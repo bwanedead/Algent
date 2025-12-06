@@ -1,0 +1,18 @@
+[package]
+name = "algent-app"
+version = "0.0.0"
+description = "Tauri shell for Algent"
+authors = ["Algent authors"]
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "1.5", features = [] }
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tauri = { version = "1.5", features = ["shell-open"] }
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
