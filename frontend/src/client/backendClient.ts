@@ -4,7 +4,7 @@
  * The transport is intentionally simple: plain HTTP with JSON. Replace or
  * augment with websockets, streaming, or Tauri commands later.
  */
-const BASE_URL = "http://127.0.0.1:8000";
+const BASE_URL = "http://127.0.0.1:43145";
 
 export type CommandRequest = {
   name: string;
@@ -13,6 +13,8 @@ export type CommandRequest = {
 };
 
 export type CommandResponse = Record<string, unknown>;
+
+export type ProviderId = "openai" | "anthropic" | "gemini" | "xai";
 
 export async function sendCommand(
   command: CommandRequest,
@@ -38,5 +40,24 @@ export async function fetchHealth(): Promise<CommandResponse> {
   if (!res.ok) {
     return { status: "error", message: `HTTP ${res.status}` };
   }
+  return (await res.json()) as CommandResponse;
+}
+
+export async function saveApiKey(
+  provider: ProviderId,
+  apiKey: string,
+): Promise<CommandResponse> {
+  const res = await fetch(`${BASE_URL}/credentials`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ provider, api_key: apiKey }),
+  });
+
+  if (!res.ok) {
+    return { status: "error", message: `HTTP ${res.status}` };
+  }
+
   return (await res.json()) as CommandResponse;
 }

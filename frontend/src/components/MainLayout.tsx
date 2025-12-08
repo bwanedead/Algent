@@ -5,6 +5,7 @@ type MainLayoutProps = {
   terminalSlot: ReactNode;
   visualizationSlot: ReactNode;
   metricsSlot: ReactNode;
+  apiKeyManagerSlot?: ReactNode;
 };
 
 const MainLayout = ({
@@ -12,6 +13,7 @@ const MainLayout = ({
   terminalSlot,
   visualizationSlot,
   metricsSlot,
+  apiKeyManagerSlot,
 }: MainLayoutProps) => {
   return (
     <div className="app-shell">
@@ -22,6 +24,7 @@ const MainLayout = ({
           Command-first playground for exploring algorithm behaviors.
         </p>
       </header>
+      {apiKeyManagerSlot}
 
       <main className="grid">
         <section className="panel">
@@ -40,7 +43,7 @@ const MainLayout = ({
       </section>
 
       <footer className="footer">
-        <span>Backend: localhost:8000 (configurable)</span>
+        <span>Backend: localhost:43145 (machine-local)</span>
         <span className="badge">Command-centric</span>
       </footer>
     </div>

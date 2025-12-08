@@ -8,7 +8,7 @@
 
 ## Build, Test, and Development Commands
 - Backend setup: `cd backend && python -m venv .venv && .venv\Scripts\Activate.ps1`.
-- Backend run placeholder: `.venv\Scripts\Activate.ps1; python -m algent_backend.app` exposes `/health`.
+- Backend run placeholder: `.venv\Scripts\Activate.ps1; python -m algent_backend.app` exposes `/health` on `http://127.0.0.1:43145`.
 - Frontend install: `cd frontend && npm install`; dev server `npm run dev`; Tauri shell `npm run tauri:dev`.
 - Tests (backend): `cd backend && .venv\Scripts\Activate.ps1 && pytest`.
 - **Do not run `git` commands in this repo unless explicitly instructed by the maintainer.**
@@ -32,6 +32,7 @@
 ## Architecture Overview
 - Agents are assembled via `agent_system/` (loops + model providers + tool registry) and dispatched through labs, aligning with the holistic vision in `docs/holistic-vision.md`.
 - Commands flow from the frontend terminal (`frontend/src/components/TerminalPanel.tsx`) to backend handlers in `commands/` and on toward lab services.
+- Credentials are updated through `/credentials` (called by `components/ApiKeyManager`), which stores provider keys via keyring or env vars.
 
 ## Architecture & Design Ethos
 Our top priority is **high structural soundness and sanity**: clean, modular, scalable architecture built with solid best practices. Whenever there is a tradeoff, **always prefer structurally sane, high-quality design over quick fixes or shortcuts**.

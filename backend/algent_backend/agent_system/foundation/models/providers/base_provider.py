@@ -4,7 +4,7 @@ Abstract provider definition.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, List
+from typing import Any
 
 
 @dataclass
@@ -20,8 +20,11 @@ class BaseModelProvider:
 
     name = "base"
 
-    def generate(self, prompt: str, **kwargs) -> ModelResponse:
+    def __init__(self, **_: object) -> None:
+        """Accept provider-specific kwargs without enforcing structure here."""
+
+    def generate(self, prompt: str, **kwargs) -> ModelResponse:  # pragma: no cover - interface
         raise NotImplementedError
 
-    async def agenerate(self, prompt: str, **kwargs) -> ModelResponse:
+    async def agenerate(self, prompt: str, **kwargs) -> ModelResponse:  # pragma: no cover - interface
         raise NotImplementedError

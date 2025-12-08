@@ -12,7 +12,7 @@ This directory hosts the minimal Python skeleton for Algent.
 ## Entrypoint
 
 - `algent_backend/app.py` exposes a temporary HTTP health endpoint using only the standard library. Replace with FastAPI/Flask/etc. once chosen.
-- Run locally: `python -m algent_backend.app`
+- Run locally: `python -m algent_backend.app` (binds to `127.0.0.1:43145` by default to avoid conflicts and stay machine-local).
 
 ## Module layout (initial placeholders)
 
@@ -25,3 +25,10 @@ This directory hosts the minimal Python skeleton for Algent.
 - `tests/` – mirrors agent system/lab modules as coverage grows.
 
 Each module includes TODO notes for future expansion; nothing here is locked-in yet.
+
+## Credentials
+
+- API keys are read from environment variables first (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, etc.).
+- If unset, the backend looks for a keyring entry under service `algent` (username `<provider>_api_key`, e.g., `openai_api_key`). Add them via `python -m keyring set algent openai_api_key`.
+- The `/credentials` HTTP endpoint accepts `POST {"provider": "...", "api_key": "..."}` to store keys (used by the frontend panel).
+- See `../docs/credentials.md` for the full mapping.
