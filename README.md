@@ -6,6 +6,7 @@ Algorithm behavior lab – desktop app for experimenting with algorithms and the
 
 - `backend/` – Python skeleton with a stdlib HTTP health endpoint and placeholders for algorithms, metrics, experiments, commands, and config.
 - `frontend/` – React + Vite shell with a Tauri wrapper. Includes layout, terminal-like command panel, metrics and visualization placeholders, and a tiny backend client.
+- `docs/` – project-wide documentation hub (vision, roadmap, general notes), plus per-surface docs under `backend/docs/` and `frontend/docs/`.
 
 ## Quickstart (dev shells)
 
