@@ -11,4 +11,3 @@ def list_available() -> list[str]:
     """Return registered algorithms. Replace with registry discovery later."""
     # TODO: implement registry/auto-discovery once algorithm set grows.
     return []
-

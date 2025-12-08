@@ -1,8 +1,8 @@
 """
 Algent backend package.
 
-This package is intentionally lightweight at this stage. It provides placeholder
-modules for algorithms, metrics, experiments, command handling, and API
-exposure. Swap or extend pieces freely as the architecture solidifies.
+Houses the core agent ecosystem (`agent_system`), pluggable labs (`labs`), API
+surface, commands, and config machinery.
 """
 
+from . import agent_system, labs  # noqa: F401

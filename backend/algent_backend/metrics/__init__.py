@@ -1,13 +1,5 @@
 """
-Metric calculators and aggregators.
-
-Design metrics to be composable so experiments can plug them together. Keep
-interfaces thin (e.g., `compute(state) -> MetricResult`).
+Legacy compatibility wrapper pointing to `labs.algo_lab.metrics`.
 """
 
-
-def available_metrics() -> list[str]:
-    """Placeholder for metric discovery."""
-    # TODO: wire into registry or module scanning.
-    return []
-
+from algent_backend.labs.algo_lab.metrics import available_metrics  # noqa: F401

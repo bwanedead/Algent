@@ -1,9 +1,5 @@
 """
-Experiment definitions and orchestration.
-
-Experiments describe which algorithm to run, with what parameters, and which
-metrics to observe. This module should eventually handle scheduling, lifecycle,
-and persistence.
+Experiment definitions and orchestration specific to Algo Lab.
 """
 from dataclasses import dataclass, field
 from typing import Any, Dict, List
@@ -22,9 +18,5 @@ class ExperimentConfig:
 def plan_experiment(cfg: ExperimentConfig) -> dict:
     """
     Placeholder planner that validates requests and returns an execution plan.
-
-    Replace with richer validation and resource allocation.
     """
-    # TODO: validate algorithm/metrics existence and produce runnable graph.
     return {"status": "planned", "experiment": cfg.name}
-

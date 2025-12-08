@@ -16,11 +16,12 @@ This directory hosts the minimal Python skeleton for Algent.
 
 ## Module layout (initial placeholders)
 
-- `algent_backend/algorithms/` – algorithm implementations and helpers.
-- `algent_backend/metrics/` – metric calculators and reducers.
-- `algent_backend/experiments/` – experiment definitions, run orchestration, and result capture.
+- `algent_backend/agent_system/` – core agent infrastructure split into `foundation/` (loops, models, prompting), `integration/` (tools/adapters), and `orchestration/` (multi-agent runners).
+- `algent_backend/labs/` – pluggable domains (“work vectors”) such as `algo_lab/` (current focus) and `news_hub/` (stub).
 - `algent_backend/commands/` – command schema and dispatch layer for both human and agent-issued actions.
-- `algent_backend/config/` – runtime/config defaults, environment helpers.
 - `algent_backend/api/` – HTTP/API surface (currently just health).
+- `algent_backend/config/` – runtime/config defaults and settings loaders.
+- `algent_backend/docs/` – backend-specific design notes.
+- `tests/` – mirrors agent system/lab modules as coverage grows.
 
 Each module includes TODO notes for future expansion; nothing here is locked-in yet.
