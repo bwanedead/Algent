@@ -15,7 +15,7 @@
     },
     "allowlist": {
       "http": {
-        "scope": ["http://127.0.0.1:*"]
+        "scope": ["http://127.0.0.1/**"]
       },
       "shell": {
         "all": false
