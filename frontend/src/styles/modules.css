@@ -9,19 +9,19 @@
 .module-grid__surface {
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(
+  background-image: repeating-linear-gradient(
       to right,
       rgba(255, 255, 255, 0.05) 0px,
       rgba(255, 255, 255, 0.05) 1px,
       transparent 1px,
-      transparent 40px
+      transparent var(--module-grid-size, 40px)
     ),
     repeating-linear-gradient(
       to bottom,
       rgba(255, 255, 255, 0.05) 0px,
       rgba(255, 255, 255, 0.05) 1px,
       transparent 1px,
-      transparent 40px
+      transparent var(--module-grid-size, 40px)
     );
   opacity: 0;
   transition: opacity 120ms ease;

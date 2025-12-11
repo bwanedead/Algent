@@ -1,4 +1,10 @@
-import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
+import {
+  CSSProperties,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 export type ModuleShape = {
   id: string;
@@ -16,20 +22,23 @@ type ModuleGridProps = {
   placementMode: boolean;
   onModuleCreate: (draft: ModuleDraft) => void;
   onCancelPlacement: () => void;
+  onModuleDelete: (id: string) => void;
 };
-
-const GRID_SIZE = 40;
 
 const ModuleGrid = ({
   modules,
   placementMode,
   onModuleCreate,
   onCancelPlacement,
+  onModuleDelete,
 }: ModuleGridProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hoverCell, setHoverCell] = useState<{ column: number; row: number } | null>(null);
   const [dragStart, setDragStart] = useState<{ column: number; row: number } | null>(null);
   const [dragCurrent, setDragCurrent] = useState<{ column: number; row: number } | null>(null);
+  const [gridSize, setGridSize] = useState(40);
+  const [gridOrigin, setGridOrigin] = useState({ x: 0, y: 0 });
+  const [contextTarget, setContextTarget] = useState<string | null>(null);
 
   useEffect(() => {
     if (!placementMode) {
@@ -38,6 +47,33 @@ const ModuleGrid = ({
       setDragCurrent(null);
     }
   }, [placementMode]);
+
+  useEffect(() => {
+    const updateGridMetrics = () => {
+      const node = containerRef.current;
+      if (!node) {
+        return;
+      }
+      const computed = getComputedStyle(node);
+      const sizeValue = computed.getPropertyValue("--s-grid");
+      const parsed = parseFloat(sizeValue || "");
+      if (!Number.isNaN(parsed) && parsed > 0) {
+        setGridSize(parsed);
+      }
+      const shell = node.closest(".hud-shell") as HTMLElement | null;
+      const referenceRect = shell?.getBoundingClientRect();
+      const nodeRect = node.getBoundingClientRect();
+      if (referenceRect) {
+        setGridOrigin({
+          x: nodeRect.left - referenceRect.left,
+          y: nodeRect.top - referenceRect.top,
+        });
+      }
+    };
+    updateGridMetrics();
+    window.addEventListener("resize", updateGridMetrics);
+    return () => window.removeEventListener("resize", updateGridMetrics);
+  }, []);
 
   useEffect(() => {
     if (!placementMode) return;
@@ -58,10 +94,25 @@ const ModuleGrid = ({
 
   const getCellFromEvent = (event: React.MouseEvent) => {
     const bounds = containerRef.current?.getBoundingClientRect();
-    if (!bounds) return null;
-    const column = Math.floor((event.clientX - bounds.left) / GRID_SIZE);
-    const row = Math.floor((event.clientY - bounds.top) / GRID_SIZE);
+    const shell = containerRef.current?.closest(".hud-shell") as HTMLElement | null;
+    const shellRect = shell?.getBoundingClientRect();
+    if (!bounds || !shellRect) return null;
+    const globalX = event.clientX - shellRect.left;
+    const globalY = event.clientY - shellRect.top;
+    const column = Math.floor(globalX / gridSize);
+    const row = Math.floor(globalY / gridSize);
     if (column < 0 || row < 0) return null;
+    // Ensure inside canvas bounds
+    const localX = column * gridSize - gridOrigin.x;
+    const localY = row * gridSize - gridOrigin.y;
+    if (
+      localX + gridSize < 0 ||
+      localY + gridSize < 0 ||
+      localX > bounds.width ||
+      localY > bounds.height
+    ) {
+      return null;
+    }
     return { column, row };
   };
 
@@ -122,10 +173,39 @@ const ModuleGrid = ({
     };
   }, [dragStart, dragCurrent]);
 
+  const alignmentX = ((gridOrigin.x % gridSize) + gridSize) % gridSize;
+  const alignmentY = ((gridOrigin.y % gridSize) + gridSize) % gridSize;
+
+  useEffect(() => {
+    if (!contextTarget) return;
+    const timer = window.setTimeout(() => {
+      const confirmed = window.confirm("Delete this module?");
+      if (confirmed) {
+        onModuleDelete(contextTarget);
+      }
+      setContextTarget(null);
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [contextTarget, onModuleDelete]);
+
   return (
-    <div className="module-grid" ref={containerRef}>
+    <div
+      className="module-grid"
+      ref={containerRef}
+      style={
+        {
+          "--module-grid-size": `${gridSize}px`,
+          "--module-grid-origin-x": `${alignmentX}px`,
+          "--module-grid-origin-y": `${alignmentY}px`,
+        } as CSSProperties
+      }
+    >
       <div
         className={`module-grid__surface ${placementMode ? "is-placing" : ""}`}
+        style={{
+          backgroundSize: `${gridSize}px ${gridSize}px`,
+          backgroundPosition: `-${alignmentX}px -${alignmentY}px`,
+        }}
         onMouseMove={handleMouseMove}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
@@ -133,14 +213,20 @@ const ModuleGrid = ({
 
       {modules.map((module) => {
         const style: CSSProperties = {
-          left: module.column * GRID_SIZE,
-          top: module.row * GRID_SIZE,
-          width: module.width * GRID_SIZE,
-          height: module.height * GRID_SIZE,
+          left: module.column * gridSize - gridOrigin.x,
+          top: module.row * gridSize - gridOrigin.y,
+          width: module.width * gridSize,
+          height: module.height * gridSize,
         };
         return (
           <div key={module.id} className="module-shell" style={style}>
-            <div className="module-shell__header">
+            <div
+              className="module-shell__header"
+              onContextMenu={(event) => {
+                event.preventDefault();
+                setContextTarget(module.id);
+              }}
+            >
               <span className="module-shell__eyebrow">module</span>
               <strong>{module.name}</strong>
             </div>
@@ -156,10 +242,10 @@ const ModuleGrid = ({
         <div
           className="module-grid__probe"
           style={{
-            left: hoverCell.column * GRID_SIZE,
-            top: hoverCell.row * GRID_SIZE,
-            width: GRID_SIZE,
-            height: GRID_SIZE,
+            left: hoverCell.column * gridSize - gridOrigin.x,
+            top: hoverCell.row * gridSize - gridOrigin.y,
+            width: gridSize,
+            height: gridSize,
           }}
         >
           <span>+</span>
@@ -170,10 +256,10 @@ const ModuleGrid = ({
         <div
           className="module-grid__selection"
           style={{
-            left: selectionRect.column * GRID_SIZE,
-            top: selectionRect.row * GRID_SIZE,
-            width: selectionRect.width * GRID_SIZE,
-            height: selectionRect.height * GRID_SIZE,
+            left: selectionRect.column * gridSize - gridOrigin.x,
+            top: selectionRect.row * gridSize - gridOrigin.y,
+            width: selectionRect.width * gridSize,
+            height: selectionRect.height * gridSize,
           }}
         >
           <span>

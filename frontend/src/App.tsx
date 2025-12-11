@@ -22,6 +22,10 @@ const App = () => {
     setPlacementMode(false);
   };
 
+  const handleModuleDelete = (id: string) => {
+    setModules((prev) => prev.filter((module) => module.id != id));
+  };
+
   const moduleCountLabel = useMemo(
     () => `${modules.length.toString().padStart(2, "0")} modules`,
     [modules.length],
@@ -76,6 +80,7 @@ const App = () => {
             placementMode={placementMode}
             onModuleCreate={handleModuleCreate}
             onCancelPlacement={() => setPlacementMode(false)}
+            onModuleDelete={handleModuleDelete}
           />
           <div className="hud-caption">
             status: idle <span>// waiting for input</span>
