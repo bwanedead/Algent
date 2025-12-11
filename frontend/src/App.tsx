@@ -7,10 +7,21 @@ const App = () => {
   const openModal = () => setApiModalOpen(true);
   const closeModal = () => setApiModalOpen(false);
 
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const el = e.currentTarget as HTMLElement;
+    el.style.setProperty("--cursor-x", `${e.clientX}px`);
+    el.style.setProperty("--cursor-y", `${e.clientY}px`);
+  };
+
   return (
-    <div className="hud-shell">
+    <div className="hud-shell" onMouseMove={handleMouseMove}>
       <div className="hud-noise" aria-hidden="true" />
       <div className="hud-scanlines" aria-hidden="true" />
+      
+      {/* Global Snap Grid Layers */}
+      <div className="hud-grid-layer base-grid" aria-hidden="true" />
+      <div className="hud-grid-layer meta-grid" aria-hidden="true" />
+
       <div className="hud-frame">
         <header className="hud-header">
           <div className="hud-title-block">
@@ -24,8 +35,7 @@ const App = () => {
         </header>
         
         <div className="hud-canvas">
-          <div className="hud-gridlines" aria-hidden="true" />
-          <div className="hud-crosshair" aria-hidden="true" />
+          {/* Canvas content goes here (e.g., workspace, terminals) */}
           <div className="hud-caption">
             status: idle <span>// waiting for input</span>
           </div>

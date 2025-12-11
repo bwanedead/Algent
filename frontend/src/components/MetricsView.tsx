@@ -9,9 +9,9 @@ const MetricsView = () => {
     <div className="metrics-grid">
       {placeholderMetrics.map((metric) => (
         <div key={metric.name} className="metric-card">
-          <div className="section-title">{metric.name}</div>
-          <div style={{ fontSize: "1.25rem" }}>{metric.value}</div>
-          <div style={{ marginTop: 6, color: "#94a3b8" }}>
+          <div className="metric-label">{metric.name}</div>
+          <div className="metric-value">{metric.value}</div>
+          <div className="metric-sub">
             TODO: live updates from backend
           </div>
         </div>

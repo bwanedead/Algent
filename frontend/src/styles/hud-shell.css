@@ -8,32 +8,49 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  /* Default cursor pos to center if JS hasn't loaded */
+  --cursor-x: 50vw;
+  --cursor-y: 50vh;
 }
 
-/* The "Mesh" - Snap points/Grid layer */
-.hud-shell::before {
-  content: "";
+/* --- GRID LAYERS --- */
+
+.hud-grid-layer {
   position: absolute;
   inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 1. Base Snap Grid (Thin, sharp, flashlight reveal) */
+.base-grid {
   background-image: 
-    linear-gradient(to right, rgba(68, 64, 60, 0.1) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(68, 64, 60, 0.1) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
   background-size: var(--s-grid) var(--s-grid);
-  mask-image: radial-gradient(ellipse at center, black 40%, transparent 100%);
-  pointer-events: none;
-  z-index: 0;
+  
+  /* Flashlight mask */
+  mask-image: radial-gradient(
+    circle 450px at var(--cursor-x) var(--cursor-y),
+    black 0%,
+    transparent 100%
+  );
 }
 
-/* Secondary artifact layer - "Grid Network" */
-.hud-shell::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle at center, var(--c-accent-faded) 1px, transparent 1px);
-  background-size: calc(var(--s-grid) * 2) calc(var(--s-grid) * 2);
-  opacity: 0.15;
-  pointer-events: none;
-  z-index: 0;
+/* 2. Meta Grid (3x3 units, scattered/broken style) */
+.meta-grid {
+  /* 3x3 = 120px if base is 40px */
+  background-image: 
+    radial-gradient(circle at 2px 2px, var(--c-accent-faded) 2px, transparent 2px);
+  background-size: calc(var(--s-grid) * 3) calc(var(--s-grid) * 3);
+  opacity: 0.3;
+  
+  /* Secondary wider flashlight */
+  mask-image: radial-gradient(
+    circle 800px at var(--cursor-x) var(--cursor-y),
+    black 20%,
+    transparent 80%
+  );
 }
 
 .hud-noise {
@@ -62,7 +79,6 @@
 
 /* --- MAIN LAYOUT --- */
 
-/* Replaces the old constrained card. Now a full-screen grid interface. */
 .hud-frame {
   position: relative;
   flex: 1;
@@ -71,8 +87,7 @@
   z-index: 10;
   padding: 24px;
   gap: 16px;
-  /* subtle vignette to focus center */
-  box-shadow: inset 0 0 150px rgba(0,0,0,0.7);
+  /* Removed vignette box-shadow to open up the feel */
 }
 
 /* --- HEADER --- */
@@ -82,8 +97,12 @@
   align-items: flex-end;
   gap: 24px;
   padding-bottom: 16px;
-  border-bottom: 1px solid var(--c-border-dim);
-  background: linear-gradient(to right, rgba(28, 25, 23, 0.8), transparent);
+  /* Fade out bottom border so it floats */
+  border-bottom: 1px solid transparent;
+  background-image: linear-gradient(to right, var(--c-border-dim) 50%, transparent 50%);
+  background-position: bottom;
+  background-size: 12px 1px;
+  background-repeat: repeat-x;
 }
 
 .hud-title-block {
@@ -128,35 +147,11 @@
 .hud-canvas {
   flex: 1;
   position: relative;
-  background: rgba(21, 18, 16, 0.6); /* Very dark warm, semi-transparent */
-  border: 1px solid var(--c-border-dim);
+  /* Removed background and border to let grid show through */
   overflow: hidden;
   display: grid;
   place-items: center;
-  /* "Burn-in" effect on the container edges */
-  box-shadow: inset 0 0 40px rgba(0,0,0,0.5);
 }
-
-/* Inner grid inside the canvas */
-.hud-gridlines {
-  position: absolute;
-  inset: 0;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 20px 20px;
-  pointer-events: none;
-}
-
-.hud-crosshair::before, .hud-crosshair::after {
-  content: "";
-  position: absolute;
-  top: 50%; left: 50%;
-  background: var(--c-border-bright);
-  opacity: 0.5;
-}
-.hud-crosshair::before { width: 20px; height: 1px; transform: translate(-50%, -50%); }
-.hud-crosshair::after { width: 1px; height: 20px; transform: translate(-50%, -50%); }
 
 .hud-caption {
   position: absolute;
@@ -174,9 +169,12 @@
 .hud-footer {
   display: flex;
   justify-content: space-between;
-  border-top: 1px solid var(--c-border-dim);
   padding-top: 12px;
-  background: linear-gradient(to right, rgba(28, 25, 23, 0.8), transparent);
+  /* Dashed top border for lighter feel */
+  background-image: linear-gradient(to right, var(--c-border-dim) 50%, transparent 50%);
+  background-position: top;
+  background-size: 12px 1px;
+  background-repeat: repeat-x;
 }
 
 .hud-footer-block {
