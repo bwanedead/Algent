@@ -53,6 +53,17 @@
   );
 }
 
+/* 3. Trace Layer - Inherits Flashlight Mask */
+.trace-layer {
+  /* Same flashlight mask as base-grid so traces only show near cursor */
+  mask-image: radial-gradient(
+    circle 600px at var(--cursor-x) var(--cursor-y),
+    black 20%,
+    transparent 100%
+  );
+  z-index: 1; /* Above base grid */
+}
+
 .hud-noise {
   position: absolute;
   inset: 0;

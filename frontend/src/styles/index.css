@@ -1,7 +1,6 @@
 @import "./base.css";
 @import "./hud-shell.css";
-@import "./controls.css";
-@import "./modal.css";
 @import "./forms.css";
 @import "./terminal.css";
 @import "./metrics.css";
+@import "./settings-tray.css";

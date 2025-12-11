@@ -1,12 +1,8 @@
 import { useState } from "react";
-import ApiKeyManager from "./components/ApiKeyManager";
+import SettingsTray from "./components/SettingsTray";
+import GridTraceLayer from "./components/GridTraceLayer";
 
 const App = () => {
-  const [isApiModalOpen, setApiModalOpen] = useState(false);
-
-  const openModal = () => setApiModalOpen(true);
-  const closeModal = () => setApiModalOpen(false);
-
   const handleMouseMove = (e: React.MouseEvent) => {
     const el = e.currentTarget as HTMLElement;
     el.style.setProperty("--cursor-x", `${e.clientX}px`);
@@ -21,6 +17,12 @@ const App = () => {
       {/* Global Snap Grid Layers */}
       <div className="hud-grid-layer base-grid" aria-hidden="true" />
       <div className="hud-grid-layer meta-grid" aria-hidden="true" />
+      
+      {/* Random Pulse Traces */}
+      <GridTraceLayer />
+
+      {/* Side Settings Tray */}
+      <SettingsTray />
 
       <div className="hud-frame">
         <header className="hud-header">
@@ -52,35 +54,6 @@ const App = () => {
           </div>
         </footer>
       </div>
-
-      <button className="api-key-button" onClick={openModal}>
-        <span className="button-label">SYSTEM</span>
-        <span className="button-text">ACCESS KEYS</span>
-      </button>
-
-      {isApiModalOpen && (
-        <div className="modal-backdrop" onClick={closeModal}>
-          <div
-            className="modal-panel"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <div className="modal-header">
-              <div>
-                <div className="modal-eyebrow">credentials</div>
-                <h2>model api keys</h2>
-              </div>
-              <button
-                className="icon-button"
-                aria-label="Close"
-                onClick={closeModal}
-              >
-                &times;
-              </button>
-            </div>
-            <ApiKeyManager />
-          </div>
-        </div>
-      )}
     </div>
   );
 };

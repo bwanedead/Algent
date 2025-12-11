@@ -1,0 +1,94 @@
+/* --- SETTINGS TRAY --- */
+
+:root {
+  /* Ensure these match base.css grid size */
+  --tray-width-units: 8; /* 8 * 40px = 320px */
+  --tray-width: calc(var(--s-grid) * var(--tray-width-units));
+}
+
+.settings-tray {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  align-items: flex-start;
+  pointer-events: none; /* Let clicks pass through empty space */
+}
+
+/* The Toggle Button - Strictly Grid Aligned */
+.tray-toggle {
+  pointer-events: auto;
+  width: var(--s-grid);
+  height: var(--s-grid);
+  background: var(--c-bg-panel);
+  border: 1px solid var(--c-border-dim);
+  border-left: none; /* Merge with panel */
+  color: var(--c-accent-amber);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-top: calc(var(--s-grid) * 2); /* Snap vertically */
+  transition: background 0.2s, color 0.2s;
+  
+  /* Simplified for now, just a square is better for grid adherence */
+  clip-path: none;
+  
+  /* Move button to the right of the panel */
+  order: 2;
+}
+
+/* The Panel Content */
+.tray-panel {
+  pointer-events: auto;
+  width: 0;
+  height: 100%;
+  background: var(--c-bg-panel);
+  border-right: 1px solid var(--c-border-dim);
+  overflow: hidden;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1); /* Tech easing */
+  display: flex;
+  flex-direction: column;
+  
+  /* Grid background for internal alignment */
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: var(--s-grid) var(--s-grid);
+  
+  /* Panel is on the left, so it should be first in flex order */
+  order: 1;
+}
+
+.settings-tray.open .tray-panel {
+  width: var(--tray-width);
+  box-shadow: -20px 0 50px rgba(0,0,0,0.8);
+}
+
+/* Content Container */
+.tray-content {
+  width: var(--tray-width); /* Fixed width to prevent reflow during anim */
+  padding: 24px; /* somewhat arbitrary, maybe should be grid-based? */
+  padding: calc(var(--s-grid) / 2); /* 20px */
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-grid);
+}
+
+.tray-header {
+  height: var(--s-grid);
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--c-border-dim);
+  margin-bottom: calc(var(--s-grid) / 2);
+}
+
+.tray-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--c-text-muted);
+}
+
