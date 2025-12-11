@@ -38,7 +38,12 @@ const ModuleGrid = ({
   const [dragCurrent, setDragCurrent] = useState<{ column: number; row: number } | null>(null);
   const [gridSize, setGridSize] = useState(40);
   const [gridOrigin, setGridOrigin] = useState({ x: 0, y: 0 });
-  const [contextTarget, setContextTarget] = useState<string | null>(null);
+  const [contextMenu, setContextMenu] = useState<{
+    moduleId: string;
+    x: number;
+    y: number;
+  } | null>(null);
+  const contextMenuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!placementMode) {
@@ -177,16 +182,40 @@ const ModuleGrid = ({
   const alignmentY = ((gridOrigin.y % gridSize) + gridSize) % gridSize;
 
   useEffect(() => {
-    if (!contextTarget) return;
-    const timer = window.setTimeout(() => {
-      const confirmed = window.confirm("Delete this module?");
-      if (confirmed) {
-        onModuleDelete(contextTarget);
+    if (!contextMenu) return;
+    const handlePointer = (event: MouseEvent) => {
+      if (!contextMenuRef.current) return;
+      if (!contextMenuRef.current.contains(event.target as Node)) {
+        setContextMenu(null);
       }
-      setContextTarget(null);
-    }, 0);
-    return () => window.clearTimeout(timer);
-  }, [contextTarget, onModuleDelete]);
+    };
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setContextMenu(null);
+      }
+    };
+    window.addEventListener("mousedown", handlePointer);
+    window.addEventListener("keydown", handleEscape);
+    return () => {
+      window.removeEventListener("mousedown", handlePointer);
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [contextMenu]);
+
+  const openContextMenu = (event: React.MouseEvent, moduleId: string) => {
+    event.preventDefault();
+    setContextMenu({
+      moduleId,
+      x: event.clientX,
+      y: event.clientY,
+    });
+  };
+
+  const handleDeleteFromMenu = () => {
+    if (!contextMenu) return;
+    onModuleDelete(contextMenu.moduleId);
+    setContextMenu(null);
+  };
 
   return (
     <div
@@ -219,14 +248,13 @@ const ModuleGrid = ({
           height: module.height * gridSize,
         };
         return (
-          <div key={module.id} className="module-shell" style={style}>
-            <div
-              className="module-shell__header"
-              onContextMenu={(event) => {
-                event.preventDefault();
-                setContextTarget(module.id);
-              }}
-            >
+          <div
+            key={module.id}
+            className="module-shell"
+            style={style}
+            onContextMenu={(event) => openContextMenu(event, module.id)}
+          >
+            <div className="module-shell__header">
               <span className="module-shell__eyebrow">module</span>
               <strong>{module.name}</strong>
             </div>
@@ -265,6 +293,22 @@ const ModuleGrid = ({
           <span>
             {selectionRect.width} × {selectionRect.height}
           </span>
+        </div>
+      )}
+
+      {contextMenu && (
+        <div
+          className="module-context-menu"
+          style={{ left: contextMenu.x, top: contextMenu.y }}
+          ref={contextMenuRef}
+        >
+          <button
+            type="button"
+            className="module-context-menu__item is-danger"
+            onClick={handleDeleteFromMenu}
+          >
+            Delete module
+          </button>
         </div>
       )}
 
