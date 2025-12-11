@@ -199,3 +199,15 @@
   color: var(--c-text-muted);
   font-size: 0.8rem;
 }
+
+/* --- ANIMATIONS --- */
+
+@keyframes growX {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes growY {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}

@@ -9,9 +9,6 @@ export const getValidDirections = (
 ): number[] => {
   const allDirs = [0, 1, 2, 3];
   if (arrivalDir === null) return allDirs;
-  
-  // arrivalDir is the direction we were moving.
-  // To reverse, we would move (arrivalDir + 2) % 4
   const forbidden = (arrivalDir + 2) % 4;
   return allDirs.filter(d => d !== forbidden);
 };
@@ -31,35 +28,33 @@ export const calculateBranching = (arrivalDir: number | null): number[] => {
  */
 export const evolveColor = (parentHue: number | null): number => {
   if (parentHue === null) return 38; // Base Amber
-  
-  // Shift by -15 to +15 degrees
   const shift = Math.floor(Math.random() * 31) - 15;
   return (parentHue + shift + 360) % 360;
 };
 
 /**
  * Generates a random walk path.
+ * For Meta traces, steps are 1, but they render as 3 units long.
+ * The logic here just generates the nodes on the grid graph.
  */
 export const generateTracePath = (
   start: Point, 
   cols: number, 
   rows: number, 
-  forbiddenStartDir: number | null = null, // Deprecated in favor of internal check but kept for compat
+  forbiddenStartDir: number | null = null, 
   forceStartDir: number | null = null
 ): { path: Point[]; lastDir: number | null } => {
   
   let { x: cx, y: cy } = start;
-  // Clamp start
   cx = Math.max(0, Math.min(cols, cx));
   cy = Math.max(0, Math.min(rows, cy));
 
   const path = [{ x: cx, y: cy }];
   const steps = Math.floor(Math.random() * 30) + 1;
   
-  // Track direction we are MOVING in (0=N, etc)
   let currentDir: number | null = forceStartDir; 
 
-  // If forceStartDir provided, execute first step immediately
+  // Force Start Logic
   if (forceStartDir !== null) {
     switch (forceStartDir) {
         case 0: cy--; break;
@@ -67,22 +62,17 @@ export const generateTracePath = (
         case 2: cy++; break;
         case 3: cx--; break;
     }
-    // Check bounds after forced step
     if (cx >= 0 && cx <= cols && cy >= 0 && cy <= rows) {
         path.push({ x: cx, y: cy });
     } else {
-        // Wall hit immediately
         return { path, lastDir: null };
     }
   }
 
+  // Random Walk
   for (let i = (forceStartDir !== null ? 1 : 0); i < steps; i++) {
-    // Determine valid moves based on currentDir (to avoid 180 reverse)
     const validMoves = [0, 1, 2, 3].filter(dir => {
-        // If we have a current moving direction, don't reverse
         if (currentDir !== null && dir === (currentDir + 2) % 4) return false;
-        
-        // Bounds check
         switch (dir) {
             case 0: return cy > 0;
             case 1: return cx < cols;
