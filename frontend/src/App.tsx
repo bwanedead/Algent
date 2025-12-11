@@ -1,10 +1,8 @@
 import { useMemo, useState } from "react";
 import SettingsTray from "./components/SettingsTray";
 import GridTraceLayer from "./components/GridTraceLayer";
-import ModuleGrid, {
-  ModuleDraft,
-  ModuleShape,
-} from "./components/ModuleGrid";
+import ModuleGrid from "./components/ModuleGrid";
+import { ModuleDraft, ModuleShape } from "./types/modules";
 
 const App = () => {
   const [modules, setModules] = useState<ModuleShape[]>([]);
