@@ -1,0 +1,104 @@
+.api-key-manager {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.api-key-helper {
+  margin: 0;
+  color: var(--c-text-muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  line-height: 1.5;
+}
+
+.api-key-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.api-key-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.api-key-field span {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--c-text-dim);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.api-key-input, .api-key-select {
+  width: 100%;
+  background: #12100e;
+  border: 1px solid var(--c-border-dim);
+  color: var(--c-text-main);
+  padding: 10px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  border-radius: 0;
+  appearance: none; /* removes default browser styles */
+}
+
+.api-key-select {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a8a29e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+}
+
+.api-key-input:focus, .api-key-select:focus {
+  outline: none;
+  border-color: var(--c-accent-amber);
+  box-shadow: 0 0 0 1px var(--c-accent-amber);
+}
+
+.api-key-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.api-key-actions button {
+  background: var(--c-border-dim);
+  color: var(--c-text-main);
+  border: none;
+  padding: 10px 20px;
+  font-family: inherit;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: 0.2s;
+}
+
+.api-key-actions button:hover {
+  background: var(--c-accent-rust);
+  color: white;
+}
+
+.api-key-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.status-message {
+  color: var(--c-accent-ok);
+  font-size: 0.85rem;
+  margin-top: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-error {
+  color: var(--c-accent-alert);
+  font-size: 0.85rem;
+  margin-top: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}

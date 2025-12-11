@@ -38,20 +38,20 @@ const TerminalPanel = () => {
     <div>
       <div className="terminal-log">
         {log.map((entry, idx) => (
-          <div key={idx} style={{ marginBottom: 6 }}>
-            <div style={{ color: "#a5b4fc" }}>{entry.label}</div>
-            <pre style={{ margin: 0, whiteSpace: "pre-wrap" }}>
+          <div key={idx} className="terminal-entry">
+            <div className="terminal-label">{entry.label}</div>
+            <pre className="terminal-payload">
               {JSON.stringify(entry.payload, null, 2)}
             </pre>
           </div>
         ))}
       </div>
-      <form onSubmit={handleSubmit} style={{ marginTop: 10 }}>
+      <form onSubmit={handleSubmit}>
         <input
           className="terminal-input"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Type a command (e.g., 'list algorithms')"
+          placeholder="ENTER COMMAND >>"
           spellCheck={false}
         />
       </form>

@@ -1,0 +1,40 @@
+:root {
+  color-scheme: dark;
+  font-family: "IBM Plex Mono", "JetBrains Mono", Consolas, monospace;
+
+  /* Rusty Industrial Palette */
+  --c-bg-deep: #0c0a09;       /* warm black */
+  --c-bg-panel: #1c1917;      /* warm charcoal */
+  --c-border-dim: #292524;    /* stone-800 */
+  --c-border-bright: #44403c; /* stone-700 */
+
+  --c-text-main: #e7e5e4;     /* stone-200 */
+  --c-text-muted: #a8a29e;    /* stone-400 */
+  --c-text-dim: #57534e;      /* stone-600 */
+
+  --c-accent-rust: #ea580c;   /* orange-600 */
+  --c-accent-amber: #d97706;  /* amber-600 */
+  --c-accent-faded: #78350f;  /* amber-900 */
+  --c-accent-ok: #65a30d;     /* lime-600 (muted) */
+  --c-accent-alert: #b91c1c;  /* red-700 */
+
+  --s-grid: 40px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--c-bg-deep);
+  color: var(--c-text-main);
+  font-feature-settings: "ss01", "ss02";
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}

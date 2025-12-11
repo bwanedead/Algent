@@ -1,0 +1,66 @@
+/* ... existing content ... */
+
+/* --- METRICS & VISUALIZATION --- */
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.metric-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--c-border-dim);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metric-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--c-text-dim);
+  letter-spacing: 0.1em;
+}
+
+.metric-value {
+  font-size: 1.4rem;
+  color: var(--c-accent-amber);
+  font-weight: 300;
+}
+
+.metric-sub {
+  font-size: 0.75rem;
+  color: var(--c-text-dim);
+  margin-top: auto;
+  font-style: italic;
+  opacity: 0.6;
+}
+
+.world-placeholder {
+  height: 100%;
+  min-height: 200px;
+  border: 1px dashed var(--c-border-dim);
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--c-text-dim);
+}
+
+.world-placeholder-text {
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--c-text-muted);
+}
+
+.world-placeholder-sub {
+  font-size: 0.8rem;
+  color: var(--c-text-dim);
+  margin-top: 8px;
+}
+

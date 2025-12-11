@@ -40,64 +40,44 @@ const ApiKeyManager = () => {
   };
 
   return (
-    <div className="panel" style={{ marginTop: 12 }}>
-      <div className="section-title">Model API Keys</div>
-      <p style={{ marginTop: 0, color: "#94a3b8" }}>
-        Keys are stored via keyring when available. Paste a new key anytime to
-        update it.
+    <div className="api-key-manager">
+      <p className="api-key-helper">
+        Keys are stored securely via the backend keyring (when available). Paste
+        new credentials anytime to update them.
       </p>
-      <form onSubmit={handleSubmit} style={{ display: "flex", gap: 8 }}>
-        <select
-          value={provider}
-          onChange={(e) => setProvider(e.target.value as ProviderId)}
-          style={{
-            background: "#0b1222",
-            color: "#e2e8f0",
-            borderRadius: 8,
-            border: "1px solid rgba(255,255,255,0.08)",
-            padding: "10px 12px",
-            minWidth: 160,
-          }}
-        >
-          {PROVIDERS.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.label}
-            </option>
-          ))}
-        </select>
-        <input
-          type="password"
-          className="terminal-input"
-          placeholder="Paste API key..."
-          value={apiKey}
-          onChange={(e) => setApiKey(e.target.value)}
-        />
-        <button
-          type="submit"
-          disabled={isSaving}
-          style={{
-            background: "#10b981",
-            color: "#0f172a",
-            border: "none",
-            borderRadius: 8,
-            padding: "10px 16px",
-            fontWeight: 600,
-            cursor: "pointer",
-          }}
-        >
-          {isSaving ? "Saving..." : "Save"}
-        </button>
+      <form className="api-key-form" onSubmit={handleSubmit}>
+        <label className="api-key-field">
+          <span>Provider</span>
+          <select
+            className="api-key-select"
+            value={provider}
+            onChange={(e) => setProvider(e.target.value as ProviderId)}
+          >
+            {PROVIDERS.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.label}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="api-key-field">
+          <span>API Key</span>
+          <input
+            type="password"
+            className="api-key-input"
+            placeholder="Paste provider key..."
+            value={apiKey}
+            onChange={(e) => setApiKey(e.target.value)}
+          />
+        </label>
+        <div className="api-key-actions">
+          <button type="submit" disabled={isSaving}>
+            {isSaving ? "Saving..." : "Save Key"}
+          </button>
+        </div>
       </form>
-      {status && (
-        <div style={{ color: "#34d399", marginTop: 8, fontSize: "0.9rem" }}>
-          {status}
-        </div>
-      )}
-      {error && (
-        <div style={{ color: "#f87171", marginTop: 8, fontSize: "0.9rem" }}>
-          {error}
-        </div>
-      )}
+      {status && <div className="status-message">{status}</div>}
+      {error && <div className="status-error">{error}</div>}
     </div>
   );
 };

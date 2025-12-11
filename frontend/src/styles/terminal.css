@@ -1,0 +1,59 @@
+/* --- TERMINAL --- */
+
+.terminal-log {
+  height: 300px;
+  overflow-y: auto;
+  font-family: "IBM Plex Mono", "JetBrains Mono", monospace;
+  font-size: 0.9rem;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--c-border-dim);
+  color: var(--c-text-muted);
+}
+
+.terminal-entry {
+  margin-bottom: 8px;
+  border-left: 2px solid transparent;
+  padding-left: 8px;
+}
+
+.terminal-entry:hover {
+  border-left-color: var(--c-border-bright);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.terminal-label {
+  color: var(--c-accent-rust);
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.terminal-payload {
+  margin: 0;
+  white-space: pre-wrap;
+  color: var(--c-text-dim);
+  font-size: 0.85rem;
+}
+
+.terminal-input {
+  width: 100%;
+  background: #0c0a09;
+  border: 1px solid var(--c-border-dim);
+  color: var(--c-accent-amber);
+  padding: 12px;
+  font-family: inherit;
+  font-size: 1rem;
+  margin-top: 12px;
+}
+
+.terminal-input:focus {
+  outline: none;
+  border-color: var(--c-accent-rust);
+  box-shadow: 0 0 10px rgba(234, 88, 12, 0.2);
+}
+
+.terminal-input::placeholder {
+  color: var(--c-text-dim);
+  opacity: 0.5;
+}
+

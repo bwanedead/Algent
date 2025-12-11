@@ -1,0 +1,192 @@
+/* --- SHELL & ATMOSPHERE --- */
+
+.hud-shell {
+  position: relative;
+  min-height: 100vh;
+  width: 100vw;
+  background: radial-gradient(circle at 50% 30%, #1c1917 0%, #0c0a09 80%);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The "Mesh" - Snap points/Grid layer */
+.hud-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(68, 64, 60, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(68, 64, 60, 0.1) 1px, transparent 1px);
+  background-size: var(--s-grid) var(--s-grid);
+  mask-image: radial-gradient(ellipse at center, black 40%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Secondary artifact layer - "Grid Network" */
+.hud-shell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at center, var(--c-accent-faded) 1px, transparent 1px);
+  background-size: calc(var(--s-grid) * 2) calc(var(--s-grid) * 2);
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hud-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  z-index: 2;
+}
+
+.hud-scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(0, 0, 0, 0.3) 4px
+  );
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.4;
+}
+
+/* --- MAIN LAYOUT --- */
+
+/* Replaces the old constrained card. Now a full-screen grid interface. */
+.hud-frame {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  padding: 24px;
+  gap: 16px;
+  /* subtle vignette to focus center */
+  box-shadow: inset 0 0 150px rgba(0,0,0,0.7);
+}
+
+/* --- HEADER --- */
+
+.hud-header {
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--c-border-dim);
+  background: linear-gradient(to right, rgba(28, 25, 23, 0.8), transparent);
+}
+
+.hud-title-block {
+  flex: 1;
+}
+
+.hud-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--c-text-dim);
+  font-weight: 600;
+}
+
+.hud-title {
+  font-size: 1.5rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--c-text-main);
+  text-shadow: 0 0 15px rgba(251, 146, 60, 0.2);
+}
+
+.hud-status-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.hud-value {
+  font-size: 1rem;
+  color: var(--c-accent-amber);
+  letter-spacing: 0.05em;
+}
+
+.hud-value--online {
+  color: var(--c-accent-ok);
+}
+
+/* --- CANVAS AREA --- */
+
+.hud-canvas {
+  flex: 1;
+  position: relative;
+  background: rgba(21, 18, 16, 0.6); /* Very dark warm, semi-transparent */
+  border: 1px solid var(--c-border-dim);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  /* "Burn-in" effect on the container edges */
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.5);
+}
+
+/* Inner grid inside the canvas */
+.hud-gridlines {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+}
+
+.hud-crosshair::before, .hud-crosshair::after {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  background: var(--c-border-bright);
+  opacity: 0.5;
+}
+.hud-crosshair::before { width: 20px; height: 1px; transform: translate(-50%, -50%); }
+.hud-crosshair::after { width: 1px; height: 20px; transform: translate(-50%, -50%); }
+
+.hud-caption {
+  position: absolute;
+  bottom: 12px; left: 12px;
+  font-size: 0.75rem;
+  color: var(--c-text-dim);
+  background: rgba(0,0,0,0.4);
+  padding: 4px 8px;
+  border-left: 2px solid var(--c-accent-faded);
+}
+.hud-caption span { color: var(--c-accent-amber); margin-left: 8px; }
+
+/* --- FOOTER --- */
+
+.hud-footer {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid var(--c-border-dim);
+  padding-top: 12px;
+  background: linear-gradient(to right, rgba(28, 25, 23, 0.8), transparent);
+}
+
+.hud-footer-block {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  font-size: 0.8rem;
+  color: var(--c-text-dim);
+}
+.hud-footer-block .hud-value {
+  color: var(--c-text-muted);
+  font-size: 0.8rem;
+}
