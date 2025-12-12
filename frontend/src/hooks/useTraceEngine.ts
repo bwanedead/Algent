@@ -104,6 +104,8 @@ const TRACE_RENDER_STYLE: Record<TraceType, TraceRenderStyle> = {
 export const useTraceEngine = (containerRef: React.RefObject<HTMLDivElement>) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const tracesRef = useRef<Trace[]>([]);
+  const pendingSpawnsRef = useRef<Trace[]>([]);
+  const isRenderingRef = useRef(false);
   const nextId = useRef(0);
   const { zoom } = useGridContext();
 
@@ -224,7 +226,11 @@ export const useTraceEngine = (containerRef: React.RefObject<HTMLDivElement>) =>
         rows: rows,
       };
 
-      tracesRef.current.push(traceRecord);
+      if (isRenderingRef.current) {
+        pendingSpawnsRef.current.push(traceRecord);
+      } else {
+        tracesRef.current.push(traceRecord);
+      }
 
       debugLog(
         `[trace] spawn ${type}#${traceRecord.id} len=${path.length - 1} hue=${Math.round(
@@ -294,6 +300,7 @@ export const useTraceEngine = (containerRef: React.RefObject<HTMLDivElement>) =>
 
       const now = Date.now();
       const activeTraces: Trace[] = [];
+      isRenderingRef.current = true;
 
       tracesRef.current.forEach((trace) => {
         const age = now - trace.startTime;
@@ -369,6 +376,15 @@ export const useTraceEngine = (containerRef: React.RefObject<HTMLDivElement>) =>
         drawTrace(ctx, trace, dist, now);
         activeTraces.push(trace);
       });
+      isRenderingRef.current = false;
+
+      if (pendingSpawnsRef.current.length > 0) {
+        debugLog(
+          `[trace] flush pending ${pendingSpawnsRef.current.length} traces`,
+        );
+        activeTraces.push(...pendingSpawnsRef.current);
+        pendingSpawnsRef.current = [];
+      }
 
       tracesRef.current = activeTraces;
       animationFrameId = requestAnimationFrame(render);
