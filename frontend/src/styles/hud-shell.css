@@ -31,8 +31,21 @@
   
   /* Flashlight mask */
   mask-image: radial-gradient(
-    circle 450px at var(--cursor-x) var(--cursor-y),
+    circle calc(var(--hud-mask-base) + var(--hud-mask-debug-radius)) at var(--cursor-x) var(--cursor-y),
     black 0%,
+    transparent 100%
+  );
+}
+
+.micro-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: var(--hud-grid-quarter) var(--hud-grid-quarter);
+  opacity: 0.2;
+  mask-image: radial-gradient(
+    circle calc(var(--hud-mask-meta) + var(--hud-mask-debug-radius)) at var(--cursor-x) var(--cursor-y),
+    black 10%,
     transparent 100%
   );
 }
@@ -47,7 +60,7 @@
   
   /* Secondary wider flashlight */
   mask-image: radial-gradient(
-    circle 800px at var(--cursor-x) var(--cursor-y),
+    circle calc(var(--hud-mask-meta) + var(--hud-mask-debug-radius)) at var(--cursor-x) var(--cursor-y),
     black 20%,
     transparent 80%
   );
@@ -57,7 +70,7 @@
 .trace-layer {
   /* Same flashlight mask as base-grid so traces only show near cursor */
   mask-image: radial-gradient(
-    circle 600px at var(--cursor-x) var(--cursor-y),
+    circle calc(var(--hud-mask-trace) + var(--hud-mask-debug-radius)) at var(--cursor-x) var(--cursor-y),
     black 20%,
     transparent 100%
   );
@@ -110,7 +123,7 @@
   border-bottom: 1px solid transparent;
   background-image: linear-gradient(to right, var(--c-border-dim) 50%, transparent 50%);
   background-position: bottom left;
-  background-size: var(--s-grid) 1px;
+  background-size: var(--hud-grid-quarter) 1px;
   background-repeat: repeat-x;
 }
 
@@ -182,7 +195,7 @@
   padding-top: calc(var(--s-grid) * 0.3);
   background-image: linear-gradient(to right, var(--c-border-dim) 50%, transparent 50%);
   background-position: top left;
-  background-size: var(--s-grid) 1px;
+  background-size: var(--hud-grid-quarter) 1px;
   background-repeat: repeat-x;
 }
 

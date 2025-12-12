@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import SettingsTray from "./components/SettingsTray";
 import GridTraceLayer from "./components/GridTraceLayer";
 import ModuleGrid from "./components/ModuleGrid";
@@ -8,6 +8,7 @@ import { ModuleDraft, ModuleShape } from "./types/modules";
 const App = () => {
   const [modules, setModules] = useState<ModuleShape[]>([]);
   const [placementMode, setPlacementMode] = useState(false);
+  const [maskDebug, setMaskDebug] = useState(false);
 
   const handleModuleCreate = (draft: ModuleDraft) => {
     setModules((prev) => [
@@ -36,6 +37,23 @@ const App = () => {
     el.style.setProperty("--cursor-y", `${e.clientY}px`);
   };
 
+  useEffect(() => {
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.altKey && event.key.toLowerCase() === "m") {
+        setMaskDebug((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.style.setProperty(
+      "--hud-mask-debug-radius",
+      maskDebug ? "2000px" : "0px",
+    );
+  }, [maskDebug]);
+
   return (
     <GridProvider>
       <div className="hud-shell" onMouseMove={handleMouseMove}>
@@ -44,6 +62,7 @@ const App = () => {
 
         {/* Global Snap Grid Layers */}
         <div className="hud-grid-layer base-grid" aria-hidden="true" />
+        <div className="hud-grid-layer micro-grid" aria-hidden="true" />
         <div className="hud-grid-layer meta-grid" aria-hidden="true" />
 
         {/* Random Pulse Traces */}

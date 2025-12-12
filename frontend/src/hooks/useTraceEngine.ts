@@ -300,6 +300,14 @@ export const useTraceEngine = (containerRef: React.RefObject<HTMLDivElement>) =>
         const dist = age * trace.speed;
         const totalPathLen = trace.maxDistance;
 
+        if (trace.type === "micro") {
+          debugLog(
+            `[render] micro tick ${trace.id} age=${age.toFixed(
+              1,
+            )} dist=${dist.toFixed(1)} total=${totalPathLen.toFixed(1)}`,
+          );
+        }
+
         if (dist >= totalPathLen && !trace.hasTriggeredComplete) {
           trace.hasTriggeredComplete = true;
           trace.completedAt = trace.completedAt ?? now;
@@ -342,6 +350,15 @@ export const useTraceEngine = (containerRef: React.RefObject<HTMLDivElement>) =>
         }
 
         const tailPos = Math.max(0, Math.min(dist, totalPathLen) - trace.tailLength);
+        if (trace.type === "micro") {
+          debugLog(
+            `[render] micro candidate ${trace.id} dist=${dist.toFixed(
+              1,
+            )} head=${Math.min(dist, totalPathLen).toFixed(1)} tailStart=${tailPos.toFixed(
+              1,
+            )} max=${totalPathLen.toFixed(1)}`,
+          );
+        }
         if (tailPos >= totalPathLen) {
           debugLog(
             `[render] skip tail>len ${trace.type}#${trace.id} tail=${tailPos} len=${totalPathLen}`,
@@ -402,6 +419,14 @@ function drawTrace(
     style.shadowAlpha,
   );
 
+  if (trace.type === "micro") {
+    debugLog(
+      `[render] micro draw start ${trace.id} head=${headPos.toFixed(2)} tail=${tailPos.toFixed(
+        2,
+      )} segments=${trace.segments.length}`,
+    );
+  }
+
   let drewSegment = false;
   let currentD = 0;
   for (let i = 0; i < trace.segments.length - 1; i++) {
@@ -449,6 +474,12 @@ function drawTrace(
 
   if (!drewSegment) {
     debugLog(`[render] no segments drawn ${trace.type}#${trace.id}`);
+  } else if (trace.type === "micro") {
+    debugLog(
+      `[render] micro segments ${trace.id} tailStart=${tailPos.toFixed(2)} head=${headPos.toFixed(
+        2,
+      )}`,
+    );
   }
 
   const { x: hx, y: hy } = getHeadCoordinates(trace, headPos);
@@ -466,6 +497,13 @@ function drawTrace(
     ) {
       debugLog(
         `[render] head offscreen ${trace.type}#${trace.id} hx=${hx} hy=${hy} canvas=${ctx.canvas.width}x${ctx.canvas.height}`,
+      );
+    }
+    if (trace.type === "micro") {
+      debugLog(
+        `[render] micro head ${trace.id} hx=${hx.toFixed(1)} hy=${hy.toFixed(
+          1,
+        )} radius=${radius.toFixed(2)} opacity=${headOpacity.toFixed(2)}`,
       );
     }
     ctx.fillStyle = hsla(
