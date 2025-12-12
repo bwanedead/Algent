@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { GRID_BASE_SIZE, GRID_SYSTEM } from "../constants/grid";
+import { useGridContext } from "../context/GridContext";
 
 type GridOrigin = { x: number; y: number };
 
@@ -16,7 +17,8 @@ export const useGridMetrics = (
 ) => {
   const cssVariable = options.cssVariable ?? "--s-grid";
   const fallback = options.fallbackSize ?? GRID_BASE_SIZE;
-  const [gridSize, setGridSize] = useState(fallback);
+  const { zoom } = useGridContext();
+  const [baseGridSize, setBaseGridSize] = useState(fallback);
   const [origin, setOrigin] = useState<GridOrigin>({ x: 0, y: 0 });
 
   const updateMetrics = useCallback(() => {
@@ -28,9 +30,9 @@ export const useGridMetrics = (
     const sizeValue = computed.getPropertyValue(cssVariable);
     const parsed = parseFloat(sizeValue || "");
     if (!Number.isNaN(parsed) && parsed > 0) {
-      setGridSize(parsed);
+      setBaseGridSize(parsed);
     } else {
-      setGridSize(fallback);
+      setBaseGridSize(fallback);
     }
 
     const shell = node.closest(".hud-shell") as HTMLElement | null;
@@ -49,6 +51,8 @@ export const useGridMetrics = (
     window.addEventListener("resize", updateMetrics);
     return () => window.removeEventListener("resize", updateMetrics);
   }, [updateMetrics]);
+
+  const gridSize = useMemo(() => baseGridSize * zoom, [baseGridSize, zoom]);
 
   const alignment: GridAlignment = useMemo(() => {
     return {

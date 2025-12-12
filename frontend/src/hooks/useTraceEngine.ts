@@ -1,11 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { GRID_SYSTEM } from "../constants/grid";
-import {
-  Point,
-  evolveColor,
-  generateTracePath,
-  getValidDirections,
-} from "../logic/trace-rules";
+import { useGridContext } from "../context/GridContext";
+import { Point, evolveColor, generateTracePath } from "../logic/trace-rules";
 
 export type TraceType = "standard" | "meta" | "micro";
 
@@ -25,6 +21,8 @@ export type Trace = {
   maxDistance: number;
   hasTriggeredComplete?: boolean;
   completedAt?: number;
+  columns: number;
+  rows: number;
 };
 
 export type TraceRenderStyle = {
@@ -39,10 +37,6 @@ export type TraceRenderStyle = {
   tailLightness: number;
 };
 
-const BASE_GRID = GRID_SYSTEM.base;
-const META_GRID = GRID_SYSTEM.meta;
-const MICRO_GRID = GRID_SYSTEM.quarter;
-
 const SPEED_STANDARD = 0.8;
 const SPEED_META = 0.18;
 const SPEED_MICRO = 0.85;
@@ -51,15 +45,25 @@ const TAIL_STANDARD = 160;
 const TAIL_META = 360;
 const TAIL_MICRO = 80;
 
+const HEAD_RADIUS_STANDARD = 1.5;
+const HEAD_RADIUS_META = 3;
+const HEAD_RADIUS_MICRO = 0.9;
+
 const HEAD_DECAY_MS = 260;
 const TAIL_FADE_MS = 800;
 
-const MICRO_MAX_LEGS = 10;
-const MICRO_SPAWN_CHANCE = 0.03;
+const MICRO_SPAWN_CHANCE = 0.08;
 const STANDARD_SPAWN_CHANCE = 0.24;
 const META_SPAWN_CHANCE = 0.08;
 const COMPLETION_BRANCH_PROBABILITY = 0.2;
 const ENABLE_TRACE_DEBUG = true;
+const BRANCH_DIRECTIONS: number[] = [0, 1, 2, 3];
+
+const debugLog = (...args: unknown[]) => {
+  if (ENABLE_TRACE_DEBUG) {
+    console.info(...args);
+  }
+};
 
 const TRACE_RENDER_STYLE: Record<TraceType, TraceRenderStyle> = {
   standard: {
@@ -85,15 +89,15 @@ const TRACE_RENDER_STYLE: Record<TraceType, TraceRenderStyle> = {
     tailLightness: 60,
   },
   micro: {
-    lineWidth: 0.75,
-    shadowBlur: 4,
-    shadowAlpha: 0.22,
-    tailMaxOpacity: 0.6,
-    headSaturation: 75,
-    headLightness: 68,
-    headAlpha: 0.55,
-    tailSaturation: 72,
-    tailLightness: 60,
+    lineWidth: 0.9,
+    shadowBlur: 5,
+    shadowAlpha: 0.25,
+    tailMaxOpacity: 0.75,
+    headSaturation: 78,
+    headLightness: 72,
+    headAlpha: 0.7,
+    tailSaturation: 74,
+    tailLightness: 66,
   },
 };
 
@@ -101,8 +105,61 @@ export const useTraceEngine = (containerRef: React.RefObject<HTMLDivElement>) =>
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const tracesRef = useRef<Trace[]>([]);
   const nextId = useRef(0);
+  const { zoom } = useGridContext();
+
+  const gridScales = useMemo(
+    () => ({
+      standard: GRID_SYSTEM.base * zoom,
+      meta: GRID_SYSTEM.meta * zoom,
+      micro: GRID_SYSTEM.quarter * zoom,
+    }),
+    [zoom],
+  );
+
+  const tailLengths = useMemo(
+    () => ({
+      standard: TAIL_STANDARD * zoom,
+      meta: TAIL_META * zoom,
+      micro: TAIL_MICRO * zoom,
+    }),
+    [zoom],
+  );
+
+  const headRadii = useMemo(
+    () => ({
+      standard: HEAD_RADIUS_STANDARD * zoom,
+      meta: HEAD_RADIUS_META * zoom,
+      micro: HEAD_RADIUS_MICRO * zoom,
+    }),
+    [zoom],
+  );
 
   useEffect(() => {
+    const resolveTraceConfig = (type: TraceType) => {
+      if (type === "meta") {
+        return {
+          gridScale: gridScales.meta,
+          speed: SPEED_META,
+          tailLength: tailLengths.meta,
+          headRadius: headRadii.meta,
+        };
+      }
+      if (type === "micro") {
+        return {
+          gridScale: gridScales.micro,
+          speed: SPEED_MICRO,
+          tailLength: tailLengths.micro,
+          headRadius: headRadii.micro,
+        };
+      }
+      return {
+        gridScale: gridScales.standard,
+        speed: SPEED_STANDARD,
+        tailLength: tailLengths.standard,
+        headRadius: headRadii.standard,
+      };
+    };
+
     const resizeCanvas = () => {
       if (containerRef.current && canvasRef.current) {
         canvasRef.current.width = containerRef.current.clientWidth;
@@ -139,10 +196,7 @@ export const useTraceEngine = (containerRef: React.RefObject<HTMLDivElement>) =>
       };
 
       const generated = generateTracePath(origin, cols, rows, null, forcedStartDir);
-      let path = generated.path;
-      if (type === "micro" && path.length > MICRO_MAX_LEGS + 1) {
-        path = path.slice(0, MICRO_MAX_LEGS + 1);
-      }
+      const path = generated.path;
 
       if (path.length < 2) {
         return;
@@ -152,7 +206,7 @@ export const useTraceEngine = (containerRef: React.RefObject<HTMLDivElement>) =>
       const totalLength = (path.length - 1) * config.gridScale;
       const duration = totalLength / config.speed + 1200;
 
-      tracesRef.current.push({
+      const traceRecord: Trace = {
         id: nextId.current++,
         segments: path,
         startTime: Date.now(),
@@ -166,30 +220,49 @@ export const useTraceEngine = (containerRef: React.RefObject<HTMLDivElement>) =>
         headRadius: config.headRadius,
         nextLegDistance: config.gridScale,
         maxDistance: totalLength,
-      });
+        columns: cols,
+        rows: rows,
+      };
 
-      if (ENABLE_TRACE_DEBUG) {
-        console.info(
-          `[trace] spawned ${type}#${nextId.current - 1} len=${path.length - 1} cells hue=${Math.round(
-            hue,
-          )} grid=${config.gridScale}px`,
-        );
-      }
+      tracesRef.current.push(traceRecord);
+
+      debugLog(
+        `[trace] spawn ${type}#${traceRecord.id} len=${path.length - 1} hue=${Math.round(
+          hue,
+        )} grid=${config.gridScale.toFixed(1)} cols=${cols} rows=${rows}`,
+      );
     };
 
     const handleTraceComplete = (
       trace: Trace,
       endPos: Point,
-      arrivalDir: number | null,
+      _arrivalDir: number | null,
     ) => {
-      if (trace.type === "micro") {
-        return;
-      }
-      const candidates = getValidDirections(arrivalDir);
-      candidates.forEach((dir) => {
+      BRANCH_DIRECTIONS.forEach((dir) => {
+        const neighbor = getNeighbor(endPos, dir);
+        if (
+          neighbor.x < 0 ||
+          neighbor.y < 0 ||
+          neighbor.x > trace.columns ||
+          neighbor.y > trace.rows
+        ) {
+          debugLog(
+            `[trace] skip child (out of bounds) type=${trace.type} parent=${trace.id} neighbor=(${neighbor.x},${neighbor.y})`,
+          );
+          return;
+        }
         if (Math.random() < COMPLETION_BRANCH_PROBABILITY) {
-          const hueSeed = shiftHue(trace.hue);
+          const hueSeed = shiftHue(trace.hue, trace.type === "micro" ? 48 : 28);
           spawnTrace(endPos, dir, hueSeed, trace.generation + 1, trace.type);
+          debugLog(
+            `[trace] child spawn type=${trace.type} parent=${trace.id} dir=${dir} hue=${Math.round(
+              hueSeed,
+            )}`,
+          );
+        } else {
+          debugLog(
+            `[trace] child roll failed type=${trace.type} parent=${trace.id} dir=${dir}`,
+          );
         }
       });
     };
@@ -249,7 +322,13 @@ export const useTraceEngine = (containerRef: React.RefObject<HTMLDivElement>) =>
               (trace.type === "standard" || trace.type === "meta") &&
               Math.random() < MICRO_SPAWN_CHANCE
             ) {
-              spawnTrace(node, dir, shiftHue(trace.hue, 12), trace.generation + 1, "micro");
+              const microHue = shiftHue(trace.hue, 48);
+              spawnTrace(node, dir, microHue, trace.generation + 1, "micro");
+              debugLog(
+                `[trace] micro spawn from ${trace.type}#${trace.id} dir=${dir} hue=${Math.round(
+                  microHue,
+                )}`,
+              );
             }
           }
           trace.nextLegDistance += trace.gridScale;
@@ -258,6 +337,15 @@ export const useTraceEngine = (containerRef: React.RefObject<HTMLDivElement>) =>
         const isFadedOut =
           trace.completedAt !== undefined && now - trace.completedAt > TAIL_FADE_MS;
         if (isFadedOut) {
+          debugLog(`[render] cull faded ${trace.type}#${trace.id}`);
+          return;
+        }
+
+        const tailPos = Math.max(0, Math.min(dist, totalPathLen) - trace.tailLength);
+        if (tailPos >= totalPathLen) {
+          debugLog(
+            `[render] skip tail>len ${trace.type}#${trace.id} tail=${tailPos} len=${totalPathLen}`,
+          );
           return;
         }
 
@@ -277,7 +365,7 @@ export const useTraceEngine = (containerRef: React.RefObject<HTMLDivElement>) =>
       clearInterval(metaLoop);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [containerRef]);
+  }, [containerRef, gridScales, headRadii, tailLengths]);
 
   return { canvasRef };
 };
@@ -314,6 +402,7 @@ function drawTrace(
     style.shadowAlpha,
   );
 
+  let drewSegment = false;
   let currentD = 0;
   for (let i = 0; i < trace.segments.length - 1; i++) {
     const p1 = trace.segments[i];
@@ -324,6 +413,7 @@ function drawTrace(
     const endOverlap = Math.min(segEnd, headPos);
 
     if (startOverlap < endOverlap) {
+      drewSegment = true;
       const f1 = (startOverlap - segStart) / gridScale;
       const f2 = (endOverlap - segStart) / gridScale;
 
@@ -357,6 +447,10 @@ function drawTrace(
     currentD += gridScale;
   }
 
+  if (!drewSegment) {
+    debugLog(`[render] no segments drawn ${trace.type}#${trace.id}`);
+  }
+
   const { x: hx, y: hy } = getHeadCoordinates(trace, headPos);
   const overrun = Math.max(0, dist - totalPathLen);
   const fade = clamp(1 - overrun / HEAD_DECAY_MS);
@@ -364,6 +458,16 @@ function drawTrace(
   const headOpacity = style.headAlpha * fade * decayFactor;
 
   if (radius > 0.05 && headOpacity > 0.01) {
+    if (
+      hx < 0 ||
+      hy < 0 ||
+      hx > ctx.canvas.width ||
+      hy > ctx.canvas.height
+    ) {
+      debugLog(
+        `[render] head offscreen ${trace.type}#${trace.id} hx=${hx} hy=${hy} canvas=${ctx.canvas.width}x${ctx.canvas.height}`,
+      );
+    }
     ctx.fillStyle = hsla(
       trace.hue,
       style.headSaturation,
@@ -375,44 +479,19 @@ function drawTrace(
     ctx.fill();
   }
 }
-
-function resolveTraceConfig(type: TraceType) {
-  if (type === "meta") {
-    return {
-      gridScale: META_GRID,
-      speed: SPEED_META,
-      tailLength: TAIL_META,
-      headRadius: 3,
-    };
-  }
-  if (type === "micro") {
-    return {
-      gridScale: MICRO_GRID,
-      speed: SPEED_MICRO,
-      tailLength: TAIL_MICRO,
-      headRadius: 0.9,
-    };
-  }
-  return {
-    gridScale: BASE_GRID,
-    speed: SPEED_STANDARD,
-    tailLength: TAIL_STANDARD,
-    headRadius: 1.5,
-  };
-}
-
 function pickHue(type: TraceType, parentHue: number | null) {
   if (type === "meta") {
     return 260 + (Math.floor(Math.random() * 14) - 7);
   }
   if (type === "micro") {
-    const base = parentHue ?? evolveColor(null);
-    return base + (Math.random() * 20 - 10);
+    const base = parentHue ?? 205;
+    const jitter = Math.random() * 20 - 10;
+    return (base + jitter + 360) % 360;
   }
   return evolveColor(parentHue);
 }
 
-function shiftHue(baseHue: number | null, variance = 18) {
+function shiftHue(baseHue: number | null, variance = 28) {
   if (baseHue === null) {
     return evolveColor(null);
   }
@@ -426,6 +505,21 @@ function deriveDirection(from: Point, to: Point): number | null {
   if (to.y > from.y) return 2;
   if (to.x < from.x) return 3;
   return null;
+}
+
+function getNeighbor(point: Point, dir: number): Point {
+  switch (dir) {
+    case 0:
+      return { x: point.x, y: point.y - 1 };
+    case 1:
+      return { x: point.x + 1, y: point.y };
+    case 2:
+      return { x: point.x, y: point.y + 1 };
+    case 3:
+      return { x: point.x - 1, y: point.y };
+    default:
+      return point;
+  }
 }
 
 function getHeadCoordinates(trace: Trace, headPos: number) {
@@ -461,3 +555,4 @@ function hsla(h: number, s: number, l: number, a: number) {
 function clamp(value: number, min = 0, max = 1) {
   return Math.min(max, Math.max(min, value));
 }
+
