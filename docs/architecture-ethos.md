@@ -1,6 +1,6 @@
-# Plattera Architectural Ethos
+# Algent Architectural Ethos
 
-This document outlines the core engineering principles and architectural philosophy governing the Plattera codebase. These rules are designed to ensure high structural soundness, scalability, and long-term maintainability as the project evolves from prototype to production desktop application.
+This document outlines the core engineering principles and architectural philosophy governing the Algent codebase. These rules are designed to ensure high structural soundness, scalability, and long-term maintainability as the project evolves from prototype to production desktop application.
 
 ---
 
