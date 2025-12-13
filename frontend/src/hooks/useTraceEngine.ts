@@ -52,12 +52,30 @@ const HEAD_RADIUS_MICRO = 0.9;
 const HEAD_DECAY_MS = 260;
 const TAIL_FADE_MS = 800;
 
-const MICRO_SPAWN_CHANCE = 0.08;
-const STANDARD_SPAWN_CHANCE = 0.24;
-const META_SPAWN_CHANCE = 0.08;
-const COMPLETION_BRANCH_PROBABILITY = 0.2;
+const MICRO_MAX_STEPS = 12;
+const MICRO_SPAWN_FROM_STANDARD = 0.02;
+const MICRO_SPAWN_FROM_META = 0.24;
+const STANDARD_SPAWN_CHANCE = 0.17;
+const META_SPAWN_CHANCE = 0.03;
+const BRANCH_PROB_STANDARD = 0.2;
+const BRANCH_PROB_META = 0.25;
+const BRANCH_PROB_MICRO = 0.1;
 const ENABLE_TRACE_DEBUG = true;
 const BRANCH_DIRECTIONS: number[] = [0, 1, 2, 3];
+
+const getBranchProbability = (type: TraceType) => {
+  if (type === "meta") return BRANCH_PROB_META;
+  if (type === "micro") return BRANCH_PROB_MICRO;
+  return BRANCH_PROB_STANDARD;
+};
+
+const toGridPoint = (point: Point, fromScale: number, toScale: number): Point => {
+  if (fromScale === toScale) return { x: point.x, y: point.y };
+  return {
+    x: Math.round((point.x * fromScale) / toScale),
+    y: Math.round((point.y * fromScale) / toScale),
+  };
+};
 
 const debugLog = (...args: unknown[]) => {
   if (ENABLE_TRACE_DEBUG) {
@@ -67,7 +85,7 @@ const debugLog = (...args: unknown[]) => {
 
 const TRACE_RENDER_STYLE: Record<TraceType, TraceRenderStyle> = {
   standard: {
-    lineWidth: 1.2,
+    lineWidth: 0.9,
     shadowBlur: 8,
     shadowAlpha: 0.35,
     tailMaxOpacity: 0.6,
@@ -144,6 +162,7 @@ export const useTraceEngine = (containerRef: React.RefObject<HTMLDivElement>) =>
           speed: SPEED_META,
           tailLength: tailLengths.meta,
           headRadius: headRadii.meta,
+          maxSteps: undefined,
         };
       }
       if (type === "micro") {
@@ -152,6 +171,7 @@ export const useTraceEngine = (containerRef: React.RefObject<HTMLDivElement>) =>
           speed: SPEED_MICRO,
           tailLength: tailLengths.micro,
           headRadius: headRadii.micro,
+          maxSteps: MICRO_MAX_STEPS,
         };
       }
       return {
@@ -159,6 +179,7 @@ export const useTraceEngine = (containerRef: React.RefObject<HTMLDivElement>) =>
         speed: SPEED_STANDARD,
         tailLength: tailLengths.standard,
         headRadius: headRadii.standard,
+        maxSteps: undefined,
       };
     };
 
@@ -197,7 +218,14 @@ export const useTraceEngine = (containerRef: React.RefObject<HTMLDivElement>) =>
         y: clamp(origin.y, 0, rows),
       };
 
-      const generated = generateTracePath(origin, cols, rows, null, forcedStartDir);
+      const generated = generateTracePath(
+        origin,
+        cols,
+        rows,
+        null,
+        forcedStartDir,
+        config.maxSteps,
+      );
       const path = generated.path;
 
       if (path.length < 2) {
@@ -244,6 +272,7 @@ export const useTraceEngine = (containerRef: React.RefObject<HTMLDivElement>) =>
       endPos: Point,
       _arrivalDir: number | null,
     ) => {
+      const branchChance = getBranchProbability(trace.type);
       BRANCH_DIRECTIONS.forEach((dir) => {
         const neighbor = getNeighbor(endPos, dir);
         if (
@@ -257,7 +286,7 @@ export const useTraceEngine = (containerRef: React.RefObject<HTMLDivElement>) =>
           );
           return;
         }
-        if (Math.random() < COMPLETION_BRANCH_PROBABILITY) {
+        if (Math.random() < branchChance) {
           const hueSeed = shiftHue(trace.hue, trace.type === "micro" ? 48 : 28);
           spawnTrace(endPos, dir, hueSeed, trace.generation + 1, trace.type);
           debugLog(
@@ -333,12 +362,17 @@ export const useTraceEngine = (containerRef: React.RefObject<HTMLDivElement>) =>
             const node = trace.segments[nodeIndex];
             const prev = trace.segments[nodeIndex - 1];
             const dir = deriveDirection(prev, node);
-            if (
-              (trace.type === "standard" || trace.type === "meta") &&
-              Math.random() < MICRO_SPAWN_CHANCE
-            ) {
+            const eligibleForMicro =
+              trace.type === "standard" || trace.type === "meta";
+            const microChance =
+              trace.type === "meta" ? MICRO_SPAWN_FROM_META : MICRO_SPAWN_FROM_STANDARD;
+            if (eligibleForMicro && Math.random() < microChance) {
               const microHue = shiftHue(trace.hue, 48);
-              spawnTrace(node, dir, microHue, trace.generation + 1, "micro");
+              const microOrigin =
+                trace.gridScale === gridScales.micro
+                  ? node
+                  : toGridPoint(node, trace.gridScale, gridScales.micro);
+              spawnTrace(microOrigin, dir, microHue, trace.generation + 1, "micro");
               debugLog(
                 `[trace] micro spawn from ${trace.type}#${trace.id} dir=${dir} hue=${Math.round(
                   microHue,

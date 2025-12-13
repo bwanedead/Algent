@@ -38,11 +38,12 @@ export const evolveColor = (parentHue: number | null): number => {
  * The logic here just generates the nodes on the grid graph.
  */
 export const generateTracePath = (
-  start: Point, 
-  cols: number, 
-  rows: number, 
-  forbiddenStartDir: number | null = null, 
-  forceStartDir: number | null = null
+  start: Point,
+  cols: number,
+  rows: number,
+  forbiddenStartDir: number | null = null,
+  forceStartDir: number | null = null,
+  maxStepsOverride?: number,
 ): { path: Point[]; lastDir: number | null } => {
   
   let { x: cx, y: cy } = start;
@@ -50,7 +51,7 @@ export const generateTracePath = (
   cy = Math.max(0, Math.min(rows, cy));
 
   const path = [{ x: cx, y: cy }];
-  const steps = Math.floor(Math.random() * 30) + 1;
+  const stepsLimit = maxStepsOverride ?? Math.floor(Math.random() * 30) + 1;
   
   let currentDir: number | null = forceStartDir; 
 
@@ -70,7 +71,7 @@ export const generateTracePath = (
   }
 
   // Random Walk
-  for (let i = (forceStartDir !== null ? 1 : 0); i < steps; i++) {
+  for (let i = forceStartDir !== null ? 1 : 0; i < stepsLimit; i++) {
     const validMoves = [0, 1, 2, 3].filter(dir => {
         if (currentDir !== null && dir === (currentDir + 2) % 4) return false;
         switch (dir) {
