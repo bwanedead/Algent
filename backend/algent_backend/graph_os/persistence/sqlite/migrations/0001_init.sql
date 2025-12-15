@@ -1,0 +1,1 @@
+-- Workspace graph init schema placeholder.
