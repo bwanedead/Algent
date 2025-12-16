@@ -16,8 +16,9 @@ class SnapshotStore:
 
     def save(self, snapshot: Snapshot) -> None:
         payload = {
-            "workspace_id": snapshot.workspace_id.value.hex,
+            "workspace_id": snapshot.workspace_id.value,
             "node_count": len(snapshot.nodes),
             "edge_count": len(snapshot.edges),
+            "graph_version": snapshot.graph_version,
         }
         self.path.write_text(json.dumps(payload), encoding="utf-8")

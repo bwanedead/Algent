@@ -5,8 +5,8 @@ from __future__ import annotations
 
 from typing import List
 
-from ..primitives.node import Node
 from ..primitives.edge import Edge
+from ..primitives.node import Node
 from .registry import VocabularyRegistry
 
 
@@ -23,7 +23,4 @@ def validate_edge(edge: Edge, vocab: VocabularyRegistry) -> List[str]:
     definition = vocab.edge_types.get(edge.edge_type)
     if not definition:
         errors.append(f"unknown edge type '{edge.edge_type}'")
-        return errors
-    if edge.src.value.hex not in vocab.node_kinds:
-        errors.append("edge source kind not registered")
     return errors

@@ -12,7 +12,7 @@ def validate_ops(ops: list[GraphOp]) -> List[str]:
     errors: List[str] = []
     seen_ids = set()
     for op in ops:
-        if op.op_id in seen_ids:
-            errors.append(f"duplicate op id {op.op_id}")
-        seen_ids.add(op.op_id)
+        if op.op_id.value in seen_ids:
+            errors.append(f"duplicate op id {op.op_id.value}")
+        seen_ids.add(op.op_id.value)
     return errors
