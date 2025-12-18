@@ -4,13 +4,13 @@ SQLite-backed workspace store.
 from __future__ import annotations
 
 import sqlite3
-from typing import Iterable
+from contextlib import nullcontext
 
-from ...core.primitives.snapshot import Snapshot
-from ...graphops.op_types import GraphOp
+from ...core.commit import Commit
+from ...persistence.store_interface import WorkspaceLedgerState, WorkspaceStore
 
 
-class SQLiteWorkspaceStore:
+class SQLiteWorkspaceStore(WorkspaceStore):
     def __init__(self, path: str) -> None:
         self.path = path
         self._ensure_db()
@@ -22,19 +22,11 @@ class SQLiteWorkspaceStore:
         finally:
             conn.close()
 
-    def load_snapshot(self, workspace_id: str) -> Snapshot:
+    def load_state(self, workspace_id: str) -> WorkspaceLedgerState:
         raise NotImplementedError
 
-    def append_ops(self, workspace_id: str, ops: Iterable[GraphOp]) -> None:
-        conn = sqlite3.connect(self.path)
-        try:
-            conn.executemany(
-                "INSERT INTO ops(workspace_id, op) VALUES (?, ?)",
-                [(workspace_id, b"") for _ in ops],
-            )
-            conn.commit()
-        finally:
-            conn.close()
+    def append_commit(self, commit: Commit) -> None:
+        raise NotImplementedError
 
-    def iter_ops(self, workspace_id: str) -> Iterable[GraphOp]:
-        return []
+    def workspace_lock(self, workspace_id: str):
+        return nullcontext()

@@ -22,3 +22,15 @@ class VersionMismatchError(GraphOSError):
         super().__init__(f"expected graph version {expected}, found {actual}")
         self.expected = expected
         self.actual = actual
+
+
+class CommitIntegrityError(GraphOSError):
+    """Raised when commit hash chain or sequencing fails."""
+
+    pass
+
+
+class WorkspaceLockError(GraphOSError):
+    """Raised when workspace lock acquisition fails."""
+
+    pass

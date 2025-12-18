@@ -83,3 +83,19 @@ class OpId:
 
     def __str__(self) -> str:
         return self.value
+
+
+@dataclass(frozen=True)
+class CommitId:
+    value: str
+
+    @staticmethod
+    def new() -> "CommitId":
+        return CommitId(uuid4().hex)
+
+    @staticmethod
+    def from_str(value: str) -> "CommitId":
+        return CommitId(_normalize_uuid(value))
+
+    def __str__(self) -> str:
+        return self.value
