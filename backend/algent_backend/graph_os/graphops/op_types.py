@@ -163,6 +163,12 @@ class SetLayout(GraphOp):
 
     op_type: ClassVar[str] = "set_layout"
 
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "x", float(self.x))
+        object.__setattr__(self, "y", float(self.y))
+        object.__setattr__(self, "width", float(self.width))
+        object.__setattr__(self, "height", float(self.height))
+
     def payload(self) -> Dict[str, Any]:
         payload: Dict[str, Any] = {
             "node_id": self.node_id.value,
