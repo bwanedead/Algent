@@ -12,6 +12,7 @@ from ..core.primitives.snapshot import Snapshot
 from ..graphops.op_apply import apply_ops
 from ..graphops.op_types import GraphOp
 from ..graphops.op_validate import validate_ops
+from ..core.vocab.registry import get_registry
 from ..persistence.store_interface import WorkspaceLedgerState, WorkspaceStore
 
 
@@ -24,7 +25,7 @@ class GraphOSService:
 
     def dry_run_ops(self, workspace_id: str, ops: Iterable[GraphOp]) -> Snapshot:
         state = self.store.load_state(workspace_id)
-        op_list = self._prepare_ops(ops, state.seen_op_ids)
+        op_list = self._prepare_ops(ops, state.seen_op_ids, state.snapshot)
         return apply_ops(state.snapshot, op_list)
 
     def commit_ops(
@@ -38,7 +39,7 @@ class GraphOSService:
     ) -> Snapshot:
         with self.store.workspace_lock(workspace_id):
             state = self.store.load_state(workspace_id)
-            op_list = self._prepare_ops(ops, state.seen_op_ids)
+            op_list = self._prepare_ops(ops, state.seen_op_ids, state.snapshot)
             next_snapshot = apply_ops(state.snapshot, op_list)
             commit = build_commit(
                 workspace_id=state.workspace_id,
@@ -54,9 +55,14 @@ class GraphOSService:
             self.store.append_commit(commit)
             return next_snapshot
 
-    def _prepare_ops(self, ops: Iterable[GraphOp], seen_op_ids: set[str]) -> List[GraphOp]:
+    def _prepare_ops(
+        self,
+        ops: Iterable[GraphOp],
+        seen_op_ids: set[str],
+        snapshot: Snapshot,
+    ) -> List[GraphOp]:
         op_list = list(ops)
-        errors = validate_ops(op_list)
+        errors = validate_ops(op_list, snapshot=snapshot, vocab=get_registry())
         duplicates = sorted({op.op_id.value for op in op_list if op.op_id.value in seen_op_ids})
         if duplicates:
             errors.append(f"duplicate op ids already committed: {', '.join(duplicates)}")

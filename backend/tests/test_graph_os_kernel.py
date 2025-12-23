@@ -23,6 +23,7 @@ from algent_backend.graph_os.graphops.op_types import (
     SetLayout,
     SetNodeProps,
 )
+from algent_backend.labs.algo_lab.run_protocols import canonical_json
 from algent_backend.graph_os.integration.agent_tools.graph_os_tools import (
     apply_graph_ops_tool,
 )
@@ -49,6 +50,8 @@ def _seed_ops() -> tuple[list[GraphOp], NodeId, NodeId]:
     run_node = NodeId.new()
     chart_node = NodeId.new()
     edge = EdgeId.new()
+    params_json = canonical_json({"algorithm": "bubble_sort", "seed": 7})
+    metric_json = canonical_json({"points": [{"index": 0, "value": 1}]})
     ops: list[GraphOp] = [
         CreateNode(
             op_id=OpId.new(),
@@ -56,8 +59,16 @@ def _seed_ops() -> tuple[list[GraphOp], NodeId, NodeId]:
             expected_version=0,
             timestamp=_ts(0),
             node_id=run_node,
-            kind="lab.run",
-            props={"status": "running"},
+            kind="lab.algo.run",
+            props={
+                "title": "bubble_sort seed=7",
+                "algo_name": "bubble_sort",
+                "params": params_json,
+                "seed": 7,
+                "status": "success",
+                "started_at_utc": _ts(0).isoformat().replace("+00:00", "Z"),
+                "ended_at_utc": _ts(1).isoformat().replace("+00:00", "Z"),
+            },
         ),
         CreateNode(
             op_id=OpId.new(),
@@ -65,8 +76,14 @@ def _seed_ops() -> tuple[list[GraphOp], NodeId, NodeId]:
             expected_version=1,
             timestamp=_ts(1),
             node_id=chart_node,
-            kind="artifact.chart",
-            props={"title": "Accuracy"},
+            kind="lab.algo.artifact.metrics_timeseries",
+            props={
+                "title": "accuracy series",
+                "metric_name": "accuracy",
+                "data": metric_json,
+                "derived": True,
+                "source_run_id": run_node.value,
+            },
         ),
         CreateEdge(
             op_id=OpId.new(),
@@ -77,7 +94,7 @@ def _seed_ops() -> tuple[list[GraphOp], NodeId, NodeId]:
             edge_type="produces",
             src=run_node,
             dst=chart_node,
-            props={"confidence": 0.74},
+            props={},
         ),
         SetNodeProps(
             op_id=OpId.new(),
@@ -85,7 +102,7 @@ def _seed_ops() -> tuple[list[GraphOp], NodeId, NodeId]:
             expected_version=3,
             timestamp=_ts(3),
             node_id=run_node,
-            props={"status": "completed"},
+            props={"status": "success"},
         ),
         SetLayout(
             op_id=OpId.new(),
@@ -114,7 +131,7 @@ def test_apply_ops_builds_snapshot() -> None:
     assert chart_node.value in result.nodes
     assert len(result.edges) == 1
     run = result.nodes[run_node.value]
-    assert run.props["status"] == "completed"
+    assert run.props["status"] == "success"
     assert run.updated_at == _ts(3)
     assert run_node.value in result.layouts
 
@@ -128,8 +145,16 @@ def test_apply_ops_requires_sequential_versions() -> None:
         expected_version=1,  # snapshot starts at version 0
         timestamp=_ts(0),
         node_id=NodeId.new(),
-        kind="lab.run",
-        props={},
+        kind="lab.algo.run",
+        props={
+            "title": "bubble_sort seed=0",
+            "algo_name": "bubble_sort",
+            "params": canonical_json({"algorithm": "bubble_sort", "seed": 0}),
+            "seed": 0,
+            "status": "success",
+            "started_at_utc": _ts(0).isoformat().replace("+00:00", "Z"),
+            "ended_at_utc": _ts(0).isoformat().replace("+00:00", "Z"),
+        },
     )
 
     with pytest.raises(VersionMismatchError):
