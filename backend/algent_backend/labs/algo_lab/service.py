@@ -23,11 +23,15 @@ class AlgoLabService:
             dataset_spec = dataset_cfg
         else:
             dataset_spec = SequenceSpec(**dataset_cfg)
+        default_metrics = SortingExperimentConfig(
+            name=payload.get("name", "adhoc-sorting"),
+            algorithm=payload["algorithm"],
+        ).metrics
         cfg = SortingExperimentConfig(
             name=payload.get("name", "adhoc-sorting"),
             algorithm=payload["algorithm"],
             dataset=dataset_spec,
-            metrics=payload.get("metrics") or SortingExperimentConfig().metrics,
+            metrics=payload.get("metrics") or default_metrics,
             collect_trace=payload.get("collect_trace", False),
             options=payload.get("options", {}),
         )

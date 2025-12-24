@@ -9,36 +9,14 @@ surface tiny and easy to reason about.
 from __future__ import annotations
 
 from dataclasses import dataclass
-import importlib.util
-from pathlib import Path
 from typing import Callable, Dict, Iterable, List
 
-
-_SORTING_MODULE = None
-
-
-def _load_sorting_module():
-    global _SORTING_MODULE
-    if _SORTING_MODULE is not None:
-        return _SORTING_MODULE
-    sorting_path = Path(__file__).with_name("algorithms") / "sorting.py"
-    spec = importlib.util.spec_from_file_location(
-        "algent_backend.labs.algo_lab._sorting",
-        sorting_path,
-    )
-    if spec is None or spec.loader is None:
-        raise ImportError(f"Could not load sorting module from {sorting_path}")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    _SORTING_MODULE = module
-    return module
-
-
-_sorting = _load_sorting_module()
-SortingOptions = _sorting.SortingOptions
-SortingResult = _sorting.SortingResult
-run_sorting_algorithm = _sorting.run_sorting_algorithm
-sorting_algorithms = _sorting.sorting_algorithms
+from .sorting import (
+    SortingOptions,
+    SortingResult,
+    run_sorting_algorithm,
+    sorting_algorithms,
+)
 
 
 AlgorithmRunner = Callable[[Iterable[int], SortingOptions], SortingResult]
