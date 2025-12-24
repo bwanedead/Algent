@@ -24,6 +24,9 @@ def build_run_record_ops(
     algo_node_id: NodeId | None = None,
     experiment_node_id: NodeId | None = None,
     run_node_id: NodeId | None = None,
+    create_algo_node: bool = True,
+    create_experiment_node: bool = True,
+    create_run_node: bool = True,
 ) -> List[GraphOp]:
     if now_utc is None:
         now_utc = datetime.now(timezone.utc)
@@ -39,6 +42,7 @@ def build_run_record_ops(
 
     if algo_node_id is None:
         algo_node_id = NodeId.new()
+    if create_algo_node:
         ops.append(
             CreateNode(
                 op_id=OpId.new(),
@@ -53,6 +57,7 @@ def build_run_record_ops(
 
     if experiment_node_id is None:
         experiment_node_id = NodeId.new()
+    if create_experiment_node:
         ops.append(
             CreateNode(
                 op_id=OpId.new(),
@@ -64,22 +69,24 @@ def build_run_record_ops(
                 props=run_record.experiment.to_node_props(),
             )
         )
-        ops.append(
-            CreateEdge(
-                op_id=OpId.new(),
-                actor=actor,
-                expected_version=next_expected(),
-                timestamp=now_utc,
-                edge_id=EdgeId.new(),
-                edge_type="contains",
-                src=algo_node_id,
-                dst=experiment_node_id,
-                props={},
+        if create_algo_node:
+            ops.append(
+                CreateEdge(
+                    op_id=OpId.new(),
+                    actor=actor,
+                    expected_version=next_expected(),
+                    timestamp=now_utc,
+                    edge_id=EdgeId.new(),
+                    edge_type="contains",
+                    src=algo_node_id,
+                    dst=experiment_node_id,
+                    props={},
+                )
             )
-        )
 
     if run_node_id is None:
         run_node_id = NodeId.new()
+    if create_run_node:
         ops.append(
             CreateNode(
                 op_id=OpId.new(),
@@ -91,32 +98,34 @@ def build_run_record_ops(
                 props=run_record.run.to_node_props(),
             )
         )
-        ops.append(
-            CreateEdge(
-                op_id=OpId.new(),
-                actor=actor,
-                expected_version=next_expected(),
-                timestamp=now_utc,
-                edge_id=EdgeId.new(),
-                edge_type="contains",
-                src=algo_node_id,
-                dst=run_node_id,
-                props={},
+        if create_algo_node:
+            ops.append(
+                CreateEdge(
+                    op_id=OpId.new(),
+                    actor=actor,
+                    expected_version=next_expected(),
+                    timestamp=now_utc,
+                    edge_id=EdgeId.new(),
+                    edge_type="contains",
+                    src=algo_node_id,
+                    dst=run_node_id,
+                    props={},
+                )
             )
-        )
-        ops.append(
-            CreateEdge(
-                op_id=OpId.new(),
-                actor=actor,
-                expected_version=next_expected(),
-                timestamp=now_utc,
-                edge_id=EdgeId.new(),
-                edge_type="has_run",
-                src=experiment_node_id,
-                dst=run_node_id,
-                props={},
+        if create_experiment_node:
+            ops.append(
+                CreateEdge(
+                    op_id=OpId.new(),
+                    actor=actor,
+                    expected_version=next_expected(),
+                    timestamp=now_utc,
+                    edge_id=EdgeId.new(),
+                    edge_type="has_run",
+                    src=experiment_node_id,
+                    dst=run_node_id,
+                    props={},
+                )
             )
-        )
 
     for metric in run_record.metrics:
         metric_node_id = NodeId.new()
@@ -167,6 +176,11 @@ def build_run_record_ops_from_snapshot(
     experiment_node_id: NodeId | None = None,
     run_node_id: NodeId | None = None,
 ) -> List[GraphOp]:
+    algo_create = algo_node_id is None or algo_node_id.value not in snapshot.nodes
+    experiment_create = (
+        experiment_node_id is None or experiment_node_id.value not in snapshot.nodes
+    )
+    run_create = run_node_id is None or run_node_id.value not in snapshot.nodes
     return build_run_record_ops(
         result,
         actor=actor,
@@ -175,6 +189,9 @@ def build_run_record_ops_from_snapshot(
         algo_node_id=algo_node_id,
         experiment_node_id=experiment_node_id,
         run_node_id=run_node_id,
+        create_algo_node=algo_create,
+        create_experiment_node=experiment_create,
+        create_run_node=run_create,
     )
 
 

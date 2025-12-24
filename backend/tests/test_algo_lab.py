@@ -3,6 +3,7 @@ from algent_backend.labs.algo_lab.experiments import (
     SortingExperimentConfig,
     run_experiment,
 )
+from algent_backend.labs.algo_lab.algorithms import list_available, run
 
 
 def test_sequence_generation_with_digits():
@@ -25,3 +26,10 @@ def test_sorting_experiment_executes_and_reports_metrics():
     metric_names = {metric.name for metric in result.metrics}
     assert "latency_ms" in metric_names
     assert "is_sorted" in metric_names
+
+
+def test_algorithms_registry_runs_known_algorithm():
+    available = {descriptor.name for descriptor in list_available("sorting")}
+    assert "bubble_sort" in available
+    result = run("bubble_sort", [3, 2, 1])
+    assert result.sorted_values == [1, 2, 3]

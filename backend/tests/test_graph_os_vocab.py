@@ -116,3 +116,45 @@ def test_edge_kind_mismatch_rejected(tmp_path: Path) -> None:
 
     with pytest.raises(GraphInvariantError):
         service.commit_ops(workspace, ops, actor="tester")
+
+
+def test_edge_validation_is_order_independent(tmp_path: Path) -> None:
+    store = CommitLedgerStore(tmp_path)
+    service = GraphOSService(store)
+    workspace = WorkspaceId.new().value
+    run_id = NodeId.new()
+    artifact_id = NodeId.new()
+    ops = [
+        CreateEdge(
+            op_id=OpId.new(),
+            actor="tester",
+            expected_version=0,
+            timestamp=BASE_TS,
+            edge_id=EdgeId.new(),
+            edge_type="produces",
+            src=run_id,
+            dst=artifact_id,
+            props={},
+        ),
+        CreateNode(
+            op_id=OpId.new(),
+            actor="tester",
+            expected_version=1,
+            timestamp=BASE_TS,
+            node_id=run_id,
+            kind="lab.algo.run",
+            props=_run_props(),
+        ),
+        CreateNode(
+            op_id=OpId.new(),
+            actor="tester",
+            expected_version=2,
+            timestamp=BASE_TS,
+            node_id=artifact_id,
+            kind="lab.algo.artifact.metrics_timeseries",
+            props=_metrics_props(run_id.value),
+        ),
+    ]
+
+    snapshot = service.commit_ops(workspace, ops, actor="tester")
+    assert snapshot.edges

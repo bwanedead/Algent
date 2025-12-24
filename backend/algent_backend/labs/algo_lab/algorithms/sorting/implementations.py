@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 import time
-from typing import Callable, Dict, Iterable, List, Protocol
+from typing import Dict, Iterable, List, Protocol
 
 
 @dataclass

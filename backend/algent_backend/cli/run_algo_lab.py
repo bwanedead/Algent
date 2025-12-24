@@ -45,26 +45,36 @@ def main() -> int:
     }
     result = lab_service.run_sorting(payload)
     snapshot = graph_service.get_snapshot(workspace_id)
-    run_node_id = NodeId.new()
     ops = build_run_record_ops_from_snapshot(
         snapshot,
         result,
         actor=args.actor,
-        run_node_id=run_node_id,
     )
+    run_node_id = None
+    for op in ops:
+        if (
+            hasattr(op, "op_type")
+            and op.op_type == "create_node"
+            and getattr(op, "kind", None) == "lab.algo.run"
+        ):
+            run_node_id = op.node_id
+            break
     graph_service.commit_ops(workspace_id, ops, actor=args.actor)
     updated_snapshot = graph_service.get_snapshot(workspace_id)
     metric_nodes = [
         node
         for node in updated_snapshot.nodes.values()
         if node.kind == "lab.algo.artifact.metrics_timeseries"
-        and node.props.get("source_run_id") == run_node_id.value
+        and (run_node_id is None or node.props.get("source_run_id") == run_node_id.value)
     ]
 
     print("Workspace:", workspace_id)
     print("Store root:", store_root)
     print("Graph version:", updated_snapshot.graph_version)
-    print("Run node:", run_node_id.value)
+    if run_node_id:
+        print("Run node:", run_node_id.value)
+    else:
+        print("Run node: <unknown>")
     print("Metric artifacts:", [node.node_id.value for node in metric_nodes])
     return 0
 
