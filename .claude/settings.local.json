@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File C:Usersdawki.claudeskillsralph-servicesscriptsrun.ps1 --init algent root)",
+      "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\dawki\\\\.claude\\\\skills\\\\ralph-services\\\\scripts\\\\run.ps1\":*)",
+      "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\dawki\\\\.claude\\\\skills\\\\ralph-services\\\\scripts\\\\run.ps1\" --init .)",
+      "Bash(powershell -NoProfile -Command:*)"
+    ]
+  }
+}
