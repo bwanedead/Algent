@@ -1,6 +1,9 @@
 # Run Skeleton Contract
 
 A valid run folder MUST contain:
+- `run.json` (engine-required)
+- `control.json` (engine-required)
+- `events.ndjson` (engine-required; can start empty)
 - `PRD.md`
 - `prd.json`
 - `PROMPT.md`

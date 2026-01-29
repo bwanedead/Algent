@@ -18,6 +18,9 @@ ralph/
 ├── templates/          # All templates for creating runs
 └── runs/               # Per-run directories
     └── <run_id>/       # Individual run folder
+        ├── run.json    # Engine state (required)
+        ├── control.json # Engine control (required)
+        ├── events.ndjson # Engine events log (required; empty ok)
         ├── PRD.md      # Human-readable spec (required)
         ├── prd.json    # Atomic stories (required)
         ├── PROMPT.md   # Loop prompt (required)
@@ -49,6 +52,9 @@ ralph/
 | `VISION_TEMPLATE.md` | High-level intent format |
 | `LOOP_STATE_TEMPLATE.json` | Control plane state format |
 | `CONTROL_PLANE.md` | Permissions matrix by mode |
+| `RUN_JSON_TEMPLATE.json` | Engine run.json starter |
+| `CONTROL_JSON_TEMPLATE.json` | Engine control.json starter |
+| `EVENTS_NDJSON_TEMPLATE.ndjson` | Engine events.ndjson starter (empty) |
 | `RUN_CHECKLIST.md` | Pre-run validation checklist |
 | `RUN_SKELETON.md` | Required/optional files reference |
 | `RUN_SKELETON_CONTRACT.md` | Minimal valid run requirements |
@@ -64,6 +70,11 @@ YYYY-MM-DD__short-slug
 ```
 
 Example: `2026-01-23__user-auth-flow`
+
+Validation notes (engine compatibility):
+- Run IDs must not contain `/` or `\`.
+- `run.json` timestamps must be UTC ISO 8601 (e.g., `2026-01-29T21:04:33Z`).
+- JSON writes should be atomic.
 
 ## Versioning
 

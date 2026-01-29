@@ -3,7 +3,12 @@
 A Ralph run folder MUST be located at:
 `ralph/runs/<run_id>/`
 
+Run ids must not contain `/` or `\`.
+
 It MUST contain:
+- `run.json` (engine-required)
+- `control.json` (engine-required)
+- `events.ndjson` (engine-required; can start empty)
 - `PRD.md`
 - `prd.json`
 - `PROMPT.md`

@@ -21,12 +21,14 @@ Before writing any run artifacts, read:
 7. `ralph/templates/PRD_JSON_SCHEMA.md` + `ralph/templates/PRD_JSON_TEMPLATE.json` (story list format)
 8. `ralph/templates/PROMPT_TEMPLATE.md` (what the loop will repeatedly receive)
 9. `ralph/templates/SUMMARY_TEMPLATE.md` (human-readable per-story run debrief)
+10. `ralph/templates/RUN_JSON_TEMPLATE.json` + `ralph/templates/CONTROL_JSON_TEMPLATE.json` (engine-required files)
 
 ---
 
 ## Step 1 — Choose run-id and create the folder
 
 - Pick a run id: `YYYY-MM-DD__short-slug`
+- Run ids must not contain `/` or `\`
 - Create:
   `ralph/runs/<run_id>/`
 
@@ -35,6 +37,9 @@ Before writing any run artifacts, read:
 ## Step 2 — Create required files (Run Skeleton Contract)
 
 A valid run folder MUST contain:
+- `run.json` (engine-required; see schema below)
+- `control.json` (engine-required; see schema below)
+- `events.ndjson` (engine-required; empty file ok)
 - `PRD.md` (human-readable spec)
 - `prd.json` (atomic stories; includes `passes` fields)
 - `PROMPT.md` (the single prompt repeatedly fed to Ralph)
@@ -49,6 +54,44 @@ Optional (only if useful):
 - `steering.md` (steering notes if review triggers; optional)
 - `loop_state.json` (control plane for advanced loops; optional)
 - `VISION.md` (high-level intent for review/steering; optional)
+
+---
+
+## Step 2a — Write engine-required files first
+
+Create these before any prep files so the run is immediately engine-usable.
+Use atomic write for JSON outputs.
+
+`run.json` (from `ralph/templates/RUN_JSON_TEMPLATE.json`):
+- Set `run_id` to the run folder name.
+- Set `created_at` and `updated_at` to UTC ISO 8601 (e.g., `2026-01-29T21:04:33Z`).
+- Set `max_iterations` to an actual integer for the run (do not leave placeholders).
+
+Minimum schema:
+```
+{
+  "run_id": "<run_id>",
+  "status": "pending",
+  "iteration": 0,
+  "max_iterations": <int>,
+  "created_at": "<ISO8601 UTC>",
+  "updated_at": "<ISO8601 UTC>",
+  "error": null
+}
+```
+
+`control.json` (from `ralph/templates/CONTROL_JSON_TEMPLATE.json`, minimum schema):
+```
+{
+  "pause": false,
+  "stop": false,
+  "skip": false,
+  "review": false
+}
+```
+
+`events.ndjson`:
+- Copy from `ralph/templates/EVENTS_NDJSON_TEMPLATE.ndjson` (empty file ok). Engine will append.
 
 ---
 
@@ -155,7 +198,8 @@ Start from:
 ## Step 11 — Final validation (before handing to Ralph)
 
 Confirm:
-- Run folder contains required files (PRD.md, prd.json, PROMPT.md, progress.md)
+- Run folder contains required files (run.json, control.json, events.ndjson, PRD.md, prd.json, PROMPT.md, progress.md)
+- run.json has status "pending" and UTC ISO 8601 timestamps
 - `SUMMARY.md` exists (recommended) so the loop can append per-story debrief entries
 - `transcripts/` exists (recommended) for per-iteration logs
 - If `loop_state.json` exists, it is valid JSON and follows `CONTROL_PLANE.md`
@@ -165,3 +209,6 @@ Confirm:
 - PROMPT references the correct run folder paths and includes the completion promise tag
 
 If any check fails, fix before the run starts.
+
+Optional validation:
+- `ralph-engine list <project_path>` shows the new run with status pending

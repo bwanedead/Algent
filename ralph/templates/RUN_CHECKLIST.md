@@ -23,6 +23,9 @@ Read and understand:
 
 ## Populate required files
 
+- [ ] `run.json` created (engine-required; pending status)
+- [ ] `control.json` created (engine-required; all false)
+- [ ] `events.ndjson` created (engine-required; empty ok)
 - [ ] `PRD.md` created (from PRD_TEMPLATE.md)
 - [ ] `prd.json` created (from PRD_JSON_TEMPLATE.json)
 - [ ] `PROMPT.md` created (from PROMPT_TEMPLATE.md)
@@ -39,6 +42,7 @@ Read and understand:
 - [ ] Stories are XS/S and each is one-iteration doable
 - [ ] Acceptance criteria are objective & verifiable
 - [ ] Story order respects dependencies
+- [ ] run.json has status "pending" and UTC ISO 8601 timestamps
 - [ ] Repo guardrails in `CLAUDE.md` (or equivalent) are in place
 - [ ] `transcripts/` exists and `iter-0001.md` will be written after iteration 1
 - [ ] If `loop_state.json` exists, worker does not edit it

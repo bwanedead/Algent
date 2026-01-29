@@ -6,6 +6,10 @@ A run must be compatible with:
 - Max iterations may stop early: design stories so each is small and ordered.
 
 Therefore:
+- Run folder must include `run.json`, `control.json`, and `events.ndjson` so ralph-engine can list the run.
+- `run.json` must include UTC ISO 8601 timestamps.
+- Use atomic writes for JSON outputs.
+- Run ids must not contain `/` or `\`.
 - `PROMPT.md` must instruct selection by `"passes": false`.
 - `prd.json` must contain `passes` booleans.
 - Acceptance criteria must be testable without human judgment.
