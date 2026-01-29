@@ -1,0 +1,14 @@
+# Handle line endings automatically for all text files
+* text=auto
+
+# Ensure common text files use LF in the repository
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.ndjson text eol=lf
+*.css text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.txt text eol=lf
+*.sh text eol=lf
+*.sql text eol=lf
