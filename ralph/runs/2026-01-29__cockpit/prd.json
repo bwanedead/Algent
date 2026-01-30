@@ -1,0 +1,146 @@
+{
+  "run_id": "2026-01-29__cockpit",
+  "title": "Ralph Cockpit UI in Algent",
+  "repo_context": "Algent is a React + Vite UI with a Tauri wrapper; cockpit must be local-only and file-contract driven.",
+  "global_verification": [],
+  "loop_settings": {
+    "review_every_n_iterations": 4,
+    "steer_every_n_iterations": 8
+  },
+  "stories": [
+    {
+      "id": "S1",
+      "title": "Add Cockpit entry point and view switch",
+      "size": "XS",
+      "passes": false,
+      "acceptance_criteria": [
+        "A cockpit button/link labeled \"Cockpit\" or \"Ralph Cockpit\" appears on the home view",
+        "Clicking the cockpit entry point renders a cockpit view with a clear heading",
+        "There is a way to return to the original home view without a full reload"
+      ],
+      "verification_commands": [],
+      "depends_on": [],
+      "files_expected": [
+        "frontend/src/App.tsx",
+        "frontend/src/styles/index.css"
+      ],
+      "notes": "Keep changes minimal; no full routing refactor."
+    },
+    {
+      "id": "S2",
+      "title": "Cockpit page skeleton layout",
+      "size": "S",
+      "passes": false,
+      "acceptance_criteria": [
+        "A dedicated cockpit component renders a sidebar, main detail panel, and control/events area placeholders",
+        "Cockpit layout uses existing HUD style tokens (colors/spacing/typography)"
+      ],
+      "verification_commands": [],
+      "depends_on": ["S1"],
+      "files_expected": [
+        "frontend/src/components/Cockpit/CockpitPage.tsx",
+        "frontend/src/styles/cockpit.css"
+      ],
+      "notes": "Keep the layout calm and operator-focused."
+    },
+    {
+      "id": "S3",
+      "title": "Cockpit data client interface with mock provider",
+      "size": "S",
+      "passes": false,
+      "acceptance_criteria": [
+        "A typed client module exposes functions for listing repos, listing runs, reading run artifacts, and writing control signals",
+        "Cockpit consumes this client and renders mock run data in the UI"
+      ],
+      "verification_commands": [],
+      "depends_on": ["S2"],
+      "files_expected": [
+        "frontend/src/client/cockpitClient.ts",
+        "frontend/src/types/cockpit.ts"
+      ],
+      "notes": "Keep mock data aligned with Ralph file contracts."
+    },
+    {
+      "id": "S4",
+      "title": "Repo selection and run list UI",
+      "size": "S",
+      "passes": false,
+      "acceptance_criteria": [
+        "User can select a repo from the cockpit sidebar",
+        "Run list updates when a repo is selected",
+        "Selected run is visibly highlighted and stored in state"
+      ],
+      "verification_commands": [],
+      "depends_on": ["S3"],
+      "files_expected": [
+        "frontend/src/components/Cockpit/CockpitPage.tsx"
+      ],
+      "notes": "No filesystem access yet; use client data."
+    },
+    {
+      "id": "S5",
+      "title": "Run detail panels for state and docs",
+      "size": "S",
+      "passes": false,
+      "acceptance_criteria": [
+        "Run state panel displays fields from mock run.json (status, phase, iteration, timestamps)",
+        "Docs panel renders PRD/progress text and story list from mock prd.json"
+      ],
+      "verification_commands": [],
+      "depends_on": ["S4"],
+      "files_expected": [
+        "frontend/src/components/Cockpit/CockpitPage.tsx"
+      ],
+      "notes": "Handle missing fields with clear placeholders."
+    },
+    {
+      "id": "S6",
+      "title": "Control panel wiring to control.json client",
+      "size": "S",
+      "passes": false,
+      "acceptance_criteria": [
+        "Control panel displays current control flags (pause/stop/skip/review)",
+        "Toggle and one-shot actions call the client update method and reflect state updates"
+      ],
+      "verification_commands": [],
+      "depends_on": ["S5"],
+      "files_expected": [
+        "frontend/src/components/Cockpit/ControlPanel.tsx"
+      ],
+      "notes": "One-shot actions must reset after simulated consume."
+    },
+    {
+      "id": "S7",
+      "title": "Events tail viewer",
+      "size": "S",
+      "passes": false,
+      "acceptance_criteria": [
+        "Events panel shows the most recent lines from mock events.ndjson",
+        "User can refresh or auto-follow to see new lines"
+      ],
+      "verification_commands": [],
+      "depends_on": ["S5"],
+      "files_expected": [
+        "frontend/src/components/Cockpit/EventsPanel.tsx"
+      ],
+      "notes": "Keep the list performant (limit to recent N lines)."
+    },
+    {
+      "id": "S8",
+      "title": "Engine launch panel and command generator",
+      "size": "S",
+      "passes": false,
+      "acceptance_criteria": [
+        "Panel allows choosing driver and git isolation toggle",
+        "Generated command includes run id and engine path",
+        "Command string is displayed clearly for copy/paste"
+      ],
+      "verification_commands": [],
+      "depends_on": ["S6", "S7"],
+      "files_expected": [
+        "frontend/src/components/Cockpit/LaunchPanel.tsx"
+      ],
+      "notes": "Use `C:\\\\projects\\\\ralph-engine` as the default engine path."
+    }
+  ]
+}
