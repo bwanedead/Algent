@@ -84,9 +84,11 @@ Minimum schema:
 ```
 {
   "pause": false,
-  "stop": false,
-  "skip": false,
-  "review": false
+  "stop_soft": false,
+  "stop_hard": false,
+  "skip_iteration": false,
+  "review_now": false,
+  "review_next": false
 }
 ```
 
