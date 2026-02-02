@@ -1,5 +1,5 @@
 {
-  "run_id": "2026-01-29__cockpit",
+  "run_id": "2026-01-29__cockpit-2",
   "title": "Ralph Cockpit UI in Algent",
   "repo_context": "Algent is a React + Vite UI with a Tauri wrapper; cockpit must be local-only and file-contract driven.",
   "global_verification": [],
@@ -99,15 +99,15 @@
       "size": "S",
       "passes": false,
       "acceptance_criteria": [
-        "Control panel displays current control flags (pause/stop/skip/review)",
-        "Toggle and one-shot actions call the client update method and reflect state updates"
+        "Control panel displays current control flags (pause, stop_soft, stop_hard, skip_iteration, review_now, review_next)",
+        "Toggle and one-shot actions call the client update method and reflect state updates for the same fields"
       ],
       "verification_commands": [],
       "depends_on": ["S5"],
       "files_expected": [
         "frontend/src/components/Cockpit/ControlPanel.tsx"
       ],
-      "notes": "One-shot actions must reset after simulated consume."
+      "notes": "One-shot actions (skip_iteration, review_now, review_next) must reset after simulated consume."
     },
     {
       "id": "S7",
