@@ -9,6 +9,9 @@ A valid run folder MUST contain:
 - `PROMPT.md`
 - `progress.md`
 
+Project-level requirement for harness drivers (claude_code, codex_cli, shell):
+- `ralph/config.json` must exist and include `driver.name`, `driver.worker_cmd`, and `driver.reviewer_cmd` (see `ralph/templates/CONFIG_JSON_TEMPLATE.json`).
+
 Recommended:
 - `SUMMARY.md` (human-readable debrief, one entry per story)
 - `notes.md` (brainstorm dump)

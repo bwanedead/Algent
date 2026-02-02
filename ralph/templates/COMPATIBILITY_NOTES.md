@@ -7,6 +7,7 @@ A run must be compatible with:
 
 Therefore:
 - Run folder must include `run.json`, `control.json`, and `events.ndjson` so ralph-engine can list the run.
+- Project must include `ralph/config.json` for harness drivers (claude_code, codex_cli, shell). It must define `driver.name`, `driver.worker_cmd`, and `driver.reviewer_cmd`.
 - `run.json` must include UTC ISO 8601 timestamps.
 - Use atomic writes for JSON outputs.
 - Run ids must not contain `/` or `\`.

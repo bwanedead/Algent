@@ -14,6 +14,9 @@ It MUST contain:
 - `PROMPT.md`
 - `progress.md`
 
+Project-level requirement for harness drivers (claude_code, codex_cli, shell):
+- `ralph/config.json` must exist and include `driver.name`, `driver.worker_cmd`, and `driver.reviewer_cmd` (see `ralph/templates/CONFIG_JSON_TEMPLATE.json`).
+
 Only the items under "It MUST contain" are required for a Ralph-ready run.
 
 Recommended:
