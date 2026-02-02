@@ -1,5 +1,5 @@
 {
-  "run_id": "2026-01-29__cockpit-2",
+  "run_id": "2026-01-29__cockpit-3",
   "title": "Ralph Cockpit UI in Algent",
   "repo_context": "Algent is a React + Vite UI with a Tauri wrapper; cockpit must be local-only and file-contract driven.",
   "global_verification": [],

@@ -1,4 +1,4 @@
-# PROMPT.md — Ralph Run: 2026-01-29__cockpit-2
+# PROMPT.md — Ralph Run: 2026-01-29__cockpit-3
 
 You are an autonomous coding agent working in this repository under a Ralph loop.
 
@@ -8,8 +8,8 @@ IMPORTANT: This exact prompt will be re-run repeatedly each iteration. You must 
 1. Read `AGENTS.md` (repo guidelines) and obey it.
 2. Read any repo-wide ethos/vision docs relevant to this change scope.
 3. Read `ralph/templates/HOW_RALPH_WORKS.md` (understand the loop mechanics).
-4. Read `ralph/runs/2026-01-29__cockpit-2/PRD.md`
-5. Read `ralph/runs/2026-01-29__cockpit-2/prd.json`
+4. Read `ralph/runs/2026-01-29__cockpit-3/PRD.md`
+5. Read `ralph/runs/2026-01-29__cockpit-3/prd.json`
 6. Read any `agents.md` files in directories you touch.
 
 ## Mission (loop behavior)
@@ -23,8 +23,8 @@ Each iteration:
 
 ## Deterministic iteration number (required)
 The loop tool may not provide the iteration number. Compute it from repo state:
-- Preferred: count files in `ralph/runs/2026-01-29__cockpit-2/transcripts/` and add 1.
-- Fallback: count existing `- Iteration:` entries in `ralph/runs/2026-01-29__cockpit-2/progress.md` and add 1.
+- Preferred: count files in `ralph/runs/2026-01-29__cockpit-3/transcripts/` and add 1.
+- Fallback: count existing `- Iteration:` entries in `ralph/runs/2026-01-29__cockpit-3/progress.md` and add 1.
 - Use that value everywhere an iteration number is required.
 
 ## Story completion count (required for cadence)
@@ -35,7 +35,7 @@ Define "story count" as the number of stories whose `passes` flipped `false → 
 ## Per-iteration procedure (do this in order)
 For the selected story:
 1. Compute the deterministic iteration number (see above).
-2. Ensure `ralph/runs/2026-01-29__cockpit-2/transcripts/` exists.
+2. Ensure `ralph/runs/2026-01-29__cockpit-3/transcripts/` exists.
 3. Implement the change with minimal scope.
 4. Sanity check (before verification and before marking the story done):
    - Confirm scope stayed within this story (no "and also").
@@ -44,14 +44,14 @@ For the selected story:
    - Confirm anything that must be durable is persisted (not left only in ephemeral state).
 5. Add/update tests and/or verification commands so acceptance criteria are objectively verifiable.
 6. Run relevant checks when feasible (e.g., `pytest` for Python, `npm test` for JS/TS).
-7. If repo rules allow, commit with: `Ralph 2026-01-29__cockpit-2: <story id> <story title>`. If not allowed, skip and note in `progress.md`.
-8. Update `ralph/runs/2026-01-29__cockpit-2/prd.json`:
+7. If repo rules allow, commit with: `Ralph 2026-01-29__cockpit-3: <story id> <story title>`. If not allowed, skip and note in `progress.md`.
+8. Update `ralph/runs/2026-01-29__cockpit-3/prd.json`:
    - set that story `"passes": true` ONLY if acceptance criteria are satisfied
-9. Append to `ralph/runs/2026-01-29__cockpit-2/progress.md` (format below)
-10. Append to `ralph/runs/2026-01-29__cockpit-2/SUMMARY.md` (format below)
+9. Append to `ralph/runs/2026-01-29__cockpit-3/progress.md` (format below)
+10. Append to `ralph/runs/2026-01-29__cockpit-3/SUMMARY.md` (format below)
 11. Write a transcript for this iteration:
     - Use `ralph/templates/TRANSCRIPT_TEMPLATE.md`
-    - Save to `ralph/runs/2026-01-29__cockpit-2/transcripts/iter-XXXX.md` (zero-padded, 4 digits)
+    - Save to `ralph/runs/2026-01-29__cockpit-3/transcripts/iter-XXXX.md` (zero-padded, 4 digits)
     - Include commands run + key outputs, failures/fixes, and any artifacts paths
 12. (Optional) Consider local `agents.md` enrichment:
     - For each directory you edited, check if a local `agents.md` exists
@@ -70,9 +70,9 @@ If `prd.json.global_verification` exists:
 
 ## Review + steering cadence (scaffold only)
 If `loop_settings.review_every_n_iterations` is set and the current iteration triggers:
-- Perform a short review pass using `ralph/templates/REVIEW_TEMPLATE.md` and write to `ralph/runs/2026-01-29__cockpit-2/review.md` (overwrite is fine).
+- Perform a short review pass using `ralph/templates/REVIEW_TEMPLATE.md` and write to `ralph/runs/2026-01-29__cockpit-3/review.md` (overwrite is fine).
 - Only pause story shipping if the review indicates drift or risk; otherwise continue with the normal story workflow.
-- If review says "off course," write steering guidance using `ralph/templates/STEERING_TEMPLATE.md` to `ralph/runs/2026-01-29__cockpit-2/steering.md` (overwrite is fine) and keep scope tiny.
+- If review says "off course," write steering guidance using `ralph/templates/STEERING_TEMPLATE.md` to `ralph/runs/2026-01-29__cockpit-3/steering.md` (overwrite is fine) and keep scope tiny.
 
 ## Cadence collision priority (required)
 If multiple cadence triggers occur in the same iteration, follow this order:
@@ -82,7 +82,7 @@ If multiple cadence triggers occur in the same iteration, follow this order:
 4. Otherwise proceed with the normal story workflow.
 
 ## Loop state control plane (if present)
-If `ralph/runs/2026-01-29__cockpit-2/loop_state.json` exists, you must obey edit-permission rules in `ralph/templates/CONTROL_PLANE.md`.
+If `ralph/runs/2026-01-29__cockpit-3/loop_state.json` exists, you must obey edit-permission rules in `ralph/templates/CONTROL_PLANE.md`.
 - Worker mode: do NOT edit `loop_state.json` or restructure PRD (story split/merge/reorder).
 - Review mode: may set `steering_requested` in `loop_state.json` when review indicates drift.
 - Steering mode: may reshape PRD (small, precise edits) and must clear `steering_requested`.
