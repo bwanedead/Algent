@@ -15,6 +15,7 @@ Ralph is a structured workflow for autonomous coding agents. It breaks features 
 ```
 ralph/
 ├── README.md           # This file
+├── config.json         # Project-level driver config (required for harness drivers)
 ├── templates/          # All templates for creating runs
 └── runs/               # Per-run directories
     └── <run_id>/       # Individual run folder
@@ -34,6 +35,8 @@ ralph/
 2. Read `templates/STORY_GUIDELINES.md` to understand what makes a good story
 3. Follow `templates/RUN_CHECKLIST.md` to create a new run
 4. Use `templates/PREP_AGENT_CHECKLIST.md` for detailed prep instructions
+5. Ensure `ralph/config.json` exists (from `templates/CONFIG_JSON_TEMPLATE.json`)
+6. If the `claude` command is not on PATH for the engine process, update `ralph/config.json` to point to a concrete executable (e.g., `C:\Users\<user>\AppData\Roaming\npm\claude.cmd`)
 
 ## Templates Reference
 
@@ -54,6 +57,7 @@ ralph/
 | `CONTROL_PLANE.md` | Permissions matrix by mode |
 | `RUN_JSON_TEMPLATE.json` | Engine run.json starter |
 | `CONTROL_JSON_TEMPLATE.json` | Engine control.json starter |
+| `CONFIG_JSON_TEMPLATE.json` | Project-level driver config (required for harness drivers) |
 | `EVENTS_NDJSON_TEMPLATE.ndjson` | Engine events.ndjson starter (empty) |
 | `RUN_CHECKLIST.md` | Pre-run validation checklist |
 | `RUN_SKELETON.md` | Required/optional files reference |

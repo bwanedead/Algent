@@ -6,7 +6,8 @@
       "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\dawki\\\\.claude\\\\skills\\\\ralph-services\\\\scripts\\\\run.ps1\" --init .)",
       "Bash(powershell -NoProfile -Command:*)",
       "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File C:\\\\Users\\\\dawki\\\\.claude\\\\skills\\\\ralph-services\\\\scripts\\\\run.ps1:*)",
-      "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File:*)"
+      "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File:*)",
+      "Bash(powershell -Command \"[DateTime]::UtcNow.ToString\\(''o''\\)\")"
     ]
   }
 }

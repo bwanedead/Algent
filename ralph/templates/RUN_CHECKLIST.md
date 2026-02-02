@@ -21,6 +21,12 @@ Read and understand:
 
 - [ ] `ralph/runs/<run_id>/` created
 
+## Ensure project-level config exists
+
+- [ ] `ralph/config.json` created (from `ralph/templates/CONFIG_JSON_TEMPLATE.json`)
+- [ ] For harness drivers, `driver.worker_cmd` and `driver.reviewer_cmd` include `{task_file}` and `{output_dir}`
+- [ ] If using `claude_code` and PATH resolution fails, point to a concrete executable (e.g., `C:\Users\<user>\AppData\Roaming\npm\claude.cmd`)
+
 ## Populate required files
 
 - [ ] `run.json` created (engine-required; pending status)

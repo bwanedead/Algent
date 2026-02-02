@@ -22,6 +22,20 @@ Before writing any run artifacts, read:
 8. `ralph/templates/PROMPT_TEMPLATE.md` (what the loop will repeatedly receive)
 9. `ralph/templates/SUMMARY_TEMPLATE.md` (human-readable per-story run debrief)
 10. `ralph/templates/RUN_JSON_TEMPLATE.json` + `ralph/templates/CONTROL_JSON_TEMPLATE.json` (engine-required files)
+11. `ralph/templates/CONFIG_JSON_TEMPLATE.json` (project-level driver config)
+
+---
+
+## Step 0a — Ensure project-level config exists
+
+The engine reads driver settings from `ralph/config.json` (project-level).
+Create it once per project using:
+- `ralph/templates/CONFIG_JSON_TEMPLATE.json`
+
+For harness drivers (claude_code, codex_cli, shell), ensure:
+- `driver.worker_cmd` includes `{task_file}` and `{output_dir}`
+- `driver.reviewer_cmd` includes `{task_file}` and `{output_dir}`
+If `claude` is not on PATH for the engine process, update `ralph/config.json` to point to a concrete executable (e.g., `C:\Users\<user>\AppData\Roaming\npm\claude.cmd`).
 
 ---
 
@@ -201,6 +215,8 @@ Start from:
 
 Confirm:
 - Run folder contains required files (run.json, control.json, events.ndjson, PRD.md, prd.json, PROMPT.md, progress.md)
+- `ralph/config.json` exists and includes worker_cmd + reviewer_cmd with `{task_file}` and `{output_dir}` for harness drivers
+- If using `claude_code`, `ralph/config.json` points to a concrete executable when PATH resolution fails
 - run.json has status "pending" and UTC ISO 8601 timestamps
 - `SUMMARY.md` exists (recommended) so the loop can append per-story debrief entries
 - `transcripts/` exists (recommended) for per-iteration logs
