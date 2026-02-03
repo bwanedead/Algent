@@ -1,7 +1,7 @@
 {
   "driver": {
     "name": "claude_code",
-    "worker_cmd": "claude -p {task_file} --output-dir {output_dir}",
-    "reviewer_cmd": "claude -p {task_file} --output-dir {output_dir}"
+    "worker_cmd": "claude.cmd -p {task_file} --output-dir {output_dir}",
+    "reviewer_cmd": "claude.cmd -p {task_file} --output-dir {output_dir}"
   }
 }
