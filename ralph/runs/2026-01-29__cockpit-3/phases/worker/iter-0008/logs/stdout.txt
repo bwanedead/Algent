@@ -1,0 +1,31 @@
+All stories are passing. According to the PROMPT.md, I need to output the completion promise.
+
+## Iteration 8 Complete
+
+Story S8 (Engine launch panel and command generator) has been successfully implemented with all acceptance criteria met:
+
+### What was built
+- LaunchPanel component with driver selection dropdown (Claude Sonnet/Opus/Haiku, OpenAI GPT-4)
+- Git isolation toggle checkbox
+- Dynamic command generator that builds ralph-engine CLI invocation
+- Command display with copy-to-clipboard functionality
+- Full integration into cockpit controls section
+
+### Files changed
+- `frontend/src/components/Cockpit/LaunchPanel.tsx` (new)
+- `frontend/src/components/Cockpit/CockpitPage.tsx`
+- `frontend/src/styles/cockpit.css`
+- `ralph/runs/2026-01-29__cockpit-3/prd.json`
+- `ralph/runs/2026-01-29__cockpit-3/progress.md`
+- `ralph/runs/2026-01-29__cockpit-3/SUMMARY.md`
+- `ralph/runs/2026-01-29__cockpit-3/transcripts/iter-0008.md` (new)
+
+### Verification
+All acceptance criteria verified:
+- âœ“ Panel allows choosing driver and git isolation toggle
+- âœ“ Generated command includes run id and engine path
+- âœ“ Command string is displayed clearly for copy/paste
+
+All 8 stories in the PRD now have `passes: true`.
+
+<promise>TASK COMPLETE</promise>

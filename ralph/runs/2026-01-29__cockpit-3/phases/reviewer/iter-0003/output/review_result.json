@@ -1,0 +1,19 @@
+{
+  "decision": "continue",
+  "confidence": 0.95,
+  "message": "Story S3 successfully completed with all acceptance criteria met. Client interface and mock provider are properly implemented and integrated into the cockpit UI. No blockers identified. 5 stories remain (S4-S8), next story S4 should proceed.",
+  "stories_complete": 3,
+  "stories_remaining": 5,
+  "artifacts": [
+    "frontend/src/types/cockpit.ts",
+    "frontend/src/client/cockpitClient.ts",
+    "frontend/src/components/Cockpit/CockpitPage.tsx",
+    "frontend/src/styles/cockpit.css"
+  ],
+  "data": {
+    "iteration": 3,
+    "story_completed": "S3",
+    "next_story": "S4",
+    "blockers": []
+  }
+}

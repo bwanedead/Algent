@@ -1,0 +1,36 @@
+Perfect! I have completed all required tasks for iteration 3. Let me provide a brief summary of what was accomplished:
+
+## Summary
+
+**Iteration 3 - Story S3: Cockpit data client interface with mock provider - COMPLETE**
+
+### What was delivered:
+
+1. **Type System** (`frontend/src/types/cockpit.ts`)
+   - Complete type definitions for Ralph cockpit data structures
+   - Types include: Run, Repo, Story, PRD, ControlSignals, EventLogEntry, RunArtifacts
+
+2. **Client Interface** (`frontend/src/client/cockpitClient.ts`)
+   - CockpitClient interface with 8 methods for data operations
+   - MockCockpitClient implementation with realistic mock data
+   - Mock data includes 2 repos, 3 runs, full PRD structure, and event logs
+
+3. **UI Integration** (`frontend/src/components/Cockpit/CockpitPage.tsx`)
+   - Repo selector dropdown
+   - Run list with active highlighting
+   - Run details grid showing status, phase, iteration, and progress
+   - Story list with visual pass indicators (âœ“/â—‹)
+
+4. **Styling** (`frontend/src/styles/cockpit.css`)
+   - Styles for all new UI elements using existing HUD design tokens
+   - Clean, operator-focused aesthetic
+
+### Acceptance Criteria: âœ“ PASS
+- âœ“ Typed client module exposes all required functions
+- âœ“ Cockpit consumes client and renders mock run data in UI
+
+### Files Updated:
+- Created: `types/cockpit.ts`, `client/cockpitClient.ts`, `transcripts/iter-0003.md`, `phases/worker/iter-0003/output/worker_summary.md`
+- Modified: `CockpitPage.tsx`, `cockpit.css`, `prd.json`, `progress.md`, `SUMMARY.md`
+
+Story S3 is marked as `passes: true` in prd.json. Ready for next iteration (S4: Repo selection and run list UI).

@@ -1,9 +1,15 @@
 {
   "run_id": "2026-01-29__cockpit-3",
-  "status": "pending",
-  "iteration": 0,
-  "max_iterations": 12,
+  "status": "completed",
+  "iteration": 7,
+  "max_iterations": 10,
+  "phase": "idle",
   "created_at": "2026-01-29T17:24:00Z",
-  "updated_at": "2026-01-29T17:24:00Z",
-  "error": null
+  "updated_at": "2026-02-03T22:23:20.828141Z",
+  "started_at": "2026-02-03T00:45:48.406744Z",
+  "finished_at": "2026-02-03T22:23:20.828141Z",
+  "error": null,
+  "git_branch": "ralph/2026-01-29__cockpit-3",
+  "git_base_branch": "organic-dev",
+  "git_base_commit": "b87f19e489fc65585e8d363ac17975a0cecd59f3"
 }

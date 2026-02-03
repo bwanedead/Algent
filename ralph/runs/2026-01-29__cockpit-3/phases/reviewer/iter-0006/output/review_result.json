@@ -1,0 +1,19 @@
+{
+  "decision": "continue",
+  "confidence": 0.95,
+  "message": "Story S6 (Control panel wiring) completed successfully. Worker implemented all control signal management features: persistent toggles (pause, stop_soft, stop_hard) and one-shot actions (skip_iteration, review_now, review_next) with proper state management and auto-reset behavior. All acceptance criteria verified. Two stories remain: S7 (Events tail viewer) and S8 (Engine launch panel and command generator). Recommend continuing to S7.",
+  "stories_complete": 6,
+  "stories_remaining": 2,
+  "artifacts": [
+    "frontend/src/components/Cockpit/ControlPanel.tsx",
+    "frontend/src/components/Cockpit/CockpitPage.tsx",
+    "frontend/src/styles/cockpit.css"
+  ],
+  "data": {
+    "current_iteration": 6,
+    "current_story": "S6",
+    "next_story": "S7",
+    "blockers": "None",
+    "verification_status": "PASS"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "decision": "continue",
+  "confidence": 0.95,
+  "message": "Story S1 completed successfully with all acceptance criteria met. Worker added cockpit entry point and view switching functionality to App.tsx with appropriate styling. No blockers encountered. 7 stories remaining (S2-S8) that need to be implemented. Next story S2 will build out the cockpit layout structure.",
+  "stories_complete": 1,
+  "stories_remaining": 7,
+  "artifacts": [
+    "frontend/src/App.tsx",
+    "frontend/src/styles/index.css"
+  ],
+  "data": {
+    "completed_story_id": "S1",
+    "completed_story_title": "Add Cockpit entry point and view switch",
+    "next_story_id": "S2",
+    "next_story_title": "Cockpit page skeleton layout",
+    "iteration_number": 1
+  }
+}

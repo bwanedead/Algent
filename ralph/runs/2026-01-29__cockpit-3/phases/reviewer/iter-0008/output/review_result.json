@@ -1,0 +1,18 @@
+{
+  "decision": "stop",
+  "confidence": 1.0,
+  "message": "All 8 stories in prd.json have passes: true. Worker completed Story S8 (Engine launch panel and command generator) successfully. All acceptance criteria verified. No blockers identified. Ralph Cockpit UI run is complete.",
+  "stories_complete": 8,
+  "stories_remaining": 0,
+  "artifacts": [
+    "frontend/src/App.tsx",
+    "frontend/src/styles/index.css",
+    "frontend/src/components/Cockpit/CockpitPage.tsx",
+    "frontend/src/styles/cockpit.css",
+    "frontend/src/types/cockpit.ts",
+    "frontend/src/client/cockpitClient.ts",
+    "frontend/src/components/Cockpit/ControlPanel.tsx",
+    "frontend/src/components/Cockpit/EventsPanel.tsx",
+    "frontend/src/components/Cockpit/LaunchPanel.tsx"
+  ]
+}

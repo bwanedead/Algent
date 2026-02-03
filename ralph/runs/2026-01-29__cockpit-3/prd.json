@@ -12,7 +12,7 @@
       "id": "S1",
       "title": "Add Cockpit entry point and view switch",
       "size": "XS",
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "A cockpit button/link labeled \"Cockpit\" or \"Ralph Cockpit\" appears on the home view",
         "Clicking the cockpit entry point renders a cockpit view with a clear heading",
@@ -30,7 +30,7 @@
       "id": "S2",
       "title": "Cockpit page skeleton layout",
       "size": "S",
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "A dedicated cockpit component renders a sidebar, main detail panel, and control/events area placeholders",
         "Cockpit layout uses existing HUD style tokens (colors/spacing/typography)"
@@ -47,7 +47,7 @@
       "id": "S3",
       "title": "Cockpit data client interface with mock provider",
       "size": "S",
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "A typed client module exposes functions for listing repos, listing runs, reading run artifacts, and writing control signals",
         "Cockpit consumes this client and renders mock run data in the UI"
@@ -64,7 +64,7 @@
       "id": "S4",
       "title": "Repo selection and run list UI",
       "size": "S",
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "User can select a repo from the cockpit sidebar",
         "Run list updates when a repo is selected",
@@ -81,7 +81,7 @@
       "id": "S5",
       "title": "Run detail panels for state and docs",
       "size": "S",
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "Run state panel displays fields from mock run.json (status, phase, iteration, timestamps)",
         "Docs panel renders PRD/progress text and story list from mock prd.json"
@@ -97,7 +97,7 @@
       "id": "S6",
       "title": "Control panel wiring to control.json client",
       "size": "S",
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "Control panel displays current control flags (pause, stop_soft, stop_hard, skip_iteration, review_now, review_next)",
         "Toggle and one-shot actions call the client update method and reflect state updates for the same fields"
@@ -113,7 +113,7 @@
       "id": "S7",
       "title": "Events tail viewer",
       "size": "S",
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "Events panel shows the most recent lines from mock events.ndjson",
         "User can refresh or auto-follow to see new lines"
@@ -129,7 +129,7 @@
       "id": "S8",
       "title": "Engine launch panel and command generator",
       "size": "S",
-      "passes": false,
+      "passes": true,
       "acceptance_criteria": [
         "Panel allows choosing driver and git isolation toggle",
         "Generated command includes run id and engine path",

@@ -1,0 +1,24 @@
+## Review Complete
+
+**Decision:** CONTINUE
+
+### Summary
+Story S6 (Control panel wiring to control.json client) has been successfully completed in iteration 6. The worker:
+
+- âœ“ Created ControlPanel component with full control signal management
+- âœ“ Implemented persistent toggle controls (pause, stop_soft, stop_hard) 
+- âœ“ Implemented one-shot action buttons (skip_iteration, review_now, review_next) with auto-reset
+- âœ“ Wired to cockpitClient for reading and updating control signals
+- âœ“ All acceptance criteria verified through code inspection
+
+### Progress
+- **Completed:** 6 of 8 stories (S1-S6)
+- **Remaining:** 2 stories (S7, S8)
+- **Blockers:** None
+
+### Next Steps
+The run should continue to work on:
+- **S7:** Events tail viewer (show recent lines from events.ndjson)
+- **S8:** Engine launch panel and command generator
+
+The review decision has been written to `review_result.json` at C:\projects\Algent\ralph\runs\2026-01-29__cockpit-3\phases\reviewer\iter-0006\output/review_result.json

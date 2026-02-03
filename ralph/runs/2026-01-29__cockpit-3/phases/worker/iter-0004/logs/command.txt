@@ -1,0 +1,1 @@
+claude.cmd -p C:\projects\Algent\ralph\runs\2026-01-29__cockpit-3\phases\worker\iter-0004\input\task.md

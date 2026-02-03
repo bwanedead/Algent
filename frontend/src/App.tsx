@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import SettingsTray from "./components/SettingsTray";
 import GridTraceLayer from "./components/GridTraceLayer";
 import ModuleGrid from "./components/ModuleGrid";
+import CockpitPage from "./components/Cockpit/CockpitPage";
 import { GridProvider } from "./context/GridContext";
 import { ModuleDraft, ModuleShape } from "./types/modules";
 
@@ -9,6 +10,7 @@ const App = () => {
   const [modules, setModules] = useState<ModuleShape[]>([]);
   const [placementMode, setPlacementMode] = useState(false);
   const [maskDebug, setMaskDebug] = useState(false);
+  const [showCockpit, setShowCockpit] = useState(false);
 
   const handleModuleCreate = (draft: ModuleDraft) => {
     setModules((prev) => [
@@ -90,20 +92,33 @@ const App = () => {
               >
                 {placementMode ? "Cancel placement" : "New Module"}
               </button>
+              <button
+                className="hud-button"
+                type="button"
+                onClick={() => setShowCockpit((prev) => !prev)}
+              >
+                {showCockpit ? "Home" : "Cockpit"}
+              </button>
             </div>
           </header>
 
           <div className="hud-canvas">
-            <ModuleGrid
-              modules={modules}
-              placementMode={placementMode}
-              onModuleCreate={handleModuleCreate}
-              onCancelPlacement={() => setPlacementMode(false)}
-              onModuleDelete={handleModuleDelete}
-            />
-            <div className="hud-caption">
-              status: idle <span>// waiting for input</span>
-            </div>
+            {showCockpit ? (
+              <CockpitPage />
+            ) : (
+              <>
+                <ModuleGrid
+                  modules={modules}
+                  placementMode={placementMode}
+                  onModuleCreate={handleModuleCreate}
+                  onCancelPlacement={() => setPlacementMode(false)}
+                  onModuleDelete={handleModuleDelete}
+                />
+                <div className="hud-caption">
+                  status: idle <span>// waiting for input</span>
+                </div>
+              </>
+            )}
           </div>
 
           <footer className="hud-footer">

@@ -1,0 +1,35 @@
+Excellent! Iteration 6 is complete. Let me provide a summary of what was accomplished.
+
+## Iteration 6 Complete - Story S6: Control panel wiring to control.json client
+
+### Summary
+Successfully implemented the control panel for the Ralph Cockpit, providing UI controls for managing Ralph Engine run execution via control signals.
+
+### What Was Built
+- **ControlPanel Component**: Created a new React component (`frontend/src/components/Cockpit/ControlPanel.tsx`) with:
+  - Toggle controls (checkboxes) for persistent flags: pause, stop_soft, stop_hard
+  - One-shot action buttons for: skip_iteration, review_now, review_next
+  - Client integration via `cockpitClient.getControlSignals()` and `updateControlSignals()`
+  - Auto-reset behavior for one-shot actions (simulates engine consumption after 1 second)
+  - Loading states and proper disable logic to prevent race conditions
+  - Placeholder message when no run is selected
+
+- **Integration**: Wired the ControlPanel into the CockpitPage controls section
+- **Styling**: Added comprehensive CSS styles matching the existing HUD design aesthetic
+
+### Files Changed
+1. `frontend/src/components/Cockpit/ControlPanel.tsx` (new, 173 lines)
+2. `frontend/src/components/Cockpit/CockpitPage.tsx` (added import and integration)
+3. `frontend/src/styles/cockpit.css` (added control panel styles)
+4. `ralph/runs/2026-01-29__cockpit-3/prd.json` (marked S6 as passes: true)
+5. `ralph/runs/2026-01-29__cockpit-3/progress.md` (appended iteration 6 entry)
+6. `ralph/runs/2026-01-29__cockpit-3/SUMMARY.md` (appended S6 entry)
+7. `ralph/runs/2026-01-29__cockpit-3/transcripts/iter-0006.md` (created transcript)
+
+### Acceptance Criteria
+âœ“ Control panel displays current control flags (pause, stop_soft, stop_hard, skip_iteration, review_now, review_next)
+âœ“ Toggle and one-shot actions call the client update method and reflect state updates for the same fields
+
+### Status: PASS
+
+The control panel is now fully functional with mock data. Next iteration will work on S7 (Events tail viewer).
