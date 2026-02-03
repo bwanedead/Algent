@@ -33,9 +33,10 @@ Create it once per project using:
 - `ralph/templates/CONFIG_JSON_TEMPLATE.json`
 
 For harness drivers (claude_code, codex_cli, shell), ensure:
-- `driver.worker_cmd` includes `{task_file}` and `{output_dir}`
-- `driver.reviewer_cmd` includes `{task_file}` and `{output_dir}`
-If `claude` is not on PATH for the engine process, update `ralph/config.json` to point to a concrete executable (e.g., `C:\Users\<user>\AppData\Roaming\npm\claude.cmd`).
+- `driver.worker_cmd` includes `{task_file}`
+- `driver.reviewer_cmd` includes `{task_file}`
+The engine writes `worker_summary.md` from worker stdout and `review_result.json` from reviewer stdout when the CLI doesn't write those files itself.
+If your CLI command is not on PATH for the engine process, update `ralph/config.json` to point to a concrete executable (e.g., `C:\Users\<user>\AppData\Roaming\npm\claude.cmd` on Windows; use the extensionless command on macOS/Linux).
 
 ---
 
@@ -215,8 +216,8 @@ Start from:
 
 Confirm:
 - Run folder contains required files (run.json, control.json, events.ndjson, PRD.md, prd.json, PROMPT.md, progress.md)
-- `ralph/config.json` exists and includes worker_cmd + reviewer_cmd with `{task_file}` and `{output_dir}` for harness drivers
-- If using `claude_code`, `ralph/config.json` points to a concrete executable when PATH resolution fails
+- `ralph/config.json` exists and includes worker_cmd + reviewer_cmd with `{task_file}` for harness drivers
+- If PATH resolution fails, `ralph/config.json` points to a concrete executable (use `.cmd` on Windows)
 - run.json has status "pending" and UTC ISO 8601 timestamps
 - `SUMMARY.md` exists (recommended) so the loop can append per-story debrief entries
 - `transcripts/` exists (recommended) for per-iteration logs

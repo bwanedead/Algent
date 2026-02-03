@@ -36,7 +36,8 @@ ralph/
 3. Follow `templates/RUN_CHECKLIST.md` to create a new run
 4. Use `templates/PREP_AGENT_CHECKLIST.md` for detailed prep instructions
 5. Ensure `ralph/config.json` exists (from `templates/CONFIG_JSON_TEMPLATE.json`)
-6. If the `claude` command is not on PATH for the engine process, update `ralph/config.json` to point to a concrete executable (e.g., `C:\Users\<user>\AppData\Roaming\npm\claude.cmd`)
+6. If your CLI command is not on PATH for the engine process, update `ralph/config.json` to point to a concrete executable (e.g., `C:\Users\<user>\AppData\Roaming\npm\claude.cmd` on Windows; use the extensionless command on macOS/Linux).
+7. The engine writes `worker_summary.md` and `review_result.json` from stdout when the CLI doesn't write those files itself, so commands just need to print to stdout.
 
 ## Templates Reference
 
