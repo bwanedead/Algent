@@ -13,16 +13,32 @@ from algent_backend.config import (
     list_providers,
     set_provider_api_key,
 )
+from algent_backend.cockpit import http as cockpit_http
 
 
 class _HealthHandler(BaseHTTPRequestHandler):
     """Responds to `/health` with a basic payload."""
+
+    def _send_cors_headers(self) -> None:
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET,POST,PATCH,OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
 
     def _send_json(self, code: int, payload: dict) -> None:
         body = json.dumps(payload).encode("utf-8")
         self.send_response(code)
         self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", str(len(body)))
+        self._send_cors_headers()
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _send_text(self, code: int, payload: str) -> None:
+        body = payload.encode("utf-8")
+        self.send_response(code)
+        self.send_header("Content-Type", "text/plain; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self._send_cors_headers()
         self.end_headers()
         self.wfile.write(body)
 
@@ -40,6 +56,14 @@ class _HealthHandler(BaseHTTPRequestHandler):
             return {}
 
     def do_GET(self) -> None:  # noqa: N802 (keep handler signature)
+        cockpit_response = cockpit_http.handle_request("GET", self.path)
+        if cockpit_response is not None:
+            status, payload, content_type = cockpit_response
+            if content_type.startswith("text/"):
+                self._send_text(status, payload)
+            else:
+                self._send_json(status, payload)
+            return
         if self.path.rstrip("/") == "/health":
             self._send_json(200, {"status": "ok", "service": "algent-backend"})
             return
@@ -47,10 +71,34 @@ class _HealthHandler(BaseHTTPRequestHandler):
 
     def do_POST(self) -> None:  # noqa: N802
         path = self.path.rstrip("/")
+        cockpit_response = cockpit_http.handle_request("POST", self.path, self._read_json())
+        if cockpit_response is not None:
+            status, payload, content_type = cockpit_response
+            if content_type.startswith("text/"):
+                self._send_text(status, payload)
+            else:
+                self._send_json(status, payload)
+            return
         if path == "/credentials":
             self._handle_credential_update()
             return
         self._send_json(404, {"status": "not_found", "path": self.path})
+
+    def do_PATCH(self) -> None:  # noqa: N802
+        cockpit_response = cockpit_http.handle_request("PATCH", self.path, self._read_json())
+        if cockpit_response is not None:
+            status, payload, content_type = cockpit_response
+            if content_type.startswith("text/"):
+                self._send_text(status, payload)
+            else:
+                self._send_json(status, payload)
+            return
+        self._send_json(404, {"status": "not_found", "path": self.path})
+
+    def do_OPTIONS(self) -> None:  # noqa: N802
+        self.send_response(204)
+        self._send_cors_headers()
+        self.end_headers()
 
     def _handle_credential_update(self) -> None:
         payload = self._read_json()

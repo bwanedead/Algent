@@ -6,21 +6,38 @@
 export type RunStatus = 'ready' | 'running' | 'paused' | 'completed' | 'failed' | 'unknown';
 export type StorySize = 'XS' | 'S' | 'M' | 'L' | 'XL';
 
-export interface Repo {
+export interface Project {
   id: string;
   name: string;
   path: string;
+  adapter?: string;
 }
 
 export interface Run {
   id: string;
-  repoId: string;
-  title: string;
+  title?: string | null;
+  projectId?: string;
   status: RunStatus;
   phase?: string;
   iteration?: number;
+  maxIterations?: number;
   createdAt?: string;
   updatedAt?: string;
+  startedAt?: string;
+  finishedAt?: string;
+  error?: string | null;
+  storyCounts?: {
+    total: number;
+    passed: number;
+  };
+  artifacts?: {
+    hasProgress?: boolean;
+    hasSummary?: boolean;
+    hasEvents?: boolean;
+    hasControl?: boolean;
+    transcriptCount?: number;
+  };
+  isTemplateRun?: boolean;
 }
 
 export interface RunState {
@@ -28,10 +45,15 @@ export interface RunState {
   status: RunStatus;
   phase?: string;
   iteration?: number;
+  maxIterations?: number;
   createdAt?: string;
   updatedAt?: string;
   startedAt?: string;
-  completedAt?: string;
+  finishedAt?: string;
+  error?: string | null;
+  gitBranch?: string;
+  gitBaseBranch?: string;
+  gitBaseCommit?: string;
 }
 
 export interface Story {
@@ -74,13 +96,29 @@ export interface EventLogEntry {
   message: string;
   phase?: string;
   iteration?: number;
+  type?: string;
+  data?: Record<string, unknown>;
 }
 
 export interface RunArtifacts {
   runState?: RunState;
   prd?: PRD;
-  prdText?: string;
   progressText?: string;
+  summaryText?: string;
   controlSignals?: ControlSignals;
   events?: EventLogEntry[];
+}
+
+export interface DoctorResult {
+  command: string;
+  exit_code: number;
+  stdout: string;
+  stderr: string;
+}
+
+export interface LiveFeed {
+  phase: string | null;
+  iteration: number | null;
+  stdout: string[];
+  stderr: string[];
 }

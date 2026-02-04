@@ -60,7 +60,7 @@ const META_SPAWN_CHANCE = 0.03;
 const BRANCH_PROB_STANDARD = 0.2;
 const BRANCH_PROB_META = 0.25;
 const BRANCH_PROB_MICRO = 0.1;
-const ENABLE_TRACE_DEBUG = true;
+const ENABLE_TRACE_DEBUG = false;
 const BRANCH_DIRECTIONS: number[] = [0, 1, 2, 3];
 
 const getBranchProbability = (type: TraceType) => {

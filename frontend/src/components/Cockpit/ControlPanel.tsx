@@ -3,10 +3,11 @@ import { cockpitClient } from '../../client/cockpitClient';
 import type { ControlSignals } from '../../types/cockpit';
 
 interface ControlPanelProps {
+  projectId: string | null;
   runId: string | null;
 }
 
-const ControlPanel = ({ runId }: ControlPanelProps) => {
+const ControlPanel = ({ projectId, runId }: ControlPanelProps) => {
   const [signals, setSignals] = useState<ControlSignals>({
     pause: false,
     stop_soft: false,
@@ -19,7 +20,7 @@ const ControlPanel = ({ runId }: ControlPanelProps) => {
 
   // Load control signals when runId changes
   useEffect(() => {
-    if (!runId) {
+    if (!projectId || !runId) {
       setSignals({
         pause: false,
         stop_soft: false,
@@ -33,23 +34,23 @@ const ControlPanel = ({ runId }: ControlPanelProps) => {
 
     const loadSignals = async () => {
       try {
-        const currentSignals = await cockpitClient.getControlSignals(runId);
+        const currentSignals = await cockpitClient.getControlSignals(projectId, runId);
         setSignals(currentSignals);
       } catch (error) {
         console.error('Failed to load control signals:', error);
       }
     };
     loadSignals();
-  }, [runId]);
+  }, [projectId, runId]);
 
   // Update a toggle (persistent flag)
   const handleToggle = async (key: keyof ControlSignals) => {
-    if (!runId) return;
+    if (!projectId || !runId) return;
 
     setLoading(true);
     try {
       const newValue = !signals[key];
-      await cockpitClient.updateControlSignals(runId, { [key]: newValue });
+      await cockpitClient.updateControlSignals(projectId, runId, { [key]: newValue });
       setSignals((prev) => ({ ...prev, [key]: newValue }));
     } catch (error) {
       console.error(`Failed to toggle ${key}:`, error);
@@ -60,17 +61,17 @@ const ControlPanel = ({ runId }: ControlPanelProps) => {
 
   // Trigger a one-shot action
   const handleOneShot = async (key: keyof ControlSignals) => {
-    if (!runId) return;
+    if (!projectId || !runId) return;
 
     setLoading(true);
     try {
       // Set to true
-      await cockpitClient.updateControlSignals(runId, { [key]: true });
+      await cockpitClient.updateControlSignals(projectId, runId, { [key]: true });
       setSignals((prev) => ({ ...prev, [key]: true }));
 
       // Simulate consumption after a short delay
       setTimeout(async () => {
-        await cockpitClient.updateControlSignals(runId, { [key]: false });
+        await cockpitClient.updateControlSignals(projectId, runId, { [key]: false });
         setSignals((prev) => ({ ...prev, [key]: false }));
       }, 1000);
     } catch (error) {
@@ -80,7 +81,7 @@ const ControlPanel = ({ runId }: ControlPanelProps) => {
     }
   };
 
-  if (!runId) {
+  if (!projectId || !runId) {
     return (
       <div className="cockpit-control-panel">
         <p className="cockpit-placeholder-text">Select a run to view controls</p>

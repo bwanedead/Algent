@@ -1,0 +1,1 @@
+"""Ralph Engine cockpit adapter."""

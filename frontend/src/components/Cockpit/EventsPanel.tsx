@@ -3,17 +3,18 @@ import { cockpitClient } from '../../client/cockpitClient';
 import type { EventLogEntry } from '../../types/cockpit';
 
 interface EventsPanelProps {
+  projectId: string | null;
   runId: string | null;
 }
 
-const EventsPanel = ({ runId }: EventsPanelProps) => {
+const EventsPanel = ({ projectId, runId }: EventsPanelProps) => {
   const [events, setEvents] = useState<EventLogEntry[]>([]);
   const [loading, setLoading] = useState(false);
   const [autoFollow, setAutoFollow] = useState(false);
 
   // Load events when runId changes
   useEffect(() => {
-    if (!runId) {
+    if (!projectId || !runId) {
       setEvents([]);
       return;
     }
@@ -21,7 +22,7 @@ const EventsPanel = ({ runId }: EventsPanelProps) => {
     const loadEvents = async () => {
       setLoading(true);
       try {
-        const eventList = await cockpitClient.getEvents(runId, 50);
+        const eventList = await cockpitClient.getEvents(projectId, runId, 50);
         setEvents(eventList);
       } catch (error) {
         console.error('Failed to load events:', error);
@@ -31,15 +32,15 @@ const EventsPanel = ({ runId }: EventsPanelProps) => {
     };
 
     loadEvents();
-  }, [runId]);
+  }, [projectId, runId]);
 
   // Auto-follow functionality
   useEffect(() => {
-    if (!autoFollow || !runId) return;
+    if (!autoFollow || !projectId || !runId) return;
 
     const interval = setInterval(async () => {
       try {
-        const eventList = await cockpitClient.getEvents(runId, 50);
+        const eventList = await cockpitClient.getEvents(projectId, runId, 50);
         setEvents(eventList);
       } catch (error) {
         console.error('Failed to refresh events:', error);
@@ -47,15 +48,15 @@ const EventsPanel = ({ runId }: EventsPanelProps) => {
     }, 2000); // Refresh every 2 seconds
 
     return () => clearInterval(interval);
-  }, [autoFollow, runId]);
+  }, [autoFollow, projectId, runId]);
 
   // Manual refresh
   const handleRefresh = async () => {
-    if (!runId) return;
+    if (!projectId || !runId) return;
 
     setLoading(true);
     try {
-      const eventList = await cockpitClient.getEvents(runId, 50);
+      const eventList = await cockpitClient.getEvents(projectId, runId, 50);
       setEvents(eventList);
     } catch (error) {
       console.error('Failed to refresh events:', error);
@@ -64,7 +65,7 @@ const EventsPanel = ({ runId }: EventsPanelProps) => {
     }
   };
 
-  if (!runId) {
+  if (!projectId || !runId) {
     return (
       <div className="cockpit-events-panel">
         <p className="cockpit-placeholder-text">Select a run to view events</p>

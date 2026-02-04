@@ -215,3 +215,6 @@ frontend/.vite/
 # Rust/Tauri build output
 frontend/src-tauri/target/
 frontend/src-tauri/.cargo/
+
+# Cockpit registry (local paths)
+backend/algent_backend/cockpit/registry.json

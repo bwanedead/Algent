@@ -1,27 +1,28 @@
 import { useState } from 'react';
 
 interface LaunchPanelProps {
+  projectPath: string | null;
   runId: string | null;
 }
 
-const LaunchPanel = ({ runId }: LaunchPanelProps) => {
-  const [driver, setDriver] = useState<string>('claude-sonnet');
-  const [gitIsolation, setGitIsolation] = useState<boolean>(false);
+const LaunchPanel = ({ projectPath, runId }: LaunchPanelProps) => {
+  const [driver, setDriver] = useState<string>('claude_code');
+  const [gitIsolation, setGitIsolation] = useState<boolean>(true);
 
   const generateCommand = (): string => {
-    if (!runId) return '';
+    if (!runId || !projectPath) return '';
 
-    const enginePath = 'C:\\projects\\ralph-engine';
     const parts = [
-      'python',
-      `"${enginePath}\\ralph_engine\\cli.py"`,
+      'ralph-engine',
       'run',
+      `"${projectPath}"`,
       `--run-id "${runId}"`,
       `--driver "${driver}"`,
+      '--resume',
     ];
 
     if (gitIsolation) {
-      parts.push('--git-isolation');
+      parts.push('--enforce-git');
     }
 
     return parts.join(' ');
@@ -29,7 +30,7 @@ const LaunchPanel = ({ runId }: LaunchPanelProps) => {
 
   const command = generateCommand();
 
-  if (!runId) {
+  if (!runId || !projectPath) {
     return (
       <div className="cockpit-launch-panel">
         <p className="cockpit-placeholder-text">Select a run to generate launch command</p>
@@ -49,10 +50,10 @@ const LaunchPanel = ({ runId }: LaunchPanelProps) => {
           value={driver}
           onChange={(e) => setDriver(e.target.value)}
         >
-          <option value="claude-sonnet">Claude Sonnet</option>
-          <option value="claude-opus">Claude Opus</option>
-          <option value="claude-haiku">Claude Haiku</option>
-          <option value="openai-gpt4">OpenAI GPT-4</option>
+          <option value="claude_code">Claude Code</option>
+          <option value="codex_cli">Codex CLI</option>
+          <option value="stub">Stub</option>
+          <option value="shell">Shell</option>
         </select>
       </div>
 
@@ -65,7 +66,7 @@ const LaunchPanel = ({ runId }: LaunchPanelProps) => {
             onChange={(e) => setGitIsolation(e.target.checked)}
             className="cockpit-control-checkbox"
           />
-          <span className="cockpit-control-label">Git Isolation</span>
+          <span className="cockpit-control-label">Enforce Git</span>
         </label>
       </div>
 

@@ -1,44 +1,48 @@
 import { useEffect, useState } from 'react';
 import { cockpitClient } from '../../client/cockpitClient';
-import type { Repo, Run, Story } from '../../types/cockpit';
+import type { Project, Run, Story } from '../../types/cockpit';
 import ControlPanel from './ControlPanel';
 import EventsPanel from './EventsPanel';
+import DoctorPanel from './DoctorPanel';
 import LaunchPanel from './LaunchPanel';
+import LiveFeedPanel from './LiveFeedPanel';
 
 const CockpitPage = () => {
-  const [repos, setRepos] = useState<Repo[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [runs, setRuns] = useState<Run[]>([]);
-  const [selectedRepoId, setSelectedRepoId] = useState<string | null>(null);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
+  const [newProjectPath, setNewProjectPath] = useState('');
+  const [projectError, setProjectError] = useState<string | null>(null);
   const [stories, setStories] = useState<Story[]>([]);
-  const [prdText, setPrdText] = useState<string | null>(null);
   const [progressText, setProgressText] = useState<string | null>(null);
+  const [summaryText, setSummaryText] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Load repos on mount
+  // Load projects on mount
   useEffect(() => {
-    const loadRepos = async () => {
+    const loadProjects = async () => {
       try {
-        const repoList = await cockpitClient.listRepos();
-        setRepos(repoList);
-        if (repoList.length > 0) {
-          setSelectedRepoId(repoList[0].id);
+        const projectList = await cockpitClient.listProjects();
+        setProjects(projectList);
+        if (projectList.length > 0) {
+          setSelectedProjectId(projectList[0].id);
         }
       } catch (error) {
-        console.error('Failed to load repos:', error);
+        console.error('Failed to load projects:', error);
       } finally {
         setLoading(false);
       }
     };
-    loadRepos();
+    loadProjects();
   }, []);
 
   // Load runs when repo is selected
   useEffect(() => {
-    if (!selectedRepoId) return;
+    if (!selectedProjectId) return;
     const loadRuns = async () => {
       try {
-        const runList = await cockpitClient.listRuns(selectedRepoId);
+        const runList = await cockpitClient.listRuns(selectedProjectId);
         setRuns(runList);
         if (runList.length > 0) {
           setSelectedRunId(runList[0].id);
@@ -48,29 +52,46 @@ const CockpitPage = () => {
       }
     };
     loadRuns();
-  }, [selectedRepoId]);
+  }, [selectedProjectId]);
 
   // Load run artifacts when run is selected
   useEffect(() => {
-    if (!selectedRunId) return;
+    if (!selectedProjectId || !selectedRunId) return;
     const loadRunDetails = async () => {
       try {
-        const artifacts = await cockpitClient.getRunArtifacts(selectedRunId);
+        const artifacts = await cockpitClient.getRunArtifacts(selectedProjectId, selectedRunId);
         if (artifacts.prd) {
           setStories(artifacts.prd.stories);
+        } else {
+          setStories([]);
         }
-        setPrdText(artifacts.prdText || null);
         setProgressText(artifacts.progressText || null);
+        setSummaryText(artifacts.summaryText || null);
       } catch (error) {
         console.error('Failed to load run artifacts:', error);
       }
     };
     loadRunDetails();
-  }, [selectedRunId]);
+  }, [selectedProjectId, selectedRunId]);
 
   const selectedRun = runs.find((r) => r.id === selectedRunId);
   const passedCount = stories.filter((s) => s.passes).length;
   const totalCount = stories.length;
+  const selectedProject = projects.find((project) => project.id === selectedProjectId);
+
+  const handleAddProject = async () => {
+    if (!newProjectPath.trim()) return;
+    try {
+      setProjectError(null);
+      const project = await cockpitClient.addProject(newProjectPath.trim());
+      setProjects((prev) => [...prev, project]);
+      setSelectedProjectId(project.id);
+      setNewProjectPath('');
+    } catch (error) {
+      console.error('Failed to add project:', error);
+      setProjectError(error instanceof Error ? error.message : 'Failed to add project');
+    }
+  };
 
   if (loading) {
     return (
@@ -88,20 +109,33 @@ const CockpitPage = () => {
           <span className="cockpit-label">REPOS & RUNS</span>
         </div>
         <div className="cockpit-sidebar-content">
-          {/* Repo selector */}
+          {/* Project selector */}
           <div className="cockpit-subsection">
-            <label className="cockpit-field-label">Repository</label>
+            <label className="cockpit-field-label">Project</label>
             <select
               className="cockpit-select"
-              value={selectedRepoId || ''}
-              onChange={(e) => setSelectedRepoId(e.target.value)}
+              value={selectedProjectId || ''}
+              onChange={(e) => setSelectedProjectId(e.target.value)}
             >
-              {repos.map((repo) => (
-                <option key={repo.id} value={repo.id}>
-                  {repo.name}
+              {projects.map((project) => (
+                <option key={project.id} value={project.id}>
+                  {project.name}
                 </option>
               ))}
             </select>
+            <div className="cockpit-add-project">
+              <input
+                type="text"
+                className="cockpit-input"
+                placeholder="C:\\projects\\my-repo"
+                value={newProjectPath}
+                onChange={(e) => setNewProjectPath(e.target.value)}
+              />
+              <button className="cockpit-control-button" onClick={handleAddProject}>
+                Add Project
+              </button>
+              {projectError && <p className="cockpit-placeholder-text">{projectError}</p>}
+            </div>
           </div>
 
           {/* Run list */}
@@ -165,25 +199,17 @@ const CockpitPage = () => {
                       {selectedRun.updatedAt ? new Date(selectedRun.updatedAt).toLocaleString() : 'N/A'}
                     </span>
                   </div>
+                  <div className="cockpit-field">
+                    <span className="cockpit-field-label">Project</span>
+                    <span className="cockpit-field-value">{selectedProject?.path || 'N/A'}</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Docs panel - PRD and Progress text */}
+              {/* Docs panel - Progress and Summary text */}
               <div className="cockpit-subsection">
                 <h3 className="cockpit-subsection-title">Documentation</h3>
                 <div className="cockpit-docs-panel">
-                  {/* PRD section */}
-                  <div className="cockpit-doc-section">
-                    <h4 className="cockpit-doc-section-title">PRD</h4>
-                    <div className="cockpit-doc-content">
-                      {prdText ? (
-                        <pre className="cockpit-doc-text">{prdText}</pre>
-                      ) : (
-                        <p className="cockpit-placeholder-text">No PRD text available</p>
-                      )}
-                    </div>
-                  </div>
-
                   {/* Progress section */}
                   <div className="cockpit-doc-section">
                     <h4 className="cockpit-doc-section-title">Progress</h4>
@@ -192,6 +218,18 @@ const CockpitPage = () => {
                         <pre className="cockpit-doc-text">{progressText}</pre>
                       ) : (
                         <p className="cockpit-placeholder-text">No progress text available</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Summary section */}
+                  <div className="cockpit-doc-section">
+                    <h4 className="cockpit-doc-section-title">Summary</h4>
+                    <div className="cockpit-doc-content">
+                      {summaryText ? (
+                        <pre className="cockpit-doc-text">{summaryText}</pre>
+                      ) : (
+                        <p className="cockpit-placeholder-text">No summary text available</p>
                       )}
                     </div>
                   </div>
@@ -229,9 +267,11 @@ const CockpitPage = () => {
           <span className="cockpit-label">CONTROL & EVENTS</span>
         </div>
         <div className="cockpit-controls-content">
-          <ControlPanel runId={selectedRunId} />
-          <EventsPanel runId={selectedRunId} />
-          <LaunchPanel runId={selectedRunId} />
+          <ControlPanel projectId={selectedProjectId} runId={selectedRunId} />
+          <LiveFeedPanel projectId={selectedProjectId} runId={selectedRunId} />
+          <EventsPanel projectId={selectedProjectId} runId={selectedRunId} />
+          <DoctorPanel projectId={selectedProjectId} runId={selectedRunId} />
+          <LaunchPanel projectPath={selectedProject?.path || null} runId={selectedRunId} />
         </div>
       </aside>
     </div>
