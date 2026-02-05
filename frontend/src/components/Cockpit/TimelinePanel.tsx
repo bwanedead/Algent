@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { cockpitClient } from '../../client/cockpitClient';
-import type { EventLogEntry, PRD, RunState, LiveFeed } from '../../types/cockpit';
+import type { EventLogEntry, PRD, RunState, LiveFeed, OrchestrationState } from '../../types/cockpit';
 
 interface TimelinePanelProps {
   projectId: string | null;
@@ -17,6 +17,7 @@ const TimelinePanel = ({ projectId, runId, showHeader = true }: TimelinePanelPro
   const [runState, setRunState] = useState<RunState | null>(null);
   const [prd, setPrd] = useState<PRD | null>(null);
   const [live, setLive] = useState<LiveFeed | null>(null);
+  const [orchestration, setOrchestration] = useState<OrchestrationState | null>(null);
 
   useEffect(() => {
     if (!projectId || !runId) {
@@ -29,16 +30,18 @@ const TimelinePanel = ({ projectId, runId, showHeader = true }: TimelinePanelPro
 
     const load = async () => {
       try {
-        const [eventList, state, prdData, liveData] = await Promise.all([
+        const [eventList, state, prdData, liveData, orchestrationData] = await Promise.all([
           cockpitClient.getEvents(projectId, runId, 500),
           cockpitClient.getRunState(projectId, runId),
           cockpitClient.getPRD(projectId, runId),
           cockpitClient.getLiveFeed(projectId, runId, 80),
+          cockpitClient.getOrchestration(projectId, runId),
         ]);
         setEvents(eventList);
         setRunState(state);
         setPrd(prdData);
         setLive(liveData);
+        setOrchestration(orchestrationData);
       } catch (error) {
         console.error('Failed to load timeline data:', error);
       }
@@ -66,16 +69,26 @@ const TimelinePanel = ({ projectId, runId, showHeader = true }: TimelinePanelPro
     (runState?.iteration !== undefined ? runState.iteration + 1 : 1);
 
   const phases = useMemo(() => {
-    const extra: string[] = [];
-    const steerEvery = prd?.loop_settings?.steer_every_n_iterations;
-    if (steerEvery) {
-      extra.push('steering');
+    const scheme = orchestration?.scheme || 'W5R';
+    const expanded: string[] = [];
+    for (const token of scheme) {
+      if (token === 'W') expanded.push('worker');
+      if (token === 'R') expanded.push('reviewer');
     }
-    return [...basePhases, ...extra];
-  }, [prd]);
+    return expanded.length ? expanded : basePhases;
+  }, [orchestration]);
 
   const currentIteration = live?.iteration ?? runState?.iteration ?? null;
   const currentPhase = live?.phase ?? runState?.phase ?? null;
+
+  const schedulePhaseForIteration = (iteration: number): string => {
+    if (!phases.length) return 'worker';
+    const schemeIndex =
+      orchestration?.cursor !== undefined
+        ? (orchestration.cursor + iteration) % phases.length
+        : iteration % phases.length;
+    return phases[schemeIndex];
+  };
 
   const statusFor = (iteration: number, phase: string): PhaseStatus => {
     if (currentIteration === iteration && currentPhase === phase) {
@@ -110,30 +123,37 @@ const TimelinePanel = ({ projectId, runId, showHeader = true }: TimelinePanelPro
         </div>
       )}
       <div className="cockpit-timeline-body">
-        {Array.from({ length: maxIterations }).map((_, idx) => (
-          <div key={idx} className="cockpit-timeline-iteration">
-            <div className="cockpit-timeline-line" />
-            <div className="cockpit-timeline-node" />
-            <div>
-              <div className="cockpit-timeline-iter-label">
-                Iter {idx}
-                {currentIteration === idx && (
-                  <span className="cockpit-timeline-current">Current</span>
-                )}
-              </div>
-              <div className="cockpit-timeline-phases">
-                {phases.map((phase) => {
-                  const status = statusFor(idx, phase);
-                  return (
-                    <div key={`${idx}-${phase}`} className={`cockpit-timeline-phase ${status}`}>
-                      <span className="cockpit-timeline-phase-badge">{phase}</span>
-                    </div>
-                  );
-                })}
+        {Array.from({ length: maxIterations }).map((_, idx) => {
+          const scheduledPhase = schedulePhaseForIteration(idx);
+          const status = statusFor(idx, scheduledPhase);
+          const reviewMode =
+            events.find(
+              (event) =>
+                event.type === 'phase_started' &&
+                event.phase === 'reviewer' &&
+                event.iteration === idx,
+            )?.data?.review_mode || null;
+          const phaseLabel = reviewMode ? `${scheduledPhase} (${reviewMode})` : scheduledPhase;
+          return (
+            <div key={idx} className="cockpit-timeline-iteration">
+              <div className="cockpit-timeline-line" />
+              <div className="cockpit-timeline-node" />
+              <div>
+                <div className="cockpit-timeline-iter-label">
+                  Iter {idx}
+                  {currentIteration === idx && (
+                    <span className="cockpit-timeline-current">Current</span>
+                  )}
+                </div>
+                <div className="cockpit-timeline-phases">
+                  <div className={`cockpit-timeline-phase ${status}`}>
+                    <span className="cockpit-timeline-phase-badge">{phaseLabel}</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

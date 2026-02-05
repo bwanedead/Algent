@@ -136,6 +136,16 @@ def get_summary_text(project_root: str, run_id: str) -> Optional[str]:
     return _safe_read_text(_run_root(Path(project_root), run_id) / "SUMMARY.md")
 
 
+def get_orchestration(project_root: str, run_id: str) -> Optional[dict]:
+    return _safe_read_json(_run_root(Path(project_root), run_id) / "orchestration.json")
+
+
+def get_worker_result(project_root: str, run_id: str, iteration: int) -> Optional[dict]:
+    run_root = _run_root(Path(project_root), run_id)
+    iter_folder = _iter_folder_name(iteration)
+    path = run_root / "phases" / "worker" / iter_folder / "output" / "worker_result.json"
+    return _safe_read_json(path)
+
 def get_control_signals(project_root: str, run_id: str) -> Dict[str, Any]:
     path = _run_root(Path(project_root), run_id) / "control.json"
     data = _safe_read_json(path) or {}
@@ -285,6 +295,7 @@ def get_artifacts(project_root: str, run_id: str, event_limit: int = 50) -> dict
         "prd": get_prd(project_root, run_id),
         "progressText": get_progress_text(project_root, run_id),
         "summaryText": get_summary_text(project_root, run_id),
+        "orchestration": get_orchestration(project_root, run_id),
         "controlSignals": get_control_signals(project_root, run_id),
         "events": get_events(project_root, run_id, event_limit),
     }

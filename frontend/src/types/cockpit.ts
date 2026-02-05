@@ -105,6 +105,7 @@ export interface RunArtifacts {
   prd?: PRD;
   progressText?: string;
   summaryText?: string;
+  orchestration?: OrchestrationState;
   controlSignals?: ControlSignals;
   events?: EventLogEntry[];
 }
@@ -121,4 +122,11 @@ export interface LiveFeed {
   iteration: number | null;
   stdout: string[];
   stderr: string[];
+}
+
+export interface OrchestrationState {
+  scheme?: string;
+  cursor?: number;
+  queue?: string[];
+  final_review_pending?: boolean;
 }

@@ -120,6 +120,9 @@ def handle_request(method: str, path: str, payload: Optional[dict] = None) -> Op
                     limit = 50
                 events = adapter.get_events(project["path"], run_id, limit)
                 return _json_response(200, {"events": events})
+            if method == "GET" and resource == "orchestration":
+                orchestration = adapter.get_orchestration(project["path"], run_id)
+                return _json_response(200, {"orchestration": orchestration})
             if method == "GET" and resource == "live":
                 limit_param = query.get("limit", ["200"])[0]
                 try:

@@ -12,6 +12,7 @@ import type {
   RunArtifacts,
   DoctorResult,
   LiveFeed,
+  OrchestrationState,
 } from '../types/cockpit';
 
 const API_BASE = 'http://127.0.0.1:43145';
@@ -30,6 +31,7 @@ export interface CockpitClient {
   getRunArtifacts(projectId: string, runId: string): Promise<RunArtifacts>;
   runDoctor(projectId: string, runId: string): Promise<DoctorResult>;
   getLiveFeed(projectId: string, runId: string, limit?: number): Promise<LiveFeed>;
+  getOrchestration(projectId: string, runId: string): Promise<OrchestrationState | null>;
   getLogTail(
     projectId: string,
     runId: string,
@@ -162,6 +164,16 @@ class BackendCockpitClient implements CockpitClient {
       `/cockpit/runs/${projectId}/${runId}/live?limit=${limit}`,
     );
     return data.live;
+  }
+
+  async getOrchestration(
+    projectId: string,
+    runId: string,
+  ): Promise<OrchestrationState | null> {
+    const data = await requestJson<{ orchestration: OrchestrationState | null }>(
+      `/cockpit/runs/${projectId}/${runId}/orchestration`,
+    );
+    return data.orchestration;
   }
 
   async getLogTail(
