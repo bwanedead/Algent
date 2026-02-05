@@ -9,7 +9,7 @@ interface LiveFeedPanelProps {
 
 const LiveFeedPanel = ({ projectId, runId }: LiveFeedPanelProps) => {
   const [live, setLive] = useState<LiveFeed | null>(null);
-  const [stream, setStream] = useState<'stdout' | 'stderr'>('stdout');
+  const [stream, setStream] = useState<'all' | 'stdout' | 'stderr'>('all');
   const [loading, setLoading] = useState(false);
   const [autoFollow, setAutoFollow] = useState(true);
   const [lineLimit, setLineLimit] = useState(120);
@@ -51,7 +51,19 @@ const LiveFeedPanel = ({ projectId, runId }: LiveFeedPanelProps) => {
     );
   }
 
-  const lines = stream === 'stdout' ? live?.stdout ?? [] : live?.stderr ?? [];
+  const stdoutLines = live?.stdout ?? [];
+  const stderrLines = live?.stderr ?? [];
+  const lines =
+    stream === 'stdout'
+      ? stdoutLines
+      : stream === 'stderr'
+        ? stderrLines
+        : [
+            ...(stdoutLines.length ? ['[stdout]'] : []),
+            ...stdoutLines,
+            ...(stderrLines.length ? ['[stderr]'] : []),
+            ...stderrLines,
+          ];
   const statusLabel =
     live?.phase && live?.iteration !== null
       ? `${live.phase} • iter ${live.iteration}`
@@ -65,6 +77,12 @@ const LiveFeedPanel = ({ projectId, runId }: LiveFeedPanelProps) => {
       </div>
       <div className="cockpit-live-controls">
         <div className="cockpit-live-tabs">
+          <button
+            className={`cockpit-live-tab ${stream === 'all' ? 'active' : ''}`}
+            onClick={() => setStream('all')}
+          >
+            All
+          </button>
           <button
             className={`cockpit-live-tab ${stream === 'stdout' ? 'active' : ''}`}
             onClick={() => setStream('stdout')}

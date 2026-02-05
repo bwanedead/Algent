@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { cockpitClient } from '../../client/cockpitClient';
 import type { Project, Run, Story } from '../../types/cockpit';
 import ControlPanel from './ControlPanel';
@@ -6,6 +6,7 @@ import EventsPanel from './EventsPanel';
 import DoctorPanel from './DoctorPanel';
 import LaunchPanel from './LaunchPanel';
 import LiveFeedPanel from './LiveFeedPanel';
+import TimelinePanel from './TimelinePanel';
 
 const CockpitPage = () => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -18,6 +19,13 @@ const CockpitPage = () => {
   const [progressText, setProgressText] = useState<string | null>(null);
   const [summaryText, setSummaryText] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [infoTab, setInfoTab] = useState<'live' | 'stories' | 'progress' | 'summary'>('live');
+  const [timelineOpen, setTimelineOpen] = useState(true);
+  const [timelinePos, setTimelinePos] = useState({ x: 0, y: 0 });
+  const [timelineDragging, setTimelineDragging] = useState(false);
+  const dragOffsetRef = useRef({ x: 0, y: 0 });
+  const timelineRef = useRef<HTMLDivElement | null>(null);
 
   // Load projects on mount
   useEffect(() => {
@@ -78,6 +86,50 @@ const CockpitPage = () => {
   const passedCount = stories.filter((s) => s.passes).length;
   const totalCount = stories.length;
   const selectedProject = projects.find((project) => project.id === selectedProjectId);
+  const runPhase = selectedRun?.phase || 'N/A';
+  const runIteration = selectedRun?.iteration ?? 'N/A';
+  const runStatus = selectedRun?.status || 'unknown';
+  const runUpdated = selectedRun?.updatedAt
+    ? new Date(selectedRun.updatedAt).toLocaleString()
+    : 'N/A';
+  const progressSummary = useMemo(
+    () => `${passedCount}/${totalCount || '—'} stories`,
+    [passedCount, totalCount],
+  );
+
+  useEffect(() => {
+    if (!timelineDragging) return;
+    const handleMove = (event: MouseEvent) => {
+      if (!timelineRef.current) return;
+      const overlayRect = timelineRef.current.getBoundingClientRect();
+      const nextX = event.clientX - dragOffsetRef.current.x;
+      const nextY = event.clientY - dragOffsetRef.current.y;
+      const maxX = Math.max(0, window.innerWidth - overlayRect.width);
+      const maxY = Math.max(0, window.innerHeight - overlayRect.height);
+      setTimelinePos({
+        x: Math.min(Math.max(0, nextX), maxX),
+        y: Math.min(Math.max(0, nextY), maxY),
+      });
+    };
+    const handleUp = () => setTimelineDragging(false);
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mouseup', handleUp);
+    return () => {
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('mouseup', handleUp);
+    };
+  }, [timelineDragging]);
+
+  const handleTimelineDragStart = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!timelineRef.current) return;
+    const rect = timelineRef.current.getBoundingClientRect();
+    dragOffsetRef.current = {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+    };
+    event.preventDefault();
+    setTimelineDragging(true);
+  };
 
   const handleAddProject = async () => {
     if (!newProjectPath.trim()) return;
@@ -102,11 +154,18 @@ const CockpitPage = () => {
   }
 
   return (
-    <div className="cockpit-container">
+    <div className={`cockpit-container ${sidebarOpen ? 'sidebar-open' : 'sidebar-collapsed'}`}>
       {/* Sidebar for repo/run selection */}
       <aside className="cockpit-sidebar">
         <div className="cockpit-section-header">
-          <span className="cockpit-label">REPOS & RUNS</span>
+          <span className="cockpit-label">PROJECTS</span>
+          <button
+            className="cockpit-icon-button"
+            onClick={() => setSidebarOpen((prev) => !prev)}
+            aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+          >
+            {sidebarOpen ? '⟨' : '⟩'}
+          </button>
         </div>
         <div className="cockpit-sidebar-content">
           {/* Project selector */}
@@ -157,103 +216,140 @@ const CockpitPage = () => {
         </div>
       </aside>
 
-      {/* Main detail panel for run state and docs */}
+      {/* Main detail panel for timeline and run state */}
       <main className="cockpit-main">
         <div className="cockpit-section-header">
-          <span className="cockpit-label">RUN DETAILS</span>
+          <div className="cockpit-header-left">
+            <span className="cockpit-label">RUN OVERVIEW</span>
+            <button
+              className="cockpit-header-button"
+              onClick={() => {
+                setTimelineOpen((prev) => {
+                  const next = !prev;
+                  if (next) {
+                    setTimelinePos({ x: 0, y: 0 });
+                  }
+                  return next;
+                });
+              }}
+            >
+              {timelineOpen ? 'Hide Timeline' : 'Show Timeline'}
+            </button>
+          </div>
+          <div className="cockpit-run-chipbar">
+            <span className="cockpit-chip">{runStatus}</span>
+            <span className="cockpit-chip">Phase: {runPhase}</span>
+            <span className="cockpit-chip">Iter: {runIteration}</span>
+            <span className="cockpit-chip">{progressSummary}</span>
+            <span className="cockpit-chip">Updated: {runUpdated}</span>
+          </div>
         </div>
         <div className="cockpit-main-content">
           {selectedRun ? (
             <>
-              {/* Run state panel */}
-              <div className="cockpit-subsection">
-                <h3 className="cockpit-subsection-title">Run State</h3>
-                <div className="cockpit-field-grid">
-                  <div className="cockpit-field">
-                    <span className="cockpit-field-label">Status</span>
-                    <span className="cockpit-field-value">{selectedRun.status}</span>
-                  </div>
-                  <div className="cockpit-field">
-                    <span className="cockpit-field-label">Phase</span>
-                    <span className="cockpit-field-value">{selectedRun.phase || 'N/A'}</span>
-                  </div>
-                  <div className="cockpit-field">
-                    <span className="cockpit-field-label">Iteration</span>
-                    <span className="cockpit-field-value">{selectedRun.iteration || 'N/A'}</span>
-                  </div>
-                  <div className="cockpit-field">
-                    <span className="cockpit-field-label">Progress</span>
-                    <span className="cockpit-field-value">
-                      {passedCount}/{totalCount} stories
-                    </span>
-                  </div>
-                  <div className="cockpit-field">
-                    <span className="cockpit-field-label">Created</span>
-                    <span className="cockpit-field-value">
-                      {selectedRun.createdAt ? new Date(selectedRun.createdAt).toLocaleString() : 'N/A'}
-                    </span>
-                  </div>
-                  <div className="cockpit-field">
-                    <span className="cockpit-field-label">Updated</span>
-                    <span className="cockpit-field-value">
-                      {selectedRun.updatedAt ? new Date(selectedRun.updatedAt).toLocaleString() : 'N/A'}
-                    </span>
-                  </div>
-                  <div className="cockpit-field">
-                    <span className="cockpit-field-label">Project</span>
-                    <span className="cockpit-field-value">{selectedProject?.path || 'N/A'}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Docs panel - Progress and Summary text */}
-              <div className="cockpit-subsection">
-                <h3 className="cockpit-subsection-title">Documentation</h3>
-                <div className="cockpit-docs-panel">
-                  {/* Progress section */}
-                  <div className="cockpit-doc-section">
-                    <h4 className="cockpit-doc-section-title">Progress</h4>
-                    <div className="cockpit-doc-content">
-                      {progressText ? (
-                        <pre className="cockpit-doc-text">{progressText}</pre>
-                      ) : (
-                        <p className="cockpit-placeholder-text">No progress text available</p>
-                      )}
+              <div className="cockpit-main-grid">
+                <div className="cockpit-main-right">
+                  <div className="cockpit-subsection">
+                    <div className="cockpit-tabs">
+                      <button
+                        className={`cockpit-tab ${infoTab === 'live' ? 'active' : ''}`}
+                        onClick={() => setInfoTab('live')}
+                      >
+                        Live
+                      </button>
+                      <button
+                        className={`cockpit-tab ${infoTab === 'stories' ? 'active' : ''}`}
+                        onClick={() => setInfoTab('stories')}
+                      >
+                        Stories
+                      </button>
+                      <button
+                        className={`cockpit-tab ${infoTab === 'progress' ? 'active' : ''}`}
+                        onClick={() => setInfoTab('progress')}
+                      >
+                        Progress
+                      </button>
+                      <button
+                        className={`cockpit-tab ${infoTab === 'summary' ? 'active' : ''}`}
+                        onClick={() => setInfoTab('summary')}
+                      >
+                        Summary
+                      </button>
                     </div>
-                  </div>
-
-                  {/* Summary section */}
-                  <div className="cockpit-doc-section">
-                    <h4 className="cockpit-doc-section-title">Summary</h4>
-                    <div className="cockpit-doc-content">
-                      {summaryText ? (
-                        <pre className="cockpit-doc-text">{summaryText}</pre>
-                      ) : (
-                        <p className="cockpit-placeholder-text">No summary text available</p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Story list */}
-              <div className="cockpit-subsection">
-                <h3 className="cockpit-subsection-title">Stories ({passedCount}/{totalCount})</h3>
-                <div className="cockpit-story-list">
-                  {stories.map((story) => (
-                    <div key={story.id} className="cockpit-story-item">
-                      <div className="cockpit-story-header">
-                        <span className={`cockpit-story-status ${story.passes ? 'pass' : 'pending'}`}>
-                          {story.passes ? '✓' : '○'}
-                        </span>
-                        <span className="cockpit-story-id">{story.id}</span>
-                        <span className="cockpit-story-size">{story.size}</span>
+                    {infoTab === 'live' && (
+                      <LiveFeedPanel projectId={selectedProjectId} runId={selectedRunId} />
+                    )}
+                    {infoTab === 'stories' && (
+                      <div className="cockpit-story-list">
+                        {stories.map((story) => (
+                          <div key={story.id} className="cockpit-story-item">
+                            <div className="cockpit-story-header">
+                              <span className={`cockpit-story-status ${story.passes ? 'pass' : 'pending'}`}>
+                                {story.passes ? '✓' : '○'}
+                              </span>
+                              <span className="cockpit-story-id">{story.id}</span>
+                              <span className="cockpit-story-size">{story.size}</span>
+                            </div>
+                            <div className="cockpit-story-title">{story.title}</div>
+                          </div>
+                        ))}
                       </div>
-                      <div className="cockpit-story-title">{story.title}</div>
-                    </div>
-                  ))}
+                    )}
+                    {infoTab === 'progress' && (
+                      <div className="cockpit-doc-content">
+                        {progressText ? (
+                          <pre className="cockpit-doc-text">{progressText}</pre>
+                        ) : (
+                          <p className="cockpit-placeholder-text">No progress text available</p>
+                        )}
+                      </div>
+                    )}
+                    {infoTab === 'summary' && (
+                      <div className="cockpit-doc-content">
+                        {summaryText ? (
+                          <pre className="cockpit-doc-text">{summaryText}</pre>
+                        ) : (
+                          <p className="cockpit-placeholder-text">No summary text available</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
+              {timelineOpen && (
+                <div
+                  className="cockpit-timeline-overlay"
+                  ref={timelineRef}
+                  style={{ left: `${timelinePos.x}px`, top: `${timelinePos.y}px` }}
+                >
+                  <div className="cockpit-timeline-overlay-header" onMouseDown={handleTimelineDragStart}>
+                    <span>Timeline</span>
+                    <div className="cockpit-timeline-overlay-actions">
+                      <button
+                        className="cockpit-icon-button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setTimelinePos({ x: 0, y: 0 });
+                        }}
+                      >
+                        Reset
+                      </button>
+                      <button
+                        className="cockpit-icon-button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setTimelineOpen(false);
+                        }}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+                  <div className="cockpit-timeline-overlay-body">
+                    <TimelinePanel projectId={selectedProjectId} runId={selectedRunId} showHeader={false} />
+                  </div>
+                </div>
+              )}
             </>
           ) : (
             <p className="cockpit-placeholder-text">No run selected</p>
@@ -268,7 +364,6 @@ const CockpitPage = () => {
         </div>
         <div className="cockpit-controls-content">
           <ControlPanel projectId={selectedProjectId} runId={selectedRunId} />
-          <LiveFeedPanel projectId={selectedProjectId} runId={selectedRunId} />
           <EventsPanel projectId={selectedProjectId} runId={selectedRunId} />
           <DoctorPanel projectId={selectedProjectId} runId={selectedRunId} />
           <LaunchPanel projectPath={selectedProject?.path || null} runId={selectedRunId} />

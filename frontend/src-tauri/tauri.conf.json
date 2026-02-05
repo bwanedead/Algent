@@ -24,9 +24,10 @@
     "windows": [
       {
         "title": "Algent Lab",
-        "width": 1100,
-        "height": 800,
-        "resizable": true
+        "width": 1080,
+        "height": 720,
+        "resizable": true,
+        "center": true
       }
     ]
   }
