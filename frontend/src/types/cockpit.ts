@@ -130,3 +130,7 @@ export interface OrchestrationState {
   queue?: string[];
   final_review_pending?: boolean;
 }
+
+export interface RunSettings {
+  max_iterations?: number;
+}

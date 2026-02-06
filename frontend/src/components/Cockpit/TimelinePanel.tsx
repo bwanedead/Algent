@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { cockpitClient } from '../../client/cockpitClient';
-import type { EventLogEntry, PRD, RunState, LiveFeed, OrchestrationState } from '../../types/cockpit';
+import type { EventLogEntry, PRD, RunState, LiveFeed, OrchestrationState, RunSettings } from '../../types/cockpit';
 
 interface TimelinePanelProps {
   projectId: string | null;
@@ -18,6 +18,7 @@ const TimelinePanel = ({ projectId, runId, showHeader = true }: TimelinePanelPro
   const [prd, setPrd] = useState<PRD | null>(null);
   const [live, setLive] = useState<LiveFeed | null>(null);
   const [orchestration, setOrchestration] = useState<OrchestrationState | null>(null);
+  const [runSettings, setRunSettings] = useState<RunSettings | null>(null);
 
   useEffect(() => {
     if (!projectId || !runId) {
@@ -30,18 +31,20 @@ const TimelinePanel = ({ projectId, runId, showHeader = true }: TimelinePanelPro
 
     const load = async () => {
       try {
-        const [eventList, state, prdData, liveData, orchestrationData] = await Promise.all([
+        const [eventList, state, prdData, liveData, orchestrationData, settingsData] = await Promise.all([
           cockpitClient.getEvents(projectId, runId, 500),
           cockpitClient.getRunState(projectId, runId),
           cockpitClient.getPRD(projectId, runId),
           cockpitClient.getLiveFeed(projectId, runId, 80),
           cockpitClient.getOrchestration(projectId, runId),
+          cockpitClient.getRunSettings(projectId, runId),
         ]);
         setEvents(eventList);
         setRunState(state);
         setPrd(prdData);
         setLive(liveData);
         setOrchestration(orchestrationData);
+        setRunSettings(settingsData);
       } catch (error) {
         console.error('Failed to load timeline data:', error);
       }
@@ -66,23 +69,33 @@ const TimelinePanel = ({ projectId, runId, showHeader = true }: TimelinePanelPro
   const passedStories = prd?.stories?.filter((story) => story.passes).length ?? 0;
   const maxIterations =
     runState?.maxIterations ??
-    (runState?.iteration !== undefined ? runState.iteration + 1 : 1);
+    runSettings?.max_iterations ??
+    (runState?.iteration !== undefined ? runState.iteration + 1 : 12);
 
   const phases = useMemo(() => {
-    const scheme = orchestration?.scheme || 'W5R';
+    const scheme = orchestration?.scheme;
+    if (!scheme) return [];
     const expanded: string[] = [];
-    for (const token of scheme) {
-      if (token === 'W') expanded.push('worker');
-      if (token === 'R') expanded.push('reviewer');
+    const normalized = scheme.toUpperCase();
+    const pattern = /([WR])(\d*)/g;
+    let match: RegExpExecArray | null;
+    while ((match = pattern.exec(normalized)) !== null) {
+      const code = match[1];
+      const count = match[2] ? Number(match[2]) : 1;
+      const phase = code === 'W' ? 'worker' : 'reviewer';
+      const repeat = Number.isFinite(count) && count > 0 ? count : 1;
+      for (let i = 0; i < repeat; i += 1) {
+        expanded.push(phase);
+      }
     }
-    return expanded.length ? expanded : basePhases;
+    return expanded;
   }, [orchestration]);
 
   const currentIteration = live?.iteration ?? runState?.iteration ?? null;
   const currentPhase = live?.phase ?? runState?.phase ?? null;
 
   const schedulePhaseForIteration = (iteration: number): string => {
-    if (!phases.length) return 'worker';
+    if (!phases.length) return 'unknown';
     const schemeIndex =
       orchestration?.cursor !== undefined
         ? (orchestration.cursor + iteration) % phases.length
@@ -119,6 +132,8 @@ const TimelinePanel = ({ projectId, runId, showHeader = true }: TimelinePanelPro
           <div className="cockpit-timeline-meta">
             <span>Stories: {passedStories}/{totalStories || '—'}</span>
             <span>Iterations: {maxIterations}</span>
+            <span>Scheme: {orchestration?.scheme || 'unset'}</span>
+            {runSettings?.max_iterations && <span>Max: {runSettings.max_iterations}</span>}
           </div>
         </div>
       )}

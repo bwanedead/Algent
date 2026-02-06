@@ -24,17 +24,20 @@ def _stable_project_id(path: str) -> str:
 def _load_registry() -> Dict[str, List[dict]]:
     path = _registry_path()
     if not path.exists():
-        return {"projects": []}
+        return {"projects": [], "run_settings": {}}
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError:
-        return {"projects": []}
+        return {"projects": [], "run_settings": {}}
     if not isinstance(data, dict):
-        return {"projects": []}
+        return {"projects": [], "run_settings": {}}
     projects = data.get("projects")
     if not isinstance(projects, list):
-        return {"projects": []}
-    return {"projects": projects}
+        return {"projects": [], "run_settings": {}}
+    run_settings = data.get("run_settings")
+    if not isinstance(run_settings, dict):
+        run_settings = {}
+    return {"projects": projects, "run_settings": run_settings}
 
 
 def _save_registry(data: Dict[str, List[dict]]) -> None:
@@ -61,6 +64,25 @@ def get_project(project_id: str) -> Optional[dict]:
         if project.get("id") == project_id:
             return project
     return None
+
+
+def get_run_settings(project_id: str, run_id: str) -> dict:
+    data = _load_registry()
+    settings = data.get("run_settings", {})
+    return settings.get(project_id, {}).get(run_id, {})
+
+
+def update_run_settings(project_id: str, run_id: str, updates: dict) -> dict:
+    data = _load_registry()
+    settings = data.setdefault("run_settings", {})
+    project_settings = settings.setdefault(project_id, {})
+    current = project_settings.get(run_id, {})
+    if not isinstance(current, dict):
+        current = {}
+    current.update(updates)
+    project_settings[run_id] = current
+    _save_registry(data)
+    return current
 
 
 def add_project(path: str, name: Optional[str] = None, adapter: str = "ralph_engine") -> dict:

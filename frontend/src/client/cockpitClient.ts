@@ -13,6 +13,7 @@ import type {
   DoctorResult,
   LiveFeed,
   OrchestrationState,
+  RunSettings,
 } from '../types/cockpit';
 
 const API_BASE = 'http://127.0.0.1:43145';
@@ -32,6 +33,23 @@ export interface CockpitClient {
   runDoctor(projectId: string, runId: string): Promise<DoctorResult>;
   getLiveFeed(projectId: string, runId: string, limit?: number): Promise<LiveFeed>;
   getOrchestration(projectId: string, runId: string): Promise<OrchestrationState | null>;
+  updateOrchestration(
+    projectId: string,
+    runId: string,
+    updates: Partial<OrchestrationState>,
+  ): Promise<OrchestrationState | null>;
+  getRunSettings(projectId: string, runId: string): Promise<RunSettings>;
+  updateRunSettings(
+    projectId: string,
+    runId: string,
+    updates: RunSettings,
+  ): Promise<RunSettings>;
+  executeCommand(
+    projectId: string,
+    runId: string,
+    command: string,
+    title?: string,
+  ): Promise<{ status: string; message?: string }>;
   getLogTail(
     projectId: string,
     runId: string,
@@ -174,6 +192,62 @@ class BackendCockpitClient implements CockpitClient {
       `/cockpit/runs/${projectId}/${runId}/orchestration`,
     );
     return data.orchestration;
+  }
+
+  async updateOrchestration(
+    projectId: string,
+    runId: string,
+    updates: Partial<OrchestrationState>,
+  ): Promise<OrchestrationState | null> {
+    const data = await requestJson<{ orchestration: OrchestrationState | null }>(
+      `/cockpit/runs/${projectId}/${runId}/orchestration`,
+      {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      },
+    );
+    return data.orchestration;
+  }
+
+  async getRunSettings(projectId: string, runId: string): Promise<RunSettings> {
+    const data = await requestJson<{ settings: RunSettings }>(
+      `/cockpit/run-settings/${projectId}/${runId}`,
+    );
+    return data.settings;
+  }
+
+  async updateRunSettings(
+    projectId: string,
+    runId: string,
+    updates: RunSettings,
+  ): Promise<RunSettings> {
+    const data = await requestJson<{ settings: RunSettings }>(
+      `/cockpit/run-settings/${projectId}/${runId}`,
+      {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      },
+    );
+    return data.settings;
+  }
+
+  async executeCommand(
+    projectId: string,
+    runId: string,
+    command: string,
+    title: string = 'Ralph Command',
+  ): Promise<{ status: string; message?: string }> {
+    const data = await requestJson<{ result: { status: string; message?: string } }>(
+      `/cockpit/runs/${projectId}/${runId}/execute`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command, title }),
+      },
+    );
+    return data.result;
   }
 
   async getLogTail(

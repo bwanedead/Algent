@@ -7,6 +7,7 @@ import DoctorPanel from './DoctorPanel';
 import LaunchPanel from './LaunchPanel';
 import LiveFeedPanel from './LiveFeedPanel';
 import TimelinePanel from './TimelinePanel';
+import OrchestrationPanel from './OrchestrationPanel';
 
 const CockpitPage = () => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -20,7 +21,7 @@ const CockpitPage = () => {
   const [summaryText, setSummaryText] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [infoTab, setInfoTab] = useState<'live' | 'stories' | 'progress' | 'summary'>('live');
+  const [infoTab, setInfoTab] = useState<'live' | 'stories' | 'progress' | 'summary' | 'orchestration'>('live');
   const [timelineOpen, setTimelineOpen] = useState(true);
   const [timelinePos, setTimelinePos] = useState({ x: 0, y: 0 });
   const [timelineDragging, setTimelineDragging] = useState(false);
@@ -275,6 +276,12 @@ const CockpitPage = () => {
                       >
                         Summary
                       </button>
+                      <button
+                        className={`cockpit-tab ${infoTab === 'orchestration' ? 'active' : ''}`}
+                        onClick={() => setInfoTab('orchestration')}
+                      >
+                        Orchestration
+                      </button>
                     </div>
                     {infoTab === 'live' && (
                       <LiveFeedPanel projectId={selectedProjectId} runId={selectedRunId} />
@@ -312,6 +319,9 @@ const CockpitPage = () => {
                           <p className="cockpit-placeholder-text">No summary text available</p>
                         )}
                       </div>
+                    )}
+                    {infoTab === 'orchestration' && (
+                      <OrchestrationPanel projectId={selectedProjectId} runId={selectedRunId} />
                     )}
                   </div>
                 </div>
@@ -366,7 +376,11 @@ const CockpitPage = () => {
           <ControlPanel projectId={selectedProjectId} runId={selectedRunId} />
           <EventsPanel projectId={selectedProjectId} runId={selectedRunId} />
           <DoctorPanel projectId={selectedProjectId} runId={selectedRunId} />
-          <LaunchPanel projectPath={selectedProject?.path || null} runId={selectedRunId} />
+          <LaunchPanel
+            projectPath={selectedProject?.path || null}
+            projectId={selectedProjectId}
+            runId={selectedRunId}
+          />
         </div>
       </aside>
     </div>

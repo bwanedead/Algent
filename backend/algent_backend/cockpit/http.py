@@ -9,6 +9,7 @@ from urllib.parse import parse_qs, urlparse
 from algent_backend.cockpit import registry
 from algent_backend.cockpit.adapters.ralph_engine import doctor as ralph_doctor
 from algent_backend.cockpit.adapters.ralph_engine import reader as ralph_reader
+from algent_backend.cockpit.adapters.ralph_engine import runner as ralph_runner
 
 
 Response = Tuple[int, Any, str]
@@ -62,6 +63,23 @@ def handle_request(method: str, path: str, payload: Optional[dict] = None) -> Op
             return _error(400, "path does not exist")
         project = registry.add_project(project_path, name=name, adapter=adapter)
         return _json_response(200, {"project": project})
+
+    if method == "GET" and route.startswith("/cockpit/run-settings/"):
+        parts = route.split("/")
+        if len(parts) == 5:
+            project_id = parts[3]
+            run_id = parts[4]
+            settings = registry.get_run_settings(project_id, run_id)
+            return _json_response(200, {"settings": settings})
+
+    if method == "PATCH" and route.startswith("/cockpit/run-settings/"):
+        parts = route.split("/")
+        if len(parts) == 5:
+            project_id = parts[3]
+            run_id = parts[4]
+            updates = payload or {}
+            settings = registry.update_run_settings(project_id, run_id, updates)
+            return _json_response(200, {"settings": settings})
 
     if method == "GET" and route.startswith("/cockpit/projects/"):
         parts = route.split("/")
@@ -123,6 +141,17 @@ def handle_request(method: str, path: str, payload: Optional[dict] = None) -> Op
             if method == "GET" and resource == "orchestration":
                 orchestration = adapter.get_orchestration(project["path"], run_id)
                 return _json_response(200, {"orchestration": orchestration})
+            if method == "PATCH" and resource == "orchestration":
+                updates = payload or {}
+                orchestration = adapter.update_orchestration(project["path"], run_id, updates)
+                return _json_response(200, {"orchestration": orchestration})
+            if method == "POST" and resource == "execute":
+                payload = payload or {}
+                command = payload.get("command")
+                title = payload.get("title", "Ralph Command")
+                result = ralph_runner.run_in_terminal(command, title)
+                status = 200 if result.get("status") == "ok" else 500
+                return _json_response(status, {"result": result})
             if method == "GET" and resource == "live":
                 limit_param = query.get("limit", ["200"])[0]
                 try:

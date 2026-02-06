@@ -565,6 +565,19 @@
   color: var(--c-bg-deep);
 }
 
+.cockpit-orchestration-panel {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--hud-grid-quarter) * 2);
+}
+
+.cockpit-orchestration-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--hud-grid-quarter) * 2);
+}
+
 /* Run details grid */
 .cockpit-field-grid {
   display: grid;
@@ -934,6 +947,13 @@
 .cockpit-launch-button:hover {
   background: var(--c-bg-panel);
   color: var(--c-accent-rust);
+}
+
+.cockpit-launch-actions {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--hud-grid-quarter) * 1.5);
+  margin-top: calc(var(--hud-grid-quarter));
 }
 
 /* Responsive behavior for smaller screens */

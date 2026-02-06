@@ -140,6 +140,14 @@ def get_orchestration(project_root: str, run_id: str) -> Optional[dict]:
     return _safe_read_json(_run_root(Path(project_root), run_id) / "orchestration.json")
 
 
+def update_orchestration(project_root: str, run_id: str, payload: Dict[str, Any]) -> dict:
+    path = _run_root(Path(project_root), run_id) / "orchestration.json"
+    current = _safe_read_json(path) or {}
+    current.update(payload)
+    path.write_text(json.dumps(current, indent=2, sort_keys=True), encoding="utf-8")
+    return current
+
+
 def get_worker_result(project_root: str, run_id: str, iteration: int) -> Optional[dict]:
     run_root = _run_root(Path(project_root), run_id)
     iter_folder = _iter_folder_name(iteration)

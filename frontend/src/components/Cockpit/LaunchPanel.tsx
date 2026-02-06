@@ -1,13 +1,32 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { cockpitClient } from '../../client/cockpitClient';
 
 interface LaunchPanelProps {
   projectPath: string | null;
+  projectId: string | null;
   runId: string | null;
 }
 
-const LaunchPanel = ({ projectPath, runId }: LaunchPanelProps) => {
+const LaunchPanel = ({ projectPath, projectId, runId }: LaunchPanelProps) => {
   const [driver, setDriver] = useState<string>('claude_code');
   const [gitIsolation, setGitIsolation] = useState<boolean>(true);
+  const [maxIterations, setMaxIterations] = useState<number>(12);
+  const [autoFollow, setAutoFollow] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!projectId || !runId) return;
+    const load = async () => {
+      try {
+        const settings = await cockpitClient.getRunSettings(projectId, runId);
+        if (settings.max_iterations) {
+          setMaxIterations(settings.max_iterations);
+        }
+      } catch (error) {
+        console.error('Failed to load run settings:', error);
+      }
+    };
+    load();
+  }, [projectId, runId]);
 
   const generateCommand = (): string => {
     if (!runId || !projectPath) return '';
@@ -19,6 +38,7 @@ const LaunchPanel = ({ projectPath, runId }: LaunchPanelProps) => {
       `--run-id "${runId}"`,
       `--driver "${driver}"`,
       '--resume',
+      `--max-iterations ${maxIterations}`,
     ];
 
     if (gitIsolation) {
@@ -29,6 +49,9 @@ const LaunchPanel = ({ projectPath, runId }: LaunchPanelProps) => {
   };
 
   const command = generateCommand();
+  const followCommand = projectPath && runId
+    ? `ralph-engine tail "${projectPath}" --run-id "${runId}" --follow`
+    : '';
 
   if (!runId || !projectPath) {
     return (
@@ -70,6 +93,24 @@ const LaunchPanel = ({ projectPath, runId }: LaunchPanelProps) => {
         </label>
       </div>
 
+      <div className="cockpit-launch-section">
+        <label className="cockpit-field-label">Max Iterations</label>
+        <input
+          className="cockpit-input"
+          type="number"
+          min={1}
+          value={maxIterations}
+          onChange={(e) => setMaxIterations(Number(e.target.value || 1))}
+          onBlur={async () => {
+            if (projectId && runId) {
+              await cockpitClient.updateRunSettings(projectId, runId, {
+                max_iterations: maxIterations,
+              });
+            }
+          }}
+        />
+      </div>
+
       {/* Generated command */}
       <div className="cockpit-launch-section">
         <label className="cockpit-field-label">Command</label>
@@ -82,6 +123,38 @@ const LaunchPanel = ({ projectPath, runId }: LaunchPanelProps) => {
         >
           Copy Command
         </button>
+        <div className="cockpit-launch-actions">
+          <button
+            className="cockpit-control-button"
+            onClick={async () => {
+              if (!projectId || !runId) return;
+              await cockpitClient.executeCommand(projectId, runId, command, 'Ralph Run');
+              if (autoFollow && followCommand) {
+                await cockpitClient.executeCommand(projectId, runId, followCommand, 'Ralph Follow');
+              }
+            }}
+          >
+            Launch / Resume
+          </button>
+          <button
+            className="cockpit-control-button"
+            onClick={async () => {
+              if (!projectId || !runId || !followCommand) return;
+              await cockpitClient.executeCommand(projectId, runId, followCommand, 'Ralph Follow');
+            }}
+          >
+            Open Follow Window
+          </button>
+        </div>
+        <label className="cockpit-control-item">
+          <input
+            type="checkbox"
+            checked={autoFollow}
+            onChange={(e) => setAutoFollow(e.target.checked)}
+            className="cockpit-control-checkbox"
+          />
+          <span className="cockpit-control-label">Auto-open Follow Window</span>
+        </label>
       </div>
     </div>
   );
