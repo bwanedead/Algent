@@ -28,7 +28,7 @@ const CockpitPage = () => {
   const summaryRef = useRef<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [infoTab, setInfoTab] = useState<'live' | 'stories' | 'progress' | 'summary' | 'orchestration' | 'reviewer'>('live');
+  const [infoTab, setInfoTab] = useState<'live' | 'events' | 'stories' | 'progress' | 'summary' | 'orchestration' | 'reviewer'>('live');
   const [timelineOpen, setTimelineOpen] = useState(false);
   const [timelinePos, setTimelinePos] = useState({ x: 0, y: 0 });
   const [timelineDragging, setTimelineDragging] = useState(false);
@@ -326,6 +326,12 @@ const CockpitPage = () => {
                         Live
                       </button>
                       <button
+                        className={`cockpit-tab ${infoTab === 'events' ? 'active' : ''}`}
+                        onClick={() => setInfoTab('events')}
+                      >
+                        Events
+                      </button>
+                      <button
                         className={`cockpit-tab ${infoTab === 'stories' ? 'active' : ''}`}
                         onClick={() => setInfoTab('stories')}
                       >
@@ -359,6 +365,9 @@ const CockpitPage = () => {
                     <div className="cockpit-tab-body">
                       {infoTab === 'live' && (
                         <LiveFeedPanel projectId={selectedProjectId} runId={selectedRunId} />
+                      )}
+                      {infoTab === 'events' && (
+                        <EventsPanel projectId={selectedProjectId} runId={selectedRunId} />
                       )}
                       {infoTab === 'stories' && (
                         <div className="cockpit-story-list">
@@ -490,11 +499,10 @@ const CockpitPage = () => {
       {/* Control and events area */}
       <aside className="cockpit-controls">
         <div className="cockpit-section-header">
-          <span className="cockpit-label">CONTROL & EVENTS</span>
+          <span className="cockpit-label">CONTROL</span>
         </div>
         <div className="cockpit-controls-content">
           <ControlPanel projectId={selectedProjectId} runId={selectedRunId} />
-          <EventsPanel projectId={selectedProjectId} runId={selectedRunId} />
           <DoctorPanel projectId={selectedProjectId} runId={selectedRunId} />
           <LaunchPanel
             projectPath={selectedProject?.path || null}

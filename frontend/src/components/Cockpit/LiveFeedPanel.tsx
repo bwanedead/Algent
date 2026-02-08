@@ -11,12 +11,21 @@ const LiveFeedPanel = ({ projectId, runId }: LiveFeedPanelProps) => {
   const [live, setLive] = useState<LiveFeed | null>(null);
   const [stream, setStream] = useState<'all' | 'stdout' | 'stderr'>('all');
   const [combinedLines, setCombinedLines] = useState<string[]>([]);
-  const [combinedPrev, setCombinedPrev] = useState<string[]>([]);
   const [newRange, setNewRange] = useState<{ start: number; end: number; lastAt: number } | null>(null);
   const [loading, setLoading] = useState(false);
   const [autoFollow, setAutoFollow] = useState(true);
   const [lineLimit, setLineLimit] = useState(120);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const combinedLengthRef = useRef(0);
+
+  const pastelColorForSource = (sourceLabel: string): string => {
+    let hash = 0;
+    for (let i = 0; i < sourceLabel.length; i += 1) {
+      hash = (hash * 31 + sourceLabel.charCodeAt(i)) >>> 0;
+    }
+    const hue = hash % 360;
+    return `hsl(${hue} 70% 82%)`;
+  };
 
   const loadLive = async () => {
     if (!projectId || !runId) return;
@@ -28,7 +37,7 @@ const LiveFeedPanel = ({ projectId, runId }: LiveFeedPanelProps) => {
       ]);
       setLive(data);
       const now = Date.now();
-      const prevLength = combinedLines.length;
+      const prevLength = combinedLengthRef.current;
       const nextLength = combined.length;
       if (nextLength > prevLength) {
         setNewRange((current) => {
@@ -38,7 +47,7 @@ const LiveFeedPanel = ({ projectId, runId }: LiveFeedPanelProps) => {
           return { start: prevLength, end: nextLength, lastAt: now };
         });
       }
-      setCombinedPrev(combinedLines);
+      combinedLengthRef.current = nextLength;
       setCombinedLines(combined);
       console.log('[cockpit][live]', {
         projectId,
@@ -59,8 +68,14 @@ const LiveFeedPanel = ({ projectId, runId }: LiveFeedPanelProps) => {
   useEffect(() => {
     if (!projectId || !runId) {
       setLive(null);
+      setCombinedLines([]);
+      setNewRange(null);
+      combinedLengthRef.current = 0;
       return;
     }
+    setCombinedLines([]);
+    setNewRange(null);
+    combinedLengthRef.current = 0;
     loadLive();
     const interval = setInterval(loadLive, 1500);
     return () => clearInterval(interval);
@@ -70,6 +85,16 @@ const LiveFeedPanel = ({ projectId, runId }: LiveFeedPanelProps) => {
     if (!autoFollow || !containerRef.current) return;
     containerRef.current.scrollTop = containerRef.current.scrollHeight;
   }, [live, autoFollow, stream]);
+
+  useEffect(() => {
+    if (!newRange) return;
+    const timer = setTimeout(() => {
+      setNewRange((current) =>
+        current && current.lastAt === newRange.lastAt ? null : current,
+      );
+    }, 1400);
+    return () => clearTimeout(timer);
+  }, [newRange]);
 
   if (!projectId || !runId) {
     return (
@@ -156,18 +181,21 @@ const LiveFeedPanel = ({ projectId, runId }: LiveFeedPanelProps) => {
           <pre className="cockpit-live-text">
             {stream === 'all'
               ? (() => {
-                  let phaseIndex = -1;
+                  let sourceLabel = 'source-0';
+                  let sourceColor = pastelColorForSource(sourceLabel);
                   return combinedLines.map((line, idx) => {
-                    if (line.startsWith('--- ')) {
-                      phaseIndex += 1;
+                    const isBoundary = line.startsWith('--- ');
+                    if (isBoundary) {
+                      sourceLabel = line;
+                      sourceColor = pastelColorForSource(sourceLabel);
                     }
                     const isNew =
                       newRange && idx >= newRange.start && idx < newRange.end;
-                    const phaseClass = `phase-${Math.max(0, phaseIndex) % 4}`;
                     return (
                       <span
                         key={idx}
-                        className={`cockpit-live-line ${phaseClass} ${isNew ? 'new' : ''}`}
+                        className={`cockpit-live-line ${isBoundary ? 'source-boundary' : 'source-line'} ${isNew ? 'new' : ''}`}
+                        style={{ color: sourceColor }}
                       >
                         {line}
                         {'\n'}
