@@ -10,6 +10,9 @@ interface LiveFeedPanelProps {
 const LiveFeedPanel = ({ projectId, runId }: LiveFeedPanelProps) => {
   const [live, setLive] = useState<LiveFeed | null>(null);
   const [stream, setStream] = useState<'all' | 'stdout' | 'stderr'>('all');
+  const [combinedLines, setCombinedLines] = useState<string[]>([]);
+  const [combinedPrev, setCombinedPrev] = useState<string[]>([]);
+  const [newRange, setNewRange] = useState<{ start: number; end: number; lastAt: number } | null>(null);
   const [loading, setLoading] = useState(false);
   const [autoFollow, setAutoFollow] = useState(true);
   const [lineLimit, setLineLimit] = useState(120);
@@ -19,8 +22,33 @@ const LiveFeedPanel = ({ projectId, runId }: LiveFeedPanelProps) => {
     if (!projectId || !runId) return;
     setLoading(true);
     try {
-      const data = await cockpitClient.getLiveFeed(projectId, runId, lineLimit);
+      const [data, combined] = await Promise.all([
+        cockpitClient.getLiveFeed(projectId, runId, lineLimit),
+        cockpitClient.getLiveFeedCombined(projectId, runId),
+      ]);
       setLive(data);
+      const now = Date.now();
+      const prevLength = combinedLines.length;
+      const nextLength = combined.length;
+      if (nextLength > prevLength) {
+        setNewRange((current) => {
+          if (current && now - current.lastAt < 5000) {
+            return { start: current.start, end: nextLength, lastAt: now };
+          }
+          return { start: prevLength, end: nextLength, lastAt: now };
+        });
+      }
+      setCombinedPrev(combinedLines);
+      setCombinedLines(combined);
+      console.log('[cockpit][live]', {
+        projectId,
+        runId,
+        phase: data.phase,
+        iteration: data.iteration,
+        stdoutLines: data.stdout.length,
+        stderrLines: data.stderr.length,
+        combinedLines: combined.length,
+      });
     } catch (error) {
       console.error('Failed to load live feed:', error);
     } finally {
@@ -58,12 +86,7 @@ const LiveFeedPanel = ({ projectId, runId }: LiveFeedPanelProps) => {
       ? stdoutLines
       : stream === 'stderr'
         ? stderrLines
-        : [
-            ...(stdoutLines.length ? ['[stdout]'] : []),
-            ...stdoutLines,
-            ...(stderrLines.length ? ['[stderr]'] : []),
-            ...stderrLines,
-          ];
+        : combinedLines;
   const statusLabel =
     live?.phase && live?.iteration !== null
       ? `${live.phase} • iter ${live.iteration}`
@@ -118,13 +141,42 @@ const LiveFeedPanel = ({ projectId, runId }: LiveFeedPanelProps) => {
           </select>
         </div>
       </div>
-      <div className="cockpit-live-body" ref={containerRef}>
+      <div
+        className="cockpit-live-body"
+        ref={containerRef}
+        onWheel={() => setAutoFollow(false)}
+        onTouchStart={() => setAutoFollow(false)}
+        onScrollCapture={() => setAutoFollow(false)}
+      >
         {loading && lines.length === 0 ? (
           <p className="cockpit-placeholder-text">Loading live output...</p>
         ) : lines.length === 0 ? (
           <p className="cockpit-placeholder-text">No live output yet</p>
         ) : (
-          <pre className="cockpit-live-text">{lines.join('\n')}</pre>
+          <pre className="cockpit-live-text">
+            {stream === 'all'
+              ? (() => {
+                  let phaseIndex = -1;
+                  return combinedLines.map((line, idx) => {
+                    if (line.startsWith('--- ')) {
+                      phaseIndex += 1;
+                    }
+                    const isNew =
+                      newRange && idx >= newRange.start && idx < newRange.end;
+                    const phaseClass = `phase-${Math.max(0, phaseIndex) % 4}`;
+                    return (
+                      <span
+                        key={idx}
+                        className={`cockpit-live-line ${phaseClass} ${isNew ? 'new' : ''}`}
+                      >
+                        {line}
+                        {'\n'}
+                      </span>
+                    );
+                  });
+                })()
+              : lines.join('\n')}
+          </pre>
         )}
       </div>
     </div>

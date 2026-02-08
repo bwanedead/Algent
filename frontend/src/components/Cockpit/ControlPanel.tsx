@@ -13,10 +13,12 @@ const ControlPanel = ({ projectId, runId }: ControlPanelProps) => {
     stop_soft: false,
     stop_hard: false,
     skip_iteration: false,
+    add_iterations: 0,
     review_now: false,
     review_next: false,
   });
   const [loading, setLoading] = useState(false);
+  const [extendBy, setExtendBy] = useState(1);
 
   // Load control signals when runId changes
   useEffect(() => {
@@ -26,6 +28,7 @@ const ControlPanel = ({ projectId, runId }: ControlPanelProps) => {
         stop_soft: false,
         stop_hard: false,
         skip_iteration: false,
+        add_iterations: 0,
         review_now: false,
         review_next: false,
       });
@@ -51,7 +54,8 @@ const ControlPanel = ({ projectId, runId }: ControlPanelProps) => {
     try {
       const newValue = !signals[key];
       await cockpitClient.updateControlSignals(projectId, runId, { [key]: newValue });
-      setSignals((prev) => ({ ...prev, [key]: newValue }));
+      const refreshed = await cockpitClient.getControlSignals(projectId, runId);
+      setSignals(refreshed);
     } catch (error) {
       console.error(`Failed to toggle ${key}:`, error);
     } finally {
@@ -67,15 +71,37 @@ const ControlPanel = ({ projectId, runId }: ControlPanelProps) => {
     try {
       // Set to true
       await cockpitClient.updateControlSignals(projectId, runId, { [key]: true });
-      setSignals((prev) => ({ ...prev, [key]: true }));
+      const refreshed = await cockpitClient.getControlSignals(projectId, runId);
+      setSignals(refreshed);
 
       // Simulate consumption after a short delay
       setTimeout(async () => {
         await cockpitClient.updateControlSignals(projectId, runId, { [key]: false });
-        setSignals((prev) => ({ ...prev, [key]: false }));
+        const next = await cockpitClient.getControlSignals(projectId, runId);
+        setSignals(next);
       }, 1000);
     } catch (error) {
       console.error(`Failed to trigger ${key}:`, error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleExtend = async () => {
+    if (!projectId || !runId) return;
+    if (extendBy <= 0) return;
+    setLoading(true);
+    try {
+      await cockpitClient.updateControlSignals(projectId, runId, { add_iterations: extendBy });
+      const refreshed = await cockpitClient.getControlSignals(projectId, runId);
+      setSignals(refreshed);
+      setTimeout(async () => {
+        await cockpitClient.updateControlSignals(projectId, runId, { add_iterations: 0 });
+        const next = await cockpitClient.getControlSignals(projectId, runId);
+        setSignals(next);
+      }, 1000);
+    } catch (error) {
+      console.error('Failed to extend iterations:', error);
     } finally {
       setLoading(false);
     }
@@ -141,6 +167,22 @@ const ControlPanel = ({ projectId, runId }: ControlPanelProps) => {
           >
             Skip Iteration {signals.skip_iteration && '(Pending)'}
           </button>
+          <div className="cockpit-control-extend">
+            <input
+              className="cockpit-input"
+              type="number"
+              min={1}
+              value={extendBy}
+              onChange={(e) => setExtendBy(Number(e.target.value || 1))}
+            />
+            <button
+              className="cockpit-control-button"
+              onClick={handleExtend}
+              disabled={loading}
+            >
+              Extend (+{extendBy})
+            </button>
+          </div>
           <button
             className="cockpit-control-button"
             onClick={() => handleOneShot('review_now')}

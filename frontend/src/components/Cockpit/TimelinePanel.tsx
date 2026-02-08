@@ -45,6 +45,12 @@ const TimelinePanel = ({ projectId, runId, showHeader = true }: TimelinePanelPro
         setLive(liveData);
         setOrchestration(orchestrationData);
         setRunSettings(settingsData);
+        console.log('[cockpit][timeline]', {
+          events: eventList.length,
+          scheme: orchestrationData?.scheme,
+          cursor: orchestrationData?.cursor,
+          maxIterations: state?.maxIterations ?? settingsData?.max_iterations ?? null,
+        });
       } catch (error) {
         console.error('Failed to load timeline data:', error);
       }
@@ -96,10 +102,21 @@ const TimelinePanel = ({ projectId, runId, showHeader = true }: TimelinePanelPro
 
   const schedulePhaseForIteration = (iteration: number): string => {
     if (!phases.length) return 'unknown';
-    const schemeIndex =
-      orchestration?.cursor !== undefined
-        ? (orchestration.cursor + iteration) % phases.length
-        : iteration % phases.length;
+    const firstEvent = events
+      .filter((event) => event.type === 'phase_started' && event.phase && event.iteration !== undefined)
+      .sort((a, b) => (a.iteration ?? 0) - (b.iteration ?? 0))[0];
+
+    let baseOffset = 0;
+    if (firstEvent?.phase && firstEvent.iteration !== undefined) {
+      const idx = phases.indexOf(firstEvent.phase);
+      if (idx >= 0) {
+        baseOffset = (idx - firstEvent.iteration + phases.length) % phases.length;
+      }
+    } else if (orchestration?.cursor !== undefined) {
+      baseOffset = orchestration.cursor % phases.length;
+    }
+
+    const schemeIndex = (baseOffset + iteration) % phases.length;
     return phases[schemeIndex];
   };
 
@@ -134,6 +151,7 @@ const TimelinePanel = ({ projectId, runId, showHeader = true }: TimelinePanelPro
             <span>Iterations: {maxIterations}</span>
             <span>Scheme: {orchestration?.scheme || 'unset'}</span>
             {runSettings?.max_iterations && <span>Max: {runSettings.max_iterations}</span>}
+            {orchestration?.cursor !== undefined && <span>Cursor: {orchestration.cursor}</span>}
           </div>
         </div>
       )}

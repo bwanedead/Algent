@@ -28,15 +28,18 @@ const LaunchPanel = ({ projectPath, projectId, runId }: LaunchPanelProps) => {
     load();
   }, [projectId, runId]);
 
-  const generateCommand = (): string => {
+  const generateCommand = (quotePaths: boolean = true, quoteArgs: boolean = true): string => {
     if (!runId || !projectPath) return '';
 
+    const projectArg = quotePaths ? `"${projectPath}"` : projectPath;
+    const runArg = quoteArgs ? `"${runId}"` : runId;
+    const driverArg = quoteArgs ? `"${driver}"` : driver;
     const parts = [
       'ralph-engine',
       'run',
-      `"${projectPath}"`,
-      `--run-id "${runId}"`,
-      `--driver "${driver}"`,
+      projectArg,
+      `--run-id ${runArg}`,
+      `--driver ${driverArg}`,
       '--resume',
       `--max-iterations ${maxIterations}`,
     ];
@@ -48,9 +51,13 @@ const LaunchPanel = ({ projectPath, projectId, runId }: LaunchPanelProps) => {
     return parts.join(' ');
   };
 
-  const command = generateCommand();
+  const command = generateCommand(true, true);
+  const execCommand = generateCommand(false, false);
   const followCommand = projectPath && runId
     ? `ralph-engine tail "${projectPath}" --run-id "${runId}" --follow`
+    : '';
+  const followExecCommand = projectPath && runId
+    ? `ralph-engine tail ${projectPath} --run-id ${runId} --follow`
     : '';
 
   if (!runId || !projectPath) {
@@ -94,7 +101,7 @@ const LaunchPanel = ({ projectPath, projectId, runId }: LaunchPanelProps) => {
       </div>
 
       <div className="cockpit-launch-section">
-        <label className="cockpit-field-label">Max Iterations</label>
+        <label className="cockpit-field-label">Max Iterations (from now)</label>
         <input
           className="cockpit-input"
           type="number"
@@ -128,9 +135,15 @@ const LaunchPanel = ({ projectPath, projectId, runId }: LaunchPanelProps) => {
             className="cockpit-control-button"
             onClick={async () => {
               if (!projectId || !runId) return;
-              await cockpitClient.executeCommand(projectId, runId, command, 'Ralph Run');
-              if (autoFollow && followCommand) {
-                await cockpitClient.executeCommand(projectId, runId, followCommand, 'Ralph Follow');
+              await cockpitClient.executeCommand(projectId, runId, execCommand, 'Ralph Run', projectPath);
+              if (autoFollow && followExecCommand) {
+                await cockpitClient.executeCommand(
+                  projectId,
+                  runId,
+                  followExecCommand,
+                  'Ralph Follow',
+                  projectPath,
+                );
               }
             }}
           >
@@ -139,8 +152,14 @@ const LaunchPanel = ({ projectPath, projectId, runId }: LaunchPanelProps) => {
           <button
             className="cockpit-control-button"
             onClick={async () => {
-              if (!projectId || !runId || !followCommand) return;
-              await cockpitClient.executeCommand(projectId, runId, followCommand, 'Ralph Follow');
+              if (!projectId || !runId || !followExecCommand) return;
+              await cockpitClient.executeCommand(
+                projectId,
+                runId,
+                followExecCommand,
+                'Ralph Follow',
+                projectPath,
+              );
             }}
           >
             Open Follow Window

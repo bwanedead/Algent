@@ -162,6 +162,7 @@ def get_control_signals(project_root: str, run_id: str) -> Dict[str, Any]:
         "stop_soft": bool(data.get("stop_soft", False)),
         "stop_hard": bool(data.get("stop_hard", False)),
         "skip_iteration": bool(data.get("skip_iteration", False)),
+        "add_iterations": int(data.get("add_iterations", 0) or 0),
         "review_now": bool(data.get("review_now", False)),
         "review_next": bool(data.get("review_next", False)),
     }
@@ -275,8 +276,82 @@ def get_log_tail(
     return list(lines)
 
 
+def get_full_stdout_feed(project_root: str, run_id: str) -> List[str]:
+    run_root = _run_root(Path(project_root), run_id)
+    events_path = run_root / "events.ndjson"
+    if not events_path.exists():
+        return []
+
+    lines: List[str] = []
+    seen = set()
+    with events_path.open("r", encoding="utf-8") as handle:
+        for raw in handle:
+            raw = raw.strip()
+            if not raw:
+                continue
+            try:
+                event = json.loads(raw)
+            except json.JSONDecodeError:
+                continue
+            if event.get("type") != "phase_started":
+                continue
+            phase = event.get("phase")
+            iteration = event.get("iteration")
+            if phase is None or iteration is None:
+                continue
+            key = (phase, int(iteration))
+            if key in seen:
+                continue
+            seen.add(key)
+            lines.append(f"--- {phase.upper()} ITERATION {int(iteration)} ---")
+            stdout = get_log_tail(project_root, run_id, phase, int(iteration), "stdout", 2000)
+            lines.extend(stdout)
+    return lines
+
+
+def _log_has_content(project_root: str, run_id: str, phase: str, iteration: int) -> bool:
+    run_root = _run_root(Path(project_root), run_id)
+    iter_folder = _iter_folder_name(iteration)
+    log_dir = run_root / "phases" / phase / iter_folder / "logs"
+    stdout = log_dir / "stdout.txt"
+    stderr = log_dir / "stderr.txt"
+    return (stdout.exists() and stdout.stat().st_size > 0) or (
+        stderr.exists() and stderr.stat().st_size > 0
+    )
+
+
+def _find_latest_output_phase(project_root: str, run_id: str) -> Optional[dict]:
+    path = _run_root(Path(project_root), run_id) / "events.ndjson"
+    if not path.exists():
+        return None
+    events: List[dict] = []
+    with path.open("r", encoding="utf-8") as handle:
+        for line in handle:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                events.append(json.loads(line))
+            except json.JSONDecodeError:
+                continue
+    for event in reversed(events):
+        if event.get("type") != "phase_started":
+            continue
+        phase = event.get("phase")
+        iteration = event.get("iteration")
+        if phase and iteration is not None:
+            if _log_has_content(project_root, run_id, phase, int(iteration)):
+                return {"phase": phase, "iteration": int(iteration)}
+    return None
+
+
 def get_live_stream(project_root: str, run_id: str, limit: int = 200) -> dict:
     active = get_active_phase(project_root, run_id)
+    if active:
+        if not _log_has_content(project_root, run_id, str(active["phase"]), int(active["iteration"])):
+            active = _find_latest_output_phase(project_root, run_id)
+    else:
+        active = _find_latest_output_phase(project_root, run_id)
     if not active:
         return {
             "phase": None,

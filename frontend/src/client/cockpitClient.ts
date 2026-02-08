@@ -32,6 +32,7 @@ export interface CockpitClient {
   getRunArtifacts(projectId: string, runId: string): Promise<RunArtifacts>;
   runDoctor(projectId: string, runId: string): Promise<DoctorResult>;
   getLiveFeed(projectId: string, runId: string, limit?: number): Promise<LiveFeed>;
+  getLiveFeedCombined(projectId: string, runId: string): Promise<string[]>;
   getOrchestration(projectId: string, runId: string): Promise<OrchestrationState | null>;
   updateOrchestration(
     projectId: string,
@@ -49,7 +50,22 @@ export interface CockpitClient {
     runId: string,
     command: string,
     title?: string,
+    cwd?: string | null,
   ): Promise<{ status: string; message?: string }>;
+  getReviewerResult(
+    projectId: string,
+    runId: string,
+    iteration: number,
+  ): Promise<Record<string, unknown> | null>;
+  getReviewerIterations(projectId: string, runId: string): Promise<number[]>;
+  getReviewerLatest(
+    projectId: string,
+    runId: string,
+  ): Promise<{ iteration: number | null; result: Record<string, unknown> | null }>;
+  getReviewerResults(
+    projectId: string,
+    runId: string,
+  ): Promise<Array<{ iteration: number; result: Record<string, unknown> }>>;
   getLogTail(
     projectId: string,
     runId: string,
@@ -184,6 +200,13 @@ class BackendCockpitClient implements CockpitClient {
     return data.live;
   }
 
+  async getLiveFeedCombined(projectId: string, runId: string): Promise<string[]> {
+    const data = await requestJson<{ lines: string[] }>(
+      `/cockpit/runs/${projectId}/${runId}/live-feed`,
+    );
+    return data.lines;
+  }
+
   async getOrchestration(
     projectId: string,
     runId: string,
@@ -238,16 +261,55 @@ class BackendCockpitClient implements CockpitClient {
     runId: string,
     command: string,
     title: string = 'Ralph Command',
+    cwd: string | null = null,
   ): Promise<{ status: string; message?: string }> {
     const data = await requestJson<{ result: { status: string; message?: string } }>(
       `/cockpit/runs/${projectId}/${runId}/execute`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ command, title }),
+        body: JSON.stringify({ command, title, cwd }),
       },
     );
     return data.result;
+  }
+
+  async getReviewerResult(
+    projectId: string,
+    runId: string,
+    iteration: number,
+  ): Promise<Record<string, unknown> | null> {
+    const data = await requestJson<{ result: Record<string, unknown> | null }>(
+      `/cockpit/runs/${projectId}/${runId}/reviewer-result?iteration=${iteration}`,
+    );
+    return data.result;
+  }
+
+  async getReviewerIterations(projectId: string, runId: string): Promise<number[]> {
+    const data = await requestJson<{ iterations: number[] }>(
+      `/cockpit/runs/${projectId}/${runId}/reviewer-iterations`,
+    );
+    return data.iterations;
+  }
+
+  async getReviewerLatest(
+    projectId: string,
+    runId: string,
+  ): Promise<{ iteration: number | null; result: Record<string, unknown> | null }> {
+    const data = await requestJson<{ iteration: number | null; result: Record<string, unknown> | null }>(
+      `/cockpit/runs/${projectId}/${runId}/reviewer-latest`,
+    );
+    return data;
+  }
+
+  async getReviewerResults(
+    projectId: string,
+    runId: string,
+  ): Promise<Array<{ iteration: number; result: Record<string, unknown> }>> {
+    const data = await requestJson<{ results: Array<{ iteration: number; result: Record<string, unknown> }> }>(
+      `/cockpit/runs/${projectId}/${runId}/reviewer-results`,
+    );
+    return data.results;
   }
 
   async getLogTail(

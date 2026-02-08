@@ -8,6 +8,7 @@ from urllib.parse import parse_qs, urlparse
 
 from algent_backend.cockpit import registry
 from algent_backend.cockpit.adapters.ralph_engine import doctor as ralph_doctor
+from algent_backend.cockpit.adapters.ralph_engine import outputs as ralph_outputs
 from algent_backend.cockpit.adapters.ralph_engine import reader as ralph_reader
 from algent_backend.cockpit.adapters.ralph_engine import runner as ralph_runner
 
@@ -145,11 +146,31 @@ def handle_request(method: str, path: str, payload: Optional[dict] = None) -> Op
                 updates = payload or {}
                 orchestration = adapter.update_orchestration(project["path"], run_id, updates)
                 return _json_response(200, {"orchestration": orchestration})
+            if method == "GET" and resource == "reviewer-result":
+                iteration_param = query.get("iteration", [None])[0]
+                if iteration_param is None:
+                    return _error(400, "iteration is required")
+                try:
+                    iteration = int(iteration_param)
+                except ValueError:
+                    return _error(400, "iteration must be an integer")
+                result = ralph_outputs.get_reviewer_result(project["path"], run_id, iteration)
+                return _json_response(200, {"result": result})
+            if method == "GET" and resource == "reviewer-iterations":
+                iterations = ralph_outputs.list_reviewer_iterations(project["path"], run_id)
+                return _json_response(200, {"iterations": iterations})
+            if method == "GET" and resource == "reviewer-latest":
+                iteration, result = ralph_outputs.get_latest_reviewer_result(project["path"], run_id)
+                return _json_response(200, {"iteration": iteration, "result": result})
+            if method == "GET" and resource == "reviewer-results":
+                results = ralph_outputs.list_reviewer_results(project["path"], run_id)
+                return _json_response(200, {"results": results})
             if method == "POST" and resource == "execute":
                 payload = payload or {}
                 command = payload.get("command")
                 title = payload.get("title", "Ralph Command")
-                result = ralph_runner.run_in_terminal(command, title)
+                cwd = payload.get("cwd")
+                result = ralph_runner.run_in_terminal(command, title, cwd=cwd)
                 status = 200 if result.get("status") == "ok" else 500
                 return _json_response(status, {"result": result})
             if method == "GET" and resource == "live":
@@ -160,6 +181,9 @@ def handle_request(method: str, path: str, payload: Optional[dict] = None) -> Op
                     limit = 200
                 live = adapter.get_live_stream(project["path"], run_id, limit)
                 return _json_response(200, {"live": live})
+            if method == "GET" and resource == "live-feed":
+                lines = adapter.get_full_stdout_feed(project["path"], run_id)
+                return _json_response(200, {"lines": lines})
             if method == "GET" and resource == "logs":
                 phase = query.get("phase", [None])[0]
                 iteration_param = query.get("iteration", [None])[0]

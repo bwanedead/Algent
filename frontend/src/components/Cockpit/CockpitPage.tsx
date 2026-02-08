@@ -8,6 +8,7 @@ import LaunchPanel from './LaunchPanel';
 import LiveFeedPanel from './LiveFeedPanel';
 import TimelinePanel from './TimelinePanel';
 import OrchestrationPanel from './OrchestrationPanel';
+import ReviewerPanel from './ReviewerPanel';
 
 const CockpitPage = () => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -19,14 +20,24 @@ const CockpitPage = () => {
   const [stories, setStories] = useState<Story[]>([]);
   const [progressText, setProgressText] = useState<string | null>(null);
   const [summaryText, setSummaryText] = useState<string | null>(null);
+  const [progressPrev, setProgressPrev] = useState<string | null>(null);
+  const [summaryPrev, setSummaryPrev] = useState<string | null>(null);
+  const [progressChangeIndex, setProgressChangeIndex] = useState(0);
+  const [summaryChangeIndex, setSummaryChangeIndex] = useState(0);
+  const progressRef = useRef<string | null>(null);
+  const summaryRef = useRef<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [infoTab, setInfoTab] = useState<'live' | 'stories' | 'progress' | 'summary' | 'orchestration'>('live');
-  const [timelineOpen, setTimelineOpen] = useState(true);
+  const [infoTab, setInfoTab] = useState<'live' | 'stories' | 'progress' | 'summary' | 'orchestration' | 'reviewer'>('live');
+  const [timelineOpen, setTimelineOpen] = useState(false);
   const [timelinePos, setTimelinePos] = useState({ x: 0, y: 0 });
   const [timelineDragging, setTimelineDragging] = useState(false);
   const dragOffsetRef = useRef({ x: 0, y: 0 });
   const timelineRef = useRef<HTMLDivElement | null>(null);
+  const progressRefEl = useRef<HTMLDivElement | null>(null);
+  const summaryRefEl = useRef<HTMLDivElement | null>(null);
+  const [progressStickBottom, setProgressStickBottom] = useState(true);
+  const [summaryStickBottom, setSummaryStickBottom] = useState(true);
 
   // Load projects on mount
   useEffect(() => {
@@ -66,21 +77,44 @@ const CockpitPage = () => {
   // Load run artifacts when run is selected
   useEffect(() => {
     if (!selectedProjectId || !selectedRunId) return;
+    let isMounted = true;
     const loadRunDetails = async () => {
       try {
         const artifacts = await cockpitClient.getRunArtifacts(selectedProjectId, selectedRunId);
+        if (!isMounted) return;
         if (artifacts.prd) {
           setStories(artifacts.prd.stories);
         } else {
           setStories([]);
         }
+        if (artifacts.progressText !== progressRef.current) {
+          setProgressChangeIndex((prev) => prev + 1);
+          console.log('[cockpit][progress] updated', {
+            length: artifacts.progressText ? artifacts.progressText.length : 0,
+          });
+        }
+        if (artifacts.summaryText !== summaryRef.current) {
+          setSummaryChangeIndex((prev) => prev + 1);
+          console.log('[cockpit][summary] updated', {
+            length: artifacts.summaryText ? artifacts.summaryText.length : 0,
+          });
+        }
+        setProgressPrev(progressText);
+        setSummaryPrev(summaryText);
         setProgressText(artifacts.progressText || null);
         setSummaryText(artifacts.summaryText || null);
+        progressRef.current = artifacts.progressText || null;
+        summaryRef.current = artifacts.summaryText || null;
       } catch (error) {
         console.error('Failed to load run artifacts:', error);
       }
     };
     loadRunDetails();
+    const interval = setInterval(loadRunDetails, 5000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
   }, [selectedProjectId, selectedRunId]);
 
   const selectedRun = runs.find((r) => r.id === selectedRunId);
@@ -97,6 +131,39 @@ const CockpitPage = () => {
     () => `${passedCount}/${totalCount || '—'} stories`,
     [passedCount, totalCount],
   );
+
+  const freshClass = (changeIndex: number) => {
+    if (changeIndex === 0) return '';
+    const cycle = changeIndex % 3;
+    if (cycle === 1) return 'fresh';
+    if (cycle === 2) return 'stale';
+    return '';
+  };
+
+  const renderWithHighlight = (current: string | null, previous: string | null) => {
+    if (!current) return null;
+    if (previous && current.startsWith(previous)) {
+      const oldPart = previous;
+      const newPart = current.slice(previous.length);
+      return (
+        <>
+          <span>{oldPart}</span>
+          <span className="cockpit-text-new">{newPart}</span>
+        </>
+      );
+    }
+    return <span>{current}</span>;
+  };
+
+  useEffect(() => {
+    if (!progressRefEl.current || !progressStickBottom) return;
+    progressRefEl.current.scrollTop = progressRefEl.current.scrollHeight;
+  }, [progressText, progressStickBottom]);
+
+  useEffect(() => {
+    if (!summaryRefEl.current || !summaryStickBottom) return;
+    summaryRefEl.current.scrollTop = summaryRefEl.current.scrollHeight;
+  }, [summaryText, summaryStickBottom]);
 
   useEffect(() => {
     if (!timelineDragging) return;
@@ -250,7 +317,7 @@ const CockpitPage = () => {
             <>
               <div className="cockpit-main-grid">
                 <div className="cockpit-main-right">
-                  <div className="cockpit-subsection">
+                  <div className="cockpit-subsection cockpit-tab-panel">
                     <div className="cockpit-tabs">
                       <button
                         className={`cockpit-tab ${infoTab === 'live' ? 'active' : ''}`}
@@ -282,47 +349,100 @@ const CockpitPage = () => {
                       >
                         Orchestration
                       </button>
+                      <button
+                        className={`cockpit-tab ${infoTab === 'reviewer' ? 'active' : ''}`}
+                        onClick={() => setInfoTab('reviewer')}
+                      >
+                        Reviewer
+                      </button>
                     </div>
-                    {infoTab === 'live' && (
-                      <LiveFeedPanel projectId={selectedProjectId} runId={selectedRunId} />
-                    )}
-                    {infoTab === 'stories' && (
-                      <div className="cockpit-story-list">
-                        {stories.map((story) => (
-                          <div key={story.id} className="cockpit-story-item">
-                            <div className="cockpit-story-header">
-                              <span className={`cockpit-story-status ${story.passes ? 'pass' : 'pending'}`}>
-                                {story.passes ? '✓' : '○'}
-                              </span>
-                              <span className="cockpit-story-id">{story.id}</span>
-                              <span className="cockpit-story-size">{story.size}</span>
+                    <div className="cockpit-tab-body">
+                      {infoTab === 'live' && (
+                        <LiveFeedPanel projectId={selectedProjectId} runId={selectedRunId} />
+                      )}
+                      {infoTab === 'stories' && (
+                        <div className="cockpit-story-list">
+                          {stories.map((story) => (
+                            <div key={story.id} className="cockpit-story-item">
+                              <div className="cockpit-story-header">
+                                <span className={`cockpit-story-status ${story.passes ? 'pass' : 'pending'}`}>
+                                  {story.passes ? '✓' : '○'}
+                                </span>
+                                <span className="cockpit-story-id">{story.id}</span>
+                                <span className="cockpit-story-size">{story.size}</span>
+                              </div>
+                              <div className="cockpit-story-title">{story.title}</div>
                             </div>
-                            <div className="cockpit-story-title">{story.title}</div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                          ))}
+                        </div>
+                      )}
                     {infoTab === 'progress' && (
-                      <div className="cockpit-doc-content">
+                      <div className="cockpit-doc-wrapper">
+                        <button
+                          className="cockpit-jump-button"
+                          onClick={() => {
+                            if (progressRefEl.current) {
+                              progressRefEl.current.scrollTop = progressRefEl.current.scrollHeight;
+                            }
+                            setProgressStickBottom(true);
+                          }}
+                        >
+                          Jump to Bottom
+                        </button>
+                        <div
+                          className={`cockpit-doc-content ${freshClass(progressChangeIndex)}`}
+                          ref={progressRefEl}
+                          onWheel={() => setProgressStickBottom(false)}
+                          onTouchStart={() => setProgressStickBottom(false)}
+                          onScrollCapture={() => setProgressStickBottom(false)}
+                        >
                         {progressText ? (
-                          <pre className="cockpit-doc-text">{progressText}</pre>
+                          <pre className="cockpit-doc-text">
+                            {renderWithHighlight(progressText, progressPrev)}
+                          </pre>
                         ) : (
                           <p className="cockpit-placeholder-text">No progress text available</p>
                         )}
+                        </div>
                       </div>
                     )}
                     {infoTab === 'summary' && (
-                      <div className="cockpit-doc-content">
+                      <div className="cockpit-doc-wrapper">
+                        <button
+                          className="cockpit-jump-button"
+                          onClick={() => {
+                            if (summaryRefEl.current) {
+                              summaryRefEl.current.scrollTop = summaryRefEl.current.scrollHeight;
+                            }
+                            setSummaryStickBottom(true);
+                          }}
+                        >
+                          Jump to Bottom
+                        </button>
+                        <div
+                          className={`cockpit-doc-content ${freshClass(summaryChangeIndex)}`}
+                          ref={summaryRefEl}
+                          onWheel={() => setSummaryStickBottom(false)}
+                          onTouchStart={() => setSummaryStickBottom(false)}
+                          onScrollCapture={() => setSummaryStickBottom(false)}
+                        >
                         {summaryText ? (
-                          <pre className="cockpit-doc-text">{summaryText}</pre>
+                          <pre className="cockpit-doc-text">
+                            {renderWithHighlight(summaryText, summaryPrev)}
+                          </pre>
                         ) : (
                           <p className="cockpit-placeholder-text">No summary text available</p>
                         )}
+                        </div>
                       </div>
                     )}
-                    {infoTab === 'orchestration' && (
-                      <OrchestrationPanel projectId={selectedProjectId} runId={selectedRunId} />
-                    )}
+                      {infoTab === 'orchestration' && (
+                        <OrchestrationPanel projectId={selectedProjectId} runId={selectedRunId} />
+                      )}
+                      {infoTab === 'reviewer' && (
+                        <ReviewerPanel projectId={selectedProjectId} runId={selectedRunId} />
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

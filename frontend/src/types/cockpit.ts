@@ -86,6 +86,7 @@ export interface ControlSignals {
   stop_soft?: boolean;
   stop_hard?: boolean;
   skip_iteration?: boolean;
+  add_iterations?: number;
   review_now?: boolean;
   review_next?: boolean;
 }
