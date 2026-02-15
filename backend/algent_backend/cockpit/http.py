@@ -7,6 +7,7 @@ from typing import Any, Dict, Optional, Tuple
 from urllib.parse import parse_qs, urlparse
 
 from algent_backend.cockpit import registry
+from algent_backend.cockpit.adapters.ralph_engine import config as ralph_config
 from algent_backend.cockpit.adapters.ralph_engine import doctor as ralph_doctor
 from algent_backend.cockpit.adapters.ralph_engine import outputs as ralph_outputs
 from algent_backend.cockpit.adapters.ralph_engine import reader as ralph_reader
@@ -90,6 +91,13 @@ def handle_request(method: str, path: str, payload: Optional[dict] = None) -> Op
             if not project:
                 return _error(404, "project not found")
             return _json_response(200, {"project": project})
+        if len(parts) == 5 and parts[4] == "driver-config":
+            project_id = parts[3]
+            project = _get_project_or_error(project_id)
+            if not project:
+                return _error(404, "project not found")
+            config = ralph_config.get_driver_config(project["path"])
+            return _json_response(200, {"driverConfig": config})
         if len(parts) == 5 and parts[4] == "runs":
             project_id = parts[3]
             project = _get_project_or_error(project_id)

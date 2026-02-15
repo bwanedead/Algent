@@ -13,6 +13,12 @@ export interface Project {
   adapter?: string;
 }
 
+export interface ProjectDriverConfig {
+  configPath: string;
+  defaultDriver: string | null;
+  configured: boolean;
+}
+
 export interface Run {
   id: string;
   title?: string | null;

@@ -14,6 +14,7 @@ import type {
   LiveFeed,
   OrchestrationState,
   RunSettings,
+  ProjectDriverConfig,
 } from '../types/cockpit';
 
 const API_BASE = 'http://127.0.0.1:43145';
@@ -21,6 +22,7 @@ const API_BASE = 'http://127.0.0.1:43145';
 export interface CockpitClient {
   listProjects(): Promise<Project[]>;
   addProject(path: string, name?: string): Promise<Project>;
+  getProjectDriverConfig(projectId: string): Promise<ProjectDriverConfig>;
   listRuns(projectId: string): Promise<Run[]>;
   getRunState(projectId: string, runId: string): Promise<RunState | null>;
   getPRD(projectId: string, runId: string): Promise<PRD | null>;
@@ -121,6 +123,13 @@ class BackendCockpitClient implements CockpitClient {
       body: JSON.stringify({ path, name }),
     });
     return data.project;
+  }
+
+  async getProjectDriverConfig(projectId: string): Promise<ProjectDriverConfig> {
+    const data = await requestJson<{ driverConfig: ProjectDriverConfig }>(
+      `/cockpit/projects/${projectId}/driver-config`,
+    );
+    return data.driverConfig;
   }
 
   async listRuns(projectId: string): Promise<Run[]> {
