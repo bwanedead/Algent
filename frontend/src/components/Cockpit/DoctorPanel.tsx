@@ -3,14 +3,18 @@ import { cockpitClient } from '../../client/cockpitClient';
 import type { DoctorResult } from '../../types/cockpit';
 
 interface DoctorPanelProps {
+  projectPath: string | null;
   projectId: string | null;
   runId: string | null;
 }
 
-const DoctorPanel = ({ projectId, runId }: DoctorPanelProps) => {
+const DoctorPanel = ({ projectPath, projectId, runId }: DoctorPanelProps) => {
   const [result, setResult] = useState<DoctorResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const doctorCommand = projectPath && runId
+    ? `ralph-engine doctor "${projectPath}" --run-id "${runId}"`
+    : '';
 
   const handleDoctor = async () => {
     if (!projectId || !runId) return;
@@ -41,6 +45,25 @@ const DoctorPanel = ({ projectId, runId }: DoctorPanelProps) => {
         <button className="cockpit-control-button" onClick={handleDoctor} disabled={loading}>
           {loading ? 'Running...' : 'Run Doctor'}
         </button>
+      </div>
+      <div className="cockpit-doctor-output">
+        <label className="cockpit-field-label">Command</label>
+        <div className="cockpit-command-group">
+          <div className="cockpit-command-copy-row">
+            <button
+              className="cockpit-copy-icon-button"
+              aria-label="Copy doctor command"
+              title="Copy command"
+              onClick={() => navigator.clipboard.writeText(doctorCommand)}
+              disabled={!doctorCommand}
+            >
+              ⎘
+            </button>
+          </div>
+          <div className="cockpit-command-box">
+            <code className="cockpit-command-text">{doctorCommand}</code>
+          </div>
+        </div>
       </div>
       {error && <p className="cockpit-placeholder-text">{error}</p>}
       {result && (

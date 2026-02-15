@@ -503,7 +503,11 @@ const CockpitPage = () => {
         </div>
         <div className="cockpit-controls-content">
           <ControlPanel projectId={selectedProjectId} runId={selectedRunId} />
-          <DoctorPanel projectId={selectedProjectId} runId={selectedRunId} />
+          <DoctorPanel
+            projectPath={selectedProject?.path || null}
+            projectId={selectedProjectId}
+            runId={selectedRunId}
+          />
           <LaunchPanel
             projectPath={selectedProject?.path || null}
             projectId={selectedProjectId}

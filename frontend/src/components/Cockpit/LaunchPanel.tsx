@@ -191,16 +191,22 @@ const LaunchPanel = ({ projectPath, projectId, runId }: LaunchPanelProps) => {
       {/* Generated command */}
       <div className="cockpit-launch-section">
         <label className="cockpit-field-label">Command</label>
-        <div className="cockpit-command-box">
-          <code className="cockpit-command-text">{command}</code>
+        <div className="cockpit-command-group">
+          <div className="cockpit-command-copy-row">
+            <button
+              className="cockpit-copy-icon-button"
+              aria-label="Copy run command"
+              title="Copy command"
+              disabled={isMissingInputs}
+              onClick={() => navigator.clipboard.writeText(command)}
+            >
+              ⎘
+            </button>
+          </div>
+          <div className="cockpit-command-box">
+            <code className="cockpit-command-text">{command}</code>
+          </div>
         </div>
-        <button
-          className="cockpit-launch-button"
-          disabled={isMissingInputs}
-          onClick={() => navigator.clipboard.writeText(command)}
-        >
-          Copy Command
-        </button>
         <div className="cockpit-launch-actions">
           <button
             className="cockpit-control-button"

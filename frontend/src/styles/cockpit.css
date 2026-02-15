@@ -1063,6 +1063,44 @@
   overflow-x: auto;
 }
 
+.cockpit-command-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cockpit-command-copy-row {
+  display: flex;
+  justify-content: flex-start;
+  margin: 0;
+}
+
+.cockpit-copy-icon-button {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--c-bg-panel);
+  border: 1px solid var(--c-border-dim);
+  border-radius: 2px;
+  color: var(--c-text-main);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.cockpit-copy-icon-button:hover:not(:disabled) {
+  border-color: var(--c-accent-rust);
+  color: var(--c-accent-rust);
+}
+
+.cockpit-copy-icon-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .cockpit-command-text {
   font-size: 0.8rem;
   color: var(--c-text-main);
