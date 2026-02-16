@@ -7,16 +7,23 @@ interface LaunchPanelProps {
   runId: string | null;
 }
 
+const KNOWN_DRIVERS = ['claude_code', 'codex_cli', 'stub', 'shell'];
+
 const LaunchPanel = ({ projectPath, projectId, runId }: LaunchPanelProps) => {
   const [runIdInput, setRunIdInput] = useState<string>('');
   const [launchMode, setLaunchMode] = useState<'resume' | 'new'>('resume');
+  const [driverMode, setDriverMode] = useState<'single' | 'split'>('single');
   const [driverOverride, setDriverOverride] = useState<string>('');
+  const [workerDriverOverride, setWorkerDriverOverride] = useState<string>('');
+  const [reviewerDriverOverride, setReviewerDriverOverride] = useState<string>('');
   const [defaultDriver, setDefaultDriver] = useState<string | null>(null);
+  const [defaultWorkerDriver, setDefaultWorkerDriver] = useState<string | null>(null);
+  const [defaultReviewerDriver, setDefaultReviewerDriver] = useState<string | null>(null);
   const [driverConfigPath, setDriverConfigPath] = useState<string | null>(null);
+  const [driverConfigSource, setDriverConfigSource] = useState<'run' | 'project' | 'default'>('default');
   const [gitIsolation, setGitIsolation] = useState<boolean>(true);
   const [maxIterations, setMaxIterations] = useState<number>(12);
   const [autoFollow, setAutoFollow] = useState<boolean>(false);
-  const knownDrivers = ['claude_code', 'codex_cli', 'stub', 'shell'];
   const effectiveRunId = runIdInput.trim();
 
   useEffect(() => {
@@ -29,17 +36,30 @@ const LaunchPanel = ({ projectPath, projectId, runId }: LaunchPanelProps) => {
     if (!projectId) return;
     const loadDriverConfig = async () => {
       try {
-        const config = await cockpitClient.getProjectDriverConfig(projectId);
+        const config = effectiveRunId
+          ? await cockpitClient.getRunDriverConfig(projectId, effectiveRunId)
+          : await cockpitClient.getProjectDriverConfig(projectId);
         setDefaultDriver(config.defaultDriver);
+        setDefaultWorkerDriver(config.workerDriver || null);
+        setDefaultReviewerDriver(config.reviewerDriver || null);
         setDriverConfigPath(config.configPath);
+        setDriverConfigSource(config.source || 'default');
+        if (config.workerDriver || config.reviewerDriver) {
+          setDriverMode('split');
+        } else {
+          setDriverMode('single');
+        }
       } catch (error) {
-        console.error('Failed to load project driver config:', error);
+        console.error('Failed to load driver config:', error);
         setDefaultDriver(null);
+        setDefaultWorkerDriver(null);
+        setDefaultReviewerDriver(null);
         setDriverConfigPath(null);
+        setDriverConfigSource('default');
       }
     };
     loadDriverConfig();
-  }, [projectId]);
+  }, [projectId, effectiveRunId]);
 
   useEffect(() => {
     if (!projectId || !effectiveRunId) return;
@@ -73,9 +93,20 @@ const LaunchPanel = ({ projectPath, projectId, runId }: LaunchPanelProps) => {
       parts.push('--resume');
     }
 
-    if (driverOverride) {
-      const driverArg = quoteArgs ? `"${driverOverride}"` : driverOverride;
-      parts.push(`--driver ${driverArg}`);
+    if (driverMode === 'single') {
+      if (driverOverride) {
+        const driverArg = quoteArgs ? `"${driverOverride}"` : driverOverride;
+        parts.push(`--driver ${driverArg}`);
+      }
+    } else {
+      if (workerDriverOverride) {
+        const workerArg = quoteArgs ? `"${workerDriverOverride}"` : workerDriverOverride;
+        parts.push(`--worker-driver ${workerArg}`);
+      }
+      if (reviewerDriverOverride) {
+        const reviewerArg = quoteArgs ? `"${reviewerDriverOverride}"` : reviewerDriverOverride;
+        parts.push(`--reviewer-driver ${reviewerArg}`);
+      }
     }
 
     if (gitIsolation) {
@@ -87,16 +118,34 @@ const LaunchPanel = ({ projectPath, projectId, runId }: LaunchPanelProps) => {
 
   const command = generateCommand(true, true);
   const execCommand = generateCommand(true, true);
-  const followCommand = projectPath && effectiveRunId
-    ? `ralph-engine tail "${projectPath}" --run-id "${effectiveRunId}" --follow`
-    : '';
   const followExecCommand = projectPath && effectiveRunId
     ? `ralph-engine tail "${projectPath}" --run-id "${effectiveRunId}" --follow`
     : '';
   const isMissingInputs = !projectPath || !effectiveRunId;
   const launchLabel = launchMode === 'resume' ? 'Resume Run' : 'Start New Run';
-  const defaultDriverLabel = defaultDriver ? `Default (${defaultDriver})` : 'Default (engine default)';
-  const selectedDriverIsCustom = defaultDriver !== null && !knownDrivers.includes(defaultDriver);
+  const sourceLabel = driverConfigSource === 'run'
+    ? `run config (${driverConfigPath || 'ralph/runs/<run_id>/config.json'})`
+    : driverConfigSource === 'project'
+      ? `project config (${driverConfigPath || 'ralph/config.json'})`
+      : 'engine defaults';
+  const singleDefaultLabel = defaultDriver
+    ? `Default (${defaultDriver})`
+    : defaultWorkerDriver || defaultReviewerDriver
+      ? 'Default (configured split drivers)'
+      : 'Default (engine default)';
+  const workerDefaultLabel = defaultWorkerDriver
+    ? `Default worker (${defaultWorkerDriver})`
+    : defaultDriver
+      ? `Default worker (${defaultDriver})`
+      : 'Default worker (engine default)';
+  const reviewerDefaultLabel = defaultReviewerDriver
+    ? `Default reviewer (${defaultReviewerDriver})`
+    : defaultDriver
+      ? `Default reviewer (${defaultDriver})`
+      : 'Default reviewer (engine default)';
+  const customDefaultDrivers = [defaultDriver, defaultWorkerDriver, defaultReviewerDriver]
+    .filter((driver): driver is string => Boolean(driver && !KNOWN_DRIVERS.includes(driver)));
+  const uniqueCustomDefaults = [...new Set(customDefaultDrivers)];
 
   if (!projectPath) {
     return (
@@ -135,25 +184,81 @@ const LaunchPanel = ({ projectPath, projectId, runId }: LaunchPanelProps) => {
 
       {/* Driver selection */}
       <div className="cockpit-launch-section">
-        <label className="cockpit-field-label">Driver</label>
+        <label className="cockpit-field-label">Driver Mode</label>
         <select
           className="cockpit-select"
-          value={driverOverride}
-          onChange={(e) => setDriverOverride(e.target.value)}
+          value={driverMode}
+          onChange={(e) => setDriverMode(e.target.value as 'single' | 'split')}
         >
-          <option value="">{defaultDriverLabel}</option>
-          <option value="claude_code">Claude Code</option>
-          <option value="codex_cli">Codex CLI</option>
-          <option value="stub">Stub</option>
-          <option value="shell">Shell</option>
-          {selectedDriverIsCustom && defaultDriver && (
-            <option value={defaultDriver}>Configured ({defaultDriver})</option>
-          )}
+          <option value="single">Single Driver (--driver)</option>
+          <option value="split">Split Drivers (--worker-driver/--reviewer-driver)</option>
         </select>
+        {driverMode === 'single' ? (
+          <>
+            <label className="cockpit-field-label">Driver Override</label>
+            <select
+              className="cockpit-select"
+              value={driverOverride}
+              onChange={(e) => setDriverOverride(e.target.value)}
+            >
+              <option value="">{singleDefaultLabel}</option>
+              <option value="claude_code">Claude Code</option>
+              <option value="codex_cli">Codex CLI</option>
+              <option value="stub">Stub</option>
+              <option value="shell">Shell</option>
+              {uniqueCustomDefaults.map((driverName) => (
+                <option key={`single-${driverName}`} value={driverName}>
+                  Configured ({driverName})
+                </option>
+              ))}
+            </select>
+          </>
+        ) : (
+          <>
+            <label className="cockpit-field-label">Worker Driver Override</label>
+            <select
+              className="cockpit-select"
+              value={workerDriverOverride}
+              onChange={(e) => setWorkerDriverOverride(e.target.value)}
+            >
+              <option value="">{workerDefaultLabel}</option>
+              <option value="claude_code">Claude Code</option>
+              <option value="codex_cli">Codex CLI</option>
+              <option value="stub">Stub</option>
+              <option value="shell">Shell</option>
+              {uniqueCustomDefaults.map((driverName) => (
+                <option key={`worker-${driverName}`} value={driverName}>
+                  Configured ({driverName})
+                </option>
+              ))}
+            </select>
+            <label className="cockpit-field-label">Reviewer Driver Override</label>
+            <select
+              className="cockpit-select"
+              value={reviewerDriverOverride}
+              onChange={(e) => setReviewerDriverOverride(e.target.value)}
+            >
+              <option value="">{reviewerDefaultLabel}</option>
+              <option value="claude_code">Claude Code</option>
+              <option value="codex_cli">Codex CLI</option>
+              <option value="stub">Stub</option>
+              <option value="shell">Shell</option>
+              {uniqueCustomDefaults.map((driverName) => (
+                <option key={`reviewer-${driverName}`} value={driverName}>
+                  Configured ({driverName})
+                </option>
+              ))}
+            </select>
+          </>
+        )}
         <p className="cockpit-placeholder-text">
-          {driverOverride
-            ? `Driver override set to "${driverOverride}" (adds --driver).`
-            : `Using project default from ${driverConfigPath || 'ralph/config.json'}.`}
+          {driverMode === 'single'
+            ? driverOverride
+              ? `Driver override set to "${driverOverride}" (adds --driver).`
+              : `Using ${sourceLabel}.`
+            : workerDriverOverride || reviewerDriverOverride
+              ? `Split overrides active:${workerDriverOverride ? ` worker=${workerDriverOverride}` : ''}${reviewerDriverOverride ? ` reviewer=${reviewerDriverOverride}` : ''}.`
+              : `Using split defaults from ${sourceLabel}.`}
         </p>
       </div>
 

@@ -23,6 +23,7 @@ export interface CockpitClient {
   listProjects(): Promise<Project[]>;
   addProject(path: string, name?: string): Promise<Project>;
   getProjectDriverConfig(projectId: string): Promise<ProjectDriverConfig>;
+  getRunDriverConfig(projectId: string, runId: string): Promise<ProjectDriverConfig>;
   listRuns(projectId: string): Promise<Run[]>;
   getRunState(projectId: string, runId: string): Promise<RunState | null>;
   getPRD(projectId: string, runId: string): Promise<PRD | null>;
@@ -128,6 +129,13 @@ class BackendCockpitClient implements CockpitClient {
   async getProjectDriverConfig(projectId: string): Promise<ProjectDriverConfig> {
     const data = await requestJson<{ driverConfig: ProjectDriverConfig }>(
       `/cockpit/projects/${projectId}/driver-config`,
+    );
+    return data.driverConfig;
+  }
+
+  async getRunDriverConfig(projectId: string, runId: string): Promise<ProjectDriverConfig> {
+    const data = await requestJson<{ driverConfig: ProjectDriverConfig }>(
+      `/cockpit/runs/${projectId}/${runId}/driver-config`,
     );
     return data.driverConfig;
   }

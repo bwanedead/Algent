@@ -15,7 +15,12 @@ export interface Project {
 
 export interface ProjectDriverConfig {
   configPath: string;
+  source?: 'project' | 'default' | 'run';
   defaultDriver: string | null;
+  workerDriver?: string | null;
+  reviewerDriver?: string | null;
+  runConfigPath?: string;
+  projectConfigPath?: string;
   configured: boolean;
 }
 

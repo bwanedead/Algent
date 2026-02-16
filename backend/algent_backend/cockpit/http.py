@@ -96,7 +96,7 @@ def handle_request(method: str, path: str, payload: Optional[dict] = None) -> Op
             project = _get_project_or_error(project_id)
             if not project:
                 return _error(404, "project not found")
-            config = ralph_config.get_driver_config(project["path"])
+            config = ralph_config.get_project_driver_config(project["path"])
             return _json_response(200, {"driverConfig": config})
         if len(parts) == 5 and parts[4] == "runs":
             project_id = parts[3]
@@ -133,6 +133,9 @@ def handle_request(method: str, path: str, payload: Optional[dict] = None) -> Op
             if method == "GET" and resource == "prd":
                 prd = adapter.get_prd(project["path"], run_id)
                 return _json_response(200, {"prd": prd})
+            if method == "GET" and resource == "driver-config":
+                config = ralph_config.get_run_driver_config(project["path"], run_id)
+                return _json_response(200, {"driverConfig": config})
             if method == "GET" and resource == "progress":
                 text = adapter.get_progress_text(project["path"], run_id) or ""
                 return _text_response(200, text)
