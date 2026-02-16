@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { cockpitClient } from '../../client/cockpitClient';
-import type { EventLogEntry, PRD, RunState, LiveFeed, OrchestrationState, RunSettings } from '../../types/cockpit';
+import type { EventLogEntry, PRD, RunState, LiveFeed, OrchestrationState } from '../../types/cockpit';
 
 interface TimelinePanelProps {
   projectId: string | null;
@@ -18,7 +18,6 @@ const TimelinePanel = ({ projectId, runId, showHeader = true }: TimelinePanelPro
   const [prd, setPrd] = useState<PRD | null>(null);
   const [live, setLive] = useState<LiveFeed | null>(null);
   const [orchestration, setOrchestration] = useState<OrchestrationState | null>(null);
-  const [runSettings, setRunSettings] = useState<RunSettings | null>(null);
 
   useEffect(() => {
     if (!projectId || !runId) {
@@ -31,25 +30,23 @@ const TimelinePanel = ({ projectId, runId, showHeader = true }: TimelinePanelPro
 
     const load = async () => {
       try {
-        const [eventList, state, prdData, liveData, orchestrationData, settingsData] = await Promise.all([
+        const [eventList, state, prdData, liveData, orchestrationData] = await Promise.all([
           cockpitClient.getEvents(projectId, runId, 500),
           cockpitClient.getRunState(projectId, runId),
           cockpitClient.getPRD(projectId, runId),
           cockpitClient.getLiveFeed(projectId, runId, 80),
           cockpitClient.getOrchestration(projectId, runId),
-          cockpitClient.getRunSettings(projectId, runId),
         ]);
         setEvents(eventList);
         setRunState(state);
         setPrd(prdData);
         setLive(liveData);
         setOrchestration(orchestrationData);
-        setRunSettings(settingsData);
         console.log('[cockpit][timeline]', {
           events: eventList.length,
           scheme: orchestrationData?.scheme,
           cursor: orchestrationData?.cursor,
-          maxIterations: state?.maxIterations ?? settingsData?.max_iterations ?? null,
+          maxIterations: state?.maxIterations ?? null,
         });
       } catch (error) {
         console.error('Failed to load timeline data:', error);
@@ -73,10 +70,37 @@ const TimelinePanel = ({ projectId, runId, showHeader = true }: TimelinePanelPro
 
   const totalStories = prd?.stories?.length ?? 0;
   const passedStories = prd?.stories?.filter((story) => story.passes).length ?? 0;
+  const latestRunStartedMaxIterations = useMemo(() => {
+    for (let i = events.length - 1; i >= 0; i -= 1) {
+      const event = events[i];
+      if (event.type !== 'run_started') continue;
+      const value = event.data?.max_iterations;
+      if (typeof value === 'number' && Number.isFinite(value) && value > 0) {
+        return Math.trunc(value);
+      }
+    }
+    return null;
+  }, [events]);
+  const observedMaxIteration = useMemo(() => {
+    let maxIteration = -1;
+    for (const event of events) {
+      if (typeof event.iteration === 'number' && event.iteration > maxIteration) {
+        maxIteration = event.iteration;
+      }
+    }
+    if (typeof runState?.iteration === 'number' && runState.iteration > maxIteration) {
+      maxIteration = runState.iteration;
+    }
+    if (typeof live?.iteration === 'number' && live.iteration > maxIteration) {
+      maxIteration = live.iteration;
+    }
+    return maxIteration;
+  }, [events, live, runState]);
+
   const maxIterations =
+    latestRunStartedMaxIterations ??
     runState?.maxIterations ??
-    runSettings?.max_iterations ??
-    (runState?.iteration !== undefined ? runState.iteration + 1 : 12);
+    (observedMaxIteration >= 0 ? observedMaxIteration + 1 : 12);
 
   const phases = useMemo(() => {
     const scheme = orchestration?.scheme;
@@ -97,8 +121,32 @@ const TimelinePanel = ({ projectId, runId, showHeader = true }: TimelinePanelPro
     return expanded;
   }, [orchestration]);
 
-  const currentIteration = live?.iteration ?? runState?.iteration ?? null;
-  const currentPhase = live?.phase ?? runState?.phase ?? null;
+  const activeFromEvents = useMemo(() => {
+    let active: { iteration: number; phase: string } | null = null;
+    for (const event of events) {
+      if (
+        event.type === 'phase_started' &&
+        typeof event.iteration === 'number' &&
+        typeof event.phase === 'string'
+      ) {
+        active = { iteration: event.iteration, phase: event.phase };
+      }
+      if (
+        event.type === 'phase_finished' &&
+        typeof event.iteration === 'number' &&
+        typeof event.phase === 'string' &&
+        active &&
+        active.iteration === event.iteration &&
+        active.phase === event.phase
+      ) {
+        active = null;
+      }
+    }
+    return active;
+  }, [events]);
+
+  const currentIteration = activeFromEvents?.iteration ?? live?.iteration ?? runState?.iteration ?? null;
+  const currentPhase = activeFromEvents?.phase ?? live?.phase ?? runState?.phase ?? null;
 
   const schedulePhaseForIteration = (iteration: number): string => {
     if (!phases.length) return 'unknown';
@@ -150,7 +198,6 @@ const TimelinePanel = ({ projectId, runId, showHeader = true }: TimelinePanelPro
             <span>Stories: {passedStories}/{totalStories || '—'}</span>
             <span>Iterations: {maxIterations}</span>
             <span>Scheme: {orchestration?.scheme || 'unset'}</span>
-            {runSettings?.max_iterations && <span>Max: {runSettings.max_iterations}</span>}
             {orchestration?.cursor !== undefined && <span>Cursor: {orchestration.cursor}</span>}
           </div>
         </div>

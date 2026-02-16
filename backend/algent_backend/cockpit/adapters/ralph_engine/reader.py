@@ -347,10 +347,7 @@ def _find_latest_output_phase(project_root: str, run_id: str) -> Optional[dict]:
 
 def get_live_stream(project_root: str, run_id: str, limit: int = 200) -> dict:
     active = get_active_phase(project_root, run_id)
-    if active:
-        if not _log_has_content(project_root, run_id, str(active["phase"]), int(active["iteration"])):
-            active = _find_latest_output_phase(project_root, run_id)
-    else:
+    if not active:
         active = _find_latest_output_phase(project_root, run_id)
     if not active:
         return {
