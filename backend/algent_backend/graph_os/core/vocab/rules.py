@@ -41,7 +41,9 @@ def validate_edge(
         return errors
     if src_kind is None or dst_kind is None:
         errors.append(
-            f"edge '{edge.edge_id.value}' missing src/dst kinds for validation"
+            f"edge '{edge.edge_id.value}' missing src/dst kinds for validation "
+            f"(ensure endpoint nodes already exist in the snapshot or are created "
+            f"earlier in the same op batch)"
         )
         return errors
     if (

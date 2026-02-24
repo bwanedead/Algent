@@ -24,10 +24,6 @@ def validate_ops(
     node_kinds: Dict[str, str] = {}
     if snapshot is not None:
         node_kinds = {node_id: node.kind for node_id, node in snapshot.nodes.items()}
-    if vocab is not None:
-        for op in ops:
-            if isinstance(op, CreateNode):
-                node_kinds[op.node_id.value] = op.kind
     for op in ops:
         if op.op_id.value in seen_ids:
             errors.append(f"duplicate op id {op.op_id.value}")
@@ -43,6 +39,9 @@ def validate_ops(
                 updated_at=op.timestamp,
             )
             errors.extend(validate_node(node, vocab))
+            # Mirror reducer semantics: later ops can only rely on nodes created
+            # earlier in the same batch.
+            node_kinds[op.node_id.value] = op.kind
         elif isinstance(op, CreateEdge):
             src_kind = node_kinds.get(op.src.value)
             dst_kind = node_kinds.get(op.dst.value)
