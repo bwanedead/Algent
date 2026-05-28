@@ -1,0 +1,22 @@
+# Pre-commit gate for Algent. See docs/linting/static-governance.md.
+# ruff auto-fixes hygiene locally so it rarely blocks; governance is informational.
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.10
+    hooks:
+      - id: ruff
+        name: ruff (lint, autofix)
+        args: ["--fix"]
+        files: ^backend/
+      - id: ruff-format
+        name: ruff (format)
+        files: ^backend/
+
+  - repo: local
+    hooks:
+      - id: governance
+        name: static governance (soft warnings)
+        entry: python tools/governance.py
+        language: system
+        pass_filenames: false
+        always_run: true

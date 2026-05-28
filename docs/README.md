@@ -1,16 +1,52 @@
 # Documentation Hub
 
-Central place for project-wide documentation. Keep high-level and cross-cutting
-notes here (vision, roadmap, onboarding, UI sketches, etc.). Component-specific
-docs live in `backend/docs/` and `frontend/docs/`.
+Project-wide documentation lives here. Surface-specific docs live in `backend/docs/` and
+`frontend/docs/`; component-internal notes (e.g. `backend/algent_backend/graph_os/docs/`)
+stay next to their code.
 
-## Suggested structure
+## How we keep docs organized
 
-- `holistic-vision.md` – overarching ecosystem vision (fill with latest pivot).
-- `algo-lab-vision.md` – original Algent/algorithm behavior lab narrative.
-- `tech-stack.md` – summary of backend/frontend/tooling choices.
-- `credentials.md` – how to provide API keys (env vars, keyring).
-- `roadmap.md` – future milestones (placeholder for now).
-- `notes/` – scratch explorations or design spikes.
+Docs sprawl is a real failure mode. To prevent it:
 
-Feel free to reorganize as the project matures.
+- **Every doc belongs to a category folder** (below). Don't drop loose files at the docs
+  root — the root holds only this index.
+- **One canonical home per topic.** If a topic already has a doc, extend it rather than
+  starting a parallel one. Merge or retire stale docs instead of stacking new ones
+  (see `ethos/raptor-3-ethos.md`).
+- **Vision ≠ architecture ≠ ethos ≠ guides.** Keep aspirational narrative, current
+  structure, governing principles, and how-to instructions in their own lanes.
+- **Add the doc to this index** in the same change that creates it.
+
+## Categories
+
+| Folder | Contents |
+|--------|----------|
+| `ethos/` | Governing principles and design philosophy. |
+| `architecture/` | How the system is actually built today (structure, stack). |
+| `vision/` | Aspirational direction, roadmap, phase narratives. |
+| `linting/` | Static-analysis and governance policy. |
+| `guides/` | Operational how-tos (setup, credentials, onboarding). |
+| `responses/` | Point-in-time analyses and summaries. |
+
+## Index
+
+### Ethos — `ethos/`
+- `architecture-ethos.md` – layer separation, no God objects.
+- `structural-ethos.md` – weight-bearing layers, robustness over cleverness.
+- `modularity-ethos.md` – decomposition: one home per responsibility, no junk drawers.
+- `raptor-3-ethos.md` – native-integration / subtractive design.
+- `doctrine-drafting-ethos.md` – how to author agent prompt doctrine.
+
+### Linting — `linting/`
+- `static-governance.md` – lint toolchain, rules, and what blocks vs. warns.
+
+### Architecture, Vision, Guides
+> These existing docs currently live at the docs root. They stay where they are; the
+> category folders apply to **new** docs going forward.
+
+- Architecture: `algent-backend-architecture.md`, `tech-stack.md`
+- Vision: `holistic-vision.md`, `project-vision.md`, `algo-lab-vision.md`,
+  `agent-network-vision.md`, `workspace-agentic-vision.md`, `aesthetic-vision.md`,
+  `PHASE_2_VISION.md`
+- Guides: `credentials.md`
+- Responses: `responses/phase-2-inoculation-summary.md`

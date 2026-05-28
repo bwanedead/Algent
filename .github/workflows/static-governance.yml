@@ -1,0 +1,34 @@
+name: Static Governance
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  static-governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install lint tools
+        run: pip install ruff==0.14.10 mypy==1.19.1
+
+      # Real bugs (undefined names, unused imports, complexity) — the one place lint blocks.
+      - name: Ruff lint
+        run: ruff check backend
+
+      - name: Ruff format check
+        run: ruff format --check backend
+
+      # Architectural + size pressure — soft, never blocks CI.
+      - name: Static governance (soft)
+        run: python tools/governance.py
+
+      # Types — deferred to non-blocking until typed coverage is real.
+      - name: Mypy (non-blocking)
+        continue-on-error: true
+        run: mypy backend/algent_backend

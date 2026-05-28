@@ -1,0 +1,33 @@
+# Tooling configuration for the Algent backend.
+# This file intentionally declares only [tool.*] sections — dependencies are managed
+# via requirements.txt and the package is run with `python -m algent_backend.app`.
+# See docs/linting/static-governance.md for the governance rationale.
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = [".venv", "**/__pycache__", "*cache*"]
+
+[tool.ruff.lint]
+# Keep the failing set high-signal: real bugs (F), import order (I), modernizations (UP),
+# likely-bug patterns (B), and complexity (C90). Style nits stay auto-fixable, not noisy.
+select = ["E", "F", "I", "W", "UP", "B", "C90"]
+# E501 (line too long) is handled by the formatter; don't double-report it as a lint error.
+ignore = ["E501"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.per-file-ignores]
+# Re-exports in package inits and unused imports in tests are expected.
+"__init__.py" = ["F401"]
+"tests/**" = ["F401", "F811"]
+
+[tool.mypy]
+# Non-blocking for now (see static-governance.md); promote once typed coverage is real.
+python_version = "3.11"
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+no_implicit_optional = true
+files = ["algent_backend"]

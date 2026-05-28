@@ -218,3 +218,11 @@ frontend/src-tauri/.cargo/
 
 # Cockpit registry (local paths)
 backend/algent_backend/cockpit/registry.json
+
+# Scratch / temp files (do not commit)
+*.tmp
+/response.md
+/tmp_edit.py
+
+# Stray pytest cache export dirs
+pytest-cache-files-*/
