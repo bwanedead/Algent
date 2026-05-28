@@ -14,6 +14,51 @@
 - **Do not run `git` commands in this repo unless explicitly instructed by the maintainer.**
 - **Do not install dependencies (pip, npm, cargo, etc.); the maintainer handles all installation. Stick to read-only commands unless told otherwise.**
 
+## Safety & Blast-Radius (non-negotiable)
+- **Stay inside the repo.** Never edit, create, or delete anything outside the repository root.
+- **No destructive/wide commands.** Never run recursive or absolute-path deletions (`rm -rf /`, `rm -rf ~`, `Remove-Item -Recurse` against a drive/home, `del /s`, etc.). Never touch `.git/` internals.
+- **No path traversal for writes/deletes.** No `..` traversal or absolute paths for edits or deletions.
+- **Secrets are off-limits.** Never read, print, commit, or modify `.env`, keys, tokens, or credentials.
+- **Disciplined deletions.** You may delete/move files *within* this repo for real refactors: remove usage first, keep the change minimal and justified, and explain what/why in the commit (when committing is authorized).
+- **Do not touch `graph_os/`** unless the task explicitly targets it — it is the weight-bearing subsystem and stays decoupled from `agent_system/` until a deliberate seam exists.
+
+## Read-First Behavior
+- **Before any edit, read the repo-wide ethos** under `docs/ethos/` relevant to your scope — at minimum `architecture-ethos.md`, `structural-ethos.md`, and `modularity-ethos.md`; add `raptor-3-ethos.md` for refactors/convergence and `doctrine-drafting-ethos.md` for prompt/doctrine surfaces.
+- **Honor local notes.** When editing inside a directory, first check for and read any `AGENTS.md`, `README.md`, or nearby `*-ethos.md` / `*-vision.md` in or above that directory (e.g. `backend/algent_backend/graph_os/docs/`).
+- **Lint policy lives in one place.** Read `docs/linting/static-governance.md` before changing lint, CI, or governance rules. Treat the custom governance checks as architectural policy, not cosmetic style — but remember the philosophy is soft pressure, not hard bumpers (only real bugs block).
+- **Docs stay organized.** New docs belong in a category folder per `docs/README.md`; extend the canonical doc for a topic rather than starting a parallel one.
+
+## Reviewer Subagents & Mandatory Review Flow
+This repo defines reviewer subagents (under `.cursor/agents/` and `.claude/agents/`) to prevent two recurring failures: **monolith / boundary drift** and **code-mass inflation**. They are useful but token-expensive, so they run **on-demand behind per-harness toggles**.
+
+A patch is **non-trivial** if it adds files, changes more than ~3 files, materially expands a file, introduces a new abstraction/helper/service, changes module or layer boundaries, or is a refactor/cleanup/reorganization.
+
+**Per-harness toggles (edit this file):**
+
+```
+REVIEWER_SUBAGENTS_ENABLED__CLAUDE_CODE = false
+REVIEWER_SUBAGENTS_ENABLED__CURSOR      = true
+REVIEWER_SUBAGENTS_ENABLED__CODEX       = false
+```
+
+**Active harness:** use the toggle matching the tool running this session — **Claude Code** → `__CLAUDE_CODE`, **Cursor** → `__CURSOR`, **Codex** → `__CODEX`. New harnesses: add a `REVIEWER_SUBAGENTS_ENABLED__<KEY> = false` line and document it here.
+
+**Policy:**
+- If the **active harness** toggle is `true`, treat it as a license to self-infer *when* a review materially strengthens the repo (typically after batch/structural work) — token cost is a real constraint, so be thoughtful, not reflexive. For non-trivial patches run:
+  - `architecture-reviewer` — structure, boundaries, layering, responsibility allocation.
+  - `code-efficiency-reviewer` — implementation weight, complexity, duplication, abstraction cost.
+- If the change concerns **refactors, migrations, or trunk-level convergence** (retiring scaffolding, rail-isolation, mechanical-vs-semantic boundaries, graph_os seams), also run `raptor-3-native-reviewer`.
+- If the change concerns **doctrine or prompt surfaces** (agent method prompts, action-contract text, lab/domain law, tool-spec behavioral text, or live doctrine in `docs/ethos/`), also run `doctrine-ethos-reviewer`.
+- If the toggle is `false`, perform a **self-review** against the same criteria and note `reviewers skipped by policy (<harness>: toggle off)` in your final summary.
+- If the human explicitly asks for reviewers on a single change, treat it as a one-off exception regardless of toggle.
+
+**Review output must** stay in scope, cite exact files/symbols, distinguish blocking vs advisory findings, and name the relevant ethos principle.
+
+**Completion requirement:** a non-trivial patch is not done until either reviewers have run (toggle on) and findings are summarized/reconciled, or a self-review was performed and summarized (toggle off), including any blocking issues and their resolution.
+
+## Folder-level `AGENTS.md` (compounding memory)
+A folder-level `AGENTS.md` is a short, local sticky note: constraints, invariants, commands, gotchas. Create or update one **only** when you discover something that prevents repeated mistakes (a non-obvious invariant, a required workflow command, an auto-generated file not to hand-edit, a dependency-ordering constraint). Keep it factual, bullet-based, and under ~30–50 lines; use repo-relative paths. Do **not** spam these everywhere.
+
 ## Coding Style & Naming Conventions
 - Python: PEP8-ish, 4-space indent, type hints when possible. Place shared types in `agent_system/foundation/...` as needed.
 - TypeScript: Follow default Vite/React conventions; components in `PascalCase`, hooks/utilities in `camelCase`.
