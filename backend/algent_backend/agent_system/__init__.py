@@ -1,10 +1,10 @@
 """
 Agent system package.
 
-This umbrella houses the core infrastructure that powers every lab or work
-vector: agent loops, model providers, tool bridges, and orchestration helpers.
-"""
+This umbrella houses the core agent infrastructure for Algent: model selection,
+runtime rails, run lifecycle, artifacts, and the agent library.
 
-from .foundation import agents, models, prompting  # noqa: F401
-from .integration import tool_registry  # noqa: F401
-from .orchestration import orchestrator  # noqa: F401
+The package is intentionally empty at the root while the first vertical slice is
+built fresh. See ``mental_model/README.md`` for the architecture this is growing
+toward.
+"""
