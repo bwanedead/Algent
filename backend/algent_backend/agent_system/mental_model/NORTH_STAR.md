@@ -1,0 +1,103 @@
+# North Star
+
+This is the master mental model for Algent's agent system. It should preserve
+the order in which the system is built, so future agentic systems can use it as
+a recipe for laying down subsystems in a sane sequence.
+
+## Core Idea
+
+Algent is the agent operating environment.
+
+LangChain, LangGraph, and LangSmith are useful tools, but they are not the
+identity of the system.
+
+```text
+Algent owns the concepts.
+Runtime rails execute the work.
+External frameworks are selectable implementation paths.
+```
+
+## Build Order
+
+The system should grow from the lowest useful layer upward.
+
+1. Model interface
+
+   Define how Algent names, selects, and resolves a model. This is the first
+   brick because every agent eventually needs a model call.
+
+2. Prompt and context assembly
+
+   Define how Algent prepares the messages, instructions, task input, and
+   contextual material sent to a model.
+
+3. Runtime rail
+
+   Define how an agent is executed. LangGraph is the first rail. Later rails can
+   include a native Algent harness or direct SDK runner.
+
+4. Run context
+
+   Define the environment handed to a running agent: run id, workspace id, model
+   resolver, artifact writer, event emitter, config, and other services.
+
+5. Artifacts
+
+   Define how agents produce durable outputs such as markdown, JSON, source
+   snapshots, transcripts, media files, reports, and trace links.
+
+6. Run events
+
+   Define a neutral event stream for lifecycle and observability: run started,
+   node started, artifact created, run completed, run failed.
+
+7. Tools
+
+   Define Algent-native tool contracts. Runtime adapters can wrap those tools
+   for LangChain or other frameworks.
+
+8. Run ledger
+
+   Define the durable record of what happened: input, output, status, errors,
+   artifacts, events, and decisions.
+
+9. GraphOS projection
+
+   Project important run records and artifacts into GraphOS when the agent
+   system has enough real behavior to justify the graph vocabulary.
+
+## Current First Slice
+
+The current slice is intentionally smaller than the full system:
+
+```text
+ModelSpec -> model resolver -> LangChain model object
+```
+
+This proves the first architectural rule:
+
+```text
+Algent describes the model need.
+The selected target decides how to instantiate it.
+```
+
+## Standing Decisions
+
+- Keep `agent_system` as the package name for now.
+- Start with model resolution before runtime orchestration.
+- Start with LangChain as the first model target.
+- Start with LangGraph as the first runtime rail later.
+- Do not make GraphOS block the first working agent run.
+- Do not build a native harness until there is pressure from a working slice.
+- Do not design the full folder tree before the next layer earns its shape.
+
+## Update Rule
+
+When a new subsystem is added, update this folder with:
+
+- what the subsystem is for
+- why it comes at that point in the build order
+- what it owns
+- what it must not own
+- how it relates to LangChain, LangGraph, GraphOS, and native systems
+- a tiny example if that makes the idea easier to understand
