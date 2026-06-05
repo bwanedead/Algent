@@ -82,16 +82,18 @@ Enforced by the governance script via AST import analysis (direct imports; absol
 relative). Each is objective, but a warning is enough to surface the right fix.
 
 1. **Rail isolation.** `langchain` / `langgraph` / `langsmith` may be imported only within
-   `agent_system/runtime/adapters/**` and `agent_system/foundation/models/targets/**`.
-   *The highest-value rule: it keeps the rail framework out of the neutral core.*
+   `agent_system/runtime/**`, `agent_system/agents/**`, and
+   `agent_system/foundation/models/targets/**`.
+   *The highest-value rule: it keeps the rail framework out of the neutral core (`runs/`,
+   `runtime/base.py`, etc.).*
 2. **`definitions/` purity.** A `definitions` module must not import other `agent_system`
    internals — contracts depend on nothing.
 3. **graph_os decoupling.** `agent_system/**` must not import `graph_os/**` and vice-versa,
    until a deliberate run-ledger projection seam exists.
 4. **Transport layering.** `agent_system/`, `graph_os/`, and `labs/` must not import
    `algent_backend.api.*` — logic never depends upward on transport.
-5. **Adapter seam.** Rail adapters under `runtime/adapters/**` are reached only via
-   `runtime/registry.py`, not imported directly by callers.
+5. **Adapter seam.** Rail adapters under `runtime/**` (e.g. `runtime/langgraph.py`) are
+   reached only via `runtime/registry.py`, not imported directly by callers.
 
 ### 4. Test placement — convention, not enforcement
 Industry-standard layout per `AGENTS.md`: tests under `backend/tests/`, mirroring the

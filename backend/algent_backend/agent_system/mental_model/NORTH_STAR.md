@@ -66,27 +66,39 @@ The system should grow from the lowest useful layer upward.
    Project important run records and artifacts into GraphOS when the agent
    system has enough real behavior to justify the graph vocabulary.
 
-## Current First Slice
+## Current Slice
 
-The current slice is intentionally smaller than the full system:
+Slice 0 proved model resolution:
 
 ```text
 ModelSpec -> model resolver -> LangChain model object
 ```
 
-This proves the first architectural rule:
+Slice 1 (current) proves runtime execution:
+
+```text
+RunRequest -> AgentRunContext -> RuntimeRegistry -> LangGraphAdapter
+-> agents/hello_workflow/graph.py -> RunResult
+```
+
+Together they establish two rules:
 
 ```text
 Algent describes the model need.
 The selected target decides how to instantiate it.
+
+LangGraph is the runtime rail.
+Algent's runtime module is the adapter boundary around that rail.
 ```
+
+See `RUNTIME_RAIL.md` for the runtime seam in detail.
 
 ## Standing Decisions
 
 - Keep `agent_system` as the package name for now.
 - Start with model resolution before runtime orchestration.
 - Start with LangChain as the first model target.
-- Start with LangGraph as the first runtime rail later.
+- Start with LangGraph as the first runtime rail (Slice 1).
 - Do not make GraphOS block the first working agent run.
 - Do not build a native harness until there is pressure from a working slice.
 - Do not design the full folder tree before the next layer earns its shape.

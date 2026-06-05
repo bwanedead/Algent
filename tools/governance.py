@@ -44,7 +44,9 @@ SIZE_STRONG = 1000
 # Rail frameworks that must stay confined to the runtime/model-target layers.
 RAIL_ROOTS = {"langchain", "langgraph", "langsmith"}
 RAIL_ALLOWED_PREFIXES = (
+    "algent_backend.agent_system.runtime",
     "algent_backend.agent_system.runtime.adapters",
+    "algent_backend.agent_system.agents",
     "algent_backend.agent_system.foundation.models.targets",
 )
 
@@ -54,8 +56,15 @@ AGENT_SYSTEM_PREFIX = "algent_backend.agent_system"
 GRAPH_OS_PREFIX = "algent_backend.graph_os"
 LABS_PREFIX = "algent_backend.labs"
 API_PREFIX = "algent_backend.api"
+RUNTIME_PREFIX = "algent_backend.agent_system.runtime"
 RUNTIME_ADAPTERS_PREFIX = "algent_backend.agent_system.runtime.adapters"
 RUNTIME_REGISTRY = "algent_backend.agent_system.runtime.registry"
+# Neutral runtime modules — not adapters; direct import is fine within runtime/.
+RUNTIME_NEUTRAL_MODULES = {
+    RUNTIME_REGISTRY,
+    "algent_backend.agent_system.runtime.base",
+    RUNTIME_PREFIX,
+}
 
 # Package roots whose top level should be __init__.py + subpackages, not loose modules.
 FLAT_WATCH_DIRS = [PACKAGE_ROOT / "agent_system"]
@@ -207,12 +216,12 @@ def check_imports(path: Path, tree: ast.AST, findings: list[Finding]) -> None:
                 f"imports '{imp}'. The api layer is transport; logic must not depend upward on it.",
             ))
 
-        # 5. Adapter seam — adapters are reached only via the runtime registry.
-        if under(imp, RUNTIME_ADAPTERS_PREFIX) and cur != RUNTIME_REGISTRY \
-                and not under(cur, RUNTIME_ADAPTERS_PREFIX):
+        # 5. Adapter seam — rail adapters are reached only via the runtime registry.
+        if under(imp, RUNTIME_PREFIX) and imp not in RUNTIME_NEUTRAL_MODULES \
+                and cur != RUNTIME_REGISTRY and not under(cur, RUNTIME_PREFIX):
             findings.append(Finding(
                 "adapter-seam", loc,
-                f"imports adapter '{imp}' directly. Reach rail adapters via runtime.registry.",
+                f"imports runtime adapter '{imp}' directly. Reach rail adapters via runtime.registry.",
             ))
 
 
