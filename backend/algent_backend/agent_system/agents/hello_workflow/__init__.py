@@ -1,5 +1,5 @@
-"""Tiny hello workflow agent for Slice 1."""
+"""Tiny hello workflow agent."""
 
-from .spec import AGENT_ID, DEFAULT_MODEL, RUNTIME
+from .spec import AGENT_ID, DEFAULT_MODEL, RUNTIME, SPEC
 
-__all__ = ["AGENT_ID", "DEFAULT_MODEL", "RUNTIME"]
+__all__ = ["AGENT_ID", "DEFAULT_MODEL", "RUNTIME", "SPEC"]

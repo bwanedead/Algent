@@ -8,22 +8,30 @@ letting LangGraph leak into every subsystem.
 ```text
 LangGraph is the runtime rail.
 agent_system/runtime/ is Algent's adapter boundary.
-agents/* own graph shapes.
+agents/* own graph shapes and the agent catalog.
 runs/ owns execution request, context, and result.
+
+Runtime adapters execute resolved AgentSpecs.
+They do not own the agent catalog.
 ```
 
 ## Flow
 
-Slice 1 proves this path:
+As of Slice 2, orchestration runs through `RunService`:
 
 ```text
-RunRequest -> AgentRunContext -> RuntimeRegistry -> LangGraphAdapter
--> agents/hello_workflow/graph.py -> RunResult
+RunRequest -> RunService
+  -> AgentRegistry.get(agent_id)
+  -> RuntimeRegistry.get(runtime)
+  -> LangGraphAdapter.run(request, context, agent_spec)
+  -> RunResult
 ```
 
-A caller describes *what* to run. The registry selects *which rail* executes it.
-The adapter translates neutral contracts into LangGraph invocation. The agent
-module owns the graph's nodes and state shape.
+A caller describes *what* to run. `RunService` resolves the agent and the rail.
+The adapter executes the already-resolved `AgentSpec` — it does not look agents
+up. The agent module owns the graph's nodes and state shape.
+
+See `AGENT_DEFINITION.md` for `AgentSpec`, `AgentRegistry`, and `RunService`.
 
 ## Ownership
 
@@ -41,12 +49,15 @@ Neutral run contracts:
 
 Algent's runtime seam:
 
-- `base.py` — `RuntimeAdapter` protocol (no LangGraph)
-- `registry.py` — adapter lookup and default registration
-- `langgraph.py` — LangGraph compile/invoke adapter
+- `base.py` — `RuntimeAdapter` protocol (no LangGraph; `AgentSpec` only under
+  `TYPE_CHECKING`)
+- `registry.py` — adapter lookup and default registration (lookup only)
+- `langgraph.py` — executes the handed `AgentSpec` via the rail's invocation
+  contract (`build_graph(...)` returns something with `.invoke(input)`); the
+  LangGraph import lives in `agents/*/graph.py`, not here
 
-Callers reach rail adapters through `RuntimeRegistry`, not by importing
-`langgraph.py` directly.
+Callers reach rail adapters through `RunService` (which uses `RuntimeRegistry`),
+not by importing `langgraph.py` directly.
 
 ### `agents/*/graph.py`
 
@@ -59,7 +70,7 @@ resolve models through `ModelResolver` without importing provider wrappers.
 Still the only place that imports LangChain provider wrappers (`ChatOpenAI`, etc.).
 Graph nodes get models via `context.model_resolver.resolve(...)`.
 
-## What Slice 1 Deliberately Omits
+## What This Layer Still Omits
 
 - artifact writer
 - run event stream
@@ -76,7 +87,7 @@ Those are later slices.
 ```python
 request = RunRequest(agent_id="hello_workflow", input={"topic": "LangGraph"})
 context = AgentRunContext(run_id="run-1", model_resolver=ModelResolver())
-result = RuntimeRegistry().run(request, context)
+result = RunService().run(request, context)
 ```
 
 The hello workflow resolves a model, calls it once inside `generate_brief`, and

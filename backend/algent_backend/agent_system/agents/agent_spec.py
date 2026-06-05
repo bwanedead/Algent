@@ -1,0 +1,34 @@
+"""
+AgentSpec — the in-process recipe for an agent.
+
+This is a Python-callable-carrying recipe (it holds ``build_graph``), not a
+serializable wire contract. That is why it is a frozen dataclass and not a
+Pydantic model: it is meant to be constructed in code and handed around in
+process. If a serializable UI/GraphOS description is needed later, introduce a
+separate ``AgentManifest`` rather than overloading this.
+
+``AgentSpec`` stays neutral about the rail: ``build_graph`` returns ``Any`` and
+this module never imports LangGraph types. The runtime adapter for the agent's
+declared ``runtime`` knows how to execute whatever ``build_graph`` returns.
+"""
+
+from __future__ import annotations
+
+from collections.abc import Callable
+from dataclasses import dataclass
+from typing import Any
+
+from algent_backend.agent_system.foundation.models import ModelSpec
+from algent_backend.agent_system.runs.context import AgentRunContext
+
+
+@dataclass(frozen=True)
+class AgentSpec:
+    """A reusable recipe for one agent."""
+
+    agent_id: str
+    name: str
+    runtime: str
+    build_graph: Callable[[AgentRunContext], Any]
+    description: str | None = None
+    default_model: ModelSpec | None = None

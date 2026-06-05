@@ -74,14 +74,22 @@ Slice 0 proved model resolution:
 ModelSpec -> model resolver -> LangChain model object
 ```
 
-Slice 1 (current) proves runtime execution:
+Slice 1 proved runtime execution:
 
 ```text
 RunRequest -> AgentRunContext -> RuntimeRegistry -> LangGraphAdapter
 -> agents/hello_workflow/graph.py -> RunResult
 ```
 
-Together they establish two rules:
+Slice 2 (current) makes agents first-class and adds an orchestration service:
+
+```text
+RunRequest -> RunService -> AgentRegistry.get(agent_id)
+-> RuntimeRegistry.get(runtime) -> LangGraphAdapter.run(..., agent_spec)
+-> RunResult
+```
+
+Together they establish three rules:
 
 ```text
 Algent describes the model need.
@@ -89,9 +97,13 @@ The selected target decides how to instantiate it.
 
 LangGraph is the runtime rail.
 Algent's runtime module is the adapter boundary around that rail.
+
+Algent owns agent lookup before runtime execution.
+Runtime adapters execute resolved AgentSpecs; they do not own the catalog.
 ```
 
-See `RUNTIME_RAIL.md` for the runtime seam in detail.
+See `RUNTIME_RAIL.md` for the runtime seam and `AGENT_DEFINITION.md` for
+`AgentSpec`, `AgentRegistry`, and `RunService`.
 
 ## Standing Decisions
 
@@ -102,6 +114,11 @@ See `RUNTIME_RAIL.md` for the runtime seam in detail.
 - Do not make GraphOS block the first working agent run.
 - Do not build a native harness until there is pressure from a working slice.
 - Do not design the full folder tree before the next layer earns its shape.
+- Keep runtime adapters ignorant of the agent catalog; agent lookup is
+  `RunService`'s job (Slice 2).
+- Keep `AgentSpec` an in-process recipe (dataclass with callables), not a
+  serializable contract; add a separate `AgentManifest` if serialization is
+  needed later.
 
 ## Update Rule
 

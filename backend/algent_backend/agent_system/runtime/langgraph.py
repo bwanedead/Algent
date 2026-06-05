@@ -1,29 +1,24 @@
 """
 LangGraph runtime adapter.
 
-Receives neutral run contracts, locates the agent graph builder, compiles and
-invokes the graph, and wraps the outcome in a ``RunResult``. LangGraph imports
-live here and in ``agents/*/graph.py`` — not in the neutral run or base layers.
+Executes the ``AgentSpec`` it is handed: builds the agent's graph, invokes it
+with the request input, and wraps the outcome in a ``RunResult``. It does not
+know the agent catalog — agent lookup happens upstream in ``RunService``.
+
+LangGraph itself is imported in ``agents/*/graph.py`` (which builds the graph),
+not here: this adapter only relies on the rail's invocation contract, that
+``build_graph(...)`` returns an object with ``.invoke(input)``.
 """
 
 from __future__ import annotations
 
-from collections.abc import Callable
-from typing import Any
+from typing import TYPE_CHECKING
 
-from langgraph.graph.state import CompiledStateGraph
-
-from algent_backend.agent_system.agents.hello_workflow import graph as hello_workflow_graph
-from algent_backend.agent_system.agents.hello_workflow import spec as hello_workflow_spec
 from algent_backend.agent_system.runs.context import AgentRunContext
 from algent_backend.agent_system.runs.models import RunRequest, RunResult
 
-GraphBuilder = Callable[[AgentRunContext], CompiledStateGraph[Any]]
-
-# Explicit agent map for Slice 1 — no discovery or dynamic loading yet.
-_AGENT_BUILDERS: dict[str, GraphBuilder] = {
-    hello_workflow_spec.AGENT_ID: hello_workflow_graph.build_graph,
-}
+if TYPE_CHECKING:
+    from algent_backend.agent_system.agents.agent_spec import AgentSpec
 
 
 class LangGraphAdapter:
@@ -31,19 +26,26 @@ class LangGraphAdapter:
 
     name = "langgraph"
 
-    def run(self, request: RunRequest, context: AgentRunContext) -> RunResult:
-        builder = _AGENT_BUILDERS.get(request.agent_id)
-        if builder is None:
+    def run(
+        self,
+        request: RunRequest,
+        context: AgentRunContext,
+        agent_spec: AgentSpec,
+    ) -> RunResult:
+        if agent_spec.runtime != self.name:
             return RunResult(
                 run_id=context.run_id,
                 agent_id=request.agent_id,
                 runtime=self.name,
                 status="failed",
-                error=f"Unknown agent '{request.agent_id}'.",
+                error=(
+                    f"Agent '{agent_spec.agent_id}' targets runtime "
+                    f"'{agent_spec.runtime}', not '{self.name}'."
+                ),
             )
 
         try:
-            compiled = builder(context)
+            compiled = agent_spec.build_graph(context)
             output = compiled.invoke(request.input)
             return RunResult(
                 run_id=context.run_id,

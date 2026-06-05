@@ -1,16 +1,14 @@
 """
 Runtime selection.
 
-Registers adapters by name and routes ``RunRequest.runtime`` to the matching
-implementation. Slice 1 registers only ``LangGraphAdapter`` as the default.
+Registers adapters by name and hands the matching implementation to callers.
+Orchestration lives in ``RunService``; this registry stays focused on lookup and
+does not know concrete agents.
 """
 
 from __future__ import annotations
 
 from collections.abc import Iterable
-
-from algent_backend.agent_system.runs.context import AgentRunContext
-from algent_backend.agent_system.runs.models import RunRequest, RunResult
 
 from .base import RuntimeAdapter
 from .langgraph import LangGraphAdapter
@@ -19,7 +17,7 @@ DEFAULT_RUNTIME = "langgraph"
 
 
 class RuntimeRegistry:
-    """Selects and invokes a runtime adapter."""
+    """Selects a runtime adapter by name."""
 
     def __init__(self, adapters: Iterable[RuntimeAdapter] | None = None) -> None:
         if adapters is None:
@@ -35,6 +33,3 @@ class RuntimeRegistry:
 
     def default(self) -> RuntimeAdapter:
         return self.get(DEFAULT_RUNTIME)
-
-    def run(self, request: RunRequest, context: AgentRunContext) -> RunResult:
-        return self.get(request.runtime).run(request, context)
