@@ -21,6 +21,8 @@ RunRequest
   -> RunService
   -> AgentRegistry.get(agent_id)      # resolve the AgentSpec
   -> RuntimeRegistry.get(runtime)     # resolve the rail adapter
+  -> tool_registry.resolve_for(spec)  # resolve + build the agent's tools
+  -> AgentRunContext(run_id, model_resolver, tools)   # RunService assembles it
   -> LangGraphAdapter.run(request, context, agent_spec)
   -> RunResult
 ```
@@ -41,8 +43,10 @@ agent_id      stable identifier
 name          human-facing label
 runtime       which rail executes it (e.g. "langgraph")
 build_graph   callable(context) -> runnable graph object
-description    optional
-default_model  optional ModelSpec
+description   optional
+default_model optional ModelSpec
+family        optional grouping for tool scope (e.g. "news")
+tool_ids      explicit tool ids the agent needs (e.g. ("web_search",))
 ```
 
 If a serializable UI/GraphOS description is needed later, introduce a separate
@@ -65,9 +69,12 @@ runtime adapter, and calls it. Lookup failures (unknown agent, unknown runtime)
 become a failed `RunResult` rather than an exception, because this is the
 user-facing control point.
 
-For this slice the caller still provides the `AgentRunContext` (so `run_id` and
-the `ModelResolver` are injectable and test-friendly). A later slice may let
-`RunService` build the context itself, only if that stays trivial.
+As of Slice 3, `RunService` owns context creation: it generates the `run_id`
+(uuid), resolves and builds the agent's tools, and assembles the
+`AgentRunContext` before calling the adapter. Collaborators are injected through
+the constructor (`agent_registry`, `runtime_registry`, `model_resolver`,
+`tool_registry`), which keeps it test-friendly with fakes. The method is
+`run(request)`.
 
 ## What It Owns / Must Not Own
 
@@ -77,12 +84,12 @@ the `ModelResolver` are injectable and test-friendly). A later slice may let
 - The neutral run primitives (`runs/models.py`, `runs/context.py`) must not
   import `agents`, `runtime`, LangGraph, or LangChain.
 
-## What Slice 2 Deliberately Omits
+## Still Omitted
 
 - agent manifests / serializable descriptions
 - plugin discovery, filesystem scanning
-- tools, artifacts, run events, persistence
+- artifacts, run events, persistence
 - LangSmith, GraphOS projection, native runtime
 - schema validation for agent inputs/outputs
 
-Those are later slices.
+(Tools arrived in Slice 3 — see `TOOLS.md`.) The rest are later slices.

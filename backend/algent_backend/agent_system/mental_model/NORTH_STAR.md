@@ -81,7 +81,7 @@ RunRequest -> AgentRunContext -> RuntimeRegistry -> LangGraphAdapter
 -> agents/hello_workflow/graph.py -> RunResult
 ```
 
-Slice 2 (current) makes agents first-class and adds an orchestration service:
+Slice 2 makes agents first-class and adds an orchestration service:
 
 ```text
 RunRequest -> RunService -> AgentRegistry.get(agent_id)
@@ -89,7 +89,16 @@ RunRequest -> RunService -> AgentRegistry.get(agent_id)
 -> RunResult
 ```
 
-Together they establish three rules:
+Slice 3 (current) adds tools and the first real agent. `RunService` now also
+resolves and builds the agent's tools and assembles the context:
+
+```text
+RunService -> resolve AgentSpec -> resolve + build tools
+-> AgentRunContext(tools) -> LangGraphAdapter -> news_brief
+-> web_search (Tavily) -> grounded brief -> RunResult
+```
+
+Together they establish these rules:
 
 ```text
 Algent describes the model need.
@@ -100,10 +109,14 @@ Algent's runtime module is the adapter boundary around that rail.
 
 Algent owns agent lookup before runtime execution.
 Runtime adapters execute resolved AgentSpecs; they do not own the catalog.
+
+Algent decides tool availability (scope).
+LangChain provides the concrete tool implementation.
 ```
 
-See `RUNTIME_RAIL.md` for the runtime seam and `AGENT_DEFINITION.md` for
-`AgentSpec`, `AgentRegistry`, and `RunService`.
+See `RUNTIME_RAIL.md` for the runtime seam, `AGENT_DEFINITION.md` for
+`AgentSpec`/`AgentRegistry`/`RunService`, `TOOLS.md` for the tool layer, and
+`NEWS_BRIEF_AGENT.md` for the first real agent.
 
 ## Standing Decisions
 
@@ -119,6 +132,10 @@ See `RUNTIME_RAIL.md` for the runtime seam and `AGENT_DEFINITION.md` for
 - Keep `AgentSpec` an in-process recipe (dataclass with callables), not a
   serializable contract; add a separate `AgentManifest` if serialization is
   needed later.
+- Algent owns tool availability via scope (global/family/agent); concrete tools
+  build themselves behind `ToolSpec.build` (Slice 3).
+- Start news with deterministic search orchestration, not model-driven
+  tool-calling; the latter can come later if a workflow needs it.
 
 ## Update Rule
 

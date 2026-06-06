@@ -1,9 +1,9 @@
 """
-Smoke tests for Slice 2: AgentSpec, AgentRegistry, and RunService.
+Smoke tests for orchestration: AgentRegistry, RunService, and the adapter.
 
-Proves agents are first-class (registered, looked up) and that orchestration
-runs through ``RunService`` -> ``RuntimeRegistry`` -> ``LangGraphAdapter`` with
-the adapter executing whatever ``AgentSpec`` it is handed. No live API calls.
+Proves agents are first-class (registered, looked up), that ``RunService`` owns
+context creation, and that the adapter executes whatever ``AgentSpec`` it is
+handed. No live API calls.
 """
 
 from __future__ import annotations
@@ -16,8 +16,8 @@ from algent_backend.agent_system.agents.agent_spec import AgentSpec
 from algent_backend.agent_system.foundation.models import ModelResolver, ModelSpec, ResolvedModel
 from algent_backend.agent_system.runs import AgentRunContext, RunRequest
 from algent_backend.agent_system.runs.service import RunService
-from algent_backend.agent_system.runtime import RuntimeRegistry
 from algent_backend.agent_system.runtime.langgraph import LangGraphAdapter
+from algent_backend.agent_system.tools import GLOBAL_SCOPE, ToolRegistry, ToolSpec
 
 
 @dataclass
@@ -61,22 +61,28 @@ def _context(run_id: str = "run-1", response: str = "Brief.") -> AgentRunContext
     return AgentRunContext(run_id=run_id, model_resolver=FakeModelResolver(FakeChatModel(response)))
 
 
-def test_agent_registry_returns_hello_workflow_spec() -> None:
+def _service(response: str = "Brief.", tool_registry: ToolRegistry | None = None) -> RunService:
+    return RunService(
+        model_resolver=FakeModelResolver(FakeChatModel(response)),
+        tool_registry=tool_registry if tool_registry is not None else ToolRegistry(),
+    )
+
+
+def test_agent_registry_returns_known_specs() -> None:
     registry = default_agent_registry()
-    spec = registry.get("hello_workflow")
-    assert spec.agent_id == "hello_workflow"
-    assert spec.runtime == "langgraph"
-    assert "hello_workflow" in {s.agent_id for s in registry.list()}
+    assert registry.get("hello_workflow").runtime == "langgraph"
+    assert registry.get("news_brief").family == "news"
+    ids = {s.agent_id for s in registry.list()}
+    assert {"hello_workflow", "news_brief"} <= ids
 
 
-def test_run_service_executes_hello_workflow() -> None:
-    context = _context(run_id="run-123", response="Brief: quantum computing basics.")
+def test_run_service_creates_context_and_runs_hello_workflow() -> None:
     request = RunRequest(agent_id="hello_workflow", input={"topic": "quantum computing"})
 
-    result = RunService().run(request, context)
+    result = _service(response="Brief: quantum computing basics.").run(request)
 
     assert result.status == "completed"
-    assert result.run_id == "run-123"
+    assert result.run_id  # RunService generates a uuid
     assert result.agent_id == "hello_workflow"
     assert result.runtime == "langgraph"
     assert result.error is None
@@ -108,7 +114,7 @@ def test_adapter_executes_any_spec_it_is_handed() -> None:
 def test_unknown_agent_returns_failed_result() -> None:
     request = RunRequest(agent_id="missing_agent", input={"topic": "nothing"})
 
-    result = RunService().run(request, _context(run_id="run-404"))
+    result = _service().run(request)
 
     assert result.status == "failed"
     assert result.agent_id == "missing_agent"
@@ -133,7 +139,40 @@ def test_runtime_mismatch_returns_failed_result() -> None:
 def test_unknown_runtime_handled_by_run_service() -> None:
     request = RunRequest(agent_id="hello_workflow", input={"topic": "x"}, runtime="native")
 
-    result = RunService().run(request, _context())
+    result = _service().run(request)
 
     assert result.status == "failed"
     assert "Unknown runtime" in (result.error or "")
+
+
+def test_no_tool_agent_does_not_build_global_tools() -> None:
+    """A global tool resolves for hello_workflow but must not be built (it's unused)."""
+
+    def _explode() -> object:
+        raise RuntimeError("missing TAVILY_API_KEY")
+
+    registry = ToolRegistry()
+    registry.register(
+        ToolSpec(
+            tool_id="web_search",
+            name="Web Search",
+            description="",
+            scope=GLOBAL_SCOPE,
+            build=_explode,
+        )
+    )
+    request = RunRequest(agent_id="hello_workflow", input={"topic": "x"})
+
+    result = _service(tool_registry=registry).run(request)
+
+    assert result.status == "completed"  # hello never accesses tools, so _explode never runs
+
+
+def test_run_service_fails_on_unknown_required_tool() -> None:
+    # news_brief requires web_search; an empty tool registry makes that unresolvable.
+    request = RunRequest(agent_id="news_brief", input={"topic": "x"})
+
+    result = _service(tool_registry=ToolRegistry()).run(request)
+
+    assert result.status == "failed"
+    assert "Unknown required tool" in (result.error or "")

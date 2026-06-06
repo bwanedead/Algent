@@ -32,3 +32,5 @@ class AgentSpec:
     build_graph: Callable[[AgentRunContext], Any]
     description: str | None = None
     default_model: ModelSpec | None = None
+    family: str | None = None
+    tool_ids: tuple[str, ...] = ()
