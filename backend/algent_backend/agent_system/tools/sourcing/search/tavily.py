@@ -1,5 +1,5 @@
 """
-Global ``web_search`` tool, backed by LangChain's Tavily integration.
+``web_search`` — keyword web/news search via LangChain's Tavily integration.
 
 This is the only place ``langchain_tavily`` is imported (lazily, inside the
 builder), keeping the rail dependency out of the neutral tool layer. The API key
@@ -12,7 +12,7 @@ from typing import Any
 
 from algent_backend.config import get_service_api_key
 
-from ..spec import GLOBAL_SCOPE, ToolSpec
+from ...spec import GLOBAL_SCOPE, ToolSpec
 
 WEB_SEARCH_TOOL_ID = "web_search"
 
@@ -40,4 +40,5 @@ SPEC = ToolSpec(
     description="Searches the web for recent, relevant results on a query.",
     scope=GLOBAL_SCOPE,
     build=_build,
+    channel="search",
 )

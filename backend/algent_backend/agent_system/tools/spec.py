@@ -42,3 +42,7 @@ class ToolSpec:
     description: str
     scope: str
     build: Callable[[], Any]
+    # Capability channel for portfolio grouping — lets orchestration ask for
+    # e.g. all "search" tools and fan out. Conventional values:
+    # "search" | "social" | "depth" | "discovery" | "general".
+    channel: str = "general"

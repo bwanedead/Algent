@@ -1,10 +1,10 @@
 """
 Global settings representation.
 """
-from dataclasses import dataclass
-import os
-from pathlib import Path
 
+import os
+from dataclasses import dataclass
+from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 

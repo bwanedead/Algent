@@ -69,8 +69,9 @@ def default_tool_registry() -> ToolRegistry:
     """Build the registry with the tools Algent ships by default."""
     # Imported lazily so importing the registry does not pull a tool's
     # third-party dependencies (e.g. langchain_tavily) into memory.
-    from .shared.web_search import SPEC as web_search_spec
+    from .sourcing import sourcing_tool_specs
 
     registry = ToolRegistry()
-    registry.register(web_search_spec)
+    for spec in sourcing_tool_specs():
+        registry.register(spec)
     return registry

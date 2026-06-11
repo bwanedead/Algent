@@ -29,5 +29,9 @@ langchain-anthropic==1.4.3
 langchain-google-genai==4.2.3
 langgraph-checkpoint-sqlite==3.1.0
 
-# Tools
+# Tools — sourcing portfolio (see agent_system/tools/sourcing/)
 langchain-tavily==0.2.18
+langchain-exa==1.1.0
+trafilatura==2.1.0
+feedparser==6.0.12
+# brave_search, x_search, gdelt_events, firecrawl fallback use httpx (above) directly

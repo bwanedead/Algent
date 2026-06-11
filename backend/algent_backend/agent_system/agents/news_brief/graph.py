@@ -23,7 +23,7 @@ from langgraph.graph.state import CompiledStateGraph
 
 from algent_backend.agent_system.foundation.models import ModelSpec
 from algent_backend.agent_system.runs.context import AgentRunContext
-from algent_backend.agent_system.tools.shared.web_search import WEB_SEARCH_TOOL_ID
+from algent_backend.agent_system.tools.sourcing.search.tavily import WEB_SEARCH_TOOL_ID
 
 from . import prompts
 

@@ -1,6 +1,7 @@
 # Tools
 
-This page explains how Algent gives agents capabilities, added in Slice 3. Tools
+This page explains how Algent gives agents capabilities (tool seam added in
+Slice 3; sourcing portfolio in Slice 5). Tools
 are **capabilities, not artifacts** — they let an agent *act* (search the web,
 later: query a graph, call an API). They are not the durable outputs a run
 produces (those come in a later artifacts slice).
@@ -30,20 +31,52 @@ any tool whose scope is `global`, the agent's `family:<family>`, or
 is a configuration error and raises `ValueError` (which `RunService` turns into a
 failed `RunResult`) rather than failing opaquely later inside the graph.
 
-This wires the global + family + agent hierarchy now, even though only
-`global:web_search` exists today.
+This wires the global + family + agent hierarchy now. All current sourcing
+tools are `global`; family/agent scoping is exercised by tests and waits for the
+first genuinely family-specific tool.
 
-## web_search (Tavily)
+## The Sourcing Portfolio (Slice 5)
 
-The first concrete tool. `tools/shared/web_search.py` is the only place
-`langchain_tavily` is imported, and the import is lazy (inside the builder) so
-the neutral tool layer stays light. Its API key comes from Algent's config
-layer (`get_service_api_key("tavily")`), keyed under `TAVILY_API_KEY` — a
-*service* key, kept separate from model-provider keys.
+Sourcing tools live in `tools/sourcing/`, organized by **capability channel** —
+one vendor per module, vendor imports lazy inside each `build()`:
+
+```text
+channel      tool_id           vendor       key             what it is for
+search       web_search        Tavily       TAVILY_API_KEY  keyword web/news search
+search       brave_search      Brave        BRAVE_API_KEY   independent-index diversity
+search       semantic_search   Exa          EXA_API_KEY     meaning-based niche discovery
+social       x_search          xAI Grok     XAI_API_KEY     live X posts/claims/sentiment
+depth        fetch_content     trafilatura  (none)          full-page article extraction
+                               + Firecrawl  FIRECRAWL_API_KEY  fallback for hard pages
+discovery    rss_feed          feedparser   (none)          what outlets publish now
+discovery    gdelt_events      GDELT        (none)          global breaking-news firehose
+```
+
+`ToolSpec.channel` tags each tool so future orchestration can fan out by
+capability ("run all `search` tools, merge, dedupe") without naming vendors.
+Agent code asks for tool ids, never vendors — swapping Exa out later touches one
+module.
+
+Keys load from environment, then `backend/.env` (copy `.env.example`), then OS
+keyring. A missing key only disables the tools that need it — everything else
+keeps working, because tools build lazily.
+
+`x_search` is the special one: X has no affordable search API, so the tool asks
+Grok (with xAI's server-side live search over X) to search and report with
+citations. It is a model-call wearing a tool interface, and it uses the xAI
+*provider* key.
+
+To manually evaluate any vendor before wiring it into an agent:
+
+```text
+python -m algent_backend.cli.probe_tool --list
+python -m algent_backend.cli.probe_tool web_search "ukraine ceasefire talks"
+python -m algent_backend.cli.probe_tool fetch_content url=https://example.com/article
+```
 
 ```text
 Algent decides tool availability.
-LangChain provides the concrete tool implementation.
+LangChain (or plain REST behind a StructuredTool) provides the implementation.
 ```
 
 ## How a tool reaches an agent
@@ -66,8 +99,8 @@ never constructs one.
 
 - `ToolSpec` / `ToolRegistry` own metadata and scope resolution; they import no
   LangChain/LangGraph (`AgentSpec` only under `TYPE_CHECKING`).
-- `tools/shared/*` own concrete tool construction; this is where rail/service
-  dependencies live.
+- `tools/sourcing/*` own concrete tool construction; this is where rail/service
+  dependencies live, one vendor per module.
 - The neutral run primitives (`runs/models.py`, `runs/context.py`) must not
   import tools' concrete dependencies — `context.tools` holds built objects typed
   as `Any`.

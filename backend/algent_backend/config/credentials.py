@@ -29,6 +29,9 @@ PROVIDER_KEY_MAP = {
 # External services / tools (not model providers).
 SERVICE_KEY_MAP = {
     "tavily": ("TAVILY_API_KEY", "tavily_api_key"),
+    "exa": ("EXA_API_KEY", "exa_api_key"),
+    "brave": ("BRAVE_API_KEY", "brave_api_key"),
+    "firecrawl": ("FIRECRAWL_API_KEY", "firecrawl_api_key"),
 }
 
 
