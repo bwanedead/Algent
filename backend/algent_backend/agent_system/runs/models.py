@@ -2,8 +2,7 @@
 Neutral run contracts.
 
 These types describe what Algent asks a runtime to do and what comes back. They
-deliberately avoid LangGraph shapes, event streams, or artifact references — those
-arrive in later slices.
+deliberately avoid LangGraph shapes — rail specifics live in runtime adapters.
 """
 
 from __future__ import annotations
@@ -21,6 +20,12 @@ class RunRequest(BaseModel):
     agent_id: str
     input: dict[str, Any]
     runtime: str = "langgraph"
+    # Pre-allocated run id (the CLI allocates one before spawning a background
+    # child so watchers can attach immediately). None = service generates one.
+    run_id: str | None = None
+    # Turn budget — a mechanical leash on agent loops, enforced by the runtime
+    # adapter. None = the rail's default limit.
+    max_turns: int | None = None
 
 
 class RunResult(BaseModel):

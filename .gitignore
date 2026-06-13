@@ -226,3 +226,6 @@ backend/algent_backend/cockpit/registry.json
 
 # Stray pytest cache export dirs
 pytest-cache-files-*/
+
+# Run control plane data (run state, events, artifacts) — never committed
+backend/runs_data/

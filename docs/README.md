@@ -36,6 +36,10 @@ Docs sprawl is a real failure mode. To prevent it:
 - `modularity-ethos.md` – decomposition: one home per responsibility, no junk drawers.
 - `raptor-3-ethos.md` – native-integration / subtractive design.
 - `doctrine-drafting-ethos.md` – how to author agent prompt doctrine.
+- `harness-ethos.md` – mechanics vs. semantic authorship; the agent-native rule.
+
+### Architecture — `architecture/`
+- `run-control-plane.md` – run directory contract, runs CLI, observability weave.
 
 ### Linting — `linting/`
 - `static-governance.md` – lint toolchain, rules, and what blocks vs. warns.

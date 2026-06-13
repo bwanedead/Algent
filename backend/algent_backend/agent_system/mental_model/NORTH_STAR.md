@@ -89,13 +89,26 @@ RunRequest -> RunService -> AgentRegistry.get(agent_id)
 -> RunResult
 ```
 
-Slice 3 (current) adds tools and the first real agent. `RunService` now also
+Slice 3 adds tools and the first real agent. `RunService` now also
 resolves and builds the agent's tools and assembles the context:
 
 ```text
 RunService -> resolve AgentSpec -> resolve + build tools
 -> AgentRunContext(tools) -> LangGraphAdapter -> news_brief
 -> web_search (Tavily) -> grounded brief -> RunResult
+```
+
+Slice 5 adds the sourcing portfolio: seven channel-organized tools
+(search / social / depth / discovery) plus key management and the probe CLI.
+
+Slice 6 (current) adds the harness layer — the run control plane every agent
+runs on (see `HARNESS.md`):
+
+```text
+RunService -> RunRecorder -> runs_data/<run_id>/
+  state.json + events.jsonl + timeline.md + result.json + done.json + artifacts/
+CLI: python -m algent_backend.cli.runs start|status|watch|list|show
+LangSmith trace per run (run_name = agent_id:run_id); token usage in the ledger
 ```
 
 Together they establish these rules:
