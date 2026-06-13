@@ -17,8 +17,10 @@ def print_json(payload: Any) -> None:
     sys.stdout.write("\n")
 
 
-def parse_input_arg(input_json: str | None, topic: str | None) -> dict[str, Any]:
-    """Build the run input from ``--input`` JSON and/or the ``--topic`` shortcut."""
+def parse_input_arg(
+    input_json: str | None, topic: str | None, goal: str | None = None
+) -> dict[str, Any]:
+    """Build the run input from ``--input`` JSON and/or the ``--topic``/``--goal`` shortcuts."""
     payload: dict[str, Any] = {}
     if input_json:
         parsed = json.loads(input_json)
@@ -27,6 +29,8 @@ def parse_input_arg(input_json: str | None, topic: str | None) -> dict[str, Any]
         payload.update(parsed)
     if topic is not None:
         payload["topic"] = topic
+    if goal is not None:
+        payload["goal"] = goal
     return payload
 
 

@@ -38,10 +38,12 @@ def default_agent_registry() -> AgentRegistry:
     """Build the registry with the agents Algent ships by default."""
     # Imported lazily so merely importing the registry class does not pull an
     # agent's graph module (and its LangGraph imports) into memory.
+    from .discovery.general.spec import SPEC as general_discovery_spec
     from .hello_workflow.spec import SPEC as hello_workflow_spec
     from .news_brief.spec import SPEC as news_brief_spec
 
     registry = AgentRegistry()
     registry.register(hello_workflow_spec)
     registry.register(news_brief_spec)
+    registry.register(general_discovery_spec)
     return registry

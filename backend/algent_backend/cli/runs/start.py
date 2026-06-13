@@ -27,6 +27,7 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
     parser.add_argument("agent_id")
     parser.add_argument("--input", help='run input as a JSON object, e.g. \'{"topic": "..."}\'')
     parser.add_argument("--topic", help="shortcut for --input '{\"topic\": ...}'")
+    parser.add_argument("--goal", help="shortcut for --input '{\"goal\": ...}' (discovery agents)")
     parser.add_argument("--runtime", default="langgraph")
     parser.add_argument("--max-turns", type=int, default=None)
     parser.add_argument(
@@ -41,7 +42,7 @@ def run(args: argparse.Namespace) -> int:
     run_id = str(uuid4())
     request = RunRequest(
         agent_id=args.agent_id,
-        input=parse_input_arg(args.input, args.topic),
+        input=parse_input_arg(args.input, args.topic, args.goal),
         runtime=args.runtime,
         run_id=run_id,
         max_turns=args.max_turns,
