@@ -1,17 +1,21 @@
 """
-Prompting — shared, layered system-prompt surfaces.
+Prompting — system-prompt layers and task-message stitching, kept distinct.
 
-Prompts are composed from ordered layers, broad to specific: a universal layer
-that applies to every agent, then family/class layers, then per-agent
-specialization, to as many layers as a specialization needs. Each layer is its
-own findable text module so prompt surfaces can be edited in isolation; the
-``compose_system_prompt`` helper assembles them.
+Two separate concerns live here:
 
-This package is pure text and string assembly — no LangChain/LangGraph, no agent
-or runtime imports.
+- *System prompt*: the agent's identity, composed from ordered layers broad to
+  specific (a universal layer for every agent, then family/class, then per-agent
+  specialization, to any depth). ``compose_system_prompt`` assembles them. Each
+  layer is its own findable text module so surfaces can be edited in isolation.
+- *Task message*: the per-run payload, including the optional query seed a caller
+  provides, stitched from conditional segments by ``stitch_message``.
+
+Identity is not the same as this run's task; the two never share a surface. This
+package is pure text and string assembly — no LangChain/LangGraph, no agent or
+runtime imports.
 """
 
 from .base import UNIVERSAL_AGENT_BASE
-from .compose import compose_system_prompt
+from .compose import compose_system_prompt, stitch_message
 
-__all__ = ["UNIVERSAL_AGENT_BASE", "compose_system_prompt"]
+__all__ = ["UNIVERSAL_AGENT_BASE", "compose_system_prompt", "stitch_message"]

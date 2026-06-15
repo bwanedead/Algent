@@ -28,6 +28,7 @@ from algent_backend.agent_system.foundation.models import ModelSpec
 from algent_backend.agent_system.runs.context import AgentRunContext
 
 from .contracts import DiscoveryResult, cap_candidates
+from .messages import build_task_message
 
 DEFAULT_MAX_CANDIDATES = 10
 ARTIFACT_NAME = "discovery_result.json"
@@ -38,24 +39,6 @@ class DiscoveryState(TypedDict, total=False):
     goal: str | None
     max_candidates: int
     result: dict[str, Any]
-
-
-def _initial_message(goal: str | None, cap: int) -> str:
-    """The task message that seeds the discovery loop."""
-    if goal:
-        focus = f"Focus your discovery on this goal: {goal}\n\n"
-    else:
-        focus = (
-            "Survey broadly for notable, interesting, or significant items that "
-            "could be worth deeper coverage.\n\n"
-        )
-    return (
-        f"{focus}"
-        "Use your discovery tools to look at what is actually being reported, "
-        f"then return up to {cap} candidate topics worth deeper investigation. "
-        "Be selective and ground each candidate in sources you found. Returning "
-        "fewer (or none) is fine if little clears the bar."
-    )
 
 
 def build_discovery_graph(
@@ -80,7 +63,7 @@ def build_discovery_graph(
         # Pass config through so the inner loop inherits the run's tracing,
         # usage callbacks, and turn budget from the adapter.
         agent_out = agent.invoke(
-            {"messages": [HumanMessage(content=_initial_message(goal, cap))]}, config
+            {"messages": [HumanMessage(content=build_task_message(goal, cap))]}, config
         )
         produced = agent_out.get("structured_response")
         result = produced if isinstance(produced, DiscoveryResult) else DiscoveryResult()

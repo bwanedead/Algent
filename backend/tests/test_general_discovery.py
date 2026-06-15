@@ -14,7 +14,7 @@ from algent_backend.agent_system.agents.discovery.base.contracts import (
     TopicCandidate,
     cap_candidates,
 )
-from algent_backend.agent_system.agents.discovery.base.loop import _initial_message
+from algent_backend.agent_system.agents.discovery.base.messages import build_task_message
 from algent_backend.agent_system.agents.discovery.general import spec as general_spec
 from algent_backend.agent_system.agents.discovery.general.prompts import SYSTEM_PROMPT
 from algent_backend.agent_system.agents.registry import default_agent_registry
@@ -47,9 +47,9 @@ def test_topic_candidate_defaults() -> None:
     assert c.seed_sources == []
 
 
-def test_initial_message_open_vs_goal() -> None:
-    open_msg = _initial_message(None, 10)
-    goal_msg = _initial_message("Russian economics", 5)
+def test_task_message_open_vs_goal() -> None:
+    open_msg = build_task_message(None, 10)
+    goal_msg = build_task_message("Russian economics", 5)
     assert "Survey broadly" in open_msg
     assert "up to 10" in open_msg
     assert "Russian economics" in goal_msg

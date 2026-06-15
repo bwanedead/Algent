@@ -2,10 +2,10 @@
 General discovery — the specialty prompt layer, plus the composed system prompt.
 
 This is the broadest discovery specialty: it sweeps for anything notable, and
-can be narrowed at runtime by an injected goal (handled in the loop's task
-message, not here). ``SYSTEM_PROMPT`` is the assembled identity: universal base
--> discovery class -> this specialty. A runtime goal is an additional task-level
-layer, kept out of the fixed system prompt.
+can be narrowed at runtime by an injected goal — but that goal is the run's
+*query seed*, assembled into the task message (see ``base/messages.py``), never
+part of this system prompt. ``SYSTEM_PROMPT`` is purely the assembled identity:
+universal base -> discovery class -> this specialty.
 """
 
 from __future__ import annotations
