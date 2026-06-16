@@ -29,16 +29,10 @@ from .base import ModelTarget
 
 TARGET_NAME = "langchain"
 
-# Providers this target knows how to build.
+# Providers this target knows how to build (i.e. has an installed langchain-*
+# integration for). This is target capability, not provider config: a vendor can
+# be a model provider in the registry without this target supporting it yet.
 _SUPPORTED = {"openai", "anthropic", "google"}
-
-# Spec provider -> the provider key the credential layer stores it under.
-# (config keys Google's key as "gemini", not "google".)
-_CREDENTIAL_PROVIDER = {
-    "openai": "openai",
-    "anthropic": "anthropic",
-    "google": "gemini",
-}
 
 
 class LangChainTarget(ModelTarget):
@@ -78,7 +72,7 @@ class LangChainTarget(ModelTarget):
     def _build_kwargs(self, spec: ModelSpec) -> dict[str, Any]:
         kwargs: dict[str, Any] = {"model": spec.model}
 
-        api_key = get_provider_api_key(_CREDENTIAL_PROVIDER[spec.provider])
+        api_key = get_provider_api_key(spec.provider)
         if api_key:
             kwargs["api_key"] = api_key
 
