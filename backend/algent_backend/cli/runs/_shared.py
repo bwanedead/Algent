@@ -13,6 +13,10 @@ from typing import Any
 
 def print_json(payload: Any) -> None:
     """Print the command's single JSON document."""
+    # Windows consoles default to cp1252 and crash on non-ASCII (e.g. world-news
+    # titles). Force UTF-8, degrading un-encodable chars rather than raising.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     json.dump(payload, sys.stdout, ensure_ascii=False, indent=2, default=str)
     sys.stdout.write("\n")
 

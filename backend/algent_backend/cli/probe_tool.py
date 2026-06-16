@@ -51,6 +51,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--list", action="store_true", help="List registered tools and exit.")
     args = parser.parse_args(argv)
 
+    # Windows consoles default to cp1252 and crash on non-ASCII tool results;
+    # force UTF-8, degrading un-encodable chars rather than raising.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
     registry = default_tool_registry()
 
     if args.list or not args.tool_id:
