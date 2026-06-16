@@ -128,8 +128,9 @@ LangChain provides the concrete tool implementation.
 ```
 
 See `RUNTIME_RAIL.md` for the runtime seam, `AGENT_DEFINITION.md` for
-`AgentSpec`/`AgentRegistry`/`RunService`, `TOOLS.md` for the tool layer, and
-`NEWS_BRIEF_AGENT.md` for the first real agent.
+`AgentSpec`/`AgentRegistry`/`RunService`, `TOOLS.md` for the tool layer,
+`NEWS_BRIEF_AGENT.md` for the first real agent, and `SOURCING_AND_PROVIDERS.md`
+for how external connections (providers, tools, external agents) are organized.
 
 ## Standing Decisions
 
@@ -149,6 +150,15 @@ See `RUNTIME_RAIL.md` for the runtime seam, `AGENT_DEFINITION.md` for
   build themselves behind `ToolSpec.build` (Slice 3).
 - Start news with deterministic search orchestration, not model-driven
   tool-calling; the latter can come later if a workflow needs it.
+- Group external connection *config* by vendor in `config/providers/` (Axis 1);
+  keep *mechanisms* (models, tools, external agents, rails) grouped by type in
+  `agent_system/` (Axis 2). Provider folders declare; mechanisms consume;
+  LangChain stays confined to named adapter edges. See `SOURCING_AND_PROVIDERS.md`.
+- A model provider is just a vendor with a `model` surface; provider config
+  (incl. the LLM brain's key) lives in `config/providers/`, not in the mechanisms.
+- Distinguish the inward control CLI (`cli/`) from outward external agent systems
+  (`external_agents/`, future) by direction of control; name X/Grok tools by
+  trust level (`xai_x_search` derived, `x_api_*` canonical, `x_api_post` gated).
 
 ## Update Rule
 
