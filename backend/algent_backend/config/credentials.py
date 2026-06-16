@@ -1,15 +1,21 @@
 """
-Credential helpers (env vars first, with optional keyring fallback).
+Credential resolution — environment first, then keyring, over the provider registry.
 
-Two namespaces are kept separate on purpose: model *providers* (OpenAI, Anthropic,
-...) and external *services*/tools (Tavily, ...). A tool key is not a model
-provider key, so it gets its own map rather than being shoehorned into the
-provider list.
+Per-vendor key *names* live in ``config/providers/`` (grouped by vendor). This
+module is the *mechanism*: given a provider id, look up its descriptor and resolve
+the key from the environment (including ``.env``) or the OS keyring.
+
+There is no longer a model-provider vs service split at the key layer — every
+vendor sits in one registry. ``get_provider_api_key`` and ``get_service_api_key``
+are kept as call-site-compatible aliases over the same lookup; the distinction is
+now expressed by a vendor's declared surfaces, not by which map its key lives in.
 """
 
 from __future__ import annotations
 
 import os
+
+from .providers import PROVIDERS, model_provider_ids
 
 try:
     import keyring  # type: ignore
@@ -19,66 +25,52 @@ except ImportError:  # pragma: no cover - optional dependency
 
 SERVICE_NAME = "algent"
 
-PROVIDER_KEY_MAP = {
-    "openai": ("OPENAI_API_KEY", "openai_api_key"),
-    "anthropic": ("ANTHROPIC_API_KEY", "anthropic_api_key"),
-    "gemini": ("GEMINI_API_KEY", "gemini_api_key"),
-    "xai": ("XAI_API_KEY", "xai_api_key"),
-}
 
-# External services / tools (not model providers).
-SERVICE_KEY_MAP = {
-    "tavily": ("TAVILY_API_KEY", "tavily_api_key"),
-    "exa": ("EXA_API_KEY", "exa_api_key"),
-    "brave": ("BRAVE_API_KEY", "brave_api_key"),
-    "firecrawl": ("FIRECRAWL_API_KEY", "firecrawl_api_key"),
-}
-
-
-def _lookup_key(env_var: str, key_name: str) -> str | None:
+def _lookup_key(env_var: str | None, keyring_name: str | None) -> str | None:
     """Resolve a key from the environment first, then keyring."""
     if env_var and env_var in os.environ:
         return os.environ[env_var]
-    if keyring and key_name:
+    if keyring and keyring_name:
         try:
-            return keyring.get_password(SERVICE_NAME, key_name)
+            return keyring.get_password(SERVICE_NAME, keyring_name)
         except Exception:
             return None
     return None
 
 
-def list_providers() -> list[str]:
-    """Return supported provider identifiers."""
-    return sorted(PROVIDER_KEY_MAP.keys())
-
-
-def get_provider_api_key(provider: str) -> str | None:
+def get_api_key(provider_id: str) -> str | None:
     """
-    Return the API key for a model provider.
+    Return the API key for any registered vendor (model provider or service).
 
     Order of precedence:
-    1. Environment variable (e.g., OPENAI_API_KEY)
-    2. Keyring entry stored under (service='algent', username='<provider>_api_key')
+    1. Environment variable (e.g., ``OPENAI_API_KEY``) — includes values from ``.env``.
+    2. Keyring entry stored under (service='algent', username='<vendor>_api_key').
+
+    Returns ``None`` for an unknown or keyless vendor.
     """
-    env_var, key_name = PROVIDER_KEY_MAP.get(provider, ("", ""))
-    return _lookup_key(env_var, key_name)
+    cfg = PROVIDERS.get(provider_id)
+    if cfg is None:
+        return None
+    return _lookup_key(cfg.key_env, cfg.keyring_name)
 
 
-def get_service_api_key(service: str) -> str | None:
-    """
-    Return the API key for an external service/tool (e.g. Tavily).
-
-    Same precedence as provider keys: environment variable first, then keyring.
-    """
-    env_var, key_name = SERVICE_KEY_MAP.get(service, ("", ""))
-    return _lookup_key(env_var, key_name)
+# Call-site-compatible aliases. Model-provider keys and external-service/tool keys
+# resolve through the same registry; the two names are kept for readability at the
+# call site (a model target asks for a provider key; a tool asks for a service key).
+get_provider_api_key = get_api_key
+get_service_api_key = get_api_key
 
 
-def set_provider_api_key(provider: str, value: str) -> None:
-    """Store the API key in keyring if available."""
+def list_providers() -> list[str]:
+    """Model providers whose keys can be set via the credentials endpoint."""
+    return model_provider_ids()
+
+
+def set_provider_api_key(provider_id: str, value: str) -> None:
+    """Store a vendor's API key in keyring (if available)."""
     if not keyring:
         raise RuntimeError("keyring is not installed")
-    _, key_name = PROVIDER_KEY_MAP.get(provider, ("", ""))
-    if not key_name:
-        raise ValueError(f"Unknown provider '{provider}'")
-    keyring.set_password(SERVICE_NAME, key_name, value)
+    cfg = PROVIDERS.get(provider_id)
+    if cfg is None or not cfg.keyring_name:
+        raise ValueError(f"Unknown provider '{provider_id}'")
+    keyring.set_password(SERVICE_NAME, cfg.keyring_name, value)
