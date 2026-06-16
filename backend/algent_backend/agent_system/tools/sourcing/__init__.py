@@ -5,7 +5,7 @@ Organized by capability channel, one vendor per module, vendor SDK imports lazy
 inside each ``build()``:
 
     search/      tavily (web_search), brave (brave_search), exa (semantic_search)
-    social/      x_search — live X/web search through xAI Grok
+    social/      xai_x_search — Grok-mediated live X search (derived intelligence)
     depth/       fetch_content — full-page extraction (trafilatura -> Firecrawl)
     discovery/   rss_feed, gdelt_events — breaking-news / what's-happening feeds
 
@@ -30,13 +30,13 @@ def sourcing_tool_specs() -> list[ToolSpec]:
     from .search.brave import SPEC as brave_search
     from .search.exa import SPEC as semantic_search
     from .search.tavily import SPEC as web_search
-    from .social.x_search import SPEC as x_search
+    from .social.xai_x_search import SPEC as xai_x_search
 
     return [
         web_search,
         brave_search,
         semantic_search,
-        x_search,
+        xai_x_search,
         fetch_content,
         rss_feed,
         gdelt_events,

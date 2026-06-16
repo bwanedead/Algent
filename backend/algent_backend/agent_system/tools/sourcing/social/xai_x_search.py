@@ -1,11 +1,17 @@
 """
-``x_search`` — live X (Twitter) search through xAI's Grok live-search API.
+``xai_x_search`` — live X (Twitter) search through xAI's Grok live-search API.
 
-X has no affordable direct search API, but xAI exposes Grok with server-side
-live search over X. So this tool is a model-call-in-tool's-clothing: it asks a
-Grok model to search X for a query and report what it finds, with citations.
-That is also why it uses the *provider* key (XAI_API_KEY), not a service key —
-it is the same credential that would power Grok as a chat model.
+Named ``xai_x_search`` (not ``x_search``) on purpose: it is the *Grok-mediated*,
+derived-intelligence view of X — Grok searches X server-side and reports back
+with citations. It is deliberately distinct from future canonical ``x_api_*``
+tools (raw post objects from the X REST API) and from a future ``grok_build``
+external-agent rail. The name encodes the trust level: derived, not canonical.
+
+X has no affordable direct search API, but xAI exposes Grok with server-side live
+search over X. So this tool is a model-call-in-tool's-clothing: it asks a Grok
+model to search X for a query and report what it finds. That is also why it uses
+the *provider* key (XAI_API_KEY), not a service key — the same credential that
+would power Grok as a chat model.
 
 API (verified against xAI docs 2026-06): POST /v1/chat/completions with
 ``search_parameters`` — mode, sources [{"type": "x"}], return_citations,
@@ -21,7 +27,7 @@ from algent_backend.config import get_provider_api_key
 from ...spec import GLOBAL_SCOPE, ToolSpec
 from .._wrap import as_structured_tool
 
-X_SEARCH_TOOL_ID = "x_search"
+XAI_X_SEARCH_TOOL_ID = "xai_x_search"
 
 _ENDPOINT = "https://api.x.ai/v1/chat/completions"
 # Cheap/fast Grok variant — the tool is a search reporter, not a deep reasoner.
@@ -41,7 +47,7 @@ def _search(query: str, max_results: int = 10) -> dict[str, Any]:
 
     api_key = get_provider_api_key("xai")
     if not api_key:
-        raise RuntimeError("x_search requires XAI_API_KEY (see backend/.env.example).")
+        raise RuntimeError("xai_x_search requires XAI_API_KEY (see backend/.env.example).")
 
     payload = {
         "model": _MODEL,
@@ -75,17 +81,17 @@ def _search(query: str, max_results: int = 10) -> dict[str, Any]:
 def _build() -> Any:
     return as_structured_tool(
         _search,
-        name="x_search",
+        name="xai_x_search",
         description=(
-            "Searches X (Twitter) live for posts about a query and reports "
-            "notable posts, claims, and sentiment with citations."
+            "Searches X (Twitter) live via xAI Grok and reports notable posts, "
+            "claims, and sentiment with citations."
         ),
     )
 
 
 SPEC = ToolSpec(
-    tool_id=X_SEARCH_TOOL_ID,
-    name="x_search",
+    tool_id=XAI_X_SEARCH_TOOL_ID,
+    name="xai_x_search",
     description="Live X (Twitter) search via xAI Grok: posts, claims, sentiment, citations.",
     scope=GLOBAL_SCOPE,
     build=_build,

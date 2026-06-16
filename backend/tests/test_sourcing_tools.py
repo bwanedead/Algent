@@ -19,7 +19,7 @@ EXPECTED_TOOLS = {
     "web_search": "search",
     "brave_search": "search",
     "semantic_search": "search",
-    "x_search": "social",
+    "xai_x_search": "social",
     "fetch_content": "depth",
     "rss_feed": "discovery",
     "gdelt_events": "discovery",
