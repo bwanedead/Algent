@@ -20,10 +20,12 @@ from .layout import RunPaths
 class RunEventLog:
     """Appends RunEvents to one run's ``events.jsonl``."""
 
-    def __init__(self, paths: RunPaths, run_id: str) -> None:
+    def __init__(self, paths: RunPaths, run_id: str, start_seq: int = 0) -> None:
         self._paths = paths
         self._run_id = run_id
-        self._seq = 0
+        # start_seq lets a second writer (e.g. the stop command) continue the
+        # sequence after the run's own events rather than colliding from 1.
+        self._seq = start_seq
         self._appended: list[RunEvent] = []
 
     def append(self, event_type: str, payload: dict[str, Any] | None = None) -> RunEvent:

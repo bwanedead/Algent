@@ -15,7 +15,7 @@ from pydantic import BaseModel, Field
 from .fsio import atomic_write_text
 from .layout import RunPaths
 
-RunLifecycleStatus = Literal["queued", "running", "completed", "failed"]
+RunLifecycleStatus = Literal["queued", "running", "completed", "failed", "stopped"]
 
 
 class RunState(BaseModel):

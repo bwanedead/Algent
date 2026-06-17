@@ -1,0 +1,63 @@
+"""
+Offline tests for the run control surface (the ``stop`` command).
+
+No real process is launched: we fabricate a run directory and confirm stop marks
+it terminal. Process termination is best-effort and platform-specific, so it is
+exercised separately from this logic.
+"""
+
+from __future__ import annotations
+
+import json
+from datetime import UTC, datetime
+from types import SimpleNamespace
+
+from algent_backend.agent_system.runs.control_plane.layout import run_paths
+from algent_backend.agent_system.runs.control_plane.state import RunState, read_state, write_state
+from algent_backend.cli.runs import stop
+
+
+def _running_state(run_id: str) -> RunState:
+    now = datetime.now(UTC).isoformat()
+    # pid=None: nothing real to kill, so stop exercises only the bookkeeping.
+    return RunState(
+        run_id=run_id,
+        agent_id="general_discovery",
+        runtime="langgraph",
+        status="running",
+        created_at=now,
+        updated_at=now,
+        pid=None,
+    )
+
+
+def test_stop_unknown_run_errors(tmp_path, monkeypatch) -> None:
+    monkeypatch.setenv("ALGENT_RUNS_DIR", str(tmp_path))
+    code = stop.run(SimpleNamespace(run_id="does-not-exist", reason="x"))
+    assert code == 1
+
+
+def test_stop_marks_run_terminal(tmp_path, monkeypatch) -> None:
+    monkeypatch.setenv("ALGENT_RUNS_DIR", str(tmp_path))
+    run_id = "run-1"
+    paths = run_paths(run_id)
+    write_state(paths, _running_state(run_id))
+
+    code = stop.run(SimpleNamespace(run_id=run_id, reason="spinning"))
+
+    assert code == 0
+    assert paths.done_file.exists()
+    assert json.loads(paths.done_file.read_text())["status"] == "stopped"
+    assert read_state(paths).status == "stopped"
+
+
+def test_stop_is_idempotent_on_terminal_run(tmp_path, monkeypatch) -> None:
+    monkeypatch.setenv("ALGENT_RUNS_DIR", str(tmp_path))
+    run_id = "run-2"
+    paths = run_paths(run_id)
+    write_state(paths, _running_state(run_id))
+
+    assert stop.run(SimpleNamespace(run_id=run_id, reason="first")) == 0
+    # second stop sees a terminal run and no-ops cleanly
+    assert stop.run(SimpleNamespace(run_id=run_id, reason="second")) == 0
+    assert read_state(paths).status == "stopped"

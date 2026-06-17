@@ -23,6 +23,7 @@ from pydantic import BaseModel, Field
 RUN_STARTED = "run.started"
 RUN_COMPLETED = "run.completed"
 RUN_FAILED = "run.failed"
+RUN_STOPPED = "run.stopped"
 NODE_COMPLETED = "node.completed"
 MODEL_USAGE = "model.usage"
 ARTIFACT_WRITTEN = "artifact.written"
