@@ -43,7 +43,8 @@ Docs sprawl is a real failure mode. To prevent it:
 - `run-control-plane.md` – run directory contract, runs CLI, observability weave.
 
 ### Guides — `guides/`
-- `agent-cli-testing.md` – discover/start/watch/stop an agent run from the CLI.
+- `run-operator-entrypoint.md` – **start here** to operate runs; hub that routes to the rest.
+- `agent-cli-testing.md` – CLI mechanics: discover/start/watch/stop an agent run.
 
 ### Linting — `linting/`
 - `static-governance.md` – lint toolchain, rules, and what blocks vs. warns.

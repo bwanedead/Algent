@@ -1,9 +1,9 @@
 # Agent CLI Testing Guide
 
-**Entrypoint doc for a testing agent.** How to discover, run, watch, and control
-an Algent agent from the command line. Every command prints exactly one JSON
-document, so humans, scripts, and other agents drive runs the same way. To test
-an agent, you only need this doc.
+The CLI mechanics reference for running and controlling an Algent agent — the
+how-to behind the [run operator entry point](./run-operator-entrypoint.md).
+Every command prints exactly one JSON document, so humans, scripts, and other
+agents drive runs the same way.
 
 Run commands from `backend/` using the project venv (e.g.
 `./.venv/Scripts/python.exe ...` on Windows).
