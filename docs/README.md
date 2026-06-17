@@ -37,9 +37,13 @@ Docs sprawl is a real failure mode. To prevent it:
 - `raptor-3-ethos.md` – native-integration / subtractive design.
 - `doctrine-drafting-ethos.md` – how to author agent prompt doctrine.
 - `harness-ethos.md` – mechanics vs. semantic authorship; the agent-native rule.
+- `agent-ergonomics-ethos.md` – fit the action seam to the agent's natural grammar; discover it empirically.
 
 ### Architecture — `architecture/`
 - `run-control-plane.md` – run directory contract, runs CLI, observability weave.
+
+### Guides — `guides/`
+- `agent-cli-testing.md` – discover/start/watch/stop an agent run from the CLI.
 
 ### Linting — `linting/`
 - `static-governance.md` – lint toolchain, rules, and what blocks vs. warns.
