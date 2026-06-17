@@ -20,7 +20,7 @@ from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.models import RunRequest, RunResult
 
 from .events_log import RunEventLog
-from .fsio import write_json_file
+from .fsio import atomic_write_text, write_json_file
 from .layout import RunPaths, run_paths
 from .ledger import LedgerEntry, RunLedger
 from .state import RunState, write_state
@@ -83,6 +83,9 @@ class RunRecorder:
 
     def emit(self, event_type: str, payload: dict[str, Any] | None = None) -> None:
         self._events.append(event_type, payload)
+        if event_type == ev.RUN_ERROR and payload and payload.get("traceback"):
+            # Persist the full stack so a failure is diagnosable from disk.
+            atomic_write_text(self.paths.error_file, str(payload["traceback"]))
         if event_type == ev.MODEL_USAGE and payload:
             self._usage["input_tokens"] = self._usage.get("input_tokens", 0) + int(
                 payload.get("input_tokens") or 0

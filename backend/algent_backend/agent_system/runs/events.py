@@ -24,6 +24,7 @@ RUN_STARTED = "run.started"
 RUN_COMPLETED = "run.completed"
 RUN_FAILED = "run.failed"
 RUN_STOPPED = "run.stopped"
+RUN_ERROR = "run.error"  # carries the full traceback when a run raises
 NODE_COMPLETED = "node.completed"
 MODEL_USAGE = "model.usage"
 ARTIFACT_WRITTEN = "artifact.written"

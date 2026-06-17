@@ -62,6 +62,11 @@ class LangGraphAdapter:
                 output=dict(output),
             )
         except Exception as exc:
+            import traceback
+
+            # Capture the full stack into the run's audit trace so the failure is
+            # diagnosable from disk; the RunResult keeps the short message.
+            context.emit(ev.RUN_ERROR, {"error": str(exc), "traceback": traceback.format_exc()})
             return RunResult(
                 run_id=context.run_id,
                 agent_id=request.agent_id,

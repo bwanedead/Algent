@@ -79,6 +79,18 @@ def test_prune_runs_noop_under_keep(tmp_path) -> None:
     assert len([p for p in tmp_path.iterdir() if p.is_dir()]) == 3
 
 
+def test_recorder_writes_error_log_on_run_error(tmp_path, monkeypatch) -> None:
+    monkeypatch.setenv("ALGENT_RUNS_DIR", str(tmp_path))
+    from algent_backend.agent_system.runs import events as ev
+    from algent_backend.agent_system.runs.control_plane.recorder import RunRecorder
+
+    rec = RunRecorder("run-err", tmp_path)
+    rec.emit(ev.RUN_ERROR, {"error": "boom", "traceback": "Traceback:\nValueError: boom"})
+
+    assert rec.paths.error_file.exists()
+    assert "ValueError: boom" in rec.paths.error_file.read_text(encoding="utf-8")
+
+
 def test_agents_lists_the_catalog(capsys) -> None:
     code = agents.run(SimpleNamespace())
     assert code == 0

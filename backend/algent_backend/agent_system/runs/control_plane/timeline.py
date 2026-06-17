@@ -23,6 +23,7 @@ from algent_backend.agent_system.runs.events import (
     MODEL_USAGE,
     NODE_COMPLETED,
     RUN_COMPLETED,
+    RUN_ERROR,
     RUN_FAILED,
     RUN_STARTED,
     RunEvent,
@@ -112,6 +113,19 @@ def _render_run_terminal(event: RunEvent) -> list[str]:
     return lines
 
 
+def _render_run_error(event: RunEvent) -> list[str]:
+    p = event.payload
+    lines = [f"- error: {p.get('error', '?')}"]
+    tb = p.get("traceback")
+    if tb:
+        # Render the full traceback (not truncated) — it is the whole point.
+        lines.append("- traceback:")
+        lines.append("```")
+        lines.extend(str(tb).rstrip().splitlines())
+        lines.append("```")
+    return lines
+
+
 def _render_generic(event: RunEvent) -> list[str]:
     if not event.payload:
         return ["- (no payload)"]
@@ -125,6 +139,7 @@ _RENDERERS = {
     ARTIFACT_WRITTEN: _render_artifact_written,
     RUN_COMPLETED: _render_run_terminal,
     RUN_FAILED: _render_run_terminal,
+    RUN_ERROR: _render_run_error,
 }
 
 

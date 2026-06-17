@@ -57,6 +57,12 @@ class RunPaths:
         return self.audit_dir / "human" / "timeline.md"
 
     @property
+    def error_file(self) -> Path:
+        # Full traceback for a failed run — written so a failure is diagnosable
+        # from disk without re-running.
+        return self.audit_dir / "error.log"
+
+    @property
     def result_file(self) -> Path:
         return self.root / "result.json"
 

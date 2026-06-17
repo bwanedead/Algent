@@ -24,6 +24,7 @@ from uuid import uuid4
 from algent_backend.agent_system.agents.registry import AgentRegistry, default_agent_registry
 from algent_backend.agent_system.artifacts import ArtifactWriter
 from algent_backend.agent_system.foundation.models import ModelResolver
+from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.context import AgentRunContext
 from algent_backend.agent_system.runs.control_plane import RunRecorder
 from algent_backend.agent_system.runs.models import RunRequest, RunResult
@@ -85,6 +86,11 @@ class RunService:
         try:
             return adapter.run(request, context, agent_spec)
         except Exception as exc:  # adapters catch their own; this is the last net
+            import traceback
+
+            recorder.emit(
+                ev.RUN_ERROR, {"error": str(exc), "traceback": traceback.format_exc()}
+            )
             return self._failed(run_id, request, f"runtime adapter raised: {exc}")
 
     @staticmethod
