@@ -37,7 +37,7 @@ class RunEventLog:
             type=event_type,
             payload=payload or {},
         )
-        self._paths.root.mkdir(parents=True, exist_ok=True)
+        self._paths.events_file.parent.mkdir(parents=True, exist_ok=True)
         # default=str: payloads may carry non-JSON values (message objects, paths);
         # the log keeps a string rendering rather than refusing the fact.
         line = json.dumps(event.model_dump(), ensure_ascii=False, default=str)

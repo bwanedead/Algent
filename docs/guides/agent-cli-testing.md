@@ -79,12 +79,14 @@ For a quick manual first run you can also use `--foreground` and just `Ctrl+C`.
 
 `backend/runs_data/<run_id>/`:
 
-- **`timeline.md`** — the human view, re-rendered live; read this first while watching.
-- `events.jsonl` — the machine trace (what we own regardless of LangSmith).
+- **`audit/human/timeline.md`** — the human view, re-rendered live; read this first while watching.
+- `audit/events.jsonl` — the machine trace (the owned local trace).
 - `artifacts/discovery_result.json` — the agent's output (the candidate list).
 - `result.json`, `state.json`, `done.json` — outcome + current snapshot + terminal marker.
-- `child_stdout.log` / `child_stderr.log` — raw child output for a background run.
-- LangSmith (if enabled) — the deep per-call trace; `state.json` notes the project.
+- `child_stdout.log` / `child_stderr.log` — raw child output for a background run; **the full Python traceback for a failed run lives in `child_stderr.log`**.
+
+Only the most recent runs are kept on disk (rolling retention); the cross-run
+ledger (`runs_data/runs_index.jsonl`) keeps the full history.
 
 ---
 

@@ -15,7 +15,7 @@ from datetime import UTC, datetime
 from uuid import uuid4
 
 from algent_backend.agent_system.runs.control_plane.fsio import write_json_file
-from algent_backend.agent_system.runs.control_plane.layout import run_paths
+from algent_backend.agent_system.runs.control_plane.layout import prune_runs, run_paths
 from algent_backend.agent_system.runs.control_plane.state import RunState, write_state
 from algent_backend.agent_system.runs.models import RunRequest
 
@@ -47,6 +47,10 @@ def run(args: argparse.Namespace) -> int:
         run_id=run_id,
         max_turns=args.max_turns,
     )
+
+    # Rolling retention: keep the recent window of run dirs, prune older ones.
+    # The cross-run ledger still records full history.
+    prune_runs(keep=5)
 
     paths = run_paths(run_id)
     write_json_file(paths.request_file, request.model_dump())
