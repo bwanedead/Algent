@@ -33,6 +33,7 @@ from .messages import build_task_message
 DEFAULT_MAX_CANDIDATES = 10
 ARTIFACT_NAME = "discovery_result.json"
 DISCOVERY_COMPLETED = "discovery.completed"
+DISCOVERY_NO_STRUCTURED_OUTPUT = "discovery.no_structured_output"
 
 
 class DiscoveryState(TypedDict, total=False):
@@ -66,7 +67,18 @@ def build_discovery_graph(
             {"messages": [HumanMessage(content=build_task_message(goal, cap))]}, config
         )
         produced = agent_out.get("structured_response")
-        result = produced if isinstance(produced, DiscoveryResult) else DiscoveryResult()
+        if isinstance(produced, DiscoveryResult):
+            result = produced
+        else:
+            # A formatting miss must read as "no structured output", not as the
+            # model genuinely finding nothing — emit a distinct signal.
+            context.emit(
+                DISCOVERY_NO_STRUCTURED_OUTPUT,
+                {"raw_type": type(produced).__name__},
+            )
+            result = DiscoveryResult(
+                notes="Model returned no structured DiscoveryResult."
+            )
         result = cap_candidates(result, cap)
 
         if context.artifacts is not None:

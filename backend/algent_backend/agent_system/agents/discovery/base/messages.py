@@ -16,8 +16,8 @@ from algent_backend.agent_system.prompting import stitch_message
 # The query seed: the open-survey default when no goal is given. A caller-provided
 # goal is framed by ``goal_seed``. Either way this is per-run input, not identity.
 OPEN_SURVEY_SEED = (
-    "Survey broadly for notable, interesting, or significant items that could be "
-    "worth deeper coverage."
+    "Identify the news topics drawing the most coverage and attention right now — "
+    "what is trending, breaking, or rising — that could be worth deeper coverage."
 )
 
 

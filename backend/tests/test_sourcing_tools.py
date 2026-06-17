@@ -23,6 +23,7 @@ EXPECTED_TOOLS = {
     "fetch_content": "depth",
     "rss_feed": "discovery",
     "gdelt_events": "discovery",
+    "news_feeds": "discovery",
 }
 
 # Vendor modules that must only load when a tool is actually built.

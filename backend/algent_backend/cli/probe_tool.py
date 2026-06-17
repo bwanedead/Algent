@@ -64,9 +64,9 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     spec = registry.get(args.tool_id)
+    # No params is valid — some tools take no arguments (e.g. a catalog lister),
+    # and tools that do need args will report that themselves on invoke.
     params = _parse_params(args.params)
-    if not params:
-        parser.error("Provide a value or key=value parameters to invoke the tool with.")
 
     print(f"probe: building '{spec.tool_id}' ({spec.channel}) ...", file=sys.stderr)
     tool = spec.build()

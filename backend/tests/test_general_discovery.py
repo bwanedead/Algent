@@ -20,6 +20,7 @@ from algent_backend.agent_system.agents.discovery.general.prompts import SYSTEM_
 from algent_backend.agent_system.agents.registry import default_agent_registry
 from algent_backend.agent_system.tools import default_tool_registry
 from algent_backend.agent_system.tools.sourcing.discovery.gdelt import GDELT_EVENTS_TOOL_ID
+from algent_backend.agent_system.tools.sourcing.discovery.news_feeds import NEWS_FEEDS_TOOL_ID
 from algent_backend.agent_system.tools.sourcing.discovery.rss import RSS_FEED_TOOL_ID
 
 
@@ -50,7 +51,7 @@ def test_topic_candidate_defaults() -> None:
 def test_task_message_open_vs_goal() -> None:
     open_msg = build_task_message(None, 10)
     goal_msg = build_task_message("Russian economics", 5)
-    assert "Survey broadly" in open_msg
+    assert "trending" in open_msg
     assert "up to 10" in open_msg
     assert "Russian economics" in goal_msg
     assert "up to 5" in goal_msg
@@ -66,7 +67,7 @@ def test_general_discovery_registered() -> None:
     spec = default_agent_registry().get("general_discovery")
     assert spec.family == "discovery"
     assert spec.runtime == "langgraph"
-    assert spec.tool_ids == (GDELT_EVENTS_TOOL_ID, RSS_FEED_TOOL_ID)
+    assert spec.tool_ids == (GDELT_EVENTS_TOOL_ID, RSS_FEED_TOOL_ID, NEWS_FEEDS_TOOL_ID)
 
 
 def test_discovery_tools_resolve_for_agent() -> None:

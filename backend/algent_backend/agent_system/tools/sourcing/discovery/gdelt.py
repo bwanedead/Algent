@@ -22,20 +22,31 @@ _TIMEOUT_S = 20.0
 
 
 def _search(query: str, max_results: int = 10, timespan: str = "24h") -> list[dict[str, str]]:
-    """Find recent global news articles; returns [{title, url, source, ...}, ...]."""
+    """Find recent global news articles; returns [{title, url, source, ...}, ...].
+
+    GDELT rate-limits aggressively (429); retry a couple of times with backoff so
+    a transient throttle does not fail the agent's turn outright.
+    """
+    import time
+
     import httpx
 
-    response = httpx.get(
-        _ENDPOINT,
-        params={
-            "query": query,
-            "mode": "artlist",
-            "format": "json",
-            "maxrecords": max_results,
-            "timespan": timespan,
-        },
-        timeout=_TIMEOUT_S,
-    )
+    params = {
+        "query": query,
+        "mode": "artlist",
+        "format": "json",
+        "maxrecords": max_results,
+        "timespan": timespan,
+    }
+    response: httpx.Response | None = None
+    for attempt in range(3):
+        response = httpx.get(_ENDPOINT, params=params, timeout=_TIMEOUT_S)
+        if response.status_code == 429 and attempt < 2:
+            time.sleep(1.5 * (attempt + 1))
+            continue
+        break
+
+    assert response is not None  # the loop always runs at least once
     response.raise_for_status()
     articles = response.json().get("articles", [])
     return [

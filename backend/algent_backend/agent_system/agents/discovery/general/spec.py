@@ -19,6 +19,7 @@ from algent_backend.agent_system.agents.agent_spec import AgentSpec
 from algent_backend.agent_system.foundation.models import ModelSpec
 from algent_backend.agent_system.runs.context import AgentRunContext
 from algent_backend.agent_system.tools.sourcing.discovery.gdelt import GDELT_EVENTS_TOOL_ID
+from algent_backend.agent_system.tools.sourcing.discovery.news_feeds import NEWS_FEEDS_TOOL_ID
 from algent_backend.agent_system.tools.sourcing.discovery.rss import RSS_FEED_TOOL_ID
 
 from ..base import loop as discovery_loop
@@ -27,12 +28,20 @@ from .prompts import SYSTEM_PROMPT
 AGENT_ID = "general_discovery"
 RUNTIME = "langgraph"
 FAMILY = "discovery"
-# Discovery channels this agent binds. Add a tool id here to widen the sweep —
-# no other change is needed.
-TOOL_IDS = (GDELT_EVENTS_TOOL_ID, RSS_FEED_TOOL_ID)
-# Sensible cheap-ish default; swap freely via ModelSpec. Discovery is judgment-
-# heavy, so this is the dial most likely worth tuning.
-DEFAULT_MODEL = ModelSpec(provider="anthropic", model="claude-haiku-4-5", temperature=0.4)
+# Discovery channels this agent binds: GDELT for what is being covered globally,
+# news_feeds + rss_feed for reading real outlet feeds. Add a tool id to widen
+# the sweep — no other change is needed.
+TOOL_IDS = (GDELT_EVENTS_TOOL_ID, RSS_FEED_TOOL_ID, NEWS_FEEDS_TOOL_ID)
+# Initial brain: a cheap, fast model (swap freely via ModelSpec — discovery is
+# judgment-heavy, so this is the dial most likely worth tuning). `extra` carries
+# OpenAI-specific knobs: streaming for diagnostics, stream_usage so token totals
+# still roll up while streaming.
+DEFAULT_MODEL = ModelSpec(
+    provider="openai",
+    model="gpt-5.4-mini",
+    temperature=0.4,
+    extra={"streaming": True, "stream_usage": True},
+)
 
 
 def build_graph(context: AgentRunContext) -> Any:
