@@ -11,9 +11,15 @@ You: discover what agents exist → start one → watch it to completion (or sto
 → read its output. You don't need the internals to operate a run; pointers to
 them are below if you want them.
 
-## The 60-second flow
+## Your job, and the flow
 
-From `backend/`, using the project venv:
+Your job is simple: **start the run, wait for it in `watch`, and report when it
+ends** — plus answer any HITL prompt if one ever appears (discovery has none
+today). You are *not* policing the run turn-by-turn. A run takes as long as it
+takes; there is no time cap (any turn/budget limits will be specified
+separately).
+
+From `backend/`, using the project venv. Every command prints one JSON document:
 
 ```
 # what can I start?
@@ -22,15 +28,22 @@ python -m algent_backend.cli.runs agents
 # start one (e.g. the discovery agent); --goal "..." to target it
 python -m algent_backend.cli.runs start general_discovery        # → {run_id}
 
-# watch until it finishes (loop; each call returns one event)
-python -m algent_backend.cli.runs watch --run-id <id> --timeout 180
-
-# stop it if it goes rogue / spins / looks wrong
-python -m algent_backend.cli.runs stop --run-id <id>
+# wait for it: watch in a loop. --timeout is a re-evaluation window, NOT a run cap.
+python -m algent_backend.cli.runs watch --run-id <id> --timeout 120
+#   loop_done -> the run ended; read the recap + artifacts and report it
+#   timeout   -> still running; just watch again
+#   error     -> inspect status + child logs
+#   hitl      -> (future) answer it, then keep watching
 ```
 
-Read the live human log at `backend/runs_data/<run_id>/timeline.md`; the agent's
-output lands in `backend/runs_data/<run_id>/artifacts/`.
+When `watch` returns `loop_done`, break out and report the recap — that report
+is your natural "it's done" signal. Read the human log at
+`backend/runs_data/<run_id>/timeline.md` and the output in
+`backend/runs_data/<run_id>/artifacts/`.
+
+`stop --run-id <id>` is the **exception**, not the routine — use it only if the
+run clearly warrants intervention (visibly stuck/looping, or you're told to
+abort).
 
 ## Read next
 

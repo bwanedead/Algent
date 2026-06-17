@@ -40,26 +40,34 @@ Run commands from `backend/` using the project venv (e.g.
 
 ---
 
-## 3. The testing loop
+## 3. The run loop
+
+Your role is **start → wait in `watch` → report when it ends** (and answer any
+HITL prompt if one ever appears). You are not policing the run turn-by-turn, and
+there is no run-time cap — `--timeout` is only a re-evaluation window. `stop` is
+the exception, not the routine.
 
 ```
-# 0. see what agents exist (pick an agent_id)
+# see what agents exist (pick an agent_id)
 python -m algent_backend.cli.runs agents
 #    today: general_discovery (the trending-news scout) · news_brief (stale) ·
 #    hello_workflow (toy). To test discovery, use general_discovery.
 
-# 1. start the discovery agent (background); note the run_id it returns
+# start it (background); note the run_id. --goal "..." targets a discovery run.
 python -m algent_backend.cli.runs start general_discovery
-#    or target it:  ... start general_discovery --goal "Russian economics"
 
-# 2. watch until it finishes (loop; each call returns one event)
+# wait for it: watch in a loop until it ends
 python -m algent_backend.cli.runs watch --run-id <id> --timeout 120
+#   loop_done -> the run ended; read timeline.md + artifacts, report the recap
+#   timeout   -> still running; just watch again (a run takes as long as it takes)
+#   error     -> inspect status + child logs
+#   hitl      -> (future) answer it, then keep watching; discovery has none today
 
-# 3. if it goes rogue / spins / looks wrong — stop it
-python -m algent_backend.cli.runs stop --run-id <id> --reason "spinning on rss"
+# stop ONLY if the run clearly warrants it (visibly stuck/looping, or told to abort)
+python -m algent_backend.cli.runs stop --run-id <id>
 ```
 
-For a quick first run you can also use `--foreground` and just `Ctrl+C` to abort.
+For a quick manual first run you can also use `--foreground` and just `Ctrl+C`.
 
 ---
 
