@@ -10,7 +10,11 @@ Run commands from `backend/` using the project venv (e.g.
 
 ---
 
-## 1. Prerequisites
+## 1. Prerequisites (dev setup — not the operating agent's concern)
+
+These are configured on the dev side before a run; an operating agent does not
+manage them. If they're missing, a run surfaces an error to relay, not something
+to pre-check.
 
 - **`backend/.env`** with the model key:
   ```
@@ -84,7 +88,11 @@ For a quick manual first run you can also use `--foreground` and just `Ctrl+C`.
 
 ---
 
-## 5. What to watch for (discovery)
+## 5. What to look for when reviewing a run (dev-side)
+
+These are the signals a developer reviews after a run to decide what to tune —
+not a checklist the operating agent must produce. The operating agent just
+relays the factual outcome (section 7); quality judgment lives here.
 
 - Did it actually **call the tools** (GDELT, then `news_feeds` → `rss_feed`) rather than invent feed URLs?
 - Is the shortlist **selective and grounded** — a few real trending topics with sources, significance set honestly — not filler?
@@ -103,9 +111,9 @@ For a quick manual first run you can also use `--foreground` and just `Ctrl+C`.
 
 ---
 
-## 7. What to report after a run
+## 7. What the operating agent reports when a run ends
 
-run id and input; terminal status; which tools were called and in what order;
-candidate quality (selective? grounded? significance honest?); whether a
-`no_structured_output` event appeared; token cost; and the one thing you'd tune
-next (prompt, feed list, or model).
+Just the factual outcome: the agent and input, the terminal status, a short
+recap of what it produced (from `timeline.md` / the result), and any error or
+anomaly the run surfaced (e.g. a `no_structured_output` event). No quality
+judgment or tuning recommendation — that's the dev-side review in section 5.

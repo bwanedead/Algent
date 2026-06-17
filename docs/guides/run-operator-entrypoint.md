@@ -13,11 +13,15 @@ them are below if you want them.
 
 ## Your job, and the flow
 
-Your job is simple: **start the run, wait for it in `watch`, and report when it
-ends** — plus answer any HITL prompt if one ever appears (discovery has none
-today). You are *not* policing the run turn-by-turn. A run takes as long as it
-takes; there is no time cap (any turn/budget limits will be specified
-separately).
+You're told which agent to run. Your job is simple: **confirm it in the registry,
+start it, wait for it in `watch`, and report when it ends** — plus answer any
+HITL prompt if one ever appears (discovery has none today). You are *not* policing
+the run turn-by-turn. A run takes as long as it takes; there is no time cap (any
+turn/budget limits will be specified separately).
+
+You don't set up keys or judge in advance whether a run will work — that's the
+dev side. If something is wrong, the run surfaces an error (a `watch` `error`
+event, a failed terminal status) that you simply relay.
 
 From `backend/`, using the project venv. Every command prints one JSON document:
 
@@ -45,29 +49,22 @@ is your natural "it's done" signal. Read the human log at
 run clearly warrants intervention (visibly stuck/looping, or you're told to
 abort).
 
-## Read next
+## Docs to be familiar with
 
-- **CLI mechanics & the testing loop → [`agent-cli-testing.md`](./agent-cli-testing.md).**
-  Your main reference: the full command set, the watch/stop loop, where every run
-  file lives, what to watch for, and what to report.
+- **CLI operation → [`agent-cli-testing.md`](./agent-cli-testing.md).** Your main
+  reference: the full command set, the watch/stop loop, and where every run file
+  lives.
 - **How runs are recorded → [`../architecture/run-control-plane.md`](../architecture/run-control-plane.md).**
-  The run-directory contract and observability weave, if you need to reason about
-  run files.
+  The run-directory contract, if you need to reason about run files.
 - **What the agent system is → `backend/algent_backend/agent_system/mental_model/`**
-  (start with `NORTH_STAR.md`). Optional background on how the system is built.
-- **Per-agent notes** — agent-specific guidance is linked here as it is written.
+  (start with `NORTH_STAR.md`). Optional background.
+- **Per-agent notes and future responsibilities** are linked here as they are written.
 
-## Prerequisites
+## What to report when a run ends
 
-- `backend/.env` holds the model key (`OPENAI_API_KEY`). The discovery tools
-  (GDELT, RSS) need no key.
-- If a run fails immediately on the model call, the key is the first thing to check.
-
-## What to report after a run
-
-Run id + input; terminal status; which tools were called and in what order;
-output quality; any anomalies (e.g. a `discovery.no_structured_output` event);
-token cost; and the one thing you'd tune next. (Full checklist in the CLI guide.)
+Just relay the outcome — the agent and input, the terminal status, a short recap
+of what it produced (from `timeline.md` / the result), and any error or anomaly
+the run surfaced. You don't analyze or recommend fixes; that's the dev side.
 
 ---
 
