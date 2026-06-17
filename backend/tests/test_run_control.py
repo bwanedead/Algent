@@ -14,7 +14,7 @@ from types import SimpleNamespace
 
 from algent_backend.agent_system.runs.control_plane.layout import run_paths
 from algent_backend.agent_system.runs.control_plane.state import RunState, read_state, write_state
-from algent_backend.cli.runs import stop
+from algent_backend.cli.runs import agents, stop
 
 
 def _running_state(run_id: str) -> RunState:
@@ -61,3 +61,11 @@ def test_stop_is_idempotent_on_terminal_run(tmp_path, monkeypatch) -> None:
     # second stop sees a terminal run and no-ops cleanly
     assert stop.run(SimpleNamespace(run_id=run_id, reason="second")) == 0
     assert read_state(paths).status == "stopped"
+
+
+def test_agents_lists_the_catalog(capsys) -> None:
+    code = agents.run(SimpleNamespace())
+    assert code == 0
+    catalog = json.loads(capsys.readouterr().out)
+    ids = {entry["agent_id"] for entry in catalog}
+    assert "general_discovery" in ids

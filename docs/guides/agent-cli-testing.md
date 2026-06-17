@@ -1,8 +1,9 @@
 # Agent CLI Testing Guide
 
-How to run, watch, and control an Algent agent from the command line for live
-testing. Every command prints exactly one JSON document, so humans, scripts, and
-other agents drive runs the same way.
+**Entrypoint doc for a testing agent.** How to discover, run, watch, and control
+an Algent agent from the command line. Every command prints exactly one JSON
+document, so humans, scripts, and other agents drive runs the same way. To test
+an agent, you only need this doc.
 
 Run commands from `backend/` using the project venv (e.g.
 `./.venv/Scripts/python.exe ...` on Windows).
@@ -29,6 +30,7 @@ Run commands from `backend/` using the project venv (e.g.
 
 | Command | What it does |
 |---|---|
+| `agents` | List the agents you can start (id, description, runtime, tools, model). Run this first to see the catalog. |
 | `start <agent_id>` | Launch a run. Background by default; `--foreground` runs inline. `--goal "..."` targets a discovery run. Returns `{run_id}`. |
 | `status --run-id <id>` | Current snapshot (status, pid, liveness, done marker). |
 | `watch --run-id <id> [--timeout N]` | **Blocks** until the next event, returns one of `loop_done` / `timeout` / `error`, then exits. Loop it. |
@@ -41,6 +43,11 @@ Run commands from `backend/` using the project venv (e.g.
 ## 3. The testing loop
 
 ```
+# 0. see what agents exist (pick an agent_id)
+python -m algent_backend.cli.runs agents
+#    today: general_discovery (the trending-news scout) · news_brief (stale) ·
+#    hello_workflow (toy). To test discovery, use general_discovery.
+
 # 1. start the discovery agent (background); note the run_id it returns
 python -m algent_backend.cli.runs start general_discovery
 #    or target it:  ... start general_discovery --goal "Russian economics"

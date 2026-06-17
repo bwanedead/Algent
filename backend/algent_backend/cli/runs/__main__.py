@@ -1,7 +1,7 @@
 """
 Dispatcher: ``python -m algent_backend.cli.runs <command> ...``
 
-Commands: start, exec, status, watch, stop, list, show.
+Commands: start, exec, status, watch, stop, agents, list, show.
 """
 
 from __future__ import annotations
@@ -9,7 +9,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from . import exec_run, list_runs, show, start, status, stop, watch
+from . import agents, exec_run, list_runs, show, start, status, stop, watch
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -18,7 +18,7 @@ def main(argv: list[str] | None = None) -> int:
         description="Algent run control plane (every command prints one JSON document).",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
-    for module in (start, exec_run, status, watch, stop, list_runs, show):
+    for module in (start, exec_run, status, watch, stop, agents, list_runs, show):
         module.add_parser(subparsers)
 
     args = parser.parse_args(argv)
