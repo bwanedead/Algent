@@ -137,6 +137,21 @@ def test_timeline_truncates_long_fields_with_marker() -> None:
     assert "[truncated" in body
 
 
+def test_timeline_numbers_turns() -> None:
+    body = render_timeline(
+        [
+            _event(1, ev.RUN_STARTED, {"agent_id": "a", "runtime": "langgraph", "input": {}}),
+            _event(2, ev.AGENT_STEP, {"content": "surveying", "tool_calls": [{"name": "gdelt_events", "args": {}}]}),
+            _event(3, ev.TOOL_RESULT, {"tool": "gdelt_events", "content": "429"}),
+            _event(4, ev.AGENT_STEP, {"content": "done", "tool_calls": []}),
+            _event(5, ev.RUN_COMPLETED, {"status": "completed", "output": {}}),
+        ]
+    )
+    assert "TURN 0001" in body
+    assert "TURN 0002" in body
+    assert "model turns: 2" in body
+
+
 # -- CLI ------------------------------------------------------------------------
 
 

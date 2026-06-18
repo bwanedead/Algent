@@ -60,10 +60,30 @@ def render_timeline(events: list[RunEvent]) -> str:
         *_render_summary(ordered),
         "",
     ]
+    turns = _turn_info(ordered)
     for event in ordered:
-        lines.extend(_render_event(event))
+        lines.extend(_render_event(event, turns))
         lines.append("")
     return "\n".join(lines) + "\n"
+
+
+_TURN_BAR = "=" * 72
+
+
+def _turn_info(events: list[RunEvent]) -> dict[int, tuple[int, float | None, str]]:
+    """Map each model-step event seq -> (turn number, duration, tools-called).
+
+    A turn is one model decision (an ``agent.step``). Its duration runs to the
+    next model step, or to the final event for the last turn.
+    """
+    steps = [e for e in events if e.type == AGENT_STEP]
+    info: dict[int, tuple[int, float | None, str]] = {}
+    for i, step in enumerate(steps):
+        nxt_ts = steps[i + 1].ts if i + 1 < len(steps) else (events[-1].ts if events else step.ts)
+        calls = [c.get("name") for c in (step.payload.get("tool_calls") or []) if c.get("name")]
+        summary = "calls " + ", ".join(calls) if calls else "final answer (no tool calls)"
+        info[step.seq] = (i + 1, _duration(step.ts, nxt_ts), summary)
+    return info
 
 
 def _render_summary(events: list[RunEvent]) -> list[str]:
@@ -97,7 +117,13 @@ def _duration(start_iso: str, end_iso: str) -> float | None:
         return None
 
 
-def _render_event(event: RunEvent) -> list[str]:
+def _render_event(event: RunEvent, turns: dict[int, tuple[int, float | None, str]]) -> list[str]:
+    # A model step opens an explicit, countable TURN block (Plattera-style).
+    if event.type == AGENT_STEP and event.seq in turns:
+        turn_no, duration, calls = turns[event.seq]
+        dur = f"{duration:.1f}s" if duration is not None else "?"
+        head = f"TURN {turn_no:04d}  |  {calls}  |  duration: {dur}"
+        return [_TURN_BAR, head, _TURN_BAR, *_render_agent_step(event)]
     head = f"## [{event.seq:04d}] {event.type}  ({event.ts})"
     body = _RENDERERS.get(event.type, _render_generic)(event)
     return [_BAR, head, *body]
