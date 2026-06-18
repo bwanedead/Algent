@@ -21,7 +21,7 @@ from algent_backend.agent_system.runs.models import RunRequest, RunResult
 
 from .events_log import RunEventLog
 from .fsio import atomic_write_text, write_json_file
-from .layout import RunPaths, run_paths
+from .layout import RunPaths, resolve_or_allocate_run_root
 from .ledger import LedgerEntry, RunLedger
 from .state import RunState, write_state
 from .timeline import write_timeline
@@ -34,9 +34,11 @@ def _now() -> str:
 class RunRecorder:
     """Persists one run's lifecycle facts across all control-plane surfaces."""
 
-    def __init__(self, run_id: str, runs_root: Path | None = None) -> None:
+    def __init__(self, run_id: str, agent_id: str, runs_root: Path | None = None) -> None:
         self.run_id = run_id
-        self.paths: RunPaths = run_paths(run_id, runs_root)
+        # The run dir is <agent>/<NNNN>__<run_id>. start() allocates it; the
+        # executing process finds the same one. A direct call allocates.
+        self.paths: RunPaths = RunPaths(resolve_or_allocate_run_root(run_id, agent_id, runs_root))
         self._events = RunEventLog(self.paths, run_id)
         self._ledger = RunLedger(runs_root)
         self._artifact_refs: list[ArtifactRef] = []

@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import argparse
 
-from algent_backend.agent_system.runs.control_plane.layout import run_paths
+from algent_backend.agent_system.runs.control_plane.layout import RunPaths, find_run_root
 from algent_backend.agent_system.runs.models import RunRequest
 
 from ._shared import print_json
@@ -27,7 +27,12 @@ def run(args: argparse.Namespace) -> int:
 
 
 def execute(run_id: str, emit_json: bool = False) -> int:
-    paths = run_paths(run_id)
+    root = find_run_root(run_id)
+    if root is None:
+        if emit_json:
+            print_json({"error": f"unknown run '{run_id}'"})
+        return 1
+    paths = RunPaths(root)
     request = RunRequest.model_validate_json(paths.request_file.read_text(encoding="utf-8"))
 
     # Imported here so `--help`/status paths stay light: building the default

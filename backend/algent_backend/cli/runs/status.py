@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import argparse
 
-from algent_backend.agent_system.runs.control_plane.layout import run_paths
+from algent_backend.agent_system.runs.control_plane.layout import RunPaths, find_run_root
 from algent_backend.agent_system.runs.control_plane.state import read_state
 
 from ._shared import pid_alive, print_json
@@ -22,10 +22,11 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
 
 
 def run(args: argparse.Namespace) -> int:
-    paths = run_paths(args.run_id)
-    if not paths.state_file.exists():
+    root = find_run_root(args.run_id)
+    if root is None:
         print_json({"error": f"unknown run '{args.run_id}'"})
         return 1
+    paths = RunPaths(root)
 
     state = read_state(paths)
     print_json(

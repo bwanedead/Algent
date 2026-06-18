@@ -14,7 +14,11 @@ from pathlib import Path
 from algent_backend.agent_system.artifacts import ArtifactWriter
 from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.control_plane.events_log import read_events
-from algent_backend.agent_system.runs.control_plane.layout import run_paths, runs_data_root
+from algent_backend.agent_system.runs.control_plane.layout import (
+    RunPaths,
+    find_run_root,
+    runs_data_root,
+)
 from algent_backend.agent_system.runs.control_plane.ledger import RunLedger
 from algent_backend.agent_system.runs.control_plane.recorder import RunRecorder
 from algent_backend.agent_system.runs.control_plane.state import read_state
@@ -41,7 +45,7 @@ def test_run_writes_all_control_plane_surfaces() -> None:
     result = _service().run(RunRequest(agent_id="hello_workflow", input={"topic": "x"}))
 
     assert result.status == "completed"
-    paths = run_paths(result.run_id)
+    paths = RunPaths(find_run_root(result.run_id))
     assert read_state(paths).status == "completed"
     assert paths.done_file.exists()
     assert paths.timeline_file.exists()
@@ -58,7 +62,7 @@ def test_failed_lookup_still_reaches_terminal_record() -> None:
     result = _service().run(RunRequest(agent_id="missing", input={}))
 
     assert result.status == "failed"
-    paths = run_paths(result.run_id)
+    paths = RunPaths(find_run_root(result.run_id))
     assert paths.done_file.exists()
     assert read_state(paths).status == "failed"
     assert [e.type for e in read_events(paths)][-1] == ev.RUN_FAILED
@@ -68,7 +72,7 @@ def test_preallocated_run_id_is_honored() -> None:
     request = RunRequest(agent_id="hello_workflow", input={"topic": "x"}, run_id="fixed-id")
     result = _service().run(request)
     assert result.run_id == "fixed-id"
-    assert run_paths("fixed-id").done_file.exists()
+    assert RunPaths(find_run_root("fixed-id")).done_file.exists()
 
 
 def test_ledger_folds_to_latest_entry_per_run() -> None:
@@ -85,7 +89,7 @@ def test_ledger_folds_to_latest_entry_per_run() -> None:
 
 
 def test_artifact_writer_records_ref_and_event() -> None:
-    recorder = RunRecorder("art-run")
+    recorder = RunRecorder("art-run", "a")
     recorder.start(RunRequest(agent_id="a", input={}, run_id="art-run"))
     writer = ArtifactWriter(
         recorder.paths.artifacts_dir, "art-run", on_written=recorder.record_artifact
@@ -159,7 +163,7 @@ def test_cli_start_allocates_run_and_request(monkeypatch, capsys) -> None:
     assert code == 0
     out = _capture_json(capsys)
     assert spawned == [out["run_id"]]
-    paths = run_paths(out["run_id"])
+    paths = RunPaths(find_run_root(out["run_id"]))
     request = json.loads(paths.request_file.read_text(encoding="utf-8"))
     assert request["input"] == {"topic": "cli"}
     assert request["max_turns"] == 7
@@ -185,7 +189,7 @@ def test_cli_status_watch_show_list_roundtrip(capsys) -> None:
 
 
 def test_cli_watch_reports_dead_process(capsys) -> None:
-    recorder = RunRecorder("dead-run")
+    recorder = RunRecorder("dead-run", "a")
     request = RunRequest(agent_id="a", input={}, run_id="dead-run")
     recorder.start(request)  # status=running, pid=this process
     # Rewrite state with a pid that cannot exist.

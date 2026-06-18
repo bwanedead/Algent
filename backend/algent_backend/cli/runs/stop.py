@@ -21,7 +21,7 @@ from datetime import UTC, datetime
 from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.control_plane.events_log import RunEventLog, read_events
 from algent_backend.agent_system.runs.control_plane.fsio import write_json_file
-from algent_backend.agent_system.runs.control_plane.layout import run_paths
+from algent_backend.agent_system.runs.control_plane.layout import RunPaths, find_run_root
 from algent_backend.agent_system.runs.control_plane.ledger import LedgerEntry, RunLedger
 from algent_backend.agent_system.runs.control_plane.state import read_state, write_state
 from algent_backend.agent_system.runs.control_plane.timeline import write_timeline
@@ -39,10 +39,11 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
 
 
 def run(args: argparse.Namespace) -> int:
-    paths = run_paths(args.run_id)
-    if not paths.state_file.exists():
+    root = find_run_root(args.run_id)
+    if root is None:
         print_json({"error": f"unknown run '{args.run_id}'"})
         return 1
+    paths = RunPaths(root)
 
     state = read_state(paths)
     if paths.done_file.exists() or state.status in _TERMINAL:

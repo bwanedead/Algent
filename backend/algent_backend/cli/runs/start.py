@@ -15,7 +15,12 @@ from datetime import UTC, datetime
 from uuid import uuid4
 
 from algent_backend.agent_system.runs.control_plane.fsio import write_json_file
-from algent_backend.agent_system.runs.control_plane.layout import prune_runs, run_paths
+from algent_backend.agent_system.runs.control_plane.layout import (
+    RunPaths,
+    allocate_run_root,
+    find_run_root,
+    prune_runs,
+)
 from algent_backend.agent_system.runs.control_plane.state import RunState, write_state
 from algent_backend.agent_system.runs.models import RunRequest
 
@@ -48,11 +53,7 @@ def run(args: argparse.Namespace) -> int:
         max_turns=args.max_turns,
     )
 
-    # Rolling retention: keep the recent window of run dirs, prune older ones.
-    # The cross-run ledger still records full history.
-    prune_runs(keep=5)
-
-    paths = run_paths(run_id)
+    paths = RunPaths(allocate_run_root(request.agent_id, run_id))
     write_json_file(paths.request_file, request.model_dump())
     now = datetime.now(UTC).isoformat()
     write_state(
@@ -68,6 +69,9 @@ def run(args: argparse.Namespace) -> int:
             max_turns=request.max_turns,
         ),
     )
+    # Rolling retention (per agent), after allocating this run so it is kept and
+    # an older one drops. The cross-run ledger still records full history.
+    prune_runs(keep=5)
 
     if args.foreground:
         from . import exec_run
@@ -82,7 +86,7 @@ def run(args: argparse.Namespace) -> int:
 
 
 def _spawn_detached(run_id: str) -> None:
-    paths = run_paths(run_id)
+    paths = RunPaths(find_run_root(run_id))
     command = [sys.executable, "-m", "algent_backend.cli.runs", "exec", "--run-id", run_id]
 
     stdout = paths.child_stdout_file.open("ab")

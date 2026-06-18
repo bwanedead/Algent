@@ -41,10 +41,11 @@ python -m algent_backend.cli.runs watch --run-id <id> --timeout 120
 ```
 
 When `watch` returns `loop_done`, break out and report the recap — that report
-is your natural "it's done" signal. Read the human log at
-`backend/runs_data/<run_id>/audit/human/timeline.md` and the output in
-`backend/runs_data/<run_id>/artifacts/`. (A failed run's full traceback is in
-that run's `child_stderr.log`.)
+is your natural "it's done" signal. Run dirs are grouped per agent and
+counter-prefixed (newest = highest number): read the human log at
+`backend/runs_data/<agent>/<NNNN>__<run_id>/audit/human/timeline.md` and the
+output in that run dir's `artifacts/`. (A failed run's full traceback is in its
+`audit/error.log`.)
 
 `stop --run-id <id>` is the **exception**, not the routine — use it only if the
 run clearly warrants intervention (visibly stuck/looping, or you're told to

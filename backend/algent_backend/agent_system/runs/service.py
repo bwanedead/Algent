@@ -51,7 +51,7 @@ class RunService:
 
     def run(self, request: RunRequest) -> RunResult:
         run_id = request.run_id or str(uuid4())
-        recorder = RunRecorder(run_id, self._runs_root)
+        recorder = RunRecorder(run_id, request.agent_id, self._runs_root)
         recorder.start(request)
         result = self._execute(request, run_id, recorder)
         recorder.finish(result)

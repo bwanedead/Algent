@@ -77,16 +77,18 @@ For a quick manual first run you can also use `--foreground` and just `Ctrl+C`.
 
 ## 4. Where to look
 
-`backend/runs_data/<run_id>/`:
+`backend/runs_data/<agent>/<NNNN>__<run_id>/` — run dirs are grouped per agent
+and counter-prefixed, so the **highest number is the most recent**:
 
 - **`audit/human/timeline.md`** — the human view, re-rendered live; read this first while watching.
 - `audit/events.jsonl` — the machine trace (the owned local trace).
+- `audit/error.log` — **the full Python traceback for a failed run** (written on failure).
 - `artifacts/discovery_result.json` — the agent's output (the candidate list).
 - `result.json`, `state.json`, `done.json` — outcome + current snapshot + terminal marker.
-- `child_stdout.log` / `child_stderr.log` — raw child output for a background run; **the full Python traceback for a failed run lives in `child_stderr.log`**.
+- `child_stdout.log` / `child_stderr.log` — raw child output for a background run.
 
-Only the most recent runs are kept on disk (rolling retention); the cross-run
-ledger (`runs_data/runs_index.jsonl`) keeps the full history.
+Only the most recent runs per agent are kept on disk (rolling retention); the
+cross-run ledger (`runs_data/runs_index.jsonl`) keeps the full history.
 
 ---
 

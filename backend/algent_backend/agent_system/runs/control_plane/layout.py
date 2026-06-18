@@ -9,6 +9,7 @@ under a temp directory.
 
 from __future__ import annotations
 
+import json
 import os
 import shutil
 from dataclasses import dataclass
@@ -83,10 +84,49 @@ class RunPaths:
         return self.root / "child_stderr.log"
 
 
-def run_paths(run_id: str, root: Path | None = None) -> RunPaths:
-    """Paths for one run id under the (resolved or given) runs-data root."""
+def _agent_dir(agent_id: str, root: Path | None = None) -> Path:
     base = root if root is not None else runs_data_root()
-    return RunPaths(root=base / run_id)
+    return base / agent_id
+
+
+def allocate_run_root(agent_id: str, run_id: str, root: Path | None = None) -> Path:
+    """Create and return a new run directory: ``<agent>/<NNNN>__<run_id>``.
+
+    The zero-padded counter comes from a per-agent ``_meta.json`` and is
+    monotonic — it never reuses a number even after retention prunes older runs —
+    so the highest-numbered directory is always the most recent in a file tree.
+    """
+    adir = _agent_dir(agent_id, root)
+    adir.mkdir(parents=True, exist_ok=True)
+    meta = adir / "_meta.json"
+    count = 0
+    if meta.exists():
+        try:
+            count = int(json.loads(meta.read_text(encoding="utf-8")).get("count", 0))
+        except (OSError, ValueError):
+            count = 0
+    count += 1
+    meta.write_text(json.dumps({"count": count}, indent=2), encoding="utf-8")
+    return adir / f"{count:04d}__{run_id}"
+
+
+def find_run_root(run_id: str, root: Path | None = None) -> Path | None:
+    """Locate an existing run directory by run id (search across agent folders)."""
+    base = root if root is not None else runs_data_root()
+    if not base.exists():
+        return None
+    matches = sorted(base.glob(f"*/*__{run_id}"))
+    return matches[0] if matches else None
+
+
+def resolve_or_allocate_run_root(run_id: str, agent_id: str, root: Path | None = None) -> Path:
+    """Return the existing run directory for ``run_id``, or allocate a new one.
+
+    ``start`` allocates the directory up front; the executing process then finds
+    that same directory. A direct ``RunService`` call (no ``start``) allocates.
+    """
+    existing = find_run_root(run_id, root)
+    return existing if existing is not None else allocate_run_root(agent_id, run_id, root)
 
 
 def index_file(root: Path | None = None) -> Path:
@@ -95,26 +135,34 @@ def index_file(root: Path | None = None) -> Path:
     return base / "runs_index.jsonl"
 
 
-def prune_runs(keep: int = 5, root: Path | None = None) -> list[str]:
-    """Keep only the most recent ``keep`` run directories; remove older ones.
+def _run_seq(run_dir: Path) -> int:
+    try:
+        return int(run_dir.name.split("__", 1)[0])
+    except ValueError:
+        return -1
 
-    Run dirs are the subdirectories of the runs-data root (the index file is left
-    alone). Recency is by directory mtime. A small rolling window keeps dev clean
-    without accumulating runs forever; the cross-run ledger still records history.
-    Returns the removed run ids. Best-effort: never raises.
+
+def prune_runs(keep: int = 5, root: Path | None = None) -> list[str]:
+    """Keep only the ``keep`` most recent run dirs *per agent*; remove older ones.
+
+    Recency is the monotonic counter prefix. The window keeps dev clean without
+    accumulating runs forever; the cross-run ledger still records history.
+    Returns removed directory names. Best-effort: never raises.
     """
     base = root if root is not None else runs_data_root()
     if not base.exists():
         return []
+    removed: list[str] = []
     try:
-        run_dirs = [p for p in base.iterdir() if p.is_dir()]
+        agent_dirs = [p for p in base.iterdir() if p.is_dir()]
     except OSError:
         return []
-    if len(run_dirs) <= keep:
-        return []
-    run_dirs.sort(key=lambda p: p.stat().st_mtime, reverse=True)
-    removed: list[str] = []
-    for stale in run_dirs[keep:]:
-        shutil.rmtree(stale, ignore_errors=True)
-        removed.append(stale.name)
+    for adir in agent_dirs:
+        run_dirs = [p for p in adir.iterdir() if p.is_dir() and "__" in p.name]
+        if len(run_dirs) <= keep:
+            continue
+        run_dirs.sort(key=_run_seq, reverse=True)
+        for stale in run_dirs[keep:]:
+            shutil.rmtree(stale, ignore_errors=True)
+            removed.append(stale.name)
     return removed
