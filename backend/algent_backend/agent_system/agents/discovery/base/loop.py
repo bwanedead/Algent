@@ -23,7 +23,7 @@ from langchain_core.messages import HumanMessage
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph import END, START, StateGraph
 
-from algent_backend.agent_system.agents.loop import build_react_loop
+from algent_backend.agent_system.agents.loop import build_react_loop, stream_react_loop
 from algent_backend.agent_system.foundation.models import ModelSpec
 from algent_backend.agent_system.runs.context import AgentRunContext
 
@@ -61,12 +61,15 @@ def build_discovery_graph(
         cap = state.get("max_candidates") or max_candidates_default
         goal = state.get("goal")
 
-        # Pass config through so the inner loop inherits the run's tracing,
-        # usage callbacks, and turn budget from the adapter.
-        agent_out = agent.invoke(
-            {"messages": [HumanMessage(content=build_task_message(goal, cap))]}, config
+        # Stream the inner loop (not invoke) so each model turn and tool result
+        # emits a per-turn event — the run is watchable turn-by-turn. Config is
+        # threaded through so tracing, usage callbacks, and the turn budget apply.
+        produced = stream_react_loop(
+            agent,
+            {"messages": [HumanMessage(content=build_task_message(goal, cap))]},
+            context=context,
+            config=config,
         )
-        produced = agent_out.get("structured_response")
         if isinstance(produced, DiscoveryResult):
             result = produced
         else:

@@ -9,6 +9,8 @@ real model with keys) is validated by running the agent, not here.
 
 from __future__ import annotations
 
+from types import SimpleNamespace
+
 from algent_backend.agent_system.agents.discovery.base.contracts import (
     DiscoveryResult,
     TopicCandidate,
@@ -17,6 +19,7 @@ from algent_backend.agent_system.agents.discovery.base.contracts import (
 from algent_backend.agent_system.agents.discovery.base.messages import build_task_message
 from algent_backend.agent_system.agents.discovery.general import spec as general_spec
 from algent_backend.agent_system.agents.discovery.general.prompts import SYSTEM_PROMPT
+from algent_backend.agent_system.agents.loop import stream_react_loop
 from algent_backend.agent_system.agents.registry import default_agent_registry
 from algent_backend.agent_system.tools import default_tool_registry
 from algent_backend.agent_system.tools.sourcing.discovery.gdelt import GDELT_EVENTS_TOOL_ID
@@ -26,6 +29,46 @@ from algent_backend.agent_system.tools.sourcing.discovery.rss import RSS_FEED_TO
 
 def _candidates(n: int) -> list[TopicCandidate]:
     return [TopicCandidate(title=f"t{i}", why_notable="because") for i in range(n)]
+
+
+class _CapturingContext:
+    def __init__(self) -> None:
+        self.events: list[tuple[str, dict]] = []
+
+    def emit(self, event_type: str, payload: dict | None = None) -> None:
+        self.events.append((event_type, payload or {}))
+
+
+class _FakeStreamAgent:
+    """Stands in for a compiled ReAct agent: yields the given update chunks."""
+
+    def __init__(self, chunks: list[dict]) -> None:
+        self._chunks = chunks
+
+    def stream(self, inputs, config=None, stream_mode=None):
+        yield from self._chunks
+
+
+def test_stream_react_loop_emits_turn_events_and_returns_structured() -> None:
+    ai_call = SimpleNamespace(
+        type="ai", content="surveying", tool_calls=[{"name": "gdelt_events", "args": {"query": "x"}}]
+    )
+    tool_msg = SimpleNamespace(type="tool", name="gdelt_events", content="429 rate limited")
+    ai_final = SimpleNamespace(type="ai", content="done", tool_calls=[])
+    chunks = [
+        {"agent": {"messages": [ai_call]}},
+        {"tools": {"messages": [tool_msg]}},
+        {"agent": {"messages": [ai_final]}},
+        {"generate_structured_response": {"structured_response": DiscoveryResult(notes="ok")}},
+    ]
+    ctx = _CapturingContext()
+    out = stream_react_loop(_FakeStreamAgent(chunks), {"messages": []}, context=ctx, config=None)
+
+    types = [t for t, _ in ctx.events]
+    assert types.count("agent.step") == 2
+    assert types.count("tool.result") == 1
+    assert isinstance(out, DiscoveryResult)
+    assert out.notes == "ok"
 
 
 def test_cap_truncates_preserving_order() -> None:

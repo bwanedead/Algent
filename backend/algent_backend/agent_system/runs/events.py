@@ -28,6 +28,8 @@ RUN_ERROR = "run.error"  # carries the full traceback when a run raises
 NODE_COMPLETED = "node.completed"
 MODEL_USAGE = "model.usage"
 ARTIFACT_WRITTEN = "artifact.written"
+AGENT_STEP = "agent.step"  # a model turn: its text plus any tool calls it requested
+TOOL_RESULT = "tool.result"  # a tool's output coming back to the model
 
 
 class RunEvent(BaseModel):
