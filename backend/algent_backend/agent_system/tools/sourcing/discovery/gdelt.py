@@ -7,15 +7,17 @@ now" — the discovery firehose a topic-discovery agent will draw from.
 
 API: GET https://api.gdeltproject.org/api/v2/doc/doc (artlist mode, JSON).
 
-GDELT enforces **one request per 5 seconds per IP** (its 429 body says so). We
-honor that with a process-wide minimum interval before every request — retrying
-faster than 5s just keeps violating the limit and escalates the throttle. We also
-send an identifying User-Agent rather than the default client string.
+GDELT rate-limits to protect its backend (its 429 body asks for <= 1 request /
+5 seconds). It also requires an identifying User-Agent. For now this tool makes
+a **single attempt with no retry** — retry logic was masking the real failure
+mode, so we keep it out of the problem space. On any non-200 it raises with the
+exact status, URL, and response body so the failure is fully self-documenting in
+the run's audit/error.log. Proper request pacing can be reintroduced once the
+contact behaviour is understood.
 """
 
 from __future__ import annotations
 
-import time
 from typing import Any
 
 from ...spec import GLOBAL_SCOPE, ToolSpec
@@ -25,41 +27,35 @@ GDELT_EVENTS_TOOL_ID = "gdelt_events"
 
 _ENDPOINT = "https://api.gdeltproject.org/api/v2/doc/doc"
 _TIMEOUT_S = 20.0
-# GDELT asks for <= 1 request / 5 seconds per IP; keep a margin.
-_MIN_INTERVAL_S = 5.5
 _HEADERS = {"User-Agent": "Algent/0.1 (news discovery agent)"}
-_last_request_monotonic = 0.0
 
 
 def _search(query: str, max_results: int = 10, timespan: str = "24h") -> list[dict[str, str]]:
     """Find recent global news articles; returns [{title, url, source, ...}, ...].
 
-    Honors GDELT's 1-request-per-5-seconds limit process-wide (sleeping out any
-    remaining interval), and retries once after a full interval on a 429.
+    One request, no retry. Raises a fully-detailed error on any non-200 so the
+    nature of a GDELT failure is captured verbatim (status + URL + body).
     """
-    global _last_request_monotonic
     import httpx
 
-    params = {
-        "query": query,
-        "mode": "artlist",
-        "format": "json",
-        "maxrecords": max_results,
-        "timespan": timespan,
-    }
-    response: httpx.Response | None = None
-    for attempt in range(2):
-        wait = _MIN_INTERVAL_S - (time.monotonic() - _last_request_monotonic)
-        if wait > 0:
-            time.sleep(wait)
-        _last_request_monotonic = time.monotonic()
-        response = httpx.get(_ENDPOINT, params=params, headers=_HEADERS, timeout=_TIMEOUT_S)
-        if response.status_code == 429 and attempt == 0:
-            continue  # the loop waits a full interval before retrying
-        break
+    response = httpx.get(
+        _ENDPOINT,
+        params={
+            "query": query,
+            "mode": "artlist",
+            "format": "json",
+            "maxrecords": max_results,
+            "timespan": timespan,
+        },
+        headers=_HEADERS,
+        timeout=_TIMEOUT_S,
+    )
+    if response.status_code != 200:
+        raise RuntimeError(
+            f"GDELT request failed: HTTP {response.status_code} for {response.url} "
+            f"| response-body: {response.text.strip()[:400]!r}"
+        )
 
-    assert response is not None  # the loop always runs at least once
-    response.raise_for_status()
     articles = response.json().get("articles", [])
     return [
         {
