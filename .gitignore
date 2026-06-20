@@ -229,3 +229,6 @@ pytest-cache-files-*/
 
 # Run control plane data (run state, events, artifacts) — never committed
 backend/runs_data/
+
+# Data-ingestion output (downloaded batches digested to disk) — never committed
+backend/ingestion_data/
