@@ -36,6 +36,8 @@ class Candidate(BaseModel):
     source_spread: int = 0  # distinct outlets carrying it
     score: float = 0.0
     reasons: list[str] = Field(default_factory=list)  # why it made the cut
+    # Co-occurring candidates folded into this one (the story's other entities).
+    related: list[str] = Field(default_factory=list)
 
 
 class LanguageInsights(BaseModel):

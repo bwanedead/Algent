@@ -18,7 +18,8 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 
 from ..sources.records import GkgRecord
-from .pillars import is_boilerplate_theme, pillar_for_theme
+from .noise import is_boilerplate_theme, is_noise_entity
+from .pillars import pillar_for_theme
 
 # Ignore items carried by fewer than this many records — pure noise otherwise.
 DEFAULT_MIN_COUNT = 3
@@ -35,6 +36,9 @@ class CandidateStats:
     avg_tone: float | None
     source_spread: int
     pillar: str | None
+    # Indices of the records that mention it — the evidence set used to detect
+    # co-occurring candidates (entities of the same story) during selection.
+    support: frozenset[int] = frozenset()
 
     @property
     def full_key(self) -> str:
@@ -51,6 +55,7 @@ class _Accumulator:
     def __post_init__(self) -> None:
         self.languages: set[str] = set()
         self.sources: set[str] = set()
+        self.support: set[int] = set()
 
 
 def extract_candidates(
@@ -58,10 +63,11 @@ def extract_candidates(
 ) -> list[CandidateStats]:
     """Aggregate records into candidate stats, dropping anything below ``min_count``."""
     acc: dict[tuple[str, str], _Accumulator] = {}
-    for record in records:
+    for index, record in enumerate(records):
         for kind, key in _items(record):
             entry = acc.setdefault((kind, key), _Accumulator())
             entry.count += 1
+            entry.support.add(index)
             entry.languages.add(record.language)
             if record.source_name:
                 entry.sources.add(record.source_name)
@@ -78,6 +84,7 @@ def extract_candidates(
             avg_tone=round(entry.tone_sum / entry.tone_n, 3) if entry.tone_n else None,
             source_spread=len(entry.sources),
             pillar=pillar_for_theme(key) if kind == "theme" else None,
+            support=frozenset(entry.support),
         )
         for (kind, key), entry in acc.items()
         if entry.count >= min_count
@@ -93,6 +100,6 @@ def _items(record: GkgRecord) -> set[tuple[str, str]]:
     """
     items: set[tuple[str, str]] = set()
     items.update(("theme", t) for t in record.themes if not is_boilerplate_theme(t))
-    items.update(("person", p) for p in record.persons)
-    items.update(("organization", o) for o in record.organizations)
+    items.update(("person", p) for p in record.persons if not is_noise_entity(p))
+    items.update(("organization", o) for o in record.organizations if not is_noise_entity(o))
     return items

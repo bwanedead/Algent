@@ -107,6 +107,31 @@ def fetch_latest(*, client: object | None = None) -> tuple[str, list[GkgRecord]]
     return packet.batch_id, records
 
 
+# Direct per-batch URLs (no lastupdate index): used to pull a *specific*
+# historical batch by its 14-digit stamp, e.g. for replaying a real sequence.
+_BATCH_BASE = "http://data.gdeltproject.org/gdeltv2/"
+_BATCH_SUFFIXES = (".gkg.csv.zip", ".translation.gkg.csv.zip")
+
+
+def fetch_batch(batch_id: str, *, client: object | None = None) -> tuple[str, list[GkgRecord]]:
+    """Download and merge a *specific* historical batch (both streams) by stamp.
+
+    GKG keeps 15-minute batches addressable by timestamp, so this lets us replay
+    a real consecutive sequence to exercise velocity/novelty on actual data.
+    """
+    own_client = client is None
+    http = client or _new_client()
+    try:
+        records: list[GkgRecord] = []
+        for suffix in _BATCH_SUFFIXES:
+            url = f"{_BATCH_BASE}{batch_id}{suffix}"
+            records.extend(parse_gkg_text(_unzip(_get(url, client=http))))
+        return batch_id, records
+    finally:
+        if own_client:
+            http.close()  # type: ignore[attr-defined]
+
+
 def parse_gkg(zip_bytes: bytes) -> list[GkgRecord]:
     """Parse a raw ``.gkg.csv.zip`` payload into records, skipping malformed rows."""
     return parse_gkg_text(_unzip(zip_bytes))

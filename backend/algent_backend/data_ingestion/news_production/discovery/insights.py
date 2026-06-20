@@ -17,8 +17,8 @@ from datetime import UTC, datetime
 from ..sources.records import GkgRecord
 from .candidates import CandidateStats, extract_candidates
 from .memory import RollingMemory
-from .pillars import is_boilerplate_theme
-from .ranking import ScoredCandidate, score_candidates, select
+from .noise import is_boilerplate_theme, is_noise_entity
+from .ranking import Selection, score_candidates, select
 from .report import Candidate, InsightsReport, LanguageInsights
 
 DEFAULT_TOP = 40
@@ -41,7 +41,9 @@ def build_insights(
     scored = score_candidates(stats, memory)
     shortlist = select(scored, top=top, quota=quota)
 
-    rising_keys = {c.stats.full_key for c in shortlist if c.rising or c.novel}
+    rising_keys = {
+        s.candidate.stats.full_key for s in shortlist if s.candidate.rising or s.candidate.novel
+    }
     report = InsightsReport(
         source=source,
         batch_id=batch_id,
@@ -55,7 +57,8 @@ def build_insights(
     return report, counts
 
 
-def _to_model(c: ScoredCandidate) -> Candidate:
+def _to_model(selection: Selection) -> Candidate:
+    c = selection.candidate
     s = c.stats
     return Candidate(
         key=s.key,
@@ -71,6 +74,7 @@ def _to_model(c: ScoredCandidate) -> Candidate:
         source_spread=s.source_spread,
         score=c.score,
         reasons=list(c.reasons),
+        related=list(selection.related),
     )
 
 
@@ -108,8 +112,8 @@ def _language_view(
 def _record_keys(record: GkgRecord) -> set[tuple[str, str]]:
     keys: set[tuple[str, str]] = set()
     keys.update(("theme", t) for t in record.themes if not is_boilerplate_theme(t))
-    keys.update(("person", p) for p in record.persons)
-    keys.update(("organization", o) for o in record.organizations)
+    keys.update(("person", p) for p in record.persons if not is_noise_entity(p))
+    keys.update(("organization", o) for o in record.organizations if not is_noise_entity(o))
     return keys
 
 

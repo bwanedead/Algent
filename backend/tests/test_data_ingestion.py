@@ -306,6 +306,15 @@ def test_extract_candidates_drops_boilerplate_themes() -> None:
     assert keys == {"theme:ECON_X"}  # structural GKG tags filtered out
 
 
+def test_extract_candidates_drops_media_attribution_entities() -> None:
+    records = [
+        _rec(organizations=["Getty ImagesCredit", "acme corp"], persons=["jane doe"])
+        for _ in range(4)
+    ]
+    keys = {s.full_key for s in extract_candidates(records, min_count=2)}
+    assert keys == {"organization:acme corp", "person:jane doe"}  # photo credit dropped
+
+
 # -- rolling memory + velocity ------------------------------------------------
 
 
@@ -339,19 +348,30 @@ def test_velocity_is_none_without_history_then_flags_rising() -> None:
 
 
 def test_select_reserves_quota_for_protected_margins() -> None:
-    # Many loud English themes, plus one tiny non-English-only outsider.
+    # Loud English themes (count 5), plus one tiny non-English-only outsider (count 3).
     loud = [_rec(themes=[f"LOUD_{i}"], source_name=f"{i}.com") for i in range(20)]
     outsider = [_rec(themes=["OUTSIDER"], language="ukr") for _ in range(3)]
-    stats = extract_candidates(loud * 3 + outsider, min_count=3)
+    stats = extract_candidates(loud * 5 + outsider, min_count=3)
     scored = ranking.score_candidates(stats, RollingMemory("s"))
 
     without_quota = ranking.select(scored, top=5, quota=0)
     with_quota = ranking.select(scored, top=5, quota=2)
 
-    keys_no = {c.stats.key for c in without_quota}
-    keys_yes = {c.stats.key for c in with_quota}
+    keys_no = {s.candidate.stats.key for s in without_quota}
+    keys_yes = {s.candidate.stats.key for s in with_quota}
     assert "OUTSIDER" not in keys_no  # loud incumbents win on raw score
     assert "OUTSIDER" in keys_yes  # quota rescues the non-English margin
+
+
+def test_select_collapses_co_occurring_candidates() -> None:
+    # Two entities that always appear together (same 5 records) = one story.
+    records = [_rec(persons=["alice"], organizations=["acme corp"]) for _ in range(5)]
+    stats = extract_candidates(records, min_count=3)
+    selections = ranking.select(ranking.score_candidates(stats, RollingMemory("s")), top=10, quota=0)
+
+    assert len(selections) == 1  # collapsed to a single representative
+    rep = selections[0]
+    assert rep.related  # the co-occurring entity folded in as related context
 
 
 # -- sampling -----------------------------------------------------------------
@@ -376,7 +396,7 @@ def test_insights_cli_writes_report_and_updates_memory(monkeypatch, tmp_path, ca
     records = [_rec(themes=["ECON_X"], persons=["jane doe"]) for _ in range(5)]
     monkeypatch.setitem(insights_cmd._FETCHERS, "gdelt_gkg", lambda: ("20260101000000", records))
 
-    assert insights_cmd.run(_ns(source="gdelt_gkg", keep=1)) == 0
+    assert insights_cmd.run(_ns(source="gdelt_gkg", keep=1, warmup=0)) == 0
     out = json.loads(capsys.readouterr().out)
     assert out["batch_id"] == "20260101000000"
     assert out["has_velocity_baseline"] is False
@@ -385,6 +405,31 @@ def test_insights_cli_writes_report_and_updates_memory(monkeypatch, tmp_path, ca
     # Memory now carries this batch, so a second run has a baseline.
     mem = load_memory("gdelt_gkg", _shared.memory_dir())
     assert mem.has_history and mem.seen("theme:ECON_X")
+
+
+def test_insights_warmup_backfills_memory_from_preceding_batches(monkeypatch, tmp_path) -> None:
+    monkeypatch.setenv(_shared._OUTPUT_ENV, str(tmp_path))
+    latest = [_rec(themes=["ECON_X"]) for _ in range(10)]
+    monkeypatch.setitem(insights_cmd._FETCHERS, "gdelt_gkg", lambda: ("20260101010000", latest))
+    # Each preceding batch had ECON_X small (count 2) -> latest (10) reads as rising.
+    monkeypatch.setitem(
+        insights_cmd._BATCH_FETCHERS,
+        "gdelt_gkg",
+        lambda bid: (bid, [_rec(themes=["ECON_X"]) for _ in range(2)]),
+    )
+
+    assert insights_cmd.run(_ns(source="gdelt_gkg", keep=1, warmup=4)) == 0
+    report = json.loads(
+        open(tmp_path / "insights" / "gdelt_gkg_20260101010000.json", encoding="utf-8").read()
+    )
+    assert report["has_velocity_baseline"] is True
+    econ = next(c for c in report["candidates"] if c["key"] == "ECON_X")
+    assert econ["velocity"] is not None and econ["velocity"] > 0 and econ["rising"]
+
+
+def test_preceding_batch_ids_step_back_15_minutes() -> None:
+    ids = insights_cmd._preceding_batch_ids("20260101010000", 3)
+    assert ids == ["20260101001500", "20260101003000", "20260101004500"]  # oldest first
 
 
 def test_sample_cli_writes_stratified_slice(monkeypatch, tmp_path, capsys) -> None:

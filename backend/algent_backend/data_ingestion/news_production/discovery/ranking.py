@@ -28,11 +28,19 @@ from .memory import RollingMemory
 SMOOTHING = 2.0
 RISING_THRESHOLD = 0.5  # velocity at/above which a candidate counts as "rising"
 
-# Blend weights (significance, velocity, cross-language, novelty).
-_W_SIGNIFICANCE = 0.40
-_W_VELOCITY = 0.30
-_W_CROSS_LANGUAGE = 0.20
-_W_NOVELTY = 0.10
+# Discovery is led by *movement corroborated by breadth*, not by raw magnitude.
+# A candidate must clear MIN_RISING_COUNT records before its velocity counts (kills
+# 0->3 ratio spikes), and velocity is capped so one explosive item can't win on
+# ratio alone. Momentum = breadth(languages) x capped-positive-velocity, so a rise
+# seen across many languages outranks an isolated single-language spike (the
+# principled lever against PR/promo noise). Significance is only a gentle floor —
+# it dominates solely at cold start, before any baseline exists. See ITERATION_LOG.
+MIN_RISING_COUNT = 5
+VELOCITY_CAP = 3.0
+
+_W_MOMENTUM = 1.0
+_W_SIGNIFICANCE = 0.12
+_W_NOVELTY = 0.30
 
 
 @dataclass(frozen=True)
@@ -55,12 +63,21 @@ def score_candidates(
 def _score_one(stats: CandidateStats, memory: RollingMemory) -> ScoredCandidate:
     velocity = _velocity(stats, memory)
     novel = memory.has_history and not memory.seen(stats.full_key)
-    rising = velocity is not None and velocity >= RISING_THRESHOLD
+    # "Rising" needs both real acceleration and enough support to mean something.
+    rising = (
+        velocity is not None
+        and velocity >= RISING_THRESHOLD
+        and stats.count >= MIN_RISING_COUNT
+    )
+
+    breadth = log1p(len(stats.languages))
+    gated_velocity = min(max(velocity or 0.0, 0.0), VELOCITY_CAP) if stats.count >= MIN_RISING_COUNT else 0.0
+    momentum = breadth * gated_velocity
+    significance = log1p(stats.count) + 0.5 * log1p(stats.source_spread)
 
     score = (
-        _W_SIGNIFICANCE * (log1p(stats.count) + 0.5 * log1p(stats.source_spread))
-        + _W_VELOCITY * max(velocity or 0.0, 0.0)
-        + _W_CROSS_LANGUAGE * log1p(len(stats.languages))
+        _W_MOMENTUM * momentum
+        + _W_SIGNIFICANCE * significance
         + _W_NOVELTY * (1.0 if novel else 0.0)
     )
     return ScoredCandidate(
@@ -104,22 +121,65 @@ def _is_protected(candidate: ScoredCandidate) -> bool:
     )
 
 
-def select(
-    scored: list[ScoredCandidate], *, top: int, quota: int
-) -> list[ScoredCandidate]:
-    """Top ``top`` by score, but reserve ``quota`` slots for protected candidates."""
+# Two candidates whose supporting records overlap this much are treated as the
+# same information object (co-occurring entities/themes of one story).
+OVERLAP_THRESHOLD = 0.5
+MAX_RELATED = 8
+
+
+@dataclass
+class Selection:
+    """A chosen representative plus the co-occurring candidates folded into it."""
+
+    candidate: ScoredCandidate
+    related: list[str]
+
+
+def _jaccard(a: frozenset[int], b: frozenset[int]) -> float:
+    if not a or not b:
+        return 0.0
+    inter = len(a & b)
+    return inter / (len(a) + len(b) - inter)
+
+
+def _dedupe(ranked: list[ScoredCandidate]) -> list[Selection]:
+    """Collapse co-occurring candidates: highest-scoring is the representative,
+    the rest attach as ``related`` (a story = one entry, with its entities)."""
+    reps: list[Selection] = []
+    for candidate in ranked:
+        host = next(
+            (
+                rep
+                for rep in reps
+                if _jaccard(rep.candidate.stats.support, candidate.stats.support)
+                >= OVERLAP_THRESHOLD
+            ),
+            None,
+        )
+        if host is not None:
+            if len(host.related) < MAX_RELATED and candidate.stats.key not in host.related:
+                host.related.append(candidate.stats.key)
+            continue
+        reps.append(Selection(candidate=candidate, related=[]))
+    return reps
+
+
+def select(scored: list[ScoredCandidate], *, top: int, quota: int) -> list[Selection]:
+    """Deduped top ``top`` by score, reserving ``quota`` slots for protected margins."""
     ranked = sorted(scored, key=lambda c: c.score, reverse=True)
-    primary = ranked[: max(top - quota, 0)]
-    chosen_keys = {c.stats.full_key for c in primary}
+    reps = _dedupe(ranked)
+
+    primary = reps[: max(top - quota, 0)]
+    chosen = {s.candidate.stats.full_key for s in primary}
 
     reserved = [
-        c for c in ranked if c.stats.full_key not in chosen_keys and _is_protected(c)
+        s
+        for s in reps
+        if s.candidate.stats.full_key not in chosen and _is_protected(s.candidate)
     ][:quota]
-    chosen_keys.update(c.stats.full_key for c in reserved)
+    chosen.update(s.candidate.stats.full_key for s in reserved)
 
-    # Backfill any unused quota with the next-best overall, so we always return
-    # up to ``top``.
-    backfill = [c for c in ranked if c.stats.full_key not in chosen_keys]
+    backfill = [s for s in reps if s.candidate.stats.full_key not in chosen]
     result = primary + reserved
     result += backfill[: top - len(result)]
-    return sorted(result, key=lambda c: c.score, reverse=True)
+    return sorted(result, key=lambda s: s.candidate.score, reverse=True)

@@ -1,0 +1,255 @@
+# Deterministic Discovery — Iteration Log
+
+A running record of how the deterministic GKG + NGrams digestion was tuned, and
+**why**. The point is retro-traceability: if the system later looks like it
+over-fit to some information shape we didn't want, this log should let us see the
+decision that put it there and undo it deliberately.
+
+Scope: deterministic processing only — no LLM/agent in the loop. The output we're
+optimizing is the `InsightsReport` (ranked candidates + per-language view) and the
+`LongtailSample`.
+
+## What "high signal" means here (the target)
+
+An insight is useful to us if it points at a **real, specific, moving** thing in
+the world that we might want to research/produce on — not a broad standing topic
+everyone already covers. Concretely we want the shortlist to favor:
+
+- **movement over magnitude** — what's *rising* this batch vs. its own recent
+  baseline, not what's perennially large (large-and-flat = the rut);
+- **specific objects over abstract tags** — named entities (people/orgs) and
+  narrow themes over generic GKG meta-themes;
+- **the margins** — emerging in non-English coverage first, never-seen-before,
+  under-covered-but-intense — protected from being crowded out by incumbents;
+- **corroboration** — signals that show up across languages/outlets (real, not
+  one-outlet noise).
+
+Reliability target: the same batch sequence replayed yields the same report
+(pure/deterministic), and the top of the list shouldn't be dominated by the same
+structural junk every time.
+
+## Method
+
+We replay **real consecutive historical batches** (GKG every 15 min; downloadable
+by timestamp) through the pipeline, accumulating rolling memory, so velocity and
+novelty are exercised on actual data rather than synthetic fixtures. Each
+iteration: observe the current output → form a hypothesis about what's weak →
+change one thing → re-run the same sequence → compare → record the decision.
+
+---
+
+## Iteration 0 — baseline (starting point)
+
+**State.** First working pipeline: candidates = themes + entities by record
+frequency; score = 0.40·significance + 0.30·velocity + 0.20·cross-language +
+0.10·novelty; protected quota of 10/40 for rising/novel/non-English; boilerplate
+theme stoplist (TAX_FNCACT, CRISISLEX_, …).
+
+**Observation (single live batch, no history).** Top candidates were broad,
+high-volume cross-language themes — `UNGP_FORESTS_RIVERS_OCEANS`, `EPU_POLICY`,
+`WB_696_PUBLIC_SECTOR_MANAGEMENT`, `GENERAL_GOVERNMENT`, `GENERAL_HEALTH`. Every
+top item carried only the `cross-language` reason. No entities in the top 10.
+Velocity unexercised (no baseline on a single batch).
+
+**Read.** With no history, score collapses to significance + cross-language, and
+at high volume *everything* is cross-language — so that term doesn't discriminate
+at the top; it just re-ranks the loudest themes. The list is "big standing topics"
+= exactly the rut. Entities never surface because a single named entity can't
+out-count a broad theme on raw frequency.
+
+**Hypotheses to test in the replay loop:**
+1. Velocity, exercised over real consecutive batches, should pull genuinely
+   moving items up — need to see whether it does and how noisy it is.
+2. `cross-language = language_count` is non-discriminating; a *relative* breadth
+   or a *non-English-lead* signal would be sharper.
+3. Themes and entities should probably be scored/served on separate tracks (or
+   per-kind normalized) so specific objects aren't buried by broad tags.
+4. Significance weight is likely too high for a discovery (vs. monitoring) goal.
+
+(Decisions recorded below as each is tested.)
+
+---
+
+## Iteration 1 — exercise velocity on a real 8-batch sequence
+
+**Setup.** Built `gdelt_gkg.fetch_batch(id)` (pull a specific historical batch),
+`discovery/replay.py` (thread memory through a sequence), and
+`scripts/discovery_eval.py` (fetch + cache the last N batches, replay, read out
+top-by-score vs top-by-velocity). Ran on 8 consecutive batches (2h of real news).
+
+**Observation (final batch, with real baseline).**
+- *Top by score* = broad cross-language themes (`UNGP_FORESTS_RIVERS_OCEANS`,
+  `EPU_POLICY`, `WB_696…`, `GENERAL_HEALTH`) — **all with negative velocity**
+  (−0.10 … −0.27). The shortlist is ranking things that are big *and shrinking*.
+- *Top by velocity* = specific and genuinely interesting: a nuclear-testing /
+  royal-commission story cluster (`elizabeth tynan`, `nuclear archipelago`,
+  `UNREST_NATIONAL_SELF_DEFENSE`), a rising cross-language hurricane
+  (`NATURAL_DISASTER_HURRICANE`, langs=3, v=+3.2). Entities surface well here.
+- *But* velocity-top is polluted by a **securities class-action PR cluster**
+  (`rosen law firm`, `securities class action services`, `phillip kim`,
+  `laurence rosen`) — single-language English newswire spam, all v=+5.5 (0→11).
+
+**Reads / decisions.**
+1. **Significance weight is way too high.** Volume-led scoring surfaces declining
+   incumbents. The shortlist must be *velocity-led*; significance becomes a gentle
+   floor (and the only signal during cold start). → change in Iter 2.
+2. **Isolated single-language spikes are the dominant noise** (PR/promo). Real
+   stories corroborate across languages. → weight velocity by language breadth so
+   a rise seen in many languages outranks an isolated one. → Iter 2.
+3. **Low-count velocity is degenerate** (0→3 ties at huge ratios). → gate "rising"
+   behind a minimum support count. → Iter 2.
+4. **Newswire/legal PR spam** (`rosen law firm`, `securities class action…`) is a
+   real, recurring GDELT artifact a general signal may not fully kill. Noted as a
+   candidate for a small, explicit, *reversible* stoplist — flagged here as the
+   most over-fit-prone lever, to revisit. → tested in Iter 3 only if the general
+   corroboration fix doesn't demote it.
+
+---
+
+## Iteration 2 — velocity-led, corroboration-weighted scoring
+
+**Change.** Replaced the additive volume-led blend with a momentum-led score:
+
+```
+momentum     = log1p(language_count) · min(positive_velocity, CAP)   # rise × breadth
+significance = log1p(count) + 0.5·log1p(source_spread)               # cold-start floor
+score        = W_MOM·momentum + W_SIG·significance + W_NOV·novelty
+```
+
+with a **min-support gate**: velocity only counts toward momentum once a
+candidate clears `MIN_RISING_COUNT` records (kills 0→3 ratio spikes), and velocity
+is capped so one explosive item can't dominate purely on ratio. Breadth
+(`log1p(language_count)`) multiplies velocity, so a rise corroborated across many
+languages outranks an isolated single-language spike — the principled lever
+against PR/promo noise, applied before reaching for any blacklist.
+
+**Result (same 8-batch sequence).** Big improvement at the very top: the
+shortlist now *leads* with corroborated movers — `NATURAL_DISASTER_HURRICANE`
+(langs=3, v=+3.2), `ELECTION_FRAUD` (langs=4, v=+2.0), `twitter` (langs=2) —
+instead of big declining incumbents. The flat high-volume themes correctly fell
+away. Velocity-led + breadth-weighted scoring validated.
+
+**New problem exposed.** Slots 4–14 are flooded by a *single story*: ~10
+co-occurring entities of one Australian nuclear-testing / royal-commission cluster
+(`elizabeth tynan`, `royal australian navy`, `nuclear archipelago`, `a royal
+commission`, `james cook university`, `robert menzies`…), all identical
+(n=7, v=+3.5, tone=−2.7, novel) because they appear in the *same 7 records*. One
+story consumes ten slots. The Rosen PR cluster behaves the same way (5 entities,
+same records). `rising` is now on 40/40 candidates — no longer discriminating.
+
+**Read.** Individual entities are the wrong final unit: co-occurring entities ARE
+one information object. We need diversity by *supporting-record overlap* — collapse
+a cluster to one representative carrying its co-occurring members as related
+context. This also quietly kills the PR cluster (5 entities → 1 entry). → Iter 3.
+
+---
+
+## Iteration 3 — co-occurrence de-duplication (entities → information objects)
+
+**Change.** Each candidate now carries its supporting record-index set. Selection
+collapses candidates whose support Jaccard-overlaps an already-chosen one above a
+threshold: the highest-scoring becomes the representative and the rest attach to
+it as `related` members (capped). So one story = one shortlist entry, annotated
+with its co-occurring entities — a real information object, not ten near-dupes.
+Applied before the top/quota cut, so the deduped representatives are what compete.
+
+**Result.** The flood is gone — the shortlist became a diverse set of distinct
+stories, each carrying its co-occurring members: `keith urban +{nicole kidman,
+…}`, `ECON_DEBT +{WB_450_DEBT, …}`, `NATURAL_DISASTER_VOLCANIC +{VOLCANO,
+VOLCANOES}` (morphological variants merged cleanly), `POWER_OUTAGE +{SNOWSTORMS,
+…}`. Co-occurrence dedup turns raw entities into information objects. Validated.
+
+**New problem exposed.** With the story flood cleared, the remaining entity noise
+became visible: **media-attribution artifacts** — `getty imagespascal
+lesegretain`, `getty imagescredit` (photo credits extracted as entities), plus
+generic org fragments. → Iter 4.
+
+---
+
+## Iteration 4 — entity noise filter (media attribution)
+
+**Change.** New `discovery/noise.py` consolidating the vocabulary stoplists
+(moved the boilerplate-theme list here too, so all noise rules live in one
+reviewable place). Added `is_noise_entity` filtering photo/wire-credit artifacts
+(Getty Images, Reuters, AFP, Shutterstock, "credit:", …) and degenerate
+entity strings. Applied in candidate extraction and the per-language view.
+
+**Result (fresh 8-batch sequence).** Media-credit junk gone. The shortlist now
+reads as real, specific, corroborated information objects:
+`WB_445_FISCAL_POLICY +{buckingham palace reservicing programme, king charles}`
+(UK royal-finance story), `DISCRIMINATION_RACE +{catriona paton, police scotland,
+john swinney}` (Scotland policing story), `UNGP_TRANSPORTATION_ROADS` (langs=5,
+tone=−5.1, cross-language road-safety), a coherent agriculture cluster
+(fertilizers/irrigation/crop-production, all cross-language). Cross-language
+corroboration is prominent at the top; entities attach as story context.
+
+**Residual noise noted (not yet acted on, to avoid over-fitting):**
+- News-outlet names extracted as entities (`akita sakigake shimpo` = a Japanese
+  newspaper) — a *source*, not a topic. Candidate for a future outlet stoplist;
+  left in for now since it's low-frequency and outlet lists risk over-fitting.
+- Representation is theme-anchored (entities ride along as related). Acceptable —
+  the entity context is preserved; surfacing entities as primary is a future knob.
+
+---
+
+## Iteration 5 — cold-start warmup (make the *live* command high-signal on run 1)
+
+**Problem.** The replay proves the signal, but a fresh `insights` call has no
+memory, so velocity is unavailable and the score falls back to volume — the rut.
+The tool would only become good after ~8 live runs accumulated baselines.
+
+**Change.** Added `insights --warmup N`: when invoked, backfill rolling memory
+from the N preceding historical batches (via `fetch_batch`) before scoring the
+latest, so the very first run is already velocity-aware. Explicit flag (no
+surprise downloads); documented as the bootstrap step.
+
+**Result.** Cold start (fresh memory) with `--warmup 6` produced
+`has_velocity_baseline: true`, 39/40 candidates rising, 6 batches warmed — the
+first live run is already velocity-aware, no longer falling back to the volume
+rut. Bootstrap validated.
+
+---
+
+## Current state & reliability notes (end of this pass)
+
+**Where it landed.** Across iterations 1→5 the GKG channel went from "broad
+declining themes / one-story floods / PR spam / photo-credit junk" to a diverse
+shortlist of **specific, corroborated, rising information objects**, each a story
+with its co-occurring entities attached (`WB_445_FISCAL_POLICY +{buckingham palace
+reservicing programme, king charles}`, `DISCRIMINATION_RACE +{police scotland,
+john swinney}`, agriculture and natural-disaster clusters, …). Cross-language
+corroboration leads; isolated single-language spikes are demoted, not surfaced.
+
+**Reliability.**
+- *Deterministic*: the core (`extract_candidates` → `score` → `select` →
+  `build_insights`) is pure; identical batches → identical report. Only `memory`
+  carries state, and it's append-trim with a fixed window.
+- *Reproducible evaluation*: `scripts/discovery_eval.py` + `replay.py` re-run the
+  same cached sequence offline, so any future parameter change can be compared on
+  identical data. Caveat: a no-arg eval uses the latest available window (data
+  moves); pin batch ids in the cache for strict A/B.
+
+**Tunable knobs (all in `ranking.py` / `noise.py`, one place each):**
+`MIN_RISING_COUNT`, `VELOCITY_CAP`, the three blend weights, `OVERLAP_THRESHOLD`
+/ `MAX_RELATED` (dedup), and the noise stoplists. These are the levers to revisit
+if we later find we over-fit to a shape we don't want.
+
+**Known limitations / over-fitting watch (deliberately left for later):**
+1. **Theme-anchored representation** — stories surface under their dominant theme
+   with entities as `related`; we don't yet promote entities to primary or build
+   true entity-centric story objects. The richest "information object" form is a
+   future iteration.
+2. **News-outlet names as entities** (`akita sakigake shimpo`) — a source, not a
+   topic. Left unfiltered to avoid an over-fit outlet blacklist; revisit if it
+   proves frequent.
+3. **NGrams is sample-only** — the second channel currently feeds the long-tail
+   slice, not its own velocity/emergence signal. A deterministic NGrams
+   trending-phrase channel (with the same memory mechanism) is the next big lever.
+4. **Per-language velocity** — the world-news view is volume-only per language;
+   per-language rising needs per-(language,candidate) memory keys.
+5. **Single-language English breaking news** is demoted by the breadth weighting —
+   precision-over-recall choice. If we find we're missing real early English-only
+   stories, relax the breadth multiplier or add a source-spread corroboration path.
+
+These are recorded so a later review can see *which* deliberate choices shaped the
+output, and undo any that turn out to bias us toward an unwanted information shape.
