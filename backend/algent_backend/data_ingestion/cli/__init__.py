@@ -1,1 +1,13 @@
-"""CLI for the data-ingestion pipeline (every command prints one JSON document)."""
+"""
+CLI for the data-ingestion pipeline (every command prints one JSON document).
+
+``COMMANDS`` is the single source of truth for the ingest command set; both this
+package's own dispatcher and the unified ``algent_backend.cli`` entry register
+the same modules under the ``ingest`` category.
+"""
+
+from __future__ import annotations
+
+from . import digest, fetch, sources
+
+COMMANDS = (fetch, digest, sources)

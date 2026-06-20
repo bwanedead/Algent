@@ -1,24 +1,31 @@
 """
-Offline tests for the data-ingestion pipeline (GKG → digest).
+Offline tests for the data-ingestion pipeline (sources, digest, CLI surface).
 
-No network: the GKG row parser is exercised on a synthetic tab-separated batch,
-and the lenses/pillars/digest are pure functions over hand-built records. The
-live fetch path is covered by ``test_gkg_fetch_smoke`` only when explicitly
-enabled, so the default suite stays hermetic.
+No network: parsers run on synthetic batches, lenses/pillars/digest are pure
+functions over hand-built records, and the CLI commands run against fake sources.
+The live fetch paths (``*_fetch_smoke``) run only when explicitly enabled, so the
+default suite stays hermetic.
 """
 
 from __future__ import annotations
 
+import gzip
+import io
 import json
 import os
+import zipfile
+from datetime import UTC, datetime
 
 import pytest
 
-from algent_backend.data_ingestion.cli import ingest
+from algent_backend.data_ingestion.cli import _shared
+from algent_backend.data_ingestion.cli import digest as digest_cmd
+from algent_backend.data_ingestion.cli import fetch as fetch_cmd
 from algent_backend.data_ingestion.news_production.discovery import lenses
 from algent_backend.data_ingestion.news_production.discovery.digest import build_digest
 from algent_backend.data_ingestion.news_production.discovery.pillars import pillar_for_theme
-from algent_backend.data_ingestion.news_production.sources import gdelt_gkg
+from algent_backend.data_ingestion.news_production.sources import gdelt_gkg, gdelt_ngrams
+from algent_backend.data_ingestion.news_production.sources.packet import RawPacket, RawPart
 from algent_backend.data_ingestion.news_production.sources.records import GkgRecord
 
 
@@ -78,9 +85,6 @@ def test_parse_skips_malformed_rows() -> None:
 
 
 def _zip_bytes(text: str) -> bytes:
-    import io
-    import zipfile
-
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, "w") as zf:
         zf.writestr("batch.gkg.csv", text)
@@ -146,27 +150,85 @@ def test_build_digest_groups_by_language_axis() -> None:
     assert eng.top_themes[0].pillar == "economy"
 
 
+# -- NGrams source ------------------------------------------------------------
+
+
+def test_ngrams_build_packet_counts_records() -> None:
+    ndjson = '{"ngram": "a"}\n{"ngram": "b"}\n\n'  # blank line ignored
+    gz = gzip.compress(ndjson.encode("utf-8"))
+    packet = gdelt_ngrams._build_packet("20260101000100", gz)
+    assert packet.source == "gdelt_ngrams"
+    assert packet.batch_id == "20260101000100"
+    assert len(packet.parts) == 1
+    assert packet.parts[0].name == "webngrams.ndjson"
+    assert packet.parts[0].record_count == 2
+
+
+def test_ngrams_latest_packet_url_walks_back_to_first_hit() -> None:
+    now = datetime(2026, 1, 1, 0, 10, 0, tzinfo=UTC)
+    available = "20260101000700.webngrams.json.gz"  # 3 minutes back
+
+    class _FakeClient:
+        def head(self, url):
+            return type("R", (), {"status_code": 200 if url.endswith(available) else 404})()
+
+        def close(self):
+            pass
+
+    batch_id, url = gdelt_ngrams.latest_packet_url(client=_FakeClient(), now=now)
+    assert batch_id == "20260101000700"
+    assert url.endswith(available)
+
+
 # -- CLI ----------------------------------------------------------------------
 
 
-def test_ingest_cli_writes_digest_and_prints_summary(monkeypatch, tmp_path, capsys) -> None:
-    monkeypatch.setenv(ingest._OUTPUT_ENV, str(tmp_path))
+def test_fetch_cli_lands_raw_parts_and_prints_summary(monkeypatch, tmp_path, capsys) -> None:
+    monkeypatch.setenv(_shared._OUTPUT_ENV, str(tmp_path))
+    packet = RawPacket(
+        source="gdelt_gkg",
+        batch_id="20260101000000",
+        parts=(
+            RawPart(name="english.gkg.csv", text="row1\nrow2\n", record_count=2),
+            RawPart(name="translation.gkg.csv", text="row1\n", record_count=1),
+        ),
+    )
+    monkeypatch.setattr(_shared.SOURCES["gdelt_gkg"], "fetch_latest_raw", lambda: packet)
+
+    assert fetch_cmd.run(_ns(source="gdelt_gkg")) == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["batch_id"] == "20260101000000"
+    assert [p["name"] for p in out["parts"]] == ["english.gkg.csv", "translation.gkg.csv"]
+    landed = os.path.join(out["raw_dir"], "english.gkg.csv")
+    assert open(landed, encoding="utf-8").read() == "row1\nrow2\n"
+
+
+def test_digest_cli_writes_digest_and_prints_summary(monkeypatch, tmp_path, capsys) -> None:
+    monkeypatch.setenv(_shared._OUTPUT_ENV, str(tmp_path))
     monkeypatch.setitem(
-        ingest._SOURCES,
+        digest_cmd._FETCHERS,
         "gdelt_gkg",
         lambda: ("20260101000000", [_rec(themes=["ECON_STOCKMARKET"], tone=1.0)]),
     )
 
-    code = ingest.run(_ns(source="gdelt_gkg"))
-    assert code == 0
-
+    assert digest_cmd.run(_ns(source="gdelt_gkg")) == 0
     out = json.loads(capsys.readouterr().out)
     assert out["batch_id"] == "20260101000000"
     assert out["total_records"] == 1
     assert os.path.exists(out["digest_path"])
     written = json.loads(open(out["digest_path"], encoding="utf-8").read())
-    assert written["source"] == "gdelt_gkg"
     assert written["languages"][0]["language"] == "eng"
+
+
+def test_unified_cli_dispatches_ingest_and_runs_categories() -> None:
+    from algent_backend.cli.__main__ import _CATEGORIES
+
+    assert set(_CATEGORIES) == {"runs", "ingest"}
+    ingest_commands = {m.add_parser.__module__.rsplit(".", 1)[-1] for m in _CATEGORIES["ingest"][1]}
+    assert {"fetch", "digest", "sources"} <= ingest_commands
+
+
+# -- live smokes (opt-in) -----------------------------------------------------
 
 
 @pytest.mark.skipif(
@@ -177,6 +239,16 @@ def test_gkg_fetch_smoke() -> None:
     batch_id, records = gdelt_gkg.fetch_latest()
     assert len(batch_id) == 14 and batch_id.isdigit()
     assert len(records) > 100
+
+
+@pytest.mark.skipif(
+    os.environ.get("ALGENT_LIVE_NGRAMS") != "1",
+    reason="live GDELT fetch; set ALGENT_LIVE_NGRAMS=1 to run",
+)
+def test_ngrams_fetch_smoke() -> None:
+    packet = gdelt_ngrams.fetch_latest_raw()
+    assert len(packet.batch_id) == 14 and packet.batch_id.isdigit()
+    assert packet.parts[0].record_count > 100
 
 
 class _ns:

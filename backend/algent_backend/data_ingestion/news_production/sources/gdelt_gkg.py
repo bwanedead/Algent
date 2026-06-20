@@ -13,10 +13,11 @@ GDELT splits its output across two parallel streams, each with its own
 batches; ``fetch_latest`` pulls both and merges them so one digest spans every
 language — which is the whole reason language is the digest's top axis.
 
-This module does three things and nothing else:
+This module does:
 - ``latest_batch_url`` — resolve the newest batch URL for one stream.
-- ``fetch_latest`` — download + parse + merge both streams into records.
-- ``parse_gkg`` — turn a batch's tab-separated rows into ``GkgRecord``s.
+- ``fetch_latest_raw`` — download + unpack both streams to verbatim text parts.
+- ``fetch_latest`` — the above, parsed + merged into ``GkgRecord``s.
+- ``parse_gkg`` / ``parse_gkg_text`` — turn a batch's rows into records.
 
 Each download is a single GET with a clear timeout; any failure raises with the
 URL so the caller can record it verbatim.
@@ -27,13 +28,17 @@ from __future__ import annotations
 import io
 import zipfile
 
+from .packet import RawPacket, RawPart
 from .records import GkgRecord
+
+SOURCE_ID = "gdelt_gkg"
 
 # The two parallel GKG streams. English is the master; translation carries the
 # non-English languages (each row's source language is in its TRANSLATIONINFO).
-_LASTUPDATE_URLS = (
-    "http://data.gdeltproject.org/gdeltv2/lastupdate.txt",
-    "http://data.gdeltproject.org/gdeltv2/lastupdate-translation.txt",
+# (label, lastupdate-index URL) — label names the landed raw file.
+_STREAMS = (
+    ("english", "http://data.gdeltproject.org/gdeltv2/lastupdate.txt"),
+    ("translation", "http://data.gdeltproject.org/gdeltv2/lastupdate-translation.txt"),
 )
 _TIMEOUT_S = 60.0
 _HEADERS = {"User-Agent": "Algent/0.1 (news discovery ingestion)"}
@@ -66,41 +71,61 @@ def latest_batch_url(lastupdate_url: str, *, client: object | None = None) -> tu
     raise RuntimeError(f"no GKG line found in {lastupdate_url}:\n{text[:500]}")
 
 
-def fetch_latest(*, client: object | None = None) -> tuple[str, list[GkgRecord]]:
-    """Download and merge the newest English + translingual batches.
+def fetch_latest_raw(*, client: object | None = None) -> RawPacket:
+    """Download and unpack the newest batch's two streams to verbatim CSV text.
 
-    Returns ``(batch_id, records)`` where ``batch_id`` is the English stream's
-    stamp (the streams publish on near-identical 15-minute slots). One shared
-    HTTP client is reused across all downloads when the caller doesn't supply
-    one.
+    Returns a :class:`RawPacket` with one part per stream. ``batch_id`` is the
+    English stream's stamp (the streams publish on near-identical 15-minute
+    slots). One shared HTTP client is reused across downloads.
     """
-    import httpx
-
     own_client = client is None
-    http = client or httpx.Client(timeout=_TIMEOUT_S, headers=_HEADERS)
+    http = client or _new_client()
     try:
         batch_id = ""
-        records: list[GkgRecord] = []
-        for lastupdate_url in _LASTUPDATE_URLS:
+        parts: list[RawPart] = []
+        for label, lastupdate_url in _STREAMS:
             stream_id, zip_url = latest_batch_url(lastupdate_url, client=http)
             batch_id = batch_id or stream_id  # English stream is listed first
-            records.extend(parse_gkg(_get(zip_url, client=http)))
-        return batch_id, records
+            text = _unzip(_get(zip_url, client=http))
+            count = sum(1 for line in text.splitlines() if line.strip())
+            parts.append(RawPart(name=f"{label}.gkg.csv", text=text, record_count=count))
+        return RawPacket(source=SOURCE_ID, batch_id=batch_id, parts=tuple(parts))
     finally:
         if own_client:
-            http.close()
+            http.close()  # type: ignore[attr-defined]
+
+
+def fetch_latest(*, client: object | None = None) -> tuple[str, list[GkgRecord]]:
+    """Download and merge the newest English + translingual batches into records.
+
+    Returns ``(batch_id, records)``.
+    """
+    packet = fetch_latest_raw(client=client)
+    records: list[GkgRecord] = []
+    for part in packet.parts:
+        records.extend(parse_gkg_text(part.text))
+    return packet.batch_id, records
 
 
 def parse_gkg(zip_bytes: bytes) -> list[GkgRecord]:
     """Parse a raw ``.gkg.csv.zip`` payload into records, skipping malformed rows."""
-    archive = zipfile.ZipFile(io.BytesIO(zip_bytes))
-    raw = archive.read(archive.namelist()[0]).decode("utf-8", "replace")
+    return parse_gkg_text(_unzip(zip_bytes))
+
+
+def parse_gkg_text(text: str) -> list[GkgRecord]:
+    """Parse decompressed GKG CSV text into records, skipping malformed rows."""
     records: list[GkgRecord] = []
-    for line in raw.splitlines():
+    for line in text.splitlines():
         record = _parse_row(line)
         if record is not None:
             records.append(record)
     return records
+
+
+def _unzip(zip_bytes: bytes) -> str:
+    """Decompress a ``.gkg.csv.zip`` payload to its CSV text (first entry)."""
+    archive = zipfile.ZipFile(io.BytesIO(zip_bytes))
+    return archive.read(archive.namelist()[0]).decode("utf-8", "replace")
 
 
 def _parse_row(line: str) -> GkgRecord | None:
@@ -143,11 +168,15 @@ def _first_tone(field_value: str) -> float | None:
         return None
 
 
-def _get(url: str, *, client: object | None = None) -> bytes:
-    """Single GET returning raw bytes; raises with the URL on any non-200."""
+def _new_client() -> object:
     import httpx
 
-    http = client if client is not None else httpx.Client(timeout=_TIMEOUT_S, headers=_HEADERS)
+    return httpx.Client(timeout=_TIMEOUT_S, headers=_HEADERS, follow_redirects=True)
+
+
+def _get(url: str, *, client: object | None = None) -> bytes:
+    """Single GET returning raw bytes; raises with the URL on any non-200."""
+    http = client if client is not None else _new_client()
     close = client is None
     try:
         response = http.get(url)  # type: ignore[attr-defined]

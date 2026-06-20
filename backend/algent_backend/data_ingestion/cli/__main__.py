@@ -1,7 +1,8 @@
 """
 Dispatcher: ``python -m algent_backend.data_ingestion.cli <command> ...``
 
-Commands: ingest.
+Commands: fetch, digest, sources. (Also reachable via the unified
+``python -m algent_backend.cli ingest <command>``.)
 """
 
 from __future__ import annotations
@@ -9,7 +10,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from . import ingest
+from . import COMMANDS
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -18,7 +19,7 @@ def main(argv: list[str] | None = None) -> int:
         description="Algent data-ingestion pipeline (every command prints one JSON document).",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
-    for module in (ingest,):
+    for module in COMMANDS:
         module.add_parser(subparsers)
 
     args = parser.parse_args(argv)
