@@ -59,6 +59,25 @@ _PILLAR_PREFIXES: dict[str, tuple[str, ...]] = {
 # Iterated in a fixed order so pillar tagging is deterministic.
 PILLARS: tuple[str, ...] = tuple(_PILLAR_PREFIXES)
 
+# Structural GKG themes — the "stopwords" of the theme vocabulary. GKG stamps
+# these on a huge fraction of all articles (functional actors, ethnicity/language
+# tags, the broad crisis lexicon, generic media tags), so by raw volume they
+# always top the list while telling us nothing about *what's happening*. Filtering
+# them is the single biggest anti-rut lever on the GKG channel. Conservative and
+# prefix-based; widen as we spot more noise.
+_BOILERPLATE_THEME_PREFIXES: tuple[str, ...] = (
+    "TAX_FNCACT",
+    "TAX_ETHNICITY",
+    "TAX_WORLDLANGUAGES",
+    "TAX_RELIGION",
+    "CRISISLEX_",
+    "MEDIA_MSM",
+    "MEDIA_SOCIAL",
+    "LEADER",
+    "USPEC_",
+    "EPU_CATS_",
+)
+
 
 def pillar_for_theme(theme: str) -> str | None:
     """Return the first pillar whose prefix matches ``theme``, or None."""
@@ -66,3 +85,8 @@ def pillar_for_theme(theme: str) -> str | None:
         if theme.startswith(prefixes):
             return pillar
     return None
+
+
+def is_boilerplate_theme(theme: str) -> bool:
+    """True for structural GKG tags that swamp volume without signalling a topic."""
+    return theme.startswith(_BOILERPLATE_THEME_PREFIXES)

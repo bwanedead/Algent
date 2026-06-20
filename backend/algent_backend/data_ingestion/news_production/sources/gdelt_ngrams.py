@@ -17,6 +17,9 @@ until a file resolves. We download exactly one packet.
 from __future__ import annotations
 
 import gzip
+import io
+import json
+from collections.abc import Iterator
 from datetime import UTC, datetime, timedelta
 
 from .packet import RawPacket, RawPart
@@ -70,6 +73,40 @@ def fetch_latest_raw(*, client: object | None = None) -> RawPacket:
     finally:
         if own:
             http.close()  # type: ignore[attr-defined]
+
+
+def stream_latest(*, client: object | None = None) -> tuple[str, Iterator[dict]]:
+    """Download the newest packet and yield its records one at a time.
+
+    The gzip (~2MB) is held in memory and decompressed *incrementally* line by
+    line, so the full ~140MB of decompressed JSON never materialises and nothing
+    is written to disk — exactly the streaming, no-retention path the processing
+    layer wants. Malformed lines are skipped.
+    """
+    own = client is None
+    http = client or _new_client()
+    try:
+        batch_id, url = latest_packet_url(client=http)
+        response = http.get(url)  # type: ignore[attr-defined]
+        if response.status_code != 200:
+            raise RuntimeError(f"NGrams fetch failed: HTTP {response.status_code} for {url}")
+        gz_bytes = response.content
+    finally:
+        if own:
+            http.close()  # type: ignore[attr-defined]
+    return batch_id, _iter_records(gz_bytes)
+
+
+def _iter_records(gz_bytes: bytes) -> Iterator[dict]:
+    with gzip.GzipFile(fileobj=io.BytesIO(gz_bytes)) as stream:
+        for raw_line in stream:
+            line = raw_line.decode("utf-8", "replace").strip()
+            if not line:
+                continue
+            try:
+                yield json.loads(line)
+            except ValueError:
+                continue
 
 
 def _build_packet(batch_id: str, gz_bytes: bytes) -> RawPacket:

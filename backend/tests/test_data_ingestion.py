@@ -21,21 +21,32 @@ import pytest
 from algent_backend.data_ingestion.cli import _shared
 from algent_backend.data_ingestion.cli import digest as digest_cmd
 from algent_backend.data_ingestion.cli import fetch as fetch_cmd
-from algent_backend.data_ingestion.news_production.discovery import lenses
+from algent_backend.data_ingestion.cli import insights as insights_cmd
+from algent_backend.data_ingestion.cli import sample as sample_cmd
+from algent_backend.data_ingestion.news_production.discovery import lenses, ranking, sampling
+from algent_backend.data_ingestion.news_production.discovery.candidates import extract_candidates
 from algent_backend.data_ingestion.news_production.discovery.digest import build_digest
+from algent_backend.data_ingestion.news_production.discovery.insights import build_insights
+from algent_backend.data_ingestion.news_production.discovery.memory import (
+    RollingMemory,
+    load_memory,
+    save_memory,
+)
 from algent_backend.data_ingestion.news_production.discovery.pillars import pillar_for_theme
 from algent_backend.data_ingestion.news_production.sources import gdelt_gkg, gdelt_ngrams
 from algent_backend.data_ingestion.news_production.sources.packet import RawPacket, RawPart
 from algent_backend.data_ingestion.news_production.sources.records import GkgRecord
 
 
-def _rec(language="eng", themes=(), tone=None, **kw) -> GkgRecord:
+def _rec(language="eng", themes=(), tone=None, persons=(), organizations=(), **kw) -> GkgRecord:
     return GkgRecord(
         record_id=kw.get("record_id", "r"),
         url=kw.get("url", "http://x"),
         source_name=kw.get("source_name", "x.com"),
         language=language,
         themes=tuple(themes),
+        persons=tuple(persons),
+        organizations=tuple(organizations),
         tone=tone,
     )
 
@@ -266,7 +277,129 @@ def test_unified_cli_dispatches_ingest_and_runs_categories() -> None:
 
     assert set(_CATEGORIES) == {"runs", "ingest"}
     ingest_commands = {m.add_parser.__module__.rsplit(".", 1)[-1] for m in _CATEGORIES["ingest"][1]}
-    assert {"fetch", "digest", "sources"} <= ingest_commands
+    assert {"fetch", "insights", "sample", "digest", "sources"} <= ingest_commands
+
+
+# -- candidate extraction -----------------------------------------------------
+
+
+def test_extract_candidates_covers_themes_and_entities_with_min_count() -> None:
+    records = [
+        _rec(themes=["ECON_X"], persons=["jane doe"], organizations=["acme"], source_name="a.com"),
+        _rec(themes=["ECON_X"], persons=["jane doe"], source_name="b.com"),
+        _rec(themes=["ECON_X"], language="spa", source_name="c.com"),
+        _rec(themes=["RARE"]),  # below min_count -> dropped
+    ]
+    stats = {s.full_key: s for s in extract_candidates(records, min_count=2)}
+
+    assert "theme:ECON_X" in stats and "person:jane doe" in stats
+    assert "theme:RARE" not in stats
+    econ = stats["theme:ECON_X"]
+    assert econ.count == 3 and econ.pillar == "economy"
+    assert set(econ.languages) == {"eng", "spa"}
+    assert econ.source_spread == 3  # three distinct outlets
+
+
+def test_extract_candidates_drops_boilerplate_themes() -> None:
+    records = [_rec(themes=["TAX_FNCACT", "ECON_X", "CRISISLEX_CRISISLEXREC"]) for _ in range(5)]
+    keys = {s.full_key for s in extract_candidates(records, min_count=2)}
+    assert keys == {"theme:ECON_X"}  # structural GKG tags filtered out
+
+
+# -- rolling memory + velocity ------------------------------------------------
+
+
+def test_rolling_memory_baseline_seen_and_window() -> None:
+    mem = RollingMemory(source="s")
+    assert not mem.has_history and mem.baseline("k") == 0.0
+
+    mem = mem.with_batch("b1", {"k": 10}).with_batch("b2", {"k": 20})
+    assert mem.has_history and mem.baseline("k") == 15.0
+    assert mem.seen("k") and not mem.seen("other")
+
+    trimmed = mem.with_batch("b3", {"k": 30}, window=2)
+    assert [b.batch_id for b in trimmed.batches] == ["b2", "b3"]  # oldest dropped
+
+
+def test_velocity_is_none_without_history_then_flags_rising() -> None:
+    records = [_rec(themes=["ECON_X"]) for _ in range(10)]
+
+    first, counts = build_insights(records, source="s", batch_id="b1", memory=RollingMemory("s"))
+    econ_first = next(c for c in first.candidates if c.key == "ECON_X")
+    assert first.has_velocity_baseline is False and econ_first.velocity is None
+
+    memory = RollingMemory("s").with_batch("b0", {"theme:ECON_X": 2})  # was small, now 10
+    second, _ = build_insights(records, source="s", batch_id="b1", memory=memory)
+    econ_second = next(c for c in second.candidates if c.key == "ECON_X")
+    assert econ_second.velocity is not None and econ_second.velocity > 0
+    assert econ_second.rising and "rising" in econ_second.reasons
+
+
+# -- ranking protected quota --------------------------------------------------
+
+
+def test_select_reserves_quota_for_protected_margins() -> None:
+    # Many loud English themes, plus one tiny non-English-only outsider.
+    loud = [_rec(themes=[f"LOUD_{i}"], source_name=f"{i}.com") for i in range(20)]
+    outsider = [_rec(themes=["OUTSIDER"], language="ukr") for _ in range(3)]
+    stats = extract_candidates(loud * 3 + outsider, min_count=3)
+    scored = ranking.score_candidates(stats, RollingMemory("s"))
+
+    without_quota = ranking.select(scored, top=5, quota=0)
+    with_quota = ranking.select(scored, top=5, quota=2)
+
+    keys_no = {c.stats.key for c in without_quota}
+    keys_yes = {c.stats.key for c in with_quota}
+    assert "OUTSIDER" not in keys_no  # loud incumbents win on raw score
+    assert "OUTSIDER" in keys_yes  # quota rescues the non-English margin
+
+
+# -- sampling -----------------------------------------------------------------
+
+
+def test_stratified_reservoir_balances_across_languages() -> None:
+    import random
+
+    items = [{"lang": "en"} for _ in range(1000)] + [{"lang": "sw"} for _ in range(3)]
+    picked = sampling.stratified_reservoir(
+        items, size=10, key=lambda r: r["lang"], per_key_cap=5, rng=random.Random(0)
+    )
+    langs = {r["lang"] for r in picked}
+    assert "sw" in langs  # the rare language survives a 1000:3 imbalance
+
+
+# -- CLI: insights + sample ---------------------------------------------------
+
+
+def test_insights_cli_writes_report_and_updates_memory(monkeypatch, tmp_path, capsys) -> None:
+    monkeypatch.setenv(_shared._OUTPUT_ENV, str(tmp_path))
+    records = [_rec(themes=["ECON_X"], persons=["jane doe"]) for _ in range(5)]
+    monkeypatch.setitem(insights_cmd._FETCHERS, "gdelt_gkg", lambda: ("20260101000000", records))
+
+    assert insights_cmd.run(_ns(source="gdelt_gkg", keep=1)) == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["batch_id"] == "20260101000000"
+    assert out["has_velocity_baseline"] is False
+    assert os.path.exists(out["report_path"])
+
+    # Memory now carries this batch, so a second run has a baseline.
+    mem = load_memory("gdelt_gkg", _shared.memory_dir())
+    assert mem.has_history and mem.seen("theme:ECON_X")
+
+
+def test_sample_cli_writes_stratified_slice(monkeypatch, tmp_path, capsys) -> None:
+    monkeypatch.setenv(_shared._OUTPUT_ENV, str(tmp_path))
+    stream = (
+        {"ngram": f"w{i}", "lang": "en", "pre": "a", "post": "b", "url": "u"} for i in range(50)
+    )
+    monkeypatch.setitem(sample_cmd._STREAMERS, "gdelt_ngrams", lambda: ("20260101000100", stream))
+
+    assert sample_cmd.run(_ns(source="gdelt_ngrams", size=5, keep=1)) == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["size"] == 5
+    written = json.loads(open(out["sample_path"], encoding="utf-8").read())
+    assert len(written["records"]) == 5
+    assert written["records"][0]["text"]  # snippet assembled from pre/post
 
 
 # -- live smokes (opt-in) -----------------------------------------------------

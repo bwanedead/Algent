@@ -45,6 +45,19 @@ def digests_dir() -> Path:
     return ingestion_dir() / "digests"
 
 
+def insights_dir() -> Path:
+    return ingestion_dir() / "insights"
+
+
+def samples_dir() -> Path:
+    return ingestion_dir() / "samples"
+
+
+def memory_dir() -> Path:
+    """Rolling cross-batch state (small aggregates). Retained, not one-in-one-out."""
+    return ingestion_dir() / "memory"
+
+
 def print_json(payload: object) -> None:
     """Print the command's single JSON document (UTF-8, never crashes on cp1252)."""
     if hasattr(sys.stdout, "reconfigure"):
@@ -70,13 +83,17 @@ def prune_raw_batches(source: str, *, keep: int) -> list[str]:
     return _prune(dirs, keep, lambda p: shutil.rmtree(p, ignore_errors=True))
 
 
+def prune_files(directory: Path, pattern: str, *, keep: int) -> list[str]:
+    """Keep the newest `keep` files matching `pattern` in `directory`; remove older."""
+    if not directory.exists():
+        return []
+    files = list(directory.glob(pattern))
+    return _prune(files, keep, lambda p: p.unlink(missing_ok=True))
+
+
 def prune_digest_files(source: str, *, keep: int) -> list[str]:
     """Keep the newest `keep` digest files for a source; remove older ones."""
-    d = digests_dir()
-    if not d.exists():
-        return []
-    files = list(d.glob(f"{source}_*.json"))
-    return _prune(files, keep, lambda p: p.unlink(missing_ok=True))
+    return prune_files(digests_dir(), f"{source}_*.json", keep=keep)
 
 
 def _prune(paths: list[Path], keep: int, remove: Callable[[Path], None]) -> list[str]:
