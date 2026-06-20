@@ -15,7 +15,7 @@ import argparse
 
 from ..news_production.discovery.digest import build_digest
 from ..news_production.sources import gdelt_gkg
-from ._shared import DIGESTABLE, digests_dir, print_json
+from ._shared import DIGESTABLE, digests_dir, print_json, prune_digest_files
 
 # Each digestable source: id -> (fetch latest -> (batch_id, records)).
 _FETCHERS = {gdelt_gkg.SOURCE_ID: gdelt_gkg.fetch_latest}
@@ -24,6 +24,12 @@ _FETCHERS = {gdelt_gkg.SOURCE_ID: gdelt_gkg.fetch_latest}
 def add_parser(subparsers: argparse._SubParsersAction) -> None:
     parser = subparsers.add_parser("digest", help="process a source's latest batch into a digest")
     parser.add_argument("source", choices=sorted(DIGESTABLE))
+    parser.add_argument(
+        "--keep",
+        type=int,
+        default=1,
+        help="digests to retain for this source (default 1 = one-in-one-out)",
+    )
     parser.set_defaults(handler=run)
 
 
@@ -35,6 +41,7 @@ def run(args: argparse.Namespace) -> int:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(digest.model_dump_json(indent=2), encoding="utf-8")
 
+    purged = prune_digest_files(args.source, keep=args.keep)
     print_json(
         {
             "source": args.source,
@@ -42,6 +49,8 @@ def run(args: argparse.Namespace) -> int:
             "total_records": digest.total_records,
             "languages": len(digest.languages),
             "digest_path": str(path),
+            "retained": args.keep,
+            "purged": purged,
         }
     )
     return 0

@@ -195,7 +195,7 @@ def test_fetch_cli_lands_raw_parts_and_prints_summary(monkeypatch, tmp_path, cap
     )
     monkeypatch.setattr(_shared.SOURCES["gdelt_gkg"], "fetch_latest_raw", lambda: packet)
 
-    assert fetch_cmd.run(_ns(source="gdelt_gkg")) == 0
+    assert fetch_cmd.run(_ns(source="gdelt_gkg", keep=1)) == 0
     out = json.loads(capsys.readouterr().out)
     assert out["batch_id"] == "20260101000000"
     assert [p["name"] for p in out["parts"]] == ["english.gkg.csv", "translation.gkg.csv"]
@@ -211,13 +211,54 @@ def test_digest_cli_writes_digest_and_prints_summary(monkeypatch, tmp_path, caps
         lambda: ("20260101000000", [_rec(themes=["ECON_STOCKMARKET"], tone=1.0)]),
     )
 
-    assert digest_cmd.run(_ns(source="gdelt_gkg")) == 0
+    assert digest_cmd.run(_ns(source="gdelt_gkg", keep=1)) == 0
     out = json.loads(capsys.readouterr().out)
     assert out["batch_id"] == "20260101000000"
     assert out["total_records"] == 1
     assert os.path.exists(out["digest_path"])
     written = json.loads(open(out["digest_path"], encoding="utf-8").read())
     assert written["languages"][0]["language"] == "eng"
+
+
+# -- retention (one-in-one-out) -----------------------------------------------
+
+
+def _fake_packet(batch_id: str) -> RawPacket:
+    return RawPacket(
+        source="gdelt_gkg",
+        batch_id=batch_id,
+        parts=(RawPart(name="english.gkg.csv", text="row\n", record_count=1),),
+    )
+
+
+def test_fetch_keeps_only_newest_and_reports_purged(monkeypatch, tmp_path, capsys) -> None:
+    monkeypatch.setenv(_shared._OUTPUT_ENV, str(tmp_path))
+
+    out = {}
+    for batch in ("20260101000000", "20260101001500"):
+        monkeypatch.setattr(
+            _shared.SOURCES["gdelt_gkg"], "fetch_latest_raw", lambda b=batch: _fake_packet(b)
+        )
+        fetch_cmd.run(_ns(source="gdelt_gkg", keep=1))
+        out = json.loads(capsys.readouterr().out)  # drain per fetch; keep the last summary
+
+    remaining = sorted(p.name for p in (tmp_path / "raw" / "gdelt_gkg").iterdir())
+    assert remaining == ["20260101001500"]  # only the newest batch survives
+    assert out["purged"] == ["20260101000000"]
+
+
+def test_prune_digest_files_keeps_newest_per_source(monkeypatch, tmp_path) -> None:
+    monkeypatch.setenv(_shared._OUTPUT_ENV, str(tmp_path))
+    d = _shared.digests_dir()
+    d.mkdir(parents=True)
+    for name in ("gdelt_gkg_20260101000000.json", "gdelt_gkg_20260101001500.json", "other_1.json"):
+        (d / name).write_text("{}", encoding="utf-8")
+
+    purged = _shared.prune_digest_files("gdelt_gkg", keep=1)
+
+    assert purged == ["gdelt_gkg_20260101000000.json"]
+    survivors = sorted(p.name for p in d.iterdir())
+    assert survivors == ["gdelt_gkg_20260101001500.json", "other_1.json"]  # other source untouched
 
 
 def test_unified_cli_dispatches_ingest_and_runs_categories() -> None:

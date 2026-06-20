@@ -14,12 +14,18 @@ from __future__ import annotations
 
 import argparse
 
-from ._shared import SOURCES, print_json, raw_dir
+from ._shared import SOURCES, print_json, prune_raw_batches, raw_dir
 
 
 def add_parser(subparsers: argparse._SubParsersAction) -> None:
     parser = subparsers.add_parser("fetch", help="retrieve + unpack a source's latest packet")
     parser.add_argument("source", choices=sorted(SOURCES))
+    parser.add_argument(
+        "--keep",
+        type=int,
+        default=1,
+        help="raw batches to retain for this source (default 1 = one-in-one-out)",
+    )
     parser.set_defaults(handler=run)
 
 
@@ -36,12 +42,15 @@ def run(args: argparse.Namespace) -> int:
             {"name": part.name, "records": part.record_count, "bytes": path.stat().st_size}
         )
 
+    purged = prune_raw_batches(packet.source, keep=args.keep)
     print_json(
         {
             "source": packet.source,
             "batch_id": packet.batch_id,
             "parts": parts_summary,
             "raw_dir": str(out_dir),
+            "retained": args.keep,
+            "purged": purged,
         }
     )
     return 0
