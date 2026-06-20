@@ -11,7 +11,7 @@
 - Backend run placeholder: `.venv\Scripts\Activate.ps1; python -m algent_backend.app` exposes `/health` on `http://127.0.0.1:43145`.
 - Frontend install: `cd frontend && npm install`; dev server `npm run dev`; Tauri shell `npm run tauri:dev`.
 - Tests (backend): `cd backend && .venv\Scripts\Activate.ps1 && pytest`.
-- **Do not run `git` commands in this repo unless explicitly instructed by the maintainer.**
+- **Git: commit and push when it makes sense — sensibly and carefully.** No hard ban and no rubber-stamp. Before committing, check `git status` / the diff so nothing that shouldn't be tracked slips in (keep `.gitignore` sane and update it when a new build/output/secret-ish path appears). Never commit directly to `main` — work on a branch. Push when it's the natural next step; pause to confirm only for the genuinely consequential (history rewrites, force-push, deletions of others' work).
 - **Do not install dependencies (pip, npm, cargo, etc.); the maintainer handles all installation. Stick to read-only commands unless told otherwise.**
 
 ## Safety & Blast-Radius (non-negotiable)
