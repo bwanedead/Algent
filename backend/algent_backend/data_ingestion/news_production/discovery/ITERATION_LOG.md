@@ -253,3 +253,49 @@ if we later find we over-fit to a shape we don't want.
 
 These are recorded so a later review can see *which* deliberate choices shaped the
 output, and undo any that turn out to bias us toward an unwanted information shape.
+
+---
+
+## Iteration 6 — NGrams emergence: empirical probe + decision (not yet shipped)
+
+**What we tried.** A throwaway probe of an NGrams emergence channel: fetch a few
+consecutive minute batches, clean tokens (strip punctuation, drop short/stopword/
+non-capitalised), count per token, velocity = last vs prior-mean. Goal: see if a
+deterministic "trending phrases" signal is high enough quality to ship as the
+second channel.
+
+**What it showed (real, but immature).** It does catch live things fast: the top
+emergers were a live Premier League match (`Bournemouth`, `Wolves`), tennis/music
+names (`Osaka`, `Naomi`, `Keys`, `Alicia`), and brands (`Albertsons`, `Spectrum`,
+`WD-40`, `Vanderbilt`). So per-minute NGrams genuinely surfaces emerging events
+GKG's 15-min coded themes would lag. But the quality isn't there yet:
+- **Word-level lacks context** — `Naomi`/`Osaka`/`Alicia`/`Keys` are really "Naomi
+  Osaka" and "Alicia Keys". The signal needs **phrase reconstruction** (chain
+  adjacent tokens sharing a `url` by `pos`) to become named entities.
+- **Noise**: sentence-initial capitals and single-article bursts (`Algebra`,
+  `Applied`, `ARRAY`) leak through a pure capitalisation heuristic.
+- **Skew**: heavily sports/entertainment.
+- **Operational**: minute files publish *partially* (caught one at 222k vs 865k
+  records) and aren't always present — velocity is skewed unless we gate on a
+  settled, complete batch.
+
+**Decision.** Do **not** ship a half-tuned second channel — it would contradict
+the "reliable / high-signal" bar and invite over-fit heuristics. NGrams stays in
+its current deterministic role (the language-stratified anti-rut **sample**),
+which is a deliberate, useful processing of the channel. The emergence channel is
+scoped as the **defined next iteration** with a concrete, non-hand-wavy plan:
+
+1. **Phrase reconstruction** — group a batch's records by `url`, order by `pos`,
+   chain runs of capitalised tokens into phrases (named entities) before counting.
+2. **Proper-noun gating** — use `pos` to drop sentence-initial false capitals;
+   require min support; for non-Latin scripts fall back to raw-token frequency
+   (capitalisation is Latin-only).
+3. **Settled-batch gate** — only process a minute once its record count looks
+   complete (vs the running norm), to avoid partial-publish velocity spikes.
+4. **Same memory mechanism** — reuse `RollingMemory` keyed per phrase for velocity,
+   exactly as GKG does, so the two channels share one signal model.
+5. **Evaluate via replay** on a real minute-sequence before shipping, same as GKG.
+
+This keeps the deterministic system honest: GKG is the shipped high-signal
+channel; NGrams emergence is a scoped, evidence-backed next step rather than a
+rushed addition.
