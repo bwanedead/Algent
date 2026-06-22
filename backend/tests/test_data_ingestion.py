@@ -23,6 +23,8 @@ from algent_backend.data_ingestion.cli import digest as digest_cmd
 from algent_backend.data_ingestion.cli import fetch as fetch_cmd
 from algent_backend.data_ingestion.cli import insights as insights_cmd
 from algent_backend.data_ingestion.cli import sample as sample_cmd
+from algent_backend.data_ingestion.cli import sweep as sweep_cmd
+from algent_backend.data_ingestion.news_production.discovery import beats as beats_registry
 from algent_backend.data_ingestion.news_production.discovery import lenses, ranking, sampling
 from algent_backend.data_ingestion.news_production.discovery.candidates import extract_candidates
 from algent_backend.data_ingestion.news_production.discovery.digest import build_digest
@@ -33,7 +35,8 @@ from algent_backend.data_ingestion.news_production.discovery.memory import (
     save_memory,
 )
 from algent_backend.data_ingestion.news_production.discovery.pillars import pillar_for_theme
-from algent_backend.data_ingestion.news_production.sources import gdelt_gkg, gdelt_ngrams
+from algent_backend.data_ingestion.news_production.discovery.sweep import run_sweep
+from algent_backend.data_ingestion.news_production.sources import gdelt_doc, gdelt_gkg, gdelt_ngrams
 from algent_backend.data_ingestion.news_production.sources.packet import RawPacket, RawPart
 from algent_backend.data_ingestion.news_production.sources.records import GkgRecord
 
@@ -445,6 +448,78 @@ def test_sample_cli_writes_stratified_slice(monkeypatch, tmp_path, capsys) -> No
     written = json.loads(open(out["sample_path"], encoding="utf-8").read())
     assert len(written["records"]) == 5
     assert written["records"][0]["text"]  # snippet assembled from pre/post
+
+
+# -- beat registry + targeted sweep -------------------------------------------
+
+
+def test_beat_registry_has_pillars_and_countries() -> None:
+    pillars = {b.pillar for b in beats_registry.pillar_beats()}
+    assert {"ai", "economics", "finance", "geopolitics", "politics"} <= pillars
+    countries = beats_registry.country_beats()
+    assert all(b.query.startswith("sourcecountry:") for b in countries)
+    assert any(b.country == "China" for b in countries)
+    assert beats_registry.all_beats()  # non-empty union
+
+
+def _beat(bid="pillar:ai", **kw):
+    from algent_backend.data_ingestion.news_production.discovery.beats import Beat
+
+    return Beat(id=bid, label="x", kind="pillar", query="q", **kw)
+
+
+def test_run_sweep_collects_hits_and_paces_between_beats() -> None:
+    slept: list[float] = []
+    hit = [{"title": "t", "url": "u", "domain": "d", "country": "United States",
+            "language": "English", "seendate": "z"}]
+    sheet = run_sweep(
+        [_beat("pillar:ai"), _beat("pillar:econ")],
+        search=lambda q, **kw: hit,
+        sleep=slept.append,
+        pace_s=6.0,
+    )
+    assert sheet.beats_swept == 2 and sheet.beats_failed == 0 and sheet.total_hits == 2
+    assert sheet.results[0].hits[0].country == "United States"
+    assert slept == [6.0]  # paced once, between the two beats (not before the first)
+
+
+def test_run_sweep_retries_once_on_rate_limit_then_records_error() -> None:
+    slept: list[float] = []
+
+    def always_limited(q, **kw):
+        raise gdelt_doc.RateLimited("slow down")
+
+    sheet = run_sweep(
+        [_beat("pillar:ai")], search=always_limited, sleep=slept.append, cooldown_s=15.0
+    )
+    assert sheet.beats_failed == 1
+    assert sheet.results[0].error == "rate_limited"
+    assert 15.0 in slept  # backed off once before giving up
+
+
+def test_sweep_cli_writes_sheet_and_prunes(monkeypatch, tmp_path, capsys) -> None:
+    monkeypatch.setenv(_shared._OUTPUT_ENV, str(tmp_path))
+    monkeypatch.setattr(
+        sweep_cmd, "run_sweep", lambda targets, **kw: _fake_sheet(len(targets))
+    )
+
+    code = sweep_cmd.run(_ns(kind="pillar", limit=2, max_records=25, pace=0.0, keep=1))
+    assert code == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["beats_swept"] == 2
+    assert os.path.exists(out["sheet_path"])
+
+
+def _fake_sheet(n: int):
+    from algent_backend.data_ingestion.news_production.discovery.report import BeatSheet
+
+    return BeatSheet(
+        generated_at="2026-01-01T00:00:00+00:00",
+        timespan="24h",
+        beats_swept=n,
+        beats_failed=0,
+        total_hits=0,
+    )
 
 
 # -- live smokes (opt-in) -----------------------------------------------------

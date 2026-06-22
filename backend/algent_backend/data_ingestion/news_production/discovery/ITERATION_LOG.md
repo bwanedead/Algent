@@ -299,3 +299,68 @@ scoped as the **defined next iteration** with a concrete, non-hand-wavy plan:
 This keeps the deterministic system honest: GKG is the shipped high-signal
 channel; NGrams emergence is a scoped, evidence-backed next step rather than a
 rushed addition.
+
+---
+
+## Iteration 7 — targeted beat sweeps (the DOC API "scalpel" beside the net)
+
+**Why.** The general GKG net finds broad thematic trends but leaves niche
+coverage to chance ("India economics" only shows if the sweep happened to contain
+it). To guarantee per-niche freshness we add *targeted* fetching: a registry of
+addressable **beats** (pillars + per-country general), each fetched on purpose via
+the free GDELT DOC API. Floors-by-construction: every beat gets its own query, so
+a niche is never starved. Deterministic — no LLM in the sweep.
+
+**DOC API facts established by probing (the non-obvious ones):**
+- Filters live **inside the query string**: `theme:ECON_STOCKMARKET sourcecountry:China`
+  (country by *name*). A separate `sourcecountry=` URL param is silently ignored.
+- `sourcecountry:Japan` as a standalone query returns that country's general feed
+  (verified: 8/8 Japan sources). `sort=datedesc` for recency, `timespan` window.
+- The **rate limit is strict and stateful**: ~1 req/5s, and bursting escalates a
+  cooldown such that even an 11s retry can still 429. So the sweep paces (~6s),
+  backs off (~15s) + retries once on 429, then records the beat's error and moves
+  on. A skipped beat is fine — the floor/refresh model fills it next cycle. A full
+  ~40-beat sweep therefore takes minutes by design (not interactive).
+
+**Beat suite (my call, per "make solid pillars you think are good").** ai,
+technology, economics, finance, geopolitics, politics, world_events, science,
+health, energy — with economics/finance/geopolitics as the intended strength
+cluster. Plus ~30 per-country general beats (top news producers), widenable later.
+Pillar queries are broad keyword/theme sets; overlap is fine because hits are
+**multi-tagged, not bucketed** (an AI-chip story tags both ai and tech), so the
+BeatSheet slices downstream by pillar/country.
+
+**Architecture (the future-proofing).** A beat is an addressable spec with
+*pluggable fulfillment*: today a targeted DOC query; later a dedicated agent — same
+registry, swap the backend. The sweep orchestrator is pure over an injected
+`search` + `sleep`, so it's fully testable offline. Output is a `BeatSheet`
+(tagged hits), retained one-in-one-out beside the GKG insights.
+
+**Result (live subset).** A first 3-pillar sweep (`datedesc`) worked end-to-end —
+18 hits across India/Chile/Morocco/Colombia/US — but relevance was loose: a broad
+keyword OR-query sorted by recency returns the *newest loosely-matching* articles
+(the AI beat surfaced a Stripe piece and Chilean bomb threats). **Fix:** pillars
+sort by `hybridrel` (relevance), country beats keep `datedesc`. Re-run: the AI
+beat became genuinely on-topic and multi-country — Getty/OpenAI deal, OpenAI–
+Samsung, Russia's foreign-neural-net policy, AI tort litigation. High-signal.
+
+One beat returned **0 hits with no error**, which exposed a reliability gap: a
+non-JSON 200 body (GDELT soft-throttling) was being parsed as an empty result,
+masking a throttle as "no news." Hardened `gdelt_doc` to raise on a non-JSON body
+so the sweep records it as a (retryable) failure — a genuine empty list still
+reads as 0. So "0 hits" now always means *no news*, never *silently throttled*.
+
+**Net.** Two complementary deterministic channels now exist: the GKG **net**
+(broad, tagged, velocity-ranked information objects) and the DOC **scalpel**
+(targeted per-beat hit sheets, relevance-sorted, guaranteed niche coverage). Both
+no-LLM. The beat registry is the seam where coverage grows and where fulfillment
+later swaps to agents.
+
+**Residual / next (recorded, not over-fit now):**
+- Pillar **query specs are first-draft** — broad keyword sets. They're the obvious
+  tuning surface (tighten phrases, add `theme:` operators) as we see real sheets.
+- **No cross-channel merge yet** — GKG net and the beat sheet are separate
+  artifacts; unifying them into one tagged pool with floor+proportional allocation
+  (the earlier design) is the next integration step.
+- **Velocity on beats** — DOC `timelinevol` could add per-beat rising/falling, at
+  the cost of a second query per beat (rate-limit pressure). Deferred.

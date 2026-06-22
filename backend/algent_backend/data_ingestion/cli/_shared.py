@@ -53,6 +53,10 @@ def samples_dir() -> Path:
     return ingestion_dir() / "samples"
 
 
+def beats_dir() -> Path:
+    return ingestion_dir() / "beats"
+
+
 def memory_dir() -> Path:
     """Rolling cross-batch state (small aggregates). Retained, not one-in-one-out."""
     return ingestion_dir() / "memory"

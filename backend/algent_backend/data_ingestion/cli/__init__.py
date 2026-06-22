@@ -8,6 +8,6 @@ the same modules under the ``ingest`` category.
 
 from __future__ import annotations
 
-from . import digest, fetch, insights, sample, sources
+from . import digest, fetch, insights, sample, sources, sweep
 
-COMMANDS = (fetch, insights, sample, digest, sources)
+COMMANDS = (fetch, insights, sweep, sample, digest, sources)

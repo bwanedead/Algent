@@ -80,3 +80,43 @@ class LongtailSample(BaseModel):
     size: int
     languages: int  # distinct languages represented in the slice
     records: list[SampleRecord] = Field(default_factory=list)
+
+
+class BeatHit(BaseModel):
+    """One article matching a beat's targeted query."""
+
+    title: str
+    url: str
+    domain: str = ""
+    country: str = ""
+    language: str = ""
+    seendate: str = ""
+
+
+class BeatResult(BaseModel):
+    """The outcome of sweeping one beat — its hits, or the error that stopped it."""
+
+    beat_id: str
+    label: str
+    kind: str  # "pillar" | "country"
+    pillar: str | None = None
+    country: str | None = None
+    query: str
+    hit_count: int = 0
+    hits: list[BeatHit] = Field(default_factory=list)
+    error: str | None = None  # set if the beat failed (e.g. rate-limited out)
+
+
+class BeatSheet(BaseModel):
+    """A full targeted sweep across the beat registry — the faceted hit sheet.
+
+    Tagged, not bucketed: each hit carries the beat's pillar/country tags, so the
+    downstream layer slices (economics, country:DE, …) on demand.
+    """
+
+    generated_at: str
+    timespan: str
+    beats_swept: int
+    beats_failed: int
+    total_hits: int
+    results: list[BeatResult] = Field(default_factory=list)
