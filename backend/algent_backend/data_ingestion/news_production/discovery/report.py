@@ -120,3 +120,40 @@ class BeatSheet(BaseModel):
     beats_failed: int
     total_hits: int
     results: list[BeatResult] = Field(default_factory=list)
+
+
+class PoolItem(BaseModel):
+    """One consolidated discovery candidate — the unit the synthesis agent reads.
+
+    A common shape over both channels: the GKG net contributes signal-rich
+    information objects (velocity / novelty / cross-language, entity context); the
+    DOC sweep contributes grounded article hits (titles + URLs). Tagged, not
+    bucketed — the agent weaves these into research vectors.
+    """
+
+    id: str
+    label: str
+    channel: str  # "gkg" | "beat"
+    kind: str  # "theme" | "person" | "organization" | "article"
+    pillars: list[str] = Field(default_factory=list)
+    scope: list[str] = Field(default_factory=list)  # countries and/or languages
+    signals: dict[str, float | int | bool | str | None] = Field(default_factory=dict)
+    evidence: list[BeatHit] = Field(default_factory=list)  # grounding articles (URLs)
+    related: list[str] = Field(default_factory=list)  # co-occurring members (GKG)
+
+
+class DiscoveryPool(BaseModel):
+    """The unified, tagged, grounded input tray for the synthesis (discovery) agent.
+
+    The deterministic layer's final deliverable: everything we sensed this cycle
+    from both channels, organized so judgment can be applied — not yet judged.
+    """
+
+    generated_at: str
+    gkg_batch_id: str | None = None
+    beat_sheet_at: str | None = None
+    item_count: int = 0
+    by_channel: dict[str, int] = Field(default_factory=dict)
+    by_pillar: dict[str, int] = Field(default_factory=dict)
+    facets: dict[str, list[str]] = Field(default_factory=dict)  # pillar -> item ids
+    items: list[PoolItem] = Field(default_factory=list)

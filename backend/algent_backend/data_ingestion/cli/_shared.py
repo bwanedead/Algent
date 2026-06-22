@@ -57,6 +57,18 @@ def beats_dir() -> Path:
     return ingestion_dir() / "beats"
 
 
+def pool_dir() -> Path:
+    return ingestion_dir() / "pool"
+
+
+def latest_file(directory: Path, pattern: str) -> Path | None:
+    """The newest file matching `pattern` in `directory` (by name), or None."""
+    if not directory.exists():
+        return None
+    files = sorted(directory.glob(pattern))
+    return files[-1] if files else None
+
+
 def memory_dir() -> Path:
     """Rolling cross-batch state (small aggregates). Retained, not one-in-one-out."""
     return ingestion_dir() / "memory"

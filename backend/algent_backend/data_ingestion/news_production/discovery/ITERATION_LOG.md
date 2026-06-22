@@ -364,3 +364,34 @@ later swaps to agents.
   (the earlier design) is the next integration step.
 - **Velocity on beats** — DOC `timelinevol` could add per-beat rising/falling, at
   the cost of a second query per beat (rate-limit pressure). Deferred.
+
+---
+
+## Iteration 8 — pool consolidation (leg 1 of the funnel)
+
+**Why.** The net and the sweep are two differently-shaped artifacts. The synthesis
+(discovery) agent should read *one* grounded, tagged tray, not juggle both.
+
+**Change.** `discovery/pool.py` folds the latest `InsightsReport` + `BeatSheet`
+into one `DiscoveryPool` of uniform `PoolItem`s, with a pillar facet index. CLI
+`pool` consolidates the on-disk artifacts (deterministic, no LLM).
+
+**Deliberate scope decision (the over-fit-watch entry).** We do *not* attempt
+deterministic cross-channel **fusion** (matching a GKG theme-aggregate to a beat
+article as "the same story"). There's no shared key — beat hits carry no GKG
+themes — so reliable linking isn't possible deterministically. So the pool only
+*organizes and grounds*: normalise both channels to one shape, dedupe beat
+articles recurring across beats (merge their pillars), align the trivially-
+overlapping pillar names (`economy`→`economics`), and index facets. The actual
+*weaving* of related items into research vectors is the agent's job (it can read
+titles), which keeps deterministic claims honest and traceable.
+
+**Result (live).** 46 items (40 GKG objects + 6 beat articles), faceted
+economics 13 / ai 6 / politics 3 / … Untagged GKG items (GKG's pillar vocabulary
+is narrow) are left for the agent to tag semantically. This is the discovery
+agent's input tray — leg 2 is the agent that turns it into a research-vector
+portfolio.
+
+**Noted follow-up:** GKG items aren't yet grounded with article URLs (the net's
+candidates are aggregates); beat items are. Threading a few example source URLs
+onto GKG candidates is a small leg-2 enabler so every pool item is clickable.

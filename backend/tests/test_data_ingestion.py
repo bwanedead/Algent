@@ -522,6 +522,103 @@ def _fake_sheet(n: int):
     )
 
 
+# -- pool consolidation -------------------------------------------------------
+
+
+def _insights_with(*candidates):
+    from algent_backend.data_ingestion.news_production.discovery.report import InsightsReport
+
+    return InsightsReport(
+        source="gdelt_gkg",
+        batch_id="20260101000000",
+        generated_at="t",
+        total_records=10,
+        candidates=list(candidates),
+    )
+
+
+def _candidate(key, kind="theme", pillar=None, **kw):
+    from algent_backend.data_ingestion.news_production.discovery.report import Candidate
+
+    return Candidate(key=key, kind=kind, pillar=pillar, count=kw.get("count", 5), **kw)
+
+
+def _sheet_with(*results):
+    from algent_backend.data_ingestion.news_production.discovery.report import BeatSheet
+
+    return BeatSheet(
+        generated_at="t", timespan="24h", beats_swept=len(results),
+        beats_failed=0, total_hits=sum(r.hit_count for r in results), results=list(results),
+    )
+
+
+def _beat_result(pillar, *hits):
+    from algent_backend.data_ingestion.news_production.discovery.report import BeatResult
+
+    return BeatResult(
+        beat_id=f"pillar:{pillar}", label=pillar, kind="pillar", pillar=pillar,
+        query="q", hit_count=len(hits), hits=list(hits),
+    )
+
+
+def _hit(title, url, country="United States"):
+    from algent_backend.data_ingestion.news_production.discovery.report import BeatHit
+
+    return BeatHit(title=title, url=url, country=country)
+
+
+def test_build_pool_unifies_channels_aligns_pillars_and_indexes_facets() -> None:
+    from algent_backend.data_ingestion.news_production.discovery.pool import build_pool
+
+    insights = _insights_with(
+        _candidate("ECON_X", pillar="economy", rising=True, velocity=2.0),  # aliased -> economics
+    )
+    sheet = _sheet_with(_beat_result("economics", _hit("Rates rise", "http://a")))
+
+    pool = build_pool(insights, sheet)
+
+    assert pool.by_channel == {"gkg": 1, "beat": 1}
+    assert pool.by_pillar["economics"] == 2  # gkg 'economy' aliased to 'economics'
+    assert set(pool.facets["economics"]) == {"gkg:theme:ECON_X", "beat:http://a"}
+    gkg = next(i for i in pool.items if i.channel == "gkg")
+    assert gkg.signals["rising"] is True and gkg.pillars == ["economics"]
+    beat = next(i for i in pool.items if i.channel == "beat")
+    assert beat.evidence[0].url == "http://a"  # beat item is grounded with the article
+
+
+def test_build_pool_dedupes_articles_recurring_across_beats() -> None:
+    from algent_backend.data_ingestion.news_production.discovery.pool import build_pool
+
+    same = _hit("Chip deal", "http://x")
+    sheet = _sheet_with(_beat_result("ai", same), _beat_result("technology", same))
+
+    pool = build_pool(None, sheet)
+
+    assert pool.item_count == 1  # one article, not two
+    assert set(pool.items[0].pillars) == {"ai", "technology"}  # merged tags
+
+
+def test_pool_cli_consolidates_latest_artifacts(monkeypatch, tmp_path, capsys) -> None:
+    monkeypatch.setenv(_shared._OUTPUT_ENV, str(tmp_path))
+    from algent_backend.data_ingestion.cli import pool as pool_cmd
+
+    insights_dir = tmp_path / "insights"
+    insights_dir.mkdir()
+    (insights_dir / "gdelt_gkg_20260101000000.json").write_text(
+        _insights_with(_candidate("ECON_X", pillar="economy")).model_dump_json(), encoding="utf-8"
+    )
+    beats_dir = tmp_path / "beats"
+    beats_dir.mkdir()
+    (beats_dir / "beats_20260101000000.json").write_text(
+        _sheet_with(_beat_result("ai", _hit("AI", "http://a"))).model_dump_json(), encoding="utf-8"
+    )
+
+    assert pool_cmd.run(_ns(source="gdelt_gkg", keep=1)) == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["item_count"] == 2
+    assert os.path.exists(out["pool_path"])
+
+
 # -- live smokes (opt-in) -----------------------------------------------------
 
 
