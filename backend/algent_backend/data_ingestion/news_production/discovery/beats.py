@@ -78,6 +78,10 @@ _PILLAR_QUERIES: dict[str, str] = {
         '(energy OR "oil prices" OR "natural gas" OR renewable OR electricity '
         'OR nuclear OR OPEC)'
     ),
+    "gaming": (
+        '("video game" OR gaming OR esports OR PlayStation OR Xbox OR Nintendo '
+        'OR "game studio" OR Steam OR "game release")'
+    ),
 }
 
 # Top news-producing / high-interest countries (GDELT uses the country *name*).
