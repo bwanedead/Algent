@@ -23,6 +23,8 @@ from .pillars import pillar_for_theme
 
 # Ignore items carried by fewer than this many records — pure noise otherwise.
 DEFAULT_MIN_COUNT = 3
+# How many example article URLs to keep per candidate (grounding, not exhaustive).
+_MAX_EXAMPLES = 3
 
 
 @dataclass(frozen=True, slots=True)
@@ -39,6 +41,9 @@ class CandidateStats:
     # Indices of the records that mention it — the evidence set used to detect
     # co-occurring candidates (entities of the same story) during selection.
     support: frozenset[int] = frozenset()
+    # A few example article URLs (from the supporting records) so the agent can
+    # free-fetch real sources before reaching for any paid surface.
+    examples: tuple[str, ...] = ()
 
     @property
     def full_key(self) -> str:
@@ -56,6 +61,7 @@ class _Accumulator:
         self.languages: set[str] = set()
         self.sources: set[str] = set()
         self.support: set[int] = set()
+        self.examples: list[str] = []  # a few distinct article URLs (capped)
 
 
 def extract_candidates(
@@ -71,6 +77,8 @@ def extract_candidates(
             entry.languages.add(record.language)
             if record.source_name:
                 entry.sources.add(record.source_name)
+            if record.url and len(entry.examples) < _MAX_EXAMPLES and record.url not in entry.examples:
+                entry.examples.append(record.url)
             if record.tone is not None:
                 entry.tone_sum += record.tone
                 entry.tone_n += 1
@@ -85,6 +93,7 @@ def extract_candidates(
             source_spread=len(entry.sources),
             pillar=pillar_for_theme(key) if kind == "theme" else None,
             support=frozenset(entry.support),
+            examples=tuple(entry.examples),
         )
         for (kind, key), entry in acc.items()
         if entry.count >= min_count

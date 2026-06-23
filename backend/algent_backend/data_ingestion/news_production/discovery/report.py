@@ -38,6 +38,8 @@ class Candidate(BaseModel):
     reasons: list[str] = Field(default_factory=list)  # why it made the cut
     # Co-occurring candidates folded into this one (the story's other entities).
     related: list[str] = Field(default_factory=list)
+    # Example article URLs from the supporting records (free-fetchable grounding).
+    examples: list[str] = Field(default_factory=list)
 
 
 class LanguageInsights(BaseModel):

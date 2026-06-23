@@ -21,7 +21,7 @@ from __future__ import annotations
 from collections import Counter, defaultdict
 from datetime import UTC, datetime
 
-from .report import BeatSheet, DiscoveryPool, InsightsReport, PoolItem
+from .report import BeatHit, BeatSheet, DiscoveryPool, InsightsReport, PoolItem
 
 # The GKG theme-pillar vocabulary (economy/…) vs the beat vocabulary (economics/…)
 # overlap; alias the trivial cases so a slice lines up across channels.
@@ -73,6 +73,8 @@ def _gkg_item(candidate) -> PoolItem:
             "avg_tone": candidate.avg_tone,
             "score": candidate.score,
         },
+        # Example source articles so the agent can free-fetch GKG items, same as beats.
+        evidence=[BeatHit(title=candidate.key, url=url) for url in candidate.examples],
         related=list(candidate.related),
     )
 

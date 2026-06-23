@@ -41,10 +41,10 @@ from algent_backend.data_ingestion.news_production.sources.packet import RawPack
 from algent_backend.data_ingestion.news_production.sources.records import GkgRecord
 
 
-def _rec(language="eng", themes=(), tone=None, persons=(), organizations=(), **kw) -> GkgRecord:
+def _rec(language="eng", themes=(), tone=None, persons=(), organizations=(), url="http://x", **kw) -> GkgRecord:
     return GkgRecord(
         record_id=kw.get("record_id", "r"),
-        url=kw.get("url", "http://x"),
+        url=url,
         source_name=kw.get("source_name", "x.com"),
         language=language,
         themes=tuple(themes),
@@ -301,6 +301,16 @@ def test_extract_candidates_covers_themes_and_entities_with_min_count() -> None:
     assert econ.count == 3 and econ.pillar == "economy"
     assert set(econ.languages) == {"eng", "spa"}
     assert econ.source_spread == 3  # three distinct outlets
+
+
+def test_extract_candidates_captures_example_urls() -> None:
+    records = [
+        _rec(themes=["ECON_X"], url="http://a"),
+        _rec(themes=["ECON_X"], url="http://b"),
+        _rec(themes=["ECON_X"], url="http://a"),  # dup url not double-counted
+    ]
+    [econ] = extract_candidates(records, min_count=2)
+    assert econ.examples == ("http://a", "http://b")  # distinct, capped grounding
 
 
 def test_extract_candidates_drops_boilerplate_themes() -> None:

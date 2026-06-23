@@ -75,6 +75,7 @@ def _to_model(selection: Selection) -> Candidate:
         score=c.score,
         reasons=list(c.reasons),
         related=list(selection.related),
+        examples=list(s.examples),
     )
 
 
