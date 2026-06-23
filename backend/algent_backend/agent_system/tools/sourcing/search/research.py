@@ -1,0 +1,103 @@
+"""
+``web_search`` — the agent's single research surface (a cost-aware facade).
+
+One tool, several capabilities behind cost-disciplined parameters, so the agent
+reasons in INTENTS — keyword vs semantic, snippets vs rich, search vs read — and
+never juggles provider-named tools (Tavily/Exa/Firecrawl are implementation
+details hidden in here). Cheap-first by construction (see the paid-api-sparingly
+ethos): free/snippet results by default; paid escalation (full-content fetch via
+Firecrawl, or X) happens only when the agent deliberately asks for it.
+
+Capabilities, by parameter:
+- **search the web** — ``web_search(query, kind="keyword"|"semantic")``. Keyword
+  routes to Tavily, semantic to Exa; the agent picks by intent, not vendor.
+- **read a page** — ``web_search(read_url="https://…")``; free extraction by
+  default, ``richness="rich"`` permits the paid Firecrawl fallback for hard pages.
+- **X (guarded)** — ``web_search(query, source="x")``; bounded, and not yet wired.
+
+Guardrails: ``max_results`` is hard-capped; ``rich`` and ``x`` require a
+deliberate choice; the read path stays free unless ``richness="rich"``. The usual
+flow is cheap: search for snippets, then ``read_url`` the one result worth the
+full read.
+"""
+
+from __future__ import annotations
+
+from typing import Any
+
+from ...spec import GLOBAL_SCOPE, ToolSpec
+from .._wrap import as_structured_tool
+
+WEB_SEARCH_TOOL_ID = "web_search"
+
+_MAX_RESULTS_CAP = 10  # hard ceiling so a call can't fan out into a credit drain
+
+
+def _search(
+    query: str = "",
+    kind: str = "keyword",
+    read_url: str = "",
+    richness: str = "standard",
+    source: str = "web",
+    max_results: int = 5,
+) -> dict[str, Any]:
+    """Investigate the web through one cost-aware surface. See the module docstring.
+
+    - ``query`` + ``kind`` ("keyword"|"semantic"): search the web.
+    - ``read_url``: read that page instead (``richness="rich"`` allows paid Firecrawl).
+    - ``source="x"``: X social search (bounded; not yet available).
+    """
+    max_results = max(1, min(max_results, _MAX_RESULTS_CAP))
+
+    if read_url:
+        return _read(read_url, rich=(richness == "rich"))
+    if source == "x":
+        return {"source": "x", "error": "x search is not wired yet; use source='web' for now"}
+    return _search_web(query, kind, max_results)
+
+
+def _read(url: str, *, rich: bool) -> dict[str, Any]:
+    """Read a page via the free-first fetch ladder (paid only when ``rich``)."""
+    from ..depth.fetch_content import _fetch
+
+    try:
+        result = _fetch(url, allow_paid_fallback=rich)
+    except Exception as exc:  # noqa: BLE001 — return a clean message, never crash the loop
+        return {"action": "read", "url": url, "error": str(exc)[:200]}
+    return {"action": "read", **result}
+
+
+def _search_web(query: str, kind: str, max_results: int) -> dict[str, Any]:
+    """Route to the right engine by intent: semantic -> Exa, else Tavily."""
+    try:
+        if kind == "semantic":
+            from .exa import _build as build_engine
+        else:
+            from .tavily import _build as build_engine
+        results = build_engine().invoke({"query": query})
+    except Exception as exc:  # noqa: BLE001 — surface a clean error to the agent
+        return {"action": "search", "kind": kind, "query": query, "error": str(exc)[:200]}
+    return {"action": "search", "kind": kind, "query": query, "results": results}
+
+
+def _build() -> Any:
+    return as_structured_tool(
+        _search,
+        name="web_search",
+        description=(
+            "One research tool. Search the web (kind='keyword' or 'semantic'), or "
+            "read a page (read_url=...; richness='rich' to allow paid full-content "
+            "fetch on hard pages), or X (source='x', bounded). Defaults are free/"
+            "cheap — only ask for 'rich' or 'x' when the target is worth the spend."
+        ),
+    )
+
+
+SPEC = ToolSpec(
+    tool_id=WEB_SEARCH_TOOL_ID,
+    name="web_search",
+    description="Unified, cost-aware research surface: web search + page read + (X).",
+    scope=GLOBAL_SCOPE,
+    build=_build,
+    channel="search",
+)

@@ -157,3 +157,63 @@ def test_fetch_raises_when_nothing_extractable(monkeypatch) -> None:
     monkeypatch.setattr(fc, "get_service_api_key", lambda svc: None)
     with pytest.raises(RuntimeError):
         fc._fetch("http://blocked")
+
+
+# -- web_search unified research facade ----------------------------------------
+
+from algent_backend.agent_system.tools.sourcing.search import exa, research, tavily  # noqa: E402
+
+
+def _engine(result):
+    return lambda: type("E", (), {"invoke": lambda self, args: result})()
+
+
+def test_web_search_reads_url_free_by_default(monkeypatch) -> None:
+    seen = {}
+
+    def fake_fetch(url, allow_paid_fallback=True):
+        seen["paid"] = allow_paid_fallback
+        return {"url": url, "content": "body", "via": "trafilatura", "quality": "good", "words": 90}
+
+    monkeypatch.setattr(fc, "_fetch", fake_fetch)
+    out = research._search(read_url="http://a")
+    assert out["action"] == "read" and out["via"] == "trafilatura"
+    assert seen["paid"] is False  # free unless richness="rich"
+
+
+def test_web_search_rich_read_allows_paid_fallback(monkeypatch) -> None:
+    seen = {}
+
+    def fake_fetch(url, allow_paid_fallback=True):
+        seen["paid"] = allow_paid_fallback
+        return {"url": url, "content": "b", "via": "firecrawl", "quality": "good", "words": 40}
+
+    monkeypatch.setattr(fc, "_fetch", fake_fetch)
+    research._search(read_url="http://a", richness="rich")
+    assert seen["paid"] is True
+
+
+def test_web_search_keyword_routes_to_tavily(monkeypatch) -> None:
+    monkeypatch.setattr(tavily, "_build", _engine(["r1", "r2"]))
+    out = research._search(query="china economy")
+    assert out["action"] == "search" and out["kind"] == "keyword" and out["results"] == ["r1", "r2"]
+
+
+def test_web_search_semantic_routes_to_exa(monkeypatch) -> None:
+    monkeypatch.setattr(exa, "_build", _engine(["s1"]))
+    out = research._search(query="emerging strands", kind="semantic")
+    assert out["kind"] == "semantic" and out["results"] == ["s1"]
+
+
+def test_web_search_x_is_guarded() -> None:
+    out = research._search(query="q", source="x")
+    assert out["source"] == "x" and "error" in out  # bounded/guarded, not wired
+
+
+def test_web_search_surfaces_engine_errors_cleanly(monkeypatch) -> None:
+    def boom():
+        raise RuntimeError("provider down")
+
+    monkeypatch.setattr(tavily, "_build", boom)
+    out = research._search(query="q")
+    assert "error" in out and "provider down" in out["error"]

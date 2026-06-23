@@ -30,7 +30,7 @@ def sourcing_tool_specs() -> list[ToolSpec]:
     from .discovery.rss import SPEC as rss_feed
     from .search.brave import SPEC as brave_search
     from .search.exa import SPEC as semantic_search
-    from .search.tavily import SPEC as web_search
+    from .search.research import SPEC as web_search  # facade over tavily/exa/fetch (+x)
     from .social.xai_x_search import SPEC as xai_x_search
 
     return [
