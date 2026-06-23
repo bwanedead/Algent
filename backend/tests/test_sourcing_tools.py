@@ -96,3 +96,64 @@ def test_env_file_loads_without_overriding_environment(tmp_path: Path, monkeypat
 
 def test_missing_env_file_is_fine(tmp_path: Path) -> None:
     assert load_env_file(tmp_path / "nope.env") == 0
+
+
+# -- fetch_content cheap-first ladder -----------------------------------------
+
+from algent_backend.agent_system.tools.sourcing.depth import fetch_content as fc  # noqa: E402
+
+
+def test_quality_grades_content() -> None:
+    assert fc._quality(None) == ("empty", 0)
+    assert fc._quality("  ") == ("empty", 0)
+    good = " ".join(["word"] * 100)
+    assert fc._quality(good) == ("good", 100)
+    assert fc._quality("please enable javascript to continue")[0] == "blocked"
+    assert fc._quality("just a few words here")[0] == "thin"
+
+
+def test_long_article_mentioning_captcha_is_not_flagged_blocked() -> None:
+    # A real article *about* captchas is long -> "good", not a wall false-positive.
+    article = "captcha " + " ".join(["analysis"] * 200)
+    assert fc._quality(article)[0] == "good"
+
+
+def test_fetch_stays_free_when_extraction_is_good(monkeypatch) -> None:
+    monkeypatch.setattr(fc, "_http_get", lambda url: "<html>...</html>")
+    monkeypatch.setattr(fc, "_extract", lambda html: " ".join(["word"] * 120))
+    called = []
+    monkeypatch.setattr(fc, "_firecrawl_markdown", lambda u, k: called.append(u))
+
+    result = fc._fetch("http://x")
+    assert result["via"] == "trafilatura" and result["quality"] == "good"
+    assert called == []  # never escalated — free result was good
+
+
+def test_fetch_escalates_to_firecrawl_when_free_is_thin(monkeypatch) -> None:
+    monkeypatch.setattr(fc, "_http_get", lambda url: "<html>shell</html>")
+    monkeypatch.setattr(fc, "_extract", lambda html: "tiny")  # thin
+    monkeypatch.setattr(fc, "get_service_api_key", lambda svc: "fc-key")
+    monkeypatch.setattr(fc, "_firecrawl_markdown", lambda u, k: " ".join(["full"] * 300))
+
+    result = fc._fetch("http://x", allow_paid_fallback=True)
+    assert result["via"] == "firecrawl" and result["quality"] == "good"
+
+
+def test_fetch_respects_free_only_switch(monkeypatch) -> None:
+    monkeypatch.setattr(fc, "_http_get", lambda url: "<html>shell</html>")
+    monkeypatch.setattr(fc, "_extract", lambda html: "tiny")
+    called = []
+    monkeypatch.setattr(fc, "_firecrawl_markdown", lambda u, k: called.append(u))
+
+    result = fc._fetch("http://x", allow_paid_fallback=False)
+    assert called == []  # budget rail: never spent
+    assert result["via"] == "trafilatura" and result["content"] == "tiny"
+
+
+def test_fetch_raises_when_nothing_extractable(monkeypatch) -> None:
+    import pytest
+
+    monkeypatch.setattr(fc, "_http_get", lambda url: None)
+    monkeypatch.setattr(fc, "get_service_api_key", lambda svc: None)
+    with pytest.raises(RuntimeError):
+        fc._fetch("http://blocked")

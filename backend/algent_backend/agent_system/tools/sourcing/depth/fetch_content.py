@@ -1,14 +1,27 @@
 """
-``fetch_content`` — full-page article extraction, with cost escalation.
+``fetch_content`` — full-page article extraction with a cheap-first ladder.
 
-Search returns ~200-char snippets; depth comes from reading the page. One tool
-id, two engines behind it:
+Search returns ~200-char snippets; depth comes from reading the page. The bulk of
+news/article pages are server-rendered HTML, so we can read them for free and
+well — and only spend on the minority that genuinely need a managed crawler. The
+ladder, cheapest first:
 
-1. trafilatura — local, free, fast; handles most article pages.
-2. Firecrawl — hosted fallback for JS-heavy or bot-walled pages. Only attempted
-   when trafilatura comes back empty *and* FIRECRAWL_API_KEY is configured.
+1. **httpx fetch** with realistic browser headers — many sites 403 a bare
+   fetcher; a normal UA + Accept headers clears most of that for free.
+2. **trafilatura** extraction — precision pass, then a recall pass if it's thin.
+3. **quality scoring** — word count + bot/JS/paywall-wall detection decide whether
+   the free result is trustworthy (``good``) or needs rescue.
+4. **Firecrawl** — hosted fallback for JS-heavy / bot-walled pages, attempted only
+   when the free result isn't ``good`` *and* a key is set *and* the caller allows
+   paid escalation (``allow_paid_fallback``). That last switch is the budget rail:
+   the agent passes ``False`` for low-value bulk and ``True`` for sources worth a
+   credit.
 
-Firecrawl API: POST https://api.firecrawl.dev/v1/scrape {"url", "formats":
+Every result reports ``via`` (which engine won) and ``quality`` so the agent
+knows how much to trust the content. No headless browser here on purpose — that
+tier is memory-heavy and deferred; Firecrawl covers the JS/anti-bot minority.
+
+Firecrawl API: POST https://api.firecrawl.dev/v1/scrape {"url","formats":
 ["markdown"]} — verify the response shape on first live probe.
 """
 
@@ -26,18 +39,60 @@ FETCH_CONTENT_TOOL_ID = "fetch_content"
 _FIRECRAWL_ENDPOINT = "https://api.firecrawl.dev/v1/scrape"
 _TIMEOUT_S = 30.0
 _MAX_CHARS = 40_000  # keep one page from flooding a prompt
+_MIN_GOOD_WORDS = 80  # below this an article body is "thin", not trustworthy
+
+# A real browser fingerprint clears the bulk of lazy bot-blocks for free.
+_BROWSER_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
+    ),
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+}
+
+# Markers of a wall rather than an article — only damning on a *short* body
+# (a real article *about* captchas would be long, so length guards false hits).
+_WALL_MARKERS = (
+    "enable javascript",
+    "are you a robot",
+    "are you a human",
+    "verify you are human",
+    "access denied",
+    "captcha",
+    "please enable cookies",
+    "subscribe to continue",
+    "this site requires javascript",
+)
 
 
-def _via_trafilatura(url: str) -> str | None:
+def _http_get(url: str) -> str | None:
+    """Fetch raw HTML with browser headers; None on block/error/non-200."""
+    import httpx
+
+    try:
+        response = httpx.get(
+            url, headers=_BROWSER_HEADERS, timeout=_TIMEOUT_S, follow_redirects=True
+        )
+    except Exception:
+        return None
+    return response.text if response.status_code == 200 else None
+
+
+def _extract(html: str) -> str | None:
+    """trafilatura precision pass, then a recall pass if the result is thin."""
     import trafilatura
 
-    downloaded = trafilatura.fetch_url(url)
-    if not downloaded:
-        return None
-    return trafilatura.extract(downloaded, include_comments=False)
+    content = trafilatura.extract(html, include_comments=False)
+    if content and len(content.split()) >= _MIN_GOOD_WORDS:
+        return content
+    recalled = trafilatura.extract(html, include_comments=False, favor_recall=True)
+    # Keep whichever recovered more text.
+    candidates = [c for c in (content, recalled) if c]
+    return max(candidates, key=lambda c: len(c.split())) if candidates else None
 
 
-def _via_firecrawl(url: str, api_key: str) -> str | None:
+def _firecrawl_markdown(url: str, api_key: str) -> str | None:
     import httpx
 
     response = httpx.post(
@@ -47,34 +102,69 @@ def _via_firecrawl(url: str, api_key: str) -> str | None:
         timeout=_TIMEOUT_S,
     )
     response.raise_for_status()
-    data = response.json().get("data", {})
-    return data.get("markdown") or None
+    return response.json().get("data", {}).get("markdown") or None
 
 
-def _fetch(url: str) -> dict[str, str]:
-    """Extract readable article content from a URL; returns {url, content, via}."""
-    content = _via_trafilatura(url)
+def _looks_walled(content: str) -> bool:
+    head = content[:2000].lower()
+    return any(marker in head for marker in _WALL_MARKERS)
+
+
+def _quality(content: str | None) -> tuple[str, int]:
+    """Grade extracted content: (label, word_count). label decides escalation."""
+    if not content or not content.strip():
+        return "empty", 0
+    words = len(content.split())
+    if words >= _MIN_GOOD_WORDS:
+        return "good", words
+    return ("blocked" if _looks_walled(content) else "thin"), words
+
+
+def _fetch(url: str, allow_paid_fallback: bool = True) -> dict[str, Any]:
+    """Extract readable article content from ``url`` via the cheap-first ladder.
+
+    Returns ``{url, content, via, quality, words}``. ``via`` is the engine that
+    won (``trafilatura`` | ``firecrawl``); ``quality`` is ``good`` | ``thin`` |
+    ``blocked`` | ``empty`` — read it to judge how much to trust the text. Set
+    ``allow_paid_fallback=False`` to stay free-only for low-value pages.
+    """
+    html = _http_get(url)
+    content = _extract(html) if html else None
     via = "trafilatura"
+    quality, words = _quality(content)
 
-    if not content:
+    if quality != "good" and allow_paid_fallback:
         api_key = get_service_api_key("firecrawl")
         if api_key:
-            content = _via_firecrawl(url, api_key)
-            via = "firecrawl"
+            rescued = _firecrawl_markdown(url, api_key)
+            r_quality, r_words = _quality(rescued)
+            if r_words > words:  # only adopt the rescue if it recovered more
+                content, via, quality, words = rescued, "firecrawl", r_quality, r_words
 
     if not content:
         raise RuntimeError(
             f"Could not extract content from {url} "
-            "(trafilatura found nothing; Firecrawl unavailable or empty)."
+            "(free fetch empty/blocked; Firecrawl unavailable, disallowed, or empty)."
         )
-    return {"url": url, "content": content[:_MAX_CHARS], "via": via}
+    return {
+        "url": url,
+        "content": content[:_MAX_CHARS],
+        "via": via,
+        "quality": quality,
+        "words": words,
+    }
 
 
 def _build() -> Any:
     return as_structured_tool(
         _fetch,
         name="fetch_content",
-        description="Fetches a URL and extracts the readable article content as text.",
+        description=(
+            "Fetches a URL and extracts the readable article content as text, "
+            "free-first with a paid Firecrawl fallback for hard pages. Returns the "
+            "content plus a 'quality' grade and which engine was used. Pass "
+            "allow_paid_fallback=false for low-value pages to stay free-only."
+        ),
     )
 
 
