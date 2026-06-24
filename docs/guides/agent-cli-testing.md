@@ -126,10 +126,14 @@ Paid search is **off by default** and per-call deliberate: the agent only touche
 Firecrawl/X by explicitly asking, and only on channels its `search_channels` grant
 permits. Free channels (keyword/semantic search, local read) cost nothing.
 
-**Watching for cost:** the synthesis run emits `estimated_usd` on completion and
-`cost.limit_reached` if it caps out — both visible in `audit/events.jsonl` and the
-timeline. The estimate is a **best-effort guardrail, not a billing figure** (see
-`foundation/cost.py`); reconcile real spend in each provider's console.
+**Watching for cost:** `watch` itself surfaces cost — every `loop_done` and
+`timeout` event carries `estimated_usd` (live spend so far) and
+`cost_limit_reached: true` if the cap tripped. So a watching agent sees spend
+climb each window and is alerted the moment cost becomes an issue (the cap also
+auto-stops the run). The numbers come from each provider's published pricing
+(sourced in `foundation/cost.py`, ~mid-2026), but they remain a **guardrail
+estimate, not a billing figure** (free tiers, plan tiers, and token accounting
+vary) — reconcile real spend in each provider's console.
 
 If anything looks wrong mid-run — repeated identical paid calls, climbing cost,
 visible spinning — `stop` it. That's the routine when a run misbehaves.

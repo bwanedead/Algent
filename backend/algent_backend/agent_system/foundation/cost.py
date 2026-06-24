@@ -23,20 +23,32 @@ import contextvars
 from collections.abc import Iterator
 from contextlib import contextmanager
 
-# USD per 1,000,000 tokens, as (input, output). ESTIMATES — verify per provider.
+# USD per 1,000,000 tokens, as (input, output). Sourced from provider pricing
+# pages (as of ~mid-2026; verify periodically — pricing changes):
+#   gpt-5.4-mini  $0.75 / $4.50   (developers.openai.com/api/docs/pricing)
+#   grok-4-fast   $0.20 / $0.50   (x.ai/api)
+#   grok-4.3      $1.25 / $2.50   (x.ai/api)
 MODEL_PRICES: dict[str, tuple[float, float]] = {
-    "gpt-5.4-mini": (0.15, 0.60),
-    "gpt-5.4": (1.25, 10.00),
-    "claude-opus-4-8": (5.00, 25.00),
-    "claude-sonnet-4-6": (3.00, 15.00),
+    "gpt-5.4-mini": (0.75, 4.50),
+    "grok-4-fast": (0.20, 0.50),
+    "grok-4.3": (1.25, 2.50),
 }
 _FALLBACK_MODEL_PRICE = (1.00, 5.00)  # conservative guess for an unknown model
 
-# USD per paid call / unit, by web_search channel. ESTIMATES.
+# USD per web_search call/unit, sourced from provider pricing (verify periodically):
+#   keyword (Tavily basic search)  $0.008/search   (docs.tavily.com api-credits; free <=1k/mo)
+#   semantic (Exa /search)         $0.007/search   (exa.ai/pricing)
+#   read (trafilatura, local)      $0.00           (no external call)
+#   rich (Firecrawl /scrape)       ~$0.001/page    (firecrawl.dev/pricing; ~$0.00083 Standard..$0.0032 Hobby)
+#   x (native X, per post read)    $0.005/post     (X API pricing; per-call ~ posts x this)
+#   x_grok (xAI Grok X-search)     $0.005/call + tokens (x.ai live search $5/1k)
 CALL_PRICES: dict[str, float] = {
-    "rich": 0.005,  # one Firecrawl page
-    "x": 0.005,  # one native-X read unit
-    "x_grok": 0.010,  # one xAI Grok X-search (model + search), rough
+    "keyword": 0.008,
+    "semantic": 0.007,
+    "read": 0.0,
+    "rich": 0.001,
+    "x": 0.05,  # ~one X search returning ~10 posts at $0.005 each (refine when wired)
+    "x_grok": 0.008,
 }
 
 DEFAULT_RUN_CAP_USD = 1.00

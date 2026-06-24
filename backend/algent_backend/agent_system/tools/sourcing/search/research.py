@@ -132,6 +132,9 @@ def _search_web(query: str, kind: str, max_results: int) -> dict[str, Any]:
         results = build_engine().invoke({"query": query})
     except Exception as exc:  # noqa: BLE001 — surface a clean error to the agent
         return {"action": "search", "kind": kind, "query": query, "error": str(exc)[:200]}
+    # Meter the call's cost (these tiers are cheap, but real beyond free quota) so
+    # the run's USD cap reflects total spend, not just the gated paid channels.
+    cost.add(cost.estimate_call_cost(kind))
     return {"action": "search", "kind": kind, "query": query, "results": results}
 
 

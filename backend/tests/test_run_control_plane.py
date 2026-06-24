@@ -227,3 +227,18 @@ def test_cli_unknown_run(capsys) -> None:
 class _ns:
     def __init__(self, **kwargs) -> None:
         self.__dict__.update(kwargs)
+
+
+# -- watch surfaces live cost ------------------------------------------------
+
+
+def test_watch_cost_summary_reports_spend_and_cap_trip() -> None:
+    from algent_backend.cli.runs.watch import _cost_summary
+
+    recorder = RunRecorder("cost-run", "a")
+    recorder.start(RunRequest(agent_id="a", input={}, run_id="cost-run"))
+    recorder.emit(ev.COST_LIMIT_REACHED, {"estimated_usd": 1.23})
+
+    summary = _cost_summary(recorder.paths)
+    assert summary["estimated_usd"] == 1.23
+    assert summary["cost_limit_reached"] is True

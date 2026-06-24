@@ -290,9 +290,10 @@ from algent_backend.agent_system.foundation import cost  # noqa: E402
 
 
 def test_cost_estimates_model_and_calls() -> None:
-    # 1M in + 1M out at gpt-5.4-mini (0.15, 0.60) = 0.75
-    assert round(cost.estimate_model_cost("gpt-5.4-mini", 1_000_000, 1_000_000), 2) == 0.75
-    assert cost.estimate_call_cost("rich") == 0.005
+    # 1M in + 1M out at gpt-5.4-mini ($0.75 in, $4.50 out) = 5.25 (sourced pricing).
+    assert round(cost.estimate_model_cost("gpt-5.4-mini", 1_000_000, 1_000_000), 2) == 5.25
+    assert cost.estimate_call_cost("rich") == 0.001
+    assert cost.estimate_call_cost("keyword") == 0.008
     assert cost.estimate_call_cost("unknown") == 0.0
 
 
@@ -303,8 +304,8 @@ def test_cost_cap_refuses_paid_call_when_near_limit(monkeypatch) -> None:
             "url": url, "content": "c", "via": "firecrawl", "quality": "good", "words": 50
         },
     )
-    # cap below one rich call's cost -> the paid call is refused outright.
-    with policy.scoped([policy.READ, policy.RICH], paid_budget=10), cost.scoped(0.001, "gpt-5.4-mini"):
+    # cap below one rich call's cost ($0.001) -> the paid call is refused outright.
+    with policy.scoped([policy.READ, policy.RICH], paid_budget=10), cost.scoped(0.0001, "gpt-5.4-mini"):
         out = research._search(read_url="http://a", richness="rich")
     assert "cost cap reached" in out["error"]
 
