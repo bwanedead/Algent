@@ -153,3 +153,36 @@ def test_research_portfolio_roundtrips() -> None:
     assert restored.vectors[0].vector_type == "synthesis"
     assert restored.vectors[0].supporting_hits[0].startswith("gkg:")
     assert restored.total_considered == 46
+
+
+# -- discovery synthesis agent (t0 -> t1) -------------------------------------
+
+
+def test_synthesis_agent_registered_with_facade_and_all_channels() -> None:
+    from algent_backend.agent_system.agents.registry import default_agent_registry
+
+    spec = default_agent_registry().get("discovery_synthesis")
+    assert spec.tool_ids == ("web_search",)  # one unified tool
+    assert {"keyword", "semantic", "read", "rich", "x"} <= set(spec.search_channels)
+
+
+def test_build_t0_message_renders_items_signals_and_directive() -> None:
+    from algent_backend.agent_system.agents.discovery.synthesis.messages import build_t0_message
+
+    pool = {
+        "item_count": 1,
+        "by_channel": {"gkg": 1},
+        "by_pillar": {"economics": 1},
+        "gkg_batch_id": "B1",
+        "items": [
+            {
+                "id": "gkg:theme:ECON_X", "label": "ECON_X", "channel": "gkg", "kind": "theme",
+                "pillars": ["economics"], "scope": ["eng"],
+                "signals": {"velocity": 2.0, "rising": True},
+                "evidence": [{"url": "http://a"}], "related": ["WB_X"],
+            }
+        ],
+    }
+    msg = build_t0_message(pool)
+    assert "ECON_X" in msg and "http://a" in msg and "velocity=2.0" in msg
+    assert "ResearchPortfolio" in msg and "t0_ref: B1" in msg

@@ -41,6 +41,13 @@ def _denied(channel: str) -> dict[str, Any]:
     }
 
 
+def _budget_exhausted(channel: str) -> dict[str, Any]:
+    return {
+        "error": f"paid-call budget exhausted for this run (channel '{channel}')",
+        "remaining_paid_budget": 0,
+    }
+
+
 def _search(
     query: str = "",
     kind: str = "keyword",
@@ -59,16 +66,22 @@ def _search(
 
     if read_url:
         rich = richness == "rich"
-        # Reading always needs READ; the paid Firecrawl fallback also needs RICH.
+        # Reading always needs READ; the paid Firecrawl fallback also needs RICH
+        # and spends one paid-budget unit (deliberate, capped).
         if not policy.is_allowed(policy.READ):
             return _denied(policy.READ)
-        if rich and not policy.is_allowed(policy.RICH):
-            return _denied(policy.RICH)
+        if rich:
+            if not policy.is_allowed(policy.RICH):
+                return _denied(policy.RICH)
+            if not policy.try_spend_paid():
+                return _budget_exhausted(policy.RICH)
         return _read(read_url, rich=rich)
 
     if source == "x":
         if not policy.is_allowed(policy.X):
             return _denied(policy.X)
+        if not policy.try_spend_paid():
+            return _budget_exhausted(policy.X)
         return {"source": "x", "error": "x search is not wired yet; use source='web' for now"}
 
     channel = policy.SEMANTIC if kind == "semantic" else policy.KEYWORD

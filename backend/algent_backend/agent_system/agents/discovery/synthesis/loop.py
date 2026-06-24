@@ -1,0 +1,111 @@
+"""
+The synthesis loop — wraps the shared ReAct loop with t0->t1 I/O.
+
+Loads the t0 discovery pool, runs the model's tool-calling loop (gated to the
+agent's permitted search channels and a hard paid-call budget for the duration),
+and emits the t1 ``ResearchPortfolio`` as the run's artifact. LangGraph/LangChain
+imports live here; the agent's ``spec.py`` stays rail-free.
+"""
+
+from __future__ import annotations
+
+import json
+from datetime import UTC, datetime
+from typing import Any, TypedDict
+
+from langchain_core.messages import HumanMessage
+from langchain_core.runnables import RunnableConfig
+from langgraph.graph import END, START, StateGraph
+
+from algent_backend.agent_system.agents.discovery.portfolio import ResearchPortfolio
+from algent_backend.agent_system.agents.loop import build_react_loop, stream_react_loop
+from algent_backend.agent_system.foundation.models import ModelSpec
+from algent_backend.agent_system.runs.context import AgentRunContext
+from algent_backend.agent_system.tools.sourcing.search import policy
+
+from .messages import build_t0_message
+
+ARTIFACT_NAME = "research_portfolio.json"
+SYNTHESIS_COMPLETED = "synthesis.completed"
+SYNTHESIS_NO_T0 = "synthesis.no_t0"
+SYNTHESIS_NO_STRUCTURED_OUTPUT = "synthesis.no_structured_output"
+
+
+class SynthesisState(TypedDict, total=False):
+    pool: dict[str, Any]  # the t0 payload; loaded from disk if absent
+    portfolio: dict[str, Any]
+
+
+def build_synthesis_graph(
+    context: AgentRunContext,
+    *,
+    model_spec: ModelSpec,
+    tool_ids: tuple[str, ...],
+    system_prompt: str,
+    search_channels: tuple[str, ...],
+    paid_budget: int,
+) -> Any:
+    """Compile the synthesis graph for an agent's model, tools, and gate."""
+    model = context.model_resolver.resolve(model_spec).client
+    tools = [context.tools[tool_id] for tool_id in tool_ids]
+    agent = build_react_loop(model, tools, system_prompt=system_prompt, response_format=ResearchPortfolio)
+
+    def synthesize(state: SynthesisState, config: RunnableConfig) -> dict[str, Any]:
+        pool = state.get("pool") or _load_latest_pool()
+        if not pool:
+            return _finish(context, ResearchPortfolio(
+                generated_at=_now(), dropped_note="no t0 pool found to synthesize"
+            ), event=SYNTHESIS_NO_T0)
+
+        # Scope the search gate + paid budget to this run for its whole duration.
+        with policy.scoped(search_channels, paid_budget):
+            produced = stream_react_loop(
+                agent,
+                {"messages": [HumanMessage(content=build_t0_message(pool))]},
+                context=context,
+                config=config,
+            )
+
+        if isinstance(produced, ResearchPortfolio):
+            portfolio = produced
+        else:
+            context.emit(SYNTHESIS_NO_STRUCTURED_OUTPUT, {"raw_type": type(produced).__name__})
+            portfolio = ResearchPortfolio(
+                generated_at=_now(), dropped_note="model returned no structured portfolio"
+            )
+        portfolio = portfolio.model_copy(update={
+            "generated_at": portfolio.generated_at or _now(),
+            "t0_ref": portfolio.t0_ref or pool.get("gkg_batch_id") or pool.get("generated_at"),
+            "total_considered": pool.get("item_count", len(pool.get("items", []))),
+        })
+        return _finish(context, portfolio, event=SYNTHESIS_COMPLETED)
+
+    graph = StateGraph(SynthesisState)
+    graph.add_node("synthesize", synthesize)
+    graph.add_edge(START, "synthesize")
+    graph.add_edge("synthesize", END)
+    return graph.compile()
+
+
+def _finish(context: AgentRunContext, portfolio: ResearchPortfolio, *, event: str) -> dict[str, Any]:
+    if context.artifacts is not None:
+        context.artifacts.write_json(ARTIFACT_NAME, portfolio.model_dump())
+    context.emit(event, {"vector_count": len(portfolio.vectors)})
+    return {"portfolio": portfolio.model_dump()}
+
+
+def _load_latest_pool() -> dict[str, Any] | None:
+    """Read the most recent t0 pool artifact from disk (None if none exists)."""
+    from algent_backend.data_ingestion.cli._shared import latest_file, pool_dir
+
+    path = latest_file(pool_dir(), "pool_*.json")
+    if path is None:
+        return None
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
+def _now() -> str:
+    return datetime.now(UTC).isoformat()

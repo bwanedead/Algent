@@ -21,6 +21,8 @@ it is about to run; tests set it directly.
 from __future__ import annotations
 
 import contextvars
+from collections.abc import Iterator
+from contextlib import contextmanager
 
 # The gateable channels (intent names; provider in parentheses).
 KEYWORD = "keyword"  # Tavily
@@ -60,3 +62,48 @@ def allowed() -> frozenset[str]:
 
 def is_allowed(channel: str) -> bool:
     return channel in _allowed.get()
+
+
+# -- per-run paid-call budget -------------------------------------------------
+#
+# The hard ceiling: even with paid channels granted and a deliberate per-call
+# choice, a run can make at most this many paid contacts. So a misbehaving prompt
+# physically cannot drain credits — the safeguard is mechanical, not trust-based.
+
+DEFAULT_PAID_BUDGET = 8
+
+_budget: contextvars.ContextVar[int] = contextvars.ContextVar(
+    "search_paid_budget", default=DEFAULT_PAID_BUDGET
+)
+_spent: contextvars.ContextVar[int] = contextvars.ContextVar("search_paid_spent", default=0)
+
+
+def remaining_paid_budget() -> int:
+    return max(0, _budget.get() - _spent.get())
+
+
+def try_spend_paid() -> bool:
+    """Consume one paid-call unit; False if the run's budget is exhausted."""
+    spent = _spent.get()
+    if spent >= _budget.get():
+        return False
+    _spent.set(spent + 1)
+    return True
+
+
+@contextmanager
+def scoped(channels: object, paid_budget: int) -> Iterator[None]:
+    """Scope the allow-set + a fresh paid budget for one agent run.
+
+    The runtime/spec wraps an agent's execution in this so the gate and budget
+    apply for exactly that run and reset afterwards.
+    """
+    allow_token = _allowed.set(normalize(channels))
+    budget_token = _budget.set(max(0, paid_budget))
+    spent_token = _spent.set(0)
+    try:
+        yield
+    finally:
+        _allowed.reset(allow_token)
+        _budget.reset(budget_token)
+        _spent.reset(spent_token)

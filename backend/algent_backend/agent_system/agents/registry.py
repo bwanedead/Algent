@@ -39,6 +39,7 @@ def default_agent_registry() -> AgentRegistry:
     # Imported lazily so merely importing the registry class does not pull an
     # agent's graph module (and its LangGraph imports) into memory.
     from .discovery.general.spec import SPEC as general_discovery_spec
+    from .discovery.synthesis.spec import SPEC as discovery_synthesis_spec
     from .hello_workflow.spec import SPEC as hello_workflow_spec
     from .news_brief.spec import SPEC as news_brief_spec
 
@@ -46,4 +47,5 @@ def default_agent_registry() -> AgentRegistry:
     registry.register(hello_workflow_spec)
     registry.register(news_brief_spec)
     registry.register(general_discovery_spec)
+    registry.register(discovery_synthesis_spec)
     return registry

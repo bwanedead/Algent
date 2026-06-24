@@ -261,3 +261,24 @@ def test_gate_blocks_semantic_when_restricted() -> None:
 def test_policy_normalize_drops_unknown_and_defaults() -> None:
     assert policy.normalize(None) == policy.DEFAULT_CHANNELS
     assert policy.normalize(["x", "bogus"]) == frozenset({"x"})
+
+
+def test_paid_budget_caps_paid_calls(monkeypatch) -> None:
+    monkeypatch.setattr(
+        fc, "_fetch",
+        lambda url, allow_paid_fallback=True: {
+            "url": url, "content": "c", "via": "firecrawl", "quality": "good", "words": 50
+        },
+    )
+    with policy.scoped([policy.READ, policy.RICH], paid_budget=1):
+        first = research._search(read_url="http://a", richness="rich")
+        second = research._search(read_url="http://b", richness="rich")
+    assert first["action"] == "read"  # first paid call within budget
+    assert "budget exhausted" in second["error"]  # second hard-stopped by the cap
+
+
+def test_scoped_sets_and_restores_policy() -> None:
+    with policy.scoped([policy.KEYWORD], paid_budget=3):
+        assert policy.allowed() == frozenset({policy.KEYWORD})
+        assert policy.remaining_paid_budget() == 3
+    assert policy.allowed() == policy.DEFAULT_CHANNELS  # restored after the run
