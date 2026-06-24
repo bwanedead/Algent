@@ -34,3 +34,7 @@ class AgentSpec:
     default_model: ModelSpec | None = None
     family: str | None = None
     tool_ids: tuple[str, ...] = ()
+    # Hard per-agent gate on the web_search facade's API channels (keyword,
+    # semantic, read, rich, x). None = the safe default (free/cheap only; paid
+    # `rich`/`x` off). The runtime scopes the facade's policy to this per run.
+    search_channels: tuple[str, ...] | None = None

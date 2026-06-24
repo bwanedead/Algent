@@ -161,7 +161,12 @@ def test_fetch_raises_when_nothing_extractable(monkeypatch) -> None:
 
 # -- web_search unified research facade ----------------------------------------
 
-from algent_backend.agent_system.tools.sourcing.search import exa, research, tavily  # noqa: E402
+from algent_backend.agent_system.tools.sourcing.search import (  # noqa: E402
+    exa,
+    policy,
+    research,
+    tavily,
+)
 
 
 def _engine(result):
@@ -189,7 +194,11 @@ def test_web_search_rich_read_allows_paid_fallback(monkeypatch) -> None:
         return {"url": url, "content": "b", "via": "firecrawl", "quality": "good", "words": 40}
 
     monkeypatch.setattr(fc, "_fetch", fake_fetch)
-    research._search(read_url="http://a", richness="rich")
+    token = policy.set_allowed([policy.READ, policy.RICH])  # grant the paid channel
+    try:
+        research._search(read_url="http://a", richness="rich")
+    finally:
+        policy.reset_allowed(token)
     assert seen["paid"] is True
 
 
@@ -205,11 +214,6 @@ def test_web_search_semantic_routes_to_exa(monkeypatch) -> None:
     assert out["kind"] == "semantic" and out["results"] == ["s1"]
 
 
-def test_web_search_x_is_guarded() -> None:
-    out = research._search(query="q", source="x")
-    assert out["source"] == "x" and "error" in out  # bounded/guarded, not wired
-
-
 def test_web_search_surfaces_engine_errors_cleanly(monkeypatch) -> None:
     def boom():
         raise RuntimeError("provider down")
@@ -217,3 +221,43 @@ def test_web_search_surfaces_engine_errors_cleanly(monkeypatch) -> None:
     monkeypatch.setattr(tavily, "_build", boom)
     out = research._search(query="q")
     assert "error" in out and "provider down" in out["error"]
+
+
+# -- per-channel permission gates ---------------------------------------------
+
+
+def test_gate_blocks_paid_channels_by_default() -> None:
+    # Default policy = free/cheap only; paid rich + x are hard-refused.
+    rich = research._search(read_url="http://a", richness="rich")
+    assert rich["error"].startswith("channel 'rich'") and "rich" not in rich["permitted_channels"]
+    x = research._search(query="q", source="x")
+    assert x["error"].startswith("channel 'x'")
+
+
+def test_gate_allows_paid_channels_when_granted(monkeypatch) -> None:
+    monkeypatch.setattr(
+        fc, "_fetch",
+        lambda url, allow_paid_fallback=True: {
+            "url": url, "content": "c", "via": "firecrawl", "quality": "good", "words": 50
+        },
+    )
+    token = policy.set_allowed([policy.KEYWORD, policy.READ, policy.RICH, policy.X])
+    try:
+        assert research._search(read_url="http://a", richness="rich")["action"] == "read"
+        assert "not wired" in research._search(query="q", source="x")["error"]  # past the gate
+    finally:
+        policy.reset_allowed(token)
+
+
+def test_gate_blocks_semantic_when_restricted() -> None:
+    token = policy.set_allowed([policy.KEYWORD, policy.READ])  # no semantic
+    try:
+        out = research._search(query="q", kind="semantic")
+        assert out["error"].startswith("channel 'semantic'")
+    finally:
+        policy.reset_allowed(token)
+
+
+def test_policy_normalize_drops_unknown_and_defaults() -> None:
+    assert policy.normalize(None) == policy.DEFAULT_CHANNELS
+    assert policy.normalize(["x", "bogus"]) == frozenset({"x"})

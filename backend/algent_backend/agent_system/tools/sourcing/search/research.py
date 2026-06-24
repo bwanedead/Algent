@@ -27,10 +27,18 @@ from typing import Any
 
 from ...spec import GLOBAL_SCOPE, ToolSpec
 from .._wrap import as_structured_tool
+from . import policy
 
 WEB_SEARCH_TOOL_ID = "web_search"
 
 _MAX_RESULTS_CAP = 10  # hard ceiling so a call can't fan out into a credit drain
+
+
+def _denied(channel: str) -> dict[str, Any]:
+    return {
+        "error": f"channel '{channel}' is not permitted for this agent",
+        "permitted_channels": sorted(policy.allowed()),
+    }
 
 
 def _search(
@@ -50,9 +58,22 @@ def _search(
     max_results = max(1, min(max_results, _MAX_RESULTS_CAP))
 
     if read_url:
-        return _read(read_url, rich=(richness == "rich"))
+        rich = richness == "rich"
+        # Reading always needs READ; the paid Firecrawl fallback also needs RICH.
+        if not policy.is_allowed(policy.READ):
+            return _denied(policy.READ)
+        if rich and not policy.is_allowed(policy.RICH):
+            return _denied(policy.RICH)
+        return _read(read_url, rich=rich)
+
     if source == "x":
+        if not policy.is_allowed(policy.X):
+            return _denied(policy.X)
         return {"source": "x", "error": "x search is not wired yet; use source='web' for now"}
+
+    channel = policy.SEMANTIC if kind == "semantic" else policy.KEYWORD
+    if not policy.is_allowed(channel):
+        return _denied(channel)
     return _search_web(query, kind, max_results)
 
 
