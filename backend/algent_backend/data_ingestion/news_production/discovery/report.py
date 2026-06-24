@@ -145,10 +145,16 @@ class PoolItem(BaseModel):
 
 
 class DiscoveryPool(BaseModel):
-    """The unified, tagged, grounded input tray for the synthesis (discovery) agent.
+    """The **t0** artifact — the first output of the discovery pipeline.
 
-    The deterministic layer's final deliverable: everything we sensed this cycle
-    from both channels, organized so judgment can be applied — not yet judged.
+    Official terminology: ``t0`` is the deterministic pipeline's initial artifact
+    (this consolidated, tagged, grounded hit list) and the **t0 payload** is the
+    initial input handed to the agent layer. The term is pipeline-relative — each
+    pipeline's first deliverable is its own t0 — and the downstream agent artifacts
+    follow as t1 (the research-vector portfolio), t2 (research briefs), etc.
+
+    Everything we sensed this cycle from both channels, organized so judgment can
+    be applied — not yet judged.
     """
 
     generated_at: str

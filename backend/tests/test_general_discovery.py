@@ -118,3 +118,38 @@ def test_discovery_tools_resolve_for_agent() -> None:
     ids = {spec.tool_id for spec in resolved}
     assert GDELT_EVENTS_TOOL_ID in ids
     assert RSS_FEED_TOOL_ID in ids
+
+
+# -- research-vector portfolio (t1) contract ----------------------------------
+
+from algent_backend.agent_system.agents.discovery.portfolio import (  # noqa: E402
+    ResearchPortfolio,
+    ResearchVector,
+)
+
+
+def test_research_portfolio_roundtrips() -> None:
+    portfolio = ResearchPortfolio(
+        generated_at="2026-01-01T00:00:00+00:00",
+        t0_ref="pool_20260101",
+        total_considered=46,
+        vectors=[
+            ResearchVector(
+                title="Asian monetary tightening",
+                thesis="Several Asian central banks are tightening in lockstep.",
+                vector_type="synthesis",
+                rationale="Cross-market force bigger than any single rate move.",
+                supporting_hits=["gkg:theme:ECON_INTEREST_RATES", "beat:http://x"],
+                pillars=["economics"],
+                scope=["Japan", "South Korea"],
+                research_effort="deep",
+                key_questions=["What's the common driver?"],
+                sources=["http://x"],
+            )
+        ],
+        dropped_note="Filler single-stat items set aside.",
+    )
+    restored = ResearchPortfolio.model_validate_json(portfolio.model_dump_json())
+    assert restored.vectors[0].vector_type == "synthesis"
+    assert restored.vectors[0].supporting_hits[0].startswith("gkg:")
+    assert restored.total_considered == 46
