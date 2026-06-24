@@ -30,6 +30,9 @@ TOOL_IDS = (WEB_SEARCH_TOOL_ID,)
 SEARCH_CHANNELS = (policy.KEYWORD, policy.SEMANTIC, policy.READ, policy.RICH, policy.X)
 # Hard ceiling on paid contacts per run — the runaway-cost backstop.
 PAID_BUDGET = 8
+# Hard ceiling on *estimated* total run spend (model tokens + paid calls). The
+# loop auto-halts when the estimate crosses this. Conservative for live testing.
+COST_CAP_USD = 1.00
 
 DEFAULT_MODEL = ModelSpec(
     provider="openai",
@@ -47,6 +50,7 @@ def build_graph(context: AgentRunContext) -> Any:
         system_prompt=SYSTEM_PROMPT,
         search_channels=SEARCH_CHANNELS,
         paid_budget=PAID_BUDGET,
+        cost_cap_usd=COST_CAP_USD,
     )
 
 

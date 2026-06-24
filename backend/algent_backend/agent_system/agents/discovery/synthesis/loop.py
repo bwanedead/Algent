@@ -19,6 +19,7 @@ from langgraph.graph import END, START, StateGraph
 
 from algent_backend.agent_system.agents.discovery.portfolio import ResearchPortfolio
 from algent_backend.agent_system.agents.loop import build_react_loop, stream_react_loop
+from algent_backend.agent_system.foundation import cost
 from algent_backend.agent_system.foundation.models import ModelSpec
 from algent_backend.agent_system.runs.context import AgentRunContext
 from algent_backend.agent_system.tools.sourcing.search import policy
@@ -44,6 +45,7 @@ def build_synthesis_graph(
     system_prompt: str,
     search_channels: tuple[str, ...],
     paid_budget: int,
+    cost_cap_usd: float,
 ) -> Any:
     """Compile the synthesis graph for an agent's model, tools, and gate."""
     model = context.model_resolver.resolve(model_spec).client
@@ -57,14 +59,16 @@ def build_synthesis_graph(
                 generated_at=_now(), dropped_note="no t0 pool found to synthesize"
             ), event=SYNTHESIS_NO_T0)
 
-        # Scope the search gate + paid budget to this run for its whole duration.
-        with policy.scoped(search_channels, paid_budget):
+        # Scope the search gate + paid-call budget + USD cost cap to this run for
+        # its whole duration. The cost meter auto-halts the loop if spend caps out.
+        with policy.scoped(search_channels, paid_budget), cost.scoped(cost_cap_usd, model_spec.model):
             produced = stream_react_loop(
                 agent,
                 {"messages": [HumanMessage(content=build_t0_message(pool))]},
                 context=context,
                 config=config,
             )
+            estimated_usd = cost.spent_usd()
 
         if isinstance(produced, ResearchPortfolio):
             portfolio = produced
@@ -78,7 +82,7 @@ def build_synthesis_graph(
             "t0_ref": portfolio.t0_ref or pool.get("gkg_batch_id") or pool.get("generated_at"),
             "total_considered": pool.get("item_count", len(pool.get("items", []))),
         })
-        return _finish(context, portfolio, event=SYNTHESIS_COMPLETED)
+        return _finish(context, portfolio, event=SYNTHESIS_COMPLETED, estimated_usd=estimated_usd)
 
     graph = StateGraph(SynthesisState)
     graph.add_node("synthesize", synthesize)
@@ -87,10 +91,16 @@ def build_synthesis_graph(
     return graph.compile()
 
 
-def _finish(context: AgentRunContext, portfolio: ResearchPortfolio, *, event: str) -> dict[str, Any]:
+def _finish(
+    context: AgentRunContext,
+    portfolio: ResearchPortfolio,
+    *,
+    event: str,
+    estimated_usd: float = 0.0,
+) -> dict[str, Any]:
     if context.artifacts is not None:
         context.artifacts.write_json(ARTIFACT_NAME, portfolio.model_dump())
-    context.emit(event, {"vector_count": len(portfolio.vectors)})
+    context.emit(event, {"vector_count": len(portfolio.vectors), "estimated_usd": estimated_usd})
     return {"portfolio": portfolio.model_dump()}
 
 

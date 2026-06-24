@@ -25,6 +25,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from ....foundation import cost
 from ...spec import GLOBAL_SCOPE, ToolSpec
 from .._wrap import as_structured_tool
 from . import policy
@@ -46,6 +47,24 @@ def _budget_exhausted(channel: str) -> dict[str, Any]:
         "error": f"paid-call budget exhausted for this run (channel '{channel}')",
         "remaining_paid_budget": 0,
     }
+
+
+def _cost_capped(channel: str) -> dict[str, Any]:
+    return {
+        "error": f"run cost cap reached; paid channel '{channel}' refused",
+        "remaining_usd": round(cost.remaining_usd(), 4),
+    }
+
+
+def _spend_paid(channel: str) -> dict[str, Any] | None:
+    """Try to authorize one paid call: count budget AND dollar cap. None = OK."""
+    est = cost.estimate_call_cost(channel)
+    if cost.would_exceed(est):
+        return _cost_capped(channel)
+    if not policy.try_spend_paid():
+        return _budget_exhausted(channel)
+    cost.add(est)
+    return None
 
 
 def _search(
@@ -73,15 +92,17 @@ def _search(
         if rich:
             if not policy.is_allowed(policy.RICH):
                 return _denied(policy.RICH)
-            if not policy.try_spend_paid():
-                return _budget_exhausted(policy.RICH)
+            refusal = _spend_paid(policy.RICH)
+            if refusal is not None:
+                return refusal
         return _read(read_url, rich=rich)
 
     if source == "x":
         if not policy.is_allowed(policy.X):
             return _denied(policy.X)
-        if not policy.try_spend_paid():
-            return _budget_exhausted(policy.X)
+        refusal = _spend_paid(policy.X)
+        if refusal is not None:
+            return refusal
         return {"source": "x", "error": "x search is not wired yet; use source='web' for now"}
 
     channel = policy.SEMANTIC if kind == "semantic" else policy.KEYWORD

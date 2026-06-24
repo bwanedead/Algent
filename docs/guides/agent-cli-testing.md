@@ -106,6 +106,34 @@ relays the factual outcome (section 7); quality judgment lives here.
 
 ---
 
+## 5b. Cost safeguards & the emergency stop (read before any live agent run)
+
+Agent runs spend real money (model tokens + paid search). Four hard rails bound a
+run so it can't run away, plus the kill switch:
+
+1. **Emergency stop (kill switch):** `python -m algent_backend.cli.runs stop --run-id <id>`
+   hard-terminates the process tree immediately. Always-available abort.
+2. **Turn limit (spin leash):** `start ... --max-turns N` caps model-loop iterations
+   (maps to the rail's recursion limit), so a model can't loop forever.
+3. **Paid-call budget:** the `web_search` facade allows at most a fixed number of
+   *paid* calls per run (Firecrawl/X); past that they're refused.
+4. **USD cost cap (auto-stop):** the run accumulates an *estimated* spend (model
+   tokens + paid calls) and **auto-halts** the moment it crosses the cap
+   (`discovery_synthesis` default **$1.00**). A `cost.limit_reached` event is
+   emitted and the loop stops itself — no need to catch it.
+
+Paid search is **off by default** and per-call deliberate: the agent only touches
+Firecrawl/X by explicitly asking, and only on channels its `search_channels` grant
+permits. Free channels (keyword/semantic search, local read) cost nothing.
+
+**Watching for cost:** the synthesis run emits `estimated_usd` on completion and
+`cost.limit_reached` if it caps out — both visible in `audit/events.jsonl` and the
+timeline. The estimate is a **best-effort guardrail, not a billing figure** (see
+`foundation/cost.py`); reconcile real spend in each provider's console.
+
+If anything looks wrong mid-run — repeated identical paid calls, climbing cost,
+visible spinning — `stop` it. That's the routine when a run misbehaves.
+
 ## 6. Known early caveats
 
 - Confirm the exact `gpt-5.4-mini` model-id string on the first run; adjust in `agents/discovery/general/spec.py` if needed.

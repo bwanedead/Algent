@@ -282,3 +282,36 @@ def test_scoped_sets_and_restores_policy() -> None:
         assert policy.allowed() == frozenset({policy.KEYWORD})
         assert policy.remaining_paid_budget() == 3
     assert policy.allowed() == policy.DEFAULT_CHANNELS  # restored after the run
+
+
+# -- run cost meter + dollar cap ----------------------------------------------
+
+from algent_backend.agent_system.foundation import cost  # noqa: E402
+
+
+def test_cost_estimates_model_and_calls() -> None:
+    # 1M in + 1M out at gpt-5.4-mini (0.15, 0.60) = 0.75
+    assert round(cost.estimate_model_cost("gpt-5.4-mini", 1_000_000, 1_000_000), 2) == 0.75
+    assert cost.estimate_call_cost("rich") == 0.005
+    assert cost.estimate_call_cost("unknown") == 0.0
+
+
+def test_cost_cap_refuses_paid_call_when_near_limit(monkeypatch) -> None:
+    monkeypatch.setattr(
+        fc, "_fetch",
+        lambda url, allow_paid_fallback=True: {
+            "url": url, "content": "c", "via": "firecrawl", "quality": "good", "words": 50
+        },
+    )
+    # cap below one rich call's cost -> the paid call is refused outright.
+    with policy.scoped([policy.READ, policy.RICH], paid_budget=10), cost.scoped(0.001, "gpt-5.4-mini"):
+        out = research._search(read_url="http://a", richness="rich")
+    assert "cost cap reached" in out["error"]
+
+
+def test_cost_meter_accumulates_and_trips_over_cap() -> None:
+    with cost.scoped(0.01, "gpt-5.4-mini"):
+        assert not cost.over_cap()
+        cost.add(0.02)  # blow past the cap
+        assert cost.over_cap() and cost.spent_usd() == 0.02
+    assert not cost.is_active()  # scope reset after the run

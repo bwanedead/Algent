@@ -17,9 +17,19 @@ from __future__ import annotations
 
 from typing import Any
 
-from algent_backend.agent_system.runs.events import AGENT_STEP, TOOL_RESULT
+from algent_backend.agent_system.foundation import cost
+from algent_backend.agent_system.runs.events import AGENT_STEP, COST_LIMIT_REACHED, TOOL_RESULT
 
 _STEP_EXCERPT_MAX_CHARS = 2000
+
+
+def _meter_model_cost(msg: Any) -> None:
+    """Add an AI message's token cost to the active run cost meter (best-effort)."""
+    if not cost.is_active():
+        return
+    usage = getattr(msg, "usage_metadata", None)
+    if isinstance(usage, dict):
+        cost.add_model_usage(int(usage.get("input_tokens") or 0), int(usage.get("output_tokens") or 0))
 
 
 def _excerpt(value: object) -> str:
@@ -73,7 +83,13 @@ def stream_react_loop(agent: Any, inputs: dict[str, Any], *, context: Any, confi
             if "structured_response" in update:
                 structured = update["structured_response"]
             for msg in update.get("messages") or []:
+                _meter_model_cost(msg)
                 _emit_message_event(context, msg)
+        # Hard cost stop: if the run's estimated spend crossed its cap, halt the
+        # loop now rather than starting another (paid) model turn.
+        if cost.over_cap():
+            context.emit(COST_LIMIT_REACHED, {"estimated_usd": cost.spent_usd()})
+            break
     return structured
 
 
