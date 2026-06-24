@@ -29,18 +29,22 @@ From `backend/`, using the project venv. Every command prints one JSON document:
 # what can I start?
 python -m algent_backend.cli.runs agents
 
-# start one (e.g. the discovery agent); --goal "..." to target it
-python -m algent_backend.cli.runs start general_discovery        # → {run_id}
+# start one (discovery_synthesis is the discovery agent) → {run_id}
+python -m algent_backend.cli.runs start discovery_synthesis --max-turns 20
+
+# THEN, before watching, give the human the run's live timeline as a clickable link:
+#   backend/runs_data/<agent>/<NNNN>__<run_id>/audit/human/timeline.md
 
 # wait for it: watch in a loop. --timeout is a re-evaluation window, NOT a run cap.
 python -m algent_backend.cli.runs watch --run-id <id> --timeout 120
 #   loop_done -> the run ended; read the recap + artifacts and report it
-#   timeout   -> still running; just watch again
+#   timeout   -> still running; watch again (each window reports estimated_usd)
 #   error     -> inspect status + child logs
-#   hitl      -> (future) answer it, then keep watching
 ```
 
-When `watch` returns `loop_done`, break out and report the recap — that report
+Before you enter the watch loop, surface the `timeline.md` path above as a
+clickable link so the human can follow the run live in their IDE. When `watch`
+returns `loop_done`, break out and report the recap — that report
 is your natural "it's done" signal. Run dirs are grouped per agent and
 counter-prefixed (newest = highest number): read the human log at
 `backend/runs_data/<agent>/<NNNN>__<run_id>/audit/human/timeline.md` and the

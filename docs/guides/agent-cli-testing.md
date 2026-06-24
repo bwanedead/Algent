@@ -54,20 +54,30 @@ the exception, not the routine.
 ```
 # see what agents exist (pick an agent_id)
 python -m algent_backend.cli.runs agents
-#    today: general_discovery (the trending-news scout) · news_brief (stale) ·
-#    hello_workflow (toy). To test discovery, use general_discovery.
+#    discovery_synthesis = THE discovery agent to test: reads the t0 hit list and
+#    produces the t1 research-vector portfolio. (Also: general_discovery (older
+#    tool-survey) · news_brief (stale) · hello_workflow (toy).)
 
-# start it (background); note the run_id. --goal "..." targets a discovery run.
-python -m algent_backend.cli.runs start general_discovery
+# discovery_synthesis reads the latest t0 pool from disk — produce a fresh one
+# first (all free, no keys, each prints one JSON doc):
+python -m algent_backend.cli ingest insights gdelt_gkg --warmup 6
+python -m algent_backend.cli ingest sweep --kind pillar
+python -m algent_backend.cli ingest pool
 
-# wait for it: watch in a loop until it ends
+# start it (background); note the run_id. --max-turns is an extra spin leash.
+python -m algent_backend.cli.runs start discovery_synthesis --max-turns 20
+
+# BEFORE entering watch, surface the live timeline link so a human can click it in
+# their IDE (it re-renders as the run progresses):
+#   backend/runs_data/discovery_synthesis/<NNNN>__<run_id>/audit/human/timeline.md
+
+# wait for it: watch in a loop until it ends. Each window reports estimated_usd.
 python -m algent_backend.cli.runs watch --run-id <id> --timeout 120
-#   loop_done -> the run ended; read timeline.md + artifacts, report the recap
-#   timeout   -> still running; just watch again (a run takes as long as it takes)
+#   loop_done -> ended; read timeline.md + research_portfolio.json; report recap + estimated_usd
+#   timeout   -> still running; watch again (note estimated_usd; cost_limit_reached => it auto-stopped)
 #   error     -> inspect status + child logs
-#   hitl      -> (future) answer it, then keep watching; discovery has none today
 
-# stop ONLY if the run clearly warrants it (visibly stuck/looping, or told to abort)
+# stop if it clearly warrants it (spinning, climbing cost, or told to abort)
 python -m algent_backend.cli.runs stop --run-id <id>
 ```
 
@@ -80,10 +90,12 @@ For a quick manual first run you can also use `--foreground` and just `Ctrl+C`.
 `backend/runs_data/<agent>/<NNNN>__<run_id>/` — run dirs are grouped per agent
 and counter-prefixed, so the **highest number is the most recent**:
 
-- **`audit/human/timeline.md`** — the human view, re-rendered live; read this first while watching.
+- **`audit/human/timeline.md`** — the human view, re-rendered live; **give this path
+  to the human as a clickable link right after `start`, before you watch.**
 - `audit/events.jsonl` — the machine trace (the owned local trace).
 - `audit/error.log` — **the full Python traceback for a failed run** (written on failure).
-- `artifacts/discovery_result.json` — the agent's output (the candidate list).
+- `artifacts/research_portfolio.json` — `discovery_synthesis` output (the t1 vectors).
+  (`discovery_result.json` for the older `general_discovery`.)
 - `result.json`, `state.json`, `done.json` — outcome + current snapshot + terminal marker.
 - `child_stdout.log` / `child_stderr.log` — raw child output for a background run.
 
