@@ -22,7 +22,7 @@ from ..news_production.discovery.candidates import extract_candidates
 from ..news_production.discovery.insights import build_insights
 from ..news_production.discovery.memory import RollingMemory, load_memory, save_memory
 from ..news_production.sources import gdelt_gkg
-from ._shared import DIGESTABLE, insights_dir, memory_dir, print_json, prune_files
+from ._shared import DIGESTABLE, insights_dir, memory_dir, print_json, progress, prune_files
 
 # Sources with a deterministic insights pipeline. id -> fetch -> (batch_id, records).
 _FETCHERS = {gdelt_gkg.SOURCE_ID: gdelt_gkg.fetch_latest}
@@ -49,12 +49,15 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
 
 
 def run(args: argparse.Namespace) -> int:
+    progress(f"[insights] fetching latest {args.source} batch (downloads)…")
     batch_id, records = _FETCHERS[args.source]()
+    progress(f"[insights] batch {batch_id}: {len(records)} records")
 
     memory = load_memory(args.source, memory_dir())
     warmed: list[str] = []
     if args.warmup:
         memory, warmed = _warm_memory(args.source, batch_id, args.warmup, memory)
+    progress("[insights] building digest…")
     report, counts = build_insights(records, source=args.source, batch_id=batch_id, memory=memory)
 
     out_dir = insights_dir()
@@ -102,13 +105,17 @@ def _warm_memory(
     fetch = _BATCH_FETCHERS.get(source)
     if fetch is None:
         return memory, []
+    ids = _preceding_batch_ids(batch_id, n)
+    progress(f"[insights] warming velocity from {len(ids)} prior batches (downloads)…")
     warmed: list[str] = []
-    for bid in _preceding_batch_ids(batch_id, n):
+    for i, bid in enumerate(ids, 1):
         try:
             _, records = fetch(bid)
         except Exception:
+            progress(f"[insights] warmup {i}/{len(ids)}  {bid} -> skipped (fetch failed)")
             continue
         counts = {s.full_key: s.count for s in extract_candidates(records)}
         memory = memory.with_batch(bid, counts)
         warmed.append(bid)
+        progress(f"[insights] warmup {i}/{len(ids)}  {bid} -> {len(records)} records")
     return memory, warmed

@@ -82,6 +82,18 @@ def print_json(payload: object) -> None:
     sys.stdout.write("\n")
 
 
+def progress(message: str) -> None:
+    """Live progress line to STDERR — keeps stdout's single-JSON contract intact.
+
+    The slow ingest steps (paced sweeps, multi-batch warmup) are otherwise silent
+    for minutes; this narrates them so a run is observably alive, not hung.
+    """
+    if hasattr(sys.stderr, "reconfigure"):
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.write(message.rstrip() + "\n")
+    sys.stderr.flush()
+
+
 # -- retention ----------------------------------------------------------------
 #
 # Slim by default: keep only the newest `keep` batches per source so test runs

@@ -22,7 +22,7 @@ from datetime import UTC, datetime
 
 from ..news_production.discovery import beats as beats_registry
 from ..news_production.discovery.sweep import run_sweep
-from ._shared import beats_dir, print_json, prune_files
+from ._shared import beats_dir, print_json, progress, prune_files
 
 
 def add_parser(subparsers: argparse._SubParsersAction) -> None:
@@ -46,10 +46,17 @@ def _select(kind: str, limit: int) -> list:
 
 def run(args: argparse.Namespace) -> int:
     targets = _select(args.kind, args.limit)
-    kwargs = {"max_records": args.max_records}
+    progress(f"[sweep] starting {len(targets)} beats (paced; this takes a few minutes)…")
+
+    def _on_progress(done: int, total: int, result) -> None:
+        outcome = f"{result.hit_count} hits" if not result.error else f"ERROR: {result.error}"
+        progress(f"[sweep] {done}/{total}  {result.beat_id:24} -> {outcome}")
+
+    kwargs = {"max_records": args.max_records, "on_progress": _on_progress}
     if args.pace is not None:
         kwargs["pace_s"] = args.pace
     sheet = run_sweep(targets, **kwargs)
+    progress(f"[sweep] done: {sheet.beats_swept} swept, {sheet.beats_failed} failed.")
 
     stamp = datetime.now(UTC).strftime("%Y%m%d%H%M%S")
     out_dir = beats_dir()

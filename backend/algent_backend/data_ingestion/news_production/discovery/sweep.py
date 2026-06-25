@@ -38,14 +38,22 @@ def run_sweep(
     sleep: Callable[[float], None] = time.sleep,
     pace_s: float = PACE_S,
     cooldown_s: float = COOLDOWN_S,
+    on_progress: Callable[[int, int, BeatResult], None] | None = None,
 ) -> BeatSheet:
-    """Sweep the registry (or a given subset) into a :class:`BeatSheet`."""
+    """Sweep the registry (or a given subset) into a :class:`BeatSheet`.
+
+    ``on_progress(done, total, result)`` is called after each beat so a caller can
+    narrate this otherwise-silent, minutes-long paced sweep.
+    """
     targets = beats if beats is not None else all_beats()
     results: list[BeatResult] = []
     for index, beat in enumerate(targets):
         if index:
             sleep(pace_s)
-        results.append(_sweep_one(beat, max_records, search, sleep, cooldown_s))
+        result = _sweep_one(beat, max_records, search, sleep, cooldown_s)
+        results.append(result)
+        if on_progress is not None:
+            on_progress(index + 1, len(targets), result)
 
     failed = sum(1 for r in results if r.error)
     return BeatSheet(
