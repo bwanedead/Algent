@@ -25,10 +25,12 @@ from contextlib import contextmanager
 
 # USD per 1,000,000 tokens, as (input, output). Sourced from provider pricing
 # pages (as of ~mid-2026; verify periodically — pricing changes):
-#   gpt-5.4-mini  $0.75 / $4.50   (developers.openai.com/api/docs/pricing)
+#   gpt-5.4-nano  $0.20 / $1.25   (developers.openai.com/api/docs/pricing) — the triage tier
+#   gpt-5.4-mini  $0.75 / $4.50   (developers.openai.com/api/docs/pricing) — the synthesis tier
 #   grok-4-fast   $0.20 / $0.50   (x.ai/api)
 #   grok-4.3      $1.25 / $2.50   (x.ai/api)
 MODEL_PRICES: dict[str, tuple[float, float]] = {
+    "gpt-5.4-nano": (0.20, 1.25),
     "gpt-5.4-mini": (0.75, 4.50),
     "grok-4-fast": (0.20, 0.50),
     "grok-4.3": (1.25, 2.50),
