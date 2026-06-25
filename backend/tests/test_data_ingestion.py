@@ -275,6 +275,51 @@ def test_prune_digest_files_keeps_newest_per_source(monkeypatch, tmp_path) -> No
     assert survivors == ["gdelt_gkg_20260101001500.json", "other_1.json"]  # other source untouched
 
 
+def test_x_grok_scrubs_keys_and_parses_json(monkeypatch) -> None:
+    from algent_backend.data_ingestion.news_production.sources import x_grok_cli
+
+    # Our provider keys must be stripped from the subprocess env.
+    monkeypatch.setenv("FIRECRAWL_API_KEY", "secret")
+    monkeypatch.setenv("X_BEARER_KEY", "secret")
+    monkeypatch.setenv("PATH", "/usr/bin")
+    assert "FIRECRAWL_API_KEY" not in x_grok_cli._scrubbed_env()
+    assert "X_BEARER_KEY" not in x_grok_cli._scrubbed_env()
+    assert "PATH" in x_grok_cli._scrubbed_env()
+
+    captured = {}
+
+    def fake_run(cmd, **kw):
+        captured["env"] = kw.get("env", {})
+        return type("R", (), {"stdout": 'prose…\n[{"topic":"Quake","summary":"big","urls":["http://a"]}]\nmore'})()
+
+    monkeypatch.setattr(x_grok_cli.subprocess, "run", fake_run)
+    hits = x_grok_cli.fetch_x_grok(limit=5)
+    assert hits == [{"topic": "Quake", "summary": "big", "urls": ["http://a"], "source": "x_grok"}]
+    assert "FIRECRAWL_API_KEY" not in captured["env"]  # the CLI never saw our key
+
+
+def test_x_native_normalizes_posts(monkeypatch) -> None:
+    from algent_backend.data_ingestion.news_production.sources import x_native
+
+    monkeypatch.setenv("X_BEARER_KEY", "tok")
+
+    class _Resp:
+        status_code = 200
+
+        def json(self):
+            return {"data": [{"id": "9", "text": "Breaking: thing", "public_metrics": {"like_count": 5}}]}
+
+    class _Client:
+        def get(self, url, params=None):
+            return _Resp()
+
+        def close(self):
+            pass
+
+    out = x_native.fetch_x_native(client=_Client())
+    assert out[0]["url"].endswith("/9") and out[0]["likes"] == 5 and out[0]["source"] == "x_native"
+
+
 def test_fetch_polymarket_filters_sports_and_captures_movement() -> None:
     from algent_backend.data_ingestion.news_production.sources import prediction_markets as pm
 
