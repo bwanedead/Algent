@@ -30,10 +30,10 @@ def write_turn_traces(paths: RunPaths, events: list[RunEvent]) -> None:
         turns = build_turns(sorted(events, key=lambda e: e.seq))
         if not turns:
             return
-        paths.turns_dir.mkdir(parents=True, exist_ok=True)
+        paths.audit_dir.mkdir(parents=True, exist_ok=True)
         for turn in turns:
             atomic_write_text(
-                paths.turns_dir / f"turn_{turn['turn']:04d}.json",
+                paths.turn_file(turn["turn"]),
                 json.dumps(turn, indent=2, default=str, ensure_ascii=False),
             )
     except Exception:

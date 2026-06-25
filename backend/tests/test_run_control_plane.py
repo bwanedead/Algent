@@ -179,13 +179,31 @@ def test_cli_start_allocates_run_and_request(monkeypatch, capsys) -> None:
     out = _capture_json(capsys)
     assert spawned == [out["run_id"]]
     # start surfaces locators so the run is immediately findable.
-    assert out["timeline"].replace("\\", "/").endswith("audit/human/timeline.md")
+    assert out["timeline"].replace("\\", "/").endswith("audit/timeline.md")
     assert "run_dir" in out and out["run_id"] in out["run_dir"]
     paths = RunPaths(find_run_root(out["run_id"]))
     request = json.loads(paths.request_file.read_text(encoding="utf-8"))
     assert request["input"] == {"topic": "cli"}
     assert request["max_turns"] == 7
     assert read_state(paths).status == "queued"
+
+
+def test_timeline_renders_reasoning_tools_used_and_t0_preview() -> None:
+    body = render_timeline(
+        [
+            _event(1, ev.INPUT_PREVIEW, {
+                "title": "t0 discovery pool", "summary": "40 items | pillars {'economics': 13}",
+                "top": ["ECON_X  [theme]  economics"], "link": "C:/x/pool.json",
+            }),
+            _event(2, ev.AGENT_STEP, {"content": "read the top hit", "tool_calls": [{"name": "web_search", "args": {}}]}),
+            _event(3, ev.AGENT_STEP, {"content": "done", "tool_calls": []}),
+        ]
+    )
+    assert "t0 discovery pool: 40 items" in body
+    assert "pool.json)" in body  # markdown link to the full t0 file
+    assert "reasoning: read the top hit" in body
+    assert "tools used: web_search" in body
+    assert "tools used: none (final answer)" in body
 
 
 def test_build_turns_groups_steps_with_their_tool_results() -> None:
@@ -212,7 +230,7 @@ def test_recorder_writes_per_turn_json_files() -> None:
     recorder.emit(ev.AGENT_STEP, {"content": "c", "tool_calls": [{"name": "t", "args": {}}]})
     recorder.emit(ev.TOOL_RESULT, {"tool": "t", "content": "r"})
 
-    turn_file = recorder.paths.turns_dir / "turn_0001.json"
+    turn_file = recorder.paths.turn_file(1)
     assert turn_file.exists()
     data = json.loads(turn_file.read_text(encoding="utf-8"))
     assert data["model_output"]["tool_calls"][0]["name"] == "t"

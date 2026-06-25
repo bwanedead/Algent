@@ -54,14 +54,13 @@ class RunPaths:
 
     @property
     def timeline_file(self) -> Path:
-        # audit/human/ — the readable projection, beside the machine event stream.
-        return self.audit_dir / "human" / "timeline.md"
+        # Flat in audit/, beside the per-turn JSONs and the machine event stream,
+        # so the curated human log and the turn detail are visible side-by-side.
+        return self.audit_dir / "timeline.md"
 
-    @property
-    def turns_dir(self) -> Path:
-        # audit/turns/ — one JSON per model turn (its output + tool I/O), for
-        # turn-by-turn auditing of a run.
-        return self.audit_dir / "turns"
+    def turn_file(self, turn: int) -> Path:
+        # audit/turn_0001.json … — one JSON per model turn, flat beside timeline.md.
+        return self.audit_dir / f"turn_{turn:04d}.json"
 
     @property
     def error_file(self) -> Path:

@@ -22,6 +22,7 @@ from datetime import datetime
 from algent_backend.agent_system.runs.events import (
     AGENT_STEP,
     ARTIFACT_WRITTEN,
+    INPUT_PREVIEW,
     MODEL_USAGE,
     NODE_COMPLETED,
     RUN_COMPLETED,
@@ -178,13 +179,28 @@ def _render_run_terminal(event: RunEvent) -> list[str]:
 
 def _render_agent_step(event: RunEvent) -> list[str]:
     p = event.payload
-    lines: list[str] = []
+    calls = p.get("tool_calls") or []
     content = p.get("content")
-    if content:
-        lines.append(f"- said: {_excerpt(content)}")
-    for call in p.get("tool_calls") or []:
-        lines.append(f"- calls {call.get('name', '?')}({_excerpt(call.get('args'))})")
-    return lines or ["- (model step)"]
+    lines = [f"- reasoning: {_excerpt(content) if content else '(no text — went straight to tools)'}"]
+    if calls:
+        lines.append(f"- tools used: {', '.join(c.get('name', '?') for c in calls)}")
+        for call in calls:
+            lines.append(f"    • {call.get('name', '?')}({_excerpt(call.get('args'))})")
+    else:
+        lines.append("- tools used: none (final answer)")
+    return lines
+
+
+def _render_input_preview(event: RunEvent) -> list[str]:
+    p = event.payload
+    lines = [f"- {p.get('title', 'input')}: {p.get('summary', '')}"]
+    for item in p.get("top") or []:
+        lines.append(f"    · {item}")
+    if p.get("link"):
+        # Clickable in most IDEs; also legible as a plain path.
+        link = str(p["link"]).replace("\\", "/")
+        lines.append(f"- full list: [{link}]({link})")
+    return lines
 
 
 def _render_tool_result(event: RunEvent) -> list[str]:
@@ -221,6 +237,7 @@ _RENDERERS = {
     RUN_ERROR: _render_run_error,
     AGENT_STEP: _render_agent_step,
     TOOL_RESULT: _render_tool_result,
+    INPUT_PREVIEW: _render_input_preview,
 }
 
 

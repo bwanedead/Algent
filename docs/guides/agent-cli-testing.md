@@ -59,17 +59,18 @@ python -m algent_backend.cli.runs agents
 #    tool-survey) · news_brief (stale) · hello_workflow (toy).)
 
 # discovery_synthesis reads the latest t0 pool from disk — produce a fresh one
-# first (all free, no keys, each prints one JSON doc):
-python -m algent_backend.cli ingest insights gdelt_gkg --warmup 6
-python -m algent_backend.cli ingest sweep --kind pillar
-python -m algent_backend.cli ingest pool
+# first (all free, no keys, each prints one JSON doc; steps narrate to stderr):
+python -m algent_backend.cli ingest insights gdelt_gkg --warmup 6   # GKG bulk (not rate-limited)
+python -m algent_backend.cli ingest pool                            # consolidate -> t0
+#  (optional, per-pillar enrichment) python -m algent_backend.cli ingest sweep --kind pillar
+#  ^ the DOC API rate-limits hard; SKIP it if it's throttling — GKG-only t0 is enough to test.
 
 # start it (background); note the run_id. --max-turns is an extra spin leash.
 python -m algent_backend.cli.runs start discovery_synthesis --max-turns 20
 
 # BEFORE entering watch, surface the live timeline link so a human can click it in
 # their IDE (it re-renders as the run progresses):
-#   backend/runs_data/discovery_synthesis/<NNNN>__<run_id>/audit/human/timeline.md
+#   backend/runs_data/discovery_synthesis/<NNNN>__<run_id>/audit/timeline.md
 
 # wait for it: watch in a loop until it ends. Each window reports estimated_usd.
 python -m algent_backend.cli.runs watch --run-id <id> --timeout 120
@@ -90,7 +91,7 @@ For a quick manual first run you can also use `--foreground` and just `Ctrl+C`.
 `backend/runs_data/<agent>/<NNNN>__<run_id>/` — run dirs are grouped per agent
 and counter-prefixed, so the **highest number is the most recent**:
 
-- **`audit/human/timeline.md`** — the human view, re-rendered live; **give this path
+- **`audit/timeline.md`** — the human view, re-rendered live; **give this path
   to the human as a clickable link right after `start`, before you watch.**
 - `audit/events.jsonl` — the machine trace (the owned local trace).
 - `audit/error.log` — **the full Python traceback for a failed run** (written on failure).

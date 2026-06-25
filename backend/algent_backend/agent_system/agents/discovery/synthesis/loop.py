@@ -21,6 +21,7 @@ from algent_backend.agent_system.agents.discovery.portfolio import ResearchPortf
 from algent_backend.agent_system.agents.loop import build_react_loop, stream_react_loop
 from algent_backend.agent_system.foundation import cost
 from algent_backend.agent_system.foundation.models import ModelSpec
+from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.context import AgentRunContext
 from algent_backend.agent_system.tools.sourcing.search import policy
 
@@ -53,15 +54,22 @@ def build_synthesis_graph(
     agent = build_react_loop(model, tools, system_prompt=system_prompt, response_format=ResearchPortfolio)
 
     def synthesize(state: SynthesisState, config: RunnableConfig) -> dict[str, Any]:
-        pool = state.get("pool") or _load_latest_pool()
+        pool = state.get("pool")
+        pool_path: str | None = None
+        if not pool:
+            pool, pool_path = _load_latest_pool()
         if not pool:
             return _finish(context, ResearchPortfolio(
                 generated_at=_now(),
                 dropped_note=(
                     "no t0 pool found — produce one first: `ingest insights gdelt_gkg "
-                    "--warmup 6`, `ingest sweep --kind pillar`, `ingest pool`, then re-run."
+                    "--warmup 6`, `ingest pool`, then re-run."
                 ),
             ), event=SYNTHESIS_NO_T0)
+
+        # Surface a curated preview of the t0 input in the timeline, with a link
+        # to the full pool file — so a watcher sees what the agent received.
+        context.emit(ev.INPUT_PREVIEW, _t0_preview(pool, pool_path))
 
         # Scope the search gate + paid-call budget + USD cost cap to this run for
         # its whole duration. The cost meter auto-halts the loop if spend caps out.
@@ -108,17 +116,36 @@ def _finish(
     return {"portfolio": portfolio.model_dump()}
 
 
-def _load_latest_pool() -> dict[str, Any] | None:
-    """Read the most recent t0 pool artifact from disk (None if none exists)."""
+def _load_latest_pool() -> tuple[dict[str, Any] | None, str | None]:
+    """Read the most recent t0 pool artifact: returns (pool, path), (None, None)."""
     from algent_backend.data_ingestion.cli._shared import latest_file, pool_dir
 
     path = latest_file(pool_dir(), "pool_*.json")
     if path is None:
-        return None
+        return None, None
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        return json.loads(path.read_text(encoding="utf-8")), str(path)
     except (OSError, ValueError):
-        return None
+        return None, None
+
+
+def _t0_preview(pool: dict[str, Any], pool_path: str | None) -> dict[str, Any]:
+    """A curated, top-hits preview of the t0 pool for the timeline (+ a link)."""
+    items = pool.get("items", [])
+    top = sorted(items, key=lambda i: (i.get("signals") or {}).get("score") or 0, reverse=True)
+    return {
+        "title": "t0 discovery pool",
+        "summary": (
+            f"{pool.get('item_count', len(items))} items | "
+            f"channels {pool.get('by_channel', {})} | pillars {pool.get('by_pillar', {})}"
+        ),
+        "top": [
+            f"{i.get('label', '')[:48]}  [{i.get('kind', '?')}]"
+            f"  {','.join(i.get('pillars', [])) or '-'}"
+            for i in top[:12]
+        ],
+        "link": pool_path,
+    }
 
 
 def _now() -> str:

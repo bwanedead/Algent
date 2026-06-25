@@ -33,7 +33,7 @@ python -m algent_backend.cli.runs agents
 python -m algent_backend.cli.runs start discovery_synthesis --max-turns 20
 
 # THEN, before watching, give the human the run's live timeline as a clickable link:
-#   backend/runs_data/<agent>/<NNNN>__<run_id>/audit/human/timeline.md
+#   backend/runs_data/<agent>/<NNNN>__<run_id>/audit/timeline.md
 
 # wait for it: watch in a loop. --timeout is a re-evaluation window, NOT a run cap.
 python -m algent_backend.cli.runs watch --run-id <id> --timeout 120
@@ -47,7 +47,7 @@ clickable link so the human can follow the run live in their IDE. When `watch`
 returns `loop_done`, break out and report the recap — that report
 is your natural "it's done" signal. Run dirs are grouped per agent and
 counter-prefixed (newest = highest number): read the human log at
-`backend/runs_data/<agent>/<NNNN>__<run_id>/audit/human/timeline.md` and the
+`backend/runs_data/<agent>/<NNNN>__<run_id>/audit/timeline.md` and the
 output in that run dir's `artifacts/`. (A failed run's full traceback is in its
 `audit/error.log`.)
 
