@@ -275,6 +275,48 @@ def test_prune_digest_files_keeps_newest_per_source(monkeypatch, tmp_path) -> No
     assert survivors == ["gdelt_gkg_20260101001500.json", "other_1.json"]  # other source untouched
 
 
+def test_fetch_polymarket_filters_sports_and_captures_movement() -> None:
+    from algent_backend.data_ingestion.news_production.sources import prediction_markets as pm
+
+    class _Resp:
+        status_code = 200
+
+        def json(self):
+            return [
+                {"question": "Will the Fed cut rates in July?", "outcomes": '["Yes","No"]',
+                 "outcomePrices": '["0.6","0.4"]', "volume24hr": 1000, "oneDayPriceChange": 0.05,
+                 "lastTradePrice": 0.6, "slug": "fed-cut", "liquidity": 500},
+                {"question": "Will Japan win the World Cup?", "outcomes": "[]",
+                 "outcomePrices": "[]", "volume24hr": 9999, "slug": "jp"},
+            ]
+
+    class _Client:
+        def get(self, url, params=None):
+            return _Resp()
+
+        def close(self):
+            pass
+
+    out = pm.fetch_polymarket(client=_Client())
+    assert len(out) == 1  # the World Cup market was filtered out
+    assert out[0]["question"].startswith("Will the Fed")
+    assert out[0]["price_change_1d"] == 0.05 and out[0]["volume_24h"] == 1000.0
+
+
+def test_build_pool_includes_prediction_markets() -> None:
+    from algent_backend.data_ingestion.news_production.discovery.pool import build_pool
+
+    markets = [{
+        "question": "Will X happen by July?", "url": "https://polymarket.com/event/x",
+        "last_price": 0.3, "volume_24h": 1000.0, "price_change_1d": 0.1, "source": "polymarket",
+    }]
+    pool = build_pool(None, None, markets)
+    assert pool.by_channel.get("market") == 1
+    item = pool.items[0]
+    assert item.channel == "market" and item.evidence[0].url.endswith("/x")
+    assert item.signals["price_change_1d"] == 0.1
+
+
 def test_ensure_t0_produces_pool_when_missing(monkeypatch, tmp_path) -> None:
     monkeypatch.setenv(_shared._OUTPUT_ENV, str(tmp_path))
     from algent_backend.data_ingestion.news_production.discovery import pipeline

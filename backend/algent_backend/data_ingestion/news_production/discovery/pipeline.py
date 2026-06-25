@@ -29,6 +29,7 @@ from algent_backend.data_ingestion.cli._shared import (
 )
 
 from ..sources import gdelt_gkg
+from ..sources.prediction_markets import fetch_polymarket
 from .insights import build_insights
 from .memory import load_memory, save_memory
 from .pool import build_pool
@@ -81,7 +82,14 @@ def _build_pool(report, say: ProgressFn) -> tuple[dict[str, Any], str]:
             sheet = BeatSheet.model_validate_json(beats_latest.read_text(encoding="utf-8"))
         except (OSError, ValueError):
             sheet = None
-    pool = build_pool(report, sheet)
+    markets: list[dict] = []
+    try:
+        say("fetching prediction markets (free, novel signal)…")
+        markets = fetch_polymarket(limit=25)
+        say(f"prediction markets: {len(markets)} active leads")
+    except Exception:  # noqa: BLE001 — a market-API hiccup must not block t0
+        say("prediction markets: skipped (fetch failed)")
+    pool = build_pool(report, sheet, markets)
     out = pool_dir()
     out.mkdir(parents=True, exist_ok=True)
     path = out / f"pool_{report.batch_id}.json"

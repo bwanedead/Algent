@@ -29,14 +29,18 @@ _PILLAR_ALIAS = {"economy": "economics"}
 
 
 def build_pool(
-    insights: InsightsReport | None, sheet: BeatSheet | None
+    insights: InsightsReport | None,
+    sheet: BeatSheet | None,
+    markets: list[dict] | None = None,
 ) -> DiscoveryPool:
-    """Consolidate the net + sweep into one grounded, tagged pool."""
+    """Consolidate the net + sweep + prediction markets into one grounded pool."""
     items: list[PoolItem] = []
     if insights is not None:
         items.extend(_gkg_item(c) for c in insights.candidates)
     if sheet is not None:
         items.extend(_beat_items(sheet))
+    if markets:
+        items.extend(_market_item(m) for m in markets)
 
     facets: dict[str, list[str]] = defaultdict(list)
     for item in items:
@@ -52,6 +56,22 @@ def build_pool(
         by_pillar={p: len(ids) for p, ids in facets.items()},
         facets=dict(facets),
         items=items,
+    )
+
+
+def _market_item(market: dict) -> PoolItem:
+    """A prediction market as a pool item — a forward-looking story lead."""
+    return PoolItem(
+        id=f"market:{market.get('source', 'pm')}:{market.get('url', '')[-40:]}",
+        label=market.get("question", ""),
+        channel="market",
+        kind="market",
+        signals={
+            "last_price": market.get("last_price"),
+            "volume_24h": market.get("volume_24h"),
+            "price_change_1d": market.get("price_change_1d"),
+        },
+        evidence=[BeatHit(title=market.get("question", ""), url=market.get("url", ""))],
     )
 
 
