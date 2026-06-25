@@ -58,15 +58,12 @@ python -m algent_backend.cli.runs agents
 #    produces the t1 research-vector portfolio. (Also: general_discovery (older
 #    tool-survey) · news_brief (stale) · hello_workflow (toy).)
 
-# discovery_synthesis reads the latest t0 pool from disk — produce a fresh one
-# first (all free, no keys, each prints one JSON doc; steps narrate to stderr):
-python -m algent_backend.cli ingest insights gdelt_gkg --warmup 6   # GKG bulk (not rate-limited)
-python -m algent_backend.cli ingest pool                            # consolidate -> t0
-#  (optional, per-pillar enrichment) python -m algent_backend.cli ingest sweep --kind pillar
-#  ^ the DOC API rate-limits hard; SKIP it if it's throttling — GKG-only t0 is enough to test.
-
-# start it (background); note the run_id. --max-turns is an extra spin leash.
+# discovery_synthesis AUTO-PRODUCES its t0 on start (free GDELT, narrated in the
+# timeline) — you do NOT run any ingest step first. Starting it is the whole job:
 python -m algent_backend.cli.runs start discovery_synthesis --max-turns 20
+#   t0 is reused if a pool <20 min old exists, else freshly built — all in-run.
+#   (Optional per-pillar enrichment: pre-run `ingest sweep --kind pillar`, but the
+#    DOC API throttles, so skip unless needed — GKG-only t0 is the default.)
 
 # BEFORE entering watch, surface the live timeline link so a human can click it in
 # their IDE (it re-renders as the run progresses):

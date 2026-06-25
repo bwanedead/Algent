@@ -275,6 +275,35 @@ def test_prune_digest_files_keeps_newest_per_source(monkeypatch, tmp_path) -> No
     assert survivors == ["gdelt_gkg_20260101001500.json", "other_1.json"]  # other source untouched
 
 
+def test_ensure_t0_produces_pool_when_missing(monkeypatch, tmp_path) -> None:
+    monkeypatch.setenv(_shared._OUTPUT_ENV, str(tmp_path))
+    from algent_backend.data_ingestion.news_production.discovery import pipeline
+
+    monkeypatch.setattr(
+        pipeline.gdelt_gkg, "fetch_latest",
+        lambda: ("20260101000000", [_rec(themes=["ECON_X"], persons=["jane doe"]) for _ in range(5)]),
+    )
+    msgs: list[str] = []
+    pool, path = pipeline.ensure_t0(on_progress=msgs.append)
+    assert pool["item_count"] >= 1 and path.endswith(".json")
+    assert any("t0 pool ready" in m for m in msgs)
+
+
+def test_ensure_t0_reuses_a_fresh_pool_without_fetching(monkeypatch, tmp_path) -> None:
+    monkeypatch.setenv(_shared._OUTPUT_ENV, str(tmp_path))
+    from algent_backend.data_ingestion.news_production.discovery import pipeline
+
+    pd = _shared.pool_dir()
+    pd.mkdir(parents=True)
+    (pd / "pool_20260101.json").write_text('{"item_count": 7, "items": []}', encoding="utf-8")
+    fetched: list[int] = []
+    monkeypatch.setattr(
+        pipeline.gdelt_gkg, "fetch_latest", lambda: fetched.append(1) or ("x", [])
+    )
+    pool, _ = pipeline.ensure_t0(fresh_minutes=60)
+    assert pool["item_count"] == 7 and fetched == []  # reused the fresh pool, no fetch
+
+
 def test_unified_cli_dispatches_ingest_and_runs_categories() -> None:
     from algent_backend.cli.__main__ import _CATEGORIES
 

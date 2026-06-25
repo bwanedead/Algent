@@ -29,6 +29,7 @@ from algent_backend.agent_system.runs.events import (
     RUN_ERROR,
     RUN_FAILED,
     RUN_STARTED,
+    T0_PROGRESS,
     TOOL_RESULT,
     RunEvent,
 )
@@ -191,6 +192,10 @@ def _render_agent_step(event: RunEvent) -> list[str]:
     return lines
 
 
+def _render_t0_progress(event: RunEvent) -> list[str]:
+    return [f"- t0: {event.payload.get('message', '')}"]
+
+
 def _render_input_preview(event: RunEvent) -> list[str]:
     p = event.payload
     lines = [f"- {p.get('title', 'input')}: {p.get('summary', '')}"]
@@ -238,6 +243,7 @@ _RENDERERS = {
     AGENT_STEP: _render_agent_step,
     TOOL_RESULT: _render_tool_result,
     INPUT_PREVIEW: _render_input_preview,
+    T0_PROGRESS: _render_t0_progress,
 }
 
 

@@ -9,7 +9,6 @@ imports live here; the agent's ``spec.py`` stays rail-free.
 
 from __future__ import annotations
 
-import json
 from datetime import UTC, datetime
 from typing import Any, TypedDict
 
@@ -24,6 +23,7 @@ from algent_backend.agent_system.foundation.models import ModelSpec
 from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.context import AgentRunContext
 from algent_backend.agent_system.tools.sourcing.search import policy
+from algent_backend.data_ingestion.news_production.discovery.pipeline import ensure_t0
 
 from .messages import build_t0_message
 
@@ -54,21 +54,22 @@ def build_synthesis_graph(
     agent = build_react_loop(model, tools, system_prompt=system_prompt, response_format=ResearchPortfolio)
 
     def synthesize(state: SynthesisState, config: RunnableConfig) -> dict[str, Any]:
+        # Self-source t0: produce (or reuse a fresh) discovery pool right here, so
+        # starting the run is the only step — no manual ingest first. Narrated to
+        # the timeline via t0.progress events; free (GDELT bulk).
         pool = state.get("pool")
         pool_path: str | None = None
         if not pool:
-            pool, pool_path = _load_latest_pool()
-        if not pool:
-            return _finish(context, ResearchPortfolio(
-                generated_at=_now(),
-                dropped_note=(
-                    "no t0 pool found — produce one first: `ingest insights gdelt_gkg "
-                    "--warmup 6`, `ingest pool`, then re-run."
-                ),
-            ), event=SYNTHESIS_NO_T0)
+            try:
+                pool, pool_path = ensure_t0(
+                    on_progress=lambda m: context.emit(ev.T0_PROGRESS, {"message": m})
+                )
+            except Exception as exc:  # noqa: BLE001 — a GDELT outage is a run result, not a crash
+                return _finish(context, ResearchPortfolio(
+                    generated_at=_now(), dropped_note=f"t0 production failed: {exc}"
+                ), event=SYNTHESIS_NO_T0)
 
-        # Surface a curated preview of the t0 input in the timeline, with a link
-        # to the full pool file — so a watcher sees what the agent received.
+        # Curated preview of the t0 input in the timeline, with a link to the pool.
         context.emit(ev.INPUT_PREVIEW, _t0_preview(pool, pool_path))
 
         # Scope the search gate + paid-call budget + USD cost cap to this run for
@@ -114,19 +115,6 @@ def _finish(
         context.artifacts.write_json(ARTIFACT_NAME, portfolio.model_dump())
     context.emit(event, {"vector_count": len(portfolio.vectors), "estimated_usd": estimated_usd})
     return {"portfolio": portfolio.model_dump()}
-
-
-def _load_latest_pool() -> tuple[dict[str, Any] | None, str | None]:
-    """Read the most recent t0 pool artifact: returns (pool, path), (None, None)."""
-    from algent_backend.data_ingestion.cli._shared import latest_file, pool_dir
-
-    path = latest_file(pool_dir(), "pool_*.json")
-    if path is None:
-        return None, None
-    try:
-        return json.loads(path.read_text(encoding="utf-8")), str(path)
-    except (OSError, ValueError):
-        return None, None
 
 
 def _t0_preview(pool: dict[str, Any], pool_path: str | None) -> dict[str, Any]:
