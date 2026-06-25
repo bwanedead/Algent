@@ -206,6 +206,21 @@ def test_timeline_renders_reasoning_tools_used_and_t0_preview() -> None:
     assert "tools used: none (final answer)" in body
 
 
+def test_timeline_renders_all_t1_vectors_in_output_preview() -> None:
+    body = render_timeline(
+        [
+            _event(1, ev.OUTPUT_PREVIEW, {
+                "title": "t1 research portfolio", "summary": "5 vectors from 40 t0 hits",
+                "items": [f"{i}. Vector {i}  [story/deep]  hits=['H']  sources=2" for i in range(1, 6)],
+                "link": "../artifacts/research_portfolio.json",
+            }),
+        ]
+    )
+    for i in range(1, 6):  # all five vectors present, not a truncated 2
+        assert f"{i}. Vector {i}" in body
+    assert "research_portfolio.json)" in body  # link to the full t1
+
+
 def test_build_turns_groups_steps_with_their_tool_results() -> None:
     from algent_backend.agent_system.runs.control_plane.turns import build_turns
 

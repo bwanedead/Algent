@@ -58,10 +58,9 @@ def build_synthesis_graph(
         # starting the run is the only step — no manual ingest first. Narrated to
         # the timeline via t0.progress events; free (GDELT bulk).
         pool = state.get("pool")
-        pool_path: str | None = None
         if not pool:
             try:
-                pool, pool_path = ensure_t0(
+                pool, _ = ensure_t0(
                     on_progress=lambda m: context.emit(ev.T0_PROGRESS, {"message": m})
                 )
             except Exception as exc:  # noqa: BLE001 — a GDELT outage is a run result, not a crash
@@ -69,8 +68,16 @@ def build_synthesis_graph(
                     generated_at=_now(), dropped_note=f"t0 production failed: {exc}"
                 ), event=SYNTHESIS_NO_T0)
 
-        # Curated preview of the t0 input in the timeline, with a link to the pool.
-        context.emit(ev.INPUT_PREVIEW, _t0_preview(pool, pool_path))
+        # Snapshot t0 INTO this run so it stays auditable (and linkable) even after
+        # the shared pool file is purged by a later run. Link relatively from the
+        # timeline (audit/timeline.md -> artifacts/t0_pool.json) so it clicks in-IDE.
+        t0_link: str | None = None
+        if context.artifacts is not None:
+            context.artifacts.write_json("t0_pool.json", pool)
+            t0_link = "../artifacts/t0_pool.json"
+
+        # Curated preview of the t0 input in the timeline, with a link to the snapshot.
+        context.emit(ev.INPUT_PREVIEW, _t0_preview(pool, t0_link))
 
         # Scope the search gate + paid-call budget + USD cost cap to this run for
         # its whole duration. The cost meter auto-halts the loop if spend caps out.
@@ -111,28 +118,49 @@ def _finish(
     event: str,
     estimated_usd: float = 0.0,
 ) -> dict[str, Any]:
+    link = None
     if context.artifacts is not None:
         context.artifacts.write_json(ARTIFACT_NAME, portfolio.model_dump())
+        link = "../artifacts/" + ARTIFACT_NAME
+    # Curated full output in the timeline — every vector (one line), so the human
+    # sees them all, not just the truncated model text, plus a link to the full t1.
+    if portfolio.vectors:
+        context.emit(ev.OUTPUT_PREVIEW, _t1_preview(portfolio, link))
     context.emit(event, {"vector_count": len(portfolio.vectors), "estimated_usd": estimated_usd})
     return {"portfolio": portfolio.model_dump()}
 
 
-def _t0_preview(pool: dict[str, Any], pool_path: str | None) -> dict[str, Any]:
-    """A curated, top-hits preview of the t0 pool for the timeline (+ a link)."""
+def _t1_preview(portfolio: ResearchPortfolio, link: str | None) -> dict[str, Any]:
+    """A clean one-line-per-vector view of the t1 portfolio for the timeline."""
+    return {
+        "title": "t1 research portfolio",
+        "summary": f"{len(portfolio.vectors)} vectors from {portfolio.total_considered} t0 hits",
+        "items": [
+            f"{i}. {v.title}  [{v.vector_type}/{v.research_effort}]  "
+            f"hits={v.supporting_hits}  sources={len(v.sources)}"
+            for i, v in enumerate(portfolio.vectors, 1)
+        ],
+        "link": link,
+    }
+
+
+def _t0_preview(pool: dict[str, Any], link: str | None) -> dict[str, Any]:
+    """A top-by-rank sample of the t0 pool for the timeline (+ a link to the full list)."""
     items = pool.get("items", [])
     top = sorted(items, key=lambda i: (i.get("signals") or {}).get("score") or 0, reverse=True)
     return {
-        "title": "t0 discovery pool",
+        "title": "t0 discovery pool (top-ranked sample — full list linked below)",
         "summary": (
             f"{pool.get('item_count', len(items))} items | "
             f"channels {pool.get('by_channel', {})} | pillars {pool.get('by_pillar', {})}"
         ),
         "top": [
-            f"{i.get('label', '')[:48]}  [{i.get('kind', '?')}]"
+            f"{i.get('label', '')[:46]}  [{i.get('kind', '?')}]"
             f"  {','.join(i.get('pillars', [])) or '-'}"
-            for i in top[:12]
+            f"  score={(i.get('signals') or {}).get('score', '-')}"
+            for i in top[:15]
         ],
-        "link": pool_path,
+        "link": link,
     }
 
 

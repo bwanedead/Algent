@@ -32,6 +32,7 @@ AGENT_STEP = "agent.step"  # a model turn: its text plus any tool calls it reque
 TOOL_RESULT = "tool.result"  # a tool's output coming back to the model
 COST_LIMIT_REACHED = "cost.limit_reached"  # est. run spend hit the cap; loop halted
 INPUT_PREVIEW = "input.preview"  # curated preview of the run's input (e.g. the t0 pool) + a link
+OUTPUT_PREVIEW = "output.preview"  # curated preview of the run's output (e.g. the t1 vectors) + a link
 T0_PROGRESS = "t0.progress"  # a step of in-run input production (e.g. building the t0 pool)
 
 

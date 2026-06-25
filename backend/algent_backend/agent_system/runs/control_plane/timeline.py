@@ -25,6 +25,7 @@ from algent_backend.agent_system.runs.events import (
     INPUT_PREVIEW,
     MODEL_USAGE,
     NODE_COMPLETED,
+    OUTPUT_PREVIEW,
     RUN_COMPLETED,
     RUN_ERROR,
     RUN_FAILED,
@@ -196,6 +197,17 @@ def _render_t0_progress(event: RunEvent) -> list[str]:
     return [f"- t0: {event.payload.get('message', '')}"]
 
 
+def _render_output_preview(event: RunEvent) -> list[str]:
+    p = event.payload
+    lines = [f"- {p.get('title', 'output')}: {p.get('summary', '')}"]
+    for line in p.get("items") or []:
+        lines.append(f"    {line}")
+    if p.get("link"):
+        link = str(p["link"]).replace("\\", "/")
+        lines.append(f"- full output: [{link}]({link})")
+    return lines
+
+
 def _render_input_preview(event: RunEvent) -> list[str]:
     p = event.payload
     lines = [f"- {p.get('title', 'input')}: {p.get('summary', '')}"]
@@ -243,6 +255,7 @@ _RENDERERS = {
     AGENT_STEP: _render_agent_step,
     TOOL_RESULT: _render_tool_result,
     INPUT_PREVIEW: _render_input_preview,
+    OUTPUT_PREVIEW: _render_output_preview,
     T0_PROGRESS: _render_t0_progress,
 }
 
