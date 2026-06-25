@@ -73,15 +73,23 @@ def run(args: argparse.Namespace) -> int:
     # an older one drops. The cross-run ledger still records full history.
     prune_runs(keep=5)
 
+    # Paths in the output so the run is immediately findable — the operator can
+    # hand the timeline link to a human before watching (see the testing guide).
+    locators = {
+        "run_dir": str(paths.root),
+        "timeline": str(paths.timeline_file),
+        "events": str(paths.events_file),
+    }
+
     if args.foreground:
         from . import exec_run
 
         exit_code = exec_run.execute(run_id)
-        print_json({"run_id": run_id, "mode": "foreground", "exit_code": exit_code})
+        print_json({"run_id": run_id, "mode": "foreground", "exit_code": exit_code, **locators})
         return exit_code
 
     _spawn_detached(run_id)
-    print_json({"run_id": run_id, "mode": "background"})
+    print_json({"run_id": run_id, "mode": "background", **locators})
     return 0
 
 

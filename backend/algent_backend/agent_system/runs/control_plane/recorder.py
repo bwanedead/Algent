@@ -25,6 +25,7 @@ from .layout import RunPaths, resolve_or_allocate_run_root
 from .ledger import LedgerEntry, RunLedger
 from .state import RunState, write_state
 from .timeline import write_timeline
+from .turns import write_turn_traces
 
 
 def _now() -> str:
@@ -96,6 +97,7 @@ class RunRecorder:
                 payload.get("output_tokens") or 0
             )
         write_timeline(self.paths, self._events.appended)
+        write_turn_traces(self.paths, self._events.appended)
 
     def record_artifact(self, ref: ArtifactRef) -> None:
         """Hook for the ArtifactWriter: collect the ref and surface the fact."""

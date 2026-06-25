@@ -58,6 +58,12 @@ class RunPaths:
         return self.audit_dir / "human" / "timeline.md"
 
     @property
+    def turns_dir(self) -> Path:
+        # audit/turns/ — one JSON per model turn (its output + tool I/O), for
+        # turn-by-turn auditing of a run.
+        return self.audit_dir / "turns"
+
+    @property
     def error_file(self) -> Path:
         # Full traceback for a failed run — written so a failure is diagnosable
         # from disk without re-running.

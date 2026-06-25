@@ -178,11 +178,45 @@ def test_cli_start_allocates_run_and_request(monkeypatch, capsys) -> None:
     assert code == 0
     out = _capture_json(capsys)
     assert spawned == [out["run_id"]]
+    # start surfaces locators so the run is immediately findable.
+    assert out["timeline"].replace("\\", "/").endswith("audit/human/timeline.md")
+    assert "run_dir" in out and out["run_id"] in out["run_dir"]
     paths = RunPaths(find_run_root(out["run_id"]))
     request = json.loads(paths.request_file.read_text(encoding="utf-8"))
     assert request["input"] == {"topic": "cli"}
     assert request["max_turns"] == 7
     assert read_state(paths).status == "queued"
+
+
+def test_build_turns_groups_steps_with_their_tool_results() -> None:
+    from algent_backend.agent_system.runs.control_plane.turns import build_turns
+
+    turns = build_turns(
+        [
+            _event(1, ev.RUN_STARTED, {"agent_id": "a"}),
+            _event(2, ev.AGENT_STEP, {"content": "thinking", "tool_calls": [{"name": "web_search", "args": {"q": "x"}}]}),
+            _event(3, ev.TOOL_RESULT, {"tool": "web_search", "content": "results"}),
+            _event(4, ev.AGENT_STEP, {"content": "done", "tool_calls": []}),
+        ]
+    )
+    assert len(turns) == 2
+    assert turns[0]["turn"] == 1
+    assert turns[0]["model_output"]["tool_calls"][0]["name"] == "web_search"
+    assert turns[0]["tool_results"][0]["tool"] == "web_search"
+    assert turns[1]["model_output"]["content"] == "done" and turns[1]["tool_results"] == []
+
+
+def test_recorder_writes_per_turn_json_files() -> None:
+    recorder = RunRecorder("turn-run", "a")
+    recorder.start(RunRequest(agent_id="a", input={}, run_id="turn-run"))
+    recorder.emit(ev.AGENT_STEP, {"content": "c", "tool_calls": [{"name": "t", "args": {}}]})
+    recorder.emit(ev.TOOL_RESULT, {"tool": "t", "content": "r"})
+
+    turn_file = recorder.paths.turns_dir / "turn_0001.json"
+    assert turn_file.exists()
+    data = json.loads(turn_file.read_text(encoding="utf-8"))
+    assert data["model_output"]["tool_calls"][0]["name"] == "t"
+    assert data["tool_results"][0]["content"] == "r"
 
 
 def test_cli_status_watch_show_list_roundtrip(capsys) -> None:

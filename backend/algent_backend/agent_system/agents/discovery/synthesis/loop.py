@@ -56,7 +56,11 @@ def build_synthesis_graph(
         pool = state.get("pool") or _load_latest_pool()
         if not pool:
             return _finish(context, ResearchPortfolio(
-                generated_at=_now(), dropped_note="no t0 pool found to synthesize"
+                generated_at=_now(),
+                dropped_note=(
+                    "no t0 pool found — produce one first: `ingest insights gdelt_gkg "
+                    "--warmup 6`, `ingest sweep --kind pillar`, `ingest pool`, then re-run."
+                ),
             ), event=SYNTHESIS_NO_T0)
 
         # Scope the search gate + paid-call budget + USD cost cap to this run for
