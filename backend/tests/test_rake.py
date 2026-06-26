@@ -68,6 +68,25 @@ def test_run_rake_drops_only_explicit_tosses_and_passes_prevetted(monkeypatch) -
     assert isinstance(usd, float)
 
 
+def test_run_rake_enriches_kept_items(monkeypatch) -> None:
+    # A keeper read by the scout comes back with a real headline + synopsis, which
+    # replace the abstract label (original preserved in signals.t0_label).
+    def fake_stream(agent, inputs, *, context, config):
+        return RakeChunkResult(verdicts=[
+            RakeVerdict(id="gkg:a", keep=True, headline="Real headline", synopsis="What happened."),
+        ])
+
+    monkeypatch.setattr(rake_loop, "stream_react_loop", fake_stream)
+    monkeypatch.setattr(rake_loop, "build_react_loop", lambda *a, **k: object())
+
+    pruned, summary, _usd = rake_loop.run_rake(_ctx()[0], _pool(), config=None)
+    a = next(it for it in pruned["items"] if it["id"] == "gkg:a")
+    assert a["label"] == "Real headline"
+    assert a["signals"]["synopsis"] == "What happened."
+    assert a["signals"]["t0_label"] == "A"  # original label preserved
+    assert summary.enriched == 1
+
+
 def test_run_rake_noop_when_all_prevetted(monkeypatch) -> None:
     monkeypatch.setattr(rake_loop, "build_react_loop", lambda *a, **k: object())
     called = {"stream": 0}

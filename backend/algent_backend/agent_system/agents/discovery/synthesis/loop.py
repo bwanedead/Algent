@@ -191,7 +191,8 @@ def _rake_enabled() -> bool:
 def _rake_recap(summary: Any) -> str:
     recap = (
         f"pruned t0: kept {summary.kept}/{summary.considered}, dropped {summary.dropped}, "
-        f"{summary.pre_vetted} pre-vetted passthrough (~${summary.estimated_usd:.4f})"
+        f"grounded {summary.enriched}, {summary.pre_vetted} pre-vetted passthrough "
+        f"(~${summary.estimated_usd:.4f})"
     )
     if summary.dropped_examples:
         recap += " | tossed e.g. " + "; ".join(summary.dropped_examples[:3])

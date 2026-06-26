@@ -102,16 +102,38 @@ def _x_item(hit: dict) -> PoolItem:
     )
 
 
+# GDELT GKG theme codes lead with a taxonomy prefix (+ sometimes a numeric id) that
+# carries no meaning for a reader: WB_2811_COLLECTIVE_BARGAINING, TAX_DISEASE_COMA.
+# We humanize the label so the agents have something legible to start from; rake then
+# upgrades it to the real article headline. The raw code is kept in signals.
+_THEME_PREFIXES = frozenset({
+    "WB", "TAX", "ECON", "EPU", "ENV", "GOV", "MANMADE", "NATURAL", "CRISISLEX",
+    "SOC", "UNGP", "WTO", "GENERAL", "POLICY", "EPU_POLICY", "FNCACT",
+})
+
+
+def _humanize_theme(code: str) -> str:
+    """`WB_2811_COLLECTIVE_BARGAINING` -> `collective bargaining`. Best-effort."""
+    parts = code.split("_")
+    while parts and (parts[0] in _THEME_PREFIXES or parts[0].isdigit()):
+        parts.pop(0)
+    return " ".join(parts).lower() if parts else code.lower()
+
+
 def _gkg_item(candidate) -> PoolItem:
     pillars = [_PILLAR_ALIAS.get(candidate.pillar, candidate.pillar)] if candidate.pillar else []
+    # Themes get a readable label (the raw code stays in signals.theme_code); named
+    # entities (person/org) are already legible, so keep their key as-is.
+    label = _humanize_theme(candidate.key) if candidate.kind == "theme" else candidate.key
     return PoolItem(
         id=f"gkg:{candidate.kind}:{candidate.key}",
-        label=candidate.key,
+        label=label,
         channel="gkg",
         kind=candidate.kind,
         pillars=pillars,
         scope=list(candidate.languages),
         signals={
+            "theme_code": candidate.key if candidate.kind == "theme" else None,
             "velocity": candidate.velocity,
             "rising": candidate.rising,
             "novel": candidate.novel,
@@ -120,7 +142,7 @@ def _gkg_item(candidate) -> PoolItem:
             "avg_tone": candidate.avg_tone,
             "score": candidate.score,
         },
-        # Example source articles so the agent can free-fetch GKG items, same as beats.
+        # Example source articles so the agent (and rake) can free-fetch GKG items.
         evidence=[BeatHit(title=candidate.key, url=url) for url in candidate.examples],
         related=list(candidate.related),
     )

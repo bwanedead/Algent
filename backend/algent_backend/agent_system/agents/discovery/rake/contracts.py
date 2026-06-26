@@ -13,11 +13,19 @@ from pydantic import BaseModel, Field
 
 
 class RakeVerdict(BaseModel):
-    """Keep-or-toss for one t0 pool item, by its id."""
+    """Keep-or-toss for one t0 pool item, by its id — with optional enrichment.
+
+    When the scout reads an item's source (free) to judge it, it returns what it
+    learned: the real ``headline`` and a one-line ``synopsis``. These upgrade the
+    item before synthesis sees it — turning an abstract t0 label (a GDELT theme
+    code) into a grounded info packet.
+    """
 
     id: str  # the pool item id this verdict is about (echo it exactly)
     keep: bool  # True = a real newsworthy lead worth the synthesis model's time
     reason: str = ""  # one short line — why kept or tossed
+    headline: str = ""  # the real article headline, if you read the source
+    synopsis: str = ""  # one-sentence what's-actually-happening, if you read it
 
 
 class RakeChunkResult(BaseModel):
@@ -32,6 +40,7 @@ class RakeSummary(BaseModel):
     considered: int = 0  # rakeable items (excludes pre-vetted passthrough)
     kept: int = 0
     dropped: int = 0
+    enriched: int = 0  # kept items the scout grounded with a real headline/synopsis
     pre_vetted: int = 0  # items that skipped rake (already LLM-vetted, e.g. X)
     chunks: int = 0
     estimated_usd: float = 0.0

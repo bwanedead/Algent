@@ -23,7 +23,10 @@ RAKE_MODEL = ModelSpec(
 # Free channels only: a fence-sitter check is a free read/search; rake never pays.
 RAKE_CHANNELS = (policy.KEYWORD, policy.SEMANTIC, policy.READ)
 RAKE_PAID_BUDGET = 0
-# Items per chunk handed to one scout pass. Small keeps each pass focused & cheap.
-RAKE_CHUNK_SIZE = 25
-# Hard ceiling on the rake stage's estimated spend (nano tokens + free calls ~ $0).
-RAKE_COST_CAP_USD = 0.30
+# Items per chunk handed to one scout pass. Kept small because each keeper may also
+# free-read its source to ground it — small chunks keep every pass within the agent's
+# step budget and the reads focused.
+RAKE_CHUNK_SIZE = 12
+# Hard ceiling on the rake stage's estimated spend. Reads are free; this just bounds
+# the nano tokens spent summarizing them. Generous headroom for the enrichment pass.
+RAKE_COST_CAP_USD = 0.60

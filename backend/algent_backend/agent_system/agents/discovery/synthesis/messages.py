@@ -44,11 +44,15 @@ def _fmt_item(item: dict[str, Any]) -> str:
     scope = ",".join(item.get("scope", [])[:3]) or "-"
     related = item.get("related", [])
     rel = f"  +[{', '.join(related[:4])}]" if related else ""
+    # rake may have grounded this item (read the source): show its synopsis so the
+    # model triages the real story, not an abstract t0 label.
+    synopsis = sig.get("synopsis")
+    syn = f"\n      ↳ {str(synopsis)[:160]}" if synopsis else ""
     return (
-        f"[{item.get('id', '?')}] {item.get('label', '')[:60]} "
+        f"[{item.get('id', '?')}] {item.get('label', '')[:70]} "
         f"| {item.get('channel', '?')}/{item.get('kind', '?')} "
         f"| pillars={pillars} scope={scope} | {' '.join(bits)} "
-        f"| {len(evidence)} urls {url[:60]}{rel}"
+        f"| {len(evidence)} urls {url[:60]}{rel}{syn}"
     )
 
 

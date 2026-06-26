@@ -788,6 +788,23 @@ def test_build_pool_dedupes_articles_recurring_across_beats() -> None:
     assert set(pool.items[0].pillars) == {"ai", "technology"}  # merged tags
 
 
+def test_gkg_theme_labels_humanized_with_code_preserved() -> None:
+    from algent_backend.data_ingestion.news_production.discovery.pool import _humanize_theme, build_pool
+
+    assert _humanize_theme("WB_2811_COLLECTIVE_BARGAINING") == "collective bargaining"
+    assert _humanize_theme("TAX_DISEASE_COMA") == "disease coma"
+    # An entity (person) keeps its legible key; only theme codes get humanized.
+    pool = build_pool(_insights_with(
+        _candidate("WB_2811_COLLECTIVE_BARGAINING", kind="theme"),
+        _candidate("queen camilla", kind="person"),
+    ), None)
+    theme = next(i for i in pool.items if i.id.endswith("COLLECTIVE_BARGAINING"))
+    assert theme.label == "collective bargaining"
+    assert theme.signals["theme_code"] == "WB_2811_COLLECTIVE_BARGAINING"  # raw code kept
+    person = next(i for i in pool.items if i.kind == "person")
+    assert person.label == "queen camilla"
+
+
 def test_pool_cli_consolidates_latest_artifacts(monkeypatch, tmp_path, capsys) -> None:
     monkeypatch.setenv(_shared._OUTPUT_ENV, str(tmp_path))
     from algent_backend.data_ingestion.cli import pool as pool_cmd
