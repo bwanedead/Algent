@@ -79,7 +79,13 @@ def _market_item(market: dict) -> PoolItem:
 
 
 def _x_item(hit: dict) -> PoolItem:
-    """A Grok-curated X trending topic as a pool item — the social hive-mind signal."""
+    """A Grok-curated X trending topic as a pool item — the social hive-mind signal.
+
+    Marked ``pre_vetted``: Grok already applied LLM judgement of significance while
+    selecting these, so when the triage ("rake") layer exists, X items skip it and
+    promote straight to the discovery agent's post-rake input — no point re-raking
+    what's already raked (and it's why the slow X fetch needn't gate the rest).
+    """
     topic = str(hit.get("topic") or "").strip()
     urls = [u for u in (hit.get("urls") or []) if isinstance(u, str)][:3]
     return PoolItem(
@@ -87,7 +93,7 @@ def _x_item(hit: dict) -> PoolItem:
         label=topic,
         channel="x",
         kind="trending",
-        signals={"summary": str(hit.get("summary") or "").strip()},
+        signals={"summary": str(hit.get("summary") or "").strip(), "pre_vetted": True},
         evidence=[BeatHit(title=topic, url=u) for u in urls],
     )
 
