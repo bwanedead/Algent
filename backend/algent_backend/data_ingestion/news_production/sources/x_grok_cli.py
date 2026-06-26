@@ -7,20 +7,24 @@ it to ask for the X-native significant-conversation picture and ingest its JSON 
 so the marginal cost is the subscription quota you already pay for, not a metered
 API.
 
+**Lane fan-out**: one generalist instance spreads its turn budget thin across every
+topic. Instead we run one focused instance *per direction* (ai, tech, politics, mma,
+…), in parallel — each spends its whole budget going deep on its lane, and every hit
+is tagged with the lane it came from. Lanes are configurable via ``ALGENT_X_GROK_LANES``.
+
 Two isolation guarantees so the CLI can only use *its own* tooling, never ours:
 - **Scrubbed environment**: our provider keys (OpenAI/Tavily/Exa/Firecrawl/X/…) are
   stripped from the subprocess env, so a CLI plugin can't spend them (this is what
   bit us when its Firecrawl plugin grabbed our key).
-- **Clean working dir**: run from a temp dir with no project `.env` to load.
+- **Clean working dir**: each lane runs from its own temp dir with no project `.env`.
 
 **Salvage on timeout**: the agentic search is slow and variable, so we tell Grok to
-*append each item it finds* to a JSONL file in its cwd as it goes. We then read that
-file after the run — so even a run that hits the wall-clock cap returns whatever it
-found so far, instead of nothing. The final stdout array is the fallback parse.
+*append each item it finds* to a JSONL file in its cwd as it goes. We read that file
+after the run — so even a lane that hits the wall-clock cap returns whatever it found,
+instead of nothing. The final stdout array is the fallback parse.
 
-The exact binary/flags vary, so the command is configurable via ``ALGENT_X_GROK_CMD``
-(default below); we own the prompt and the parsing. Best-effort throughout: any
-failure returns an empty list rather than blocking t0.
+Best-effort throughout: any lane's failure returns no items for that lane rather than
+blocking the others or t0.
 """
 
 from __future__ import annotations
@@ -30,34 +34,54 @@ import os
 import shlex
 import subprocess
 import tempfile
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
 
 _CMD_ENV = "ALGENT_X_GROK_CMD"
+_LANES_ENV = "ALGENT_X_GROK_LANES"  # comma list, e.g. "ai,mma" — overrides defaults
+_CONCURRENCY_ENV = "ALGENT_X_GROK_CONCURRENCY"  # max lanes to run at once
+
 # `grok -p` = single-turn headless: prints to stdout and exits. --max-turns bounds
-# the agentic search. The search can need many tool turns before it composes its
-# answer; too few and it hits "max turns reached" empty-handed, so we give it 20.
-# Override the whole command via the env var.
+# the agentic search; per *lane* (one focused topic) this is a generous ceiling,
+# not a target. Override the whole command via the env var.
 _DEFAULT_CMD = "grok --max-turns 20 -p"
-# Grok's agentic X/web search runs many turns at ~20-50s each, so it needs a
-# generous wall-clock budget. We let it run long (it's worth it for X-native
-# signal) — the JSONL salvage below means a near-miss at the cap still yields hits.
+# Per-lane wall-clock budget. The search is worth running long; the JSONL salvage
+# below means a near-miss at the cap still yields hits. Lanes run in parallel, so
+# total time is ~the slowest wave, not the sum.
 _TIMEOUT_S = 600.0
-# Grok appends each found item here (in its temp cwd) so we can read partial results.
-_FINDINGS_FILE = "x_findings.jsonl"
+_DEFAULT_CONCURRENCY = 3  # be polite to the subscription; tunable via env
+_FINDINGS_FILE = "x_findings.jsonl"  # Grok appends each item here (in its temp cwd)
 
 # Provider credentials the CLI must NOT see (so its plugins can't bill our APIs).
 _SCRUB_PREFIXES = ("OPENAI", "ANTHROPIC", "GEMINI", "TAVILY", "EXA", "BRAVE", "FIRECRAWL", "X_")
 
-_PROMPT = (
+# Search directions. Each becomes one focused headless instance. Add/trim freely;
+# select per run via ALGENT_X_GROK_LANES. Defaults cover the high-value lanes.
+_LANE_FOCUS = {
+    "ai": "AI developments: model/product launches, research, lab and industry moves, "
+          "and notable statements by influential AI figures.",
+    "tech": "technology and startups beyond AI: product launches, funding rounds, "
+            "big-tech strategy, and engineering/security news.",
+    "politics": "politics and policy: significant developments and notable statements "
+                "by influential political figures (what they actually said).",
+    "discussions": "significant live conversations and discourse trending on X right "
+                   "now that could become news.",
+    "gaming": "video game and gaming-industry news: releases, studio/publisher moves, "
+              "major patches, esports, and significant community developments.",
+    "mma": "UFC and MMA world news: fight announcements and bookings, results and "
+           "finishes, fighter news and injuries, and promotion (UFC/PFL/ONE) developments.",
+    "misc": "significant breaking or trending items not covered by the other lanes.",
+}
+_DEFAULT_LANES = ("ai", "tech", "politics", "mma")
+
+_BASE_PROMPT = (
     "Use ONLY your own built-in X/web search. Do NOT read, load, or use any API "
     "keys, .env files, or external credentials for any part of this task.\n"
-    "Goal: surface what is SIGNIFICANT on X right now that mainstream wire services "
-    "would miss or be slow on — favor X-native signal over generic headlines:\n"
-    "- AI and tech developments (launches, research, model/industry moves)\n"
-    "- politics and notable statements by influential people (what they actually said)\n"
-    "- significant live conversations and real-time updates on trending events\n"
-    "Skip sports scores, memes, and generic celebrity gossip. Substance over virality.\n"
+    "Focus area: {focus}\n"
+    "Surface what is SIGNIFICANT on X right now within this focus area — favor "
+    "X-native signal that mainstream wire services miss or are slow on. Skip memes "
+    "and generic gossip; substance over virality.\n"
     "As you confirm EACH newsworthy item, immediately append it as a single-line "
     "JSON object to a file named {outfile} in the current directory, then keep "
     "searching for more (aim for up to {limit}). Each appended line must be exactly:\n"
@@ -66,10 +90,48 @@ _PROMPT = (
 )
 
 
-def fetch_x_grok(*, limit: int = 20) -> list[dict[str, Any]]:
-    """Ask the Grok CLI for X-native significant topics; returns normalized hits (or [])."""
+def fetch_x_grok(
+    *, limit: int = 6, lanes: tuple[str, ...] | None = None, max_workers: int | None = None,
+) -> list[dict[str, Any]]:
+    """Fan out one focused Grok instance per lane; merge, dedupe, and return hits.
+
+    ``limit`` is the per-lane cap. Each hit carries the ``lane`` it came from.
+    """
+    chosen = resolve_lanes(lanes)
+    workers = max_workers or _concurrency()
+    collected: list[dict[str, Any]] = []
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        futures = {pool.submit(_run_lane, lane, limit): lane for lane in chosen}
+        for future in as_completed(futures):
+            try:
+                collected.extend(future.result())
+            except Exception:  # noqa: BLE001 — a lane crashing must not sink the rest
+                continue
+    return _dedupe(collected)
+
+
+def resolve_lanes(lanes: tuple[str, ...] | None) -> tuple[str, ...]:
+    """Pick active lanes: explicit arg → ``ALGENT_X_GROK_LANES`` → defaults."""
+    if lanes is not None:
+        picked = [lane.strip().lower() for lane in lanes if lane.strip()]
+    else:
+        env = os.environ.get(_LANES_ENV, "")
+        picked = [lane.strip().lower() for lane in env.split(",") if lane.strip()] if env else list(_DEFAULT_LANES)
+    valid = tuple(lane for lane in picked if lane in _LANE_FOCUS)
+    return valid or _DEFAULT_LANES
+
+
+def _concurrency() -> int:
+    try:
+        return max(1, int(os.environ.get(_CONCURRENCY_ENV, _DEFAULT_CONCURRENCY)))
+    except ValueError:
+        return _DEFAULT_CONCURRENCY
+
+
+def _run_lane(lane: str, limit: int) -> list[dict[str, Any]]:
+    """Run one headless Grok instance scoped to ``lane``; return its tagged hits."""
     cmd = shlex.split(os.environ.get(_CMD_ENV) or _DEFAULT_CMD)
-    prompt = _PROMPT.format(limit=limit, outfile=_FINDINGS_FILE)
+    prompt = _BASE_PROMPT.format(focus=_LANE_FOCUS[lane], limit=limit, outfile=_FINDINGS_FILE)
     with tempfile.TemporaryDirectory() as workdir:
         stdout = ""
         try:
@@ -87,10 +149,10 @@ def fetch_x_grok(*, limit: int = 20) -> list[dict[str, Any]]:
             stdout = (exc.stdout if isinstance(exc.stdout, str) else "") or ""
         except OSError:
             return []
-        # Prefer the incrementally-written file (survives timeouts); fall back to
-        # the final stdout array (read inside the with-block, before cleanup).
+        # Prefer the incrementally-written file (survives timeouts); fall back to the
+        # final stdout array (read inside the with-block, before cleanup).
         items = _read_findings(Path(workdir) / _FINDINGS_FILE) or _parse_json_array(stdout)
-    return _normalize(items, limit)
+    return _normalize(items, limit, lane)
 
 
 def _scrubbed_env() -> dict[str, str]:
@@ -134,22 +196,36 @@ def _parse_json_array(text: str) -> list:
     return data if isinstance(data, list) else []
 
 
-def _normalize(items: list, limit: int) -> list[dict[str, Any]]:
+def _normalize(items: list, limit: int, lane: str) -> list[dict[str, Any]]:
     out: list[dict[str, Any]] = []
     seen: set[str] = set()
     for item in items:
         if not isinstance(item, dict) or not item.get("topic"):
             continue
         topic = str(item.get("topic", "")).strip()
-        if topic.lower() in seen:  # JSONL + stdout can overlap; dedupe by topic
+        if topic.lower() in seen:  # JSONL + stdout can overlap within a lane
             continue
         seen.add(topic.lower())
         out.append({
             "topic": topic,
             "summary": str(item.get("summary", "")).strip(),
             "urls": [u for u in (item.get("urls") or []) if isinstance(u, str)][:3],
+            "lane": lane,
             "source": "x_grok",
         })
         if len(out) >= limit:
             break
+    return out
+
+
+def _dedupe(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Drop topics that recur across lanes (keep the first lane that found it)."""
+    out: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for item in items:
+        key = item.get("topic", "").lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(item)
     return out

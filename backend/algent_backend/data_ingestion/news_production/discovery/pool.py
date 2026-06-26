@@ -93,7 +93,11 @@ def _x_item(hit: dict) -> PoolItem:
         label=topic,
         channel="x",
         kind="trending",
-        signals={"summary": str(hit.get("summary") or "").strip(), "pre_vetted": True},
+        signals={
+            "summary": str(hit.get("summary") or "").strip(),
+            "lane": str(hit.get("lane") or ""),  # which X direction surfaced it
+            "pre_vetted": True,
+        },
         evidence=[BeatHit(title=topic, url=u) for u in urls],
     )
 

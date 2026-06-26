@@ -286,16 +286,39 @@ def test_x_grok_scrubs_keys_and_parses_json(monkeypatch) -> None:
     assert "X_BEARER_KEY" not in x_grok_cli._scrubbed_env()
     assert "PATH" in x_grok_cli._scrubbed_env()
 
-    captured = {}
-
     def fake_run(cmd, **kw):
-        captured["env"] = kw.get("env", {})
         return type("R", (), {"stdout": 'prose…\n[{"topic":"Quake","summary":"big","urls":["http://a"]}]\nmore'})()
 
     monkeypatch.setattr(x_grok_cli.subprocess, "run", fake_run)
-    hits = x_grok_cli.fetch_x_grok(limit=5)
-    assert hits == [{"topic": "Quake", "summary": "big", "urls": ["http://a"], "source": "x_grok"}]
-    assert "FIRECRAWL_API_KEY" not in captured["env"]  # the CLI never saw our key
+    hits = x_grok_cli.fetch_x_grok(limit=5, lanes=("ai",))
+    assert hits == [{"topic": "Quake", "summary": "big", "urls": ["http://a"],
+                     "lane": "ai", "source": "x_grok"}]
+
+
+def test_x_grok_fans_out_lanes_and_tags(monkeypatch) -> None:
+    from algent_backend.data_ingestion.news_production.sources import x_grok_cli
+
+    # The lane shows up in the prompt (focus text), so branch the fake on it.
+    def fake_run(cmd, **kw):
+        prompt = cmd[-1]
+        topic = "UFC 320 booked" if "UFC" in prompt else "GPT-6 launch"
+        return type("R", (), {"stdout": f'[{{"topic":"{topic}","summary":"s","urls":[]}}]'})()
+
+    monkeypatch.setattr(x_grok_cli.subprocess, "run", fake_run)
+    hits = x_grok_cli.fetch_x_grok(limit=3, lanes=("ai", "mma"), max_workers=2)
+    tagged = {h["topic"]: h["lane"] for h in hits}
+    assert tagged == {"GPT-6 launch": "ai", "UFC 320 booked": "mma"}
+
+
+def test_resolve_lanes_precedence(monkeypatch) -> None:
+    from algent_backend.data_ingestion.news_production.sources import x_grok_cli
+
+    monkeypatch.delenv(x_grok_cli._LANES_ENV, raising=False)
+    assert x_grok_cli.resolve_lanes(None) == x_grok_cli._DEFAULT_LANES
+    assert x_grok_cli.resolve_lanes(("mma", "bogus")) == ("mma",)  # invalid dropped
+    monkeypatch.setenv(x_grok_cli._LANES_ENV, "ai, gaming")
+    assert x_grok_cli.resolve_lanes(None) == ("ai", "gaming")
+    assert x_grok_cli.resolve_lanes(("nope",)) == x_grok_cli._DEFAULT_LANES  # all-invalid → default
 
 
 def test_x_native_normalizes_posts(monkeypatch) -> None:

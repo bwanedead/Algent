@@ -135,9 +135,12 @@ def _fetch_markets(say: ProgressFn) -> list[dict]:
 
 
 def _fetch_x(say: ProgressFn) -> list[dict]:
-    say("fetching X trending via Grok CLI (subscription, ~2-3 min)…")
-    hits = fetch_x_grok(limit=12)  # best-effort: returns [] on any failure/timeout
-    say(f"X (grok): {len(hits)} trending topics" if hits else "X (grok): none (skipped/failed)")
+    from ..sources.x_grok_cli import resolve_lanes
+
+    lanes = resolve_lanes(None)
+    say(f"fetching X via Grok CLI across {len(lanes)} lanes ({', '.join(lanes)}) — subscription, slow…")
+    hits = fetch_x_grok()  # best-effort fan-out: returns [] on total failure
+    say(f"X (grok): {len(hits)} topics across lanes" if hits else "X (grok): none (skipped/failed)")
     return hits
 
 
