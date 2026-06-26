@@ -28,16 +28,22 @@ from typing import Any
 
 _CMD_ENV = "ALGENT_X_GROK_CMD"
 # `grok -p` = single-turn headless: prints to stdout and exits. --max-turns bounds
-# the agentic X search so it can't loop. Override the whole command via the env var.
-_DEFAULT_CMD = "grok --max-turns 8 -p"
-# Grok's agentic X/web search runs ~8 turns at ~20-50s each, so it needs a generous
-# wall-clock budget; 150s clipped it mid-search. 240s absorbs the run-to-run variance.
-_TIMEOUT_S = 240.0
+# the agentic X search so it can't loop. 8 turns sometimes ran out before it
+# composed the final JSON (esp. when asked for more items), so we give it 12.
+# Override the whole command via the env var.
+_DEFAULT_CMD = "grok --max-turns 12 -p"
+# Grok's agentic X/web search runs ~8-12 turns at ~20-50s each, so it needs a
+# generous wall-clock budget; 150s clipped it mid-search. 300s absorbs the
+# run-to-run variance (the search is best-effort — a miss returns [] and t0 builds
+# without X rather than blocking).
+_TIMEOUT_S = 300.0
 
 # Provider credentials the CLI must NOT see (so its plugins can't bill our APIs).
 _SCRUB_PREFIXES = ("OPENAI", "ANTHROPIC", "GEMINI", "TAVILY", "EXA", "BRAVE", "FIRECRAWL", "X_")
 
 _PROMPT = (
+    "Use ONLY your own built-in X/web search. Do NOT read, load, or use any API "
+    "keys, .env files, or external credentials for any part of this task. "
     "Search X for the top trending and breaking NEWS topics right now (not sports "
     "scores or memes). Return ONLY a JSON array, no prose, of up to {limit} items: "
     '[{{"topic": "...", "summary": "one sentence", "urls": ["https://..."]}}]'

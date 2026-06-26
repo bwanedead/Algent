@@ -30,7 +30,15 @@ From `backend/`, using the project venv. Every command prints one JSON document:
 python -m algent_backend.cli.runs agents
 
 # start one (discovery_synthesis is the discovery agent) → {run_id}
+# It self-sources its t0 pool (no manual ingest first). The t0 source channels
+# are toggleable via ALGENT_T0_CHANNELS (default: gkg,beats,markets). The X
+# channel (Grok CLI) is OFF by default — it's slow (~2-3 min) and spends your
+# subscription quota — so opt in only when you want it:
+#   ALGENT_T0_CHANNELS=gkg,markets,x python -m algent_backend.cli.runs start discovery_synthesis
 python -m algent_backend.cli.runs start discovery_synthesis --max-turns 20
+
+# To build/inspect a t0 pool directly (per-channel testing), without an agent run:
+#   python -m algent_backend.cli ingest t0 --channels markets --force
 
 # THEN, before watching, give the human the run's live timeline as a clickable link:
 #   backend/runs_data/<agent>/<NNNN>__<run_id>/audit/timeline.md

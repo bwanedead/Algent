@@ -391,6 +391,47 @@ def test_ensure_t0_reuses_a_fresh_pool_without_fetching(monkeypatch, tmp_path) -
     assert pool["item_count"] == 7 and fetched == []  # reused the fresh pool, no fetch
 
 
+def test_resolve_channels_precedence(monkeypatch) -> None:
+    from algent_backend.data_ingestion.news_production.discovery import pipeline
+
+    monkeypatch.delenv(pipeline._ENV_CHANNELS, raising=False)
+    assert pipeline.resolve_channels(None) == pipeline.DEFAULT_CHANNELS  # default
+    assert "x" not in pipeline.DEFAULT_CHANNELS  # X is opt-in, off by default
+    # Explicit arg wins, filtered to valid channels.
+    assert pipeline.resolve_channels({"gkg", "x", "bogus"}) == frozenset({"gkg", "x"})
+    # Env var used when no explicit arg; an all-invalid set falls back to default.
+    monkeypatch.setenv(pipeline._ENV_CHANNELS, "gkg, x")
+    assert pipeline.resolve_channels(None) == frozenset({"gkg", "x"})
+    assert pipeline.resolve_channels({"nope"}) == pipeline.DEFAULT_CHANNELS
+
+
+def test_build_pool_includes_x_trending() -> None:
+    from algent_backend.data_ingestion.news_production.discovery.pool import build_pool
+
+    x_hits = [{"topic": "Strait of Hormuz attack", "summary": "Ship hit.",
+               "urls": ["https://x.com/i/web/status/1"], "source": "x_grok"}]
+    pool = build_pool(None, None, None, x_hits)
+    assert pool.by_channel.get("x") == 1
+    item = pool.items[0]
+    assert item.channel == "x" and item.kind == "trending"
+    assert item.evidence[0].url.endswith("/1") and item.signals["summary"] == "Ship hit."
+
+
+def test_ensure_t0_x_channel_skips_gkg_and_fetches_grok(monkeypatch, tmp_path) -> None:
+    monkeypatch.setenv(_shared._OUTPUT_ENV, str(tmp_path))
+    from algent_backend.data_ingestion.news_production.discovery import pipeline
+
+    gkg_called: list[int] = []
+    monkeypatch.setattr(pipeline.gdelt_gkg, "fetch_latest", lambda: gkg_called.append(1) or ("x", []))
+    monkeypatch.setattr(
+        pipeline, "fetch_x_grok",
+        lambda **_: [{"topic": "T", "summary": "s", "urls": [], "source": "x_grok"}],
+    )
+    pool, path = pipeline.ensure_t0(channels={"x"}, on_progress=lambda _m: None)
+    assert gkg_called == []  # gkg off → never fetched
+    assert pool["by_channel"].get("x") == 1 and path.endswith(".json")
+
+
 def test_unified_cli_dispatches_ingest_and_runs_categories() -> None:
     from algent_backend.cli.__main__ import _CATEGORIES
 

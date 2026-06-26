@@ -62,6 +62,12 @@ python -m algent_backend.cli.runs agents
 # timeline) — you do NOT run any ingest step first. Starting it is the whole job:
 python -m algent_backend.cli.runs start discovery_synthesis --max-turns 20
 #   t0 is reused if a pool <20 min old exists, else freshly built — all in-run.
+#   t0 SOURCE CHANNELS are toggleable via ALGENT_T0_CHANNELS (default
+#   gkg,beats,markets). X (Grok CLI) is OFF by default — slow (~2-3 min) + spends
+#   sub quota — opt in only when wanted:
+#     ALGENT_T0_CHANNELS=gkg,markets,x python -m algent_backend.cli.runs start discovery_synthesis
+#   Build/inspect a t0 pool directly (per-channel testing, no agent run):
+#     python -m algent_backend.cli ingest t0 --channels markets --force
 #   (Optional per-pillar enrichment: pre-run `ingest sweep --kind pillar`, but the
 #    DOC API throttles, so skip unless needed — GKG-only t0 is the default.)
 

@@ -32,8 +32,9 @@ def build_pool(
     insights: InsightsReport | None,
     sheet: BeatSheet | None,
     markets: list[dict] | None = None,
+    x_hits: list[dict] | None = None,
 ) -> DiscoveryPool:
-    """Consolidate the net + sweep + prediction markets into one grounded pool."""
+    """Consolidate the net + sweep + prediction markets + X into one grounded pool."""
     items: list[PoolItem] = []
     if insights is not None:
         items.extend(_gkg_item(c) for c in insights.candidates)
@@ -41,6 +42,8 @@ def build_pool(
         items.extend(_beat_items(sheet))
     if markets:
         items.extend(_market_item(m) for m in markets)
+    if x_hits:
+        items.extend(_x_item(h) for h in x_hits)
 
     facets: dict[str, list[str]] = defaultdict(list)
     for item in items:
@@ -72,6 +75,20 @@ def _market_item(market: dict) -> PoolItem:
             "price_change_1d": market.get("price_change_1d"),
         },
         evidence=[BeatHit(title=market.get("question", ""), url=market.get("url", ""))],
+    )
+
+
+def _x_item(hit: dict) -> PoolItem:
+    """A Grok-curated X trending topic as a pool item — the social hive-mind signal."""
+    topic = str(hit.get("topic") or "").strip()
+    urls = [u for u in (hit.get("urls") or []) if isinstance(u, str)][:3]
+    return PoolItem(
+        id=f"x:{hit.get('source', 'x')}:{topic[:60]}",
+        label=topic,
+        channel="x",
+        kind="trending",
+        signals={"summary": str(hit.get("summary") or "").strip()},
+        evidence=[BeatHit(title=topic, url=u) for u in urls],
     )
 
 
