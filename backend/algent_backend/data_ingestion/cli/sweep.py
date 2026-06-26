@@ -20,8 +20,8 @@ from __future__ import annotations
 import argparse
 from datetime import UTC, datetime
 
-from ..news_production.discovery import beats as beats_registry
-from ..news_production.discovery.sweep import run_sweep
+from ..newsroom.discovery import beats as beats_registry
+from ..newsroom.discovery.sweep import run_sweep
 from ._shared import beats_dir, print_json, progress, prune_files
 
 

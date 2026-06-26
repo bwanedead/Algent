@@ -25,7 +25,7 @@ from algent_backend.agent_system.foundation.models import ModelSpec
 from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.context import AgentRunContext
 from algent_backend.agent_system.tools.sourcing.search import policy
-from algent_backend.data_ingestion.news_production.discovery.pipeline import ensure_t0
+from algent_backend.data_ingestion.newsroom.discovery.pipeline import ensure_t0
 
 from .messages import build_t0_message
 

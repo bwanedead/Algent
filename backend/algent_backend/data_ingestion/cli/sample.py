@@ -17,9 +17,9 @@ from __future__ import annotations
 import argparse
 from datetime import UTC, datetime
 
-from ..news_production.discovery.report import LongtailSample, SampleRecord
-from ..news_production.discovery.sampling import stratified_reservoir
-from ..news_production.sources import gdelt_ngrams
+from ..newsroom.discovery.report import LongtailSample, SampleRecord
+from ..newsroom.discovery.sampling import stratified_reservoir
+from ..newsroom.sources import gdelt_ngrams
 from ._shared import print_json, prune_files, samples_dir
 
 # Sources exposing a streamable record iterator. id -> stream -> (batch_id, iter[dict]).

@@ -7,6 +7,6 @@ digests over them. No model is in this loop. It is intentionally generic — the
 mechanical machinery here is not news-specific and may serve broader research
 workflows in other domains over time.
 
-Domain-specific processing lives one level down (e.g. ``news_production``); the
+Domain-specific processing lives one level down (e.g. ``newsroom``); the
 agentic side that *consumes* these digests lives in ``agent_system``.
 """

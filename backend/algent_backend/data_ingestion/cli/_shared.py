@@ -16,7 +16,7 @@ import sys
 from collections.abc import Callable
 from pathlib import Path
 
-from ..news_production.sources import gdelt_gkg, gdelt_ngrams
+from ..newsroom.sources import gdelt_gkg, gdelt_ngrams
 
 # backend/ — parents: [cli, data_ingestion, algent_backend, backend]
 _BACKEND_DIR = Path(__file__).resolve().parents[3]

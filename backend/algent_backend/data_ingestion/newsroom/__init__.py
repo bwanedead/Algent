@@ -1,5 +1,5 @@
 """
-``news_production`` — the news-domain data work inside ``data_ingestion``.
+``newsroom`` — the news-domain data work inside ``data_ingestion``.
 
 This is the first concrete domain built on the generic ingestion machinery: the
 data feeding an autonomous news discovery → research → production pipeline.

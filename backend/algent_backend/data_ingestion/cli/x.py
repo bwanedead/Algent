@@ -30,11 +30,11 @@ def run(args: argparse.Namespace) -> int:
     load_env_file(Path(__file__).resolve().parents[3] / ".env")
     progress(f"[x] discovering via {args.via}…")
     if args.via == "grok":
-        from ..news_production.sources.x_grok_cli import fetch_x_grok
+        from ..newsroom.sources.x_grok_cli import fetch_x_grok
 
         hits = fetch_x_grok(limit=args.limit)
     else:
-        from ..news_production.sources.x_native import fetch_x_native
+        from ..newsroom.sources.x_native import fetch_x_native
 
         hits = fetch_x_native(limit=args.limit)
 

@@ -13,8 +13,8 @@ from __future__ import annotations
 
 import argparse
 
-from ..news_production.discovery.digest import build_digest
-from ..news_production.sources import gdelt_gkg
+from ..newsroom.discovery.digest import build_digest
+from ..newsroom.sources import gdelt_gkg
 from ._shared import DIGESTABLE, digests_dir, print_json, prune_digest_files
 
 # Each digestable source: id -> (fetch latest -> (batch_id, records)).

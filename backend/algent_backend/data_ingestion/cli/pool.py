@@ -15,8 +15,8 @@ from __future__ import annotations
 import argparse
 from datetime import UTC, datetime
 
-from ..news_production.discovery.pool import build_pool
-from ..news_production.discovery.report import BeatSheet, InsightsReport
+from ..newsroom.discovery.pool import build_pool
+from ..newsroom.discovery.report import BeatSheet, InsightsReport
 from ._shared import (
     beats_dir,
     insights_dir,

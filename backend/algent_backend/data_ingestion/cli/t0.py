@@ -42,7 +42,7 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
 
 def run(args: argparse.Namespace) -> int:
     # Imported here (not at module top) to avoid a pipeline<->cli import cycle.
-    from ..news_production.discovery.pipeline import (
+    from ..newsroom.discovery.pipeline import (
         DEFAULT_FRESH_MINUTES,
         ensure_t0,
         resolve_channels,

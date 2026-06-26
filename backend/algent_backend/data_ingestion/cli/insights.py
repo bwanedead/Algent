@@ -18,10 +18,10 @@ from __future__ import annotations
 import argparse
 from datetime import UTC, datetime, timedelta
 
-from ..news_production.discovery.candidates import extract_candidates
-from ..news_production.discovery.insights import build_insights
-from ..news_production.discovery.memory import RollingMemory, load_memory, save_memory
-from ..news_production.sources import gdelt_gkg
+from ..newsroom.discovery.candidates import extract_candidates
+from ..newsroom.discovery.insights import build_insights
+from ..newsroom.discovery.memory import RollingMemory, load_memory, save_memory
+from ..newsroom.sources import gdelt_gkg
 from ._shared import DIGESTABLE, insights_dir, memory_dir, print_json, progress, prune_files
 
 # Sources with a deterministic insights pipeline. id -> fetch -> (batch_id, records).

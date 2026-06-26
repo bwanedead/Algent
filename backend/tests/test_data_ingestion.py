@@ -24,21 +24,21 @@ from algent_backend.data_ingestion.cli import fetch as fetch_cmd
 from algent_backend.data_ingestion.cli import insights as insights_cmd
 from algent_backend.data_ingestion.cli import sample as sample_cmd
 from algent_backend.data_ingestion.cli import sweep as sweep_cmd
-from algent_backend.data_ingestion.news_production.discovery import beats as beats_registry
-from algent_backend.data_ingestion.news_production.discovery import lenses, ranking, sampling
-from algent_backend.data_ingestion.news_production.discovery.candidates import extract_candidates
-from algent_backend.data_ingestion.news_production.discovery.digest import build_digest
-from algent_backend.data_ingestion.news_production.discovery.insights import build_insights
-from algent_backend.data_ingestion.news_production.discovery.memory import (
+from algent_backend.data_ingestion.newsroom.discovery import beats as beats_registry
+from algent_backend.data_ingestion.newsroom.discovery import lenses, ranking, sampling
+from algent_backend.data_ingestion.newsroom.discovery.candidates import extract_candidates
+from algent_backend.data_ingestion.newsroom.discovery.digest import build_digest
+from algent_backend.data_ingestion.newsroom.discovery.insights import build_insights
+from algent_backend.data_ingestion.newsroom.discovery.memory import (
     RollingMemory,
     load_memory,
     save_memory,
 )
-from algent_backend.data_ingestion.news_production.discovery.pillars import pillar_for_theme
-from algent_backend.data_ingestion.news_production.discovery.sweep import run_sweep
-from algent_backend.data_ingestion.news_production.sources import gdelt_doc, gdelt_gkg, gdelt_ngrams
-from algent_backend.data_ingestion.news_production.sources.packet import RawPacket, RawPart
-from algent_backend.data_ingestion.news_production.sources.records import GkgRecord
+from algent_backend.data_ingestion.newsroom.discovery.pillars import pillar_for_theme
+from algent_backend.data_ingestion.newsroom.discovery.sweep import run_sweep
+from algent_backend.data_ingestion.newsroom.sources import gdelt_doc, gdelt_gkg, gdelt_ngrams
+from algent_backend.data_ingestion.newsroom.sources.packet import RawPacket, RawPart
+from algent_backend.data_ingestion.newsroom.sources.records import GkgRecord
 
 
 def _rec(language="eng", themes=(), tone=None, persons=(), organizations=(), url="http://x", **kw) -> GkgRecord:
@@ -276,7 +276,7 @@ def test_prune_digest_files_keeps_newest_per_source(monkeypatch, tmp_path) -> No
 
 
 def test_x_grok_scrubs_keys_and_parses_json(monkeypatch) -> None:
-    from algent_backend.data_ingestion.news_production.sources import x_grok_cli
+    from algent_backend.data_ingestion.newsroom.sources import x_grok_cli
 
     # Our provider keys must be stripped from the subprocess env.
     monkeypatch.setenv("FIRECRAWL_API_KEY", "secret")
@@ -296,7 +296,7 @@ def test_x_grok_scrubs_keys_and_parses_json(monkeypatch) -> None:
 
 
 def test_x_grok_fans_out_lanes_and_tags(monkeypatch) -> None:
-    from algent_backend.data_ingestion.news_production.sources import x_grok_cli
+    from algent_backend.data_ingestion.newsroom.sources import x_grok_cli
 
     # The lane shows up in the prompt (focus text), so branch the fake on it.
     def fake_run(cmd, **kw):
@@ -311,7 +311,7 @@ def test_x_grok_fans_out_lanes_and_tags(monkeypatch) -> None:
 
 
 def test_resolve_lanes_precedence(monkeypatch) -> None:
-    from algent_backend.data_ingestion.news_production.sources import x_grok_cli
+    from algent_backend.data_ingestion.newsroom.sources import x_grok_cli
 
     monkeypatch.delenv(x_grok_cli._LANES_ENV, raising=False)
     assert x_grok_cli.resolve_lanes(None) == x_grok_cli._DEFAULT_LANES
@@ -322,7 +322,7 @@ def test_resolve_lanes_precedence(monkeypatch) -> None:
 
 
 def test_x_native_normalizes_posts(monkeypatch) -> None:
-    from algent_backend.data_ingestion.news_production.sources import x_native
+    from algent_backend.data_ingestion.newsroom.sources import x_native
 
     monkeypatch.setenv("X_BEARER_KEY", "tok")
 
@@ -344,7 +344,7 @@ def test_x_native_normalizes_posts(monkeypatch) -> None:
 
 
 def test_fetch_polymarket_filters_sports_and_captures_movement() -> None:
-    from algent_backend.data_ingestion.news_production.sources import prediction_markets as pm
+    from algent_backend.data_ingestion.newsroom.sources import prediction_markets as pm
 
     class _Resp:
         status_code = 200
@@ -372,7 +372,7 @@ def test_fetch_polymarket_filters_sports_and_captures_movement() -> None:
 
 
 def test_build_pool_includes_prediction_markets() -> None:
-    from algent_backend.data_ingestion.news_production.discovery.pool import build_pool
+    from algent_backend.data_ingestion.newsroom.discovery.pool import build_pool
 
     markets = [{
         "question": "Will X happen by July?", "url": "https://polymarket.com/event/x",
@@ -387,7 +387,7 @@ def test_build_pool_includes_prediction_markets() -> None:
 
 def test_ensure_t0_produces_pool_when_missing(monkeypatch, tmp_path) -> None:
     monkeypatch.setenv(_shared._OUTPUT_ENV, str(tmp_path))
-    from algent_backend.data_ingestion.news_production.discovery import pipeline
+    from algent_backend.data_ingestion.newsroom.discovery import pipeline
 
     monkeypatch.setattr(
         pipeline.gdelt_gkg, "fetch_latest",
@@ -401,7 +401,7 @@ def test_ensure_t0_produces_pool_when_missing(monkeypatch, tmp_path) -> None:
 
 def test_ensure_t0_reuses_a_fresh_pool_without_fetching(monkeypatch, tmp_path) -> None:
     monkeypatch.setenv(_shared._OUTPUT_ENV, str(tmp_path))
-    from algent_backend.data_ingestion.news_production.discovery import pipeline
+    from algent_backend.data_ingestion.newsroom.discovery import pipeline
 
     pd = _shared.pool_dir()
     pd.mkdir(parents=True)
@@ -415,7 +415,7 @@ def test_ensure_t0_reuses_a_fresh_pool_without_fetching(monkeypatch, tmp_path) -
 
 
 def test_resolve_channels_precedence(monkeypatch) -> None:
-    from algent_backend.data_ingestion.news_production.discovery import pipeline
+    from algent_backend.data_ingestion.newsroom.discovery import pipeline
 
     monkeypatch.delenv(pipeline._ENV_CHANNELS, raising=False)
     assert pipeline.resolve_channels(None) == pipeline.DEFAULT_CHANNELS  # default
@@ -429,7 +429,7 @@ def test_resolve_channels_precedence(monkeypatch) -> None:
 
 
 def test_build_pool_includes_x_trending() -> None:
-    from algent_backend.data_ingestion.news_production.discovery.pool import build_pool
+    from algent_backend.data_ingestion.newsroom.discovery.pool import build_pool
 
     x_hits = [{"topic": "Strait of Hormuz attack", "summary": "Ship hit.",
                "urls": ["https://x.com/i/web/status/1"], "source": "x_grok"}]
@@ -442,7 +442,7 @@ def test_build_pool_includes_x_trending() -> None:
 
 def test_ensure_t0_x_channel_skips_gkg_and_fetches_grok(monkeypatch, tmp_path) -> None:
     monkeypatch.setenv(_shared._OUTPUT_ENV, str(tmp_path))
-    from algent_backend.data_ingestion.news_production.discovery import pipeline
+    from algent_backend.data_ingestion.newsroom.discovery import pipeline
 
     gkg_called: list[int] = []
     monkeypatch.setattr(pipeline.gdelt_gkg, "fetch_latest", lambda: gkg_called.append(1) or ("x", []))
@@ -653,7 +653,7 @@ def test_beat_registry_has_pillars_and_countries() -> None:
 
 
 def _beat(bid="pillar:ai", **kw):
-    from algent_backend.data_ingestion.news_production.discovery.beats import Beat
+    from algent_backend.data_ingestion.newsroom.discovery.beats import Beat
 
     return Beat(id=bid, label="x", kind="pillar", query="q", **kw)
 
@@ -701,7 +701,7 @@ def test_sweep_cli_writes_sheet_and_prunes(monkeypatch, tmp_path, capsys) -> Non
 
 
 def _fake_sheet(n: int):
-    from algent_backend.data_ingestion.news_production.discovery.report import BeatSheet
+    from algent_backend.data_ingestion.newsroom.discovery.report import BeatSheet
 
     return BeatSheet(
         generated_at="2026-01-01T00:00:00+00:00",
@@ -716,7 +716,7 @@ def _fake_sheet(n: int):
 
 
 def _insights_with(*candidates):
-    from algent_backend.data_ingestion.news_production.discovery.report import InsightsReport
+    from algent_backend.data_ingestion.newsroom.discovery.report import InsightsReport
 
     return InsightsReport(
         source="gdelt_gkg",
@@ -728,13 +728,13 @@ def _insights_with(*candidates):
 
 
 def _candidate(key, kind="theme", pillar=None, **kw):
-    from algent_backend.data_ingestion.news_production.discovery.report import Candidate
+    from algent_backend.data_ingestion.newsroom.discovery.report import Candidate
 
     return Candidate(key=key, kind=kind, pillar=pillar, count=kw.get("count", 5), **kw)
 
 
 def _sheet_with(*results):
-    from algent_backend.data_ingestion.news_production.discovery.report import BeatSheet
+    from algent_backend.data_ingestion.newsroom.discovery.report import BeatSheet
 
     return BeatSheet(
         generated_at="t", timespan="24h", beats_swept=len(results),
@@ -743,7 +743,7 @@ def _sheet_with(*results):
 
 
 def _beat_result(pillar, *hits):
-    from algent_backend.data_ingestion.news_production.discovery.report import BeatResult
+    from algent_backend.data_ingestion.newsroom.discovery.report import BeatResult
 
     return BeatResult(
         beat_id=f"pillar:{pillar}", label=pillar, kind="pillar", pillar=pillar,
@@ -752,13 +752,13 @@ def _beat_result(pillar, *hits):
 
 
 def _hit(title, url, country="United States"):
-    from algent_backend.data_ingestion.news_production.discovery.report import BeatHit
+    from algent_backend.data_ingestion.newsroom.discovery.report import BeatHit
 
     return BeatHit(title=title, url=url, country=country)
 
 
 def test_build_pool_unifies_channels_aligns_pillars_and_indexes_facets() -> None:
-    from algent_backend.data_ingestion.news_production.discovery.pool import build_pool
+    from algent_backend.data_ingestion.newsroom.discovery.pool import build_pool
 
     insights = _insights_with(
         _candidate("ECON_X", pillar="economy", rising=True, velocity=2.0),  # aliased -> economics
@@ -777,7 +777,7 @@ def test_build_pool_unifies_channels_aligns_pillars_and_indexes_facets() -> None
 
 
 def test_build_pool_dedupes_articles_recurring_across_beats() -> None:
-    from algent_backend.data_ingestion.news_production.discovery.pool import build_pool
+    from algent_backend.data_ingestion.newsroom.discovery.pool import build_pool
 
     same = _hit("Chip deal", "http://x")
     sheet = _sheet_with(_beat_result("ai", same), _beat_result("technology", same))
@@ -789,7 +789,7 @@ def test_build_pool_dedupes_articles_recurring_across_beats() -> None:
 
 
 def test_gkg_theme_labels_humanized_with_code_preserved() -> None:
-    from algent_backend.data_ingestion.news_production.discovery.pool import _humanize_theme, build_pool
+    from algent_backend.data_ingestion.newsroom.discovery.pool import _humanize_theme, build_pool
 
     assert _humanize_theme("WB_2811_COLLECTIVE_BARGAINING") == "collective bargaining"
     assert _humanize_theme("TAX_DISEASE_COMA") == "disease coma"
