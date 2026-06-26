@@ -9,6 +9,7 @@ imports live here; the agent's ``spec.py`` stays rail-free.
 
 from __future__ import annotations
 
+import os
 from datetime import UTC, datetime
 from typing import Any, TypedDict
 
@@ -17,6 +18,7 @@ from langchain_core.runnables import RunnableConfig
 from langgraph.graph import END, START, StateGraph
 
 from algent_backend.agent_system.agents.discovery.portfolio import ResearchPortfolio
+from algent_backend.agent_system.agents.discovery.rake.loop import run_rake
 from algent_backend.agent_system.agents.loop import build_react_loop, stream_react_loop
 from algent_backend.agent_system.foundation import cost
 from algent_backend.agent_system.foundation.models import ModelSpec
@@ -79,6 +81,23 @@ def build_synthesis_graph(
         # Curated preview of the t0 input in the timeline, with a link to the snapshot.
         context.emit(ev.INPUT_PREVIEW, _t0_preview(pool, t0_link))
 
+        # RAKE: a cheap nano scout prunes obvious non-news before the pricier
+        # synthesis model triages. Pre-vetted items (X/grok) skip it. Self-metered
+        # (nano tier) and fail-open — its spend adds to the run total. Toggle off
+        # with ALGENT_RAKE=0. Best-effort: a rake failure leaves the pool unraked.
+        rake_usd = 0.0
+        if _rake_enabled():
+            try:
+                pool, rake_summary, rake_usd = run_rake(
+                    context, pool, config=config,
+                    on_progress=lambda m: context.emit(ev.RAKE_PROGRESS, {"message": m}),
+                )
+                if context.artifacts is not None:
+                    context.artifacts.write_json("raked_pool.json", pool)
+                context.emit(ev.RAKE_PROGRESS, {"message": _rake_recap(rake_summary)})
+            except Exception as exc:  # noqa: BLE001 — rake is a best-effort pre-filter
+                context.emit(ev.RAKE_PROGRESS, {"message": f"rake skipped (error: {exc})"})
+
         # Scope the search gate + paid-call budget + USD cost cap to this run for
         # its whole duration. The cost meter auto-halts the loop if spend caps out.
         with policy.scoped(search_channels, paid_budget), cost.scoped(cost_cap_usd, model_spec.model):
@@ -88,7 +107,7 @@ def build_synthesis_graph(
                 context=context,
                 config=config,
             )
-            estimated_usd = cost.spent_usd()
+            estimated_usd = cost.spent_usd() + rake_usd
 
         if isinstance(produced, ResearchPortfolio):
             portfolio = produced
@@ -162,6 +181,21 @@ def _t0_preview(pool: dict[str, Any], link: str | None) -> dict[str, Any]:
         ],
         "link": link,
     }
+
+
+def _rake_enabled() -> bool:
+    """Rake is on by default; ALGENT_RAKE=0/false/no turns the stage off."""
+    return os.environ.get("ALGENT_RAKE", "1").strip().lower() not in ("0", "false", "no", "off")
+
+
+def _rake_recap(summary: Any) -> str:
+    recap = (
+        f"pruned t0: kept {summary.kept}/{summary.considered}, dropped {summary.dropped}, "
+        f"{summary.pre_vetted} pre-vetted passthrough (~${summary.estimated_usd:.4f})"
+    )
+    if summary.dropped_examples:
+        recap += " | tossed e.g. " + "; ".join(summary.dropped_examples[:3])
+    return recap
 
 
 def _now() -> str:

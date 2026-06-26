@@ -34,6 +34,7 @@ COST_LIMIT_REACHED = "cost.limit_reached"  # est. run spend hit the cap; loop ha
 INPUT_PREVIEW = "input.preview"  # curated preview of the run's input (e.g. the t0 pool) + a link
 OUTPUT_PREVIEW = "output.preview"  # curated preview of the run's output (e.g. the t1 vectors) + a link
 T0_PROGRESS = "t0.progress"  # a step of in-run input production (e.g. building the t0 pool)
+RAKE_PROGRESS = "rake.progress"  # a step of the nano triage ("rake") pruning the t0 pool
 
 
 class RunEvent(BaseModel):

@@ -26,6 +26,7 @@ from algent_backend.agent_system.runs.events import (
     MODEL_USAGE,
     NODE_COMPLETED,
     OUTPUT_PREVIEW,
+    RAKE_PROGRESS,
     RUN_COMPLETED,
     RUN_ERROR,
     RUN_FAILED,
@@ -197,6 +198,10 @@ def _render_t0_progress(event: RunEvent) -> list[str]:
     return [f"- t0: {event.payload.get('message', '')}"]
 
 
+def _render_rake_progress(event: RunEvent) -> list[str]:
+    return [f"- rake: {event.payload.get('message', '')}"]
+
+
 def _render_output_preview(event: RunEvent) -> list[str]:
     p = event.payload
     lines = [f"- {p.get('title', 'output')}: {p.get('summary', '')}"]
@@ -257,6 +262,7 @@ _RENDERERS = {
     INPUT_PREVIEW: _render_input_preview,
     OUTPUT_PREVIEW: _render_output_preview,
     T0_PROGRESS: _render_t0_progress,
+    RAKE_PROGRESS: _render_rake_progress,
 }
 
 

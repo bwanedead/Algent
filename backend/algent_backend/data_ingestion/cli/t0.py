@@ -19,20 +19,19 @@ from __future__ import annotations
 
 import argparse
 
-from ..news_production.discovery.pipeline import (
-    ALL_CHANNELS,
-    DEFAULT_FRESH_MINUTES,
-    ensure_t0,
-    resolve_channels,
-)
 from ._shared import print_json, progress
+
+# Channel names for the --channels help text. Kept as a literal here (not imported
+# from pipeline) so this module — pulled in by cli/__init__ — never imports pipeline
+# at load time; pipeline imports cli._shared, so a top-level import would cycle.
+_CHANNEL_NAMES = "gkg,beats,markets,x"
 
 
 def add_parser(subparsers: argparse._SubParsersAction) -> None:
     parser = subparsers.add_parser("t0", help="build the t0 discovery pool (toggleable channels)")
     parser.add_argument(
         "--channels",
-        help=f"comma list of {','.join(ALL_CHANNELS)} (default: env ALGENT_T0_CHANNELS or gkg,beats,markets)",
+        help=f"comma list of {_CHANNEL_NAMES} (default: env ALGENT_T0_CHANNELS or gkg,beats,markets)",
     )
     parser.add_argument(
         "--force", action="store_true",
@@ -42,6 +41,13 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
 
 
 def run(args: argparse.Namespace) -> int:
+    # Imported here (not at module top) to avoid a pipeline<->cli import cycle.
+    from ..news_production.discovery.pipeline import (
+        DEFAULT_FRESH_MINUTES,
+        ensure_t0,
+        resolve_channels,
+    )
+
     channels = set(args.channels.split(",")) if args.channels else None
     chans = resolve_channels(channels)
     progress(f"[t0] building with channels: {', '.join(sorted(chans))}")
