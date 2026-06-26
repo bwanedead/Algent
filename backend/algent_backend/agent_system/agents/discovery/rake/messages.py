@@ -43,9 +43,10 @@ def _fmt_item(item: dict[str, Any]) -> str:
 
 
 _DIRECTIVE = (
-    "TASK: Return a RakeChunkResult with one verdict per id above — keep=true for a "
-    "real newsworthy lead, keep=false for ads/spam/boilerplate/evergreen/pure "
-    "price-or-roster bets. When unsure, keep. For keepers whose meaning isn't obvious "
-    "from the line (e.g. an abstract theme label), FREE-read the evidence URL and fill "
-    "headline + synopsis from the article. Echo each id exactly."
+    "TASK: Return a RakeChunkResult with one verdict per id above. DEFAULT to keep — "
+    "toss (keep=false) ONLY obvious junk: ads/spam/boilerplate/evergreen and pure "
+    "price-or-roster bets. Keep small, niche, or fringe real stories. When in any "
+    "doubt, keep. For keepers whose meaning isn't obvious from the line (e.g. an "
+    "abstract theme label), FREE-read the evidence URL and fill headline + synopsis "
+    "from the article. Echo each id exactly."
 )
