@@ -11,6 +11,7 @@ settle which X channel is better juice-per-spend before wiring it into t0.
 from __future__ import annotations
 
 import argparse
+from pathlib import Path
 
 from ._shared import print_json, progress
 
@@ -23,6 +24,10 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
 
 
 def run(args: argparse.Namespace) -> int:
+    # Load backend/.env so the native path sees X_BEARER_KEY (grok scrubs keys anyway).
+    from algent_backend.config.env_file import load_env_file
+
+    load_env_file(Path(__file__).resolve().parents[3] / ".env")
     progress(f"[x] discovering via {args.via}…")
     if args.via == "grok":
         from ..news_production.sources.x_grok_cli import fetch_x_grok

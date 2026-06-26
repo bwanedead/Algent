@@ -27,8 +27,12 @@ import tempfile
 from typing import Any
 
 _CMD_ENV = "ALGENT_X_GROK_CMD"
-_DEFAULT_CMD = "grok -p"
-_TIMEOUT_S = 150.0
+# `grok -p` = single-turn headless: prints to stdout and exits. --max-turns bounds
+# the agentic X search so it can't loop. Override the whole command via the env var.
+_DEFAULT_CMD = "grok --max-turns 8 -p"
+# Grok's agentic X/web search runs ~8 turns at ~20-50s each, so it needs a generous
+# wall-clock budget; 150s clipped it mid-search. 240s absorbs the run-to-run variance.
+_TIMEOUT_S = 240.0
 
 # Provider credentials the CLI must NOT see (so its plugins can't bill our APIs).
 _SCRUB_PREFIXES = ("OPENAI", "ANTHROPIC", "GEMINI", "TAVILY", "EXA", "BRAVE", "FIRECRAWL", "X_")
