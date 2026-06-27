@@ -47,6 +47,7 @@ def rank_portfolio(
     portfolio: ResearchPortfolio,
     *,
     model_spec: ModelSpec = DEFAULT_MODEL,
+    config: object = None,
 ) -> tuple[RouteRanking, dict[str, ResearchVector]]:
     """Rank a t1 portfolio for promotion. Returns (ranking, candidate_id -> vector).
 
@@ -70,7 +71,7 @@ def rank_portfolio(
                 "sources": len(vec.sources),
             },
         ))
-    ranking = route(context, candidates, PROMOTION_BRIEF, model_spec=model_spec)
+    ranking = route(context, candidates, PROMOTION_BRIEF, model_spec=model_spec, config=config)
     return ranking, by_id
 
 

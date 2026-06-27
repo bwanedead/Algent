@@ -24,7 +24,7 @@ class _Structured:
     def __init__(self, ranking: RouteRanking, capture: list) -> None:
         self._r, self._cap = ranking, capture
 
-    def invoke(self, messages):
+    def invoke(self, messages, config=None):
         self._cap.append(messages)
         return self._r
 

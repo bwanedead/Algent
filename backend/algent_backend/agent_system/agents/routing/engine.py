@@ -29,17 +29,25 @@ def route(
     brief: RoutingBrief,
     *,
     model_spec: ModelSpec,
+    config: object = None,
 ) -> RouteRanking:
-    """Rank ``candidates`` against ``brief`` and return the ranking (best-first)."""
+    """Rank ``candidates`` against ``brief`` and return the ranking (best-first).
+
+    ``config`` is the run's RunnableConfig (if any) — threaded to the model call so
+    its token usage is captured by the run's usage handler.
+    """
     if not candidates:
         return RouteRanking(note="no candidates to route")
 
     model = context.model_resolver.resolve(model_spec).client
     structured = model.with_structured_output(RouteRanking)
-    raw = structured.invoke([
-        SystemMessage(content=build_router_system_prompt(brief)),
-        HumanMessage(content=build_router_message(candidates, brief.top_k)),
-    ])
+    raw = structured.invoke(
+        [
+            SystemMessage(content=build_router_system_prompt(brief)),
+            HumanMessage(content=build_router_message(candidates, brief.top_k)),
+        ],
+        config=config,
+    )
 
     ranking = raw if isinstance(raw, RouteRanking) else _coerce(raw)
     # Trust only choices that name a real candidate; order best-first by rank.
