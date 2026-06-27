@@ -1,0 +1,1016 @@
+{
+  "generated_at": "2026-06-26T09:15:00Z",
+  "t0_ref": "20260626091500",
+  "total_considered": 59,
+  "vectors": [
+    {
+      "id": "vec_fe488549e0",
+      "title": "Buckingham Palace becomes an open, non-residential monarchy HQ",
+      "thesis": "Charles’s decision not to live at Buckingham Palace reframes the palace from royal residence to public-facing administrative and ceremonial hub, while highlighting the cost, access, and legitimacy politics of monarchy modernization.",
+      "vector_type": "story",
+      "rationale": "Big symbolic monarchy move, tied to a very large public refurbishment bill, tax disclosures, and public-access tradeoffs.",
+      "supporting_hits": [
+        "gkg:person:king charles"
+      ],
+      "pillars": [
+        "politics",
+        "society",
+        "UK",
+        "royalty",
+        "public-spending"
+      ],
+      "scope": [
+        "politics",
+        "society",
+        "UK",
+        "royalty",
+        "public-spending"
+      ],
+      "research_effort": "standard",
+      "key_questions": [
+        "Why was residence at Buckingham Palace rejected after the refurb?",
+        "How do the tax disclosures and Sovereign Grant figures change the public debate?",
+        "What public-access changes are planned, and what do they mean practically?",
+        "Is this a one-off Charles decision or a template for William’s reign?"
+      ],
+      "sources": [
+        "https://www.peeblesshirenews.com/news/national/26229673.clar"
+      ]
+    },
+    {
+      "id": "vec_20da31ce1c",
+      "title": "Poverty reduction without political loyalty in Colombia and Latin America",
+      "thesis": "Colombia’s election suggests a broader Latin American pattern: material gains, lower poverty, and reduced inequality do not necessarily translate into support for the incumbents who delivered them.",
+      "vector_type": "synthesis",
+      "rationale": "Connects development outcomes to electoral backlash, a useful cross-country political economy frame.",
+      "supporting_hits": [
+        "gkg:theme:WB_1153_MIDDLE_CLASS"
+      ],
+      "pillars": [
+        "economics",
+        "politics",
+        "Latin America",
+        "elections",
+        "poverty",
+        "middle class"
+      ],
+      "scope": [
+        "economics",
+        "politics",
+        "Latin America",
+        "elections",
+        "poverty",
+        "middle class"
+      ],
+      "research_effort": "standard",
+      "key_questions": [
+        "How robust are the poverty and inequality gains?",
+        "What explains the electoral disconnect: security, identity, inflation, media, organization?",
+        "Is Mexico really the exception, and if so why?",
+        "What does this imply for future left-of-center coalitions?"
+      ],
+      "sources": [
+        "https://www.counterpunch.org/2026/06/26/the-paradox-of-progr"
+      ]
+    },
+    {
+      "id": "vec_836b603637",
+      "title": "Cuba’s sweeping reforms as a response to crisis and stagnation",
+      "thesis": "Cuba’s approval of broad economic and social reforms signals a renewed attempt to relieve pressure through enterprise autonomy, agricultural changes, banking reform, and targeted relief.",
+      "vector_type": "story",
+      "rationale": "Potentially major policy shift in a sanctioned, economically stressed system; likely broader implications for liberalization and state capacity.",
+      "supporting_hits": [
+        "gkg:theme:TAX_POLITICAL_PARTY_COMMUNIST_PARTY"
+      ],
+      "pillars": [
+        "politics",
+        "economics",
+        "Cuba",
+        "reform",
+        "state-capacity"
+      ],
+      "scope": [
+        "politics",
+        "economics",
+        "Cuba",
+        "reform",
+        "state-capacity"
+      ],
+      "research_effort": "standard",
+      "key_questions": [
+        "What exactly is being reformed, and how deep are the changes?",
+        "Are these measures structural or just crisis management?",
+        "How do sanctions and external pressure shape the package?",
+        "Who benefits and who loses inside the Cuban system?"
+      ],
+      "sources": []
+    },
+    {
+      "id": "vec_49737daa71",
+      "title": "Labour-market institutions and worker protections under pressure",
+      "thesis": "Rising attention to labor-market institutions reflects a broader contest over working conditions, enforcement, and whether productivity gains are being shared with workers.",
+      "vector_type": "synthesis",
+      "rationale": "Cross-cutting economics story likely to gather multiple subhappenings: unsafe work, collective bargaining, job security, and workplace governance.",
+      "supporting_hits": [
+        "gkg:theme:WB_2788_LABOR_MARKET_INSTITUTIONS_AND_POLICIES"
+      ],
+      "pillars": [
+        "economics",
+        "labor",
+        "working-conditions",
+        "policy"
+      ],
+      "scope": [
+        "economics",
+        "labor",
+        "working-conditions",
+        "policy"
+      ],
+      "research_effort": "light",
+      "key_questions": [
+        "Which countries or sectors are driving the signal?",
+        "Is the story about legal reform, accidents, wage pressure, or labor conflict?",
+        "Are employers or governments changing enforcement?"
+      ],
+      "sources": []
+    },
+    {
+      "id": "vec_c3e6a3b46e",
+      "title": "AI, cobots, and the fight over who captures productivity gains",
+      "thesis": "The UAW warning about AI and collaborative robots points to a larger labor fight over automation, job displacement, and whether workers get a share of productivity gains.",
+      "vector_type": "implications",
+      "rationale": "Clear implications for manufacturing, labor negotiations, and industrial policy.",
+      "supporting_hits": [
+        "gkg:organization:technology progress"
+      ],
+      "pillars": [
+        "economics",
+        "labor",
+        "AI",
+        "automation",
+        "manufacturing"
+      ],
+      "scope": [
+        "economics",
+        "labor",
+        "AI",
+        "automation",
+        "manufacturing"
+      ],
+      "research_effort": "light",
+      "key_questions": [
+        "Where is automation adoption most advanced?",
+        "Are there concrete job losses or just bargaining pressure?",
+        "What contractual model would share gains with workers?"
+      ],
+      "sources": []
+    },
+    {
+      "id": "vec_721593c131",
+      "title": "UK asylum vetting and biometric screening after Afghanistan",
+      "thesis": "The UK is trying to formalize security screening for evacuation and mercy-flight contexts after Afghanistan-era failures exposed risks in the asylum and vetting pipeline.",
+      "vector_type": "story",
+      "rationale": "Strong domestic security and immigration-policy relevance, with explicit concern about potentially dangerous entrants.",
+      "supporting_hits": [
+        "gkg:theme:SMUGGLING",
+        "gkg:organization:ministry of defence"
+      ],
+      "pillars": [
+        "politics",
+        "security",
+        "UK",
+        "immigration",
+        "Afghanistan"
+      ],
+      "scope": [
+        "politics",
+        "security",
+        "UK",
+        "immigration",
+        "Afghanistan"
+      ],
+      "research_effort": "standard",
+      "key_questions": [
+        "What exactly changes under the new biometric delegation framework?",
+        "How many people are affected, and what oversight exists?",
+        "Is this a real correction or a papering-over of past failures?",
+        "How do MoD, Home Office, and allies split responsibility?"
+      ],
+      "sources": [
+        "https://www.express.co.uk/news/politics/2221474/Afghanistan-",
+        "https://www.kidderminstershuttle.co.uk/news/national/2623025"
+      ]
+    },
+    {
+      "id": "vec_3cbce743a5",
+      "title": "Belarus edging toward direct involvement in the Ukraine war",
+      "thesis": "Ukraine’s warning that Belarus is building out military infrastructure near the border raises the risk of a northern-front escalation and a broader Russian attempt to stretch Kyiv’s defenses.",
+      "vector_type": "story",
+      "rationale": "Material military escalation risk with regional security implications.",
+      "supporting_hits": [
+        "gkg:theme:SLFID_MILITARY_BUILDUP"
+      ],
+      "pillars": [
+        "politics",
+        "security",
+        "Ukraine",
+        "Belarus",
+        "Russia",
+        "war"
+      ],
+      "scope": [
+        "politics",
+        "security",
+        "Ukraine",
+        "Belarus",
+        "Russia",
+        "war"
+      ],
+      "research_effort": "standard",
+      "key_questions": [
+        "What evidence supports the build-up claims?",
+        "Is Minsk preparing to intervene or merely signaling?",
+        "How credible is the 70,000-troop estimate?",
+        "What would trigger a shift from posturing to actual involvement?"
+      ],
+      "sources": [
+        "https://londonlovesbusiness.com/zelensky-warns-belarus-milit"
+      ]
+    },
+    {
+      "id": "vec_436abf8ae1",
+      "title": "Russia/Moscow leadership and hydropower/environment-linked developments",
+      "thesis": "The Russian signals around Sergei Sobyanin and hydropower/environment suggest a local-to-national governance story that may connect energy infrastructure, environmental management, and municipal power.",
+      "vector_type": "synthesis",
+      "rationale": "Could turn into a broader Russia governance/infrastructure piece if corroborated by follow-on hits.",
+      "supporting_hits": [
+        "gkg:person:sergei sobyanin",
+        "gkg:theme:ENV_HYDRO"
+      ],
+      "pillars": [
+        "environment",
+        "economics",
+        "Russia",
+        "energy",
+        "urban-governance"
+      ],
+      "scope": [
+        "environment",
+        "economics",
+        "Russia",
+        "energy",
+        "urban-governance"
+      ],
+      "research_effort": "light",
+      "key_questions": [
+        "What are the concrete developments?",
+        "Is this about power generation, water management, or municipal politics?",
+        "What is the significance for Moscow or broader Russian infrastructure?"
+      ],
+      "sources": [
+        "https://www.therecord.com/news/world/europe/russia-reports-o"
+      ]
+    },
+    {
+      "id": "vec_4bf928407a",
+      "title": "Global market volatility as shares skid and risk appetite shifts",
+      "thesis": "The market signal points to a broader volatility regime where trading conditions themselves are driving risk-off behavior rather than a single catalyst.",
+      "vector_type": "story",
+      "rationale": "Useful macro-finance framing; can connect to rates, geopolitics, and commodity shocks.",
+      "supporting_hits": [
+        "gkg:theme:WB_1150_VOLATILITY",
+        "gkg:theme:ECON_CURRENCY_EXCHANGE_RATE"
+      ],
+      "pillars": [
+        "economics",
+        "markets",
+        "volatility",
+        "FX",
+        "macro"
+      ],
+      "scope": [
+        "economics",
+        "markets",
+        "volatility",
+        "FX",
+        "macro"
+      ],
+      "research_effort": "standard",
+      "key_questions": [
+        "What is driving the volatility: rates, geopolitics, earnings, or liquidity?",
+        "Are FX moves reinforcing the broader selloff?",
+        "Is this a short-lived shock or an emerging regime change?"
+      ],
+      "sources": []
+    },
+    {
+      "id": "vec_b4a67e126d",
+      "title": "Regional tightening / easing divergence in central banking",
+      "thesis": "The pool shows a multi-bank policy cluster—Fed, BoE, ECB, and related FX volatility—pointing to a wider phase of divergent central-bank positioning rather than a single isolated meeting.",
+      "vector_type": "synthesis",
+      "rationale": "High-leverage macro story that can absorb several policy-rate and currency hits.",
+      "supporting_hits": [
+        "gkg:theme:WB_1070_ECONOMIC_GROWTH_POLICY",
+        "gkg:theme:ECON_CURRENCY_EXCHANGE_RATE",
+        "gkg:theme:WB_1150_VOLATILITY"
+      ],
+      "pillars": [
+        "economics",
+        "central-banks",
+        "inflation",
+        "rates",
+        "FX"
+      ],
+      "scope": [
+        "economics",
+        "central-banks",
+        "inflation",
+        "rates",
+        "FX"
+      ],
+      "research_effort": "deep",
+      "key_questions": [
+        "Which economies are still prioritizing inflation vs growth?",
+        "How much rate expectation is already priced in?",
+        "Are trade/energy shocks changing the policy path?",
+        "What does divergence imply for currencies and capital flows?"
+      ],
+      "sources": [
+        "https://www.polymarket.com/event/fed-decision-in-june-825"
+      ]
+    },
+    {
+      "id": "vec_bd540e7822",
+      "title": "Fed path under inflation pressure: no change, cuts, or surprise hike?",
+      "thesis": "Market pricing around the Fed suggests the main question is whether persistent inflation and energy shocks keep rates unchanged, delay cuts, or force a more hawkish surprise.",
+      "vector_type": "story",
+      "rationale": "Clear, near-term market-moving macro story with direct rate and asset-price implications.",
+      "supporting_hits": [
+        "market:polymarket:es-by-50-bps-after-the-july-2026-meeting",
+        "market:polymarket:es-by-25-bps-after-the-july-2026-meeting",
+        "market:polymarket:terest-rates-after-the-july-2026-meeting",
+        "market:polymarket:/event/bitcoin-above-58k-on-june-26-2026",
+        "gkg:theme:WB_1070_ECONOMIC_GROWTH_POLICY",
+        "gkg:theme:ECON_CURRENCY_EXCHANGE_RATE"
+      ],
+      "pillars": [
+        "economics",
+        "markets",
+        "Federal Reserve",
+        "inflation",
+        "Bitcoin"
+      ],
+      "scope": [
+        "economics",
+        "markets",
+        "Federal Reserve",
+        "inflation",
+        "Bitcoin"
+      ],
+      "research_effort": "deep",
+      "key_questions": [
+        "What is the dominant scenario in the July FOMC market?",
+        "What data points are shifting expectations?",
+        "How tightly is Bitcoin tracking rate expectations?",
+        "How much of the move is geopolitical energy spillover?"
+      ],
+      "sources": [
+        "https://polymarket.com/event/fed-decision-in-june-825",
+        "https://polymarket.com/event/what-will-fed-rate-hit-before-2027",
+        "https://polymarket.com/event/how-many-fed-rate-cuts-in-2026"
+      ]
+    },
+    {
+      "id": "vec_1b251bc49e",
+      "title": "Strait of Hormuz normalization and the Iran escalation/ceasefire trade",
+      "thesis": "The Polymarket cluster around Hormuz traffic, shipping normalcy, and Iran outcomes reflects a market-priced geopolitical swing between containment, ceasefire durability, and renewed disruption.",
+      "vector_type": "synthesis",
+      "rationale": "Major oil/shipping/geopolitics nexus with direct macro implications.",
+      "supporting_hits": [
+        "market:polymarket:traffic-returns-to-normal-by-end-of-june",
+        "market:polymarket:muz-traffic-returns-to-normal-by-july-31",
+        "market:polymarket:muz-traffic-returns-to-normal-by-july-15",
+        "market:polymarket:ait-of-hormuz-on-any-day-by-june-30-2026",
+        "market:polymarket:e-oil-cl-hit-high-200-by-end-of-june-677",
+        "market:polymarket:will-jared-kushner-enter-iran-by-june-30",
+        "market:polymarket:benjamin-netanyahu-enter-iran-by-june-30",
+        "market:polymarket:/will-the-iranian-regime-fall-by-june-30",
+        "market:polymarket:deal-by-august-31-2026-20260621201255154",
+        "market:polymarket:bia-bans-us-military-aircraft-by-june-30"
+      ],
+      "pillars": [
+        "economics",
+        "markets",
+        "Middle East",
+        "oil",
+        "shipping",
+        "Iran"
+      ],
+      "scope": [
+        "economics",
+        "markets",
+        "Middle East",
+        "oil",
+        "shipping",
+        "Iran"
+      ],
+      "research_effort": "deep",
+      "key_questions": [
+        "Which Hormuz outcomes are actually driving prices?",
+        "What’s the latest credible reporting on ceasefire/negotiation status?",
+        "Are traders betting on de-escalation or on a sudden shock?",
+        "How exposed are oil and shipping markets to a reversal?"
+      ],
+      "sources": [
+        "https://polymarket.com/event/us-escorts-commercial-ship-through-hormuz-by-march-31",
+        "https://polymarket.com/event/what-iranian-demands-will-trump-agree-to-by-june-30",
+        "https://polymarket.com/event/iran-ceasefire-continues-through..."
+      ]
+    },
+    {
+      "id": "vec_1d73aa1b55",
+      "title": "Unification Church / political influence / price-manipulation storyline in East Asia",
+      "thesis": "Reporting linking the Unification Church to South Korean political and legal themes suggests an ongoing influence-and-accountability story that may intersect with court or party politics.",
+      "vector_type": "story",
+      "rationale": "Recurring regional politics/institutional accountability story; potentially significant if tied to court or party dynamics.",
+      "supporting_hits": [
+        "gkg:organization:unification church"
+      ],
+      "pillars": [
+        "politics",
+        "East Asia",
+        "Korea",
+        "religion",
+        "influence"
+      ],
+      "scope": [
+        "politics",
+        "East Asia",
+        "Korea",
+        "religion",
+        "influence"
+      ],
+      "research_effort": "light",
+      "key_questions": [
+        "What new allegation or court development is being reported?",
+        "Are financial or political ties under scrutiny?",
+        "What is the likely institutional consequence?"
+      ],
+      "sources": [
+        "http://global.chinadaily.com.cn/a/202606/..."
+      ]
+    },
+    {
+      "id": "vec_73c4d32a61",
+      "title": "E-government and public payments administration update",
+      "thesis": "The Turkish local-news e-government/payments signal points to a routine but potentially important state-services update affecting beneficiaries and payment timing.",
+      "vector_type": "story",
+      "rationale": "Public-administration story with possible immediate household impact, even if narrowly scoped.",
+      "supporting_hits": [
+        "gkg:theme:WB_2358_E_GOVERNMENT"
+      ],
+      "pillars": [
+        "economics",
+        "public-services",
+        "Turkey",
+        "payments",
+        "digital-government"
+      ],
+      "scope": [
+        "economics",
+        "public-services",
+        "Turkey",
+        "payments",
+        "digital-government"
+      ],
+      "research_effort": "light",
+      "key_questions": [
+        "What payments are being updated?",
+        "Which populations are affected?",
+        "Is this a recurring schedule change or a policy shift?"
+      ],
+      "sources": [
+        "https://www.bursadabugun.com/haber/haziran-ayi-odemeleri-hes"
+      ]
+    },
+    {
+      "id": "vec_7f73d95462",
+      "title": "Wind energy momentum",
+      "thesis": "The wind-energy signal suggests continued activity in renewable project development, industrial partnerships, or policy support for wind power.",
+      "vector_type": "synthesis",
+      "rationale": "Clean-energy industrial and policy theme with global relevance.",
+      "supporting_hits": [
+        "gkg:theme:WB_529_WIND_ENERGY"
+      ],
+      "pillars": [
+        "environment",
+        "economics",
+        "energy",
+        "wind-power"
+      ],
+      "scope": [
+        "environment",
+        "economics",
+        "energy",
+        "wind-power"
+      ],
+      "research_effort": "light",
+      "key_questions": [
+        "Is this project finance, policy, or manufacturing?",
+        "Which region is driving the trend?",
+        "Are supply-chain or grid constraints still binding?"
+      ],
+      "sources": [
+        "https://www.trend.az/business/4201886.html"
+      ]
+    },
+    {
+      "id": "vec_e187781307",
+      "title": "Utilities governance and performance under scrutiny",
+      "thesis": "The utilities-governance cluster points to a corporate/public-service accountability story around operational performance, regulation, and governance standards.",
+      "vector_type": "story",
+      "rationale": "Potentially cross-sector relevance for infrastructure oversight and corporate governance.",
+      "supporting_hits": [
+        "gkg:theme:WB_519_UTILITIES_GOVERNANCE_AND_PERFORMANCE"
+      ],
+      "pillars": [
+        "economics",
+        "utilities",
+        "governance",
+        "regulation"
+      ],
+      "scope": [
+        "economics",
+        "utilities",
+        "governance",
+        "regulation"
+      ],
+      "research_effort": "light",
+      "key_questions": [
+        "Which utility or sector is implicated?",
+        "Is the issue financial, operational, or regulatory?",
+        "What governance failures or reforms are in play?"
+      ],
+      "sources": [
+        "https://www.lexology.com/pro/content/key-lessons-coupangs-re..."
+      ]
+    },
+    {
+      "id": "vec_3ff9600765",
+      "title": "Consumer-protection pressure around fuel prices/taxes in Ireland",
+      "thesis": "Irish petrol retailers are pushing back against fuel-duty changes, framing the issue as consumer-protection and cost-of-living pressure rather than just sector lobbying.",
+      "vector_type": "story",
+      "rationale": "Straightforward cost-of-living policy story with immediate household relevance.",
+      "supporting_hits": [
+        "gkg:theme:WB_364_CONSUMER_PROTECTION"
+      ],
+      "pillars": [
+        "economics",
+        "consumer-prices",
+        "Ireland",
+        "fuel",
+        "tax"
+      ],
+      "scope": [
+        "economics",
+        "consumer-prices",
+        "Ireland",
+        "fuel",
+        "tax"
+      ],
+      "research_effort": "light",
+      "key_questions": [
+        "What taxes or duty changes are being proposed?",
+        "How big is the consumer impact?",
+        "Is this a temporary relief rollback or a larger fuel-tax shift?"
+      ],
+      "sources": [
+        "https://dublinpeople.com/news/dublin/articles/2026/06/26/ipr"
+      ]
+    },
+    {
+      "id": "vec_b11510b080",
+      "title": "Economic growth policy as a broad policy frame",
+      "thesis": "The economic-growth-policy theme likely captures a broad policy push around austerity, fiscal contraction, and growth signaling rather than a single headline event.",
+      "vector_type": "synthesis",
+      "rationale": "Could absorb several fiscal and industrial-policy substories; useful as a macro framing vector.",
+      "supporting_hits": [
+        "gkg:theme:WB_1070_ECONOMIC_GROWTH_POLICY"
+      ],
+      "pillars": [
+        "economics",
+        "fiscal-policy",
+        "growth",
+        "austerity"
+      ],
+      "scope": [
+        "economics",
+        "fiscal-policy",
+        "growth",
+        "austerity"
+      ],
+      "research_effort": "light",
+      "key_questions": [
+        "Which governments or firms are driving the policy signal?",
+        "Is this growth-supportive policy or just rhetorical framing?",
+        "Are there measurable fiscal or spending changes underneath?"
+      ],
+      "sources": []
+    },
+    {
+      "id": "vec_91b8b163a5",
+      "title": "Foreign-banks / cross-border finance theme",
+      "thesis": "The foreign-banks signal indicates a developing finance story around cross-border banking activity, regulation, or market access.",
+      "vector_type": "story",
+      "rationale": "Finance-sector structure story; may matter for bank strategy, sanctions, or trade/compliance issues.",
+      "supporting_hits": [
+        "gkg:theme:ECON_FOREIGNBANKS"
+      ],
+      "pillars": [
+        "economics",
+        "finance",
+        "banks",
+        "cross-border"
+      ],
+      "scope": [
+        "economics",
+        "finance",
+        "banks",
+        "cross-border"
+      ],
+      "research_effort": "light",
+      "key_questions": [
+        "Which banks and jurisdictions are involved?",
+        "Is the story about market entry, compliance, or restrictions?",
+        "What triggered the rising attention?"
+      ],
+      "sources": []
+    },
+    {
+      "id": "vec_e1bbb9ca0f",
+      "title": "Supplementary assistance / nutrition-program policy story",
+      "thesis": "The supplementary theme likely reflects changes to benefit design, educational support, or nutritional assistance programs.",
+      "vector_type": "story",
+      "rationale": "Household-facing policy with possible welfare and education implications.",
+      "supporting_hits": [
+        "gkg:theme:WB_1616_SUPPLEMENTARY"
+      ],
+      "pillars": [
+        "economics",
+        "welfare",
+        "education",
+        "nutrition"
+      ],
+      "scope": [
+        "economics",
+        "welfare",
+        "education",
+        "nutrition"
+      ],
+      "research_effort": "light",
+      "key_questions": [
+        "Which program is being adjusted?",
+        "Who qualifies and how does it change support levels?",
+        "Is this budgetary tightening or expansion?"
+      ],
+      "sources": []
+    },
+    {
+      "id": "vec_aa5ebf3dd6",
+      "title": "Education-admissions oversight in South Bangka",
+      "thesis": "Local authorities are tightening supervision of online school admissions, suggesting concern over transparency, fraud, or equal access.",
+      "vector_type": "story",
+      "rationale": "Concrete governance/education administration story with local accountability angle.",
+      "supporting_hits": [
+        "gkg:organization:school or"
+      ],
+      "pillars": [
+        "politics",
+        "education",
+        "Indonesia",
+        "admissions",
+        "oversight"
+      ],
+      "scope": [
+        "politics",
+        "education",
+        "Indonesia",
+        "admissions",
+        "oversight"
+      ],
+      "research_effort": "light",
+      "key_questions": [
+        "What problem prompted tighter supervision?",
+        "What role does the Ombudsman play?",
+        "Is this part of a broader admissions reform?"
+      ],
+      "sources": [
+        "https://bangka.tribunnews.com/lokal/1688161/tak-mau-kecolong"
+      ]
+    },
+    {
+      "id": "vec_0f99424677",
+      "title": "Ministry of education / education-administration signal",
+      "thesis": "The ministry-of-education cluster points to a likely policy or administrative change in education governance that deserves separate tracking despite the generic label.",
+      "vector_type": "story",
+      "rationale": "Education policy often hides significant distributional effects even when the label is generic.",
+      "supporting_hits": [
+        "gkg:organization:ministry education"
+      ],
+      "pillars": [
+        "politics",
+        "education",
+        "public-policy"
+      ],
+      "scope": [
+        "politics",
+        "education",
+        "public-policy"
+      ],
+      "research_effort": "light",
+      "key_questions": [
+        "What exactly is being changed?",
+        "Is this a reform, appointment, budget move, or directive?",
+        "Which country’s education system is affected?"
+      ],
+      "sources": []
+    },
+    {
+      "id": "vec_0c0b564b1b",
+      "title": "Foreign-affairs / diplomatic update",
+      "thesis": "The foreign-affairs signal suggests a diplomatic or geopolitical development that merits separate tracking despite the generic label.",
+      "vector_type": "story",
+      "rationale": "Could be a substantive bilateral or regional diplomatic move.",
+      "supporting_hits": [
+        "gkg:organization:foreign affairs"
+      ],
+      "pillars": [
+        "politics",
+        "diplomacy",
+        "international-relations"
+      ],
+      "scope": [
+        "politics",
+        "diplomacy",
+        "international-relations"
+      ],
+      "research_effort": "light",
+      "key_questions": [
+        "Which foreign ministry or office is involved?",
+        "Is this a statement, visit, agreement, or warning?",
+        "What is the downstream geopolitical significance?"
+      ],
+      "sources": [
+        "http://www.bignewsnetwork.com/news/279149046/uae-stresses-ne..."
+      ]
+    },
+    {
+      "id": "vec_7ab7361c6f",
+      "title": "Pardon politics / elite clemency debate",
+      "thesis": "The pardon theme likely reflects discussion of clemency, constitutional powers, or symbolic rehab of controversial political figures.",
+      "vector_type": "synthesis",
+      "rationale": "Can indicate significant institutional or partisan conflict around justice and legacy politics.",
+      "supporting_hits": [
+        "gkg:theme:SOC_PARDON"
+      ],
+      "pillars": [
+        "politics",
+        "law",
+        "justice",
+        "clemency"
+      ],
+      "scope": [
+        "politics",
+        "law",
+        "justice",
+        "clemency"
+      ],
+      "research_effort": "light",
+      "key_questions": [
+        "Who is being pardoned or proposed for pardon?",
+        "What is the political motive?",
+        "Is this symbolic or legally consequential?"
+      ],
+      "sources": [
+        "https://newstalk1130.iheart.com/content/2026-06-26-jd-vance-..."
+      ]
+    },
+    {
+      "id": "vec_eb6a4675ab",
+      "title": "Rights investigations into deaths and degrading treatment in ICE detention",
+      "thesis": "UN criticism of ICE detention deaths points to mounting international scrutiny of detention conditions, transparency, and abuse allegations in the U.S. immigration system.",
+      "vector_type": "story",
+      "rationale": "Human-rights and domestic-policy crossover with a strong accountability angle.",
+      "supporting_hits": [
+        "gkg:theme:SOC_DEGRADINGTREATMENT"
+      ],
+      "pillars": [
+        "politics",
+        "rights",
+        "immigration",
+        "detention",
+        "US"
+      ],
+      "scope": [
+        "politics",
+        "rights",
+        "immigration",
+        "detention",
+        "US"
+      ],
+      "research_effort": "standard",
+      "key_questions": [
+        "How many deaths are at issue?",
+        "What systemic failures are alleged?",
+        "What investigations or remedies are being demanded?"
+      ],
+      "sources": [
+        "https://www.miragenews.com/turk-urges-action-amid-ice-custod..."
+      ]
+    },
+    {
+      "id": "vec_bc241d1369",
+      "title": "Social-democratic fragmentation in Britain’s “Your Party”",
+      "thesis": "Early enthusiasm around Britain’s new left project appears to be unraveling over leadership clashes and organizational legitimacy.",
+      "vector_type": "story",
+      "rationale": "Emerging UK left politics story with potential to reshape opposition dynamics.",
+      "supporting_hits": [
+        "gkg:theme:TAX_POLITICAL_PARTY_LEFT_PARTY"
+      ],
+      "pillars": [
+        "politics",
+        "UK",
+        "left-politics",
+        "party-organization"
+      ],
+      "scope": [
+        "politics",
+        "UK",
+        "left-politics",
+        "party-organization"
+      ],
+      "research_effort": "light",
+      "key_questions": [
+        "What are the specific disputes inside the project?",
+        "Is the movement losing momentum or just reorganizing?",
+        "Could it still consolidate into an electoral force?"
+      ],
+      "sources": [
+        "https://www.socialistalternative.org/2026/06/19/the-tragedy-..."
+      ]
+    },
+    {
+      "id": "vec_203f00122b",
+      "title": "US political repression / paramilitary framing around anti-fascist protest",
+      "thesis": "The paramilitaries/repression cluster suggests a broader narrative about state power, domestic-terror framing, and the policing of left protest.",
+      "vector_type": "synthesis",
+      "rationale": "Significant political-legal story if corroborated beyond the source framing.",
+      "supporting_hits": [
+        "gkg:theme:WB_2449_PARAMILITARIES"
+      ],
+      "pillars": [
+        "politics",
+        "US",
+        "protest",
+        "law-enforcement",
+        "civil-liberties"
+      ],
+      "scope": [
+        "politics",
+        "US",
+        "protest",
+        "law-enforcement",
+        "civil-liberties"
+      ],
+      "research_effort": "light",
+      "key_questions": [
+        "What specific prosecutions or directives are being discussed?",
+        "Is the “rolling coup” framing supported by facts or rhetoric?",
+        "What are the civil-liberties implications?"
+      ],
+      "sources": [
+        "https://www.counterpunch.org/2026/06/26/trump-despotism-fasc..."
+      ]
+    },
+    {
+      "id": "vec_e1450a93a7",
+      "title": "Localized disaster tails: avalanche and heavy rain",
+      "thesis": "The disaster hits indicate real environmental events, but they are fragmented; each likely represents a localized weather or hazard report needing country-specific verification.",
+      "vector_type": "story",
+      "rationale": "These are genuine hazard reports even if individually small.",
+      "supporting_hits": [
+        "gkg:theme:NATURAL_DISASTER_AVALANCHE",
+        "gkg:theme:NATURAL_DISASTER_HEAVY_RAIN"
+      ],
+      "pillars": [
+        "environment",
+        "disaster",
+        "weather",
+        "hazards"
+      ],
+      "scope": [
+        "environment",
+        "disaster",
+        "weather",
+        "hazards"
+      ],
+      "research_effort": "light",
+      "key_questions": [
+        "Where exactly did the avalanche/heavy rain strike?",
+        "Were there casualties, evacuations, or infrastructure impacts?",
+        "Is there a regional weather pattern behind multiple incidents?"
+      ],
+      "sources": [
+        "https://www.portalsamorzadowy.pl/gospodarka-komunalna/system...",
+        "https://english.news.cn/asiapacific/20260626/eb3c70fbc26349c"
+      ]
+    },
+    {
+      "id": "vec_6a7bc30c51",
+      "title": "Health/local-news noise tail around nausea/disease labels",
+      "thesis": "Some health-like labels in the pool may conceal routine local reporting, but the signal is too thin to elevate without more corroboration.",
+      "vector_type": "story",
+      "rationale": "Kept as a tail-light vector so the pool isn’t over-pruned.",
+      "supporting_hits": [
+        "gkg:theme:TAX_DISEASE_NAUSEA"
+      ],
+      "pillars": [
+        "health",
+        "local-news",
+        "tail"
+      ],
+      "scope": [
+        "health",
+        "local-news",
+        "tail"
+      ],
+      "research_effort": "light",
+      "key_questions": [
+        "Is this a true public-health item or a misclassified local event?",
+        "Does the article involve contamination, poisoning, or a medical incident?"
+      ],
+      "sources": [
+        "https://kauno.diena.lt/naujienos/vilnius/miesto-pulsas/kaip-..."
+      ]
+    },
+    {
+      "id": "vec_bbbb83428e",
+      "title": "Television blackout / infrastructure disruption signal",
+      "thesis": "The “television black” organization label likely flags a blackout, outage, or broadcast interruption story rather than a media-organization item.",
+      "vector_type": "story",
+      "rationale": "Infrastructure/outage stories can be significant if confirmed.",
+      "supporting_hits": [
+        "gkg:organization:television black"
+      ],
+      "pillars": [
+        "environment",
+        "infrastructure",
+        "media",
+        "outage"
+      ],
+      "scope": [
+        "environment",
+        "infrastructure",
+        "media",
+        "outage"
+      ],
+      "research_effort": "light",
+      "key_questions": [
+        "Was this a broadcast outage, citywide blackout, or some other disruption?",
+        "What caused it and who was affected?"
+      ],
+      "sources": [
+        "https://rtcg.me/magazin/zanimljivosti/858226/prizor-koji-je-..."
+      ]
+    },
+    {
+      "id": "vec_9967a1c47b",
+      "title": "Generic local transport/service tail",
+      "thesis": "The transportation-ish local signal may be a real local development but is too opaque to separate from other transport or lifestyle tails without more evidence.",
+      "vector_type": "story",
+      "rationale": "Low-confidence but real-news tail coverage.",
+      "supporting_hits": [
+        "gkg:organization:office office"
+      ],
+      "pillars": [
+        "transport",
+        "local-news",
+        "tail"
+      ],
+      "scope": [
+        "transport",
+        "local-news",
+        "tail"
+      ],
+      "research_effort": "light",
+      "key_questions": [
+        "What is the actual event behind the label?",
+        "Is it tourism, transport, or a local-service initiative?"
+      ],
+      "sources": [
+        "https://makassar.tribunnews.com/travel/1842444/dorong-minat-..."
+      ]
+    }
+  ],
+  "dropped_note": "I dropped only obvious non-news / non-distinct noise and did not remove lightly-structured local tails. Market prediction items were fused into broader geopolitical/macro vectors when they clearly belonged to a real underlying story; standalone speculative or entertainment-like markets were not elevated as separate news vectors."
+}

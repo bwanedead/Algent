@@ -33,6 +33,16 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
     parser.add_argument("--input", help='run input as a JSON object, e.g. \'{"topic": "..."}\'')
     parser.add_argument("--topic", help="shortcut for --input '{\"topic\": ...}'")
     parser.add_argument("--goal", help="shortcut for --input '{\"goal\": ...}' (discovery agents)")
+    parser.add_argument(
+        "--input-file",
+        help="seed the run's initial state from a JSON file (a saved artifact/fixture), "
+        "so a stage runs in isolation on supplied input — pair with --input-key",
+    )
+    parser.add_argument(
+        "--input-key",
+        help="mount --input-file under this state key, e.g. 'pool' (synthesis) or "
+        "'portfolio' (router); omit to use the file as the whole input dict",
+    )
     parser.add_argument("--runtime", default="langgraph")
     parser.add_argument("--max-turns", type=int, default=None)
     parser.add_argument(
@@ -47,7 +57,7 @@ def run(args: argparse.Namespace) -> int:
     run_id = str(uuid4())
     request = RunRequest(
         agent_id=args.agent_id,
-        input=parse_input_arg(args.input, args.topic, args.goal),
+        input=parse_input_arg(args.input, args.topic, args.goal, args.input_file, args.input_key),
         runtime=args.runtime,
         run_id=run_id,
         max_turns=args.max_turns,

@@ -70,6 +70,16 @@ python -m algent_backend.cli.runs start discovery_synthesis --max-turns 20
 #     python -m algent_backend.cli ingest t0 --channels markets --force
 #   (Optional per-pillar enrichment: pre-run `ingest sweep --kind pillar`, but the
 #    DOC API throttles, so skip unless needed — GKG-only t0 is the default.)
+#
+# RUN A STAGE IN ISOLATION (no upstream, no spend): a run's --input IS the graph's
+# initial state, so feed a saved artifact/fixture to skip producing it. Fixtures live
+# in backend/fixtures/ (see its README):
+#     # synthesis on a saved t0 pool — no GDELT fetch:
+#     python -m algent_backend.cli.runs start discovery_synthesis \
+#         --input-file fixtures/t0_pool_sample.json --input-key pool
+#   --input-key mounts the file under that state key (pool / portfolio / vector / ...);
+#   omit it to use the file as the whole input dict. Bank any run's artifacts/*.json
+#   as a new fixture to iterate on a downstream stage without re-running the pipeline.
 
 # BEFORE entering watch, surface the live timeline link so a human can click it in
 # their IDE (it re-renders as the run progresses):

@@ -169,6 +169,8 @@ def test_cli_start_allocates_run_and_request(monkeypatch, capsys) -> None:
             input=None,
             topic="cli",
             goal=None,
+            input_file=None,
+            input_key=None,
             runtime="langgraph",
             max_turns=7,
             foreground=False,

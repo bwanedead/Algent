@@ -1,0 +1,2795 @@
+{
+  "generated_at": "2026-06-26T09:17:01.766317+00:00",
+  "gkg_batch_id": "20260626091500",
+  "beat_sheet_at": "2026-06-25T20:41:07.731896+00:00",
+  "item_count": 65,
+  "by_channel": {
+    "gkg": 40,
+    "market": 25
+  },
+  "by_pillar": {
+    "economics": 14,
+    "politics": 3,
+    "environment": 3
+  },
+  "facets": {
+    "economics": [
+      "gkg:theme:WB_1070_ECONOMIC_GROWTH_POLICY",
+      "gkg:theme:WB_2788_LABOR_MARKET_INSTITUTIONS_AND_POLICIES",
+      "gkg:theme:WB_1153_MIDDLE_CLASS",
+      "gkg:theme:ECON_FOREIGNBANKS",
+      "gkg:theme:WB_519_UTILITIES_GOVERNANCE_AND_PERFORMANCE",
+      "gkg:theme:WB_1616_SUPPLEMENTARY",
+      "gkg:theme:WB_529_WIND_ENERGY",
+      "gkg:theme:WB_2449_PARAMILITARIES",
+      "gkg:theme:WB_364_CONSUMER_PROTECTION",
+      "gkg:theme:WB_2358_E_GOVERNMENT",
+      "gkg:theme:WB_1150_VOLATILITY",
+      "gkg:theme:ECON_CURRENCY_EXCHANGE_RATE",
+      "gkg:theme:WB_2520_REPARATIONS",
+      "gkg:theme:WB_1917_INTELLECTUAL_PROPERTY"
+    ],
+    "politics": [
+      "gkg:theme:TAX_POLITICAL_PARTY_COMMUNIST_PARTY",
+      "gkg:theme:TAX_POLITICAL_PARTY_LEFT_PARTY",
+      "gkg:theme:EPU_POLICY_DUMA"
+    ],
+    "environment": [
+      "gkg:theme:NATURAL_DISASTER_AVALANCHE",
+      "gkg:theme:NATURAL_DISASTER_HEAVY_RAIN",
+      "gkg:theme:ENV_HYDRO"
+    ]
+  },
+  "items": [
+    {
+      "id": "gkg:person:king charles",
+      "label": "king charles",
+      "channel": "gkg",
+      "kind": "person",
+      "pillars": [],
+      "scope": [
+        "ben",
+        "ell",
+        "eng",
+        "rus",
+        "srp",
+        "swe",
+        "tur",
+        "ukr"
+      ],
+      "signals": {
+        "theme_code": null,
+        "velocity": 3.571,
+        "rising": true,
+        "novel": false,
+        "count": 22,
+        "language_count": 8,
+        "avg_tone": 1.858,
+        "score": 7.1506
+      },
+      "evidence": [
+        {
+          "title": "king charles",
+          "url": "https://www.peeblesshirenews.com/news/national/26229673.clarence-house-remain-kings-london-home-buckingham-palace-work-complete/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "king charles",
+          "url": "https://www.basingstokegazette.co.uk/news/national/26229673.clarence-house-remain-kings-london-home-buckingham-palace-work-complete/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "king charles",
+          "url": "https://www.kidderminstershuttle.co.uk/news/national/26229673.clarence-house-remain-kings-london-home-buckingham-palace-work-complete/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": [
+        "windsor castle"
+      ]
+    },
+    {
+      "id": "gkg:theme:WB_1070_ECONOMIC_GROWTH_POLICY",
+      "label": "economic growth policy",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [
+        "economics"
+      ],
+      "scope": [
+        "bul",
+        "deu",
+        "ell",
+        "eng",
+        "ita",
+        "jpn",
+        "mkd",
+        "zho"
+      ],
+      "signals": {
+        "theme_code": "WB_1070_ECONOMIC_GROWTH_POLICY",
+        "velocity": 2.619,
+        "rising": true,
+        "novel": false,
+        "count": 36,
+        "language_count": 8,
+        "avg_tone": -1.057,
+        "score": 6.3833
+      },
+      "evidence": [
+        {
+          "title": "WB_1070_ECONOMIC_GROWTH_POLICY",
+          "url": "https://www.prnewswire.com/news-releases/aercap-delivers-first-of-three-new-airbus-a321neo-aircraft-to-azerbaijan-airlines-302811667.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_1070_ECONOMIC_GROWTH_POLICY",
+          "url": "http://www.econotimes.com/SpaceX-Eyes-Starlink-Mobile-Phone-Service-to-Challenge-Verizon-ATT-and-T-Mobile-1745234",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_1070_ECONOMIC_GROWTH_POLICY",
+          "url": "https://press24.mk/dimitrieska-kochoska-rastat-kapitalnite-investicii-poradi-podobra-realizacija-na-proektite/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": [
+        "WB_1074_FISCAL_CONTRACTION",
+        "WB_1072_FISCAL_POLICY_AND_GROWTH",
+        "AUSTERITY"
+      ]
+    },
+    {
+      "id": "gkg:theme:WB_2788_LABOR_MARKET_INSTITUTIONS_AND_POLICIES",
+      "label": "labor market institutions and policies",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [
+        "economics"
+      ],
+      "scope": [
+        "deu",
+        "eng",
+        "ita",
+        "rus",
+        "ukr",
+        "zho"
+      ],
+      "signals": {
+        "theme_code": "WB_2788_LABOR_MARKET_INSTITUTIONS_AND_POLICIES",
+        "velocity": 3.8,
+        "rising": true,
+        "novel": false,
+        "count": 16,
+        "language_count": 6,
+        "avg_tone": -0.845,
+        "score": 6.3402
+      },
+      "evidence": [
+        {
+          "title": "WB_2788_LABOR_MARKET_INSTITUTIONS_AND_POLICIES",
+          "url": "https://english.news.cn/asiapacific/20260626/eb3c70fbc26349c9a3d4bd826f615c9c/c.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_2788_LABOR_MARKET_INSTITUTIONS_AND_POLICIES",
+          "url": "https://english.news.cn/20260626/ee6ff966cf8046b38040c29e4c9cbcbb/c.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_2788_LABOR_MARKET_INSTITUTIONS_AND_POLICIES",
+          "url": "https://www.counterpunch.org/2026/06/26/the-left-and-breaching-capitalisms-digital-fortress/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": [
+        "WB_2802_WORKING_CONDITIONS",
+        "UNSAFE_WORK_ENVIRONMENT"
+      ]
+    },
+    {
+      "id": "gkg:theme:WB_1153_MIDDLE_CLASS",
+      "label": "middle class",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [
+        "economics"
+      ],
+      "scope": [
+        "ben",
+        "deu",
+        "ell",
+        "eng",
+        "ind",
+        "zho"
+      ],
+      "signals": {
+        "theme_code": "WB_1153_MIDDLE_CLASS",
+        "velocity": 3.0,
+        "rising": true,
+        "novel": false,
+        "count": 14,
+        "language_count": 6,
+        "avg_tone": -1.521,
+        "score": 6.3066
+      },
+      "evidence": [
+        {
+          "title": "WB_1153_MIDDLE_CLASS",
+          "url": "https://www.counterpunch.org/2026/06/26/the-paradox-of-progressive-success/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_1153_MIDDLE_CLASS",
+          "url": "https://www.counterpunch.org/2026/06/26/trump-despotism-fascist-repression-in-the-united-states-on-the-eve-of-the-nations-250th-anniversary/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_1153_MIDDLE_CLASS",
+          "url": "https://euobserver.com/224314/listen-is-italysmeloni-paving-the-way-for-the-national-rally-in-france/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": [
+        "ECON_MIDDLECLASS",
+        "WB_1152_ECONOMIC_AND_SOCIAL_MOBILITY",
+        "WB_707_POVERTY_MEASUREMENT_AND_ANALYSIS"
+      ]
+    },
+    {
+      "id": "gkg:theme:ECON_FOREIGNBANKS",
+      "label": "foreignbanks",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [
+        "economics"
+      ],
+      "scope": [
+        "eng",
+        "fra",
+        "lit",
+        "ron",
+        "zho"
+      ],
+      "signals": {
+        "theme_code": "ECON_FOREIGNBANKS",
+        "velocity": 3.0,
+        "rising": true,
+        "novel": true,
+        "count": 6,
+        "language_count": 5,
+        "avg_tone": -1.06,
+        "score": 6.0163
+      },
+      "evidence": [
+        {
+          "title": "ECON_FOREIGNBANKS",
+          "url": "https://www.mondaq.com:443/unitedstates/export-controls-trade-investment-sanctions/1806638/new-general-license-for-iranian-origin-oil-exports-is-first-step-in-broader-sanctions-relief-described-in-preliminary-us-iran-deal-but-significant-risks-remain",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "ECON_FOREIGNBANKS",
+          "url": "https://fr.allafrica.com/stories/202606260159.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "ECON_FOREIGNBANKS",
+          "url": "https://kauno.diena.lt/naujienos/verslas/lb-banku-pelnas-lietuvoje-siemet-augo-55-proc-1763015",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:theme:TAX_POLITICAL_PARTY_COMMUNIST_PARTY",
+      "label": "political party communist party",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [
+        "politics"
+      ],
+      "scope": [
+        "ben",
+        "eng",
+        "kor",
+        "nep",
+        "zho"
+      ],
+      "signals": {
+        "theme_code": "TAX_POLITICAL_PARTY_COMMUNIST_PARTY",
+        "velocity": 3.279,
+        "rising": true,
+        "novel": false,
+        "count": 21,
+        "language_count": 5,
+        "avg_tone": 0.667,
+        "score": 5.8901
+      },
+      "evidence": [
+        {
+          "title": "TAX_POLITICAL_PARTY_COMMUNIST_PARTY",
+          "url": "https://www.counterpunch.org/2026/06/26/us-instigated-humanitarian-crisis-forces-cuba-to-adopt-major-economic-changes/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "TAX_POLITICAL_PARTY_COMMUNIST_PARTY",
+          "url": "https://www.counterpunch.org/2026/06/26/i-am-not-a-pussy-and-never-was/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "TAX_POLITICAL_PARTY_COMMUNIST_PARTY",
+          "url": "https://zdnet.co.kr/view/?no=20260626163928",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:theme:WB_519_UTILITIES_GOVERNANCE_AND_PERFORMANCE",
+      "label": "utilities governance and performance",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [
+        "economics"
+      ],
+      "scope": [
+        "deu",
+        "ell",
+        "eng",
+        "ron"
+      ],
+      "signals": {
+        "theme_code": "WB_519_UTILITIES_GOVERNANCE_AND_PERFORMANCE",
+        "velocity": 4.0,
+        "rising": true,
+        "novel": true,
+        "count": 8,
+        "language_count": 4,
+        "avg_tone": -1.808,
+        "score": 5.5238
+      },
+      "evidence": [
+        {
+          "title": "WB_519_UTILITIES_GOVERNANCE_AND_PERFORMANCE",
+          "url": "https://www.lexology.com/pro/content/key-lessons-coupangs-record-breaking-fine-cybersecurity-governance-and-cross-border-risks",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_519_UTILITIES_GOVERNANCE_AND_PERFORMANCE",
+          "url": "https://business24.ro/guvernanta/numire-administrator-presedinte-consiliu-1657807",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_519_UTILITIES_GOVERNANCE_AND_PERFORMANCE",
+          "url": "https://www.finanzen.net/nachricht/aktien/kaufempfehlungen-kw-26-favoriten-der-finanzprofis-diese-aktien-empfehlen-experten-zu-kaufen-15764606",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": [
+        "WB_417_CORPORATE_GOVERNANCE",
+        "WB_515_POWER_SECTOR_POLICY_AND_INSTITUTIONS",
+        "WB_847_COMPANY_AND_CORPORATE_LAW",
+        "WB_410_BUSINESS_LAW_AND_REGULATION",
+        "forward program",
+        "savings program",
+        "business division",
+        "TAX_WORLDINSECTS_ANTS"
+      ]
+    },
+    {
+      "id": "gkg:theme:NATURAL_DISASTER_AVALANCHE",
+      "label": "disaster avalanche",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [
+        "environment"
+      ],
+      "scope": [
+        "pol",
+        "srp",
+        "tel",
+        "zho"
+      ],
+      "signals": {
+        "theme_code": "NATURAL_DISASTER_AVALANCHE",
+        "velocity": 3.0,
+        "rising": true,
+        "novel": true,
+        "count": 6,
+        "language_count": 4,
+        "avg_tone": -2.449,
+        "score": 5.4693
+      },
+      "evidence": [
+        {
+          "title": "NATURAL_DISASTER_AVALANCHE",
+          "url": "https://www.portalsamorzadowy.pl/gospodarka-komunalna/system-kaucyjny-bedzie-rozszerzony-mobilne-butelkomaty-i-nowy-zwrot-kaucji,666282.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "NATURAL_DISASTER_AVALANCHE",
+          "url": "https://wiadomosci.wp.pl/trzaskowski-obiecywal-ochrone-sygnalista-zwolniony-w-sieci-wrze-7300955340708000a",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "NATURAL_DISASTER_AVALANCHE",
+          "url": "https://ec.ltn.com.tw/article/breakingnews/5485170",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:theme:SOC_PARDON",
+      "label": "pardon",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [],
+      "scope": [
+        "deu",
+        "eng",
+        "fra",
+        "rus",
+        "spa"
+      ],
+      "signals": {
+        "theme_code": "SOC_PARDON",
+        "velocity": 2.636,
+        "rising": true,
+        "novel": false,
+        "count": 13,
+        "language_count": 5,
+        "avg_tone": -2.96,
+        "score": 5.1565
+      },
+      "evidence": [
+        {
+          "title": "SOC_PARDON",
+          "url": "https://newstalk1130.iheart.com/content/2026-06-26-jd-vance-says-diddy-is-not-a-christian/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "SOC_PARDON",
+          "url": "https://www.counterpunch.org/2026/06/26/trump-despotism-fascist-repression-in-the-united-states-on-the-eve-of-the-nations-250th-anniversary/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "SOC_PARDON",
+          "url": "https://1360kktx.iheart.com/content/2026-06-26-jd-vance-says-diddy-is-not-a-christian/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": [
+        "richard nixon presidential library"
+      ]
+    },
+    {
+      "id": "gkg:organization:ministry education",
+      "label": "ministry education",
+      "channel": "gkg",
+      "kind": "organization",
+      "pillars": [],
+      "scope": [
+        "bos",
+        "ell",
+        "ind",
+        "pol",
+        "rus",
+        "tha",
+        "ukr"
+      ],
+      "signals": {
+        "theme_code": null,
+        "velocity": 2.25,
+        "rising": true,
+        "novel": false,
+        "count": 11,
+        "language_count": 7,
+        "avg_tone": 0.101,
+        "score": 5.1208
+      },
+      "evidence": [
+        {
+          "title": "ministry education",
+          "url": "https://www.portalsamorzadowy.pl/edukacja/koniec-starego-programu-nauczania-od-1-wrzesnia-nauka-bedzie-wygladac-inaczej,666411.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "ministry education",
+          "url": "https://www.jpnn.com/news/yudhistira-sampaikan-3-pesan-penting-mendikdasmen-poin-2-bikin-guru-bahagia",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "ministry education",
+          "url": "https://www.voicetv.co.th/read/v5UHIutRz",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:organization:school or",
+      "label": "school or",
+      "channel": "gkg",
+      "kind": "organization",
+      "pillars": [],
+      "scope": [
+        "cat",
+        "ces",
+        "ind",
+        "ita",
+        "spa"
+      ],
+      "signals": {
+        "theme_code": null,
+        "velocity": 2.5,
+        "rising": true,
+        "novel": true,
+        "count": 5,
+        "language_count": 5,
+        "avg_tone": 0.44,
+        "score": 5.1019
+      },
+      "evidence": [
+        {
+          "title": "school or",
+          "url": "https://bangka.tribunnews.com/lokal/1688161/tak-mau-kecolongan-pemkab-bangka-selatan-pantau-spmb-langsung-ke-sekolah",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "school or",
+          "url": "https://www.elperiodicomediterraneo.com/salud/guia/2026/06/26/que-hacer-durante-terremoto-protegerse-mesa-131836093.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "school or",
+          "url": "https://www.ilmessaggero.it:443/social/ragazzini_sistemano_giardino_casa_anziani_meduna_di_livenza-9615807.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:organization:bmw",
+      "label": "bmw",
+      "channel": "gkg",
+      "kind": "organization",
+      "pillars": [],
+      "scope": [
+        "ben",
+        "eng",
+        "ita",
+        "kor",
+        "ron",
+        "srp",
+        "zho"
+      ],
+      "signals": {
+        "theme_code": null,
+        "velocity": 2.2,
+        "rising": true,
+        "novel": false,
+        "count": 16,
+        "language_count": 7,
+        "avg_tone": -1.486,
+        "score": 5.0639
+      },
+      "evidence": [
+        {
+          "title": "bmw",
+          "url": "https://www.autocarindia.com/cars/cars-above-1-cr",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "bmw",
+          "url": "https://www.autocarindia.com/auto-features/autocar-india-modern-classic-rally-2026-a-showcase-led-by-ratan-tata-cars-440163",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "bmw",
+          "url": "https://www.autocarindia.com/car-news/2026-bmw-x6-launched-at-rs-178-crore-440055",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:theme:TAX_POLITICAL_PARTY_LEFT_PARTY",
+      "label": "political party left party",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [
+        "politics"
+      ],
+      "scope": [
+        "eng",
+        "rus",
+        "tur"
+      ],
+      "signals": {
+        "theme_code": "TAX_POLITICAL_PARTY_LEFT_PARTY",
+        "velocity": 3.0,
+        "rising": true,
+        "novel": true,
+        "count": 6,
+        "language_count": 3,
+        "avg_tone": 4.228,
+        "score": 4.789
+      },
+      "evidence": [
+        {
+          "title": "TAX_POLITICAL_PARTY_LEFT_PARTY",
+          "url": "https://www.socialistalternative.org/2026/06/19/the-tragedy-of-your-party-lessons-for-socialists/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "TAX_POLITICAL_PARTY_LEFT_PARTY",
+          "url": "https://t24.com.tr/dunya/almanyada-afdnin-kapatilmasi-yeniden-gundemde,1331845",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "TAX_POLITICAL_PARTY_LEFT_PARTY",
+          "url": "https://www.birgun.net/haber/meclis-teki-sandalye-dagiliminda-son-durum-ne-720682%20class=nav-link%20target=_blank",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": [
+        "democrat party",
+        "bliss party maharashtra mp not",
+        "free cases party",
+        "democratic regions party",
+        "TAX_POLITICAL_PARTY_DEMOCRATIC_LEFT_PARTY",
+        "democratic left party",
+        "party hatay mp erafettin"
+      ]
+    },
+    {
+      "id": "gkg:organization:foreign affairs",
+      "label": "foreign affairs",
+      "channel": "gkg",
+      "kind": "organization",
+      "pillars": [],
+      "scope": [
+        "eng",
+        "kor",
+        "tur",
+        "zho"
+      ],
+      "signals": {
+        "theme_code": null,
+        "velocity": 2.692,
+        "rising": true,
+        "novel": false,
+        "count": 10,
+        "language_count": 4,
+        "avg_tone": 0.83,
+        "score": 4.7642
+      },
+      "evidence": [
+        {
+          "title": "foreign affairs",
+          "url": "http://www.bignewsnetwork.com/news/279149046/uae-stresses-need-for-unity-at-gcc-us-joint-ministerial-meeting",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "foreign affairs",
+          "url": "https://indiapost.com/iran-and-oman-discuss-60-day-strait-of-hormuz-traffic-plan-as-stanfoff-intensifies/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "foreign affairs",
+          "url": "https://www.therecord.com/news/canada/anand-welcomes-turkish-counterpart-to-ottawa-ahead-of-nato-summit-in-ankara/article_ac66114c-e4aa-5038-b305-722b73f98366.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:theme:WB_1616_SUPPLEMENTARY",
+      "label": "supplementary",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [
+        "economics"
+      ],
+      "scope": [
+        "deu",
+        "eng",
+        "ita",
+        "mkd",
+        "spa"
+      ],
+      "signals": {
+        "theme_code": "WB_1616_SUPPLEMENTARY",
+        "velocity": 2.355,
+        "rising": true,
+        "novel": false,
+        "count": 11,
+        "language_count": 5,
+        "avg_tone": -0.728,
+        "score": 4.6669
+      },
+      "evidence": [
+        {
+          "title": "WB_1616_SUPPLEMENTARY",
+          "url": "https://www.thehindu.com/education/what-if-every-cbse-osm-answer-script-had-been-opened/article71149531.ece",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_1616_SUPPLEMENTARY",
+          "url": "https://www.federalregister.gov/documents/2026/04/28/2026-08244/equal-access-to-housing-in-hud-programs-revisions",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_1616_SUPPLEMENTARY",
+          "url": "https://www.sowetan.co.za/news/2026-06-26-ramaphosa-unveils-immigration-crackdown-with-10000-new-inspectors/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": [
+        "WB_1614_NUTRITIONAL_PROGRAMS"
+      ]
+    },
+    {
+      "id": "gkg:theme:EPU_POLICY_DUMA",
+      "label": "duma",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [
+        "politics"
+      ],
+      "scope": [
+        "eng",
+        "rus",
+        "ukr"
+      ],
+      "signals": {
+        "theme_code": "EPU_POLICY_DUMA",
+        "velocity": 3.121,
+        "rising": true,
+        "novel": false,
+        "count": 15,
+        "language_count": 3,
+        "avg_tone": -0.921,
+        "score": 4.6355
+      },
+      "evidence": [
+        {
+          "title": "EPU_POLICY_DUMA",
+          "url": "https://www.nakedcapitalism.com/2026/06/trump-2-0s-escalation-strategy-against-russia-is-starting-to-take-shape.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "EPU_POLICY_DUMA",
+          "url": "https://www.vesti.ru/ns/deputat-saraliev-anonsiroval-novyj-obmen-plennymi-mezhdu-rossiej-i-ukrainoj",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "EPU_POLICY_DUMA",
+          "url": "https://rg.ru/2026/06/26/reg-szfo/ushel-iz-zhizni-byvshij-gubernator-vologodskoj-oblasti-viacheslav-pozgalev.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:theme:WB_529_WIND_ENERGY",
+      "label": "wind energy",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [
+        "economics"
+      ],
+      "scope": [
+        "deu",
+        "eng",
+        "zho"
+      ],
+      "signals": {
+        "theme_code": "WB_529_WIND_ENERGY",
+        "velocity": 3.414,
+        "rising": true,
+        "novel": false,
+        "count": 14,
+        "language_count": 3,
+        "avg_tone": 2.325,
+        "score": 4.6086
+      },
+      "evidence": [
+        {
+          "title": "WB_529_WIND_ENERGY",
+          "url": "https://www.trend.az/business/4201886.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_529_WIND_ENERGY",
+          "url": "https://www.counterpunch.org/2026/06/26/us-instigated-humanitarian-crisis-forces-cuba-to-adopt-major-economic-changes/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_529_WIND_ENERGY",
+          "url": "https://www.trend.az/casia/kyrgyzstan/4201868.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": [
+        "ENV_WINDPOWER"
+      ]
+    },
+    {
+      "id": "gkg:theme:WB_2449_PARAMILITARIES",
+      "label": "paramilitaries",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [
+        "economics"
+      ],
+      "scope": [
+        "eng",
+        "fra",
+        "spa",
+        "ukr"
+      ],
+      "signals": {
+        "theme_code": "WB_2449_PARAMILITARIES",
+        "velocity": 2.586,
+        "rising": true,
+        "novel": false,
+        "count": 11,
+        "language_count": 4,
+        "avg_tone": -3.374,
+        "score": 4.5984
+      },
+      "evidence": [
+        {
+          "title": "WB_2449_PARAMILITARIES",
+          "url": "https://www.counterpunch.org/2026/06/26/trump-despotism-fascist-repression-in-the-united-states-on-the-eve-of-the-nations-250th-anniversary/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_2449_PARAMILITARIES",
+          "url": "https://www.publicradiotulsa.org/npr-national-news/2026-06-26/un-agency-pauses-evacuation-of-ships-through-the-strait-of-hormuz-after-attack-on-vessel",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_2449_PARAMILITARIES",
+          "url": "https://www.kmuw.org/2026-06-26/un-agency-pauses-evacuation-of-ships-through-the-strait-of-hormuz-after-attack-on-vessel",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:theme:TAX_DISEASE_NAUSEA",
+      "label": "disease nausea",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [],
+      "scope": [
+        "dan",
+        "deu",
+        "lit",
+        "spa",
+        "srp"
+      ],
+      "signals": {
+        "theme_code": "TAX_DISEASE_NAUSEA",
+        "velocity": 2.368,
+        "rising": true,
+        "novel": false,
+        "count": 6,
+        "language_count": 5,
+        "avg_tone": -3.866,
+        "score": 4.5932
+      },
+      "evidence": [
+        {
+          "title": "TAX_DISEASE_NAUSEA",
+          "url": "https://kauno.diena.lt/naujienos/vilnius/miesto-pulsas/kaip-saugiai-keliauti-karscius-1763012",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "TAX_DISEASE_NAUSEA",
+          "url": "https://www.larazon.es/gente/famosos/kiko-matamoros-pide-ayuda-encontrar-hermano-coto-inesperado-mensaje_202606266a3e3aaa95cc61359cde9d2d.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "TAX_DISEASE_NAUSEA",
+          "url": "https://www.bt.dk/samfund/leverpostej-tilbagekaldes-efter-salmonella-fund",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:organization:television black",
+      "label": "television black",
+      "channel": "gkg",
+      "kind": "organization",
+      "pillars": [],
+      "scope": [
+        "bos",
+        "hrv",
+        "srp"
+      ],
+      "signals": {
+        "theme_code": null,
+        "velocity": 4.846,
+        "rising": true,
+        "novel": false,
+        "count": 17,
+        "language_count": 3,
+        "avg_tone": -2.397,
+        "score": 4.5473
+      },
+      "evidence": [
+        {
+          "title": "television black",
+          "url": "https://rtcg.me/magazin/zanimljivosti/858226/prizor-koji-je-rasplakao-svijet-dok-se-zemlja-tresla-oni-su-se-drzali-za-ruke.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "television black",
+          "url": "https://rtcg.me/mundijal/Vijesti/858213/srusen-rekord-po-broju-golova-na-svjetskim-prvenstvima.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "television black",
+          "url": "https://rtcg.me/vijesti/politika/858258/cikotic-krapovic-da-dokaze-optuzbe-na-racun-zirojevica-ili-podnese-ostavku.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:theme:TAX_DISEASE_ATROPHY",
+      "label": "disease atrophy",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [],
+      "scope": [
+        "eng",
+        "jpn",
+        "rus",
+        "zho"
+      ],
+      "signals": {
+        "theme_code": "TAX_DISEASE_ATROPHY",
+        "velocity": 2.52,
+        "rising": true,
+        "novel": false,
+        "count": 9,
+        "language_count": 4,
+        "avg_tone": -1.094,
+        "score": 4.4639
+      },
+      "evidence": [
+        {
+          "title": "TAX_DISEASE_ATROPHY",
+          "url": "https://www.counterpunch.org/2026/06/26/why-iran-defeated-the-us-and-israel/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "TAX_DISEASE_ATROPHY",
+          "url": "https://www.the-miyanichi.co.jp/pressrelease/prtimes/871343.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "TAX_DISEASE_ATROPHY",
+          "url": "http://industry.caijing.com.cn/20260626/5167560.shtml",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:theme:TAX_DISEASE_STROKE",
+      "label": "disease stroke",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [],
+      "scope": [
+        "bul",
+        "dan",
+        "deu",
+        "ell",
+        "eng",
+        "fra",
+        "kor",
+        "mkd",
+        "nld",
+        "nor",
+        "pol",
+        "rus",
+        "srp",
+        "ukr",
+        "zho"
+      ],
+      "signals": {
+        "theme_code": "TAX_DISEASE_STROKE",
+        "velocity": 1.328,
+        "rising": true,
+        "novel": false,
+        "count": 53,
+        "language_count": 15,
+        "avg_tone": -1.001,
+        "score": 4.3863
+      },
+      "evidence": [
+        {
+          "title": "TAX_DISEASE_STROKE",
+          "url": "https://www.autocarindia.com/bike-reviews/350cc-bajaj-pulsar-ns400z-review-remains-the-vfm-king-440462",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "TAX_DISEASE_STROKE",
+          "url": "https://www.billboard.com/music/pop/justin-bieber-swag-coachella-live-album-stream-it-now-1236281692/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "TAX_DISEASE_STROKE",
+          "url": "https://www.express.co.uk/life-style/life/2222053/key-signs-heatstroke-cats-vets",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:theme:NATURAL_DISASTER_HEAVY_RAIN",
+      "label": "disaster heavy rain",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [
+        "environment"
+      ],
+      "scope": [
+        "eng",
+        "kor",
+        "nep",
+        "vie",
+        "zho"
+      ],
+      "signals": {
+        "theme_code": "NATURAL_DISASTER_HEAVY_RAIN",
+        "velocity": 2.07,
+        "rising": true,
+        "novel": false,
+        "count": 31,
+        "language_count": 5,
+        "avg_tone": -2.996,
+        "score": 4.2873
+      },
+      "evidence": [
+        {
+          "title": "NATURAL_DISASTER_HEAVY_RAIN",
+          "url": "https://english.news.cn/asiapacific/20260626/eb3c70fbc26349c9a3d4bd826f615c9c/c.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "NATURAL_DISASTER_HEAVY_RAIN",
+          "url": "https://www.rhyljournal.co.uk/news/26229911.thunderstorm-warning-issued-conwy-denbighshire/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "NATURAL_DISASTER_HEAVY_RAIN",
+          "url": "https://www.express.co.uk/news/weather/2222004/met-office-names-16-areas-rain",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:theme:SMUGGLING",
+      "label": "smuggling",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [],
+      "scope": [
+        "ben",
+        "bos",
+        "deu",
+        "ell",
+        "eng",
+        "fra",
+        "ind",
+        "mar",
+        "mkd",
+        "pan",
+        "rus",
+        "srp",
+        "tel",
+        "tur",
+        "zho"
+      ],
+      "signals": {
+        "theme_code": "SMUGGLING",
+        "velocity": 1.337,
+        "rising": true,
+        "novel": false,
+        "count": 24,
+        "language_count": 15,
+        "avg_tone": -5.087,
+        "score": 4.2787
+      },
+      "evidence": [
+        {
+          "title": "SMUGGLING",
+          "url": "https://www.express.co.uk/news/politics/2221474/Afghanistan-migrants-security-vetting-Taliban",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "SMUGGLING",
+          "url": "https://www.trend.az/azerbaijan/politics/4201848.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "SMUGGLING",
+          "url": "https://www.counterpunch.org/2026/06/26/the-origin-of-trumps-drug-war-killing-spree/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:theme:WB_364_CONSUMER_PROTECTION",
+      "label": "consumer protection",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [
+        "economics"
+      ],
+      "scope": [
+        "bul",
+        "eng",
+        "kor"
+      ],
+      "signals": {
+        "theme_code": "WB_364_CONSUMER_PROTECTION",
+        "velocity": 2.789,
+        "rising": true,
+        "novel": false,
+        "count": 7,
+        "language_count": 3,
+        "avg_tone": -1.187,
+        "score": 4.2327
+      },
+      "evidence": [
+        {
+          "title": "WB_364_CONSUMER_PROTECTION",
+          "url": "https://dublinpeople.com/news/dublin/articles/2026/06/26/ipra-petrol-july/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_364_CONSUMER_PROTECTION",
+          "url": "https://www.mondaq.com:443/unitedstates/export-controls-trade-investment-sanctions/1807866/export-controls-and-sanctions-shape-boundaries-of-defense-deal-making",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_364_CONSUMER_PROTECTION",
+          "url": "https://www.mondaq.com:443/unitedstates/healthcare/1807876/cms-issues-2027-hhs-notice-of-benefit-and-payment-parameters-final-rule",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": [
+        "WB_363_FINANCIAL_INCLUSION"
+      ]
+    },
+    {
+      "id": "gkg:organization:information technology",
+      "label": "information technology",
+      "channel": "gkg",
+      "kind": "organization",
+      "pillars": [],
+      "scope": [
+        "ben",
+        "eng",
+        "ind",
+        "kor",
+        "tha"
+      ],
+      "signals": {
+        "theme_code": null,
+        "velocity": 2.097,
+        "rising": true,
+        "novel": false,
+        "count": 10,
+        "language_count": 5,
+        "avg_tone": 0.704,
+        "score": 4.1769
+      },
+      "evidence": [
+        {
+          "title": "information technology",
+          "url": "https://www.prnewswire.com/news-releases/e-fund-hk-hkex-tech-100-index-etf-3456-lists-today-302811691.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "information technology",
+          "url": "https://english.news.cn/20260626/f864258001f249fa91c828d6489bc80a/c.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "information technology",
+          "url": "https://www.prokerala.com/news/articles/a1780273.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:person:sergei sobyanin",
+      "label": "sergei sobyanin",
+      "channel": "gkg",
+      "kind": "person",
+      "pillars": [],
+      "scope": [
+        "eng",
+        "ron",
+        "rus"
+      ],
+      "signals": {
+        "theme_code": null,
+        "velocity": 2.657,
+        "rising": true,
+        "novel": false,
+        "count": 14,
+        "language_count": 3,
+        "avg_tone": -4.834,
+        "score": 4.1622
+      },
+      "evidence": [
+        {
+          "title": "sergei sobyanin",
+          "url": "https://www.therecord.com/news/world/europe/russia-reports-one-of-the-biggest-ukrainian-drone-attacks-on-its-soil-and-annexed-crimea/article_5d5026be-0f79-5d39-b538-30bd2e4f9103.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "sergei sobyanin",
+          "url": "https://abcnews.com/International/wireStory/russia-reports-biggest-ukrainian-drone-attacks-soil-annexed-134232258",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "sergei sobyanin",
+          "url": "https://www.goulburnpost.com.au/story/9300112/ukraine-launches-massive-drone-attack-on-russia-crimea/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:theme:ENV_HYDRO",
+      "label": "hydro",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [
+        "environment"
+      ],
+      "scope": [
+        "deu",
+        "eng",
+        "nep",
+        "spa",
+        "zho"
+      ],
+      "signals": {
+        "theme_code": "ENV_HYDRO",
+        "velocity": 2.048,
+        "rising": true,
+        "novel": false,
+        "count": 14,
+        "language_count": 5,
+        "avg_tone": -2.46,
+        "score": 4.157
+      },
+      "evidence": [
+        {
+          "title": "ENV_HYDRO",
+          "url": "https://www.therecord.com/news/world/europe/russia-reports-one-of-the-biggest-ukrainian-drone-attacks-on-its-soil-and-annexed-crimea/article_5d5026be-0f79-5d39-b538-30bd2e4f9103.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "ENV_HYDRO",
+          "url": "https://abcnews.com/International/wireStory/russia-reports-biggest-ukrainian-drone-attacks-soil-annexed-134232258",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "ENV_HYDRO",
+          "url": "https://www.goulburnpost.com.au/story/9300112/ukraine-launches-massive-drone-attack-on-russia-crimea/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:organization:ministry of defence",
+      "label": "ministry of defence",
+      "channel": "gkg",
+      "kind": "organization",
+      "pillars": [],
+      "scope": [
+        "ara",
+        "eng"
+      ],
+      "signals": {
+        "theme_code": null,
+        "velocity": 8.5,
+        "rising": true,
+        "novel": true,
+        "count": 17,
+        "language_count": 2,
+        "avg_tone": -3.763,
+        "score": 4.109
+      },
+      "evidence": [
+        {
+          "title": "ministry of defence",
+          "url": "https://www.kidderminstershuttle.co.uk/news/national/26230251.ministers-braced-opposition-using-barracks-house-asylum-seekers/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "ministry of defence",
+          "url": "https://www.yorkpress.co.uk/news/26229970.dismay-new-plans-house-migrants-raf-linton-on-ouse/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "ministry of defence",
+          "url": "https://londonlovesbusiness.com/labour-sparks-fury-with-not-in-our-back-yard-asylum-plan/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": [
+        "home office on",
+        "tom cunningham",
+        "braintree district council",
+        "refugee council imran hussain",
+        "essex joe giddens",
+        "suffolk home office",
+        "owen humphreys",
+        "home office"
+      ]
+    },
+    {
+      "id": "gkg:theme:WB_2358_E_GOVERNMENT",
+      "label": "e government",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [
+        "economics"
+      ],
+      "scope": [
+        "ben",
+        "pan",
+        "tur"
+      ],
+      "signals": {
+        "theme_code": "WB_2358_E_GOVERNMENT",
+        "velocity": 2.5,
+        "rising": true,
+        "novel": true,
+        "count": 5,
+        "language_count": 3,
+        "avg_tone": 1.396,
+        "score": 4.0773
+      },
+      "evidence": [
+        {
+          "title": "WB_2358_E_GOVERNMENT",
+          "url": "https://www.bursadabugun.com/haber/haziran-ayi-odemeleri-hesaplara-yatirildi-1931393.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_2358_E_GOVERNMENT",
+          "url": "https://www.bursadabugun.com/haber/haziran-ayi-dogum-yardimi-odemeleri-hesaplara-yatirildi-1931417.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_2358_E_GOVERNMENT",
+          "url": "https://www.gazetevatan.com/ekonomi/paralar-hesaplara-aktarildi-bakan-goktas-detaylari-paylasti-2382899",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:theme:WB_1150_VOLATILITY",
+      "label": "volatility",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [
+        "economics"
+      ],
+      "scope": [
+        "deu",
+        "ell",
+        "eng",
+        "ind",
+        "pol",
+        "ron",
+        "swa",
+        "vie",
+        "zho"
+      ],
+      "signals": {
+        "theme_code": "WB_1150_VOLATILITY",
+        "velocity": 1.415,
+        "rising": true,
+        "novel": false,
+        "count": 62,
+        "language_count": 9,
+        "avg_tone": -1.553,
+        "score": 3.9767
+      },
+      "evidence": [
+        {
+          "title": "WB_1150_VOLATILITY",
+          "url": "http://www.goskagit.com/news/world/world-shares-skid-as-traders-sell-to-lock-in-profits-after-recent-rallies-driven-by/article_8be87a87-c449-5689-8a05-849221e8c6ba.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_1150_VOLATILITY",
+          "url": "https://www.northwichguardian.co.uk/news/national/26230191.heathrow-forecasts-1-1-fall-passenger-numbers-year-iran-war/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_1150_VOLATILITY",
+          "url": "https://www.sthelensstar.co.uk/news/national/26230191.heathrow-forecasts-1-1-fall-passenger-numbers-year-iran-war/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:organization:office office",
+      "label": "office office",
+      "channel": "gkg",
+      "kind": "organization",
+      "pillars": [],
+      "scope": [
+        "ind",
+        "jpn",
+        "zho"
+      ],
+      "signals": {
+        "theme_code": null,
+        "velocity": 2.6,
+        "rising": true,
+        "novel": false,
+        "count": 7,
+        "language_count": 3,
+        "avg_tone": 2.853,
+        "score": 3.9707
+      },
+      "evidence": [
+        {
+          "title": "office office",
+          "url": "https://makassar.tribunnews.com/travel/1842444/dorong-minat-baca-siswa-perpustakaan-keliling-telah-menjangkau-137-sekolah",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "office office",
+          "url": "https://j-town.net/provider/atpress_town/606933/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "office office",
+          "url": "https://j-town.net/provider/prwire/202606261579/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:organization:unification church",
+      "label": "unification church",
+      "channel": "gkg",
+      "kind": "organization",
+      "pillars": [],
+      "scope": [
+        "eng",
+        "kor"
+      ],
+      "signals": {
+        "theme_code": null,
+        "velocity": 3.5,
+        "rising": true,
+        "novel": true,
+        "count": 7,
+        "language_count": 2,
+        "avg_tone": -3.942,
+        "score": 3.9529
+      },
+      "evidence": [
+        {
+          "title": "unification church",
+          "url": "http://global.chinadaily.com.cn/a/202606/26/WS6a3e1feca310986e2b462174.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "unification church",
+          "url": "https://english.news.cn/20260626/bc35a48b288440e99d8ed9505c4a2ad9/c.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "unification church",
+          "url": "http://www.bignewsnetwork.com/news/279149059/2nd-ld-writethru-wife-of-s-korea-ex-president-yoon-sentenced-to-7-years-in-prison-for-corruptions",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": [
+        "ECON_PRICEMANIPULATION",
+        "seoul central district court",
+        "TAX_POLITICAL_PARTY_PEOPLE_POWER_PARTY",
+        "people power party",
+        "seoul high court"
+      ]
+    },
+    {
+      "id": "gkg:theme:SOC_DEGRADINGTREATMENT",
+      "label": "degradingtreatment",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [],
+      "scope": [
+        "eng",
+        "spa"
+      ],
+      "signals": {
+        "theme_code": "SOC_DEGRADINGTREATMENT",
+        "velocity": 3.0,
+        "rising": true,
+        "novel": true,
+        "count": 6,
+        "language_count": 2,
+        "avg_tone": -4.308,
+        "score": 3.9461
+      },
+      "evidence": [
+        {
+          "title": "SOC_DEGRADINGTREATMENT",
+          "url": "https://www.miragenews.com/turk-urges-action-amid-ice-custody-death-1700054/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "SOC_DEGRADINGTREATMENT",
+          "url": "https://www.starobserver.com.au/news/exclusive-78er-garry-wotherspoon-quits-nsw-police-lgbtqia-committee-over-oxford-st-raids/242296",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "SOC_DEGRADINGTREATMENT",
+          "url": "https://www.prokerala.com/news/articles/a1780275.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:organization:technology progress",
+      "label": "technology progress",
+      "channel": "gkg",
+      "kind": "organization",
+      "pillars": [],
+      "scope": [
+        "rus",
+        "zho"
+      ],
+      "signals": {
+        "theme_code": null,
+        "velocity": 3.0,
+        "rising": true,
+        "novel": true,
+        "count": 6,
+        "language_count": 2,
+        "avg_tone": 0.114,
+        "score": 3.9461
+      },
+      "evidence": [
+        {
+          "title": "technology progress",
+          "url": "https://cars.tvbs.com.tw/life/329083",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "technology progress",
+          "url": "https://n.yam.com/Article/20260626941412",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "technology progress",
+          "url": "http://sc.stock.cnfol.com/gushiyaowen/20260626/32291024.shtml",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:theme:SLFID_MILITARY_BUILDUP",
+      "label": "slfid military buildup",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [],
+      "scope": [
+        "eng",
+        "zho"
+      ],
+      "signals": {
+        "theme_code": "SLFID_MILITARY_BUILDUP",
+        "velocity": 3.0,
+        "rising": true,
+        "novel": true,
+        "count": 6,
+        "language_count": 2,
+        "avg_tone": -4.375,
+        "score": 3.9369
+      },
+      "evidence": [
+        {
+          "title": "SLFID_MILITARY_BUILDUP",
+          "url": "https://londonlovesbusiness.com/zelensky-warns-belarus-military-build-up-nears-completion/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "SLFID_MILITARY_BUILDUP",
+          "url": "https://english.news.cn/20260626/42a27846bfe2428cac7032f730b01c56/c.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "SLFID_MILITARY_BUILDUP",
+          "url": "http://www.bignewsnetwork.com/news/279149054/japan-move-to-reorganize-air-force-expand-security-scope-to-space-sparks-concern",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:theme:ECON_CURRENCY_EXCHANGE_RATE",
+      "label": "currency exchange rate",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [
+        "economics"
+      ],
+      "scope": [
+        "deu",
+        "ell",
+        "eng",
+        "fra",
+        "ind",
+        "kor",
+        "nep",
+        "pol",
+        "rus",
+        "spa",
+        "swa",
+        "tur",
+        "zho"
+      ],
+      "signals": {
+        "theme_code": "ECON_CURRENCY_EXCHANGE_RATE",
+        "velocity": 1.25,
+        "rising": true,
+        "novel": false,
+        "count": 34,
+        "language_count": 13,
+        "avg_tone": -0.59,
+        "score": 3.9275
+      },
+      "evidence": [
+        {
+          "title": "ECON_CURRENCY_EXCHANGE_RATE",
+          "url": "http://www.econotimes.com/FxWirePro-USD-JPY-dips-as-Japanese-Yen-consolidates-near-40-year-low-1745225",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "ECON_CURRENCY_EXCHANGE_RATE",
+          "url": "https://peoplesreview.com.np/2026/06/26/nepal-tightens-surveillance-of-foreign-nationals/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "ECON_CURRENCY_EXCHANGE_RATE",
+          "url": "https://www.counterpunch.org/2026/06/26/us-instigated-humanitarian-crisis-forces-cuba-to-adopt-major-economic-changes/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:theme:WB_2520_REPARATIONS",
+      "label": "reparations",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [
+        "economics"
+      ],
+      "scope": [
+        "deu",
+        "eng",
+        "ita",
+        "spa"
+      ],
+      "signals": {
+        "theme_code": "WB_2520_REPARATIONS",
+        "velocity": 2.143,
+        "rising": true,
+        "novel": false,
+        "count": 9,
+        "language_count": 4,
+        "avg_tone": -3.912,
+        "score": 3.8635
+      },
+      "evidence": [
+        {
+          "title": "WB_2520_REPARATIONS",
+          "url": "https://www.miragenews.com/turk-urges-action-amid-ice-custody-death-1700054/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_2520_REPARATIONS",
+          "url": "https://www.prokerala.com/news/articles/a1780275.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_2520_REPARATIONS",
+          "url": "https://www.eleconomista.com.mx/politica/condenan-asesinato-buscadora-20260626-820406.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "gkg:theme:WB_1917_INTELLECTUAL_PROPERTY",
+      "label": "intellectual property",
+      "channel": "gkg",
+      "kind": "theme",
+      "pillars": [
+        "economics"
+      ],
+      "scope": [
+        "ell",
+        "eng",
+        "ind",
+        "nld",
+        "spa",
+        "zho"
+      ],
+      "signals": {
+        "theme_code": "WB_1917_INTELLECTUAL_PROPERTY",
+        "velocity": 1.7,
+        "rising": true,
+        "novel": false,
+        "count": 25,
+        "language_count": 6,
+        "avg_tone": 0.424,
+        "score": 3.8529
+      },
+      "evidence": [
+        {
+          "title": "WB_1917_INTELLECTUAL_PROPERTY",
+          "url": "https://www.sowetan.co.za/s-mag/culture/2026-06-26-sthandiwe-kgoroge-turns-newsroom-queen-in-dear-sis-dolly/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_1917_INTELLECTUAL_PROPERTY",
+          "url": "https://prowrestling.net/site/2026/06/25/tna-impact-results-6-25-moores-review-of-the-mike-santana-and-nic-nemeth-slammiversary-world-title-summit-cedric-alexander-frankie-kazarian-and-mr-elegance-vs-leon-slater-fabian-aichner-an/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "WB_1917_INTELLECTUAL_PROPERTY",
+          "url": "https://www.whatsonstage.com/news/lil-lambley-and-sam-julyan-launch-new-production-company-act-two-entertainment_1726292/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": [
+        "WB_376_INNOVATION_TECHNOLOGY_AND_ENTREPRENEURSHIP",
+        "WB_377_FIRM_INNOVATION_PRODUCTIVITY_AND_GROWTH"
+      ]
+    },
+    {
+      "id": "gkg:person:carlos alvarado",
+      "label": "carlos alvarado",
+      "channel": "gkg",
+      "kind": "person",
+      "pillars": [],
+      "scope": [
+        "ell",
+        "eng"
+      ],
+      "signals": {
+        "theme_code": null,
+        "velocity": 3.706,
+        "rising": true,
+        "novel": false,
+        "count": 18,
+        "language_count": 2,
+        "avg_tone": -2.168,
+        "score": 3.8258
+      },
+      "evidence": [
+        {
+          "title": "carlos alvarado",
+          "url": "https://www.wellandtribune.ca/news/world/americas/venezuelans-hope-online-posts-will-bring-news-of-missing-after-devastating-earthquakes/article_32191ca2-8796-5ef7-a9bd-a87bf3ad5c6c.html",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "carlos alvarado",
+          "url": "https://www.tivysideadvertiser.co.uk/news/national/26229601.venezuelans-search-rubble-survivors-two-earthquakes-kill-least-235/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        },
+        {
+          "title": "carlos alvarado",
+          "url": "https://www.wral.com/news/ap/b07af-neighbors-dig-through-venezuela-rubble-to-search-for-loved-ones-after-2-deadly-earthquakes/",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": [
+        "SOC_POINTSOFINTEREST_MILITARY_BASE",
+        "dominican air force major carlos olivares",
+        "felix rodriguez",
+        "swiss foreign ministry",
+        "maria cristina diaz",
+        "MOVEMENT_SOCIAL",
+        "cristian carreno",
+        "juan alberto mendano"
+      ]
+    },
+    {
+      "id": "market:polymarket:benjamin-netanyahu-enter-iran-by-june-30",
+      "label": "Will Benjamin Netanyahu enter Iran by June 30?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.0,
+        "volume_24h": 3122541.56,
+        "price_change_1d": -0.0
+      },
+      "evidence": [
+        {
+          "title": "Will Benjamin Netanyahu enter Iran by June 30?",
+          "url": "https://polymarket.com/event/will-benjamin-netanyahu-enter-iran-by-june-30",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:e-be-the-next-prime-minister-of-ethiopia",
+      "label": "Will Adanech Abiebie be the next Prime Minister of Ethiopia?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.0,
+        "volume_24h": 3009506.94,
+        "price_change_1d": -0.01
+      },
+      "evidence": [
+        {
+          "title": "Will Adanech Abiebie be the next Prime Minister of Ethiopia?",
+          "url": "https://polymarket.com/event/will-adanech-abiebie-be-the-next-prime-minister-of-ethiopia",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:traffic-returns-to-normal-by-end-of-june",
+      "label": "Strait of Hormuz traffic returns to normal by end of June?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.12,
+        "volume_24h": 2327161.61,
+        "price_change_1d": 0.07
+      },
+      "evidence": [
+        {
+          "title": "Strait of Hormuz traffic returns to normal by end of June?",
+          "url": "https://polymarket.com/event/strait-of-hormuz-traffic-returns-to-normal-by-end-of-june",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:muz-traffic-returns-to-normal-by-july-31",
+      "label": "Strait of Hormuz traffic returns to normal by July 31?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.58,
+        "volume_24h": 953313.06,
+        "price_change_1d": 0.1
+      },
+      "evidence": [
+        {
+          "title": "Strait of Hormuz traffic returns to normal by July 31?",
+          "url": "https://polymarket.com/event/strait-of-hormuz-traffic-returns-to-normal-by-july-31",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:r-iranian-control-by-june-30-561-854-897",
+      "label": "Kharg Island no longer under Iranian control by June 30?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.0,
+        "volume_24h": 816435.17,
+        "price_change_1d": -0.0
+      },
+      "evidence": [
+        {
+          "title": "Kharg Island no longer under Iranian control by June 30?",
+          "url": "https://polymarket.com/event/kharg-island-no-longer-under-iranian-control-by-june-30-561-854-897",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:es-by-50-bps-after-the-july-2026-meeting",
+      "label": "Will the Fed increase interest rates by 50+ bps after the July 2026 meeting?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.01,
+        "volume_24h": 805560.36,
+        "price_change_1d": 0.0
+      },
+      "evidence": [
+        {
+          "title": "Will the Fed increase interest rates by 50+ bps after the July 2026 meeting?",
+          "url": "https://polymarket.com/event/will-the-fed-increase-interest-rates-by-50-bps-after-the-july-2026-meeting",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:muz-traffic-returns-to-normal-by-july-15",
+      "label": "Strait of Hormuz traffic returns to normal by July 15?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.45,
+        "volume_24h": 784198.92,
+        "price_change_1d": 0.09
+      },
+      "evidence": [
+        {
+          "title": "Strait of Hormuz traffic returns to normal by July 15?",
+          "url": "https://polymarket.com/event/strait-of-hormuz-traffic-returns-to-normal-by-july-15",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:e-oil-cl-hit-high-200-by-end-of-june-677",
+      "label": "Will Crude Oil (CL) hit (HIGH) $200 by end of June?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.0,
+        "volume_24h": 687848.84,
+        "price_change_1d": -0.0
+      },
+      "evidence": [
+        {
+          "title": "Will Crude Oil (CL) hit (HIGH) $200 by end of June?",
+          "url": "https://polymarket.com/event/will-crude-oil-cl-hit-high-200-by-end-of-june-677",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:es-by-25-bps-after-the-july-2026-meeting",
+      "label": "Will the Fed decrease interest rates by 25 bps after the July 2026 meeting?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.01,
+        "volume_24h": 641311.96,
+        "price_change_1d": 0.0
+      },
+      "evidence": [
+        {
+          "title": "Will the Fed decrease interest rates by 25 bps after the July 2026 meeting?",
+          "url": "https://polymarket.com/event/will-the-fed-decrease-interest-rates-by-25-bps-after-the-july-2026-meeting",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:confirm-that-aliens-exist-by-june-30-333",
+      "label": "Will the US confirm that aliens exist by June 30?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.0,
+        "volume_24h": 630911.82,
+        "price_change_1d": 0.0
+      },
+      "evidence": [
+        {
+          "title": "Will the US confirm that aliens exist by June 30?",
+          "url": "https://polymarket.com/event/will-the-us-confirm-that-aliens-exist-by-june-30-333",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:ity-thunder-in-2026-27-20260622172331603",
+      "label": "Will Ayo Dosunmu play for the Oklahoma City Thunder in 2026-27?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.0,
+        "volume_24h": 474780.01,
+        "price_change_1d": 0.0
+      },
+      "evidence": [
+        {
+          "title": "Will Ayo Dosunmu play for the Oklahoma City Thunder in 2026-27?",
+          "url": "https://polymarket.com/event/will-ayo-dosunmu-play-for-the-oklahoma-city-thunder-in-2026-27-20260622172331603",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:lymarket.com/event/putin-out-before-2027",
+      "label": "Putin out as President of Russia by December 31, 2026?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.12,
+        "volume_24h": 465457.69,
+        "price_change_1d": 0.03
+      },
+      "evidence": [
+        {
+          "title": "Putin out as President of Russia by December 31, 2026?",
+          "url": "https://polymarket.com/event/putin-out-before-2027",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:tcoin-dip-to-57pt5k-in-june-2026-623-575",
+      "label": "Will Bitcoin dip to $57,500 in June?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.39,
+        "volume_24h": 430608.22,
+        "price_change_1d": 0.21
+      },
+      "evidence": [
+        {
+          "title": "Will Bitcoin dip to $57,500 in June?",
+          "url": "https://polymarket.com/event/will-bitcoin-dip-to-57pt5k-in-june-2026-623-575",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:will-jared-kushner-enter-iran-by-june-30",
+      "label": "Will Jared Kushner enter Iran by June 30?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.0,
+        "volume_24h": 418310.93,
+        "price_change_1d": -0.0
+      },
+      "evidence": [
+        {
+          "title": "Will Jared Kushner enter Iran by June 30?",
+          "url": "https://polymarket.com/event/will-jared-kushner-enter-iran-by-june-30",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:/will-the-iranian-regime-fall-by-june-30",
+      "label": "Will the Iranian regime fall by June 30?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.0,
+        "volume_24h": 403164.5,
+        "price_change_1d": -0.0
+      },
+      "evidence": [
+        {
+          "title": "Will the Iranian regime fall by June 30?",
+          "url": "https://polymarket.com/event/will-the-iranian-regime-fall-by-june-30",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:lando-magic-in-2026-27-20260622172331604",
+      "label": "Will Ayo Dosunmu play for the Orlando Magic in 2026-27?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.0,
+        "volume_24h": 377845.01,
+        "price_change_1d": -0.0
+      },
+      "evidence": [
+        {
+          "title": "Will Ayo Dosunmu play for the Orlando Magic in 2026-27?",
+          "url": "https://polymarket.com/event/will-ayo-dosunmu-play-for-the-orlando-magic-in-2026-27-20260622172331604",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:terest-rates-after-the-july-2026-meeting",
+      "label": "Will there be no change in Fed interest rates after the July 2026 meeting?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.82,
+        "volume_24h": 373009.17,
+        "price_change_1d": 0.06
+      },
+      "evidence": [
+        {
+          "title": "Will there be no change in Fed interest rates after the July 2026 meeting?",
+          "url": "https://polymarket.com/event/will-there-be-no-change-in-fed-interest-rates-after-the-july-2026-meeting",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:deal-by-august-31-2026-20260621201255154",
+      "label": "US-Iran Final Nuclear Deal by August 31, 2026?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.26,
+        "volume_24h": 343724.77,
+        "price_change_1d": 0.02
+      },
+      "evidence": [
+        {
+          "title": "US-Iran Final Nuclear Deal by August 31, 2026?",
+          "url": "https://polymarket.com/event/us-iran-final-nuclear-deal-by-august-31-2026-20260621201255154",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:bia-bans-us-military-aircraft-by-june-30",
+      "label": "Saudi Arabia bans US military aircraft by June 30?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.0,
+        "volume_24h": 342614.65,
+        "price_change_1d": 0.0
+      },
+      "evidence": [
+        {
+          "title": "Saudi Arabia bans US military aircraft by June 30?",
+          "url": "https://polymarket.com/event/saudi-arabia-bans-us-military-aircraft-by-june-30",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:/event/bitcoin-above-58k-on-june-26-2026",
+      "label": "Will the price of Bitcoin be above $58,000 on June 26?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.9,
+        "volume_24h": 339536.89,
+        "price_change_1d": -0.08
+      },
+      "evidence": [
+        {
+          "title": "Will the price of Bitcoin be above $58,000 on June 26?",
+          "url": "https://polymarket.com/event/bitcoin-above-58k-on-june-26-2026",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:play-for-new-england-patriots-in-2026-27",
+      "label": "Will Brandon Aiyuk play for New England Patriots in 2026-27?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.0,
+        "volume_24h": 308803.08,
+        "price_change_1d": -0.03
+      },
+      "evidence": [
+        {
+          "title": "Will Brandon Aiyuk play for New England Patriots in 2026-27?",
+          "url": "https://polymarket.com/event/will-brandon-aiyuk-play-for-new-england-patriots-in-2026-27",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:ait-of-hormuz-on-any-day-by-june-30-2026",
+      "label": "Will 60 ships transit the Strait of Hormuz on any day by June 30, 2026?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.64,
+        "volume_24h": 307922.95,
+        "price_change_1d": 0.35
+      },
+      "evidence": [
+        {
+          "title": "Will 60 ships transit the Strait of Hormuz on any day by June 30, 2026?",
+          "url": "https://polymarket.com/event/will-60-ships-transit-the-strait-of-hormuz-on-any-day-by-june-30-2026",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:es-by-25-bps-after-the-july-2026-meeting",
+      "label": "Will the Fed increase interest rates by 25 bps after the July 2026 meeting?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.17,
+        "volume_24h": 273029.72,
+        "price_change_1d": -0.06
+      },
+      "evidence": [
+        {
+          "title": "Will the Fed increase interest rates by 25 bps after the July 2026 meeting?",
+          "url": "https://polymarket.com/event/will-the-fed-increase-interest-rates-by-25-bps-after-the-july-2026-meeting",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:-2028-democratic-presidential-nomination",
+      "label": "Will Hunter Biden win the 2028 Democratic presidential nomination?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.01,
+        "volume_24h": 272998.81,
+        "price_change_1d": -0.0
+      },
+      "evidence": [
+        {
+          "title": "Will Hunter Biden win the 2028 Democratic presidential nomination?",
+          "url": "https://polymarket.com/event/will-person-a-win-the-2028-democratic-presidential-nomination",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    },
+    {
+      "id": "market:polymarket:/event/bitcoin-above-62k-on-june-26-2026",
+      "label": "Will the price of Bitcoin be above $62,000 on June 26?",
+      "channel": "market",
+      "kind": "market",
+      "pillars": [],
+      "scope": [],
+      "signals": {
+        "last_price": 0.04,
+        "volume_24h": 253077.21,
+        "price_change_1d": -0.39
+      },
+      "evidence": [
+        {
+          "title": "Will the price of Bitcoin be above $62,000 on June 26?",
+          "url": "https://polymarket.com/event/bitcoin-above-62k-on-june-26-2026",
+          "domain": "",
+          "country": "",
+          "language": "",
+          "seendate": ""
+        }
+      ],
+      "related": []
+    }
+  ]
+}
