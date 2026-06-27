@@ -232,3 +232,6 @@ backend/runs_data/
 
 # Data-ingestion output (downloaded batches digested to disk) — never committed
 backend/ingestion_data/
+
+# Signal-profile store (t2 assets written by ProfileStore) — never committed
+backend/profile_store/
