@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from algent_backend.agent_system.agents.agent_spec import AgentSpec
+from algent_backend.agent_system.agents.agent_spec import AgentSpec, TestFixture
 from algent_backend.agent_system.foundation.models import ModelSpec
 from algent_backend.agent_system.runs.context import AgentRunContext
 from algent_backend.agent_system.tools.sourcing.search import policy
@@ -64,4 +64,6 @@ SPEC = AgentSpec(
     family=FAMILY,
     tool_ids=TOOL_IDS,
     search_channels=SEARCH_CHANNELS,
+    # Isolated test: run synthesis on a saved t0 pool (no GDELT) via `--fixture`.
+    test_fixture=TestFixture("fixtures/t0_pool_sample.json", "pool"),
 )

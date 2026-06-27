@@ -23,6 +23,19 @@ from algent_backend.agent_system.runs.context import AgentRunContext
 
 
 @dataclass(frozen=True)
+class TestFixture:
+    """A saved input that runs this agent in ISOLATION (see backend/fixtures/).
+
+    Lets `runs start <agent> --fixture` feed the agent a stored upstream artifact
+    instead of producing it — so a stage is testable without spending on everything
+    before it. The fixture lives *with* the agent so it can't drift from a doc table.
+    """
+
+    input_file: str            # path to the JSON fixture (relative to backend/)
+    input_key: str | None = None  # state key to mount it under (None = whole input dict)
+
+
+@dataclass(frozen=True)
 class AgentSpec:
     """A reusable recipe for one agent."""
 
@@ -38,3 +51,5 @@ class AgentSpec:
     # semantic, read, rich, x). None = the safe default (free/cheap only; paid
     # `rich`/`x` off). The runtime scopes the facade's policy to this per run.
     search_channels: tuple[str, ...] | None = None
+    # Stored input for isolated testing via `runs start <agent> --fixture`.
+    test_fixture: TestFixture | None = None

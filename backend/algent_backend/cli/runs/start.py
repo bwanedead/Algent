@@ -43,6 +43,12 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
         help="mount --input-file under this state key, e.g. 'pool' (synthesis) or "
         "'portfolio' (router); omit to use the file as the whole input dict",
     )
+    parser.add_argument(
+        "--fixture",
+        action="store_true",
+        help="run the agent on ITS OWN registered test fixture (isolated test input) — "
+        "no need to know which file/key; the agent declares it",
+    )
     parser.add_argument("--runtime", default="langgraph")
     parser.add_argument("--max-turns", type=int, default=None)
     parser.add_argument(
@@ -55,9 +61,18 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
 
 def run(args: argparse.Namespace) -> int:
     run_id = str(uuid4())
+
+    input_file, input_key = args.input_file, args.input_key
+    if args.fixture:  # the agent declares its own isolated-test input
+        resolved = _resolve_fixture(args.agent_id)
+        if resolved is None:
+            print_json({"error": f"agent '{args.agent_id}' has no registered test fixture"})
+            return 1
+        input_file, input_key = resolved
+
     request = RunRequest(
         agent_id=args.agent_id,
-        input=parse_input_arg(args.input, args.topic, args.goal, args.input_file, args.input_key),
+        input=parse_input_arg(args.input, args.topic, args.goal, input_file, input_key),
         runtime=args.runtime,
         run_id=run_id,
         max_turns=args.max_turns,
@@ -101,6 +116,21 @@ def run(args: argparse.Namespace) -> int:
     _spawn_detached(run_id)
     print_json({"run_id": run_id, "mode": "background", **locators})
     return 0
+
+
+def _resolve_fixture(agent_id: str) -> tuple[str, str | None] | None:
+    """An agent's registered test fixture as (input_file, input_key), or None if it
+    has none / the agent is unknown (the run itself reports an unknown agent cleanly).
+    """
+    # Lazy import: the registry pulls agent modules, kept off the light start path.
+    from algent_backend.agent_system.agents.registry import default_agent_registry
+
+    try:
+        spec = default_agent_registry().get(agent_id)
+    except ValueError:
+        return None
+    fixture = spec.test_fixture
+    return (fixture.input_file, fixture.input_key) if fixture is not None else None
 
 
 def _spawn_detached(run_id: str) -> None:

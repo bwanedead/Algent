@@ -32,3 +32,25 @@ def test_input_file_non_object_without_key_errors(tmp_path) -> None:
 
 def test_no_input_is_empty() -> None:
     assert parse_input_arg(None, None) == {}
+
+
+def test_synthesis_declares_a_present_test_fixture() -> None:
+    # `runs start discovery_synthesis --fixture` resolves to a real, on-disk file.
+    from pathlib import Path
+
+    from algent_backend.agent_system.agents.registry import default_agent_registry
+    from algent_backend.cli.runs.start import _resolve_fixture
+
+    spec = default_agent_registry().get("discovery_synthesis")
+    assert spec.test_fixture is not None and spec.test_fixture.input_key == "pool"
+
+    resolved = _resolve_fixture("discovery_synthesis")
+    assert resolved == (spec.test_fixture.input_file, "pool")
+    assert Path(resolved[0]).exists(), "the declared fixture file must exist on disk"
+
+
+def test_resolve_fixture_none_for_agent_without_one() -> None:
+    from algent_backend.cli.runs.start import _resolve_fixture
+
+    assert _resolve_fixture("hello_workflow") is None   # no fixture declared
+    assert _resolve_fixture("nonexistent_agent") is None  # unknown agent, handled cleanly

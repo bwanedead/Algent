@@ -40,6 +40,14 @@ python -m algent_backend.cli.runs start discovery_synthesis --max-turns 20
 # To build/inspect a t0 pool directly (per-channel testing), without an agent run:
 #   python -m algent_backend.cli ingest t0 --channels markets --force
 
+# TEST A STAGE IN ISOLATION ON ITS STORED INPUT (no upstream, no spend): each agent
+# declares its own test fixture, so one uniform flag works for any of them — you do
+# NOT need to know which file/key. When asked to "test <agent> with stored input":
+#   python -m algent_backend.cli.runs start <agent_id> --fixture
+# e.g. `... start discovery_synthesis --fixture` runs synthesis on a saved t0 pool
+# (no GDELT). If an agent has no fixture, the command says so. (Under the hood this is
+# --input-file/--input-key seeding the graph's initial state; see backend/fixtures/.)
+
 # THEN, before watching, give the human the run's live timeline as a clickable link:
 #   backend/runs_data/<agent>/<NNNN>__<run_id>/audit/timeline.md
 
