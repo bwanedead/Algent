@@ -17,7 +17,10 @@ from langchain_core.messages import HumanMessage
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph import END, START, StateGraph
 
-from algent_backend.agent_system.agents.discovery.portfolio import ResearchPortfolio
+from algent_backend.agent_system.agents.discovery.portfolio import (
+    ResearchPortfolio,
+    ensure_vector_ids,
+)
 from algent_backend.agent_system.agents.discovery.rake.loop import run_rake
 from algent_backend.agent_system.agents.loop import build_react_loop, stream_react_loop
 from algent_backend.agent_system.foundation import cost
@@ -121,6 +124,7 @@ def build_synthesis_graph(
             "t0_ref": portfolio.t0_ref or pool.get("gkg_batch_id") or pool.get("generated_at"),
             "total_considered": pool.get("item_count", len(pool.get("items", []))),
         })
+        portfolio = ensure_vector_ids(portfolio)  # durable ids before anything references a vector
         return _finish(context, portfolio, event=SYNTHESIS_COMPLETED, estimated_usd=estimated_usd)
 
     graph = StateGraph(SynthesisState)

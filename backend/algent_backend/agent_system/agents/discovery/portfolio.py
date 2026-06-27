@@ -14,6 +14,8 @@ read it as a typed contract.
 
 from __future__ import annotations
 
+import hashlib
+
 from pydantic import BaseModel, Field
 
 # What kind of thread the vector is — the synthesis "flavors" (see ITERATION_LOG /
@@ -27,6 +29,9 @@ EFFORT_LEVELS = ("light", "standard", "deep")
 class ResearchVector(BaseModel):
     """One thread of importance worth allocating research effort to."""
 
+    # Stable id, assigned in code (not by the model) via ``ensure_vector_ids`` — so a
+    # promoted profile's parent_vector_id always points at a real, durable vector.
+    id: str = ""
     title: str  # short handle for the thread
     thesis: str  # the angle/claim — the larger force the hits are evidence of
     vector_type: str  # one of VECTOR_TYPES
@@ -48,3 +53,19 @@ class ResearchPortfolio(BaseModel):
     total_considered: int = 0  # how many t0 hits were triaged
     vectors: list[ResearchVector] = Field(default_factory=list)
     dropped_note: str | None = None  # brief: what was set aside and why (anti-spam record)
+
+
+def vector_id(vector: ResearchVector) -> str:
+    """A deterministic, content-derived id for a vector (same content -> same id)."""
+    seed = f"{vector.title}\n{vector.thesis}".strip()
+    return "vec_" + hashlib.sha1(seed.encode("utf-8")).hexdigest()[:10]
+
+
+def ensure_vector_ids(portfolio: ResearchPortfolio) -> ResearchPortfolio:
+    """Fill any empty vector id with a stable content-derived id. Idempotent.
+
+    Ids are assigned in code, not by the model — collision-resistant and stable, so a
+    profile's ``parent_vector_id`` always references a real, durable vector id.
+    """
+    vectors = [v if v.id else v.model_copy(update={"id": vector_id(v)}) for v in portfolio.vectors]
+    return portfolio.model_copy(update={"vectors": vectors})

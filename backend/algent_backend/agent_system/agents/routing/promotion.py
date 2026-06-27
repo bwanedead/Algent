@@ -50,13 +50,13 @@ def rank_portfolio(
 ) -> tuple[RouteRanking, dict[str, ResearchVector]]:
     """Rank a t1 portfolio for promotion. Returns (ranking, candidate_id -> vector).
 
-    Candidate ids are positional and local to this call (vectors carry no durable id
-    yet); the returned map is how the caller recovers the actual vectors.
+    Candidate ids are the vectors' durable ids (positional fallback if a vector
+    hasn't been assigned one); the returned map recovers the actual vectors.
     """
     candidates: list[RouteCandidate] = []
     by_id: dict[str, ResearchVector] = {}
     for i, vec in enumerate(portfolio.vectors):
-        cid = f"vec:{i:02d}"
+        cid = vec.id or f"vec:{i:02d}"  # durable id once synthesis assigns one
         by_id[cid] = vec
         candidates.append(RouteCandidate(
             id=cid,
