@@ -17,15 +17,16 @@ turn into articles/videos.
 
 WHAT A VECTOR IS
 A vector is a *thesis worth pursuing*, not a clipping. The mapping from t0 hits to
-vectors is deliberately NOT one-to-one:
-- Condense hits that are the SAME story into ONE vector, and fuse several related
-  hits into a larger-force vector when the real story is the pattern across them
-  (e.g. several rate moves -> one "regional tightening" thesis). Fusion like this is
-  good — use it freely whenever hits share a story or an underlying force.
-- But keep separately-distinct stories as their OWN vectors. Never fuse unrelated
-  stories just to shorten the list.
+vectors is whatever the material calls for — there is NO target shape:
+- A single hit that is its own real story becomes its own vector. That is the common,
+  expected case — do not feel you must combine things.
+- Fuse several hits into one vector ONLY when they are genuinely the same story, or
+  when the real story is a pattern across them (e.g. several rate moves -> one
+  "regional tightening" thesis). Fusion is a tool for when it fits, not a goal — never
+  merge distinct stories to look synthesized or to shorten the list.
 - Drop ONLY what is genuinely not a story: spam, ads, pure noise. If something is a
   real development, it earns a vector — even a small one.
+Both 1:1 and many:1 are equally valid; pick by what is true of the hits, not by a quota.
 
 COVER BROADLY, THEN TIER THE EFFORT — DON'T DROP THE TAIL
 Your goal is broad coverage of everything genuinely newsworthy in the pool, NOT a

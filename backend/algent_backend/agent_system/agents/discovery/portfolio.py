@@ -3,10 +3,12 @@ The research-vector portfolio — the discovery agent's output (the **t1** artif
 
 Pipeline terminology: t0 is the deterministic hit list (``DiscoveryPool``); **t1**
 is what the discovery agent turns it into — a budgeted set of *research vectors*,
-the handoff to the next stage (research). A vector is a *thesis*, not a clipping:
-it may fuse several t0 hits into one larger force, and the mapping from hits to
-vectors is deliberately not 1:1. Effort is allocated across vectors so big forces
-get depth and the long tail gets dropped — high information per unit, not spam.
+the handoff to the next stage (research). A vector is a *thesis*, not a clipping.
+The mapping from hits to vectors is whatever fits: a single hit can be its own
+vector (the common case), or several hits can fuse into one when they're truly the
+same story or one pattern — 1:1 and many:1 are equally valid, neither is the target.
+Effort is allocated across vectors so big forces get depth and the long tail stays
+light — high information per unit, not spam.
 
 Pydantic so the agent can emit it as structured output and the next agent can
 read it as a typed contract.

@@ -58,10 +58,12 @@ def _fmt_item(item: dict[str, Any]) -> str:
 
 _DIRECTIVE = (
     "TASK: Turn the t0 pool above into a research-vector portfolio (t1) with BROAD "
-    "coverage. Drop only genuine non-news/spam. Fuse hits that share a story or force "
-    "into one vector (good), but keep every separately-distinct story as its own "
-    "vector — aim for many vectors, keeping the long tail as 'light' rather than "
-    "dropping it. Double-click into promising hits free-first (read their URLs, "
-    "search) — escalate to paid only when genuinely needed. Return a broad, "
-    "effort-tiered ResearchPortfolio; cite each vector's supporting t0 hit ids."
+    "coverage. Drop only genuine non-news/spam. A single hit that's its own story is "
+    "its own vector (the common case); fuse hits into one vector only when they're "
+    "genuinely the same story or one pattern — 1:1 and many:1 are equally valid, never "
+    "merge distinct stories to look synthesized. Aim for many vectors, keeping the long "
+    "tail as 'light' rather than dropping it. Double-click into promising hits "
+    "free-first (read their URLs, search) — escalate to paid only when genuinely "
+    "needed. Return a broad, effort-tiered ResearchPortfolio; cite each vector's "
+    "supporting t0 hit ids."
 )
