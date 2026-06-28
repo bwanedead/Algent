@@ -1,0 +1,41 @@
+{
+  "id": "vec_bd540e7822",
+  "title": "Fed path under inflation pressure: no change, cuts, or surprise hike?",
+  "thesis": "Market pricing around the Fed suggests the main question is whether persistent inflation and energy shocks keep rates unchanged, delay cuts, or force a more hawkish surprise.",
+  "vector_type": "story",
+  "rationale": "Clear, near-term market-moving macro story with direct rate and asset-price implications.",
+  "supporting_hits": [
+    "market:polymarket:es-by-50-bps-after-the-july-2026-meeting",
+    "market:polymarket:es-by-25-bps-after-the-july-2026-meeting",
+    "market:polymarket:terest-rates-after-the-july-2026-meeting",
+    "market:polymarket:/event/bitcoin-above-58k-on-june-26-2026",
+    "gkg:theme:WB_1070_ECONOMIC_GROWTH_POLICY",
+    "gkg:theme:ECON_CURRENCY_EXCHANGE_RATE"
+  ],
+  "pillars": [
+    "economics",
+    "markets",
+    "Federal Reserve",
+    "inflation",
+    "Bitcoin"
+  ],
+  "scope": [
+    "economics",
+    "markets",
+    "Federal Reserve",
+    "inflation",
+    "Bitcoin"
+  ],
+  "research_effort": "deep",
+  "key_questions": [
+    "What is the dominant scenario in the July FOMC market?",
+    "What data points are shifting expectations?",
+    "How tightly is Bitcoin tracking rate expectations?",
+    "How much of the move is geopolitical energy spillover?"
+  ],
+  "sources": [
+    "https://polymarket.com/event/fed-decision-in-june-825",
+    "https://polymarket.com/event/what-will-fed-rate-hit-before-2027",
+    "https://polymarket.com/event/how-many-fed-rate-cuts-in-2026"
+  ]
+}

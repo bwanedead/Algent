@@ -42,6 +42,7 @@ def default_agent_registry() -> AgentRegistry:
     from .discovery.synthesis.spec import SPEC as discovery_synthesis_spec
     from .hello_workflow.spec import SPEC as hello_workflow_spec
     from .news_brief.spec import SPEC as news_brief_spec
+    from .research.spec import SPEC as signal_profile_spec
     from .routing.spec import SPEC as signal_router_spec
 
     registry = AgentRegistry()
@@ -50,4 +51,5 @@ def default_agent_registry() -> AgentRegistry:
     registry.register(general_discovery_spec)
     registry.register(discovery_synthesis_spec)
     registry.register(signal_router_spec)
+    registry.register(signal_profile_spec)
     return registry

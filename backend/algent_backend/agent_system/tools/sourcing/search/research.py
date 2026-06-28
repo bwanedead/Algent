@@ -25,7 +25,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ....foundation import cost
+from ....foundation import cost, snapshots
 from ...spec import GLOBAL_SCOPE, ToolSpec
 from .._wrap import as_structured_tool
 from . import policy
@@ -119,6 +119,10 @@ def _read(url: str, *, rich: bool) -> dict[str, Any]:
         result = _fetch(url, allow_paid_fallback=rich)
     except Exception as exc:  # noqa: BLE001 — return a clean message, never crash the loop
         return {"action": "read", "url": url, "error": str(exc)[:200]}
+    # Capture what the source said at read-time (no-op unless a profile run is
+    # collecting snapshots); the harness attaches it to the source ledger by URL.
+    if result.get("content"):
+        snapshots.record(result.get("url", url), result["content"])
     return {"action": "read", **result}
 
 
