@@ -41,6 +41,7 @@ def test_merge_is_additive_dedups_and_preserves_verified_snapshots() -> None:
         ],
         claims=[Claim(id="nc1", text="primary data confirms a hold", salience="high", supported_by=["ns1"])],
         threads=[Thread(id="nt1", title="primary grounding", body="b", claims=[existing_claim_id, "nc1"])],
+        entities=[Entity(id="ne1", name="Federal Reserve", type="org", role="central bank")],  # entities have no provenance
         addressed_findings=["find_01"],
     )
     merged = merge_additions(
@@ -61,6 +62,7 @@ def test_merge_is_additive_dedups_and_preserves_verified_snapshots() -> None:
     ec = next(c for c in merged.claim_ledger if c.id == existing_claim_id)
     assert ec.provenance.added_by_stage == "signal_profile"  # existing item keeps its provenance
     assert existing_claim_id in merged.threads[0].claims and nc.id in merged.threads[0].claims  # links resolve
+    assert any(e.name == "Federal Reserve" for e in merged.entities)  # entity merged (no provenance field)
 
 
 # -- the enricher graph --------------------------------------------------------

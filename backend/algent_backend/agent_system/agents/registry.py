@@ -42,6 +42,7 @@ def default_agent_registry() -> AgentRegistry:
     from .discovery.synthesis.spec import SPEC as discovery_synthesis_spec
     from .enrich.counter_perspective import SPEC as enrich_counter_perspective_spec
     from .enrich.primary_source import SPEC as enrich_primary_source_spec
+    from .gauntlet.spec import SPEC as profile_gauntlet_spec
     from .hello_workflow.spec import SPEC as hello_workflow_spec
     from .news_brief.spec import SPEC as news_brief_spec
     from .research.spec import SPEC as signal_profile_spec
@@ -58,4 +59,5 @@ def default_agent_registry() -> AgentRegistry:
     registry.register(profile_reviewer_spec)
     registry.register(enrich_primary_source_spec)
     registry.register(enrich_counter_perspective_spec)
+    registry.register(profile_gauntlet_spec)
     return registry

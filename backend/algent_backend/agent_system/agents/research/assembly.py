@@ -76,7 +76,8 @@ def merge_additions(
     # their verified snapshots + original provenance while new items are correctly attributed.
     for s in additions.sources:
         s.snapshot = None
-    for item in (*additions.sources, *additions.claims, *additions.threads, *additions.entities):
+    # Entities are lightweight nodes with no provenance field; only these carry it.
+    for item in (*additions.sources, *additions.claims, *additions.threads):
         item.provenance = None
     sources, entities, claims, threads = _assemble(
         profile.source_ledger + additions.sources,

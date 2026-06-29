@@ -54,13 +54,13 @@ def build_enrich_graph(
         pdict = state.get("profile")
         if not pdict:
             context.emit(ENRICH_NO_WORK, {"message": "no profile supplied to enrich"})
-            return {"profile": pdict or {}}
+            return {"profile": pdict or {}, "addressed": []}
         profile = SignalProfile.model_validate(pdict)
         review = ReviewReport.model_validate(state["review"]) if state.get("review") else None
         findings = _select_findings(review, lane)
         if not findings:
             context.emit(ENRICH_NO_WORK, {"message": f"no '{lane}' findings to act on", "profile_id": profile.id})
-            return {"profile": profile.model_dump()}
+            return {"profile": profile.model_dump(), "addressed": []}
 
         context.emit(ev.INPUT_PREVIEW, _assignment_preview(profile, findings, lane))
         with policy_scope(search_channels, paid_budget), cost.scoped(cost_cap_usd, model_spec.model), snapshots.scoped():
@@ -87,7 +87,7 @@ def build_enrich_graph(
             "added_claims": len(merged.claim_ledger) - before[1],
             "addressed": additions.addressed_findings,
         })
-        return {"profile": merged.model_dump()}
+        return {"profile": merged.model_dump(), "addressed": additions.addressed_findings}
 
     graph = StateGraph(EnrichState)
     graph.add_node("enrich", enrich)
