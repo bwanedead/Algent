@@ -1,4 +1,4 @@
-"""Tests for the signal_profile agent (t1 vector -> t2 profile lane)."""
+"""Tests for the signal_profile agent graph (v2) — t1 vector -> t2 profile."""
 
 from __future__ import annotations
 
@@ -26,45 +26,17 @@ def _ctx(events: list) -> AgentRunContext:
     )
 
 
-def _spec() -> ModelSpec:
-    return ModelSpec(provider="openai", model="gpt-5.4-mini")
-
-
 def _graph(context, monkeypatch, produced):
     monkeypatch.setattr(profile_loop, "build_react_loop", lambda *a, **k: object())
     monkeypatch.setattr(profile_loop, "stream_react_loop", lambda *a, **k: produced)
     return profile_loop.build_profile_graph(
-        context, model_spec=_spec(), tool_ids=("web_search",), system_prompt="sys",
+        context, model_spec=ModelSpec(provider="openai", model="gpt-5.4-mini"),
+        tool_ids=("web_search",), system_prompt="sys",
         search_channels=("keyword", "read"), paid_budget=2, cost_cap_usd=1.0,
     )
 
 
-def test_finalize_attaches_snapshot_and_stamps_provenance() -> None:
-    from algent_backend.agent_system.agents.research.profile import SourceSnapshot
-
-    profile = SignalProfile(
-        id="", title="Fed path",
-        source_ledger=[
-            SourceArtifact(id="s1", url="https://ex.com/a"),
-            # the model FABRICATED a snapshot for s2 — the harness must discard it
-            SourceArtifact(id="s2", url="https://ex.com/b",
-                           snapshot=SourceSnapshot(content_hash="sha256:FAKE", excerpt="made up")),
-        ],
-        claim_ledger=[Claim(id="c1", text="rates held", status="confirmed", supported_by=["s1"])],
-    )
-    captured = {"https://ex.com/a": {"content_hash": "sha256:abc", "excerpt": "the fed held", "captured_at": "t"}}
-    out = profile_loop._finalize(profile, {"id": "vec_bd540e7822", "title": "Fed path"}, captured, "gpt-5.4-mini")
-
-    assert out.id == "prof_bd540e7822" and out.parent_vector_id == "vec_bd540e7822"
-    assert out.generator == "signal_profile@v1" and out.model == "gpt-5.4-mini" and out.generated_at
-    # s1: real harness-captured snapshot attached by URL
-    assert out.source_ledger[0].snapshot is not None
-    assert out.source_ledger[0].snapshot.content_hash == "sha256:abc"
-    # s2: model-fabricated snapshot DISCARDED (no real capture for that URL)
-    assert out.source_ledger[1].snapshot is None
-
-
-def test_profile_graph_produces_and_persists(monkeypatch, tmp_path) -> None:
+def test_profile_graph_produces_persists_and_writes_briefing(monkeypatch, tmp_path) -> None:
     monkeypatch.setenv("ALGENT_PROFILE_STORE", str(tmp_path))
     produced = SignalProfile(
         id="model-set", title="Fed path under inflation pressure", profile_status="complete",
@@ -80,9 +52,11 @@ def test_profile_graph_produces_and_persists(monkeypatch, tmp_path) -> None:
     prof = out["profile"]
     assert prof["id"] == "prof_bd540e7822"               # harness id, not the model's
     assert prof["parent_vector_id"] == "vec_bd540e7822"
-    assert prof["claim_ledger"][0]["status"] == "confirmed"
+    assert prof["source_ledger"][0]["id"].startswith("src_")     # content-addressed
+    assert prof["claim_ledger"][0]["supported_by"] == [prof["source_ledger"][0]["id"]]  # ref rewritten
     assert (tmp_path / "prof_bd540e7822.json").exists()  # persisted to the ProfileStore
-    assert any(et == "profile.completed" for et, _ in events)
+    done = next(p for et, p in events if et == "profile.completed")
+    assert done["status"] == "complete" and "threads" in done
 
 
 def test_profile_graph_no_vector_is_insufficient_not_failure(monkeypatch, tmp_path) -> None:

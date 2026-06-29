@@ -24,8 +24,10 @@ from algent_backend.agent_system.agents.discovery.portfolio import (
 from algent_backend.agent_system.agents.research import (
     Claim,
     DerivedLead,
+    Entity,
     SignalProfile,
     SourceArtifact,
+    Thread,
 )
 from algent_backend.agent_system.agents.routing import RouteCandidate
 from algent_backend.data_ingestion.newsroom.discovery.report import PoolItem
@@ -36,6 +38,8 @@ ENTITY_CONTRACTS = [
     SignalProfile,    # t2
     Claim,            # ledger entity
     SourceArtifact,   # ledger entity
+    Entity,           # knowledge-field node
+    Thread,           # knowledge-field strand
     DerivedLead,      # backfeed entity
     RouteCandidate,   # routing entity
 ]

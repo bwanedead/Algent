@@ -1,15 +1,21 @@
 """
-t2 contracts — the SignalProfile and its parts (the newsroom's central asset).
+t2 contracts — the research profile and its parts (the newsroom's central asset).
 
-A *signal profile* is the researched knowledge object a t1 signal vector is promoted
-into: a **claim ledger** + a **source ledger** + situational modules, every piece
-stably-IDed so it can later be indexed into the signal graph. An article — and every
-other t3 production — is a *view* of this object, not the object itself.
+A *profile* is the researched knowledge object a t1 research vector is promoted into,
+and — crucially — an **agent-facing interface**: it must be easy for an agent to build
+reliably, read holistically, and extend later. So it is a flat set of self-contained,
+addressable items (claims, threads, entities, sources), each with a stable id, light
+provenance, and a salience — append-friendly, retrievable, graph-ready.
 
-Graph-ready by design (stable IDs, parent vector id, entity tags, version stamps, and
-empty ``derived_leads`` / ``corpus_context`` slots for the future feedback loop) but
-DB-agnostic: it round-trips to JSON and is persisted through ``ProfileStore``. No
-storage or rail imports here — pure contract.
+Three layers of knowledge, kept distinct so a consumer can trust each appropriately:
+- EVIDENCE SPINE (verifiable): the claim ledger + source ledger.
+- KNOWLEDGE FIELD (organic richness): entities (the graph join-keys) + threads (flexible
+  strands of the surrounding field — no rigid rings, no imposed degrees).
+- META-KNOWLEDGE (what we don't know): omissions, open questions.
+
+The raw object here is CANONICAL. A separate deterministic renderer (``briefing.py``)
+produces a readable *view*; it is never the source of truth. Pure contract — no storage
+or rail imports; round-trips to JSON, persisted through ``ProfileStore``.
 """
 
 from __future__ import annotations
@@ -18,13 +24,15 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 # A claim's legitimacy plane — the heart of "confirmed here, speculative there".
 ClaimStatus = Literal[
     "confirmed", "likely", "unconfirmed", "contested", "speculative", "opinion"
 ]
 SourceType = Literal["primary", "secondary", "tertiary"]
+# How much an item matters — for renderer ordering and (later) RAG retrieval priority.
+Salience = Literal["high", "medium", "low"]
 # Not every profile ends "article-ready" — some honestly end as "not enough here".
 ProfileStatus = Literal[
     "draft", "researching", "complete", "needs_verification",
@@ -39,27 +47,33 @@ SuggestedUse = Literal[
 LeadUse = Literal["radar", "profile", "background", "watch"]
 
 
+class ItemProvenance(BaseModel):
+    """Light provenance on an individual item — traceable contributions + upgrades."""
+
+    added_by_stage: str = ""   # the research stage/agent that added it
+    revision: int = 1          # the profile revision it was added/updated in
+    created_at: str = ""       # ISO-8601 UTC
+
+
 class SourceSnapshot(BaseModel):
-    """Point-in-time tamper-evidence for a cited source.
+    """Point-in-time tamper-evidence for a cited source (harness-captured, never model).
 
     Hash + timestamp prove what the source said when we used it (and catch later
     external edits / link-rot). The full captured text lives as a separate artifact
-    (``full_text_path``) so the ledger stays small and readable — only a short
-    ``excerpt`` is inline.
+    (``full_text_path``); only a short ``excerpt`` is inline.
     """
 
-    content_hash: str = ""        # hash of the captured content at use-time
-    captured_at: str = ""         # ISO-8601 UTC
-    excerpt: str = ""             # short inline snippet for readability
-    full_text_path: str | None = None  # the full captured text, stored by reference
+    content_hash: str = ""
+    captured_at: str = ""
+    excerpt: str = ""
+    full_text_path: str | None = None
 
 
 class SourceArtifact(BaseModel):
     """One exact cited thing — an article / PDF / post / filing / transcript / dataset.
 
-    This is the *artifact* (a specific URL/document), not the permanent source
-    identity. ``publisher_id`` / ``author_id`` are reserved hooks for when a
-    SourceOrg / SourcePerson registry exists; null for now.
+    The id is content-addressed (from the normalized URL) by the harness, so the *same*
+    source has the same id everywhere — the cross-profile join-key, dedup-friendly.
     """
 
     id: str
@@ -76,6 +90,23 @@ class SourceArtifact(BaseModel):
     independent_of: list[str] = Field(default_factory=list)  # source ids it is NOT reposting
     safe_to_cite: bool = True
     snapshot: SourceSnapshot | None = None
+    provenance: ItemProvenance | None = None
+
+
+class Entity(BaseModel):
+    """A first-class node in the knowledge field — the graph join-key.
+
+    The id is content-addressed (normalized ``canonical_name`` + ``type``) so the same
+    entity links across profiles. Humble for now: no resolution system — ``aliases``
+    and ``canonical_name`` leave room to get smarter later.
+    """
+
+    id: str
+    name: str
+    canonical_name: str = ""        # resolved canonical form (= name for now)
+    type: str = "other"             # person | org | place | concept | event | other (open)
+    role: str = ""                  # freeform — its role in THIS story
+    aliases: list[str] = Field(default_factory=list)
 
 
 class Claim(BaseModel):
@@ -84,17 +115,37 @@ class Claim(BaseModel):
     id: str
     text: str
     status: ClaimStatus = "unconfirmed"
+    salience: Salience = "medium"
     supported_by: list[str] = Field(default_factory=list)     # SourceArtifact ids
     contradicted_by: list[str] = Field(default_factory=list)  # SourceArtifact ids
     note: str = ""
+    provenance: ItemProvenance | None = None
+
+
+class Thread(BaseModel):
+    """A flexible strand of the surrounding knowledge field — the organic richness.
+
+    NOT a ring or a fixed degree: the agent records as many threads as the story
+    genuinely has, of whatever ``kind`` each actually is. Each links the entities,
+    claims, and sources it touches, so it is grounded *and* graph-ready connective
+    tissue — and a natural retrieval unit.
+    """
+
+    id: str
+    title: str
+    kind: str = ""              # OPEN hint: background | force | connection | framing | implication | analysis | ...
+    body: str = ""              # freeform — the actual richness / dot-connecting
+    salience: Salience = "medium"
+    entities: list[str] = Field(default_factory=list)   # entity ids it touches
+    claims: list[str] = Field(default_factory=list)     # claim ids that ground it
+    sources: list[str] = Field(default_factory=list)    # source ids
+    provenance: ItemProvenance | None = None
 
 
 class DerivedLead(BaseModel):
     """A rich adjacent lead noticed mid-research — backfeed into the T0 lead pool.
 
-    Any research stage may emit one when it spots something worth its own future
-    attention. It NEVER mutates t1 directly; the next synthesis decides whether to
-    promote / merge / archive it.
+    Never mutates t1 directly; the next synthesis decides promote / merge / archive.
     """
 
     id: str
@@ -112,42 +163,46 @@ class DerivedLead(BaseModel):
     created_by_stage: str = ""
 
 
-class ProfileModules(BaseModel):
-    """Situational profile sections — all optional. Core ledgers are stable; these vary."""
-
-    timeline: list[str] = Field(default_factory=list)
-    angles: list[str] = Field(default_factory=list)
-    omissions: list[str] = Field(default_factory=list)        # what's missing / counter-framing
-    open_questions: list[str] = Field(default_factory=list)
-    data_notes: list[str] = Field(default_factory=list)       # stats/datasets worth crunching
-    visual_opportunities: list[str] = Field(default_factory=list)  # charts/maps a production could use
-    watch_triggers: list[str] = Field(default_factory=list)   # what to monitor for updates
-
-
 class SignalProfile(BaseModel):
-    """t2 — the researched knowledge object (the asset). An article is a view of this."""
+    """t2 — the researched knowledge object (the asset). An article is a view of this.
+
+    A flat, addressable, agent-ergonomic interface. The model authors items with simple
+    LOCAL ids (s1, c1, e1, t1); the harness assigns stable/content-addressed ids and
+    rewrites references (see ``assembly.py``).
+    """
 
     id: str
-    parent_vector_id: str = ""       # the t1 signal vector this was promoted from
+    parent_vector_id: str = ""       # the t1 research vector this was promoted from
     title: str
-    summary: str = ""
+    summary: str = ""                # the holistic gist (read first)
     profile_status: ProfileStatus = "draft"
+    as_of: str = ""                  # recency horizon of the info (latest date it reflects)
 
-    claim_ledger: list[Claim] = Field(default_factory=list)
+    # ── evidence spine (verifiable) ──
     source_ledger: list[SourceArtifact] = Field(default_factory=list)
-    entities: list[str] = Field(default_factory=list)         # graph tags
-    modules: ProfileModules = Field(default_factory=ProfileModules)
+    claim_ledger: list[Claim] = Field(default_factory=list)
 
-    # What the profile believes it can feed downstream (the t3 lane reads these).
+    # ── knowledge field (organic richness) ──
+    entities: list[Entity] = Field(default_factory=list)
+    threads: list[Thread] = Field(default_factory=list)
+
+    # ── meta-knowledge (what we don't know) ──
+    omissions: list[str] = Field(default_factory=list)        # what's missing / counter-framing
+    open_questions: list[str] = Field(default_factory=list)
+    timeline: list[str] = Field(default_factory=list)         # chronology, when it helps
+
+    # ── forward / applicability ──
     output_recommendations: list[SuggestedUse] = Field(default_factory=list)
-
-    # Graph-loop slots — present but empty until backfeed / self-search exist.
+    data_notes: list[str] = Field(default_factory=list)       # stats/datasets to crunch (analytics lane)
+    visual_opportunities: list[str] = Field(default_factory=list)  # charts/maps a production could use
+    watch_triggers: list[str] = Field(default_factory=list)   # what to monitor for a refresh
     derived_leads: list[DerivedLead] = Field(default_factory=list)
-    corpus_context: list[str] = Field(default_factory=list)
+    related_profiles: list[str] = Field(default_factory=list)  # graph edges (corpus; empty now)
+    corpus_context: list[str] = Field(default_factory=list)    # what we already knew (empty now)
 
-    # Provenance / versioning — the manifest seed; eases later audit + migration.
+    # ── provenance / versioning (manifest seed) ──
     schema_version: int = SCHEMA_VERSION
     revision: int = 1
-    generated_at: str = ""           # ISO-8601 UTC
+    generated_at: str = ""           # when this profile was built
     generator: str = ""              # agent id / version that built it
     model: str = ""                  # model that produced it
