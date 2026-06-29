@@ -37,10 +37,12 @@ Salience = Literal["high", "medium", "low"]
 # snapshotted = backed by a source we deep-read & hashed; snippet_only = sourced but only
 # from search snippets (no deep read); unsourced = no source at all.
 GroundingStatus = Literal["snapshotted", "snippet_only", "unsourced"]
-# Not every profile ends "article-ready" — some honestly end as "not enough here".
+# The profile lifecycle. The first research pass yields a "draft"; "mature" is EARNED
+# by surviving the review/enrichment gauntlet — not just by having a first pass.
 ProfileStatus = Literal[
-    "draft", "researching", "complete", "needs_verification",
-    "insufficient_evidence", "superseded", "archived",
+    "draft", "researching", "reviewed_needs_enrichment", "enriching",
+    "needs_verification", "complete", "mature",
+    "insufficient_evidence", "unsound", "superseded", "archived",
 ]
 # What a finished profile thinks it can feed (the t3 lane reads these later).
 SuggestedUse = Literal[
