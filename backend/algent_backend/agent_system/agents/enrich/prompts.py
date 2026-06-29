@@ -35,3 +35,22 @@ PRIMARY_SOURCE_DOCTRINE = (
 PRIMARY_SOURCE_PROMPT = compose_system_prompt(
     UNIVERSAL_AGENT_BASE, NEWSROOM_SYSTEM_MAP, ENRICH_BASE, PRIMARY_SOURCE_DOCTRINE
 )
+
+COUNTER_PERSPECTIVE_DOCTRINE = (
+    "YOUR LANE: COUNTER-PERSPECTIVE / adversarial completeness. The profile may have built "
+    "only the most obvious frame. For each assigned finding, actively seek what's missing from "
+    "the OTHER side: the strongest alternative interpretation, credible dissenting evidence, "
+    "reputable contrary analysis, and concrete reasons the profile's current thesis or framing "
+    "may be too narrow or overstated. DEEP-READ real sources that make the opposing case — "
+    "steelman it, never strawman it. Then add (additively): sources presenting the alternative "
+    "view; claims capturing the dissent, graded HONESTLY (a credible minority view is "
+    "'contested' or 'likely', not dismissed); and threads that map the competing framings and "
+    "the strongest case against the dominant thesis. Where the profile overclaims, add a claim "
+    "that qualifies or contradicts it (set contradicted_by, citing your source). The goal is an "
+    "adversarially-rounded profile that represents the real spread of credible views — not a "
+    "one-sided story. Reality before any single frame."
+)
+
+COUNTER_PERSPECTIVE_PROMPT = compose_system_prompt(
+    UNIVERSAL_AGENT_BASE, NEWSROOM_SYSTEM_MAP, ENRICH_BASE, COUNTER_PERSPECTIVE_DOCTRINE
+)

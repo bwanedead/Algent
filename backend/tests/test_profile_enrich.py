@@ -112,6 +112,21 @@ def test_enrich_graph_merges_bumps_revision_and_persists(monkeypatch, tmp_path) 
     assert done["added_sources"] == 1 and done["addressed"] == ["find_01"]
 
 
+def test_counter_perspective_lane_registered_and_distinct() -> None:
+    from algent_backend.agent_system.agents.enrich.prompts import (
+        COUNTER_PERSPECTIVE_PROMPT,
+        PRIMARY_SOURCE_PROMPT,
+    )
+    from algent_backend.agent_system.agents.registry import default_agent_registry
+
+    spec = default_agent_registry().get("enrich_counter_perspective")
+    assert spec.tool_ids == ("web_search",)
+    assert spec.test_fixture.input_file.endswith("enrich_input_sample.json")
+    # the lanes share the engine but carry distinct doctrine
+    assert "COUNTER-PERSPECTIVE" in COUNTER_PERSPECTIVE_PROMPT and "steelman" in COUNTER_PERSPECTIVE_PROMPT
+    assert COUNTER_PERSPECTIVE_PROMPT != PRIMARY_SOURCE_PROMPT
+
+
 def test_enrich_graph_no_findings_for_lane_is_a_noop(monkeypatch) -> None:
     events: list = []
     graph = _graph(_ctx(events), monkeypatch, ProfileAdditions())
