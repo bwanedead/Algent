@@ -171,6 +171,25 @@ class DerivedLead(BaseModel):
     created_by_stage: str = ""
 
 
+class ProfileAdditions(BaseModel):
+    """What an enricher contributes to an existing profile — ADDITIVE only.
+
+    The enricher authors new items with LOCAL ids (and may reference existing item ids
+    from the briefing to link). The merge harness folds these in: content-addressed dedup
+    collapses anything already present, refs are rewritten, snapshots attach to the new
+    reads, the revision bumps, and grounding is recomputed.
+    """
+
+    sources: list[SourceArtifact] = Field(default_factory=list)
+    claims: list[Claim] = Field(default_factory=list)
+    threads: list[Thread] = Field(default_factory=list)
+    entities: list[Entity] = Field(default_factory=list)
+    omissions: list[str] = Field(default_factory=list)
+    open_questions: list[str] = Field(default_factory=list)
+    addressed_findings: list[str] = Field(default_factory=list)  # review finding ids this resolved
+    note: str = ""
+
+
 class SignalProfile(BaseModel):
     """t2 — the researched knowledge object (the asset). An article is a view of this.
 

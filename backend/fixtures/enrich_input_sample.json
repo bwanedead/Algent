@@ -1,0 +1,969 @@
+{
+  "profile": {
+    "id": "prof_bd540e7822",
+    "parent_vector_id": "vec_bd540e7822",
+    "title": "Fed path under inflation pressure: no change, cuts, or surprise hike?",
+    "summary": "The dominant market thesis in late June 2026 is that the Fed is likely to hold rates steady at the July FOMC, with markets having swung decisively away from cuts and toward no change, while a meaningful hawkish tail risk remains. The evidence gathered here is a mix of primary Fed/BEA data and Polymarket pricing/summaries. The BEA\u2019s May 2026 PCE release shows inflation still elevated at 4.1% y/y overall and 3.4% y/y ex-food and energy, which supports a higher-for-longer stance. Polymarket\u2019s Fed-rates dashboard shows no change at 81% for the upcoming meeting, with a 25 bps hike at 17.5% and a 25 bps cut at 1.4%. Polymarket\u2019s 2026 rate-cut ladder also heavily favors zero cuts in 2026, implying the market is not just delaying cuts but largely pricing them out. Reuters reporting on June 26 says economists broadly expect the Fed to hold for the rest of 2026, while financial markets have priced some hike risk. Energy spillovers appear to have mattered: Reuters reported oil prices had fallen back as Strait of Hormuz flows resumed, suggesting geopolitical energy shock risk was real but somewhat easing by late June. On Bitcoin, I found a crypto market article showing BTC around $59k amid geopolitical stress; however, I did not find a clean primary source tying BTC\u2019s move specifically to Fed expectations, so that linkage remains suggestive rather than proven.",
+    "profile_status": "needs_verification",
+    "as_of": "2026-06-29",
+    "source_ledger": [
+      {
+        "id": "src_57ce073766",
+        "url": "https://www.federalreserve.gov/monetarypolicy/fomc.htm",
+        "title": "About the FOMC",
+        "publisher": "Federal Reserve",
+        "author": "",
+        "publisher_id": null,
+        "author_id": null,
+        "source_type": "primary",
+        "published_at": "2026-06-17",
+        "retrieved_at": "2026-06-29",
+        "reliability": "high",
+        "independent_of": [],
+        "safe_to_cite": true,
+        "snapshot": {
+          "content_hash": "sha256:5d63bba6448d1a23e646bf2b4bc99c17e852c5492d3ea1b04e71ade23ec7f29f",
+          "captured_at": "2026-06-29T22:03:40.646456+00:00",
+          "excerpt": "About the FOMC\nRecent FOMC press conference\nJune 17, 2026\nFOMC Transcripts and other historical materials\nThe term \"monetary policy\" refers to the actions undertaken by a central bank, such as the Federal Reserve, to influence the availability and cost of money and credit to help promote national ec",
+          "full_text_path": null
+        },
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "src_38d30e02d7",
+        "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+        "title": "Meeting calendars, statements, and minutes (2021-2027)",
+        "publisher": "Federal Reserve",
+        "author": "",
+        "publisher_id": null,
+        "author_id": null,
+        "source_type": "primary",
+        "published_at": "2026-06-17",
+        "retrieved_at": "2026-06-29",
+        "reliability": "high",
+        "independent_of": [],
+        "safe_to_cite": true,
+        "snapshot": {
+          "content_hash": "sha256:0fc8d35d8247abe9e580525e591339430b1af32aff86c54d445c61839c66bef9",
+          "captured_at": "2026-06-29T22:03:43.232827+00:00",
+          "excerpt": "Please enable JavaScript if it is disabled in your browser or access the information through the links provided below.  \n \n \n             \n             \n            \n            \n            \n                \n                \n                \n                        \n                \n               ",
+          "full_text_path": null
+        },
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "src_a9cb717468",
+        "url": "https://www.bea.gov/news/2026/personal-income-and-outlays-may-2026",
+        "title": "Personal Income and Outlays, May 2026",
+        "publisher": "U.S. Bureau of Economic Analysis",
+        "author": "",
+        "publisher_id": null,
+        "author_id": null,
+        "source_type": "primary",
+        "published_at": "2026-06-25",
+        "retrieved_at": "2026-06-29",
+        "reliability": "high",
+        "independent_of": [],
+        "safe_to_cite": true,
+        "snapshot": {
+          "content_hash": "sha256:1cf9457d166869299a56bd96bd64fb19a6198dc12bae64a30fbd6ed298afac16",
+          "captured_at": "2026-06-29T22:03:40.404502+00:00",
+          "excerpt": "News Release\nPersonal Income and Outlays, May 2026\nPersonal income increased $181.6 billion (0.7 percent at a monthly rate) in May, according to estimates released today by the U.S. Bureau of Economic Analysis (BEA). Disposable personal income (DPI)\u2014personal income less personal current taxes\u2014increa",
+          "full_text_path": null
+        },
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "src_aa3ce69bba",
+        "url": "https://polymarket.com/dashboards/fed-rates",
+        "title": "Federal Reserve rates",
+        "publisher": "Polymarket",
+        "author": "",
+        "publisher_id": null,
+        "author_id": null,
+        "source_type": "primary",
+        "published_at": "2026-06-29",
+        "retrieved_at": "2026-06-29",
+        "reliability": "medium",
+        "independent_of": [],
+        "safe_to_cite": true,
+        "snapshot": {
+          "content_hash": "sha256:8ba017d2d63eeb155487b7776c2ccdc0571f3f045c1771b7ea5cbd6f44fddca8",
+          "captured_at": "2026-06-29T22:03:41.216510+00:00",
+          "excerpt": "Federal Reserve rates\nWhat will the Fed do at the upcoming meetings?\nMeeting in\nEXPECTED DECISION\nNo change\n81%\nchance\nEXPECTED DECISION\nNo change\n81%\nchance\nMeeting in\nOdds Over Time\nNo change 81%\n25 bps hike 17.5%\n25 bps cut 1.4%\n50+ bps cut <1%\nSkip to main contentFederal Reserve rates\nOdds Over ",
+          "full_text_path": null
+        },
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "src_6c7eaf1229",
+        "url": "https://polymarket.com/event/how-many-fed-rate-cuts-in-2026",
+        "title": "How many Fed rate cuts in 2026? Predictions & Odds | Polymarket",
+        "publisher": "Polymarket",
+        "author": "",
+        "publisher_id": null,
+        "author_id": null,
+        "source_type": "primary",
+        "published_at": "2026-06-29",
+        "retrieved_at": "2026-06-29",
+        "reliability": "medium",
+        "independent_of": [],
+        "safe_to_cite": true,
+        "snapshot": {
+          "content_hash": "sha256:6a10987be47bedb22b6c871c0908b15663baf78733f27166663c73adc7637a2f",
+          "captured_at": "2026-06-29T22:03:41.903125+00:00",
+          "excerpt": "Elevated inflation and a resilient labor market have driven trader consensus toward zero Federal Reserve rate cuts in 2026 at 79.8% implied probability. The June FOMC meeting under new Chair Kevin Warsh held the fed funds target at 3.50%-3.75%, with updated projections lifting 2026 PCE inflation to ",
+          "full_text_path": null
+        },
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "src_c540c199b8",
+        "url": "https://www.reuters.com/business/energy/oil-edges-lower-amid-resumption-strait-shipments-even-vessel-hit-near-oman-2026-06-26/",
+        "title": "Oil edges lower amid resumption of strait shipments even as vessel hit near Oman",
+        "publisher": "Reuters",
+        "author": "",
+        "publisher_id": null,
+        "author_id": null,
+        "source_type": "secondary",
+        "published_at": "2026-06-26",
+        "retrieved_at": "2026-06-29",
+        "reliability": "high",
+        "independent_of": [],
+        "safe_to_cite": true,
+        "snapshot": null,
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "src_1940f81438",
+        "url": "https://www.reuters.com/business/fed-hold-rates-this-year-economists-say-defying-market-bets-hikes-2026-06-26/",
+        "title": "Fed to hold rates this year, economists say, defying market bets for hikes: Reuters poll",
+        "publisher": "Reuters",
+        "author": "",
+        "publisher_id": null,
+        "author_id": null,
+        "source_type": "secondary",
+        "published_at": "2026-06-26",
+        "retrieved_at": "2026-06-29",
+        "reliability": "high",
+        "independent_of": [],
+        "safe_to_cite": true,
+        "snapshot": null,
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "src_5c200ddf4b",
+        "url": "https://cryptobriefing.com/over-1b-in-crypto-liquidated-as-bitcoin-falls-to-59k-amid-geopolitical-tensions/",
+        "title": "Over $1B in crypto liquidated as Bitcoin falls to $59K amid geopolitical tensions",
+        "publisher": "Crypto Briefing",
+        "author": "",
+        "publisher_id": null,
+        "author_id": null,
+        "source_type": "secondary",
+        "published_at": "2026-06-25",
+        "retrieved_at": "2026-06-29",
+        "reliability": "medium",
+        "independent_of": [],
+        "safe_to_cite": true,
+        "snapshot": null,
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      }
+    ],
+    "claim_ledger": [
+      {
+        "id": "clm_b432821266",
+        "text": "The Federal Reserve\u2019s FOMC holds eight regularly scheduled meetings per year and uses the federal funds rate as its main policy rate.",
+        "status": "confirmed",
+        "salience": "medium",
+        "grounding": "snapshotted",
+        "supported_by": [
+          "src_57ce073766",
+          "src_38d30e02d7"
+        ],
+        "contradicted_by": [],
+        "note": "",
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "clm_d1d9d8f8bd",
+        "text": "The next scheduled FOMC meeting after the June 2026 meeting is the July 28-29, 2026 meeting.",
+        "status": "confirmed",
+        "salience": "high",
+        "grounding": "snapshotted",
+        "supported_by": [
+          "src_38d30e02d7"
+        ],
+        "contradicted_by": [],
+        "note": "",
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "clm_effb4593bb",
+        "text": "The BEA\u2019s May 2026 PCE release shows overall PCE inflation at 4.1% year over year and core PCE inflation at 3.4% year over year.",
+        "status": "confirmed",
+        "salience": "high",
+        "grounding": "snapshotted",
+        "supported_by": [
+          "src_a9cb717468"
+        ],
+        "contradicted_by": [],
+        "note": "",
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "clm_4f77e384c8",
+        "text": "May 2026 PCE inflation remains above the Fed\u2019s 2% objective.",
+        "status": "confirmed",
+        "salience": "high",
+        "grounding": "snapshotted",
+        "supported_by": [
+          "src_57ce073766",
+          "src_a9cb717468"
+        ],
+        "contradicted_by": [],
+        "note": "",
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "clm_b0d14f76d5",
+        "text": "Polymarket\u2019s Fed-rates dashboard shows no change as the dominant expected decision for the upcoming meeting, at 81%.",
+        "status": "confirmed",
+        "salience": "high",
+        "grounding": "snapshotted",
+        "supported_by": [
+          "src_aa3ce69bba"
+        ],
+        "contradicted_by": [],
+        "note": "",
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "clm_4dc36bf9b1",
+        "text": "On the same Polymarket dashboard, a 25 bps hike is priced at 17.5% and a 25 bps cut at 1.4%.",
+        "status": "confirmed",
+        "salience": "high",
+        "grounding": "snapshotted",
+        "supported_by": [
+          "src_aa3ce69bba"
+        ],
+        "contradicted_by": [],
+        "note": "",
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "clm_503fa2a324",
+        "text": "Polymarket\u2019s 2026 rate-cut ladder heavily favors zero cuts in 2026, with the page text showing roughly 79.8% implied probability for 0 cuts.",
+        "status": "likely",
+        "salience": "high",
+        "grounding": "snapshotted",
+        "supported_by": [
+          "src_6c7eaf1229"
+        ],
+        "contradicted_by": [],
+        "note": "Page contains AI-generated summary blocks and some inconsistent phrasing; use as a market read rather than a canonical fact source.",
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "clm_fd9aed908e",
+        "text": "Reuters reported on June 26, 2026 that economists broadly expect the Fed to hold its benchmark rate steady for the rest of 2026.",
+        "status": "likely",
+        "salience": "medium",
+        "grounding": "snippet_only",
+        "supported_by": [
+          "src_1940f81438"
+        ],
+        "contradicted_by": [],
+        "note": "",
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "clm_b4d690948e",
+        "text": "Reuters reported that financial markets had been pricing in some hike risk around this period, even as economists expected no further moves in 2026.",
+        "status": "likely",
+        "salience": "medium",
+        "grounding": "snippet_only",
+        "supported_by": [
+          "src_1940f81438"
+        ],
+        "contradicted_by": [],
+        "note": "The read is from Reuters summary text surfaced in search results, not a full article deep-read.",
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "clm_402f2e037b",
+        "text": "Reuters reported that oil prices had fallen as Strait of Hormuz shipments resumed, implying that energy-shock pressure was easing by late June.",
+        "status": "likely",
+        "salience": "medium",
+        "grounding": "snippet_only",
+        "supported_by": [
+          "src_c540c199b8"
+        ],
+        "contradicted_by": [],
+        "note": "",
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "clm_2737e71c43",
+        "text": "A crypto-sector article reported Bitcoin around $59,175 on June 25, 2026 amid geopolitical tensions.",
+        "status": "likely",
+        "salience": "low",
+        "grounding": "snippet_only",
+        "supported_by": [
+          "src_5c200ddf4b"
+        ],
+        "contradicted_by": [],
+        "note": "",
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "clm_f342a44adc",
+        "text": "The claim that Bitcoin is tightly tracking Fed rate expectations is not yet well established from the evidence gathered here.",
+        "status": "unconfirmed",
+        "salience": "medium",
+        "grounding": "unsourced",
+        "supported_by": [],
+        "contradicted_by": [],
+        "note": "",
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      }
+    ],
+    "entities": [
+      {
+        "id": "ent_48e2d9c960",
+        "name": "Federal Reserve / FOMC",
+        "canonical_name": "Federal Reserve / FOMC",
+        "type": "org",
+        "role": "Sets U.S. monetary policy; central institution in the story.",
+        "aliases": [
+          "Fed",
+          "FOMC"
+        ]
+      },
+      {
+        "id": "ent_7e1f9714e5",
+        "name": "BEA",
+        "canonical_name": "BEA",
+        "type": "org",
+        "role": "Publishes the PCE inflation data that pressures policy expectations.",
+        "aliases": [
+          "Bureau of Economic Analysis"
+        ]
+      },
+      {
+        "id": "ent_4e723b5d29",
+        "name": "Polymarket",
+        "canonical_name": "Polymarket",
+        "type": "org",
+        "role": "Prediction-market venue showing current market-implied probabilities.",
+        "aliases": []
+      },
+      {
+        "id": "ent_f800057e35",
+        "name": "Reuters",
+        "canonical_name": "Reuters",
+        "type": "org",
+        "role": "Corroborating news-wire source for market expectations and energy context.",
+        "aliases": []
+      },
+      {
+        "id": "ent_a1c4a22ec5",
+        "name": "U.S. PCE inflation",
+        "canonical_name": "U.S. PCE inflation",
+        "type": "concept",
+        "role": "Main inflation gauge in the evidence gathered; still elevated.",
+        "aliases": [
+          "PCE"
+        ]
+      },
+      {
+        "id": "ent_9191fb24ac",
+        "name": "Federal funds rate",
+        "canonical_name": "Federal funds rate",
+        "type": "concept",
+        "role": "The policy rate whose next move is being priced.",
+        "aliases": [
+          "fed funds rate"
+        ]
+      },
+      {
+        "id": "ent_7c2638fe8f",
+        "name": "July 28-29, 2026 FOMC meeting",
+        "canonical_name": "July 28-29, 2026 FOMC meeting",
+        "type": "event",
+        "role": "The immediate policy decision under watch.",
+        "aliases": [
+          "July FOMC 2026"
+        ]
+      },
+      {
+        "id": "ent_7f115fffbb",
+        "name": "Strait of Hormuz / Gulf energy flows",
+        "canonical_name": "Strait of Hormuz / Gulf energy flows",
+        "type": "place",
+        "role": "Geopolitical energy channel affecting inflation expectations.",
+        "aliases": [
+          "Hormuz"
+        ]
+      },
+      {
+        "id": "ent_a88d43338f",
+        "name": "Bitcoin",
+        "canonical_name": "Bitcoin",
+        "type": "concept",
+        "role": "Risk asset cited in the vector; linkage to Fed expectations remains partly unproven.",
+        "aliases": [
+          "BTC"
+        ]
+      },
+      {
+        "id": "ent_199ed6db96",
+        "name": "Economist forecasts",
+        "canonical_name": "Economist forecasts",
+        "type": "concept",
+        "role": "Useful comparator to market pricing; Reuters says they leaned toward a hold.",
+        "aliases": []
+      }
+    ],
+    "threads": [
+      {
+        "id": "thr_09072b8511",
+        "title": "Dominant scenario: no change at the July FOMC",
+        "kind": "market structure",
+        "body": "The cleanest market signal is that no change is the dominant near-term expectation. Polymarket\u2019s fed-rates dashboard shows 81% for no change versus 17.5% for a hike and 1.4% for a cut. That makes the base case a pause, not easing.",
+        "salience": "high",
+        "grounding": "snapshotted",
+        "entities": [
+          "ent_48e2d9c960",
+          "ent_4e723b5d29",
+          "ent_9191fb24ac",
+          "ent_7c2638fe8f"
+        ],
+        "claims": [
+          "clm_d1d9d8f8bd",
+          "clm_b0d14f76d5",
+          "clm_4dc36bf9b1"
+        ],
+        "sources": [
+          "src_38d30e02d7",
+          "src_aa3ce69bba"
+        ],
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "thr_300adc6e59",
+        "title": "Inflation remains the central constraint",
+        "kind": "force",
+        "body": "The BEA\u2019s May PCE print was still hot at 4.1% y/y headline and 3.4% y/y core. That is strong evidence for why cuts are not the dominant scenario and why a hawkish surprise cannot be dismissed.",
+        "salience": "high",
+        "grounding": "snapshotted",
+        "entities": [
+          "ent_7e1f9714e5",
+          "ent_a1c4a22ec5",
+          "ent_48e2d9c960"
+        ],
+        "claims": [
+          "clm_effb4593bb",
+          "clm_4f77e384c8"
+        ],
+        "sources": [
+          "src_57ce073766",
+          "src_a9cb717468"
+        ],
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "thr_f71f5e1929",
+        "title": "Market pricing has shifted away from cuts",
+        "kind": "market interpretation",
+        "body": "The 2026 rate-cut ladder on Polymarket is heavily skewed toward zero cuts, suggesting traders are not merely postponing easing but largely removing it from the base case. Because the page contains AI-generated summary text and some internal inconsistency in phrasing, this should be treated as a useful market read, not a clean ground truth.",
+        "salience": "high",
+        "grounding": "snapshotted",
+        "entities": [
+          "ent_4e723b5d29",
+          "ent_48e2d9c960",
+          "ent_9191fb24ac"
+        ],
+        "claims": [
+          "clm_503fa2a324"
+        ],
+        "sources": [
+          "src_6c7eaf1229"
+        ],
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "thr_e75592357c",
+        "title": "Energy shock as a hawkish catalyst, but perhaps easing",
+        "kind": "force",
+        "body": "Reuters reporting suggests geopolitics and oil had been a meaningful inflation driver, but by June 26 some of that pressure was cooling as Strait of Hormuz traffic recovered and oil prices fell. That means energy spillover may have pushed the market toward hawkishness, but the latest move could be partly reversing.",
+        "salience": "medium",
+        "grounding": "snippet_only",
+        "entities": [
+          "ent_f800057e35",
+          "ent_7f115fffbb",
+          "ent_a1c4a22ec5",
+          "ent_48e2d9c960"
+        ],
+        "claims": [
+          "clm_402f2e037b"
+        ],
+        "sources": [
+          "src_c540c199b8"
+        ],
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "thr_b4de5532cc",
+        "title": "Why Bitcoin is relevant, but not yet tightly proven",
+        "kind": "connection",
+        "body": "Bitcoin is in the vector because macro liquidity and rate expectations often affect crypto risk appetite. Here, I found a contemporaneous BTC price move around $59k amid geopolitical stress, but I did not find strong primary evidence that BTC was tightly tracking Fed pricing specifically. That linkage remains a hypothesis, not a confirmed claim.",
+        "salience": "medium",
+        "grounding": "unsourced",
+        "entities": [
+          "ent_a88d43338f",
+          "ent_48e2d9c960",
+          "ent_4e723b5d29"
+        ],
+        "claims": [
+          "clm_2737e71c43",
+          "clm_f342a44adc"
+        ],
+        "sources": [
+          "src_5c200ddf4b"
+        ],
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "thr_0fdde2a23d",
+        "title": "Economist consensus versus market pricing",
+        "kind": "framing",
+        "body": "Reuters reported economists broadly expected the Fed to hold steady through year-end, aligning with the market\u2019s no-change base case, while also noting that markets had been leaning more hawkish. This matters because it suggests the divergence is mostly about the size of hawkish tail risk, not the baseline hold scenario.",
+        "salience": "medium",
+        "grounding": "snippet_only",
+        "entities": [
+          "ent_f800057e35",
+          "ent_199ed6db96",
+          "ent_48e2d9c960"
+        ],
+        "claims": [
+          "clm_fd9aed908e",
+          "clm_b4d690948e"
+        ],
+        "sources": [
+          "src_1940f81438"
+        ],
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "thr_e7c64fbe72",
+        "title": "What would change the path",
+        "kind": "analysis",
+        "body": "The next decisive inputs are fresh inflation prints, labor data, and any renewed energy shock. If inflation stays sticky or energy reaccelerates, the hawkish tail widens; if energy normalization persists and inflation cools, the market could drift back toward eventual cuts. This is an inference from the evidence, not a directly observed fact.",
+        "salience": "high",
+        "grounding": "snippet_only",
+        "entities": [
+          "ent_7e1f9714e5",
+          "ent_f800057e35",
+          "ent_7f115fffbb",
+          "ent_48e2d9c960"
+        ],
+        "claims": [
+          "clm_effb4593bb",
+          "clm_402f2e037b"
+        ],
+        "sources": [
+          "src_a9cb717468",
+          "src_c540c199b8",
+          "src_1940f81438"
+        ],
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      },
+      {
+        "id": "thr_a64faa1713",
+        "title": "Open question: how much of BTC\u2019s move is rate expectations versus geopolitics?",
+        "kind": "open_question",
+        "body": "The evidence gathered here does not cleanly separate Fed-driven repricing from crypto-specific or geopolitics-driven moves. A better answer would require synchronized BTC price series, Fed funds futures/overnight index swap data, and event-window analysis around inflation and FOMC dates.",
+        "salience": "medium",
+        "grounding": "unsourced",
+        "entities": [
+          "ent_a88d43338f",
+          "ent_48e2d9c960",
+          "ent_7f115fffbb"
+        ],
+        "claims": [
+          "clm_f342a44adc"
+        ],
+        "sources": [
+          "src_5c200ddf4b",
+          "src_c540c199b8",
+          "src_1940f81438"
+        ],
+        "provenance": {
+          "added_by_stage": "research",
+          "revision": 1,
+          "created_at": "2026-06-29T00:00:00Z"
+        }
+      }
+    ],
+    "omissions": [
+      "I did not retrieve a direct CME FedWatch or other official futures curve source, so the exact market-implied odds from the broader rates market are not directly verified here.",
+      "I did not successfully deep-read a BLS CPI release page; the inflation case is grounded instead in BEA PCE, which is the Fed\u2019s preferred inflation measure.",
+      "I did not find strong primary evidence that Bitcoin is tightly tracking Fed expectations; the BTC linkage remains underdetermined.",
+      "I did not obtain a direct Fed June 2026 statement or press conference transcript page beyond the official FOMC hub/calendar pages and Polymarket\u2019s summaries, so claims about specific FOMC rhetoric are not independently grounded in first-party Fed text here.",
+      "The Polymarket page contains AI-generated summary language with some internal inconsistencies across blocks; use it for market sentiment, not as a canonical factual source."
+    ],
+    "open_questions": [
+      "Will the July 28-29 FOMC meeting deliver another hold, or does a fresh inflation/energy surprise reopen hike odds?",
+      "Does the broader rates market (CME FedWatch / SOFR / OIS) match Polymarket\u2019s hawkish repricing, or is this venue-specific?",
+      "How much of Bitcoin\u2019s June move is driven by Fed expectations versus geopolitical risk-off flows or crypto-specific factors?",
+      "Will the cooling in Strait of Hormuz/oil prices persist long enough to remove energy as a hawkish catalyst?"
+    ],
+    "timeline": [
+      "2026-06-17: FOMC hub/calendar indicate the June meeting and upcoming July 28-29 meeting schedule.",
+      "2026-06-25: BEA releases May PCE inflation at 4.1% y/y headline and 3.4% y/y core.",
+      "2026-06-26: Reuters reports economists expect the Fed to hold steady for the rest of 2026.",
+      "2026-06-26: Reuters reports oil prices fell as Strait of Hormuz shipments resumed.",
+      "2026-06-29: Polymarket dashboard shows 81% no change, 17.5% hike, 1.4% cut for the upcoming meeting."
+    ],
+    "output_recommendations": [
+      "article",
+      "brief",
+      "radar",
+      "chart",
+      "watch"
+    ],
+    "data_notes": [
+      "Pull a time series of Polymarket or comparable market pricing around the June FOMC, July meeting, and key inflation releases.",
+      "Add Fed funds futures / OIS / SOFR-implied probabilities for the same dates.",
+      "Add a synchronized BTC/USD price series with macro event timestamps.",
+      "Add Brent or WTI and Strait of Hormuz shipping indicators to quantify the energy spillover channel."
+    ],
+    "visual_opportunities": [
+      "Probability ladder for July FOMC outcomes: hold vs cut vs hike.",
+      "Overlay of PCE inflation, Brent oil, and Fed-path pricing.",
+      "BTC/USD versus rates-pricing event window chart around June 17-29, 2026."
+    ],
+    "watch_triggers": [
+      "A hotter-than-expected CPI/PCE print before the July meeting.",
+      "Renewed Strait of Hormuz disruption or a renewed oil spike.",
+      "A shift in Polymarket or futures pricing toward 25 bps hike odds above the hold scenario.",
+      "A synchronized break in Bitcoin and rates-pricing around the same macro catalyst."
+    ],
+    "derived_leads": [
+      {
+        "id": "dl1",
+        "title": "Fed funds futures versus prediction markets on the July 2026 meeting",
+        "why_noticed": "There is a clear need to compare prediction-market odds with conventional rates pricing to confirm whether hawkish repricing is broad-based.",
+        "source_url": "https://polymarket.com/dashboards/fed-rates",
+        "source_artifact_id": "s4",
+        "excerpt": "No change 81% chance; 25 bps hike 17.5%; 25 bps cut 1.4%.",
+        "relation_to_profile": "Would validate whether the base case is truly a hold and how much surprise-hike tail risk exists.",
+        "suggested_use": "radar",
+        "confidence": "medium",
+        "entities": [
+          "Federal Reserve / FOMC",
+          "Polymarket",
+          "Federal funds rate"
+        ],
+        "topics": [
+          "rates",
+          "market pricing",
+          "FedWatch"
+        ],
+        "lead_origin": "research-readthrough",
+        "created_by_stage": "research"
+      },
+      {
+        "id": "dl2",
+        "title": "Bitcoin event-study around June 2026 inflation and FOMC data",
+        "why_noticed": "Bitcoin is mentioned in the vector, but the causal link to Fed expectations is not established; an event study would sharpen that.",
+        "source_url": "https://cryptobriefing.com/over-1b-in-crypto-liquidated-as-bitcoin-falls-to-59k-amid-geopolitical-tensions/",
+        "source_artifact_id": "s8",
+        "excerpt": "Bitcoin\u2019s price fell to $59,175... attributed to multiple factors... and geopolitical tensions involving Iran.",
+        "relation_to_profile": "Could separate crypto-specific and macro-driven effects.",
+        "suggested_use": "background",
+        "confidence": "medium",
+        "entities": [
+          "Bitcoin",
+          "Federal Reserve / FOMC"
+        ],
+        "topics": [
+          "Bitcoin",
+          "event study",
+          "macro"
+        ],
+        "lead_origin": "research-readthrough",
+        "created_by_stage": "research"
+      },
+      {
+        "id": "dl3",
+        "title": "Oil shock transmission into Fed pricing",
+        "why_noticed": "Energy spillovers appear to be one of the main hawkish catalysts in the story.",
+        "source_url": "https://www.reuters.com/business/energy/oil-edges-lower-amid-resumption-strait-shipments-even-vessel-hit-near-oman-2026-06-26/",
+        "source_artifact_id": "s6",
+        "excerpt": "Crude prices sank 2%... as more stranded oil tankers exited the Strait of Hormuz...",
+        "relation_to_profile": "Could explain whether the hawkish repricing is transitory or persistent.",
+        "suggested_use": "watch",
+        "confidence": "medium",
+        "entities": [
+          "Strait of Hormuz / Gulf energy flows",
+          "Federal Reserve / FOMC"
+        ],
+        "topics": [
+          "oil",
+          "inflation",
+          "geopolitics"
+        ],
+        "lead_origin": "research-readthrough",
+        "created_by_stage": "research"
+      },
+      {
+        "id": "dl4",
+        "title": "Committee split and dissents at recent FOMC meetings",
+        "why_noticed": "The market\u2019s small but nonzero hike tail could reflect internal Fed divergence, but that needs first-party confirmation.",
+        "source_url": "https://www.federalreserve.gov/monetarypolicy/fomc.htm",
+        "source_artifact_id": "s1",
+        "excerpt": "The FOMC consists of twelve members... and determines the appropriate stance of monetary policy.",
+        "relation_to_profile": "Could reveal whether the hawkish tail is anchored in committee composition or just data flow.",
+        "suggested_use": "profile",
+        "confidence": "low",
+        "entities": [
+          "Federal Reserve / FOMC"
+        ],
+        "topics": [
+          "FOMC",
+          "dissent",
+          "policy stance"
+        ],
+        "lead_origin": "research-readthrough",
+        "created_by_stage": "research"
+      }
+    ],
+    "related_profiles": [],
+    "corpus_context": [
+      "Federal Reserve / rates markets",
+      "inflation / PCE",
+      "energy shock / geopolitics",
+      "Bitcoin / macro risk"
+    ],
+    "schema_version": 2,
+    "revision": 1,
+    "generated_at": "2026-06-29T22:04:38.536721+00:00",
+    "generator": "signal_profile@v2",
+    "model": "gpt-5.4-mini"
+  },
+  "review": {
+    "id": "review_prof_bd540e7822",
+    "profile_id": "prof_bd540e7822",
+    "verdict": "needs_verification",
+    "summary": "The profile has a solid core on the next FOMC date, May PCE, and Polymarket pricing, but it is not yet mature because several higher-level interpretive threads lean on snippet-level Reuters coverage or under-supported inference. The biggest weakness is that the profile\u2019s central framing about market repricing, energy spillovers, and any Bitcoin/Fed linkage is still not fully verified against stronger primary or broader-market evidence. It is usable as an infant profile, but it needs additional primary-source grounding and at least one broader market comparison before it can be trusted as mature.",
+    "findings": [
+      {
+        "id": "f1",
+        "type": "missing_primary_source",
+        "severity": "high",
+        "target": "profile",
+        "explanation": "The profile\u2019s market-pricing thesis relies heavily on Polymarket (src_aa3ce69bba, src_6c7eaf1229), but the briefing itself notes an omission: no direct CME FedWatch or other official futures-curve source was retrieved. That leaves the key claim about broader rates-market repricing only partially verified, especially because Polymarket can be venue-specific and the profile itself flags possible internal inconsistencies in the page text.",
+        "recommended_enrichment": "Add a primary or at least market-standard rates-curve source to verify whether the no-change/hike balance is reflected outside Polymarket.",
+        "suggested_search_direction": "Retrieve CME FedWatch, SOFR/OIS pricing, or comparable futures-implied policy odds for the July 28-29, 2026 FOMC and the rest of 2026.",
+        "lane": "primary_source",
+        "maturity_blocker": true
+      },
+      {
+        "id": "f2",
+        "type": "missing_perspective",
+        "severity": "high",
+        "target": "thr_e7c64fbe72",
+        "explanation": "The weakly grounded thread around what would change the policy path is framed as a single-direction inference from inflation and energy, but it does not yet present a serious competing interpretation. A mature profile should show whether any credible observers think the Fed could still cut, hold longer for different reasons, or hike for reasons other than inflation/energy. Right now the thread reads like a forecast summary rather than a tested debate.",
+        "recommended_enrichment": "Collect a counterview from economists, strategists, or Fed watchers who disagree with the prevailing hold/no-change base case and explain the conditions they cite.",
+        "suggested_search_direction": "Look for Reuters, major-bank research, or Fed-watcher commentary arguing for cuts, a prolonged hold, or a hike scenario despite the current PCE and market odds.",
+        "lane": "counter_perspective",
+        "maturity_blocker": true
+      },
+      {
+        "id": "f3",
+        "type": "unresolved_causality",
+        "severity": "medium",
+        "target": "clm_402f2e037b",
+        "explanation": "The profile treats the Strait of Hormuz/oil channel as a hawkish catalyst that may be easing, but the evidence is only a Reuters report on oil prices falling as shipments resumed. That supports co-movement, not causation. The profile still overstates the policy relevance of the energy move unless it can show how much that oil swing actually altered inflation expectations or Fed pricing.",
+        "recommended_enrichment": "Add evidence connecting energy prices to inflation expectations or policy pricing, not just to oil-market movement.",
+        "suggested_search_direction": "Find event-window or market commentary linking the June oil move to breakeven inflation, Fed futures, or economist revisions around the Strait of Hormuz news.",
+        "lane": "analytics",
+        "maturity_blocker": false
+      },
+      {
+        "id": "f4",
+        "type": "thin_grounding",
+        "severity": "medium",
+        "target": "clm_fd9aed908e",
+        "explanation": "The Reuters poll claim that economists broadly expect the Fed to hold steady through year-end is only snippet-grounded in the briefing. It is useful corroboration, but as currently used it underpins a key framing claim about economist consensus versus market pricing without deep-read support visible in the profile.",
+        "recommended_enrichment": "Deep-read the Reuters poll and capture the actual sample size, distribution, and any caveats about dissent or uncertainty.",
+        "suggested_search_direction": "Open the full Reuters poll story and any cited economist comments; extract the precise polling breakdown and exceptions.",
+        "lane": "primary_source",
+        "maturity_blocker": false
+      },
+      {
+        "id": "f5",
+        "type": "source_concentration",
+        "severity": "medium",
+        "target": "profile",
+        "explanation": "Two of eight sources are from the Federal Reserve, and the rest of the profile is concentrated in Polymarket and Reuters. That is not inherently wrong, but the evidence base is narrow for a market-moving policy question. The profile would be more robust with at least one independent market-data source and one direct first-party economic release beyond PCE.",
+        "recommended_enrichment": "Broaden the source base with independent market pricing and additional official macro data.",
+        "suggested_search_direction": "Add a market-rate source plus another official inflation/labor release or Fed communication relevant to the July meeting.",
+        "lane": "primary_source",
+        "maturity_blocker": false
+      },
+      {
+        "id": "f6",
+        "type": "needs_data",
+        "severity": "medium",
+        "target": "profile",
+        "explanation": "The profile itself flags seven analytics opportunities and suggests a chart would help, but it currently lacks a concrete quantitative comparison of market probabilities over time. Without a time series, the claim that markets have swung decisively away from cuts remains descriptive rather than measured.",
+        "recommended_enrichment": "Build a chart or table showing the change in policy-odds pricing over time, ideally alongside the May PCE release and the Reuters poll date.",
+        "suggested_search_direction": "Pull historical Polymarket snapshots or other rates-pricing snapshots for multiple dates in June 2026 and compare the shift in implied odds.",
+        "lane": "analytics",
+        "maturity_blocker": false
+      },
+      {
+        "id": "f7",
+        "type": "missing_perspective",
+        "severity": "medium",
+        "target": "clm_2737e71c43",
+        "explanation": "The Bitcoin thread is explicitly labeled unconfirmed/unsourced, but the profile still includes BTC as a relevant concept and implies a macro-risk connection. There is no serious alternate explanation for the BTC move in the briefing beyond geopolitics, and no proof that Fed expectations were the dominant driver. This is a weak, potentially distracting tangent until the competing explanations are properly separated.",
+        "recommended_enrichment": "Either substantiate the Fed/BTC linkage with better evidence or prune the thread by showing that crypto-specific liquidation dynamics and geopolitical risk explain the move better.",
+        "suggested_search_direction": "Look for BTC intraday moves around the June 25-26 macro events, crypto liquidation data, and analyst commentary separating macro-rate effects from geopolitical or crypto-native causes.",
+        "lane": "analytics",
+        "maturity_blocker": false
+      },
+      {
+        "id": "f8",
+        "type": "weak_context",
+        "severity": "low",
+        "target": "profile",
+        "explanation": "The profile covers the July FOMC and June PCE, but it lacks the broader policy context that would make the read more mature, such as where the Fed had already signaled it was heading in prior statements or how the labor backdrop might interact with inflation. The current framing is understandable but still a bit reactive and event-specific.",
+        "recommended_enrichment": "Add surrounding Fed guidance and labor-market context so the policy call is not read in isolation from the broader macro setup.",
+        "suggested_search_direction": "Pull the latest Fed statement/press conference language and the most recent labor-market release relevant to late June 2026.",
+        "lane": "gap_fill",
+        "maturity_blocker": false
+      }
+    ],
+    "recommended_lanes": [
+      "primary_source",
+      "counter_perspective",
+      "analytics",
+      "gap_fill",
+      "discussion_landscape"
+    ],
+    "reviewer": "profile_reviewer@v1",
+    "model": "gpt-5.4-mini",
+    "generated_at": "2026-06-29T22:40:35.870806+00:00"
+  }
+}

@@ -40,6 +40,7 @@ def default_agent_registry() -> AgentRegistry:
     # agent's graph module (and its LangGraph imports) into memory.
     from .discovery.general.spec import SPEC as general_discovery_spec
     from .discovery.synthesis.spec import SPEC as discovery_synthesis_spec
+    from .enrich.primary_source import SPEC as enrich_primary_source_spec
     from .hello_workflow.spec import SPEC as hello_workflow_spec
     from .news_brief.spec import SPEC as news_brief_spec
     from .research.spec import SPEC as signal_profile_spec
@@ -54,4 +55,5 @@ def default_agent_registry() -> AgentRegistry:
     registry.register(signal_router_spec)
     registry.register(signal_profile_spec)
     registry.register(profile_reviewer_spec)
+    registry.register(enrich_primary_source_spec)
     return registry

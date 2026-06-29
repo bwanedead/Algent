@@ -1,19 +1,20 @@
 """
-Profile assembly — the harness step that turns a model-authored profile into a robust,
-graph-ready stored object.
+Profile assembly — the harness step that turns model-authored items into a robust,
+graph-ready stored object (and folds enricher additions into an existing profile).
 
-The model writes with simple LOCAL ids (s1, c1, e1, t1) and links between them — easy to
-keep internally consistent. This code makes it sound:
+The model writes with simple LOCAL ids (s1/c1/e1/t1); this code makes it sound:
 - assigns STABLE ids: content-addressed for sources (normalized URL) and entities
   (canonical name + type) — the cross-profile join-keys; content-hash for claims/threads;
-- REWRITES every reference through the local->stable map, dropping any dangling ref;
-- DEDUPES sources/entities/claims/threads that collapse to the same id;
-- attaches harness-captured SNAPSHOTS by URL (the harness is the sole authority — a model
-  can't hash);
-- stamps per-item + profile PROVENANCE and the profile's stable id.
+- REWRITES every reference through the local->stable map, dropping dangling refs;
+- DEDUPES items that collapse to the same id (so re-adding is idempotent — the basis of merge);
+- attaches harness-captured SNAPSHOTS by normalized URL (sole authority — a model can't hash;
+  on merge, already-verified snapshots are preserved);
+- computes GROUNDING (a claim is "snapshotted" only if a deep-read source backs it; a thread
+  inherits the weakest of its claims);
+- stamps per-item + profile PROVENANCE.
 
-Same principle as snapshots and vector ids: the model reasons, the harness guarantees
-integrity. Pure functions — no I/O, easy to test.
+Two entry points share one core (``_assemble``): ``finalize_profile`` (first build) and
+``merge_additions`` (fold an enricher's additions, revision++). Pure — no I/O.
 """
 
 from __future__ import annotations
@@ -23,46 +24,97 @@ import re
 from datetime import UTC, datetime
 from typing import Any
 
-from .profile import SCHEMA_VERSION, ItemProvenance, SignalProfile, SourceSnapshot
+from .profile import (
+    SCHEMA_VERSION,
+    ItemProvenance,
+    ProfileAdditions,
+    SignalProfile,
+    SourceSnapshot,
+)
 
 _GROUNDING_ORDER = {"snapshotted": 0, "snippet_only": 1, "unsourced": 2}
 
 
 def finalize_profile(
-    profile: SignalProfile,
-    vector: dict[str, Any],
-    captured: dict[str, dict],
-    *,
-    model: str,
-    generator: str,
-    stage: str,
+    profile: SignalProfile, vector: dict[str, Any], captured: dict[str, dict],
+    *, model: str, generator: str, stage: str,
 ) -> SignalProfile:
-    """Assign stable ids, rewrite refs, dedup, attach snapshots, stamp provenance."""
+    """First build: assemble the model's items, stamp the profile id + provenance."""
     revision = profile.revision or 1
     prov = ItemProvenance(added_by_stage=stage, revision=revision, created_at=_now())
-    # Normalize captured snapshot keys so a model-written url matches the read-tool url
-    # despite scheme/www/trailing-slash/case differences.
+    # First build: the harness is the sole snapshot authority — discard all model snapshots
+    # so only real captured ones survive.
+    for s in profile.source_ledger:
+        s.snapshot = None
+    sources, entities, claims, threads = _assemble(
+        profile.source_ledger, profile.entities, profile.claim_ledger, profile.threads, captured, prov
+    )
+    return profile.model_copy(update={
+        "id": _profile_id(vector),
+        "parent_vector_id": vector.get("id", ""),
+        "source_ledger": sources, "claim_ledger": claims, "entities": entities, "threads": threads,
+        "revision": revision, "schema_version": SCHEMA_VERSION,
+        "generated_at": prov.created_at, "generator": generator, "model": model,
+    })
+
+
+def merge_additions(
+    profile: SignalProfile, additions: ProfileAdditions, captured: dict[str, dict],
+    *, generator: str, stage: str,
+) -> SignalProfile:
+    """Fold an enricher's additive items into an existing profile (revision++).
+
+    Existing items keep their stable ids (content-addressing is idempotent) and their
+    already-verified snapshots; new items get stable ids, snapshots from THIS run's reads,
+    and provenance stamped with the new revision + the enricher stage. Dedup collapses any
+    overlap. Meta lists are appended; status becomes 'enriching'.
+    """
+    new_rev = (profile.revision or 1) + 1
+    prov = ItemProvenance(added_by_stage=stage, revision=new_rev, created_at=_now())
+    # The enricher's additions are model-authored: clear their snapshots (harness re-attaches
+    # real captures) and provenance (harness stamps this revision/stage) so existing items keep
+    # their verified snapshots + original provenance while new items are correctly attributed.
+    for s in additions.sources:
+        s.snapshot = None
+    for item in (*additions.sources, *additions.claims, *additions.threads, *additions.entities):
+        item.provenance = None
+    sources, entities, claims, threads = _assemble(
+        profile.source_ledger + additions.sources,
+        profile.entities + additions.entities,
+        profile.claim_ledger + additions.claims,
+        profile.threads + additions.threads,
+        captured, prov,
+    )
+    return profile.model_copy(update={
+        "source_ledger": sources, "claim_ledger": claims, "entities": entities, "threads": threads,
+        "revision": new_rev, "schema_version": SCHEMA_VERSION, "profile_status": "enriching",
+        "omissions": _dedup_strs(profile.omissions + additions.omissions),
+        "open_questions": _dedup_strs(profile.open_questions + additions.open_questions),
+    })
+
+
+def _assemble(source_ledger, entities_in, claim_ledger, threads_in, captured, prov):
+    """The shared core: ids, refs, dedup, snapshots, grounding, provenance."""
     captured_norm = {_norm_url(u): v for u, v in captured.items()}
 
-    # 1. Sources — content-addressed id, dedup, harness snapshot, provenance.
     src_map: dict[str, str] = {}
     sources, seen_src = [], set()
-    for s in profile.source_ledger:
+    for s in source_ledger:
         new = _source_id(s)
         src_map[s.id] = new
         if new in seen_src:
             continue
         s.id = new
-        captured_snap = captured_norm.get(_norm_url(s.url)) if s.url else None
-        s.snapshot = SourceSnapshot(**captured_snap) if captured_snap else None
+        if s.snapshot is None:  # keep an already-verified snapshot; else attach a real capture
+            snap = captured_norm.get(_norm_url(s.url)) if s.url else None
+            s.snapshot = SourceSnapshot(**snap) if snap else None
         s.provenance = s.provenance or prov
         seen_src.add(new)
         sources.append(s)
 
-    # 2. Entities — content-addressed id (canonical name + type), dedup.
     ent_map: dict[str, str] = {}
     entities, seen_ent = [], set()
-    for e in profile.entities:
+    for e in entities_in:
         if not e.canonical_name:
             e.canonical_name = e.name
         new = _entity_id(e)
@@ -73,13 +125,10 @@ def finalize_profile(
         seen_ent.add(new)
         entities.append(e)
 
-    # 3. Claims — content-hash id, rewrite source refs (drop dangling), dedup, GROUND.
-    #    Grounding is harness-computed from snapshots: a claim is only "snapshotted" if a
-    #    source we actually deep-read backs it — so high-confidence-on-snippets is exposed.
     snapshotted = {s.id for s in sources if s.snapshot is not None}
     claim_map: dict[str, str] = {}
     claims, seen_clm = [], {}
-    for c in profile.claim_ledger:
+    for c in claim_ledger:
         new = _claim_id(c)
         claim_map[c.id] = new
         if new in seen_clm:
@@ -92,9 +141,8 @@ def finalize_profile(
         seen_clm[new] = c
         claims.append(c)
 
-    # 4. Threads — id, rewrite refs, dedup, and inherit the WEAKEST grounding of their claims.
     threads, seen_thr = [], set()
-    for t in profile.threads:
+    for t in threads_in:
         new = _thread_id(t)
         if new in seen_thr:
             continue
@@ -107,19 +155,7 @@ def finalize_profile(
         seen_thr.add(new)
         threads.append(t)
 
-    return profile.model_copy(update={
-        "id": _profile_id(vector),
-        "parent_vector_id": vector.get("id", ""),
-        "source_ledger": sources,
-        "claim_ledger": claims,
-        "entities": entities,
-        "threads": threads,
-        "revision": revision,
-        "schema_version": SCHEMA_VERSION,  # harness-stamped: the standard, not a model value
-        "generated_at": prov.created_at,
-        "generator": generator,
-        "model": model,
-    })
+    return sources, entities, claims, threads
 
 
 def _claim_grounding(supported_by: list[str], snapshotted: set[str]) -> str:
@@ -129,7 +165,6 @@ def _claim_grounding(supported_by: list[str], snapshotted: set[str]) -> str:
 
 
 def _thread_grounding(claim_ids: list[str], claims_by_id: dict[str, Any]) -> str:
-    """The weakest grounding among a thread's claims (so a thread can't look stronger)."""
     levels = [claims_by_id[c].grounding for c in claim_ids if c in claims_by_id]
     if not levels:
         return "unsourced"
@@ -137,12 +172,19 @@ def _thread_grounding(claim_ids: list[str], claims_by_id: dict[str, Any]) -> str
 
 
 def _remap(refs: list[str], mapping: dict[str, str]) -> list[str]:
-    """Rewrite local refs to stable ids; drop any that don't resolve; dedup, keep order."""
     out: list[str] = []
     for ref in refs:
         stable = mapping.get(ref)
         if stable and stable not in out:
             out.append(stable)
+    return out
+
+
+def _dedup_strs(items: list[str]) -> list[str]:
+    out: list[str] = []
+    for s in items:
+        if s and s not in out:
+            out.append(s)
     return out
 
 
