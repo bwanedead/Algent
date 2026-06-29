@@ -64,6 +64,31 @@ def test_assembly_rewrites_refs_dedupes_and_stamps() -> None:
     assert out.id == "prof_abc123" and out.parent_vector_id == "vec_abc123"
 
 
+def test_assembly_computes_grounding_and_stamps_schema_version() -> None:
+    p = SignalProfile(
+        id="", title="t", schema_version=1,  # model emitted a stale schema_version
+        source_ledger=[
+            SourceArtifact(id="s1", url="https://a.com"),   # will be snapshotted
+            SourceArtifact(id="s2", url="https://b.com"),   # no snapshot
+        ],
+        claim_ledger=[
+            Claim(id="c1", text="deep claim", salience="high", supported_by=["s1"]),
+            Claim(id="c2", text="snippet claim", salience="high", supported_by=["s2"]),
+            Claim(id="c3", text="bare claim", salience="low"),  # no sources
+        ],
+        threads=[Thread(id="t1", title="th", salience="high", claims=["c1", "c2"])],
+    )
+    captured = {"a.com": {"content_hash": "sha256:x", "excerpt": "e", "captured_at": "t"}}
+    out = finalize_profile(p, {"id": "vec_z"}, captured, model="m", generator="g", stage="s")
+
+    g = {c.text: c.grounding for c in out.claim_ledger}
+    assert g["deep claim"] == "snapshotted"      # backed by a deep-read source
+    assert g["snippet claim"] == "snippet_only"  # sourced but never read
+    assert g["bare claim"] == "unsourced"
+    assert out.threads[0].grounding == "snippet_only"  # weakest of its claims
+    assert out.schema_version == 2  # harness-stamped, overrides the model's stale 1
+
+
 def test_assembly_discards_model_fabricated_snapshots() -> None:
     from algent_backend.agent_system.agents.research.profile import SourceSnapshot
 
@@ -81,5 +106,5 @@ def test_briefing_renders_salience_first_and_drills() -> None:
     md = render_briefing(out)
     assert md.startswith("# Fed path")
     assert "## What's going on (the field)" in md and "rate path" in md
-    assert "## Evidence (claims)" in md and "[confirmed] The Fed held rates" in md
+    assert "## Evidence (claims)" in md and "[confirmed/snapshotted] The Fed held rates" in md
     assert "[snapshot]" in md  # the snapshotted source is marked

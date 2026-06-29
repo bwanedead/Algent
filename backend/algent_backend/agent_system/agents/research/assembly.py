@@ -23,7 +23,9 @@ import re
 from datetime import UTC, datetime
 from typing import Any
 
-from .profile import ItemProvenance, SignalProfile, SourceSnapshot
+from .profile import SCHEMA_VERSION, ItemProvenance, SignalProfile, SourceSnapshot
+
+_GROUNDING_ORDER = {"snapshotted": 0, "snippet_only": 1, "unsourced": 2}
 
 
 def finalize_profile(
@@ -71,9 +73,12 @@ def finalize_profile(
         seen_ent.add(new)
         entities.append(e)
 
-    # 3. Claims — content-hash id, rewrite source refs (drop dangling), dedup.
+    # 3. Claims — content-hash id, rewrite source refs (drop dangling), dedup, GROUND.
+    #    Grounding is harness-computed from snapshots: a claim is only "snapshotted" if a
+    #    source we actually deep-read backs it — so high-confidence-on-snippets is exposed.
+    snapshotted = {s.id for s in sources if s.snapshot is not None}
     claim_map: dict[str, str] = {}
-    claims, seen_clm = [], set()
+    claims, seen_clm = [], {}
     for c in profile.claim_ledger:
         new = _claim_id(c)
         claim_map[c.id] = new
@@ -82,11 +87,12 @@ def finalize_profile(
         c.id = new
         c.supported_by = _remap(c.supported_by, src_map)
         c.contradicted_by = _remap(c.contradicted_by, src_map)
+        c.grounding = _claim_grounding(c.supported_by, snapshotted)
         c.provenance = c.provenance or prov
-        seen_clm.add(new)
+        seen_clm[new] = c
         claims.append(c)
 
-    # 4. Threads — id, rewrite entity/claim/source refs, dedup.
+    # 4. Threads — id, rewrite refs, dedup, and inherit the WEAKEST grounding of their claims.
     threads, seen_thr = [], set()
     for t in profile.threads:
         new = _thread_id(t)
@@ -96,6 +102,7 @@ def finalize_profile(
         t.entities = _remap(t.entities, ent_map)
         t.claims = _remap(t.claims, claim_map)
         t.sources = _remap(t.sources, src_map)
+        t.grounding = _thread_grounding(t.claims, seen_clm)
         t.provenance = t.provenance or prov
         seen_thr.add(new)
         threads.append(t)
@@ -108,10 +115,25 @@ def finalize_profile(
         "entities": entities,
         "threads": threads,
         "revision": revision,
+        "schema_version": SCHEMA_VERSION,  # harness-stamped: the standard, not a model value
         "generated_at": prov.created_at,
         "generator": generator,
         "model": model,
     })
+
+
+def _claim_grounding(supported_by: list[str], snapshotted: set[str]) -> str:
+    if not supported_by:
+        return "unsourced"
+    return "snapshotted" if any(s in snapshotted for s in supported_by) else "snippet_only"
+
+
+def _thread_grounding(claim_ids: list[str], claims_by_id: dict[str, Any]) -> str:
+    """The weakest grounding among a thread's claims (so a thread can't look stronger)."""
+    levels = [claims_by_id[c].grounding for c in claim_ids if c in claims_by_id]
+    if not levels:
+        return "unsourced"
+    return max(levels, key=lambda g: _GROUNDING_ORDER.get(g, 2))
 
 
 def _remap(refs: list[str], mapping: dict[str, str]) -> list[str]:

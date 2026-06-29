@@ -33,6 +33,10 @@ ClaimStatus = Literal[
 SourceType = Literal["primary", "secondary", "tertiary"]
 # How much an item matters — for renderer ordering and (later) RAG retrieval priority.
 Salience = Literal["high", "medium", "low"]
+# How well-grounded a claim/thread is — HARNESS-computed from snapshots, not the model.
+# snapshotted = backed by a source we deep-read & hashed; snippet_only = sourced but only
+# from search snippets (no deep read); unsourced = no source at all.
+GroundingStatus = Literal["snapshotted", "snippet_only", "unsourced"]
 # Not every profile ends "article-ready" — some honestly end as "not enough here".
 ProfileStatus = Literal[
     "draft", "researching", "complete", "needs_verification",
@@ -116,6 +120,7 @@ class Claim(BaseModel):
     text: str
     status: ClaimStatus = "unconfirmed"
     salience: Salience = "medium"
+    grounding: GroundingStatus = "unsourced"  # HARNESS-computed from snapshots, not the model
     supported_by: list[str] = Field(default_factory=list)     # SourceArtifact ids
     contradicted_by: list[str] = Field(default_factory=list)  # SourceArtifact ids
     note: str = ""
@@ -136,6 +141,7 @@ class Thread(BaseModel):
     kind: str = ""              # OPEN hint: background | force | connection | framing | implication | analysis | ...
     body: str = ""              # freeform — the actual richness / dot-connecting
     salience: Salience = "medium"
+    grounding: GroundingStatus = "unsourced"  # HARNESS-computed: the weakest of its claims
     entities: list[str] = Field(default_factory=list)   # entity ids it touches
     claims: list[str] = Field(default_factory=list)     # claim ids that ground it
     sources: list[str] = Field(default_factory=list)    # source ids

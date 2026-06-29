@@ -30,12 +30,24 @@ def render_briefing(profile: SignalProfile) -> str:
     if profile.output_recommendations:
         out += [f"**Recommended outputs:** {', '.join(profile.output_recommendations)}", ""]
 
+    # Grounding caveat up front — so a consuming drafter writes only to the real confidence.
+    weak = sum(
+        1 for c in profile.claim_ledger if c.salience == "high" and c.grounding != "snapshotted"
+    )
+    if weak:
+        out += [
+            f"> **Grounding caveat:** {weak} high-salience claim(s) rest on search snippets, "
+            "not deep-read sources. Write to that confidence — do not overstate.",
+            "",
+        ]
+
     # The field — threads, most-salient first.
     if profile.threads:
         out.append("## What's going on (the field)")
         for t in sorted(profile.threads, key=lambda t: _SALIENCE_ORDER.get(t.salience, 1)):
             kind = f" ({t.kind})" if t.kind else ""
-            out.append(f"### {t.title}{kind}  ·{t.salience}·")
+            warn = "  (!) weakly grounded" if (t.salience == "high" and t.grounding != "snapshotted") else ""
+            out.append(f"### {t.title}{kind}  ·{t.salience} / {t.grounding}·{warn}")
             if t.body:
                 out.append(t.body)
             links = []
@@ -59,7 +71,8 @@ def render_briefing(profile: SignalProfile) -> str:
         out.append("## Evidence (claims)")
         for c in sorted(profile.claim_ledger, key=lambda c: _SALIENCE_ORDER.get(c.salience, 1)):
             sup = ", ".join(src_name.get(s, s) for s in c.supported_by) or "-"
-            line = f"- [{c.status}] {c.text}  <- {sup}  `{c.id}`"
+            warn = "  (!) high-salience, snippet-only" if (c.salience == "high" and c.grounding != "snapshotted") else ""
+            line = f"- [{c.status}/{c.grounding}] {c.text}  <- {sup}  `{c.id}`{warn}"
             if c.contradicted_by:
                 line += "  (contradicted: " + ", ".join(src_name.get(s, s) for s in c.contradicted_by) + ")"
             out.append(line)
