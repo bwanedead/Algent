@@ -107,6 +107,17 @@ field ("here is what is actually going on between these forces, and here are the
 of conflict"); sometimes it is closer and more particular. There is no perfect framing
 and no single correct lens. Seek the one that maximizes reality-contact for *this* story.
 
+Framing is **not neutral packaging — it is the lens that decides what becomes legible at
+all.** The same facts, viewed through the right frame, snap into a clear structure the
+reader can grasp — the way a well-posed problem makes its own answer almost fill itself in
+(this is what a good thought experiment does: pose the question so reality reveals its
+shape). Through the wrong frame, the same facts stay a disordered pile, or worse, quietly
+arrange into a structure that misrepresents. So choosing the frame is part of conveying the
+truth, not a wrapper on it — and a poor or self-serving frame is a route to deception even
+when every fact is accurate. Pick the frame that makes the *real* shape of the thing
+legible, and be suspicious of any frame chosen because it is flattering, convenient, or
+exciting rather than because it reveals.
+
 ## Honest compression
 All reporting is compression — we cannot show all of reality. The ethical line is
 whether our compression preserves the **shape** of reality or distorts it toward a

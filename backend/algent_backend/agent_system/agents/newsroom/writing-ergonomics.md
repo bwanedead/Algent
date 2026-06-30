@@ -48,13 +48,34 @@ enough to reconstruct the real shape, manageable enough not to overwhelm. Too fi
 molecule drowns in detail the reader cannot hold; too coarse and they cannot rebuild what is
 true. Aim for that optimal resolution, and let the demand of the material set it.
 
+## The frame is the vantage everything assembles from
+Before the first sentence there is a choice of **frame** — the vantage you look from and ask
+the reader to look from: which elements are foregrounded, in what relation, seen from where.
+It is load-bearing, not decoration: the same material assembles into a clear molecule under
+one frame and a confused pile under another. *Which* frame to choose is governed first by
+spirit.md (the frame that maximizes reality-contact — never the one that is merely flattering
+or exciting); ergonomics is then the craft of conveying cleanly **within** that frame. Hold
+the chosen vantage steadily; do not re-frame mid-piece without telling the reader you have.
+
 ## Use the precise landmark
 Words are landmarks in concept space — a shared term fixes the reader's position so you can
 move them to the exact nuance. Use the **accurate** word, even a technical one, rather than
 swapping in a vaguer one that lands them at the wrong node. When the reader may lack a
 landmark, **supply it** (a brief definition, an orientation, a concrete example) — placed
-*around* the meaning, not in place of it. An **analogy** is a borrowed structure: when two
-ideas share a shape, hand the reader the familiar one to build the unfamiliar.
+*around* the meaning, not in place of it.
+
+## Analogy and metaphor — a borrowed structure, marked at the seams
+An analogy or metaphor hands the reader a structure they already hold and says *"the new
+thing is shaped like this."* It is a powerful **download shortcut**: instead of building an
+unfamiliar molecule piece by piece, you transfer a familiar one whole, and the reader grasps
+the shape at once. Reach for it as a tool, not a reflex — not everything needs analogizing,
+and a piece drowning in metaphor conveys less, not more.
+
+But the likeness is **fuzzy**: a borrowed structure matches in *shape* and differs in
+*specifics*. So **mark the seams** — say where the analogy holds and where it breaks, and what
+to adjust — so the reader does not import the wrong details along with the right shape. An
+unmarked analogy quietly installs false structure into the reader's molecule; that is a
+deception, not just a clumsiness (see spirit.md). Borrow the shape; flag the divergence.
 
 ## Minimize cost; do not make them backtrack
 Every conceptual hop costs the reader effort, and effort spent decoding *us* is stolen from
