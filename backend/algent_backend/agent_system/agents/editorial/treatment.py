@@ -86,8 +86,9 @@ class EditorialTreatment(BaseModel):
     must_use_items: list[str] = Field(default_factory=list)    # profile item ids the draft must carry (load-bearing)
     open_questions: list[str] = Field(default_factory=list)    # what stays genuinely unknown / to flag as uncertain
 
-    # ── meta ──
+    # ── meta / lineage ──
     schema_version: int = SCHEMA_VERSION
+    revision: int = 1                                  # bumps each gauntlet revision
     generated_at: str = ""
     generator: str = ""                                # agent id / version
     model: str = ""                                    # model that produced it

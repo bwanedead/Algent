@@ -31,6 +31,14 @@ view from above the field ("here are the forces actually in play, and here is wh
 collide"); sometimes it is close and particular (one case that carries the whole). Let the
 material decide.
 
+**There is no catalog of allowed frames.** Candidate frames are never selected from a preset
+menu or taxonomy — they are *discovered from the material itself*: the profile's actual
+claims, threads, entities, tensions, and gaps. The examples named in this document (the wide
+field-view, the single telling case) are illustrations of what a frame *does*, not options to
+choose from. If two different stories ever end up with the same frame, it must be because the
+material genuinely shares a shape — never because the frame came off a shelf. Discover the
+frame; do not pick it.
+
 **Do the search, do not take the first frame.** The first frame that occurs to you is usually
 the most obvious or the most clichéd, and rarely the most revealing. So:
 1. **Generate several candidate frames** — genuinely different vantages on the same profile.

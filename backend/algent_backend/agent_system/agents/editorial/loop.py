@@ -14,6 +14,7 @@ LangGraph/LangChain imports live here; spec.py stays rail-free.
 
 from __future__ import annotations
 
+import hashlib
 from datetime import UTC, datetime
 from typing import Any, TypedDict
 
@@ -29,6 +30,7 @@ from algent_backend.agent_system.runs.context import AgentRunContext
 from .briefing import render_treatment
 from .messages import build_treatment_message
 from .prompts import SYSTEM_PROMPT
+from .store import JsonTreatmentStore
 from .treatment import EditorialTreatment
 
 ARTIFACT_JSON = "treatment.json"
@@ -74,8 +76,22 @@ def build_planning_graph(context: AgentRunContext, *, model_spec: ModelSpec) -> 
     return graph.compile()
 
 
-def _finalize(t: EditorialTreatment, profile: SignalProfile, model: str) -> EditorialTreatment:
-    """Stamp identity + validate every reference against the profile (drop dangling)."""
+def _treatment_id(profile_id: str, frame: str) -> str:
+    """Content-addressed by (profile, frame): the same vantage on a profile is the same
+    treatment (idempotent); a genuinely different frame is a different treatment node."""
+    key = f"{profile_id}|{frame.strip().lower()}"
+    return "trt_" + hashlib.sha1(key.encode("utf-8")).hexdigest()[:10]
+
+
+def _finalize(
+    t: EditorialTreatment, profile: SignalProfile, model: str,
+    *, prior: EditorialTreatment | None = None,
+) -> EditorialTreatment:
+    """Stamp identity + validate every reference against the profile (drop dangling).
+
+    On a revision (``prior`` given), keep the prior treatment's id and bump the revision —
+    the lineage stays one node; otherwise mint a content-addressed id at revision 1.
+    """
     valid_item_ids = {x.id for x in (
         *profile.claim_ledger, *profile.threads, *profile.source_ledger, *profile.entities,
     )}
@@ -97,13 +113,14 @@ def _finalize(t: EditorialTreatment, profile: SignalProfile, model: str) -> Edit
     ]
 
     return t.model_copy(update={
-        "id": f"treatment_{profile.id}",
+        "id": prior.id if prior else _treatment_id(profile.id, t.chosen_frame.frame),
         "profile_id": profile.id,
         "title": t.title or profile.title,
         "concepts": concepts,
         "reader_path": [c for c in dict.fromkeys(t.reader_path) if c in concept_ids],
         "perspectives": perspectives,
         "must_use_items": [m for m in dict.fromkeys(t.must_use_items) if m in valid_item_ids],
+        "revision": (prior.revision + 1) if prior else 1,
         "generator": GENERATOR,
         "model": model,
         "generated_at": datetime.now(UTC).isoformat(),
@@ -111,6 +128,13 @@ def _finalize(t: EditorialTreatment, profile: SignalProfile, model: str) -> Edit
 
 
 def _finish(context: AgentRunContext, t: EditorialTreatment, *, event: str) -> dict[str, Any]:
+    # Persist to the durable store (a treatment outlives the run — see store.py) AND as
+    # run artifacts. A store hiccup must not fail an otherwise-good run.
+    if t.profile_id:
+        try:
+            JsonTreatmentStore().save(t)
+        except Exception:  # noqa: BLE001
+            pass
     link = None
     if context.artifacts is not None:
         context.artifacts.write_json(ARTIFACT_JSON, t.model_dump())

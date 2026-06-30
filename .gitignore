@@ -235,3 +235,6 @@ backend/ingestion_data/
 
 # Signal-profile store (t2 assets written by ProfileStore) — never committed
 backend/profile_store/
+
+# Editorial-treatment store (frame+molecule assets written by TreatmentStore) — never committed
+backend/treatment_store/

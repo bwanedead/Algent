@@ -86,17 +86,25 @@ def _treatment() -> EditorialTreatment:
     )
 
 
-def test_planner_graph_produces_treatment_validates_refs_and_persists() -> None:
+def test_planner_graph_produces_treatment_validates_refs_and_persists(tmp_path, monkeypatch) -> None:
+    monkeypatch.setenv("ALGENT_TREATMENT_STORE", str(tmp_path))  # durable save -> tmp, not the repo
     events: list = []
     graph = plan_loop.build_planning_graph(_ctx(_Model(_treatment()), events), model_spec=_spec())
 
     out = graph.invoke({"profile": _profile().model_dump()})
     t = EditorialTreatment.model_validate(out["treatment"])
 
-    # Harness identity stamping.
-    assert t.id == "treatment_prof_x" and t.profile_id == "prof_x"
+    # Harness identity stamping — content-addressed by (profile, frame), revision 1.
+    assert t.id == plan_loop._treatment_id("prof_x", "two real risks pulling opposite ways")
+    assert t.id.startswith("trt_") and t.profile_id == "prof_x" and t.revision == 1
     assert t.title == "Fed path"  # filled from the profile when the model left it blank
     assert t.generator == "editorial_planner@v1" and t.generated_at
+
+    # Persisted to the durable store and recoverable by profile lineage.
+    from algent_backend.agent_system.agents.editorial.store import JsonTreatmentStore
+    store = JsonTreatmentStore(tmp_path)
+    assert store.get(t.id) is not None
+    assert [k.id for k in store.list_for_profile("prof_x")] == [t.id]
 
     # Blank ids assigned; model ids kept.
     ids = [c.id for c in t.concepts]
