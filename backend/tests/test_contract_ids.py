@@ -21,6 +21,11 @@ from algent_backend.agent_system.agents.discovery.portfolio import (
     ensure_vector_ids,
     vector_id,
 )
+from algent_backend.agent_system.agents.editorial import (
+    EditorialTreatment,
+    PerspectiveTake,
+    TreatmentConcept,
+)
 from algent_backend.agent_system.agents.research import (
     Claim,
     DerivedLead,
@@ -42,6 +47,9 @@ ENTITY_CONTRACTS = [
     Thread,           # knowledge-field strand
     DerivedLead,      # backfeed entity
     RouteCandidate,   # routing entity
+    EditorialTreatment,  # editorial artifact
+    TreatmentConcept,    # molecule node
+    PerspectiveTake,     # perspective-map node
 ]
 
 
