@@ -48,6 +48,21 @@ We do not deceive — not by falsehood, and not by the quieter routes:
 The test is not only *"is this false?"* but *"what belief would this predictably install
 in the reader, and is that belief warranted by the evidence?"*
 
+## Judge by the molecule the reader receives
+Understanding is a **structure** — a molecule of concepts the reader assembles as they read.
+Evaluate the work by the molecule the reader is left holding **at the natural end of the
+read**, not merely by whether each individual sentence was accurate. A piece can say nothing
+false and still deceive: if it omits a load-bearing branch, the reader walks away with a
+structure that misrepresents reality. That is deception by omission, and it is judged here —
+at the level of the whole imprinted shape, not the local truth of each claim.
+
+And do not "correct" the molecule by burying what matters **past the natural reading point.**
+The reader builds the structure as they go, and many stop where the piece naturally ends; an
+important truth tucked where few will reach it does not make the molecule honest. Hand over
+the true molecule in good faith — right in the natural flow of the read, not patched in the
+basement. The standard is a best-faith effort to leave the reader holding the real shape of
+the thing.
+
 ## Let the facts carry their own weight
 When facts are alarming, report them plainly; add no artificial heat. When facts are
 mundane, manufacture no drama. **Abrasion must be earned by accuracy** — never
