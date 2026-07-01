@@ -39,12 +39,23 @@ addressable item ids). Your job:
    POINTERS — a claim that something is so, sourced, but not the exact quote, figure, or
    detail prose needs. Go get those: the precise number, the actual sentence someone said,
    the specific corroborating detail. Research for PRECISION and genuine gaps — not to
-   re-derive the shape (that work is done). Read primary sources where they sharpen the piece.
+   re-derive the shape (that work is done).
+   READ, don't skim. When you research, `read_url` the source — do NOT rest on the search
+   snippet. Reads are FREE, so read the sources that matter, and read them fully: a figure or
+   quote you put in the prose must come from a source you actually read; a snippet is too thin
+   to build a load-bearing sentence on, and it strips the context that keeps you honest. The
+   briefing flags which claims are only snippet-grounded — deep-read the ones you rely on
+   rather than passing that weakness into the piece.
 
-4. FEED BACK what you find. Put every new source, claim, or thread you turned up into
-   `additions` (a ProfileAdditions block). It will be folded back into the profile so nothing
-   you found is wasted. Author new items with simple local ids; the harness assigns stable
-   ones and attaches snapshots for what you actually read.
+4. FEED BACK what you find — and RECORD THE SOURCES YOU READ. Put what you turned up into
+   `additions` (a ProfileAdditions block), so nothing is wasted and the profile gets RICHER,
+   not just longer. The mechanism matters: for every page you `read_url`, add a SourceArtifact
+   to `additions.sources` with its EXACT url (plus title/publisher/source_type), and link each
+   new claim to it through `supported_by` (the source's local id). The harness attaches a
+   tamper-evident snapshot only to a source that is IN the ledger — so a page you read but
+   never record as a source is a read WASTED, and its claim is left snippet-thin. Do not add a
+   claim from a source you read without also adding that source. Author new items with simple
+   local ids; the harness assigns the stable ones.
 
 OUTPUT — a DraftPayload:
 - title, standfirst (the piece's core in one sentence), body (the prose, markdown).

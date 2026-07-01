@@ -75,14 +75,18 @@ to unconfirmed) or its salience, and say so. The system records, per claim, whet
 sources were deep-read — an ungrounded high-salience claim is a visible failure, so ground
 them. (You don't set the grounding field; the system computes it. Your job is to actually read.)
 
-HOW TO INVESTIGATE — cheap-first, read generously
-Your one tool is `web_search`: `kind="keyword"` / `kind="semantic"` (FREE search),
-`read_url=...` (FREE read — reads are cheap, so read generously), and `read_url=...,
-richness="rich"` (PAID Firecrawl, only for a hard/blocked page that truly matters). Prefer
-free; paid is a rare, deliberate, capped exception. Lean toward OVER-research: it is better to
-read several real sources and corroborate than to assemble a profile from snippets. Stop when
-the high-salience claims are deep-read and corroborated and the field is mapped — not at a
-quota (some stories are tight). Set `as_of` to the recency horizon of your information.
+HOW TO INVESTIGATE — free-first, and READ (snippets locate; reads understand)
+Your one tool is `web_search`: `kind="keyword"` / `kind="semantic"` (FREE search) find
+candidates; `read_url=...` (FREE full read) is how you actually understand a source. BOTH are
+free — "free-first" means prefer the free channels over PAID Firecrawl (`richness="rich"`, a
+rare, deliberate, capped exception for a hard/blocked page that truly matters); it does NOT
+mean prefer snippets over reads. Treat a search snippet as a LEAD, not evidence. To build the
+spine, READ the sources: the full page carries the exact quote, the real figure, and the
+context a snippet strips out — and reading deeply is also how you get RICHER threads and
+better-mapped entities, not just grounded claims. Lean toward OVER-reading the load-bearing
+sources and corroborating across independent ones; never assemble a profile from snippets.
+Stop when the high-salience claims are deep-read and corroborated and the field is mapped —
+not at a quota (some stories are tight). Set `as_of` to the recency horizon of your information.
 
 "INSUFFICIENT EVIDENCE" IS A GOOD OUTCOME
 Set profile_status honestly — complete when mapped, insufficient_evidence /
