@@ -10,7 +10,7 @@ files are the source of truth; this just loads them.
 
 from __future__ import annotations
 
-from functools import cache, lru_cache
+from functools import cache
 from pathlib import Path
 
 _DIR = Path(__file__).parent

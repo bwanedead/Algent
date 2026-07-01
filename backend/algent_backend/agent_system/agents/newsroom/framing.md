@@ -61,6 +61,13 @@ chosen because it is:
 If a frame requires the reader to accept a contestable premise just to follow the story, it is
 steering, not revealing. Prefer the frame the reader could inhabit whatever their priors.
 
+A miniature of the test (an illustration, not a template): a drop in a city's crime numbers
+can be framed as *"a mayor's policy vindicated"* — flattering to one side, and it puts the
+competing explanations (a demographic shift, a change in how crimes get counted) in the dark.
+The revealing frame is the one that holds all the candidate causes in view and lets the
+evidence sort them. The tell is not the conclusion — it is that the frame settled the
+conclusion before the evidence could.
+
 ## The frame must hold the whole picture
 A good frame does not force a single point of view — it gives the reader the vantage from
 which they can see **all** the serious perspectives in play and judge among them (see spirit's

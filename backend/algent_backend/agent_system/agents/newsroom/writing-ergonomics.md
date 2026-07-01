@@ -9,7 +9,7 @@ It is evaluated mostly **where the words are laid down** — a drafting posture 
 lens, not a separate upfront plan. You cannot pre-compute good prose; you write toward this
 and check against it.
 
-It is grounded in a simple model (see `docs/writings_by_the_dev/`): understanding is a
+It is grounded in a simple model: understanding is a
 **structure of concepts** — a *molecule* of related ideas assembled in the mind — and
 conveying is **navigating the reader** from where they stand to that structure, building it
 faithfully as they go.
@@ -38,6 +38,11 @@ Concepts have prerequisites.
   you have not yet given them.
 - **Towers** — some ideas rest on several foundations at once. Establish all the load-bearing
   pillars before raising the apex; do not ask the reader to hold an apex with nothing under it.
+- **Lock-and-key pairs** — some concepts only resolve *jointly*: neither is comprehensible
+  without the other (a mechanism and its incentive; a rule and its loophole). Do not serialize
+  the pair as if it were a chain — deliver both halves close together, often best by showing
+  them working as one (a concrete case where mechanism and incentive meet) and then naming
+  the parts.
 
 Move **broad → specific.** That is the direction a reader instinctively expects to travel;
 traveling it keeps their model assembling instead of buckling.
@@ -76,6 +81,9 @@ But the likeness is **fuzzy**: a borrowed structure matches in *shape* and diffe
 to adjust — so the reader does not import the wrong details along with the right shape. An
 unmarked analogy quietly installs false structure into the reader's molecule; that is a
 deception, not just a clumsiness (see spirit.md). Borrow the shape; flag the divergence.
+(In miniature: *"the power grid is the internet of electricity"* quietly imports
+route-around-damage intuitions that physics does not honor — unmarked, the reader now holds
+a confidence about blackout resilience that no sentence ever asserted.)
 
 ## Minimize cost; do not make them backtrack
 Every conceptual hop costs the reader effort, and effort spent decoding *us* is stolen from

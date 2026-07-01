@@ -54,7 +54,10 @@ Evaluate the work by the molecule the reader is left holding **at the natural en
 read**, not merely by whether each individual sentence was accurate. A piece can say nothing
 false and still deceive: if it omits a load-bearing branch, the reader walks away with a
 structure that misrepresents reality. That is deception by omission, and it is judged here —
-at the level of the whole imprinted shape, not the local truth of each claim.
+at the level of the whole imprinted shape, not the local truth of each claim. (A miniature:
+*"the trial found no serious side effects"* can be entirely true while the piece omits that
+the trial excluded the patients most at risk — every sentence accurate, and the reader walks
+away holding a safety the evidence never established.)
 
 And do not "correct" the molecule by burying what matters **past the natural reading point.**
 The reader builds the structure as they go, and many stop where the piece naturally ends; an
@@ -108,15 +111,11 @@ of conflict"); sometimes it is closer and more particular. There is no perfect f
 and no single correct lens. Seek the one that maximizes reality-contact for *this* story.
 
 Framing is **not neutral packaging — it is the lens that decides what becomes legible at
-all.** The same facts, viewed through the right frame, snap into a clear structure the
-reader can grasp — the way a well-posed problem makes its own answer almost fill itself in
-(this is what a good thought experiment does: pose the question so reality reveals its
-shape). Through the wrong frame, the same facts stay a disordered pile, or worse, quietly
-arrange into a structure that misrepresents. So choosing the frame is part of conveying the
-truth, not a wrapper on it — and a poor or self-serving frame is a route to deception even
-when every fact is accurate. Pick the frame that makes the *real* shape of the thing
-legible, and be suspicious of any frame chosen because it is flattering, convenient, or
-exciting rather than because it reveals.
+all**, and a poor or self-serving frame is a route to deception even when every fact under
+it is accurate. The value is this: the frame is chosen because it **reveals** — never
+because it is flattering, convenient, or exciting. The craft of the search — generating
+genuinely different candidates, testing each against reality, recording the rejected — is
+governed in depth by [framing.md](framing.md).
 
 ## Honest compression
 All reporting is compression — we cannot show all of reality. The ethical line is

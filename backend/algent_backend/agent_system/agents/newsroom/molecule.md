@@ -37,6 +37,11 @@ make the dependencies explicit:
   prerequisite. Mark what each concept **depends on**.
 - **Towers** — a concept that rests on several foundations at once: name all the pillars, so
   the drafter raises none of them with nothing underneath.
+- **Lock-and-key pairs** — two concepts that only resolve *jointly*: neither is comprehensible
+  without the other (a mechanism and the incentive that drives it; a rule and the loophole it
+  creates). Mark the pair as a pair — mutual `depends_on` — so the drafter delivers them
+  together. Serialized as a chain, the reader holds half a meaning until the other half
+  arrives, and many stop reading before it does.
 
 A concept is **load-bearing** if removing it would leave the reader holding a *wrong* shape —
 not merely a less-detailed one. Distinguish the load-bearing from the merely interesting; the
@@ -58,7 +63,10 @@ profile: cite the **claim / thread / source ids** that supply it. Two consequenc
 - **do-not-overstate** — concepts whose evidence is thin, contested, or hedged. Carry forward
   the ceiling: what the draft may *not* assert beyond what the grounding supports. A molecule
   that quietly upgrades a *likely* into a *fact* is a deception (see spirit's *certainty
-  laundering*).
+  laundering*). The move in miniature: the profile grounds *"regulators are investigating
+  whether the firm misled clients"* — the treatment may not carry it as *"the firm misled
+  clients."* Same subject, upgraded certainty; the ceiling is the grade of the claim, not
+  its topic.
 
 ## Completeness is a spirit obligation, not a length target
 The molecule must include every **load-bearing branch** of the real structure — most
