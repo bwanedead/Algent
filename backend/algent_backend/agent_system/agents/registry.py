@@ -40,6 +40,7 @@ def default_agent_registry() -> AgentRegistry:
     # agent's graph module (and its LangGraph imports) into memory.
     from .discovery.general.spec import SPEC as general_discovery_spec
     from .discovery.synthesis.spec import SPEC as discovery_synthesis_spec
+    from .editorial.draft_spec import SPEC as article_drafter_spec
     from .editorial.gauntlet_spec import SPEC as planning_gauntlet_spec
     from .editorial.review_spec import SPEC as treatment_reviewer_spec
     from .editorial.spec import SPEC as editorial_planner_spec
@@ -63,6 +64,7 @@ def default_agent_registry() -> AgentRegistry:
     registry.register(editorial_planner_spec)
     registry.register(treatment_reviewer_spec)
     registry.register(planning_gauntlet_spec)
+    registry.register(article_drafter_spec)
     registry.register(enrich_primary_source_spec)
     registry.register(enrich_counter_perspective_spec)
     registry.register(profile_gauntlet_spec)

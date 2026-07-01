@@ -22,6 +22,7 @@ from algent_backend.agent_system.agents.discovery.portfolio import (
     vector_id,
 )
 from algent_backend.agent_system.agents.editorial import (
+    ArticleDraft,
     EditorialTreatment,
     PerspectiveTake,
     TreatmentConcept,
@@ -50,6 +51,7 @@ ENTITY_CONTRACTS = [
     EditorialTreatment,  # editorial artifact
     TreatmentConcept,    # molecule node
     PerspectiveTake,     # perspective-map node
+    ArticleDraft,        # prose product
 ]
 
 

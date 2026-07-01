@@ -238,3 +238,6 @@ backend/profile_store/
 
 # Editorial-treatment store (frame+molecule assets written by TreatmentStore) — never committed
 backend/treatment_store/
+
+# Article-draft store (prose products written by DraftStore) — never committed
+backend/draft_store/
