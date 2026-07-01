@@ -12,6 +12,10 @@ from __future__ import annotations
 from collections import Counter
 
 from algent_backend.agent_system.agents.research.briefing import render_briefing
+from algent_backend.agent_system.agents.research.grounding import (
+    weak_load_bearing_claims,
+    weak_load_bearing_threads,
+)
 from algent_backend.agent_system.agents.research.profile import SignalProfile
 
 
@@ -35,11 +39,11 @@ def build_review_message(profile: SignalProfile) -> str:
 def _grounding_signals(profile: SignalProfile) -> list[str]:
     claims = profile.claim_ledger
     high = [c for c in claims if c.salience == "high"]
-    high_weak = [c for c in high if c.grounding != "snapshotted"]
+    high_weak = weak_load_bearing_claims(claims)   # the shared grounding-floor definition
     deep_sources = sum(1 for s in profile.source_ledger if s.snapshot is not None)
     pubs = Counter((s.publisher or s.url or "?") for s in profile.source_ledger)
     top_pub, top_n = (pubs.most_common(1)[0] if pubs else ("-", 0))
-    weak_threads = [t for t in profile.threads if t.salience == "high" and t.grounding != "snapshotted"]
+    weak_threads = weak_load_bearing_threads(profile.threads)
     return [
         f"- claims: {len(claims)} ({len(high)} high-salience); "
         f"deep-read sources: {deep_sources}/{len(profile.source_ledger)}",

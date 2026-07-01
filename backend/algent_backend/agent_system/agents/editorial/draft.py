@@ -53,6 +53,7 @@ class ArticleDraft(BaseModel):
     cited_source_ids: list[str] = Field(default_factory=list)   # validated against the profile
     research_note: str = ""
     word_count: int = 0
+    grounding_verdict: str = ""         # deterministic citation-harness verdict (see citations.py)
 
     # ── meta / lineage ──
     schema_version: int = SCHEMA_VERSION

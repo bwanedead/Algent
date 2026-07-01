@@ -34,6 +34,7 @@ from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.context import AgentRunContext
 from algent_backend.agent_system.tools.sourcing.search import policy
 
+from .citations import CitationReport, check_citations, render_citation_report
 from .draft import ArticleDraft, DraftPayload
 from .draft_messages import build_draft_message
 from .draft_store import JsonDraftStore, render_draft
@@ -100,7 +101,11 @@ def build_draft_graph(
                 pass
 
         draft_obj = _finalize_draft(payload, treatment, enriched, model_spec.model)
-        return _finish(context, draft_obj, enriched, profile)
+        # Deterministic citation/accuracy audit (the grounding floor) — stamp its verdict on
+        # the draft so the drafting gauntlet can gate on it later.
+        report = check_citations(draft_obj, treatment, enriched)
+        draft_obj = draft_obj.model_copy(update={"grounding_verdict": report.verdict})
+        return _finish(context, draft_obj, report, enriched, profile)
 
     graph = StateGraph(DraftState)
     graph.add_node("draft", draft)
@@ -143,7 +148,8 @@ def _finalize_draft(
 
 
 def _finish(
-    context: AgentRunContext, draft: ArticleDraft, enriched: SignalProfile, before: SignalProfile,
+    context: AgentRunContext, draft: ArticleDraft, report: CitationReport,
+    enriched: SignalProfile, before: SignalProfile,
 ) -> dict[str, Any]:
     if draft.treatment_id:
         try:
@@ -154,6 +160,8 @@ def _finish(
     if context.artifacts is not None:
         context.artifacts.write_json(ARTIFACT_JSON, draft.model_dump())
         context.artifacts.write_text(ARTIFACT_MD, render_draft(draft))
+        context.artifacts.write_json("citation_report.json", report.model_dump())
+        context.artifacts.write_text("citation_report.md", render_citation_report(report))
         context.artifacts.write_json("profile.json", enriched.model_dump())
         context.artifacts.write_text("briefing.md", render_briefing(enriched))
         link = "../artifacts/" + ARTIFACT_MD
@@ -161,6 +169,9 @@ def _finish(
     context.emit(DRAFT_COMPLETED, {
         "draft_id": draft.id, "treatment_id": draft.treatment_id,
         "word_count": draft.word_count, "cited_claims": len(draft.cited_claim_ids),
+        "grounding_verdict": report.verdict,
+        "must_use_missing": len(report.must_use_missing),
+        "weak_load_bearing": len(report.weak_load_bearing),
         "profile_revision": enriched.revision,
         "added_claims": len(enriched.claim_ledger) - len(before.claim_ledger),
         "added_sources": len(enriched.source_ledger) - len(before.source_ledger),

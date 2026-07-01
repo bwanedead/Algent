@@ -24,6 +24,7 @@ import re
 from datetime import UTC, datetime
 from typing import Any
 
+from .grounding import cap_status_by_grounding
 from .profile import (
     SCHEMA_VERSION,
     ItemProvenance,
@@ -53,6 +54,9 @@ def finalize_profile(
         "id": _profile_id(vector),
         "parent_vector_id": vector.get("id", ""),
         "source_ledger": sources, "claim_ledger": claims, "entities": entities, "threads": threads,
+        # Deterministic floor: the model may not claim maturity while a load-bearing claim/thread
+        # is only snippet-grounded (see grounding.py).
+        "profile_status": cap_status_by_grounding(profile.profile_status, claims, threads),
         "revision": revision, "schema_version": SCHEMA_VERSION,
         "generated_at": prov.created_at, "generator": generator, "model": model,
     })
@@ -94,10 +98,8 @@ def merge_additions(
     })
 
 
-def _assemble(source_ledger, entities_in, claim_ledger, threads_in, captured, prov):
-    """The shared core: ids, refs, dedup, snapshots, grounding, provenance."""
-    captured_norm = {_norm_url(u): v for u, v in captured.items()}
-
+def _place_sources(source_ledger, captured_norm, prov):
+    """Assign content-addressed ids, dedup, and attach real captures (keeping verified snapshots)."""
     src_map: dict[str, str] = {}
     sources, seen_src = [], set()
     for s in source_ledger:
@@ -112,6 +114,13 @@ def _assemble(source_ledger, entities_in, claim_ledger, threads_in, captured, pr
         s.provenance = s.provenance or prov
         seen_src.add(new)
         sources.append(s)
+    return sources, src_map
+
+
+def _assemble(source_ledger, entities_in, claim_ledger, threads_in, captured, prov):
+    """The shared core: ids, refs, dedup, snapshots, grounding, provenance."""
+    captured_norm = {_norm_url(u): v for u, v in captured.items()}
+    sources, src_map = _place_sources(source_ledger, captured_norm, prov)
 
     ent_map: dict[str, str] = {}
     entities, seen_ent = [], set()
