@@ -24,7 +24,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from algent_backend.agent_system.agents.research.grounding import is_deep_read
+from algent_backend.agent_system.agents.research.grounding import is_consequential, is_deep_read
 from algent_backend.agent_system.agents.research.profile import SignalProfile
 
 from .draft import ArticleDraft
@@ -80,7 +80,9 @@ def check_citations(
         if c is None:
             continue
         tally[c.grounding] = tally.get(c.grounding, 0) + 1
-        if not is_deep_read(c.grounding) and (c.salience == "high" or c.grounding == "unsourced"):
+        # A cited claim is a floor violation if it's consequential (high/medium) and not
+        # deep-read, or unsourced at any salience — half-digested evidence in the prose.
+        if not is_deep_read(c.grounding) and (is_consequential(c.salience) or c.grounding == "unsourced"):
             weak.append(cid)
         if c.status != "confirmed":
             overstate.append(cid)

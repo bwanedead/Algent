@@ -47,10 +47,17 @@ def test_grounding_floor_and_status_cap() -> None:
 
 
 def test_low_salience_snippet_does_not_trip_the_floor() -> None:
-    # Snippets are fine on inconsequential (low-salience) claims.
+    # Snippets are fine on inconsequential (low-salience) scouting residue.
     claims = [_claim("c1", salience="low", grounding="snippet_only")]
     assert meets_grounding_floor(claims, [])
     assert cap_status_by_grounding("complete", claims, []) == "complete"
+
+
+def test_medium_salience_snippet_trips_the_floor() -> None:
+    # "Snippets discover, reads persist": a MEDIUM (consequential) snippet claim is a violation.
+    claims = [_claim("c1", salience="medium", grounding="snippet_only")]
+    assert not meets_grounding_floor(claims, [])
+    assert cap_status_by_grounding("complete", claims, []) == "needs_verification"
 
 
 # -- citation harness ----------------------------------------------------------

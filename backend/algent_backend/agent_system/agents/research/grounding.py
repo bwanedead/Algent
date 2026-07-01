@@ -1,23 +1,28 @@
 """
 The deep-read grounding floor — ONE canonical definition, used at every layer.
 
-"Load-bearing" = high salience. The floor: a load-bearing claim (or thread) must rest on a
-source we actually DEEP-READ (``grounding == "snapshotted"``), not a search snippet. Snippets
-are fragile; deep reads carry the exact figure/quote and the context that keeps us honest.
+The principle: **snippets are for discovery, deep reads are for persistence.** A search snippet
+is a reconnaissance tool — scan the landscape, find what matters. But by the time we PERSIST
+meaning — write a claim into the ledger, enrich stable knowledge — the source should have been
+read in full. A *consequential* claim (high or medium salience) that rests only on a snippet is
+a floor violation: half-digested evidence that shouldn't have been persisted. Only genuinely
+peripheral, low-salience context may remain at snippet level (the residue of scouting).
 
 This rule was duplicated ad-hoc across the briefing, the reviewer message, and (implicitly) the
 drafter. Centralizing it here means the research layer, the profile status, and the draft
-citation harness all judge grounding IDENTICALLY — so "avoid snippets on anything that matters"
-is enforced the same way everywhere. Pure + deterministic: no model, no cost.
+citation harness all judge grounding IDENTICALLY. Pure + deterministic: no model, no cost.
 """
 
 from __future__ import annotations
 
 from .profile import Claim, ProfileStatus, SignalProfile, Thread
 
-# Statuses that assert the profile is trustworthy/finished — a load-bearing gap must not coexist
+# Statuses that assert the profile is trustworthy/finished — a grounding gap must not coexist
 # with these, so the deterministic floor caps them down.
 _MATURE_STATUSES: frozenset[str] = frozenset({"mature", "complete"})
+# "Consequential" = worth persisting on real evidence. Low-salience is inconsequential scouting
+# residue where a snippet is tolerable; high/medium must be deep-read before it persists.
+_CONSEQUENTIAL: frozenset[str] = frozenset({"high", "medium"})
 
 
 def is_deep_read(grounding: str) -> bool:
@@ -25,14 +30,20 @@ def is_deep_read(grounding: str) -> bool:
     return grounding == "snapshotted"
 
 
+def is_consequential(salience: str) -> bool:
+    """Consequential = high or medium salience (only low-salience context may stay snippet)."""
+    return salience in _CONSEQUENTIAL
+
+
 def weak_load_bearing_claims(claims: list[Claim]) -> list[Claim]:
-    """High-salience claims NOT backed by a deep-read source (the floor violations)."""
-    return [c for c in claims if c.salience == "high" and not is_deep_read(c.grounding)]
+    """Consequential (high/medium) claims NOT backed by a deep-read source — the floor violations
+    (a snippet-derived claim that got persisted anyway)."""
+    return [c for c in claims if is_consequential(c.salience) and not is_deep_read(c.grounding)]
 
 
 def weak_load_bearing_threads(threads: list[Thread]) -> list[Thread]:
-    """High-salience threads whose grounding is thin (their weakest claim is not deep-read)."""
-    return [t for t in threads if t.salience == "high" and not is_deep_read(t.grounding)]
+    """Consequential threads whose grounding is thin (their weakest claim is not deep-read)."""
+    return [t for t in threads if is_consequential(t.salience) and not is_deep_read(t.grounding)]
 
 
 def meets_grounding_floor(claims: list[Claim], threads: list[Thread]) -> bool:

@@ -16,7 +16,10 @@ ENRICH_BASE = (
     "you never rewrite or remove existing items. Author new items with simple local ids "
     "(ns1, nc1, ne1, nt1) and reference existing item ids (clm_... / src_...) to link or "
     "corroborate. The system merges your additions, re-grounds the claims, and bumps the "
-    "revision. Stay tightly scoped to your assigned findings — do not sprawl."
+    "revision. Stay tightly scoped to your assigned findings — do not sprawl. "
+    "GROUNDING: snippets are for scouting only — any consequential claim you add (high or "
+    "medium salience) must rest on a source you actually DEEP-READ (read_url) and record in "
+    "the source ledger; never persist snippet-derived evidence."
 )
 
 PRIMARY_SOURCE_DOCTRINE = (

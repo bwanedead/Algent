@@ -56,7 +56,9 @@ def test_profile_graph_produces_persists_and_writes_briefing(monkeypatch, tmp_pa
     assert prof["claim_ledger"][0]["supported_by"] == [prof["source_ledger"][0]["id"]]  # ref rewritten
     assert (tmp_path / "prof_bd540e7822.json").exists()  # persisted to the ProfileStore
     done = next(p for et, p in events if et == "profile.completed")
-    assert done["status"] == "complete" and "threads" in done
+    # Deterministic grounding floor: the model claimed "complete", but its consequential claim
+    # rests on a snippet (no deep-read source), so the harness caps it to needs_verification.
+    assert done["status"] == "needs_verification" and "threads" in done
 
 
 def test_profile_graph_no_vector_is_insufficient_not_failure(monkeypatch, tmp_path) -> None:
