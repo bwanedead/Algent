@@ -20,8 +20,9 @@ AGENT_ID = "signal_router"
 RUNTIME = "langgraph"
 FAMILY = "newsroom"
 
-# Editorial judgment over a couple dozen candidates — the savvy tier, one cheap call.
-DEFAULT_MODEL = ModelSpec(provider="openai", model="gpt-5.4-mini", temperature=0.2)
+# Coarse ranking/selection over supplied candidates — the nano tier is plenty here (it
+# reasons over given text into a structured pick, no research, no generation).
+DEFAULT_MODEL = ModelSpec(provider="openai", model="gpt-5.4-nano", temperature=0.2)
 
 
 def build_graph(context: AgentRunContext) -> Any:

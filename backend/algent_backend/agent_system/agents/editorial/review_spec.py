@@ -20,8 +20,9 @@ AGENT_ID = "treatment_reviewer"
 RUNTIME = "langgraph"
 FAMILY = "newsroom"
 
-# Editorial judgment over one treatment — the savvy tier, one structured call.
-DEFAULT_MODEL = ModelSpec(provider="openai", model="gpt-5.4-mini", temperature=0.2)
+# Structured critique over a supplied treatment + profile, backed by a re-review — the nano
+# tier is enough (judges given text into findings; does not research or generate prose).
+DEFAULT_MODEL = ModelSpec(provider="openai", model="gpt-5.4-nano", temperature=0.2)
 
 
 def build_graph(context: AgentRunContext) -> Any:
