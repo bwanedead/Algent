@@ -12,9 +12,19 @@ from __future__ import annotations
 from algent_backend.agent_system.agents.research.briefing import render_briefing
 from algent_backend.agent_system.agents.research.profile import SignalProfile
 
+from .briefing import render_treatment
+from .review_contracts import TreatmentReview
+from .treatment import EditorialTreatment
 
-def build_treatment_message(profile: SignalProfile) -> str:
-    return "\n".join([
+
+def build_treatment_message(
+    profile: SignalProfile,
+    *,
+    prior: EditorialTreatment | None = None,
+    review: TreatmentReview | None = None,
+) -> str:
+    """The planning task. With a prior treatment + its review, this is a REVISION pass."""
+    parts = [
         f"# PROFILE TO PLAN — {profile.id}  (status: {profile.profile_status})",
         "",
         "## Addressable item ids (ground your treatment in these)",
@@ -24,12 +34,45 @@ def build_treatment_message(profile: SignalProfile) -> str:
         "",
         render_briefing(profile),
         "",
-        "TASK: Produce an EditorialTreatment for this profile. Choose the most "
-        "reality-revealing frame (and record the rejected alternatives), design the "
-        "concept-molecule the reader must build (load-bearing concepts, dependencies, "
-        "grounding by id, do-not-overstate ceilings), map every serious perspective, and "
-        "name this story's deception risks. Cite item ids throughout. Do NOT write prose.",
-    ])
+    ]
+    if prior is not None and review is not None:
+        parts += _revision_block(prior, review)
+    else:
+        parts.append(
+            "TASK: Produce an EditorialTreatment for this profile. Choose the most "
+            "reality-revealing frame (and record the rejected alternatives), design the "
+            "concept-molecule the reader must build (load-bearing concepts, dependencies, "
+            "grounding by id, do-not-overstate ceilings), map every serious perspective, and "
+            "name this story's deception risks. Cite item ids throughout. Do NOT write prose."
+        )
+    return "\n".join(parts)
+
+
+def _revision_block(prior: EditorialTreatment, review: TreatmentReview) -> list[str]:
+    findings = [
+        f"- [{f.severity}/{f.type}] {f.target}: {f.explanation}"
+        + (f"  → {f.recommendation}" if f.recommendation else "")
+        + ("  (PROMOTION BLOCKER)" if f.promotion_blocker else "")
+        for f in review.findings
+    ]
+    better = [f"- A reviewer suggested a possibly-better frame: {review.better_frame}"] if review.better_frame else []
+    return [
+        "## YOU ARE REVISING — a prior treatment was reviewed and is NOT yet promoted",
+        "",
+        "### Your prior treatment",
+        "",
+        render_treatment(prior),
+        "",
+        f"### The reviewer's critique (verdict: {review.verdict})",
+        review.summary,
+        *better,
+        *findings,
+        "",
+        "TASK: Produce an IMPROVED EditorialTreatment. Address every promotion-blocking "
+        "finding, weigh the better-frame suggestion honestly (adopt it only if it genuinely "
+        "reveals more — do not switch frames to appease), keep what was sound, and do not "
+        "discard good grounded work. Re-ground in the item ids. Do NOT write prose.",
+    ]
 
 
 def _id_index(profile: SignalProfile) -> list[str]:

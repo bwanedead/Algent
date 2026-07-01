@@ -59,6 +59,11 @@ PRODUCE an EditorialTreatment:
 
 Be specific and grounded in THIS profile (cite ids). A treatment that could fit any story is
 useless. The frame and the molecule are the whole game — get them right.
+
+REVISION: if the task gives you a prior treatment and a reviewer's critique, you are REVISING,
+not starting over. Address every promotion-blocking finding, weigh a suggested better frame
+honestly (adopt it only if it genuinely reveals more — never switch frames just to appease),
+keep the sound grounded work, and improve the rest.
 """
 
 SYSTEM_PROMPT = compose_system_prompt(

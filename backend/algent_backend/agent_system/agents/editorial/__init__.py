@@ -8,6 +8,8 @@ they are built. Re-exports the contract for ergonomic imports.
 
 from __future__ import annotations
 
+from .gauntlet_contracts import PlanningGauntletReport
+from .review_contracts import TreatmentFinding, TreatmentReview
 from .treatment import (
     EditorialTreatment,
     FrameOption,
@@ -19,5 +21,8 @@ __all__ = [
     "EditorialTreatment",
     "FrameOption",
     "PerspectiveTake",
+    "PlanningGauntletReport",
     "TreatmentConcept",
+    "TreatmentFinding",
+    "TreatmentReview",
 ]

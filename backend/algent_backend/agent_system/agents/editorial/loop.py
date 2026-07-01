@@ -30,6 +30,7 @@ from algent_backend.agent_system.runs.context import AgentRunContext
 from .briefing import render_treatment
 from .messages import build_treatment_message
 from .prompts import SYSTEM_PROMPT
+from .review_contracts import TreatmentReview
 from .store import JsonTreatmentStore
 from .treatment import EditorialTreatment
 
@@ -41,8 +42,10 @@ GENERATOR = "editorial_planner@v1"
 
 
 class PlanState(TypedDict, total=False):
-    profile: dict[str, Any]    # the profile to plan (the input)
-    treatment: dict[str, Any]  # the produced EditorialTreatment
+    profile: dict[str, Any]           # the profile to plan (the input)
+    prior_treatment: dict[str, Any]   # a prior treatment to revise (gauntlet revision pass)
+    treatment_review: dict[str, Any]  # the critique that revision must address
+    treatment: dict[str, Any]         # the produced EditorialTreatment
 
 
 def build_planning_graph(context: AgentRunContext, *, model_spec: ModelSpec) -> Any:
@@ -58,16 +61,21 @@ def build_planning_graph(context: AgentRunContext, *, model_spec: ModelSpec) -> 
             ), event=PLAN_NO_INPUT)
 
         profile = SignalProfile.model_validate(pdict)
-        context.emit(ev.INPUT_PREVIEW, _profile_preview(profile))
+        prior = EditorialTreatment.model_validate(state["prior_treatment"]) if state.get("prior_treatment") else None
+        review = TreatmentReview.model_validate(state["treatment_review"]) if state.get("treatment_review") else None
+        context.emit(ev.INPUT_PREVIEW, _profile_preview(profile, prior))
         raw = structured.invoke(
             [SystemMessage(content=SYSTEM_PROMPT),
-             HumanMessage(content=build_treatment_message(profile))],
+             HumanMessage(content=build_treatment_message(profile, prior=prior, review=review))],
             config=config,
         )
         treatment = raw if isinstance(raw, EditorialTreatment) else EditorialTreatment(
             id="", title=profile.title,
         )
-        return _finish(context, _finalize(treatment, profile, model_spec.model), event=PLAN_COMPLETED)
+        return _finish(
+            context, _finalize(treatment, profile, model_spec.model, prior=prior),
+            event=PLAN_COMPLETED,
+        )
 
     graph = StateGraph(PlanState)
     graph.add_node("plan", plan)
@@ -162,9 +170,10 @@ def _treatment_preview(t: EditorialTreatment, link: str | None) -> dict[str, Any
     }
 
 
-def _profile_preview(profile: SignalProfile) -> dict[str, Any]:
+def _profile_preview(profile: SignalProfile, prior: EditorialTreatment | None = None) -> dict[str, Any]:
+    mode = f"revising rev {prior.revision}" if prior else "fresh plan"
     return {
-        "title": "input: profile to plan",
+        "title": f"input: profile to plan ({mode})",
         "summary": f"{profile.id} — {profile.title}  [status: {profile.profile_status}, "
                    f"{len(profile.claim_ledger)} claims, {len(profile.threads)} threads]",
         "top": [f"status: {profile.profile_status}"],
