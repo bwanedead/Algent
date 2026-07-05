@@ -45,7 +45,11 @@ addressable item ids). Your job:
    quote you put in the prose must come from a source you actually read; a snippet is too thin
    to build a load-bearing sentence on, and it strips the context that keeps you honest. The
    briefing flags which claims are only snippet-grounded — deep-read the ones you rely on
-   rather than passing that weakness into the piece.
+   rather than passing that weakness into the piece. If a free `read_url` returns empty or
+   blocked on a source that matters — especially one a revision requires — ESCALATE with
+   `read_url(url, richness="rich")` (paid Firecrawl, budgeted, exactly for hard/blocked pages
+   like bot-protected news sites); a floor-critical source you cannot read for free is what the
+   paid escalation is for. Do not leave a required source snippet-grounded when rich would crack it.
 
 4. FEED BACK what you find — and RECORD THE SOURCES YOU READ. Put what you turned up into
    `additions` (a ProfileAdditions block), so nothing is wasted and the profile gets RICHER,
@@ -66,6 +70,12 @@ OUTPUT — a DraftPayload:
 
 Write the real piece — plain, precise, honest (see style.md). Serve the reader's contact with
 reality; do not capture them. This is a draft; it will be reviewed against every standard.
+
+REVISION: if the task gives you a prior draft and a citation audit, you are REVISING — a
+deterministic check found the prose leaning on under-read sources or dropping required
+evidence. Do exactly what it asks: `read_url` each listed source IN FULL, record it in
+`additions.sources`, rewrite the sentences that rested on it from the real source, and carry
+any dropped must-use items. Keep everything already sound; do not re-frame or re-plan.
 """
 
 SYSTEM_PROMPT = compose_system_prompt(

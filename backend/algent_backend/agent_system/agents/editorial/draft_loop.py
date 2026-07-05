@@ -49,9 +49,11 @@ STAGE = "drafting"
 
 
 class DraftState(TypedDict, total=False):
-    treatment: dict[str, Any]  # the promoted treatment to write from (input)
-    profile: dict[str, Any]    # its source profile — evidence + enrich-back target (input)
-    draft: dict[str, Any]      # the produced ArticleDraft
+    treatment: dict[str, Any]        # the promoted treatment to write from (input)
+    profile: dict[str, Any]          # its source profile — evidence + enrich-back target (input)
+    prior_draft: dict[str, Any]      # a prior draft to revise (drafting-gauntlet revision pass)
+    citation_report: dict[str, Any]  # the audit that revision must clear (worklist + missing)
+    draft: dict[str, Any]            # the produced ArticleDraft
     # NOTE: `profile` is also the OUTPUT — the enriched (revision++) profile after drafting.
 
 
@@ -79,21 +81,26 @@ def build_draft_graph(
 
         treatment = EditorialTreatment.model_validate(tdict)
         profile = SignalProfile.model_validate(pdict)
-        context.emit(ev.INPUT_PREVIEW, _input_preview(treatment, profile))
+        prior = ArticleDraft.model_validate(state["prior_draft"]) if state.get("prior_draft") else None
+        report = CitationReport.model_validate(state["citation_report"]) if state.get("citation_report") else None
+        context.emit(ev.INPUT_PREVIEW, _input_preview(treatment, profile, prior))
 
         with policy.scoped(search_channels, paid_budget), \
                 cost.scoped(cost_cap_usd, model_spec.model), snapshots.scoped():
             produced = stream_react_loop(
-                agent, {"messages": [HumanMessage(content=build_draft_message(treatment, profile))]},
+                agent,
+                {"messages": [HumanMessage(content=build_draft_message(treatment, profile, prior=prior, report=report))]},
                 context=context, config=config,
             )
             captured = snapshots.collected()
         payload = produced if isinstance(produced, DraftPayload) else DraftPayload()
 
-        # Enrich-back: fold the drafter's findings into the profile (stage="drafting"), but
-        # only if it actually found something — an empty merge would churn the revision.
+        # Enrich-back: fold the drafter's findings into the profile (stage="drafting"). Run the
+        # merge if it added items OR merely re-read sources — a re-read of an existing snippet
+        # source upgrades ITS grounding (the merge attaches captures to existing sources too),
+        # which is how a revision round clears the citation floor.
         enriched = profile
-        if _has_additions(payload.additions):
+        if _has_additions(payload.additions) or captured:
             enriched = merge_additions(profile, payload.additions, captured, generator=GENERATOR, stage=STAGE)
             try:
                 JsonProfileStore().save(enriched)
@@ -176,12 +183,15 @@ def _finish(
         "added_claims": len(enriched.claim_ledger) - len(before.claim_ledger),
         "added_sources": len(enriched.source_ledger) - len(before.source_ledger),
     })
-    return {"draft": draft.model_dump(), "profile": enriched.model_dump()}
+    # Return the audit too, so the drafting gauntlet drives revision off the exact lists.
+    return {"draft": draft.model_dump(), "profile": enriched.model_dump(),
+            "citation_report": report.model_dump()}
 
 
-def _input_preview(t: EditorialTreatment, p: SignalProfile) -> dict[str, Any]:
+def _input_preview(t: EditorialTreatment, p: SignalProfile, prior: ArticleDraft | None = None) -> dict[str, Any]:
+    mode = f"revising (prior verdict: {prior.grounding_verdict})" if prior else "fresh draft"
     return {
-        "title": "input: treatment + profile to draft from",
+        "title": f"input: treatment + profile to draft from ({mode})",
         "summary": f"treatment {t.id} (rev {t.revision}) · frame: {t.chosen_frame.frame[:70]}",
         "top": [f"profile {p.id} rev {p.revision}: {len(p.claim_ledger)} claims, {len(p.threads)} threads"],
         "link": None,

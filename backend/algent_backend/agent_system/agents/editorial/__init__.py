@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from .citations import CitationReport, check_citations
 from .draft import ArticleDraft, DraftPayload
+from .draft_gauntlet_contracts import DraftingGauntletReport
 from .gauntlet_contracts import PlanningGauntletReport
 from .review_contracts import TreatmentFinding, TreatmentReview
 from .treatment import (
@@ -23,6 +24,7 @@ __all__ = [
     "ArticleDraft",
     "CitationReport",
     "DraftPayload",
+    "DraftingGauntletReport",
     "check_citations",
     "EditorialTreatment",
     "FrameOption",
