@@ -27,6 +27,7 @@ from algent_backend.agent_system.tools.sourcing.search import policy
 
 from .assembly import finalize_profile
 from .briefing import render_briefing
+from .grounding import grounding_gap
 from .messages import build_vector_message
 from .profile import SignalProfile
 from .store import JsonProfileStore
@@ -35,6 +36,7 @@ ARTIFACT_NAME = "profile.json"
 BRIEFING_NAME = "briefing.md"
 PROFILE_COMPLETED = "profile.completed"
 PROFILE_NO_INPUT = "profile.no_input"
+GROUNDING_CAPPED = "grounding.capped"   # the floor overrode the model's asserted maturity
 GENERATOR = "signal_profile@v2"
 STAGE = "signal_profile"
 
@@ -91,9 +93,17 @@ def build_profile_graph(
                 summary="model returned no structured profile",
             )
 
+        asserted_status = profile.profile_status
         profile = finalize_profile(
             profile, vector, captured, model=model_spec.model, generator=GENERATOR, stage=STAGE
         )
+        # Telemetry: the deterministic grounding floor overrode the model's maturity claim.
+        # This is free doctrine-failure measurement AND the exact worklist enrichment can act on.
+        if profile.profile_status != asserted_status:
+            context.emit(GROUNDING_CAPPED, {
+                "profile_id": profile.id, "asserted": asserted_status,
+                "capped_to": profile.profile_status, "gap": grounding_gap(profile),
+            })
         return _finish(context, profile, event=PROFILE_COMPLETED, estimated_usd=estimated_usd)
 
     graph = StateGraph(ProfileState)

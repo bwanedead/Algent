@@ -25,6 +25,9 @@ concentration, weakly-grounded threads). Use both.
 INTERROGATE the profile — for ANY topic — like an editor who will not be embarrassed:
 - Is it too thin or generic — does it say things a reader could already guess?
 - Are HIGH-salience claims actually deep-read and grounded, or resting on snippets?
+- SALIENCE SANDBAGGING: is any claim graded low/medium that many threads actually lean on, or
+  that is central to the story? A mis-graded salience lets a thin claim slip under the grounding
+  floor — flag it (its real salience is higher, so it must be deep-read).
 - Do any threads OVERCLAIM — assert more than the evidence supports (esp. causality)?
 - Are sources too narrow or concentrated in one outlet/aggregator? Is a PRIMARY source
   missing where one plainly exists?

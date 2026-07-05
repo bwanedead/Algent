@@ -24,7 +24,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from algent_backend.agent_system.agents.research.grounding import is_consequential, is_deep_read
+from algent_backend.agent_system.agents.research.grounding import is_draft_citation_violation
 from algent_backend.agent_system.agents.research.profile import SignalProfile
 
 from .draft import ArticleDraft
@@ -47,7 +47,8 @@ class CitationReport(BaseModel):
 
     cited_claims: int = 0
     grounding_tally: dict[str, int] = Field(default_factory=dict)  # snapshotted / snippet_only / unsourced
-    weak_load_bearing: list[str] = Field(default_factory=list)     # cited high-salience claims NOT deep-read
+    weak_load_bearing: list[str] = Field(default_factory=list)     # cited consequential claims NOT deep-read
+    deep_read_worklist: list[str] = Field(default_factory=list)    # SOURCE ids behind the weak claims (the reads to do)
     overstatement_flags: list[str] = Field(default_factory=list)   # cited non-confirmed claims (reviewer must check hedging)
 
     def promotable(self) -> bool:
@@ -65,6 +66,12 @@ def check_citations(
     cited_claims = set(draft.cited_claim_ids)
     cited_any = cited_claims | set(draft.cited_source_ids)
 
+    # The treatment's own declaration of what's load-bearing — a cross-check on salience, which
+    # the profile-authoring model could otherwise sandbag to slip a thin claim under the floor.
+    treatment_consequential = set(treatment.must_use_items)
+    for concept in treatment.concepts:
+        treatment_consequential.update(concept.grounds_in)
+
     # COVERAGE: a must-use id is carried if the draft cites it directly, or (for a must-use
     # thread) if the draft cites any of the claims that ground that thread.
     present, missing = [], []
@@ -72,18 +79,18 @@ def check_citations(
         covered = m in cited_any or bool(thread_claims.get(m, set()) & cited_claims)
         (present if covered else missing).append(m)
 
-    # GROUNDING: tally the cited claims by grounding; flag load-bearing ones that aren't deep-read.
+    # GROUNDING: tally the cited claims; flag floor violations (shared predicate); collect the
+    # SOURCE ids behind the weak ones as the deep-read worklist (reads are per-source, not per-claim).
     tally = {"snapshotted": 0, "snippet_only": 0, "unsourced": 0}
-    weak, overstate = [], []
+    weak, overstate, worklist = [], [], []
     for cid in draft.cited_claim_ids:
         c = claims_by_id.get(cid)
         if c is None:
             continue
         tally[c.grounding] = tally.get(c.grounding, 0) + 1
-        # A cited claim is a floor violation if it's consequential (high/medium) and not
-        # deep-read, or unsourced at any salience — half-digested evidence in the prose.
-        if not is_deep_read(c.grounding) and (is_consequential(c.salience) or c.grounding == "unsourced"):
+        if is_draft_citation_violation(c, treatment_consequential=cid in treatment_consequential):
             weak.append(cid)
+            worklist.extend(c.supported_by)   # the sources to actually read (snippet-sourced weak claims)
         if c.status != "confirmed":
             overstate.append(cid)
 
@@ -95,7 +102,8 @@ def check_citations(
         verdict=verdict,
         must_use_present=present, must_use_missing=missing,
         cited_claims=len(draft.cited_claim_ids), grounding_tally=tally,
-        weak_load_bearing=weak, overstatement_flags=overstate,
+        weak_load_bearing=weak, deep_read_worklist=list(dict.fromkeys(worklist)),
+        overstatement_flags=overstate,
     )
 
 
@@ -108,7 +116,9 @@ def render_citation_report(r: CitationReport) -> str:
         f"- grounding of {r.cited_claims} cited claims: {r.grounding_tally}",
     ]
     if r.weak_load_bearing:
-        out.append(f"- ⚠ load-bearing claims not deep-read (deep-read required): {', '.join(r.weak_load_bearing)}")
+        out.append(f"- ⚠ consequential claims not deep-read: {', '.join(r.weak_load_bearing)}")
+        if r.deep_read_worklist:
+            out.append(f"  → deep-read these sources: {', '.join(r.deep_read_worklist)}")
     if r.overstatement_flags:
         out.append(f"- verify hedging on non-confirmed cited claims: {', '.join(r.overstatement_flags)}")
     return "\n".join(out) + "\n"

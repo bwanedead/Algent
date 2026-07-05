@@ -16,8 +16,9 @@ from algent_backend.agent_system.agents.research.profile import (
 )
 
 
-def _claim(cid, salience="high", grounding="snapshotted", status="confirmed") -> Claim:
-    return Claim(id=cid, text=f"claim {cid}", salience=salience, grounding=grounding, status=status)
+def _claim(cid, salience="high", grounding="snapshotted", status="confirmed", supported_by=None) -> Claim:
+    return Claim(id=cid, text=f"claim {cid}", salience=salience, grounding=grounding, status=status,
+                 supported_by=supported_by or [])
 
 
 def _profile(claims, threads=None) -> SignalProfile:
@@ -90,6 +91,22 @@ def test_must_use_thread_covered_via_its_claims() -> None:
     # must-use is the THREAD; the draft cites a claim that grounds it -> covered.
     r = check_citations(_draft(["c1"]), _treatment(["t1"]), prof)
     assert r.must_use_present == ["t1"] and r.verdict == "grounded"
+
+
+def test_treatment_consequential_overrides_sandbagged_salience() -> None:
+    # A claim graded "low" in the profile but declared load-bearing by the treatment (must_use)
+    # is treated as consequential — the model can't sandbag salience to slip under the floor.
+    prof = _profile([_claim("c1", salience="low", grounding="snippet_only", supported_by=["s1"])])
+    r = check_citations(_draft(["c1"]), _treatment(["c1"]), prof)
+    assert r.verdict == "needs_deep_read" and r.weak_load_bearing == ["c1"]
+    assert r.deep_read_worklist == ["s1"]   # the worklist is the SOURCE to read, not the claim
+
+
+def test_low_salience_snippet_not_in_treatment_is_tolerated_in_prose() -> None:
+    # Same low snippet claim, but NOT declared load-bearing by the treatment -> tolerated.
+    prof = _profile([_claim("c1", salience="low", grounding="snippet_only", supported_by=["s1"])])
+    r = check_citations(_draft(["c1"]), _treatment([]), prof)
+    assert r.verdict == "grounded" and r.weak_load_bearing == []
 
 
 def test_overstatement_flags_non_confirmed_cited_claims() -> None:

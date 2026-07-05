@@ -59,6 +59,10 @@ def test_profile_graph_produces_persists_and_writes_briefing(monkeypatch, tmp_pa
     # Deterministic grounding floor: the model claimed "complete", but its consequential claim
     # rests on a snippet (no deep-read source), so the harness caps it to needs_verification.
     assert done["status"] == "needs_verification" and "threads" in done
+    # ...and the cap is observable — telemetry of doctrine failure + the exact worklist.
+    capped = next(p for et, p in events if et == "grounding.capped")
+    assert capped["asserted"] == "complete" and capped["capped_to"] == "needs_verification"
+    assert capped["gap"]["weak_claims"] == [prof["claim_ledger"][0]["id"]]
 
 
 def test_profile_graph_no_vector_is_insufficient_not_failure(monkeypatch, tmp_path) -> None:
