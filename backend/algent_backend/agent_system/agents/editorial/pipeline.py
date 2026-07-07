@@ -18,6 +18,7 @@ from typing import Any, TypedDict
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph import END, START, StateGraph
 
+from algent_backend.agent_system.agents.research.profile import SignalProfile
 from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.context import AgentRunContext
 
@@ -26,6 +27,7 @@ from .draft_gauntlet import build_drafting_gauntlet_graph
 from .draft_store import render_draft
 from .gauntlet import build_planning_gauntlet_graph
 from .pipeline_contracts import EditorialPipelineReport
+from .publish import render_published_article
 
 PIPELINE_COMPLETED = "editorial_pipeline.completed"
 PIPELINE_NO_INPUT = "editorial_pipeline.no_input"
@@ -56,6 +58,7 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
         draft_out = build_drafting_gauntlet_graph(context).invoke(
             {"treatment": treatment, "profile": profile}, config)
         draft = draft_out.get("draft") or {}
+        enriched_profile = draft_out.get("profile") or profile   # final grounding state for the appendix
         draft_report = draft_out.get("gauntlet") or {}
 
         outcome = str(draft_report.get("outcome", ""))
@@ -80,7 +83,12 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
             generated_at=datetime.now(UTC).isoformat(),
         )
         if context.artifacts is not None and draft:
-            context.artifacts.write_text("article.md", render_draft(ArticleDraft.model_validate(draft)))
+            draft_obj = ArticleDraft.model_validate(draft)
+            # The reader-facing piece + transparency appendix, and the annotated draft for audit.
+            context.artifacts.write_text(
+                "article_published.md",
+                render_published_article(draft_obj, SignalProfile.model_validate(enriched_profile)))
+            context.artifacts.write_text("article.md", render_draft(draft_obj))
             context.artifacts.write_json("editorial_pipeline_report.json", report.model_dump())
         context.emit(ev.OUTPUT_PREVIEW, _preview(report))
         context.emit(PIPELINE_COMPLETED, report.model_dump())

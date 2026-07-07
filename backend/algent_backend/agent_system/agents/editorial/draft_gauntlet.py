@@ -110,7 +110,9 @@ def build_drafting_gauntlet_graph(context: AgentRunContext) -> Any:
             context.artifacts.write_json("drafting_gauntlet_report.json", result.model_dump())
         context.emit(ev.OUTPUT_PREVIEW, _preview(result))
         context.emit(GAUNTLET_COMPLETED, result.model_dump())
-        return {"draft": draft, "gauntlet": result.model_dump()}
+        # Return the final enriched profile too, so downstream (the publish view) can render the
+        # transparency appendix against the grounding state the draft was actually built on.
+        return {"draft": draft, "profile": profile, "gauntlet": result.model_dump()}
 
     graph = StateGraph(GauntletState)
     graph.add_node("gauntlet", run_gauntlet)
