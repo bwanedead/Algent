@@ -20,6 +20,11 @@ class EditorialPipelineReport(BaseModel):
     draft_id: str = ""
     draft_outcome: str = ""          # grounded | grounded_with_caveats | blocked_omission
     publishable: bool = False        # the draft cleared the floor (grounded or grounded_with_caveats)
+    # Honest status for the human approval surface. The WALL is deterministically proven, but the
+    # CAVEAT is still doctrine (nothing yet verifies the prose actually hedges a walled source at
+    # its ceiling — that is v3b's first lane). So a caveated piece is publishable *pending* that
+    # check, and we say so rather than implying it's fully cleared.
+    status: str = ""                 # publishable | publishable_pending_caveat_check | blocked
     article_title: str = ""
     word_count: int = 0
     barriers: list[str] = Field(default_factory=list)  # walled sources carried with honest caveats

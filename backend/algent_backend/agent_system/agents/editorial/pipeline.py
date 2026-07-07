@@ -58,13 +58,22 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
         draft = draft_out.get("draft") or {}
         draft_report = draft_out.get("gauntlet") or {}
 
+        outcome = str(draft_report.get("outcome", ""))
+        # A clean grounded piece is publishable; a caveated one is publishable ONLY once a human
+        # (or v3b) confirms the prose actually carries the hedge — say so honestly.
+        status = {
+            "grounded": "publishable",
+            "grounded_with_caveats": "publishable_pending_caveat_check",
+        }.get(outcome, "blocked")
+
         report = EditorialPipelineReport(
             profile_id=str(profile.get("id", "")),
             treatment_id=str(treatment.get("id", "")),
             treatment_verdict=str(plan_report.get("final_verdict", "")),
             draft_id=str(draft.get("id", "")),
-            draft_outcome=str(draft_report.get("outcome", "")),
+            draft_outcome=outcome,
             publishable=bool(draft_report.get("promoted", False)),
+            status=status,
             article_title=str(draft.get("title", "")),
             word_count=int(draft.get("word_count", 0) or 0),
             barriers=draft_report.get("barriers", []),
@@ -88,7 +97,7 @@ def _preview(r: EditorialPipelineReport) -> dict[str, Any]:
     return {
         "title": f"article: {r.article_title[:70] or '(untitled)'}",
         "summary": (
-            f"{r.word_count} words | draft: {r.draft_outcome} | publishable: {r.publishable} | "
+            f"{r.word_count} words | status: {r.status} | draft: {r.draft_outcome} | "
             f"treatment: {r.treatment_verdict}"
             + (f" | walls caveated: {r.barriers}" if r.barriers else "")
         ),

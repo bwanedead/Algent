@@ -119,9 +119,13 @@ def build_drafting_gauntlet_graph(context: AgentRunContext) -> Any:
     return graph.compile()
 
 
-def _problems(report: dict[str, Any]) -> int:
-    """How far a draft is from clean: weak (under-read) claims + dropped must-use items."""
-    return len(report.get("weak_load_bearing", [])) + len(report.get("must_use_missing", []))
+def _problems(report: dict[str, Any]) -> tuple[int, int]:
+    """Rank a draft's distance from clean, WORST dimension first. A dropped must-use item is a
+    hard block (blocked_omission); a weak-but-caveatable claim still promotes — so they are not
+    fungible. Compare lexicographically ``(missing, weak)`` so no number of weak claims ever
+    outranks dropped required evidence (else the loop could keep a *blocked* draft over a
+    *publishable* one — a real regression revisions do cause)."""
+    return (len(report.get("must_use_missing", [])), len(report.get("weak_load_bearing", [])))
 
 
 def _write(context: AgentRunContext, name: str, payload: Any) -> None:

@@ -73,6 +73,17 @@ def test_gauntlet_promotes_with_caveats_when_a_source_is_walled(monkeypatch) -> 
     assert g["barriers"] == ["src_a"]   # the walled source, carried with an honest caveat
 
 
+def test_best_draft_never_prefers_a_blocked_draft_over_a_publishable_one(monkeypatch) -> None:
+    # round 1: 3 weak, 0 missing -> publishable with caveats. round 2: 0 weak, 2 missing ->
+    # BLOCKED. The blocked draft has fewer TOTAL problems (2 < 3) but a dropped must-use must
+    # never be preferred over caveatable weakness (lexicographic (missing, weak)).
+    g, _, _ = _run(
+        monkeypatch, [_out("needs_deep_read", weak=3), _out("drops_must_use", weak=0, missing=2)],
+        {"treatment": {"id": "trt_x"}, "profile": {"id": "prof_x"}})
+    assert g["outcome"] == "grounded_with_caveats" and g["promoted"] is True
+    assert g["final_must_use_missing"] == 0   # kept the publishable draft, not the blocked one
+
+
 def test_gauntlet_keeps_the_best_draft_not_a_regressive_last_one(monkeypatch) -> None:
     # round 1 clean-ish (1 weak, no missing); round 2 REGRESSES (drops a must-use). The gauntlet
     # must keep round 1 and promote with caveats — a bad revision can't ruin a good draft.

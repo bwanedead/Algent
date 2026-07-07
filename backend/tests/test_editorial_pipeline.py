@@ -37,6 +37,7 @@ def test_pipeline_chains_planning_then_drafting_into_an_article(monkeypatch) -> 
     assert r["treatment_id"] == "trt_x" and r["draft_id"] == "drf_x"
     assert r["article_title"] == "A real Fed piece" and r["word_count"] == 420
     assert r["draft_outcome"] == "grounded_with_caveats" and r["publishable"] is True
+    assert r["status"] == "publishable_pending_caveat_check"   # honest: the caveat isn't verified yet
     assert r["barriers"] == ["src_a"] and r["treatment_verdict"] == "needs_revision"
     assert any(et == "editorial_pipeline.completed" for et, _ in events)
 
