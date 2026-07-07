@@ -63,13 +63,24 @@ def test_gauntlet_revises_until_grounded(monkeypatch) -> None:
 
 def test_gauntlet_promotes_with_caveats_when_a_source_is_walled(monkeypatch) -> None:
     # Never clears (source is walled) but drops no required evidence -> honest-barrier path:
-    # promotable with caveats, the wall reported, not an infinite loop.
+    # promotable with caveats, the wall reported. And it STOPS EARLY on no progress (a revision
+    # that didn't shrink the problem = a wall) rather than burning all rounds.
     g, drafter, _ = _run(
         monkeypatch, [_out("needs_deep_read", weak=1)],   # always ungrounded, no must-use missing
         {"treatment": {"id": "trt_x"}, "profile": {"id": "prof_x"}})
-    assert g["rounds"] == dg.MAX_ROUNDS and drafter.calls == dg.MAX_ROUNDS
+    assert g["rounds"] == 2 and drafter.calls == 2   # one revision, no progress -> stop
     assert g["promoted"] is True and g["outcome"] == "grounded_with_caveats"
     assert g["barriers"] == ["src_a"]   # the walled source, carried with an honest caveat
+
+
+def test_gauntlet_keeps_the_best_draft_not_a_regressive_last_one(monkeypatch) -> None:
+    # round 1 clean-ish (1 weak, no missing); round 2 REGRESSES (drops a must-use). The gauntlet
+    # must keep round 1 and promote with caveats — a bad revision can't ruin a good draft.
+    g, _, _ = _run(
+        monkeypatch, [_out("needs_deep_read", weak=1), _out("drops_must_use", weak=1, missing=2)],
+        {"treatment": {"id": "trt_x"}, "profile": {"id": "prof_x"}})
+    assert g["outcome"] == "grounded_with_caveats" and g["promoted"] is True
+    assert g["final_must_use_missing"] == 0   # kept the non-regressed draft
 
 
 def test_gauntlet_blocks_when_required_evidence_is_dropped(monkeypatch) -> None:

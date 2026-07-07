@@ -56,16 +56,26 @@ def build_drafting_gauntlet_graph(context: AgentRunContext) -> Any:
         initial_verdict = report["verdict"]
         initial_weak = len(report.get("weak_load_bearing", []))
 
-        # Revise while the deterministic floor isn't cleared (bounded). The drafter is driven by
-        # the report's LISTS, not the masked verdict — worklist + missing fixed in one pass.
+        # Revise while the floor isn't cleared (bounded). Two guards learned from live runs:
+        #  - KEEP THE BEST draft (fewest problems), so a regressive later round can't ruin a good
+        #    earlier one (a revision once dropped must-use items and blocked a promotable draft).
+        #  - STOP ON NO PROGRESS: if a round doesn't reduce problems, the remaining sources are
+        #    walled — more rounds only burn cost and risk regression. Exit to the honest-barrier.
+        best = (draft, profile, report)
         rounds = 1
         while report["verdict"] != "grounded" and rounds < MAX_ROUNDS:
+            prev = _problems(report)
             out = build_drafter(context).invoke(
                 {"treatment": treatment, "profile": profile,
                  "prior_draft": draft, "citation_report": report}, config)
             draft, profile, report = out["draft"], out["profile"], out["citation_report"]
             rounds += 1
             _write(context, f"draft_round{rounds}.json", draft)
+            if _problems(report) <= _problems(best[2]):   # improved (or tied, prefer the later, enriched one)
+                best = (draft, profile, report)
+            if report["verdict"] == "grounded" or _problems(report) >= prev:
+                break   # cleared, or no progress -> remaining sources are walled
+        draft, profile, report = best   # promote the best draft seen, not necessarily the last
 
         # Terminal outcome. Promotion is possible even unglounded — a piece that followed the
         # scent as far as the sources allow and honestly caveats the walls is publishable; only
@@ -107,6 +117,11 @@ def build_drafting_gauntlet_graph(context: AgentRunContext) -> Any:
     graph.add_edge(START, "gauntlet")
     graph.add_edge("gauntlet", END)
     return graph.compile()
+
+
+def _problems(report: dict[str, Any]) -> int:
+    """How far a draft is from clean: weak (under-read) claims + dropped must-use items."""
+    return len(report.get("weak_load_bearing", [])) + len(report.get("must_use_missing", []))
 
 
 def _write(context: AgentRunContext, name: str, payload: Any) -> None:
