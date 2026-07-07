@@ -84,7 +84,13 @@ Your one tool is `web_search`: `kind="keyword"` / `kind="semantic"` (FREE search
 candidates; `read_url=...` (FREE full read) is how you actually understand a source. BOTH are
 free — "free-first" means prefer the free channels over PAID Firecrawl (`richness="rich"`, a
 rare, deliberate, capped exception for a hard/blocked page that truly matters); it does NOT
-mean prefer snippets over reads. Treat a search snippet as a LEAD, not evidence. To build the
+mean prefer snippets over reads. Every read returns a `quality` grade (good | thin | blocked |
+empty); if a read of a source that MATTERS comes back not-`good` (you'll see a `retry_hint`),
+retry that url with `richness="rich"` — that is exactly when the paid crawler earns its cost.
+If the `rich` read is ALSO degraded (`barrier: true`), the source is genuinely walled: do not
+persist a snippet-derived claim as confident — lower its status/salience, record it as an open
+question noting the barrier, or drop it. Follow the scent as far as the sources allow, then
+report the limit honestly. Treat a search snippet as a LEAD, not evidence. To build the
 spine, READ the sources: the full page carries the exact quote, the real figure, and the
 context a snippet strips out — and reading deeply is also how you get RICHER threads and
 better-mapped entities, not just grounded claims. Lean toward OVER-reading the load-bearing

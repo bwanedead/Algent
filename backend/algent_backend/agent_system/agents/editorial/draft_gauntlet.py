@@ -46,7 +46,8 @@ def build_drafting_gauntlet_graph(context: AgentRunContext) -> Any:
         treatment, profile = state.get("treatment"), state.get("profile")
         if not treatment or not profile:
             context.emit(GAUNTLET_NO_INPUT, {"message": "treatment or profile missing to the drafting gauntlet"})
-            return {"gauntlet": DraftingGauntletReport(final_verdict="drops_must_use").model_dump()}
+            return {"gauntlet": DraftingGauntletReport(
+                outcome="blocked_omission", final_verdict="drops_must_use").model_dump()}
 
         # Round 1: draft + audit.
         out = build_drafter(context).invoke({"treatment": treatment, "profile": profile}, config)
@@ -66,17 +67,31 @@ def build_drafting_gauntlet_graph(context: AgentRunContext) -> Any:
             rounds += 1
             _write(context, f"draft_round{rounds}.json", draft)
 
+        # Terminal outcome. Promotion is possible even unglounded — a piece that followed the
+        # scent as far as the sources allow and honestly caveats the walls is publishable; only
+        # DROPPING required evidence is a real block (that's omission, and it's fixable).
+        must_missing = report.get("must_use_missing", [])
+        if report["verdict"] == "grounded":
+            outcome, barriers = "grounded", []
+        elif must_missing:
+            outcome, barriers = "blocked_omission", []
+        else:
+            # Bounded rounds (incl. rich escalation) are exhausted; what's still un-read is
+            # treated as genuinely walled and carried with honest caveats (see draft doctrine).
+            outcome, barriers = "grounded_with_caveats", report.get("deep_read_worklist", [])
+
         result = DraftingGauntletReport(
             treatment_id=str(draft.get("treatment_id", "")),
             profile_id=str(draft.get("profile_id", "")),
             draft_id=str(draft.get("id", "")),
             rounds=rounds,
-            promoted=report["verdict"] == "grounded",
+            outcome=outcome,
+            promoted=outcome in ("grounded", "grounded_with_caveats"),
             initial_verdict=initial_verdict, final_verdict=report["verdict"],
             initial_weak_claims=initial_weak,
             final_weak_claims=len(report.get("weak_load_bearing", [])),
-            final_must_use_missing=len(report.get("must_use_missing", [])),
-            final_worklist=report.get("deep_read_worklist", []),
+            final_must_use_missing=len(must_missing),
+            barriers=barriers,
             ending_profile_revision=int(profile.get("revision", 1) or 1),
             generated_at=datetime.now(UTC).isoformat(),
         )
@@ -103,11 +118,11 @@ def _preview(r: DraftingGauntletReport) -> dict[str, Any]:
     return {
         "title": f"drafting gauntlet ({r.rounds} round(s))",
         "summary": (
-            f"{r.initial_verdict} -> {r.final_verdict} | promoted: {r.promoted} | "
+            f"outcome: {r.outcome} | promoted: {r.promoted} | "
             f"weak claims {r.initial_weak_claims} -> {r.final_weak_claims} | "
             f"profile rev {r.ending_profile_revision}"
-            + (f" | still unread: {r.final_worklist}" if r.final_worklist else "")
+            + (f" | walled (caveated): {r.barriers}" if r.barriers else "")
         ),
-        "items": [f"draft: {r.draft_id}", f"rounds: {r.rounds}"],
+        "items": [f"draft: {r.draft_id}", f"rounds: {r.rounds}", f"outcome: {r.outcome}"],
         "link": "../artifacts/draft.json",
     }

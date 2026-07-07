@@ -11,9 +11,19 @@ the bounded rounds is a valid, honest outcome (some sources genuinely can't be d
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 from .citations import CitationVerdict
+
+# The gauntlet's terminal outcome — promotion is possible even when a source is walled, as long
+# as the piece follows the scent as far as it can and honestly reports the limit.
+#   grounded             — every consequential claim deep-read (clean).
+#   grounded_with_caveats — some sources are genuinely walled (free + paid exhausted); the piece
+#                           carries them with honest caveats. Promotable.
+#   blocked_omission     — the draft DROPPED required must-use evidence (a real, fixable fail).
+DraftingOutcome = Literal["grounded", "grounded_with_caveats", "blocked_omission"]
 
 
 class DraftingGauntletReport(BaseModel):
@@ -23,13 +33,14 @@ class DraftingGauntletReport(BaseModel):
     profile_id: str = ""
     draft_id: str = ""
     rounds: int = 0                                # drafter passes (1 = no revision)
-    promoted: bool = False                         # final verdict == grounded
+    outcome: DraftingOutcome | str = "grounded"
+    promoted: bool = False                         # outcome is grounded or grounded_with_caveats
 
     initial_verdict: CitationVerdict | str = ""
     final_verdict: CitationVerdict | str = ""
     initial_weak_claims: int = 0
     final_weak_claims: int = 0
     final_must_use_missing: int = 0
-    final_worklist: list[str] = Field(default_factory=list)  # sources still needing a deep read, if any
+    barriers: list[str] = Field(default_factory=list)  # walled sources carried with honest caveats
     ending_profile_revision: int = 1               # enrich-back bumps this as reads land
     generated_at: str = ""

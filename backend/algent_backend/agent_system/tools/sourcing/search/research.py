@@ -112,18 +112,39 @@ def _search(
 
 
 def _read(url: str, *, rich: bool) -> dict[str, Any]:
-    """Read a page via the free-first fetch ladder (paid only when ``rich``)."""
+    """Read a page via the free-first fetch ladder (paid only when ``rich``).
+
+    Two honest signals accompany a read so the agent (and doctrine) can act:
+    - ``retry_hint`` on a *degraded free* read — telling it a paid ``richness='rich'`` retry
+      is available for this hard page (that is precisely when Firecrawl earns its cost).
+    - ``barrier: true`` when even a ``rich`` read is degraded/failed — free + paid both
+      exhausted, so the source is genuinely walled (the cue to honestly caveat, not keep trying).
+    """
     from ..depth.fetch_content import _fetch
 
     try:
         result = _fetch(url, allow_paid_fallback=rich)
     except Exception as exc:  # noqa: BLE001 — return a clean message, never crash the loop
-        return {"action": "read", "url": url, "error": str(exc)[:200]}
-    # Capture what the source said at read-time (no-op unless a profile run is
-    # collecting snapshots); the harness attaches it to the source ledger by URL.
-    if result.get("content"):
+        out = {"action": "read", "url": url, "error": str(exc)[:200]}
+        if rich:
+            out["barrier"] = True
+        else:
+            out["retry_hint"] = "free read failed on a hard page — retry richness='rich' (paid crawler)"
+        return out
+    # Only a GOOD extraction is a real deep read that grounds a claim. A thin/blocked bot-wall
+    # must NOT falsely ground — snapshot (the grounding signal) only on good content.
+    if result.get("content") and result.get("quality") == "good":
         snapshots.record(result.get("url", url), result["content"])
-    return {"action": "read", **result}
+    out = {"action": "read", **result}
+    if result.get("quality") != "good":
+        if rich:
+            out["barrier"] = True  # free + paid both degraded — a genuine wall
+        else:
+            out["retry_hint"] = (
+                f"extraction was '{result.get('quality')}', not a full read — retry this url with "
+                "richness='rich' for the paid crawler if this source matters"
+            )
+    return out
 
 
 def _search_web(query: str, kind: str, max_results: int) -> dict[str, Any]:

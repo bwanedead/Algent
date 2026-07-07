@@ -50,31 +50,41 @@ def _run(monkeypatch, outputs, state):
 
 
 def test_gauntlet_revises_until_grounded(monkeypatch) -> None:
-    # round 1 ungrounded (2 weak claims), round 2 clears -> stops at 2 rounds, promoted.
+    # round 1 ungrounded (2 weak claims), round 2 clears -> stops at 2 rounds, clean grounded.
     g, drafter, events = _run(
         monkeypatch, [_out("needs_deep_read", weak=2), _out("grounded", rev=2)],
         {"treatment": {"id": "trt_x"}, "profile": {"id": "prof_x", "revision": 1}})
     assert g["rounds"] == 2 and drafter.calls == 2 and g["promoted"] is True
-    assert g["initial_verdict"] == "needs_deep_read" and g["final_verdict"] == "grounded"
+    assert g["outcome"] == "grounded" and g["barriers"] == []
     assert g["initial_weak_claims"] == 2 and g["final_weak_claims"] == 0
     assert g["ending_profile_revision"] == 2   # enrich-back landed as the read cleared the floor
     assert any(et == "drafting_gauntlet.completed" for et, _ in events)
 
 
-def test_gauntlet_is_bounded_when_the_floor_never_clears(monkeypatch) -> None:
+def test_gauntlet_promotes_with_caveats_when_a_source_is_walled(monkeypatch) -> None:
+    # Never clears (source is walled) but drops no required evidence -> honest-barrier path:
+    # promotable with caveats, the wall reported, not an infinite loop.
     g, drafter, _ = _run(
-        monkeypatch, [_out("needs_deep_read", weak=1)],   # always ungrounded
+        monkeypatch, [_out("needs_deep_read", weak=1)],   # always ungrounded, no must-use missing
         {"treatment": {"id": "trt_x"}, "profile": {"id": "prof_x"}})
     assert g["rounds"] == dg.MAX_ROUNDS and drafter.calls == dg.MAX_ROUNDS
-    assert g["promoted"] is False and g["final_verdict"] == "needs_deep_read"
-    assert g["final_worklist"] == ["src_a"]   # honestly reports what's still unread
+    assert g["promoted"] is True and g["outcome"] == "grounded_with_caveats"
+    assert g["barriers"] == ["src_a"]   # the walled source, carried with an honest caveat
+
+
+def test_gauntlet_blocks_when_required_evidence_is_dropped(monkeypatch) -> None:
+    # Dropping a must-use item is a real, fixable omission — NOT excused by the barrier path.
+    g, _, _ = _run(
+        monkeypatch, [_out("drops_must_use", weak=1, missing=1)],
+        {"treatment": {"id": "trt_x"}, "profile": {"id": "prof_x"}})
+    assert g["promoted"] is False and g["outcome"] == "blocked_omission"
 
 
 def test_gauntlet_stops_at_one_round_when_grounded(monkeypatch) -> None:
     g, drafter, _ = _run(
         monkeypatch, [_out("grounded")],
         {"treatment": {"id": "trt_x"}, "profile": {"id": "prof_x"}})
-    assert g["rounds"] == 1 and drafter.calls == 1 and g["promoted"] is True
+    assert g["rounds"] == 1 and drafter.calls == 1 and g["promoted"] is True and g["outcome"] == "grounded"
 
 
 def test_gauntlet_no_input_is_not_promoted(monkeypatch) -> None:

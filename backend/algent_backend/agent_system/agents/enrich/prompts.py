@@ -19,7 +19,10 @@ ENRICH_BASE = (
     "revision. Stay tightly scoped to your assigned findings — do not sprawl. "
     "GROUNDING: snippets are for scouting only — any consequential claim you add (high or "
     "medium salience) must rest on a source you actually DEEP-READ (read_url) and record in "
-    "the source ledger; never persist snippet-derived evidence."
+    "the source ledger; never persist snippet-derived evidence. If a read comes back not-'good' "
+    "(a retry_hint appears), retry that url with richness='rich' (paid crawler); if it is walled "
+    "even then ('barrier'), do not persist it as confident — lower the status/salience or note "
+    "the barrier as an open question."
 )
 
 PRIMARY_SOURCE_DOCTRINE = (
