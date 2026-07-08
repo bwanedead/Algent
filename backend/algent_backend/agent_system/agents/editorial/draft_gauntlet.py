@@ -102,6 +102,7 @@ def build_drafting_gauntlet_graph(context: AgentRunContext) -> Any:
             final_weak_claims=len(report.get("weak_load_bearing", [])),
             final_must_use_missing=len(must_missing),
             barriers=barriers,
+            unverified_figures=report.get("unverified_figures", []),
             ending_profile_revision=int(profile.get("revision", 1) or 1),
             generated_at=datetime.now(UTC).isoformat(),
         )

@@ -80,6 +80,7 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
             article_title=str(draft.get("title", "")),
             word_count=int(draft.get("word_count", 0) or 0),
             barriers=draft_report.get("barriers", []),
+            unverified_figures=draft_report.get("unverified_figures", []),
             generated_at=datetime.now(UTC).isoformat(),
         )
         if context.artifacts is not None and draft:

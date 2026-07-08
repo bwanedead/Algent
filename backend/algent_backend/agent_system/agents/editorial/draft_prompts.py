@@ -55,6 +55,10 @@ addressable item ids). Your job:
    downgrade the certainty, and say plainly you could not independently verify beyond that).
    Following the scent as far as the sources allow and reporting the limit is honest; pretending
    is not.
+   AS-OF FOR VOLATILE FIGURES. For fast-moving numbers (live market odds, prices, poll shares),
+   carry the moment in the sentence — "as of June 26, Polymarket showed ~81%". A live page read
+   at two moments gives two true-but-different figures; a bare number silently drifts off the
+   evidence, and every figure you write must match the claim you cite for it.
 
 4. FEED BACK what you find — and RECORD THE SOURCES YOU READ. Put what you turned up into
    `additions` (a ProfileAdditions block), so nothing is wasted and the profile gets RICHER,

@@ -114,3 +114,16 @@ def test_overstatement_flags_non_confirmed_cited_claims() -> None:
     r = check_citations(_draft(["c1", "c2"]), _treatment([]), prof)
     assert r.overstatement_flags == ["c1"]     # contested claim flagged for hedging check
     assert r.verdict == "grounded"             # grounding is fine; hedging is the reviewer's job
+
+
+def test_unverified_figures_catches_prose_drifting_off_its_evidence() -> None:
+    # A cited claim says 81%; the prose says 83% — a live-source drift caught for free.
+    prof = _profile([_claim("c1", grounding="snapshotted"), _claim("c2", grounding="snapshotted")])
+    prof.claim_ledger[0].text = "Polymarket shows no change at 81%"
+    prof.claim_ledger[1].text = "core PCE rose 3.4%"
+    d = _draft(["c1", "c2"])
+    d.body = "The hold is priced at 83%, and core PCE is 3.4%."
+    r = check_citations(d, _treatment([]), prof)
+    assert "83%" in r.unverified_figures        # drifted off the evidence -> flagged
+    assert "3.4%" not in r.unverified_figures    # legitimately restated -> not flagged
+    assert "81%" not in r.unverified_figures     # the claim's number, absent from the prose

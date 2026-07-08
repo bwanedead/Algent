@@ -28,4 +28,5 @@ class EditorialPipelineReport(BaseModel):
     article_title: str = ""
     word_count: int = 0
     barriers: list[str] = Field(default_factory=list)  # walled sources carried with honest caveats
+    unverified_figures: list[str] = Field(default_factory=list)  # prose figures that drifted off the cited evidence
     generated_at: str = ""

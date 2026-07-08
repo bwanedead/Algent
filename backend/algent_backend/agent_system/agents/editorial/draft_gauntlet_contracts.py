@@ -42,5 +42,6 @@ class DraftingGauntletReport(BaseModel):
     final_weak_claims: int = 0
     final_must_use_missing: int = 0
     barriers: list[str] = Field(default_factory=list)  # walled sources carried with honest caveats
+    unverified_figures: list[str] = Field(default_factory=list)  # prose percentages not in any cited claim
     ending_profile_revision: int = 1               # enrich-back bumps this as reads land
     generated_at: str = ""

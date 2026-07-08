@@ -20,15 +20,27 @@ drafting gauntlet will use it as a promotion GATE (revise-until-grounded) once i
 
 from __future__ import annotations
 
+import re
 from typing import Literal
 
 from pydantic import BaseModel, Field
 
 from algent_backend.agent_system.agents.research.grounding import is_draft_citation_violation
-from algent_backend.agent_system.agents.research.profile import SignalProfile
+from algent_backend.agent_system.agents.research.profile import Claim, SignalProfile
 
 from .draft import ArticleDraft
 from .treatment import EditorialTreatment
+
+_PROSE_PCT = re.compile(r"\d+(?:\.\d+)?%")
+
+
+def unverified_prose_figures(body: str, cited_claims: list[Claim]) -> list[str]:
+    """Percentages in the prose that appear in NONE of the cited claims' text — a cheap,
+    deterministic catch for prose drifting off its own evidence (e.g. a live dashboard read at
+    two moments giving 83% vs 81%). Conservative: exact %-strings only, so false positives are
+    rare (a legitimately restated figure will match its claim)."""
+    claim_text = " ".join(c.text for c in cited_claims)
+    return [f for f in dict.fromkeys(_PROSE_PCT.findall(body)) if f not in claim_text]
 
 # The floor verdict, worst-first: dropping required evidence is worse than thin grounding.
 CitationVerdict = Literal["drops_must_use", "needs_deep_read", "grounded"]
@@ -50,6 +62,7 @@ class CitationReport(BaseModel):
     weak_load_bearing: list[str] = Field(default_factory=list)     # cited consequential claims NOT deep-read
     deep_read_worklist: list[str] = Field(default_factory=list)    # SOURCE ids behind the weak claims (the reads to do)
     overstatement_flags: list[str] = Field(default_factory=list)   # cited non-confirmed claims (reviewer must check hedging)
+    unverified_figures: list[str] = Field(default_factory=list)    # percentages in the prose not found in any cited claim
 
     def promotable(self) -> bool:
         """A draft clears the deterministic floor only when it carries its required evidence
@@ -94,6 +107,7 @@ def check_citations(
         if c.status != "confirmed":
             overstate.append(cid)
 
+    cited_objs = [claims_by_id[cid] for cid in draft.cited_claim_ids if cid in claims_by_id]
     verdict: CitationVerdict = (
         "drops_must_use" if missing else "needs_deep_read" if weak else "grounded"
     )
@@ -104,6 +118,7 @@ def check_citations(
         cited_claims=len(draft.cited_claim_ids), grounding_tally=tally,
         weak_load_bearing=weak, deep_read_worklist=list(dict.fromkeys(worklist)),
         overstatement_flags=overstate,
+        unverified_figures=unverified_prose_figures(draft.body, cited_objs),
     )
 
 

@@ -15,6 +15,7 @@ import re
 
 from algent_backend.agent_system.agents.research.profile import SignalProfile
 
+from .citations import unverified_prose_figures
 from .draft import ArticleDraft
 
 # Inline machine markers the drafter emits, e.g. "[clm_ab12, clm_cd34, src_ef56]".
@@ -32,6 +33,21 @@ def _clean_prose(body: str) -> str:
     return re.sub(r" {2,}", " ", _MARKER.sub("", body)).strip()
 
 
+def _capture_date(source) -> str:
+    """The date a source was captured (YYYY-MM-DD), for as-of anchoring on volatile sources."""
+    ca = (source.snapshot.captured_at if source.snapshot else "") or ""
+    return ca[:10]
+
+
+def _claim_asof(claim, sources: dict) -> str:
+    """The capture date behind a deep-read claim (for fast-moving figures)."""
+    for sid in claim.supported_by:
+        s = sources.get(sid)
+        if s and s.snapshot and s.snapshot.captured_at:
+            return s.snapshot.captured_at[:10]
+    return ""
+
+
 def render_published_article(draft: ArticleDraft, profile: SignalProfile) -> str:
     claims = {c.id: c for c in profile.claim_ledger}
     sources = {s.id: s for s in profile.source_ledger}
@@ -39,18 +55,20 @@ def render_published_article(draft: ArticleDraft, profile: SignalProfile) -> str
     cited_src_ids = set(draft.cited_source_ids) | {s for c in cited_claims for s in c.supported_by}
     cited_sources = [sources[s] for s in cited_src_ids if s in sources]
 
+    sources = {s.id: s for s in profile.source_ledger}
     out = [f"# {draft.title or '(untitled)'}"]
     if draft.standfirst:
         out += [f"*{draft.standfirst}*"]
-    out += ["", _clean_prose(draft.body), "", "---", *_appendix(draft, cited_sources, cited_claims)]
+    out += ["", _clean_prose(draft.body), "", "---",
+            *_appendix(draft, cited_sources, cited_claims, sources)]
     return "\n".join(out).rstrip() + "\n"
 
 
-def _appendix(draft: ArticleDraft, cited_sources: list, cited_claims: list) -> list[str]:
+def _appendix(draft: ArticleDraft, cited_sources: list, cited_claims: list, sources: dict) -> list[str]:
     out = [
         "## How we know this — sources & verification",
-        "_Optional. The receipts: what the piece rests on and how far we could verify it. Where a "
-        "wall stopped us we say so — you may be able to reach a source we could not._",
+        "_Optional. The receipts: what the piece rests on, when we captured it, and how far we could "
+        "verify each part — so you can judge for yourself, and perhaps reach a source we did not._",
         "",
     ]
     if draft.frame:
@@ -58,25 +76,47 @@ def _appendix(draft: ArticleDraft, cited_sources: list, cited_claims: list) -> l
 
     out.append("**Sources**")
     for s in sorted(cited_sources, key=lambda s: (s.snapshot is None, s.source_type)):
-        access = "read in full" if s.snapshot else "summary only — we could not access the full text"
+        if s.snapshot:
+            d = _capture_date(s)
+            access = "read in full" + (f" · captured {d}" if d else "")
+        else:
+            access = "full text not obtained — used its summary"
         out.append(f"- ({s.source_type}) {s.title or s.url} — {s.url}  ·  _{access}_")
     out.append("")
 
     out.append("**Claims, and how far we tracked each down**")
     for c in cited_claims:
-        out.append(f"- _[{c.status}]_ {c.text}  ·  {_GROUNDING_WORDS.get(c.grounding, c.grounding)}")
+        asof = _claim_asof(c, sources) if c.grounding == "snapshotted" else ""
+        stamp = f" (as of {asof})" if asof else ""
+        out.append(f"- _[{c.status}]_ {c.text}  ·  {_GROUNDING_WORDS.get(c.grounding, c.grounding)}{stamp}")
     out.append("")
 
-    walls = [s for s in cited_sources if s.snapshot is None]
+    out += _limits(draft, cited_sources, cited_claims)
+    return out
+
+
+def _limits(draft: ArticleDraft, cited_sources: list, cited_claims: list) -> list[str]:
+    """The honest limits: sources we didn't get in full, our-synthesis claims, and any figures
+    that drifted off the cited evidence — what to double-check."""
+    no_full = [s for s in cited_sources if s.snapshot is None]
     synth = [c for c in cited_claims if c.grounding == "unsourced"]
-    if walls or synth:
-        out.append("**Where we hit a limit**")
-        for s in walls:
-            out.append(
-                f"- We could not fully access **{s.title or s.url}** ({s.url}); claims resting on it "
-                "are taken from its summary — you may be able to reach it directly."
-            )
-        for c in synth:
-            out.append(f"- \"{c.text}\" is our reading across the evidence, not a single sourced fact.")
-        out.append("")
+    figures = unverified_prose_figures(draft.body, cited_claims)
+    if not (no_full or synth or figures):
+        return []
+    out = ["**Where we hit a limit / what to double-check**"]
+    for s in no_full:
+        # Neutral: snapshot-less can mean "walled" OR "not pursued" — do not claim effort we may
+        # not have spent. Say what is true: we did not obtain the full text.
+        out.append(
+            f"- We did not obtain the full text of **{s.title or s.url}** ({s.url}); claims resting "
+            "on it are from its summary — you may be able to reach it directly."
+        )
+    for c in synth:
+        out.append(f"- \"{c.text}\" is our reading across the evidence, not a single sourced fact.")
+    if figures:
+        out.append(
+            f"- Figures in the piece we could not match to the cited evidence (double-check these, "
+            f"and note live sources move): {', '.join(figures)}."
+        )
+    out.append("")
     return out
