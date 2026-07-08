@@ -21,13 +21,16 @@ from contextlib import contextmanager
 from datetime import UTC, datetime
 from typing import Any
 
-_EXCERPT_CHARS = 300
+# The captured excerpt is tamper-evidence AND the corpus the citation harness verifies figures
+# against (a figure a source really carried is verified-at-capture). News ledes carry the key
+# numbers, so capture enough to cover them — not the whole page (that would bloat the profile).
+_EXCERPT_CHARS = 1200
 
 _active: contextvars.ContextVar[bool] = contextvars.ContextVar("snapshots_active", default=False)
 # Default {} is never mutated: record() no-ops unless active, and scoped() always
 # installs a fresh dict before activating.
 _store: contextvars.ContextVar[dict[str, dict[str, Any]]] = contextvars.ContextVar(
-    "snapshots_store", default={}
+    "snapshots_store", default={}  # noqa: B039 — never mutated; scoped() installs a fresh dict
 )
 
 

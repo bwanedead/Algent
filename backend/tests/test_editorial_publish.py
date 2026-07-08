@@ -60,7 +60,8 @@ def test_published_view_cleans_prose_and_appends_receipts() -> None:
     assert "Where we hit a limit" in md
     assert "did not obtain the full text" in md and "reuters.com" in md
     assert "our reading across the evidence" in md and "Bitcoin tracks Fed pricing" in md
-    assert "double-check these" in md and "83%" in md   # the figure that drifted off the evidence
+    # honest framing — never asserts the figure is wrong, points the reader at the source
+    assert "could not match to our stored evidence" in md and "83%" in md
 
 
 def test_appendix_is_silent_when_everything_is_clean() -> None:

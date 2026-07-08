@@ -68,6 +68,10 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
             "grounded": "publishable",
             "grounded_with_caveats": "publishable_pending_caveat_check",
         }.get(outcome, "blocked")
+        # A drifted/unverified figure is also an unverified promise — fold it into the pending
+        # status so `status` stays the single honest signal for the approval surface.
+        if status == "publishable" and draft_report.get("unverified_figures"):
+            status = "publishable_pending_caveat_check"
 
         report = EditorialPipelineReport(
             profile_id=str(profile.get("id", "")),

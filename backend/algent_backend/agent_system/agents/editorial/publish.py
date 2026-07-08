@@ -55,7 +55,6 @@ def render_published_article(draft: ArticleDraft, profile: SignalProfile) -> str
     cited_src_ids = set(draft.cited_source_ids) | {s for c in cited_claims for s in c.supported_by}
     cited_sources = [sources[s] for s in cited_src_ids if s in sources]
 
-    sources = {s.id: s for s in profile.source_ledger}
     out = [f"# {draft.title or '(untitled)'}"]
     if draft.standfirst:
         out += [f"*{draft.standfirst}*"]
@@ -91,16 +90,17 @@ def _appendix(draft: ArticleDraft, cited_sources: list, cited_claims: list, sour
         out.append(f"- _[{c.status}]_ {c.text}  ·  {_GROUNDING_WORDS.get(c.grounding, c.grounding)}{stamp}")
     out.append("")
 
-    out += _limits(draft, cited_sources, cited_claims)
+    out += _limits(draft, cited_sources, cited_claims, sources)
     return out
 
 
-def _limits(draft: ArticleDraft, cited_sources: list, cited_claims: list) -> list[str]:
+def _limits(draft: ArticleDraft, cited_sources: list, cited_claims: list, sources: dict) -> list[str]:
     """The honest limits: sources we didn't get in full, our-synthesis claims, and any figures
-    that drifted off the cited evidence — what to double-check."""
+    that don't appear in the cited evidence — what to double-check."""
     no_full = [s for s in cited_sources if s.snapshot is None]
     synth = [c for c in cited_claims if c.grounding == "unsourced"]
-    figures = unverified_prose_figures(draft.body, cited_claims)
+    prose = " ".join(x for x in (draft.title, draft.standfirst, draft.body) if x)
+    figures = unverified_prose_figures(prose, cited_claims, sources)
     if not (no_full or synth or figures):
         return []
     out = ["**Where we hit a limit / what to double-check**"]
@@ -114,9 +114,11 @@ def _limits(draft: ArticleDraft, cited_sources: list, cited_claims: list) -> lis
     for c in synth:
         out.append(f"- \"{c.text}\" is our reading across the evidence, not a single sourced fact.")
     if figures:
+        # Honest about the two possibilities: a source we read may state the figure exactly (worth
+        # confirming there), OR a live source moved since. Never asserts the figure is wrong.
         out.append(
-            f"- Figures in the piece we could not match to the cited evidence (double-check these, "
-            f"and note live sources move): {', '.join(figures)}."
+            f"- Figures we could not match to our stored evidence — worth confirming against the "
+            f"source (which may state them exactly), and note live sources move: {', '.join(figures)}."
         )
     out.append("")
     return out

@@ -34,13 +34,28 @@ from .treatment import EditorialTreatment
 _PROSE_PCT = re.compile(r"\d+(?:\.\d+)?%")
 
 
-def unverified_prose_figures(body: str, cited_claims: list[Claim]) -> list[str]:
-    """Percentages in the prose that appear in NONE of the cited claims' text — a cheap,
-    deterministic catch for prose drifting off its own evidence (e.g. a live dashboard read at
-    two moments giving 83% vs 81%). Conservative: exact %-strings only, so false positives are
-    rare (a legitimately restated figure will match its claim)."""
-    claim_text = " ".join(c.text for c in cited_claims)
-    return [f for f in dict.fromkeys(_PROSE_PCT.findall(body)) if f not in claim_text]
+def unverified_prose_figures(prose: str, cited_claims: list[Claim], sources_by_id: dict) -> list[str]:
+    """Percentages in the prose that appear NOWHERE in the cited evidence — a cheap, deterministic
+    catch for prose drifting off its own evidence (e.g. a live dashboard read at two moments giving
+    83% vs 81%).
+
+    The corpus is the cited claims' text PLUS the captured excerpt of those claims' OWN sources: a
+    figure a deep-read source really carried is verified-at-capture, even if the ledger claim
+    summarized the number out — that is "more specific than our summary", NOT drift. The corpus is
+    restricted to the cited claims' sources (not the whole ledger) so a numbers-dense page can't
+    coincidentally absolve a genuinely drifted figure.
+
+    Deliberately conservative: percentages only (dollar amounts/counts fall to the semantic judge),
+    and a plain substring test (so "8%" can hide inside "78%") — it errs toward MISSING a drift, not
+    inventing one; do not "fix" that into a false-positive generator.
+    """
+    corpus = " ".join(c.text for c in cited_claims)
+    for c in cited_claims:
+        for sid in c.supported_by:
+            s = sources_by_id.get(sid)
+            if s and s.snapshot and s.snapshot.excerpt:
+                corpus += " " + s.snapshot.excerpt
+    return [f for f in dict.fromkeys(_PROSE_PCT.findall(prose)) if f not in corpus]
 
 # The floor verdict, worst-first: dropping required evidence is worse than thin grounding.
 CitationVerdict = Literal["drops_must_use", "needs_deep_read", "grounded"]
@@ -108,6 +123,8 @@ def check_citations(
             overstate.append(cid)
 
     cited_objs = [claims_by_id[cid] for cid in draft.cited_claim_ids if cid in claims_by_id]
+    sources_by_id = {s.id: s for s in profile.source_ledger}
+    prose = " ".join(x for x in (draft.title, draft.standfirst, draft.body) if x)  # all read prose
     verdict: CitationVerdict = (
         "drops_must_use" if missing else "needs_deep_read" if weak else "grounded"
     )
@@ -118,7 +135,7 @@ def check_citations(
         cited_claims=len(draft.cited_claim_ids), grounding_tally=tally,
         weak_load_bearing=weak, deep_read_worklist=list(dict.fromkeys(worklist)),
         overstatement_flags=overstate,
-        unverified_figures=unverified_prose_figures(draft.body, cited_objs),
+        unverified_figures=unverified_prose_figures(prose, cited_objs, sources_by_id),
     )
 
 
