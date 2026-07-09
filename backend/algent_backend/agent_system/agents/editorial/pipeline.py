@@ -22,6 +22,7 @@ from algent_backend.agent_system.agents.research.profile import SignalProfile
 from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.context import AgentRunContext
 
+from .caveat_spec import build_graph as build_caveat_reviewer
 from .draft import ArticleDraft
 from .draft_gauntlet import build_drafting_gauntlet_graph
 from .draft_store import render_draft
@@ -61,17 +62,19 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
         enriched_profile = draft_out.get("profile") or profile   # final grounding state for the appendix
         draft_report = draft_out.get("gauntlet") or {}
 
+        # 3. v3b — verify the flagged promises are actually kept in the prose (the last honesty
+        # gate). Cheap: nano, and free when nothing is flagged. Its pass is what earns "publishable".
+        caveat = build_caveat_reviewer(context).invoke(
+            {"draft": draft, "profile": enriched_profile}, config).get("caveat_check") or {}
+        caveat_verdict = str(caveat.get("verdict", "verified"))
+
         outcome = str(draft_report.get("outcome", ""))
-        # A clean grounded piece is publishable; a caveated one is publishable ONLY once a human
-        # (or v3b) confirms the prose actually carries the hedge — say so honestly.
-        status = {
-            "grounded": "publishable",
-            "grounded_with_caveats": "publishable_pending_caveat_check",
-        }.get(outcome, "blocked")
-        # A drifted/unverified figure is also an unverified promise — fold it into the pending
-        # status so `status` stays the single honest signal for the approval surface.
-        if status == "publishable" and draft_report.get("unverified_figures"):
-            status = "publishable_pending_caveat_check"
+        if outcome == "blocked_omission":
+            status = "blocked"                # dropped required evidence — a real block
+        elif caveat_verdict == "needs_hedging":
+            status = "needs_hedging"          # the prose doesn't keep a flagged promise — hold
+        else:
+            status = "publishable"            # grounded (or honestly caveated) AND caveats verified
 
         report = EditorialPipelineReport(
             profile_id=str(profile.get("id", "")),
@@ -79,8 +82,10 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
             treatment_verdict=str(plan_report.get("final_verdict", "")),
             draft_id=str(draft.get("id", "")),
             draft_outcome=outcome,
-            publishable=bool(draft_report.get("promoted", False)),
+            publishable=status == "publishable",
             status=status,
+            caveat_verdict=caveat_verdict,
+            caveat_findings=len(caveat.get("findings", [])),
             article_title=str(draft.get("title", "")),
             word_count=int(draft.get("word_count", 0) or 0),
             barriers=draft_report.get("barriers", []),
@@ -111,8 +116,9 @@ def _preview(r: EditorialPipelineReport) -> dict[str, Any]:
         "title": f"article: {r.article_title[:70] or '(untitled)'}",
         "summary": (
             f"{r.word_count} words | status: {r.status} | draft: {r.draft_outcome} | "
-            f"treatment: {r.treatment_verdict}"
-            + (f" | walls caveated: {r.barriers}" if r.barriers else "")
+            f"caveats: {r.caveat_verdict}"
+            + (f" ({r.caveat_findings} to fix)" if r.caveat_findings else "")
+            + (f" | walls: {r.barriers}" if r.barriers else "")
         ),
         "items": [f"treatment: {r.treatment_id}", f"draft: {r.draft_id}"],
         "link": "../artifacts/article.md",

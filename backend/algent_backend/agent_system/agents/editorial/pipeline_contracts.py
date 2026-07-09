@@ -19,12 +19,12 @@ class EditorialPipelineReport(BaseModel):
     treatment_verdict: str = ""      # planning gauntlet's final verdict (promoted | needs_revision | …)
     draft_id: str = ""
     draft_outcome: str = ""          # grounded | grounded_with_caveats | blocked_omission
-    publishable: bool = False        # the draft cleared the floor (grounded or grounded_with_caveats)
-    # Honest status for the human approval surface. The WALL is deterministically proven, but the
-    # CAVEAT is still doctrine (nothing yet verifies the prose actually hedges a walled source at
-    # its ceiling — that is v3b's first lane). So a caveated piece is publishable *pending* that
-    # check, and we say so rather than implying it's fully cleared.
-    status: str = ""                 # publishable | publishable_pending_caveat_check | blocked
+    publishable: bool = False        # status == "publishable"
+    # The single honest signal for the human approval surface. v3b (the caveat reviewer) verifies
+    # the prose actually keeps its flagged promises; its pass earns "publishable", its fail holds.
+    status: str = ""                 # publishable | needs_hedging | blocked
+    caveat_verdict: str = ""         # v3b: verified | needs_hedging
+    caveat_findings: int = 0         # how many places the prose failed to hedge (0 = clean)
     article_title: str = ""
     word_count: int = 0
     barriers: list[str] = Field(default_factory=list)  # walled sources carried with honest caveats

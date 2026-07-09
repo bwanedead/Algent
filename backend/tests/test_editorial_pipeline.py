@@ -21,25 +21,41 @@ def _ctx(events):
     )
 
 
-def test_pipeline_chains_planning_then_drafting_into_an_article(monkeypatch) -> None:
+def _wire(monkeypatch, plan_out, draft_out, caveat_out):
+    monkeypatch.setattr(pl, "build_planning_gauntlet_graph", lambda ctx: _Graph(plan_out))
+    monkeypatch.setattr(pl, "build_drafting_gauntlet_graph", lambda ctx: _Graph(draft_out))
+    monkeypatch.setattr(pl, "build_caveat_reviewer", lambda ctx: _Graph(caveat_out))
+
+
+def test_caveated_piece_becomes_publishable_once_caveats_verified(monkeypatch) -> None:
     plan_out = {"treatment": {"id": "trt_x"}, "gauntlet": {"final_verdict": "needs_revision"}}
     draft_out = {
         "draft": {"id": "drf_x", "title": "A real Fed piece", "word_count": 420},
         "gauntlet": {"outcome": "grounded_with_caveats", "promoted": True, "barriers": ["src_a"]},
     }
-    monkeypatch.setattr(pl, "build_planning_gauntlet_graph", lambda ctx: _Graph(plan_out))
-    monkeypatch.setattr(pl, "build_drafting_gauntlet_graph", lambda ctx: _Graph(draft_out))
+    _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified", "findings": []}})
 
     events: list = []
     out = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({"profile": {"id": "prof_x"}})
 
     r = out["pipeline"]
     assert r["treatment_id"] == "trt_x" and r["draft_id"] == "drf_x"
-    assert r["article_title"] == "A real Fed piece" and r["word_count"] == 420
-    assert r["draft_outcome"] == "grounded_with_caveats" and r["publishable"] is True
-    assert r["status"] == "publishable_pending_caveat_check"   # honest: the caveat isn't verified yet
-    assert r["barriers"] == ["src_a"] and r["treatment_verdict"] == "needs_revision"
+    assert r["draft_outcome"] == "grounded_with_caveats"
+    # v3b verified the caveats are actually in the prose -> the pending promise is now cleared.
+    assert r["status"] == "publishable" and r["publishable"] is True
+    assert r["caveat_verdict"] == "verified" and r["barriers"] == ["src_a"]
     assert any(et == "editorial_pipeline.completed" for et, _ in events)
+
+
+def test_unhedged_prose_holds_the_piece(monkeypatch) -> None:
+    plan_out = {"treatment": {"id": "trt_x"}, "gauntlet": {}}
+    draft_out = {"draft": {"id": "drf_x"}, "gauntlet": {"outcome": "grounded_with_caveats", "barriers": ["s"]}}
+    caveat_out = {"caveat_check": {"verdict": "needs_hedging", "findings": [{"id": "cav_01"}]}}
+    _wire(monkeypatch, plan_out, draft_out, caveat_out)
+
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "prof_x"}})["pipeline"]
+    assert r["status"] == "needs_hedging" and r["publishable"] is False
+    assert r["caveat_verdict"] == "needs_hedging" and r["caveat_findings"] == 1
 
 
 def test_pipeline_no_profile_is_not_publishable(monkeypatch) -> None:
