@@ -1,0 +1,95 @@
+/* Ohmega Monster — information-first. Plain, terminal/wiki feel. No flash. */
+
+:root {
+  --bg: #f7f7f4;          /* off-white default */
+  --fg: #1a1a1a;
+  --muted: #6b6b6b;
+  --rule: #e0e0dc;
+  --link: #1a1a1a;
+  --accent: #b0402f;      /* one restrained accent (used sparingly) */
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0e0e0e;
+  --fg: #e8e8e6;
+  --muted: #8a8a86;
+  --rule: #262626;
+  --link: #e8e8e6;
+  --accent: #e07a63;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e0e0e; --fg: #e8e8e6; --muted: #8a8a86; --rule: #262626; --link: #e8e8e6; --accent: #e07a63;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); }
+
+body {
+  font-family: var(--sans);
+  line-height: 1.65;
+  font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+
+/* ── chrome: mono, terminal-flavored ── */
+.masthead { border-bottom: 1px solid var(--rule); }
+.masthead .wrap { display: flex; align-items: baseline; justify-content: space-between; padding-top: 18px; padding-bottom: 16px; }
+.brand { font-family: var(--mono); font-weight: 600; letter-spacing: 0.02em; text-decoration: none; color: var(--fg); font-size: 18px; }
+.brand .dot { color: var(--accent); }
+.tagline { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+
+.themebtn { font-family: var(--mono); font-size: 12px; background: none; border: 1px solid var(--rule); color: var(--muted); padding: 3px 8px; cursor: pointer; border-radius: 3px; }
+.themebtn:hover { color: var(--fg); border-color: var(--muted); }
+
+footer { border-top: 1px solid var(--rule); margin-top: 64px; }
+footer .wrap { font-family: var(--mono); font-size: 12px; color: var(--muted); padding: 20px; }
+
+/* ── home: a dense wiki/terminal index ── */
+.feed { list-style: none; padding: 0; margin: 28px 0; }
+.feed li { padding: 16px 0; border-bottom: 1px solid var(--rule); }
+.feed a { text-decoration: none; color: var(--fg); }
+.feed a:hover .h { text-decoration: underline; text-decoration-color: var(--accent); }
+.feed .meta { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+.feed .h { font-family: var(--serif); font-size: 20px; line-height: 1.3; }
+.feed .dek { color: var(--muted); font-size: 15px; margin-top: 4px; }
+
+/* ── article ── */
+article { margin: 32px 0; }
+article h1 { font-family: var(--serif); font-size: 30px; line-height: 1.2; margin: 0 0 10px; }
+article .dek { font-family: var(--serif); font-style: italic; color: var(--muted); font-size: 19px; line-height: 1.4; margin: 0 0 18px; }
+article .byline { font-family: var(--mono); font-size: 12px; color: var(--muted); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 8px 0; margin-bottom: 24px; }
+.prose { font-size: 18px; }
+.prose p { margin: 0 0 18px; }
+.prose a { color: var(--link); text-decoration: underline; text-decoration-color: var(--accent); }
+.prose h2 { font-family: var(--serif); font-size: 22px; margin: 32px 0 12px; }
+.prose blockquote { border-left: 2px solid var(--accent); margin: 0 0 18px; padding-left: 16px; color: var(--muted); }
+.prose code { font-family: var(--mono); font-size: 0.85em; background: var(--rule); padding: 1px 4px; border-radius: 3px; }
+.prose img { max-width: 100%; height: auto; }
+
+/* ── the receipts: collapsible, monospace, unmistakably "the record" ── */
+.receipts { margin-top: 48px; border: 1px solid var(--rule); border-radius: 4px; }
+.receipts > summary { font-family: var(--mono); font-size: 13px; cursor: pointer; padding: 14px 16px; color: var(--muted); list-style: none; }
+.receipts > summary::-webkit-details-marker { display: none; }
+.receipts > summary:hover { color: var(--fg); }
+.receipts[open] > summary { border-bottom: 1px solid var(--rule); color: var(--fg); }
+.receipts .body { font-family: var(--mono); font-size: 13px; line-height: 1.6; padding: 8px 16px 16px; }
+.receipts .body h2 { display: none; }
+.receipts .body p { margin: 10px 0; }
+.receipts .body a { color: var(--link); word-break: break-all; }
+
+.status { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); border: 1px solid var(--rule); padding: 1px 5px; border-radius: 3px; }
+
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  article h1 { font-size: 25px; }
+  .prose { font-size: 17px; }
+}

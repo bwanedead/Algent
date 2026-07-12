@@ -151,8 +151,8 @@ venv.bak/
 # Rope project settings
 .ropeproject
 
-# mkdocs documentation
-/site
+# mkdocs documentation (unused; `/site` freed for the newsroom site — Ohmega Monster — which
+# IS tracked. Its own build output is ignored via site/.gitignore.)
 
 # mypy
 .mypy_cache/
