@@ -21,9 +21,10 @@ def _ctx(events):
     )
 
 
-def _wire(monkeypatch, plan_out, draft_out, caveat_out):
+def _wire(monkeypatch, plan_out, draft_out, caveat_out, headline_out=None):
     monkeypatch.setattr(pl, "build_planning_gauntlet_graph", lambda ctx: _Graph(plan_out))
     monkeypatch.setattr(pl, "build_drafting_gauntlet_graph", lambda ctx: _Graph(draft_out))
+    monkeypatch.setattr(pl, "build_headline_writer", lambda ctx: _Graph(headline_out or {"headline": {}}))
     monkeypatch.setattr(pl, "build_caveat_reviewer", lambda ctx: _Graph(caveat_out))
 
 
@@ -45,6 +46,18 @@ def test_caveated_piece_becomes_publishable_once_caveats_verified(monkeypatch) -
     assert r["status"] == "publishable" and r["publishable"] is True
     assert r["caveat_verdict"] == "verified" and r["barriers"] == ["src_a"]
     assert any(et == "editorial_pipeline.completed" for et, _ in events)
+
+
+def test_pipeline_applies_the_truthful_headline(monkeypatch) -> None:
+    plan_out = {"treatment": {"id": "trt_x"}, "gauntlet": {}}
+    draft_out = {"draft": {"id": "drf_x", "title": "working title", "word_count": 400},
+                 "gauntlet": {"outcome": "grounded", "promoted": True}}
+    headline_out = {"headline": {"title": "Fed holds, hike tail still live", "standfirst": "the nuance"}}
+    _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}}, headline_out)
+
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "prof_x"}})["pipeline"]
+    assert r["article_title"] == "Fed holds, hike tail still live"   # retitled from the working title
+    assert r["status"] == "publishable"
 
 
 def test_unhedged_prose_holds_the_piece(monkeypatch) -> None:

@@ -27,6 +27,7 @@ from .draft import ArticleDraft
 from .draft_gauntlet import build_drafting_gauntlet_graph
 from .draft_store import render_draft
 from .gauntlet import build_planning_gauntlet_graph
+from .headline_spec import build_graph as build_headline_writer
 from .pipeline_contracts import EditorialPipelineReport
 from .publish import render_published_article
 
@@ -62,7 +63,13 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
         enriched_profile = draft_out.get("profile") or profile   # final grounding state for the appendix
         draft_report = draft_out.get("gauntlet") or {}
 
-        # 3. v3b — verify the flagged promises are actually kept in the prose (the last honesty
+        # 3. headline — retitle from the FINAL prose, per headline-guidance.md (truthful, no clickbait).
+        if draft:
+            hl = build_headline_writer(context).invoke({"draft": draft}, config).get("headline") or {}
+            if hl.get("title"):
+                draft = {**draft, "title": hl["title"], "standfirst": hl.get("standfirst") or draft.get("standfirst", "")}
+
+        # 4. v3b — verify the flagged promises are actually kept in the prose (the last honesty
         # gate). Cheap: nano, and free when nothing is flagged. Its pass is what earns "publishable".
         caveat = build_caveat_reviewer(context).invoke(
             {"draft": draft, "profile": enriched_profile}, config).get("caveat_check") or {}

@@ -44,6 +44,7 @@ def default_agent_registry() -> AgentRegistry:
     from .editorial.draft_gauntlet_spec import SPEC as drafting_gauntlet_spec
     from .editorial.draft_spec import SPEC as article_drafter_spec
     from .editorial.gauntlet_spec import SPEC as planning_gauntlet_spec
+    from .editorial.headline_spec import SPEC as headline_writer_spec
     from .editorial.pipeline_spec import SPEC as editorial_pipeline_spec
     from .editorial.review_spec import SPEC as treatment_reviewer_spec
     from .editorial.spec import SPEC as editorial_planner_spec
@@ -69,6 +70,7 @@ def default_agent_registry() -> AgentRegistry:
     registry.register(planning_gauntlet_spec)
     registry.register(article_drafter_spec)
     registry.register(caveat_reviewer_spec)
+    registry.register(headline_writer_spec)
     registry.register(drafting_gauntlet_spec)
     registry.register(editorial_pipeline_spec)
     registry.register(enrich_primary_source_spec)
