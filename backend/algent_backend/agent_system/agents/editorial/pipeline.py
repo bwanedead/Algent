@@ -22,6 +22,7 @@ from algent_backend.agent_system.agents.research.profile import SignalProfile
 from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.context import AgentRunContext
 
+from .analytics_spec import build_graph as build_analytics_router
 from .caveat_spec import build_graph as build_caveat_reviewer
 from .draft import ArticleDraft
 from .draft_gauntlet import build_drafting_gauntlet_graph
@@ -75,6 +76,11 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
             {"draft": draft, "profile": enriched_profile}, config).get("caveat_check") or {}
         caveat_verdict = str(caveat.get("verdict", "verified"))
 
+        # 5. analytics routing — assess whether a chart/table/insight/illustration would make the
+        # story clearer, emitting grounded requests. The (sandboxed) worker fulfills them later.
+        analytics = build_analytics_router(context).invoke(
+            {"profile": enriched_profile}, config).get("analytics_plan") or {}
+
         outcome = str(draft_report.get("outcome", ""))
         if outcome == "blocked_omission":
             status = "blocked"                # dropped required evidence — a real block
@@ -97,6 +103,8 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
             word_count=int(draft.get("word_count", 0) or 0),
             barriers=draft_report.get("barriers", []),
             unverified_figures=draft_report.get("unverified_figures", []),
+            analytics_warranted=bool(analytics.get("warranted")),
+            analytics_count=len(analytics.get("requests", [])),
             generated_at=datetime.now(UTC).isoformat(),
         )
         if context.artifacts is not None and draft:

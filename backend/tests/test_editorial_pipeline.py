@@ -21,11 +21,12 @@ def _ctx(events):
     )
 
 
-def _wire(monkeypatch, plan_out, draft_out, caveat_out, headline_out=None):
+def _wire(monkeypatch, plan_out, draft_out, caveat_out, headline_out=None, analytics_out=None):
     monkeypatch.setattr(pl, "build_planning_gauntlet_graph", lambda ctx: _Graph(plan_out))
     monkeypatch.setattr(pl, "build_drafting_gauntlet_graph", lambda ctx: _Graph(draft_out))
     monkeypatch.setattr(pl, "build_headline_writer", lambda ctx: _Graph(headline_out or {"headline": {}}))
     monkeypatch.setattr(pl, "build_caveat_reviewer", lambda ctx: _Graph(caveat_out))
+    monkeypatch.setattr(pl, "build_analytics_router", lambda ctx: _Graph(analytics_out or {"analytics_plan": {}}))
 
 
 def test_caveated_piece_becomes_publishable_once_caveats_verified(monkeypatch) -> None:

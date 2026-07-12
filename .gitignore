@@ -236,6 +236,10 @@ backend/ingestion_data/
 # Signal-profile store (t2 assets written by ProfileStore) — never committed
 backend/profile_store/
 
+# Analytics worker sandbox — transient produced artifacts (the AGENTS.md doctrine IS tracked)
+/analytics_workspace/*
+!/analytics_workspace/AGENTS.md
+
 # Editorial-treatment store (frame+molecule assets written by TreatmentStore) — never committed
 backend/treatment_store/
 
