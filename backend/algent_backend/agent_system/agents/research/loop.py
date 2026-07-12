@@ -28,6 +28,7 @@ from algent_backend.agent_system.tools.sourcing.search import policy
 from .assembly import finalize_profile
 from .briefing import render_briefing
 from .grounding import grounding_gap
+from .leads import JsonLeadStore, backfeed_leads
 from .messages import build_vector_message
 from .profile import SignalProfile
 from .store import JsonProfileStore
@@ -122,6 +123,10 @@ def _finish(
         JsonProfileStore().save(profile)
     except Exception:  # noqa: BLE001 — a store hiccup must not fail an otherwise-good run
         pass
+    # Backfeed: fold any adjacent leads this research noticed into the discovery queue (content-
+    # addressed dedup + provenance), so the newsroom crowdsources its own organic ideas.
+    if profile.derived_leads:
+        backfeed_leads(profile.derived_leads, stage=STAGE, store=JsonLeadStore())
     link = None
     if context.artifacts is not None:
         context.artifacts.write_json(ARTIFACT_NAME, profile.model_dump())
