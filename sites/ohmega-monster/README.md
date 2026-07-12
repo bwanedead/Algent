@@ -10,7 +10,7 @@ framework leaves the door open for dynamic features later (search, charts, an ap
 ## Run locally
 
 ```bash
-cd site
+cd sites/ohmega-monster
 npm install        # first time only
 npm run dev        # http://localhost:3000
 ```
@@ -55,6 +55,6 @@ build. Recommended: publish from a dedicated branch (e.g. `publish`) that Vercel
 
 ## Deploy (Vercel)
 
-1. Import this repo into Vercel; set the **Root Directory** to `site/`.
+1. Import this repo into Vercel; set the **Root Directory** to `sites/ohmega-monster/`.
 2. Framework preset: **Next.js** (auto-detected). Build command / output are the defaults.
 3. Point the production deployment at your publish branch, and add the domain `ohmega.monster`.
