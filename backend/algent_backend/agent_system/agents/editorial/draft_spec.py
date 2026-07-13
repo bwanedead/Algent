@@ -25,7 +25,7 @@ RUNTIME = "langgraph"
 FAMILY = "newsroom"
 TOOL_IDS = (WEB_SEARCH_TOOL_ID,)
 # Free channels + paid `rich` for the occasional blocked primary that sharpens the piece.
-SEARCH_CHANNELS = (policy.KEYWORD, policy.SEMANTIC, policy.READ, policy.RICH)
+SEARCH_CHANNELS = (policy.KEYWORD, policy.SEMANTIC, policy.READ, policy.RICH, policy.X)
 PAID_BUDGET = 4          # lighter than research — drafting is precision, not discovery
 COST_CAP_USD = 1.00
 

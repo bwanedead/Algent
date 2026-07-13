@@ -103,7 +103,8 @@ def _search(
         refusal = _spend_paid(policy.X)
         if refusal is not None:
             return refusal
-        return {"source": "x", "error": "x search is not wired yet; use source='web' for now"}
+        from .x_search import x_recent_search
+        return {"action": "search", "kind": "x", **x_recent_search(query, max_results)}
 
     channel = policy.SEMANTIC if kind == "semantic" else policy.KEYWORD
     if not policy.is_allowed(channel):

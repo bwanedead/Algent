@@ -22,7 +22,7 @@ from .prompts import PRIMARY_SOURCE_PROMPT
 AGENT_ID = "enrich_primary_source"
 LANE = "primary_source"
 TOOL_IDS = (WEB_SEARCH_TOOL_ID,)
-SEARCH_CHANNELS = (policy.KEYWORD, policy.SEMANTIC, policy.READ, policy.RICH)
+SEARCH_CHANNELS = (policy.KEYWORD, policy.SEMANTIC, policy.READ, policy.RICH, policy.X)
 PAID_BUDGET = 6
 COST_CAP_USD = 1.00
 

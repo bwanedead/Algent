@@ -25,8 +25,8 @@ AGENT_ID = "signal_profile"
 RUNTIME = "langgraph"
 FAMILY = "newsroom"
 TOOL_IDS = (WEB_SEARCH_TOOL_ID,)
-# Free channels + paid `rich` for hard/blocked pages that matter. No X (not wired).
-SEARCH_CHANNELS = (policy.KEYWORD, policy.SEMANTIC, policy.READ, policy.RICH)
+# Free channels + paid `rich` for hard/blocked pages + `x` for social/real-time signal.
+SEARCH_CHANNELS = (policy.KEYWORD, policy.SEMANTIC, policy.READ, policy.RICH, policy.X)
 PAID_BUDGET = 6          # hard ceiling on paid contacts per run
 COST_CAP_USD = 1.00      # hard ceiling on estimated run spend; the loop auto-halts at it
 

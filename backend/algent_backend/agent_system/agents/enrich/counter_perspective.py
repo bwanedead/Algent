@@ -24,7 +24,7 @@ from .prompts import COUNTER_PERSPECTIVE_PROMPT
 AGENT_ID = "enrich_counter_perspective"
 LANE = "counter_perspective"
 TOOL_IDS = (WEB_SEARCH_TOOL_ID,)
-SEARCH_CHANNELS = (policy.KEYWORD, policy.SEMANTIC, policy.READ, policy.RICH)
+SEARCH_CHANNELS = (policy.KEYWORD, policy.SEMANTIC, policy.READ, policy.RICH, policy.X)
 PAID_BUDGET = 6
 COST_CAP_USD = 1.00
 

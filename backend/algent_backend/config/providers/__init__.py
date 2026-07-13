@@ -22,10 +22,11 @@ from .firecrawl import FIRECRAWL
 from .google import GOOGLE
 from .openai import OPENAI
 from .tavily import TAVILY
+from .x import X
 from .xai import XAI
 
 PROVIDERS: dict[str, ProviderConfig] = {
-    p.id: p for p in (OPENAI, ANTHROPIC, GOOGLE, XAI, TAVILY, EXA, BRAVE, FIRECRAWL)
+    p.id: p for p in (OPENAI, ANTHROPIC, GOOGLE, XAI, TAVILY, EXA, BRAVE, FIRECRAWL, X)
 }
 
 
