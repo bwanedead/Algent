@@ -34,6 +34,8 @@ def test_x_search_shapes_results(monkeypatch) -> None:
 
 def test_x_search_missing_token_is_a_clean_error(monkeypatch) -> None:
     monkeypatch.setattr(x_search, "get_service_api_key", lambda _: None)
+    for name in x_search._TOKEN_ENV_CANDIDATES:  # clear any real token from the operator env
+        monkeypatch.delenv(name, raising=False)
     out = x_search.x_recent_search("q")
     assert "error" in out and "X_BEARER_TOKEN" in out["error"]
 

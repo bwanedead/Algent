@@ -9,12 +9,29 @@ seam without the agents changing (they only ever see ``web_search(source="x", ..
 
 from __future__ import annotations
 
+import os
 from typing import Any
 
 from algent_backend.config import get_service_api_key
 
 _ENDPOINT = "https://api.x.com/2/tweets/search/recent"
 _TIMEOUT_S = 20.0
+# The registry name first, then the common names people actually use — so X search works with
+# whatever the operator already has in .env without a config change.
+_TOKEN_ENV_CANDIDATES = (
+    "X_BEARER_TOKEN", "X_BEARER_KEY", "TWITTER_BEARER_TOKEN", "X_API_BEARER_TOKEN",
+    "X_BEARER", "BEARER_TOKEN",
+)
+
+
+def _resolve_bearer() -> str | None:
+    tok = get_service_api_key("x")
+    if tok:
+        return tok
+    for name in _TOKEN_ENV_CANDIDATES:
+        if os.environ.get(name):
+            return os.environ[name]
+    return None
 
 
 def x_recent_search(query: str, max_results: int = 10) -> dict[str, Any]:
@@ -25,9 +42,10 @@ def x_recent_search(query: str, max_results: int = 10) -> dict[str, Any]:
     """
     import httpx
 
-    token = get_service_api_key("x")
+    token = _resolve_bearer()
     if not token:
-        return {"source": "x", "error": "no X bearer token configured (set X_BEARER_TOKEN)"}
+        return {"source": "x", "error": "no X bearer token found (looked for X_BEARER_TOKEN and "
+                                        "common aliases) — tell me your var name or set X_BEARER_TOKEN"}
 
     params = {
         "query": query,
