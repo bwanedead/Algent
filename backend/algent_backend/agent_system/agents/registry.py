@@ -54,6 +54,7 @@ def default_agent_registry() -> AgentRegistry:
     from .gauntlet.spec import SPEC as profile_gauntlet_spec
     from .hello_workflow.spec import SPEC as hello_workflow_spec
     from .news_brief.spec import SPEC as news_brief_spec
+    from .newsroom.rail_spec import SPEC as newsroom_rail_spec
     from .research.spec import SPEC as signal_profile_spec
     from .review.spec import SPEC as profile_reviewer_spec
     from .routing.spec import SPEC as signal_router_spec
@@ -78,4 +79,5 @@ def default_agent_registry() -> AgentRegistry:
     registry.register(enrich_primary_source_spec)
     registry.register(enrich_counter_perspective_spec)
     registry.register(profile_gauntlet_spec)
+    registry.register(newsroom_rail_spec)
     return registry
