@@ -77,6 +77,18 @@ def test_produces_artifact_copies_it_out_and_empties_scratch(tmp_path: Path) -> 
     assert not (ws / "anx_01").exists()
 
 
+def test_table_kind_carries_body_md_for_inlining(tmp_path: Path) -> None:
+    def run(_p: str, folder: Path) -> tuple[bool, str]:
+        (folder / "table.md").write_text("| Outcome | P |\n|--|--|\n| Hold | 3.4 |", encoding="utf-8")
+        (folder / "data.csv").write_text("outcome,p\nHold,3.4\n", encoding="utf-8")
+        (folder / "caption.md").write_text("the odds", encoding="utf-8")
+        return True, "{}"
+    req = _request().model_copy(update={"kind": "table"})
+    art = aw.fulfill_request(req, _profile(), workspace=tmp_path / "ws", runner=run)
+    assert art.status == "produced" and art.artifact_name.endswith(".md")
+    assert "| Outcome | P |" in art.body_md          # the markdown body travels for the publish view
+
+
 def test_figure_check_flags_a_number_not_in_the_evidence(tmp_path: Path) -> None:
     # 9.9 is nowhere in the claims/snapshot — the visual analog of unverified_prose_figures.
     art = aw.fulfill_request(_request(), _profile(), workspace=tmp_path / "ws",

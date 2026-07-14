@@ -80,6 +80,18 @@ def test_produced_analytics_are_embedded_and_receipted() -> None:
     assert "Charts & tables" in md and "from claims c1" in md and "as of 2026-06-26" in md
 
 
+def test_table_analytic_is_inlined_not_image_embedded() -> None:
+    # A markdown table must be inlined as text; an ![](x.md) image link would render broken.
+    analytics = [{"request_id": "anx_t", "status": "produced", "artifact_name": "analytic_anx_t.md",
+                  "title": "Odds table", "body_md": "| Outcome | P |\n|--|--|\n| Hold | 81% |",
+                  "data_refs": ["c1"], "figure_check": {"verified": True, "unverified": []}}]
+    md = render_published_article(_draft(), _profile(), analytics)
+    assert "| Outcome | P |" in md and "| Hold | 81% |" in md   # the table itself is present
+    assert "![" not in md.split("How we know this")[0]           # no image embed in the body
+    assert "AI-assisted analytic, built only from cited data" in md   # honesty label still travels
+    assert "Charts & tables" in md and "from claims c1" in md    # and it still earns a receipts line
+
+
 def test_analytic_with_unverified_figures_is_flagged_in_receipts() -> None:
     analytics = [{"request_id": "anx_09", "status": "produced", "artifact_name": "a.svg",
                   "title": "drifty chart", "caption": "c", "data_refs": ["c1"],

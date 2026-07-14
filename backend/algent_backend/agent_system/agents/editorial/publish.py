@@ -15,8 +15,11 @@ import re
 
 from algent_backend.agent_system.agents.research.profile import SignalProfile
 
+from .analytics_contracts import AI_ANALYTIC_LABEL
 from .citations import unverified_prose_figures
 from .draft import ArticleDraft
+
+_IMAGE_SUFFIXES = (".svg", ".png")
 
 # Inline machine markers the drafter emits, e.g. "[clm_ab12, clm_cd34, src_ef56]".
 _MARKER = re.compile(r"\s*\[(?:clm_|src_)[^\]]*\]")
@@ -56,7 +59,8 @@ def render_published_article(
     cited_claims = [claims[c] for c in draft.cited_claim_ids if c in claims]
     cited_src_ids = set(draft.cited_source_ids) | {s for c in cited_claims for s in c.supported_by}
     cited_sources = [sources[s] for s in cited_src_ids if s in sources]
-    produced = [a for a in (analytics or []) if a.get("status") == "produced" and a.get("artifact_name")]
+    produced = [a for a in (analytics or [])
+                if a.get("status") == "produced" and (a.get("artifact_name") or a.get("body_md"))]
 
     out = [f"# {draft.title or '(untitled)'}"]
     if draft.standfirst:
@@ -68,12 +72,21 @@ def render_published_article(
 
 
 def _figures(produced: list[dict]) -> list[str]:
-    """Embed each produced analytic in the reader view — image + caption (which already carries the
-    'AI-assisted, built only from cited data' label the harness stamped)."""
+    """Place each produced analytic in the reader view by TYPE:
+
+    - a chart/illustration (``.svg``/``.png``) is embedded as an image, with the harness caption
+      (which carries the 'AI-assisted, built only from cited data' label) beneath it;
+    - a table/insight (markdown) is INLINED as text — an image link to a ``.md`` file would render
+      as a broken image — followed by the honesty label so the provenance travels with it either way.
+    """
     out: list[str] = []
     for a in produced:
-        alt = a.get("title") or "analytic"
-        out += [f"![{alt}]({a['artifact_name']})", "", f"*{a.get('caption', '').strip()}*", ""]
+        name = a.get("artifact_name", "")
+        if name.endswith(_IMAGE_SUFFIXES):
+            alt = a.get("title") or "analytic"
+            out += [f"![{alt}]({name})", "", f"*{a.get('caption', '').strip()}*", ""]
+        elif a.get("body_md"):
+            out += [a["body_md"].strip(), "", f"*{AI_ANALYTIC_LABEL}.*", ""]
     return out
 
 

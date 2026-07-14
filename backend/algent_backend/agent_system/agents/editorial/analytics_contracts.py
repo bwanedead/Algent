@@ -64,6 +64,7 @@ class AnalyticsArtifact(BaseModel):
     title: str = ""
     status: RequestStatus = "produced"                 # produced | skipped | failed
     artifact_name: str = ""                            # the chart/table/insight file in the artifact store
+    body_md: str = ""                                  # the produced markdown for a table/insight (inlined by the publish view; empty for image kinds)
     data_name: str = ""                                # the backing data.csv in the artifact store
     caption: str = ""                                  # harness-assembled: worker caption + provenance
     data_refs: list[str] = Field(default_factory=list)  # the claim/source/thread ids it was grounded in

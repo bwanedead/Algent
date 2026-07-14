@@ -351,6 +351,10 @@ def fulfill_request(
         figure_check = {"checked": bool(data_text), "verified": data_text != "" and not unverified,
                         "unverified": unverified}
 
+        # A markdown analytic (table/insight) is INLINED by the publish view, not embedded as an
+        # image — so carry its body forward. An image analytic (chart/illustration) has no body.
+        body_md = visual.read_text(encoding="utf-8", errors="replace") if visual.suffix == ".md" else ""
+
         # (4) copy the finished artifact OUT (harness, not worker) + stamp provenance.
         artifact_name = data_name = ""
         if context is not None and context.artifacts is not None:
@@ -363,6 +367,7 @@ def fulfill_request(
         return _finalize(
             result, status="produced", swept=removed,
             artifact_name=artifact_name or visual.name, data_name=data_name or (data.name if data else ""),
+            body_md=body_md,
             caption=_caption(request, worker_cap, request.data_refs, as_of),
             figure_check=figure_check,
             note=("figure check: numbers not found in cited evidence — " + ", ".join(unverified)) if unverified else "",
