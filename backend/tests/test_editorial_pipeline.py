@@ -21,12 +21,19 @@ def _ctx(events):
     )
 
 
-def _wire(monkeypatch, plan_out, draft_out, caveat_out, headline_out=None, analytics_out=None):
+def _wire(monkeypatch, plan_out, draft_out, caveat_out, headline_out=None, analytics_out=None,
+          worker_out=None):
     monkeypatch.setattr(pl, "build_planning_gauntlet_graph", lambda ctx: _Graph(plan_out))
     monkeypatch.setattr(pl, "build_drafting_gauntlet_graph", lambda ctx: _Graph(draft_out))
     monkeypatch.setattr(pl, "build_headline_writer", lambda ctx: _Graph(headline_out or {"headline": {}}))
     monkeypatch.setattr(pl, "build_caveat_reviewer", lambda ctx: _Graph(caveat_out))
     monkeypatch.setattr(pl, "build_analytics_router", lambda ctx: _Graph(analytics_out or {"analytics_plan": {}}))
+    # A sentinel worker: if it is ever built, it records the call — so a test can prove the gate
+    # kept it OFF (never built) without any risk of spawning real grok.
+    built = []
+    monkeypatch.setattr(pl, "build_analytics_worker_graph",
+                        lambda ctx: built.append(1) or _Graph(worker_out or {"analytics_artifacts": []}))
+    return built
 
 
 def test_caveated_piece_becomes_publishable_once_caveats_verified(monkeypatch) -> None:
@@ -75,6 +82,44 @@ def test_unhedged_prose_holds_the_piece(monkeypatch) -> None:
 def test_pipeline_no_profile_is_not_publishable(monkeypatch) -> None:
     out = pl.build_editorial_pipeline_graph(_ctx([])).invoke({})
     assert out["pipeline"]["publishable"] is False
+
+
+def test_analytics_worker_is_gated_off_by_default(monkeypatch) -> None:
+    # Even when analytics are warranted, the (quota-spending) worker must NOT run unless enabled.
+    monkeypatch.delenv(pl._ANALYTICS_WORKER_ENV, raising=False)
+    plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
+    draft_out = {"draft": {"id": "d", "word_count": 100}, "gauntlet": {"outcome": "grounded"}}
+    analytics_out = {"analytics_plan": {"warranted": True, "requests": [{"id": "anx_01"}]}}
+    built = _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}},
+                  analytics_out=analytics_out)
+
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "p"}})["pipeline"]
+    assert built == []                                  # worker never built -> no grok spawn
+    assert r["analytics_warranted"] is True and r["analytics_produced"] == 0
+
+
+def test_analytics_worker_runs_and_caps_when_enabled(monkeypatch) -> None:
+    monkeypatch.setenv(pl._ANALYTICS_WORKER_ENV, "1")
+    monkeypatch.setenv(pl._ANALYTICS_CAP_ENV, "2")
+    seen: dict = {}
+
+    class _CapGraph:
+        def invoke(self, state, _config=None):
+            seen["n"] = len(state["analytics_plan"]["requests"])   # how many requests reached the worker
+            return {"analytics_artifacts": [{"request_id": "anx_01", "status": "produced",
+                                             "artifact_name": "a.svg", "escaped_writes": []}]}
+
+    plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
+    draft_out = {"draft": {"id": "d", "word_count": 100}, "gauntlet": {"outcome": "grounded"}}
+    reqs = [{"id": f"anx_{i:02d}"} for i in range(5)]     # 5 requested, cap is 2
+    analytics_out = {"analytics_plan": {"warranted": True, "requests": reqs}}
+    _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}},
+          analytics_out=analytics_out)
+    monkeypatch.setattr(pl, "build_analytics_worker_graph", lambda ctx: _CapGraph())
+
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "p"}})["pipeline"]
+    assert seen["n"] == 2                                # capped to ALGENT_ANALYTICS_MAX
+    assert r["analytics_produced"] == 1 and r["analytics_escapes"] == 0
 
 
 def test_editorial_pipeline_registered_with_fixture() -> None:

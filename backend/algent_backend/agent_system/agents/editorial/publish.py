@@ -48,22 +48,37 @@ def _claim_asof(claim, sources: dict) -> str:
     return ""
 
 
-def render_published_article(draft: ArticleDraft, profile: SignalProfile) -> str:
+def render_published_article(
+    draft: ArticleDraft, profile: SignalProfile, analytics: list[dict] | None = None
+) -> str:
     claims = {c.id: c for c in profile.claim_ledger}
     sources = {s.id: s for s in profile.source_ledger}
     cited_claims = [claims[c] for c in draft.cited_claim_ids if c in claims]
     cited_src_ids = set(draft.cited_source_ids) | {s for c in cited_claims for s in c.supported_by}
     cited_sources = [sources[s] for s in cited_src_ids if s in sources]
+    produced = [a for a in (analytics or []) if a.get("status") == "produced" and a.get("artifact_name")]
 
     out = [f"# {draft.title or '(untitled)'}"]
     if draft.standfirst:
         out += [f"*{draft.standfirst}*"]
-    out += ["", _clean_prose(draft.body), "", "---",
-            *_appendix(draft, cited_sources, cited_claims, sources)]
+    out += ["", _clean_prose(draft.body), ""]
+    out += _figures(produced)                       # the produced charts, each with its AI label
+    out += ["---", *_appendix(draft, cited_sources, cited_claims, sources, produced)]
     return "\n".join(out).rstrip() + "\n"
 
 
-def _appendix(draft: ArticleDraft, cited_sources: list, cited_claims: list, sources: dict) -> list[str]:
+def _figures(produced: list[dict]) -> list[str]:
+    """Embed each produced analytic in the reader view — image + caption (which already carries the
+    'AI-assisted, built only from cited data' label the harness stamped)."""
+    out: list[str] = []
+    for a in produced:
+        alt = a.get("title") or "analytic"
+        out += [f"![{alt}]({a['artifact_name']})", "", f"*{a.get('caption', '').strip()}*", ""]
+    return out
+
+
+def _appendix(draft: ArticleDraft, cited_sources: list, cited_claims: list, sources: dict,
+              produced: list[dict] | None = None) -> list[str]:
     out = [
         "## How we know this — sources & verification",
         "_Optional. The receipts: what the piece rests on, when we captured it, and how far we could "
@@ -72,6 +87,17 @@ def _appendix(draft: ArticleDraft, cited_sources: list, cited_claims: list, sour
     ]
     if draft.frame:
         out += [f"**How this piece is framed:** {draft.frame}", ""]
+
+    if produced:
+        out.append("**Charts & tables** — _each built only from the cited claims below, by an AI tool_")
+        for a in produced:
+            refs = ", ".join(a.get("data_refs", []))
+            asof = f" · as of {a['as_of']}" if a.get("as_of") else ""
+            fc = a.get("figure_check") or {}
+            check = ("" if fc.get("verified") else
+                     f" · ⚠ figures not all matched to the cited claims: {', '.join(fc.get('unverified', []))}")
+            out.append(f"- {a.get('title') or 'analytic'} — from claims {refs}{asof}{check}")
+        out.append("")
 
     out.append("**Sources**")
     for s in sorted(cited_sources, key=lambda s: (s.snapshot is None, s.source_type)):

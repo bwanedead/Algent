@@ -12,6 +12,7 @@ from a raw vector.
 
 from __future__ import annotations
 
+import os
 from datetime import UTC, datetime
 from typing import Any, TypedDict
 
@@ -23,6 +24,7 @@ from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.context import AgentRunContext
 
 from .analytics_spec import build_graph as build_analytics_router
+from .analytics_worker import build_analytics_worker_graph
 from .caveat_spec import build_graph as build_caveat_reviewer
 from .draft import ArticleDraft
 from .draft_gauntlet import build_drafting_gauntlet_graph
@@ -34,6 +36,25 @@ from .publish import render_published_article
 
 PIPELINE_COMPLETED = "editorial_pipeline.completed"
 PIPELINE_NO_INPUT = "editorial_pipeline.no_input"
+
+# The analytics WORKER (grok subprocess) is gated separately from the router. The router is cheap
+# (a nano assessment, always runs); the worker is minutes-long and spends subscription quota per
+# request, so it is OFF by default and capped — mirroring the ALGENT_RAKE toggle idiom. Flip the
+# default once live pipeline runs prove it stable.
+_ANALYTICS_WORKER_ENV = "ALGENT_ANALYTICS_WORKER"
+_ANALYTICS_CAP_ENV = "ALGENT_ANALYTICS_MAX"
+_ANALYTICS_CAP_DEFAULT = 3
+
+
+def _analytics_worker_enabled() -> bool:
+    return os.environ.get(_ANALYTICS_WORKER_ENV, "0").strip().lower() in ("1", "true", "yes", "on")
+
+
+def _analytics_cap() -> int:
+    try:
+        return max(0, int(os.environ.get(_ANALYTICS_CAP_ENV, _ANALYTICS_CAP_DEFAULT)))
+    except ValueError:
+        return _ANALYTICS_CAP_DEFAULT
 
 
 class PipelineState(TypedDict, total=False):
@@ -77,9 +98,18 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
         caveat_verdict = str(caveat.get("verdict", "verified"))
 
         # 5. analytics routing — assess whether a chart/table/insight/illustration would make the
-        # story clearer, emitting grounded requests. The (sandboxed) worker fulfills them later.
+        # story clearer, emitting grounded requests (cheap nano; always runs).
         analytics = build_analytics_router(context).invoke(
             {"profile": enriched_profile}, config).get("analytics_plan") or {}
+
+        # 6. analytics WORKER (gated + capped) — fulfill the grounded requests into real artifacts
+        # via the sandboxed grok subprocess. OFF by default: each request is a minutes-long,
+        # quota-spending run. When on, cap the batch and hand only the produced artifacts forward.
+        produced_analytics: list[dict[str, Any]] = []
+        if analytics.get("warranted") and _analytics_worker_enabled():
+            capped = {**analytics, "requests": (analytics.get("requests") or [])[: _analytics_cap()]}
+            produced_analytics = build_analytics_worker_graph(context).invoke(
+                {"analytics_plan": capped, "profile": enriched_profile}, config).get("analytics_artifacts") or []
 
         outcome = str(draft_report.get("outcome", ""))
         if outcome == "blocked_omission":
@@ -105,14 +135,18 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
             unverified_figures=draft_report.get("unverified_figures", []),
             analytics_warranted=bool(analytics.get("warranted")),
             analytics_count=len(analytics.get("requests", [])),
+            analytics_produced=sum(1 for a in produced_analytics if a.get("status") == "produced"),
+            analytics_escapes=sum(1 for a in produced_analytics if a.get("escaped_writes")),
             generated_at=datetime.now(UTC).isoformat(),
         )
         if context.artifacts is not None and draft:
             draft_obj = ArticleDraft.model_validate(draft)
-            # The reader-facing piece + transparency appendix, and the annotated draft for audit.
+            # The reader-facing piece + transparency appendix (with any produced charts embedded +
+            # receipted), and the annotated draft for audit.
             context.artifacts.write_text(
                 "article_published.md",
-                render_published_article(draft_obj, SignalProfile.model_validate(enriched_profile)))
+                render_published_article(
+                    draft_obj, SignalProfile.model_validate(enriched_profile), produced_analytics))
             context.artifacts.write_text("article.md", render_draft(draft_obj))
             context.artifacts.write_json("editorial_pipeline_report.json", report.model_dump())
         context.emit(ev.OUTPUT_PREVIEW, _preview(report))

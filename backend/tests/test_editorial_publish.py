@@ -64,6 +64,30 @@ def test_published_view_cleans_prose_and_appends_receipts() -> None:
     assert "could not match to our stored evidence" in md and "83%" in md
 
 
+def test_produced_analytics_are_embedded_and_receipted() -> None:
+    analytics = [
+        {"request_id": "anx_01", "status": "produced", "artifact_name": "analytic_anx_01.svg",
+         "title": "Core PCE, Mar-May", "caption": "PCE climbed — AI-assisted analytic, built only from cited data.",
+         "data_refs": ["c1"], "as_of": "2026-06-26", "figure_check": {"verified": True, "unverified": []}},
+        {"request_id": "anx_02", "status": "failed", "artifact_name": ""},   # not embedded
+    ]
+    md = render_published_article(_draft(), _profile(), analytics)
+    # the produced chart is embedded in the body with its AI-labelled caption; the failed one is not.
+    assert "![Core PCE, Mar-May](analytic_anx_01.svg)" in md
+    assert "AI-assisted analytic, built only from cited data" in md
+    assert "anx_02" not in md
+    # and it earns a receipts line carrying its claim provenance + as-of.
+    assert "Charts & tables" in md and "from claims c1" in md and "as of 2026-06-26" in md
+
+
+def test_analytic_with_unverified_figures_is_flagged_in_receipts() -> None:
+    analytics = [{"request_id": "anx_09", "status": "produced", "artifact_name": "a.svg",
+                  "title": "drifty chart", "caption": "c", "data_refs": ["c1"],
+                  "figure_check": {"verified": False, "unverified": ["9.9"]}}]
+    md = render_published_article(_draft(), _profile(), analytics)
+    assert "figures not all matched to the cited claims: 9.9" in md
+
+
 def test_appendix_is_silent_when_everything_is_clean() -> None:
     prof = SignalProfile(id="p", title="t",
         source_ledger=[SourceArtifact(id="s1", url="u", title="src", source_type="primary",

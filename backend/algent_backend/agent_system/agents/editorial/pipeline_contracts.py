@@ -26,7 +26,9 @@ class EditorialPipelineReport(BaseModel):
     caveat_verdict: str = ""         # v3b: verified | needs_hedging
     caveat_findings: int = 0         # how many places the prose failed to hedge (0 = clean)
     analytics_warranted: bool = False  # would a chart/table/insight/illustration aid this story?
-    analytics_count: int = 0           # grounded analytics requested (the worker fulfills them later)
+    analytics_count: int = 0           # grounded analytics requested
+    analytics_produced: int = 0        # requests the (gated) worker actually fulfilled into artifacts
+    analytics_escapes: int = 0         # worker runs that broke their lane (tripwire) — should stay 0
     article_title: str = ""
     word_count: int = 0
     barriers: list[str] = Field(default_factory=list)  # walled sources carried with honest caveats
