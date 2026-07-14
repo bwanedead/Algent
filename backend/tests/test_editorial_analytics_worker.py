@@ -112,6 +112,26 @@ def test_no_output_is_a_clean_failure(tmp_path: Path) -> None:
     assert art.status == "failed" and art.artifact_name == ""
 
 
+def test_new_escapes_diffs_against_baseline() -> None:
+    # only paths that appear DURING the run count — the user's pre-existing dirt is ignored.
+    assert aw._new_escapes({"a"}, {"a", "backend/evil.py"}) == ["backend/evil.py"]
+    assert aw._new_escapes({"a"}, {"a"}) == []
+    assert aw._new_escapes(None, {"x"}) == []   # git unavailable -> tripwire simply doesn't arm
+
+
+def test_escape_tripwire_fails_loudly_even_on_a_good_chart(tmp_path: Path, monkeypatch) -> None:
+    # A good-looking chart from a lane-breaking run is NOT trustworthy: hard fail + loud event.
+    seen = iter([set(), {"backend/secrets.py"}])   # before -> after: a new write outside the lane
+    monkeypatch.setattr(aw, "_git_status", lambda _root: next(seen))
+    events: list = []
+    ctx = _ctx(tmp_path, events)
+    art = aw.fulfill_request(_request(), _profile(), workspace=tmp_path / "ws",
+                             context=ctx, runner=_good_runner())
+    assert art.status == "failed" and art.escaped_writes == ["backend/secrets.py"]
+    assert any(et == aw.ANALYTICS_WORKER_ESCAPE for et, _ in events)
+    assert not (tmp_path / "ws" / "anx_01").exists()   # scratch still emptied
+
+
 def test_worker_graph_loops_warranted_requests(tmp_path: Path) -> None:
     events: list = []
     plan = AnalyticsPlan(id="analytics_prof_x", profile_id="prof_x", warranted=True, requests=[_request()])

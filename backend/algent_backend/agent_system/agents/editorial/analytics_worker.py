@@ -45,6 +45,7 @@ from .analytics_contracts import (
 GENERATOR = "analytics_worker@v1"
 ANALYTICS_WORKER_COMPLETED = "analytics_worker.completed"
 ANALYTICS_ARTIFACT_PRODUCED = "analytics_worker.artifact"
+ANALYTICS_WORKER_ESCAPE = "analytics_worker.escape"   # loud: the worker wrote outside its lane
 
 # The sandbox: a per-request scratch folder lives under here; AGENTS.md at its root carries the
 # worker doctrine (discovered by grok walking up from the scratch cwd).
@@ -159,6 +160,40 @@ def _sweep(folder: Path) -> list[str]:
     return removed
 
 
+def _git_status(root: Path) -> set[str] | None:
+    """Repo-relative paths currently dirty in ``root`` — the tripwire baseline.
+
+    Excludes ``analytics_workspace/`` itself (the worker's legitimate, gitignored home). Returns
+    None when ``root`` is not a git repo or git is unavailable — the tripwire then simply doesn't
+    arm (it is a free bonus check, never a hard dependency of the worker).
+    """
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(root), "status", "--porcelain"],
+            capture_output=True, text=True, timeout=15, encoding="utf-8", errors="replace",
+        )
+    except (FileNotFoundError, OSError, subprocess.SubprocessError):
+        return None
+    if proc.returncode != 0:
+        return None
+    paths: set[str] = set()
+    for line in proc.stdout.splitlines():
+        p = line[3:].strip().split(" -> ")[-1].strip('"')   # drop the XY prefix; take a rename's dest
+        if p and not p.startswith((_WORKSPACE_DIRNAME + "/", _WORKSPACE_DIRNAME + "\\")):
+            paths.add(p)
+    return paths
+
+
+def _new_escapes(before: set[str] | None, after: set[str] | None) -> list[str]:
+    """Paths that became dirty DURING the worker run, outside its lane — a detected escape.
+
+    Diffed against a baseline so the user's own pre-existing uncommitted work never trips it.
+    """
+    if before is None or after is None:
+        return []
+    return sorted(after - before)
+
+
 def _visual_unverified_figures(data_text: str, cited_claims: list[Claim], sources_by_id: dict) -> list[str]:
     """Significant numbers in the plotted data that appear NOWHERE in the cited evidence — the
     visual analog of ``unverified_prose_figures``. Same conservative stance (substring, err toward
@@ -236,14 +271,27 @@ def fulfill_request(
     if folder.exists():
         shutil.rmtree(folder, ignore_errors=True)
     folder.mkdir(parents=True, exist_ok=True)
+    repo_root = workspace.parent                        # analytics_workspace/ sits at the repo root
     try:
         import json
         (folder / "data.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
         (folder / "REQUEST.md").write_text(_brief(request), encoding="utf-8")
 
+        before = _git_status(repo_root)                 # tripwire baseline (see _git_status)
         ok, tail = (runner or (lambda p, f: _grok_runner(p, f, timeout=timeout)))(_prompt(), folder)
 
         removed = _sweep(folder)                        # (2) artifact-type + size sweep
+
+        # (2b) ESCAPE tripwire — "stay in your lane" as a DETECTED invariant, not just doctrine. If
+        # the worker wrote anything in the repo outside analytics_workspace/, distrust it entirely
+        # (a good-looking chart from a lane-breaking run is not trustworthy) and alert loudly.
+        escaped = _new_escapes(before, _git_status(repo_root))
+        if escaped:
+            if context is not None:
+                context.emit(ANALYTICS_WORKER_ESCAPE, {"request_id": request.id, "escaped": escaped})
+            return _finalize(result, status="failed", swept=removed, escaped_writes=escaped,
+                             note="worker wrote outside analytics_workspace/: " + ", ".join(escaped[:5]))
+
         skipped = (folder / "SKIPPED.md")
         if skipped.exists():
             return _finalize(result, status="skipped", swept=removed,

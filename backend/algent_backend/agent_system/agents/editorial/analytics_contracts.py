@@ -71,6 +71,7 @@ class AnalyticsArtifact(BaseModel):
     ai_label: str = AI_ANALYTIC_LABEL
     figure_check: dict = Field(default_factory=dict)   # {checked, verified, unverified:[...]} — visual drift catch
     swept: list[str] = Field(default_factory=list)     # files removed by the artifact-type/size sweep
+    escaped_writes: list[str] = Field(default_factory=list)  # repo paths the worker touched OUTSIDE its lane (a hard fail)
     note: str = ""
     generated_at: str = ""
     model: str = ""
