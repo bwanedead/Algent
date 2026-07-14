@@ -206,20 +206,30 @@ def _new_escapes(before: set[str] | None, after: set[str] | None) -> list[str]:
 
 
 def _store_fingerprint(repo_root: Path) -> dict[str, tuple[int, int]]:
-    """(mtime_ns, size) of every file in the guarded gitignored stores — the git tripwire's blind
-    spot. Cheap: these hold small per-item JSON, not dependency-scale trees."""
+    """(mtime_ns, size) of the guarded gitignored files — the git tripwire's blind spot. Cheap:
+    small per-item JSON, not dependency-scale trees. Covers the content stores AND ``.env`` files
+    (credential poisoning is the classic sandbox escape, and ``.env`` is gitignored + not a store,
+    so nothing else would catch it). Metadata only — NEVER reads any file's contents."""
     fp: dict[str, tuple[int, int]] = {}
+
+    def _stamp(p: Path) -> None:
+        try:
+            st = p.stat()
+            fp[str(p)] = (st.st_mtime_ns, st.st_size)
+        except OSError:
+            pass
+
     for name in _GUARDED_STORE_DIRS:
         d = repo_root / "backend" / name
-        if not d.is_dir():
-            continue
-        for p in d.rglob("*"):
+        if d.is_dir():
+            for p in d.rglob("*"):
+                if p.is_file():
+                    _stamp(p)
+    # .env at the repo root and under backend/ — mtime+size only, contents never touched.
+    for base in (repo_root, repo_root / "backend"):
+        for p in (*base.glob(".env"), *base.glob(".env.*")):
             if p.is_file():
-                try:
-                    st = p.stat()
-                    fp[str(p)] = (st.st_mtime_ns, st.st_size)
-                except OSError:
-                    continue
+                _stamp(p)
     return fp
 
 

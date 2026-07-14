@@ -20,6 +20,34 @@ from .citations import unverified_prose_figures
 from .draft import ArticleDraft
 
 _IMAGE_SUFFIXES = (".svg", ".png")
+_TABLE_ROW = re.compile(r"^\s*\|.*\|\s*$")
+
+
+def _table_block(body_md: str) -> str:
+    """The contiguous markdown table in ``body_md`` (its ``|…|`` rows), plus one heading/label line
+    directly above it if present — and NOTHING else.
+
+    The worker's markdown is grok-authored: any free-text it wraps around the table (a 'Source:'
+    line, a 'hawkish momentum builds' aside) would otherwise reach the reader without passing the
+    caveat gate the draft prose passes through. Bounding the inline to the table itself removes that
+    vector deterministically; the residual — the cell wording — is largely pinned by the figure
+    check and the receipts line. Prose-only analytics (an ``insight`` with no table) inline nothing
+    here: ungated prose must not reach the reader (its provenance still shows in the receipts)."""
+    lines = body_md.splitlines()
+    start = end = None
+    for i, ln in enumerate(lines):
+        if _TABLE_ROW.match(ln):
+            if start is None:
+                start = i
+            end = i
+        elif start is not None:
+            break                                  # first contiguous table run only
+    if start is None:
+        return ""
+    head = start
+    if start > 0 and lines[start - 1].strip() and not _TABLE_ROW.match(lines[start - 1]):
+        head = start - 1                           # one adjacent heading/label line, if any
+    return "\n".join(lines[head:end + 1]).strip()
 
 # Inline machine markers the drafter emits, e.g. "[clm_ab12, clm_cd34, src_ef56]".
 _MARKER = re.compile(r"\s*\[(?:clm_|src_)[^\]]*\]")
@@ -86,7 +114,9 @@ def _figures(produced: list[dict]) -> list[str]:
             alt = a.get("title") or "analytic"
             out += [f"![{alt}]({name})", "", f"*{a.get('caption', '').strip()}*", ""]
         elif a.get("body_md"):
-            out += [a["body_md"].strip(), "", f"*{AI_ANALYTIC_LABEL}.*", ""]
+            table = _table_block(a["body_md"])     # bounded to the table — no ungated free-text
+            if table:
+                out += [table, "", f"*{AI_ANALYTIC_LABEL}.*", ""]
     return out
 
 

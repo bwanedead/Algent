@@ -153,6 +153,15 @@ def test_store_escapes_catches_new_and_modified_files() -> None:
     assert aw._store_escapes(before, before) == []   # unchanged -> nothing
 
 
+def test_store_fingerprint_covers_stores_and_env(tmp_path: Path) -> None:
+    (tmp_path / "backend" / "profile_store").mkdir(parents=True)
+    (tmp_path / "backend" / "profile_store" / "p.json").write_text("{}", encoding="utf-8")
+    (tmp_path / ".env").write_text("SECRET=1", encoding="utf-8")   # the classic escape target
+    fp = aw._store_fingerprint(tmp_path)
+    assert any("p.json" in k for k in fp)
+    assert any(k.endswith(".env") for k in fp)   # .env is fingerprinted (metadata only, never read)
+
+
 def test_tripwire_catches_a_poisoned_store_json(tmp_path: Path, monkeypatch) -> None:
     # A worker that overwrites a gitignored profile JSON must be caught even though git is clean.
     monkeypatch.setattr(aw, "_git_status", lambda _root: set())   # git sees nothing (ignored path)

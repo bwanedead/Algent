@@ -92,6 +92,31 @@ def test_table_analytic_is_inlined_not_image_embedded() -> None:
     assert "Charts & tables" in md and "from claims c1" in md    # and it still earns a receipts line
 
 
+def test_inlined_table_strips_ungated_free_text() -> None:
+    # grok-authored commentary around the table must NOT reach the reader ungated; only the table
+    # (and its numbers, which the figure-check pins) is inlined.
+    body = ("# Odds\n\n**Source:** made-up dashboard\n\nHawkish momentum is clearly building.\n\n"
+            "| Outcome | P |\n|--|--|\n| Hold | 81% |\n\n**Note:** my spicy editorial take here.")
+    analytics = [{"request_id": "anx_t", "status": "produced", "artifact_name": "analytic_anx_t.md",
+                  "title": "Odds", "body_md": body, "data_refs": ["c1"],
+                  "figure_check": {"verified": True, "unverified": []}}]
+    md = render_published_article(_draft(), _profile(), analytics)
+    body_region = md.split("How we know this")[0]
+    assert "| Hold | 81% |" in body_region                    # the table survives
+    assert "Hawkish momentum" not in md and "spicy editorial" not in md   # the free-text does not
+    assert "made-up dashboard" not in md
+
+
+def test_prose_only_analytic_inlines_nothing_but_still_receipts() -> None:
+    # An insight with no table = ungated prose -> not inlined, but its provenance still shows.
+    analytics = [{"request_id": "anx_i", "status": "produced", "artifact_name": "analytic_anx_i.md",
+                  "title": "A computed insight", "body_md": "PCE climbed 0.4pp over three months.",
+                  "data_refs": ["c1"], "figure_check": {"verified": True, "unverified": []}}]
+    md = render_published_article(_draft(), _profile(), analytics)
+    assert "PCE climbed 0.4pp" not in md.split("How we know this")[0]   # prose body not inlined
+    assert "Charts & tables" in md and "A computed insight" in md       # receipts still carry it
+
+
 def test_analytic_with_unverified_figures_is_flagged_in_receipts() -> None:
     analytics = [{"request_id": "anx_09", "status": "produced", "artifact_name": "a.svg",
                   "title": "drifty chart", "caption": "c", "data_refs": ["c1"],
