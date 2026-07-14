@@ -166,7 +166,22 @@ from algent_backend.agent_system.tools.sourcing.search import (  # noqa: E402
     policy,
     research,
     tavily,
+    x_search,
 )
+
+
+class _XResp:
+    """A fake X API response so the gate test exercises the wired path without the network."""
+
+    status_code = 200
+    text = ""
+
+    def json(self):
+        return {
+            "data": [{"id": "1", "text": "hi", "author_id": "a",
+                      "public_metrics": {"like_count": 1, "retweet_count": 0}}],
+            "includes": {"users": [{"id": "a", "username": "acme", "verified": True}]},
+        }
 
 
 def _engine(result):
@@ -241,10 +256,15 @@ def test_gate_allows_paid_channels_when_granted(monkeypatch) -> None:
             "url": url, "content": "c", "via": "firecrawl", "quality": "good", "words": 50
         },
     )
+    # X is wired now: past the gate it reaches the real engine. Mock the transport so the unit
+    # suite never touches the live API (and never depends on a real bearer in the env).
+    monkeypatch.setattr(x_search, "_resolve_bearer", lambda: "tok")
+    monkeypatch.setattr(x_search, "_get", lambda params, token: _XResp())
     token = policy.set_allowed([policy.KEYWORD, policy.READ, policy.RICH, policy.X])
     try:
         assert research._search(read_url="http://a", richness="rich")["action"] == "read"
-        assert "not wired" in research._search(query="q", source="x")["error"]  # past the gate
+        x = research._search(query="q", source="x")  # past the gate, into the (mocked) engine
+        assert x["kind"] == "x" and x["source"] == "x" and x["results"][0]["author"] == "acme"
     finally:
         policy.reset_allowed(token)
 

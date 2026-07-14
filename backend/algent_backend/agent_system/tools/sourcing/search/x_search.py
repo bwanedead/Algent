@@ -34,14 +34,27 @@ def _resolve_bearer() -> str | None:
     return None
 
 
+def _get(params: dict[str, Any], token: str) -> Any:
+    """The network seam — an authenticated GET to the X recent-search endpoint.
+
+    Isolated so tests inject a fake transport (as the grok runner is injectable) and NEVER touch
+    the live API from the unit suite. Returns an httpx-style response (``.status_code``, ``.text``,
+    ``.json()``).
+    """
+    import httpx
+
+    return httpx.get(
+        _ENDPOINT, params=params,
+        headers={"Authorization": f"Bearer {token}"}, timeout=_TIMEOUT_S,
+    )
+
+
 def x_recent_search(query: str, max_results: int = 10) -> dict[str, Any]:
     """Search recent X posts for ``query``. Returns ``{source, query, results}`` or ``{source, error}``.
 
     Results are compact: text, author handle, url, timestamp, and engagement — enough for an agent
     to gauge social signal / find primary posts, without flooding the prompt.
     """
-    import httpx
-
     token = _resolve_bearer()
     if not token:
         return {"source": "x", "error": "no X bearer token found (looked for X_BEARER_TOKEN and "
@@ -55,10 +68,7 @@ def x_recent_search(query: str, max_results: int = 10) -> dict[str, Any]:
         "user.fields": "username,name,verified",
     }
     try:
-        resp = httpx.get(
-            _ENDPOINT, params=params,
-            headers={"Authorization": f"Bearer {token}"}, timeout=_TIMEOUT_S,
-        )
+        resp = _get(params, token)
     except Exception as exc:  # noqa: BLE001 — a clean error, never crash the loop
         return {"source": "x", "error": str(exc)[:200]}
     if resp.status_code != 200:
