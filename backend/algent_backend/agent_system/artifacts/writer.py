@@ -41,6 +41,10 @@ class ArtifactWriter:
         body = json.dumps(payload, ensure_ascii=False, indent=2, default=str)
         return self._write(name, body.encode("utf-8"), kind)
 
+    def write_bytes(self, name: str, data: bytes, kind: str = "binary") -> ArtifactRef:
+        """Persist raw bytes (e.g. a produced chart image) into the run's artifacts."""
+        return self._write(name, data, kind)
+
     def _write(self, name: str, data: bytes, kind: str) -> ArtifactRef:
         safe = _SAFE_NAME.sub("_", name).strip("._") or "artifact"
         self._dir.mkdir(parents=True, exist_ok=True)

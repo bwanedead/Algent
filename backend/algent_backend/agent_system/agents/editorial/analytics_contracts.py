@@ -43,3 +43,35 @@ class AnalyticsPlan(BaseModel):
     generated_at: str = ""
     generator: str = ""
     model: str = ""
+
+
+# The AI label every produced analytic carries into the publish view — no visual passes as a
+# photograph or as anything but a chart drawn from the cited data.
+AI_ANALYTIC_LABEL = "AI-assisted analytic, built only from cited data"
+
+
+class AnalyticsArtifact(BaseModel):
+    """One fulfilled request — what the (sandboxed) worker produced, plus the harness's checks.
+
+    The worker draws the visual; the HARNESS owns integrity: it copies the artifact out of the
+    sandbox, runs the figure check (the visual analog of ``unverified_prose_figures``), and
+    stamps provenance (claim ids, as-of, AI label). ``artifact_name``/``data_name`` are names in
+    the run's artifact store — the sandbox scratch folder is emptied after.
+    """
+
+    request_id: str
+    kind: AnalyticKind
+    title: str = ""
+    status: RequestStatus = "produced"                 # produced | skipped | failed
+    artifact_name: str = ""                            # the chart/table/insight file in the artifact store
+    data_name: str = ""                                # the backing data.csv in the artifact store
+    caption: str = ""                                  # harness-assembled: worker caption + provenance
+    data_refs: list[str] = Field(default_factory=list)  # the claim/source/thread ids it was grounded in
+    as_of: str = ""                                    # recency horizon of the underlying data
+    ai_label: str = AI_ANALYTIC_LABEL
+    figure_check: dict = Field(default_factory=dict)   # {checked, verified, unverified:[...]} — visual drift catch
+    swept: list[str] = Field(default_factory=list)     # files removed by the artifact-type/size sweep
+    note: str = ""
+    generated_at: str = ""
+    model: str = ""
+    generator: str = ""
