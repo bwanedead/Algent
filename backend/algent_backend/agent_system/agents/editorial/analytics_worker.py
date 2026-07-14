@@ -51,6 +51,13 @@ ANALYTICS_WORKER_ESCAPE = "analytics_worker.escape"   # loud: the worker wrote o
 # worker doctrine (discovered by grok walking up from the scratch cwd).
 _WORKSPACE_DIRNAME = "analytics_workspace"
 
+# The gitignored content stores the git tripwire is BLIND to (git status --porcelain omits ignored
+# paths) — and precisely the pipeline-poisoning targets: overwrite one profile/treatment/draft JSON
+# and every downstream stage inherits the corruption. So we fingerprint them separately. Small-JSON
+# dirs, cheap to stat; NOT runs_data (the run's own legitimately-churning control plane) or
+# ingestion_data (large, and not a per-request corruption target).
+_GUARDED_STORE_DIRS = ("profile_store", "treatment_store", "draft_store", "lead_store")
+
 # The artifact-type allowlist + size cap the post-run sweep enforces (mechanical, not doctrinal).
 _ALLOWED_SUFFIXES = {".png", ".svg", ".csv", ".md", ".json", ".txt"}
 _MAX_FILE_BYTES = 2_000_000       # a chart/table is small; anything large is a red flag
@@ -166,6 +173,10 @@ def _git_status(root: Path) -> set[str] | None:
     Excludes ``analytics_workspace/`` itself (the worker's legitimate, gitignored home). Returns
     None when ``root`` is not a git repo or git is unavailable — the tripwire then simply doesn't
     arm (it is a free bonus check, never a hard dependency of the worker).
+
+    BLIND SPOT: ``git status`` omits gitignored paths, so a worker that overwrote a gitignored
+    store JSON would not surface here. ``_store_fingerprint`` covers exactly those stores; the two
+    checks are complementary and both feed the escape decision.
     """
     try:
         proc = subprocess.run(
@@ -192,6 +203,33 @@ def _new_escapes(before: set[str] | None, after: set[str] | None) -> list[str]:
     if before is None or after is None:
         return []
     return sorted(after - before)
+
+
+def _store_fingerprint(repo_root: Path) -> dict[str, tuple[int, int]]:
+    """(mtime_ns, size) of every file in the guarded gitignored stores — the git tripwire's blind
+    spot. Cheap: these hold small per-item JSON, not dependency-scale trees."""
+    fp: dict[str, tuple[int, int]] = {}
+    for name in _GUARDED_STORE_DIRS:
+        d = repo_root / "backend" / name
+        if not d.is_dir():
+            continue
+        for p in d.rglob("*"):
+            if p.is_file():
+                try:
+                    st = p.stat()
+                    fp[str(p)] = (st.st_mtime_ns, st.st_size)
+                except OSError:
+                    continue
+    return fp
+
+
+def _store_escapes(before: dict[str, tuple[int, int]], after: dict[str, tuple[int, int]]) -> list[str]:
+    """Store files created OR modified during the run — a worker corrupting the pipeline's state.
+
+    Baseline-diffed like the git check: any pre-existing file that legitimately changed outside the
+    run window cancels; only a write during the run surfaces. Reports the offending file paths.
+    """
+    return sorted(k for k, v in after.items() if before.get(k) != v)
 
 
 def _visual_unverified_figures(data_text: str, cited_claims: list[Claim], sources_by_id: dict) -> list[str]:
@@ -277,15 +315,18 @@ def fulfill_request(
         (folder / "data.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
         (folder / "REQUEST.md").write_text(_brief(request), encoding="utf-8")
 
-        before = _git_status(repo_root)                 # tripwire baseline (see _git_status)
+        before_git = _git_status(repo_root)             # tripwire baseline (see _git_status)
+        before_store = _store_fingerprint(repo_root)    # + the gitignored stores git can't see
         ok, tail = (runner or (lambda p, f: _grok_runner(p, f, timeout=timeout)))(_prompt(), folder)
 
         removed = _sweep(folder)                        # (2) artifact-type + size sweep
 
         # (2b) ESCAPE tripwire — "stay in your lane" as a DETECTED invariant, not just doctrine. If
-        # the worker wrote anything in the repo outside analytics_workspace/, distrust it entirely
-        # (a good-looking chart from a lane-breaking run is not trustworthy) and alert loudly.
-        escaped = _new_escapes(before, _git_status(repo_root))
+        # the worker wrote anything in the repo outside analytics_workspace/ — tracked files (git)
+        # OR the gitignored content stores it could poison — distrust it entirely (a good-looking
+        # chart from a lane-breaking run is not trustworthy) and alert loudly.
+        escaped = (_new_escapes(before_git, _git_status(repo_root))
+                   + _store_escapes(before_store, _store_fingerprint(repo_root)))
         if escaped:
             if context is not None:
                 context.emit(ANALYTICS_WORKER_ESCAPE, {"request_id": request.id, "escaped": escaped})

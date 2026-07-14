@@ -132,6 +132,27 @@ def test_escape_tripwire_fails_loudly_even_on_a_good_chart(tmp_path: Path, monke
     assert not (tmp_path / "ws" / "anx_01").exists()   # scratch still emptied
 
 
+def test_store_escapes_catches_new_and_modified_files() -> None:
+    # git status can't see gitignored stores; this fingerprint diff is the complement.
+    before = {"p/prof_a.json": (100, 10)}
+    after = {"p/prof_a.json": (200, 10),   # same size, newer mtime -> a silent overwrite
+             "p/prof_b.json": (50, 5)}     # a brand-new file
+    assert aw._store_escapes(before, after) == ["p/prof_a.json", "p/prof_b.json"]
+    assert aw._store_escapes(before, before) == []   # unchanged -> nothing
+
+
+def test_tripwire_catches_a_poisoned_store_json(tmp_path: Path, monkeypatch) -> None:
+    # A worker that overwrites a gitignored profile JSON must be caught even though git is clean.
+    monkeypatch.setattr(aw, "_git_status", lambda _root: set())   # git sees nothing (ignored path)
+    fps = iter([{}, {"backend/profile_store/prof_x.json": (1, 2)}])   # before -> after: a new write
+    monkeypatch.setattr(aw, "_store_fingerprint", lambda _root: next(fps))
+    events: list = []
+    art = aw.fulfill_request(_request(), _profile(), workspace=tmp_path / "ws",
+                             context=_ctx(tmp_path, events), runner=_good_runner())
+    assert art.status == "failed" and "prof_x.json" in art.escaped_writes[0]
+    assert any(et == aw.ANALYTICS_WORKER_ESCAPE for et, _ in events)
+
+
 def test_worker_graph_loops_warranted_requests(tmp_path: Path) -> None:
     events: list = []
     plan = AnalyticsPlan(id="analytics_prof_x", profile_id="prof_x", warranted=True, requests=[_request()])
