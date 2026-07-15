@@ -112,6 +112,7 @@ def test_enrich_graph_merges_bumps_revision_and_persists(monkeypatch, tmp_path) 
     assert any(s["url"] == "https://fed.gov/d" for s in out["profile"]["source_ledger"])
     done = next(p for et, p in events if et == "enrich.completed")
     assert done["added_sources"] == 1 and done["addressed"] == ["find_01"]
+    assert "estimated_usd" in done   # enrichment surfaces its spend (the rail sums it)
 
 
 def test_counter_perspective_lane_registered_and_distinct() -> None:

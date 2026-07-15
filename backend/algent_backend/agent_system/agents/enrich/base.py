@@ -9,7 +9,6 @@ the generic router). LangGraph/LangChain imports live here; lane spec.py modules
 
 from __future__ import annotations
 
-from collections import Counter
 from typing import Any, TypedDict
 
 from langchain_core.messages import HumanMessage
@@ -69,6 +68,7 @@ def build_enrich_graph(
                 context=context, config=config,
             )
             captured = snapshots.collected()
+            estimated_usd = cost.spent_usd()   # capture inside the scope (it resets on exit)
         additions = produced if isinstance(produced, ProfileAdditions) else ProfileAdditions()
 
         before = (len(profile.source_ledger), len(profile.claim_ledger), len(profile.threads))
@@ -86,6 +86,7 @@ def build_enrich_graph(
             "added_sources": len(merged.source_ledger) - before[0],
             "added_claims": len(merged.claim_ledger) - before[1],
             "addressed": additions.addressed_findings,
+            "estimated_usd": estimated_usd,
         })
         return {"profile": merged.model_dump(), "addressed": additions.addressed_findings}
 

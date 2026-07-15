@@ -93,6 +93,7 @@ def build_draft_graph(
                 context=context, config=config,
             )
             captured = snapshots.collected()
+            estimated_usd = cost.spent_usd()   # capture inside the scope (it resets on exit)
         payload = produced if isinstance(produced, DraftPayload) else DraftPayload()
 
         # Enrich-back: fold the drafter's findings into the profile (stage="drafting"). Run the
@@ -112,7 +113,7 @@ def build_draft_graph(
         # the draft so the drafting gauntlet can gate on it later.
         report = check_citations(draft_obj, treatment, enriched)
         draft_obj = draft_obj.model_copy(update={"grounding_verdict": report.verdict})
-        return _finish(context, draft_obj, report, enriched, profile)
+        return _finish(context, draft_obj, report, enriched, profile, estimated_usd=estimated_usd)
 
     graph = StateGraph(DraftState)
     graph.add_node("draft", draft)
@@ -156,7 +157,7 @@ def _finalize_draft(
 
 def _finish(
     context: AgentRunContext, draft: ArticleDraft, report: CitationReport,
-    enriched: SignalProfile, before: SignalProfile,
+    enriched: SignalProfile, before: SignalProfile, *, estimated_usd: float = 0.0,
 ) -> dict[str, Any]:
     if draft.treatment_id:
         try:
@@ -182,6 +183,7 @@ def _finish(
         "profile_revision": enriched.revision,
         "added_claims": len(enriched.claim_ledger) - len(before.claim_ledger),
         "added_sources": len(enriched.source_ledger) - len(before.source_ledger),
+        "estimated_usd": estimated_usd,
     })
     # Return the audit too, so the drafting gauntlet drives revision off the exact lists.
     return {"draft": draft.model_dump(), "profile": enriched.model_dump(),

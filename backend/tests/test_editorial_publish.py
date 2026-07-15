@@ -80,6 +80,14 @@ def test_produced_analytics_are_embedded_and_receipted() -> None:
     assert "Charts & tables" in md and "from claims c1" in md and "as of 2026-06-26" in md
 
 
+def test_clean_prose_strips_backtick_and_bare_markers() -> None:
+    # the drafter's marker format varies run to run; the reader view must strip every form.
+    from algent_backend.agent_system.agents.editorial.publish import _clean_prose
+    out = _clean_prose("CENTCOM said it would act. `clm_0fd2078` `src_1a68d97` The fee was dropped. clm_abc123")
+    assert "clm_" not in out and "src_" not in out and "`" not in out
+    assert out == "CENTCOM said it would act. The fee was dropped."
+
+
 def test_table_analytic_is_inlined_not_image_embedded() -> None:
     # A markdown table must be inlined as text; an ![](x.md) image link would render broken.
     analytics = [{"request_id": "anx_t", "status": "produced", "artifact_name": "analytic_anx_t.md",

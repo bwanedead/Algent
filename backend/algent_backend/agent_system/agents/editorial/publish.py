@@ -49,8 +49,16 @@ def _table_block(body_md: str) -> str:
         head = start - 1                           # one adjacent heading/label line, if any
     return "\n".join(lines[head:end + 1]).strip()
 
-# Inline machine markers the drafter emits, e.g. "[clm_ab12, clm_cd34, src_ef56]".
-_MARKER = re.compile(r"\s*\[(?:clm_|src_)[^\]]*\]")
+# Inline machine markers the drafter emits. The prompt asks for the bracketed list form
+# ("[clm_ab12, clm_cd34, src_ef56]"), but the model's format varies run to run — it also emits
+# backtick-wrapped or bare ids ("`clm_ab12` `src_ef56`"). The reader-facing floor must strip ALL
+# of them regardless of the drafter's formatting whim (ids are `clm_`/`src_` + hex — never prose).
+_MARKER = re.compile(r"\s*\[(?:clm_|src_)[^\]]*\]")                    # [clm_ab12, src_ef56]
+# Accepted edge: no trailing boundary on the hex, so a malformed id (`clm_0fd207x`) strips the hex
+# run and leaves the stray `x`. That is deliberately conservative — a strict boundary risks eating
+# real prose that abuts a well-formed id. Do NOT loosen this into a broader pattern to "fix" the
+# stray char; a malformed marker is a drafter bug to catch upstream, not a reason to strip prose.
+_MARKER_TOKEN = re.compile(r"\s*`?(?:clm_|src_)[0-9a-fA-F]+`?")       # `clm_ab12` or bare clm_ab12
 
 _GROUNDING_WORDS = {
     "snapshotted": "read in full",
@@ -61,7 +69,8 @@ _GROUNDING_WORDS = {
 
 def _clean_prose(body: str) -> str:
     """Strip the machine-citation markers for the reader view (the appendix carries the trace)."""
-    return re.sub(r" {2,}", " ", _MARKER.sub("", body)).strip()
+    out = _MARKER_TOKEN.sub("", _MARKER.sub("", body))   # bracketed lists, then backticked/bare ids
+    return re.sub(r" {2,}", " ", out).strip()
 
 
 def _capture_date(source) -> str:

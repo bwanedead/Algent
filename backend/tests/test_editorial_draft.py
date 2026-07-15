@@ -106,6 +106,7 @@ def test_drafter_enriches_profile_when_it_finds_new_evidence(tmp_path, monkeypat
     assert added["provenance"]["added_by_stage"] == "drafting"
     done = next(p for et, p in events if et == "draft.completed")
     assert done["added_claims"] == 1 and done["profile_revision"] == 2
+    assert "estimated_usd" in done   # drafting surfaces its spend (the rail sums it)
 
 
 def test_drafter_missing_input_is_empty_draft(monkeypatch) -> None:
