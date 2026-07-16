@@ -15,7 +15,8 @@ export type ArticleMeta = {
   slug: string;
   title: string;
   dek: string;
-  date: string;
+  date: string; // day-granular, for display
+  published_at: string; // full timestamp — what the feed actually sorts on
   status: string; // publishable | needs_hedging | ... (honest, shown to the reader)
   // All derived from the profile by the publish pipeline — never author-written, never generated.
   tags: string[]; // canonical topics first, then the specific entities
@@ -36,7 +37,10 @@ function readDir(): string[] {
 export function getAllMeta(): ArticleMeta[] {
   return readDir()
     .map((file) => toMeta(file, matter(fs.readFileSync(path.join(ARTICLES_DIR, file), "utf8")).data))
-    .sort((a, b) => (a.date < b.date ? 1 : -1)); // newest first
+    // Newest first, on the full publish timestamp — `date` is day-granular, so sorting on it left
+    // same-day pieces (routine for a newsroom) in arbitrary order. Falls back to `date` for older
+    // articles written before published_at existed.
+    .sort((a, b) => (b.published_at || b.date).localeCompare(a.published_at || a.date));
 }
 
 export function getSlugs(): string[] {
@@ -65,6 +69,7 @@ function toMeta(file: string, data: Record<string, unknown>): ArticleMeta {
     title: String(data.title ?? "(untitled)"),
     dek: String(data.dek ?? ""),
     date: String(data.date ?? ""),
+    published_at: String(data.published_at ?? ""),
     status: String(data.status ?? ""),
     tags: strings(data.tags),
     flags: strings(data.flags),

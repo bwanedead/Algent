@@ -17,6 +17,7 @@ from __future__ import annotations
 import hashlib
 import re
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 
 import yaml
 
@@ -123,6 +124,7 @@ def convert(
     *, article_md: str, rail: dict, pipeline: dict, profile: dict,
     date: str, run_id: str = "", corrections: list[dict] | None = None,
     vector: dict | None = None, analytics: list[dict] | None = None,
+    published_at: str | None = None,
 ) -> SiteArticle:
     """Turn a run's artifacts into a ``SiteArticle``. Pure: strings in, ``SiteArticle`` out.
 
@@ -138,6 +140,10 @@ def convert(
         "title": title,
         "dek": dek,
         "date": date,
+        # Full-precision publish moment. `date` is day-granular and cannot order two pieces
+        # published the same day — which a newsroom does routinely, and which silently left the
+        # feed in arbitrary order. This is what the index actually sorts on.
+        "published_at": published_at or datetime.now(UTC).isoformat(),
         "as_of": str(profile.get("as_of") or ""),
         "status": str(pipeline.get("status") or ""),
         # Derived, never generated (see tagging.py) — categorisation that costs no model call and
