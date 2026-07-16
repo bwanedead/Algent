@@ -24,8 +24,13 @@ def build_draft_message(
     *,
     prior: ArticleDraft | None = None,
     report: CitationReport | None = None,
+    caveat: dict | None = None,
 ) -> str:
-    """The drafting task. With a prior draft + its citation audit, this is a REVISION pass."""
+    """The drafting task. With a prior draft + its citation audit, this is a REVISION pass.
+
+    With ``caveat`` (the v3b findings), it is the narrower HEDGING repair lap instead: fix exactly
+    the sentences the reviewer flagged and change nothing else.
+    """
     parts = [
         f"# WRITE THE PIECE — treatment {treatment.id} (rev {treatment.revision})",
         "",
@@ -41,7 +46,9 @@ def build_draft_message(
         render_briefing(profile),
         "",
     ]
-    if prior is not None and report is not None:
+    if prior is not None and caveat is not None:
+        parts += _caveat_block(prior, caveat)
+    elif prior is not None and report is not None:
         parts += _revision_block(prior, report, profile)
     else:
         parts.append(
@@ -53,6 +60,46 @@ def build_draft_message(
             "prose rests on. Emit a DraftPayload."
         )
     return "\n".join(parts)
+
+
+def _caveat_block(prior: ArticleDraft, caveat: dict) -> list[str]:
+    """The HEDGING REPAIR lap — surgical, not a rewrite.
+
+    The caveat reviewer found specific sentences claiming more than their evidence supports. Its
+    findings name the claim and the problem, so the fix is targeted: hedge exactly those, leave
+    everything else alone. This is what makes 'needs_hedging' one more lap instead of a held piece.
+    """
+    lines = [
+        "## YOU ARE REPAIRING HEDGING — a reviewer found sentences that outrun their evidence",
+        "",
+        "Your prior draft is below. A semantic review found the places where the prose asserts more",
+        "than the cited evidence establishes (certainty laundering — see spirit.md). Fix EXACTLY",
+        "those and nothing else: this is a surgical repair, not a rewrite. Do NOT re-report, do NOT",
+        "re-frame, do NOT cut load-bearing content, and do NOT 'fix' it by deleting the claim — hedge",
+        "it to the level the evidence actually supports, or state what is established and stop.",
+        "Keep the title/standfirst unless a finding names them. Every other sentence stays as written.",
+        "",
+        "### What the reviewer flagged",
+    ]
+    for f in (caveat.get("findings") or []):
+        fid = f.get("id") or f.get("claim_id") or ""
+        lines.append(f"- [{f.get('kind', 'overstatement')}] {fid} — {f.get('explanation') or f.get('detail') or ''}")
+        if f.get("quote"):
+            lines.append(f'  offending text: "{f["quote"]}"')
+    if caveat.get("note"):
+        lines += ["", f"Reviewer note: {caveat['note']}"]
+    lines += [
+        "",
+        "### Your prior draft",
+        f"TITLE: {prior.title}",
+        f"STANDFIRST: {prior.standfirst}",
+        "",
+        prior.body,
+        "",
+        "TASK: Emit a DraftPayload with the same piece, hedged where flagged. Carry the same cited",
+        "ids. No new research is needed — this is a wording repair against evidence you already have.",
+    ]
+    return lines
 
 
 def _revision_block(prior: ArticleDraft, report: CitationReport, profile: SignalProfile) -> list[str]:

@@ -23,8 +23,11 @@ class EditorialPipelineReport(BaseModel):
     # The single honest signal for the human approval surface. v3b (the caveat reviewer) verifies
     # the prose actually keeps its flagged promises; its pass earns "publishable", its fail holds.
     status: str = ""                 # publishable | needs_hedging | blocked
-    caveat_verdict: str = ""         # v3b: verified | needs_hedging
+    caveat_verdict: str = ""         # v3b: verified | needs_hedging (AFTER any repair lap)
     caveat_findings: int = 0         # how many places the prose failed to hedge (0 = clean)
+    # 1 = clean first pass; 2 = the self-heal lap ran (findings -> targeted hedge -> re-check).
+    # A run that repeatedly needs the lap is a signal to tune the drafter, not the reviewer.
+    caveat_rounds: int = 1
     analytics_warranted: bool = False  # would a chart/table/insight/illustration aid this story?
     analytics_count: int = 0           # grounded analytics requested
     analytics_produced: int = 0        # requests the (gated) worker actually fulfilled into artifacts

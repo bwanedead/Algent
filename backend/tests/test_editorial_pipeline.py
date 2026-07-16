@@ -68,15 +68,67 @@ def test_pipeline_applies_the_truthful_headline(monkeypatch) -> None:
     assert r["status"] == "publishable"
 
 
-def test_unhedged_prose_holds_the_piece(monkeypatch) -> None:
+class _Sequence:
+    """A graph whose successive invocations return successive outputs (for the repair lap)."""
+
+    def __init__(self, *outs):
+        self._outs, self._i = list(outs), 0
+
+    def invoke(self, _state, _config=None):
+        out = self._outs[min(self._i, len(self._outs) - 1)]
+        self._i += 1
+        return out
+
+
+def test_needs_hedging_self_heals_and_ships(monkeypatch) -> None:
+    # The whole point: an overclaim is repaired by machine, not parked in a queue. Findings ->
+    # targeted hedge -> re-headline -> re-check -> publishable. Nothing waits on a human.
     plan_out = {"treatment": {"id": "trt_x"}, "gauntlet": {}}
-    draft_out = {"draft": {"id": "drf_x"}, "gauntlet": {"outcome": "grounded_with_caveats", "barriers": ["s"]}}
-    caveat_out = {"caveat_check": {"verdict": "needs_hedging", "findings": [{"id": "cav_01"}]}}
-    _wire(monkeypatch, plan_out, draft_out, caveat_out)
+    draft_out = {"draft": {"id": "drf_x", "title": "t", "word_count": 400},
+                 "gauntlet": {"outcome": "grounded"}}
+    _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {}})
+    # first check fails, second (after the repair) passes. NOTE: hoist the sequence — the pipeline
+    # calls build_caveat_reviewer() per use, so a lambda that constructs it inline would hand back
+    # a fresh sequence each time and never advance.
+    caveats = _Sequence(
+        {"caveat_check": {"verdict": "needs_hedging", "findings": [{"id": "cav_01"}]}},
+        {"caveat_check": {"verdict": "verified", "findings": []}})
+    monkeypatch.setattr(pl, "build_caveat_reviewer", lambda ctx: caveats)
+    repaired = {"draft": {"id": "drf_x", "title": "t", "word_count": 390}, "profile": {"id": "prof_x"}}
+    monkeypatch.setattr(pl, "build_drafter", lambda ctx: _Sequence(repaired))
+
+    events: list = []
+    r = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({"profile": {"id": "prof_x"}})["pipeline"]
+    assert r["status"] == "publishable" and r["publishable"] is True   # shipped, not held
+    assert r["caveat_verdict"] == "verified" and r["caveat_rounds"] == 2
+    assert any(et == pl.CAVEAT_REPAIRED for et, _ in events)
+
+
+def test_still_unhedged_after_the_repair_lap_holds_the_piece(monkeypatch) -> None:
+    # The lap is bounded: if the repair doesn't take, we stay honest rather than loop or ship it.
+    plan_out = {"treatment": {"id": "trt_x"}, "gauntlet": {}}
+    draft_out = {"draft": {"id": "drf_x", "title": "t"}, "gauntlet": {"outcome": "grounded_with_caveats",
+                                                                     "barriers": ["s"]}}
+    _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {}})
+    monkeypatch.setattr(pl, "build_caveat_reviewer", lambda ctx: _Sequence(
+        {"caveat_check": {"verdict": "needs_hedging", "findings": [{"id": "cav_01"}]}}))  # always fails
+    monkeypatch.setattr(pl, "build_drafter", lambda ctx: _Sequence(
+        {"draft": {"id": "drf_x", "title": "t"}, "profile": {"id": "prof_x"}}))
 
     r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "prof_x"}})["pipeline"]
     assert r["status"] == "needs_hedging" and r["publishable"] is False
-    assert r["caveat_verdict"] == "needs_hedging" and r["caveat_findings"] == 1
+    assert r["caveat_rounds"] == 2   # the lap ran and didn't take — bounded, no third try
+
+
+def test_clean_first_pass_does_not_run_the_repair_lap(monkeypatch) -> None:
+    plan_out = {"treatment": {"id": "trt_x"}, "gauntlet": {}}
+    draft_out = {"draft": {"id": "drf_x", "title": "t"}, "gauntlet": {"outcome": "grounded"}}
+    _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified", "findings": []}})
+    built = []
+    monkeypatch.setattr(pl, "build_drafter", lambda ctx: built.append(1) or _Sequence({}))
+
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "prof_x"}})["pipeline"]
+    assert r["caveat_rounds"] == 1 and built == []   # no extra drafter spend on a clean piece
 
 
 def test_pipeline_no_profile_is_not_publishable(monkeypatch) -> None:
