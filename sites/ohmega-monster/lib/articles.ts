@@ -45,7 +45,9 @@ export function getArticle(slug: string): Article | null {
   const { data, content } = matter(fs.readFileSync(file, "utf8"));
   const idx = content.indexOf(RECEIPTS_HEADING);
   const body = (idx >= 0 ? content.slice(0, idx) : content).replace(/^---\s*$/gm, "").trim();
-  const receipts = idx >= 0 ? content.slice(idx).trim() : null;
+  // The heading is the split marker (a machine contract), not reader copy — the disclosure's own
+  // label already says what this is, so drop it from the render rather than say it twice.
+  const receipts = idx >= 0 ? content.slice(idx).replace(/^##[^\n]*\n/, "").trim() : null;
   return { ...toMeta(`${slug}.md`, data), body, receipts };
 }
 
