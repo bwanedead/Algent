@@ -81,7 +81,11 @@ def commit_and_push(worktree: Path, message: str) -> tuple[bool, str]:
 def site_code_drift(root: Path) -> str | None:
     """Warn when the current branch's site CODE (not content) is ahead of ``site-live`` — nobody is
     watching in full-auto, so a CSS/app fix on dev would otherwise silently never ship."""
-    ok, out = _git(root, "diff", "--name-only", f"{DEPLOY_BRANCH}...HEAD", "--",
+    # TWO-dot: the actual tree difference between the branches. NOT three-dot (`A...HEAD`), which
+    # diffs from the MERGE BASE and so re-reports every file this branch touched since it forked —
+    # even ones site-live already has by an equivalent commit. The branches legitimately carry
+    # cherry-picked twins of the same work, so three-dot cried wolf on 8 files when 1 had drifted.
+    ok, out = _git(root, "diff", "--name-only", DEPLOY_BRANCH, "HEAD", "--",
                    "/".join(_SITE_SUBPATH))
     if not ok:
         return None
