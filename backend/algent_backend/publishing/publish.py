@@ -17,7 +17,7 @@ commit+push to the ``site-live`` branch lives in ``site_git.py`` and only runs w
 from __future__ import annotations
 
 import json
-import shutil
+import re
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
@@ -29,6 +29,28 @@ from .converter import SiteArticle, build_slug, convert, parse_published_article
 # Only a caveat-verified article auto-publishes. These are the pipeline's terminal statuses.
 _PUBLISHABLE = "publishable"
 _BLOCKED = "blocked"
+
+# Accusation-class language — the coarse signal for the OPTIONAL named-individual hold-lane. This is
+# where defamation risk concentrates, so an operator can choose to route pieces that pair a named
+# person with this language to a human glance even in full-auto. Deliberately conservative (errs
+# toward holding); NOT a guarantee, and off by default.
+_ACCUSATION = re.compile(
+    r"\b(accus|alleg|fraud|guilt|convict|charg|indict|lied|lying|corrupt|scandal|misconduct|"
+    r"crimina|embezzl|brib|launder|perjur|assault|abus|harass)\w*", re.IGNORECASE)
+
+
+def named_individual_flag(profile: dict, article_md: str) -> str | None:
+    """Coarse opt-in check: does the piece pair a named person (a profile 'person' entity) with
+    accusation-class language? If so, return a hold reason. Conservative, not authoritative."""
+    persons = [str(e.get("name", "")) for e in (profile.get("entities") or [])
+               if str(e.get("type", "")).lower() == "person" and e.get("name")]
+    if not persons or not _ACCUSATION.search(article_md):
+        return None
+    # Word-boundary match, not bare substring — a person named "Mark" must not match "marketplace"
+    # and phantom-hold the piece (a chronic false-positive lane starves the site like an over-strict gate).
+    hit = next((p for p in persons if re.search(rf"\b{re.escape(p)}\b", article_md, re.IGNORECASE)), None)
+    return (f"names a person ({hit}) alongside accusation-class language — held for a human glance "
+            "(named-individual lane)") if hit else None
 
 # Actions a publish attempt can resolve to (the ledger records which).
 Action = str  # published | staged | held | corrected | refused | blocked | retracted | error
@@ -86,6 +108,7 @@ def publish_run(
     correction: str = "",
     today: str | None = None,
     push: bool = False,
+    hold_named_individuals: bool = False,
 ) -> PublishResult:
     """Gate a finished run and stage/hold it. ``push`` (the kill switch) is applied by the caller's
     git step; here it only distinguishes the recorded action (``staged`` vs ``published``)."""
@@ -108,6 +131,8 @@ def publish_run(
     if status != _PUBLISHABLE:
         reason = f"status is '{status or 'unknown'}', not publishable (caveat lane did not pass)"
         return _hold(held_dir, slug, status, [reason], run_id, rail, pipeline)
+    if hold_named_individuals and (flag := named_individual_flag(profile, article_md)):
+        return _hold(held_dir, slug, status, [flag], run_id, rail, pipeline)
 
     # ── publishable: convert + stage (or correct) ─────────────────────────────────────────────
     content_path = site_dir / "content" / "articles" / f"{slug}.md"
@@ -164,6 +189,22 @@ def retract(slug: str, reason: str, *, site_dir: Path, today: str | None = None)
 
 # ── file + ledger writers ──────────────────────────────────────────────────────────────────────
 
+_SVG_SCRIPT = re.compile(rb"<script[\s\S]*?</script\s*>", re.IGNORECASE)
+_SVG_FOREIGN = re.compile(rb"<foreignObject[\s\S]*?</foreignObject\s*>", re.IGNORECASE)
+_SVG_ON_ATTR = re.compile(rb"""\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)""", re.IGNORECASE)
+_SVG_JS_HREF = re.compile(rb"""((?:xlink:)?href)\s*=\s*("|')\s*javascript:[^"']*\2""", re.IGNORECASE)
+
+
+def _sanitize_svg(data: bytes) -> bytes:
+    """Strip active content from an SVG. The site renders analytics via <img> (scripts never run
+    there), but a grok-produced SVG served from our own origin could execute if opened DIRECTLY —
+    so we neutralize scripts/handlers/foreignObject/javascript: at copy time. Defense in depth."""
+    data = _SVG_SCRIPT.sub(b"", data)
+    data = _SVG_FOREIGN.sub(b"", data)
+    data = _SVG_ON_ATTR.sub(b"", data)
+    return _SVG_JS_HREF.sub(rb'\1=\2#\2', data)
+
+
 def _write_article(site_dir: Path, article: SiteArticle, run_dir: Path) -> None:
     content_path = site_dir / "content" / "articles" / f"{article.slug}.md"
     content_path.parent.mkdir(parents=True, exist_ok=True)
@@ -173,8 +214,10 @@ def _write_article(site_dir: Path, article: SiteArticle, run_dir: Path) -> None:
         dest.mkdir(parents=True, exist_ok=True)
         for name in article.assets:
             src = run_dir / "artifacts" / name
-            if src.exists():
-                shutil.copyfile(src, dest / name)
+            if not src.exists():
+                continue
+            data = src.read_bytes()
+            (dest / name).write_bytes(_sanitize_svg(data) if name.lower().endswith(".svg") else data)
 
 
 def _hold(

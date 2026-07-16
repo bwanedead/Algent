@@ -109,6 +109,23 @@ def test_retract_leaves_an_honest_tombstone(tmp_path: Path) -> None:
     assert "RETRACTED" in (d["site_dir"] / "publish-ledger.md").read_text(encoding="utf-8")
 
 
+def test_svg_assets_are_sanitized_on_copy(tmp_path: Path) -> None:
+    d = _dirs(tmp_path)
+    evil = (b'<svg xmlns="http://www.w3.org/2000/svg" onload="steal()">'
+            b'<script>fetch("//evil")</script>'
+            b'<a href="javascript:alert(1)">x</a>'
+            b'<foreignObject><body>hi</body></foreignObject></svg>')
+    art_dir = _run(tmp_path, article=_ARTICLE.replace(
+        "The committee held rates.", "The committee held rates.\n\n![C](analytic_c1.svg)"),
+        assets=["analytic_c1.svg"]) / "artifacts"
+    (art_dir / "analytic_c1.svg").write_bytes(evil)
+    r = pb.publish_run(art_dir.parent, today="2026-07-15", **d)
+    out = (d["site_dir"] / "public" / "analytics" / r.slug / "analytic_c1.svg").read_bytes()
+    assert b"<script" not in out and b"onload=" not in out
+    assert b"javascript:" not in out and b"<foreignObject" not in out.lower()
+    assert b"<svg" in out   # the drawing itself survives
+
+
 def test_missing_artifacts_is_a_clean_error(tmp_path: Path) -> None:
     empty = tmp_path / "runs" / "0009__x"
     (empty / "artifacts").mkdir(parents=True)

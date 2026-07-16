@@ -248,3 +248,7 @@ backend/treatment_store/
 
 # Article-draft store (prose products written by DraftStore) — never committed
 backend/draft_store/
+
+# Site publishing — operational state, never committed
+/.site-live/
+backend/publish_held/

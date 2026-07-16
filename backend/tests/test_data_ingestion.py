@@ -458,7 +458,7 @@ def test_ensure_t0_x_channel_skips_gkg_and_fetches_grok(monkeypatch, tmp_path) -
 def test_unified_cli_dispatches_ingest_and_runs_categories() -> None:
     from algent_backend.cli.__main__ import _CATEGORIES
 
-    assert set(_CATEGORIES) == {"runs", "ingest"}
+    assert {"runs", "ingest"} <= set(_CATEGORIES)   # superset: new categories (e.g. 'site') won't re-break this
     ingest_commands = {m.add_parser.__module__.rsplit(".", 1)[-1] for m in _CATEGORIES["ingest"][1]}
     assert {"fetch", "insights", "sample", "digest", "sources"} <= ingest_commands
 

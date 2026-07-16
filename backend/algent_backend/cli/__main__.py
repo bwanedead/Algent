@@ -23,13 +23,18 @@ import sys
 from algent_backend.data_ingestion.cli import COMMANDS as INGEST_COMMANDS
 
 from .runs import agents, exec_run, list_runs, show, start, status, stop, watch
+from .site import held as site_held
+from .site import publish as site_publish
+from .site import retract as site_retract
 
 RUNS_COMMANDS = (start, exec_run, status, watch, stop, agents, list_runs, show)
+SITE_COMMANDS = (site_publish, site_retract, site_held)
 
 # Category id -> (help, command modules registered under it).
 _CATEGORIES = {
     "runs": ("agent run control plane", RUNS_COMMANDS),
     "ingest": ("data-ingestion pipelines", INGEST_COMMANDS),
+    "site": ("publish finished runs to the live site", SITE_COMMANDS),
 }
 
 
