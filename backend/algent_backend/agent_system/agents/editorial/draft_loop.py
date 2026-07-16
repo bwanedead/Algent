@@ -179,6 +179,9 @@ def _finish(
         "word_count": draft.word_count, "cited_claims": len(draft.cited_claim_ids),
         "grounding_verdict": report.verdict,
         "must_use_missing": len(report.must_use_missing),
+        # Telemetry: must-use items the floor refused to enforce. A planner repeatedly making thin
+        # items undroppable (i.e. padding the piece) is visible here rather than silent.
+        "must_use_stripped": report.must_use_stripped,
         "weak_load_bearing": len(report.weak_load_bearing),
         "profile_revision": enriched.revision,
         "added_claims": len(enriched.claim_ledger) - len(before.claim_ledger),
