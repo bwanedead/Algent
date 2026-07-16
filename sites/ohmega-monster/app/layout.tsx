@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 // Set the display before paint (no flash), honoring a saved choice and defaulting to terminal.
-const NO_FLASH = `try{var t=localStorage.getItem('theme');document.documentElement.setAttribute('data-theme',t==='paper'?'paper':'terminal');}catch(e){document.documentElement.setAttribute('data-theme','terminal');}`;
+const NO_FLASH = `try{var t=localStorage.getItem('theme');document.documentElement.setAttribute('data-theme',t==='paper'?'paper':'dark-amber');}catch(e){document.documentElement.setAttribute('data-theme','dark-amber');}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -42,7 +42,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="content" className="shell">{children}</main>
         <footer className="site-footer">
           <div className="shell footer-row">
-            <span>OHMEGA MONSTER</span>
             <nav aria-label="Secondary navigation">
               <a href="/feed.xml">RSS</a>
               <a href="/sitemap.xml">Sitemap</a>

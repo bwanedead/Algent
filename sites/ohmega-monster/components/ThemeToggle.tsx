@@ -2,20 +2,20 @@
 
 import { useEffect, useState } from "react";
 
-type DisplayTheme = "terminal" | "paper";
+type DisplayTheme = "dark-amber" | "paper";
 
 // A display preference, not a separate brand skin. The layout's no-flash script applies the
 // persisted value before paint so both modes stay stable across navigation.
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState<DisplayTheme>("terminal");
+  const [theme, setTheme] = useState<DisplayTheme>("dark-amber");
 
   useEffect(() => {
     const current = document.documentElement.getAttribute("data-theme");
-    setTheme(current === "paper" ? "paper" : "terminal");
+    setTheme(current === "paper" ? "paper" : "dark-amber");
   }, []);
 
   function toggle() {
-    const next: DisplayTheme = document.documentElement.getAttribute("data-theme") === "paper" ? "terminal" : "paper";
+    const next: DisplayTheme = document.documentElement.getAttribute("data-theme") === "paper" ? "dark-amber" : "paper";
     document.documentElement.setAttribute("data-theme", next);
     try {
       localStorage.setItem("theme", next);
@@ -27,11 +27,11 @@ export default function ThemeToggle() {
     <button
       className="display-toggle"
       onClick={toggle}
-      aria-label={`Switch to ${theme === "terminal" ? "paper" : "amber terminal"} display`}
-      title={`Switch to ${theme === "terminal" ? "paper" : "amber terminal"} display`}
+      aria-label={`Switch to ${theme === "dark-amber" ? "paper" : "dark amber"} display`}
+      title={`Switch to ${theme === "dark-amber" ? "paper" : "dark amber"} display`}
     >
       <span className="display-label">Display</span>
-      <span>{theme === "terminal" ? "Amber" : "Paper"}</span>
+      <span>{theme === "dark-amber" ? "Dark amber" : "Paper"}</span>
     </button>
   );
 }
