@@ -15,6 +15,9 @@ downloads/
 eggs/
 .eggs/
 lib/
+# The Ohmega Monster site owns TypeScript source under its local lib/ directory.
+!sites/ohmega-monster/lib/
+!sites/ohmega-monster/lib/**
 lib64/
 parts/
 sdist/
