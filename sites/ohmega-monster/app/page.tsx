@@ -6,26 +6,34 @@ import { getAllMeta } from "@/lib/articles";
 export default function Home() {
   const articles = getAllMeta();
   return (
-    <>
+    <section className="index-page" aria-labelledby="index-title">
+      <header className="index-header">
+        <div>
+          <p className="eyebrow">Newsroom</p>
+          <h1 id="index-title">Report index</h1>
+        </div>
+        <p className="index-count">{articles.length} {articles.length === 1 ? "entry" : "entries"}</p>
+      </header>
       <ul className="feed">
         {articles.length === 0 && (
-          <li style={{ color: "var(--muted)", fontFamily: "var(--mono)", fontSize: 13 }}>
-            no articles yet — the publish pipeline drops them into content/articles/.
-          </li>
+          <li className="feed-empty">No reports available.</li>
         )}
         {articles.map((a) => (
           <li key={a.slug}>
             <Link href={`/articles/${a.slug}`}>
-              <div className="meta">
-                {a.date}
-                {a.status ? <>  ·  <span className="status">{a.status}</span></> : null}
+              <div className="feed-meta">
+                <time dateTime={a.date}>{a.date}</time>
+                {a.status ? <span className="status">{a.status}</span> : null}
               </div>
-              <div className="h">{a.title}</div>
-              {a.dek ? <div className="dek">{a.dek}</div> : null}
+              <div className="feed-story">
+                <h2>{a.title}</h2>
+                {a.dek ? <p>{a.dek}</p> : null}
+              </div>
+              <span className="feed-command" aria-hidden="true">Open</span>
             </Link>
           </li>
         ))}
       </ul>
-    </>
+    </section>
   );
 }

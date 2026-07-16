@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -34,21 +35,41 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
   if (!a) notFound();
 
   return (
-    <article>
-      <h1>{a.title}</h1>
-      {a.dek ? <p className="dek">{a.dek}</p> : null}
-      <div className="byline">
-        {a.date}
-        {a.status ? <>  ·  status: {a.status}</> : null}
-      </div>
+    <article className="article-page">
+      <nav className="breadcrumb" aria-label="Breadcrumb">
+        <Link href="/">Index</Link>
+        <span aria-hidden="true">/</span>
+        <time dateTime={a.date}>{a.date}</time>
+      </nav>
+
+      <header className="article-header">
+        <h1>{a.title}</h1>
+        {a.dek ? <p className="dek">{a.dek}</p> : null}
+        <dl className="article-meta">
+          <div>
+            <dt>Filed</dt>
+            <dd><time dateTime={a.date}>{a.date}</time></dd>
+          </div>
+          {a.status ? (
+            <div>
+              <dt>Status</dt>
+              <dd>{a.status}</dd>
+            </div>
+          ) : null}
+        </dl>
+      </header>
 
       <div className="prose">
         <Markdown remarkPlugins={[remarkGfm]}>{a.body}</Markdown>
       </div>
 
       {a.receipts ? (
-        <details className="receipts">
-          <summary>▸ How we know this — sources & verification (the receipts)</summary>
+        <details className="source-record">
+          <summary>
+            <span className="disclosure-mark" aria-hidden="true">+</span>
+            <span>Source record</span>
+            <span className="disclosure-hint">Sources / claims / limits</span>
+          </summary>
           <div className="body">
             <Markdown remarkPlugins={[remarkGfm]}>{a.receipts}</Markdown>
           </div>
