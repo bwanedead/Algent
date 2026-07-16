@@ -16,8 +16,8 @@ export const metadata: Metadata = {
   alternates: { types: { "application/rss+xml": `${SITE_URL}/feed.xml` } },
 };
 
-// Set the theme before paint (no flash), honoring a saved choice or the OS preference.
-const NO_FLASH = `try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}`;
+// Set the display before paint (no flash), honoring a saved choice and defaulting to terminal.
+const NO_FLASH = `try{var t=localStorage.getItem('theme');document.documentElement.setAttribute('data-theme',t==='paper'?'paper':'terminal');}catch(e){document.documentElement.setAttribute('data-theme','terminal');}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -26,21 +26,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: NO_FLASH }} />
       </head>
       <body>
-        <header className="masthead">
-          <div className="wrap">
-            <Link href="/" className="brand">
-              OHMEGA<span className="dot">.</span>MONSTER
+        <a className="skip-link" href="#content">Skip to content</a>
+        <header className="site-header">
+          <div className="shell header-row">
+            <Link href="/" className="brand" aria-label="Ohmega Monster home">
+              <span>OHMEGA</span><span className="brand-separator">/</span><span>MONSTER</span>
             </Link>
-            <span style={{ display: "flex", gap: 14, alignItems: "baseline" }}>
-              <span className="tagline">reality, with the receipts</span>
+            <nav className="site-nav" aria-label="Primary navigation">
+              <Link href="/">Index</Link>
+              <a href="/feed.xml">RSS</a>
               <ThemeToggle />
-            </span>
+            </nav>
           </div>
         </header>
-        <main className="wrap">{children}</main>
-        <footer>
-          <div className="wrap">
-            Ohmega Monster · every claim traceable, every wall disclosed · <a href="/">index</a>
+        <main id="content" className="shell">{children}</main>
+        <footer className="site-footer">
+          <div className="shell footer-row">
+            <span>OHMEGA MONSTER</span>
+            <nav aria-label="Secondary navigation">
+              <a href="/feed.xml">RSS</a>
+              <a href="/sitemap.xml">Sitemap</a>
+            </nav>
           </div>
         </footer>
       </body>
