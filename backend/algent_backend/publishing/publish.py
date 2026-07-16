@@ -21,6 +21,7 @@ import re
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 import yaml
 
@@ -66,19 +67,34 @@ class PublishResult:
     content_path: str = ""
 
 
-def _read_run(run_dir: Path) -> tuple[str, dict, dict, dict] | None:
-    """Load (article_md, rail_report, pipeline_report, profile) from a run dir. None if incomplete."""
+def _load(art: Path, name: str) -> Any:
+    f = art / name
+    if not f.exists():
+        return None
+    try:
+        return json.loads(f.read_text(encoding="utf-8"))
+    except Exception:  # noqa: BLE001 — a malformed optional artifact must not sink the publish
+        return None
+
+
+def _read_run(run_dir: Path) -> tuple[str, dict, dict, dict, dict, list] | None:
+    """Load (article_md, rail, pipeline, profile, vector, analytics) from a run dir. None if incomplete.
+
+    Only the article + pipeline report are required; the rest enrich the frontmatter (the vector
+    supplies pillars for topic tags, the analytics supply the thumbnail) and are optional so an
+    editorial-only run still publishes.
+    """
     art = run_dir / "artifacts"
     article = art / "article_published.md"
-    pipeline_f = art / "editorial_pipeline_report.json"
-    if not article.exists() or not pipeline_f.exists():
+    pipeline = _load(art, "editorial_pipeline_report.json")
+    if not article.exists() or not pipeline:
         return None
-    pipeline = json.loads(pipeline_f.read_text(encoding="utf-8"))
-    rail_f = art / "newsroom_rail_report.json"
-    rail = json.loads(rail_f.read_text(encoding="utf-8")) if rail_f.exists() else {}
-    profile_f = art / "profile.json"
-    profile = json.loads(profile_f.read_text(encoding="utf-8")) if profile_f.exists() else {}
-    return article.read_text(encoding="utf-8"), rail, pipeline, profile
+    return (article.read_text(encoding="utf-8"),
+            _load(art, "newsroom_rail_report.json") or {},
+            pipeline,
+            _load(art, "profile.json") or {},
+            _load(art, "selected_vector.json") or {},
+            _load(art, "analytics_artifacts.json") or [])
 
 
 def _today() -> str:
@@ -116,7 +132,7 @@ def publish_run(
     loaded = _read_run(run_dir)
     if loaded is None:
         return PublishResult(action="error", reasons=["run has no article_published.md + pipeline report"])
-    article_md, rail, pipeline, profile = loaded
+    article_md, rail, pipeline, profile, vector, analytics = loaded
 
     status = str(pipeline.get("status") or "")
     title, _dek, _rest = parse_published_article(article_md)
@@ -147,7 +163,8 @@ def publish_run(
         corrections = [*corrections, {"date": today, "reason": correction}]
 
     article = convert(article_md=article_md, rail=rail, pipeline=pipeline, profile=profile,
-                      date=today, run_id=run_id, corrections=corrections or None)
+                      date=today, run_id=run_id, corrections=corrections or None,
+                      vector=vector, analytics=analytics)
     _write_article(site_dir, article, run_dir)
     _append_publish_ledger(site_dir, article, run_id,
                            kind="correction" if is_rewrite else "publish", pushed=push)
