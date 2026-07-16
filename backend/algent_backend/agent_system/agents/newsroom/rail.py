@@ -36,6 +36,9 @@ from algent_backend.agent_system.agents.research.leads import (
 )
 from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.context import AgentRunContext
+from algent_backend.agent_system.runs.control_plane.layout import find_run_root
+from algent_backend.publishing import publish as pb
+from algent_backend.publishing import site_git
 
 from ..discovery.synthesis.spec import build_graph as build_synthesis
 from ..editorial.pipeline_spec import build_graph as build_editorial
@@ -47,6 +50,7 @@ from .rail_contracts import NewsroomRailReport
 RAIL_COMPLETED = "newsroom_rail.completed"
 RAIL_STAGE = "newsroom_rail.stage"
 BACKFEED_INJECTED = "newsroom_rail.backfeed_injected"
+RAIL_PUBLISHED = "newsroom_rail.published"
 
 # The backfeed read-side is ON by default — the loop only closes if the leads actually re-enter
 # discovery. ALGENT_BACKFEED=0 turns it off; ALGENT_BACKFEED_MAX caps how many leads enter (the
@@ -143,14 +147,66 @@ def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | Non
         report.article_title = str(pipeline.get("article_title", ""))
         report.analytics_produced = int(pipeline.get("analytics_produced", 0) or 0)
         report.stage_reached = "complete"
+        report.total_usd = round(sum(costs), 6)
 
-        return _finish(context, report, pipeline=pipeline, total=round(sum(costs), 6))
+        # 6. PUBLISH — by virtue of the pipeline, not by someone running a command. A piece that
+        # earned `publishable` goes live here; the floors already decided, so there is nothing left
+        # for a human to approve. (The gate still holds: anything short of publishable routes to the
+        # held ledger instead, and the ALGENT_SITE_PUBLISH kill switch can pause pushing entirely.)
+        context.emit(RAIL_STAGE, {"stage": "publish"})
+        _publish(context, report)
+
+        return _finish(context, report, pipeline=pipeline, total=report.total_usd)
 
     graph = StateGraph(RailState)
     graph.add_node("run", run)
     graph.add_edge(START, "run")
     graph.add_edge("run", END)
     return graph.compile()
+
+
+def _publish(context: AgentRunContext, report: NewsroomRailReport) -> None:
+    """Ship the finished piece. The rail publishes ITSELF — that is the whole design.
+
+    The floors already made the call (only a caveat-verified `publishable` piece is eligible; the
+    self-heal lap already repaired what it could), so there is no human decision left to wait for.
+    Publishing as a manual command afterwards was the friction this removes.
+
+    The run's artifacts must already be on disk — they are: every stage wrote through this run's
+    artifact store, and the rail report is written just below with the publish outcome folded in.
+    Best-effort by construction: a distribution failure must never retroactively fail an article
+    that the newsroom already produced honestly, so anything here is caught and recorded.
+    """
+    try:
+        run_dir = find_run_root(context.run_id)
+        if run_dir is None:
+            report.publish_action = "skipped (run dir not found)"
+            return
+        root = site_git.repo_root(run_dir)
+        push = site_git.publish_enabled()
+        worktree = None
+        if push:
+            worktree, note = site_git.ensure_worktree(root)
+            if worktree is None:
+                report.publish_action = f"skipped ({note[:80]})"
+                return
+        target = site_git.live_site_dir(root) if push else site_git.site_dir(root)
+
+        result = pb.publish_run(run_dir, site_dir=target, held_dir=root / "backend" / "publish_held",
+                                push=push)
+        report.publish_action = result.action
+        report.published_slug = result.slug
+        if push and worktree is not None and result.action in ("published", "corrected"):
+            ok, _note = site_git.commit_and_push(
+                worktree, message=f"publish({result.slug}): {result.status}\n\n{result.digest}")
+            report.published = ok
+            if not ok:
+                report.publish_action = "push_failed"
+        context.emit(RAIL_PUBLISHED, {"action": report.publish_action, "slug": report.published_slug,
+                                      "published": report.published, "reasons": result.reasons})
+    except Exception as exc:  # noqa: BLE001 — see docstring: distribution never fails the article
+        report.publish_action = f"error ({str(exc)[:90]})"
+        context.emit(RAIL_PUBLISHED, {"action": report.publish_action, "published": False})
 
 
 def _inject_backfeed(context: AgentRunContext, pool: dict | None, store: Any) -> tuple[dict | None, int]:
@@ -228,6 +284,7 @@ def _preview(r: NewsroomRailReport) -> dict[str, Any]:
             f"{r.pool_items} t0 items (+{r.backfeed_leads_injected} backfed) -> {r.vector_count} vectors"
             + (f" -> promoted: {r.selected_vector_title[:50]}" if r.selected_vector_title else "")
             + (f" -> article: {r.article_status}" if r.article_status else "")
+            + (f" -> {r.publish_action}" if r.publish_action else "")
             + f"  ·  ~${r.total_usd:.4f}"
             + (f"  ·  {r.note}" if r.note else "")
         ),

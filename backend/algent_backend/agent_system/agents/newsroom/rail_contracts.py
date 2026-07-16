@@ -35,6 +35,13 @@ class NewsroomRailReport(BaseModel):
     article_status: str = ""            # publishable | needs_hedging | blocked
     article_title: str = ""
     analytics_produced: int = 0
+    # ── distribution ──
+    # The rail publishes itself: a piece that earns `publishable` goes live by virtue of the
+    # pipeline, not because someone ran a command. `publish_action` records what actually happened
+    # (published | staged | held | refused | ...) so the ledger tells the whole story of the run.
+    published: bool = False
+    published_slug: str = ""
+    publish_action: str = ""
     # ── accounting ──
     total_usd: float = 0.0              # summed est. spend across every stage that surfaced it
     note: str = ""
