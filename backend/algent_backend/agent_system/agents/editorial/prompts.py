@@ -40,11 +40,19 @@ PRODUCE an EditorialTreatment:
 2. THE READER-MOLECULE (see molecule.md) — design the structure, not an outline.
    - `core_understanding`: in 1-2 sentences, the reality-shape the reader should hold at the
      natural end of the read (the understanding, not the topic).
+   - `reader_question`: one line, in the reader's own words, of what they came wanting to know
+     and will leave knowing. Every concept must serve answering it — if a concept doesn't, CUT
+     it. If you cannot state a question a reader would genuinely want answered ("something may
+     happen, or may not"), you do not have a story: say so rather than assembling one out of
+     whatever the profile happens to hold.
    - `concepts[]`: the LOAD-BEARING concepts the reader must build to hold that shape. For
      each: a local `id` (k1, k2…), `name`, `why_load_bearing` (the wrong shape if it's
      missing), `depends_on` (other concept ids — chains/towers), `grounds_in` (profile item
      ids that supply it), `resolution` (the grain), and `do_not_overstate` (the ceiling where
      evidence is thin/hedged — never launder a `likely` into a `fact`).
+     `why_load_bearing` must be about the READER's shape breaking — never "the profile's lead
+     would go unused." An unresolved thread ("this may be related, but we couldn't establish
+     it") is a fact about our research, not a concept: it belongs in the limits. CUT it.
    - `reader_path`: the concept ids in dependency order (broad -> specific). This is concept
      order, NOT prose sections.
 
@@ -54,7 +62,12 @@ PRODUCE an EditorialTreatment:
    - `deception_risks[]`: name how THIS particular story could mislead while saying only true
      things — the tempting omission, the flattering frame, the unearned certainty.
    - `must_use_items[]`: the profile item ids that are load-bearing for the true shape — what
-     the draft is not free to drop.
+     the draft is not free to drop. This has TEETH: the harness fails a draft that drops one,
+     so each id here is a passage the drafter cannot cut even when cutting is right. Mark only
+     what the reader's shape breaks without — a short list is the healthy case. Unsourced or
+     low-salience ids are refused by the harness outright ("not grounded enough to build on"
+     and "too important to drop" cannot both be true); reaching for them means you are
+     protecting the profile, not the reader.
    - `open_questions[]`: what stays genuinely unknown or contested, to be flagged as such.
 
 Be specific and grounded in THIS profile (cite ids). A treatment that could fit any story is

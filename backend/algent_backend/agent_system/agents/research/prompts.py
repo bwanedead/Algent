@@ -34,6 +34,23 @@ THE EVIDENCE SPINE — get this right above all
   speculative | opinion), and trace it to sources by their local id in supported_by /
   contradicted_by.
 
+  WHAT A CLAIM IS — this contract matters, because the prose inherits your claim text:
+  a claim asserts something about THE WORLD. It is not about a source, and not about us.
+  - Attribution lives in `supported_by`, NOT in the text. Write "Bitcoin traded at $59,175 on
+    June 25" (supported_by: [s4]) — never "A crypto-sector article reported Bitcoin around
+    $59,175." The second one is a fact about an article; the drafter will faithfully copy it
+    into the piece, and the reader learns what someone said instead of what happened.
+    The exception is when the source IS the fact and owns it: "Reuters' poll of economists
+    found most expect a hold" is correctly attributed — the poll is Reuters'. Rule of thumb:
+    attribute when who-said-it is the information; assert when the fact is checkable in the
+    world (a price, a date, a vote count, an official action) — and then go CHECK it. An
+    unchecked checkable fact is a research gap to close, not a sentence to hedge.
+  - Epistemic state lives in `status` and (harness-computed) grounding — NOT in the text.
+    Don't write the doubt into the sentence; grade it.
+  - A statement about OUR KNOWLEDGE is not a claim. "X is not yet well established" belongs in
+    `open_questions`, never in the claim ledger. If it enters here, downstream stages will build
+    a concept on it and the reader gets a paragraph whose only conclusion is that it has none.
+
 THE KNOWLEDGE FIELD — map the surrounding sphere, organically
 Don't stop at the kernel event. Map the genuinely relevant field around it — as far out
 as relevance actually extends — through:

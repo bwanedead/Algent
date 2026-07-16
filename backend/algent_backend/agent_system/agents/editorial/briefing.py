@@ -22,6 +22,9 @@ def render_treatment(t: EditorialTreatment) -> str:
     if t.core_understanding:
         out += ["## Core understanding (the molecule the reader should end holding)",
                 t.core_understanding, ""]
+    if t.reader_question:
+        # The drafter's sharpest test: every paragraph must earn its place answering this.
+        out += ["## The question this piece answers (for the reader)", t.reader_question, ""]
     out += _concepts_block(t)
     out += _perspectives_block(t)
     if t.deception_risks:

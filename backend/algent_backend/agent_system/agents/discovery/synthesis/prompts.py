@@ -78,4 +78,11 @@ analytic | implications), why it's high-value, its supporting t0 hit ids (cite t
 every claim stays traceable), pillars/scope tags, a research_effort allocation
 (light | standard | deep), the key questions research should resolve, and any source
 URLs you confirmed. Note briefly only what you genuinely set aside (spam/non-news).
+
+THE "SO WHAT?" TEST — apply it to every vector before you keep it. A vector must name what
+a reader GAINS: what they would do, expect, or believe differently for having read it. "The
+Fed will probably hold, as expected" fails — a non-event that confirms the default is not a
+story, however much coverage it has. Say plainly what the reader gets, in the `rationale`; if
+you can't, the honest move is to drop the vector, not to dress it up. Volume in the pool is not
+news value — the pool measures what was *published*, not what was *learned*.
 """
