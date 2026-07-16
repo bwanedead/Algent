@@ -37,26 +37,13 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
   return (
     <article className="article-page">
       <nav className="breadcrumb" aria-label="Breadcrumb">
-        <Link href="/">Index</Link>
-        <span aria-hidden="true">/</span>
-        <time dateTime={a.date}>{a.date}</time>
+        <Link href="/">← Index</Link>
       </nav>
 
       <header className="article-header">
         <h1>{a.title}</h1>
         {a.dek ? <p className="dek">{a.dek}</p> : null}
-        <dl className="article-meta">
-          <div>
-            <dt>Filed</dt>
-            <dd><time dateTime={a.date}>{a.date}</time></dd>
-          </div>
-          {a.status ? (
-            <div>
-              <dt>Status</dt>
-              <dd>{a.status}</dd>
-            </div>
-          ) : null}
-        </dl>
+        <time className="article-date" dateTime={a.date}>{a.date}</time>
       </header>
 
       <div className="prose">
