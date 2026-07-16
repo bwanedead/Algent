@@ -2,12 +2,18 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import ThemeToggle from "@/components/ThemeToggle";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Ohmega Monster",
-  description: "An information-first newsroom. Reality, with the receipts.",
+  metadataBase: new URL(SITE_URL),
+  title: { default: SITE_NAME, template: `%s · ${SITE_NAME}` },
+  description: SITE_DESCRIPTION,
+  openGraph: { type: "website", siteName: SITE_NAME, url: SITE_URL, title: SITE_NAME, description: SITE_DESCRIPTION },
+  twitter: { card: "summary", title: SITE_NAME, description: SITE_DESCRIPTION },
+  // Let readers and machines discover the feed from any page.
+  alternates: { types: { "application/rss+xml": `${SITE_URL}/feed.xml` } },
 };
 
 // Set the theme before paint (no flash), honoring a saved choice or the OS preference.
