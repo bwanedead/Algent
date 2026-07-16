@@ -20,6 +20,8 @@ from dataclasses import dataclass, field
 
 import yaml
 
+from .tagging import derive_all
+
 # The receipts appendix heading the pipeline emits and the site splits on (substring-matched there).
 _RECEIPTS_HEADING = "## How we know this"
 # Analytic image refs the publish view embeds, e.g. "![Chart](analytic_ar_1.svg)". Tables are inline
@@ -120,6 +122,7 @@ def _frontmatter(data: dict) -> str:
 def convert(
     *, article_md: str, rail: dict, pipeline: dict, profile: dict,
     date: str, run_id: str = "", corrections: list[dict] | None = None,
+    vector: dict | None = None, analytics: list[dict] | None = None,
 ) -> SiteArticle:
     """Turn a run's artifacts into a ``SiteArticle``. Pure: strings in, ``SiteArticle`` out.
 
@@ -137,7 +140,18 @@ def convert(
         "date": date,
         "as_of": str(profile.get("as_of") or ""),
         "status": str(pipeline.get("status") or ""),
+        # Derived, never generated (see tagging.py) — categorisation that costs no model call and
+        # cannot hallucinate. Also the substrate for tag+recency search later.
+        **{k: v for k, v in derive_all(profile, vector).items() if v},
     }
+    # THUMBNAIL: a produced analytic is the best thumbnail this article can have — a real visual
+    # built from the piece's own cited evidence, on-brand via the worker's spec, with zero
+    # fabrication risk. Strictly better than a generated illustration, and it needs no AI-image
+    # floor to ship. Articles without one fall back to their flags for visual texture.
+    if thumb := next((a.get("artifact_name") for a in (analytics or [])
+                      if a.get("status") == "produced"
+                      and str(a.get("artifact_name", "")).endswith((".svg", ".png"))), None):
+        fm["thumbnail"] = f"/analytics/{slug}/{thumb}"
     if corrections:
         fm["corrections"] = corrections
     markdown = _frontmatter(fm) + "\n" + body + "\n"

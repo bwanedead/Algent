@@ -73,6 +73,41 @@ def _full(monkeypatch, **over):
     )
 
 
+def test_rail_publishes_itself_when_the_piece_is_publishable(monkeypatch) -> None:
+    # The point: a piece that earns `publishable` ships BY VIRTUE OF THE PIPELINE. Nobody runs a
+    # command. (Publishing was previously a manual CLI step — that friction is what this removes.)
+    monkeypatch.setenv(rl._BACKFEED_ENV, "0")
+    _full(monkeypatch)
+    seen = {}
+    monkeypatch.setattr(rl, "find_run_root", lambda _rid: __import__("pathlib").Path("/runs/x"))
+    monkeypatch.setattr(rl.site_git, "publish_enabled", lambda: False)   # switch off -> stage, no git
+    monkeypatch.setattr(rl.site_git, "repo_root", lambda _p: __import__("pathlib").Path("/repo"))
+    monkeypatch.setattr(rl.site_git, "site_dir", lambda _r: __import__("pathlib").Path("/repo/site"))
+    monkeypatch.setattr(rl.pb, "publish_run", lambda run_dir, **kw: seen.update(kw) or
+                        type("R", (), {"action": "staged", "slug": "fed-holds-abc123",
+                                       "status": "publishable", "digest": "d", "reasons": []})())
+    events: list = []
+    r = rl.build_newsroom_rail_graph(_ctx(events)).invoke({"pool": {"items": [], "item_count": 1}})["rail"]
+
+    assert r["publish_action"] == "staged" and r["published_slug"] == "fed-holds-abc123"
+    assert seen["push"] is False                      # kill switch off -> staged, never pushed
+    assert any(et == rl.RAIL_PUBLISHED for et, _ in events)
+
+
+def test_a_publish_failure_never_fails_the_article(monkeypatch) -> None:
+    # Distribution is downstream of the newsroom: if the push breaks, the piece was still produced
+    # honestly and the run must say so rather than retroactively "fail".
+    monkeypatch.setenv(rl._BACKFEED_ENV, "0")
+    _full(monkeypatch)
+    monkeypatch.setattr(rl, "find_run_root", lambda _rid: __import__("pathlib").Path("/runs/x"))
+    monkeypatch.setattr(rl.site_git, "publish_enabled", lambda: False)
+    monkeypatch.setattr(rl.site_git, "repo_root", lambda _p: (_ for _ in ()).throw(OSError("git gone")))
+
+    r = rl.build_newsroom_rail_graph(_ctx([])).invoke({"pool": {"items": [], "item_count": 1}})["rail"]
+    assert r["stage_reached"] == "complete" and r["article_status"] == "publishable"   # article intact
+    assert r["publish_action"].startswith("error") and r["published"] is False
+
+
 def test_rail_runs_end_to_end_and_reports(monkeypatch) -> None:
     monkeypatch.setenv(rl._BACKFEED_ENV, "0")   # isolate the chain from the backfeed queue here
     _full(monkeypatch)

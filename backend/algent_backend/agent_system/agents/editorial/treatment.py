@@ -77,6 +77,10 @@ class EditorialTreatment(BaseModel):
 
     # ── the reader-molecule (the reality-shape to convey) ──
     core_understanding: str = ""                       # the molecule the reader should end holding (1-2 sentences)
+    # The reader-facing dual of core_understanding: the question, in the reader's words, that this
+    # piece answers. The shape is what they hold; this is why they wanted it. Every concept either
+    # serves answering it or does not belong — and a vector that can't state one isn't a story.
+    reader_question: str = ""
     concepts: list[TreatmentConcept] = Field(default_factory=list)
     reader_path: list[str] = Field(default_factory=list)  # suggested concept-id order (dependency order, NOT prose sections)
 

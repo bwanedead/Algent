@@ -17,6 +17,10 @@ export type ArticleMeta = {
   dek: string;
   date: string;
   status: string; // publishable | needs_hedging | ... (honest, shown to the reader)
+  // All derived from the profile by the publish pipeline — never author-written, never generated.
+  tags: string[]; // canonical topics first, then the specific entities
+  flags: string[]; // country flag emoji for the places the piece is about
+  thumbnail: string; // a produced analytic, when the piece has one
 };
 
 export type Article = ArticleMeta & {
@@ -45,8 +49,14 @@ export function getArticle(slug: string): Article | null {
   const { data, content } = matter(fs.readFileSync(file, "utf8"));
   const idx = content.indexOf(RECEIPTS_HEADING);
   const body = (idx >= 0 ? content.slice(0, idx) : content).replace(/^---\s*$/gm, "").trim();
-  const receipts = idx >= 0 ? content.slice(idx).trim() : null;
+  // The heading is the split marker (a machine contract), not reader copy — the disclosure's own
+  // label already says what this is, so drop it from the render rather than say it twice.
+  const receipts = idx >= 0 ? content.slice(idx).replace(/^##[^\n]*\n/, "").trim() : null;
   return { ...toMeta(`${slug}.md`, data), body, receipts };
+}
+
+function strings(v: unknown): string[] {
+  return Array.isArray(v) ? v.map(String).filter(Boolean) : [];
 }
 
 function toMeta(file: string, data: Record<string, unknown>): ArticleMeta {
@@ -56,5 +66,8 @@ function toMeta(file: string, data: Record<string, unknown>): ArticleMeta {
     dek: String(data.dek ?? ""),
     date: String(data.date ?? ""),
     status: String(data.status ?? ""),
+    tags: strings(data.tags),
+    flags: strings(data.flags),
+    thumbnail: String(data.thumbnail ?? ""),
   };
 }

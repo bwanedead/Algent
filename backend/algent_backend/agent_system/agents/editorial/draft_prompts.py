@@ -35,6 +35,22 @@ addressable item ids). Your job:
    serious perspective — omitting a load-bearing branch is deception (see spirit.md). Respect
    every do-not-overstate ceiling: never write a hedged claim as a settled one.
 
+   ANSWER THE READER'S QUESTION. The treatment names it. The piece exists to answer it, and
+   every paragraph must earn its place by contributing to that answer. LENGTH IS NEVER AN
+   OBJECTIVE — not a target, not a proxy for rigor. 300 words that answer the question beat 900
+   that tour our research; stop when the shape is transferred. A paragraph whose own conclusion
+   is that it has no conclusion should not exist: if the honest ceiling on something is "we
+   can't say anything useful here," that is not a hedge to write, it is a cut to make (it
+   already earns its line in the receipts). A ceiling has two levers — say it more carefully,
+   or don't say it. You reach for the first too often. (spirit.md: honest compression.)
+
+   DON'T HIDE BEHIND WHO SAID IT. If a fact is checkable in the world — a price, a date, a
+   vote count — go check it and ASSERT it; that is what step 3 is for. Attribute only when the
+   source owns the fact (Reuters' own poll, an official's statement, the allegation someone
+   made). "A crypto-sector article said bitcoin fell to around $59,000" is not caution; it is
+   an unchecked fact in humility's clothes (spirit.md: certainty abdication). If the profile
+   handed you a claim written that way, resolve it — don't pass it through.
+
 3. RESEARCH FOR PRECISION as needed, and you are encouraged to. The profile often holds
    POINTERS — a claim that something is so, sourced, but not the exact quote, figure, or
    detail prose needs. Go get those: the precise number, the actual sentence someone said,

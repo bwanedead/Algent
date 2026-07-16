@@ -176,7 +176,9 @@ a { color: inherit; }
 
 .feed a {
   display: grid;
-  grid-template-columns: 138px minmax(0, 1fr);
+  /* date | story | thumbnail. The third column collapses to nothing when a piece has no
+     analytic, so unillustrated rows keep exactly their old layout. */
+  grid-template-columns: 138px minmax(0, 1fr) auto;
   gap: 24px;
   align-items: start;
   padding: var(--line) 0;
@@ -214,6 +216,37 @@ a { color: inherit; }
   color: var(--muted);
   font-size: 12px;
   line-height: var(--line);
+}
+
+/* Flags: the "where", at a glance. Derived from the piece's own entities, so always literally
+   true — and simply absent when nothing maps cleanly (never a decorative stand-in). */
+.feed-flags { font-size: 12px; line-height: var(--line); letter-spacing: 0.06em; }
+
+/* Tags: canonical topic first, then the specifics. Quiet by default — they are navigation, not
+   the story, and must not compete with the headline. */
+.feed-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 10px;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--faint);
+  font-size: 10px;
+  line-height: var(--line);
+}
+.feed-tags li + li::before { content: "·"; margin-right: 10px; color: var(--rule-strong); }
+.feed a:hover .feed-tags { color: var(--muted); }
+
+/* Thumbnail: a chart built from the piece's OWN cited data (never decorative, never generated).
+   Sized small and rule-bounded so the index stays an index. */
+.feed-thumb {
+  width: 108px;
+  height: 68px;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  background: var(--panel);
+  align-self: start;
 }
 
 .feed-empty { padding: 28px 0; color: var(--muted); font-size: 12px; }
@@ -351,9 +384,12 @@ a { color: inherit; }
   .site-nav > a { display: none; }
   .display-label { display: none; }
   .index-page { padding-top: calc(var(--line) * 2); }
-  .feed a { grid-template-columns: 1fr; gap: 0; padding: var(--line) 0; }
-  .feed-meta { grid-column: 1 / -1; flex-direction: row; align-items: center; }
+  /* Mobile: date row, then story, with the thumbnail beside the story rather than stacked —
+     keeps the row scannable without a full-width image dominating the feed. */
+  .feed a { grid-template-columns: minmax(0, 1fr) auto; gap: 0 14px; padding: var(--line) 0; }
+  .feed-meta { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 10px; }
   .feed-story { grid-column: 1; }
+  .feed-thumb { width: 72px; height: 48px; }
   .article-header { padding-top: calc(var(--line) * 2); }
   .article-header h1 { line-height: calc(var(--line) * 2); }
   .disclosure-hint { display: none; }

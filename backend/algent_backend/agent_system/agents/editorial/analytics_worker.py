@@ -46,6 +46,7 @@ GENERATOR = "analytics_worker@v1"
 ANALYTICS_WORKER_COMPLETED = "analytics_worker.completed"
 ANALYTICS_ARTIFACT_PRODUCED = "analytics_worker.artifact"
 ANALYTICS_WORKER_ESCAPE = "analytics_worker.escape"   # loud: the worker wrote outside its lane
+ANALYTICS_WORKER_READY = "analytics_worker.ready"     # update + canary result, before any spend
 
 # The sandbox: a per-request scratch folder lives under here; AGENTS.md at its root carries the
 # worker doctrine (discovered by grok walking up from the scratch cwd).
@@ -295,6 +296,57 @@ def _grok_runner(prompt: str, folder: Path, *, timeout: float) -> tuple[bool, st
 Runner = Callable[[str, Path], tuple[bool, str]]
 
 
+def grok_version() -> str:
+    """The exact harness version — stamped onto every artifact as provenance, so a shift in
+    analytics quality can be correlated to a tool version from the ledger instead of guessed."""
+    try:
+        proc = subprocess.run(["grok", "--version"], capture_output=True, text=True, timeout=30,
+                              encoding="utf-8", errors="replace")
+        return (proc.stdout or "").strip() or "unknown"
+    except (FileNotFoundError, OSError, subprocess.SubprocessError):
+        return "unknown"
+
+
+def update_grok() -> str:
+    """Update the harness AT A RUN BOUNDARY (never mid-run — one tool version per article).
+
+    The harness's improvement curve IS the analytics quality curve, so we take the newest build
+    every run rather than pinning. This is affordable precisely because analytics degrade
+    gracefully: a bad release costs one missing visual, never a broken article (contrast the
+    drafter's model, where the same policy would be reckless).
+    """
+    try:
+        proc = subprocess.run(["grok", "update"], capture_output=True, text=True, timeout=180,
+                              encoding="utf-8", errors="replace")
+        out = ((proc.stdout or "") + (proc.stderr or "")).strip().splitlines()
+        return (out[-1][:160] if out else "updated") if proc.returncode == 0 else "update failed"
+    except (FileNotFoundError, OSError, subprocess.SubprocessError) as exc:
+        return f"update skipped ({str(exc)[:60]})"
+
+
+def canary(workspace: Path, *, runner: Runner | None = None, timeout: float = 120.0) -> tuple[bool, str]:
+    """Prove the freshly-updated harness still works, on fixture data, before spending on real work.
+
+    Seconds of quota: draw one tiny chart from known numbers and check an artifact came back. A
+    pass means the new build behaves; a fail means we skip analytics for this run and SAY SO,
+    rather than discovering the breakage halfway through an article's visuals.
+    """
+    folder = workspace / "_canary"
+    shutil.rmtree(folder, ignore_errors=True)
+    folder.mkdir(parents=True, exist_ok=True)
+    try:
+        (folder / "data.csv").write_text("month,value\nMar,1.0\nApr,2.0\nMay,3.0\n", encoding="utf-8")
+        prompt = ("Read data.csv in this folder and draw a minimal line chart of value by month as "
+                  "chart.svg. Nothing else — no extra files, no network.")
+        ok, tail = (runner or (lambda p, f: _grok_runner(p, f, timeout=timeout)))(prompt, folder)
+        drew = (folder / "chart.svg").exists() or (folder / "chart.png").exists()
+        if drew:
+            return True, "canary ok"
+        return False, f"canary produced no chart ({'ran' if ok else 'run failed'}: {tail[:100]})"
+    finally:
+        shutil.rmtree(folder, ignore_errors=True)
+
+
 def fulfill_request(
     request: AnalyticsRequest,
     profile: SignalProfile,
@@ -303,13 +355,14 @@ def fulfill_request(
     context: AgentRunContext | None = None,
     runner: Runner | None = None,
     timeout: float = _TIMEOUT_S,
+    version: str = "",
 ) -> AnalyticsArtifact:
     """Build one grounded request into an artifact, with the harness owning integrity end-to-end."""
     workspace = workspace or default_workspace()
     payload, cited_claims, as_of = _grounded_data(request, profile)
     result = AnalyticsArtifact(request_id=request.id, kind=request.kind, title=request.title,
                                data_refs=request.data_refs, as_of=as_of,
-                               generator=GENERATOR, model="grok-build",
+                               generator=GENERATOR, model=version or "grok-build",
                                generated_at=datetime.now(UTC).isoformat())
 
     if not request.data_refs:                          # the router should have filtered this; belt-and-suspenders
@@ -402,10 +455,13 @@ class WorkerState(TypedDict, total=False):
     analytics_artifacts: list[dict[str, Any]]
 
 
-def build_analytics_worker_graph(context: AgentRunContext, *, runner: Runner | None = None) -> Any:
+def build_analytics_worker_graph(
+    context: AgentRunContext, *, runner: Runner | None = None, refresh: bool = True,
+) -> Any:
     """Compile the worker stage: fulfill each warranted request in a plan into an artifact.
 
-    ``runner`` is injectable (tests pass a fake); the default spawns grok-build.
+    ``runner`` is injectable (tests pass a fake); the default spawns grok-build. ``refresh``
+    updates the harness at this run boundary + canaries it before any real spend (tests pass False).
     """
 
     def work(state: WorkerState, config: RunnableConfig) -> dict[str, Any]:
@@ -416,10 +472,25 @@ def build_analytics_worker_graph(context: AgentRunContext, *, runner: Runner | N
             context.emit(ANALYTICS_WORKER_COMPLETED, {"produced": 0, "note": "nothing warranted"})
             return {"analytics_artifacts": []}
 
+        # Take the newest harness at the RUN BOUNDARY (never mid-run: one tool version per
+        # article), then prove it still works on fixture data before spending on real requests.
+        # A bad release costs this run's visuals, not the article — that graceful degradation is
+        # exactly what makes an always-update policy affordable here.
+        version = ""
+        if refresh:
+            note = update_grok()
+            version = grok_version()
+            ok, canary_note = canary(default_workspace(), runner=runner)
+            context.emit(ANALYTICS_WORKER_READY, {"version": version, "update": note, "canary": canary_note})
+            if not ok:
+                context.emit(ANALYTICS_WORKER_COMPLETED, {
+                    "produced": 0, "note": f"analytics skipped — {canary_note} (version {version})"})
+                return {"analytics_artifacts": []}
+
         profile = SignalProfile.model_validate(pdict)
         artifacts: list[AnalyticsArtifact] = []
         for request in plan.requests:
-            art = fulfill_request(request, profile, context=context, runner=runner)
+            art = fulfill_request(request, profile, context=context, runner=runner, version=version)
             artifacts.append(art)
             context.emit(ANALYTICS_ARTIFACT_PRODUCED, {
                 "request_id": art.request_id, "status": art.status,

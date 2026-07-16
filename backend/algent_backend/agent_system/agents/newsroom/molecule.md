@@ -30,6 +30,14 @@ meeting"), but the *understanding* ("the Fed held rates because two real risks p
 opposite directions, and the committee is genuinely split on which to weigh"). Everything
 else in the treatment serves transferring *this* shape faithfully.
 
+Then name its reader-facing dual: **the question this piece answers** — one line, in the reader's
+words, of what they came wanting to know and will leave knowing ("will the Fed move in July, and
+what would change that?"). The core understanding is the shape; the question is why anyone wants
+it. This is the sharpest test you have: **every concept below either serves answering that question
+or does not belong in the piece.** And if you cannot state a question a reader would actually want
+answered — if the honest version is "something might happen, or might not" — then you do not have a
+story. Say so in the treatment rather than assembling one out of what the profile happens to hold.
+
 ## Load-bearing concepts and their dependencies
 Decompose the core understanding into the **concepts the reader must build** to hold it, and
 make the dependencies explicit:
@@ -48,6 +56,14 @@ not merely a less-detailed one. Distinguish the load-bearing from the merely int
 treatment carries the former and lets the drafter spend remaining room on the latter. Order
 broad → specific (the direction a reader instinctively travels).
 
+The test is about the **reader**, never about the inventory. *"The profile's tertiary lead would go
+unused"* is not a reason to include anything — the profile is our workspace, not a manifest to be
+discharged, and an unused item costs the reader nothing. A thread the research turned up and could
+not resolve is a fact about **our research**, not a concept the reader must build: it belongs in the
+limits, not in the molecule. Watch for the tell — if the only honest thing a concept can say is
+*"this may be related, but we could not establish that,"* it is not a concept. Cut it. (See spirit's
+*honest compression*: a ceiling has two levers, and cutting is the one you under-use.)
+
 ## Right resolution
 For each concept, set the **grain**: comprehensive enough to reconstruct the real shape,
 manageable enough to hold. Flag where the material genuinely demands a long chain (do not let
@@ -60,6 +76,14 @@ profile: cite the **claim / thread / source ids** that supply it. Two consequenc
 - **must-use items** — the profile items that are load-bearing for the true shape, which the
   draft is not free to drop. (Downstream, the harness can check the draft actually carries
   them.)
+
+  Must-use is a **floor with teeth, and it costs the reader.** The harness fails a draft that drops
+  one, so every id you mark here is a passage the drafter *cannot cut* — including when cutting is
+  the right call. Mark only what the reader's shape genuinely breaks without; "it would be a shame
+  to waste it" is the padding instinct wearing a duty's clothes. A thin item cannot be must-use at
+  all — the harness refuses an unsourced or low-salience id outright, since "not grounded enough to
+  build on" and "too important to drop" cannot both be true of the same claim. Reaching for those is
+  the reliable signal you are protecting the profile rather than the reader.
 - **do-not-overstate** — concepts whose evidence is thin, contested, or hedged. Carry forward
   the ceiling: what the draft may *not* assert beyond what the grounding supports. A molecule
   that quietly upgrades a *likely* into a *fact* is a deception (see spirit's *certainty

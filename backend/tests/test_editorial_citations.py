@@ -87,10 +87,21 @@ def test_drops_must_use_is_the_worst_verdict() -> None:
 
 
 def test_must_use_thread_covered_via_its_claims() -> None:
-    prof = _profile([_claim("c1")], threads=[Thread(id="t1", title="strand", claims=["c1"])])
+    # A thread's grounding is harness-computed as the weakest of its claims — c1 is snapshotted, so
+    # the thread is too (spelled out here because the model default is "unsourced").
+    prof = _profile([_claim("c1")],
+                    threads=[Thread(id="t1", title="strand", claims=["c1"], grounding="snapshotted")])
     # must-use is the THREAD; the draft cites a claim that grounds it -> covered.
     r = check_citations(_draft(["c1"]), _treatment(["t1"]), prof)
     assert r.must_use_present == ["t1"] and r.verdict == "grounded"
+
+
+def test_unsourced_thread_cannot_be_must_use_either() -> None:
+    # The floor is about the item, not its type: a thread grounded in nothing is equally incoherent
+    # as undroppable evidence.
+    prof = _profile([_claim("c1")], threads=[Thread(id="t1", title="strand", claims=[])])
+    r = check_citations(_draft(["c1"]), _treatment(["t1"]), prof)
+    assert r.must_use_stripped == ["t1 (unsourced)"] and r.verdict == "grounded"
 
 
 def test_treatment_consequential_overrides_sandbagged_salience() -> None:
@@ -107,6 +118,48 @@ def test_low_salience_snippet_not_in_treatment_is_tolerated_in_prose() -> None:
     prof = _profile([_claim("c1", salience="low", grounding="snippet_only", supported_by=["s1"])])
     r = check_citations(_draft(["c1"]), _treatment([]), prof)
     assert r.verdict == "grounded" and r.weak_load_bearing == []
+
+
+# -- the must-use floor: a thin item may not be made UNDROPPABLE ---------------
+
+def test_unsourced_claim_cannot_be_must_use() -> None:
+    # An unsourced claim can't be load-bearing (the grounding floor) AND simultaneously be evidence
+    # the draft is forbidden to drop. The harness refuses it rather than force padding into prose.
+    prof = _profile([_claim("c1"), _claim("c2", grounding="unsourced", status="unconfirmed")])
+    r = check_citations(_draft(["c1"]), _treatment(["c1", "c2"]), prof)   # draft drops c2
+    assert r.verdict == "grounded"                    # NOT drops_must_use — the cut is allowed
+    assert r.must_use_missing == [] and r.must_use_present == ["c1"]
+    assert r.must_use_stripped == ["c2 (unsourced)"]
+
+
+def test_low_salience_claim_cannot_be_must_use() -> None:
+    prof = _profile([_claim("c1"), _claim("c2", salience="low")])
+    r = check_citations(_draft(["c1"]), _treatment(["c1", "c2"]), prof)
+    assert r.verdict == "grounded" and r.must_use_stripped == ["c2 (low salience)"]
+
+
+def test_the_bitcoin_case_the_drafter_may_now_cut_it() -> None:
+    """Replay of the real Fed piece: the planner made a low-salience BTC claim and an UNSOURCED
+    'not well established' claim must-use, so the harness forced the drafter to carry a paragraph
+    that resolved to nothing. Cutting both must now be legal."""
+    prof = _profile([
+        _claim("clm_pce"),                                                        # the real story
+        _claim("clm_btc_price", salience="low", supported_by=["s1"]),             # peripheral
+        _claim("clm_btc_link", salience="medium", grounding="unsourced", status="unconfirmed"),
+    ])
+    treatment = _treatment(["clm_pce", "clm_btc_price", "clm_btc_link"])
+    r = check_citations(_draft(["clm_pce"]), treatment, prof)                     # BTC cut entirely
+    assert r.verdict == "grounded"                    # the correct editorial call is no longer punished
+    assert set(r.must_use_stripped) == {"clm_btc_price (low salience)", "clm_btc_link (unsourced)"}
+
+
+def test_stripped_from_must_use_is_still_held_to_the_deep_read_floor_if_cited() -> None:
+    # Droppability and grounding-strength are different axes: "you need not carry this" and "if you
+    # DO carry it, it must be deep-read" are both true — so sandbagging still can't slip the floor.
+    prof = _profile([_claim("c1", salience="low", grounding="snippet_only", supported_by=["s1"])])
+    r = check_citations(_draft(["c1"]), _treatment(["c1"]), prof)   # stripped from must_use, but cited
+    assert r.must_use_stripped == ["c1 (low salience)"]
+    assert r.verdict == "needs_deep_read" and r.weak_load_bearing == ["c1"]
 
 
 def test_overstatement_flags_non_confirmed_cited_claims() -> None:

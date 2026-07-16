@@ -131,12 +131,10 @@ def _figures(produced: list[dict]) -> list[str]:
 
 def _appendix(draft: ArticleDraft, cited_sources: list, cited_claims: list, sources: dict,
               produced: list[dict] | None = None) -> list[str]:
-    out = [
-        "## How we know this — sources & verification",
-        "_Optional. The receipts: what the piece rests on, when we captured it, and how far we could "
-        "verify each part — so you can judge for yourself, and perhaps reach a source we did not._",
-        "",
-    ]
+    # The heading is the machine contract (the site splits the receipts here) and the site's own
+    # disclosure label already says what this is — so no preamble explaining the receipts to the
+    # reader. Show the record; don't narrate it.
+    out = ["## How we know this", ""]
     if draft.frame:
         out += [f"**How this piece is framed:** {draft.frame}", ""]
 

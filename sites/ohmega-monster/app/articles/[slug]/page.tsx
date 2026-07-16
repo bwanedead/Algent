@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import Markdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 
+import Prose from "@/components/Prose";
 import { getArticle, getSlugs } from "@/lib/articles";
 import { SITE_URL } from "@/lib/site";
 
@@ -47,7 +46,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
       </header>
 
       <div className="prose">
-        <Markdown remarkPlugins={[remarkGfm]}>{a.body}</Markdown>
+        <Prose>{a.body}</Prose>
       </div>
 
       {a.receipts ? (
@@ -58,7 +57,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
             <span className="disclosure-hint">Sources / claims / limits</span>
           </summary>
           <div className="body">
-            <Markdown remarkPlugins={[remarkGfm]}>{a.receipts}</Markdown>
+            <Prose>{a.receipts}</Prose>
           </div>
         </details>
       ) : null}

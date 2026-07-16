@@ -28,6 +28,7 @@ from .analytics_worker import build_analytics_worker_graph
 from .caveat_spec import build_graph as build_caveat_reviewer
 from .draft import ArticleDraft
 from .draft_gauntlet import build_drafting_gauntlet_graph
+from .draft_spec import build_graph as build_drafter
 from .draft_store import render_draft
 from .gauntlet import build_planning_gauntlet_graph
 from .headline_spec import build_graph as build_headline_writer
@@ -36,6 +37,7 @@ from .publish import render_published_article
 
 PIPELINE_COMPLETED = "editorial_pipeline.completed"
 PIPELINE_NO_INPUT = "editorial_pipeline.no_input"
+CAVEAT_REPAIRED = "editorial_pipeline.caveat_repaired"   # the self-heal lap ran; here's the outcome
 
 # The analytics WORKER (grok subprocess) is gated separately from the router. The router is cheap
 # (a nano assessment, always runs); the worker is minutes-long and spends subscription quota per
@@ -93,9 +95,17 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
 
         # 4. v3b — verify the flagged promises are actually kept in the prose (the last honesty
         # gate). Cheap: nano, and free when nothing is flagged. Its pass is what earns "publishable".
+        # Runs AFTER the headline because it judges title + standfirst + body.
         caveat = build_caveat_reviewer(context).invoke(
             {"draft": draft, "profile": enriched_profile}, config).get("caveat_check") or {}
         caveat_verdict = str(caveat.get("verdict", "verified"))
+
+        # 4b. SELF-HEAL — one bounded repair lap (see _repair_hedging).
+        caveat_rounds = 1
+        if caveat_verdict == "needs_hedging" and draft:
+            draft, enriched_profile, caveat, caveat_rounds = _repair_hedging(
+                context, config, draft=draft, treatment=treatment, profile=enriched_profile, caveat=caveat)
+            caveat_verdict = str(caveat.get("verdict", "verified"))
 
         # 5. analytics routing — assess whether a chart/table/insight/illustration would make the
         # story clearer, emitting grounded requests (cheap nano; always runs).
@@ -129,6 +139,7 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
             status=status,
             caveat_verdict=caveat_verdict,
             caveat_findings=len(caveat.get("findings", [])),
+            caveat_rounds=caveat_rounds,
             article_title=str(draft.get("title", "")),
             word_count=int(draft.get("word_count", 0) or 0),
             barriers=draft_report.get("barriers", []),
@@ -158,6 +169,36 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
     graph.add_edge(START, "pipeline")
     graph.add_edge("pipeline", END)
     return graph.compile()
+
+
+def _repair_hedging(
+    context: AgentRunContext, config: RunnableConfig, *,
+    draft: dict[str, Any], treatment: dict[str, Any], profile: dict[str, Any], caveat: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], int]:
+    """One bounded lap that repairs an overclaim instead of parking the piece.
+
+    The caveat findings name specific sentences and specific problems, so the fix is surgical:
+    hedge exactly those, re-headline (the title must stay truthful to the changed prose), re-check.
+    This is what makes ``needs_hedging`` mean *took one more lap* rather than *held in a queue
+    nobody reads* — duds ship by design, overclaims get repaired by machine, and nothing waits on a
+    human. Bounded at one lap: if the repair doesn't take, we stay honest rather than loop.
+    """
+    repaired = build_drafter(context).invoke(
+        {"treatment": treatment, "profile": profile, "prior_draft": draft, "caveat_check": caveat}, config)
+    new_draft = repaired.get("draft") or {}
+    if not new_draft:
+        return draft, profile, caveat, 2          # the repair produced nothing; keep the honest verdict
+
+    profile = repaired.get("profile") or profile
+    hl = build_headline_writer(context).invoke({"draft": new_draft}, config).get("headline") or {}
+    if hl.get("title"):
+        new_draft = {**new_draft, "title": hl["title"],
+                     "standfirst": hl.get("standfirst") or new_draft.get("standfirst", "")}
+    rechecked = build_caveat_reviewer(context).invoke(
+        {"draft": new_draft, "profile": profile}, config).get("caveat_check") or {}
+    context.emit(CAVEAT_REPAIRED, {"verdict": rechecked.get("verdict"),
+                                   "findings_remaining": len(rechecked.get("findings", []))})
+    return new_draft, profile, rechecked, 2
 
 
 def _preview(r: EditorialPipelineReport) -> dict[str, Any]:

@@ -177,7 +177,7 @@ def test_tripwire_catches_a_poisoned_store_json(tmp_path: Path, monkeypatch) -> 
 def test_worker_graph_loops_warranted_requests(tmp_path: Path) -> None:
     events: list = []
     plan = AnalyticsPlan(id="analytics_prof_x", profile_id="prof_x", warranted=True, requests=[_request()])
-    graph = aw.build_analytics_worker_graph(_ctx(tmp_path, events), runner=_good_runner())
+    graph = aw.build_analytics_worker_graph(_ctx(tmp_path, events), runner=_good_runner(), refresh=False)
     out = graph.invoke({"analytics_plan": plan.model_dump(), "profile": _profile().model_dump()})
 
     arts = out["analytics_artifacts"]
@@ -186,8 +186,43 @@ def test_worker_graph_loops_warranted_requests(tmp_path: Path) -> None:
     assert done["produced"] == 1
 
 
+def test_canary_passes_when_the_harness_draws(tmp_path: Path) -> None:
+    ok, note = aw.canary(tmp_path / "ws", runner=_good_runner())
+    assert ok and note == "canary ok"
+    assert not (tmp_path / "ws" / "_canary").exists()   # scratch cleaned even on the canary
+
+
+def test_canary_fails_when_the_harness_draws_nothing(tmp_path: Path) -> None:
+    ok, note = aw.canary(tmp_path / "ws", runner=lambda _p, _f: (True, "{}"))   # ran, drew nothing
+    assert not ok and "no chart" in note
+
+
+def test_a_failed_canary_skips_analytics_without_breaking_the_article(tmp_path: Path, monkeypatch) -> None:
+    # The property that makes always-updating affordable: a bad harness release costs this run's
+    # visuals and SAYS SO — it never blocks the piece.
+    monkeypatch.setattr(aw, "update_grok", lambda: "updated to 9.9.9")
+    monkeypatch.setattr(aw, "grok_version", lambda: "grok 9.9.9")
+    monkeypatch.setattr(aw, "canary", lambda _ws, runner=None: (False, "canary produced no chart"))
+    events: list = []
+    plan = AnalyticsPlan(id="x", profile_id="prof_x", warranted=True, requests=[_request()])
+    graph = aw.build_analytics_worker_graph(_ctx(tmp_path, events), runner=_good_runner(), refresh=True)
+    out = graph.invoke({"analytics_plan": plan.model_dump(), "profile": _profile().model_dump()})
+
+    assert out["analytics_artifacts"] == []            # degraded, not crashed
+    done = next(p for et, p in events if et == aw.ANALYTICS_WORKER_COMPLETED)
+    assert "analytics skipped" in done["note"] and "9.9.9" in done["note"]   # and it says why
+    ready = next(p for et, p in events if et == aw.ANALYTICS_WORKER_READY)
+    assert ready["version"] == "grok 9.9.9"            # version stamped even on the failure path
+
+
+def test_produced_artifact_is_version_stamped(tmp_path: Path) -> None:
+    art = aw.fulfill_request(_request(), _profile(), workspace=tmp_path / "ws",
+                             runner=_good_runner(), version="grok 0.2.63 (2ade4617f)")
+    assert art.model == "grok 0.2.63 (2ade4617f)"      # provenance: which tool drew this
+
+
 def test_worker_graph_does_nothing_when_not_warranted(tmp_path: Path) -> None:
     plan = AnalyticsPlan(id="x", warranted=False)
-    graph = aw.build_analytics_worker_graph(_ctx(tmp_path, []), runner=_good_runner())
+    graph = aw.build_analytics_worker_graph(_ctx(tmp_path, []), runner=_good_runner(), refresh=False)
     out = graph.invoke({"analytics_plan": plan.model_dump(), "profile": _profile().model_dump()})
     assert out["analytics_artifacts"] == []
