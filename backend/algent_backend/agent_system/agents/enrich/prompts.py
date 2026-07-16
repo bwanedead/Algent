@@ -54,7 +54,18 @@ COUNTER_PERSPECTIVE_DOCTRINE = (
     "the strongest case against the dominant thesis. Where the profile overclaims, add a claim "
     "that qualifies or contradicts it (set contradicted_by, citing your source). The goal is an "
     "adversarially-rounded profile that represents the real spread of credible views — not a "
-    "one-sided story. Reality before any single frame."
+    "one-sided story. Reality before any single frame.\n\n"
+    "WHERE TO LOOK. Dissent is rarely in the same wire copy that built the dominant frame — if "
+    "the profile leans on one outlet, more of that outlet is not a counter-perspective. Widen "
+    "the source CLASS: primary documents and data (the filing, the dataset, the regulator's own "
+    "page) often contradict the summarized telling, and `web_search(query=..., source=\"x\")` is "
+    "frequently where credible on-the-ground dissent surfaces first — the operator, the tracker, "
+    "the domain specialist disputing the consensus read. X is a source class, not a last resort. "
+    "But carry its epistemics: a post grounds 'who said what' at full strength and the WORLD only "
+    "weakly — keep an uncorroborated world-claim from a post 'unconfirmed'/'contested' and modest "
+    "in salience unless the account is authoritative for that fact, and snapshot the post (add it "
+    "to the source ledger with its exact url) because posts vanish. Widening the aperture must not "
+    "become laundering rumor into the spine."
 )
 
 COUNTER_PERSPECTIVE_PROMPT = compose_system_prompt(

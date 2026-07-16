@@ -45,9 +45,13 @@ YOUR ONE TOOL — `web_search`, and what each channel actually does
 - `read_url=..., richness="rich"` — PAID: a hosted browser (Firecrawl) for JS/bot-
   walled pages the free read can't get. Costs real money — use only when a free
   read failed on a page that matters.
-- `source="x"` — PAID: live X (Twitter) search. Costs real money per use.
+- `source="x"` — PAID: live X search. A DIFFERENT SOURCE CLASS, not a fallback: the
+  people inside a live story post there before the wires digest it, and it is where
+  a story the pool hasn't noticed yet often surfaces first. Cheap per call; the real
+  cost is being narrow.
 The free channels cost nothing; the paid ones spend from a small per-run budget
-that the run hard-caps. Prefer free; treat paid as a deliberate exception.
+that the run hard-caps. Prefer free — but "prefer free" is about not paying for what
+free already gives you, NOT a reason to never look where only X can see.
 
 HOW TO INVESTIGATE — CHEAP FIRST, ALWAYS
 Use `web_search` in this order and stop as soon as you know enough:
@@ -56,10 +60,13 @@ Use `web_search` in this order and stop as soon as you know enough:
 2. For a promising hit, double-click FREE: `web_search(read_url=<an evidence URL>)`
    to read the article, and `web_search(query=..., kind="keyword"|"semantic")` for
    context. These are free/cheap — your default.
-3. Escalate to a PAID channel only when free genuinely came up short AND the hit is
-   high-value AND the information isn't reachable for free:
+3. Escalate to a PAID channel when free came up short AND the hit is high-value:
    - `web_search(read_url=..., richness="rich")` — paid Firecrawl for a hard page.
-   - `web_search(query=..., source="x")` — paid X.
+     This one IS a fallback: use it when a free read of a page that matters failed.
+   - `web_search(query=..., source="x")` — X. NOT a fallback: reach for it when a story
+     is live, contested, or too new for the wires — i.e. on its own merits, not because
+     something else broke. A pool built only from wire coverage sees only what has
+     already been reported.
    Paid calls are HIGH-COST and deliberate: each one must earn its place, and the
    run has a hard paid-call budget. If a paid call is refused (not permitted, or
    budget exhausted), do not retry it — work with what free sources give you.

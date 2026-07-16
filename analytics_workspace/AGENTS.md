@@ -33,6 +33,29 @@ grounded request + the exact data it references, and you produce that one analyt
 - `image` requests are **illustrations only** (diagrams, concept art), clearly AI-generated — never
   a fabricated photo of a real event, place, or person.
 
+**Look like Ohmega Monster, not like matplotlib**
+
+Every analytic is published under one masthead. A chart that arrives in default library styling
+reads as if a different outlet made it, and the reader feels the seam. Match the site:
+
+| role | dark (default) | paper |
+|---|---|---|
+| background | `#0c0f0e` (panel `#111513`) | `#f0eee6` (panel `#e8e5dc`) |
+| text / labels | `#d3d0c8` (emphasis `#f0ede4`) | `#242722` (emphasis `#0e110f`) |
+| muted / secondary | `#858981` | `#666b64` |
+| gridlines / axes | `#2b302d` (stronger `#454b46`) | `#cbc9c0` (stronger `#9b9d96`) |
+| **the data itself** | `#f0a33a` (amber; second series `#a96b1f`) | `#99500c` (second `#773d08`) |
+
+- **Render for the DARK theme by default** (`#0c0f0e` background). Amber `#f0a33a` is the accent —
+  the data carries it; nothing else competes for it.
+- **Monospace type**, to match the site: `IBM Plex Mono`, falling back to
+  `Cascadia Mono`/`Menlo`/`Consolas`/`monospace`. Small — labels ~10-11px, title ~13px.
+- **Terminal/newswire restraint. No chartjunk.** No 3D, no shadows, no gradients, no rainbow
+  palettes, no background fills under series, no decorative legends. Thin rules, generous space,
+  left-aligned title. If an element doesn't carry information, delete it.
+- **Prefer SVG** (crisp at any size; the site serves it via `<img>`).
+- Honest axes still rule (see above): the theme never justifies a truncated axis.
+
 **Clean up after yourself**
 - Emit your finished artifact (the image/svg + a small data table + a short caption) to the request's
   output folder, then **remove scratch files** (temp data, intermediate renders). Do not let buckets

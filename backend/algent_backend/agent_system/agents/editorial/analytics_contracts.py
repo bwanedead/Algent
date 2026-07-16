@@ -75,5 +75,5 @@ class AnalyticsArtifact(BaseModel):
     escaped_writes: list[str] = Field(default_factory=list)  # repo paths the worker touched OUTSIDE its lane (a hard fail)
     note: str = ""
     generated_at: str = ""
-    model: str = ""
+    model: str = ""              # the harness + its exact version (provenance: which tool drew this)
     generator: str = ""
