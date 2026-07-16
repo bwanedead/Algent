@@ -48,6 +48,14 @@ def test_topics_are_canonical_and_pillar_weighted() -> None:
     assert all(t in tg._TOPIC_VOCAB for t in topics)   # canonical vocabulary only — never free-form
 
 
+def test_pharma_story_leads_with_health_not_economics() -> None:
+    # Regression from a live run: an FDA drug approval tagged "economics" first, because the vocab
+    # had no pharma terms at all and the synthesizer had put pillars=["economics"]. A domain gap in
+    # the vocabulary reads as bad ranking but is really absence — the fix belongs in the table.
+    topics = tg.derive_topics(["economics"], ["health", "pharma", "FDA", "cardiovascular"], cap=3)
+    assert topics[0] == "health" and "economics" in topics
+
+
 def test_entity_tags_exclude_sources_and_countries() -> None:
     tags = tg.derive_entity_tags(_PROFILE, cap=5, exclude=["Iran", "United States"])
     assert "Strait of Hormuz" == tags[0]    # most-referenced across threads

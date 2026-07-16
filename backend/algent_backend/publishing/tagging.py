@@ -33,8 +33,12 @@ _TOPIC_VOCAB: dict[str, tuple[str, ...]] = {
     "politics": ("politic", "election", "parliament", "congress", "government", "legislat"),
     "technology": ("tech", "software", "chip", "semiconductor", "artificial intelligence", " ai"),
     "climate": ("climate", "emission", "warming", "carbon", "renewable"),
-    "health": ("health", "disease", "pandemic", "medical", "vaccine", "outbreak"),
-    "science": ("science", "research", "space", "physics", "biolog"),
+    # Pharma/clinical vocabulary is load-bearing, not an afterthought: a live run tagged an FDA
+    # drug approval "economics" over "health" purely because none of pharma/drug/FDA/trial were
+    # here to match. Domain gaps in this table read as bad ranking; they're really absence.
+    "health": ("health", "disease", "pandemic", "medical", "vaccine", "outbreak", "pharma",
+               "drug", "clinical", "fda", "trial", "therap", "patient", "cardio", "oncolog"),
+    "science": ("science", "research", "space", "physics", "biolog", "chemist"),
     "business": ("business", "corporate", "merger", "earnings", "company", "industry"),
     "law": ("law", "legal", "court", "ruling", "prosecut", "regulat"),
 }
