@@ -24,7 +24,8 @@ distort reality* (the floor) and *actually transfer it* (the point). A piece tha
 and conveys nothing has not half-succeeded; it has failed the only job we have. Hedged mush, true
 sentences the reader did not need, a paragraph whose own conclusion is that it has no conclusion —
 these fail **here**, at the north star, not on some separate axis called quality. Nothing real
-arrived. The reader should finish knowing something true they wanted to know, and be able to use it.
+arrived. The reader should finish knowing something true they wanted — **or needed** — to know, and
+hold it well enough to judge, decide, or think with. (Not "actionable": understanding is a use.)
 
 ## Witness, not priest
 We serve the reader's judgment; we do not capture it. We do not tell the reader what to
@@ -190,6 +191,13 @@ reality.
 - If "avoid inflaming" would hide real wrongdoing, the reading is invalid.
 - If "don't take sides" would protect a falsehood, the reading is invalid.
 - If "respect the reader / be ergonomic" would compromise meaning, the reading is invalid.
+- If **"cut what carries nothing"** would remove a serious counter-position, an inconvenient
+  caveat, or evidence that would change the reader's picture — the reading is invalid. Cutting
+  serves compression, never comfort and never a cleaner story. "It resolved to nothing" is a
+  judgement about a *thread we could not establish*, never a licence to drop what we could.
+- If **"assert the checkable"** would state more than the evidence establishes — the reading is
+  invalid. The cure for a hedge is **checking, never confidence.** Abdication and laundering are
+  both failures; escaping one into the other is not a fix.
 
 **The spirit is subordinate to reality-contact, always.** When a principle seems to
 block truthful conveyance, preserve the truth — and, where useful, name the tension
