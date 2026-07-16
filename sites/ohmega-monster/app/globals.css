@@ -45,13 +45,6 @@ body {
   min-height: 100vh;
   margin: 0;
   background-color: var(--bg);
-  background-image: linear-gradient(
-    to bottom,
-    transparent calc(var(--line) - 1px),
-    color-mix(in srgb, var(--rule) 32%, transparent) calc(var(--line) - 1px),
-    color-mix(in srgb, var(--rule) 32%, transparent) var(--line)
-  );
-  background-size: 100% var(--line);
   color: var(--text);
   font-family: var(--mono);
   font-size: 13px;
@@ -231,6 +224,13 @@ a { color: inherit; }
   min-height: 65vh;
   margin: 0 auto;
   padding-top: var(--line);
+  background-image: linear-gradient(
+    to bottom,
+    transparent calc(var(--line) - 1px),
+    color-mix(in srgb, var(--rule) 32%, transparent) calc(var(--line) - 1px),
+    color-mix(in srgb, var(--rule) 32%, transparent) var(--line)
+  );
+  background-size: 100% var(--line);
 }
 
 .breadcrumb {
