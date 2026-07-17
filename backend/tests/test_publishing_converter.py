@@ -96,3 +96,13 @@ def test_frontmatter_is_valid_yaml_despite_punctuation_in_dek() -> None:
     art = _convert(article_md=tricky)
     fm = yaml.safe_load(art.markdown.split("---\n")[1])
     assert fm["dek"] == "A: B — the market's move."
+
+
+def test_published_at_orders_same_day_pieces() -> None:
+    # `date` is day-granular; two pieces published the same day (routine for a newsroom) tie on it,
+    # leaving the feed in arbitrary order — which is exactly what shipped. published_at is the key
+    # the index actually sorts on.
+    fa = yaml.safe_load(_convert(published_at="2026-07-16T10:00:00+00:00").markdown.split("---\n")[1])
+    fb = yaml.safe_load(_convert(published_at="2026-07-16T21:00:00+00:00").markdown.split("---\n")[1])
+    assert fa["date"] == fb["date"]                  # same day -> `date` cannot order them
+    assert fa["published_at"] < fb["published_at"]   # the real moment can

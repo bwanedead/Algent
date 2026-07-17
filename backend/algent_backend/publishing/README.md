@@ -73,3 +73,8 @@ With humans out of the loop, nobody notices `site-live` lagging your dev branch'
 (CSS/app changes, not content). `site publish` warns when it detects drift; merge dev → `site-live`
 to ship code changes. (Auto-published content and assets differ by design and are excluded from the
 warning.)
+
+**The branch discipline that keeps this from breaking** — one-way merges, never a hand-written
+commit on `site-live`, how to resolve a merge, and how to recover from divergence — is the
+[Site Branch Protocol](../../../docs/guides/site-branch-protocol.md). Read it before touching
+`site-live` by hand.
