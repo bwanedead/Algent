@@ -2,8 +2,23 @@
 title: Hormuz saw serious traffic disruption, but the record doesn’t prove a sustained full closure
 dek: Visible tanker counts dropped sharply in mid-July and insurers treated passage as riskier, while conflicting “open/closed” statements persisted and AIS gaps mean a total shutdown wasn’t established.
 date: '2026-07-16'
+published_at: '2026-07-16T10:26:28.549553+00:00'
 as_of: '2026-07-16'
 status: publishable
+tags:
+- trade
+- economics
+- energy
+- Strait of Hormuz
+- shipowners and charterers
+places:
+- Iran
+- United States
+- Oman
+flags:
+- 🇮🇷
+- 🇺🇸
+- 🇴🇲
 ---
 
 The Strait of Hormuz was not shown to be fully closed. What the record does show is a serious operational disruption: tanker traffic slowed on July 10, fell to multi-week lows by July 13, and Reuters later reported just six vessels transiting on Sunday, the lowest count in five weeks. CNBC, using Kpler data, reported 14 ships on Sunday, down from 37 a week earlier. Those counts are only a visible floor, not a complete tally, because Reuters reported that ships were increasingly switching off AIS transponders.

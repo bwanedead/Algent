@@ -2,6 +2,7 @@
 title: FDA approves Merck’s oral Lipfendra (enlicitide) to lower LDL-C, but outcomes and access remain unproven
 dek: The label is based on strong LDL-C reductions versus placebo in phase 3 trials, while cardiovascular benefit, and how the oral route will affect uptake and payer coverage, are still pending CORALreef Outcomes data and nonpublic reimbursement terms.
 date: '2026-07-16'
+published_at: '2026-07-16T21:07:58.959911+00:00'
 as_of: '2026-07-16'
 status: publishable
 tags:
