@@ -138,6 +138,21 @@ def test_low_salience_claim_cannot_be_must_use() -> None:
     assert r.verdict == "grounded" and r.must_use_stripped == ["c2 (low salience)"]
 
 
+def test_must_use_is_hard_capped_at_three() -> None:
+    # must_use is omission-risk insurance, not an inventory. A planner marking many claims
+    # undroppable (the padding cause) is capped: the most-salient survive, the rest are the
+    # drafter's judgment. Highest-salience-first so the most defensible stay enforced.
+    prof = _profile([
+        _claim("hi1", salience="high"), _claim("hi2", salience="high"),
+        _claim("md1", salience="medium"), _claim("md2", salience="medium"),
+        _claim("hi3", salience="high"),
+    ])
+    r = check_citations(_draft([]), _treatment(["hi1", "md1", "hi2", "md2", "hi3"]), prof)
+    assert set(r.must_use_present) | set(r.must_use_missing) == {"hi1", "hi2", "hi3"}  # the 3 high ones
+    assert set(m.split()[0] for m in r.must_use_stripped) == {"md1", "md2"}            # mediums over cap
+    assert all("over cap" in m for m in r.must_use_stripped)
+
+
 def test_the_bitcoin_case_the_drafter_may_now_cut_it() -> None:
     """Replay of the real Fed piece: the planner made a low-salience BTC claim and an UNSOURCED
     'not well established' claim must-use, so the harness forced the drafter to carry a paragraph

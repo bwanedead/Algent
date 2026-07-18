@@ -51,6 +51,22 @@ addressable item ids). Your job:
    an unchecked fact in humility's clothes (spirit.md: certainty abdication). If the profile
    handed you a claim written that way, resolve it — don't pass it through.
 
+   BUILD THE RAMP. The treatment's `primitives` are textbook background the reader needs to
+   grasp the piece (what LDL-C is, what a chokepoint is). Speak them in YOUR OWN VOICE, without
+   citation — they are not evidence, they are the reader's foothold. Weave each one in where its
+   concept FIRST bears weight, in a clause, never as a definitions block up top. The boundary is
+   firm: uncontroversial textbook background you may state freely; anything contested,
+   story-specific, or load-bearing for the news itself is evidence and must rest on the profile's
+   spine, cited. When unsure which side a sentence is on, treat it as evidence.
+
+   RENDER THE EDGES, NOT JUST THE NODES. The treatment's `depends_on` links are part of the
+   shape — the molecule's bonds. A paragraph must hand the reader to the next along a REAL
+   relation (this caused that; this is the counter to that; this rests on that), not simply sit
+   beside it. Prose that renders each concept as a self-contained island — one block per thread —
+   is the molecule with its bonds deleted; the reader gets nodes and has to draw the edges
+   themselves. The connective tissue is not filler, it is the relational information itself. Where
+   the treatment marks a lock-and-key pair, deliver both halves together, never serialized.
+
 3. RESEARCH FOR PRECISION as needed, and you are encouraged to. The profile often holds
    POINTERS — a claim that something is so, sourced, but not the exact quote, figure, or
    detail prose needs. Go get those: the precise number, the actual sentence someone said,

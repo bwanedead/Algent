@@ -55,19 +55,28 @@ PRODUCE an EditorialTreatment:
      it") is a fact about our research, not a concept: it belongs in the limits. CUT it.
    - `reader_path`: the concept ids in dependency order (broad -> specific). This is concept
      order, NOT prose sections.
+   - `primitives[]`: THE RAMP. Textbook background a decently-informed general reader must already
+     hold to build the molecule (term -> one plain-language clause, 2-4 max). These are NOT news
+     and NOT evidence — the drafter speaks them in its own voice, uncited — so they belong here,
+     not on the profile's spine. Only uncontroversial background (what LDL-C is, what a chokepoint
+     is); anything contested, story-specific, or load-bearing for the news itself is evidence, not
+     a primitive. Aim at a generalist: an expert needs no ramp, a novice an endless one. Causal
+     antecedents (what led here) are NOT primitives — they are checkable fact and come from the
+     field threads by id. (See molecule.md: The ramp, and support depth per concept.)
 
 3. COMPLETENESS / HONESTY (see spirit.md)
    - `perspectives[]`: every serious side at its strongest good-faith form (steelman, never
      strawman), each with `grounds_in` ids. Apply scrutiny symmetrically.
    - `deception_risks[]`: name how THIS particular story could mislead while saying only true
      things — the tempting omission, the flattering frame, the unearned certainty.
-   - `must_use_items[]`: the profile item ids that are load-bearing for the true shape — what
-     the draft is not free to drop. This has TEETH: the harness fails a draft that drops one,
-     so each id here is a passage the drafter cannot cut even when cutting is right. Mark only
-     what the reader's shape breaks without — a short list is the healthy case. Unsourced or
-     low-salience ids are refused by the harness outright ("not grounded enough to build on"
-     and "too important to drop" cannot both be true); reaching for them means you are
-     protecting the profile, not the reader.
+   - `must_use_items[]`: OMISSION-RISK INSURANCE — not a completeness manifest. The harness fails
+     a draft that drops one, so each id is a passage the drafter cannot cut even when cutting is
+     right. The bar is NOT "important" — it is "its absence would DECEIVE": the serious
+     counter-position, the inconvenient caveat, the thing a writer would be tempted to bury. Merely
+     informative facts are NOT must-use; the drafter carries or cuts them by judgment. HARD-CAPPED
+     AT 3 (the harness strips beyond it, most-salient first) — marking more means you are using the
+     floor as an inventory, which is what forced padding into the prose. Unsourced/low-salience ids
+     are refused outright.
    - `open_questions[]`: what stays genuinely unknown or contested, to be flagged as such.
 
 Be specific and grounded in THIS profile (cite ids). A treatment that could fit any story is

@@ -32,6 +32,8 @@ from .draft import ArticleDraft
 from .treatment import EditorialTreatment
 
 _PROSE_PCT = re.compile(r"\d+(?:\.\d+)?%")
+# Omission-risk insurance, not an inventory: only the rare item a writer might bury belongs here.
+_MUST_USE_CAP = 3
 
 
 def eligible_must_use(
@@ -50,6 +52,14 @@ def eligible_must_use(
       the piece may still cite it. This is what lets the drafter make the editorial cut that the
       coverage check would otherwise punish.
 
+    ``must_use`` is OMISSION-RISK insurance, not a completeness manifest: it marks the rare thing a
+    writer would be tempted to bury (the serious counter-position, the inconvenient caveat) whose
+    absence would leave the reader *misled*, not merely less informed. So beyond the thin-item strip,
+    it is HARD-CAPPED at ``_MUST_USE_CAP``: a treatment that marks 15 of 38 claims undroppable is
+    using the floor as an inventory, which is what forced padding into the prose. Survivors past the
+    cap are stripped highest-salience-first (the most defensible stay enforced); everything else the
+    drafter carries or cuts by editorial judgment, under spirit — not by harness compulsion.
+
     ANTI-SANDBAGGING INTERACTION (deliberate, not accidental): this does NOT weaken the
     ``treatment_consequential`` cross-check. That set is still built from the ORIGINAL must-use plus
     every concept's ``grounds_in``, so a claim stripped here is still held to the deep-read floor
@@ -58,6 +68,7 @@ def eligible_must_use(
     sandbags a claim's salience therefore still cannot slip it under the grounding floor via a
     concept that grounds in it.
     """
+    _sal = {"high": 0, "medium": 1, "low": 2}
     keep, stripped = [], []
     for m in must_use:
         item = claims_by_id.get(m) or threads_by_id.get(m)
@@ -69,6 +80,15 @@ def eligible_must_use(
             stripped.append(f"{m} (low salience)")
         else:
             keep.append(m)
+    # Hard cap: keep the most-salient survivors, strip the rest as "over cap" (telemetry, not failure).
+    # NOTE: salience is a PROXY for "most defensible to keep", not a claim that salience == burial-risk.
+    # The doctrine's canonical must_use cases (the counter-position, the inconvenient caveat) aren't
+    # necessarily the most salient items in an over-stuffed list — but it's the best deterministic
+    # signal available, and it should almost never bind: the doctrine now pushes planners to mark <=3.
+    keep.sort(key=lambda m: _sal.get(getattr(claims_by_id.get(m) or threads_by_id.get(m), "salience", "medium"), 1))
+    if len(keep) > _MUST_USE_CAP:
+        stripped += [f"{m} (over cap)" for m in keep[_MUST_USE_CAP:]]
+        keep = keep[:_MUST_USE_CAP]
     return keep, stripped
 
 

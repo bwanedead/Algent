@@ -59,6 +59,20 @@ class PerspectiveTake(BaseModel):
     grounds_in: list[str] = Field(default_factory=list)  # profile claim/thread/source ids
 
 
+class Primitive(BaseModel):
+    """A textbook concept the reader must already hold to build the molecule — the ramp.
+
+    NOT a claim about the world and NOT news: it is uncontroversial background (what LDL-C is, what
+    a chokepoint is) the drafter may speak in its own voice, without citation. It lives here, on the
+    treatment, precisely because it is not evidence — sourcing textbook knowledge would recreate the
+    inventory disease with receipts attached. Anything contested, story-specific, or load-bearing
+    for the news itself is NOT a primitive; it is evidence and stays on the profile's spine.
+    """
+
+    term: str
+    plain_meaning: str = ""                            # one plain-language clause a general reader can hold
+
+
 class EditorialTreatment(BaseModel):
     """The pre-draft reality-compression — the durable understanding the drafter inherits.
 
@@ -83,6 +97,9 @@ class EditorialTreatment(BaseModel):
     reader_question: str = ""
     concepts: list[TreatmentConcept] = Field(default_factory=list)
     reader_path: list[str] = Field(default_factory=list)  # suggested concept-id order (dependency order, NOT prose sections)
+    # The ramp: textbook primitives a decently-informed general reader must already hold to build
+    # the molecule (2-4 max). The drafter speaks these in its own voice; they are not evidence.
+    primitives: list[Primitive] = Field(default_factory=list)
 
     # ── completeness / honesty ──
     perspectives: list[PerspectiveTake] = Field(default_factory=list)

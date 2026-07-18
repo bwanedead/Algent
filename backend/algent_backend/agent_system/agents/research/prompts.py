@@ -66,6 +66,12 @@ as relevance actually extends — through:
   number, NO forced "first/second-order" layers. A tight story has few; a sprawling one has
   many. Connective analysis must stay grounded — link threads to claims; never smuggle in a
   worldview. Be a witness, not a priest.
+  CAUSAL ANTECEDENTS especially: when it bears on understanding the story, capture what LED
+  HERE and what PRIOR STATE this changed — the event before the event, the status quo it broke.
+  This is checkable, news-adjacent fact (so it lives here on the spine as a thread, sourced),
+  and it is what lets the piece explain rather than merely report. Distinct from a textbook
+  primitive (what a term means), which is NOT research and is handled downstream — this is the
+  real, specific history of THIS story.
 
 SALIENCE — mark what matters
 Give each claim and thread a salience: high | medium | low. The most important material
