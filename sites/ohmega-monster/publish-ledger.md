@@ -11,3 +11,11 @@ caveats: verified (0 findings)
 analytics: 2 produced, 0 escapes
 cost: ~$0.4809
 run: 0003__14c1d5eb-4fb9-4702-a017-2cd76cd80012
+
+### PUBLISH strait-of-hormuz-sees-severe-disruption-as-tankers-are-hit-a-75a07f — 2026-07-18
+status: needs_hedging  ·  draft: grounded_with_caveats  ·  treatment: needs_revision
+caveats: needs_hedging (1 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.5407
+⚠ walled sources (carried with caveats): src_b86123a696
+run: 0005__cee59fe8-3738-410e-b0e2-58501b08b468
