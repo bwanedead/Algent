@@ -19,3 +19,10 @@ analytics: 2 produced, 0 escapes
 cost: ~$0.5407
 ⚠ walled sources (carried with caveats): src_b86123a696
 run: 0005__cee59fe8-3738-410e-b0e2-58501b08b468
+
+### PUBLISH strait-of-hormuz-impaired-not-closed-strikes-and-vessel-dama-24b347 — 2026-07-18
+status: publishable  ·  draft: grounded_with_caveats  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 3 produced, 0 escapes
+cost: ~$0.0000
+run: 0006__ca5f09fa-0f1c-4190-9496-dde06d7bc0d4
