@@ -24,6 +24,7 @@ from __future__ import annotations
 import re
 import shutil
 import subprocess
+import time
 from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
@@ -78,6 +79,35 @@ _TIMEOUT_S = 240.0
 # time axis. This mirrors unverified_prose_figures' stance (percentages only; counts fall to the
 # semantic judge) — err toward missing a drift, never toward inventing one.
 _SIG_NUM = re.compile(r"\d+\.\d+%?|\d+%")
+
+
+_STALE_SCRATCH_AGE_S = 2 * 60 * 60   # a live request's scratch is minutes old, never hours
+
+
+def sweep_stale_scratch(workspace: Path, *, max_age_s: float = _STALE_SCRATCH_AGE_S) -> list[str]:
+    """Remove per-request scratch dirs orphaned by a killed run. Returns what it cleaned.
+
+    ``fulfill_request`` empties its scratch in a ``finally``, but a killed process (a dropped
+    session, a machine sleep) never runs it — so the workspace slowly accumulates dead folders.
+    This self-heals on the next worker start: no daemon, no bookkeeping, no coordination.
+
+    Age-gated rather than sweeping everything, so a CONCURRENT run's live scratch is never deleted:
+    an in-flight request's folder is minutes old; anything hours old belongs to a run that is gone.
+    """
+    cleaned: list[str] = []
+    if not workspace.is_dir():
+        return cleaned
+    cutoff = time.time() - max_age_s
+    for child in workspace.iterdir():
+        if not child.is_dir() or child.name.startswith("."):
+            continue
+        try:
+            if child.stat().st_mtime < cutoff:
+                shutil.rmtree(child, ignore_errors=True)
+                cleaned.append(child.name)
+        except OSError:
+            continue
+    return cleaned
 
 
 def default_workspace() -> Path:
@@ -478,10 +508,14 @@ def build_analytics_worker_graph(
         # exactly what makes an always-update policy affordable here.
         version = ""
         if refresh:
+            # Self-heal first: a killed run can't empty its own scratch, so clean up anything a
+            # dead predecessor left behind before adding more.
+            cleaned = sweep_stale_scratch(default_workspace())
             note = update_grok()
             version = grok_version()
             ok, canary_note = canary(default_workspace(), runner=runner)
-            context.emit(ANALYTICS_WORKER_READY, {"version": version, "update": note, "canary": canary_note})
+            context.emit(ANALYTICS_WORKER_READY, {"version": version, "update": note,
+                                                  "canary": canary_note, "swept_stale": cleaned})
             if not ok:
                 context.emit(ANALYTICS_WORKER_COMPLETED, {
                     "produced": 0, "note": f"analytics skipped — {canary_note} (version {version})"})

@@ -186,6 +186,31 @@ def test_worker_graph_loops_warranted_requests(tmp_path: Path) -> None:
     assert done["produced"] == 1
 
 
+def test_sweep_removes_orphaned_scratch_but_spares_a_live_one(tmp_path: Path) -> None:
+    # A killed run can't empty its own scratch (the finally never runs), so the workspace
+    # accumulates dead folders. Age-gating is what makes the sweep safe under concurrency.
+    import os
+    import time as _t
+
+    ws = tmp_path / "ws"
+    (ws / "req_dead").mkdir(parents=True)
+    (ws / "req_dead" / "chart.svg").write_text("<svg/>", encoding="utf-8")
+    (ws / "req_live").mkdir()
+    old = _t.time() - (5 * 60 * 60)
+    os.utime(ws / "req_dead", (old, old))          # hours old -> its run is gone
+
+    cleaned = aw.sweep_stale_scratch(ws)
+    assert cleaned == ["req_dead"] and not (ws / "req_dead").exists()
+    assert (ws / "req_live").exists()               # a concurrent run's live scratch is untouched
+
+
+def test_sweep_is_a_noop_on_a_clean_workspace(tmp_path: Path) -> None:
+    ws = tmp_path / "ws"
+    ws.mkdir()
+    (ws / "AGENTS.md").write_text("doctrine", encoding="utf-8")
+    assert aw.sweep_stale_scratch(ws) == [] and (ws / "AGENTS.md").exists()   # files are never touched
+
+
 def test_canary_passes_when_the_harness_draws(tmp_path: Path) -> None:
     ok, note = aw.canary(tmp_path / "ws", runner=_good_runner())
     assert ok and note == "canary ok"
