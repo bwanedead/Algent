@@ -81,6 +81,18 @@ Aim the ramp at a decently-informed generalist — not an expert (who needs no r
 novice (an endless primitive-chase serves no one). The support you name is the reader's foothold,
 not a textbook.
 
+**Two bars, and most candidate primitives fail one of them:**
+- **Is it actually unfamiliar?** A term in the news for months (the Strait of Hormuz, the Fed, the
+  FDA) is already the reader's furniture — explaining it is condescension, not a ramp. Reserve
+  primitives for what a smart reader genuinely would not know: `LDL-C`, `PCSK9`, `VLCC`, `AIS-dark`.
+  When in doubt, assume they know it.
+- **Is the meaning CONCRETE?** A primitive must state what the thing *is* — the place, the number,
+  the mechanism — never gesture at its significance. *"a narrow route whose disruption can ripple
+  far beyond the water itself"* is abstraction posing as explanation and teaches nothing. *"the sea
+  lane between Iran and Oman that about a fifth of the world's seaborne oil passes through"* is a
+  primitive: it hands the reader a fact they can hold and reason with. If you cannot write the
+  plain meaning concretely, you do not understand the term well enough to gloss it — leave it out.
+
 ## Right resolution — and support depth
 For each concept, set the **grain**: comprehensive enough to reconstruct the real shape,
 manageable enough to hold. Flag where the material genuinely demands a long chain (do not let

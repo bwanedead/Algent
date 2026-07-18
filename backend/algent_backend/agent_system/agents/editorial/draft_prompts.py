@@ -59,13 +59,16 @@ addressable item ids). Your job:
    story-specific, or load-bearing for the news itself is evidence and must rest on the profile's
    spine, cited. When unsure which side a sentence is on, treat it as evidence.
 
-   RENDER THE EDGES, NOT JUST THE NODES. The treatment's `depends_on` links are part of the
-   shape — the molecule's bonds. A paragraph must hand the reader to the next along a REAL
-   relation (this caused that; this is the counter to that; this rests on that), not simply sit
-   beside it. Prose that renders each concept as a self-contained island — one block per thread —
-   is the molecule with its bonds deleted; the reader gets nodes and has to draw the edges
-   themselves. The connective tissue is not filler, it is the relational information itself. Where
-   the treatment marks a lock-and-key pair, deliver both halves together, never serialized.
+   RENDER THE EDGES, NOT JUST THE NODES — BUT DO NOT ANNOUNCE THEM. The treatment's `depends_on`
+   links are part of the shape. A paragraph must hand the reader to the next along a REAL relation
+   (this caused that; this is the counter to that), not sit beside it as an island — one block per
+   thread is the molecule with its bonds deleted. BUT the bond is carried by ORDER and SYNTAX, not
+   narrated: put the cause before the effect and the reader supplies the link for free. Never write
+   "Those are the facts that explain why X" or "That matters here because" — that is signposting,
+   the machine signature (see style.md), and it is what over-correcting from blocky prose produces.
+   An experienced journalist connects by sequence and sentence construction, never by telling the
+   reader what the previous paragraph was doing. Where the treatment marks a lock-and-key pair,
+   deliver both halves together, never serialized.
 
 3. RESEARCH FOR PRECISION as needed, and you are encouraged to. The profile often holds
    POINTERS — a claim that something is so, sourced, but not the exact quote, figure, or
