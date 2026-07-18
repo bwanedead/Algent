@@ -25,6 +25,9 @@ class NewsroomRailReport(BaseModel):
     pool_items: int = 0                 # t0 items considered (incl. any backfed leads)
     backfeed_leads_injected: int = 0    # damped open leads merged into the pool (the loop closing)
     vector_count: int = 0               # t1 vectors synthesized
+    # Measured, not inferred: how often any stage actually reached for live X. Zero across a run
+    # means the source class is wired but unused — which is what two doctrine passes failed to fix.
+    x_searches: int = 0
     # ── promotion ──
     selected_vector_id: str = ""
     selected_vector_title: str = ""

@@ -13,7 +13,8 @@ Capabilities, by parameter:
   routes to Tavily, semantic to Exa; the agent picks by intent, not vendor.
 - **read a page** — ``web_search(read_url="https://…")``; free extraction by
   default, ``richness="rich"`` permits the paid Firecrawl fallback for hard pages.
-- **X (guarded)** — ``web_search(query, source="x")``; bounded, and not yet wired.
+- **X** — ``web_search(query, source="x")``; live X search. A DIFFERENT SOURCE CLASS (the
+  people inside a story post there before the wires digest it), not a fallback for a failed read.
 
 Guardrails: ``max_results`` is hard-capped; ``rich`` and ``x`` require a
 deliberate choice; the read path stays free unless ``richness="rich"``. The usual
@@ -79,7 +80,9 @@ def _search(
 
     - ``query`` + ``kind`` ("keyword"|"semantic"): search the web.
     - ``read_url``: read that page instead (``richness="rich"`` allows paid Firecrawl).
-    - ``source="x"``: X social search (bounded; not yet available).
+    - ``source="x"``: LIVE X SEARCH — real posts, available now. Use it when a story is unfolding,
+      when you need what someone ACTUALLY posted rather than an outlet's characterization of it,
+      or when the wires agree and you need to know if anyone credible on the ground disputes them.
     """
     max_results = max(1, min(max_results, _MAX_RESULTS_CAP))
 
@@ -169,10 +172,12 @@ def _build() -> Any:
         _search,
         name="web_search",
         description=(
-            "One research tool. Search the web (kind='keyword' or 'semantic'), or "
-            "read a page (read_url=...; richness='rich' to allow paid full-content "
-            "fetch on hard pages), or X (source='x', bounded). Defaults are free/"
-            "cheap — only ask for 'rich' or 'x' when the target is worth the spend."
+            "One research tool. Search the web (kind='keyword' or 'semantic'), read a page "
+            "(read_url=...; richness='rich' allows the paid crawler on a hard page), or search "
+            "LIVE X POSTS (source='x'). X is a distinct source class, not a fallback: reach for it "
+            "when a story is unfolding, when you need the primary post rather than an outlet's "
+            "summary of it, or to find credible on-the-ground dissent from the wire consensus. "
+            "Web search and reads are free; 'rich' and 'x' draw on a small per-run budget."
         ),
     )
 

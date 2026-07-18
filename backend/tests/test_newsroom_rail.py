@@ -189,3 +189,24 @@ def test_newsroom_rail_registered() -> None:
     from algent_backend.agent_system.agents.registry import default_agent_registry
     spec = default_agent_registry().get("newsroom_rail")
     assert spec.default_model is None and spec.family == "newsroom"
+
+
+def test_rail_counts_x_searches(monkeypatch) -> None:
+    # Measure X adoption rather than inferring it from artifacts — two doctrine passes tried to
+    # raise usage while we could only guess whether it moved.
+    monkeypatch.setenv(rl._BACKFEED_ENV, "0")
+
+    class _XGraph:
+        def __init__(self, out, ctx):
+            self._out, self._ctx = out, ctx
+
+        def invoke(self, _s, _c=None):
+            from algent_backend.agent_system.runs import events as ev
+            self._ctx.emit(ev.TOOL_RESULT, {"content": '{"action": "search", "kind": "x", "results": []}'})
+            self._ctx.emit(ev.TOOL_RESULT, {"content": '{"action": "search", "kind": "keyword"}'})
+            return self._out
+
+    _full(monkeypatch)
+    monkeypatch.setattr(rl, "build_profile", lambda ctx: _XGraph({"profile": {"id": "prof_1"}}, ctx))
+    r = rl.build_newsroom_rail_graph(_ctx([])).invoke({"pool": {"items": [], "item_count": 1}})["rail"]
+    assert r["x_searches"] == 1   # the X call counted, the keyword one didn't

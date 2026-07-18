@@ -89,11 +89,17 @@ def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | Non
         # reported estimated_usd, so the rail can total the run's spend.
         costs: list[float] = []
 
+        # Also counts X searches: we spent two doctrine passes trying to raise X adoption while
+        # only INFERRING usage from artifacts. Measure it instead — an X result carries kind="x".
+        x_calls = [0]
+
         def _tee(event_type: str, payload: dict[str, Any] | None = None) -> None:
             p = payload or {}
             usd = p.get("estimated_usd")
             if isinstance(usd, (int, float)):
                 costs.append(float(usd))
+            if event_type == ev.TOOL_RESULT and '"kind": "x"' in str(p.get("content", "")):
+                x_calls[0] += 1
             context.emit(event_type, p)
 
         sub = dataclasses.replace(context, emit=_tee)
@@ -148,6 +154,7 @@ def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | Non
         report.analytics_produced = int(pipeline.get("analytics_produced", 0) or 0)
         report.stage_reached = "complete"
         report.total_usd = round(sum(costs), 6)
+        report.x_searches = x_calls[0]
 
         # 6. PUBLISH — by virtue of the pipeline, not by someone running a command. A piece that
         # earned `publishable` goes live here; the floors already decided, so there is nothing left
