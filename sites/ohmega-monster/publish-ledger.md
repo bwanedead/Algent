@@ -26,3 +26,10 @@ caveats: verified (0 findings)
 analytics: 3 produced, 0 escapes
 cost: ~$0.0000
 run: 0006__ca5f09fa-0f1c-4190-9496-dde06d7bc0d4
+
+### PUBLISH cisa-warns-sharepoint-server-subscription-edition-2019-and-2-1d951d — 2026-07-18
+status: blocked  ·  draft: blocked_omission  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 3 produced, 0 escapes
+cost: ~$0.0000
+run: 0007__3466b5bc-ba4f-4b38-9c62-5583dc3a1141
