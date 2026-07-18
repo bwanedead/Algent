@@ -119,14 +119,21 @@ def _figures(produced: list[dict]) -> list[str]:
     out: list[str] = []
     for a in produced:
         name = a.get("artifact_name", "")
+        title = str(a.get("title") or "").strip()
+        # An analytic dropped in with no label is a puzzle, not information: the reader meets a
+        # table and has to reverse-engineer what it shows. So every figure carries a heading and a
+        # one-line explainer of what it tells you. Both come from HARNESS/router-controlled fields
+        # (title, question) — not the worker's free text — so the ramp costs no new trust.
+        explainer = " ".join(x for x in (str(a.get("question") or "").strip(), AI_ANALYTIC_LABEL + ".") if x)
         if name.endswith(_IMAGE_SUFFIXES):
-            alt = a.get("title") or "analytic"
-            out += [f"![{alt}]({name})", "", f"*{a.get('caption', '').strip()}*", ""]
-        elif a.get("body_md"):
-            table = _table_block(a["body_md"])     # bounded to the table — no ungated free-text
-            if table:
-                out += [table, "", f"*{AI_ANALYTIC_LABEL}.*", ""]
-    return out
+            body = [f"![{title or 'analytic'}]({name})"]
+            explainer = str(a.get("caption") or explainer).strip()
+        elif table := _table_block(str(a.get("body_md") or "")):
+            body = [table]
+        else:
+            continue
+        out += [f"**{title}**" if title else "", "", *body, "", f"*{explainer}*", ""]
+    return [ln for ln in out if ln is not None]
 
 
 def _appendix(draft: ArticleDraft, cited_sources: list, cited_claims: list, sources: dict,

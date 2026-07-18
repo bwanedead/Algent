@@ -100,6 +100,22 @@ def test_table_analytic_is_inlined_not_image_embedded() -> None:
     assert "Charts & tables" in md and "from claims c1" in md    # and it still earns a receipts line
 
 
+def test_analytic_renders_as_a_labelled_figure_not_a_naked_table() -> None:
+    # A table dropped in with no label is a puzzle: a real run shipped a bare "Score | Meaning"
+    # grid with nothing saying what it was. Every figure now carries a heading and an explainer,
+    # both from harness/router-controlled fields (title, question) — no new ungated text.
+    analytics = [{"request_id": "a1", "status": "produced", "artifact_name": "a.md",
+                  "title": "Transits vs normal", "question": "How much traffic is still moving?",
+                  "body_md": "| Day | Transits |\n|--|--|\n| Mon | 9 |",
+                  "data_refs": ["c1"], "figure_check": {"verified": True, "unverified": []}}]
+    md = render_published_article(_draft(), _profile(), analytics)
+    body = md.split("How we know this")[0]
+    assert "**Transits vs normal**" in body                      # you know what it is
+    assert "How much traffic is still moving?" in body           # and what it shows
+    assert "| Mon | 9 |" in body                                 # the data itself
+    assert body.index("**Transits vs normal**") < body.index("| Day | Transits |")   # label first
+
+
 def test_inlined_table_strips_ungated_free_text() -> None:
     # grok-authored commentary around the table must NOT reach the reader ungated; only the table
     # (and its numbers, which the figure-check pins) is inlined.

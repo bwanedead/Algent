@@ -391,6 +391,7 @@ def fulfill_request(
     workspace = workspace or default_workspace()
     payload, cited_claims, as_of = _grounded_data(request, profile)
     result = AnalyticsArtifact(request_id=request.id, kind=request.kind, title=request.title,
+                               question=request.question,
                                data_refs=request.data_refs, as_of=as_of,
                                generator=GENERATOR, model=version or "grok-build",
                                generated_at=datetime.now(UTC).isoformat())

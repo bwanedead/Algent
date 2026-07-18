@@ -62,6 +62,9 @@ class AnalyticsArtifact(BaseModel):
     request_id: str
     kind: AnalyticKind
     title: str = ""
+    # What the reader learns from it (the router's `question`). Carried through so the published
+    # figure can SAY what it shows — a table dropped in with no label is a puzzle, not an analytic.
+    question: str = ""
     status: RequestStatus = "produced"                 # produced | skipped | failed
     artifact_name: str = ""                            # the chart/table/insight file in the artifact store
     body_md: str = ""                                  # the produced markdown for a table/insight (inlined by the publish view; empty for image kinds)

@@ -325,6 +325,34 @@ a { color: inherit; }
 .prose code { background: var(--panel); color: var(--accent); padding: 2px 4px; font-family: inherit; font-size: 0.9em; }
 .prose img { max-width: 100%; height: auto; border: 1px solid var(--rule); }
 
+/* Analytics presentation — a chart or table is a FIGURE, not loose text dumped after a rule.
+   The container gives it edges so the eye reads it as one object, and scrolls a wide table
+   inside itself instead of breaking the page. */
+.table-wrap {
+  margin: var(--line) 0;
+  border: 1px solid var(--rule);
+  background: var(--panel);
+  overflow-x: auto;              /* wide analytics scroll here, never the page */
+  -webkit-overflow-scrolling: touch;
+}
+.prose table { width: 100%; border-collapse: collapse; font-size: 11px; line-height: calc(var(--line) - 6px); }
+.prose thead th {
+  position: sticky; top: 0;      /* header stays while scanning a long table */
+  background: var(--panel);
+  color: var(--strong);
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--rule-strong);
+}
+.prose th, .prose td { padding: 6px 12px; vertical-align: top; }
+.prose tbody tr + tr td { border-top: 1px solid var(--rule); }
+.prose tbody tr:hover td { background: var(--bg); }
+.prose td:first-child { white-space: nowrap; color: var(--strong); }   /* the label column reads as the spine */
+
+/* The figure's caption — the line that says what you're looking at. */
+.prose p > em:only-child { display: block; color: var(--muted); font-size: 11px; line-height: var(--line); }
+
 /* The machine-readable support layer, exposed without editorial branding. */
 .source-record {
   margin-top: calc(var(--line) * 3);

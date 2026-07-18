@@ -5,6 +5,18 @@ import remarkGfm from "remark-gfm";
 // identically. NOTE: no rehype-raw — raw HTML in content is never rendered, and markdown images
 // become <img>, which is what keeps AI-generated SVG analytics from executing anything.
 const components = {
+  // Every table gets a bounded, scrollable container. Analytics tables are often wide (a real one
+  // shipped with seven columns), and a raw markdown table either overflows the page or squeezes
+  // itself unreadable. Wrapping here — rather than asking the generator for narrower tables —
+  // keeps the fix deterministic and applies to article tables too.
+  table({ children, ...rest }: { children?: React.ReactNode }) {
+    return (
+      <div className="table-wrap">
+        <table {...rest}>{children}</table>
+      </div>
+    );
+  },
+
   // Outbound links open in a new tab: a reader checking a source (the receipts are *made* of
   // outbound links) should not lose the piece they were reading. Internal/anchor links stay
   // in-tab. rel=noopener/noreferrer is required with target=_blank — without it the opened page
