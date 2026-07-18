@@ -37,10 +37,27 @@ def build_router_system_prompt(brief: RoutingBrief) -> str:
     return compose_system_prompt(UNIVERSAL_AGENT_BASE, NEWSROOM_SYSTEM_MAP, ROUTER_BASE, assignment)
 
 
-def build_router_message(candidates: list[RouteCandidate], top_k: int) -> str:
-    """Render the candidates + the ranking directive into the task message."""
+def build_router_message(
+    candidates: list[RouteCandidate], top_k: int,
+    recent: tuple[tuple[str, str], ...] = (),
+) -> str:
+    """Render the candidates + any cooldown + the ranking directive into the task message."""
     lines = ["# CANDIDATES TO RANK", f"count: {len(candidates)}", ""]
     lines.extend(_fmt(c) for c in candidates)
+    if recent:
+        lines += [
+            "",
+            "# ALREADY COVERED — COOLDOWN (what we published recently)",
+            *[f"- {when[:10]}  {title}" for when, title in recent],
+            "",
+            "Do NOT promote a candidate that is a close match to one of these — same event, same "
+            "actors, same development. The pool over-represents whatever is dominating coverage, "
+            "so the same running story resurfaces every day; picking it again gives the reader a "
+            "piece they have effectively already read. Prefer a genuinely different story.",
+            "The exception is a MATERIAL new development — a real change in the situation, not "
+            "another day of the same one. If you promote on that basis, say what changed in the "
+            "rationale; if you cannot name what changed, it is not a new story.",
+        ]
     lines.extend([
         "",
         f"TASK: Rank the best up to {top_k} by the assignment's criteria. For each, return "

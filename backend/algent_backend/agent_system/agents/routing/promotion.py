@@ -11,6 +11,8 @@ Only this module knows about t1 types; the generic engine stays decoupled.
 
 from __future__ import annotations
 
+from dataclasses import replace
+
 from algent_backend.agent_system.agents.discovery.portfolio import (
     ResearchPortfolio,
     ResearchVector,
@@ -54,6 +56,10 @@ def rank_portfolio(
     Candidate ids are the vectors' durable ids (positional fallback if a vector
     hasn't been assigned one); the returned map recovers the actual vectors.
     """
+    brief = PROMOTION_BRIEF
+    if recent := _recently_published():
+        brief = replace(brief, recent=recent)
+
     candidates: list[RouteCandidate] = []
     by_id: dict[str, ResearchVector] = {}
     for i, vec in enumerate(portfolio.vectors):
@@ -71,8 +77,23 @@ def rank_portfolio(
                 "sources": len(vec.sources),
             },
         ))
-    ranking = route(context, candidates, PROMOTION_BRIEF, model_spec=model_spec, config=config)
+    ranking = route(context, candidates, brief, model_spec=model_spec, config=config)
     return ranking, by_id
+
+
+def _recently_published() -> tuple[tuple[str, str], ...]:
+    """Recent published headlines — the cooldown reference. Best-effort: routing must never fail
+    because the site is unreadable (a fresh clone has no published articles at all)."""
+    try:
+        from algent_backend.publishing import site_git
+        from algent_backend.publishing.history import recent_headlines
+
+        root = site_git.repo_root()
+        # The live worktree is what is actually on the site; the working tree catches staged pieces
+        # when the publish kill switch is off.
+        return tuple(recent_headlines([site_git.live_site_dir(root), site_git.site_dir(root)]))
+    except Exception:  # noqa: BLE001
+        return ()
 
 
 def top_vector(ranking: RouteRanking, by_id: dict[str, ResearchVector]) -> ResearchVector | None:

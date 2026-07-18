@@ -57,3 +57,7 @@ class RoutingBrief:
     selecting_for: str   # the ranking criteria
     downstream: str      # what the winner becomes / next steps (self-awareness)
     top_k: int = 10
+    # COOLDOWN: things we recently produced, as (when, what). A router that can't see its own
+    # recent output re-picks the same story while it dominates the pool. Advisory by design — the
+    # router still promotes a genuinely new development on a running story.
+    recent: tuple[tuple[str, str], ...] = ()
