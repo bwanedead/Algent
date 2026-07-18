@@ -26,6 +26,7 @@ from algent_backend.agent_system.runs.context import AgentRunContext
 from .analytics_spec import build_graph as build_analytics_router
 from .analytics_worker import build_analytics_worker_graph
 from .caveat_spec import build_graph as build_caveat_reviewer
+from .comprehension_spec import build_graph as build_comprehension_reviewer
 from .draft import ArticleDraft
 from .draft_gauntlet import build_drafting_gauntlet_graph
 from .draft_spec import build_graph as build_drafter
@@ -38,6 +39,7 @@ from .publish import render_published_article
 PIPELINE_COMPLETED = "editorial_pipeline.completed"
 PIPELINE_NO_INPUT = "editorial_pipeline.no_input"
 CAVEAT_REPAIRED = "editorial_pipeline.caveat_repaired"   # the self-heal lap ran; here's the outcome
+RAMP_REPAIRED = "editorial_pipeline.ramp_repaired"       # the comprehension repair lap ran
 
 # The analytics WORKER (grok subprocess) is gated separately from the router. The router is cheap
 # (a nano assessment, always runs); the worker is minutes-long and spends subscription quota per
@@ -107,6 +109,11 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
                 context, config, draft=draft, treatment=treatment, profile=enriched_profile, caveat=caveat)
             caveat_verdict = str(caveat.get("verdict", "verified"))
 
+        # 4c. COMPREHENSION (gate C) — see _comprehension_pass. Advisory-with-repair, never a
+        # publish gate: a hard-to-follow piece is a dud, not a lie, so it ships either way.
+        draft, enriched_profile, comprehension, comprehension_rounds = _comprehension_pass(
+            context, config, draft=draft, treatment=treatment, profile=enriched_profile)
+
         # 5. analytics routing — assess whether a chart/table/insight/illustration would make the
         # story clearer, emitting grounded requests (cheap nano; always runs).
         analytics = build_analytics_router(context).invoke(
@@ -140,6 +147,9 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
             caveat_verdict=caveat_verdict,
             caveat_findings=len(caveat.get("findings", [])),
             caveat_rounds=caveat_rounds,
+            comprehension_verdict=str(comprehension.get("verdict", "")),
+            comprehension_findings=len(comprehension.get("findings", [])),
+            comprehension_rounds=comprehension_rounds,
             article_title=str(draft.get("title", "")),
             word_count=int(draft.get("word_count", 0) or 0),
             barriers=draft_report.get("barriers", []),
@@ -198,6 +208,47 @@ def _repair_hedging(
         {"draft": new_draft, "profile": profile}, config).get("caveat_check") or {}
     context.emit(CAVEAT_REPAIRED, {"verdict": rechecked.get("verdict"),
                                    "findings_remaining": len(rechecked.get("findings", []))})
+    return new_draft, profile, rechecked, 2
+
+
+def _comprehension_pass(
+    context: AgentRunContext, config: RunnableConfig, *,
+    draft: dict[str, Any], treatment: dict[str, Any], profile: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], int]:
+    """Gate C: a general reader reads the prose COLD; if they stumble, one bounded ramp-repair lap.
+
+    Advisory — a hard-to-follow piece ships anyway; this only tries to make it clearer first. The
+    repair is handhold-or-cut only (adds no claims), so no honesty gate re-runs after it.
+    """
+    comprehension = build_comprehension_reviewer(context).invoke({"draft": draft}, config).get(
+        "comprehension_check") or {}
+    if str(comprehension.get("verdict", "clear")) != "needs_ramp" or not draft:
+        return draft, profile, comprehension, 1
+    return _repair_comprehension(context, config, draft=draft, treatment=treatment,
+                                 profile=profile, comprehension=comprehension)
+
+
+def _repair_comprehension(
+    context: AgentRunContext, config: RunnableConfig, *,
+    draft: dict[str, Any], treatment: dict[str, Any], profile: dict[str, Any], comprehension: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], int]:
+    """One bounded ramp-repair lap: a general reader stumbled; add the flagged handholds or cut.
+
+    Handhold-or-cut only (the drafter's comprehension block enforces it) — it adds no claims and
+    strengthens nothing, so no honesty gate needs to re-run. If the repair produces nothing, keep
+    the original draft and the honest verdict rather than looping.
+    """
+    repaired = build_drafter(context).invoke(
+        {"treatment": treatment, "profile": profile, "prior_draft": draft,
+         "comprehension_check": comprehension}, config)
+    new_draft = repaired.get("draft") or {}
+    if not new_draft:
+        return draft, profile, comprehension, 2
+    profile = repaired.get("profile") or profile
+    rechecked = build_comprehension_reviewer(context).invoke({"draft": new_draft}, config).get(
+        "comprehension_check") or {}
+    context.emit(RAMP_REPAIRED, {"verdict": rechecked.get("verdict"),
+                                 "findings_remaining": len(rechecked.get("findings", []))})
     return new_draft, profile, rechecked, 2
 
 
