@@ -56,3 +56,10 @@ cost: ~$0.3504
 pool: backfeed=4, gkg=40, market=25, x=24
 promoted_from: x=1
 run: 0009__809ee640-913e-4727-9a95-32532bc7d3b0
+
+### PUBLISH telstra-ceo-vicki-brady-says-july-outage-was-caused-by-fault-9fce8b — 2026-07-19
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 3 produced, 0 escapes
+cost: ~$0.0000
+run: 0010__55d0efca-ab71-45da-8596-5cedefac521c
