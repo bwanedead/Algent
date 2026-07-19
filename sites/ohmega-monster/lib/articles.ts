@@ -20,7 +20,8 @@ export type ArticleMeta = {
   status: string; // publishable | needs_hedging | ... (honest, shown to the reader)
   // All derived from the profile by the publish pipeline — never author-written, never generated.
   tags: string[]; // canonical topics first, then the specific entities
-  flags: string[]; // country flag emoji for the places the piece is about
+  places: string[]; // country display names (aligned with flags when both present)
+  flags: string[]; // country flag emoji — rendered as images in the UI (see FlagRow)
   thumbnail: string; // a produced analytic, when the piece has one
 };
 
@@ -72,6 +73,7 @@ function toMeta(file: string, data: Record<string, unknown>): ArticleMeta {
     published_at: String(data.published_at ?? ""),
     status: String(data.status ?? ""),
     tags: strings(data.tags),
+    places: strings(data.places),
     flags: strings(data.flags),
     thumbnail: String(data.thumbnail ?? ""),
   };

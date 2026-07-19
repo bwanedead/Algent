@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import FlagRow from "@/components/FlagRow";
 import { getAllMeta } from "@/lib/articles";
 
 // The hub: a dense, wiki/terminal-style index of pieces, newest first.
@@ -16,11 +17,8 @@ export default function Home() {
             <Link href={`/articles/${a.slug}`}>
               <div className="feed-meta">
                 <time dateTime={a.date}>{a.date}</time>
-                {/* Flags: the "where" at a glance — derived from profile + vector geography
-                    (entities, scope, titles), never invented. Absent when nothing maps cleanly. */}
-                {a.flags.length > 0 && (
-                  <span className="feed-flags" aria-label="Places">{a.flags.join(" ")}</span>
-                )}
+                {/* Visual country association — PNG flags (emoji letters fail on many OSes). */}
+                <FlagRow flags={a.flags} places={a.places} />
               </div>
               <div className="feed-story">
                 <h2>{a.title}</h2>

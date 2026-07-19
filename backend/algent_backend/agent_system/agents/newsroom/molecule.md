@@ -23,20 +23,37 @@ the molecule is a *dependency structure of concepts*, not a sequence of sections
 "part 1, part 2, part 3." Emit: *what must the reader come to understand, what does each piece
 rest on, and what does the real evidence supply.* The drafter turns that into prose.
 
-## The core understanding
-First name the **reality-shape** the piece exists to convey — in one or two sentences, the
-molecule the reader should be holding at the natural end of the read. Not the topic ("the Fed
-meeting"), but the *understanding* ("the Fed held rates because two real risks point in
-opposite directions, and the committee is genuinely split on which to weigh"). Everything
-else in the treatment serves transferring *this* shape faithfully.
+## The core understanding — the big deal, not the latest procedural layer
+Step back from the profile's surface inventory and name the **reality-shape** the piece exists
+to convey — in one or two sentences, the molecule the reader should hold at the natural end of
+the read. Not the topic ("the Fed meeting"), and not the **procedural surface** that delivered
+the evidence ("the CEO testified," "CISA issued an advisory," "a regulator published a note")
+unless that procedure *is* the load-bearing event. The understanding is what happened, at what
+scale, through what mechanism, and why it matters: *"Australia's largest telco lost a large
+share of mobile service after a time-sync failure, with real (bounded) spillover into emergency
+calls — a controls failure, not only a glitch."*
 
-Then name its reader-facing dual: **the question this piece answers** — one line, in the reader's
-words, of what they came wanting to know and will leave knowing ("will the Fed move in July, and
-what would change that?"). The core understanding is the shape; the question is why anyone wants
-it. This is the sharpest test you have: **every concept below either serves answering that question
-or does not belong in the piece.** And if you cannot state a question a reader would actually want
-answered — if the honest version is "something might happen, or might not" — then you do not have a
-story. Say so in the treatment rather than assembling one out of what the profile happens to hold.
+The focal event and the frame should agree (see framing.md: *name the focal event*). If the
+core understanding is really about an outage, breach, vote, or strike, do not let the molecule
+orbit the hearing that *discussed* it. Testimony and inquiries are often how we learn more;
+they are supporting structure, not the apex, unless the political or legal act itself is the
+news.
+
+Then name its reader-facing dual: **the question this piece answers** — one line, in the
+house reader's words, of what they came wanting to know and will leave knowing
+("how bad was the outage, who did it hit, and what does the cause imply?"). The core
+understanding is the shape; the question is why anyone wants it. **Every concept below either
+serves answering that question or does not belong.** And if you cannot state a question a
+reader would actually want answered — if the honest version is "someone commented on something"
+with no transferable event — you do not have a story. Say so rather than assembling one out of
+whatever the profile happens to hold.
+
+**Significance is built into the molecule, not announced.** The reader should leave holding
+scale, mechanism, and stakes as part of the shape. Do **not** plan a concept whose only job is
+"why this is a big deal" as a separate sermon — and do not plan a molecule that withholds the
+stakes so carefully that the reader must invent them. Facts that carry weight (share of
+network, emergency-call errors, who depends on the firm) *are* the significance when ordered
+and supported correctly (spirit + style: no self-narration).
 
 ## Load-bearing concepts and their dependencies
 Decompose the core understanding into the **concepts the reader must build** to hold it, and
@@ -87,12 +104,13 @@ not a textbook.
   primitives for what a smart reader genuinely would not know: `LDL-C`, `PCSK9`, `VLCC`, `AIS-dark`.
   When in doubt, assume they know it.
   **This includes the ACTORS, and that is the case most often missed.** An agency, company,
-  product, **person**, or **jurisdiction** outside general awareness is exactly a primitive:
-  `CISA`, `MSRC`, `SharePoint`, a foreign mayor or party figure, "the UK's governing Labour
-  party". A live piece that opens on a bare personal name with no role and no country never
-  starts for a non-local reader — same failure mode as an unexplained acronym. If the story's
-  subject is an acronym **or a person the house reader may not know**, the ramp is not optional.
-  Prefer actors and jurisdiction over secondary jargon when the primitive budget is tight (2–4).
+  product, **person**, or **jurisdiction** outside general awareness is exactly a primitive.
+  For people: the primitive is not the name alone — it is **name + the title/role that
+  explains their place in this story** (and jurisdiction when needed). See spirit's *people,
+  titles, and who is acting*. A bare personal name with no role never starts the piece for a
+  non-local reader — same failure mode as an unexplained acronym. Prefer load-bearing people
+  and jurisdiction over secondary jargon when the primitive budget is tight (2–4). Do not spend
+  the budget on every named person; only the ones the molecule needs.
 - **Is the meaning CONCRETE?** A primitive must state what the thing *is* — the place, the number,
   the mechanism — never gesture at its significance. *"a narrow route whose disruption can ripple
   far beyond the water itself"* is abstraction posing as explanation and teaches nothing. *"the sea

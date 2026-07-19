@@ -31,6 +31,28 @@ view from above the field ("here are the forces actually in play, and here is wh
 collide"); sometimes it is close and particular (one case that carries the whole). Let the
 material decide.
 
+## First: name the focal event (the center of mass)
+Before choosing a "lens," step back from the profile's most recent surface and ask: **what is
+the big deal for the house reader — the world event, failure, decision, or change that
+deserves the reporting's center of mass?**
+
+That focal thing is not always the newest procedural layer in the dossier. Profiles often
+arrive via a **testimony, hearing, advisory, press conference, or earnings call** that
+*discusses* an earlier event. The procedure can be useful evidence; it is often **not** the
+story. A live miss: an outage that took down a large share of a national mobile network and
+touched emergency calls was framed as "the CEO told a Senate inquiry…" — the testimony became
+the headline, and the reader had to infer why the outage itself mattered.
+
+**Prefer the load-bearing event as the frame's subject** when the procedure mainly *reveals*
+or *updates* it: the outage, the vote, the breach, the strike, the court order — then fold the
+hearing/testimony/advisory in as how we know more, not as the parallax. Prefer the procedure
+as subject only when the procedure *is* the news (a vote of no confidence, an indictment, a
+treaty signing).
+
+This is not manufacturing a narrative. It is choosing which true structure the reader is asked
+to build: the one that answers *"what happened that I should understand, at what scale, and
+why it matters"* — not merely *"who commented most recently."*
+
 **There is no catalog of allowed frames.** Candidate frames are never selected from a preset
 menu or taxonomy — they are *discovered from the material itself*: the profile's actual
 claims, threads, entities, tensions, and gaps. The examples named in this document (the wide
@@ -65,7 +87,11 @@ chosen because it is:
   the newsroom's vantage. The mild form was a dosing paragraph that only a doctor needed; the
   full form is a whole piece whose `reader_question` is *"are my servers in scope, and what do
   I do beyond patching?"* — written for CISA's reader, not ours. **Reject that frame.** Re-aim
-  at the house reader: what happened, who it touches, why it matters outside the profession.
+  at the house reader: what happened, who it touches, why it matters outside the profession;
+- **procedural-surface capture** — the frame foregrounds the hearing, testimony, advisory
+  release, or presser because that is what the profile is richest in, while the **world event**
+  that makes it matter sits in the background. The reader is left reconstructing scale and
+  significance themselves. Prefer the event; use the procedure as evidence and update.
 
 If a frame requires the reader to accept a contestable premise just to follow the story, it is
 steering, not revealing. Prefer the frame the reader could inhabit whatever their priors.

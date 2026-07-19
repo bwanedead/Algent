@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import FlagRow from "@/components/FlagRow";
 import Prose from "@/components/Prose";
 import { getArticle, getSlugs } from "@/lib/articles";
 import { SITE_URL } from "@/lib/site";
@@ -44,10 +45,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
         {a.dek ? <p className="dek">{a.dek}</p> : null}
         <div className="article-meta">
           <time className="article-date" dateTime={a.date}>{a.date}</time>
-          {/* Same derived flags as the feed — the "where" at a glance, absent when unmapped. */}
-          {a.flags.length > 0 && (
-            <span className="feed-flags" aria-label="Places">{a.flags.join(" ")}</span>
-          )}
+          <FlagRow flags={a.flags} places={a.places} />
         </div>
       </header>
 

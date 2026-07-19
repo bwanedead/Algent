@@ -33,14 +33,13 @@ follows the news and is NOT a specialist in this field.** They can hold a hard i
 real argument — do not dumb anything down. They have no insider vocabulary — do not assume any.
 
 That single definition decides most editorial questions:
-- **Name the actors.** An organization, agency, product, **or person** the reader may not know
-  gets a clause the first time it appears. Agencies and products: *"CISA, the U.S. government's
-  cybersecurity agency"*, *"SharePoint, Microsoft's widely used corporate document platform"*.
-  **People who drive the story are actors too** — a bare surname is not a ramp. On first mention,
-  give **role + why they matter in this story**, and the **jurisdiction** when it is not already
-  obvious: *"[Name], the mayor of X / opposition leader / central-bank head in [country]…"*. A
-  piece that opens on a name a smart non-local reader has never heard has told them nothing at
-  all about who is acting.
+- **Name the actors.** An organization, agency, product, company, **or person** the reader may
+  not know gets a clause the first time it appears. Agencies and products: *"CISA, the U.S.
+  government's cybersecurity agency"*, *"SharePoint, Microsoft's widely used corporate document
+  platform"*. Companies the story depends on: one clause of **what they are / what they do in
+  this jurisdiction** — *"Telstra, Australia's largest mobile network operator"* — not a brand
+  name alone. People: see **people, titles, and who is acting** below — a bare name is not a
+  ramp.
 - **Orient the jurisdiction.** If the story is national politics, a domestic court, a local
   disaster, or a party fight, the reader must know **where** this is happening before the
   chronology starts. Do not assume "Labour" or "Congress" or a city name is enough world-knowledge
@@ -57,6 +56,41 @@ The test is simple and unforgiving: **could a smart friend outside the field —
 country's insider politics — read this and come away actually understanding what happened and why
 it matters?** If they would finish it thinking "someone important said something about something
 technical," the piece failed — no matter how accurate every sentence was.
+
+## People, titles, and who is acting
+The reader should not have to know every human on earth — or guess which John Smith we mean.
+When a person is **load-bearing** for the story (they act, decide, announce, or embody the
+stakes), establish them quickly on **first mention** with whatever makes their role in *this*
+piece legible:
+
+1. **Name + the title or role that matters here** — office, job, or standing that explains why
+   they are in the story (*mayor of Greater Manchester*, *UK prime minister*, *Fed chair*,
+   *CEO of the company that makes X*). Prefer the title that illuminates **this** article, not
+   a CV dump of every hat they wear.
+2. **Jurisdiction or affiliation when it is not already clear** — country, government, company,
+   court. *"Labour"* is not enough if the reader may not know which country's Labour.
+3. **A light establishing clause when the title alone is thin** — why they matter to the
+   stakes, or a one-phrase disambiguator if the name is common. One clause, not a biography.
+
+**First mention is the place for this; later mentions can be the bare name** (or a short
+role-tag only if needed to keep two people straight). Headlines and standfirsts obey the same
+spirit when a bare surname would leave the reader guessing who is acting — *"Mayor X pledges…"*
+or *"X, [role], pledges…"* beats an insider-only nameplate when space allows.
+
+**Do not title-spam.** The opposite trap is half the piece spent reciting everyone's full
+style and portfolio. Reserve the handhold for **central names** — the people the molecule
+needs. Passing mentions, quoted experts used once, and crowd actors can stay light. If
+someone is not load-bearing, do not open a dossier on them.
+
+**Familiarity is not a free pass to zero context — and fame is not a free pass to zero
+clarity.** A globally famous multi-hat figure may not need "who is this?" explained from
+scratch, but a **one-clause establish** still helps when role or which hat is load-bearing
+(*"…the founder of [company] at the center of the dispute"*), and it prevents name confusion.
+When in doubt, prefer a short role clause over a bare surname for anyone the house reader
+might not instantly place.
+
+The test: after the first mention, could a smart friend say *which person, in what capacity,
+in what system* — without already following that country's politics?
 
 ## Witness, not priest
 We serve the reader's judgment; we do not capture it. We do not tell the reader what to
