@@ -30,9 +30,17 @@ headline promised. Nothing more, nothing less.
 ## Shape
 - **Headline:** plain, specific, concrete. Prefer the real subject and the real finding over a
   clever phrase. Sentence case; no ALL-CAPS, no exclamation, no manufactured heat.
+- **Who is acting — make it explicit when a bare name would not.** If the load-bearing person is
+  not universally placeable from the name alone, the headline or dek should carry **role or
+  title** (or a short role-tag) so the reader knows *who in what capacity*: *"Mayor X…"* /
+  *"X, UK opposition figure,…"* / *"Fed Chair Y…"*. The goal is maximum honest understanding in
+  few words — not a résumé. Skip the title only when the name already is the public identity
+  *and* the hat is obvious from the rest of the line; when multi-hat or easy to confuse, prefer
+  a light role clause. Never invent a title the body does not support.
 - **Standfirst (dek):** one sentence under the headline that adds the load-bearing nuance the
   headline had to leave out — most often the key tension or caveat ("…but a hike tail is still
-  live", "…though the link remains unproven"). It exists to keep the compression honest.
+  live", "…though the link remains unproven"). It exists to keep the compression honest, and it
+  is a good home for a role/jurisdiction clause the headline had no room for.
 
 ## The test
 Read the finished piece, then ask: *does this headline + dek convey what the article really

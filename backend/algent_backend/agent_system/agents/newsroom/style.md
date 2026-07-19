@@ -58,6 +58,12 @@ quick orientation) rather than dumbing the idea down; never hollow out a hard-bu
 to sound accessible. Equally, do not perform sophistication — no jargon wall, no insider
 wink. The reader is neither a child nor a colleague to impress.
 
+**Titles are landmarks, not decoration.** On first mention of a load-bearing person, a short
+role or office is often the fastest landmark (spirit: *people, titles, and who is acting*).
+After that, the name is enough. Do not re-announce the full title every time, and do not turn
+the piece into a program of honorifics — that is the other machine failure mode (padding with
+status).
+
 ## Tone matches the material — never manufactured
 Let the facts set the temperature. When the material is grave, write plainly and let it be
 grave; when it is ordinary, do not inflate it; when it is genuinely uncertain, sound

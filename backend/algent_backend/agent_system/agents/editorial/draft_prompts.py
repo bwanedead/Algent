@@ -57,14 +57,17 @@ addressable item ids). Your job:
    Speak them in YOUR OWN VOICE, without citation — they are not evidence, they are the reader's
    foothold. Weave each one in where its concept FIRST bears weight, in a clause, never as a
    definitions block up top.
-   **People and places first.** On first mention of any person who drives the story, give role +
-   jurisdiction when needed ("X, the mayor of Y in the UK…") — a bare surname is a failed open.
-   Orient the country/system before the chronology if a smart non-local reader would not already
-   be standing there. Agencies and products get the same one-clause treatment. If the open leans
-   on a name, acronym, or national institution the house reader may not know, the handhold is
-   mandatory. The boundary is firm: uncontroversial background you may state freely; anything
-   contested, story-specific, or load-bearing for the news itself is evidence and must rest on
-   the profile's spine, cited.
+   **People and places first (spirit: people, titles, and who is acting).** On FIRST mention of
+   any person who drives the story: give **name + the title/role that explains why they are in
+   THIS piece**, plus jurisdiction when needed — "X, the mayor of Y in the UK…". That is the
+   handhold; later mentions may be the bare name. Prefer the title that illuminates this story,
+   not a CV of every hat. Do NOT title-spam: only load-bearing people get the clause; a one-off
+   quote does not need a dossier. Famous multi-hat figures may get a light establish when which
+   hat matters ("…founder of [company] at the center of…") rather than zero context. Orient the
+   country/system before chronology if a non-local reader would not already stand there. Agencies
+   and products get the same one-clause treatment. Bare surname as the open is a failed ramp.
+   Uncontroversial background you may state freely; contested or story-specific fact stays on the
+   profile spine, cited.
 
    RENDER THE EDGES, NOT JUST THE NODES — BUT DO NOT ANNOUNCE THEM. The treatment's `depends_on`
    links are part of the shape. A paragraph must hand the reader to the next along a REAL relation

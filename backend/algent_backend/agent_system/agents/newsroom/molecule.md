@@ -87,12 +87,13 @@ not a textbook.
   primitives for what a smart reader genuinely would not know: `LDL-C`, `PCSK9`, `VLCC`, `AIS-dark`.
   When in doubt, assume they know it.
   **This includes the ACTORS, and that is the case most often missed.** An agency, company,
-  product, **person**, or **jurisdiction** outside general awareness is exactly a primitive:
-  `CISA`, `MSRC`, `SharePoint`, a foreign mayor or party figure, "the UK's governing Labour
-  party". A live piece that opens on a bare personal name with no role and no country never
-  starts for a non-local reader — same failure mode as an unexplained acronym. If the story's
-  subject is an acronym **or a person the house reader may not know**, the ramp is not optional.
-  Prefer actors and jurisdiction over secondary jargon when the primitive budget is tight (2–4).
+  product, **person**, or **jurisdiction** outside general awareness is exactly a primitive.
+  For people: the primitive is not the name alone — it is **name + the title/role that
+  explains their place in this story** (and jurisdiction when needed). See spirit's *people,
+  titles, and who is acting*. A bare personal name with no role never starts the piece for a
+  non-local reader — same failure mode as an unexplained acronym. Prefer load-bearing people
+  and jurisdiction over secondary jargon when the primitive budget is tight (2–4). Do not spend
+  the budget on every named person; only the ones the molecule needs.
 - **Is the meaning CONCRETE?** A primitive must state what the thing *is* — the place, the number,
   the mechanism — never gesture at its significance. *"a narrow route whose disruption can ripple
   far beyond the water itself"* is abstraction posing as explanation and teaches nothing. *"the sea
