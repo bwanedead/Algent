@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="520" viewBox="0 0 720 520" role="img" aria-labelledby="title desc">
+  <title id="title">Brazil’s affected export share vs. exemption-protected categories</title>
+  <desc id="desc">Two-part view: 18% of Brazil exports to the U.S. reported as affected by the 25% tariff, and six named exemption categories listed without value shares.</desc>
+
+  <defs>
+    <style type="text/css"><![CDATA[
+      .bg { fill: #0c0f0e; }
+      .panel { fill: #111513; stroke: #2b302d; stroke-width: 1; }
+      .title { fill: #f0ede4; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 13px; font-weight: 600; }
+      .subtitle { fill: #858981; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 10px; }
+      .label { fill: #d3d0c8; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 11px; }
+      .label-em { fill: #f0ede4; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 11px; font-weight: 600; }
+      .muted { fill: #858981; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 10px; }
+      .small { fill: #858981; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 9px; }
+      .axis { stroke: #2b302d; stroke-width: 1; fill: none; }
+      .grid { stroke: #2b302d; stroke-width: 1; }
+      .bar-affected { fill: #f0a33a; }
+      .bar-rest { fill: #454b46; }
+      .chip { fill: #111513; stroke: #454b46; stroke-width: 1; }
+      .chip-text { fill: #d3d0c8; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 10px; }
+      .badge { fill: #a96b1f; }
+      .badge-text { fill: #0c0f0e; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 9px; font-weight: 600; }
+      .rule { stroke: #2b302d; stroke-width: 1; }
+    ]]></style>
+  </defs>
+
+  <!-- background -->
+  <rect class="bg" x="0" y="0" width="720" height="520"/>
+
+  <!-- title block -->
+  <text class="title" x="28" y="32">Brazil’s affected export share vs. named exemptions</text>
+  <text class="subtitle" x="28" y="50">Brazil exports to the U.S. · 25% tariff footprint (illustrative) · as of 2026-07-16</text>
+  <line class="rule" x1="28" y1="62" x2="692" y2="62"/>
+
+  <!-- PART 1 panel -->
+  <rect class="panel" x="28" y="78" width="664" height="168" rx="2"/>
+  <text class="label-em" x="44" y="102">1 · Reported overall affected share</text>
+  <text class="muted" x="44" y="118">Share of Brazil’s exports to the U.S. Brazil says are hit by the 25% tariff</text>
+
+  <!-- axis labels -->
+  <text class="small" x="44" y="148">0%</text>
+  <text class="small" x="200" y="148">25%</text>
+  <text class="small" x="356" y="148">50%</text>
+  <text class="small" x="512" y="148">75%</text>
+  <text class="small" x="656" y="148">100%</text>
+  <line class="grid" x1="44" y1="152" x2="656" y2="152"/>
+  <line class="grid" x1="200" y1="152" x2="200" y2="158"/>
+  <line class="grid" x1="356" y1="152" x2="356" y2="158"/>
+  <line class="grid" x1="512" y1="152" x2="512" y2="158"/>
+  <line class="grid" x1="656" y1="152" x2="656" y2="158"/>
+
+  <!-- stacked bar: 18% affected (amber), 82% rest (muted)
+       track width = 612 (44 to 656)
+       18% of 612 = 110.16 ≈ 110
+       82% of 612 = 501.84 ≈ 502 -->
+  <rect class="bar-affected" x="44" y="170" width="110" height="28"/>
+  <rect class="bar-rest" x="154" y="170" width="502" height="28"/>
+
+  <text class="label-em" x="50" y="189">18%</text>
+  <text class="label" x="170" y="189">82% not in reported affected share</text>
+
+  <text class="muted" x="44" y="220">Affected (reported) · ~3,000 items · ~18% of exports to the U.S.</text>
+  <text class="muted" x="44" y="234">Source claim status: likely · snapshotted</text>
+
+  <!-- PART 2 panel -->
+  <rect class="panel" x="28" y="262" width="664" height="188" rx="2"/>
+  <text class="label-em" x="44" y="286">2 · Named exemption categories</text>
+  <text class="muted" x="44" y="302">Categories explicitly listed as exempt — no export-value shares provided in source data</text>
+
+  <!-- badge -->
+  <rect class="badge" x="44" y="316" width="292" height="18" rx="2"/>
+  <text class="badge-text" x="52" y="329">named exemptions (no value share provided)</text>
+
+  <!-- category chips — equal presence markers, NOT magnitude bars -->
+  <!-- row 1 -->
+  <rect class="chip" x="44" y="348" width="200" height="32" rx="2"/>
+  <circle cx="60" cy="364" r="5" fill="#f0a33a"/>
+  <text class="chip-text" x="74" y="368">coffee</text>
+  <text class="small" x="160" y="368">exempt</text>
+
+  <rect class="chip" x="256" y="348" width="200" height="32" rx="2"/>
+  <circle cx="272" cy="364" r="5" fill="#f0a33a"/>
+  <text class="chip-text" x="286" y="368">beef</text>
+  <text class="small" x="372" y="368">exempt</text>
+
+  <rect class="chip" x="468" y="348" width="200" height="32" rx="2"/>
+  <circle cx="484" cy="364" r="5" fill="#f0a33a"/>
+  <text class="chip-text" x="498" y="368">oranges</text>
+  <text class="small" x="584" y="368">exempt</text>
+
+  <!-- row 2 -->
+  <rect class="chip" x="44" y="390" width="200" height="32" rx="2"/>
+  <circle cx="60" cy="406" r="5" fill="#f0a33a"/>
+  <text class="chip-text" x="74" y="410">orange juice</text>
+  <text class="small" x="160" y="410">exempt</text>
+
+  <rect class="chip" x="256" y="390" width="200" height="32" rx="2"/>
+  <circle cx="272" cy="406" r="5" fill="#f0a33a"/>
+  <text class="chip-text" x="286" y="410">oil &amp; gas products</text>
+  <text class="small" x="372" y="410">exempt</text>
+
+  <rect class="chip" x="468" y="390" width="200" height="32" rx="2"/>
+  <circle cx="484" cy="406" r="5" fill="#f0a33a"/>
+  <text class="chip-text" x="498" y="410">aerospace parts</text>
+  <text class="small" x="584" y="410">exempt</text>
+
+  <text class="small" x="44" y="438">Equal markers = presence only. Do not read chip size as trade weight.</text>
+
+  <!-- footer -->
+  <line class="rule" x1="28" y1="468" x2="692" y2="468"/>
+  <text class="small" x="28" y="488">Note: full HS-code mapping is not yet present in the provided data for a precise basket composition.</text>
+  <text class="small" x="28" y="504">Sources: AP News, CNBC (2026-07-16) · Ohmega Monster analytic · grounded claims only</text>
+</svg>

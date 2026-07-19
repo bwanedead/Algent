@@ -72,3 +72,10 @@ cost: ~$0.3188
 pool: backfeed=3, gkg=40, market=25, x=24
 promoted_from: gkg=1, x=2
 run: 0010__55d0efca-ab71-45da-8596-5cedefac521c
+
+### PUBLISH u-s-imposes-25-section-301-tariffs-on-most-brazilian-imports-9fce8b — 2026-07-19
+status: needs_hedging  ·  draft: grounded  ·  treatment: needs_revision
+caveats: needs_hedging (1 findings)
+analytics: 3 produced, 0 escapes
+cost: ~$0.0000
+run: 0011__9e225e84-823d-4713-9c30-4dcb7e2e954c
