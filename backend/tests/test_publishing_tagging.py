@@ -36,6 +36,43 @@ def test_unmapped_places_get_no_flag_rather_than_a_wrong_one() -> None:
     assert names == [] and flags == []      # a strait is not a country — skip, never guess
 
 
+def test_flags_from_vector_scope_when_entities_omit_the_country() -> None:
+    # Live failure: UK politics profile entity-ified people/parties only; scope=["UK"] was the
+    # only geography field — and was ignored. Scope is intentional geography; it must count.
+    profile = {
+        "entities": [
+            {"id": "e1", "name": "Andy Burnham", "type": "person"},
+            {"id": "e2", "name": "Labour Party", "type": "org"},
+            {"id": "e3", "name": "Digital ID scheme", "type": "policy"},
+        ],
+        "threads": [],
+        "source_ledger": [],
+    }
+    vector = {"pillars": ["politics"], "scope": ["UK"], "title": "Digital ID U-turn"}
+    names, flags = tg.derive_places(profile, vector)
+    assert names == ["United Kingdom"] and flags == ["🇬🇧"]
+    assert tg.derive_all(profile, vector)["flags"] == ["🇬🇧"]
+
+
+def test_flags_from_title_phrase_when_no_scope() -> None:
+    # Secondary harvest: a title that names a mapped country, no entity, no scope.
+    profile = {"entities": [], "threads": [], "source_ledger": []}
+    vector = {"title": "Peru earthquake leaves towns without power", "pillars": [], "scope": []}
+    names, flags = tg.derive_places(profile, vector)
+    assert names == ["Peru"] and flags == ["🇵🇪"]
+
+
+def test_flag_cap_keeps_the_feed_scannable() -> None:
+    profile = {
+        "entities": [
+            {"name": "Iran"}, {"name": "United States"}, {"name": "United Kingdom"},
+            {"name": "France"}, {"name": "Germany"},
+        ],
+    }
+    names, flags = tg.derive_places(profile, cap=3)
+    assert len(names) == 3 and len(flags) == 3
+
+
 def test_flag_emoji_is_derived_not_tabled() -> None:
     assert tg.flag_emoji("IR") == "🇮🇷" and tg.flag_emoji("ua") == "🇺🇦"
 

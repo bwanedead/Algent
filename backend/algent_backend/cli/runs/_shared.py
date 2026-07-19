@@ -11,6 +11,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from algent_backend.agent_system.runs.control_plane.liveness import process_alive
+
 
 def print_json(payload: Any) -> None:
     """Print the command's single JSON document."""
@@ -60,25 +62,9 @@ def parse_input_arg(
     return payload
 
 
-def pid_alive(pid: int | None) -> bool:
-    """Best-effort liveness check; errs on 'alive' so watchers don't false-alarm.
-
-    Windows note: ``os.kill(pid, 0)`` is NOT a probe on Windows (any non-console
-    signal value terminates the process), so we query via OpenProcess instead.
-    """
-    if pid is None:
-        return False
-    if sys.platform == "win32":
-        return _pid_alive_windows(pid)
-    import os
-
-    try:
-        os.kill(pid, 0)
-        return True
-    except ProcessLookupError:
-        return False
-    except OSError:
-        return True
+# One liveness implementation, owned by the control plane (state.py needs it to reconcile a run
+# whose process vanished). Re-exported here so the CLI keeps its established name.
+pid_alive = process_alive
 
 
 def terminate_process(pid: int | None) -> bool:
@@ -113,24 +99,3 @@ def terminate_process(pid: int | None) -> bool:
         return False
 
 
-_STILL_ACTIVE = 259
-_PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
-
-
-def _pid_alive_windows(pid: int) -> bool:
-    try:
-        import ctypes
-
-        kernel32 = ctypes.windll.kernel32
-        handle = kernel32.OpenProcess(_PROCESS_QUERY_LIMITED_INFORMATION, False, pid)
-        if not handle:
-            return False
-        try:
-            exit_code = ctypes.c_ulong()
-            if kernel32.GetExitCodeProcess(handle, ctypes.byref(exit_code)):
-                return exit_code.value == _STILL_ACTIVE
-            return True
-        finally:
-            kernel32.CloseHandle(handle)
-    except Exception:
-        return True

@@ -44,7 +44,7 @@ def route(
     raw = structured.invoke(
         [
             SystemMessage(content=build_router_system_prompt(brief)),
-            HumanMessage(content=build_router_message(candidates, brief.top_k)),
+            HumanMessage(content=build_router_message(candidates, brief.top_k, brief.recent)),
         ],
         config=config,
     )

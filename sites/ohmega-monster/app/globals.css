@@ -218,9 +218,22 @@ a { color: inherit; }
   line-height: var(--line);
 }
 
-/* Flags: the "where", at a glance. Derived from the piece's own entities, so always literally
-   true — and simply absent when nothing maps cleanly (never a decorative stand-in). */
-.feed-flags { font-size: 12px; line-height: var(--line); letter-spacing: 0.06em; }
+/* Flags: the "where", at a glance. Derived from profile/scope geography — always literally
+   true, and simply absent when nothing maps cleanly (never a decorative stand-in). */
+.feed-flags {
+  font-size: 14px;
+  line-height: var(--line);
+  letter-spacing: 0.08em;
+  /* Emoji flags can collapse to "GB" text on some platforms; keep them as emoji-first UI. */
+  font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+}
+.article-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 12px;
+  margin-top: 4px;
+}
 
 /* Tags: canonical topic first, then the specifics. Quiet by default — they are navigation, not
    the story, and must not compete with the headline. */
@@ -324,6 +337,34 @@ a { color: inherit; }
 .prose blockquote { margin: var(--line) 0; padding-left: 18px; border-left: 2px solid var(--accent-dim); color: var(--muted); }
 .prose code { background: var(--panel); color: var(--accent); padding: 2px 4px; font-family: inherit; font-size: 0.9em; }
 .prose img { max-width: 100%; height: auto; border: 1px solid var(--rule); }
+
+/* Analytics presentation — a chart or table is a FIGURE, not loose text dumped after a rule.
+   The container gives it edges so the eye reads it as one object, and scrolls a wide table
+   inside itself instead of breaking the page. */
+.table-wrap {
+  margin: var(--line) 0;
+  border: 1px solid var(--rule);
+  background: var(--panel);
+  overflow-x: auto;              /* wide analytics scroll here, never the page */
+  -webkit-overflow-scrolling: touch;
+}
+.prose table { width: 100%; border-collapse: collapse; font-size: 11px; line-height: calc(var(--line) - 6px); }
+.prose thead th {
+  position: sticky; top: 0;      /* header stays while scanning a long table */
+  background: var(--panel);
+  color: var(--strong);
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--rule-strong);
+}
+.prose th, .prose td { padding: 6px 12px; vertical-align: top; }
+.prose tbody tr + tr td { border-top: 1px solid var(--rule); }
+.prose tbody tr:hover td { background: var(--bg); }
+.prose td:first-child { white-space: nowrap; color: var(--strong); }   /* the label column reads as the spine */
+
+/* The figure's caption — the line that says what you're looking at. */
+.prose p > em:only-child { display: block; color: var(--muted); font-size: 11px; line-height: var(--line); }
 
 /* The machine-readable support layer, exposed without editorial branding. */
 .source-record {

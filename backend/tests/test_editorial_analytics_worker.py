@@ -69,7 +69,9 @@ def test_produces_artifact_copies_it_out_and_empties_scratch(tmp_path: Path) -> 
 
     assert art.status == "produced"
     assert art.figure_check["verified"] is True and art.figure_check["unverified"] == []
-    assert art.ai_label and "cited claims c1, c2" in art.caption and "2026-06-30" in art.caption
+    # Human-readable provenance only — claim ids stay out of the reader-facing caption.
+    assert art.ai_label and "cited claims" not in art.caption and "clm_" not in art.caption
+    assert "BLS" in art.caption and "2026-06-30" in art.caption
     # the artifact + its data were copied into the run's artifact store
     assert (tmp_path / "artifacts" / art.artifact_name).exists()
     assert (tmp_path / "artifacts" / art.data_name).exists()
@@ -184,6 +186,31 @@ def test_worker_graph_loops_warranted_requests(tmp_path: Path) -> None:
     assert len(arts) == 1 and arts[0]["status"] == "produced"
     done = next(p for et, p in events if et == aw.ANALYTICS_WORKER_COMPLETED)
     assert done["produced"] == 1
+
+
+def test_sweep_removes_orphaned_scratch_but_spares_a_live_one(tmp_path: Path) -> None:
+    # A killed run can't empty its own scratch (the finally never runs), so the workspace
+    # accumulates dead folders. Age-gating is what makes the sweep safe under concurrency.
+    import os
+    import time as _t
+
+    ws = tmp_path / "ws"
+    (ws / "req_dead").mkdir(parents=True)
+    (ws / "req_dead" / "chart.svg").write_text("<svg/>", encoding="utf-8")
+    (ws / "req_live").mkdir()
+    old = _t.time() - (5 * 60 * 60)
+    os.utime(ws / "req_dead", (old, old))          # hours old -> its run is gone
+
+    cleaned = aw.sweep_stale_scratch(ws)
+    assert cleaned == ["req_dead"] and not (ws / "req_dead").exists()
+    assert (ws / "req_live").exists()               # a concurrent run's live scratch is untouched
+
+
+def test_sweep_is_a_noop_on_a_clean_workspace(tmp_path: Path) -> None:
+    ws = tmp_path / "ws"
+    ws.mkdir()
+    (ws / "AGENTS.md").write_text("doctrine", encoding="utf-8")
+    assert aw.sweep_stale_scratch(ws) == [] and (ws / "AGENTS.md").exists()   # files are never touched
 
 
 def test_canary_passes_when_the_harness_draws(tmp_path: Path) -> None:

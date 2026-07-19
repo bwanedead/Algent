@@ -37,10 +37,32 @@ def build_router_system_prompt(brief: RoutingBrief) -> str:
     return compose_system_prompt(UNIVERSAL_AGENT_BASE, NEWSROOM_SYSTEM_MAP, ROUTER_BASE, assignment)
 
 
-def build_router_message(candidates: list[RouteCandidate], top_k: int) -> str:
-    """Render the candidates + the ranking directive into the task message."""
+def build_router_message(
+    candidates: list[RouteCandidate], top_k: int,
+    recent: tuple[tuple[str, str], ...] = (),
+) -> str:
+    """Render the candidates + any cooldown + the ranking directive into the task message."""
     lines = ["# CANDIDATES TO RANK", f"count: {len(candidates)}", ""]
     lines.extend(_fmt(c) for c in candidates)
+    if recent:
+        lines += [
+            "",
+            "# ALREADY COVERED — COOLDOWN (what we published recently)",
+            *[f"- {when[:10]}  {title}" for when, title in recent],
+            "",
+            "Do NOT rank #1 any candidate in the same STORY-FAMILY as one of these — same place, "
+            "product, conflict, chokepoint, or named event (Hormuz/Iran shipping, a given CVE "
+            "wave, the same drug approval, …). The pool over-represents whatever is dominating "
+            "coverage; re-picking it gives the reader a piece they have effectively already read. "
+            "Prefer a genuinely different story.",
+            "A REFRAME IS NOT A NEW STORY. 'War widens', 'IRGC strikes', 'broader campaign', "
+            "'updated traffic figures', or 'closure still unproven' on a beat already in this "
+            "list is the SAME development for the reader — demote it. A material exception would "
+            "need a fact class the prior pieces could not have stated (new theatre, new primary "
+            "actor class, resolved question). If you cannot name that against a SPECIFIC prior "
+            "headline, it is not a new story. A mechanical floor also demotes same-family "
+            "candidates after you rank — do not fight it by padding rationales.",
+        ]
     lines.extend([
         "",
         f"TASK: Rank the best up to {top_k} by the assignment's criteria. For each, return "

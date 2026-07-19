@@ -26,9 +26,9 @@ import time
 from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.control_plane.events_log import read_events
 from algent_backend.agent_system.runs.control_plane.layout import RunPaths, find_run_root
-from algent_backend.agent_system.runs.control_plane.state import read_state
+from algent_backend.agent_system.runs.control_plane.state import CRASH_ERROR, read_state
 
-from ._shared import pid_alive, print_json
+from ._shared import print_json
 
 
 def _cost_summary(paths: RunPaths) -> dict:
@@ -74,14 +74,20 @@ def run(args: argparse.Namespace) -> int:
             print_json({"event": "error", "reason": f"unknown run '{args.run_id}'"})
             return 1
 
+        # A run can reach a terminal state WITHOUT a done file — notably a crash, which read_state
+        # reconciles to `failed` (a vanished process). Exit on any terminal status rather than
+        # polling to the timeout, and keep naming the crash case specifically, since "your session
+        # dropped and took the run with it" is the diagnosis an operator actually needs.
         state = read_state(paths)
-        if state.status == "running" and not pid_alive(state.pid):
+        if state.status in ("failed", "stopped"):
+            crashed = state.status == "failed" and state.error == CRASH_ERROR
             print_json(
                 {
                     "event": "error",
-                    "reason": "process_dead",
+                    "reason": "process_dead" if crashed else state.status,
                     "run_id": args.run_id,
                     "pid": state.pid,
+                    "error": state.error,
                 }
             )
             return 1

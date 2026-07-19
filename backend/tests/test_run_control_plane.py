@@ -312,3 +312,46 @@ def test_watch_cost_summary_reports_spend_and_cap_trip() -> None:
     summary = _cost_summary(recorder.paths)
     assert summary["estimated_usd"] == 1.23
     assert summary["cost_limit_reached"] is True
+
+
+# -- crashed-run reconciliation (the ledger must never claim a dead run is alive) ---------------
+
+def test_running_state_with_a_dead_pid_reconciles_to_failed() -> None:
+    """A foreground run dies with its terminal, leaving status=running forever. read_state is
+    where that lie gets corrected, so every consumer sees the truth without asking."""
+    from algent_backend.agent_system.runs.control_plane.state import read_state, write_state
+
+    result = _service().run(RunRequest(agent_id="hello_workflow", input={"topic": "x"}))
+    paths = RunPaths(find_run_root(result.run_id))
+    # simulate the disconnect: mark it running under a pid that cannot exist
+    write_state(paths, read_state(paths).model_copy(update={"status": "running", "pid": 999_999_998}))
+
+    state = read_state(paths)
+    assert state.status == "failed" and "no longer running" in (state.error or "")
+    # and the correction is PERSISTED, not re-diagnosed on every read
+    assert json.loads(paths.state_file.read_text(encoding="utf-8"))["status"] == "failed"
+
+
+def test_reconciliation_leaves_a_live_run_alone() -> None:
+    # our own pid is alive -> a running run stays running (errs toward alive, never false-kills)
+    import os
+
+    from algent_backend.agent_system.runs.control_plane.state import read_state, write_state
+
+    result = _service().run(RunRequest(agent_id="hello_workflow", input={"topic": "x"}))
+    paths = RunPaths(find_run_root(result.run_id))
+    write_state(paths, read_state(paths).model_copy(update={"status": "running", "pid": os.getpid()}))
+    assert read_state(paths).status == "running"
+
+
+def test_reconciliation_ignores_terminal_states_and_missing_pids() -> None:
+    from algent_backend.agent_system.runs.control_plane.state import read_state, write_state
+
+    result = _service().run(RunRequest(agent_id="hello_workflow", input={"topic": "x"}))
+    paths = RunPaths(find_run_root(result.run_id))
+    # completed with a dead pid must stay completed — only *running* claims are reconciled
+    write_state(paths, read_state(paths).model_copy(update={"status": "completed", "pid": 999_999_998}))
+    assert read_state(paths).status == "completed"
+    # queued with no pid yet must not be declared dead
+    write_state(paths, read_state(paths).model_copy(update={"status": "running", "pid": None}))
+    assert read_state(paths).status == "running"

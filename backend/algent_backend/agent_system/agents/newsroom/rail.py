@@ -89,11 +89,17 @@ def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | Non
         # reported estimated_usd, so the rail can total the run's spend.
         costs: list[float] = []
 
+        # Also counts X searches: we spent two doctrine passes trying to raise X adoption while
+        # only INFERRING usage from artifacts. Measure it instead — an X result carries kind="x".
+        x_calls = [0]
+
         def _tee(event_type: str, payload: dict[str, Any] | None = None) -> None:
             p = payload or {}
             usd = p.get("estimated_usd")
             if isinstance(usd, (int, float)):
                 costs.append(float(usd))
+            if event_type == ev.TOOL_RESULT and '"kind": "x"' in str(p.get("content", "")):
+                x_calls[0] += 1
             context.emit(event_type, p)
 
         sub = dataclasses.replace(context, emit=_tee)
@@ -124,6 +130,7 @@ def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | Non
             return _finish(context, report, note="routing promoted no vector")
         report.selected_vector_id = str(vector.get("id", ""))
         report.selected_vector_title = str(vector.get("title", ""))
+        report.pool_by_channel, report.promoted_from = _channel_provenance(context, pool, vector)
 
         # 3. profile (the #1 vector -> a researched t2 profile).
         context.emit(RAIL_STAGE, {"stage": "profile"})
@@ -148,6 +155,7 @@ def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | Non
         report.analytics_produced = int(pipeline.get("analytics_produced", 0) or 0)
         report.stage_reached = "complete"
         report.total_usd = round(sum(costs), 6)
+        report.x_searches = x_calls[0]
 
         # 6. PUBLISH — by virtue of the pipeline, not by someone running a command. A piece that
         # earned `publishable` goes live here; the floors already decided, so there is nothing left
@@ -163,6 +171,43 @@ def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | Non
     graph.add_edge(START, "run")
     graph.add_edge("run", END)
     return graph.compile()
+
+
+def _channel_provenance(
+    context: AgentRunContext, pool: dict | None, vector: dict,
+) -> tuple[dict[str, int], dict[str, int]]:
+    """(what each channel contributed, which channels fed the PROMOTED story).
+
+    Derived, not instrumented: a vector already cites its ``supporting_hits`` (t0 item ids) and each
+    pool item already carries its ``channel``, so provenance is a join — no synthesis change needed.
+
+    The pair is the point. Pool share alone says nothing; the ratio of "share of the pool" to "share
+    of what actually got promoted" is the overfit signal. A live run made this concrete: X supplied
+    a quarter of the pool and 100% of the promoted story, while a constitutional crisis sourced from
+    GDELT lost — a steer that is invisible without measuring both sides.
+    """
+    if pool is None:                       # synthesis self-sourced it; read this run's snapshot
+        try:
+            run_dir = find_run_root(context.run_id)
+            if run_dir is None:
+                return {}, {}
+            import json as _json
+            pool = _json.loads((run_dir / "artifacts" / "t0_pool.json").read_text(encoding="utf-8"))
+        except Exception:  # noqa: BLE001 — observability must never break a run
+            return {}, {}
+
+    items = pool.get("items") or []
+    by_id = {str(i.get("id")): str(i.get("channel") or "?") for i in items}
+    pool_counts: dict[str, int] = {}
+    for ch in by_id.values():
+        pool_counts[ch] = pool_counts.get(ch, 0) + 1
+
+    promoted: dict[str, int] = {}
+    for hit in (vector.get("supporting_hits") or []):
+        ch = by_id.get(str(hit))
+        if ch:
+            promoted[ch] = promoted.get(ch, 0) + 1
+    return pool_counts, promoted
 
 
 def _publish(context: AgentRunContext, report: NewsroomRailReport) -> None:

@@ -54,6 +54,7 @@ class DraftState(TypedDict, total=False):
     prior_draft: dict[str, Any]      # a prior draft to revise (drafting-gauntlet revision pass)
     citation_report: dict[str, Any]  # the audit that revision must clear (worklist + missing)
     caveat_check: dict[str, Any]     # v3b findings -> the narrower HEDGING repair lap
+    comprehension_check: dict[str, Any]  # gate C findings -> the RAMP repair lap
     draft: dict[str, Any]            # the produced ArticleDraft
     # NOTE: `profile` is also the OUTPUT — the enriched (revision++) profile after drafting.
 
@@ -91,7 +92,8 @@ def build_draft_graph(
             produced = stream_react_loop(
                 agent,
                 {"messages": [HumanMessage(content=build_draft_message(
-                    treatment, profile, prior=prior, report=report, caveat=state.get("caveat_check")))]},
+                    treatment, profile, prior=prior, report=report, caveat=state.get("caveat_check"),
+                    comprehension=state.get("comprehension_check")))]},
                 context=context, config=config,
             )
             captured = snapshots.collected()

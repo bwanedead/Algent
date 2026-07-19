@@ -28,6 +28,9 @@ def _wire(monkeypatch, plan_out, draft_out, caveat_out, headline_out=None, analy
     monkeypatch.setattr(pl, "build_headline_writer", lambda ctx: _Graph(headline_out or {"headline": {}}))
     monkeypatch.setattr(pl, "build_caveat_reviewer", lambda ctx: _Graph(caveat_out))
     monkeypatch.setattr(pl, "build_analytics_router", lambda ctx: _Graph(analytics_out or {"analytics_plan": {}}))
+    # gate C defaults to clear (a well-built piece); individual tests override to exercise the lane.
+    monkeypatch.setattr(pl, "build_comprehension_reviewer",
+                        lambda ctx: _Graph({"comprehension_check": {"verdict": "clear", "findings": []}}))
     # A sentinel worker: if it is ever built, it records the call — so a test can prove the gate
     # kept it OFF (never built) without any risk of spawning real grok.
     built = []
@@ -102,6 +105,41 @@ def test_needs_hedging_self_heals_and_ships(monkeypatch) -> None:
     assert r["status"] == "publishable" and r["publishable"] is True   # shipped, not held
     assert r["caveat_verdict"] == "verified" and r["caveat_rounds"] == 2
     assert any(et == pl.CAVEAT_REPAIRED for et, _ in events)
+
+
+def test_comprehension_is_advisory_repairs_but_never_blocks_publish(monkeypatch) -> None:
+    # A hard-to-follow piece is a dud, not a lie: gate C earns one ramp-repair lap, then ships either
+    # way. needs_ramp must NOT flip a publishable piece to held.
+    plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
+    draft_out = {"draft": {"id": "d", "title": "t", "word_count": 400}, "gauntlet": {"outcome": "grounded"}}
+    _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}})
+    # first read flags a ramp gap; after the repair, it reads clear
+    comp = _Sequence({"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}]}},
+                     {"comprehension_check": {"verdict": "clear", "findings": []}})
+    monkeypatch.setattr(pl, "build_comprehension_reviewer", lambda ctx: comp)
+    monkeypatch.setattr(pl, "build_drafter", lambda ctx: _Sequence(
+        {"draft": {"id": "d", "title": "t"}, "profile": {"id": "p"}}))
+
+    events: list = []
+    r = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({"profile": {"id": "p"}})["pipeline"]
+    assert r["status"] == "publishable" and r["publishable"] is True   # never blocked by comprehension
+    assert r["comprehension_verdict"] == "clear" and r["comprehension_rounds"] == 2
+    assert any(et == pl.RAMP_REPAIRED for et, _ in events)
+
+
+def test_a_still_unclear_piece_ships_anyway(monkeypatch) -> None:
+    # even if the ramp repair doesn't fully take, the honest (if imperfect) piece ships — duds ship.
+    plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
+    draft_out = {"draft": {"id": "d", "title": "t"}, "gauntlet": {"outcome": "grounded"}}
+    _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}})
+    monkeypatch.setattr(pl, "build_comprehension_reviewer", lambda ctx: _Sequence(
+        {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}]}}))  # never clears
+    monkeypatch.setattr(pl, "build_drafter", lambda ctx: _Sequence(
+        {"draft": {"id": "d", "title": "t"}, "profile": {"id": "p"}}))
+
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "p"}})["pipeline"]
+    assert r["status"] == "publishable"                       # honest but imperfect -> still ships
+    assert r["comprehension_verdict"] == "needs_ramp" and r["comprehension_rounds"] == 2
 
 
 def test_still_unhedged_after_the_repair_lap_holds_the_piece(monkeypatch) -> None:

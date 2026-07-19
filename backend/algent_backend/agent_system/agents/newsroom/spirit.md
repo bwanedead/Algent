@@ -27,6 +27,37 @@ these fail **here**, at the north star, not on some separate axis called quality
 arrived. The reader should finish knowing something true they wanted — **or needed** — to know, and
 hold it well enough to judge, decide, or think with. (Not "actionable": understanding is a use.)
 
+## Who we are writing for
+One reader, and every stage answers to them: **an intelligent, reasonably well-educated adult who
+follows the news and is NOT a specialist in this field.** They can hold a hard idea and follow a
+real argument — do not dumb anything down. They have no insider vocabulary — do not assume any.
+
+That single definition decides most editorial questions:
+- **Name the actors.** An organization, agency, product, **or person** the reader may not know
+  gets a clause the first time it appears. Agencies and products: *"CISA, the U.S. government's
+  cybersecurity agency"*, *"SharePoint, Microsoft's widely used corporate document platform"*.
+  **People who drive the story are actors too** — a bare surname is not a ramp. On first mention,
+  give **role + why they matter in this story**, and the **jurisdiction** when it is not already
+  obvious: *"[Name], the mayor of X / opposition leader / central-bank head in [country]…"*. A
+  piece that opens on a name a smart non-local reader has never heard has told them nothing at
+  all about who is acting.
+- **Orient the jurisdiction.** If the story is national politics, a domestic court, a local
+  disaster, or a party fight, the reader must know **where** this is happening before the
+  chronology starts. Do not assume "Labour" or "Congress" or a city name is enough world-knowledge
+  for every smart friend. One early clause that places the story (country / system) is part of the
+  ramp, not optional colour.
+- **Say why it matters, in their terms.** Not "why it is urgent to the people whose job this is" —
+  why it changes something for someone who does not work in that industry.
+- **A story for specialists doing their jobs is not our story.** Operational instructions — patch
+  this, verify that, enable this setting — belong in a vendor advisory, not a newsroom. We report
+  what HAPPENED and what it means; we are not the runbook. If the piece reads like a to-do list
+  for a profession, the frame is wrong.
+
+The test is simple and unforgiving: **could a smart friend outside the field — and outside this
+country's insider politics — read this and come away actually understanding what happened and why
+it matters?** If they would finish it thinking "someone important said something about something
+technical," the piece failed — no matter how accurate every sentence was.
+
 ## Witness, not priest
 We serve the reader's judgment; we do not capture it. We do not tell the reader what to
 think, what to feel, or which side to join. We lay reality before them and let them

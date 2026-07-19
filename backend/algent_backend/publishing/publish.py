@@ -17,6 +17,7 @@ commit+push to the ``site-live`` branch lives in ``site_git.py`` and only runs w
 from __future__ import annotations
 
 import json
+import os
 import re
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
@@ -27,9 +28,21 @@ import yaml
 
 from .converter import SiteArticle, build_slug, convert, parse_published_article
 
-# Only a caveat-verified article auto-publishes. These are the pipeline's terminal statuses.
+# The pipeline's terminal statuses.
 _PUBLISHABLE = "publishable"
 _BLOCKED = "blocked"
+
+# THE STATUS GATE IS OFF BY DEFAULT. Operator decision: nothing may stand between a produced
+# article and the operator reading it — the site IS the review surface, and a held piece breaks the
+# only feedback loop that improves the machine. So every finished piece publishes regardless of
+# status, and its honest `status` rides in the frontmatter for the reader to see (the site shows
+# it). The gate machinery is kept, not deleted, because this is a "for now" call: set
+# ALGENT_PUBLISH_GATE=1 to restore hold-on-status once quality no longer needs the tight loop.
+_GATE_ENV = "ALGENT_PUBLISH_GATE"
+
+
+def _gate_enabled() -> bool:
+    return os.environ.get(_GATE_ENV, "0").strip().lower() in ("1", "true", "yes", "on")
 
 # Accusation-class language — the coarse signal for the OPTIONAL named-individual hold-lane. This is
 # where defamation risk concentrates, so an operator can choose to route pieces that pair a named
@@ -140,13 +153,14 @@ def publish_run(
     slug = build_slug(title, profile_id)
     run_id = run_dir.name
 
-    # ── the gate ──────────────────────────────────────────────────────────────────────────────
-    if status == _BLOCKED:
-        return _hold(held_dir, slug, status, ["status is blocked — dropped required evidence"],
-                     run_id, rail, pipeline, action="blocked")
-    if status != _PUBLISHABLE:
-        reason = f"status is '{status or 'unknown'}', not publishable (caveat lane did not pass)"
-        return _hold(held_dir, slug, status, [reason], run_id, rail, pipeline)
+    # ── the gate (OFF by default — see _gate_enabled) ─────────────────────────────────────────
+    if _gate_enabled():
+        if status == _BLOCKED:
+            return _hold(held_dir, slug, status, ["status is blocked — dropped required evidence"],
+                         run_id, rail, pipeline, action="blocked")
+        if status != _PUBLISHABLE:
+            reason = f"status is '{status or 'unknown'}', not publishable (caveat lane did not pass)"
+            return _hold(held_dir, slug, status, [reason], run_id, rail, pipeline)
     if hold_named_individuals and (flag := named_individual_flag(profile, article_md)):
         return _hold(held_dir, slug, status, [flag], run_id, rail, pipeline)
 

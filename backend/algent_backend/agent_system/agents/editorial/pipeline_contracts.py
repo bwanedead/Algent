@@ -28,6 +28,11 @@ class EditorialPipelineReport(BaseModel):
     # 1 = clean first pass; 2 = the self-heal lap ran (findings -> targeted hedge -> re-check).
     # A run that repeatedly needs the lap is a signal to tune the drafter, not the reviewer.
     caveat_rounds: int = 1
+    # Comprehension (gate C) — advisory, NOT a publish gate: a hard-to-follow piece is a dud, not a
+    # lie, so it ships either way, but earns one bounded ramp-repair lap first.
+    comprehension_verdict: str = ""   # clear | needs_ramp (after any repair lap)
+    comprehension_findings: int = 0   # unexplained terms / islands / lost threads still standing
+    comprehension_rounds: int = 1
     analytics_warranted: bool = False  # would a chart/table/insight/illustration aid this story?
     analytics_count: int = 0           # grounded analytics requested
     analytics_produced: int = 0        # requests the (gated) worker actually fulfilled into artifacts

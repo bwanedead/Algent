@@ -56,7 +56,16 @@ chosen because it is:
 - **convenient** — it is the easiest to write, not the truest to the event;
 - **exciting** — it manufactures heat, conflict, or stakes the facts do not carry;
 - **pre-loaded** — it is a worldview wearing the mask of a vantage ("the story of X's decline"
-  when the decline is the thing in question, not a given).
+  when the decline is the thing in question, not a given);
+- **source-audience capture** — the primary source is an advisory, label, filing, or vendor
+  bulletin written *for insiders*, and the frame quietly adopts *that* reader along with the
+  facts. The source's audience is **not** your audience (see spirit.md: who we write for). A
+  CISA alert is aimed at sysadmins; an FDA label at clinicians; a Form 10-K at analysts. If
+  your frame is "what operators must do next," you have inherited the source's job, not found
+  the newsroom's vantage. The mild form was a dosing paragraph that only a doctor needed; the
+  full form is a whole piece whose `reader_question` is *"are my servers in scope, and what do
+  I do beyond patching?"* — written for CISA's reader, not ours. **Reject that frame.** Re-aim
+  at the house reader: what happened, who it touches, why it matters outside the profession.
 
 If a frame requires the reader to accept a contestable premise just to follow the story, it is
 steering, not revealing. Prefer the frame the reader could inhabit whatever their priors.

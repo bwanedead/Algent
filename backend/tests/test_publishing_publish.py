@@ -53,19 +53,34 @@ def test_publishable_is_published_when_push_on(tmp_path: Path) -> None:
     assert "push paused" not in (d["site_dir"] / "publish-ledger.md").read_text(encoding="utf-8")
 
 
-def test_needs_hedging_goes_to_held_queue_not_the_site(tmp_path: Path) -> None:
+def test_everything_publishes_by_default_status_rides_along_honestly(tmp_path: Path) -> None:
+    # Operator decision: nothing stands between a produced article and the operator reading it —
+    # the site IS the review surface. A needs_hedging piece ships with its status visible.
+    d = _dirs(tmp_path)
+    r = pb.publish_run(_run(tmp_path, status="needs_hedging"), today="2026-07-15", **d)
+    assert r.action == "staged"
+    fm = yaml.safe_load((d["site_dir"] / "content" / "articles" / f"{r.slug}.md")
+                        .read_text(encoding="utf-8").split("---\n")[1])
+    assert fm["status"] == "needs_hedging"      # published, but never silently — the reader sees it
+
+
+def test_even_blocked_publishes_when_the_gate_is_off(tmp_path: Path) -> None:
+    d = _dirs(tmp_path)
+    r = pb.publish_run(_run(tmp_path, status="blocked"), today="2026-07-15", **d)
+    assert r.action == "staged" and (d["site_dir"] / "content" / "articles" / f"{r.slug}.md").exists()
+
+
+def test_the_gate_still_works_when_restored(tmp_path: Path, monkeypatch) -> None:
+    # The machinery is kept, not deleted — this is a "for now" call, so it must be re-armable.
+    monkeypatch.setenv(pb._GATE_ENV, "1")
     d = _dirs(tmp_path)
     r = pb.publish_run(_run(tmp_path, status="needs_hedging"), today="2026-07-15", **d)
     assert r.action == "held" and "not publishable" in r.reasons[0]
-    assert not (d["site_dir"] / "content" / "articles").exists()          # nothing on the site
-    assert (d["held_dir"] / "held-ledger.md").exists()                    # recorded for the operator
+    assert not (d["site_dir"] / "content" / "articles").exists()
+    assert (d["held_dir"] / "held-ledger.md").exists()
 
-
-def test_blocked_is_refused(tmp_path: Path) -> None:
-    d = _dirs(tmp_path)
-    r = pb.publish_run(_run(tmp_path, status="blocked"), today="2026-07-15", **d)
-    assert r.action == "blocked"
-    assert "HELD" not in (d["held_dir"] / "held-ledger.md").read_text(encoding="utf-8").split("\n")[0]
+    blocked = pb.publish_run(_run(tmp_path, status="blocked", name="0002__b"), today="2026-07-15", **d)
+    assert blocked.action == "blocked"
 
 
 def test_assets_are_copied_into_the_site_public_dir(tmp_path: Path) -> None:

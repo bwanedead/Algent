@@ -40,11 +40,17 @@ PRODUCE an EditorialTreatment:
 2. THE READER-MOLECULE (see molecule.md) — design the structure, not an outline.
    - `core_understanding`: in 1-2 sentences, the reality-shape the reader should hold at the
      natural end of the read (the understanding, not the topic).
-   - `reader_question`: one line, in the reader's own words, of what they came wanting to know
-     and will leave knowing. Every concept must serve answering it — if a concept doesn't, CUT
-     it. If you cannot state a question a reader would genuinely want answered ("something may
-     happen, or may not"), you do not have a story: say so rather than assembling one out of
-     whatever the profile happens to hold.
+   - `reader_question`: one line, in the HOUSE READER's own words (spirit.md: intelligent,
+     non-specialist news reader — NOT the source's professional audience). What THEY came wanting
+     to know and will leave knowing. Every concept must serve answering it — if a concept doesn't,
+     CUT it. Bind the question to that reader: for a cyber incident, "how bad is this, who does it
+     touch, and could it reach me?" — NEVER "are my servers in scope / what do I do beyond patching?"
+     (that is the advisory's reader, not ours; see framing.md source-audience capture). If you
+     cannot state a question a general reader would genuinely want answered ("something may happen,
+     or may not"), you do not have a story: say so rather than assembling one out of whatever the
+     profile happens to hold.
+   - If this is a MATERIAL UPDATE on a story already covered, the molecule is the DELTA — what
+     changed — not a re-tell of the prior piece. Continuity coverage should look like continuity.
    - `concepts[]`: the LOAD-BEARING concepts the reader must build to hold that shape. For
      each: a local `id` (k1, k2…), `name`, `why_load_bearing` (the wrong shape if it's
      missing), `depends_on` (other concept ids — chains/towers), `grounds_in` (profile item
@@ -55,19 +61,31 @@ PRODUCE an EditorialTreatment:
      it") is a fact about our research, not a concept: it belongs in the limits. CUT it.
    - `reader_path`: the concept ids in dependency order (broad -> specific). This is concept
      order, NOT prose sections.
+   - `primitives[]`: THE RAMP. Textbook background a decently-informed general reader must already
+     hold to build the molecule (term -> one plain-language clause, 2-4 max). These are NOT news
+     and NOT evidence — the drafter speaks them in its own voice, uncited — so they belong here,
+     not on the profile's spine. Only uncontroversial background; anything contested,
+     story-specific, or load-bearing for the news itself is evidence, not a primitive.
+     **Priority when the budget is tight:** (1) people who drive the story — role + why they
+     matter, never a bare name; (2) jurisdiction / political system when the story is domestic to
+     a country the house reader may not live in; (3) the scheme/object itself in one plain clause;
+     (4) only then secondary jargon. Operator jargon is NOT the house reader's ramp. Causal
+     antecedents (what led here) are NOT primitives — they are checkable fact and come from the
+     field threads by id. (See molecule.md: The ramp + shared origin before chronology.)
 
 3. COMPLETENESS / HONESTY (see spirit.md)
    - `perspectives[]`: every serious side at its strongest good-faith form (steelman, never
      strawman), each with `grounds_in` ids. Apply scrutiny symmetrically.
    - `deception_risks[]`: name how THIS particular story could mislead while saying only true
      things — the tempting omission, the flattering frame, the unearned certainty.
-   - `must_use_items[]`: the profile item ids that are load-bearing for the true shape — what
-     the draft is not free to drop. This has TEETH: the harness fails a draft that drops one,
-     so each id here is a passage the drafter cannot cut even when cutting is right. Mark only
-     what the reader's shape breaks without — a short list is the healthy case. Unsourced or
-     low-salience ids are refused by the harness outright ("not grounded enough to build on"
-     and "too important to drop" cannot both be true); reaching for them means you are
-     protecting the profile, not the reader.
+   - `must_use_items[]`: OMISSION-RISK INSURANCE — not a completeness manifest. The harness fails
+     a draft that drops one, so each id is a passage the drafter cannot cut even when cutting is
+     right. The bar is NOT "important" — it is "its absence would DECEIVE": the serious
+     counter-position, the inconvenient caveat, the thing a writer would be tempted to bury. Merely
+     informative facts are NOT must-use; the drafter carries or cuts them by judgment. HARD-CAPPED
+     AT 3 (the harness strips beyond it, most-salient first) — marking more means you are using the
+     floor as an inventory, which is what forced padding into the prose. Unsourced/low-salience ids
+     are refused outright.
    - `open_questions[]`: what stays genuinely unknown or contested, to be flagged as such.
 
 Be specific and grounded in THIS profile (cite ids). A treatment that could fit any story is

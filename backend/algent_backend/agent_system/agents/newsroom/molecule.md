@@ -64,11 +64,62 @@ limits, not in the molecule. Watch for the tell — if the only honest thing a c
 *"this may be related, but we could not establish that,"* it is not a concept. Cut it. (See spirit's
 *honest compression*: a ceiling has two levers, and cutting is the one you under-use.)
 
-## Right resolution
+## The ramp — what the reader must already hold (`primitives`)
+A molecule the reader cannot connect to anything they already know does not slide in — it sits
+there as jargon. So before deciding grain, decide the **ramp**: what a *decently-informed general
+reader* must already hold to build this molecule, and supply exactly those. Two sources of ramp:
+- **primitives** — textbook background that is not news and not contested: *what LDL-C is*, *what a
+  chokepoint is*. List them (`primitives`: term → one plain-language clause, 2-4 max). These are
+  NOT evidence — the drafter speaks them in its own voice, uncited — so they live here on the
+  treatment, not on the profile's spine. (Sourcing textbook knowledge would recreate the inventory
+  disease with receipts attached.) Anything contested, story-specific, or load-bearing for the news
+  itself is NOT a primitive — it is evidence, and stays on the spine.
+- **causal antecedents** — what led here, the prior state this changed. These ARE checkable,
+  news-adjacent fact, so they come from the profile's field threads (by id), not from `primitives`.
+
+Aim the ramp at a decently-informed generalist — not an expert (who needs no ramp) and not a
+novice (an endless primitive-chase serves no one). The support you name is the reader's foothold,
+not a textbook.
+
+**Two bars, and most candidate primitives fail one of them:**
+- **Is it actually unfamiliar?** A term in the news for months (the Strait of Hormuz, the Fed, the
+  FDA) is already the reader's furniture — explaining it is condescension, not a ramp. Reserve
+  primitives for what a smart reader genuinely would not know: `LDL-C`, `PCSK9`, `VLCC`, `AIS-dark`.
+  When in doubt, assume they know it.
+  **This includes the ACTORS, and that is the case most often missed.** An agency, company,
+  product, **person**, or **jurisdiction** outside general awareness is exactly a primitive:
+  `CISA`, `MSRC`, `SharePoint`, a foreign mayor or party figure, "the UK's governing Labour
+  party". A live piece that opens on a bare personal name with no role and no country never
+  starts for a non-local reader — same failure mode as an unexplained acronym. If the story's
+  subject is an acronym **or a person the house reader may not know**, the ramp is not optional.
+  Prefer actors and jurisdiction over secondary jargon when the primitive budget is tight (2–4).
+- **Is the meaning CONCRETE?** A primitive must state what the thing *is* — the place, the number,
+  the mechanism — never gesture at its significance. *"a narrow route whose disruption can ripple
+  far beyond the water itself"* is abstraction posing as explanation and teaches nothing. *"the sea
+  lane between Iran and Oman that about a fifth of the world's seaborne oil passes through"* is a
+  primitive: it hands the reader a fact they can hold and reason with. If you cannot write the
+  plain meaning concretely, you do not understand the term well enough to gloss it — leave it out.
+
+## Shared origin before chronology
+Before the reader can follow *what changed when*, they need **where they are standing**: the
+country/system, what the scheme or conflict *is* in one plain clause, and who the load-bearing
+people are. Chronology without that origin is insider code. Put scene-setting on the ramp
+(primitives + the first concept's support), not as a later aside.
+
+## Right resolution — and support depth
 For each concept, set the **grain**: comprehensive enough to reconstruct the real shape,
 manageable enough to hold. Flag where the material genuinely demands a long chain (do not let
 the drafter truncate a hard-but-true idea to look simple) and where a coarse pass is honest
 enough. Resolution is a reality-fidelity decision, not just an ease decision.
+
+Grain has a reader-side face: **support depth.** For each load-bearing concept, judge what sits
+beneath it for the target reader and how far down to go — *inferable freely* (say nothing; the
+reader supplies it), *one-clause context*, *a primitive* (from the ramp above), or *a causal
+antecedent* (from the field threads). And the **stopping rule** — the answer to your own
+infinite-regress worry (support has support has support): **support extends only as deep as the
+`reader_question` requires, and no deeper.** Below that line the reader is *primed to dig on their
+own*, not carried. A piece that ramps every primitive to bedrock is as failed as one that ramps
+nothing — it buried the molecule under scaffolding.
 
 ## Ground it in the evidence (by id)
 This is a **research** product, not an essay. Every load-bearing concept must trace to the
@@ -77,13 +128,24 @@ profile: cite the **claim / thread / source ids** that supply it. Two consequenc
   draft is not free to drop. (Downstream, the harness can check the draft actually carries
   them.)
 
-  Must-use is a **floor with teeth, and it costs the reader.** The harness fails a draft that drops
-  one, so every id you mark here is a passage the drafter *cannot cut* — including when cutting is
-  the right call. Mark only what the reader's shape genuinely breaks without; "it would be a shame
-  to waste it" is the padding instinct wearing a duty's clothes. A thin item cannot be must-use at
-  all — the harness refuses an unsourced or low-salience id outright, since "not grounded enough to
-  build on" and "too important to drop" cannot both be true of the same claim. Reaching for those is
-  the reliable signal you are protecting the profile rather than the reader.
+  Must-use is **omission-risk insurance, not a completeness manifest** — and it costs the reader.
+  The harness fails a draft that drops a must-use id, so every id here is a passage the drafter
+  *cannot cut*, even when cutting is right. So the bar is not "important" — it is **"its absence
+  would deceive."** Mark only what a writer might be *tempted to bury* and whose burial would leave
+  the reader misled: the canonical cases are the **serious counter-position** and the **inconvenient
+  caveat**. A merely-informative fact is not must-use — the drafter carries or cuts it by judgment.
+  The floor is **hard-capped at 3** (the harness strips beyond it, most-salient first): if you find
+  yourself marking more, you are using the floor as an inventory, which is exactly what forced
+  padding into the prose. A thin item cannot be must-use at all — the harness refuses an unsourced
+  or low-salience id, since "not grounded enough to build on" and "too important to drop" cannot
+  both be true of one claim.
+
+  > **Why this one gate is soft while the honesty gates stay hard.** Must-use is an editorial
+  > *judgment* ("what matters to this story"), so it belongs to spirit and is capped, not enforced
+  > by inventory. But the honesty floors — deep-read grounding, the caveat lane, the figure checks —
+  > stay exactly as hard as they are. That is not a contradiction: **the hard floors are what make
+  > the soft rails safe to loosen.** A machine with honest floors can afford free editorial
+  > expression; a machine with neither is just a confident liar with good prose rhythm.
 - **do-not-overstate** — concepts whose evidence is thin, contested, or hedged. Carry forward
   the ceiling: what the draft may *not* assert beyond what the grounding supports. A molecule
   that quietly upgrades a *likely* into a *fact* is a deception (see spirit's *certainty
@@ -107,6 +169,24 @@ saying true things: the tempting omission, the frame that flatters, the emphasis
 an unwarranted conclusion, the certainty the evidence does not earn. Naming the risks here
 arms the treatment reviewer and the draft reviewer to check for exactly them — you know this
 material better than anyone downstream will.
+
+## Altitude — news, not a runbook
+The molecule is the shape of a *world event* for a general reader. If a concept only exists to
+hand an operator a procedure (patch order, version matrix, AMSI toggle, "verify then rotate"),
+it is the source's altitude, not ours. Report that such guidance exists and what its existence
+signals (severity, exposure, what changed) — do not make the response package the molecule.
+Operator steps serve a subsection of a subsection of readers; the house reader's takeaway is
+what happened, who it touches, and why it matters.
+
+## Continuity — when the story is an update
+If the vector is a material development on something already covered, the core understanding is
+the **delta** (what changed) — not a re-assembly of the prior piece. Continuity coverage should
+look like continuity to the reader, not déjà vu.
+
+**Do not re-ask a settled question.** If prior pieces already asked "is Hormuz closed or only
+disrupted?" (or the equivalent for this beat), a new treatment must not put that question back
+in `reader_question` unless the evidence *answers* it differently. Re-litigating the same
+uncertainty is déjà vu wearing a new headline.
 
 ## What you hand forward
 A treatment that carries: the chosen frame (and rejected ones), the core understanding, the

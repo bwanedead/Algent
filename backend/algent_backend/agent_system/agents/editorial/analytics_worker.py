@@ -24,6 +24,7 @@ from __future__ import annotations
 import re
 import shutil
 import subprocess
+import time
 from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
@@ -78,6 +79,35 @@ _TIMEOUT_S = 240.0
 # time axis. This mirrors unverified_prose_figures' stance (percentages only; counts fall to the
 # semantic judge) — err toward missing a drift, never toward inventing one.
 _SIG_NUM = re.compile(r"\d+\.\d+%?|\d+%")
+
+
+_STALE_SCRATCH_AGE_S = 2 * 60 * 60   # a live request's scratch is minutes old, never hours
+
+
+def sweep_stale_scratch(workspace: Path, *, max_age_s: float = _STALE_SCRATCH_AGE_S) -> list[str]:
+    """Remove per-request scratch dirs orphaned by a killed run. Returns what it cleaned.
+
+    ``fulfill_request`` empties its scratch in a ``finally``, but a killed process (a dropped
+    session, a machine sleep) never runs it — so the workspace slowly accumulates dead folders.
+    This self-heals on the next worker start: no daemon, no bookkeeping, no coordination.
+
+    Age-gated rather than sweeping everything, so a CONCURRENT run's live scratch is never deleted:
+    an in-flight request's folder is minutes old; anything hours old belongs to a run that is gone.
+    """
+    cleaned: list[str] = []
+    if not workspace.is_dir():
+        return cleaned
+    cutoff = time.time() - max_age_s
+    for child in workspace.iterdir():
+        if not child.is_dir() or child.name.startswith("."):
+            continue
+        try:
+            if child.stat().st_mtime < cutoff:
+                shutil.rmtree(child, ignore_errors=True)
+                cleaned.append(child.name)
+        except OSError:
+            continue
+    return cleaned
 
 
 def default_workspace() -> Path:
@@ -264,10 +294,33 @@ def _collect(folder: Path, kind: str) -> tuple[Path | None, Path | None, str]:
     return visual, data, cap
 
 
-def _caption(request: AnalyticsRequest, worker_caption: str, data_refs: list[str], as_of: str) -> str:
-    """Harness-assembled caption: the worker's description + provenance the harness controls."""
-    base = worker_caption or request.title or request.question
-    prov = f"Source: cited claims {', '.join(data_refs)}." if data_refs else ""
+def _caption(
+    request: AnalyticsRequest,
+    worker_caption: str,
+    profile: SignalProfile,
+    cited_claims: list[Claim],
+    as_of: str,
+) -> str:
+    """Harness-assembled caption: worker description + human-readable provenance (never claim ids).
+
+    Machine ids (`clm_…`) belong in the receipts appendix, not under the figure a reader meets cold.
+    Captions carry publisher names + as-of — the same standard as prose attribution.
+    """
+    base = (worker_caption or request.title or request.question).strip()
+    # Strip any machine markers the worker may have echoed into caption.md.
+    base = re.sub(r"\b(?:clm_|src_)[0-9a-fA-F]+\b", "", base)
+    base = re.sub(r"\s{2,}", " ", base).strip(" —,-")
+    sources_by_id = {s.id: s for s in profile.source_ledger}
+    pubs: list[str] = []
+    for c in cited_claims:
+        for sid in c.supported_by:
+            s = sources_by_id.get(sid)
+            if not s:
+                continue
+            label = (s.publisher or s.title or "").strip()
+            if label and label not in pubs:
+                pubs.append(label)
+    prov = f"Source: {', '.join(pubs[:3])}." if pubs else ""
     asof = f" As of {as_of}." if as_of else ""
     return f"{base} — {AI_ANALYTIC_LABEL}. {prov}{asof}".strip()
 
@@ -361,6 +414,7 @@ def fulfill_request(
     workspace = workspace or default_workspace()
     payload, cited_claims, as_of = _grounded_data(request, profile)
     result = AnalyticsArtifact(request_id=request.id, kind=request.kind, title=request.title,
+                               question=request.question,
                                data_refs=request.data_refs, as_of=as_of,
                                generator=GENERATOR, model=version or "grok-build",
                                generated_at=datetime.now(UTC).isoformat())
@@ -431,7 +485,7 @@ def fulfill_request(
             result, status="produced", swept=removed,
             artifact_name=artifact_name or visual.name, data_name=data_name or (data.name if data else ""),
             body_md=body_md,
-            caption=_caption(request, worker_cap, request.data_refs, as_of),
+            caption=_caption(request, worker_cap, profile, cited_claims, as_of),
             figure_check=figure_check,
             note=("figure check: numbers not found in cited evidence — " + ", ".join(unverified)) if unverified else "",
         )
@@ -478,10 +532,14 @@ def build_analytics_worker_graph(
         # exactly what makes an always-update policy affordable here.
         version = ""
         if refresh:
+            # Self-heal first: a killed run can't empty its own scratch, so clean up anything a
+            # dead predecessor left behind before adding more.
+            cleaned = sweep_stale_scratch(default_workspace())
             note = update_grok()
             version = grok_version()
             ok, canary_note = canary(default_workspace(), runner=runner)
-            context.emit(ANALYTICS_WORKER_READY, {"version": version, "update": note, "canary": canary_note})
+            context.emit(ANALYTICS_WORKER_READY, {"version": version, "update": note,
+                                                  "canary": canary_note, "swept_stale": cleaned})
             if not ok:
                 context.emit(ANALYTICS_WORKER_COMPLETED, {
                     "produced": 0, "note": f"analytics skipped — {canary_note} (version {version})"})

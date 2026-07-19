@@ -25,11 +25,13 @@ def build_draft_message(
     prior: ArticleDraft | None = None,
     report: CitationReport | None = None,
     caveat: dict | None = None,
+    comprehension: dict | None = None,
 ) -> str:
     """The drafting task. With a prior draft + its citation audit, this is a REVISION pass.
 
-    With ``caveat`` (the v3b findings), it is the narrower HEDGING repair lap instead: fix exactly
-    the sentences the reviewer flagged and change nothing else.
+    With ``caveat`` (the v3b findings), it is the narrower HEDGING repair lap. With
+    ``comprehension`` (gate C findings), it is the RAMP repair lap: add the flagged handholds /
+    transitions or cut, and change nothing else.
     """
     parts = [
         f"# WRITE THE PIECE — treatment {treatment.id} (rev {treatment.revision})",
@@ -46,7 +48,9 @@ def build_draft_message(
         render_briefing(profile),
         "",
     ]
-    if prior is not None and caveat is not None:
+    if prior is not None and comprehension is not None:
+        parts += _comprehension_block(prior, comprehension)
+    elif prior is not None and caveat is not None:
         parts += _caveat_block(prior, caveat)
     elif prior is not None and report is not None:
         parts += _revision_block(prior, report, profile)
@@ -60,6 +64,46 @@ def build_draft_message(
             "prose rests on. Emit a DraftPayload."
         )
     return "\n".join(parts)
+
+
+def _comprehension_block(prior: ArticleDraft, comprehension: dict) -> list[str]:
+    """The RAMP repair lap — a general reader stumbled in specific places. Surgical, not a rewrite.
+
+    The constraint is hard and one-directional: your only moves are to ADD A HANDHOLD (a one-clause
+    plain-language ramp, in your own voice, uncited) or CONNECT an island onto the through-line or
+    CUT. You may NOT add new claims, strengthen any assertion, or pad. Fix exactly what's flagged.
+    """
+    lines = [
+        "## YOU ARE REPAIRING COMPREHENSION — a general reader stumbled in specific places",
+        "",
+        "Your prior draft is below. A reader read it cold and could not follow it in the places",
+        "listed. Repair EXACTLY those and nothing else. Your ONLY moves: add a one-clause plain",
+        "handhold (your own voice, no citation — it's textbook background, not evidence), connect an",
+        "island paragraph onto the through-line with a real relation, or cut what can't connect and",
+        "isn't needed. Do NOT add new claims, do NOT strengthen any assertion, do NOT pad, do NOT",
+        "re-report. Every sentence not named below stays exactly as written.",
+        "",
+        "### Where the reader stumbled",
+    ]
+    for f in (comprehension.get("findings") or []):
+        fid = f.get("id", "")
+        lines.append(f"- [{f.get('kind', 'other')} -> {f.get('fix', 'add_handhold')}] {fid}: {f.get('issue', '')}")
+        if f.get("where"):
+            lines.append(f'  at: "{f["where"]}"')
+        if f.get("suggestion"):
+            lines.append(f"  do: {f['suggestion']}")
+    lines += [
+        "",
+        "### Your prior draft",
+        f"TITLE: {prior.title}",
+        f"STANDFIRST: {prior.standfirst}",
+        "",
+        prior.body,
+        "",
+        "TASK: Emit a DraftPayload — the same piece with the flagged handholds/connections added or",
+        "the flagged passages cut. Carry the same cited ids. No new research.",
+    ]
+    return lines
 
 
 def _caveat_block(prior: ArticleDraft, caveat: dict) -> list[str]:

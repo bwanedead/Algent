@@ -26,6 +26,11 @@ def render_treatment(t: EditorialTreatment) -> str:
         # The drafter's sharpest test: every paragraph must earn its place answering this.
         out += ["## The question this piece answers (for the reader)", t.reader_question, ""]
     out += _concepts_block(t)
+    if t.primitives:
+        # The ramp — speak these in your own voice, uncited, where each concept first bears weight.
+        out.append("## Primitives — textbook background to weave in (YOUR voice, no citation)")
+        out += [f"- **{p.term}** — {p.plain_meaning}" for p in t.primitives]
+        out.append("")
     out += _perspectives_block(t)
     if t.deception_risks:
         out.append("## Deception risks (how this story could mislead while saying true things)")

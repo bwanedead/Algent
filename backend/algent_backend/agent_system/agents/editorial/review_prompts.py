@@ -28,9 +28,17 @@ INTERROGATE the treatment:
 - FRAME: Is the chosen frame the most reality-revealing vantage, or just the first plausible
   one? Is there a better one (name it in `better_frame`)? Does the frame flatter, excite,
   smuggle a premise, or sit too narrow to hold every serious side? (see framing.md)
+- SOURCE-AUDIENCE CAPTURE (blocking when clear): Is `reader_question` aimed at the HOUSE
+  reader (spirit.md) or at the source's professional audience (sysadmin, clinician, trader)?
+  Is the frame "what operators must do next" when the newsroom's job is "what happened and
+  what it means"? Advisory / label / filing sources arrive pre-aimed at insiders — adopting
+  their frame silently adopts their reader (framing.md). Block promotion if the honest answer
+  to "who is this for?" is a specialist doing their job.
 - MOLECULE / OMISSION: What would the reader FALSELY believe after receiving this molecule?
   Is a load-bearing concept or a serious perspective MISSING — such that the reader walks
   away with a misshapen structure? (deception by omission — see spirit.md, molecule.md)
+  Are the ACTORS on the ramp — including people (role + jurisdiction) and the country/system
+  when a non-local reader would not already know them — not only acronyms/products?
 - SYMMETRY: Is a perspective flattened or strawmanned? Is scrutiny applied to one side but
   not the others (false symmetry / asymmetric scrutiny)?
 - CERTAINTY: Does any concept assert more than its grounding supports — a `likely` written as
@@ -39,7 +47,8 @@ INTERROGATE the treatment:
 - GROUNDING: Is any concept or perspective ungrounded in the profile's items?
 - STEERING: Does the molecule, taken whole, install an unwarranted conclusion or capture the
   reader rather than serve their judgment?
-- CORE: Does `core_understanding` actually capture the real shape of the thing?
+- CORE: Does `core_understanding` actually capture the real shape of the thing? Does
+  `reader_question` serve a smart non-specialist?
 
 OUTPUT — a TreatmentReview (task-generating, not prose criticism)
 - findings[]: each with a `type`, `severity` (low|medium|high|blocking), a `target` ("frame"

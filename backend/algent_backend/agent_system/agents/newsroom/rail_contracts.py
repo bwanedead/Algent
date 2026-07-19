@@ -10,7 +10,7 @@ what the whole thing cost.
 
 from __future__ import annotations
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 # How far the rail progressed — each stage can legitimately be the end (no promotable vector is a
 # valid, non-error outcome, just as a still-needs_revision treatment is downstream).
@@ -25,6 +25,15 @@ class NewsroomRailReport(BaseModel):
     pool_items: int = 0                 # t0 items considered (incl. any backfed leads)
     backfeed_leads_injected: int = 0    # damped open leads merged into the pool (the loop closing)
     vector_count: int = 0               # t1 vectors synthesized
+    # Measured, not inferred: how often any stage actually reached for live X. Zero across a run
+    # means the source class is wired but unused — which is what two doctrine passes failed to fix.
+    x_searches: int = 0
+    # DISCOVERY OBSERVABILITY — where the news actually came from. `pool_by_channel` is what each
+    # source contributed; `promoted_from` is which channel(s) fed the story we ACTUALLY ran. The
+    # ratio between them is the overfit signal: a channel that supplies a quarter of the pool but
+    # every promoted story is steering the newsroom, and that is invisible without this.
+    pool_by_channel: dict[str, int] = Field(default_factory=dict)
+    promoted_from: dict[str, int] = Field(default_factory=dict)
     # ── promotion ──
     selected_vector_id: str = ""
     selected_vector_title: str = ""
