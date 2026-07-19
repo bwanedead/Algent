@@ -62,6 +62,20 @@ def test_flags_from_title_phrase_when_no_scope() -> None:
     assert names == ["Peru"] and flags == ["🇵🇪"]
 
 
+def test_demonym_in_entity_name_maps_country() -> None:
+    # Telstra-style profile: orgs named "Australian …" without a bare "Australia" entity.
+    profile = {
+        "entities": [
+            {"name": "Telstra", "type": "org"},
+            {"name": "Australian Communications and Media Authority (ACMA)", "type": "org"},
+            {"name": "Australian Rail Track Corporation", "type": "org"},
+        ],
+    }
+    vector = {"title": "Telstra outage", "scope": ["eng"], "pillars": []}
+    names, flags = tg.derive_places(profile, vector)
+    assert names == ["Australia"] and flags == ["🇦🇺"]
+
+
 def test_flag_cap_keeps_the_feed_scannable() -> None:
     profile = {
         "entities": [

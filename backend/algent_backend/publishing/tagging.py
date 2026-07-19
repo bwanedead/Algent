@@ -80,6 +80,14 @@ _COUNTRY_ISO: dict[str, str] = {
     "greece": "GR", "portugal": "PT", "austria": "AT", "belgium": "BE", "czechia": "CZ",
     "czech republic": "CZ", "hungary": "HU", "romania": "RO", "serbia": "RS", "croatia": "HR",
     "bulgaria": "BG", "european union": "EU",
+    # Demonyms / adjectival forms — live miss: "Australian Communications and Media Authority"
+    # never matched "australia". Whole-phrase scan only; still no guessing of unmapped places.
+    "australian": "AU", "american": "US", "british": "GB", "canadian": "CA", "french": "FR",
+    "german": "DE", "chinese": "CN", "japanese": "JP", "indian": "IN", "russian": "RU",
+    "ukrainian": "UA", "iranian": "IR", "israeli": "IL", "mexican": "MX", "brazilian": "BR",
+    "south african": "ZA", "korean": "KR", "dutch": "NL", "spanish": "ES", "italian": "IT",
+    "swedish": "SE", "norwegian": "NO", "danish": "DK", "finnish": "FI", "irish": "IE",
+    "polish": "PL", "turkish": "TR", "egyptian": "EG", "saudi": "SA", "emirati": "AE",
 }
 
 # Stable display labels once an ISO code is known (so "UK" and "United Kingdom" collapse cleanly).
