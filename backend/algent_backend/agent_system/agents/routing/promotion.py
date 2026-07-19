@@ -28,9 +28,19 @@ PROMOTION_BRIEF = RoutingBrief(
     role="the promotion editor deciding which signal vector to research next",
     candidate_kind="t1 signal vectors (theses worth pursuing, each fused from t0 hits)",
     selecting_for=(
-        "the single most worth-profiling vector right now — weigh importance, public "
-        "interest, novelty/under-coverage, how compelling a production it could yield, "
-        "and how well it can be grounded in real evidence"
+        "the single most worth-profiling vector right now, JUDGED FOR A GENERAL NEWS READER: "
+        "an intelligent, reasonably well-informed adult who follows the news but is NOT a "
+        "specialist in any particular field. Weigh how much this changes what THAT reader "
+        "understands about the world, plus novelty/under-coverage and how well it can be "
+        "grounded in real evidence. "
+        "URGENCY IS NOT SIGNIFICANCE. A story that is operationally urgent to a narrow "
+        "profession (a patch admins must apply, a filing lawyers must answer) is not thereby "
+        "important to a general reader — a live run ranked an enterprise-software patch advisory "
+        "above a constitutional crisis because the advisory sounded time-critical. Ask 'who is "
+        "this for?': if the honest answer is a specialist doing their job, it is a trade story, "
+        "and it loses to a story that changes how a general reader sees the world. "
+        "Beware the loudest channel: a source that skews to one professional community (infosec "
+        "chatter, market noise) will keep offering its own niche as breaking news"
     ),
     downstream=(
         "the #1 you rank is promoted into a t2 signal profile — a researched dossier "

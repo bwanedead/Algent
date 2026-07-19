@@ -37,8 +37,11 @@ Numbers, places, names. If you cannot make it concrete, you do not understand it
 write the sentence.
 
 **2. Narrating your own logic instead of writing prose.** *"Those are the facts that explain why
-traffic dropped."* *"That matters here because…"* *"What this means is…"* No journalist writes
-this. It is the piece explaining its own structure to the reader — treating them as unable to see
+traffic dropped."* *"That matters here because…"* *"What this means is…"* *"That boundary matters."*
+*"That is not just rhetoric."* *"The reason this is more than a routine patch notice is…"* No
+journalist writes this. The tell is a sentence whose only job is to assert that the NEXT sentence
+is important — a label where an idea should be. Delete it and lead with the substance; if the
+point is genuinely important, saying it plainly proves that better than announcing it did. It is the piece explaining its own structure to the reader — treating them as unable to see
 that a fact bears on the next one. **A relation is carried by ORDER and SYNTAX, not announced.**
 Put the cause before the effect and the reader supplies "because" for free; the sentence that says
 "this explains that" is the sentence you delete. This is the failure mode of trying too hard to

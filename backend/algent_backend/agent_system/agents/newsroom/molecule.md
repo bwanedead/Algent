@@ -86,6 +86,12 @@ not a textbook.
   FDA) is already the reader's furniture — explaining it is condescension, not a ramp. Reserve
   primitives for what a smart reader genuinely would not know: `LDL-C`, `PCSK9`, `VLCC`, `AIS-dark`.
   When in doubt, assume they know it.
+  **This includes the ACTORS, and that is the case most often missed.** An agency, company, or
+  product outside general awareness is exactly a primitive: `CISA`, `MSRC`, `SharePoint`,
+  `Kpler`, `JMIC/UKMTO`. A live piece opened "CISA says multiple SharePoint vulnerabilities are
+  being exploited" without ever saying what either is — to a reader who does not already know,
+  that sentence carries no information at all. If the story's subject is an acronym, the ramp is
+  not optional.
 - **Is the meaning CONCRETE?** A primitive must state what the thing *is* — the place, the number,
   the mechanism — never gesture at its significance. *"a narrow route whose disruption can ripple
   far beyond the water itself"* is abstraction posing as explanation and teaches nothing. *"the sea

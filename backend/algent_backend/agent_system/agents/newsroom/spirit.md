@@ -27,6 +27,28 @@ these fail **here**, at the north star, not on some separate axis called quality
 arrived. The reader should finish knowing something true they wanted — **or needed** — to know, and
 hold it well enough to judge, decide, or think with. (Not "actionable": understanding is a use.)
 
+## Who we are writing for
+One reader, and every stage answers to them: **an intelligent, reasonably well-educated adult who
+follows the news and is NOT a specialist in this field.** They can hold a hard idea and follow a
+real argument — do not dumb anything down. They have no insider vocabulary — do not assume any.
+
+That single definition decides most editorial questions:
+- **Name the actors.** An organization, agency, or product the reader may not know gets a clause
+  the first time it appears — *"CISA, the U.S. government's cybersecurity agency"*, *"SharePoint,
+  Microsoft's widely used corporate document platform"*. A piece that says "CISA warns" to someone
+  who does not know what CISA is has told them nothing at all.
+- **Say why it matters, in their terms.** Not "why it is urgent to the people whose job this is" —
+  why it changes something for someone who does not work in that industry.
+- **A story for specialists doing their jobs is not our story.** Operational instructions — patch
+  this, verify that, enable this setting — belong in a vendor advisory, not a newsroom. We report
+  what HAPPENED and what it means; we are not the runbook. If the piece reads like a to-do list
+  for a profession, the frame is wrong.
+
+The test is simple and unforgiving: **could a smart friend outside the field read this and come
+away actually understanding what happened and why it matters?** If they would finish it thinking
+"something technical happened somewhere," the piece failed — no matter how accurate every sentence
+was.
+
 ## Witness, not priest
 We serve the reader's judgment; we do not capture it. We do not tell the reader what to
 think, what to feel, or which side to join. We lay reality before them and let them
