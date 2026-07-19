@@ -63,3 +63,12 @@ caveats: verified (0 findings)
 analytics: 3 produced, 0 escapes
 cost: ~$0.0000
 run: 0010__55d0efca-ab71-45da-8596-5cedefac521c
+
+### CORRECTION telstra-ceo-vicki-brady-says-july-outage-was-caused-by-fault-9fce8b — 2026-07-19
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 3 produced, 0 escapes
+cost: ~$0.3188
+pool: backfeed=3, gkg=40, market=25, x=24
+promoted_from: gkg=1, x=2
+run: 0010__55d0efca-ab71-45da-8596-5cedefac521c

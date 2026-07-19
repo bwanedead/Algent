@@ -2,7 +2,7 @@
 title: Telstra CEO Vicki Brady says July outage was caused by faulty time-server software configuration and documentation gaps
 dek: Brady told a Senate inquiry the Network Time Protocol, the system that keeps computers and network equipment aligned to the same time, restart sent wrong dates across parts of its mobile network, affecting about 45% of services at peak and causing 604 Triple Zero call errors—while Telstra says the core Triple Zero platform was unaffected.
 date: '2026-07-19'
-published_at: '2026-07-19T11:02:53.701425+00:00'
+published_at: '2026-07-19T11:04:14.601097+00:00'
 as_of: '2026-07-17'
 status: publishable
 tags:
@@ -11,7 +11,14 @@ tags:
 - Triple Zero
 - Senate Environment and Communications References Committee
 - Australian Communications and Media Authority (ACMA)
+places:
+- Australia
+flags:
+- 🇦🇺
 thumbnail: /analytics/telstra-ceo-vicki-brady-says-july-outage-was-caused-by-fault-9fce8b/analytic_req_2_outage_peak_impact_share.svg
+corrections:
+- date: '2026-07-19'
+  reason: derive Australia flag from demonym entities
 ---
 
 Telstra’s July outage started as a maintenance job on a network time-keeping device and turned into a far wider mobile-service failure.
