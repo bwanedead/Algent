@@ -86,18 +86,25 @@ not a textbook.
   FDA) is already the reader's furniture — explaining it is condescension, not a ramp. Reserve
   primitives for what a smart reader genuinely would not know: `LDL-C`, `PCSK9`, `VLCC`, `AIS-dark`.
   When in doubt, assume they know it.
-  **This includes the ACTORS, and that is the case most often missed.** An agency, company, or
-  product outside general awareness is exactly a primitive: `CISA`, `MSRC`, `SharePoint`,
-  `Kpler`, `JMIC/UKMTO`. A live piece opened "CISA says multiple SharePoint vulnerabilities are
-  being exploited" without ever saying what either is — to a reader who does not already know,
-  that sentence carries no information at all. If the story's subject is an acronym, the ramp is
-  not optional.
+  **This includes the ACTORS, and that is the case most often missed.** An agency, company,
+  product, **person**, or **jurisdiction** outside general awareness is exactly a primitive:
+  `CISA`, `MSRC`, `SharePoint`, a foreign mayor or party figure, "the UK's governing Labour
+  party". A live piece that opens on a bare personal name with no role and no country never
+  starts for a non-local reader — same failure mode as an unexplained acronym. If the story's
+  subject is an acronym **or a person the house reader may not know**, the ramp is not optional.
+  Prefer actors and jurisdiction over secondary jargon when the primitive budget is tight (2–4).
 - **Is the meaning CONCRETE?** A primitive must state what the thing *is* — the place, the number,
   the mechanism — never gesture at its significance. *"a narrow route whose disruption can ripple
   far beyond the water itself"* is abstraction posing as explanation and teaches nothing. *"the sea
   lane between Iran and Oman that about a fifth of the world's seaborne oil passes through"* is a
   primitive: it hands the reader a fact they can hold and reason with. If you cannot write the
   plain meaning concretely, you do not understand the term well enough to gloss it — leave it out.
+
+## Shared origin before chronology
+Before the reader can follow *what changed when*, they need **where they are standing**: the
+country/system, what the scheme or conflict *is* in one plain clause, and who the load-bearing
+people are. Chronology without that origin is insider code. Put scene-setting on the ramp
+(primitives + the first concept's support), not as a later aside.
 
 ## Right resolution — and support depth
 For each concept, set the **grain**: comprehensive enough to reconstruct the real shape,

@@ -65,11 +65,13 @@ PRODUCE an EditorialTreatment:
      hold to build the molecule (term -> one plain-language clause, 2-4 max). These are NOT news
      and NOT evidence — the drafter speaks them in its own voice, uncited — so they belong here,
      not on the profile's spine. Only uncontroversial background; anything contested,
-     story-specific, or load-bearing for the news itself is evidence, not a primitive. **Actors
-     first when the subject is an acronym or product outside general awareness** (CISA, SharePoint,
-     MSRC) — operator jargon (RCE, AMSI, machine keys) is NOT the house reader's ramp. Prefer none
-     of the latter as primitives. Causal antecedents (what led here) are NOT primitives — they are
-     checkable fact and come from the field threads by id. (See molecule.md: The ramp.)
+     story-specific, or load-bearing for the news itself is evidence, not a primitive.
+     **Priority when the budget is tight:** (1) people who drive the story — role + why they
+     matter, never a bare name; (2) jurisdiction / political system when the story is domestic to
+     a country the house reader may not live in; (3) the scheme/object itself in one plain clause;
+     (4) only then secondary jargon. Operator jargon is NOT the house reader's ramp. Causal
+     antecedents (what led here) are NOT primitives — they are checkable fact and come from the
+     field threads by id. (See molecule.md: The ramp + shared origin before chronology.)
 
 3. COMPLETENESS / HONESTY (see spirit.md)
    - `perspectives[]`: every serious side at its strongest good-faith form (steelman, never

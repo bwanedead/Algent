@@ -16,8 +16,8 @@ export default function Home() {
             <Link href={`/articles/${a.slug}`}>
               <div className="feed-meta">
                 <time dateTime={a.date}>{a.date}</time>
-                {/* Flags carry the "where" at a glance — derived from the piece's own entities,
-                    so they're always literally true (and absent when nothing maps cleanly). */}
+                {/* Flags: the "where" at a glance — derived from profile + vector geography
+                    (entities, scope, titles), never invented. Absent when nothing maps cleanly. */}
                 {a.flags.length > 0 && (
                   <span className="feed-flags" aria-label="Places">{a.flags.join(" ")}</span>
                 )}

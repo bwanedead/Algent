@@ -218,9 +218,22 @@ a { color: inherit; }
   line-height: var(--line);
 }
 
-/* Flags: the "where", at a glance. Derived from the piece's own entities, so always literally
-   true — and simply absent when nothing maps cleanly (never a decorative stand-in). */
-.feed-flags { font-size: 12px; line-height: var(--line); letter-spacing: 0.06em; }
+/* Flags: the "where", at a glance. Derived from profile/scope geography — always literally
+   true, and simply absent when nothing maps cleanly (never a decorative stand-in). */
+.feed-flags {
+  font-size: 14px;
+  line-height: var(--line);
+  letter-spacing: 0.08em;
+  /* Emoji flags can collapse to "GB" text on some platforms; keep them as emoji-first UI. */
+  font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+}
+.article-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 12px;
+  margin-top: 4px;
+}
 
 /* Tags: canonical topic first, then the specifics. Quiet by default — they are navigation, not
    the story, and must not compete with the headline. */

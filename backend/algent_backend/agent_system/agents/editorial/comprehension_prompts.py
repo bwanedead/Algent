@@ -31,6 +31,13 @@ STUMBLED:
 - UNEXPLAINED_TERM — a term the piece leans on to make its point, used with no plain-language
   handhold, that a general reader would not know (e.g. "LDL-C", "PCSK9", "AIS-dark"). A term used
   once in passing that doesn't carry weight is fine — flag only load-bearing jargon left cold.
+- UNKNOWN_ACTOR — a person or institution the piece leans on as if the reader already knows them,
+  with no role (and, when needed, jurisdiction) on first load-bearing mention. A bare name that
+  drives the story is a stumble for a non-local general reader — flag it even if the name is
+  "famous in its own country." Fix: one-clause role handhold, not a biography.
+- MISSING_SCENE — the piece never places the story (country, political system, or what the scheme
+  *is*) before chronology or stakes. You can follow sentences but not say *where this is happening*
+  or what object is under discussion. Fix: early orienting clause, not a digression.
 - ASSUMED_CONTEXT — a sentence that only makes sense if you already know something the piece never
   gave you (an event it references but never established, a "the decision" with no decision named).
 - ISLAND_PARAGRAPH — a paragraph that sits with no relation to the through-line: you can't tell why

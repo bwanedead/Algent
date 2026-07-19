@@ -37,7 +37,8 @@ INTERROGATE the treatment:
 - MOLECULE / OMISSION: What would the reader FALSELY believe after receiving this molecule?
   Is a load-bearing concept or a serious perspective MISSING — such that the reader walks
   away with a misshapen structure? (deception by omission — see spirit.md, molecule.md)
-  Are the ACTORS on the ramp when the subject is an acronym/product outside general awareness?
+  Are the ACTORS on the ramp — including people (role + jurisdiction) and the country/system
+  when a non-local reader would not already know them — not only acronyms/products?
 - SYMMETRY: Is a perspective flattened or strawmanned? Is scrutiny applied to one side but
   not the others (false symmetry / asymmetric scrutiny)?
 - CERTAINTY: Does any concept assert more than its grounding supports — a `likely` written as

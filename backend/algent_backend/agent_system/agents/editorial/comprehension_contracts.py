@@ -29,6 +29,8 @@ class ComprehensionFinding(BaseModel):
     id: str
     kind: Literal[
         "unexplained_term",    # jargon used load-bearingly with no plain-language handhold
+        "unknown_actor",       # a person/org the piece leans on with no role/jurisdiction handhold
+        "missing_scene",       # country/system/scheme never oriented before chronology or stakes
         "assumed_context",     # a sentence that only parses if you already know something unavailable
         "island_paragraph",    # a block with no relation to the through-line — a node with no edges
         "lost_thread",         # the point where the piece stopped being followable

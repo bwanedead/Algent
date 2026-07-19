@@ -42,7 +42,13 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
       <header className="article-header">
         <h1>{a.title}</h1>
         {a.dek ? <p className="dek">{a.dek}</p> : null}
-        <time className="article-date" dateTime={a.date}>{a.date}</time>
+        <div className="article-meta">
+          <time className="article-date" dateTime={a.date}>{a.date}</time>
+          {/* Same derived flags as the feed — the "where" at a glance, absent when unmapped. */}
+          {a.flags.length > 0 && (
+            <span className="feed-flags" aria-label="Places">{a.flags.join(" ")}</span>
+          )}
+        </div>
       </header>
 
       <div className="prose">

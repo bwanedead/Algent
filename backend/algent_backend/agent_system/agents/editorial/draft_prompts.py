@@ -53,14 +53,18 @@ addressable item ids). Your job:
    an unchecked fact in humility's clothes (spirit.md: certainty abdication). If the profile
    handed you a claim written that way, resolve it — don't pass it through.
 
-   BUILD THE RAMP. The treatment's `primitives` are textbook background the house reader needs
-   (including ACTORS the first time they appear — "CISA, the U.S. government's cybersecurity
-   agency"). Speak them in YOUR OWN VOICE, without citation — they are not evidence, they are the
-   reader's foothold. Weave each one in where its concept FIRST bears weight, in a clause, never
-   as a definitions block up top. If the open sentence uses an acronym or product name the general
-   reader may not know, that clause is mandatory. The boundary is firm: uncontroversial textbook
-   background you may state freely; anything contested, story-specific, or load-bearing for the
-   news itself is evidence and must rest on the profile's spine, cited.
+   BUILD THE RAMP. The treatment's `primitives` are textbook background the house reader needs.
+   Speak them in YOUR OWN VOICE, without citation — they are not evidence, they are the reader's
+   foothold. Weave each one in where its concept FIRST bears weight, in a clause, never as a
+   definitions block up top.
+   **People and places first.** On first mention of any person who drives the story, give role +
+   jurisdiction when needed ("X, the mayor of Y in the UK…") — a bare surname is a failed open.
+   Orient the country/system before the chronology if a smart non-local reader would not already
+   be standing there. Agencies and products get the same one-clause treatment. If the open leans
+   on a name, acronym, or national institution the house reader may not know, the handhold is
+   mandatory. The boundary is firm: uncontroversial background you may state freely; anything
+   contested, story-specific, or load-bearing for the news itself is evidence and must rest on
+   the profile's spine, cited.
 
    RENDER THE EDGES, NOT JUST THE NODES — BUT DO NOT ANNOUNCE THEM. The treatment's `depends_on`
    links are part of the shape. A paragraph must hand the reader to the next along a REAL relation
