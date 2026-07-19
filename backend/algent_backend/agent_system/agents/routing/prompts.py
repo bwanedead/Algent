@@ -50,13 +50,18 @@ def build_router_message(
             "# ALREADY COVERED — COOLDOWN (what we published recently)",
             *[f"- {when[:10]}  {title}" for when, title in recent],
             "",
-            "Do NOT promote a candidate that is a close match to one of these — same event, same "
-            "actors, same development. The pool over-represents whatever is dominating coverage, "
-            "so the same running story resurfaces every day; picking it again gives the reader a "
-            "piece they have effectively already read. Prefer a genuinely different story.",
-            "The exception is a MATERIAL new development — a real change in the situation, not "
-            "another day of the same one. If you promote on that basis, say what changed in the "
-            "rationale; if you cannot name what changed, it is not a new story.",
+            "Do NOT rank #1 any candidate in the same STORY-FAMILY as one of these — same place, "
+            "product, conflict, chokepoint, or named event (Hormuz/Iran shipping, a given CVE "
+            "wave, the same drug approval, …). The pool over-represents whatever is dominating "
+            "coverage; re-picking it gives the reader a piece they have effectively already read. "
+            "Prefer a genuinely different story.",
+            "A REFRAME IS NOT A NEW STORY. 'War widens', 'IRGC strikes', 'broader campaign', "
+            "'updated traffic figures', or 'closure still unproven' on a beat already in this "
+            "list is the SAME development for the reader — demote it. A material exception would "
+            "need a fact class the prior pieces could not have stated (new theatre, new primary "
+            "actor class, resolved question). If you cannot name that against a SPECIFIC prior "
+            "headline, it is not a new story. A mechanical floor also demotes same-family "
+            "candidates after you rank — do not fight it by padding rationales.",
         ]
     lines.extend([
         "",

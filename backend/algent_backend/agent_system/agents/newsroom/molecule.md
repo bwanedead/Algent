@@ -176,6 +176,11 @@ If the vector is a material development on something already covered, the core u
 the **delta** (what changed) — not a re-assembly of the prior piece. Continuity coverage should
 look like continuity to the reader, not déjà vu.
 
+**Do not re-ask a settled question.** If prior pieces already asked "is Hormuz closed or only
+disrupted?" (or the equivalent for this beat), a new treatment must not put that question back
+in `reader_question` unless the evidence *answers* it differently. Re-litigating the same
+uncertainty is déjà vu wearing a new headline.
+
 ## What you hand forward
 A treatment that carries: the chosen frame (and rejected ones), the core understanding, the
 load-bearing concepts with their dependencies and grounding, the perspective map, the

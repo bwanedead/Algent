@@ -21,6 +21,7 @@ from algent_backend.agent_system.foundation.models import ModelSpec
 from algent_backend.agent_system.runs.context import AgentRunContext
 
 from .contracts import RouteCandidate, RouteRanking, RoutingBrief
+from .cooldown import demote_cooled
 from .engine import route
 
 # The injected responsibility for the t1->t2 promotion decision.
@@ -56,7 +57,11 @@ PROMOTION_BRIEF = RoutingBrief(
         "a non-specialist?' If the honest answer is 'a professional doing their job,' it is a trade "
         "story — demote it. "
         "Beware the loudest channel: a source skewed to one professional community (infosec "
-        "chatter, market noise) will keep offering its own niche as breaking news"
+        "chatter, market noise) will keep offering its own niche as breaking news. "
+        "BEAT DIVERSITY: if the ALREADY COVERED list already holds a story-family (same place, "
+        "product, conflict, or chokepoint named in prior headlines), do NOT rank that family #1. "
+        "A reframe ('war widens', 'IRGC strikes', 'broader campaign') is NOT a new story when the "
+        "reader would recognise the same beat. Prefer a genuinely different vector."
     ),
     downstream=(
         "the #1 you rank is promoted into a t2 signal profile — a researched dossier "
@@ -104,6 +109,19 @@ def rank_portfolio(
             },
         ))
     ranking = route(context, candidates, brief, model_spec=model_spec, config=config)
+    # Soft instruction alone re-crowned Hormuz by re-titling the beat; mechanical floor demotes
+    # same-family candidates below fresh ones so they cannot promote while the family is hot.
+    if recent:
+        before_top = ranking.choices[0].candidate_id if ranking.choices else ""
+        ranking = demote_cooled(ranking, candidates, recent)
+        after_top = ranking.choices[0].candidate_id if ranking.choices else ""
+        if before_top and after_top and before_top != after_top:
+            try:
+                context.emit("routing.cooldown_demote", {
+                    "was_top": before_top, "now_top": after_top, "note": ranking.note[-240:],
+                })
+            except Exception:  # noqa: BLE001 — telemetry must never break the pick
+                pass
     return ranking, by_id
 
 

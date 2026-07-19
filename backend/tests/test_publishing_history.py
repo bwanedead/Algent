@@ -62,7 +62,7 @@ def test_cooldown_reaches_the_router_message() -> None:
     msg = build_router_message([RouteCandidate(id="v1", label="Hormuz again", summary="same story")],
                                brief.top_k, brief.recent)
     assert "ALREADY COVERED" in msg and "Hormuz disruption" in msg
-    assert "close match" in msg and "MATERIAL new development" in msg   # cooldown, not a hard block
+    assert "STORY-FAMILY" in msg and "REFRAME IS NOT A NEW STORY" in msg
 
 
 def test_no_cooldown_section_when_nothing_published() -> None:
