@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="420" viewBox="0 0 920 420" role="img" aria-labelledby="title desc">
+  <title id="title">Hormuz vessel-transit slowdown vs. strike days (Reuters-reported trend)</title>
+  <desc id="desc">Timeline of CENTCOM-verified U.S. strike waves on July 8 and July 12, 2026, and Reuters-reported Hormuz traffic multi-week lows on July 13, 2026. Traffic markers are Reuters-reported levels, not independently audited vessel counts.</desc>
+
+  <!-- Background -->
+  <rect width="920" height="420" fill="#0c0f0e"/>
+
+  <!-- Title block -->
+  <text x="40" y="36" fill="#f0ede4" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="13" font-weight="600">Hormuz vessel-transit slowdown vs. strike days</text>
+  <text x="40" y="54" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">Reuters-reported traffic levels · as of 2026-07-19 · not independently audited vessel counts</text>
+
+  <!-- Legend -->
+  <g transform="translate(40, 78)">
+    <circle cx="6" cy="0" r="5" fill="none" stroke="#f0a33a" stroke-width="1.75"/>
+    <text x="18" y="4" fill="#d3d0c8" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">U.S. strike wave (CENTCOM primary)</text>
+    <rect x="280" y="-5" width="10" height="10" fill="#f0a33a"/>
+    <text x="298" y="4" fill="#d3d0c8" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">Reuters-reported traffic low</text>
+  </g>
+
+  <!-- Timeline geometry:
+       dates: Jul 8, 9, 10, 11, 12, 13, 14
+       x range: 80 .. 860 (padding for labels)
+       day width: (860-80)/6 = 130
+       axis y: 250
+  -->
+  <!-- Axis line -->
+  <line x1="80" y1="250" x2="860" y2="250" stroke="#454b46" stroke-width="1.25"/>
+
+  <!-- Day ticks and labels -->
+  <!-- Jul 8: x=80 -->
+  <line x1="80" y1="244" x2="80" y2="256" stroke="#2b302d" stroke-width="1"/>
+  <text x="80" y="274" text-anchor="middle" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">Jul 8</text>
+
+  <!-- Jul 9: x=210 -->
+  <line x1="210" y1="246" x2="210" y2="254" stroke="#2b302d" stroke-width="1"/>
+  <text x="210" y="274" text-anchor="middle" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">Jul 9</text>
+
+  <!-- Jul 10: x=340 -->
+  <line x1="340" y1="246" x2="340" y2="254" stroke="#2b302d" stroke-width="1"/>
+  <text x="340" y="274" text-anchor="middle" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">Jul 10</text>
+
+  <!-- Jul 11: x=470 -->
+  <line x1="470" y1="246" x2="470" y2="254" stroke="#2b302d" stroke-width="1"/>
+  <text x="470" y="274" text-anchor="middle" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">Jul 11</text>
+
+  <!-- Jul 12: x=600 -->
+  <line x1="600" y1="244" x2="600" y2="256" stroke="#2b302d" stroke-width="1"/>
+  <text x="600" y="274" text-anchor="middle" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">Jul 12</text>
+
+  <!-- Jul 13: x=730 -->
+  <line x1="730" y1="244" x2="730" y2="256" stroke="#2b302d" stroke-width="1"/>
+  <text x="730" y="274" text-anchor="middle" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">Jul 13</text>
+
+  <!-- Jul 14: x=860 -->
+  <line x1="860" y1="246" x2="860" y2="254" stroke="#2b302d" stroke-width="1"/>
+  <text x="860" y="274" text-anchor="middle" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">Jul 14</text>
+
+  <text x="470" y="298" text-anchor="middle" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">2026</text>
+
+  <!-- ===== Markers ===== -->
+
+  <!-- Jul 8 strike (above axis) -->
+  <line x1="80" y1="250" x2="80" y2="170" stroke="#454b46" stroke-width="1"/>
+  <circle cx="80" cy="170" r="6" fill="none" stroke="#f0a33a" stroke-width="1.75"/>
+  <text x="80" y="148" text-anchor="middle" fill="#f0ede4" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">U.S. strike wave</text>
+  <text x="80" y="162" text-anchor="middle" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="9">CENTCOM</text>
+
+  <!-- Jul 12 strike wave 1 (above, slightly left of day) -->
+  <line x1="585" y1="250" x2="585" y2="150" stroke="#454b46" stroke-width="1"/>
+  <circle cx="585" cy="150" r="6" fill="none" stroke="#f0a33a" stroke-width="1.75"/>
+  <text x="585" y="118" text-anchor="middle" fill="#f0ede4" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">Strike wave</text>
+  <text x="585" y="132" text-anchor="middle" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="9">CENTCOM</text>
+
+  <!-- Jul 12 additional strikes (above, slightly right of day) -->
+  <line x1="615" y1="250" x2="615" y2="190" stroke="#454b46" stroke-width="1"/>
+  <circle cx="615" cy="190" r="6" fill="none" stroke="#f0a33a" stroke-width="1.75"/>
+  <text x="655" y="186" text-anchor="start" fill="#f0ede4" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">Additional strikes</text>
+  <text x="655" y="200" text-anchor="start" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="9">CENTCOM</text>
+
+  <!-- Jul 13 traffic low (below axis) — square marker to distinguish category -->
+  <line x1="730" y1="250" x2="730" y2="320" stroke="#454b46" stroke-width="1"/>
+  <rect x="724" y="314" width="12" height="12" fill="#f0a33a"/>
+  <text x="730" y="348" text-anchor="middle" fill="#f0ede4" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">Multi-week lows / lowest in 2 months</text>
+  <text x="730" y="362" text-anchor="middle" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="9">Reuters-reported traffic · not audited counts</text>
+
+  <!-- Note footer -->
+  <text x="40" y="400" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="9">No independent vessel counts in source set · no post–Jul 13 traffic level in claims (persistence not shown)</text>
+</svg>

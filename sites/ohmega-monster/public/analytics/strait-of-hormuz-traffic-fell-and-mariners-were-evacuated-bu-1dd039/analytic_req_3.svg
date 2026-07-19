@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" width="960" height="620" role="img" aria-labelledby="title desc">
+  <title id="title">Hormuz chokepoint: institutional risk and feasibility signals</title>
+  <desc id="desc">Diagram of what JMIC, IMO, and OHCHR said about Hormuz risk and transit feasibility, with a side panel for Iran closure claims and Reuters traffic observation. As of 2026-07-19.</desc>
+
+  <defs>
+    <style type="text/css"><![CDATA[
+      .bg { fill: #0c0f0e; }
+      .panel { fill: #111513; stroke: #2b302d; stroke-width: 1; }
+      .panel-claim { fill: #111513; stroke: #454b46; stroke-width: 1; stroke-dasharray: 4 3; }
+      .title { fill: #f0ede4; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 13px; font-weight: 600; }
+      .subtitle { fill: #858981; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 10px; }
+      .col-label { fill: #f0a33a; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 11px; font-weight: 600; }
+      .col-sub { fill: #858981; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 9px; }
+      .body { fill: #d3d0c8; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 10px; }
+      .body-em { fill: #f0ede4; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 10px; font-weight: 600; }
+      .tag { fill: #0c0f0e; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 9px; font-weight: 600; }
+      .tag-bg { fill: #f0a33a; }
+      .tag-bg-muted { fill: #454b46; }
+      .rule { stroke: #2b302d; stroke-width: 1; }
+      .rule-strong { stroke: #454b46; stroke-width: 1; }
+      .side-label { fill: #858981; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 9px; letter-spacing: 0.06em; }
+      .side-title { fill: #f0ede4; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 10px; font-weight: 600; }
+      .footer { fill: #858981; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 9px; }
+      .bullet { fill: #f0a33a; }
+    ]]></style>
+  </defs>
+
+  <!-- background -->
+  <rect class="bg" x="0" y="0" width="960" height="620"/>
+
+  <!-- header -->
+  <text class="title" x="28" y="32">Hormuz chokepoint — institutional risk &amp; feasibility signals</text>
+  <text class="subtitle" x="28" y="50">What each institution said is possible · as of 2026-07-19 · diagram (not vessel tracking)</text>
+  <line class="rule-strong" x1="28" y1="62" x2="932" y2="62"/>
+
+  <!-- column 1: JMIC -->
+  <rect class="panel" x="28" y="80" width="280" height="360" rx="2"/>
+  <rect class="tag-bg" x="40" y="94" width="42" height="16" rx="1"/>
+  <text class="tag" x="48" y="105">JMIC</text>
+  <text class="col-label" x="90" y="106">Advisory notes</text>
+  <text class="col-sub" x="40" y="126">Notes 009-26 · 010-26</text>
+  <line class="rule" x1="40" y1="138" x2="296" y2="138"/>
+
+  <circle class="bullet" cx="48" cy="162" r="2.5"/>
+  <text class="body-em" x="58" y="166">Threat level: MODERATE</text>
+  <text class="body" x="58" y="182">Reduced to moderate (009-26);</text>
+  <text class="body" x="58" y="196">remained moderate (010-26).</text>
+
+  <circle class="bullet" cx="48" cy="226" r="2.5"/>
+  <text class="body-em" x="58" y="230">Strait: OPEN</text>
+  <text class="body" x="58" y="246">Transit remained possible with</text>
+  <text class="body" x="58" y="260">routing and mine-risk precautions.</text>
+
+  <circle class="bullet" cx="48" cy="290" r="2.5"/>
+  <text class="body-em" x="58" y="294">Precautions (southern route)</text>
+  <text class="body" x="58" y="310">Day or night transit allowed with:</text>
+  <text class="body" x="58" y="326">AIS on · radars radiating</text>
+  <text class="body" x="58" y="342">running lights on · normal VHF</text>
+
+  <text class="col-sub" x="40" y="400">Signal type: operational advisory</text>
+  <text class="col-sub" x="40" y="416">Status: confirmed (snapshotted)</text>
+
+  <!-- column 2: IMO -->
+  <rect class="panel" x="324" y="80" width="280" height="360" rx="2"/>
+  <rect class="tag-bg" x="336" y="94" width="34" height="16" rx="1"/>
+  <text class="tag" x="344" y="105">IMO</text>
+  <text class="col-label" x="378" y="106">Evacuation planning</text>
+  <text class="col-sub" x="336" y="126">Stranded seafarers response</text>
+  <line class="rule" x1="336" y1="138" x2="592" y2="138"/>
+
+  <circle class="bullet" cx="344" cy="162" r="2.5"/>
+  <text class="body-em" x="354" y="166">Scale</text>
+  <text class="body" x="354" y="182">Evacuation plan for over 11,000</text>
+  <text class="body" x="354" y="196">seafarers still stranded in region.</text>
+
+  <circle class="bullet" cx="344" cy="226" r="2.5"/>
+  <text class="body-em" x="354" y="230">Character</text>
+  <text class="body" x="354" y="246">Described as a large-scale</text>
+  <text class="body" x="354" y="260">multinational operation.</text>
+
+  <circle class="bullet" cx="344" cy="290" r="2.5"/>
+  <text class="body-em" x="354" y="294">Cooperation named</text>
+  <text class="body" x="354" y="310">Iran · Oman · other coastal States</text>
+  <text class="body" x="354" y="326">United States · maritime industry</text>
+
+  <text class="col-sub" x="336" y="400">Signal type: humanitarian logistics</text>
+  <text class="col-sub" x="336" y="416">Status: confirmed (snapshotted)</text>
+
+  <!-- column 3: OHCHR -->
+  <rect class="panel" x="620" y="80" width="280" height="360" rx="2"/>
+  <rect class="tag-bg" x="632" y="94" width="52" height="16" rx="1"/>
+  <text class="tag" x="638" y="105">OHCHR</text>
+  <text class="col-label" x="692" y="106">Human rights office</text>
+  <text class="col-sub" x="632" y="126">UN / humanitarian consequences</text>
+  <line class="rule" x1="632" y1="138" x2="888" y2="138"/>
+
+  <circle class="bullet" cx="640" cy="162" r="2.5"/>
+  <text class="body-em" x="650" y="166">On reported closure</text>
+  <text class="body" x="650" y="182">Would have severe humanitarian</text>
+  <text class="body" x="650" y="196">consequences.</text>
+
+  <circle class="bullet" cx="640" cy="226" r="2.5"/>
+  <text class="body-em" x="650" y="230">Call to action</text>
+  <text class="body" x="650" y="246">Urged immediate return to the</text>
+  <text class="body" x="650" y="260">ceasefire, consistent with</text>
+  <text class="body" x="650" y="274">international law.</text>
+
+  <circle class="bullet" cx="640" cy="304" r="2.5"/>
+  <text class="body-em" x="650" y="308">Frame</text>
+  <text class="body" x="650" y="324">Rights / law lens — not a</text>
+  <text class="body" x="650" y="338">navigation or traffic bulletin.</text>
+
+  <text class="col-sub" x="632" y="400">Signal type: humanitarian / legal</text>
+  <text class="col-sub" x="632" y="416">Status: confirmed (snapshotted)</text>
+
+  <!-- side panel: claims vs observed -->
+  <text class="side-label" x="28" y="468">SIDE PANEL — CLAIMS ELEMENT VS OBSERVED INDICATOR</text>
+  <line class="rule" x1="28" y1="476" x2="932" y2="476"/>
+
+  <!-- claim box -->
+  <rect class="panel-claim" x="28" y="488" width="452" height="88" rx="2"/>
+  <rect class="tag-bg-muted" x="40" y="500" width="48" height="14" rx="1"/>
+  <text class="tag" x="46" y="510">CLAIM</text>
+  <text class="side-title" x="96" y="511">Iran declared closure</text>
+  <text class="body" x="40" y="534">Iran declared it had closed the Strait of Hormuz after a vessel</text>
+  <text class="body" x="40" y="548">traveled on an unapproved route and was struck.</text>
+  <text class="col-sub" x="40" y="564">Status: likely (not confirmed) · distinct from JMIC “open” advisory</text>
+
+  <!-- observed box -->
+  <rect class="panel" x="496" y="488" width="436" height="88" rx="2"/>
+  <rect class="tag-bg" x="508" y="500" width="64" height="14" rx="1"/>
+  <text class="tag" x="514" y="510">OBSERVED</text>
+  <text class="side-title" x="580" y="511">Reuters traffic slowdown</text>
+  <text class="body" x="508" y="534">Reuters reported vessels transiting the Strait of Hormuz</text>
+  <text class="body" x="508" y="548">fell to multi-week lows on 2026-07-13.</text>
+  <text class="col-sub" x="508" y="564">Status: confirmed · indicator of traffic volume, not legal status</text>
+
+  <!-- footer -->
+  <line class="rule" x1="28" y1="592" x2="932" y2="592"/>
+  <text class="footer" x="28" y="610">Sources: JMIC 009-26 / 010-26 · IMO evacuation plan · OHCHR · Reuters · grounded claims only · no operational vessel tracking</text>
+</svg>

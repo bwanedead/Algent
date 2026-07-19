@@ -33,3 +33,10 @@ caveats: verified (0 findings)
 analytics: 3 produced, 0 escapes
 cost: ~$0.0000
 run: 0007__3466b5bc-ba4f-4b38-9c62-5583dc3a1141
+
+### PUBLISH strait-of-hormuz-traffic-fell-and-mariners-were-evacuated-bu-1dd039 — 2026-07-19
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 3 produced, 0 escapes
+cost: ~$0.0000
+run: 0008__1649c497-a3a4-4aa8-8131-d6e83a6deaf4
