@@ -37,9 +37,10 @@ STUMBLED:
   unless a smart general reader could place them *and* which hat matters from the surrounding
   line alone. Fix: one-clause name+title/role handhold (the title that explains this story), not
   a biography and not titles for every minor name.
-- MISSING_SCENE — the piece never places the story (country, political system, or what the scheme
-  *is*) before chronology or stakes. You can follow sentences but not say *where this is happening*
-  or what object is under discussion. Fix: early orienting clause, not a digression.
+- MISSING_SCENE — the piece never places the story (country, political system, what the company
+  *is*, or what the scheme/object is) before chronology or stakes. You can follow sentences but
+  not say *where this is*, *who the firm is*, or what failed. Fix: early orienting clause, not a
+  digression.
 - ASSUMED_CONTEXT — a sentence that only makes sense if you already know something the piece never
   gave you (an event it references but never established, a "the decision" with no decision named).
 - ISLAND_PARAGRAPH — a paragraph that sits with no relation to the through-line: you can't tell why

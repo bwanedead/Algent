@@ -218,19 +218,36 @@ a { color: inherit; }
   line-height: var(--line);
 }
 
-/* Flags: the "where", at a glance. Derived from profile/scope geography — always literally
-   true, and simply absent when nothing maps cleanly (never a decorative stand-in). */
+/* Flags: visual "where" for browsing. PNG images (not emoji) — regional-indicator emoji often
+   render as bare letter pairs (AU, GB) on Windows/Linux font stacks. */
 .feed-flags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  line-height: 1;
+  /* letter-spacing must stay 0 if emoji fallback is ever used — spacing splits RI pairs into AU. */
+  letter-spacing: 0;
+}
+.feed-flag-img {
+  display: inline-block;
+  width: 20px;
+  height: 15px;
+  object-fit: cover;
+  border-radius: 1px;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--rule-strong) 50%, transparent);
+  vertical-align: middle;
+}
+.feed-flag-fallback {
   font-size: 14px;
-  line-height: var(--line);
-  letter-spacing: 0.08em;
-  /* Emoji flags can collapse to "GB" text on some platforms; keep them as emoji-first UI. */
+  line-height: 1;
+  letter-spacing: 0;
   font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
 }
 .article-meta {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   gap: 0 12px;
   margin-top: 4px;
 }

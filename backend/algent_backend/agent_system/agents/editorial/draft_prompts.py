@@ -37,14 +37,14 @@ addressable item ids). Your job:
 
    ANSWER THE HOUSE READER'S QUESTION. The treatment names it — that reader is a smart
    non-specialist (spirit.md), not the professional the source wrote for. The piece exists to
-   answer THAT question. WE ARE NEVER THE RUNBOOK. Report that guidance exists and what its
-   existence signals (severity, who is exposed, what changed) — do NOT ship patch sequences,
-   version matrices, AMSI toggles, or "do X then Y" operator steps. Those belong in the vendor
-   advisory; our job is the event's shape and reach. If a paragraph only helps a sysadmin
-   execute a response, CUT it. LENGTH IS NEVER AN OBJECTIVE — 300 words that answer the reader
-   beat 900 that tour research. A paragraph whose own conclusion is that it has no conclusion
-   should not exist: if the honest ceiling is "we can't say anything useful here," that is a cut
-   (spirit.md: honest compression).
+   transfer the FOCAL EVENT's shape: what happened, scale, mechanism, stakes — with hearings
+   and testimony as evidence when useful, not as a substitute center of mass (framing.md).
+   Build significance with concrete facts (how large, who depends on it, what broke) ordered so
+   the reader feels the weight; never announce "this matters because…" and never leave the
+   stakes so implicit that only an insider would care. WE ARE NEVER THE RUNBOOK. Report that
+   guidance exists and what its existence signals — do NOT ship operator step-lists. If a
+   paragraph only helps a specialist execute a response, CUT it. LENGTH IS NEVER AN OBJECTIVE —
+   300 words that answer the reader beat 900 that tour research.
 
    DON'T HIDE BEHIND WHO SAID IT. If a fact is checkable in the world — a price, a date, a
    vote count — go check it and ASSERT it; that is what step 3 is for. Attribute only when the
@@ -57,17 +57,14 @@ addressable item ids). Your job:
    Speak them in YOUR OWN VOICE, without citation — they are not evidence, they are the reader's
    foothold. Weave each one in where its concept FIRST bears weight, in a clause, never as a
    definitions block up top.
-   **People and places first (spirit: people, titles, and who is acting).** On FIRST mention of
-   any person who drives the story: give **name + the title/role that explains why they are in
-   THIS piece**, plus jurisdiction when needed — "X, the mayor of Y in the UK…". That is the
-   handhold; later mentions may be the bare name. Prefer the title that illuminates this story,
-   not a CV of every hat. Do NOT title-spam: only load-bearing people get the clause; a one-off
-   quote does not need a dossier. Famous multi-hat figures may get a light establish when which
-   hat matters ("…founder of [company] at the center of…") rather than zero context. Orient the
-   country/system before chronology if a non-local reader would not already stand there. Agencies
-   and products get the same one-clause treatment. Bare surname as the open is a failed ramp.
-   Uncontroversial background you may state freely; contested or story-specific fact stays on the
-   profile spine, cited.
+   **People, companies, and places first (spirit: people, titles, and who is acting).** On FIRST
+   mention of any person who drives the story: **name + title/role for THIS piece**, plus
+   jurisdiction when needed. On FIRST mention of a load-bearing company or institution: **what
+   it is / does here** ("Telstra, Australia's largest mobile network operator") — a brand alone
+   is not a ramp. Same for agencies and products. Later mentions may be bare names. Do NOT
+   title-spam or recap every org's history. Orient the country/system before chronology if a
+   non-local reader would not already stand there. Bare surname or bare brand as the open is a
+   failed ramp. Uncontroversial background you may state freely; contested fact stays cited.
 
    RENDER THE EDGES, NOT JUST THE NODES — BUT DO NOT ANNOUNCE THEM. The treatment's `depends_on`
    links are part of the shape. A paragraph must hand the reader to the next along a REAL relation
