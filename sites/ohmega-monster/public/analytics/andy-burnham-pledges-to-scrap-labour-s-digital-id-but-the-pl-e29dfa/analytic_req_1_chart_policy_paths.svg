@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="640" viewBox="0 0 1080 640" role="img" aria-labelledby="title desc">
+  <title id="title">Mandatory vs voluntary vs scrapped: what the plan meant at each stage</title>
+  <desc id="desc">Four-stage comparison of UK digital ID requirements: individual obligation, right-to-work digital checks, and public-service conditionality, from original mandatory approach through post-backlash voluntary model, March 2026 consultation, and Burnham cancellation pledge.</desc>
+
+  <defs>
+    <style type="text/css"><![CDATA[
+      .bg { fill: #0c0f0e; }
+      .panel { fill: #111513; stroke: #2b302d; stroke-width: 1; }
+      .title { fill: #f0ede4; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 15px; font-weight: 600; }
+      .subtitle { fill: #858981; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 11px; }
+      .rowlabel { fill: #d3d0c8; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 11px; font-weight: 600; }
+      .collabel { fill: #f0ede4; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 11px; font-weight: 600; }
+      .colsub { fill: #858981; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 9px; }
+      .cell { fill: #d3d0c8; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 10px; }
+      .cell-emph { fill: #f0ede4; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 10px; font-weight: 600; }
+      .muted { fill: #858981; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 9px; }
+      .footer { fill: #858981; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 9px; }
+      .rule { stroke: #2b302d; stroke-width: 1; fill: none; }
+      .rule-strong { stroke: #454b46; stroke-width: 1; fill: none; }
+      .accent-bar { fill: #f0a33a; }
+      .chip-yes { fill: #2a1a0a; stroke: #f0a33a; stroke-width: 1; }
+      .chip-yes-t { fill: #f0a33a; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 9px; font-weight: 600; }
+      .chip-no { fill: #151816; stroke: #454b46; stroke-width: 1; }
+      .chip-no-t { fill: #858981; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 9px; font-weight: 600; }
+      .chip-mixed { fill: #1a1810; stroke: #a96b1f; stroke-width: 1; }
+      .chip-mixed-t { fill: #f0a33a; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 9px; font-weight: 600; }
+      .chip-na { fill: #111513; stroke: #2b302d; stroke-width: 1; }
+      .chip-na-t { fill: #858981; font-family: "IBM Plex Mono", "Cascadia Mono", Menlo, Consolas, monospace; font-size: 9px; font-weight: 600; }
+    ]]></style>
+  </defs>
+
+  <!-- background -->
+  <rect class="bg" x="0" y="0" width="1080" height="640"/>
+
+  <!-- title block -->
+  <rect class="accent-bar" x="28" y="24" width="3" height="36"/>
+  <text class="title" x="42" y="40">Mandatory vs voluntary vs scrapped: what the plan meant at each stage</text>
+  <text class="subtitle" x="42" y="58">UK digital ID core requirements across four policy stages · as of 2026-07-19</text>
+
+  <!-- matrix panel -->
+  <rect class="panel" x="28" y="80" width="1024" height="500" rx="2"/>
+
+  <!-- column geometry: label col + 4 stages -->
+  <!-- x starts: 44 | 250 | 450 | 650 | 850  widths ~190 each after label -->
+  <!-- header row y=100-150; data rows at y=170, 300, 430 -->
+
+  <!-- header rule -->
+  <line class="rule-strong" x1="44" y1="158" x2="1036" y2="158"/>
+
+  <!-- column headers -->
+  <text class="rowlabel" x="44" y="120">Decision point</text>
+  <text class="muted" x="44" y="136">held constant across stages</text>
+
+  <text class="collabel" x="250" y="112">1 · Original mandatory</text>
+  <text class="colsub" x="250" y="128">Right-to-work approach</text>
+  <text class="colsub" x="250" y="142">GOV.UK / initial proposal · 2025-09</text>
+
+  <text class="collabel" x="470" y="112">2 · Post-backlash voluntary</text>
+  <text class="colsub" x="470" y="128">Voluntary for individuals</text>
+  <text class="colsub" x="470" y="142">Commons clarification · 2026-01</text>
+
+  <text class="collabel" x="690" y="112">3 · March 2026 consultation</text>
+  <text class="colsub" x="690" y="128">No legal obligation framing</text>
+  <text class="colsub" x="690" y="142">Cabinet Office · 2026-03</text>
+
+  <text class="collabel" x="910" y="112">4 · Burnham cancellation</text>
+  <text class="colsub" x="910" y="128">Pledged scrap of plans</text>
+  <text class="colsub" x="910" y="142">BBC report · 2026-07-18</text>
+
+  <!-- vertical column dividers -->
+  <line class="rule" x1="240" y1="96" x2="240" y2="560"/>
+  <line class="rule" x1="460" y1="96" x2="460" y2="560"/>
+  <line class="rule" x1="680" y1="96" x2="680" y2="560"/>
+  <line class="rule" x1="900" y1="96" x2="900" y2="560"/>
+
+  <!-- ========== ROW 1: Individuals have/show ID ========== -->
+  <text class="rowlabel" x="44" y="188">Individuals</text>
+  <text class="rowlabel" x="44" y="204">have / show ID</text>
+
+  <!-- stage 1 -->
+  <rect class="chip-yes" x="250" y="174" width="72" height="18" rx="2"/>
+  <text class="chip-yes-t" x="262" y="186">MANDATORY</text>
+  <text class="cell" x="250" y="210">Mandatory digital ID for</text>
+  <text class="cell" x="250" y="224">proving right to work</text>
+  <text class="muted" x="250" y="244">clm: initial RTW proposal</text>
+
+  <!-- stage 2 -->
+  <rect class="chip-no" x="470" y="174" width="78" height="18" rx="2"/>
+  <text class="chip-no-t" x="482" y="186">VOLUNTARY</text>
+  <text class="cell" x="470" y="210">“free, voluntary digital</text>
+  <text class="cell" x="470" y="224">infrastructure”</text>
+  <text class="muted" x="470" y="244">mandatory element removed</text>
+
+  <!-- stage 3 -->
+  <rect class="chip-no" x="690" y="174" width="118" height="18" rx="2"/>
+  <text class="chip-no-t" x="698" y="186">NO LEGAL OBLIGATION</text>
+  <text class="cell" x="690" y="210">No legal obligation to have</text>
+  <text class="cell" x="690" y="224">or present the digital ID</text>
+  <text class="muted" x="690" y="244">consultation wording</text>
+
+  <!-- stage 4 -->
+  <rect class="chip-na" x="910" y="174" width="68" height="18" rx="2"/>
+  <text class="chip-na-t" x="922" y="186">SCRAPPED</text>
+  <text class="cell" x="910" y="210">No government-issued</text>
+  <text class="cell" x="910" y="224">digital ID for all adults</text>
+  <text class="muted" x="910" y="244">Burnham pledge</text>
+
+  <line class="rule" x1="44" y1="268" x2="1036" y2="268"/>
+
+  <!-- ========== ROW 2: RTW digital checks ========== -->
+  <text class="rowlabel" x="44" y="298">Right-to-work</text>
+  <text class="rowlabel" x="44" y="314">digital checks</text>
+
+  <!-- stage 1 -->
+  <rect class="chip-yes" x="250" y="284" width="72" height="18" rx="2"/>
+  <text class="chip-yes-t" x="262" y="296">MANDATORY</text>
+  <text class="cell" x="250" y="320">Mandatory only for Right</text>
+  <text class="cell" x="250" y="334">to Work checks by end of</text>
+  <text class="cell" x="250" y="348">Parliament</text>
+  <text class="muted" x="250" y="368">only mandatory element</text>
+
+  <!-- stage 2 -->
+  <rect class="chip-yes" x="470" y="284" width="72" height="18" rx="2"/>
+  <text class="chip-yes-t" x="482" y="296">MANDATORY</text>
+  <text class="cell" x="470" y="320">Digital RTW checks remain</text>
+  <text class="cell" x="470" y="334">mandatory by end of</text>
+  <text class="cell" x="470" y="348">Parliament</text>
+  <text class="muted" x="470" y="368">Jan 2026 clarification</text>
+
+  <!-- stage 3 -->
+  <rect class="chip-mixed" x="690" y="284" width="88" height="18" rx="2"/>
+  <text class="chip-mixed-t" x="700" y="296">NOT RESTATED</text>
+  <text class="cell" x="690" y="320">Consultation claims address</text>
+  <text class="cell" x="690" y="334">individual obligation and</text>
+  <text class="cell" x="690" y="348">services — not RTW checks</text>
+  <text class="muted" x="690" y="368">no RTW restatement in data</text>
+
+  <!-- stage 4 -->
+  <rect class="chip-na" x="910" y="284" width="68" height="18" rx="2"/>
+  <text class="chip-na-t" x="922" y="296">SCRAPPED</text>
+  <text class="cell" x="910" y="320">Plans for the scheme</text>
+  <text class="cell" x="910" y="334">scrapped in full</text>
+  <text class="muted" x="910" y="368">cancellation pledge</text>
+
+  <line class="rule" x1="44" y1="390" x2="1036" y2="390"/>
+
+  <!-- ========== ROW 3: Public service access ========== -->
+  <text class="rowlabel" x="44" y="420">Public-service</text>
+  <text class="rowlabel" x="44" y="436">access conditional?</text>
+
+  <!-- stage 1 -->
+  <rect class="chip-no" x="250" y="406" width="52" height="18" rx="2"/>
+  <text class="chip-no-t" x="260" y="418">NO (life)</text>
+  <text class="cell" x="250" y="442">No requirement to carry</text>
+  <text class="cell" x="250" y="456">or be asked to produce it</text>
+  <text class="cell" x="250" y="470">in ordinary life</text>
+  <text class="muted" x="250" y="490">GOV.UK announcement</text>
+
+  <!-- stage 2 -->
+  <rect class="chip-no" x="470" y="406" width="100" height="18" rx="2"/>
+  <text class="chip-no-t" x="480" y="418">NOT CONDITIONAL</text>
+  <text class="cell" x="470" y="442">Access to public services</text>
+  <text class="cell" x="470" y="456">would not be conditional</text>
+  <text class="cell" x="470" y="470">on having a digital ID</text>
+  <text class="muted" x="470" y="490">Jan 2026 Commons</text>
+
+  <!-- stage 3 -->
+  <rect class="chip-no" x="690" y="406" width="100" height="18" rx="2"/>
+  <text class="chip-no-t" x="700" y="418">NOT DEPENDENT</text>
+  <text class="cell" x="690" y="442">Access “not be made</text>
+  <text class="cell" x="690" y="456">dependent” / not conditional</text>
+  <text class="cell" x="690" y="470">on having it</text>
+  <text class="muted" x="690" y="490">Mar 2026 consultation</text>
+
+  <!-- stage 4 -->
+  <rect class="chip-na" x="910" y="406" width="88" height="18" rx="2"/>
+  <text class="chip-na-t" x="918" y="418">N/A — CANCELLED</text>
+  <text class="cell" x="910" y="442">Resources redirected to</text>
+  <text class="cell" x="910" y="456">cost of living and daily</text>
+  <text class="cell" x="910" y="470">priorities</text>
+  <text class="muted" x="910" y="490">Burnham office framing</text>
+
+  <!-- footer -->
+  <text class="footer" x="28" y="606">Sources: GOV.UK (2025-09-26) · Hansard Digital ID debate (2026-01-15) · Commons Library CBP-10369 (2026-03-23) · Cabinet Office consultation (2026-03-10) · BBC News (2026-07-18)</text>
+  <text class="footer" x="28" y="622">Amber chips mark remaining obligations; grey marks voluntary / not conditional / scrapped. Stage 3 RTW left “not restated” — consultation claims do not reaffirm employer RTW checks.</text>
+</svg>

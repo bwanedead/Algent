@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 780" width="720" height="780" role="img" aria-labelledby="title desc">
+  <title id="title">Timeline: UK digital ID — proposal to Burnham reversal (Sep 2025–Jul 2026)</title>
+  <desc id="desc">Vertical timeline of five anchored events: Sep 2025 original mandatory proposal; 13 Oct 2025 Commons right-to-work statement; 15 Jan 2026 dilution to voluntary infrastructure; 10 Mar 2026 consultation; 18 Jul 2026 Burnham scrap pledge.</desc>
+
+  <!-- Background -->
+  <rect width="720" height="780" fill="#0c0f0e"/>
+
+  <!-- Title block -->
+  <text x="36" y="36" fill="#f0ede4" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="13" font-weight="600">Timeline: digital ID proposal → dilution → reverse</text>
+  <text x="36" y="56" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">Mandatory right-to-work framing shifts; Burnham pledges to scrap already-diluted scheme</text>
+  <text x="36" y="74" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">As of 19 Jul 2026 · sources: Commons Hansard, Cabinet Office, BBC, HoC Library</text>
+
+  <!-- Spine -->
+  <line x1="120" y1="110" x2="120" y2="720" stroke="#2b302d" stroke-width="1.5"/>
+
+  <!-- Event 1: Sep 2025 -->
+  <circle cx="120" cy="140" r="6" fill="#f0a33a" stroke="#0c0f0e" stroke-width="2"/>
+  <text x="48" y="136" fill="#f0a33a" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10" font-weight="600" text-anchor="end">Sep 2025</text>
+  <text x="48" y="150" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="9" text-anchor="end">month</text>
+  <text x="148" y="134" fill="#f0ede4" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="11" font-weight="600">Original proposal</text>
+  <text x="148" y="152" fill="#d3d0c8" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">Mandatory scheme to prove right to work, framed as</text>
+  <text x="148" y="166" fill="#d3d0c8" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">immigration-enforcement tool against illegal work.</text>
+  <text x="148" y="184" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="9">clm_1d05e72b24 · framing: enforcement / mandatory</text>
+
+  <!-- Event 2: 13 Oct 2025 -->
+  <circle cx="120" cy="250" r="6" fill="#f0a33a" stroke="#0c0f0e" stroke-width="2"/>
+  <text x="48" y="246" fill="#f0a33a" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10" font-weight="600" text-anchor="end">13 Oct 2025</text>
+  <text x="48" y="260" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="9" text-anchor="end">Commons</text>
+  <text x="148" y="244" fill="#f0ede4" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="11" font-weight="600">Commons statement</text>
+  <text x="148" y="262" fill="#d3d0c8" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">Digital ID mandatory for right-to-work checks by end</text>
+  <text x="148" y="276" fill="#d3d0c8" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">of parliament. Services stay on separate IT systems;</text>
+  <text x="148" y="290" fill="#d3d0c8" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">NHS data kept separate.</text>
+  <text x="148" y="308" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="9">clm_3ee16b2f37 · src_b4d8f3244c · still mandatory RTW</text>
+
+  <!-- Event 3: 15 Jan 2026 -->
+  <circle cx="120" cy="370" r="6" fill="#f0a33a" stroke="#0c0f0e" stroke-width="2"/>
+  <text x="48" y="366" fill="#f0a33a" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10" font-weight="600" text-anchor="end">15 Jan 2026</text>
+  <text x="48" y="380" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="9" text-anchor="end">Commons</text>
+  <text x="148" y="364" fill="#f0ede4" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="11" font-weight="600">Dilution: voluntary infrastructure</text>
+  <text x="148" y="382" fill="#d3d0c8" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">Scheme recast as “free, voluntary digital infrastructure”.</text>
+  <text x="148" y="396" fill="#d3d0c8" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">Public services not conditional on holding an ID.</text>
+  <text x="148" y="410" fill="#d3d0c8" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">Employer right-to-work checks still mandatory by EoP.</text>
+  <text x="148" y="428" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="9">clm_9170a1d6b7 · clm_641e859f32 · framing: convenience / partial</text>
+
+  <!-- Event 4: 10 Mar 2026 -->
+  <circle cx="120" cy="490" r="6" fill="#f0a33a" stroke="#0c0f0e" stroke-width="2"/>
+  <text x="48" y="486" fill="#f0a33a" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10" font-weight="600" text-anchor="end">10 Mar 2026</text>
+  <text x="48" y="500" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="9" text-anchor="end">Cabinet Office</text>
+  <text x="148" y="484" fill="#f0ede4" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="11" font-weight="600">Consultation published</text>
+  <text x="148" y="502" fill="#d3d0c8" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">No legal obligation to have or present digital ID;</text>
+  <text x="148" y="516" fill="#d3d0c8" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">services not dependent on it. Intent to legislate;</text>
+  <text x="148" y="530" fill="#d3d0c8" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">build on One Login / Wallet / eVisa; NHS stays separate.</text>
+  <text x="148" y="548" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="9">clm_efc591f381 · clm_c393369b27 · clm_55a1c5f486 · clm_a2c6bf1139</text>
+
+  <!-- Event 5: 18 Jul 2026 -->
+  <circle cx="120" cy="610" r="6" fill="#f0a33a" stroke="#0c0f0e" stroke-width="2"/>
+  <text x="48" y="606" fill="#f0a33a" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10" font-weight="600" text-anchor="end">18 Jul 2026</text>
+  <text x="48" y="620" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="9" text-anchor="end">BBC / Burnham</text>
+  <text x="148" y="604" fill="#f0ede4" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="11" font-weight="600">Burnham: scrap the plans</text>
+  <text x="148" y="622" fill="#d3d0c8" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">First major policy signal: scrap government digital ID</text>
+  <text x="148" y="636" fill="#d3d0c8" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">for all British adults if PM; redirect resource to cost</text>
+  <text x="148" y="650" fill="#d3d0c8" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="10">of living and everyday priorities.</text>
+  <text x="148" y="668" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="9">clm_a1f82e2e66 · clm_f83da5bdfc · src_5a1ff8260b · reverse signal</text>
+
+  <!-- Footnote / nuance -->
+  <line x1="36" y1="700" x2="684" y2="700" stroke="#2b302d" stroke-width="1"/>
+  <text x="36" y="722" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="9">Nuance: by Jan–Mar 2026 the public-facing scheme was already voluntary; Burnham is reversing a diluted plan,</text>
+  <text x="36" y="736" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="9">not an intact mandatory universal ID. Mandatory drop after backlash is confirmed but undated (before Jan 2026).</text>
+  <text x="36" y="756" fill="#858981" font-family="IBM Plex Mono, Cascadia Mono, Menlo, Consolas, monospace" font-size="9">Context not plotted as undated: OBR £1.8bn estimate (Nov) rejected by Downing Street. No later formal repeal plotted.</text>
+</svg>

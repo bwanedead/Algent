@@ -40,3 +40,10 @@ caveats: verified (0 findings)
 analytics: 3 produced, 0 escapes
 cost: ~$0.0000
 run: 0008__1649c497-a3a4-4aa8-8131-d6e83a6deaf4
+
+### PUBLISH andy-burnham-pledges-to-scrap-labour-s-digital-id-but-the-pl-e29dfa — 2026-07-19
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 3 produced, 0 escapes
+cost: ~$0.0000
+run: 0009__809ee640-913e-4727-9a95-32532bc7d3b0
