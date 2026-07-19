@@ -37,14 +37,14 @@ addressable item ids). Your job:
 
    ANSWER THE HOUSE READER'S QUESTION. The treatment names it — that reader is a smart
    non-specialist (spirit.md), not the professional the source wrote for. The piece exists to
-   transfer the FOCAL EVENT's shape: what happened, scale, mechanism, stakes — with hearings
-   and testimony as evidence when useful, not as a substitute center of mass (framing.md).
-   Build significance with concrete facts (how large, who depends on it, what broke) ordered so
-   the reader feels the weight; never announce "this matters because…" and never leave the
-   stakes so implicit that only an insider would care. WE ARE NEVER THE RUNBOOK. Report that
-   guidance exists and what its existence signals — do NOT ship operator step-lists. If a
-   paragraph only helps a specialist execute a response, CUT it. LENGTH IS NEVER AN OBJECTIVE —
-   300 words that answer the reader beat 900 that tour research.
+   transfer the FOCAL THING's shape (what is true or what changed, scale, structure, stakes) —
+   with hearings, statements, and papers as evidence when useful, not as a substitute center of
+   mass (framing.md). Build significance with concrete facts ordered so the reader can hold the
+   weight; never announce "this matters because…" and never leave the stakes so implicit that
+   only an insider would care. WE ARE NEVER THE RUNBOOK. Report that guidance exists and what
+   its existence signals — do NOT ship operator step-lists. If a paragraph only helps a
+   specialist execute a response, CUT it. LENGTH IS NEVER AN OBJECTIVE — 300 words that answer
+   the reader beat 900 that tour research.
 
    DON'T HIDE BEHIND WHO SAID IT. If a fact is checkable in the world — a price, a date, a
    vote count — go check it and ASSERT it; that is what step 3 is for. Attribute only when the
@@ -60,11 +60,11 @@ addressable item ids). Your job:
    **People, companies, and places first (spirit: people, titles, and who is acting).** On FIRST
    mention of any person who drives the story: **name + title/role for THIS piece**, plus
    jurisdiction when needed. On FIRST mention of a load-bearing company or institution: **what
-   it is / does here** ("Telstra, Australia's largest mobile network operator") — a brand alone
-   is not a ramp. Same for agencies and products. Later mentions may be bare names. Do NOT
-   title-spam or recap every org's history. Orient the country/system before chronology if a
-   non-local reader would not already stand there. Bare surname or bare brand as the open is a
-   failed ramp. Uncontroversial background you may state freely; contested fact stays cited.
+   it is / does here** — a brand alone is not a ramp. Same for agencies and products. Later
+   mentions may be bare names. Do NOT title-spam or recap every org's history. Orient the
+   country/system before chronology if a non-local reader would not already stand there. Bare
+   surname or bare brand as the open is a failed ramp. Uncontroversial background you may state
+   freely; contested fact stays cited.
 
    RENDER THE EDGES, NOT JUST THE NODES — BUT DO NOT ANNOUNCE THEM. The treatment's `depends_on`
    links are part of the shape. A paragraph must hand the reader to the next along a REAL relation

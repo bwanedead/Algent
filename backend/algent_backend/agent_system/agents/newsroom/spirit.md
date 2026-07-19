@@ -37,9 +37,9 @@ That single definition decides most editorial questions:
   not know gets a clause the first time it appears. Agencies and products: *"CISA, the U.S.
   government's cybersecurity agency"*, *"SharePoint, Microsoft's widely used corporate document
   platform"*. Companies the story depends on: one clause of **what they are / what they do in
-  this jurisdiction** — *"Telstra, Australia's largest mobile network operator"* — not a brand
-  name alone. People: see **people, titles, and who is acting** below — a bare name is not a
-  ramp.
+  this jurisdiction** — what they do or what role they play in the story (size, sector, public
+  function) — not a brand name alone. People: see **people, titles, and who is acting** below —
+  a bare name is not a ramp.
 - **Orient the jurisdiction.** If the story is national politics, a domestic court, a local
   disaster, or a party fight, the reader must know **where** this is happening before the
   chronology starts. Do not assume "Labour" or "Congress" or a city name is enough world-knowledge

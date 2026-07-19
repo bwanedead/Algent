@@ -23,37 +23,35 @@ the molecule is a *dependency structure of concepts*, not a sequence of sections
 "part 1, part 2, part 3." Emit: *what must the reader come to understand, what does each piece
 rest on, and what does the real evidence supply.* The drafter turns that into prose.
 
-## The core understanding — the big deal, not the latest procedural layer
+## The core understanding — the big deal, not the latest surface
 Step back from the profile's surface inventory and name the **reality-shape** the piece exists
 to convey — in one or two sentences, the molecule the reader should hold at the natural end of
-the read. Not the topic ("the Fed meeting"), and not the **procedural surface** that delivered
-the evidence ("the CEO testified," "CISA issued an advisory," "a regulator published a note")
-unless that procedure *is* the load-bearing event. The understanding is what happened, at what
-scale, through what mechanism, and why it matters: *"Australia's largest telco lost a large
-share of mobile service after a time-sync failure, with real (bounded) spillover into emergency
-calls — a controls failure, not only a glitch."*
+the read. Not the topic label ("the Fed meeting," "a tech story"), and not the **procedural or
+reactive surface** that delivered the evidence ("X testified," "an agency issued a note," "a
+paper dropped," "markets reacted") unless that surface *is* the load-bearing fact. The
+understanding is what is true or what changed, for whom, by what mechanism or structure, and
+with what stakes — in terms a house reader can hold.
 
-The focal event and the frame should agree (see framing.md: *name the focal event*). If the
-core understanding is really about an outage, breach, vote, or strike, do not let the molecule
-orbit the hearing that *discussed* it. Testimony and inquiries are often how we learn more;
-they are supporting structure, not the apex, unless the political or legal act itself is the
-news.
+The focal thing and the frame should agree (see framing.md: *name the focal thing*). If the
+core understanding is really about a world change, finding, decision, or structure, do not let
+the molecule orbit the hearing, memo, or recap that *discussed* it. Those are often how we
+learn more; they are supporting structure, not the apex, unless the act of speaking, ruling,
+or publishing *is* the news.
 
-Then name its reader-facing dual: **the question this piece answers** — one line, in the
-house reader's words, of what they came wanting to know and will leave knowing
-("how bad was the outage, who did it hit, and what does the cause imply?"). The core
+Then name its reader-facing dual: **the question this piece answers** — one line, in the house
+reader's words, of what they came wanting to know and will leave knowing. The core
 understanding is the shape; the question is why anyone wants it. **Every concept below either
 serves answering that question or does not belong.** And if you cannot state a question a
 reader would actually want answered — if the honest version is "someone commented on something"
-with no transferable event — you do not have a story. Say so rather than assembling one out of
-whatever the profile happens to hold.
+with no transferable understanding — you do not have a story. Say so rather than assembling one
+out of whatever the profile happens to hold.
 
 **Significance is built into the molecule, not announced.** The reader should leave holding
-scale, mechanism, and stakes as part of the shape. Do **not** plan a concept whose only job is
+scale, structure, and stakes as part of the shape. Do **not** plan a concept whose only job is
 "why this is a big deal" as a separate sermon — and do not plan a molecule that withholds the
-stakes so carefully that the reader must invent them. Facts that carry weight (share of
-network, emergency-call errors, who depends on the firm) *are* the significance when ordered
-and supported correctly (spirit + style: no self-narration).
+stakes so carefully that the reader must invent them. Concrete facts that carry weight (how
+large, who is affected, what depends on what, what is irreversible) *are* the significance when
+ordered and supported correctly (spirit + style: no self-narration).
 
 ## Load-bearing concepts and their dependencies
 Decompose the core understanding into the **concepts the reader must build** to hold it, and

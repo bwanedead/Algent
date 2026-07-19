@@ -13,11 +13,11 @@ the piece delivers — in a few plain words. A reader who reads only the headlin
 with a *true, if compressed,* picture, and a reader who clicks should find exactly what the
 headline promised. Nothing more, nothing less.
 
-**Subject the focal event, not the latest microphone.** If the piece is really about an outage,
-breach, strike, or decision, put *that* in the headline — scale and mechanism when space
-allows — and let testimony or inquiries live in the dek or body. A headline that only says who
-spoke to which committee, when the big deal is the failure they described, has the wrong center
-of mass (framing.md).
+**Subject the focal thing, not the latest microphone.** Put the load-bearing reality in the
+headline when that is what the piece is really about — the change, finding, decision, or
+structure — and let hearings, statements, or recaps live in the dek or body when they are only
+how we know more. A headline that only names who spoke or what memo dropped, when the big deal
+is something else, has the wrong center of mass (framing.md).
 
 ## No deception, in either direction (this is the whole standard)
 - **No clickbait / curiosity gap.** Do not withhold the point to manufacture a click ("You won't
