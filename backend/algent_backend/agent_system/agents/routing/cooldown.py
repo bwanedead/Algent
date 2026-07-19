@@ -20,8 +20,8 @@ from .contracts import RouteCandidate, RouteRanking
 
 # Floor: share this many significant tokens with a single prior title → same story family.
 _MIN_SHARED = 2
-# Or share one longer "anchor" token (places, orgs, rare nouns) with any prior title.
-_ANCHOR_LEN = 5
+# Or share one longer "anchor" token (places, orgs, products — not generic news verbs).
+_ANCHOR_LEN = 6
 # A token seen in this many cooldown titles is a saturated beat key (e.g. "hormuz" x3).
 _SATURATION_COUNT = 2
 
@@ -36,6 +36,16 @@ _STOP = frozenset({
     "does", "doing", "make", "made", "much", "many", "both", "each", "few", "own", "same",
     "record", "remains", "remain", "despite", "ongoing", "around", "across", "after",
     "sees", "seen", "seem", "seems", "keep", "kept", "come", "came", "take", "took",
+    # Generic news glue — live false positives: "active" matched SharePoint→SonicWall;
+    # "damage" matched Hormuz vessel-damage → Peru earthquake. Never family anchors.
+    "active", "damage", "severe", "major", "crisis", "attack", "attacks", "struck", "strike",
+    "strikes", "warning", "warned", "report", "reports", "official", "officials", "security",
+    "military", "forces", "people", "public", "world", "global", "latest", "update", "updates",
+    "under", "against", "between", "without", "within", "through", "during", "before",
+    "server", "servers", "system", "systems", "support", "edition", "version", "versions",
+    "traffic", "reduce", "reduced", "closure", "closed", "open", "opened", "prove", "proves",
+    "durable", "sustained", "serious", "heavy", "broad", "enterprise", "campaign", "exploited",
+    "exploitation", "patching", "patches", "vulnerability", "vulnerabilities",
 })
 
 

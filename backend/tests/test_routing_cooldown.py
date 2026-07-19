@@ -33,6 +33,23 @@ def test_kyiv_story_not_cooled_by_hormuz_priors() -> None:
     assert not cool, why
 
 
+def test_generic_news_words_are_not_anchors() -> None:
+    # Live false positives on run 0009: "active" (SharePoint) demoted SonicWall; "damage"
+    # (Hormuz) demoted a Peru earthquake. Common verbs/adjectives must never be family keys.
+    assert "active" not in anchors("CISA warns active exploitation of SharePoint Server")
+    assert "damage" not in anchors("vessel damage reduce traffic in the strait")
+    cool, why = cooled_by(
+        "Actively exploited SonicWall SMA1000 zero-days hit enterprise gateways",
+        ["CISA warns SharePoint Server are under active exploitation"],
+    )
+    assert not cool, why
+    cool2, why2 = cooled_by(
+        "Peru earthquake with deaths and infrastructure damage",
+        ["Strait of Hormuz impaired: strikes and vessel damage reduce traffic"],
+    )
+    assert not cool2, why2
+
+
 def test_sharepoint_second_piece_cooled_by_anchor() -> None:
     priors = [
         "CISA warns SharePoint Server Subscription Edition, 2019, and 2016 are under active exploitation",
