@@ -2,7 +2,7 @@
 title: Andy Burnham pledges to scrap Labour’s digital ID, but the plan was already being scaled back
 dek: By the time Burnham made his cost-of-living pledge, ministers had already dropped mandatory digital ID for individuals and reframed parts of the scheme as voluntary after backlash and parliamentary scrutiny.
 date: '2026-07-19'
-published_at: '2026-07-19T10:08:38.757219+00:00'
+published_at: '2026-07-19T10:34:07.716133+00:00'
 as_of: '2026-07-19'
 status: publishable
 tags:
@@ -11,7 +11,14 @@ tags:
 - Digital ID scheme
 - Andy Burnham
 - Civil liberties / privacy concerns
+places:
+- United Kingdom
+flags:
+- 🇬🇧
 thumbnail: /analytics/andy-burnham-pledges-to-scrap-labour-s-digital-id-but-the-pl-e29dfa/analytic_req_1_chart_policy_paths.svg
+corrections:
+- date: '2026-07-19'
+  reason: derive country flags from vector geography (scope)
 ---
 
 Andy Burnham says he will scrap Labour’s digital ID scheme and put the time and resource into the cost of living instead. But the move is not a clean kill of an intact plan. By the time he made the pledge, the government had already dropped the mandatory element of the scheme after backlash and relaunching it as voluntary digital infrastructure.
