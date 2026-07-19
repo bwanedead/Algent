@@ -68,8 +68,7 @@ RULES (honesty first — see spirit.md):
 WRITE `title` AND `question` FOR THE READER — they are PUBLISHED, not internal notes. The title
 captions the figure and the question becomes the line under it that says what it shows, so a reader
 meeting the artifact cold knows what they are looking at. Plain language, no pipeline vocabulary,
-no ids. "What share of normal traffic is still moving through Hormuz?" — not "quantify transit
-delta vs baseline per clm refs".
+no ids. Plain question a cold reader would ask — not pipeline vocabulary or claim ids.
 
 OUTPUT — an AnalyticsPlan: warranted (bool) and, if true, the grounded requests (kind, title,
 question, spec, data_refs by id, rationale).

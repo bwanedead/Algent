@@ -34,7 +34,7 @@ INTERROGATE the treatment:
   *discusses* or *reacts to* it? Prefer that reality as center of mass unless the surface act
   itself is the news (framing.md).
 - SOURCE-AUDIENCE CAPTURE (blocking when clear): Is `reader_question` aimed at the HOUSE
-  reader (spirit.md) or at the source's professional audience (sysadmin, clinician, trader)?
+  reader (spirit.md) or at the source's professional audience (operator, clinician, trader, lawyer)?
   Is the frame "what operators must do next" when the newsroom's job is "what happened and
   what it means"? Advisory / label / filing sources arrive pre-aimed at insiders — adopting
   their frame silently adopts their reader (framing.md). Block promotion if the honest answer

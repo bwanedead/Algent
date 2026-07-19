@@ -51,17 +51,16 @@ def build_router_message(
             *[f"- {when[:10]}  {title}" for when, title in recent],
             "",
             "Do NOT rank #1 any candidate in the same STORY-FAMILY as one of these — same place, "
-            "product, conflict, chokepoint, or named event (Hormuz/Iran shipping, a given CVE "
-            "wave, the same drug approval, …). The pool over-represents whatever is dominating "
-            "coverage; re-picking it gives the reader a piece they have effectively already read. "
-            "Prefer a genuinely different story.",
-            "A REFRAME IS NOT A NEW STORY. 'War widens', 'IRGC strikes', 'broader campaign', "
-            "'updated traffic figures', or 'closure still unproven' on a beat already in this "
-            "list is the SAME development for the reader — demote it. A material exception would "
-            "need a fact class the prior pieces could not have stated (new theatre, new primary "
-            "actor class, resolved question). If you cannot name that against a SPECIFIC prior "
-            "headline, it is not a new story. A mechanical floor also demotes same-family "
-            "candidates after you rank — do not fight it by padding rationales.",
+            "product, conflict, institution, person, or named event. The pool over-represents "
+            "whatever is dominating coverage; re-picking it gives the reader a piece they have "
+            "effectively already read. Prefer a genuinely different story.",
+            "A REFRAME IS NOT A NEW STORY. A new angle, a broader campaign label, updated figures "
+            "on the same development, or restating an unresolved question already in this list is "
+            "the SAME development for the reader — demote it. A material exception would need a "
+            "fact class the prior pieces could not have stated (new primary actor class, new "
+            "theatre, resolved question, genuine delta). If you cannot name that against a "
+            "SPECIFIC prior headline, it is not a new story. A mechanical floor also demotes "
+            "same-family candidates after you rank — do not fight it by padding rationales.",
         ]
     lines.extend([
         "",

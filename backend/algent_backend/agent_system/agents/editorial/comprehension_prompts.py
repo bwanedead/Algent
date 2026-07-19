@@ -29,7 +29,7 @@ Read the piece once, straight through, as that person. Then report only where yo
 STUMBLED:
 
 - UNEXPLAINED_TERM — a term the piece leans on to make its point, used with no plain-language
-  handhold, that a general reader would not know (e.g. "LDL-C", "PCSK9", "AIS-dark"). A term used
+  handhold, that a general reader would not know (specialist acronyms, domain mechanisms). A term used
   once in passing that doesn't carry weight is fine — flag only load-bearing jargon left cold.
 - UNKNOWN_ACTOR — a person or institution the piece leans on as if the reader already knows them,
   with no title/role (and, when needed, jurisdiction) on first load-bearing mention. A bare name

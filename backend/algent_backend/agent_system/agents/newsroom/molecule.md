@@ -83,12 +83,13 @@ limits, not in the molecule. Watch for the tell — if the only honest thing a c
 A molecule the reader cannot connect to anything they already know does not slide in — it sits
 there as jargon. So before deciding grain, decide the **ramp**: what a *decently-informed general
 reader* must already hold to build this molecule, and supply exactly those. Two sources of ramp:
-- **primitives** — textbook background that is not news and not contested: *what LDL-C is*, *what a
-  chokepoint is*. List them (`primitives`: term → one plain-language clause, 2-4 max). These are
-  NOT evidence — the drafter speaks them in its own voice, uncited — so they live here on the
-  treatment, not on the profile's spine. (Sourcing textbook knowledge would recreate the inventory
-  disease with receipts attached.) Anything contested, story-specific, or load-bearing for the news
-  itself is NOT a primitive — it is evidence, and stays on the spine.
+- **primitives** — textbook background that is not news and not contested: what a technical term
+  *is*, what a mechanism *does*, what an institution *is for*. List them (`primitives`: term → one
+  plain-language clause, 2-4 max). These are NOT evidence — the drafter speaks them in its own
+  voice, uncited — so they live here on the treatment, not on the profile's spine. (Sourcing
+  textbook knowledge would recreate the inventory disease with receipts attached.) Anything
+  contested, story-specific, or load-bearing for the news itself is NOT a primitive — it is
+  evidence, and stays on the spine.
 - **causal antecedents** — what led here, the prior state this changed. These ARE checkable,
   news-adjacent fact, so they come from the profile's field threads (by id), not from `primitives`.
 
@@ -97,10 +98,10 @@ novice (an endless primitive-chase serves no one). The support you name is the r
 not a textbook.
 
 **Two bars, and most candidate primitives fail one of them:**
-- **Is it actually unfamiliar?** A term in the news for months (the Strait of Hormuz, the Fed, the
-  FDA) is already the reader's furniture — explaining it is condescension, not a ramp. Reserve
-  primitives for what a smart reader genuinely would not know: `LDL-C`, `PCSK9`, `VLCC`, `AIS-dark`.
-  When in doubt, assume they know it.
+- **Is it actually unfamiliar?** A term already in general news furniture for a long time is
+  often not worth a primitive — explaining it is condescension, not a ramp. Reserve primitives
+  for what a smart general reader genuinely would not know (specialist terms, obscure
+  mechanisms, less-known institutions). When in doubt, assume they know the furniture.
   **This includes the ACTORS, and that is the case most often missed.** An agency, company,
   product, **person**, or **jurisdiction** outside general awareness is exactly a primitive.
   For people: the primitive is not the name alone — it is **name + the title/role that
@@ -110,11 +111,9 @@ not a textbook.
   and jurisdiction over secondary jargon when the primitive budget is tight (2–4). Do not spend
   the budget on every named person; only the ones the molecule needs.
 - **Is the meaning CONCRETE?** A primitive must state what the thing *is* — the place, the number,
-  the mechanism — never gesture at its significance. *"a narrow route whose disruption can ripple
-  far beyond the water itself"* is abstraction posing as explanation and teaches nothing. *"the sea
-  lane between Iran and Oman that about a fifth of the world's seaborne oil passes through"* is a
-  primitive: it hands the reader a fact they can hold and reason with. If you cannot write the
-  plain meaning concretely, you do not understand the term well enough to gloss it — leave it out.
+  the mechanism — never gesture at its significance. Figurative hand-waving is not a ramp; a
+  concrete clause the reader can hold and reason with is. If you cannot write the plain meaning
+  concretely, you do not understand the term well enough to gloss it — leave it out.
 
 ## Shared origin before chronology
 Before the reader can follow *what changed when*, they need **where they are standing**: the
@@ -188,20 +187,20 @@ material better than anyone downstream will.
 
 ## Altitude — news, not a runbook
 The molecule is the shape of a *world event* for a general reader. If a concept only exists to
-hand an operator a procedure (patch order, version matrix, AMSI toggle, "verify then rotate"),
-it is the source's altitude, not ours. Report that such guidance exists and what its existence
-signals (severity, exposure, what changed) — do not make the response package the molecule.
-Operator steps serve a subsection of a subsection of readers; the house reader's takeaway is
-what happened, who it touches, and why it matters.
+hand a professional a procedure (steps, matrices, toggles, checklists), it is the source's
+altitude, not ours. Report that such guidance exists and what its existence signals (severity,
+exposure, what changed) — do not make the response package the molecule. Operator steps serve a
+subsection of a subsection of readers; the house reader's takeaway is what happened, who it
+touches, and why it matters.
 
 ## Continuity — when the story is an update
 If the vector is a material development on something already covered, the core understanding is
 the **delta** (what changed) — not a re-assembly of the prior piece. Continuity coverage should
 look like continuity to the reader, not déjà vu.
 
-**Do not re-ask a settled question.** If prior pieces already asked "is Hormuz closed or only
-disrupted?" (or the equivalent for this beat), a new treatment must not put that question back
-in `reader_question` unless the evidence *answers* it differently. Re-litigating the same
+**Do not re-ask a settled question.** If prior pieces already put a specific open question to
+the reader on this beat, a new treatment must not put that same question back in
+`reader_question` unless the evidence *answers* it differently. Re-litigating the same
 uncertainty is déjà vu wearing a new headline.
 
 ## What you hand forward

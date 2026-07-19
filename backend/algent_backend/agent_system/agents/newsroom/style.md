@@ -28,24 +28,24 @@ reader and reality. When in doubt, get out of the way.
 These are not stylistic preferences. They are the specific patterns that make prose read as
 machine-written, and both are failures of the plainness above:
 
-**1. Decorative abstraction where a fact belongs.** *"a narrow route whose disruption can ripple
-far beyond the water itself"* is not writing — it is gesturing at an idea instead of stating one.
-It says nothing checkable, and the reach for atmosphere ("ripple", "far beyond", "itself") is the
-tell. The fix is never a better metaphor; it is **the concrete fact you already have**: *"a narrow
-sea lane between Iran and Oman that about a fifth of the world's seaborne oil passes through."*
-Numbers, places, names. If you cannot make it concrete, you do not understand it well enough to
-write the sentence.
+**1. Decorative abstraction where a fact belongs.** A sentence that *gestures* at importance or
+reach without stating anything checkable is not writing — it is atmosphere wearing the costume of
+explanation. The reach for vague elevation ("ripple," "far beyond," "implications," "itself") is
+the tell. The fix is never a better metaphor; it is **the concrete fact you already have**: the
+number, the place, the name, the mechanism. If you cannot make it concrete, you do not understand
+it well enough to write the sentence.
 
-**2. Narrating your own logic instead of writing prose.** *"Those are the facts that explain why
-traffic dropped."* *"That matters here because…"* *"What this means is…"* *"That boundary matters."*
-*"That is not just rhetoric."* *"The reason this is more than a routine patch notice is…"* No
-journalist writes this. The tell is a sentence whose only job is to assert that the NEXT sentence
-is important — a label where an idea should be. Delete it and lead with the substance; if the
-point is genuinely important, saying it plainly proves that better than announcing it did. It is the piece explaining its own structure to the reader — treating them as unable to see
-that a fact bears on the next one. **A relation is carried by ORDER and SYNTAX, not announced.**
-Put the cause before the effect and the reader supplies "because" for free; the sentence that says
-"this explains that" is the sentence you delete. This is the failure mode of trying too hard to
-connect: signposting is not connective tissue, it is the absence of it, wearing a label.
+**2. Narrating your own logic instead of writing prose.** *"That matters here because…"* *"What
+this means is…"* *"That boundary matters."* *"That is not just rhetoric."* *"Those are the facts
+that explain why…"* *"The reason this is more than a routine notice is…"* No journalist writes
+this. The tell is a sentence whose only job is to assert that the NEXT sentence is important — a
+label where an idea should be. Delete it and lead with the substance; if the point is genuinely
+important, saying it plainly proves that better than announcing it did. It is the piece explaining
+its own structure to the reader — treating them as unable to see that a fact bears on the next
+one. **A relation is carried by ORDER and SYNTAX, not announced.** Put the cause before the effect
+and the reader supplies "because" for free; the sentence that says "this explains that" is the
+sentence you delete. This is the failure mode of trying too hard to connect: signposting is not
+connective tissue, it is the absence of it, wearing a label.
 
 Write as an experienced journalist would — assume an intelligent reader, state things, and move.
 The reader does not need the dots drawn between every two facts; they need the facts in an order

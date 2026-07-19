@@ -135,14 +135,14 @@ you should reach for it on its own merits, not when something else broke. Reach 
 A story built only from wire copy is a wire digest — the reader could have gone to the wire.
 
 X EPISTEMICS — this is the price of using it, and it is not optional:
-- An X post is FIRST a fact about who-said-what. "The IRGC's account posted that the strait is
-  closed" is fully grounded by the post itself — the author owns their own statement. Write it
-  that way (attribution is correct here: the source IS the fact — see the claim contract above).
-- An X post is WEAK evidence about the WORLD. "The strait is closed" sourced only to a post is
-  NOT confirmed, however confident the poster. Keep such a claim `unconfirmed`/`likely` and
+- An X post is FIRST a fact about who-said-what. "Account A posted that X happened" is fully
+  grounded by the post itself — the author owns their own statement. Write it that way
+  (attribution is correct here: the source IS the fact — see the claim contract above).
+- An X post is WEAK evidence about the WORLD. "X happened" sourced only to a post is NOT
+  confirmed, however confident the poster. Keep such a claim `unconfirmed`/`likely` and
   LOW/MEDIUM salience until corroborated by an independent source, or unless the account is
-  itself authoritative for that fact (the shipowner about their own vessel, the agency about
-  its own action, the tracker that holds the transponder data).
+  itself authoritative for that fact (the subject about their own action, the agency about its
+  own decision, the holder of the primary data).
 - SNAPSHOT what you use. Add every X post you rely on to the source ledger with its exact url
   (source_type "primary" when the account is the subject) and link claims to it via
   `supported_by`. Posts are deleted and edited far more than news pages — an unsnapshotted post

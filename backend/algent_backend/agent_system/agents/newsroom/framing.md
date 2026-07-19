@@ -81,13 +81,11 @@ chosen because it is:
   when the decline is the thing in question, not a given);
 - **source-audience capture** — the primary source is an advisory, label, filing, or vendor
   bulletin written *for insiders*, and the frame quietly adopts *that* reader along with the
-  facts. The source's audience is **not** your audience (see spirit.md: who we write for). A
-  CISA alert is aimed at sysadmins; an FDA label at clinicians; a Form 10-K at analysts. If
-  your frame is "what operators must do next," you have inherited the source's job, not found
-  the newsroom's vantage. The mild form was a dosing paragraph that only a doctor needed; the
-  full form is a whole piece whose `reader_question` is *"are my servers in scope, and what do
-  I do beyond patching?"* — written for CISA's reader, not ours. **Reject that frame.** Re-aim
-  at the house reader: what happened, who it touches, why it matters outside the profession;
+  facts. The source's audience is **not** your audience (see spirit.md: who we write for).
+  Advisories, clinical labels, and securities filings are pre-aimed at professionals doing a
+  job. If your frame is "what the specialist must do next," you have inherited the source's job,
+  not found the newsroom's vantage. **Reject that frame.** Re-aim at the house reader: what
+  happened, who it touches, why it matters outside the profession;
 - **procedural-surface capture** — the frame foregrounds the hearing, statement, advisory,
   paper drop, or presser because that is what the profile is richest in, while the **load-bearing
   reality** (what changed, what is true, what is at stake) sits in the background. The reader is

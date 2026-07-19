@@ -62,11 +62,12 @@ class PerspectiveTake(BaseModel):
 class Primitive(BaseModel):
     """A textbook concept the reader must already hold to build the molecule — the ramp.
 
-    NOT a claim about the world and NOT news: it is uncontroversial background (what LDL-C is, what
-    a chokepoint is) the drafter may speak in its own voice, without citation. It lives here, on the
-    treatment, precisely because it is not evidence — sourcing textbook knowledge would recreate the
-    inventory disease with receipts attached. Anything contested, story-specific, or load-bearing
-    for the news itself is NOT a primitive; it is evidence and stays on the profile's spine.
+    NOT a claim about the world and NOT news: it is uncontroversial background (what a term is,
+    what a mechanism does) the drafter may speak in its own voice, without citation. It lives here,
+    on the treatment, precisely because it is not evidence — sourcing textbook knowledge would
+    recreate the inventory disease with receipts attached. Anything contested, story-specific, or
+    load-bearing for the news itself is NOT a primitive; it is evidence and stays on the profile's
+    spine.
     """
 
     term: str
