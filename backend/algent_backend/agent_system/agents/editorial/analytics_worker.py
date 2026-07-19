@@ -294,10 +294,33 @@ def _collect(folder: Path, kind: str) -> tuple[Path | None, Path | None, str]:
     return visual, data, cap
 
 
-def _caption(request: AnalyticsRequest, worker_caption: str, data_refs: list[str], as_of: str) -> str:
-    """Harness-assembled caption: the worker's description + provenance the harness controls."""
-    base = worker_caption or request.title or request.question
-    prov = f"Source: cited claims {', '.join(data_refs)}." if data_refs else ""
+def _caption(
+    request: AnalyticsRequest,
+    worker_caption: str,
+    profile: SignalProfile,
+    cited_claims: list[Claim],
+    as_of: str,
+) -> str:
+    """Harness-assembled caption: worker description + human-readable provenance (never claim ids).
+
+    Machine ids (`clm_…`) belong in the receipts appendix, not under the figure a reader meets cold.
+    Captions carry publisher names + as-of — the same standard as prose attribution.
+    """
+    base = (worker_caption or request.title or request.question).strip()
+    # Strip any machine markers the worker may have echoed into caption.md.
+    base = re.sub(r"\b(?:clm_|src_)[0-9a-fA-F]+\b", "", base)
+    base = re.sub(r"\s{2,}", " ", base).strip(" —,-")
+    sources_by_id = {s.id: s for s in profile.source_ledger}
+    pubs: list[str] = []
+    for c in cited_claims:
+        for sid in c.supported_by:
+            s = sources_by_id.get(sid)
+            if not s:
+                continue
+            label = (s.publisher or s.title or "").strip()
+            if label and label not in pubs:
+                pubs.append(label)
+    prov = f"Source: {', '.join(pubs[:3])}." if pubs else ""
     asof = f" As of {as_of}." if as_of else ""
     return f"{base} — {AI_ANALYTIC_LABEL}. {prov}{asof}".strip()
 
@@ -462,7 +485,7 @@ def fulfill_request(
             result, status="produced", swept=removed,
             artifact_name=artifact_name or visual.name, data_name=data_name or (data.name if data else ""),
             body_md=body_md,
-            caption=_caption(request, worker_cap, request.data_refs, as_of),
+            caption=_caption(request, worker_cap, profile, cited_claims, as_of),
             figure_check=figure_check,
             note=("figure check: numbers not found in cited evidence — " + ", ".join(unverified)) if unverified else "",
         )

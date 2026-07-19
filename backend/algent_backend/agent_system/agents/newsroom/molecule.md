@@ -163,6 +163,19 @@ an unwarranted conclusion, the certainty the evidence does not earn. Naming the 
 arms the treatment reviewer and the draft reviewer to check for exactly them — you know this
 material better than anyone downstream will.
 
+## Altitude — news, not a runbook
+The molecule is the shape of a *world event* for a general reader. If a concept only exists to
+hand an operator a procedure (patch order, version matrix, AMSI toggle, "verify then rotate"),
+it is the source's altitude, not ours. Report that such guidance exists and what its existence
+signals (severity, exposure, what changed) — do not make the response package the molecule.
+Operator steps serve a subsection of a subsection of readers; the house reader's takeaway is
+what happened, who it touches, and why it matters.
+
+## Continuity — when the story is an update
+If the vector is a material development on something already covered, the core understanding is
+the **delta** (what changed) — not a re-assembly of the prior piece. Continuity coverage should
+look like continuity to the reader, not déjà vu.
+
 ## What you hand forward
 A treatment that carries: the chosen frame (and rejected ones), the core understanding, the
 load-bearing concepts with their dependencies and grounding, the perspective map, the

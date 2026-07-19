@@ -41,10 +41,14 @@ Kinds — pick the form the QUESTION deserves, and PREFER A VISUAL when the data
   chart is numbers that aren't a series at all.
 - `table` — LOWER pressure: use it when values genuinely exist but no visual would add anything
   (competing figures side by side, a definitional dispute, before/after pairs). A table is the
-  fallback, not the default. Keep it SMALL — a few columns a reader can scan. If it needs seven
-  columns it is a data dump, not an analytic; cut it down or make it a chart.
-  NEVER emit a key/legend/scoring-scale as its own analytic — a "score -> meaning" table explains
-  another artifact and is meaningless alone; fold it into the thing it describes or drop it.
+  fallback, not the default. Keep it SMALL — a few columns a HOUSE READER can scan. If it needs
+  seven columns it is a data dump, not an analytic; cut it down or make it a chart.
+  NEVER restate a source's own matrix (version→patch, CVE→severity, "score → meaning" legend) —
+  that is the advisory's compliance grid re-gridded. A table must COMPUTE, COMPARE, or REVEAL
+  something a general reader could not get by reading the source; a table only an affected
+  specialist could use fails even when the cells are accurate. Drop it.
+  NEVER emit a key/legend/scoring-scale as its own analytic — fold it into the thing it describes
+  or drop it.
 - `insight` — ANY analysis of the cited data that is not a picture: a computed figure the reader
   would want (a rate of change, a share, a baseline comparison, a reconciliation of two sources
   that disagree, a bound on what the numbers can support). This is the widest kind and the most

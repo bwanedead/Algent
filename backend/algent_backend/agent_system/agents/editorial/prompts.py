@@ -40,11 +40,17 @@ PRODUCE an EditorialTreatment:
 2. THE READER-MOLECULE (see molecule.md) — design the structure, not an outline.
    - `core_understanding`: in 1-2 sentences, the reality-shape the reader should hold at the
      natural end of the read (the understanding, not the topic).
-   - `reader_question`: one line, in the reader's own words, of what they came wanting to know
-     and will leave knowing. Every concept must serve answering it — if a concept doesn't, CUT
-     it. If you cannot state a question a reader would genuinely want answered ("something may
-     happen, or may not"), you do not have a story: say so rather than assembling one out of
-     whatever the profile happens to hold.
+   - `reader_question`: one line, in the HOUSE READER's own words (spirit.md: intelligent,
+     non-specialist news reader — NOT the source's professional audience). What THEY came wanting
+     to know and will leave knowing. Every concept must serve answering it — if a concept doesn't,
+     CUT it. Bind the question to that reader: for a cyber incident, "how bad is this, who does it
+     touch, and could it reach me?" — NEVER "are my servers in scope / what do I do beyond patching?"
+     (that is the advisory's reader, not ours; see framing.md source-audience capture). If you
+     cannot state a question a general reader would genuinely want answered ("something may happen,
+     or may not"), you do not have a story: say so rather than assembling one out of whatever the
+     profile happens to hold.
+   - If this is a MATERIAL UPDATE on a story already covered, the molecule is the DELTA — what
+     changed — not a re-tell of the prior piece. Continuity coverage should look like continuity.
    - `concepts[]`: the LOAD-BEARING concepts the reader must build to hold that shape. For
      each: a local `id` (k1, k2…), `name`, `why_load_bearing` (the wrong shape if it's
      missing), `depends_on` (other concept ids — chains/towers), `grounds_in` (profile item
@@ -58,11 +64,12 @@ PRODUCE an EditorialTreatment:
    - `primitives[]`: THE RAMP. Textbook background a decently-informed general reader must already
      hold to build the molecule (term -> one plain-language clause, 2-4 max). These are NOT news
      and NOT evidence — the drafter speaks them in its own voice, uncited — so they belong here,
-     not on the profile's spine. Only uncontroversial background (what LDL-C is, what a chokepoint
-     is); anything contested, story-specific, or load-bearing for the news itself is evidence, not
-     a primitive. Aim at a generalist: an expert needs no ramp, a novice an endless one. Causal
-     antecedents (what led here) are NOT primitives — they are checkable fact and come from the
-     field threads by id. (See molecule.md: The ramp, and support depth per concept.)
+     not on the profile's spine. Only uncontroversial background; anything contested,
+     story-specific, or load-bearing for the news itself is evidence, not a primitive. **Actors
+     first when the subject is an acronym or product outside general awareness** (CISA, SharePoint,
+     MSRC) — operator jargon (RCE, AMSI, machine keys) is NOT the house reader's ramp. Prefer none
+     of the latter as primitives. Causal antecedents (what led here) are NOT primitives — they are
+     checkable fact and come from the field threads by id. (See molecule.md: The ramp.)
 
 3. COMPLETENESS / HONESTY (see spirit.md)
    - `perspectives[]`: every serious side at its strongest good-faith form (steelman, never

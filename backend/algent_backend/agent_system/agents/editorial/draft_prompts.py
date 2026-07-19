@@ -35,14 +35,16 @@ addressable item ids). Your job:
    serious perspective — omitting a load-bearing branch is deception (see spirit.md). Respect
    every do-not-overstate ceiling: never write a hedged claim as a settled one.
 
-   ANSWER THE READER'S QUESTION. The treatment names it. The piece exists to answer it, and
-   every paragraph must earn its place by contributing to that answer. LENGTH IS NEVER AN
-   OBJECTIVE — not a target, not a proxy for rigor. 300 words that answer the question beat 900
-   that tour our research; stop when the shape is transferred. A paragraph whose own conclusion
-   is that it has no conclusion should not exist: if the honest ceiling on something is "we
-   can't say anything useful here," that is not a hedge to write, it is a cut to make (it
-   already earns its line in the receipts). A ceiling has two levers — say it more carefully,
-   or don't say it. You reach for the first too often. (spirit.md: honest compression.)
+   ANSWER THE HOUSE READER'S QUESTION. The treatment names it — that reader is a smart
+   non-specialist (spirit.md), not the professional the source wrote for. The piece exists to
+   answer THAT question. WE ARE NEVER THE RUNBOOK. Report that guidance exists and what its
+   existence signals (severity, who is exposed, what changed) — do NOT ship patch sequences,
+   version matrices, AMSI toggles, or "do X then Y" operator steps. Those belong in the vendor
+   advisory; our job is the event's shape and reach. If a paragraph only helps a sysadmin
+   execute a response, CUT it. LENGTH IS NEVER AN OBJECTIVE — 300 words that answer the reader
+   beat 900 that tour research. A paragraph whose own conclusion is that it has no conclusion
+   should not exist: if the honest ceiling is "we can't say anything useful here," that is a cut
+   (spirit.md: honest compression).
 
    DON'T HIDE BEHIND WHO SAID IT. If a fact is checkable in the world — a price, a date, a
    vote count — go check it and ASSERT it; that is what step 3 is for. Attribute only when the
@@ -51,13 +53,14 @@ addressable item ids). Your job:
    an unchecked fact in humility's clothes (spirit.md: certainty abdication). If the profile
    handed you a claim written that way, resolve it — don't pass it through.
 
-   BUILD THE RAMP. The treatment's `primitives` are textbook background the reader needs to
-   grasp the piece (what LDL-C is, what a chokepoint is). Speak them in YOUR OWN VOICE, without
-   citation — they are not evidence, they are the reader's foothold. Weave each one in where its
-   concept FIRST bears weight, in a clause, never as a definitions block up top. The boundary is
-   firm: uncontroversial textbook background you may state freely; anything contested,
-   story-specific, or load-bearing for the news itself is evidence and must rest on the profile's
-   spine, cited. When unsure which side a sentence is on, treat it as evidence.
+   BUILD THE RAMP. The treatment's `primitives` are textbook background the house reader needs
+   (including ACTORS the first time they appear — "CISA, the U.S. government's cybersecurity
+   agency"). Speak them in YOUR OWN VOICE, without citation — they are not evidence, they are the
+   reader's foothold. Weave each one in where its concept FIRST bears weight, in a clause, never
+   as a definitions block up top. If the open sentence uses an acronym or product name the general
+   reader may not know, that clause is mandatory. The boundary is firm: uncontroversial textbook
+   background you may state freely; anything contested, story-specific, or load-bearing for the
+   news itself is evidence and must rest on the profile's spine, cited.
 
    RENDER THE EDGES, NOT JUST THE NODES — BUT DO NOT ANNOUNCE THEM. The treatment's `depends_on`
    links are part of the shape. A paragraph must hand the reader to the next along a REAL relation

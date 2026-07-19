@@ -76,6 +76,14 @@ def test_image_refs_rewritten_to_site_path_and_collected() -> None:
     assert "](analytic_ar_1.svg)" not in art.markdown          # the bare ref is gone
 
 
+def test_digest_carries_channel_provenance_when_present() -> None:
+    art = _convert(rail={**_RAIL, "pool_by_channel": {"gkg": 40, "x": 24}, "promoted_from": {"x": 4},
+                         "x_searches": 1})
+    assert "pool: gkg=40, x=24" in art.digest
+    assert "promoted_from: x=4" in art.digest
+    assert "x_searches: 1" in art.digest
+
+
 def test_digest_carries_the_floor_signals_and_cost() -> None:
     art = _convert()
     d = art.digest

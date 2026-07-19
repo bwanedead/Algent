@@ -116,3 +116,33 @@ def test_resolved_tools_build_lazily_and_cache() -> None:
     second = tools["web_search"]
     assert first is second
     assert builds["count"] == 1
+
+
+def test_web_search_schema_never_marks_implemented_sources_unavailable() -> None:
+    """Tool schemas are doctrine: the model reads them at call time with more weight than the
+    system prompt. A stale "not yet available" on an implemented channel (X) silently defeated two
+    doctrine passes — models rationally never call a button that says it's broken.
+
+    Walk the facade's declared surface and refuse any unavailable/not-wired language for sources
+    the facade actually implements. Ten lines; this failure class cannot recur silently.
+    """
+    import algent_backend.agent_system.tools.sourcing.search.research as research
+
+    tool = research._build()
+    text = "\n".join([
+        research.SPEC.description or "",
+        getattr(tool, "description", "") or "",
+        research.__doc__ or "",
+        (research._search.__doc__ or ""),
+    ]).lower()
+    # Phrases that once advertised X as a stub after it was live.
+    banned = (
+        "not yet available",
+        "not yet wired",
+        "not yet implemented",
+        "not available",
+        "unavailable",
+        "not wired",
+    )
+    for phrase in banned:
+        assert phrase not in text, f"web_search schema still says '{phrase}' — tool docs are doctrine"

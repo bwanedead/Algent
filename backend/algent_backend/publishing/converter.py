@@ -104,6 +104,13 @@ def quality_digest(rail: dict, pipeline: dict, *, run_id: str = "") -> str:
         f"analytics: {pipeline.get('analytics_produced', 0)} produced, {pipeline.get('analytics_escapes', 0)} escapes",
         f"cost: ~${float(rail.get('total_usd', 0.0) or 0.0):.4f}",
     ]
+    # Discovery observability across runs: pool share vs what fed the winner (overfit signal).
+    if pool := rail.get("pool_by_channel"):
+        lines.append("pool: " + ", ".join(f"{k}={v}" for k, v in sorted(pool.items())))
+    if promo := rail.get("promoted_from"):
+        lines.append("promoted_from: " + ", ".join(f"{k}={v}" for k, v in sorted(promo.items())))
+    if x := rail.get("x_searches"):
+        lines.append(f"x_searches: {x}")
     if barriers:
         lines.append(f"⚠ walled sources (carried with caveats): {', '.join(barriers)}")
     if figs:
