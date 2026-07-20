@@ -95,3 +95,12 @@ cost: ~$0.4162
 pool: backfeed=4, gkg=40, market=23, x=24
 promoted_from: backfeed=4, gkg=3
 run: 0013__4de0ba5a-074c-47f1-8a73-baa842456fc2
+
+### PUBLISH energy-shock-forces-central-banks-to-test-whether-inflation-9e0685 — 2026-07-20
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 1 produced, 0 escapes
+cost: ~$0.3218
+pool: backfeed=4, gkg=40, market=23, x=24
+promoted_from: gkg=2, market=2
+run: 0014__ede7ac63-ba48-4f23-9267-e8efb6835c4d
