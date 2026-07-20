@@ -86,3 +86,12 @@ caveats: verified (0 findings)
 analytics: 0 produced, 0 escapes
 cost: ~$0.0000
 run: 0013__4de0ba5a-074c-47f1-8a73-baa842456fc2
+
+### CORRECTION ebola-outbreak-in-eastern-dr-congo-still-expanding-despite-r-c00a85 — 2026-07-20
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 0 produced, 0 escapes
+cost: ~$0.4162
+pool: backfeed=4, gkg=40, market=23, x=24
+promoted_from: backfeed=4, gkg=3
+run: 0013__4de0ba5a-074c-47f1-8a73-baa842456fc2

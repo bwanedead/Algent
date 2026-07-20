@@ -2,7 +2,7 @@
 title: Ebola outbreak in eastern DR Congo still expanding despite rising surveillance, as conflict and labor unrest slow response
 dek: WHO said the outbreak has reached 2,124 confirmed cases and 828 deaths as of July 15, with many health zones still affected; it warned that attacks and unpaid-worker strikes are disrupting surveillance, testing, contact tracing and facility staffing.
 date: '2026-07-20'
-published_at: '2026-07-20T09:40:04.751064+00:00'
+published_at: '2026-07-20T09:43:29.808319+00:00'
 as_of: '2026-07-17'
 status: publishable
 tags:
@@ -10,11 +10,18 @@ tags:
 - health
 - economics
 - Ituri province
-- Democratic Republic of the Congo
+- International Medical Corps
 places:
-- Sudan
+- Democratic Republic of the Congo
+- Uganda
+- South Sudan
 flags:
-- 🇸🇩
+- 🇨🇩
+- 🇺🇬
+- 🇸🇸
+corrections:
+- date: '2026-07-20'
+  reason: correct country flags (DRC/Uganda/South Sudan; not Sudan)
 ---
 
 The Ebola outbreak in eastern Democratic Republic of Congo is still large and still active. As of July 15, WHO said the country had reported 2,124 confirmed cases and 828 deaths, with 12,693 contacts — people exposed to a case and then monitored for symptoms — identified and under follow-up across affected provinces. The outbreak had spread across 46 health zones in five provinces: Ituri, North Kivu, South Kivu, Haut-Uele and Tshopo.
