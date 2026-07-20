@@ -72,6 +72,8 @@ def test_produces_artifact_copies_it_out_and_empties_scratch(tmp_path: Path) -> 
     # Human-readable provenance only — claim ids stay out of the reader-facing caption.
     assert art.ai_label and "cited claims" not in art.caption and "clm_" not in art.caption
     assert "BLS" in art.caption and "2026-06-30" in art.caption
+    # Cold-reader explainer: question (what is measured) appears in the caption.
+    assert "how is inflation moving" in art.caption.lower()
     # the artifact + its data were copied into the run's artifact store
     assert (tmp_path / "artifacts" / art.artifact_name).exists()
     assert (tmp_path / "artifacts" / art.data_name).exists()

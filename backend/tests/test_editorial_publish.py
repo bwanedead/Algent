@@ -67,13 +67,17 @@ def test_published_view_cleans_prose_and_appends_receipts() -> None:
 def test_produced_analytics_are_embedded_and_receipted() -> None:
     analytics = [
         {"request_id": "anx_01", "status": "produced", "artifact_name": "analytic_anx_01.svg",
-         "title": "Core PCE, Mar-May", "caption": "PCE climbed — AI-assisted analytic, built only from cited data.",
+         "title": "Core PCE, Mar-May",
+         "question": "How did core PCE change from March to May?",
+         "caption": "How did core PCE change from March to May? PCE climbed. — AI-assisted analytic, built only from cited data. Source: BLS. As of 2026-06-26.",
          "data_refs": ["c1"], "as_of": "2026-06-26", "figure_check": {"verified": True, "unverified": []}},
         {"request_id": "anx_02", "status": "failed", "artifact_name": ""},   # not embedded
     ]
     md = render_published_article(_draft(), _profile(), analytics)
     # the produced chart is embedded in the body with its AI-labelled caption; the failed one is not.
     assert "![Core PCE, Mar-May](analytic_anx_01.svg)" in md
+    assert "**Core PCE, Mar-May**" in md  # labelled figure heading
+    assert "How did core PCE change" in md  # cold-reader explainer under the chart
     assert "AI-assisted analytic, built only from cited data" in md
     assert "anx_02" not in md
     # and it earns a receipts line carrying its claim provenance + as-of.

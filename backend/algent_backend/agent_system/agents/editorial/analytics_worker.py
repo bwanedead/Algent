@@ -154,16 +154,25 @@ def _brief(request: AnalyticsRequest) -> str:
     names = _VISUAL_NAMES.get(request.kind, ("output.md",))
     return "\n".join([
         f"# Analytics request — {request.id} ({request.kind})",
-        f"\n**Title:** {request.title}",
-        f"**What the reader should learn:** {request.question}",
+        f"\n**Title (on the figure):** {request.title}",
+        f"**What this shows (reader explainer):** {request.question}",
         f"**Build:** {request.spec}",
         f"**Why it helps:** {request.rationale}",
         "\n## Your job",
         "Build EXACTLY this one analytic, using ONLY the data in `data.json` (already fetched and",
-        "cited — do not go find more). Follow the doctrine in `AGENTS.md`. Then emit:",
+        "cited — do not go find more). Follow the doctrine in `AGENTS.md`.",
+        "",
+        "The figure must be self-explanatory to a cold house reader:",
+        "- Chart title = what is measured (plain words).",
+        "- Every axis labeled with units; series named in human language (no series1/y).",
+        "- Period or as-of visible on the figure or in the caption.",
+        f"- `{_CAPTION_NAME}`: 1–3 sentences — what it shows, the main takeaway, any limit.",
+        "  No claim ids, no pipeline jargon.",
+        "",
+        "Then emit:",
         f"- `{names[0]}`" + (f" (or `{names[1]}`)" if len(names) > 1 else "") + " — the analytic itself",
         f"- `{_DATA_NAME}` — the exact rows you plotted (so the harness can verify the numbers)",
-        f"- `{_CAPTION_NAME}` — one or two plain sentences describing what it shows",
+        f"- `{_CAPTION_NAME}` — plain-language explainer (see above)",
         "\nIf the data is too thin, contested, or would force a misleading visual: do NOT improvise —",
         "write `SKIPPED.md` with the reason instead. Faithful and bounded beats clever.",
     ]) + "\n"
@@ -301,15 +310,27 @@ def _caption(
     cited_claims: list[Claim],
     as_of: str,
 ) -> str:
-    """Harness-assembled caption: worker description + human-readable provenance (never claim ids).
+    """Harness-assembled caption: what it shows + worker detail + human provenance (never claim ids).
 
-    Machine ids (`clm_…`) belong in the receipts appendix, not under the figure a reader meets cold.
-    Captions carry publisher names + as-of — the same standard as prose attribution.
+    Structure for a cold reader: (1) what is measured / what the figure shows, (2) any worker
+    takeaway that adds, (3) source + as-of + AI label. Machine ids stay out of the reader view.
     """
-    base = (worker_caption or request.title or request.question).strip()
-    # Strip any machine markers the worker may have echoed into caption.md.
-    base = re.sub(r"\b(?:clm_|src_)[0-9a-fA-F]+\b", "", base)
-    base = re.sub(r"\s{2,}", " ", base).strip(" —,-")
+    def _clean(text: str) -> str:
+        text = re.sub(r"\b(?:clm_|src_)[0-9a-fA-F]+\b", "", text or "")
+        return re.sub(r"\s{2,}", " ", text).strip(" —,-")
+
+    shows = _clean(request.question or request.title)
+    worker = _clean(worker_caption)
+    # Avoid repeating the same sentence twice if the worker paraphrased the question.
+    if worker and shows and worker.lower()[:40] == shows.lower()[:40]:
+        worker = ""
+    if worker and shows and shows.lower() in worker.lower():
+        body = worker
+    elif worker and shows:
+        body = f"{shows} {worker}"
+    else:
+        body = worker or shows or _clean(request.title)
+
     sources_by_id = {s.id: s for s in profile.source_ledger}
     pubs: list[str] = []
     for c in cited_claims:
@@ -320,9 +341,12 @@ def _caption(
             label = (s.publisher or s.title or "").strip()
             if label and label not in pubs:
                 pubs.append(label)
-    prov = f"Source: {', '.join(pubs[:3])}." if pubs else ""
-    asof = f" As of {as_of}." if as_of else ""
-    return f"{base} — {AI_ANALYTIC_LABEL}. {prov}{asof}".strip()
+    tail = [AI_ANALYTIC_LABEL + "."]
+    if pubs:
+        tail.append(f"Source: {', '.join(pubs[:3])}.")
+    if as_of:
+        tail.append(f"As of {as_of}.")
+    return f"{body} — {' '.join(tail)}".strip()
 
 
 # ── the runner (injectable so tests never spawn a subprocess) ─────────────────────────────────

@@ -108,30 +108,40 @@ def render_published_article(
     return "\n".join(out).rstrip() + "\n"
 
 
+def _figure_explainer(a: dict) -> str:
+    """Plain 'what this shows' for a cold reader — never make them reverse-engineer the chart.
+
+    Prefer harness caption (already includes question + provenance). Fall back to question +
+    AI label so a figure never lands bare.
+    """
+    caption = str(a.get("caption") or "").strip()
+    if caption:
+        return caption
+    question = str(a.get("question") or "").strip()
+    bits = [b for b in (question, AI_ANALYTIC_LABEL + ".") if b]
+    return " ".join(bits)
+
+
 def _figures(produced: list[dict]) -> list[str]:
     """Place each produced analytic in the reader view by TYPE:
 
-    - a chart/illustration (``.svg``/``.png``) is embedded as an image, with the harness caption
-      (which carries the 'AI-assisted, built only from cited data' label) beneath it;
+    - a chart/illustration (``.svg``/``.png``) is embedded as an image, with a plain explainer
+      under it (what is measured / what it shows + provenance);
     - a table/insight (markdown) is INLINED as text — an image link to a ``.md`` file would render
-      as a broken image — followed by the honesty label so the provenance travels with it either way.
+      as a broken image — followed by the same style of explainer.
     """
     out: list[str] = []
     for a in produced:
         name = a.get("artifact_name", "")
         title = str(a.get("title") or "").strip()
-        # An analytic dropped in with no label is a puzzle, not information: the reader meets a
-        # table and has to reverse-engineer what it shows. So every figure carries a heading and a
-        # one-line explainer of what it tells you. Both come from HARNESS/router-controlled fields
-        # (title, question) — not the worker's free text — so the ramp costs no new trust.
-        explainer = " ".join(x for x in (str(a.get("question") or "").strip(), AI_ANALYTIC_LABEL + ".") if x)
+        explainer = _figure_explainer(a)
         if name.endswith(_IMAGE_SUFFIXES):
             body = [f"![{title or 'analytic'}]({name})"]
-            explainer = str(a.get("caption") or explainer).strip()
         elif table := _table_block(str(a.get("body_md") or "")):
             body = [table]
         else:
             continue
+        # Heading = what is measured; italic line under = what it shows + source/as-of.
         out += [f"**{title}**" if title else "", "", *body, "", f"*{explainer}*", ""]
     return [ln for ln in out if ln is not None]
 
