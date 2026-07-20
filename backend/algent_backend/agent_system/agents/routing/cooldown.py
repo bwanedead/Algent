@@ -1,10 +1,9 @@
 """
 Mechanical story-family cooldown — the floor under the soft "don't pick a close match" instruction.
 
-Soft cooldown alone failed live: the router re-titled the same Hormuz beat ("war widens / IRGC")
-as a "material new development" and re-published the same traffic-vs-closure molecule. Headlines
-are still advisory data for the model; this module is the **deterministic floor** that keeps a
-story-family already on the site out of the #1 slot.
+Soft cooldown alone can fail: the model re-titles the same beat as a "material new development"
+and promotes it anyway. Headlines are still advisory data for the model; this module is the
+**deterministic floor** that keeps a story-family already on the site out of the #1 slot.
 
 A candidate is "cooled" when it shares distinctive tokens with recent headlines (or a token that
 has already appeared in two+ recent titles — the saturation signal). Cooled candidates stay in
@@ -22,7 +21,7 @@ from .contracts import RouteCandidate, RouteRanking
 _MIN_SHARED = 2
 # Or share one longer "anchor" token (places, orgs, products — not generic news verbs).
 _ANCHOR_LEN = 6
-# A token seen in this many cooldown titles is a saturated beat key (e.g. "hormuz" x3).
+# A token seen in this many cooldown titles is a saturated beat key.
 _SATURATION_COUNT = 2
 
 _TOKEN = re.compile(r"[a-z0-9]+", re.I)
@@ -36,8 +35,7 @@ _STOP = frozenset({
     "does", "doing", "make", "made", "much", "many", "both", "each", "few", "own", "same",
     "record", "remains", "remain", "despite", "ongoing", "around", "across", "after",
     "sees", "seen", "seem", "seems", "keep", "kept", "come", "came", "take", "took",
-    # Generic news glue — live false positives: "active" matched SharePoint→SonicWall;
-    # "damage" matched Hormuz vessel-damage → Peru earthquake. Never family anchors.
+    # Generic news glue — never family anchors (would false-match unrelated stories).
     "active", "damage", "severe", "major", "crisis", "attack", "attacks", "struck", "strike",
     "strikes", "warning", "warned", "report", "reports", "official", "officials", "security",
     "military", "forces", "people", "public", "world", "global", "latest", "update", "updates",
@@ -82,8 +80,8 @@ def cooled_by(
             continue
         shared = cand & prior
         shared_anch = cand_anch & anchors(title)
-        # One distinctive anchor in common (Hormuz, SharePoint, Lipfendra, …) is enough —
-        # re-titling the same beat never drops the place/product name.
+        # One distinctive anchor in common is enough — re-titling the same beat rarely drops
+        # the place, product, or proper name.
         if shared_anch:
             return True, f"anchor {sorted(shared_anch)[0]!r} also in prior: {title[:80]}"
         if len(shared) >= _MIN_SHARED:

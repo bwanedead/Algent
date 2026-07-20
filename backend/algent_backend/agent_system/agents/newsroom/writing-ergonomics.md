@@ -78,11 +78,10 @@ and a piece drowning in metaphor conveys less, not more.
 
 **An analogy must BORROW A STRUCTURE. Figurative language that borrows nothing is not analogy —
 it is decoration, and it is the machine signature style.md names.** The test is whether the reader
-can carry a shape across: *"a chokepoint — like a single bridge into a city"* transfers a structure.
-*"disruption there can ripple far beyond the water itself"* transfers nothing; it gestures at
-importance while saying less than the plain number would. When you catch yourself reaching for
-atmosphere, you wanted a fact: *"about a fifth of the world's seaborne oil passes through it."*
-Never analogize what a concrete specific would convey better — which is most of the time.
+can carry a shape across (a familiar structure mapped onto a new one). Atmosphere that only
+gestures at importance transfers nothing — you wanted a concrete fact (a number, a place, a
+mechanism). Never analogize what a concrete specific would convey better — which is most of the
+time.
 
 But the likeness is **fuzzy**: a borrowed structure matches in *shape* and differs in
 *specifics*. So **mark the seams** — say where the analogy holds and where it breaks, and what

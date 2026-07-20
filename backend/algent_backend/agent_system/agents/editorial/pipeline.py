@@ -47,7 +47,9 @@ RAMP_REPAIRED = "editorial_pipeline.ramp_repaired"       # the comprehension rep
 # default once live pipeline runs prove it stable.
 _ANALYTICS_WORKER_ENV = "ALGENT_ANALYTICS_WORKER"
 _ANALYTICS_CAP_ENV = "ALGENT_ANALYTICS_MAX"
-_ANALYTICS_CAP_DEFAULT = 3
+# Soft default was 3 and every live run filled it — padding. Prefer at most one strong analytic
+# unless the operator raises the cap; zero is still success when nothing useful exists.
+_ANALYTICS_CAP_DEFAULT = 1
 
 
 def _analytics_worker_enabled() -> bool:

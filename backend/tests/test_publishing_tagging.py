@@ -62,6 +62,23 @@ def test_flags_from_title_phrase_when_no_scope() -> None:
     assert names == ["Peru"] and flags == ["🇵🇪"]
 
 
+def test_drc_and_south_sudan_do_not_collide() -> None:
+    # Nested names must not double-map: DRC ≠ ROC; South Sudan ≠ Sudan.
+    profile = {
+        "entities": [
+            {"name": "Democratic Republic of the Congo"},
+            {"name": "South Sudan"},
+            {"name": "Uganda"},
+        ],
+    }
+    names, flags = tg.derive_places(profile, {"title": "outbreak update", "scope": []})
+    assert names == [
+        "Democratic Republic of the Congo", "South Sudan", "Uganda",
+    ]
+    assert flags == ["🇨🇩", "🇸🇸", "🇺🇬"]
+    assert "Sudan" not in names and "Republic of the Congo" not in names
+
+
 def test_demonym_in_entity_name_maps_country() -> None:
     # Telstra-style profile: orgs named "Australian …" without a bare "Australia" entity.
     profile = {

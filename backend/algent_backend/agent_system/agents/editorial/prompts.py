@@ -31,10 +31,10 @@ You have no tools — you reason over what the profile already contains; you do 
 PRODUCE an EditorialTreatment:
 
 1. FRAMING (see framing.md) — do the search, do not take the first frame.
-   - FIRST: name the FOCAL EVENT — the world event / failure / decision that is the big deal for
-     the house reader (framing.md: center of mass). Do not default to the newest hearing,
-     testimony, advisory, or presser if that procedure only *discusses* a prior load-bearing
-     event; prefer the event, use the procedure as evidence.
+   - FIRST: name the FOCAL THING — the change, fact, decision, structure, or event that is the
+     big deal for the house reader (framing.md: center of mass). Do not default to the newest
+     hearing, statement, advisory, paper, or presser if that surface only *discusses* or
+     *reacts to* the load-bearing reality; prefer that reality, use the surface as evidence.
    - Generate several genuinely different candidate vantages on that focal story.
    - Choose the one that maximizes reality-contact — reveals the real shape, distorts least,
      and lets the reader see ALL the serious sides. Put it in `chosen_frame` with a rationale.
@@ -44,17 +44,16 @@ PRODUCE an EditorialTreatment:
 
 2. THE READER-MOLECULE (see molecule.md) — design the structure, not an outline.
    - `core_understanding`: in 1-2 sentences, the reality-shape the reader should hold — the big
-     deal (event, scale, mechanism, stakes), NOT "someone testified about X" unless the
-     testimony *is* the news. Significance lives IN this shape via facts, not as a sermon concept.
+     deal (what is true or what changed, scale, structure, stakes), NOT "someone spoke/wrote
+     about X" unless that act *is* the news. Significance lives IN this shape via facts, not as
+     a sermon concept.
    - `reader_question`: one line, in the HOUSE READER's own words (spirit.md: intelligent,
      non-specialist news reader — NOT the source's professional audience). What THEY came wanting
-     to know and will leave knowing — about the event and its meaning. Every concept must serve
-     answering it — if a concept doesn't, CUT it. Bind the question to that reader: for a network
-     failure, "how bad was it, who was hit, what failed, and what does that imply?" — NEVER
-     "what did the CEO tell the committee?" as the whole story, and NEVER "are my servers in
-     scope / what do I patch?" (advisory's reader; framing.md source-audience capture). If you
-     cannot state a question a general reader would genuinely want answered, you do not have a
-     story: say so rather than assembling one out of whatever the profile happens to hold.
+     to know and will leave knowing — about the focal thing and its meaning. Every concept must
+     serve answering it — if a concept doesn't, CUT it. Bind the question to that reader, not to
+     the source's profession and not to the latest procedural surface alone. If you cannot state
+     a question a general reader would genuinely want answered, you do not have a story: say so
+     rather than assembling one out of whatever the profile happens to hold.
    - If this is a MATERIAL UPDATE on a story already covered, the molecule is the DELTA — what
      changed — not a re-tell of the prior piece. Continuity coverage should look like continuity.
    - `concepts[]`: the LOAD-BEARING concepts the reader must build to hold that shape. For
@@ -73,13 +72,14 @@ PRODUCE an EditorialTreatment:
      not on the profile's spine. Only uncontroversial background; anything contested,
      story-specific, or load-bearing for the news itself is evidence, not a primitive.
      **Priority when the budget is tight:** (1) load-bearing people — name + title/role for THIS
-     story; (2) load-bearing companies/institutions — what they are / do in this place
-     ("Telstra, Australia's largest mobile operator"); (3) jurisdiction / political system when
-     a non-local reader would not already stand there; (4) the scheme/object/mechanism the event
-     turns on, in one plain clause (what a time server does, what the product is); (5) only then
-     secondary jargon. Operator jargon is NOT the house reader's ramp. Causal antecedents are
-     NOT primitives — checkable fact from field threads by id.
-     (See molecule.md: The ramp; spirit: people, titles, and who is acting.)
+     story; (2) load-bearing companies/institutions — what they are / do in this place; (3)
+     jurisdiction / political system when a non-local reader would not already stand there; (4)
+     the object, scheme, or mechanism the focal thing turns on, in one plain clause; (5) only
+     then secondary jargon. Operator jargon is NOT the house reader's ramp. Causal antecedents
+     are NOT primitives — checkable fact from field threads by id.
+     When scale is abstract, prefer concepts that give reference points (trajectory, share,
+     population/exposed base, geographic concentration) if the profile supports them.
+     (See molecule.md: The ramp + magnitude reference points; spirit: people, titles.)
 
 3. COMPLETENESS / HONESTY (see spirit.md)
    - `perspectives[]`: every serious side at its strongest good-faith form (steelman, never

@@ -34,23 +34,20 @@ real argument — do not dumb anything down. They have no insider vocabulary —
 
 That single definition decides most editorial questions:
 - **Name the actors.** An organization, agency, product, company, **or person** the reader may
-  not know gets a clause the first time it appears. Agencies and products: *"CISA, the U.S.
-  government's cybersecurity agency"*, *"SharePoint, Microsoft's widely used corporate document
-  platform"*. Companies the story depends on: one clause of **what they are / what they do in
-  this jurisdiction** — *"Telstra, Australia's largest mobile network operator"* — not a brand
-  name alone. People: see **people, titles, and who is acting** below — a bare name is not a
-  ramp.
+  not know gets a clause the first time it appears. Agencies and products: one plain clause of
+  what they are. Companies the story depends on: one clause of **what they do / what role they
+  play here** (size, sector, public function) — not a brand name alone. People: see **people,
+  titles, and who is acting** below — a bare name is not a ramp.
 - **Orient the jurisdiction.** If the story is national politics, a domestic court, a local
   disaster, or a party fight, the reader must know **where** this is happening before the
-  chronology starts. Do not assume "Labour" or "Congress" or a city name is enough world-knowledge
-  for every smart friend. One early clause that places the story (country / system) is part of the
-  ramp, not optional colour.
+  chronology starts. Do not assume a party name, a legislature's nickname, or a city alone is
+  enough world-knowledge for every smart friend. One early clause that places the story
+  (country / system) is part of the ramp, not optional colour.
 - **Say why it matters, in their terms.** Not "why it is urgent to the people whose job this is" —
   why it changes something for someone who does not work in that industry.
-- **A story for specialists doing their jobs is not our story.** Operational instructions — patch
-  this, verify that, enable this setting — belong in a vendor advisory, not a newsroom. We report
-  what HAPPENED and what it means; we are not the runbook. If the piece reads like a to-do list
-  for a profession, the frame is wrong.
+- **A story for specialists doing their jobs is not our story.** Operational instructions and
+  professional runbooks belong in the source's venue, not a newsroom. We report what happened
+  and what it means. If the piece reads like a to-do list for a profession, the frame is wrong.
 
 The test is simple and unforgiving: **could a smart friend outside the field — and outside this
 country's insider politics — read this and come away actually understanding what happened and why
@@ -64,11 +61,11 @@ stakes), establish them quickly on **first mention** with whatever makes their r
 piece legible:
 
 1. **Name + the title or role that matters here** — office, job, or standing that explains why
-   they are in the story (*mayor of Greater Manchester*, *UK prime minister*, *Fed chair*,
-   *CEO of the company that makes X*). Prefer the title that illuminates **this** article, not
-   a CV dump of every hat they wear.
+   they are in the story (mayor, minister, central-bank head, company chief, court, regulator).
+   Prefer the title that illuminates **this** article, not a CV dump of every hat they wear.
 2. **Jurisdiction or affiliation when it is not already clear** — country, government, company,
-   court. *"Labour"* is not enough if the reader may not know which country's Labour.
+   court. A party or legislature name alone is not enough if the reader may not know which
+   country or system it belongs to.
 3. **A light establishing clause when the title alone is thin** — why they matter to the
    stakes, or a one-phrase disambiguator if the name is common. One clause, not a biography.
 

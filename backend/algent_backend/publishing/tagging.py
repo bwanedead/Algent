@@ -75,7 +75,12 @@ _COUNTRY_ISO: dict[str, str] = {
     "thailand": "TH", "malaysia": "MY", "singapore": "SG", "australia": "AU", "new zealand": "NZ",
     "canada": "CA", "mexico": "MX", "brazil": "BR", "argentina": "AR", "chile": "CL",
     "colombia": "CO", "venezuela": "VE", "peru": "PE", "cuba": "CU", "haiti": "HT",
-    "nigeria": "NG", "south africa": "ZA", "kenya": "KE", "ethiopia": "ET", "sudan": "SD",
+    "nigeria": "NG", "south africa": "ZA", "kenya": "KE", "ethiopia": "ET", "uganda": "UG",
+    # Longer phrases first in scan order (sorted by len); "sudan" must not match inside "south sudan".
+    "south sudan": "SS", "sudan": "SD",
+    "democratic republic of the congo": "CD", "democratic republic of congo": "CD",
+    "dr congo": "CD", "drc": "CD", "congo kinshasa": "CD", "congo-kinshasa": "CD",
+    "republic of the congo": "CG", "congo brazzaville": "CG", "congo-brazzaville": "CG",
     "libya": "LY", "algeria": "DZ", "morocco": "MA", "tunisia": "TN", "ghana": "GH",
     "greece": "GR", "portugal": "PT", "austria": "AT", "belgium": "BE", "czechia": "CZ",
     "czech republic": "CZ", "hungary": "HU", "romania": "RO", "serbia": "RS", "croatia": "HR",
@@ -104,7 +109,9 @@ _ISO_DISPLAY: dict[str, str] = {
     "TH": "Thailand", "MY": "Malaysia", "SG": "Singapore", "AU": "Australia", "NZ": "New Zealand",
     "CA": "Canada", "MX": "Mexico", "BR": "Brazil", "AR": "Argentina", "CL": "Chile",
     "CO": "Colombia", "VE": "Venezuela", "PE": "Peru", "CU": "Cuba", "HT": "Haiti",
-    "NG": "Nigeria", "ZA": "South Africa", "KE": "Kenya", "ET": "Ethiopia", "SD": "Sudan",
+    "NG": "Nigeria", "ZA": "South Africa", "KE": "Kenya", "ET": "Ethiopia", "UG": "Uganda",
+    "SS": "South Sudan", "SD": "Sudan",
+    "CD": "Democratic Republic of the Congo", "CG": "Republic of the Congo",
     "LY": "Libya", "DZ": "Algeria", "MA": "Morocco", "TN": "Tunisia", "GH": "Ghana",
     "GR": "Greece", "PT": "Portugal", "AT": "Austria", "BE": "Belgium", "CZ": "Czechia",
     "HU": "Hungary", "RO": "Romania", "RS": "Serbia", "HR": "Croatia", "BG": "Bulgaria",
@@ -145,22 +152,38 @@ def _iso_for_label(label: str) -> str | None:
 
 
 def _scan_text_for_iso(text: str) -> list[str]:
-    """Longest-alias-first whole-phrase scan of free text. Returns ISO codes in encounter order."""
+    """Longest-alias-first whole-phrase scan. Non-overlapping so nested names don't double-match.
+
+    Example: "democratic republic of the congo" must yield CD only — not also CG from the
+    embedded "republic of the congo". "south sudan" must yield SS only — not SD from "sudan".
+    """
     hay = f" {_normalize_label(text)} "
     if hay == "  ":
         return []
-    # Longest first so "united states" wins over a hypothetical shorter fragment.
     aliases = sorted(
         ((a, iso) for a, iso in _COUNTRY_ISO.items() if len(a) >= _MIN_SCAN_ALIAS_LEN),
         key=lambda x: -len(x[0]),
     )
+    occupied = [False] * len(hay)
     found: list[str] = []
     seen: set[str] = set()
     for alias, iso in aliases:
         needle = f" {alias} "
-        if needle in hay and iso not in seen:
-            seen.add(iso)
-            found.append(iso)
+        start = 0
+        while True:
+            i = hay.find(needle, start)
+            if i < 0:
+                break
+            end = i + len(needle)
+            if any(occupied[i:end]):
+                start = i + 1
+                continue
+            for j in range(i, end):
+                occupied[j] = True
+            if iso not in seen:
+                seen.add(iso)
+                found.append(iso)
+            start = end
     return found
 
 

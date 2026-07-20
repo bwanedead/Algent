@@ -15,29 +15,30 @@ type Props = {
 export default function FlagRow({ flags, places = [], className = "feed-flags" }: Props) {
   if (!flags.length) return null;
   return (
-    <span className={className} aria-label="Places">
+    <span className={className} aria-label={places.length ? places.join(", ") : "Places"}>
       {flags.map((flag, i) => {
         const iso = flagEmojiToIso(flag);
         const label = places[i] || iso || "place";
         if (!iso) {
-          // Unknown shape — show the raw string only if we must.
           return (
-            <span key={`${flag}-${i}`} className="feed-flag-fallback" title={label}>
+            <span key={`flag-${i}`} className="feed-flag-fallback" title={label}>
               {flag}
             </span>
           );
         }
         return (
           <img
-            key={iso}
+            key={`flag-${i}-${iso}`}
             className="feed-flag-img"
             src={flagImageUrl(iso, 20)}
             srcSet={`${flagImageUrl(iso, 40)} 2x`}
             width={20}
             height={15}
-            alt=""
+            alt={label}
             title={label}
-            loading="lazy"
+            // Eager: the index shows only a few flags per row; lazy load was hiding siblings
+            // in tight grid cells on some browsers.
+            loading="eager"
             decoding="async"
           />
         );

@@ -176,13 +176,14 @@ a { color: inherit; }
 
 .feed a {
   display: grid;
-  /* date | story | thumbnail. The third column collapses to nothing when a piece has no
-     analytic, so unillustrated rows keep exactly their old layout. */
-  grid-template-columns: 138px minmax(0, 1fr) auto;
+  /* date+flags | story | thumbnail. The third column collapses when a piece has no analytic. */
+  grid-template-columns: minmax(148px, 168px) minmax(0, 1fr) auto;
   gap: 24px;
   align-items: start;
   padding: var(--line) 0;
   text-decoration: none;
+  /* Flags must not be clipped when several countries share a story. */
+  overflow: visible;
 }
 
 .feed a:hover .feed-story h2,
@@ -194,10 +195,12 @@ a { color: inherit; }
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0;
+  gap: 6px;
   color: var(--muted);
   font-size: 10px;
   line-height: var(--line);
+  min-width: 0;
+  overflow: visible;
 }
 
 .feed-story h2 {
@@ -221,22 +224,23 @@ a { color: inherit; }
 /* Flags: visual "where" for browsing. PNG images (not emoji) — regional-indicator emoji often
    render as bare letter pairs (AU, GB) on Windows/Linux font stacks. */
 .feed-flags {
-  display: inline-flex;
+  display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 4px;
   line-height: 1;
+  max-width: 100%;
   /* letter-spacing must stay 0 if emoji fallback is ever used — spacing splits RI pairs into AU. */
   letter-spacing: 0;
 }
 .feed-flag-img {
-  display: inline-block;
+  display: block;
+  flex: 0 0 auto;
   width: 20px;
   height: 15px;
   object-fit: cover;
   border-radius: 1px;
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--rule-strong) 50%, transparent);
-  vertical-align: middle;
 }
 .feed-flag-fallback {
   font-size: 14px;

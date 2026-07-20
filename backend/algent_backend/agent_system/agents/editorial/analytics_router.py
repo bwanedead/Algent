@@ -2,13 +2,14 @@
 The analytics router — profile -> AnalyticsPlan. Assesses whether a story would be clearer with an
 analytic (chart / table / computed insight / illustrative image) and emits grounded requests.
 
-Tool-free, one structured call on the nano tier. Honest by doctrine: it may only request analytics
-that AID understanding and are grounded in the profile's actual data (by id) — never invented data,
-never decoration. Most stories warrant nothing, and that is the expected common outcome.
+Tool-free, one structured call on the nano tier. Honest by doctrine: most stories need NOTHING.
+Analytics only when a real quantity or comparison would transfer understanding the prose alone
+cannot. Never decoration, never a research notebook for the machine.
 """
 
 from __future__ import annotations
 
+import re
 from datetime import UTC, datetime
 from typing import Any, TypedDict
 
@@ -24,55 +25,69 @@ from algent_backend.agent_system.foundation.models import ModelSpec
 from algent_backend.agent_system.prompting import UNIVERSAL_AGENT_BASE, compose_system_prompt
 from algent_backend.agent_system.runs.context import AgentRunContext
 
-from .analytics_contracts import AnalyticsPlan
+from .analytics_contracts import AnalyticsPlan, AnalyticsRequest
 
 ARTIFACT_NAME = "analytics_plan.json"
 ANALYTICS_COMPLETED = "analytics.completed"
 GENERATOR = "analytics_router@v1"
 
+# Live failure mode: every run shipped 3 analytics, many of them 2-column "evidence ledgers"
+# (confirmed vs unconfirmed, claim support buckets) that only restate the profile for the machine.
+_META_LEDGER = re.compile(
+    r"confirm(ed)?\s+vs|unconfirm|"
+    r"evidence[- ]grade|evidence type|"
+    r"what we can and cannot|"
+    r"support in claims|claims? read|"
+    r"status in verified|status text|"
+    r"first-party|secondary source|"
+    r"what .{0,60}(does|doesn't|does not).{0,30}prove|"
+    r"bucket|claim.?status|ledger",
+    re.I,
+)
+
 _ROLE = """\
-You are Algent's analytics router. Assess whether this story would be conveyed MORE CLEARLY with an
-analytic, and if so, request exactly what would help — no more.
+You are Algent's analytics router. The only criterion is USEFULNESS for a house reader:
 
-Kinds — pick the form the QUESTION deserves, and PREFER A VISUAL when the data supports one:
-- `chart` — a plot of real data, and the FIRST thing to reach for when there is a real series or
-  comparison. A reader takes a shape in at a glance that a table makes them assemble row by row.
-  The bar is honest data, not lots of it: three real points over time is a chart. What is NOT a
-  chart is numbers that aren't a series at all.
-- `table` — LOWER pressure: use it when values genuinely exist but no visual would add anything
-  (competing figures side by side, a definitional dispute, before/after pairs). A table is the
-  fallback, not the default. Keep it SMALL — a few columns a HOUSE READER can scan. If it needs
-  seven columns it is a data dump, not an analytic; cut it down or make it a chart.
-  NEVER restate a source's own matrix (version→patch, CVE→severity, "score → meaning" legend) —
-  that is the advisory's compliance grid re-gridded. A table must COMPUTE, COMPARE, or REVEAL
-  something a general reader could not get by reading the source; a table only an affected
-  specialist could use fails even when the cells are accurate. Drop it.
-  NEVER emit a key/legend/scoring-scale as its own analytic — fold it into the thing it describes
-  or drop it.
-- `insight` — ANY analysis of the cited data that is not a picture: a computed figure the reader
-  would want (a rate of change, a share, a baseline comparison, a reconciliation of two sources
-  that disagree, a bound on what the numbers can support). This is the widest kind and the most
-  under-used — reach for it whenever the value is in the COMPUTATION, not the visual.
-- `image` — an AI-generated ILLUSTRATION/diagram, never a fabricated photo of a real event/person.
-The worker is a general analysis tool, not a chart generator; the kind is your judgement about what
-would actually help, and "no visual, but this figure computed and stated" is a first-class answer.
+  What visual (if any) would most help them grasp scale, trajectory, place, or comparison —
 
-RULES (honesty first — see spirit.md):
-- Ground every request in the profile's ACTUAL data: cite the claim/source/thread ids that supply
-  it. If the data for a chart is not in the profile, do not request the chart.
-- Request only what AIDS understanding — the key quantity, the trend, the comparison that carries
-  the story. Never decoration, never a chart for its own sake.
-- Prefer none. MOST stories do not need an analytic; returning warranted=false with no requests is
-  the common, correct outcome. Do not manufacture a reason.
+  better than prose alone, using only data that already exists in the profile?
 
-WRITE `title` AND `question` FOR THE READER — they are PUBLISHED, not internal notes. The title
-captions the figure and the question becomes the line under it that says what it shows, so a reader
-meeting the artifact cold knows what they are looking at. Plain language, no pipeline vocabulary,
-no ids. "What share of normal traffic is still moving through Hormuz?" — not "quantify transit
-delta vs baseline per clm refs".
+- If something useful exists: request that one analytic (grounded).
+- If nothing would help, or data is missing: warranted=false. That is success.
+- Never decorate, never fill a quota, never invent numbers or a map without data.
 
-OUTPUT — an AnalyticsPlan: warranted (bool) and, if true, the grounded requests (kind, title,
-question, spec, data_refs by id, rationale).
+UTILITY CLASSES (pick the one that helps most, only when data supports it):
+1. TRAJECTORY — counts or rates over time (is it rising, peaking, slowing?). Prefer a simple
+   line/area chart with clear axes and period.
+2. GEOGRAPHY — the story names subregions (provinces, cities, health zones) a cold reader will
+   not place. Prefer a bar/ranked breakdown by region with counts or rates, OR a simple labeled
+   map/diagram of those named places if location (not inventing a rate) is the point. Never invent
+   boundaries or rates not in the data.
+3. COMPARATIVE SCALE — absolute counts float without a reference. Prefer a small comparison to a
+   baseline the reader can hold (prior peak, share of population, share of a total, another
+   country) when those numbers exist in the profile.
+4. STRUCTURE — a before/after or part-of-whole that prose makes the reader assemble row by row.
+
+YES when one of those classes applies and the numbers (or named places) are in the profile.
+NO when prose is enough; data is too thin; the ask would be an evidence notebook (confirmed vs
+unconfirmed, claim grades); or specialist matrices / legends.
+
+Kinds (only if useful):
+- `chart` — preferred for trajectory, ranked regional breakdowns, and comparisons.
+- `table` — only a few real quantities (never status/evidence ledgers).
+- `insight` — one computed figure or tight comparison, not a multi-row claim essay.
+- `image` — labeled orientation diagram / simple map of named places only when geography is the
+  aid and you are not inventing rates; never decoration.
+
+Reader clarity is part of usefulness. PUBLISHED fields:
+- `title`: what is measured (plain words).
+- `question`: what this shows — quantity/comparison + why it helps the story.
+- `spec`: how to build it so a cold reader can read axes/units without reverse-engineering.
+
+Ground every request in profile data ids. Prefer zero or one request.
+
+OUTPUT — AnalyticsPlan: warranted=false when nothing useful; otherwise the single best grounded
+request (or the minimal set if two distinct utilities truly need separate figures).
 """
 
 SYSTEM_PROMPT = compose_system_prompt(UNIVERSAL_AGENT_BASE, NEWSROOM_SYSTEM_MAP, doctrine("spirit"), _ROLE)
@@ -112,19 +127,40 @@ def _message(profile: SignalProfile) -> str:
         "- claims: " + ", ".join(f"{c.id} ({c.salience})" for c in profile.claim_ledger),
         "- sources: " + ", ".join(s.id for s in profile.source_ledger),
     ]
+    # Researcher flags are optional hints only — never a quota to fill.
     flags = profile.data_notes + profile.visual_opportunities
     return "\n".join([
         f"# ASSESS FOR ANALYTICS — {profile.id}",
         "",
         "## Addressable data ids (ground any request in these)",
         *ids,
-        *(["", "## The researcher already flagged:", *[f"- {f}" for f in flags]] if flags else []),
+        *(["", "## Optional researcher notes (not a mandate to chart):",
+           *[f"- {f}" for f in flags]] if flags else []),
         "",
         render_briefing(profile),
         "",
-        "TASK: Would an analytic make this story clearer? If so, emit grounded AnalyticsRequests "
-        "(cite data ids). If not — the common case — return warranted=false. No decoration.",
+        "TASK: Decide only by usefulness. If a real quantity/series/comparison would help a "
+        "house reader more than prose, request it with a title that names what is measured and a "
+        "question that states what the figure shows. Otherwise warranted=false. Never evidence "
+        "ledgers or claim-status tables. Zero is a normal success.",
     ])
+
+
+def _is_reader_facing(req: AnalyticsRequest) -> bool:
+    """Drop research-notebook analytics that restated the claim ledger as a 2-column status grid.
+
+    Soft doctrine alone still shipped these every run; this is the mechanical floor.
+    """
+    blob = " ".join(filter(None, (req.title, req.question, req.spec, req.rationale)))
+    if _META_LEDGER.search(blob):
+        return False
+    # Status-grid tables: kind table/insight + claim-grade vocabulary without a real quantity ask.
+    if req.kind in ("table", "insight"):
+        grades = bool(re.search(r"\b(confirmed|unconfirmed|likely|speculative|snippet)\b", blob, re.I))
+        meta = bool(re.search(r"\b(claim|evidence|status|first-party|secondary)\b", blob, re.I))
+        if grades and meta:
+            return False
+    return True
 
 
 def _finalize(plan: AnalyticsPlan, profile: SignalProfile, model: str) -> AnalyticsPlan:
@@ -134,9 +170,14 @@ def _finalize(plan: AnalyticsPlan, profile: SignalProfile, model: str) -> Analyt
     valid = {x.id for x in (*profile.claim_ledger, *profile.source_ledger, *profile.threads)}
     requests = [r.model_copy(update={"data_refs": [d for d in r.data_refs if d in valid]}) for r in requests]
     requests = [r for r in requests if r.data_refs]  # a request grounded in nothing is not a request
+    requests = [r for r in requests if _is_reader_facing(r)]
+    note = plan.note
+    if plan.requests and not requests:
+        note = (note + " | dropped non-reader-facing / ungrounded analytics").strip(" |")
     return plan.model_copy(update={
         "id": f"analytics_{profile.id}", "profile_id": profile.id,
         "warranted": bool(requests) and plan.warranted, "requests": requests,
+        "note": note,
         "generator": GENERATOR, "model": model, "generated_at": datetime.now(UTC).isoformat(),
     })
 

@@ -28,12 +28,13 @@ INTERROGATE the treatment:
 - FRAME: Is the chosen frame the most reality-revealing vantage, or just the first plausible
   one? Is there a better one (name it in `better_frame`)? Does the frame flatter, excite,
   smuggle a premise, or sit too narrow to hold every serious side? (see framing.md)
-- FOCAL EVENT / PROCEDURAL-SURFACE CAPTURE (blocking when clear): Is `core_understanding` /
-  `reader_question` about the load-bearing world event (outage, vote, breach…), or did the
-  treatment orbit a hearing, testimony, advisory, or presser that only *discusses* that event?
-  Prefer the event as center of mass unless the procedure itself is the news (framing.md).
+- FOCAL THING / PROCEDURAL-SURFACE CAPTURE (blocking when clear): Is `core_understanding` /
+  `reader_question` about the load-bearing reality (what changed, what is true, what is at
+  stake), or did the treatment orbit a hearing, statement, advisory, paper, or presser that only
+  *discusses* or *reacts to* it? Prefer that reality as center of mass unless the surface act
+  itself is the news (framing.md).
 - SOURCE-AUDIENCE CAPTURE (blocking when clear): Is `reader_question` aimed at the HOUSE
-  reader (spirit.md) or at the source's professional audience (sysadmin, clinician, trader)?
+  reader (spirit.md) or at the source's professional audience (operator, clinician, trader, lawyer)?
   Is the frame "what operators must do next" when the newsroom's job is "what happened and
   what it means"? Advisory / label / filing sources arrive pre-aimed at insiders — adopting
   their frame silently adopts their reader (framing.md). Block promotion if the honest answer

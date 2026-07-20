@@ -31,27 +31,27 @@ view from above the field ("here are the forces actually in play, and here is wh
 collide"); sometimes it is close and particular (one case that carries the whole). Let the
 material decide.
 
-## First: name the focal event (the center of mass)
+## First: name the focal thing (the center of mass)
 Before choosing a "lens," step back from the profile's most recent surface and ask: **what is
-the big deal for the house reader — the world event, failure, decision, or change that
+the big deal for the house reader — the change, fact, decision, structure, or event that
 deserves the reporting's center of mass?**
 
 That focal thing is not always the newest procedural layer in the dossier. Profiles often
-arrive via a **testimony, hearing, advisory, press conference, or earnings call** that
-*discusses* an earlier event. The procedure can be useful evidence; it is often **not** the
-story. A live miss: an outage that took down a large share of a national mobile network and
-touched emergency calls was framed as "the CEO told a Senate inquiry…" — the testimony became
-the headline, and the reader had to infer why the outage itself mattered.
+arrive via a **hearing, testimony, advisory, press conference, paper release, earnings call,
+or secondary write-up** that *discusses, reacts to, or updates* something else. The procedure
+or reaction can be useful evidence; it is often **not** the story. The same miss has many
+shapes: the world event is treated as background while the microphone, memo, or recap is
+treated as the piece.
 
-**Prefer the load-bearing event as the frame's subject** when the procedure mainly *reveals*
-or *updates* it: the outage, the vote, the breach, the strike, the court order — then fold the
-hearing/testimony/advisory in as how we know more, not as the parallax. Prefer the procedure
-as subject only when the procedure *is* the news (a vote of no confidence, an indictment, a
-treaty signing).
+**Prefer the load-bearing reality as the frame's subject** when the latest surface mainly
+*reveals* or *comments on* it — then fold the hearing, statement, or paper in as how we know
+more or what is contested, not as the parallax. Prefer the surface itself as subject only when
+**that act is the news** (a vote of no confidence, an indictment handed down, a treaty signed,
+a policy formally adopted or killed).
 
 This is not manufacturing a narrative. It is choosing which true structure the reader is asked
-to build: the one that answers *"what happened that I should understand, at what scale, and
-why it matters"* — not merely *"who commented most recently."*
+to build: the one that answers *"what should I understand about the world, at what scale, and
+why it matters"* — not merely *"who spoke or published most recently."*
 
 **There is no catalog of allowed frames.** Candidate frames are never selected from a preset
 menu or taxonomy — they are *discovered from the material itself*: the profile's actual
@@ -81,17 +81,16 @@ chosen because it is:
   when the decline is the thing in question, not a given);
 - **source-audience capture** — the primary source is an advisory, label, filing, or vendor
   bulletin written *for insiders*, and the frame quietly adopts *that* reader along with the
-  facts. The source's audience is **not** your audience (see spirit.md: who we write for). A
-  CISA alert is aimed at sysadmins; an FDA label at clinicians; a Form 10-K at analysts. If
-  your frame is "what operators must do next," you have inherited the source's job, not found
-  the newsroom's vantage. The mild form was a dosing paragraph that only a doctor needed; the
-  full form is a whole piece whose `reader_question` is *"are my servers in scope, and what do
-  I do beyond patching?"* — written for CISA's reader, not ours. **Reject that frame.** Re-aim
-  at the house reader: what happened, who it touches, why it matters outside the profession;
-- **procedural-surface capture** — the frame foregrounds the hearing, testimony, advisory
-  release, or presser because that is what the profile is richest in, while the **world event**
-  that makes it matter sits in the background. The reader is left reconstructing scale and
-  significance themselves. Prefer the event; use the procedure as evidence and update.
+  facts. The source's audience is **not** your audience (see spirit.md: who we write for).
+  Advisories, clinical labels, and securities filings are pre-aimed at professionals doing a
+  job. If your frame is "what the specialist must do next," you have inherited the source's job,
+  not found the newsroom's vantage. **Reject that frame.** Re-aim at the house reader: what
+  happened, who it touches, why it matters outside the profession;
+- **procedural-surface capture** — the frame foregrounds the hearing, statement, advisory,
+  paper drop, or presser because that is what the profile is richest in, while the **load-bearing
+  reality** (what changed, what is true, what is at stake) sits in the background. The reader is
+  left reconstructing significance themselves. Prefer that reality as subject; use the surface
+  as evidence and update when it is not itself the news.
 
 If a frame requires the reader to accept a contestable premise just to follow the story, it is
 steering, not revealing. Prefer the frame the reader could inhabit whatever their priors.
