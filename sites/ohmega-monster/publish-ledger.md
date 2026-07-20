@@ -79,3 +79,10 @@ caveats: needs_hedging (1 findings)
 analytics: 3 produced, 0 escapes
 cost: ~$0.0000
 run: 0011__9e225e84-823d-4713-9c30-4dcb7e2e954c
+
+### PUBLISH ebola-outbreak-in-eastern-dr-congo-still-expanding-despite-r-c00a85 — 2026-07-20
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 0 produced, 0 escapes
+cost: ~$0.0000
+run: 0013__4de0ba5a-074c-47f1-8a73-baa842456fc2
