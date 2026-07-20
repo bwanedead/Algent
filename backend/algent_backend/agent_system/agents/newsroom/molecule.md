@@ -53,6 +53,13 @@ stakes so carefully that the reader must invent them. Concrete facts that carry 
 large, who is affected, what depends on what, what is irreversible) *are* the significance when
 ordered and supported correctly (spirit + style: no self-narration).
 
+**Give the reader reference points for magnitude.** Bare large counts and place-names without
+anchors force the reader to invent scale. When the evidence allows, include at least one of:
+trajectory (rising/falling vs when), share of a total, comparison to a prior peak or similar
+event, population or exposed population, or geographic concentration (where most of the harm
+sits). Subregions a house reader will not know need light orientation — not a geography lecture,
+but enough that which places matter (and which is worst) is holdable.
+
 ## Load-bearing concepts and their dependencies
 Decompose the core understanding into the **concepts the reader must build** to hold it, and
 make the dependencies explicit:

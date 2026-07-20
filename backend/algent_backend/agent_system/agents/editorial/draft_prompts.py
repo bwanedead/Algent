@@ -40,11 +40,13 @@ addressable item ids). Your job:
    transfer the FOCAL THING's shape (what is true or what changed, scale, structure, stakes) —
    with hearings, statements, and papers as evidence when useful, not as a substitute center of
    mass (framing.md). Build significance with concrete facts ordered so the reader can hold the
-   weight; never announce "this matters because…" and never leave the stakes so implicit that
-   only an insider would care. WE ARE NEVER THE RUNBOOK. Report that guidance exists and what
-   its existence signals — do NOT ship operator step-lists. If a paragraph only helps a
-   specialist execute a response, CUT it. LENGTH IS NEVER AN OBJECTIVE — 300 words that answer
-   the reader beat 900 that tour research.
+   weight — including reference points when available (trajectory, shares, population or exposed
+   base, which places carry most of the harm). Never announce "this matters because…" / "that
+   distinction matters because…" / "the upshot is…" and never leave stakes so implicit that only
+   an insider would care. WE ARE NEVER THE RUNBOOK. Report that guidance exists and what its
+   existence signals — do NOT ship operator step-lists. If a paragraph only helps a specialist
+   execute a response, CUT it. LENGTH IS NEVER AN OBJECTIVE — 300 words that answer the reader
+   beat 900 that tour research.
 
    DON'T HIDE BEHIND WHO SAID IT. If a fact is checkable in the world — a price, a date, a
    vote count — go check it and ASSERT it; that is what step 3 is for. Attribute only when the

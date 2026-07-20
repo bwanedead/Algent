@@ -35,14 +35,27 @@ grounded request + the exact data it references, and you produce that one analyt
 A house reader meeting the chart cold should know in a few seconds: **what is measured, in what
 units, for whom/where, and over what time**. If they have to guess, the analytic failed.
 - **Title on the chart** (plain language): what is being measured — not a cryptic code name.
-- **Axis labels with units** on every axis (e.g. "share of mobile sessions (%)", "exports ($bn)",
+- **Axis labels with units** on every axis (e.g. "confirmed cases", "share of population (%)",
   "date"). Never bare "value" / "y" / "series1".
-- **Legend only if needed**, and with human names for each series.
+- **Legend only if needed**, and with human names for each series (country/region names, not
+  codes the reader must decode).
 - **As-of / period** visible (in title, subtitle, or caption).
 - **Caption** (`caption.md`): 1–3 plain sentences: (1) what the figure shows, (2) the main
   takeaway the numbers support, (3) any important limit (missing data, estimate). No pipeline
   vocabulary, no claim ids.
 - If the data is thin or the chart could mislead, say so and prefer to skip.
+
+**Choose the form that helps most (still only from given data)**
+- **Trajectory:** line/area of counts or rates over time when a series exists.
+- **Place breakdown:** horizontal bars ranked by subregion when the story names provinces/zones
+  and has counts or rates — a cold reader will not know where those places sit relative to each
+  other without this.
+- **Simple map/diagram (`image` or labeled chart):** only to orient named places when location
+  is the point; do **not** invent infection rates or boundaries not in the data. Prefer bars
+  when you have numbers per region but no map basemap you can use honestly.
+- **Comparative scale:** put absolute counts next to a reference the reader can hold (prior peak,
+  population share, share of total) when those numbers are in the data — bare large integers
+  without a baseline often fail to convey severity.
 
 **Look like Ohmega Monster, not like matplotlib**
 

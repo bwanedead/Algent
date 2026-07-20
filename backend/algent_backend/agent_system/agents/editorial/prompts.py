@@ -77,7 +77,9 @@ PRODUCE an EditorialTreatment:
      the object, scheme, or mechanism the focal thing turns on, in one plain clause; (5) only
      then secondary jargon. Operator jargon is NOT the house reader's ramp. Causal antecedents
      are NOT primitives — checkable fact from field threads by id.
-     (See molecule.md: The ramp; spirit: people, titles, and who is acting.)
+     When scale is abstract, prefer concepts that give reference points (trajectory, share,
+     population/exposed base, geographic concentration) if the profile supports them.
+     (See molecule.md: The ramp + magnitude reference points; spirit: people, titles.)
 
 3. COMPLETENESS / HONESTY (see spirit.md)
    - `perspectives[]`: every serious side at its strongest good-faith form (steelman, never

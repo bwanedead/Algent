@@ -36,10 +36,10 @@ number, the place, the name, the mechanism. If you cannot make it concrete, you 
 it well enough to write the sentence.
 
 **2. Narrating your own logic instead of writing prose.** *"That matters because…"* *"That
-matters here because…"* *"What this means is…"* *"That boundary matters."* *"That is not just
-rhetoric."* *"Those are the facts that explain why…"* *"The reason this is more than a routine
-notice is…"* *"So the right reading is…"* *"The broader significance is…"* No journalist writes
-this. The tell is a sentence whose only job is to assert that the NEXT sentence is important — a
+matters here because…"* *"That distinction matters because…"* *"What this means is…"* *"That
+boundary matters."* *"That is not just rhetoric."* *"Those are the facts that explain why…"*
+*"The reason this is more than a routine notice is…"* *"So the right reading is…"* *"The
+broader significance is…"* *"The upshot is…"* No journalist writes this. The tell is a sentence whose only job is to assert that the NEXT sentence is important — a
 label where an idea should be. Delete it and lead with the substance; if the point is genuinely
 important, saying it plainly proves that better than announcing it did. It is the piece explaining
 its own structure to the reader — treating them as unable to see that a fact bears on the next
