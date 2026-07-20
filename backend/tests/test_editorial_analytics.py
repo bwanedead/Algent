@@ -80,6 +80,39 @@ def test_router_drops_a_request_grounded_in_nothing() -> None:
     assert p["warranted"] is False and p["requests"] == []
 
 
+def test_router_drops_meta_evidence_ledger_tables() -> None:
+    # Live failure: every article got a 2-col "confirmed vs unconfirmed" / claim-support notebook.
+    plan = AnalyticsPlan(id="", warranted=True, requests=[
+        AnalyticsRequest(
+            id="", kind="table",
+            title="Confirmed vs unconfirmed retaliation levers",
+            question="Which tools are confirmed first-party vs secondary?",
+            spec="two-column evidence type status grid",
+            data_refs=["c1"],
+            rationale="reconcile claim status for the reader"),
+        AnalyticsRequest(
+            id="", kind="insight",
+            title="What the exemption rationale does and doesn't prove",
+            question="Does the claim ledger support inflation targeting?",
+            spec="bucket support in claims",
+            data_refs=["c1"],
+            rationale="evidence-grade share of claims"),
+        AnalyticsRequest(
+            id="", kind="chart",
+            title="Share of exports at risk",
+            question="What share of exports faces the tariff?",
+            spec="bar of 18% vs exempt categories",
+            data_refs=["c1"],
+            rationale="shows scale"),
+    ])
+    graph = ar.build_analytics_router_graph(_ctx(_Model(plan), []), model_spec=_spec())
+    p = graph.invoke({"profile": _profile().model_dump()})["analytics_plan"]
+    assert p["warranted"] is True
+    assert len(p["requests"]) == 1
+    assert p["requests"][0]["kind"] == "chart"
+    assert "Share of exports" in p["requests"][0]["title"]
+
+
 def test_router_no_profile_is_not_warranted() -> None:
     graph = ar.build_analytics_router_graph(_ctx(_Model(AnalyticsPlan(id="x")), []), model_spec=_spec())
     assert graph.invoke({})["analytics_plan"]["warranted"] is False

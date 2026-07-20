@@ -156,7 +156,9 @@ needs_verification when it isn't there. Refusing to manufacture certainty is suc
 
 ALSO
 - omissions / open_questions: what's missing and unresolved (intellectual honesty).
-- data_notes / visual_opportunities: analytics the story would benefit from — FLAG, don't compute.
+- data_notes / visual_opportunities: ONLY if the evidence holds a real series/comparison a
+  reader would need visualized — FLAG, don't compute. Empty is the common correct case; do not
+  invent chart ideas to fill fields.
 - derived_leads: adjacent stories worth their own future attention (backfeed, not a detour).
 - output_recommendations: what this profile can feed (article / radar / brief / chart / …).
 - Narrate one short line before each tool call and after results, for the run timeline.
