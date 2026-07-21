@@ -111,3 +111,10 @@ caveats: verified (0 findings)
 analytics: 0 produced, 0 escapes
 cost: ~$0.0000
 run: 0015__333337a0-04ef-42f2-95dd-e79b55397cc1
+
+### PUBLISH lebanon-begins-pilot-zone-deployments-in-three-southern-vill-dd6593 — 2026-07-21
+status: publishable  ·  draft: grounded_with_caveats  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 1 produced, 0 escapes
+cost: ~$0.0000
+run: 0016__8bc0fca9-f4e5-4881-8e1f-f3e91907be60
