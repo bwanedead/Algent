@@ -18,7 +18,7 @@ from pathlib import Path
 
 import yaml
 
-_DEFAULT_LIMIT = 12       # article cooldown: how many recent pieces to hold in view
+_DEFAULT_LIMIT = 15       # article cooldown: how many recent pieces to hold in view
 _DEFAULT_DAYS = 10        # time cooldown: how long a story stays "just covered"
 
 

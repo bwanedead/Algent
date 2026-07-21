@@ -87,13 +87,14 @@ rail's auto-publish writes and pushes through it so the operator's main working 
 touched mid-run. It's created on demand; if it's missing, the publish step recreates it. You can
 operate on it directly with `git -C .site-live ...` as above. Don't delete it mid-publish.
 
-## Auto-publish and the kill switch
+## Auto-publish (live by default)
 
-With `ALGENT_SITE_PUBLISH=1` in `backend/.env`, a rail run that earns `publishable` publishes
-itself: the rail writes the article into `.site-live/` and pushes to `origin/site-live`. Off (the
-default), runs stage the article into the working tree but do not push. Either way, the branch
-rule holds — the rail is the sanctioned second writer of `site-live`, and it only ever writes
-content/assets/ledger, never code.
+Live publish is **ON by default**. A rail run that produces an eligible article publishes
+itself: write into `.site-live/` and push to `origin/site-live` → Vercel. You do not re-approve
+each piece. To **pause** shipping without a code change, set `ALGENT_SITE_PUBLISH=0` (stage only).
+
+Either way, the branch rule holds — the rail is the sanctioned second writer of `site-live`, and
+it only ever writes content/assets/ledger, never code.
 
 ## If it ever diverges again — recovery
 

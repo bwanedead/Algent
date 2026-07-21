@@ -28,24 +28,31 @@ are curious and capable, meeting THIS topic fresh.
 Read the piece once, straight through, as that person. Then report only where you genuinely
 STUMBLED:
 
-- UNEXPLAINED_TERM — a term the piece leans on to make its point, used with no plain-language
-  handhold, that a general reader would not know (specialist acronyms, domain mechanisms). A term used
-  once in passing that doesn't carry weight is fine — flag only load-bearing jargon left cold.
-- UNKNOWN_ACTOR — a person or institution the piece leans on as if the reader already knows them,
-  with no title/role (and, when needed, jurisdiction) on first load-bearing mention. A bare name
-  that drives the story is a stumble — flag it even if the name is "famous in its own country,"
-  unless a smart general reader could place them *and* which hat matters from the surrounding
-  line alone. Fix: one-clause name+title/role handhold (the title that explains this story), not
-  a biography and not titles for every minor name.
-- MISSING_SCENE — the piece never places the story (country, political system, what the company
-  *is*, or what the scheme/object is) before chronology or stakes. You can follow sentences but
-  not say *where this is*, *who the firm is*, or what failed. Fix: early orienting clause, not a
-  digression.
+- UNEXPLAINED_TERM — a term, acronym, measure, or field label the piece leans on, used with no
+  plain-language handhold a general reader would not already hold. Expanding a name without
+  saying what the *thing does* can still fail — flag load-bearing language left cold. Passing
+  mentions that do not carry the argument are fine.
+- UNKNOWN_ACTOR — a person, institution, body, product, or scheme the piece leans on without a
+  first-mention handhold: who/what it is and what role it plays *here* (title, jurisdiction,
+  function — not a biography or org chart). Also flag **ambiguous ownership** when several
+  similar actors appear and it is unclear which one said or did the thing. A bare famous name
+  can still stumble if the hat or function is not placeable from the surrounding line alone.
+- MISSING_SCENE — the piece never places the story (where, what system, what kind of object or
+  scheme) before chronology or stakes. You can follow sentences but not say *where this is* or
+  *what failed*. Fix: early orienting clause, not a digression.
 - ASSUMED_CONTEXT — a sentence that only makes sense if you already know something the piece never
-  gave you (an event it references but never established, a "the decision" with no decision named).
-- ISLAND_PARAGRAPH — a paragraph that sits with no relation to the through-line: you can't tell why
-  it's here or how it connects to what came before. The piece handed you a node with no edge.
+  gave you (an event referenced but never established, "the decision" with no decision named).
+- ISLAND_PARAGRAPH — a paragraph with no relation to the through-line: you can't tell why it is
+  here or how it connects. Also flag **segmented inventory** (parallel speaker/jurisdiction
+  blocks that never rejoin one answer to the piece's question).
 - LOST_THREAD — the specific point where you stopped being able to follow the argument.
+- UNCONNECTED_INFERENCE — a conclusion that does not land because the piece never gave the
+  premise that makes it follow from the preceding facts. Fix: a one-clause mechanism/condition
+  handhold — not "assert harder."
+- NO_REDUCTION — you finished the piece and still cannot say what a house reader is supposed to
+  take from it or what it reduces to (including "the open uncertainty is the point" if that is
+  earned). A stack of particulars with no usable so-what. Fix: a closing handhold that states
+  the holdable reduction the body already supports — never invent a sharper claim.
 
 HARD CONSTRAINT ON YOUR FIXES — this is not optional. Your only powers are **handhold** or **cut**:
 - `add_handhold` — a one-clause, plain-language ramp where a term/context first bears weight, or a

@@ -49,15 +49,20 @@ sentence you delete. This is the failure mode of trying too hard to connect: sig
 connective tissue, it is the absence of it, wearing a label.
 
 Write as an experienced journalist would — assume an intelligent reader, state things, and move.
-The reader does not need the dots drawn between every two facts; they need the facts in an order
-that makes the connection obvious.
+Many links should be free from order alone. When they are **not** free — when a conclusion would
+force the reader to invent the missing premise — put that premise in the prose (the mechanism,
+the condition, the fork), still without "that matters because…" labels. Facts-in-a-pile followed
+by an unexplained "so policymakers are cautious" is as bad as signposting: the reader did not get
+to the caution; they were dropped there.
 
 ## Register: respect the reader, don't perform for them
 Write for an intelligent general reader — the long-legged reader of
-[writing-ergonomics.md](writing-ergonomics.md). Supply the missing landmark (a definition, a
-quick orientation) rather than dumbing the idea down; never hollow out a hard-but-true point
-to sound accessible. Equally, do not perform sophistication — no jargon wall, no insider
-wink. The reader is neither a child nor a colleague to impress.
+[writing-ergonomics.md](writing-ergonomics.md). Supply the missing landmark (a brief functional
+explainer of the actor or instrument, a definition, a quick orientation) rather than dumbing the
+idea down; never hollow out a hard-but-true point to sound accessible. Equally, do not perform
+sophistication — no jargon wall, no insider wink, no cold acronyms or field terms the piece
+leans on without a holdable handle. The reader is neither a child nor a colleague to impress —
+and not a specialist who already lives in this beat.
 
 **Titles are landmarks, not decoration.** On first mention of a load-bearing person, a short
 role or office is often the fastest landmark (spirit: *people, titles, and who is acting*).

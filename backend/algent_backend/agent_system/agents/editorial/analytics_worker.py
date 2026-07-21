@@ -1,10 +1,10 @@
 """
 The analytics worker — fulfills one grounded ``AnalyticsRequest`` into a real artifact.
 
-The router decides a chart/table/insight/illustration would help and emits a request grounded in
-the profile's data (by id). This stage BUILDS it, by handing the request + exactly its cited data
-to a sandboxed grok-build subprocess that draws the visual inside ``analytics_workspace/`` and
-nothing else (see that dir's ``AGENTS.md`` for the worker's doctrine).
+The router decides a chart/table/insight/illustration would help and emits a request — either
+grounded in profile claim ids, or marked ``may_source`` so this stage may fetch public data at
+figure time (profile and analytics are separate concerns). This stage BUILDS it via a sandboxed
+grok-build subprocess inside ``analytics_workspace/`` (see that dir's ``AGENTS.md``).
 
 Integrity is the HARNESS's job, not the worker's — mechanical, not doctrinal (so a misbehaving
 subprocess can't launder its way past it):
@@ -38,6 +38,7 @@ from algent_backend.agent_system.runs.context import AgentRunContext
 
 from .analytics_contracts import (
     AI_ANALYTIC_LABEL,
+    AI_ANALYTIC_LABEL_SOURCED,
     AnalyticsArtifact,
     AnalyticsPlan,
     AnalyticsRequest,
@@ -118,9 +119,11 @@ def default_workspace() -> Path:
 # ── the grounded hand-off ────────────────────────────────────────────────────────────────────
 
 def _grounded_data(request: AnalyticsRequest, profile: SignalProfile) -> tuple[dict[str, Any], list[Claim], str]:
-    """Resolve the request's ``data_refs`` to the profile's ACTUAL items — the only data the worker sees.
+    """Build the worker hand-off payload from profile refs and/or a source-at-analytics-time brief.
 
-    Returns (payload for data.json, the cited claim objects for the figure check, the as-of date).
+    Profile-held numbers arrive as resolved claims/sources. Source-at-time asks arrive with
+    ``may_source`` + ``source_hint`` so the worker can fetch public data. Returns
+    (payload for data.json, cited claim objects for the figure check, the as-of date).
     """
     claims_by_id = {c.id: c for c in profile.claim_ledger}
     sources_by_id = {s.id: s for s in profile.source_ledger}
@@ -144,7 +147,9 @@ def _grounded_data(request: AnalyticsRequest, profile: SignalProfile) -> tuple[d
     payload = {
         "request_id": request.id, "kind": request.kind, "title": request.title,
         "question": request.question, "spec": request.spec, "rationale": request.rationale,
+        "may_source": bool(request.may_source), "source_hint": request.source_hint,
         "as_of": profile.as_of, "claims": claims, "threads": threads, "sources": sources,
+        "story_title": profile.title, "story_summary": (profile.summary or "")[:600],
     }
     return payload, cited_claims, profile.as_of
 
@@ -152,19 +157,44 @@ def _grounded_data(request: AnalyticsRequest, profile: SignalProfile) -> tuple[d
 def _brief(request: AnalyticsRequest) -> str:
     """The human/agent-readable request the worker reads alongside data.json."""
     names = _VISUAL_NAMES.get(request.kind, ("output.md",))
+    if request.may_source:
+        data_rules = [
+            "\n## Your job (source-at-analytics-time)",
+            "Build EXACTLY this one analytic. Profile and analytics are separate: the series may",
+            "NOT already be in data.json. You MAY fetch public data described by `source_hint`",
+            f"in data.json / below — **Source hint:** {request.source_hint or request.spec}",
+            "",
+            "Rules when sourcing:",
+            "- Fetch only what the hint names (official dashboards, statistical releases, primary",
+            "  public tables). Prefer primary publishers over secondary rewrites.",
+            "- Put every plotted row in `data.csv` and name the publisher + URL in `caption.md`.",
+            "- NEVER invent, extrapolate, or smooth numbers. If the series is not findable or is",
+            "  contested, write `SKIPPED.md` with the reason — do not improvise a chart.",
+            "- You may use any claims/sources already in data.json as context for the story, but",
+            "  the plotted series must come from real fetched rows (or profile claims if they",
+            "  already hold the series).",
+        ]
+    else:
+        data_rules = [
+            "\n## Your job",
+            "Build EXACTLY this one analytic, using ONLY the data in `data.json` (already fetched",
+            "and cited — do not go find more). Follow the doctrine in `AGENTS.md`.",
+        ]
     return "\n".join([
         f"# Analytics request — {request.id} ({request.kind})",
         f"\n**Title (on the figure):** {request.title}",
         f"**What this shows (reader explainer):** {request.question}",
         f"**Build:** {request.spec}",
         f"**Why it helps:** {request.rationale}",
-        "\n## Your job",
-        "Build EXACTLY this one analytic, using ONLY the data in `data.json` (already fetched and",
-        "cited — do not go find more). Follow the doctrine in `AGENTS.md`.",
+        *data_rules,
         "",
         "The figure must be self-explanatory to a cold house reader:",
         "- Chart title = what is measured (plain words).",
         "- Every axis labeled with units; series named in human language (no series1/y).",
+        "- Multi-series: use the AGENTS.md hue-contrast palette (amber + cyan + mauve) — never two",
+        "  near-identical browns. Legend with human series names.",
+        "- If a real gap exists in the series, leave it and explain it in the caption; if the public",
+        "  series is continuous, fetch the missing period — do not invent points.",
         "- Period or as-of visible on the figure or in the caption.",
         f"- `{_CAPTION_NAME}`: 1–3 sentences — what it shows, the main takeaway, any limit.",
         "  No claim ids, no pipeline jargon.",
@@ -178,7 +208,15 @@ def _brief(request: AnalyticsRequest) -> str:
     ]) + "\n"
 
 
-def _prompt() -> str:
+def _prompt(*, may_source: bool = False) -> str:
+    if may_source:
+        return (
+            "Read AGENTS.md, REQUEST.md, and data.json in this folder. Build the one requested "
+            "analytic. You may fetch public data named by source_hint / REQUEST.md — put every "
+            "plotted row in data.csv and name the publisher in caption.md. Never invent numbers. "
+            "Write the output files REQUEST.md asks for. Do not install heavy packages, do not "
+            "write outside this folder."
+        )
     return ("Read AGENTS.md, REQUEST.md, and data.json in this folder, then build the one requested "
             "analytic from ONLY the data in data.json and write the output files REQUEST.md asks for. "
             "Do not fetch anything, do not install heavy packages, do not write outside this folder.")
@@ -341,9 +379,15 @@ def _caption(
             label = (s.publisher or s.title or "").strip()
             if label and label not in pubs:
                 pubs.append(label)
-    tail = [AI_ANALYTIC_LABEL + "."]
+    # For sourced analytics the worker caption should already name the publisher; still stamp
+    # the AI label so the figure never passes as a pre-existing official graphic.
+    label = AI_ANALYTIC_LABEL_SOURCED if request.may_source and not cited_claims else AI_ANALYTIC_LABEL
+    tail = [label + "."]
     if pubs:
         tail.append(f"Source: {', '.join(pubs[:3])}.")
+    elif request.may_source and request.source_hint:
+        # Soft provenance when profile held no source ledger rows for this figure.
+        tail.append(f"Sourced for this figure ({_clean(request.source_hint)[:120]}).")
     if as_of:
         tail.append(f"As of {as_of}.")
     return f"{body} — {' '.join(tail)}".strip()
@@ -351,12 +395,22 @@ def _caption(
 
 # ── the runner (injectable so tests never spawn a subprocess) ─────────────────────────────────
 
-def _grok_runner(prompt: str, folder: Path, *, timeout: float) -> tuple[bool, str]:
-    """Run grok-build headless, cwd pinned to the scratch folder. Returns (ok, tail-of-output)."""
+def _grok_runner(
+    prompt: str, folder: Path, *, timeout: float, allow_web: bool = False,
+) -> tuple[bool, str]:
+    """Run grok-build headless, cwd pinned to the scratch folder. Returns (ok, tail-of-output).
+
+    ``allow_web`` is only True for may_source analytics requests — profile-held charts stay offline.
+    """
+    cmd = [
+        "grok", "-p", prompt, "--cwd", str(folder), "--output-format", "json",
+        "--always-approve", "--no-memory",
+    ]
+    if not allow_web:
+        cmd.append("--disable-web-search")
     try:
         proc = subprocess.run(
-            ["grok", "-p", prompt, "--cwd", str(folder), "--output-format", "json",
-             "--always-approve", "--disable-web-search", "--no-memory"],
+            cmd,
             capture_output=True, text=True, timeout=timeout,
             # grok emits UTF-8 (smart quotes / emoji); decode as such so Windows' cp1252 locale
             # can't crash the decode. errors='replace' keeps a garbled tail from ever raising.
@@ -434,17 +488,29 @@ def fulfill_request(
     timeout: float = _TIMEOUT_S,
     version: str = "",
 ) -> AnalyticsArtifact:
-    """Build one grounded request into an artifact, with the harness owning integrity end-to-end."""
+    """Build one request into an artifact, with the harness owning integrity end-to-end.
+
+    Accepts profile-grounded requests (``data_refs``) and/or source-at-analytics-time requests
+    (``may_source`` + ``source_hint``). The two paths can combine; neither invents numbers.
+    """
     workspace = workspace or default_workspace()
     payload, cited_claims, as_of = _grounded_data(request, profile)
+    ai_label = (
+        AI_ANALYTIC_LABEL_SOURCED
+        if request.may_source and not request.data_refs
+        else AI_ANALYTIC_LABEL
+    )
     result = AnalyticsArtifact(request_id=request.id, kind=request.kind, title=request.title,
                                question=request.question,
-                               data_refs=request.data_refs, as_of=as_of,
+                               data_refs=request.data_refs, as_of=as_of, ai_label=ai_label,
                                generator=GENERATOR, model=version or "grok-build",
                                generated_at=datetime.now(UTC).isoformat())
 
-    if not request.data_refs:                          # the router should have filtered this; belt-and-suspenders
-        return result.model_copy(update={"status": "failed", "note": "no grounded data_refs"})
+    if not request.data_refs and not (request.may_source and (request.source_hint or request.spec)):
+        return result.model_copy(update={
+            "status": "failed",
+            "note": "no data_refs and not may_source (need profile data or a source hint)",
+        })
 
     folder = workspace / _safe(request.id)
     if folder.exists():
@@ -458,7 +524,10 @@ def fulfill_request(
 
         before_git = _git_status(repo_root)             # tripwire baseline (see _git_status)
         before_store = _store_fingerprint(repo_root)    # + the gitignored stores git can't see
-        ok, tail = (runner or (lambda p, f: _grok_runner(p, f, timeout=timeout)))(_prompt(), folder)
+        prompt = _prompt(may_source=bool(request.may_source))
+        allow_web = bool(request.may_source)
+        ok, tail = (runner or (lambda p, f: _grok_runner(
+            p, f, timeout=timeout, allow_web=allow_web)))(prompt, folder)
 
         removed = _sweep(folder)                        # (2) artifact-type + size sweep
 
@@ -485,12 +554,35 @@ def fulfill_request(
         if visual is None:
             return _finalize(result, status="failed", swept=removed, note="no output artifact found")
 
-        # (3) figure check — the visual analog of unverified_prose_figures.
+        # (3) figure check — profile-held path: numbers must appear in cited evidence.
+        # Source-at-time path: require a non-empty data table (series is the evidence of record);
+        # claim-substring check would false-fail every newly fetched row.
         data_text = data.read_text(encoding="utf-8", errors="replace") if data else ""
         sources_by_id = {s.id: s for s in profile.source_ledger}
-        unverified = _visual_unverified_figures(data_text, cited_claims, sources_by_id) if data_text else []
-        figure_check = {"checked": bool(data_text), "verified": data_text != "" and not unverified,
-                        "unverified": unverified}
+        if request.may_source and not cited_claims:
+            rows = [ln for ln in data_text.splitlines() if ln.strip()]
+            figure_check = {
+                "checked": bool(data_text),
+                "verified": len(rows) >= 2,  # header + ≥1 data row
+                "unverified": [] if len(rows) >= 2 else ["empty or missing sourced data.csv"],
+                "mode": "sourced",
+            }
+            note = "" if figure_check["verified"] else "sourced analytic produced no data table"
+        else:
+            unverified = (
+                _visual_unverified_figures(data_text, cited_claims, sources_by_id)
+                if data_text else []
+            )
+            figure_check = {
+                "checked": bool(data_text),
+                "verified": data_text != "" and not unverified,
+                "unverified": unverified,
+                "mode": "profile",
+            }
+            note = (
+                ("figure check: numbers not found in cited evidence — " + ", ".join(unverified))
+                if unverified else ""
+            )
 
         # A markdown analytic (table/insight) is INLINED by the publish view, not embedded as an
         # image — so carry its body forward. An image analytic (chart/illustration) has no body.
@@ -511,7 +603,7 @@ def fulfill_request(
             body_md=body_md,
             caption=_caption(request, worker_cap, profile, cited_claims, as_of),
             figure_check=figure_check,
-            note=("figure check: numbers not found in cited evidence — " + ", ".join(unverified)) if unverified else "",
+            note=note,
         )
     finally:
         shutil.rmtree(folder, ignore_errors=True)       # (1)+(4) empty the scratch folder, always

@@ -321,7 +321,7 @@ def test_resolve_lanes_precedence(monkeypatch) -> None:
     assert x_grok_cli.resolve_lanes(("nope",)) == x_grok_cli._DEFAULT_LANES  # all-invalid → default
 
 
-def test_x_native_normalizes_posts(monkeypatch) -> None:
+def test_x_native_probe_search_costs_posts(monkeypatch) -> None:
     from algent_backend.data_ingestion.newsroom.sources import x_native
 
     monkeypatch.setenv("X_BEARER_KEY", "tok")
@@ -330,7 +330,13 @@ def test_x_native_normalizes_posts(monkeypatch) -> None:
         status_code = 200
 
         def json(self):
-            return {"data": [{"id": "9", "text": "Breaking: thing", "public_metrics": {"like_count": 5}}]}
+            return {
+                "data": [{
+                    "id": "9", "text": "Breaking: thing", "author_id": "1",
+                    "public_metrics": {"like_count": 5, "retweet_count": 1},
+                }],
+                "includes": {"users": [{"id": "1", "username": "wire"}]},
+            }
 
     class _Client:
         def get(self, url, params=None):
@@ -340,7 +346,48 @@ def test_x_native_normalizes_posts(monkeypatch) -> None:
             pass
 
     out = x_native.fetch_x_native(client=_Client())
-    assert out[0]["url"].endswith("/9") and out[0]["likes"] == 5 and out[0]["source"] == "x_native"
+    assert out[0]["urls"][0].endswith("/9") and out[0]["likes"] == 5 and out[0]["source"] == "x_api"
+    assert x_native.last_cost()["posts_fetched"] == 1
+    assert x_native.last_cost()["estimated_usd"] == 0.005
+
+
+def test_x_api_discovery_trends_sparse_zero_posts(monkeypatch) -> None:
+    """Default t0 path: trend names only — wide net, no post body spend."""
+    from algent_backend.data_ingestion.newsroom.sources import x_native
+
+    monkeypatch.setenv("X_BEARER_TOKEN", "tok")
+    monkeypatch.delenv(x_native._HYDRATE_TOP_ENV, raising=False)
+
+    class _Resp:
+        status_code = 200
+
+        def json(self):
+            return {
+                "data": [
+                    {"trend_name": "Alpha Event", "tweet_count": 9000},
+                    {"trend_name": "Beta Thing", "tweet_count": 100},
+                    {"trend_name": "alpha event", "tweet_count": 50},  # dupe casefold
+                ],
+            }
+
+    class _Client:
+        def get(self, url, params=None):
+            return _Resp()
+
+        def close(self):
+            pass
+
+    hits = x_native.fetch_x_api_discovery(
+        woeids=(1, 23424977), max_topics=30, hydrate_top=0, client=_Client(),
+    )
+    # Two places × 2 unique names (alpha merged) = 2 topics after dedupe
+    names = {h["topic"] for h in hits}
+    assert "Alpha Event" in names or "alpha event" in {n.casefold() for n in names}
+    assert all(h["source"] == "x_trends" for h in hits)
+    assert all(not h.get("urls") for h in hits)
+    c = x_native.last_cost()
+    assert c["posts_fetched"] == 0 and c["estimated_usd"] == 0.0
+    assert c["topics"] == len(hits) <= 30
 
 
 def test_fetch_polymarket_filters_sports_and_captures_movement() -> None:
@@ -419,36 +466,51 @@ def test_resolve_channels_precedence(monkeypatch) -> None:
 
     monkeypatch.delenv(pipeline._ENV_CHANNELS, raising=False)
     assert pipeline.resolve_channels(None) == pipeline.DEFAULT_CHANNELS  # default
-    assert "x" not in pipeline.DEFAULT_CHANNELS  # X is opt-in, off by default
+    assert "x" in pipeline.DEFAULT_CHANNELS  # X on by default (sparse trends; cheap)
     # Explicit arg wins, filtered to valid channels.
     assert pipeline.resolve_channels({"gkg", "x", "bogus"}) == frozenset({"gkg", "x"})
     # Env var used when no explicit arg; an all-invalid set falls back to default.
-    monkeypatch.setenv(pipeline._ENV_CHANNELS, "gkg, x")
-    assert pipeline.resolve_channels(None) == frozenset({"gkg", "x"})
+    monkeypatch.setenv(pipeline._ENV_CHANNELS, "gkg, markets")
+    assert pipeline.resolve_channels(None) == frozenset({"gkg", "markets"})
     assert pipeline.resolve_channels({"nope"}) == pipeline.DEFAULT_CHANNELS
 
 
-def test_build_pool_includes_x_trending() -> None:
+def test_build_pool_includes_x_trends() -> None:
     from algent_backend.data_ingestion.newsroom.discovery.pool import build_pool
 
-    x_hits = [{"topic": "Strait of Hormuz attack", "summary": "Ship hit.",
-               "urls": ["https://x.com/i/web/status/1"], "source": "x_grok"}]
+    x_hits = [{"topic": "Strait of Hormuz", "summary": "Trending on X (worldwide)",
+               "urls": [], "source": "x_trends", "tweet_count": 12000, "pre_vetted": False}]
     pool = build_pool(None, None, None, x_hits)
     assert pool.by_channel.get("x") == 1
     item = pool.items[0]
     assert item.channel == "x" and item.kind == "trending"
-    assert item.evidence[0].url.endswith("/1") and item.signals["summary"] == "Ship hit."
+    assert item.signals["tweet_count"] == 12000
+    assert item.evidence == []
 
 
-def test_ensure_t0_x_channel_skips_gkg_and_fetches_grok(monkeypatch, tmp_path) -> None:
+def test_ensure_t0_x_channel_skips_gkg_and_fetches_api(monkeypatch, tmp_path) -> None:
     monkeypatch.setenv(_shared._OUTPUT_ENV, str(tmp_path))
+    monkeypatch.delenv("ALGENT_X_T0_VIA", raising=False)
     from algent_backend.data_ingestion.newsroom.discovery import pipeline
 
     gkg_called: list[int] = []
     monkeypatch.setattr(pipeline.gdelt_gkg, "fetch_latest", lambda: gkg_called.append(1) or ("x", []))
+
+    def _fake_api(**_):
+        return [{"topic": "T", "summary": "Trending", "urls": [],
+                 "source": "x_trends", "pre_vetted": False}]
+
     monkeypatch.setattr(
-        pipeline, "fetch_x_grok",
-        lambda **_: [{"topic": "T", "summary": "s", "urls": [], "source": "x_grok"}],
+        "algent_backend.data_ingestion.newsroom.sources.x_native.fetch_x_api_discovery",
+        _fake_api,
+    )
+    monkeypatch.setattr(
+        "algent_backend.data_ingestion.newsroom.sources.x_native.resolve_bearer",
+        lambda: "tok",
+    )
+    monkeypatch.setattr(
+        "algent_backend.data_ingestion.newsroom.sources.x_native.last_cost",
+        lambda: {"topics": 1, "posts_fetched": 0, "estimated_usd": 0.0},
     )
     pool, path = pipeline.ensure_t0(channels={"x"}, on_progress=lambda _m: None)
     assert gkg_called == []  # gkg off → never fetched

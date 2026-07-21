@@ -46,6 +46,11 @@ reader would actually want answered — if the honest version is "someone commen
 with no transferable understanding — you do not have a story. Say so rather than assembling one
 out of whatever the profile happens to hold.
 
+**Name the reduction (the usable so-what).** In one line: after reading, what can a house
+reader *do* with this understanding — even if the honest answer is "rates could go either way;
+watch X"? Without a reduction, the molecule is only a stack of nodes. The reduction must be
+true to the evidence; do not invent a sharper point than the claims support.
+
 **Significance is built into the molecule, not announced.** The reader should leave holding
 scale, structure, and stakes as part of the shape. Do **not** plan a concept whose only job is
 "why this is a big deal" as a separate sermon — and do not plan a molecule that withholds the
@@ -77,6 +82,12 @@ A concept is **load-bearing** if removing it would leave the reader holding a *w
 not merely a less-detailed one. Distinguish the load-bearing from the merely interesting; the
 treatment carries the former and lets the drafter spend remaining room on the latter. Order
 broad → specific (the direction a reader instinctively travels).
+
+**Primitives the house reader will lack.** If the core understanding depends on terms,
+named bodies, measures, schemes, or roles a smart non-specialist may not already hold, put
+them in the treatment's **primitives** / early concepts so the drafter must ramp them —
+including a brief *what it is / what it does here*, not only a name. Do not assume the field
+already installed those landmarks.
 
 The test is about the **reader**, never about the inventory. *"The profile's tertiary lead would go
 unused"* is not a reason to include anything — the profile is our workspace, not a manifest to be

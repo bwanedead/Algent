@@ -102,6 +102,34 @@ def test_figure_check_flags_a_number_not_in_the_evidence(tmp_path: Path) -> None
     assert "9.9" in art.note
 
 
+def test_may_source_without_profile_data_refs_produces(tmp_path: Path) -> None:
+    # Profile and analytics are separate: worker may fulfill a sourced series that the profile
+    # never held as claims. Figure check is against the produced data table, not claim substrings.
+    req = AnalyticsRequest(
+        id="anx_src", kind="chart", title="Weekly cases",
+        question="Is the outbreak accelerating?",
+        spec="line of weekly confirmed cases",
+        data_refs=[], may_source=True,
+        source_hint="WHO weekly Ebola case counts DRC last 8 weeks",
+        rationale="trajectory",
+    )
+    art = aw.fulfill_request(
+        req, _profile(), workspace=tmp_path / "ws",
+        runner=_good_runner("week,cases\n1,10\n2,25\n3,40\n"),
+    )
+    assert art.status == "produced"
+    assert art.figure_check.get("mode") == "sourced"
+    assert art.figure_check["verified"] is True
+    assert "sourced" in art.ai_label.lower() or "Sourced" in art.caption
+
+
+def test_may_source_without_hint_fails(tmp_path: Path) -> None:
+    req = AnalyticsRequest(id="anx_bad", kind="chart", data_refs=[], may_source=False)
+    art = aw.fulfill_request(req, _profile(), workspace=tmp_path / "ws", runner=_good_runner())
+    assert art.status == "failed"
+    assert "data_refs" in art.note
+
+
 def test_skipped_when_worker_declines(tmp_path: Path) -> None:
     def run(_p: str, folder: Path) -> tuple[bool, str]:
         (folder / "SKIPPED.md").write_text("data too thin to plot honestly", encoding="utf-8")

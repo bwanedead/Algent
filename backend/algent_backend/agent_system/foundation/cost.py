@@ -42,16 +42,25 @@ _FALLBACK_MODEL_PRICE = (1.00, 5.00)  # conservative guess for an unknown model
 #   semantic (Exa /search)         $0.007/search   (exa.ai/pricing)
 #   read (trafilatura, local)      $0.00           (no external call)
 #   rich (Firecrawl /scrape)       ~$0.001/page    (firecrawl.dev/pricing; ~$0.00083 Standard..$0.0032 Hobby)
-#   x (native X, per post read)    $0.005/post     (X API pricing; per-call ~ posts x this)
+#   x post read                    $0.005/post     (X pay-per-use; confirm in console)
+#   x (research default call)      10 posts × $0.005 = $0.05  (web_search source=x default max)
+#   x_trends                       $0.00 posts     (trend names only; t0 sparse path)
 #   x_grok (xAI Grok X-search)     $0.005/call + tokens (x.ai live search $5/1k)
 CALL_PRICES: dict[str, float] = {
     "keyword": 0.008,
     "semantic": 0.007,
     "read": 0.0,
     "rich": 0.001,
-    "x": 0.05,  # ~one X search returning ~10 posts at $0.005 each (refine when wired)
+    "x": 0.05,           # default research call (~10 posts); prefer estimate_x_posts(n)
+    "x_post": 0.005,     # per post body returned
+    "x_trends": 0.0,     # WOEID trends (no post bodies)
     "x_grok": 0.008,
 }
+
+
+def estimate_x_posts(n: int) -> float:
+    """Estimated USD for ``n`` X post bodies returned (t0 hydrate / research search)."""
+    return max(0, int(n)) * CALL_PRICES["x_post"]
 
 DEFAULT_RUN_CAP_USD = 1.00
 

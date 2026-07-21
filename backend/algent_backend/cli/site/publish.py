@@ -1,4 +1,4 @@
-"""``site publish`` — gate a finished run and stage it (or push it live if the kill switch is on)."""
+"""``site publish`` — gate a finished run and push it live (default), or stage if publish is paused."""
 
 from __future__ import annotations
 
@@ -58,7 +58,7 @@ def run(args: argparse.Namespace) -> int:
         "status": result.status,
         "reasons": result.reasons,
         "content_path": result.content_path,
-        "kill_switch": "on" if push else "off (staged, not pushed)",
+        "live_publish": "on" if push else "paused (staged only; ALGENT_SITE_PUBLISH=0)",
         "pushed": pushed,
         "drift_warning": drift,
         "digest": result.digest,

@@ -47,11 +47,16 @@ Root override: `ALGENT_RUNS_DIR` (tests isolate under a temp dir).
 # from backend/ with the venv python
 python -m algent_backend.cli.runs start <agent_id> --topic "..." [--input '{...}']
                                         [--max-turns N] [--foreground]
+                                        [--from-run REF]   # post-t0 portfolio reuse (see CLI guide)
 python -m algent_backend.cli.runs status --run-id <id>
 python -m algent_backend.cli.runs watch  --run-id <id> --timeout 600
 python -m algent_backend.cli.runs list   [--limit N]
 python -m algent_backend.cli.runs show   --run-id <id>
 ```
+
+Full operator CLI (all flags, post-t0 reuse, cooldown, cost rails):
+[`docs/guides/agent-cli-testing.md`](../guides/agent-cli-testing.md). Short hub:
+[`docs/guides/run-operator-entrypoint.md`](../guides/run-operator-entrypoint.md).
 
 `start` allocates the run id, writes `request.json` + a `queued` state, then
 spawns a detached child (`exec`) — or runs inline with `--foreground`. Watchers

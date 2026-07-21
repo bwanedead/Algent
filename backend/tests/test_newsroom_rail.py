@@ -232,3 +232,46 @@ def test_rail_reports_channel_provenance(monkeypatch) -> None:
 
     assert r["pool_by_channel"] == {"x": 2, "gkg": 2}    # X is half the pool...
     assert r["promoted_from"] == {"x": 2}                # ...and all of what we ran: the steer
+
+
+def test_rail_reuses_portfolio_skips_synthesis_and_still_routes(monkeypatch) -> None:
+    """Post-t0 launch: supply a prior portfolio, skip discovery spend; routing still runs (cooldown elsewhere)."""
+    monkeypatch.setenv(rl._BACKFEED_ENV, "1")  # even with backfeed on, reuse must not touch it
+    synthesis_calls: list = []
+
+    def _syn(_ctx):
+        synthesis_calls.append(1)
+        return _EmittingGraph({"portfolio": {"vectors": []}}, _ctx, 0.0)
+
+    _wire(
+        monkeypatch,
+        portfolio={"vectors": [], "total_considered": 0},  # unused — we supply portfolio in state
+        route={"selected_vector": {"id": "v02", "title": "Second ranked hit"}},
+        profile={"id": "prof_2"},
+        gauntlet={"profile": {"id": "prof_2"}, "gauntlet": {"final_verdict": "mature"}},
+        pipeline={"status": "publishable", "article_title": "Second story", "analytics_produced": 0},
+    )
+    monkeypatch.setattr(rl, "build_synthesis", _syn)
+    events: list = []
+    prior = {
+        "vectors": [
+            {"id": "v01", "title": "Already published beat"},
+            {"id": "v02", "title": "Second ranked hit"},
+        ],
+        "total_considered": 80,
+    }
+    out = rl.build_newsroom_rail_graph(_ctx(events)).invoke({
+        "portfolio": prior, "source_run_id": "prev-run-uuid",
+    })
+    r = out["rail"]
+    assert synthesis_calls == []                         # t0+synthesis never ran
+    assert r["portfolio_source"] == "reused"
+    assert r["source_run_id"] == "prev-run-uuid"
+    assert r["vector_count"] == 2
+    assert r["selected_vector_id"] == "v02"
+    assert r["stage_reached"] == "complete"
+    assert r["backfeed_leads_injected"] == 0
+    assert any(
+        et == rl.RAIL_STAGE and (p or {}).get("skipped") is True
+        for et, p in events
+    )

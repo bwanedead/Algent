@@ -72,12 +72,44 @@ def test_router_emits_grounded_requests_and_stamps_identity() -> None:
 
 
 def test_router_drops_a_request_grounded_in_nothing() -> None:
-    # A request whose data_refs don't resolve is not a request; if none survive, not warranted.
+    # A request whose data_refs don't resolve and is not may_source is not a request.
     plan = AnalyticsPlan(id="", warranted=True, requests=[
         AnalyticsRequest(id="", kind="chart", data_refs=["c_ghost"], spec="x")])
     graph = ar.build_analytics_router_graph(_ctx(_Model(plan), []), model_spec=_spec())
     p = graph.invoke({"profile": _profile().model_dump()})["analytics_plan"]
     assert p["warranted"] is False and p["requests"] == []
+
+
+def test_router_keeps_may_source_without_profile_series() -> None:
+    # Profile need not hold a multi-row series — usefulness + a source hunch is enough.
+    plan = AnalyticsPlan(id="", warranted=True, requests=[
+        AnalyticsRequest(
+            id="", kind="chart",
+            title="Weekly confirmed cases",
+            question="Is the outbreak accelerating?",
+            spec="line of weekly confirmed cases last 8 weeks",
+            data_refs=[],
+            may_source=True,
+            source_hint="WHO / MoH weekly Ebola case counts for DRC, last 8 weeks",
+            rationale="trajectory the prose alone cannot show"),
+    ])
+    graph = ar.build_analytics_router_graph(_ctx(_Model(plan), []), model_spec=_spec())
+    p = graph.invoke({"profile": _profile().model_dump()})["analytics_plan"]
+    assert p["warranted"] is True and len(p["requests"]) == 1
+    req = p["requests"][0]
+    assert req["may_source"] is True
+    assert "WHO" in req["source_hint"]
+    assert req["data_refs"] == []
+
+
+def test_router_may_source_falls_back_to_spec_as_hint() -> None:
+    plan = AnalyticsPlan(id="", warranted=True, requests=[
+        AnalyticsRequest(id="", kind="chart", may_source=True, spec="BLS core PCE y/y last 12 months",
+                         title="PCE path", question="trend", data_refs=[])])
+    graph = ar.build_analytics_router_graph(_ctx(_Model(plan), []), model_spec=_spec())
+    p = graph.invoke({"profile": _profile().model_dump()})["analytics_plan"]
+    assert p["warranted"] is True
+    assert "BLS" in p["requests"][0]["source_hint"]
 
 
 def test_router_drops_meta_evidence_ledger_tables() -> None:

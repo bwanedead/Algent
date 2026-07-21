@@ -32,7 +32,6 @@ from algent_backend.data_ingestion.cli._shared import (
 
 from ..sources import gdelt_gkg
 from ..sources.prediction_markets import fetch_polymarket
-from ..sources.x_grok_cli import fetch_x_grok
 from .insights import build_insights
 from .memory import load_memory, save_memory
 from .pool import build_pool
@@ -43,11 +42,16 @@ _KEEP = 1
 
 # The toggleable t0 source channels. ``gkg`` is the free deterministic net (the
 # base); ``beats`` reuses a DOC sweep from disk; ``markets`` and ``x`` are extra
-# signals fetched live. X (Grok CLI) is slow (~2-3 min) and spends subscription
-# quota, so it's OFF by default — opt in per run, see ``resolve_channels``.
+# signals fetched live. X primary path is the **X API** (same surface as
+# api.x.com/mcp) — not Grok Build headless. Grok CLI is an optional supplement.
+# X is ON by default (sparse trends-first; ~$0 post spend unless hydrate is raised).
+# Disable with ALGENT_T0_CHANNELS=gkg,beats,markets or if no bearer (auto-skips).
 ALL_CHANNELS = ("gkg", "beats", "markets", "x")
-DEFAULT_CHANNELS = frozenset({"gkg", "beats", "markets"})
-_ENV_CHANNELS = "ALGENT_T0_CHANNELS"  # comma-separated override, e.g. "gkg,markets,x"
+DEFAULT_CHANNELS = frozenset({"gkg", "beats", "markets", "x"})
+_ENV_CHANNELS = "ALGENT_T0_CHANNELS"  # comma-separated override, e.g. "gkg,markets"
+# How t0 pulls X: ``api`` (default, X API multi-lane), ``api+grok`` (API + optional Grok CLI),
+# ``grok`` (legacy Grok-only — not recommended).
+_ENV_X_VIA = "ALGENT_X_T0_VIA"
 
 ProgressFn = Callable[[str], None]
 
@@ -135,13 +139,62 @@ def _fetch_markets(say: ProgressFn) -> list[dict]:
 
 
 def _fetch_x(say: ProgressFn) -> list[dict]:
-    from ..sources.x_grok_cli import resolve_lanes
+    """X into t0: **sparse trends-first API** (wide net, minimal post spend).
 
-    lanes = resolve_lanes(None)
-    say(f"fetching X via Grok CLI across {len(lanes)} lanes ({', '.join(lanes)}) — subscription, slow…")
-    hits = fetch_x_grok()  # best-effort fan-out: returns [] on total failure
-    say(f"X (grok): {len(hits)} topics across lanes" if hits else "X (grok): none (skipped/failed)")
-    return hits
+    Default: worldwide + US trends → ≤~30 topic seeds, **0 post bodies** (cheap iterate).
+    Optional hydrate is hard-capped (``ALGENT_X_MAX_POSTS``). Grok CLI only if
+    ``ALGENT_X_T0_VIA=api+grok`` / ``grok``.
+    """
+    via = os.environ.get(_ENV_X_VIA, "api").strip().lower() or "api"
+    hits: list[dict] = []
+
+    if via in ("api", "api+grok", "native"):
+        from ..sources.x_native import fetch_x_api_discovery, last_cost, resolve_bearer
+
+        if not resolve_bearer():
+            say("X (api): skipped — no bearer token (X_BEARER_TOKEN / X_BEARER_KEY)")
+        else:
+            say("fetching X trends (worldwide + US) — sparse, no posts by default…")
+            try:
+                api_hits = fetch_x_api_discovery()
+            except Exception as exc:  # noqa: BLE001 — X must not sink t0
+                say(f"X (api): failed ({str(exc)[:80]})")
+                api_hits = []
+            hits.extend(api_hits)
+            c = last_cost()
+            say(
+                f"X (api): {c.get('topics', 0)} topics, {c.get('posts_fetched', 0)} posts, "
+                f"~${float(c.get('estimated_usd') or 0):.4f} est."
+                if api_hits else "X (api): none"
+            )
+
+    if via in ("grok", "api+grok"):
+        from ..sources.x_grok_cli import fetch_x_grok, resolve_lanes
+
+        lanes = resolve_lanes(None)
+        say(f"fetching X via Grok CLI (supplement) across {len(lanes)} lanes — subscription…")
+        try:
+            grok_hits = fetch_x_grok()
+        except Exception as exc:  # noqa: BLE001
+            say(f"X (grok): failed ({str(exc)[:80]})")
+            grok_hits = []
+        # Cap Grok supplement so it cannot dump unbounded topics into the pool.
+        grok_hits = (grok_hits or [])[:10]
+        hits.extend(grok_hits)
+        say(f"X (grok): {len(grok_hits)} topics" if grok_hits else "X (grok): none")
+
+    if via not in ("api", "api+grok", "native", "grok"):
+        say(f"X: unknown ALGENT_X_T0_VIA={via!r} (use api | api+grok | grok); defaulting to api")
+        os.environ[_ENV_X_VIA] = "api"
+        return _fetch_x(say)
+
+    # Hard safety: never more than 30 X items into the pool unless explicitly raised.
+    max_topics = 30
+    try:
+        max_topics = max(1, min(50, int(os.environ.get("ALGENT_X_MAX_TOPICS", "30"))))
+    except ValueError:
+        pass
+    return hits[:max_topics]
 
 
 def _age_minutes(path: Path) -> float:

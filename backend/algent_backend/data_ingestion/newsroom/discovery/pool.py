@@ -79,26 +79,41 @@ def _market_item(market: dict) -> PoolItem:
 
 
 def _x_item(hit: dict) -> PoolItem:
-    """A Grok-curated X trending topic as a pool item — the social hive-mind signal.
+    """An X hit as a pool item — API posts (primary) or optional Grok-curated topics.
 
-    Marked ``pre_vetted``: Grok already applied LLM judgement of significance while
-    selecting these, so when the triage ("rake") layer exists, X items skip it and
-    promote straight to the discovery agent's post-rake input — no point re-raking
-    what's already raked (and it's why the slow X fetch needn't gate the rest).
+    ``pre_vetted`` is True only when an upstream LLM already judged significance
+    (Grok CLI path). Raw X API posts stay ``pre_vetted=False`` so rake/synthesis
+    still triage them. Engagement metrics ride in signals for ranking later.
     """
     topic = str(hit.get("topic") or "").strip()
     urls = [u for u in (hit.get("urls") or []) if isinstance(u, str)][:3]
+    src = str(hit.get("source") or "x")
+    # Stable-ish id: prefer post URL tail, else trend/topic slug.
+    if urls and "/status/" in urls[0]:
+        sid = urls[0].rstrip("/").rsplit("/", 1)[-1]
+        item_id = f"x:{src}:{sid}"
+    else:
+        slug = "".join(ch if ch.isalnum() else "_" for ch in topic.lower())[:48]
+        item_id = f"x:{src}:{slug or 'topic'}"
+    pre = hit.get("pre_vetted")
+    if pre is None:
+        pre = src in ("x_grok", "grok")  # only LLM-curated paths skip re-rake
+    kind = "trending" if src in ("x_trends", "x_grok", "grok") or pre else "post"
     return PoolItem(
-        id=f"x:{hit.get('source', 'x')}:{topic[:60]}",
+        id=item_id,
         label=topic,
         channel="x",
-        kind="trending",
+        kind=kind,
         signals={
             "summary": str(hit.get("summary") or "").strip(),
-            "lane": str(hit.get("lane") or ""),  # which X direction surfaced it
-            "pre_vetted": True,
+            "lane": str(hit.get("lane") or ""),
+            "author": str(hit.get("author") or ""),
+            "likes": hit.get("likes"),
+            "reposts": hit.get("reposts"),
+            "tweet_count": hit.get("tweet_count"),
+            "pre_vetted": bool(pre),
         },
-        evidence=[BeatHit(title=topic, url=u) for u in urls],
+        evidence=[BeatHit(title=topic[:140], url=u) for u in urls],
     )
 
 

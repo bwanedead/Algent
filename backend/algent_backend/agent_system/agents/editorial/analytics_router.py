@@ -49,28 +49,40 @@ _ROLE = """\
 You are Algent's analytics router. The only criterion is USEFULNESS for a house reader:
 
   What visual (if any) would most help them grasp scale, trajectory, place, or comparison —
+  better than prose alone?
 
-  better than prose alone, using only data that already exists in the profile?
+Profile and analytics are SEPARATE concerns. The profile is a researched story map — it is NOT
+a data warehouse. Do NOT refuse a useful chart just because a multi-row series is not already
+in the claim ledger. Ask: would a figure help, and is the data reasonably available?
 
-- If something useful exists: request that one analytic (grounded).
-- If nothing would help, or data is missing: warranted=false. That is success.
+- If something useful exists: request that one analytic.
+- If nothing would help: warranted=false. That is success.
 - Never decorate, never fill a quota, never invent numbers or a map without data.
 
-UTILITY CLASSES (pick the one that helps most, only when data supports it):
+UTILITY CLASSES (pick the one that helps most):
 1. TRAJECTORY — counts or rates over time (is it rising, peaking, slowing?). Prefer a simple
    line/area chart with clear axes and period.
 2. GEOGRAPHY — the story names subregions (provinces, cities, health zones) a cold reader will
    not place. Prefer a bar/ranked breakdown by region with counts or rates, OR a simple labeled
    map/diagram of those named places if location (not inventing a rate) is the point. Never invent
-   boundaries or rates not in the data.
+   boundaries or rates.
 3. COMPARATIVE SCALE — absolute counts float without a reference. Prefer a small comparison to a
    baseline the reader can hold (prior peak, share of population, share of a total, another
-   country) when those numbers exist in the profile.
+   country) when those numbers exist or are publicly standard.
 4. STRUCTURE — a before/after or part-of-whole that prose makes the reader assemble row by row.
 
-YES when one of those classes applies and the numbers (or named places) are in the profile.
-NO when prose is enough; data is too thin; the ask would be an evidence notebook (confirmed vs
-unconfirmed, claim grades); or specialist matrices / legends.
+DATA PATHS (either is fine):
+A. PROFILE-HELD — key magnitudes already appear as claims/sources. Set `data_refs` to those ids.
+B. SOURCE-AT-ANALYTICS-TIME — a series/breakdown would help but is not in the profile (normal).
+   Set `may_source=true` and `source_hint` to a concrete public source hunch
+   (e.g. "WHO / MoH weekly Ebola case counts for DRC provinces, last 8 weeks";
+   "BLS CPI release table, last 12 months core PCE y/y"). The worker may fetch that data.
+   Optional: still cite a few claim ids that motivate WHY the figure helps the story.
+
+YES when one of those classes applies and either (A) numbers are already cited or (B) a
+reasonable public source is likely to hold them.
+NO when prose is enough; the ask would be an evidence notebook (confirmed vs unconfirmed,
+claim grades); specialist matrices / legends; or pure decoration with no real quantity.
 
 Kinds (only if useful):
 - `chart` — preferred for trajectory, ranked regional breakdowns, and comparisons.
@@ -83,11 +95,12 @@ Reader clarity is part of usefulness. PUBLISHED fields:
 - `title`: what is measured (plain words).
 - `question`: what this shows — quantity/comparison + why it helps the story.
 - `spec`: how to build it so a cold reader can read axes/units without reverse-engineering.
+- `data_refs` and/or `may_source` + `source_hint` as above.
 
-Ground every request in profile data ids. Prefer zero or one request.
+Prefer zero or one request.
 
-OUTPUT — AnalyticsPlan: warranted=false when nothing useful; otherwise the single best grounded
-request (or the minimal set if two distinct utilities truly need separate figures).
+OUTPUT — AnalyticsPlan: warranted=false when nothing useful; otherwise the single best request
+(or the minimal set if two distinct utilities truly need separate figures).
 """
 
 SYSTEM_PROMPT = compose_system_prompt(UNIVERSAL_AGENT_BASE, NEWSROOM_SYSTEM_MAP, doctrine("spirit"), _ROLE)
@@ -132,17 +145,19 @@ def _message(profile: SignalProfile) -> str:
     return "\n".join([
         f"# ASSESS FOR ANALYTICS — {profile.id}",
         "",
-        "## Addressable data ids (ground any request in these)",
+        "## Profile data ids (optional grounding when numbers are already held)",
         *ids,
         *(["", "## Optional researcher notes (not a mandate to chart):",
            *[f"- {f}" for f in flags]] if flags else []),
         "",
         render_briefing(profile),
         "",
-        "TASK: Decide only by usefulness. If a real quantity/series/comparison would help a "
-        "house reader more than prose, request it with a title that names what is measured and a "
-        "question that states what the figure shows. Otherwise warranted=false. Never evidence "
-        "ledgers or claim-status tables. Zero is a normal success.",
+        "TASK: Decide only by usefulness for a house reader. A multi-row series need NOT already "
+        "live in the profile — if a trajectory, place breakdown, or scale comparison would help "
+        "and public data is a reasonable hunch, set may_source=true with a concrete source_hint. "
+        "When key numbers are already in claims, set data_refs. Title what is measured; question "
+        "what the figure shows. Never evidence ledgers or claim-status tables. Zero is a normal "
+        "success.",
     ])
 
 
@@ -166,14 +181,25 @@ def _is_reader_facing(req: AnalyticsRequest) -> bool:
 def _finalize(plan: AnalyticsPlan, profile: SignalProfile, model: str) -> AnalyticsPlan:
     requests = [r if r.id else r.model_copy(update={"id": f"anx_{i:02d}"})
                 for i, r in enumerate(plan.requests, 1)]
-    # Drop any request whose data_refs don't resolve to the profile (no ungrounded analytics).
+    # Keep profile-grounded refs that resolve; keep source-at-analytics-time asks with a real hint.
+    # Drop pure ungrounded/unsourceable asks — never invent a chart with nowhere to get numbers.
     valid = {x.id for x in (*profile.claim_ledger, *profile.source_ledger, *profile.threads)}
-    requests = [r.model_copy(update={"data_refs": [d for d in r.data_refs if d in valid]}) for r in requests]
-    requests = [r for r in requests if r.data_refs]  # a request grounded in nothing is not a request
-    requests = [r for r in requests if _is_reader_facing(r)]
+    kept: list[AnalyticsRequest] = []
+    for r in requests:
+        refs = [d for d in r.data_refs if d in valid]
+        r = r.model_copy(update={"data_refs": refs})
+        if refs:
+            kept.append(r)
+            continue
+        if r.may_source and (r.source_hint.strip() or r.spec.strip()):
+            # Prefer an explicit source_hint; fall back to spec as the fetch brief.
+            if not r.source_hint.strip() and r.spec.strip():
+                r = r.model_copy(update={"source_hint": r.spec.strip()})
+            kept.append(r)
+    requests = [r for r in kept if _is_reader_facing(r)]
     note = plan.note
     if plan.requests and not requests:
-        note = (note + " | dropped non-reader-facing / ungrounded analytics").strip(" |")
+        note = (note + " | dropped non-reader-facing / ungrounded / unsourceable analytics").strip(" |")
     return plan.model_copy(update={
         "id": f"analytics_{profile.id}", "profile_id": profile.id,
         "warranted": bool(requests) and plan.warranted, "requests": requests,

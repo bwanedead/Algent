@@ -28,12 +28,14 @@ class ComprehensionFinding(BaseModel):
 
     id: str
     kind: Literal[
-        "unexplained_term",    # jargon used load-bearingly with no plain-language handhold
-        "unknown_actor",       # a person/org the piece leans on with no role/jurisdiction handhold
+        "unexplained_term",    # term/acronym/measure left cold (name alone may still fail)
+        "unknown_actor",       # person/org/body without what-it-is / what-it-does-here handhold
         "missing_scene",       # country/system/scheme never oriented before chronology or stakes
         "assumed_context",     # a sentence that only parses if you already know something unavailable
         "island_paragraph",    # a block with no relation to the through-line — a node with no edges
         "lost_thread",         # the point where the piece stopped being followable
+        "unconnected_inference",  # conclusion dropped without the premise that makes it land
+        "no_reduction",        # finished piece with no holdable so-what for a house reader
         "other",
     ] = "other"
     where: str = ""            # a short quote / locator so the fix is targeted, not a rewrite

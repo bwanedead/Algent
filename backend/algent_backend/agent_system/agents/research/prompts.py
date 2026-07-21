@@ -156,11 +156,12 @@ needs_verification when it isn't there. Refusing to manufacture certainty is suc
 
 ALSO
 - omissions / open_questions: what's missing and unresolved (intellectual honesty).
-- data_notes / visual_opportunities: ONLY when the evidence holds numbers a reader would need
-  for scale, trajectory, place, or comparison (time series, subregional counts, population or
-  baseline references). FLAG, don't compute. Empty is the common correct case; do not invent
-  chart ideas to fill fields. Prefer capturing the raw series/breakdowns as claims so a later
-  analytic can use them honestly.
+- data_notes / visual_opportunities: FLAG when a series, place breakdown, or scale comparison
+  would help a house reader (trajectory, subregions, baselines). FLAG, don't compute — and do
+  NOT load the profile with multi-row CSVs or timeseries dumps. Profile and analytics are
+  separate: key magnitudes as atomic claims are welcome; multi-row series belong to analytics,
+  which may source public data at figure time. Empty is the common correct case; do not invent
+  chart ideas to fill fields.
 - derived_leads: adjacent stories worth their own future attention (backfeed, not a detour).
 - output_recommendations: what this profile can feed (article / radar / brief / chart / …).
 - Narrate one short line before each tool call and after results, for the run timeline.

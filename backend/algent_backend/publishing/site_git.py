@@ -1,11 +1,9 @@
 """
 The deployment mechanism — commit auto-published articles to the ``site-live`` branch and push.
 
-Vercel deploys production from ``origin/site-live``, so "publish" == a commit on that branch. This
-is the one OUTWARD, hard-to-reverse step in the pipeline, so it sits behind a kill switch
-(``ALGENT_SITE_PUBLISH``, off by default) — runs still produce and stage articles when it's off;
-they only reach the live domain when the operator flips it, after the Vercel wiring is done and one
-end-to-end is verified.
+Vercel deploys production from ``origin/site-live``, so "publish" == a commit on that branch.
+**Live publish is ON by default** — every finished eligible article commits + pushes. To pause
+shipping without changing code, set ``ALGENT_SITE_PUBLISH=0`` (stage only into the working tree).
 
 To avoid disrupting the operator's working tree, live commits happen in a dedicated git WORKTREE
 checked out to ``site-live`` (``.site-live/`` at the repo root, gitignored). ``publish_run`` writes
@@ -25,8 +23,8 @@ _PUBLISH_ENV = "ALGENT_SITE_PUBLISH"
 
 
 def publish_enabled() -> bool:
-    """The kill switch. OFF by default — articles stage but do not reach the live domain."""
-    return os.environ.get(_PUBLISH_ENV, "0").strip().lower() in ("1", "true", "yes", "on")
+    """Live push ON by default. Only ``0`` / ``false`` / ``no`` / ``off`` pauses to stage-only."""
+    return os.environ.get(_PUBLISH_ENV, "1").strip().lower() not in ("0", "false", "no", "off")
 
 
 def _git(cwd: Path, *args: str) -> tuple[bool, str]:
@@ -60,9 +58,9 @@ def ensure_worktree(root: Path) -> tuple[Path | None, str]:
         return wt, ("worktree updated" if ok else f"pull warning: {out}")
     _git(root, "fetch", "origin", DEPLOY_BRANCH)
     ok, out = _git(root, "worktree", "add", str(wt), DEPLOY_BRANCH)
-    if not ok:  # branch may not exist yet — the operator creates it during Vercel setup
+    if not ok:  # branch may not exist yet — create once and push (see publish README)
         return None, (f"could not add site-live worktree ({out}); create the '{DEPLOY_BRANCH}' branch "
-                      "and push it once (see the publish README) before enabling ALGENT_SITE_PUBLISH")
+                      "and push it once (see the publish README); or set ALGENT_SITE_PUBLISH=0 to stage only")
     return wt, "worktree created"
 
 

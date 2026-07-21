@@ -1,4 +1,4 @@
-"""Tests for the publish kill switch + named-individual hold-lane (git plumbing stays behind the switch)."""
+"""Tests for live-publish default + named-individual hold-lane (git plumbing behind the pause flag)."""
 
 from __future__ import annotations
 
@@ -9,12 +9,15 @@ from algent_backend.publishing import publish as pb
 from algent_backend.publishing import site_git
 
 
-def test_kill_switch_defaults_off(monkeypatch) -> None:
+def test_live_publish_defaults_on(monkeypatch) -> None:
+    # Operator policy: everything ships until they explicitly pause it.
     monkeypatch.delenv("ALGENT_SITE_PUBLISH", raising=False)
-    assert site_git.publish_enabled() is False
+    assert site_git.publish_enabled() is True
     monkeypatch.setenv("ALGENT_SITE_PUBLISH", "1")
     assert site_git.publish_enabled() is True
     monkeypatch.setenv("ALGENT_SITE_PUBLISH", "off")
+    assert site_git.publish_enabled() is False
+    monkeypatch.setenv("ALGENT_SITE_PUBLISH", "0")
     assert site_git.publish_enabled() is False
 
 

@@ -20,6 +20,7 @@ from algent_backend.agent_system.runs.control_plane.layout import (
     allocate_run_root,
     find_run_root,
     prune_runs,
+    resolve_run_ref,
 )
 from algent_backend.agent_system.runs.control_plane.state import RunState, write_state
 from algent_backend.agent_system.runs.models import RunRequest
@@ -42,6 +43,13 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
         "--input-key",
         help="mount --input-file under this state key, e.g. 'pool' (synthesis) or "
         "'portfolio' (router); omit to use the file as the whole input dict",
+    )
+    parser.add_argument(
+        "--from-run",
+        help="reuse a prior run's t1 research_portfolio.json (and t0_pool.json if present) "
+        "as this run's starting state — skip t0+synthesis on newsroom_rail. Routing still "
+        "applies the same published-headline cooldown as a fresh run (cooled families stay "
+        "blocked). Accepts run UUID, NNNN counter, agent/NNNN, or a path to a run directory",
     )
     parser.add_argument(
         "--fixture",
@@ -70,9 +78,17 @@ def run(args: argparse.Namespace) -> int:
             return 1
         input_file, input_key = resolved
 
+    try:
+        run_input = parse_input_arg(args.input, args.topic, args.goal, input_file, input_key)
+        if args.from_run:
+            run_input = _merge_from_run(run_input, args.from_run, prefer_agent=args.agent_id)
+    except (OSError, ValueError, FileNotFoundError) as exc:
+        print_json({"error": str(exc)})
+        return 1
+
     request = RunRequest(
         agent_id=args.agent_id,
-        input=parse_input_arg(args.input, args.topic, args.goal, input_file, input_key),
+        input=run_input,
         runtime=args.runtime,
         run_id=run_id,
         max_turns=args.max_turns,
@@ -131,6 +147,56 @@ def _resolve_fixture(agent_id: str) -> tuple[str, str | None] | None:
         return None
     fixture = spec.test_fixture
     return (fixture.input_file, fixture.input_key) if fixture is not None else None
+
+
+def _merge_from_run(payload: dict, ref: str, *, prefer_agent: str) -> dict:
+    """Load a prior run's portfolio (+ optional pool) into the new run's initial state.
+
+    The rail skips t0+synthesis when ``portfolio`` is present; routing still applies cooldown
+    so a just-published #1 demotes and an on-deck vector can promote without re-discovery.
+    """
+    import json
+
+    run_dir = resolve_run_ref(ref, prefer_agent=prefer_agent)
+    if run_dir is None:
+        raise FileNotFoundError(
+            f"--from-run could not resolve '{ref}' "
+            f"(try a run UUID, NNNN counter, agent/NNNN, or path to a run dir)"
+        )
+    artifacts = run_dir / "artifacts"
+    portfolio_path = artifacts / "research_portfolio.json"
+    if not portfolio_path.is_file():
+        raise FileNotFoundError(
+            f"--from-run {run_dir.name}: no artifacts/research_portfolio.json "
+            f"(need a completed synthesis/rail run with a t1 portfolio)"
+        )
+    portfolio = json.loads(portfolio_path.read_text(encoding="utf-8"))
+    if not isinstance(portfolio, dict) or not portfolio.get("vectors"):
+        raise ValueError(f"--from-run {run_dir.name}: research_portfolio.json has no vectors")
+
+    # Best-effort source run id from the directory name (NNNN__uuid) or state.json.
+    source_run_id = ""
+    name = run_dir.name
+    if "__" in name:
+        source_run_id = name.split("__", 1)[1]
+    state_file = run_dir / "state.json"
+    if state_file.is_file():
+        try:
+            source_run_id = str(json.loads(state_file.read_text(encoding="utf-8")).get("run_id")
+                                or source_run_id)
+        except (OSError, ValueError):
+            pass
+
+    merged = {**payload, "portfolio": portfolio, "source_run_id": source_run_id}
+    pool_path = artifacts / "t0_pool.json"
+    if pool_path.is_file() and "pool" not in merged:
+        try:
+            pool = json.loads(pool_path.read_text(encoding="utf-8"))
+            if isinstance(pool, dict):
+                merged["pool"] = pool
+        except (OSError, ValueError):
+            pass
+    return merged
 
 
 def _spawn_detached(run_id: str) -> None:

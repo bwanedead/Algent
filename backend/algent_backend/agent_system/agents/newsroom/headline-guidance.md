@@ -36,6 +36,12 @@ is something else, has the wrong center of mass (framing.md).
 ## Shape
 - **Headline:** plain, specific, concrete. Prefer the real subject and the real finding over a
   clever phrase. Sentence case; no ALL-CAPS, no exclamation, no manufactured heat.
+- **House-reader plain, not guild shorthand.** The headline is often the *only* line a reader
+  sees. Prefer words a smart non-specialist can hold without already living in this beat.
+  Field-internal dialect is a poor compression when a plain phrase carries the same truth.
+  Accuracy still wins over dumbed-down wrongness — but specialist dialect is not accuracy. If
+  the body must use a technical term, the body supplies the handhold; the headline should not
+  force cold jargon on a reader who never opens the piece.
 - **Who is acting — make it explicit when a bare name would not.** If the load-bearing person is
   not universally placeable from the name alone, the headline or dek should carry **role or
   title** (or a short role-tag) so the reader knows *who in what capacity*: *"Mayor X…"* /
@@ -46,7 +52,8 @@ is something else, has the wrong center of mass (framing.md).
 - **Standfirst (dek):** one sentence under the headline that adds the load-bearing nuance the
   headline had to leave out — most often the key tension or caveat ("…but a hike tail is still
   live", "…though the link remains unproven"). It exists to keep the compression honest, and it
-  is a good home for a role/jurisdiction clause the headline had no room for.
+  is a good home for a role/jurisdiction clause the headline had no room for. If the dek names
+  several actors, keep ownership explicit (who frames what) so the body is not left to guess.
 
 ## The test
 Read the finished piece, then ask: *does this headline + dek convey what the article really

@@ -17,6 +17,7 @@ from algent_backend.agent_system.runs.control_plane.layout import (
     allocate_run_root,
     find_run_root,
     prune_runs,
+    resolve_run_ref,
 )
 from algent_backend.agent_system.runs.control_plane.state import RunState, read_state, write_state
 from algent_backend.cli.runs import agents, stop
@@ -52,6 +53,22 @@ def test_allocate_increments_and_find_locates(tmp_path) -> None:
     b.mkdir(parents=True, exist_ok=True)
     assert find_run_root("id-b", tmp_path) == b
     assert find_run_root("nope", tmp_path) is None
+
+
+def test_resolve_run_ref_accepts_uuid_counter_and_path(tmp_path) -> None:
+    a = allocate_run_root("newsroom_rail", "uuid-aaa", tmp_path)
+    b = allocate_run_root("newsroom_rail", "uuid-bbb", tmp_path)
+    a.mkdir(parents=True, exist_ok=True)
+    (a / "artifacts").mkdir()
+    b.mkdir(parents=True, exist_ok=True)
+    (b / "request.json").write_text("{}", encoding="utf-8")
+
+    assert resolve_run_ref("uuid-bbb", root=tmp_path) == b
+    assert resolve_run_ref("0002", prefer_agent="newsroom_rail", root=tmp_path) == b
+    assert resolve_run_ref("2", prefer_agent="newsroom_rail", root=tmp_path) == b
+    assert resolve_run_ref("newsroom_rail/0001", root=tmp_path) == a
+    assert resolve_run_ref(str(b), root=tmp_path) == b.resolve()
+    assert resolve_run_ref("missing", root=tmp_path) is None
 
 
 def test_stop_unknown_run_errors(tmp_path, monkeypatch) -> None:
