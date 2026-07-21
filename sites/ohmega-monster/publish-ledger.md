@@ -104,3 +104,10 @@ cost: ~$0.3218
 pool: backfeed=4, gkg=40, market=23, x=24
 promoted_from: gkg=2, market=2
 run: 0014__ede7ac63-ba48-4f23-9267-e8efb6835c4d
+
+### PUBLISH ai-infrastructure-is-increasingly-a-credit-market-risk-with-1d951d — 2026-07-21
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 0 produced, 0 escapes
+cost: ~$0.0000
+run: 0015__333337a0-04ef-42f2-95dd-e79b55397cc1
