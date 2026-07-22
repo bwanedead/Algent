@@ -62,13 +62,17 @@ _WORKSPACE_DIRNAME = "analytics_workspace"
 _GUARDED_STORE_DIRS = ("profile_store", "treatment_store", "draft_store", "lead_store")
 
 # The artifact-type allowlist + size cap the post-run sweep enforces (mechanical, not doctrinal).
-_ALLOWED_SUFFIXES = {".png", ".svg", ".csv", ".md", ".json", ".txt"}
-_MAX_FILE_BYTES = 2_000_000       # a chart/table is small; anything large is a red flag
+_ALLOWED_SUFFIXES = {".png", ".svg", ".csv", ".md", ".json", ".txt", ".gif"}
+_MAX_FILE_BYTES = 2_500_000       # chart/map/short gif; anything large is a red flag
 _MAX_TOTAL_BYTES = 8_000_000
 
 # What the worker is told to emit (by kind). The harness looks for exactly these.
-_VISUAL_NAMES = {"chart": ("chart.svg", "chart.png"), "image": ("illustration.svg", "illustration.png"),
-                 "table": ("table.md",), "insight": ("insight.md",)}
+_VISUAL_NAMES = {
+    "chart": ("chart.svg", "chart.png", "chart.gif"),
+    "image": ("illustration.svg", "illustration.png", "illustration.gif", "map.svg", "map.png"),
+    "table": ("table.md",),
+    "insight": ("insight.md",),
+}
 _DATA_NAME = "data.csv"
 _CAPTION_NAME = "caption.md"
 
@@ -188,6 +192,12 @@ def _brief(request: AnalyticsRequest) -> str:
         f"**Why it helps:** {request.rationale}",
         *data_rules,
         "",
+        "Stack (already installed in the workspace — do not pip install):",
+        "- Python: `..\\.venv\\Scripts\\python.exe` (Windows) or `../.venv/bin/python` (Unix)",
+        "- Helpers: `../lib/` — `lib.charts`, `lib.maps`, `lib.animate`, `lib.theme`",
+        "- Basemap: `../data/natural_earth/ne_110m_admin_0_countries.geojson` (maps only)",
+        "- Maps: country/theater frame + real lat/lon; optional inset box; never freehand coastlines.",
+        "",
         "The figure must be self-explanatory to a cold house reader:",
         "- Chart title = what is measured (plain words).",
         "- Every axis labeled with units; series named in human language (no series1/y).",
@@ -200,7 +210,8 @@ def _brief(request: AnalyticsRequest) -> str:
         "  No claim ids, no pipeline jargon.",
         "",
         "Then emit:",
-        f"- `{names[0]}`" + (f" (or `{names[1]}`)" if len(names) > 1 else "") + " — the analytic itself",
+        f"- `{names[0]}`" + (f" (or another allowed name: {', '.join(names)})" if len(names) > 1 else "")
+        + " — the analytic itself",
         f"- `{_DATA_NAME}` — the exact rows you plotted (so the harness can verify the numbers)",
         f"- `{_CAPTION_NAME}` — plain-language explainer (see above)",
         "\nIf the data is too thin, contested, or would force a misleading visual: do NOT improvise —",
@@ -209,17 +220,26 @@ def _brief(request: AnalyticsRequest) -> str:
 
 
 def _prompt(*, may_source: bool = False) -> str:
+    stack = (
+        "Use the analytics_workspace venv Python if present "
+        "(Windows: ..\\.venv\\Scripts\\python.exe ; Unix: ../.venv/bin/python) and the helpers in "
+        "../lib/ (charts, maps, animate, theme). Prefer those over freehand drawing. "
+        "Never pip install. Never write outside analytics_workspace/. "
+    )
     if may_source:
         return (
-            "Read AGENTS.md, REQUEST.md, and data.json in this folder. Build the one requested "
-            "analytic. You may fetch public data named by source_hint / REQUEST.md — put every "
-            "plotted row in data.csv and name the publisher in caption.md. Never invent numbers. "
-            "Write the output files REQUEST.md asks for. Do not install heavy packages, do not "
-            "write outside this folder."
+            "Read AGENTS.md (parent folder), REQUEST.md, and data.json in this folder. Build the "
+            "one requested analytic. " + stack +
+            "You may fetch public data named by source_hint / REQUEST.md — put every plotted row "
+            "in data.csv and name the publisher in caption.md. Never invent numbers. Write the "
+            "output files REQUEST.md asks for."
         )
-    return ("Read AGENTS.md, REQUEST.md, and data.json in this folder, then build the one requested "
-            "analytic from ONLY the data in data.json and write the output files REQUEST.md asks for. "
-            "Do not fetch anything, do not install heavy packages, do not write outside this folder.")
+    return (
+        "Read AGENTS.md (parent folder), REQUEST.md, and data.json in this folder, then build the "
+        "one requested analytic from ONLY the data in data.json and write the output files "
+        "REQUEST.md asks for. " + stack +
+        "Do not fetch anything."
+    )
 
 
 # ── the mechanical guardrails (harness-owned) ────────────────────────────────────────────────

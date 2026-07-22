@@ -1,62 +1,68 @@
-# Map analytics stack (newsroom)
+# Map & analytics stack (newsroom)
 
 House readers need geography that is **accurate first**, then clear. Zoom-only village
 clusters without national context fail that bar — the Lebanon pilot-zone figure was a live
 example: three towns in a box, hard to place, easy to misread as "somewhere in the south."
+
+## Managed install (dedicated venv)
+
+Analytics packages live in **`analytics_workspace/.venv`**, not the system Python and not
+(necessarily) `backend/.venv`. Pin list: `analytics_workspace/requirements.txt`.
+
+```powershell
+cd analytics_workspace
+powershell -File scripts\setup_venv.ps1
+```
+
+| Package | Role |
+|---------|------|
+| numpy, pandas | series / tables |
+| matplotlib | charts + map draw |
+| shapely, pyproj | honest geometry |
+| Pillow, imageio | PNG / short GIF |
+
+**Excluded on purpose:** geopandas, GDAL, cartopy (heavy native builds). Country outlines come
+from a **~1–2 MB** Natural Earth **110m** admin-0 GeoJSON (`scripts/download_basemap.py`).
+
+Helpers (tracked): `analytics_workspace/lib/{theme,charts,maps,animate}.py`.
 
 ## Goals
 
 | Need | Form |
 |---|---|
 | Where are these places? | Country (or theater) basemap + labeled points + optional inset |
-| How big is this region vs the country? | Same, with scale bar / relative markers |
-| Where is intensity highest? | Choropleth from real per-region values only |
+| How big is this region vs the country? | Same, with relative frame |
+| Where is intensity highest? | Choropleth from real per-region values only (later) |
 | What changed on a front? | Theater map with dated layers + as-of (no invented fills) |
+| Explain a sequence | Short GIF via `lib.animate` (few frames, under size cap) |
 
 ## Composition default
 
-1. **Outer frame:** full country or multi-country theater relevant to the story.
-2. **Inset / callout:** local cluster or front when detail matters.
-3. **Landmarks:** capital, major city, border, and any line/river the prose uses.
+1. **Outer frame:** full country or multi-country theater.
+2. **Inset / callout:** local cluster when detail matters.
+3. **Landmarks:** capital, major city, border, named river only if prose uses it.
 4. **Caption:** what is shown, as-of, coordinate/outline sources.
 
 Never present freehand relative positions as geographic truth. Skip if honest geometry is
 unavailable.
 
-## Implementation path (staged)
+## Worker integration
 
-**Now (worker doctrine, no new installs forced)**
-- Analytics router + `analytics_workspace/AGENTS.md` require country-scale default + real
-  geocodes when maps are requested.
-- Worker may Nominatim/OSM (when `may_source`) for place coords; put rows in `data.csv`.
-- Prefer SVG; Ohmega Monster theme tokens already in AGENTS.md.
+- Doctrine: `analytics_workspace/AGENTS.md` points at the venv + `lib/`.
+- Harness: `analytics_worker` REQUEST.md / prompt tell the grok worker to use
+  `../.venv/.../python` and allow `.gif` / `map.svg` outputs.
+- Scratch folders remain gitignored; stack + doctrine are tracked.
 
-**Next (when the maintainer adds deps deliberately)**
-- Pin a small stack in the analytics/worker environment only, e.g.:
-  - `matplotlib` (already intended for charts)
-  - `shapely` + `pyproj` for geometry
-  - optional `geopandas` or pure GeoJSON + matplotlib `PathPatch`
-- Vendor or cache **Natural Earth 110m/50m** admin-0 (and admin-1 when needed) under a
-  gitignored data dir the worker may read — not full planet tiles.
-- Thin helper module (e.g. `analytics_workspace/lib/maps.py` later): `country_frame(iso)`,
-  `plot_points(lons, lats, labels)`, `inset_box(...)`, theme applied once.
+## Later
 
-**Later (dynamic / multi-run)**
-- Choropleth join on ISO/admin codes from public tables.
-- Multi-layer conflict maps only with dated claim-backed polygons or official lines.
-- Optional interactive (site-side) is a separate product decision; pipeline still ships a
-  static SVG/PNG that stands alone.
+- Admin-1 / selective higher-res outlines when a story needs provinces (still not planet tiles).
+- Choropleth join on ISO codes from public tables.
+- Site-side interactive maps only as a separate product decision; pipeline still ships static SVG/PNG/GIF.
 
 ## What not to do
 
 - Zoom-only cluster with no national context.
 - AI-illustrated "map" that looks cartographic but is not geocoded.
 - Heatmaps or "areas controlled by X" without real region values or official boundaries.
-- Installing packages ad hoc inside a run (`pip install` is forbidden in the sandbox).
-
-## Ownership
-
-- **Router** decides *whether* a map helps and specifies country-scale + data path.
-- **Worker** builds only honest figures inside `analytics_workspace/`.
-- **Doctrine** (spirit / molecule / comprehension) keeps prose from assuming the reader
-  already knows the places; the map supports that orientation, it does not replace it.
+- `pip install` inside a run; mid-run dependency sprawl.
+- Downloading global OSM/elevation dumps into the workspace.

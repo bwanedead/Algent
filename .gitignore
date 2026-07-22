@@ -242,9 +242,20 @@ backend/profile_store/
 # Lead backfeed queue (derived leads flowing back to discovery) — never committed
 backend/lead_store/
 
-# Analytics worker sandbox — transient produced artifacts (the AGENTS.md doctrine IS tracked)
+# Analytics worker sandbox — scratch runs are local; stack + doctrine are tracked
 /analytics_workspace/*
 !/analytics_workspace/AGENTS.md
+!/analytics_workspace/README.md
+!/analytics_workspace/requirements.txt
+!/analytics_workspace/lib/
+!/analytics_workspace/lib/**
+!/analytics_workspace/scripts/
+!/analytics_workspace/scripts/**
+!/analytics_workspace/data/
+!/analytics_workspace/data/README.md
+# venv + downloaded basemaps stay local (setup scripts recreate them)
+/analytics_workspace/.venv/
+/analytics_workspace/data/natural_earth/
 
 # Editorial-treatment store (frame+molecule assets written by TreatmentStore) — never committed
 backend/treatment_store/

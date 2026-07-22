@@ -1,0 +1,24 @@
+# Analytics / visualization stack for the newsroom worker sandbox.
+# Install ONLY into analytics_workspace/.venv (never into the system Python).
+# Keep this list small — no geopandas/GDAL/cartopy (heavy native builds).
+#
+#   python -m venv .venv
+#   .venv\Scripts\python.exe -m pip install -U pip
+#   .venv\Scripts\python.exe -m pip install -r requirements.txt
+#   .venv\Scripts\python.exe scripts/download_basemap.py
+#   .venv\Scripts\python.exe scripts/smoke_test.py
+
+# Core numerics + tables
+numpy==2.2.6
+pandas==2.2.3
+
+# Charts / static figures
+matplotlib==3.10.3
+
+# Geometry for honest maps (pure wheels; no GDAL)
+shapely==2.1.1
+pyproj==3.7.1
+
+# Raster / GIF frames (short animations later)
+Pillow==11.2.1
+imageio==2.37.0
