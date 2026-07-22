@@ -253,9 +253,12 @@ backend/lead_store/
 !/analytics_workspace/scripts/**
 !/analytics_workspace/data/
 !/analytics_workspace/data/README.md
-# venv + downloaded basemaps stay local (setup scripts recreate them)
+# venv + downloaded basemaps + local smoke/scratch stay local (setup recreates them)
 /analytics_workspace/.venv/
 /analytics_workspace/data/natural_earth/
+/analytics_workspace/data/_smoke/
+/analytics_workspace/**/__pycache__/
+/analytics_workspace/**/*.pyc
 
 # Editorial-treatment store (frame+molecule assets written by TreatmentStore) — never committed
 backend/treatment_store/
