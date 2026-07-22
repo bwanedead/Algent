@@ -51,6 +51,13 @@ _ANALYTICS_CAP_ENV = "ALGENT_ANALYTICS_MAX"
 # unless the operator raises the cap; zero is still success when nothing useful exists.
 _ANALYTICS_CAP_DEFAULT = 1
 
+# A live failure mode: the comprehension "handhold" repair lap rewrote a ~400-word piece into a
+# single sentence, then the pipeline still marked it publishable. A hollow shell is not a dud —
+# it is a corrupted repair. Floor below this → not publishable; repair that collapses the body
+# is discarded.
+_MIN_PUBLISH_WORDS = 120
+_REPAIR_KEEP_FRAC = 0.55  # keep prior draft if the repair keeps less than this share of body words
+
 
 def _analytics_worker_enabled() -> bool:
     return os.environ.get(_ANALYTICS_WORKER_ENV, "0").strip().lower() in ("1", "true", "yes", "on")
@@ -61,6 +68,19 @@ def _analytics_cap() -> int:
         return max(0, int(os.environ.get(_ANALYTICS_CAP_ENV, _ANALYTICS_CAP_DEFAULT)))
     except ValueError:
         return _ANALYTICS_CAP_DEFAULT
+
+
+def _body_words(draft: dict[str, Any] | None) -> int:
+    if not draft:
+        return 0
+    body = str(draft.get("body") or "")
+    n = len(body.split())
+    if n:
+        return n
+    try:
+        return int(draft.get("word_count") or 0)
+    except (TypeError, ValueError):
+        return 0
 
 
 class PipelineState(TypedDict, total=False):
@@ -131,10 +151,16 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
                 {"analytics_plan": capped, "profile": enriched_profile}, config).get("analytics_artifacts") or []
 
         outcome = str(draft_report.get("outcome", ""))
+        words = _body_words(draft)
+        # Keep word_count honest even if the model left it stale after a bad rewrite.
+        if draft:
+            draft = {**draft, "word_count": words}
         if outcome == "blocked_omission":
             status = "blocked"                # dropped required evidence — a real block
         elif caveat_verdict == "needs_hedging":
             status = "needs_hedging"          # the prose doesn't keep a flagged promise — hold
+        elif words < _MIN_PUBLISH_WORDS:
+            status = "needs_revision"         # hollow / collapsed body — never ship a caption + map
         else:
             status = "publishable"            # grounded (or honestly caveated) AND caveats verified
 
@@ -153,7 +179,7 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
             comprehension_findings=len(comprehension.get("findings", [])),
             comprehension_rounds=comprehension_rounds,
             article_title=str(draft.get("title", "")),
-            word_count=int(draft.get("word_count", 0) or 0),
+            word_count=words,
             barriers=draft_report.get("barriers", []),
             unverified_figures=draft_report.get("unverified_figures", []),
             analytics_warranted=bool(analytics.get("warranted")),
@@ -239,18 +265,37 @@ def _repair_comprehension(
     Handhold-or-cut only (the drafter's comprehension block enforces it) — it adds no claims and
     strengthens nothing, so no honesty gate needs to re-run. If the repair produces nothing, keep
     the original draft and the honest verdict rather than looping.
+
+    CRITICAL: a repair that *collapses* the body (handholds that wipe the article) is discarded.
+    Live failure: ~400 words → ~21 words, then still published as a map + one sentence.
     """
+    prior_words = _body_words(draft)
     repaired = build_drafter(context).invoke(
         {"treatment": treatment, "profile": profile, "prior_draft": draft,
          "comprehension_check": comprehension}, config)
     new_draft = repaired.get("draft") or {}
     if not new_draft:
         return draft, profile, comprehension, 2
+    new_words = _body_words(new_draft)
+    collapsed = (
+        prior_words >= _MIN_PUBLISH_WORDS
+        and (new_words < _MIN_PUBLISH_WORDS
+             or new_words < int(prior_words * _REPAIR_KEEP_FRAC))
+    )
+    if collapsed:
+        context.emit(RAMP_REPAIRED, {
+            "verdict": "repair_rejected_collapsed",
+            "prior_words": prior_words, "new_words": new_words,
+            "findings_remaining": len(comprehension.get("findings", [])),
+        })
+        return draft, profile, comprehension, 2
     profile = repaired.get("profile") or profile
+    new_draft = {**new_draft, "word_count": new_words}
     rechecked = build_comprehension_reviewer(context).invoke({"draft": new_draft}, config).get(
         "comprehension_check") or {}
     context.emit(RAMP_REPAIRED, {"verdict": rechecked.get("verdict"),
-                                 "findings_remaining": len(rechecked.get("findings", []))})
+                                 "findings_remaining": len(rechecked.get("findings", [])),
+                                 "prior_words": prior_words, "new_words": new_words})
     return new_draft, profile, rechecked, 2
 
 

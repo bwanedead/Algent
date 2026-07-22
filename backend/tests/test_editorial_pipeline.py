@@ -109,16 +109,19 @@ def test_needs_hedging_self_heals_and_ships(monkeypatch) -> None:
 
 def test_comprehension_is_advisory_repairs_but_never_blocks_publish(monkeypatch) -> None:
     # A hard-to-follow piece is a dud, not a lie: gate C earns one ramp-repair lap, then ships either
-    # way. needs_ramp must NOT flip a publishable piece to held.
+    # way. needs_ramp must NOT flip a publishable piece to held — if the body stays intact.
+    body = " ".join(["word"] * 200)
     plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
-    draft_out = {"draft": {"id": "d", "title": "t", "word_count": 400}, "gauntlet": {"outcome": "grounded"}}
+    draft_out = {"draft": {"id": "d", "title": "t", "body": body, "word_count": 200},
+                 "gauntlet": {"outcome": "grounded"}}
     _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}})
-    # first read flags a ramp gap; after the repair, it reads clear
+    # first read flags a ramp gap; after the repair, it reads clear (body still long enough)
     comp = _Sequence({"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}]}},
                      {"comprehension_check": {"verdict": "clear", "findings": []}})
     monkeypatch.setattr(pl, "build_comprehension_reviewer", lambda ctx: comp)
     monkeypatch.setattr(pl, "build_drafter", lambda ctx: _Sequence(
-        {"draft": {"id": "d", "title": "t"}, "profile": {"id": "p"}}))
+        {"draft": {"id": "d", "title": "t", "body": body + " ramp", "word_count": 201},
+         "profile": {"id": "p"}}))
 
     events: list = []
     r = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({"profile": {"id": "p"}})["pipeline"]
@@ -127,15 +130,51 @@ def test_comprehension_is_advisory_repairs_but_never_blocks_publish(monkeypatch)
     assert any(et == pl.RAMP_REPAIRED for et, _ in events)
 
 
-def test_a_still_unclear_piece_ships_anyway(monkeypatch) -> None:
-    # even if the ramp repair doesn't fully take, the honest (if imperfect) piece ships — duds ship.
+def test_comprehension_repair_that_collapses_the_body_is_rejected(monkeypatch) -> None:
+    # Live failure: ramp repair wiped ~400 words down to one sentence; must keep the prior draft.
+    long_body = " ".join(["word"] * 400)
     plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
-    draft_out = {"draft": {"id": "d", "title": "t"}, "gauntlet": {"outcome": "grounded"}}
+    draft_out = {"draft": {"id": "d", "title": "t", "body": long_body, "word_count": 400},
+                 "gauntlet": {"outcome": "grounded"}}
+    _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}})
+    monkeypatch.setattr(pl, "build_comprehension_reviewer", lambda ctx: _Sequence(
+        {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}]}}))
+    monkeypatch.setattr(pl, "build_drafter", lambda ctx: _Sequence(
+        {"draft": {"id": "d", "title": "t", "body": "One hollow sentence.", "word_count": 3},
+         "profile": {"id": "p"}}))
+    events: list = []
+    out = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({"profile": {"id": "p"}})
+    r = out["pipeline"]
+    assert r["status"] == "publishable" and r["word_count"] >= 200
+    assert out["draft"]["body"] == long_body
+    assert any(
+        et == pl.RAMP_REPAIRED and (p or {}).get("verdict") == "repair_rejected_collapsed"
+        for et, p in events
+    )
+
+
+def test_hollow_draft_is_not_publishable(monkeypatch) -> None:
+    plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
+    draft_out = {"draft": {"id": "d", "title": "t", "body": "One line only.", "word_count": 3},
+                 "gauntlet": {"outcome": "grounded"}}
+    _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}})
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "p"}})["pipeline"]
+    assert r["status"] == "needs_revision" and r["publishable"] is False
+    assert r["word_count"] < pl._MIN_PUBLISH_WORDS
+
+
+def test_a_still_unclear_piece_ships_anyway(monkeypatch) -> None:
+    # even if the ramp repair doesn't fully take, the honest (if imperfect) piece ships — duds ship
+    # when they still have a real body.
+    body = " ".join(["word"] * 200)
+    plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
+    draft_out = {"draft": {"id": "d", "title": "t", "body": body, "word_count": 200},
+                 "gauntlet": {"outcome": "grounded"}}
     _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}})
     monkeypatch.setattr(pl, "build_comprehension_reviewer", lambda ctx: _Sequence(
         {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}]}}))  # never clears
     monkeypatch.setattr(pl, "build_drafter", lambda ctx: _Sequence(
-        {"draft": {"id": "d", "title": "t"}, "profile": {"id": "p"}}))
+        {"draft": {"id": "d", "title": "t", "body": body, "word_count": 200}, "profile": {"id": "p"}}))
 
     r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "p"}})["pipeline"]
     assert r["status"] == "publishable"                       # honest but imperfect -> still ships
