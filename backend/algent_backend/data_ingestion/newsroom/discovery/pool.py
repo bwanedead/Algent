@@ -98,7 +98,14 @@ def _x_item(hit: dict) -> PoolItem:
     pre = hit.get("pre_vetted")
     if pre is None:
         pre = src in ("x_grok", "grok")  # only LLM-curated paths skip re-rake
-    kind = "trending" if src in ("x_trends", "x_grok", "grok") or pre else "post"
+    if src in ("x_news",):
+        kind = "news"
+    elif src in ("x_aggregator",):
+        kind = "post"  # general wire posts — still rake/synthesis triage
+    elif src in ("x_grok", "grok") or pre:
+        kind = "trending"
+    else:
+        kind = "post"
     return PoolItem(
         id=item_id,
         label=topic,

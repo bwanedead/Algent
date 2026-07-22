@@ -322,17 +322,33 @@ def test_resolve_lanes_precedence(monkeypatch) -> None:
 
 
 def test_x_native_probe_search_costs_posts(monkeypatch) -> None:
+    """When News returns unusable junk, probe falls through to recent search (posts bill)."""
     from algent_backend.data_ingestion.newsroom.sources import x_native
 
     monkeypatch.setenv("X_BEARER_KEY", "tok")
 
-    class _Resp:
+    class _NewsJunk:
         status_code = 200
 
         def json(self):
             return {
                 "data": [{
-                    "id": "9", "text": "Breaking: thing", "author_id": "1",
+                    "id": "junk1",
+                    "name": "Celebrity dating drama",
+                    "summary": "gossip",
+                    "category": "Entertainment",
+                    "contexts": {"topics": ["Celebrity"]},
+                }],
+            }
+
+    class _SearchOk:
+        status_code = 200
+
+        def json(self):
+            return {
+                "data": [{
+                    "id": "9", "text": "Breaking: thing happened with officials today about policy",
+                    "author_id": "1",
                     "public_metrics": {"like_count": 5, "retweet_count": 1},
                 }],
                 "includes": {"users": [{"id": "1", "username": "wire"}]},
@@ -340,7 +356,9 @@ def test_x_native_probe_search_costs_posts(monkeypatch) -> None:
 
     class _Client:
         def get(self, url, params=None):
-            return _Resp()
+            if "news/search" in url:
+                return _NewsJunk()
+            return _SearchOk()
 
         def close(self):
             pass
@@ -351,43 +369,102 @@ def test_x_native_probe_search_costs_posts(monkeypatch) -> None:
     assert x_native.last_cost()["estimated_usd"] == 0.005
 
 
-def test_x_api_discovery_trends_sparse_zero_posts(monkeypatch) -> None:
-    """Default t0 path: trend names only — wide net, no post body spend."""
+def test_x_api_discovery_uses_news_stories_not_trends(monkeypatch) -> None:
+    """Default t0 path: X News stories (headlines), not WOEID trends or AI roster."""
     from algent_backend.data_ingestion.newsroom.sources import x_native
 
     monkeypatch.setenv("X_BEARER_TOKEN", "tok")
-    monkeypatch.delenv(x_native._HYDRATE_TOP_ENV, raising=False)
+    monkeypatch.setenv(x_native._NEWS_SEEDS_ENV, "government")  # one seed for the unit test
+    monkeypatch.setenv(x_native._USE_AGGS_ENV, "0")  # isolate News leg
 
     class _Resp:
         status_code = 200
 
         def json(self):
             return {
-                "data": [
-                    {"trend_name": "Alpha Event", "tweet_count": 9000},
-                    {"trend_name": "Beta Thing", "tweet_count": 100},
-                    {"trend_name": "alpha event", "tweet_count": 50},  # dupe casefold
-                ],
+                "data": [{
+                    "id": "n1",
+                    "name": "Something significant happens abroad",
+                    "summary": "A concrete development is unfolding with public stakes.",
+                    "category": "News",
+                    "hook": "What just changed",
+                    "keywords": ["diplomacy", "region"],
+                    "contexts": {"topics": ["Politics"]},
+                }],
             }
 
     class _Client:
         def get(self, url, params=None):
+            assert "news/search" in url
             return _Resp()
 
         def close(self):
             pass
 
-    hits = x_native.fetch_x_api_discovery(
-        woeids=(1, 23424977), max_topics=30, hydrate_top=0, client=_Client(),
-    )
-    # Two places × 2 unique names (alpha merged) = 2 topics after dedupe
-    names = {h["topic"] for h in hits}
-    assert "Alpha Event" in names or "alpha event" in {n.casefold() for n in names}
-    assert all(h["source"] == "x_trends" for h in hits)
-    assert all(not h.get("urls") for h in hits)
+    hits = x_native.fetch_x_api_discovery(max_stories=10, max_posts=0, client=_Client())
+    assert len(hits) == 1
+    assert hits[0]["source"] == "x_news"
+    assert "significant" in hits[0]["topic"].lower()
+    assert hits[0]["lane"].startswith("news:")
     c = x_native.last_cost()
-    assert c["posts_fetched"] == 0 and c["estimated_usd"] == 0.0
-    assert c["topics"] == len(hits) <= 30
+    assert c["posts_fetched"] == 0 and c["trend_requests"] == 0
+    assert "news" in c["mode"] and c["news_requests"] >= 1
+    assert c["estimated_usd"] == 0.0
+
+
+def test_x_api_discovery_pulls_general_aggregators(monkeypatch) -> None:
+    """Sparse aggregator leg: MarioNawfal-class wires, not a domain roster."""
+    from algent_backend.data_ingestion.newsroom.sources import x_native
+
+    monkeypatch.setenv("X_BEARER_TOKEN", "tok")
+    monkeypatch.setenv(x_native._USE_NEWS_ENV, "0")
+    monkeypatch.setenv(x_native._AGGS_ENV, "MarioNawfal")
+    monkeypatch.setenv(x_native._AGGS_PER_ENV, "2")
+
+    class _Client:
+        def get(self, url, params=None):
+            class R:
+                def __init__(self, code, body):
+                    self.status_code = code
+                    self._body = body
+                    self.text = str(body)
+
+                def json(self):
+                    return self._body
+
+            if "/users/by/username/" in url:
+                return R(200, {"data": {"id": "111", "username": "MarioNawfal"}})
+            if "/users/111/tweets" in url:
+                return R(200, {
+                    "data": [
+                        {
+                            "id": "p1",
+                            "text": "BREAKING: officials confirm a major policy shift after overnight talks with allies.",
+                            "created_at": "2026-07-22T01:00:00.000Z",
+                            "public_metrics": {"like_count": 100, "retweet_count": 20},
+                        },
+                        {
+                            "id": "p2",
+                            "text": "Iran strike damage forces Kuwait to urge electricity rationing across the country.",
+                            "created_at": "2026-07-22T02:00:00.000Z",
+                            "public_metrics": {"like_count": 50, "retweet_count": 10},
+                        },
+                    ],
+                })
+            return R(404, {})
+
+        def close(self):
+            pass
+
+    hits = x_native.fetch_x_api_discovery(max_stories=10, max_posts=5, client=_Client())
+    assert len(hits) == 2
+    assert all(h["source"] == "x_aggregator" for h in hits)
+    assert hits[0]["author"] == "MarioNawfal"
+    assert "MarioNawfal" in hits[0]["lane"]
+    c = x_native.last_cost()
+    assert c["posts_fetched"] == 2 and c["user_timeline_requests"] == 1
+    assert c["estimated_usd"] == 0.01
+    assert "aggregators" in c["mode"]
 
 
 def test_fetch_polymarket_filters_sports_and_captures_movement() -> None:
@@ -475,17 +552,18 @@ def test_resolve_channels_precedence(monkeypatch) -> None:
     assert pipeline.resolve_channels({"nope"}) == pipeline.DEFAULT_CHANNELS
 
 
-def test_build_pool_includes_x_trends() -> None:
+def test_build_pool_includes_x_news() -> None:
     from algent_backend.data_ingestion.newsroom.discovery.pool import build_pool
 
-    x_hits = [{"topic": "Strait of Hormuz", "summary": "Trending on X (worldwide)",
-               "urls": [], "source": "x_trends", "tweet_count": 12000, "pre_vetted": False}]
+    x_hits = [{"topic": "Something significant happens abroad",
+               "summary": "A concrete development is unfolding.",
+               "urls": [], "source": "x_news", "pre_vetted": False, "lane": "news:World",
+               "news_id": "n1", "category": "World"}]
     pool = build_pool(None, None, None, x_hits)
     assert pool.by_channel.get("x") == 1
     item = pool.items[0]
-    assert item.channel == "x" and item.kind == "trending"
-    assert item.signals["tweet_count"] == 12000
-    assert item.evidence == []
+    assert item.channel == "x" and item.kind == "news"
+    assert "significant" in item.label.lower()
 
 
 def test_ensure_t0_x_channel_skips_gkg_and_fetches_api(monkeypatch, tmp_path) -> None:
@@ -497,8 +575,8 @@ def test_ensure_t0_x_channel_skips_gkg_and_fetches_api(monkeypatch, tmp_path) ->
     monkeypatch.setattr(pipeline.gdelt_gkg, "fetch_latest", lambda: gkg_called.append(1) or ("x", []))
 
     def _fake_api(**_):
-        return [{"topic": "T", "summary": "Trending", "urls": [],
-                 "source": "x_trends", "pre_vetted": False}]
+        return [{"topic": "Story from X News", "summary": "summary", "urls": [],
+                 "source": "x_news", "pre_vetted": False, "lane": "news:World"}]
 
     monkeypatch.setattr(
         "algent_backend.data_ingestion.newsroom.sources.x_native.fetch_x_api_discovery",
@@ -510,7 +588,8 @@ def test_ensure_t0_x_channel_skips_gkg_and_fetches_api(monkeypatch, tmp_path) ->
     )
     monkeypatch.setattr(
         "algent_backend.data_ingestion.newsroom.sources.x_native.last_cost",
-        lambda: {"topics": 1, "posts_fetched": 0, "estimated_usd": 0.0},
+        lambda: {"topics": 1, "posts_fetched": 0, "estimated_usd": 0.0,
+                 "news_requests": 1, "search_requests": 0, "mode": "news"},
     )
     pool, path = pipeline.ensure_t0(channels={"x"}, on_progress=lambda _m: None)
     assert gkg_called == []  # gkg off → never fetched

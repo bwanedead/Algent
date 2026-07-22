@@ -1,16 +1,22 @@
 """
 X discovery via the native X API v2 — primary t0 X channel (sparse / cost-aware).
 
-Same data plane as X's hosted MCP (``api.x.com/mcp``). The pipeline uses REST with an
-app-only Bearer so t0 stays headless.
+Same data plane as X's hosted MCP (``api.x.com/mcp``). Headless REST + app Bearer.
 
-**Default strategy (cheap wide net):**
-  1. Pull **trends** for a few locations (worldwide + US) — topic *names*, not posts.
-  2. Cap at ~30 pool items (topic seeds for synthesis).
-  3. **Do not hydrate posts by default** — posts are the billable unit (~$0.005 each).
-  4. Optional: hydrate only the top K trends with a tiny post budget (hard-capped).
+**Goal:** funnel significant *X-native* developments into discovery without overfitting
+to a domain (AI, sports, …) or a huge account roster.
 
-Grok CLI remains an optional supplement (``x_grok_cli``), never the default.
+**Default strategy (two legs, both general):**
+  1. **X News** (``GET /2/news/search``) — platform-clustered stories (headline + summary
+     + category). Topic-agnostic seeds open the index; X decides what is a "story".
+  2. **General aggregators** — a *tiny* list of cross-topic news wires on X
+     (e.g. MarioNawfal, SpectatorIndex, DiscloseTV). Not domain notables; they
+     rebroadcast "main stuff" that often lives only there. Sparse post budget.
+
+Rejected: WOEID trends (fandom noise), AI/lab rosters, large follow lists.
+
+Cost: News story metadata is not billed as post bodies. Aggregator timelines
+pull a few posts each (~$0.005/post). Cap hard via ``ALGENT_X_MAX_POSTS``.
 """
 
 from __future__ import annotations
@@ -20,53 +26,89 @@ import re
 from typing import Any
 
 _RECENT_SEARCH = "https://api.x.com/2/tweets/search/recent"
-_TRENDS = "https://api.x.com/2/trends/by/woeid/{woeid}"
+_NEWS_SEARCH = "https://api.x.com/2/news/search"
+_USER_BY_USERNAME = "https://api.x.com/2/users/by/username/{username}"
+_USER_TWEETS = "https://api.x.com/2/users/{id}/tweets"
 _TIMEOUT_S = 25.0
 
-# Pay-per-use post read estimate (guardrail; confirm in X console).
 _USD_PER_POST = 0.005
-# Trends / counts return no post bodies — estimate as free of post-billing.
-_USD_PER_TREND_REQUEST = 0.0
+# News story objects are not post bodies; treat as free of per-post billing until proven otherwise.
+_USD_PER_NEWS_REQUEST = 0.0
 
 _TOKEN_ENV_CANDIDATES = (
     "X_BEARER_TOKEN", "X_BEARER_KEY", "TWITTER_BEARER_TOKEN", "X_API_BEARER_TOKEN",
     "X_BEARER", "BEARER_TOKEN",
 )
 
-# Locations: where attention is ranked — not topic categories.
-# 1 = Worldwide, 23424977 = United States (Yahoo WOEID).
-_WOEIDS_ENV = "ALGENT_X_TREND_WOEIDS"
-_DEFAULT_WOEIDS = (1, 23424977)
+_MAX_STORIES_ENV = "ALGENT_X_MAX_TOPICS"   # max total hits (news + aggregators)
+_MAX_POSTS_ENV = "ALGENT_X_MAX_POSTS"       # post bodies from aggregators / fallback
+_NEWS_AGE_ENV = "ALGENT_X_NEWS_MAX_AGE_H"  # hours (default 48)
+_NEWS_SEEDS_ENV = "ALGENT_X_NEWS_SEEDS"    # comma seed queries
+_USE_NEWS_ENV = "ALGENT_X_USE_NEWS"        # default on
+_USE_AGGS_ENV = "ALGENT_X_USE_AGGREGATORS"  # default on
+_AGGS_ENV = "ALGENT_X_AGGREGATORS"         # comma handles without @
+_AGGS_PER_ENV = "ALGENT_X_AGGREGATOR_POSTS"  # posts per aggregator account
 
-_MAX_TOPICS_ENV = "ALGENT_X_MAX_TOPICS"       # pool items from X (default 30)
-_MAX_TRENDS_ENV = "ALGENT_X_MAX_TRENDS_PER"  # per location (API max 50)
-_HYDRATE_TOP_ENV = "ALGENT_X_HYDRATE_TOP"    # how many top trends get a post search (default 0)
-_MAX_POSTS_ENV = "ALGENT_X_MAX_POSTS"        # hard ceiling on posts returned this run (default 20)
-_POSTS_PER_ENV = "ALGENT_X_POSTS_PER"        # posts per hydrate call, min 10 API (default 10)
+# Topic-agnostic seeds: open the News index without scripting a domain menu.
+# Avoid bare "breaking" — it heavily matches viral/social noise on X.
+_DEFAULT_NEWS_SEEDS = (
+    "war",
+    "government",
+    "election",
+    "economy",
+    "court",
+    "military",
+    "policy",
+    "science",
+    "diplomacy",
+    "strike",
+)
 
-# Module-level ledger for the last discovery call (t0 progress + tests).
+# Cross-topic news aggregators on X — general wires, not vertical domain lists.
+# Env can replace entirely (ALGENT_X_AGGREGATORS=handle1,handle2) or disable (none/off).
+_DEFAULT_AGGREGATORS = (
+    "MarioNawfal",
+    "spectatorindex",
+    "Disclosetv",
+    "visegrad24",
+)
+
+# Soft drop: News stories that are pure platform culture noise (not "main stuff").
+_JUNK_TOPICS = frozenset({
+    "relationships", "celebrity", "entertainment", "sports", "gaming",
+    "memes", "travel", "fashion", "music",
+})
+_JUNK_CATEGORIES = frozenset({"entertainment", "sports"})
+
+# Fallback recent-search if News + aggregators empty — still no account roster.
+_FALLBACK_SEARCH = (
+    '(announces OR announced OR confirms OR confirmed OR "said today" OR "press conference" '
+    'OR "has ordered" OR "has approved" OR "has banned") -is:retweet -is:reply lang:en'
+)
+
 _LAST_COST: dict[str, Any] = {
     "posts_fetched": 0,
     "trend_requests": 0,
+    "news_requests": 0,
     "search_requests": 0,
+    "user_timeline_requests": 0,
     "topics": 0,
     "estimated_usd": 0.0,
+    "mode": "news",
 }
 
 
 def last_cost() -> dict[str, Any]:
-    """Cost ledger from the most recent ``fetch_x_api_discovery`` call."""
     return dict(_LAST_COST)
 
 
 def resolve_bearer() -> str | None:
-    """App-only Bearer for X API v2 — same credential family as research ``web_search(source=x)``."""
     try:
         from algent_backend.config import get_service_api_key
         tok = get_service_api_key("x")
         if tok:
             return tok
-    except Exception:  # noqa: BLE001 — env fallback is fine offline
+    except Exception:  # noqa: BLE001
         pass
     for name in _TOKEN_ENV_CANDIDATES:
         if os.environ.get(name):
@@ -74,16 +116,24 @@ def resolve_bearer() -> str | None:
     return None
 
 
-def resolve_woeids() -> tuple[int, ...]:
-    raw = os.environ.get(_WOEIDS_ENV, "")
+def resolve_news_seeds() -> tuple[str, ...]:
+    raw = os.environ.get(_NEWS_SEEDS_ENV, "")
+    if raw.strip().lower() in ("none", "off", "0"):
+        return ()
     if raw.strip():
-        out: list[int] = []
-        for part in raw.split(","):
-            part = part.strip()
-            if part.isdigit():
-                out.append(int(part))
-        return tuple(out) or _DEFAULT_WOEIDS
-    return _DEFAULT_WOEIDS
+        return tuple(s.strip() for s in raw.split(",") if s.strip())
+    return _DEFAULT_NEWS_SEEDS
+
+
+def resolve_aggregators() -> tuple[str, ...]:
+    raw = os.environ.get(_AGGS_ENV, "")
+    if raw.strip().lower() in ("none", "off", "0"):
+        return ()
+    if raw.strip():
+        return tuple(s.strip().lstrip("@") for s in raw.split(",") if s.strip())
+    if not _aggregators_enabled():
+        return ()
+    return _DEFAULT_AGGREGATORS
 
 
 def _int_env(name: str, default: int, *, lo: int, hi: int) -> int:
@@ -94,17 +144,35 @@ def _int_env(name: str, default: int, *, lo: int, hi: int) -> int:
     return max(lo, min(n, hi))
 
 
-def _record_cost(*, posts: int = 0, trend_reqs: int = 0, search_reqs: int = 0, topics: int = 0) -> float:
-    usd = posts * _USD_PER_POST + trend_reqs * _USD_PER_TREND_REQUEST
+def _news_enabled() -> bool:
+    return os.environ.get(_USE_NEWS_ENV, "1").strip().lower() not in ("0", "false", "no", "off")
+
+
+def _aggregators_enabled() -> bool:
+    return os.environ.get(_USE_AGGS_ENV, "1").strip().lower() not in ("0", "false", "no", "off")
+
+
+def _record_cost(
+    *,
+    posts: int = 0,
+    news_reqs: int = 0,
+    search_reqs: int = 0,
+    timeline_reqs: int = 0,
+    topics: int = 0,
+    mode: str = "news",
+) -> float:
+    usd = posts * _USD_PER_POST + news_reqs * _USD_PER_NEWS_REQUEST
     _LAST_COST.update({
         "posts_fetched": posts,
-        "trend_requests": trend_reqs,
+        "trend_requests": 0,
+        "news_requests": news_reqs,
         "search_requests": search_reqs,
+        "user_timeline_requests": timeline_reqs,
         "topics": topics,
         "estimated_usd": round(usd, 6),
         "usd_per_post": _USD_PER_POST,
+        "mode": mode,
     })
-    # When a run cost meter is active (research), fold in; t0 often has no meter — still logged.
     try:
         from algent_backend.agent_system.foundation import cost as run_cost
         if run_cost.is_active() and usd > 0:
@@ -116,81 +184,112 @@ def _record_cost(*, posts: int = 0, trend_reqs: int = 0, search_reqs: int = 0, t
 
 def fetch_x_api_discovery(
     *,
-    woeids: tuple[int, ...] | None = None,
-    max_topics: int | None = None,
-    hydrate_top: int | None = None,
+    max_stories: int | None = None,
     max_posts: int | None = None,
     client: object | None = None,
 ) -> list[dict[str, Any]]:
-    """Sparse wide-net X discovery for t0.
+    """X-native discovery: News stories + sparse general aggregators.
 
-    Default: **trends only** (worldwide + US) → up to ~30 topic seeds, **0 posts**.
-    Optional hydrate of the top few trends is hard-capped by ``max_posts``.
+    No trends lists. No domain rosters. Caps volume and post pull hard.
     """
     if not resolve_bearer() and client is None:
         _record_cost()
         return []
 
-    places = woeids if woeids is not None else resolve_woeids()
-    cap_topics = max_topics if max_topics is not None else _int_env(_MAX_TOPICS_ENV, 30, lo=1, hi=50)
-    per_place = _int_env(_MAX_TRENDS_ENV, 20, lo=1, hi=50)
-    n_hydrate = hydrate_top if hydrate_top is not None else _int_env(_HYDRATE_TOP_ENV, 0, lo=0, hi=10)
+    story_cap = max_stories if max_stories is not None else _int_env(_MAX_STORIES_ENV, 20, lo=1, hi=50)
+    # Default 20 posts ≈ $0.10 — X user-timeline min is 5/req, so 4 wires need ~20.
     post_budget = max_posts if max_posts is not None else _int_env(_MAX_POSTS_ENV, 20, lo=0, hi=100)
-    posts_per = _int_env(_POSTS_PER_ENV, 10, lo=10, hi=25)  # API min 10 for recent search
+    age_h = _int_env(_NEWS_AGE_ENV, 48, lo=1, hi=720)
+    posts_per_agg = _int_env(_AGGS_PER_ENV, 3, lo=1, hi=10)
 
-    trends: list[dict[str, Any]] = []
-    trend_reqs = 0
-    for woeid in places:
-        try:
-            batch = _fetch_trends(woeid, max_trends=per_place, client=client)
-            trend_reqs += 1
-            for t in batch:
-                t = {**t, "woeid": woeid}
-                trends.append(t)
-        except Exception:  # noqa: BLE001 — one location must not sink X
-            continue
-
-    merged = _merge_trends(trends)[:cap_topics]
-    hits = [_trend_hit(t) for t in merged]
-
-    posts_fetched = 0
+    hits: list[dict[str, Any]] = []
+    news_reqs = 0
     search_reqs = 0
-    if n_hydrate > 0 and post_budget >= 10:
-        for t in merged[:n_hydrate]:
-            if posts_fetched + 10 > post_budget:
-                break
-            name = str(t.get("trend_name") or "").strip()
-            if not name:
-                continue
-            try:
-                take = min(posts_per, post_budget - posts_fetched)
-                if take < 10:
-                    break
-                posts = _recent_search(
-                    f'"{name}" -is:retweet lang:en',
-                    limit=take,
-                    client=client,
-                )
-                search_reqs += 1
-                posts_fetched += len(posts)
-                # Attach best post URLs onto the matching topic hit (still one pool item).
-                for h in hits:
-                    if h.get("topic") == name:
-                        urls = [p["url"] for p in posts if p.get("url")][:3]
-                        if urls:
-                            h["urls"] = urls
-                            h["summary"] = (posts[0].get("text") or h["summary"])[:280]
-                            h["likes"] = posts[0].get("likes", 0)
-                        break
-            except Exception:  # noqa: BLE001
-                continue
+    timeline_reqs = 0
+    posts_fetched = 0
+    modes: list[str] = []
 
+    # Reserve room for aggregators so News cannot starve the wire leg.
+    aggs = resolve_aggregators() if post_budget > 0 else ()
+    reserved_agg = 0
+    if aggs:
+        # ~1/3 of slots or posts_per × accounts, whichever is smaller; leave ≥ half for News.
+        reserved_agg = min(
+            story_cap // 3,
+            len(aggs) * posts_per_agg,
+            post_budget,
+            max(0, story_cap // 2),
+        )
+        reserved_agg = max(reserved_agg, min(4, story_cap // 2, post_budget)) if post_budget else 0
+    news_cap = max(1, story_cap - reserved_agg) if reserved_agg else story_cap
+
+    # ── 1. X News stories ────────────────────────────────────────────────────
+    if _news_enabled():
+        seeds = resolve_news_seeds()
+        per_seed = max(3, min(8, news_cap // max(1, min(len(seeds), 5)) or 4))
+        for seed in seeds:
+            if len(hits) >= news_cap:
+                break
+            try:
+                stories = _search_news(
+                    seed, max_results=per_seed, max_age_hours=age_h, client=client,
+                )
+                news_reqs += 1
+            except Exception:  # noqa: BLE001 — tier/perm issues fall through
+                stories = []
+            for s in stories:
+                if not _news_story_usable(s):
+                    continue
+                hits.append(_news_hit(s, seed=seed))
+                if len(hits) >= news_cap:
+                    break
+        if hits:
+            modes.append("news")
+
+    hits = _dedupe_hits(hits)[:news_cap]
+
+    # ── 2. General aggregators (Mario Nawfal–class wires) ────────────────────
+    remaining_slots = max(0, story_cap - len(hits))
+    remaining_posts = max(0, post_budget - posts_fetched)
+    if remaining_slots and remaining_posts and aggs:
+        try:
+            agg_hits, n_posts, n_tl = _fetch_aggregators(
+                handles=aggs,
+                posts_per=posts_per_agg,
+                max_posts=remaining_posts,
+                max_hits=remaining_slots,
+                client=client,
+            )
+            posts_fetched += n_posts
+            timeline_reqs += n_tl
+            hits.extend(agg_hits)
+            if agg_hits:
+                modes.append("aggregators")
+        except Exception:  # noqa: BLE001
+            pass
+
+    hits = _dedupe_hits(hits)[:story_cap]
+
+    # ── 3. Speech-act search only if both legs empty ─────────────────────────
+    if not hits and post_budget >= 10:
+        modes.append("search_fallback")
+        try:
+            take = min(10, post_budget)
+            posts = _recent_search(_FALLBACK_SEARCH, limit=take, client=client)
+            search_reqs += 1
+            posts_fetched += len(posts)
+            hits = [_post_hit(p, lane="probe:news_speech", source="x_api") for p in posts]
+        except Exception:  # noqa: BLE001
+            hits = []
+
+    mode = "+".join(modes) if modes else "empty"
     usd = _record_cost(
-        posts=posts_fetched, trend_reqs=trend_reqs, search_reqs=search_reqs, topics=len(hits),
+        posts=posts_fetched, news_reqs=news_reqs, search_reqs=search_reqs,
+        timeline_reqs=timeline_reqs, topics=len(hits), mode=mode,
     )
     for h in hits:
-        h["estimated_usd_run"] = usd  # observability on each hit is redundant; ledger is canonical
-    return hits
+        h["estimated_usd_run"] = usd
+    return hits[:story_cap]
 
 
 def fetch_x_native(
@@ -199,10 +298,26 @@ def fetch_x_native(
     limit: int = 10,
     client: object | None = None,
 ) -> list[dict[str, Any]]:
-    """Single recent-search probe (CLI / tests). Avoid for t0 — use ``fetch_x_api_discovery``."""
-    q = query or '("breaking" OR "just in") -is:retweet lang:en'
-    posts = _recent_search(q, limit=max(10, min(limit, 100)), client=client)
-    _record_cost(posts=len(posts), search_reqs=1, topics=len(posts))
+    """CLI probe: News if possible, else recent search (bills posts)."""
+    if not resolve_bearer() and client is None:
+        _record_cost()
+        return []
+    q = (query or "government").strip() or "government"
+    try:
+        stories = _search_news(q, max_results=max(1, min(limit, 100)), max_age_hours=48, client=client)
+        hits = [_news_hit(s, seed=q) for s in stories if _news_story_usable(s)]
+        if hits:
+            _record_cost(news_reqs=1, topics=len(hits), mode="news")
+            return hits[:limit]
+        # empty/junk → fall through; still count the news attempt
+        news_reqs = 1
+    except Exception:  # noqa: BLE001
+        news_reqs = 0
+    posts = _recent_search(query or _FALLBACK_SEARCH, limit=max(10, min(limit, 100)), client=client)
+    _record_cost(
+        posts=len(posts), news_reqs=news_reqs, search_reqs=1,
+        topics=len(posts), mode="search_fallback",
+    )
     return [_post_hit(p, lane="probe", source="x_api") for p in posts]
 
 
@@ -228,28 +343,26 @@ def _http_get(url: str, params: dict[str, Any] | None, client: object | None) ->
             http.close()  # type: ignore[attr-defined]
 
 
-def _fetch_trends(woeid: int, *, max_trends: int, client: object | None) -> list[dict[str, Any]]:
+def _search_news(
+    query: str, *, max_results: int, max_age_hours: int, client: object | None,
+) -> list[dict[str, Any]]:
+    """Platform news stories (headline/summary/category) — not WOEID trends."""
+    # Valid news.fields (live API 2026): id, name, summary, category, hook, keywords,
+    # disclaimer, updated_at, cluster_posts_results, contexts.
     resp = _http_get(
-        _TRENDS.format(woeid=woeid),
+        _NEWS_SEARCH,
         {
-            "max_trends": max(1, min(max_trends, 50)),
-            "trend.fields": "trend_name,tweet_count",
+            "query": query,
+            "max_results": max(1, min(int(max_results), 100)),
+            "max_age_hours": max(1, min(int(max_age_hours), 720)),
+            "news.fields": "id,name,summary,category,hook,keywords,updated_at,contexts",
         },
         client,
     )
     if resp.status_code != 200:
-        raise RuntimeError(f"X trends HTTP {resp.status_code}: {resp.text[:160]}")
+        raise RuntimeError(f"X news HTTP {resp.status_code}: {resp.text[:180]}")
     data = (resp.json() or {}).get("data") or []
-    out: list[dict[str, Any]] = []
-    for row in data:
-        name = str(row.get("trend_name") or "").strip()
-        if not name:
-            continue
-        out.append({
-            "trend_name": name,
-            "tweet_count": int(row.get("tweet_count") or 0),
-        })
-    return out
+    return [row for row in data if isinstance(row, dict)]
 
 
 def _recent_search(query: str, *, limit: int, client: object | None) -> list[dict[str, Any]]:
@@ -267,6 +380,104 @@ def _recent_search(query: str, *, limit: int, client: object | None) -> list[dic
     if resp.status_code != 200:
         raise RuntimeError(f"X search HTTP {resp.status_code}: {resp.text[:160]}")
     return _shape_posts(resp.json())
+
+
+def _fetch_aggregators(
+    *,
+    handles: tuple[str, ...],
+    posts_per: int,
+    max_posts: int,
+    max_hits: int,
+    client: object | None,
+) -> tuple[list[dict[str, Any]], int, int]:
+    """Pull a few recent original posts from general news-wire accounts.
+
+    Spreads across handles (round-robin keep) so one loud wire cannot monopolize
+    the aggregator slice. X timelines require max_results ≥ 5; we still only
+    *keep* ``posts_per`` usable posts per handle.
+    """
+    hits: list[dict[str, Any]] = []
+    posts_fetched = 0
+    timeline_reqs = 0
+    per_handle: dict[str, list[dict[str, Any]]] = {}
+
+    for handle in handles:
+        if posts_fetched >= max_posts:
+            break
+        # User-timeline max_results minimum is 5; skip further handles if we can't afford it.
+        if posts_fetched > 0 and posts_fetched + 5 > max_posts:
+            break
+        try:
+            uid = _user_id(handle, client=client)
+        except Exception:  # noqa: BLE001
+            continue
+        if not uid:
+            continue
+        try:
+            # API floor is 5; we keep only posts_per usable posts below.
+            posts = _user_timeline(uid, handle=handle, limit=max(5, posts_per), client=client)
+            timeline_reqs += 1
+        except Exception:  # noqa: BLE001
+            continue
+        posts_fetched += len(posts)
+        kept: list[dict[str, Any]] = []
+        for p in posts:
+            if not _aggregator_post_usable(p):
+                continue
+            kept.append(_post_hit(p, lane=f"agg:{handle}", source="x_aggregator"))
+            if len(kept) >= posts_per:
+                break
+        per_handle[handle] = kept
+
+    # Round-robin merge so Mario / Spectator / Disclose / Visegrad all surface.
+    if per_handle:
+        depth = max(len(v) for v in per_handle.values())
+        for i in range(depth):
+            for handle in handles:
+                bucket = per_handle.get(handle) or []
+                if i < len(bucket):
+                    hits.append(bucket[i])
+                    if len(hits) >= max_hits:
+                        return hits, posts_fetched, timeline_reqs
+    return hits, posts_fetched, timeline_reqs
+
+
+def _user_id(username: str, *, client: object | None) -> str | None:
+    resp = _http_get(_USER_BY_USERNAME.format(username=username.lstrip("@")), None, client)
+    if resp.status_code != 200:
+        return None
+    data = (resp.json() or {}).get("data") or {}
+    return str(data["id"]) if data.get("id") else None
+
+
+def _user_timeline(
+    user_id: str, *, handle: str, limit: int, client: object | None,
+) -> list[dict[str, Any]]:
+    resp = _http_get(
+        _USER_TWEETS.format(id=user_id),
+        {
+            "max_results": max(5, min(int(limit), 100)),
+            "exclude": "retweets,replies",
+            "tweet.fields": "public_metrics,created_at,lang",
+        },
+        client,
+    )
+    if resp.status_code != 200:
+        raise RuntimeError(f"X timeline HTTP {resp.status_code}: {resp.text[:160]}")
+    out: list[dict[str, Any]] = []
+    for t in (resp.json() or {}).get("data") or []:
+        pm = t.get("public_metrics") or {}
+        tid = t.get("id", "")
+        out.append({
+            "id": tid,
+            "text": t.get("text", ""),
+            "author": handle,
+            "url": f"https://x.com/{handle}/status/{tid}" if handle and tid else "",
+            "created_at": t.get("created_at", ""),
+            "likes": int(pm.get("like_count") or 0),
+            "reposts": int(pm.get("retweet_count") or 0),
+        })
+    return out
 
 
 def _shape_posts(payload: dict[str, Any]) -> list[dict[str, Any]]:
@@ -292,37 +503,94 @@ def _shape_posts(payload: dict[str, Any]) -> list[dict[str, Any]]:
     return out
 
 
-def _merge_trends(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Dedupe by name (casefold); keep max tweet_count; sort by volume desc."""
-    best: dict[str, dict[str, Any]] = {}
-    for r in rows:
-        name = str(r.get("trend_name") or "").strip()
-        if not name:
-            continue
-        key = name.casefold()
-        prev = best.get(key)
-        if prev is None or int(r.get("tweet_count") or 0) > int(prev.get("tweet_count") or 0):
-            best[key] = r
-    return sorted(best.values(), key=lambda x: int(x.get("tweet_count") or 0), reverse=True)
+_MEME_NAME_RE = re.compile(
+    r"\b(meme|memes|comedy|comedic|delights|stuns in|draws divided views|"
+    r"dating|girlfriend|boyfriend|broke boys)\b",
+    re.I,
+)
 
 
-def _trend_hit(t: dict[str, Any]) -> dict[str, Any]:
-    name = str(t.get("trend_name") or "").strip()
-    count = int(t.get("tweet_count") or 0)
-    woeid = t.get("woeid", "")
-    where = "worldwide" if woeid == 1 else f"woeid:{woeid}"
+def _news_story_usable(story: dict[str, Any]) -> bool:
+    """Drop pure viral/social noise; keep real news-shaped clusters."""
+    name = str(story.get("name") or story.get("hook") or "").strip()
+    if len(name) < 12:
+        return False
+    if _MEME_NAME_RE.search(name):
+        return False
+    cat = str(story.get("category") or "").strip().casefold()
+    if cat in _JUNK_CATEGORIES:
+        return False
+    contexts = story.get("contexts") or {}
+    topics = contexts.get("topics") if isinstance(contexts, dict) else None
+    lowered: set[str] = set()
+    if isinstance(topics, list) and topics:
+        lowered = {str(t).casefold() for t in topics}
+        serious = lowered & {
+            "news", "politics", "business & finance", "business", "finance",
+            "elections", "crime", "science", "health", "technology", "world",
+            "religion", "islam", "war", "military",
+        }
+        if not serious and lowered <= _JUNK_TOPICS:
+            return False
+        if lowered <= {"relationships", "celebrity", "memes"}:
+            return False
+    # Category "Other" with only soft topics is usually viral culture, not main stuff.
+    if cat == "other" and lowered and not (lowered & {"news", "politics", "crime"}):
+        return False
+    return True
+
+
+def _aggregator_post_usable(post: dict[str, Any]) -> bool:
+    text = str(post.get("text") or "").strip()
+    if len(text) < 40:
+        return False
+    # Drop pure link dumps / engagement bait with almost no text
+    if text.count("http") >= 1 and len(text) < 60:
+        return False
+    return True
+
+
+def _news_hit(story: dict[str, Any], *, seed: str) -> dict[str, Any]:
+    name = str(story.get("name") or story.get("hook") or "").strip()
+    summary = str(story.get("summary") or story.get("hook") or "").strip()
+    rid = str(story.get("id") or story.get("rest_id") or "")
+    category = str(story.get("category") or "").strip()
+    keywords = story.get("keywords") or []
+    if isinstance(keywords, list):
+        kw = ", ".join(str(k) for k in keywords[:8])
+    else:
+        kw = ""
+    bits = [b for b in (category, f"seed:{seed}" if seed else "", kw) if b]
     return {
-        "topic": name,
-        "summary": f"Trending on X ({where})" + (f" · ~{count:,} posts" if count else ""),
-        "urls": [],  # no post bill; synthesis uses the topic name as a seed
-        "lane": f"trend:{where}",
-        "source": "x_trends",
+        "topic": name or f"X news {rid[:12]}",
+        "summary": summary[:400] or name,
+        "urls": [],  # story-level; no post bill
+        "lane": f"news:{category or 'general'}",
+        "source": "x_news",
         "author": "",
         "likes": 0,
         "reposts": 0,
-        "tweet_count": count,
+        "news_id": rid,
+        "category": category,
         "pre_vetted": False,
     }
+
+
+def _dedupe_hits(hits: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    best: dict[str, dict[str, Any]] = {}
+    for h in hits:
+        key = (
+            h.get("news_id")
+            or (h.get("urls") or [None])[0]
+            or h.get("topic")
+            or ""
+        )
+        key = str(key).casefold()
+        if not key:
+            continue
+        if key not in best:
+            best[key] = h
+    return list(best.values())
 
 
 _WS = re.compile(r"\s+")
@@ -331,11 +599,10 @@ _WS = re.compile(r"\s+")
 def _post_hit(post: dict[str, Any], *, lane: str, source: str) -> dict[str, Any]:
     text = _WS.sub(" ", str(post.get("text") or "")).strip()
     author = str(post.get("author") or "").strip()
-    topic = text[:90] + ("…" if len(text) > 90 else "")
-    if author:
-        topic = f"@{author}: {topic}" if topic else f"@{author}"
+    lead = text[:100] + ("…" if len(text) > 100 else "")
+    topic = f"@{author}: {lead}" if author and lead else (lead or f"x post {post.get('id', '')}")
     return {
-        "topic": topic or f"x post {post.get('id', '')}",
+        "topic": topic,
         "summary": text[:280],
         "urls": [u for u in [post.get("url")] if u],
         "lane": lane,

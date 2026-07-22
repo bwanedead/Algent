@@ -93,11 +93,12 @@ python -m algent_backend.cli.runs agents
 # discovery only (t0 hit list → t1 research portfolio)
 python -m algent_backend.cli.runs start discovery_synthesis --max-turns 20
 #   t0 is reused if a pool <20 min old exists, else freshly built — all in-run.
-#   ALGENT_T0_CHANNELS default: gkg,beats,markets,x. X is ON (sparse): WW+US trends →
-#   ≤~30 topic seeds, **0 post bodies by default** (~$0.00 post spend / ~0¢). Needs
-#   X_BEARER_TOKEN / X_BEARER_KEY (skips cleanly if missing). Caps: ALGENT_X_MAX_TOPICS=30,
-#   ALGENT_X_HYDRATE_TOP=0, ALGENT_X_MAX_POSTS=20. Turn X off: ALGENT_T0_CHANNELS=gkg,beats,markets
-#   Probe: python -m algent_backend.cli ingest x --via api  (returns cost ledger)
+#   ALGENT_T0_CHANNELS default: gkg,beats,markets,x. X is ON via **X News + general aggregators**
+#   (not trends, not an AI/domain roster): platform-clustered stories plus a tiny wire list
+#   (MarioNawfal, spectatorindex, Disclosetv, visegrad24). Default ≤~20 posts (~$0.10).
+#   Needs X_BEARER_TOKEN / X_BEARER_KEY. Tune: ALGENT_X_NEWS_SEEDS, ALGENT_X_AGGREGATORS,
+#   ALGENT_X_MAX_TOPICS, ALGENT_X_MAX_POSTS. Turn X off: ALGENT_T0_CHANNELS=gkg,beats,markets
+#   Probe: python -m algent_backend.cli ingest x --via api
 #   Direct t0 (no agent): python -m algent_backend.cli ingest t0 --channels markets --force
 
 # full newsroom rail (t0 → synthesis → routing → profile → gauntlet → editorial → publish)

@@ -43,14 +43,13 @@ _KEEP = 1
 # The toggleable t0 source channels. ``gkg`` is the free deterministic net (the
 # base); ``beats`` reuses a DOC sweep from disk; ``markets`` and ``x`` are extra
 # signals fetched live. X primary path is the **X API** (same surface as
-# api.x.com/mcp) — not Grok Build headless. Grok CLI is an optional supplement.
-# X is ON by default (sparse trends-first; ~$0 post spend unless hydrate is raised).
-# Disable with ALGENT_T0_CHANNELS=gkg,beats,markets or if no bearer (auto-skips).
+# api.x.com/mcp): prefer **News stories** (platform-clustered headlines), NOT
+# WOEID trends and NOT a fixed AI/account roster. Grok CLI optional. ON by default.
+# Disable: ALGENT_T0_CHANNELS=gkg,beats,markets or no bearer.
 ALL_CHANNELS = ("gkg", "beats", "markets", "x")
 DEFAULT_CHANNELS = frozenset({"gkg", "beats", "markets", "x"})
 _ENV_CHANNELS = "ALGENT_T0_CHANNELS"  # comma-separated override, e.g. "gkg,markets"
-# How t0 pulls X: ``api`` (default, X API multi-lane), ``api+grok`` (API + optional Grok CLI),
-# ``grok`` (legacy Grok-only — not recommended).
+# How t0 pulls X: ``api`` (default news/stories), ``api+grok``, ``grok`` (legacy).
 _ENV_X_VIA = "ALGENT_X_T0_VIA"
 
 ProgressFn = Callable[[str], None]
@@ -139,11 +138,11 @@ def _fetch_markets(say: ProgressFn) -> list[dict]:
 
 
 def _fetch_x(say: ProgressFn) -> list[dict]:
-    """X into t0: **sparse trends-first API** (wide net, minimal post spend).
+    """X into t0: **News stories** + sparse general aggregators (not trends / domain roster).
 
-    Default: worldwide + US trends → ≤~30 topic seeds, **0 post bodies** (cheap iterate).
-    Optional hydrate is hard-capped (``ALGENT_X_MAX_POSTS``). Grok CLI only if
-    ``ALGENT_X_T0_VIA=api+grok`` / ``grok``.
+    Trending hashtags = popularity noise. Fixed AI/lab accounts = overfit. News search returns
+    platform-clustered stories; a tiny set of cross-topic wires (Mario Nawfal–class) adds
+    X-native main-stuff posts. Cap hard; Grok only if ``ALGENT_X_T0_VIA=api+grok``.
     """
     via = os.environ.get(_ENV_X_VIA, "api").strip().lower() or "api"
     hits: list[dict] = []
@@ -154,7 +153,7 @@ def _fetch_x(say: ProgressFn) -> list[dict]:
         if not resolve_bearer():
             say("X (api): skipped — no bearer token (X_BEARER_TOKEN / X_BEARER_KEY)")
         else:
-            say("fetching X trends (worldwide + US) — sparse, no posts by default…")
+            say("fetching X News + general aggregators (no trends, no domain roster)…")
             try:
                 api_hits = fetch_x_api_discovery()
             except Exception as exc:  # noqa: BLE001 — X must not sink t0
@@ -163,8 +162,11 @@ def _fetch_x(say: ProgressFn) -> list[dict]:
             hits.extend(api_hits)
             c = last_cost()
             say(
-                f"X (api): {c.get('topics', 0)} topics, {c.get('posts_fetched', 0)} posts, "
-                f"~${float(c.get('estimated_usd') or 0):.4f} est."
+                f"X (api): {c.get('topics', 0)} hits, {c.get('posts_fetched', 0)} posts, "
+                f"~${float(c.get('estimated_usd') or 0):.4f} est. "
+                f"(mode={c.get('mode')}, news_reqs={c.get('news_requests', 0)}, "
+                f"timelines={c.get('user_timeline_requests', 0)}, "
+                f"searches={c.get('search_requests', 0)})"
                 if api_hits else "X (api): none"
             )
 
@@ -178,7 +180,6 @@ def _fetch_x(say: ProgressFn) -> list[dict]:
         except Exception as exc:  # noqa: BLE001
             say(f"X (grok): failed ({str(exc)[:80]})")
             grok_hits = []
-        # Cap Grok supplement so it cannot dump unbounded topics into the pool.
         grok_hits = (grok_hits or [])[:10]
         hits.extend(grok_hits)
         say(f"X (grok): {len(grok_hits)} topics" if grok_hits else "X (grok): none")
@@ -188,10 +189,9 @@ def _fetch_x(say: ProgressFn) -> list[dict]:
         os.environ[_ENV_X_VIA] = "api"
         return _fetch_x(say)
 
-    # Hard safety: never more than 30 X items into the pool unless explicitly raised.
-    max_topics = 30
+    max_topics = 20
     try:
-        max_topics = max(1, min(50, int(os.environ.get("ALGENT_X_MAX_TOPICS", "30"))))
+        max_topics = max(1, min(50, int(os.environ.get("ALGENT_X_MAX_TOPICS", "20"))))
     except ValueError:
         pass
     return hits[:max_topics]
