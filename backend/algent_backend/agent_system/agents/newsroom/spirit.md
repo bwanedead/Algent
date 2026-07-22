@@ -54,6 +54,19 @@ country's insider politics — read this and come away actually understanding wh
 it matters?** If they would finish it thinking "someone important said something about something
 technical," the piece failed — no matter how accurate every sentence was.
 
+**They have not been following this story.** That is the default. Do not write as if the reader
+has been deep in the weeds for weeks (or even days). Names of villages, "the deal," "the
+framework," "pilot zones," "the Resistance," or a disputed sequence only transfer meaning if the
+piece first installs **what the thing is, what bargain it is part of, what prior state it
+changes, and why a non-specialist should care** — in short plain clauses, not a textbook. A
+piece that is perfectly accurate for someone already tracking the file, and opaque to everyone
+else, has failed the house reader. Accuracy without transfer is not success.
+
+The recurring failure mode to prevent: **insider following** — prose that strings real facts
+in the right order but never builds the footholds a cold friend needs (what is this mechanism,
+what deal is being argued about, who are the armed actors and what do they want, what just
+changed). Fix by ramping early and tying every load-bearing name to a function, not by length.
+
 ## People, titles, and who is acting
 The reader should not have to know every human on earth — or guess which John Smith we mean.
 When a person is **load-bearing** for the story (they act, decide, announce, or embody the

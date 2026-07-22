@@ -100,38 +100,57 @@ limits, not in the molecule. Watch for the tell — if the only honest thing a c
 ## The ramp — what the reader must already hold (`primitives`)
 A molecule the reader cannot connect to anything they already know does not slide in — it sits
 there as jargon. So before deciding grain, decide the **ramp**: what a *decently-informed general
-reader* must already hold to build this molecule, and supply exactly those. Two sources of ramp:
+reader who has NOT been following this story* must already hold to build this molecule, and
+supply exactly those. Default assumption: they meet the piece cold. Two sources of ramp:
 - **primitives** — textbook background that is not news and not contested: what a technical term
-  *is*, what a mechanism *does*, what an institution *is for*. List them (`primitives`: term → one
-  plain-language clause, 2-4 max). These are NOT evidence — the drafter speaks them in its own
-  voice, uncited — so they live here on the treatment, not on the profile's spine. (Sourcing
-  textbook knowledge would recreate the inventory disease with receipts attached.) Anything
-  contested, story-specific, or load-bearing for the news itself is NOT a primitive — it is
-  evidence, and stays on the spine.
+  *is*, what a mechanism *does*, what an institution *is for*, what a named bargain or zone
+  *means in ordinary language*. List them (`primitives`: term → one plain-language clause,
+  **3–6 max** when the story is a multi-party mechanism; 2–4 is fine for simpler pieces). These
+  are NOT evidence — the drafter speaks them in its own voice, uncited — so they live here on
+  the treatment, not on the profile's spine. (Sourcing textbook knowledge would recreate the
+  inventory disease with receipts attached.) Anything contested, story-specific, or load-bearing
+  for the *news claim itself* is NOT a primitive — it is evidence, and stays on the spine. But a
+  **story mechanism label** the reader will not already hold ("pilot zone," "safe zone," a
+  framework nickname, "the Resistance" as a term of art) *is* a primitive: say what the *kind of
+  thing* is, without litigating the disputed facts.
 - **causal antecedents** — what led here, the prior state this changed. These ARE checkable,
-  news-adjacent fact, so they come from the profile's field threads (by id), not from `primitives`.
+  news-adjacent fact, so they come from the profile's field threads (by id), not from
+  `primitives`. **If the molecule turns on a deal, ceasefire, prior war, or long-running power
+  balance, at least one early concept must install that antecedent** — otherwise the reader
+  holds movements without meaning. Do not leave "what this is attached to" as insider memory.
 
-Aim the ramp at a decently-informed generalist — not an expert (who needs no ramp) and not a
-novice (an endless primitive-chase serves no one). The support you name is the reader's foothold,
-not a textbook.
+Aim the ramp at a decently-informed generalist meeting the topic **fresh** — not an expert, not
+a daily tracker of this file, and not a novice needing a book. The support you name is the
+reader's foothold, not a textbook and not a recap for people already in the weeds.
+
+**The "pilot zone" failure mode (generalizes):** A piece can name real villages, a real
+framework, and a real rejection of "disarmament" and still leave a cold reader unable to say
+(1) what a pilot zone *is*, (2) what bargain links troops / withdrawal / weapons, (3) who the
+armed actors are and what they want, (4) what prior arrangement this changes. Those four are
+usually **ramp + early concepts**, not optional colour. If the core understanding depends on
+them and they are missing from primitives / early concepts, the molecule is incomplete.
 
 **Two bars, and most candidate primitives fail one of them:**
-- **Is it actually unfamiliar?** A term already in general news furniture for a long time is
-  often not worth a primitive — explaining it is condescension, not a ramp. Reserve primitives
-  for what a smart general reader genuinely would not know (specialist terms, obscure
-  mechanisms, less-known institutions). When in doubt, assume they know the furniture.
+- **Is it actually unfamiliar *to a cold house reader*?** A term already in general news
+  furniture for a long time is often not worth a primitive — explaining it is condescension.
+  But **do not treat "appeared in specialist coverage" as general furniture.** Reserve
+  primitives for what a smart friend who has not followed this file would not already hold:
+  specialist terms, obscure mechanisms, less-known institutions, **and load-bearing story
+  labels** (zone types, deal nicknames, militia self-names). When in doubt on a *mechanism*
+  term the molecule turns on, **ramp it** — the live failure is under-ramping, not over-ramping.
   **This includes the ACTORS, and that is the case most often missed.** An agency, company,
-  product, **person**, or **jurisdiction** outside general awareness is exactly a primitive.
-  For people: the primitive is not the name alone — it is **name + the title/role that
-  explains their place in this story** (and jurisdiction when needed). See spirit's *people,
-  titles, and who is acting*. A bare personal name with no role never starts the piece for a
-  non-local reader — same failure mode as an unexplained acronym. Prefer load-bearing people
-  and jurisdiction over secondary jargon when the primitive budget is tight (2–4). Do not spend
-  the budget on every named person; only the ones the molecule needs.
+  product, **person**, **armed movement**, or **jurisdiction** outside general awareness is
+  exactly a primitive. For people: the primitive is not the name alone — it is **name + the
+  title/role that explains their place in this story** (and jurisdiction when needed). See
+  spirit's *people, titles, and who is acting*. Prefer load-bearing people, the main non-state
+  armed actor, jurisdiction, and the **deal/mechanism the dispute is about** over secondary
+  jargon when the budget is tight. Do not spend the budget on every named person; only the ones
+  the molecule needs.
 - **Is the meaning CONCRETE?** A primitive must state what the thing *is* — the place, the number,
-  the mechanism — never gesture at its significance. Figurative hand-waving is not a ramp; a
-  concrete clause the reader can hold and reason with is. If you cannot write the plain meaning
-  concretely, you do not understand the term well enough to gloss it — leave it out.
+  the mechanism, the *kind of zone or bargain* — never gesture at its significance. Figurative
+  hand-waving is not a ramp; a concrete clause the reader can hold and reason with is. If you
+  cannot write the plain meaning concretely, you do not understand the term well enough to gloss
+  it — leave it out.
 
 ## Shared origin before chronology
 Before the reader can follow *what changed when*, they need **where they are standing**: the

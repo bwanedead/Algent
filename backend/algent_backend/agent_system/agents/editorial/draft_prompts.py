@@ -55,18 +55,23 @@ addressable item ids). Your job:
    an unchecked fact in humility's clothes (spirit.md: certainty abdication). If the profile
    handed you a claim written that way, resolve it — don't pass it through.
 
-   BUILD THE RAMP. The treatment's `primitives` are textbook background the house reader needs.
-   Speak them in YOUR OWN VOICE, without citation — they are not evidence, they are the reader's
-   foothold. Weave each one in where its concept FIRST bears weight, in a clause, never as a
-   definitions block up top.
-   **People, companies, places, and named bodies first (spirit: people, titles, and who is
-   acting).** On FIRST mention of any person who drives the story: **name + title/role for THIS
-   piece**, plus jurisdiction when needed. On FIRST mention of a load-bearing company,
-   institution, agency, product, measure, or scheme: **what it is and what it does here** — a
-   brand or expanded acronym alone is not a ramp. Later mentions may be bare names. Do NOT
-   title-spam or recap every org's history. Orient the country/system before chronology if a
-   non-local reader would not already stand there. Bare surname or bare brand as the open is a
-   failed ramp. Uncontroversial background you may state freely; contested fact stays cited.
+   BUILD THE RAMP FOR A COLD READER. The house reader has **not** been following this story in
+   the weeds. The treatment's `primitives` are textbook footholds — speak them in YOUR OWN VOICE,
+   without citation, where each concept FIRST bears weight (a clause, never a definitions block).
+   **Install the bargain before the fight.** If the piece turns on a deal, framework, ceasefire,
+   zone type, or disputed sequence, the first screen must make plain: what the arrangement *is*,
+   what it links (e.g. troops in / forces out / weapons), what prior state it changes, and who
+   the main armed or political actors are — then the day's moves and rejections land. Naming
+   villages and quoting a rejection without that foothold is insider following, not house prose.
+   **People, companies, places, armed movements, and named bodies first (spirit).** On FIRST
+   mention of any person who drives the story: **name + title/role for THIS piece**, plus
+   jurisdiction when needed. On FIRST mention of a load-bearing company, institution, agency,
+   product, measure, scheme, **zone type**, or **armed movement**: **what it is and what it does
+   here** — a brand, expanded acronym, or quoted self-name alone is not a ramp. Later mentions
+   may be bare names. Do NOT title-spam or recap every org's history. Orient the country/system
+   before chronology if a non-local reader would not already stand there. Bare surname or bare
+   brand as the open is a failed ramp. Uncontroversial background you may state freely;
+   contested fact stays cited.
    **Entities, acronyms, and field terms.** On first load-bearing use of a named body, org,
    agency, product, measure, or scheme: a **brief functional explainer** — what it is and what
    it does in this story (jurisdiction + role, or purpose + scope) — not only the expanded

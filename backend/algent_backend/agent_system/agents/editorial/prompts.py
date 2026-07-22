@@ -66,17 +66,18 @@ PRODUCE an EditorialTreatment:
      it") is a fact about our research, not a concept: it belongs in the limits. CUT it.
    - `reader_path`: the concept ids in dependency order (broad -> specific). This is concept
      order, NOT prose sections.
-   - `primitives[]`: THE RAMP. Textbook background a decently-informed general reader must already
-     hold to build the molecule (term -> one plain-language clause, 2-4 max). These are NOT news
-     and NOT evidence — the drafter speaks them in its own voice, uncited — so they belong here,
-     not on the profile's spine. Only uncontroversial background; anything contested,
-     story-specific, or load-bearing for the news itself is evidence, not a primitive.
-     **Priority when the budget is tight:** (1) load-bearing people — name + title/role for THIS
-     story; (2) load-bearing companies/institutions — what they are / do in this place; (3)
-     jurisdiction / political system when a non-local reader would not already stand there; (4)
-     the object, scheme, or mechanism the focal thing turns on, in one plain clause; (5) only
-     then secondary jargon. Operator jargon is NOT the house reader's ramp. Causal antecedents
-     are NOT primitives — checkable fact from field threads by id.
+   - `primitives[]`: THE RAMP for a cold house reader who has **not** been following this story
+     (term -> one plain-language clause; usually 2–4, up to **6** when the piece is a multi-party
+     mechanism). These are NOT news and NOT evidence — the drafter speaks them uncited. Only
+     uncontroversial background; contested fact stays on the spine. **But** load-bearing *labels*
+     and mechanisms the reader will not already hold — "pilot zone," a framework nickname, a
+     militia self-name, what kind of bargain links A/B/C — ARE primitives: say what the kind of
+     thing is. **Priority when the budget is tight:** (1) jurisdiction + scene; (2) load-bearing
+     people and main armed/political actors — who they are *here*; (3) the deal/mechanism/zone
+     type the dispute turns on; (4) companies/institutions; (5) only then secondary jargon.
+     Operator jargon is NOT the house reader's ramp. Causal antecedents (what led here) are NOT
+     primitives — they are early concepts grounded in field threads — but if the molecule needs
+     them, they MUST appear early, not as insider memory.
      When scale is abstract, prefer concepts that give reference points (trajectory, share,
      population/exposed base, geographic concentration) if the profile supports them.
      (See molecule.md: The ramp + magnitude reference points; spirit: people, titles.)

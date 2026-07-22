@@ -59,12 +59,49 @@ units, for whom/where, and over what time**. If they have to guess, the analytic
 - **Place breakdown:** horizontal bars ranked by subregion when the story names provinces/zones
   and has counts or rates — a cold reader will not know where those places sit relative to each
   other without this.
-- **Simple map/diagram (`image` or labeled chart):** only to orient named places when location
-  is the point; do **not** invent infection rates or boundaries not in the data. Prefer bars
-  when you have numbers per region but no map basemap you can use honestly.
+- **Map / geography figure (`image` or labeled chart):** only when location or spatial scope is
+  the point. **Accuracy is paramount** — a wrong map is a deception. See **Maps** below. Prefer
+  bars when you have numbers per region but no basemap you can use honestly.
 - **Comparative scale:** put absolute counts next to a reference the reader can hold (prior peak,
   population share, share of total) when those numbers are in the data — bare large integers
   without a baseline often fail to convey severity.
+
+## Maps (accuracy first; useful at house-reader distance)
+
+Maps will be common. Treat them as **evidence-shaped figures**, not decorative art.
+
+**Default composition**
+1. **Outer frame = country or theater** (e.g. all of Lebanon, or the relevant multi-country
+   region for a war). The cold reader must see *where in the world / country* this sits.
+2. **Local detail as inset or callout** when the story names a village cluster or front —
+   box/circle on the country map pointing to a zoomed panel, not a zoom-only orphan that could
+   be anywhere.
+3. **Reference landmarks** the prose uses: capital, major city, international border, named
+   river or line (only if the story leans on it). Label plain-language.
+
+**Hard accuracy rules**
+- Place points only from **real coordinates** (e.g. Nominatim/OSM, national stats offices, or
+  coordinates already in REQUEST.md / data.csv). Write every plotted lat/lon into `data.csv`.
+- Country/region outlines only from a **standard geometry source** you actually use (Natural
+  Earth, GADM, official admin geojson). Do not freehand a coastline and present it as a map.
+- Do **not** invent control polygons, "captured" fills, or heat unless the data table has real
+  values per region and the geometry matches those regions.
+- If you cannot get honest coords or outlines, **SKIP** with reason — never ship a schematic
+  that looks precise but is made up.
+
+**Future forms we want the stack to support** (use only when data exists)
+- Single-country choropleth (economic, cases, votes) with legend + units.
+- Multi-country theater map (e.g. front movement) with dated layers and as-of.
+- Point map of named places on country basemap + optional inset.
+- World/regional fill only when the story is truly global/regional.
+
+**Practical stack (worker sandbox — no dependency sprawl)**
+- Prefer libraries **already available** in the environment (often matplotlib + pandas).
+- If geopandas/cartopy/shapely are present, use them for outlines; if not, do **not** `pip
+  install` — either plot honest lat/lon on a simple projected axes with labeled country bbox
+  from a small geojson you fetch when `may_source` allows, or skip.
+- Theme: same Ohmega Monster colors as charts; monospace labels; thin rules; SVG preferred.
+- Caption must say what geography is shown, the as-of, and the source of coordinates/outlines.
 
 **Look like Ohmega Monster, not like matplotlib**
 

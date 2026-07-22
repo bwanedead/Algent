@@ -41,6 +41,7 @@ Docs sprawl is a real failure mode. To prevent it:
 
 ### Architecture — `architecture/`
 - `run-control-plane.md` – run directory contract, runs CLI, observability weave.
+- `map-analytics-stack.md` – accurate country-scale map figures for the newsroom analytics path.
 
 ### Guides — `guides/`
 - `run-operator-entrypoint.md` – **start here** to operate runs; short hub that routes to the rest.

@@ -98,8 +98,8 @@ class EditorialTreatment(BaseModel):
     reader_question: str = ""
     concepts: list[TreatmentConcept] = Field(default_factory=list)
     reader_path: list[str] = Field(default_factory=list)  # suggested concept-id order (dependency order, NOT prose sections)
-    # The ramp: textbook primitives a decently-informed general reader must already hold to build
-    # the molecule (2-4 max). The drafter speaks these in its own voice; they are not evidence.
+    # The ramp: textbook primitives a cold house reader must hold to build the molecule
+    # (usually 2–4; up to ~6 for multi-party mechanisms). Drafter voice, not evidence.
     primitives: list[Primitive] = Field(default_factory=list)
 
     # ── completeness / honesty ──

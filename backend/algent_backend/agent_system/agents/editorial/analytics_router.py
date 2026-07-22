@@ -62,10 +62,18 @@ in the claim ledger. Ask: would a figure help, and is the data reasonably availa
 UTILITY CLASSES (pick the one that helps most):
 1. TRAJECTORY — counts or rates over time (is it rising, peaking, slowing?). Prefer a simple
    line/area chart with clear axes and period.
-2. GEOGRAPHY — the story names subregions (provinces, cities, health zones) a cold reader will
-   not place. Prefer a bar/ranked breakdown by region with counts or rates, OR a simple labeled
-   map/diagram of those named places if location (not inventing a rate) is the point. Never invent
-   boundaries or rates.
+2. GEOGRAPHY — the story names subregions (provinces, cities, villages, zones) a cold reader will
+   not place. Prefer a bar/ranked breakdown by region with counts or rates when magnitude is the
+   point. Prefer a **map** when location/scope is the point. Map rules (accuracy is paramount):
+   - Default frame is **country or larger theater**, not a zoom-only cluster of three towns with
+     no national context. The reader should see where the cluster sits relative to the country,
+     capital, major city, and relevant border (and a named river/line only if the story uses it).
+   - Local detail may be an **inset callout** of the village cluster *inside* that country frame —
+     not a floating schematic that could be anywhere.
+   - Use real geocodes / standard basemap geometry when sourcing; never freehand place-names into
+     invented relative positions presented as geographic truth. If coordinates cannot be found,
+     skip the map rather than ship a plausible-looking fiction.
+   - Never invent boundaries, control areas, or rates not in the data.
 3. COMPARATIVE SCALE — absolute counts float without a reference. Prefer a small comparison to a
    baseline the reader can hold (prior peak, share of population, share of a total, another
    country) when those numbers exist or are publicly standard.
@@ -88,8 +96,8 @@ Kinds (only if useful):
 - `chart` — preferred for trajectory, ranked regional breakdowns, and comparisons.
 - `table` — only a few real quantities (never status/evidence ledgers).
 - `insight` — one computed figure or tight comparison, not a multi-row claim essay.
-- `image` — labeled orientation diagram / simple map of named places only when geography is the
-  aid and you are not inventing rates; never decoration.
+- `image` — labeled map/diagram only when geography is the aid. Prefer country-scale + local
+  inset (see GEOGRAPHY). Never invent rates, borders, or place positions; never decoration.
 
 Reader clarity is part of usefulness. PUBLISHED fields:
 - `title`: what is measured (plain words).
