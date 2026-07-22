@@ -370,12 +370,13 @@ def test_x_native_probe_search_costs_posts(monkeypatch) -> None:
 
 
 def test_x_api_discovery_uses_news_stories_not_trends(monkeypatch) -> None:
-    """Default t0 path: X News stories (headlines), not WOEID trends or AI roster."""
+    """General News leg: X News stories (headlines), not WOEID trends."""
     from algent_backend.data_ingestion.newsroom.sources import x_native
 
     monkeypatch.setenv("X_BEARER_TOKEN", "tok")
     monkeypatch.setenv(x_native._NEWS_SEEDS_ENV, "government")  # one seed for the unit test
     monkeypatch.setenv(x_native._USE_AGGS_ENV, "0")  # isolate News leg
+    monkeypatch.setenv(x_native._USE_AI_ENV, "0")
 
     class _Resp:
         status_code = 200
@@ -418,6 +419,7 @@ def test_x_api_discovery_pulls_general_aggregators(monkeypatch) -> None:
 
     monkeypatch.setenv("X_BEARER_TOKEN", "tok")
     monkeypatch.setenv(x_native._USE_NEWS_ENV, "0")
+    monkeypatch.setenv(x_native._USE_AI_ENV, "0")
     monkeypatch.setenv(x_native._AGGS_ENV, "MarioNawfal")
     monkeypatch.setenv(x_native._AGGS_PER_ENV, "2")
 
@@ -465,6 +467,65 @@ def test_x_api_discovery_pulls_general_aggregators(monkeypatch) -> None:
     assert c["posts_fetched"] == 2 and c["user_timeline_requests"] == 1
     assert c["estimated_usd"] == 0.01
     assert "aggregators" in c["mode"]
+
+
+def test_x_api_discovery_ai_pulse_is_dedicated_not_general_only(monkeypatch) -> None:
+    """AI pulse is a reserved third leg (labs/people), not a replacement for general News."""
+    from algent_backend.data_ingestion.newsroom.sources import x_native
+
+    monkeypatch.setenv("X_BEARER_TOKEN", "tok")
+    monkeypatch.setenv(x_native._USE_NEWS_ENV, "0")
+    monkeypatch.setenv(x_native._USE_AGGS_ENV, "0")
+    monkeypatch.setenv(x_native._AI_ACCOUNTS_ENV, "OpenAI,sama")
+    monkeypatch.setenv(x_native._AI_NEWS_SEEDS_ENV, "none")
+    monkeypatch.setenv(x_native._AI_MAX_POSTS_ENV, "10")
+
+    class _Client:
+        def get(self, url, params=None):
+            class R:
+                def __init__(self, code, body):
+                    self.status_code = code
+                    self._body = body
+                    self.text = str(body)
+
+                def json(self):
+                    return self._body
+
+            assert "tweets/search/recent" in url
+            q = (params or {}).get("query", "")
+            assert "from:OpenAI" in q and "from:sama" in q
+            return R(200, {
+                "data": [
+                    {
+                        "id": "a1",
+                        "text": "Introducing our new model: stronger reasoning and safer defaults for agents.",
+                        "author_id": "1",
+                        "public_metrics": {"like_count": 900, "retweet_count": 100},
+                    },
+                    {
+                        "id": "a2",
+                        "text": "Excited about the next wave of useful AI tools shipping this quarter.",
+                        "author_id": "2",
+                        "public_metrics": {"like_count": 50, "retweet_count": 5},
+                    },
+                ],
+                "includes": {"users": [
+                    {"id": "1", "username": "OpenAI"},
+                    {"id": "2", "username": "sama"},
+                ]},
+            })
+
+        def close(self):
+            pass
+
+    hits = x_native.fetch_x_api_discovery(max_stories=10, max_posts=10, client=_Client())
+    assert len(hits) >= 1
+    assert all(h["source"] == "x_ai_pulse" for h in hits)
+    assert any(h["author"] == "OpenAI" for h in hits)
+    assert any(h["lane"].startswith("ai:") for h in hits)
+    c = x_native.last_cost()
+    assert "ai_pulse" in c["mode"] and c["posts_fetched"] >= 1
+    assert c["estimated_usd"] > 0
 
 
 def test_fetch_polymarket_filters_sports_and_captures_movement() -> None:

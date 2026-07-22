@@ -1,7 +1,7 @@
 """
-``x`` — X discovery probe: **News + general aggregators** (default t0) vs Grok / raw search.
+``x`` — X discovery probe: general News + wires + **AI pulse** (default t0).
 
-    python -m algent_backend.cli ingest x --via api      # News stories + MarioNawfal-class wires
+    python -m algent_backend.cli ingest x --via api      # News + wires + lab/person AI pulse
     python -m algent_backend.cli ingest x --via native  # one news/search or speech-act search
     python -m algent_backend.cli ingest x --via grok    # optional Grok Build supplement
 """

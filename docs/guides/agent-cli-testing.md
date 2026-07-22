@@ -93,11 +93,13 @@ python -m algent_backend.cli.runs agents
 # discovery only (t0 hit list → t1 research portfolio)
 python -m algent_backend.cli.runs start discovery_synthesis --max-turns 20
 #   t0 is reused if a pool <20 min old exists, else freshly built — all in-run.
-#   ALGENT_T0_CHANNELS default: gkg,beats,markets,x. X is ON via **X News + general aggregators**
-#   (not trends, not an AI/domain roster): platform-clustered stories plus a tiny wire list
-#   (MarioNawfal, spectatorindex, Disclosetv, visegrad24). Default ≤~20 posts (~$0.10).
+#   ALGENT_T0_CHANNELS default: gkg,beats,markets,x. X is ON with three legs:
+#     (1) general X News stories (2) general wires (MarioNawfal/spectatorindex/…)
+#     (3) dedicated AI pulse (labs US/CN/open + sama/karpathy/dario/elon… + AI news).
+#   General discovery is NOT AI-primary; AI is a reserved slice. Default ≤~28 posts (~$0.14).
 #   Needs X_BEARER_TOKEN / X_BEARER_KEY. Tune: ALGENT_X_NEWS_SEEDS, ALGENT_X_AGGREGATORS,
-#   ALGENT_X_MAX_TOPICS, ALGENT_X_MAX_POSTS. Turn X off: ALGENT_T0_CHANNELS=gkg,beats,markets
+#   ALGENT_X_AI_ACCOUNTS, ALGENT_X_USE_AI_PULSE, ALGENT_X_MAX_TOPICS, ALGENT_X_MAX_POSTS.
+#   Turn X off: ALGENT_T0_CHANNELS=gkg,beats,markets
 #   Probe: python -m algent_backend.cli ingest x --via api
 #   Direct t0 (no agent): python -m algent_backend.cli ingest t0 --channels markets --force
 

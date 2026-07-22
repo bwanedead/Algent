@@ -138,11 +138,11 @@ def _fetch_markets(say: ProgressFn) -> list[dict]:
 
 
 def _fetch_x(say: ProgressFn) -> list[dict]:
-    """X into t0: **News stories** + sparse general aggregators (not trends / domain roster).
+    """X into t0: general News + wires + **dedicated AI pulse** (not trends-only).
 
-    Trending hashtags = popularity noise. Fixed AI/lab accounts = overfit. News search returns
-    platform-clustered stories; a tiny set of cross-topic wires (Mario Nawfal–class) adds
-    X-native main-stuff posts. Cap hard; Grok only if ``ALGENT_X_T0_VIA=api+grok``.
+    General legs stay domain-agnostic. AI labs/people are a *reserved* third slice so
+    we keep release/lab eyeballs without making discovery AI-primary. Cap hard.
+    Grok only if ``ALGENT_X_T0_VIA=api+grok``.
     """
     via = os.environ.get(_ENV_X_VIA, "api").strip().lower() or "api"
     hits: list[dict] = []
@@ -153,7 +153,7 @@ def _fetch_x(say: ProgressFn) -> list[dict]:
         if not resolve_bearer():
             say("X (api): skipped — no bearer token (X_BEARER_TOKEN / X_BEARER_KEY)")
         else:
-            say("fetching X News + general aggregators (no trends, no domain roster)…")
+            say("fetching X News + general wires + AI pulse…")
             try:
                 api_hits = fetch_x_api_discovery()
             except Exception as exc:  # noqa: BLE001 — X must not sink t0
@@ -161,8 +161,10 @@ def _fetch_x(say: ProgressFn) -> list[dict]:
                 api_hits = []
             hits.extend(api_hits)
             c = last_cost()
+            ai_n = sum(1 for h in api_hits if str(h.get("source")) == "x_ai_pulse")
             say(
-                f"X (api): {c.get('topics', 0)} hits, {c.get('posts_fetched', 0)} posts, "
+                f"X (api): {c.get('topics', 0)} hits ({ai_n} ai_pulse), "
+                f"{c.get('posts_fetched', 0)} posts, "
                 f"~${float(c.get('estimated_usd') or 0):.4f} est. "
                 f"(mode={c.get('mode')}, news_reqs={c.get('news_requests', 0)}, "
                 f"timelines={c.get('user_timeline_requests', 0)}, "
