@@ -191,9 +191,9 @@ def _fetch_x(say: ProgressFn) -> list[dict]:
         os.environ[_ENV_X_VIA] = "api"
         return _fetch_x(say)
 
-    max_topics = 20
+    max_topics = 28
     try:
-        max_topics = max(1, min(50, int(os.environ.get("ALGENT_X_MAX_TOPICS", "20"))))
+        max_topics = max(1, min(50, int(os.environ.get("ALGENT_X_MAX_TOPICS", "28"))))
     except ValueError:
         pass
     return hits[:max_topics]

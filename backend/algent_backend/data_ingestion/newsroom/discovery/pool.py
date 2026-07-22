@@ -103,6 +103,8 @@ def _x_item(hit: dict) -> PoolItem:
     elif src in ("x_ai_pulse",):
         # Dedicated AI eyeballs (labs/people/AI news) — still rake unless pre_vetted
         kind = "news" if str(hit.get("lane") or "").startswith("ai_news:") else "post"
+    elif src in ("x_novelty",):
+        kind = "post"  # engagement-ranked event probes — novelty valve
     elif src in ("x_aggregator",):
         kind = "post"  # general wire posts — still rake/synthesis triage
     elif src in ("x_grok", "grok") or pre:

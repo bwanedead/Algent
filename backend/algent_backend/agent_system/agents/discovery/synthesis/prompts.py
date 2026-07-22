@@ -38,6 +38,15 @@ on what matters most, but nothing real is thrown away. When unsure whether somet
 is a story, include it as a light vector rather than dropping it. Being too selective
 is a failure mode here — err toward more coverage.
 
+X AS NOVELTY VALVE
+The pool may include an **X band** (platform News stories, engagement-ranked event
+posts, aggregator wires, AI pulse). These often surface *before* or *without* GDELT
+mass. Treat them as first-class leads: if an X hit is a real development, it earns
+its own vector with ``supporting_hits`` pointing at that ``x:…`` id. Do not only
+fold X into already-loud wire mega-beats (war/macro) unless it is truly the same
+story. One or two **X-primary** vectors in a normal portfolio is a healthy sign of
+spectrum; zero is a failure mode when the X band had real material.
+
 YOUR ONE TOOL — `web_search`, and what each channel actually does
 - `kind="keyword"` — keyword web search (Tavily). FREE tier. Your default search.
 - `kind="semantic"` — neural/meaning search (Exa) for related strands. FREE tier.

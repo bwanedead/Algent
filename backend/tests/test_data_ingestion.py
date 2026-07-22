@@ -377,6 +377,7 @@ def test_x_api_discovery_uses_news_stories_not_trends(monkeypatch) -> None:
     monkeypatch.setenv(x_native._NEWS_SEEDS_ENV, "government")  # one seed for the unit test
     monkeypatch.setenv(x_native._USE_AGGS_ENV, "0")  # isolate News leg
     monkeypatch.setenv(x_native._USE_AI_ENV, "0")
+    monkeypatch.setenv(x_native._USE_NOVELTY_ENV, "0")
 
     class _Resp:
         status_code = 200
@@ -420,6 +421,7 @@ def test_x_api_discovery_pulls_general_aggregators(monkeypatch) -> None:
     monkeypatch.setenv("X_BEARER_TOKEN", "tok")
     monkeypatch.setenv(x_native._USE_NEWS_ENV, "0")
     monkeypatch.setenv(x_native._USE_AI_ENV, "0")
+    monkeypatch.setenv(x_native._USE_NOVELTY_ENV, "0")
     monkeypatch.setenv(x_native._AGGS_ENV, "MarioNawfal")
     monkeypatch.setenv(x_native._AGGS_PER_ENV, "2")
 
@@ -476,6 +478,7 @@ def test_x_api_discovery_ai_pulse_is_dedicated_not_general_only(monkeypatch) -> 
     monkeypatch.setenv("X_BEARER_TOKEN", "tok")
     monkeypatch.setenv(x_native._USE_NEWS_ENV, "0")
     monkeypatch.setenv(x_native._USE_AGGS_ENV, "0")
+    monkeypatch.setenv(x_native._USE_NOVELTY_ENV, "0")
     monkeypatch.setenv(x_native._AI_ACCOUNTS_ENV, "OpenAI,sama")
     monkeypatch.setenv(x_native._AI_NEWS_SEEDS_ENV, "none")
     monkeypatch.setenv(x_native._AI_MAX_POSTS_ENV, "10")
@@ -518,7 +521,7 @@ def test_x_api_discovery_ai_pulse_is_dedicated_not_general_only(monkeypatch) -> 
         def close(self):
             pass
 
-    hits = x_native.fetch_x_api_discovery(max_stories=10, max_posts=10, client=_Client())
+    hits = x_native.fetch_x_api_discovery(max_stories=10, max_posts=12, client=_Client())
     assert len(hits) >= 1
     assert all(h["source"] == "x_ai_pulse" for h in hits)
     assert any(h["author"] == "OpenAI" for h in hits)
