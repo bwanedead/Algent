@@ -134,3 +134,10 @@ caveats: verified (0 findings)
 analytics: 1 produced, 0 escapes
 cost: ~$0.0000
 run: 0019__eef17e90-cf39-471c-b7cf-abeea993f0a4
+
+### PUBLISH ice-s-fy2026-data-show-a-june-surge-in-arrests-and-higher-de-24b347 — 2026-07-22
+status: needs_hedging  ·  draft: grounded  ·  treatment: needs_revision
+caveats: needs_hedging (1 findings)
+analytics: 1 produced, 0 escapes
+cost: ~$0.0000
+run: 0020__0f45383d-b4b0-4dfd-90d9-be6fdfa0b560
