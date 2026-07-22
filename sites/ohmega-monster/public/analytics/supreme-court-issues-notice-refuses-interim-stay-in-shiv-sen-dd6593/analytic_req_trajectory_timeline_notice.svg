@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="690.209944pt" height="373.021172pt" viewBox="0 0 690.209944 373.021172" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-07-22T05:03:10.666601</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.3, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 373.021172 
+L 690.209944 373.021172 
+L 690.209944 -0 
+L 0 -0 
+z
+" style="fill: #0c0f0e"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 234.62 277.867163 
+L 592.777353 277.867163 
+L 592.777353 79.26275 
+L 234.62 79.26275 
+z
+" style="fill: #111513"/>
+   </g>
+   <g id="LineCollection_1">
+    <path d="M 234.62 110.858907 
+L 255.68808 110.858907 
+" clip-path="url(#p66b8323aa6)" style="fill: none; stroke: #454b46; stroke-width: 0.7"/>
+   </g>
+   <g id="LineCollection_2">
+    <path d="M 234.62 155.996273 
+L 255.68808 155.996273 
+" clip-path="url(#p66b8323aa6)" style="fill: none; stroke: #454b46; stroke-width: 0.7"/>
+   </g>
+   <g id="LineCollection_3">
+    <path d="M 234.62 201.13364 
+L 255.68808 201.13364 
+" clip-path="url(#p66b8323aa6)" style="fill: none; stroke: #454b46; stroke-width: 0.7"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <path d="M 255.68808 277.867163 
+L 255.68808 79.26275 
+" clip-path="url(#p66b8323aa6)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_2">
+      <defs>
+       <path id="m84f92e0641" d="M 0 0 
+L 0 3.5 
+" style="stroke: #858981; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m84f92e0641" x="255.68808" y="277.867163" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(198.168252 312.037382) rotate(-20)">22 Jul 2026</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_3">
+      <path d="M 297.824239 277.867163 
+L 297.824239 79.26275 
+" clip-path="url(#p66b8323aa6)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#m84f92e0641" x="297.824239" y="277.867163" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(240.304411 312.037382) rotate(-20)">24 Jul 2026</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_5">
+      <path d="M 339.960398 277.867163 
+L 339.960398 79.26275 
+" clip-path="url(#p66b8323aa6)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#m84f92e0641" x="339.960398" y="277.867163" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(282.440571 312.037382) rotate(-20)">26 Jul 2026</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_7">
+      <path d="M 382.096557 277.867163 
+L 382.096557 79.26275 
+" clip-path="url(#p66b8323aa6)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#m84f92e0641" x="382.096557" y="277.867163" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(324.57673 312.037382) rotate(-20)">28 Jul 2026</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_9">
+      <path d="M 424.232716 277.867163 
+L 424.232716 79.26275 
+" clip-path="url(#p66b8323aa6)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#m84f92e0641" x="424.232716" y="277.867163" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(366.712889 312.037382) rotate(-20)">30 Jul 2026</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_11">
+      <path d="M 466.368875 277.867163 
+L 466.368875 79.26275 
+" clip-path="url(#p66b8323aa6)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_12">
+      <g>
+       <use xlink:href="#m84f92e0641" x="466.368875" y="277.867163" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(408.831947 311.990397) rotate(-20)">01 Aug 2026</text>
+     </g>
+    </g>
+    <g id="xtick_7">
+     <g id="line2d_13">
+      <path d="M 508.505035 277.867163 
+L 508.505035 79.26275 
+" clip-path="url(#p66b8323aa6)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_14">
+      <g>
+       <use xlink:href="#m84f92e0641" x="508.505035" y="277.867163" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(450.968106 311.990397) rotate(-20)">03 Aug 2026</text>
+     </g>
+    </g>
+    <g id="xtick_8">
+     <g id="line2d_15">
+      <path d="M 550.641194 277.867163 
+L 550.641194 79.26275 
+" clip-path="url(#p66b8323aa6)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_16">
+      <g>
+       <use xlink:href="#m84f92e0641" x="550.641194" y="277.867163" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(493.104265 311.990397) rotate(-20)">05 Aug 2026</text>
+     </g>
+    </g>
+    <g id="xtick_9">
+     <g id="line2d_17">
+      <path d="M 592.777353 277.867163 
+L 592.777353 79.26275 
+" clip-path="url(#p66b8323aa6)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_18">
+      <g>
+       <use xlink:href="#m84f92e0641" x="592.777353" y="277.867163" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(535.240425 311.990397) rotate(-20)">07 Aug 2026</text>
+     </g>
+    </g>
+    <g id="text_10">
+     <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="413.698676" y="325.188548" transform="rotate(-0 413.698676 325.188548)">Date (calendar day when reported; relative span for next listing)</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_19">
+      <defs>
+       <path id="mb5ded8ea04" d="M 0 0 
+L -3.5 0 
+" style="stroke: #858981; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#mb5ded8ea04" x="234.62" y="110.858907" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_11">
+      <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="227.62" y="113.989922" transform="rotate(-0 227.62 113.989922)">Supreme Court issues notice</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_20">
+      <g>
+       <use xlink:href="#mb5ded8ea04" x="234.62" y="155.996273" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_12">
+      <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="227.62" y="159.127289" transform="rotate(-0 227.62 159.127289)">Responses sought from Speaker &amp; others</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_21">
+      <g>
+       <use xlink:href="#mb5ded8ea04" x="234.62" y="201.13364" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_13">
+      <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="227.62" y="204.23864" transform="rotate(-0 227.62 204.23864)">Interim relief refused</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_22">
+      <g>
+       <use xlink:href="#mb5ded8ea04" x="234.62" y="246.271006" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_14">
+      <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="227.62" y="249.402022" transform="rotate(-0 227.62 249.402022)">Listed for hearing after two weeks</text>
+     </g>
+    </g>
+    <g id="text_15">
+     <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="33.571875" y="178.564956" transform="rotate(-90 33.571875 178.564956)">Procedural step</text>
+    </g>
+   </g>
+   <g id="LineCollection_4">
+    <path d="M 255.68808 246.271006 
+L 550.641194 246.271006 
+" clip-path="url(#p66b8323aa6)" style="fill: none; stroke-dasharray: 6.4,4.8; stroke-dashoffset: 0; stroke: #5eb8c9; stroke-width: 1.6"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 234.62 277.867163 
+L 234.62 79.26275 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 234.62 277.867163 
+L 592.777353 277.867163 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_16">
+    <text style="font-size: 8px; font-family: 'Consolas'; fill: #858981" transform="translate(558.641194 243.920006)">after two weeks</text>
+    <text style="font-size: 8px; font-family: 'Consolas'; fill: #858981" transform="translate(558.641194 252.500756)">(exact date not reported)</text>
+   </g>
+   <g id="text_17">
+    <text style="font-size: 11px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(234.62 53.464219)">Timeline: Supreme Court notice and next procedural steps</text>
+    <text style="font-size: 11px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(234.62 65.26275)">in the Shiv Sena (UBT) Speaker challenge</text>
+   </g>
+   <g id="PathCollection_1">
+    <defs>
+     <path id="md62fab60d9" d="M 0 4.743416 
+C 1.257969 4.743416 2.464584 4.24362 3.354102 3.354102 
+C 4.24362 2.464584 4.743416 1.257969 4.743416 0 
+C 4.743416 -1.257969 4.24362 -2.464584 3.354102 -3.354102 
+C 2.464584 -4.24362 1.257969 -4.743416 0 -4.743416 
+C -1.257969 -4.743416 -2.464584 -4.24362 -3.354102 -3.354102 
+C -4.24362 -2.464584 -4.743416 -1.257969 -4.743416 0 
+C -4.743416 1.257969 -4.24362 2.464584 -3.354102 3.354102 
+C -2.464584 4.24362 -1.257969 4.743416 0 4.743416 
+z
+" style="stroke: #f0ede4; stroke-width: 0.8"/>
+    </defs>
+    <g clip-path="url(#p66b8323aa6)">
+     <use xlink:href="#md62fab60d9" x="255.68808" y="110.858907" style="fill: #f0a33a; stroke: #f0ede4; stroke-width: 0.8"/>
+    </g>
+   </g>
+   <g id="PathCollection_2">
+    <g clip-path="url(#p66b8323aa6)">
+     <use xlink:href="#md62fab60d9" x="255.68808" y="155.996273" style="fill: #f0a33a; stroke: #f0ede4; stroke-width: 0.8"/>
+    </g>
+   </g>
+   <g id="PathCollection_3">
+    <g clip-path="url(#p66b8323aa6)">
+     <use xlink:href="#md62fab60d9" x="255.68808" y="201.13364" style="fill: #f0a33a; stroke: #f0ede4; stroke-width: 0.8"/>
+    </g>
+   </g>
+   <g id="PathCollection_4">
+    <path d="M 550.641194 250.454306 
+C 551.750618 250.454306 552.814752 250.013527 553.599234 249.229046 
+C 554.383715 248.444565 554.824494 247.38043 554.824494 246.271006 
+C 554.824494 245.161582 554.383715 244.097448 553.599234 243.312966 
+C 552.814752 242.528485 551.750618 242.087706 550.641194 242.087706 
+C 549.53177 242.087706 548.467635 242.528485 547.683154 243.312966 
+C 546.898673 244.097448 546.457894 245.161582 546.457894 246.271006 
+C 546.457894 247.38043 546.898673 248.444565 547.683154 249.229046 
+C 548.467635 250.013527 549.53177 250.454306 550.641194 250.454306 
+L 550.641194 250.454306 
+z
+" clip-path="url(#p66b8323aa6)" style="fill: none; stroke: #5eb8c9; stroke-width: 1.6"/>
+   </g>
+   <g id="legend_1">
+    <g id="line2d_23">
+     <path d="M 374.031103 254.768413 
+L 382.031103 254.768413 
+L 390.031103 254.768413 
+" style="fill: none; stroke: #ffffff; stroke-width: 1.5; stroke-linecap: square"/>
+     <defs>
+      <path id="mb1654d47c6" d="M 0 4 
+C 1.060812 4 2.078319 3.578535 2.828427 2.828427 
+C 3.578535 2.078319 4 1.060812 4 0 
+C 4 -1.060812 3.578535 -2.078319 2.828427 -2.828427 
+C 2.078319 -3.578535 1.060812 -4 0 -4 
+C -1.060812 -4 -2.078319 -3.578535 -2.828427 -2.828427 
+C -3.578535 -2.078319 -4 -1.060812 -4 0 
+C -4 1.060812 -3.578535 2.078319 -2.828427 2.828427 
+C -2.078319 3.578535 -1.060812 4 0 4 
+z
+" style="stroke: #f0ede4"/>
+     </defs>
+     <g>
+      <use xlink:href="#mb1654d47c6" x="382.031103" y="254.768413" style="fill: #f0a33a; stroke: #f0ede4"/>
+     </g>
+    </g>
+    <g id="text_18">
+     <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="396.431103" y="257.568413" transform="rotate(-0 396.431103 257.568413)">Calendar date (reported)</text>
+    </g>
+    <g id="line2d_24">
+     <path d="M 374.031103 266.225913 
+L 382.031103 266.225913 
+L 390.031103 266.225913 
+" style="fill: none; stroke-dasharray: 6.4,4.8; stroke-dashoffset: 0; stroke: #5eb8c9; stroke-width: 1.6"/>
+    </g>
+    <g id="text_19">
+     <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="396.431103" y="269.025913" transform="rotate(-0 396.431103 269.025913)">Relative listing (no fixed date in sources)</text>
+    </g>
+   </g>
+  </g>
+  <g id="text_20">
+   <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="92.88" y="27.41625" transform="rotate(-0 92.88 27.41625)">Arvind Ganpat Sawant v. Hon'ble Speaker, Lok Sabha and Ors. · W.P.(C) No. 886/2026</text>
+  </g>
+  <g id="text_21">
+   <text style="font-size: 7.5px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="21.6" y="349.92" transform="rotate(-0 21.6 349.92)">as of 2026-07-22  ·  Bench: Justices P.S. Narasimha and Alok Aradhe  ·  Sources: The New Indian Express; Verdictum</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p66b8323aa6">
+   <rect x="234.62" y="79.26275" width="358.157353" height="198.604413"/>
+  </clipPath>
+ </defs>
+</svg>

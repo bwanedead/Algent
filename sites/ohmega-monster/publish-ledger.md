@@ -127,3 +127,10 @@ cost: ~$0.3771
 pool: backfeed=5, gkg=40, market=23, x=30
 promoted_from: gkg=3
 run: 0016__8bc0fca9-f4e5-4881-8e1f-f3e91907be60
+
+### PUBLISH supreme-court-issues-notice-refuses-interim-stay-in-shiv-sen-dd6593 — 2026-07-22
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 1 produced, 0 escapes
+cost: ~$0.0000
+run: 0019__eef17e90-cf39-471c-b7cf-abeea993f0a4
