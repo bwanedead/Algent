@@ -148,3 +148,10 @@ caveats: verified (0 findings)
 analytics: 0 produced, 0 escapes
 cost: ~$0.0000
 run: 0022__8f828c6e-0bac-4314-90a6-c369d3cd1960
+
+### PUBLISH nicaragua-s-ortega-says-there-will-be-no-more-elections-but-809478 — 2026-07-23
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 0 produced, 0 escapes
+cost: ~$0.0000
+run: 0023__f26ed597-27f8-4734-867c-e909cab107f5
