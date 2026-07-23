@@ -2,11 +2,11 @@
 The promotion router — the first concrete use of the generic engine (t1 -> t2).
 
 It does nothing the engine doesn't already do; it just supplies the two
-stage-specific things: the **brief** (the "pick the most profile-worthy vector" job)
-and the **adapter** that renders t1 ``ResearchVector``s into generic candidates. This
-is the pattern for every future router: a brief + an adapter, no new machinery.
+stage-specific things: the **brief** (the "rank every vector for the house reader" job)
+and the **adapter** that renders t1 ``ResearchVector``s into generic candidates.
 
-Only this module knows about t1 types; the generic engine stays decoupled.
+Cooldown is a list of recent published headlines in the agent payload — the model
+flags same-story-family matches. No lexical post-filter.
 """
 
 from __future__ import annotations
@@ -21,50 +21,40 @@ from algent_backend.agent_system.foundation.models import ModelSpec
 from algent_backend.agent_system.runs.context import AgentRunContext
 
 from .contracts import RouteCandidate, RouteRanking, RoutingBrief
-from .cooldown import demote_cooled
 from .engine import route
 
 # The injected responsibility for the t1->t2 promotion decision.
 PROMOTION_BRIEF = RoutingBrief(
-    role="the promotion editor deciding which signal vector to research next",
+    role="the promotion editor ranking every research vector for what we should write next",
     candidate_kind="t1 signal vectors (theses worth pursuing, each fused from t0 hits)",
     selecting_for=(
-        "the single most worth-profiling vector right now, judged for the HOUSE READER: an "
-        "intelligent, reasonably well-informed adult who follows the news but is NOT a specialist "
-        "in any field. "
-        "RANKING AXIS — reader SIGNIFICANCE *plus* CURIOSITY/AWE. We are not only a wire "
-        "digest of the same war/macro head everyone covers. Score as a composite (say which "
-        "carry the story): "
+        "FULL ORDERING of all vectors for the HOUSE READER: an intelligent, reasonably "
+        "well-informed adult who follows the news but is NOT a specialist in any field. "
+        "Score each vector 0-100 as a composite of: "
         "(a) SCALE — how many people are affected, and how directly. "
         "(b) MAGNITUDE — economic weight: dollars, jobs, prices people pay. "
         "(c) DURABILITY — structural change vs one-week blip. "
         "(d) IRREVERSIBILITY — one-way doors (deaths, treaties, elections, precedents). "
         "(e) URGENCY — real time-sensitivity; multiplies the others, does not replace them. "
         "(f) NOVELTY / under-coverage — what a general reader would *not* already get from "
-        "every homepage. **Boost this.** Unique X-native or under-covered angles outrank "
-        "yet another rehash of the same mega-beat when stakes are comparable. "
+        "every homepage. **Boost this.** "
         "(g) CURIOSITY / AWE / NEW HUMAN KNOWLEDGE — science breakthroughs, archaeology, "
-        "physics, biology, math feats, genuine discoveries, cool accomplishments that make "
-        "a smart reader lean in (e.g. AI disproves a long-standing conjecture; first fossil; "
-        "new telescope result). **Weigh this harder than before.** Enjoyable, high-signal "
-        "knowledge stories are first-class, not 'soft' also-rans. "
-        "GROUNDABILITY IS A GATE, NOT A SCORE — ineligible if unresearchable; no bonus for "
-        "easy cites. Trade/professional runbooks demote. "
-        "When significance is comparable, prefer the more novel or wonder-inducing vector "
-        "over the most mainstream. Not all-out fringe — still real, grounded, transferable "
-        "to a Western generalist — but turn the novelty/curiosity knobs UP. "
-        "BEAT DIVERSITY: if ALREADY COVERED holds a story-family, do NOT rank that family #1 "
-        "unless a true structural delta; prefer a genuinely different vector."
+        "physics, biology, math feats, genuine discoveries. **Weigh this harder.** "
+        "GROUNDABILITY IS A GATE — demote unresearchable or pure trade/professional runbooks. "
+        "When significance is comparable, prefer novel or wonder-inducing over mainstream rehash. "
+        "Rank EVERY vector — do not drop to a shortlist. Flag cooldown=true when the vector is "
+        "the same story-family as a recent published headline (semantic judgment)."
     ),
     downstream=(
-        "the #1 you rank is promoted into a t2 signal profile — a researched dossier "
-        "with a claim + source ledger — which later renders into productions (article, "
-        "post, chart, ...). Lower ranks are the on-deck queue"
+        "The highest-ranked vector with cooldown=false is promoted into a t2 signal profile. "
+        "Cooldown=true vectors stay in the ordered list for audit but will not promote. "
+        "The full ordered list is the on-deck queue."
     ),
-    top_k=10,
+    rank_all=True,
+    top_k=80,
 )
 
-# Editorial judgment over a couple dozen candidates — the savvy tier, one cheap call.
+# Editorial judgment over a full portfolio — savvy tier, one structured call.
 DEFAULT_MODEL = ModelSpec(provider="openai", model="gpt-5.4-mini", temperature=0.2)
 
 
@@ -80,14 +70,13 @@ def rank_portfolio(
     Candidate ids are the vectors' durable ids (positional fallback if a vector
     hasn't been assigned one); the returned map recovers the actual vectors.
     """
-    brief = PROMOTION_BRIEF
-    if recent := _recently_published():
-        brief = replace(brief, recent=recent)
+    recent = _recently_published()
+    brief = replace(PROMOTION_BRIEF, recent=recent)
 
     candidates: list[RouteCandidate] = []
     by_id: dict[str, ResearchVector] = {}
     for i, vec in enumerate(portfolio.vectors):
-        cid = vec.id or f"vec:{i:02d}"  # durable id once synthesis assigns one
+        cid = vec.id or f"vec:{i:02d}"
         by_id[cid] = vec
         candidates.append(RouteCandidate(
             id=cid,
@@ -102,48 +91,42 @@ def rank_portfolio(
             },
         ))
     ranking = route(context, candidates, brief, model_spec=model_spec, config=config)
-    # Soft instruction alone can re-promote the same beat under a reframe; mechanical floor
-    # demotes same-family candidates below fresh ones so they cannot promote while hot.
-    # Always run demote_cooled (even with empty recent) so the ranking note records status.
-    before_top = ranking.choices[0].candidate_id if ranking.choices else ""
-    ranking = demote_cooled(ranking, candidates, recent)
-    after_top = ranking.choices[0].candidate_id if ranking.choices else ""
+
     try:
+        cooled = [c.candidate_id for c in ranking.choices if c.cooldown]
+        top = top_vector(ranking, by_id)
         context.emit("routing.cooldown_status", {
             "n_recent": len(recent),
-            "recent_titles": [t[:80] for _, t in recent[:8]],
-            "was_top": before_top,
-            "now_top": after_top,
-            "demoted": bool(before_top and after_top and before_top != after_top),
-            "note_tail": (ranking.note or "")[-280:],
+            "recent_titles": [t[:80] for _, t in recent[:12]],
+            "mode": "agent_semantic",
+            "n_flagged": len(cooled),
+            "cooled_ids": cooled,
+            "promote_id": top.id if top else None,
+            "promote_title": (top.title[:100] if top else None),
+            "note_tail": (ranking.note or "")[-240:],
         })
-        if before_top and after_top and before_top != after_top:
-            context.emit("routing.cooldown_demote", {
-                "was_top": before_top, "now_top": after_top, "note": ranking.note[-240:],
-            })
-    except Exception:  # noqa: BLE001 — telemetry must never break the pick
+    except Exception:  # noqa: BLE001
         pass
     return ranking, by_id
 
 
 def _recently_published() -> tuple[tuple[str, str], ...]:
-    """Recent published headlines — the cooldown reference. Best-effort: routing must never fail
-    because the site is unreadable (a fresh clone has no published articles at all)."""
+    """Recent published headlines — payload for agent cooldown. Best-effort."""
     try:
         from algent_backend.publishing import site_git
         from algent_backend.publishing.history import recent_headlines
 
         root = site_git.repo_root()
-        # The live worktree is what is actually on the site; the working tree catches staged pieces
-        # when the publish kill switch is off.
         return tuple(recent_headlines([site_git.live_site_dir(root), site_git.site_dir(root)]))
     except Exception:  # noqa: BLE001
         return ()
 
 
 def top_vector(ranking: RouteRanking, by_id: dict[str, ResearchVector]) -> ResearchVector | None:
-    """The #1-ranked vector — the one to promote into a profile (programmatic pick)."""
+    """First non-cooldown ranked vector — the one to promote into a profile."""
     for choice in ranking.choices:
+        if choice.cooldown:
+            continue
         if choice.candidate_id in by_id:
             return by_id[choice.candidate_id]
     return None

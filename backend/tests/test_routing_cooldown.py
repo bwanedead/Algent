@@ -1,173 +1,146 @@
-"""Mechanical story-family cooldown — the floor that soft 'close match' instruction failed to hold."""
+"""Agent-semantic cooldown — flags on ranking choices; no lexical demotion floor."""
 
 from __future__ import annotations
 
-from algent_backend.agent_system.agents.routing.contracts import RankedChoice, RouteCandidate, RouteRanking
-from algent_backend.agent_system.agents.routing.cooldown import anchors, cooled_by, demote_cooled, significant_tokens
+from algent_backend.agent_system.agents.discovery.portfolio import (
+    ResearchPortfolio,
+    ResearchVector,
+    ensure_vector_ids,
+)
+from algent_backend.agent_system.agents.routing.contracts import (
+    RankedChoice,
+    RouteCandidate,
+    RouteRanking,
+    RoutingBrief,
+)
+from algent_backend.agent_system.agents.routing.engine import route
+from algent_backend.agent_system.agents.routing.promotion import rank_portfolio, top_vector
 from algent_backend.agent_system.agents.routing.prompts import build_router_message
+from algent_backend.agent_system.foundation.models import ModelSpec
+from algent_backend.agent_system.runs.context import AgentRunContext
 
 
-_HORMUZ_PRIORS = [
-    "Strait of Hormuz impaired, not closed: strikes and vessel damage reduce traffic",
-    "Strait of Hormuz sees severe disruption as tankers are hit and traffic drops",
-    "Hormuz saw serious traffic disruption, but the record doesn't prove a sustained full closure",
-]
+class _Structured:
+    def __init__(self, ranking: RouteRanking, capture: list) -> None:
+        self._r, self._cap = ranking, capture
+
+    def invoke(self, messages, config=None):
+        self._cap.append(messages)
+        return self._r
 
 
-def test_hormuz_reframe_is_cooled_by_anchor() -> None:
-    # Live failure mode: router re-titled the beat as "war widens / IRGC" and promoted it.
-    blob = (
-        "U.S.–Iran war widens with strikes on Revolutionary Guard and Hormuz disruption "
-        "reports Iran conflict widening with strikes on IRGC assets and Hormuz disruption"
+class _Model:
+    def __init__(self, ranking: RouteRanking, capture: list) -> None:
+        self._r, self._cap = ranking, capture
+
+    def with_structured_output(self, _schema):
+        return _Structured(self._r, self._cap)
+
+
+class _Resolver:
+    def __init__(self, model) -> None:
+        self._m = model
+
+    def resolve(self, _spec):
+        return type("R", (), {"client": self._m})()
+
+
+def _ctx(model, events: list):
+    return AgentRunContext(
+        run_id="t",
+        model_resolver=_Resolver(model),  # type: ignore[arg-type]
+        emit=lambda et, p=None: events.append((et, p or {})),
     )
-    cool, why = cooled_by(blob, _HORMUZ_PRIORS)
-    assert cool, why
-    assert "hormuz" in why.lower() or "strikes" in why.lower() or "saturated" in why.lower()
 
 
-def test_kyiv_story_not_cooled_by_hormuz_priors() -> None:
-    cool, why = cooled_by(
-        "Kyiv under heavy missile/drone attack amid Patriot shortage — air defense procurement",
-        _HORMUZ_PRIORS,
-    )
-    assert not cool, why
+def _spec():
+    return ModelSpec(provider="openai", model="gpt-5.4-mini")
 
 
-def test_generic_news_words_are_not_anchors() -> None:
-    # Live false positives on run 0009: "active" (SharePoint) demoted SonicWall; "damage"
-    # (Hormuz) demoted a Peru earthquake. Common verbs/adjectives must never be family keys.
-    assert "active" not in anchors("CISA warns active exploitation of SharePoint Server")
-    assert "damage" not in anchors("vessel damage reduce traffic in the strait")
-    cool, why = cooled_by(
-        "Actively exploited SonicWall SMA1000 zero-days hit enterprise gateways",
-        ["CISA warns SharePoint Server are under active exploitation"],
-    )
-    assert not cool, why
-    cool2, why2 = cooled_by(
-        "Peru earthquake with deaths and infrastructure damage",
-        ["Strait of Hormuz impaired: strikes and vessel damage reduce traffic"],
-    )
-    assert not cool2, why2
-
-
-def test_sharepoint_second_piece_cooled_by_anchor() -> None:
-    priors = [
-        "CISA warns SharePoint Server Subscription Edition, 2019, and 2016 are under active exploitation",
-    ]
-    cool, why = cooled_by(
-        "Microsoft/SharePoint exploitation campaign becomes a broad enterprise security story",
-        priors,
-    )
-    assert cool and "sharepoint" in why.lower()
-
-
-def test_demote_moves_cooled_below_fresh() -> None:
-    recent = tuple((f"2026-07-1{i}", t) for i, t in enumerate(_HORMUZ_PRIORS))
-    candidates = [
-        RouteCandidate(id="rv1", label="U.S.–Iran war widens with Hormuz disruption",
-                       summary="IRGC strikes and shipping pressure"),
-        RouteCandidate(id="rv4", label="Kyiv under heavy missile attack",
-                       summary="Patriot shortage constrains defense"),
-        RouteCandidate(id="rv8", label="China consumer defaults rise",
-                       summary="household credit stress"),
-    ]
-    # LLM put Hormuz first (the live bug); floor must promote a fresh story.
-    ranking = RouteRanking(choices=[
-        RankedChoice(candidate_id="rv1", rank=1, score=93, rationale="biggest impact"),
-        RankedChoice(candidate_id="rv4", rank=2, score=74, rationale="human impact"),
-        RankedChoice(candidate_id="rv8", rank=3, score=47, rationale="macro"),
-    ])
-    out = demote_cooled(ranking, candidates, recent)
-    assert out.choices[0].candidate_id == "rv4"
-    assert out.choices[0].rank == 1
-    assert out.choices[-1].candidate_id == "rv1"
-    assert "mechanical cooldown" in out.note
-
-
-def test_demote_noop_when_all_cooled() -> None:
-    # Nowhere to demote to — leave LLM order rather than empty promote.
-    recent = (("2026-07-18", "Hormuz traffic falls"),)
-    candidates = [
-        RouteCandidate(id="a", label="Hormuz again", summary="strait traffic"),
-        RouteCandidate(id="b", label="Hormuz closure debate", summary="shipping"),
-    ]
-    ranking = RouteRanking(choices=[
-        RankedChoice(candidate_id="a", rank=1, score=90),
-        RankedChoice(candidate_id="b", rank=2, score=80),
-    ])
-    out = demote_cooled(ranking, candidates, recent)
-    assert [c.candidate_id for c in out.choices] == ["a", "b"]
-
-
-def test_significant_tokens_drop_glue() -> None:
-    toks = significant_tokens("The Strait of Hormuz sees severe disruption as the tankers are hit")
-    assert "hormuz" in toks and "strait" in toks and "disruption" in toks
-    assert "the" not in toks and "sees" not in toks
-    assert "hormuz" in anchors("Strait of Hormuz traffic")
-
-
-def test_router_message_names_reframe_failure() -> None:
+def test_router_message_carries_headlines_for_semantic_cooldown() -> None:
     msg = build_router_message(
         [RouteCandidate(id="v1", label="x", summary="y")],
-        10,
-        (("2026-07-18", "Hormuz disruption"),),
-    )
-    assert "STORY-FAMILY" in msg and "REFRAME IS NOT A NEW STORY" in msg
-    assert "mechanical floor" in msg
-
-
-def test_ice_reframe_cooled_by_short_org_and_plural_stem() -> None:
-    """Live 0022: ICE is 3 letters (was dropped); arrest vs arrests didn't match."""
-    prior = (
-        "ICE's FY2026 data show a June surge in arrests and higher detention, "
-        "but criminals first doesn't match the custody mix"
-    )
-    blob = (
-        "ICE arrest surge and record detention levels under renewed interior-enforcement push "
-        "U.S. immigration enforcement accelerating with record arrest levels and more detention"
-    )
-    assert "ice" in significant_tokens(prior) and "ice" in significant_tokens(blob)
-    assert "arrest" in significant_tokens(prior)  # arrests → arrest
-    cool, why = cooled_by(blob, [prior])
-    assert cool, why
-    assert "ice" in why.lower() or "detention" in why.lower() or "arrest" in why.lower()
-
-
-def test_ice_demote_below_google_fine() -> None:
-    recent = ((
-        "2026-07-22",
-        "ICE's FY2026 data show a June surge in arrests and higher detention, "
-        "but criminals first doesn't match the custody mix",
-    ),)
-    candidates = [
-        RouteCandidate(
-            id="v2",
-            label="ICE arrest surge and record detention levels under renewed interior-enforcement push",
-            summary="immigration enforcement accelerating, more detention",
+        RoutingBrief(
+            role="r",
+            candidate_kind="k",
+            selecting_for="s",
+            downstream="d",
+            recent=(("2026-07-18", "Hormuz disruption"),),
         ),
-        RouteCandidate(
-            id="v1",
-            label="Google hit with €890M EU antitrust fine over search and Play self-preferencing",
-            summary="EU antitrust fine for self-preferencing",
-        ),
-    ]
-    ranking = RouteRanking(choices=[
-        RankedChoice(candidate_id="v2", rank=1, score=92, rationale="ICE scale"),
-        RankedChoice(candidate_id="v1", rank=2, score=89, rationale="Google"),
-    ])
-    out = demote_cooled(ranking, candidates, recent)
-    assert out.choices[0].candidate_id == "v1"
-    assert out.choices[-1].candidate_id == "v2"
-    assert "mechanical cooldown demoted" in out.note
-
-
-def test_demote_records_when_no_recent_headlines() -> None:
-    ranking = RouteRanking(choices=[
-        RankedChoice(candidate_id="a", rank=1, score=90),
-    ])
-    out = demote_cooled(
-        ranking,
-        [RouteCandidate(id="a", label="Anything", summary="x")],
-        (),
     )
-    assert "no recent headlines" in out.note
+    assert "ALREADY COVERED" in msg and "Hormuz disruption" in msg
+    assert "cooldown=true" in msg.lower() or "cooldown=true/false" in msg.lower() or "cooldown=true" in msg
+    assert "SEMANTICALLY" in msg
+    assert "mechanical floor" not in msg
+
+
+def test_top_vector_skips_agent_cooldown_flags() -> None:
+    portfolio = ensure_vector_ids(ResearchPortfolio(generated_at="t", vectors=[
+        ResearchVector(title="ICE again", thesis="t", vector_type="story",
+                       rationale="r", research_effort="deep"),
+        ResearchVector(title="Ortega elections", thesis="t", vector_type="story",
+                       rationale="r", research_effort="standard"),
+    ]))
+    ice, ort = portfolio.vectors[0].id, portfolio.vectors[1].id
+    ranking = RouteRanking(choices=[
+        RankedChoice(candidate_id=ice, rank=1, score=95, cooldown=True,
+                     cooldown_reason="prior ICE piece"),
+        RankedChoice(candidate_id=ort, rank=2, score=80, cooldown=False),
+    ])
+    # Simulate engine band: free first
+    ranking = ranking.model_copy(update={"choices": [
+        RankedChoice(candidate_id=ort, rank=1, score=80, cooldown=False),
+        RankedChoice(candidate_id=ice, rank=2, score=95, cooldown=True,
+                     cooldown_reason="prior ICE piece"),
+    ]})
+    by_id = {v.id: v for v in portfolio.vectors}
+    top = top_vector(ranking, by_id)
+    assert top is not None and top.title == "Ortega elections"
+
+
+def test_route_ranks_all_and_backfills_missing() -> None:
+    ranking = RouteRanking(choices=[
+        RankedChoice(candidate_id="a", rank=1, score=90, cooldown=False),
+        # model forgot b
+    ])
+    events: list = []
+    ctx = _ctx(_Model(ranking, []), events)
+    brief = RoutingBrief(
+        role="r", candidate_kind="k", selecting_for="s", downstream="d", rank_all=True,
+    )
+    out = route(
+        ctx,
+        [RouteCandidate(id="a", label="A"), RouteCandidate(id="b", label="B")],
+        brief,
+        model_spec=_spec(),
+    )
+    ids = {c.candidate_id for c in out.choices}
+    assert ids == {"a", "b"}
+    assert out.choices[0].candidate_id == "a"
+
+
+def test_route_puts_cooldown_band_after_free() -> None:
+    ranking = RouteRanking(choices=[
+        RankedChoice(candidate_id="cooled", rank=1, score=99, cooldown=True,
+                     cooldown_reason="prior"),
+        RankedChoice(candidate_id="fresh", rank=2, score=70, cooldown=False),
+    ])
+    ctx = _ctx(_Model(ranking, []), [])
+    brief = RoutingBrief(
+        role="r", candidate_kind="k", selecting_for="s", downstream="d", rank_all=True,
+        recent=(("2026-07-22", "Prior story"),),
+    )
+    out = route(
+        ctx,
+        [
+            RouteCandidate(id="cooled", label="Same family"),
+            RouteCandidate(id="fresh", label="New story"),
+        ],
+        brief,
+        model_spec=_spec(),
+    )
+    assert out.choices[0].candidate_id == "fresh"
+    assert out.choices[0].cooldown is False
+    assert out.choices[1].candidate_id == "cooled"
+    assert out.choices[1].cooldown is True
+    assert "agent cooldown" in out.note

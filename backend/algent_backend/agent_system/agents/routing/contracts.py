@@ -32,16 +32,23 @@ class RankedChoice(BaseModel):
     """One ranked candidate in a routing decision."""
 
     candidate_id: str
-    rank: int            # 1 = best
+    rank: int            # 1 = best among *eligible* promote order after cooldown sort
     score: float = 0.0   # 0-100 — the router's importance/fit estimate
     rationale: str = ""
+    # Agent semantic judgment: same story-family as a recent published headline.
+    cooldown: bool = False
+    cooldown_reason: str = ""  # which prior headline / why, if cooldown
 
 
 class RouteRanking(BaseModel):
-    """The router's structured output: an ordered selection, best first."""
+    """The router's structured output: full ordered list, best first.
+
+    Every input candidate should appear once. Cooldown flags are agent judgment
+    (not lexical). Promote the first choice with ``cooldown=False``.
+    """
 
     choices: list[RankedChoice] = Field(default_factory=list)
-    note: str = ""       # brief: what was set aside / why, if anything
+    note: str = ""       # brief: what was set aside / cooldown summary
 
 
 @dataclass(frozen=True)
@@ -56,8 +63,8 @@ class RoutingBrief:
     candidate_kind: str  # what the items are
     selecting_for: str   # the ranking criteria
     downstream: str      # what the winner becomes / next steps (self-awareness)
-    top_k: int = 10
-    # COOLDOWN: things we recently produced, as (when, what). A router that can't see its own
-    # recent output re-picks the same story while it dominates the pool. Advisory by design — the
-    # router still promotes a genuinely new development on a running story.
+    # Rank ALL candidates when True (promotion default). When False, cap at top_k.
+    rank_all: bool = True
+    top_k: int = 50      # only used when rank_all is False; also a soft max for huge sets
+    # COOLDOWN payload: recent published (when, title). Agent judges story-family match.
     recent: tuple[tuple[str, str], ...] = ()

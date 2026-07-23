@@ -3,9 +3,8 @@ What we have already published — the cooldown reference.
 
 A pool built from published-article volume keeps re-surfacing whatever is dominating the wires, so
 the newsroom covers the same running story night after night. The cheapest correction is to tell
-the promotion router what we JUST RAN: recent headlines, as data, with an instruction not to pick a
-close match. Judgment stays with the router (a genuinely new development on a running story should
-still promote) — this is a cooldown, not a mechanical block.
+the promotion (and synthesis) agent what we JUST RAN: recent headlines as payload. The agent
+judges story-family match semantically and flags cooldown — there is no lexical demotion floor.
 
 Headlines are the reference because they are what a reader would recognise as "the same story",
 and because they cost nothing to produce: they are already in the published frontmatter.

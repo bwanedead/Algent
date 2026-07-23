@@ -59,12 +59,16 @@ def test_missing_site_dir_is_not_an_error(tmp_path: Path) -> None:
 def test_cooldown_reaches_the_router_message() -> None:
     brief = RoutingBrief(role="r", candidate_kind="k", selecting_for="s", downstream="d",
                          recent=(("2026-07-17T10:00:00+00:00", "Hormuz disruption"),))
-    msg = build_router_message([RouteCandidate(id="v1", label="Hormuz again", summary="same story")],
-                               brief.top_k, brief.recent)
+    msg = build_router_message(
+        [RouteCandidate(id="v1", label="Hormuz again", summary="same story")],
+        brief,
+    )
     assert "ALREADY COVERED" in msg and "Hormuz disruption" in msg
-    assert "STORY-FAMILY" in msg and "REFRAME IS NOT A NEW STORY" in msg
+    assert "SEMANTICALLY" in msg
+    assert "cooldown" in msg.lower()
 
 
 def test_no_cooldown_section_when_nothing_published() -> None:
-    msg = build_router_message([RouteCandidate(id="v1", label="x", summary="y")], 10, ())
-    assert "ALREADY COVERED" not in msg      # a fresh newsroom sees no noise
+    brief = RoutingBrief(role="r", candidate_kind="k", selecting_for="s", downstream="d")
+    msg = build_router_message([RouteCandidate(id="v1", label="x", summary="y")], brief)
+    assert "none loaded" in msg.lower() or "no recent" in msg.lower()

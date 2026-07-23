@@ -15,11 +15,18 @@ from typing import Any
 _MAX_ITEMS = 150
 
 
-def build_t0_message(pool: dict[str, Any]) -> str:
+def build_t0_message(
+    pool: dict[str, Any],
+    *,
+    recent_headlines: tuple[tuple[str, str], ...] | list[tuple[str, str]] = (),
+) -> str:
     """Render a t0 ``DiscoveryPool`` dict into the run's task message.
 
     X items are listed in a dedicated **novelty band** first so synthesis treats
     the X channel as a first-class valve, not garnish on GKG mass.
+
+    ``recent_headlines`` is the cooldown payload (date, title): prefer not to
+    rebuild the same story-family as something we just published.
     """
     items = pool.get("items", [])[:_MAX_ITEMS]
     x_items = [i for i in items if str(i.get("channel") or "") == "x"]
@@ -33,6 +40,17 @@ def build_t0_message(pool: dict[str, Any]) -> str:
         "Each line is a candidate hit: [id] label | tags | signals | evidence.",
         "",
     ]
+    if recent_headlines:
+        lines.append("# ALREADY COVERED — recent published headlines (cooldown)")
+        lines.append(
+            "Prefer vectors that are NOT the same story-family as these. A reframe or "
+            "updated figures on the same development is still the same family — skip it "
+            "unless there is a true structural delta. Do not spend the portfolio on "
+            "repetition of what we just published."
+        )
+        for when, title in recent_headlines:
+            lines.append(f"- {str(when)[:10]}  {title}")
+        lines.append("")
     if x_items:
         lines.append(
             f"## X NOVELTY BAND ({len(x_items)} hits) — platform-native / wires / AI pulse"

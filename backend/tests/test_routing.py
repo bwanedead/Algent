@@ -86,8 +86,8 @@ def test_route_no_candidates_skips_model() -> None:
 def test_rank_portfolio_wraps_vectors_and_top_vector_picks_number_one() -> None:
     portfolio = ResearchPortfolio(generated_at="t", vectors=[_vec("V0", "light"), _vec("V1", "deep")])
     ranking = RouteRanking(choices=[
-        RankedChoice(candidate_id="vec:01", rank=1, score=95),
-        RankedChoice(candidate_id="vec:00", rank=2, score=60),
+        RankedChoice(candidate_id="vec:01", rank=1, score=95, cooldown=False),
+        RankedChoice(candidate_id="vec:00", rank=2, score=60, cooldown=False),
     ])
     captured: list = []
     ctx = _ctx(_Model(ranking, captured), [])
@@ -98,6 +98,9 @@ def test_rank_portfolio_wraps_vectors_and_top_vector_picks_number_one() -> None:
     assert top is not None and top.title == "V1"  # #1 maps back to the right vector
     # the candidate rendering reached the model (V1's signals are in the human message)
     assert "vec:01" in captured[0][1].content
+    # full-list + agent cooldown instructions in the message
+    human = captured[0][1].content
+    assert "Rank ALL" in human or "ALL" in human
 
 
 def test_router_prompt_injects_brief_and_system_map() -> None:

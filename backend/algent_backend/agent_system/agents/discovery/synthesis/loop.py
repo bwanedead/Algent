@@ -106,7 +106,9 @@ def build_synthesis_graph(
         with policy.scoped(search_channels, paid_budget), cost.scoped(cost_cap_usd, model_spec.model):
             produced = stream_react_loop(
                 agent,
-                {"messages": [HumanMessage(content=build_t0_message(pool))]},
+                {"messages": [HumanMessage(content=build_t0_message(
+                    pool, recent_headlines=_recent_published_headlines(),
+                ))]},
                 context=context,
                 config=config,
             )
@@ -190,6 +192,18 @@ def _t0_preview(pool: dict[str, Any], link: str | None) -> dict[str, Any]:
 def _rake_enabled() -> bool:
     """Rake is on by default; ALGENT_RAKE=0/false/no turns the stage off."""
     return os.environ.get("ALGENT_RAKE", "1").strip().lower() not in ("0", "false", "no", "off")
+
+
+def _recent_published_headlines() -> tuple[tuple[str, str], ...]:
+    """Cooldown payload for synthesis — same source as the promotion router."""
+    try:
+        from algent_backend.publishing import site_git
+        from algent_backend.publishing.history import recent_headlines
+
+        root = site_git.repo_root()
+        return tuple(recent_headlines([site_git.live_site_dir(root), site_git.site_dir(root)]))
+    except Exception:  # noqa: BLE001
+        return ()
 
 
 def _rake_recap(summary: Any) -> str:
