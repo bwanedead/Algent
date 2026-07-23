@@ -73,6 +73,7 @@ _WEAK_ANCHORS = frozenset({
     "outcomes", "unproven", "infrastructure", "heading", "toward", "towards",
     "warning", "warned", "record", "still", "whether", "forces", "central", "banks",
     "shipping", "diplomacy", "escalation", "continue", "continues", "ongoing",
+    "software", "faulty", "configuration", "outage", "server", "servers",
 })
 
 
