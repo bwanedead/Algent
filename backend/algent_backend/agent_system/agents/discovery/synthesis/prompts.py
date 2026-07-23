@@ -33,10 +33,18 @@ Your goal is broad coverage of everything genuinely newsworthy in the pool, NOT 
 short highlight reel. A full pool usually holds many real stories — produce a vector
 for EACH one (often 10-25 from a full pool, not 3-4). Instead of dropping the long
 tail, KEEP it and set its research_effort to "light"; reserve "standard"/"deep" for
-the big, high-leverage, cross-corroborated forces. That way effort still concentrates
-on what matters most, but nothing real is thrown away. When unsure whether something
+the big, high-leverage, cross-corroborated forces *and* for high-curiosity knowledge
+stories (real breakthroughs, discoveries, cool feats). When unsure whether something
 is a story, include it as a light vector rather than dropping it. Being too selective
 is a failure mode here — err toward more coverage.
+
+CURIOSITY / AWE / NEW KNOWLEDGE — promote into the portfolio head
+Science, archaeology, physics, biology, math, space, and genuine discovery/feat
+stories are a product strength when they are real and researchable. Do not bury them
+as throwaway light tails while the head is only war/macro. Give breakthrough-shaped
+items their own vectors with standard effort when the evidence is there (e.g. a
+serious new result, first-of-kind find, disproved conjecture). Wonder that transfers
+to a smart generalist is first-class news for us.
 
 X AS NOVELTY VALVE
 The pool may include an **X band** (platform News, event probes, spectrum voices,

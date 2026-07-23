@@ -764,6 +764,21 @@ def test_select_reserves_quota_for_protected_margins() -> None:
     assert "OUTSIDER" in keys_yes  # quota rescues the non-English margin
 
 
+def test_curiosity_and_novelty_boost_science_keys() -> None:
+    """Science/discovery keys get a curiosity score; novel keys get a large novelty boost."""
+    sci = [_rec(themes=["SCIENCE_PHYSICS_BREAKTHROUGH"], source_name=f"s{i}.edu") for i in range(5)]
+    bland = [_rec(themes=["LOUD_BLAND"], source_name=f"b{i}.com") for i in range(5)]
+    mem = RollingMemory("s").with_batch("b0", {"theme:LOUD_BLAND": 5})  # bland seen; sci novel
+    stats = extract_candidates(sci + bland, min_count=3)
+    scored = ranking.score_candidates(stats, mem)
+    by_key = {c.stats.key: c for c in scored}
+    assert by_key["SCIENCE_PHYSICS_BREAKTHROUGH"].curiosity >= 0.75
+    assert "curiosity" in by_key["SCIENCE_PHYSICS_BREAKTHROUGH"].reasons
+    assert by_key["SCIENCE_PHYSICS_BREAKTHROUGH"].novel is True
+    # With novelty+curiosity boosts, the science key should not trail bland volume.
+    assert by_key["SCIENCE_PHYSICS_BREAKTHROUGH"].score >= by_key["LOUD_BLAND"].score
+
+
 def test_select_collapses_co_occurring_candidates() -> None:
     # Two entities that always appear together (same 5 records) = one story.
     records = [_rec(persons=["alice"], organizations=["acme corp"]) for _ in range(5)]

@@ -4,15 +4,13 @@ Ranking — score candidates and select a shortlist that resists the headline ru
 Two steps:
 
 - **score** each candidate by blending the signals that matter for discovery:
-  significance (volume + outlet spread), velocity (acceleration vs the rolling
-  baseline), cross-language reach, and novelty. Volume alone is the rut, so it is
-  only one term and not the dominant one.
-- **select** the shortlist with a *protected quota*: most slots go to the top
-  blended scores, but a reserved fraction is held for rising / novel /
-  non-English-only candidates so the loud incumbents can't crowd out the margins
-  where real discovery lives.
+  momentum (movement + breadth), a light significance floor, **novelty** (new to
+  our memory — our asset vs wire sameness), and **curiosity** (science / knowledge
+  / discovery-shaped themes — feats and new human knowledge).
+- **select** the shortlist with a *protected quota* for rising / novel /
+  non-English / science-curiosity margins so loud war-macro cannot crowd them out.
 
-Pure functions over :class:`CandidateStats` + :class:`RollingMemory`.
+Volume alone is the rut. Novelty and curiosity are boosted, not punished.
 """
 
 from __future__ import annotations
@@ -29,18 +27,24 @@ SMOOTHING = 2.0
 RISING_THRESHOLD = 0.5  # velocity at/above which a candidate counts as "rising"
 
 # Discovery is led by *movement corroborated by breadth*, not by raw magnitude.
-# A candidate must clear MIN_RISING_COUNT records before its velocity counts (kills
-# 0->3 ratio spikes), and velocity is capped so one explosive item can't win on
-# ratio alone. Momentum = breadth(languages) x capped-positive-velocity, so a rise
-# seen across many languages outranks an isolated single-language spike (the
-# principled lever against PR/promo noise). Significance is only a gentle floor —
-# it dominates solely at cold start, before any baseline exists. See ITERATION_LOG.
+# Novelty + curiosity are first-class so unique/interesting material can outrank
+# yet another Iran/Fed/AI-credit rehash. See ITERATION_LOG.
 MIN_RISING_COUNT = 5
 VELOCITY_CAP = 3.0
 
-_W_MOMENTUM = 1.0
-_W_SIGNIFICANCE = 0.12
-_W_NOVELTY = 0.30
+_W_MOMENTUM = 0.85
+_W_SIGNIFICANCE = 0.10
+_W_NOVELTY = 0.95       # was 0.30 — novelty is the product differentiator
+_W_CURIOSITY = 0.55     # science / knowledge / discovery-shaped keys
+
+# Theme/key fragments that signal "new human knowledge / cool feat" material.
+_CURIOSITY_MARKERS = (
+    "SCIENCE", "SPACE", "ASTRONOM", "BIOLOG", "PHYSICS", "CHEMIST", "GENOME",
+    "GENETIC", "CRISPR", "QUANTUM", "TELESCOPE", "FOSSIL", "DINOSAUR", "ARCHAEO",
+    "MATH", "MATHEMAT", "CONJECTURE", "THEOREM", "NEURO", "CLIMATE_SCIENCE",
+    "TECH_SCIENCE", "INNOVATION", "MEDICAL", "HEALTH_RESEARCH", "PALEONTO",
+    "COSMOLOG", "PARTICLE", "MICROSCOP", "EXOPLANET", "DNA_", "RNA_",
+)
 
 
 @dataclass(frozen=True)
@@ -49,6 +53,7 @@ class ScoredCandidate:
     velocity: float | None
     rising: bool
     novel: bool
+    curiosity: float
     score: float
     reasons: tuple[str, ...]
 
@@ -56,8 +61,21 @@ class ScoredCandidate:
 def score_candidates(
     stats: list[CandidateStats], memory: RollingMemory
 ) -> list[ScoredCandidate]:
-    """Attach velocity/novelty and a blended score to every candidate."""
+    """Attach velocity/novelty/curiosity and a blended score to every candidate."""
     return [_score_one(s, memory) for s in stats]
+
+
+def _curiosity_score(stats: CandidateStats) -> float:
+    """0..1 — science/knowledge/discovery shape (not PR fluff)."""
+    if getattr(stats, "pillar", None) == "science":
+        return 1.0
+    blob = f"{stats.full_key} {stats.key}".upper()
+    hits = sum(1 for m in _CURIOSITY_MARKERS if m in blob)
+    if hits >= 2:
+        return 1.0
+    if hits == 1:
+        return 0.75
+    return 0.0
 
 
 def _score_one(stats: CandidateStats, memory: RollingMemory) -> ScoredCandidate:
@@ -69,6 +87,7 @@ def _score_one(stats: CandidateStats, memory: RollingMemory) -> ScoredCandidate:
         and velocity >= RISING_THRESHOLD
         and stats.count >= MIN_RISING_COUNT
     )
+    curiosity = _curiosity_score(stats)
 
     breadth = log1p(len(stats.languages))
     gated_velocity = min(max(velocity or 0.0, 0.0), VELOCITY_CAP) if stats.count >= MIN_RISING_COUNT else 0.0
@@ -79,14 +98,16 @@ def _score_one(stats: CandidateStats, memory: RollingMemory) -> ScoredCandidate:
         _W_MOMENTUM * momentum
         + _W_SIGNIFICANCE * significance
         + _W_NOVELTY * (1.0 if novel else 0.0)
+        + _W_CURIOSITY * curiosity
     )
     return ScoredCandidate(
         stats=stats,
         velocity=velocity,
         rising=rising,
         novel=novel,
+        curiosity=curiosity,
         score=round(score, 4),
-        reasons=_reasons(stats, rising, novel),
+        reasons=_reasons(stats, rising, novel, curiosity),
     )
 
 
@@ -97,12 +118,16 @@ def _velocity(stats: CandidateStats, memory: RollingMemory) -> float | None:
     return round((stats.count - base) / (base + SMOOTHING), 3)
 
 
-def _reasons(stats: CandidateStats, rising: bool, novel: bool) -> tuple[str, ...]:
+def _reasons(
+    stats: CandidateStats, rising: bool, novel: bool, curiosity: float,
+) -> tuple[str, ...]:
     reasons: list[str] = []
     if rising:
         reasons.append("rising")
     if novel:
         reasons.append("novel")
+    if curiosity >= 0.75:
+        reasons.append("curiosity")
     if "eng" not in stats.languages:
         reasons.append("non-english")
     if len(stats.languages) >= 5:
@@ -113,10 +138,11 @@ def _reasons(stats: CandidateStats, rising: bool, novel: bool) -> tuple[str, ...
 
 
 def _is_protected(candidate: ScoredCandidate) -> bool:
-    """The margins we refuse to let volume crowd out."""
+    """The margins we refuse to let volume crowd out — including science/curiosity."""
     return (
         candidate.rising
         or candidate.novel
+        or candidate.curiosity >= 0.75
         or "eng" not in candidate.stats.languages
     )
 

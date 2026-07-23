@@ -69,7 +69,11 @@ _PILLAR_QUERIES: dict[str, str] = {
         "(crisis OR conflict OR war OR protest OR summit OR disaster OR ceasefire)"
     ),
     "science": (
-        "(science OR research OR climate OR space OR physics OR biology OR study)"
+        # Breakthroughs / new knowledge — not generic "study says" SEO.
+        '(breakthrough OR discovery OR "peer-reviewed" OR "for the first time" '
+        'OR archaeology OR paleontology OR physics OR biology OR genome OR quantum '
+        'OR telescope OR fossil OR "Nature journal" OR "Science journal" OR CRISPR '
+        'OR exoplanet OR "researchers found" OR "scientists discover")'
     ),
     "health": (
         "(health OR disease OR medical OR vaccine OR outbreak OR hospital OR \"public health\")"

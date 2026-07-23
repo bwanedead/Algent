@@ -22,7 +22,7 @@ from .ranking import Selection, score_candidates, select
 from .report import Candidate, InsightsReport, LanguageInsights
 
 DEFAULT_TOP = 40
-DEFAULT_QUOTA = 10  # protected slots within the shortlist
+DEFAULT_QUOTA = 14  # protected: rising / novel / non-English / science-curiosity
 DEFAULT_PER_LANGUAGE_TOP = 8
 
 

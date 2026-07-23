@@ -65,6 +65,10 @@ _DEFAULT_NEWS_SEEDS = (
     "military",
     "policy",
     "science",
+    "discovery",
+    "archaeology",
+    "physics",
+    "biology",
     "diplomacy",
     "strike",
 )
@@ -167,9 +171,11 @@ _DEFAULT_NOVELTY_PROBES = (
     # Policy / legal / conflict acts
     '(lawsuit OR sanctions OR ceasefire OR "has ordered" OR "has banned" OR "struck a deal" '
     'OR "has approved" OR "has blocked") -is:retweet -is:reply lang:en',
-    # Long-tail curiosity / science / firsts (spectrum beyond war-macro)
-    '("for the first time" OR "study finds" OR "researchers" OR "scientists" OR discovered '
-    'OR "peer-reviewed") -is:retweet -is:reply lang:en',
+    # Science / knowledge feats — breakthroughs, archaeology, physics, biology, math
+    '("for the first time" OR "study finds" OR "researchers" OR "scientists discover" '
+    'OR "peer-reviewed" OR breakthrough OR archaeology OR fossil OR quantum OR genome '
+    'OR telescope OR "math" OR conjecture OR "Nature" OR "Science") '
+    "-is:retweet -is:reply lang:en",
     # Labor / cost-of-living / housing (often under-covered in GKG head)
     '(strike OR "laid off" OR walkout OR "cost of living" OR "rent prices" OR "union vote") '
     "-is:retweet -is:reply lang:en",
