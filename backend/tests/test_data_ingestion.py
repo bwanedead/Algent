@@ -637,6 +637,7 @@ def test_build_pool_includes_x_news() -> None:
 
 def test_ensure_t0_x_channel_skips_gkg_and_fetches_api(monkeypatch, tmp_path) -> None:
     monkeypatch.setenv(_shared._OUTPUT_ENV, str(tmp_path))
+    monkeypatch.setenv("ALGENT_T0_CRYSTALLIZE", "0")  # isolate X path from finisher
     monkeypatch.delenv("ALGENT_X_T0_VIA", raising=False)
     from algent_backend.data_ingestion.newsroom.discovery import pipeline
 
@@ -821,6 +822,68 @@ def test_broad_themes_demoted_vs_story_candidates() -> None:
     assert best_story.specificity > gas.specificity
     assert best_story.score > gas.score
     assert "specific" in best_story.reasons
+
+
+def test_crystallize_pool_keeps_events_and_drops_junk() -> None:
+    from algent_backend.data_ingestion.newsroom.discovery.crystallize import (
+        crystallize_pool,
+    )
+    from algent_backend.data_ingestion.newsroom.discovery.report import (
+        DiscoveryPool,
+        PoolItem,
+    )
+
+    class _Fake:
+        last_usd = 0.001
+
+        def complete_json(self, *, system: str, user: str):
+            return [
+                {
+                    "id": "gkg:story:iran",
+                    "keep": True,
+                    "event": "Iran and US envoys hold talks in Pakistan on day 10 of fighting.",
+                    "reason": "discrete talks",
+                },
+                {
+                    "id": "gkg:story:garden",
+                    "keep": False,
+                    "event": None,
+                    "reason": "lifestyle",
+                },
+                {
+                    "id": "x:x_novelty:1",
+                    "keep": True,
+                    "event": "Houthis issue ultimatum to Saudi Arabia after rejected peace talks.",
+                    "reason": "kinetic diplomacy",
+                },
+            ]
+
+    pool = DiscoveryPool(
+        generated_at="t",
+        item_count=3,
+        by_channel={"gkg": 2, "x": 1},
+        items=[
+            PoolItem(
+                id="gkg:story:iran", label="even as us iran fight talks pakistan",
+                channel="gkg", kind="story", signals={"score": 2.0},
+            ),
+            PoolItem(
+                id="gkg:story:garden", label="what to plant in july seeds list",
+                channel="gkg", kind="story", signals={"score": 3.0},
+            ),
+            PoolItem(
+                id="x:x_novelty:1", label="@x: HOUTHI ULTIMATUM",
+                channel="x", kind="post", signals={"score": 1.0},
+            ),
+        ],
+    )
+    out, result = crystallize_pool(pool, client=_Fake())
+    assert result.mode == "llm" and result.dropped == 1 and result.kept == 2
+    labels = [i.label for i in out.items]
+    assert any("Pakistan" in lab for lab in labels)
+    assert any("Houthi" in lab or "ultimatum" in lab.lower() for lab in labels)
+    assert all(i.signals.get("crystallized") for i in out.items)
+    assert not any("plant" in i.label.lower() for i in out.items)
 
 
 def test_sports_text_filtered_from_markets_and_entities() -> None:

@@ -125,6 +125,17 @@ def _build_pool(report, chans: frozenset[str], say: ProgressFn) -> tuple[dict[st
         report, sheet, markets, x_hits,
         gkg_limit=gkg_limit, markets_limit=markets_limit,
     )
+    # Semantic finisher: rewrite to event sentences / drop non-events (cheap LLM).
+    try:
+        from .crystallize import crystallize_pool
+        pool, cryst = crystallize_pool(pool, on_progress=say)
+        if cryst.mode != "off" and cryst.dropped:
+            say(
+                f"crystallize summary: mode={cryst.mode} kept={cryst.kept} "
+                f"dropped={cryst.dropped} usd~{cryst.estimated_usd:.4f}"
+            )
+    except Exception as exc:  # noqa: BLE001 — never block t0 on crystallizer
+        say(f"crystallize: skipped ({str(exc)[:80]})")
     out = pool_dir()
     out.mkdir(parents=True, exist_ok=True)
     stamp = report.batch_id if report is not None else datetime.now(UTC).strftime("%Y%m%d%H%M%S")
