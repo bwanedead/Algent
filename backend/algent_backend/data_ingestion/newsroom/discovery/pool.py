@@ -33,15 +33,28 @@ def build_pool(
     sheet: BeatSheet | None,
     markets: list[dict] | None = None,
     x_hits: list[dict] | None = None,
+    *,
+    gkg_limit: int | None = None,
+    markets_limit: int | None = None,
 ) -> DiscoveryPool:
-    """Consolidate the net + sweep + prediction markets + X into one grounded pool."""
+    """Consolidate the net + sweep + prediction markets + X into one grounded pool.
+
+    Optional ``gkg_limit`` / ``markets_limit`` rebalance when the X novelty valve is
+    on so wire/market mass cannot drown platform-native leads.
+    """
     items: list[PoolItem] = []
     if insights is not None:
-        items.extend(_gkg_item(c) for c in insights.candidates)
+        gkg = list(insights.candidates)
+        if gkg_limit is not None:
+            gkg = gkg[: max(0, gkg_limit)]
+        items.extend(_gkg_item(c) for c in gkg)
     if sheet is not None:
         items.extend(_beat_items(sheet))
     if markets:
-        items.extend(_market_item(m) for m in markets)
+        mk = list(markets)
+        if markets_limit is not None:
+            mk = mk[: max(0, markets_limit)]
+        items.extend(_market_item(m) for m in mk)
     if x_hits:
         items.extend(_x_item(h) for h in x_hits)
 
@@ -105,6 +118,8 @@ def _x_item(hit: dict) -> PoolItem:
         kind = "news" if str(hit.get("lane") or "").startswith("ai_news:") else "post"
     elif src in ("x_novelty",):
         kind = "post"  # engagement-ranked event probes — novelty valve
+    elif src in ("x_spectrum",):
+        kind = "post"  # multi-angle independent / OSINT voices
     elif src in ("x_aggregator",):
         kind = "post"  # general wire posts — still rake/synthesis triage
     elif src in ("x_grok", "grok") or pre:

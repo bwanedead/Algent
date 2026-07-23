@@ -105,14 +105,39 @@ def _build_pool(report, chans: frozenset[str], say: ProgressFn) -> tuple[dict[st
     sheet = _load_beats(say) if "beats" in chans else None
     markets = _fetch_markets(say) if "markets" in chans else []
     x_hits = _fetch_x(say) if "x" in chans else []
-    pool = build_pool(report, sheet, markets, x_hits)
+    # When X is on, shrink wire/market mass so novelty/spectrum leads stay visible
+    # in the chooser menu (not 40 GKG + 25 markets drowning ~20 X).
+    gkg_limit = markets_limit = None
+    if x_hits:
+        try:
+            gkg_limit = max(10, min(40, int(os.environ.get("ALGENT_T0_GKG_CAP", "24"))))
+        except ValueError:
+            gkg_limit = 24
+        try:
+            markets_limit = max(5, min(25, int(os.environ.get("ALGENT_T0_MARKETS_CAP", "12"))))
+        except ValueError:
+            markets_limit = 12
+        say(
+            f"rebalance with X on: GKG≤{gkg_limit}, markets≤{markets_limit}, "
+            f"X={len(x_hits)} (raise/lower via ALGENT_T0_GKG_CAP / ALGENT_T0_MARKETS_CAP)"
+        )
+    pool = build_pool(
+        report, sheet, markets, x_hits,
+        gkg_limit=gkg_limit, markets_limit=markets_limit,
+    )
     out = pool_dir()
     out.mkdir(parents=True, exist_ok=True)
     stamp = report.batch_id if report is not None else datetime.now(UTC).strftime("%Y%m%d%H%M%S")
     path = out / f"pool_{stamp}.json"
     path.write_text(pool.model_dump_json(indent=2), encoding="utf-8")
     prune_files(out, "pool_*.json", keep=_KEEP)
-    say(f"t0 pool ready: {pool.item_count} items  {pool.by_channel}")
+    by = pool.by_channel
+    x_share = (by.get("x", 0) / pool.item_count) if pool.item_count else 0.0
+    say(f"t0 pool ready: {pool.item_count} items  {by}  x_share={x_share:.0%}")
+    if x_hits:
+        from collections import Counter
+        src = Counter(str(h.get("source") or "?") for h in x_hits)
+        say(f"X band breakdown: {dict(src)}")
     return pool.model_dump(), str(path)
 
 
@@ -191,9 +216,9 @@ def _fetch_x(say: ProgressFn) -> list[dict]:
         os.environ[_ENV_X_VIA] = "api"
         return _fetch_x(say)
 
-    max_topics = 28
+    max_topics = 36
     try:
-        max_topics = max(1, min(50, int(os.environ.get("ALGENT_X_MAX_TOPICS", "28"))))
+        max_topics = max(1, min(50, int(os.environ.get("ALGENT_X_MAX_TOPICS", "36"))))
     except ValueError:
         pass
     return hits[:max_topics]

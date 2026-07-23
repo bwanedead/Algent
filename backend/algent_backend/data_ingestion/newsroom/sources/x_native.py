@@ -5,15 +5,16 @@ Same data plane as X's hosted MCP (``api.x.com/mcp``). Headless REST + app Beare
 
 **Legs (novelty valve — not a domain overfit menu):**
   1. **General News** — platform story clusters; hydrate 1 cluster post (URL + engagement).
-  2. **Novelty probes** — domain-agnostic recent-search (announcement/act speech), ranked
-     client-side by engagement (pay-per-use often lacks min_faves operators).
-  3. **General aggregators** — tiny cross-topic wires (Mario Nawfal–class).
+  2. **Novelty probes** — domain-agnostic recent-search (acts + long-tail curiosity/labor),
+     ranked client-side by engagement (min_faves operators often unavailable on pay-per-use).
+  3. **Wires** — cross-topic aggregators *plus* a small spectrum from: batch (independent /
+     OSINT / multi-angle voices — not only one political wire).
   4. **AI pulse** — labs/people + AI News seeds (reserved band, not residual scraps).
 
 Rejected: WOEID trends. Domain rosters as the *only* channel. Huge follow lists.
 
 Cost: News metadata free of per-post billing; hydrated posts + probes + timelines
-bill ~$0.005/post. Cap hard via ``ALGENT_X_MAX_POSTS`` (default ~30 ≈ $0.15).
+bill ~$0.005/post. Cap hard via ``ALGENT_X_MAX_POSTS`` (default ~36 ≈ $0.18).
 """
 
 from __future__ import annotations
@@ -74,6 +75,20 @@ _DEFAULT_AGGREGATORS = (
     "spectatorindex",
     "Disclosetv",
     "visegrad24",
+)
+
+# Spectrum voices (from: batch, not timelines) — multi-angle primary/OSINT/commentary
+# so discovery is not only mega-wires + legacy press gravity. Env: ALGENT_X_SPECTRUM.
+_SPECTRUM_ENV = "ALGENT_X_SPECTRUM"
+_USE_SPECTRUM_ENV = "ALGENT_X_USE_SPECTRUM"
+_DEFAULT_SPECTRUM = (
+    "mtracey",           # independent US politics
+    "ggreenwald",        # independent / System Update
+    "RnaudBertrand",     # non-Western geopolitics angle
+    "Osinttechnical",    # OSINT / conflict primary-ish
+    "BrunoMacaes",       # geopolitics / Europe-Asia
+    "public_citizen",    # progressive regulatory
+    "CatoInstitute",     # libertarian policy
 )
 
 # Dedicated AI pulse: labs (US + CN + open), people, AI media. Not used for *general*
@@ -143,13 +158,21 @@ _DEFAULT_AI_NEWS_SEEDS = (
     "Anthropic",
 )
 
-# Domain-agnostic novelty probes — event/speech shape, not a vertical roster.
-# Engagement ranking is client-side (min_faves operators often unavailable on pay-per-use).
+# Domain-agnostic novelty probes — event shape + long-tail curiosity/labor.
+# Not a vertical menu (no "always OpenAI"). Engagement ranked client-side.
 _DEFAULT_NOVELTY_PROBES = (
+    # High-signal acts (often X-first)
     '("JUST IN" OR BREAKING OR "has announced" OR "just released" OR unveiled OR "is launching") '
     "-is:retweet -is:reply lang:en",
+    # Policy / legal / conflict acts
     '(lawsuit OR sanctions OR ceasefire OR "has ordered" OR "has banned" OR "struck a deal" '
     'OR "has approved" OR "has blocked") -is:retweet -is:reply lang:en',
+    # Long-tail curiosity / science / firsts (spectrum beyond war-macro)
+    '("for the first time" OR "study finds" OR "researchers" OR "scientists" OR discovered '
+    'OR "peer-reviewed") -is:retweet -is:reply lang:en',
+    # Labor / cost-of-living / housing (often under-covered in GKG head)
+    '(strike OR "laid off" OR walkout OR "cost of living" OR "rent prices" OR "union vote") '
+    "-is:retweet -is:reply lang:en",
 )
 
 _JUNK_TOPICS = frozenset({
@@ -211,6 +234,18 @@ def resolve_aggregators() -> tuple[str, ...]:
     if not _aggregators_enabled():
         return ()
     return _DEFAULT_AGGREGATORS
+
+
+def resolve_spectrum() -> tuple[str, ...]:
+    """Independent / OSINT / multi-angle handles for spectrum from: batch."""
+    raw = os.environ.get(_SPECTRUM_ENV, "")
+    if raw.strip().lower() in ("none", "off", "0"):
+        return ()
+    if raw.strip():
+        return tuple(s.strip().lstrip("@") for s in raw.split(",") if s.strip())
+    if os.environ.get(_USE_SPECTRUM_ENV, "1").strip().lower() in ("0", "false", "no", "off"):
+        return ()
+    return _DEFAULT_SPECTRUM
 
 
 def resolve_ai_accounts() -> tuple[tuple[str, str], ...]:
@@ -303,14 +338,14 @@ def fetch_x_api_discovery(
         _record_cost()
         return []
 
-    story_cap = max_stories if max_stories is not None else _int_env(_MAX_STORIES_ENV, 28, lo=1, hi=50)
-    # ~$0.15 default: hydrate + novelty + sparse aggs + AI from: batches.
-    post_budget = max_posts if max_posts is not None else _int_env(_MAX_POSTS_ENV, 30, lo=0, hi=100)
+    story_cap = max_stories if max_stories is not None else _int_env(_MAX_STORIES_ENV, 36, lo=1, hi=50)
+    # ~$0.18 default: hydrate + novelty + spectrum + sparse aggs + AI.
+    post_budget = max_posts if max_posts is not None else _int_env(_MAX_POSTS_ENV, 36, lo=0, hi=100)
     age_h = _int_env(_NEWS_AGE_ENV, 48, lo=1, hi=720)
     posts_per_agg = _int_env(_AGGS_PER_ENV, 2, lo=1, hi=10)
     ai_post_soft = _int_env(_AI_MAX_POSTS_ENV, 10, lo=0, hi=50)
-    novelty_max = _int_env(_NOVELTY_MAX_ENV, 6, lo=0, hi=20)
-    hydrate_max = _int_env(_HYDRATE_MAX_ENV, 6, lo=0, hi=20)
+    novelty_max = _int_env(_NOVELTY_MAX_ENV, 10, lo=0, hi=20)
+    hydrate_max = _int_env(_HYDRATE_MAX_ENV, 8, lo=0, hi=20)
 
     news_reqs = 0
     search_reqs = 0
@@ -319,20 +354,23 @@ def fetch_x_api_discovery(
     modes: list[str] = []
 
     aggs = resolve_aggregators() if post_budget > 0 else ()
+    spectrum = resolve_spectrum() if post_budget > 0 else ()
     ai_accounts = resolve_ai_accounts()
     ai_on = _ai_pulse_enabled() and (bool(ai_accounts) or bool(resolve_ai_news_seeds()))
     novelty_on = _novelty_enabled() and post_budget > 0 and novelty_max > 0
+    spectrum_on = bool(spectrum)
 
-    # Fixed band sizes so fill order cannot starve novelty/AI. Share story_cap
-    # across active legs; each active non-news leg gets at least min(4, room).
-    active = sum(1 for on in (_news_enabled(), novelty_on, bool(aggs), ai_on) if on) or 1
+    # Fixed band sizes so fill order cannot starve novelty/AI/spectrum.
+    active = sum(
+        1 for on in (_news_enabled(), novelty_on, bool(aggs), spectrum_on, ai_on) if on
+    ) or 1
     share = max(1, story_cap // active)
     band_news = share if _news_enabled() else 0
-    band_nov = min(novelty_max, share) if novelty_on else 0
+    band_nov = min(novelty_max, max(share, 6)) if novelty_on else 0
     band_agg = min(6, max(share, min(4, story_cap))) if aggs else 0
+    band_spectrum = min(5, max(3, share)) if spectrum_on else 0
     band_ai = min(6, max(share, min(4, story_cap))) if ai_on else 0
-    # Normalize if sum exceeds cap (prefer novelty + AI over oversized news).
-    total_b = band_news + band_nov + band_agg + band_ai
+    total_b = band_news + band_nov + band_agg + band_spectrum + band_ai
     if total_b > story_cap:
         overflow = total_b - story_cap
         for _ in range(overflow):
@@ -342,7 +380,9 @@ def fetch_x_api_discovery(
                 band_agg -= 1
             elif band_ai > 2:
                 band_ai -= 1
-            elif band_nov > 1:
+            elif band_spectrum > 2:
+                band_spectrum -= 1
+            elif band_nov > 2:
                 band_nov -= 1
             else:
                 break
@@ -351,11 +391,15 @@ def fetch_x_api_discovery(
     hydrate_budget = (
         min(hydrate_max, max(0, post_budget // 3)) if (_news_enabled() and hydrate_max) else 0
     )
-    novelty_budget = (
-        min(max(10, novelty_max), max(0, post_budget - hydrate_budget) // 2)
-        if novelty_on else 0
-    )
-    rest = max(0, post_budget - hydrate_budget - novelty_budget)
+    # Reserve ≥10 posts for spectrum/novelty when on (recent-search API floor is 10).
+    spectrum_budget = 10 if spectrum_on and post_budget - hydrate_budget >= 20 else 0
+    novelty_budget = 0
+    if novelty_on:
+        left_for_nov = max(0, post_budget - hydrate_budget - spectrum_budget)
+        novelty_budget = min(max(10, novelty_max + 4), left_for_nov)
+        if novelty_budget < 10:
+            novelty_budget = 0
+    rest = max(0, post_budget - hydrate_budget - novelty_budget - spectrum_budget)
     if ai_on and aggs:
         ai_budget = min(ai_post_soft, max(0, rest // 2))
         agg_budget = rest - ai_budget
@@ -365,7 +409,7 @@ def fetch_x_api_discovery(
         ai_budget, agg_budget = 0, rest
 
     band_hits: dict[str, list[dict[str, Any]]] = {
-        "news": [], "novelty": [], "aggregators": [], "ai_pulse": [],
+        "news": [], "novelty": [], "aggregators": [], "spectrum": [], "ai_pulse": [],
     }
 
     # ── 1. General X News (+ hydrate cluster posts) ──────────────────────────
@@ -430,6 +474,21 @@ def fetch_x_api_discovery(
         except Exception:  # noqa: BLE001
             pass
 
+    # ── 3b. Spectrum from: batch (multi-angle voices, not wire-only) ──────────
+    if spectrum_on and band_spectrum and spectrum_budget >= 10:
+        try:
+            sp_hits, n_posts, n_search = _fetch_spectrum_batch(
+                handles=spectrum, max_hits=band_spectrum, max_posts=spectrum_budget,
+                client=client,
+            )
+            posts_fetched += n_posts
+            search_reqs += n_search
+            band_hits["spectrum"] = sp_hits
+            if sp_hits:
+                modes.append("spectrum")
+        except Exception:  # noqa: BLE001
+            pass
+
     # ── 4. AI pulse (reserved band — not residual) ───────────────────────────
     if ai_on and band_ai:
         try:
@@ -455,9 +514,9 @@ def fetch_x_api_discovery(
         except Exception:  # noqa: BLE001
             pass
 
-    # Merge bands: novelty and AI early so synthesis sees the novelty valve first.
+    # Merge bands: novelty/spectrum/AI early so synthesis sees the valve first.
     hits: list[dict[str, Any]] = []
-    for key in ("novelty", "ai_pulse", "news", "aggregators"):
+    for key in ("novelty", "spectrum", "ai_pulse", "news", "aggregators"):
         hits.extend(band_hits[key])
     hits = _dedupe_hits(hits)[:story_cap]
 
@@ -658,19 +717,16 @@ def _hydrate_news_hits(
 def _fetch_novelty_probes(
     *, max_hits: int, max_posts: int, client: object | None,
 ) -> tuple[list[dict[str, Any]], int, int]:
-    """Domain-agnostic event probes; keep top posts by engagement (client-side)."""
+    """Domain-agnostic event + long-tail probes; mix viral head with mid-tail."""
     hits: list[dict[str, Any]] = []
     posts_fetched = 0
     search_reqs = 0
     scored: list[tuple[int, dict[str, Any]]] = []
     for probe in _DEFAULT_NOVELTY_PROBES:
-        if posts_fetched >= max_posts:
-            break
-        take = min(10, max_posts - posts_fetched)
-        if take < 10:
+        if posts_fetched + 10 > max_posts:
             break
         try:
-            posts = _recent_search(probe, limit=take, client=client)
+            posts = _recent_search(probe, limit=10, client=client)
             search_reqs += 1
         except Exception:  # noqa: BLE001
             posts = []
@@ -681,8 +737,18 @@ def _fetch_novelty_probes(
             eng = int(p.get("likes") or 0) + 2 * int(p.get("reposts") or 0)
             scored.append((eng, p))
     scored.sort(key=lambda t: t[0], reverse=True)
+    # Interleave head (high engagement) with mid-tail so we do not only surface
+    # mega-viral accounts — long-tail curiosities stay in the menu.
+    head = scored[: max(1, len(scored) // 3)]
+    mid = scored[max(1, len(scored) // 3) : max(2, (2 * len(scored)) // 3)]
+    mixed: list[tuple[int, dict[str, Any]]] = []
+    for i in range(max(len(head), len(mid))):
+        if i < len(head):
+            mixed.append(head[i])
+        if i < len(mid):
+            mixed.append(mid[i])
     seen_text: set[str] = set()
-    for eng, p in scored:
+    for _eng, p in mixed:
         if len(hits) >= max_hits:
             break
         key = str(p.get("text") or "")[:80].casefold()
@@ -690,6 +756,44 @@ def _fetch_novelty_probes(
             continue
         seen_text.add(key)
         hits.append(_post_hit(p, lane="novelty:event", source="x_novelty"))
+    return hits, posts_fetched, search_reqs
+
+
+def _fetch_spectrum_batch(
+    *,
+    handles: tuple[str, ...],
+    max_hits: int,
+    max_posts: int,
+    client: object | None,
+) -> tuple[list[dict[str, Any]], int, int]:
+    """One or two from: OR batches across spectrum voices — multi-angle, cheap."""
+    if max_posts < 10 or not handles:
+        return [], 0, 0
+    posts_fetched = 0
+    search_reqs = 0
+    scored: list[tuple[int, dict[str, Any]]] = []
+    chunk_size = 7
+    for i in range(0, len(handles), chunk_size):
+        if posts_fetched + 10 > max_posts:
+            break
+        chunk = handles[i : i + chunk_size]
+        q = "(" + " OR ".join(f"from:{h}" for h in chunk) + ") -is:retweet -is:reply"
+        try:
+            posts = _recent_search(q, limit=10, client=client)
+            search_reqs += 1
+        except Exception:  # noqa: BLE001
+            posts = []
+        posts_fetched += len(posts)
+        for p in posts:
+            if len(str(p.get("text") or "")) < 40:
+                continue
+            eng = int(p.get("likes") or 0) + 2 * int(p.get("reposts") or 0)
+            scored.append((eng, p))
+    scored.sort(key=lambda t: t[0], reverse=True)
+    hits = [
+        _post_hit(p, lane=f"spectrum:{p.get('author') or 'x'}", source="x_spectrum")
+        for _e, p in scored[:max_hits]
+    ]
     return hits, posts_fetched, search_reqs
 
 
