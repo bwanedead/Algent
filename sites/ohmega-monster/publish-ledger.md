@@ -141,3 +141,10 @@ caveats: needs_hedging (1 findings)
 analytics: 1 produced, 0 escapes
 cost: ~$0.0000
 run: 0020__0f45383d-b4b0-4dfd-90d9-be6fdfa0b560
+
+### PUBLISH ice-s-mid-2026-interior-enforcement-surge-lifts-arrests-and-6bf20e — 2026-07-23
+status: publishable  ·  draft: grounded_with_caveats  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 0 produced, 0 escapes
+cost: ~$0.0000
+run: 0022__8f828c6e-0bac-4314-90a6-c369d3cd1960
