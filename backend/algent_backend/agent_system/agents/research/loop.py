@@ -32,6 +32,7 @@ from .leads import JsonLeadStore, backfeed_leads
 from .messages import build_vector_message
 from .profile import SignalProfile
 from .store import JsonProfileStore
+from .x_seeds import hydrate_vector_with_x_seeds
 
 ARTIFACT_NAME = "profile.json"
 BRIEFING_NAME = "briefing.md"
@@ -44,6 +45,7 @@ STAGE = "signal_profile"
 
 class ProfileState(TypedDict, total=False):
     vector: dict[str, Any]   # the selected signal vector to research (the input)
+    pool: dict[str, Any]     # optional t0 pool — hydrates X seed URLs from supporting hits
     profile: dict[str, Any]  # the produced t2 signal profile
 
 
@@ -70,6 +72,14 @@ def build_profile_graph(
                 summary="no signal vector supplied to research",
             ), event=PROFILE_NO_INPUT)
 
+        # Restore X post URLs from t0 supporting hits (synthesis often keeps only wire URLs).
+        vector = hydrate_vector_with_x_seeds(vector, state.get("pool"))
+        if vector.get("x_seed_urls"):
+            context.emit(ev.INPUT_PREVIEW, {
+                "title": "X seed URLs hydrated for research",
+                "summary": f"{len(vector['x_seed_urls'])} x.com URL(s); x_primary={vector.get('x_primary')}",
+                "items": list(vector["x_seed_urls"])[:8],
+            })
         context.emit(ev.INPUT_PREVIEW, _vector_preview(vector))
 
         # Scope the search gate + paid budget + USD cap, and collect source snapshots,

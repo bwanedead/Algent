@@ -159,8 +159,11 @@ def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | Non
         report.pool_by_channel, report.promoted_from = _channel_provenance(context, pool, vector)
 
         # 3. profile (the #1 vector -> a researched t2 profile).
+        # Pass pool so research can hydrate X post URLs from supporting_hits.
         context.emit(RAIL_STAGE, {"stage": "profile"})
-        profile = build_profile(sub).invoke({"vector": vector}, config).get("profile") or {}
+        profile = build_profile(sub).invoke(
+            {"vector": vector, "pool": pool}, config,
+        ).get("profile") or {}
         report.stage_reached = "profile"
         if not profile.get("id"):
             return _finish(context, report, note="profile research produced nothing")

@@ -54,6 +54,9 @@ own vector with ``supporting_hits`` pointing at that ``x:…`` id. Do not only f
 X into already-loud wire mega-beats (war/macro) unless it is truly the same story.
 Several **X-primary** vectors in a normal portfolio is healthy; zero is a failure
 when the X band had real material.
+When a vector is X-primary, put the **x.com post URL** (from the hit's evidence) in
+``sources`` — not only NPR/Guardian rewrites. Research needs that URL to deep-read
+the first-party post; wire-only ``sources`` is how X disappears from the profile.
 
 SPECTRUM WHEN YOU DOUBLE-CLICK
 Prefer primary documents, official data releases, and primary X posts *alongside*

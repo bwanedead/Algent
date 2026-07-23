@@ -127,6 +127,17 @@ def build_synthesis_graph(
             "total_considered": pool.get("item_count", len(pool.get("items", []))),
         })
         portfolio = ensure_vector_ids(portfolio)  # durable ids before anything references a vector
+        # Attach x.com evidence URLs onto vectors whose supporting_hits are X band items
+        # so research does not only see wire URLs the synthesizer preferred.
+        try:
+            from algent_backend.agent_system.agents.research.x_seeds import (
+                hydrate_portfolio_vectors,
+            )
+            portfolio_dict = hydrate_portfolio_vectors(portfolio.model_dump(), pool)
+            portfolio = ResearchPortfolio.model_validate(portfolio_dict)
+            portfolio = ensure_vector_ids(portfolio)
+        except Exception:  # noqa: BLE001 — hydration must not sink synthesis
+            pass
         return _finish(context, portfolio, event=SYNTHESIS_COMPLETED, estimated_usd=estimated_usd)
 
     graph = StateGraph(SynthesisState)

@@ -148,10 +148,12 @@ you should reach for it on its own merits, not when something else broke. Reach 
 - you need specialist read-outs (flight/ship trackers, OSINT, domain analysts) that mainstream
   coverage aggregates late or not at all.
 A story built only from wire copy is a wire digest — the reader could have gone to the wire.
-**Default bias to fix:** under-using X and over-using prestige wires. If the vector was
-promoted from an X hit or the t0 pool had X primary material, the profile should usually
-carry at least one snapshotted X source when that post is load-bearing or first-party —
-not only a wire rewrite of the same event.
+**Default bias to fix:** under-using X and over-using prestige wires.
+**Hard duty when the assignment marks x_primary / lists X SEED POST URLs:** before you finish,
+(1) deep-read at least one of those X URLs, (2) run at least one ``web_search(source="x")`` for
+related first-party posts, (3) put load-bearing X posts in the source_ledger. Skip only if the
+paid X channel is refused (budget/permit). A profile whose supporting_hits were ``x:…`` but
+whose ledger has zero x.com URLs is a structural miss — fix it in this pass, not later.
 
 X EPISTEMICS — this is the price of using it, and it is not optional:
 - An X post is FIRST a fact about who-said-what. "Account A posted that X happened" is fully
