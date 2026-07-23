@@ -20,7 +20,7 @@ from algent_backend.agent_system.agents.discovery.portfolio import (
 from algent_backend.agent_system.foundation.models import ModelSpec
 from algent_backend.agent_system.runs.context import AgentRunContext
 
-from .contracts import RouteCandidate, RouteRanking, RoutingBrief
+from .contracts import RankedChoice, RouteCandidate, RouteRanking, RoutingBrief
 from .engine import route
 
 # The injected responsibility for the t1->t2 promotion decision.
@@ -43,7 +43,8 @@ PROMOTION_BRIEF = RoutingBrief(
         "GROUNDABILITY IS A GATE — demote unresearchable or pure trade/professional runbooks. "
         "When significance is comparable, prefer novel or wonder-inducing over mainstream rehash. "
         "Rank EVERY vector — do not drop to a shortlist. Flag cooldown=true when the vector is "
-        "the same story-family as a recent published headline (semantic judgment)."
+        "the same story-family as a recent published headline (semantic judgment) OR matches "
+        "an operator TOPIC FREEZE line (dev hard-block)."
     ),
     downstream=(
         "The highest-ranked vector with cooldown=false is promoted into a t2 signal profile. "
@@ -91,6 +92,8 @@ def rank_portfolio(
             },
         ))
     ranking = route(context, candidates, brief, model_spec=model_spec, config=config)
+    # Operator hard-freeze (dev): force cooldown on matching vectors after agent rank.
+    ranking, freeze_hits = apply_topic_freeze(ranking, by_id)
 
     try:
         cooled = [c.candidate_id for c in ranking.choices if c.cooldown]
@@ -98,9 +101,10 @@ def rank_portfolio(
         context.emit("routing.cooldown_status", {
             "n_recent": len(recent),
             "recent_titles": [t[:80] for _, t in recent[:12]],
-            "mode": "agent_semantic",
+            "mode": "agent_semantic+topic_freeze",
             "n_flagged": len(cooled),
             "cooled_ids": cooled,
+            "topic_freeze_hits": freeze_hits,
             "promote_id": top.id if top else None,
             "promote_title": (top.title[:100] if top else None),
             "note_tail": (ranking.note or "")[-240:],
@@ -108,6 +112,58 @@ def rank_portfolio(
     except Exception:  # noqa: BLE001
         pass
     return ranking, by_id
+
+
+def apply_topic_freeze(
+    ranking: RouteRanking,
+    by_id: dict[str, ResearchVector],
+) -> tuple[RouteRanking, list[str]]:
+    """Force cooldown on vectors matching ``topic_freeze.md``. Returns (ranking, hit lines)."""
+    try:
+        from algent_backend.data_ingestion.newsroom.topic_freeze import (
+            load_freeze_phrases,
+            match_freeze,
+        )
+    except Exception:  # noqa: BLE001
+        return ranking, []
+
+    phrases = load_freeze_phrases()
+    if not phrases or not ranking.choices:
+        return ranking, []
+
+    hits: list[str] = []
+    updated: list[RankedChoice] = []
+    for ch in ranking.choices:
+        vec = by_id.get(ch.candidate_id)
+        blob = (
+            f"{vec.title} {vec.thesis} {vec.rationale}"
+            if vec is not None
+            else ch.candidate_id
+        )
+        phrase = match_freeze(blob, phrases)
+        if phrase:
+            hits.append(f"{ch.candidate_id}:{phrase}")
+            updated.append(ch.model_copy(update={
+                "cooldown": True,
+                "cooldown_reason": f"topic freeze: {phrase}",
+            }))
+        else:
+            updated.append(ch)
+
+    if not hits:
+        return ranking, []
+
+    free = [c for c in updated if not c.cooldown]
+    cooled = [c for c in updated if c.cooldown]
+    ordered = [
+        c.model_copy(update={"rank": i})
+        for i, c in enumerate(free + cooled, start=1)
+    ]
+    note_bits = [ranking.note.strip()] if ranking.note.strip() else []
+    note_bits.append(
+        f"topic freeze forced cooldown on {len(hits)}: " + "; ".join(hits[:8])
+    )
+    return ranking.model_copy(update={"choices": ordered, "note": " | ".join(note_bits)}), hits
 
 
 def _recently_published() -> tuple[tuple[str, str], ...]:

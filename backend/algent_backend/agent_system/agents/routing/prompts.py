@@ -60,6 +60,7 @@ def build_router_message(
     )
     lines = ["# CANDIDATES TO RANK", f"count: {n}", ""]
     lines.extend(_fmt(c) for c in candidates)
+    freeze_lines = _topic_freeze_lines()
     if brief.recent:
         lines += [
             "",
@@ -82,7 +83,15 @@ def build_router_message(
         lines += [
             "",
             "# ALREADY COVERED — none loaded (no recent site headlines available)",
-            "Set cooldown=false for all unless you know of no other reason.",
+            "Set cooldown=false for all unless a TOPIC FREEZE line applies.",
+        ]
+    if freeze_lines:
+        lines += [
+            "",
+            "# TOPIC FREEZE (operator hard-block — treat as cooldown=true)",
+            "These beats are frozen until the operator removes them from topic_freeze.md. "
+            "Any candidate in the same family MUST be cooldown=true.",
+            *freeze_lines,
         ]
     lines.extend([
         "",
@@ -99,3 +108,11 @@ def _fmt(c: RouteCandidate) -> str:
     sig = " ".join(f"{k}={v}" for k, v in (c.signals or {}).items() if v not in (None, "", False))
     tags = ",".join(c.tags) or "-"
     return f"[{c.id}] {c.label}\n    {c.summary[:280]}\n    tags={tags}  {sig}"
+
+
+def _topic_freeze_lines() -> list[str]:
+    try:
+        from algent_backend.data_ingestion.newsroom.topic_freeze import freeze_lines_for_prompt
+        return freeze_lines_for_prompt()
+    except Exception:  # noqa: BLE001
+        return []
