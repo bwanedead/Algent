@@ -16,10 +16,9 @@ a single report closes the loop. Four deliberate properties:
   (ii)  BOUNDED — the rail inherits each stage's own floors (models, paid budgets, USD caps, review
         gates); it re-litigates none of them. It promotes the router's single #1 vector — one article
         per run — rather than fanning out.
-  (iii) BACKFEED — before discovery, it reads the damped open leads (``open_leads_for_discovery``)
-        and merges them into the t0 pool, so the leads the research loop emits actually re-enter
-        discovery. The damping cap is applied on the intake side; consumed leads are marked so they
-        do not loop forever. Skipped on portfolio-reuse launches.
+  (iii) BACKFEED — **OFF by default.** Opt-in only (``ALGENT_BACKFEED=1``). When on, open research
+        leads re-enter the t0 pool. Live regression 0022: ICE open leads re-seeded the same
+        published family and beat cooldown. Default stays off until backfeed is gated by cooldown.
   (iv)  REUSE — a post-t0 launch can skip discovery and re-route a prior portfolio. The same
         headline-ring cooldown applies as on a fresh run (cooled story-families cannot promote
         until they fall off the ring). Saves t0/synthesis cost only — not a variety bypass.
@@ -59,9 +58,9 @@ RAIL_STAGE = "newsroom_rail.stage"
 BACKFEED_INJECTED = "newsroom_rail.backfeed_injected"
 RAIL_PUBLISHED = "newsroom_rail.published"
 
-# The backfeed read-side is ON by default — the loop only closes if the leads actually re-enter
-# discovery. ALGENT_BACKFEED=0 turns it off; ALGENT_BACKFEED_MAX caps how many leads enter (the
-# damping cap on the intake side).
+# Backfeed is OFF by default. It was meant to re-queue unfinished research threads, but live
+# it re-injected the same published story-family (ICE 0020→0022) and fought cooldown. Opt in
+# only with ALGENT_BACKFEED=1 after it is gated against recent headlines. Cap still applies.
 _BACKFEED_ENV = "ALGENT_BACKFEED"
 _BACKFEED_CAP_ENV = "ALGENT_BACKFEED_MAX"
 _BACKFEED_CAP_DEFAULT = 5
@@ -72,7 +71,8 @@ _LEAD_SCORE = {"high": 5.0, "med": 3.0, "medium": 3.0, "low": 1.5, "": 2.0}
 
 
 def _backfeed_enabled() -> bool:
-    return os.environ.get(_BACKFEED_ENV, "1").strip().lower() not in ("0", "false", "no", "off")
+    # Default OFF — must opt in. (Was default ON; caused same-story repetition.)
+    return os.environ.get(_BACKFEED_ENV, "0").strip().lower() in ("1", "true", "yes", "on")
 
 
 def _backfeed_cap() -> int:

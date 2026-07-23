@@ -114,3 +114,60 @@ def test_router_message_names_reframe_failure() -> None:
     )
     assert "STORY-FAMILY" in msg and "REFRAME IS NOT A NEW STORY" in msg
     assert "mechanical floor" in msg
+
+
+def test_ice_reframe_cooled_by_short_org_and_plural_stem() -> None:
+    """Live 0022: ICE is 3 letters (was dropped); arrest vs arrests didn't match."""
+    prior = (
+        "ICE's FY2026 data show a June surge in arrests and higher detention, "
+        "but criminals first doesn't match the custody mix"
+    )
+    blob = (
+        "ICE arrest surge and record detention levels under renewed interior-enforcement push "
+        "U.S. immigration enforcement accelerating with record arrest levels and more detention"
+    )
+    assert "ice" in significant_tokens(prior) and "ice" in significant_tokens(blob)
+    assert "arrest" in significant_tokens(prior)  # arrests → arrest
+    cool, why = cooled_by(blob, [prior])
+    assert cool, why
+    assert "ice" in why.lower() or "detention" in why.lower() or "arrest" in why.lower()
+
+
+def test_ice_demote_below_google_fine() -> None:
+    recent = ((
+        "2026-07-22",
+        "ICE's FY2026 data show a June surge in arrests and higher detention, "
+        "but criminals first doesn't match the custody mix",
+    ),)
+    candidates = [
+        RouteCandidate(
+            id="v2",
+            label="ICE arrest surge and record detention levels under renewed interior-enforcement push",
+            summary="immigration enforcement accelerating, more detention",
+        ),
+        RouteCandidate(
+            id="v1",
+            label="Google hit with €890M EU antitrust fine over search and Play self-preferencing",
+            summary="EU antitrust fine for self-preferencing",
+        ),
+    ]
+    ranking = RouteRanking(choices=[
+        RankedChoice(candidate_id="v2", rank=1, score=92, rationale="ICE scale"),
+        RankedChoice(candidate_id="v1", rank=2, score=89, rationale="Google"),
+    ])
+    out = demote_cooled(ranking, candidates, recent)
+    assert out.choices[0].candidate_id == "v1"
+    assert out.choices[-1].candidate_id == "v2"
+    assert "mechanical cooldown demoted" in out.note
+
+
+def test_demote_records_when_no_recent_headlines() -> None:
+    ranking = RouteRanking(choices=[
+        RankedChoice(candidate_id="a", rank=1, score=90),
+    ])
+    out = demote_cooled(
+        ranking,
+        [RouteCandidate(id="a", label="Anything", summary="x")],
+        (),
+    )
+    assert "no recent headlines" in out.note

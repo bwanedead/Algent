@@ -104,17 +104,25 @@ def rank_portfolio(
     ranking = route(context, candidates, brief, model_spec=model_spec, config=config)
     # Soft instruction alone can re-promote the same beat under a reframe; mechanical floor
     # demotes same-family candidates below fresh ones so they cannot promote while hot.
-    if recent:
-        before_top = ranking.choices[0].candidate_id if ranking.choices else ""
-        ranking = demote_cooled(ranking, candidates, recent)
-        after_top = ranking.choices[0].candidate_id if ranking.choices else ""
+    # Always run demote_cooled (even with empty recent) so the ranking note records status.
+    before_top = ranking.choices[0].candidate_id if ranking.choices else ""
+    ranking = demote_cooled(ranking, candidates, recent)
+    after_top = ranking.choices[0].candidate_id if ranking.choices else ""
+    try:
+        context.emit("routing.cooldown_status", {
+            "n_recent": len(recent),
+            "recent_titles": [t[:80] for _, t in recent[:8]],
+            "was_top": before_top,
+            "now_top": after_top,
+            "demoted": bool(before_top and after_top and before_top != after_top),
+            "note_tail": (ranking.note or "")[-280:],
+        })
         if before_top and after_top and before_top != after_top:
-            try:
-                context.emit("routing.cooldown_demote", {
-                    "was_top": before_top, "now_top": after_top, "note": ranking.note[-240:],
-                })
-            except Exception:  # noqa: BLE001 — telemetry must never break the pick
-                pass
+            context.emit("routing.cooldown_demote", {
+                "was_top": before_top, "now_top": after_top, "note": ranking.note[-240:],
+            })
+    except Exception:  # noqa: BLE001 — telemetry must never break the pick
+        pass
     return ranking, by_id
 
 
