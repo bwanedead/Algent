@@ -2,7 +2,7 @@
 title: ICE’s mid-2026 interior enforcement surge lifts arrests and detention, but removals remain hard to audit
 dek: ICE reported record-level bookings and a July arrest pace averaging 1,593 a day, while detainees include a large share without criminal convictions and ICE says its data is released with delays that complicate verifying downstream removal outcomes.
 date: '2026-07-23'
-published_at: '2026-07-23T11:06:08.113742+00:00'
+published_at: '2026-07-23T11:06:02.303280+00:00'
 as_of: '2026-07-22'
 status: publishable
 tags:
@@ -11,6 +11,10 @@ tags:
 - U.S. Immigration and Customs Enforcement (ICE)
 - Department of Homeland Security (DHS)
 - Enforcement and Removal Operations (ERO)
+places:
+- United States
+flags:
+- 🇺🇸
 ---
 
 U.S. Immigration and Customs Enforcement appears to have entered a sharper interior-enforcement phase in mid-2026.

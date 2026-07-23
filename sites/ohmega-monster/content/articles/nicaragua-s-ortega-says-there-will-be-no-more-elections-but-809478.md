@@ -2,7 +2,7 @@
 title: Nicaragua’s Ortega says there will be no more elections, but 2027 election dates remain in law
 dek: Ortega’s announcement and the National Assembly’s implementation steps suggest competition is being shut down, but the 2025 electoral framework still calendars general elections and no decree is yet shown that formally abolishes the 2027 cycle.
 date: '2026-07-23'
-published_at: '2026-07-23T20:50:26.002776+00:00'
+published_at: '2026-07-23T20:50:24.181940+00:00'
 as_of: '2026-07-23'
 status: publishable
 tags:
@@ -12,9 +12,9 @@ tags:
 - National Assembly of Nicaragua
 - 2027 Nicaraguan election cycle
 places:
-- United States
+- Nicaragua
 flags:
-- 🇺🇸
+- 🇳🇮
 ---
 
 Daniel Ortega said Nicaragua would no longer hold elections during a speech marking the anniversary of the Sandinista Revolution, and the National Assembly said it was beginning work on a plan to implement his directives. Those two moves are the clearest evidence so far that the ruling system is pushing beyond managed elections and toward something more final.
