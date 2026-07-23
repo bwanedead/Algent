@@ -22,6 +22,7 @@ from collections import Counter, defaultdict
 from datetime import UTC, datetime
 
 from .report import BeatHit, BeatSheet, DiscoveryPool, InsightsReport, PoolItem
+from .stories import url_slug_label
 
 # The GKG theme-pillar vocabulary (economy/…) vs the beat vocabulary (economics/…)
 # overlap; alias the trivial cases so a slice lines up across channels.
@@ -51,7 +52,12 @@ def build_pool(
     if sheet is not None:
         items.extend(_beat_items(sheet))
     if markets:
-        mk = list(markets)
+        from ..topic_filters import is_sports_text
+
+        mk = [
+            m for m in markets
+            if not is_sports_text(str(m.get("question") or ""))
+        ]
         if markets_limit is not None:
             mk = mk[: max(0, markets_limit)]
         items.extend(_market_item(m) for m in mk)
@@ -164,11 +170,25 @@ def _humanize_theme(code: str) -> str:
 
 def _gkg_item(candidate) -> PoolItem:
     pillars = [_PILLAR_ALIAS.get(candidate.pillar, candidate.pillar)] if candidate.pillar else []
-    # Themes get a readable label (the raw code stays in signals.theme_code); named
-    # entities (person/org) are already legible, so keep their key as-is.
-    label = _humanize_theme(candidate.key) if candidate.kind == "theme" else candidate.key
+    # Story/event keys are already human; themes get a readable label (raw code
+    # stays in signals); named entities keep their key as-is.
+    if candidate.kind in ("story", "event"):
+        label = candidate.key
+    elif candidate.kind == "theme":
+        label = _humanize_theme(candidate.key)
+    else:
+        label = candidate.key
+    # Prefer a URL-slug title on evidence when the candidate is still a bare theme.
+    evidence: list[BeatHit] = []
+    for url in candidate.examples:
+        title = label
+        if candidate.kind == "theme":
+            slug = url_slug_label(url)
+            if slug:
+                title = slug
+        evidence.append(BeatHit(title=title[:160], url=url))
     return PoolItem(
-        id=f"gkg:{candidate.kind}:{candidate.key}",
+        id=f"gkg:{candidate.kind}:{_id_slug(candidate.kind, candidate.key)}",
         label=label,
         channel="gkg",
         kind=candidate.kind,
@@ -183,11 +203,22 @@ def _gkg_item(candidate) -> PoolItem:
             "language_count": candidate.language_count,
             "avg_tone": candidate.avg_tone,
             "score": candidate.score,
+            # Scalar only (PoolItem.signals values are str|float|int|bool).
+            "reasons": (
+                ",".join(candidate.reasons)
+                if getattr(candidate, "reasons", None)
+                else None
+            ),
         },
-        # Example source articles so the agent (and rake) can free-fetch GKG items.
-        evidence=[BeatHit(title=candidate.key, url=url) for url in candidate.examples],
+        evidence=evidence,
         related=list(candidate.related),
     )
+
+
+def _id_slug(kind: str, key: str) -> str:
+    """Stable-ish id fragment; story/event keys can be long."""
+    raw = key if kind in ("theme", "person", "organization") else key[:80]
+    return "".join(ch if ch.isalnum() or ch in "._-+ " else "_" for ch in raw).strip()[:96]
 
 
 def _beat_items(sheet: BeatSheet) -> list[PoolItem]:

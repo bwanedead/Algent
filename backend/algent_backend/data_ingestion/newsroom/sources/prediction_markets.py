@@ -20,18 +20,16 @@ from __future__ import annotations
 import json
 from typing import Any
 
+from algent_backend.data_ingestion.newsroom.topic_filters import is_sports_text
+
 _GAMMA_MARKETS = "https://gamma-api.polymarket.com/markets"
 _TIMEOUT_S = 20.0
 _HEADERS = {"User-Agent": "Algent/0.1 (news discovery ingestion)"}
 
-# Sports/parlay markers — these dominate volume but aren't news. Conservative,
-# substring, case-insensitive. Widen as we see noise.
-_SPORTS_MARKERS: tuple[str, ...] = (
-    "world cup", "fifa", "nba", " nfl", "mlb", " nhl", "ncaa", "premier league",
-    "champions league", "super bowl", "world series", "stanley cup", "ballon d'or",
-    "grand prix", " f1 ", "formula 1", "ufc", "boxing", "tennis", "golf", "cricket",
-    "playoff", "vs.", " vs ", "to win the match", "ligue 1", "la liga", "serie a",
-    "wimbledon", "win on 20", "winner", " open 20",
+# Extra market-shape markers (shared sports list is primary).
+_MARKET_SPORTS_EXTRA: tuple[str, ...] = (
+    "play for the", "play in the", "to win the", "mvp", "championship game",
+    "wc champions", "champions photo", "score the most", "points in the",
 )
 
 
@@ -89,8 +87,10 @@ def _normalize(market: dict[str, Any]) -> dict[str, Any] | None:
 
 
 def _is_sports(question: str) -> bool:
-    q = question.lower()
-    return any(marker in q for marker in _SPORTS_MARKERS)
+    if is_sports_text(question):
+        return True
+    q = question.casefold()
+    return any(marker in q for marker in _MARKET_SPORTS_EXTRA)
 
 
 def _loads(value: object) -> list:

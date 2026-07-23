@@ -20,10 +20,15 @@ from .memory import RollingMemory
 from .noise import is_boilerplate_theme, is_noise_entity
 from .ranking import Selection, score_candidates, select
 from .report import Candidate, InsightsReport, LanguageInsights
+from .stories import extract_event_candidates, extract_story_candidates
 
 DEFAULT_TOP = 40
-DEFAULT_QUOTA = 14  # protected: rising / novel / non-English / science-curiosity
+DEFAULT_QUOTA = 14  # protected: rising / novel / non-English / science-curiosity / grain
 DEFAULT_PER_LANGUAGE_TOP = 8
+# Cap theme/entity volume so story/event grain can occupy real shortlist slots.
+_MAX_THEME_ENTITY = 48
+_MAX_STORY = 36
+_MAX_EVENT = 28
 
 
 def build_insights(
@@ -37,7 +42,11 @@ def build_insights(
     per_language_top: int = DEFAULT_PER_LANGUAGE_TOP,
 ) -> tuple[InsightsReport, dict[str, int]]:
     """Build the report for a batch; also return its per-candidate counts."""
-    stats = extract_candidates(records)
+    # Theme/entity spine + story/event grain (URL slugs + actor×action).
+    base = extract_candidates(records)[:_MAX_THEME_ENTITY]
+    stories = extract_story_candidates(records)[:_MAX_STORY]
+    events = extract_event_candidates(records)[:_MAX_EVENT]
+    stats = base + stories + events
     scored = score_candidates(stats, memory)
     shortlist = select(scored, top=top, quota=quota)
 

@@ -9,6 +9,25 @@ Scope: deterministic processing only — no LLM/agent in the loop. The output we
 optimizing is the `InsightsReport` (ranked candidates + per-language view) and the
 `LongtailSample`.
 
+## 2026-07-23 — event grain + sports kill (unit-of-discovery shift)
+
+**Problem.** Theme/entity ranking (even with novelty/curiosity weights) still
+surfaced standing tags (`ENV_NATURALGAS`, `united states :: armedconflict`) and
+sports leaks (X JUST-IN, LeBron markets). Grade: D/C.
+
+**Change.**
+- Candidate unit: **URL-slug stories** + **actor×action events** (not mega themes).
+- Ranking: specificity + standing-topic tax; demote mega-actor×weak-action.
+- Shared `topic_filters.is_sports_text` on X / markets / GKG entities.
+- X novelty probes retargeted to event morphology; per-author spectrum/novelty caps.
+
+**Observation (batch 20260723103000).** Shortlist became 100% story/event kinds;
+sports markets gone; GKG labels read as headlines (e.g. Iran envoys in Pakistan,
+FDA peptides, Novo/Lilly suit) rather than taxonomy codes. Residual noise:
+entity OCR (sergei laurel), local crime/commercial slugs — filterable.
+
+---
+
 ## What "high signal" means here (the target)
 
 An insight is useful to us if it points at a **real, specific, moving** thing in

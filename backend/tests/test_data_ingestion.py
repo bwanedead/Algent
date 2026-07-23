@@ -547,6 +547,8 @@ def test_fetch_polymarket_filters_sports_and_captures_movement() -> None:
                  "lastTradePrice": 0.6, "slug": "fed-cut", "liquidity": 500},
                 {"question": "Will Japan win the World Cup?", "outcomes": "[]",
                  "outcomePrices": "[]", "volume24hr": 9999, "slug": "jp"},
+                {"question": "Will LeBron James play for the Miami Heat in 2026-27?",
+                 "outcomes": "[]", "outcomePrices": "[]", "volume24hr": 5000, "slug": "lbj"},
             ]
 
     class _Client:
@@ -777,6 +779,65 @@ def test_curiosity_and_novelty_boost_science_keys() -> None:
     assert by_key["SCIENCE_PHYSICS_BREAKTHROUGH"].novel is True
     # With novelty+curiosity boosts, the science key should not trail bland volume.
     assert by_key["SCIENCE_PHYSICS_BREAKTHROUGH"].score >= by_key["LOUD_BLAND"].score
+
+
+def test_broad_themes_demoted_vs_story_candidates() -> None:
+    """URL-slug stories outrank standing mega-themes when both are rising."""
+    from algent_backend.data_ingestion.newsroom.discovery.stories import (
+        extract_story_candidates,
+        url_slug_label,
+    )
+
+    url = (
+        "https://example.com/world/"
+        "iran-drones-hit-novospasskoye-refinery-after-talks-collapse.html"
+    )
+    assert url_slug_label(url) is not None
+    stories = [
+        _rec(
+            themes=["ENV_NATURALGAS"],
+            persons=["iran"],
+            url=url,
+            source_name=f"outlet{i}.com",
+        )
+        for i in range(4)
+    ]
+    # Extra pure mega-theme volume without story slugs
+    mega = [
+        _rec(themes=["ENV_NATURALGAS"], url=f"https://wire.example/a{i}", source_name=f"w{i}.com")
+        for i in range(8)
+    ]
+    mem = RollingMemory("s").with_batch("b0", {"theme:ENV_NATURALGAS": 20})
+    stats = extract_candidates(stories + mega, min_count=3) + extract_story_candidates(
+        stories + mega, min_count=1
+    )
+    scored = ranking.score_candidates(stats, mem)
+    by_kind = {}
+    for c in scored:
+        by_kind.setdefault(c.stats.kind, []).append(c)
+    assert by_kind.get("story"), "expected at least one story candidate"
+    best_story = max(by_kind["story"], key=lambda c: c.score)
+    gas = next(c for c in scored if c.stats.key == "ENV_NATURALGAS")
+    assert best_story.specificity > gas.specificity
+    assert best_story.score > gas.score
+    assert "specific" in best_story.reasons
+
+
+def test_sports_text_filtered_from_markets_and_entities() -> None:
+    from algent_backend.data_ingestion.newsroom.topic_filters import is_sports_text
+
+    assert is_sports_text("Will LeBron James play for the Miami Heat in 2026-27?")
+    assert is_sports_text("Joan Laporta has announced the signing of a Barcelona midfielder")
+    assert not is_sports_text("Treasury Secretary Bessent Defends Government Equity Stakes")
+
+    records = [
+        _rec(persons=["LeBron James"], organizations=["Miami Heat"], themes=["ECON_X"])
+        for _ in range(4)
+    ]
+    keys = {s.full_key for s in extract_candidates(records, min_count=2)}
+    assert "person:LeBron James" not in keys
+    assert "organization:Miami Heat" not in keys
+    assert "theme:ECON_X" in keys
 
 
 def test_select_collapses_co_occurring_candidates() -> None:

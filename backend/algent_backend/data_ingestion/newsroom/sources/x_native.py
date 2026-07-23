@@ -23,6 +23,8 @@ import os
 import re
 from typing import Any
 
+from algent_backend.data_ingestion.newsroom.topic_filters import is_non_news_topic, is_sports_text
+
 _RECENT_SEARCH = "https://api.x.com/2/tweets/search/recent"
 _NEWS_SEARCH = "https://api.x.com/2/news/search"
 _TWEETS_LOOKUP = "https://api.x.com/2/tweets"
@@ -162,23 +164,32 @@ _DEFAULT_AI_NEWS_SEEDS = (
     "Anthropic",
 )
 
-# Domain-agnostic novelty probes — event shape + long-tail curiosity/labor.
-# Not a vertical menu (no "always OpenAI"). Engagement ranked client-side.
+# Domain-agnostic novelty probes — *event morphology*, not celebrity JUST-IN.
+# Sports excluded in-query and client-side. Engagement ranked client-side.
+_SPORTS_EXCLUDE_Q = (
+    '-NBA -NFL -MLB -NHL -UFC -soccer -football -transfer -"Premier League" '
+    '-"Champions League" -Barcelona -Messi -LeBron -matchday'
+)
 _DEFAULT_NOVELTY_PROBES = (
-    # High-signal acts (often X-first)
-    '("JUST IN" OR BREAKING OR "has announced" OR "just released" OR unveiled OR "is launching") '
-    "-is:retweet -is:reply lang:en",
-    # Policy / legal / conflict acts
-    '(lawsuit OR sanctions OR ceasefire OR "has ordered" OR "has banned" OR "struck a deal" '
-    'OR "has approved" OR "has blocked") -is:retweet -is:reply lang:en',
-    # Science / knowledge feats — breakthroughs, archaeology, physics, biology, math
-    '("for the first time" OR "study finds" OR "researchers" OR "scientists discover" '
-    'OR "peer-reviewed" OR breakthrough OR archaeology OR fossil OR quantum OR genome '
-    'OR telescope OR "math" OR conjecture OR "Nature" OR "Science") '
-    "-is:retweet -is:reply lang:en",
-    # Labor / cost-of-living / housing (often under-covered in GKG head)
-    '(strike OR "laid off" OR walkout OR "cost of living" OR "rent prices" OR "union vote") '
-    "-is:retweet -is:reply lang:en",
+    # Kinetic / diplomatic moves (grain: who did what)
+    f'(struck OR sank OR seized OR downed OR "air strike" OR airstrike OR "missile hit" '
+    f'OR blockade OR "ceasefire collapsed" OR "talks failed" OR ultimatum OR "peace talks" '
+    f'OR "has ordered strikes" OR bombed OR invaded) '
+    f"-is:retweet -is:reply lang:en {_SPORTS_EXCLUDE_Q}",
+    # Institutional / legal / money ruptures
+    f'(indicted OR "ruled that" OR overturned OR sanctioned OR nationalized OR '
+    f'"export ban" OR "defaults on" OR "emergency session" OR "has banned" OR '
+    f'"central bank" OR "interest rate" OR "declared emergency") '
+    f"-is:retweet -is:reply lang:en {_SPORTS_EXCLUDE_Q}",
+    # Science / knowledge feats
+    f'("for the first time" OR "scientists discover" OR "peer-reviewed" OR breakthrough '
+    f'OR archaeology OR fossil OR quantum OR genome OR telescope OR conjecture OR '
+    f'"Nature journal" OR "Science journal" OR "has confirmed") '
+    f"-is:retweet -is:reply lang:en {_SPORTS_EXCLUDE_Q}",
+    # Labor / cost-of-living
+    f'(walkout OR "laid off" OR "union vote" OR "cost of living" OR "rent prices" '
+    f'OR "mass layoff" OR "plant closed") '
+    f"-is:retweet -is:reply lang:en {_SPORTS_EXCLUDE_Q}",
 )
 
 _JUNK_TOPICS = frozenset({
@@ -189,7 +200,8 @@ _JUNK_CATEGORIES = frozenset({"entertainment", "sports"})
 
 _FALLBACK_SEARCH = (
     '(announces OR announced OR confirms OR confirmed OR "said today" OR "press conference" '
-    'OR "has ordered" OR "has approved" OR "has banned") -is:retweet -is:reply lang:en'
+    'OR "has ordered" OR "has approved" OR "has banned") -is:retweet -is:reply lang:en '
+    f"{_SPORTS_EXCLUDE_Q}"
 )
 
 _LAST_COST: dict[str, Any] = {
@@ -754,13 +766,22 @@ def _fetch_novelty_probes(
         if i < len(mid):
             mixed.append(mid[i])
     seen_text: set[str] = set()
+    per_author: dict[str, int] = {}
     for _eng, p in mixed:
         if len(hits) >= max_hits:
             break
-        key = str(p.get("text") or "")[:80].casefold()
+        text = str(p.get("text") or "")
+        if is_non_news_topic(text):
+            continue
+        key = text[:80].casefold()
         if key in seen_text:
             continue
+        author = str(p.get("author") or "").casefold()
+        if author and per_author.get(author, 0) >= 1:
+            continue
         seen_text.add(key)
+        if author:
+            per_author[author] = per_author.get(author, 0) + 1
         hits.append(_post_hit(p, lane="novelty:event", source="x_novelty"))
     return hits, posts_fetched, search_reqs
 
@@ -796,10 +817,22 @@ def _fetch_spectrum_batch(
             eng = int(p.get("likes") or 0) + 2 * int(p.get("reposts") or 0)
             scored.append((eng, p))
     scored.sort(key=lambda t: t[0], reverse=True)
-    hits = [
-        _post_hit(p, lane=f"spectrum:{p.get('author') or 'x'}", source="x_spectrum")
-        for _e, p in scored[:max_hits]
-    ]
+    # Cap per author so one OSINT/war account cannot own the spectrum band.
+    per_author: dict[str, int] = {}
+    hits: list[dict[str, Any]] = []
+    for _e, p in scored:
+        if len(hits) >= max_hits:
+            break
+        text = str(p.get("text") or "")
+        if is_non_news_topic(text):
+            continue
+        author = str(p.get("author") or "x").casefold()
+        if per_author.get(author, 0) >= 1:
+            continue
+        per_author[author] = per_author.get(author, 0) + 1
+        hits.append(
+            _post_hit(p, lane=f"spectrum:{p.get('author') or 'x'}", source="x_spectrum")
+        )
     return hits, posts_fetched, search_reqs
 
 
@@ -997,11 +1030,13 @@ _MEME_NAME_RE = re.compile(
 
 
 def _news_story_usable(story: dict[str, Any]) -> bool:
-    """Drop pure viral/social noise; keep real news-shaped clusters."""
+    """Drop pure viral/social/sports noise; keep real news-shaped clusters."""
     name = str(story.get("name") or story.get("hook") or "").strip()
     if len(name) < 12:
         return False
     if _MEME_NAME_RE.search(name):
+        return False
+    if is_non_news_topic(name) or is_sports_text(str(story.get("summary") or "")):
         return False
     cat = str(story.get("category") or "").strip().casefold()
     if cat in _JUNK_CATEGORIES:
@@ -1011,6 +1046,8 @@ def _news_story_usable(story: dict[str, Any]) -> bool:
     lowered: set[str] = set()
     if isinstance(topics, list) and topics:
         lowered = {str(t).casefold() for t in topics}
+        if lowered & {"sports", "entertainment", "gaming", "celebrity"}:
+            return False
         serious = lowered & {
             "news", "politics", "business & finance", "business", "finance",
             "elections", "crime", "science", "health", "technology", "world",
@@ -1044,6 +1081,8 @@ def _aggregator_post_usable(post: dict[str, Any]) -> bool:
     if len(text) < 40:
         return False
     if text.count("http") >= 1 and len(text) < 60:
+        return False
+    if is_non_news_topic(text):
         return False
     return True
 

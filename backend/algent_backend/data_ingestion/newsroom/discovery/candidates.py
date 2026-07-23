@@ -18,6 +18,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 
 from ..sources.records import GkgRecord
+from ..topic_filters import is_sports_text
 from .noise import is_boilerplate_theme, is_noise_entity
 from .pillars import pillar_for_theme
 
@@ -109,6 +110,12 @@ def _items(record: GkgRecord) -> set[tuple[str, str]]:
     """
     items: set[tuple[str, str]] = set()
     items.update(("theme", t) for t in record.themes if not is_boilerplate_theme(t))
-    items.update(("person", p) for p in record.persons if not is_noise_entity(p))
-    items.update(("organization", o) for o in record.organizations if not is_noise_entity(o))
+    items.update(
+        ("person", p) for p in record.persons
+        if not is_noise_entity(p) and not is_sports_text(p)
+    )
+    items.update(
+        ("organization", o) for o in record.organizations
+        if not is_noise_entity(o) and not is_sports_text(o)
+    )
     return items
