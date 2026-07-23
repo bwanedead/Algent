@@ -155,3 +155,10 @@ caveats: verified (0 findings)
 analytics: 0 produced, 0 escapes
 cost: ~$0.0000
 run: 0023__f26ed597-27f8-4734-867c-e909cab107f5
+
+### PUBLISH u-s-reinforces-aerial-refueling-fleet-in-israel-as-escalatio-a5549f — 2026-07-23
+status: publishable  ·  draft: grounded_with_caveats  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 0 produced, 0 escapes
+cost: ~$0.0000
+run: 0024__0432c006-acc3-473e-8dec-414ea7b9aad0
