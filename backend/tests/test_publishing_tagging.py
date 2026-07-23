@@ -1,17 +1,19 @@
-"""Tests for tag/flag derivation — pure functions of the profile, no model, no invention."""
+"""Tests for tag/flag derivation — flags from agent countries_of_relevance only."""
 
 from __future__ import annotations
 
 from algent_backend.publishing import tagging as tg
 
-# Shaped like a real profile: the model types countries inconsistently (Iran as an org — this is
-# from an actual run) and entity-ifies the outlets it read.
 _PROFILE = {
+    "countries_of_relevance": [
+        {"iso2": "IR", "name": "Iran", "role": "primary"},
+        {"iso2": "US", "name": "United States", "role": "actor"},
+    ],
     "entities": [
-        {"id": "e1", "name": "Iran", "type": "org"},                 # a country, mistyped
-        {"id": "e2", "name": "United States", "type": "org"},        # ditto
+        {"id": "e1", "name": "Iran", "type": "org"},
+        {"id": "e2", "name": "United States", "type": "org"},
         {"id": "e3", "name": "Strait of Hormuz", "type": "place"},
-        {"id": "e4", "name": "Reuters", "type": "org"},              # a source, not a subject
+        {"id": "e4", "name": "Reuters", "type": "org"},
         {"id": "e5", "name": "Kpler", "type": "org"},
         {"id": "e6", "name": "Joint Maritime Information Center", "type": "org"},
     ],
@@ -21,83 +23,66 @@ _PROFILE = {
     ],
     "source_ledger": [{"publisher": "Reuters"}, {"publisher": "Kpler"}],
 }
-_VECTOR = {"pillars": ["economics", "energy", "shipping", "US-Iran conflict", "freight"],
-           "scope": ["Gulf", "global markets"]}
+_VECTOR = {
+    "pillars": ["economics", "energy", "shipping", "US-Iran conflict", "freight"],
+    "scope": ["Gulf", "global markets"],
+}
 
 
-def test_flags_match_country_names_across_all_entity_types() -> None:
-    # The model typed Iran/US as "org"; trusting `type == place` would miss the story's subject.
+def test_flags_from_agent_countries_of_relevance() -> None:
     names, flags = tg.derive_places(_PROFILE)
     assert names == ["Iran", "United States"] and flags == ["🇮🇷", "🇺🇸"]
 
 
-def test_unmapped_places_get_no_flag_rather_than_a_wrong_one() -> None:
-    names, flags = tg.derive_places({"entities": [{"id": "e", "name": "Strait of Hormuz", "type": "place"}]})
-    assert names == [] and flags == []      # a strait is not a country — skip, never guess
-
-
-def test_flags_from_vector_scope_when_entities_omit_the_country() -> None:
-    # Live failure: UK politics profile entity-ified people/parties only; scope=["UK"] was the
-    # only geography field — and was ignored. Scope is intentional geography; it must count.
-    profile = {
+def test_no_countries_contract_yields_no_flags() -> None:
+    # No lexical fallback — empty contract means empty flags (never invent US).
+    names, flags = tg.derive_places({
         "entities": [
-            {"id": "e1", "name": "Andy Burnham", "type": "person"},
-            {"id": "e2", "name": "Labour Party", "type": "org"},
-            {"id": "e3", "name": "Digital ID scheme", "type": "policy"},
+            {"name": "United States"},
+            {"name": "Marco Rubio"},
+            {"name": "Nicaragua"},
         ],
-        "threads": [],
-        "source_ledger": [],
-    }
-    vector = {"pillars": ["politics"], "scope": ["UK"], "title": "Digital ID U-turn"}
-    names, flags = tg.derive_places(profile, vector)
-    assert names == ["United Kingdom"] and flags == ["🇬🇧"]
-    assert tg.derive_all(profile, vector)["flags"] == ["🇬🇧"]
+        "countries_of_relevance": [],
+    })
+    assert names == [] and flags == []
 
 
-def test_flags_from_title_phrase_when_no_scope() -> None:
-    # Secondary harvest: a title that names a mapped country, no entity, no scope.
-    profile = {"entities": [], "threads": [], "source_ledger": []}
-    vector = {"title": "Peru earthquake leaves towns without power", "pillars": [], "scope": []}
-    names, flags = tg.derive_places(profile, vector)
-    assert names == ["Peru"] and flags == ["🇵🇪"]
-
-
-def test_drc_and_south_sudan_do_not_collide() -> None:
-    # Nested names must not double-map: DRC ≠ ROC; South Sudan ≠ Sudan.
+def test_nicaragua_not_us_when_agent_declares_ni() -> None:
+    # Live failure: Rubio reaction made US the only flag; agent contract fixes it.
     profile = {
+        "countries_of_relevance": [
+            {"iso2": "NI", "name": "Nicaragua", "role": "primary setting"},
+        ],
         "entities": [
-            {"name": "Democratic Republic of the Congo"},
-            {"name": "South Sudan"},
-            {"name": "Uganda"},
+            {"name": "Daniel Ortega"},
+            {"name": "Marco Rubio"},
+            {"name": "United States"},
         ],
     }
-    names, flags = tg.derive_places(profile, {"title": "outbreak update", "scope": []})
-    assert names == [
-        "Democratic Republic of the Congo", "South Sudan", "Uganda",
-    ]
-    assert flags == ["🇨🇩", "🇸🇸", "🇺🇬"]
-    assert "Sudan" not in names and "Republic of the Congo" not in names
+    names, flags = tg.derive_places(profile)
+    assert names == ["Nicaragua"] and flags == ["🇳🇮"]
+    assert "United States" not in names
 
 
-def test_demonym_in_entity_name_maps_country() -> None:
-    # Telstra-style profile: orgs named "Australian …" without a bare "Australia" entity.
-    profile = {
-        "entities": [
-            {"name": "Telstra", "type": "org"},
-            {"name": "Australian Communications and Media Authority (ACMA)", "type": "org"},
-            {"name": "Australian Rail Track Corporation", "type": "org"},
-        ],
-    }
-    vector = {"title": "Telstra outage", "scope": ["eng"], "pillars": []}
-    names, flags = tg.derive_places(profile, vector)
-    assert names == ["Australia"] and flags == ["🇦🇺"]
+def test_agent_name_repairs_missing_iso() -> None:
+    names, flags = tg.derive_places({
+        "countries_of_relevance": [{"iso2": "", "name": "Nicaragua"}],
+    })
+    assert names == ["Nicaragua"] and flags == ["🇳🇮"]
+
+
+def test_uk_alias_normalized() -> None:
+    names, flags = tg.derive_places({
+        "countries_of_relevance": [{"iso2": "UK", "name": "United Kingdom"}],
+    })
+    assert names[0] == "United Kingdom" and flags == ["🇬🇧"]
 
 
 def test_flag_cap_keeps_the_feed_scannable() -> None:
     profile = {
-        "entities": [
-            {"name": "Iran"}, {"name": "United States"}, {"name": "United Kingdom"},
-            {"name": "France"}, {"name": "Germany"},
+        "countries_of_relevance": [
+            {"iso2": "IR"}, {"iso2": "US"}, {"iso2": "GB"},
+            {"iso2": "FR"}, {"iso2": "DE"},
         ],
     }
     names, flags = tg.derive_places(profile, cap=3)
@@ -106,38 +91,44 @@ def test_flag_cap_keeps_the_feed_scannable() -> None:
 
 def test_flag_emoji_is_derived_not_tabled() -> None:
     assert tg.flag_emoji("IR") == "🇮🇷" and tg.flag_emoji("ua") == "🇺🇦"
+    assert tg.flag_emoji("NI") == "🇳🇮"
 
 
 def test_topics_are_canonical_and_pillar_weighted() -> None:
-    # "markets" only appears via scope ("global markets") — ambient; energy/trade are pillars.
     topics = tg.derive_topics(_VECTOR["pillars"], _VECTOR["scope"], cap=3)
-    assert topics[0] == "trade"             # two pillar hits (shipping, freight)
+    assert topics[0] == "trade"
     assert "energy" in topics and "markets" not in topics
-    assert all(t in tg._TOPIC_VOCAB for t in topics)   # canonical vocabulary only — never free-form
+    assert all(t in tg._TOPIC_VOCAB for t in topics)
 
 
 def test_pharma_story_leads_with_health_not_economics() -> None:
-    # Regression from a live run: an FDA drug approval tagged "economics" first, because the vocab
-    # had no pharma terms at all and the synthesizer had put pillars=["economics"]. A domain gap in
-    # the vocabulary reads as bad ranking but is really absence — the fix belongs in the table.
     topics = tg.derive_topics(["economics"], ["health", "pharma", "FDA", "cardiovascular"], cap=3)
     assert topics[0] == "health" and "economics" in topics
 
 
-def test_entity_tags_exclude_sources_and_countries() -> None:
+def test_entity_tags_exclude_sources_and_declared_countries() -> None:
     tags = tg.derive_entity_tags(_PROFILE, cap=5, exclude=["Iran", "United States"])
-    assert "Strait of Hormuz" == tags[0]    # most-referenced across threads
-    assert "Reuters" not in tags and "Kpler" not in tags     # who we read, not what it's about
-    assert "Iran" not in tags               # renders as a flag; don't say it twice
+    assert "Strait of Hormuz" == tags[0]
+    assert "Reuters" not in tags and "Kpler" not in tags
+    assert "Iran" not in tags
 
 
 def test_derive_all_budgets_the_bar_so_specifics_survive() -> None:
     out = tg.derive_all(_PROFILE, _VECTOR)
     assert len(out["tags"]) <= 5
-    assert "Strait of Hormuz" in out["tags"]   # the specific isn't crowded out by generic topics
+    assert "Strait of Hormuz" in out["tags"]
     assert out["flags"] == ["🇮🇷", "🇺🇸"]
+    assert out["places"] == ["Iran", "United States"]
 
 
-def test_no_vector_still_yields_flags_and_entity_tags() -> None:
-    out = tg.derive_all(_PROFILE, None)
-    assert out["flags"] == ["🇮🇷", "🇺🇸"] and "Strait of Hormuz" in out["tags"]
+def test_ice_story_agent_declares_us_only() -> None:
+    out = tg.derive_all({
+        "countries_of_relevance": [{"iso2": "US", "name": "United States"}],
+        "entities": [
+            {"id": "e1", "name": "ICE", "type": "org"},
+            {"id": "e2", "name": "DHS", "type": "org"},
+        ],
+        "threads": [{"entities": ["e1", "e1", "e2"]}],
+        "source_ledger": [],
+    }, {"pillars": ["politics", "law"], "scope": []})
+    assert out["flags"] == ["🇺🇸"] and out["places"] == ["United States"]

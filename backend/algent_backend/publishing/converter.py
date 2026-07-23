@@ -153,8 +153,7 @@ def convert(
         "published_at": published_at or datetime.now(UTC).isoformat(),
         "as_of": str(profile.get("as_of") or ""),
         "status": str(pipeline.get("status") or ""),
-        # Derived, never generated (see tagging.py) — categorisation that costs no model call and
-        # cannot hallucinate. Also the substrate for tag+recency search later.
+        # Tags: derived. Places/flags: from agent countries_of_relevance only (see tagging.py).
         **{k: v for k, v in derive_all(profile, vector).items() if v},
     }
     # THUMBNAIL: a produced analytic is the best thumbnail this article can have — a real visual

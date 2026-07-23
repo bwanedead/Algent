@@ -90,8 +90,13 @@ def merge_additions(
         profile.threads + additions.threads,
         captured, prov,
     )
+    countries = _merge_countries(
+        list(profile.countries_of_relevance or []),
+        list(additions.countries_of_relevance or []),
+    )
     return profile.model_copy(update={
         "source_ledger": sources, "claim_ledger": claims, "entities": entities, "threads": threads,
+        "countries_of_relevance": countries,
         "revision": new_rev, "schema_version": SCHEMA_VERSION, "profile_status": "enriching",
         "omissions": _dedup_strs(profile.omissions + additions.omissions),
         "open_questions": _dedup_strs(profile.open_questions + additions.open_questions),
@@ -195,6 +200,19 @@ def _dedup_strs(items: list[str]) -> list[str]:
     for s in items:
         if s and s not in out:
             out.append(s)
+    return out
+
+
+def _merge_countries(existing: list, additions: list) -> list:
+    """Dedupe by iso2 (case-insensitive); keep order, prefer first non-empty name."""
+    out: list = []
+    seen: set[str] = set()
+    for c in (*existing, *additions):
+        iso = str(getattr(c, "iso2", "") or "").strip().upper()
+        if not iso or iso in seen:
+            continue
+        seen.add(iso)
+        out.append(c)
     return out
 
 

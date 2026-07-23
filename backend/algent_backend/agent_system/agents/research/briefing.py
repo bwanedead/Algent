@@ -59,6 +59,14 @@ def render_briefing(profile: SignalProfile) -> str:
                 out.append("_" + "  |  ".join(links) + "_")
             out.append("")
 
+    if profile.countries_of_relevance:
+        out.append("## Countries of relevance (feed flags)")
+        for c in profile.countries_of_relevance:
+            role = f" — {c.role}" if c.role else ""
+            name = c.name or c.iso2
+            out.append(f"- **{c.iso2.upper()}** {name}{role}")
+        out.append("")
+
     if profile.entities:
         out.append("## Key players")
         for e in profile.entities:

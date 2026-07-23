@@ -171,6 +171,20 @@ class DerivedLead(BaseModel):
     created_by_stage: str = ""
 
 
+class CountryOfRelevance(BaseModel):
+    """Where the story is ABOUT — agent judgment for feed flags (not a text scan).
+
+    ``iso2`` is the flag key (ISO-3166 alpha-2, or ``EU``). ``name`` is the display
+    label. Primary setting first; include only countries of *story relevance*, not
+    every nation mentioned in passing (e.g. a US official reacting does not make
+    the US the story's country unless the story is about the US).
+    """
+
+    iso2: str
+    name: str = ""
+    role: str = ""  # e.g. "primary setting", "actor state", "secondary"
+
+
 class ProfileAdditions(BaseModel):
     """What an enricher contributes to an existing profile — ADDITIVE only.
 
@@ -184,6 +198,7 @@ class ProfileAdditions(BaseModel):
     claims: list[Claim] = Field(default_factory=list)
     threads: list[Thread] = Field(default_factory=list)
     entities: list[Entity] = Field(default_factory=list)
+    countries_of_relevance: list[CountryOfRelevance] = Field(default_factory=list)
     omissions: list[str] = Field(default_factory=list)
     open_questions: list[str] = Field(default_factory=list)
     addressed_findings: list[str] = Field(default_factory=list)  # review finding ids this resolved
@@ -212,6 +227,8 @@ class SignalProfile(BaseModel):
     # ── knowledge field (organic richness) ──
     entities: list[Entity] = Field(default_factory=list)
     threads: list[Thread] = Field(default_factory=list)
+    # Feed flags: agent-declared countries of relevance (primary first). NOT derived by scan.
+    countries_of_relevance: list[CountryOfRelevance] = Field(default_factory=list)
 
     # ── meta-knowledge (what we don't know) ──
     omissions: list[str] = Field(default_factory=list)        # what's missing / counter-framing

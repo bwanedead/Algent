@@ -42,7 +42,10 @@ _DIRECTIVE = (
     "TASK: Build this vector's signal profile. Search free-first and READ the sources "
     "you cite. Construct the source ledger and the claim ledger (atomic, graded claims "
     "traced to sources by id) — that is the core. Map the landscape: competing "
-    "interpretations, omissions, open questions. Flag (don't compute) analytics needs. "
+    "interpretations, omissions, open questions. "
+    "REQUIRED: fill countries_of_relevance with the country/countries this story is ABOUT "
+    "(iso2 + name; primary setting first — not every nation mentioned). "
+    "Flag (don't compute) analytics needs. "
     "Add derived_leads for adjacent stories. Set an honest profile_status — "
     "insufficient_evidence is a valid result. Return a SignalProfile."
 )

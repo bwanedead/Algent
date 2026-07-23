@@ -54,6 +54,13 @@ THE EVIDENCE SPINE — get this right above all
 THE KNOWLEDGE FIELD — map the surrounding sphere, organically
 Don't stop at the kernel event. Map the genuinely relevant field around it — as far out
 as relevance actually extends — through:
+- COUNTRIES OF RELEVANCE (required for the feed flag): the country or countries this
+  story is ABOUT — primary setting first. Output structured items with ``iso2`` (ISO-3166
+  alpha-2, e.g. NI, US, IR; use EU for European Union) and a display ``name``. This is
+  agent judgment of story geography, NOT a scan of every nation mentioned. A US official
+  reacting to a Nicaragua story does NOT make the United States the country of relevance;
+  Nicaragua does. A pure US domestic ICE story → US only. Multi-country stories list up
+  to ~3 that truly define the beat. Empty is a research failure — the site will show no flag.
 - ENTITIES: the actors, institutions, places, and concepts involved. Give each a LOCAL id
   (e1, e2, …), a name, a type (person | org | place | concept | event | other), and its
   role in this story. These are the connective nodes.

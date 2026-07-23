@@ -1,24 +1,15 @@
 """
-Tags + country flags — DERIVED from the profile (and vector geography), never generated.
+Tags + country flags.
 
-The data already exists: the researcher named the entities, the synthesizer named the pillars and
-scope. So categorisation costs no model call and cannot hallucinate — it is a pure function of the
-evidence.
+- TOPIC / ENTITY tags: still derived from profile pillars/entities (deterministic).
+- FLAGS / PLACES: come ONLY from the agent's ``countries_of_relevance`` contract field
+  on the signal profile. No lexical scan of titles, entities, or scope for flags.
 
-Two tiers, deliberately:
-- TOPIC tags come from a small CANONICAL vocabulary. Pillars are free-form and already fragmenting
-  in real runs ("economics", "energy", "shipping", "freight", "US-Iran conflict" in one vector), so
-  mapping them into a fixed set is what stops the tag space degenerating into near-duplicates
-  ("economics" vs "economic policy") that no search or index could ever unify.
-- ENTITY tags stay free-form (Iran, Strait of Hormuz, OPEC): entity ids are content-addressed, so
-  they dedupe themselves, and their whole value is specificity.
-
-Flags are the "where" at a glance for browsing. They are matched on NAME, not on
-``type == "place"``: the model's typing is unreliable in practice (a real run typed *Iran* and
-*United States* as ``org``). Geography also lives in the vector's ``scope`` (and sometimes only
-there — a UK politics profile may entity-ify people and parties without ever listing "United
-Kingdom"). We harvest from every reliable field we have, then map only through a deliberate ISO
-table. Unmapped text yields NO flag — never invent one to fill space.
+Why: live failures (Nicaragua story → US flag because Rubio was mentioned; ICE story →
+no flag because "United States" never landed as an exact entity). Geography for the feed
+is a semantic judgment the researcher already makes — capture it in the contract, render
+it to ISO flag emoji/PNG. The ISO table here is a *renderer* (name + iso2 → display),
+not a story identifier.
 """
 
 from __future__ import annotations
@@ -40,9 +31,6 @@ _TOPIC_VOCAB: dict[str, tuple[str, ...]] = {
     "politics": ("politic", "election", "parliament", "congress", "government", "legislat"),
     "technology": ("tech", "software", "chip", "semiconductor", "artificial intelligence", " ai"),
     "climate": ("climate", "emission", "warming", "carbon", "renewable"),
-    # Pharma/clinical vocabulary is load-bearing, not an afterthought: a live run tagged an FDA
-    # drug approval "economics" over "health" purely because none of pharma/drug/FDA/trial were
-    # here to match. Domain gaps in this table read as bad ranking; they're really absence.
     "health": ("health", "disease", "pandemic", "medical", "vaccine", "outbreak", "pharma",
                "drug", "clinical", "fda", "trial", "therap", "patient", "cardio", "oncolog"),
     "science": ("science", "research", "space", "physics", "biolog", "chemist"),
@@ -50,52 +38,7 @@ _TOPIC_VOCAB: dict[str, tuple[str, ...]] = {
     "law": ("law", "legal", "court", "ruling", "prosecut", "regulat"),
 }
 
-# Newsworthy countries -> ISO-3166 alpha-2. Deliberately partial: an unmapped name yields NO flag,
-# which is the correct outcome (never invent a flag to fill space). Aliases are matching keys only;
-# the display name prefers a stable canonical form per ISO (see _ISO_DISPLAY).
-_COUNTRY_ISO: dict[str, str] = {
-    "iran": "IR", "israel": "IL", "oman": "OM", "yemen": "YE", "saudi arabia": "SA",
-    "united arab emirates": "AE", "uae": "AE", "qatar": "QA", "kuwait": "KW", "iraq": "IQ",
-    "syria": "SY", "lebanon": "LB", "turkey": "TR", "türkiye": "TR", "egypt": "EG",
-    "united states": "US", "united states of america": "US", "usa": "US", "u.s.": "US",
-    "u.s.a.": "US", "america": "US",
-    "united kingdom": "GB", "uk": "GB", "u.k.": "GB", "britain": "GB", "great britain": "GB",
-    # Constituent nations map to the UK flag for feed association (no separate ISO country codes
-    # for England/Scotland/Wales in the common flag-emoji set we use).
-    "england": "GB", "scotland": "GB", "wales": "GB", "northern ireland": "GB",
-    "france": "FR", "germany": "DE",
-    "italy": "IT", "spain": "ES", "netherlands": "NL", "holland": "NL", "poland": "PL", "sweden": "SE",
-    "norway": "NO", "finland": "FI", "denmark": "DK", "ireland": "IE", "republic of ireland": "IE",
-    "switzerland": "CH",
-    "russia": "RU", "russian federation": "RU", "ukraine": "UA", "belarus": "BY", "china": "CN",
-    "people's republic of china": "CN", "taiwan": "TW",
-    "japan": "JP", "south korea": "KR", "republic of korea": "KR", "north korea": "KP",
-    "dprk": "KP", "india": "IN", "pakistan": "PK",
-    "afghanistan": "AF", "bangladesh": "BD", "indonesia": "ID", "vietnam": "VN", "philippines": "PH",
-    "thailand": "TH", "malaysia": "MY", "singapore": "SG", "australia": "AU", "new zealand": "NZ",
-    "canada": "CA", "mexico": "MX", "brazil": "BR", "argentina": "AR", "chile": "CL",
-    "colombia": "CO", "venezuela": "VE", "peru": "PE", "cuba": "CU", "haiti": "HT",
-    "nigeria": "NG", "south africa": "ZA", "kenya": "KE", "ethiopia": "ET", "uganda": "UG",
-    # Longer phrases first in scan order (sorted by len); "sudan" must not match inside "south sudan".
-    "south sudan": "SS", "sudan": "SD",
-    "democratic republic of the congo": "CD", "democratic republic of congo": "CD",
-    "dr congo": "CD", "drc": "CD", "congo kinshasa": "CD", "congo-kinshasa": "CD",
-    "republic of the congo": "CG", "congo brazzaville": "CG", "congo-brazzaville": "CG",
-    "libya": "LY", "algeria": "DZ", "morocco": "MA", "tunisia": "TN", "ghana": "GH",
-    "greece": "GR", "portugal": "PT", "austria": "AT", "belgium": "BE", "czechia": "CZ",
-    "czech republic": "CZ", "hungary": "HU", "romania": "RO", "serbia": "RS", "croatia": "HR",
-    "bulgaria": "BG", "european union": "EU",
-    # Demonyms / adjectival forms — live miss: "Australian Communications and Media Authority"
-    # never matched "australia". Whole-phrase scan only; still no guessing of unmapped places.
-    "australian": "AU", "american": "US", "british": "GB", "canadian": "CA", "french": "FR",
-    "german": "DE", "chinese": "CN", "japanese": "JP", "indian": "IN", "russian": "RU",
-    "ukrainian": "UA", "iranian": "IR", "israeli": "IL", "mexican": "MX", "brazilian": "BR",
-    "south african": "ZA", "korean": "KR", "dutch": "NL", "spanish": "ES", "italian": "IT",
-    "swedish": "SE", "norwegian": "NO", "danish": "DK", "finnish": "FI", "irish": "IE",
-    "polish": "PL", "turkish": "TR", "egyptian": "EG", "saudi": "SA", "emirati": "AE",
-}
-
-# Stable display labels once an ISO code is known (so "UK" and "United Kingdom" collapse cleanly).
+# Display labels for known ISO codes (renderer only).
 _ISO_DISPLAY: dict[str, str] = {
     "IR": "Iran", "IL": "Israel", "OM": "Oman", "YE": "Yemen", "SA": "Saudi Arabia",
     "AE": "United Arab Emirates", "QA": "Qatar", "KW": "Kuwait", "IQ": "Iraq",
@@ -109,6 +52,8 @@ _ISO_DISPLAY: dict[str, str] = {
     "TH": "Thailand", "MY": "Malaysia", "SG": "Singapore", "AU": "Australia", "NZ": "New Zealand",
     "CA": "Canada", "MX": "Mexico", "BR": "Brazil", "AR": "Argentina", "CL": "Chile",
     "CO": "Colombia", "VE": "Venezuela", "PE": "Peru", "CU": "Cuba", "HT": "Haiti",
+    "NI": "Nicaragua", "CR": "Costa Rica", "PA": "Panama", "GT": "Guatemala", "HN": "Honduras",
+    "SV": "El Salvador", "BZ": "Belize",
     "NG": "Nigeria", "ZA": "South Africa", "KE": "Kenya", "ET": "Ethiopia", "UG": "Uganda",
     "SS": "South Sudan", "SD": "Sudan",
     "CD": "Democratic Republic of the Congo", "CG": "Republic of the Congo",
@@ -118,19 +63,26 @@ _ISO_DISPLAY: dict[str, str] = {
     "EU": "European Union",
 }
 
-# Aliases shorter than this only match as exact field values (scope="UK"), never as substrings of
-# longer free text — so "us" / "in" / "no" cannot fire inside ordinary English.
-_MIN_SCAN_ALIAS_LEN = 3
+# Optional name → ISO when the agent fills name but botches iso2 (still not story-scan).
+_NAME_TO_ISO: dict[str, str] = {
+    "nicaragua": "NI", "united states": "US", "usa": "US", "u.s.": "US", "america": "US",
+    "united kingdom": "GB", "uk": "GB", "britain": "GB", "iran": "IR", "israel": "IL",
+    "russia": "RU", "ukraine": "UA", "china": "CN", "germany": "DE", "france": "FR",
+    "saudi arabia": "SA", "yemen": "YE", "lebanon": "LB", "syria": "SY", "iraq": "IQ",
+    "turkey": "TR", "egypt": "EG", "india": "IN", "japan": "JP", "south korea": "KR",
+    "north korea": "KP", "australia": "AU", "canada": "CA", "mexico": "MX", "brazil": "BR",
+    "south africa": "ZA", "kenya": "KE", "ethiopia": "ET", "uganda": "UG",
+    "democratic republic of the congo": "CD", "south sudan": "SS", "sudan": "SD",
+    "european union": "EU", "croatia": "HR", "spain": "ES", "italy": "IT",
+    "netherlands": "NL", "poland": "PL", "sweden": "SE", "norway": "NO",
+}
 
+_ISO2_RE = re.compile(r"^[A-Za-z]{2}$")
 _NON_WORD = re.compile(r"[^a-z0-9]+", re.I)
 
 
 def flag_emoji(iso2: str) -> str:
-    """ISO-3166 alpha-2 -> regional-indicator flag emoji (deterministic, no table needed).
-
-    ``EU`` is not an ISO country; map it to the EU flag sequence used in Unicode (regional
-    indicators for E+U still render as 🇪🇺 on modern platforms).
-    """
+    """ISO-3166 alpha-2 -> regional-indicator flag emoji (deterministic)."""
     return "".join(chr(0x1F1E6 + ord(c) - ord("A")) for c in iso2.upper())
 
 
@@ -138,142 +90,66 @@ def _normalize_label(text: str) -> str:
     return _NON_WORD.sub(" ", (text or "").strip().lower()).strip()
 
 
-def _iso_for_label(label: str) -> str | None:
-    """Exact alias match after light normalization. No guessing."""
-    key = _normalize_label(label)
-    if not key:
+def _normalize_iso2(raw: str) -> str | None:
+    code = (raw or "").strip().upper()
+    if code == "UK":
+        code = "GB"
+    if not _ISO2_RE.match(code):
         return None
-    if key in _COUNTRY_ISO:
-        return _COUNTRY_ISO[key]
-    # Strip a leading "the " so "the United Kingdom" still maps.
-    if key.startswith("the "):
-        return _COUNTRY_ISO.get(key[4:])
-    return None
+    return code
 
 
-def _scan_text_for_iso(text: str) -> list[str]:
-    """Longest-alias-first whole-phrase scan. Non-overlapping so nested names don't double-match.
+def _resolve_country_entry(entry: object) -> tuple[str, str] | None:
+    """(iso2, display_name) from a CountryOfRelevance-like dict/object, or None if unusable."""
+    if isinstance(entry, dict):
+        iso_raw = entry.get("iso2") or entry.get("iso") or entry.get("code") or ""
+        name = str(entry.get("name") or "").strip()
+    else:
+        iso_raw = getattr(entry, "iso2", None) or getattr(entry, "iso", None) or ""
+        name = str(getattr(entry, "name", "") or "").strip()
 
-    Example: "democratic republic of the congo" must yield CD only — not also CG from the
-    embedded "republic of the congo". "south sudan" must yield SS only — not SD from "sudan".
-    """
-    hay = f" {_normalize_label(text)} "
-    if hay == "  ":
-        return []
-    aliases = sorted(
-        ((a, iso) for a, iso in _COUNTRY_ISO.items() if len(a) >= _MIN_SCAN_ALIAS_LEN),
-        key=lambda x: -len(x[0]),
-    )
-    occupied = [False] * len(hay)
-    found: list[str] = []
-    seen: set[str] = set()
-    for alias, iso in aliases:
-        needle = f" {alias} "
-        start = 0
-        while True:
-            i = hay.find(needle, start)
-            if i < 0:
-                break
-            end = i + len(needle)
-            if any(occupied[i:end]):
-                start = i + 1
-                continue
-            for j in range(i, end):
-                occupied[j] = True
-            if iso not in seen:
-                seen.add(iso)
-                found.append(iso)
-            start = end
-    return found
-
-
-def _geography_fields(profile: dict, vector: dict | None) -> list[str]:
-    """Every string that may name a place — entities, scope, titles. Order is priority."""
-    fields: list[str] = []
-    for e in (profile.get("entities") or []):
-        raw = str(e.get("canonical_name") or e.get("name") or "").strip()
-        if raw:
-            fields.append(raw)
-    vector = vector or {}
-    for item in (vector.get("scope") or []):
-        s = str(item).strip()
-        if s:
-            fields.append(s)
-    for key in ("title", "thesis", "rationale"):
-        s = str(vector.get(key) or "").strip()
-        if s:
-            fields.append(s)
-    # Profile title is a weak but useful fallback when scope was empty.
-    pt = str(profile.get("title") or "").strip()
-    if pt:
-        fields.append(pt)
-    return fields
+    iso = _normalize_iso2(str(iso_raw))
+    if not iso and name:
+        iso = _NAME_TO_ISO.get(_normalize_label(name))
+    if not iso:
+        return None
+    display = name or _ISO_DISPLAY.get(iso, iso)
+    return iso, display
 
 
 def derive_places(
     profile: dict, vector: dict | None = None, *, cap: int = _FLAG_CAP,
 ) -> tuple[list[str], list[str]]:
-    """(country display names, flag emoji) for the places the story is about.
+    """(country display names, flag emoji) from agent ``countries_of_relevance`` only.
 
-    Harvest order:
-      1. Exact entity / scope labels (highest trust — a scope of ``UK`` is intentional geography).
-      2. Phrase scan of titles/theses for mapped country names (secondary — only whole aliases).
-
-    Cap keeps the feed scannable. Unmapped geography is simply omitted.
+    No lexical harvest of entities/titles. Empty contract → empty flags (never invent US
+    because a US official was named).
     """
+    del vector  # geography is not scanned from the vector anymore
+    raw = profile.get("countries_of_relevance") or []
     ordered_iso: list[str] = []
+    names: list[str] = []
     seen: set[str] = set()
-
-    def _add(iso: str | None) -> None:
-        if not iso or iso in seen or len(ordered_iso) >= cap:
-            return
+    for entry in raw:
+        resolved = _resolve_country_entry(entry)
+        if not resolved:
+            continue
+        iso, display = resolved
+        if iso in seen:
+            continue
         seen.add(iso)
         ordered_iso.append(iso)
-
-    fields = _geography_fields(profile, vector)
-    # Pass 1: exact labels (entity "Iran", scope "UK", scope "United Kingdom").
-    for field in fields:
-        # Scope entries are often short exact codes; entity names are often exact countries.
-        # Also try each slash/comma segment ("Labour Party / UK government" → try both halves).
-        parts = re.split(r"[/,|;]+", field)
-        for part in ([field] + parts):
-            _add(_iso_for_label(part))
-            if len(ordered_iso) >= cap:
-                break
+        names.append(display)
         if len(ordered_iso) >= cap:
             break
-
-    # Pass 2: phrase scan of longer free text (titles), only if we still have room.
-    if len(ordered_iso) < cap:
-        for field in fields:
-            if len(field) < 8:          # short labels already tried exactly; skip re-scan noise
-                continue
-            for iso in _scan_text_for_iso(field):
-                _add(iso)
-                if len(ordered_iso) >= cap:
-                    break
-            if len(ordered_iso) >= cap:
-                break
-
-    names = [_ISO_DISPLAY.get(iso, iso) for iso in ordered_iso]
     flags = [flag_emoji(iso) for iso in ordered_iso]
     return names, flags
 
 
 def derive_topics(pillars: list[str], scope: list[str] | None = None, *, cap: int = 3) -> list[str]:
-    """Free-form pillars/scope -> the canonical topics they imply (stable, unionable, searchable).
-
-    RANKED by how many of a topic's markers actually hit, because broad pillars trip several topics
-    at once and an unranked list buries the specific under the generic: the Hormuz vector matched
-    five topics, of which "energy"/"trade" are what the story IS and "economics"/"markets" are
-    ambient. Strongest signal first, then cap.
-    """
+    """Free-form pillars/scope -> the canonical topics they imply."""
     pillar_hay = " ".join(str(x).lower() for x in (pillars or []))
     scope_hay = " ".join(str(x).lower() for x in (scope or []))
-    # A PILLAR match outweighs a SCOPE match: pillars say what the story is, scope says where it
-    # sits. Unweighted, ties broke on dict order and the Hormuz piece tagged "economics · markets"
-    # (both ambient — "markets" came only from the scope "global markets") while dropping "energy"
-    # and "conflict", which is what it was actually about.
     scored = [
         (sum(2 for n in needles if n in pillar_hay) + sum(1 for n in needles if n in scope_hay), topic)
         for topic, needles in _TOPIC_VOCAB.items()
@@ -282,24 +158,15 @@ def derive_topics(pillars: list[str], scope: list[str] | None = None, *, cap: in
 
 
 def derive_entity_tags(profile: dict, *, cap: int = 3, exclude: list[str] | None = None) -> list[str]:
-    """The entities this story is ABOUT, most-referenced first.
-
-    Entities carry no salience of their own, so rank by how often the field REFERENCES them (threads
-    link the entities they touch) — a proxy for load-bearing that needs no model call.
-
-    Two deterministic exclusions, both learned from real output:
-    - COUNTRIES render as flags; showing 🇮🇷 and an "Iran" tag is the same fact twice.
-    - SOURCE ORGS are who we READ, not what the story is about. The researcher entity-ifies them
-      (a live profile produced "Reuters", "Kpler", "U.S. Energy Information Administration"), and
-      tagging a piece "Reuters" tells the reader nothing about the world. The source ledger already
-      names them, so this is a free, exact filter.
-    """
+    """The entities this story is ABOUT, most-referenced first."""
     skip = {s.lower() for s in (exclude or [])}
-    # Also skip any entity that is itself a mapped country alias (flags already cover them).
-    for e in (profile.get("entities") or []):
-        raw = str(e.get("canonical_name") or e.get("name") or "").strip()
-        if _iso_for_label(raw):
-            skip.add(raw.lower())
+    # Skip entities that match declared countries of relevance (flags cover them).
+    for c in (profile.get("countries_of_relevance") or []):
+        resolved = _resolve_country_entry(c)
+        if resolved:
+            skip.add(resolved[1].lower())
+        if isinstance(c, dict) and c.get("name"):
+            skip.add(str(c["name"]).lower())
     for s in (profile.get("source_ledger") or []):
         for field in ("publisher", "author"):
             if val := str(s.get(field) or "").strip().lower():
@@ -325,9 +192,6 @@ def derive_all(profile: dict, vector: dict | None = None) -> dict[str, list[str]
     """Everything the frontmatter needs: canonical topics + entity tags + places/flags."""
     vector = vector or {}
     places, flags = derive_places(profile, vector)
-    # Budget the bar so the specific always survives the cap: a bar of five generic topics tells the
-    # reader less than "energy · trade · Strait of Hormuz". Topics set the shelf, entities say which
-    # story it is — so both get guaranteed room rather than competing for one list.
     topics = derive_topics(vector.get("pillars") or [], vector.get("scope") or [], cap=3)
     entities = derive_entity_tags(profile, cap=_TAG_CAP - len(topics), exclude=places)
     return {"tags": [*topics, *entities], "places": places, "flags": flags}
