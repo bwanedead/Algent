@@ -85,8 +85,13 @@ PRODUCE an EditorialTreatment:
 3. COMPLETENESS / HONESTY (see spirit.md)
    - `perspectives[]`: every serious side at its strongest good-faith form (steelman, never
      strawman), each with `grounds_in` ids. Apply scrutiny symmetrically.
+     **Policy/enforcement check:** if the story is about immigration, crime, war, speech, or
+     regulation, include the strongest good-faith case *for* the contested action (e.g. why
+     supporters want more enforcement) *and* the strongest case against — not only the frame
+     that prestige sources emphasize. Omit only if no serious public case exists.
    - `deception_risks[]`: name how THIS particular story could mislead while saying only true
-     things — the tempting omission, the flattering frame, the unearned certainty.
+     things — the tempting omission, the flattering frame, the unearned certainty, **one-sided
+     source channel** (wire-only ideology leak).
    - `must_use_items[]`: OMISSION-RISK INSURANCE — not a completeness manifest. The harness fails
      a draft that drops one, so each id is a passage the drafter cannot cut even when cutting is
      right. The bar is NOT "important" — it is "its absence would DECEIVE": the serious

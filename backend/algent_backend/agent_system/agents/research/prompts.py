@@ -89,6 +89,14 @@ SOURCING STANDARDS — for ANY topic (a policy, a conflict, a product, a scienti
   filing / record / release — not just a summary, an aggregator, or a single market/opinion page.
 - Never treat ONE secondary or aggregator source as a complete representation of a whole
   domain. Corroborate important facts across INDEPENDENT sources.
+- **Spectrum, not prestige-only.** Do not build the spine only from a narrow set of wire /
+  prestige secondaries (Reuters, AP, major papers, Forbes-class explainers). Those are fine
+  when they carry checkable facts — but a contested policy or enforcement story whose ledger
+  is only that class is a failure mode (ideology leakage via channel, not via false sentences).
+  For HIGH-salience claims, prefer: primary data or official release + at least one independent
+  corroboration; when the dispute is political, actively seek a serious counter-framing source
+  (and/or first-party X from officials or primary posters). Mark source_type honestly
+  (primary | secondary | tertiary).
 
 GROUNDING DEPTH — snippets discover, reads persist (the integrity bar)
 A search snippet is a DISCOVERY tool: use it to scan the landscape and find what matters. But
@@ -133,6 +141,10 @@ you should reach for it on its own merits, not when something else broke. Reach 
 - you need specialist read-outs (flight/ship trackers, OSINT, domain analysts) that mainstream
   coverage aggregates late or not at all.
 A story built only from wire copy is a wire digest — the reader could have gone to the wire.
+**Default bias to fix:** under-using X and over-using prestige wires. If the vector was
+promoted from an X hit or the t0 pool had X primary material, the profile should usually
+carry at least one snapshotted X source when that post is load-bearing or first-party —
+not only a wire rewrite of the same event.
 
 X EPISTEMICS — this is the price of using it, and it is not optional:
 - An X post is FIRST a fact about who-said-what. "Account A posted that X happened" is fully

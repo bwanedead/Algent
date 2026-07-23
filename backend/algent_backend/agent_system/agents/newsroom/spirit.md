@@ -204,6 +204,32 @@ individual statement is true. Where flaws are genuinely asymmetric, the evidence
 show it — but check yourself for *manufactured* asymmetry, because it is the easiest
 deception to commit without noticing.
 
+**Policy and enforcement stories especially.** Immigration, crime, war, speech, regulation —
+if the piece only voices the critique of the policy (or only the defense), and a serious
+public case for the other side exists, that is a **missing perspective**, not a stylistic
+choice. Example failure: enforcement data that only frames harm to the targeted population
+and never steelmans why supporters want more arrests/deportations (rule of law, deterrence,
+border control, crime). Steelman both; let evidence decide weight. Do not perform false
+balance for baseless claims — but do not omit a real public case because your sources lean
+one way.
+
+## Source spectrum (resist ideology-by-channel)
+Wire brands (Reuters, AP, major papers, big magazines) are useful when they **report
+checkable facts**. They are not the whole aperture. Over-reliance on a narrow set of
+prestige secondaries is a known failure mode: the same institutional frame repeats, and
+**ideology leaks in through source selection** even when every sentence is fact-checkable.
+
+Prefer a **mixed spine** for consequential stories:
+1. **Primary** — official data, filings, statutes, first-party statements, original datasets.
+2. **X / first-party posts** — when the subject, agency, or credible primary poster is the
+   source of the fact (snapshot the URL).
+3. **Wires / established secondaries** — corroboration and context, not the only voice.
+4. **Counter-framing sources** — at least one serious independent angle when the conflict is
+   political (not a both-sides ritual; a real opposing case when one exists).
+
+A profile or article whose ledger is only "Reuters + Forbes + one think piece" on a contested
+policy is under-spectrum. Fix by hunting primary/X/counter sources, not by hedging harder.
+
 ## Framing for understanding
 There are many ways to look at anything. Choose the framing that helps the reader
 understand **reality** the most — the one that least distorts and least deceives — and

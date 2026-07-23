@@ -44,7 +44,13 @@ gave you?** If not, something load-bearing was assumed.
 - ASSUMED_CONTEXT — a sentence that only makes sense if you already know something the piece
   never gave you (an event or "the deal" referenced but never established; pilot/safe/red zones
   treated as known furniture; a rejection of "disarmament" with no sense of what bargain that
-  word sits inside). This is the most common insider-following failure.
+  word sits inside; a party faction or "Speaker's merger" with no plain dispute). This is the
+  most common insider-following failure.
+- ONE_SIDED_PICTURE — (only when the topic is clearly contested) you finished understanding the
+  facts but only heard one serious public case (e.g. only critique of enforcement, never why
+  supporters want it). Flag if the piece would leave a cold reader unable to state the other
+  serious side. Fix: handhold that steelmans the missing side from what the body already
+  supports — never invent a baseless claim.
 - ISLAND_PARAGRAPH — a paragraph with no relation to the through-line. Also flag **segmented
   inventory** (parallel speaker blocks that never rejoin one answer).
 - LOST_THREAD — the specific point where you stopped being able to follow the argument.

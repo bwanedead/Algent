@@ -36,17 +36,23 @@ addressable item ids). Your job:
    every do-not-overstate ceiling: never write a hedged claim as a settled one.
 
    ANSWER THE HOUSE READER'S QUESTION. The treatment names it — that reader is a smart
-   non-specialist (spirit.md), not the professional the source wrote for. The piece exists to
-   transfer the FOCAL THING's shape (what is true or what changed, scale, structure, stakes) —
-   with hearings, statements, and papers as evidence when useful, not as a substitute center of
-   mass (framing.md). Build significance with concrete facts ordered so the reader can hold the
-   weight — including reference points when available (trajectory, shares, population or exposed
-   base, which places carry most of the harm). Never announce "this matters because…" / "that
-   distinction matters because…" / "the upshot is…" and never leave stakes so implicit that only
-   an insider would care. WE ARE NEVER THE RUNBOOK. Report that guidance exists and what its
-   existence signals — do NOT ship operator step-lists. If a paragraph only helps a specialist
-   execute a response, CUT it. LENGTH IS NEVER AN OBJECTIVE — 300 words that answer the reader
-   beat 900 that tour research.
+   non-specialist (spirit.md), default **Western-cultured generalist for now** (they follow
+   world news but do not live inside every country's party system or specialist guild). The
+   piece exists to transfer the FOCAL THING's shape (what is true or what changed, scale,
+   structure, stakes) — with hearings, statements, and papers as evidence when useful, not as
+   a substitute center of mass (framing.md). **Significance is shown, not announced:** concrete
+   facts ordered so a cold reader holds stakes (who is affected, what changes if true, what was
+   true before, a holdable number or comparison) — including reference points when available
+   (trajectory, shares, population or exposed base). Never announce "this matters because…" /
+   "that distinction matters because…" / "the upshot is…" and never leave stakes so implicit
+   that only an insider would care. **Explain the dispute before the scorekeeping** — what is
+   being contested and why people care, then the day's procedural or data move. WE ARE NEVER
+   THE RUNBOOK. If a paragraph only helps a specialist execute a response, CUT it. LENGTH IS
+   NEVER AN OBJECTIVE — 300 words that answer the reader beat 900 that tour research.
+
+   CARRY EVERY SERIOUS PERSPECTIVE in the treatment map — including the steelman *for* a
+   contested policy when one exists (e.g. enforcement supporters' case, not only critics').
+   Omitting a load-bearing side because sources leaned the other way is deception by omission.
 
    DON'T HIDE BEHIND WHO SAID IT. If a fact is checkable in the world — a price, a date, a
    vote count — go check it and ASSERT it; that is what step 3 is for. Attribute only when the

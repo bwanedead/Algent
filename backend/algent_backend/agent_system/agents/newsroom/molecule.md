@@ -58,6 +58,16 @@ stakes so carefully that the reader must invent them. Concrete facts that carry 
 large, who is affected, what depends on what, what is irreversible) *are* the significance when
 ordered and supported correctly (spirit + style: no self-narration).
 
+**Dispute before scorekeeping.** If the story is a challenge, lawsuit, enforcement action, or
+party fight, the molecule must include early concepts for: (1) what is being contested in plain
+language, (2) what each serious side wants and why (steelman), (3) what just changed. A molecule
+that only names procedural moves (notice issued, stay denied, hearing in two weeks) without the
+dispute and stakes fails the house reader even if every procedure is accurate.
+
+**Western generalist default (current house).** Plan for a smart reader who is not already
+inside this country's party system or specialist guild. Subnational parties, Speakers, merger
+rules, and local acronyms need primitives or early concepts — not zero-context name drops.
+
 **Give the reader reference points for magnitude.** Bare large counts and place-names without
 anchors force the reader to invent scale. When the evidence allows, include at least one of:
 trajectory (rising/falling vs when), share of a total, comparison to a prior peak or similar

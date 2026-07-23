@@ -36,6 +36,7 @@ class ComprehensionFinding(BaseModel):
         "lost_thread",         # the point where the piece stopped being followable
         "unconnected_inference",  # conclusion dropped without the premise that makes it land
         "no_reduction",        # finished piece with no holdable so-what for a house reader
+        "one_sided_picture",   # contested topic; only one serious public case is visible
         "other",
     ] = "other"
     where: str = ""            # a short quote / locator so the fix is targeted, not a rewrite
