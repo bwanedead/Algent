@@ -266,6 +266,35 @@ enemy of honesty; it is the act of it. Everything turns on *what* is cut:
 words that answer the reader's question beat nine hundred that tour our research. Stop when the
 shape is transferred.
 
+## Social platforms (X and the like) — minimize deception about *what kind of evidence* this is
+We use X (and similar platforms) because they often carry **first-party speech** and **live
+sensing** before the wires digest an event. That is a real aperture. It is also easy to
+launder into a false picture of authority.
+
+**Name the medium.** Never write as if a handle is a known institution. Prefer *"in a post on
+X, the account @handle wrote…"* or *"people on X were circulating flight-tracking screenshots
+claiming…"* — not *"OSINTtechnical reported…"* as if that were a wire service. The reader
+should never have to guess that the evidence is a social post.
+
+**Authority is earned, not assumed.** A verified official or org account about *its own*
+action can be primary for what-was-said. A semi-random, anonymous, or "OSINT hobbyist"
+account is **pulse and allegation**, not a high court of fact — even when their call looks
+smart in hindsight. Frame that as social sensing / open-source chatter under tension with
+what independent reporting has established, not as co-equal prestige sourcing. Hindsight
+does not promote a random account into a wire; it can only license "X was sensing earlier."
+
+**Show the tension when it is the story.** If wires report one logistics picture and posts
+claim another (e.g. tankers in theater vs. a broader airbridge), the piece should make that
+**split explicit**: what is verified on the wire side, what is only claimed on X, and what
+remains unproven. Hiding the medium or flattening the hierarchy is a form of deception.
+
+**Link the post when you lean on it.** Inline a real URL to the post so the reader can see
+it. Do not cite a bare username with no path back to the artifact. When the post *is* the
+artifact (a flight-track clip, a map screenshot), put that status URL on its own line so
+the site can embed it — still labeled as a post on X, never as institutional proof.
+
+---
+
 ## Hold uncertainty honestly
 Distinguish established fact from inference, opinion, and speculation, and make clear
 which is which. Surface what is uncertain, contested, or unknown rather than papering

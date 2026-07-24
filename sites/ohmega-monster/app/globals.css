@@ -387,6 +387,56 @@ a { color: inherit; }
 /* The figure's caption — the line that says what you're looking at. */
 .prose p > em:only-child { display: block; color: var(--muted); font-size: 11px; line-height: var(--line); }
 
+/* X status embed — public platform iframe under a sole-link paragraph. No server. */
+.x-post-embed {
+  margin: 0 0 var(--line);
+  border: 1px solid var(--rule);
+  background: var(--panel);
+  overflow: hidden;
+}
+.x-post-embed-frame {
+  display: block;
+  width: 100%;
+  min-height: 420px;
+  height: 480px;
+  border: 0;
+  background: var(--bg);
+}
+.x-post-embed-cap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--rule);
+  color: var(--muted);
+  font-size: 11px;
+  line-height: var(--line);
+}
+.x-post-embed-cap a {
+  color: var(--accent);
+  text-underline-offset: 3px;
+}
+.x-post-embed-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--rule-strong);
+  color: var(--strong);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.x-post-embed-hint {
+  color: var(--faint);
+  margin-left: auto;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 /* The machine-readable support layer, exposed without editorial branding. */
 .source-record {
   margin-top: calc(var(--line) * 3);

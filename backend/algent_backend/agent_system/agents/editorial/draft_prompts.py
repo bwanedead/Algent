@@ -144,6 +144,33 @@ OUTPUT — a DraftPayload:
 - research_note: what you went and found, and any frame tension worth flagging.
 - additions: everything new you turned up, for enrich-back.
 
+X / SOCIAL POSTS IN PROSE — minimize deception about the medium and the authority
+When the profile rests on X (or similar) posts, the reader must never be confused about
+*what kind of thing* they are reading:
+- **Name the medium every time you lean on a post:** "in a post on X", "on X, the account
+  @handle wrote…", "people on X were circulating…". Never treat a handle as a known news
+  org ("OSINTtechnical reported…" alone is wrong; "a post on X by @OSINTtechnical claimed…"
+  is right).
+- **Authority matches the account.** Official / verified institutional accounts can be
+  first-party for what-was-said. Semi-random or hobby OSINT accounts are **pulse and
+  allegation** — useful as early sensing, not co-equal with Reuters/CENTCOM for world-facts.
+  Do not elevate them into the same voice as established reporting.
+- **When wires and X disagree or only one side has the claim, stage the tension:** what
+  independent reporting has established, what posters claim to be noticing, and what is
+  still unverified. That split is often the real story (air traffic chatter vs. confirmed
+  basing posture). Do not flatten them into one confident logistics picture.
+- **Inline the post URL** when you rely on a specific post: markdown link the phrase that
+  points at it, e.g. `[in a post on X](https://x.com/…/status/…)`. Bare username without a
+  path back to the artifact is a failed citation.
+- **Embed cue for load-bearing posts (clips, flight maps, screenshots):** after you name the
+  medium in prose, put the status URL alone on its own line as a markdown link, e.g.
+  `[Post on X · @handle](https://x.com/handle/status/…)`. The site can render an embed from
+  a sole-link paragraph — no server setup; your job is the honest link + framing. Do not
+  spam embeds for every mention; one for the key artifact is enough.
+- **Pulse, not prestige:** "people on X were noticing…" / "one public OSINT-style account
+  posted…" is the right register for semi-random accounts. Even when their call looks smart
+  later, do not rewrite history into "this source established…".
+
 Write the real piece — plain, precise, honest (see style.md). Serve the reader's contact with
 reality; do not capture them. This is a draft; it will be reviewed against every standard.
 

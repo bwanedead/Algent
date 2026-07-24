@@ -153,6 +153,48 @@ def test_analytic_with_unverified_figures_is_flagged_in_receipts() -> None:
     assert "figures not all matched to the cited claims: 9.9" in md
 
 
+def test_source_label_names_x_medium_not_bare_handle() -> None:
+    """Receipts must not present an X handle as if it were a wire outlet."""
+    from algent_backend.agent_system.agents.editorial.publish import _source_label
+
+    bare = SourceArtifact(
+        id="x1",
+        url="https://x.com/Osinttechnical/status/2080393908685566041",
+        title="Post by @Osinttechnical",
+        source_type="primary",
+    )
+    label = _source_label(bare)
+    assert "X post" in label
+    assert "@Osinttechnical" in label
+    assert not label.lower().startswith("post by")
+
+    honest_pub = SourceArtifact(
+        id="x2",
+        url="https://x.com/WhiteHouse/status/1",
+        title="unused",
+        publisher="X post · @WhiteHouse (official account)",
+        source_type="primary",
+    )
+    assert _source_label(honest_pub) == "X post · @WhiteHouse (official account) — unused"
+
+    wrapper = SourceArtifact(
+        id="x3",
+        url="https://x.com/i/web/status/2080393908685566041",
+        title="X web status wrapper for @Osinttechnical post",
+        source_type="primary",
+    )
+    assert _source_label(wrapper) == "X post"
+
+    wire = SourceArtifact(
+        id="r1",
+        url="https://www.reuters.com/world/x",
+        title="Israel tankers",
+        publisher="Reuters",
+        source_type="secondary",
+    )
+    assert _source_label(wire) == "Israel tankers — Reuters"
+
+
 def test_appendix_is_silent_when_everything_is_clean() -> None:
     prof = SignalProfile(id="p", title="t",
         source_ledger=[SourceArtifact(id="s1", url="u", title="src", source_type="primary",

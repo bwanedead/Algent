@@ -66,6 +66,51 @@ _GROUNDING_WORDS = {
     "unsourced": "our synthesis across the evidence — no single cited source",
 }
 
+# X/Twitter status URLs — receipts must name the medium, not look like a wire byline.
+_X_STATUS_RE = re.compile(
+    r"(?:https?://)?(?:(?:www|mobile)\.)?(?:twitter|x)\.com/"
+    r"(?:(?P<handle>[A-Za-z0-9_]{1,15})/status/\d+|i/web/status/\d+)",
+    re.I,
+)
+_WEAK_X_TITLE = re.compile(
+    r"(?i)^(post by\s*@?\w+|x\s*post\b|tweet by\b)|web status wrapper",
+)
+
+
+def _source_label(source) -> str:
+    """Reader-facing name for a source line.
+
+    Minimize deception: an X post must read as an X post. Bare handles and titles like
+    "Post by @OSINTtechnical" get rewritten so they cannot be mistaken for a known outlet.
+    Prefer an already-honest ``publisher`` string from research when present.
+    """
+    url = (getattr(source, "url", None) or "").strip()
+    title = (getattr(source, "title", None) or "").strip()
+    publisher = (getattr(source, "publisher", None) or "").strip()
+
+    m = _X_STATUS_RE.search(url)
+    if m:
+        handle = (m.group("handle") or "").lstrip("@")
+        pub_names_medium = bool(
+            publisher and re.search(r"(?i)\bx(\s*post|\.com)?\b|twitter", publisher)
+        )
+        if pub_names_medium:
+            base = publisher
+        elif handle:
+            base = f"X post · @{handle}"
+        else:
+            base = publisher or "X post"
+        # Drop weak/wrapper titles that launder a handle into institutional authority.
+        if not title or _WEAK_X_TITLE.search(title):
+            return base
+        if title.lower() in base.lower() or (handle and title.lower() in {handle.lower(), f"@{handle.lower()}"}):
+            return base
+        return f"{base} — {title}"
+
+    if title and publisher and publisher.lower() not in title.lower():
+        return f"{title} — {publisher}"
+    return title or publisher or url
+
 
 def _clean_prose(body: str) -> str:
     """Strip the machine-citation markers for the reader view (the appendix carries the trace)."""
@@ -173,7 +218,8 @@ def _appendix(draft: ArticleDraft, cited_sources: list, cited_claims: list, sour
             access = "read in full" + (f" · captured {d}" if d else "")
         else:
             access = "full text not obtained — used its summary"
-        out.append(f"- ({s.source_type}) {s.title or s.url} — {s.url}  ·  _{access}_")
+        label = _source_label(s)
+        out.append(f"- ({s.source_type}) {label} — {s.url}  ·  _{access}_")
     out.append("")
 
     out.append("**Claims, and how far we tracked each down**")

@@ -157,19 +157,30 @@ whose ledger has zero x.com URLs is a structural miss — fix it in this pass, n
 
 X EPISTEMICS — this is the price of using it, and it is not optional:
 - An X post is FIRST a fact about who-said-what. "Account A posted that X happened" is fully
-  grounded by the post itself — the author owns their own statement. Write it that way
+  grounded by the post itself — the author owns their own statement. Write claims that way
   (attribution is correct here: the source IS the fact — see the claim contract above).
 - An X post is WEAK evidence about the WORLD. "X happened" sourced only to a post is NOT
   confirmed, however confident the poster. Keep such a claim `unconfirmed`/`likely` and
   LOW/MEDIUM salience until corroborated by an independent source, or unless the account is
   itself authoritative for that fact (the subject about their own action, the agency about its
   own decision, the holder of the primary data).
-- SNAPSHOT what you use. Add every X post you rely on to the source ledger with its exact url
-  (source_type "primary" when the account is the subject) and link claims to it via
-  `supported_by`. Posts are deleted and edited far more than news pages — an unsnapshotted post
-  is evidence that can evaporate, and the receipts are how a reader checks us.
-Used this way X widens the aperture. Used lazily it launders rumor into the spine — and the
-grounding floor will not save you here, because a post is trivially "read".
+- AUTHORITY TIERS for the source_ledger (prevents laundering a hobby account as a wire):
+  - Official / verified org or named official speaking for themselves → source_type
+    `primary`; publisher like "X post · @WhiteHouse (official account)".
+  - Named public figure with clear identity about their own domain → often `primary` for
+    the speech-act, still weak for world-facts.
+  - Semi-random, anonymous, or OSINT-style accounts → source_type `secondary` or `tertiary`
+    (not `primary` — primary is for the subject of the speech or an official organ);
+    publisher MUST read like "X post · @handle (public account / OSINT-style)" — never a bare
+    handle as if it were Reuters. In claims, treat as **pulse / open-source chatter**, not
+    established logistics fact. Title should also say the medium (e.g. "X post by @handle…"),
+    not "OSINTtechnical reported…".
+- SNAPSHOT what you use. Add every X post you rely on with its EXACT url and the publisher
+  string above. Posts are deleted and edited far more than news pages — an unsnapshotted post
+  is evidence that can evaporate.
+Used this way X widens the aperture (and sometimes senses earlier than wires). Used lazily it
+launders rumor into the spine — and the grounding floor will not save you, because a post is
+trivially "read".
 
 "INSUFFICIENT EVIDENCE" IS A GOOD OUTCOME
 Set profile_status honestly — complete when mapped, insufficient_evidence /
