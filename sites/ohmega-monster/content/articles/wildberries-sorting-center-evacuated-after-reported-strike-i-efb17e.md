@@ -2,7 +2,7 @@
 title: Wildberries sorting center evacuated after reported strike in Simferopol, as drone attacks hit its wider network
 dek: The attack on the Russian-occupied Crimea site was first circulated on X and later acknowledged by Wildberries, but the available reporting does not independently confirm the exact location, damage level, or a dual-use role for that specific facility.
 date: '2026-07-24'
-published_at: '2026-07-24T09:36:12.360192+00:00'
+published_at: '2026-07-24T09:54:19.509511+00:00'
 as_of: '2026-07-24'
 status: publishable
 tags:
@@ -19,6 +19,10 @@ flags:
 - 🇺🇦
 - 🇷🇺
 - 🇪🇺
+thumbnail: /analytics/wildberries-sorting-center-evacuated-after-reported-strike-i-efb17e/map_wildberries_strikes.svg
+corrections:
+- date: '2026-07-24'
+  reason: add strike-location map and sole-line X post link for embed
 ---
 
 A Wildberries sorting center in Simferopol, in Russian-occupied Crimea, was reported struck overnight on July 23-24 and then evacuated for safety, according to Interfax quoting a company press-service Telegram message and Reuters reporting on the wider pattern of attacks on the retailer’s warehouses. An X post by the open-source account Osinttechnical showed a fire and was the first public seed of the claim, but the stronger confirmation in this pass is that Wildberries later acknowledged one of its Simferopol warehouses had been hit and that the sorting center was evacuated.
@@ -26,6 +30,12 @@ A Wildberries sorting center in Simferopol, in Russian-occupied Crimea, was repo
 Ukraine’s drone strikes in this story are aimed at logistics sites in Russian-held territory; Wildberries says it is a civilian logistics business trying to protect staff and keep shipping moving. The dispute here is whether this specific Simferopol facility was only civilian warehousing or also tied to military supply.
 
 Wildberries is one of Russia’s largest online retailers and a major logistics operator, moving goods through warehouses and sorting centers across a wide network. In this story, the company is the target of a drone campaign that has been hitting distribution sites in Russia and occupied territory.
+
+**Reported Wildberries warehouse strike locations (city-level)**
+
+![Reported Wildberries warehouse strike locations (city-level)](/analytics/wildberries-sorting-center-evacuated-after-reported-strike-i-efb17e/map_wildberries_strikes.svg)
+
+*City centroids for locations named in reporting (Simferopol, Krasnodar, Nevinnomyssk) — not facility addresses. Basemap: Natural Earth 110m. As of 2026-07-24. AI-assisted analytic from real basemap geometry.*
 
 The Simferopol strike sits in that larger sequence. Reuters reported attacks on Wildberries warehouses in Krasnodar and Nevinnomyssk on July 22, with earlier strikes on July 18 killing eight workers, and later coverage said the company had to suspend or redistribute operations after repeated hits. The Kyiv Independent, reporting on the Simferopol fire, described the facility as part of a major logistics hub for the Russian-occupied Crimean peninsula and said Wildberries later confirmed one of its warehouses there was struck. Reuters also said Wildberries said it was redistributing goods across warehouses to restore operations, while an e-commerce lobby group asked for tax relief for businesses hit by the attacks.
 
@@ -35,6 +45,10 @@ For Simferopol itself, the record stops short of a full forensic picture. Establ
 
 ---
 ## How we know this
+
+**Charts & tables** — _each built only from the cited claims below, by an AI tool_
+- Wildberries strike locations map — city-level orientation
+
 
 **How this piece is framed:** A story about a new, partially verified strike on a Wildberries logistics site in occupied Crimea, read inside a broader series of attacks on the company’s distribution network. The governing question is not whether the company is a military target in the abstract, but what is actually established about this Simferopol hit, how it fits a reported pattern of repeated strikes, and where the evidence stops before it reaches independent forensic confirmation or proof of dual-use function at this specific site.
 
