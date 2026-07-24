@@ -2,7 +2,7 @@
 title: Houthis declare naval blockade on Saudi Arabia with immediate effect
 dek: The Iran-aligned group says the move is retaliation for Saudi actions in Yemen, but it is not yet clear how—and to what extent—shipping through Bab el-Mandeb will be disrupted.
 date: '2026-07-24'
-published_at: '2026-07-24T09:53:58.790226+00:00'
+published_at: '2026-07-24T10:03:03.767235+00:00'
 as_of: '2026-07-24'
 status: publishable
 tags:
@@ -21,6 +21,8 @@ thumbnail: /analytics/houthis-declare-naval-blockade-on-saudi-arabia-with-immedi
 corrections:
 - date: '2026-07-24'
   reason: add Bab el-Mandeb theater map inline for geographic orientation
+- date: '2026-07-24'
+  reason: reframe Red Sea map with theater-bounded viewport
 ---
 
 Yemen’s Iran-aligned Houthis said on Monday they were imposing a naval blockade on Saudi Arabia, calling it a maritime embargo against the “criminal Saudi enemy” and saying it took effect “effective immediately.” In practical terms, that means they are saying they will try to stop or deter vessels from moving to or from Saudi Arabia through the sea lane. The group framed the move as retaliation for what it called an “unjust and oppressive siege” on Yemen.
