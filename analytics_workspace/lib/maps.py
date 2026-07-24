@@ -209,6 +209,134 @@ def _label_point(geom: BaseGeometry, view: BaseGeometry) -> tuple[float, float] 
         return None
 
 
+class _LabelPlacer:
+    """Greedy non-overlapping label placement in data coordinates.
+
+    Estimates text boxes from fontsize + string length (good enough for 110m maps).
+    Tries candidate anchors / offsets; skips the label if nothing free — never stacks
+    unreadable overlaps. Shared by country, region, and city annotations.
+    """
+
+    def __init__(
+        self,
+        ax,
+        *,
+        x_span: float,
+        y_span: float,
+        fig_w_in: float,
+        fig_h_in: float,
+        pad_frac: float = 0.12,
+    ) -> None:
+        self.ax = ax
+        self._boxes: list[tuple[float, float, float, float]] = []  # (x0,y0,x1,y1) data coords
+        # Rough data-units per inch (equal aspect approx).
+        self._dx_in = x_span / max(fig_w_in, 0.1)
+        self._dy_in = y_span / max(fig_h_in, 0.1)
+        self._pad_frac = pad_frac
+
+    def _size(self, text: str, fontsize: float) -> tuple[float, float]:
+        # ~0.55em average glyph width; 1.15 line height — conservative so we over-avoid overlap.
+        w_in = max(len(text), 1) * fontsize * 0.55 / 72.0
+        h_in = fontsize * 1.25 / 72.0
+        return w_in * self._dx_in, h_in * self._dy_in
+
+    def _box_at(
+        self, x: float, y: float, w: float, h: float, ha: str, va: str,
+    ) -> tuple[float, float, float, float]:
+        if ha == "left":
+            x0, x1 = x, x + w
+        elif ha == "right":
+            x0, x1 = x - w, x
+        else:
+            x0, x1 = x - w / 2, x + w / 2
+        if va == "bottom":
+            y0, y1 = y, y + h
+        elif va == "top":
+            y0, y1 = y - h, y
+        else:
+            y0, y1 = y - h / 2, y + h / 2
+        pad_x = w * self._pad_frac
+        pad_y = h * self._pad_frac
+        return (x0 - pad_x, y0 - pad_y, x1 + pad_x, y1 + pad_y)
+
+    @staticmethod
+    def _overlap(a: tuple[float, float, float, float], b: tuple[float, float, float, float]) -> bool:
+        return not (a[2] < b[0] or a[0] > b[2] or a[3] < b[1] or a[1] > b[3])
+
+    def _free(self, box: tuple[float, float, float, float]) -> bool:
+        return all(not self._overlap(box, b) for b in self._boxes)
+
+    def place(
+        self,
+        text: str,
+        candidates: Sequence[tuple[float, float, str, str]],
+        *,
+        fontsize: float,
+        color: str,
+        fontstyle: str = "normal",
+        fontweight: str = "normal",
+        zorder: int = 4,
+        alpha: float = 1.0,
+    ) -> bool:
+        """Try candidates as (x, y, ha, va). Returns True if drawn."""
+        if not text.strip():
+            return False
+        w, h = self._size(text, fontsize)
+        for x, y, ha, va in candidates:
+            box = self._box_at(x, y, w, h, ha, va)
+            if not self._free(box):
+                continue
+            self.ax.text(
+                x, y, text,
+                color=color, fontsize=fontsize,
+                ha=ha, va=va,
+                fontstyle=fontstyle, fontweight=fontweight,
+                zorder=zorder, alpha=alpha, clip_on=True,
+            )
+            self._boxes.append(box)
+            return True
+        return False
+
+    def ring_candidates(
+        self, x: float, y: float, *, steps: int = 12, radii: Sequence[float] | None = None,
+    ) -> list[tuple[float, float, str, str]]:
+        """Offsets around a point for city/feature labels (data degrees)."""
+        import math
+        out: list[tuple[float, float, str, str]] = [(x, y, "center", "center")]
+        for r in radii or (0.35, 0.7, 1.1, 1.6, 2.2):
+            for i in range(steps):
+                ang = 2 * math.pi * i / steps
+                dx, dy = r * math.cos(ang), r * math.sin(ang)
+                # Prefer outside placement: ha/va pull text away from the point.
+                ha = "left" if dx >= 0.05 else ("right" if dx <= -0.05 else "center")
+                va = "bottom" if dy >= 0.05 else ("top" if dy <= -0.05 else "center")
+                out.append((x + dx, y + dy, ha, va))
+        return out
+
+    def jitter_candidates(
+        self, x: float, y: float, *, scale: float = 1.0,
+    ) -> list[tuple[float, float, str, str]]:
+        """Small grid of offsets for country/region labels at a representative point."""
+        steps = [
+            (0, 0, "center", "center"),
+            (0.4 * scale, 0.3 * scale, "left", "bottom"),
+            (-0.4 * scale, 0.3 * scale, "right", "bottom"),
+            (0.4 * scale, -0.3 * scale, "left", "top"),
+            (-0.4 * scale, -0.3 * scale, "right", "top"),
+            (0.7 * scale, 0, "left", "center"),
+            (-0.7 * scale, 0, "right", "center"),
+            (0, 0.55 * scale, "center", "bottom"),
+            (0, -0.55 * scale, "center", "top"),
+            (1.0 * scale, 0.5 * scale, "left", "bottom"),
+            (-1.0 * scale, 0.5 * scale, "right", "bottom"),
+            (1.0 * scale, -0.5 * scale, "left", "top"),
+            (-1.0 * scale, -0.5 * scale, "right", "top"),
+            (1.4 * scale, 0, "left", "center"),
+            (-1.4 * scale, 0, "right", "center"),
+        ]
+        return [(x + dx, y + dy, ha, va) for dx, dy, ha, va in steps]
+
+
 def country_points_map(
     *,
     countries: Sequence[str],
@@ -299,10 +427,15 @@ def country_points_map(
         spine.set_linewidth(0.6)
     ax.set_title(title, color=theme.emphasis, loc="left", pad=10)
 
-    # Country labels (focus first, then larger neighbors in view).
-    labeled = 0
-    max_labels = 10
-    # Sort: focus countries first, then by visible area
+    placer = _LabelPlacer(
+        ax, x_span=dx, y_span=dy, fig_w_in=width, fig_h_in=height,
+    )
+    # Scale jitter with map span so Red Sea / Black Sea theaters get enough separation.
+    jitter = max(dx, dy) * 0.045
+
+    # Country labels (focus first, then larger neighbors). Collision-aware — skip if no free slot.
+    max_labels = 12
+
     def _sort_key(item: tuple[str, BaseGeometry, dict, bool]) -> tuple:
         lab, geom, props, is_focus = item
         try:
@@ -311,10 +444,10 @@ def country_points_map(
             area = 0.0
         return (0 if is_focus else 1, -area)
 
+    n_country = 0
     for lab, geom, props, is_focus in sorted(visible, key=_sort_key):
-        if labeled >= max_labels:
+        if n_country >= max_labels:
             break
-        # Skip tiny slivers in view
         try:
             if geom.intersection(view).area < (dx * dy) * 0.008 and not is_focus:
                 continue
@@ -324,18 +457,18 @@ def country_points_map(
         if not pt:
             continue
         name = _display_name(lab, props)
-        ax.text(
-            pt[0], pt[1], name,
-            color=theme.muted if not is_focus else theme.text,
+        ok = placer.place(
+            name,
+            placer.jitter_candidates(pt[0], pt[1], scale=jitter * (1.2 if is_focus else 1.0)),
             fontsize=9 if is_focus else 8,
-            ha="center", va="center",
-            fontstyle="italic" if not is_focus else "normal",
+            color=theme.text if is_focus else theme.muted,
+            fontstyle="normal" if is_focus else "italic",
             zorder=3,
-            path_effects=[],
         )
-        labeled += 1
+        if ok:
+            n_country += 1
 
-    # Optional region / water labels (Black Sea, Bab el-Mandeb, etc.)
+    # Region / water labels (Black Sea, Bab el-Mandeb, etc.) — same collision set.
     for reg in region_labels or []:
         try:
             lon, lat = float(reg["lon"]), float(reg["lat"])
@@ -344,14 +477,14 @@ def country_points_map(
             continue
         if not name or not (minx <= lon <= maxx and miny <= lat <= maxy):
             continue
-        ax.text(
-            lon, lat, name,
-            color=theme.series2,
+        placer.place(
+            name,
+            placer.jitter_candidates(lon, lat, scale=jitter * 0.9),
             fontsize=8,
-            ha="center", va="center",
+            color=theme.series2,
             fontstyle="italic",
             zorder=3,
-            alpha=0.9,
+            alpha=0.95,
         )
 
     if inset:
@@ -363,21 +496,43 @@ def country_points_map(
         )
         ax.add_patch(rect)
         lab = str(inset.get("label") or "detail")
-        ax.text(x0, y1, lab, color=theme.series2, fontsize=8, va="bottom", ha="left", zorder=4)
+        placer.place(
+            lab,
+            [(x0, y1, "left", "bottom"), (x0, y0, "left", "top")],
+            fontsize=8,
+            color=theme.series2,
+            zorder=4,
+        )
 
-    # Story points on top
-    offsets = [(8, 7), (8, -11), (-10, 9), (-10, -12), (12, 1), (-14, 3)]
-    for i, p in enumerate(rows):
+    # Story points on top — ring of offsets so city names never stack on each other or countries.
+    # Reserve a small exclusion around each marker so labels don't sit on the dot.
+    for p in rows:
         lon, lat = float(p["lon"]), float(p["lat"])
         ax.plot(lon, lat, "o", color=theme.series1, markersize=8, zorder=5,
                 markeredgecolor=theme.emphasis, markeredgewidth=0.6)
+        # Tiny occupied box on the marker itself
+        m = max(dx, dy) * 0.012
+        placer._boxes.append((lon - m, lat - m, lon + m, lat + m))
         name = str(p.get("name") or "")
         if name:
-            ox, oy = offsets[i % len(offsets)]
-            ax.annotate(
-                name, (lon, lat), textcoords="offset points", xytext=(ox, oy),
-                color=theme.emphasis, fontsize=9, fontweight="medium", zorder=6,
+            r0 = max(dx, dy) * 0.03
+            placed = placer.place(
+                name,
+                placer.ring_candidates(lon, lat, steps=16, radii=(r0, r0 * 1.6, r0 * 2.4, r0 * 3.3)),
+                fontsize=9,
+                color=theme.emphasis,
+                fontweight="medium",
+                zorder=6,
             )
+            if not placed:
+                # Last resort: farther ring rather than overlap.
+                placer.place(
+                    name,
+                    placer.ring_candidates(lon, lat, steps=20, radii=(r0 * 4.0, r0 * 5.0)),
+                    fontsize=8,
+                    color=theme.emphasis,
+                    zorder=6,
+                )
 
     footer = source_note
     if as_of:

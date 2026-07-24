@@ -13,9 +13,17 @@
 - Site-live must include `XPostEmbed` / `Prose` embed wiring (merge `organic-dev` site code if
   drift_warning says components are behind).
 
-## Theme / stock illustrations (planned — not a wire yet)
-Goal: optional **honest atmosphere** art (Grok Imagine or similar) so pieces are not only text +
-data visuals — a topic mood image, not evidence.
+## Label non-overlap (maps / charts)
+Map labels use a greedy collision placer (`analytics_workspace/lib/maps.py` `_LabelPlacer`):
+estimated text boxes in data coordinates, candidate offsets, **skip rather than stack**.
+City markers get a ring of offsets; country/region labels jitter around a representative point.
+Any new chart annotation path should reuse the same idea (or matplotlib's constraint layout
+for axes titles only — never freehand multi-label maps without a collision pass).
+
+## Theme / stock illustrations (planned — **not wired**, nothing appears at article top yet)
+Goal: optional **honest atmosphere** art (Grok Imagine / xAI image API) so pieces are not only
+text + data visuals — a topic mood image, not evidence. **This is not implemented end-to-end.**
+No hero/frontmatter image is generated on publish today; if you see no top image, that is expected.
 
 Constraints (do not violate):
 - Never a fabricated photograph of a **real event** or real person as if documentary.
@@ -23,8 +31,8 @@ Constraints (do not violate):
 - Never a substitute for a **map** when geography is the aid.
 - Optional, cheap, one per piece max; skip when map/chart already carries the visual load.
 
-Likely path: router or a tiny post-draft stage emits a `theme_prompt` + `theme_image` asset;
-publish puts it under `public/illustrations/<slug>/` with frontmatter `hero:` for the site.
+Likely path (when built): small post-draft stage → `theme_prompt` + image asset →
+`public/illustrations/<slug>/` + frontmatter `hero:` rendered above the body on the site.
 
 ## Operator toggles
 | Env | Default | Meaning |
