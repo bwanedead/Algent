@@ -34,7 +34,8 @@ operator-controlled and hard: matching vectors cannot promote.
 - strait of hormuz
 - tanker traffic
 - bab al-mandeb
-- houthi ultimatum
+# unfrozen 2026-07-24 — operator greenlit Houthi–Saudi ultimatum rail
+# - houthi ultimatum
 - israel-iran ceasefire
 - israel x iran
 - iran ceasefire

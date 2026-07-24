@@ -1231,14 +1231,40 @@ def test_build_pool_spends_the_cap_on_unlike_stories_not_on_a_running_one() -> N
     pool = build_pool(None, _sheet_with(running, tail), beats_limit=4)
     urls = [i.evidence[0].url for i in pool.items]
 
-    assert len(urls) == 4
     assert "http://s1" in urls and "http://s2" in urls   # the tail survives the cap
-    # Ten near-duplicate strait headlines cannot take more than a couple of slots.
-    assert sum(1 for u in urls if u.startswith("http://w")) == 2
+    # Ten rewrites of one line are one story. The pool would rather come back short
+    # than pad the cap with echoes.
+    assert sum(1 for u in urls if u.startswith("http://w")) == 1
+    assert len(urls) == 3
 
 
-def test_diversify_does_not_owe_any_query_a_slot() -> None:
-    """No quotas: a query whose hits are all redundant gets nothing, and that's correct."""
+def test_truncation_is_source_interleaved_so_list_order_does_not_decide() -> None:
+    """When the cap bites, it must not all go to whichever query sorted first.
+
+    Regression: two earlier content-only rules both collapsed here on live data —
+    one gave 27 of 28 slots to the first two queries, the other gave 12 to one query
+    because non-Latin scripts share no vocabulary and so always looked novel.
+    """
+    from algent_backend.data_ingestion.newsroom.discovery.pool import build_pool
+
+    first = _beat_result(
+        "technology",
+        *[_hit(f"Chipmaker {n} opens fabrication plant", f"http://t{n}") for n in "abcde"],
+    )
+    second = _beat_result(
+        "health",
+        *[_hit(f"Clinic in {n} reports rare parasite cluster", f"http://h{n}") for n in "abcde"],
+    )
+
+    urls = [i.evidence[0].url for i in build_pool(None, _sheet_with(first, second),
+                                                  beats_limit=4).items]
+
+    assert sum(1 for u in urls if u.startswith("http://t")) > 0
+    assert sum(1 for u in urls if u.startswith("http://h")) > 0
+
+
+def test_a_query_returning_only_echoes_gets_nothing() -> None:
+    """No quotas: nothing is owed a slot just for having been asked."""
     from algent_backend.data_ingestion.newsroom.discovery.pool import build_pool
 
     echo = _beat_result(
@@ -1250,10 +1276,12 @@ def test_diversify_does_not_owe_any_query_a_slot() -> None:
         _hit("Quantum processor factors record integer", "http://v1"),
         _hit("Archaeologists date Saharan rock art", "http://v2"),
     )
-    # Distinct URLs but one headline -> dedup collapses the echo to a single item.
-    pool = build_pool(None, _sheet_with(echo, varied), beats_limit=2)
+    pool = build_pool(None, _sheet_with(echo, varied), beats_limit=3)
+    urls = [i.evidence[0].url for i in pool.items]
 
-    assert [i.evidence[0].url for i in pool.items] == ["http://e0_x", "http://v1"]
+    # Three URLs, one headline -> one item, not three.
+    assert sum(1 for u in urls if u.startswith("http://e")) == 1
+    assert "http://v1" in urls and "http://v2" in urls
 
 
 def test_build_pool_collapses_the_same_headline_syndicated_to_many_outlets() -> None:

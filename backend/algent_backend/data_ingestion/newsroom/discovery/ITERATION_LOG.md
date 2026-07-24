@@ -40,8 +40,8 @@ sheet wasn't neglected — the sweep could not complete.
   is the next rotation — a failed beat stays unstamped and goes first), and a
   wall-clock **budget** so it is safe to call inline.
 - Soft throttle (non-JSON 200) now raises `RateLimited` like a 429 — same signal.
-- Pool: sweep capped (`ALGENT_T0_BEATS_CAP`, 28) and spent on the **least-alike**
-  stories (`pool._diversify`, greedy on headline-vocabulary overlap).
+- Pool: sweep capped (`ALGENT_T0_BEATS_CAP`, 28); the cap drops **echoes** and
+  truncates in a source-interleaved order (`pool._diversify`).
 - Pool dedup now collapses **syndicated headlines**, not just repeated URLs (the same
   measles story arrived at 3 URLs and took 3 of 28 slots).
 - Promotion gets a second, coarser reference beside headline cooldown: **what recent
@@ -49,16 +49,43 @@ sheet wasn't neglected — the sweep could not complete.
   as a tie-break only.
 
 **Framing correction (same day, operator).** The first cut spent the cap *round-robin
-per query* — one hit per beat before any beat got a second. Rejected, correctly: that
+per query* — one hit per query before any query got a second. Rejected, correctly: that
 is a quota system, and it trades a wire rut for a taxonomy rut. Hard categories were
-only ever a heuristic for variety, and the goal is a genuine long tail of many kinds of
-thing, not a checklist of buckets to satiate. Selection is now purely **dissimilarity**
-— no query is owed a slot, and a query whose hits are all redundant gets nothing. The
-registry stays, reframed as a *sampling frame*: a set of nets cast into parts of the
-corpus the loudness channels cannot see, with no claim on the output.
+only ever a heuristic for variety; the goal is a genuine long tail of many kinds of
+thing, not a checklist of buckets to satiate. The registry stays, reframed as a
+*sampling frame*: nets cast into parts of the corpus the loudness channels cannot see,
+with no claim on the output.
 
-**Observation.** Rotation works end to end; the diversifier drops near-duplicate
-coverage in favour of unlike stories. Throughput is the open item — see below.
+**Two failed attempts at a content-only selection rule** (recorded because the failure
+mode generalizes — a bare headline is weak evidence, and both rules looked fine on
+crafted unit-test inputs and collapsed on live data):
+
+1. *Least-overlap greedy* — take the item sharing fewest words with what's chosen.
+   Degenerate: early on almost every item has some unseen word, so it took the first
+   zero-overlap item each pass, which is list order. Live: **15 slots to the first
+   query, 12 to the second, zero to five queries that each returned 25 hits.**
+2. *Rare-vocabulary greedy* (mean idf × (1 − redundancy)) — prefer stories whose words
+   are rare in the day's catch. Better (5 of 6 queries touched) but biased by script,
+   not novelty: Serbian, Greek and Chinese headlines share no tokens with anything, so
+   they score maximal distinctiveness whatever they say. Live: **12 of 28 slots to one
+   query's non-Latin headlines, health zero.**
+
+**What shipped instead.** Split the job by what a headline can honestly support:
+- **Echo suppression** (≥0.6 vocabulary overlap with something already kept → skip).
+  This is the reliable part and does the real work — a running story arrives as twenty
+  rewrites of one line.
+- **Source-interleaved truncation** — an *ordering device only*, so that when the cap
+  bites it isn't the registry's declaration order that decides. Nothing is reserved;
+  a query whose hits are all echoes still contributes nothing.
+- **No topical ranking at this layer.** Choosing between two unlike stories needs
+  semantics the synthesis agent has and a title match does not. Pool organizes and
+  grounds; it does not judge.
+
+**Observation (live, 150-hit sheet, 28-item cap).** 6 of 6 queries represented; the 12
+syndicated copies of one measles headline collapsed to 4 distinct health stories; the
+selection spans Rwandan scholarships for Nigerian students, Bangladesh's president
+resigning, Spain's budget defeat, Uganda's Ebola countdown, Taiwanese semiconductor
+training. Throughput is the open item — see below.
 
 **Still open.** Even with backoff, DOC throttling is the binding constraint on how much
 of the registry stays fresh. If a rotation keeps landing <50% of its slice, the answer

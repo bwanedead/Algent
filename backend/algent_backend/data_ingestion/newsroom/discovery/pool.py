@@ -296,37 +296,74 @@ _STOP = frozenset(
 )
 
 
+# How much headline vocabulary two stories must share to count as the same story
+# told twice. High on purpose: this drops echoes, it does not rank topics.
+_ECHO_OVERLAP = 0.6
+
+
 def _diversify(items: list[PoolItem], limit: int | None) -> list[PoolItem]:
-    """Spend the cap on variety: repeatedly take the item least like what's taken.
+    """Fill the cap with distinct stories, dropping the echoes.
 
-    Greedy, and scored on the plainest evidence available at this layer — the words
-    in the headline. An item whose vocabulary is entirely new scores zero redundancy
-    and is taken immediately; the fourth tanker-in-the-strait headline shares nearly
-    every content word with the first three and loses its slot to something unlike
-    it. Ties keep source order, so within equal novelty the channel's ranking stands.
+    Two jobs, deliberately separated, because only one of them can be done honestly
+    from a bare headline:
 
-    This is a *long-tail* rule, not a quota: nothing is guaranteed a slot, and a
-    genuinely crowded day can still fill the pool from one subject if that day's
-    stories really are all different from one another.
+    1. **Drop echoes** — a story already held in near-identical words is skipped.
+       This is the real work: a running story arrives as twenty rewrites of one
+       line ("US measles cases pass 2025 record" ×12), and without this they eat
+       the pool. Overlap of headline vocabulary is reliable evidence for *this*.
+    2. **Truncate fairly** — the survivors are walked in a source-interleaved
+       order, so that when the cap bites it is not simply whichever query happened
+       to sort first that wins everything.
+
+    What this deliberately does NOT do is rank topics against each other. Two
+    attempts to score "interestingness" lexically both failed on real data: ranking
+    by unseen words handed 27 of 28 slots to the first two queries in the list, and
+    ranking by rare vocabulary handed 12 slots to one query because non-Latin
+    scripts share no tokens with anything and so always look maximally novel. A
+    headline cannot tell us which of two unlike stories is the better lead — the
+    synthesis agent reads these titles next and can actually judge. This layer
+    organizes and grounds; it does not judge (see the module docstring).
+
+    Still no quota: nothing is owed a slot, and a query whose hits are all echoes of
+    what we already hold contributes nothing.
     """
     if limit is None or len(items) <= limit:
         return items
 
-    remaining = [(item, _terms(item)) for item in items]
     chosen: list[PoolItem] = []
-    used: set[str] = set()
-    while remaining and len(chosen) < limit:
-        best_at, best_score = 0, None
-        for index, (_item, terms) in enumerate(remaining):
-            score = (len(terms & used) / len(terms)) if terms else 1.0
-            if best_score is None or score < best_score:
-                best_at, best_score = index, score
-                if score == 0.0:
-                    break  # nothing can beat wholly-new vocabulary
-        item, terms = remaining.pop(best_at)
+    kept_terms: list[frozenset[str]] = []
+    for item in _interleaved_by_source(items):
+        terms = _terms(item)
+        if terms and any(_overlap(terms, held) >= _ECHO_OVERLAP for held in kept_terms):
+            continue
         chosen.append(item)
-        used |= terms
+        kept_terms.append(terms)
+        if len(chosen) >= limit:
+            break
     return chosen
+
+
+def _overlap(terms: frozenset[str], other: frozenset[str]) -> float:
+    """Share of the smaller headline's vocabulary the two have in common."""
+    if not terms or not other:
+        return 0.0
+    return len(terms & other) / min(len(terms), len(other))
+
+
+def _interleaved_by_source(items: list[PoolItem]) -> list[PoolItem]:
+    """Round-robin over the query that found each item — an ordering device only.
+
+    This is not representation: nothing here reserves a slot or drops an item. It
+    only decides *what order the cap eats in*, so truncation reflects the day's
+    material rather than the registry's declaration order.
+    """
+    queues: dict[str, list[PoolItem]] = defaultdict(list)
+    for item in items:
+        queues[item.signals.get("found_by") or ""].append(item)
+    ordered: list[PoolItem] = []
+    for rank in range(max((len(q) for q in queues.values()), default=0)):
+        ordered.extend(q[rank] for q in queues.values() if rank < len(q))
+    return ordered
 
 
 def _terms(item: PoolItem) -> frozenset[str]:
@@ -345,7 +382,11 @@ def _new_beat_item(result, hit) -> PoolItem:
         kind="article",
         pillars=[result.pillar] if result.pillar else [],
         scope=[hit.country] if hit.country else [],
-        signals={"domain": hit.domain, "seendate": hit.seendate, "language": hit.language},
+        signals={
+            "domain": hit.domain, "seendate": hit.seendate, "language": hit.language,
+            # Which query surfaced it — used only to interleave before the cap bites.
+            "found_by": result.beat_id,
+        },
         evidence=[hit],
     )
 
