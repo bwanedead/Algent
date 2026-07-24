@@ -179,3 +179,10 @@ pool: gkg=23, market=10, x=24
 promoted_from: gkg=2
 x_searches: 3
 run: 0025__d571773a-c855-4991-8e5a-b7c03ee7eae9
+
+### PUBLISH houthis-declare-naval-blockade-on-saudi-arabia-with-immediat-ce7cbd — 2026-07-24
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 0 produced, 0 escapes
+cost: ~$0.0000
+run: 0026__674f903f-0972-4d1a-bade-5845cf89919d
