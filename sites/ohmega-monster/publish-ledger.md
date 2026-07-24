@@ -162,3 +162,10 @@ caveats: verified (0 findings)
 analytics: 0 produced, 0 escapes
 cost: ~$0.0000
 run: 0024__0432c006-acc3-473e-8dec-414ea7b9aad0
+
+### PUBLISH sonam-wangchuk-ends-26-day-delhi-hunger-strike-but-exam-leak-6cba5d — 2026-07-24
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 0 produced, 0 escapes
+cost: ~$0.0000
+run: 0025__d571773a-c855-4991-8e5a-b7c03ee7eae9
