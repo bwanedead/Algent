@@ -19,7 +19,7 @@ flags:
 - 🇺🇦
 - 🇷🇺
 - 🇪🇺
-thumbnail: /analytics/wildberries-sorting-center-evacuated-after-reported-strike-i-efb17e/map_wildberries_strikes_v3.svg
+thumbnail: /analytics/wildberries-sorting-center-evacuated-after-reported-strike-i-efb17e/map_wildberries_strikes_v4.svg
 corrections:
 - date: '2026-07-24'
   reason: add strike-location map and sole-line X post link for embed
@@ -40,7 +40,7 @@ Wildberries is one of Russia’s largest online retailers and a major logistics 
 
 **Reported Wildberries warehouse strike locations (city-level)**
 
-![Reported Wildberries warehouse strike locations (city-level)](/analytics/wildberries-sorting-center-evacuated-after-reported-strike-i-efb17e/map_wildberries_strikes_v3.svg)
+![Reported Wildberries warehouse strike locations (city-level)](/analytics/wildberries-sorting-center-evacuated-after-reported-strike-i-efb17e/map_wildberries_strikes_v4.svg)
 
 *City centroids for locations named in reporting (Simferopol, Krasnodar, Nevinnomyssk) — not facility addresses. Basemap: Natural Earth 110m. As of 2026-07-24. AI-assisted analytic from real basemap geometry.*
 
