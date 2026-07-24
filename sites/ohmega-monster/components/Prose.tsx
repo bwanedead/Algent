@@ -8,9 +8,8 @@ import XPostEmbed, { parseXStatusUrl } from "@/components/XPostEmbed";
 // identically. NOTE: no rehype-raw — raw HTML in content is never rendered, and markdown images
 // become <img>, which is what keeps AI-generated SVG analytics from executing anything.
 //
-// X status embeds: when a paragraph is ONLY a link to an x.com/twitter.com status, render the
-// public platform embed under it. No server setup — client iframe. Inline X links in mixed
-// prose stay plain links (no embed spam).
+// X status embeds: when a paragraph is effectively only a link to an x.com/twitter.com status,
+// render a visible post card. Inline X links inside mixed prose stay plain links.
 
 function childToText(node: ReactNode): string {
   if (node == null || typeof node === "boolean") return "";
@@ -23,34 +22,48 @@ function childToText(node: ReactNode): string {
   return "";
 }
 
-/** If `children` is a single anchor (optionally wrapped) to an X status, return its parse. */
+function flatten(node: ReactNode): ReactNode[] {
+  if (node == null || node === false) return [];
+  if (Array.isArray(node)) return node.flatMap(flatten);
+  return [node];
+}
+
+/** True if this React node is an element (host or custom) with an href prop. */
+function elementHref(node: ReactNode): string | undefined {
+  if (!node || typeof node !== "object" || !("props" in node)) return undefined;
+  const href = (node as { props?: { href?: string } }).props?.href;
+  return typeof href === "string" ? href : undefined;
+}
+
+/**
+ * If the paragraph is effectively a single X status link (plus optional whitespace), return it.
+ * Handles react-markdown's custom `a` output and bare URL text.
+ */
 function soleXStatusFromChildren(children: ReactNode): ReturnType<typeof parseXStatusUrl> {
-  const list = Array.isArray(children) ? children : [children];
-  const meaningful = list.filter((c) => {
+  const nodes = flatten(children).filter((c) => {
     if (c == null || c === false) return false;
     if (typeof c === "string") return c.trim().length > 0;
     return true;
   });
-  if (meaningful.length !== 1) return null;
+  if (nodes.length === 0) return null;
 
-  const only = meaningful[0];
-  // react-markdown passes the custom `a` element as a React element with props.href
-  if (only && typeof only === "object" && "props" in only) {
-    const props = (only as { props?: { href?: string; children?: ReactNode } }).props;
-    const parsed = parseXStatusUrl(props?.href);
-    if (parsed) return parsed;
+  // Single link element
+  if (nodes.length === 1) {
+    const only = nodes[0];
+    const href = elementHref(only);
+    if (href) return parseXStatusUrl(href);
+    return parseXStatusUrl(childToText(only).trim());
   }
 
-  // Fallback: bare URL text that remark didn't turn into a link
-  const text = childToText(only).trim();
-  return parseXStatusUrl(text);
+  // One link + only whitespace-ish leftovers already filtered; reject multi-content paragraphs
+  const hrefs = nodes.map(elementHref).filter(Boolean) as string[];
+  if (hrefs.length === 1 && nodes.every((n) => elementHref(n) || (typeof n === "string" && !n.trim()))) {
+    return parseXStatusUrl(hrefs[0]);
+  }
+  return null;
 }
 
 const components = {
-  // Every table gets a bounded, scrollable container. Analytics tables are often wide (a real one
-  // shipped with seven columns), and a raw markdown table either overflows the page or squeezes
-  // itself unreadable. Wrapping here — rather than asking the generator for narrower tables —
-  // keeps the fix deterministic and applies to article tables too.
   table({ children, ...rest }: { children?: React.ReactNode }) {
     return (
       <div className="table-wrap">
@@ -59,10 +72,6 @@ const components = {
     );
   },
 
-  // Outbound links open in a new tab: a reader checking a source (the receipts are *made* of
-  // outbound links) should not lose the piece they were reading. Internal/anchor links stay
-  // in-tab. rel=noopener/noreferrer is required with target=_blank — without it the opened page
-  // gets window.opener access back into ours.
   a({ href, children, ...rest }: { href?: string; children?: React.ReactNode }) {
     const external = !!href && /^https?:\/\//i.test(href);
     return external ? (
@@ -76,15 +85,14 @@ const components = {
     );
   },
 
-  // Sole-link paragraphs to an X status → embed. Mixed prose keeps normal paragraphs.
+  // Sole-link X status → card (replace the thin paragraph link, don't leave only an orange line).
   p({ children, ...rest }: { children?: React.ReactNode }) {
     const x = soleXStatusFromChildren(children);
     if (x) {
       return (
-        <>
-          <p {...rest}>{children}</p>
+        <div className="x-post-embed-wrap" {...rest}>
           <XPostEmbed statusId={x.id} href={x.href} handle={x.handle} />
-        </>
+        </div>
       );
     }
     return <p {...rest}>{children}</p>;

@@ -21,9 +21,9 @@ export function parseXStatusUrl(
 }
 
 /**
- * Client-side X/Twitter status embed via the public platform iframe.
- * No backend, no API keys — just the status id in a sandboxed iframe.
- * Falls back to a plain outbound link if the iframe is blocked.
+ * Visible X post card. Always shows a local chrome card (so the reader never only gets a
+ * thin orange link). Optionally mounts the public platform iframe — sandboxed embeds often
+ * fail silently; the card remains useful either way.
  */
 export default function XPostEmbed({
   statusId,
@@ -35,6 +35,7 @@ export default function XPostEmbed({
   handle?: string;
 }) {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [showIframe, setShowIframe] = useState(true);
 
   useEffect(() => {
     const apply = () => {
@@ -54,25 +55,49 @@ export default function XPostEmbed({
     `https://platform.twitter.com/embed/Tweet.html?id=${encodeURIComponent(statusId)}` +
     `&theme=${theme}&dnt=true`;
 
-  const label = handle ? `Post on X · @${handle}` : "Post on X";
+  const at = handle ? `@${handle}` : "on X";
 
   return (
     <figure className="x-post-embed">
-      <iframe
-        className="x-post-embed-frame"
-        title={label}
-        src={src}
-        loading="lazy"
-        referrerPolicy="no-referrer"
-        // sandbox keeps third-party script contained; allow-scripts/same-origin needed for embed UI
-        sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
-      />
+      <div className="x-post-embed-card">
+        <div className="x-post-embed-card-top">
+          <span className="x-post-embed-mark" aria-hidden="true">
+            𝕏
+          </span>
+          <div className="x-post-embed-meta">
+            <span className="x-post-embed-handle">{at}</span>
+            <span className="x-post-embed-sub">Post on X · pulse / open-source chatter</span>
+          </div>
+          <a
+            className="x-post-embed-open"
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Open post ↗
+          </a>
+        </div>
+        <p className="x-post-embed-note">
+          Embedded for context — not a wire source. Status id{" "}
+          <code className="x-post-embed-id">{statusId}</code>
+        </p>
+      </div>
+      {showIframe ? (
+        <iframe
+          className="x-post-embed-frame"
+          title={`Post on X ${at}`}
+          src={src}
+          loading="lazy"
+          // no sandbox: X's public embed needs full script access; sandbox often yields a blank box
+          referrerPolicy="no-referrer-when-downgrade"
+          onError={() => setShowIframe(false)}
+        />
+      ) : null}
       <figcaption className="x-post-embed-cap">
-        <span className="x-post-embed-mark">X</span>
         <a href={href} target="_blank" rel="noopener noreferrer">
-          {label}
+          {handle ? `Post on X · @${handle}` : "Post on X"}
         </a>
-        <span className="x-post-embed-hint">embedded post · not a wire source</span>
+        <span className="x-post-embed-hint">not a wire source</span>
       </figcaption>
     </figure>
   );
