@@ -196,7 +196,9 @@ def _brief(request: AnalyticsRequest) -> str:
         "- Python: `..\\.venv\\Scripts\\python.exe` (Windows) or `../.venv/bin/python` (Unix)",
         "- Helpers: `../lib/` — `lib.charts`, `lib.maps`, `lib.animate`, `lib.theme`",
         "- Basemap: `../data/natural_earth/ne_110m_admin_0_countries.geojson` (maps only)",
-        "- Maps: country/theater frame + real lat/lon; optional inset box; never freehand coastlines.",
+        "- Maps: use lib.maps.country_points_map with real lat/lon. Viewport follows the point "
+        "cluster (readable theater), not full-country bounds — Russia/Canada/USA full outlines "
+        "make multi-city stories unreadable. Never freehand coastlines.",
         "",
         "The figure must be self-explanatory to a cold house reader:",
         "- Chart title = what is measured (plain words).",

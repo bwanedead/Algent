@@ -357,7 +357,19 @@ a { color: inherit; }
 .prose h2 { margin: calc(var(--line) * 2) 0 var(--line); color: var(--strong); font-size: 18px; line-height: var(--line); }
 .prose blockquote { margin: var(--line) 0; padding-left: 18px; border-left: 2px solid var(--accent-dim); color: var(--muted); }
 .prose code { background: var(--panel); color: var(--accent); padding: 2px 4px; font-family: inherit; font-size: 0.9em; }
-.prose img { max-width: 100%; height: auto; border: 1px solid var(--rule); }
+.prose img {
+  display: block;
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+  background: var(--panel);
+}
+/* Analytic maps/charts: kill letterbox emptiness — image defines height, not a fixed slab. */
+.prose p:has(> img:only-child),
+.prose p > img:only-child {
+  margin-block: 0;
+}
 
 /* Analytics presentation — a chart or table is a FIGURE, not loose text dumped after a rule.
    The container gives it edges so the eye reads it as one object, and scrolls a wide table

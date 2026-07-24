@@ -109,6 +109,53 @@ def _add_polygon(ax, geom: BaseGeometry, *, facecolor: str, edgecolor: str, lw: 
         ))
 
 
+def _theater_bounds(
+    feats: list[tuple[str, BaseGeometry, dict]],
+    rows: list[dict],
+    *,
+    min_span_deg: float = 8.0,
+    max_span_deg: float = 28.0,
+    pad_frac: float = 0.4,
+) -> tuple[float, float, float, float]:
+    """Viewport that shows the story's places, not an entire continental country outline.
+
+    Full-country bounds for Russia/Canada/USA make a 3-city cluster unreadable (tiny dots on a
+    vast empty frame). Prefer the point cluster, expanded to a readable min span, capped so we
+    never zoom out to planet-scale emptiness. Country polygons still draw underneath for context.
+    """
+    if rows:
+        lons = [float(p["lon"]) for p in rows]
+        lats = [float(p["lat"]) for p in rows]
+        minx, maxx = min(lons), max(lons)
+        miny, maxy = min(lats), max(lats)
+    else:
+        minx = min(g.bounds[0] for _, g, _ in feats)
+        miny = min(g.bounds[1] for _, g, _ in feats)
+        maxx = max(g.bounds[2] for _, g, _ in feats)
+        maxy = max(g.bounds[3] for _, g, _ in feats)
+
+    def _expand(lo: float, hi: float) -> tuple[float, float]:
+        span = max(hi - lo, 0.25)
+        mid = (lo + hi) / 2.0
+        # Floor: enough context to place the cluster.
+        if span < min_span_deg:
+            lo, hi = mid - min_span_deg / 2.0, mid + min_span_deg / 2.0
+            span = min_span_deg
+        # Pad around the (possibly expanded) span.
+        lo -= span * pad_frac + 0.4
+        hi += span * pad_frac + 0.4
+        span = hi - lo
+        # Ceiling: Russia-scale emptiness is worse than a tight theater crop.
+        if span > max_span_deg:
+            mid = (lo + hi) / 2.0
+            lo, hi = mid - max_span_deg / 2.0, mid + max_span_deg / 2.0
+        return lo, hi
+
+    minx, maxx = _expand(minx, maxx)
+    miny, maxy = _expand(miny, maxy)
+    return minx, miny, maxx, maxy
+
+
 def country_points_map(
     *,
     countries: Sequence[str],
@@ -118,14 +165,18 @@ def country_points_map(
     theme: Theme = DARK,
     as_of: str | None = None,
     source_note: str = "basemap: Natural Earth 110m",
-    pad: float = 0.6,
+    pad: float = 0.6,  # retained for call-site compat; framing uses _theater_bounds
     inset: dict | None = None,
+    min_span_deg: float = 8.0,
+    max_span_deg: float = 28.0,
 ) -> Path:
     """Country (or multi-country theater) frame + labeled lat/lon points.
 
     ``points`` items: ``{"name": str, "lon": float, "lat": float, ...}``.
+    Viewport follows the **point cluster** (readable theater), not full-country bounds —
+    critical for Russia/Canada/USA where country geometry is continent-sized.
     Optional ``inset``: ``{"lon_min", "lon_max", "lat_min", "lat_max", "label"}`` draws a
-    callout box on the main map (zoom detail is the callout itself — not a floating orphan).
+    callout box on the main map.
     """
     if not basemap_available():
         raise FileNotFoundError(
@@ -135,33 +186,38 @@ def country_points_map(
     rows = list(points)
     feats = load_countries(list(countries))
 
-    fig, ax = plt.subplots(figsize=(7.2, 6.0))
+    minx, miny, maxx, maxy = _theater_bounds(
+        feats, rows, min_span_deg=min_span_deg, max_span_deg=max_span_deg,
+    )
+    dx, dy = max(maxx - minx, 0.1), max(maxy - miny, 0.1)
+    # Figure size tracks aspect so the SVG isn't a tall black slab of empty ocean.
+    aspect = dx / dy
+    height = 5.4
+    width = max(5.5, min(8.5, height * aspect))
+    fig, ax = plt.subplots(figsize=(width, height))
     ax.set_facecolor(theme.panel)
     for _label, geom, _props in feats:
         _add_polygon(ax, geom, facecolor="#1a221e", edgecolor=theme.grid_strong, lw=0.7)
 
-    # Bounds from country geometry (not only points — so one village can't zoom the frame).
-    minx = min(g.bounds[0] for _, g, _ in feats)
-    miny = min(g.bounds[1] for _, g, _ in feats)
-    maxx = max(g.bounds[2] for _, g, _ in feats)
-    maxy = max(g.bounds[3] for _, g, _ in feats)
-    dx, dy = maxx - minx, maxy - miny
-    ax.set_xlim(minx - pad * dx * 0.08 - 0.15, maxx + pad * dx * 0.08 + 0.15)
-    ax.set_ylim(miny - pad * dy * 0.08 - 0.15, maxy + pad * dy * 0.08 + 0.15)
+    ax.set_xlim(minx, maxx)
+    ax.set_ylim(miny, maxy)
     ax.set_aspect("equal", adjustable="box")
     ax.grid(False)
     ax.set_xlabel("longitude")
     ax.set_ylabel("latitude")
     ax.set_title(title, color=theme.emphasis, loc="left", pad=10)
 
-    for p in rows:
+    # Stagger label offsets so tight city clusters don't pile on one another.
+    offsets = [(7, 6), (7, -10), (-8, 8), (-8, -12), (10, 0), (-12, 2)]
+    for i, p in enumerate(rows):
         lon, lat = float(p["lon"]), float(p["lat"])
-        ax.plot(lon, lat, "o", color=theme.series1, markersize=7, zorder=5)
+        ax.plot(lon, lat, "o", color=theme.series1, markersize=8, zorder=5)
         name = str(p.get("name") or "")
         if name:
+            ox, oy = offsets[i % len(offsets)]
             ax.annotate(
-                name, (lon, lat), textcoords="offset points", xytext=(6, 5),
-                color=theme.text, fontsize=8, zorder=6,
+                name, (lon, lat), textcoords="offset points", xytext=(ox, oy),
+                color=theme.text, fontsize=9, zorder=6,
             )
 
     if inset:
@@ -182,7 +238,7 @@ def country_points_map(
     fig.tight_layout()
     out_p = Path(out)
     out_p.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(out_p, bbox_inches="tight", pad_inches=0.25)
+    fig.savefig(out_p, bbox_inches="tight", pad_inches=0.2)
     plt.close(fig)
     return out_p
 
