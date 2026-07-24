@@ -2,7 +2,7 @@
 title: Wildberries sorting center evacuated after reported strike in Simferopol, as drone attacks hit its wider network
 dek: The attack on the Russian-occupied Crimea site was first circulated on X and later acknowledged by Wildberries, but the available reporting does not independently confirm the exact location, damage level, or a dual-use role for that specific facility.
 date: '2026-07-24'
-published_at: '2026-07-24T09:54:19.509511+00:00'
+published_at: '2026-07-24T09:55:44.189680+00:00'
 as_of: '2026-07-24'
 status: publishable
 tags:
@@ -23,9 +23,14 @@ thumbnail: /analytics/wildberries-sorting-center-evacuated-after-reported-strike
 corrections:
 - date: '2026-07-24'
   reason: add strike-location map and sole-line X post link for embed
+- date: '2026-07-24'
+  reason: add sole-line X status link so the post can embed
 ---
 
 A Wildberries sorting center in Simferopol, in Russian-occupied Crimea, was reported struck overnight on July 23-24 and then evacuated for safety, according to Interfax quoting a company press-service Telegram message and Reuters reporting on the wider pattern of attacks on the retailer’s warehouses. An X post by the open-source account Osinttechnical showed a fire and was the first public seed of the claim, but the stronger confirmation in this pass is that Wildberries later acknowledged one of its Simferopol warehouses had been hit and that the sorting center was evacuated.
+
+[Post on X · @Osinttechnical](https://x.com/Osinttechnical/status/2080427489298391112)
+
 
 Ukraine’s drone strikes in this story are aimed at logistics sites in Russian-held territory; Wildberries says it is a civilian logistics business trying to protect staff and keep shipping moving. The dispute here is whether this specific Simferopol facility was only civilian warehousing or also tied to military supply.
 
