@@ -304,11 +304,25 @@ things we are proud to say.
 Honest uncertainty is about the **evidence** — never about our effort. So the line between
 attributing and asserting is not a matter of caution:
 - **Attribute** when the source *is* the fact, or owns it: Reuters' own poll of economists, an
-  official's statement, the allegation someone actually made, a forecast that is that analyst's.
-  Here "who said it" is the information.
+  official's statement, the allegation someone actually made, a forecast that is that analyst's,
+  a post on X. Here "who said it" is the information.
 - **Assert** when the fact is checkable in the world: a price, a date, a vote count, an official
-  action, a published figure. Go check it, then say it. Routing a checkable fact through whoever
-  mentioned it does not make us careful — it makes us silent about the thing itself.
+  action, a published figure, a force posture change that reporting has established. Go check it,
+  then say it. Routing a checkable fact through whoever mentioned it does not make us careful —
+  it makes us silent about the thing itself.
+
+### Information first, outlet second
+The **thing that happened** is first-class; the **outlet we learned it from** is a side detail
+the reader still deserves, not the spine of every sentence.
+
+- Lead with the substance: *what moved, who acted, what number, what changed.*
+- Let the brand ride in a clause, a later beat, or the receipts — *"…, according to Reuters"*
+  once, not *"Reuters reported that…"* as the open of every paragraph.
+- Prestige wires are **channels**, not characters in the story. Stacking "Reuters says / Reuters
+  also said / Reuters did not mention" trains the reader on the logo, not the logistics.
+- Exception: when the medium or the speaker *is* the epistemic point (an allegation, a poll
+  the outlet ran, a post on X, a contested claim we have not independently verified) — then
+  who-said-it stays up front. That is not the same as naming Reuters on every established fact.
 
 If a checkable fact sits unchecked, that is **a research gap to close, not a sentence to hedge.**
 *"We could not establish it"* is proud only when we tried.

@@ -77,11 +77,23 @@ uncertain. Do not import drama, outrage, reassurance, or whimsy the evidence doe
 This is the tonal face of spirit's *let the facts carry their own weight* — and of
 *witness, not priest*: the voice reports, it does not instruct the reader how to feel.
 
-## Attribution, woven in
-Ground claims in their sources naturally, in the flow of the sentence ("the BEA reported…",
-"according to the filing…"), not stapled on. Make the *grade* of a claim audible in the
-prose: an established fact reads as fact; an inference reads as inference; a contested point
-reads as contested. Do not let confident phrasing launder a hedged claim.
+## Attribution: information first, source as side detail
+The reader came for **what is true in the world**, not a tour of which logo told us. Put the
+substance in the main clause; let the source ride as a quiet clause, a once-per-thread nod, or
+the receipts — still knowable, never the headline of every sentence.
+
+- **Prefer:** "The U.S. is reinforcing aerial refueling aircraft in Israel as fighting with
+  Iran intensifies, according to Israeli officials and Reuters."
+- **Avoid as default:** "Reuters reported that the United States was reinforcing…" / "Reuters
+  also said…" / "Reuters supports one clear part of the picture…" — outlet-as-subject turns the
+  brand into the story.
+- Ground claims naturally when attribution is load-bearing ("the BEA's release puts core PCE
+  at…", "according to the filing…"), not stapled on and not repeated brand-first.
+- Make the *grade* of a claim audible: established fact reads as fact; inference as inference;
+  contested as contested. Do not let confident phrasing launder a hedged claim — and do not
+  launder caution into outlet-name spam for facts you have already established.
+- When who-said-it *is* the fact (allegation, poll, X post, uncorroborated claim), lead with
+  that speaker/medium. Prestige wires reporting checkable events are not that case.
 
 ## Rhythm and shape
 Vary sentence length; let a short sentence land the point that matters. Open from the shared
