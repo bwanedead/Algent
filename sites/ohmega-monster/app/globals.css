@@ -399,60 +399,40 @@ a { color: inherit; }
 /* The figure's caption — the line that says what you're looking at. */
 .prose p > em:only-child { display: block; color: var(--muted); font-size: 11px; line-height: var(--line); }
 
-/* X status card — always visible chrome; optional platform iframe below. No server. */
+/* X status embed — just the official tweet card, minimal chrome. */
 .x-post-embed-wrap { margin: 0 0 calc(var(--line) * 1.5); }
 .x-post-embed {
   margin: 0;
-  border: 1px solid var(--rule-strong);
-  background: var(--panel);
+  max-width: 550px; /* X's native embed width — kills the huge empty right gutter */
+  background: transparent;
+  border: 0;
+  overflow: visible;
+}
+.x-post-embed-frame-wrap {
+  width: 100%;
+  max-width: 550px;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
   overflow: hidden;
-}
-.x-post-embed-card { padding: 12px 14px; border-bottom: 1px solid var(--rule); }
-.x-post-embed-card-top {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px 12px;
-}
-.x-post-embed-meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
-.x-post-embed-handle { color: var(--strong); font-size: 13px; font-weight: 600; }
-.x-post-embed-sub { color: var(--faint); font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; }
-.x-post-embed-open {
-  color: var(--bg);
-  background: var(--accent);
-  padding: 5px 10px;
-  font-size: 11px;
-  text-decoration: none;
-  white-space: nowrap;
-}
-.x-post-embed-open:hover { filter: brightness(1.08); }
-.x-post-embed-note {
-  margin: 10px 0 0;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: var(--line);
-}
-.x-post-embed-id {
-  font-size: 10px;
-  color: var(--faint);
-  background: var(--bg);
-  padding: 1px 4px;
+  background: var(--panel);
+  line-height: 0; /* no gap under iframe */
 }
 .x-post-embed-frame {
   display: block;
   width: 100%;
-  min-height: 360px;
-  height: 420px;
+  max-width: 550px;
+  min-height: 280px;
+  height: 520px; /* tall enough for media posts; X crops internally */
   border: 0;
-  background: var(--bg);
+  background: transparent;
 }
 .x-post-embed-cap {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px 12px;
-  padding: 8px 12px;
-  border-top: 1px solid var(--rule);
+  margin-top: 6px;
+  padding: 0;
   color: var(--muted);
   font-size: 11px;
   line-height: var(--line);
@@ -460,18 +440,6 @@ a { color: inherit; }
 .x-post-embed-cap a {
   color: var(--accent);
   text-underline-offset: 3px;
-}
-.x-post-embed-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border: 1px solid var(--rule-strong);
-  color: var(--strong);
-  font-size: 14px;
-  font-weight: 600;
-  flex: 0 0 auto;
 }
 .x-post-embed-hint {
   color: var(--faint);
