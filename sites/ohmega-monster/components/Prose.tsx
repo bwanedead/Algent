@@ -1,3 +1,9 @@
+"use client";
+
+// Client boundary: embeds XPostEmbed (client) under sole-link status URLs. Must be a client
+// module — a server Prose that imports a client child broke static export with
+// "TypeError: rK is not a function" during prerender (Vercel production deploys failed).
+
 import type { ReactNode } from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
