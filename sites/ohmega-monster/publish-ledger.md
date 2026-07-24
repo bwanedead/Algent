@@ -186,3 +186,10 @@ caveats: verified (0 findings)
 analytics: 0 produced, 0 escapes
 cost: ~$0.0000
 run: 0026__674f903f-0972-4d1a-bade-5845cf89919d
+
+### PUBLISH wildberries-sorting-center-evacuated-after-reported-strike-i-efb17e — 2026-07-24
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 0 produced, 0 escapes
+cost: ~$0.0000
+run: 0027__041845cb-9012-49ec-93ef-e105bf1eb9d9
