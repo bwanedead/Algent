@@ -143,9 +143,9 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
         analytics = build_analytics_router(context).invoke(
             {"profile": enriched_profile}, config).get("analytics_plan") or {}
 
-        # 6. analytics WORKER (gated + capped) — fulfill the grounded requests into real artifacts
-        # via the sandboxed grok subprocess. OFF by default: each request is a minutes-long,
-        # quota-spending run. When on, cap the batch and hand only the produced artifacts forward.
+        # 6. analytics WORKER (capped) — fulfill the grounded requests into real artifacts via the
+        # sandboxed grok subprocess. ON by default (maps/charts must ship when the router
+        # warrants them). Cap bounds cost; set ALGENT_ANALYTICS_WORKER=0 only to pause spend.
         produced_analytics: list[dict[str, Any]] = []
         if analytics.get("warranted") and _analytics_worker_enabled():
             capped = {**analytics, "requests": (analytics.get("requests") or [])[: _analytics_cap()]}
