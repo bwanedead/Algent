@@ -1,9 +1,51 @@
+import type { ReactNode } from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+
+import XPostEmbed, { parseXStatusUrl } from "@/components/XPostEmbed";
 
 // One markdown renderer for the whole site, so article prose and the source record behave
 // identically. NOTE: no rehype-raw — raw HTML in content is never rendered, and markdown images
 // become <img>, which is what keeps AI-generated SVG analytics from executing anything.
+//
+// X status embeds: when a paragraph is ONLY a link to an x.com/twitter.com status, render the
+// public platform embed under it. No server setup — client iframe. Inline X links in mixed
+// prose stay plain links (no embed spam).
+
+function childToText(node: ReactNode): string {
+  if (node == null || typeof node === "boolean") return "";
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(childToText).join("");
+  if (typeof node === "object" && node !== null && "props" in node) {
+    const el = node as { props?: { children?: ReactNode } };
+    return childToText(el.props?.children);
+  }
+  return "";
+}
+
+/** If `children` is a single anchor (optionally wrapped) to an X status, return its parse. */
+function soleXStatusFromChildren(children: ReactNode): ReturnType<typeof parseXStatusUrl> {
+  const list = Array.isArray(children) ? children : [children];
+  const meaningful = list.filter((c) => {
+    if (c == null || c === false) return false;
+    if (typeof c === "string") return c.trim().length > 0;
+    return true;
+  });
+  if (meaningful.length !== 1) return null;
+
+  const only = meaningful[0];
+  // react-markdown passes the custom `a` element as a React element with props.href
+  if (only && typeof only === "object" && "props" in only) {
+    const props = (only as { props?: { href?: string; children?: ReactNode } }).props;
+    const parsed = parseXStatusUrl(props?.href);
+    if (parsed) return parsed;
+  }
+
+  // Fallback: bare URL text that remark didn't turn into a link
+  const text = childToText(only).trim();
+  return parseXStatusUrl(text);
+}
+
 const components = {
   // Every table gets a bounded, scrollable container. Analytics tables are often wide (a real one
   // shipped with seven columns), and a raw markdown table either overflows the page or squeezes
@@ -32,6 +74,20 @@ const components = {
         {children}
       </a>
     );
+  },
+
+  // Sole-link paragraphs to an X status → embed. Mixed prose keeps normal paragraphs.
+  p({ children, ...rest }: { children?: React.ReactNode }) {
+    const x = soleXStatusFromChildren(children);
+    if (x) {
+      return (
+        <>
+          <p {...rest}>{children}</p>
+          <XPostEmbed statusId={x.id} href={x.href} handle={x.handle} />
+        </>
+      );
+    }
+    return <p {...rest}>{children}</p>;
   },
 };
 

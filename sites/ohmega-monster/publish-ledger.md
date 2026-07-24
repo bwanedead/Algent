@@ -223,3 +223,13 @@ pool: gkg=23, market=10, x=24
 promoted_from: x=1
 x_searches: 4
 run: 0027__041845cb-9012-49ec-93ef-e105bf1eb9d9
+
+### CORRECTION wildberries-sorting-center-evacuated-after-reported-strike-i-efb17e — 2026-07-24
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 0 produced, 0 escapes
+cost: ~$0.3455
+pool: gkg=23, market=10, x=24
+promoted_from: x=1
+x_searches: 4
+run: 0027__041845cb-9012-49ec-93ef-e105bf1eb9d9
