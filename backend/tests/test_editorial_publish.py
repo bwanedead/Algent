@@ -92,6 +92,22 @@ def test_clean_prose_strips_backtick_and_bare_markers() -> None:
     assert out == "CENTCOM said it would act. The fee was dropped."
 
 
+def test_clean_prose_strips_markdown_link_citation_form() -> None:
+    # 2026-07 Wangchuk draft: markers as `` [`[clm_hex](#)`, `[`[ent_…](#)` ``
+    from algent_backend.agent_system.agents.editorial.publish import _clean_prose
+    raw = (
+        "Education Minister Dharmendra Pradhan. "
+        "`[`[clm_9747f4f642](#)`, `[`[clm_c8240631d4](#)`, `[`[ent_1e9b5b6bf5](#)`\n\n"
+        "That first fact matters."
+    )
+    out = _clean_prose(raw)
+    assert "clm_" not in out and "ent_" not in out and "(#)" not in out
+    assert "`" not in out and "[`" not in out
+    assert ",," not in out
+    assert "Pradhan." in out and "That first fact matters." in out
+    assert out.startswith("Education Minister Dharmendra Pradhan.")
+
+
 def test_table_analytic_is_inlined_not_image_embedded() -> None:
     # A markdown table must be inlined as text; an ![](x.md) image link would render broken.
     analytics = [{"request_id": "anx_t", "status": "produced", "artifact_name": "analytic_anx_t.md",

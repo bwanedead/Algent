@@ -51,14 +51,21 @@ def _table_block(body_md: str) -> str:
 
 # Inline machine markers the drafter emits. The prompt asks for the bracketed list form
 # ("[clm_ab12, clm_cd34, src_ef56]"), but the model's format varies run to run — it also emits
-# backtick-wrapped or bare ids ("`clm_ab12` `src_ef56`"). The reader-facing floor must strip ALL
-# of them regardless of the drafter's formatting whim (ids are `clm_`/`src_` + hex — never prose).
-_MARKER = re.compile(r"\s*\[(?:clm_|src_)[^\]]*\]")                    # [clm_ab12, src_ef56]
+# backtick-wrapped or bare ids ("`clm_ab12` `src_ef56`"), and sometimes markdown-link wrappers
+# like `` [`[clm_ab12](#)`, `[`[ent_…](#)` ``. The reader-facing floor must strip ALL of them
+# regardless of the drafter's formatting whim (ids are `clm_`/`src_`/`ent_` + hex — never prose).
+_MARKER = re.compile(r"\s*\[(?:clm_|src_|ent_)[^\]]*\]")                    # [clm_ab12, src_ef56]
 # Accepted edge: no trailing boundary on the hex, so a malformed id (`clm_0fd207x`) strips the hex
 # run and leaves the stray `x`. That is deliberately conservative — a strict boundary risks eating
 # real prose that abuts a well-formed id. Do NOT loosen this into a broader pattern to "fix" the
 # stray char; a malformed marker is a drafter bug to catch upstream, not a reason to strip prose.
-_MARKER_TOKEN = re.compile(r"\s*`?(?:clm_|src_)[0-9a-fA-F]+`?")       # `clm_ab12` or bare clm_ab12
+_MARKER_TOKEN = re.compile(r"\s*`?(?:clm_|src_|ent_)[0-9a-fA-F]+`?")       # `clm_ab12` or bare
+# Markdown-link citation form (seen 2026-07): `[`[clm_hex](#)`  or  [clm_hex](#)
+_MARKER_MD_LINK = re.compile(
+    r"(?:\s*,)?\s*`?\[`?(?:clm_|src_|ent_)[0-9a-fA-F]+\]\(#\)`?"
+)
+# Stray wrapper crumbs left after link-form strip: bare `[` / trailing backticks near punctuation
+_MARKER_CRUMBS = re.compile(r"(?:\s*`+\[`*)+|\s*`+(?=\s|$|[.,;:])")
 
 _GROUNDING_WORDS = {
     "snapshotted": "read in full",
@@ -114,8 +121,19 @@ def _source_label(source) -> str:
 
 def _clean_prose(body: str) -> str:
     """Strip the machine-citation markers for the reader view (the appendix carries the trace)."""
-    out = _MARKER_TOKEN.sub("", _MARKER.sub("", body))   # bracketed lists, then backticked/bare ids
-    return re.sub(r" {2,}", " ", out).strip()
+    # Order: markdown-link form first (would otherwise leave ` [` crumbs), then bracket lists,
+    # then bare/backticked ids, then residual wrapper crumbs and comma trails the model left
+    # between markers ("fact. `[`[clm…](#)`, `[`[clm…](#)`" → "fact.,," without this).
+    out = _MARKER_MD_LINK.sub("", body)
+    out = _MARKER.sub("", out)
+    out = _MARKER_TOKEN.sub("", out)
+    out = _MARKER_CRUMBS.sub("", out)
+    out = re.sub(r"([.!?])\s*,+", r"\1", out)          # "end.,," → "end."
+    out = re.sub(r",\s*,+", ", ", out)                   # leftover ", ," runs
+    out = re.sub(r"[ \t]+,", ",", out)
+    out = re.sub(r" {2,}", " ", out)
+    out = re.sub(r" *\n", "\n", out)
+    return out.strip()
 
 
 def _capture_date(source) -> str:
