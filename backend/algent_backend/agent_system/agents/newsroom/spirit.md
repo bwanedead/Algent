@@ -311,6 +311,12 @@ attributing and asserting is not a matter of caution:
   then say it. Routing a checkable fact through whoever mentioned it does not make us careful —
   it makes us silent about the thing itself.
 
+### Landscape before the day's move
+A cold reader who cannot state **what the conflict is about** and **who wants what** after the
+first screen has not received the story — only a procedural surface (ended a fast, held a vote,
+issued a warning). Install the grievance / bargain / system in concrete language early; then
+attach the news move. Do not announce that the landscape "matters"; just put it first.
+
 ### Information first, outlet second
 The **thing that happened** is first-class; the **outlet we learned it from** is a side detail
 the reader still deserves, not the spine of every sentence.

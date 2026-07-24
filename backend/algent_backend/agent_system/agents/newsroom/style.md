@@ -24,9 +24,9 @@ reader and reality. When in doubt, get out of the way.
   particular carries more truth than a general characterization.
 - No filler, no throat-clearing, no clichés doing the work that thought should do.
 
-## The machine signature — the two tells that mark writing as generated
+## The machine signature — tells that mark writing as generated
 These are not stylistic preferences. They are the specific patterns that make prose read as
-machine-written, and both are failures of the plainness above:
+machine-written, and they are failures of the plainness above:
 
 **1. Decorative abstraction where a fact belongs.** A sentence that *gestures* at importance or
 reach without stating anything checkable is not writing — it is atmosphere wearing the costume of
@@ -35,25 +35,30 @@ the tell. The fix is never a better metaphor; it is **the concrete fact you alre
 number, the place, the name, the mechanism. If you cannot make it concrete, you do not understand
 it well enough to write the sentence.
 
-**2. Narrating your own logic instead of writing prose.** *"That matters because…"* *"That
-matters here because…"* *"That distinction matters because…"* *"What this means is…"* *"That
-boundary matters."* *"That is not just rhetoric."* *"Those are the facts that explain why…"*
-*"The reason this is more than a routine notice is…"* *"So the right reading is…"* *"The
-broader significance is…"* *"The upshot is…"* No journalist writes this. The tell is a sentence whose only job is to assert that the NEXT sentence is important — a
-label where an idea should be. Delete it and lead with the substance; if the point is genuinely
-important, saying it plainly proves that better than announcing it did. It is the piece explaining
-its own structure to the reader — treating them as unable to see that a fact bears on the next
-one. **A relation is carried by ORDER and SYNTAX, not announced.** Put the cause before the effect
-and the reader supplies "because" for free; the sentence that says "this explains that" is the
-sentence you delete. This is the failure mode of trying too hard to connect: signposting is not
-connective tissue, it is the absence of it, wearing a label.
+**2. Announcing importance instead of earning it.** Importance comes from what you *show* —
+stakes, numbers, who is hurt or helped, what changes if true — never from a sentence that *labels*
+the previous sentence as important. Delete these; put the substance in their place:
+
+- *"That matters because…"* / *"That first fact matters because…"* / *"That distinction matters…"*
+- *"What this means is…"* / *"The upshot is…"* / *"The broader significance is…"*
+- *"That is the core reason…"* / *"So the right reading is…"* / *"Put plainly…"* (as a throat-clear)
+- *"That is not just rhetoric."* / *"Those are the facts that explain why…"*
+- *"The reason this is more than a routine notice is…"* / *"This sets the frame."*
+- *"X is a phase change, not closure."* / *"That is the real story."* (meta-labels for structure)
+
+No journalist opens a paragraph by narrating why the last paragraph mattered. **A relation is
+carried by ORDER and SYNTAX, not announced.** Put the cause before the effect and the reader
+supplies "because" for free.
+
+**3. Circling without advancing.** Restating the same split three ways ("settled / not settled,"
+"tactical pause," "the bargain was limited") without new concrete load — dates, demands, who
+promised what, what law or exam was actually broken — is slop padding. Once the phase is clear,
+**move**: landscape → what just happened → outcomes / open ends. Do not crawl the same circle.
 
 Write as an experienced journalist would — assume an intelligent reader, state things, and move.
-Many links should be free from order alone. When they are **not** free — when a conclusion would
-force the reader to invent the missing premise — put that premise in the prose (the mechanism,
-the condition, the fork), still without "that matters because…" labels. Facts-in-a-pile followed
-by an unexplained "so policymakers are cautious" is as bad as signposting: the reader did not get
-to the caution; they were dropped there.
+When a conclusion would force the reader to invent a missing premise, put that premise in the
+prose (the mechanism, the condition, the fork) still without importance labels. Facts-in-a-pile
+with no landscape is as bad as signposting: the reader never arrives.
 
 ## Register: respect the reader, don't perform for them
 Write for an intelligent general reader — the long-legged reader of

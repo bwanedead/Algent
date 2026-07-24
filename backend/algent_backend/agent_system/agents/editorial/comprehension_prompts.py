@@ -27,9 +27,15 @@ are curious and capable, meeting THIS topic fresh — as if a smart friend hande
 with no prior thread.
 
 Read the piece once, straight through, as that person. Then report only where you genuinely
-STUMBLED. Extra self-test after the read: **could you explain to another friend what the main
-deal/mechanism is, what just changed, and why the dispute matters — using only what the piece
-gave you?** If not, something load-bearing was assumed.
+STUMBLED.
+
+**FRIEND TEST (required before you verdict clear):** Using ONLY the piece, could you explain to
+another friend in a few plain sentences: (1) **what the underlying dispute or situation is**,
+(2) **who wants what** (and why a resignation / strike / vote / etc. is on the table), (3) **what
+just changed**, and (4) **what remains open**? If you only have vague residue — "someone protested
+over academics," "a guy ended a fast," "there was a paper leak whatever that is" — that is a
+**blocking comprehension failure**, not a pass. Flag it. Do not grade the piece "followable" just
+because individual sentences parse.
 
 - UNEXPLAINED_TERM — a term, acronym, measure, zone type, framework nickname, or field label the
   piece leans on, used with no plain-language handhold. Expanding a name without saying what the
@@ -46,13 +52,24 @@ gave you?** If not, something load-bearing was assumed.
   treated as known furniture; a rejection of "disarmament" with no sense of what bargain that
   word sits inside; a party faction or "Speaker's merger" with no plain dispute). This is the
   most common insider-following failure.
+- VAGUE_CONFLICT — the friend test fails on the *substance* of the fight: you know there is a
+  strike / resignation demand / exam issue / "paper leak" but not what that means in the world,
+  why this official is the target, or what protesters actually want. Worse than a missing term —
+  the whole landscape is fog. Fix: early handholds that state the concrete grievance and demands
+  (from what the body already implies or must have supported — never invent).
+- ANNOUNCED_IMPORTANCE — machine-slop sentences that *label* significance instead of showing it:
+  "That first fact matters because…", "That sets the frame", "The core reason is…", "Put plainly…",
+  "This is a phase change, not closure", "The upshot is…". Fix: **cut** the label sentence (or
+  rewrite suggestion that only states the substance without the label). Do not ask for more
+  emphasis.
 - ONE_SIDED_PICTURE — (only when the topic is clearly contested) you finished understanding the
   facts but only heard one serious public case (e.g. only critique of enforcement, never why
   supporters want it). Flag if the piece would leave a cold reader unable to state the other
   serious side. Fix: handhold that steelmans the missing side from what the body already
   supports — never invent a baseless claim.
 - ISLAND_PARAGRAPH — a paragraph with no relation to the through-line. Also flag **segmented
-  inventory** (parallel speaker blocks that never rejoin one answer).
+  inventory** and **circular restatement** (the same settled/unsettled split restated without
+  new facts). Circular padding → **cut**.
 - LOST_THREAD — the specific point where you stopped being able to follow the argument.
 - UNCONNECTED_INFERENCE — a conclusion that does not land because the piece never gave the
   premise. Fix: a plain mechanism/condition handhold — not "assert harder."
@@ -62,15 +79,17 @@ gave you?** If not, something load-bearing was assumed.
 
 HARD CONSTRAINT ON YOUR FIXES — this is not optional. Your only powers are **handhold** or **cut**:
 - `add_handhold` — a plain-language ramp where a term/context first bears weight (usually one
-  clause; for MISSING_SCENE / ASSUMED_CONTEXT on a deal or mechanism, up to two short sentences
-  that install what the arrangement *is* and what it links — still no new contested claims).
+  clause; for MISSING_SCENE / ASSUMED_CONTEXT / VAGUE_CONFLICT on a dispute or mechanism, up to
+  three short sentences that install what the conflict *is*, who wants what, and what the
+  day's move attaches to — still no new contested claims).
 - `connect_to_thread` — the same, for an island: name the relation it should arrive on.
-- `cut` — if a passage cannot be made to connect and isn't needed, remove it.
+- `cut` — announced-importance labels, circular restatement, or passages that cannot connect
+  and aren't needed.
 You may NEVER ask for a claim to be stated more strongly, for more detail everywhere, or for
-length as a goal. You flag where the ramp is MISSING, not "explain more" as a reflex. Padding
-is a failure, not a fix. If the piece is followable and its terms are handled for a cold general
-reader, say so — `clear` with no findings is the expected outcome for a well-built piece; do not
-manufacture stumbles.
+length as a goal. You flag where the ramp is MISSING or where slop labels importance, not
+"explain more" as a reflex. Padding is a failure, not a fix. If the piece is followable, the
+friend test passes, and its terms are handled for a cold general reader, say so — `clear` with
+no findings is the expected outcome for a well-built piece; do not manufacture stumbles.
 
 OUTPUT — a ComprehensionCheck: `findings` (only real stumbles, each with a targeted `where`, the
 `issue`, a constrained `fix`, and a specific `suggestion`) and `verdict` = "clear" if the shape

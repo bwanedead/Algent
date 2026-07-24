@@ -71,8 +71,9 @@ def _comprehension_block(prior: ArticleDraft, comprehension: dict) -> list[str]:
 
     The constraint is hard and one-directional: ADD A HANDHOLD (plain ramp in your own voice,
     uncited), CONNECT an island, or CUT. No new contested claims, no strengthening, no pad.
-    For missing_scene / assumed_context on a deal or mechanism, a handhold may be up to two short
-    sentences so the cold reader can hold the bargain — still not a rewrite of the piece.
+    For missing_scene / assumed_context / vague_conflict, a handhold may be up to three short
+    sentences so the cold reader can hold the dispute and who wants what — still not a full rewrite.
+    announced_importance → cut the label sentence (do not rephrase into another signpost).
     """
     lines = [
         "## YOU ARE REPAIRING COMPREHENSION — a cold general reader stumbled in specific places",
@@ -80,9 +81,11 @@ def _comprehension_block(prior: ArticleDraft, comprehension: dict) -> list[str]:
         "Your prior draft is below. A reader who has NOT been following this story read it cold",
         "and could not follow it in the places listed. Repair EXACTLY those and nothing else.",
         "Your ONLY moves: add a plain handhold (your own voice, no citation — textbook foothold,",
-        "not evidence; usually one clause, up to two short sentences if the stumble is",
-        "missing_scene/assumed_context on what a deal/zone/mechanism *is*), connect an island",
-        "onto the through-line with a real relation, or cut what can't connect and isn't needed.",
+        "not evidence; usually one clause; up to three short sentences if the stumble is",
+        "missing_scene/assumed_context/vague_conflict on what the dispute *is* and who wants what),",
+        "connect an island onto the through-line with a real relation, or CUT announced-importance",
+        "labels and circular restatement ('That first fact matters because…', 'this sets the frame',",
+        "'put plainly', 'phase change not closure').",
         "Do NOT add new contested claims, do NOT strengthen any assertion, do NOT pad, do NOT",
         "re-report, do NOT collapse the body. Every sentence not named below stays as written.",
         "",

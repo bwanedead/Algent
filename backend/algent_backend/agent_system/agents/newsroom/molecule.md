@@ -168,6 +168,23 @@ country/system, what the scheme or conflict *is* in one plain clause, and who th
 people are. Chronology without that origin is insider code. Put scene-setting on the ramp
 (primitives + the first concept's support), not as a later aside.
 
+**The "hunger strike / paper leak" failure mode (generalizes):** A piece can report that a named
+person *ended* a fast, name an exam acronym, and name a minister who should resign — and still
+leave a cold reader holding only *"someone in India protested over school stuff."* That is not a
+molecule. The early concepts must install, in plain language:
+
+1. **What the underlying dispute is** (e.g. competitive entrance-exam question papers were alleged
+   to have leaked; students say the process is corrupt / unfair — not just "exam-fairness fight").
+2. **Who wants what** (protesters demand X; the state claims Y; the resignation target's role in
+   that system).
+3. **Why this person / this tactic** (who the striker is in one clause; what the hunger strike was
+   *for*, not only that it ended).
+4. **Then** the day's move (ended after talks; police used tear gas; internet cut) and what remains
+   open.
+
+If (1)–(3) are missing, the molecule is incomplete even when every later sentence is true.
+**Landscape before news move.** Procedure without grievance is insider code.
+
 ## Right resolution — and support depth
 For each concept, set the **grain**: comprehensive enough to reconstruct the real shape,
 manageable enough to hold. Flag where the material genuinely demands a long chain (do not let

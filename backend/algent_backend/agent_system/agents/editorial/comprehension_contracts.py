@@ -32,6 +32,8 @@ class ComprehensionFinding(BaseModel):
         "unknown_actor",       # person/org/body without what-it-is / what-it-does-here handhold
         "missing_scene",       # country/system/scheme never oriented before chronology or stakes
         "assumed_context",     # a sentence that only parses if you already know something unavailable
+        "vague_conflict",      # cannot state what the dispute is about / who wants what / why
+        "announced_importance",  # machine signature: labels significance instead of showing it
         "island_paragraph",    # a block with no relation to the through-line — a node with no edges
         "lost_thread",         # the point where the piece stopped being followable
         "unconnected_inference",  # conclusion dropped without the premise that makes it land

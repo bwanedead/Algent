@@ -40,15 +40,25 @@ addressable item ids). Your job:
    world news but do not live inside every country's party system or specialist guild). The
    piece exists to transfer the FOCAL THING's shape (what is true or what changed, scale,
    structure, stakes) — with hearings, statements, and papers as evidence when useful, not as
-   a substitute center of mass (framing.md). **Significance is shown, not announced:** concrete
-   facts ordered so a cold reader holds stakes (who is affected, what changes if true, what was
-   true before, a holdable number or comparison) — including reference points when available
-   (trajectory, shares, population or exposed base). Never announce "this matters because…" /
-   "that distinction matters because…" / "the upshot is…" and never leave stakes so implicit
-   that only an insider would care. **Explain the dispute before the scorekeeping** — what is
-   being contested and why people care, then the day's procedural or data move. WE ARE NEVER
-   THE RUNBOOK. If a paragraph only helps a specialist execute a response, CUT it. LENGTH IS
-   NEVER AN OBJECTIVE — 300 words that answer the reader beat 900 that tour research.
+   a substitute center of mass (framing.md).
+
+   **PATH (anti-circle):** (1) **Landscape** — country/system, what the underlying dispute *is*
+   in concrete terms, who wants what, who the load-bearing people are and why they matter here;
+   (2) **What just happened** — the news move with enough detail to be holdable; (3) **Outcomes
+   and open ends** — what is settled, what is not, what to watch. Do not crawl the same "settled
+   vs not" loop three times. Get to the meat; advance. A cold friend test after the first screen:
+   can they say what the conflict is about and why anyone is striking / resigning / fighting?
+   If not, the open failed.
+
+   **Significance is shown, not announced:** concrete facts ordered so a cold reader holds
+   stakes (who is affected, what changes if true, what was true before, a holdable number or
+   comparison). NEVER write "that matters because…", "that first fact matters…", "this sets the
+   frame", "the core reason is…", "put plainly…", "phase change not closure" as labels — delete
+   and state the substance (style.md machine signature). **Explain the dispute before the
+   scorekeeping** — paper leak means what, NEET is what, resignation demand is *because* of what
+   — then the day's procedural move. WE ARE NEVER THE RUNBOOK. If a paragraph only helps a
+   specialist execute a response, CUT it. LENGTH IS NEVER AN OBJECTIVE — 300 words that answer
+   the reader beat 900 that tour research; 700 words of landscape-less circling answers nobody.
 
    CARRY EVERY SERIOUS PERSPECTIVE in the treatment map — including the steelman *for* a
    contested policy when one exists (e.g. enforcement supporters' case, not only critics').
@@ -106,11 +116,16 @@ addressable item ids). Your job:
    (this caused that; this is the counter to that), not sit beside it as an island — one block per
    thread is the molecule with its bonds deleted. BUT the bond is carried by ORDER and SYNTAX, not
    narrated: put the cause before the effect and the reader supplies the link for free. Never write
-   "Those are the facts that explain why X" or "That matters here because" — that is signposting,
-   the machine signature (see style.md), and it is what over-correcting from blocky prose produces.
+   "Those are the facts that explain why X" or "That matters here because" or "That first fact
+   matters because it sets the frame" — that is signposting, the machine signature (see style.md).
    An experienced journalist connects by sequence and sentence construction, never by telling the
    reader what the previous paragraph was doing. Where the treatment marks a lock-and-key pair,
    deliver both halves together, never serialized.
+
+   AI-SLOP SELF-CHECK before you submit: re-read body and DELETE any sentence whose only job is
+   to announce importance, restate the same split without new facts, or narrate the piece's own
+   structure. If a paragraph could be cut and the reader still holds the same concrete picture,
+   cut it.
 
 3. RESEARCH FOR PRECISION as needed, and you are encouraged to. The profile often holds
    POINTERS — a claim that something is so, sourced, but not the exact quote, figure, or
