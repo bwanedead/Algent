@@ -6,9 +6,12 @@ consolidates already-written artifacts). It runs the same ``ensure_t0`` the
 discovery agent self-runs, so you can test t0 — and each individual channel — by
 hand, picking which sources to spend on.
 
-Channels: ``gkg`` (free GDELT net), ``beats`` (DOC sweep from disk), ``markets``
-(Polymarket), ``x`` (Grok CLI — slow, spends subscription quota). X is off by
-default; opt in explicitly. Progress prints to stderr; one JSON summary to stdout.
+Channels: ``gkg`` (free GDELT net), ``beats`` (the addressable beat registry, kept
+current by a rotating free DOC sweep — the diversity channel), ``markets``
+(Polymarket), ``x`` (X API). Progress prints to stderr; one JSON summary to stdout.
+
+The beat rotation re-sweeps only the stalest slice, so a t0 close behind another
+costs nothing. ``ALGENT_BEATS_REFRESH=0`` serves the sheet without refreshing it.
 
     python -m algent_backend.cli ingest t0                      # default channels
     python -m algent_backend.cli ingest t0 --channels gkg,x     # just GKG + X

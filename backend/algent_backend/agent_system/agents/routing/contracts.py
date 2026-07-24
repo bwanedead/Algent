@@ -68,3 +68,7 @@ class RoutingBrief:
     top_k: int = 50      # only used when rank_all is False; also a soft max for huge sets
     # COOLDOWN payload: recent published (when, title). Agent judges story-family match.
     recent: tuple[tuple[str, str], ...] = ()
+    # SATURATION payload: (beat family, count) across recent coverage. Coarser than
+    # ``recent`` — it answers "have we been living on one beat?" where cooldown answers
+    # "did we already write this story?". A tie-break weight, never a block.
+    saturated: tuple[tuple[str, int], ...] = ()

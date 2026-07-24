@@ -37,11 +37,14 @@ def build_pool(
     *,
     gkg_limit: int | None = None,
     markets_limit: int | None = None,
+    beats_limit: int | None = None,
 ) -> DiscoveryPool:
     """Consolidate the net + sweep + prediction markets + X into one grounded pool.
 
     Optional ``gkg_limit`` / ``markets_limit`` rebalance when the X novelty valve is
-    on so wire/market mass cannot drown platform-native leads.
+    on so wire/market mass cannot drown platform-native leads. ``beats_limit`` caps
+    the swept registry, which is the opposite problem: 40 beats × 25 records is an
+    order of magnitude more than a pool should carry, so it is taken round-robin.
     """
     items: list[PoolItem] = []
     if insights is not None:
@@ -50,7 +53,7 @@ def build_pool(
             gkg = gkg[: max(0, gkg_limit)]
         items.extend(_gkg_item(c) for c in gkg)
     if sheet is not None:
-        items.extend(_beat_items(sheet))
+        items.extend(_beat_items(sheet, beats_limit))
     if markets:
         from ..topic_filters import is_sports_text
 
@@ -221,18 +224,117 @@ def _id_slug(kind: str, key: str) -> str:
     return "".join(ch if ch.isalnum() or ch in "._-+ " else "_" for ch in raw).strip()[:96]
 
 
-def _beat_items(sheet: BeatSheet) -> list[PoolItem]:
-    """Beat articles, de-duplicated across beats by URL (merging pillars/scope)."""
-    by_url: dict[str, PoolItem] = {}
+def _beat_items(sheet: BeatSheet, limit: int | None = None) -> list[PoolItem]:
+    """Swept articles, de-duplicated, then narrowed to the cap by *dissimilarity*.
+
+    The sweep returns far more than a pool should carry, so something has to be
+    dropped — and what gets dropped is redundancy: :func:`_diversify` keeps the
+    stories least like the ones already kept. The query that fetched an article is
+    deliberately *not* part of that decision. A query is a net cast into a different
+    part of the corpus, not a category owed representation; selecting one-per-query
+    would only trade a wire rut for a taxonomy rut.
+    """
+    seen: dict[str, PoolItem] = {}
+    items: list[PoolItem] = []
     for result in sheet.results:
         for hit in result.hits:
-            key = hit.url or f"{result.beat_id}:{hit.title}"
-            existing = by_url.get(key)
+            keys = _dedupe_keys(result, hit)
+            existing = next((seen[k] for k in keys if k in seen), None)
             if existing is None:
-                by_url[key] = _new_beat_item(result, hit)
+                item = _new_beat_item(result, hit)
+                for key in keys:
+                    seen[key] = item
+                items.append(item)
             else:
+                # A story found by more than one query keeps every tag it earned.
                 _merge_tags(existing, result, hit)
-    return list(by_url.values())
+    return _diversify(items, limit)
+
+
+def _dedupe_keys(result, hit) -> list[str]:
+    """The identities one article can arrive under: its URL, and its headline.
+
+    URL alone is not enough. A wire story is syndicated to a dozen outlets under the
+    same headline at different URLs, and each copy would otherwise spend a slot in a
+    capped pool — three of the same measles headline is not three leads.
+    """
+    keys = [f"u:{hit.url}"] if hit.url else []
+    title = _title_key(hit.title)
+    keys.append(f"t:{title}" if title else f"b:{result.beat_id}:{hit.title}")
+    return keys
+
+
+def _title_key(title: str) -> str:
+    """Headline down to its words, so two renderings of one headline collide.
+
+    GDELT spaces punctuation out, and inconsistently: the same wire story arrives as
+    "U . S . measles cases" from one outlet and "US measles cases" from the next. So
+    words are split on punctuation and then runs of single letters are glued back
+    into the initialism they came from (``u s`` -> ``us``).
+    """
+    merged: list[str] = []
+    in_initialism = False
+    for word in "".join(ch if ch.isalnum() else " " for ch in title.lower()).split():
+        if len(word) == 1 and word.isalpha():
+            if in_initialism:
+                merged[-1] += word
+            else:
+                merged.append(word)
+                in_initialism = True
+        else:
+            merged.append(word)
+            in_initialism = False
+    return " ".join(merged)
+
+
+# Words too common to say anything about what a story is about.
+_STOP = frozenset(
+    "the a an and or of in on to for with as at by from is are was were be been being "
+    "it its this that these those has have had will would can could may might not new "
+    "after over amid says said say report reports first than into out about more most"
+    .split()
+)
+
+
+def _diversify(items: list[PoolItem], limit: int | None) -> list[PoolItem]:
+    """Spend the cap on variety: repeatedly take the item least like what's taken.
+
+    Greedy, and scored on the plainest evidence available at this layer — the words
+    in the headline. An item whose vocabulary is entirely new scores zero redundancy
+    and is taken immediately; the fourth tanker-in-the-strait headline shares nearly
+    every content word with the first three and loses its slot to something unlike
+    it. Ties keep source order, so within equal novelty the channel's ranking stands.
+
+    This is a *long-tail* rule, not a quota: nothing is guaranteed a slot, and a
+    genuinely crowded day can still fill the pool from one subject if that day's
+    stories really are all different from one another.
+    """
+    if limit is None or len(items) <= limit:
+        return items
+
+    remaining = [(item, _terms(item)) for item in items]
+    chosen: list[PoolItem] = []
+    used: set[str] = set()
+    while remaining and len(chosen) < limit:
+        best_at, best_score = 0, None
+        for index, (_item, terms) in enumerate(remaining):
+            score = (len(terms & used) / len(terms)) if terms else 1.0
+            if best_score is None or score < best_score:
+                best_at, best_score = index, score
+                if score == 0.0:
+                    break  # nothing can beat wholly-new vocabulary
+        item, terms = remaining.pop(best_at)
+        chosen.append(item)
+        used |= terms
+    return chosen
+
+
+def _terms(item: PoolItem) -> frozenset[str]:
+    """A headline's content words — what one story's overlap with another is judged on."""
+    return frozenset(
+        word for word in _title_key(item.label).split()
+        if len(word) > 3 and word not in _STOP
+    )
 
 
 def _new_beat_item(result, hit) -> PoolItem:

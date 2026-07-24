@@ -41,8 +41,9 @@ DEFAULT_FRESH_MINUTES = 20  # a pool newer than this is current (GKG is 15-min)
 _KEEP = 1
 
 # The toggleable t0 source channels. ``gkg`` is the free deterministic net (the
-# base); ``beats`` reuses a DOC sweep from disk; ``markets`` and ``x`` are extra
-# signals fetched live. X primary path is the **X API** (same surface as
+# base); ``beats`` keeps the addressable beat registry fresh on a rotating sweep
+# (free DOC; the diversity channel — see ``beat_refresh``); ``markets`` and ``x``
+# are extra signals fetched live. X primary path is the **X API** (same surface as
 # api.x.com/mcp): prefer **News stories** (platform-clustered headlines), NOT
 # WOEID trends and NOT a fixed AI/account roster. Grok CLI optional. ON by default.
 # Disable: ALGENT_T0_CHANNELS=gkg,beats,markets or no bearer.
@@ -109,21 +110,23 @@ def _build_pool(report, chans: frozenset[str], say: ProgressFn) -> tuple[dict[st
     # in the chooser menu (not 40 GKG + 25 markets drowning ~20 X).
     gkg_limit = markets_limit = None
     if x_hits:
-        try:
-            gkg_limit = max(10, min(40, int(os.environ.get("ALGENT_T0_GKG_CAP", "24"))))
-        except ValueError:
-            gkg_limit = 24
-        try:
-            markets_limit = max(5, min(25, int(os.environ.get("ALGENT_T0_MARKETS_CAP", "12"))))
-        except ValueError:
-            markets_limit = 12
+        gkg_limit = _cap_env("ALGENT_T0_GKG_CAP", 24, lo=10, hi=40)
+        markets_limit = _cap_env("ALGENT_T0_MARKETS_CAP", 12, lo=5, hi=25)
         say(
             f"rebalance with X on: GKG≤{gkg_limit}, markets≤{markets_limit}, "
             f"X={len(x_hits)} (raise/lower via ALGENT_T0_GKG_CAP / ALGENT_T0_MARKETS_CAP)"
         )
+    # The sweep is capped unconditionally (unlike gkg/markets, which only rebalance
+    # when X is on): a swept registry is ~40 queries × 25 records, an order of
+    # magnitude past what a pool should carry. The cap is spent on the *least alike*
+    # stories, so it buys long tail rather than ten versions of the loudest thing.
+    beats_limit = None
+    if sheet is not None:
+        beats_limit = _cap_env("ALGENT_T0_BEATS_CAP", 28, lo=4, hi=80)
+        say(f"sweep: ≤{beats_limit} pool items, least-alike first (ALGENT_T0_BEATS_CAP)")
     pool = build_pool(
         report, sheet, markets, x_hits,
-        gkg_limit=gkg_limit, markets_limit=markets_limit,
+        gkg_limit=gkg_limit, markets_limit=markets_limit, beats_limit=beats_limit,
     )
     # Semantic finisher: rewrite to event sentences / drop non-events (cheap LLM).
     try:
@@ -152,7 +155,46 @@ def _build_pool(report, chans: frozenset[str], say: ProgressFn) -> tuple[dict[st
     return pool.model_dump(), str(path)
 
 
+def _cap_env(name: str, default: int, *, lo: int, hi: int) -> int:
+    """A per-channel pool cap from the environment, clamped to a sane range."""
+    try:
+        return max(lo, min(hi, int(os.environ.get(name, str(default)))))
+    except ValueError:
+        return default
+
+
 def _load_beats(say: ProgressFn) -> BeatSheet | None:
+    """The sweep channel: load the standing sheet, drop what's stale, refresh the rotation.
+
+    This is the half of discovery that goes *looking* instead of listening. GKG, X and
+    markets all measure loudness, so on their own they re-find whatever is already
+    everywhere; the sweep casts targeted queries into corners of the corpus the
+    loudness channels never reach. Left as a pure disk read it decays into nothing
+    (and it did — a dead sheet made every pool wire-and-trend only), so the sheet is
+    refreshed here, a stalest-slice at a time. Free (GDELT DOC) and paced; opt out
+    with ``ALGENT_BEATS_REFRESH=0``.
+    """
+    from . import beat_refresh
+
+    sheet = _read_beat_sheet()
+    if beat_refresh.refresh_enabled():
+        try:
+            sheet = beat_refresh.refresh_sheet(sheet, on_progress=say)
+        except Exception as exc:  # noqa: BLE001 — a source hiccup must not sink t0
+            say(f"beats: refresh failed ({str(exc)[:80]}) — serving what's current")
+            sheet = beat_refresh.prune_stale(sheet)
+        else:
+            _write_beat_sheet(sheet, say)
+    else:
+        # Age guard applies either way: a stale sheet contributes nothing rather
+        # than folding month-old articles into t0 as today's news.
+        sheet = beat_refresh.prune_stale(sheet)
+    if sheet is None:
+        say("beats: no current sheet (channel contributes nothing this cycle)")
+    return sheet
+
+
+def _read_beat_sheet() -> BeatSheet | None:
     beats_latest = latest_file(beats_dir(), "beats_*.json")
     if beats_latest is None:
         return None
@@ -160,6 +202,22 @@ def _load_beats(say: ProgressFn) -> BeatSheet | None:
         return BeatSheet.model_validate_json(beats_latest.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return None
+
+
+def _write_beat_sheet(sheet: BeatSheet | None, say: ProgressFn) -> None:
+    """Persist the merged sheet so the rotation carries across runs."""
+    if sheet is None:
+        return
+    try:
+        out = beats_dir()
+        out.mkdir(parents=True, exist_ok=True)
+        stamp = datetime.now(UTC).strftime("%Y%m%d%H%M%S")
+        (out / f"beats_{stamp}.json").write_text(
+            sheet.model_dump_json(indent=2), encoding="utf-8"
+        )
+        prune_files(out, "beats_*.json", keep=_KEEP)
+    except OSError as exc:
+        say(f"beats: could not persist sheet ({str(exc)[:60]})")
 
 
 def _fetch_markets(say: ProgressFn) -> list[dict]:

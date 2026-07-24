@@ -6,7 +6,10 @@ stage-specific things: the **brief** (the "rank every vector for the house reade
 and the **adapter** that renders t1 ``ResearchVector``s into generic candidates.
 
 Cooldown is a list of recent published headlines in the agent payload — the model
-flags same-story-family matches. No lexical post-filter.
+flags same-story-family matches. No lexical post-filter. Alongside it rides a
+coarser **recurring coverage** list (what our recent output keeps returning to),
+which is a tie-break weight only: a pull toward the long tail, never a quota, and
+it must never demote a genuinely bigger story.
 """
 
 from __future__ import annotations
@@ -44,7 +47,9 @@ PROMOTION_BRIEF = RoutingBrief(
         "When significance is comparable, prefer novel or wonder-inducing over mainstream rehash. "
         "Rank EVERY vector — do not drop to a shortlist. Flag cooldown=true when the vector is "
         "the same story-family as a recent published headline (semantic judgment) OR matches "
-        "an operator TOPIC FREEZE line (dev hard-block)."
+        "an operator TOPIC FREEZE line (dev hard-block). Separately, WHAT WE KEEP CIRCLING "
+        "breaks ties: between comparable vectors, prefer the one further from ground we "
+        "have been working over and over."
     ),
     downstream=(
         "The highest-ranked vector with cooldown=false is promoted into a t2 signal profile. "
@@ -71,8 +76,8 @@ def rank_portfolio(
     Candidate ids are the vectors' durable ids (positional fallback if a vector
     hasn't been assigned one); the returned map recovers the actual vectors.
     """
-    recent = _recently_published()
-    brief = replace(PROMOTION_BRIEF, recent=recent)
+    recent, saturated = _recently_published()
+    brief = replace(PROMOTION_BRIEF, recent=recent, saturated=saturated)
 
     candidates: list[RouteCandidate] = []
     by_id: dict[str, ResearchVector] = {}
@@ -101,7 +106,8 @@ def rank_portfolio(
         context.emit("routing.cooldown_status", {
             "n_recent": len(recent),
             "recent_titles": [t[:80] for _, t in recent[:12]],
-            "mode": "agent_semantic+topic_freeze",
+            "recurring_coverage": [f"{label}×{n}" for label, n in saturated[:8]],
+            "mode": "agent_semantic+recurring_coverage+topic_freeze",
             "n_flagged": len(cooled),
             "cooled_ids": cooled,
             "topic_freeze_hits": freeze_hits,
@@ -166,16 +172,21 @@ def apply_topic_freeze(
     return ranking.model_copy(update={"choices": ordered, "note": " | ".join(note_bits)}), hits
 
 
-def _recently_published() -> tuple[tuple[str, str], ...]:
-    """Recent published headlines — payload for agent cooldown. Best-effort."""
+def _recently_published() -> tuple[tuple[tuple[str, str], ...], tuple[tuple[str, int], ...]]:
+    """(headlines, recurring subjects) from recent output — the two cooldown payloads.
+
+    Headlines drive the story-family cooldown; recurring subjects are the coarser rut
+    tie-break. Best-effort: no site history is a valid state, not an error.
+    """
     try:
         from algent_backend.publishing import site_git
-        from algent_backend.publishing.history import recent_headlines
+        from algent_backend.publishing.history import recent_headlines, recurring_coverage
 
         root = site_git.repo_root()
-        return tuple(recent_headlines([site_git.live_site_dir(root), site_git.site_dir(root)]))
+        dirs = [site_git.live_site_dir(root), site_git.site_dir(root)]
+        return tuple(recent_headlines(dirs)), tuple(recurring_coverage(dirs))
     except Exception:  # noqa: BLE001
-        return ()
+        return (), ()
 
 
 def top_vector(ranking: RouteRanking, by_id: dict[str, ResearchVector]) -> ResearchVector | None:

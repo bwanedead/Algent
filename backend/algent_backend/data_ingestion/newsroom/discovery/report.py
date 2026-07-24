@@ -107,6 +107,10 @@ class BeatResult(BaseModel):
     hit_count: int = 0
     hits: list[BeatHit] = Field(default_factory=list)
     error: str | None = None  # set if the beat failed (e.g. rate-limited out)
+    # When this beat was last fetched successfully (ISO-8601 UTC). Empty on a failed
+    # sweep and on sheets written before per-beat freshness existed — both read as
+    # "infinitely stale", which is the safe default: refresh it, don't serve it.
+    swept_at: str = ""
 
 
 class BeatSheet(BaseModel):

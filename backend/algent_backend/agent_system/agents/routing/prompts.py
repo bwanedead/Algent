@@ -85,6 +85,23 @@ def build_router_message(
             "# ALREADY COVERED — none loaded (no recent site headlines available)",
             "Set cooldown=false for all unless a TOPIC FREEZE line applies.",
         ]
+    if brief.saturated:
+        lines += [
+            "",
+            "# WHAT WE KEEP CIRCLING — recurring subjects in recent output (tie-break weight)",
+            "This is NOT cooldown and NOT a block. Cooldown asks 'did we already write this "
+            "story?'; this asks 'have we been circling one thing?'. A run of pieces can each "
+            "be an honestly different story and still leave the feed reading as one obsession.",
+            *[f"- {label}  ×{count}" for label, count in brief.saturated],
+            "",
+            "Apply it ONLY as a tie-break: when two candidates are of comparable importance, "
+            "rank the one further from this list higher. This is a pull toward the long tail "
+            "— genuine variety of subject matter — NOT a checklist of categories to fill; "
+            "nothing is owed a slot for being different. Never demote a genuinely bigger "
+            "story for being on ground we cover a lot: a major development on a recurring "
+            "subject is still the right call, and starving a live story to look varied is "
+            "the worse failure. Do not set cooldown=true on recurrence alone.",
+        ]
     if freeze_lines:
         lines += [
             "",

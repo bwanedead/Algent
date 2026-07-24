@@ -10,10 +10,10 @@ Two hard-won facts (see ITERATION_LOG):
 - **Filters go inside the query string**, not as separate params:
   ``theme:ECON_STOCKMARKET sourcecountry:China`` (country by *name*). A separate
   ``sourcecountry=`` URL param is ignored.
-- **The rate limit is strict and stateful** (~1 req / 5s, and it escalates a
-  cooldown if you burst). This module does a single request and raises
-  ``RateLimited`` on a 429 so the *sweep* can pace and back off; it never retries
-  on its own. A User-Agent is required.
+- **The rate limit is strict, stateful, and escalating.** It throttles two ways: a
+  hard 429, and a *soft* throttle that returns HTTP 200 with a non-JSON body. Both
+  mean the same thing — back off — so both raise ``RateLimited`` and the sweep paces
+  on that one signal. This module never retries on its own. A User-Agent is required.
 """
 
 from __future__ import annotations
@@ -24,7 +24,10 @@ _HEADERS = {"User-Agent": "Algent/0.1 (news discovery ingestion)"}
 
 
 class RateLimited(Exception):
-    """Raised on an HTTP 429 so the caller can back off (we never retry here)."""
+    """Raised when GDELT is throttling us — hard (429) or soft (non-JSON 200).
+
+    The caller backs off; we never retry here.
+    """
 
 
 def search(
@@ -64,13 +67,13 @@ def search(
 
 
 def _parse(response: object) -> list[dict[str, str]]:
-    # A non-JSON 200 body is GDELT soft-throttling/erroring, not "no results" —
-    # raise so the sweep records it as a (retryable) failure instead of silently
-    # logging the beat as zero hits. A valid JSON with an empty list is genuine 0.
+    # A non-JSON 200 body is GDELT soft-throttling, not "no results" — same signal as
+    # a 429, so it raises the same exception and the sweep backs off on it rather than
+    # pacing on regardless. A valid JSON with an empty list is a genuine 0.
     try:
         raw = response.json().get("articles", [])  # type: ignore[attr-defined]
     except ValueError as exc:
-        raise RuntimeError("DOC API returned a non-JSON body (likely throttled)") from exc
+        raise RateLimited("non-JSON body (soft throttle)") from exc
     return [
         {
             "title": a.get("title", ""),

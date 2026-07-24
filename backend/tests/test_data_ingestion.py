@@ -14,7 +14,7 @@ import io
 import json
 import os
 import zipfile
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 import pytest
 
@@ -1020,18 +1020,69 @@ def test_run_sweep_collects_hits_and_paces_between_beats() -> None:
     assert slept == [6.0]  # paced once, between the two beats (not before the first)
 
 
-def test_run_sweep_retries_once_on_rate_limit_then_records_error() -> None:
+def test_run_sweep_records_a_throttle_without_retrying_it() -> None:
+    """No immediate retry: the retry is the next rotation, when we're out of the penalty box."""
+    attempts: list[str] = []
+
+    def always_limited(q, **kw):
+        attempts.append(q)
+        raise gdelt_doc.RateLimited("slow down")
+
+    sheet = run_sweep([_beat("pillar:ai")], search=always_limited, sleep=lambda _s: None)
+
+    assert attempts == ["q"]  # asked once, not twice
+    assert sheet.beats_failed == 1 and sheet.results[0].error == "rate_limited"
+
+
+def test_run_sweep_backs_off_harder_across_beats_while_throttled() -> None:
+    """The limiter's state is global, so the gap has to carry across beats, not reset."""
     slept: list[float] = []
 
     def always_limited(q, **kw):
         raise gdelt_doc.RateLimited("slow down")
 
-    sheet = run_sweep(
-        [_beat("pillar:ai")], search=always_limited, sleep=slept.append, cooldown_s=15.0
+    run_sweep(
+        [_beat(f"pillar:b{i}") for i in range(4)], search=always_limited, sleep=slept.append,
+        pace_s=10.0, cooldown_s=20.0, max_gap_s=60.0, budget_s=10_000.0,
     )
-    assert sheet.beats_failed == 1
-    assert sheet.results[0].error == "rate_limited"
-    assert 15.0 in slept  # backed off once before giving up
+    assert slept == [20.0, 40.0, 60.0]  # escalates, then holds at the ceiling
+
+
+def test_run_sweep_relaxes_the_gap_again_after_a_success() -> None:
+    calls = [0]
+
+    def limited_then_ok(q, **kw):
+        calls[0] += 1
+        if calls[0] <= 2:
+            raise gdelt_doc.RateLimited("slow down")
+        return []
+
+    slept: list[float] = []
+    run_sweep(
+        [_beat(f"pillar:b{i}") for i in range(5)], search=limited_then_ok, sleep=slept.append,
+        pace_s=10.0, cooldown_s=20.0, max_gap_s=60.0, budget_s=10_000.0,
+    )
+    assert slept[:2] == [20.0, 40.0]
+    assert slept[2] == 28.0  # 40 * 0.7 — recovering, not snapping straight back
+    assert slept[3] == pytest.approx(19.6)
+
+
+def test_run_sweep_stops_at_the_wall_clock_budget_leaving_the_rest_unswept() -> None:
+    """Unreached beats are omitted, not failed — they were never asked."""
+    now = [0.0]
+
+    def clock():
+        return now[0]
+
+    def tick(seconds):
+        now[0] += seconds
+
+    sheet = run_sweep(
+        [_beat(f"pillar:b{i}") for i in range(10)], search=lambda q, **kw: [],
+        sleep=tick, clock=clock, pace_s=10.0, budget_s=35.0,
+    )
+    # 10s per gap against a 35s budget: beats 1-4 fit, the 5th gap would overrun.
+    assert sheet.beats_swept == 4 and sheet.beats_failed == 0
 
 
 def test_sweep_cli_writes_sheet_and_prunes(monkeypatch, tmp_path, capsys) -> None:
@@ -1045,6 +1096,33 @@ def test_sweep_cli_writes_sheet_and_prunes(monkeypatch, tmp_path, capsys) -> Non
     out = json.loads(capsys.readouterr().out)
     assert out["beats_swept"] == 2
     assert os.path.exists(out["sheet_path"])
+
+
+def test_sweep_cli_tops_up_the_standing_sheet_instead_of_replacing_it(
+    monkeypatch, tmp_path, capsys
+) -> None:
+    """Sweeping a subset by hand must not discard the beats the rotation gathered."""
+    monkeypatch.setenv(_shared._OUTPUT_ENV, str(tmp_path))
+    beats = tmp_path / "beats"
+    beats.mkdir()
+    real_now = datetime.now(UTC)   # the CLI prunes against the real clock
+    (beats / "beats_20260724000000.json").write_text(
+        _sheet_with(_stamped("health", 1, _hit("Ebola", "http://e"), base=real_now)
+                    ).model_dump_json(),
+        encoding="utf-8")
+    monkeypatch.setattr(
+        sweep_cmd, "run_sweep",
+        lambda targets, **kw: _sheet_with(
+            _stamped("ai", 0, _hit("Chips", "http://c"), base=real_now)),
+    )
+
+    assert sweep_cmd.run(_ns(kind="pillar", limit=1, max_records=25, pace=0.0, keep=1)) == 0
+    out = json.loads(capsys.readouterr().out)
+
+    assert out["beats_swept"] == 1      # this run only asked for one beat
+    assert out["sheet_beats"] == 2      # but the sheet still carries the pre-existing one
+    merged = json.loads(open(out["sheet_path"], encoding="utf-8").read())
+    assert {r["beat_id"] for r in merged["results"]} == {"pillar:ai", "pillar:health"}
 
 
 def _fake_sheet(n: int):
@@ -1133,6 +1211,207 @@ def test_build_pool_dedupes_articles_recurring_across_beats() -> None:
 
     assert pool.item_count == 1  # one article, not two
     assert set(pool.items[0].pillars) == {"ai", "technology"}  # merged tags
+
+
+def test_build_pool_spends_the_cap_on_unlike_stories_not_on_a_running_one() -> None:
+    """The cap buys long tail: near-identical coverage loses slots to anything unlike it."""
+    from algent_backend.data_ingestion.newsroom.discovery.pool import build_pool
+
+    running = _beat_result(
+        "world_events",
+        *[_hit(f"Tanker convoy damaged crossing contested strait, day {i}", f"http://w{i}")
+          for i in range(10)],
+    )
+    tail = _beat_result(
+        "science",
+        _hit("Astronomers report first candidate moon beyond solar system", "http://s1"),
+        _hit("Fossil shows juvenile tyrannosaurs hunted alone", "http://s2"),
+    )
+
+    pool = build_pool(None, _sheet_with(running, tail), beats_limit=4)
+    urls = [i.evidence[0].url for i in pool.items]
+
+    assert len(urls) == 4
+    assert "http://s1" in urls and "http://s2" in urls   # the tail survives the cap
+    # Ten near-duplicate strait headlines cannot take more than a couple of slots.
+    assert sum(1 for u in urls if u.startswith("http://w")) == 2
+
+
+def test_diversify_does_not_owe_any_query_a_slot() -> None:
+    """No quotas: a query whose hits are all redundant gets nothing, and that's correct."""
+    from algent_backend.data_ingestion.newsroom.discovery.pool import build_pool
+
+    echo = _beat_result(
+        "politics",
+        *[_hit("Central bank holds rates steady", f"http://e{i}_x") for i in range(3)],
+    )
+    varied = _beat_result(
+        "science",
+        _hit("Quantum processor factors record integer", "http://v1"),
+        _hit("Archaeologists date Saharan rock art", "http://v2"),
+    )
+    # Distinct URLs but one headline -> dedup collapses the echo to a single item.
+    pool = build_pool(None, _sheet_with(echo, varied), beats_limit=2)
+
+    assert [i.evidence[0].url for i in pool.items] == ["http://e0_x", "http://v1"]
+
+
+def test_build_pool_collapses_the_same_headline_syndicated_to_many_outlets() -> None:
+    """A wire story at five URLs is one lead, not five slots in a capped pool."""
+    from algent_backend.data_ingestion.newsroom.discovery.pool import build_pool
+
+    syndicated = _beat_result(
+        "health",
+        _hit("U . S . measles cases reach 35 - year high", "http://a"),
+        _hit("US measles cases reach 35 year high", "http://b"),   # same headline, other outlet
+        _hit("Ebola outbreak tops 1,000 deaths", "http://c"),
+    )
+    pool = build_pool(None, _sheet_with(syndicated))
+
+    assert pool.item_count == 2
+    assert [i.evidence[0].url for i in pool.items] == ["http://a", "http://c"]
+
+
+def test_build_pool_without_a_beat_cap_keeps_every_hit() -> None:
+    from algent_backend.data_ingestion.newsroom.discovery.pool import build_pool
+
+    sheet = _sheet_with(_beat_result("ai", _hit("a", "http://a"), _hit("b", "http://b")))
+    assert build_pool(None, sheet).item_count == 2
+
+
+# -- beat freshness: the rotating refresh -------------------------------------
+
+
+def _stamped(pillar, hours_ago, *hits, error=None, base=None):
+    """A beat result last swept ``hours_ago`` (None = never swept).
+
+    ``base`` defaults to the frozen ``_NOW``; pass the real clock for tests that go
+    through code which prunes against ``datetime.now`` (the CLI), so they don't rot.
+    """
+    from algent_backend.data_ingestion.newsroom.discovery.report import BeatResult
+
+    origin = _NOW if base is None else base
+    swept = "" if hours_ago is None else (origin - timedelta(hours=hours_ago)).isoformat()
+    return BeatResult(
+        beat_id=f"pillar:{pillar}", label=pillar, kind="pillar", pillar=pillar, query="q",
+        hit_count=len(hits), hits=list(hits), swept_at=swept, error=error,
+    )
+
+
+_NOW = datetime(2026, 7, 24, 12, 0, tzinfo=UTC)
+
+
+def test_prune_stale_drops_results_past_their_shelf_life() -> None:
+    from algent_backend.data_ingestion.newsroom.discovery import beat_refresh
+
+    sheet = _sheet_with(
+        _stamped("science", 2, _hit("fresh", "http://f")),
+        _stamped("ai", 700, _hit("month old", "http://o")),   # the dead-sheet case
+        _stamped("health", None, _hit("never swept", "http://n")),
+    )
+    pruned = beat_refresh.prune_stale(sheet, hours=24.0, now=_NOW)
+
+    assert [r.beat_id for r in pruned.results] == ["pillar:science"]
+    assert pruned.beats_swept == 1 and pruned.total_hits == 1
+
+
+def test_prune_stale_returns_none_when_nothing_survives() -> None:
+    """A fully stale sheet must contribute nothing — not month-old articles as today's news."""
+    from algent_backend.data_ingestion.newsroom.discovery import beat_refresh
+
+    sheet = _sheet_with(_stamped("ai", 700, _hit("old", "http://o")))
+    assert beat_refresh.prune_stale(sheet, hours=24.0, now=_NOW) is None
+    assert beat_refresh.prune_stale(None) is None
+
+
+def test_stalest_beats_leads_with_pillars_on_a_cold_start() -> None:
+    """Registry order breaks ties, and pillars lead it — so cycle one buys topical breadth."""
+    from algent_backend.data_ingestion.newsroom.discovery import beat_refresh
+    from algent_backend.data_ingestion.newsroom.discovery import beats as registry
+
+    targets = beat_refresh.stalest_beats(None, limit=11, eligible_after=6.0, now=_NOW)
+
+    assert [b.id for b in targets] == [b.id for b in registry.pillar_beats()]
+
+
+def test_stalest_beats_orders_by_age_and_skips_the_currently_fresh() -> None:
+    from algent_backend.data_ingestion.newsroom.discovery import beat_refresh
+
+    fresh = [_beat("pillar:ai"), _beat("pillar:science"), _beat("pillar:health")]
+    sheet = _sheet_with(_stamped("ai", 1), _stamped("science", 20), _stamped("health", 8))
+
+    targets = beat_refresh.stalest_beats(
+        sheet, limit=5, eligible_after=6.0, registry=fresh, now=_NOW,
+    )
+    # science (20h) before health (8h); ai (1h) is still current and is not re-swept.
+    assert [b.id for b in targets] == ["pillar:science", "pillar:health"]
+
+
+def test_refresh_sheet_merges_the_slice_and_keeps_untouched_beats() -> None:
+    from algent_backend.data_ingestion.newsroom.discovery import beat_refresh
+
+    standing = _sheet_with(
+        _stamped("ai", 1, _hit("current ai", "http://ai")),        # fresh — left alone
+        _stamped("science", 20, _hit("old science", "http://s0")),  # stale — re-swept
+    )
+    swept: list[str] = []
+
+    def fake_sweep(targets, **kw):
+        swept.extend(b.id for b in targets)
+        return _sheet_with(_stamped("science", 0, _hit("new science", "http://s1")))
+
+    merged = beat_refresh.refresh_sheet(
+        standing, limit=5, eligible_after=6.0, hours=24.0, now=_NOW, sweep=fake_sweep,
+        registry=[_beat("pillar:ai"), _beat("pillar:science")],
+    )
+
+    assert swept == ["pillar:science"]  # only the stale one cost a request
+    by_id = {r.beat_id: r for r in merged.results}
+    assert by_id["pillar:ai"].hits[0].url == "http://ai"     # untouched beat survives
+    assert by_id["pillar:science"].hits[0].url == "http://s1"  # stale one replaced
+
+
+def test_refresh_sheet_keeps_prior_hits_when_a_beat_fails() -> None:
+    """A rate-limited beat must not erase its last good coverage — and stays first in line."""
+    from algent_backend.data_ingestion.newsroom.discovery import beat_refresh
+
+    standing = _sheet_with(_stamped("science", 20, _hit("last good", "http://s0")))
+
+    def failing_sweep(targets, **kw):
+        return _sheet_with(_stamped("science", None, error="rate_limited"))
+
+    merged = beat_refresh.refresh_sheet(
+        standing, limit=5, eligible_after=6.0, hours=24.0, now=_NOW, sweep=failing_sweep,
+        registry=[_beat("pillar:science")],
+    )
+    assert merged.results[0].hits[0].url == "http://s0"
+    assert merged.results[0].error is None
+
+
+def test_refresh_sheet_schedules_no_work_when_the_sheet_is_current() -> None:
+    from algent_backend.data_ingestion.newsroom.discovery import beat_refresh
+
+    standing = _sheet_with(_stamped("science", 1, _hit("fresh", "http://s")))
+
+    def never(targets, **kw):  # pragma: no cover — must not be called
+        raise AssertionError("swept a current sheet")
+
+    merged = beat_refresh.refresh_sheet(
+        standing, limit=5, eligible_after=6.0, hours=24.0, now=_NOW, sweep=never,
+        registry=[_beat("pillar:science")],
+    )
+    assert merged.results[0].hits[0].url == "http://s"
+
+
+def test_run_sweep_stamps_swept_at_on_success_only() -> None:
+    ok = run_sweep([_beat("pillar:ai")], search=lambda q, **kw: [], sleep=lambda _s: None)
+    assert ok.results[0].swept_at  # stamped -> counts as fresh
+
+    def boom(q, **kw):
+        raise RuntimeError("nope")
+
+    failed = run_sweep([_beat("pillar:ai")], search=boom, sleep=lambda _s: None)
+    assert failed.results[0].swept_at == ""  # unstamped -> retried next rotation
 
 
 def test_gkg_theme_labels_humanized_with_code_preserved() -> None:
