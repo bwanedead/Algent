@@ -2,7 +2,7 @@
 title: Houthis declare naval blockade on Saudi Arabia with immediate effect
 dek: The Iran-aligned group says the move is retaliation for Saudi actions in Yemen, but it is not yet clear how—and to what extent—shipping through Bab el-Mandeb will be disrupted.
 date: '2026-07-24'
-published_at: '2026-07-24T09:29:08.604347+00:00'
+published_at: '2026-07-24T09:53:58.790226+00:00'
 as_of: '2026-07-24'
 status: publishable
 tags:
@@ -17,11 +17,21 @@ places:
 flags:
 - 🇾🇪
 - 🇸🇦
+thumbnail: /analytics/houthis-declare-naval-blockade-on-saudi-arabia-with-immediat-ce7cbd/map_bab_el_mandeb_theater.svg
+corrections:
+- date: '2026-07-24'
+  reason: add Bab el-Mandeb theater map inline for geographic orientation
 ---
 
 Yemen’s Iran-aligned Houthis said on Monday they were imposing a naval blockade on Saudi Arabia, calling it a maritime embargo against the “criminal Saudi enemy” and saying it took effect “effective immediately.” In practical terms, that means they are saying they will try to stop or deter vessels from moving to or from Saudi Arabia through the sea lane. The group framed the move as retaliation for what it called an “unjust and oppressive siege” on Yemen.
 
 The latest declaration lands on a route that is much more than a political symbol. Bab el-Mandeb, the narrow sea passage linking the Red Sea to the Gulf of Aden, is a major gateway for Red Sea shipping. If traffic there is interrupted or made less predictable, vessels can be rerouted and costs can rise, especially for Saudi oil shipments that move through the Red Sea toward Asia. If Houthis can disrupt shipping through Bab el-Mandeb, it can delay or reroute cargo bound for Saudi Arabia—turning the declaration into immediate operational risk.
+
+**Red Sea theater: Bab el-Mandeb and Houthi–Saudi coastline context**
+
+![Red Sea theater: Bab el-Mandeb and Houthi–Saudi coastline context](/analytics/houthis-declare-naval-blockade-on-saudi-arabia-with-immediat-ce7cbd/map_bab_el_mandeb_theater.svg)
+
+*Where the choke point sits relative to Yemen and the Saudi Red Sea coast. City and strait markers are standard coordinates, not facility-level. Basemap: Natural Earth 110m. As of 2026-07-24. AI-assisted analytic from real basemap geometry.*
 
 The Houthis also cast the move as payback for Saudi actions they cite directly: a strike on Sanaa International Airport and a blockade on Yemen that they say has lasted nearly 12 years. In the Houthi telling, the embargo is a symmetrical answer — “an eye for an eye,” in their wording — and the group added escalation language about “all escalation with escalation” and readiness for further action. The Houthis present the blockade as a way to raise the cost of Saudi maritime activity unless Saudi actions in Yemen stop.
 
@@ -35,6 +45,10 @@ For now, the shape of the story is simple: a declared Houthi threat, a Saudi cou
 
 ---
 ## How we know this
+
+**Charts & tables** — _each built only from the cited claims below, by an AI tool_
+- Red Sea theater map — Bab el-Mandeb orientation (basemap + standard coordinates)
+
 
 **How this piece is framed:** A public Houthi declaration of an immediate maritime embargo/naval blockade threat against Saudi Arabia, framed as retaliation for Saudi actions in Yemen, with Bab el-Mandeb as the choke point that makes the threat matter while enforcement and eventual disruption remain unverified.
 

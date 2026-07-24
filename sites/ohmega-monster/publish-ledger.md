@@ -193,3 +193,13 @@ caveats: verified (0 findings)
 analytics: 0 produced, 0 escapes
 cost: ~$0.0000
 run: 0027__041845cb-9012-49ec-93ef-e105bf1eb9d9
+
+### CORRECTION houthis-declare-naval-blockade-on-saudi-arabia-with-immediat-ce7cbd — 2026-07-24
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 0 produced, 0 escapes
+cost: ~$0.2030
+pool: gkg=23, market=10, x=24
+promoted_from: gkg=1, x=1
+x_searches: 5
+run: 0026__674f903f-0972-4d1a-bade-5845cf89919d
