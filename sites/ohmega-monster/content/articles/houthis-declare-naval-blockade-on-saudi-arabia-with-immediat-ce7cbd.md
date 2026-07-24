@@ -17,7 +17,7 @@ places:
 flags:
 - 🇾🇪
 - 🇸🇦
-thumbnail: /analytics/houthis-declare-naval-blockade-on-saudi-arabia-with-immediat-ce7cbd/map_bab_el_mandeb_theater.svg
+thumbnail: /analytics/houthis-declare-naval-blockade-on-saudi-arabia-with-immediat-ce7cbd/map_bab_el_mandeb_theater_v2.svg
 corrections:
 - date: '2026-07-24'
   reason: add Bab el-Mandeb theater map inline for geographic orientation
@@ -31,7 +31,7 @@ The latest declaration lands on a route that is much more than a political symbo
 
 **Red Sea theater: Bab el-Mandeb and Houthi–Saudi coastline context**
 
-![Red Sea theater: Bab el-Mandeb and Houthi–Saudi coastline context](/analytics/houthis-declare-naval-blockade-on-saudi-arabia-with-immediat-ce7cbd/map_bab_el_mandeb_theater.svg)
+![Red Sea theater: Bab el-Mandeb and Houthi–Saudi coastline context](/analytics/houthis-declare-naval-blockade-on-saudi-arabia-with-immediat-ce7cbd/map_bab_el_mandeb_theater_v2.svg)
 
 *Where the choke point sits relative to Yemen and the Saudi Red Sea coast. City and strait markers are standard coordinates, not facility-level. Basemap: Natural Earth 110m. As of 2026-07-24. AI-assisted analytic from real basemap geometry.*
 
