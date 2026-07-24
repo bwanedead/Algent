@@ -25,9 +25,13 @@ from .tagging import derive_all
 
 # The receipts appendix heading the pipeline emits and the site splits on (substring-matched there).
 _RECEIPTS_HEADING = "## How we know this"
-# Analytic image refs the publish view embeds, e.g. "![Chart](analytic_ar_1.svg)". Tables are inline
-# markdown (no asset); only real images (.svg/.png) become files under the site's public/ dir.
-_IMAGE_REF = re.compile(r"!\[([^\]]*)\]\((analytic_[^)]+\.(?:svg|png))\)")
+# Analytic image refs the publish view embeds, e.g. "![Chart](analytic_ar_1.svg)" or
+# "![Theater](map_bab_el_mandeb.svg)". Tables are inline markdown (no asset); only real images
+# (.svg/.png) with a relative filename (no path separators / absolute URLs) become files under
+# the site's public/ dir.
+_IMAGE_REF = re.compile(
+    r"!\[([^\]]*)\]\(((?:analytic_|map_)[^)/]+\.(?:svg|png)|[^/)\s]+\.(?:svg|png))\)"
+)
 _SLUG_MAX_TITLE = 60
 
 

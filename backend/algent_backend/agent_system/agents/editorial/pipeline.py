@@ -42,14 +42,15 @@ CAVEAT_REPAIRED = "editorial_pipeline.caveat_repaired"   # the self-heal lap ran
 RAMP_REPAIRED = "editorial_pipeline.ramp_repaired"       # the comprehension repair lap ran
 
 # The analytics WORKER (grok subprocess) is gated separately from the router. The router is cheap
-# (a nano assessment, always runs); the worker is minutes-long and spends subscription quota per
-# request, so it is OFF by default and capped — mirroring the ALGENT_RAKE toggle idiom. Flip the
-# default once live pipeline runs prove it stable.
+# (a nano assessment, always runs); the worker spends quota per request. ON by default so
+# geography maps and trajectory charts actually ship — live runs with worker off planned
+# figures that never appeared (Houthi choke-point, Wildberries strike map). Disable with
+# ALGENT_ANALYTICS_WORKER=0. Cap still bounds cost.
 _ANALYTICS_WORKER_ENV = "ALGENT_ANALYTICS_WORKER"
 _ANALYTICS_CAP_ENV = "ALGENT_ANALYTICS_MAX"
-# Soft default was 3 and every live run filled it — padding. Prefer at most one strong analytic
-# unless the operator raises the cap; zero is still success when nothing useful exists.
-_ANALYTICS_CAP_DEFAULT = 1
+# Prefer at most two strong analytics (e.g. theater map + trajectory). Zero is still success
+# when nothing useful exists; three+ was padding.
+_ANALYTICS_CAP_DEFAULT = 2
 
 # A live failure mode: the comprehension "handhold" repair lap rewrote a ~400-word piece into a
 # single sentence, then the pipeline still marked it publishable. A hollow shell is not a dud —
@@ -60,7 +61,8 @@ _REPAIR_KEEP_FRAC = 0.55  # keep prior draft if the repair keeps less than this 
 
 
 def _analytics_worker_enabled() -> bool:
-    return os.environ.get(_ANALYTICS_WORKER_ENV, "0").strip().lower() in ("1", "true", "yes", "on")
+    # Default ON — maps/charts are high reader value when the router warrants them.
+    return os.environ.get(_ANALYTICS_WORKER_ENV, "1").strip().lower() in ("1", "true", "yes", "on")
 
 
 def _analytics_cap() -> int:

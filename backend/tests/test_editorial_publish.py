@@ -169,6 +169,64 @@ def test_analytic_with_unverified_figures_is_flagged_in_receipts() -> None:
     assert "figures not all matched to the cited claims: 9.9" in md
 
 
+def test_x_status_url_injected_for_embed_when_handle_named_without_link() -> None:
+    from algent_backend.agent_system.agents.editorial.publish import render_published_article
+
+    prof = SignalProfile(
+        id="p", title="t",
+        source_ledger=[
+            SourceArtifact(
+                id="sx",
+                url="https://x.com/Osinttechnical/status/2080427489298391112",
+                title="Post by @Osinttechnical",
+                source_type="secondary",
+            ),
+            SourceArtifact(id="s1", url="https://reuters.com/a", title="Wire", source_type="secondary",
+                           snapshot=SourceSnapshot(content_hash="h")),
+        ],
+        claim_ledger=[
+            Claim(id="c1", text="A post showed fire", status="confirmed", grounding="snippet_only",
+                  supported_by=["sx"]),
+        ],
+    )
+    draft = ArticleDraft(
+        id="d", title="Strike", standfirst="dek",
+        body="An X post by the open-source account Osinttechnical showed a fire at the warehouse.",
+        cited_claim_ids=["c1"], cited_source_ids=["sx"],
+    )
+    md = render_published_article(draft, prof)
+    body = md.split("How we know this")[0]
+    assert "https://x.com/Osinttechnical/status/2080427489298391112" in body
+    assert "Post on X · @Osinttechnical" in body
+
+
+def test_map_figure_is_placed_after_opening_paragraph() -> None:
+    from algent_backend.agent_system.agents.editorial.publish import render_published_article
+
+    prof = _profile()
+    draft = _draft()
+    draft = ArticleDraft(
+        id="d", title="Fed piece", standfirst="the dek", frame="a market-pricing story",
+        body=(
+            "First landscape paragraph about the choke point and the theater.\n\n"
+            "Second paragraph continues the news move and the dispute."
+        ),
+        cited_claim_ids=["c1", "c2", "c3"], cited_source_ids=["s1", "s2"],
+    )
+    analytics = [{
+        "request_id": "m1", "status": "produced", "kind": "image",
+        "artifact_name": "map_bab_el_mandeb.svg",
+        "title": "Bab el-Mandeb theater map",
+        "question": "Where is the choke point relative to Saudi Arabia and Yemen?",
+        "caption": "Theater map. — AI-assisted analytic, built only from cited data.",
+        "data_refs": ["c1"], "figure_check": {"verified": True, "unverified": []},
+    }]
+    md = render_published_article(draft, prof, analytics)
+    body = md.split("How we know this")[0]
+    assert body.index("First landscape") < body.index("map_bab_el_mandeb.svg")
+    assert body.index("map_bab_el_mandeb.svg") < body.index("Second paragraph")
+
+
 def test_source_label_names_x_medium_not_bare_handle() -> None:
     """Receipts must not present an X handle as if it were a wire outlet."""
     from algent_backend.agent_system.agents.editorial.publish import _source_label

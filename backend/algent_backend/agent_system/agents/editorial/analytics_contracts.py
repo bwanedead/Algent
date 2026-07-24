@@ -13,8 +13,12 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-# What kind of analytic. `image` is an AI-generated ILLUSTRATION (diagram/concept art), never a
-# fabricated photo of a real event — see the worker doctrine.
+# What kind of analytic.
+# - chart/table/insight: quantities from real data
+# - image: labeled MAP (preferred) or structural diagram via the analytics worker — never a
+#   fabricated photo of a real news event. Future: optional theme-illustration (Grok Imagine /
+#   similar) may land as a separate honest "AI atmosphere" asset with its own label — not as
+#   evidence and not as a stand-in for a map.
 AnalyticKind = Literal["chart", "table", "insight", "image"]
 RequestStatus = Literal["requested", "produced", "skipped", "failed"]
 

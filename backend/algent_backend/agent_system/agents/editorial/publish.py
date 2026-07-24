@@ -162,13 +162,91 @@ def render_published_article(
     produced = [a for a in (analytics or [])
                 if a.get("status") == "produced" and (a.get("artifact_name") or a.get("body_md"))]
 
+    body = _ensure_x_embed_links(_clean_prose(draft.body), cited_sources)
+
     out = [f"# {draft.title or '(untitled)'}"]
     if draft.standfirst:
         out += [f"*{draft.standfirst}*"]
-    out += ["", _clean_prose(draft.body), ""]
-    out += _figures(produced)                       # the produced charts, each with its AI label
+    out += ["", *_body_with_figures(body, produced)]
     out += ["---", *_appendix(draft, cited_sources, cited_claims, sources, produced)]
     return "\n".join(out).rstrip() + "\n"
+
+
+def _ensure_x_embed_links(body: str, cited_sources: list) -> str:
+    """If prose leans on an X status but has no status URL, add a sole-line link for site embeds.
+
+    The site embeds a status only when a paragraph is solely a link to x.com/.../status/...
+    Drafters often name @handle without the URL; receipts still hold it. Inject once per
+    missing status so the reader can see the post (and the embed can fire).
+    """
+    out = body
+    for s in cited_sources:
+        url = (getattr(s, "url", None) or "").strip()
+        m = _X_STATUS_RE.search(url)
+        if not m:
+            continue
+        handle = (m.group("handle") or "").lstrip("@")
+        status_id = re.search(r"/status/(\d+)", url, re.I)
+        sid = status_id.group(1) if status_id else ""
+        if not sid:
+            continue
+        if re.search(rf"/status/{re.escape(sid)}\b", out, re.I):
+            continue
+        # Only inject when the prose actually leans on X / this handle (avoid random receipts).
+        mentions = bool(re.search(r"\bon X\b|\bpost on X\b|x\.com|twitter\.com", out, re.I))
+        if handle and re.search(rf"@{re.escape(handle)}\b|\b{re.escape(handle)}\b", out, re.I):
+            mentions = True
+        if not mentions:
+            continue
+        canonical = (
+            f"https://x.com/{handle}/status/{sid}" if handle else f"https://x.com/i/web/status/{sid}"
+        )
+        label = f"Post on X · @{handle}" if handle else "Post on X"
+        out = out.rstrip() + f"\n\n[{label}]({canonical})\n"
+    return out
+
+
+def _is_map_figure(a: dict) -> bool:
+    name = str(a.get("artifact_name") or "").lower()
+    title = str(a.get("title") or "").lower()
+    kind = str(a.get("kind") or "").lower()
+    spec = str(a.get("spec") or a.get("question") or "").lower()
+    if "map" in name or "map" in title or "map" in spec:
+        return True
+    if kind == "image" and any(k in title or k in spec for k in ("geo", "theater", "location", "choke")):
+        return True
+    return False
+
+
+def _body_with_figures(body: str, produced: list[dict]) -> list[str]:
+    """Put orientation maps early (after the first prose block); other figures after the body.
+
+    Geographic figures help most when the reader still needs the landscape — not after a wall of
+    text. Trajectory charts etc. still trail the prose.
+    """
+    if not produced:
+        return [body, ""]
+    early = [a for a in produced if _is_map_figure(a)]
+    late = [a for a in produced if a not in early]
+    if not early:
+        return [body, ""] + _figures(produced)
+
+    # Split after the first paragraph (or first two short ones if the open is a single sentence).
+    parts = re.split(r"\n\n+", body.strip(), maxsplit=1)
+    if len(parts) == 1:
+        return [body, ""] + _figures(early) + _figures(late)
+
+    head, tail = parts[0], parts[1]
+    # If the first block is very short, take one more paragraph so the map lands after landscape setup.
+    if len(head.split()) < 40 and "\n\n" in tail:
+        more = re.split(r"\n\n+", tail, maxsplit=1)
+        head = head + "\n\n" + more[0]
+        tail = more[1] if len(more) > 1 else ""
+    out = [head, ""] + _figures(early)
+    if tail.strip():
+        out += [tail.strip(), ""]
+    out += _figures(late)
+    return out
 
 
 def _figure_explainer(a: dict) -> str:

@@ -213,9 +213,9 @@ def test_pipeline_no_profile_is_not_publishable(monkeypatch) -> None:
     assert out["pipeline"]["publishable"] is False
 
 
-def test_analytics_worker_is_gated_off_by_default(monkeypatch) -> None:
-    # Even when analytics are warranted, the (quota-spending) worker must NOT run unless enabled.
-    monkeypatch.delenv(pl._ANALYTICS_WORKER_ENV, raising=False)
+def test_analytics_worker_can_be_gated_off(monkeypatch) -> None:
+    # Worker is ON by default so maps ship; operators can still disable with ALGENT_ANALYTICS_WORKER=0.
+    monkeypatch.setenv(pl._ANALYTICS_WORKER_ENV, "0")
     plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
     draft_out = {"draft": {"id": "d", "word_count": 100}, "gauntlet": {"outcome": "grounded"}}
     analytics_out = {"analytics_plan": {"warranted": True, "requests": [{"id": "anx_01"}]}}

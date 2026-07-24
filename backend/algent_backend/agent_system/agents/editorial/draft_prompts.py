@@ -189,9 +189,9 @@ When the profile rests on X (or similar) posts, the reader must never be confuse
   path back to the artifact is a failed citation.
 - **Embed cue for load-bearing posts (clips, flight maps, screenshots):** after you name the
   medium in prose, put the status URL alone on its own line as a markdown link, e.g.
-  `[Post on X · @handle](https://x.com/handle/status/…)`. The site can render an embed from
-  a sole-link paragraph — no server setup; your job is the honest link + framing. Do not
-  spam embeds for every mention; one for the key artifact is enough.
+  `[Post on X · @handle](https://x.com/handle/status/…)`. The site renders an embed only from
+  a **sole-link paragraph** — naming @handle without the URL does not embed. No server setup;
+  your job is the honest link + framing. One key artifact is enough; do not spam embeds.
 - **Pulse, not prestige:** "people on X were noticing…" / "one public OSINT-style account
   posted…" is the right register for semi-random accounts. Even when their call looks smart
   later, do not rewrite history into "this source established…".

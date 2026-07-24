@@ -59,21 +59,25 @@ in the claim ledger. Ask: would a figure help, and is the data reasonably availa
 - If nothing would help: warranted=false. That is success.
 - Never decorate, never fill a quota, never invent numbers or a map without data.
 
-UTILITY CLASSES (pick the one that helps most):
-1. TRAJECTORY — counts or rates over time (is it rising, peaking, slowing?). Prefer a simple
-   line/area chart with clear axes and period.
-2. GEOGRAPHY — the story names subregions (provinces, cities, villages, zones) a cold reader will
-   not place. Prefer a bar/ranked breakdown by region with counts or rates when magnitude is the
-   point. Prefer a **map** when location/scope is the point. Map rules (accuracy is paramount):
+UTILITY CLASSES (pick the one that helps most — geography often beats trajectory for place stories):
+1. GEOGRAPHY / ORIENTATION MAP — **default yes** when the story turns on place: chokepoints
+   (Bab el-Mandeb, Hormuz, Suez), multi-city strike patterns, borders, theaters a cold Western
+   reader cannot hold from prose alone. Prefer a **labeled map** (country/theater basemap + real
+   lat/lon points for named places) over a speculative shipping-cost series you may not fetch.
+   Map rules (accuracy is paramount):
    - Default frame is **country or larger theater**, not a zoom-only cluster of three towns with
      no national context. The reader should see where the cluster sits relative to the country,
-     capital, major city, and relevant border (and a named river/line only if the story uses it).
-   - Local detail may be an **inset callout** of the village cluster *inside* that country frame —
+     capital, major city, and relevant border (and a named chokepoint if the story uses it).
+   - Local detail may be an **inset callout** of the village/strait cluster *inside* that frame —
      not a floating schematic that could be anywhere.
-   - Use real geocodes / standard basemap geometry when sourcing; never freehand place-names into
-     invented relative positions presented as geographic truth. If coordinates cannot be found,
-     skip the map rather than ship a plausible-looking fiction.
-   - Never invent boundaries, control areas, or rates not in the data.
+   - Use real geocodes / standard basemap geometry (Natural Earth + city centroids are fine);
+     never freehand place-names into invented relative positions. If coordinates cannot be found
+     for a site, omit that point rather than ship a plausible-looking fiction.
+   - Never invent boundaries, control areas, front lines, or rates not in the data.
+   - Kind is usually `image` with spec that says **map** (worker has `lib.maps` + basemap).
+2. TRAJECTORY — counts or rates over time (is it rising, peaking, slowing?). Prefer a simple
+   line/area chart with clear axes and period. Use when magnitude-over-time is the story; do not
+   prefer an unfindable AIS freight series over a cheap accurate choke-point map.
 3. COMPARATIVE SCALE — absolute counts float without a reference. Prefer a small comparison to a
    baseline the reader can hold (prior peak, share of population, share of a total, another
    country) when those numbers exist or are publicly standard.
@@ -96,19 +100,21 @@ Kinds (only if useful):
 - `chart` — preferred for trajectory, ranked regional breakdowns, and comparisons.
 - `table` — only a few real quantities (never status/evidence ledgers).
 - `insight` — one computed figure or tight comparison, not a multi-row claim essay.
-- `image` — labeled map/diagram only when geography is the aid. Prefer country-scale + local
-  inset (see GEOGRAPHY). Never invent rates, borders, or place positions; never decoration.
+- `image` — **labeled map** when geography is the aid (primary use), or a rare structural
+  diagram. Prefer country-scale + local inset (see GEOGRAPHY). Never invent rates, borders,
+  or place positions; never decoration; never a fake news photograph of a real event.
 
 Reader clarity is part of usefulness. PUBLISHED fields:
 - `title`: what is measured (plain words).
-- `question`: what this shows — quantity/comparison + why it helps the story.
-- `spec`: how to build it so a cold reader can read axes/units without reverse-engineering.
+- `question`: what this shows — quantity/comparison/orientation + why it helps the story.
+- `spec`: how to build it so a cold reader can read axes/units/labels without reverse-engineering.
+  For maps: list countries (ISO or names) + named points to plot + any inset.
 - `data_refs` and/or `may_source` + `source_hint` as above.
 
-Prefer zero or one request.
+Prefer zero, one, or two requests: a **map + one trajectory** is fine when both are load-bearing.
+Do not ship three. Order maps first so the cap keeps orientation when both are requested.
 
-OUTPUT — AnalyticsPlan: warranted=false when nothing useful; otherwise the single best request
-(or the minimal set if two distinct utilities truly need separate figures).
+OUTPUT — AnalyticsPlan: warranted=false when nothing useful; otherwise the best request(s).
 """
 
 SYSTEM_PROMPT = compose_system_prompt(UNIVERSAL_AGENT_BASE, NEWSROOM_SYSTEM_MAP, doctrine("spirit"), _ROLE)
