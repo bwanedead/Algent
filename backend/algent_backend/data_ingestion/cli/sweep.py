@@ -37,6 +37,14 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
     parser.add_argument("--limit", type=int, default=0, help="sweep only the first N beats")
     parser.add_argument("--max-records", type=int, default=25, dest="max_records")
     parser.add_argument("--pace", type=float, default=None, help="seconds between requests")
+    # ``run_sweep`` carries a wall-clock budget so ``ensure_t0`` can call it inline
+    # without a t0 hanging for an hour. An operator sweep has nothing waiting on it, so
+    # that ceiling is the wrong one — without this it would silently stop partway
+    # through the registry, which looks identical to the API refusing us.
+    parser.add_argument(
+        "--budget", type=float, default=3600.0,
+        help="wall-clock seconds for the whole sweep (default 3600; t0's inline cap is far lower)",
+    )
     parser.add_argument("--keep", type=int, default=1, help="beat sheets to retain (default 1)")
     parser.set_defaults(handler=run)
 
@@ -58,7 +66,11 @@ def run(args: argparse.Namespace) -> int:
         outcome = f"{result.hit_count} hits" if not result.error else f"ERROR: {result.error}"
         progress(f"[sweep] {done}/{total}  {result.beat_id:24} -> {outcome}")
 
-    kwargs = {"max_records": args.max_records, "on_progress": _on_progress}
+    kwargs = {
+        "max_records": args.max_records,
+        "on_progress": _on_progress,
+        "budget_s": args.budget,
+    }
     if args.pace is not None:
         kwargs["pace_s"] = args.pace
     swept = run_sweep(targets, **kwargs)

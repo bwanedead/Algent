@@ -1113,7 +1113,7 @@ def test_sweep_cli_writes_sheet_and_prunes(monkeypatch, tmp_path, capsys) -> Non
         sweep_cmd, "run_sweep", lambda targets, **kw: _fake_sheet(len(targets))
     )
 
-    code = sweep_cmd.run(_ns(kind="pillar", limit=2, max_records=25, pace=0.0, keep=1))
+    code = sweep_cmd.run(_ns(kind="pillar", limit=2, max_records=25, pace=0.0, budget=60.0, keep=1))
     assert code == 0
     out = json.loads(capsys.readouterr().out)
     assert out["beats_swept"] == 2
@@ -1138,7 +1138,7 @@ def test_sweep_cli_tops_up_the_standing_sheet_instead_of_replacing_it(
             _stamped("ai", 0, _hit("Chips", "http://c"), base=real_now)),
     )
 
-    assert sweep_cmd.run(_ns(kind="pillar", limit=1, max_records=25, pace=0.0, keep=1)) == 0
+    assert sweep_cmd.run(_ns(kind="pillar", limit=1, max_records=25, pace=0.0, budget=60.0, keep=1)) == 0
     out = json.loads(capsys.readouterr().out)
 
     assert out["beats_swept"] == 1      # this run only asked for one beat
