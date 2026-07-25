@@ -25,6 +25,9 @@ _SPORTS_MARKERS: tuple[str, ...] = (
     "bayern munich", "liverpool fc", "chelsea fc", "arsenal fc", "psg ",
     "lakers", "celtics", "yankees", "dodgers", "chiefs", "cowboys",
     "raptors", "miami heat", "golden state", "tottenham",
+    # Leaked through a live GKG pool as a roster move ("phillies place ... on il").
+    "phillies", "mets", "red sox", "cubs", "astros", "braves", "padres",
+    "76ers", "warriors", "bucks", "nuggets", "packers", "eagles nfl", "steelers",
     # athletes / transfer speech
     "lebron", "messi", "ronaldo", "mbappe", "haaland", "mahomes",
     "transfer window", "transfer fee", "has signed for", "loan deal",
@@ -52,6 +55,12 @@ _SPORTS_WORD_RE = re.compile(
 _ENTERTAINMENT_MARKERS: tuple[str, ...] = (
     "box office", "netflix series", "reality show", "grammy", "oscar nominee",
     "celebrity dating", "red carpet", "kardashian", "onlyfans",
+    # Observed on a live GKG pool: concert cancellations, radio-show clips, celebrity
+    # marriage gossip, travel listicles, game-release PR. All arrived as "stories".
+    "concert short", "comeback tour", "full show", "soul sessions",
+    "divorce", "dating rumors", "engagement ring", "baby bump",
+    "isnt just for", "is wild as", "things to do in",
+    "release date", "new dlc", "free dlc", "gameplay trailer", "battle details",
 )
 
 # Algorithmic finance SEO — the ticker-roundup mills. Observed on a live sweep:
@@ -80,6 +89,21 @@ def is_promo_listicle(text: str) -> bool:
     return any(marker in text.casefold() for marker in _PROMO_MARKERS)
 
 
+# A GKG story label is scraped from a URL path, and plenty of CMSs put a UUID there
+# instead of a slug. Observed live: "fd3f4cef f9d9 4f86 86c7 361c42ecefa8". There is no
+# story in it and never will be, so it should never reach a menu.
+_HEXISH_RE = re.compile(r"^[0-9a-f]{4,}$")
+
+
+def is_label_garbage(text: str) -> bool:
+    """True when a label carries no words — a UUID or hash scraped from a URL path."""
+    words = text.split()
+    if not words:
+        return True
+    hexish = sum(1 for w in words if _HEXISH_RE.fullmatch(w.casefold()))
+    return hexish >= max(2, len(words) - 1)
+
+
 def is_sports_text(text: str) -> bool:
     """True when text is primarily sports / match / transfer noise."""
     if not text or not text.strip():
@@ -99,5 +123,10 @@ def is_entertainment_junk(text: str) -> bool:
 
 
 def is_non_news_topic(text: str) -> bool:
-    """Sports, entertainment, or ticker-mill SEO — drop from discovery menus."""
-    return is_sports_text(text) or is_entertainment_junk(text) or is_promo_listicle(text)
+    """Sports, entertainment, ticker-mill SEO, or wordless junk — drop from menus."""
+    return (
+        is_sports_text(text)
+        or is_entertainment_junk(text)
+        or is_promo_listicle(text)
+        or is_label_garbage(text)
+    )

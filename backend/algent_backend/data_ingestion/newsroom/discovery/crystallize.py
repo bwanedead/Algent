@@ -37,6 +37,8 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any, Protocol
 
+from algent_backend.agent_system.foundation.models.specs import ModelSpec
+
 from ..topic_filters import is_non_news_topic, is_sports_text
 from .report import DiscoveryPool, PoolItem
 
@@ -71,8 +73,22 @@ DROP when it is:
 - gardening, product openers, entertainment schedules
 
 For KEEP items write ONE event sentence in English:
-  [Actor] [verb past/present] [object/place] [optional stake].
-Be specific. Prefer concrete nouns over abstractions. No clickbait.
+  [Actor] [verb past/present] [object/place].
+
+USE ONLY WHAT YOU WERE GIVEN. You are looking at a label, a URL and a few signals —
+NOT the article. So the sentence must be a *tidying* of the words in front of you, not
+a reconstruction of the story: no names, numbers, dates, places, casualties, agencies
+or motives that are not already in the candidate. Do not guess what the article
+probably says.
+
+"even as us iran fight talks pakistan" -> "US and Iran hold talks in Pakistan."
+NOT "Iran and US envoys hold talks in Pakistan on day 10 of fighting." (`envoys` and
+`day 10` were invented — that is a fabricated lead entering the newsroom as fact.)
+
+If the candidate is too thin to make a sentence without inventing something, that is a
+DROP, not an invitation to fill the gap. An honest drop costs us one lead; an invented
+specific costs us the thing the whole desk is built on. Prefer concrete nouns over
+abstractions where the input gives you them. No clickbait.
 
 Return ONLY a JSON array (no markdown), one object per input id:
 [{"id":"...","keep":true,"event":"...","reason":"short"},
@@ -126,7 +142,7 @@ def crystallize_pool(
         say("crystallize: nothing needs label repair — skipped")
         return pool, CrystallizeResult(kept=len(items), dropped=0, mode="off")
 
-    llm = client or _try_openai_client()
+    llm = client or _try_house_client()
     if llm is not None:
         try:
             decisions, usd = _llm_decide(llm, ranked, say)
@@ -186,11 +202,19 @@ def crystallize_pool(
 
 
 # Kinds whose label is a machine artifact rather than something a person published:
-# GKG theme codes, actor×action event keys, and bare extracted entity names. A
-# ``story`` is excluded — its label comes from a URL slug, which is a real headline in
-# all but punctuation — as are ``article``/``news``/``post`` (published headlines) and
+# GKG theme codes, actor×action event keys, bare extracted entity names — and
+# ``story``, whose label is scraped off a URL path.
+#
+# ``story`` was briefly excluded here on the theory that a URL slug is a headline in
+# all but punctuation. A live pool said otherwise: 35 of 36 GKG items were stories,
+# and among them were three labels that were nothing but a UUID
+# ("fd3f4cef f9d9 4f86 86c7 361c42ecefa8"), a concert cancellation, a celebrity
+# divorce, a travel listicle and a baseball roster move. Slugs need both the repair
+# and, more importantly, the drop — this is the junk-heaviest channel we have.
+#
+# Excluded: ``article``/``news``/``post`` (a person wrote that headline) and
 # ``market`` (already a discrete, legible question).
-_MACHINE_LABEL_KINDS = frozenset({"theme", "event", "person", "organization"})
+_MACHINE_LABEL_KINDS = frozenset({"theme", "event", "person", "organization", "story"})
 
 
 def _needs_label_repair(item: PoolItem) -> bool:
@@ -357,7 +381,8 @@ def _int_env(name: str, default: int, lo: int, hi: int) -> int:
     return max(lo, min(n, hi))
 
 
-def _try_openai_client() -> CrystallizeClient | None:
+def _try_house_client() -> CrystallizeClient | None:
+    """Build the triage-tier client, or None when there's no key to build it with."""
     try:
         from algent_backend.config import get_provider_api_key
         key = get_provider_api_key("openai")
@@ -366,47 +391,62 @@ def _try_openai_client() -> CrystallizeClient | None:
     if not key:
         return None
     model = os.environ.get(_ENV_MODEL, _DEFAULT_MODEL).strip() or _DEFAULT_MODEL
-    return OpenAICrystallizeClient(api_key=key, model=model)
+    # temperature stays low but explicit; max_tokens is deliberately left unset — the
+    # resolver owns per-provider parameter naming, and the reply is one short JSON array.
+    return HouseCrystallizeClient(
+        ModelSpec(provider="openai", model=model, temperature=0.1)
+    )
 
 
-class OpenAICrystallizeClient:
-    """Thin OpenAI chat wrapper for crystallize JSON."""
+class HouseCrystallizeClient:
+    """Crystallize's model call, built through the house model layer.
 
-    def __init__(self, *, api_key: str, model: str) -> None:
-        self.api_key = api_key
-        self.model = model
+    It used to hold a raw ``openai.OpenAI`` client — the only provider bypass in the
+    codebase — which is how it ended up pinned to a model absent from the catalog and
+    sending ``max_tokens`` to a model that only accepts ``max_completion_tokens`` (a
+    live 400 that silently demoted the whole pass to the heuristic fallback). Going
+    through ``ModelResolver`` means parameter translation, key resolution and provider
+    routing are solved once, where every other call site already solves them.
+    """
+
+    def __init__(self, spec: ModelSpec) -> None:
+        self.spec = spec
+        self.model = spec.model
         self.last_usd = 0.0
 
     def complete_json(self, *, system: str, user: str) -> list[dict[str, Any]]:
-        from openai import OpenAI
+        from langchain_core.messages import HumanMessage, SystemMessage
 
-        client = OpenAI(api_key=self.api_key)
-        resp = client.chat.completions.create(
-            model=self.model,
-            temperature=0.1,
-            max_tokens=2500,
-            response_format={"type": "json_object"},
-            messages=[
-                {"role": "system", "content": system},
-                {
-                    "role": "user",
-                    "content": user
-                    + "\n\nRespond as JSON object: {\"decisions\":[...]}",
-                },
-            ],
+        from algent_backend.agent_system.foundation.cost import estimate_model_cost
+        from algent_backend.agent_system.foundation.models.resolver import ModelResolver
+
+        client = ModelResolver().resolve(self.spec).client
+        reply = client.invoke([
+            SystemMessage(content=system),
+            HumanMessage(content=user + '\n\nRespond as JSON object: {"decisions":[...]}'),
+        ])
+        usage = getattr(reply, "usage_metadata", None) or {}
+        self.last_usd = round(
+            estimate_model_cost(
+                self.model,
+                int(usage.get("input_tokens") or 0),
+                int(usage.get("output_tokens") or 0),
+            ),
+            6,
         )
-        usage = resp.usage
-        if usage is not None:
-            from algent_backend.agent_system.foundation.cost import estimate_model_cost
+        return _parse_decisions(_text_of(reply))
 
-            self.last_usd = round(
-                estimate_model_cost(
-                    self.model, usage.prompt_tokens or 0, usage.completion_tokens or 0
-                ),
-                6,
-            )
-        text = (resp.choices[0].message.content or "").strip()
-        return _parse_decisions(text)
+
+def _text_of(reply: Any) -> str:
+    """The reply's text, whether the provider returned a string or content blocks."""
+    content = getattr(reply, "content", reply)
+    if isinstance(content, str):
+        return content.strip()
+    parts = [
+        block.get("text", "") if isinstance(block, dict) else str(block)
+        for block in (content or [])
+    ]
+    return "".join(parts).strip()
 
 
 def _parse_decisions(text: str) -> list[dict[str, Any]]:

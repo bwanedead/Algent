@@ -67,6 +67,13 @@ def build_pool(
     if x_hits:
         items.extend(_x_item(h) for h in x_hits)
 
+    # Echoes are a cross-channel problem, not a sweep problem. Polymarket lists every
+    # outcome of one question as its own market (five "Fed July decision" rows, four
+    # "ceasefire holds through <date>" rows), and the same wire story reaches the X band
+    # from two accounts. Suppressing per channel left all of that in the menu, so the
+    # pass runs once over everything, after the channels are merged.
+    items = _drop_echoes(items)
+
     facets: dict[str, list[str]] = defaultdict(list)
     for item in items:
         for pillar in item.pillars:
@@ -306,6 +313,24 @@ _STOP = frozenset(
 # How much headline vocabulary two stories must share to count as the same story
 # told twice. High on purpose: this drops echoes, it does not rank topics.
 _ECHO_OVERLAP = 0.6
+
+
+def _drop_echoes(items: list[PoolItem]) -> list[PoolItem]:
+    """Keep the first telling of each story, drop the retellings. No cap, no reordering.
+
+    Same rule as inside the sweep cap, applied to the merged pool so it also catches
+    the cross-channel echoes: a market's five outcome rows for one decision, or one wire
+    story arriving from two X accounts.
+    """
+    kept: list[PoolItem] = []
+    kept_terms: list[frozenset[str]] = []
+    for item in items:
+        terms = _terms(item)
+        if terms and any(_overlap(terms, held) >= _ECHO_OVERLAP for held in kept_terms):
+            continue
+        kept.append(item)
+        kept_terms.append(terms)
+    return kept
 
 
 def _diversify(items: list[PoolItem], limit: int | None) -> list[PoolItem]:
