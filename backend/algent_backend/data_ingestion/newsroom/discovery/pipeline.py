@@ -110,20 +110,22 @@ def _build_pool(report, chans: frozenset[str], say: ProgressFn) -> tuple[dict[st
     # in the chooser menu (not 40 GKG + 25 markets drowning ~20 X).
     gkg_limit = markets_limit = None
     if x_hits:
-        gkg_limit = _cap_env("ALGENT_T0_GKG_CAP", 24, lo=10, hi=40)
-        markets_limit = _cap_env("ALGENT_T0_MARKETS_CAP", 12, lo=5, hi=25)
+        gkg_limit = _cap_env("ALGENT_T0_GKG_CAP", 45, lo=10, hi=120)
+        markets_limit = _cap_env("ALGENT_T0_MARKETS_CAP", 16, lo=5, hi=40)
         say(
             f"rebalance with X on: GKG≤{gkg_limit}, markets≤{markets_limit}, "
             f"X={len(x_hits)} (raise/lower via ALGENT_T0_GKG_CAP / ALGENT_T0_MARKETS_CAP)"
         )
     # The sweep is capped unconditionally (unlike gkg/markets, which only rebalance
-    # when X is on): a swept registry is ~40 queries × 25 records, an order of
-    # magnitude past what a pool should carry. The cap is spent on the *least alike*
-    # stories, so it buys long tail rather than ten versions of the loudest thing.
+    # when X is on) because a swept registry is ~40 queries × 25 records. But the cap
+    # is a *payload* bound, not an editorial one: a long menu is the point — it is how
+    # the operator sees each cycle what we are prone to, and the research/drafting
+    # bandwidth this feeds is meant to grow into it. Echo suppression already strips
+    # the redundancy, so a high cap buys distinct leads rather than more of the same.
     beats_limit = None
     if sheet is not None:
-        beats_limit = _cap_env("ALGENT_T0_BEATS_CAP", 28, lo=4, hi=80)
-        say(f"sweep: ≤{beats_limit} pool items, least-alike first (ALGENT_T0_BEATS_CAP)")
+        beats_limit = _cap_env("ALGENT_T0_BEATS_CAP", 90, lo=4, hi=300)
+        say(f"sweep: ≤{beats_limit} pool items, echoes dropped (ALGENT_T0_BEATS_CAP)")
     pool = build_pool(
         report, sheet, markets, x_hits,
         gkg_limit=gkg_limit, markets_limit=markets_limit, beats_limit=beats_limit,

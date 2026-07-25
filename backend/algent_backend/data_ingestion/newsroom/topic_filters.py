@@ -54,6 +54,31 @@ _ENTERTAINMENT_MARKERS: tuple[str, ...] = (
     "celebrity dating", "red carpet", "kardashian", "onlyfans",
 )
 
+# Algorithmic finance SEO — the ticker-roundup mills. Observed on a live sweep:
+# "Promising Cryptocurrency Stocks To Follow Today – July 24th", "Top Blockchain
+# Stocks To Consider – July 24th". These are generated daily from a template, carry
+# no event, and arrive in volume, so they crowd a capped menu with nothing. Matched
+# on headline *shape* rather than by domain, because the mills rotate domains.
+_PROMO_MARKERS: tuple[str, ...] = (
+    "stocks to follow", "stocks to consider", "stocks to watch", "stocks to buy",
+    "shares to watch", "stocks you should", "stocks that could",
+    "shares sold by", "shares bought by", "shares acquired by", "stake boosted by",
+    "position increased by", "position lowered by", "position raised by",
+    "buys new stake", "sells shares of", "purchases shares of",
+    "short interest update", "short interest down", "short interest up",
+    "price target raised", "price target lowered", "given average rating",
+    "sets new 52-week", "reaches new 52-week", "trading up", "trading down",
+    "analysts expect", "expected to post", "eps estimate",
+    "here's what to know about", "what you need to know about",
+)
+
+
+def is_promo_listicle(text: str) -> bool:
+    """True for template-generated ticker/SEO roundups — volume with no event."""
+    if not text:
+        return False
+    return any(marker in text.casefold() for marker in _PROMO_MARKERS)
+
 
 def is_sports_text(text: str) -> bool:
     """True when text is primarily sports / match / transfer noise."""
@@ -74,5 +99,5 @@ def is_entertainment_junk(text: str) -> bool:
 
 
 def is_non_news_topic(text: str) -> bool:
-    """Sports or entertainment — drop from discovery menus."""
-    return is_sports_text(text) or is_entertainment_junk(text)
+    """Sports, entertainment, or ticker-mill SEO — drop from discovery menus."""
+    return is_sports_text(text) or is_entertainment_junk(text) or is_promo_listicle(text)

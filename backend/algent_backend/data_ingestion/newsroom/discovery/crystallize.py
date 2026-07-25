@@ -1,12 +1,27 @@
 """
-Event crystallizer — cheap semantic finisher on the t0 shortlist.
+Label repair — make machine-derived candidates legible as leads.
 
-Mechanical discovery produces story/event/market/x candidates. Many are still
-noise (lifestyle slugs, standing theater, commercial fluff). This pass:
+GKG does not hand us headlines. It hands us taxonomy codes
+(``WB_2811_COLLECTIVE_BARGAINING``), actor×action pairs (``fda :: approve``), and bare
+entity names. None of those is a story a human can triage, so a small model rewrites
+each into one discrete event sentence — or says it isn't an event at all, and it is
+dropped. That is this module's whole remit.
 
-1. Asks a small model to rewrite each item as **one discrete event sentence**
-   (who / what / where / when / so-what), or
-2. **Drops** items that are not discrete news events.
+**Scope was deliberately narrowed** (see ITERATION_LOG 2026-07-24). It used to run
+over the entire pool and decide keep/drop for everything, which was wrong twice over:
+
+- Most of the pool already *has* a real published headline (every sweep hit, X news,
+  a market question). Rewriting those is paraphrase risk for no gain — and it used to
+  overwrite ``evidence[0].title``, putting generated text where a real headline had
+  been, in the artifact we persist.
+- Deciding what is *worth covering* is the synthesis agent's job. It is the capable
+  model, it sees the whole pool, and it is instructed to keep the long tail. A cheap
+  pre-filter culling the menu ahead of it removes exactly the tail the operator wants
+  to see, and does so on less context.
+
+So: items with machine-derived labels are repaired (and dropped if they are not
+events); items that already carry a real headline pass through untouched. Structural
+junk is still screened for free by the deterministic ``topic_filters`` denylist.
 
 Optional: ``ALGENT_T0_CRYSTALLIZE=0`` skips. Default on when an OpenAI key exists.
 Falls back to a conservative heuristic when no key / offline tests.
@@ -29,14 +44,16 @@ ProgressFn = Callable[[str], None]
 
 _ENV_ON = "ALGENT_T0_CRYSTALLIZE"  # 0/false to skip
 _ENV_MAX = "ALGENT_T0_CRYSTALLIZE_MAX"  # items sent to the model (default 40)
-_ENV_MODEL = "ALGENT_T0_CRYSTALLIZE_MODEL"  # default gpt-4o-mini
+_ENV_MODEL = "ALGENT_T0_CRYSTALLIZE_MODEL"
 
-_DEFAULT_MODEL = "gpt-4o-mini"
+# The triage tier from the house catalog (``foundation.cost.MODEL_PRICES``).
+# Crystallize is triage by definition — keep/drop plus a one-sentence rewrite — so
+# it belongs on the cheapest current model, not on one of its own choosing. Cost is
+# read from that same catalog rather than re-declared here: this file used to carry
+# private per-token constants, which meant the ledger stayed wrong independently of
+# whatever model was actually called.
+_DEFAULT_MODEL = "gpt-5.4-nano"
 _DEFAULT_MAX = 40
-
-# Rough $/1M tokens for cost ledger (gpt-4o-mini ballpark).
-_USD_PER_1M_IN = 0.15
-_USD_PER_1M_OUT = 0.60
 
 _SYSTEM = """You are a newsroom discovery filter for a Western generalist desk.
 
@@ -98,9 +115,16 @@ def crystallize_pool(
         return pool, CrystallizeResult(kept=0, dropped=0, mode="off")
 
     cap = max_items if max_items is not None else _int_env(_ENV_MAX, _DEFAULT_MAX, 10, 80)
-    # Prefer GKG story/event + X first; markets are already discrete outcomes.
-    ranked = _priority_order(items)[:cap]
+    # Only what needs repairing goes to the model. Everything else already reads as a
+    # lead and is none of this module's business.
+    repairable = [i for i in items if _needs_label_repair(i)]
+    ranked = _priority_order(repairable)[:cap]
     rest = [i for i in items if i.id not in {r.id for r in ranked}]
+    if not ranked:
+        # Nothing machine-labelled this cycle (a pool that is all real headlines is a
+        # good pool). Don't pay for a call with an empty payload.
+        say("crystallize: nothing needs label repair — skipped")
+        return pool, CrystallizeResult(kept=len(items), dropped=0, mode="off")
 
     llm = client or _try_openai_client()
     if llm is not None:
@@ -161,6 +185,19 @@ def crystallize_pool(
     return new_pool, result
 
 
+# Kinds whose label is a machine artifact rather than something a person published:
+# GKG theme codes, actor×action event keys, and bare extracted entity names. A
+# ``story`` is excluded — its label comes from a URL slug, which is a real headline in
+# all but punctuation — as are ``article``/``news``/``post`` (published headlines) and
+# ``market`` (already a discrete, legible question).
+_MACHINE_LABEL_KINDS = frozenset({"theme", "event", "person", "organization"})
+
+
+def _needs_label_repair(item: PoolItem) -> bool:
+    """True when the item's label is a machine artifact, not a published headline."""
+    return item.kind in _MACHINE_LABEL_KINDS
+
+
 def _priority_order(items: list[PoolItem]) -> list[PoolItem]:
     """What the model should see first — grain channels before residual tags."""
     rank = {
@@ -195,17 +232,20 @@ def _sort_kept(items: list[PoolItem]) -> list[PoolItem]:
 
 
 def _apply_event(item: PoolItem, event: str, *, reason: str) -> PoolItem:
+    """Swap the machine label for the event sentence, keeping the original for audit.
+
+    Evidence is left strictly alone. This used to write the generated sentence over
+    ``evidence[0].title``, which put model prose where a source's own words had been —
+    in the artifact we persist, indistinguishable from the real thing. Nothing needed
+    it (synthesis reads evidence for its URL), and a newsroom that keeps receipts
+    cannot have paraphrase impersonating a headline.
+    """
     sig = dict(item.signals or {})
     sig["crystallized"] = True
     sig["raw_label"] = item.label[:200]
     if reason:
         sig["crystallize_reason"] = reason[:80]
-    # Evidence titles: first hit gets the event sentence for rake/agent.
-    evidence = list(item.evidence)
-    if evidence:
-        head = evidence[0]
-        evidence[0] = head.model_copy(update={"title": event[:160]})
-    return item.model_copy(update={"label": event[:220], "signals": sig, "evidence": evidence})
+    return item.model_copy(update={"label": event[:220], "signals": sig})
 
 
 def _rebuild_pool(old: DiscoveryPool, items: list[PoolItem]) -> DiscoveryPool:
@@ -357,9 +397,12 @@ class OpenAICrystallizeClient:
         )
         usage = resp.usage
         if usage is not None:
+            from algent_backend.agent_system.foundation.cost import estimate_model_cost
+
             self.last_usd = round(
-                (usage.prompt_tokens or 0) * _USD_PER_1M_IN / 1_000_000
-                + (usage.completion_tokens or 0) * _USD_PER_1M_OUT / 1_000_000,
+                estimate_model_cost(
+                    self.model, usage.prompt_tokens or 0, usage.completion_tokens or 0
+                ),
                 6,
             )
         text = (resp.choices[0].message.content or "").strip()

@@ -824,66 +824,88 @@ def test_broad_themes_demoted_vs_story_candidates() -> None:
     assert "specific" in best_story.reasons
 
 
-def test_crystallize_pool_keeps_events_and_drops_junk() -> None:
-    from algent_backend.data_ingestion.newsroom.discovery.crystallize import (
-        crystallize_pool,
-    )
-    from algent_backend.data_ingestion.newsroom.discovery.report import (
-        DiscoveryPool,
-        PoolItem,
-    )
+def _pool_of(*items):
+    from algent_backend.data_ingestion.newsroom.discovery.report import DiscoveryPool
 
-    class _Fake:
-        last_usd = 0.001
+    return DiscoveryPool(generated_at="t", item_count=len(items), items=list(items))
 
-        def complete_json(self, *, system: str, user: str):
-            return [
-                {
-                    "id": "gkg:story:iran",
-                    "keep": True,
-                    "event": "Iran and US envoys hold talks in Pakistan on day 10 of fighting.",
-                    "reason": "discrete talks",
-                },
-                {
-                    "id": "gkg:story:garden",
-                    "keep": False,
-                    "event": None,
-                    "reason": "lifestyle",
-                },
-                {
-                    "id": "x:x_novelty:1",
-                    "keep": True,
-                    "event": "Houthis issue ultimatum to Saudi Arabia after rejected peace talks.",
-                    "reason": "kinetic diplomacy",
-                },
-            ]
 
-    pool = DiscoveryPool(
-        generated_at="t",
-        item_count=3,
-        by_channel={"gkg": 2, "x": 1},
-        items=[
-            PoolItem(
-                id="gkg:story:iran", label="even as us iran fight talks pakistan",
-                channel="gkg", kind="story", signals={"score": 2.0},
-            ),
-            PoolItem(
-                id="gkg:story:garden", label="what to plant in july seeds list",
-                channel="gkg", kind="story", signals={"score": 3.0},
-            ),
-            PoolItem(
-                id="x:x_novelty:1", label="@x: HOUTHI ULTIMATUM",
-                channel="x", kind="post", signals={"score": 1.0},
-            ),
-        ],
+def _pool_item(pid, label, *, channel="gkg", kind="theme", **signals):
+    from algent_backend.data_ingestion.newsroom.discovery.report import PoolItem
+
+    return PoolItem(id=pid, label=label, channel=channel, kind=kind, signals=signals)
+
+
+class _FakeCrystallizer:
+    """Returns a canned decision per id, and records what it was actually asked."""
+
+    last_usd = 0.001
+
+    def __init__(self, decisions):
+        self.decisions = decisions
+        self.seen = ""
+
+    def complete_json(self, *, system: str, user: str):
+        self.seen = user
+        return self.decisions
+
+
+def test_crystallize_repairs_machine_labels_and_drops_non_events() -> None:
+    from algent_backend.data_ingestion.newsroom.discovery.crystallize import crystallize_pool
+
+    pool = _pool_of(
+        _pool_item("gkg:theme:WB_2811", "collective bargaining", kind="theme", score=2.0),
+        _pool_item("gkg:event:fda_approve", "fda :: approve", kind="event", score=3.0),
     )
-    out, result = crystallize_pool(pool, client=_Fake())
-    assert result.mode == "llm" and result.dropped == 1 and result.kept == 2
-    labels = [i.label for i in out.items]
-    assert any("Pakistan" in lab for lab in labels)
-    assert any("Houthi" in lab or "ultimatum" in lab.lower() for lab in labels)
-    assert all(i.signals.get("crystallized") for i in out.items)
-    assert not any("plant" in i.label.lower() for i in out.items)
+    fake = _FakeCrystallizer([
+        {"id": "gkg:theme:WB_2811", "keep": False, "event": None, "reason": "standing topic"},
+        {"id": "gkg:event:fda_approve", "keep": True, "reason": "approval",
+         "event": "The FDA approved Merck's oral cholesterol drug enlicitide."},
+    ])
+
+    out, result = crystallize_pool(pool, client=fake)
+
+    assert result.mode == "llm" and result.dropped == 1 and result.kept == 1
+    repaired = out.items[0]
+    assert repaired.label.startswith("The FDA approved")
+    assert repaired.signals["raw_label"] == "fda :: approve"   # audit trail kept
+
+
+def test_crystallize_leaves_published_headlines_alone() -> None:
+    """A real headline is not this module's business — no rewrite, no drop, no call."""
+    from algent_backend.data_ingestion.newsroom.discovery.crystallize import crystallize_pool
+
+    headline = "Uganda clears final Ebola patient, starting 42-day countdown"
+    pool = _pool_of(
+        _pool_item("beat:http://a", headline, channel="beat", kind="article"),
+        _pool_item("x:x_news:1", "Houthis declare naval blockade", channel="x", kind="news"),
+        _pool_item("market:pm:1", "Will the Fed cut in September?", channel="market", kind="market"),
+    )
+    fake = _FakeCrystallizer([])
+
+    out, result = crystallize_pool(pool, client=fake)
+
+    assert result.mode == "off" and result.kept == 3 and result.dropped == 0
+    assert fake.seen == ""                              # the model was never called
+    assert [i.label for i in out.items][0] == headline  # headline untouched
+
+
+def test_crystallize_never_overwrites_a_source_headline_with_generated_text() -> None:
+    """Evidence carries the source's own words; model prose must not impersonate them."""
+    from algent_backend.data_ingestion.newsroom.discovery.crystallize import crystallize_pool
+    from algent_backend.data_ingestion.newsroom.discovery.report import BeatHit
+
+    item = _pool_item("gkg:theme:T", "collective bargaining", kind="theme")
+    item.evidence.append(BeatHit(title="Union files for arbitration", url="http://a"))
+    fake = _FakeCrystallizer([
+        {"id": "gkg:theme:T", "keep": True, "reason": "filing",
+         "event": "A rail union filed for federal arbitration over a stalled contract."},
+    ])
+
+    out, _ = crystallize_pool(_pool_of(item), client=fake)
+
+    assert out.items[0].label.startswith("A rail union filed")
+    assert out.items[0].evidence[0].title == "Union files for arbitration"
 
 
 def test_sports_text_filtered_from_markets_and_entities() -> None:

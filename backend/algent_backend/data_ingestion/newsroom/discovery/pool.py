@@ -234,10 +234,17 @@ def _beat_items(sheet: BeatSheet, limit: int | None = None) -> list[PoolItem]:
     part of the corpus, not a category owed representation; selecting one-per-query
     would only trade a wire rut for a taxonomy rut.
     """
+    from ..topic_filters import is_non_news_topic
+
     seen: dict[str, PoolItem] = {}
     items: list[PoolItem] = []
     for result in sheet.results:
         for hit in result.hits:
+            # The sweep was the one channel with no denylist: X, markets and GKG
+            # entities all screen here, so a `world_events` or country query was
+            # free to hand us match reports and ticker-mill SEO.
+            if is_non_news_topic(hit.title):
+                continue
             keys = _dedupe_keys(result, hit)
             existing = next((seen[k] for k in keys if k in seen), None)
             if existing is None:

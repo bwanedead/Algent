@@ -53,9 +53,14 @@ _PILLAR_QUERIES: dict[str, str] = {
         "(economy OR economic OR GDP OR inflation OR recession OR \"central bank\" "
         "OR \"interest rates\" OR unemployment OR tariffs)"
     ),
+    # Crypto is deliberately NOT in here. Bundling it into finance gave it a standing
+    # allocation it hasn't earned, and dragged the ticker-mill roundups in with it
+    # (see ``topic_filters._PROMO_MARKERS``). Genuinely large crypto news still reaches
+    # discovery via GKG volume and the X band — it just isn't a question we ask every
+    # cycle whether or not anything happened.
     "finance": (
-        '("stock market" OR stocks OR bonds OR "federal reserve" OR cryptocurrency '
-        'OR bitcoin OR "financial markets" OR earnings OR IPO)'
+        '("stock market" OR stocks OR bonds OR "federal reserve" '
+        'OR "financial markets" OR earnings OR IPO)'
     ),
     "geopolitics": (
         '(geopolitics OR sanctions OR "foreign policy" OR diplomacy OR "trade war" '
