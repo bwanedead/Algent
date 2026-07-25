@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from algent_backend.agent_system.agents.editorial.analytics_contracts import AI_ANALYTIC_LABEL
 from algent_backend.agent_system.agents.editorial.draft import ArticleDraft
 from algent_backend.agent_system.agents.editorial.publish import render_published_article
 from algent_backend.agent_system.agents.research.profile import (
@@ -116,7 +117,10 @@ def test_table_analytic_is_inlined_not_image_embedded() -> None:
     md = render_published_article(_draft(), _profile(), analytics)
     assert "| Outcome | P |" in md and "| Hold | 81% |" in md   # the table itself is present
     assert "![" not in md.split("How we know this")[0]           # no image embed in the body
-    assert "AI-assisted analytic, built only from cited data" in md   # honesty label still travels
+    # The honesty label still travels. Asserted against the constant, not a copy of its
+    # wording: this test held a hand-typed version and silently went red when the label
+    # was reworded, which reads for months like the disclosure had been dropped.
+    assert AI_ANALYTIC_LABEL in md
     assert "Charts & tables" in md and "from claims c1" in md    # and it still earns a receipts line
 
 
