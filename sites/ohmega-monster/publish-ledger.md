@@ -250,3 +250,10 @@ caveats: verified (0 findings)
 analytics: 1 produced, 0 escapes
 cost: ~$0.0000
 run: 0028__fc1d455d-0b7f-4bb2-a0bd-0d8d06decffd
+
+### PUBLISH researchers-document-baja-california-orcas-hold-and-ram-sunf-cb07f1 — 2026-07-25
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.0000
+run: 0029__4d86583a-76c3-40f2-8ab3-1257a1082420

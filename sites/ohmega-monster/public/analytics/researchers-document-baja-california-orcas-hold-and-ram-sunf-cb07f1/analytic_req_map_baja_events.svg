@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="489.059756pt" height="469.411562pt" viewBox="0 0 489.059756 469.411562" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-07-25T01:40:03.777080</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.3, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 469.411562 
+L 489.059756 469.411562 
+L 489.059756 0 
+L 0 0 
+z
+" style="fill: #0c0f0e"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 19.588494 450.778312 
+L 467.908494 450.778312 
+L 467.908494 39.818312 
+L 19.588494 39.818312 
+z
+" style="fill: #0a1628"/>
+   </g>
+   <g id="patch_3">
+    <path d="M -42.417898 -78.582066 
+L 10.652449 -82.180301 
+L 69.959581 -87.244449 
+L 65.587994 -78.112264 
+L 136.105928 -55.409526 
+L 242.645907 -22.513112 
+L 335.513994 -22.850286 
+L 372.549896 -22.863362 
+L 372.640494 -42.133369 
+L 453.544041 -42.117772 
+L 470.575064 -25.559353 
+L 494.453241 -10.796549 
+L 522.203315 9.742578 
+L 537.689969 34.133521 
+L 549.307995 59.80778 
+L 573.450494 73.909312 
+L 612.211494 87.919312 
+L 641.632494 51.026312 
+L 679.814414 50.125002 
+L 712.728574 68.739155 
+L 736.160766 100.709508 
+L 752.311494 128.081312 
+L 779.864494 154.700312 
+L 790.138494 187.390312 
+L 803.214494 209.339312 
+L 839.640494 223.816312 
+L 872.797494 234.090312 
+L 891.010121 232.689453 
+L 872.887532 273.685188 
+L 864.720916 307.299894 
+L 861.307333 369.866826 
+L 856.808955 392.673612 
+L 864.90314 418.149536 
+L 879.384062 440.923725 
+L 888.706643 477.143591 
+L 919.704095 511.911835 
+L 930.606163 538.556987 
+L 948.877165 561.549592 
+L 998.464252 573.939429 
+L 1017.766903 593.476187 
+L 1058.726493 580.425125 
+L 1094.336971 575.708331 
+L 1129.304343 567.31494 
+L 1158.699424 559.305236 
+L 1188.402165 540.249908 
+L 1199.529841 513.009892 
+L 1203.364565 473.777035 
+L 1211.437034 460.125084 
+L 1243.066804 447.895708 
+L 1292.449952 437.06369 
+L 1333.80042 438.690204 
+L 1362.125231 434.734854 
+L 1373.328935 444.636562 
+L 1371.744591 467.129617 
+L 1346.648805 494.890899 
+L 1335.545273 523.324287 
+L 1344.152269 531.457092 
+L 1337.156142 551.644241 
+L 1325.451675 588.084905 
+L 1313.614486 576.090851 
+L 1303.837047 576.869153 
+L 1294.95975 577.483305 
+L 1278.23083 605.672966 
+L 1269.754172 600.147749 
+L 1264.101044 602.297957 
+L 1264.466658 609.169815 
+L 1221.275977 608.655788 
+L 1177.67751 608.736626 
+L 1177.642532 635.025784 
+L 1156.550384 635.141647 
+L 1173.934505 650.725437 
+L 1191.206407 661.512856 
+L 1196.388939 671.63298 
+L 1203.953405 674.466175 
+L 1202.757605 690.369767 
+L 1142.818762 690.509727 
+L 1120.342566 728.575738 
+L 1126.975507 737.302193 
+L 1121.557653 748.252502 
+L 1120.412569 761.854998 
+L 1067.561526 711.577731 
+L 1043.478102 696.412654 
+L 1005.348159 684.23278 
+L 979.262893 687.625862 
+L 941.755555 705.195803 
+L 918.216327 709.799162 
+L 885.238748 697.491377 
+L 850.239993 688.606842 
+L 806.592025 667.184104 
+L 771.580054 660.640454 
+L 718.710891 638.929297 
+L 679.642138 616.608798 
+L 667.853237 604.136909 
+L 641.71973 601.350741 
+L 593.952261 586.568136 
+L 574.499983 565.26 
+L 524.321627 538.754855 
+L 500.92362 509.304294 
+L 489.792301 486.545749 
+L 505.372495 481.987035 
+L 500.567626 468.669316 
+L 511.304376 456.555803 
+L 511.53484 440.406056 
+L 495.780876 419.435794 
+L 491.566061 400.852276 
+L 475.907457 377.284094 
+L 434.752428 330.863267 
+L 387.797026 294.383982 
+L 365.079531 265.271249 
+L 324.997201 246.203872 
+L 316.409538 234.79623 
+L 323.52872 205.933295 
+L 299.720406 195.040893 
+L 272.15461 172.347542 
+L 260.512907 139.762103 
+L 235.392977 135.962358 
+L 208.274847 111.364907 
+L 186.38992 88.647412 
+L 184.354314 74.056698 
+L 159.240455 38.832289 
+L 142.698521 3.07097 
+L 143.405652 -14.8658 
+L 109.631652 -33.388981 
+L 94.040576 -31.354589 
+L 67.388233 -44.219832 
+L 59.904604 -25.257437 
+L 67.63196 -2.847601 
+L 72.177411 32.22111 
+L 88.192009 51.473138 
+L 122.848032 83.641079 
+L 130.545219 94.635987 
+L 137.647542 97.969946 
+L 143.808673 114.011116 
+L 152.109178 113.361939 
+L 161.482381 143.482179 
+L 175.664051 155.362799 
+L 185.609236 171.898662 
+L 214.958458 195.664759 
+L 230.454172 239.106359 
+L 244.317347 259.560212 
+L 257.291167 281.443926 
+L 259.857706 306.073926 
+L 282.376119 307.617221 
+L 301.103239 328.836066 
+L 318.043338 349.68813 
+L 316.909088 358.051353 
+L 297.256467 375.20501 
+L 288.982488 374.98057 
+L 276.668679 346.591873 
+L 246.106798 319.973294 
+L 212.432969 297.395758 
+L 188.547413 285.534425 
+L 190.090708 251.363475 
+L 183.005291 226.057726 
+L 160.748724 211.58278 
+L 128.648359 190.744026 
+L 122.481203 196.75553 
+L 110.703136 184.585324 
+L 81.898109 173.282709 
+L 54.373363 146.166962 
+L 57.777279 142.642372 
+L 77.012402 145.290963 
+L 94.33983 127.847672 
+L 96.082254 106.780882 
+L 60.131473 73.466643 
+L 32.727353 60.536207 
+L 15.508549 31.375233 
+L -1.816451 0.755444 
+L -23.44677 -36.570932 
+z
+" clip-path="url(#pfa0add31d3)" style="fill: #2a3d36; stroke: #454b46; stroke-width: 0.75"/>
+   </g>
+   <g id="matplotlib.axis_1"/>
+   <g id="matplotlib.axis_2"/>
+   <g id="patch_4">
+    <path d="M 19.588494 450.778312 
+L 19.588494 39.818312 
+" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 19.588494 450.778312 
+L 467.908494 450.778312 
+" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8; opacity: 0.95" x="389.766529" y="202.691391" transform="rotate(-0 389.766529 202.691391)">Mexico</text>
+   </g>
+   <g id="text_2">
+    <text style="font-style: italic; font-size: 8px; font-family: 'Consolas'; text-anchor: middle; fill: #5eb8c9; opacity: 0.95" x="234.408494" y="205.230812" transform="rotate(-0 234.408494 205.230812)">Gulf of California</text>
+   </g>
+   <g id="text_3">
+    <text style="font-style: italic; font-size: 8px; font-family: 'Consolas'; fill: #5eb8c9; opacity: 0.95" transform="translate(98.677869 173.098187)">Baja California</text>
+    <text style="font-style: italic; font-size: 8px; font-family: 'Consolas'; fill: #5eb8c9; opacity: 0.95" transform="translate(111.874119 181.363437)">Peninsula</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8; opacity: 0.95" x="304.458494" y="365.998148" transform="rotate(-0 304.458494 365.998148)">San José del Cabo</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8; opacity: 0.95" x="300.722494" y="304.354148" transform="rotate(-0 300.722494 304.354148)">Isla Cerralvo</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 11px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(19.588494 18.453594)">Map: where the two “ram-to-fragment” sunfish events happened</text>
+    <text style="font-size: 11px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(19.588494 29.818312)">southern Gulf of California</text>
+   </g>
+   <g id="patch_6">
+    <path d="M 264.763494 392.403312 
+L 334.813494 392.403312 
+L 334.813494 294.333312 
+L 264.763494 294.333312 
+L 264.763494 392.403312 
+z
+" clip-path="url(#pfa0add31d3)" style="fill: none; stroke-dasharray: 4.44,1.92; stroke-dashoffset: 0; stroke: #5eb8c9; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #5eb8c9" x="264.763494" y="284.286062" transform="rotate(-0 264.763494 284.286062)">Baja California Sur detail</text>
+   </g>
+   <g id="legend_1">
+    <g id="patch_7">
+     <path d="M 311.543026 70.9655 
+L 463.658494 70.9655 
+L 463.658494 44.068312 
+L 311.543026 44.068312 
+z
+" style="fill: #111513; opacity: 0.92; stroke: #454b46; stroke-linejoin: miter"/>
+    </g>
+    <g id="line2d_1">
+     <path d="M 314.943026 50.673078 
+L 323.443026 50.673078 
+L 331.943026 50.673078 
+" style="fill: none; stroke: #000000; stroke-opacity: 0; stroke-width: 1.5; stroke-linecap: square"/>
+     <defs>
+      <path id="meb8b9aa554" d="M 0 4 
+C 1.060812 4 2.078319 3.578535 2.828427 2.828427 
+C 3.578535 2.078319 4 1.060812 4 0 
+C 4 -1.060812 3.578535 -2.078319 2.828427 -2.828427 
+C 2.078319 -3.578535 1.060812 -4 0 -4 
+C -1.060812 -4 -2.078319 -3.578535 -2.828427 -2.828427 
+C -3.578535 -2.078319 -4 -1.060812 -4 0 
+C -4 1.060812 -3.578535 2.078319 -2.828427 2.828427 
+C -2.078319 3.578535 -1.060812 4 0 4 
+z
+" style="stroke: #f0ede4"/>
+     </defs>
+     <g>
+      <use xlink:href="#meb8b9aa554" x="323.443026" y="50.673078" style="fill: #f0a33a; stroke: #f0ede4"/>
+     </g>
+    </g>
+    <g id="text_8">
+     <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="338.743026" y="53.648078" transform="rotate(-0 338.743026 53.648078)">Event 1 (29 July 2024)</text>
+    </g>
+    <g id="line2d_2">
+     <path d="M 314.943026 62.846672 
+L 323.443026 62.846672 
+L 331.943026 62.846672 
+" style="fill: none; stroke: #000000; stroke-opacity: 0; stroke-width: 1.5; stroke-linecap: square"/>
+     <defs>
+      <path id="m07f8a3e22e" d="M 0 4 
+C 1.060812 4 2.078319 3.578535 2.828427 2.828427 
+C 3.578535 2.078319 4 1.060812 4 0 
+C 4 -1.060812 3.578535 -2.078319 2.828427 -2.828427 
+C 2.078319 -3.578535 1.060812 -4 0 -4 
+C -1.060812 -4 -2.078319 -3.578535 -2.828427 -2.828427 
+C -3.578535 -2.078319 -4 -1.060812 -4 0 
+C -4 1.060812 -3.578535 2.078319 -2.828427 2.828427 
+C -2.078319 3.578535 -1.060812 4 0 4 
+z
+" style="stroke: #f0ede4"/>
+     </defs>
+     <g>
+      <use xlink:href="#m07f8a3e22e" x="323.443026" y="62.846672" style="fill: #5eb8c9; stroke: #f0ede4"/>
+     </g>
+    </g>
+    <g id="text_9">
+     <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="338.743026" y="65.821672" transform="rotate(-0 338.743026 65.821672)">Event 2 (7 September 2025)</text>
+    </g>
+   </g>
+   <g id="line2d_3">
+    <defs>
+     <path id="mb057ced00b" d="M 0 5 
+C 1.326016 5 2.597899 4.473168 3.535534 3.535534 
+C 4.473168 2.597899 5 1.326016 5 0 
+C 5 -1.326016 4.473168 -2.597899 3.535534 -3.535534 
+C 2.597899 -4.473168 1.326016 -5 0 -5 
+C -1.326016 -5 -2.597899 -4.473168 -3.535534 -3.535534 
+C -4.473168 -2.597899 -5 -1.326016 -5 0 
+C -5 1.326016 -4.473168 2.597899 -3.535534 3.535534 
+C -2.597899 4.473168 -1.326016 5 0 5 
+z
+" style="stroke: #f0ede4; stroke-width: 0.7"/>
+    </defs>
+    <g clip-path="url(#pfa0add31d3)">
+     <use xlink:href="#mb057ced00b" x="314.695928" y="371.757242" style="fill: #f0a33a; stroke: #f0ede4; stroke-width: 0.7"/>
+    </g>
+   </g>
+   <g id="line2d_4">
+    <defs>
+     <path id="m30b0cbb2a9" d="M 0 5 
+C 1.326016 5 2.597899 4.473168 3.535534 3.535534 
+C 4.473168 2.597899 5 1.326016 5 0 
+C 5 -1.326016 4.473168 -2.597899 3.535534 -3.535534 
+C 2.597899 -4.473168 1.326016 -5 0 -5 
+C -1.326016 -5 -2.597899 -4.473168 -3.535534 -3.535534 
+C -4.473168 -2.597899 -5 -1.326016 -5 0 
+C -5 1.326016 -4.473168 2.597899 -3.535534 3.535534 
+C -2.597899 4.473168 -1.326016 5 0 5 
+z
+" style="stroke: #f0ede4; stroke-width: 0.7"/>
+    </defs>
+    <g clip-path="url(#pfa0add31d3)">
+     <use xlink:href="#m30b0cbb2a9" x="289.568993" y="310.82878" style="fill: #5eb8c9; stroke: #f0ede4; stroke-width: 0.7"/>
+    </g>
+   </g>
+   <g id="text_10">
+    <text style="font-weight: 500; font-size: 8.5px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4" x="333.375928" y="400.972242" transform="rotate(-0 333.375928 400.972242)">Event 1 — off San José del Cabo</text>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 500; font-size: 8.5px; font-family: 'Consolas'; text-anchor: end; fill: #f0ede4" x="268.553993" y="288.112452" transform="rotate(-0 268.553993 288.112452)">Event 2 — Isla Cerralvo channel</text>
+   </g>
+  </g>
+  <g id="text_12">
+   <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="10.8" y="456.970312" transform="rotate(-0 10.8 456.970312)">as of 2026-07-25 · basemap: Natural Earth 110m · event coords: Frontiers in Ethology paper summary</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pfa0add31d3">
+   <rect x="19.588494" y="39.818312" width="448.32" height="410.96"/>
+  </clipPath>
+ </defs>
+</svg>
