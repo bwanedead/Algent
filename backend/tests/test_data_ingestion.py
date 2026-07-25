@@ -1566,3 +1566,89 @@ def test_run_sweep_randomises_execution_order_so_no_beat_is_always_first() -> No
         assert sorted(seen) == sorted(b.id for b in targets)  # every beat still swept
 
     assert len(orders) > 1  # the order actually varies
+
+
+# -- science feeds: the curiosity channel, off the GDELT chokepoint -------------
+
+_RSS2 = b"""<?xml version="1.0"?><rss version="2.0"><channel>
+<item><title>Orcas filmed smashing giant sunfish</title><link>https://x.org/a</link>
+<pubDate>Fri, 25 Jul 2026</pubDate></item>
+<item><title>Author Correction: threat coding</title><link>https://x.org/b</link></item>
+</channel></rss>"""
+
+_RSS1 = b"""<?xml version="1.0"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns="http://purl.org/rss/1.0/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<item><title>Baby <i>T. rex</i> were killers from birth</title><link>https://nature.com/x</link>
+<dc:date>2026-07-25</dc:date></item></rdf:RDF>"""
+
+_ATOM = b"""<?xml version="1.0"?><feed xmlns="http://www.w3.org/2005/Atom">
+<entry><title>How Fast Is the Universe Expanding?</title>
+<link href="https://quanta.org/u"/><updated>2026-07-25</updated></entry></feed>"""
+
+
+def test_science_feed_parses_rss2_rss1_and_atom() -> None:
+    """The three shapes these feeds actually ship; Nature is RSS 1.0/RDF."""
+    from algent_backend.data_ingestion.newsroom.sources import science_feeds
+
+    rss2 = science_feeds.parse_feed(_RSS2)
+    assert rss2[0]["title"] == "Orcas filmed smashing giant sunfish"
+    assert rss2[0]["domain"] == "x.org"
+
+    rss1 = science_feeds.parse_feed(_RSS1)
+    # Nature italicises species names inline; the markup must not reach the label.
+    assert rss1[0]["title"] == "Baby T. rex were killers from birth"
+
+    atom = science_feeds.parse_feed(_ATOM)
+    assert atom[0]["url"] == "https://quanta.org/u"   # Atom carries the link as an attr
+
+
+def test_science_fetch_drops_journal_furniture_and_survives_a_dead_feed() -> None:
+    from algent_backend.data_ingestion.newsroom.sources import science_feeds
+
+    class _Resp:
+        def __init__(self, code, body=b""):
+            self.status_code, self.content = code, body
+
+    class _Client:
+        def get(self, url):
+            if "dead" in url:
+                raise RuntimeError("connection reset")
+            return _Resp(200, _RSS2)
+
+    hits = science_feeds.fetch_science(
+        feeds=(("dead", "https://dead/", "science"), ("ok", "https://ok/", "science")),
+        client=_Client(),
+    )
+    titles = [h["title"] for h in hits]
+    assert titles == ["Orcas filmed smashing giant sunfish"]   # correction dropped
+    assert hits[0]["feed"] == "ok" and hits[0]["pillar"] == "science"
+
+
+def test_build_pool_carries_science_as_its_own_channel() -> None:
+    from algent_backend.data_ingestion.newsroom.discovery.pool import build_pool
+
+    science = [
+        {"title": "Ancient ape fossil in Egypt challenges human origins",
+         "url": "https://sd.com/a", "domain": "sd.com", "feed": "science_daily", "pillar": "science"},
+        {"title": "Orcas filmed smashing giant sunfish into pieces",
+         "url": "https://sd.com/b", "domain": "sd.com", "feed": "science_daily", "pillar": "science"},
+    ]
+    pool = build_pool(None, None, None, None, science)
+
+    assert pool.by_channel == {"science": 2}
+    assert pool.by_pillar["science"] == 2
+    item = pool.items[0]
+    assert item.channel == "science" and item.kind == "article"
+    assert item.signals["found_by"] == "science:science_daily"   # interleave key set
+
+
+def test_science_channel_screens_the_shared_denylist() -> None:
+    """Sports and promo shapes are dropped here as on every other channel."""
+    from algent_backend.data_ingestion.newsroom.discovery.pool import build_pool
+
+    science = [
+        {"title": "Quantum effect boosts energy transfer", "url": "https://a/1", "feed": "f", "pillar": "science"},
+        {"title": "Lakers sign a new center", "url": "https://a/2", "feed": "f", "pillar": "science"},
+    ]
+    pool = build_pool(None, None, None, None, science)
+    assert [i.label for i in pool.items] == ["Quantum effect boosts energy transfer"]

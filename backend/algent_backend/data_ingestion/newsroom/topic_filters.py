@@ -45,7 +45,12 @@ _SPORTS_WORD_RE = re.compile(
     r"\b("
     r"soccer|footballer|goalkeeper|midfielder|striker|quarterback|"
     r"pitcher|batting|wicket|wickets|innings|halftime|fulltime|"
-    r"fixture|fixtures|relegation|promotion race|transfer|"
+    # NB: bare "transfer" was here and was silently killing real stories across three
+    # desks — "peaceful transfer of power", "wire transfer probe", "heat transfer
+    # breakthrough", "energy transfer". The sports sense is already covered by the
+    # phrase markers above ("transfer window", "transfer fee"), which is where a word
+    # this common belongs.
+    r"fixture|fixtures|relegation|promotion race|"
     r"lineup|line-up|roster move|free agent|draft pick|"
     r"ufc|mma|wrestlemania|knicks|nets|yankees"
     r")\b",

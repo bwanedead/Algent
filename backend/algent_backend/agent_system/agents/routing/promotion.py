@@ -9,9 +9,10 @@ Cooldown is a list of recent published headlines in the agent payload — the mo
 flags same-story-family matches. No lexical post-filter. Alongside it rides a
 coarser **recurring coverage** list (what our recent output keeps returning to).
 
-The agent scores, but the score does not choose. Promotion is a **lottery over the
-eligible** — see ``_ENV_MODE`` for why, and for how to switch back. The agent's real
-authority here is the gate (cooldown), not the order.
+The agent scores, but the score does not decide alone. Promotion is a **rut-discounted
+weighted draw** over the eligible — importance tilts the odds, our own repetition
+discounts them, chance settles the rest, and a genuinely enormous new story still leads
+outright. See ``_ENV_MODE``. The agent's absolute authority is the gate (cooldown).
 """
 
 from __future__ import annotations
@@ -57,13 +58,16 @@ PROMOTION_BRIEF = RoutingBrief(
     ),
     downstream=(
         "One vector is promoted into a t2 signal profile and becomes an article. Which one "
-        "is NOT decided by your score: the promote order is drawn by lottery among the "
-        "vectors you leave cooldown=false, because a fixed scoring criterion applied every "
-        "day produces the same kind of winner every day. Your score is recorded for audit "
-        "and for the human reading the queue; treat it as your honest read of importance, "
-        "not as a vote. What your judgment DOES decide is eligibility: a cooldown=true "
-        "vector cannot be drawn. Cooled vectors stay in the list for audit. The full "
-        "ordered list is the on-deck queue."
+        "is NOT simply your top score. The promote order is a weighted random draw over "
+        "the vectors you leave cooldown=false: your score sets the odds, and those odds "
+        "are then discounted for how much a vector overlaps what our own recent output "
+        "keeps circling — because a fixed criterion applied every day produces the same "
+        "kind of winner every day. A very high score with no such overlap does lead "
+        "outright. So score honestly on importance and it will count, but do not try to "
+        "engineer the outcome; the anti-repetition correction happens after you. What "
+        "your judgment alone decides is eligibility: a cooldown=true vector cannot be "
+        "drawn at all. Cooled vectors stay in the list for audit. The full ordered list "
+        "is the on-deck queue."
     ),
     rank_all=True,
     top_k=80,
@@ -74,31 +78,49 @@ DEFAULT_MODEL = ModelSpec(provider="openai", model="gpt-5.4-mini", temperature=0
 
 # How the promote order is decided once the agent has judged cooldown.
 #
-#   "lottery" (default) — shuffle the eligible vectors. No score decides the order.
-#   "rank"              — the agent's 0-100 composite, highest first.
+#   "draw" (default) — weighted random draw: importance tilts the odds, our own rut
+#                      discounts them, chance settles the rest.
+#   "rank"           — the agent's 0-100 composite, highest first (the original).
 #
-# Lottery is the default because the composite score was manufacturing the rut it was
-# meant to avoid. Its first five criteria — scale, magnitude, durability,
-# irreversibility, urgency — are all monotonic in "how large is this conflict or macro
-# event", so the same *kind* of story wins every single day, and novelty/curiosity sat
-# as nudges inside a function that magnitude dominates. Live: the Iran-Israel-Red Sea
-# cluster scored 96 and oil 85, while a solar generation record scored 66 and a
-# scholarship-migration story 27. A criterion applied daily is a rut with extra steps.
+# Why not straight ranking. The composite manufactures the rut it exists to prevent:
+# scale, magnitude, durability, irreversibility and urgency are all monotonic in "how
+# large is this conflict or macro event", so the same *kind* of story wins every day and
+# novelty sits as a nudge inside a function magnitude dominates. Live: Iran-Israel-Red
+# Sea 96, oil 85, a record solar month 66, scholarship migration 27.
 #
-# What survives is a **floor, not a ranking**: don't repeat ourselves (cooldown), don't
-# run what an operator froze, and don't send research after something with nothing to
-# research. Those are binary and defensible. Ordering the survivors by anything else is
-# an editorial worldview, so it is left to chance instead.
+# Why not a flat lottery either. It answers stagnation by throwing away the one thing
+# the score is actually good at — telling us when something genuinely enormous has
+# happened. A flat draw leads with Turkey's solar record on the day a war starts.
 #
-# The cost is real and worth stating: on a day when something enormous happens, the
-# lottery can lead with a small story while the big one waits its turn. Set
-# ALGENT_PROMOTE_MODE=rank to get the old behaviour back.
+# So: **weight the draw, and discount the rut.** A vector's odds are its importance
+# score decayed by how much it overlaps what our own recent output keeps circling
+# (``publishing.history.recurring_coverage``, read off published frontmatter). A big
+# genuinely-new story keeps its full weight and usually leads. The eighth Hormuz piece
+# has its weight cut per matching label, so it stops crowding the queue without ever
+# being banned — and the discount *decays on its own* as we stop covering it, because
+# the recurrence window is only ten days. Nothing is quota'd and no category is
+# privileged; the penalty is descriptive of us, not prescriptive about the world.
+#
+# BREAK GLASS: a vector scoring at/above ``_ENV_BREAK_GLASS`` with zero rut overlap
+# leads outright. That is the "something enormous and genuinely new happened" path, and
+# it is rare by construction — it needs both a near-top score and no recurrence.
 _ENV_MODE = "ALGENT_PROMOTE_MODE"
+_ENV_DECAY = "ALGENT_PROMOTE_RUT_DECAY"          # weight multiplier per matching label
+_ENV_BREAK_GLASS = "ALGENT_PROMOTE_BREAK_GLASS"  # score at which magnitude just wins
+_DECAY = 0.45
+_BREAK_GLASS = 90.0
 
 
 def promote_mode() -> str:
-    mode = os.environ.get(_ENV_MODE, "lottery").strip().lower()
-    return mode if mode in ("lottery", "rank") else "lottery"
+    mode = os.environ.get(_ENV_MODE, "draw").strip().lower()
+    return mode if mode in ("draw", "rank") else "draw"
+
+
+def _float_env(name: str, default: float, *, lo: float, hi: float) -> float:
+    try:
+        return max(lo, min(hi, float(os.environ.get(name, str(default)))))
+    except ValueError:
+        return default
 
 
 def rank_portfolio(
@@ -137,8 +159,10 @@ def rank_portfolio(
     # Operator hard-freeze (dev): force cooldown on matching vectors after agent rank.
     ranking, freeze_hits = apply_topic_freeze(ranking, by_id)
     mode = promote_mode()
-    if mode == "lottery":
-        ranking = apply_promotion_lottery(ranking, by_id, seed=portfolio.generated_at)
+    if mode == "draw":
+        ranking = apply_promotion_draw(
+            ranking, by_id, recurring=saturated, seed=portfolio.generated_at,
+        )
 
     try:
         cooled = [c.candidate_id for c in ranking.choices if c.cooldown]
@@ -161,43 +185,111 @@ def rank_portfolio(
     return ranking, by_id
 
 
-def apply_promotion_lottery(
+def apply_promotion_draw(
     ranking: RouteRanking,
     by_id: dict[str, ResearchVector],
     *,
+    recurring: tuple[tuple[str, int], ...] = (),
     seed: str = "",
 ) -> RouteRanking:
-    """Shuffle the eligible vectors into a promote order. Scores are kept, not obeyed.
+    """Order the eligible vectors by a rut-discounted weighted draw. See ``_ENV_MODE``.
 
-    Eligible = not cooled (recent story-family or operator freeze) and groundable. The
-    order among them is chance. Cooled vectors keep their place at the end so the
-    on-deck queue stays readable and the audit trail keeps every score.
+    Eligible = not cooled (recent story-family or operator freeze) and groundable.
+    Weight = importance score × decay per recurring-coverage label the vector matches.
+    A near-top score with no recurrence skips the draw entirely (break glass).
 
-    ``seed`` makes the draw reproducible for a given portfolio — the same portfolio
-    always yields the same order, so an operator can work down the queue across runs
-    (and a re-run with ``--from-run`` walks the same list) rather than getting a fresh
-    shuffle each time. Cooldown is what stops repeats: once a piece is published its
-    story-family is cooled, so the next draw cannot land on it again.
+    ``seed`` makes the draw reproducible for a given portfolio, so an operator can work
+    down the queue across runs instead of getting a fresh order each time. Cooldown is
+    what stops repeats: once a piece is published, its story-family is cooled.
     """
     if not ranking.choices:
         return ranking
 
-    eligible = [c for c in ranking.choices if not c.cooldown and _groundable(by_id.get(c.candidate_id))]
+    eligible = [
+        c for c in ranking.choices
+        if not c.cooldown and _groundable(by_id.get(c.candidate_id))
+    ]
     held = [c for c in ranking.choices if c not in eligible]
     if not eligible:
         return ranking
 
-    random.Random(seed or None).shuffle(eligible)
+    decay = _float_env(_ENV_DECAY, _DECAY, lo=0.05, hi=1.0)
+    break_glass = _float_env(_ENV_BREAK_GLASS, _BREAK_GLASS, lo=0.0, hi=1000.0)
+    labels = _rut_labels(recurring)
+
+    weights: dict[str, float] = {}
+    ruts: dict[str, int] = {}
+    forced: list[RankedChoice] = []
+    drawable: list[RankedChoice] = []
+    for choice in eligible:
+        rut = _rut_overlap(by_id.get(choice.candidate_id), labels)
+        ruts[choice.candidate_id] = rut
+        weights[choice.candidate_id] = max(float(choice.score), 1.0) * (decay ** rut)
+        if choice.score >= break_glass and rut == 0:
+            forced.append(choice)
+        else:
+            drawable.append(choice)
+
+    forced.sort(key=lambda c: -c.score)
+    drawn = _weighted_order(drawable, weights, random.Random(seed or None))
     ordered = [
         c.model_copy(update={"rank": i})
-        for i, c in enumerate(eligible + held, start=1)
+        for i, c in enumerate(forced + drawn + held, start=1)
     ]
+
     note_bits = [ranking.note.strip()] if ranking.note.strip() else []
+    discounted = sum(1 for n in ruts.values() if n)
     note_bits.append(
-        f"promote order drawn by lottery over {len(eligible)} eligible vectors "
-        "(scores retained for audit, not used for ordering)"
+        f"promote order: weighted draw over {len(eligible)} eligible "
+        f"(decay {decay} per rut label; {discounted} discounted for recurrence"
+        + (f"; {len(forced)} led on break-glass score >= {break_glass:.0f}" if forced else "")
+        + ")"
     )
     return ranking.model_copy(update={"choices": ordered, "note": " | ".join(note_bits)})
+
+
+def _weighted_order(
+    choices: list[RankedChoice], weights: dict[str, float], rng: random.Random
+) -> list[RankedChoice]:
+    """Draw without replacement, odds proportional to weight."""
+    pool = list(choices)
+    order: list[RankedChoice] = []
+    while pool:
+        total = sum(max(weights.get(c.candidate_id, 1.0), 0.0) for c in pool)
+        if total <= 0:
+            rng.shuffle(pool)
+            return order + pool
+        cut = rng.uniform(0.0, total)
+        running = 0.0
+        for index, choice in enumerate(pool):
+            running += max(weights.get(choice.candidate_id, 1.0), 0.0)
+            if running >= cut:
+                order.append(pool.pop(index))
+                break
+        else:
+            order.append(pool.pop())
+    return order
+
+
+def _rut_labels(recurring: tuple[tuple[str, int], ...]) -> list[str]:
+    """The bare labels of what our recent output keeps circling ("place:Iran" -> "iran")."""
+    out: list[str] = []
+    for label, _count in recurring:
+        bare = label.split(":", 1)[-1].strip().casefold()
+        if len(bare) > 2:
+            out.append(bare)
+    return out
+
+
+def _rut_overlap(vector: ResearchVector | None, labels: list[str]) -> int:
+    """How many recurring labels this vector touches — the discount exponent."""
+    if vector is None or not labels:
+        return 0
+    blob = " ".join([
+        vector.title, vector.thesis, vector.rationale,
+        " ".join(vector.pillars), " ".join(vector.scope),
+    ]).casefold()
+    return sum(1 for label in labels if label in blob)
 
 
 def _groundable(vector: ResearchVector | None) -> bool:

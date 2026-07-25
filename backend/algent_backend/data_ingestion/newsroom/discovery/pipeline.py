@@ -43,12 +43,15 @@ _KEEP = 1
 # The toggleable t0 source channels. ``gkg`` is the free deterministic net (the
 # base); ``beats`` keeps the addressable beat registry fresh on a rotating sweep
 # (free DOC; the diversity channel — see ``beat_refresh``); ``markets`` and ``x``
-# are extra signals fetched live. X primary path is the **X API** (same surface as
+# are extra signals fetched live; ``science`` is the curiosity channel and the only one
+# that does not run through GDELT (see ``sources.science_feeds`` — every registry query
+# shares one DOC endpoint, so a single throttle silenced science entirely).
+# X primary path is the **X API** (same surface as
 # api.x.com/mcp): prefer **News stories** (platform-clustered headlines), NOT
 # WOEID trends and NOT a fixed AI/account roster. Grok CLI optional. ON by default.
 # Disable: ALGENT_T0_CHANNELS=gkg,beats,markets or no bearer.
-ALL_CHANNELS = ("gkg", "beats", "markets", "x")
-DEFAULT_CHANNELS = frozenset({"gkg", "beats", "markets", "x"})
+ALL_CHANNELS = ("gkg", "beats", "markets", "x", "science")
+DEFAULT_CHANNELS = frozenset({"gkg", "beats", "markets", "x", "science"})
 _ENV_CHANNELS = "ALGENT_T0_CHANNELS"  # comma-separated override, e.g. "gkg,markets"
 # How t0 pulls X: ``api`` (default news/stories), ``api+grok``, ``grok`` (legacy).
 _ENV_X_VIA = "ALGENT_X_T0_VIA"
@@ -106,6 +109,7 @@ def _build_pool(report, chans: frozenset[str], say: ProgressFn) -> tuple[dict[st
     sheet = _load_beats(say) if "beats" in chans else None
     markets = _fetch_markets(say) if "markets" in chans else []
     x_hits = _fetch_x(say) if "x" in chans else []
+    science = _fetch_science(say) if "science" in chans else []
     # When X is on, shrink wire/market mass so novelty/spectrum leads stay visible
     # in the chooser menu (not 40 GKG + 25 markets drowning ~20 X).
     gkg_limit = markets_limit = None
@@ -126,9 +130,11 @@ def _build_pool(report, chans: frozenset[str], say: ProgressFn) -> tuple[dict[st
     if sheet is not None:
         beats_limit = _cap_env("ALGENT_T0_BEATS_CAP", 90, lo=4, hi=300)
         say(f"sweep: ≤{beats_limit} pool items, echoes dropped (ALGENT_T0_BEATS_CAP)")
+    science_limit = _cap_env("ALGENT_T0_SCIENCE_CAP", 24, lo=4, hi=80) if science else None
     pool = build_pool(
-        report, sheet, markets, x_hits,
+        report, sheet, markets, x_hits, science,
         gkg_limit=gkg_limit, markets_limit=markets_limit, beats_limit=beats_limit,
+        science_limit=science_limit,
     )
     # Semantic finisher: rewrite to event sentences / drop non-events (cheap LLM).
     try:
@@ -220,6 +226,21 @@ def _write_beat_sheet(sheet: BeatSheet | None, say: ProgressFn) -> None:
         prune_files(out, "beats_*.json", keep=_KEEP)
     except OSError as exc:
         say(f"beats: could not persist sheet ({str(exc)[:60]})")
+
+
+def _fetch_science(say: ProgressFn) -> list[dict]:
+    """The curiosity channel: edited science feeds, free, independent of GDELT."""
+    try:
+        from ..sources.science_feeds import FEEDS, fetch_science
+
+        say(f"fetching science feeds ({len(FEEDS)} sources, free)…")
+        hits = fetch_science()
+        from collections import Counter
+        say(f"science: {len(hits)} items {dict(Counter(h.get('feed') for h in hits))}")
+        return hits
+    except Exception as exc:  # noqa: BLE001 — a dead feed must not sink t0
+        say(f"science: skipped ({str(exc)[:70]})")
+        return []
 
 
 def _fetch_markets(say: ProgressFn) -> list[dict]:

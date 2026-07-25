@@ -34,10 +34,12 @@ def build_pool(
     sheet: BeatSheet | None,
     markets: list[dict] | None = None,
     x_hits: list[dict] | None = None,
+    science: list[dict] | None = None,
     *,
     gkg_limit: int | None = None,
     markets_limit: int | None = None,
     beats_limit: int | None = None,
+    science_limit: int | None = None,
 ) -> DiscoveryPool:
     """Consolidate the net + sweep + prediction markets + X into one grounded pool.
 
@@ -66,6 +68,11 @@ def build_pool(
         items.extend(_market_item(m) for m in mk)
     if x_hits:
         items.extend(_x_item(h) for h in x_hits)
+    if science:
+        from ..topic_filters import is_non_news_topic
+
+        sci = [_science_item(h) for h in science if not is_non_news_topic(str(h.get("title") or ""))]
+        items.extend(_diversify(sci, science_limit))
 
     # Echoes are a cross-channel problem, not a sweep problem. Polymarket lists every
     # outcome of one question as its own market (five "Fed July decision" rows, four
@@ -88,6 +95,26 @@ def build_pool(
         by_pillar={p: len(ids) for p, ids in facets.items()},
         facets=dict(facets),
         items=items,
+    )
+
+
+def _science_item(hit: dict) -> PoolItem:
+    """A science-feed item — the curiosity channel, and the only one off GDELT."""
+    url = str(hit.get("url") or "")
+    return PoolItem(
+        id=f"sci:{hit.get('feed', 'feed')}:{url[-48:]}",
+        label=str(hit.get("title") or ""),
+        channel="science",
+        kind="article",
+        pillars=[str(hit["pillar"])] if hit.get("pillar") else [],
+        signals={
+            "feed": str(hit.get("feed") or ""),
+            "domain": str(hit.get("domain") or ""),
+            "seendate": str(hit.get("seendate") or ""),
+            # The interleave key, same as the sweep's — one feed can't take the cap.
+            "found_by": f"science:{hit.get('feed', '')}",
+        },
+        evidence=[BeatHit(title=str(hit.get("title") or "")[:160], url=url)],
     )
 
 

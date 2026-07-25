@@ -114,55 +114,119 @@ def _spec():
     from algent_backend.agent_system.foundation.models import ModelSpec
     return ModelSpec(provider="openai", model="gpt-5.4-mini")
 
+# -- promote order: rut-discounted weighted draw -------------------------------
 
-# -- promote order: lottery over the eligible, not a score ---------------------
 
-
-def _grounded(title: str) -> ResearchVector:
-    v = _vec(title)
+def _grounded(title: str, thesis: str = "", score_tags: tuple[str, ...] = ()) -> ResearchVector:
+    v = ResearchVector(
+        title=title, thesis=thesis or f"thesis {title}", vector_type="story",
+        rationale="because", research_effort="standard",
+    )
     v.supporting_hits.append("gkg:story:x")   # something to research
+    v.scope.extend(score_tags)
     return v
 
 
-def test_lottery_ignores_the_score_when_ordering_the_promotable() -> None:
-    """The composite score manufactured the rut it was meant to avoid: its first five
-    criteria are all monotonic in 'how big is this conflict', so the same kind of story
-    won every day. Order among the eligible is chance now."""
-    from algent_backend.agent_system.agents.routing.promotion import apply_promotion_lottery
+def _draw(ranking, by_id, **kw):
+    from algent_backend.agent_system.agents.routing.promotion import apply_promotion_draw
+    return apply_promotion_draw(ranking, by_id, **kw)
 
-    by_id = {f"v{i}": _grounded(f"V{i}") for i in range(8)}
+
+def test_draw_does_not_always_hand_the_lead_to_the_top_score() -> None:
+    """A fixed criterion applied daily produces the same kind of winner daily. Odds are
+    tilted by score, not decided by it."""
+    by_id = {f"v{i}": _grounded(f"V{i}") for i in range(6)}
     ranking = RouteRanking(choices=[
-        RankedChoice(candidate_id=f"v{i}", rank=i + 1, score=100 - i) for i in range(8)
+        RankedChoice(candidate_id=f"v{i}", rank=i + 1, score=80 - i * 5) for i in range(6)
     ])
 
-    orders = {
-        tuple(c.candidate_id for c in apply_promotion_lottery(ranking, by_id, seed=s).choices)
-        for s in ("a", "b", "c", "d", "e")
+    leaders = {_draw(ranking, by_id, seed=s).choices[0].candidate_id for s in "abcdefgh"}
+    assert len(leaders) > 1          # the lead genuinely moves
+    for s in "abcdefgh":
+        out = _draw(ranking, by_id, seed=s)
+        assert sorted(c.candidate_id for c in out.choices) == sorted(by_id)
+
+
+def test_draw_favours_the_higher_score_on_average() -> None:
+    """Weighted, not flat: throwing the score away loses the one thing it is good for."""
+    by_id = {"big": _grounded("Big"), "small": _grounded("Small")}
+    ranking = RouteRanking(choices=[
+        RankedChoice(candidate_id="big", rank=1, score=100),
+        RankedChoice(candidate_id="small", rank=2, score=5),
+    ])
+    leads = sum(
+        _draw(ranking, by_id, seed=str(n)).choices[0].candidate_id == "big"
+        for n in range(80)
+    )
+    assert leads > 55   # ~95% expected by weight; assert well clear of a coin flip
+
+
+def test_recurring_coverage_discounts_the_rut_without_banning_it() -> None:
+    """The eighth Hormuz piece stops crowding the queue, but is never blocked."""
+    by_id = {
+        "rut": _grounded("Hormuz shipping risk again", "More on the Strait of Hormuz and Iran"),
+        "fresh": _grounded("Exomoon candidate confirmed", "Astronomers report a first"),
     }
-    assert len(orders) > 1                       # the draw actually varies
-    for order in orders:
-        assert sorted(order) == sorted(by_id)    # and never loses a vector
+    ranking = RouteRanking(choices=[
+        RankedChoice(candidate_id="rut", rank=1, score=88),
+        RankedChoice(candidate_id="fresh", rank=2, score=40),
+    ])
+    recurring = (("subject:Strait of Hormuz", 4), ("place:Iran", 5))
+
+    with_rut = sum(
+        _draw(ranking, by_id, recurring=recurring, seed=str(n)).choices[0].candidate_id == "rut"
+        for n in range(80)
+    )
+    without = sum(
+        _draw(ranking, by_id, seed=str(n)).choices[0].candidate_id == "rut"
+        for n in range(80)
+    )
+    assert with_rut < without          # recurrence really costs it the lead
+    assert with_rut > 0                # but it is discounted, not banned
 
 
-def test_lottery_is_reproducible_for_one_portfolio() -> None:
-    """Same portfolio, same queue — so an operator can work down it across runs."""
-    from algent_backend.agent_system.agents.routing.promotion import apply_promotion_lottery
+def test_break_glass_lets_an_enormous_new_story_lead_outright() -> None:
+    """The cost of a flat lottery was leading with a solar record on the day a war starts."""
+    by_id = {"huge": _grounded("Unprecedented new event"), **{
+        f"v{i}": _grounded(f"V{i}") for i in range(5)}}
+    ranking = RouteRanking(choices=[
+        RankedChoice(candidate_id="huge", rank=1, score=97),
+        *[RankedChoice(candidate_id=f"v{i}", rank=i + 2, score=60) for i in range(5)],
+    ])
+    for s in "abcdef":
+        out = _draw(ranking, by_id, seed=s)
+        assert out.choices[0].candidate_id == "huge"
+    assert "break-glass" in _draw(ranking, by_id, seed="a").note
 
+
+def test_break_glass_does_not_apply_to_a_story_we_keep_circling() -> None:
+    """High score plus recurrence is exactly the rut — it must not get the override."""
+    by_id = {"rut": _grounded("Iran strikes continue", "More on Iran"),
+             "other": _grounded("Something else entirely")}
+    ranking = RouteRanking(choices=[
+        RankedChoice(candidate_id="rut", rank=1, score=99),
+        RankedChoice(candidate_id="other", rank=2, score=30),
+    ])
+    notes = {_draw(ranking, by_id, recurring=(("place:Iran", 6),), seed=s).note for s in "ab"}
+    assert all("break-glass" not in n for n in notes)
+
+
+def test_draw_is_reproducible_for_one_portfolio() -> None:
+    """Same portfolio, same queue — an operator can work down it across runs."""
     by_id = {f"v{i}": _grounded(f"V{i}") for i in range(6)}
     ranking = RouteRanking(choices=[
         RankedChoice(candidate_id=f"v{i}", rank=i + 1, score=50) for i in range(6)
     ])
-    first = apply_promotion_lottery(ranking, by_id, seed="t0-20260725")
-    again = apply_promotion_lottery(ranking, by_id, seed="t0-20260725")
+    a = [c.candidate_id for c in _draw(ranking, by_id, seed="t0-20260725").choices]
+    b = [c.candidate_id for c in _draw(ranking, by_id, seed="t0-20260725").choices]
+    assert a == b
 
-    assert [c.candidate_id for c in first.choices] == [c.candidate_id for c in again.choices]
 
-
-def test_lottery_never_draws_a_cooled_or_ungroundable_vector() -> None:
-    """The floor that survives: don't repeat ourselves, and don't research nothing."""
-    from algent_backend.agent_system.agents.routing.promotion import apply_promotion_lottery
-
-    by_id = {"ok": _grounded("Fine"), "cooled": _grounded("Repeat"), "thin": _vec("Nothing to read")}
+def test_draw_never_picks_a_cooled_or_ungroundable_vector() -> None:
+    """The floor that survives: don't repeat ourselves, don't research nothing."""
+    thin = ResearchVector(title="Nothing to read", thesis="t", vector_type="story",
+                          rationale="r", research_effort="light")
+    by_id = {"ok": _grounded("Fine"), "cooled": _grounded("Repeat"), "thin": thin}
     ranking = RouteRanking(choices=[
         RankedChoice(candidate_id="thin", rank=1, score=99),
         RankedChoice(candidate_id="cooled", rank=2, score=98, cooldown=True,
@@ -170,16 +234,14 @@ def test_lottery_never_draws_a_cooled_or_ungroundable_vector() -> None:
         RankedChoice(candidate_id="ok", rank=3, score=10),
     ])
 
-    out = apply_promotion_lottery(ranking, by_id, seed="s")
+    out = _draw(ranking, by_id, seed="s")
 
-    assert out.choices[0].candidate_id == "ok"      # the only eligible one leads
-    assert top_vector(out, by_id).title == "Fine"   # and it is what gets promoted
-    assert "lottery" in out.note
+    assert out.choices[0].candidate_id == "ok"
+    assert top_vector(out, by_id).title == "Fine"
 
 
-def test_lottery_falls_back_to_the_ranking_when_nothing_is_eligible() -> None:
-    from algent_backend.agent_system.agents.routing.promotion import apply_promotion_lottery
-
-    by_id = {"a": _vec("A")}   # ungroundable
+def test_draw_falls_back_to_the_ranking_when_nothing_is_eligible() -> None:
+    thin = ResearchVector(title="A", thesis="t", vector_type="story", rationale="r",
+                          research_effort="light")
     ranking = RouteRanking(choices=[RankedChoice(candidate_id="a", rank=1, score=5)])
-    assert apply_promotion_lottery(ranking, by_id, seed="s").choices[0].candidate_id == "a"
+    assert _draw(ranking, {"a": thin}, seed="s").choices[0].candidate_id == "a"
