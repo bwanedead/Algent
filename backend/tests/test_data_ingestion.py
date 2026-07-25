@@ -1056,6 +1056,20 @@ def test_run_sweep_records_a_throttle_without_retrying_it() -> None:
     assert sheet.beats_failed == 1 and sheet.results[0].error == "rate_limited"
 
 
+def test_run_sweep_resumes_the_gap_the_last_sweep_ended_on() -> None:
+    """Starting optimistic every time made the first beats sacrificial — and because a
+    throttled beat stays unstamped and so sorts first again, whichever beat led the
+    registry burned there forever (pillar:ai never once succeeded)."""
+    slept: list[float] = []
+    sheet = run_sweep(
+        [_beat("pillar:ai"), _beat("pillar:b")], search=lambda q, **kw: [],
+        sleep=slept.append, pace_s=10.0, max_gap_s=120.0, start_gap_s=80.0,
+        budget_s=10_000.0,
+    )
+    assert slept == [56.0]           # resumed at 80, decayed on success (80 * 0.7)
+    assert sheet.last_gap_s > 10.0   # and the learned pace is carried forward
+
+
 def test_run_sweep_backs_off_harder_across_beats_while_throttled() -> None:
     """The limiter's state is global, so the gap has to carry across beats, not reset."""
     slept: list[float] = []

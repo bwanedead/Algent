@@ -126,6 +126,10 @@ class BeatSheet(BaseModel):
     beats_failed: int
     total_hits: int
     results: list[BeatResult] = Field(default_factory=list)
+    # The request gap the last sweep ended on. Carried so the next sweep starts where
+    # the limiter actually left us instead of re-learning by sacrificing its first few
+    # beats — which starved whichever beat sorts first in the registry (see sweep.py).
+    last_gap_s: float = 0.0
 
 
 class PoolItem(BaseModel):

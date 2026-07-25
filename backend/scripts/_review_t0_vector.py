@@ -11,7 +11,7 @@ items = pool.get("items") or []
 print("=== T0", pool_p.name, len(items), "items", dict(Counter(i.get("channel") for i in items)), "===")
 bf = [i for i in items if i.get("channel") == "backfeed"]
 print("backfeed items:", len(bf), "(should be 0 with default off)")
-for ch in ("gkg", "x", "market", "backfeed"):
+for ch in ("gkg", "x", "beat", "market", "backfeed"):
     chunk = [i for i in items if i.get("channel") == ch]
     if not chunk:
         continue

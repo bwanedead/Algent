@@ -58,6 +58,7 @@ def run_sweep(
     cooldown_s: float = COOLDOWN_S,
     max_gap_s: float = MAX_GAP_S,
     budget_s: float = BUDGET_S,
+    start_gap_s: float = 0.0,
     clock: ClockFn = time.monotonic,
     on_progress: Callable[[int, int, BeatResult], None] | None = None,
 ) -> BeatSheet:
@@ -67,11 +68,16 @@ def run_sweep(
     narrate this otherwise-silent, minutes-long paced sweep. Beats not reached inside
     ``budget_s`` are omitted from the sheet rather than recorded as failures — they
     were never asked, and the rotation will ask them first next time.
+
+    ``start_gap_s`` seeds the adaptive gap from the last sweep's ending gap. Starting
+    optimistic every time made the first few beats sacrificial, and because a throttled
+    beat stays unstamped and therefore sorts first again, whichever beat leads the
+    registry burned in that slot indefinitely — ``pillar:ai`` never once succeeded.
     """
     targets = beats if beats is not None else all_beats()
     results: list[BeatResult] = []
     started = clock()
-    gap = pace_s
+    gap = max(pace_s, min(max_gap_s, start_gap_s or pace_s))
 
     for index, beat in enumerate(targets):
         if index:
@@ -91,6 +97,7 @@ def run_sweep(
         beats_failed=sum(1 for r in results if r.error),
         total_hits=sum(r.hit_count for r in results),
         results=results,
+        last_gap_s=gap,
     )
 
 

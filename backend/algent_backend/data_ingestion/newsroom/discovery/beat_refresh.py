@@ -170,6 +170,9 @@ def refresh_sheet(
     # Narrate per beat: this is a minutes-long paced fetch, and a t0 that goes silent
     # for minutes is indistinguishable from a t0 that hung.
     sweep_kwargs.setdefault("on_progress", _beat_narrator(say))
+    # Resume the limiter's pace from where the last sweep left it (see sweep.run_sweep).
+    if current is not None and current.last_gap_s:
+        sweep_kwargs.setdefault("start_gap_s", current.last_gap_s)
     swept = sweep(targets, **sweep_kwargs)
     merged = merge(current, swept)
     fresh = sum(1 for r in swept.results if not r.error)
@@ -206,10 +209,13 @@ def merge(sheet: BeatSheet | None, swept: BeatSheet) -> BeatSheet | None:
     kept = list(by_id.values())
     if not kept:
         return None
-    return _resheet(sheet or swept, kept)
+    # The fresh sweep is the authority on what the limiter is currently allowing.
+    return _resheet(sheet or swept, kept, last_gap_s=swept.last_gap_s or None)
 
 
-def _resheet(base: BeatSheet, results: list[BeatResult]) -> BeatSheet:
+def _resheet(
+    base: BeatSheet, results: list[BeatResult], *, last_gap_s: float | None = None
+) -> BeatSheet:
     """``base`` with ``results`` swapped in and the roll-up counters recomputed."""
     return base.model_copy(update={
         "generated_at": datetime.now(UTC).isoformat(),
@@ -217,6 +223,7 @@ def _resheet(base: BeatSheet, results: list[BeatResult]) -> BeatSheet:
         "beats_swept": len(results),
         "beats_failed": sum(1 for r in results if r.error),
         "total_hits": sum(r.hit_count for r in results),
+        "last_gap_s": base.last_gap_s if last_gap_s is None else last_gap_s,
     })
 
 

@@ -41,9 +41,16 @@ class Beat:
 # iterations, kept here in one reviewable place. Overlap between pillars is fine:
 # a story is multi-tagged, not bucketed (an AI chip story is both ai and tech).
 _PILLAR_QUERIES: dict[str, str] = {
+    # Named the labs and the release language. The old query listed OpenAI and nothing
+    # else, so a frontier release from anyone but OpenAI could not match it — Anthropic
+    # shipping Opus 5 reached us only as a Chinese-language item picked up by the China
+    # query. A frontier model release is a story we should never have to be lucky to see.
     "ai": (
         '("artificial intelligence" OR "machine learning" OR "generative AI" '
-        'OR "large language model" OR chatbot OR OpenAI OR "neural network")'
+        'OR "large language model" OR "frontier model" OR "neural network" OR chatbot '
+        'OR OpenAI OR Anthropic OR Claude OR Gemini OR DeepMind OR Mistral '
+        'OR Llama OR DeepSeek OR Qwen OR xAI OR Grok '
+        'OR "model release" OR "model card" OR benchmark)'
     ),
     "technology": (
         "(technology OR software OR semiconductor OR cybersecurity OR \"tech company\" "
