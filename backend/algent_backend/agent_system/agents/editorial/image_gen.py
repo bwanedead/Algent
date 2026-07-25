@@ -20,9 +20,27 @@ from typing import Any
 
 from .hero_image import IMAGE_LABEL, build_image_prompt
 
-# Nano Banana 2.
-MODEL = "gemini-3.1-flash-image"
-ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/interactions"
+# Nano Banana 2. Lite by default — half the price for work that is decorative by
+# definition, so the standard model is reserved for a hero we actually care about.
+MODEL = "gemini-3.1-flash-lite-image"
+MODEL_STANDARD = "gemini-3.1-flash-image"
+_API_ROOT = "https://generativelanguage.googleapis.com/v1beta/models"
+
+# generateContent, not the interactions endpoint the image docs describe: interactions 404s
+# for the lite model ("Requested entity was not found") while both models list
+# generateContent among their supportedGenerationMethods. One endpoint for both is worth
+# more than following the doc page.
+def endpoint(model: str) -> str:
+    return f"{_API_ROOT}/{model}:generateContent"
+
+
+#: Sizes each model will actually accept. Lite is 1K-only — asking for 2K returns
+#: "Image size 2K is not supported for this model", which is also why the price list
+#: quotes lite at 1K only.
+SIZES: dict[str, tuple[str, ...]] = {
+    "gemini-3.1-flash-lite-image": ("1K",),
+    "gemini-3.1-flash-image": ("1K", "2K", "4K"),
+}
 
 # 16:9 because a hero is a wide banner and the same asset is what a link preview shows.
 ASPECT = "16:9"
@@ -30,13 +48,14 @@ DEFAULT_SIZE = "2K"
 _ENV_SIZE = "ALGENT_HERO_IMAGE_SIZE"
 _ENV_MODEL = "ALGENT_HERO_IMAGE_MODEL"
 
-# Published output-token prices, per image, standard tier (batch is ~50% less).
+# Standard tier list prices per image (batch is ~50% less). Lite is roughly half of flash.
 USD_PER_IMAGE: dict[str, float] = {
     "0.5K": 0.045,
     "1K": 0.067,
     "2K": 0.101,
     "4K": 0.151,
 }
+USD_PER_IMAGE_LITE: dict[str, float] = {"1K": 0.0336, "2K": 0.0505}
 
 _TIMEOUT_S = 120.0
 
@@ -56,6 +75,9 @@ class GeneratedImage:
     aspect: str
     prompt: str
     estimated_usd: float
+    #: The caption we authorised, if any. The review gate compares the rendered words
+    #: against this — a hook that came back misspelled is worse than no hook.
+    hook: str = ""
     label: str = IMAGE_LABEL
 
     def suffix(self) -> str:
@@ -71,14 +93,18 @@ def model_id() -> str:
     return os.environ.get(_ENV_MODEL, MODEL).strip() or MODEL
 
 
-def estimated_usd(size: str | None = None) -> float:
-    return USD_PER_IMAGE.get(size or image_size(), USD_PER_IMAGE[DEFAULT_SIZE])
+def estimated_usd(size: str | None = None, *, model: str | None = None) -> float:
+    """List price for one image at this size on this model."""
+    table = USD_PER_IMAGE_LITE if "lite" in (model or model_id()).lower() else USD_PER_IMAGE
+    chosen = size or image_size()
+    return table.get(chosen) or USD_PER_IMAGE.get(chosen, USD_PER_IMAGE[DEFAULT_SIZE])
 
 
 def generate_hero_image(
     subject: str,
     *,
     setting: str = "",
+    hook: str = "",
     size: str | None = None,
     mime_type: str = "image/jpeg",
     api_key: str | None = None,
@@ -92,35 +118,34 @@ def generate_hero_image(
     """
     import httpx
 
-    prompt = build_image_prompt(subject, setting=setting)   # raises on an unsafe subject
+    prompt = build_image_prompt(subject, setting=setting, hook=hook)  # raises if unsafe
     chosen = size if size in USD_PER_IMAGE else image_size()
     key = api_key or _resolve_key()
     if not key:
         raise ImageGenerationError("no Gemini API key (GEMINI_API_KEY)")
 
+    model = model_id()
+    chosen = _supported_size(model, chosen)
     payload = {
-        "model": model_id(),
-        "input": [{"type": "text", "text": prompt}],
-        "response_format": {
-            "type": "image",
-            "mime_type": mime_type,
-            "aspect_ratio": ASPECT,
-            "image_size": chosen,
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {
+            "responseModalities": ["IMAGE"],
+            "imageConfig": {"aspectRatio": ASPECT, "imageSize": chosen},
         },
     }
     own = client is None
     http = client or httpx.Client(timeout=_TIMEOUT_S)
     try:
         response = http.post(
-            ENDPOINT, json=payload,
+            endpoint(model), json=payload,
             headers={"x-goog-api-key": key, "Content-Type": "application/json"},
         )
         if getattr(response, "status_code", 0) != 200:
             body = (getattr(response, "text", "") or "")[:200]
             raise ImageGenerationError(f"HTTP {response.status_code}: {body}")
-        payload = response.json()
-        data, returned_mime = _decode(payload)
-        usd = _metered_usd(payload, chosen)
+        body = response.json()
+        data, returned_mime = _decode(body)
+        usd = _metered_usd(body, chosen, model)
     except ImageGenerationError:
         raise
     except Exception as exc:  # noqa: BLE001 — one vendor shape change must not crash a rail
@@ -130,8 +155,8 @@ def generate_hero_image(
             http.close()
 
     return GeneratedImage(
-        data=data, mime_type=returned_mime, model=model_id(), size=chosen, aspect=ASPECT,
-        prompt=prompt, estimated_usd=usd,
+        data=data, mime_type=returned_mime, model=model, size=chosen, aspect=ASPECT,
+        prompt=prompt, estimated_usd=usd, hook=hook.strip(),
     )
 
 
@@ -159,8 +184,20 @@ def _decode(payload: dict) -> tuple[bytes, str]:
 
 
 def _image_blocks(payload: dict) -> list[dict]:
-    """Every plausible image-bearing block, in the order we prefer them."""
+    """Every plausible image-bearing block, in the order we prefer them.
+
+    Primary shape is generateContent's ``candidates[].content.parts[].inlineData``; the
+    older interactions shapes are still read because this response has moved once already
+    and a silent miss is indistinguishable from a refusal.
+    """
     found: list[dict] = []
+    for cand in payload.get("candidates") or []:
+        if not isinstance(cand, dict):
+            continue
+        for part in ((cand.get("content") or {}).get("parts") or []):
+            if isinstance(part, dict) and isinstance(part.get("inlineData"), dict):
+                inline = part["inlineData"]
+                found.append({"data": inline.get("data"), "mime_type": inline.get("mimeType")})
     convenience = payload.get("output_image")
     if isinstance(convenience, dict):
         found.append(convenience)
@@ -177,19 +214,52 @@ def _image_blocks(payload: dict) -> list[dict]:
     return found
 
 
-# Output-token price for the image model, USD per 1M tokens, derived from the published
-# per-image rates (2K ≈ 1,680 output tokens ≈ $0.101). Metering the tokens the response
-# actually reports beats a size lookup: a real 2K generation came back at 1,535.
+# Output-token price per 1M, derived from the published per-image rates (flash 2K ≈ 1,680
+# tokens ≈ $0.101; lite is about half). Metering the tokens the response actually reports
+# beats a size lookup — a real 2K flash image billed 1,535 against a listed 1,680 — but the
+# rate has to follow the model or lite gets charged at flash prices.
 _USD_PER_1M_OUTPUT = 60.0
+_USD_PER_1M_OUTPUT_LITE = 30.0
 
 
-def _metered_usd(payload: dict, size: str) -> float:
-    """Cost from the response's own usage when present, else the per-size list price."""
-    usage = payload.get("usage") if isinstance(payload, dict) else None
-    tokens = (usage or {}).get("total_output_tokens") if isinstance(usage, dict) else None
-    if isinstance(tokens, int) and tokens > 0:
-        return round(tokens / 1_000_000 * _USD_PER_1M_OUTPUT, 6)
-    return estimated_usd(size)
+def _rate_for(model: str) -> float:
+    return _USD_PER_1M_OUTPUT_LITE if "lite" in model.lower() else _USD_PER_1M_OUTPUT
+
+
+def _metered_usd(payload: dict, size: str, model: str | None = None) -> float:
+    """Cost from the response's own usage when present, else the per-size list price.
+
+    Prefers the IMAGE-modality token count, which is the billed quantity: a 1K image
+    reports 1,120 image tokens inside a 1,511 candidate total, and charging the total
+    would overstate every image by the prompt-echo tokens.
+    """
+    chosen = model or model_id()
+    tokens = _image_tokens(payload)
+    if tokens:
+        return round(tokens / 1_000_000 * _rate_for(chosen), 6)
+    return estimated_usd(size, model=chosen)
+
+
+def _image_tokens(payload: dict) -> int:
+    if not isinstance(payload, dict):
+        return 0
+    usage = payload.get("usageMetadata") or payload.get("usage") or {}
+    for detail in usage.get("candidatesTokensDetails") or []:
+        if isinstance(detail, dict) and str(detail.get("modality")).upper() == "IMAGE":
+            count = detail.get("tokenCount")
+            if isinstance(count, int) and count > 0:
+                return count
+    for key in ("candidatesTokenCount", "total_output_tokens"):
+        count = usage.get(key)
+        if isinstance(count, int) and count > 0:
+            return count
+    return 0
+
+
+def _supported_size(model: str, size: str) -> str:
+    """Clamp to a size this model accepts — lite rejects anything above 1K outright."""
+    allowed = SIZES.get(model)
+    return size if not allowed or size in allowed else allowed[-1]
 
 
 def _resolve_key() -> str | None:

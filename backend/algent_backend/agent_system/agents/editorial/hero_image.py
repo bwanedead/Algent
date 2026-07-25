@@ -45,13 +45,22 @@ _STYLE = (
     "wide 16:9 landscape framing, safe for work"
 )
 
-# Appended to every prompt, in code. Each clause is here because of an observed failure or
-# an honesty rule we are not willing to leave to chance.
+# The line that actually matters, and it is not "no text".
+#
+# The Florida failure was never that words appeared. It was that the model *invented*
+# quantities, drew them as a ranking chart, and stamped a forged Bureau of Economic Analysis
+# seal on top — a synthetic official document asserting figures nobody verified. A caption we
+# wrote ourselves and can check is a completely different object: it is our editorial copy,
+# set in a picture.
+#
+# So the prohibitions target **fabricated authority**, not lettering:
+#   - the model may never invent data, charts, or anything with the visual grammar of evidence
+#   - the model may never invent an emblem, seal or logo
+#   - the model may never present the image as documentary proof of a real event
+# and text is allowed only when we supply the exact words (see ``hook``).
 _PROHIBITIONS = (
-    "Do not render any text, words, letters, numbers, labels or captions anywhere in the "
-    "image. "
     "Do not render charts, graphs, tables, dashboards, infographics, percentages or any "
-    "figures or statistics. "
+    "figures, statistics or data of any kind. "
     "Do not render logos, seals, crests, badges, flags-as-insignia, watermarks or anything "
     "resembling an official emblem or government mark. "
     "Do not depict a recognisable real, identifiable person. "
@@ -59,6 +68,23 @@ _PROHIBITIONS = (
     "not imply it is a photograph of the events described. "
     "A generic, representative illustration of the subject is exactly what is wanted."
 )
+
+_NO_TEXT = "Do not render any text, words, letters, numbers, labels or captions anywhere. "
+
+# A social thumbnail with no words is a picture people scroll past; one with a short hook
+# gives them a reason to stop. The words are ALWAYS ours — passed in, never invented — and
+# the review gate checks that what came back says exactly what we authorised.
+MAX_HOOK_WORDS = 8
+
+
+def _hook_clause(hook: str) -> str:
+    return (
+        f'Set exactly these words as a short bold caption over the image: "{hook}". '
+        "Use a clean heavy sans-serif, high contrast against the picture, positioned so it "
+        "does not cover the subject, sized to stay legible in a small feed thumbnail. "
+        "Render THESE WORDS ONLY — reproduce them exactly, with no other text, no extra "
+        "words, no invented figures, and no caption of your own devising anywhere. "
+    )
 
 # A subject carrying digits, money or percentages invites the model to draw data — which is
 # how the fabricated BEA chart happened. Reject rather than sanitise: a subject that needs a
@@ -97,18 +123,43 @@ def is_safe_subject(subject: str) -> bool:
     return check_subject(subject) is None
 
 
-def build_image_prompt(subject: str, *, setting: str = "") -> str:
-    """Assemble the generation prompt for a hero image. Raises on an unusable subject.
+def check_hook(hook: str) -> str | None:
+    """Return why this caption is unusable, or ``None``. Empty means a plain image."""
+    text = (hook or "").strip()
+    if not text:
+        return None
+    if len(text.split()) > MAX_HOOK_WORDS:
+        return (
+            f"too long ({len(text.split())} words) — a thumbnail hook is a few words read at "
+            "a glance, not a headline"
+        )
+    if _ARTEFACT.search(text):
+        return "names a chart/document/logo; a hook is editorial copy, not a figure"
+    return None
+
+
+def build_image_prompt(subject: str, *, setting: str = "", hook: str = "") -> str:
+    """Assemble the generation prompt for a hero image. Raises on an unusable subject/hook.
 
     ``subject`` is the concrete physical thing to depict ("an orca surfacing in coastal
-    water", "a juvenile feathered tyrannosaur"). ``setting`` optionally places it. The
-    headline is deliberately not a parameter — see the module docstring.
+    water"). ``setting`` optionally places it. ``hook`` is a short caption **we author** to
+    be set over the picture, thumbnail-style — supply it and the image carries those words;
+    omit it and the image carries none.
+
+    The headline is deliberately not a parameter, in either mode. A hook is a few words we
+    chose and can verify; a headline pasted in is where the model started inventing figures.
     """
     reason = check_subject(subject)
     if reason is not None:
         raise UnsafeImageSubject(f"{subject!r}: {reason}")
+    hook = (hook or "").strip()
+    bad_hook = check_hook(hook)
+    if bad_hook is not None:
+        raise UnsafeImageSubject(f"hook {hook!r}: {bad_hook}")
+
     scene = f"{subject.strip()}, {setting.strip()}" if setting.strip() else subject.strip()
-    return f"{scene}. {_STYLE}. {_PROHIBITIONS}"
+    text_rule = _hook_clause(hook) if hook else _NO_TEXT
+    return f"{scene}. {_STYLE}. {text_rule}{_PROHIBITIONS}"
 
 
 # -- the review gate ----------------------------------------------------------
@@ -119,7 +170,8 @@ def build_image_prompt(subject: str, *, setting: str = "") -> str:
 # exactly the failure classes we have already seen — not for aesthetics.
 
 IMAGE_REJECTIONS: tuple[str, ...] = (
-    "text_in_image",        # any rendered words, letters, numbers or captions
+    "text_mismatch",        # words on the image are not exactly the hook we authorised
+    "unrequested_text",     # lettering on an image that was supposed to carry none
     "chart_or_data",        # a chart, graph, table, infographic or figures presented as data
     "official_insignia",    # a logo, seal, crest, badge or watermark — real or invented
     "identifiable_person",  # a recognisable real person
@@ -135,8 +187,12 @@ beside the article mislead a reader?
 
 The image should be a plain, representative illustration of its subject. Reject it if you see:
 
-- text_in_image — any rendered words, letters, numbers, labels or captions at all, including
-  on signs, screens or documents inside the scene.
+- text_mismatch — the image was authorised to carry an exact caption and the words it
+  actually shows differ from it: misspelled, reworded, truncated, duplicated, or joined by
+  extra lettering the model added. The caption is our editorial copy, so it has to read
+  exactly as written; a garbled one is worse than none.
+- unrequested_text — an image that was supposed to carry no words has lettering on it,
+  including on signs, screens or documents inside the scene.
 - chart_or_data — a chart, graph, table, dashboard or infographic, or any figures shown as
   though they were data. This is the most serious one. A picture of a chart is a claim, and a
   generated chart is a claim we did not verify.

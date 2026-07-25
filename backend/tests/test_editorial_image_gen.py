@@ -17,17 +17,24 @@ from algent_backend.agent_system.agents.editorial.image_gen import (
 _PIXEL = base64.b64encode(b"\xff\xd8\xff\xe0jpegbytes").decode()
 
 
-def _live_shape(mime: str = "image/jpeg") -> dict:
-    """The shape a real 200 actually returns — steps[] -> model_output -> content[]."""
+def _live_shape(mime: str = "image/jpeg", image_tokens: int = 1120) -> dict:
+    """What generateContent actually returns for an image."""
     return {
-        "status": "completed",
+        "candidates": [{"content": {"parts": [{"inlineData": {"mimeType": mime, "data": _PIXEL}}]}}],
+        "usageMetadata": {
+            "promptTokenCount": 12,
+            "candidatesTokenCount": image_tokens + 391,   # image tokens + prompt echo
+            "candidatesTokensDetails": [{"modality": "IMAGE", "tokenCount": image_tokens}],
+        },
+    }
+
+
+def _interactions_shape(mime: str = "image/jpeg") -> dict:
+    """The older interactions shape, still read so a rollback doesn't silently break."""
+    return {
         "usage": {"total_output_tokens": 1535},
-        "steps": [
-            {"type": "thought", "signature": "..."},
-            {"type": "model_output",
-             "content": [{"type": "image", "mime_type": mime, "data": _PIXEL}]},
-        ],
-        "model": "gemini-3.1-flash-image",
+        "steps": [{"type": "model_output",
+                   "content": [{"type": "image", "mime_type": mime, "data": _PIXEL}]}],
     }
 
 
@@ -66,22 +73,42 @@ def test_a_response_with_no_image_raises_rather_than_writing_an_empty_file() -> 
         _decode({"status": "completed", "steps": [{"type": "thought"}]})
 
 
-def test_cost_is_metered_from_reported_tokens_not_a_size_table() -> None:
-    # A real 2K generation reported 1,535 output tokens, not the listed 1,680.
-    assert _metered_usd(_live_shape(), "2K") == pytest.approx(0.0921, abs=0.002)
+def test_cost_uses_the_image_tokens_not_the_candidate_total() -> None:
+    """A 1K image reports 1,120 IMAGE tokens inside a larger candidate total; billing the
+    total would overstate every image by the prompt-echo tokens."""
+    flash = "gemini-3.1-flash-image"
+    assert _metered_usd(_live_shape(image_tokens=1120), "1K", flash) == pytest.approx(0.0672, abs=0.001)
     # Falls back to the list price when the vendor omits usage.
-    assert _metered_usd({}, "2K") == pytest.approx(0.101)
+    assert _metered_usd({}, "2K", flash) == pytest.approx(0.101)
+
+
+def test_lite_is_billed_at_the_lite_rate_not_the_flash_rate() -> None:
+    """Same tokens, half the price — metering has to follow the model or lite costs 2x."""
+    lite = "gemini-3.1-flash-lite-image"
+    flash = "gemini-3.1-flash-image"
+    assert _metered_usd(_live_shape(), "1K", lite) == pytest.approx(
+        _metered_usd(_live_shape(), "1K", flash) / 2, rel=0.01
+    )
+    assert _metered_usd({}, "1K", lite) == pytest.approx(0.0336)
+
+
+def test_lite_is_clamped_to_1k_because_it_rejects_anything_larger() -> None:
+    """Asking lite for 2K returns 'Image size 2K is not supported for this model'."""
+    from algent_backend.agent_system.agents.editorial.image_gen import _supported_size
+
+    assert _supported_size("gemini-3.1-flash-lite-image", "2K") == "1K"
+    assert _supported_size("gemini-3.1-flash-image", "2K") == "2K"
 
 
 def test_generation_sends_the_guarded_prompt_and_never_the_raw_subject_alone() -> None:
     client = _Client(_Resp(_live_shape()))
     img = generate_hero_image("an orca surfacing in coastal water", client=client)
 
-    sent = client.calls[0]["input"][0]["text"]
+    sent = client.calls[0]["contents"][0]["parts"][0]["text"]
     assert sent.startswith("an orca surfacing in coastal water.")
     # The prohibitions are attached by the builder, not by the caller.
     assert "Do not render any text" in sent and "Do not render charts" in sent
-    assert client.calls[0]["response_format"]["aspect_ratio"] == "16:9"
+    assert client.calls[0]["generationConfig"]["imageConfig"]["aspectRatio"] == "16:9"
     assert img.estimated_usd > 0 and img.label.startswith("AI-generated")
 
 

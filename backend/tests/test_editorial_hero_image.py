@@ -6,6 +6,7 @@ import pytest
 
 from algent_backend.agent_system.agents.editorial.hero_image import (
     IMAGE_LABEL,
+    check_hook,
     IMAGE_REJECTIONS,
     UnsafeImageSubject,
     build_image_prompt,
@@ -46,6 +47,29 @@ def test_a_subject_naming_a_chart_or_document_is_refused() -> None:
         assert "chart/document/logo" in check_subject(bad)
 
 
+def test_a_hook_puts_our_exact_words_on_the_image() -> None:
+    """A wordless thumbnail gets scrolled past; a short hook gives a reason to stop. The
+    words are ours, passed in — never the model's invention."""
+    prompt = build_image_prompt("an orca surfacing in coastal water",
+                                hook="Orcas filmed dismembering a sunfish")
+
+    assert '"Orcas filmed dismembering a sunfish"' in prompt
+    assert "reproduce them exactly" in prompt
+    assert "Do not render any text" not in prompt      # the no-text rule is lifted
+    assert "Do not render charts" in prompt            # the fabrication rules are not
+
+
+def test_a_plain_image_still_forbids_all_lettering() -> None:
+    assert "Do not render any text" in build_image_prompt("an orca surfacing in coastal water")
+
+
+def test_a_hook_that_is_really_a_headline_is_refused() -> None:
+    assert "too long" in check_hook(
+        "Florida claims the fourteenth largest economy on earth right now today"
+    )
+    assert check_hook("") is None                       # empty just means a plain image
+
+
 def test_a_whole_headline_is_refused_for_length() -> None:
     """Passing the T. rex headline verbatim rendered the entire sentence inside the image."""
     headline = (
@@ -69,7 +93,8 @@ def test_an_empty_subject_is_refused_so_no_image_beats_a_wrong_one() -> None:
 def test_the_review_gate_names_the_failures_we_have_actually_seen() -> None:
     assert "chart_or_data" in IMAGE_REJECTIONS       # the fabricated ranking chart
     assert "official_insignia" in IMAGE_REJECTIONS   # the fabricated BEA seal
-    assert "text_in_image" in IMAGE_REJECTIONS       # the headline baked into the T. rex image
+    assert "unrequested_text" in IMAGE_REJECTIONS    # lettering on an image meant to have none
+    assert "text_mismatch" in IMAGE_REJECTIONS       # a hook that came back misspelled
     assert "reads_as_documentary" in IMAGE_REJECTIONS
 
 
