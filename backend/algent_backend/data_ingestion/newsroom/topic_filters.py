@@ -55,13 +55,18 @@ _SPORTS_WORD_RE = re.compile(
 _ENTERTAINMENT_MARKERS: tuple[str, ...] = (
     "box office", "netflix series", "reality show", "grammy", "oscar nominee",
     "celebrity dating", "red carpet", "kardashian", "onlyfans",
-    # Observed on a live GKG pool: concert cancellations, radio-show clips, celebrity
-    # marriage gossip, travel listicles, game-release PR. All arrived as "stories".
+    # Observed on a live GKG pool: concert cancellations, radio-show clips, a wellness
+    # podcast episode, celebrity marriage gossip, travel listicles. All arrived as
+    # "stories" with URL-slug labels.
     "concert short", "comeback tour", "full show", "soul sessions",
     "divorce", "dating rumors", "engagement ring", "baby bump",
     "isnt just for", "is wild as", "things to do in",
-    "release date", "new dlc", "free dlc", "gameplay trailer", "battle details",
 )
+# NOTE: release-PR markers ("release date", "new dlc", "gameplay trailer") were tried
+# here and removed. Gaming is a wanted beat, and a denylist broad enough to catch
+# marketing copy also catches "Nintendo announces release date for X", which is real
+# gaming news. The fix for a beat returning marketing belongs in the beat's *query*
+# (see beats._PILLAR_QUERIES["gaming"]), not in a filter that can't tell the two apart.
 
 # Algorithmic finance SEO — the ticker-roundup mills. Observed on a live sweep:
 # "Promising Cryptocurrency Stocks To Follow Today – July 24th", "Top Blockchain

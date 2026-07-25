@@ -87,9 +87,18 @@ _PILLAR_QUERIES: dict[str, str] = {
         '(energy OR "oil prices" OR "natural gas" OR renewable OR electricity '
         'OR nuclear OR OPEC)'
     ),
+    # Gaming is a wanted beat, but the trade press is overwhelmingly release calendars,
+    # so a broad platform-name query returns nine slots of marketing copy (observed:
+    # four delays, a DLC drop, and two "can X save Xbox" columns in one sweep). Asking
+    # for the *newsworthy* subclasses instead — money, labour, law, platform power,
+    # things breaking — still surfaces a big launch when a big launch is genuinely the
+    # story, because those carry the same business language.
     "gaming": (
-        '("video game" OR gaming OR esports OR PlayStation OR Xbox OR Nintendo '
-        'OR "game studio" OR Steam OR "game release")'
+        '("video game" OR gaming OR "game studio" OR "game developer") '
+        'AND (layoffs OR closure OR acquisition OR lawsuit OR antitrust OR union '
+        'OR strike OR regulation OR revenue OR earnings OR outage OR breach '
+        'OR "class action" OR ruling OR investigation OR "player data" '
+        'OR preservation OR "record sales" OR shutdown OR delisted)'
     ),
 }
 
