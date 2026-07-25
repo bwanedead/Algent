@@ -62,6 +62,24 @@ because individual sentences parse.
   "This is a phase change, not closure", "The upshot is…". Fix: **cut** the label sentence (or
   rewrite suggestion that only states the substance without the label). Do not ask for more
   emphasis.
+- DRAFTER_VANTAGE — the piece is written from the newsroom's seat rather than the reader's. You
+  are the last stage that can catch this and it is the single most common defect we ship, because
+  every stage before you has also read the profile and so the sentence looks normal from inside.
+  Test each one as somebody who followed a link and knows nothing. Flag:
+    • a noun phrase assuming acquaintance the piece never supplied — "the case", "the claim",
+      "the Chamber", "the dispute" used as if already introduced;
+    • a before/after only we can see — "makes the case more concrete than it was before",
+      "clearer than previously thought";
+    • a figure, table, specimen or catalogue number the reader cannot see — "Figure 1 labels
+      RSKM P2416.82 as…" — standing where plain words belong;
+    • **our own process as the subject** — "this pass does not close", "cannot be verified here",
+      "we were unable to reproduce". What is known and unknown is a fact about the world, not a
+      status report on us;
+    • a caption describing the figure's purpose to us rather than telling the reader what they
+      are looking at — "This map orients a reader to…", "Gives readers immediate orientation";
+    • an organisation or person named repeatedly but never actually identified.
+  Fix: `add_handhold` for the unintroduced actor or missing plain-words version; `cut` for the
+  process-narration. Never soften — the sentence has to be rewritten from the reader's side.
 - ONE_SIDED_PICTURE — (only when the topic is clearly contested) you finished understanding the
   facts but only heard one serious public case (e.g. only critique of enforcement, never why
   supporters want it). Flag if the piece would leave a cold reader unable to state the other

@@ -34,6 +34,12 @@ class ComprehensionFinding(BaseModel):
         "assumed_context",     # a sentence that only parses if you already know something unavailable
         "vague_conflict",      # cannot state what the dispute is about / who wants what / why
         "announced_importance",  # machine signature: labels significance instead of showing it
+        # Written from OUR vantage point, not the reader's: "the case" / "the claim" on first use,
+        # a before/after only we can see, a figure or catalogue number the reader cannot see, our
+        # research pass as the subject ("this pass", "cannot be verified here"). The reader has
+        # read nothing but this piece. See style.md machine signature 4 — this is the most common
+        # defect and the hardest to see from inside the pipeline, which is why it is named here.
+        "drafter_vantage",
         "island_paragraph",    # a block with no relation to the through-line — a node with no edges
         "lost_thread",         # the point where the piece stopped being followable
         "unconnected_inference",  # conclusion dropped without the premise that makes it land

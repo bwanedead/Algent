@@ -249,6 +249,31 @@ def _body_with_figures(body: str, produced: list[dict]) -> list[str]:
     return out
 
 
+# A caption that opens by explaining the figure's purpose *to us* — "This map orients a reader
+# to the Canadian location…", "Gives readers immediate geographic orientation for…" — is our
+# rationale for building it, printed where the reader expects to be told what they are looking
+# at (style.md, machine signature 4). The doctrine now forbids writing them; this removes the
+# ones that get written anyway, because the pattern is mechanical: the meta-sentence comes first
+# and a genuinely useful description follows it.
+_CAPTION_META = re.compile(
+    r"^\s*(?:(?:This|The)\s+(?:map|chart|table|figure|graphic|analytic|visual)\b[^.]*?"
+    r"\b(?:reader|readers)\b[^.]*\.|"
+    r"(?:Gives|Give|Helps|Help|Shows|Orients|Allows|Lets)\s+(?:the\s+)?readers?\b[^.]*\.)\s*",
+    re.I,
+)
+
+
+def strip_caption_meta(caption: str) -> str:
+    """Drop a leading sentence that explains the figure to us instead of to the reader.
+
+    Only ever removes a *whole* leading sentence, and never the last one standing — so a caption
+    that is nothing but meta-narration is left alone rather than emptied, and the failure stays
+    visible instead of turning into a bare figure.
+    """
+    stripped = _CAPTION_META.sub("", caption, count=1).strip()
+    return stripped if stripped else caption.strip()
+
+
 def _figure_explainer(a: dict) -> str:
     """Plain 'what this shows' for a cold reader — never make them reverse-engineer the chart.
 
@@ -257,8 +282,8 @@ def _figure_explainer(a: dict) -> str:
     """
     caption = str(a.get("caption") or "").strip()
     if caption:
-        return caption
-    question = str(a.get("question") or "").strip()
+        return strip_caption_meta(caption)
+    question = strip_caption_meta(str(a.get("question") or "").strip())
     bits = [b for b in (question, AI_ANALYTIC_LABEL + ".") if b]
     return " ".join(bits)
 

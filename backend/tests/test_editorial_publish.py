@@ -282,3 +282,49 @@ def test_appendix_is_silent_when_everything_is_clean() -> None:
                      cited_claim_ids=["c1"], cited_source_ids=["s1"])
     md = render_published_article(d, prof)
     assert "Where we hit a limit" not in md   # nothing to flag -> no alarm section
+
+
+# -- captions must address the reader, not explain the figure to us -------------
+
+
+def test_caption_meta_preamble_is_stripped() -> None:
+    """Shipped live: the router's rationale for building a figure, printed as its caption."""
+    from algent_backend.agent_system.agents.editorial.publish import strip_caption_meta
+
+    out = strip_caption_meta(
+        "This map orients a reader to the Canadian location and the stratigraphic setting "
+        "tied to the specimen. This map places the T. rex foot bone in the Frenchman Formation."
+    )
+    assert out == "This map places the T. rex foot bone in the Frenchman Formation."
+
+    out = strip_caption_meta(
+        "Gives readers immediate geographic orientation for the two encounters. "
+        "This map places the two ram-to-fragment events in the Gulf of California."
+    )
+    assert out.startswith("This map places the two")
+
+
+def test_caption_stripper_leaves_a_reader_facing_caption_alone() -> None:
+    from algent_backend.agent_system.agents.editorial.publish import strip_caption_meta
+
+    good = "Where the bone was found, in southern Saskatchewan."
+    assert strip_caption_meta(good) == good
+
+
+def test_caption_stripper_never_empties_a_caption() -> None:
+    """A caption that is *only* meta-narration stays visible rather than becoming a bare figure."""
+    from algent_backend.agent_system.agents.editorial.publish import strip_caption_meta
+
+    only_meta = "This map orients a reader to the region."
+    assert strip_caption_meta(only_meta) == only_meta
+
+
+def test_published_figure_caption_drops_the_meta_sentence() -> None:
+    analytics = [{"request_id": "a1", "status": "produced", "artifact_name": "a1.svg",
+                  "title": "Where the bone was found",
+                  "caption": "This map orients a reader to the Canadian location. "
+                             "The bone came from southern Saskatchewan.",
+                  "data_refs": ["c1"], "figure_check": {"verified": True, "unverified": []}}]
+    md = render_published_article(_draft(), _profile(), analytics)
+    assert "orients a reader" not in md
+    assert "The bone came from southern Saskatchewan." in md

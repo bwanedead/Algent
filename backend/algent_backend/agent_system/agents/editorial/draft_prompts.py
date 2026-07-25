@@ -127,6 +127,24 @@ addressable item ids). Your job:
    structure. If a paragraph could be cut and the reader still holds the same concrete picture,
    cut it.
 
+   COLD-READER SELF-CHECK before you submit — do this one last, and do it literally. Re-read the
+   piece as somebody who followed a link, knows nothing about this story, and has read no part of
+   your profile. You have spent this whole run inside the profile; the reader has not seen a word
+   of it, and that asymmetry is invisible from where you are sitting, which is why it has to be
+   checked deliberately rather than felt. Every one of these is a rewrite, not a softening (see
+   style.md, machine signature 4 — writing from our vantage point):
+     - a noun phrase that assumes acquaintance the piece has not supplied: "the case", "the
+       claim", "the Chamber", "the dispute" on first use;
+     - a before/after only we can see: "more concrete than it was before", "clearer than
+       previously thought";
+     - any reference to a figure, table or specimen the reader cannot see, or a catalogue
+       number standing where plain words belong;
+     - our own process as the subject: "this pass", "cannot be verified here", "we were unable
+       to reproduce" — say what is or is not known about the world instead;
+     - an organisation or person named more than once but never actually identified.
+   If the cold reader would stop and ask "what case?", "which figure?", "who are they?" — you have
+   written for yourself. Fix it in the prose.
+
 3. RESEARCH FOR PRECISION as needed, and you are encouraged to. The profile often holds
    POINTERS — a claim that something is so, sourced, but not the exact quote, figure, or
    detail prose needs. Go get those: the precise number, the actual sentence someone said,

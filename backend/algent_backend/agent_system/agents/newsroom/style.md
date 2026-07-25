@@ -55,6 +55,48 @@ supplies "because" for free.
 promised what, what law or exam was actually broken — is slop padding. Once the phase is clear,
 **move**: landscape → what just happened → outcomes / open ends. Do not crawl the same circle.
 
+**4. Writing from our vantage point instead of the reader's.** This is the most common and the
+most damaging of the four, because every other stage of this pipeline reads the profile too and
+so the defect looks normal from the inside.
+
+**The reader has read nothing but this piece.** They did not see the profile, the sources, the
+research passes, the paper, or any figure you did not put in front of them. They have never heard
+of this story. Any phrase that presumes otherwise is a defect, however true it is. Real examples,
+all published:
+
+- *"A new study makes the baby T. rex case much more concrete than it was before."* — there is no
+  "the case", and the reader never knew its prior state. This is our before/after, not theirs.
+  → **State the finding.** "Palaeontologists have identified the smallest T. rex bone yet found."
+- *"Figure 1 labels RSKM P2416.82 as T. rex left metatarsal III from the latest Maastrichtian
+  Frenchman Formation."* — cites a figure the reader cannot see, by catalogue number, in the
+  second paragraph. → **Say the thing in plain words**, and if a figure carries the point, either
+  put the figure in the piece or describe what it shows: "The fossil is a single toe bone from a
+  hatchling, found in southern Saskatchewan in rock about 66 million years old."
+- *"What this pass does not fully close is the Chamber's exact calculation."* — "this pass" is our
+  research process. The reader is not tracking our passes. → "It is still not clear how the
+  Chamber arrived at the figure."
+- *"This map orients a reader to the Canadian location."* / *"Gives readers immediate geographic
+  orientation."* — describes the artifact's purpose to *us*. → **Tell the reader what they are
+  looking at**: "Where the bone was found."
+- Headline: *"Florida's $1.8tn economy claim is backed by BEA data — but the 14th-largest ranking
+  can't be verified from the Chamber release alone."* — foregrounds our verification result to a
+  reader who has never heard the claim. → Lead with the claim and who made it, then the doubt.
+
+Two rules that follow, and they are absolute:
+
+- **Identify every actor at first mention.** "The Chamber" appearing six times without ever saying
+  what it is, is a failure even when the first mention was formally complete. Give the reader the
+  handful of words that make the name mean something: *the Florida Chamber of Commerce, the state's
+  main business lobby.*
+- **Never make our own verification the subject of a sentence.** What we could and could not
+  confirm is reported as a fact about the world — "the Chamber has not published its method" — not
+  as a status report on our work: "we were unable to reproduce", "this pass did not close",
+  "cannot be verified here". The reader wants the state of the knowledge, not the state of us.
+
+The test: read each sentence as someone who opened this page from a link and knows nothing. If a
+noun phrase ("the case", "the claim", "the Chamber", "Figure 1", "this pass") requires acquaintance
+the piece has not yet supplied, it is broken — rewrite it, do not soften it.
+
 Write as an experienced journalist would — assume an intelligent reader, state things, and move.
 When a conclusion would force the reader to invent a missing premise, put that premise in the
 prose (the mechanism, the condition, the fork) still without importance labels. Facts-in-a-pile

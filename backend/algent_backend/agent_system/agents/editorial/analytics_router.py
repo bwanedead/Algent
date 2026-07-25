@@ -60,10 +60,20 @@ in the claim ledger. Ask: would a figure help, and is the data reasonably availa
 - Never decorate, never fill a quota, never invent numbers or a map without data.
 
 UTILITY CLASSES (pick the one that helps most — geography often beats trajectory for place stories):
-1. GEOGRAPHY / ORIENTATION MAP — **default yes** when the story turns on place: chokepoints
-   (Bab el-Mandeb, Hormuz, Suez), multi-city strike patterns, borders, theaters a cold Western
-   reader cannot hold from prose alone. Prefer a **labeled map** (country/theater basemap + real
-   lat/lon points for named places) over a speculative shipping-cost series you may not fetch.
+1. GEOGRAPHY / ORIENTATION MAP — warranted when the story turns on **spatial relationships a
+   sentence cannot carry**: chokepoints (Bab el-Mandeb, Hormuz, Suez), multi-city strike patterns,
+   borders, spread, theaters a cold Western reader cannot hold from prose alone. Prefer a
+   **labeled map** (country/theater basemap + real lat/lon points) over a speculative
+   shipping-cost series you may not fetch.
+
+   **But a place being mentioned is not geography being load-bearing.** One event at one location
+   does not earn a map: a country outline with a single dot in it tells the reader nothing the
+   place name already told them, and we shipped exactly that — a Canada-and-US outline with one
+   point on it for a fossil found in Saskatchewan. Before requesting a map, name the spatial
+   question it answers ("how far apart are these?", "what does this sit between?", "where is this
+   spreading?"). If the honest answer is "it shows where it happened", the place name in the prose
+   is already doing that job — request something else, or nothing.
+
    Map rules (accuracy is paramount):
    - Default frame is **country or larger theater**, not a zoom-only cluster of three towns with
      no national context. The reader should see where the cluster sits relative to the country,
@@ -106,13 +116,32 @@ Kinds (only if useful):
 
 Reader clarity is part of usefulness. PUBLISHED fields:
 - `title`: what is measured (plain words).
-- `question`: what this shows — quantity/comparison/orientation + why it helps the story.
+- `question`: **the caption the reader will actually read, printed verbatim under the figure.**
+  So write it to the reader, describing what they are looking at — "Where the bone was found",
+  "Florida's economy against the countries it is being compared to". NEVER describe the figure's
+  purpose to us, and never mention the reader in it. Shipped failures to avoid: *"This map
+  orients a reader to the Canadian location"*, *"Gives readers immediate geographic
+  orientation"* — that is our rationale for building it, published as though it were a caption
+  (style.md, machine signature 4). If the sentence contains "the reader", "orients", "helps the
+  story" or "gives readers", it is the wrong sentence.
 - `spec`: how to build it so a cold reader can read axes/units/labels without reverse-engineering.
   For maps: list countries (ISO or names) + named points to plot + any inset.
+  A comparison is far more useful with the **full spectrum** than with an arbitrary handful: when
+  the story is a ranking or a standing, show the whole field or an explicit top-N *and* bottom-N,
+  and put the rank numbers on it when the rank is the point. Seven unexplained peers invites the
+  question "why these seven?".
 - `data_refs` and/or `may_source` + `source_hint` as above.
 
-Prefer zero, one, or two requests: a **map + one trajectory** is fine when both are load-bearing.
-Do not ship three. Order maps first so the cap keeps orientation when both are requested.
+Prefer zero, one, or two requests. Do not ship three.
+
+**Pick the form the story actually needs — do not default to a map.** Geography earns a map only
+when *where* is genuinely load-bearing and the map can show something a sentence cannot: a choke
+point, a spread, a multi-site theatre. A single find at one location does not need one; a
+country-outline map with one dot tells the reader nothing they did not get from the place name,
+and we have published exactly that. Ask what the reader is missing — a quantity over time, a
+comparison against the full field, a mechanism, a sequence of events, a composition — and build
+*that*. If nothing genuinely aids comprehension, `warranted=false` is the right answer and always
+available.
 
 OUTPUT — AnalyticsPlan: warranted=false when nothing useful; otherwise the best request(s).
 """

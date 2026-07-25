@@ -19,6 +19,29 @@ structure — and let hearings, statements, or recaps live in the dek or body wh
 how we know more. A headline that only names who spoke or what memo dropped, when the big deal
 is something else, has the wrong center of mass (framing.md).
 
+## Written for someone who has never heard of this
+The reader meets the headline **cold**. They do not know the claim, the dispute, the institution
+or the number, and they certainly do not know what we were able to confirm about it. A headline
+that only makes sense to someone already following the story — or worse, to someone who has read
+our profile — has failed before the piece begins (style.md, machine signature 4).
+
+Two specific failures, both shipped:
+
+- **Leading with our verdict on a claim the reader has never seen.** *"Florida's $1.8tn economy
+  claim is backed by BEA data — but the 14th-largest ranking can't be verified from the Chamber
+  release alone."* Every clause of that is about *our* checking. The reader has not been told
+  there is a claim, who made it, or why they should care. → Name the claim and the claimant, then
+  carry the doubt: *"Florida's business lobby says the state economy has passed $1.8tn and ranks
+  14th in the world. The ranking is hard to check."*
+- **Hedging the finding into the headline's spine.** A headline is not the place to run the
+  caveat argument. State what happened or what was found; the honest qualifier belongs in the dek
+  where it has room to be precise. Compressing "supported / not supported / partly" into the
+  headline produces the shape above every time.
+
+Our confidence in a fact is not the news. **The fact, and who is asserting it, is the news.** Say
+plainly if something is contested — "disputed", "unverified", "the group has not shown its
+workings" — but as a property of the world, never as a report on our research pass.
+
 ## No deception, in either direction (this is the whole standard)
 - **No clickbait / curiosity gap.** Do not withhold the point to manufacture a click ("You won't
   believe what the Fed did"). Tell the reader the point.
