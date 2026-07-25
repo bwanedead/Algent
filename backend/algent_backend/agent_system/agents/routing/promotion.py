@@ -7,13 +7,17 @@ and the **adapter** that renders t1 ``ResearchVector``s into generic candidates.
 
 Cooldown is a list of recent published headlines in the agent payload — the model
 flags same-story-family matches. No lexical post-filter. Alongside it rides a
-coarser **recurring coverage** list (what our recent output keeps returning to),
-which is a tie-break weight only: a pull toward the long tail, never a quota, and
-it must never demote a genuinely bigger story.
+coarser **recurring coverage** list (what our recent output keeps returning to).
+
+The agent scores, but the score does not choose. Promotion is a **lottery over the
+eligible** — see ``_ENV_MODE`` for why, and for how to switch back. The agent's real
+authority here is the gate (cooldown), not the order.
 """
 
 from __future__ import annotations
 
+import os
+import random
 from dataclasses import replace
 
 from algent_backend.agent_system.agents.discovery.portfolio import (
@@ -52,9 +56,14 @@ PROMOTION_BRIEF = RoutingBrief(
         "have been working over and over."
     ),
     downstream=(
-        "The highest-ranked vector with cooldown=false is promoted into a t2 signal profile. "
-        "Cooldown=true vectors stay in the ordered list for audit but will not promote. "
-        "The full ordered list is the on-deck queue."
+        "One vector is promoted into a t2 signal profile and becomes an article. Which one "
+        "is NOT decided by your score: the promote order is drawn by lottery among the "
+        "vectors you leave cooldown=false, because a fixed scoring criterion applied every "
+        "day produces the same kind of winner every day. Your score is recorded for audit "
+        "and for the human reading the queue; treat it as your honest read of importance, "
+        "not as a vote. What your judgment DOES decide is eligibility: a cooldown=true "
+        "vector cannot be drawn. Cooled vectors stay in the list for audit. The full "
+        "ordered list is the on-deck queue."
     ),
     rank_all=True,
     top_k=80,
@@ -62,6 +71,34 @@ PROMOTION_BRIEF = RoutingBrief(
 
 # Editorial judgment over a full portfolio — savvy tier, one structured call.
 DEFAULT_MODEL = ModelSpec(provider="openai", model="gpt-5.4-mini", temperature=0.2)
+
+# How the promote order is decided once the agent has judged cooldown.
+#
+#   "lottery" (default) — shuffle the eligible vectors. No score decides the order.
+#   "rank"              — the agent's 0-100 composite, highest first.
+#
+# Lottery is the default because the composite score was manufacturing the rut it was
+# meant to avoid. Its first five criteria — scale, magnitude, durability,
+# irreversibility, urgency — are all monotonic in "how large is this conflict or macro
+# event", so the same *kind* of story wins every single day, and novelty/curiosity sat
+# as nudges inside a function that magnitude dominates. Live: the Iran-Israel-Red Sea
+# cluster scored 96 and oil 85, while a solar generation record scored 66 and a
+# scholarship-migration story 27. A criterion applied daily is a rut with extra steps.
+#
+# What survives is a **floor, not a ranking**: don't repeat ourselves (cooldown), don't
+# run what an operator froze, and don't send research after something with nothing to
+# research. Those are binary and defensible. Ordering the survivors by anything else is
+# an editorial worldview, so it is left to chance instead.
+#
+# The cost is real and worth stating: on a day when something enormous happens, the
+# lottery can lead with a small story while the big one waits its turn. Set
+# ALGENT_PROMOTE_MODE=rank to get the old behaviour back.
+_ENV_MODE = "ALGENT_PROMOTE_MODE"
+
+
+def promote_mode() -> str:
+    mode = os.environ.get(_ENV_MODE, "lottery").strip().lower()
+    return mode if mode in ("lottery", "rank") else "lottery"
 
 
 def rank_portfolio(
@@ -99,6 +136,9 @@ def rank_portfolio(
     ranking = route(context, candidates, brief, model_spec=model_spec, config=config)
     # Operator hard-freeze (dev): force cooldown on matching vectors after agent rank.
     ranking, freeze_hits = apply_topic_freeze(ranking, by_id)
+    mode = promote_mode()
+    if mode == "lottery":
+        ranking = apply_promotion_lottery(ranking, by_id, seed=portfolio.generated_at)
 
     try:
         cooled = [c.candidate_id for c in ranking.choices if c.cooldown]
@@ -107,6 +147,7 @@ def rank_portfolio(
             "n_recent": len(recent),
             "recent_titles": [t[:80] for _, t in recent[:12]],
             "recurring_coverage": [f"{label}×{n}" for label, n in saturated[:8]],
+            "promote_mode": mode,
             "mode": "agent_semantic+recurring_coverage+topic_freeze",
             "n_flagged": len(cooled),
             "cooled_ids": cooled,
@@ -118,6 +159,52 @@ def rank_portfolio(
     except Exception:  # noqa: BLE001
         pass
     return ranking, by_id
+
+
+def apply_promotion_lottery(
+    ranking: RouteRanking,
+    by_id: dict[str, ResearchVector],
+    *,
+    seed: str = "",
+) -> RouteRanking:
+    """Shuffle the eligible vectors into a promote order. Scores are kept, not obeyed.
+
+    Eligible = not cooled (recent story-family or operator freeze) and groundable. The
+    order among them is chance. Cooled vectors keep their place at the end so the
+    on-deck queue stays readable and the audit trail keeps every score.
+
+    ``seed`` makes the draw reproducible for a given portfolio — the same portfolio
+    always yields the same order, so an operator can work down the queue across runs
+    (and a re-run with ``--from-run`` walks the same list) rather than getting a fresh
+    shuffle each time. Cooldown is what stops repeats: once a piece is published its
+    story-family is cooled, so the next draw cannot land on it again.
+    """
+    if not ranking.choices:
+        return ranking
+
+    eligible = [c for c in ranking.choices if not c.cooldown and _groundable(by_id.get(c.candidate_id))]
+    held = [c for c in ranking.choices if c not in eligible]
+    if not eligible:
+        return ranking
+
+    random.Random(seed or None).shuffle(eligible)
+    ordered = [
+        c.model_copy(update={"rank": i})
+        for i, c in enumerate(eligible + held, start=1)
+    ]
+    note_bits = [ranking.note.strip()] if ranking.note.strip() else []
+    note_bits.append(
+        f"promote order drawn by lottery over {len(eligible)} eligible vectors "
+        "(scores retained for audit, not used for ordering)"
+    )
+    return ranking.model_copy(update={"choices": ordered, "note": " | ".join(note_bits)})
+
+
+def _groundable(vector: ResearchVector | None) -> bool:
+    """The one non-negotiable floor: there has to be something to research."""
+    if vector is None:
+        return False
+    return bool(vector.supporting_hits or vector.sources)
 
 
 def apply_topic_freeze(

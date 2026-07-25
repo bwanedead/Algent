@@ -1542,3 +1542,27 @@ def test_ngrams_fetch_smoke() -> None:
 class _ns:
     def __init__(self, **kwargs) -> None:
         self.__dict__.update(kwargs)
+
+
+def test_run_sweep_randomises_execution_order_so_no_beat_is_always_first() -> None:
+    """Position in a sweep decides who eats the throttle; a fixed order made that a
+    permanent sentence (pillar:ai and pillar:science had never once succeeded)."""
+    import random as _random
+
+    targets = [_beat(f"pillar:b{i}") for i in range(8)]
+    orders = set()
+    for seed in range(6):
+        seen: list[str] = []
+
+        def _search(q, **kw):
+            return []
+
+        sheet = run_sweep(
+            targets, search=_search, sleep=lambda _s: None,
+            rng=_random.Random(seed), budget_s=10_000.0,
+        )
+        seen = [r.beat_id for r in sheet.results]
+        orders.add(tuple(seen))
+        assert sorted(seen) == sorted(b.id for b in targets)  # every beat still swept
+
+    assert len(orders) > 1  # the order actually varies

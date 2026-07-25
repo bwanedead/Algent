@@ -113,3 +113,73 @@ def test_router_prompt_injects_brief_and_system_map() -> None:
 def _spec():
     from algent_backend.agent_system.foundation.models import ModelSpec
     return ModelSpec(provider="openai", model="gpt-5.4-mini")
+
+
+# -- promote order: lottery over the eligible, not a score ---------------------
+
+
+def _grounded(title: str) -> ResearchVector:
+    v = _vec(title)
+    v.supporting_hits.append("gkg:story:x")   # something to research
+    return v
+
+
+def test_lottery_ignores_the_score_when_ordering_the_promotable() -> None:
+    """The composite score manufactured the rut it was meant to avoid: its first five
+    criteria are all monotonic in 'how big is this conflict', so the same kind of story
+    won every day. Order among the eligible is chance now."""
+    from algent_backend.agent_system.agents.routing.promotion import apply_promotion_lottery
+
+    by_id = {f"v{i}": _grounded(f"V{i}") for i in range(8)}
+    ranking = RouteRanking(choices=[
+        RankedChoice(candidate_id=f"v{i}", rank=i + 1, score=100 - i) for i in range(8)
+    ])
+
+    orders = {
+        tuple(c.candidate_id for c in apply_promotion_lottery(ranking, by_id, seed=s).choices)
+        for s in ("a", "b", "c", "d", "e")
+    }
+    assert len(orders) > 1                       # the draw actually varies
+    for order in orders:
+        assert sorted(order) == sorted(by_id)    # and never loses a vector
+
+
+def test_lottery_is_reproducible_for_one_portfolio() -> None:
+    """Same portfolio, same queue — so an operator can work down it across runs."""
+    from algent_backend.agent_system.agents.routing.promotion import apply_promotion_lottery
+
+    by_id = {f"v{i}": _grounded(f"V{i}") for i in range(6)}
+    ranking = RouteRanking(choices=[
+        RankedChoice(candidate_id=f"v{i}", rank=i + 1, score=50) for i in range(6)
+    ])
+    first = apply_promotion_lottery(ranking, by_id, seed="t0-20260725")
+    again = apply_promotion_lottery(ranking, by_id, seed="t0-20260725")
+
+    assert [c.candidate_id for c in first.choices] == [c.candidate_id for c in again.choices]
+
+
+def test_lottery_never_draws_a_cooled_or_ungroundable_vector() -> None:
+    """The floor that survives: don't repeat ourselves, and don't research nothing."""
+    from algent_backend.agent_system.agents.routing.promotion import apply_promotion_lottery
+
+    by_id = {"ok": _grounded("Fine"), "cooled": _grounded("Repeat"), "thin": _vec("Nothing to read")}
+    ranking = RouteRanking(choices=[
+        RankedChoice(candidate_id="thin", rank=1, score=99),
+        RankedChoice(candidate_id="cooled", rank=2, score=98, cooldown=True,
+                     cooldown_reason="same family"),
+        RankedChoice(candidate_id="ok", rank=3, score=10),
+    ])
+
+    out = apply_promotion_lottery(ranking, by_id, seed="s")
+
+    assert out.choices[0].candidate_id == "ok"      # the only eligible one leads
+    assert top_vector(out, by_id).title == "Fine"   # and it is what gets promoted
+    assert "lottery" in out.note
+
+
+def test_lottery_falls_back_to_the_ranking_when_nothing_is_eligible() -> None:
+    from algent_backend.agent_system.agents.routing.promotion import apply_promotion_lottery
+
+    by_id = {"a": _vec("A")}   # ungroundable
+    ranking = RouteRanking(choices=[RankedChoice(candidate_id="a", rank=1, score=5)])
+    assert apply_promotion_lottery(ranking, by_id, seed="s").choices[0].candidate_id == "a"

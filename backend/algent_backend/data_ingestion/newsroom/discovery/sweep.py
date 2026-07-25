@@ -25,6 +25,7 @@ is fully testable offline with no network and no real waiting.
 
 from __future__ import annotations
 
+import random
 import time
 from collections.abc import Callable
 from datetime import UTC, datetime
@@ -60,6 +61,7 @@ def run_sweep(
     budget_s: float = BUDGET_S,
     start_gap_s: float = 0.0,
     clock: ClockFn = time.monotonic,
+    rng: random.Random | None = None,
     on_progress: Callable[[int, int, BeatResult], None] | None = None,
 ) -> BeatSheet:
     """Sweep the registry (or a given subset) into a :class:`BeatSheet`.
@@ -74,7 +76,14 @@ def run_sweep(
     beat stays unstamped and therefore sorts first again, whichever beat leads the
     registry burned in that slot indefinitely — ``pillar:ai`` never once succeeded.
     """
-    targets = beats if beats is not None else all_beats()
+    targets = list(beats if beats is not None else all_beats())
+    # Execution order is randomised, because position in a sweep decides who eats the
+    # throttle and a fixed order made that a permanent sentence. Selection still favours
+    # the stalest (see beat_refresh); this only decides who goes first among the chosen.
+    # It is why ``pillar:ai`` and ``pillar:science`` had never once succeeded: registry
+    # order put them at the front of every rotation, a throttled beat stays unstamped
+    # and so sorts first again, and the front of a sweep is where requests die.
+    (rng or random).shuffle(targets)
     results: list[BeatResult] = []
     started = clock()
     gap = max(pace_s, min(max_gap_s, start_gap_s or pace_s))
