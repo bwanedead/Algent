@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="635.931563pt" height="441.297094pt" viewBox="0 0 635.931563 441.297094" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-07-25T01:53:49.471587</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.3, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 441.297094 
+L 635.931563 441.297094 
+L 635.931563 0 
+L 0 0 
+z
+" style="fill: #0c0f0e"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 99.196 364.2455 
+L 594.619895 364.2455 
+L 594.619895 65.269 
+L 99.196 65.269 
+z
+" style="fill: #111513"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 99.196 350.655659 
+L 256.744645 350.655659 
+L 256.744645 336.079804 
+L 99.196 336.079804 
+z
+" clip-path="url(#pf7c7968ab4)" style="fill: #454b46"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 99.196 329.220579 
+L 296.375438 329.220579 
+L 296.375438 314.644724 
+L 99.196 314.644724 
+z
+" clip-path="url(#pf7c7968ab4)" style="fill: #454b46"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 99.196 307.785498 
+L 302.872289 307.785498 
+L 302.872289 293.209644 
+L 99.196 293.209644 
+z
+" clip-path="url(#pf7c7968ab4)" style="fill: #454b46"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 99.196 286.350418 
+L 319.926524 286.350418 
+L 319.926524 271.774564 
+L 99.196 271.774564 
+z
+" clip-path="url(#pf7c7968ab4)" style="fill: #454b46"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 99.196 264.915338 
+L 325.936112 264.915338 
+L 325.936112 250.339483 
+L 99.196 250.339483 
+z
+" clip-path="url(#pf7c7968ab4)" style="fill: #454b46"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 99.196 243.480258 
+L 379.535135 243.480258 
+L 379.535135 228.904403 
+L 99.196 228.904403 
+z
+" clip-path="url(#pf7c7968ab4)" style="fill: #454b46"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 99.196 222.045177 
+L 384.570195 222.045177 
+L 384.570195 207.469323 
+L 99.196 207.469323 
+z
+" clip-path="url(#pf7c7968ab4)" style="fill: #5eb8c9"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 99.196 200.610097 
+L 396.426949 200.610097 
+L 396.426949 186.034242 
+L 99.196 186.034242 
+z
+" clip-path="url(#pf7c7968ab4)" style="fill: #5eb8c9"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 99.196 179.175017 
+L 397.239055 179.175017 
+L 397.239055 164.599162 
+L 99.196 164.599162 
+z
+" clip-path="url(#pf7c7968ab4)" style="fill: #f0a33a"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 99.196 157.739936 
+L 403.735906 157.739936 
+L 403.735906 143.164082 
+L 99.196 143.164082 
+z
+" clip-path="url(#pf7c7968ab4)" style="fill: #5eb8c9"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 99.196 136.304856 
+L 454.248925 136.304856 
+L 454.248925 121.729002 
+L 99.196 121.729002 
+z
+" clip-path="url(#pf7c7968ab4)" style="fill: #454b46"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 99.196 114.869776 
+L 467.892313 114.869776 
+L 467.892313 100.293921 
+L 99.196 100.293921 
+z
+" clip-path="url(#pf7c7968ab4)" style="fill: #454b46"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 99.196 93.434696 
+L 486.245918 93.434696 
+L 486.245918 78.858841 
+L 99.196 78.858841 
+z
+" clip-path="url(#pf7c7968ab4)" style="fill: #454b46"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <path d="M 99.196 364.2455 
+L 99.196 65.269 
+" clip-path="url(#pf7c7968ab4)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_2">
+      <defs>
+       <path id="m907238dab3" d="M 0 0 
+L 0 3.5 
+" style="stroke: #858981; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m907238dab3" x="99.196" y="364.2455" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="99.196" y="378.1455" transform="rotate(-0 99.196 378.1455)">0.0</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_3">
+      <path d="M 180.406642 364.2455 
+L 180.406642 65.269 
+" clip-path="url(#pf7c7968ab4)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#m907238dab3" x="180.406642" y="364.2455" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="180.406642" y="378.1455" transform="rotate(-0 180.406642 378.1455)">0.5</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_5">
+      <path d="M 261.617283 364.2455 
+L 261.617283 65.269 
+" clip-path="url(#pf7c7968ab4)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#m907238dab3" x="261.617283" y="364.2455" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="261.617283" y="378.1455" transform="rotate(-0 261.617283 378.1455)">1.0</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_7">
+      <path d="M 342.827925 364.2455 
+L 342.827925 65.269 
+" clip-path="url(#pf7c7968ab4)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#m907238dab3" x="342.827925" y="364.2455" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="342.827925" y="378.1455" transform="rotate(-0 342.827925 378.1455)">1.5</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_9">
+      <path d="M 424.038567 364.2455 
+L 424.038567 65.269 
+" clip-path="url(#pf7c7968ab4)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#m907238dab3" x="424.038567" y="364.2455" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="424.038567" y="378.1455" transform="rotate(-0 424.038567 378.1455)">2.0</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_11">
+      <path d="M 505.249208 364.2455 
+L 505.249208 65.269 
+" clip-path="url(#pf7c7968ab4)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_12">
+      <g>
+       <use xlink:href="#m907238dab3" x="505.249208" y="364.2455" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="505.249208" y="378.1455" transform="rotate(-0 505.249208 378.1455)">2.5</text>
+     </g>
+    </g>
+    <g id="xtick_7">
+     <g id="line2d_13">
+      <path d="M 586.45985 364.2455 
+L 586.45985 65.269 
+" clip-path="url(#pf7c7968ab4)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_14">
+      <g>
+       <use xlink:href="#m907238dab3" x="586.45985" y="364.2455" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="586.45985" y="378.1455" transform="rotate(-0 586.45985 378.1455)">3.0</text>
+     </g>
+    </g>
+    <g id="text_8">
+     <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="346.907948" y="391.447062" transform="rotate(-0 346.907948 391.447062)">Nominal GDP, current US$ (trillions)</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_15">
+      <defs>
+       <path id="m0c60a3f218" d="M 0 0 
+L -3.5 0 
+" style="stroke: #858981; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m0c60a3f218" x="99.196" y="343.367732" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="92.196" y="346.817732" transform="rotate(-0 92.196 346.817732)">Switzerland</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_16">
+      <g>
+       <use xlink:href="#m0c60a3f218" x="99.196" y="321.932651" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_10">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="92.196" y="325.382651" transform="rotate(-0 92.196 325.382651)">Netherlands</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_17">
+      <g>
+       <use xlink:href="#m0c60a3f218" x="99.196" y="300.497571" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_11">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="92.196" y="303.947571" transform="rotate(-0 92.196 303.947571)">Saudi Arabia</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_18">
+      <g>
+       <use xlink:href="#m0c60a3f218" x="99.196" y="279.062491" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_12">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="92.196" y="282.541397" transform="rotate(-0 92.196 282.541397)">Türkiye</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_19">
+      <g>
+       <use xlink:href="#m0c60a3f218" x="99.196" y="257.627411" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_13">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="92.196" y="261.077411" transform="rotate(-0 92.196 261.077411)">Indonesia</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_20">
+      <g>
+       <use xlink:href="#m0c60a3f218" x="99.196" y="236.19233" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_14">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="92.196" y="239.671237" transform="rotate(-0 92.196 239.671237)">Spain</text>
+     </g>
+    </g>
+    <g id="ytick_7">
+     <g id="line2d_21">
+      <g>
+       <use xlink:href="#m0c60a3f218" x="99.196" y="214.75725" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_15">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="92.196" y="218.20725" transform="rotate(-0 92.196 218.20725)">Australia</text>
+     </g>
+    </g>
+    <g id="ytick_8">
+     <g id="line2d_22">
+      <g>
+       <use xlink:href="#m0c60a3f218" x="99.196" y="193.32217" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_16">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="92.196" y="196.77217" transform="rotate(-0 92.196 196.77217)">Mexico</text>
+     </g>
+    </g>
+    <g id="ytick_9">
+     <g id="line2d_23">
+      <g>
+       <use xlink:href="#m0c60a3f218" x="99.196" y="171.887089" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_17">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="92.196" y="175.337089" transform="rotate(-0 92.196 175.337089)">Florida</text>
+     </g>
+    </g>
+    <g id="ytick_10">
+     <g id="line2d_24">
+      <g>
+       <use xlink:href="#m0c60a3f218" x="99.196" y="150.452009" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_18">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="92.196" y="153.902009" transform="rotate(-0 92.196 153.902009)">South Korea</text>
+     </g>
+    </g>
+    <g id="ytick_11">
+     <g id="line2d_25">
+      <g>
+       <use xlink:href="#m0c60a3f218" x="99.196" y="129.016929" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_19">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="92.196" y="132.466929" transform="rotate(-0 92.196 132.466929)">Brazil</text>
+     </g>
+    </g>
+    <g id="ytick_12">
+     <g id="line2d_26">
+      <g>
+       <use xlink:href="#m0c60a3f218" x="99.196" y="107.581849" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_20">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="92.196" y="111.031849" transform="rotate(-0 92.196 111.031849)">Canada</text>
+     </g>
+    </g>
+    <g id="ytick_13">
+     <g id="line2d_27">
+      <g>
+       <use xlink:href="#m0c60a3f218" x="99.196" y="86.146768" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_21">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="92.196" y="89.596768" transform="rotate(-0 92.196 89.596768)">Italy</text>
+     </g>
+    </g>
+   </g>
+   <g id="patch_16">
+    <path d="M 99.196 364.2455 
+L 99.196 65.269 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 99.196 364.2455 
+L 594.619895 364.2455 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_22">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="256.744645" y="345.585701" transform="rotate(-0 256.744645 345.585701)">  0.97T (2024)</text>
+   </g>
+   <g id="text_23">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="296.375438" y="324.15062" transform="rotate(-0 296.375438 324.15062)">  1.21T (2024)</text>
+   </g>
+   <g id="text_24">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="302.872289" y="302.71554" transform="rotate(-0 302.872289 302.71554)">  1.25T (2024)</text>
+   </g>
+   <g id="text_25">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="319.926524" y="281.28046" transform="rotate(-0 319.926524 281.28046)">  1.36T (2024)</text>
+   </g>
+   <g id="text_26">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="325.936112" y="259.845379" transform="rotate(-0 325.936112 259.845379)">  1.40T (2024)</text>
+   </g>
+   <g id="text_27">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="379.535135" y="238.410299" transform="rotate(-0 379.535135 238.410299)">  1.73T (2024)</text>
+   </g>
+   <g id="text_28">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="384.570195" y="216.975219" transform="rotate(-0 384.570195 216.975219)">  1.76T (2024)</text>
+   </g>
+   <g id="text_29">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="396.426949" y="195.540138" transform="rotate(-0 396.426949 195.540138)">  1.83T (2024)</text>
+   </g>
+   <g id="text_30">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4" x="397.239055" y="174.105058" transform="rotate(-0 397.239055 174.105058)">  1.83T (2025)</text>
+   </g>
+   <g id="text_31">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="403.735906" y="152.669978" transform="rotate(-0 403.735906 152.669978)">  1.88T (2024)</text>
+   </g>
+   <g id="text_32">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="454.248925" y="131.234898" transform="rotate(-0 454.248925 131.234898)">  2.19T (2024)</text>
+   </g>
+   <g id="text_33">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="467.892313" y="109.799817" transform="rotate(-0 467.892313 109.799817)">  2.27T (2024)</text>
+   </g>
+   <g id="text_34">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="486.245918" y="88.364737" transform="rotate(-0 486.245918 88.364737)">  2.38T (2024)</text>
+   </g>
+   <g id="text_35">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="584.711417" y="356.522142" transform="rotate(-0 584.711417 356.522142)">U.S. GDP (2024, World Bank): T  (~16× Florida)</text>
+   </g>
+   <g id="text_36">
+    <text style="font-size: 11.5px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4" x="99.196" y="53.269" transform="rotate(-0 99.196 53.269)">Florida vs peers: nominal GDP near the Chamber's 'world's No. 14' claim</text>
+   </g>
+   <g id="legend_1">
+    <g id="patch_18">
+     <path d="M 411.063645 332.48925 
+L 427.063645 332.48925 
+L 427.063645 326.88925 
+L 411.063645 326.88925 
+z
+" style="fill: #f0a33a; stroke: #f0a33a; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_37">
+     <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="433.463645" y="332.48925" transform="rotate(-0 433.463645 332.48925)">Florida (BEA state GDP)</text>
+    </g>
+    <g id="patch_19">
+     <path d="M 411.063645 343.94675 
+L 427.063645 343.94675 
+L 427.063645 338.34675 
+L 411.063645 338.34675 
+z
+" style="fill: #5eb8c9; stroke: #5eb8c9; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_38">
+     <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="433.463645" y="343.94675" transform="rotate(-0 433.463645 343.94675)">Chamber-cited peers (AUS, MEX, KOR)</text>
+    </g>
+    <g id="patch_20">
+     <path d="M 411.063645 355.40425 
+L 427.063645 355.40425 
+L 427.063645 349.80425 
+L 411.063645 349.80425 
+z
+" style="fill: #454b46; stroke: #454b46; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_39">
+     <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="433.463645" y="355.40425" transform="rotate(-0 433.463645 355.40425)">Nearby economies (World Bank)</text>
+    </g>
+   </g>
+  </g>
+  <g id="text_40">
+   <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="89.496" y="27.805" transform="rotate(-0 89.496 27.805)">Florida = BEA state GDP (2025); countries = World Bank GDP current US$ (2024)</text>
+  </g>
+  <g id="text_41">
+   <text style="font-size: 7px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="21.6" y="418.261" transform="rotate(-0 21.6 418.261)">Sources: BEA GDP by State via FRED FLNGSP (Florida 2025); World Bank NY.GDP.MKTP.CD (countries 2024). State vs country GDP are different accounting units.</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pf7c7968ab4">
+   <rect x="99.196" y="65.269" width="495.423895" height="298.9765"/>
+  </clipPath>
+ </defs>
+</svg>
