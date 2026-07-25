@@ -9,6 +9,7 @@ inline. Watchers can attach to the run id the moment this command returns.
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
 from datetime import UTC, datetime
@@ -24,6 +25,8 @@ from algent_backend.agent_system.runs.control_plane.layout import (
 )
 from algent_backend.agent_system.runs.control_plane.state import RunState, write_state
 from algent_backend.agent_system.runs.models import RunRequest
+
+from algent_backend.agent_system.agents.editorial.analytics_harness import HARNESSES
 
 from ._shared import parse_input_arg, print_json
 
@@ -60,6 +63,16 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
     parser.add_argument("--runtime", default="langgraph")
     parser.add_argument("--max-turns", type=int, default=None)
     parser.add_argument(
+        "--analytics-harness", dest="analytics_harness", choices=HARNESSES, default=None,
+        help="which coding CLI draws the figures (default: codex). Use grok when its quota "
+             "is worth spending; codex otherwise. Sets ALGENT_ANALYTICS_HARNESS for the run.",
+    )
+    parser.add_argument(
+        "--analytics-model", dest="analytics_model", default=None,
+        help="model for the analytics harness (codex default: gpt-5.6-luna; gpt-5.6-terra is "
+             "the heavier sibling). Sets ALGENT_CODEX_MODEL for the run.",
+    )
+    parser.add_argument(
         "--foreground",
         action="store_true",
         help="execute in this process instead of spawning a background child",
@@ -69,6 +82,16 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
 
 def run(args: argparse.Namespace) -> int:
     run_id = str(uuid4())
+
+    # Harness choice is per-run and travels by environment, so it reaches the analytics
+    # worker whether the graph runs here or in a spawned child — the worker resolves it
+    # at the moment it shells out, not at import.
+    for flag, env in (
+        (getattr(args, "analytics_harness", None), "ALGENT_ANALYTICS_HARNESS"),
+        (getattr(args, "analytics_model", None), "ALGENT_CODEX_MODEL"),
+    ):
+        if flag:
+            os.environ[env] = flag
 
     input_file, input_key = args.input_file, args.input_key
     if args.fixture:  # the agent declares its own isolated-test input

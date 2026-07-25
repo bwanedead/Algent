@@ -8,6 +8,7 @@ import type { ReactNode } from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
+import ArticleImage from "@/components/ArticleImage";
 import XPostEmbed, { parseXStatusUrl } from "@/components/XPostEmbed";
 
 // One markdown renderer for the whole site, so article prose and the source record behave
@@ -70,6 +71,12 @@ function soleXStatusFromChildren(children: ReactNode): ReturnType<typeof parseXS
 }
 
 const components = {
+  // Charts and maps carry small labels; at body width they are borderline and on a phone
+  // unreadable. Tap/click opens them full-screen (see ArticleImage).
+  img({ src, alt }: { src?: string; alt?: string }) {
+    return <ArticleImage src={src} alt={alt} />;
+  },
+
   table({ children, ...rest }: { children?: React.ReactNode }) {
     return (
       <div className="table-wrap">

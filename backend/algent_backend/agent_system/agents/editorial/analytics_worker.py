@@ -43,6 +43,7 @@ from .analytics_contracts import (
     AnalyticsPlan,
     AnalyticsRequest,
 )
+from .analytics_harness import resolve_harness
 
 GENERATOR = "analytics_worker@v1"
 ANALYTICS_WORKER_COMPLETED = "analytics_worker.completed"
@@ -420,30 +421,14 @@ def _caption(
 def _grok_runner(
     prompt: str, folder: Path, *, timeout: float, allow_web: bool = False,
 ) -> tuple[bool, str]:
-    """Run grok-build headless, cwd pinned to the scratch folder. Returns (ok, tail-of-output).
+    """Run the configured coding harness headless, cwd pinned to the scratch folder.
 
-    ``allow_web`` is only True for may_source analytics requests — profile-held charts stay offline.
+    Kept under this name because it is the worker's one subprocess seam and every caller
+    already injects around it; *which* CLI runs is now ``analytics_harness``'s decision
+    (codex by default, grok when quota allows). ``allow_web`` is True only for may_source
+    requests — profile-held charts stay offline.
     """
-    cmd = [
-        "grok", "-p", prompt, "--cwd", str(folder), "--output-format", "json",
-        "--always-approve", "--no-memory",
-    ]
-    if not allow_web:
-        cmd.append("--disable-web-search")
-    try:
-        proc = subprocess.run(
-            cmd,
-            capture_output=True, text=True, timeout=timeout,
-            # grok emits UTF-8 (smart quotes / emoji); decode as such so Windows' cp1252 locale
-            # can't crash the decode. errors='replace' keeps a garbled tail from ever raising.
-            encoding="utf-8", errors="replace",
-        )
-    except FileNotFoundError:
-        return False, "grok CLI not found on PATH"
-    except subprocess.TimeoutExpired:
-        return False, f"grok timed out after {timeout}s"
-    out = (proc.stdout or "")[-600:] + (("\n" + proc.stderr[-300:]) if proc.stderr else "")
-    return proc.returncode == 0, out
+    return resolve_harness().run(prompt, folder, timeout=timeout, allow_web=allow_web)
 
 
 Runner = Callable[[str, Path], tuple[bool, str]]
@@ -452,29 +437,12 @@ Runner = Callable[[str, Path], tuple[bool, str]]
 def grok_version() -> str:
     """The exact harness version — stamped onto every artifact as provenance, so a shift in
     analytics quality can be correlated to a tool version from the ledger instead of guessed."""
-    try:
-        proc = subprocess.run(["grok", "--version"], capture_output=True, text=True, timeout=30,
-                              encoding="utf-8", errors="replace")
-        return (proc.stdout or "").strip() or "unknown"
-    except (FileNotFoundError, OSError, subprocess.SubprocessError):
-        return "unknown"
+    return resolve_harness().version()
 
 
 def update_grok() -> str:
-    """Update the harness AT A RUN BOUNDARY (never mid-run — one tool version per article).
-
-    The harness's improvement curve IS the analytics quality curve, so we take the newest build
-    every run rather than pinning. This is affordable precisely because analytics degrade
-    gracefully: a bad release costs one missing visual, never a broken article (contrast the
-    drafter's model, where the same policy would be reckless).
-    """
-    try:
-        proc = subprocess.run(["grok", "update"], capture_output=True, text=True, timeout=180,
-                              encoding="utf-8", errors="replace")
-        out = ((proc.stdout or "") + (proc.stderr or "")).strip().splitlines()
-        return (out[-1][:160] if out else "updated") if proc.returncode == 0 else "update failed"
-    except (FileNotFoundError, OSError, subprocess.SubprocessError) as exc:
-        return f"update skipped ({str(exc)[:60]})"
+    """Update the harness AT A RUN BOUNDARY (never mid-run — one tool version per article)."""
+    return resolve_harness().update()
 
 
 def canary(workspace: Path, *, runner: Runner | None = None, timeout: float = 120.0) -> tuple[bool, str]:

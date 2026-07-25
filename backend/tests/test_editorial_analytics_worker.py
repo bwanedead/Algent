@@ -283,3 +283,58 @@ def test_worker_graph_does_nothing_when_not_warranted(tmp_path: Path) -> None:
     graph = aw.build_analytics_worker_graph(_ctx(tmp_path, []), runner=_good_runner(), refresh=False)
     out = graph.invoke({"analytics_plan": plan.model_dump(), "profile": _profile().model_dump()})
     assert out["analytics_artifacts"] == []
+
+
+# -- the coding harness seam: codex by default, grok when quota allows ----------
+
+
+def test_codex_is_the_default_harness_and_stays_offline_unless_asked() -> None:
+    from pathlib import Path
+
+    from algent_backend.agent_system.agents.editorial.analytics_harness import resolve_harness
+
+    h = resolve_harness()
+    assert h.name == "codex"
+
+    offline = h.argv("draw it", Path("/scratch"), allow_web=False)
+    assert offline[:2] == ["codex", "exec"]
+    assert "--search" not in offline          # a profile-held chart must not reach the network
+    assert "--full-auto" in offline and "--skip-git-repo-check" in offline
+    assert offline[offline.index("-C") + 1] == str(Path("/scratch"))   # cwd pinned to the folder
+
+    online = h.argv("draw it", Path("/scratch"), allow_web=True)
+    assert "--search" in online               # only a may_source request earns it
+
+
+def test_grok_inverts_the_web_flag(monkeypatch) -> None:
+    """grok searches unless told not to; codex only when told to. Hence per-harness argv."""
+    from pathlib import Path
+
+    from algent_backend.agent_system.agents.editorial.analytics_harness import resolve_harness
+
+    monkeypatch.setenv("ALGENT_ANALYTICS_HARNESS", "grok")
+    g = resolve_harness()
+    assert g.name == "grok"
+    assert "--disable-web-search" in g.argv("d", Path("/s"), allow_web=False)
+    assert "--disable-web-search" not in g.argv("d", Path("/s"), allow_web=True)
+
+
+def test_harness_model_is_selectable(monkeypatch) -> None:
+    from pathlib import Path
+
+    from algent_backend.agent_system.agents.editorial.analytics_harness import resolve_harness
+
+    monkeypatch.delenv("ALGENT_ANALYTICS_HARNESS", raising=False)
+    monkeypatch.setenv("ALGENT_CODEX_MODEL", "gpt-5.6-terra")
+    argv = resolve_harness().argv("d", Path("/s"), allow_web=False)
+    assert "gpt-5.6-terra" in argv
+
+
+def test_a_missing_cli_is_a_missing_figure_not_a_crash(monkeypatch) -> None:
+    from pathlib import Path
+
+    from algent_backend.agent_system.agents.editorial import analytics_harness as ah
+
+    monkeypatch.setattr(ah, "executable", lambda _n: None)
+    ok, tail = ah.CodexHarness().run("d", Path("/s"), timeout=1.0)
+    assert ok is False and "not found on PATH" in tail

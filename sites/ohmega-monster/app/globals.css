@@ -275,8 +275,8 @@ a { color: inherit; }
 /* Thumbnail: a chart built from the piece's OWN cited data (never decorative, never generated).
    Sized small and rule-bounded so the index stays an index. */
 .feed-thumb {
-  width: 108px;
-  height: 68px;
+  width: 168px;
+  height: 105px;
   object-fit: cover;
   border: 1px solid var(--rule);
   background: var(--panel);
@@ -513,7 +513,7 @@ a { color: inherit; }
   .feed a { grid-template-columns: minmax(0, 1fr) auto; gap: 0 14px; padding: var(--line) 0; }
   .feed-meta { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 10px; }
   .feed-story { grid-column: 1; }
-  .feed-thumb { width: 72px; height: 48px; }
+  .feed-thumb { width: 116px; height: 73px; }
   .article-header { padding-top: calc(var(--line) * 2); }
   .article-header h1 { line-height: calc(var(--line) * 2); }
   .disclosure-hint { display: none; }
@@ -525,4 +525,65 @@ a { color: inherit; }
 @media (max-width: 420px) {
   .brand { font-size: 12px; }
   .footer-row { align-items: flex-start; flex-direction: column; justify-content: center; gap: 8px; }
+}
+
+
+/* Figures open full-screen on click — chart and map labels are at the edge of legible at
+   body width and below it on a phone, which is why a reader taps them expecting a zoom.
+   The trigger is a button so it is keyboard-reachable and announced; it must not look
+   like one, hence the reset. */
+.figure-zoom {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+  font: inherit;
+  color: inherit;
+}
+.figure-zoom img { display: block; width: 100%; height: auto; }
+.figure-zoom:focus-visible { outline: 2px solid var(--accent, currentColor); outline-offset: 3px; }
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.88);
+  cursor: zoom-out;
+  overscroll-behavior: contain;
+}
+.lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  cursor: default;
+  /* Analytics ship as SVG on a transparent ground; without this they vanish into the
+     backdrop when enlarged. */
+  background: #fff;
+}
+.lightbox-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  width: 44px;               /* a real touch target */
+  height: 44px;
+  border: 0;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+.lightbox-close:hover { background: rgba(255, 255, 255, 0.22); }
+
+@media (max-width: 640px) {
+  .lightbox { padding: 8px; }
 }

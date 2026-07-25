@@ -93,6 +93,27 @@ UTILITY CLASSES (pick the one that helps most — geography often beats trajecto
    country) when those numbers exist or are publicly standard.
 4. STRUCTURE — a before/after or part-of-whole that prose makes the reader assemble row by row.
 
+THE TEST THAT OVERRIDES ALL FOUR: **would a real publication have commissioned this?**
+Ask it in that form, because a desk with a graphics budget only spends it when the picture
+carries something the words cannot. Two failures, and we ship both:
+
+- **Charting what should have stayed a sentence.** A three-step sequence of an animal's
+  behaviour, drawn as boxes with arrows, is a diagram of a sentence — it adds no quantity, no
+  comparison, no scale, nothing the sentence did not already deliver, and it reads as corny
+  precisely because a reader can tell it was made to satisfy a slot rather than to explain
+  something. If the figure is just prose in a box, it is worse than no figure.
+- **Not charting what obviously wanted charting.** The reverse failure is quieter but just as
+  common: a piece full of numbers over time, or a ranking, or a share-of-total, with no
+  picture at all, leaving the reader to assemble a shape in their head from a paragraph of
+  digits. If you find yourself declining while the profile holds three or more comparable
+  magnitudes, look again.
+
+Numbers, magnitudes, positions, shares and change over time are what pictures are FOR.
+Sequences, definitions and mechanisms are what sentences are for. `warranted=false` is a
+perfectly good answer and always available — but so is asking for the chart the piece is
+crying out for. Judge each request on whether the reader ends up knowing something they
+could not have got from the paragraph beside it.
+
 DATA PATHS (either is fine):
 A. PROFILE-HELD — key magnitudes already appear as claims/sources. Set `data_refs` to those ids.
 B. SOURCE-AT-ANALYTICS-TIME — a series/breakdown would help but is not in the profile (normal).
