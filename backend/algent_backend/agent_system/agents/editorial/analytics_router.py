@@ -66,13 +66,23 @@ UTILITY CLASSES (pick the one that helps most — geography often beats trajecto
    **labeled map** (country/theater basemap + real lat/lon points) over a speculative
    shipping-cost series you may not fetch.
 
-   **But a place being mentioned is not geography being load-bearing.** One event at one location
-   does not earn a map: a country outline with a single dot in it tells the reader nothing the
-   place name already told them, and we shipped exactly that — a Canada-and-US outline with one
-   point on it for a fossil found in Saskatchewan. Before requesting a map, name the spatial
-   question it answers ("how far apart are these?", "what does this sit between?", "where is this
-   spreading?"). If the honest answer is "it shows where it happened", the place name in the prose
-   is already doing that job — request something else, or nothing.
+   **HARD RULE: a map must show a RELATIONSHIP BETWEEN AT LEAST TWO THINGS THE STORY IS ABOUT.**
+   A distance, a route, a spread, a boundary, a chokepoint between two places both named in the
+   piece. If the map's honest one-line description is "where X is", it is banned — no matter how
+   load-bearing the place feels, no matter that the reader might wonder where it is. A named
+   place plus a reader's general knowledge already answers "where is X" better than an outline
+   with a dot, and we have now shipped that same useless figure three times:
+     - a Canada-and-US outline with one point, for a fossil found in Saskatchewan;
+     - a whole-Mars outline with one point, for dunes in Kaiser Crater — which did not even
+       show the crater, let alone the dunes the article is about;
+     - two Baja coordinates, where the story was the behaviour, not the geography.
+   Asking "name the spatial question" was not enough of a filter, because a plausible-sounding
+   question can be invented for any location. So: **count the things being related. Fewer than
+   two, no map.**
+
+   And a map may never be schematic. An approximated band, an indicative boundary, a "not an
+   exact ice boundary" frost zone — a figure that has to disclaim its own geometry is not
+   orienting anyone; it is decoration with a caveat. Real geocodes or no figure.
 
    Map rules (accuracy is paramount):
    - Default frame is **country or larger theater**, not a zoom-only cluster of three towns with

@@ -35,15 +35,38 @@ _NS = {
     "dc": "http://purl.org/dc/elements/1.1/",
 }
 
-# (feed id, url, pillar). Kept small and edited-by-humans on purpose; widen on
-# observed value, not on availability.
+# (feed id, url, pillar). All edited by people, which is the point — the selection work is
+# already done upstream of us.
+#
+# Widened from five to twelve because five was not enough for *freshness*: each outlet's top
+# items barely move inside a day, so the science menu read as "the same as yesterday" even
+# though nothing was broken. Independent editors disagree about what leads, so more outlets
+# buys more genuinely different material than drawing deeper from the same few — verified
+# live, the added feeds led with Io's interior heat, a NASA deep-space antenna at risk, an
+# ancient Mount Rainier mudflow and a Starship recovery attempt, none of which the original
+# five carried.
 FEEDS: tuple[tuple[str, str, str], ...] = (
     ("nature", "https://www.nature.com/nature.rss", "science"),
     ("phys_org", "https://phys.org/rss-feed/", "science"),
     ("science_daily", "https://www.sciencedaily.com/rss/top/science.xml", "science"),
     ("esa", "https://www.esa.int/rssfeed/Our_Activities/Space_Science", "science"),
     ("quanta", "https://api.quantamagazine.org/feed/", "science"),
+    ("science_news", "https://www.sciencenews.org/feed", "science"),
+    ("new_scientist", "https://www.newscientist.com/section/news/feed/", "science"),
+    ("eos", "https://eos.org/feed", "science"),
+    ("live_science", "https://www.livescience.com/feeds/all", "science"),
+    ("smithsonian", "https://www.smithsonianmag.com/rss/science-nature/", "science"),
+    ("nasa", "https://www.nasa.gov/news-release/feed/", "science"),
+    ("ars_science", "https://feeds.arstechnica.com/arstechnica/science", "science"),
 )
+
+# Deliberately NOT here: arXiv. Its Atom API works and returns the newest preprints in a
+# category, but they are papers rather than stories — a live sample led with
+# "Magnetohydrodynamical opening of dust traps in protoplanetary disks". Deciding which of
+# several hundred daily preprints is news needs judgment this layer does not have, and adding
+# them would fill the menu with titles nothing would ever pick. arXiv is the right place to
+# GROUND a specific claim in the primary paper, which is a research-stage job, not a
+# discovery channel.
 
 
 # Feed furniture, not stories: journal metadata and the outlet's own promos. Kept here
