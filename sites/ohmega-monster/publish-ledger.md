@@ -265,3 +265,10 @@ analytics: 2 produced, 0 escapes
 cost: ~$0.0000
 ⚠ walled sources (carried with caveats): src_b15e2a126d, src_d0ced3e3c8, src_9de7598f1a
 run: 0030__8b00d03c-d464-4b2a-ae23-8518d3009f33
+
+### PUBLISH typhoon-noul-makes-landfall-in-guangdong-near-huidong-county-1fd5d5 — 2026-07-26
+status: publishable  ·  draft: grounded_with_caveats  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 0 produced, 0 escapes
+cost: ~$0.0000
+run: 0031__853de9db-603b-496e-b2d3-bd0ad1c17d73
