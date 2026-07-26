@@ -284,11 +284,14 @@ class _Img:
         return ".jpg"
 
 
-def test_hero_is_off_by_default(monkeypatch) -> None:
-    """It spends real money per article, so an operator turns it on deliberately."""
+def test_hero_is_on_by_default_and_can_be_switched_off(monkeypatch) -> None:
+    """~$0.034 on the lite model is a few percent of a rail; a wall of text costs more."""
     from algent_backend.agent_system.agents.editorial.hero_stage import make_hero
 
     monkeypatch.delenv("ALGENT_HERO_IMAGE", raising=False)
+    assert make_hero(_hl(), _Writer(), generate=lambda *a, **k: _Img()) is not None
+
+    monkeypatch.setenv("ALGENT_HERO_IMAGE", "0")
     assert make_hero(_hl(), _Writer(), generate=lambda *a, **k: _Img()) is None
 
 

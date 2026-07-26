@@ -10,8 +10,9 @@ about the journalism depends on it. So every failure path — no key, no subject
 refusal, a dead API — returns ``None`` and the article publishes exactly as it would have
 before. It must never be able to cost us a run.
 
-Off by default until an operator turns it on (``ALGENT_HERO_IMAGE=1``), because it spends
-real money per article and the operator asked to watch the economics first.
+On by default (``ALGENT_HERO_IMAGE=0`` to disable). It spends ~$0.034 per article on the
+lite model, which is a few percent of a rail, and an article without an opening picture is
+a wall of text and a shared link with nothing to show — worth more than the cost.
 """
 
 from __future__ import annotations
@@ -40,7 +41,7 @@ class HeroRecord:
 
 
 def hero_enabled() -> bool:
-    return os.environ.get(_ENV_ON, "0").strip().lower() in ("1", "true", "yes", "on")
+    return os.environ.get(_ENV_ON, "1").strip().lower() not in ("0", "false", "no", "off")
 
 
 def make_hero(
