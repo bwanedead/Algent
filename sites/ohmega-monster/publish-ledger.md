@@ -286,3 +286,11 @@ caveats: verified (0 findings)
 analytics: 2 produced, 0 escapes
 cost: ~$0.0000
 run: 0035__96862d25-614e-4cb7-9083-2a7fadf2b3fb
+
+### PUBLISH europe-s-electrification-is-running-into-grid-connection-que-08ce7d — 2026-07-26
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.0000
+⚠ figures not matched to evidence: 32%
+run: 0036__0dbf86ae-a059-4c01-9b67-b67d829586a3
