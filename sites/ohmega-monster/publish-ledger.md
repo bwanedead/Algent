@@ -279,3 +279,10 @@ caveats: verified (0 findings)
 analytics: 1 produced, 0 escapes
 cost: ~$0.0000
 run: 0034__416470a3-4ba9-4d1e-8602-1f1e7b9d45b3
+
+### PUBLISH italy-and-japan-sign-intent-on-biomanufacturing-cooperation-82d903 — 2026-07-26
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.0000
+run: 0035__96862d25-614e-4cb7-9083-2a7fadf2b3fb
