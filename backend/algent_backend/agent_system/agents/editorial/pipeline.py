@@ -169,21 +169,13 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
             status = "needs_hedging"          # the prose doesn't keep a flagged promise — hold
         elif words < _MIN_PUBLISH_WORDS:
             status = "needs_revision"         # hollow / collapsed body — never ship a caption + map
-        elif str(comprehension.get("verdict", "clear")) == "needs_ramp":
-            # Still unfollowable AFTER its repair lap — hold it.
-            #
-            # This verdict used to be advisory, and the result was pieces shipping that the
-            # reviewer had already said a general reader could not follow: two science
-            # articles in a row went live carrying findings like "assumed_context" and
-            # "announced_importance" that the repair pass failed to clear. A gate that never
-            # holds anything is not a gate, and comprehension is the ONE gate that speaks for
-            # the reader rather than for accuracy — everything else here checks whether we are
-            # right, only this checks whether we were understood.
-            #
-            # The repair lap still runs first, so this only catches genuine failures, not a
-            # first-pass wobble. Held pieces land in the held queue with their findings intact.
-            status = "needs_ramp"
         else:
+            # NOTE: comprehension does NOT gate here, deliberately, and it was briefly made to.
+            # The operator reads the site — it is the review surface — so a piece held for being
+            # hard to follow is a piece nobody reads and nobody learns from, while the drafting
+            # problem stays invisible. The answer to weak prose is a repair that works, not a
+            # queue. So the verdict rides on the report (and the frontmatter) where it can be
+            # seen, and the pressure lives in ``_repair_comprehension`` instead.
             status = "publishable"            # grounded (or honestly caveated) AND caveats verified
 
         report = EditorialPipelineReport(

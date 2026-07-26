@@ -49,10 +49,18 @@ class ComprehensionFinding(BaseModel):
     ] = "other"
     where: str = ""            # a short quote / locator so the fix is targeted, not a rewrite
     issue: str = ""            # what breaks for the reader here
-    # The fix is constrained to HANDHOLD-or-CUT — a one-clause plain-language ramp, a real transition
-    # onto the through-line, or removal. NEVER "assert more" or "add detail everywhere".
-    fix: Literal["add_handhold", "connect_to_thread", "cut"] = "add_handhold"
-    suggestion: str = ""       # the specific handhold/transition to add, or what to cut
+    # Mostly HANDHOLD-or-CUT — a one-clause plain-language ramp, a real transition onto the
+    # through-line, or removal. NEVER "assert more" or "add detail everywhere".
+    #
+    # ``rewrite_for_reader`` exists because handhold-or-cut cannot repair the most common defect
+    # we ship. A sentence written from our vantage — an opening that rebuts a source the reader
+    # never saw, a paragraph that justifies why an item is in the piece, our own research state
+    # narrated as prose — is not missing a handhold and is not merely cuttable: the information
+    # is wanted, the framing is wrong. It has to be said again from the reader's side, with the
+    # same facts. Without this option the reviewer could only ask for a ramp onto a sentence
+    # that should not have been phrased that way, which is why two repair laps changed nothing.
+    fix: Literal["add_handhold", "connect_to_thread", "cut", "rewrite_for_reader"] = "add_handhold"
+    suggestion: str = ""       # the handhold/transition to add, what to cut, or the reader-side rewrite
 
 
 class ComprehensionCheck(BaseModel):
