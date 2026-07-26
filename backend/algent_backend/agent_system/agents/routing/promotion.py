@@ -104,7 +104,42 @@ DEFAULT_MODEL = ModelSpec(provider="openai", model="gpt-5.4-mini", temperature=0
 # BREAK GLASS: a vector scoring at/above ``_ENV_BREAK_GLASS`` with zero rut overlap
 # leads outright. That is the "something enormous and genuinely new happened" path, and
 # it is rare by construction — it needs both a near-top score and no recurrence.
+# Deliberate redo: re-run a story we have already published, to replace it.
+#
+# Cooldown exists to stop the newsroom covering the same thing night after night, and it
+# does that by reading our own published headlines — which means it also blocks the one
+# case where re-running is exactly right: a piece that shipped short of standard (a bug ate
+# its figures, a source was wrong) and needs replacing rather than following up. Without an
+# escape hatch the only way through is deleting the published article first, which is worse
+# in every respect: it loses the corrections trail.
+#
+# Operator-only, per-run, and loud — the override is recorded in the emitted cooldown status
+# so a redo can never be mistaken for the ring having lapsed.
+_ENV_REDO = "ALGENT_PROMOTE_REDO"
 _ENV_MODE = "ALGENT_PROMOTE_MODE"
+
+
+def redo_enabled() -> bool:
+    return os.environ.get(_ENV_REDO, "0").strip().lower() in ("1", "true", "yes", "on")
+
+
+def clear_cooldown_for_redo(ranking: RouteRanking) -> RouteRanking:
+    """Drop cooldown flags so an already-published story can be re-run and replaced."""
+    if not ranking.choices:
+        return ranking
+    cooled = [c.candidate_id for c in ranking.choices if c.cooldown]
+    if not cooled:
+        return ranking
+    freed = [
+        c.model_copy(update={"cooldown": False,
+                             "cooldown_reason": f"cleared by operator redo ({c.cooldown_reason})"})
+        for c in ranking.choices
+    ]
+    note = (ranking.note + " | " if ranking.note.strip() else "") + (
+        f"OPERATOR REDO: cooldown cleared on {len(cooled)} vector(s) — this run is expected to "
+        "replace an already-published piece"
+    )
+    return ranking.model_copy(update={"choices": freed, "note": note})
 _ENV_DECAY = "ALGENT_PROMOTE_RUT_DECAY"          # weight multiplier per matching label
 _ENV_BREAK_GLASS = "ALGENT_PROMOTE_BREAK_GLASS"  # score at which magnitude just wins
 _DECAY = 0.45
@@ -158,6 +193,9 @@ def rank_portfolio(
     ranking = route(context, candidates, brief, model_spec=model_spec, config=config)
     # Operator hard-freeze (dev): force cooldown on matching vectors after agent rank.
     ranking, freeze_hits = apply_topic_freeze(ranking, by_id)
+    redo = redo_enabled()
+    if redo:
+        ranking = clear_cooldown_for_redo(ranking)
     mode = promote_mode()
     if mode == "draw":
         ranking = apply_promotion_draw(
@@ -172,6 +210,7 @@ def rank_portfolio(
             "recent_titles": [t[:80] for _, t in recent[:12]],
             "recurring_coverage": [f"{label}×{n}" for label, n in saturated[:8]],
             "promote_mode": mode,
+            "operator_redo": redo,
             "mode": "agent_semantic+recurring_coverage+topic_freeze",
             "n_flagged": len(cooled),
             "cooled_ids": cooled,

@@ -85,6 +85,15 @@ UTILITY CLASSES (pick the one that helps most — geography often beats trajecto
      for a site, omit that point rather than ship a plausible-looking fiction.
    - Never invent boundaries, control areas, front lines, or rates not in the data.
    - Kind is usually `image` with spec that says **map** (worker has `lib.maps` + basemap).
+   - **A map request MUST set `may_source=true`.** Coordinates, boundaries and basemap
+     geometry are public reference data; they are never in a claim ledger, because a claim
+     ledger holds what the *story* asserts, not where places are. A map with only
+     `data_refs` is structurally unbuildable and the worker will correctly refuse it —
+     observed: a typhoon-track map skipped with "no latitude/longitude for Huidong landfall
+     or Hong Kong, no boundary geometry... because sourcing is disabled", leaving a
+     landfall story with no picture at all. Put the story's own positions and times in
+     `data_refs` as usual, and set `may_source=true` with a `source_hint` naming where the
+     geocodes come from so the coordinates can be fetched and cited.
 2. TRAJECTORY — counts or rates over time (is it rising, peaking, slowing?). Prefer a simple
    line/area chart with clear axes and period. Use when magnitude-over-time is the story; do not
    prefer an unfindable AIS freight series over a cheap accurate choke-point map.

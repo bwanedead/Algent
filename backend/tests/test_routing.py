@@ -245,3 +245,30 @@ def test_draw_falls_back_to_the_ranking_when_nothing_is_eligible() -> None:
                           research_effort="light")
     ranking = RouteRanking(choices=[RankedChoice(candidate_id="a", rank=1, score=5)])
     assert _draw(ranking, {"a": thin}, seed="s").choices[0].candidate_id == "a"
+
+
+def test_operator_redo_clears_cooldown_so_a_published_piece_can_be_replaced() -> None:
+    """A piece that shipped short of standard needs re-running, but its own headline cools it.
+    The alternative to an escape hatch is deleting the article first, which loses the
+    corrections trail."""
+    from algent_backend.agent_system.agents.routing.promotion import clear_cooldown_for_redo
+
+    ranking = RouteRanking(choices=[
+        RankedChoice(candidate_id="v1", rank=1, score=80, cooldown=True,
+                     cooldown_reason="same story-family as 'Typhoon Noul makes landfall'"),
+    ])
+    out = clear_cooldown_for_redo(ranking)
+
+    assert out.choices[0].cooldown is False
+    # Loud in the audit trail — a redo must never look like the ring having lapsed.
+    assert "OPERATOR REDO" in out.note
+    assert "same story-family" in out.choices[0].cooldown_reason   # original reason retained
+
+
+def test_redo_is_off_by_default(monkeypatch) -> None:
+    from algent_backend.agent_system.agents.routing.promotion import redo_enabled
+
+    monkeypatch.delenv("ALGENT_PROMOTE_REDO", raising=False)
+    assert redo_enabled() is False
+    monkeypatch.setenv("ALGENT_PROMOTE_REDO", "1")
+    assert redo_enabled() is True
