@@ -56,3 +56,30 @@ def test_named_individual_lane_holds_a_publishable_piece(tmp_path: Path) -> None
     on = pb.publish_run(run, site_dir=tmp_path / "s2", held_dir=tmp_path / "h2",
                         today="2026-07-15", hold_named_individuals=True)
     assert on.action == "held" and "named-individual lane" in on.reasons[0]
+
+
+def test_commit_force_adds_the_ignored_asset_path(tmp_path, monkeypatch) -> None:
+    """Published figures live under a gitignored path — right for the dev tree, catastrophic in
+    the live worktree. `git add -A` skipped them, so every auto-published chart, map and hero
+    shipped with a correct <img> ref pointing at a file that was never committed, and 404'd."""
+    from algent_backend.publishing import site_git as sg
+
+    calls: list[tuple] = []
+    monkeypatch.setattr(sg, "_git", lambda wt, *a: (calls.append(a), (True, ""))[1])
+
+    assets = tmp_path / sg._ASSET_PATH
+    assets.mkdir(parents=True)
+    sg.commit_and_push(tmp_path, "publish(x): publishable")
+
+    assert ("add", "-A") in calls
+    assert ("add", "-f", sg._ASSET_PATH) in calls          # the ignored path, staged anyway
+    assert calls.index(("add", "-A")) < calls.index(("add", "-f", sg._ASSET_PATH))
+
+
+def test_no_asset_dir_means_no_force_add(tmp_path, monkeypatch) -> None:
+    from algent_backend.publishing import site_git as sg
+
+    calls: list[tuple] = []
+    monkeypatch.setattr(sg, "_git", lambda wt, *a: (calls.append(a), (True, ""))[1])
+    sg.commit_and_push(tmp_path, "publish(x): publishable")
+    assert not any(a[:2] == ("add", "-f") for a in calls)
