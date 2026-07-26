@@ -18,6 +18,10 @@ flags:
 - 🇮🇹
 - 🇯🇵
 thumbnail: /analytics/italy-and-japan-sign-intent-on-biomanufacturing-cooperation-82d903/analytic_req_1_sector_footprint.svg
+hero: /analytics/italy-and-japan-sign-intent-on-biomanufacturing-cooperation-82d903/hero.jpg
+hero_alt: a laboratory bioreactor and glassware on a workbench
+hero_label: AI-generated illustration — not a photograph of this story
+hero_hook: Italy and Japan sign a biotech pact
 ---
 
 Italy and Japan have signed a dichiarazione di intenti to strengthen scientific cooperation, open new collaborations and develop joint initiatives, according to a press note from Italy’s National Research Council, the CNR.

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Timeline of Italy–Japan diplomatic vs science/tech steps (2024–2026)</title>
+  <desc id="desc">A horizontal timeline showing diplomatic milestones from February and June 2024, the November 2024 ACSA signing, the January 2026 joint statement, and the July 2026 CNR biomanufacturing press note.</desc>
+  <rect width="1600" height="900" fill="#0c0f0e"/>
+  <style>
+    .mono { font-family: Consolas, 'Liberation Mono', monospace; }
+    .title { fill:#f0ede4; font:700 34px Consolas, 'Liberation Mono', monospace; }
+    .sub { fill:#858981; font:18px Consolas, 'Liberation Mono', monospace; }
+    .year { fill:#d3d0c8; font:700 20px Consolas, 'Liberation Mono', monospace; }
+    .date { fill:#f0ede4; font:700 17px Consolas, 'Liberation Mono', monospace; }
+    .label { fill:#d3d0c8; font:16px Consolas, 'Liberation Mono', monospace; }
+    .small { fill:#858981; font:14px Consolas, 'Liberation Mono', monospace; }
+  </style>
+  <text x="92" y="78" class="title">Timeline of Italy–Japan diplomatic vs science/tech steps</text>
+  <text x="92" y="112" class="sub">Dated milestones, 2024–2026 · exact day where published; month or summit window otherwise</text>
+  <line x1="140" y1="420" x2="1470" y2="420" stroke="#454b46" stroke-width="4"/>
+  <line x1="140" y1="420" x2="785" y2="420" stroke="#f0a33a" stroke-width="4"/>
+  <line x1="785" y1="420" x2="1470" y2="420" stroke="#5eb8c9" stroke-width="4" opacity=".8"/>
+  <line x1="140" y1="380" x2="140" y2="460" stroke="#454b46"/>
+  <line x1="785" y1="380" x2="785" y2="460" stroke="#454b46"/>
+  <line x1="1470" y1="380" x2="1470" y2="460" stroke="#454b46"/>
+  <text x="140" y="500" text-anchor="middle" class="year">2024</text>
+  <text x="785" y="500" text-anchor="middle" class="year">2025</text>
+  <text x="1470" y="500" text-anchor="middle" class="year">2026</text>
+
+  <line x1="205" y1="420" x2="205" y2="235" stroke="#f0a33a" stroke-width="2"/>
+  <circle cx="205" cy="420" r="11" fill="#f0a33a"/>
+  <text x="205" y="185" text-anchor="middle" class="date">Feb 5, 2024</text>
+  <text x="205" y="210" text-anchor="middle" class="label">Meloni–Kishida summit</text>
+  <text x="205" y="232" text-anchor="middle" class="small">security / GCAP cooperation</text>
+
+  <line x1="420" y1="420" x2="420" y2="610" stroke="#f0a33a" stroke-width="2"/>
+  <circle cx="420" cy="420" r="11" fill="#f0a33a"/>
+  <text x="420" y="655" text-anchor="middle" class="date">Jun 13–15, 2024</text>
+  <text x="420" y="680" text-anchor="middle" class="label">G7 Apulia Summit</text>
+  <text x="420" y="702" text-anchor="middle" class="small">Action Plan launched; ACSA talks begin</text>
+
+  <line x1="625" y1="420" x2="625" y2="235" stroke="#f0a33a" stroke-width="2"/>
+  <circle cx="625" cy="420" r="11" fill="#f0a33a"/>
+  <text x="625" y="185" text-anchor="middle" class="date">Nov 2024</text>
+  <text x="625" y="210" text-anchor="middle" class="label">Japan–Italy ACSA signed</text>
+  <text x="625" y="232" text-anchor="middle" class="small">month reported by Bluebook</text>
+
+  <line x1="1030" y1="420" x2="1030" y2="610" stroke="#5eb8c9" stroke-width="2"/>
+  <circle cx="1030" cy="420" r="11" fill="#5eb8c9" stroke="#f0a33a" stroke-width="4"/>
+  <text x="1030" y="655" text-anchor="middle" class="date">Jan 16, 2026</text>
+  <text x="1030" y="680" text-anchor="middle" class="label">Joint Statement</text>
+  <text x="1030" y="702" text-anchor="middle" class="small">AI robotics, semiconductors, biomanufacturing + more</text>
+
+  <line x1="1330" y1="420" x2="1330" y2="235" stroke="#5eb8c9" stroke-width="2"/>
+  <circle cx="1330" cy="420" r="11" fill="#5eb8c9"/>
+  <text x="1330" y="185" text-anchor="middle" class="date">Jul 9, 2026</text>
+  <text x="1330" y="210" text-anchor="middle" class="label">CNR press note</text>
+  <text x="1330" y="232" text-anchor="middle" class="small">biomanufacturing declaration of intent</text>
+
+  <rect x="92" y="790" width="18" height="18" rx="3" fill="#f0a33a"/><text x="122" y="805" class="small">Diplomatic milestone</text>
+  <rect x="350" y="790" width="18" height="18" rx="3" fill="#5eb8c9"/><text x="380" y="805" class="small">Science / technology milestone</text>
+  <circle cx="705" cy="799" r="9" fill="#5eb8c9" stroke="#f0a33a" stroke-width="4"/><text x="725" y="805" class="small">Joint diplomatic + science/technology scope</text>
+  <text x="92" y="855" class="small">Sources: Japan MOFA Diplomatic Bluebook 2025; Japan–Italy Joint Statement (Jan 16, 2026); CNR press note (09/07/2026).</text>
+</svg>
