@@ -31,8 +31,17 @@ is *about*; a later stage would only have the headline to go on, and that is exa
   as data: passing a headline containing "$1.8 trillion" and "14th-largest" produced a picture
   with a fabricated government seal, the words "DATA CONFIRMED", and an invented ranking chart.
   That is a fabricated document, not an illustration, and it is the one outcome we cannot ship.
-- When the piece has no depictable subject — a pure data or process story — leave it EMPTY.
-  No image is always better than a misleading one.
+- Abstract stories still have physical settings, and you should name one. A trade agreement,
+  a research partnership, a court ruling, a budget fight — none is "a thing", but all of them
+  happen somewhere among something: a laboratory bench, a bioreactor, a container port, a
+  parliament chamber, a transmission pylon against a landscape. That is a generic
+  representative illustration, which is exactly what a hero is for, and it is labelled as
+  AI-generated wherever it appears. Reaching for the setting is right; only the *specific*
+  claim is off limits.
+- Leave it EMPTY only when any picture would actively mislead — a story about a false claim,
+  a hoax, a disputed identity, an accusation against a named person, or one where a plausible
+  image would itself become the misinformation. "This is abstract" is not that; "a picture
+  here would assert something we did not verify" is.
 
 AND EMIT `image_hook` — the few words that sit ON that image, thumbnail-style.
 

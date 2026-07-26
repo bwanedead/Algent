@@ -67,6 +67,14 @@ _MARKER_MD_LINK = re.compile(
 # Stray wrapper crumbs left after link-form strip: bare `[` / trailing backticks near punctuation
 _MARKER_CRUMBS = re.compile(r"(?:\s*`+\[`*)+|\s*`+(?=\s|$|[.,;:])")
 
+# Our own pipeline vocabulary, leaking onto the page. "The signed text was not available in
+# this run" tells a reader that a research pass they know nothing about did not find something;
+# the fact about the world is simply that it was not available. These exact phrases are banned in
+# two doctrine files and shipped anyway, so they are removed mechanically — safe to do because
+# each is a trailing prepositional phrase whose deletion leaves a correct sentence, and because
+# there is no context in which either is right on a reader-facing page.
+_PROCESS_PHRASE = re.compile(r"\s+in this (?:run|pass|review|iteration)\b", re.I)
+
 _GROUNDING_WORDS = {
     "snapshotted": "read in full",
     "snippet_only": "from a source summary — we did not read the full source",
@@ -128,6 +136,7 @@ def _clean_prose(body: str) -> str:
     out = _MARKER.sub("", out)
     out = _MARKER_TOKEN.sub("", out)
     out = _MARKER_CRUMBS.sub("", out)
+    out = _PROCESS_PHRASE.sub("", out)
     out = re.sub(r"([.!?])\s*,+", r"\1", out)          # "end.,," → "end."
     out = re.sub(r",\s*,+", ", ", out)                   # leftover ", ," runs
     out = re.sub(r"[ \t]+,", ",", out)

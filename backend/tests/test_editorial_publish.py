@@ -328,3 +328,27 @@ def test_published_figure_caption_drops_the_meta_sentence() -> None:
     md = render_published_article(_draft(), _profile(), analytics)
     assert "orients a reader" not in md
     assert "The bone came from southern Saskatchewan." in md
+
+
+def test_our_process_vocabulary_is_stripped_from_reader_prose() -> None:
+    """"Not available in this run" tells a reader about a research pass they know nothing about;
+    the fact about the world is that it was not available. Banned in two doctrine files and
+    shipped anyway, so it is removed mechanically."""
+    from algent_backend.agent_system.agents.editorial.publish import _clean_prose
+
+    assert _clean_prose("The signed text was not available in this run.") == (
+        "The signed text was not available."
+    )
+    assert _clean_prose("It was unclear in this pass whether talks resumed.") == (
+        "It was unclear whether talks resumed."
+    )
+
+
+def test_the_process_strip_does_not_eat_real_prose() -> None:
+    """The word boundary is load-bearing — "in this region"/"in this runoff" must survive."""
+    from algent_backend.agent_system.agents.editorial.publish import _clean_prose
+
+    for keep in ("The run of storms continued in this region.",
+                 "Turnout was low in this runoff election.",
+                 "Rainfall in this rural county broke records."):
+        assert _clean_prose(keep) == keep
