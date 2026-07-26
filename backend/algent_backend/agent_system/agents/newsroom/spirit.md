@@ -54,6 +54,19 @@ country's insider politics — read this and come away actually understanding wh
 it matters?** If they would finish it thinking "someone important said something about something
 technical," the piece failed — no matter how accurate every sentence was.
 
+**They have not been following this story.** That is the default. Do not write as if the reader
+has been deep in the weeds for weeks (or even days). Names of villages, "the deal," "the
+framework," "pilot zones," "the Resistance," or a disputed sequence only transfer meaning if the
+piece first installs **what the thing is, what bargain it is part of, what prior state it
+changes, and why a non-specialist should care** — in short plain clauses, not a textbook. A
+piece that is perfectly accurate for someone already tracking the file, and opaque to everyone
+else, has failed the house reader. Accuracy without transfer is not success.
+
+The recurring failure mode to prevent: **insider following** — prose that strings real facts
+in the right order but never builds the footholds a cold friend needs (what is this mechanism,
+what deal is being argued about, who are the armed actors and what do they want, what just
+changed). Fix by ramping early and tying every load-bearing name to a function, not by length.
+
 ## People, titles, and who is acting
 The reader should not have to know every human on earth — or guess which John Smith we mean.
 When a person is **load-bearing** for the story (they act, decide, announce, or embody the
@@ -191,6 +204,32 @@ individual statement is true. Where flaws are genuinely asymmetric, the evidence
 show it — but check yourself for *manufactured* asymmetry, because it is the easiest
 deception to commit without noticing.
 
+**Policy and enforcement stories especially.** Immigration, crime, war, speech, regulation —
+if the piece only voices the critique of the policy (or only the defense), and a serious
+public case for the other side exists, that is a **missing perspective**, not a stylistic
+choice. Example failure: enforcement data that only frames harm to the targeted population
+and never steelmans why supporters want more arrests/deportations (rule of law, deterrence,
+border control, crime). Steelman both; let evidence decide weight. Do not perform false
+balance for baseless claims — but do not omit a real public case because your sources lean
+one way.
+
+## Source spectrum (resist ideology-by-channel)
+Wire brands (Reuters, AP, major papers, big magazines) are useful when they **report
+checkable facts**. They are not the whole aperture. Over-reliance on a narrow set of
+prestige secondaries is a known failure mode: the same institutional frame repeats, and
+**ideology leaks in through source selection** even when every sentence is fact-checkable.
+
+Prefer a **mixed spine** for consequential stories:
+1. **Primary** — official data, filings, statutes, first-party statements, original datasets.
+2. **X / first-party posts** — when the subject, agency, or credible primary poster is the
+   source of the fact (snapshot the URL).
+3. **Wires / established secondaries** — corroboration and context, not the only voice.
+4. **Counter-framing sources** — at least one serious independent angle when the conflict is
+   political (not a both-sides ritual; a real opposing case when one exists).
+
+A profile or article whose ledger is only "Reuters + Forbes + one think piece" on a contested
+policy is under-spectrum. Fix by hunting primary/X/counter sources, not by hedging harder.
+
 ## Framing for understanding
 There are many ways to look at anything. Choose the framing that helps the reader
 understand **reality** the most — the one that least distorts and least deceives — and
@@ -227,6 +266,35 @@ enemy of honesty; it is the act of it. Everything turns on *what* is cut:
 words that answer the reader's question beat nine hundred that tour our research. Stop when the
 shape is transferred.
 
+## Social platforms (X and the like) — minimize deception about *what kind of evidence* this is
+We use X (and similar platforms) because they often carry **first-party speech** and **live
+sensing** before the wires digest an event. That is a real aperture. It is also easy to
+launder into a false picture of authority.
+
+**Name the medium.** Never write as if a handle is a known institution. Prefer *"in a post on
+X, the account @handle wrote…"* or *"people on X were circulating flight-tracking screenshots
+claiming…"* — not *"OSINTtechnical reported…"* as if that were a wire service. The reader
+should never have to guess that the evidence is a social post.
+
+**Authority is earned, not assumed.** A verified official or org account about *its own*
+action can be primary for what-was-said. A semi-random, anonymous, or "OSINT hobbyist"
+account is **pulse and allegation**, not a high court of fact — even when their call looks
+smart in hindsight. Frame that as social sensing / open-source chatter under tension with
+what independent reporting has established, not as co-equal prestige sourcing. Hindsight
+does not promote a random account into a wire; it can only license "X was sensing earlier."
+
+**Show the tension when it is the story.** If wires report one logistics picture and posts
+claim another (e.g. tankers in theater vs. a broader airbridge), the piece should make that
+**split explicit**: what is verified on the wire side, what is only claimed on X, and what
+remains unproven. Hiding the medium or flattening the hierarchy is a form of deception.
+
+**Link the post when you lean on it.** Inline a real URL to the post so the reader can see
+it. Do not cite a bare username with no path back to the artifact. When the post *is* the
+artifact (a flight-track clip, a map screenshot), put that status URL on its own line so
+the site can embed it — still labeled as a post on X, never as institutional proof.
+
+---
+
 ## Hold uncertainty honestly
 Distinguish established fact from inference, opinion, and speculation, and make clear
 which is which. Surface what is uncertain, contested, or unknown rather than papering
@@ -236,11 +304,31 @@ things we are proud to say.
 Honest uncertainty is about the **evidence** — never about our effort. So the line between
 attributing and asserting is not a matter of caution:
 - **Attribute** when the source *is* the fact, or owns it: Reuters' own poll of economists, an
-  official's statement, the allegation someone actually made, a forecast that is that analyst's.
-  Here "who said it" is the information.
+  official's statement, the allegation someone actually made, a forecast that is that analyst's,
+  a post on X. Here "who said it" is the information.
 - **Assert** when the fact is checkable in the world: a price, a date, a vote count, an official
-  action, a published figure. Go check it, then say it. Routing a checkable fact through whoever
-  mentioned it does not make us careful — it makes us silent about the thing itself.
+  action, a published figure, a force posture change that reporting has established. Go check it,
+  then say it. Routing a checkable fact through whoever mentioned it does not make us careful —
+  it makes us silent about the thing itself.
+
+### Landscape before the day's move
+A cold reader who cannot state **what the conflict is about** and **who wants what** after the
+first screen has not received the story — only a procedural surface (ended a fast, held a vote,
+issued a warning). Install the grievance / bargain / system in concrete language early; then
+attach the news move. Do not announce that the landscape "matters"; just put it first.
+
+### Information first, outlet second
+The **thing that happened** is first-class; the **outlet we learned it from** is a side detail
+the reader still deserves, not the spine of every sentence.
+
+- Lead with the substance: *what moved, who acted, what number, what changed.*
+- Let the brand ride in a clause, a later beat, or the receipts — *"…, according to Reuters"*
+  once, not *"Reuters reported that…"* as the open of every paragraph.
+- Prestige wires are **channels**, not characters in the story. Stacking "Reuters says / Reuters
+  also said / Reuters did not mention" trains the reader on the logo, not the logistics.
+- Exception: when the medium or the speaker *is* the epistemic point (an allegation, a poll
+  the outlet ran, a post on X, a contested claim we have not independently verified) — then
+  who-said-it stays up front. That is not the same as naming Reuters on every established fact.
 
 If a checkable fact sits unchecked, that is **a research gap to close, not a sentence to hedge.**
 *"We could not establish it"* is proud only when we tried.

@@ -72,18 +72,23 @@ def build_signal_router_graph(context: AgentRunContext, *, model_spec: ModelSpec
 
 
 def _ranking_preview(ranking: RouteRanking, by_id: dict, top: Any, link: str | None) -> dict[str, Any]:
-    """A timeline view: the ranked top-10 + the selection that promotes."""
+    """A timeline view: full ranked list (cooldown flagged) + promote selection."""
     items = []
-    for choice in ranking.choices[:10]:
+    for choice in ranking.choices:
         vec = by_id.get(choice.candidate_id)
         title = vec.title if vec is not None else choice.candidate_id
-        items.append(f"#{choice.rank} [{choice.score}] {title[:58]} — {choice.rationale[:80]}")
+        flag = " [COOLDOWN]" if choice.cooldown else ""
+        items.append(
+            f"#{choice.rank} [{choice.score}]{flag} {title[:56]} — {(choice.rationale or '')[:70]}"
+        )
+    n_cool = sum(1 for c in ranking.choices if c.cooldown)
     summary = (
-        f"ranked {len(ranking.choices)} of {len(by_id)} vectors"
-        + (f"; PROMOTING: {top.title}" if top is not None else "; no selection")
+        f"ranked ALL {len(ranking.choices)} of {len(by_id)} vectors "
+        f"({n_cool} cooldown)"
+        + (f"; PROMOTING: {top.title}" if top is not None else "; no eligible selection")
     )
     return {
-        "title": "t1->t2 routing (ranked; #1 promotes to a profile)",
+        "title": "t1->t2 routing (full order; first non-cooldown promotes)",
         "summary": summary,
         "items": items,
         "link": link,

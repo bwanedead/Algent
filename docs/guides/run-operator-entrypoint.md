@@ -40,6 +40,9 @@ python -m algent_backend.cli.runs start discovery_synthesis --max-turns 20
 # To build/inspect a t0 pool directly (per-channel testing), without an agent run:
 #   python -m algent_backend.cli ingest t0 --channels markets --force
 
+# full newsroom rail (discovery → article → publish)
+#   python -m algent_backend.cli.runs start newsroom_rail
+
 # TEST A STAGE IN ISOLATION ON ITS STORED INPUT (no upstream, no spend): each agent
 # declares its own test fixture, so one uniform flag works for any of them — you do
 # NOT need to know which file/key. When asked to "test <agent> with stored input":
@@ -47,6 +50,13 @@ python -m algent_backend.cli.runs start discovery_synthesis --max-turns 20
 # e.g. `... start discovery_synthesis --fixture` runs synthesis on a saved t0 pool
 # (no GDELT). If an agent has no fixture, the command says so. (Under the hood this is
 # --input-file/--input-key seeding the graph's initial state; see backend/fixtures/.)
+
+# POST-t0 REUSE (skip discovery cost; cooldown still applies — same as a fresh run):
+# After a full rail, try another article from that run's t1 portfolio without re-running t0:
+#   python -m algent_backend.cli.runs start newsroom_rail --from-run 0013
+# Cooldown is a ring of recent published headlines: story-families already on the site
+# cannot promote until they fall off the ring. --from-run does NOT bypass that (and does
+# not mean "always take rank #2"). Full detail: agent-cli-testing.md §5.
 
 # THEN, before watching, give the human the run's live timeline as a clickable link:
 #   backend/runs_data/<agent>/<NNNN>__<run_id>/audit/timeline.md
@@ -73,9 +83,10 @@ abort).
 
 ## Docs to be familiar with
 
-- **CLI operation → [`agent-cli-testing.md`](./agent-cli-testing.md).** Your main
-  reference: the full command set, the watch/stop loop, and where every run file
-  lives.
+- **CLI operation → [`agent-cli-testing.md`](./agent-cli-testing.md) (canonical).**
+  Full command set, all `start` flags, post-t0 `--from-run`, cooldown rules,
+  watch/stop loop, cost rails, and where every run file lives. **Prefer this
+  file whenever an agent needs reliable CLI docs.**
 - **How runs are recorded → [`../architecture/run-control-plane.md`](../architecture/run-control-plane.md).**
   The run-directory contract, if you need to reason about run files.
 - **What the agent system is → `backend/algent_backend/agent_system/mental_model/`**

@@ -85,7 +85,9 @@ chosen because it is:
   Advisories, clinical labels, and securities filings are pre-aimed at professionals doing a
   job. If your frame is "what the specialist must do next," you have inherited the source's job,
   not found the newsroom's vantage. **Reject that frame.** Re-aim at the house reader: what
-  happened, who it touches, why it matters outside the profession;
+  happened, who it touches, why it matters outside the profession — including a holdable
+  reduction a non-specialist can leave with (what is open, what would change the next move),
+  not only a tour of insider metrics;
 - **procedural-surface capture** — the frame foregrounds the hearing, statement, advisory,
   paper drop, or presser because that is what the profile is richest in, while the **load-bearing
   reality** (what changed, what is true, what is at stake) sits in the background. The reader is

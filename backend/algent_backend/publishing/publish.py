@@ -10,8 +10,8 @@ reviewer, and receipts make the machine trustworthy enough to run itself, and th
 (visible, dated, first-class) are the post-publish safety valve.
 
 This module owns the file/ledger/gating logic (pure enough to test against a tmp site dir). The git
-commit+push to the ``site-live`` branch lives in ``site_git.py`` and only runs when the kill switch
-(``ALGENT_SITE_PUBLISH``) is on — off by default until the Vercel wiring + one verified end-to-end.
+commit+push to the ``site-live`` branch lives in ``site_git.py`` and runs by default
+(``ALGENT_SITE_PUBLISH`` ON unless explicitly set to 0/false/off).
 """
 
 from __future__ import annotations
@@ -139,8 +139,8 @@ def publish_run(
     push: bool = False,
     hold_named_individuals: bool = False,
 ) -> PublishResult:
-    """Gate a finished run and stage/hold it. ``push`` (the kill switch) is applied by the caller's
-    git step; here it only distinguishes the recorded action (``staged`` vs ``published``)."""
+    """Gate a finished run and stage/hold it. ``push`` (live ship, ON by default) is applied by the
+    caller's git step; here it only distinguishes the recorded action (``staged`` vs ``published``)."""
     today = today or _today()
     loaded = _read_run(run_dir)
     if loaded is None:
@@ -178,7 +178,8 @@ def publish_run(
 
     article = convert(article_md=article_md, rail=rail, pipeline=pipeline, profile=profile,
                       date=today, run_id=run_id, corrections=corrections or None,
-                      vector=vector, analytics=analytics)
+                      vector=vector, analytics=analytics,
+                      hero=(pipeline.get("hero") or None))
     _write_article(site_dir, article, run_dir)
     _append_publish_ledger(site_dir, article, run_id,
                            kind="correction" if is_rewrite else "publish", pushed=push)

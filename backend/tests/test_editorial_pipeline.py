@@ -109,16 +109,19 @@ def test_needs_hedging_self_heals_and_ships(monkeypatch) -> None:
 
 def test_comprehension_is_advisory_repairs_but_never_blocks_publish(monkeypatch) -> None:
     # A hard-to-follow piece is a dud, not a lie: gate C earns one ramp-repair lap, then ships either
-    # way. needs_ramp must NOT flip a publishable piece to held.
+    # way. needs_ramp must NOT flip a publishable piece to held — if the body stays intact.
+    body = " ".join(["word"] * 200)
     plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
-    draft_out = {"draft": {"id": "d", "title": "t", "word_count": 400}, "gauntlet": {"outcome": "grounded"}}
+    draft_out = {"draft": {"id": "d", "title": "t", "body": body, "word_count": 200},
+                 "gauntlet": {"outcome": "grounded"}}
     _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}})
-    # first read flags a ramp gap; after the repair, it reads clear
+    # first read flags a ramp gap; after the repair, it reads clear (body still long enough)
     comp = _Sequence({"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}]}},
                      {"comprehension_check": {"verdict": "clear", "findings": []}})
     monkeypatch.setattr(pl, "build_comprehension_reviewer", lambda ctx: comp)
     monkeypatch.setattr(pl, "build_drafter", lambda ctx: _Sequence(
-        {"draft": {"id": "d", "title": "t"}, "profile": {"id": "p"}}))
+        {"draft": {"id": "d", "title": "t", "body": body + " ramp", "word_count": 201},
+         "profile": {"id": "p"}}))
 
     events: list = []
     r = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({"profile": {"id": "p"}})["pipeline"]
@@ -127,15 +130,51 @@ def test_comprehension_is_advisory_repairs_but_never_blocks_publish(monkeypatch)
     assert any(et == pl.RAMP_REPAIRED for et, _ in events)
 
 
-def test_a_still_unclear_piece_ships_anyway(monkeypatch) -> None:
-    # even if the ramp repair doesn't fully take, the honest (if imperfect) piece ships — duds ship.
+def test_comprehension_repair_that_collapses_the_body_is_rejected(monkeypatch) -> None:
+    # Live failure: ramp repair wiped ~400 words down to one sentence; must keep the prior draft.
+    long_body = " ".join(["word"] * 400)
     plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
-    draft_out = {"draft": {"id": "d", "title": "t"}, "gauntlet": {"outcome": "grounded"}}
+    draft_out = {"draft": {"id": "d", "title": "t", "body": long_body, "word_count": 400},
+                 "gauntlet": {"outcome": "grounded"}}
+    _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}})
+    monkeypatch.setattr(pl, "build_comprehension_reviewer", lambda ctx: _Sequence(
+        {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}]}}))
+    monkeypatch.setattr(pl, "build_drafter", lambda ctx: _Sequence(
+        {"draft": {"id": "d", "title": "t", "body": "One hollow sentence.", "word_count": 3},
+         "profile": {"id": "p"}}))
+    events: list = []
+    out = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({"profile": {"id": "p"}})
+    r = out["pipeline"]
+    assert r["status"] == "publishable" and r["word_count"] >= 200
+    assert out["draft"]["body"] == long_body
+    assert any(
+        et == pl.RAMP_REPAIRED and (p or {}).get("verdict") == "repair_rejected_collapsed"
+        for et, p in events
+    )
+
+
+def test_hollow_draft_is_not_publishable(monkeypatch) -> None:
+    plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
+    draft_out = {"draft": {"id": "d", "title": "t", "body": "One line only.", "word_count": 3},
+                 "gauntlet": {"outcome": "grounded"}}
+    _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}})
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "p"}})["pipeline"]
+    assert r["status"] == "needs_revision" and r["publishable"] is False
+    assert r["word_count"] < pl._MIN_PUBLISH_WORDS
+
+
+def test_a_still_unclear_piece_ships_anyway(monkeypatch) -> None:
+    # even if the ramp repair doesn't fully take, the honest (if imperfect) piece ships — duds ship
+    # when they still have a real body.
+    body = " ".join(["word"] * 200)
+    plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
+    draft_out = {"draft": {"id": "d", "title": "t", "body": body, "word_count": 200},
+                 "gauntlet": {"outcome": "grounded"}}
     _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}})
     monkeypatch.setattr(pl, "build_comprehension_reviewer", lambda ctx: _Sequence(
         {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}]}}))  # never clears
     monkeypatch.setattr(pl, "build_drafter", lambda ctx: _Sequence(
-        {"draft": {"id": "d", "title": "t"}, "profile": {"id": "p"}}))
+        {"draft": {"id": "d", "title": "t", "body": body, "word_count": 200}, "profile": {"id": "p"}}))
 
     r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "p"}})["pipeline"]
     assert r["status"] == "publishable"                       # honest but imperfect -> still ships
@@ -174,9 +213,9 @@ def test_pipeline_no_profile_is_not_publishable(monkeypatch) -> None:
     assert out["pipeline"]["publishable"] is False
 
 
-def test_analytics_worker_is_gated_off_by_default(monkeypatch) -> None:
-    # Even when analytics are warranted, the (quota-spending) worker must NOT run unless enabled.
-    monkeypatch.delenv(pl._ANALYTICS_WORKER_ENV, raising=False)
+def test_analytics_worker_can_be_gated_off(monkeypatch) -> None:
+    # Worker is ON by default so maps ship; operators can still disable with ALGENT_ANALYTICS_WORKER=0.
+    monkeypatch.setenv(pl._ANALYTICS_WORKER_ENV, "0")
     plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
     draft_out = {"draft": {"id": "d", "word_count": 100}, "gauntlet": {"outcome": "grounded"}}
     analytics_out = {"analytics_plan": {"warranted": True, "requests": [{"id": "anx_01"}]}}
@@ -220,3 +259,88 @@ def test_editorial_pipeline_registered_with_fixture() -> None:
     spec = default_agent_registry().get("editorial_pipeline")
     assert spec.test_fixture is not None and spec.test_fixture.input_key == "profile"
     assert Path(spec.test_fixture.input_file).exists()
+
+
+# -- hero image stage: decoration that must never cost us the article ------------
+
+
+def _hl(subject: str = "an orca surfacing in coastal water", hook: str = "Orcas take a sunfish apart"):
+    return {"title": "T", "standfirst": "d", "image_subject": subject, "image_hook": hook}
+
+
+class _Writer:
+    def __init__(self):
+        self.written = {}
+
+    def write_bytes(self, name, data, kind="binary"):
+        self.written[name] = data
+        return name
+
+
+class _Img:
+    data, model, size, estimated_usd = b"\xff\xd8jpeg", "gemini-3.1-flash-lite-image", "1K", 0.0336
+
+    def suffix(self):
+        return ".jpg"
+
+
+def test_hero_is_on_by_default_and_can_be_switched_off(monkeypatch) -> None:
+    """~$0.034 on the lite model is a few percent of a rail; a wall of text costs more."""
+    from algent_backend.agent_system.agents.editorial.hero_stage import make_hero
+
+    monkeypatch.delenv("ALGENT_HERO_IMAGE", raising=False)
+    assert make_hero(_hl(), _Writer(), generate=lambda *a, **k: _Img()) is not None
+
+    monkeypatch.setenv("ALGENT_HERO_IMAGE", "0")
+    assert make_hero(_hl(), _Writer(), generate=lambda *a, **k: _Img()) is None
+
+
+def test_hero_records_what_the_publisher_needs(monkeypatch) -> None:
+    from algent_backend.agent_system.agents.editorial.hero_stage import make_hero
+
+    monkeypatch.setenv("ALGENT_HERO_IMAGE", "1")
+    w = _Writer()
+    seen = {}
+
+    def _gen(subject, hook="", **kw):
+        seen["subject"], seen["hook"] = subject, hook
+        return _Img()
+
+    rec = make_hero(_hl(), w, generate=_gen)
+
+    assert rec["artifact_name"] == "hero.jpg" and "hero.jpg" in w.written
+    assert rec["alt"] == "an orca surfacing in coastal water"      # honest description
+    assert rec["hook"] == "Orcas take a sunfish apart"
+    assert "AI-generated" in rec["label"]
+    assert seen["subject"] and seen["hook"]                         # brief reached the generator
+
+
+def test_no_subject_means_no_hero_rather_than_a_guessed_one(monkeypatch) -> None:
+    """The headline writer leaves it empty when nothing is depictable. That is a decision."""
+    from algent_backend.agent_system.agents.editorial.hero_stage import make_hero
+
+    monkeypatch.setenv("ALGENT_HERO_IMAGE", "1")
+    assert make_hero(_hl(subject=""), _Writer(), generate=lambda *a, **k: _Img()) is None
+
+
+def test_a_failed_generation_never_costs_the_article(monkeypatch) -> None:
+    from algent_backend.agent_system.agents.editorial.hero_stage import make_hero
+
+    monkeypatch.setenv("ALGENT_HERO_IMAGE", "1")
+    notes: list[str] = []
+
+    def _boom(*a, **k):
+        raise RuntimeError("quota exceeded")
+
+    assert make_hero(_hl(), _Writer(), say=notes.append, generate=_boom) is None
+    assert any("skipped" in n for n in notes)      # reported, not swallowed
+
+
+def test_a_guard_refusal_happens_before_any_spend(monkeypatch) -> None:
+    from algent_backend.agent_system.agents.editorial.hero_stage import make_hero
+
+    monkeypatch.setenv("ALGENT_HERO_IMAGE", "1")
+    called = []
+    rec = make_hero(_hl(subject="Florida's $1.8 trillion economy claim"), _Writer(),
+                    generate=lambda *a, **k: called.append(1) or _Img())
+    assert rec is None and called == []

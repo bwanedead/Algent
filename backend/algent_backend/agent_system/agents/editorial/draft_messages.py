@@ -69,19 +69,25 @@ def build_draft_message(
 def _comprehension_block(prior: ArticleDraft, comprehension: dict) -> list[str]:
     """The RAMP repair lap — a general reader stumbled in specific places. Surgical, not a rewrite.
 
-    The constraint is hard and one-directional: your only moves are to ADD A HANDHOLD (a one-clause
-    plain-language ramp, in your own voice, uncited) or CONNECT an island onto the through-line or
-    CUT. You may NOT add new claims, strengthen any assertion, or pad. Fix exactly what's flagged.
+    The constraint is hard and one-directional: ADD A HANDHOLD (plain ramp in your own voice,
+    uncited), CONNECT an island, or CUT. No new contested claims, no strengthening, no pad.
+    For missing_scene / assumed_context / vague_conflict, a handhold may be up to three short
+    sentences so the cold reader can hold the dispute and who wants what — still not a full rewrite.
+    announced_importance → cut the label sentence (do not rephrase into another signpost).
     """
     lines = [
-        "## YOU ARE REPAIRING COMPREHENSION — a general reader stumbled in specific places",
+        "## YOU ARE REPAIRING COMPREHENSION — a cold general reader stumbled in specific places",
         "",
-        "Your prior draft is below. A reader read it cold and could not follow it in the places",
-        "listed. Repair EXACTLY those and nothing else. Your ONLY moves: add a one-clause plain",
-        "handhold (your own voice, no citation — it's textbook background, not evidence), connect an",
-        "island paragraph onto the through-line with a real relation, or cut what can't connect and",
-        "isn't needed. Do NOT add new claims, do NOT strengthen any assertion, do NOT pad, do NOT",
-        "re-report. Every sentence not named below stays exactly as written.",
+        "Your prior draft is below. A reader who has NOT been following this story read it cold",
+        "and could not follow it in the places listed. Repair EXACTLY those and nothing else.",
+        "Your ONLY moves: add a plain handhold (your own voice, no citation — textbook foothold,",
+        "not evidence; usually one clause; up to three short sentences if the stumble is",
+        "missing_scene/assumed_context/vague_conflict on what the dispute *is* and who wants what),",
+        "connect an island onto the through-line with a real relation, or CUT announced-importance",
+        "labels and circular restatement ('That first fact matters because…', 'this sets the frame',",
+        "'put plainly', 'phase change not closure').",
+        "Do NOT add new contested claims, do NOT strengthen any assertion, do NOT pad, do NOT",
+        "re-report, do NOT collapse the body. Every sentence not named below stays as written.",
         "",
         "### Where the reader stumbled",
     ]

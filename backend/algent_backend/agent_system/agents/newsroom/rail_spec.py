@@ -6,6 +6,11 @@ profile -> profile gauntlet -> editorial pipeline). Rail-free: the orchestrator 
 each stage carries its own model, budgets, and floors. Run the whole rail from nothing with:
 
     runs start newsroom_rail            # self-sources t0 + reads the backfeed queue
+
+Or reuse a prior run's t1 portfolio (skip t0+synthesis cost; same promotion cooldown
+as a fresh run — cooled story-families stay blocked) with:
+
+    runs start newsroom_rail --from-run <run_id|NNNN|path>
 """
 
 from __future__ import annotations

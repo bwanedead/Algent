@@ -33,10 +33,38 @@ Your goal is broad coverage of everything genuinely newsworthy in the pool, NOT 
 short highlight reel. A full pool usually holds many real stories — produce a vector
 for EACH one (often 10-25 from a full pool, not 3-4). Instead of dropping the long
 tail, KEEP it and set its research_effort to "light"; reserve "standard"/"deep" for
-the big, high-leverage, cross-corroborated forces. That way effort still concentrates
-on what matters most, but nothing real is thrown away. When unsure whether something
+the big, high-leverage, cross-corroborated forces *and* for high-curiosity knowledge
+stories (real breakthroughs, discoveries, cool feats). When unsure whether something
 is a story, include it as a light vector rather than dropping it. Being too selective
 is a failure mode here — err toward more coverage.
+
+CURIOSITY / AWE / NEW KNOWLEDGE — promote into the portfolio head
+Science, archaeology, physics, biology, math, space, and genuine discovery/feat
+stories are a product strength when they are real and researchable. Do not bury them
+as throwaway light tails while the head is only war/macro. Give breakthrough-shaped
+items their own vectors with standard effort when the evidence is there (e.g. a
+serious new result, first-of-kind find, disproved conjecture). Wonder that transfers
+to a smart generalist is first-class news for us.
+
+X AS NOVELTY VALVE
+The pool may include an **X band** (platform News, event probes, spectrum voices,
+aggregator wires, AI pulse). These often surface *before* or *without* GDELT mass.
+Treat them as first-class leads: if an X hit is a real development, it earns its
+own vector with ``supporting_hits`` pointing at that ``x:…`` id. Do not only fold
+X into already-loud wire mega-beats (war/macro) unless it is truly the same story.
+Several **X-primary** vectors in a normal portfolio is healthy; zero is a failure
+when the X band had real material.
+When a vector is X-primary, put the **x.com post URL** (from the hit's evidence) in
+``sources`` — not only NPR/Guardian rewrites. Research needs that URL to deep-read
+the first-party post; wire-only ``sources`` is how X disappears from the profile.
+
+SPECTRUM WHEN YOU DOUBLE-CLICK
+Prefer primary documents, official data releases, and primary X posts *alongside*
+any wire. Do not build every thesis only from Reuters/Forbes/AP-shaped coverage —
+those are useful when verifiable, but a portfolio that never cites X-primary or
+primary-source angles is under-spectrum. When two framings exist, note both lightly
+in the vector rationale (not a both-sides ritual — just do not launder one ideology
+as the only available reality).
 
 YOUR ONE TOOL — `web_search`, and what each channel actually does
 - `kind="keyword"` — keyword web search (Tavily). FREE tier. Your default search.

@@ -1,5 +1,9 @@
 """
-X discovery via the Grok Build CLI (subscription, headless) — the "free" channel.
+X discovery via the Grok Build CLI (subscription, headless) — **optional supplement only**.
+
+Primary t0 X is the native X API (``x_native`` / same surface as ``api.x.com/mcp``).
+This module remains for ``ALGENT_X_T0_VIA=api+grok`` or ``grok`` when you want an
+extra LLM-curated pass — not the default discovery path.
 
 xAI ships the Grok Build CLI with a documented headless mode (`-p`) for scripts
 and automations, available to SuperGrok / X Premium+ subscribers. We shell out to

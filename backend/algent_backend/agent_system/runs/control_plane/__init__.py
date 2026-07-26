@@ -28,6 +28,7 @@ from .layout import (
     allocate_run_root,
     find_run_root,
     resolve_or_allocate_run_root,
+    resolve_run_ref,
     runs_data_root,
 )
 from .recorder import RunRecorder
@@ -41,6 +42,7 @@ __all__ = [
     "find_run_root",
     "read_state",
     "resolve_or_allocate_run_root",
+    "resolve_run_ref",
     "runs_data_root",
     "write_state",
 ]

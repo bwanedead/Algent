@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from algent_backend.agent_system.agents.editorial.analytics_contracts import AI_ANALYTIC_LABEL
 from algent_backend.agent_system.agents.editorial.draft import ArticleDraft
 from algent_backend.agent_system.agents.editorial.publish import render_published_article
 from algent_backend.agent_system.agents.research.profile import (
@@ -92,6 +93,22 @@ def test_clean_prose_strips_backtick_and_bare_markers() -> None:
     assert out == "CENTCOM said it would act. The fee was dropped."
 
 
+def test_clean_prose_strips_markdown_link_citation_form() -> None:
+    # 2026-07 Wangchuk draft: markers as `` [`[clm_hex](#)`, `[`[ent_…](#)` ``
+    from algent_backend.agent_system.agents.editorial.publish import _clean_prose
+    raw = (
+        "Education Minister Dharmendra Pradhan. "
+        "`[`[clm_9747f4f642](#)`, `[`[clm_c8240631d4](#)`, `[`[ent_1e9b5b6bf5](#)`\n\n"
+        "That first fact matters."
+    )
+    out = _clean_prose(raw)
+    assert "clm_" not in out and "ent_" not in out and "(#)" not in out
+    assert "`" not in out and "[`" not in out
+    assert ",," not in out
+    assert "Pradhan." in out and "That first fact matters." in out
+    assert out.startswith("Education Minister Dharmendra Pradhan.")
+
+
 def test_table_analytic_is_inlined_not_image_embedded() -> None:
     # A markdown table must be inlined as text; an ![](x.md) image link would render broken.
     analytics = [{"request_id": "anx_t", "status": "produced", "artifact_name": "analytic_anx_t.md",
@@ -100,7 +117,10 @@ def test_table_analytic_is_inlined_not_image_embedded() -> None:
     md = render_published_article(_draft(), _profile(), analytics)
     assert "| Outcome | P |" in md and "| Hold | 81% |" in md   # the table itself is present
     assert "![" not in md.split("How we know this")[0]           # no image embed in the body
-    assert "AI-assisted analytic, built only from cited data" in md   # honesty label still travels
+    # The honesty label still travels. Asserted against the constant, not a copy of its
+    # wording: this test held a hand-typed version and silently went red when the label
+    # was reworded, which reads for months like the disclosure had been dropped.
+    assert AI_ANALYTIC_LABEL in md
     assert "Charts & tables" in md and "from claims c1" in md    # and it still earns a receipts line
 
 
@@ -153,6 +173,106 @@ def test_analytic_with_unverified_figures_is_flagged_in_receipts() -> None:
     assert "figures not all matched to the cited claims: 9.9" in md
 
 
+def test_x_status_url_injected_for_embed_when_handle_named_without_link() -> None:
+    from algent_backend.agent_system.agents.editorial.publish import render_published_article
+
+    prof = SignalProfile(
+        id="p", title="t",
+        source_ledger=[
+            SourceArtifact(
+                id="sx",
+                url="https://x.com/Osinttechnical/status/2080427489298391112",
+                title="Post by @Osinttechnical",
+                source_type="secondary",
+            ),
+            SourceArtifact(id="s1", url="https://reuters.com/a", title="Wire", source_type="secondary",
+                           snapshot=SourceSnapshot(content_hash="h")),
+        ],
+        claim_ledger=[
+            Claim(id="c1", text="A post showed fire", status="confirmed", grounding="snippet_only",
+                  supported_by=["sx"]),
+        ],
+    )
+    draft = ArticleDraft(
+        id="d", title="Strike", standfirst="dek",
+        body="An X post by the open-source account Osinttechnical showed a fire at the warehouse.",
+        cited_claim_ids=["c1"], cited_source_ids=["sx"],
+    )
+    md = render_published_article(draft, prof)
+    body = md.split("How we know this")[0]
+    assert "https://x.com/Osinttechnical/status/2080427489298391112" in body
+    assert "Post on X · @Osinttechnical" in body
+
+
+def test_map_figure_is_placed_after_opening_paragraph() -> None:
+    from algent_backend.agent_system.agents.editorial.publish import render_published_article
+
+    prof = _profile()
+    draft = _draft()
+    draft = ArticleDraft(
+        id="d", title="Fed piece", standfirst="the dek", frame="a market-pricing story",
+        body=(
+            "First landscape paragraph about the choke point and the theater.\n\n"
+            "Second paragraph continues the news move and the dispute."
+        ),
+        cited_claim_ids=["c1", "c2", "c3"], cited_source_ids=["s1", "s2"],
+    )
+    analytics = [{
+        "request_id": "m1", "status": "produced", "kind": "image",
+        "artifact_name": "map_bab_el_mandeb.svg",
+        "title": "Bab el-Mandeb theater map",
+        "question": "Where is the choke point relative to Saudi Arabia and Yemen?",
+        "caption": "Theater map. — AI-assisted analytic, built only from cited data.",
+        "data_refs": ["c1"], "figure_check": {"verified": True, "unverified": []},
+    }]
+    md = render_published_article(draft, prof, analytics)
+    body = md.split("How we know this")[0]
+    assert body.index("First landscape") < body.index("map_bab_el_mandeb.svg")
+    assert body.index("map_bab_el_mandeb.svg") < body.index("Second paragraph")
+
+
+def test_source_label_names_x_medium_not_bare_handle() -> None:
+    """Receipts must not present an X handle as if it were a wire outlet."""
+    from algent_backend.agent_system.agents.editorial.publish import _source_label
+
+    bare = SourceArtifact(
+        id="x1",
+        url="https://x.com/Osinttechnical/status/2080393908685566041",
+        title="Post by @Osinttechnical",
+        source_type="primary",
+    )
+    label = _source_label(bare)
+    assert "X post" in label
+    assert "@Osinttechnical" in label
+    assert not label.lower().startswith("post by")
+
+    honest_pub = SourceArtifact(
+        id="x2",
+        url="https://x.com/WhiteHouse/status/1",
+        title="unused",
+        publisher="X post · @WhiteHouse (official account)",
+        source_type="primary",
+    )
+    assert _source_label(honest_pub) == "X post · @WhiteHouse (official account) — unused"
+
+    wrapper = SourceArtifact(
+        id="x3",
+        url="https://x.com/i/web/status/2080393908685566041",
+        title="X web status wrapper for @Osinttechnical post",
+        source_type="primary",
+    )
+    assert _source_label(wrapper) == "X post"
+
+    wire = SourceArtifact(
+        id="r1",
+        url="https://www.reuters.com/world/x",
+        title="Israel tankers",
+        publisher="Reuters",
+        source_type="secondary",
+    )
+    assert _source_label(wire) == "Israel tankers — Reuters"
+
+
 def test_appendix_is_silent_when_everything_is_clean() -> None:
     prof = SignalProfile(id="p", title="t",
         source_ledger=[SourceArtifact(id="s1", url="u", title="src", source_type="primary",
@@ -162,3 +282,49 @@ def test_appendix_is_silent_when_everything_is_clean() -> None:
                      cited_claim_ids=["c1"], cited_source_ids=["s1"])
     md = render_published_article(d, prof)
     assert "Where we hit a limit" not in md   # nothing to flag -> no alarm section
+
+
+# -- captions must address the reader, not explain the figure to us -------------
+
+
+def test_caption_meta_preamble_is_stripped() -> None:
+    """Shipped live: the router's rationale for building a figure, printed as its caption."""
+    from algent_backend.agent_system.agents.editorial.publish import strip_caption_meta
+
+    out = strip_caption_meta(
+        "This map orients a reader to the Canadian location and the stratigraphic setting "
+        "tied to the specimen. This map places the T. rex foot bone in the Frenchman Formation."
+    )
+    assert out == "This map places the T. rex foot bone in the Frenchman Formation."
+
+    out = strip_caption_meta(
+        "Gives readers immediate geographic orientation for the two encounters. "
+        "This map places the two ram-to-fragment events in the Gulf of California."
+    )
+    assert out.startswith("This map places the two")
+
+
+def test_caption_stripper_leaves_a_reader_facing_caption_alone() -> None:
+    from algent_backend.agent_system.agents.editorial.publish import strip_caption_meta
+
+    good = "Where the bone was found, in southern Saskatchewan."
+    assert strip_caption_meta(good) == good
+
+
+def test_caption_stripper_never_empties_a_caption() -> None:
+    """A caption that is *only* meta-narration stays visible rather than becoming a bare figure."""
+    from algent_backend.agent_system.agents.editorial.publish import strip_caption_meta
+
+    only_meta = "This map orients a reader to the region."
+    assert strip_caption_meta(only_meta) == only_meta
+
+
+def test_published_figure_caption_drops_the_meta_sentence() -> None:
+    analytics = [{"request_id": "a1", "status": "produced", "artifact_name": "a1.svg",
+                  "title": "Where the bone was found",
+                  "caption": "This map orients a reader to the Canadian location. "
+                             "The bone came from southern Saskatchewan.",
+                  "data_refs": ["c1"], "figure_check": {"verified": True, "unverified": []}}]
+    md = render_published_article(_draft(), _profile(), analytics)
+    assert "orients a reader" not in md
+    assert "The bone came from southern Saskatchewan." in md

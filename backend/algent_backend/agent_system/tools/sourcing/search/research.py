@@ -103,11 +103,26 @@ def _search(
     if source == "x":
         if not policy.is_allowed(policy.X):
             return _denied(policy.X)
+        # Pre-authorize on the default estimate; then true-up to posts actually returned.
         refusal = _spend_paid(policy.X)
         if refusal is not None:
             return refusal
         from .x_search import x_recent_search
-        return {"action": "search", "kind": "x", **x_recent_search(query, max_results)}
+        from algent_backend.agent_system.foundation import cost as run_cost
+        payload = x_recent_search(query, max_results)
+        results = payload.get("results") or []
+        # True-up: we already charged estimate_call_cost("x"); adjust to posts × $0.005.
+        assumed = run_cost.estimate_call_cost(policy.X)
+        actual = run_cost.estimate_x_posts(len(results) if isinstance(results, list) else 0)
+        delta = actual - assumed
+        if abs(delta) > 1e-9:
+            run_cost.add(delta)
+        return {
+            "action": "search", "kind": "x",
+            "estimated_usd": round(actual, 6),
+            "posts": len(results) if isinstance(results, list) else 0,
+            **payload,
+        }
 
     channel = policy.SEMANTIC if kind == "semantic" else policy.KEYWORD
     if not policy.is_allowed(channel):

@@ -3,19 +3,25 @@ The full newsroom rail (v1) — raw discovery pool -> finished, receipted articl
 
     [backfeed intake] -> synthesis -> routing -> profile -> profile gauntlet -> editorial pipeline
 
+Or, when a prior t1 portfolio is supplied (``--from-run`` / state.portfolio):
+
+    [reuse portfolio] -> routing (cooldown) -> profile -> gauntlet -> editorial
+
 It chains the stages that already work as sub-graphs under ONE run/context (the same idiom the
 gauntlets and the editorial pipeline use), so every stage's events land in this run's timeline and
-a single report closes the loop. Three deliberate properties:
+a single report closes the loop. Four deliberate properties:
 
   (i)   COST — the rail tees the event stream and sums each stage's reported ``estimated_usd``, so
         every finished article carries what it actually cost to make.
   (ii)  BOUNDED — the rail inherits each stage's own floors (models, paid budgets, USD caps, review
         gates); it re-litigates none of them. It promotes the router's single #1 vector — one article
         per run — rather than fanning out.
-  (iii) BACKFEED — before discovery, it reads the damped open leads (``open_leads_for_discovery``)
-        and merges them into the t0 pool, so the leads the research loop emits actually re-enter
-        discovery. The damping cap is applied on the intake side; consumed leads are marked so they
-        do not loop forever.
+  (iii) BACKFEED — **OFF by default.** Opt-in only (``ALGENT_BACKFEED=1``). When on, open research
+        leads re-enter the t0 pool. Live regression 0022: ICE open leads re-seeded the same
+        published family and beat cooldown. Default stays off until backfeed is gated by cooldown.
+  (iv)  REUSE — a post-t0 launch can skip discovery and re-route a prior portfolio. The same
+        headline-ring cooldown applies as on a fresh run (cooled story-families cannot promote
+        until they fall off the ring). Saves t0/synthesis cost only — not a variety bypass.
 
 Each stage can legitimately be the end: no promotable vector is a valid outcome, not an error.
 """
@@ -52,9 +58,9 @@ RAIL_STAGE = "newsroom_rail.stage"
 BACKFEED_INJECTED = "newsroom_rail.backfeed_injected"
 RAIL_PUBLISHED = "newsroom_rail.published"
 
-# The backfeed read-side is ON by default — the loop only closes if the leads actually re-enter
-# discovery. ALGENT_BACKFEED=0 turns it off; ALGENT_BACKFEED_MAX caps how many leads enter (the
-# damping cap on the intake side).
+# Backfeed is OFF by default. It was meant to re-queue unfinished research threads, but live
+# it re-injected the same published story-family (ICE 0020→0022) and fought cooldown. Opt in
+# only with ALGENT_BACKFEED=1 after it is gated against recent headlines. Cap still applies.
 _BACKFEED_ENV = "ALGENT_BACKFEED"
 _BACKFEED_CAP_ENV = "ALGENT_BACKFEED_MAX"
 _BACKFEED_CAP_DEFAULT = 5
@@ -65,7 +71,8 @@ _LEAD_SCORE = {"high": 5.0, "med": 3.0, "medium": 3.0, "low": 1.5, "": 2.0}
 
 
 def _backfeed_enabled() -> bool:
-    return os.environ.get(_BACKFEED_ENV, "1").strip().lower() not in ("0", "false", "no", "off")
+    # Default OFF — must opt in. (Was default ON; caused same-story repetition.)
+    return os.environ.get(_BACKFEED_ENV, "0").strip().lower() in ("1", "true", "yes", "on")
 
 
 def _backfeed_cap() -> int:
@@ -76,9 +83,11 @@ def _backfeed_cap() -> int:
 
 
 class RailState(TypedDict, total=False):
-    pool: dict[str, Any]       # optional t0 pool; synthesis self-sources if absent
-    rail: dict[str, Any]       # the NewsroomRailReport
-    pipeline: dict[str, Any]   # the editorial pipeline's report (the article)
+    pool: dict[str, Any]            # optional t0 pool; synthesis self-sources if absent
+    portfolio: dict[str, Any]       # optional t1 portfolio — when set, skip t0+synthesis (reuse)
+    source_run_id: str              # prior run id when portfolio was reused (observability)
+    rail: dict[str, Any]            # the NewsroomRailReport
+    pipeline: dict[str, Any]        # the editorial pipeline's report (the article)
 
 
 def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | None = None) -> Any:
@@ -105,23 +114,40 @@ def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | Non
         sub = dataclasses.replace(context, emit=_tee)
         report = NewsroomRailReport(generated_at=datetime.now(UTC).isoformat())
 
-        # (iii) BACKFEED intake — merge the damped open leads into the discovery pool.
+        # 1. discovery synthesis (pool -> t1 portfolio) — OR reuse a prior portfolio and skip t0.
+        # Reuse path: operator supplies ``portfolio`` (e.g. --from-run). Saves discovery cost only.
+        # Routing always applies the same headline-ring cooldown as a fresh run — cooled families
+        # cannot promote until they fall off the ring. Backfeed only applies to a fresh discovery pass.
         pool = state.get("pool")
-        if _backfeed_enabled():
-            pool, injected = _inject_backfeed(context, pool, lead_store or JsonLeadStore())
-            report.backfeed_leads_injected = injected
+        reused = state.get("portfolio") or {}
+        if reused.get("vectors"):
+            portfolio = reused
+            report.portfolio_source = "reused"
+            report.source_run_id = str(state.get("source_run_id") or "")
+            report.vector_count = len(portfolio.get("vectors", []))
+            report.pool_items = int(portfolio.get("total_considered", 0) or 0)
+            report.stage_reached = "synthesis"
+            context.emit(RAIL_STAGE, {
+                "stage": "synthesis", "skipped": True, "reason": "portfolio_reused",
+                "source_run_id": report.source_run_id, "vector_count": report.vector_count,
+            })
+        else:
+            if _backfeed_enabled():
+                pool, injected = _inject_backfeed(context, pool, lead_store or JsonLeadStore())
+                report.backfeed_leads_injected = injected
 
-        # 1. discovery synthesis (pool -> t1 portfolio). No pool -> synthesis self-sources t0.
-        context.emit(RAIL_STAGE, {"stage": "synthesis"})
-        syn_input: dict[str, Any] = {"pool": pool} if pool is not None else {}
-        portfolio = build_synthesis(sub).invoke(syn_input, config).get("portfolio") or {}
-        report.vector_count = len(portfolio.get("vectors", []))
-        report.pool_items = int(portfolio.get("total_considered", 0) or 0)
-        report.stage_reached = "synthesis"
-        if not portfolio.get("vectors"):
-            return _finish(context, report, note="synthesis produced no vectors")
+            context.emit(RAIL_STAGE, {"stage": "synthesis"})
+            syn_input: dict[str, Any] = {"pool": pool} if pool is not None else {}
+            portfolio = build_synthesis(sub).invoke(syn_input, config).get("portfolio") or {}
+            report.portfolio_source = "fresh"
+            report.vector_count = len(portfolio.get("vectors", []))
+            report.pool_items = int(portfolio.get("total_considered", 0) or 0)
+            report.stage_reached = "synthesis"
+            if not portfolio.get("vectors"):
+                return _finish(context, report, note="synthesis produced no vectors")
 
-        # 2. routing (portfolio -> the #1 vector to promote).
+        # 2. routing (portfolio -> the #1 vector to promote). Always runs under the same cooldown
+        # ring whether the portfolio is fresh or reused (variety is not optional).
         context.emit(RAIL_STAGE, {"stage": "routing"})
         route = build_router(sub).invoke({"portfolio": portfolio}, config)
         vector = route.get("selected_vector")
@@ -133,8 +159,11 @@ def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | Non
         report.pool_by_channel, report.promoted_from = _channel_provenance(context, pool, vector)
 
         # 3. profile (the #1 vector -> a researched t2 profile).
+        # Pass pool so research can hydrate X post URLs from supporting_hits.
         context.emit(RAIL_STAGE, {"stage": "profile"})
-        profile = build_profile(sub).invoke({"vector": vector}, config).get("profile") or {}
+        profile = build_profile(sub).invoke(
+            {"vector": vector, "pool": pool}, config,
+        ).get("profile") or {}
         report.stage_reached = "profile"
         if not profile.get("id"):
             return _finish(context, report, note="profile research produced nothing")
@@ -323,10 +352,20 @@ def _finish(
 
 
 def _preview(r: NewsroomRailReport) -> dict[str, Any]:
+    if r.portfolio_source == "reused":
+        origin = f"reused portfolio ({r.vector_count} vectors"
+        if r.source_run_id:
+            origin += f" from {r.source_run_id[:8]}"
+        origin += ")"
+    else:
+        origin = (
+            f"{r.pool_items} t0 items (+{r.backfeed_leads_injected} backfed) "
+            f"-> {r.vector_count} vectors"
+        )
     return {
         "title": f"full rail -> {r.stage_reached}",
         "summary": (
-            f"{r.pool_items} t0 items (+{r.backfeed_leads_injected} backfed) -> {r.vector_count} vectors"
+            origin
             + (f" -> promoted: {r.selected_vector_title[:50]}" if r.selected_vector_title else "")
             + (f" -> article: {r.article_status}" if r.article_status else "")
             + (f" -> {r.publish_action}" if r.publish_action else "")

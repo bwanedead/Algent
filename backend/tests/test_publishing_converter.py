@@ -114,3 +114,28 @@ def test_published_at_orders_same_day_pieces() -> None:
     fb = yaml.safe_load(_convert(published_at="2026-07-16T21:00:00+00:00").markdown.split("---\n")[1])
     assert fa["date"] == fb["date"]                  # same day -> `date` cannot order them
     assert fa["published_at"] < fb["published_at"]   # the real moment can
+
+
+def test_hero_lands_in_frontmatter_and_is_copied_as_an_asset() -> None:
+    """A generated hero is decoration: it ships beside the thumbnail, never replacing it."""
+    hero = {"artifact_name": "hero.jpg", "alt": "an orca surfacing in coastal water",
+            "hook": "Orcas caught taking a sunfish apart",
+            "label": "AI-generated illustration — not a photograph of this story",
+            "model": "gemini-3.1-flash-lite-image", "size": "1K", "estimated_usd": 0.0336}
+    analytics = [{"status": "produced", "artifact_name": "analytic_a1.svg"}]
+
+    art = cv.convert(article_md="# T\n*d*\n\nBody.\n", rail={}, pipeline={"profile_id": "p"},
+                  profile={}, date="2026-07-25", analytics=analytics, hero=hero)
+
+    assert "hero: /analytics/" in art.markdown and "hero.jpg" in art.markdown
+    assert "Orcas caught taking a sunfish apart" in art.markdown
+    assert "AI-generated illustration" in art.markdown      # the label travels with it
+    assert "hero.jpg" in art.assets                          # and the file is copied to the site
+    # The real figure remains the thumbnail — a chart from cited evidence beats an illustration.
+    assert "analytic_a1.svg" in art.markdown
+
+
+def test_no_hero_leaves_the_frontmatter_untouched() -> None:
+    art = cv.convert(article_md="# T\n*d*\n\nBody.\n", rail={}, pipeline={"profile_id": "p"},
+                  profile={}, date="2026-07-25")
+    assert "hero:" not in art.markdown

@@ -13,21 +13,34 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-# What kind of analytic. `image` is an AI-generated ILLUSTRATION (diagram/concept art), never a
-# fabricated photo of a real event — see the worker doctrine.
+# What kind of analytic.
+# - chart/table/insight: quantities from real data
+# - image: labeled MAP (preferred) or structural diagram via the analytics worker — never a
+#   fabricated photo of a real news event. Future: optional theme-illustration (Grok Imagine /
+#   similar) may land as a separate honest "AI atmosphere" asset with its own label — not as
+#   evidence and not as a stand-in for a map.
 AnalyticKind = Literal["chart", "table", "insight", "image"]
 RequestStatus = Literal["requested", "produced", "skipped", "failed"]
 
 
 class AnalyticsRequest(BaseModel):
-    """One grounded ask: build this analytic from this data, to answer this question."""
+    """One useful ask: build this analytic to answer this question for a house reader.
+
+    Profile and analytics are largely separate: the profile need not already hold a time series.
+    Prefer ``data_refs`` when claims/sources in the profile already carry the numbers; set
+    ``may_source`` + ``source_hint`` when usefulness is clear and public data is likely available
+    to fetch at analytics time. Never invent numbers either way.
+    """
 
     id: str
     kind: AnalyticKind
     title: str = ""                                    # a short label for the produced artifact
     question: str = ""                                 # what the reader learns from it
     spec: str = ""                                     # what to build (e.g. "line chart of PCE y/y, 2024-2026")
-    data_refs: list[str] = Field(default_factory=list)  # profile claim/source/thread ids that supply the data
+    data_refs: list[str] = Field(default_factory=list)  # optional profile claim/source/thread ids
+    # When True, the worker may fetch public data described by source_hint (profile need not hold it).
+    may_source: bool = False
+    source_hint: str = ""                              # where/what to fetch (e.g. "WHO weekly Ebola cases DRC")
     rationale: str = ""                                # why it aids understanding (not decoration)
     status: RequestStatus = "requested"
 
@@ -46,8 +59,9 @@ class AnalyticsPlan(BaseModel):
 
 
 # The AI label every produced analytic carries into the publish view — no visual passes as a
-# photograph or as anything but a chart drawn from the cited data.
-AI_ANALYTIC_LABEL = "AI-assisted analytic, built only from cited data"
+# photograph or as anything but a chart drawn from real data (profile-cited and/or sourced).
+AI_ANALYTIC_LABEL = "AI-assisted analytic, built only from real cited or sourced data"
+AI_ANALYTIC_LABEL_SOURCED = "AI-assisted analytic; series sourced for this figure (not from the profile ledger)"
 
 
 class AnalyticsArtifact(BaseModel):

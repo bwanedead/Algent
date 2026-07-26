@@ -54,6 +54,11 @@ INTERROGATE the treatment:
   reader rather than serve their judgment?
 - CORE: Does `core_understanding` actually capture the real shape of the thing? Does
   `reader_question` serve a smart non-specialist?
+- LANDSCAPE (blocking when clear): Could a cold house reader state **what the underlying
+  dispute is**, **who wants what**, and **why the day's move attaches to that** from the
+  molecule alone — or does the treatment only name an event surface (ended a strike, a vote,
+  a hearing) while leaving paper-leak / exam / resignation / bargain substance foggy?
+  Procedure without grievance is incomplete (molecule.md hunger-strike failure mode).
 
 OUTPUT — a TreatmentReview (task-generating, not prose criticism)
 - findings[]: each with a `type`, `severity` (low|medium|high|blocking), a `target` ("frame"

@@ -70,6 +70,14 @@ def test_reviewer_is_shown_prose_only_never_the_evidence() -> None:
                                           model_spec=_SPEC).invoke({"draft": _draft().model_dump()})
     shown = _Structured.last_message[1].content   # the HumanMessage
     assert "LDL-C" in shown and "clm_" not in shown and "grounding" not in shown and "treatment" not in shown
+    # friend-test + slop cut are part of the cold-read brief (not optional flavor)
+    assert "FRIEND TEST" in shown and "announced_importance" in shown
+
+
+def test_vague_conflict_and_announced_importance_kinds_are_valid() -> None:
+    for kind, fix in (("vague_conflict", "add_handhold"), ("announced_importance", "cut")):
+        f = ComprehensionFinding(id="x", kind=kind, issue="t", fix=fix)
+        assert f.kind == kind
 
 
 def test_clear_when_the_reader_follows_it() -> None:

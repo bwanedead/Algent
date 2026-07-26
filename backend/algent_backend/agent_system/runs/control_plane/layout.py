@@ -124,6 +124,84 @@ def find_run_root(run_id: str, root: Path | None = None) -> Path | None:
     return matches[0] if matches else None
 
 
+def resolve_run_ref(
+    ref: str,
+    *,
+    prefer_agent: str | None = None,
+    root: Path | None = None,
+) -> Path | None:
+    """Locate a run directory from a flexible operator reference.
+
+    Accepts:
+      - full run UUID (via ``find_run_root``)
+      - absolute/relative path to a run directory
+      - counter prefix ``0013`` / ``13`` (latest match; prefer ``prefer_agent`` if set)
+      - ``agent_id/0013`` form
+    """
+    text = (ref or "").strip()
+    if not text:
+        return None
+    base = root if root is not None else runs_data_root()
+
+    # Path to an existing run dir (has artifacts/ or request.json).
+    as_path = Path(text)
+    if as_path.is_dir() and (
+        (as_path / "artifacts").is_dir() or (as_path / "request.json").is_file()
+    ):
+        return as_path.resolve()
+
+    # Full UUID (with or without agent folder knowledge).
+    by_id = find_run_root(text, root=base)
+    if by_id is not None:
+        return by_id
+
+    # agent_id/NNNN or agent_id/NNNN__uuid
+    if "/" in text or "\\" in text:
+        parts = text.replace("\\", "/").split("/")
+        if len(parts) == 2:
+            agent, suffix = parts[0], parts[1]
+            adir = base / agent
+            if adir.is_dir():
+                hit = _match_counter(adir, suffix)
+                if hit is not None:
+                    return hit
+
+    # Bare counter: 0013 or 13 — prefer a named agent, else any.
+    if prefer_agent:
+        hit = _match_counter(base / prefer_agent, text)
+        if hit is not None:
+            return hit
+    if base.exists():
+        for adir in sorted(base.iterdir()):
+            if not adir.is_dir() or adir.name.startswith(("_", ".")):
+                continue
+            hit = _match_counter(adir, text)
+            if hit is not None:
+                return hit
+    return None
+
+
+def _match_counter(agent_dir: Path, token: str) -> Path | None:
+    """Match ``NNNN`` or ``NNNN__...`` under one agent directory (highest seq wins)."""
+    if not agent_dir.is_dir():
+        return None
+    token = token.strip()
+    # Exact dir name or UUID tail already handled elsewhere; here: counter prefix.
+    if token.isdigit():
+        pad = f"{int(token):04d}"
+    elif len(token) >= 4 and token[:4].isdigit() and (len(token) == 4 or token[4] == "_"):
+        pad = token[:4]
+    else:
+        # Full dir name under this agent?
+        direct = agent_dir / token
+        return direct if direct.is_dir() else None
+    matches = [p for p in agent_dir.iterdir() if p.is_dir() and p.name.startswith(f"{pad}__")]
+    if not matches:
+        return None
+    matches.sort(key=_run_seq, reverse=True)
+    return matches[0]
+
+
 def resolve_or_allocate_run_root(run_id: str, agent_id: str, root: Path | None = None) -> Path:
     """Return the existing run directory for ``run_id``, or allocate a new one.
 

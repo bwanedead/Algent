@@ -15,9 +15,22 @@ from typing import Any
 _MAX_ITEMS = 150
 
 
-def build_t0_message(pool: dict[str, Any]) -> str:
-    """Render a t0 ``DiscoveryPool`` dict into the run's task message."""
+def build_t0_message(
+    pool: dict[str, Any],
+    *,
+    recent_headlines: tuple[tuple[str, str], ...] | list[tuple[str, str]] = (),
+) -> str:
+    """Render a t0 ``DiscoveryPool`` dict into the run's task message.
+
+    X items are listed in a dedicated **novelty band** first so synthesis treats
+    the X channel as a first-class valve, not garnish on GKG mass.
+
+    ``recent_headlines`` is the cooldown payload (date, title): prefer not to
+    rebuild the same story-family as something we just published.
+    """
     items = pool.get("items", [])[:_MAX_ITEMS]
+    x_items = [i for i in items if str(i.get("channel") or "") == "x"]
+    other = [i for i in items if str(i.get("channel") or "") != "x"]
     lines = [
         "# t0 DISCOVERY POOL (your input to triage)",
         f"items: {pool.get('item_count', len(items))}   "
@@ -27,8 +40,32 @@ def build_t0_message(pool: dict[str, Any]) -> str:
         "Each line is a candidate hit: [id] label | tags | signals | evidence.",
         "",
     ]
-    lines.extend(_fmt_item(item) for item in items)
-    lines.extend(["", _DIRECTIVE])
+    if recent_headlines:
+        lines.append("# ALREADY COVERED — recent published headlines (cooldown)")
+        lines.append(
+            "Prefer vectors that are NOT the same story-family as these. A reframe or "
+            "updated figures on the same development is still the same family — skip it "
+            "unless there is a true structural delta. Do not spend the portfolio on "
+            "repetition of what we just published."
+        )
+        for when, title in recent_headlines:
+            lines.append(f"- {str(when)[:10]}  {title}")
+        lines.append("")
+    if x_items:
+        lines.append(
+            f"## X NOVELTY BAND ({len(x_items)} hits) — platform-native / wires / AI pulse"
+        )
+        lines.append(
+            "Prefer vectors whose *primary* supporting hits are these when they are real "
+            "developments. Do not only use X as a footnote on GKG mega-beats."
+        )
+        lines.extend(_fmt_item(item) for item in x_items)
+        lines.append("")
+    if other:
+        lines.append(f"## OTHER CHANNELS ({len(other)} hits) — gkg / markets / beats / backfeed")
+        lines.extend(_fmt_item(item) for item in other)
+        lines.append("")
+    lines.append(_DIRECTIVE)
     return "\n".join(lines)
 
 
@@ -58,12 +95,13 @@ def _fmt_item(item: dict[str, Any]) -> str:
 
 _DIRECTIVE = (
     "TASK: Turn the t0 pool above into a research-vector portfolio (t1) with BROAD "
-    "coverage. Drop only genuine non-news/spam. A single hit that's its own story is "
-    "its own vector (the common case); fuse hits into one vector only when they're "
-    "genuinely the same story or one pattern — 1:1 and many:1 are equally valid, never "
-    "merge distinct stories to look synthesized. Aim for many vectors, keeping the long "
-    "tail as 'light' rather than dropping it. Double-click into promising hits "
-    "free-first (read their URLs, search) — escalate to paid only when genuinely "
-    "needed. Return a broad, effort-tiered ResearchPortfolio; cite each vector's "
-    "supporting t0 hit ids."
+    "coverage and GENUINE SPECTRUM. Drop only genuine non-news/spam. A single hit "
+    "that's its own story is its own vector (the common case); fuse hits into one "
+    "vector only when they're genuinely the same story or one pattern — never merge "
+    "distinct stories to look synthesized. "
+    "X BAND: when an X hit is a real development (not empty engagement bait), give it "
+    "its own vector with primary supporting_hit from channel x — do not only absorb X "
+    "into Iran/Fed/macro mega-vectors. Aim for many vectors, long tail as 'light'. "
+    "Double-click free-first; use source=x when a live X-native strand is missing from "
+    "wires. Return a broad, effort-tiered ResearchPortfolio; cite supporting t0 hit ids."
 )

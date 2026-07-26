@@ -33,6 +33,7 @@ from .draft_spec import build_graph as build_drafter
 from .draft_store import render_draft
 from .gauntlet import build_planning_gauntlet_graph
 from .headline_spec import build_graph as build_headline_writer
+from .hero_stage import make_hero
 from .pipeline_contracts import EditorialPipelineReport
 from .publish import render_published_article
 
@@ -40,20 +41,30 @@ PIPELINE_COMPLETED = "editorial_pipeline.completed"
 PIPELINE_NO_INPUT = "editorial_pipeline.no_input"
 CAVEAT_REPAIRED = "editorial_pipeline.caveat_repaired"   # the self-heal lap ran; here's the outcome
 RAMP_REPAIRED = "editorial_pipeline.ramp_repaired"       # the comprehension repair lap ran
+HERO_IMAGE = "editorial_pipeline.hero_image"             # hero generated / skipped, with the reason
 
 # The analytics WORKER (grok subprocess) is gated separately from the router. The router is cheap
-# (a nano assessment, always runs); the worker is minutes-long and spends subscription quota per
-# request, so it is OFF by default and capped — mirroring the ALGENT_RAKE toggle idiom. Flip the
-# default once live pipeline runs prove it stable.
+# (a nano assessment, always runs); the worker spends quota per request. ON by default so
+# geography maps and trajectory charts actually ship — live runs with worker off planned
+# figures that never appeared (Houthi choke-point, Wildberries strike map). Disable with
+# ALGENT_ANALYTICS_WORKER=0. Cap still bounds cost.
 _ANALYTICS_WORKER_ENV = "ALGENT_ANALYTICS_WORKER"
 _ANALYTICS_CAP_ENV = "ALGENT_ANALYTICS_MAX"
-# Soft default was 3 and every live run filled it — padding. Prefer at most one strong analytic
-# unless the operator raises the cap; zero is still success when nothing useful exists.
-_ANALYTICS_CAP_DEFAULT = 1
+# Prefer at most two strong analytics (e.g. theater map + trajectory). Zero is still success
+# when nothing useful exists; three+ was padding.
+_ANALYTICS_CAP_DEFAULT = 2
+
+# A live failure mode: the comprehension "handhold" repair lap rewrote a ~400-word piece into a
+# single sentence, then the pipeline still marked it publishable. A hollow shell is not a dud —
+# it is a corrupted repair. Floor below this → not publishable; repair that collapses the body
+# is discarded.
+_MIN_PUBLISH_WORDS = 120
+_REPAIR_KEEP_FRAC = 0.55  # keep prior draft if the repair keeps less than this share of body words
 
 
 def _analytics_worker_enabled() -> bool:
-    return os.environ.get(_ANALYTICS_WORKER_ENV, "0").strip().lower() in ("1", "true", "yes", "on")
+    # Default ON — maps/charts are high reader value when the router warrants them.
+    return os.environ.get(_ANALYTICS_WORKER_ENV, "1").strip().lower() in ("1", "true", "yes", "on")
 
 
 def _analytics_cap() -> int:
@@ -61,6 +72,19 @@ def _analytics_cap() -> int:
         return max(0, int(os.environ.get(_ANALYTICS_CAP_ENV, _ANALYTICS_CAP_DEFAULT)))
     except ValueError:
         return _ANALYTICS_CAP_DEFAULT
+
+
+def _body_words(draft: dict[str, Any] | None) -> int:
+    if not draft:
+        return 0
+    body = str(draft.get("body") or "")
+    n = len(body.split())
+    if n:
+        return n
+    try:
+        return int(draft.get("word_count") or 0)
+    except (TypeError, ValueError):
+        return 0
 
 
 class PipelineState(TypedDict, total=False):
@@ -92,10 +116,14 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
         draft_report = draft_out.get("gauntlet") or {}
 
         # 3. headline — retitle from the FINAL prose, per headline-guidance.md (truthful, no clickbait).
+        hero: dict[str, Any] | None = None
         if draft:
             hl = build_headline_writer(context).invoke({"draft": draft}, config).get("headline") or {}
             if hl.get("title"):
                 draft = {**draft, "title": hl["title"], "standfirst": hl.get("standfirst") or draft.get("standfirst", "")}
+            # 3b. hero image — decoration, from the brief the headline writer just wrote. Off by
+            # default; every failure path returns None and the article publishes unchanged.
+            hero = make_hero(hl, context.artifacts, say=lambda m: context.emit(HERO_IMAGE, {"note": m}))
 
         # 4. v3b — verify the flagged promises are actually kept in the prose (the last honesty
         # gate). Cheap: nano, and free when nothing is flagged. Its pass is what earns "publishable".
@@ -121,9 +149,9 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
         analytics = build_analytics_router(context).invoke(
             {"profile": enriched_profile}, config).get("analytics_plan") or {}
 
-        # 6. analytics WORKER (gated + capped) — fulfill the grounded requests into real artifacts
-        # via the sandboxed grok subprocess. OFF by default: each request is a minutes-long,
-        # quota-spending run. When on, cap the batch and hand only the produced artifacts forward.
+        # 6. analytics WORKER (capped) — fulfill the grounded requests into real artifacts via the
+        # sandboxed grok subprocess. ON by default (maps/charts must ship when the router
+        # warrants them). Cap bounds cost; set ALGENT_ANALYTICS_WORKER=0 only to pause spend.
         produced_analytics: list[dict[str, Any]] = []
         if analytics.get("warranted") and _analytics_worker_enabled():
             capped = {**analytics, "requests": (analytics.get("requests") or [])[: _analytics_cap()]}
@@ -131,10 +159,16 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
                 {"analytics_plan": capped, "profile": enriched_profile}, config).get("analytics_artifacts") or []
 
         outcome = str(draft_report.get("outcome", ""))
+        words = _body_words(draft)
+        # Keep word_count honest even if the model left it stale after a bad rewrite.
+        if draft:
+            draft = {**draft, "word_count": words}
         if outcome == "blocked_omission":
             status = "blocked"                # dropped required evidence — a real block
         elif caveat_verdict == "needs_hedging":
             status = "needs_hedging"          # the prose doesn't keep a flagged promise — hold
+        elif words < _MIN_PUBLISH_WORDS:
+            status = "needs_revision"         # hollow / collapsed body — never ship a caption + map
         else:
             status = "publishable"            # grounded (or honestly caveated) AND caveats verified
 
@@ -152,8 +186,9 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
             comprehension_verdict=str(comprehension.get("verdict", "")),
             comprehension_findings=len(comprehension.get("findings", [])),
             comprehension_rounds=comprehension_rounds,
+            hero=hero,
             article_title=str(draft.get("title", "")),
-            word_count=int(draft.get("word_count", 0) or 0),
+            word_count=words,
             barriers=draft_report.get("barriers", []),
             unverified_figures=draft_report.get("unverified_figures", []),
             analytics_warranted=bool(analytics.get("warranted")),
@@ -239,18 +274,37 @@ def _repair_comprehension(
     Handhold-or-cut only (the drafter's comprehension block enforces it) — it adds no claims and
     strengthens nothing, so no honesty gate needs to re-run. If the repair produces nothing, keep
     the original draft and the honest verdict rather than looping.
+
+    CRITICAL: a repair that *collapses* the body (handholds that wipe the article) is discarded.
+    Live failure: ~400 words → ~21 words, then still published as a map + one sentence.
     """
+    prior_words = _body_words(draft)
     repaired = build_drafter(context).invoke(
         {"treatment": treatment, "profile": profile, "prior_draft": draft,
          "comprehension_check": comprehension}, config)
     new_draft = repaired.get("draft") or {}
     if not new_draft:
         return draft, profile, comprehension, 2
+    new_words = _body_words(new_draft)
+    collapsed = (
+        prior_words >= _MIN_PUBLISH_WORDS
+        and (new_words < _MIN_PUBLISH_WORDS
+             or new_words < int(prior_words * _REPAIR_KEEP_FRAC))
+    )
+    if collapsed:
+        context.emit(RAMP_REPAIRED, {
+            "verdict": "repair_rejected_collapsed",
+            "prior_words": prior_words, "new_words": new_words,
+            "findings_remaining": len(comprehension.get("findings", [])),
+        })
+        return draft, profile, comprehension, 2
     profile = repaired.get("profile") or profile
+    new_draft = {**new_draft, "word_count": new_words}
     rechecked = build_comprehension_reviewer(context).invoke({"draft": new_draft}, config).get(
         "comprehension_check") or {}
     context.emit(RAMP_REPAIRED, {"verdict": rechecked.get("verdict"),
-                                 "findings_remaining": len(rechecked.get("findings", []))})
+                                 "findings_remaining": len(rechecked.get("findings", [])),
+                                 "prior_words": prior_words, "new_words": new_words})
     return new_draft, profile, rechecked, 2
 
 

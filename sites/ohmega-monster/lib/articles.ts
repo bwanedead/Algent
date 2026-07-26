@@ -23,6 +23,12 @@ export type ArticleMeta = {
   places: string[]; // country display names (aligned with flags when both present)
   flags: string[]; // country flag emoji — rendered as images in the UI (see FlagRow)
   thumbnail: string; // a produced analytic, when the piece has one
+  // A generated opening illustration, when the run made one. Decoration, never evidence —
+  // which is why the label travels with it and is rendered wherever the image is.
+  hero: string;
+  heroAlt: string;
+  heroHook: string;
+  heroLabel: string;
 };
 
 export type Article = ArticleMeta & {
@@ -76,5 +82,9 @@ function toMeta(file: string, data: Record<string, unknown>): ArticleMeta {
     places: strings(data.places),
     flags: strings(data.flags),
     thumbnail: String(data.thumbnail ?? ""),
+    hero: String(data.hero ?? ""),
+    heroAlt: String(data.hero_alt ?? ""),
+    heroHook: String(data.hero_hook ?? ""),
+    heroLabel: String(data.hero_label ?? ""),
   };
 }

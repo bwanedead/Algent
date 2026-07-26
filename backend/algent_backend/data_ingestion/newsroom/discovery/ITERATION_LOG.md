@@ -9,6 +9,109 @@ Scope: deterministic processing only — no LLM/agent in the loop. The output we
 optimizing is the `InsightsReport` (ranked candidates + per-language view) and the
 `LongtailSample`.
 
+## 2026-07-24 — the beat channel was dead (variety root cause)
+
+**Problem.** Discovery kept returning the same super-topics (the live site ran 4
+Strait-of-Hormuz pieces and 2 ICE pieces out of 22). The suspicion was ranking; the
+cause was the **pool**.
+
+Measured on `pool_20260724084500`: `{gkg: 23, x: 24, market: 12}` — **zero beat
+items**. The standing sheet was `beats_20260625204107`: 29 days old, 2 beats swept,
+both failed, 0 hits. So the entire beat registry — 11 pillar beats (science, health,
+energy, gaming, …) plus 30 country beats, i.e. the *whole* anti-rut mechanism — had
+been contributing nothing for a month, and every pool was built purely from three
+loudness channels: GKG wire volume, X trends, Polymarket. `ensure_t0` only ever *read*
+a sheet off disk; nothing refreshed it.
+
+**Why it died (the deeper cause).** A live 14-beat sweep came back **12/14 throttled**
+(`rate_limited` / non-JSON soft throttle). The DOC limiter is stateful and escalating,
+and the old sweep fought it: a flat 6s gap plus an immediate retry per beat, so a
+throttle doubled our request rate exactly when we were being told to stop. The June
+sheet wasn't neglected — the sweep could not complete.
+
+**Change.**
+- `beat_refresh` — rotating refresh inside `ensure_t0`: re-sweep the **stalest slice**
+  (14/cycle), merge into the standing sheet, per-beat `swept_at`. Cold start takes the
+  pillars first (registry order breaks ties), so cycle one buys topical breadth.
+- **Age guard** (`prune_stale`, 24h): a stale sheet contributes *nothing*. Before this,
+  had the June sheet held hits, t0 would have folded month-old articles in as today's.
+- Sweep pacing rebuilt for a stateful limiter: adaptive gap that **carries across
+  beats** (doubles on throttle, decays on success), **no immediate retry** (the retry
+  is the next rotation — a failed beat stays unstamped and goes first), and a
+  wall-clock **budget** so it is safe to call inline.
+- Soft throttle (non-JSON 200) now raises `RateLimited` like a 429 — same signal.
+- Pool: sweep capped (`ALGENT_T0_BEATS_CAP`, 28); the cap drops **echoes** and
+  truncates in a source-interleaved order (`pool._diversify`).
+- Pool dedup now collapses **syndicated headlines**, not just repeated URLs (the same
+  measles story arrived at 3 URLs and took 3 of 28 slots).
+- Promotion gets a second, coarser reference beside headline cooldown: **what recent
+  output keeps circling** (recurring subjects/places/topics off published frontmatter),
+  as a tie-break only.
+
+**Framing correction (same day, operator).** The first cut spent the cap *round-robin
+per query* — one hit per query before any query got a second. Rejected, correctly: that
+is a quota system, and it trades a wire rut for a taxonomy rut. Hard categories were
+only ever a heuristic for variety; the goal is a genuine long tail of many kinds of
+thing, not a checklist of buckets to satiate. The registry stays, reframed as a
+*sampling frame*: nets cast into parts of the corpus the loudness channels cannot see,
+with no claim on the output.
+
+**Two failed attempts at a content-only selection rule** (recorded because the failure
+mode generalizes — a bare headline is weak evidence, and both rules looked fine on
+crafted unit-test inputs and collapsed on live data):
+
+1. *Least-overlap greedy* — take the item sharing fewest words with what's chosen.
+   Degenerate: early on almost every item has some unseen word, so it took the first
+   zero-overlap item each pass, which is list order. Live: **15 slots to the first
+   query, 12 to the second, zero to five queries that each returned 25 hits.**
+2. *Rare-vocabulary greedy* (mean idf × (1 − redundancy)) — prefer stories whose words
+   are rare in the day's catch. Better (5 of 6 queries touched) but biased by script,
+   not novelty: Serbian, Greek and Chinese headlines share no tokens with anything, so
+   they score maximal distinctiveness whatever they say. Live: **12 of 28 slots to one
+   query's non-Latin headlines, health zero.**
+
+**What shipped instead.** Split the job by what a headline can honestly support:
+- **Echo suppression** (≥0.6 vocabulary overlap with something already kept → skip).
+  This is the reliable part and does the real work — a running story arrives as twenty
+  rewrites of one line.
+- **Source-interleaved truncation** — an *ordering device only*, so that when the cap
+  bites it isn't the registry's declaration order that decides. Nothing is reserved;
+  a query whose hits are all echoes still contributes nothing.
+- **No topical ranking at this layer.** Choosing between two unlike stories needs
+  semantics the synthesis agent has and a title match does not. Pool organizes and
+  grounds; it does not judge.
+
+**Observation (live, 150-hit sheet, 28-item cap).** 6 of 6 queries represented; the 12
+syndicated copies of one measles headline collapsed to 4 distinct health stories; the
+selection spans Rwandan scholarships for Nigerian students, Bangladesh's president
+resigning, Spain's budget defeat, Uganda's Ebola countdown, Taiwanese semiconductor
+training. Throughput is the open item — see below.
+
+**Still open.** Even with backoff, DOC throttling is the binding constraint on how much
+of the registry stays fresh. If a rotation keeps landing <50% of its slice, the answer
+is a smaller slice at a wider gap (more cycles), not more retries.
+
+---
+
+## 2026-07-23 — event grain + sports kill (unit-of-discovery shift)
+
+**Problem.** Theme/entity ranking (even with novelty/curiosity weights) still
+surfaced standing tags (`ENV_NATURALGAS`, `united states :: armedconflict`) and
+sports leaks (X JUST-IN, LeBron markets). Grade: D/C.
+
+**Change.**
+- Candidate unit: **URL-slug stories** + **actor×action events** (not mega themes).
+- Ranking: specificity + standing-topic tax; demote mega-actor×weak-action.
+- Shared `topic_filters.is_sports_text` on X / markets / GKG entities.
+- X novelty probes retargeted to event morphology; per-author spectrum/novelty caps.
+
+**Observation (batch 20260723103000).** Shortlist became 100% story/event kinds;
+sports markets gone; GKG labels read as headlines (e.g. Iran envoys in Pakistan,
+FDA peptides, Novo/Lilly suit) rather than taxonomy codes. Residual noise:
+entity OCR (sergei laurel), local crime/commercial slugs — filterable.
+
+---
+
 ## What "high signal" means here (the target)
 
 An insight is useful to us if it points at a **real, specific, moving** thing in

@@ -171,6 +171,7 @@ def test_cli_start_allocates_run_and_request(monkeypatch, capsys) -> None:
             goal=None,
             input_file=None,
             input_key=None,
+            from_run=None,   # the reuse-a-prior-portfolio path; not exercised here
             fixture=False,
             runtime="langgraph",
             max_turns=7,

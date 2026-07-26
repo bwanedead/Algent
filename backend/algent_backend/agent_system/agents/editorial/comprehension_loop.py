@@ -38,9 +38,16 @@ def _message(draft: ArticleDraft) -> str:
     """Only the reader-facing prose — title, standfirst, body. No ids, no evidence, no plan."""
     return "\n\n".join(x for x in (
         f"TITLE: {draft.title}", f"STANDFIRST: {draft.standfirst}", draft.body.strip(),
-        "TASK: Read this as its intended general reader and report only where you genuinely "
-        "stumbled — an unexplained load-bearing term, an assumed context, an island paragraph, or "
-        "where you lost the thread. Your only fixes are a handhold or a cut. If it reads clearly, "
+        "TASK: Read this as its intended general reader (cold, not following the story day to day). "
+        "Report only where you genuinely stumbled.\n"
+        "FRIEND TEST (required): After reading, could you explain to a friend — using only this "
+        "prose — (1) what the underlying dispute/situation is in concrete terms, (2) who wants "
+        "what and why (including any resignation/strike/demand), (3) what just changed, (4) what "
+        "remains open? If you only hold vague residue ('someone protested over school stuff'), "
+        "that is needs_ramp: flag vague_conflict / missing_scene / assumed_context as fits.\n"
+        "Also flag announced_importance machine-slop ('That first fact matters because…', "
+        "'this sets the frame', 'put plainly', 'phase change not closure') with fix=cut.\n"
+        "Your only fixes are a handhold or a cut. If the friend test passes and it reads clearly, "
         "return 'clear' with no findings.",
     ) if x)
 

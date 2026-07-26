@@ -1,4 +1,10 @@
-"""Tests for X (Twitter) search — the direct X API v2 path behind the web_search `x` channel."""
+"""Tests for X (Twitter) search — the direct X API v2 path behind the web_search `x` channel.
+
+Credentials are patched at ``x_search._resolve_bearer``, the module's own seam. These tests
+used to patch a ``get_service_api_key`` name that x_search no longer has (resolution moved
+behind that seam and delegates to ``x_native``), so they failed on the attribute rather than
+on the behaviour and stopped covering it.
+"""
 
 from __future__ import annotations
 
@@ -16,7 +22,7 @@ class _Resp:
 
 
 def test_x_search_shapes_results(monkeypatch) -> None:
-    monkeypatch.setattr(x_search, "get_service_api_key", lambda _: "tok")
+    monkeypatch.setattr(x_search, "_resolve_bearer", lambda: "tok")
     payload = {
         "data": [{"id": "1", "text": "hello", "author_id": "a", "created_at": "2026-07-01",
                   "public_metrics": {"like_count": 5, "retweet_count": 2}}],
@@ -33,15 +39,13 @@ def test_x_search_shapes_results(monkeypatch) -> None:
 
 
 def test_x_search_missing_token_is_a_clean_error(monkeypatch) -> None:
-    monkeypatch.setattr(x_search, "get_service_api_key", lambda _: None)
-    for name in x_search._TOKEN_ENV_CANDIDATES:  # clear any real token from the operator env
-        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setattr(x_search, "_resolve_bearer", lambda: None)
     out = x_search.x_recent_search("q")
     assert "error" in out and "X_BEARER_TOKEN" in out["error"]
 
 
 def test_x_search_non_200_is_a_clean_error(monkeypatch) -> None:
-    monkeypatch.setattr(x_search, "get_service_api_key", lambda _: "tok")
+    monkeypatch.setattr(x_search, "_resolve_bearer", lambda: "tok")
     monkeypatch.setattr("httpx.get", lambda *a, **k: _Resp(429, {}, "rate limited"))
     out = x_search.x_recent_search("q")
     assert "429" in out["error"]

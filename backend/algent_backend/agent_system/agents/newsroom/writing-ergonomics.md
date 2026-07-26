@@ -69,6 +69,27 @@ swapping in a vaguer one that lands them at the wrong node. When the reader may 
 landmark, **supply it** (a brief definition, an orientation, a concrete example) — placed
 *around* the meaning, not in place of it.
 
+### Terms, entities, and field-internal language
+A decently smart, decently educated house reader is **not** assumed to already hold
+specialist landmarks. On first load-bearing use of anything the piece leans on:
+
+- **Named bodies, orgs, agencies, products, measures, schemes** — give a **brief functional
+  explainer**, not only the expanded name. The reader needs a holdable model of *what this
+  thing is and what it does here* (jurisdiction + role, or purpose + scope) in roughly one
+  clause. Expanding an acronym alone is often not enough: the full official title can still
+  be empty if the reader cannot place what kind of actor or instrument it is.
+- **Acronyms and initialisms** — expand once and attach that same functional handhold; later
+  mentions may be bare.
+- **Field-internal terms and contrast pairs** the argument turns on (technical labels, status
+  grades, measurement distinctions, process names) — define in a clause at first weight, not
+  in a glossary block up top.
+- **Who owns the claim** — when several similar actors appear, keep ownership explicit so the
+  reader never has to guess which institution, official, or side is speaking or deciding.
+
+If a term or entity only makes sense inside a profession, either supply the handhold or do
+not lean on it. Cold guild language is a failed ramp, not sophistication. Keep explainers
+brief — enough to plant a usable mental handle, not a digression.
+
 ## Analogy and metaphor — a borrowed structure, marked at the seams
 An analogy or metaphor hands the reader a structure they already hold and says *"the new
 thing is shaped like this."* It is a powerful **download shortcut**: instead of building an
@@ -117,6 +138,34 @@ For a reader not yet at level, supply the missing landmarks — a definition, an
 an example — **around** the meaning, never **instead of** it. We offer a hand to climb
 without lowering the ceiling. The reader who isn't yet at level has resources to close the
 gap; we make the gap *closable*, we do not erase the height.
+
+**Long legs ≠ cold jargon.** Writing for those with long legs means keeping the *real idea*
+whole — not making the piece legible only to people who already live inside the field. A
+smart non-specialist who finishes the piece should be able to say *"I got something usable
+from that"* without having needed a finance (or other guild) membership card.
+
+## Connect the inference, not just the facts
+Order and syntax should make many links free. When the next step is **not** free — when a
+conclusion rests on a premise the reader has not been given — **state the missing premise in
+substance**, not as a label. Dumping particulars and then announcing a conclusion ("so
+decision-makers are cautious," "so the risk is real") without the bridge that makes the
+conclusion follow is a failed transfer. Give the condition, mechanism, or fork the reader
+needs so the inference lands without "that matters because…" signposting.
+
+## Leave a holdable reduction
+At the natural end of the piece the house reader should hold a **so-what they can use**: what
+is open, what is settled, what would change the next move if anything — even when the honest
+answer is "the uncertainty is the point." A pile of attributed particulars with no reduction
+is a failed molecule: it went in and left nothing to do. The reduction must be earned by the
+evidence; never invent a sharper takeaway than the piece supports. The form of the so-what
+is topic-dependent (a decision fork, a scale the reader can hold, a risk that is open or
+closed); the requirement is not.
+
+## Cohesion over chop
+The piece should read as one **thread of understanding**, not a segmented inventory of
+speakers, jurisdictions, or sources. Revisit the same reader question; each block should
+change that answer. Prefer fewer, better-connected moves over parallel sections that never
+rejoin. Island blocks that do not change the molecule belong cut, not stitched with signposts.
 
 ## Ergonomics never overrides accuracy
 If a smoother phrasing would bend the meaning, the meaning wins. If a cleaner ordering would

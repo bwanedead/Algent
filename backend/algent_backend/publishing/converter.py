@@ -25,9 +25,13 @@ from .tagging import derive_all
 
 # The receipts appendix heading the pipeline emits and the site splits on (substring-matched there).
 _RECEIPTS_HEADING = "## How we know this"
-# Analytic image refs the publish view embeds, e.g. "![Chart](analytic_ar_1.svg)". Tables are inline
-# markdown (no asset); only real images (.svg/.png) become files under the site's public/ dir.
-_IMAGE_REF = re.compile(r"!\[([^\]]*)\]\((analytic_[^)]+\.(?:svg|png))\)")
+# Analytic image refs the publish view embeds, e.g. "![Chart](analytic_ar_1.svg)" or
+# "![Theater](map_bab_el_mandeb.svg)". Tables are inline markdown (no asset); only real images
+# (.svg/.png) with a relative filename (no path separators / absolute URLs) become files under
+# the site's public/ dir.
+_IMAGE_REF = re.compile(
+    r"!\[([^\]]*)\]\(((?:analytic_|map_)[^)/]+\.(?:svg|png)|[^/)\s]+\.(?:svg|png))\)"
+)
 _SLUG_MAX_TITLE = 60
 
 
@@ -131,7 +135,7 @@ def convert(
     *, article_md: str, rail: dict, pipeline: dict, profile: dict,
     date: str, run_id: str = "", corrections: list[dict] | None = None,
     vector: dict | None = None, analytics: list[dict] | None = None,
-    published_at: str | None = None,
+    hero: dict | None = None, published_at: str | None = None,
 ) -> SiteArticle:
     """Turn a run's artifacts into a ``SiteArticle``. Pure: strings in, ``SiteArticle`` out.
 
@@ -153,8 +157,7 @@ def convert(
         "published_at": published_at or datetime.now(UTC).isoformat(),
         "as_of": str(profile.get("as_of") or ""),
         "status": str(pipeline.get("status") or ""),
-        # Derived, never generated (see tagging.py) — categorisation that costs no model call and
-        # cannot hallucinate. Also the substrate for tag+recency search later.
+        # Tags: derived. Places/flags: from agent countries_of_relevance only (see tagging.py).
         **{k: v for k, v in derive_all(profile, vector).items() if v},
     }
     # THUMBNAIL: a produced analytic is the best thumbnail this article can have — a real visual
@@ -165,6 +168,20 @@ def convert(
                       if a.get("status") == "produced"
                       and str(a.get("artifact_name", "")).endswith((".svg", ".png"))), None):
         fm["thumbnail"] = f"/analytics/{slug}/{thumb}"
+
+    # HERO: a generated opening illustration, when the run made one. Kept separate from
+    # `thumbnail` rather than replacing it — the thumbnail is a real figure built from cited
+    # evidence and stays the honest default for anything that wants a picture of the piece's
+    # *content*. The hero is decoration, so it carries its AI label everywhere it appears and
+    # the surfaces choose which they want.
+    hero_name = str((hero or {}).get("artifact_name") or "")
+    if hero_name:
+        fm["hero"] = f"/analytics/{slug}/{hero_name}"
+        fm["hero_alt"] = str(hero.get("alt") or "")
+        fm["hero_label"] = str(hero.get("label") or "")
+        if hero.get("hook"):
+            fm["hero_hook"] = str(hero["hook"])
+        assets = [*assets, hero_name]
     if corrections:
         fm["corrections"] = corrections
     markdown = _frontmatter(fm) + "\n" + body + "\n"

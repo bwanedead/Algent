@@ -41,9 +41,16 @@ class Beat:
 # iterations, kept here in one reviewable place. Overlap between pillars is fine:
 # a story is multi-tagged, not bucketed (an AI chip story is both ai and tech).
 _PILLAR_QUERIES: dict[str, str] = {
+    # Named the labs and the release language. The old query listed OpenAI and nothing
+    # else, so a frontier release from anyone but OpenAI could not match it — Anthropic
+    # shipping Opus 5 reached us only as a Chinese-language item picked up by the China
+    # query. A frontier model release is a story we should never have to be lucky to see.
     "ai": (
         '("artificial intelligence" OR "machine learning" OR "generative AI" '
-        'OR "large language model" OR chatbot OR OpenAI OR "neural network")'
+        'OR "large language model" OR "frontier model" OR "neural network" OR chatbot '
+        'OR OpenAI OR Anthropic OR Claude OR Gemini OR DeepMind OR Mistral '
+        'OR Llama OR DeepSeek OR Qwen OR xAI OR Grok '
+        'OR "model release" OR "model card" OR benchmark)'
     ),
     "technology": (
         "(technology OR software OR semiconductor OR cybersecurity OR \"tech company\" "
@@ -53,9 +60,14 @@ _PILLAR_QUERIES: dict[str, str] = {
         "(economy OR economic OR GDP OR inflation OR recession OR \"central bank\" "
         "OR \"interest rates\" OR unemployment OR tariffs)"
     ),
+    # Crypto is deliberately NOT in here. Bundling it into finance gave it a standing
+    # allocation it hasn't earned, and dragged the ticker-mill roundups in with it
+    # (see ``topic_filters._PROMO_MARKERS``). Genuinely large crypto news still reaches
+    # discovery via GKG volume and the X band — it just isn't a question we ask every
+    # cycle whether or not anything happened.
     "finance": (
-        '("stock market" OR stocks OR bonds OR "federal reserve" OR cryptocurrency '
-        'OR bitcoin OR "financial markets" OR earnings OR IPO)'
+        '("stock market" OR stocks OR bonds OR "federal reserve" '
+        'OR "financial markets" OR earnings OR IPO)'
     ),
     "geopolitics": (
         '(geopolitics OR sanctions OR "foreign policy" OR diplomacy OR "trade war" '
@@ -69,7 +81,11 @@ _PILLAR_QUERIES: dict[str, str] = {
         "(crisis OR conflict OR war OR protest OR summit OR disaster OR ceasefire)"
     ),
     "science": (
-        "(science OR research OR climate OR space OR physics OR biology OR study)"
+        # Breakthroughs / new knowledge — not generic "study says" SEO.
+        '(breakthrough OR discovery OR "peer-reviewed" OR "for the first time" '
+        'OR archaeology OR paleontology OR physics OR biology OR genome OR quantum '
+        'OR telescope OR fossil OR "Nature journal" OR "Science journal" OR CRISPR '
+        'OR exoplanet OR "researchers found" OR "scientists discover")'
     ),
     "health": (
         "(health OR disease OR medical OR vaccine OR outbreak OR hospital OR \"public health\")"
@@ -78,9 +94,18 @@ _PILLAR_QUERIES: dict[str, str] = {
         '(energy OR "oil prices" OR "natural gas" OR renewable OR electricity '
         'OR nuclear OR OPEC)'
     ),
+    # Gaming is a wanted beat, but the trade press is overwhelmingly release calendars,
+    # so a broad platform-name query returns nine slots of marketing copy (observed:
+    # four delays, a DLC drop, and two "can X save Xbox" columns in one sweep). Asking
+    # for the *newsworthy* subclasses instead — money, labour, law, platform power,
+    # things breaking — still surfaces a big launch when a big launch is genuinely the
+    # story, because those carry the same business language.
     "gaming": (
-        '("video game" OR gaming OR esports OR PlayStation OR Xbox OR Nintendo '
-        'OR "game studio" OR Steam OR "game release")'
+        '("video game" OR gaming OR "game studio" OR "game developer") '
+        'AND (layoffs OR closure OR acquisition OR lawsuit OR antitrust OR union '
+        'OR strike OR regulation OR revenue OR earnings OR outage OR breach '
+        'OR "class action" OR ruling OR investigation OR "player data" '
+        'OR preservation OR "record sales" OR shutdown OR delisted)'
     ),
 }
 

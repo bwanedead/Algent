@@ -9,29 +9,16 @@ seam without the agents changing (they only ever see ``web_search(source="x", ..
 
 from __future__ import annotations
 
-import os
 from typing import Any
-
-from algent_backend.config import get_service_api_key
 
 _ENDPOINT = "https://api.x.com/2/tweets/search/recent"
 _TIMEOUT_S = 20.0
-# The registry name first, then the common names people actually use — so X search works with
-# whatever the operator already has in .env without a config change.
-_TOKEN_ENV_CANDIDATES = (
-    "X_BEARER_TOKEN", "X_BEARER_KEY", "TWITTER_BEARER_TOKEN", "X_API_BEARER_TOKEN",
-    "X_BEARER", "BEARER_TOKEN",
-)
 
 
 def _resolve_bearer() -> str | None:
-    tok = get_service_api_key("x")
-    if tok:
-        return tok
-    for name in _TOKEN_ENV_CANDIDATES:
-        if os.environ.get(name):
-            return os.environ[name]
-    return None
+    # Same credential resolution as t0 X discovery (API / MCP surface).
+    from algent_backend.data_ingestion.newsroom.sources.x_native import resolve_bearer
+    return resolve_bearer()
 
 
 def _get(params: dict[str, Any], token: str) -> Any:

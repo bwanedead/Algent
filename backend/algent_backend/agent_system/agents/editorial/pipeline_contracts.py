@@ -37,6 +37,10 @@ class EditorialPipelineReport(BaseModel):
     analytics_count: int = 0           # grounded analytics requested
     analytics_produced: int = 0        # requests the (gated) worker actually fulfilled into artifacts
     analytics_escapes: int = 0         # worker runs that broke their lane (tripwire) — should stay 0
+    #: The hero illustration, when one was generated: artifact_name, alt, hook, label, model,
+    #: size, estimated_usd. Absent (None) whenever the stage was off, skipped or failed — the
+    #: article is complete either way, so this is never a signal of a broken run.
+    hero: dict | None = None
     article_title: str = ""
     word_count: int = 0
     barriers: list[str] = Field(default_factory=list)  # walled sources carried with honest caveats

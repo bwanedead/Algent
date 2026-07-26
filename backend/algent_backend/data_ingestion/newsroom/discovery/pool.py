@@ -22,6 +22,7 @@ from collections import Counter, defaultdict
 from datetime import UTC, datetime
 
 from .report import BeatHit, BeatSheet, DiscoveryPool, InsightsReport, PoolItem
+from .stories import url_slug_label
 
 # The GKG theme-pillar vocabulary (economy/…) vs the beat vocabulary (economics/…)
 # overlap; alias the trivial cases so a slice lines up across channels.
@@ -33,17 +34,52 @@ def build_pool(
     sheet: BeatSheet | None,
     markets: list[dict] | None = None,
     x_hits: list[dict] | None = None,
+    science: list[dict] | None = None,
+    *,
+    gkg_limit: int | None = None,
+    markets_limit: int | None = None,
+    beats_limit: int | None = None,
+    science_limit: int | None = None,
 ) -> DiscoveryPool:
-    """Consolidate the net + sweep + prediction markets + X into one grounded pool."""
+    """Consolidate the net + sweep + prediction markets + X into one grounded pool.
+
+    Optional ``gkg_limit`` / ``markets_limit`` rebalance when the X novelty valve is
+    on so wire/market mass cannot drown platform-native leads. ``beats_limit`` caps
+    the swept registry, which is the opposite problem: 40 beats × 25 records is an
+    order of magnitude more than a pool should carry, so it is taken round-robin.
+    """
     items: list[PoolItem] = []
     if insights is not None:
-        items.extend(_gkg_item(c) for c in insights.candidates)
+        gkg = list(insights.candidates)
+        if gkg_limit is not None:
+            gkg = gkg[: max(0, gkg_limit)]
+        items.extend(_gkg_item(c) for c in gkg)
     if sheet is not None:
-        items.extend(_beat_items(sheet))
+        items.extend(_beat_items(sheet, beats_limit))
     if markets:
-        items.extend(_market_item(m) for m in markets)
+        from ..topic_filters import is_sports_text
+
+        mk = [
+            m for m in markets
+            if not is_sports_text(str(m.get("question") or ""))
+        ]
+        if markets_limit is not None:
+            mk = mk[: max(0, markets_limit)]
+        items.extend(_market_item(m) for m in mk)
     if x_hits:
         items.extend(_x_item(h) for h in x_hits)
+    if science:
+        from ..topic_filters import is_non_news_topic
+
+        sci = [_science_item(h) for h in science if not is_non_news_topic(str(h.get("title") or ""))]
+        items.extend(_diversify(sci, science_limit))
+
+    # Echoes are a cross-channel problem, not a sweep problem. Polymarket lists every
+    # outcome of one question as its own market (five "Fed July decision" rows, four
+    # "ceasefire holds through <date>" rows), and the same wire story reaches the X band
+    # from two accounts. Suppressing per channel left all of that in the menu, so the
+    # pass runs once over everything, after the channels are merged.
+    items = _drop_echoes(items)
 
     facets: dict[str, list[str]] = defaultdict(list)
     for item in items:
@@ -59,6 +95,26 @@ def build_pool(
         by_pillar={p: len(ids) for p, ids in facets.items()},
         facets=dict(facets),
         items=items,
+    )
+
+
+def _science_item(hit: dict) -> PoolItem:
+    """A science-feed item — the curiosity channel, and the only one off GDELT."""
+    url = str(hit.get("url") or "")
+    return PoolItem(
+        id=f"sci:{hit.get('feed', 'feed')}:{url[-48:]}",
+        label=str(hit.get("title") or ""),
+        channel="science",
+        kind="article",
+        pillars=[str(hit["pillar"])] if hit.get("pillar") else [],
+        signals={
+            "feed": str(hit.get("feed") or ""),
+            "domain": str(hit.get("domain") or ""),
+            "seendate": str(hit.get("seendate") or ""),
+            # The interleave key, same as the sweep's — one feed can't take the cap.
+            "found_by": f"science:{hit.get('feed', '')}",
+        },
+        evidence=[BeatHit(title=str(hit.get("title") or "")[:160], url=url)],
     )
 
 
@@ -79,26 +135,55 @@ def _market_item(market: dict) -> PoolItem:
 
 
 def _x_item(hit: dict) -> PoolItem:
-    """A Grok-curated X trending topic as a pool item — the social hive-mind signal.
+    """An X hit as a pool item — API posts (primary) or optional Grok-curated topics.
 
-    Marked ``pre_vetted``: Grok already applied LLM judgement of significance while
-    selecting these, so when the triage ("rake") layer exists, X items skip it and
-    promote straight to the discovery agent's post-rake input — no point re-raking
-    what's already raked (and it's why the slow X fetch needn't gate the rest).
+    ``pre_vetted`` is True only when an upstream LLM already judged significance
+    (Grok CLI path). Raw X API posts stay ``pre_vetted=False`` so rake/synthesis
+    still triage them. Engagement metrics ride in signals for ranking later.
     """
     topic = str(hit.get("topic") or "").strip()
     urls = [u for u in (hit.get("urls") or []) if isinstance(u, str)][:3]
+    src = str(hit.get("source") or "x")
+    # Stable-ish id: prefer post URL tail, else trend/topic slug.
+    if urls and "/status/" in urls[0]:
+        sid = urls[0].rstrip("/").rsplit("/", 1)[-1]
+        item_id = f"x:{src}:{sid}"
+    else:
+        slug = "".join(ch if ch.isalnum() else "_" for ch in topic.lower())[:48]
+        item_id = f"x:{src}:{slug or 'topic'}"
+    pre = hit.get("pre_vetted")
+    if pre is None:
+        pre = src in ("x_grok", "grok")  # only LLM-curated paths skip re-rake
+    if src in ("x_news",):
+        kind = "news"
+    elif src in ("x_ai_pulse",):
+        # Dedicated AI eyeballs (labs/people/AI news) — still rake unless pre_vetted
+        kind = "news" if str(hit.get("lane") or "").startswith("ai_news:") else "post"
+    elif src in ("x_novelty",):
+        kind = "post"  # engagement-ranked event probes — novelty valve
+    elif src in ("x_spectrum",):
+        kind = "post"  # multi-angle independent / OSINT voices
+    elif src in ("x_aggregator",):
+        kind = "post"  # general wire posts — still rake/synthesis triage
+    elif src in ("x_grok", "grok") or pre:
+        kind = "trending"
+    else:
+        kind = "post"
     return PoolItem(
-        id=f"x:{hit.get('source', 'x')}:{topic[:60]}",
+        id=item_id,
         label=topic,
         channel="x",
-        kind="trending",
+        kind=kind,
         signals={
             "summary": str(hit.get("summary") or "").strip(),
-            "lane": str(hit.get("lane") or ""),  # which X direction surfaced it
-            "pre_vetted": True,
+            "lane": str(hit.get("lane") or ""),
+            "author": str(hit.get("author") or ""),
+            "likes": hit.get("likes"),
+            "reposts": hit.get("reposts"),
+            "tweet_count": hit.get("tweet_count"),
+            "pre_vetted": bool(pre),
         },
-        evidence=[BeatHit(title=topic, url=u) for u in urls],
+        evidence=[BeatHit(title=topic[:140], url=u) for u in urls],
     )
 
 
@@ -122,11 +207,25 @@ def _humanize_theme(code: str) -> str:
 
 def _gkg_item(candidate) -> PoolItem:
     pillars = [_PILLAR_ALIAS.get(candidate.pillar, candidate.pillar)] if candidate.pillar else []
-    # Themes get a readable label (the raw code stays in signals.theme_code); named
-    # entities (person/org) are already legible, so keep their key as-is.
-    label = _humanize_theme(candidate.key) if candidate.kind == "theme" else candidate.key
+    # Story/event keys are already human; themes get a readable label (raw code
+    # stays in signals); named entities keep their key as-is.
+    if candidate.kind in ("story", "event"):
+        label = candidate.key
+    elif candidate.kind == "theme":
+        label = _humanize_theme(candidate.key)
+    else:
+        label = candidate.key
+    # Prefer a URL-slug title on evidence when the candidate is still a bare theme.
+    evidence: list[BeatHit] = []
+    for url in candidate.examples:
+        title = label
+        if candidate.kind == "theme":
+            slug = url_slug_label(url)
+            if slug:
+                title = slug
+        evidence.append(BeatHit(title=title[:160], url=url))
     return PoolItem(
-        id=f"gkg:{candidate.kind}:{candidate.key}",
+        id=f"gkg:{candidate.kind}:{_id_slug(candidate.kind, candidate.key)}",
         label=label,
         channel="gkg",
         kind=candidate.kind,
@@ -141,25 +240,197 @@ def _gkg_item(candidate) -> PoolItem:
             "language_count": candidate.language_count,
             "avg_tone": candidate.avg_tone,
             "score": candidate.score,
+            # Scalar only (PoolItem.signals values are str|float|int|bool).
+            "reasons": (
+                ",".join(candidate.reasons)
+                if getattr(candidate, "reasons", None)
+                else None
+            ),
         },
-        # Example source articles so the agent (and rake) can free-fetch GKG items.
-        evidence=[BeatHit(title=candidate.key, url=url) for url in candidate.examples],
+        evidence=evidence,
         related=list(candidate.related),
     )
 
 
-def _beat_items(sheet: BeatSheet) -> list[PoolItem]:
-    """Beat articles, de-duplicated across beats by URL (merging pillars/scope)."""
-    by_url: dict[str, PoolItem] = {}
+def _id_slug(kind: str, key: str) -> str:
+    """Stable-ish id fragment; story/event keys can be long."""
+    raw = key if kind in ("theme", "person", "organization") else key[:80]
+    return "".join(ch if ch.isalnum() or ch in "._-+ " else "_" for ch in raw).strip()[:96]
+
+
+def _beat_items(sheet: BeatSheet, limit: int | None = None) -> list[PoolItem]:
+    """Swept articles, de-duplicated, then narrowed to the cap by *dissimilarity*.
+
+    The sweep returns far more than a pool should carry, so something has to be
+    dropped — and what gets dropped is redundancy: :func:`_diversify` keeps the
+    stories least like the ones already kept. The query that fetched an article is
+    deliberately *not* part of that decision. A query is a net cast into a different
+    part of the corpus, not a category owed representation; selecting one-per-query
+    would only trade a wire rut for a taxonomy rut.
+    """
+    from ..topic_filters import is_non_news_topic
+
+    seen: dict[str, PoolItem] = {}
+    items: list[PoolItem] = []
     for result in sheet.results:
         for hit in result.hits:
-            key = hit.url or f"{result.beat_id}:{hit.title}"
-            existing = by_url.get(key)
+            # The sweep was the one channel with no denylist: X, markets and GKG
+            # entities all screen here, so a `world_events` or country query was
+            # free to hand us match reports and ticker-mill SEO.
+            if is_non_news_topic(hit.title):
+                continue
+            keys = _dedupe_keys(result, hit)
+            existing = next((seen[k] for k in keys if k in seen), None)
             if existing is None:
-                by_url[key] = _new_beat_item(result, hit)
+                item = _new_beat_item(result, hit)
+                for key in keys:
+                    seen[key] = item
+                items.append(item)
             else:
+                # A story found by more than one query keeps every tag it earned.
                 _merge_tags(existing, result, hit)
-    return list(by_url.values())
+    return _diversify(items, limit)
+
+
+def _dedupe_keys(result, hit) -> list[str]:
+    """The identities one article can arrive under: its URL, and its headline.
+
+    URL alone is not enough. A wire story is syndicated to a dozen outlets under the
+    same headline at different URLs, and each copy would otherwise spend a slot in a
+    capped pool — three of the same measles headline is not three leads.
+    """
+    keys = [f"u:{hit.url}"] if hit.url else []
+    title = _title_key(hit.title)
+    keys.append(f"t:{title}" if title else f"b:{result.beat_id}:{hit.title}")
+    return keys
+
+
+def _title_key(title: str) -> str:
+    """Headline down to its words, so two renderings of one headline collide.
+
+    GDELT spaces punctuation out, and inconsistently: the same wire story arrives as
+    "U . S . measles cases" from one outlet and "US measles cases" from the next. So
+    words are split on punctuation and then runs of single letters are glued back
+    into the initialism they came from (``u s`` -> ``us``).
+    """
+    merged: list[str] = []
+    in_initialism = False
+    for word in "".join(ch if ch.isalnum() else " " for ch in title.lower()).split():
+        if len(word) == 1 and word.isalpha():
+            if in_initialism:
+                merged[-1] += word
+            else:
+                merged.append(word)
+                in_initialism = True
+        else:
+            merged.append(word)
+            in_initialism = False
+    return " ".join(merged)
+
+
+# Words too common to say anything about what a story is about.
+_STOP = frozenset(
+    "the a an and or of in on to for with as at by from is are was were be been being "
+    "it its this that these those has have had will would can could may might not new "
+    "after over amid says said say report reports first than into out about more most"
+    .split()
+)
+
+
+# How much headline vocabulary two stories must share to count as the same story
+# told twice. High on purpose: this drops echoes, it does not rank topics.
+_ECHO_OVERLAP = 0.6
+
+
+def _drop_echoes(items: list[PoolItem]) -> list[PoolItem]:
+    """Keep the first telling of each story, drop the retellings. No cap, no reordering.
+
+    Same rule as inside the sweep cap, applied to the merged pool so it also catches
+    the cross-channel echoes: a market's five outcome rows for one decision, or one wire
+    story arriving from two X accounts.
+    """
+    kept: list[PoolItem] = []
+    kept_terms: list[frozenset[str]] = []
+    for item in items:
+        terms = _terms(item)
+        if terms and any(_overlap(terms, held) >= _ECHO_OVERLAP for held in kept_terms):
+            continue
+        kept.append(item)
+        kept_terms.append(terms)
+    return kept
+
+
+def _diversify(items: list[PoolItem], limit: int | None) -> list[PoolItem]:
+    """Fill the cap with distinct stories, dropping the echoes.
+
+    Two jobs, deliberately separated, because only one of them can be done honestly
+    from a bare headline:
+
+    1. **Drop echoes** — a story already held in near-identical words is skipped.
+       This is the real work: a running story arrives as twenty rewrites of one
+       line ("US measles cases pass 2025 record" ×12), and without this they eat
+       the pool. Overlap of headline vocabulary is reliable evidence for *this*.
+    2. **Truncate fairly** — the survivors are walked in a source-interleaved
+       order, so that when the cap bites it is not simply whichever query happened
+       to sort first that wins everything.
+
+    What this deliberately does NOT do is rank topics against each other. Two
+    attempts to score "interestingness" lexically both failed on real data: ranking
+    by unseen words handed 27 of 28 slots to the first two queries in the list, and
+    ranking by rare vocabulary handed 12 slots to one query because non-Latin
+    scripts share no tokens with anything and so always look maximally novel. A
+    headline cannot tell us which of two unlike stories is the better lead — the
+    synthesis agent reads these titles next and can actually judge. This layer
+    organizes and grounds; it does not judge (see the module docstring).
+
+    Still no quota: nothing is owed a slot, and a query whose hits are all echoes of
+    what we already hold contributes nothing.
+    """
+    if limit is None or len(items) <= limit:
+        return items
+
+    chosen: list[PoolItem] = []
+    kept_terms: list[frozenset[str]] = []
+    for item in _interleaved_by_source(items):
+        terms = _terms(item)
+        if terms and any(_overlap(terms, held) >= _ECHO_OVERLAP for held in kept_terms):
+            continue
+        chosen.append(item)
+        kept_terms.append(terms)
+        if len(chosen) >= limit:
+            break
+    return chosen
+
+
+def _overlap(terms: frozenset[str], other: frozenset[str]) -> float:
+    """Share of the smaller headline's vocabulary the two have in common."""
+    if not terms or not other:
+        return 0.0
+    return len(terms & other) / min(len(terms), len(other))
+
+
+def _interleaved_by_source(items: list[PoolItem]) -> list[PoolItem]:
+    """Round-robin over the query that found each item — an ordering device only.
+
+    This is not representation: nothing here reserves a slot or drops an item. It
+    only decides *what order the cap eats in*, so truncation reflects the day's
+    material rather than the registry's declaration order.
+    """
+    queues: dict[str, list[PoolItem]] = defaultdict(list)
+    for item in items:
+        queues[item.signals.get("found_by") or ""].append(item)
+    ordered: list[PoolItem] = []
+    for rank in range(max((len(q) for q in queues.values()), default=0)):
+        ordered.extend(q[rank] for q in queues.values() if rank < len(q))
+    return ordered
+
+
+def _terms(item: PoolItem) -> frozenset[str]:
+    """A headline's content words — what one story's overlap with another is judged on."""
+    return frozenset(
+        word for word in _title_key(item.label).split()
+        if len(word) > 3 and word not in _STOP
+    )
 
 
 def _new_beat_item(result, hit) -> PoolItem:
@@ -170,7 +441,11 @@ def _new_beat_item(result, hit) -> PoolItem:
         kind="article",
         pillars=[result.pillar] if result.pillar else [],
         scope=[hit.country] if hit.country else [],
-        signals={"domain": hit.domain, "seendate": hit.seendate, "language": hit.language},
+        signals={
+            "domain": hit.domain, "seendate": hit.seendate, "language": hit.language,
+            # Which query surfaced it — used only to interleave before the cap bites.
+            "found_by": result.beat_id,
+        },
         evidence=[hit],
     )
 

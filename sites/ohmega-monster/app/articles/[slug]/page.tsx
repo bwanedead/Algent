@@ -25,8 +25,14 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
       title: a.title,
       description: a.dek,
       ...(a.date ? { publishedTime: a.date } : {}),
+      ...(a.hero ? { images: [`${SITE_URL}${a.hero}`] } : {}),
     },
-    twitter: { card: "summary_large_image", title: a.title, description: a.dek },
+    twitter: {
+      card: "summary_large_image",
+      title: a.title,
+      description: a.dek,
+      ...(a.hero ? { images: [`${SITE_URL}${a.hero}`] } : {}),
+    },
   };
 }
 
@@ -48,6 +54,15 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
           <FlagRow flags={a.flags} places={a.places} />
         </div>
       </header>
+
+      {a.hero ? (
+        <figure className="article-hero">
+          <img src={a.hero} alt={a.heroAlt} />
+          {/* The label is not optional furniture: a picture beside a news story is a lie
+              unless it says what it is. */}
+          <figcaption>{a.heroLabel}</figcaption>
+        </figure>
+      ) : null}
 
       <div className="prose">
         <Prose>{a.body}</Prose>

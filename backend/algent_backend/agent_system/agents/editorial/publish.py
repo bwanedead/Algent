@@ -51,14 +51,21 @@ def _table_block(body_md: str) -> str:
 
 # Inline machine markers the drafter emits. The prompt asks for the bracketed list form
 # ("[clm_ab12, clm_cd34, src_ef56]"), but the model's format varies run to run — it also emits
-# backtick-wrapped or bare ids ("`clm_ab12` `src_ef56`"). The reader-facing floor must strip ALL
-# of them regardless of the drafter's formatting whim (ids are `clm_`/`src_` + hex — never prose).
-_MARKER = re.compile(r"\s*\[(?:clm_|src_)[^\]]*\]")                    # [clm_ab12, src_ef56]
+# backtick-wrapped or bare ids ("`clm_ab12` `src_ef56`"), and sometimes markdown-link wrappers
+# like `` [`[clm_ab12](#)`, `[`[ent_…](#)` ``. The reader-facing floor must strip ALL of them
+# regardless of the drafter's formatting whim (ids are `clm_`/`src_`/`ent_` + hex — never prose).
+_MARKER = re.compile(r"\s*\[(?:clm_|src_|ent_)[^\]]*\]")                    # [clm_ab12, src_ef56]
 # Accepted edge: no trailing boundary on the hex, so a malformed id (`clm_0fd207x`) strips the hex
 # run and leaves the stray `x`. That is deliberately conservative — a strict boundary risks eating
 # real prose that abuts a well-formed id. Do NOT loosen this into a broader pattern to "fix" the
 # stray char; a malformed marker is a drafter bug to catch upstream, not a reason to strip prose.
-_MARKER_TOKEN = re.compile(r"\s*`?(?:clm_|src_)[0-9a-fA-F]+`?")       # `clm_ab12` or bare clm_ab12
+_MARKER_TOKEN = re.compile(r"\s*`?(?:clm_|src_|ent_)[0-9a-fA-F]+`?")       # `clm_ab12` or bare
+# Markdown-link citation form (seen 2026-07): `[`[clm_hex](#)`  or  [clm_hex](#)
+_MARKER_MD_LINK = re.compile(
+    r"(?:\s*,)?\s*`?\[`?(?:clm_|src_|ent_)[0-9a-fA-F]+\]\(#\)`?"
+)
+# Stray wrapper crumbs left after link-form strip: bare `[` / trailing backticks near punctuation
+_MARKER_CRUMBS = re.compile(r"(?:\s*`+\[`*)+|\s*`+(?=\s|$|[.,;:])")
 
 _GROUNDING_WORDS = {
     "snapshotted": "read in full",
@@ -66,11 +73,67 @@ _GROUNDING_WORDS = {
     "unsourced": "our synthesis across the evidence — no single cited source",
 }
 
+# X/Twitter status URLs — receipts must name the medium, not look like a wire byline.
+_X_STATUS_RE = re.compile(
+    r"(?:https?://)?(?:(?:www|mobile)\.)?(?:twitter|x)\.com/"
+    r"(?:(?P<handle>[A-Za-z0-9_]{1,15})/status/\d+|i/web/status/\d+)",
+    re.I,
+)
+_WEAK_X_TITLE = re.compile(
+    r"(?i)^(post by\s*@?\w+|x\s*post\b|tweet by\b)|web status wrapper",
+)
+
+
+def _source_label(source) -> str:
+    """Reader-facing name for a source line.
+
+    Minimize deception: an X post must read as an X post. Bare handles and titles like
+    "Post by @OSINTtechnical" get rewritten so they cannot be mistaken for a known outlet.
+    Prefer an already-honest ``publisher`` string from research when present.
+    """
+    url = (getattr(source, "url", None) or "").strip()
+    title = (getattr(source, "title", None) or "").strip()
+    publisher = (getattr(source, "publisher", None) or "").strip()
+
+    m = _X_STATUS_RE.search(url)
+    if m:
+        handle = (m.group("handle") or "").lstrip("@")
+        pub_names_medium = bool(
+            publisher and re.search(r"(?i)\bx(\s*post|\.com)?\b|twitter", publisher)
+        )
+        if pub_names_medium:
+            base = publisher
+        elif handle:
+            base = f"X post · @{handle}"
+        else:
+            base = publisher or "X post"
+        # Drop weak/wrapper titles that launder a handle into institutional authority.
+        if not title or _WEAK_X_TITLE.search(title):
+            return base
+        if title.lower() in base.lower() or (handle and title.lower() in {handle.lower(), f"@{handle.lower()}"}):
+            return base
+        return f"{base} — {title}"
+
+    if title and publisher and publisher.lower() not in title.lower():
+        return f"{title} — {publisher}"
+    return title or publisher or url
+
 
 def _clean_prose(body: str) -> str:
     """Strip the machine-citation markers for the reader view (the appendix carries the trace)."""
-    out = _MARKER_TOKEN.sub("", _MARKER.sub("", body))   # bracketed lists, then backticked/bare ids
-    return re.sub(r" {2,}", " ", out).strip()
+    # Order: markdown-link form first (would otherwise leave ` [` crumbs), then bracket lists,
+    # then bare/backticked ids, then residual wrapper crumbs and comma trails the model left
+    # between markers ("fact. `[`[clm…](#)`, `[`[clm…](#)`" → "fact.,," without this).
+    out = _MARKER_MD_LINK.sub("", body)
+    out = _MARKER.sub("", out)
+    out = _MARKER_TOKEN.sub("", out)
+    out = _MARKER_CRUMBS.sub("", out)
+    out = re.sub(r"([.!?])\s*,+", r"\1", out)          # "end.,," → "end."
+    out = re.sub(r",\s*,+", ", ", out)                   # leftover ", ," runs
+    out = re.sub(r"[ \t]+,", ",", out)
+    out = re.sub(r" {2,}", " ", out)
+    out = re.sub(r" *\n", "\n", out)
+    return out.strip()
 
 
 def _capture_date(source) -> str:
@@ -99,13 +162,116 @@ def render_published_article(
     produced = [a for a in (analytics or [])
                 if a.get("status") == "produced" and (a.get("artifact_name") or a.get("body_md"))]
 
+    body = _ensure_x_embed_links(_clean_prose(draft.body), cited_sources)
+
     out = [f"# {draft.title or '(untitled)'}"]
     if draft.standfirst:
         out += [f"*{draft.standfirst}*"]
-    out += ["", _clean_prose(draft.body), ""]
-    out += _figures(produced)                       # the produced charts, each with its AI label
+    out += ["", *_body_with_figures(body, produced)]
     out += ["---", *_appendix(draft, cited_sources, cited_claims, sources, produced)]
     return "\n".join(out).rstrip() + "\n"
+
+
+def _ensure_x_embed_links(body: str, cited_sources: list) -> str:
+    """If prose leans on an X status but has no status URL, add a sole-line link for site embeds.
+
+    The site embeds a status only when a paragraph is solely a link to x.com/.../status/...
+    Drafters often name @handle without the URL; receipts still hold it. Inject once per
+    missing status so the reader can see the post (and the embed can fire).
+    """
+    out = body
+    for s in cited_sources:
+        url = (getattr(s, "url", None) or "").strip()
+        m = _X_STATUS_RE.search(url)
+        if not m:
+            continue
+        handle = (m.group("handle") or "").lstrip("@")
+        status_id = re.search(r"/status/(\d+)", url, re.I)
+        sid = status_id.group(1) if status_id else ""
+        if not sid:
+            continue
+        if re.search(rf"/status/{re.escape(sid)}\b", out, re.I):
+            continue
+        # Only inject when the prose actually leans on X / this handle (avoid random receipts).
+        mentions = bool(re.search(r"\bon X\b|\bpost on X\b|x\.com|twitter\.com", out, re.I))
+        if handle and re.search(rf"@{re.escape(handle)}\b|\b{re.escape(handle)}\b", out, re.I):
+            mentions = True
+        if not mentions:
+            continue
+        canonical = (
+            f"https://x.com/{handle}/status/{sid}" if handle else f"https://x.com/i/web/status/{sid}"
+        )
+        label = f"Post on X · @{handle}" if handle else "Post on X"
+        out = out.rstrip() + f"\n\n[{label}]({canonical})\n"
+    return out
+
+
+def _is_map_figure(a: dict) -> bool:
+    name = str(a.get("artifact_name") or "").lower()
+    title = str(a.get("title") or "").lower()
+    kind = str(a.get("kind") or "").lower()
+    spec = str(a.get("spec") or a.get("question") or "").lower()
+    if "map" in name or "map" in title or "map" in spec:
+        return True
+    if kind == "image" and any(k in title or k in spec for k in ("geo", "theater", "location", "choke")):
+        return True
+    return False
+
+
+def _body_with_figures(body: str, produced: list[dict]) -> list[str]:
+    """Put orientation maps early (after the first prose block); other figures after the body.
+
+    Geographic figures help most when the reader still needs the landscape — not after a wall of
+    text. Trajectory charts etc. still trail the prose.
+    """
+    if not produced:
+        return [body, ""]
+    early = [a for a in produced if _is_map_figure(a)]
+    late = [a for a in produced if a not in early]
+    if not early:
+        return [body, ""] + _figures(produced)
+
+    # Split after the first paragraph (or first two short ones if the open is a single sentence).
+    parts = re.split(r"\n\n+", body.strip(), maxsplit=1)
+    if len(parts) == 1:
+        return [body, ""] + _figures(early) + _figures(late)
+
+    head, tail = parts[0], parts[1]
+    # If the first block is very short, take one more paragraph so the map lands after landscape setup.
+    if len(head.split()) < 40 and "\n\n" in tail:
+        more = re.split(r"\n\n+", tail, maxsplit=1)
+        head = head + "\n\n" + more[0]
+        tail = more[1] if len(more) > 1 else ""
+    out = [head, ""] + _figures(early)
+    if tail.strip():
+        out += [tail.strip(), ""]
+    out += _figures(late)
+    return out
+
+
+# A caption that opens by explaining the figure's purpose *to us* — "This map orients a reader
+# to the Canadian location…", "Gives readers immediate geographic orientation for…" — is our
+# rationale for building it, printed where the reader expects to be told what they are looking
+# at (style.md, machine signature 4). The doctrine now forbids writing them; this removes the
+# ones that get written anyway, because the pattern is mechanical: the meta-sentence comes first
+# and a genuinely useful description follows it.
+_CAPTION_META = re.compile(
+    r"^\s*(?:(?:This|The)\s+(?:map|chart|table|figure|graphic|analytic|visual)\b[^.]*?"
+    r"\b(?:reader|readers)\b[^.]*\.|"
+    r"(?:Gives|Give|Helps|Help|Shows|Orients|Allows|Lets)\s+(?:the\s+)?readers?\b[^.]*\.)\s*",
+    re.I,
+)
+
+
+def strip_caption_meta(caption: str) -> str:
+    """Drop a leading sentence that explains the figure to us instead of to the reader.
+
+    Only ever removes a *whole* leading sentence, and never the last one standing — so a caption
+    that is nothing but meta-narration is left alone rather than emptied, and the failure stays
+    visible instead of turning into a bare figure.
+    """
+    stripped = _CAPTION_META.sub("", caption, count=1).strip()
+    return stripped if stripped else caption.strip()
 
 
 def _figure_explainer(a: dict) -> str:
@@ -116,8 +282,8 @@ def _figure_explainer(a: dict) -> str:
     """
     caption = str(a.get("caption") or "").strip()
     if caption:
-        return caption
-    question = str(a.get("question") or "").strip()
+        return strip_caption_meta(caption)
+    question = strip_caption_meta(str(a.get("question") or "").strip())
     bits = [b for b in (question, AI_ANALYTIC_LABEL + ".") if b]
     return " ".join(bits)
 
@@ -173,7 +339,8 @@ def _appendix(draft: ArticleDraft, cited_sources: list, cited_claims: list, sour
             access = "read in full" + (f" · captured {d}" if d else "")
         else:
             access = "full text not obtained — used its summary"
-        out.append(f"- ({s.source_type}) {s.title or s.url} — {s.url}  ·  _{access}_")
+        label = _source_label(s)
+        out.append(f"- ({s.source_type}) {label} — {s.url}  ·  _{access}_")
     out.append("")
 
     out.append("**Claims, and how far we tracked each down**")

@@ -37,14 +37,15 @@ rail run ──► site publish <run_id> ──► content/articles/<slug>.md + 
    Confirm `/feed.xml` and `/sitemap.xml` respond and an article page shows its OG tags before
    pointing anything (indexers, the future X-poster) at them — a typo in a route file only surfaces
    on that first build.
-4. Leave the kill switch **off** until you've verified one end-to-end (below).
 
-## The kill switch
+## Live publish (ON by default)
 
-`ALGENT_SITE_PUBLISH` — **off by default.** Off: `site publish` *stages* the article into the
-working tree (preview locally / on a Vercel preview) but does **not** push. On (`1`/`true`/`on`):
-`site publish` writes into a dedicated `.site-live/` git worktree and pushes to `origin/site-live`
-→ Vercel deploys. Flip it on only after the Vercel wiring and one verified staged article.
+`ALGENT_SITE_PUBLISH` — **ON by default.** Every eligible finished piece writes into the
+`.site-live/` worktree and pushes to `origin/site-live` → Vercel deploys. That is the product
+behavior: the rail publishes itself; you do not re-approve each article.
+
+To **pause** shipping without code changes: set `ALGENT_SITE_PUBLISH=0` (or `false` / `off`).
+Then runs still stage into the working-tree site dir but do not push.
 
 ## Commands
 

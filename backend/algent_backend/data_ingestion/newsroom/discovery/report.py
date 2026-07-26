@@ -107,6 +107,10 @@ class BeatResult(BaseModel):
     hit_count: int = 0
     hits: list[BeatHit] = Field(default_factory=list)
     error: str | None = None  # set if the beat failed (e.g. rate-limited out)
+    # When this beat was last fetched successfully (ISO-8601 UTC). Empty on a failed
+    # sweep and on sheets written before per-beat freshness existed — both read as
+    # "infinitely stale", which is the safe default: refresh it, don't serve it.
+    swept_at: str = ""
 
 
 class BeatSheet(BaseModel):
@@ -122,6 +126,10 @@ class BeatSheet(BaseModel):
     beats_failed: int
     total_hits: int
     results: list[BeatResult] = Field(default_factory=list)
+    # The request gap the last sweep ended on. Carried so the next sweep starts where
+    # the limiter actually left us instead of re-learning by sacrificing its first few
+    # beats — which starved whichever beat sorts first in the registry (see sweep.py).
+    last_gap_s: float = 0.0
 
 
 class PoolItem(BaseModel):

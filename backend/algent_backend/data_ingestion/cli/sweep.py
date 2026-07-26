@@ -6,13 +6,17 @@ Fetches each registered beat via paced DOC API queries and writes a faceted
 the deterministic "hard-target per niche" coverage: economics, AI, per-country
 general events, etc., each fetched on purpose so a niche is never starved.
 
-It is slow by design — the DOC API rate limit forces ~one request every few
-seconds, so a full sweep of all beats takes minutes. Use ``--kind`` / ``--limit``
-to sweep a subset.
+It is slow by design — the DOC API rate limit is strict, stateful, and escalating,
+so a full sweep of all beats takes many minutes and will not land every beat. Use
+``--kind`` / ``--limit`` to sweep a subset.
 
     python -m algent_backend.data_ingestion.cli sweep                 # all beats
     python -m algent_backend.data_ingestion.cli sweep --kind pillar   # pillars only
     python -m algent_backend.data_ingestion.cli sweep --limit 4       # first 4 (testing)
+
+Results **merge into the standing sheet** rather than replacing it: the sheet is
+cumulative (t0 keeps it fresh a slice at a time — see ``beat_refresh``), so sweeping
+a subset by hand must top those beats up, not discard every beat it didn't ask for.
 """
 
 from __future__ import annotations
@@ -20,9 +24,11 @@ from __future__ import annotations
 import argparse
 from datetime import UTC, datetime
 
+from ..newsroom.discovery import beat_refresh
 from ..newsroom.discovery import beats as beats_registry
+from ..newsroom.discovery.report import BeatSheet
 from ..newsroom.discovery.sweep import run_sweep
-from ._shared import beats_dir, print_json, progress, prune_files
+from ._shared import beats_dir, latest_file, print_json, progress, prune_files
 
 
 def add_parser(subparsers: argparse._SubParsersAction) -> None:
@@ -31,6 +37,14 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
     parser.add_argument("--limit", type=int, default=0, help="sweep only the first N beats")
     parser.add_argument("--max-records", type=int, default=25, dest="max_records")
     parser.add_argument("--pace", type=float, default=None, help="seconds between requests")
+    # ``run_sweep`` carries a wall-clock budget so ``ensure_t0`` can call it inline
+    # without a t0 hanging for an hour. An operator sweep has nothing waiting on it, so
+    # that ceiling is the wrong one — without this it would silently stop partway
+    # through the registry, which looks identical to the API refusing us.
+    parser.add_argument(
+        "--budget", type=float, default=3600.0,
+        help="wall-clock seconds for the whole sweep (default 3600; t0's inline cap is far lower)",
+    )
     parser.add_argument("--keep", type=int, default=1, help="beat sheets to retain (default 1)")
     parser.set_defaults(handler=run)
 
@@ -52,12 +66,17 @@ def run(args: argparse.Namespace) -> int:
         outcome = f"{result.hit_count} hits" if not result.error else f"ERROR: {result.error}"
         progress(f"[sweep] {done}/{total}  {result.beat_id:24} -> {outcome}")
 
-    kwargs = {"max_records": args.max_records, "on_progress": _on_progress}
+    kwargs = {
+        "max_records": args.max_records,
+        "on_progress": _on_progress,
+        "budget_s": args.budget,
+    }
     if args.pace is not None:
         kwargs["pace_s"] = args.pace
-    sheet = run_sweep(targets, **kwargs)
-    progress(f"[sweep] done: {sheet.beats_swept} swept, {sheet.beats_failed} failed.")
+    swept = run_sweep(targets, **kwargs)
+    progress(f"[sweep] done: {swept.beats_swept} swept, {swept.beats_failed} failed.")
 
+    sheet = beat_refresh.merge(beat_refresh.prune_stale(_standing_sheet()), swept) or swept
     stamp = datetime.now(UTC).strftime("%Y%m%d%H%M%S")
     out_dir = beats_dir()
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -67,12 +86,24 @@ def run(args: argparse.Namespace) -> int:
 
     print_json(
         {
-            "beats_swept": sheet.beats_swept,
-            "beats_failed": sheet.beats_failed,
-            "total_hits": sheet.total_hits,
+            "beats_swept": swept.beats_swept,          # what this run asked for
+            "beats_failed": swept.beats_failed,
+            "total_hits": swept.total_hits,
+            "sheet_beats": sheet.beats_swept,          # what the merged sheet now holds
+            "sheet_hits": sheet.total_hits,
             "sheet_path": str(path),
             "retained": args.keep,
             "purged": purged,
         }
     )
     return 0
+
+
+def _standing_sheet() -> BeatSheet | None:
+    latest = latest_file(beats_dir(), "beats_*.json")
+    if latest is None:
+        return None
+    try:
+        return BeatSheet.model_validate_json(latest.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
