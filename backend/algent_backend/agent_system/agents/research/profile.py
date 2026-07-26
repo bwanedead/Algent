@@ -228,6 +228,10 @@ class SignalProfile(BaseModel):
     entities: list[Entity] = Field(default_factory=list)
     threads: list[Thread] = Field(default_factory=list)
     # Feed flags: agent-declared countries of relevance (primary first). NOT derived by scan.
+    # Where the story HAPPENS and who it AFFECTS — never the home country of whoever published,
+    # reported or funded it. Empty is correct and expected when nothing on Earth is the setting:
+    # a Mars dune image shipped tagged 🇪🇺🇩🇪 because ESA is European and DLR is German, which
+    # tells a reader nothing true about where the story is.
     countries_of_relevance: list[CountryOfRelevance] = Field(default_factory=list)
 
     # ── meta-knowledge (what we don't know) ──

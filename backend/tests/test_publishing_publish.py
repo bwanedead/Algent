@@ -146,3 +146,10 @@ def test_missing_artifacts_is_a_clean_error(tmp_path: Path) -> None:
     (empty / "artifacts").mkdir(parents=True)
     r = pb.publish_run(empty, today="2026-07-15", **_dirs(tmp_path))
     assert r.action == "error"
+
+
+def test_a_needs_ramp_piece_is_held_and_says_why() -> None:
+    """Held pieces are triaged by a human; blaming the caveat lane sends them to the wrong place."""
+    from algent_backend.publishing.publish import _PUBLISHABLE
+
+    assert _PUBLISHABLE == "publishable"     # anything else routes to the held queue

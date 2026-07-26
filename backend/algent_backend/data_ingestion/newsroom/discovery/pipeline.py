@@ -130,7 +130,7 @@ def _build_pool(report, chans: frozenset[str], say: ProgressFn) -> tuple[dict[st
     if sheet is not None:
         beats_limit = _cap_env("ALGENT_T0_BEATS_CAP", 90, lo=4, hi=300)
         say(f"sweep: ≤{beats_limit} pool items, echoes dropped (ALGENT_T0_BEATS_CAP)")
-    science_limit = _cap_env("ALGENT_T0_SCIENCE_CAP", 24, lo=4, hi=80) if science else None
+    science_limit = _cap_env("ALGENT_T0_SCIENCE_CAP", 40, lo=4, hi=120) if science else None
     pool = build_pool(
         report, sheet, markets, x_hits, science,
         gkg_limit=gkg_limit, markets_limit=markets_limit, beats_limit=beats_limit,

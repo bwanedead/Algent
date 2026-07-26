@@ -127,6 +127,25 @@ addressable item ids). Your job:
    structure. If a paragraph could be cut and the reader still holds the same concrete picture,
    cut it.
 
+   BEFORE THE FIRST SENTENCE — name the reader's starting state (see writing-ergonomics.md,
+   "The reader's starting state"). Do this as actual thinking, not a formality, because you
+   have just spent a run inside the profile and that material now feels like the world. It is
+   our private notes. Answer for yourself:
+     - What does a reader who has never thought about this subject already know? Usually: the
+       everyday nouns and nothing else. Not the mission, not the agency, not the acronym, not
+       the index, not the prior state of the debate.
+     - Which proper nouns must therefore be introduced in a few plain words at first use?
+       Every one you cannot introduce is one you should not name.
+     - What is the single interesting thing here, stated in words that need nothing behind
+       them? That sentence is your opening. Not a rebuttal of a headline the reader never
+       saw, not a note about who reported what, not a caveat about our confidence.
+     - Which numbers in the profile actually change what a reader thinks, and which only
+       prove we read the source? Keep the first kind. Metadata — orbit numbers, pixel
+       scales, decimal coordinates, capture timestamps, internal ids — is not substance.
+   The profile is a superset of the article on purpose. You are NOT obliged to place
+   everything in it; forcing every held item into the prose is what makes a piece bounce
+   between unrelated specifics. Select, then explain what you selected, from zero.
+
    COLD-READER SELF-CHECK before you submit — do this one last, and do it literally. Re-read the
    piece as somebody who followed a link, knows nothing about this story, and has read no part of
    your profile. You have spent this whole run inside the profile; the reader has not seen a word

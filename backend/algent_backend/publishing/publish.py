@@ -159,7 +159,15 @@ def publish_run(
             return _hold(held_dir, slug, status, ["status is blocked — dropped required evidence"],
                          run_id, rail, pipeline, action="blocked")
         if status != _PUBLISHABLE:
-            reason = f"status is '{status or 'unknown'}', not publishable (caveat lane did not pass)"
+            # Name the lane that actually held it — a held piece is triaged by a human, and
+            # "caveat lane did not pass" on a piece held for comprehension sends them looking
+            # in the wrong place.
+            why = {
+                "needs_hedging": "the prose does not keep a promise the caveat pass flagged",
+                "needs_ramp": "a general reader could not follow it, and the repair lap did not fix it",
+                "needs_revision": "the body collapsed below publishable length",
+            }.get(status, "it did not earn publishable")
+            reason = f"status is '{status or 'unknown'}', not publishable — {why}"
             return _hold(held_dir, slug, status, [reason], run_id, rail, pipeline)
     if hold_named_individuals and (flag := named_individual_flag(profile, article_md)):
         return _hold(held_dir, slug, status, [flag], run_id, rail, pipeline)

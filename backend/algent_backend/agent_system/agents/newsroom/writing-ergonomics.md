@@ -47,6 +47,50 @@ Concepts have prerequisites.
 Move **broad → specific.** That is the direction a reader instinctively expects to travel;
 traveling it keeps their model assembling instead of buckling.
 
+## The reader's starting state — you and they do not share a world
+This is the failure this doctrine exists to prevent, and it is the one we keep shipping. It is
+not a style problem and it cannot be fixed by avoiding phrases. It is a **modelling** problem:
+by the time you write, you have spent a whole run inside a research profile — sources, claims,
+metadata, competing statements, what got verified and what didn't — and that material feels
+like the world. It is not the world. It is *our private notes*.
+
+**The reader has seen none of it, and never will.** Not the profile, not the sources, not the
+press release you are reacting to, not the figure you are citing, not the research passes. So:
+
+- **Every proper noun arrives cold.** An orbiter, an agency, an acronym, an instrument, a
+  bureau, a company, a law — the reader has never encountered it. Give the handful of words
+  that make the name mean something *at first use*, or don't use the name. Shipped: "DLR"
+  seven times in one piece, never once expanded; "Mars Express" as the subject of the first
+  sentence, never introduced as a spacecraft.
+- **Never argue with a source the reader cannot see.** Opening with "X is not showing literal
+  metal" rebuts a headline only we read. The reader did not hold the wrong belief you are
+  correcting. State what *is*, and if the popular framing is itself the story, introduce the
+  framing before you take it apart.
+- **Never explain why something is in the piece.** "Vietnam belongs in the story only as a
+  secondary forecast-monitoring zone" is a desk decision narrated aloud. Just report the
+  forecast. Inclusion is invisible to a reader; only content is visible.
+- **Never narrate the evidence-weighing.** "The metadata locate the scene but do not prove the
+  interpretation", "that sequence does not settle the official classification", "those are
+  reported figures, not independently verified totals in this run". The reader wants the state
+  of the *world*, not the state of *our confidence*. Where something genuinely isn't known,
+  say so as a fact about the world — "no official landfall intensity has been published yet" —
+  and never in our process vocabulary. "This run", "this pass", "here" meaning *in our
+  research* have no meaning on a page.
+- **A number must change what the reader thinks.** Metadata is not substance. Orbit number,
+  pixel scale, decimal coordinates and capture timestamps were in the profile, so they got
+  reported; none of them help anyone understand frost on a dune. Keep the numbers that carry
+  scale, change, or stakes — 340,000 people moved — and cut the ones that only prove we read
+  the source.
+- **Organise by idea, not by source.** "ESA says X; DLR adds Y; ESA says A; DLR says B" is a
+  comparison of two press releases. The reader is not interested in who said it unless
+  who-said-it *is* the fact. Lead with what is true and attribute in passing.
+
+The practical test, and it is not optional: **write the first sentence for someone who has
+never once thought about this subject.** For a Mars dune image that is not "Mars Express is not
+showing literal metal" — it is that a European spacecraft photographed a field of dark dunes
+near the Martian south pole, and the strange sheen on them turned out to be winter frost. The
+interesting thing, first, in words that need nothing behind them.
+
 ## Right resolution
 Distill each idea to the **grain matched to the reader and the material** — comprehensive
 enough to reconstruct the real shape, manageable enough not to overwhelm. Too fine and the

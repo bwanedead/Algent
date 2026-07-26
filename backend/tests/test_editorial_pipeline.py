@@ -145,7 +145,9 @@ def test_comprehension_repair_that_collapses_the_body_is_rejected(monkeypatch) -
     events: list = []
     out = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({"profile": {"id": "p"}})
     r = out["pipeline"]
-    assert r["status"] == "publishable" and r["word_count"] >= 200
+    # The collapse is rejected and the real body kept — that is what this test is about. The
+    # piece is then held on comprehension, since the repair never cleared the verdict.
+    assert r["word_count"] >= 200 and r["status"] == "needs_ramp"
     assert out["draft"]["body"] == long_body
     assert any(
         et == pl.RAMP_REPAIRED and (p or {}).get("verdict") == "repair_rejected_collapsed"
@@ -163,9 +165,12 @@ def test_hollow_draft_is_not_publishable(monkeypatch) -> None:
     assert r["word_count"] < pl._MIN_PUBLISH_WORDS
 
 
-def test_a_still_unclear_piece_ships_anyway(monkeypatch) -> None:
-    # even if the ramp repair doesn't fully take, the honest (if imperfect) piece ships — duds ship
-    # when they still have a real body.
+def test_a_still_unclear_piece_is_held_not_shipped(monkeypatch) -> None:
+    # REVERSED, deliberately. This used to assert that an imperfect piece ships "when it still
+    # has a real body", which made comprehension the one gate that never held anything — and two
+    # science articles went live that the reviewer had already said a general reader could not
+    # follow. Accuracy gates ask whether we are right; this one asks whether we were understood,
+    # and shipping past it defeats the point of running it.
     body = " ".join(["word"] * 200)
     plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
     draft_out = {"draft": {"id": "d", "title": "t", "body": body, "word_count": 200},
@@ -177,7 +182,8 @@ def test_a_still_unclear_piece_ships_anyway(monkeypatch) -> None:
         {"draft": {"id": "d", "title": "t", "body": body, "word_count": 200}, "profile": {"id": "p"}}))
 
     r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "p"}})["pipeline"]
-    assert r["status"] == "publishable"                       # honest but imperfect -> still ships
+    assert r["status"] == "needs_ramp"                        # unfollowable after repair -> held
+    assert r["publishable"] is False
     assert r["comprehension_verdict"] == "needs_ramp" and r["comprehension_rounds"] == 2
 
 
@@ -344,3 +350,18 @@ def test_a_guard_refusal_happens_before_any_spend(monkeypatch) -> None:
     rec = make_hero(_hl(subject="Florida's $1.8 trillion economy claim"), _Writer(),
                     generate=lambda *a, **k: called.append(1) or _Img())
     assert rec is None and called == []
+
+
+def test_needs_ramp_after_repair_holds_instead_of_publishing() -> None:
+    """Comprehension is the one gate that speaks for the reader rather than for accuracy.
+    It used to be advisory, and two science pieces went live that the reviewer had already
+    said a general reader could not follow."""
+    from algent_backend.agent_system.agents.editorial.pipeline_contracts import (
+        EditorialPipelineReport,
+    )
+
+    # The gate itself is a status branch; assert the contract can carry the verdict and that
+    # the publisher treats anything non-publishable as held (see test_publishing_publish).
+    r = EditorialPipelineReport(status="needs_ramp", comprehension_verdict="needs_ramp")
+    assert r.publishable is False
+    assert r.status == "needs_ramp"
