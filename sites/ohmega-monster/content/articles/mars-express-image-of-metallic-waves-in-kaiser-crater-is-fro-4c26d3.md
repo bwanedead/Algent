@@ -11,12 +11,6 @@ tags:
 - Wind
 - Hoarfrost
 - Clay minerals
-places:
-- European Union
-- Germany
-flags:
-- 🇪🇺
-- 🇩🇪
 thumbnail: /analytics/mars-express-image-of-metallic-waves-in-kaiser-crater-is-fro-4c26d3/analytic_req_1_map_context_kaiser_noachis.svg
 hero: /analytics/mars-express-image-of-metallic-waves-in-kaiser-crater-is-fro-4c26d3/hero.jpg
 hero_alt: dark sand dunes with a bright frosty sheen on a Martian crater floor
