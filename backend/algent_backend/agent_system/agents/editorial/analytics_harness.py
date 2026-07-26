@@ -124,7 +124,13 @@ class CodexHarness(Harness):
         ]
         if allow_web:
             # Off unless asked: only a may_source request may reach the network.
-            cmd.append("--search")
+            #
+            # NOT ``--search``: that flag exists on the top-level ``codex`` command but not on
+            # ``codex exec``, which rejects it outright ("unexpected argument '--search'
+            # found"). Passing it failed every web-allowed analytic on this harness while
+            # offline ones kept working — a partial failure that reads like the request being
+            # unbuildable rather than the flag being wrong.
+            cmd += ["-c", "tools.web_search=true"]
         return cmd
 
     def version(self) -> str:

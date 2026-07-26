@@ -303,7 +303,11 @@ def test_codex_is_the_default_harness_and_stays_offline_unless_asked() -> None:
     assert offline[offline.index("-C") + 1] == str(Path("/scratch"))   # cwd pinned to the folder
 
     online = h.argv("draw it", Path("/scratch"), allow_web=True)
-    assert "--search" in online               # only a may_source request earns it
+    # `codex exec` rejects --search ("unexpected argument"); the equivalent is a config
+    # override. Getting this wrong failed every web-allowed analytic while offline ones
+    # kept working, which reads like an unbuildable request rather than a bad flag.
+    assert "--search" not in online
+    assert "tools.web_search=true" in online   # only a may_source request earns it
 
 
 def test_grok_inverts_the_web_flag(monkeypatch) -> None:
