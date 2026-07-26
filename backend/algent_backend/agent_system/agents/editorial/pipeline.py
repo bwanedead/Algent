@@ -33,6 +33,7 @@ from .draft_spec import build_graph as build_drafter
 from .draft_store import render_draft
 from .gauntlet import build_planning_gauntlet_graph
 from .headline_spec import build_graph as build_headline_writer
+from .hero_stage import make_hero
 from .pipeline_contracts import EditorialPipelineReport
 from .publish import render_published_article
 
@@ -40,6 +41,7 @@ PIPELINE_COMPLETED = "editorial_pipeline.completed"
 PIPELINE_NO_INPUT = "editorial_pipeline.no_input"
 CAVEAT_REPAIRED = "editorial_pipeline.caveat_repaired"   # the self-heal lap ran; here's the outcome
 RAMP_REPAIRED = "editorial_pipeline.ramp_repaired"       # the comprehension repair lap ran
+HERO_IMAGE = "editorial_pipeline.hero_image"             # hero generated / skipped, with the reason
 
 # The analytics WORKER (grok subprocess) is gated separately from the router. The router is cheap
 # (a nano assessment, always runs); the worker spends quota per request. ON by default so
@@ -114,10 +116,14 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
         draft_report = draft_out.get("gauntlet") or {}
 
         # 3. headline — retitle from the FINAL prose, per headline-guidance.md (truthful, no clickbait).
+        hero: dict[str, Any] | None = None
         if draft:
             hl = build_headline_writer(context).invoke({"draft": draft}, config).get("headline") or {}
             if hl.get("title"):
                 draft = {**draft, "title": hl["title"], "standfirst": hl.get("standfirst") or draft.get("standfirst", "")}
+            # 3b. hero image — decoration, from the brief the headline writer just wrote. Off by
+            # default; every failure path returns None and the article publishes unchanged.
+            hero = make_hero(hl, context.artifacts, say=lambda m: context.emit(HERO_IMAGE, {"note": m}))
 
         # 4. v3b — verify the flagged promises are actually kept in the prose (the last honesty
         # gate). Cheap: nano, and free when nothing is flagged. Its pass is what earns "publishable".
@@ -180,6 +186,7 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
             comprehension_verdict=str(comprehension.get("verdict", "")),
             comprehension_findings=len(comprehension.get("findings", [])),
             comprehension_rounds=comprehension_rounds,
+            hero=hero,
             article_title=str(draft.get("title", "")),
             word_count=words,
             barriers=draft_report.get("barriers", []),

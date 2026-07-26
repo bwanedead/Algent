@@ -31,10 +31,18 @@ export default function Home() {
                   </ul>
                 )}
               </div>
-              {/* The thumbnail is a chart built from this piece's own cited data — never a
-                  decorative or generated image. Absent for pieces with no analytic. */}
-              {a.thumbnail ? (
-                <img className="feed-thumb" src={a.thumbnail} alt="" aria-hidden="true" loading="lazy" />
+              {/* Picture for the card: the hero when the piece has one (drawn for this
+                  purpose, 16:9), otherwise a produced analytic — a chart from the piece's own
+                  cited data. Decorative only; the alt is empty because the headline beside it
+                  already carries the meaning. */}
+              {a.hero || a.thumbnail ? (
+                <img
+                  className="feed-thumb"
+                  src={a.hero || a.thumbnail}
+                  alt=""
+                  aria-hidden="true"
+                  loading="lazy"
+                />
               ) : null}
             </Link>
           </li>

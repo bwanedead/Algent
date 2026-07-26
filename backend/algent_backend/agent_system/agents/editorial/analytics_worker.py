@@ -247,9 +247,25 @@ def _prompt(*, may_source: bool = False) -> str:
 
 # ── the mechanical guardrails (harness-owned) ────────────────────────────────────────────────
 
+# Scaffolding a coding CLI leaves behind. Removed as whole directories before the file
+# sweep: codex initialises a git repo in its working root even with --skip-git-repo-check,
+# and letting the allowlist delete a .git tree file-by-file means hundreds of entries in the
+# removed-list for something that was never a candidate artifact.
+_TOOL_DIRS = {".git", ".agents", ".codex", ".grok", "__pycache__", "node_modules", ".venv"}
+
+
+def _prune_tool_dirs(folder: Path) -> list[str]:
+    removed: list[str] = []
+    for child in folder.iterdir():
+        if child.is_dir() and child.name in _TOOL_DIRS:
+            shutil.rmtree(child, ignore_errors=True)
+            removed.append(f"{child.name}/")
+    return removed
+
+
 def _sweep(folder: Path) -> list[str]:
     """Enforce the artifact-type allowlist + size cap; delete + report anything outside it."""
-    removed: list[str] = []
+    removed: list[str] = _prune_tool_dirs(folder)
     total = 0
     for p in sorted(folder.rglob("*")):
         if p.is_dir():

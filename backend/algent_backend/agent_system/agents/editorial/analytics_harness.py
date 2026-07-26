@@ -171,6 +171,40 @@ def resolve_harness(name: str | None = None) -> Harness:
     return _REGISTRY.get(chosen, _REGISTRY[DEFAULT_HARNESS])()
 
 
+def fallback_for(harness: Harness) -> Harness | None:
+    """The other installed harness, or None when there isn't one."""
+    for other in HARNESSES:
+        if other != harness.name and executable(other) is not None:
+            return _REGISTRY[other]()
+    return None
+
+
+def run_with_fallback(
+    prompt: str, folder: Path, *, timeout: float, allow_web: bool = False,
+    harness: Harness | None = None, on_note: Callable[[str], None] | None = None,
+) -> tuple[bool, str]:
+    """Run the chosen harness; on failure, try the other one before giving up.
+
+    These CLIs fail for reasons that have nothing to do with the request — a quota wall, a
+    model the installed version is too old to run (codex 0.125 cannot run the 5.6 family),
+    an auth expiry. Any of those costs the article every one of its figures, silently,
+    because a failed analytic degrades to no analytic. Trying the sibling is nearly free and
+    turns a whole-run loss into a log line.
+    """
+    primary = harness or resolve_harness()
+    ok, tail = primary.run(prompt, folder, timeout=timeout, allow_web=allow_web)
+    if ok:
+        return True, tail
+
+    other = fallback_for(primary)
+    if other is None:
+        return False, tail
+    if on_note is not None:
+        on_note(f"analytics: {primary.name} failed ({tail.strip()[-120:]}); retrying on {other.name}")
+    ok2, tail2 = other.run(prompt, folder, timeout=timeout, allow_web=allow_web)
+    return ok2, (tail2 if ok2 else f"{primary.name}: {tail}\n{other.name}: {tail2}")
+
+
 def _capture(cmd: list[str], *, timeout: float = 30.0) -> str | None:
     exe = executable(cmd[0])
     if exe is None:

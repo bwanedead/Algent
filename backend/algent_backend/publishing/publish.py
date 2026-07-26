@@ -178,7 +178,8 @@ def publish_run(
 
     article = convert(article_md=article_md, rail=rail, pipeline=pipeline, profile=profile,
                       date=today, run_id=run_id, corrections=corrections or None,
-                      vector=vector, analytics=analytics)
+                      vector=vector, analytics=analytics,
+                      hero=(pipeline.get("hero") or None))
     _write_article(site_dir, article, run_dir)
     _append_publish_ledger(site_dir, article, run_id,
                            kind="correction" if is_rewrite else "publish", pushed=push)

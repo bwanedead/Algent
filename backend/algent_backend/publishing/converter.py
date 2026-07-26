@@ -135,7 +135,7 @@ def convert(
     *, article_md: str, rail: dict, pipeline: dict, profile: dict,
     date: str, run_id: str = "", corrections: list[dict] | None = None,
     vector: dict | None = None, analytics: list[dict] | None = None,
-    published_at: str | None = None,
+    hero: dict | None = None, published_at: str | None = None,
 ) -> SiteArticle:
     """Turn a run's artifacts into a ``SiteArticle``. Pure: strings in, ``SiteArticle`` out.
 
@@ -168,6 +168,20 @@ def convert(
                       if a.get("status") == "produced"
                       and str(a.get("artifact_name", "")).endswith((".svg", ".png"))), None):
         fm["thumbnail"] = f"/analytics/{slug}/{thumb}"
+
+    # HERO: a generated opening illustration, when the run made one. Kept separate from
+    # `thumbnail` rather than replacing it — the thumbnail is a real figure built from cited
+    # evidence and stays the honest default for anything that wants a picture of the piece's
+    # *content*. The hero is decoration, so it carries its AI label everywhere it appears and
+    # the surfaces choose which they want.
+    hero_name = str((hero or {}).get("artifact_name") or "")
+    if hero_name:
+        fm["hero"] = f"/analytics/{slug}/{hero_name}"
+        fm["hero_alt"] = str(hero.get("alt") or "")
+        fm["hero_label"] = str(hero.get("label") or "")
+        if hero.get("hook"):
+            fm["hero_hook"] = str(hero["hook"])
+        assets = [*assets, hero_name]
     if corrections:
         fm["corrections"] = corrections
     markdown = _frontmatter(fm) + "\n" + body + "\n"

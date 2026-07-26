@@ -274,9 +274,14 @@ a { color: inherit; }
 
 /* Thumbnail: a chart built from the piece's OWN cited data (never decorative, never generated).
    Sized small and rule-bounded so the index stays an index. */
+/* The card picture. 16:9 to match the hero it usually is, and big enough to actually read
+   at a glance — the old 108px strip was too small to tell you anything. Still a strip
+   layout rather than a stacked card: the density and the flag column are the point, this
+   just makes room for an image inside it. */
 .feed-thumb {
-  width: 168px;
-  height: 105px;
+  width: 208px;
+  aspect-ratio: 16 / 9;
+  height: auto;
   object-fit: cover;
   border: 1px solid var(--rule);
   background: var(--panel);
@@ -513,7 +518,7 @@ a { color: inherit; }
   .feed a { grid-template-columns: minmax(0, 1fr) auto; gap: 0 14px; padding: var(--line) 0; }
   .feed-meta { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 10px; }
   .feed-story { grid-column: 1; }
-  .feed-thumb { width: 116px; height: 73px; }
+  .feed-thumb { width: 100%; }   /* full-bleed picture above the text on a phone */
   .article-header { padding-top: calc(var(--line) * 2); }
   .article-header h1 { line-height: calc(var(--line) * 2); }
   .disclosure-hint { display: none; }
@@ -586,4 +591,32 @@ a { color: inherit; }
 
 @media (max-width: 640px) {
   .lightbox { padding: 8px; }
+
+  /* Below this width the three-column strip squeezes the picture to nothing, so the card
+     stacks: image, then meta, then story. */
+  .feed a {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+  .feed-thumb { order: -1; }
+}
+
+
+/* The article's opening illustration. Generated, so it is always labelled — the caption is
+   part of the figure, not an optional nicety. */
+.article-hero {
+  margin: var(--line) 0 calc(var(--line) * 1.5);
+}
+.article-hero img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+  background: var(--panel);
+}
+.article-hero figcaption {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: var(--line);
 }

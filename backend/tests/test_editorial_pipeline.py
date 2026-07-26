@@ -259,3 +259,85 @@ def test_editorial_pipeline_registered_with_fixture() -> None:
     spec = default_agent_registry().get("editorial_pipeline")
     assert spec.test_fixture is not None and spec.test_fixture.input_key == "profile"
     assert Path(spec.test_fixture.input_file).exists()
+
+
+# -- hero image stage: decoration that must never cost us the article ------------
+
+
+def _hl(subject: str = "an orca surfacing in coastal water", hook: str = "Orcas take a sunfish apart"):
+    return {"title": "T", "standfirst": "d", "image_subject": subject, "image_hook": hook}
+
+
+class _Writer:
+    def __init__(self):
+        self.written = {}
+
+    def write_bytes(self, name, data, kind="binary"):
+        self.written[name] = data
+        return name
+
+
+class _Img:
+    data, model, size, estimated_usd = b"\xff\xd8jpeg", "gemini-3.1-flash-lite-image", "1K", 0.0336
+
+    def suffix(self):
+        return ".jpg"
+
+
+def test_hero_is_off_by_default(monkeypatch) -> None:
+    """It spends real money per article, so an operator turns it on deliberately."""
+    from algent_backend.agent_system.agents.editorial.hero_stage import make_hero
+
+    monkeypatch.delenv("ALGENT_HERO_IMAGE", raising=False)
+    assert make_hero(_hl(), _Writer(), generate=lambda *a, **k: _Img()) is None
+
+
+def test_hero_records_what_the_publisher_needs(monkeypatch) -> None:
+    from algent_backend.agent_system.agents.editorial.hero_stage import make_hero
+
+    monkeypatch.setenv("ALGENT_HERO_IMAGE", "1")
+    w = _Writer()
+    seen = {}
+
+    def _gen(subject, hook="", **kw):
+        seen["subject"], seen["hook"] = subject, hook
+        return _Img()
+
+    rec = make_hero(_hl(), w, generate=_gen)
+
+    assert rec["artifact_name"] == "hero.jpg" and "hero.jpg" in w.written
+    assert rec["alt"] == "an orca surfacing in coastal water"      # honest description
+    assert rec["hook"] == "Orcas take a sunfish apart"
+    assert "AI-generated" in rec["label"]
+    assert seen["subject"] and seen["hook"]                         # brief reached the generator
+
+
+def test_no_subject_means_no_hero_rather_than_a_guessed_one(monkeypatch) -> None:
+    """The headline writer leaves it empty when nothing is depictable. That is a decision."""
+    from algent_backend.agent_system.agents.editorial.hero_stage import make_hero
+
+    monkeypatch.setenv("ALGENT_HERO_IMAGE", "1")
+    assert make_hero(_hl(subject=""), _Writer(), generate=lambda *a, **k: _Img()) is None
+
+
+def test_a_failed_generation_never_costs_the_article(monkeypatch) -> None:
+    from algent_backend.agent_system.agents.editorial.hero_stage import make_hero
+
+    monkeypatch.setenv("ALGENT_HERO_IMAGE", "1")
+    notes: list[str] = []
+
+    def _boom(*a, **k):
+        raise RuntimeError("quota exceeded")
+
+    assert make_hero(_hl(), _Writer(), say=notes.append, generate=_boom) is None
+    assert any("skipped" in n for n in notes)      # reported, not swallowed
+
+
+def test_a_guard_refusal_happens_before_any_spend(monkeypatch) -> None:
+    from algent_backend.agent_system.agents.editorial.hero_stage import make_hero
+
+    monkeypatch.setenv("ALGENT_HERO_IMAGE", "1")
+    called = []
+    rec = make_hero(_hl(subject="Florida's $1.8 trillion economy claim"), _Writer(),
+                    generate=lambda *a, **k: called.append(1) or _Img())
+    assert rec is None and called == []
