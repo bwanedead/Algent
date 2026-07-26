@@ -145,9 +145,7 @@ def test_comprehension_repair_that_collapses_the_body_is_rejected(monkeypatch) -
     events: list = []
     out = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({"profile": {"id": "p"}})
     r = out["pipeline"]
-    # The collapse is rejected and the real body kept — that is what this test is about. The
-    # piece is then held on comprehension, since the repair never cleared the verdict.
-    assert r["word_count"] >= 200 and r["status"] == "needs_ramp"
+    assert r["status"] == "publishable" and r["word_count"] >= 200
     assert out["draft"]["body"] == long_body
     assert any(
         et == pl.RAMP_REPAIRED and (p or {}).get("verdict") == "repair_rejected_collapsed"
@@ -165,12 +163,11 @@ def test_hollow_draft_is_not_publishable(monkeypatch) -> None:
     assert r["word_count"] < pl._MIN_PUBLISH_WORDS
 
 
-def test_a_still_unclear_piece_is_held_not_shipped(monkeypatch) -> None:
-    # REVERSED, deliberately. This used to assert that an imperfect piece ships "when it still
-    # has a real body", which made comprehension the one gate that never held anything — and two
-    # science articles went live that the reviewer had already said a general reader could not
-    # follow. Accuracy gates ask whether we are right; this one asks whether we were understood,
-    # and shipping past it defeats the point of running it.
+def test_a_still_unclear_piece_ships_anyway(monkeypatch) -> None:
+    # It ships, and that is the operator's call: the SITE is the review surface, so a piece held
+    # for being hard to follow is a piece nobody reads and nobody learns from, while the drafting
+    # problem stays invisible. (Briefly made a hard gate, then reverted for that reason.) The
+    # pressure lives in the repair lap and in the verdict riding visibly on the report instead.
     body = " ".join(["word"] * 200)
     plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
     draft_out = {"draft": {"id": "d", "title": "t", "body": body, "word_count": 200},
@@ -182,8 +179,8 @@ def test_a_still_unclear_piece_is_held_not_shipped(monkeypatch) -> None:
         {"draft": {"id": "d", "title": "t", "body": body, "word_count": 200}, "profile": {"id": "p"}}))
 
     r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "p"}})["pipeline"]
-    assert r["status"] == "needs_ramp"                        # unfollowable after repair -> held
-    assert r["publishable"] is False
+    assert r["status"] == "publishable"                       # ships; the site is the review surface
+    # ...but the verdict is never hidden — it rides on the report for the operator to see.
     assert r["comprehension_verdict"] == "needs_ramp" and r["comprehension_rounds"] == 2
 
 

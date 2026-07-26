@@ -70,10 +70,16 @@ def _comprehension_block(prior: ArticleDraft, comprehension: dict) -> list[str]:
     """The RAMP repair lap — a general reader stumbled in specific places. Surgical, not a rewrite.
 
     The constraint is hard and one-directional: ADD A HANDHOLD (plain ramp in your own voice,
-    uncited), CONNECT an island, or CUT. No new contested claims, no strengthening, no pad.
+    uncited), CONNECT an island, CUT, or — for a drafter_vantage finding — RESTATE the same facts
+    from the reader's side. No new contested claims, no strengthening, no pad.
     For missing_scene / assumed_context / vague_conflict, a handhold may be up to three short
     sentences so the cold reader can hold the dispute and who wants what — still not a full rewrite.
     announced_importance → cut the label sentence (do not rephrase into another signpost).
+
+    ``rewrite_for_reader`` was added because handhold-or-cut could not repair the defect we ship
+    most: a sentence whose *framing* is ours, not its content. Two laps of "add a ramp" changed
+    nothing on a piece that opened by rebutting a source the reader had never seen — there was no
+    ramp to add, because the sentence should not have been pointed that way.
     """
     lines = [
         "## YOU ARE REPAIRING COMPREHENSION — a cold general reader stumbled in specific places",
@@ -83,9 +89,16 @@ def _comprehension_block(prior: ArticleDraft, comprehension: dict) -> list[str]:
         "Your ONLY moves: add a plain handhold (your own voice, no citation — textbook foothold,",
         "not evidence; usually one clause; up to three short sentences if the stumble is",
         "missing_scene/assumed_context/vague_conflict on what the dispute *is* and who wants what),",
-        "connect an island onto the through-line with a real relation, or CUT announced-importance",
+        "connect an island onto the through-line with a real relation, CUT announced-importance",
         "labels and circular restatement ('That first fact matters because…', 'this sets the frame',",
-        "'put plainly', 'phase change not closure').",
+        "'put plainly', 'phase change not closure'),",
+        "or — where the fix says rewrite_for_reader — SAY THE SAME THING FROM THE READER'S SIDE.",
+        "That last one is a re-pointing, not a rewrite of the piece: keep every fact, drop the",
+        "framing only we can see. You spent this run inside the profile and the reader has seen",
+        "none of it, so a sentence that argues with a source they never read, explains why an item",
+        "is in the piece, narrates what we could or could not confirm, or leans on a name we never",
+        "introduced, has to be said again facing outward. Use the suggested replacement sentence",
+        "when one is given; keep your own voice when it is better, but keep the facts.",
         "Do NOT add new contested claims, do NOT strengthen any assertion, do NOT pad, do NOT",
         "re-report, do NOT collapse the body. Every sentence not named below stays as written.",
         "",
