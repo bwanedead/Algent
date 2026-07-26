@@ -272,3 +272,10 @@ caveats: verified (0 findings)
 analytics: 0 produced, 0 escapes
 cost: ~$0.0000
 run: 0031__853de9db-603b-496e-b2d3-bd0ad1c17d73
+
+### PUBLISH mars-express-image-of-metallic-waves-in-kaiser-crater-is-fro-4c26d3 — 2026-07-26
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 1 produced, 0 escapes
+cost: ~$0.0000
+run: 0034__416470a3-4ba9-4d1e-8602-1f1e7b9d45b3
