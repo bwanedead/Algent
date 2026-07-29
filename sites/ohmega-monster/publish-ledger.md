@@ -294,3 +294,10 @@ analytics: 2 produced, 0 escapes
 cost: ~$0.0000
 ⚠ figures not matched to evidence: 32%
 run: 0036__0dbf86ae-a059-4c01-9b67-b67d829586a3
+
+### PUBLISH astronomers-study-an-off-center-tidal-disruption-event-and-u-51cd51 — 2026-07-29
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 1 produced, 0 escapes
+cost: ~$0.0000
+run: 0037__b17b28d0-6a97-4f03-adf2-466f593f6659

@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="620" viewBox="0 0 900 620" role="img" aria-labelledby="title desc">
+  <title id="title">TDE 2025abcr is far outside the host galaxy nucleus</title>
+  <desc id="desc">Schematic host-field reconstruction based on the paper's Legacy Survey figures. The transient is shown southwest of the host nucleus, 9.5 arcseconds or 9.3 kiloparsecs away.</desc>
+  <rect width="900" height="620" fill="#0c0f0e"/>
+  <rect x="28" y="25" width="844" height="570" rx="12" fill="#111513" stroke="#454b46" stroke-width="2"/>
+
+  <text x="62" y="68" fill="#f0ede4" font-family="monospace" font-size="25" font-weight="700">TDE 2025abcr is far outside the host nucleus</text>
+  <text x="62" y="96" fill="#858981" font-family="monospace" font-size="14">Legacy Survey host-field schematic • relative placement from the paper’s Figures 1–2</text>
+
+  <!-- A restrained, non-photographic host-field texture. -->
+  <ellipse cx="435" cy="326" rx="220" ry="118" fill="#303934" opacity="0.72" transform="rotate(-12 435 326)"/>
+  <ellipse cx="435" cy="326" rx="150" ry="76" fill="#4a514b" opacity="0.60" transform="rotate(-12 435 326)"/>
+  <ellipse cx="435" cy="326" rx="82" ry="42" fill="#777b6f" opacity="0.38" transform="rotate(-12 435 326)"/>
+  <path d="M180 447 C270 402 342 382 435 326 C525 271 613 248 702 225" fill="none" stroke="#858981" stroke-width="1.5" stroke-dasharray="5 8" opacity="0.38"/>
+
+  <!-- 5 arcsec scale: 80 px, so 9.5 arcsec is 152 px. -->
+  <line x1="675" y1="510" x2="755" y2="510" stroke="#d3d0c8" stroke-width="4"/>
+  <line x1="675" y1="502" x2="675" y2="518" stroke="#d3d0c8" stroke-width="2"/>
+  <line x1="755" y1="502" x2="755" y2="518" stroke="#d3d0c8" stroke-width="2"/>
+  <text x="715" y="538" text-anchor="middle" fill="#d3d0c8" font-family="monospace" font-size="15">5 arcsec</text>
+
+  <!-- N/E orientation copied conceptually from the paper figure. -->
+  <line x1="770" y1="128" x2="770" y2="88" stroke="#d3d0c8" stroke-width="2"/>
+  <polygon points="770,82 764,94 776,94" fill="#d3d0c8"/>
+  <text x="770" y="76" text-anchor="middle" fill="#d3d0c8" font-family="monospace" font-size="13">N</text>
+  <line x1="770" y1="128" x2="810" y2="128" stroke="#d3d0c8" stroke-width="2"/>
+  <polygon points="816,128 804,122 804,134" fill="#d3d0c8"/>
+  <text x="826" y="133" fill="#d3d0c8" font-family="monospace" font-size="13">E</text>
+
+  <!-- The vector is 152 px long: 9.5 arcsec at 16 px/arcsec. -->
+  <line x1="435" y1="326" x2="296" y2="387" stroke="#f0a33a" stroke-width="3" stroke-dasharray="9 7"/>
+  <circle cx="435" cy="326" r="11" fill="#0c0f0e" stroke="#d3d0c8" stroke-width="4"/>
+  <line x1="424" y1="326" x2="446" y2="326" stroke="#d3d0c8" stroke-width="3"/>
+  <line x1="435" y1="315" x2="435" y2="337" stroke="#d3d0c8" stroke-width="3"/>
+  <text x="460" y="304" fill="#f0ede4" font-family="monospace" font-size="17" font-weight="700">HOST NUCLEUS</text>
+  <text x="460" y="326" fill="#858981" font-family="monospace" font-size="13">WISEA J014656.04−152214.7</text>
+
+  <circle cx="296" cy="387" r="15" fill="#5eb8c9" stroke="#f0ede4" stroke-width="3"/>
+  <circle cx="296" cy="387" r="25" fill="none" stroke="#5eb8c9" stroke-width="2" opacity="0.75"/>
+  <text x="250" y="431" fill="#f0ede4" font-family="monospace" font-size="17" font-weight="700">TDE 2025abcr</text>
+  <text x="250" y="452" fill="#858981" font-family="monospace" font-size="13">transient localization</text>
+
+  <rect x="540" y="361" width="260" height="83" rx="8" fill="#0c0f0e" stroke="#f0a33a" stroke-width="2"/>
+  <text x="560" y="390" fill="#f0a33a" font-family="monospace" font-size="21" font-weight="700">9.5 arcsec</text>
+  <text x="560" y="418" fill="#f0ede4" font-family="monospace" font-size="18">= 9.3 kpc projected</text>
+
+  <text x="62" y="560" fill="#858981" font-family="monospace" font-size="12">Schematic only: positions reproduce the paper’s relative host/transient placement; the annotated separation is measured.</text>
+</svg>
