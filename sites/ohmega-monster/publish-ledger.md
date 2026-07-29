@@ -301,3 +301,10 @@ caveats: verified (0 findings)
 analytics: 1 produced, 0 escapes
 cost: ~$0.0000
 run: 0037__b17b28d0-6a97-4f03-adf2-466f593f6659
+
+### PUBLISH china-s-reported-immersion-duv-tool-production-start-lacks-p-809478 — 2026-07-29
+status: publishable  ·  draft: grounded_with_caveats  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 1 produced, 0 escapes
+cost: ~$0.0000
+run: 0038__85b4ed1c-baa7-42f3-a200-b2b3552c31d4
