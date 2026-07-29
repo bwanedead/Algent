@@ -308,3 +308,10 @@ caveats: verified (0 findings)
 analytics: 1 produced, 0 escapes
 cost: ~$0.0000
 run: 0038__85b4ed1c-baa7-42f3-a200-b2b3552c31d4
+
+### PUBLISH nasa-pays-to-rescue-swift-suspending-its-pointed-science-as-5dcc3d — 2026-07-29
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.0000
+run: 0039__aa51436d-f63f-4625-bfe0-831006cf3488
