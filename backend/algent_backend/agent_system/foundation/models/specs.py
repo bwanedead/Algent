@@ -23,6 +23,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field
 
 Provider = Literal["openai", "anthropic", "google"]
+ReasoningEffort = Literal["low", "medium", "high"]
 
 
 class ModelSpec(BaseModel):
@@ -35,5 +36,8 @@ class ModelSpec(BaseModel):
     max_tokens: int | None = None
     timeout: float | None = None
     max_retries: int | None = None
+    # GPT-5.x defaults to medium effort when omitted — always set intentionally
+    # on OpenAI stages so triage stays cheap and heavy stages stay deliberate.
+    reasoning_effort: ReasoningEffort | None = None
 
     extra: dict[str, Any] = Field(default_factory=dict)

@@ -33,6 +33,9 @@ class EditorialPipelineReport(BaseModel):
     comprehension_verdict: str = ""   # clear | needs_ramp (after any repair lap)
     comprehension_findings: int = 0   # unexplained terms / islands / lost threads still standing
     comprehension_rounds: int = 1
+    #: Country flags the comprehension reviewer judged the piece does not earn. Applied by the
+    #: publish converter — see ``pipeline._comprehension_pass`` for why the call lives there.
+    places_to_drop: list[str] = Field(default_factory=list)
     analytics_warranted: bool = False  # would a chart/table/insight/illustration aid this story?
     analytics_count: int = 0           # grounded analytics requested
     analytics_produced: int = 0        # requests the (gated) worker actually fulfilled into artifacts

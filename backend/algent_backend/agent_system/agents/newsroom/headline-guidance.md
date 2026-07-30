@@ -72,14 +72,42 @@ workings" — but as a property of the world, never as a report on our research 
   few words — not a résumé. Skip the title only when the name already is the public identity
   *and* the hat is obvious from the rest of the line; when multi-hat or easy to confuse, prefer
   a light role clause. Never invent a title the body does not support.
+- **No specialist initialisms, ever.** A headline is the one surface with no room to
+  explain itself, and the surface most readers see alone. *"China's reported immersion DUV
+  tool production start lacks proof it can replace ASML at scale"* is addressed to people
+  who already know the story; to everyone else it does not even reveal that the subject is
+  chipmaking. Name the thing in plain words — *"China reportedly starts building advanced
+  chipmaking machines, but stays far behind the leader"* — and let the acronym appear in the
+  body once the piece has earned it. NASA, EU, UN and the like are fine; UVOT, XRT, DUV,
+  HRSC and DLR are not.
+- **The headline must let the reader picture the situation.** *"NASA pays to rescue Swift,
+  suspending its pointed science as orbit decays"* assumes the reader knows Swift is a space
+  telescope, which is the single fact that makes the sentence mean anything. Say what kind of
+  thing it is: *"NASA races to save an aging space telescope as its orbit decays."* If a
+  reader cannot form a picture from the headline alone, it has not done its job.
+- **Watch for words that flip meaning in context.** "Suspending" was meant as *pausing
+  observations*, but beside a photograph of a spacecraft it reads as *hanging in space*. A
+  headline is read once, fast, with a picture next to it — ambiguity that prose would survive
+  is fatal here.
 - **Standfirst (dek):** one sentence under the headline that adds the load-bearing nuance the
   headline had to leave out — most often the key tension or caveat ("…but a hike tail is still
   live", "…though the link remains unproven"). It exists to keep the compression honest, and it
   is a good home for a role/jurisdiction clause the headline had no room for. If the dek names
   several actors, keep ownership explicit (who frames what) so the body is not left to guess.
 
+  The dek is also the reader's **fastest route to the point**, and it is usually the last thing
+  they read before deciding whether to stay. A headline can only carry the event; the dek is
+  where the substance that makes the event worth reading fits — the stake, the scale, the
+  obstacle, the number that reframes it. "Two governments signed a declaration" plus "no funding
+  is attached to it" tells a reader more in a second than three paragraphs will. Spend it on
+  substance, never on announcing importance.
+
 ## The test
 Read the finished piece, then ask: *does this headline + dek convey what the article really
 says, at the confidence the evidence supports, such that no reader is misled?* If yes, it is
 good, however plain. If it needs a sharper claim than the piece earns to be compelling, the
 headline is wrong — not the piece.
+
+Then a second test, for friction: *a reader who reads only the headline and dek and stops —
+do they come away knowing what this is and why somebody would care?* They should. Most people
+never get further, and the ones who do decide there.

@@ -201,11 +201,32 @@ def _brief(request: AnalyticsRequest) -> str:
         "cluster (readable theater), not full-country bounds — Russia/Canada/USA full outlines "
         "make multi-city stories unreadable. Never freehand coastlines.",
         "",
-        "The figure must be self-explanatory to a cold house reader:",
-        "- Chart title = what is measured (plain words).",
-        "- Every axis labeled with units; series named in human language (no series1/y).",
+        "The figure must land in about THREE SECONDS on a cold house reader who will not study it:",
+        "- Chart title = the FINDING in plain words, not the measure. 'Data-centre demand nearly",
+        "  doubles by 2030' — not 'EU data-centre electricity use, 2024-2030'. If the title only",
+        "  names the axes, the reader has to derive the point, and most will not.",
+        "- Annotate the number that carries the story directly on the plot, at the place it happens.",
+        "- Every axis labeled with units; series named in human language (no series1/y). Where the",
+        "  unit is one a general reader does not hold (TWh, GW), give a comparison in the caption.",
         "- Multi-series: use the AGENTS.md hue-contrast palette (amber + cyan + mauve) — never two",
-        "  near-identical browns. Legend with human series names.",
+        "  near-identical browns. Label series DIRECTLY at the end of each line or on each band;",
+        "  fall back to a legend only when direct labels would collide. A legend is a lookup table",
+        "  the reader has to run in their head.",
+        "- Keep it simple enough to read at a glance: few series, one axis, no stacked-everything.",
+        "  If the figure needs study, plot a simpler cut of the same data instead.",
+        "- EVERYTHING MUST FIT INSIDE THE CANVAS. A published timeline had its right-hand labels",
+        "  running off the edge, so the reader got half a word. Use `constrained_layout` or",
+        "  `bbox_inches='tight'`, keep long labels short or wrapped, and after saving, confirm no",
+        "  text extends past the figure bounds. A clipped label is a failed figure and the harness",
+        "  now rejects it, so this costs you the whole attempt.",
+        "- On a time axis, do not let one distant point stretch the whole scale: if most of the span",
+        "  is empty, break or compress the quiet years and give the space to where events cluster.",
+        "- State the UNIT in plain words, and mark each number's STATUS — actual, reported,",
+        "  estimated or target. Never place a target beside an actual without saying which is which,",
+        "  and never compare a subset to a total without separating them.",
+        "- A trajectory needs enough points to show its SHAPE. Two endpoints are a pair, not a trend:",
+        "  plot the history running into the present as well as any projection, so the reader can see",
+        "  the rate and whether the forecast continues the past curve or breaks from it.",
         "- If a real gap exists in the series, leave it and explain it in the caption; if the public",
         "  series is continuous, fetch the missing period — do not invent points.",
         "- Period or as-of visible on the figure or in the caption.",
@@ -589,6 +610,19 @@ def fulfill_request(
                 ("figure check: numbers not found in cited evidence — " + ", ".join(unverified))
                 if unverified else ""
             )
+
+        # (3b) geometry check — is the picture LEGIBLE, not just honest? Every other gate here
+        # asks whether the numbers are true; none asked whether the labels survive to the edge of
+        # the frame, and a timeline shipped with its right-hand text running off the canvas.
+        # Decidable from the file, invisible to the worker (matplotlib reports success), and fatal
+        # to the one thing a label is for — so it is checked, not requested.
+        if visual.suffix == ".svg":
+            from .analytics_geometry import check_fit
+
+            misfit = check_fit(visual.read_text(encoding="utf-8", errors="replace"))
+            if misfit:
+                return _finalize(result, status="failed", swept=removed,
+                                 note=f"figure does not fit its canvas: {misfit}")
 
         # A markdown analytic (table/insight) is INLINED by the publish view, not embedded as an
         # image — so carry its body forward. An image analytic (chart/illustration) has no body.

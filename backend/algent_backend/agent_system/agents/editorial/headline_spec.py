@@ -10,7 +10,7 @@ from __future__ import annotations
 from typing import Any
 
 from algent_backend.agent_system.agents.agent_spec import AgentSpec
-from algent_backend.agent_system.foundation.models import ModelSpec
+from algent_backend.agent_system.foundation.models import openai_spec
 from algent_backend.agent_system.runs.context import AgentRunContext
 
 from .headline_loop import build_headline_writer_graph
@@ -19,7 +19,7 @@ AGENT_ID = "headline_writer"
 RUNTIME = "langgraph"
 FAMILY = "newsroom"
 
-DEFAULT_MODEL = ModelSpec(provider="openai", model="gpt-5.4-nano", temperature=0.4)
+DEFAULT_MODEL = openai_spec(reasoning_effort="low", temperature=0.4)
 
 
 def build_graph(context: AgentRunContext) -> Any:

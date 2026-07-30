@@ -58,6 +58,21 @@ _ANALYTICS_CAP_DEFAULT = 2
 # single sentence, then the pipeline still marked it publishable. A hollow shell is not a dud —
 # it is a corrupted repair. Floor below this → not publishable; repair that collapses the body
 # is discarded.
+#: How many read→fix laps an article gets. The full sequence is:
+#:
+#:     draft → review → draft → review → draft → publish
+#:
+#: Two, and the bound is the point. Review cannot be open-ended: an unpublished article
+#: teaches us nothing, the live site is the review surface, and a loop with no floor has no
+#: reason to ever terminate — each read can always find something. The way quality improves is
+#: not more laps; it is the register growing so the PRODUCTION stages stop generating these
+#: defects at all.
+#:
+#: Note the sequence ends on a FIX, not a read. A final review whose verdict cannot change
+#: whether the piece ships is spend with no consequence attached, so it is not performed — the
+#: cheap mechanical collapse guard in ``_repair_once`` still protects that last repair.
+_MAX_REVIEW_LAPS = 2
+
 _MIN_PUBLISH_WORDS = 120
 _REPAIR_KEEP_FRAC = 0.55  # keep prior draft if the repair keeps less than this share of body words
 
@@ -141,8 +156,17 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
 
         # 4c. COMPREHENSION (gate C) — see _comprehension_pass. Advisory-with-repair, never a
         # publish gate: a hard-to-follow piece is a dud, not a lie, so it ships either way.
+        #
+        # The country flags are derived HERE, before the review, rather than at publish where
+        # they used to be. They come from the profile's declared geography, which is settled
+        # before anybody has read the finished prose — so no upstream stage can tell whether the
+        # article actually accounts for a country, and a South Africa flag shipped on a piece
+        # that never mentioned it. Deriving them first makes them reviewable, and the reviewer
+        # gets both repairs: earn the flag in a clause, or take it off.
+        assigned_places = _derive_places(enriched_profile)
         draft, enriched_profile, comprehension, comprehension_rounds = _comprehension_pass(
-            context, config, draft=draft, treatment=treatment, profile=enriched_profile)
+            context, config, draft=draft, treatment=treatment, profile=enriched_profile,
+            places=assigned_places)
 
         # 5. analytics routing — assess whether a chart/table/insight/illustration would make the
         # story clearer, emitting grounded requests (cheap nano; always runs).
@@ -192,6 +216,9 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
             comprehension_verdict=str(comprehension.get("verdict", "")),
             comprehension_findings=len(comprehension.get("findings", [])),
             comprehension_rounds=comprehension_rounds,
+            # Carried to publish so the converter can honour the reviewer's flag removals — it
+            # is the only stage that read the finished prose alongside the assigned flags.
+            places_to_drop=[str(p) for p in (comprehension.get("places_to_drop") or [])],
             hero=hero,
             article_title=str(draft.get("title", "")),
             word_count=words,
@@ -254,43 +281,91 @@ def _repair_hedging(
     return new_draft, profile, rechecked, 2
 
 
+def _derive_places(profile: dict[str, Any]) -> list[str]:
+    """The country flags this piece would fly, so the reviewer can judge them against the prose.
+
+    Uses the same derivation publish uses, so what the reviewer judges is exactly what a reader
+    would see — geography comes from the profile's declared contract and nothing else.
+    """
+    from algent_backend.publishing.tagging import derive_places
+
+    try:
+        places, _flags = derive_places(profile or {})
+    except Exception:  # noqa: BLE001 — flags are furniture; never fail an article over them
+        return []
+    return places
+
+
 def _comprehension_pass(
     context: AgentRunContext, config: RunnableConfig, *,
     draft: dict[str, Any], treatment: dict[str, Any], profile: dict[str, Any],
+    places: list[str] | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], int]:
-    """Gate C: a general reader reads the prose COLD; if they stumble, one bounded ramp-repair lap.
+    """The review stage: read the finished prose COLD, send it back to be fixed, bounded.
 
-    Advisory — a hard-to-follow piece ships anyway; this only tries to make it clearer first. The
-    repair is handhold-or-cut only (adds no claims), so no honesty gate re-runs after it.
+    The sequence is **draft → review → draft → review → draft → publish**. Two reads, each
+    followed by a repair, and then it ships. Note what deliberately does NOT happen: the last
+    repair is not re-reviewed. A review whose verdict cannot change the outcome is spend with
+    no consequence attached, so the loop ends on a fix rather than on an opinion.
+
+    Advisory throughout — a hard-to-follow piece ships anyway; this only tries to make it
+    clearer first. Every repair is clarifying (handhold, cut, reorder, reader-side rewrite), so
+    it adds no claims and no honesty gate re-runs after it.
+
+    ``places`` are the country flags the page will carry. The reviewer may drop unearned ones
+    outright or demand the clause that earns them; a drop alone does not trigger a repair lap,
+    since removing the flag already resolves it.
     """
-    comprehension = build_comprehension_reviewer(context).invoke({"draft": draft}, config).get(
-        "comprehension_check") or {}
-    if str(comprehension.get("verdict", "clear")) != "needs_ramp" or not draft:
-        return draft, profile, comprehension, 1
-    return _repair_comprehension(context, config, draft=draft, treatment=treatment,
-                                 profile=profile, comprehension=comprehension)
+    review = build_comprehension_reviewer(context).invoke(
+        {"draft": draft, "places": places or []}, config).get("comprehension_check") or {}
+
+    # The flag decision belongs to the FIRST read — later reads are not shown the flags block —
+    # so it is captured here and carried across every lap rather than being lost.
+    drops = list(review.get("places_to_drop") or [])
+
+    reviews = 1
+    for lap in range(_MAX_REVIEW_LAPS):
+        if not draft or str(review.get("verdict", "clear")) != "needs_ramp":
+            break
+        draft, profile, changed = _repair_once(
+            context, config, draft=draft, treatment=treatment, profile=profile, review=review)
+        if not changed:
+            break            # the drafter produced nothing usable; another lap will not help
+        if lap == _MAX_REVIEW_LAPS - 1:
+            break            # final repair ships unreviewed — see the docstring
+        review = build_comprehension_reviewer(context).invoke(
+            {"draft": draft}, config).get("comprehension_check") or {}
+        reviews += 1
+
+    if drops:
+        review = {**review, "places_to_drop": drops}
+    return draft, profile, review, reviews
 
 
-def _repair_comprehension(
+def _repair_once(
     context: AgentRunContext, config: RunnableConfig, *,
-    draft: dict[str, Any], treatment: dict[str, Any], profile: dict[str, Any], comprehension: dict[str, Any],
-) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], int]:
-    """One bounded ramp-repair lap: a general reader stumbled; add the flagged handholds or cut.
+    draft: dict[str, Any], treatment: dict[str, Any], profile: dict[str, Any], review: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any], bool]:
+    """Send the review's findings back to the drafter once. Returns whether anything changed.
 
-    Handhold-or-cut only (the drafter's comprehension block enforces it) — it adds no claims and
-    strengthens nothing, so no honesty gate needs to re-run. If the repair produces nothing, keep
-    the original draft and the honest verdict rather than looping.
+    Repair only — the caller decides whether the result is worth re-reading, because the last
+    repair of a run deliberately is not. The reviewer's fixes are clarifying (handhold, cut,
+    reorder, reader-side rewrite), so they add no claims and no honesty gate needs to re-run.
+
+    If the drafter produces nothing usable, keep the original draft; the caller stops looping
+    rather than burning another lap on the same failure.
 
     CRITICAL: a repair that *collapses* the body (handholds that wipe the article) is discarded.
-    Live failure: ~400 words → ~21 words, then still published as a map + one sentence.
+    Live failure: ~400 words → ~21 words, then still published as a map + one sentence. This
+    guard is mechanical and cheap, so it still protects the final unreviewed repair.
     """
     prior_words = _body_words(draft)
     repaired = build_drafter(context).invoke(
         {"treatment": treatment, "profile": profile, "prior_draft": draft,
-         "comprehension_check": comprehension}, config)
+         "comprehension_check": review}, config)
     new_draft = repaired.get("draft") or {}
     if not new_draft:
-        return draft, profile, comprehension, 2
+        return draft, profile, False
     new_words = _body_words(new_draft)
     collapsed = (
         prior_words >= _MIN_PUBLISH_WORDS
@@ -301,17 +376,15 @@ def _repair_comprehension(
         context.emit(RAMP_REPAIRED, {
             "verdict": "repair_rejected_collapsed",
             "prior_words": prior_words, "new_words": new_words,
-            "findings_remaining": len(comprehension.get("findings", [])),
+            "findings_remaining": len(review.get("findings", [])),
         })
-        return draft, profile, comprehension, 2
-    profile = repaired.get("profile") or profile
-    new_draft = {**new_draft, "word_count": new_words}
-    rechecked = build_comprehension_reviewer(context).invoke({"draft": new_draft}, config).get(
-        "comprehension_check") or {}
-    context.emit(RAMP_REPAIRED, {"verdict": rechecked.get("verdict"),
-                                 "findings_remaining": len(rechecked.get("findings", [])),
-                                 "prior_words": prior_words, "new_words": new_words})
-    return new_draft, profile, rechecked, 2
+        return draft, profile, False
+    context.emit(RAMP_REPAIRED, {
+        "verdict": "repaired",
+        "findings_addressed": len(review.get("findings", [])),
+        "prior_words": prior_words, "new_words": new_words,
+    })
+    return {**new_draft, "word_count": new_words}, repaired.get("profile") or profile, True
 
 
 def _preview(r: EditorialPipelineReport) -> dict[str, Any]:

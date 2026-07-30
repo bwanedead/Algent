@@ -10,7 +10,7 @@ from __future__ import annotations
 from typing import Any
 
 from algent_backend.agent_system.agents.agent_spec import AgentSpec, TestFixture
-from algent_backend.agent_system.foundation.models import ModelSpec
+from algent_backend.agent_system.foundation.models import openai_spec
 from algent_backend.agent_system.runs.context import AgentRunContext
 from algent_backend.agent_system.tools.sourcing.search import policy
 from algent_backend.agent_system.tools.sourcing.search.research import WEB_SEARCH_TOOL_ID
@@ -25,7 +25,7 @@ TOOL_IDS = (WEB_SEARCH_TOOL_ID,)
 SEARCH_CHANNELS = (policy.KEYWORD, policy.SEMANTIC, policy.READ, policy.RICH)
 
 # The orchestrator itself does no model work; sub-graphs carry their own models.
-DEFAULT_MODEL = ModelSpec(provider="openai", model="gpt-5.4-mini")
+DEFAULT_MODEL = openai_spec(reasoning_effort="medium")
 
 
 def build_graph(context: AgentRunContext) -> Any:

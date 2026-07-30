@@ -131,6 +131,27 @@ def _frontmatter(data: dict) -> str:
     return f"---\n{body}---\n"
 
 
+def _derived_frontmatter(profile: dict, vector: dict | None, pipeline: dict) -> dict:
+    """Derived tags/places/flags, with the reviewer's rejected flags removed.
+
+    Flags are assigned from the profile's declared geography, which is settled before anyone has
+    read the finished article — so the only stage that can tell whether the prose accounts for a
+    country is the comprehension reviewer, which reads both. Its removals are applied here.
+    Places and flags are positionally paired, so they must be filtered together.
+    """
+    derived = derive_all(profile, vector)
+    drop = {str(p).strip().casefold() for p in (pipeline.get("places_to_drop") or []) if p}
+    if not drop:
+        return derived
+
+    places = list(derived.get("places") or [])
+    flags = list(derived.get("flags") or [])
+    kept = [(p, f) for p, f in zip(places, flags) if p.strip().casefold() not in drop]
+    return {**derived,
+            "places": [p for p, _ in kept],
+            "flags": [f for _, f in kept]}
+
+
 def convert(
     *, article_md: str, rail: dict, pipeline: dict, profile: dict,
     date: str, run_id: str = "", corrections: list[dict] | None = None,
@@ -157,8 +178,9 @@ def convert(
         "published_at": published_at or datetime.now(UTC).isoformat(),
         "as_of": str(profile.get("as_of") or ""),
         "status": str(pipeline.get("status") or ""),
-        # Tags: derived. Places/flags: from agent countries_of_relevance only (see tagging.py).
-        **{k: v for k, v in derive_all(profile, vector).items() if v},
+        # Tags: derived. Places/flags: from agent countries_of_relevance only (see tagging.py),
+        # minus anything the comprehension reviewer judged the finished prose does not earn.
+        **{k: v for k, v in _derived_frontmatter(profile, vector, pipeline).items() if v},
     }
     # THUMBNAIL: a produced analytic is the best thumbnail this article can have — a real visual
     # built from the piece's own cited evidence, on-brand via the worker's spec, with zero

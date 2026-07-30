@@ -1,0 +1,39 @@
+{
+  "_comment": [
+    "X lists read by the discovery band. Edit this file to manage the roster — no code change.",
+    "Add a list: open it on X, copy the number from x.com/i/lists/<NUMBER>, add an entry.",
+    "Vet before adding:  python -m algent_backend.cli ingest lists --vet <id> --samples 8",
+    "Find candidates:    python -m algent_backend.cli ingest lists --scout",
+    "",
+    "Fields: id (string), label (short slug, appears in the menu as list:<label>),",
+    "        pillar (topic hint, may be empty), enabled (bool), note (why it is here).",
+    "ALGENT_X_LISTS overrides this file entirely; ALGENT_X_USE_LISTS=0 turns the band off.",
+    "",
+    "Deliberately NOT here: newsroom staff lists (FT journalists, AP Staff, Economist).",
+    "They are live and high-volume, and reading them makes discovery a projection of the",
+    "press this newsroom exists to route around."
+  ],
+  "lists": [
+    {
+      "id": "1510243728203698181",
+      "label": "science_space",
+      "pillar": "science",
+      "enabled": true,
+      "note": "74 members, 6.2k followers, 'Refreshing news for the curious'. Best of the three on vetting: 0/8 retweets, and returned a Galileo/Saturn anniversary, Earth-at-night imagery, and a Kellogg history piece."
+    },
+    {
+      "id": "1697526819900313950",
+      "label": "ai",
+      "pillar": "ai",
+      "enabled": true,
+      "note": "22 members, 'stuff bout ai'. Real AI discussion but retweet-heavy and conversational; the per-author cap matters most here."
+    },
+    {
+      "id": "2082694580009615556",
+      "label": "broad_strokes",
+      "pillar": "",
+      "enabled": true,
+      "note": "33 members, 'broad strokes feed'. Widest register — surfaced a centaur disaster robot and the Jabal al-Tayr necropolis excavation. Also the most dominated by one high-volume account."
+    }
+  ]
+}

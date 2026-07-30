@@ -75,6 +75,15 @@ def _fmt_item(item: dict[str, Any]) -> str:
     for key in ("velocity", "rising", "novel", "language_count", "avg_tone", "count"):
         if sig.get(key) not in (None, False):
             bits.append(f"{key}={sig[key]}")
+    # Provenance for X items. t0 filters nothing, so YOU are the stage that decides what a
+    # post is worth — and that needs to be visible. `list:<name>` says which curated roster
+    # vouched for the account; `RETWEET of @x` says the account amplified rather than
+    # reported, which is weaker evidence for a claim but a real signal about what a trusted
+    # roster is attending to. Weigh it; do not treat it as equivalent to first-hand reporting.
+    if sig.get("list_label"):
+        bits.append(f"list:{sig['list_label']}")
+    if sig.get("is_retweet"):
+        bits.append(f"RETWEET of @{sig.get('retweet_of') or '?'}")
     evidence = item.get("evidence", []) or []
     url = evidence[0].get("url", "") if evidence else ""
     pillars = ",".join(item.get("pillars", [])) or "-"

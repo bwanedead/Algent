@@ -12,7 +12,16 @@ model wrappers.
 """
 
 from .handles import ResolvedModel
+from .openai_defaults import DEFAULT_OPENAI_MODEL, openai_model_id, openai_spec
 from .resolver import ModelResolver
-from .specs import ModelSpec
+from .specs import ModelSpec, ReasoningEffort
 
-__all__ = ["ModelResolver", "ModelSpec", "ResolvedModel"]
+__all__ = [
+    "DEFAULT_OPENAI_MODEL",
+    "ModelResolver",
+    "ModelSpec",
+    "ReasoningEffort",
+    "ResolvedModel",
+    "openai_model_id",
+    "openai_spec",
+]

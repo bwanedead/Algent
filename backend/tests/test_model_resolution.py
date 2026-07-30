@@ -57,3 +57,27 @@ def test_optional_knobs_are_omitted_when_unset(monkeypatch: pytest.MonkeyPatch) 
 
     assert isinstance(resolved.client, ChatOpenAI)
     assert resolved.client.max_tokens is None
+
+
+def test_openai_reasoning_effort_is_passed_through(monkeypatch: pytest.MonkeyPatch) -> None:
+    from langchain_openai import ChatOpenAI
+
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+    spec = ModelSpec(
+        provider="openai", model="gpt-5.6-luna", temperature=0.2, reasoning_effort="low",
+    )
+    resolved = ModelResolver().resolve(spec)
+    assert isinstance(resolved.client, ChatOpenAI)
+    model_id = getattr(resolved.client, "model_name", None) or getattr(resolved.client, "model", None)
+    assert model_id == "gpt-5.6-luna"
+    assert resolved.client.reasoning_effort == "low"
+
+
+def test_openai_spec_defaults_to_luna(monkeypatch: pytest.MonkeyPatch) -> None:
+    from algent_backend.agent_system.foundation.models import openai_spec
+
+    monkeypatch.delenv("ALGENT_OPENAI_MODEL", raising=False)
+    spec = openai_spec(reasoning_effort="medium", temperature=0.3)
+    assert spec.provider == "openai"
+    assert spec.model == "gpt-5.6-luna"
+    assert spec.reasoning_effort == "medium"

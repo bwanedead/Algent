@@ -170,6 +170,45 @@ Reader clarity is part of usefulness. PUBLISHED fields:
   the story is a ranking or a standing, show the whole field or an explicit top-N *and* bottom-N,
   and put the rank numbers on it when the rank is the point. Seven unexplained peers invites the
   question "why these seven?".
+
+  **ENOUGH POINTS TO SHOW THE SHAPE.** Two numbers are not a trend, they are a pair — and we
+  shipped "EU data-centre electricity use, 2024–2030" as exactly two bars, which tells a reader
+  the endpoints and hides the thing they actually want, which is how fast it is bending. If the
+  story is growth, decline or acceleration, ask for the **series**: several years of history
+  before the present, and the projection after it, so the curve is visible and the reader can see
+  whether the future line continues the past one or breaks from it. History is usually the
+  cheapest part to source and the part that makes the figure worth having.
+
+  **SAY WHAT IS BEING COUNTED, AND WHETHER IT HAPPENED.** A shipped chart carried the label
+  "279 total DUV systems, 47% immersion" and a reader could not tell what a "DUV system" is,
+  whether 279 was a year's shipments or a running total, or whether the two bars beside it were
+  actual output, capacity or an announced target. Every figure must state, on the figure:
+    - the **unit** in words a general reader holds ("lithography machines shipped per year");
+    - the **status** of each number — actual, reported, estimated, or *target*. Never plot a
+      target adjacent to an actual without labelling which is which; that is the difference
+      between a comparison and a false equivalence;
+    - that the compared quantities are **the same kind of thing**. If our side is
+      immersion-only and theirs is all types, either compute the comparable subset or separate
+      the two visibly. Comparing a subset to a total silently overstates the gap.
+
+  **A TIMELINE MUST EARN ITS SPACE.** A shipped Swift timeline put a 2004 launch at one end and
+  a cluster of 2026 events at the other, leaving two-thirds of the canvas empty and crushing
+  every event that mattered into the right margin — where the labels then ran off the edge. If
+  most of a time axis is empty, break or compress the quiet span and give the room to the period
+  where things happen. And if the sequence tells the reader nothing they did not get from the
+  prose, do not request it: dates are not a finding.
+
+  **INSTANTLY LEGIBLE, NOT STUDIABLE.** A reader gives a figure about three seconds. In that time
+  they must get the point without decoding it. So:
+    - the `title` states the FINDING, not the measure — "Data-centre demand nearly doubles by
+      2030", not "EU data-centre electricity use, 2024–2030";
+    - label the lines and bars **directly** on the plot; a legend that has to be matched back to
+      colours is a puzzle;
+    - annotate the one number that carries the story right where it happens on the chart;
+    - units and scale in words a non-specialist holds — say what a terawatt-hour is comparable to
+      if the quantity is unfamiliar;
+    - few series, no dual axes, no stacked everything. If the figure needs a paragraph of study,
+      it has failed and a simpler cut of the same data is the fix.
 - `data_refs` and/or `may_source` + `source_hint` as above.
 
 Prefer zero, one, or two requests. Do not ship three.

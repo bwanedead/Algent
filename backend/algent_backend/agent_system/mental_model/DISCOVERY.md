@@ -1,66 +1,65 @@
-# Discovery Agents
+# Discovery
 
-The first agent-native loop in Algent, and the template every later agent clones.
+How a story gets *found* — everything before anyone researches or writes one.
 
-## What a discovery agent is
+## The shape
 
-It surveys information sources and returns *candidate topics worth deeper work* —
-it does not write the final article or brief. Output is a `DiscoveryResult`
-(a capped list of `TopicCandidate`s) written as an artifact, which a downstream
-research/brief agent consumes as its topic. Discovery is one of two ways a topic
-enters the pipeline: you inject one, or a discovery run proposes some.
-
-## The agent loop
-
-Every agent stands on the same reusable loop: a model with tools bound, looping
-model -> tool -> model until it decides it is done. That loop is LangGraph's
-prebuilt `create_react_agent`, wrapped once in `agents/loop.py`. Algent supplies
-the model, the resolved tool menu, the composed prompt, and a structured output
-schema; LangChain/LangGraph owns the looping, tool selection, and execution.
-
-`discovery/base/loop.py` wraps that ReAct agent in a thin graph so discovery's
-input (optional `goal` + candidate cap) and output (`DiscoveryResult` artifact)
-match run conventions instead of raw chat messages. The cap is enforced
-mechanically after the model returns — discipline serving authorship, not
-replacing it.
-
-## Discovery as a class (composition, not inheritance)
-
-`agents/discovery/` is a family package:
-
-- `base/` — shared machinery: `contracts.py` (output types), `loop.py` (the
-  discovery loop), `prompts.py` (the discovery class prompt layer).
-- `general/` — the first specialty: open or goal-injected broad survey. Future
-  specialties (`breaking_news/`, `investigative/`) clone this shape with their
-  own prompt layer, tool menu, and cap semantics.
-
-"Discovery-ness" is `family="discovery"` + living here + using `base/` — not an
-`AgentSpec` subclass.
-
-## Layered prompting
-
-Prompts compose broad to specific via `prompting/compose_system_prompt(*layers)`,
-to arbitrary depth:
+Discovery is a **data pipeline followed by two agents**, not one agent that goes
+looking:
 
 ```text
-UNIVERSAL_AGENT_BASE   (agent_system/prompting/base.py — every agent)
-  -> DISCOVERY_BASE    (discovery/base/prompts.py — the class)
-    -> GENERAL_DISCOVERY (discovery/general/prompts.py — the specialty)
+t0   ingest pipeline   source channels -> a scored, deduped pool of candidates
+t1   discovery_synthesis  pool -> a ResearchPortfolio of research vectors
+     signal_router        portfolio -> the one vector promoted to research
 ```
 
-A runtime `goal` is an additional task-level layer (it shapes the loop's first
-message), kept out of the fixed system prompt. Each layer is its own findable
-module, so prompt surfaces are edited in isolation.
+The t0 half is deterministic code (`data_ingestion/newsroom/discovery/`), not a
+model loop. That is the important structural fact: **candidate acquisition is
+plumbing, judgment is the agent's**. Fetching, pacing, deduping and echo
+suppression are mechanical problems with mechanical answers, and a model asked to
+do them does them worse and unpredictably.
 
-## Tool menu
+## t0 channels
 
-The agent binds exactly the tools it lists in `tool_ids` (starting with
-`gdelt_events` + `rss_feed`). Widening the sweep is a one-line change to
-`TOOL_IDS`; the loop binds whatever is listed. Algent's `resolve_for` decides
-what is available; the agent decides what it binds.
+Toggleable, resolved by `resolve_channels` (arg -> `ALGENT_T0_CHANNELS` -> all):
+
+| channel   | source                          | role |
+|-----------|---------------------------------|------|
+| `gkg`     | GDELT GKG net                   | what the world's press is actually covering |
+| `beats`   | rotating GDELT DOC sweep        | the **diversity channel** — deliberate breadth |
+| `markets` | Polymarket                      | where money disagrees with consensus |
+| `x`       | X API                           | first-party and fast; pre-vetted, bypasses the rake |
+| `science` | curated RSS/Atom journal feeds  | the beat the news wires structurally underserve |
+
+`beats` is the one most easily lost and most costly to lose — it is usually the
+largest single contributor, and it is the reason the pool is not just today's
+wire cycle. It sweeps against GDELT DOC, which enforces a **shared, stateful,
+escalating rate limit**: anything else that hits DOC unpaced beforehand will make
+the sweep fail wholesale with `rate_limited` and zero hits. A beat channel
+returning nothing is nearly always that, and nearly never the beats being dead.
+
+## Why there is no "discovery agent" to launch
+
+There used to be: `general_discovery`, a ReAct agent that improvised GDELT DOC
+queries from a prompt. It is **retired**. The t0 pipeline superseded it, nothing
+in the newsroom rail called it, and leaving it registered was actively harmful —
+it fired unpaced parallel DOC queries, so running it immediately before a sweep
+429'd the limiter and emptied the beat channel.
+
+Discovery starts at `ingest t0`. See `docs/guides/newsroom-pipeline.md` for which command produces
+which outcome.
+
+## What the agents add
+
+- **`discovery_synthesis`** reads the pool and writes a `ResearchPortfolio`: a set
+  of *research vectors*, each a thesis with key questions and the t0 item ids
+  supporting it. This is the step that turns headlines into angles.
+- **`signal_router`** ranks the portfolio and promotes one vector. Ranking is
+  rut-discounted and cooldown-aware on purpose: an unweighted "best story" metric
+  converges on the same few super-topics and quietly becomes the thing that
+  destroys variety.
 
 ## Deferred
 
-Multi-surface fan-out + agentic unification (a LangGraph graduation when one
-agent over many surfaces strains), the `breaking_news` specialty (significance
-threshold, fast tempo), scheduling, and the candidate -> research-run split.
+The rake layer for un-vetted channels, additional synthesis specialties, and
+scheduling.

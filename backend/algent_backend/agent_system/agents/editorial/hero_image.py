@@ -66,7 +66,16 @@ _PROHIBITIONS = (
     "Do not depict a recognisable real, identifiable person. "
     "Do not stage it as documentary or news photography of a specific real event, and do "
     "not imply it is a photograph of the events described. "
-    "A generic, representative illustration of the subject is exactly what is wanted."
+    "A generic, representative illustration of the subject is exactly what is wanted. "
+    # A named real object has a real shape, and a reader who looks it up finds out. Our Swift
+    # hero grew a robotic arm the actual spacecraft does not have, which quietly teaches the
+    # reader something false about a thing they can go and check. Invented ATMOSPHERE is fine;
+    # invented STRUCTURE is not.
+    "If the subject is a specific real object — a named spacecraft, aircraft, instrument, "
+    "vehicle or building — keep its overall form plausible for that class of object and do "
+    "NOT add major structures it would not have (no robotic arms, docking rigs, domes or "
+    "extra booms invented for effect). When in doubt, frame it more distantly or more "
+    "generically rather than inventing hardware."
 )
 
 _NO_TEXT = "Do not render any text, words, letters, numbers, labels or captions anywhere. "
@@ -78,10 +87,21 @@ MAX_HOOK_WORDS = 8
 
 
 def _hook_clause(hook: str) -> str:
+    """The caption treatment, pinned so every hero looks like it came from one publication.
+
+    Left unspecified, the model picks a different treatment each time — one image came back
+    with the words flat on the picture and the next with them inside a filled panel, which
+    reads as two different sites. Flat is the choice: it looks like an editorial cover rather
+    than a slide, and it stays legible at thumbnail size where a box just eats the picture.
+    """
     return (
-        f'Set exactly these words as a short bold caption over the image: "{hook}". '
-        "Use a clean heavy sans-serif, high contrast against the picture, positioned so it "
-        "does not cover the subject, sized to stay legible in a small feed thumbnail. "
+        f'Set exactly these words as a caption over the image: "{hook}". '
+        "TYPOGRAPHY, follow exactly so every image in this publication matches: heavy "
+        "sans-serif, pure white text, set FLAT directly on the photograph — no box, no "
+        "banner, no panel, no plate, no coloured block, no outline, no scrim and no border "
+        "behind or around the words. A soft drop shadow for legibility is the only effect "
+        "permitted. Place it in the upper-left over a calm area of the picture, left-aligned, "
+        "large enough to read in a small feed thumbnail, and never covering the main subject. "
         "Render THESE WORDS ONLY — reproduce them exactly, with no other text, no extra "
         "words, no invented figures, and no caption of your own devising anywhere. "
     )

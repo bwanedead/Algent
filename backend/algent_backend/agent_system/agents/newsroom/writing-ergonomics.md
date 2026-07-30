@@ -47,6 +47,86 @@ Concepts have prerequisites.
 Move **broad → specific.** That is the direction a reader instinctively expects to travel;
 traveling it keeps their model assembling instead of buckling.
 
+## The first two sentences carry the whole bargain
+A reader arriving on a page is deciding whether to spend the next three minutes, and they
+decide almost immediately, from the top of the piece and the shape of the block beneath it.
+If working out *what this is and why it is interesting* takes a paragraph of effort, most
+people will not spend it — and a piece nobody finishes conveyed nothing, however accurate.
+
+So the opening two sentences must hand over, in plain words, **what happened and what makes
+it worth knowing**. Not a label saying it matters — that is the machine signature and it is
+banned (style.md 2). The substance itself, which is what makes announcement unnecessary:
+
+- *"Italy and Japan sign intent on biomanufacturing cooperation"* leaves a reader asking why
+  two governments signing a letter is their business. The answer was in the piece, several
+  paragraphs down: it is about turning waste and biomass into industrial materials, and the
+  declaration has no money attached. Put that up top — the thing being attempted, and the
+  catch — and a reader knows within seconds whether they want the rest.
+- *"Europe's electrification is running into grid-connection queues"* is closer, because the
+  obstacle is named. What it still owes the reader immediately is the size of the thing:
+  2,500 GW of projects waiting.
+
+The test: **after two sentences, could the reader tell a friend what this is about and why
+somebody would care?** If not, you have front-loaded context that should be second, or buried
+the finding that should be first. Ordering is the whole fix here — no new words are needed,
+and padding an opening is the opposite of the point.
+
+Length is the other half of the same problem. Every paragraph a reader must cross before the
+substance arrives is friction they may not pay. Prefer the shorter piece that lands over the
+longer one that covers more, and never keep a paragraph because the profile held the material.
+
+## Say what the thing is before you say its name
+
+The order is not stylistic. An unfamiliar label arriving before its meaning forces the
+reader to hold a placeholder and keep reading in the hope it resolves, and that is where
+people quit. Put the plain-language function first, the specialist term second:
+
+- ✗ *"China has reportedly begun domestic production of immersion deep ultraviolet
+  lithography tools, a high-end chipmaking category used to print fine circuit patterns."*
+- ✓ *"A Chinese company has reportedly begun making the machines that print microscopic
+  circuit patterns onto computer chips — a technique called immersion deep-ultraviolet
+  lithography, and one of the few things the Dutch firm ASML still dominates."*
+
+Same facts, same length. The second one is readable on the first pass because the concrete
+object arrives before the vocabulary.
+
+**Every specialist initialism gets a key at first use, and the key says what it DOES.**
+Not `UVOT` — *"its Ultraviolet/Optical Telescope, or UVOT, sees light that never reaches
+the ground."* For a company or product where an expansion helps nobody, a short descriptor
+does the same work: *"the Dutch lithography maker ASML."* After that the short form is
+fine. We have shipped UVOT, XRT, DUV, DLR, HRSC and HEASARC with no key at all — in one
+case while the article's own tags carried the expansion — so treat this as a hard rule
+rather than a preference. A term the reader can only decode by searching is a term we
+failed to report.
+
+## State the causal chain; never leave the reader to deduce it
+
+A reader should never have to work out *why* the situation exists. The Swift piece left
+open whether the observatory was built without propulsion, had lost its propulsion, or was
+failing some other way — a guess a careful reader could make, but a guess. Say it outright:
+
+> Swift was launched without any engine of its own, so it cannot fight the thin
+> atmospheric drag that has been slowly pulling it down since 2004.
+
+Write the mechanism as **X is happening because Y, which means Z** — and put it near the
+top, not paragraph five. If something is broken, say what broke, whose it is, and what it
+prevents. In that same piece the failed reaction wheels belonged to the *rescue vehicle*,
+not to the telescope being rescued; a reader who blurred the two would misunderstand the
+entire story.
+
+## Every section earns its place on the through-line
+
+A block that is interesting but unheralded reads as a digression, even when it turns out
+to be relevant. The Swift piece cut from a failing spacecraft to a black hole tearing a
+star apart with no bridge, then justified the detour afterwards. Establish the connection
+*before* entering the material:
+
+> What is at risk becomes concrete in the kind of event Swift exists to catch. In November,
+> it helped confirm…
+
+The reader should never be asking "why am I reading this now?" — and never encounter the
+same point twice, as that piece did when it closed by re-arguing what it had already shown.
+
 ## The reader's starting state — you and they do not share a world
 This is the failure this doctrine exists to prevent, and it is the one we keep shipping. It is
 not a style problem and it cannot be fixed by avoiding phrases. It is a **modelling** problem:

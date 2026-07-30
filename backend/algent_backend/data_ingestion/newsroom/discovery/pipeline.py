@@ -34,6 +34,7 @@ from ..sources import gdelt_gkg
 from ..sources.prediction_markets import fetch_polymarket
 from .insights import build_insights
 from .memory import load_memory, save_memory
+from .seen import item_key, load_seen, save_seen
 from .pool import build_pool
 from .report import BeatSheet
 
@@ -50,8 +51,8 @@ _KEEP = 1
 # api.x.com/mcp): prefer **News stories** (platform-clustered headlines), NOT
 # WOEID trends and NOT a fixed AI/account roster. Grok CLI optional. ON by default.
 # Disable: ALGENT_T0_CHANNELS=gkg,beats,markets or no bearer.
-ALL_CHANNELS = ("gkg", "beats", "markets", "x", "science")
-DEFAULT_CHANNELS = frozenset({"gkg", "beats", "markets", "x", "science"})
+ALL_CHANNELS = ("gkg", "beats", "markets", "x", "science", "papers", "events")
+DEFAULT_CHANNELS = frozenset({"gkg", "beats", "markets", "x", "science", "papers", "events"})
 _ENV_CHANNELS = "ALGENT_T0_CHANNELS"  # comma-separated override, e.g. "gkg,markets"
 # How t0 pulls X: ``api`` (default news/stories), ``api+grok``, ``grok`` (legacy).
 _ENV_X_VIA = "ALGENT_X_T0_VIA"
@@ -110,6 +111,12 @@ def _build_pool(report, chans: frozenset[str], say: ProgressFn) -> tuple[dict[st
     markets = _fetch_markets(say) if "markets" in chans else []
     x_hits = _fetch_x(say) if "x" in chans else []
     science = _fetch_science(say) if "science" in chans else []
+    # Papers ride the same item shape and the same per-group capping as the feeds, so they
+    # need no separate plumbing — only their own ``group``, which keeps them a distinct block.
+    if "papers" in chans:
+        science = [*science, *_fetch_papers(say)]
+    if "events" in chans:
+        science = [*science, *_fetch_events(say)]
     # When X is on, shrink wire/market mass so novelty/spectrum leads stay visible
     # in the chooser menu (not 40 GKG + 25 markets drowning ~20 X).
     gkg_limit = markets_limit = None
@@ -130,11 +137,20 @@ def _build_pool(report, chans: frozenset[str], say: ProgressFn) -> tuple[dict[st
     if sheet is not None:
         beats_limit = _cap_env("ALGENT_T0_BEATS_CAP", 90, lo=4, hi=300)
         say(f"sweep: ≤{beats_limit} pool items, echoes dropped (ALGENT_T0_BEATS_CAP)")
-    science_limit = _cap_env("ALGENT_T0_SCIENCE_CAP", 40, lo=4, hi=120) if science else None
+    # PER CHANNEL now (science / ai / world), not one shared budget — see build_pool. 25 is a
+    # per-group figure, so the feeds channels together contribute up to ~75 rather than 40 for
+    # all of them, and a group with fewer outlets cannot be crowded out by one with more.
+    science_limit = _cap_env("ALGENT_T0_SCIENCE_CAP", 25, lo=4, hi=120) if science else None
+    # Papers get a tighter cap than the news groups: the channel exists so a primary source is
+    # one hop away, not to compete for attention with stories somebody might actually pick.
+    papers_limit = _cap_env("ALGENT_T0_PAPERS_CAP", 12, lo=2, hi=60)
+    # Cross-run novelty: what did previous pools already carry? Without this, channels that
+    # harvest the top-N of a slow source re-offer the same entries every run — see seen.py.
+    ledger = load_seen(memory_dir())
     pool = build_pool(
         report, sheet, markets, x_hits, science,
         gkg_limit=gkg_limit, markets_limit=markets_limit, beats_limit=beats_limit,
-        science_limit=science_limit,
+        science_limit=science_limit, papers_limit=papers_limit, ledger=ledger,
     )
     # Semantic finisher: rewrite to event sentences / drop non-events (cheap LLM).
     try:
@@ -147,6 +163,15 @@ def _build_pool(report, chans: frozenset[str], say: ProgressFn) -> tuple[dict[st
             )
     except Exception as exc:  # noqa: BLE001 — never block t0 on crystallizer
         say(f"crystallize: skipped ({str(exc)[:80]})")
+    # Record AFTER crystallize, so only what actually reached the menu counts as seen —
+    # an item the crystallizer dropped was never offered and must stay eligible.
+    fresh_count = sum(1 for i in pool.items if not (i.signals or {}).get("seen_before"))
+    save_seen(
+        ledger.record([item_key(i) for i in pool.items]).pruned(),
+        memory_dir(),
+    )
+    say(f"novelty: {fresh_count}/{pool.item_count} items are new since the last pools")
+
     out = pool_dir()
     out.mkdir(parents=True, exist_ok=True)
     stamp = report.batch_id if report is not None else datetime.now(UTC).strftime("%Y%m%d%H%M%S")
@@ -236,10 +261,39 @@ def _fetch_science(say: ProgressFn) -> list[dict]:
         say(f"fetching science feeds ({len(FEEDS)} sources, free)…")
         hits = fetch_science()
         from collections import Counter
-        say(f"science: {len(hits)} items {dict(Counter(h.get('feed') for h in hits))}")
+        say(f"feeds: {len(hits)} items across {dict(Counter(h.get('group') for h in hits))}")
         return hits
     except Exception as exc:  # noqa: BLE001 — a dead feed must not sink t0
         say(f"science: skipped ({str(exc)[:70]})")
+        return []
+
+
+def _fetch_papers(say: ProgressFn) -> list[dict]:
+    """Primary literature, on its own channel so it never dilutes the news blocks."""
+    try:
+        from ..sources.arxiv import CATEGORIES, fetch_arxiv
+
+        say(f"fetching arXiv ({len(CATEGORIES)} category groups, free)…")
+        hits = fetch_arxiv()
+        say(f"papers: {len(hits)} newest submissions")
+        return hits
+    except Exception as exc:  # noqa: BLE001 — arXiv is a shelf, never a blocker
+        say(f"papers: skipped ({str(exc)[:70]})")
+        return []
+
+
+def _fetch_events(say: ProgressFn) -> list[dict]:
+    """Wikipedia's Current Events portal: what HAPPENED, not what is being covered."""
+    try:
+        from ..sources.wikipedia_events import fetch_current_events
+
+        say("fetching Wikipedia current events (free, human-curated)…")
+        hits = fetch_current_events()
+        from collections import Counter
+        say(f"events: {len(hits)} items {dict(Counter(h.get('category') for h in hits))}")
+        return hits
+    except Exception as exc:  # noqa: BLE001 — one more channel, never a blocker
+        say(f"events: skipped ({str(exc)[:70]})")
         return []
 
 

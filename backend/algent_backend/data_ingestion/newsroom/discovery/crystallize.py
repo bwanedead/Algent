@@ -48,13 +48,8 @@ _ENV_ON = "ALGENT_T0_CRYSTALLIZE"  # 0/false to skip
 _ENV_MAX = "ALGENT_T0_CRYSTALLIZE_MAX"  # items sent to the model (default 40)
 _ENV_MODEL = "ALGENT_T0_CRYSTALLIZE_MODEL"
 
-# The triage tier from the house catalog (``foundation.cost.MODEL_PRICES``).
-# Crystallize is triage by definition — keep/drop plus a one-sentence rewrite — so
-# it belongs on the cheapest current model, not on one of its own choosing. Cost is
-# read from that same catalog rather than re-declared here: this file used to carry
-# private per-token constants, which meant the ledger stayed wrong independently of
-# whatever model was actually called.
-_DEFAULT_MODEL = "gpt-5.4-nano"
+# Crystallize is triage — keep/drop plus a one-sentence rewrite — so effort stays
+# low. Model id comes from ALGENT_T0_CRYSTALLIZE_MODEL or the house OpenAI default.
 _DEFAULT_MAX = 40
 
 _SYSTEM = """You are a newsroom discovery filter for a Western generalist desk.
@@ -390,11 +385,12 @@ def _try_house_client() -> CrystallizeClient | None:
         key = os.environ.get("OPENAI_API_KEY")
     if not key:
         return None
-    model = os.environ.get(_ENV_MODEL, _DEFAULT_MODEL).strip() or _DEFAULT_MODEL
-    # temperature stays low but explicit; max_tokens is deliberately left unset — the
-    # resolver owns per-provider parameter naming, and the reply is one short JSON array.
+    from algent_backend.agent_system.foundation.models import openai_model_id, openai_spec
+
+    # Explicit crystallize override wins; otherwise the house OpenAI default (Luna).
+    model = (os.environ.get(_ENV_MODEL) or "").strip() or openai_model_id()
     return HouseCrystallizeClient(
-        ModelSpec(provider="openai", model=model, temperature=0.1)
+        openai_spec(reasoning_effort="low", temperature=0.1, model=model)
     )
 
 
@@ -417,7 +413,7 @@ class HouseCrystallizeClient:
     def complete_json(self, *, system: str, user: str) -> list[dict[str, Any]]:
         from langchain_core.messages import HumanMessage, SystemMessage
 
-        from algent_backend.agent_system.foundation.cost import estimate_model_cost
+        from algent_backend.agent_system.foundation.cost import estimate_usage_cost
         from algent_backend.agent_system.foundation.models.resolver import ModelResolver
 
         client = ModelResolver().resolve(self.spec).client
@@ -426,14 +422,7 @@ class HouseCrystallizeClient:
             HumanMessage(content=user + '\n\nRespond as JSON object: {"decisions":[...]}'),
         ])
         usage = getattr(reply, "usage_metadata", None) or {}
-        self.last_usd = round(
-            estimate_model_cost(
-                self.model,
-                int(usage.get("input_tokens") or 0),
-                int(usage.get("output_tokens") or 0),
-            ),
-            6,
-        )
+        self.last_usd = round(estimate_usage_cost(self.model, usage if isinstance(usage, dict) else {}), 6)
         return _parse_decisions(_text_of(reply))
 
 

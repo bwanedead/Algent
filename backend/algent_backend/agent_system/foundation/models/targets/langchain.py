@@ -81,6 +81,11 @@ class LangChainTarget(ModelTarget):
             if value is not None:
                 kwargs[field] = value
 
+        # OpenAI GPT-5.x: omit → API defaults to medium reasoning. Pass through
+        # only when set so Anthropic/Google specs stay untouched.
+        if spec.provider == "openai" and spec.reasoning_effort is not None:
+            kwargs["reasoning_effort"] = spec.reasoning_effort
+
         # Provider-specific escape hatch wins over nothing else; it is last.
         kwargs.update(spec.extra)
         return kwargs

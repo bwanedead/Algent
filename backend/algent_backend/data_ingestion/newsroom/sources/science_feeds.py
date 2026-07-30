@@ -45,20 +45,86 @@ _NS = {
 # live, the added feeds led with Io's interior heat, a NASA deep-space antenna at risk, an
 # ancient Mount Rainier mudflow and a Starship recovery attempt, none of which the original
 # five carried.
-FEEDS: tuple[tuple[str, str, str], ...] = (
-    ("nature", "https://www.nature.com/nature.rss", "science"),
-    ("phys_org", "https://phys.org/rss-feed/", "science"),
-    ("science_daily", "https://www.sciencedaily.com/rss/top/science.xml", "science"),
-    ("esa", "https://www.esa.int/rssfeed/Our_Activities/Space_Science", "science"),
-    ("quanta", "https://api.quantamagazine.org/feed/", "science"),
-    ("science_news", "https://www.sciencenews.org/feed", "science"),
-    ("new_scientist", "https://www.newscientist.com/section/news/feed/", "science"),
-    ("eos", "https://eos.org/feed", "science"),
-    ("live_science", "https://www.livescience.com/feeds/all", "science"),
-    ("smithsonian", "https://www.smithsonianmag.com/rss/science-nature/", "science"),
-    ("nasa", "https://www.nasa.gov/news-release/feed/", "science"),
-    ("ars_science", "https://feeds.arstechnica.com/arstechnica/science", "science"),
+#: ``(feed id, url, pillar, channel)``. The fourth field is the **menu channel**, and it
+#: exists because this registry outgrew its name. It began as science-only; it now carries AI,
+#: world and regional news too, and filing a Nikkei Asia markets story under a channel called
+#: "science" would be actively misleading to whoever reads the menu. The pillar is the topic;
+#: the channel is where it appears. Each channel is capped separately, so a large group cannot
+#: crowd out a small one — which is exactly how AI got squeezed out before.
+FEEDS: tuple[tuple[str, str, str, str], ...] = (
+    # ── Science ─────────────────────────────────────────────────────────────────────
+    ("nature", "https://www.nature.com/nature.rss", "science", "science"),
+    ("phys_org", "https://phys.org/rss-feed/", "science", "science"),
+    ("science_daily", "https://www.sciencedaily.com/rss/top/science.xml", "science", "science"),
+    ("esa", "https://www.esa.int/rssfeed/Our_Activities/Space_Science", "science", "science"),
+    ("quanta", "https://api.quantamagazine.org/feed/", "science", "science"),
+    ("science_news", "https://www.sciencenews.org/feed", "science", "science"),
+    ("new_scientist", "https://www.newscientist.com/section/news/feed/", "science", "science"),
+    ("eos", "https://eos.org/feed", "science", "science"),
+    ("live_science", "https://www.livescience.com/feeds/all", "science", "science"),
+    ("smithsonian", "https://www.smithsonianmag.com/rss/science-nature/", "science", "science"),
+    ("nasa", "https://www.nasa.gov/news-release/feed/", "science", "science"),
+    ("ars_science", "https://feeds.arstechnica.com/arstechnica/science", "science", "science"),
+    ("spacenews", "https://spacenews.com/feed/", "science", "science"),
+    # Engineering feats and megaprojects — the "how did they build that" register. Added
+    # because the menu had no home for the class of story an operator kept seeing elsewhere
+    # (a 582-tonne fusion magnet, a domestic lithography tool) and we never surfaced.
+    ("interesting_eng", "https://interestingengineering.com/rss", "science", "science"),
+
+    # ── AI and computing ────────────────────────────────────────────────────────────
+    # Added because AI was structurally absent from the menu, and the arithmetic shows why:
+    # the beat registry holds 41 slices, refreshes 8 per run, and drops anything not
+    # refreshed within 24h — so at one or two runs a day roughly 33 beats contribute
+    # nothing, and `pillar:ai` only appears if it wins that lottery AND survives the DOC
+    # throttle. On the last live run it was drawn and came back `rate_limited`. Routing AI
+    # through feeds instead removes both failure modes at once: free, unthrottled, and
+    # edited by people. The same reasoning that created this channel for science.
+    ("ars_tech", "https://feeds.arstechnica.com/arstechnica/technology-lab", "ai", "ai"),
+    ("wired_ai", "https://www.wired.com/feed/tag/ai/latest/rss", "ai", "ai"),
+    ("mit_tr_ai", "https://www.technologyreview.com/topic/artificial-intelligence/feed", "ai", "ai"),
+    ("verge_ai", "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml", "ai", "ai"),
+    ("techcrunch_ai", "https://techcrunch.com/category/artificial-intelligence/feed/", "ai", "ai"),
+    ("hf_blog", "https://huggingface.co/blog/feed.xml", "ai", "ai"),
+    ("deepmind", "https://deepmind.google/blog/rss.xml", "ai", "ai"),
+    ("openai_news", "https://openai.com/news/rss.xml", "ai", "ai"),
+    ("import_ai", "https://importai.substack.com/feed", "ai", "ai"),
+
+    # ── Health, climate ─────────────────────────────────────────────────────────────
+    ("statnews", "https://www.statnews.com/feed/", "health", "science"),
+    ("nature_medicine", "https://www.nature.com/nm.rss", "health", "science"),
+    ("carbon_brief", "https://www.carbonbrief.org/feed/", "environment", "science"),
+    ("grist", "https://grist.org/feed/", "environment", "science"),
+
+    # ── World, reported from outside the Anglo-American press ───────────────────────
+    # The gap this closes: GKG and the beat sweep both read the same global wire corpus, so
+    # discovery inherited whichever stories that corpus amplifies. These are edited desks in
+    # other countries with different news judgment — the point is not more volume but a
+    # different sense of what leads. Verified live: SCMP led on a Japan quake, MercoPress on
+    # a Brazil-Paraguay dispute, Rest of World on Chinese students using AI to pick colleges.
+    ("scmp", "https://www.scmp.com/rss/91/feed", "geopolitics", "world"),
+    ("nikkei_asia", "https://asia.nikkei.com/rss/feed/nar", "economics", "world"),
+    ("aljazeera", "https://www.aljazeera.com/xml/rss/all.xml", "geopolitics", "world"),
+    ("dw_world", "https://rss.dw.com/rdf/rss-en-world", "geopolitics", "world"),
+    ("france24", "https://www.france24.com/en/rss", "geopolitics", "world"),
+    ("thehindu", "https://www.thehindu.com/news/international/feeder/default.rss",
+     "geopolitics", "world"),
+    ("restofworld", "https://restofworld.org/feed/latest/", "technology", "world"),
+    ("japan_times", "https://www.japantimes.co.jp/feed/", "geopolitics", "world"),
+    ("africanews", "https://www.africanews.com/feed/rss", "geopolitics", "world"),
+    ("mercopress", "https://en.mercopress.com/rss/", "geopolitics", "world"),
+    ("defense_one", "https://www.defenseone.com/rss/all/", "defense", "world"),
 )
+
+# Verified live before being wired in, which caught two that looked right and were not:
+# Ars Technica's ``information-technology`` path 404s (the feed is ``technology-lab``), and
+# Inside Climate News returns 403 to our user agent. A feed is only useful if it actually
+# parses, so each addition is checked rather than assumed.
+#
+# Note the archive-shaped feeds — OpenAI (~1,055 entries), Hugging Face (~833), DeepMind
+# (~100) publish their whole history in one document. We take the top ``per_feed``, which is
+# correct only while they stay newest-first; they do today. If one ever reorders, that feed
+# quietly starts serving old posts rather than failing loudly, which is the failure mode to
+# watch for here.
 
 # Deliberately NOT here: arXiv. Its Atom API works and returns the newest preprints in a
 # category, but they are papers rather than stories — a live sample led with
@@ -85,7 +151,7 @@ def is_feed_boilerplate(title: str) -> bool:
 def fetch_science(
     *,
     per_feed: int = 8,
-    feeds: tuple[tuple[str, str, str], ...] | None = None,
+    feeds: tuple[tuple[str, ...], ...] | None = None,
     client: object | None = None,
 ) -> list[dict[str, Any]]:
     """Pull recent items from each science feed. One bad feed never sinks the rest."""
@@ -95,7 +161,11 @@ def fetch_science(
     http = client or httpx.Client(timeout=_TIMEOUT_S, headers=_HEADERS, follow_redirects=True)
     hits: list[dict[str, Any]] = []
     try:
-        for feed_id, url, pillar in (feeds or FEEDS):
+        for row in (feeds or FEEDS):
+            # Rows are (id, url, pillar, channel); a three-field row is accepted and defaults
+            # to the science channel, so callers and fixtures predating the split still work.
+            feed_id, url, pillar = row[0], row[1], row[2]
+            channel = row[3] if len(row) > 3 else "science"
             try:
                 response = http.get(url)  # type: ignore[attr-defined]
                 if getattr(response, "status_code", 0) != 200:
@@ -105,7 +175,7 @@ def fetch_science(
                 continue
             kept = [e for e in entries if not is_feed_boilerplate(e["title"])]
             for entry in kept[:per_feed]:
-                hits.append({**entry, "feed": feed_id, "pillar": pillar})
+                hits.append({**entry, "feed": feed_id, "pillar": pillar, "group": channel})
     finally:
         if own:
             http.close()  # type: ignore[attr-defined]

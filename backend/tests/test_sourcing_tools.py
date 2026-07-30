@@ -310,8 +310,41 @@ from algent_backend.agent_system.foundation import cost  # noqa: E402
 
 
 def test_cost_estimates_model_and_calls() -> None:
-    # 1M in + 1M out at gpt-5.4-mini ($0.75 in, $4.50 out) = 5.25 (sourced pricing).
+    # 1M uncached in + 1M out at gpt-5.4-mini ($0.75 in, $4.50 out) = 5.25.
     assert round(cost.estimate_model_cost("gpt-5.4-mini", 1_000_000, 1_000_000), 2) == 5.25
+    # Luna ordinary (under 272k cliff): 100k uncached + 50k out = 0.02 + 0.06 = 0.08
+    assert round(cost.estimate_model_cost("gpt-5.6-luna", 100_000, 50_000), 4) == 0.08
+    # Luna with cache: 50k uncached @0.20 + 50k cached @0.02 + 10k cache_write @0.25 + 20k out @1.20
+    assert round(
+        cost.estimate_model_cost(
+            "gpt-5.6-luna", 50_000, 20_000,
+            cached_input_tokens=50_000, cache_write_tokens=10_000,
+        ),
+        5,
+    ) == round(0.01 + 0.001 + 0.0025 + 0.024, 5)
+    # usage_metadata: input includes cached — uncached = input - cache_read
+    assert round(
+        cost.estimate_usage_cost(
+            "gpt-5.6-luna",
+            {
+                "input_tokens": 100_000,
+                "output_tokens": 10_000,
+                "input_token_details": {"cache_read": 40_000, "cache_creation": 5_000},
+            },
+        ),
+        5,
+    ) == round(
+        # 60k uncached @0.20 + 40k cached @0.02 + 5k write @0.25 + 10k out @1.20
+        0.012 + 0.0008 + 0.00125 + 0.012,
+        5,
+    )
+    # Long-context cliff: >272k input uses long rates for the whole request
+    assert round(
+        cost.estimate_model_cost("gpt-5.6-luna", 300_000, 10_000),
+        4,
+    ) == round(300_000 / 1_000_000 * 0.40 + 10_000 / 1_000_000 * 1.80, 4)
+    # Grok stays in the table
+    assert round(cost.estimate_model_cost("grok-4-fast", 1_000_000, 1_000_000), 2) == 0.70
     assert cost.estimate_call_cost("rich") == 0.001
     assert cost.estimate_call_cost("keyword") == 0.008
     assert cost.estimate_call_cost("unknown") == 0.0

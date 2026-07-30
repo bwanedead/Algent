@@ -13,7 +13,7 @@ from __future__ import annotations
 from typing import Any
 
 from algent_backend.agent_system.agents.agent_spec import AgentSpec, TestFixture
-from algent_backend.agent_system.foundation.models import ModelSpec
+from algent_backend.agent_system.foundation.models import openai_spec
 from algent_backend.agent_system.runs.context import AgentRunContext
 from algent_backend.agent_system.tools.sourcing.search import policy
 from algent_backend.agent_system.tools.sourcing.search.research import WEB_SEARCH_TOOL_ID
@@ -28,10 +28,7 @@ SEARCH_CHANNELS = (policy.KEYWORD, policy.SEMANTIC, policy.READ, policy.RICH, po
 PAID_BUDGET = 6
 COST_CAP_USD = 1.00
 
-DEFAULT_MODEL = ModelSpec(
-    provider="openai", model="gpt-5.4-mini", temperature=0.3,
-    extra={"streaming": True, "stream_usage": True},
-)
+DEFAULT_MODEL = openai_spec(reasoning_effort="medium", temperature=0.3, streaming=True)
 
 
 def build_graph(context: AgentRunContext) -> Any:

@@ -38,7 +38,6 @@ def default_agent_registry() -> AgentRegistry:
     """Build the registry with the agents Algent ships by default."""
     # Imported lazily so merely importing the registry class does not pull an
     # agent's graph module (and its LangGraph imports) into memory.
-    from .discovery.general.spec import SPEC as general_discovery_spec
     from .discovery.synthesis.spec import SPEC as discovery_synthesis_spec
     from .editorial.analytics_spec import SPEC as analytics_router_spec
     from .editorial.caveat_spec import SPEC as caveat_reviewer_spec
@@ -63,7 +62,11 @@ def default_agent_registry() -> AgentRegistry:
     registry = AgentRegistry()
     registry.register(hello_workflow_spec)
     registry.register(news_brief_spec)
-    registry.register(general_discovery_spec)
+    # NOTE: ``general_discovery`` was retired here. It was a ReAct agent that free-styled
+    # GDELT DOC queries from a prompt, and the t0 ingest pipeline superseded it entirely —
+    # nothing in the newsroom rail referenced it. Leaving it registered was not merely dead
+    # weight: it fired unpaced parallel DOC queries, which 429s the shared rate limiter and
+    # made the very next beat sweep fail with zero hits. Discovery starts at ``ingest t0``.
     registry.register(discovery_synthesis_spec)
     registry.register(signal_router_spec)
     registry.register(signal_profile_spec)

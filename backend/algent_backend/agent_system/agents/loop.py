@@ -29,7 +29,8 @@ def _meter_model_cost(msg: Any) -> None:
         return
     usage = getattr(msg, "usage_metadata", None)
     if isinstance(usage, dict):
-        cost.add_model_usage(int(usage.get("input_tokens") or 0), int(usage.get("output_tokens") or 0))
+        # Pass the full usage blob so cache-read / cache-write buckets price correctly.
+        cost.add_model_usage(usage=usage)
 
 
 def _excerpt(value: object) -> str:

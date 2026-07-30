@@ -11,7 +11,7 @@ from __future__ import annotations
 from typing import Any
 
 from algent_backend.agent_system.agents.agent_spec import AgentSpec, TestFixture
-from algent_backend.agent_system.foundation.models import ModelSpec
+from algent_backend.agent_system.foundation.models import openai_spec
 from algent_backend.agent_system.runs.context import AgentRunContext
 
 from .loop import build_planning_graph
@@ -22,7 +22,7 @@ FAMILY = "newsroom"
 
 # Framing + molecule design over one profile — the savvy tier, one structured call. A touch
 # of temperature: choosing a frame means generating genuinely different candidate vantages.
-DEFAULT_MODEL = ModelSpec(provider="openai", model="gpt-5.4-mini", temperature=0.35)
+DEFAULT_MODEL = openai_spec(reasoning_effort="medium", temperature=0.35)
 
 
 def build_graph(context: AgentRunContext) -> Any:

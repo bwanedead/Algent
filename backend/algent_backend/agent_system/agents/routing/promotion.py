@@ -25,7 +25,7 @@ from algent_backend.agent_system.agents.discovery.portfolio import (
     ResearchPortfolio,
     ResearchVector,
 )
-from algent_backend.agent_system.foundation.models import ModelSpec
+from algent_backend.agent_system.foundation.models import ModelSpec, openai_spec
 from algent_backend.agent_system.runs.context import AgentRunContext
 
 from .contracts import RankedChoice, RouteCandidate, RouteRanking, RoutingBrief
@@ -73,8 +73,8 @@ PROMOTION_BRIEF = RoutingBrief(
     top_k=80,
 )
 
-# Editorial judgment over a full portfolio — savvy tier, one structured call.
-DEFAULT_MODEL = ModelSpec(provider="openai", model="gpt-5.4-mini", temperature=0.2)
+# Editorial judgment over a full portfolio — medium effort when called without a spec.
+DEFAULT_MODEL = openai_spec(reasoning_effort="medium", temperature=0.2)
 
 # How the promote order is decided once the agent has judged cooldown.
 #

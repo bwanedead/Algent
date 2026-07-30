@@ -11,7 +11,7 @@ from __future__ import annotations
 from typing import Any
 
 from algent_backend.agent_system.agents.agent_spec import AgentSpec, TestFixture
-from algent_backend.agent_system.foundation.models import ModelSpec
+from algent_backend.agent_system.foundation.models import openai_spec
 from algent_backend.agent_system.runs.context import AgentRunContext
 
 from .run_graph import build_signal_router_graph
@@ -20,9 +20,8 @@ AGENT_ID = "signal_router"
 RUNTIME = "langgraph"
 FAMILY = "newsroom"
 
-# Coarse ranking/selection over supplied candidates — the nano tier is plenty here (it
-# reasons over given text into a structured pick, no research, no generation).
-DEFAULT_MODEL = ModelSpec(provider="openai", model="gpt-5.4-nano", temperature=0.2)
+# Ranking over supplied candidates — low effort is enough (structured pick, no research).
+DEFAULT_MODEL = openai_spec(reasoning_effort="low", temperature=0.2)
 
 
 def build_graph(context: AgentRunContext) -> Any:

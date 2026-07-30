@@ -19,7 +19,7 @@ from langgraph.graph import END, START, StateGraph
 from algent_backend.agent_system.foundation.models import ModelSpec
 from algent_backend.agent_system.runs.context import AgentRunContext
 
-from .comprehension_contracts import ComprehensionCheck
+from .comprehension_contracts import ComprehensionCheck, ComprehensionFinding
 from .comprehension_prompts import SYSTEM_PROMPT
 from .draft import ArticleDraft
 
@@ -31,13 +31,27 @@ GENERATOR = "comprehension_reviewer@v1"
 
 class ComprehensionState(TypedDict, total=False):
     draft: dict[str, Any]              # the finished draft to read cold (input) — NO profile by design
+    places: list[str]                  # country flags assigned to this piece, for the reviewer to judge
     comprehension_check: dict[str, Any]
 
 
-def _message(draft: ArticleDraft) -> str:
-    """Only the reader-facing prose — title, standfirst, body. No ids, no evidence, no plan."""
+def _message(draft: ArticleDraft, places: list[str] | None = None) -> str:
+    """Only the reader-facing prose — title, standfirst, body. No ids, no evidence, no plan.
+
+    Plus the country flags the page will carry. Those are reader-facing furniture, and this is
+    the first stage that can see both them and the finished prose, so it is the only stage that
+    can tell whether the piece earns them.
+    """
+    flags_block = (
+        "COUNTRY FLAGS THIS PAGE WILL SHOW: " + ", ".join(places)
+        + "\nJudge each one from the prose alone: does the piece make clear why this country is "
+          "part of the story? Reporting FROM a country, or an agency that happens to be based "
+          "there, is not the same as the story being ABOUT it."
+        if places else ""
+    )
     return "\n\n".join(x for x in (
         f"TITLE: {draft.title}", f"STANDFIRST: {draft.standfirst}", draft.body.strip(),
+        flags_block,
         "TASK: Read this as its intended general reader (cold, not following the story day to day). "
         "Report only where you genuinely stumbled.\n"
         "FRIEND TEST (required): After reading, could you explain to a friend — using only this "
@@ -64,13 +78,15 @@ def build_comprehension_reviewer_graph(context: AgentRunContext, *, model_spec: 
             return _finish(context, ComprehensionCheck(id="comprehension_none", verdict="clear",
                                                        summary="no prose to read"), skipped=True)
 
+        places = [str(p) for p in (state.get("places") or [])]
         raw = structured.invoke(
-            [SystemMessage(content=SYSTEM_PROMPT), HumanMessage(content=_message(draft))],
+            [SystemMessage(content=SYSTEM_PROMPT),
+             HumanMessage(content=_message(draft, places))],
             config=config,
         )
         check = raw if isinstance(raw, ComprehensionCheck) else ComprehensionCheck(
             id="", verdict="clear", summary="reviewer returned no structured check")
-        return _finish(context, _finalize(check, draft, model_spec.model))
+        return _finish(context, _finalize(check, draft, model_spec.model, places=places))
 
     graph = StateGraph(ComprehensionState)
     graph.add_node("review", review)
@@ -79,13 +95,29 @@ def build_comprehension_reviewer_graph(context: AgentRunContext, *, model_spec: 
     return graph.compile()
 
 
-def _finalize(check: ComprehensionCheck, draft: ArticleDraft, model: str) -> ComprehensionCheck:
+def _finalize(
+    check: ComprehensionCheck, draft: ArticleDraft, model: str,
+    *, places: list[str] | None = None,
+) -> ComprehensionCheck:
     findings = [f if f.id else f.model_copy(update={"id": f"cmp_{i:02d}"})
                 for i, f in enumerate(check.findings, 1)]
-    # A structured check with findings but a stale/clear verdict is coerced honest.
-    verdict = "needs_ramp" if findings else check.verdict
+
+    # Only flags we actually showed it can be dropped. A model naming a country that was
+    # never assigned is confused, and honouring that would let a review invent removals —
+    # the same reason the flags come from the declared contract and not a lexical scan.
+    offered = {p.strip().casefold() for p in (places or [])}
+    drops = [p for p in check.places_to_drop if p.strip().casefold() in offered]
+
+    # A dropped flag is a resolved problem, not an outstanding one: the fix is applied at
+    # publish, so it must not by itself force a repair lap on the prose.
+    open_findings = [f for f in findings
+                     if not (f.kind == "unjustified_flag"
+                             and f.where.strip().casefold() in
+                             {d.strip().casefold() for d in drops})]
+    verdict = "needs_ramp" if open_findings else check.verdict
     return check.model_copy(update={
         "id": f"comprehension_{draft.id}", "draft_id": draft.id, "findings": findings,
+        "places_to_drop": drops,
         "verdict": verdict, "reviewer": GENERATOR, "model": model,
         "generated_at": datetime.now(UTC).isoformat(),
     })

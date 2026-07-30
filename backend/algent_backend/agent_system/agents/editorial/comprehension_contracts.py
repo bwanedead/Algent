@@ -40,6 +40,22 @@ class ComprehensionFinding(BaseModel):
         # read nothing but this piece. See style.md machine signature 4 — this is the most common
         # defect and the hardest to see from inside the pipeline, which is why it is named here.
         "drafter_vantage",
+        # A country flag beside the headline that the piece never justifies. Flags are the
+        # reader's first orientation cue, so an unexplained one is a question the article
+        # raises and never answers: a shipped Swift piece flew a South Africa flag with no
+        # mention of the country anywhere in the prose. Two honest repairs exist and the
+        # reviewer picks — say why the country is in the story, or take the flag off.
+        "unjustified_flag",
+        # -- polish and production value ------------------------------------------------
+        # A piece assembled from a claim ledger reads like one: true sentences in the order
+        # the evidence arrived rather than the order an idea unfolds. These name the seams.
+        "buried_point",        # the thing that makes the story interesting arrives too late
+        "rough_seam",          # unheralded jump, register change, or source-ordered structure
+        "repetition",          # a point argued twice; one statement is the budget
+        "wire_echo",           # reads as a restatement of one outlet's framing and sequence
+        "causal_gap",          # the mechanism is left to be deduced instead of stated
+        "unearned_figure",     # a chart that answers no question, or is not legible at a glance
+        "garbled_detail",      # a mangled proper noun or a number that disagrees with itself
         "island_paragraph",    # a block with no relation to the through-line — a node with no edges
         "lost_thread",         # the point where the piece stopped being followable
         "unconnected_inference",  # conclusion dropped without the premise that makes it land
@@ -59,7 +75,14 @@ class ComprehensionFinding(BaseModel):
     # is wanted, the framing is wrong. It has to be said again from the reader's side, with the
     # same facts. Without this option the reviewer could only ask for a ramp onto a sentence
     # that should not have been phrased that way, which is why two repair laps changed nothing.
-    fix: Literal["add_handhold", "connect_to_thread", "cut", "rewrite_for_reader"] = "add_handhold"
+    #
+    # ``reorder`` is the fix for a buried point or a rough seam, and it is the cheapest repair
+    # in the system: the material is already in the piece and in the right words, just in the
+    # wrong place. Naming it separately matters because the alternative repairs all ADD text,
+    # and reaching for those when the real defect is sequence is how a piece gets padded.
+    fix: Literal[
+        "add_handhold", "connect_to_thread", "cut", "rewrite_for_reader", "reorder",
+    ] = "add_handhold"
     suggestion: str = ""       # the handhold/transition to add, what to cut, or the reader-side rewrite
 
 
@@ -71,6 +94,12 @@ class ComprehensionCheck(BaseModel):
     verdict: ComprehensionVerdict = "clear"
     summary: str = ""          # one line: did it land, and if not, the biggest break
     findings: list[ComprehensionFinding] = Field(default_factory=list)
+    #: Country flags this reviewer judges the piece does not earn, by display name.
+    #: The reviewer is the right place for this call: flags are assigned from the profile's
+    #: declared geography, which is decided before anyone has read the finished prose, so
+    #: nothing upstream can know whether the article actually accounts for a country. Dropping
+    #: a flag is the alternative to sending the piece back — see ``unjustified_flag``.
+    places_to_drop: list[str] = Field(default_factory=list)
     reviewer: str = ""
     model: str = ""
     generated_at: str = ""

@@ -22,6 +22,7 @@ from collections import Counter, defaultdict
 from datetime import UTC, datetime
 
 from .report import BeatHit, BeatSheet, DiscoveryPool, InsightsReport, PoolItem
+from .seen import SeenLedger, partition
 from .stories import url_slug_label
 
 # The GKG theme-pillar vocabulary (economy/…) vs the beat vocabulary (economics/…)
@@ -40,6 +41,8 @@ def build_pool(
     markets_limit: int | None = None,
     beats_limit: int | None = None,
     science_limit: int | None = None,
+    papers_limit: int | None = None,
+    ledger: SeenLedger | None = None,
 ) -> DiscoveryPool:
     """Consolidate the net + sweep + prediction markets + X into one grounded pool.
 
@@ -47,7 +50,12 @@ def build_pool(
     on so wire/market mass cannot drown platform-native leads. ``beats_limit`` caps
     the swept registry, which is the opposite problem: 40 beats × 25 records is an
     order of magnitude more than a pool should carry, so it is taken round-robin.
+
+    ``ledger`` is the cross-run novelty memory. Channels that harvest the top-N of a slow
+    source (science feeds, X search, the beat sheet) otherwise re-offer yesterday's items
+    every run — see ``seen.py``. Repeats are demoted to backfill, never dropped outright.
     """
+    ledger = ledger or SeenLedger()
     items: list[PoolItem] = []
     if insights is not None:
         gkg = list(insights.candidates)
@@ -55,7 +63,7 @@ def build_pool(
             gkg = gkg[: max(0, gkg_limit)]
         items.extend(_gkg_item(c) for c in gkg)
     if sheet is not None:
-        items.extend(_beat_items(sheet, beats_limit))
+        items.extend(_prefer_fresh(_beat_items(sheet, beats_limit), ledger))
     if markets:
         from ..topic_filters import is_sports_text
 
@@ -67,12 +75,24 @@ def build_pool(
             mk = mk[: max(0, markets_limit)]
         items.extend(_market_item(m) for m in mk)
     if x_hits:
-        items.extend(_x_item(h) for h in x_hits)
+        items.extend(_prefer_fresh(list(_x_item(h) for h in x_hits), ledger))
     if science:
         from ..topic_filters import is_non_news_topic
 
         sci = [_science_item(h) for h in science if not is_non_news_topic(str(h.get("title") or ""))]
-        items.extend(_diversify(sci, science_limit))
+        # PER CHANNEL, not pooled. The feed registry is lopsided by design — 18 science feeds,
+        # 9 AI, 11 world — so one shared cap would hand the menu to whichever group has the
+        # most outlets and squeeze the others back out. That is precisely how AI vanished
+        # before, and it would have happened again the moment world feeds were added.
+        by_group: dict[str, list[PoolItem]] = defaultdict(list)
+        for item in sci:
+            by_group[item.channel].append(item)
+        for group in sorted(by_group):
+            cap = papers_limit if group == "papers" else science_limit
+            # Novelty BEFORE the cap, not after. A slow weekly feed offers the same top
+            # entries every run, so taking the first N and then filtering leaves the cap
+            # already spent on yesterday's items — the ordering is the whole fix.
+            items.extend(_diversify(_prefer_fresh(by_group[group], ledger), cap))
 
     # Echoes are a cross-channel problem, not a sweep problem. Polymarket lists every
     # outcome of one question as its own market (five "Fed July decision" rows, four
@@ -98,13 +118,31 @@ def build_pool(
     )
 
 
+def _prefer_fresh(items: list[PoolItem], ledger: SeenLedger) -> list[PoolItem]:
+    """Put items we have never surfaced first, repeats after them.
+
+    Order only — nothing is removed here. Every downstream cap (per-channel limits, the
+    diversify pass, the pool ceiling) then spends itself on genuinely new material first
+    and falls through to repeats only when there is not enough new, which is what keeps a
+    quiet day from producing an empty menu.
+    """
+    fresh, repeats = partition(items, ledger)
+    for item in repeats:
+        item.signals["seen_before"] = True   # honest in the menu, and usable as a rank signal
+    return [*fresh, *repeats]
+
+
 def _science_item(hit: dict) -> PoolItem:
-    """A science-feed item — the curiosity channel, and the only one off GDELT."""
+    """A curated-feed item — the channels that run off GDELT entirely.
+
+    ``group`` is the menu channel (science / ai / world). It defaults to ``science`` so a
+    caller passing older three-field feed rows keeps working.
+    """
     url = str(hit.get("url") or "")
     return PoolItem(
         id=f"sci:{hit.get('feed', 'feed')}:{url[-48:]}",
         label=str(hit.get("title") or ""),
-        channel="science",
+        channel=str(hit.get("group") or "science"),
         kind="article",
         pillars=[str(hit["pillar"])] if hit.get("pillar") else [],
         signals={
@@ -165,6 +203,8 @@ def _x_item(hit: dict) -> PoolItem:
         kind = "post"  # multi-angle independent / OSINT voices
     elif src in ("x_aggregator",):
         kind = "post"  # general wire posts — still rake/synthesis triage
+    elif src in ("x_list",):
+        kind = "post"  # curated-list posts; the list owner vetted the ROSTER, not the post
     elif src in ("x_grok", "grok") or pre:
         kind = "trending"
     else:
@@ -181,6 +221,18 @@ def _x_item(hit: dict) -> PoolItem:
             "likes": hit.get("likes"),
             "reposts": hit.get("reposts"),
             "tweet_count": hit.get("tweet_count"),
+            # The post's own timestamp. The API returns it and the fetch layer keeps it, but it
+            # used to stop here — so nothing downstream could tell a 40-minute-old post from a
+            # week-old one, and the staleness in this channel was undetectable by construction.
+            "created_at": str(hit.get("created_at") or ""),
+            # PROVENANCE. t0 collects everything and filters nothing, so the stage that has to
+            # weigh a post needs to know what kind of thing it is: which curated list vouched
+            # for the account, and whether this person wrote it or amplified somebody else.
+            # A retweet is weaker evidence than first-hand reporting, but it is real signal
+            # about what a trusted roster is attending to — so it is labelled, not discarded.
+            "list_label": str(hit.get("list_label") or ""),
+            "is_retweet": bool(hit.get("is_retweet")),
+            "retweet_of": str(hit.get("retweet_of") or ""),
             "pre_vetted": bool(pre),
         },
         evidence=[BeatHit(title=topic[:140], url=u) for u in urls],
