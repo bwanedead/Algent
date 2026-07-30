@@ -315,3 +315,11 @@ caveats: verified (0 findings)
 analytics: 2 produced, 0 escapes
 cost: ~$0.0000
 run: 0039__aa51436d-f63f-4625-bfe0-831006cf3488
+
+### PUBLISH satyress-s-centaur-robot-threehalves-has-detailed-rescue-des-c18d4a — 2026-07-30
+status: publishable  ·  draft: grounded_with_caveats  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 0 produced, 0 escapes
+cost: ~$0.0000
+⚠ walled sources (carried with caveats): src_37bb6d293d, src_b35158bd85
+run: 0040__b05b63c0-86f8-49ba-bfe4-8ad1950b518f
