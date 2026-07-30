@@ -323,3 +323,10 @@ analytics: 0 produced, 0 escapes
 cost: ~$0.0000
 ⚠ walled sources (carried with caveats): src_37bb6d293d, src_b35158bd85
 run: 0040__b05b63c0-86f8-49ba-bfe4-8ad1950b518f
+
+### PUBLISH nature-podcast-cites-a-lead-for-ancient-amazon-earthworks-bu-f98533 — 2026-07-30
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 0 produced, 0 escapes
+cost: ~$0.0000
+run: 0041__6b3b9ece-03fb-49bf-93d6-f9da76b29483
