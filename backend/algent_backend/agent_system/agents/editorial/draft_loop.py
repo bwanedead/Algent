@@ -88,14 +88,13 @@ def build_draft_graph(
         context.emit(ev.INPUT_PREVIEW, _input_preview(treatment, profile, prior))
 
         with policy.scoped(search_channels, paid_budget), \
-                cost.scoped(cost_cap_usd, model_spec.model), snapshots.scoped(), \
-                cost.essential_scope():
+                cost.scoped(cost_cap_usd, model_spec.model), snapshots.scoped():
             produced = stream_react_loop(
                 agent,
                 {"messages": [HumanMessage(content=build_draft_message(
                     treatment, profile, prior=prior, report=report, caveat=state.get("caveat_check"),
                     comprehension=state.get("comprehension_check")))]},
-                context=context, config=config,
+                context=context, config=config, essential=True,
             )
             captured = snapshots.collected()
             estimated_usd = cost.spent_usd()   # capture inside the scope (it resets on exit)

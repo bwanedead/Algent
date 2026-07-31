@@ -72,7 +72,10 @@ def _turn_ceiling() -> float:
     )
 
 
-def stream_react_loop(agent: Any, inputs: dict[str, Any], *, context: Any, config: Any) -> Any:
+def stream_react_loop(
+    agent: Any, inputs: dict[str, Any], *, context: Any, config: Any,
+    essential: bool = False,
+) -> Any:
     """Run the compiled ReAct agent by streaming it, emitting a per-turn event for
     each model step and tool result so the run is watchable turn-by-turn.
 
@@ -82,13 +85,19 @@ def stream_react_loop(agent: Any, inputs: dict[str, Any], *, context: Any, confi
 
     Each model turn is preauthorized via ``try_reserve`` against the article hard cap;
     usage settles the reservation. Hard-stop / failed reserve ends the loop.
+
+    ``essential=True`` marks *model turns* as finish-path (draft under slim_finish).
+    Nested tool calls do not inherit that flag — they reserve with essential=False.
     """
     if cost.is_hard_stop():
         context.emit(COST_LIMIT_REACHED, {"estimated_usd": cost.spent_usd(), "mode": cost.mode()})
         return None
 
+    def _reserve_turn():
+        return cost.try_reserve(_turn_ceiling(), op="model_turn", essential=essential)
+
     structured: Any = None
-    pending = cost.try_reserve(_turn_ceiling(), op="model_turn")
+    pending = _reserve_turn()
     if pending is None and cost.is_active():
         context.emit(COST_LIMIT_REACHED, {"estimated_usd": cost.spent_usd(), "mode": cost.mode()})
         return None
@@ -110,7 +119,7 @@ def stream_react_loop(agent: Any, inputs: dict[str, Any], *, context: Any, confi
                     _emit_message_event(context, msg)
                     tool_calls = getattr(msg, "tool_calls", None) or []
                     if tool_calls:
-                        pending = cost.try_reserve(_turn_ceiling(), op="model_turn")
+                        pending = _reserve_turn()
                         if pending is None:
                             context.emit(
                                 COST_LIMIT_REACHED,

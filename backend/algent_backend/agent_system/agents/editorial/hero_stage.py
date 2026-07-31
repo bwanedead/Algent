@@ -90,18 +90,17 @@ def make_hero(
         from .image_gen import estimated_usd as hero_est, generate_hero_image
 
         est = hero_est()
-        with cost.essential_scope():
-            res = cost.try_reserve(est, op="hero_image", essential=True)
-            if res is None and cost.is_active():
-                note(f"hero: skipped ({cost.mode()} — budget)")
-                return None
-            fn = generate or generate_hero_image
-            try:
-                image = fn(subject, hook=hook)
-            except Exception:
-                cost.release(res)
-                raise
-            cost.settle(res, float(getattr(image, "estimated_usd", est) or est))
+        res = cost.try_reserve(est, op="hero_image", essential=True)
+        if res is None and cost.is_active():
+            note(f"hero: skipped ({cost.mode()} — budget)")
+            return None
+        fn = generate or generate_hero_image
+        try:
+            image = fn(subject, hook=hook)
+        except Exception:
+            cost.release(res)
+            raise
+        cost.settle(res, float(getattr(image, "estimated_usd", est) or est))
     except UnsafeImageSubject as exc:
         note(f"hero: refused ({str(exc)[:100]}) — skipped")
         return None

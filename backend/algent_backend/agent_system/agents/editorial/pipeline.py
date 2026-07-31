@@ -261,15 +261,14 @@ def _headline_and_hero(
     hero: dict[str, Any] | None = None
     if not draft:
         return draft, hero
-    with cost.essential_scope():
-        hl = build_headline_writer(context).invoke({"draft": draft}, config).get("headline") or {}
-        if hl.get("title"):
-            draft = {
-                **draft,
-                "title": hl["title"],
-                "standfirst": hl.get("standfirst") or draft.get("standfirst", ""),
-            }
-        hero = make_hero(hl, context.artifacts, say=lambda m: context.emit(HERO_IMAGE, {"note": m}))
+    hl = build_headline_writer(context).invoke({"draft": draft}, config).get("headline") or {}
+    if hl.get("title"):
+        draft = {
+            **draft,
+            "title": hl["title"],
+            "standfirst": hl.get("standfirst") or draft.get("standfirst", ""),
+        }
+    hero = make_hero(hl, context.artifacts, say=lambda m: context.emit(HERO_IMAGE, {"note": m}))
     return draft, hero
 
 
