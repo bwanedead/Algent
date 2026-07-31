@@ -11,6 +11,7 @@ from langchain_core.runnables import RunnableConfig
 from langgraph.graph import END, START, StateGraph
 
 from algent_backend.agent_system.foundation.models import ModelSpec
+from algent_backend.agent_system.foundation.models.budget_gate import gate_chat_model
 from algent_backend.agent_system.runs.context import AgentRunContext
 
 from .draft import ArticleDraft
@@ -27,7 +28,11 @@ class HeadlineState(TypedDict, total=False):
 
 
 def build_headline_writer_graph(context: AgentRunContext, *, model_spec: ModelSpec) -> Any:
-    model = context.model_resolver.resolve(model_spec).client
+    # Finish-path one-shot: mark the gated client essential so slim_finish still admits it
+    # without wrapping tools in cost.essential_scope.
+    model = gate_chat_model(
+        context.model_resolver.resolve(model_spec).client, essential=True,
+    )
     structured = model.with_structured_output(Headline)
 
     def write(state: HeadlineState, config: RunnableConfig) -> dict[str, Any]:

@@ -20,6 +20,10 @@ from algent_backend.agent_system.foundation.models import (
 def test_resolves_anthropic_spec_to_langchain_chat_model() -> None:
     from langchain_anthropic import ChatAnthropic
 
+    from algent_backend.agent_system.foundation.models.budget_gate import (
+        BudgetGatedChatModel,
+    )
+
     spec = ModelSpec(provider="anthropic", model="claude-sonnet-4-5", temperature=0.2)
     resolved = ModelResolver().resolve(spec)
 
@@ -28,9 +32,11 @@ def test_resolves_anthropic_spec_to_langchain_chat_model() -> None:
     assert resolved.target == "langchain"
     assert resolved.model == "claude-sonnet-4-5"
 
-    assert isinstance(resolved.client, ChatAnthropic)
-    assert resolved.client.model == "claude-sonnet-4-5"
-    assert resolved.client.temperature == 0.2
+    assert isinstance(resolved.client, BudgetGatedChatModel)
+    assert isinstance(resolved.client.inner, ChatAnthropic)
+    assert resolved.client.inner.model == "claude-sonnet-4-5"
+    assert resolved.client.inner.temperature == 0.2
+    assert resolved.client.model_id == "claude-sonnet-4-5"
 
 
 def test_default_target_is_langchain(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -51,26 +57,37 @@ def test_optional_knobs_are_omitted_when_unset(monkeypatch: pytest.MonkeyPatch) 
     """Unset knobs should not be forced onto the client (provider defaults win)."""
     from langchain_openai import ChatOpenAI
 
+    from algent_backend.agent_system.foundation.models.budget_gate import (
+        BudgetGatedChatModel,
+    )
+
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")
     spec = ModelSpec(provider="openai", model="gpt-4o-mini")
     resolved = ModelResolver().resolve(spec)
 
-    assert isinstance(resolved.client, ChatOpenAI)
-    assert resolved.client.max_tokens is None
+    assert isinstance(resolved.client, BudgetGatedChatModel)
+    assert isinstance(resolved.client.inner, ChatOpenAI)
+    assert resolved.client.inner.max_tokens is None
 
 
 def test_openai_reasoning_effort_is_passed_through(monkeypatch: pytest.MonkeyPatch) -> None:
     from langchain_openai import ChatOpenAI
+
+    from algent_backend.agent_system.foundation.models.budget_gate import (
+        BudgetGatedChatModel,
+    )
 
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")
     spec = ModelSpec(
         provider="openai", model="gpt-5.6-luna", temperature=0.2, reasoning_effort="low",
     )
     resolved = ModelResolver().resolve(spec)
-    assert isinstance(resolved.client, ChatOpenAI)
-    model_id = getattr(resolved.client, "model_name", None) or getattr(resolved.client, "model", None)
+    assert isinstance(resolved.client, BudgetGatedChatModel)
+    inner = resolved.client.inner
+    assert isinstance(inner, ChatOpenAI)
+    model_id = getattr(inner, "model_name", None) or getattr(inner, "model", None)
     assert model_id == "gpt-5.6-luna"
-    assert resolved.client.reasoning_effort == "low"
+    assert inner.reasoning_effort == "low"
 
 
 def test_openai_spec_defaults_to_luna(monkeypatch: pytest.MonkeyPatch) -> None:

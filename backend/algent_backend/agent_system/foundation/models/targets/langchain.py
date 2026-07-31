@@ -46,6 +46,17 @@ class LangChainTarget(ModelTarget):
     def resolve(self, spec: ModelSpec) -> ResolvedModel:
         chat_cls = self._chat_class(spec.provider)
         client = chat_cls(**self._build_kwargs(spec))
+        from algent_backend.agent_system.foundation.models.budget_gate import (
+            gate_chat_model,
+        )
+
+        # Every resolved LangChain client is budget-gated so structured one-shots
+        # (review/headline/caveat) and ReAct turns share one authorization seam.
+        client = gate_chat_model(
+            client,
+            model_id=spec.model,
+            max_output_tokens=spec.max_tokens,
+        )
         return ResolvedModel(
             provider=spec.provider,
             target=self.name,

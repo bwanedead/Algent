@@ -72,7 +72,10 @@ def build_draft_graph(
     """Compile the drafting graph for an agent's model, tools, and gate."""
     model = context.model_resolver.resolve(model_spec).client
     tools = [context.tools[tool_id] for tool_id in tool_ids]
-    agent = build_react_loop(model, tools, system_prompt=system_prompt, response_format=DraftPayload)
+    agent = build_react_loop(
+        model, tools, system_prompt=system_prompt, response_format=DraftPayload,
+        essential=True,
+    )
 
     def draft(state: DraftState, config: RunnableConfig) -> dict[str, Any]:
         tdict, pdict = state.get("treatment"), state.get("profile")
