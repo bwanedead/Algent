@@ -330,3 +330,14 @@ caveats: verified (0 findings)
 analytics: 0 produced, 0 escapes
 cost: ~$0.0000
 run: 0041__6b3b9ece-03fb-49bf-93d6-f9da76b29483
+
+### PUBLISH ai-is-speeding-the-search-for-linear-a-s-meaning-not-deciphe-5dcc3d — 2026-07-31
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 0 produced, 0 escapes
+cost: ~$1.0958  ·  mode: slim_finish  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.0742, gauntlet=$0.3971, profile=$0.6242, routing=$0.0003
+soft_cap_crossed: yes @ gauntlet
+skipped: search_fallback(slim_finish), search_fallback(slim_finish), gauntlet_rereview(slim_finish), treatment_review(slim_finish), caveat_check(slim_finish), comprehension_repair(slim_finish), analytics(slim_finish)
+refused: model_turn(slim_finish)
+run: 0051__d17c0760-5e65-42a6-af89-29017aeb67c0
