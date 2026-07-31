@@ -21,7 +21,11 @@ import os
 from dataclasses import asdict, dataclass
 from typing import Any
 
+from algent_backend.agent_system.foundation import cost
+
 from .hero_image import IMAGE_LABEL, UnsafeImageSubject, check_hook, check_subject
+from .image_gen import estimated_usd as hero_est
+from .image_gen import generate_hero_image
 
 _ENV_ON = "ALGENT_HERO_IMAGE"
 HERO_STEM = "hero"
@@ -86,9 +90,6 @@ def make_hero(
         hook = ""
 
     try:
-        from algent_backend.agent_system.foundation import cost
-        from .image_gen import estimated_usd as hero_est, generate_hero_image
-
         est = hero_est()
         res = cost.try_reserve(est, op="hero_image", essential=True)
         if res is None and cost.is_active():

@@ -593,6 +593,46 @@ def test_reserve_settle_releases_hold() -> None:
         assert not cost.would_exceed(0.8)
 
 
+def test_settle_over_reservation_hard_stops() -> None:
+    """Actual usage above the reserved ceiling is a budget defect → hard_stop."""
+    with cost.article_scoped(3.0, soft_usd=1.0):
+        res = cost.try_reserve(0.10, op="model_turn")
+        assert res is not None
+        cost.settle(res, 0.50)  # overrun
+        assert cost.mode() == "hard_stop"
+        assert cost.article_spent_usd() == 0.50  # actual charged honestly
+        assert any(
+            r.get("reason") == "reservation_overrun"
+            for r in cost.snapshot()["refused_operations"]
+        )
+        assert cost.try_reserve(0.01, op="keyword") is None
+
+
+def test_turn_ceiling_scales_with_input_over_8k_tokens() -> None:
+    """Large prompts must reserve more than the old fixed 8k-input ceiling."""
+    from types import SimpleNamespace
+
+    from algent_backend.agent_system.agents import loop as agent_loop
+
+    small = [SimpleNamespace(content="hi", tool_calls=None, type="human")]
+    # 3 chars/token → 27_000 chars ≈ 9_000 tokens (+ framing).
+    huge = [SimpleNamespace(content="x" * 27_000, tool_calls=None, type="human")]
+    small_tok = agent_loop.estimate_messages_tokens(small)
+    huge_tok = agent_loop.estimate_messages_tokens(huge)
+    assert huge_tok > 8_000
+    assert small_tok < 8_000
+
+    with cost.scoped(10.0, "gpt-5.4-mini"):
+        small_usd = agent_loop.turn_ceiling_usd(small, model="gpt-5.4-mini")
+        huge_usd = agent_loop.turn_ceiling_usd(huge, model="gpt-5.4-mini")
+    assert huge_usd > small_usd
+    # Explicit: huge exceeds what a fixed 8k-input ceiling would have reserved.
+    fixed_8k = cost.estimate_model_call_ceiling(
+        "gpt-5.4-mini", 8_000, cost.DEFAULT_MAX_OUTPUT_TOKENS,
+    )
+    assert huge_usd > fixed_8k
+
+
 def test_fallback_provider_contacts_are_metered(monkeypatch) -> None:
     research.circuit.reset()
 

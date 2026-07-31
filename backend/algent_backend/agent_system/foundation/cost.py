@@ -448,7 +448,11 @@ def try_reserve(
 
 
 def settle(reservation: Reservation | None, actual: float) -> None:
-    """Apply actual usage against a reservation (or charge without one via add)."""
+    """Apply actual usage against a reservation (or charge without one via add).
+
+    If actual exceeds the reserved estimate, charge the real spend then enter hard_stop —
+    a reservation overrun is a budget defect (the call was admitted under a too-low ceiling).
+    """
     if reservation is None:
         add(actual)
         return
@@ -458,9 +462,13 @@ def settle(reservation: Reservation | None, actual: float) -> None:
         add(act)
         return
     held = led._open.pop(reservation.id, None)
+    estimate = held.estimate if held is not None else 0.0
     if held is not None:
         led.reserved_usd = round(max(0.0, led.reserved_usd - held.estimate), 6)
     _charge(led, act, op=reservation.op)
+    if act > estimate + 1e-9:
+        _record_refuse(led, reservation.op, "reservation_overrun")
+        _enter_hard_stop(led)
 
 
 def release(reservation: Reservation | None) -> None:
@@ -582,7 +590,10 @@ def article_scoped(
     soft_usd: float | None = None,
     cap_usd: float | None = None,
 ) -> Iterator[None]:
-    """Open the full-rail article budget (soft + hard). Positional / ``cap_usd`` set the hard ceiling."""
+    """Open the full-rail article budget (soft + hard).
+
+    Positional / ``cap_usd`` set the hard ceiling.
+    """
     hard = max(
         0.0,
         float(

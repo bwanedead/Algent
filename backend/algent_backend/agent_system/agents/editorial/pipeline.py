@@ -138,9 +138,8 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
             return {"pipeline": EditorialPipelineReport().model_dump()}
 
         plan_out = build_planning_gauntlet_graph(context).invoke({"profile": profile}, config)
-        treatment = plan_out.get("treatment") or {}
+        treatment = _ensure_treatment(plan_out.get("treatment") or {}, profile)
         plan_report = plan_out.get("gauntlet") or {}
-        treatment = _ensure_treatment(treatment, profile)
 
         draft_out = build_drafting_gauntlet_graph(context).invoke(
             {"treatment": treatment, "profile": profile}, config)
@@ -148,91 +147,22 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
         enriched_profile = draft_out.get("profile") or profile
         draft_report = draft_out.get("gauntlet") or {}
 
-        # Hard stop with no draft: persist best artifacts and exit without spending more.
-        if cost.is_hard_stop() and not draft.get("id"):
-            report = EditorialPipelineReport(
-                profile_id=str(profile.get("id", "")),
-                status="hard_cost_cap",
-                generated_at=datetime.now(UTC).isoformat(),
-            )
-            if context.artifacts is not None:
-                context.artifacts.write_json("editorial_pipeline_report.json", report.model_dump())
-            context.emit(PIPELINE_COMPLETED, report.model_dump())
-            return {"treatment": treatment, "draft": draft, "pipeline": report.model_dump()}
+        early = _hard_stop_without_draft(context, profile, treatment, draft)
+        if early is not None:
+            return early
 
         draft, hero = _headline_and_hero(context, config, draft)
+        draft, enriched_profile, quality = _post_draft_quality(
+            context, config, draft=draft, treatment=treatment, profile=enriched_profile)
 
-        caveat = build_caveat_reviewer(context).invoke(
-            {"draft": draft, "profile": enriched_profile}, config).get("caveat_check") or {}
-        caveat_verdict = str(caveat.get("verdict", "verified"))
-        caveat_rounds = 1
-        if caveat_verdict == "needs_hedging" and draft:
-            if budget_policy.allow_optional("draft_repair"):
-                draft, enriched_profile, caveat, caveat_rounds = _repair_hedging(
-                    context, config, draft=draft, treatment=treatment,
-                    profile=enriched_profile, caveat=caveat)
-                caveat_verdict = str(caveat.get("verdict", "verified"))
-            else:
-                caveat_rounds = 1
-
-        assigned_places = _derive_places(enriched_profile)
-        if budget_policy.allow_optional("comprehension_repair"):
-            draft, enriched_profile, comprehension, comprehension_rounds = _comprehension_pass(
-                context, config, draft=draft, treatment=treatment, profile=enriched_profile,
-                places=assigned_places)
-        else:
-            comprehension, comprehension_rounds = {}, 0
-
-        if budget_policy.allow_optional("analytics"):
-            analytics = build_analytics_router(context).invoke(
-                {"profile": enriched_profile}, config).get("analytics_plan") or {}
-            produced_analytics = _run_analytics_worker(
-                context, config, analytics, enriched_profile)
-        else:
-            analytics, produced_analytics = {}, []
-
-        outcome = str(draft_report.get("outcome", ""))
-        words = _body_words(draft)
-        if draft:
-            draft = {**draft, "word_count": words}
-        status = _pipeline_status(outcome, caveat_verdict, words, enriched_profile)
-        if cost.is_hard_stop() and draft.get("id"):
-            status = "cost_capped"
-
-        report = EditorialPipelineReport(
-            profile_id=str(profile.get("id", "")),
-            treatment_id=str(treatment.get("id", "")),
-            treatment_verdict=str(plan_report.get("final_verdict", "")),
-            draft_id=str(draft.get("id", "")),
-            draft_outcome=outcome,
-            publishable=status == "publishable",
-            status=status,
-            caveat_verdict=caveat_verdict,
-            caveat_findings=len(caveat.get("findings", [])),
-            caveat_rounds=caveat_rounds,
-            comprehension_verdict=str(comprehension.get("verdict", "")),
-            comprehension_findings=len(comprehension.get("findings", [])),
-            comprehension_rounds=comprehension_rounds,
-            places_to_drop=[str(p) for p in (comprehension.get("places_to_drop") or [])],
-            hero=hero,
-            article_title=str(draft.get("title", "")),
-            word_count=words,
-            barriers=draft_report.get("barriers", []),
-            unverified_figures=draft_report.get("unverified_figures", []),
-            analytics_warranted=bool(analytics.get("warranted")),
-            analytics_count=len(analytics.get("requests", [])),
-            analytics_produced=sum(1 for a in produced_analytics if a.get("status") == "produced"),
-            analytics_escapes=sum(1 for a in produced_analytics if a.get("escaped_writes")),
-            generated_at=datetime.now(UTC).isoformat(),
+        report = _build_pipeline_report(
+            profile=profile, treatment=treatment, plan_report=plan_report,
+            draft=draft, draft_report=draft_report, hero=hero, **quality,
         )
-        if context.artifacts is not None and draft:
-            draft_obj = ArticleDraft.model_validate(draft)
-            context.artifacts.write_text(
-                "article_published.md",
-                render_published_article(
-                    draft_obj, SignalProfile.model_validate(enriched_profile), produced_analytics))
-            context.artifacts.write_text("article.md", render_draft(draft_obj))
-            context.artifacts.write_json("editorial_pipeline_report.json", report.model_dump())
+        _persist_pipeline_artifacts(
+            context, draft=draft, profile=enriched_profile,
+            analytics=quality["produced_analytics"], report=report,
+        )
         context.emit(ev.OUTPUT_PREVIEW, _preview(report))
         context.emit(PIPELINE_COMPLETED, report.model_dump())
         return {"treatment": treatment, "draft": draft, "pipeline": report.model_dump()}
@@ -242,6 +172,135 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
     graph.add_edge(START, "pipeline")
     graph.add_edge("pipeline", END)
     return graph.compile()
+
+
+def _hard_stop_without_draft(
+    context: AgentRunContext,
+    profile: dict[str, Any],
+    treatment: dict[str, Any],
+    draft: dict[str, Any],
+) -> dict[str, Any] | None:
+    if not (cost.is_hard_stop() and not draft.get("id")):
+        return None
+    report = EditorialPipelineReport(
+        profile_id=str(profile.get("id", "")),
+        status="hard_cost_cap",
+        generated_at=datetime.now(UTC).isoformat(),
+    )
+    if context.artifacts is not None:
+        context.artifacts.write_json("editorial_pipeline_report.json", report.model_dump())
+    context.emit(PIPELINE_COMPLETED, report.model_dump())
+    return {"treatment": treatment, "draft": draft, "pipeline": report.model_dump()}
+
+
+def _post_draft_quality(
+    context: AgentRunContext, config: RunnableConfig, *,
+    draft: dict[str, Any], treatment: dict[str, Any], profile: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    """Caveat / comprehension / analytics after the first draft — slim-aware."""
+    caveat = build_caveat_reviewer(context).invoke(
+        {"draft": draft, "profile": profile}, config).get("caveat_check") or {}
+    caveat_verdict = str(caveat.get("verdict", "verified"))
+    caveat_rounds = 1
+    if caveat_verdict == "needs_hedging" and draft:
+        if budget_policy.allow_optional("draft_repair"):
+            draft, profile, caveat, caveat_rounds = _repair_hedging(
+                context, config, draft=draft, treatment=treatment,
+                profile=profile, caveat=caveat)
+            caveat_verdict = str(caveat.get("verdict", "verified"))
+
+    assigned_places = _derive_places(profile)
+    if budget_policy.allow_optional("comprehension_repair"):
+        draft, profile, comprehension, comprehension_rounds = _comprehension_pass(
+            context, config, draft=draft, treatment=treatment, profile=profile,
+            places=assigned_places)
+    else:
+        comprehension, comprehension_rounds = {}, 0
+
+    if budget_policy.allow_optional("analytics"):
+        analytics = build_analytics_router(context).invoke(
+            {"profile": profile}, config).get("analytics_plan") or {}
+        produced_analytics = _run_analytics_worker(
+            context, config, analytics, profile)
+    else:
+        analytics, produced_analytics = {}, []
+
+    return draft, profile, {
+        "caveat_verdict": caveat_verdict,
+        "caveat_rounds": caveat_rounds,
+        "caveat_findings": len(caveat.get("findings", [])),
+        "comprehension": comprehension,
+        "comprehension_rounds": comprehension_rounds,
+        "analytics": analytics,
+        "produced_analytics": produced_analytics,
+    }
+
+
+def _build_pipeline_report(
+    *,
+    profile: dict[str, Any],
+    treatment: dict[str, Any],
+    plan_report: dict[str, Any],
+    draft: dict[str, Any],
+    draft_report: dict[str, Any],
+    hero: dict[str, Any] | None,
+    caveat_verdict: str,
+    caveat_rounds: int,
+    caveat_findings: int,
+    comprehension: dict[str, Any],
+    comprehension_rounds: int,
+    analytics: dict[str, Any],
+    produced_analytics: list[dict[str, Any]],
+) -> EditorialPipelineReport:
+    outcome = str(draft_report.get("outcome", ""))
+    words = _body_words(draft)
+    if draft:
+        draft["word_count"] = words
+    status = _pipeline_status(outcome, caveat_verdict, words, profile)
+    if cost.is_hard_stop() and draft.get("id"):
+        status = "cost_capped"
+    return EditorialPipelineReport(
+        profile_id=str(profile.get("id", "")),
+        treatment_id=str(treatment.get("id", "")),
+        treatment_verdict=str(plan_report.get("final_verdict", "")),
+        draft_id=str(draft.get("id", "")),
+        draft_outcome=outcome,
+        publishable=status == "publishable",
+        status=status,
+        caveat_verdict=caveat_verdict,
+        caveat_findings=caveat_findings,
+        caveat_rounds=caveat_rounds,
+        comprehension_verdict=str(comprehension.get("verdict", "")),
+        comprehension_findings=len(comprehension.get("findings", [])),
+        comprehension_rounds=comprehension_rounds,
+        places_to_drop=[str(p) for p in (comprehension.get("places_to_drop") or [])],
+        hero=hero,
+        article_title=str(draft.get("title", "")),
+        word_count=words,
+        barriers=draft_report.get("barriers", []),
+        unverified_figures=draft_report.get("unverified_figures", []),
+        analytics_warranted=bool(analytics.get("warranted")),
+        analytics_count=len(analytics.get("requests", [])),
+        analytics_produced=sum(1 for a in produced_analytics if a.get("status") == "produced"),
+        analytics_escapes=sum(1 for a in produced_analytics if a.get("escaped_writes")),
+        generated_at=datetime.now(UTC).isoformat(),
+    )
+
+
+def _persist_pipeline_artifacts(
+    context: AgentRunContext, *,
+    draft: dict[str, Any], profile: dict[str, Any],
+    analytics: list[dict[str, Any]], report: EditorialPipelineReport,
+) -> None:
+    if context.artifacts is None or not draft:
+        return
+    draft_obj = ArticleDraft.model_validate(draft)
+    context.artifacts.write_text(
+        "article_published.md",
+        render_published_article(
+            draft_obj, SignalProfile.model_validate(profile), analytics))
+    context.artifacts.write_text("article.md", render_draft(draft_obj))
+    context.artifacts.write_json("editorial_pipeline_report.json", report.model_dump())
 
 
 def _ensure_treatment(treatment: dict[str, Any], profile: dict[str, Any]) -> dict[str, Any]:
@@ -300,7 +359,8 @@ def _pipeline_status(
 
 def _repair_hedging(
     context: AgentRunContext, config: RunnableConfig, *,
-    draft: dict[str, Any], treatment: dict[str, Any], profile: dict[str, Any], caveat: dict[str, Any],
+    draft: dict[str, Any], treatment: dict[str, Any],
+    profile: dict[str, Any], caveat: dict[str, Any],
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], int]:
     """One bounded lap that repairs an overclaim instead of parking the piece.
 
@@ -311,10 +371,18 @@ def _repair_hedging(
     human. Bounded at one lap: if the repair doesn't take, we stay honest rather than loop.
     """
     repaired = build_drafter(context).invoke(
-        {"treatment": treatment, "profile": profile, "prior_draft": draft, "caveat_check": caveat}, config)
+        {
+            "treatment": treatment,
+            "profile": profile,
+            "prior_draft": draft,
+            "caveat_check": caveat,
+        },
+        config,
+    )
     new_draft = repaired.get("draft") or {}
     if not new_draft:
-        return draft, profile, caveat, 2          # the repair produced nothing; keep the honest verdict
+        # Repair produced nothing; keep the honest verdict.
+        return draft, profile, caveat, 2
 
     profile = repaired.get("profile") or profile
     hl = build_headline_writer(context).invoke({"draft": new_draft}, config).get("headline") or {}
@@ -391,7 +459,8 @@ def _comprehension_pass(
 
 def _repair_once(
     context: AgentRunContext, config: RunnableConfig, *,
-    draft: dict[str, Any], treatment: dict[str, Any], profile: dict[str, Any], review: dict[str, Any],
+    draft: dict[str, Any], treatment: dict[str, Any],
+    profile: dict[str, Any], review: dict[str, Any],
 ) -> tuple[dict[str, Any], dict[str, Any], bool]:
     """Send the review's findings back to the drafter once. Returns whether anything changed.
 
