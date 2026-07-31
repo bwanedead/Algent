@@ -341,3 +341,15 @@ soft_cap_crossed: yes @ gauntlet
 skipped: search_fallback(slim_finish), search_fallback(slim_finish), gauntlet_rereview(slim_finish), treatment_review(slim_finish), caveat_check(slim_finish), comprehension_repair(slim_finish), analytics(slim_finish)
 refused: model_turn(slim_finish)
 run: 0051__d17c0760-5e65-42a6-af89-29017aeb67c0
+
+### PUBLISH ceuta-s-mass-crossings-overwhelmed-spain-s-border-system-but-5dcc3d — 2026-07-31
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 0 produced, 0 escapes
+cost: ~$1.0810  ·  mode: slim_finish  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.0649, gauntlet=$0.7715, profile=$0.2445, routing=$0.0002
+soft_cap_crossed: yes @ gauntlet
+skipped: search_fallback(slim_finish), search_fallback(slim_finish), search_fallback(slim_finish), gauntlet_rereview(slim_finish), treatment_review(slim_finish), caveat_check(slim_finish), comprehension_repair(slim_finish), analytics(slim_finish)
+refused: model_turn(slim_finish)
+disposition: needs_verification
+run: 0052__871a9a39-653a-4d64-a41d-07f610411ecb
