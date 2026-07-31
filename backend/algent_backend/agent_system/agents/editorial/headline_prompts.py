@@ -38,10 +38,12 @@ is *about*; a later stage would only have the headline to go on, and that is exa
   representative illustration, which is exactly what a hero is for, and it is labelled as
   AI-generated wherever it appears. Reaching for the setting is right; only the *specific*
   claim is off limits.
-- Leave it EMPTY only when any picture would actively mislead — a story about a false claim,
-  a hoax, a disputed identity, an accusation against a named person, or one where a plausible
-  image would itself become the misinformation. "This is abstract" is not that; "a picture
-  here would assert something we did not verify" is.
+- **Always emit a subject.** House policy is that every piece gets a thumbnail-style hero that
+  sets the stage. Prefer the real physical setting of the topic. When a picture of the claim
+  itself would become the misinformation (a hoax, a disputed identity, an accusation against
+  a named person), still emit a **neutral stage-setting** that does not depict the disputed
+  claim — a quiet landscape, a generic newsroom desk, an empty chamber — never leave the
+  field empty and never name the contested person or event.
 
 AND EMIT `image_hook` — the few words that sit ON that image, thumbnail-style.
 
@@ -58,7 +60,8 @@ who asked what the piece is about.
 - No colons, no subordinate clauses, no "study finds", no our-verification framing.
 - Honest at a glance: it may sharpen, it may not overstate. If the finding is qualified and
   the qualification is the story, the hook says less rather than saying it wrongly.
-- Leave EMPTY when there is no honest short version, or when `image_subject` is empty.
+- Prefer a short hook whenever the subject is set. Leave EMPTY only when there is no honest
+  short version that does not overstate.
 
 Emit a Headline {title, standfirst, image_subject, image_hook}. Read the whole piece first;
 the headline must be true to the FINAL prose, not a working title.

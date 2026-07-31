@@ -106,10 +106,19 @@ from algent_backend.agent_system.tools.sourcing.depth import fetch_content as fc
 def test_quality_grades_content() -> None:
     assert fc._quality(None) == ("empty", 0)
     assert fc._quality("  ") == ("empty", 0)
-    good = " ".join(["word"] * 100)
-    assert fc._quality(good) == ("good", 100)
+    good = " ".join(["word"] * 150)
+    assert fc._quality(good) == ("good", 150)
     assert fc._quality("please enable javascript to continue")[0] == "blocked"
-    assert fc._quality("just a few words here")[0] == "thin"
+    assert fc._quality("just a few words here")[0] in ("thin", "empty")
+    # ~86-word podcast blurbs used to false-grade "good"; completeness floor is higher now.
+    assert fc._quality(" ".join(["word"] * 86))[0] == "thin"
+
+
+def test_incomplete_meta_body_is_thin_not_good() -> None:
+    # Body barely longer than a rich meta description → we extracted the blurb, not the article.
+    body = " ".join(["word"] * 130)
+    meta = {"title": "Major Amazon earthworks study", "description": " ".join(["detail"] * 100)}
+    assert fc._quality(body, meta)[0] == "thin"
 
 
 def test_long_article_mentioning_captcha_is_not_flagged_blocked() -> None:
@@ -119,10 +128,14 @@ def test_long_article_mentioning_captcha_is_not_flagged_blocked() -> None:
 
 
 def test_fetch_stays_free_when_extraction_is_good(monkeypatch) -> None:
+    monkeypatch.setenv("ALGENT_FETCH_CACHE", "0")
+    monkeypatch.setenv("ALGENT_FETCH_PLAYWRIGHT", "0")
     monkeypatch.setattr(fc, "_http_get", lambda url: "<html>...</html>")
-    monkeypatch.setattr(fc, "_extract", lambda html: " ".join(["word"] * 120))
+    monkeypatch.setattr(fc, "_extract", lambda html: " ".join(["word"] * 150))
+    monkeypatch.setattr(fc, "_extract_meta", lambda html: {})
     called = []
     monkeypatch.setattr(fc, "_firecrawl_markdown", lambda u, k: called.append(u))
+    monkeypatch.setattr(fc, "_playwright_html", lambda u: called.append(("pw", u)))
 
     result = fc._fetch("http://x")
     assert result["via"] == "trafilatura" and result["quality"] == "good"
@@ -130,8 +143,11 @@ def test_fetch_stays_free_when_extraction_is_good(monkeypatch) -> None:
 
 
 def test_fetch_escalates_to_firecrawl_when_free_is_thin(monkeypatch) -> None:
+    monkeypatch.setenv("ALGENT_FETCH_CACHE", "0")
+    monkeypatch.setenv("ALGENT_FETCH_PLAYWRIGHT", "0")
     monkeypatch.setattr(fc, "_http_get", lambda url: "<html>shell</html>")
     monkeypatch.setattr(fc, "_extract", lambda html: "tiny")  # thin
+    monkeypatch.setattr(fc, "_extract_meta", lambda html: {})
     monkeypatch.setattr(fc, "get_service_api_key", lambda svc: "fc-key")
     monkeypatch.setattr(fc, "_firecrawl_markdown", lambda u, k: " ".join(["full"] * 300))
 
@@ -139,20 +155,89 @@ def test_fetch_escalates_to_firecrawl_when_free_is_thin(monkeypatch) -> None:
     assert result["via"] == "firecrawl" and result["quality"] == "good"
 
 
-def test_fetch_respects_free_only_switch(monkeypatch) -> None:
+def test_better_candidate_prefers_quality_then_length() -> None:
+    assert fc._better_candidate(
+        new_quality="good", new_words=150, old_quality="thin", old_words=200,
+    )
+    assert not fc._better_candidate(
+        new_quality="thin", new_words=200, old_quality="good", old_words=150,
+    )
+    assert fc._better_candidate(
+        new_quality="good", new_words=200, old_quality="good", old_words=150,
+    )
+
+
+def test_fetch_prefers_quality_over_word_count(monkeypatch) -> None:
+    """A complete 150-word article beats a longer thin navigation fragment."""
+    monkeypatch.setenv("ALGENT_FETCH_CACHE", "0")
+    monkeypatch.setenv("ALGENT_FETCH_PLAYWRIGHT", "0")
+    thin_nav = " ".join(["link"] * 200)
+    good_article = " ".join(["substance"] * 150)
+
+    def grade(html, fallback_meta=None):
+        if html and "shell" in html:
+            return thin_nav, "trafilatura", "thin", 200, {}
+        return good_article, "trafilatura", "good", 150, {}
+
     monkeypatch.setattr(fc, "_http_get", lambda url: "<html>shell</html>")
-    monkeypatch.setattr(fc, "_extract", lambda html: "tiny")
+    monkeypatch.setattr(fc, "_grade_html", grade)
+    monkeypatch.setattr(fc, "get_service_api_key", lambda svc: "fc-key")
+    monkeypatch.setattr(fc, "_firecrawl_markdown", lambda u, k: good_article)
+
+    result = fc._fetch("http://x", allow_paid_fallback=True)
+    assert result["via"] == "firecrawl" and result["quality"] == "good"
+    assert result["words"] == 150
+
+
+def test_fetch_playwright_stays_off_by_default(monkeypatch) -> None:
+    monkeypatch.setenv("ALGENT_FETCH_CACHE", "0")
+    monkeypatch.delenv("ALGENT_FETCH_PLAYWRIGHT", raising=False)
+    monkeypatch.setattr(fc, "_http_get", lambda url: "<html>shell</html>")
+    monkeypatch.setattr(fc, "_extract", lambda html: " ".join(["word"] * 50))
+    monkeypatch.setattr(fc, "_extract_meta", lambda html: {})
+    monkeypatch.setattr(fc, "get_service_api_key", lambda svc: None)
+    pw = []
+    monkeypatch.setattr(fc, "_playwright_html", lambda u: pw.append(u) or None)
+
+    result = fc._fetch("http://x", allow_paid_fallback=False)
+    assert pw == []  # default off — no browser launch on a low-end laptop
+    assert result["quality"] == "thin"
+
+
+def test_fetch_playwright_used_when_enabled(monkeypatch) -> None:
+    monkeypatch.setenv("ALGENT_FETCH_CACHE", "0")
+    monkeypatch.setenv("ALGENT_FETCH_PLAYWRIGHT", "1")
+    monkeypatch.setattr(fc, "_http_get", lambda url: "<html>shell</html>")
+    monkeypatch.setattr(fc, "_extract", lambda html: "tiny" if "shell" in html else " ".join(["word"] * 200))
+    monkeypatch.setattr(fc, "_extract_meta", lambda html: {})
+    monkeypatch.setattr(fc, "get_service_api_key", lambda svc: None)
+    monkeypatch.setattr(fc, "_playwright_html", lambda u: "<html>rendered article body</html>")
+
+    result = fc._fetch("http://x", allow_paid_fallback=False)
+    assert result["via"] == "playwright" and result["quality"] == "good"
+
+
+def test_fetch_respects_free_only_switch(monkeypatch) -> None:
+    monkeypatch.setenv("ALGENT_FETCH_CACHE", "0")
+    monkeypatch.setenv("ALGENT_FETCH_PLAYWRIGHT", "0")
+    monkeypatch.setattr(fc, "_http_get", lambda url: "<html>shell</html>")
+    thin = " ".join(["word"] * 50)
+    monkeypatch.setattr(fc, "_extract", lambda html: thin)
+    monkeypatch.setattr(fc, "_extract_meta", lambda html: {})
     called = []
     monkeypatch.setattr(fc, "_firecrawl_markdown", lambda u, k: called.append(u))
 
     result = fc._fetch("http://x", allow_paid_fallback=False)
     assert called == []  # budget rail: never spent
-    assert result["via"] == "trafilatura" and result["content"] == "tiny"
+    assert result["via"] == "trafilatura" and result["quality"] == "thin"
+    assert result["content"] == thin
 
 
 def test_fetch_raises_when_nothing_extractable(monkeypatch) -> None:
     import pytest
 
+    monkeypatch.setenv("ALGENT_FETCH_CACHE", "0")
+    monkeypatch.setenv("ALGENT_FETCH_PLAYWRIGHT", "0")
     monkeypatch.setattr(fc, "_http_get", lambda url: None)
     monkeypatch.setattr(fc, "get_service_api_key", lambda svc: None)
     with pytest.raises(RuntimeError):
@@ -218,24 +303,82 @@ def test_web_search_rich_read_allows_paid_fallback(monkeypatch) -> None:
 
 
 def test_web_search_keyword_routes_to_tavily(monkeypatch) -> None:
+    research.circuit.reset()
     monkeypatch.setattr(tavily, "_build", _engine(["r1", "r2"]))
     out = research._search(query="china economy")
     assert out["action"] == "search" and out["kind"] == "keyword" and out["results"] == ["r1", "r2"]
+    assert out.get("provider") == "tavily"
 
 
 def test_web_search_semantic_routes_to_exa(monkeypatch) -> None:
+    research.circuit.reset()
     monkeypatch.setattr(exa, "_build", _engine(["s1"]))
     out = research._search(query="emerging strands", kind="semantic")
     assert out["kind"] == "semantic" and out["results"] == ["s1"]
+    assert out.get("provider") == "exa"
 
 
 def test_web_search_surfaces_engine_errors_cleanly(monkeypatch) -> None:
+    research.circuit.reset()
+
     def boom():
         raise RuntimeError("provider down")
 
     monkeypatch.setattr(tavily, "_build", boom)
+    monkeypatch.setattr(exa, "_build", boom)
+    monkeypatch.setattr(research, "_invoke_provider", lambda provider, q, n: (_ for _ in ()).throw(RuntimeError("provider down")))
     out = research._search(query="q")
     assert "error" in out and "provider down" in out["error"]
+
+
+def test_web_search_falls_through_on_quota_failure(monkeypatch) -> None:
+    research.circuit.reset()
+    calls: list[str] = []
+
+    def invoke(provider, query, max_results):
+        calls.append(provider)
+        if provider == "tavily":
+            raise RuntimeError("HTTP 432 quota exceeded")
+        return [{"title": "ok", "url": "http://x"}]
+
+    monkeypatch.setattr(research, "_invoke_provider", invoke)
+    out = research._search(query="amazon earthworks paper")
+    assert out["results"] and out["provider"] == "brave"
+    assert out.get("fallback_from") == "tavily"
+    assert calls[0] == "tavily" and "brave" in calls
+    assert research.circuit.is_open("tavily")
+
+
+def test_web_search_falls_through_on_tavily_error_payload(monkeypatch) -> None:
+    """Amazon 0041 shape: Tavily returns an error dict without raising."""
+    research.circuit.reset()
+    calls: list[str] = []
+
+    def invoke(provider, query, max_results):
+        calls.append(provider)
+        if provider == "tavily":
+            return {"error": ValueError("Error 432 quota exceeded")}
+        return [{"title": "recovered", "url": "http://nature.example/paper"}]
+
+    monkeypatch.setattr(research, "_invoke_provider", invoke)
+    out = research._search(query="amazon earthworks Pärssinen")
+    assert out["provider"] == "brave" and out["results"]
+    assert out.get("fallback_from") == "tavily"
+    assert research.circuit.is_open("tavily")
+    assert "432" in (out.get("error") or "") or calls[0] == "tavily"
+
+
+def test_web_search_scholar_resolve(monkeypatch) -> None:
+    from algent_backend.agent_system.tools.sourcing.search import scholarly
+
+    monkeypatch.setattr(
+        scholarly, "resolve",
+        lambda query="", doi="": {
+            "action": "scholar", "doi": doi or "10.1/x", "results": [{"title": "Paper", "doi": "10.1/x"}],
+        },
+    )
+    out = research._search(doi="10.1038/s41586-026-10835-7")
+    assert out["action"] == "scholar" and out["results"]
 
 
 # -- per-channel permission gates ---------------------------------------------
@@ -295,6 +438,19 @@ def test_paid_budget_caps_paid_calls(monkeypatch) -> None:
         second = research._search(read_url="http://b", richness="rich")
     assert first["action"] == "read"  # first paid call within budget
     assert "budget exhausted" in second["error"]  # second hard-stopped by the cap
+
+
+def test_rich_read_does_not_charge_when_free_path_wins(monkeypatch) -> None:
+    monkeypatch.setattr(
+        fc, "_fetch",
+        lambda url, allow_paid_fallback=True: {
+            "url": url, "content": "c", "via": "trafilatura", "quality": "good", "words": 150
+        },
+    )
+    with policy.scoped([policy.READ, policy.RICH], paid_budget=1):
+        out = research._search(read_url="http://a", richness="rich")
+        assert out["via"] == "trafilatura"
+        assert policy.remaining_paid_budget() == 1  # Firecrawl unused → no charge
 
 
 def test_scoped_sets_and_restores_policy() -> None:
@@ -369,3 +525,72 @@ def test_cost_meter_accumulates_and_trips_over_cap() -> None:
         cost.add(0.02)  # blow past the cap
         assert cost.over_cap() and cost.spent_usd() == 0.02
     assert not cost.is_active()  # scope reset after the run
+
+
+def test_article_scoped_nests_stage_allowances() -> None:
+    with cost.article_scoped(1.0, soft_usd=1.0):  # hard=soft=$1 for this unit test
+        with cost.scoped(0.4, "gpt-5.4-mini"):
+            cost.add(0.3)
+            assert cost.spent_usd() == 0.3  # stage-relative
+            assert cost.article_spent_usd() == 0.3
+        with cost.scoped(1.0, "gpt-5.4-mini"):  # stage wants $1 but only $0.70 remains
+            cost.add(0.5)
+            assert cost.spent_usd() == 0.5
+            assert not cost.would_exceed(0.19)
+            assert cost.would_exceed(0.21)  # would breach article remaining
+        assert cost.article_spent_usd() == 0.8
+    assert not cost.is_active()
+
+
+def test_soft_cap_enters_slim_finish() -> None:
+    with cost.article_scoped(3.0, soft_usd=1.0):
+        cost.set_stage("profile")
+        cost.add(1.0)
+        assert cost.mode() == "slim_finish"
+        assert cost.snapshot()["soft_cap_crossed"] is True
+        assert cost.snapshot()["soft_crossed_at_stage"] == "profile"
+        # Optional paid ops refuse under slim
+        assert cost.try_reserve(0.01, op="rich") is None
+        # Essential finish path still reserves under hard
+        with cost.essential_scope():
+            res = cost.try_reserve(0.05, op="model_turn", essential=True)
+            assert res is not None
+            cost.settle(res, 0.04)
+        assert cost.article_spent_usd() == 1.04
+
+
+def test_hard_cap_refuses_new_reservations() -> None:
+    with cost.article_scoped(0.05, soft_usd=0.01):
+        cost.add(0.05)
+        assert cost.mode() == "hard_stop"
+        assert cost.try_reserve(0.001, op="keyword") is None
+        with cost.essential_scope():
+            assert cost.try_reserve(0.001, op="hero_image", essential=True) is None
+
+
+def test_reserve_settle_releases_hold() -> None:
+    with cost.article_scoped(1.0, soft_usd=1.0):
+        res = cost.try_reserve(0.5, op="keyword")
+        assert res is not None
+        assert cost.snapshot()["reserved_usd"] == 0.5
+        assert cost.would_exceed(0.6)  # spent 0 + reserved 0.5 + 0.6 > 1
+        cost.settle(res, 0.1)
+        assert cost.article_spent_usd() == 0.1
+        assert cost.snapshot()["reserved_usd"] == 0.0
+        assert not cost.would_exceed(0.8)
+
+
+def test_fallback_provider_contacts_are_metered(monkeypatch) -> None:
+    research.circuit.reset()
+
+    def fake_invoke(provider, q, n):
+        if provider == "tavily":
+            raise RuntimeError("Error 432 quota exceeded")
+        return [{"title": "ok"}]
+
+    monkeypatch.setattr(research, "_invoke_provider", fake_invoke)
+    with cost.scoped(1.0, "gpt-5.4-mini"):
+        out = research._search(query="china economy")
+        # Tavily fail + Brave success → two keyword contacts metered
+        assert out.get("provider") == "brave"
+        assert abs(cost.spent_usd() - 2 * cost.estimate_call_cost("keyword")) < 1e-9

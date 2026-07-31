@@ -21,6 +21,18 @@ def _ctx(events):
     )
 
 
+def _spine_profile(pid: str = "prof_x") -> dict:
+    """Minimal profile that clears the article-spine publish floor."""
+    snap = {"content_hash": "sha256:x", "excerpt": "e", "captured_at": "t"}
+    return {
+        "id": pid,
+        "source_ledger": [
+            {"id": "s1", "url": "https://a.example/1", "source_type": "primary", "snapshot": snap},
+            {"id": "s2", "url": "https://b.example/2", "snapshot": snap},
+        ],
+    }
+
+
 def _wire(monkeypatch, plan_out, draft_out, caveat_out, headline_out=None, analytics_out=None,
           worker_out=None):
     monkeypatch.setattr(pl, "build_planning_gauntlet_graph", lambda ctx: _Graph(plan_out))
@@ -48,7 +60,7 @@ def test_caveated_piece_becomes_publishable_once_caveats_verified(monkeypatch) -
     _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified", "findings": []}})
 
     events: list = []
-    out = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({"profile": {"id": "prof_x"}})
+    out = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({"profile": _spine_profile()})
 
     r = out["pipeline"]
     assert r["treatment_id"] == "trt_x" and r["draft_id"] == "drf_x"
@@ -66,7 +78,7 @@ def test_pipeline_applies_the_truthful_headline(monkeypatch) -> None:
     headline_out = {"headline": {"title": "Fed holds, hike tail still live", "standfirst": "the nuance"}}
     _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}}, headline_out)
 
-    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "prof_x"}})["pipeline"]
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile()})["pipeline"]
     assert r["article_title"] == "Fed holds, hike tail still live"   # retitled from the working title
     assert r["status"] == "publishable"
 
@@ -97,11 +109,11 @@ def test_needs_hedging_self_heals_and_ships(monkeypatch) -> None:
         {"caveat_check": {"verdict": "needs_hedging", "findings": [{"id": "cav_01"}]}},
         {"caveat_check": {"verdict": "verified", "findings": []}})
     monkeypatch.setattr(pl, "build_caveat_reviewer", lambda ctx: caveats)
-    repaired = {"draft": {"id": "drf_x", "title": "t", "word_count": 390}, "profile": {"id": "prof_x"}}
+    repaired = {"draft": {"id": "drf_x", "title": "t", "word_count": 390}, "profile": _spine_profile()}
     monkeypatch.setattr(pl, "build_drafter", lambda ctx: _Sequence(repaired))
 
     events: list = []
-    r = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({"profile": {"id": "prof_x"}})["pipeline"]
+    r = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({"profile": _spine_profile()})["pipeline"]
     assert r["status"] == "publishable" and r["publishable"] is True   # shipped, not held
     assert r["caveat_verdict"] == "verified" and r["caveat_rounds"] == 2
     assert any(et == pl.CAVEAT_REPAIRED for et, _ in events)
@@ -121,10 +133,10 @@ def test_comprehension_is_advisory_repairs_but_never_blocks_publish(monkeypatch)
     monkeypatch.setattr(pl, "build_comprehension_reviewer", lambda ctx: comp)
     monkeypatch.setattr(pl, "build_drafter", lambda ctx: _Sequence(
         {"draft": {"id": "d", "title": "t", "body": body + " ramp", "word_count": 201},
-         "profile": {"id": "p"}}))
+         "profile": _spine_profile("p")}))
 
     events: list = []
-    r = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({"profile": {"id": "p"}})["pipeline"]
+    r = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({"profile": _spine_profile("p")})["pipeline"]
     assert r["status"] == "publishable" and r["publishable"] is True   # never blocked by comprehension
     assert r["comprehension_verdict"] == "clear" and r["comprehension_rounds"] == 2
     assert any(et == pl.RAMP_REPAIRED for et, _ in events)
@@ -141,9 +153,9 @@ def test_comprehension_repair_that_collapses_the_body_is_rejected(monkeypatch) -
         {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}]}}))
     monkeypatch.setattr(pl, "build_drafter", lambda ctx: _Sequence(
         {"draft": {"id": "d", "title": "t", "body": "One hollow sentence.", "word_count": 3},
-         "profile": {"id": "p"}}))
+         "profile": _spine_profile("p")}))
     events: list = []
-    out = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({"profile": {"id": "p"}})
+    out = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({"profile": _spine_profile("p")})
     r = out["pipeline"]
     assert r["status"] == "publishable" and r["word_count"] >= 200
     assert out["draft"]["body"] == long_body
@@ -158,9 +170,61 @@ def test_hollow_draft_is_not_publishable(monkeypatch) -> None:
     draft_out = {"draft": {"id": "d", "title": "t", "body": "One line only.", "word_count": 3},
                  "gauntlet": {"outcome": "grounded"}}
     _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}})
-    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "p"}})["pipeline"]
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile("p")})["pipeline"]
     assert r["status"] == "needs_revision" and r["publishable"] is False
     assert r["word_count"] < pl._MIN_PUBLISH_WORDS
+
+
+def test_thin_spine_is_honest_signal_not_hard_stop(monkeypatch) -> None:
+    """Citation grounding on one podcast page earns thin_spine — honest, still drafted."""
+    plan_out = {"treatment": {"id": "t"}, "gauntlet": {"final_verdict": "needs_revision"}}
+    thin = {
+        "id": "p",
+        "source_ledger": [
+            {"id": "s1", "url": "https://podcast.example/ep", "snapshot": {"content_hash": "h"}},
+        ],
+    }
+    draft_out = {
+        "draft": {"id": "d", "title": "We could not verify the paper", "body": " ".join(["w"] * 200),
+                  "word_count": 200},
+        "profile": thin,
+        "gauntlet": {"outcome": "grounded", "promoted": True},
+    }
+    _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified", "findings": []}})
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": thin})["pipeline"]
+    assert r["status"] == "thin_spine" and r["publishable"] is False
+    assert r["draft_outcome"] == "grounded"  # citations OK; spine signal honest
+    assert r["draft_id"] == "d"  # still produced an article artifact
+
+
+def test_unsound_treatment_still_drafts(monkeypatch) -> None:
+    """Soft promote: unsound / empty treatment gets a fallback id and still drafts."""
+    plan_out = {"treatment": {"id": ""}, "gauntlet": {"final_verdict": "unsound"}}
+    draft_calls: list = []
+    seen: dict = {}
+
+    def _draft_graph(ctx):
+        draft_calls.append(1)
+
+        class G:
+            def invoke(self, state, _config=None):
+                seen.update(state)
+                return {
+                    "draft": {"id": "d", "title": "t", "body": " ".join(["w"] * 200),
+                              "word_count": 200},
+                    "profile": _spine_profile("p"),
+                    "gauntlet": {"outcome": "grounded", "promoted": True},
+                }
+        return G()
+
+    _wire(monkeypatch, plan_out, {"draft": {}, "gauntlet": {}},
+          {"caveat_check": {"verdict": "verified", "findings": []}})
+    monkeypatch.setattr(pl, "build_drafting_gauntlet_graph", _draft_graph)
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile("p")})["pipeline"]
+    assert draft_calls == [1]
+    assert str(seen.get("treatment", {}).get("id", "")).startswith("trt_fallback_")
+    assert r["treatment_verdict"] == "unsound"
+    assert r["status"] == "publishable"  # drafted + spine cleared
 
 
 def test_a_still_unclear_piece_ships_anyway(monkeypatch) -> None:
@@ -176,9 +240,9 @@ def test_a_still_unclear_piece_ships_anyway(monkeypatch) -> None:
     monkeypatch.setattr(pl, "build_comprehension_reviewer", lambda ctx: _Sequence(
         {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}]}}))  # never clears
     monkeypatch.setattr(pl, "build_drafter", lambda ctx: _Sequence(
-        {"draft": {"id": "d", "title": "t", "body": body, "word_count": 200}, "profile": {"id": "p"}}))
+        {"draft": {"id": "d", "title": "t", "body": body, "word_count": 200}, "profile": _spine_profile("p")}))
 
-    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "p"}})["pipeline"]
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile("p")})["pipeline"]
     assert r["status"] == "publishable"                       # ships; the site is the review surface
     # ...but the verdict is never hidden — it rides on the report for the operator to see.
     assert r["comprehension_verdict"] == "needs_ramp"
@@ -196,9 +260,9 @@ def test_still_unhedged_after_the_repair_lap_holds_the_piece(monkeypatch) -> Non
     monkeypatch.setattr(pl, "build_caveat_reviewer", lambda ctx: _Sequence(
         {"caveat_check": {"verdict": "needs_hedging", "findings": [{"id": "cav_01"}]}}))  # always fails
     monkeypatch.setattr(pl, "build_drafter", lambda ctx: _Sequence(
-        {"draft": {"id": "drf_x", "title": "t"}, "profile": {"id": "prof_x"}}))
+        {"draft": {"id": "drf_x", "title": "t"}, "profile": _spine_profile()}))
 
-    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "prof_x"}})["pipeline"]
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile()})["pipeline"]
     assert r["status"] == "needs_hedging" and r["publishable"] is False
     assert r["caveat_rounds"] == 2   # the lap ran and didn't take — bounded, no third try
 
@@ -210,7 +274,7 @@ def test_clean_first_pass_does_not_run_the_repair_lap(monkeypatch) -> None:
     built = []
     monkeypatch.setattr(pl, "build_drafter", lambda ctx: built.append(1) or _Sequence({}))
 
-    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "prof_x"}})["pipeline"]
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile()})["pipeline"]
     assert r["caveat_rounds"] == 1 and built == []   # no extra drafter spend on a clean piece
 
 
@@ -228,7 +292,7 @@ def test_analytics_worker_can_be_gated_off(monkeypatch) -> None:
     built = _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}},
                   analytics_out=analytics_out)
 
-    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "p"}})["pipeline"]
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile("p")})["pipeline"]
     assert built == []                                  # worker never built -> no grok spawn
     assert r["analytics_warranted"] is True and r["analytics_produced"] == 0
 
@@ -252,7 +316,7 @@ def test_analytics_worker_runs_and_caps_when_enabled(monkeypatch) -> None:
           analytics_out=analytics_out)
     monkeypatch.setattr(pl, "build_analytics_worker_graph", lambda ctx: _CapGraph())
 
-    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "p"}})["pipeline"]
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile("p")})["pipeline"]
     assert seen["n"] == 2                                # capped to ALGENT_ANALYTICS_MAX
     assert r["analytics_produced"] == 1 and r["analytics_escapes"] == 0
 
@@ -321,12 +385,28 @@ def test_hero_records_what_the_publisher_needs(monkeypatch) -> None:
     assert seen["subject"] and seen["hook"]                         # brief reached the generator
 
 
-def test_no_subject_means_no_hero_rather_than_a_guessed_one(monkeypatch) -> None:
-    """The headline writer leaves it empty when nothing is depictable. That is a decision."""
+def test_empty_subject_falls_back_so_every_piece_can_hero(monkeypatch) -> None:
+    """House policy: every article gets a hero; empty image_subject is not a skip."""
     from algent_backend.agent_system.agents.editorial.hero_stage import make_hero
 
     monkeypatch.setenv("ALGENT_HERO_IMAGE", "1")
-    assert make_hero(_hl(subject=""), _Writer(), generate=lambda *a, **k: _Img()) is None
+    notes: list[str] = []
+    seen: dict = {}
+
+    def _gen(subject, hook=""):
+        seen["subject"] = subject
+        return _Img()
+
+    rec = make_hero(
+        {"title": "Ancient Amazon earthworks under forest canopy", "standfirst": "d",
+         "image_subject": "", "image_hook": ""},
+        _Writer(),
+        say=notes.append,
+        generate=_gen,
+    )
+    assert rec is not None
+    assert seen["subject"] == "a quiet landscape under soft daylight"
+    assert any("falling back" in n for n in notes)
 
 
 def test_a_failed_generation_never_costs_the_article(monkeypatch) -> None:
@@ -342,14 +422,22 @@ def test_a_failed_generation_never_costs_the_article(monkeypatch) -> None:
     assert any("skipped" in n for n in notes)      # reported, not swallowed
 
 
-def test_a_guard_refusal_happens_before_any_spend(monkeypatch) -> None:
+def test_a_bad_writer_subject_falls_back_before_spend(monkeypatch) -> None:
+    """Quantities in the writer's subject are rejected; we fall back rather than skip."""
     from algent_backend.agent_system.agents.editorial.hero_stage import make_hero
 
     monkeypatch.setenv("ALGENT_HERO_IMAGE", "1")
-    called = []
-    rec = make_hero(_hl(subject="Florida's $1.8 trillion economy claim"), _Writer(),
-                    generate=lambda *a, **k: called.append(1) or _Img())
-    assert rec is None and called == []
+    seen: dict = {}
+    notes: list[str] = []
+    rec = make_hero(
+        _hl(subject="Florida's $1.8 trillion economy claim"),
+        _Writer(),
+        say=notes.append,
+        generate=lambda subject, hook="": seen.update(subject=subject) or _Img(),
+    )
+    assert rec is not None
+    assert "$" not in seen["subject"] and "trillion" not in seen["subject"].lower()
+    assert any("falling back" in n or "rejected" in n for n in notes)
 
 
 def test_needs_ramp_after_repair_holds_instead_of_publishing() -> None:
@@ -394,7 +482,7 @@ def _wire_review(monkeypatch, reviewer, drafter):
           {"caveat_check": {"verdict": "verified"}})
     monkeypatch.setattr(pl, "build_comprehension_reviewer", lambda ctx: reviewer)
     monkeypatch.setattr(pl, "build_drafter", lambda ctx: drafter)
-    return pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "p"}})["pipeline"]
+    return pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile("p")})["pipeline"]
 
 
 def test_the_second_review_reads_the_repaired_draft(monkeypatch) -> None:
@@ -405,7 +493,7 @@ def test_the_second_review_reads_the_repaired_draft(monkeypatch) -> None:
         {"comprehension_check": {"verdict": "clear", "findings": []}},
     )
     drafter = _counting({"draft": {"id": "d", "title": "t", "body": _long(), "word_count": 200},
-                         "profile": {"id": "p"}})
+                         "profile": _spine_profile("p")})
     r = _wire_review(monkeypatch, reviewer, drafter)
 
     assert len(reviewer.calls) == 2 and len(drafter.calls) == 1
@@ -419,7 +507,7 @@ def test_the_loop_ends_on_a_fix_not_a_read(monkeypatch) -> None:
     reviewer = _counting(
         {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}]}})
     drafter = _counting({"draft": {"id": "d", "title": "t", "body": _long(), "word_count": 200},
-                         "profile": {"id": "p"}})
+                         "profile": _spine_profile("p")})
     r = _wire_review(monkeypatch, reviewer, drafter)
 
     assert len(reviewer.calls) == 2        # never a third read
@@ -443,7 +531,7 @@ def test_a_clean_piece_costs_no_repair_laps(monkeypatch) -> None:
     monkeypatch.setattr(pl, "build_comprehension_reviewer", lambda ctx: reviewer)
     monkeypatch.setattr(pl, "build_drafter", _never)
 
-    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": {"id": "p"}})["pipeline"]
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile("p")})["pipeline"]
     assert len(reviewer.calls) == 1
     assert r["comprehension_rounds"] == 1
 

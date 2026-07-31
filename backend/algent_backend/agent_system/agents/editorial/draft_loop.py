@@ -88,7 +88,8 @@ def build_draft_graph(
         context.emit(ev.INPUT_PREVIEW, _input_preview(treatment, profile, prior))
 
         with policy.scoped(search_channels, paid_budget), \
-                cost.scoped(cost_cap_usd, model_spec.model), snapshots.scoped():
+                cost.scoped(cost_cap_usd, model_spec.model), snapshots.scoped(), \
+                cost.essential_scope():
             produced = stream_react_loop(
                 agent,
                 {"messages": [HumanMessage(content=build_draft_message(

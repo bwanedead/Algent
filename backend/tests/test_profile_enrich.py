@@ -111,7 +111,8 @@ def test_enrich_graph_merges_bumps_revision_and_persists(monkeypatch, tmp_path) 
     assert out["profile"]["revision"] == 2  # merged + bumped
     assert any(s["url"] == "https://fed.gov/d" for s in out["profile"]["source_ledger"])
     done = next(p for et, p in events if et == "enrich.completed")
-    assert done["added_sources"] == 1 and done["addressed"] == ["find_01"]
+    assert done["added_sources"] == 1 and done["addressed"] == []
+    assert done["addressed_claimed"] == ["find_01"]  # claimed, but re-review owns closure
     assert "estimated_usd" in done   # enrichment surfaces its spend (the rail sums it)
 
 
@@ -139,3 +140,46 @@ def test_enrich_graph_no_findings_for_lane_is_a_noop(monkeypatch) -> None:
     out = graph.invoke({"profile": _existing().model_dump(), "review": review})
     assert out["profile"]["revision"] == 1  # unchanged
     assert any(et == "enrich.no_work" for et, _ in events)
+
+
+def test_enrich_does_not_close_findings_without_evidence_delta(monkeypatch, tmp_path) -> None:
+    """Model-claimed addressed_findings with zero new sources/claims must not close."""
+    monkeypatch.setenv("ALGENT_PROFILE_STORE", str(tmp_path))
+    empty = ProfileAdditions(addressed_findings=["find_01"])  # claims closure, adds nothing
+    events: list = []
+    graph = _graph(_ctx(events), monkeypatch, empty)
+
+    out = graph.invoke({"profile": _existing().model_dump(), "review": _review()})
+
+    assert out["addressed"] == []  # harness stripped the false closure
+    done = next(p for et, p in events if et == "enrich.completed")
+    assert done["addressed"] == [] and done["addressed_claimed"] == ["find_01"]
+    assert done["added_sources"] == 0
+
+
+def test_enrich_leaves_claimed_findings_for_rereview(monkeypatch, tmp_path) -> None:
+    """Evidence additions do not auto-close findings — re-review is the authority."""
+    monkeypatch.setenv("ALGENT_PROFILE_STORE", str(tmp_path))
+    additions = ProfileAdditions(
+        sources=[SourceArtifact(id="ns1", url="https://fed.gov/d", source_type="primary")],
+        addressed_findings=["find_01", "find_02", "find_03", "find_04"],
+    )
+    events: list = []
+    graph = _graph(_ctx(events), monkeypatch, additions)
+    review = ReviewReport(id="r", profile_id="prof_z", findings=[
+        ReviewFinding(id="find_01", type="missing_primary_source", severity="high",
+                      target="profile", lane="primary_source", maturity_blocker=True),
+        ReviewFinding(id="find_02", type="needs_data", severity="medium",
+                      target="profile", lane="primary_source"),
+        ReviewFinding(id="find_03", type="weak_context", severity="medium",
+                      target="profile", lane="primary_source"),
+        ReviewFinding(id="find_04", type="other", severity="low",
+                      target="profile", lane="primary_source"),
+    ]).model_dump()
+
+    out = graph.invoke({"profile": _existing().model_dump(), "review": review})
+
+    assert out["addressed"] == []
+    done = next(p for et, p in events if et == "enrich.completed")
+    assert done["addressed_claimed"] == ["find_01", "find_02", "find_03", "find_04"]
+    assert done["added_sources"] == 1

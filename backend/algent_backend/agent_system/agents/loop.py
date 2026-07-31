@@ -23,14 +23,12 @@ from algent_backend.agent_system.runs.events import AGENT_STEP, COST_LIMIT_REACH
 _STEP_EXCERPT_MAX_CHARS = 2000
 
 
-def _meter_model_cost(msg: Any) -> None:
-    """Add an AI message's token cost to the active run cost meter (best-effort)."""
-    if not cost.is_active():
-        return
+def _usage_usd(msg: Any) -> float:
+    """USD for an AI message from usage_metadata (0 if unknown). Does not charge."""
     usage = getattr(msg, "usage_metadata", None)
-    if isinstance(usage, dict):
-        # Pass the full usage blob so cache-read / cache-write buckets price correctly.
-        cost.add_model_usage(usage=usage)
+    if not isinstance(usage, dict):
+        return 0.0
+    return cost.estimate_usage_cost(cost.active_model(), usage)
 
 
 def _excerpt(value: object) -> str:
@@ -66,6 +64,14 @@ def _emit_message_event(context: Any, msg: Any) -> None:
         pass
 
 
+def _turn_ceiling() -> float:
+    return cost.estimate_model_call_ceiling(
+        cost.active_model() or "gpt-5.4-mini",
+        input_tokens=8_000,
+        max_output_tokens=cost.DEFAULT_MAX_OUTPUT_TOKENS,
+    )
+
+
 def stream_react_loop(agent: Any, inputs: dict[str, Any], *, context: Any, config: Any) -> Any:
     """Run the compiled ReAct agent by streaming it, emitting a per-turn event for
     each model step and tool result so the run is watchable turn-by-turn.
@@ -73,24 +79,54 @@ def stream_react_loop(agent: Any, inputs: dict[str, Any], *, context: Any, confi
     Returns the agent's ``structured_response`` (or ``None`` if it produced none).
     Streaming is how the loop executes; a genuine failure still propagates (and is
     captured to the run's audit trace) — only the per-event emission is best-effort.
+
+    Each model turn is preauthorized via ``try_reserve`` against the article hard cap;
+    usage settles the reservation. Hard-stop / failed reserve ends the loop.
     """
+    if cost.is_hard_stop():
+        context.emit(COST_LIMIT_REACHED, {"estimated_usd": cost.spent_usd(), "mode": cost.mode()})
+        return None
+
     structured: Any = None
+    pending = cost.try_reserve(_turn_ceiling(), op="model_turn")
+    if pending is None and cost.is_active():
+        context.emit(COST_LIMIT_REACHED, {"estimated_usd": cost.spent_usd(), "mode": cost.mode()})
+        return None
+
     for chunk in agent.stream(inputs, config=config, stream_mode="updates"):
         if not isinstance(chunk, dict):
             continue
+        stop = False
         for update in chunk.values():
             if not isinstance(update, dict):
                 continue
             if "structured_response" in update:
                 structured = update["structured_response"]
             for msg in update.get("messages") or []:
-                _meter_model_cost(msg)
-                _emit_message_event(context, msg)
-        # Hard cost stop: if the run's estimated spend crossed its cap, halt the
-        # loop now rather than starting another (paid) model turn.
-        if cost.over_cap():
-            context.emit(COST_LIMIT_REACHED, {"estimated_usd": cost.spent_usd()})
+                if getattr(msg, "type", None) == "ai":
+                    actual = _usage_usd(msg)
+                    cost.settle(pending, actual)
+                    pending = None
+                    _emit_message_event(context, msg)
+                    tool_calls = getattr(msg, "tool_calls", None) or []
+                    if tool_calls:
+                        pending = cost.try_reserve(_turn_ceiling(), op="model_turn")
+                        if pending is None:
+                            context.emit(
+                                COST_LIMIT_REACHED,
+                                {"estimated_usd": cost.spent_usd(), "mode": cost.mode()},
+                            )
+                            stop = True
+                            break
+                else:
+                    _emit_message_event(context, msg)
+            if stop:
+                break
+        if stop or cost.over_cap() or cost.is_hard_stop():
+            if cost.over_cap() or cost.is_hard_stop():
+                context.emit(COST_LIMIT_REACHED, {"estimated_usd": cost.spent_usd(), "mode": cost.mode()})
             break
+    cost.release(pending)
     return structured
 
 

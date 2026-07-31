@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from algent_backend.agent_system.agents.newsroom import rail as rl
 from algent_backend.agent_system.agents.research.profile import DerivedLead
+from algent_backend.agent_system.foundation import cost
 from algent_backend.agent_system.runs.context import AgentRunContext
 
 
@@ -17,7 +18,8 @@ class _EmittingGraph:
         self._out, self._ctx, self._usd = out, ctx, usd
 
     def invoke(self, _state, _config=None):
-        if self._usd:                       # surface spend the way real stages do (a *_completed event)
+        if self._usd:  # charge the article meter the way live stages do (cost.add / spent_usd)
+            cost.add(float(self._usd))
             self._ctx.emit("stage.completed", {"estimated_usd": self._usd})
         return self._out
 
@@ -123,11 +125,112 @@ def test_rail_runs_end_to_end_and_reports(monkeypatch) -> None:
     assert any(et == rl.RAIL_COMPLETED for et, _ in events)
 
 
+def test_immature_profile_still_enters_editorial(monkeypatch) -> None:
+    """Soft diagnose: disposition recorded, editorial still runs (site = review surface)."""
+    monkeypatch.setenv(rl._BACKFEED_ENV, "0")
+    editorial_calls: list = []
+    _wire(
+        monkeypatch,
+        portfolio={"vectors": [{"id": "vec_1", "title": "Amazon earthworks"}], "total_considered": 10},
+        route={"selected_vector": {"id": "vec_1", "title": "Amazon earthworks"}},
+        profile={"id": "prof_1", "profile_status": "needs_verification"},
+        gauntlet={
+            "profile": {"id": "prof_1", "profile_status": "needs_verification"},
+            "gauntlet": {"final_verdict": "needs_verification", "remaining_blockers": 3},
+        },
+        pipeline={"status": "thin_spine", "article_title": "Honest thin piece", "analytics_produced": 0},
+    )
+    monkeypatch.setattr(
+        rl, "build_editorial",
+        lambda ctx: editorial_calls.append(1) or _EmittingGraph(
+            {"pipeline": {"status": "thin_spine", "article_title": "Honest thin piece",
+                          "analytics_produced": 0}},
+            ctx, 0.0,
+        ),
+    )
+    monkeypatch.setattr(rl, "find_run_root", lambda _rid: None)
+    r = rl.build_newsroom_rail_graph(_ctx([])).invoke({"pool": {"items": [], "item_count": 1}})["rail"]
+    assert editorial_calls == [1]
+    assert r["stage_reached"] == "complete"
+    assert r["disposition"] == "needs_verification"
+    assert "soft-warn" in r["note"]
+    assert r["article_status"] == "thin_spine"
+
+
+def test_needs_enrichment_still_enters_editorial(monkeypatch) -> None:
+    """Soft enrichment leftovers (Centaur path) may still draft; spine gate handles thin stubs."""
+    monkeypatch.setenv(rl._BACKFEED_ENV, "0")
+    _wire(
+        monkeypatch,
+        portfolio={"vectors": [{"id": "vec_1", "title": "Centaur"}], "total_considered": 10},
+        route={"selected_vector": {"id": "vec_1", "title": "Centaur"}},
+        profile={"id": "prof_1"},
+        gauntlet={
+            "profile": {"id": "prof_1"},
+            "gauntlet": {"final_verdict": "needs_enrichment", "remaining_blockers": 6},
+        },
+        pipeline={"status": "publishable", "article_title": "Centaur piece", "analytics_produced": 0},
+    )
+    monkeypatch.setattr(rl, "find_run_root", lambda _rid: None)  # skip publish path
+    r = rl.build_newsroom_rail_graph(_ctx([])).invoke({"pool": {"items": [], "item_count": 1}})["rail"]
+    assert r["stage_reached"] == "complete"
+    assert r["gauntlet_verdict"] == "needs_enrichment"
+    assert r["disposition"] == ""
+
+
 def test_rail_sums_per_stage_cost(monkeypatch) -> None:
     monkeypatch.setenv(rl._BACKFEED_ENV, "0")
     _full(monkeypatch, costs={"syn": 0.02, "prof": 0.5, "ed": 0.25})   # router/gauntlet report none
     r = rl.build_newsroom_rail_graph(_ctx([])).invoke({"pool": {"items": [], "item_count": 1}})["rail"]
     assert abs(r["total_usd"] - 0.77) < 1e-9   # every surfaced estimated_usd, summed
+    assert r["cost_by_stage"]["synthesis"] == 0.02
+    assert r["cost_by_stage"]["profile"] == 0.5
+    assert r["cost_by_stage"]["editorial"] == 0.25
+
+
+def test_rail_writes_report_before_publish(monkeypatch) -> None:
+    """Publisher reads newsroom_rail_report.json — it must already carry disposition/cost."""
+    monkeypatch.setenv(rl._BACKFEED_ENV, "0")
+    _full(monkeypatch, costs={"syn": 0.01, "ed": 0.02})
+    written: list[dict] = []
+
+    class _Arts:
+        def write_json(self, name, data):
+            if name == "newsroom_rail_report.json":
+                written.append(dict(data))
+
+        def write_text(self, *a, **k):
+            return None
+
+    seen_digest_fields: dict = {}
+
+    def fake_publish(run_dir, **kw):
+        # Simulate publish reading the on-disk report (what converter/digest use).
+        snap = written[-1] if written else {}
+        seen_digest_fields.update({
+            "total_usd": snap.get("total_usd"),
+            "cost_by_stage": snap.get("cost_by_stage"),
+            "disposition": snap.get("disposition", ""),
+        })
+        return type("R", (), {
+            "action": "staged", "slug": "x", "status": "publishable",
+            "digest": "d", "reasons": [],
+        })()
+
+    monkeypatch.setattr(rl, "find_run_root", lambda _rid: __import__("pathlib").Path("/runs/x"))
+    monkeypatch.setattr(rl.site_git, "publish_enabled", lambda: False)
+    monkeypatch.setattr(rl.site_git, "repo_root", lambda _p: __import__("pathlib").Path("/repo"))
+    monkeypatch.setattr(rl.site_git, "site_dir", lambda _r: __import__("pathlib").Path("/repo/site"))
+    monkeypatch.setattr(rl.pb, "publish_run", fake_publish)
+
+    ctx = _ctx([])
+    ctx = __import__("dataclasses").replace(ctx, artifacts=_Arts())
+    rl.build_newsroom_rail_graph(ctx).invoke({"pool": {"items": [], "item_count": 1}})
+
+    assert written, "report must be written before publish"
+    assert seen_digest_fields["total_usd"] == 0.03
+    assert seen_digest_fields["cost_by_stage"]["synthesis"] == 0.01
+    assert "editorial" in seen_digest_fields["cost_by_stage"]
 
 
 def test_backfeed_leads_are_injected_and_consumed(monkeypatch) -> None:

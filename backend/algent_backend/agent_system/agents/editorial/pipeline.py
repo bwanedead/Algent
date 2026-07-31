@@ -3,11 +3,9 @@ The editorial pipeline (v1) — profile -> planning gauntlet -> drafting gauntle
 
 One run turns a research profile into a finished article, chaining the two gauntlets that
 already work as sub-graphs under one run/context (so every stage's events land in this run's
-timeline). It does NOT hard-gate on the planning verdict — the drafter writes from the best
-treatment available, and the article is always produced; the report carries the quality signals
-(treatment verdict, draft outcome, walls caveated) that the eventual human approval surface
-reads. The upstream research + profile gauntlet are separate, proven stages; prepend them to go
-from a raw vector.
+timeline). Soft quality signals (treatment verdict, thin_spine, needs_hedging) ride on the
+report — they diagnose, they do not skip drafting. Bounded repair laps then hand off so the
+site can be the review surface. Hard-stop only on mechanical impossibility (no profile).
 """
 
 from __future__ import annotations
@@ -19,7 +17,9 @@ from typing import Any, TypedDict
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph import END, START, StateGraph
 
+from algent_backend.agent_system.agents.newsroom import budget_policy
 from algent_backend.agent_system.agents.research.profile import SignalProfile
+from algent_backend.agent_system.foundation import cost
 from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.context import AgentRunContext
 
@@ -102,6 +102,22 @@ def _body_words(draft: dict[str, Any] | None) -> int:
         return 0
 
 
+def _has_article_spine(profile: dict[str, Any] | None) -> bool:
+    """True when the profile carries enough deep-read evidence to support an article.
+
+    Citation grounding can pass on one podcast page; that proves the draft quoted its sources,
+    not that there is a story. Require a snapshotted primary, or at least two snapshotted
+    sources — the mechanical floor that separates a grounded stub from publishable prose.
+    """
+    if not profile:
+        return False
+    ledger = profile.get("source_ledger") or []
+    snapshotted = [s for s in ledger if isinstance(s, dict) and s.get("snapshot")]
+    if any(str(s.get("source_type") or "") == "primary" for s in snapshotted):
+        return True
+    return len(snapshotted) >= 2
+
+
 class PipelineState(TypedDict, total=False):
     profile: dict[str, Any]    # the research profile to turn into an article (input)
     treatment: dict[str, Any]  # the planned treatment
@@ -115,92 +131,73 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
     def run(state: PipelineState, config: RunnableConfig) -> dict[str, Any]:
         profile = state.get("profile")
         if not profile:
-            context.emit(PIPELINE_NO_INPUT, {"message": "no profile supplied to the editorial pipeline"})
+            context.emit(
+                PIPELINE_NO_INPUT,
+                {"message": "no profile supplied to the editorial pipeline"},
+            )
             return {"pipeline": EditorialPipelineReport().model_dump()}
 
-        # 1. plan (the planning gauntlet: plan -> review -> revise -> re-review).
         plan_out = build_planning_gauntlet_graph(context).invoke({"profile": profile}, config)
         treatment = plan_out.get("treatment") or {}
         plan_report = plan_out.get("gauntlet") or {}
+        treatment = _ensure_treatment(treatment, profile)
 
-        # 2. draft (the drafting gauntlet: draft -> audit -> revise until grounded/caveated).
         draft_out = build_drafting_gauntlet_graph(context).invoke(
             {"treatment": treatment, "profile": profile}, config)
         draft = draft_out.get("draft") or {}
-        enriched_profile = draft_out.get("profile") or profile   # final grounding state for the appendix
+        enriched_profile = draft_out.get("profile") or profile
         draft_report = draft_out.get("gauntlet") or {}
 
-        # 3. headline — retitle from the FINAL prose, per headline-guidance.md (truthful, no clickbait).
-        hero: dict[str, Any] | None = None
-        if draft:
-            hl = build_headline_writer(context).invoke({"draft": draft}, config).get("headline") or {}
-            if hl.get("title"):
-                draft = {**draft, "title": hl["title"], "standfirst": hl.get("standfirst") or draft.get("standfirst", "")}
-            # 3b. hero image — decoration, from the brief the headline writer just wrote. Off by
-            # default; every failure path returns None and the article publishes unchanged.
-            hero = make_hero(hl, context.artifacts, say=lambda m: context.emit(HERO_IMAGE, {"note": m}))
+        # Hard stop with no draft: persist best artifacts and exit without spending more.
+        if cost.is_hard_stop() and not draft.get("id"):
+            report = EditorialPipelineReport(
+                profile_id=str(profile.get("id", "")),
+                status="hard_cost_cap",
+                generated_at=datetime.now(UTC).isoformat(),
+            )
+            if context.artifacts is not None:
+                context.artifacts.write_json("editorial_pipeline_report.json", report.model_dump())
+            context.emit(PIPELINE_COMPLETED, report.model_dump())
+            return {"treatment": treatment, "draft": draft, "pipeline": report.model_dump()}
 
-        # 4. v3b — verify the flagged promises are actually kept in the prose (the last honesty
-        # gate). Cheap: nano, and free when nothing is flagged. Its pass is what earns "publishable".
-        # Runs AFTER the headline because it judges title + standfirst + body.
+        draft, hero = _headline_and_hero(context, config, draft)
+
         caveat = build_caveat_reviewer(context).invoke(
             {"draft": draft, "profile": enriched_profile}, config).get("caveat_check") or {}
         caveat_verdict = str(caveat.get("verdict", "verified"))
-
-        # 4b. SELF-HEAL — one bounded repair lap (see _repair_hedging).
         caveat_rounds = 1
         if caveat_verdict == "needs_hedging" and draft:
-            draft, enriched_profile, caveat, caveat_rounds = _repair_hedging(
-                context, config, draft=draft, treatment=treatment, profile=enriched_profile, caveat=caveat)
-            caveat_verdict = str(caveat.get("verdict", "verified"))
+            if budget_policy.allow_optional("draft_repair"):
+                draft, enriched_profile, caveat, caveat_rounds = _repair_hedging(
+                    context, config, draft=draft, treatment=treatment,
+                    profile=enriched_profile, caveat=caveat)
+                caveat_verdict = str(caveat.get("verdict", "verified"))
+            else:
+                caveat_rounds = 1
 
-        # 4c. COMPREHENSION (gate C) — see _comprehension_pass. Advisory-with-repair, never a
-        # publish gate: a hard-to-follow piece is a dud, not a lie, so it ships either way.
-        #
-        # The country flags are derived HERE, before the review, rather than at publish where
-        # they used to be. They come from the profile's declared geography, which is settled
-        # before anybody has read the finished prose — so no upstream stage can tell whether the
-        # article actually accounts for a country, and a South Africa flag shipped on a piece
-        # that never mentioned it. Deriving them first makes them reviewable, and the reviewer
-        # gets both repairs: earn the flag in a clause, or take it off.
         assigned_places = _derive_places(enriched_profile)
-        draft, enriched_profile, comprehension, comprehension_rounds = _comprehension_pass(
-            context, config, draft=draft, treatment=treatment, profile=enriched_profile,
-            places=assigned_places)
+        if budget_policy.allow_optional("comprehension_repair"):
+            draft, enriched_profile, comprehension, comprehension_rounds = _comprehension_pass(
+                context, config, draft=draft, treatment=treatment, profile=enriched_profile,
+                places=assigned_places)
+        else:
+            comprehension, comprehension_rounds = {}, 0
 
-        # 5. analytics routing — assess whether a chart/table/insight/illustration would make the
-        # story clearer, emitting grounded requests (cheap nano; always runs).
-        analytics = build_analytics_router(context).invoke(
-            {"profile": enriched_profile}, config).get("analytics_plan") or {}
-
-        # 6. analytics WORKER (capped) — fulfill the grounded requests into real artifacts via the
-        # sandboxed grok subprocess. ON by default (maps/charts must ship when the router
-        # warrants them). Cap bounds cost; set ALGENT_ANALYTICS_WORKER=0 only to pause spend.
-        produced_analytics: list[dict[str, Any]] = []
-        if analytics.get("warranted") and _analytics_worker_enabled():
-            capped = {**analytics, "requests": (analytics.get("requests") or [])[: _analytics_cap()]}
-            produced_analytics = build_analytics_worker_graph(context).invoke(
-                {"analytics_plan": capped, "profile": enriched_profile}, config).get("analytics_artifacts") or []
+        if budget_policy.allow_optional("analytics"):
+            analytics = build_analytics_router(context).invoke(
+                {"profile": enriched_profile}, config).get("analytics_plan") or {}
+            produced_analytics = _run_analytics_worker(
+                context, config, analytics, enriched_profile)
+        else:
+            analytics, produced_analytics = {}, []
 
         outcome = str(draft_report.get("outcome", ""))
         words = _body_words(draft)
-        # Keep word_count honest even if the model left it stale after a bad rewrite.
         if draft:
             draft = {**draft, "word_count": words}
-        if outcome == "blocked_omission":
-            status = "blocked"                # dropped required evidence — a real block
-        elif caveat_verdict == "needs_hedging":
-            status = "needs_hedging"          # the prose doesn't keep a flagged promise — hold
-        elif words < _MIN_PUBLISH_WORDS:
-            status = "needs_revision"         # hollow / collapsed body — never ship a caption + map
-        else:
-            # NOTE: comprehension does NOT gate here, deliberately, and it was briefly made to.
-            # The operator reads the site — it is the review surface — so a piece held for being
-            # hard to follow is a piece nobody reads and nobody learns from, while the drafting
-            # problem stays invisible. The answer to weak prose is a repair that works, not a
-            # queue. So the verdict rides on the report (and the frontmatter) where it can be
-            # seen, and the pressure lives in ``_repair_comprehension`` instead.
-            status = "publishable"            # grounded (or honestly caveated) AND caveats verified
+        status = _pipeline_status(outcome, caveat_verdict, words, enriched_profile)
+        if cost.is_hard_stop() and draft.get("id"):
+            status = "cost_capped"
 
         report = EditorialPipelineReport(
             profile_id=str(profile.get("id", "")),
@@ -216,8 +213,6 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
             comprehension_verdict=str(comprehension.get("verdict", "")),
             comprehension_findings=len(comprehension.get("findings", [])),
             comprehension_rounds=comprehension_rounds,
-            # Carried to publish so the converter can honour the reviewer's flag removals — it
-            # is the only stage that read the finished prose alongside the assigned flags.
             places_to_drop=[str(p) for p in (comprehension.get("places_to_drop") or [])],
             hero=hero,
             article_title=str(draft.get("title", "")),
@@ -232,8 +227,6 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
         )
         if context.artifacts is not None and draft:
             draft_obj = ArticleDraft.model_validate(draft)
-            # The reader-facing piece + transparency appendix (with any produced charts embedded +
-            # receipted), and the annotated draft for audit.
             context.artifacts.write_text(
                 "article_published.md",
                 render_published_article(
@@ -249,6 +242,61 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
     graph.add_edge(START, "pipeline")
     graph.add_edge("pipeline", END)
     return graph.compile()
+
+
+def _ensure_treatment(treatment: dict[str, Any], profile: dict[str, Any]) -> dict[str, Any]:
+    if treatment.get("id"):
+        return treatment
+    return {
+        **treatment,
+        "id": f"trt_fallback_{profile.get('id', 'x')}",
+        "revision": 1,
+        "reader_question": "What can be said honestly from the available evidence?",
+    }
+
+
+def _headline_and_hero(
+    context: AgentRunContext, config: RunnableConfig, draft: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    hero: dict[str, Any] | None = None
+    if not draft:
+        return draft, hero
+    with cost.essential_scope():
+        hl = build_headline_writer(context).invoke({"draft": draft}, config).get("headline") or {}
+        if hl.get("title"):
+            draft = {
+                **draft,
+                "title": hl["title"],
+                "standfirst": hl.get("standfirst") or draft.get("standfirst", ""),
+            }
+        hero = make_hero(hl, context.artifacts, say=lambda m: context.emit(HERO_IMAGE, {"note": m}))
+    return draft, hero
+
+
+def _run_analytics_worker(
+    context: AgentRunContext, config: RunnableConfig,
+    analytics: dict[str, Any], profile: dict[str, Any],
+) -> list[dict[str, Any]]:
+    if not (analytics.get("warranted") and _analytics_worker_enabled()):
+        return []
+    capped = {**analytics, "requests": (analytics.get("requests") or [])[: _analytics_cap()]}
+    return build_analytics_worker_graph(context).invoke(
+        {"analytics_plan": capped, "profile": profile}, config,
+    ).get("analytics_artifacts") or []
+
+
+def _pipeline_status(
+    outcome: str, caveat_verdict: str, words: int, profile: dict[str, Any] | None,
+) -> str:
+    if outcome == "blocked_omission":
+        return "blocked"
+    if caveat_verdict == "needs_hedging":
+        return "needs_hedging"
+    if words < _MIN_PUBLISH_WORDS:
+        return "needs_revision"
+    if not _has_article_spine(profile):
+        return "thin_spine"
+    return "publishable"
 
 
 def _repair_hedging(

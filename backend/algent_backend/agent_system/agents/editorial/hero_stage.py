@@ -4,15 +4,15 @@ The hero-image stage — turn the headline writer's brief into a file in the run
 Sits immediately after the headline because that is where ``image_subject`` and
 ``image_hook`` are written, by the one stage that has read the finished piece.
 
-Everything about this stage is designed to be *skippable*. A hero is decoration: it helps
-an article not open as a wall of text and it gives a shared link something to show. Nothing
-about the journalism depends on it. So every failure path — no key, no subject, a guard
-refusal, a dead API — returns ``None`` and the article publishes exactly as it would have
-before. It must never be able to cost us a run.
+House policy (current default): **every article gets a hero** — a thumbnail-style stage-
+setting image for the topic's substance, not evidence. Generation/API failure still returns
+``None`` so decoration can never sink a run. An empty or unsafe ``image_subject`` falls back
+to a neutral stage-setting (never invents a scene from the title — that could depict a
+disputed claim the writer declined to illustrate). Opt out with ``ALGENT_HERO_IMAGE=0``.
 
-On by default (``ALGENT_HERO_IMAGE=0`` to disable). It spends ~$0.034 per article on the
-lite model, which is a few percent of a rail, and an article without an opening picture is
-a wall of text and a shared link with nothing to show — worth more than the cost.
+On by default. It spends ~$0.034 per article on the lite model, which is a few percent of a
+rail, and an article without an opening picture is a wall of text and a shared link with
+nothing to show — worth more than the cost.
 """
 
 from __future__ import annotations
@@ -25,6 +25,10 @@ from .hero_image import IMAGE_LABEL, UnsafeImageSubject, check_hook, check_subje
 
 _ENV_ON = "ALGENT_HERO_IMAGE"
 HERO_STEM = "hero"
+
+# Neutral stage-setting when the writer left the subject empty or unsafe. Intentionally
+# claim-free — does not invent imagery from the title.
+_GENERIC_STAGE = "a quiet landscape under soft daylight"
 
 
 @dataclass(frozen=True)
@@ -44,6 +48,14 @@ def hero_enabled() -> bool:
     return os.environ.get(_ENV_ON, "1").strip().lower() not in ("0", "false", "no", "off")
 
 
+def resolve_image_subject(headline: dict[str, Any]) -> str:
+    """Pick a depictable subject. Prefer the writer's brief; else a claim-free stage-setting."""
+    written = str(headline.get("image_subject") or "").strip()
+    if written and check_subject(written) is None:
+        return written
+    return _GENERIC_STAGE
+
+
 def make_hero(
     headline: dict[str, Any],
     artifacts: Any,
@@ -60,26 +72,36 @@ def make_hero(
     if not hero_enabled() or artifacts is None:
         return None
 
-    subject = str(headline.get("image_subject") or "").strip()
+    written = str(headline.get("image_subject") or "").strip()
+    subject = resolve_image_subject(headline)
     hook = str(headline.get("image_hook") or "").strip()
-    if not subject:
-        # The headline writer is told to leave this empty when a piece has no depictable
-        # subject. That is a decision, not a gap — no image beats a misleading one.
-        note("hero: no image subject for this piece — skipped")
-        return None
+    if not written:
+        note(f'hero: empty image_subject — falling back to "{subject}"')
+    elif written != subject:
+        note(f'hero: writer subject rejected — falling back to "{subject}"')
 
-    # Check before spending. A guard refusal here is the headline writer having written a
-    # subject or hook it was told not to, which is worth surfacing rather than swallowing.
-    for label, reason in (("subject", check_subject(subject)), ("hook", check_hook(hook))):
-        if reason is not None:
-            note(f"hero: {label} rejected ({reason}) — skipped")
-            return None
+    bad_hook = check_hook(hook)
+    if bad_hook is not None:
+        note(f"hero: hook rejected ({bad_hook}) — generating without caption")
+        hook = ""
 
     try:
-        from .image_gen import generate_hero_image
+        from algent_backend.agent_system.foundation import cost
+        from .image_gen import estimated_usd as hero_est, generate_hero_image
 
-        fn = generate or generate_hero_image
-        image = fn(subject, hook=hook)
+        est = hero_est()
+        with cost.essential_scope():
+            res = cost.try_reserve(est, op="hero_image", essential=True)
+            if res is None and cost.is_active():
+                note(f"hero: skipped ({cost.mode()} — budget)")
+                return None
+            fn = generate or generate_hero_image
+            try:
+                image = fn(subject, hook=hook)
+            except Exception:
+                cost.release(res)
+                raise
+            cost.settle(res, float(getattr(image, "estimated_usd", est) or est))
     except UnsafeImageSubject as exc:
         note(f"hero: refused ({str(exc)[:100]}) — skipped")
         return None

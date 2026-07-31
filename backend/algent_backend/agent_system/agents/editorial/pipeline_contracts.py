@@ -2,8 +2,9 @@
 Editorial-pipeline contract — the end-to-end report: profile in, finished article out.
 
 Chains the two gauntlets that already work (planning, then drafting) so a single run turns a
-research profile into an actual article. The article is always produced (the best we can do);
-this report carries the quality signals a human approval surface would read.
+research profile into an actual article. Unsound treatments hold before drafting; thin
+evidence spines hold at publish even when citations are grounded. This report carries the
+quality signals a human approval surface would read.
 """
 
 from __future__ import annotations
@@ -22,7 +23,7 @@ class EditorialPipelineReport(BaseModel):
     publishable: bool = False        # status == "publishable"
     # The single honest signal for the human approval surface. v3b (the caveat reviewer) verifies
     # the prose actually keeps its flagged promises; its pass earns "publishable", its fail holds.
-    status: str = ""                 # publishable | needs_hedging | blocked
+    status: str = ""                 # publishable | needs_hedging | blocked | thin_spine | …
     caveat_verdict: str = ""         # v3b: verified | needs_hedging (AFTER any repair lap)
     caveat_findings: int = 0         # how many places the prose failed to hedge (0 = clean)
     # 1 = clean first pass; 2 = the self-heal lap ran (findings -> targeted hedge -> re-check).

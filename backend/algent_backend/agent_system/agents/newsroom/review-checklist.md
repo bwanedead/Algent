@@ -140,6 +140,14 @@ sentences in the order the evidence arrived rather than the order an idea unfold
 - **Wire-echo.** If the piece reads as a restatement of one outlet's coverage — its
   framing, its emphasis, its sequence, with "Reuters said" carrying the load — that is a
   finding. A secondary outlet is a lead, not the spine.
+- **Lead-as-article.** If the piece's subject is that a podcast / wire / hearing / blog
+  *mentioned* a finding, and the body is mostly verification-gap narration about that
+  mention rather than an explanation of the underlying claim, that is a finding — even when
+  every sentence is carefully hedged. Hedging a thin meta-piece does not make it journalism.
+  Prefer: cut research-state / "we could not verify" narration that is doing the spine's job;
+  rewrite so the outlet mention is evidence or provenance, not the subject; record the
+  structural miss clearly for the next enrichment lap. Do not invent the missing landscape
+  in this pass.
 
 **Preferred outcome:** it reads like one person who understands the subject explaining it
 once, well.

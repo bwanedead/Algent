@@ -66,19 +66,40 @@ def build_gauntlet_graph(context: AgentRunContext) -> Any:
         initial_findings = len(review.get("findings", []))
 
         # 2-3. enrich per lane, sequentially — each merges on the prior result.
+        from algent_backend.agent_system.agents.newsroom import budget_policy
+
         lanes_run: list[str] = []
-        addressed: list[str] = []
+        start_profile = profile
+        initial_ids = {
+            str(f.get("id")) for f in review.get("findings", []) if f.get("id")
+        }
         for lane, module in _LANE_MODULES:
             if not any(f.get("lane") == lane for f in review.get("findings", [])):
                 continue
+            if not budget_policy.allow_optional("enrich_lane"):
+                break
             out = module.build_graph(context).invoke({"profile": profile, "review": review}, config)
             profile = out.get("profile", profile)
             lanes_run.append(lane)
-            addressed.extend(out.get("addressed", []))
 
-        # 4. re-review the enriched profile (closes the loop).
-        rereview = build_reviewer(context).invoke({"profile": profile}, config)["review"]
-        _write(context, "review_final.json", rereview)
+        # 4. re-review only when enrichment ran or the profile revision moved. Skipping an
+        # unchanged re-read saves a full review pass when there was nothing to re-judge.
+        profile_changed = (
+            int(profile.get("revision", start_rev) or start_rev) != start_rev
+            or profile is not start_profile
+        )
+        if lanes_run or profile_changed:
+            rereview = build_reviewer(context).invoke({"profile": profile}, config)["review"]
+            _write(context, "review_final.json", rereview)
+        else:
+            rereview = review
+            _write(context, "review_final.json", rereview)
+
+        final_ids = {
+            str(f.get("id")) for f in rereview.get("findings", []) if f.get("id")
+        }
+        # Re-review owns closure: findings present initially but absent after re-review.
+        addressed = sorted(initial_ids - final_ids)
 
         report = GauntletReport(
             profile_id=str(profile.get("id", "")),

@@ -105,9 +105,43 @@ def quality_digest(rail: dict, pipeline: dict, *, run_id: str = "") -> str:
         f"status: {pipeline.get('status', '?')}  ·  draft: {pipeline.get('draft_outcome', '?')}"
         f"  ·  treatment: {pipeline.get('treatment_verdict', '?')}",
         f"caveats: {pipeline.get('caveat_verdict', '?')} ({pipeline.get('caveat_findings', 0)} findings)",
-        f"analytics: {pipeline.get('analytics_produced', 0)} produced, {pipeline.get('analytics_escapes', 0)} escapes",
-        f"cost: ~${float(rail.get('total_usd', 0.0) or 0.0):.4f}",
+        f"analytics: {pipeline.get('analytics_produced', 0)} produced,"
+        f" {pipeline.get('analytics_escapes', 0)} escapes",
+        f"cost: ~${float(rail.get('total_usd', 0.0) or 0.0):.4f}"
+        f"  ·  mode: {rail.get('budget_mode') or 'normal'}"
+        f"  ·  soft/hard: ${float(rail.get('soft_cap_usd') or 1):.2f}"
+        f"/${float(rail.get('hard_cap_usd') or 3):.2f}",
     ]
+    if by_stage := rail.get("cost_by_stage"):
+        parts = [f"{k}=${float(v):.4f}" for k, v in sorted(by_stage.items())]
+        if parts:
+            lines.append("cost_by_stage: " + ", ".join(parts))
+    if rail.get("soft_cap_crossed"):
+        lines.append(
+            "soft_cap_crossed: yes"
+            + (f" @ {rail['soft_crossed_at_stage']}" if rail.get("soft_crossed_at_stage") else "")
+        )
+    if rail.get("hard_stop"):
+        lines.append(
+            "hard_stop: yes"
+            + (f" @ {rail['hard_stop_stage']}" if rail.get("hard_stop_stage") else "")
+        )
+    skipped = rail.get("skipped_operations") or []
+    if skipped:
+        lines.append(
+            "skipped: " + ", ".join(
+                f"{s.get('op', '?')}({s.get('reason', '')})" for s in skipped[:12]
+            )
+        )
+    refused = rail.get("refused_operations") or []
+    if refused:
+        lines.append(
+            "refused: " + ", ".join(
+                f"{s.get('op', '?')}({s.get('reason', '')})" for s in refused[:12]
+            )
+        )
+    if disp := rail.get("disposition"):
+        lines.append(f"disposition: {disp}")
     # Discovery observability across runs: pool share vs what fed the winner (overfit signal).
     if pool := rail.get("pool_by_channel"):
         lines.append("pool: " + ", ".join(f"{k}={v}" for k, v in sorted(pool.items())))

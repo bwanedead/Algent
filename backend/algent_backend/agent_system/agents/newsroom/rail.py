@@ -11,8 +11,9 @@ It chains the stages that already work as sub-graphs under ONE run/context (the 
 gauntlets and the editorial pipeline use), so every stage's events land in this run's timeline and
 a single report closes the loop. Four deliberate properties:
 
-  (i)   COST — the rail tees the event stream and sums each stage's reported ``estimated_usd``, so
-        every finished article carries what it actually cost to make.
+  (i)   COST — the rail wraps the run in ``cost.article_scoped`` and buckets
+        ``article_spent_usd`` by ``RAIL_STAGE``, so every finished article carries
+        what it actually cost to make (stage allowances draw from one remaining pool).
   (ii)  BOUNDED — the rail inherits each stage's own floors (models, paid budgets, USD caps, review
         gates); it re-litigates none of them. It promotes the router's single #1 vector — one article
         per run — rather than fanning out.
@@ -24,6 +25,9 @@ a single report closes the loop. Four deliberate properties:
         until they fall off the ring). Saves t0/synthesis cost only — not a variety bypass.
 
 Each stage can legitimately be the end: no promotable vector is a valid outcome, not an error.
+Profile readiness is diagnosed honestly (disposition on the report) but does not hard-stop the
+rail — the site is the review surface, so immature profiles still draft and publish with their
+quality status visible for the feedback loop.
 """
 
 from __future__ import annotations
@@ -40,6 +44,7 @@ from algent_backend.agent_system.agents.research.leads import (
     JsonLeadStore,
     open_leads_for_discovery,
 )
+from algent_backend.agent_system.foundation import cost
 from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.context import AgentRunContext
 from algent_backend.agent_system.runs.control_plane.layout import find_run_root
@@ -94,112 +99,180 @@ def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | Non
     """Compile the full-rail orchestrator. ``lead_store`` is injectable (tests pass a fake)."""
 
     def run(state: RailState, config: RunnableConfig) -> dict[str, Any]:
-        # (i) COST tee — a context whose emit forwards to the real sink AND captures every stage's
-        # reported estimated_usd, so the rail can total the run's spend.
-        costs: list[float] = []
-
-        # Also counts X searches: we spent two doctrine passes trying to raise X adoption while
-        # only INFERRING usage from artifacts. Measure it instead — an X result carries kind="x".
-        x_calls = [0]
-
-        def _tee(event_type: str, payload: dict[str, Any] | None = None) -> None:
-            p = payload or {}
-            usd = p.get("estimated_usd")
-            if isinstance(usd, (int, float)):
-                costs.append(float(usd))
-            if event_type == ev.TOOL_RESULT and '"kind": "x"' in str(p.get("content", "")):
-                x_calls[0] += 1
-            context.emit(event_type, p)
-
-        sub = dataclasses.replace(context, emit=_tee)
-        report = NewsroomRailReport(generated_at=datetime.now(UTC).isoformat())
-
-        # 1. discovery synthesis (pool -> t1 portfolio) — OR reuse a prior portfolio and skip t0.
-        # Reuse path: operator supplies ``portfolio`` (e.g. --from-run). Saves discovery cost only.
-        # Routing always applies the same headline-ring cooldown as a fresh run — cooled families
-        # cannot promote until they fall off the ring. Backfeed only applies to a fresh discovery pass.
-        pool = state.get("pool")
-        reused = state.get("portfolio") or {}
-        if reused.get("vectors"):
-            portfolio = reused
-            report.portfolio_source = "reused"
-            report.source_run_id = str(state.get("source_run_id") or "")
-            report.vector_count = len(portfolio.get("vectors", []))
-            report.pool_items = int(portfolio.get("total_considered", 0) or 0)
-            report.stage_reached = "synthesis"
-            context.emit(RAIL_STAGE, {
-                "stage": "synthesis", "skipped": True, "reason": "portfolio_reused",
-                "source_run_id": report.source_run_id, "vector_count": report.vector_count,
-            })
-        else:
-            if _backfeed_enabled():
-                pool, injected = _inject_backfeed(context, pool, lead_store or JsonLeadStore())
-                report.backfeed_leads_injected = injected
-
-            context.emit(RAIL_STAGE, {"stage": "synthesis"})
-            syn_input: dict[str, Any] = {"pool": pool} if pool is not None else {}
-            portfolio = build_synthesis(sub).invoke(syn_input, config).get("portfolio") or {}
-            report.portfolio_source = "fresh"
-            report.vector_count = len(portfolio.get("vectors", []))
-            report.pool_items = int(portfolio.get("total_considered", 0) or 0)
-            report.stage_reached = "synthesis"
-            if not portfolio.get("vectors"):
-                return _finish(context, report, note="synthesis produced no vectors")
-
-        # 2. routing (portfolio -> the #1 vector to promote). Always runs under the same cooldown
-        # ring whether the portfolio is fresh or reused (variety is not optional).
-        context.emit(RAIL_STAGE, {"stage": "routing"})
-        route = build_router(sub).invoke({"portfolio": portfolio}, config)
-        vector = route.get("selected_vector")
-        report.stage_reached = "routing"
-        if not vector:
-            return _finish(context, report, note="routing promoted no vector")
-        report.selected_vector_id = str(vector.get("id", ""))
-        report.selected_vector_title = str(vector.get("title", ""))
-        report.pool_by_channel, report.promoted_from = _channel_provenance(context, pool, vector)
-
-        # 3. profile (the #1 vector -> a researched t2 profile).
-        # Pass pool so research can hydrate X post URLs from supporting_hits.
-        context.emit(RAIL_STAGE, {"stage": "profile"})
-        profile = build_profile(sub).invoke(
-            {"vector": vector, "pool": pool}, config,
-        ).get("profile") or {}
-        report.stage_reached = "profile"
-        if not profile.get("id"):
-            return _finish(context, report, note="profile research produced nothing")
-        report.profile_id = str(profile.get("id", ""))
-
-        # 4. profile gauntlet (review/enrich the profile to maturity).
-        context.emit(RAIL_STAGE, {"stage": "gauntlet"})
-        g = build_profile_gauntlet(sub).invoke({"profile": profile}, config)
-        profile = g.get("profile") or profile
-        report.gauntlet_verdict = str((g.get("gauntlet") or {}).get("final_verdict", ""))
-        report.stage_reached = "gauntlet"
-
-        # 5. editorial pipeline (profile -> planned, drafted, headlined, caveated, receipted article).
-        context.emit(RAIL_STAGE, {"stage": "editorial"})
-        pipeline = build_editorial(sub).invoke({"profile": profile}, config).get("pipeline") or {}
-        report.article_status = str(pipeline.get("status", ""))
-        report.article_title = str(pipeline.get("article_title", ""))
-        report.analytics_produced = int(pipeline.get("analytics_produced", 0) or 0)
-        report.stage_reached = "complete"
-        report.total_usd = round(sum(costs), 6)
-        report.x_searches = x_calls[0]
-
-        # 6. PUBLISH — by virtue of the pipeline, not by someone running a command. A piece that
-        # earned `publishable` goes live here; the floors already decided, so there is nothing left
-        # for a human to approve. (The gate still holds: anything short of publishable routes to the
-        # held ledger instead, and the ALGENT_SITE_PUBLISH kill switch can pause pushing entirely.)
-        context.emit(RAIL_STAGE, {"stage": "publish"})
-        _publish(context, report)
-
-        return _finish(context, report, pipeline=pipeline, total=report.total_usd)
+        with cost.article_scoped():
+            return _run_rail(context, state, config, lead_store=lead_store)
 
     graph = StateGraph(RailState)
     graph.add_node("run", run)
     graph.add_edge(START, "run")
     graph.add_edge("run", END)
     return graph.compile()
+
+
+def _run_rail(
+    context: AgentRunContext, state: RailState, config: RunnableConfig, *, lead_store: Any | None,
+) -> dict[str, Any]:
+    sub, x_calls = _install_cost_tee(context)
+    report = NewsroomRailReport(generated_at=datetime.now(UTC).isoformat())
+
+    pool, portfolio, early = _resolve_portfolio(
+        context, sub, state, config, report, lead_store=lead_store)
+    if early is not None:
+        return _finish_with_cost(context, report, early)
+
+    profile, early = _route_profile_gauntlet(
+        context, sub, config, report, pool=pool, portfolio=portfolio)
+    if early is not None:
+        return _finish_with_cost(context, report, early)
+
+    return _editorial_and_publish(
+        context, sub, config, report, profile, x_calls=x_calls,
+    )
+
+
+def _install_cost_tee(context: AgentRunContext) -> tuple[Any, list[int]]:
+    """Forward events; label the article ledger from RAIL_STAGE. Returns (sub_ctx, x_calls)."""
+    x_calls = [0]
+
+    def _tee(event_type: str, payload: dict[str, Any] | None = None) -> None:
+        p = payload or {}
+        if event_type == RAIL_STAGE and p.get("stage"):
+            cost.set_stage(str(p["stage"]))
+        if event_type == ev.TOOL_RESULT and '"kind": "x"' in str(p.get("content", "")):
+            x_calls[0] += 1
+        context.emit(event_type, p)
+
+    return dataclasses.replace(context, emit=_tee), x_calls
+
+
+def _apply_cost_snapshot(report: NewsroomRailReport) -> None:
+    snap = cost.snapshot()
+    report.total_usd = float(snap.get("spent_usd") or 0.0)
+    report.soft_cap_usd = float(snap.get("soft_cap_usd") or cost.soft_cap_usd())
+    report.hard_cap_usd = float(snap.get("hard_cap_usd") or cost.hard_cap_usd())
+    report.budget_mode = str(snap.get("mode") or "normal")
+    report.soft_cap_crossed = bool(snap.get("soft_cap_crossed"))
+    report.soft_crossed_at_stage = str(snap.get("soft_crossed_at_stage") or "")
+    report.hard_stop = bool(snap.get("hard_stop"))
+    report.hard_stop_stage = str(snap.get("hard_stop_stage") or "")
+    report.cost_by_stage = dict(snap.get("cost_by_stage") or {})
+    report.cost_by_op = dict(snap.get("cost_by_op") or {})
+    report.skipped_operations = list(snap.get("skipped_operations") or [])
+    report.refused_operations = list(snap.get("refused_operations") or [])
+
+
+def _finish_with_cost(
+    context: AgentRunContext, report: NewsroomRailReport, early: dict[str, Any],
+) -> dict[str, Any]:
+    """Re-finish an early exit after snapshotting the article ledger onto the report."""
+    _apply_cost_snapshot(report)
+    return _finish(
+        context, report,
+        pipeline=early.get("pipeline") or {},
+        total=report.total_usd,
+    )
+
+
+def _resolve_portfolio(
+    context: AgentRunContext, sub: AgentRunContext, state: RailState, config: RunnableConfig,
+    report: NewsroomRailReport, *, lead_store: Any | None,
+) -> tuple[dict | None, dict[str, Any], dict[str, Any] | None]:
+    """Discovery synthesis or portfolio reuse. Returns (pool, portfolio, early_finish_or_None)."""
+    pool = state.get("pool")
+    reused = state.get("portfolio") or {}
+    if reused.get("vectors"):
+        portfolio = reused
+        report.portfolio_source = "reused"
+        report.source_run_id = str(state.get("source_run_id") or "")
+        report.vector_count = len(portfolio.get("vectors", []))
+        report.pool_items = int(portfolio.get("total_considered", 0) or 0)
+        report.stage_reached = "synthesis"
+        sub.emit(RAIL_STAGE, {
+            "stage": "synthesis", "skipped": True, "reason": "portfolio_reused",
+            "source_run_id": report.source_run_id, "vector_count": report.vector_count,
+        })
+        return pool, portfolio, None
+
+    if _backfeed_enabled():
+        pool, injected = _inject_backfeed(context, pool, lead_store or JsonLeadStore())
+        report.backfeed_leads_injected = injected
+
+    sub.emit(RAIL_STAGE, {"stage": "synthesis"})
+    syn_input: dict[str, Any] = {"pool": pool} if pool is not None else {}
+    portfolio = build_synthesis(sub).invoke(syn_input, config).get("portfolio") or {}
+    report.portfolio_source = "fresh"
+    report.vector_count = len(portfolio.get("vectors", []))
+    report.pool_items = int(portfolio.get("total_considered", 0) or 0)
+    report.stage_reached = "synthesis"
+    if not portfolio.get("vectors"):
+        return pool, portfolio, _finish(context, report, note="synthesis produced no vectors")
+    return pool, portfolio, None
+
+
+def _route_profile_gauntlet(
+    context: AgentRunContext, sub: AgentRunContext, config: RunnableConfig,
+    report: NewsroomRailReport, *, pool: dict | None, portfolio: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    """Routing → profile → gauntlet. Returns (profile, early_finish_or_None)."""
+    sub.emit(RAIL_STAGE, {"stage": "routing"})
+    route = build_router(sub).invoke({"portfolio": portfolio}, config)
+    vector = route.get("selected_vector")
+    report.stage_reached = "routing"
+    if not vector:
+        return {}, _finish(context, report, note="routing promoted no vector")
+    report.selected_vector_id = str(vector.get("id", ""))
+    report.selected_vector_title = str(vector.get("title", ""))
+    report.pool_by_channel, report.promoted_from = _channel_provenance(context, pool, vector)
+
+    sub.emit(RAIL_STAGE, {"stage": "profile"})
+    profile = build_profile(sub).invoke(
+        {"vector": vector, "pool": pool}, config,
+    ).get("profile") or {}
+    report.stage_reached = "profile"
+    if not profile.get("id"):
+        return profile, _finish(context, report, note="profile research produced nothing")
+    report.profile_id = str(profile.get("id", ""))
+
+    sub.emit(RAIL_STAGE, {"stage": "gauntlet"})
+    g = build_profile_gauntlet(sub).invoke({"profile": profile}, config)
+    profile = g.get("profile") or profile
+    gauntlet = g.get("gauntlet") or {}
+    report.gauntlet_verdict = str(gauntlet.get("final_verdict", ""))
+    report.stage_reached = "gauntlet"
+    _record_profile_disposition(report, profile, gauntlet)
+    return profile, None
+
+
+def _record_profile_disposition(
+    report: NewsroomRailReport, profile: dict[str, Any], gauntlet: dict[str, Any],
+) -> None:
+    """Soft readiness diagnose — disposition on the report, never a hard stop."""
+    _ready, disposition, why = _profile_ready_for_prose(profile, gauntlet)
+    if disposition:
+        report.disposition = disposition
+        report.note = why
+
+
+def _editorial_and_publish(
+    context: AgentRunContext, sub: AgentRunContext, config: RunnableConfig,
+    report: NewsroomRailReport, profile: dict[str, Any], *,
+    x_calls: list[int],
+) -> dict[str, Any]:
+    """Draft → publish. Fail-open publish; quality status rides on the report."""
+    sub.emit(RAIL_STAGE, {"stage": "editorial"})
+    pipeline = build_editorial(sub).invoke({"profile": profile}, config).get("pipeline") or {}
+    report.article_status = str(pipeline.get("status", ""))
+    report.article_title = str(pipeline.get("article_title", ""))
+    report.analytics_produced = int(pipeline.get("analytics_produced", 0) or 0)
+    report.stage_reached = "complete"
+    _apply_cost_snapshot(report)
+    report.x_searches = x_calls[0]
+    # Write the report BEFORE publish so the digest sees disposition, provenance, and cost.
+    if context.artifacts is not None:
+        context.artifacts.write_json("newsroom_rail_report.json", report.model_dump())
+    sub.emit(RAIL_STAGE, {"stage": "publish"})
+    _publish(context, report)
+    return _finish(context, report, pipeline=pipeline, total=report.total_usd)
 
 
 def _channel_provenance(
@@ -337,6 +410,36 @@ def _lead_to_item(lead: Any) -> dict[str, Any]:
     }
 
 
+# Profile gauntlet verdicts that are ready without a soft-warning disposition.
+# Soft enrichment leftovers are fine; verification/unsound get a disposition note but
+# still proceed — the site is the review surface.
+_PROSE_READY_VERDICTS = frozenset({"mature", "needs_enrichment"})
+_BLOCKING_PROFILE_STATUSES = frozenset({
+    "needs_verification", "insufficient_evidence", "unsound",
+})
+
+
+def _profile_ready_for_prose(
+    profile: dict[str, Any], gauntlet: dict[str, Any],
+) -> tuple[bool, str, str]:
+    """Return (ready, disposition, note). Soft diagnose only — never hard-stops the rail.
+
+    Review already diagnosed maturity; we surface that as disposition so the published
+    artifact carries why it was weak. Editorial still runs: publishing is the feedback loop.
+    """
+    verdict = str(gauntlet.get("final_verdict") or "").strip()
+    status = str(profile.get("profile_status") or "").strip()
+
+    if verdict in ("needs_verification", "unsound") or not verdict:
+        disposition = verdict or "held"
+        return False, disposition, f"profile soft-warn (gauntlet: {disposition})"
+    if status in _BLOCKING_PROFILE_STATUSES:
+        return False, status, f"profile soft-warn (status: {status})"
+    if verdict not in _PROSE_READY_VERDICTS:
+        return False, "held", f"profile soft-warn (gauntlet: {verdict})"
+    return True, "", ""
+
+
 def _finish(
     context: AgentRunContext, report: NewsroomRailReport, *,
     pipeline: dict | None = None, total: float = 0.0, note: str = "",
@@ -367,13 +470,15 @@ def _preview(r: NewsroomRailReport) -> dict[str, Any]:
         "summary": (
             origin
             + (f" -> promoted: {r.selected_vector_title[:50]}" if r.selected_vector_title else "")
+            + (f" -> held: {r.disposition}" if r.disposition else "")
             + (f" -> article: {r.article_status}" if r.article_status else "")
             + (f" -> {r.publish_action}" if r.publish_action else "")
             + f"  ·  ~${r.total_usd:.4f}"
             + (f"  ·  {r.note}" if r.note else "")
         ),
         "items": [
-            f"profile: {r.profile_id or '—'} ({r.gauntlet_verdict or 'n/a'})",
+            f"profile: {r.profile_id or '—'} ({r.gauntlet_verdict or 'n/a'})"
+            + (f" · disposition: {r.disposition}" if r.disposition else ""),
             f"article: {r.article_title or '—'}",
         ],
         "link": "../artifacts/article_published.md",

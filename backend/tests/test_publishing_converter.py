@@ -78,10 +78,13 @@ def test_image_refs_rewritten_to_site_path_and_collected() -> None:
 
 def test_digest_carries_channel_provenance_when_present() -> None:
     art = _convert(rail={**_RAIL, "pool_by_channel": {"gkg": 40, "x": 24}, "promoted_from": {"x": 4},
-                         "x_searches": 1})
+                         "x_searches": 1, "cost_by_stage": {"profile": 0.05, "editorial": 0.05},
+                         "disposition": "needs_verification"})
     assert "pool: gkg=40, x=24" in art.digest
     assert "promoted_from: x=4" in art.digest
     assert "x_searches: 1" in art.digest
+    assert "cost_by_stage:" in art.digest and "editorial=$0.0500" in art.digest
+    assert "disposition: needs_verification" in art.digest
 
 
 def test_digest_carries_the_floor_signals_and_cost() -> None:
@@ -89,6 +92,7 @@ def test_digest_carries_the_floor_signals_and_cost() -> None:
     d = art.digest
     assert "status: needs_hedging" in d and "caveats: needs_hedging (6 findings)" in d
     assert "cost: ~$0.1010" in d and "run: run_abc" in d
+    assert "mode: normal" in d
     assert "analytics: 1 produced, 0 escapes" in d
 
 

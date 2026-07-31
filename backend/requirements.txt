@@ -35,3 +35,6 @@ langchain-exa==1.1.0
 trafilatura==2.1.0
 feedparser==6.0.12
 # brave_search, x_search, gdelt_events, firecrawl fallback use httpx (above) directly
+# Optional (NOT installed by default — enable when your machine can afford it):
+#   pip install playwright && playwright install chromium
+#   then set ALGENT_FETCH_PLAYWRIGHT=1 for JS-rendered page rescue in fetch_content

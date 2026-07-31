@@ -37,6 +37,7 @@ _MAX_FINDINGS = 4  # bound the work per enrich pass
 class EnrichState(TypedDict, total=False):
     profile: dict[str, Any]  # the profile to enrich
     review: dict[str, Any]   # its ReviewReport (the assignments)
+    addressed: list[str]     # finding ids closed only after a validated evidence delta
 
 
 def build_enrich_graph(
@@ -73,6 +74,9 @@ def build_enrich_graph(
 
         before = (len(profile.source_ledger), len(profile.claim_ledger), len(profile.threads))
         merged = merge_additions(profile, additions, captured, generator=generator, stage=stage)
+        # Model-claimed closure is not authoritative — re-review owns finding closure.
+        # Keep claimed ids on the event for observability; return none as "addressed".
+        addressed: list[str] = []
         try:
             JsonProfileStore().save(merged)
         except Exception:  # noqa: BLE001
@@ -80,15 +84,16 @@ def build_enrich_graph(
         if context.artifacts is not None:
             context.artifacts.write_json("profile.json", merged.model_dump())
             context.artifacts.write_text("briefing.md", render_briefing(merged))
-        context.emit(ev.OUTPUT_PREVIEW, _enrich_preview(merged, before, additions, lane))
+        context.emit(ev.OUTPUT_PREVIEW, _enrich_preview(merged, before, additions, lane, addressed))
         context.emit(ENRICH_COMPLETED, {
             "profile_id": merged.id, "lane": lane, "revision": merged.revision,
             "added_sources": len(merged.source_ledger) - before[0],
             "added_claims": len(merged.claim_ledger) - before[1],
-            "addressed": additions.addressed_findings,
+            "addressed": addressed,
+            "addressed_claimed": additions.addressed_findings,
             "estimated_usd": estimated_usd,
         })
-        return {"profile": merged.model_dump(), "addressed": additions.addressed_findings}
+        return {"profile": merged.model_dump(), "addressed": addressed}
 
     graph = StateGraph(EnrichState)
     graph.add_node("enrich", enrich)
@@ -119,14 +124,18 @@ def _assignment_preview(profile: SignalProfile, findings: list, lane: str) -> di
     }
 
 
-def _enrich_preview(merged: SignalProfile, before: tuple, additions: ProfileAdditions, lane: str) -> dict[str, Any]:
+def _enrich_preview(
+    merged: SignalProfile, before: tuple, additions: ProfileAdditions, lane: str,
+    addressed: list[str] | None = None,
+) -> dict[str, Any]:
     snap = sum(1 for s in merged.source_ledger if s.snapshot is not None)
+    kept = addressed if addressed is not None else additions.addressed_findings
     return {
         "title": f"profile enriched (lane: {lane}, rev {merged.revision})",
         "summary": (
             f"+{len(merged.source_ledger) - before[0]} sources (+{snap} deep-read total), "
             f"+{len(merged.claim_ledger) - before[1]} claims, +{len(merged.threads) - before[2]} threads | "
-            f"addressed: {additions.addressed_findings}"
+            f"addressed: {kept}"
         ),
         "items": [f"+source: {s.title or s.url}" for s in additions.sources[:6]],
         "link": "../artifacts/briefing.md",

@@ -10,7 +10,10 @@ Firecrawl, or X) happens only when the agent deliberately asks for it.
 
 Capabilities, by parameter:
 - **search the web** — ``web_search(query, kind="keyword"|"semantic")``. Keyword
-  routes to Tavily, semantic to Exa; the agent picks by intent, not vendor.
+  prefers Tavily, falls through to Brave then Exa on hard provider failure;
+  semantic prefers Exa, falls through to keyword engines.
+- **scholarly resolve** — ``web_search(doi=...)`` or ``kind="scholar"`` — free
+  Crossref/OpenAlex lookup for papers (no paid budget).
 - **read a page** — ``web_search(read_url="https://…")``; free extraction by
   default, ``richness="rich"`` permits the paid Firecrawl fallback for hard pages.
 - **X** — ``web_search(query, source="x")``; live X search. A DIFFERENT SOURCE CLASS (the
@@ -29,7 +32,7 @@ from typing import Any
 from ....foundation import cost, snapshots
 from ...spec import GLOBAL_SCOPE, ToolSpec
 from .._wrap import as_structured_tool
-from . import policy
+from . import circuit, policy
 
 WEB_SEARCH_TOOL_ID = "web_search"
 
@@ -58,13 +61,36 @@ def _cost_capped(channel: str) -> dict[str, Any]:
 
 
 def _spend_paid(channel: str) -> dict[str, Any] | None:
-    """Try to authorize one paid call: count budget AND dollar cap. None = OK."""
+    """Authorize + settle one paid call (count budget AND dollar reserve). None = OK."""
+    if cost.is_slim() or cost.is_hard_stop():
+        cost.record_skip(channel, cost.mode())
+        return {
+            "error": f"channel '{channel}' skipped ({cost.mode()})",
+            "budget_mode": cost.mode(),
+        }
+    est = cost.estimate_call_cost(channel)
+    if not policy.try_spend_paid():
+        return _budget_exhausted(channel)
+    res = cost.try_reserve(est, op=channel)
+    if res is None:
+        return _cost_capped(channel)
+    cost.settle(res, est)
+    return None
+
+
+def _can_afford_paid(channel: str) -> dict[str, Any] | None:
+    """Check paid affordability without consuming budget. None = OK."""
+    if cost.is_slim() or cost.is_hard_stop():
+        cost.record_skip(channel, cost.mode())
+        return {
+            "error": f"channel '{channel}' skipped ({cost.mode()})",
+            "budget_mode": cost.mode(),
+        }
     est = cost.estimate_call_cost(channel)
     if cost.would_exceed(est):
         return _cost_capped(channel)
-    if not policy.try_spend_paid():
+    if policy.remaining_paid_budget() <= 0:
         return _budget_exhausted(channel)
-    cost.add(est)
     return None
 
 
@@ -75,59 +101,76 @@ def _search(
     richness: str = "standard",
     source: str = "web",
     max_results: int = 5,
+    doi: str = "",
 ) -> dict[str, Any]:
-    """Investigate the web through one cost-aware surface. See the module docstring.
-
-    - ``query`` + ``kind`` ("keyword"|"semantic"): search the web.
-    - ``read_url``: read that page instead (``richness="rich"`` allows paid Firecrawl).
-    - ``source="x"``: LIVE X SEARCH — real posts, available now. Use it when a story is unfolding,
-      when you need what someone ACTUALLY posted rather than an outlet's characterization of it,
-      or when the wires agree and you need to know if anyone credible on the ground disputes them.
-    """
+    """Investigate the web through one cost-aware surface. See the module docstring."""
     max_results = max(1, min(max_results, _MAX_RESULTS_CAP))
-
     if read_url:
-        rich = richness == "rich"
-        # Reading always needs READ; the paid Firecrawl fallback also needs RICH
-        # and spends one paid-budget unit (deliberate, capped).
-        if not policy.is_allowed(policy.READ):
-            return _denied(policy.READ)
-        if rich:
-            if not policy.is_allowed(policy.RICH):
-                return _denied(policy.RICH)
-            refusal = _spend_paid(policy.RICH)
-            if refusal is not None:
-                return refusal
-        return _read(read_url, rich=rich)
-
+        return _search_read(read_url, richness=richness)
+    if doi or kind == "scholar":
+        return _search_scholar(query=query, doi=doi)
     if source == "x":
-        if not policy.is_allowed(policy.X):
-            return _denied(policy.X)
-        # Pre-authorize on the default estimate; then true-up to posts actually returned.
-        refusal = _spend_paid(policy.X)
-        if refusal is not None:
-            return refusal
-        from .x_search import x_recent_search
-        from algent_backend.agent_system.foundation import cost as run_cost
-        payload = x_recent_search(query, max_results)
-        results = payload.get("results") or []
-        # True-up: we already charged estimate_call_cost("x"); adjust to posts × $0.005.
-        assumed = run_cost.estimate_call_cost(policy.X)
-        actual = run_cost.estimate_x_posts(len(results) if isinstance(results, list) else 0)
-        delta = actual - assumed
-        if abs(delta) > 1e-9:
-            run_cost.add(delta)
-        return {
-            "action": "search", "kind": "x",
-            "estimated_usd": round(actual, 6),
-            "posts": len(results) if isinstance(results, list) else 0,
-            **payload,
-        }
-
+        return _search_x(query, max_results)
     channel = policy.SEMANTIC if kind == "semantic" else policy.KEYWORD
     if not policy.is_allowed(channel):
         return _denied(channel)
     return _search_web(query, kind, max_results)
+
+
+def _search_read(read_url: str, *, richness: str) -> dict[str, Any]:
+    rich = richness == "rich"
+    if not policy.is_allowed(policy.READ):
+        return _denied(policy.READ)
+    if rich:
+        if not policy.is_allowed(policy.RICH):
+            return _denied(policy.RICH)
+        # Affordability check only — charge when Firecrawl is actually used.
+        refusal = _can_afford_paid(policy.RICH)
+        if refusal is not None:
+            return refusal
+    return _read(read_url, rich=rich)
+
+
+def _search_scholar(*, query: str, doi: str) -> dict[str, Any]:
+    if not policy.is_allowed(policy.KEYWORD) and not policy.is_allowed(policy.SEMANTIC):
+        return _denied(policy.KEYWORD)
+    from . import scholarly
+    return scholarly.resolve(query=query, doi=doi)
+
+
+def _search_x(query: str, max_results: int) -> dict[str, Any]:
+    if not policy.is_allowed(policy.X):
+        return _denied(policy.X)
+    if cost.is_slim() or cost.is_hard_stop():
+        cost.record_skip(policy.X, cost.mode())
+        return {
+            "error": f"channel 'x' skipped ({cost.mode()})",
+            "budget_mode": cost.mode(),
+        }
+    # Reserve maximum for requested post count; settle actual returned posts.
+    ceiling = cost.estimate_x_posts(max_results)
+    if ceiling <= 0:
+        ceiling = cost.estimate_call_cost(policy.X)
+    if not policy.try_spend_paid():
+        return _budget_exhausted(policy.X)
+    res = cost.try_reserve(ceiling, op=policy.X)
+    if res is None:
+        return _cost_capped(policy.X)
+    from .x_search import x_recent_search
+    try:
+        payload = x_recent_search(query, max_results)
+    except Exception:
+        cost.release(res)
+        raise
+    results = payload.get("results") or []
+    actual = cost.estimate_x_posts(len(results) if isinstance(results, list) else 0)
+    cost.settle(res, actual)
+    return {
+        "action": "search", "kind": "x",
+        "estimated_usd": round(actual, 6),
+        "posts": len(results) if isinstance(results, list) else 0,
+        **payload,
+    }
 
 
 def _read(url: str, *, rich: bool) -> dict[str, Any]:
@@ -141,15 +184,34 @@ def _read(url: str, *, rich: bool) -> dict[str, Any]:
     """
     from ..depth.fetch_content import _fetch
 
+    paid_res = None
+    allow_paid = False
+    rich_est = cost.estimate_call_cost(policy.RICH)
+    if rich:
+        paid_res = cost.try_reserve(rich_est, op=policy.RICH)
+        allow_paid = paid_res is not None
+
     try:
-        result = _fetch(url, allow_paid_fallback=rich)
+        result = _fetch(url, allow_paid_fallback=allow_paid)
     except Exception as exc:  # noqa: BLE001 — return a clean message, never crash the loop
+        cost.release(paid_res)
         out = {"action": "read", "url": url, "error": str(exc)[:200]}
         if rich:
             out["barrier"] = True
         else:
-            out["retry_hint"] = "free read failed on a hard page — retry richness='rich' (paid crawler)"
+            out["retry_hint"] = (
+                "free read failed on a hard page — retry richness='rich' (paid crawler)"
+            )
         return out
+    # Charge rich budget only when Firecrawl actually rescued the page.
+    if allow_paid and result.get("via") == "firecrawl":
+        if policy.try_spend_paid():
+            cost.settle(paid_res, rich_est)
+        else:
+            cost.release(paid_res)
+            result = {**result, "budget_note": "rich budget unavailable"}
+    else:
+        cost.release(paid_res)
     # Only a GOOD extraction is a real deep read that grounds a claim. A thin/blocked bot-wall
     # must NOT falsely ground — snapshot (the grounding signal) only on good content.
     if result.get("content") and result.get("quality") == "good":
@@ -167,19 +229,89 @@ def _read(url: str, *, rich: bool) -> dict[str, Any]:
 
 
 def _search_web(query: str, kind: str, max_results: int) -> dict[str, Any]:
-    """Route to the right engine by intent: semantic -> Exa, else Tavily."""
-    try:
-        if kind == "semantic":
-            from .exa import _build as build_engine
-        else:
-            from .tavily import _build as build_engine
-        results = build_engine().invoke({"query": query})
-    except Exception as exc:  # noqa: BLE001 — surface a clean error to the agent
-        return {"action": "search", "kind": kind, "query": query, "error": str(exc)[:200]}
-    # Meter the call's cost (these tiers are cheap, but real beyond free quota) so
-    # the run's USD cap reflects total spend, not just the gated paid channels.
-    cost.add(cost.estimate_call_cost(kind))
-    return {"action": "search", "kind": kind, "query": query, "results": results}
+    """Route by intent with automatic fallthrough on hard provider failure.
+
+    Primary: keyword→Tavily, semantic→Exa. On circuit-open or hard error, try Brave
+    (independent index) then the other intent engine. Empty results alone do not trip
+    the breaker — only quota/auth-class failures do. Provider-returned error payloads
+    (e.g. Tavily ``{"error": ValueError("Error 432 quota exceeded")}``) count as hard
+    failures too — Amazon 0041 returned that shape without raising.
+
+    Every provider contact is authorized before contact and settled after.
+    Slim/hard mode refuses fallback providers (optional expenditure).
+    """
+    chain = _provider_chain(kind)
+    errors: list[str] = []
+    meter_kind = kind if kind in ("keyword", "semantic") else "keyword"
+    unit = cost.estimate_call_cost(meter_kind)
+    for i, provider in enumerate(chain):
+        if i > 0 and (cost.is_slim() or cost.is_hard_stop()):
+            cost.record_skip("search_fallback", cost.mode())
+            errors.append(f"{provider}: skipped ({cost.mode()} — no fallback search)")
+            break
+        if circuit.is_open(provider):
+            errors.append(f"{provider}: circuit open")
+            continue
+        res = cost.try_reserve(unit, op=meter_kind)
+        if res is None:
+            errors.append(f"{provider}: cost refused ({cost.mode()})")
+            break
+        try:
+            results = _invoke_provider(provider, query, max_results)
+        except Exception as exc:  # noqa: BLE001
+            cost.settle(res, unit)
+            circuit.record_failure(provider, exc)
+            errors.append(f"{provider}: {str(exc)[:120]}")
+            continue
+        cost.settle(res, unit)
+        payload_err = _provider_error_payload(results)
+        if payload_err is not None:
+            circuit.record_failure(provider, payload_err)
+            errors.append(f"{provider}: {payload_err[:120]}")
+            continue
+        circuit.record_success(provider)
+        out: dict[str, Any] = {
+            "action": "search", "kind": kind, "query": query,
+            "provider": provider, "results": results,
+        }
+        if provider != chain[0]:
+            out["fallback_from"] = chain[0]
+        return out
+    return {
+        "action": "search", "kind": kind, "query": query,
+        "error": "; ".join(errors)[:300] or "all search providers failed",
+        "providers_tried": chain,
+    }
+
+
+def _provider_error_payload(results: Any) -> str | None:
+    """Extract a hard-failure message from a non-raising provider response, if any."""
+    if isinstance(results, dict) and results.get("error") is not None:
+        return str(results["error"])
+    if isinstance(results, list) and len(results) == 1 and isinstance(results[0], dict):
+        err = results[0].get("error")
+        if err is not None:
+            return str(err)
+    return None
+
+
+def _provider_chain(kind: str) -> list[str]:
+    if kind == "semantic":
+        return ["exa", "brave", "tavily"]
+    return ["tavily", "brave", "exa"]
+
+
+def _invoke_provider(provider: str, query: str, max_results: int) -> list[Any]:
+    if provider == "tavily":
+        from .tavily import _build as build_engine
+        return build_engine().invoke({"query": query})
+    if provider == "exa":
+        from .exa import _build as build_engine
+        return build_engine().invoke({"query": query})
+    if provider == "brave":
+        from .brave import _search as brave_search
+        return brave_search(query, max_results=max_results)
+    raise RuntimeError(f"unknown search provider: {provider}")
 
 
 def _build() -> Any:
@@ -187,12 +319,14 @@ def _build() -> Any:
         _search,
         name="web_search",
         description=(
-            "One research tool. Search the web (kind='keyword' or 'semantic'), read a page "
-            "(read_url=...; richness='rich' allows the paid crawler on a hard page), or search "
-            "LIVE X POSTS (source='x'). X is a distinct source class, not a fallback: reach for it "
-            "when a story is unfolding, when you need the primary post rather than an outlet's "
-            "summary of it, or to find credible on-the-ground dissent from the wire consensus. "
-            "Web search and reads are free; 'rich' and 'x' draw on a small per-run budget."
+            "One research tool. Search the web (kind='keyword' or 'semantic'), resolve a paper "
+            "(doi=... or kind='scholar'), read a page (read_url=...; richness='rich' allows the "
+            "paid crawler on a hard page), or search LIVE X POSTS (source='x'). X is a distinct "
+            "source class, not a fallback: reach for it when a story is unfolding, when you need "
+            "the primary post rather than an outlet's summary of it, or to find credible "
+            "on-the-ground dissent from the wire consensus. Web search and reads are free; "
+            "'rich' and 'x' draw on a small per-run budget. Keyword search auto-falls through "
+            "providers on quota failure."
         ),
     )
 
@@ -200,7 +334,7 @@ def _build() -> Any:
 SPEC = ToolSpec(
     tool_id=WEB_SEARCH_TOOL_ID,
     name="web_search",
-    description="Unified, cost-aware research surface: web search + page read + (X).",
+    description="Unified, cost-aware research surface: web search + page read + scholar + (X).",
     scope=GLOBAL_SCOPE,
     build=_build,
     channel="search",

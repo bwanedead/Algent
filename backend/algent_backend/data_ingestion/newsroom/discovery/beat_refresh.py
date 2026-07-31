@@ -33,7 +33,7 @@ from datetime import UTC, datetime
 
 from .beats import Beat, all_beats
 from .report import BeatResult, BeatSheet
-from .sweep import run_sweep
+from .sweep import COOLDOWN_S, run_sweep
 
 # A beat result older than this is not news any more — beats query a 24h timespan,
 # so past this point the hits are stale by their own definition. Dropped on load.
@@ -133,6 +133,33 @@ def stalest_beats(
     return [beat for _, _, beat in scored[:limit]]
 
 
+# Floor wait after any recorded throttle, even if last_gap_s was somehow tiny.
+# Same number as the in-sweep cooldown — one limiter concept, one constant.
+COOLDOWN_FLOOR_S = COOLDOWN_S
+
+
+def cooldown_remaining_s(
+    sheet: BeatSheet | None, *, now: datetime | None = None
+) -> float:
+    """Seconds of DOC cooldown still owed, or 0 if it is safe to ask again.
+
+    Uses the last sweep's ending gap as the wait after ``last_throttle_at``. If we
+    never recorded a throttle, or the stamp is unparseable, returns 0.
+    """
+    if sheet is None or not sheet.last_throttle_at:
+        return 0.0
+    try:
+        when = datetime.fromisoformat(sheet.last_throttle_at.replace("Z", "+00:00"))
+    except ValueError:
+        return 0.0
+    if when.tzinfo is None:
+        when = when.replace(tzinfo=UTC)
+    at = now or datetime.now(UTC)
+    wait = max(float(sheet.last_gap_s or 0.0), COOLDOWN_FLOOR_S)
+    owed = wait - (at - when).total_seconds()
+    return max(0.0, owed)
+
+
 def refresh_sheet(
     sheet: BeatSheet | None,
     *,
@@ -155,6 +182,16 @@ def refresh_sheet(
     beats = all_beats() if registry is None else registry
     current = prune_stale(sheet, hours=hours, now=at)
 
+    # Do not ask DOC while we already know we are in its penalty box. Serving the
+    # pruned sheet (or nothing) is better than walking into a limit on purpose.
+    wait = cooldown_remaining_s(sheet, now=at)
+    if wait > 0:
+        say(
+            f"beats: DOC cooldown {wait:.0f}s remaining "
+            f"(last_gap={sheet.last_gap_s if sheet else 0:.0f}s) — skipping refresh"
+        )
+        return current
+
     targets = stalest_beats(
         current,
         limit=slice_size() if limit is None else limit,
@@ -176,10 +213,14 @@ def refresh_sheet(
     swept = sweep(targets, **sweep_kwargs)
     merged = merge(current, swept)
     fresh = sum(1 for r in swept.results if not r.error)
+    abort_note = (
+        "; aborted early after consecutive rate limits"
+        if swept.aborted_for_throttle else ""
+    )
     say(
         f"beats: {fresh}/{len(targets)} refreshed ({swept.total_hits} hits); "
         f"sheet now {merged.beats_swept if merged else 0} beats / "
-        f"{merged.total_hits if merged else 0} hits"
+        f"{merged.total_hits if merged else 0} hits{abort_note}"
     )
     return merged
 
@@ -209,21 +250,32 @@ def merge(sheet: BeatSheet | None, swept: BeatSheet) -> BeatSheet | None:
     kept = list(by_id.values())
     if not kept:
         return None
-    # The fresh sweep is the authority on what the limiter is currently allowing.
-    return _resheet(sheet or swept, kept, last_gap_s=swept.last_gap_s or None)
+    # The fresh sweep is the authority on what the limiter is currently allowing —
+    # including clearing a prior throttle stamp when this sweep saw none.
+    return _resheet(sheet or swept, kept, limiter=swept)
 
 
 def _resheet(
-    base: BeatSheet, results: list[BeatResult], *, last_gap_s: float | None = None
+    base: BeatSheet,
+    results: list[BeatResult],
+    *,
+    limiter: BeatSheet | None = None,
 ) -> BeatSheet:
-    """``base`` with ``results`` swapped in and the roll-up counters recomputed."""
+    """``base`` with ``results`` swapped in and the roll-up counters recomputed.
+
+    When ``limiter`` is set (a fresh sweep), adopt its gap/throttle/abort fields.
+    Otherwise keep ``base``'s limiter memory (prune path).
+    """
+    src = limiter or base
     return base.model_copy(update={
         "generated_at": datetime.now(UTC).isoformat(),
         "results": results,
         "beats_swept": len(results),
         "beats_failed": sum(1 for r in results if r.error),
         "total_hits": sum(r.hit_count for r in results),
-        "last_gap_s": base.last_gap_s if last_gap_s is None else last_gap_s,
+        "last_gap_s": src.last_gap_s,
+        "last_throttle_at": src.last_throttle_at,
+        "aborted_for_throttle": src.aborted_for_throttle,
     })
 
 

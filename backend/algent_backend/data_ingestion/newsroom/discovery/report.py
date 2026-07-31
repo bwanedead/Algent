@@ -130,6 +130,14 @@ class BeatSheet(BaseModel):
     # the limiter actually left us instead of re-learning by sacrificing its first few
     # beats — which starved whichever beat sorts first in the registry (see sweep.py).
     last_gap_s: float = 0.0
+    # When DOC last throttled us (ISO-8601 UTC). Empty when the last sweep saw no
+    # rate_limited responses. Paired with ``last_gap_s`` so the next refresh can refuse
+    # to touch DOC until the known cooldown has elapsed — asking earlier is how we
+    # walk into a limit we already know about.
+    last_throttle_at: str = ""
+    # True when the last sweep stopped early because consecutive throttles said DOC
+    # was locked; remaining beats were left unswept on purpose.
+    aborted_for_throttle: bool = False
 
 
 class PoolItem(BaseModel):

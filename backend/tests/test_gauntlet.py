@@ -60,13 +60,22 @@ def test_gauntlet_skips_lanes_with_no_findings(monkeypatch) -> None:
     base = SignalProfile(id="p", title="t", revision=1).model_dump()
     review = ReviewReport(id="r", verdict="needs_enrichment",
                           findings=[ReviewFinding(id="f1", type="needs_data", lane="analytics")]).model_dump()
-    monkeypatch.setattr(orchestrator, "build_reviewer", lambda c: _FakeGraph({"review": review}))
+    calls = {"n": 0}
+
+    def fake_reviewer(_context):
+        calls["n"] += 1
+        return _FakeGraph({"review": review})
+
+    monkeypatch.setattr(orchestrator, "build_reviewer", fake_reviewer)
     # neither lane should be invoked (no matching findings) — if they were, this would error
     monkeypatch.setattr(primary_source, "build_graph", lambda c: (_ for _ in ()).throw(AssertionError("ran")))
     monkeypatch.setattr(counter_perspective, "build_graph", lambda c: (_ for _ in ()).throw(AssertionError("ran")))
 
     out = orchestrator.build_gauntlet_graph(_ctx([])).invoke({"profile": base})
-    assert out["gauntlet"]["lanes_run"] == []  # nothing to run
+    g = out["gauntlet"]
+    assert g["lanes_run"] == []  # nothing to run
+    assert calls["n"] == 1  # no re-review when profile unchanged and no enrichment
+    assert g["final_verdict"] == g["initial_verdict"] == "needs_enrichment"
 
 
 def test_profile_gauntlet_registered_with_fixture() -> None:
