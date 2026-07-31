@@ -188,7 +188,8 @@ def _read(url: str, *, rich: bool) -> dict[str, Any]:
     allow_paid = False
     rich_est = cost.estimate_call_cost(policy.RICH)
     if rich:
-        paid_res = cost.try_reserve(rich_est, op=policy.RICH)
+        # Rich is never essential finish-path spend — refuse under slim even inside essential_scope.
+        paid_res = cost.try_reserve(rich_est, op=policy.RICH, essential=False)
         allow_paid = paid_res is not None
 
     try:

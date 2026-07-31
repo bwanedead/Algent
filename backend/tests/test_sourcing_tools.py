@@ -542,6 +542,19 @@ def test_article_scoped_nests_stage_allowances() -> None:
     assert not cost.is_active()
 
 
+def test_stage_cap_enforced_under_article_scoped() -> None:
+    with cost.article_scoped(3.0, soft_usd=3.0):
+        with cost.scoped(0.1, "gpt-5.4-mini"):
+            r = cost.try_reserve(0.08, op="keyword")
+            assert r is not None
+            cost.settle(r, 0.08)
+            # Stage ceiling is $0.10 even though article hard is $3.
+            assert cost.try_reserve(0.05, op="keyword") is None
+            assert cost.would_exceed(0.05)
+        # Outside the stage scope, article remaining still allows it.
+        assert cost.try_reserve(0.05, op="keyword") is not None
+
+
 def test_soft_cap_enters_slim_finish() -> None:
     with cost.article_scoped(3.0, soft_usd=1.0):
         cost.set_stage("profile")

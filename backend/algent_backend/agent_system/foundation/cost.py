@@ -429,6 +429,10 @@ def try_reserve(
         _record_refuse(led, op, "hard_cap")
         _enter_hard_stop(led)
         return None
+    # Nested stage ``scoped`` ceiling (per-agent allowance under the article envelope).
+    if _active.get() and (led.committed() + est) > _cap.get() + 1e-12:
+        _record_refuse(led, op, "stage_cap")
+        return None
     # Slim mode: only essential finish-path ops may reserve new spend.
     if led.mode == "slim_finish" and not is_ess:
         _record_refuse(led, op, "slim_finish")
@@ -540,21 +544,34 @@ def article_spent_usd() -> float:
 def remaining_usd() -> float:
     led = _ledger.get()
     if led is not None:
-        return max(0.0, led.hard_cap_usd - led.committed())
+        hard_left = max(0.0, led.hard_cap_usd - led.committed())
+        if _active.get():
+            stage_left = max(0.0, _cap.get() - led.committed())
+            return min(hard_left, stage_left)
+        return hard_left
     return max(0.0, _cap.get() - _spent.get())
 
 
 def over_cap() -> bool:
     led = _ledger.get()
     if led is not None:
-        return led.spent_usd >= led.hard_cap_usd or led.mode == "hard_stop"
+        if led.spent_usd >= led.hard_cap_usd or led.mode == "hard_stop":
+            return True
+        if _active.get() and led.committed() >= _cap.get():
+            return True
+        return False
     return _active.get() and _spent.get() >= _cap.get()
 
 
 def would_exceed(usd: float) -> bool:
+    usd = max(0.0, float(usd))
     led = _ledger.get()
     if led is not None:
-        return (led.committed() + max(0.0, usd)) > led.hard_cap_usd
+        if (led.committed() + usd) > led.hard_cap_usd:
+            return True
+        if _active.get() and (led.committed() + usd) > _cap.get():
+            return True
+        return False
     return _active.get() and (_spent.get() + usd) > _cap.get()
 
 
