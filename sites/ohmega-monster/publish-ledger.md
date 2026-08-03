@@ -353,3 +353,13 @@ skipped: search_fallback(slim_finish), search_fallback(slim_finish), search_fall
 refused: model_turn(slim_finish)
 disposition: needs_verification
 run: 0052__871a9a39-653a-4d64-a41d-07f610411ecb
+
+### PUBLISH online-ant-sales-are-a-real-trade-but-their-invasion-risk-is-5dcc3d — 2026-08-03
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 1 produced, 0 escapes
+cost: ~$0.4820  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+analytics_skipped: an_source_to_destination_risk_map:integrity_check_failed
+cost_by_stage: editorial=$0.0403, gauntlet=$0.3086, profile=$0.1329, routing=$0.0002
+disposition: needs_verification
+run: 0055__829f7f3f-50c8-42c1-85bc-63581d5d55a2
