@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="778.957718pt" height="355.259375pt" viewBox="0 0 778.957718 355.259375" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-08-04T03:43:14.613462</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.3, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 355.259375 
+L 778.957718 355.259375 
+L 778.957718 0 
+L 0 0 
+z
+" style="fill: #0c0f0e"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 200.95 282.603125 
+L 717.622 282.603125 
+L 717.622 52.203125 
+L 200.95 52.203125 
+z
+" style="fill: #111513"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 200.95 272.130398 
+L 579.002683 272.130398 
+L 579.002683 225.043717 
+L 200.95 225.043717 
+z
+" clip-path="url(#pbe1fd46699)" style="fill: #c98bb8"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 200.95 190.946465 
+L 452.985122 190.946465 
+L 452.985122 143.859785 
+L 200.95 143.859785 
+z
+" clip-path="url(#pbe1fd46699)" style="fill: #5eb8c9"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 200.95 109.762533 
+L 597.905317 109.762533 
+L 597.905317 62.675852 
+L 200.95 62.675852 
+z
+" clip-path="url(#pbe1fd46699)" style="fill: #f0a33a"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <defs>
+       <path id="md8b86c0e7e" d="M 0 0 
+L 0 3.5 
+" style="stroke: #858981; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#md8b86c0e7e" x="200.95" y="282.603125" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="200.95" y="296.503125" transform="rotate(-0 200.95 296.503125)">0</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2">
+      <g>
+       <use xlink:href="#md8b86c0e7e" x="263.95878" y="282.603125" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="263.95878" y="296.503125" transform="rotate(-0 263.95878 296.503125)">100</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3">
+      <g>
+       <use xlink:href="#md8b86c0e7e" x="326.967561" y="282.603125" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="326.967561" y="296.503125" transform="rotate(-0 326.967561 296.503125)">200</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#md8b86c0e7e" x="389.976341" y="282.603125" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="389.976341" y="296.503125" transform="rotate(-0 389.976341 296.503125)">300</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_5">
+      <g>
+       <use xlink:href="#md8b86c0e7e" x="452.985122" y="282.603125" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="452.985122" y="296.503125" transform="rotate(-0 452.985122 296.503125)">400</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#md8b86c0e7e" x="515.993902" y="282.603125" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="515.993902" y="296.503125" transform="rotate(-0 515.993902 296.503125)">500</text>
+     </g>
+    </g>
+    <g id="xtick_7">
+     <g id="line2d_7">
+      <g>
+       <use xlink:href="#md8b86c0e7e" x="579.002683" y="282.603125" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="579.002683" y="296.503125" transform="rotate(-0 579.002683 296.503125)">600</text>
+     </g>
+    </g>
+    <g id="xtick_8">
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#md8b86c0e7e" x="642.011463" y="282.603125" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="642.011463" y="296.503125" transform="rotate(-0 642.011463 296.503125)">700</text>
+     </g>
+    </g>
+    <g id="xtick_9">
+     <g id="line2d_9">
+      <g>
+       <use xlink:href="#md8b86c0e7e" x="705.020244" y="282.603125" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="705.020244" y="296.503125" transform="rotate(-0 705.020244 296.503125)">800</text>
+     </g>
+    </g>
+    <g id="text_10">
+     <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="459.286" y="309.775" transform="rotate(-0 459.286 309.775)">Reported or planned outlet locations (count; not additive)</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_10">
+      <defs>
+       <path id="m9956a99331" d="M 0 0 
+L -3.5 0 
+" style="stroke: #858981; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m9956a99331" x="200.95" y="248.587057" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_11">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="193.95" y="252.065964" transform="rotate(-0 193.95 252.065964)">WashXpress — separate Thai chain</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_11">
+      <g>
+       <use xlink:href="#m9956a99331" x="200.95" y="167.403125" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_12">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="193.95" y="170.882031" transform="rotate(-0 193.95 170.882031)">Trendy Wash — additional outlets</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_12">
+      <g>
+       <use xlink:href="#m9956a99331" x="200.95" y="86.219193" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_13">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="193.95" y="89.698099" transform="rotate(-0 193.95 89.698099)">Trendy Wash — supplied equipment</text>
+     </g>
+    </g>
+   </g>
+   <g id="patch_6">
+    <path d="M 200.95 282.603125 
+L 200.95 52.203125 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 200.95 282.603125 
+L 717.622 282.603125 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="200.95" y="34.228719" transform="rotate(-0 200.95 34.228719)">Three separate figures — supplied, planned and competitor locations</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(587.823912 246.294315)">~600 · reported locations</text>
+    <text style="font-size: 8.5px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(587.823912 255.092612)">separate chain; not LG outlets</text>
+   </g>
+   <g id="text_16">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(461.806351 165.076516)">~400 · planned additional supply</text>
+    <text style="font-size: 8.5px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(461.806351 173.900047)">expected during the year; not completed</text>
+   </g>
+   <g id="text_17">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(606.726546 83.943318)">630 · reported equipment supplied</text>
+    <text style="font-size: 8.5px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(606.726546 92.682646)">LG / Trendy Wash</text>
+   </g>
+   <g id="text_18">
+    <text style="font-size: 8px; font-family: 'Consolas'; fill: #858981" transform="translate(200.95 327.337375)">As of 2026-08-04 · Company-reported or secondary-coverage figures; not independently verified.</text>
+    <text style="font-size: 8px; font-family: 'Consolas'; fill: #858981" transform="translate(200.95 335.658125)">Do not add the bars: the 400 is planned, and WashXpress is a separate Thai chain.</text>
+   </g>
+   <g id="text_19">
+    <text style="font-size: 14px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(200.95 27.740937)">LG’s reported Thai footprint includes a planned expansion, not 1,030</text>
+    <text style="font-size: 14px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(200.95 42.135125)">completed outlets</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pbe1fd46699">
+   <rect x="200.95" y="52.203125" width="516.672" height="230.4"/>
+  </clipPath>
+ </defs>
+</svg>
