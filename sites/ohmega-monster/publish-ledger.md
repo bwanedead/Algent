@@ -383,3 +383,13 @@ analytics_skipped: an_japanese_seed_passage_comparison:skipped
 cost_by_stage: editorial=$0.0953, gauntlet=$0.2696, profile=$0.1526, routing=$0.0004
 disposition: needs_verification
 run: 0059__63799e5b-183c-4a73-b5fb-598029a46a28
+
+### PUBLISH lg-s-thai-laundromat-expansion-shows-a-supplier-market-not-a-5dcc3d — 2026-08-04
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 0 produced, 0 escapes
+cost: ~$0.6195  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+analytics_skipped: req_reported_thai_outlet_counts:skipped
+cost_by_stage: editorial=$0.1065, gauntlet=$0.3325, profile=$0.1800, routing=$0.0005
+disposition: needs_verification
+run: 0060__797166ee-df16-400f-9845-4e2518f3488a
