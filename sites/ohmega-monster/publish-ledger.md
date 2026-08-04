@@ -403,3 +403,12 @@ analytics_skipped: req_tiger_shark_seasonal_shift_map:skipped
 cost_by_stage: editorial=$0.1209, gauntlet=$0.2784, profile=$0.1402, routing=$0.0006
 disposition: needs_verification
 run: 0058__5ce0f8ab-2104-458a-a1a8-7463feb5bf88
+
+### PUBLISH some-tiny-forest-floor-animals-can-carry-viable-seeds-forest-5dcc3d — 2026-08-04
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 1 produced, 0 escapes
+cost: ~$0.5179  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.0953, gauntlet=$0.2696, profile=$0.1526, routing=$0.0004
+disposition: needs_verification
+run: 0059__63799e5b-183c-4a73-b5fb-598029a46a28
