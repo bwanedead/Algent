@@ -267,22 +267,111 @@ a { color: inherit; }
   margin-top: 4px;
 }
 
-.share-button {
+.article-meta .share {
   margin-left: auto;
-  padding: 0;
+  position: relative;
+}
+
+.share {
+  position: relative;
+  z-index: 2;
+}
+
+.share-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
   border: 0;
   background: none;
   color: var(--muted);
   font: inherit;
   font-size: 10px;
-  line-height: var(--line);
+  line-height: 1;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
 }
-.share-button:hover,
-.share-button:focus-visible {
+.share-trigger:hover,
+.share-trigger:focus-visible,
+.share-trigger[aria-expanded="true"] {
   color: var(--accent);
+  outline: none;
+}
+.share-icon {
+  display: block;
+  flex: 0 0 auto;
+}
+.share-trigger-label {
+  max-width: 0;
+  overflow: hidden;
+  opacity: 0;
+  white-space: nowrap;
+  transition: max-width 140ms ease-out, opacity 120ms ease-out;
+}
+.share-trigger:hover .share-trigger-label,
+.share-trigger:focus-visible .share-trigger-label,
+.share-trigger[aria-expanded="true"] .share-trigger-label {
+  max-width: 4.5em;
+  opacity: 1;
+}
+
+.share-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  width: min(320px, calc(100vw - 32px));
+  padding: 12px;
+  border: 1px solid var(--rule-strong);
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 8px 24px color-mix(in srgb, #000 35%, transparent);
+}
+.share-hint {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+.share-url {
+  display: block;
+  width: 100%;
+  margin: 0 0 10px;
+  padding: 7px 8px;
+  border: 1px solid var(--rule);
+  background: var(--bg);
+  color: var(--strong);
+  font: inherit;
+  font-size: 11px;
+  line-height: 1.4;
+}
+.share-url:focus {
+  outline: 1px solid var(--accent-dim);
+  outline-offset: 0;
+  border-color: var(--accent-dim);
+}
+.share-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.share-copy {
+  padding: 5px 10px;
+  border: 1px solid var(--rule-strong);
+  background: transparent;
+  color: var(--strong);
+  font: inherit;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.share-copy:hover,
+.share-copy:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent-dim);
   outline: none;
 }
 

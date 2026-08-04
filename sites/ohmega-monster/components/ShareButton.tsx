@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 type Props = {
   url: string;
@@ -9,67 +9,139 @@ type Props = {
   className?: string;
 };
 
-/**
- * Standard article share: system share sheet when the browser supports it (carries
- * title + URL so messengers/OS can show the Open Graph preview), otherwise copy a
- * short "Check out this article" blurb + link to the clipboard.
- */
-export default function ShareButton({ url, title, dek, className }: Props) {
-  const [status, setStatus] = useState<"idle" | "copied" | "shared" | "failed">("idle");
+function sharePayload(title: string, url: string): string {
+  return `Check out this article from Ohmega Monster:\n${title}\n${url}`;
+}
 
-  async function share(e: React.MouseEvent) {
-    // Index cards wrap the row in a Link — don't navigate when sharing.
+async function copyText(text: string): Promise<void> {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.setAttribute("readonly", "");
+  ta.style.position = "fixed";
+  ta.style.left = "-9999px";
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand("copy");
+  document.body.removeChild(ta);
+}
+
+/**
+ * Minimal share: icon opens a small panel with the link and one Copy action.
+ * Paste payload is a short Ohmega Monster line + title + URL — no system share sheet.
+ */
+export default function ShareButton({ url, title, className }: Props) {
+  const [open, setOpen] = useState(false);
+  const [status, setStatus] = useState<"idle" | "copied" | "failed">("idle");
+  const rootRef = useRef<HTMLDivElement>(null);
+  const panelId = useId();
+
+  useEffect(() => {
+    if (!open) return;
+    function onPointer(e: MouseEvent) {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("mousedown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) setStatus("idle");
+  }, [open]);
+
+  async function onCopy(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
-    const text = `Check out this article: ${title}`;
     try {
-      if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
-        await navigator.share({
-          title,
-          text: dek?.trim() ? `${text}\n${dek.trim()}` : text,
-          url,
-        });
-        setStatus("shared");
-        window.setTimeout(() => setStatus("idle"), 2000);
-        return;
-      }
-      const payload = `${text}\n${url}`;
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(payload);
-      } else {
-        const ta = document.createElement("textarea");
-        ta.value = payload;
-        ta.setAttribute("readonly", "");
-        ta.style.position = "fixed";
-        ta.style.left = "-9999px";
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand("copy");
-        document.body.removeChild(ta);
-      }
+      await copyText(sharePayload(title, url));
       setStatus("copied");
       window.setTimeout(() => setStatus("idle"), 2000);
-    } catch (err) {
-      if (err instanceof DOMException && err.name === "AbortError") return;
+    } catch {
       setStatus("failed");
       window.setTimeout(() => setStatus("idle"), 2500);
     }
   }
 
-  const label =
-    status === "copied" ? "Link copied"
-    : status === "shared" ? "Shared"
-    : status === "failed" ? "Share failed"
-    : "Share";
+  function toggle(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setOpen((v) => !v);
+  }
+
+  const copyLabel =
+    status === "copied" ? "Copied"
+    : status === "failed" ? "Copy failed"
+    : "Copy";
 
   return (
-    <button
-      type="button"
-      className={className ? `share-button ${className}` : "share-button"}
-      onClick={share}
-      aria-label={status === "idle" ? "Share this article" : label}
+    <div
+      ref={rootRef}
+      className={className ? `share ${className}` : "share"}
     >
-      {label}
-    </button>
+      <button
+        type="button"
+        className="share-trigger"
+        aria-label="Share this article"
+        aria-expanded={open}
+        aria-controls={panelId}
+        onClick={toggle}
+      >
+        <svg
+          className="share-icon"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.75"
+          strokeLinecap="square"
+          strokeLinejoin="miter"
+          aria-hidden="true"
+        >
+          <circle cx="18" cy="5" r="2.25" />
+          <circle cx="6" cy="12" r="2.25" />
+          <circle cx="18" cy="19" r="2.25" />
+          <path d="M8.2 10.9 15.8 6.1M8.2 13.1 15.8 17.9" />
+        </svg>
+        <span className="share-trigger-label">Share</span>
+      </button>
+
+      {open ? (
+        <div
+          id={panelId}
+          className="share-panel"
+          role="dialog"
+          aria-label="Copy link"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <p className="share-hint">Copy a link to share</p>
+          <input
+            className="share-url"
+            type="text"
+            readOnly
+            value={url}
+            aria-label="Article link"
+            onFocus={(e) => e.currentTarget.select()}
+          />
+          <div className="share-actions">
+            <button type="button" className="share-copy" onClick={onCopy}>
+              {copyLabel}
+            </button>
+          </div>
+        </div>
+      ) : null}
+    </div>
   );
 }
