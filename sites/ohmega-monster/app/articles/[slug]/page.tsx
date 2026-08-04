@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import FlagRow from "@/components/FlagRow";
 import Prose from "@/components/Prose";
+import ShareButton from "@/components/ShareButton";
 import { getArticle, getSlugs } from "@/lib/articles";
 import { SITE_URL } from "@/lib/site";
 
@@ -39,6 +40,8 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
 export default function ArticlePage({ params }: { params: { slug: string } }) {
   const a = getArticle(params.slug);
   if (!a) notFound();
+  const qt = a.quickTake;
+  const url = `${SITE_URL}/articles/${a.slug}`;
 
   return (
     <article className="article-page">
@@ -52,11 +55,44 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
         <div className="article-meta">
           <time className="article-date" dateTime={a.date}>{a.date}</time>
           <FlagRow flags={a.flags} places={a.places} />
+          <ShareButton url={url} title={a.title} dek={a.dek} />
         </div>
+        {/* Soft-publish can ship non-publishable pieces; status must remain reader-visible. */}
+        {a.status && a.status !== "publishable" ? (
+          <p className="article-status" role="status">
+            Review status: {a.status.replace(/_/g, " ")}
+          </p>
+        ) : null}
       </header>
+
+      {qt ? (
+        <section className="quick-take" aria-label="At a glance">
+          {qt.whatHappened ? (
+            <p>
+              <span className="quick-take-label">What happened</span>
+              {qt.whatHappened}
+            </p>
+          ) : null}
+          {qt.whyItMatters ? (
+            <p>
+              <span className="quick-take-label">Why it matters</span>
+              {qt.whyItMatters}
+            </p>
+          ) : null}
+          {qt.whatIsUncertain ? (
+            <p>
+              <span className="quick-take-label">Still open</span>
+              {qt.whatIsUncertain}
+            </p>
+          ) : null}
+        </section>
+      ) : null}
 
       {a.hero ? (
         <figure className="article-hero">
+          {/* Hook text is already burned into the generated image by the hero stage —
+              do not overlay it again (that double-captions every hooked hero). heroHook
+              stays in frontmatter for feeds/index consumers that want the plain string. */}
           <img src={a.hero} alt={a.heroAlt} />
           {/* The label is not optional furniture: a picture beside a news story is a lie
               unless it says what it is. */}

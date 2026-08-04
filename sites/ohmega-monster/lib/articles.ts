@@ -11,6 +11,12 @@ const ARTICLES_DIR = path.join(process.cwd(), "content", "articles");
 // it out so the page can render it as a collapsible, skippable section.
 const RECEIPTS_HEADING = "## How we know this";
 
+export type QuickTake = {
+  whatHappened: string;
+  whyItMatters: string;
+  whatIsUncertain: string;
+};
+
 export type ArticleMeta = {
   slug: string;
   title: string;
@@ -29,6 +35,7 @@ export type ArticleMeta = {
   heroAlt: string;
   heroHook: string;
   heroLabel: string;
+  quickTake: QuickTake | null;
 };
 
 export type Article = ArticleMeta & {
@@ -71,6 +78,17 @@ function strings(v: unknown): string[] {
 }
 
 function toMeta(file: string, data: Record<string, unknown>): ArticleMeta {
+  const rawQt = data.quick_take;
+  let quickTake: QuickTake | null = null;
+  if (rawQt && typeof rawQt === "object" && !Array.isArray(rawQt)) {
+    const q = rawQt as Record<string, unknown>;
+    const whatHappened = String(q.what_happened ?? "").trim();
+    const whyItMatters = String(q.why_it_matters ?? "").trim();
+    const whatIsUncertain = String(q.what_is_uncertain ?? "").trim();
+    if (whatHappened || whyItMatters || whatIsUncertain) {
+      quickTake = { whatHappened, whyItMatters, whatIsUncertain };
+    }
+  }
   return {
     slug: file.replace(/\.md$/, ""),
     title: String(data.title ?? "(untitled)"),
@@ -86,5 +104,6 @@ function toMeta(file: string, data: Record<string, unknown>): ArticleMeta {
     heroAlt: String(data.hero_alt ?? ""),
     heroHook: String(data.hero_hook ?? ""),
     heroLabel: String(data.hero_label ?? ""),
+    quickTake,
   };
 }
