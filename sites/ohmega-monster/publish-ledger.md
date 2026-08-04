@@ -455,3 +455,6 @@ cost: ~$0.6195  ·  mode: normal  ·  soft/hard: $1.00/$3.00
 cost_by_stage: editorial=$0.1065, gauntlet=$0.3325, profile=$0.1800, routing=$0.0005
 disposition: needs_verification
 run: 0060__797166ee-df16-400f-9845-4e2518f3488a
+
+### RETRACTED south-korean-appliance-maker-lg-s-thai-laundromat-expansion-5dcc3d — 2026-08-04
+Reason: duplicate from analytics backfill that used the pre-headline working title; charts belong on the original live URL
