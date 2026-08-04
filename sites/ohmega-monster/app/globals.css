@@ -196,10 +196,13 @@ a { color: inherit; }
 
 .feed a.feed-link:focus-visible { outline: 1px solid var(--accent-dim); outline-offset: 6px; }
 
-.feed-share {
+/* Must beat `.share { position: relative }` — otherwise the control is in-flow full-width
+   and the panel anchors to the far side of the row instead of under the icon. */
+.share.feed-share {
   position: absolute;
   top: var(--line);
   right: 0;
+  width: max-content;
 }
 
 .feed-meta {
@@ -275,6 +278,7 @@ a { color: inherit; }
 .share {
   position: relative;
   z-index: 2;
+  width: max-content;
 }
 
 .share-trigger {
@@ -284,7 +288,7 @@ a { color: inherit; }
   padding: 2px 0;
   border: 0;
   background: none;
-  color: var(--muted);
+  color: var(--accent);
   font: inherit;
   font-size: 10px;
   line-height: 1;
@@ -295,12 +299,14 @@ a { color: inherit; }
 .share-trigger:hover,
 .share-trigger:focus-visible,
 .share-trigger[aria-expanded="true"] {
-  color: var(--accent);
+  color: var(--strong);
   outline: none;
 }
 .share-icon {
   display: block;
   flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
 }
 .share-trigger-label {
   max-width: 0;
