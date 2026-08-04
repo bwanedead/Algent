@@ -443,3 +443,6 @@ cost: ~$0.5179  ·  mode: normal  ·  soft/hard: $1.00/$3.00
 cost_by_stage: editorial=$0.0953, gauntlet=$0.2696, profile=$0.1526, routing=$0.0004
 disposition: needs_verification
 run: 0059__63799e5b-183c-4a73-b5fb-598029a46a28
+
+### RETRACTED some-tiny-forest-floor-animals-can-carry-viable-seeds-forest-5dcc3d — 2026-08-04
+Reason: duplicate from analytics backfill that used the pre-headline working title; charts belong on the original live URL
