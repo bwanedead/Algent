@@ -421,3 +421,13 @@ cost: ~$0.6195  ·  mode: normal  ·  soft/hard: $1.00/$3.00
 cost_by_stage: editorial=$0.1065, gauntlet=$0.3325, profile=$0.1800, routing=$0.0005
 disposition: needs_verification
 run: 0060__797166ee-df16-400f-9845-4e2518f3488a
+
+### CORRECTION reported-tiger-shark-catch-off-massachusetts-fits-a-regional-5dcc3d — 2026-08-04
+status: publishable  ·  draft: grounded  ·  treatment: needs_revision
+caveats: verified (0 findings)
+analytics: 0 produced, 0 escapes
+cost: ~$0.5402  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+analytics_skipped: req_tiger_shark_seasonal_shift_map:skipped
+cost_by_stage: editorial=$0.1209, gauntlet=$0.2784, profile=$0.1402, routing=$0.0006
+disposition: needs_verification
+run: 0058__5ce0f8ab-2104-458a-a1a8-7463feb5bf88

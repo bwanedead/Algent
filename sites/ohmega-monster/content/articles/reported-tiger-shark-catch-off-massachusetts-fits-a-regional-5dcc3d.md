@@ -1,8 +1,8 @@
 ---
 title: Reported tiger-shark catch off Massachusetts fits a regional shift—but proves no new range
-dek: Two anglers said they caught and released a juvenile tiger shark near Cape Cod in July, but no direct state or federal record confirming the specimen was found in the reviewed materials; stronger evidence shows only that tiger sharks can move farther north during warmer seasons.
+dek: Two anglers reported catching and releasing a roughly five-foot juvenile tiger shark near Falmouth, but the observation is not independently confirmed and cannot show that Massachusetts has become a permanent range or nursery.
 date: '2026-08-04'
-published_at: '2026-08-04T06:16:47.836209+00:00'
+published_at: '2026-08-04T09:52:09.632558+00:00'
 as_of: '2026-08-04'
 status: publishable
 tags:
@@ -16,13 +16,16 @@ places:
 flags:
 - 🇺🇸
 quick_take:
-  what_happened: Two anglers reported catching and releasing an approximately five-foot juvenile tiger shark from a Falmouth, Massachusetts, beach in late July. No direct state or federal record confirming the specimen was located in the reviewed materials.
-  why_it_matters: The report is compatible with a documented regional pattern of earlier, farther-north seasonal movement, but it does not establish a new Massachusetts range, nursery, rising abundance, or increased beach danger.
-  what_is_uncertain: The catch remains unverified, and it is unclear whether it reflects a broader change in Massachusetts presence or a rare seasonal visit or short-term warm-water incursion.
+  what_happened: Two anglers reported catching and releasing an approximately five-foot juvenile tiger shark from a Falmouth, Massachusetts, beach in late July; no direct Massachusetts or NOAA record confirming the specimen was located in the reviewed sources.
+  why_it_matters: The reader can separate an unverified local report from a documented regional shift without inferring a new Massachusetts range, nursery, increased abundance, or increased beach danger.
+  what_is_uncertain: It remains unresolved whether the reported catch is a verified observation that reflects a broader increase in Massachusetts presence, rather than a rare seasonal visit or short-term warm-water incursion.
 hero: /analytics/reported-tiger-shark-catch-off-massachusetts-fits-a-regional-5dcc3d/hero.jpg
 hero_alt: A tiger shark in shallow Cape Cod coastal water
 hero_label: AI-generated illustration — not a photograph of this story
 hero_hook: An unusual shark near Cape Cod
+corrections:
+- date: '2026-08-04'
+  reason: backfilled analytics onto the original live URL after restoring analytics_workspace/lib
 ---
 
 Two anglers reported catching and releasing an approximately five-foot juvenile tiger shark from a beach in Falmouth, Massachusetts, in late July. The report is compatible with a documented pattern of tiger sharks arriving in northern waters earlier and moving farther north during warmer conditions—but it does not establish that this shark was driven north by climate change, or that tiger sharks are becoming common along Massachusetts beaches.
@@ -63,15 +66,17 @@ The next meaningful evidence would be repeated, independently verified juvenile 
 **How this piece is framed:** What one unverified Massachusetts catch can—and cannot—tell us about a documented regional tiger-shark shift.
 
 **Visuals not shipped** — _planned but not fulfilled_
-- Tiger sharks’ warm-season range has shifted north since the 1980s (req_tiger_shark_seasonal_shift_map): skipped — analytics_workspace missing tracked helpers: lib/__init__.py, lib/theme.py, lib/charts.py, lib/maps.py, lib/animate.py — restore from git; do not delete lib/ (see analytics_workspace/AGENTS.md)
+- Tiger sharks’ warm-season range has shifted north since the 1980s (req_tiger_shark_seasonal_shift_map): skipped — # Skipped
+
+The requested map was not produced because the named 2022 study publishes the warm-season 50% KDE high-catch-density edges as a raster figure, not as reproducible contour coordinates or an underlying spatial table. The study reports a poleward shift of about 440 km, but it does not provid
 
 **Sources**
-- (primary) Climate Change Is Shifting Tiger Shark Populations Northward — NOAA Fisheries — https://www.fisheries.noaa.gov/feature-story/climate-change-shifting-tiger-shark-populations-northward  ·  _read in full · captured 2026-08-04_
-- (primary) Ocean warming alters the distributional range, migratory timing, and spatial protections of an apex predator, the tiger shark (Galeocerdo cuvier) — Global Change Biology / Wiley — https://onlinelibrary.wiley.com/doi/full/10.1111/gcb.16045  ·  _read in full · captured 2026-08-04_
-- (primary) Atlantic Highly Migratory Species — NOAA Fisheries — https://www.fisheries.noaa.gov/topic/atlantic-highly-migratory-species  ·  _read in full · captured 2026-08-04_
 - (primary) Shark Nursery Areas in the Coastal Waters of Massachusetts — Massachusetts Division of Marine Fisheries — https://www.mass.gov/doc/shark-nursery-areas-in-the-coastal-waters-of-massachusetts/download  ·  _read in full · captured 2026-08-04_
+- (primary) Climate Change Is Shifting Tiger Shark Populations Northward — NOAA Fisheries — https://www.fisheries.noaa.gov/feature-story/climate-change-shifting-tiger-shark-populations-northward  ·  _read in full · captured 2026-08-04_
+- (primary) Atlantic Highly Migratory Species — NOAA Fisheries — https://www.fisheries.noaa.gov/topic/atlantic-highly-migratory-species  ·  _read in full · captured 2026-08-04_
 - (primary) Cooperative Shark Tagging Program — NOAA Fisheries — https://www.fisheries.noaa.gov/resource/document/cooperative-shark-tagging-program  ·  _read in full · captured 2026-08-04_
 - (primary) Consolidated Atlantic Highly Migratory Species Management Plan — NOAA Fisheries — https://www.fisheries.noaa.gov/management-plan/consolidated-atlantic-highly-migratory-species-management-plan  ·  _read in full · captured 2026-08-04_
+- (primary) Ocean warming alters the distributional range, migratory timing, and spatial protections of an apex predator, the tiger shark (Galeocerdo cuvier) — Global Change Biology / Wiley — https://onlinelibrary.wiley.com/doi/full/10.1111/gcb.16045  ·  _read in full · captured 2026-08-04_
 - (secondary) Brothers catch tiger shark on Cape Cod, a rarity this far north — NBC Boston — https://www.nbcboston.com/news/local/brothers-catch-tiger-shark-on-cape-cod-a-rarity-this-far-north/3988687  ·  _read in full · captured 2026-08-04_
 - (secondary) Tiger shark caught off Massachusetts could be sign of warming waters — The Daily Gazette / Associated Press — https://www.dailygazette.com/leader_herald/ap/national/tiger-shark-caught-off-massachusetts-could-be-sign-of-warming-waters/article_30390b5b-8c3b-52a8-8908-c1a6a0c23bbc.html  ·  _read in full · captured 2026-08-04_
 
