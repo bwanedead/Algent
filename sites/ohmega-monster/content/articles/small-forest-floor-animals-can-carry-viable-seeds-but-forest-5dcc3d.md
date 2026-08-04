@@ -1,8 +1,8 @@
 ---
 title: Small forest-floor animals can carry viable seeds, but forest regeneration is unproven
-dek: A 2026 review finds that slugs, beetles, crickets, earwigs and woodlice can sometimes pass intact, viable seeds after eating them—but the evidence does not yet show whether those seeds germinate and grow into adult plants.
+dek: A 2026 review brings together evidence that slugs, beetles, crickets, earwigs and woodlice can sometimes pass intact, viable seeds—but the studies rarely show whether those seeds germinate and become adult plants.
 date: '2026-08-04'
-published_at: '2026-08-04T06:27:06.486053+00:00'
+published_at: '2026-08-04T09:52:23.868685+00:00'
 as_of: '2026-08-04'
 status: publishable
 tags:
@@ -18,13 +18,17 @@ flags:
 - 🇯🇵
 - 🇩🇪
 quick_take:
-  what_happened: A 2026 review synthesizes evidence that several small forest-floor animals can eat seeds and later pass some intact and viable in their faeces.
-  why_it_matters: This identifies a possible short-range route for seed movement that could supplement birds, mammals and ants in some forests, but it is not yet an established restoration tool or replacement for long-distance dispersers.
-  what_is_uncertain: Researchers do not yet know how often passed seeds reach suitable sites, germinate and become adult plants in the wild.
+  what_happened: A 2026 review brings together evidence that some slugs, beetles, crickets, earwigs and woodlice can ingest seeds and later pass at least some intact and viable, while the accessible evidence does not establish how often this produces new plants; freshwater crabs are included in the review's reported scope but their case-level evidence was not independently verified.
+  why_it_matters: 'The reader can separate a newly documented route of short-range seed movement from proven forest regeneration: invertebrates may supplement local dispersal in particular forest-floor settings, but their value cannot yet be measured as an equivalent substitute for larger vertebrate dispersers or used as an established restoration intervention.'
+  what_is_uncertain: How often do seeds that survive invertebrate gut passage move to suitable sites, germinate and recruit into adult plants, and can that process compensate for lost vertebrate dispersal? Grounded in clm_77087d4f56, clm_15ac0d7e2c, clm_a6b0690a61 and clm_e8f498bb33.
+thumbnail: /analytics/small-forest-floor-animals-can-carry-viable-seeds-but-forest-5dcc3d/analytic_an_japanese_seed_passage_comparison.svg
 hero: /analytics/small-forest-floor-animals-can-carry-viable-seeds-but-forest-5dcc3d/hero.jpg
 hero_alt: A woodlouse moving through leaf litter beside fallen seeds
 hero_label: AI-generated illustration — not a photograph of this story
 hero_hook: Tiny animals move forest seeds
+corrections:
+- date: '2026-08-04'
+  reason: backfilled analytics onto the original live URL after restoring analytics_workspace/lib
 ---
 
 A 2026 review brings together evidence that some slugs, beetles, crickets, earwigs and woodlice eat seeds and later pass at least some of them intact and viable. The finding establishes a possible route for short-range seed movement across the forest floor, not a demonstrated replacement for the birds and mammals that disperse seeds over longer distances or proof that new forests result.
@@ -36,6 +40,12 @@ Small forest-floor animals sometimes carry plant seeds through their guts and re
 The biological sequence is longer than ingestion and passage. A seed must survive digestion, move away from the parent plant, land in a suitable forest-floor microsite—such as soil, leaf litter, sheltered debris or a burrow—remain viable, germinate and eventually recruit into an adult plant. **Seed-dispersal effectiveness** measures that fuller outcome, including how many seeds move, where they are deposited and whether they produce new plants.
 
 The strongest evidence in the review’s case base reaches the first part of that chain: consumption, gut passage and, in some cases, viable seeds in faeces. The available evidence does not establish how often the entire chain ends in adult-plant recruitment at ecosystem scale.
+
+**Camel crickets left far more seeds intact than woodlice or earwigs**
+
+![Camel crickets left far more seeds intact than woodlice or earwigs](/analytics/small-forest-floor-animals-can-carry-viable-seeds-but-forest-5dcc3d/analytic_an_japanese_seed_passage_comparison.svg)
+
+*In the Japanese study, what share of recovered seeds remained intact after passage through camel crickets, woodlice and earwigs? This chart shows the share of recovered seeds that remained intact after passage through camel crickets, woodlice and earwigs in one controlled Monotropastrum humile study. Camel crickets had the highest intactness result (83.8%), while woodlice and earwigs were near one-third; intactness does not demonstrate movement distance, recruitment or new-plant production. — AI-assisted analytic, built only from real cited or sourced data. Source: Plants, People, Planet / Wiley. As of 2026-08-04.*
 
 ## What the 2026 review adds
 
@@ -68,26 +78,25 @@ The conservation question arises as **defaunation**, the loss or reduction of an
 It cannot yet be treated as equivalent compensation for the loss of vertebrate dispersers. A global analysis links vertebrate defaunation with reduced forest regeneration, especially after the loss of primates and birds, but does not show that invertebrates restore the same long-distance dispersal, gene flow or carbon-storage functions. Nor does a Bornean study showing insects and fungi compensating for lost **seed predation** demonstrate replacement of seed dispersal; those are different ecological processes.
 
 The durable finding is therefore narrower and more useful: small animals on the forest floor can sometimes move seeds through their guts without destroying them. Whether that pathway produces enough surviving seedlings to alter plant populations or regenerate forests remains an empirical question, one that requires field measurements of deposition, germination and adult-plant recruitment.
-
 ---
 ## How we know this
 
 **How this piece is framed:** Small forest-floor animals can sometimes carry viable seeds, but the evidence is strongest for a biological pathway and weakest at the point that matters most: whether those seeds are deposited, germinate and produce new plants. The 2026 review is the news-bearing synthesis that brings this evidence ladder into view.
 
-**Visuals not shipped** — _planned but not fulfilled_
-- Camel crickets left far more seeds intact than woodlice or earwigs (an_japanese_seed_passage_comparison): skipped — analytics_workspace missing tracked helpers: lib/__init__.py, lib/theme.py, lib/charts.py, lib/maps.py, lib/animate.py — restore from git; do not delete lib/ (see analytics_workspace/AGENTS.md)
+**Charts & tables** — _AI-assisted; provenance on each line_
+- Camel crickets left far more seeds intact than woodlice or earwigs — from claims clm_1662d80373, clm_99426c29de, clm_77f17b3c9a · as of 2026-08-04
 
 **Sources**
+- (primary) Invertebrate endozoochory: An overlooked pathway of seed dispersal — Trends in Plant Science / Elsevier — https://www.sciencedirect.com/science/article/pii/S1360138526001858  ·  _read in full · captured 2026-08-04_
+- (primary) Earwigs and woodlice as some of the world's smallest internal seed dispersal agents: Insights from the ecology of Monotropastrum humile — Plants, People, Planet / Wiley — https://nph.onlinelibrary.wiley.com/doi/full/10.1002/ppp3.10519  ·  _read in full · captured 2026-08-04_
+- (primary) Gastropod Seed Dispersal: An Invasive Slug Destroys Far More Seeds in Its Gut than Native Gastropods — PLOS ONE / PubMed Central — https://pmc.ncbi.nlm.nih.gov/articles/PMC3783466/  ·  _read in full · captured 2026-08-04_
+- (primary) Fungi and insects compensate for lost vertebrate seed predation in an experimentally defaunated tropical forest — Nature Communications — https://www.nature.com/articles/s41467-021-21978-8  ·  _read in full · captured 2026-08-04_
+- (primary) HKU-led Review Highlights Hidden Seed Dispersers in Forest Regeneration — The University of Hong Kong — https://www.hku.hk/press/news_detail_29253.html  ·  _read in full · captured 2026-08-04_
+- (primary) Quantifying the impacts of defaunation on natural forest regeneration in a global meta-analysis — Nature Communications — https://www.nature.com/articles/s41467-019-12539-1  ·  _read in full · captured 2026-08-04_
+- (primary) Are Gastropods, Rather than Ants, Important Dispersers of Seeds of Myrmecochorous Forest Herbs? — The American Naturalist / University of Chicago Press; author-hosted copy at Technical University of Munich — https://www.lss.ls.tum.de/fileadmin/w00bds/toek/05_Publikationen/PDF_Mittarbeiter/PDF_Publikationen/2012-01.pdf  ·  _read in full · captured 2026-08-04_
+- (primary) New record holder for smallest dispersers of ingested seeds: Woodlice — Kobe University — https://www.kobe-u.ac.jp/en/news/article/20240509-65288  ·  _read in full · captured 2026-08-04_
 - (primary) Seed dispersal effectiveness in fragmented and defaunated landscapes — Ecosphere — https://esajournals.onlinelibrary.wiley.com/doi/10.1002/ecs2.4658  ·  _read in full · captured 2026-08-04_
 - (primary) Invertebrate endozoochory: An overlooked pathway of seed dispersal — Trends in Plant Science / Elsevier — https://www.sciencedirect.com/science/article/abs/pii/S1360138526001858  ·  _read in full · captured 2026-08-04_
-- (primary) Are Gastropods, Rather than Ants, Important Dispersers of Seeds of Myrmecochorous Forest Herbs? — The American Naturalist / University of Chicago Press; author-hosted copy at Technical University of Munich — https://www.lss.ls.tum.de/fileadmin/w00bds/toek/05_Publikationen/PDF_Mittarbeiter/PDF_Publikationen/2012-01.pdf  ·  _read in full · captured 2026-08-04_
-- (primary) HKU-led Review Highlights Hidden Seed Dispersers in Forest Regeneration — The University of Hong Kong — https://www.hku.hk/press/news_detail_29253.html  ·  _read in full · captured 2026-08-04_
-- (primary) Invertebrate endozoochory: An overlooked pathway of seed dispersal — Trends in Plant Science / Elsevier — https://www.sciencedirect.com/science/article/pii/S1360138526001858  ·  _read in full · captured 2026-08-04_
-- (primary) Quantifying the impacts of defaunation on natural forest regeneration in a global meta-analysis — Nature Communications — https://www.nature.com/articles/s41467-019-12539-1  ·  _read in full · captured 2026-08-04_
-- (primary) New record holder for smallest dispersers of ingested seeds: Woodlice — Kobe University — https://www.kobe-u.ac.jp/en/news/article/20240509-65288  ·  _read in full · captured 2026-08-04_
-- (primary) Gastropod Seed Dispersal: An Invasive Slug Destroys Far More Seeds in Its Gut than Native Gastropods — PLOS ONE / PubMed Central — https://pmc.ncbi.nlm.nih.gov/articles/PMC3783466/  ·  _read in full · captured 2026-08-04_
-- (primary) Earwigs and woodlice as some of the world's smallest internal seed dispersal agents: Insights from the ecology of Monotropastrum humile — Plants, People, Planet / Wiley — https://nph.onlinelibrary.wiley.com/doi/full/10.1002/ppp3.10519  ·  _read in full · captured 2026-08-04_
-- (primary) Fungi and insects compensate for lost vertebrate seed predation in an experimentally defaunated tropical forest — Nature Communications — https://www.nature.com/articles/s41467-021-21978-8  ·  _read in full · captured 2026-08-04_
 
 **Claims, and how far we tracked each down**
 - _[confirmed]_ Invertebrates including orthopterans, gastropods and beetles can function as internal seed dispersers by ingesting seeds and later defecating at least some seeds intact and viable.  ·  read in full (as of 2026-08-04)
