@@ -103,6 +103,13 @@ from vectors 3 and 7 merged — questions, hits and sources unioned). `--angle "
 prepends an operator steer to the picked vector's thesis, for when the framing
 you want is not the framing synthesis chose.
 
+**Pin a frozen menu** with `--menu <portfolio.json|run-dir>` so pick numbers stay
+valid after a later synthesis rebuild — you do not need to remake the menu to
+re-launch.
+
+**Ad-hoc (no menu id):** `--brief "Title" --angle "thesis…"` invents or revives a
+story by content and goes straight to the rail.
+
 An out-of-range or non-numeric pick is a hard error. That is deliberate — a
 silently dropped pick would produce a successful-looking run that wrote about
 something nobody chose.

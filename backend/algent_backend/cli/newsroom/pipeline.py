@@ -79,13 +79,26 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
         "--pick", default=None,
         help="menu VECTOR numbers to carry forward. Comma separates articles, '+' joins "
              "vectors into ONE article: --pick 3+7,12 makes two articles, the first built "
-             "from vectors 3 and 7 together.",
+             "from vectors 3 and 7 together. Pair with --menu to pin a frozen portfolio "
+             "so numbers stay valid after a later synthesis rebuild.",
+    )
+    parser.add_argument(
+        "--menu", default=None,
+        help="portfolio JSON (or discovery_synthesis run dir) to resolve --pick against. "
+             "Use when the menu you are numbering is not the latest — stale / prior menus "
+             "stay pickable without rebuilding synthesis.",
+    )
+    parser.add_argument(
+        "--brief", default=None,
+        help="ad-hoc story with NO menu id: a title (and usually --angle as the thesis). "
+             "Skips t0/synthesis entirely — invent a topic or revive a stale pick by "
+             "content. Comma-separate for multiple articles.",
     )
     parser.add_argument(
         "--angle", default=None,
-        help="operator steer for the picked story, e.g. --angle 'the lithography monopoly, "
-             "not the share-price move'. Use when the vector's framing is not the story you "
-             "want. Applies to every pick in this run.",
+        help="operator steer / thesis. With --pick: prepended to the vector thesis. "
+             "With --brief/--compose: becomes the thesis. Applies to every article in "
+             "this run.",
     )
     parser.add_argument(
         "--compose", default=None,
@@ -149,6 +162,28 @@ def _latest_portfolio() -> tuple[dict[str, Any], Path]:
             "no research portfolio exists yet — run with --from t0 (or --from synthesis) first"
         )
     return json.loads(files[-1].read_text(encoding="utf-8")), files[-1]
+
+
+def load_portfolio(spec: str | None = None) -> tuple[dict[str, Any], Path]:
+    """Load a t1 portfolio — explicit ``--menu`` path/run, else the latest.
+
+    ``spec`` may be a ``research_portfolio.json`` path, any file that is the portfolio
+    JSON, or a ``discovery_synthesis/<run>`` directory (artifacts resolved inside).
+    """
+    if not spec or not str(spec).strip():
+        return _latest_portfolio()
+    path = Path(spec).expanduser()
+    if path.is_dir():
+        candidate = path / "artifacts" / "research_portfolio.json"
+        if not candidate.is_file():
+            candidate = path / "research_portfolio.json"
+        path = candidate
+    if not path.is_file():
+        raise FileNotFoundError(f"--menu {spec!r}: portfolio file not found")
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict) or not (data.get("vectors") or []):
+        raise ValueError(f"--menu {spec!r}: no vectors in portfolio")
+    return data, path
 
 
 def _resolve_picks(
@@ -286,6 +321,42 @@ def compose_vector(
     }
 
 
+def ad_hoc_vector(title: str, *, angle: str | None = None) -> dict[str, Any]:
+    """Build a research vector from thin air — no menu id, no t0 hits required.
+
+    Use when the operator invents a topic, or when a prior menu pick is revived by
+    title/thesis after the numbered menu has been replaced. Research still has to
+    ground the piece; this only makes promotion not depend on a live menu index.
+    """
+    cleaned = (title or "").strip()
+    if not cleaned:
+        raise ValueError("--brief needs a non-empty title")
+    thesis = (angle or "").strip() or cleaned
+    return {
+        "id": "",
+        "title": cleaned[:180],
+        "thesis": thesis,
+        "vector_type": "story",
+        "rationale": (
+            "Ad-hoc operator brief — not derived from a live synthesis menu id. "
+            "Treat the title/thesis as the assigned story; research must still ground it."
+        ),
+        "supporting_hits": [],
+        "pillars": [],
+        "scope": [],
+        "research_effort": "deep",
+        "key_questions": [],
+        "sources": [],
+    }
+
+
+def _parse_briefs(spec: str) -> list[str]:
+    titles = [t.strip() for t in spec.split(",") if t.strip()]
+    if not titles:
+        raise ValueError("--brief was given but resolved to no titles")
+    return titles
+
+
 def print_vector_menu(portfolio: dict[str, Any], *, out) -> None:
     """Print the portfolio as the numbered menu an operator picks from.
 
@@ -343,10 +414,8 @@ def run(args: argparse.Namespace) -> int:
 
     import sys
 
-    # --compose numbers the existing pool menu. Rebuilding t0 renumbers items and
-    # breaks the pick the operator just made — so compose reuses the latest pool
-    # unless they explicitly ask for a fresh discovery (--fresh).
-    if args.compose and args.from_stage == "t0" and not args.fresh:
+    # --compose / --brief skip discovery rebuild: the operator already named the story.
+    if (args.compose or args.brief) and args.from_stage == "t0" and not args.fresh:
         args.from_stage = "synthesis"
 
     try:
@@ -356,6 +425,32 @@ def run(args: argparse.Namespace) -> int:
         return 1
 
     result: dict[str, Any] = {"stages": stages}
+
+    # -- brief: ad-hoc vectors (no menu id, no pool required) ------------------
+    if args.brief:
+        try:
+            titles = _parse_briefs(args.brief)
+        except ValueError as exc:
+            print_json({"error": str(exc)})
+            return 1
+        briefs = [(i + 1, ad_hoc_vector(title, angle=args.angle)) for i, title in enumerate(titles)]
+        result["briefs"] = [{"n": n, "title": v["title"]} for n, v in briefs]
+        if args.dry_run:
+            result["dry_run"] = True
+            print_json(result)
+            return 0
+        publish = "publish" in stages
+        runs = []
+        empty = {"generated_at": "", "vectors": [], "origin": "ad_hoc"}
+        for n, vector in briefs:
+            seed = _seed_portfolio(empty, [vector], [n], angle=None)
+            progress(f"[rail] brief {n}: {vector['title'][:80]}")
+            runs.append({"brief": n, "seed_portfolio": str(seed),
+                         "exit_code": _rail(args, portfolio_file=seed, publish=publish)})
+        result["runs"] = runs
+        result["exit_code"] = max(r["exit_code"] for r in runs)
+        print_json(result)
+        return int(result["exit_code"])
 
     # -- t0 -------------------------------------------------------------------
     if "t0" in stages:
@@ -454,15 +549,18 @@ def run(args: argparse.Namespace) -> int:
         result["portfolio"] = {"path": str(portfolio_path),
                                "vectors": len(portfolio.get("vectors") or [])}
     elif args.pick or (args.to_stage == "menu" and not args.pool_menu):
-        # Picks are synthesis-menu numbers; vector menu reprint needs the same file.
+        # Picks are synthesis-menu numbers; --menu pins a frozen portfolio so a later
+        # rebuild cannot renumber the operator's choices. Vector menu reprint needs
+        # the same file.
         try:
-            portfolio, portfolio_path = _latest_portfolio()
-        except FileNotFoundError as exc:
+            portfolio, portfolio_path = load_portfolio(args.menu)
+        except (FileNotFoundError, ValueError) as exc:
             print_json({"error": str(exc)})
             return 1
         result["portfolio"] = {"path": str(portfolio_path),
                                "vectors": len(portfolio.get("vectors") or []),
-                               "reused": True}
+                               "reused": True,
+                               "pinned": bool(args.menu)}
 
     # -- menu -----------------------------------------------------------------
     # Operator contract: t0-only → pool menu. Synthesis stop → BOTH full menus

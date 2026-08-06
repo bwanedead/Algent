@@ -177,6 +177,76 @@ def test_compose_defaults_skip_t0_rebuild(monkeypatch, tmp_path) -> None:
     pool = {
         "generated_at": "2026-01-01T00:00:00Z",
         "items": [
+            {"id": "a", "label": "one", "pillars": [], "evidence": []},
+            {"id": "b", "label": "two", "pillars": [], "evidence": []},
+        ],
+        "item_count": 2,
+    }
+    pool_path = tmp_path / "pool.json"
+    import json
+    pool_path.write_text(json.dumps(pool), encoding="utf-8")
+
+    monkeypatch.setattr(pipeline, "_latest_pool", lambda: (pool, pool_path))
+    monkeypatch.setattr(
+        "algent_backend.data_ingestion.newsroom.discovery.pipeline.pool_dir",
+        lambda: tmp_path,
+    )
+    called = []
+
+    def fake_rail(args, *, portfolio_file, publish):
+        called.append(portfolio_file)
+        return 0
+
+    monkeypatch.setattr(pipeline, "_rail", fake_rail)
+
+    args = Namespace(
+        from_stage="t0", to_stage="publish", compose="1+2", angle="joined",
+        pick=None, brief=None, menu=None, pool_menu=False, channels=None,
+        fresh=False, dry_run=False, analytics_harness=None, analytics_model=None,
+    )
+    assert pipeline.run(args) == 0
+    assert len(called) == 1
+
+
+def test_ad_hoc_brief_needs_no_menu() -> None:
+    v = pipeline.ad_hoc_vector("Made-up magma story", angle="why Tuscany matters")
+    assert v["title"] == "Made-up magma story"
+    assert v["thesis"] == "why Tuscany matters"
+    assert v["supporting_hits"] == []
+    assert "Ad-hoc" in v["rationale"]
+
+
+def test_brief_dry_run_skips_rail(monkeypatch) -> None:
+    from argparse import Namespace
+
+    monkeypatch.setattr(pipeline, "_rail", lambda *a, **k: (_ for _ in ()).throw(AssertionError("no rail")))
+    args = Namespace(
+        from_stage="t0", to_stage="publish", brief="Thin air topic", angle="the angle",
+        compose=None, pick=None, menu=None, pool_menu=False, channels=None,
+        fresh=False, dry_run=True, analytics_harness=None, analytics_model=None,
+    )
+    # dry-run returns 0 and must not need a pool
+    assert pipeline.run(args) == 0
+
+
+def test_load_portfolio_pins_explicit_menu(tmp_path) -> None:
+    import json
+    path = tmp_path / "research_portfolio.json"
+    path.write_text(json.dumps(_portfolio(3)), encoding="utf-8")
+    data, got = pipeline.load_portfolio(str(path))
+    assert got == path
+    assert len(data["vectors"]) == 3
+    picks = pipeline._resolve_picks(data, "2")
+    assert picks[0][1][0]["title"] == "story 2"
+
+
+def test_compose_defaults_skip_t0_rebuild(monkeypatch, tmp_path) -> None:
+    """Menu numbers must stay valid — compose reuses the latest pool, not a new t0."""
+    from argparse import Namespace
+
+    pool = {
+        "generated_at": "2026-01-01T00:00:00Z",
+        "items": [
             {"id": "w:1", "label": "ants", "pillars": ["world"], "evidence": [{"url": "http://a"}]},
         ],
         "item_count": 1,
@@ -202,6 +272,8 @@ def test_compose_defaults_skip_t0_rebuild(monkeypatch, tmp_path) -> None:
         fresh=False,
         dry_run=False,
         pick=None,
+        brief=None,
+        menu=None,
         pool_menu=False,
         channels=None,
         analytics_harness=None,
@@ -218,3 +290,4 @@ def test_composed_vector_validates_against_the_contract() -> None:
     from algent_backend.agent_system.agents.discovery.portfolio import ResearchVector
 
     ResearchVector.model_validate(pipeline.compose_vector(_items(), [1, 2], angle="x"))
+    ResearchVector.model_validate(pipeline.ad_hoc_vector("Ad hoc", angle="thesis"))
