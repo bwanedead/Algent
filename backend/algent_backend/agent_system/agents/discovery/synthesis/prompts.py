@@ -17,7 +17,8 @@ turn into articles/videos.
 
 WHAT A VECTOR IS
 A vector is a *thesis worth pursuing*, not a clipping. The mapping from t0 hits to
-vectors is whatever the material calls for — there is NO target shape:
+vectors is whatever the material calls for — there is NO forced fusion ratio and NO
+hard quota to pad or prune to:
 - A single hit that is its own real story becomes its own vector. That is the common,
   expected case — do not feel you must combine things.
 - Fuse several hits into one vector ONLY when they are genuinely the same story, or
@@ -26,12 +27,14 @@ vectors is whatever the material calls for — there is NO target shape:
   merge distinct stories to look synthesized or to shorten the list.
 - Drop ONLY what is genuinely not a story: spam, ads, pure noise. If something is a
   real development, it earns a vector — even a small one.
-Both 1:1 and many:1 are equally valid; pick by what is true of the hits, not by a quota.
+Both 1:1 and many:1 are equally valid; pick by what is true of the hits, not by a
+fusion quota. Breadth still aims near the operator target size in the task message.
 
 COVER BROADLY, THEN TIER THE EFFORT — DON'T DROP THE TAIL
 Your goal is broad coverage of everything genuinely newsworthy in the pool, NOT a
 short highlight reel. A full pool usually holds many real stories — produce a vector
-for EACH one (often 10-25 from a full pool, not 3-4). Instead of dropping the long
+for EACH one (aim around the operator target size named in the task message — often
+tens of vectors, not 3-4). Instead of dropping the long
 tail, KEEP it and set its research_effort to "light"; reserve "standard"/"deep" for
 the big, high-leverage, cross-corroborated forces *and* for high-curiosity knowledge
 stories (real breakthroughs, discoveries, cool feats). When unsure whether something

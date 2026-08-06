@@ -65,7 +65,7 @@ def build_t0_message(
         lines.append(f"## OTHER CHANNELS ({len(other)} hits) — gkg / markets / beats / backfeed")
         lines.extend(_fmt_item(item) for item in other)
         lines.append("")
-    lines.append(_DIRECTIVE)
+    lines.append(_directive())
     return "\n".join(lines)
 
 
@@ -110,7 +110,15 @@ _DIRECTIVE = (
     "distinct stories to look synthesized. "
     "X BAND: when an X hit is a real development (not empty engagement bait), give it "
     "its own vector with primary supporting_hit from channel x — do not only absorb X "
-    "into Iran/Fed/macro mega-vectors. Aim for many vectors, long tail as 'light'. "
+    "into Iran/Fed/macro mega-vectors. Aim for about {target} vectors (operator "
+    "target) — more if the pool truly has more real stories, fewer only if the pool "
+    "is thin. Prefer covering near that size over pruning to a short highlight reel; "
+    "long tail as 'light'. "
     "Double-click free-first; use source=x when a live X-native strand is missing from "
     "wires. Return a broad, effort-tiered ResearchPortfolio; cite supporting t0 hit ids."
 )
+
+
+def _directive() -> str:
+    from algent_backend.agent_system.agents.newsroom.flags import synthesis_target_vectors
+    return _DIRECTIVE.format(target=synthesis_target_vectors())

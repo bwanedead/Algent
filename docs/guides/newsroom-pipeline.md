@@ -29,11 +29,11 @@ full ladder.
 
 | I want… | command |
 |---------|---------|
-| fresh discovery and a **t0 pool menu** to pick from (default) | `newsroom run --to menu` |
-| **t0 pool only** (explicit) | `ingest t0 --force --menu` or `newsroom run --to menu --pool-menu` |
+| fresh discovery and a **synthesis vector menu** to pick from (default) | `newsroom run --to menu` |
+| **t0 pool only** | `ingest t0 --force --menu` or `newsroom run --to menu --pool-menu` (or `SYNTHESIS_ENABLED = False`) |
 | the menu again, without re-spending on discovery | `newsroom run --from menu --to menu` |
-| these **synthesis** menu vectors turned into published articles | enable synthesis in `flags.py`, then `newsroom run --from menu --pick 3,7` |
-| the whole thing, unattended | set `SYNTHESIS_ENABLED = True` in `agent_system/agents/newsroom/flags.py`, then `newsroom run` |
+| these **synthesis** menu vectors turned into published articles | `newsroom run --from menu --pick 3,7` |
+| the whole thing, unattended | `newsroom run` (needs synthesis on — the default in `flags.py`) |
 | an article, but staged rather than shipped | `newsroom run --to editorial` |
 | to see what would run, spending nothing | add `--dry-run` |
 | discovery from only some channels | `newsroom run --to menu --channels gkg,science` |
@@ -41,11 +41,12 @@ full ladder.
 | the raw t0 item menu, to blend items myself | `newsroom run --to menu --pool-menu` |
 | these raw t0 items blended into one article | `newsroom run --compose 88+114 --angle "…"` |
 
-**Synthesis (default off).** Standing toggle is `SYNTHESIS_ENABLED` in
+**Synthesis (default on).** Standing toggles live in
 `backend/algent_backend/agent_system/agents/newsroom/flags.py` — agents edit that file;
-do not manage this via `.env`. When off, discovery stops at the raw t0 pool for hand
-compose/pick. Set `True` for scheduled / unattended vector selection. Optional one-shot:
-`ALGENT_SYNTHESIS=0/1`. `ingest t0` never runs synthesis.
+do not manage these via `.env`. `SYNTHESIS_ENABLED` runs t1; `SYNTHESIS_TARGET_VECTORS`
+is the soft portfolio-size aim (currently 40). Set `SYNTHESIS_ENABLED = False` to stop
+at the raw t0 pool for hand compose/pick. Optional one-shot: `ALGENT_SYNTHESIS=0/1`.
+`ingest t0` never runs synthesis.
 
 **English menu.** Non-English t0 labels get an English line (`signals.label_en`) with the
 original kept underneath — source widely, triage in English. Published articles stay

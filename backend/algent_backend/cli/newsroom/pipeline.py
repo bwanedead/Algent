@@ -427,16 +427,24 @@ def run(args: argparse.Namespace) -> int:
 
     # -- synthesis (pool -> t1 portfolio) --------------------------------------
     portfolio: dict[str, Any] = {}
-    # Asking only for the pool menu means synthesis has nothing to contribute — don't
-    # pay a model to build vectors the operator has said they are going to bypass.
-    # Durable pause lives in newsroom/flags.py (SYNTHESIS_ENABLED); env is one-shot only.
+    portfolio_path: Path | None = None
+    # Durable pause: flags.SYNTHESIS_ENABLED (env is one-shot only). When off, do not
+    # *run* synthesis — but --pick must still reuse the last vector portfolio. Forcing
+    # pool_menu on pick would mis-number the operator's synthesis menu choices.
     from algent_backend.agent_system.agents.newsroom.flags import synthesis_enabled
-    synthesis_paused = not synthesis_enabled()
-    skip_synthesis = (args.pool_menu and args.to_stage == "menu") or synthesis_paused
-    if synthesis_paused and "synthesis" in stages:
+    synthesis_off = not synthesis_enabled()
+    pool_menu_only = bool(args.pool_menu and args.to_stage == "menu")
+    if synthesis_off and "synthesis" in stages and not args.pick:
         progress("[synthesis] off (flags.SYNTHESIS_ENABLED) — using t0 pool menu")
         args.pool_menu = True
-    if "synthesis" in stages and not args.dry_run and not skip_synthesis:
+        pool_menu_only = True
+    run_synthesis = (
+        "synthesis" in stages
+        and not args.dry_run
+        and not synthesis_off
+        and not pool_menu_only
+    )
+    if run_synthesis:
         progress("[synthesis] turning the pool into research vectors…")
         code = _synthesis(args, pool_file=pool_path)
         if code != 0:
@@ -445,9 +453,8 @@ def run(args: argparse.Namespace) -> int:
         portfolio, portfolio_path = _latest_portfolio()
         result["portfolio"] = {"path": str(portfolio_path),
                                "vectors": len(portfolio.get("vectors") or [])}
-    elif (args.pick or args.to_stage == "menu") and not skip_synthesis:
-        # Picking (or showing the menu) without re-running synthesis: the numbers must
-        # refer to the portfolio the operator was actually shown, so reuse the latest.
+    elif args.pick or (args.to_stage == "menu" and not args.pool_menu):
+        # Picks are synthesis-menu numbers; vector menu reprint needs the same file.
         try:
             portfolio, portfolio_path = _latest_portfolio()
         except FileNotFoundError as exc:
