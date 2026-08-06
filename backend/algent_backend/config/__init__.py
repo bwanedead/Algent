@@ -15,4 +15,5 @@ from .credentials import (  # noqa: E402, F401
     list_providers,
     set_provider_api_key,
 )
+from .providers import get_provider_config  # noqa: E402, F401
 from .settings import Settings, load_settings  # noqa: E402, F401

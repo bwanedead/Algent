@@ -11,7 +11,7 @@ from __future__ import annotations
 from typing import Any
 
 from algent_backend.agent_system.agents.agent_spec import AgentSpec, TestFixture
-from algent_backend.agent_system.foundation.models import openai_spec
+from algent_backend.agent_system.foundation.models import house_spec
 from algent_backend.agent_system.runs.context import AgentRunContext
 
 from .run_graph import build_signal_router_graph
@@ -21,7 +21,7 @@ RUNTIME = "langgraph"
 FAMILY = "newsroom"
 
 # Ranking over supplied candidates — low effort is enough (structured pick, no research).
-DEFAULT_MODEL = openai_spec(reasoning_effort="low", temperature=0.2)
+DEFAULT_MODEL = house_spec(reasoning_effort="low", temperature=0.2)
 
 
 def build_graph(context: AgentRunContext) -> Any:

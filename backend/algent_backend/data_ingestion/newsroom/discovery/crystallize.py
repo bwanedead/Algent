@@ -379,18 +379,18 @@ def _int_env(name: str, default: int, lo: int, hi: int) -> int:
 def _try_house_client() -> CrystallizeClient | None:
     """Build the triage-tier client, or None when there's no key to build it with."""
     try:
+        from algent_backend.agent_system.foundation.models import house_provider
         from algent_backend.config import get_provider_api_key
-        key = get_provider_api_key("openai")
+        if not get_provider_api_key(house_provider()):
+            return None
     except Exception:  # noqa: BLE001
-        key = os.environ.get("OPENAI_API_KEY")
-    if not key:
         return None
-    from algent_backend.agent_system.foundation.models import openai_model_id, openai_spec
+    from algent_backend.agent_system.foundation.models import house_model_id, house_spec
 
-    # Explicit crystallize override wins; otherwise the house OpenAI default (Luna).
-    model = (os.environ.get(_ENV_MODEL) or "").strip() or openai_model_id()
+    # Explicit crystallize override wins; otherwise the house default (Muse Contributor).
+    model = (os.environ.get(_ENV_MODEL) or "").strip() or house_model_id()
     return HouseCrystallizeClient(
-        openai_spec(reasoning_effort="low", temperature=0.1, model=model)
+        house_spec(reasoning_effort="low", temperature=0.1, model=model)
     )
 
 
@@ -419,7 +419,7 @@ class HouseCrystallizeClient:
         client = ModelResolver().resolve(self.spec).client
         reply = client.invoke([
             SystemMessage(content=system),
-            HumanMessage(content=user + '\n\nRespond as JSON object: {"decisions":[...]}'),
+            HumanMessage(content=user + "\n\nRespond as a JSON object with a list field."),
         ])
         usage = getattr(reply, "usage_metadata", None) or {}
         self.last_usd = round(estimate_usage_cost(self.model, usage if isinstance(usage, dict) else {}), 6)
@@ -443,7 +443,7 @@ def _parse_decisions(text: str) -> list[dict[str, Any]]:
     if isinstance(data, list):
         return data
     if isinstance(data, dict):
-        for key in ("decisions", "items", "results", "candidates"):
+        for key in ("decisions", "translations", "items", "results", "candidates"):
             if isinstance(data.get(key), list):
                 return data[key]
         # single object?

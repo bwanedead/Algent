@@ -44,7 +44,7 @@ def _ctx(model, events):
     )
 
 
-_SPEC = ModelSpec(provider="openai", model="gpt-5.4-nano")
+_SPEC = ModelSpec(provider="openai", model="gpt-5.6-luna")
 
 
 def _draft(body="The FDA approved the drug. It lowers LDL-C.") -> ArticleDraft:
@@ -107,4 +107,4 @@ def test_empty_prose_skips_the_read() -> None:
 def test_comprehension_reviewer_registered() -> None:
     from algent_backend.agent_system.agents.registry import default_agent_registry
     spec = default_agent_registry().get("comprehension_reviewer")
-    assert spec.default_model.model == "gpt-5.4-nano" and spec.family == "newsroom"
+    assert spec.default_model.provider == "meta" and spec.default_model.model == "muse-spark-1.2-contributor" and spec.family == "newsroom"

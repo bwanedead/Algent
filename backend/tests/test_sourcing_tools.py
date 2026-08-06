@@ -501,6 +501,10 @@ def test_cost_estimates_model_and_calls() -> None:
     ) == round(300_000 / 1_000_000 * 0.40 + 10_000 / 1_000_000 * 1.80, 4)
     # Grok stays in the table
     assert round(cost.estimate_model_cost("grok-4-fast", 1_000_000, 1_000_000), 2) == 0.70
+    # Muse Contributor: 100k fresh @0.10 + 50k out @0.20 = 0.01 + 0.01 = 0.02
+    assert round(
+        cost.estimate_model_cost("muse-spark-1.2-contributor", 100_000, 50_000), 4,
+    ) == 0.02
     assert cost.estimate_call_cost("rich") == 0.001
     assert cost.estimate_call_cost("keyword") == 0.008
     assert cost.estimate_call_cost("unknown") == 0.0
@@ -593,19 +597,42 @@ def test_reserve_settle_releases_hold() -> None:
         assert not cost.would_exceed(0.8)
 
 
-def test_settle_over_reservation_hard_stops() -> None:
-    """Actual usage above the reserved ceiling is a budget defect → hard_stop."""
+def test_settle_over_reservation_stays_normal_under_soft_cap() -> None:
+    """Under-estimate must not force slim — soft/hard thresholds alone own the mode."""
     with cost.article_scoped(3.0, soft_usd=1.0):
         res = cost.try_reserve(0.10, op="model_turn")
         assert res is not None
-        cost.settle(res, 0.50)  # overrun
-        assert cost.mode() == "hard_stop"
-        assert cost.article_spent_usd() == 0.50  # actual charged honestly
+        cost.settle(res, 0.50)  # overrun, still under soft
+        assert cost.mode() == "normal"
+        assert cost.article_spent_usd() == 0.50
         assert any(
             r.get("reason") == "reservation_overrun"
             for r in cost.snapshot()["refused_operations"]
         )
+        # Non-essential work must still be allowed while under soft.
+        assert cost.try_reserve(0.01, op="keyword") is not None
+
+
+def test_settle_over_reservation_enters_slim_when_soft_crossed() -> None:
+    with cost.article_scoped(3.0, soft_usd=1.0):
+        res = cost.try_reserve(0.10, op="model_turn")
+        assert res is not None
+        cost.settle(res, 1.20)  # overrun past soft, under hard
+        assert cost.mode() == "slim_finish"
         assert cost.try_reserve(0.01, op="keyword") is None
+        with cost.essential_scope():
+            assert cost.try_reserve(0.01, op="model_turn", essential=True) is not None
+
+
+def test_settle_over_reservation_hard_stops_when_hard_cap_crossed() -> None:
+    with cost.article_scoped(0.40, soft_usd=0.10):
+        res = cost.try_reserve(0.10, op="model_turn")
+        assert res is not None
+        cost.settle(res, 0.50)  # overrun past hard
+        assert cost.mode() == "hard_stop"
+        assert cost.article_spent_usd() == 0.50
+        with cost.essential_scope():
+            assert cost.try_reserve(0.01, op="model_turn", essential=True) is None
 
 
 def test_turn_ceiling_scales_with_input_over_8k_tokens() -> None:

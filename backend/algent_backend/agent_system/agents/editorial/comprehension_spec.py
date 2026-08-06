@@ -11,7 +11,7 @@ from __future__ import annotations
 from typing import Any
 
 from algent_backend.agent_system.agents.agent_spec import AgentSpec
-from algent_backend.agent_system.foundation.models import openai_spec
+from algent_backend.agent_system.foundation.models import house_spec
 from algent_backend.agent_system.runs.context import AgentRunContext
 
 from .comprehension_loop import build_comprehension_reviewer_graph
@@ -22,7 +22,7 @@ FAMILY = "newsroom"
 
 # A single cold read of the prose — nano is plenty (and reading as a *normal* reader, not an
 # expert, is the job; a bigger model would be more likely to fill gaps a real reader can't).
-DEFAULT_MODEL = openai_spec(reasoning_effort="low", temperature=0.3)
+DEFAULT_MODEL = house_spec(reasoning_effort="low", temperature=0.3)
 
 
 def build_graph(context: AgentRunContext) -> Any:

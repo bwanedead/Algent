@@ -13,7 +13,7 @@ from __future__ import annotations
 from typing import Any
 
 from algent_backend.agent_system.agents.agent_spec import AgentSpec, TestFixture
-from algent_backend.agent_system.foundation.models import openai_spec
+from algent_backend.agent_system.foundation.models import house_spec
 from algent_backend.agent_system.runs.context import AgentRunContext
 from algent_backend.agent_system.tools.sourcing.search import policy
 from algent_backend.agent_system.tools.sourcing.search.research import WEB_SEARCH_TOOL_ID
@@ -34,7 +34,7 @@ PAID_BUDGET = 8
 # loop auto-halts when the estimate crosses this. Conservative for live testing.
 COST_CAP_USD = 1.00
 
-DEFAULT_MODEL = openai_spec(reasoning_effort="medium", temperature=0.3, streaming=True)
+DEFAULT_MODEL = house_spec(reasoning_effort="medium", temperature=0.3, streaming=True)
 
 
 def build_graph(context: AgentRunContext) -> Any:

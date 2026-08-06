@@ -11,17 +11,17 @@ obvious while we learn the LangChain surface. LangChain's ``init_chat_model(...)
 one-liner could collapse this later; switching is fully internal to this file
 and changes neither ``ModelSpec`` nor callers.
 
-The three providers share kwarg names on their constructors (``model``,
-``api_key``, ``temperature``, ``max_tokens``, ``timeout``, ``max_retries``);
-Google aliases ``max_tokens`` to ``max_output_tokens`` internally. So one common
-kwargs dict serves all three — no per-provider translation needed.
+OpenAI and Meta (OpenAI-compatible) share ``ChatOpenAI``; Meta adds ``base_url``.
+Anthropic/Google keep their own wrappers. Common knobs (``model``, ``api_key``,
+``temperature``, ``max_tokens``, ``timeout``, ``max_retries``) are shared.
 """
 
 from __future__ import annotations
 
+import os
 from typing import Any
 
-from algent_backend.config import get_provider_api_key
+from algent_backend.config import get_provider_api_key, get_provider_config
 
 from ..handles import ResolvedModel
 from ..specs import ModelSpec
@@ -32,7 +32,9 @@ TARGET_NAME = "langchain"
 # Providers this target knows how to build (i.e. has an installed langchain-*
 # integration for). This is target capability, not provider config: a vendor can
 # be a model provider in the registry without this target supporting it yet.
-_SUPPORTED = {"openai", "anthropic", "google"}
+_SUPPORTED = {"openai", "anthropic", "google", "meta"}
+_OPENAI_COMPAT = frozenset({"openai", "meta"})
+_ENV_META_BASE = "META_MODEL_API_BASE_URL"
 
 
 class LangChainTarget(ModelTarget):
@@ -66,7 +68,7 @@ class LangChainTarget(ModelTarget):
 
     def _chat_class(self, provider: str) -> type:
         """Lazily import and return the LangChain chat-model class for a provider."""
-        if provider == "openai":
+        if provider in _OPENAI_COMPAT:
             from langchain_openai import ChatOpenAI
 
             return ChatOpenAI
@@ -87,16 +89,50 @@ class LangChainTarget(ModelTarget):
         if api_key:
             kwargs["api_key"] = api_key
 
+        if spec.provider == "meta":
+            cfg = get_provider_config("meta")
+            base = (os.environ.get(_ENV_META_BASE) or "").strip() or (
+                (cfg.base_url if cfg else None) or ""
+            )
+            if not base:
+                raise ValueError(
+                    "Meta provider has no base_url; set META_MODEL_API_BASE_URL "
+                    "or ProviderConfig.base_url on meta."
+                )
+            kwargs["base_url"] = base.rstrip("/")
+
         for field in ("temperature", "max_tokens", "timeout", "max_retries"):
             value = getattr(spec, field)
             if value is not None:
                 kwargs[field] = value
 
-        # OpenAI GPT-5.x: omit → API defaults to medium reasoning. Pass through
-        # only when set so Anthropic/Google specs stay untouched.
-        if spec.provider == "openai" and spec.reasoning_effort is not None:
+        # OpenAI GPT-5.x and Meta Muse: pass reasoning when set. Function tools +
+        # reasoning need the Responses API on OpenAI; Meta also exposes Responses
+        # as the full agentic surface — use it whenever effort is set.
+        if spec.provider in _OPENAI_COMPAT and spec.reasoning_effort is not None:
             kwargs["reasoning_effort"] = spec.reasoning_effort
+            if spec.reasoning_effort != "none":
+                kwargs.setdefault("use_responses_api", True)
 
         # Provider-specific escape hatch wins over nothing else; it is last.
         kwargs.update(spec.extra)
+
+        # ChatOpenAI with streaming=True puts stream=true into Responses ``create``
+        # even on the non-stream ``_generate`` path used by ReAct ``invoke``. The
+        # SDK then returns a Stream object and construction crashes. Prefer correct
+        # tool+reasoning calls over token streaming for these models.
+        #
+        # OpenAI Luna also needs previous_response_id + truncation to avoid
+        # replaying full reasoning blocks every ReAct turn. Meta's 1M context does
+        # not need that chain — leave those OpenAI-only.
+        if kwargs.get("use_responses_api") and kwargs.get("reasoning_effort") not in (
+            None,
+            "none",
+        ):
+            kwargs["streaming"] = False
+            kwargs.pop("stream_usage", None)
+            if spec.provider == "openai":
+                kwargs.setdefault("use_previous_response_id", True)
+                kwargs.setdefault("truncation", "auto")
+
         return kwargs

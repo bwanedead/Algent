@@ -1,9 +1,10 @@
 """
-Shared OpenAI defaults for newsroom / agent stages.
+Shared OpenAI defaults for explicit OpenAI stages.
 
-One house model (``gpt-5.6-luna``) across OpenAI stages; stages differ by
-``reasoning_effort`` (low vs medium), not by model slug. Override the slug with
-``ALGENT_OPENAI_MODEL`` when testing another OpenAI id without editing every spec.
+``openai_spec`` always targets OpenAI (default ``gpt-5.6-luna``). Newsroom house
+defaults live in ``house_defaults.house_spec`` (Meta Muse Contributor) — use that
+for agent DEFAULT_MODEL values, and this module when you intentionally want OpenAI.
+Override the OpenAI slug with ``ALGENT_OPENAI_MODEL``.
 """
 
 from __future__ import annotations
@@ -30,7 +31,7 @@ def openai_spec(
     model: str | None = None,
     **extra: Any,
 ) -> ModelSpec:
-    """Build an OpenAI ``ModelSpec`` on the house default (Luna unless overridden)."""
+    """Build an OpenAI ``ModelSpec`` (Luna unless ``ALGENT_OPENAI_MODEL`` / ``model=``)."""
     payload_extra = dict(extra)
     if streaming:
         payload_extra.setdefault("streaming", True)

@@ -11,7 +11,7 @@ from __future__ import annotations
 from typing import Any
 
 from algent_backend.agent_system.agents.agent_spec import AgentSpec
-from algent_backend.agent_system.foundation.models import openai_spec
+from algent_backend.agent_system.foundation.models import house_spec
 from algent_backend.agent_system.runs.context import AgentRunContext
 
 from .review_loop import build_treatment_reviewer_graph
@@ -22,7 +22,7 @@ FAMILY = "newsroom"
 
 # Structured critique over a supplied treatment + profile, backed by a re-review — the nano
 # tier is enough (judges given text into findings; does not research or generate prose).
-DEFAULT_MODEL = openai_spec(reasoning_effort="low", temperature=0.2)
+DEFAULT_MODEL = house_spec(reasoning_effort="low", temperature=0.2)
 
 
 def build_graph(context: AgentRunContext) -> Any:

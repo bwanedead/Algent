@@ -41,7 +41,7 @@ def _ctx(model, events):
 
 
 def _spec():
-    return ModelSpec(provider="openai", model="gpt-5.4-nano")
+    return ModelSpec(provider="openai", model="gpt-5.6-luna")
 
 
 def test_headline_writer_produces_title_and_dek() -> None:
@@ -63,4 +63,4 @@ def test_headline_writer_registered_on_nano() -> None:
     from algent_backend.agent_system.agents.registry import default_agent_registry
 
     spec = default_agent_registry().get("headline_writer")
-    assert spec.tool_ids == () and spec.default_model.model == "gpt-5.4-nano"
+    assert spec.tool_ids == () and spec.default_model.provider == "meta" and spec.default_model.model == "muse-spark-1.2-contributor"

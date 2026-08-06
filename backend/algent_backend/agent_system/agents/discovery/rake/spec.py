@@ -8,14 +8,14 @@ constants keep the tuning in one place, mirroring an ``AgentSpec``'s knobs.
 
 from __future__ import annotations
 
-from algent_backend.agent_system.foundation.models import openai_spec
+from algent_backend.agent_system.foundation.models import house_spec
 from algent_backend.agent_system.tools.sourcing.search import policy
 from algent_backend.agent_system.tools.sourcing.search.research import WEB_SEARCH_TOOL_ID
 
 TOOL_IDS = (WEB_SEARCH_TOOL_ID,)
 # Low effort — high-volume surface sieve, not deep work. Same house model as the
 # rest of the OpenAI rail; effort is what keeps this stage cheap.
-RAKE_MODEL = openai_spec(reasoning_effort="low", temperature=0.2, streaming=True)
+RAKE_MODEL = house_spec(reasoning_effort="low", temperature=0.2, streaming=True)
 # Free channels only: a fence-sitter check is a free read/search; rake never pays.
 RAKE_CHANNELS = (policy.KEYWORD, policy.SEMANTIC, policy.READ)
 RAKE_PAID_BUDGET = 0

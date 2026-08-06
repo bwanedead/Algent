@@ -44,7 +44,7 @@ def _ctx(model, events):
 
 
 def _spec():
-    return ModelSpec(provider="openai", model="gpt-5.4-nano")
+    return ModelSpec(provider="openai", model="gpt-5.6-luna")
 
 
 def _profile() -> SignalProfile:
@@ -150,11 +150,34 @@ def test_router_no_profile_is_not_warranted() -> None:
     assert graph.invoke({})["analytics_plan"]["warranted"] is False
 
 
+def test_router_defers_source_specimen_until_licensed_lane() -> None:
+    plan = AnalyticsPlan(id="", warranted=True, requests=[
+        AnalyticsRequest(
+            id="", kind="image", title="Linear A tablet", question="what does the script look like?",
+            spec="photograph of a Linear A tablet", data_refs=["c1"],
+            visual_class="source_specimen", priority="essential_context",
+            rationale="reader needs to see the artifact",
+        ),
+        AnalyticsRequest(
+            id="", kind="chart", title="PCE trend", question="how is inflation moving?",
+            spec="line chart of PCE y/y", data_refs=["c1"], visual_class="data_chart",
+        ),
+    ])
+    graph = ar.build_analytics_router_graph(_ctx(_Model(plan), []), model_spec=_spec())
+    p = AnalyticsPlan.model_validate(graph.invoke({"profile": _profile().model_dump()})["analytics_plan"])
+    assert p.warranted is True
+    by_class = {r.visual_class: r for r in p.requests}
+    assert by_class["source_specimen"].status == "source_unavailable"
+    assert "licensed media" in by_class["source_specimen"].rationale
+    assert by_class["data_chart"].status == "requested"
+    assert "source_specimen" in p.note
+
+
 def test_analytics_router_registered_with_fixture() -> None:
     from pathlib import Path
 
     from algent_backend.agent_system.agents.registry import default_agent_registry
 
     spec = default_agent_registry().get("analytics_router")
-    assert spec.default_model.model == "gpt-5.4-nano" and spec.test_fixture is not None
+    assert spec.default_model.provider == "meta" and spec.default_model.model == "muse-spark-1.2-contributor" and spec.test_fixture is not None
     assert Path(spec.test_fixture.input_file).exists()

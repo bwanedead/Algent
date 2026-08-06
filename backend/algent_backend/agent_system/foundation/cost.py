@@ -75,6 +75,27 @@ class ModelRate:
 
 
 MODEL_RATES: dict[str, ModelRate] = {
+    # Meta Muse Spark — Contributor rates from Meta dashboard (train-on-data tier).
+    # Override by changing this table if Meta revises list prices; caps still apply.
+    "muse-spark-1.2-contributor": ModelRate(
+        input=0.10,
+        output=0.20,
+        cached_input=0.002,
+        cache_write=0.0,
+    ),
+    # Standard Muse Spark (non-contributor) — keep for ALGENT_HOUSE_MODEL swaps.
+    "muse-spark-1.2": ModelRate(
+        input=1.25,
+        output=4.25,
+        cached_input=0.15,
+        cache_write=0.0,
+    ),
+    "muse-spark-1.1": ModelRate(
+        input=1.25,
+        output=4.25,
+        cached_input=0.15,
+        cache_write=0.0,
+    ),
     "gpt-5.6-luna": ModelRate(
         input=0.20,
         output=1.20,
@@ -450,8 +471,10 @@ def try_reserve(
 def settle(reservation: Reservation | None, actual: float) -> None:
     """Apply actual usage against a reservation (or charge without one via add).
 
-    If actual exceeds the reserved estimate, charge the real spend then enter hard_stop —
-    a reservation overrun is a budget defect (the call was admitted under a too-low ceiling).
+    If actual exceeds the reserved estimate, charge the real spend and record the overrun.
+    Mode follows settled spend only (``_charge`` → ``_sync_mode``): soft → slim_finish,
+    hard → hard_stop. Do **not** force slim on under-estimate alone — that used to strand
+    ~$2 of hard headroom and kill mid-rail work (gauntlet review) while still under soft.
     """
     if reservation is None:
         add(actual)
@@ -468,7 +491,6 @@ def settle(reservation: Reservation | None, actual: float) -> None:
     _charge(led, act, op=reservation.op)
     if act > estimate + 1e-9:
         _record_refuse(led, reservation.op, "reservation_overrun")
-        _enter_hard_stop(led)
 
 
 def release(reservation: Reservation | None) -> None:
