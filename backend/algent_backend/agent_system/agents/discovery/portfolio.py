@@ -71,3 +71,54 @@ def ensure_vector_ids(portfolio: ResearchPortfolio) -> ResearchPortfolio:
     """
     vectors = [v if v.id else v.model_copy(update={"id": vector_id(v)}) for v in portfolio.vectors]
     return portfolio.model_copy(update={"vectors": vectors})
+
+
+def coerce_portfolio(raw: object, *, generated_at: str = "") -> ResearchPortfolio | None:
+    """Best-effort normalize alternate model shapes into ``ResearchPortfolio``.
+
+    Some providers emit ``portfolio: [...]`` instead of ``vectors``, or ``type``
+    instead of ``vector_type``. Returns ``None`` when nothing usable is present.
+    """
+    if isinstance(raw, ResearchPortfolio):
+        return raw
+    if not isinstance(raw, dict):
+        return None
+    data = dict(raw)
+    if not data.get("vectors") and isinstance(data.get("portfolio"), list):
+        data["vectors"] = data.pop("portfolio")
+    vectors_in = data.get("vectors")
+    if not isinstance(vectors_in, list) or not vectors_in:
+        return None
+    norm_vecs = []
+    for item in vectors_in:
+        if not isinstance(item, dict):
+            continue
+        v = dict(item)
+        if not v.get("vector_type") and v.get("type"):
+            v["vector_type"] = v.pop("type")
+        if not (v.get("title") or "").strip():
+            continue
+        scope = v.get("scope")
+        if isinstance(scope, str):
+            v["scope"] = [scope]
+        pillars = v.get("pillars")
+        if isinstance(pillars, str):
+            v["pillars"] = [pillars]
+        try:
+            norm_vecs.append(ResearchVector.model_validate(v))
+        except Exception:  # noqa: BLE001 — skip malformed vector rows
+            continue
+    if not norm_vecs:
+        return None
+    data["vectors"] = norm_vecs
+    data.setdefault("generated_at", generated_at or "")
+    try:
+        return ResearchPortfolio.model_validate(data)
+    except Exception:  # noqa: BLE001
+        return ResearchPortfolio(
+            generated_at=generated_at or "",
+            vectors=norm_vecs,
+            total_considered=int(data.get("total_considered") or 0),
+            t0_ref=data.get("t0_ref"),
+            dropped_note=data.get("dropped_note"),
+        )

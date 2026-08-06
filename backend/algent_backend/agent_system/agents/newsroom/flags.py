@@ -27,6 +27,13 @@ SYNTHESIS_ENABLED = True
 # Wired into the synthesis task message so the model sees the standing aim.
 SYNTHESIS_TARGET_VECTORS = 40
 
+# Structured final portfolio needs room: ~400 output tokens/vector is a safe
+# planning figure (title+thesis+rationale+questions+sources). Default ReAct
+# ceiling (4k) silently truncates larger portfolios into empty ``vectors``.
+_SYNTHESIS_TOKENS_PER_VECTOR = 400
+_SYNTHESIS_OUTPUT_FLOOR = 8_192
+_SYNTHESIS_OUTPUT_CEILING = 32_768
+
 # ---------------------------------------------------------------------------
 
 _SYNTHESIS_ENV = "ALGENT_SYNTHESIS"
@@ -48,3 +55,9 @@ def synthesis_enabled() -> bool:
 def synthesis_target_vectors() -> int:
     """Standing soft target for t1 portfolio size (see ``SYNTHESIS_TARGET_VECTORS``)."""
     return max(1, int(SYNTHESIS_TARGET_VECTORS))
+
+
+def synthesis_max_output_tokens() -> int:
+    """Output-token ceiling for the synthesis ReAct + structured portfolio call."""
+    need = synthesis_target_vectors() * _SYNTHESIS_TOKENS_PER_VECTOR
+    return max(_SYNTHESIS_OUTPUT_FLOOR, min(_SYNTHESIS_OUTPUT_CEILING, need))

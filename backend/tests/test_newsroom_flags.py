@@ -46,6 +46,16 @@ def test_synthesis_target_vectors_positive(monkeypatch: pytest.MonkeyPatch) -> N
     assert flags.synthesis_target_vectors() == 1
 
 
+def test_synthesis_max_output_scales_with_target(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(flags, "SYNTHESIS_TARGET_VECTORS", 40)
+    # 40 * 400 = 16000, within floor/ceiling
+    assert flags.synthesis_max_output_tokens() == 16_000
+    monkeypatch.setattr(flags, "SYNTHESIS_TARGET_VECTORS", 5)
+    assert flags.synthesis_max_output_tokens() == 8_192  # floor
+    monkeypatch.setattr(flags, "SYNTHESIS_TARGET_VECTORS", 200)
+    assert flags.synthesis_max_output_tokens() == 32_768  # ceiling
+
+
 def test_t0_directive_includes_target(monkeypatch: pytest.MonkeyPatch) -> None:
     from algent_backend.agent_system.agents.discovery.synthesis import messages as syn_msg
     monkeypatch.setattr(flags, "SYNTHESIS_TARGET_VECTORS", 40)

@@ -111,11 +111,14 @@ visible, don't just call tools silently.
 OUTPUT
 Return a ResearchPortfolio: a broad, effort-tiered set of vectors covering every
 real story in the pool (many vectors, the long tail kept as "light" — not pruned to
-a few). For each vector give a title, a thesis, its type (story | synthesis |
+a few). Put every vector in the ``vectors`` array — never leave it empty and claim
+delivery in ``dropped_note``. ``dropped_note`` is ONLY a short anti-spam record of
+what you genuinely set aside (ads/noise), not a summary of what you delivered.
+For each vector give a title, a thesis, its type (story | synthesis |
 analytic | implications), why it's high-value, its supporting t0 hit ids (cite them —
 every claim stays traceable), pillars/scope tags, a research_effort allocation
 (light | standard | deep), the key questions research should resolve, and any source
-URLs you confirmed. Note briefly only what you genuinely set aside (spam/non-news).
+URLs you confirmed.
 
 THE "SO WHAT?" TEST — apply it to every vector before you keep it. A vector must name what
 a reader GAINS: what they would do, expect, or believe differently for having read it. "The
