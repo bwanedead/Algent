@@ -458,3 +458,12 @@ run: 0060__797166ee-df16-400f-9845-4e2518f3488a
 
 ### RETRACTED south-korean-appliance-maker-lg-s-thai-laundromat-expansion-5dcc3d — 2026-08-04
 Reason: duplicate from analytics backfill that used the pre-headline working title; charts belong on the original live URL
+
+### PUBLISH dr-congo-bans-raw-copper-and-cobalt-exports-to-force-refinin-3f2614 — 2026-08-06
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.5370  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.0719, gauntlet=$0.3505, profile=$0.1142, routing=$0.0004
+⚠ figures not matched to evidence: 14%, 39%, 42%, 80%, 25%, 27%, 75%, 50%
+run: 0061__177762bb-ab50-43a2-81d4-e5103ed4f218
