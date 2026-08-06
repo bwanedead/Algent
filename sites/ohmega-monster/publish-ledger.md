@@ -506,3 +506,14 @@ refused: model_turn(reservation_overrun)
 disposition: needs_verification
 ⚠ figures not matched to evidence: 50%, 65%, 84%
 run: 0065__ffa027ae-d866-4eeb-8063-4d57c94dfd48
+
+### PUBLISH western-sahara-a-disputed-desert-territory-froze-north-afric-f14cc1 — 2026-08-06
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 0 produced, 0 escapes
+cost: ~$0.6292  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+analytics_skipped: req_algeria_morocco_map_01:failed, req_algeria_morocco_scale_02:integrity_check_failed
+cost_by_stage: editorial=$0.1180, gauntlet=$0.4075, profile=$0.1033, routing=$0.0004
+refused: model_turn(reservation_overrun)
+⚠ figures not matched to evidence: 11%, 21%
+run: 0067__2c433dc5-4075-40d9-8c62-a6467f27c410
