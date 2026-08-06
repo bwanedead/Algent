@@ -11,15 +11,25 @@
 - Backend run placeholder: `.venv\Scripts\Activate.ps1; python -m algent_backend.app` exposes `/health` on `http://127.0.0.1:43145`.
 - Frontend install: `cd frontend && npm install`; dev server `npm run dev`; Tauri shell `npm run tauri:dev`.
 - Tests (backend): `cd backend && .venv\Scripts\Activate.ps1 && pytest`.
-- **Git: commit and push when it makes sense — sensibly and carefully.** No hard ban and no rubber-stamp. Before committing, check `git status` / the diff so nothing that shouldn't be tracked slips in (keep `.gitignore` sane and update it when a new build/output/secret-ish path appears). Never commit directly to `main` — work on a branch. Push when it's the natural next step; pause to confirm only for the genuinely consequential (history rewrites, force-push, deletions of others' work).
 - **Do not install dependencies (pip, npm, cargo, etc.); the maintainer handles all installation. Stick to read-only commands unless told otherwise.**
+
+## Git hygiene (standing duty — not optional)
+Keep a **sane working tree** and a **remote backup** as work lands. Do not let large uncommitted piles accumulate.
+
+- **Commit when a chunk is done.** After a coherent unit is correct (a feature slice, a fix, a doctrine pass, a testable batch — typically once reviewers/self-review are settled for non-trivial work), commit it. Prefer several small scoped commits over one mega-commit at end of day.
+- **Push after committing.** Push the feature branch to `origin` so remote holds the backup. Do not wait for the human to ask unless push is blocked.
+- **Branch only — never commit to `main`.** Work on `organic-dev` or a topic branch.
+- **Before every commit:** `git status` + diff. Exclude secrets (`.env`, keys), run artifacts (`backend/runs_data/`), caches, build outputs, and one-shot local scratch. Update `.gitignore` when a new junk path appears.
+- **Messages:** short imperative, scoped to the area (`feat(models): …`, `fix(editorial): …`).
+- **Pause for confirmation only when consequential:** force-push, history rewrite, deleting others' work, or committing something ambiguous/secret-adjacent. Ordinary feature commits do **not** need a pre-ask.
+- **Site-live content** still ships via the publish worktree / `site-live` branch — that path is separate from committing app code on `organic-dev`.
 
 ## Safety & Blast-Radius (non-negotiable)
 - **Stay inside the repo.** Never edit, create, or delete anything outside the repository root.
 - **No destructive/wide commands.** Never run recursive or absolute-path deletions (`rm -rf /`, `rm -rf ~`, `Remove-Item -Recurse` against a drive/home, `del /s`, etc.). Never touch `.git/` internals.
 - **No path traversal for writes/deletes.** No `..` traversal or absolute paths for edits or deletions.
 - **Secrets are off-limits.** Never read, print, commit, or modify `.env`, keys, tokens, or credentials.
-- **Disciplined deletions.** You may delete/move files *within* this repo for real refactors: remove usage first, keep the change minimal and justified, and explain what/why in the commit (when committing is authorized).
+- **Disciplined deletions.** You may delete/move files *within* this repo for real refactors: remove usage first, keep the change minimal and justified, and explain what/why in the commit.
 - **Do not touch `graph_os/`** unless the task explicitly targets it — it is the weight-bearing subsystem and stays decoupled from `agent_system/` until a deliberate seam exists.
 
 ## Read-First Behavior
@@ -71,7 +81,8 @@ A folder-level `AGENTS.md` is a short, local sticky note: constraints, invariant
 - When adding new command/loop/lab logic, add at least a sanity test covering the main happy path.
 
 ## Commit & Pull Request Guidelines
-- Commit messages follow short imperative style (`“add agent system skeleton”`); keep commits scoped and reference the area touched.
+- Follow **Git hygiene** above: commit+push coherent chunks on the feature branch without waiting to be asked.
+- Commit messages follow short imperative style (`feat(area): …`); keep commits scoped and reference the area touched.
 - PRs should describe scope, mention testing performed (`pytest`, `npm run dev` smoke), and link issues/tasks when applicable.
 - Include screenshots or logs only when UI or observability changes are made.
 
