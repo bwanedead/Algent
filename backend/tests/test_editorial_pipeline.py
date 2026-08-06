@@ -35,6 +35,9 @@ def _spine_profile(pid: str = "prof_x") -> dict:
 
 def _wire(monkeypatch, plan_out, draft_out, caveat_out, headline_out=None, analytics_out=None,
           worker_out=None):
+    # Hero is on by default in production; most pipeline unit tests do not mock image
+    # gen, so leave it off unless a hero-specific test turns it on.
+    monkeypatch.setenv("ALGENT_HERO_IMAGE", "0")
     monkeypatch.setattr(pl, "build_planning_gauntlet_graph", lambda ctx: _Graph(plan_out))
     monkeypatch.setattr(pl, "build_drafting_gauntlet_graph", lambda ctx: _Graph(draft_out))
     monkeypatch.setattr(pl, "build_headline_writer", lambda ctx: _Graph(headline_out or {"headline": {}}))
