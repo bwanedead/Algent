@@ -248,16 +248,23 @@ def _fulfill_analytics(
     Deferral policy (e.g. source_specimen → source_unavailable) is owned by the
     analytics router; this stage only fulfills still-requested items.
     """
+    # Terminal plan statuses that must NOT be sent to the worker. Anything else
+    # (including a model-hallucinated ``produced``) is treated as still open.
+    _DEFERRED = frozenset({
+        "not_warranted", "soft_cap_skipped", "worker_disabled", "source_unavailable",
+    })
     reqs = list(analytics.get("requests") or [])
     if not reqs:
         return []
 
     active, deferred = [], []
     for r in reqs:
-        if str(r.get("status") or "requested") in ("", "requested"):
-            active.append(r)
-        else:
+        status = str(r.get("status") or "requested").strip().lower() or "requested"
+        if status in _DEFERRED:
             deferred.append({**r, "note": r.get("note") or r.get("rationale") or ""})
+        else:
+            # Reset fulfillment claims — only the worker may mark produced/failed.
+            active.append({**r, "status": "requested"})
 
     if not analytics.get("warranted") or not active:
         return deferred
@@ -382,7 +389,10 @@ def _build_pipeline_report(
         unverified_figures=draft_report.get("unverified_figures", []),
         analytics_warranted=bool(analytics.get("warranted")),
         analytics_count=len(analytics.get("requests", [])),
-        analytics_produced=sum(1 for a in produced_analytics if a.get("status") == "produced"),
+        analytics_produced=sum(
+            1 for a in produced_analytics
+            if a.get("status") == "produced" and (a.get("artifact_name") or a.get("body_md"))
+        ),
         analytics_escapes=sum(1 for a in produced_analytics if a.get("escaped_writes")),
         analytics_skipped=skipped,
         surface_issues=issues,

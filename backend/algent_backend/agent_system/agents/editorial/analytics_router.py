@@ -377,7 +377,10 @@ def _finalize(plan: AnalyticsPlan, profile: SignalProfile, model: str) -> Analyt
                 ).strip(),
             }))
         else:
-            active.append(r)
+            # Fulfillment status is owned by the worker — never by the router model.
+            # Muse (and others) sometimes emit status="produced" on the plan; that used
+            # to skip the worker entirely while the report counted fake productions.
+            active.append(r.model_copy(update={"status": "requested"}))
     note = plan.note
     if deferred:
         note = (note + " | dropped source_specimen (licensed media lane not ready)").strip(" |")

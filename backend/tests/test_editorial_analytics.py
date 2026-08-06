@@ -173,6 +173,21 @@ def test_router_defers_source_specimen_until_licensed_lane() -> None:
     assert "source_specimen" in p.note
 
 
+def test_router_resets_model_hallucinated_produced_status() -> None:
+    """Muse sometimes marks plan requests status=produced; that must not skip the worker."""
+    plan = AnalyticsPlan(id="", warranted=True, requests=[
+        AnalyticsRequest(
+            id="", kind="chart", title="Cobalt share", question="who mines cobalt?",
+            spec="bar chart of mine share", data_refs=["c1"], visual_class="data_chart",
+            status="produced",
+        ),
+    ])
+    graph = ar.build_analytics_router_graph(_ctx(_Model(plan), []), model_spec=_spec())
+    p = AnalyticsPlan.model_validate(graph.invoke({"profile": _profile().model_dump()})["analytics_plan"])
+    assert len(p.requests) == 1
+    assert p.requests[0].status == "requested"
+
+
 def test_analytics_router_registered_with_fixture() -> None:
     from pathlib import Path
 

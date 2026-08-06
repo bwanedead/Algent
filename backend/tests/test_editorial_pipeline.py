@@ -454,6 +454,58 @@ def test_analytics_worker_runs_and_caps_when_enabled(monkeypatch) -> None:
     assert r["analytics_produced"] == 1 and r["analytics_escapes"] == 0
 
 
+def test_fake_produced_plan_status_still_reaches_worker(monkeypatch) -> None:
+    """Router/model 'produced' without an artifact must not skip fulfillment."""
+    monkeypatch.setenv(pl._ANALYTICS_WORKER_ENV, "1")
+    monkeypatch.setenv(pl._ANALYTICS_CAP_ENV, "2")
+    seen: dict = {}
+
+    class _Graph:
+        def invoke(self, state, _config=None):
+            seen["statuses"] = [r.get("status") for r in state["analytics_plan"]["requests"]]
+            seen["n"] = len(state["analytics_plan"]["requests"])
+            return {"analytics_artifacts": [{
+                "request_id": "anx_01", "status": "produced",
+                "artifact_name": "cobalt.svg", "escaped_writes": [],
+            }]}
+
+    plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
+    draft_out = {"draft": {"id": "d", "word_count": 100}, "gauntlet": {"outcome": "grounded"}}
+    analytics_out = {"analytics_plan": {
+        "warranted": True,
+        "requests": [{"id": "anx_01", "status": "produced", "title": "cobalt"}],
+    }}
+    _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}},
+          analytics_out=analytics_out)
+    monkeypatch.setattr(pl, "build_analytics_worker_graph", lambda ctx: _Graph())
+
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile("p")})["pipeline"]
+    assert seen.get("n") == 1
+    assert seen.get("statuses") == ["requested"]
+    assert r["analytics_produced"] == 1
+
+
+def test_produced_without_artifact_does_not_count(monkeypatch) -> None:
+    monkeypatch.setenv(pl._ANALYTICS_WORKER_ENV, "1")
+
+    class _Graph:
+        def invoke(self, state, _config=None):
+            return {"analytics_artifacts": [{
+                "request_id": "anx_01", "status": "produced",  # lie: no file
+                "artifact_name": "", "body_md": "", "escaped_writes": [],
+            }]}
+
+    plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
+    draft_out = {"draft": {"id": "d", "word_count": 100}, "gauntlet": {"outcome": "grounded"}}
+    analytics_out = {"analytics_plan": {"warranted": True, "requests": [{"id": "anx_01"}]}}
+    _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}},
+          analytics_out=analytics_out)
+    monkeypatch.setattr(pl, "build_analytics_worker_graph", lambda ctx: _Graph())
+
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile("p")})["pipeline"]
+    assert r["analytics_produced"] == 0
+
+
 def test_editorial_pipeline_registered_with_fixture() -> None:
     from pathlib import Path
 

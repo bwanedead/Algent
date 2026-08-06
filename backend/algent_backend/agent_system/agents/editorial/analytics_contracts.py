@@ -58,6 +58,8 @@ class AnalyticsRequest(BaseModel):
     placement: VisualPlacement = "after_opening"
     reader_gap: str = ""   # the mental model the visual supplies that prose alone cannot
     factual_basis: str = ""  # cited data / public reference geometry / sourced media basis
+    # Router emits ``requested`` (or ``source_unavailable`` for deferred classes).
+    # Never ``produced`` — that status is owned exclusively by the analytics worker.
     status: RequestStatus = "requested"
 
 
