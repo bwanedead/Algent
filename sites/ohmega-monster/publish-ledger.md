@@ -494,3 +494,15 @@ cost: ~$0.5099  ·  mode: normal  ·  soft/hard: $1.00/$3.00
 cost_by_stage: editorial=$0.0670, gauntlet=$0.3135, profile=$0.1290, routing=$0.0004
 refused: model_turn(reservation_overrun), model_turn(reservation_overrun)
 run: 0064__fc7b1e48-5755-4191-b12e-4d0d7decaf7f
+
+### PUBLISH the-microscopic-hairs-that-let-corals-breathe-94-and-why-hea-975ef3 — 2026-08-06
+status: needs_hedging  ·  draft: grounded  ·  treatment: promoted
+caveats: needs_hedging (1 findings)
+analytics: 0 produced, 1 escapes
+cost: ~$0.5475  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+analytics_skipped: req_coral_cilia_thermal_collapse_01:failed
+cost_by_stage: editorial=$0.1287, gauntlet=$0.3414, profile=$0.0771, routing=$0.0003
+refused: model_turn(reservation_overrun)
+disposition: needs_verification
+⚠ figures not matched to evidence: 50%, 65%, 84%
+run: 0065__ffa027ae-d866-4eeb-8063-4d57c94dfd48
