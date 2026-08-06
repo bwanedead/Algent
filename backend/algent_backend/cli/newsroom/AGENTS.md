@@ -37,3 +37,11 @@ Do **not** remake synthesis just to re-pick. Freeze the portfolio path (or use `
 `agent_system/agents/newsroom/flags.py`: `SYNTHESIS_ENABLED`, `SYNTHESIS_TARGET_VECTORS`, and
 `synthesis_max_output_tokens()` (scales with the target so large portfolios are not truncated
 into empty `vectors`). Agents edit that file — not `.env`.
+
+## Single-flight (do not overlap rails)
+
+`newsroom run` takes an exclusive lock at `runs_data/newsroom_run.lock` whenever it might spend
+(synthesis or a rail). A second launch while another is alive exits with a busy error. If you
+must stop a run, use `python -m algent_backend.cli runs stop --run-id …` (tree-kill) — do not
+only kill the parent shell and relaunch. Overlapping rails double-spend and false-trip analytics
+escapes.

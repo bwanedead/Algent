@@ -201,13 +201,22 @@ def test_escape_tripwire_fails_loudly_even_on_a_good_chart(tmp_path: Path, monke
     assert not (tmp_path / "ws" / "anx_01").exists()   # scratch still emptied
 
 
-def test_store_escapes_catches_new_and_modified_files() -> None:
+def test_store_escapes_catches_new_and_resized_files() -> None:
     # git status can't see gitignored stores; this fingerprint diff is the complement.
-    before = {"p/prof_a.json": (100, 10)}
-    after = {"p/prof_a.json": (200, 10),   # same size, newer mtime -> a silent overwrite
-             "p/prof_b.json": (50, 5)}     # a brand-new file
-    assert aw._store_escapes(before, after) == ["p/prof_a.json", "p/prof_b.json"]
+    # mtime-only bumps (scanners / concurrent touch) must NOT trip — size or new path must.
+    before = {"p/prof_a.json": (100, 10), "p/prof_c.json": (50, 8)}
+    after = {"p/prof_a.json": (200, 10),   # same size, newer mtime -> ignore
+             "p/prof_b.json": (50, 5),     # brand-new file
+             "p/prof_c.json": (90, 12)}    # resized -> escape
+    assert aw._store_escapes(before, after) == ["p/prof_b.json", "p/prof_c.json"]
     assert aw._store_escapes(before, before) == []   # unchanged -> nothing
+
+
+def test_pct_supported_by_corpus_allows_derived_ratios() -> None:
+    corpus = "About 60,000 people crossed into a city of 85,000 residents."
+    assert aw._pct_supported_by_corpus("71%", corpus)  # 60000/85000
+    assert not aw._pct_supported_by_corpus("164%", corpus)  # not a ratio of cited counts
+    assert aw._pct_supported_by_corpus("50%", "growth hit 50% year over year")
 
 
 def test_store_fingerprint_covers_stores_and_env(tmp_path: Path) -> None:

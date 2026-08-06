@@ -410,9 +410,7 @@ def _rail(args: Namespace, *, portfolio_file: Path | None, publish: bool) -> int
 
 
 def run(args: argparse.Namespace) -> int:
-    from algent_backend.data_ingestion.cli._shared import progress
-
-    import sys
+    from algent_backend.cli.newsroom.single_flight import NewsroomBusyError, NewsroomRunLock
 
     # --compose / --brief skip discovery rebuild: the operator already named the story.
     if (args.compose or args.brief) and args.from_stage == "t0" and not args.fresh:
@@ -425,6 +423,35 @@ def run(args: argparse.Namespace) -> int:
         return 1
 
     result: dict[str, Any] = {"stages": stages}
+
+    # Dry-run / menu-only (t0..menu, no pick) never spends the rail — no lock.
+    # Any path that reaches _synthesis / _rail must lock so a killed-shell orphan
+    # cannot overlap a relaunch.
+    _RAIL_STAGES = frozenset({"route", "profile", "gauntlet", "editorial", "publish"})
+    needs_lock = not args.dry_run and (
+        bool(args.pick or args.brief or args.compose)
+        or "synthesis" in stages
+        or any(s in _RAIL_STAGES for s in stages)
+    )
+    if not needs_lock:
+        return _run_locked(args, stages, result)
+
+    try:
+        with NewsroomRunLock():
+            return _run_locked(args, stages, result)
+    except NewsroomBusyError as exc:
+        print_json({"error": str(exc)})
+        return 2
+
+
+def _run_locked(
+    args: argparse.Namespace,
+    stages: list[str],
+    result: dict[str, Any],
+) -> int:
+    from algent_backend.data_ingestion.cli._shared import progress
+
+    import sys
 
     # -- brief: ad-hoc vectors (no menu id, no pool required) ------------------
     if args.brief:

@@ -77,7 +77,9 @@ _VISUAL_NAMES = {
 _DATA_NAME = "data.csv"
 _CAPTION_NAME = "caption.md"
 
-_TIMEOUT_S = 240.0
+_TIMEOUT_S = 360.0
+# Maps / may_source fetches routinely need longer than a profile-held line chart.
+_TIMEOUT_SOURCED_S = 600.0
 
 # A measured quantity: a percentage or a decimal — the values a chart could FABRICATE. Bare
 # integers are deliberately excluded: they are the axis/date labels (years, month numbers,
@@ -85,6 +87,7 @@ _TIMEOUT_S = 240.0
 # time axis. This mirrors unverified_prose_figures' stance (percentages only; counts fall to the
 # semantic judge) — err toward missing a drift, never toward inventing one.
 _SIG_NUM = re.compile(r"\d+\.\d+%?|\d+%")
+_CORPUS_NUM = re.compile(r"\d+(?:\.\d+)?")
 
 
 _STALE_SCRATCH_AGE_S = 2 * 60 * 60   # a live request's scratch is minutes old, never hours
@@ -419,25 +422,75 @@ def _store_fingerprint(repo_root: Path) -> dict[str, tuple[int, int]]:
 
 
 def _store_escapes(before: dict[str, tuple[int, int]], after: dict[str, tuple[int, int]]) -> list[str]:
-    """Store files created OR modified during the run — a worker corrupting the pipeline's state.
+    """Store files created or resized during the run — a worker corrupting pipeline state.
 
-    Baseline-diffed like the git check: any pre-existing file that legitimately changed outside the
-    run window cancels; only a write during the run surfaces. Reports the offending file paths.
+    Size (not mtime) is the signal for an existing path: concurrent rails and scanners bump
+    mtimes without rewriting bytes, and that used to false-positive the tripwire into discarding
+    real charts. A new path, or a path whose byte length changed, still fails loudly.
     """
-    return sorted(k for k, v in after.items() if before.get(k) != v)
+    escaped: list[str] = []
+    for path, (_mtime_ns, size) in after.items():
+        prior = before.get(path)
+        if prior is None or prior[1] != size:
+            escaped.append(path)
+    return sorted(escaped)
+
+
+def _pct_supported_by_corpus(token: str, corpus: str) -> bool:
+    """True when ``token`` is literally in evidence, or is a ratio of two corpus numbers.
+
+    Charts often derive ``60k / 85k → 71%``; requiring the percentage string itself in a claim
+    rejects honest arithmetic. Invented percentages that match no pair still fail.
+    """
+    if token in corpus:
+        return True
+    bare = token.rstrip("%")
+    try:
+        target = float(bare)
+    except ValueError:
+        return False
+    # "71 percent" / "71 pct" without a % sign in the claim text
+    if re.search(rf"(?<!\d){re.escape(bare)}\s*(?:%|percent|pct)\b", corpus, re.I):
+        return True
+    # Comma-grouped counts ("60,000") must parse as single magnitudes for ratio checks.
+    nums = [float(x) for x in _CORPUS_NUM.findall(corpus.replace(",", ""))]
+    for i, a in enumerate(nums):
+        if a == 0:
+            continue
+        for b in nums[i + 1 :]:
+            if b == 0:
+                continue
+            for num, den in ((a, b), (b, a)):
+                ratio = 100.0 * num / den
+                if abs(ratio - target) <= max(0.75, 0.02 * abs(target)):
+                    return True
+    return False
 
 
 def _visual_unverified_figures(data_text: str, cited_claims: list[Claim], sources_by_id: dict) -> list[str]:
     """Significant numbers in the plotted data that appear NOWHERE in the cited evidence — the
     visual analog of ``unverified_prose_figures``. Same conservative stance (substring, err toward
-    missing a drift rather than inventing one)."""
+    missing a drift rather than inventing one). Derived percentages from cited counts are allowed."""
     corpus = " ".join(c.text for c in cited_claims)
     for c in cited_claims:
         for sid in c.supported_by:
             s = sources_by_id.get(sid)
             if s and s.snapshot and s.snapshot.excerpt:
                 corpus += " " + s.snapshot.excerpt
-    return [n for n in dict.fromkeys(_SIG_NUM.findall(data_text)) if n not in corpus]
+    out: list[str] = []
+    for n in dict.fromkeys(_SIG_NUM.findall(data_text)):
+        if n.endswith("%"):
+            if not _pct_supported_by_corpus(n, corpus):
+                out.append(n)
+        elif n not in corpus:
+            out.append(n)
+    return out
+
+
+def _timeout_for(request: AnalyticsRequest) -> float:
+    if request.kind == "image" or request.may_source:
+        return _TIMEOUT_SOURCED_S
+    return _TIMEOUT_S
 
 
 def _collect(folder: Path, kind: str) -> tuple[Path | None, Path | None, str]:
@@ -559,7 +612,7 @@ def fulfill_request(
     workspace: Path | None = None,
     context: AgentRunContext | None = None,
     runner: Runner | None = None,
-    timeout: float = _TIMEOUT_S,
+    timeout: float | None = None,
     version: str = "",
 ) -> AnalyticsArtifact:
     """Build one request into an artifact, with the harness owning integrity end-to-end.
@@ -604,8 +657,9 @@ def fulfill_request(
         before_store = _store_fingerprint(repo_root)    # + the gitignored stores git can't see
         prompt = _prompt(may_source=bool(request.may_source))
         allow_web = bool(request.may_source)
+        run_timeout = _timeout_for(request) if timeout is None else timeout
         ok, tail = (runner or (lambda p, f: _grok_runner(
-            p, f, timeout=timeout, allow_web=allow_web)))(prompt, folder)
+            p, f, timeout=run_timeout, allow_web=allow_web)))(prompt, folder)
 
         removed = _sweep(folder)                        # (2) artifact-type + size sweep
 
