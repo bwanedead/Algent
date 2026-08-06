@@ -429,12 +429,12 @@ def run(args: argparse.Namespace) -> int:
     portfolio: dict[str, Any] = {}
     # Asking only for the pool menu means synthesis has nothing to contribute — don't
     # pay a model to build vectors the operator has said they are going to bypass.
-    # ALGENT_SYNTHESIS=0 is the durable operator pause (manual t0 picking mode).
+    # Durable pause lives in newsroom/flags.py (SYNTHESIS_ENABLED); env is one-shot only.
     from algent_backend.agent_system.agents.newsroom.flags import synthesis_enabled
     synthesis_paused = not synthesis_enabled()
     skip_synthesis = (args.pool_menu and args.to_stage == "menu") or synthesis_paused
     if synthesis_paused and "synthesis" in stages:
-        progress("[synthesis] paused (ALGENT_SYNTHESIS=0) — using t0 pool menu")
+        progress("[synthesis] off (flags.SYNTHESIS_ENABLED) — using t0 pool menu")
         args.pool_menu = True
     if "synthesis" in stages and not args.dry_run and not skip_synthesis:
         progress("[synthesis] turning the pool into research vectors…")

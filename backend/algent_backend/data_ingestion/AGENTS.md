@@ -5,4 +5,4 @@
 - Menu printer: `cli/t0.py` `print_menu` (no label truncation; `signals.label_en` when non-English). Vector menu: `cli/newsroom/pipeline.py` `print_vector_menu`.
 - **`--compose` must not rebuild t0.** It reuses the latest pool so pick numbers stay valid; only `--fresh` rebuilds discovery.
 - **X is off by default in t0** (`DEFAULT_CHANNELS` omits `x`). Re-enable with `--channels …,x` or `ALGENT_T0_CHANNELS`.
-- **`ALGENT_SYNTHESIS` defaults ON** when unset. Pause with `=0` for manual t0 picking — do not assume paused without checking the env.
+- **Synthesis defaults OFF** via `agent_system/agents/newsroom/flags.py` (`SYNTHESIS_ENABLED`). Agents flip that file — do not ask the human to set `.env`. Optional one-shot: `ALGENT_SYNTHESIS=0/1`.

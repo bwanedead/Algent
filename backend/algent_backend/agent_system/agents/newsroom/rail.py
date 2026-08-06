@@ -197,18 +197,18 @@ def _resolve_portfolio(
         pool, injected = _inject_backfeed(context, pool, lead_store or JsonLeadStore())
         report.backfeed_leads_injected = injected
 
-    # Durable operator pause: synthesis is for unattended selection; when paused the rail
-    # needs an explicit portfolio (compose / pick / --from-run), not a fresh t1 build.
+    # Durable operator pause (flags.SYNTHESIS_ENABLED): when off the rail needs an
+    # explicit portfolio (compose / pick / --from-run), not a fresh t1 build.
     from .flags import synthesis_enabled
     if not synthesis_enabled():
         report.portfolio_source = "paused"
         report.stage_reached = "synthesis"
         sub.emit(RAIL_STAGE, {
-            "stage": "synthesis", "skipped": True, "reason": "ALGENT_SYNTHESIS=0",
+            "stage": "synthesis", "skipped": True, "reason": "synthesis_disabled",
         })
         return pool, {}, _finish(
             context, report,
-            note="synthesis paused (ALGENT_SYNTHESIS=0) — compose/pick a t0 lead or re-enable",
+            note="synthesis off (flags.SYNTHESIS_ENABLED) — compose/pick a t0 lead or set True",
         )
 
     sub.emit(RAIL_STAGE, {"stage": "synthesis"})

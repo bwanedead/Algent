@@ -24,6 +24,9 @@ Keep a **sane working tree** and a **remote backup** as work lands. Do not let l
 - **Pause for confirmation only when consequential:** force-push, history rewrite, deleting others' work, or committing something ambiguous/secret-adjacent. Ordinary feature commits do **not** need a pre-ask.
 - **Site-live content** still ships via the publish worktree / `site-live` branch — that path is separate from committing app code on `organic-dev`.
 
+## Operator knobs (in-repo files — not `.env`)
+Standing behavioral defaults (synthesis on/off, harness picks that are not secrets) live in **checked-in modules agents edit**, e.g. `backend/algent_backend/agent_system/agents/newsroom/flags.py`. Do **not** ask the human to set `.env` for those. `.env` / keyring stay for credentials and machine-local secrets only. Optional process env overrides are fine for one-shot runs.
+
 ## Safety & Blast-Radius (non-negotiable)
 - **Stay inside the repo.** Never edit, create, or delete anything outside the repository root.
 - **No destructive/wide commands.** Never run recursive or absolute-path deletions (`rm -rf /`, `rm -rf ~`, `Remove-Item -Recurse` against a drive/home, `del /s`, etc.). Never touch `.git/` internals.
