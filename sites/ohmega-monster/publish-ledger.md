@@ -467,3 +467,13 @@ cost: ~$0.5370  ·  mode: normal  ·  soft/hard: $1.00/$3.00
 cost_by_stage: editorial=$0.0719, gauntlet=$0.3505, profile=$0.1142, routing=$0.0004
 ⚠ figures not matched to evidence: 14%, 39%, 42%, 80%, 25%, 27%, 75%, 50%
 run: 0061__177762bb-ab50-43a2-81d4-e5103ed4f218
+
+### PUBLISH seismic-noise-points-to-yellowstone-scale-magma-reservoir-be-6adf04 — 2026-08-06
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.6146  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.0796, gauntlet=$0.4484, profile=$0.0863, routing=$0.0002
+refused: model_turn(reservation_overrun)
+⚠ figures not matched to evidence: 18%
+run: 0062__e6f89885-355c-446f-a10b-b52a1ff32924
