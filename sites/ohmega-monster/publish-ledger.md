@@ -485,3 +485,12 @@ analytics: 2 produced, 0 escapes
 cost: ~$0.4443  ·  mode: normal  ·  soft/hard: $1.00/$3.00
 cost_by_stage: editorial=$0.0950, gauntlet=$0.1737, profile=$0.1752, routing=$0.0003
 run: 0063__0852b997-f22b-4a5e-acb8-e79bc4366413
+
+### PUBLISH reef-corals-breathe-by-spinning-tiny-vortices-heat-can-break-975ef3 — 2026-08-06
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 1 produced, 0 escapes
+cost: ~$0.5099  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.0670, gauntlet=$0.3135, profile=$0.1290, routing=$0.0004
+refused: model_turn(reservation_overrun), model_turn(reservation_overrun)
+run: 0064__fc7b1e48-5755-4191-b12e-4d0d7decaf7f
