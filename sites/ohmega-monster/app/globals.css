@@ -174,22 +174,36 @@ a { color: inherit; }
 
 .feed li { border-bottom: 1px solid var(--rule); }
 
-.feed a {
+.feed-item {
+  position: relative;
+}
+
+.feed-link {
   display: grid;
   /* date+flags | story | thumbnail. The third column collapses when a piece has no analytic. */
   grid-template-columns: minmax(148px, 168px) minmax(0, 1fr) auto;
   gap: 24px;
   align-items: start;
   padding: var(--line) 0;
+  padding-right: 72px; /* room for the share control */
   text-decoration: none;
   /* Flags must not be clipped when several countries share a story. */
   overflow: visible;
 }
 
-.feed a:hover .feed-story h2,
-.feed a:focus-visible .feed-story h2 { color: var(--accent); }
+.feed a.feed-link:hover .feed-story h2,
+.feed a.feed-link:focus-visible .feed-story h2 { color: var(--accent); }
 
-.feed a:focus-visible { outline: 1px solid var(--accent-dim); outline-offset: 6px; }
+.feed a.feed-link:focus-visible { outline: 1px solid var(--accent-dim); outline-offset: 6px; }
+
+/* Must beat `.share { position: relative }` — otherwise the control is in-flow full-width
+   and the panel anchors to the far side of the row instead of under the icon. */
+.share.feed-share {
+  position: absolute;
+  top: var(--line);
+  right: 0;
+  width: max-content;
+}
 
 .feed-meta {
   display: flex;
@@ -254,6 +268,117 @@ a { color: inherit; }
   align-items: center;
   gap: 0 12px;
   margin-top: 4px;
+}
+
+.article-meta .share {
+  margin-left: auto;
+  position: relative;
+}
+
+.share {
+  position: relative;
+  z-index: 2;
+  width: max-content;
+}
+
+.share-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.share-trigger:hover,
+.share-trigger:focus-visible,
+.share-trigger[aria-expanded="true"] {
+  color: var(--strong);
+  outline: none;
+}
+.share-icon {
+  display: block;
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+}
+.share-trigger-label {
+  max-width: 0;
+  overflow: hidden;
+  opacity: 0;
+  white-space: nowrap;
+  transition: max-width 140ms ease-out, opacity 120ms ease-out;
+}
+.share-trigger:hover .share-trigger-label,
+.share-trigger:focus-visible .share-trigger-label,
+.share-trigger[aria-expanded="true"] .share-trigger-label {
+  max-width: 4.5em;
+  opacity: 1;
+}
+
+.share-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  width: min(320px, calc(100vw - 32px));
+  padding: 12px;
+  border: 1px solid var(--rule-strong);
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 8px 24px color-mix(in srgb, #000 35%, transparent);
+}
+.share-hint {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+.share-url {
+  display: block;
+  width: 100%;
+  margin: 0 0 10px;
+  padding: 7px 8px;
+  border: 1px solid var(--rule);
+  background: var(--bg);
+  color: var(--strong);
+  font: inherit;
+  font-size: 11px;
+  line-height: 1.4;
+}
+.share-url:focus {
+  outline: 1px solid var(--accent-dim);
+  outline-offset: 0;
+  border-color: var(--accent-dim);
+}
+.share-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.share-copy {
+  padding: 5px 10px;
+  border: 1px solid var(--rule-strong);
+  background: transparent;
+  color: var(--strong);
+  font: inherit;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.share-copy:hover,
+.share-copy:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent-dim);
+  outline: none;
 }
 
 /* Tags: canonical topic first, then the specifics. Quiet by default — they are navigation, not
@@ -337,6 +462,34 @@ a { color: inherit; }
   color: var(--muted);
   font-size: clamp(14px, 1.8vw, 16px);
   line-height: var(--line);
+}
+
+.quick-take {
+  max-width: 720px;
+  margin: calc(var(--line) * 1.25) 0 var(--line);
+  padding: calc(var(--line) * 0.75) 0;
+  border-top: 1px solid var(--rule-strong);
+  border-bottom: 1px solid var(--rule);
+}
+
+.quick-take p {
+  margin: 0 0 calc(var(--line) * 0.65);
+  color: var(--text);
+  font-size: clamp(13px, 1.6vw, 15px);
+  line-height: var(--line);
+}
+
+.quick-take p:last-child {
+  margin-bottom: 0;
+}
+
+.quick-take-label {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--accent-dim);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .article-date {
@@ -515,7 +668,7 @@ a { color: inherit; }
   .index-page { padding-top: calc(var(--line) * 2); }
   /* Mobile: date row, then story, with the thumbnail beside the story rather than stacked —
      keeps the row scannable without a full-width image dominating the feed. */
-  .feed a { grid-template-columns: minmax(0, 1fr) auto; gap: 0 14px; padding: var(--line) 0; }
+  .feed-link { grid-template-columns: minmax(0, 1fr) auto; gap: 0 14px; padding: var(--line) 0; padding-right: 64px; }
   .feed-meta { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 10px; }
   .feed-story { grid-column: 1; }
   .feed-thumb { width: 100%; }   /* full-bleed picture above the text on a phone */
@@ -594,13 +747,22 @@ a { color: inherit; }
 
   /* Below this width the three-column strip squeezes the picture to nothing, so the card
      stacks: image, then meta, then story. */
-  .feed a {
+  .feed-link {
     grid-template-columns: minmax(0, 1fr);
     gap: 10px;
+    padding-right: 64px;
   }
   .feed-thumb { order: -1; }
 }
 
+
+.article-status {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+}
 
 /* The article's opening illustration. Generated, so it is always labelled — the caption is
    part of the figure, not an optional nicety. */
