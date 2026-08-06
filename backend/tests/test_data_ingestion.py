@@ -615,7 +615,8 @@ def test_resolve_channels_precedence(monkeypatch) -> None:
 
     monkeypatch.delenv(pipeline._ENV_CHANNELS, raising=False)
     assert pipeline.resolve_channels(None) == pipeline.DEFAULT_CHANNELS  # default
-    assert "x" in pipeline.DEFAULT_CHANNELS  # X on by default (sparse trends; cheap)
+    assert "x" not in pipeline.DEFAULT_CHANNELS  # X opt-in (sparse yield vs spend)
+    assert "x" in pipeline.ALL_CHANNELS  # still available via --channels / env
     # Explicit arg wins, filtered to valid channels.
     assert pipeline.resolve_channels({"gkg", "x", "bogus"}) == frozenset({"gkg", "x"})
     # Env var used when no explicit arg; an all-invalid set falls back to default.

@@ -95,16 +95,18 @@ def test_table_kind_carries_body_md_for_inlining(tmp_path: Path) -> None:
 
 def test_figure_check_flags_a_number_not_in_the_evidence(tmp_path: Path) -> None:
     # 9.9 is nowhere in the claims/snapshot — the visual analog of unverified_prose_figures.
+    # Failed integrity must not ship as produced.
     art = aw.fulfill_request(_request(), _profile(), workspace=tmp_path / "ws",
                              runner=_good_runner("x,y\nApril,3.1\nMay,9.9\n"))
-    assert art.status == "produced"
+    assert art.status == "integrity_check_failed"
     assert art.figure_check["verified"] is False and "9.9" in art.figure_check["unverified"]
     assert "9.9" in art.note
+    assert not art.artifact_name
 
 
 def test_may_source_without_profile_data_refs_produces(tmp_path: Path) -> None:
     # Profile and analytics are separate: worker may fulfill a sourced series that the profile
-    # never held as claims. Figure check is against the produced data table, not claim substrings.
+    # never held as claims. Provenance requires a data table AND a publisher URL in caption.md.
     req = AnalyticsRequest(
         id="anx_src", kind="chart", title="Weekly cases",
         question="Is the outbreak accelerating?",
@@ -113,14 +115,37 @@ def test_may_source_without_profile_data_refs_produces(tmp_path: Path) -> None:
         source_hint="WHO weekly Ebola case counts DRC last 8 weeks",
         rationale="trajectory",
     )
-    art = aw.fulfill_request(
-        req, _profile(), workspace=tmp_path / "ws",
-        runner=_good_runner("week,cases\n1,10\n2,25\n3,40\n"),
-    )
+
+    def run(_p: str, folder: Path) -> tuple[bool, str]:
+        (folder / "chart.svg").write_text("<svg>cases</svg>", encoding="utf-8")
+        (folder / "data.csv").write_text("week,cases\n1,10\n2,25\n3,40\n", encoding="utf-8")
+        (folder / "caption.md").write_text(
+            "Weekly cases rose. Source: WHO https://www.who.int/ebola", encoding="utf-8",
+        )
+        return True, "{}"
+
+    art = aw.fulfill_request(req, _profile(), workspace=tmp_path / "ws", runner=run)
     assert art.status == "produced"
     assert art.figure_check.get("mode") == "sourced"
     assert art.figure_check["verified"] is True
     assert "sourced" in art.ai_label.lower() or "Sourced" in art.caption
+
+
+def test_may_source_without_publisher_url_fails_integrity(tmp_path: Path) -> None:
+    req = AnalyticsRequest(
+        id="anx_src", kind="chart", title="Weekly cases",
+        question="Is the outbreak accelerating?",
+        spec="line of weekly confirmed cases",
+        data_refs=[], may_source=True,
+        source_hint="WHO weekly Ebola case counts",
+        rationale="trajectory",
+    )
+    art = aw.fulfill_request(
+        req, _profile(), workspace=tmp_path / "ws",
+        runner=_good_runner("week,cases\n1,10\n2,25\n"),
+    )
+    assert art.status == "integrity_check_failed"
+    assert "publisher URL" in " ".join(art.figure_check.get("unverified") or [])
 
 
 def test_may_source_without_hint_fails(tmp_path: Path) -> None:
@@ -236,6 +261,32 @@ def test_sweep_removes_orphaned_scratch_but_spares_a_live_one(tmp_path: Path) ->
     assert (ws / "req_live").exists()               # a concurrent run's live scratch is untouched
 
 
+def test_sweep_never_deletes_weight_bearing_stack_dirs(tmp_path: Path) -> None:
+    """Regression: age-sweep used to rmtree *any* old dir, including lib/scripts/data.
+
+    That silently deleted the chart/map helpers after ~2h idle and zeroed every visual.
+    """
+    import os
+    import time as _t
+
+    ws = tmp_path / "ws"
+    for name in ("lib", "scripts", "data", "anx_01", "req_dead", "_canary"):
+        (ws / name).mkdir(parents=True)
+        (ws / name / "marker.txt").write_text("x", encoding="utf-8")
+    old = _t.time() - (5 * 60 * 60)
+    for name in ("lib", "scripts", "data", "anx_01", "req_dead", "_canary"):
+        os.utime(ws / name, (old, old))
+
+    cleaned = aw.sweep_stale_scratch(ws)
+    assert set(cleaned) == {"anx_01", "req_dead", "_canary"}
+    assert (ws / "lib" / "marker.txt").exists()
+    assert (ws / "scripts" / "marker.txt").exists()
+    assert (ws / "data" / "marker.txt").exists()
+    assert not (ws / "anx_01").exists()
+    assert not (ws / "req_dead").exists()
+    assert not (ws / "_canary").exists()
+
+
 def test_sweep_is_a_noop_on_a_clean_workspace(tmp_path: Path) -> None:
     ws = tmp_path / "ws"
     ws.mkdir()
@@ -265,9 +316,12 @@ def test_a_failed_canary_skips_analytics_without_breaking_the_article(tmp_path: 
     graph = aw.build_analytics_worker_graph(_ctx(tmp_path, events), runner=_good_runner(), refresh=True)
     out = graph.invoke({"analytics_plan": plan.model_dump(), "profile": _profile().model_dump()})
 
-    assert out["analytics_artifacts"] == []            # degraded, not crashed
+    # Degraded, not crashed — each planned request is an explicit skip (never "forgotten").
+    arts = out["analytics_artifacts"]
+    assert len(arts) == 1 and arts[0]["status"] == "skipped"
+    assert "canary" in arts[0]["note"]
     done = next(p for et, p in events if et == aw.ANALYTICS_WORKER_COMPLETED)
-    assert "analytics skipped" in done["note"] and "9.9.9" in done["note"]   # and it says why
+    assert "canary failed" in done["note"] and "9.9.9" in done["note"]
     ready = next(p for et, p in events if et == aw.ANALYTICS_WORKER_READY)
     assert ready["version"] == "grok 9.9.9"            # version stamped even on the failure path
 
@@ -285,14 +339,27 @@ def test_worker_graph_does_nothing_when_not_warranted(tmp_path: Path) -> None:
     assert out["analytics_artifacts"] == []
 
 
-# -- the coding harness seam: codex by default, grok when quota allows ----------
+# -- the coding harness seam: grok by default, codex when quota runs out ----------
 
 
-def test_codex_is_the_default_harness_and_stays_offline_unless_asked() -> None:
+def test_grok_is_the_default_harness(monkeypatch) -> None:
     from pathlib import Path
 
     from algent_backend.agent_system.agents.editorial.analytics_harness import resolve_harness
 
+    monkeypatch.delenv("ALGENT_ANALYTICS_HARNESS", raising=False)
+    h = resolve_harness()
+    assert h.name == "grok"
+    assert "--disable-web-search" in h.argv("draw it", Path("/scratch"), allow_web=False)
+    assert "--disable-web-search" not in h.argv("draw it", Path("/scratch"), allow_web=True)
+
+
+def test_codex_stays_offline_unless_asked(monkeypatch) -> None:
+    from pathlib import Path
+
+    from algent_backend.agent_system.agents.editorial.analytics_harness import resolve_harness
+
+    monkeypatch.setenv("ALGENT_ANALYTICS_HARNESS", "codex")
     h = resolve_harness()
     assert h.name == "codex"
 
@@ -328,7 +395,7 @@ def test_harness_model_is_selectable(monkeypatch) -> None:
 
     from algent_backend.agent_system.agents.editorial.analytics_harness import resolve_harness
 
-    monkeypatch.delenv("ALGENT_ANALYTICS_HARNESS", raising=False)
+    monkeypatch.setenv("ALGENT_ANALYTICS_HARNESS", "codex")
     monkeypatch.setenv("ALGENT_CODEX_MODEL", "gpt-5.6-terra")
     argv = resolve_harness().argv("d", Path("/s"), allow_web=False)
     assert "gpt-5.6-terra" in argv

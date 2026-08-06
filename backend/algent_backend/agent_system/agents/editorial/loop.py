@@ -50,7 +50,12 @@ class PlanState(TypedDict, total=False):
 
 def build_planning_graph(context: AgentRunContext, *, model_spec: ModelSpec) -> Any:
     """Compile the planning graph for the given model (no tools — pure judgment)."""
-    model = context.model_resolver.resolve(model_spec).client
+    from algent_backend.agent_system.foundation.models.budget_gate import gate_chat_model
+
+    # Finish-path: treatment is required to publish under slim_finish.
+    model = gate_chat_model(
+        context.model_resolver.resolve(model_spec).client, essential=True,
+    )
     structured = model.with_structured_output(EditorialTreatment)
 
     def plan(state: PlanState, config: RunnableConfig) -> dict[str, Any]:

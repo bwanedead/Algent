@@ -27,7 +27,7 @@ class NewsroomRailReport(BaseModel):
     vector_count: int = 0               # t1 vectors synthesized
     # Launch mode: "fresh" runs t0+synthesis; "reused" skips them and re-routes a prior portfolio
     # (still cooldown-guarded) so a second on-deck vector can be tried without re-paying t0.
-    portfolio_source: str = "fresh"     # "fresh" | "reused"
+    portfolio_source: str = "fresh"     # "fresh" | "reused" | "paused"
     source_run_id: str = ""             # prior run id when portfolio_source=reused (observability)
     # Measured, not inferred: how often any stage actually reached for live X. Zero across a run
     # means the source class is wired but unused — which is what two doctrine passes failed to fix.

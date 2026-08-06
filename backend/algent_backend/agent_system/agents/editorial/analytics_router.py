@@ -80,6 +80,19 @@ UTILITY CLASSES (pick the one that helps most — geography often beats trajecto
    question can be invented for any location. So: **count the things being related. Fewer than
    two, no map.**
 
+   ENCLAVE / BORDER RELATIONSHIP MAPS ARE IN SCOPE when the story turns on a territory's
+   relation to neighbors (e.g. Ceuta relative to Morocco and mainland Spain, the Strait, the
+   Spain–Morocco border around the enclave). That is a multi-entity spatial relationship, not
+   "where is Ceuta". Set visual_class=`locator_map`, priority=`essential_context` when a cold
+   reader cannot hold the geography from prose alone, may_source=true, and name the related
+   entities in `spec` (countries + enclave + strait/border). Use Natural Earth geometry and
+   real geocodes — never Nano Banana / generative maps.
+
+   SOURCE SPECIMEN / COMPARISON panels (visual_class=`source_specimen`) are NOT yet
+   shippable — the licensed source-media lane is unfinished. Do not request them. Prefer a
+   locator_map, data_chart, comparison, or timeline when those genuinely help. When a
+   specimen would be ideal, set warranted=false rather than inventing glyphs or unlicensed media.
+
    And a map may never be schematic. An approximated band, an indicative boundary, a "not an
    exact ice boundary" frost zone — a figure that has to disclaim its own geometry is not
    orienting anyone; it is decoration with a caveat. Real geocodes or no figure.
@@ -210,6 +223,15 @@ Reader clarity is part of usefulness. PUBLISHED fields:
     - few series, no dual axes, no stacked everything. If the figure needs a paragraph of study,
       it has failed and a simpler cut of the same data is the fix.
 - `data_refs` and/or `may_source` + `source_hint` as above.
+- ALSO SET on every request:
+  - `visual_class`: locator_map | data_chart | comparison | timeline | process_diagram |
+    source_specimen | other
+  - `priority`: essential_context (cold reader cannot hold the article's central shape
+    without it — locator OR scale/trajectory when that IS the story) | high_value | optional.
+    Slim runs may keep only one essential_context visual.
+  - `placement`: after_quick_take | after_opening | after_section | mid_body
+  - `reader_gap`: the mental model this supplies that prose alone cannot
+  - `factual_basis`: cited data, public reference geometry, or sourced media basis
 
 Prefer zero, one, or two requests. Do not ship three.
 
@@ -230,6 +252,7 @@ SYSTEM_PROMPT = compose_system_prompt(UNIVERSAL_AGENT_BASE, NEWSROOM_SYSTEM_MAP,
 
 class AnalyticsState(TypedDict, total=False):
     profile: dict[str, Any]         # the profile to assess (input)
+    treatment: dict[str, Any]       # optional governing frame / entry fields
     analytics_plan: dict[str, Any]  # the produced AnalyticsPlan
 
 
@@ -243,8 +266,16 @@ def build_analytics_router_graph(context: AgentRunContext, *, model_spec: ModelS
             return _finish(context, AnalyticsPlan(id="analytics_none", warranted=False,
                                                   note="no profile supplied"))
         profile = SignalProfile.model_validate(pdict)
+        treatment = None
+        if state.get("treatment"):
+            try:
+                from .treatment import EditorialTreatment
+                treatment = EditorialTreatment.model_validate(state["treatment"])
+            except Exception:  # noqa: BLE001
+                treatment = None
         raw = structured.invoke(
-            [SystemMessage(content=SYSTEM_PROMPT), HumanMessage(content=_message(profile))],
+            [SystemMessage(content=SYSTEM_PROMPT),
+             HumanMessage(content=_message(profile, treatment))],
             config=config,
         )
         plan = raw if isinstance(raw, AnalyticsPlan) else AnalyticsPlan(id="", warranted=False)
@@ -257,29 +288,42 @@ def build_analytics_router_graph(context: AgentRunContext, *, model_spec: ModelS
     return graph.compile()
 
 
-def _message(profile: SignalProfile) -> str:
+def _message(profile: SignalProfile, treatment=None) -> str:
     ids = [
         "- claims: " + ", ".join(f"{c.id} ({c.salience})" for c in profile.claim_ledger),
         "- sources: " + ", ".join(s.id for s in profile.source_ledger),
     ]
     # Researcher flags are optional hints only — never a quota to fill.
     flags = profile.data_notes + profile.visual_opportunities
+    entry: list[str] = []
+    if treatment is not None:
+        entry = ["", "## Governing treatment (visuals must serve THIS frame — not a rejected one)"]
+        if treatment.chosen_frame.frame:
+            entry.append(f"- chosen_frame: {treatment.chosen_frame.frame}")
+        if treatment.reader_question:
+            entry.append(f"- reader_question: {treatment.reader_question}")
+        if treatment.news_kernel:
+            entry.append(f"- news_kernel: {treatment.news_kernel}")
+        if treatment.plain_subject:
+            entry.append(f"- plain_subject: {treatment.plain_subject}")
     return "\n".join([
         f"# ASSESS FOR ANALYTICS — {profile.id}",
         "",
         "## Profile data ids (optional grounding when numbers are already held)",
         *ids,
+        *entry,
         *(["", "## Optional researcher notes (not a mandate to chart):",
            *[f"- {f}" for f in flags]] if flags else []),
         "",
         render_briefing(profile),
         "",
-        "TASK: Decide only by usefulness for a house reader. A multi-row series need NOT already "
+        "TASK: Decide only by usefulness for a house reader. Align with the treatment's "
+        "chosen frame and news_kernel when present. A multi-row series need NOT already "
         "live in the profile — if a trajectory, place breakdown, or scale comparison would help "
         "and public data is a reasonable hunch, set may_source=true with a concrete source_hint. "
-        "When key numbers are already in claims, set data_refs. Title what is measured; question "
-        "what the figure shows. Never evidence ledgers or claim-status tables. Zero is a normal "
-        "success.",
+        "When key numbers are already in claims, set data_refs. Set visual_class, priority, "
+        "placement, reader_gap, factual_basis. Title what is measured; question what the figure "
+        "shows. Never evidence ledgers or claim-status tables. Zero is a normal success.",
     ])
 
 
@@ -319,12 +363,30 @@ def _finalize(plan: AnalyticsPlan, profile: SignalProfile, model: str) -> Analyt
                 r = r.model_copy(update={"source_hint": r.spec.strip()})
             kept.append(r)
     requests = [r for r in kept if _is_reader_facing(r)]
+    # Licensed source-media lane is not built yet — keep specimen requests on the plan as
+    # explicit skips so digests/receipts show why they did not ship, but do not fulfill them.
+    active: list[AnalyticsRequest] = []
+    deferred: list[AnalyticsRequest] = []
+    for r in requests:
+        if r.visual_class == "source_specimen":
+            deferred.append(r.model_copy(update={
+                "status": "source_unavailable",
+                "rationale": (
+                    (r.rationale + " | " if r.rationale else "")
+                    + "licensed media lane not ready"
+                ).strip(),
+            }))
+        else:
+            active.append(r)
     note = plan.note
-    if plan.requests and not requests:
+    if deferred:
+        note = (note + " | dropped source_specimen (licensed media lane not ready)").strip(" |")
+    if plan.requests and not active and not deferred:
         note = (note + " | dropped non-reader-facing / ungrounded / unsourceable analytics").strip(" |")
     return plan.model_copy(update={
         "id": f"analytics_{profile.id}", "profile_id": profile.id,
-        "warranted": bool(requests) and plan.warranted, "requests": requests,
+        "warranted": bool(active) and plan.warranted,
+        "requests": active + deferred,
         "note": note,
         "generator": GENERATOR, "model": model, "generated_at": datetime.now(UTC).isoformat(),
     })

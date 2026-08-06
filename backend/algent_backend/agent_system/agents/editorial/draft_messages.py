@@ -26,6 +26,7 @@ def build_draft_message(
     report: CitationReport | None = None,
     caveat: dict | None = None,
     comprehension: dict | None = None,
+    analytics_plan: dict | None = None,
 ) -> str:
     """The drafting task. With a prior draft + its citation audit, this is a REVISION pass.
 
@@ -40,6 +41,7 @@ def build_draft_message(
         "",
         render_treatment(treatment),
         "",
+        *_analytics_plan_block(analytics_plan),
         "## The source profile — your evidence (cite these ids; chase the pointers for precision)",
         "",
         "### Addressable item ids",
@@ -56,12 +58,15 @@ def build_draft_message(
         parts += _revision_block(prior, report, profile)
     else:
         parts.append(
-            "TASK: Write the article from the treatment's frame, assembling its molecule in "
-            "dependency order at the right resolution, carrying every must-use item and serious "
-            "perspective, and respecting every do-not-overstate ceiling. Research for PRECISION "
-            "(exact quotes, figures, details the profile only points at) and put everything new "
-            "you find into `additions` so it enriches the profile. Cite the claim/source ids the "
-            "prose rests on. Emit a DraftPayload."
+            "TASK: Write the article from the treatment's frame, assembling its molecule. "
+            "OPEN with the treatment's news_kernel / reader_payoff / key_uncertainty (first "
+            "1–2 sentences = what happened + why it matters + essential uncertainty), THEN "
+            "minimal scene orientation, THEN mechanism/causality with honest causal statuses, "
+            "THEN depth. When plain_subject is set, say that before the specialist name. "
+            "Carry every must-use item and serious perspective; respect every do-not-overstate "
+            "ceiling. Research for PRECISION (exact quotes, figures, details the profile only "
+            "points at) and put everything new you find into `additions`. Cite the claim/source "
+            "ids the prose rests on. Emit a DraftPayload."
         )
     return "\n".join(parts)
 
@@ -187,6 +192,24 @@ def _revision_block(prior: ArticleDraft, report: CitationReport, profile: Signal
         "Re-cite the claim/source ids. Emit a DraftPayload.",
     ]
     return lines
+
+
+def _analytics_plan_block(plan: dict | None) -> list[str]:
+    """Tell the drafter which visuals are planned so prose does not re-narrate them as decoration."""
+    if not plan or not plan.get("warranted") or not plan.get("requests"):
+        return []
+    lines = [
+        "## Planned visuals (figures land at publish — leave room; do not invent numbers)",
+        "These are already decided. Write so a cold reader still follows without them, but do "
+        "not spend paragraphs restating a locator map or chart the page will carry.",
+    ]
+    for r in plan.get("requests") or []:
+        title = r.get("title") or r.get("id") or "visual"
+        cls = r.get("visual_class") or r.get("kind") or ""
+        gap = r.get("reader_gap") or r.get("question") or ""
+        place = r.get("placement") or "after_opening"
+        lines.append(f"- [{cls} · {place}] {title}" + (f" — {gap}" if gap else ""))
+    return lines + [""]
 
 
 def _id_index(profile: SignalProfile) -> list[str]:

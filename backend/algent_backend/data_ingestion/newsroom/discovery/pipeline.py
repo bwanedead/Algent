@@ -43,17 +43,16 @@ _KEEP = 1
 
 # The toggleable t0 source channels. ``gkg`` is the free deterministic net (the
 # base); ``beats`` keeps the addressable beat registry fresh on a rotating sweep
-# (free DOC; the diversity channel — see ``beat_refresh``); ``markets`` and ``x``
-# are extra signals fetched live; ``science`` is the curiosity channel and the only one
-# that does not run through GDELT (see ``sources.science_feeds`` — every registry query
+# (free DOC; the diversity channel — see ``beat_refresh``); ``markets`` is an
+# extra live signal; ``science`` is the curiosity channel and the only one that
+# does not run through GDELT (see ``sources.science_feeds`` — every registry query
 # shares one DOC endpoint, so a single throttle silenced science entirely).
-# X primary path is the **X API** (same surface as
-# api.x.com/mcp): prefer **News stories** (platform-clustered headlines), NOT
-# WOEID trends and NOT a fixed AI/account roster. Grok CLI optional. ON by default.
-# Disable: ALGENT_T0_CHANNELS=gkg,beats,markets or no bearer.
+# ``x`` stays in ALL_CHANNELS for opt-in (``--channels …,x`` or ALGENT_T0_CHANNELS)
+# but is OFF by default — sparse yield vs spend; re-enable when the X legs earn it.
+# X path when enabled: X API news/stories (same surface as api.x.com/mcp); Grok optional.
 ALL_CHANNELS = ("gkg", "beats", "markets", "x", "science", "papers", "events")
-DEFAULT_CHANNELS = frozenset({"gkg", "beats", "markets", "x", "science", "papers", "events"})
-_ENV_CHANNELS = "ALGENT_T0_CHANNELS"  # comma-separated override, e.g. "gkg,markets"
+DEFAULT_CHANNELS = frozenset({"gkg", "beats", "markets", "science", "papers", "events"})
+_ENV_CHANNELS = "ALGENT_T0_CHANNELS"  # comma-separated override, e.g. "gkg,markets,x"
 # How t0 pulls X: ``api`` (default news/stories), ``api+grok``, ``grok`` (legacy).
 _ENV_X_VIA = "ALGENT_X_T0_VIA"
 
@@ -163,8 +162,13 @@ def _build_pool(report, chans: frozenset[str], say: ProgressFn) -> tuple[dict[st
             )
     except Exception as exc:  # noqa: BLE001 — never block t0 on crystallizer
         say(f"crystallize: skipped ({str(exc)[:80]})")
-    # Record AFTER crystallize, so only what actually reached the menu counts as seen —
-    # an item the crystallizer dropped was never offered and must stay eligible.
+    # Operator menu is English-first; keep originals. Soft — never blocks t0.
+    try:
+        from .label_english import enrich_english_labels
+        pool = enrich_english_labels(pool, on_progress=say)
+    except Exception as exc:  # noqa: BLE001
+        say(f"menu-en: skipped ({str(exc)[:80]})")
+    # Record AFTER crystallize (+ menu-en); items dropped before the menu stay eligible.
     fresh_count = sum(1 for i in pool.items if not (i.signals or {}).get("seen_before"))
     save_seen(
         ledger.record([item_key(i) for i in pool.items]).pruned(),

@@ -47,31 +47,67 @@ def build_planning_gauntlet_graph(context: AgentRunContext) -> Any:
             context.emit(GAUNTLET_NO_INPUT, {"message": "no profile supplied to the planning gauntlet"})
             return {"gauntlet": PlanningGauntletReport(final_verdict="unsound").model_dump()}
 
-        # 1. plan
+        # 1. plan (essential under slim — required to publish)
         treatment = build_planner(context).invoke({"profile": profile}, config)["treatment"]
         _write(context, "treatment_initial.json", treatment)
 
-        # 2. review
-        review = build_treatment_reviewer(context).invoke(
-            {"treatment": treatment, "profile": profile}, config)["treatment_review"]
+        from algent_backend.agent_system.agents.newsroom import budget_policy
+        from algent_backend.agent_system.foundation.models.budget_gate import (
+            BudgetRefusedError,
+        )
+
+        # 2. review — optional once soft-capped; keep the draftable treatment.
+        # Soft-ship the treatment, but never invent a "promoted" verdict for a skipped review.
+        skipped_review = {"verdict": "not_reviewed", "findings": [], "better_frame": ""}
+        if budget_policy.allow_optional("treatment_review"):
+            try:
+                review = build_treatment_reviewer(context).invoke(
+                    {"treatment": treatment, "profile": profile}, config,
+                )["treatment_review"]
+            except BudgetRefusedError:
+                from algent_backend.agent_system.foundation import cost
+
+                cost.record_skip("treatment_review", cost.mode())
+                review = skipped_review
+        else:
+            review = skipped_review
         _write(context, "review_initial.json", review)
         initial_verdict = review.get("verdict", "")
         initial_findings = len(review.get("findings", []))
 
         # 3. revise + re-review if not yet promoted (one bounded pass).
+        # not_reviewed means the budget rail skipped judgment — do not revise against an empty critique.
         revised = False
         addressed: list[str] = []
-        if initial_verdict != "promoted":
-            treatment = build_planner(context).invoke(
-                {"profile": profile, "prior_treatment": treatment, "treatment_review": review},
-                config)["treatment"]
-            _write(context, "treatment_final.json", treatment)
-            review = build_treatment_reviewer(context).invoke(
-                {"treatment": treatment, "profile": profile}, config)["treatment_review"]
-            _write(context, "review_final.json", review)
-            revised = True
-            addressed = [f.get("id", "") for f in review.get("findings", []) if not f.get("promotion_blocker")]
+        if initial_verdict not in ("promoted", "not_reviewed") and budget_policy.allow_optional(
+            "treatment_revise",
+        ):
+            try:
+                treatment = build_planner(context).invoke(
+                    {
+                        "profile": profile,
+                        "prior_treatment": treatment,
+                        "treatment_review": review,
+                    },
+                    config,
+                )["treatment"]
+                _write(context, "treatment_final.json", treatment)
+                if budget_policy.allow_optional("treatment_review"):
+                    review = build_treatment_reviewer(context).invoke(
+                        {"treatment": treatment, "profile": profile}, config,
+                    )["treatment_review"]
+                    _write(context, "review_final.json", review)
+                revised = True
+                addressed = [
+                    f.get("id", "")
+                    for f in review.get("findings", [])
+                    if not f.get("promotion_blocker")
+                ]
+            except BudgetRefusedError:
+                from algent_backend.agent_system.foundation import cost
 
+                cost.record_skip("treatment_revise", cost.mode())
+                _write(context, "treatment_final.json", treatment)
         final_verdict = review.get("verdict", "")
         report = PlanningGauntletReport(
             profile_id=str(profile.get("id", "")),

@@ -45,8 +45,14 @@ def _table_block(body_md: str) -> str:
     if start is None:
         return ""
     head = start
-    if start > 0 and lines[start - 1].strip() and not _TABLE_ROW.match(lines[start - 1]):
-        head = start - 1                           # one adjacent heading/label line, if any
+    # Only a markdown heading or a bold-only label may ride above the table — never free prose.
+    if start > 0:
+        prev = lines[start - 1].strip()
+        if prev and (
+            re.match(r"^#{1,3}\s+\S", prev)
+            or re.fullmatch(r"\*\*[^*]+\*\*", prev)
+        ):
+            head = start - 1
     return "\n".join(lines[head:end + 1]).strip()
 
 # Inline machine markers the drafter emits. The prompt asks for the bracketed list form
@@ -168,17 +174,40 @@ def render_published_article(
     cited_claims = [claims[c] for c in draft.cited_claim_ids if c in claims]
     cited_src_ids = set(draft.cited_source_ids) | {s for c in cited_claims for s in c.supported_by}
     cited_sources = [sources[s] for s in cited_src_ids if s in sources]
-    produced = [a for a in (analytics or [])
+    all_analytics = list(analytics or [])
+    produced = [a for a in all_analytics
                 if a.get("status") == "produced" and (a.get("artifact_name") or a.get("body_md"))]
+    skipped = [
+        a for a in all_analytics
+        if a.get("status") and a.get("status") != "produced"
+    ]
 
     body = _ensure_x_embed_links(_clean_prose(draft.body), cited_sources)
 
     out = [f"# {draft.title or '(untitled)'}"]
     if draft.standfirst:
         out += [f"*{draft.standfirst}*"]
+    out += _quick_take_block(draft)
     out += ["", *_body_with_figures(body, produced)]
-    out += ["---", *_appendix(draft, cited_sources, cited_claims, sources, produced)]
+    out += ["---", *_appendix(
+        draft, cited_sources, cited_claims, sources, produced, skipped=skipped,
+    )]
     return "\n".join(out).rstrip() + "\n"
+
+
+def _quick_take_block(draft: ArticleDraft) -> list[str]:
+    """Cold-reader gist between dek and body — machine-contract heading for the site converter."""
+    qt = getattr(draft, "quick_take", None)
+    if qt is None or not getattr(qt, "filled", lambda: False)():
+        return []
+    lines = ["", "## At a glance"]
+    if qt.what_happened.strip():
+        lines.append(f"- **What happened:** {qt.what_happened.strip()}")
+    if qt.why_it_matters.strip():
+        lines.append(f"- **Why it matters:** {qt.why_it_matters.strip()}")
+    if qt.what_is_uncertain.strip():
+        lines.append(f"- **What remains uncertain:** {qt.what_is_uncertain.strip()}")
+    return lines if len(lines) > 2 else []
 
 
 def _ensure_x_embed_links(body: str, cited_sources: list) -> str:
@@ -216,6 +245,8 @@ def _ensure_x_embed_links(body: str, cited_sources: list) -> str:
 
 
 def _is_map_figure(a: dict) -> bool:
+    if str(a.get("visual_class") or "") == "locator_map":
+        return True
     name = str(a.get("artifact_name") or "").lower()
     title = str(a.get("title") or "").lower()
     kind = str(a.get("kind") or "").lower()
@@ -228,34 +259,102 @@ def _is_map_figure(a: dict) -> bool:
 
 
 def _body_with_figures(body: str, produced: list[dict]) -> list[str]:
-    """Put orientation maps early (after the first prose block); other figures after the body.
+    """Place figures by declared placement; maps still default early.
 
-    Geographic figures help most when the reader still needs the landscape — not after a wall of
-    text. Trajectory charts etc. still trail the prose.
+    - after_quick_take → before the first body paragraph (quick-take already precedes body)
+    - after_opening / maps → after the opening paragraph(s), never before the open
+    - after_section → after the first ``##``/``###`` section body
+    - mid_body → near the midpoint of the prose blocks
+    - anything else → after the prose
     """
     if not produced:
         return [body, ""]
-    early = [a for a in produced if _is_map_figure(a)]
-    late = [a for a in produced if a not in early]
-    if not early:
-        return [body, ""] + _figures(produced)
 
-    # Split after the first paragraph (or first two short ones if the open is a single sentence).
-    parts = re.split(r"\n\n+", body.strip(), maxsplit=1)
-    if len(parts) == 1:
-        return [body, ""] + _figures(early) + _figures(late)
+    at_qt: list[dict] = []
+    early: list[dict] = []
+    after_sec: list[dict] = []
+    mid: list[dict] = []
+    late: list[dict] = []
+    for a in produced:
+        place = str(a.get("placement") or "")
+        if place == "after_quick_take":
+            at_qt.append(a)
+        elif place == "after_section":
+            after_sec.append(a)
+        elif place == "mid_body":
+            mid.append(a)
+        elif place == "after_opening" or _is_map_figure(a):
+            early.append(a)
+        else:
+            late.append(a)
 
-    head, tail = parts[0], parts[1]
-    # If the first block is very short, take one more paragraph so the map lands after landscape setup.
-    if len(head.split()) < 40 and "\n\n" in tail:
-        more = re.split(r"\n\n+", tail, maxsplit=1)
-        head = head + "\n\n" + more[0]
-        tail = more[1] if len(more) > 1 else ""
-    out = [head, ""] + _figures(early)
-    if tail.strip():
-        out += [tail.strip(), ""]
-    out += _figures(late)
-    return out
+    if not (at_qt or early or after_sec or mid):
+        return [body, ""] + _figures(late)
+
+    blocks = [b for b in re.split(r"\n\n+", body.strip()) if b]
+    if not blocks:
+        return _figures(produced)
+
+    # Absorb a second opening block only when it is still prose — never a section heading.
+    open_at = 1
+    if (
+        len(blocks[0].split()) < 40
+        and len(blocks) > 1
+        and not re.match(r"^#{2,3}\s", blocks[1])
+    ):
+        open_at = 2
+
+    section_at = open_at
+    headings = [i for i, b in enumerate(blocks) if re.match(r"^#{2,3}\s", b)]
+    if len(headings) >= 2:
+        section_at = headings[1]
+    elif len(headings) == 1:
+        section_at = len(blocks)
+
+    mid_at = max(open_at, len(blocks) // 2)
+
+    pieces: list[str] = []
+    placed = {"qt": False, "early": False, "sec": False, "mid": False}
+
+    def _blank() -> None:
+        if pieces and pieces[-1] != "":
+            pieces.append("")
+
+    def _place(bucket: list[dict], which: str) -> None:
+        if not bucket or placed[which]:
+            return
+        _blank()
+        pieces.extend(_figures(bucket))
+        placed[which] = True
+
+    for i, block in enumerate(blocks):
+        if i == 0:
+            _place(at_qt, "qt")
+        if i == open_at:
+            _place(early, "early")
+        if i == section_at:
+            _place(after_sec, "sec")
+        if i == mid_at:
+            _place(mid, "mid")
+        _blank()
+        pieces.append(block)
+
+    # open_at / section_at / mid_at may equal len(blocks) — place after the body, never before it.
+    if early and not placed["early"]:
+        _blank()
+        pieces.extend(_figures(early))
+    if after_sec and not placed["sec"]:
+        _blank()
+        pieces.extend(_figures(after_sec))
+    if mid and not placed["mid"]:
+        _blank()
+        pieces.extend(_figures(mid))
+    if at_qt and not placed["qt"]:
+        pieces[0:0] = _figures(at_qt) + ([""] if pieces else [])
+    if late:
+        _blank()
+        pieces.extend(_figures(late))
+    return pieces
 
 
 # A caption that opens by explaining the figure's purpose *to us* — "This map orients a reader
@@ -322,7 +421,7 @@ def _figures(produced: list[dict]) -> list[str]:
 
 
 def _appendix(draft: ArticleDraft, cited_sources: list, cited_claims: list, sources: dict,
-              produced: list[dict] | None = None) -> list[str]:
+              produced: list[dict] | None = None, skipped: list[dict] | None = None) -> list[str]:
     # The heading is the machine contract (the site splits the receipts here) and the site's own
     # disclosure label already says what this is — so no preamble explaining the receipts to the
     # reader. Show the record; don't narrate it.
@@ -331,14 +430,31 @@ def _appendix(draft: ArticleDraft, cited_sources: list, cited_claims: list, sour
         out += [f"**How this piece is framed:** {draft.frame}", ""]
 
     if produced:
-        out.append("**Charts & tables** — _each built only from the cited claims below, by an AI tool_")
+        out.append("**Charts & tables** — _AI-assisted; provenance on each line_")
         for a in produced:
-            refs = ", ".join(a.get("data_refs", []))
+            refs = ", ".join(a.get("data_refs", []) or [])
             asof = f" · as of {a['as_of']}" if a.get("as_of") else ""
             fc = a.get("figure_check") or {}
+            if fc.get("mode") == "sourced":
+                basis = "sourced for this figure"
+            elif refs:
+                basis = f"from claims {refs}"
+            else:
+                basis = "from cited evidence"
             check = ("" if fc.get("verified") else
                      f" · ⚠ figures not all matched to the cited claims: {', '.join(fc.get('unverified', []))}")
-            out.append(f"- {a.get('title') or 'analytic'} — from claims {refs}{asof}{check}")
+            out.append(f"- {a.get('title') or 'analytic'} — {basis}{asof}{check}")
+        out.append("")
+
+    if skipped:
+        out.append("**Visuals not shipped** — _planned but not fulfilled_")
+        for a in skipped:
+            rid = a.get("request_id") or a.get("id") or "?"
+            status = a.get("status") or "skipped"
+            title = a.get("title") or rid
+            note = a.get("note") or a.get("rationale") or ""
+            note_bit = f" — {note}" if note else ""
+            out.append(f"- {title} ({rid}): {status}{note_bit}")
         out.append("")
 
     out.append("**Sources**")

@@ -36,7 +36,8 @@ TreatmentFindingType = Literal[
 ]
 Severity = Literal["low", "medium", "high", "blocking"]
 # The reviewer's overall judgment of the treatment.
-TreatmentVerdict = Literal["promoted", "needs_revision", "unsound"]
+# ``not_reviewed`` is a mechanical budget skip — never laundered into ``promoted``.
+TreatmentVerdict = Literal["promoted", "needs_revision", "unsound", "not_reviewed"]
 
 
 class TreatmentFinding(BaseModel):

@@ -4,20 +4,19 @@ The hero-image stage — turn the headline writer's brief into a file in the run
 Sits immediately after the headline because that is where ``image_subject`` and
 ``image_hook`` are written, by the one stage that has read the finished piece.
 
-House policy (current default): **every article gets a hero** — a thumbnail-style stage-
-setting image for the topic's substance, not evidence. Generation/API failure still returns
-``None`` so decoration can never sink a run. An empty or unsafe ``image_subject`` falls back
-to a neutral stage-setting (never invents a scene from the title — that could depict a
-disputed claim the writer declined to illustrate). Opt out with ``ALGENT_HERO_IMAGE=0``.
+House policy: **every article gets a hero** — one Gemini image call per article (~$0.03 on
+lite/1K). Empty/unsafe ``image_subject`` falls back to a neutral stage-setting.
 
-On by default. It spends ~$0.034 per article on the lite model, which is a few percent of a
-rail, and an article without an opening picture is a wall of text and a shared link with
-nothing to show — worth more than the cost.
+**Quota exception:** if Gemini returns 429/quota exhausted, we soft-skip and still publish
+(``{"skipped": "quota"}``). That is the only ship-without-hero path while ``ALGENT_HERO_IMAGE``
+is on. Other failures hold at publish. Do **not** retry quota errors — retries multiply
+burn against a depleted quota for no gain. Opt out entirely with ``ALGENT_HERO_IMAGE=0``.
 """
 
 from __future__ import annotations
 
 import os
+import time
 from dataclasses import asdict, dataclass
 from typing import Any
 
@@ -34,14 +33,18 @@ HERO_STEM = "hero"
 # claim-free — does not invent imagery from the title.
 _GENERIC_STAGE = "a quiet landscape under soft daylight"
 
+# Transient server errors only — never retry 429/quota (that doubles spend against an empty pot).
+_TRANSIENT_ATTEMPTS = 2
+_TRANSIENT_WAIT_S = 3.0
+
 
 @dataclass(frozen=True)
 class HeroRecord:
     """What the pipeline reports and the publisher needs. Mirrors the artifact on disk."""
 
     artifact_name: str
-    alt: str                 # the subject, which is also the honest description of the picture
-    hook: str                # words set on the image, empty for a plain one
+    alt: str
+    hook: str
     label: str
     model: str
     size: str
@@ -50,6 +53,10 @@ class HeroRecord:
 
 def hero_enabled() -> bool:
     return os.environ.get(_ENV_ON, "1").strip().lower() not in ("0", "false", "no", "off")
+
+
+def is_quota_skip(hero: dict[str, Any] | None) -> bool:
+    return isinstance(hero, dict) and hero.get("skipped") == "quota"
 
 
 def resolve_image_subject(headline: dict[str, Any]) -> str:
@@ -67,10 +74,12 @@ def make_hero(
     say: Any = None,
     generate: Any = None,
 ) -> dict[str, Any] | None:
-    """Generate the hero for a finished piece, or return None. Never raises.
+    """Generate the hero, return a quota-skip marker, or None (hold at publish).
 
-    ``artifacts`` is the run's ArtifactWriter (None when a run has no artifact sink);
-    ``generate`` is injected so tests never reach the network.
+    Returns:
+      - HeroRecord dict with ``artifact_name`` on success
+      - ``{"skipped": "quota"}`` when Gemini quota/429 blocks generation (publish allowed)
+      - ``None`` for other failures / budget / disabled (publish holds when enabled)
     """
     note = say if callable(say) else (lambda _m: None)
     if not hero_enabled() or artifacts is None:
@@ -93,27 +102,33 @@ def make_hero(
         est = hero_est()
         res = cost.try_reserve(est, op="hero_image", essential=True)
         if res is None and cost.is_active():
-            note(f"hero: skipped ({cost.mode()} — budget)")
+            note(f"hero: failed ({cost.mode()} — budget); article must not ship without a hero")
             return None
         fn = generate or generate_hero_image
         try:
-            image = fn(subject, hook=hook)
+            image = _call_once_or_transient_retry(fn, subject, hook=hook, note=note)
         except Exception:
             cost.release(res)
             raise
         cost.settle(res, float(getattr(image, "estimated_usd", est) or est))
     except UnsafeImageSubject as exc:
-        note(f"hero: refused ({str(exc)[:100]}) — skipped")
+        note(f"hero: refused ({str(exc)[:100]}) — article must not ship without a hero")
         return None
-    except Exception as exc:  # noqa: BLE001 — decoration must never cost us the article
-        note(f"hero: generation failed ({type(exc).__name__}: {str(exc)[:90]}) — skipped")
+    except Exception as exc:  # noqa: BLE001
+        if _is_quota_error(exc):
+            note(f"hero: quota/429 — publishing without hero ({str(exc)[:80]})")
+            return {"skipped": "quota"}
+        note(
+            f"hero: generation failed ({type(exc).__name__}: {str(exc)[:90]}) "
+            "— article must not ship without a hero"
+        )
         return None
 
     name = f"{HERO_STEM}{image.suffix()}"
     try:
         artifacts.write_bytes(name, image.data, kind="image")
     except Exception as exc:  # noqa: BLE001
-        note(f"hero: could not write artifact ({str(exc)[:80]}) — skipped")
+        note(f"hero: could not write artifact ({str(exc)[:80]}) — article must not ship without a hero")
         return None
 
     record = HeroRecord(
@@ -125,3 +140,26 @@ def make_hero(
         f"~${image.estimated_usd:.4f}" + (f' — "{hook}"' if hook else " — no caption")
     )
     return asdict(record)
+
+
+def _call_once_or_transient_retry(fn: Any, subject: str, *, hook: str, note: Any) -> Any:
+    try:
+        return fn(subject, hook=hook)
+    except Exception as exc:  # noqa: BLE001
+        if _is_quota_error(exc) or not _is_transient(exc):
+            raise
+        note(f"hero: transient {type(exc).__name__} — one retry")
+        time.sleep(_TRANSIENT_WAIT_S)
+        return fn(subject, hook=hook)
+
+
+def _is_quota_error(exc: Exception) -> bool:
+    msg = str(exc).lower()
+    return any(tok in msg for tok in ("429", "quota", "resource_exhausted"))
+
+
+def _is_transient(exc: Exception) -> bool:
+    if isinstance(exc, UnsafeImageSubject) or _is_quota_error(exc):
+        return False
+    msg = str(exc).lower()
+    return any(tok in msg for tok in ("unavailable", "timeout", "503", "500", "502"))

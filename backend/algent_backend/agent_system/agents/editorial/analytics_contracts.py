@@ -20,7 +20,18 @@ from pydantic import BaseModel, Field
 #   similar) may land as a separate honest "AI atmosphere" asset with its own label — not as
 #   evidence and not as a stand-in for a map.
 AnalyticKind = Literal["chart", "table", "insight", "image"]
-RequestStatus = Literal["requested", "produced", "skipped", "failed"]
+RequestStatus = Literal[
+    "requested", "produced", "skipped", "failed",
+    # Explicit visual-plan outcomes so digests/receipts never imply "forgotten".
+    "not_warranted", "soft_cap_skipped", "worker_disabled",
+    "source_unavailable", "integrity_check_failed",
+]
+VisualClass = Literal[
+    "locator_map", "data_chart", "comparison", "timeline",
+    "process_diagram", "source_specimen", "other",
+]
+VisualPriority = Literal["essential_context", "high_value", "optional"]
+VisualPlacement = Literal["after_quick_take", "after_opening", "after_section", "mid_body"]
 
 
 class AnalyticsRequest(BaseModel):
@@ -42,6 +53,11 @@ class AnalyticsRequest(BaseModel):
     may_source: bool = False
     source_hint: str = ""                              # where/what to fetch (e.g. "WHO weekly Ebola cases DRC")
     rationale: str = ""                                # why it aids understanding (not decoration)
+    visual_class: VisualClass = "other"
+    priority: VisualPriority = "optional"
+    placement: VisualPlacement = "after_opening"
+    reader_gap: str = ""   # the mental model the visual supplies that prose alone cannot
+    factual_basis: str = ""  # cited data / public reference geometry / sourced media basis
     status: RequestStatus = "requested"
 
 
@@ -90,6 +106,10 @@ class AnalyticsArtifact(BaseModel):
     figure_check: dict = Field(default_factory=dict)   # {checked, verified, unverified:[...]} — visual drift catch
     swept: list[str] = Field(default_factory=list)     # files removed by the artifact-type/size sweep
     escaped_writes: list[str] = Field(default_factory=list)  # repo paths the worker touched OUTSIDE its lane (a hard fail)
+    visual_class: VisualClass = "other"
+    priority: VisualPriority = "optional"
+    placement: VisualPlacement = "after_opening"
+    reader_gap: str = ""
     note: str = ""
     generated_at: str = ""
     model: str = ""              # the harness + its exact version (provenance: which tool drew this)

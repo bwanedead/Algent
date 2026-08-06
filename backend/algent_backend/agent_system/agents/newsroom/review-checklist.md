@@ -95,8 +95,9 @@ the telescope being rescued — a reader who blurred the two misunderstood the e
   meant as *pausing observations*; next to a picture of a spacecraft it reads as *hanging in
   space*.
 
-**Preferred outcome:** a reader who reads only the headline and standfirst still comes away
-knowing what this is and why somebody would care.
+**Preferred outcome:** a reader who reads only the headline knows what the piece is about; the
+headline + standfirst together still convey why somebody would care and any load-bearing limit.
+The title is a crisp wrapper, not a caveat compound.
 
 ## 4. Is it written for a reader, or for us?
 

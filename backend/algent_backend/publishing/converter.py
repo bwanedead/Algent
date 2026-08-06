@@ -25,6 +25,10 @@ from .tagging import derive_all
 
 # The receipts appendix heading the pipeline emits and the site splits on (substring-matched there).
 _RECEIPTS_HEADING = "## How we know this"
+_AT_A_GLANCE = "## At a glance"
+_QUICK_TAKE_LINE = re.compile(
+    r"^- \*\*(What happened|Why it matters|What remains uncertain):\*\*\s*(.+)$"
+)
 # Analytic image refs the publish view embeds, e.g. "![Chart](analytic_ar_1.svg)" or
 # "![Theater](map_bab_el_mandeb.svg)". Tables are inline markdown (no asset); only real images
 # (.svg/.png) with a relative filename (no path separators / absolute URLs) become files under
@@ -33,6 +37,12 @@ _IMAGE_REF = re.compile(
     r"!\[([^\]]*)\]\(((?:analytic_|map_)[^)/]+\.(?:svg|png)|[^/)\s]+\.(?:svg|png))\)"
 )
 _SLUG_MAX_TITLE = 60
+
+_QUICK_TAKE_KEYS = {
+    "What happened": "what_happened",
+    "Why it matters": "why_it_matters",
+    "What remains uncertain": "what_is_uncertain",
+}
 
 
 @dataclass
@@ -71,6 +81,37 @@ def parse_published_article(md: str) -> tuple[str, str, str]:
         cut = j + 1
     rest = "\n".join(lines[cut:]).strip()
     return title, dek, rest
+
+
+def extract_quick_take(rest: str) -> tuple[dict[str, str], str]:
+    """Lift ``## At a glance`` into frontmatter fields and strip it from the body.
+
+    The site renders a dedicated QuickTake block from frontmatter; leaving the markdown
+    section in the body would duplicate it.
+    """
+    lines = rest.splitlines()
+    start = next((i for i, ln in enumerate(lines) if ln.strip() == _AT_A_GLANCE), None)
+    if start is None:
+        return {}, rest
+    end = start + 1
+    qt: dict[str, str] = {}
+    while end < len(lines):
+        ln = lines[end].strip()
+        if not ln:
+            end += 1
+            continue
+        m = _QUICK_TAKE_LINE.match(ln)
+        if not m:
+            break
+        key = _QUICK_TAKE_KEYS.get(m.group(1))
+        if key:
+            qt[key] = m.group(2).strip()
+        end += 1
+    # Drop a trailing blank left after the section so the body does not open with empty lines.
+    while end < len(lines) and not lines[end].strip():
+        end += 1
+    body = "\n".join(lines[:start] + lines[end:]).strip()
+    return qt, body
 
 
 def build_slug(title: str, profile_id: str) -> str:
@@ -112,6 +153,14 @@ def quality_digest(rail: dict, pipeline: dict, *, run_id: str = "") -> str:
         f"  ·  soft/hard: ${float(rail.get('soft_cap_usd') or 1):.2f}"
         f"/${float(rail.get('hard_cap_usd') or 3):.2f}",
     ]
+    if skipped_vis := pipeline.get("analytics_skipped") or []:
+        lines.append(
+            "analytics_skipped: " + ", ".join(str(s) for s in skipped_vis[:12])
+        )
+    if surface := pipeline.get("surface_issues") or []:
+        lines.append(
+            "surface_issues: " + "; ".join(str(s) for s in surface[:6])
+        )
     if by_stage := rail.get("cost_by_stage"):
         parts = [f"{k}=${float(v):.4f}" for k, v in sorted(by_stage.items())]
         if parts:
@@ -198,6 +247,7 @@ def convert(
     the facts) is carried separately so the page can say "reporting as of X · published Y".
     """
     title, dek, rest = parse_published_article(article_md)
+    quick_take, rest = extract_quick_take(rest)
     profile_id = str(pipeline.get("profile_id") or rail.get("profile_id") or "")
     slug = build_slug(title, profile_id)
     body, assets = rewrite_image_refs(rest, slug)
@@ -216,6 +266,8 @@ def convert(
         # minus anything the comprehension reviewer judged the finished prose does not earn.
         **{k: v for k, v in _derived_frontmatter(profile, vector, pipeline).items() if v},
     }
+    if quick_take:
+        fm["quick_take"] = quick_take
     # THUMBNAIL: a produced analytic is the best thumbnail this article can have — a real visual
     # built from the piece's own cited evidence, on-brand via the worker's spec, with zero
     # fabrication risk. Strictly better than a generated illustration, and it needs no AI-image

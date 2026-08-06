@@ -11,6 +11,7 @@ site can be the review surface. Hard-stop only on mechanical impossibility (no p
 from __future__ import annotations
 
 import os
+import re
 from datetime import UTC, datetime
 from typing import Any, TypedDict
 
@@ -33,7 +34,7 @@ from .draft_spec import build_graph as build_drafter
 from .draft_store import render_draft
 from .gauntlet import build_planning_gauntlet_graph
 from .headline_spec import build_graph as build_headline_writer
-from .hero_stage import make_hero
+from .hero_stage import hero_enabled, is_quota_skip, make_hero
 from .pipeline_contracts import EditorialPipelineReport
 from .publish import render_published_article
 
@@ -42,6 +43,14 @@ PIPELINE_NO_INPUT = "editorial_pipeline.no_input"
 CAVEAT_REPAIRED = "editorial_pipeline.caveat_repaired"   # the self-heal lap ran; here's the outcome
 RAMP_REPAIRED = "editorial_pipeline.ramp_repaired"       # the comprehension repair lap ran
 HERO_IMAGE = "editorial_pipeline.hero_image"             # hero generated / skipped, with the reason
+SURFACE_REPAIRED = "editorial_pipeline.surface_repaired"  # cold-browser surface package re-ran
+
+_STOPWORDS = frozenset({
+    "a", "an", "the", "and", "or", "of", "in", "on", "to", "for", "with", "from",
+    "into", "over", "under", "as", "by", "at", "is", "are", "was", "were", "be",
+    "this", "that", "its", "their", "known", "called", "named",
+})
+_QUICK_TAKE_KEYS = ("what_happened", "why_it_matters", "what_is_uncertain")
 
 # The analytics WORKER (grok subprocess) is gated separately from the router. The router is cheap
 # (a nano assessment, always runs); the worker spends quota per request. ON by default so
@@ -141,8 +150,13 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
         treatment = _ensure_treatment(plan_out.get("treatment") or {}, profile)
         plan_report = plan_out.get("gauntlet") or {}
 
+        # Visual PLAN early (cheap) so soft-cap repair spending cannot starve the plan.
+        # Fulfillment runs after the final surface package.
+        analytics_plan = _plan_analytics(context, config, profile, treatment)
+
         draft_out = build_drafting_gauntlet_graph(context).invoke(
-            {"treatment": treatment, "profile": profile}, config)
+            {"treatment": treatment, "profile": profile,
+             "analytics_plan": analytics_plan}, config)
         draft = draft_out.get("draft") or {}
         enriched_profile = draft_out.get("profile") or profile
         draft_report = draft_out.get("gauntlet") or {}
@@ -151,9 +165,20 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
         if early is not None:
             return early
 
-        draft, hero = _headline_and_hero(context, config, draft)
+        # Prose repairs first; final surface package (headline/quick_take/hero) runs AFTER
+        # so title/gist match the repaired body.
         draft, enriched_profile, quality = _post_draft_quality(
             context, config, draft=draft, treatment=treatment, profile=enriched_profile)
+        draft, hero, surface_issues = _headline_and_hero(
+            context, config, draft, treatment=treatment)
+        produced_analytics = _fulfill_analytics(
+            context, config, analytics_plan, enriched_profile)
+        quality = {
+            **quality,
+            "analytics": analytics_plan,
+            "produced_analytics": produced_analytics,
+            "surface_issues": surface_issues,
+        }
 
         report = _build_pipeline_report(
             profile=profile, treatment=treatment, plan_report=plan_report,
@@ -161,7 +186,7 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
         )
         _persist_pipeline_artifacts(
             context, draft=draft, profile=enriched_profile,
-            analytics=quality["produced_analytics"], report=report,
+            analytics=produced_analytics, report=report,
         )
         context.emit(ev.OUTPUT_PREVIEW, _preview(report))
         context.emit(PIPELINE_COMPLETED, report.model_dump())
@@ -193,15 +218,85 @@ def _hard_stop_without_draft(
     return {"treatment": treatment, "draft": draft, "pipeline": report.model_dump()}
 
 
+def _plan_analytics(
+    context: AgentRunContext, config: RunnableConfig,
+    profile: dict[str, Any], treatment: dict[str, Any],
+) -> dict[str, Any]:
+    """Cheap visual plan — runs after treatment, before drafting; not slim-gated."""
+    from algent_backend.agent_system.foundation.models.budget_gate import (
+        BudgetRefusedError,
+    )
+
+    if cost.is_hard_stop():
+        cost.record_skip("analytics_plan", "hard_stop")
+        return {}
+    try:
+        return build_analytics_router(context).invoke(
+            {"profile": profile, "treatment": treatment}, config,
+        ).get("analytics_plan") or {}
+    except BudgetRefusedError:
+        cost.record_skip("analytics_plan", cost.mode())
+        return {}
+
+
+def _fulfill_analytics(
+    context: AgentRunContext, config: RunnableConfig,
+    analytics: dict[str, Any], profile: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Fulfill a prior visual plan — slim selection owned by budget_policy.
+
+    Deferral policy (e.g. source_specimen → source_unavailable) is owned by the
+    analytics router; this stage only fulfills still-requested items.
+    """
+    reqs = list(analytics.get("requests") or [])
+    if not reqs:
+        return []
+
+    active, deferred = [], []
+    for r in reqs:
+        if str(r.get("status") or "requested") in ("", "requested"):
+            active.append(r)
+        else:
+            deferred.append({**r, "note": r.get("note") or r.get("rationale") or ""})
+
+    if not analytics.get("warranted") or not active:
+        return deferred
+    if not _analytics_worker_enabled():
+        return [{
+            **r, "status": "worker_disabled", "note": "ALGENT_ANALYTICS_WORKER off",
+        } for r in active] + deferred
+
+    keep, skipped = budget_policy.select_analytics_requests(active, cap=_analytics_cap())
+    if not keep:
+        return skipped + deferred
+    capped = {**analytics, "requests": keep}
+    produced = build_analytics_worker_graph(context).invoke(
+        {"analytics_plan": capped, "profile": profile}, config,
+    ).get("analytics_artifacts") or []
+    return produced + skipped + deferred
+
+
 def _post_draft_quality(
     context: AgentRunContext, config: RunnableConfig, *,
     draft: dict[str, Any], treatment: dict[str, Any], profile: dict[str, Any],
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
-    """Caveat / comprehension / analytics after the first draft — slim-aware."""
-    caveat = build_caveat_reviewer(context).invoke(
-        {"draft": draft, "profile": profile}, config).get("caveat_check") or {}
-    caveat_verdict = str(caveat.get("verdict", "verified"))
-    caveat_rounds = 1
+    """Caveat + comprehension repairs after the first draft — before the final surface package."""
+    from algent_backend.agent_system.foundation.models.budget_gate import (
+        BudgetRefusedError,
+    )
+
+    caveat: dict[str, Any] = {}
+    caveat_verdict = "verified"
+    caveat_rounds = 0
+    if budget_policy.allow_optional("caveat_check"):
+        try:
+            caveat = build_caveat_reviewer(context).invoke(
+                {"draft": draft, "profile": profile}, config,
+            ).get("caveat_check") or {}
+            caveat_verdict = str(caveat.get("verdict", "verified"))
+            caveat_rounds = 1
+        except BudgetRefusedError:
+            cost.record_skip("caveat_check", cost.mode())
     if caveat_verdict == "needs_hedging" and draft:
         if budget_policy.allow_optional("draft_repair"):
             draft, profile, caveat, caveat_rounds = _repair_hedging(
@@ -217,22 +312,12 @@ def _post_draft_quality(
     else:
         comprehension, comprehension_rounds = {}, 0
 
-    if budget_policy.allow_optional("analytics"):
-        analytics = build_analytics_router(context).invoke(
-            {"profile": profile}, config).get("analytics_plan") or {}
-        produced_analytics = _run_analytics_worker(
-            context, config, analytics, profile)
-    else:
-        analytics, produced_analytics = {}, []
-
     return draft, profile, {
         "caveat_verdict": caveat_verdict,
         "caveat_rounds": caveat_rounds,
         "caveat_findings": len(caveat.get("findings", [])),
         "comprehension": comprehension,
         "comprehension_rounds": comprehension_rounds,
-        "analytics": analytics,
-        "produced_analytics": produced_analytics,
     }
 
 
@@ -251,6 +336,7 @@ def _build_pipeline_report(
     comprehension_rounds: int,
     analytics: dict[str, Any],
     produced_analytics: list[dict[str, Any]],
+    surface_issues: list[str] | None = None,
 ) -> EditorialPipelineReport:
     outcome = str(draft_report.get("outcome", ""))
     words = _body_words(draft)
@@ -259,6 +345,21 @@ def _build_pipeline_report(
     status = _pipeline_status(outcome, caveat_verdict, words, profile)
     if cost.is_hard_stop() and draft.get("id"):
         status = "cost_capped"
+    issues = list(surface_issues or [])
+    # Hero required except Gemini quota (soft-skip) or ALGENT_HERO_IMAGE=0.
+    if hero_enabled() and not (isinstance(hero, dict) and hero.get("artifact_name")):
+        if is_quota_skip(hero):
+            if "hero_quota_skipped" not in issues:
+                issues.append("hero_quota_skipped")
+        else:
+            status = "needs_hero"
+            if "hero_missing" not in issues:
+                issues.append("hero_missing")
+    skipped = [
+        f"{a.get('request_id') or a.get('id') or '?'}:{a.get('status')}"
+        for a in produced_analytics
+        if a.get("status") and a.get("status") != "produced"
+    ]
     return EditorialPipelineReport(
         profile_id=str(profile.get("id", "")),
         treatment_id=str(treatment.get("id", "")),
@@ -283,6 +384,8 @@ def _build_pipeline_report(
         analytics_count=len(analytics.get("requests", [])),
         analytics_produced=sum(1 for a in produced_analytics if a.get("status") == "produced"),
         analytics_escapes=sum(1 for a in produced_analytics if a.get("escaped_writes")),
+        analytics_skipped=skipped,
+        surface_issues=issues,
         generated_at=datetime.now(UTC).isoformat(),
     )
 
@@ -316,32 +419,112 @@ def _ensure_treatment(treatment: dict[str, Any], profile: dict[str, Any]) -> dic
 
 def _headline_and_hero(
     context: AgentRunContext, config: RunnableConfig, draft: dict[str, Any],
-) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    *, treatment: dict[str, Any] | None = None,
+) -> tuple[dict[str, Any], dict[str, Any] | None, list[str]]:
+    """Final surface package after prose repairs — title, dek, quick_take, hero.
+
+    Runs one bounded cold-browser repair when mechanical checks fail, then soft-ships
+    any remaining issues on the report.
+    """
     hero: dict[str, Any] | None = None
+    issues: list[str] = []
     if not draft:
-        return draft, hero
+        return draft, hero, issues
     with cost.essential_scope():
-        hl = build_headline_writer(context).invoke({"draft": draft}, config).get("headline") or {}
-        if hl.get("title"):
-            draft = {
-                **draft,
-                "title": hl["title"],
-                "standfirst": hl.get("standfirst") or draft.get("standfirst", ""),
-            }
+        invoke_in: dict[str, Any] = {"draft": draft}
+        if treatment:
+            invoke_in["treatment"] = treatment
+        hl = build_headline_writer(context).invoke(invoke_in, config).get("headline") or {}
+        draft = _apply_headline(draft, hl, treatment=treatment)
+        issues = _surface_cold_browser_issues(draft, treatment)
+        if issues:
+            repair_in = {**invoke_in, "draft": draft, "surface_issues": issues}
+            repaired = build_headline_writer(context).invoke(repair_in, config).get("headline") or {}
+            # Keep image fields from the first pass when the repair omits them — hero runs once.
+            for key in ("image_subject", "image_hook"):
+                if not str(repaired.get(key) or "").strip() and str(hl.get(key) or "").strip():
+                    repaired[key] = hl[key]
+            hl = repaired or hl
+            draft = _apply_headline(draft, hl, treatment=treatment)
+            remaining = _surface_cold_browser_issues(draft, treatment)
+            context.emit(SURFACE_REPAIRED, {
+                "prior_issues": issues, "remaining_issues": remaining,
+            })
+            issues = remaining
         hero = make_hero(hl, context.artifacts, say=lambda m: context.emit(HERO_IMAGE, {"note": m}))
-    return draft, hero
+    return draft, hero, issues
 
 
-def _run_analytics_worker(
-    context: AgentRunContext, config: RunnableConfig,
-    analytics: dict[str, Any], profile: dict[str, Any],
-) -> list[dict[str, Any]]:
-    if not (analytics.get("warranted") and _analytics_worker_enabled()):
-        return []
-    capped = {**analytics, "requests": (analytics.get("requests") or [])[: _analytics_cap()]}
-    return build_analytics_worker_graph(context).invoke(
-        {"analytics_plan": capped, "profile": profile}, config,
-    ).get("analytics_artifacts") or []
+def _apply_headline(
+    draft: dict[str, Any], hl: dict[str, Any], *, treatment: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Apply headline fields; merge quick_take field-by-field so partial outputs keep fallbacks."""
+    if not hl:
+        return draft
+    out = {**draft}
+    if hl.get("title"):
+        out["title"] = hl["title"]
+        out["standfirst"] = hl.get("standfirst") or draft.get("standfirst", "")
+
+    prior = draft.get("quick_take") if isinstance(draft.get("quick_take"), dict) else {}
+    # Treatment entry is the durable fallback when headline/drafter leave a field blank.
+    fallback = {
+        "what_happened": str((treatment or {}).get("news_kernel") or ""),
+        "why_it_matters": str((treatment or {}).get("reader_payoff") or ""),
+        "what_is_uncertain": str((treatment or {}).get("key_uncertainty") or ""),
+    }
+    incoming = hl.get("quick_take") if isinstance(hl.get("quick_take"), dict) else {}
+    merged: dict[str, str] = {}
+    for key in _QUICK_TAKE_KEYS:
+        for candidate in (incoming.get(key), prior.get(key), fallback.get(key)):
+            text = str(candidate or "").strip()
+            if text:
+                merged[key] = text
+                break
+        else:
+            merged[key] = ""
+    if any(merged.values()):
+        out["quick_take"] = merged
+    return out
+
+
+def _surface_cold_browser_issues(
+    draft: dict[str, Any], treatment: dict[str, Any] | None,
+) -> list[str]:
+    """Mechanical cold-browser checks on the final surface — advisory, one repair lap max."""
+    issues: list[str] = []
+    title = str(draft.get("title") or "").strip()
+    standfirst = str(draft.get("standfirst") or "").strip()
+    surface = f"{title} {standfirst}".casefold()
+    qt = draft.get("quick_take") if isinstance(draft.get("quick_take"), dict) else {}
+    plain = str((treatment or {}).get("plain_subject") or "").strip()
+    kernel = str((treatment or {}).get("news_kernel") or "").strip()
+    payoff = str((treatment or {}).get("reader_payoff") or "").strip()
+    uncertainty = str((treatment or {}).get("key_uncertainty") or "").strip()
+
+    if plain:
+        words = [
+            w for w in re.findall(r"[a-z0-9]+", plain.casefold())
+            if len(w) > 3 and w not in _STOPWORDS
+        ]
+        if words and not any(w in surface for w in words):
+            issues.append(
+                f"title/dek omit plain_subject ({plain!r}); a specialist name alone fails "
+                "a cold browser"
+            )
+
+    if re.fullmatch(r"[A-Z]{2,8}", title):
+        issues.append(f"title is only an initialism ({title!r})")
+
+    expected = (
+        ("what_happened", kernel),
+        ("why_it_matters", payoff),
+        ("what_is_uncertain", uncertainty),
+    )
+    for field, source in expected:
+        if source and not str(qt.get(field) or "").strip():
+            issues.append(f"quick_take.{field} is empty")
+    return issues
 
 
 def _pipeline_status(
@@ -365,11 +548,8 @@ def _repair_hedging(
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], int]:
     """One bounded lap that repairs an overclaim instead of parking the piece.
 
-    The caveat findings name specific sentences and specific problems, so the fix is surgical:
-    hedge exactly those, re-headline (the title must stay truthful to the changed prose), re-check.
-    This is what makes ``needs_hedging`` mean *took one more lap* rather than *held in a queue
-    nobody reads* — duds ship by design, overclaims get repaired by machine, and nothing waits on a
-    human. Bounded at one lap: if the repair doesn't take, we stay honest rather than loop.
+    Headline/quick_take are NOT refreshed here — the final surface package runs after all
+    prose repairs so the title stays truthful to the last body.
     """
     repaired = build_drafter(context).invoke(
         {
@@ -382,14 +562,9 @@ def _repair_hedging(
     )
     new_draft = repaired.get("draft") or {}
     if not new_draft:
-        # Repair produced nothing; keep the honest verdict.
         return draft, profile, caveat, 2
 
     profile = repaired.get("profile") or profile
-    hl = build_headline_writer(context).invoke({"draft": new_draft}, config).get("headline") or {}
-    if hl.get("title"):
-        new_draft = {**new_draft, "title": hl["title"],
-                     "standfirst": hl.get("standfirst") or new_draft.get("standfirst", "")}
     rechecked = build_caveat_reviewer(context).invoke(
         {"draft": new_draft, "profile": profile}, config).get("caveat_check") or {}
     context.emit(CAVEAT_REPAIRED, {"verdict": rechecked.get("verdict"),
@@ -505,14 +680,19 @@ def _repair_once(
 
 
 def _preview(r: EditorialPipelineReport) -> dict[str, Any]:
+    summary = (
+        f"{r.word_count} words | status: {r.status} | draft: {r.draft_outcome} | "
+        f"caveats: {r.caveat_verdict}"
+        + (f" ({r.caveat_findings} to fix)" if r.caveat_findings else "")
+        + (f" | walls: {r.barriers}" if r.barriers else "")
+    )
+    if r.analytics_skipped:
+        summary += f" | visuals skipped: {len(r.analytics_skipped)}"
+    if r.surface_issues:
+        summary += f" | surface issues: {len(r.surface_issues)}"
     return {
         "title": f"article: {r.article_title[:70] or '(untitled)'}",
-        "summary": (
-            f"{r.word_count} words | status: {r.status} | draft: {r.draft_outcome} | "
-            f"caveats: {r.caveat_verdict}"
-            + (f" ({r.caveat_findings} to fix)" if r.caveat_findings else "")
-            + (f" | walls: {r.barriers}" if r.barriers else "")
-        ),
+        "summary": summary,
         "items": [f"treatment: {r.treatment_id}", f"draft: {r.draft_id}"],
         "link": "../artifacts/article.md",
     }

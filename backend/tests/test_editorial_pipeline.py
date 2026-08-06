@@ -75,12 +75,145 @@ def test_pipeline_applies_the_truthful_headline(monkeypatch) -> None:
     plan_out = {"treatment": {"id": "trt_x"}, "gauntlet": {}}
     draft_out = {"draft": {"id": "drf_x", "title": "working title", "word_count": 400},
                  "gauntlet": {"outcome": "grounded", "promoted": True}}
-    headline_out = {"headline": {"title": "Fed holds, hike tail still live", "standfirst": "the nuance"}}
+    headline_out = {"headline": {
+        "title": "Fed holds, hike tail still live",
+        "standfirst": "the nuance",
+        "quick_take": {
+            "what_happened": "The Fed held rates.",
+            "why_it_matters": "Markets still price a hike tail.",
+            "what_is_uncertain": "Whether sticky PCE forces a later move.",
+        },
+    }}
     _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}}, headline_out)
 
-    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile()})["pipeline"]
+    out = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile()})
+    r = out["pipeline"]
     assert r["article_title"] == "Fed holds, hike tail still live"   # retitled from the working title
     assert r["status"] == "publishable"
+    assert out["draft"]["quick_take"]["what_happened"] == "The Fed held rates."
+
+
+def test_pipeline_applies_headline_after_repairs(monkeypatch) -> None:
+    """Surface package must see the repaired body — headline runs after caveat/comprehension."""
+    order: list[str] = []
+
+    class _OrderGraph:
+        def __init__(self, name, out):
+            self.name, self._out = name, out
+
+        def invoke(self, _state, _config=None):
+            order.append(self.name)
+            return self._out
+
+    plan_out = {"treatment": {"id": "trt_x"}, "gauntlet": {}}
+    draft_out = {"draft": {"id": "drf_x", "title": "working", "body": "x " * 200, "word_count": 200},
+                 "gauntlet": {"outcome": "grounded"}}
+    monkeypatch.setattr(pl, "build_planning_gauntlet_graph",
+                        lambda ctx: _OrderGraph("plan", plan_out))
+    monkeypatch.setattr(pl, "build_analytics_router",
+                        lambda ctx: _OrderGraph("analytics_plan", {
+                            "analytics_plan": {"warranted": True, "requests": [{"id": "anx_01"}]},
+                        }))
+    monkeypatch.setattr(pl, "build_drafting_gauntlet_graph",
+                        lambda ctx: _OrderGraph("draft", draft_out))
+    monkeypatch.setattr(pl, "build_caveat_reviewer",
+                        lambda ctx: _OrderGraph("caveat", {"caveat_check": {"verdict": "verified"}}))
+    monkeypatch.setattr(pl, "build_comprehension_reviewer",
+                        lambda ctx: _OrderGraph("comprehension",
+                                                {"comprehension_check": {"verdict": "clear"}}))
+    monkeypatch.setattr(pl, "build_headline_writer",
+                        lambda ctx: _OrderGraph("headline", {"headline": {"title": "Final"}}))
+    monkeypatch.setattr(pl, "build_analytics_worker_graph",
+                        lambda ctx: _OrderGraph("analytics_worker", {"analytics_artifacts": []}))
+    monkeypatch.setattr(pl, "make_hero", lambda *_a, **_k: None)
+    monkeypatch.setenv(pl._ANALYTICS_WORKER_ENV, "1")
+
+    pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile()})
+    assert order.index("analytics_plan") < order.index("draft")
+    assert order.index("caveat") < order.index("headline")
+    assert order.index("comprehension") < order.index("headline")
+    assert order.index("headline") < order.index("analytics_worker")
+
+
+def test_surface_repair_reruns_headline_once(monkeypatch) -> None:
+    """Cold-browser surface issues trigger one bounded headline repair lap."""
+    calls: list[dict] = []
+
+    class _HeadlineGraph:
+        def invoke(self, state, _config=None):
+            calls.append(state)
+            if state.get("surface_issues"):
+                return {"headline": {
+                    "title": "AI probes an undeciphered Bronze Age script",
+                    "standfirst": "A model ran on Linear A tablets; no translation yet.",
+                    "quick_take": {
+                        "what_happened": "Researchers probed Linear A with an AI model.",
+                        "why_it_matters": "It may help study an undeciphered script.",
+                        "what_is_uncertain": "No translation has been produced.",
+                    },
+                }}
+            return {"headline": {
+                "title": "Linear A",
+                "standfirst": "A model ran.",
+                "quick_take": {},
+            }}
+
+    plan_out = {
+        "treatment": {
+            "id": "trt_x",
+            "plain_subject": "an undeciphered Bronze Age script",
+            "news_kernel": "Researchers probed Linear A with an AI model.",
+            "reader_payoff": "It may help study an undeciphered script.",
+            "key_uncertainty": "No translation has been produced.",
+        },
+        "gauntlet": {},
+    }
+    draft_out = {
+        "draft": {"id": "drf_x", "title": "working", "body": "x " * 200, "word_count": 200},
+        "gauntlet": {"outcome": "grounded", "promoted": True},
+    }
+    _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}})
+    monkeypatch.setattr(pl, "build_headline_writer", lambda ctx: _HeadlineGraph())
+    monkeypatch.setattr(pl, "make_hero", lambda *_a, **_k: None)
+
+    events: list = []
+    out = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({"profile": _spine_profile()})
+    assert len(calls) == 2
+    assert calls[1].get("surface_issues")
+    assert out["draft"]["title"].startswith("AI probes")
+    assert any(et == pl.SURFACE_REPAIRED for et, _ in events)
+    assert out["pipeline"]["article_title"].startswith("AI probes")
+
+
+def test_analytics_skips_are_recorded_on_report(monkeypatch) -> None:
+    monkeypatch.setenv(pl._ANALYTICS_WORKER_ENV, "1")
+    monkeypatch.setenv(pl._ANALYTICS_CAP_ENV, "1")
+
+    class _CapGraph:
+        def invoke(self, state, _config=None):
+            req = state["analytics_plan"]["requests"][0]
+            return {"analytics_artifacts": [{
+                "request_id": req["id"], "status": "produced",
+                "artifact_name": "a.svg", "escaped_writes": [],
+            }]}
+
+    plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
+    draft_out = {"draft": {"id": "d", "word_count": 100}, "gauntlet": {"outcome": "grounded"}}
+    reqs = [
+        {"id": "anx_01", "priority": "essential_context"},
+        {"id": "anx_02", "priority": "optional"},
+        {"id": "anx_03", "visual_class": "source_specimen", "status": "source_unavailable",
+         "rationale": "licensed media lane not ready"},
+    ]
+    analytics_out = {"analytics_plan": {"warranted": True, "requests": reqs}}
+    _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}},
+          analytics_out=analytics_out)
+    monkeypatch.setattr(pl, "build_analytics_worker_graph", lambda ctx: _CapGraph())
+
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile("p")})["pipeline"]
+    assert r["analytics_produced"] == 1
+    assert any("anx_02:skipped" in s for s in r["analytics_skipped"])
+    assert any("anx_03:source_unavailable" in s for s in r["analytics_skipped"])
 
 
 class _Sequence:
@@ -409,17 +542,41 @@ def test_empty_subject_falls_back_so_every_piece_can_hero(monkeypatch) -> None:
     assert any("falling back" in n for n in notes)
 
 
-def test_a_failed_generation_never_costs_the_article(monkeypatch) -> None:
-    from algent_backend.agent_system.agents.editorial.hero_stage import make_hero
+def test_quota_exhaustion_soft_skips_without_retry(monkeypatch) -> None:
+    """429/quota is the only ship-without-hero path — one attempt, no retry burn."""
+    from algent_backend.agent_system.agents.editorial import hero_stage
 
     monkeypatch.setenv("ALGENT_HERO_IMAGE", "1")
+    monkeypatch.setattr(hero_stage.time, "sleep", lambda _s: None)
     notes: list[str] = []
+    calls = {"n": 0}
 
     def _boom(*a, **k):
-        raise RuntimeError("quota exceeded")
+        calls["n"] += 1
+        raise RuntimeError("HTTP 429: quota exceeded")
 
-    assert make_hero(_hl(), _Writer(), say=notes.append, generate=_boom) is None
-    assert any("skipped" in n for n in notes)      # reported, not swallowed
+    out = hero_stage.make_hero(_hl(), _Writer(), say=notes.append, generate=_boom)
+    assert out == {"skipped": "quota"}
+    assert calls["n"] == 1
+    assert any("publishing without hero" in n for n in notes)
+
+
+def test_a_failed_generation_returns_none_for_publish_hold(monkeypatch) -> None:
+    """Non-quota failure must not soft-ship; pipeline/publish treat None as needs_hero / hold."""
+    from algent_backend.agent_system.agents.editorial import hero_stage
+
+    monkeypatch.setenv("ALGENT_HERO_IMAGE", "1")
+    monkeypatch.setattr(hero_stage.time, "sleep", lambda _s: None)
+    notes: list[str] = []
+    calls = {"n": 0}
+
+    def _boom(*a, **k):
+        calls["n"] += 1
+        raise RuntimeError("HTTP 500: unavailable")
+
+    assert hero_stage.make_hero(_hl(), _Writer(), say=notes.append, generate=_boom) is None
+    assert calls["n"] == hero_stage._TRANSIENT_ATTEMPTS
+    assert any("must not ship without a hero" in n for n in notes)
 
 
 def test_a_bad_writer_subject_falls_back_before_spend(monkeypatch) -> None:

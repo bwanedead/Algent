@@ -61,6 +61,16 @@ class ComprehensionFinding(BaseModel):
         "unconnected_inference",  # conclusion dropped without the premise that makes it land
         "no_reduction",        # finished piece with no holdable so-what for a house reader
         "one_sided_picture",   # contested topic; only one serious public case is visible
+        # -- reader-entry / information hierarchy -----------------------------------------
+        # Openings that bury the news behind orientation, or lead with guild names before
+        # meaning, or dump methodology before the payoff. Soft promotion still ships; these
+        # name the repair.
+        "missing_news_kernel",  # first screen never states what happened / was found
+        "opening_order",        # landscape / etymology / methodology before the event
+        "jargon_before_gloss",  # specialist name or initialism before plain meaning
+        "unclear_causal_chain", # policy→event or mechanism link left foggy or overstated
+        "method_before_payoff", # technical how-to arrives before the reader holds the finding
+        "wall_of_text",         # long uninterrupted prose with no headings / figures / breaks
         "other",
     ] = "other"
     where: str = ""            # a short quote / locator so the fix is targeted, not a rewrite

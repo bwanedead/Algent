@@ -80,7 +80,9 @@ def test_produced_analytics_are_embedded_and_receipted() -> None:
     assert "**Core PCE, Mar-May**" in md  # labelled figure heading
     assert "How did core PCE change" in md  # cold-reader explainer under the chart
     assert "AI-assisted analytic, built only from cited data" in md
-    assert "anx_02" not in md
+    # Failed visuals are not embedded, but they are receipted so they are not "forgotten".
+    assert "![anx_02" not in md and "analytic_anx_02" not in md
+    assert "**Visuals not shipped**" in md and "anx_02" in md and "failed" in md
     # and it earns a receipts line carrying its claim provenance + as-of.
     assert "Charts & tables" in md and "from claims c1" in md and "as of 2026-06-26" in md
 
@@ -166,11 +168,15 @@ def test_prose_only_analytic_inlines_nothing_but_still_receipts() -> None:
 
 
 def test_analytic_with_unverified_figures_is_flagged_in_receipts() -> None:
-    analytics = [{"request_id": "anx_09", "status": "produced", "artifact_name": "a.svg",
+    # Integrity failures are not embedded; they appear under Visuals not shipped.
+    analytics = [{"request_id": "anx_09", "status": "integrity_check_failed",
                   "title": "drifty chart", "caption": "c", "data_refs": ["c1"],
-                  "figure_check": {"verified": False, "unverified": ["9.9"]}}]
+                  "figure_check": {"verified": False, "unverified": ["9.9"]},
+                  "note": "figure check: numbers not found in cited evidence — 9.9"}]
     md = render_published_article(_draft(), _profile(), analytics)
-    assert "figures not all matched to the cited claims: 9.9" in md
+    assert "drifty chart" not in md.split("How we know this")[0]
+    assert "**Visuals not shipped**" in md and "integrity_check_failed" in md
+    assert "9.9" in md
 
 
 def test_x_status_url_injected_for_embed_when_handle_named_without_link() -> None:
@@ -212,7 +218,9 @@ def test_map_figure_is_placed_after_opening_paragraph() -> None:
     draft = ArticleDraft(
         id="d", title="Fed piece", standfirst="the dek", frame="a market-pricing story",
         body=(
-            "First landscape paragraph about the choke point and the theater.\n\n"
+            "First landscape paragraph about the choke point and the theater, with enough "
+            "context that the publisher treats this block as a complete opening before any "
+            "map is inserted for the cold reader who still needs the geography of the region.\n\n"
             "Second paragraph continues the news move and the dispute."
         ),
         cited_claim_ids=["c1", "c2", "c3"], cited_source_ids=["s1", "s2"],

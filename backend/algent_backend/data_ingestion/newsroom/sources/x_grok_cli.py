@@ -42,6 +42,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
 
+from algent_backend.agent_system.runs.control_plane.process_tree import run_capturing
+
 _CMD_ENV = "ALGENT_X_GROK_CMD"
 _LANES_ENV = "ALGENT_X_GROK_LANES"  # comma list, e.g. "ai,mma" — overrides defaults
 _CONCURRENCY_ENV = "ALGENT_X_GROK_CONCURRENCY"  # max lanes to run at once
@@ -139,14 +141,11 @@ def _run_lane(lane: str, limit: int) -> list[dict[str, Any]]:
     with tempfile.TemporaryDirectory() as workdir:
         stdout = ""
         try:
-            result = subprocess.run(
+            result = run_capturing(
                 [*cmd, prompt],
                 env=_scrubbed_env(),
                 cwd=workdir,
-                capture_output=True,
-                text=True,
                 timeout=_TIMEOUT_S,
-                check=False,
             )
             stdout = result.stdout or ""
         except subprocess.TimeoutExpired as exc:  # salvage whatever it wrote before the cap

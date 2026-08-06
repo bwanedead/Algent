@@ -51,6 +51,18 @@ reader *do* with this understanding — even if the honest answer is "rates coul
 watch X"? Without a reduction, the molecule is only a stack of nodes. The reduction must be
 true to the evidence; do not invent a sharper point than the claims support.
 
+**Reader entry fields (required on the treatment).** Capture the first-screen bargain as
+schema, not only as prose advice:
+- `news_kernel` — one plain sentence: what concretely happened or was found
+- `reader_payoff` — the reduction / why a non-specialist should care
+- `key_uncertainty` — the most important open or contested link
+- `plain_subject` — plain-language subject when the guild name alone fails a cold browser
+- `causal_chain[]` — explicit cause→effect with status `established` | `supported` |
+  `possible` | `unknown`
+
+The drafter opens with these before landscape or methodology. A treatment that only has
+`core_understanding` and landscape concepts still leaves the headline and open to guess.
+
 **Significance is built into the molecule, not announced.** The reader should leave holding
 scale, structure, and stakes as part of the shape. Do **not** plan a concept whose only job is
 "why this is a big deal" as a separate sermon — and do not plan a molecule that withholds the
@@ -183,7 +195,11 @@ molecule. The early concepts must install, in plain language:
    open.
 
 If (1)–(3) are missing, the molecule is incomplete even when every later sentence is true.
-**Landscape before news move.** Procedure without grievance is insider code.
+**Dispute and actors before procedural scorekeeping.** Procedure without grievance is insider
+code. That is molecule design — not a license for the prose to open with geography or
+etymology before the news kernel. The published open still leads with what happened / was
+found; the landscape concepts above are what make that kernel intelligible and must be
+installed early, not as a wall of context ahead of the event.
 
 ## Right resolution — and support depth
 For each concept, set the **grain**: comprehensive enough to reconstruct the real shape,

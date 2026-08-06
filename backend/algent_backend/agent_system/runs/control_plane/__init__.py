@@ -1,6 +1,6 @@
 """
-Run control plane — the filesystem surfaces that make runs observable and
-drivable from outside the running process.
+Run control plane — the filesystem and process surfaces that make runs observable
+and drivable from outside the running process.
 
 Every run owns one directory, grouped by agent and counter-prefixed so the most
 recent is obvious in a file tree:
@@ -17,6 +17,9 @@ recent is obvious in a file tree:
 
 Plus a per-agent ``_meta.json`` (the monotonic counter) and one cross-run index
 (``runs_index.jsonl``) for ledger queries.
+
+Process hygiene (``liveness``, ``process_tree``) lives here too: stop/timeout must
+tree-kill nested CLI children so they do not keep burning RAM after the parent dies.
 
 These files are the seam that lets any process — a human shell, another agent,
 a headless CLI harness — start, watch, and inspect runs. The CLI is only a

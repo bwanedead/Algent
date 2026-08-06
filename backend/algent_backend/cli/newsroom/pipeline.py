@@ -63,7 +63,6 @@ STAGES: tuple[str, ...] = (
 #: Picking angles means the operator chooses the story that will actually be written,
 #: rather than a candidate that synthesis may still turn into something else.
 
-
 def add_parser(subparsers: argparse._SubParsersAction) -> None:
     parser = subparsers.add_parser(
         "run", help="run a slice of the newsroom pipeline (--from/--to/--pick)",
@@ -90,9 +89,9 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
     )
     parser.add_argument(
         "--compose", default=None,
-        help="build the vector YOURSELF from t0 POOL item numbers, bypassing synthesis's "
-             "grouping: --compose 88+114 makes one article from pool items 88 and 114. "
-             "Pair with --angle to say what the story is. Use --pool-menu to see the numbers.",
+        help="build the vector YOURSELF from the latest t0 POOL item numbers (does not "
+             "rebuild discovery — numbers stay stable). Bypasses synthesis grouping: "
+             "--compose 88+114. Pair with --angle. Pass --fresh only if you want a new pool.",
     )
     parser.add_argument(
         "--pool-menu", dest="pool_menu", action="store_true",
@@ -108,7 +107,7 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
     )
     parser.add_argument(
         "--analytics-harness", dest="analytics_harness", default=None,
-        help="which coding CLI draws the figures (codex default; grok when its quota is worth spending)",
+        help="which coding CLI draws the figures (grok default; codex/Luna when grok quota is gone)",
     )
     parser.add_argument(
         "--analytics-model", dest="analytics_model", default=None,
@@ -288,15 +287,18 @@ def compose_vector(
 
 
 def print_vector_menu(portfolio: dict[str, Any], *, out) -> None:
-    """Print the portfolio as the numbered menu an operator picks from."""
+    """Print the portfolio as the numbered menu an operator picks from.
+
+    Titles and theses are never truncated — the operator menu must be paste-complete.
+    """
     vectors = portfolio.get("vectors") or []
-    print(f"\n=== MENU — {len(vectors)} research vectors ===", file=out)
+    print(f"\n=== SYNTHESIS MENU — {len(vectors)} research vectors ===", file=out)
     for n, v in enumerate(vectors, 1):
         pillars = ", ".join(v.get("pillars") or []) or "-"
         print(f"\n{n:3}. ({pillars})  {v.get('title') or ''}", file=out)
         thesis = str(v.get("thesis") or "").strip()
         if thesis:
-            print(f"     {thesis[:220]}", file=out)
+            print(f"     {thesis}", file=out)
         hits = v.get("supporting_hits") or []
         print(f"     [{v.get('vector_type', '?')} | effort {v.get('research_effort', '?')} "
               f"| {len(hits)} hits]", file=out)
@@ -341,6 +343,12 @@ def run(args: argparse.Namespace) -> int:
 
     import sys
 
+    # --compose numbers the existing pool menu. Rebuilding t0 renumbers items and
+    # breaks the pick the operator just made — so compose reuses the latest pool
+    # unless they explicitly ask for a fresh discovery (--fresh).
+    if args.compose and args.from_stage == "t0" and not args.fresh:
+        args.from_stage = "synthesis"
+
     try:
         stages = _span(args.from_stage, args.to_stage)
     except ValueError as exc:
@@ -378,6 +386,8 @@ def run(args: argparse.Namespace) -> int:
         pool, pool_path = _latest_pool()
         result["pool"] = {"path": str(pool_path), "item_count": pool.get("item_count"),
                           "reused": True}
+        if args.compose:
+            progress(f"[t0] reusing pool ({pool_path.name}) for --compose")
 
     # -- compose: the operator builds the vector from raw t0 items --------------
     # Handled before synthesis because it REPLACES synthesis: the grouping is the
@@ -419,7 +429,13 @@ def run(args: argparse.Namespace) -> int:
     portfolio: dict[str, Any] = {}
     # Asking only for the pool menu means synthesis has nothing to contribute — don't
     # pay a model to build vectors the operator has said they are going to bypass.
-    skip_synthesis = args.pool_menu and args.to_stage == "menu"
+    # ALGENT_SYNTHESIS=0 is the durable operator pause (manual t0 picking mode).
+    from algent_backend.agent_system.agents.newsroom.flags import synthesis_enabled
+    synthesis_paused = not synthesis_enabled()
+    skip_synthesis = (args.pool_menu and args.to_stage == "menu") or synthesis_paused
+    if synthesis_paused and "synthesis" in stages:
+        progress("[synthesis] paused (ALGENT_SYNTHESIS=0) — using t0 pool menu")
+        args.pool_menu = True
     if "synthesis" in stages and not args.dry_run and not skip_synthesis:
         progress("[synthesis] turning the pool into research vectors…")
         code = _synthesis(args, pool_file=pool_path)
@@ -442,11 +458,14 @@ def run(args: argparse.Namespace) -> int:
                                "reused": True}
 
     # -- menu -----------------------------------------------------------------
+    # Operator contract: t0-only → pool menu. Synthesis stop → BOTH full menus
+    # (pool numbers ≠ vector numbers). See cli/newsroom/AGENTS.md.
     if "menu" in stages and not args.dry_run:
+        from algent_backend.data_ingestion.cli.t0 import print_menu
         if args.pool_menu:
-            from algent_backend.data_ingestion.cli.t0 import print_menu
             print_menu(pool, out=sys.stderr)
         else:
+            print_menu(pool, out=sys.stderr)
             print_vector_menu(portfolio, out=sys.stderr)
 
     if args.to_stage == "menu":

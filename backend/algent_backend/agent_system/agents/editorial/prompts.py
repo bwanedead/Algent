@@ -54,6 +54,20 @@ PRODUCE an EditorialTreatment:
      the source's profession and not to the latest procedural surface alone. If you cannot state
      a question a general reader would genuinely want answered, you do not have a story: say so
      rather than assembling one out of whatever the profile happens to hold.
+   - READER ENTRY (required — the first-screen bargain; see writing-ergonomics / molecule
+     reduction). These are NOT the same as core_understanding:
+     - `news_kernel`: ONE plain sentence naming what concretely happened or was found. A cold
+       browser must understand it without already knowing the beat. Not orientation ("Ceuta is
+       a Spanish enclave…") — the event/finding first.
+     - `reader_payoff`: why a non-specialist should care (the usable so-what / reduction).
+     - `key_uncertainty`: the single most important open, contested, or unresolved link the
+       piece must hold honestly (e.g. whether a policy change caused a crossing surge).
+     - `plain_subject`: when the story turns on a specialist name (Linear A, DUV, a niche
+       statute), the plain-language description a cold reader needs BEFORE the guild term
+       ("an undeciphered Bronze Age script"). Empty only when the subject is already house-readable.
+     - `causal_chain[]`: explicit cause→effect links with status
+       `established` | `supported` | `possible` | `unknown`. Do NOT collapse a possible link
+       into an established one. Policy-change → event is often `possible` or `unknown`.
    - If this is a MATERIAL UPDATE on a story already covered, the molecule is the DELTA — what
      changed — not a re-tell of the prior piece. Continuity coverage should look like continuity.
    - `concepts[]`: the LOAD-BEARING concepts the reader must build to hold that shape. For
@@ -65,7 +79,8 @@ PRODUCE an EditorialTreatment:
      would go unused." An unresolved thread ("this may be related, but we couldn't establish
      it") is a fact about our research, not a concept: it belongs in the limits. CUT it.
    - `reader_path`: the concept ids in dependency order (broad -> specific). This is concept
-     order, NOT prose sections.
+     order, NOT prose sections — and the NEWS KERNEL still opens the prose before landscape
+     concepts are assembled.
    - `primitives[]`: THE RAMP for a cold house reader who has **not** been following this story
      (term -> one plain-language clause; usually 2–4, up to **6** when the piece is a multi-party
      mechanism). These are NOT news and NOT evidence — the drafter speaks them uncited. Only

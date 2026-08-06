@@ -8,17 +8,18 @@ one runs dry is the difference between an article with a chart and one without.
 
 Two implementations, same contract:
 
-- **codex** (``codex exec``) — the default. Web access is OFF unless ``--search`` is
-  passed, which matches what we want: a chart built from profile-held numbers must not be
-  able to wander onto the internet, and only a ``may_source`` request earns that.
-- **grok** (``grok -p``) — the original. Web is ON by default there, so it has to be
-  switched off explicitly with ``--disable-web-search``; the asymmetry is why each harness
-  builds its own argv rather than sharing a flag list.
+- **codex** (``codex exec``) — the fallback when grok quota is gone. Web access is OFF
+  unless ``--search`` is passed, which matches what we want: a chart built from
+  profile-held numbers must not be able to wander onto the internet, and only a
+  ``may_source`` request earns that.
+- **grok** (``grok -p``) — the default while quota lasts. Web is ON by default there, so
+  it has to be switched off explicitly with ``--disable-web-search``; the asymmetry is
+  why each harness builds its own argv rather than sharing a flag list.
 
 Both run with the working directory pinned to the request's scratch folder and with
 approvals pre-granted, because the integrity guarantee lives in the *harness* around the
-subprocess (pinned cwd, artifact allow-list, cleanup) rather than in anything the
-subprocess promises. Neither is trusted; both are contained.
+subprocess (pinned cwd, artifact allow-list, cleanup, tree-kill on timeout) rather than
+in anything the subprocess promises. Neither is trusted; both are contained.
 """
 
 from __future__ import annotations
@@ -26,9 +27,12 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+from collections.abc import Callable
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
+
+from algent_backend.agent_system.runs.control_plane.process_tree import run_capturing
 
 
 @lru_cache(maxsize=8)
@@ -42,11 +46,12 @@ def executable(name: str) -> str | None:
     """
     return shutil.which(name)
 
-# codex is the default: it is what stays available when grok-build quota runs out, and its
-# offline-by-default posture is the safer of the two.
-DEFAULT_HARNESS = "codex"
+# grok is the default while quota lasts; flip to codex (Luna) via
+# ``ALGENT_ANALYTICS_HARNESS=codex`` when grok-build runs dry. Codex stays the
+# offline-by-default safer posture for that fallback.
+DEFAULT_HARNESS = "grok"
 _ENV_HARNESS = "ALGENT_ANALYTICS_HARNESS"   # "codex" | "grok"
-# Start on luna; terra is the heavier sibling to try if luna draws poorly.
+# Codex fallback model — luna; terra is the heavier sibling to try if luna draws poorly.
 DEFAULT_CODEX_MODEL = "gpt-5.6-luna"
 _ENV_CODEX_MODEL = "ALGENT_CODEX_MODEL"
 
@@ -76,13 +81,14 @@ class Harness:
         if exe is None:
             return False, f"{self.name} CLI not found on PATH"
         try:
-            proc = subprocess.run(
+            proc = run_capturing(
                 [exe, *argv[1:]],
-                capture_output=True, text=True, timeout=timeout,
+                timeout=timeout,
                 # These CLIs emit UTF-8 (smart quotes / emoji); decode as such so a Windows
                 # cp1252 locale cannot crash the decode. errors='replace' keeps a garbled
                 # tail from ever raising.
-                encoding="utf-8", errors="replace",
+                encoding="utf-8",
+                errors="replace",
             )
         except FileNotFoundError:
             return False, f"{self.name} CLI not found on PATH"
@@ -216,8 +222,9 @@ def _capture(cmd: list[str], *, timeout: float = 30.0) -> str | None:
     if exe is None:
         return None
     try:
-        proc = subprocess.run([exe, *cmd[1:]], capture_output=True, text=True, timeout=timeout,
-                              encoding="utf-8", errors="replace")
+        proc = run_capturing(
+            [exe, *cmd[1:]], timeout=timeout, encoding="utf-8", errors="replace",
+        )
     except (FileNotFoundError, OSError, subprocess.SubprocessError):
         return None
     if proc.returncode != 0:

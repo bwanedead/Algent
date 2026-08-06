@@ -61,7 +61,14 @@ def print_menu(pool: dict, *, out) -> None:
     "item 74", and that has to mean the same item to the person reading and to any
     command consuming the numbers. Channel headers are annotations inside that one
     sequence, never a restart of it.
+
+    Labels are never truncated. Non-English labels show English first (from
+    ``signals.label_en``) with the original on the next line.
     """
+    from algent_backend.data_ingestion.newsroom.discovery.label_english import (
+        format_menu_label,
+    )
+
     items = pool.get("items") or []
     by_channel: dict[str, list[tuple[int, dict]]] = {}
     for n, item in enumerate(items, 1):
@@ -73,7 +80,12 @@ def print_menu(pool: dict, *, out) -> None:
         for n, item in entries:
             pillar = (item.get("pillars") or ["-"])[0]
             cryst = "[c] " if (item.get("signals") or {}).get("crystallized") else ""
-            print(f"{n:4}. ({pillar}) {cryst}{(item.get('label') or '')[:110]}", file=out)
+            display, original = format_menu_label(item)
+            missing = (item.get("signals") or {}).get("label_en_missing")
+            suffix = " [needs EN]" if missing and not original else ""
+            print(f"{n:4}. ({pillar}) {cryst}{display}{suffix}", file=out)
+            if original:
+                print(f"       orig: {original}", file=out)
     print(file=out)
 
 

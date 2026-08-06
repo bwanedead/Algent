@@ -41,6 +41,10 @@ class EditorialPipelineReport(BaseModel):
     analytics_count: int = 0           # grounded analytics requested
     analytics_produced: int = 0        # requests the (gated) worker actually fulfilled into artifacts
     analytics_escapes: int = 0         # worker runs that broke their lane (tripwire) — should stay 0
+    # Explicit non-produced outcomes so digests never imply "forgotten" visuals.
+    analytics_skipped: list[str] = Field(default_factory=list)  # e.g. "anx_01:soft_cap_skipped"
+    #: Cold-browser surface issues found after the final headline package (advisory; soft ship).
+    surface_issues: list[str] = Field(default_factory=list)
     #: The hero illustration, when one was generated: artifact_name, alt, hook, label, model,
     #: size, estimated_usd. Absent (None) whenever the stage was off, skipped or failed — the
     #: article is complete either way, so this is never a signal of a broken run.

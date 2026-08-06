@@ -67,6 +67,9 @@ def build_gauntlet_graph(context: AgentRunContext) -> Any:
 
         # 2-3. enrich per lane, sequentially — each merges on the prior result.
         from algent_backend.agent_system.agents.newsroom import budget_policy
+        from algent_backend.agent_system.foundation.models.budget_gate import (
+            BudgetRefusedError,
+        )
 
         lanes_run: list[str] = []
         start_profile = profile
@@ -78,18 +81,36 @@ def build_gauntlet_graph(context: AgentRunContext) -> Any:
                 continue
             if not budget_policy.allow_optional("enrich_lane"):
                 break
-            out = module.build_graph(context).invoke({"profile": profile, "review": review}, config)
+            try:
+                out = module.build_graph(context).invoke(
+                    {"profile": profile, "review": review}, config,
+                )
+            except BudgetRefusedError:
+                # Soft/hard crossed mid-lane: keep what we have and stop enriching.
+                break
             profile = out.get("profile", profile)
             lanes_run.append(lane)
 
         # 4. re-review only when enrichment ran or the profile revision moved. Skipping an
         # unchanged re-read saves a full review pass when there was nothing to re-judge.
+        # Under slim_finish this re-pass is optional — keep the initial review and proceed
+        # toward publish rather than dying on a refused model call.
         profile_changed = (
             int(profile.get("revision", start_rev) or start_rev) != start_rev
             or profile is not start_profile
         )
-        if lanes_run or profile_changed:
-            rereview = build_reviewer(context).invoke({"profile": profile}, config)["review"]
+        if (lanes_run or profile_changed) and budget_policy.allow_optional(
+            "gauntlet_rereview",
+        ):
+            try:
+                rereview = build_reviewer(context).invoke(
+                    {"profile": profile}, config,
+                )["review"]
+            except BudgetRefusedError:
+                from algent_backend.agent_system.foundation import cost
+
+                cost.record_skip("gauntlet_rereview", cost.mode())
+                rereview = review
             _write(context, "review_final.json", rereview)
         else:
             rereview = review

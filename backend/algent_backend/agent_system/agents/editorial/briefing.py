@@ -25,6 +25,7 @@ def render_treatment(t: EditorialTreatment) -> str:
     if t.reader_question:
         # The drafter's sharpest test: every paragraph must earn its place answering this.
         out += ["## The question this piece answers (for the reader)", t.reader_question, ""]
+    out += _entry_block(t)
     out += _concepts_block(t)
     if t.primitives:
         # The ramp — speak these in your own voice, uncited, where each concept first bears weight.
@@ -51,6 +52,27 @@ def _frame_block(t: EditorialTreatment) -> list[str]:
         out.append(f"_{t.chosen_frame.rationale}_")
     if t.rejected_frames:
         out += ["", "_Rejected frames:_"] + [f"- ~~{f.frame}~~ — {f.rationale}" for f in t.rejected_frames]
+    return out + [""]
+
+
+def _entry_block(t: EditorialTreatment) -> list[str]:
+    """Cold-reader entry: kernel → payoff → uncertainty → causal honesty → plain subject."""
+    if not any((t.news_kernel, t.reader_payoff, t.key_uncertainty, t.plain_subject, t.causal_chain)):
+        return []
+    out = ["## Reader entry (open with this — before landscape or methodology)"]
+    if t.news_kernel:
+        out.append(f"**News kernel:** {t.news_kernel}")
+    if t.reader_payoff:
+        out.append(f"**Why it matters:** {t.reader_payoff}")
+    if t.key_uncertainty:
+        out.append(f"**Key uncertainty:** {t.key_uncertainty}")
+    if t.plain_subject:
+        out.append(f"**Plain subject (use before specialist names):** {t.plain_subject}")
+    if t.causal_chain:
+        out.append("**Causal chain (do not blur these statuses):**")
+        for link in t.causal_chain:
+            note = f" — {link.note}" if link.note else ""
+            out.append(f"- [{link.status}] {link.cause} → {link.effect}{note}")
     return out + [""]
 
 

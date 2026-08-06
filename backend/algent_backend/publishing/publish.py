@@ -80,6 +80,30 @@ class PublishResult:
     content_path: str = ""
 
 
+def _hero_required_and_missing(run_dir: Path, pipeline: dict) -> str | None:
+    """None when a hero is present, opted out, or quota-skipped; else a hold reason."""
+    from algent_backend.agent_system.agents.editorial.hero_stage import (
+        hero_enabled,
+        is_quota_skip,
+    )
+
+    if not hero_enabled():
+        return None
+    hero = pipeline.get("hero") if isinstance(pipeline.get("hero"), dict) else None
+    if is_quota_skip(hero):
+        return None
+    issues = pipeline.get("surface_issues") or []
+    if "hero_quota_skipped" in issues:
+        return None
+    name = str((hero or {}).get("artifact_name") or "").strip()
+    if not name:
+        return "hero image required — every article must ship with a hero (quota is the only exception)"
+    path = run_dir / "artifacts" / name
+    if not path.exists() or path.stat().st_size <= 0:
+        return f"hero artifact missing or empty ({name})"
+    return None
+
+
 def _load(art: Path, name: str) -> Any:
     f = art / name
     if not f.exists():
@@ -153,6 +177,13 @@ def publish_run(
     slug = build_slug(title, profile_id)
     run_id = run_dir.name
 
+    # Hard floor: every article ships with a hero, except Gemini quota skip
+    # (``hero.skipped == quota`` / ``hero_quota_skipped``) or ALGENT_HERO_IMAGE=0.
+    hero_block = _hero_required_and_missing(run_dir, pipeline)
+    if hero_block:
+        return _hold(held_dir, slug, status or "needs_hero", [hero_block],
+                     run_id, rail, pipeline)
+
     # ── the gate (OFF by default — see _gate_enabled) ─────────────────────────────────────────
     if _gate_enabled():
         if status == _BLOCKED:
@@ -184,10 +215,12 @@ def publish_run(
     if is_rewrite:
         corrections = [*corrections, {"date": today, "reason": correction}]
 
+    raw_hero = pipeline.get("hero") if isinstance(pipeline.get("hero"), dict) else None
+    hero_for_site = raw_hero if raw_hero and raw_hero.get("artifact_name") else None
     article = convert(article_md=article_md, rail=rail, pipeline=pipeline, profile=profile,
                       date=today, run_id=run_id, corrections=corrections or None,
                       vector=vector, analytics=analytics,
-                      hero=(pipeline.get("hero") or None))
+                      hero=hero_for_site)
     _write_article(site_dir, article, run_dir)
     _append_publish_ledger(site_dir, article, run_id,
                            kind="correction" if is_rewrite else "publish", pushed=push)

@@ -19,7 +19,7 @@ from langgraph.graph import END, START, StateGraph
 from algent_backend.agent_system.foundation.models import ModelSpec
 from algent_backend.agent_system.runs.context import AgentRunContext
 
-from .comprehension_contracts import ComprehensionCheck, ComprehensionFinding
+from .comprehension_contracts import ComprehensionCheck
 from .comprehension_prompts import SYSTEM_PROMPT
 from .draft import ArticleDraft
 
@@ -55,14 +55,16 @@ def _message(draft: ArticleDraft, places: list[str] | None = None) -> str:
         "TASK: Read this as its intended general reader (cold, not following the story day to day). "
         "Report only where you genuinely stumbled.\n"
         "FRIEND TEST (required): After reading, could you explain to a friend — using only this "
-        "prose — (1) what the underlying dispute/situation is in concrete terms, (2) who wants "
-        "what and why (including any resignation/strike/demand), (3) what just changed, (4) what "
-        "remains open? If you only hold vague residue ('someone protested over school stuff'), "
-        "that is needs_ramp: flag vague_conflict / missing_scene / assumed_context as fits.\n"
-        "Also flag announced_importance machine-slop ('That first fact matters because…', "
-        "'this sets the frame', 'put plainly', 'phase change not closure') with fix=cut.\n"
-        "Your only fixes are a handhold or a cut. If the friend test passes and it reads clearly, "
-        "return 'clear' with no findings.",
+        "prose — (1) what happened / was found, (2) why it matters, (3) what the underlying "
+        "dispute/situation is, (4) who wants what, (5) what remains open? If you only hold vague "
+        "residue, that is needs_ramp: flag missing_news_kernel / vague_conflict / missing_scene "
+        "/ assumed_context / opening_order as fits.\n"
+        "Also flag jargon_before_gloss, unclear_causal_chain, method_before_payoff, wall_of_text, "
+        "and announced_importance machine-slop ('That first fact matters because…', "
+        "'this sets the frame', 'put plainly') with fix=cut.\n"
+        "Your fixes may be add_handhold, connect_to_thread, cut, rewrite_for_reader, or reorder. "
+        "Prefer reorder for buried/opening-order defects. If the friend test passes and it reads "
+        "clearly, return 'clear' with no findings.",
     ) if x)
 
 

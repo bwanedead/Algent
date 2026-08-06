@@ -5,6 +5,27 @@ This directory is the **only** place the analytics worker (the grok-build stage 
 early-days sandbox: strict doctrine + light guardrails, not a container fortress. Keep it that way
 until we genuinely need more.
 
+## Weight-bearing stack (do not delete)
+
+These tracked paths are **runtime dependencies** of every visual article, not optional samples:
+
+| Path | Role |
+|---|---|
+| `lib/__init__.py`, `lib/theme.py`, `lib/charts.py`, `lib/maps.py`, `lib/animate.py` | Canonical helpers the worker is instructed to import |
+| `scripts/setup_venv.ps1`, `scripts/download_basemap.py`, `scripts/smoke_test.py` | Reproducible stack setup + canary |
+| `data/README.md` | Documents the Natural Earth basemap location |
+| `requirements.txt`, this `AGENTS.md`, `README.md` | Pins + doctrine |
+
+Scratch folders (`<request_id>/`, `_canary/`), `.venv/`, and downloaded `data/natural_earth/` are
+local/gitignored. Deleting or “cleaning up” `lib/` or `scripts/` breaks map/chart production even
+when the editorial pipeline is healthy — the worker will refuse the stack rather than freehand
+geography. If a helper must change, edit it in place or replace it with an equivalent import path
+and update `analytics_worker` briefs in the same change.
+
+**Pipeline invariant:** `sweep_stale_scratch` may only remove scratch-shaped dirs (`anx_*`,
+`req_*`, `_canary`). It must never age-delete `lib/`, `scripts/`, or `data/` — that bug
+previously wiped the stack after ~2h idle and shipped articles with zero visuals.
+
 ## Python environment (use this — do not pip install mid-run)
 
 A **dedicated venv** lives at `analytics_workspace/.venv` with a pinned stack

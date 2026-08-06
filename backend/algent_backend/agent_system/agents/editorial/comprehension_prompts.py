@@ -164,6 +164,23 @@ the order the evidence arrived rather than the order an idea unfolds. These are 
 - NO_REDUCTION — you finished and still cannot say what a house reader should take from it.
   Fix: a closing handhold that states the holdable reduction the body already supports — never
   invent a sharper claim.
+- MISSING_NEWS_KERNEL — after the first screen you still cannot state what happened or was
+  found. Orientation without the event is a fail. Fix: `reorder` if the kernel exists later;
+  else `add_handhold` / `rewrite_for_reader` with the plain event sentence.
+- OPENING_ORDER — landscape, etymology, geography, or methodology arrives BEFORE the event/
+  finding. Same family as buried_point, but specifically first-screen sequence. Fix: `reorder`.
+- JARGON_BEFORE_GLOSS — a specialist name or initialism lands before its plain meaning
+  ("Linear A" with no "undeciphered Bronze Age script"; "DUV" with no chipmaking handhold).
+  Fix: `rewrite_for_reader` so the concrete object arrives first.
+- UNCLEAR_CAUSAL_CHAIN — a policy→event or mechanism link is left foggy, or asserted harder
+  than the piece earns. Distinct from causal_gap when the issue is STATUS honesty (possible
+  written as settled). Fix: `add_handhold` / `rewrite_for_reader` stating the link and its
+  confidence in plain words.
+- METHOD_BEFORE_PAYOFF — technical how-to / methodology wall arrives before the reader holds
+  the finding and why it matters. Depth is fine AFTER the gist. Fix: `reorder`.
+- WALL_OF_TEXT — a long uninterrupted prose run with no descriptive headings or breaks where
+  a house reader would lose the thread. Fix: `reorder` / `rewrite_for_reader` suggesting
+  descriptive H2s that name the section's question or finding (not generic "Background").
 
 HARD CONSTRAINT ON YOUR FIXES — this is not optional. Your powers are **handhold**, **cut**,
 **reorder**, or **reader-side rewrite**:

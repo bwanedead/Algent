@@ -64,8 +64,8 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
     parser.add_argument("--max-turns", type=int, default=None)
     parser.add_argument(
         "--analytics-harness", dest="analytics_harness", choices=HARNESSES, default=None,
-        help="which coding CLI draws the figures (default: codex). Use grok when its quota "
-             "is worth spending; codex otherwise. Sets ALGENT_ANALYTICS_HARNESS for the run.",
+        help="which coding CLI draws the figures (default: grok). Use codex/Luna when grok "
+             "quota runs out. Sets ALGENT_ANALYTICS_HARNESS for the run.",
     )
     parser.add_argument(
         "--analytics-model", dest="analytics_model", default=None,

@@ -80,7 +80,8 @@ all published:
   looking at**: "Where the bone was found."
 - Headline: *"Florida's $1.8tn economy claim is backed by BEA data — but the 14th-largest ranking
   can't be verified from the Chamber release alone."* — foregrounds our verification result to a
-  reader who has never heard the claim. → Lead with the claim and who made it, then the doubt.
+  reader who has never heard the claim, and hedges the title into mush. → Crisp wrapper for the
+  claim and who made it; put the checkability limit in the dek (headline-guidance.md).
 
 Two rules that follow, and they are absolute:
 

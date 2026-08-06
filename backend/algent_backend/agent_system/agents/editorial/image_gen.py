@@ -44,7 +44,7 @@ SIZES: dict[str, tuple[str, ...]] = {
 
 # 16:9 because a hero is a wide banner and the same asset is what a link preview shows.
 ASPECT = "16:9"
-DEFAULT_SIZE = "2K"
+DEFAULT_SIZE = "1K"  # lite is 1K-only; requesting 2K just fails (and can still burn quota)
 _ENV_SIZE = "ALGENT_HERO_IMAGE_SIZE"
 _ENV_MODEL = "ALGENT_HERO_IMAGE_MODEL"
 
@@ -61,7 +61,7 @@ _TIMEOUT_S = 120.0
 
 
 class ImageGenerationError(RuntimeError):
-    """The image could not be generated. Callers ship the article without a hero."""
+    """The image could not be generated. Publish must hold — articles require a hero."""
 
 
 @dataclass(frozen=True)

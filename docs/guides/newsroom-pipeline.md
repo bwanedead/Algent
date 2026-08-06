@@ -30,15 +30,24 @@ full ladder.
 | I want… | command |
 |---------|---------|
 | fresh discovery and a menu to pick from | `newsroom run --to menu` |
+| **t0 pool only** (pause synthesis; pick by hand) | `ingest t0 --force --menu` or set `ALGENT_SYNTHESIS=0` then `newsroom run --to menu` |
 | the menu again, without re-spending on discovery | `newsroom run --from menu --to menu` |
 | these menu vectors turned into published articles | `newsroom run --from menu --pick 3,7` |
-| the whole thing, unattended | `newsroom run` |
+| the whole thing, unattended | `newsroom run` (needs `ALGENT_SYNTHESIS=1`, the default) |
 | an article, but staged rather than shipped | `newsroom run --to editorial` |
 | to see what would run, spending nothing | add `--dry-run` |
 | discovery from only some channels | `newsroom run --to menu --channels gkg,science` |
 | a different figure-drawing harness | add `--analytics-harness grok` |
 | the raw t0 item menu, to blend items myself | `newsroom run --to menu --pool-menu` |
 | these raw t0 items blended into one article | `newsroom run --compose 88+114 --angle "…"` |
+
+**Synthesis pause.** `ALGENT_SYNTHESIS=0` (also `false`/`off`) skips the t1 synthesis stage so
+discovery stops at the raw t0 pool. Use that while you are choosing leads by hand; turn it
+back on for scheduled / unattended selection later. `ingest t0` never runs synthesis.
+
+**English menu.** Non-English t0 labels get an English line (`signals.label_en`) with the
+original kept underneath — source widely, triage in English. Published articles stay
+English-central (drafter doctrine). Pause with `ALGENT_T0_MENU_EN=0` if needed.
 
 ```bash
 python -m algent_backend.cli newsroom run --to menu
@@ -69,7 +78,8 @@ into two vectors, promoted one, and dropped the other.
 
 `--compose` is the escape hatch: you pick raw **t0 pool** items and declare them one
 story. That grouping is final and synthesis never sees it (so `--compose` skips the
-synthesis cost entirely).
+synthesis cost entirely). It **reuses the latest pool** so menu numbers stay stable;
+pass `--fresh` only when you intentionally want a new discovery run first.
 
 ```bash
 python -m algent_backend.cli newsroom run --to menu --pool-menu

@@ -170,6 +170,49 @@ def test_compose_uses_the_angle_as_the_thesis() -> None:
     assert v["thesis"] == "a dying telescope still working"
 
 
+def test_compose_defaults_skip_t0_rebuild(monkeypatch, tmp_path) -> None:
+    """Menu numbers must stay valid — compose reuses the latest pool, not a new t0."""
+    from argparse import Namespace
+
+    pool = {
+        "generated_at": "2026-01-01T00:00:00Z",
+        "items": [
+            {"id": "w:1", "label": "ants", "pillars": ["world"], "evidence": [{"url": "http://a"}]},
+        ],
+        "item_count": 1,
+        "by_channel": {"world": 1},
+    }
+    pool_path = tmp_path / "pool_test.json"
+    pool_path.write_text("{}", encoding="utf-8")
+    seed = tmp_path / "seed.json"
+    seed.write_text("{}", encoding="utf-8")
+    monkeypatch.setattr(pipeline, "_latest_pool", lambda: (pool, pool_path))
+    monkeypatch.setattr(pipeline, "_seed_portfolio", lambda *_a, **_k: seed)
+    called = {"rail": False}
+    monkeypatch.setattr(
+        pipeline, "_rail",
+        lambda *_a, **_k: called.__setitem__("rail", True) or 0,
+    )
+
+    args = Namespace(
+        from_stage="t0",
+        to_stage="publish",
+        compose="1",
+        angle="what the ant trade is",
+        fresh=False,
+        dry_run=False,
+        pick=None,
+        pool_menu=False,
+        channels=None,
+        analytics_harness=None,
+        analytics_model=None,
+    )
+    code = pipeline.run(args)
+    assert code == 0
+    assert called["rail"] is True
+    assert args.from_stage == "synthesis"
+
+
 def test_composed_vector_validates_against_the_contract() -> None:
     """It goes straight to the rail, so it must be a real ResearchVector."""
     from algent_backend.agent_system.agents.discovery.portfolio import ResearchVector

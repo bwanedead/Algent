@@ -13,20 +13,33 @@ _ARTICLE = ("# Fed holds, hike tail still live\n*A hold is the base case, but a 
             "The committee held rates.\n\n---\n## How we know this — sources & verification\n_Receipts._\n")
 
 
-def _run(tmp: Path, *, status="publishable", name="0001__abc", article=_ARTICLE, assets=None) -> Path:
+def _run(tmp: Path, *, status="publishable", name="0001__abc", article=_ARTICLE, assets=None,
+         hero=True, hero_quota_skipped=False) -> Path:
     art = tmp / "runs" / name / "artifacts"
     art.mkdir(parents=True)
     (art / "article_published.md").write_text(article, encoding="utf-8")
-    (art / "editorial_pipeline_report.json").write_text(json.dumps({
+    report: dict = {
         "profile_id": "prof_x", "status": status, "draft_outcome": "grounded",
         "treatment_verdict": "promoted", "caveat_verdict": "verified", "caveat_findings": 0,
         "analytics_produced": 0, "analytics_escapes": 0, "barriers": [], "unverified_figures": [],
-    }), encoding="utf-8")
+    }
+    asset_names = list(assets or [])
+    if hero_quota_skipped:
+        report["hero"] = {"skipped": "quota"}
+        report["issues"] = ["hero_quota_skipped"]
+    elif hero:
+        report["hero"] = {
+            "artifact_name": "hero.jpg", "alt": "a quiet landscape under soft daylight",
+            "hook": "", "label": "AI-generated illustration", "model": "test", "size": "1K",
+            "estimated_usd": 0.03,
+        }
+        asset_names = [*asset_names, "hero.jpg"]
+    (art / "editorial_pipeline_report.json").write_text(json.dumps(report), encoding="utf-8")
     (art / "newsroom_rail_report.json").write_text(json.dumps(
         {"profile_id": "prof_x", "total_usd": 0.2314}), encoding="utf-8")
     (art / "profile.json").write_text(json.dumps({"id": "prof_x", "as_of": "2026-07-14"}), encoding="utf-8")
-    for a in assets or []:
-        (art / a).write_bytes(b"<svg/>")
+    for a in asset_names:
+        (art / a).write_bytes(b"<svg/>" if a.endswith(".svg") else b"\xff\xd8\xff")  # jpeg-ish
     return art.parent
 
 
@@ -44,6 +57,27 @@ def test_publishable_is_staged_when_push_off(tmp_path: Path) -> None:
     assert fm["status"] == "publishable" and fm["date"] == "2026-07-15" and fm["as_of"] == "2026-07-14"
     ledger = (d["site_dir"] / "publish-ledger.md").read_text(encoding="utf-8")
     assert "staged; push paused" in ledger and "cost: ~$0.2314" in ledger
+
+
+def test_missing_hero_holds_even_when_status_gate_is_off(tmp_path: Path) -> None:
+    """Hero is a hard floor — soft-skipping decoration previously shipped hero-less pieces."""
+    d = _dirs(tmp_path)
+    r = pb.publish_run(_run(tmp_path, hero=False), today="2026-07-15", **d)
+    assert r.action == "held"
+    assert "hero image required" in r.reasons[0]
+    assert not (d["site_dir"] / "content" / "articles").exists()
+
+
+def test_quota_skipped_hero_still_publishes(tmp_path: Path) -> None:
+    """Gemini quota is the only allowed ship-without-hero exception."""
+    d = _dirs(tmp_path)
+    r = pb.publish_run(_run(tmp_path, hero=False, hero_quota_skipped=True),
+                       today="2026-07-15", **d)
+    assert r.action == "staged"
+    content = (d["site_dir"] / "content" / "articles" / f"{r.slug}.md")
+    assert content.exists()
+    fm = yaml.safe_load(content.read_text(encoding="utf-8").split("---\n")[1])
+    assert "hero" not in fm or not fm.get("hero")
 
 
 def test_publishable_is_published_when_push_on(tmp_path: Path) -> None:

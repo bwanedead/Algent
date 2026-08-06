@@ -89,6 +89,21 @@ _SIG_NUM = re.compile(r"\d+\.\d+%?|\d+%")
 
 _STALE_SCRATCH_AGE_S = 2 * 60 * 60   # a live request's scratch is minutes old, never hours
 
+# Weight-bearing stack dirs — never age-sweep these even if the scratch allowlist drifts.
+_PROTECTED_WORKSPACE_DIRS = frozenset({"lib", "scripts", "data"})
+
+
+def _is_scratch_dir(name: str) -> bool:
+    """True for per-request / canary scratch folders — the only things age-sweep may remove.
+
+    Production ids are ``anx_*`` (router); tests may use ``req_*``. Never treat ``lib`` /
+    ``scripts`` / ``data`` as scratch — an earlier bug deleted any old directory and wiped
+    the chart helpers after ~2h idle.
+    """
+    if name in _PROTECTED_WORKSPACE_DIRS or name.startswith("."):
+        return False
+    return name == "_canary" or name.startswith(("anx_", "req_"))
+
 
 def sweep_stale_scratch(workspace: Path, *, max_age_s: float = _STALE_SCRATCH_AGE_S) -> list[str]:
     """Remove per-request scratch dirs orphaned by a killed run. Returns what it cleaned.
@@ -99,13 +114,16 @@ def sweep_stale_scratch(workspace: Path, *, max_age_s: float = _STALE_SCRATCH_AG
 
     Age-gated rather than sweeping everything, so a CONCURRENT run's live scratch is never deleted:
     an in-flight request's folder is minutes old; anything hours old belongs to a run that is gone.
+
+    Only scratch-shaped directories (``anx_*``, ``req_*``, ``_canary``) are candidates.
+    ``lib/``, ``scripts/``, and ``data/`` are never removed here regardless of mtime.
     """
     cleaned: list[str] = []
     if not workspace.is_dir():
         return cleaned
     cutoff = time.time() - max_age_s
     for child in workspace.iterdir():
-        if not child.is_dir() or child.name.startswith("."):
+        if not child.is_dir() or not _is_scratch_dir(child.name):
             continue
         try:
             if child.stat().st_mtime < cutoff:
@@ -119,6 +137,33 @@ def sweep_stale_scratch(workspace: Path, *, max_age_s: float = _STALE_SCRATCH_AG
 def default_workspace() -> Path:
     """The repo-root ``analytics_workspace/`` (5 up: editorial→agents→agent_system→algent_backend→backend→root)."""
     return Path(__file__).resolve().parents[5] / _WORKSPACE_DIRNAME
+
+
+_STACK_FILES = (
+    "lib/__init__.py",
+    "lib/theme.py",
+    "lib/charts.py",
+    "lib/maps.py",
+    "lib/animate.py",
+    "AGENTS.md",
+)
+
+
+def workspace_stack_ready(workspace: Path | None = None) -> tuple[bool, str]:
+    """True when the tracked helper stack the worker imports is present on disk.
+
+    ``lib/`` is weight-bearing (see ``analytics_workspace/AGENTS.md``). Deleting it looks like a
+    tidy-up but silently disables every map/chart; fail closed with an explicit skip reason.
+    """
+    root = workspace or default_workspace()
+    missing = [rel for rel in _STACK_FILES if not (root / rel).is_file()]
+    if not missing:
+        return True, ""
+    return False, (
+        "analytics_workspace missing tracked helpers: "
+        + ", ".join(missing)
+        + " — restore from git; do not delete lib/ (see analytics_workspace/AGENTS.md)"
+    )
 
 
 # ── the grounded hand-off ────────────────────────────────────────────────────────────────────
@@ -172,7 +217,9 @@ def _brief(request: AnalyticsRequest) -> str:
             "Rules when sourcing:",
             "- Fetch only what the hint names (official dashboards, statistical releases, primary",
             "  public tables). Prefer primary publishers over secondary rewrites.",
-            "- Put every plotted row in `data.csv` and name the publisher + URL in `caption.md`.",
+            "- Put every plotted row in `data.csv` and name the publisher + a full `https://` URL",
+            "  in `caption.md`. The harness rejects sourced figures without a URL — a table alone",
+            "  is not provenance.",
             "- NEVER invent, extrapolate, or smooth numbers. If the series is not findable or is",
             "  contested, write `SKIPPED.md` with the reason — do not improvise a chart.",
             "- You may use any claims/sources already in data.json as context for the story, but",
@@ -527,11 +574,15 @@ def fulfill_request(
         if request.may_source and not request.data_refs
         else AI_ANALYTIC_LABEL
     )
-    result = AnalyticsArtifact(request_id=request.id, kind=request.kind, title=request.title,
-                               question=request.question,
-                               data_refs=request.data_refs, as_of=as_of, ai_label=ai_label,
-                               generator=GENERATOR, model=version or "grok-build",
-                               generated_at=datetime.now(UTC).isoformat())
+    result = AnalyticsArtifact(
+        request_id=request.id, kind=request.kind, title=request.title,
+        question=request.question,
+        data_refs=request.data_refs, as_of=as_of, ai_label=ai_label,
+        visual_class=request.visual_class, priority=request.priority,
+        placement=request.placement, reader_gap=request.reader_gap,
+        generator=GENERATOR, model=version or "grok-build",
+        generated_at=datetime.now(UTC).isoformat(),
+    )
 
     if not request.data_refs and not (request.may_source and (request.source_hint or request.spec)):
         return result.model_copy(update={
@@ -582,19 +633,29 @@ def fulfill_request(
             return _finalize(result, status="failed", swept=removed, note="no output artifact found")
 
         # (3) figure check — profile-held path: numbers must appear in cited evidence.
-        # Source-at-time path: require a non-empty data table (series is the evidence of record);
-        # claim-substring check would false-fail every newly fetched row.
+        # Source-at-time path: non-empty data table PLUS a publisher URL in caption.md.
+        # A CSV alone is not provenance — without a URL we refuse to call the figure verified.
         data_text = data.read_text(encoding="utf-8", errors="replace") if data else ""
         sources_by_id = {s.id: s for s in profile.source_ledger}
         if request.may_source and not cited_claims:
             rows = [ln for ln in data_text.splitlines() if ln.strip()]
+            has_table = len(rows) >= 2  # header + ≥1 data row
+            has_url = bool(re.search(r"https?://\S+", worker_cap or "", re.I))
+            unverified: list[str] = []
+            if not has_table:
+                unverified.append("empty or missing sourced data.csv")
+            if not has_url:
+                unverified.append("caption.md must name the publisher URL for sourced figures")
             figure_check = {
-                "checked": bool(data_text),
-                "verified": len(rows) >= 2,  # header + ≥1 data row
-                "unverified": [] if len(rows) >= 2 else ["empty or missing sourced data.csv"],
+                "checked": True,
+                "verified": not unverified,
+                "unverified": unverified,
                 "mode": "sourced",
             }
-            note = "" if figure_check["verified"] else "sourced analytic produced no data table"
+            note = (
+                "" if figure_check["verified"]
+                else "sourced analytic failed provenance check: " + ", ".join(unverified)
+            )
         else:
             unverified = (
                 _visual_unverified_figures(data_text, cited_claims, sources_by_id)
@@ -623,6 +684,14 @@ def fulfill_request(
             if misfit:
                 return _finalize(result, status="failed", swept=removed,
                                  note=f"figure does not fit its canvas: {misfit}")
+
+        # Failed integrity is not a shippable figure — do not copy into the reader path.
+        if not figure_check.get("verified"):
+            return _finalize(
+                result, status="integrity_check_failed", swept=removed,
+                figure_check=figure_check,
+                note=note or "figure integrity check failed",
+            )
 
         # A markdown analytic (table/insight) is INLINED by the publish view, not embedded as an
         # image — so carry its body forward. An image analytic (chart/illustration) has no body.
@@ -686,6 +755,25 @@ def build_analytics_worker_graph(
         # article), then prove it still works on fixture data before spending on real requests.
         # A bad release costs this run's visuals, not the article — that graceful degradation is
         # exactly what makes an always-update policy affordable here.
+        def _skip_all(reason: str) -> dict[str, Any]:
+            skipped = [
+                {
+                    **r.model_dump(),
+                    "request_id": r.id,
+                    "status": "skipped",
+                    "note": reason,
+                }
+                for r in plan.requests
+            ]
+            context.emit(ANALYTICS_WORKER_COMPLETED, {
+                "produced": 0, "total": len(skipped), "note": reason,
+            })
+            return {"analytics_artifacts": skipped}
+
+        stack_ok, stack_note = workspace_stack_ready()
+        if not stack_ok:
+            return _skip_all(stack_note)
+
         version = ""
         if refresh:
             # Self-heal first: a killed run can't empty its own scratch, so clean up anything a
@@ -697,9 +785,7 @@ def build_analytics_worker_graph(
             context.emit(ANALYTICS_WORKER_READY, {"version": version, "update": note,
                                                   "canary": canary_note, "swept_stale": cleaned})
             if not ok:
-                context.emit(ANALYTICS_WORKER_COMPLETED, {
-                    "produced": 0, "note": f"analytics skipped — {canary_note} (version {version})"})
-                return {"analytics_artifacts": []}
+                return _skip_all(f"analytics canary failed: {canary_note} (version {version})")
 
         profile = SignalProfile.model_validate(pdict)
         artifacts: list[AnalyticsArtifact] = []
