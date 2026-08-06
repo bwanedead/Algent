@@ -34,4 +34,6 @@ Do **not** remake synthesis just to re-pick. Freeze the portfolio path (or use `
 
 ## Operator defaults (not `.env`)
 
-`agent_system/agents/newsroom/flags.py`: `SYNTHESIS_ENABLED`, `SYNTHESIS_TARGET_VECTORS`. Agents edit that file — not `.env`.
+`agent_system/agents/newsroom/flags.py`: `SYNTHESIS_ENABLED`, `SYNTHESIS_TARGET_VECTORS`, and
+`synthesis_max_output_tokens()` (scales with the target so large portfolios are not truncated
+into empty `vectors`). Agents edit that file — not `.env`.
