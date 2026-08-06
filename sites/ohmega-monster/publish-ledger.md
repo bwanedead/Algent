@@ -477,3 +477,11 @@ cost_by_stage: editorial=$0.0796, gauntlet=$0.4484, profile=$0.0863, routing=$0.
 refused: model_turn(reservation_overrun)
 ⚠ figures not matched to evidence: 18%
 run: 0062__e6f89885-355c-446f-a10b-b52a1ff32924
+
+### PUBLISH researchers-report-vacuum-made-perovskite-on-silicon-solar-c-e34dae — 2026-08-06
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.4443  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.0950, gauntlet=$0.1737, profile=$0.1752, routing=$0.0003
+run: 0063__0852b997-f22b-4a5e-acb8-e79bc4366413
