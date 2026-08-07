@@ -787,3 +787,41 @@ def test_a_real_figure_produces_no_failure_line() -> None:
     assert pl._analytics_failures([
         {"request_id": "r", "status": "produced", "body_md": "| a | b |"},
     ]) == []
+
+
+# -- sourced figure data becomes evidence -------------------------------------
+
+def test_sourced_figure_data_enters_the_claim_ledger() -> None:
+    """Analytics is a research act. Data a figure fetched is evidence the profile lacked;
+    discarding it the moment the chart is drawn throws away real, attributed research."""
+    profile = {"claim_ledger": [{"id": "clm_1", "text": "existing"}], "source_ledger": []}
+    artifacts = [{"request_id": "r1", "status": "produced", "sourced_claims": [
+        {"text": "Exports by year: year 2019, korea_bn 542.2", "url": "https://kita.net/x"},
+        {"text": "Exports by year: year 2020, korea_bn 512.5", "url": "https://kita.net/x"},
+    ]}]
+
+    events: list = []
+    out = pl._absorb_sourced_claims(_ctx(events), profile, artifacts)
+
+    assert len(out["claim_ledger"]) == 3
+    added = [c for c in out["claim_ledger"] if c["id"].startswith("clm_an_")]
+    assert len(added) == 2
+    # Graded honestly: this came from a figure's fetch, not from a graded research read.
+    assert all(c["grade"] == "likely" and c["sourced_by"] == "analytics" for c in added)
+    # One source row for the shared publisher, and every claim points at it.
+    assert len(out["source_ledger"]) == 1
+    assert all(c["supported_by"] == [out["source_ledger"][0]["id"]] for c in added)
+    assert any(et == pl.ANALYTICS_CLAIMS_ADDED for et, _ in events)
+
+
+def test_absorbing_nothing_leaves_the_profile_untouched() -> None:
+    profile = {"claim_ledger": [{"id": "clm_1", "text": "x"}]}
+    assert pl._absorb_sourced_claims(_ctx([]), profile, []) is profile
+    assert pl._absorb_sourced_claims(_ctx([]), profile, [{"status": "produced"}]) is profile
+
+
+def test_a_repeated_row_is_not_added_twice() -> None:
+    profile = {"claim_ledger": [{"id": "clm_1", "text": "Exports: 2019, 542.2"}],
+               "source_ledger": []}
+    arts = [{"sourced_claims": [{"text": "Exports: 2019, 542.2", "url": "https://k.net"}]}]
+    assert pl._absorb_sourced_claims(_ctx([]), profile, arts) is profile

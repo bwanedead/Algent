@@ -173,6 +173,12 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
             context, config, draft, treatment=treatment)
         produced_analytics = _fulfill_analytics(
             context, config, analytics_plan, enriched_profile)
+        # Data a figure went and sourced is evidence the profile did not have. Fold it into
+        # the ledger rather than letting it die with the scratch folder — analytics is a
+        # research act, and the numbers under a published chart should be as inspectable as
+        # any other claim (and reusable in prose on a later lap).
+        enriched_profile = _absorb_sourced_claims(
+            context, enriched_profile, produced_analytics)
         quality = {
             **quality,
             "analytics": analytics_plan,
@@ -581,6 +587,64 @@ def _repair_hedging(
     context.emit(CAVEAT_REPAIRED, {"verdict": rechecked.get("verdict"),
                                    "findings_remaining": len(rechecked.get("findings", []))})
     return new_draft, profile, rechecked, 2
+
+
+ANALYTICS_CLAIMS_ADDED = "editorial_pipeline.analytics_claims_added"
+
+
+def _absorb_sourced_claims(
+    context: AgentRunContext,
+    profile: dict[str, Any],
+    artifacts: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Add a sourced figure's data to the claim ledger, with its publisher as a source.
+
+    Marked ``sourced_by: analytics`` and graded ``likely`` rather than confirmed: this came
+    from a figure's own fetch, not from the research pass that reads and grades sources, and
+    the ledger should not pretend otherwise. It is real, attributed evidence — it just has a
+    different provenance from a deep-read claim, and saying so is the whole point of a ledger.
+    """
+    rows = [row for a in artifacts or [] for row in (a.get("sourced_claims") or [])]
+    if not rows:
+        return profile
+
+    import hashlib
+
+    out = dict(profile)
+    claims = list(out.get("claim_ledger") or [])
+    sources = list(out.get("source_ledger") or [])
+    by_url = {str(s.get("url") or ""): s for s in sources}
+    existing = {str(c.get("text") or "") for c in claims}
+    added = 0
+
+    for row in rows:
+        text, url = str(row.get("text") or "").strip(), str(row.get("url") or "").strip()
+        if not text or not url or text in existing:
+            continue
+        src = by_url.get(url)
+        if src is None:
+            sid = "src_an_" + hashlib.sha1(url.encode("utf-8")).hexdigest()[:10]
+            src = {"id": sid, "url": url, "source_type": "secondary",
+                   "title": "sourced for a figure"}
+            sources.append(src)
+            by_url[url] = src
+        claims.append({
+            "id": "clm_an_" + hashlib.sha1(text.encode("utf-8")).hexdigest()[:10],
+            "text": text,
+            "grade": "likely",
+            "salience": "low",
+            "supported_by": [src["id"]],
+            "sourced_by": "analytics",
+        })
+        existing.add(text)
+        added += 1
+
+    if not added:
+        return profile
+    out["claim_ledger"] = claims
+    out["source_ledger"] = sources
+    context.emit(ANALYTICS_CLAIMS_ADDED, {"claims_added": added})
+    return out
 
 
 def _analytics_failures(artifacts: list[dict[str, Any]]) -> list[str]:

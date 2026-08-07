@@ -418,3 +418,77 @@ def test_a_missing_cli_is_a_missing_figure_not_a_crash(monkeypatch) -> None:
     monkeypatch.setattr(ah, "executable", lambda _n: None)
     ok, tail = ah.CodexHarness().run("d", Path("/s"), timeout=1.0)
     assert ok is False and "not found on PATH" in tail
+
+
+# -- why figures kept failing integrity ---------------------------------------
+
+def test_a_part_of_whole_remainder_is_not_fabrication() -> None:
+    """The real rejection: claims held Korea's total ($496.3bn) and its chips ($149bn);
+    the chart plotted chips against the NON-chip remainder, 496.3 - 149 = 347.3. Demanding
+    every plotted value be quoted verbatim forbids arithmetic, i.e. forbids most charts."""
+    from algent_backend.agent_system.agents.editorial.analytics_worker import (
+        _arithmetic_supported,
+    )
+
+    nums = [496.3, 149.0, 416.6, 133.2]
+    assert _arithmetic_supported(347.3, nums) is True     # 496.3 - 149
+    assert _arithmetic_supported(283.4, nums) is True     # 416.6 - 133.2
+    assert _arithmetic_supported(645.3, nums) is True     # 496.3 + 149
+    assert _arithmetic_supported(999.9, nums) is False    # invented still fails
+
+
+def test_years_written_as_floats_are_not_treated_as_figures() -> None:
+    """A CSV renders its year column as 2019.0 (pandas does this), which slips past the
+    bare-integer exclusion — so a decade-long trajectory was rejected for citing its decade."""
+    from algent_backend.agent_system.agents.editorial.analytics_worker import (
+        _visual_unverified_figures,
+    )
+
+    class _C:
+        text = "Korea exported $496.3 billion in H1 2026"
+        supported_by: list = []
+
+    data = "year,korea\n2019.0,542.2\n2020.0,512.5\n"
+    out = _visual_unverified_figures(data, [_C()], {})
+    assert not any(y in out for y in ("2019.0", "2020.0")), out
+
+
+def test_a_sourced_request_is_not_held_to_the_profile_standard() -> None:
+    """may_source exists so a figure can fetch what the profile lacks. Gating on
+    'may_source AND no claims' meant a grounded+sourced request could only ever fail:
+    anything fetched was by definition absent from the ledger."""
+    import inspect
+
+    from algent_backend.agent_system.agents.editorial import analytics_worker as aw
+
+    src = inspect.getsource(aw.fulfill_request)
+    assert "if request.may_source and not cited_claims:" not in src
+    assert "if request.may_source:" in src
+
+
+def test_sourced_rows_become_claim_shaped_evidence() -> None:
+    from algent_backend.agent_system.agents.editorial.analytics_contracts import (
+        AnalyticsRequest,
+    )
+    from algent_backend.agent_system.agents.editorial.analytics_worker import _sourced_claims
+
+    req = AnalyticsRequest(id="r1", kind="chart", title="Exports by year", may_source=True)
+    rows = _sourced_claims(
+        "year,korea_bn\n2019,542.2\n2020,512.5\n",
+        "Series from KITA. https://stat.kita.net/x — as of 2026",
+        req,
+    )
+    assert len(rows) == 2
+    assert rows[0]["url"] == "https://stat.kita.net/x"
+    assert "2019" in rows[0]["text"] and "542.2" in rows[0]["text"]
+
+
+def test_unattributed_data_never_becomes_a_claim() -> None:
+    """No publisher URL, no claim — an unattributed number is not evidence."""
+    from algent_backend.agent_system.agents.editorial.analytics_contracts import (
+        AnalyticsRequest,
+    )
+    from algent_backend.agent_system.agents.editorial.analytics_worker import _sourced_claims
+
+    req = AnalyticsRequest(id="r1", kind="chart", may_source=True)
+    assert _sourced_claims("year,v\n2019,1\n", "no url here", req) == []

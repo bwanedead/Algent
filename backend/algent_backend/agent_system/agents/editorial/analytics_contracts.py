@@ -106,6 +106,15 @@ class AnalyticsArtifact(BaseModel):
     as_of: str = ""                                    # recency horizon of the underlying data
     ai_label: str = AI_ANALYTIC_LABEL
     figure_check: dict = Field(default_factory=dict)   # {checked, verified, unverified:[...]} — visual drift catch
+    #: Data the worker SOURCED that the profile did not already hold, as claim-shaped rows
+    #: ``{"text": ..., "url": ...}``.
+    #:
+    #: Analytics is a research act, not a decoration step. When a figure legitimately fetches
+    #: public data — a decade of export totals the profile never gathered — that data is
+    #: evidence, and throwing it away the moment the chart is drawn is the waste this field
+    #: exists to stop. It flows back into the claim ledger, so the numbers under a figure are
+    #: as inspectable as any other claim and the next stage can use them in prose.
+    sourced_claims: list[dict] = Field(default_factory=list)
     swept: list[str] = Field(default_factory=list)     # files removed by the artifact-type/size sweep
     escaped_writes: list[str] = Field(default_factory=list)  # repo paths the worker touched OUTSIDE its lane (a hard fail)
     visual_class: VisualClass = "other"

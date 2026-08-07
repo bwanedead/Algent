@@ -87,6 +87,13 @@ _TIMEOUT_SOURCED_S = 600.0
 # time axis. This mirrors unverified_prose_figures' stance (percentages only; counts fall to the
 # semantic judge) — err toward missing a drift, never toward inventing one.
 _SIG_NUM = re.compile(r"\d+\.\d+%?|\d+%")
+
+#: Years written as floats. The exclusion above only skips bare integers, so a CSV that
+#: renders its time column as ``2019.0`` (which is simply what pandas does to a numeric
+#: year) sails past it and every year on the axis is reported as an unverified figure —
+#: which is precisely how a decade-long trajectory chart was rejected for citing the
+#: decade it covered.
+_YEAR_LIKE = re.compile(r"^(?:19|20|21)\d{2}\.0+$")
 _CORPUS_NUM = re.compile(r"\d+(?:\.\d+)?")
 
 
@@ -485,7 +492,64 @@ def _pct_supported_by_corpus(token: str, corpus: str) -> bool:
                 ratio = 100.0 * num / den
                 if abs(ratio - target) <= max(0.75, 0.02 * abs(target)):
                     return True
+    return _arithmetic_supported(target, nums)
+
+
+def _arithmetic_supported(target: float, nums: list[float]) -> bool:
+    """Is ``target`` a plain sum or difference of two cited numbers?
+
+    The case that killed a real figure: the claims held South Korea's total exports
+    ($496.3bn) and its chip exports ($149bn), and the chart plotted chips against the
+    NON-chip remainder — 496.3 - 149 = 347.3. That is the whole point of a
+    part-of-whole split, and it was rejected because 347.3 appears in no claim.
+    Demanding that every plotted value be quoted verbatim forbids arithmetic, which
+    means forbidding most honest charts.
+
+    Deliberately shallow: two operands, add or subtract. A number that matches no pair
+    is still unverified, so an invented figure fails exactly as before.
+    """
+    tol = max(0.05, 0.005 * abs(target))
+    for i, a in enumerate(nums):
+        for b in nums[i + 1:]:
+            if abs((a - b) - target) <= tol or abs((b - a) - target) <= tol:
+                return True
+            if abs((a + b) - target) <= tol:
+                return True
     return False
+
+
+#: How many sourced rows become claims. A figure's series can be long; the ledger wants the
+#: shape of the evidence, not a transcription of the CSV, which is published beside it anyway.
+_MAX_SOURCED_CLAIMS = 12
+
+
+def _sourced_claims(data_text: str, caption: str, request: AnalyticsRequest) -> list[dict]:
+    """Turn a sourced figure's data table into claim-shaped rows for the profile.
+
+    One claim per data row, phrased so it reads as a statement rather than a CSV line, and
+    every one carries the publisher URL the sourced-mode provenance check already required.
+    Without a URL nothing is emitted: an unattributed number is not a claim.
+    """
+    url_match = re.search(r"https?://\S+", caption or "")
+    if not url_match:
+        return []
+    url = url_match.group(0).rstrip(").,;")
+
+    rows = [ln.strip() for ln in (data_text or "").splitlines() if ln.strip()]
+    if len(rows) < 2:
+        return []
+    header = [h.strip() for h in rows[0].split(",")]
+    subject = (request.title or request.question or "figure data").strip()
+
+    out: list[dict] = []
+    for row in rows[1:  _MAX_SOURCED_CLAIMS + 1]:
+        cells = [c.strip() for c in row.split(",")]
+        if len(cells) != len(header):
+            continue
+        pairs = ", ".join(f"{h} {c}" for h, c in zip(header, cells) if c)
+        if pairs:
+            out.append({"text": f"{subject}: {pairs}", "url": url})
+    return out
 
 
 def _visual_unverified_figures(data_text: str, cited_claims: list[Claim], sources_by_id: dict) -> list[str]:
@@ -500,10 +564,14 @@ def _visual_unverified_figures(data_text: str, cited_claims: list[Claim], source
                 corpus += " " + s.snapshot.excerpt
     out: list[str] = []
     for n in dict.fromkeys(_SIG_NUM.findall(data_text)):
+        if _YEAR_LIKE.match(n):
+            continue        # an axis label, not a claim — see _YEAR_LIKE
         if n.endswith("%"):
             if not _pct_supported_by_corpus(n, corpus):
                 out.append(n)
-        elif n not in corpus:
+        elif n not in corpus and not _pct_supported_by_corpus(n, corpus):
+            # Bare values get the same arithmetic leeway percentages already had: a
+            # part-of-whole split derives its remainder, and that is not fabrication.
             out.append(n)
     return out
 
@@ -712,7 +780,15 @@ def fulfill_request(
         # A CSV alone is not provenance — without a URL we refuse to call the figure verified.
         data_text = data.read_text(encoding="utf-8", errors="replace") if data else ""
         sources_by_id = {s.id: s for s in profile.source_ledger}
-        if request.may_source and not cited_claims:
+        # ``may_source`` decides the standard, NOT "may_source and no claims". A request can
+        # be both grounded in the profile and permitted to fetch what the profile lacks — that
+        # is the normal shape for a trajectory, where the claims hold this year and the series
+        # needs the prior decade. Requiring every plotted number to appear in a claim made such
+        # a request impossible to satisfy: anything the worker fetched was, by definition, not
+        # in the ledger, so a grounded+sourced figure could only ever fail. Provenance is still
+        # enforced — a sourced figure must carry its publisher URL — it is the standard that
+        # changes, not the rigour.
+        if request.may_source:
             rows = [ln for ln in data_text.splitlines() if ln.strip()]
             has_table = len(rows) >= 2  # header + ≥1 data row
             has_url = bool(re.search(r"https?://\S+", worker_cap or "", re.I))
@@ -759,6 +835,14 @@ def fulfill_request(
             if misfit:
                 return _finalize(result, status="failed", swept=removed,
                                  note=f"figure does not fit its canvas: {misfit}")
+
+        # Data the worker went and fetched is EVIDENCE, not scratch. Carry it back so it can
+        # enter the claim ledger instead of dying with the scratch folder — the numbers under
+        # a published figure should be as inspectable as any other claim.
+        if request.may_source and figure_check.get("verified"):
+            result = result.model_copy(update={
+                "sourced_claims": _sourced_claims(data_text, worker_cap, request),
+            })
 
         # Failed integrity is not a shippable figure — do not copy into the reader path.
         if not figure_check.get("verified"):
