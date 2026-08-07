@@ -529,3 +529,13 @@ refused: model_turn(reservation_overrun)
 ⚠ walled sources (carried with caveats): src_2ecc162aec
 ⚠ figures not matched to evidence: 74%, 69%, 24%, 84.9%, 72%
 run: 0069__3eae02d5-9a2c-4757-8bee-5dae7661adea
+
+### PUBLISH low-water-on-the-danube-is-forcing-europe-s-nuclear-plants-t-98d14a — 2026-08-07
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.5354  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.1208, gauntlet=$0.2686, profile=$0.1456, routing=$0.0004
+refused: model_turn(reservation_overrun)
+⚠ figures not matched to evidence: 35%, 69%
+run: 0070__5c81673c-e916-4648-9fd4-3f6cc778b26e

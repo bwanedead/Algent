@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="797.839312pt" height="317.598pt" viewBox="0 0 797.839312 317.598" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-08-07T17:18:22.011974</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.3, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M -0 317.598 
+L 797.839312 317.598 
+L 797.839312 0 
+L -0 0 
+z
+" style="fill: #0c0f0e"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 30.698438 237.966 
+L 761.642438 237.966 
+L 761.642438 44.43 
+L 30.698438 44.43 
+z
+" style="fill: #111513"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 213.434438 237.966 
+L 213.434438 44.43 
+" clip-path="url(#pb94a3ad9c3)" style="fill: none; stroke: #2b302d; stroke-width: 0.5; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 396.170438 237.966 
+L 396.170438 44.43 
+" clip-path="url(#pb94a3ad9c3)" style="fill: none; stroke: #2b302d; stroke-width: 0.5; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_3">
+    <path d="M 578.906438 237.966 
+L 578.906438 44.43 
+" clip-path="url(#pb94a3ad9c3)" style="fill: none; stroke: #2b302d; stroke-width: 0.5; stroke-linecap: square"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 30.698438 182.3244 
+L 198.815558 182.3244 
+L 198.815558 140.3916 
+L 30.698438 140.3916 
+z
+" clip-path="url(#pb94a3ad9c3)" style="fill: #e8c547; stroke: #0c0f0e; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 198.815558 182.3244 
+L 323.076038 182.3244 
+L 323.076038 140.3916 
+L 198.815558 140.3916 
+z
+" clip-path="url(#pb94a3ad9c3)" style="fill: #5eb8c9; stroke: #0c0f0e; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 323.076038 182.3244 
+L 418.829702 182.3244 
+L 418.829702 140.3916 
+L 323.076038 140.3916 
+z
+" clip-path="url(#pb94a3ad9c3)" style="fill: #f0a33a; stroke: #0c0f0e; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 418.829702 182.3244 
+L 491.924102 182.3244 
+L 491.924102 140.3916 
+L 418.829702 140.3916 
+z
+" clip-path="url(#pb94a3ad9c3)" style="fill: #4a9fd4; stroke: #0c0f0e; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 491.924102 182.3244 
+L 613.99175 182.3244 
+L 613.99175 140.3916 
+L 491.924102 140.3916 
+z
+" clip-path="url(#pb94a3ad9c3)" style="fill: #858981; stroke: #0c0f0e; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 613.99175 182.3244 
+L 681.238598 182.3244 
+L 681.238598 140.3916 
+L 613.99175 140.3916 
+z
+" clip-path="url(#pb94a3ad9c3)" style="fill: #6b5544; stroke: #0c0f0e; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 681.238598 182.3244 
+L 761.642438 182.3244 
+L 761.642438 140.3916 
+L 681.238598 140.3916 
+z
+" clip-path="url(#pb94a3ad9c3)" style="fill: #3d4540; stroke: #0c0f0e; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_4">
+      <defs>
+       <path id="mca5640f15b" d="M 0 0 
+L 0 3.5 
+" style="stroke: #858981; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#mca5640f15b" x="30.698438" y="237.966" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="30.698438" y="251.866" transform="rotate(-0 30.698438 251.866)">0%</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_5">
+      <g>
+       <use xlink:href="#mca5640f15b" x="213.434438" y="237.966" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="213.434438" y="251.866" transform="rotate(-0 213.434438 251.866)">25%</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#mca5640f15b" x="396.170438" y="237.966" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="396.170438" y="251.866" transform="rotate(-0 396.170438 251.866)">50%</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_7">
+      <g>
+       <use xlink:href="#mca5640f15b" x="578.906438" y="237.966" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="578.906438" y="251.866" transform="rotate(-0 578.906438 251.866)">75%</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#mca5640f15b" x="761.642438" y="237.966" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="761.642438" y="251.866" transform="rotate(-0 761.642438 251.866)">100%</text>
+     </g>
+    </g>
+    <g id="text_6">
+     <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="396.170438" y="268.410844" transform="rotate(-0 396.170438 268.410844)">% of EU electricity generation, 2025 (reported)</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2"/>
+   <g id="patch_10">
+    <path d="M 30.698438 237.966 
+L 761.642438 237.966 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 7.5px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="396.170438" y="205.517934" transform="rotate(-0 396.170438 205.517934)">Wind+solar 30.1% (841 TWh)  ·  Fossil 29% (809 TWh)  ·  Renewables 47.7% (1331 TWh)</text>
+   </g>
+   <g id="text_8">
+    <text style="font-weight: 700; font-size: 13px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4" x="30.698438" y="34.43" transform="rotate(-0 30.698438 34.43)">EU electricity mix 2025: a third depends on rivers</text>
+   </g>
+   <g id="patch_11">
+    <path d="M 30.698438 182.3244 
+L 198.815558 182.3244 
+L 198.815558 140.3916 
+L 30.698438 140.3916 
+L 30.698438 182.3244 
+z
+" clip-path="url(#pb94a3ad9c3)" style="fill: none; stroke: #f0ede4; stroke-width: 2.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 418.829702 182.3244 
+L 491.924102 182.3244 
+L 491.924102 140.3916 
+L 418.829702 140.3916 
+L 418.829702 182.3244 
+z
+" clip-path="url(#pb94a3ad9c3)" style="fill: none; stroke: #f0ede4; stroke-width: 2.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 500; font-size: 8.5px; font-family: 'Consolas'; fill: #0c0f0e" transform="translate(98.399146 159.216797)">Nuclear</text>
+    <text style="font-weight: 500; font-size: 8.5px; font-family: 'Consolas'; fill: #0c0f0e" transform="translate(107.74649 167.662875)">23%</text>
+   </g>
+   <g id="text_10">
+    <text style="font-weight: 500; font-size: 8.5px; font-family: 'Consolas'; fill: #0c0f0e" transform="translate(251.598454 159.216797)">Wind</text>
+    <text style="font-weight: 500; font-size: 8.5px; font-family: 'Consolas'; fill: #0c0f0e" transform="translate(253.93529 167.662875)">17%</text>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 500; font-size: 8.5px; font-family: 'Consolas'; fill: #0c0f0e" transform="translate(359.26869 159.216797)">Solar</text>
+    <text style="font-weight: 500; font-size: 8.5px; font-family: 'Consolas'; fill: #0c0f0e" transform="translate(359.26869 167.662875)">13.1%</text>
+   </g>
+   <g id="text_12">
+    <text style="font-weight: 500; font-size: 7.5px; font-family: 'Consolas'; fill: #0c0f0e" transform="translate(445.067331 159.45757)">Hydro</text>
+    <text style="font-weight: 500; font-size: 7.5px; font-family: 'Consolas'; fill: #0c0f0e" transform="translate(449.191159 166.932258)">10%</text>
+   </g>
+   <g id="text_13">
+    <text style="font-weight: 500; font-size: 8.5px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(545.947418 159.216797)">Gas</text>
+    <text style="font-weight: 500; font-size: 8.5px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(541.273746 167.662875)">16.7%</text>
+   </g>
+   <g id="text_14">
+    <text style="font-weight: 500; font-size: 7.5px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(639.367517 155.742492)">Coal</text>
+    <text style="font-weight: 500; font-size: 7.5px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(639.367517 163.194914)">9.2%</text>
+    <text style="font-weight: 500; font-size: 7.5px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(633.181775 170.647336)">257 TWh</text>
+   </g>
+   <g id="text_15">
+    <text style="font-weight: 500; font-size: 7.5px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(711.130947 159.468703)">Other</text>
+    <text style="font-weight: 500; font-size: 7.5px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(715.254775 166.921125)">11%</text>
+   </g>
+   <g id="line2d_9">
+    <path d="M 34.353158 133.134 
+L 34.353158 127.4892 
+L 195.160838 127.4892 
+L 195.160838 133.134 
+" clip-path="url(#pb94a3ad9c3)" style="fill: none; stroke: #f0ede4; stroke-width: 1.3"/>
+   </g>
+   <g id="line2d_10">
+    <path d="M 422.484422 133.134 
+L 422.484422 127.4892 
+L 488.269382 127.4892 
+L 488.269382 133.134 
+" clip-path="url(#pb94a3ad9c3)" style="fill: none; stroke: #f0ede4; stroke-width: 1.3"/>
+   </g>
+   <g id="line2d_11">
+    <path d="M 195.160838 127.4892 
+L 422.484422 127.4892 
+" clip-path="url(#pb94a3ad9c3)" style="fill: none; stroke-dasharray: 2,2; stroke-dashoffset: 0; stroke: #f0ede4"/>
+   </g>
+   <g id="line2d_12">
+    <path d="M 261.31127 103.2972 
+L 261.31127 125.8764 
+" clip-path="url(#pb94a3ad9c3)" style="fill: none; stroke: #f0ede4; stroke-linecap: square"/>
+   </g>
+   <g id="text_16">
+    <g id="patch_13">
+     <path d="M 209.351035 104.8344 
+L 313.271504 104.8344 
+Q 316.421504 104.8344 316.421504 101.6844 
+L 316.421504 83.836556 
+Q 316.421504 80.686556 313.271504 80.686556 
+L 209.351035 80.686556 
+Q 206.201035 80.686556 206.201035 83.836556 
+L 206.201035 101.6844 
+Q 206.201035 104.8344 209.351035 104.8344 
+z
+" style="fill: #111513; stroke: #f0ede4; stroke-width: 1.2; stroke-linejoin: miter"/>
+    </g>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(209.351035 90.129525)">Drought-exposed  ~33%</text>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(219.248223 99.837994)">(nuclear + hydro)</text>
+   </g>
+  </g>
+  <g id="text_17">
+   <text style="font-size: 7.5px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="30.698438" y="290.859328" transform="rotate(-0 30.698438 290.859328)">Source: Ember European Electricity Review 2026  ·  reported 2025 generation shares</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pb94a3ad9c3">
+   <rect x="30.698438" y="44.43" width="730.944" height="193.536"/>
+  </clipPath>
+ </defs>
+</svg>
