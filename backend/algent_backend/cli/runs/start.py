@@ -80,7 +80,31 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
     parser.set_defaults(handler=run)
 
 
+#: Agents that spend a FULL rail (research + gauntlet + editorial + publish) and so must
+#: never run twice at once. ``newsroom run`` already takes the single-flight lock, but this
+#: entry point did not, so launching the rail directly bypassed it entirely — the same
+#: overlapping-spend hole, reachable by a different command. The lock is reentrant, so the
+#: nested acquire from ``newsroom run`` is a no-op rather than a self-block.
+_SINGLE_FLIGHT_AGENTS = frozenset({"newsroom_rail"})
+
+
 def run(args: argparse.Namespace) -> int:
+    if args.agent_id in _SINGLE_FLIGHT_AGENTS:
+        from algent_backend.cli.newsroom.single_flight import (
+            NewsroomBusyError,
+            NewsroomRunLock,
+        )
+
+        try:
+            with NewsroomRunLock():
+                return _run(args)
+        except NewsroomBusyError as exc:
+            print_json({"error": str(exc)})
+            return 2
+    return _run(args)
+
+
+def _run(args: argparse.Namespace) -> int:
     run_id = str(uuid4())
 
     # Harness choice is per-run and travels by environment, so it reaches the analytics

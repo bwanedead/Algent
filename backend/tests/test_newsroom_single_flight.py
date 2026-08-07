@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+from types import SimpleNamespace
 from pathlib import Path
 
 import pytest
@@ -26,16 +27,32 @@ def test_lock_acquire_release(tmp_path: Path) -> None:
     assert not path.exists()
 
 
-def test_lock_blocks_second_holder(tmp_path: Path) -> None:
+def test_lock_blocks_a_second_PROCESS(tmp_path: Path, monkeypatch) -> None:
+    """The contract is one rail per MACHINE, enforced across processes.
+
+    This used to assert that two lock objects in one process blocked each other, which
+    reads as the same thing and is not: the rail is launched by `newsroom run`, which then
+    calls `runs start` — both of which take the lock, in one process. Blocking on
+    same-pid made the pipeline refuse its own rail, so nesting is allowed and the guard
+    is against a DIFFERENT live pid, which is the case that actually double-spends.
+    """
+    from algent_backend.cli.newsroom import single_flight as sf
+
     path = tmp_path / "newsroom_run.lock"
-    a = NewsroomRunLock(path)
-    a.acquire()
-    b = NewsroomRunLock(path)
+    path.write_text(json.dumps({"pid": 4242, "started_at": "", "argv": "other run"}),
+                    encoding="utf-8")
+    monkeypatch.setattr(sf, "_pid_alive", lambda pid: pid == 4242)
+
     with pytest.raises(NewsroomBusyError, match="already running"):
-        b.acquire()
-    a.release()
-    b.acquire()
-    b.release()
+        NewsroomRunLock(path).acquire()
+
+    # Once that process is gone, the lock is recoverable rather than jammed forever.
+    monkeypatch.setattr(sf, "_pid_alive", lambda pid: False)
+    lock = NewsroomRunLock(path)
+    lock.acquire()
+    assert json.loads(path.read_text(encoding="utf-8"))["pid"] == os.getpid()
+    lock.release()
+    assert not path.exists()
 
 
 def test_stale_lock_from_dead_pid_is_stolen(tmp_path: Path) -> None:
@@ -100,3 +117,49 @@ def test_a_live_holder_still_blocks(tmp_path, monkeypatch) -> None:
 
     with pytest.raises(sf.NewsroomBusyError, match="already running"):
         sf.NewsroomRunLock(lock).acquire()
+
+
+def test_the_lock_is_reentrant_within_one_process(tmp_path) -> None:
+    """`newsroom run` holds the lock and then calls `runs start`, which takes it again.
+
+    A non-reentrant lock makes the pipeline refuse its own rail — the holder pid IS us and
+    is trivially alive, so the busy check fires on ourselves.
+    """
+    from algent_backend.cli.newsroom import single_flight as sf
+
+    lock = tmp_path / "newsroom_run.lock"
+    outer = sf.NewsroomRunLock(lock)
+    outer.acquire()
+    try:
+        inner = sf.NewsroomRunLock(lock)
+        inner.acquire()                       # must not raise
+        inner.release()
+        # The nested release must NOT remove the file — that would unlock the rail mid-run.
+        assert lock.exists(), "nested release deleted the outer holder's lock"
+        assert json.loads(lock.read_text(encoding="utf-8"))["pid"] == os.getpid()
+    finally:
+        outer.release()
+    assert not lock.exists()
+
+
+def test_launching_the_rail_directly_also_takes_the_lock(tmp_path, monkeypatch) -> None:
+    """The hole that `newsroom run`'s lock did not cover: `runs start newsroom_rail`
+    bypassed single-flight entirely, so the same overlapping spend was one command away."""
+    from algent_backend.cli.newsroom import single_flight as sf
+    from algent_backend.cli.runs import start
+
+    lock = tmp_path / "newsroom_run.lock"
+    lock.write_text(json.dumps({"pid": 4242, "started_at": "", "argv": "other"}), encoding="utf-8")
+    monkeypatch.setattr(sf, "lock_path", lambda: lock)
+    monkeypatch.setattr(sf, "_pid_alive", lambda pid: pid == 4242)
+
+    code = start.run(SimpleNamespace(agent_id="newsroom_rail"))
+    assert code == 2                          # refused, not launched
+
+
+def test_a_non_rail_agent_is_not_gated(monkeypatch) -> None:
+    """Only full-rail spend is single-flight; a cheap agent must still run alongside one."""
+    from algent_backend.cli.runs import start
+
+    monkeypatch.setattr(start, "_run", lambda args: 0)
+    assert start.run(SimpleNamespace(agent_id="discovery_synthesis")) == 0

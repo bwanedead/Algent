@@ -93,6 +93,7 @@ class NewsroomRunLock:
     def __init__(self, path: Path | None = None) -> None:
         self.path = path or lock_path()
         self._held = False
+        self._nested = False    # acquired inside a lock this same process already holds
 
     def acquire(self) -> None:
         if self._held:
@@ -104,6 +105,14 @@ class NewsroomRunLock:
                 fd = os.open(self.path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
             except FileExistsError:
                 holder = _read_holder(self.path)
+                # OURS ALREADY — the lock is reentrant within one process. `newsroom run`
+                # takes it and then calls `runs start` internally, which takes it again; a
+                # non-reentrant lock would make the pipeline refuse its own rail. The nested
+                # acquirer never writes and never releases, so the outer holder stays intact.
+                if holder and holder.pid == os.getpid():
+                    self._nested = True
+                    self._held = True
+                    return
                 if holder and _pid_alive(holder.pid):
                     raise NewsroomBusyError(
                         f"newsroom already running (pid {holder.pid}"
@@ -139,6 +148,11 @@ class NewsroomRunLock:
 
     def release(self) -> None:
         if not self._held:
+            return
+        if self._nested:
+            # Someone above us on this call stack owns the file; deleting it here would
+            # unlock the rail mid-run and let a second launch straight in.
+            self._held = self._nested = False
             return
         try:
             self.path.unlink()
