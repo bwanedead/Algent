@@ -43,6 +43,14 @@ class EditorialPipelineReport(BaseModel):
     analytics_escapes: int = 0         # worker runs that broke their lane (tripwire) — should stay 0
     # Explicit non-produced outcomes so digests never imply "forgotten" visuals.
     analytics_skipped: list[str] = Field(default_factory=list)  # e.g. "anx_01:soft_cap_skipped"
+    #: Why each unproduced figure failed, as ``"<request_id>: <status> — <note>"``.
+    #:
+    #: "Analytics is broken" turned out to be three unrelated things — a worker skipped by a
+    #: stale process, a chart discarded by the store tripwire, a timeout, and a fabricated 164%
+    #: correctly rejected — and telling them apart meant grepping run timelines. A count of
+    #: produced-vs-requested says something failed; it never says which thing, so every
+    #: investigation restarted from zero. The reason rides on the report.
+    analytics_failures: list[str] = Field(default_factory=list)
     #: Cold-browser surface issues found after the final headline package (advisory; soft ship).
     surface_issues: list[str] = Field(default_factory=list)
     #: The hero illustration, when one was generated: artifact_name, alt, hook, label, model,

@@ -39,10 +39,16 @@ def _run(tmp: Path, article: str, entities: list) -> Path:
     art = tmp / "runs" / "0001__x" / "artifacts"
     art.mkdir(parents=True)
     (art / "article_published.md").write_text(article, encoding="utf-8")
+    # A hero is a publish floor now ("every article must ship with a hero"), so a fixture
+    # without one holds for that reason and never reaches the lane under test.
     (art / "editorial_pipeline_report.json").write_text(json.dumps(
-        {"profile_id": "prof_x", "status": "publishable", "caveat_verdict": "verified"}), encoding="utf-8")
+        {"profile_id": "prof_x", "status": "publishable", "caveat_verdict": "verified",
+         "hero": {"artifact_name": "hero.jpg"}}), encoding="utf-8")
     (art / "newsroom_rail_report.json").write_text(json.dumps({"total_usd": 0.1}), encoding="utf-8")
     (art / "profile.json").write_text(json.dumps({"id": "prof_x", "entities": entities}), encoding="utf-8")
+    # The floor checks the hero BYTES exist, not just the reference — a report naming a hero
+    # that was never written is exactly the empty-artifact failure it was added to catch.
+    (art / "hero.jpg").write_bytes(b"not-a-real-jpeg-but-non-empty")
     return art.parent
 
 

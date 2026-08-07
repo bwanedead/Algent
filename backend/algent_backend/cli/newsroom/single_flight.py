@@ -40,17 +40,28 @@ def lock_path() -> Path:
 
 
 def _pid_alive(pid: int) -> bool:
+    """Is the recorded holder still running? Delegates to the control plane's probe.
+
+    This used to be a local ``os.kill(pid, 0)``, which is wrong on Windows in a way that
+    breaks the lock outright — and the control plane's own module already carries a comment
+    saying so. ``signal.CTRL_C_EVENT == 0``, so CPython routes that call to
+    ``GenerateConsoleCtrlEvent`` rather than to a liveness probe. Measured on this platform:
+
+        live pid -> True     (right, by luck)
+        DEAD pid -> True     (wrong; the house probe returns False)
+
+    Two consequences, both observed as "the pipeline is being weird". A lock file that
+    outlives its process can never be recognised as stale, so the recovery path below is
+    unreachable and every later run fails "busy" until someone deletes the file by hand. And
+    because the call really does try to raise a console control event, a *second* launch can
+    deliver a Ctrl-C to the first run's process group — the lock interrupting the very rail it
+    exists to protect.
+    """
     if pid <= 0:
         return False
-    try:
-        os.kill(pid, 0)
-    except ProcessLookupError:
-        return False
-    except PermissionError:
-        return True  # exists, not ours to signal
-    except OSError:
-        return False
-    return True
+    from algent_backend.agent_system.runs.control_plane.liveness import process_alive
+
+    return process_alive(pid)
 
 
 def _read_holder(path: Path) -> _Holder | None:

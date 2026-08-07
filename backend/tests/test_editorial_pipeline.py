@@ -758,3 +758,32 @@ def test_a_rejected_repair_stops_the_loop_early(monkeypatch) -> None:
     assert len(reviewer.calls) == 1 and len(drafter.calls) == 1
     assert r["comprehension_rounds"] == 1
     assert r["status"] == "publishable"
+
+
+# -- analytics failure reporting ----------------------------------------------
+
+def test_failure_reasons_ride_on_the_report() -> None:
+    """"Analytics is broken" was three unrelated causes, told apart only by grepping run
+    timelines. The reason belongs on the report so an investigation starts from the answer."""
+    out = pl._analytics_failures([
+        {"request_id": "req_map", "status": "failed", "note": "grok timed out after 600.0s"},
+        {"request_id": "req_scale", "status": "integrity_check_failed",
+         "note": "figure check: numbers not found in cited evidence — 164%"},
+        {"request_id": "req_ok", "status": "produced", "artifact_name": "chart.svg"},
+    ])
+    assert len(out) == 2
+    assert out[0].startswith("req_map: failed — grok timed out")
+    assert "164%" in out[1]
+
+
+def test_a_produced_claim_with_no_file_is_reported_as_a_failure() -> None:
+    """The worst shape a failure takes: a rail reported analytics_produced=1 against an empty
+    assets directory, so it looked like success everywhere except on the published page."""
+    out = pl._analytics_failures([{"request_id": "req_x", "status": "produced"}])
+    assert out == ["req_x: produced_but_empty — claimed produced with no artifact on disk"]
+
+
+def test_a_real_figure_produces_no_failure_line() -> None:
+    assert pl._analytics_failures([
+        {"request_id": "r", "status": "produced", "body_md": "| a | b |"},
+    ]) == []

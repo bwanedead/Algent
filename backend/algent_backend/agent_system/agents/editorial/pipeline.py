@@ -395,6 +395,7 @@ def _build_pipeline_report(
         ),
         analytics_escapes=sum(1 for a in produced_analytics if a.get("escaped_writes")),
         analytics_skipped=skipped,
+        analytics_failures=_analytics_failures(produced_analytics),
         surface_issues=issues,
         generated_at=datetime.now(UTC).isoformat(),
     )
@@ -582,6 +583,28 @@ def _repair_hedging(
     return new_draft, profile, rechecked, 2
 
 
+def _analytics_failures(artifacts: list[dict[str, Any]]) -> list[str]:
+    """One readable line per figure that did not ship, with the reason attached.
+
+    Also catches the *silent* failure: an artifact that claims ``produced`` while carrying no
+    file and no body. That one shipped a rail reporting ``analytics_produced=1`` against an
+    empty assets directory, which is the worst shape a failure can take — it looks like
+    success everywhere except on the page.
+    """
+    out: list[str] = []
+    for art in artifacts or []:
+        status = str(art.get("status") or "")
+        has_output = bool(art.get("artifact_name") or art.get("body_md"))
+        if status == "produced" and has_output:
+            continue
+        rid = str(art.get("request_id") or "?")
+        note = str(art.get("note") or "").strip()
+        if status == "produced" and not has_output:
+            status, note = "produced_but_empty", note or "claimed produced with no artifact on disk"
+        out.append(f"{rid}: {status}" + (f" — {note[:160]}" if note else ""))
+    return out
+
+
 def _derive_places(profile: dict[str, Any]) -> list[str]:
     """The country flags this piece would fly, so the reviewer can judge them against the prose.
 
@@ -698,11 +721,17 @@ def _preview(r: EditorialPipelineReport) -> dict[str, Any]:
     )
     if r.analytics_skipped:
         summary += f" | visuals skipped: {len(r.analytics_skipped)}"
+    # Figures are the thing most often silently absent, so say it in the one line an operator
+    # reads: "1/2 figures" beats discovering an empty assets folder on the published page.
+    if r.analytics_warranted:
+        summary += f" | figures: {r.analytics_produced}/{r.analytics_count}"
     if r.surface_issues:
         summary += f" | surface issues: {len(r.surface_issues)}"
+    items = [f"treatment: {r.treatment_id}", f"draft: {r.draft_id}"]
+    items += [f"figure failed — {reason}" for reason in r.analytics_failures[:4]]
     return {
         "title": f"article: {r.article_title[:70] or '(untitled)'}",
         "summary": summary,
-        "items": [f"treatment: {r.treatment_id}", f"draft: {r.draft_id}"],
+        "items": items,
         "link": "../artifacts/article.md",
     }

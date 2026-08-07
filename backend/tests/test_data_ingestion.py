@@ -289,7 +289,7 @@ def test_x_grok_scrubs_keys_and_parses_json(monkeypatch) -> None:
     def fake_run(cmd, **kw):
         return type("R", (), {"stdout": 'prose…\n[{"topic":"Quake","summary":"big","urls":["http://a"]}]\nmore'})()
 
-    monkeypatch.setattr(x_grok_cli.subprocess, "run", fake_run)
+    monkeypatch.setattr(x_grok_cli, "run_capturing", fake_run)
     hits = x_grok_cli.fetch_x_grok(limit=5, lanes=("ai",))
     assert hits == [{"topic": "Quake", "summary": "big", "urls": ["http://a"],
                      "lane": "ai", "source": "x_grok"}]
@@ -304,7 +304,7 @@ def test_x_grok_fans_out_lanes_and_tags(monkeypatch) -> None:
         topic = "UFC 320 booked" if "UFC" in prompt else "GPT-6 launch"
         return type("R", (), {"stdout": f'[{{"topic":"{topic}","summary":"s","urls":[]}}]'})()
 
-    monkeypatch.setattr(x_grok_cli.subprocess, "run", fake_run)
+    monkeypatch.setattr(x_grok_cli, "run_capturing", fake_run)
     hits = x_grok_cli.fetch_x_grok(limit=3, lanes=("ai", "mma"), max_workers=2)
     tagged = {h["topic"]: h["lane"] for h in hits}
     assert tagged == {"GPT-6 launch": "ai", "UFC 320 booked": "mma"}
