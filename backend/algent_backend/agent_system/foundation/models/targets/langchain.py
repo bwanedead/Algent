@@ -57,6 +57,13 @@ class LangChainTarget(ModelTarget):
         client = gate_chat_model(
             client,
             model_id=spec.model,
+            # Carried so a failure names the VENDOR, not the wire protocol. Several
+            # providers share the OpenAI-shaped client, so an un-labelled
+            # ``openai.APIConnectionError`` reads as "OpenAI is down" when the call went to
+            # Meta — which is exactly how one outage got misdiagnosed. Also gives the
+            # reconnect probe somewhere to knock.
+            provider=spec.provider,
+            base_url=str(self._build_kwargs(spec).get("base_url") or ""),
             max_output_tokens=spec.max_tokens,
         )
         return ResolvedModel(

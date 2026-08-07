@@ -66,6 +66,12 @@ def parse_published_article(md: str) -> tuple[str, str, str]:
     Title and dek move into frontmatter; everything from the first body line onward is carried as-is
     (the site itself splits the receipts at the heading).
     """
+    from algent_backend.agent_system.foundation.text_hygiene import scrub_text
+
+    # Last line of defence before a title becomes a permanent slug. A published URL still
+    # reads ".../corals-breathe-94-and-why..." because a NUL rode this far unnoticed, and a
+    # slug is the one field we cannot correct later without breaking every link to it.
+    md = scrub_text(md)
     lines = md.splitlines()
     title, dek, cut = "", "", 0
     for i, ln in enumerate(lines):

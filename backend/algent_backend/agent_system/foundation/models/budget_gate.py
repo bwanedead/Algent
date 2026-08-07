@@ -338,6 +338,12 @@ class BudgetGatedChatModel(BaseChatModel):
     model_id: str = ""
     max_output_tokens: int = cost.DEFAULT_MAX_OUTPUT_TOKENS
     essential: bool = False
+    #: Who is actually on the other end, and where. Carried for DIAGNOSIS as much as for
+    #: reconnection: the client library is OpenAI-shaped for several providers, so a raw
+    #: ``openai.APIConnectionError`` names the protocol rather than the vendor and reads as
+    #: "OpenAI is down" when the call went to Meta. Errors are re-labelled with these.
+    provider: str = ""
+    base_url: str = ""
 
     @property
     def _llm_type(self) -> str:
@@ -364,14 +370,28 @@ class BudgetGatedChatModel(BaseChatModel):
         run_manager: CallbackManagerForLLMRun | None,
         **kwargs: Any,
     ) -> ChatResult:
-        if isinstance(self.inner, BaseChatModel):
-            return self.inner._generate(  # noqa: SLF001 — intentional inner delegation
-                messages, stop=stop, run_manager=run_manager, **kwargs,
-            )
-        msg = self.inner.invoke(messages, stop=stop, **kwargs)
-        if not isinstance(msg, AIMessage):
-            msg = AIMessage(content=str(msg))
-        return ChatResult(generations=[ChatGeneration(message=msg)])
+        def _call() -> ChatResult:
+            if isinstance(self.inner, BaseChatModel):
+                return self.inner._generate(  # noqa: SLF001 — intentional inner delegation
+                    messages, stop=stop, run_manager=run_manager, **kwargs,
+                )
+            msg = self.inner.invoke(messages, stop=stop, **kwargs)
+            if not isinstance(msg, AIMessage):
+                msg = AIMessage(content=str(msg))
+            return ChatResult(generations=[ChatGeneration(message=msg)])
+
+        # THE single place every model call reaches a provider, so it is where a dropped
+        # connection is worth surviving. A rail died mid-gauntlet on one APIConnectionError
+        # after the pool, synthesis and a full profile had already been paid for; the outage
+        # lasted seconds and the pipeline has no resume, so recovery meant re-buying all of
+        # it. Holding the call here loses nothing, because nothing upstream unwinds.
+        from .reconnect import call_with_reconnect
+
+        return call_with_reconnect(
+            _call,
+            probe_url=self.base_url,
+            on_wait=lambda m: print(f"[model:{self.provider or '?'}] {m}", flush=True),
+        )
 
     def _generate(
         self,
@@ -472,6 +492,8 @@ def gate_chat_model(
     model_id: str = "",
     max_output_tokens: int | None = None,
     essential: bool | None = None,
+    provider: str = "",
+    base_url: str = "",
 ) -> Any:
     """Wrap a chat model so every generation is budget-authorized. Idempotent."""
     max_out = (
@@ -496,5 +518,7 @@ def gate_chat_model(
             model_id=str(mid),
             max_output_tokens=max_out,
             essential=bool(essential) if essential is not None else False,
+            provider=provider,
+            base_url=base_url or str(getattr(model, "openai_api_base", "") or ""),
         )
     return model

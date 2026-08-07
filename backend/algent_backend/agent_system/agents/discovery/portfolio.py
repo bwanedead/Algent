@@ -79,11 +79,16 @@ def coerce_portfolio(raw: object, *, generated_at: str = "") -> ResearchPortfoli
     Some providers emit ``portfolio: [...]`` instead of ``vectors``, or ``type``
     instead of ``vector_type``. Returns ``None`` when nothing usable is present.
     """
+    from algent_backend.agent_system.foundation.text_hygiene import scrub
+
     if isinstance(raw, ResearchPortfolio):
         return raw
     if not isinstance(raw, dict):
         return None
-    data = dict(raw)
+    # Control characters out before anything validates or persists. A live run put 333 NULs
+    # into this artifact — one per em dash — and they travelled all the way to a published
+    # slug, which is a permanent URL. See ``text_hygiene``.
+    data = dict(scrub(raw))
     if not data.get("vectors") and isinstance(data.get("portfolio"), list):
         data["vectors"] = data.pop("portfolio")
     vectors_in = data.get("vectors")
