@@ -35,6 +35,20 @@ INTERROGATE the profile — for ANY topic — like an editor who will not be emb
 - Is the discussion landscape missing — what are different credible parties actually saying?
 - Would analytics (a chart / metric / calculation from real data) add something search can't?
 - What unexamined adjacent context is missing? What, concretely, would make it MATURE?
+- **DEPTH WITHOUT ALTITUDE** (`missing_scope`) — the most common thinness we ship, and the
+  hardest to see because the profile looks *full*. It knows the incident exhaustively and the
+  system around it barely at all. Check for each, and flag what is absent:
+    · the larger flow/market/alliance/supply chain this sits in, and what SHARE of it this is;
+    · who depends on it and how badly — which industries, products, countries, populations
+      feel it first, and who is insulated;
+    · who gains and who loses, including inside the place it happened;
+    · which ongoing contest or structural shift this is an episode of;
+    · what else moves when this moves.
+  A Congo export-ban profile that carries the decree in detail but not Congo's share of world
+  cobalt, nor which industries cannot substitute it, is not a mature profile — it can only
+  produce an instruction manual for one occurrence. The reader's questions live at those
+  scales. Not every story reaches every scale and forcing global stakes onto a local event is
+  its own dishonesty, but a profile that never looked is incomplete, not modest.
 
 OUTPUT — a ReviewReport (task-generating, not prose criticism)
 - findings[]: each a specific weakness with a `type`, a `severity` (low|medium|high|blocking),

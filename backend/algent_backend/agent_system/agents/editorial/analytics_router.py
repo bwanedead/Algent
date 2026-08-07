@@ -125,6 +125,19 @@ UTILITY CLASSES (pick the one that helps most — geography often beats trajecto
    country) when those numbers exist or are publicly standard.
 4. STRUCTURE — a before/after or part-of-whole that prose makes the reader assemble row by row.
 
+PICK THE SCOPE A READER IS ACTUALLY ASKING ABOUT. The profile now carries claims at several
+scales — the incident, the system it sits in, who depends on it, who gains and loses, the
+larger story it belongs to. A figure should almost always be drawn at the scale where the
+reader's question lives, which is rarely the incident itself. For a Congo cobalt export ban,
+the figure worth commissioning is Congo's share of world supply, or which industries depend on
+that supply — not a timeline of the decree's procedural steps. A chart about a sub-process of
+the specific event is the single most common way we produce something nobody wanted: it is
+technically about the story and answers a question no reader had.
+
+Before requesting anything, name the question in reader words ("how much of the world's cobalt
+comes from one country?"). If the question only makes sense to someone already inside the
+story, you are drawing at the wrong altitude — go up a level.
+
 THE TEST THAT OVERRIDES ALL FOUR: **would a real publication have commissioned this?**
 Ask it in that form, because a desk with a graphics budget only spends it when the picture
 carries something the words cannot. Two failures, and we ship both:

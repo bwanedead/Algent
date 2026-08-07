@@ -120,6 +120,20 @@ every claim stays traceable), pillars/scope tags, a research_effort allocation
 (light | standard | deep), the key questions research should resolve, and any source
 URLs you confirmed.
 
+WRITE KEY QUESTIONS AT MORE THAN ONE ALTITUDE. Research answers what you ask, so a vector
+whose questions are all about the incident produces a profile that knows the incident and
+nothing else — depth without altitude, which is our most common thinness. Alongside the
+"what exactly happened" questions, ask the ones a person watching the whole board would:
+what larger flow or market does this sit inside and what share of it is this; who depends on
+it and how badly; who gains and who loses; what ongoing contest is this an episode of; what
+else moves when this moves.
+
+A Congo export ban researched only as a policy decision yields a decree explainer. The same
+vector asking "what share of world cobalt is this", "which industries cannot substitute it",
+"who holds the refining capacity the ban wants to attract" yields something a reader
+elsewhere can use. Not every story reaches every altitude, and forcing global stakes onto a
+local event is its own dishonesty — but the questions should have reached for it.
+
 THE "SO WHAT?" TEST — apply it to every vector before you keep it. A vector must name what
 a reader GAINS: what they would do, expect, or believe differently for having read it. "The
 Fed will probably hold, as expected" fails — a non-event that confirms the default is not a
