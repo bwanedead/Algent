@@ -360,3 +360,35 @@ def test_the_process_strip_does_not_eat_real_prose() -> None:
                  "Turnout was low in this runoff election.",
                  "Rainfall in this rural county broke records."):
         assert _clean_prose(keep) == keep
+
+
+def test_agent_scaffolding_never_reaches_the_page() -> None:
+    """A published piece opened with the drafter's own field labels above the prose:
+
+        TITLE: The Tiny Pump That Lets Corals Breathe ...
+        STANDFIRST: Reef corals beat microscopic hairs ...
+
+    The real title and dek were already parsed from the markdown heading, so this was pure
+    scaffolding — the shape of the request showing through the answer — duplicated content
+    and a plain tell that a machine wrote the page.
+    """
+    from algent_backend.agent_system.agents.editorial.publish import _clean_prose
+
+    out = _clean_prose(
+        "TITLE: The Tiny Pump That Lets Corals Breathe\n"
+        "STANDFIRST: Reef corals beat microscopic hairs to spin vortices.\n"
+        "**Review status:** needs hedging\n\n"
+        "Corals that cannot move beat microscopic hairs to pull oxygen.\n"
+    )
+    assert "TITLE:" not in out
+    assert "STANDFIRST:" not in out
+    assert "Review status" not in out
+    assert out.startswith("Corals that cannot move")
+
+
+def test_a_label_inside_a_sentence_is_left_alone() -> None:
+    """Only a line that STARTS with the label is furniture; prose mentioning one is prose."""
+    from algent_backend.agent_system.agents.editorial.publish import _clean_prose
+
+    body = "The paper's title: 'Ciliary flows in corals' ran in Science Advances."
+    assert _clean_prose(body) == body

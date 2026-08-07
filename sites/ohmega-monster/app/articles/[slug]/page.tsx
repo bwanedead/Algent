@@ -12,6 +12,27 @@ export function generateStaticParams() {
   return getSlugs().map((slug) => ({ slug }));
 }
 
+// Soft-publish can ship a piece our editing checks were not satisfied with, and saying so is
+// deliberate. But the raw status is PIPELINE vocabulary: a reader met "Review status: needs
+// hedging" and learned nothing except that a machine was involved. Same disclosure, said in
+// words the reader actually holds. Unknown statuses fall back to a plain generic line rather
+// than exposing an internal token.
+const REVIEW_NOTICE: Record<string, string> = {
+  needs_hedging:
+    "Published before our editing checks were satisfied: some claims here may be stated more firmly than the evidence supports.",
+  needs_ramp:
+    "Published before our editing checks were satisfied: parts of this may be hard to follow without background we did not supply.",
+  needs_revision:
+    "Published before our editing checks were satisfied: this piece is shorter or thinner than we intend.",
+};
+
+function reviewNotice(status: string): string {
+  return (
+    REVIEW_NOTICE[status] ??
+    "Published before our editing checks were satisfied — treat it as a draft."
+  );
+}
+
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
   const a = getArticle(params.slug);
   if (!a) return {};
@@ -57,10 +78,10 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
           <FlagRow flags={a.flags} places={a.places} />
           <ShareButton url={url} title={a.title} dek={a.dek} />
         </div>
-        {/* Soft-publish can ship non-publishable pieces; status must remain reader-visible. */}
+        {/* Soft-publish can ship non-publishable pieces; the disclosure stays, in plain words. */}
         {a.status && a.status !== "publishable" ? (
           <p className="article-status" role="status">
-            Review status: {a.status.replace(/_/g, " ")}
+            {reviewNotice(a.status)}
           </p>
         ) : null}
       </header>

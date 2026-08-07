@@ -133,12 +133,42 @@ def _source_label(source) -> str:
     return title or publisher or url
 
 
+#: Field labels the drafter sometimes emits INSIDE the body, having been asked for a titled
+#: package and answered with the labels attached. A published piece opened, verbatim:
+#:
+#:     TITLE: The Tiny Pump That Lets Corals Breathe  and Why Heat Makes It Suffocate Them
+#:     STANDFIRST: Reef corals beat microscopic hairs to spin millimetre-scale vortices...
+#:
+#: above a body that then said the same thing again in prose. The real title and dek were
+#: already parsed out of the markdown heading, so this is pure scaffolding — the shape of the
+#: request showing through the answer — and it is duplicated content as well as a tell that a
+#: machine wrote the page. Anchored to line starts so a sentence mentioning a title is safe.
+_SCAFFOLD_LABEL = re.compile(
+    r"^[ \t]*(?:\*\*|__)?"
+    r"(?:TITLE|HEADLINE|STANDFIRST|DEK|SUBTITLE|SUBHEAD|BODY|ARTICLE|DRAFT|LEDE|LEAD|"
+    r"SUMMARY|QUICK[ _-]?TAKE|REVIEW[ _-]?STATUS|VERDICT|STATUS|NOTES?|OUTPUT)"
+    r"(?:\*\*|__)?[ \t]*:[ \t]*",
+    re.IGNORECASE | re.MULTILINE,
+)
+
+
+def _strip_scaffold_lines(body: str) -> str:
+    """Remove whole lines that are nothing but an agent field label and its value.
+
+    A label mid-paragraph is left alone: "the paper's title: 'X'" is prose, not scaffolding.
+    Only a line that STARTS with the label is machine furniture.
+    """
+    kept = [line for line in body.splitlines() if not _SCAFFOLD_LABEL.match(line)]
+    return "\n".join(kept)
+
+
 def _clean_prose(body: str) -> str:
     """Strip the machine-citation markers for the reader view (the appendix carries the trace)."""
     # Order: markdown-link form first (would otherwise leave ` [` crumbs), then bracket lists,
     # then bare/backticked ids, then residual wrapper crumbs and comma trails the model left
     # between markers ("fact. `[`[clm…](#)`, `[`[clm…](#)`" → "fact.,," without this).
-    out = _MARKER_MD_LINK.sub("", body)
+    out = _strip_scaffold_lines(body)
+    out = _MARKER_MD_LINK.sub("", out)
     out = _MARKER.sub("", out)
     out = _MARKER_TOKEN.sub("", out)
     out = _MARKER_CRUMBS.sub("", out)

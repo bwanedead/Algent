@@ -150,8 +150,55 @@ sentences in the order the evidence arrived rather than the order an idea unfold
   structural miss clearly for the next enrichment lap. Do not invent the missing landscape
   in this pass.
 
+- **Sentences that need re-reading.** Some published sentences cannot be parsed by their
+  intended reader at any speed. Shipped verbatim:
+
+  > Ambient-noise tomography images Vs, not melt. Converting Vs to melt fraction and volume
+  > is the most assumption-dependent step.
+
+  Two sentences, four pieces of unexplained apparatus, and a reader who now knows only that
+  they are not the audience. **Read every sentence once, at speed, as the reader.** If you
+  would have to go back, it fails — and the fix is a lower ramp into the idea, not a shorter
+  sentence. That example wants something like: *the method measures how fast waves travel,
+  not how much rock is molten, so turning one into the other is where the estimate is
+  softest.* Same content, no apparatus, one pass.
+- **Whiplash pivots.** Chunks that are well written in isolation and then hand off to
+  something unrelated with no bridge. The reader is building a model as they go; an
+  unheralded turn makes them drop it. Every new idea arrives *attached* to the one before it.
+- **Section proliferation.** Five headed sections inside one article is a symptom, not a
+  structure — usually the research profile's shape showing through. Headings are for a piece
+  that genuinely has parts; most of ours do not. Prefer continuous prose that carries the
+  reader by argument rather than by signposts, and treat every heading as needing to earn
+  itself. Chopping a piece into labelled blocks is the cheap way to look organised and it
+  reads as low-effort assembly.
+
 **Preferred outcome:** it reads like one person who understands the subject explaining it
-once, well.
+once, well — continuous, in one voice, with no sentence that needs a second pass.
+
+## 5b. Is it about the forest or the twigs?
+
+**The vulnerability.** Research gathers method and detail, so the draft narrates the method
+and detail. The reader wanted to know what it means for anything.
+
+A published piece on perovskite-on-silicon solar cells never established that the subject was
+**making solar panels cheaper or more efficient**, never explained what the technique is for
+in any broader sense, and spent its length walking through procedure. Every sentence may have
+been true and the piece was still useless: a reader finished it unable to say why they had
+read it.
+
+- **Say what it is for, early and plainly.** Before any apparatus: what does this technology,
+  method or finding *do* in the world, and who would notice if it worked?
+- **Detail must be load-bearing.** A number, a step, a parameter earns its place only if it
+  changes what the reader concludes. Procedure that merely shows the work belongs in the
+  appendix, which we already publish.
+- **Ratio test.** Roughly, how much of this piece is *significance and consequence* versus
+  *method and peripheral detail*? If the second dominates, it is a walkthrough, not an article.
+- **Not a word cap.** The fix is never "make it shorter" — it is cutting the twigs so the
+  forest is visible. A long piece that stays on the through-line is fine; a short one buried
+  in procedure is not.
+
+**Preferred outcome:** a reader can say what this changes, for whom, and why it was worth
+their time — and the detail they remember is the detail that supports that.
 
 ## 6. Do the figures earn their place?
 

@@ -75,6 +75,55 @@ Length is the other half of the same problem. Every paragraph a reader must cros
 substance arrives is friction they may not pay. Prefer the shorter piece that lands over the
 longer one that covers more, and never keep a paragraph because the profile held the material.
 
+## One continuous piece, not a set of labelled blocks
+
+Headings are for an article that genuinely has parts. Most do not. Five headed sections
+inside one piece is almost always the research profile's shape showing through — we gathered
+in sections, so we wrote in sections — and it reads as assembly rather than writing. It is
+also the cheap way to look organised: chopping prose into labelled chunks *looks* structured
+while doing none of the work of actually carrying a reader from one idea to the next.
+
+Default to continuous prose that moves by argument. Each paragraph should hand off to the
+next: the new idea arrives attached to the one before it, so the reader keeps building one
+model instead of starting a fresh one at every header. Use a heading only where a piece truly
+turns — and if you find yourself needing several, that usually means the through-line is
+missing and a heading is being asked to hide the gap.
+
+## Every sentence must land on the first pass
+
+Read each sentence once, at speed, as the reader. If you would have to go back, it fails.
+This shipped:
+
+> Ambient-noise tomography images Vs, not melt. Converting Vs to melt fraction and volume is
+> the most assumption-dependent step.
+
+Four pieces of unexplained apparatus in two sentences, and a reader who learns only that they
+are not the audience. The fix is a lower ramp into the idea, never just a shorter sentence:
+
+> The method measures how fast waves travel through rock, not how much of it is molten — so
+> turning one into the other is where the estimate gets softest.
+
+Same content, same length, no apparatus, one pass. When an idea genuinely needs specialist
+vocabulary, build the ramp first and put the term at the top of it, not at the bottom.
+
+## The forest, not the twigs
+
+Research hands you method and detail, and the draft will narrate them unless you decide
+otherwise. A piece on perovskite-on-silicon solar cells shipped without ever establishing that
+the subject was making solar panels cheaper — it walked through procedure instead, every
+sentence true and the whole thing useless.
+
+- Say early and plainly what the thing **does in the world**, and who would notice if it
+  worked. That comes before any apparatus.
+- A number, a step or a parameter earns its place only if it changes what the reader
+  concludes. Detail that merely shows the work belongs in the appendix, which we publish
+  anyway.
+- Ask what share of the piece is significance and consequence versus method and peripheral
+  detail. If the second wins, you have written a walkthrough.
+
+This is not an instruction to write shorter. A long piece that stays on the through-line is
+fine; a short one buried in procedure is not. Cut twigs, not length.
+
 ## Say what the thing is before you say its name
 
 The order is not stylistic. An unfamiliar label arriving before its meaning forces the
