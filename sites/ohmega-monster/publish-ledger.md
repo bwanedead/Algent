@@ -517,3 +517,15 @@ cost_by_stage: editorial=$0.1180, gauntlet=$0.4075, profile=$0.1033, routing=$0.
 refused: model_turn(reservation_overrun)
 ⚠ figures not matched to evidence: 11%, 21%
 run: 0067__2c433dc5-4075-40d9-8c62-a6467f27c410
+
+### PUBLISH south-korea-and-taiwan-overtake-japan-in-first-half-exports-7e9d72 — 2026-08-07
+status: publishable  ·  draft: grounded_with_caveats  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 0 produced, 0 escapes
+cost: ~$0.6057  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+analytics_skipped: req_korea_taiwan_japan_h1_split:integrity_check_failed, req_export_trajectory_2019_2026:integrity_check_failed
+cost_by_stage: editorial=$0.1344, gauntlet=$0.3034, profile=$0.1676, routing=$0.0004
+refused: model_turn(reservation_overrun)
+⚠ walled sources (carried with caveats): src_2ecc162aec
+⚠ figures not matched to evidence: 74%, 69%, 24%, 84.9%, 72%
+run: 0069__3eae02d5-9a2c-4757-8bee-5dae7661adea
