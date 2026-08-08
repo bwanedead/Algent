@@ -426,10 +426,15 @@ def _persist_pipeline_artifacts(
     if context.artifacts is None or not draft:
         return
     draft_obj = ArticleDraft.model_validate(draft)
+    profile_obj = SignalProfile.model_validate(profile)
+    # Re-write the profile so enrichment SURVIVES the run. The research stage wrote this file
+    # before analytics existed, so a figure's sourced data was reaching the rendered page and
+    # then dying with the process — the ledger on disk never gained it, and nothing downstream
+    # (a confirmation lap, a later story on the same subject) could ever see it.
+    context.artifacts.write_json("profile.json", profile_obj.model_dump())
     context.artifacts.write_text(
         "article_published.md",
-        render_published_article(
-            draft_obj, SignalProfile.model_validate(profile), analytics))
+        render_published_article(draft_obj, profile_obj, analytics))
     context.artifacts.write_text("article.md", render_draft(draft_obj))
     context.artifacts.write_json("editorial_pipeline_report.json", report.model_dump())
 
@@ -642,10 +647,17 @@ def _absorb_sourced_claims(
         claims.append({
             "id": "clm_an_" + hashlib.sha1(text.encode("utf-8")).hexdigest()[:10],
             "text": text,
-            "grade": "likely",
+            # Fields must match the Claim contract or Pydantic drops them on the way to disk.
+            # An earlier version wrote grade="likely" and sourced_by="analytics" — neither is a
+            # Claim field — so 24 absorbed rows reached profile.json as unmarked defaults.
+            # `status` is the real vocabulary, and `unconfirmed` is the honest value: a figure's
+            # own fetch is not the research pass that reads and grades a source. That is also
+            # exactly what a later confirmation lap should look for.
+            "status": "unconfirmed",
             "salience": "low",
             "supported_by": [src["id"]],
-            "sourced_by": "analytics",
+            "note": "sourced by the analytics worker for a figure; not yet research-confirmed",
+            "provenance": {"added_by_stage": "editorial.analytics", "revision": 1},
         })
         existing.add(text)
         added += 1

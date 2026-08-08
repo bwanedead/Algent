@@ -806,12 +806,24 @@ def test_sourced_figure_data_enters_the_claim_ledger() -> None:
     assert len(out["claim_ledger"]) == 3
     added = [c for c in out["claim_ledger"] if c["id"].startswith("clm_an_")]
     assert len(added) == 2
-    # Graded honestly: this came from a figure's fetch, not from a graded research read.
-    assert all(c["grade"] == "likely" and c["sourced_by"] == "analytics" for c in added)
     # One source row for the shared publisher, and every claim points at it.
     assert len(out["source_ledger"]) == 1
     assert all(c["supported_by"] == [out["source_ledger"][0]["id"]] for c in added)
     assert any(et == pl.ANALYTICS_CLAIMS_ADDED for et, _ in events)
+
+    # ASSERT THROUGH THE CONTRACT, not the raw dict. The first version of this test checked
+    # grade="likely" and sourced_by="analytics" on the dict and passed — while the feature was
+    # dead, because neither is a Claim field and Pydantic dropped both on the way to disk. A
+    # live run absorbed 24 rows and persisted none of them marked. What survives is what counts.
+    from algent_backend.agent_system.agents.research.profile import SignalProfile
+
+    saved = SignalProfile.model_validate({"id": "p1", "title": "t", **out}).model_dump()
+    kept = [c for c in saved["claim_ledger"] if str(c["id"]).startswith("clm_an_")]
+    assert len(kept) == 2
+    # `unconfirmed` is the honest status and the hook a later research lap looks for: a figure's
+    # own fetch is not the research pass that reads and grades a source.
+    assert all(c["status"] == "unconfirmed" and c["salience"] == "low" for c in kept)
+    assert all(c["provenance"]["added_by_stage"] == "editorial.analytics" for c in kept)
 
 
 def test_absorbing_nothing_leaves_the_profile_untouched() -> None:
