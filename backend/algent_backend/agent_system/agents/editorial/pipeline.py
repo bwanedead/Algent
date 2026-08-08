@@ -24,6 +24,7 @@ from algent_backend.agent_system.foundation import cost
 from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.context import AgentRunContext
 
+from .analytics_confirm import confirm_analytics_claims
 from .analytics_spec import build_graph as build_analytics_router
 from .analytics_worker import build_analytics_worker_graph
 from .caveat_spec import build_graph as build_caveat_reviewer
@@ -190,10 +191,15 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
         # any other claim (and reusable in prose on a later lap).
         enriched_profile = _absorb_sourced_claims(
             context, enriched_profile, produced_analytics)
+        # The worker may contribute evidence; it may not grade its own fetch. An independent
+        # research pass rules on anything it added before those rows harden into the ledger.
+        enriched_profile, confirm_report = confirm_analytics_claims(
+            context, config, enriched_profile)
         quality = {
             **quality,
             "analytics": analytics_plan,
             "produced_analytics": produced_analytics,
+            "analytics_confirm": confirm_report,
             "surface_issues": surface_issues,
         }
 
@@ -345,6 +351,14 @@ def _post_draft_quality(
     }
 
 
+def _verdict_counts(confirm: dict[str, Any] | None) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for check in (confirm or {}).get("checks") or []:
+        verdict = str(check.get("verdict") or "unconfirmed")
+        counts[verdict] = counts.get(verdict, 0) + 1
+    return counts
+
+
 def _build_pipeline_report(
     *,
     profile: dict[str, Any],
@@ -360,6 +374,7 @@ def _build_pipeline_report(
     comprehension_rounds: int,
     analytics: dict[str, Any],
     produced_analytics: list[dict[str, Any]],
+    analytics_confirm: dict[str, Any] | None = None,
     surface_issues: list[str] | None = None,
 ) -> EditorialPipelineReport:
     outcome = str(draft_report.get("outcome", ""))
@@ -413,6 +428,11 @@ def _build_pipeline_report(
         analytics_escapes=sum(1 for a in produced_analytics if a.get("escaped_writes")),
         analytics_skipped=skipped,
         analytics_failures=_analytics_failures(produced_analytics),
+        analytics_claim_verdicts=_verdict_counts(analytics_confirm),
+        analytics_contested=[
+            c.get("claim_id", "") for c in (analytics_confirm or {}).get("checks", [])
+            if c.get("verdict") == "contested"
+        ],
         surface_issues=issues,
         generated_at=datetime.now(UTC).isoformat(),
     )

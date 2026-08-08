@@ -51,6 +51,14 @@ class EditorialPipelineReport(BaseModel):
     #: produced-vs-requested says something failed; it never says which thing, so every
     #: investigation restarted from zero. The reason rides on the report.
     analytics_failures: list[str] = Field(default_factory=list)
+    #: Verdicts from the independent pass over claims the analytics worker contributed, as
+    #: ``{"confirmed": n, "contested": n, "unconfirmed": n}``. Empty when a figure sourced
+    #: nothing new, which is the common case for profile-grounded charts.
+    analytics_claim_verdicts: dict[str, int] = Field(default_factory=dict)
+    #: Claims an independent source materially DISAGREED with. This is louder than a failed
+    #: figure: the chart was already drawn from these numbers and is on the page, so a non-empty
+    #: list means a published visual may be wrong — not merely that a ledger row is doubtful.
+    analytics_contested: list[str] = Field(default_factory=list)
     #: Cold-browser surface issues found after the final headline package (advisory; soft ship).
     surface_issues: list[str] = Field(default_factory=list)
     #: The hero illustration, when one was generated: artifact_name, alt, hook, label, model,
