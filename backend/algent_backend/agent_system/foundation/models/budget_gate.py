@@ -23,6 +23,7 @@ from langchain_core.runnables import Runnable
 from pydantic import ConfigDict, Field
 
 from algent_backend.agent_system.foundation import cost
+from algent_backend.agent_system.foundation.text_hygiene import scrub
 
 _CHARS_PER_TOKEN = 3
 _MSG_FRAMING_TOKENS = 64
@@ -329,6 +330,32 @@ def _gated_parse_runnable(
     return RunnableLambda(_invoke)
 
 
+def _scrub_result(result: ChatResult) -> ChatResult:
+    """Repair provider-mangled control characters the moment a response arrives.
+
+    The corruption is provider-side, so it can enter through ANY model call, and patching
+    each place it was last seen leaking is a losing game: the portfolio and the published
+    body were both fixed at their own parse sites, and the next run put NULs into figure
+    captions instead, which the published article then inlined ("above 300 " where "€300"
+    belonged). Same fault, third surface.
+
+    Everything downstream — contracts, artifacts, slugs, prose — is reached through here, so
+    this is the boundary where scrubbing is both complete and done once.
+    """
+    for gen in result.generations:
+        msg = getattr(gen, "message", None)
+        if msg is None:
+            continue
+        if isinstance(msg.content, (str, list)):
+            msg.content = scrub(msg.content)
+        # Tool-call arguments are model text too, and they become search queries, URLs and
+        # written artifacts without ever passing through a message body.
+        for call in getattr(msg, "tool_calls", None) or []:
+            if isinstance(call, dict) and isinstance(call.get("args"), dict):
+                call["args"] = scrub(call["args"])
+    return result
+
+
 class BudgetGatedChatModel(BaseChatModel):
     """``BaseChatModel`` wrapper: reserve → inner generate → settle on every call."""
 
@@ -387,11 +414,12 @@ class BudgetGatedChatModel(BaseChatModel):
         # it. Holding the call here loses nothing, because nothing upstream unwinds.
         from .reconnect import call_with_reconnect
 
-        return call_with_reconnect(
+        result = call_with_reconnect(
             _call,
             probe_url=self.base_url,
             on_wait=lambda m: print(f"[model:{self.provider or '?'}] {m}", flush=True),
         )
+        return _scrub_result(result)
 
     def _generate(
         self,
@@ -421,9 +449,13 @@ class BudgetGatedChatModel(BaseChatModel):
         # Prefer one-shot generate for metering certainty; stream only when inactive.
         if not cost.is_active():
             if hasattr(self.inner, "_stream"):
-                yield from self.inner._stream(  # noqa: SLF001
+                # The one path that skips _call_inner_generate, so it scrubs its own chunks.
+                for chunk in self.inner._stream(  # noqa: SLF001
                     messages, stop=stop, run_manager=run_manager, **kwargs,
-                )
+                ):
+                    if isinstance(chunk.message.content, (str, list)):
+                        chunk.message.content = scrub(chunk.message.content)
+                    yield chunk
                 return
             result = self._call_inner_generate(messages, stop, run_manager, **kwargs)
             yield ChatGenerationChunk(message=result.generations[0].message)

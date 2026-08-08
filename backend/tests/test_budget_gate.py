@@ -251,3 +251,40 @@ def test_gate_is_idempotent() -> None:
     twice = gate_chat_model(once, model_id="gpt-5.4-mini")
     assert once is twice or isinstance(twice, BudgetGatedChatModel)
     assert twice.inner is fake or twice.inner is once.inner
+
+
+class _CorruptingChat(BaseChatModel):
+    """A provider that mangles multi-byte characters, as Muse does on long generations."""
+
+    @property
+    def _llm_type(self) -> str:
+        return "corrupting"
+
+    def _generate(self, messages, stop=None, run_manager=None, **kwargs):
+        msg = AIMessage(
+            content="prices above \x00e2\x0082\x00ac300 per MWh \x00 a record",
+            tool_calls=[
+                {
+                    "name": "search",
+                    "args": {"query": "Paks \x00e2\x0080\x0094 Danube levels"},
+                    "id": "call_1",
+                },
+            ],
+        )
+        return ChatResult(generations=[ChatGeneration(message=msg)])
+
+
+def test_control_chars_are_repaired_at_the_model_boundary() -> None:
+    """Every downstream surface is reached through here, so the scrub belongs here.
+
+    The corruption is provider-side and had already been patched at two separate parse
+    sites; the next run put it into figure captions, which the published body inlined. A
+    caption is not a new bug, it is the same one arriving somewhere else.
+    """
+    gate = BudgetGatedChatModel(inner=_CorruptingChat(), model_id="m")
+    msg = gate._generate([HumanMessage(content="hi")]).generations[0].message
+
+    assert msg.content == "prices above €300 per MWh a record"
+    # Tool-call arguments are model text too, and become search queries and written
+    # artifacts without ever passing through a message body.
+    assert msg.tool_calls[0]["args"]["query"] == "Paks — Danube levels"

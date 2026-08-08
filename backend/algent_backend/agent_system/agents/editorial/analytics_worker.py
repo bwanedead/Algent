@@ -614,7 +614,10 @@ def _caption(
     if worker and shows and shows.lower() in worker.lower():
         body = worker
     elif worker and shows:
-        body = f"{shows} {worker}"
+        # Two independent sentences, so punctuate between them. Bare concatenation published
+        # "...how much depends on water EU electricity generation in 2025, by source share",
+        # which reads as one broken sentence and hides where the summary ends.
+        body = f"{shows.rstrip('.')}. {worker}"
     else:
         body = worker or shows or _clean(request.title)
 
