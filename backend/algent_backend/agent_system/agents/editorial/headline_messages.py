@@ -62,6 +62,13 @@ def build_headline_message(
         "TASK: Write the final surface package — headline, standfirst, quick_take "
         "(what_happened / why_it_matters / what_is_uncertain), image_subject, image_hook. "
         "Cold-browser test: title + dek + hook must make sense without reading the body. "
-        "Specialist names need plain_subject first. Emit a Headline.",
+        "Specialist names need plain_subject first. "
+        "DO NOT RESTATE THE BODY'S OPENING PARAGRAPH. You can see it above, and the dek and "
+        "what_happened keep converging on it because all three summarise the same lead — one "
+        "piece shipped the same sentence about Danube levels, shutdowns and €300 prices three "
+        "times before the reader learned anything new. These are a ladder: the dek adds the "
+        "load-bearing caveat or consequence the title had no room for, what_happened serves a "
+        "reader who will never open the body, and the opening paragraph begins the telling. "
+        "Write each to add what the others do not. Emit a Headline.",
     ]
     return "\n".join(lines)

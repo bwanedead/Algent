@@ -196,6 +196,15 @@ read it.
 - **Not a word cap.** The fix is never "make it shorter" — it is cutting the twigs so the
   forest is visible. A long piece that stays on the through-line is fine; a short one buried
   in procedure is not.
+- **Run the compression pass, and name what you cut.** Not a word cap, but not a pass you may
+  skip either: pieces on the through-line still land several hundred words heavy, because the
+  padding arrives disguised as care. Check the five patterns in
+  [writing-ergonomics](writing-ergonomics.md) — *the top of the piece saying one fact three
+  times* (dek, At-a-glance, opening paragraph, written by different stages and converged
+  without anyone noticing), mid-sentence glosses, one magnitude framed three ways, full
+  institutional titles, second units and hedge tails. Report the cuts as a finding when the
+  draft has not made them; a reviewer who says "reads well" about a piece carrying all five
+  has confirmed prose quality and missed the problem.
 
 **Preferred outcome:** a reader can say what this changes, for whom, and why it was worth
 their time — and the detail they remember is the detail that supports that.

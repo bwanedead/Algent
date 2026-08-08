@@ -441,12 +441,18 @@ def _figures(produced: list[dict]) -> list[str]:
         explainer = _figure_explainer(a)
         if name.endswith(_IMAGE_SUFFIXES):
             body = [f"![{title or 'analytic'}]({name})"]
+            # A drawn figure already carries its title INSIDE the image, so a bold line
+            # above it published the same sentence twice, a line apart. The alt text keeps
+            # the title for readers who cannot see the image.
+            heading = ""
         elif table := _table_block(str(a.get("body_md") or "")):
             body = [table]
+            # A markdown table draws no title of its own, so it still needs one.
+            heading = f"**{title}**" if title else ""
         else:
             continue
-        # Heading = what is measured; italic line under = what it shows + source/as-of.
-        out += [f"**{title}**" if title else "", "", *body, "", f"*{explainer}*", ""]
+        # Heading only where the artifact lacks one; italic line under = what it shows + source.
+        out += [heading, "", *body, "", f"*{explainer}*", ""]
     return [ln for ln in out if ln is not None]
 
 

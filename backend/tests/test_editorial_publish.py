@@ -77,7 +77,10 @@ def test_produced_analytics_are_embedded_and_receipted() -> None:
     md = render_published_article(_draft(), _profile(), analytics)
     # the produced chart is embedded in the body with its AI-labelled caption; the failed one is not.
     assert "![Core PCE, Mar-May](analytic_anx_01.svg)" in md
-    assert "**Core PCE, Mar-May**" in md  # labelled figure heading
+    # A DRAWN figure carries its title inside the image, so a bold heading above it published the
+    # same sentence twice, a line apart. The alt text keeps the title for readers who cannot see
+    # the image; the explainer under it still says what the figure shows.
+    assert "**Core PCE, Mar-May**" not in md
     assert "How did core PCE change" in md  # cold-reader explainer under the chart
     assert "AI-assisted analytic, built only from cited data" in md
     # Failed visuals are not embedded, but they are receipted so they are not "forgotten".
@@ -119,6 +122,9 @@ def test_table_analytic_is_inlined_not_image_embedded() -> None:
     md = render_published_article(_draft(), _profile(), analytics)
     assert "| Outcome | P |" in md and "| Hold | 81% |" in md   # the table itself is present
     assert "![" not in md.split("How we know this")[0]           # no image embed in the body
+    # Unlike a drawn figure, a markdown table renders no title of its own, so it KEEPS the bold
+    # heading a chart no longer gets — otherwise the table arrives unlabelled.
+    assert "**Odds table**" in md
     # The honesty label still travels. Asserted against the constant, not a copy of its
     # wording: this test held a hand-typed version and silently went red when the label
     # was reworded, which reads for months like the disclosure had been dropped.

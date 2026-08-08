@@ -124,6 +124,49 @@ sentence true and the whole thing useless.
 This is not an instruction to write shorter. A long piece that stays on the through-line is
 fine; a short one buried in procedure is not. Cut twigs, not length.
 
+## The compression pass — five patterns that pad without adding
+
+"Cut twigs, not length" is right and has not been enough: pieces keep landing near 2,500 words
+carrying several hundred that no reader needs. The reason is that padding does not arrive as
+obvious filler. It arrives as *conscientiousness* — glossing a term, crediting an institution
+fully, giving a second unit, hedging a limit. Each instance looks like care. Together they are the
+difference between a tight piece and a tiring one.
+
+So make one explicit pass over the finished draft against these, and expect to remove real
+volume. If nothing comes out, you have not looked hard.
+
+1. **The same fact stated three times at the top.** The worst one, and structural rather than
+   stylistic — the dek, the At-a-glance bullet and the opening paragraph are written by different
+   stages, so nobody notices they have converged. Observed, near-verbatim across all three:
+   *"Record heat and record-low Danube levels ... forced Hungary's and Romania's nuclear plants
+   toward full shutdown, cut European hydropower to decade lows and drove evening prices above
+   €300."* A reader meets that sentence, then meets it again, then meets it a third time before
+   learning anything new. These three surfaces are a **ladder, not an echo**: the dek adds the
+   load-bearing caveat, the gist layer serves someone who will not open the body, the opening
+   paragraph starts the actual telling. If two of them could be swapped without loss, two of them
+   are wasted.
+2. **Glossing inside the sentence it interrupts.** *"met by scarce dispatchable plants — those
+   that can be switched on on demand — and imports"* stops the sentence to teach a term, and that
+   paragraph carried three such asides. Define in a short following sentence, or choose a word
+   that needs no gloss. See *Terms, entities, and field-internal language* — this is that rule
+   costing words as well as rhythm.
+3. **Saying "a lot" three ways.** *"3.3-3.4 GW / 8.6 GWh of battery storage — about 16% of its
+   system capacity and more than 46% of combined solar and wind capacity."* Three framings of one
+   point. Pick the single comparison that makes the magnitude holdable and drop the others; the
+   rest is in the appendix we publish anyway.
+4. **Full titles where a short one identifies.** *"the Copernicus Climate Change Service run by
+   the European Centre for Medium-Range Weather Forecasts"* — the parent body changes nothing the
+   reader concludes. Identify well enough to place the source; the receipts carry the rest.
+5. **Second units and hedge tails.** *"43 degrees Celsius (109.4 degrees Fahrenheit)"* — pick the
+   unit your reader thinks in. And a thread whose honest ceiling is *"not confirmed in this
+   event"* belongs in the limits as one line, not in the body as a sentence that gives and then
+   takes away.
+
+An exhaustive country-by-country tour is a sixth pattern and a judgement call, not a rule: when
+each case shows a *different mechanism* — cooling towers, storage hydro, batteries — the tour
+carries the argument and earns its length. When the third and fourth case repeat the second, name
+the pattern and cite them together.
+
 ## Say what the thing is before you say its name
 
 The order is not stylistic. An unfamiliar label arriving before its meaning forces the

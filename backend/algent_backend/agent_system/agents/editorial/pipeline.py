@@ -59,9 +59,15 @@ _QUICK_TAKE_KEYS = ("what_happened", "why_it_matters", "what_is_uncertain")
 # ALGENT_ANALYTICS_WORKER=0. Cap still bounds cost.
 _ANALYTICS_WORKER_ENV = "ALGENT_ANALYTICS_WORKER"
 _ANALYTICS_CAP_ENV = "ALGENT_ANALYTICS_MAX"
-# Prefer at most two strong analytics (e.g. theater map + trajectory). Zero is still success
-# when nothing useful exists; three+ was padding.
-_ANALYTICS_CAP_DEFAULT = 2
+# Zero is still success when nothing useful exists, and the router is told not to fill a quota —
+# this only bounds cost, it is not a target.
+#
+# Raised 2 -> 3 because 2 was silently forcing a choice between kinds. The Danube drought piece
+# spent both slots on charts (generation mix, evening prices) and shipped no map, even though the
+# river's course through six countries was the mechanism of the whole story. A spatial figure and
+# a quantitative one answer different questions; making them compete for the same slot means the
+# reader loses whichever the router ranked second. Three fits orientation + magnitude + one more.
+_ANALYTICS_CAP_DEFAULT = 3
 
 # A live failure mode: the comprehension "handhold" repair lap rewrote a ~400-word piece into a
 # single sentence, then the pipeline still marked it publishable. A hollow shell is not a dud —

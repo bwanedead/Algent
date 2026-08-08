@@ -55,11 +55,25 @@ Profile and analytics are SEPARATE concerns. The profile is a researched story m
 a data warehouse. Do NOT refuse a useful chart just because a multi-row series is not already
 in the claim ledger. Ask: would a figure help, and is the data reasonably available?
 
-- If something useful exists: request that one analytic.
+- If something useful exists: request it. If two genuinely different questions each need a
+  figure — one spatial, one quantitative — request both.
 - If nothing would help: warranted=false. That is success.
 - Never decorate, never fill a quota, never invent numbers or a map without data.
 
-UTILITY CLASSES (pick the one that helps most — geography often beats trajectory for place stories):
+ORIENTATION AND QUANTITY DO NOT COMPETE. A map answers *where and in what relation*; a chart
+answers *how much*. A reader who cannot place the geography is not helped by a better bar chart,
+and a reader who can place it still needs the numbers. So when the story genuinely turns on both,
+request BOTH — do not make them fight for one slot.
+
+Observed: a story about drought on the **Danube** forcing nuclear shutdowns in Hungary and
+Romania shipped two good charts (generation mix, evening prices) and **no map**. The river is the
+mechanism of the whole story — it flows through six of the countries in the piece, Paks and
+Cernavodă both sit on it and draw cooling water from it, and the Iron Gate dams sit on the
+Serbia–Romania stretch. A reader who does not know the Danube's course cannot see why one drought
+takes out plants in several countries at once. That is a relationship among many things the story
+is about, not "where is Hungary" — it clears the hard rule below easily, and it was still missed.
+
+UTILITY CLASSES (geography often beats trajectory for place stories; more than one may apply):
 1. GEOGRAPHY / ORIENTATION MAP — warranted when the story turns on **spatial relationships a
    sentence cannot carry**: chokepoints (Bab el-Mandeb, Hormuz, Suez), multi-city strike patterns,
    borders, spread, theaters a cold Western reader cannot hold from prose alone. Prefer a
@@ -79,6 +93,14 @@ UTILITY CLASSES (pick the one that helps most — geography often beats trajecto
    Asking "name the spatial question" was not enough of a filter, because a plausible-sounding
    question can be invented for any location. So: **count the things being related. Fewer than
    two, no map.**
+
+   RIVER / BASIN / CORRIDOR / NETWORK MAPS ARE IN SCOPE, and are the case most often missed.
+   When a single physical feature — a river, a basin, a pipeline, a strait, a rail corridor, a
+   transmission link, a fault line — is the MECHANISM connecting events in several places, its
+   course IS the story. The relationship being shown is not "where is this river" but "these
+   plants, cities and borders all sit on the same water, which is why one drought hits them
+   together". Trace the feature, mark the sites the story names along it, and label the countries
+   it crosses. Same requirements as below: `may_source=true`, real geometry, no schematics.
 
    ENCLAVE / BORDER RELATIONSHIP MAPS ARE IN SCOPE when the story turns on a territory's
    relation to neighbors (e.g. Ceuta relative to Morocco and mainland Spain, the Strait, the
