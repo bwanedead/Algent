@@ -76,18 +76,25 @@ PRODUCE an EditorialTreatment:
      ids that supply it), `resolution` (the grain — see below), and `do_not_overstate` (the
      ceiling where evidence is thin/hedged — never launder a `likely` into a `fact`).
 
-     **THIS LIST IS THE ARTICLE'S LENGTH.** Whatever you list, the drafter covers, at roughly
-     250-300 words each. Nine concepts is a 2,500-word article — that is not a drafting
-     failure, it is this field. So the question is never "what else is true and relevant"
-     (the profile is full of that) but "what is the FEWEST the shape actually stands on."
-     **Aim for 4-6.** More than 6 means you are inventorying the profile rather than
-     designing a molecule, and you should be merging, not adding.
+     **KNOW WHAT THIS LIST DOES.** Whatever you list, the drafter covers, and each concept
+     becomes a stretch of prose. This field, not the drafter's restraint, is where an
+     article's length is actually decided — a piece that ran 2,500 words when it had far less
+     than that to say was carrying nine concepts, and no amount of tightening downstream could
+     have saved it. Choose knowing that.
+
+     There is no right number. A dense structural story may genuinely stand on many concepts
+     and a sharp single-development story on very few, and forcing either toward a house count
+     would make every piece the same shape — which is its own failure. What is constant is the
+     question: not "what else is true and relevant" (the profile is full of that) but **what
+     does this shape actually stand on, and what is merely also true?**
 
      Merge before you add. Concepts that are facets of one idea belong together: "what the
-     talks were", "what the toolkit is" and "what the mechanism is called" are one concept
-     about how the two sides manage the line, not three. A reader holds a handful of ideas,
-     not a syllabus — and the profile having researched something well is not a reason the
-     reader must receive it as its own concept.
+     talks were", "what the toolkit is" and "what the mechanism is called" are one idea about
+     how two sides manage a line, not three. A reader holds ideas, not a syllabus — and the
+     profile having researched something well is never a reason the reader must receive it as
+     its own concept. If you find yourself listing because the material exists rather than
+     because the shape needs it, you are inventorying, and the cut belongs here where it is
+     cheap rather than downstream where it is impossible.
 
    - `resolution` — THE COARSEST GRAIN THAT STILL SUPPORTS THE SHAPE, and what you are rolling
      up to get there. Not a specification of what detail to include; that reading turns this
