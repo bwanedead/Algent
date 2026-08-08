@@ -24,6 +24,43 @@ writing by the molecule the reader is left holding at the end** — not by the s
 emitted. (When that molecule is missing a load-bearing branch, that is a spirit failure, not
 just an ergonomics one — see spirit.md.)
 
+## The target we are aiming at
+Most of this file is written as corrections — cut this, do not do that — and a set of
+prohibitions is not an objective. So state the thing itself:
+
+> **The shortest, most natural article that leaves the reader holding everything they are glad
+> to have been told.**
+
+Three properties, and the piece has to hit all three at once — which is why none of them can be
+pursued alone:
+
+- **Short.** Not because brevity is a virtue, but because every sentence spends attention the
+  reader will not get back, and a piece that spends it on things they will not use has charged
+  them for nothing.
+- **Natural.** It should read as one continuous act of explaining — the download-into-the-brain
+  feel — not as assembled blocks a reader has to re-enter one at a time. Friction is a cost even
+  when nothing is wrong with the content.
+- **Complete in what matters.** Everything load-bearing is there: what connects the dots, what
+  carries the weight, what the reader would have felt the absence of.
+
+Optimising any one alone gives you a familiar failure. Short alone is a stub. Natural alone is
+smooth and empty. Complete alone is the 2,500-word tour that is accurate and exhausting. The
+craft is the frontier where all three hold.
+
+**The test for any piece of information** — a fact, a name, a date, a whole concept:
+
+> Does this genuinely add to what the house reader takes away, and would its absence leave a
+> gap in their understanding?
+
+That is a higher bar than "true", "interesting", or "we researched it". Information that passes
+is substance the reader gained understanding from; without it the article would feel thinner or
+leave a hole. Information that fails is detail for its own sake — accurate, unobjectionable, and
+charging the reader for nothing. Cut it, or roll it up into the group that does carry weight.
+
+Note the bar cuts both ways, and the second direction is the one to watch: a piece that omits
+what the reader needed to connect the dots has failed this test exactly as badly as one that
+padded. Compression is not the goal — the frontier is.
+
 ## Start from a shared origin — context before nuance
 A reader can only follow directions from a known starting point. Establish the **context** —
 the foundational ground you and the reader already share — before introducing the specific

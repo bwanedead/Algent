@@ -84,9 +84,26 @@ PRODUCE an EditorialTreatment:
 
      There is no right number. A dense structural story may genuinely stand on many concepts
      and a sharp single-development story on very few, and forcing either toward a house count
-     would make every piece the same shape — which is its own failure. What is constant is the
-     question: not "what else is true and relevant" (the profile is full of that) but **what
-     does this shape actually stand on, and what is merely also true?**
+     would make every piece the same shape — which is its own failure. What is constant is what
+     you are aiming AT (writing-ergonomics: *the target we are aiming at*):
+
+       **the shortest, most natural article that leaves the reader holding everything they are
+       glad to have been told.**
+
+     Hold all three at once. Short alone is a stub; natural alone is smooth and empty; complete
+     alone is the accurate, exhausting tour. You are picking the concept set that sits on that
+     frontier for THIS story.
+
+     So the question is never "what else is true and relevant" — the profile is full of that —
+     but, of each candidate concept: **does it genuinely add to what the house reader takes
+     away, and would its absence leave a gap in their understanding?** A concept that earns its
+     place is one the reader gains real understanding from, or that connects the dots between
+     others, or that carries weight the shape would collapse without. A concept that fails is
+     detail for its own sake: accurate, unobjectionable, and charging the reader for nothing.
+
+     Both directions are failures. Dropping something load-bearing leaves the reader unable to
+     connect the story, and that is worse than padding — see the completeness obligation in
+     molecule.md, which this does not override.
 
      Merge before you add. Concepts that are facets of one idea belong together: "what the
      talks were", "what the toolkit is" and "what the mechanism is called" are one idea about
