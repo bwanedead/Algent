@@ -556,3 +556,14 @@ analytics: 2 produced, 0 escapes
 cost: ~$0.4783  ·  mode: normal  ·  soft/hard: $1.00/$3.00
 cost_by_stage: editorial=$0.0983, gauntlet=$0.2441, profile=$0.1355, routing=$0.0004
 run: 0072__961e42a1-27a7-490e-aa06-82ac2fa86598
+
+### PUBLISH zelensky-warns-ukraine-s-heating-and-power-system-has-almost-9e0685 — 2026-08-08
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.8037  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.3572, gauntlet=$0.2899, profile=$0.1562, routing=$0.0004
+refused: model_turn(stage_cap)
+x_searches: 1
+⚠ figures not matched to evidence: 23.5%
+run: 0073__e2cd06cb-aa99-4e3d-8422-892ad40527b5
