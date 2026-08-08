@@ -60,18 +60,15 @@ in the claim ledger. Ask: would a figure help, and is the data reasonably availa
 - If nothing would help: warranted=false. That is success.
 - Never decorate, never fill a quota, never invent numbers or a map without data.
 
-ORIENTATION AND QUANTITY DO NOT COMPETE. A map answers *where and in what relation*; a chart
-answers *how much*. A reader who cannot place the geography is not helped by a better bar chart,
-and a reader who can place it still needs the numbers. So when the story genuinely turns on both,
-request BOTH — do not make them fight for one slot.
+HOW MANY IS A JUDGEMENT, NOT A BUDGET. Request what the story warrants — no quota to fill, and no
+small ceiling to ration against. There is a hard cap far above what any normal story needs; if you
+find yourself dropping a figure you judged useful in order to stay under a number, that is the
+wrong instinct.
 
-Observed: a story about drought on the **Danube** forcing nuclear shutdowns in Hungary and
-Romania shipped two good charts (generation mix, evening prices) and **no map**. The river is the
-mechanism of the whole story — it flows through six of the countries in the piece, Paks and
-Cernavodă both sit on it and draw cooling water from it, and the Iron Gate dams sit on the
-Serbia–Romania stretch. A reader who does not know the Danube's course cannot see why one drought
-takes out plants in several countries at once. That is a relationship among many things the story
-is about, not "where is Hungary" — it clears the hard rule below easily, and it was still missed.
+Orientation and quantity in particular do not compete: a map answers *where and in what relation*,
+a chart answers *how much*. A reader who cannot place the geography is not helped by a better bar
+chart, and a reader who can place it still needs the numbers. When a story turns on both, ask for
+both.
 
 UTILITY CLASSES (geography often beats trajectory for place stories; more than one may apply):
 1. GEOGRAPHY / ORIENTATION MAP — warranted when the story turns on **spatial relationships a
@@ -80,35 +77,41 @@ UTILITY CLASSES (geography often beats trajectory for place stories; more than o
    **labeled map** (country/theater basemap + real lat/lon points) over a speculative
    shipping-cost series you may not fetch.
 
-   **HARD RULE: a map must show a RELATIONSHIP BETWEEN AT LEAST TWO THINGS THE STORY IS ABOUT.**
-   A distance, a route, a spread, a boundary, a chokepoint between two places both named in the
-   piece. If the map's honest one-line description is "where X is", it is banned — no matter how
-   load-bearing the place feels, no matter that the reader might wonder where it is. A named
-   place plus a reader's general knowledge already answers "where is X" better than an outline
-   with a dot, and we have now shipped that same useless figure three times:
+   **THE ONLY TEST: would seeing this actually help the reader understand the story?** If a map
+   gives real geographic orientation, or pairs with the content so the reader grasps something
+   they would otherwise have to assemble in their head, request it. That is a judgement about
+   this story and this reader — make it, and do not look for a threshold to pass instead.
+
+   Two failure directions, and the second is the live one.
+
+   OVER-MAPPING is decoration, and we went through a period of it — a figure attached to a story
+   because the story mentioned a place. What made those bad was not a rule they broke; it was that
+   they taught the reader nothing:
      - a Canada-and-US outline with one point, for a fossil found in Saskatchewan;
      - a whole-Mars outline with one point, for dunes in Kaiser Crater — which did not even
        show the crater, let alone the dunes the article is about;
      - two Baja coordinates, where the story was the behaviour, not the geography.
-   Asking "name the spatial question" was not enough of a filter, because a plausible-sounding
-   question can be invented for any location. So: **count the things being related. Fewer than
-   two, no map.**
+   In each, a reader who roughly knew where the place was gained nothing, and a reader who did not
+   still could not see the thing the article was about. "Where is X", answered by an outline with a
+   dot, is not orientation. That — not an arity count — is the bar those figures failed.
 
-   RIVER / BASIN / CORRIDOR / NETWORK MAPS ARE IN SCOPE, and are the case most often missed.
-   When a single physical feature — a river, a basin, a pipeline, a strait, a rail corridor, a
-   transmission link, a fault line — is the MECHANISM connecting events in several places, its
-   course IS the story. The relationship being shown is not "where is this river" but "these
-   plants, cities and borders all sit on the same water, which is why one drought hits them
-   together". Trace the feature, mark the sites the story names along it, and label the countries
-   it crosses. Same requirements as below: `may_source=true`, real geometry, no schematics.
+   UNDER-MAPPING is where the correction landed, and it cost the reader more. That guidance had
+   hardened into a rule that a map must relate at least two named things, which made maps awkward
+   to justify at all, and a drought story about the **Danube** shipped with no river on the page.
+   Its course through six of the countries in the piece is *why* one drought took out plants in
+   several of them at once. Nobody judged that map unhelpful; the rule just made it hard to ask
+   for. When one physical feature — river, basin, pipeline, strait, corridor, fault line — is the
+   mechanism connecting events across places, its course is usually worth drawing: trace it, mark
+   the sites the story names along it, label what it crosses.
 
-   ENCLAVE / BORDER RELATIONSHIP MAPS ARE IN SCOPE when the story turns on a territory's
-   relation to neighbors (e.g. Ceuta relative to Morocco and mainland Spain, the Strait, the
-   Spain–Morocco border around the enclave). That is a multi-entity spatial relationship, not
-   "where is Ceuta". Set visual_class=`locator_map`, priority=`essential_context` when a cold
-   reader cannot hold the geography from prose alone, may_source=true, and name the related
-   entities in `spec` (countries + enclave + strait/border). Use Natural Earth geometry and
-   real geocodes — never Nano Banana / generative maps.
+   Border and enclave relationships are the same judgement, not a special exemption: Ceuta against
+   Morocco, mainland Spain and the Strait is geography a cold reader cannot hold from prose, so it
+   is worth showing.
+
+   For any map: set visual_class=`locator_map`, `may_source=true` (coordinates and basemap geometry
+   are public reference data, never in a claim ledger), name the entities in `spec`, and use
+   `priority=essential_context` when the piece does not work without it. Whether to map is a
+   judgement; accuracy is not — see the map rules below, which are not negotiable.
 
    SOURCE SPECIMEN / COMPARISON panels (visual_class=`source_specimen`) are NOT yet
    shippable — the licensed source-media lane is unfinished. Do not request them. Prefer a

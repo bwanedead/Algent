@@ -59,15 +59,20 @@ _QUICK_TAKE_KEYS = ("what_happened", "why_it_matters", "what_is_uncertain")
 # ALGENT_ANALYTICS_WORKER=0. Cap still bounds cost.
 _ANALYTICS_WORKER_ENV = "ALGENT_ANALYTICS_WORKER"
 _ANALYTICS_CAP_ENV = "ALGENT_ANALYTICS_MAX"
-# Zero is still success when nothing useful exists, and the router is told not to fill a quota —
-# this only bounds cost, it is not a target.
+# A COST BACKSTOP, NOT AN EDITORIAL TARGET. How many figures a story warrants is a judgement the
+# router makes against the story; this number exists only because we cannot build infinitely many.
+# It should almost never be the thing that decides.
 #
-# Raised 2 -> 3 because 2 was silently forcing a choice between kinds. The Danube drought piece
-# spent both slots on charts (generation mix, evening prices) and shipped no map, even though the
-# river's course through six countries was the mechanism of the whole story. A spatial figure and
-# a quantitative one answer different questions; making them compete for the same slot means the
-# reader loses whichever the router ranked second. Three fits orientation + magnitude + one more.
-_ANALYTICS_CAP_DEFAULT = 3
+# It was 2, and that was low enough to decide constantly. The Danube drought piece spent both
+# slots on charts (generation mix, evening prices) and shipped no map of the river whose course
+# through six countries was the mechanism of the whole story — not because anyone judged the map
+# unhelpful, but because there was no slot left. A number that silently overrules the judgement it
+# was meant to bound is set wrong. 7 is high enough that hitting it means something unusual about
+# the story rather than something arbitrary about the limit.
+#
+# Zero is still success when nothing helps, and the router is told never to fill a quota — this
+# ceiling is not a goal to reach.
+_ANALYTICS_CAP_DEFAULT = 7
 
 # A live failure mode: the comprehension "handhold" repair lap rewrote a ~400-word piece into a
 # single sentence, then the pipeline still marked it publishable. A hollow shell is not a dud —
