@@ -538,10 +538,18 @@ _WORKER_PROVENANCE = re.compile(
 )
 
 
+#: Labels left standing when their URL is removed. Stripping the link out of
+#: "WeatherNext confidence: https://…" leaves "WeatherNext confidence:" dangling at the end of the
+#: caption, which reads as truncation — worse than the duplication being fixed.
+_ORPHAN_LABEL = re.compile(r"(?:^|[.;])\s*[^.;:]{0,60}:\s*(?=[.;]|$)")
+
+
 def _strip_provenance(text: str) -> str:
     """Drop worker-authored source/as-of/URL text so the harness's stamp is the only one."""
     out = _WORKER_PROVENANCE.sub("", text or "")
-    return re.sub(r"\s*[—,;]\s*$", "", out.strip())
+    out = _ORPHAN_LABEL.sub(".", out)
+    out = re.sub(r"\s*([.;])\s*(?=[.;])", "", out)          # collapse punctuation left adjacent
+    return re.sub(r"\s*[—,;:]\s*$", "", out.strip())
 
 
 def _sourced_claims(data_text: str, caption: str, request: AnalyticsRequest) -> list[dict]:
