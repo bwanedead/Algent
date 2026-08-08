@@ -539,3 +539,12 @@ cost_by_stage: editorial=$0.1208, gauntlet=$0.2686, profile=$0.1456, routing=$0.
 refused: model_turn(reservation_overrun)
 ⚠ figures not matched to evidence: 35%, 69%
 run: 0070__5c81673c-e916-4648-9fd4-3f6cc778b26e
+
+### PUBLISH india-and-china-keep-talking-on-their-disputed-himalayan-bor-1d56d8 — 2026-08-08
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.5857  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.1150, gauntlet=$0.3385, profile=$0.1317, routing=$0.0004
+⚠ figures not matched to evidence: 56%, 93%
+run: 0071__41cbc344-3c1a-4f1c-a480-14c86275cc2c
