@@ -522,6 +522,27 @@ def _arithmetic_supported(target: float, nums: list[float]) -> bool:
 #: shape of the evidence, not a transcription of the CSV, which is published beside it anyway.
 _MAX_SOURCED_CLAIMS = 12
 
+#: Provenance the WORKER wrote into its own caption. The harness owns provenance — it stamps the
+#: AI label, the publishers and the as-of itself — so a worker that also writes them produces a
+#: caption carrying every line twice. Observed under one map: a bare URL for each of eight plotted
+#: points, then "As of <date>" and a Source list, then the harness's own label, Source list and
+#: as-of again. ~1,400 characters, the largest block of text on the page, and nothing a reader
+#: wants to read. The full per-row attribution already ships in the figure's data.csv and the
+#: article's receipts, which is where an inspectable audit trail belongs; the caption's job is to
+#: say what the figure shows.
+_WORKER_PROVENANCE = re.compile(
+    r"(?:\*\*)?(?:Sources?|Data source|Basemap|Geocodes?)(?:\*\*)?\s*:.*$"
+    r"|\bAs of \d{4}-\d{2}-\d{2}\.?"
+    r"|\(?https?://\S+\)?",
+    re.IGNORECASE | re.DOTALL,
+)
+
+
+def _strip_provenance(text: str) -> str:
+    """Drop worker-authored source/as-of/URL text so the harness's stamp is the only one."""
+    out = _WORKER_PROVENANCE.sub("", text or "")
+    return re.sub(r"\s*[—,;]\s*$", "", out.strip())
+
 
 def _sourced_claims(data_text: str, caption: str, request: AnalyticsRequest) -> list[dict]:
     """Turn a sourced figure's data table into claim-shaped rows for the profile.
@@ -604,6 +625,7 @@ def _caption(
     """
     def _clean(text: str) -> str:
         text = re.sub(r"\b(?:clm_|src_)[0-9a-fA-F]+\b", "", text or "")
+        text = _strip_provenance(text)
         return re.sub(r"\s{2,}", " ", text).strip(" —,-")
 
     shows = _clean(request.question or request.title)

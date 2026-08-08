@@ -6,6 +6,20 @@ from .draft import ArticleDraft
 from .treatment import EditorialTreatment
 
 
+def _opening_paragraph(body: str) -> str:
+    """The first real prose paragraph — skipping any heading or figure the body opens with."""
+    for block in (body or "").split("\n\n"):
+        text = block.strip()
+        if not text or text.startswith(("#", "!", "|", ">", "-")):
+            continue
+        # A figure caption is a wholly italic block and sits right under the image, so it is the
+        # first non-heading thing in any piece that leads with a chart. It is not the opening.
+        if text.startswith("*") and text.endswith("*"):
+            continue
+        return text
+    return (body or "").strip()[:600]
+
+
 def build_headline_message(
     draft: ArticleDraft,
     treatment: EditorialTreatment | None = None,
@@ -58,6 +72,12 @@ def build_headline_message(
         "",
         "## The finished article",
         draft.body.strip(),
+        "",
+        # The body is long, so its opening paragraph — the one surface the dek and quick_take
+        # keep colliding with — is buried thousands of words above the task. Repeating it here,
+        # adjacent to the instruction, is what makes the echo visible at the moment of writing.
+        "## The body already opens with this paragraph — DO NOT RESTATE IT",
+        _opening_paragraph(draft.body),
         "",
         "TASK: Write the final surface package — headline, standfirst, quick_take "
         "(what_happened / why_it_matters / what_is_uncertain), image_subject, image_hook. "

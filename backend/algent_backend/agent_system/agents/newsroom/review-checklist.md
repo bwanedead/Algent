@@ -196,6 +196,16 @@ read it.
 - **Not a word cap.** The fix is never "make it shorter" — it is cutting the twigs so the
   forest is visible. A long piece that stays on the through-line is fine; a short one buried
   in procedure is not.
+- **Resolution check: does this detail change the reader's mental model?** The most reliable
+  source of length is not padding but *grain* — particulars carried at a finer resolution than
+  the reader will ever use. A border piece named six friction points, each with its own
+  disengagement date; a reader holds "three main stretches of contested border, one cluster
+  now managed" and could not name one of the six an hour later. Rolling up is not vagueness
+  and not inaccuracy — the group is stated precisely and the members ship in the receipts. Ask
+  it of every list, date, coordinate and proper noun: **would the reader use this?** A
+  particular earns its name when it recurs, when the story turns on that specific one, or when
+  it is the evidence for a contested claim. Otherwise, name the pattern and let the group carry
+  the members.
 - **Run the compression pass, and name what you cut.** Not a word cap, but not a pass you may
   skip either: pieces on the through-line still land several hundred words heavy, because the
   padding arrives disguised as care. Check the five patterns in

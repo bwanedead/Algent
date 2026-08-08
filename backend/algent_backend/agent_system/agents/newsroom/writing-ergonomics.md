@@ -383,6 +383,44 @@ speakers, jurisdictions, or sources. Revisit the same reader question; each bloc
 change that answer. Prefer fewer, better-connected moves over parallel sections that never
 rejoin. Island blocks that do not change the molecule belong cut, not stitched with signposts.
 
+**Where the chop actually comes from.** The treatment hands you concepts, and the path of least
+resistance is to write one self-contained block per concept and set them side by side. Each block
+is true, each is well-grounded, and the piece still reads as a list because nothing carries
+*across* the seam. The reader feels this as work: they finish a paragraph, park it, and start
+again cold.
+
+The repair is at the joins, not inside the blocks. Ask of each move: *what did the last one leave
+the reader holding, and how does this one act on it?* Then write the connection rather than
+implying it. Two facts placed next to each other are a stack; one sentence saying how the second
+bears on the first is a thread. And prefer that connective sentence over a signpost heading — a
+heading announces a topic change, which is the opposite of continuity.
+
+Watch for the stacking tells: a colon followed by a run of clauses that are really three separate
+facts; a paragraph of sentences that could be reordered without loss; consecutive sentences that
+each introduce a new noun the previous one never mentioned.
+
+## An increment needs its baseline
+Most news is a *change to an ongoing situation*, and a piece that reports the change while
+assuming the situation reads as insider correspondence — accurate to someone already following,
+faintly disorienting to everyone else. The tell is prior states referenced as known.
+
+Observed, in one opening: *"India and China held their **36th** border-management talks … calm
+enough for **flights and pilgrimages to resume**."* Both phrases assume the reader already knows
+there is a long-running series of talks, and that flights and pilgrimages had been suspended in
+the first place. Nothing in the piece had said either. A reader who has not been following stalls
+on the second clause and never fully recovers.
+
+So before the increment lands, the reader needs the standing state it is an increment *to*: what
+the situation has been, how the parties currently stand, what was already broken or already fixed.
+This is not a history lesson and it is not license to lengthen — usually it is a clause or a
+sentence, and it *replaces* the detail you were about to spend on the newest surface. The
+question is not "have I explained the background" but "can a reader who has never heard of this
+tell what state the world was in before today."
+
+Two failure modes bracket this. Assuming the baseline is the one above. Reciting it — opening with
+a chronology of everything that led here — is the other, and it buries the news. Give the standing
+state, then the change, in that order and in as few words as it takes.
+
 ## Ergonomics never overrides accuracy
 If a smoother phrasing would bend the meaning, the meaning wins. If a cleaner ordering would
 imply a causation the evidence does not support, the evidence wins. **Clarity that costs

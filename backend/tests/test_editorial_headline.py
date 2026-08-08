@@ -64,3 +64,31 @@ def test_headline_writer_registered_on_nano() -> None:
 
     spec = default_agent_registry().get("headline_writer")
     assert spec.tool_ids == () and spec.default_model.provider == "meta" and spec.default_model.model == "muse-spark-1.2-contributor"
+
+
+def test_opening_paragraph_is_surfaced_beside_the_task_and_skips_figures() -> None:
+    """The dek and quick_take kept restating the body's first paragraph, so it is shown here.
+
+    The body can run thousands of words, which put the one surface they collide with far above
+    the instruction. It must be the opening PROSE — a piece that leads with a chart has a
+    heading, an image and an italic caption first, and a dek warned off the caption would be
+    warned off the wrong thing.
+    """
+    from algent_backend.agent_system.agents.editorial.headline_messages import (
+        _opening_paragraph,
+        build_headline_message,
+    )
+
+    body = (
+        "## At a glance\n\n"
+        "![The disputed border](analytic_map.svg)\n\n"
+        "*Locator map of the border. — AI-assisted analytic.*\n\n"
+        "India and China held their 36th border talks in New Delhi and agreed only to keep "
+        "using existing channels.\n\n"
+        "The talks followed years of standoff."
+    )
+    assert _opening_paragraph(body).startswith("India and China held their 36th")
+
+    msg = build_headline_message(ArticleDraft(id="d1", title="t", body=body))
+    assert "DO NOT RESTATE IT" in msg
+    assert msg.index("DO NOT RESTATE IT") > msg.index("## The finished article")

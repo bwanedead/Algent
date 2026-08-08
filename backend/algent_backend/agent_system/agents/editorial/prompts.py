@@ -73,8 +73,37 @@ PRODUCE an EditorialTreatment:
    - `concepts[]`: the LOAD-BEARING concepts the reader must build to hold that shape. For
      each: a local `id` (k1, k2…), `name`, `why_load_bearing` (the wrong shape if it's
      missing), `depends_on` (other concept ids — chains/towers), `grounds_in` (profile item
-     ids that supply it), `resolution` (the grain), and `do_not_overstate` (the ceiling where
-     evidence is thin/hedged — never launder a `likely` into a `fact`).
+     ids that supply it), `resolution` (the grain — see below), and `do_not_overstate` (the
+     ceiling where evidence is thin/hedged — never launder a `likely` into a `fact`).
+
+     **THIS LIST IS THE ARTICLE'S LENGTH.** Whatever you list, the drafter covers, at roughly
+     250-300 words each. Nine concepts is a 2,500-word article — that is not a drafting
+     failure, it is this field. So the question is never "what else is true and relevant"
+     (the profile is full of that) but "what is the FEWEST the shape actually stands on."
+     **Aim for 4-6.** More than 6 means you are inventorying the profile rather than
+     designing a molecule, and you should be merging, not adding.
+
+     Merge before you add. Concepts that are facets of one idea belong together: "what the
+     talks were", "what the toolkit is" and "what the mechanism is called" are one concept
+     about how the two sides manage the line, not three. A reader holds a handful of ideas,
+     not a syllabus — and the profile having researched something well is not a reason the
+     reader must receive it as its own concept.
+
+   - `resolution` — THE COARSEST GRAIN THAT STILL SUPPORTS THE SHAPE, and what you are rolling
+     up to get there. Not a specification of what detail to include; that reading turns this
+     field into a padding instruction and it has been read that way.
+
+     The test for any particular: **does this change the reader's mental model at the
+     resolution they care about?** If not, generalize it. "Three main stretches of contested
+     border" gives the reader the same structure as six named friction points, at a fraction
+     of the cost — and the six names, held for one paragraph and forgotten, were never going
+     to be part of anyone's picture. Rolling up is not vagueness: the group is stated
+     precisely, and the members live in the receipts we publish anyway.
+
+     Err toward compression. A reader who finishes with the right shape and none of the
+     placenames has been served; one who finishes with all the placenames and no shape has not.
+     Detail earns a name when the reader would use the name — because it recurs, because the
+     story turns on that specific one, or because it is the evidence for a contested claim.
      `why_load_bearing` must be about the READER's shape breaking — never "the profile's lead
      would go unused." An unresolved thread ("this may be related, but we couldn't establish
      it") is a fact about our research, not a concept: it belongs in the limits. CUT it.
