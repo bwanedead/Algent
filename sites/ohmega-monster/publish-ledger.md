@@ -548,3 +548,11 @@ cost: ~$0.5857  ·  mode: normal  ·  soft/hard: $1.00/$3.00
 cost_by_stage: editorial=$0.1150, gauntlet=$0.3385, profile=$0.1317, routing=$0.0004
 ⚠ figures not matched to evidence: 56%, 93%
 run: 0071__41cbc344-3c1a-4f1c-a480-14c86275cc2c
+
+### PUBLISH google-s-ai-hurricane-model-buys-forecasters-an-extra-day-478b03 — 2026-08-08
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.4783  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.0983, gauntlet=$0.2441, profile=$0.1355, routing=$0.0004
+run: 0072__961e42a1-27a7-490e-aa06-82ac2fa86598
