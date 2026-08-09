@@ -378,3 +378,32 @@ def test_rail_reuses_portfolio_skips_synthesis_and_still_routes(monkeypatch) -> 
         et == rl.RAIL_STAGE and (p or {}).get("skipped") is True
         for et, p in events
     )
+
+
+def test_stage_clock_times_stages_and_slow_legs() -> None:
+    """Wall time per stage, the counterpart to cost_by_stage.
+
+    A run went ten minutes with no model calls and looked dead from outside; it was a figure
+    timing out in a subprocess. Cost was attributed by stage from the start, time was not, so
+    that could only be diagnosed by reading raw event timestamps afterwards.
+    """
+    from algent_backend.agent_system.agents.newsroom.rail import StageClock, _hms
+
+    clock = StageClock()
+    clock.enter("profile")
+    clock.enter("editorial")
+    clock.mark("analytics_worker.artifact", {"request_id": "req_map", "note": "timed out"})
+    summary = clock.summary()
+
+    # Every stage closes, including the last one — which only ends when the run does.
+    assert set(summary["by_stage"]) == {"profile", "editorial"}
+    assert all(v is not None for v in summary["by_stage"].values())
+    assert summary["total_seconds"] >= 0
+
+    # Legs carry what identifies the slow thing, ranked slowest first, private fields dropped.
+    leg = summary["slow_legs"][0]
+    assert leg["event"] == "analytics_worker.artifact" and leg["detail"] == "req_map"
+    assert not any(k.startswith("_") for k in leg)
+
+    # Durations read as durations, not float seconds.
+    assert _hms(5) == "5s" and _hms(65) == "1m05s" and _hms(600) == "10m00s"

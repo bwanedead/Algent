@@ -34,6 +34,8 @@ from __future__ import annotations
 
 import dataclasses
 import os
+import sys
+import time
 from datetime import UTC, datetime
 from typing import Any, TypedDict
 
@@ -112,7 +114,11 @@ def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | Non
 def _run_rail(
     context: AgentRunContext, state: RailState, config: RunnableConfig, *, lead_store: Any | None,
 ) -> dict[str, Any]:
-    sub, x_calls = _install_cost_tee(context)
+    sub, x_calls, clock = _install_cost_tee(context)
+    # Module-level so every _finish path picks up timings without threading the clock through
+    # six signatures. Safe because the single-flight lock guarantees one rail per process.
+    global _CLOCK
+    _CLOCK = clock
     report = NewsroomRailReport(generated_at=datetime.now(UTC).isoformat())
 
     pool, portfolio, early = _resolve_portfolio(
@@ -130,19 +136,106 @@ def _run_rail(
     )
 
 
-def _install_cost_tee(context: AgentRunContext) -> tuple[Any, list[int]]:
-    """Forward events; label the article ledger from RAIL_STAGE. Returns (sub_ctx, x_calls)."""
+def _install_cost_tee(context: AgentRunContext) -> tuple[Any, list[int], StageClock]:
+    """Forward events; label the article ledger from RAIL_STAGE. Returns (sub_ctx, x_calls, clock).
+
+    Also the natural place to TIME the rail, because it already sees every stage transition.
+    """
     x_calls = [0]
+    clock = StageClock()
 
     def _tee(event_type: str, payload: dict[str, Any] | None = None) -> None:
         p = payload or {}
         if event_type == RAIL_STAGE and p.get("stage"):
             cost.set_stage(str(p["stage"]))
+            clock.enter(str(p["stage"]))
+        if event_type in _SLOW_LEG_EVENTS:
+            clock.mark(event_type, p)
         if event_type == ev.TOOL_RESULT and '"kind": "x"' in str(p.get("content", "")):
             x_calls[0] += 1
         context.emit(event_type, p)
 
-    return dataclasses.replace(context, emit=_tee), x_calls
+    return dataclasses.replace(context, emit=_tee), x_calls, clock
+
+
+#: Events worth timing INSIDE a stage. "editorial" is one rail stage but many minutes, and the
+#: minutes are not evenly spread — a figure that times out spends ten of them in a subprocess
+#: whose calls never appear on the model dashboard, which reads from outside as a dead run.
+_SLOW_LEG_EVENTS = frozenset({
+    "analytics_worker.ready",
+    "analytics_worker.artifact",
+    "editorial_pipeline.hero_image",
+    "editorial_pipeline.analytics_claims_confirmed",
+    "draft.completed",
+    "comprehension_check.completed",
+    "headline.completed",
+})
+
+
+#: Set per run in _run_rail; read by every _finish path. See the note there.
+_CLOCK: StageClock | None = None
+
+
+class StageClock:
+    """Wall time per rail stage, printed as it happens and kept for the report.
+
+    Cost was already attributed by stage; TIME was not, so "why has this been running for
+    twenty minutes" could only be answered by reading raw event timestamps out of a run's
+    timeline after the fact. This makes it answerable while the run is still going.
+    """
+
+    def __init__(self) -> None:
+        self.stages: list[dict[str, Any]] = []
+        self.legs: list[dict[str, Any]] = []
+        self._t0 = time.monotonic()
+
+    def enter(self, stage: str) -> None:
+        now = time.monotonic()
+        if self.stages:
+            prev = self.stages[-1]
+            prev["seconds"] = round(now - prev["_start"], 1)
+            self._say(f"[stage] {prev['stage']} finished in {_hms(prev['seconds'])}")
+        self.stages.append({"stage": stage, "_start": now, "seconds": None})
+        self._say(f"[stage] {stage} started (+{_hms(now - self._t0)} into the run)")
+
+    def mark(self, event_type: str, payload: dict[str, Any]) -> None:
+        """Note a slow leg inside the current stage, so a long stage is not opaque."""
+        now = time.monotonic()
+        last = self.legs[-1]["_at"] if self.legs else (
+            self.stages[-1]["_start"] if self.stages else self._t0)
+        label = event_type.split(".")[-1]
+        detail = str(payload.get("request_id") or payload.get("note") or "")[:80]
+        self.legs.append({"event": event_type, "detail": detail,
+                          "since_previous_s": round(now - last, 1), "_at": now})
+        self._say(f"[leg]   {label} (+{_hms(now - last)}){f' — {detail}' if detail else ''}")
+
+    def close(self) -> None:
+        if self.stages and self.stages[-1]["seconds"] is None:
+            last = self.stages[-1]
+            last["seconds"] = round(time.monotonic() - last["_start"], 1)
+            self._say(f"[stage] {last['stage']} finished in {_hms(last['seconds'])}")
+
+    def summary(self) -> dict[str, Any]:
+        self.close()
+        return {
+            "total_seconds": round(time.monotonic() - self._t0, 1),
+            "by_stage": {s["stage"]: s["seconds"] for s in self.stages},
+            "slow_legs": [
+                {k: v for k, v in leg.items() if not k.startswith("_")}
+                for leg in sorted(self.legs, key=lambda x: -x["since_previous_s"])[:12]
+            ],
+        }
+
+    @staticmethod
+    def _say(line: str) -> None:
+        print(line, file=sys.stderr, flush=True)
+
+
+def _hms(seconds: float) -> str:
+    seconds = max(0.0, float(seconds))
+    if seconds < 60:
+        return f"{seconds:.0f}s"
+    return f"{int(seconds // 60)}m{int(seconds % 60):02d}s"
 
 
 def _apply_cost_snapshot(report: NewsroomRailReport) -> None:
@@ -461,6 +554,13 @@ def _finish(
     if note:
         report.note = note
     report.total_usd = total
+    if _CLOCK is not None:
+        timings = _CLOCK.summary()
+        report.total_seconds = float(timings["total_seconds"])
+        report.stage_seconds = {k: v for k, v in timings["by_stage"].items() if v is not None}
+        report.slow_legs = timings["slow_legs"]
+        if context.artifacts is not None:
+            context.artifacts.write_json("stage_timings.json", timings)
     if context.artifacts is not None:
         context.artifacts.write_json("newsroom_rail_report.json", report.model_dump())
     context.emit(ev.OUTPUT_PREVIEW, _preview(report))
@@ -488,6 +588,7 @@ def _preview(r: NewsroomRailReport) -> dict[str, Any]:
             + (f" -> article: {r.article_status}" if r.article_status else "")
             + (f" -> {r.publish_action}" if r.publish_action else "")
             + f"  ·  ~${r.total_usd:.4f}"
+            + (f"  ·  {_hms(r.total_seconds)}" if r.total_seconds else "")
             + (f"  ·  {r.note}" if r.note else "")
         ),
         "items": [

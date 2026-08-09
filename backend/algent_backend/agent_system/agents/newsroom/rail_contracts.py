@@ -70,6 +70,15 @@ class NewsroomRailReport(BaseModel):
     cost_by_stage: dict[str, float] = Field(default_factory=dict)
     cost_by_op: dict[str, float] = Field(default_factory=dict)
     skipped_operations: list[dict[str, str]] = Field(default_factory=list)
+    #: Wall time, the counterpart to cost_by_stage. Spend was attributed by stage from the start;
+    #: TIME was not, so "why has this been running twenty minutes" could only be answered by
+    #: reading raw event timestamps out of a timeline afterwards.
+    total_seconds: float = 0.0
+    stage_seconds: dict[str, float] = Field(default_factory=dict)
+    #: The slowest legs INSIDE stages, longest first. A rail stage like "editorial" is many
+    #: minutes and they are not evenly spread — one figure timing out in a subprocess spends ten
+    #: of them making no model calls at all, which from outside looks like a dead run.
+    slow_legs: list[dict] = Field(default_factory=list)
     refused_operations: list[dict[str, str]] = Field(default_factory=list)
     note: str = ""
     generated_at: str = ""
