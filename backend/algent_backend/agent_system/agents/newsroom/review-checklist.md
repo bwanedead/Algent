@@ -119,7 +119,14 @@ Flag every instance:
   looking at;
 - **announced importance** — "That matters because…", "This sets the frame", "Put plainly…",
   "The upshot is…", "a phase change, not closure". These label significance instead of
-  showing it. The fix is to **cut** the label, never to add emphasis.
+  showing it. The fix is to **cut** the label, never to add emphasis;
+- **the craft narrated to the reader** — the writer describing what the writing is doing.
+  Shipped: *"The reader needs only a few footholds to follow it"* opening a paragraph that
+  then supplied them; also *"Europe's electricity grid … is the through-line"* and a closing
+  line admiring the piece's own two figures. Handing over footholds is right; **saying** you
+  are about to is the doctrine leaking through the prose. A reader is not a student being
+  told the lesson plan. The fix is always to delete the sentence and keep what follows it —
+  the footholds themselves lose nothing.
 
 **Preferred outcome:** nothing in the piece reveals that a pipeline made it.
 

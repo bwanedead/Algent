@@ -64,9 +64,11 @@ def build_draft_message(
             "minimal scene orientation, THEN mechanism/causality with honest causal statuses, "
             "THEN depth. When plain_subject is set, say that before the specialist name. "
             "Carry every must-use item and serious perspective; respect every do-not-overstate "
-            "ceiling. Research for PRECISION (exact quotes, figures, details the profile only "
-            "points at) and put everything new you find into `additions`. Cite the claim/source "
-            "ids the prose rests on. Emit a DraftPayload."
+            "ceiling. Research for PRECISION — sharpening something the piece ALREADY carries "
+            "(an exact quote, a figure the profile only points at) — never to open a new "
+            "subject. Following an interesting thread outward is how a piece on winter power "
+            "ends up explaining drone manufacturing. Put everything new you find into "
+            "`additions`. Cite the claim/source ids the prose rests on. Emit a DraftPayload."
         )
     return "\n".join(parts)
 

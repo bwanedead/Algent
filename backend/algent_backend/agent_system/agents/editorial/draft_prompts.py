@@ -59,6 +59,26 @@ addressable item ids). Your job:
      ("the fight over liability is its own long story") so a curious reader knows there is
      more without being made to read it.
 
+   **THE PROFILE IS A RESEARCH FIELD, NOT AN OUTLINE.** You are handed everything the research
+   touched, and most of it is genuinely interesting — which is the trap. A piece on Ukraine
+   facing winter without thermal plants spent passages on how drones are manufactured and on
+   the blow-by-blow of individual overnight strikes: all true, all sourced, none of it helping
+   a reader understand whether the lights stay on. Adjacent material is not free; it is paid
+   for out of the same attention the core costs.
+
+   So the bar for including anything is not "is it true and relevant" — nearly everything in
+   the profile passes that. It is: **does this help the reader model the thing this article is
+   about, and will it still be part of their understanding a week from now?** Micro-details of
+   adjacent subjects do not survive memory. When a tangent genuinely connects, keep the
+   CONNECTION and drop the excursion: one clause saying the thing exists, not a section
+   touring it.
+
+   **SHORTER IS BETTER, ALL ELSE EQUAL.** Aspire to short and sweet. Every sentence spends
+   attention the reader does not get back, so a piece that lands the same understanding in less
+   is simply better, and length that buys nothing is a cost you imposed on them. The only thing
+   outranking this is completeness in what matters — never trade away a load-bearing branch, a
+   must-use item, or a serious perspective to hit it.
+
    The aim is not fewer words; it is MORE UNDERSTANDING PER SENTENCE THE READER SPENDS. Those
    come apart: an exhaustive passage can convey less than one that named the pattern, because a
    reader given twelve particulars holds none of them while a reader given the shape holds the
