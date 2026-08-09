@@ -57,6 +57,23 @@ _ENV_CODEX_MODEL = "ALGENT_CODEX_MODEL"
 
 HARNESSES = ("codex", "grok")
 
+#: Silence that means STUCK rather than slow — no byte written or removed anywhere in the
+#: scratch folder for this long. Generous on purpose: a worker may reason or fetch for minutes
+#: before it writes, and killing a thinking agent is the failure this replaces.
+_IDLE_S = 360.0
+
+
+def _scratch_token(folder: Path) -> object:
+    """A cheap value that changes whenever the worker touches its scratch folder."""
+    try:
+        return tuple(sorted(
+            (p.name, p.stat().st_size, int(p.stat().st_mtime))
+            for p in folder.rglob("*") if p.is_file()
+        ))
+    except OSError:
+        # Unreadable mid-write is not evidence of a stall; treat it as "unknown, keep waiting".
+        return None
+
 
 @dataclass(frozen=True)
 class HarnessResult:
@@ -84,6 +101,11 @@ class Harness:
             proc = run_capturing(
                 [exe, *argv[1:]],
                 timeout=timeout,
+                # A figure is built by writing files, so the scratch folder IS the progress
+                # signal: while it changes the worker is working, and killing it then costs the
+                # full ceiling and returns nothing.
+                idle_timeout=_IDLE_S,
+                progress=lambda: _scratch_token(folder),
                 # These CLIs emit UTF-8 (smart quotes / emoji); decode as such so a Windows
                 # cp1252 locale cannot crash the decode. errors='replace' keeps a garbled
                 # tail from ever raising.

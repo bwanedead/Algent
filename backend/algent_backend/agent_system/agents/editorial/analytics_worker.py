@@ -77,9 +77,17 @@ _VISUAL_NAMES = {
 _DATA_NAME = "data.csv"
 _CAPTION_NAME = "caption.md"
 
-_TIMEOUT_S = 360.0
+# ABSOLUTE BACKSTOPS, not expected durations. The harness now stops a worker that goes SILENT
+# (no scratch-folder activity for _IDLE_S), so these only fire on a child that is somehow both
+# busy and useless — they should essentially never decide anything.
+#
+# They used to be the real limit, and were set inside the range where figures actually finish.
+# Measured across nine produced figures: 180s to 605s, with two landing at 601s and 605s against
+# a 600s cap — and one killed at 602s having written nothing. A ceiling that cuts off work in
+# progress spends its whole budget and returns no artifact, which is the worst trade available.
+_TIMEOUT_S = 1200.0
 # Maps / may_source fetches routinely need longer than a profile-held line chart.
-_TIMEOUT_SOURCED_S = 600.0
+_TIMEOUT_SOURCED_S = 1800.0
 
 # A measured quantity: a percentage or a decimal — the values a chart could FABRICATE. Bare
 # integers are deliberately excluded: they are the axis/date labels (years, month numbers,
