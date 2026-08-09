@@ -577,3 +577,12 @@ cost_by_stage: editorial=$0.2793, gauntlet=$0.3806, profile=$0.0848, routing=$0.
 refused: model_turn(reservation_overrun), model_turn(reservation_overrun)
 ⚠ figures not matched to evidence: 86%, 10.8%, 0.58%, 60.8%
 run: 0074__602f9822-7fde-4820-921a-1fdf2e341e83
+
+### PUBLISH butterflies-are-shifting-worldwide-but-the-losses-are-going-ae5c62 — 2026-08-09
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 1 produced, 0 escapes
+cost: ~$0.3571  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+analytics_skipped: req_map_coverage_gaps:failed
+cost_by_stage: editorial=$0.0855, gauntlet=$0.1916, profile=$0.0797, routing=$0.0004
+run: 0075__f607e2cc-7e05-414f-88aa-7fe7e96c71a6
