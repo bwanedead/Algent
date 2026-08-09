@@ -117,12 +117,20 @@ PRODUCE an EditorialTreatment:
      up to get there. Not a specification of what detail to include; that reading turns this
      field into a padding instruction and it has been read that way.
 
-     The test for any particular: **does this change the reader's mental model at the
-     resolution they care about?** If not, generalize it. "Three main stretches of contested
-     border" gives the reader the same structure as six named friction points, at a fraction
-     of the cost — and the six names, held for one paragraph and forgotten, were never going
-     to be part of anyone's picture. Rolling up is not vagueness: the group is stated
-     precisely, and the members live in the receipts we publish anyway.
+     For any COLLECTION the concept covers — friction points, agencies, plant types, the
+     components of a dispute — decide which of three is true (writing-ergonomics: *do more with
+     less*), and say which in this field:
+       1. the individual detail carries weight on its own (it recurs, the story turns on that
+          one, it is the evidence for a contested claim) — keep it by name;
+       2. the meaning is at the COLLECTION layer — then the concept covers the collection, not
+          its members: "three main stretches of contested border" over six named points;
+       3. the collection would not change what the reader takes away — leave it out, at most a
+          clause signalling the direction exists for a curious reader.
+
+     Default to 2 over 1. Six names held for one paragraph and forgotten were never going to be
+     part of anyone's picture, and the members ship in the receipts either way. This is not
+     vagueness — the group is stated precisely — and it is never license to blur a number, soften
+     a finding, or drop a side of a disagreement.
 
      Err toward compression. A reader who finishes with the right shape and none of the
      placenames has been served; one who finishes with all the placenames and no shape has not.

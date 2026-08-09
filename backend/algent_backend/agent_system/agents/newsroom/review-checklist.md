@@ -196,16 +196,22 @@ read it.
 - **Not a word cap.** The fix is never "make it shorter" — it is cutting the twigs so the
   forest is visible. A long piece that stays on the through-line is fine; a short one buried
   in procedure is not.
-- **Resolution check: does this detail change the reader's mental model?** The most reliable
-  source of length is not padding but *grain* — particulars carried at a finer resolution than
-  the reader will ever use. A border piece named six friction points, each with its own
-  disengagement date; a reader holds "three main stretches of contested border, one cluster
-  now managed" and could not name one of the six an hour later. Rolling up is not vagueness
-  and not inaccuracy — the group is stated precisely and the members ship in the receipts. Ask
-  it of every list, date, coordinate and proper noun: **would the reader use this?** A
-  particular earns its name when it recurs, when the story turns on that specific one, or when
-  it is the evidence for a contested claim. Otherwise, name the pattern and let the group carry
-  the members.
+- **Resolution check: is this worth what it costs the reader?** The most reliable source of
+  length is not padding but *grain* — particulars carried finer than the reader will ever use.
+  A border piece named six friction points with their disengagement dates; a reader holds
+  "three main stretches of contested border, one cluster now managed" and could not name one of
+  the six an hour later. For every collection, say which of three applies: the detail carries
+  weight alone (it recurs, the story turns on it, it is evidence for a contested claim) — keep
+  it; the meaning is at the collection layer — name the collection, not the members; the
+  collection would not change what the reader takes away — cut it, leaving at most a clause
+  that the direction exists.
+- **Look for a whole section that could be one sentence.** This is the biggest available win
+  and the one reviewers keep missing while catching smaller things. A section walking every
+  component of a tension can usually become *that the tension exists, between whom, and why it
+  is unresolved*. Go section by section and ask what each one establishes; where the answer is
+  a sentence, say so and name the section. Six well-merged concepts written as six long
+  sections is the same overlong article by another route — a piece can pass every upstream
+  check and still spend the reader's attention on enumeration.
 - **Run the compression pass, and name what you cut.** Not a word cap, but not a pass you may
   skip either: pieces on the through-line still land several hundred words heavy, because the
   padding arrives disguised as care. Check the five patterns in

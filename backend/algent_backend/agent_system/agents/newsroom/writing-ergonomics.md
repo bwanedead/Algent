@@ -161,6 +161,39 @@ sentence true and the whole thing useless.
 This is not an instruction to write shorter. A long piece that stays on the through-line is
 fine; a short one buried in procedure is not. Cut twigs, not length.
 
+## Do more with less — the three-tier test
+
+The aim is not a shorter piece. It is **more understanding per sentence the reader spends**. Those
+come apart constantly: a piece can be exhaustive and convey less than one that named the pattern
+and moved on, because a reader given twelve particulars holds none of them, while a reader given
+the shape holds the shape.
+
+Themes and generalities are usually worth more than an inventory. So when you face a *collection*
+of anything — friction points, agencies, court filings, plant types, parameters, the components of
+a dispute — do not default to walking it. Ask which of three things is true:
+
+1. **The individual detail carries weight on its own.** It recurs, the story turns on that
+   specific one, or it is the evidence for a contested claim. Keep it, by name.
+2. **The meaning lives at the collection layer.** Then convey the *collection*, not its members:
+   "three main stretches of contested border", "a running dispute over who pays for the cleanup",
+   "several agencies with overlapping authority and no lead". The reader gets the same structure
+   at a fraction of the cost, and the members are in the receipts we publish anyway.
+3. **The collection itself would not change what the reader takes away.** Drop it. You may leave
+   a single clause signalling the direction exists — *"the legal fight over liability is its own
+   long story"* — so a curious reader knows there is more without being made to read it.
+
+**This applies to whole sections, not just phrases.** The largest wins are structural: a section
+that walks every component of a tension can very often become one or two sentences stating *that
+the tension exists, between whom, and why it is unresolved*. If a passage's honest summary is
+"there is a fight here and it has many moving parts", write that sentence rather than the parts.
+Ask it of every section you have written: could this be replaced by naming what it establishes?
+If yes, and nothing load-bearing is lost, replace it.
+
+Precision survives all of this. "Three main stretches" is exact; it is not hedging or vagueness,
+and rolling up is never license to blur a number, soften a finding, or duck a disagreement. What
+is being cut is *enumeration*, not accuracy — and never a load-bearing branch, a must-use item, or
+a serious perspective, which stay whatever the cost in words.
+
 ## The compression pass — five patterns that pad without adding
 
 "Cut twigs, not length" is right and has not been enough: pieces keep landing near 2,500 words

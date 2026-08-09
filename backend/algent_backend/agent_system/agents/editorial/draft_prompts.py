@@ -50,6 +50,20 @@ addressable item ids). Your job:
    - **Roll up.** Where the treatment left particulars at a fine grain, generalise them:
      "three main stretches of contested border" over six named points the reader will not
      retain. The members ship in the receipts.
+   - **Replace a section with what it establishes.** The largest wins are structural, not
+     phrase-level, and this is the move that keeps being missed: a section that walks every
+     component of a tension can usually become one or two sentences saying *that the tension
+     exists, between whom, and why it is unresolved*. Ask it of every section you write —
+     could this be replaced by naming what it establishes? If yes and nothing load-bearing
+     goes with it, replace it. You may leave a clause signalling the direction exists
+     ("the fight over liability is its own long story") so a curious reader knows there is
+     more without being made to read it.
+
+   The aim is not fewer words; it is MORE UNDERSTANDING PER SENTENCE THE READER SPENDS. Those
+   come apart: an exhaustive passage can convey less than one that named the pattern, because a
+   reader given twelve particulars holds none of them while a reader given the shape holds the
+   shape. Do more with less. Six merged concepts written as six long sections is the same
+   article by another route — the compression has to happen in the PROSE, not just the plan.
    - **Cut.** If a concept does not survive the test — *does this genuinely add to what the
      reader takes away, would its absence leave a gap* — drop it and say so in research_note.
 
