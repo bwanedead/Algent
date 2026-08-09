@@ -567,3 +567,13 @@ refused: model_turn(stage_cap)
 x_searches: 1
 ⚠ figures not matched to evidence: 23.5%
 run: 0073__e2cd06cb-aa99-4e3d-8422-892ad40527b5
+
+### PUBLISH bronze-age-greek-elites-wore-rings-forged-from-meteorite-iro-1b26cc — 2026-08-09
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.7450  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.2793, gauntlet=$0.3806, profile=$0.0848, routing=$0.0004
+refused: model_turn(reservation_overrun), model_turn(reservation_overrun)
+⚠ figures not matched to evidence: 86%, 10.8%, 0.58%, 60.8%
+run: 0074__602f9822-7fde-4820-921a-1fdf2e341e83
