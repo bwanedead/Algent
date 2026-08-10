@@ -70,6 +70,28 @@ function soleXStatusFromChildren(children: ReactNode): ReturnType<typeof parseXS
   return null;
 }
 
+/**
+ * True when the paragraph is WHOLLY italic — a figure caption, which the pipeline emits as
+ * `*what it shows … Source: … As of …*` on its own line.
+ *
+ * This has to be decided here rather than in CSS. The stylesheet used `p > em:only-child`, but
+ * `:only-child` counts only ELEMENT siblings — surrounding text nodes are invisible to it — so an
+ * ordinary sentence with one italic phrase matched too. A study citation rendered as
+ * "…published in August 2026 in the" / *Journal of Archaeological Science* on its own small grey
+ * line / a stranded ".", because caption styling sets `display: block`.
+ */
+function isWhollyItalic(children: ReactNode): boolean {
+  const nodes = flatten(children).filter(
+    (c) => !(typeof c === "string" && c.trim().length === 0),
+  );
+  if (nodes.length !== 1) return false;
+  const only = nodes[0];
+  return (
+    typeof only === "object" && only !== null && "type" in only &&
+    (only as { type?: unknown }).type === "em"
+  );
+}
+
 const components = {
   // Charts and maps carry small labels; at body width they are borderline and on a phone
   // unreadable. Tap/click opens them full-screen (see ArticleImage).
@@ -107,6 +129,9 @@ const components = {
           <XPostEmbed statusId={x.id} href={x.href} handle={x.handle} />
         </div>
       );
+    }
+    if (isWhollyItalic(children)) {
+      return <p className="figure-caption" {...rest}>{children}</p>;
     }
     return <p {...rest}>{children}</p>;
   },

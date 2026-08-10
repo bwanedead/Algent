@@ -554,8 +554,11 @@ a { color: inherit; }
 .prose tbody tr:hover td { background: var(--bg); }
 .prose td:first-child { white-space: nowrap; color: var(--strong); }   /* the label column reads as the spine */
 
-/* The figure's caption — the line that says what you're looking at. */
-.prose p > em:only-child { display: block; color: var(--muted); font-size: 11px; line-height: var(--line); }
+/* The figure's caption — the line that says what you're looking at.
+   Keyed off a class set in Prose.tsx, NOT `em:only-child`: that selector counts only element
+   siblings, so a normal sentence containing one italic phrase matched it and had its italics
+   forced onto their own small grey line, stranding the punctuation after them. */
+.prose p.figure-caption > em { display: block; color: var(--muted); font-size: 11px; line-height: var(--line); }
 
 /* X status embed — just the official tweet card, minimal chrome. */
 .x-post-embed-wrap { margin: 0 0 calc(var(--line) * 1.5); }
