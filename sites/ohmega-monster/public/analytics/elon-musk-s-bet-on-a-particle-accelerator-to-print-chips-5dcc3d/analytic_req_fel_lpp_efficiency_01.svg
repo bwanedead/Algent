@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="829.675687pt" height="480.96pt" viewBox="0 0 829.675687 480.96" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-08-10T05:18:06.702897</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.3, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 480.96 
+L 829.675688 480.96 
+L 829.675688 0 
+L 0 0 
+z
+" style="fill: #0c0f0e"/>
+  </g>
+  <g id="axes_1">
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 12.5px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4" x="117.045844" y="33.923541" transform="rotate(-0 117.045844 33.923541)">FEL claims 4× the light at half the energy — but none of it has printed a chip</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="117.045844" y="55.585425" transform="rotate(-0 117.045844 55.585425)">Per-scanner comparison  ·  LPP figures are production reality  ·  FEL figures are projections only</text>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_2">
+    <path d="M 117.045844 356.846197 
+L 373.763085 356.846197 
+L 373.763085 86.227134 
+L 117.045844 86.227134 
+z
+" style="fill: #111513"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <defs>
+       <path id="md1d99a8484" d="M 0 0 
+L 0 3.5 
+" style="stroke: #858981; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#md1d99a8484" x="170.120816" y="356.846197" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 9px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(150.326441 370.056197)">ASML LPP</text>
+      <text style="font-size: 9px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(152.800738 379.709541)">(today)</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2">
+      <g>
+       <use xlink:href="#md1d99a8484" x="320.688113" y="356.846197" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 9px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(303.368035 370.056197)">FEL-EUV</text>
+      <text style="font-size: 9px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(293.470847 379.709541)">(projected)</text>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_3">
+      <path d="M 117.045844 356.846197 
+L 373.763085 356.846197 
+" clip-path="url(#p2262566025)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_4">
+      <defs>
+       <path id="m57bf6c7ff2" d="M 0 0 
+L -3.5 0 
+" style="stroke: #858981; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m57bf6c7ff2" x="117.045844" y="356.846197" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="110.045844" y="360.296197" transform="rotate(-0 110.045844 360.296197)">0</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_5">
+      <path d="M 117.045844 305.592587 
+L 373.763085 305.592587 
+" clip-path="url(#p2262566025)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#m57bf6c7ff2" x="117.045844" y="305.592587" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="110.045844" y="309.042587" transform="rotate(-0 110.045844 309.042587)">500</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_7">
+      <path d="M 117.045844 254.338976 
+L 373.763085 254.338976 
+" clip-path="url(#p2262566025)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#m57bf6c7ff2" x="117.045844" y="254.338976" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="110.045844" y="257.788976" transform="rotate(-0 110.045844 257.788976)">1000</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_9">
+      <path d="M 117.045844 203.085366 
+L 373.763085 203.085366 
+" clip-path="url(#p2262566025)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#m57bf6c7ff2" x="117.045844" y="203.085366" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="110.045844" y="206.535366" transform="rotate(-0 110.045844 206.535366)">1500</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_11">
+      <path d="M 117.045844 151.831755 
+L 373.763085 151.831755 
+" clip-path="url(#p2262566025)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_12">
+      <g>
+       <use xlink:href="#m57bf6c7ff2" x="117.045844" y="151.831755" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="110.045844" y="155.281755" transform="rotate(-0 110.045844 155.281755)">2000</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_13">
+      <path d="M 117.045844 100.578145 
+L 373.763085 100.578145 
+" clip-path="url(#p2262566025)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_14">
+      <g>
+       <use xlink:href="#m57bf6c7ff2" x="117.045844" y="100.578145" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_10">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="110.045844" y="104.028145" transform="rotate(-0 110.045844 104.028145)">2500</text>
+     </g>
+    </g>
+    <g id="text_11">
+     <text style="font-size: 9.5px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="82.103109" y="221.536666" transform="rotate(-90 82.103109 221.536666)">EUV light per scanner (watts)</text>
+    </g>
+   </g>
+   <g id="patch_3">
+    <path d="M 117.045844 356.846197 
+L 117.045844 86.227134 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 117.045844 356.846197 
+L 373.763085 356.846197 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 128.714809 356.846197 
+L 211.526823 356.846197 
+L 211.526823 305.592587 
+L 128.714809 305.592587 
+z
+" clip-path="url(#p2262566025)" style="fill: #f0a33a; stroke: #0c0f0e; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 279.282106 356.846197 
+L 362.09412 356.846197 
+L 362.09412 151.831755 
+L 279.282106 151.831755 
+z
+" clip-path="url(#p2262566025)" style="fill: #5eb8c9; stroke: #0c0f0e; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="245.404464" y="78.227134" transform="rotate(-0 245.404464 78.227134)">Light delivered</text>
+   </g>
+   <g id="text_13">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(157.062027 286.211363)">500 W</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(154.450269 296.574972)">ACTUAL</text>
+   </g>
+   <g id="text_14">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Consolas'; fill: #5eb8c9" transform="translate(305.017566 132.450531)">2000 W</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Consolas'; fill: #5eb8c9" transform="translate(302.405808 142.814141)">CLAIMED</text>
+   </g>
+  </g>
+  <g id="axes_3">
+   <g id="patch_7">
+    <path d="M 455.912602 356.846197 
+L 712.629844 356.846197 
+L 712.629844 86.227134 
+L 455.912602 86.227134 
+z
+" style="fill: #111513"/>
+   </g>
+   <g id="matplotlib.axis_3">
+    <g id="xtick_3">
+     <g id="line2d_15">
+      <g>
+       <use xlink:href="#md1d99a8484" x="508.987575" y="356.846197" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_15">
+      <text style="font-size: 9px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(489.1932 370.056197)">ASML LPP</text>
+      <text style="font-size: 9px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(491.667496 379.709541)">(today)</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_16">
+      <g>
+       <use xlink:href="#md1d99a8484" x="659.554872" y="356.846197" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_16">
+      <text style="font-size: 9px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(642.234793 370.056197)">FEL-EUV</text>
+      <text style="font-size: 9px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(632.337606 379.709541)">(projected)</text>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_4">
+    <g id="ytick_7">
+     <g id="line2d_17">
+      <path d="M 455.912602 356.846197 
+L 712.629844 356.846197 
+" clip-path="url(#pea23479adf)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_18">
+      <g>
+       <use xlink:href="#m57bf6c7ff2" x="455.912602" y="356.846197" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_17">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="448.912602" y="360.296197" transform="rotate(-0 448.912602 360.296197)">0.0</text>
+     </g>
+    </g>
+    <g id="ytick_8">
+     <g id="line2d_19">
+      <path d="M 455.912602 321.191512 
+L 712.629844 321.191512 
+" clip-path="url(#pea23479adf)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_20">
+      <g>
+       <use xlink:href="#m57bf6c7ff2" x="455.912602" y="321.191512" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_18">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="448.912602" y="324.641512" transform="rotate(-0 448.912602 324.641512)">0.2</text>
+     </g>
+    </g>
+    <g id="ytick_9">
+     <g id="line2d_21">
+      <path d="M 455.912602 285.536826 
+L 712.629844 285.536826 
+" clip-path="url(#pea23479adf)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_22">
+      <g>
+       <use xlink:href="#m57bf6c7ff2" x="455.912602" y="285.536826" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_19">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="448.912602" y="288.986826" transform="rotate(-0 448.912602 288.986826)">0.4</text>
+     </g>
+    </g>
+    <g id="ytick_10">
+     <g id="line2d_23">
+      <path d="M 455.912602 249.882141 
+L 712.629844 249.882141 
+" clip-path="url(#pea23479adf)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_24">
+      <g>
+       <use xlink:href="#m57bf6c7ff2" x="455.912602" y="249.882141" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_20">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="448.912602" y="253.332141" transform="rotate(-0 448.912602 253.332141)">0.6</text>
+     </g>
+    </g>
+    <g id="ytick_11">
+     <g id="line2d_25">
+      <path d="M 455.912602 214.227455 
+L 712.629844 214.227455 
+" clip-path="url(#pea23479adf)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_26">
+      <g>
+       <use xlink:href="#m57bf6c7ff2" x="455.912602" y="214.227455" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_21">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="448.912602" y="217.677455" transform="rotate(-0 448.912602 217.677455)">0.8</text>
+     </g>
+    </g>
+    <g id="ytick_12">
+     <g id="line2d_27">
+      <path d="M 455.912602 178.57277 
+L 712.629844 178.57277 
+" clip-path="url(#pea23479adf)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_28">
+      <g>
+       <use xlink:href="#m57bf6c7ff2" x="455.912602" y="178.57277" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_22">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="448.912602" y="182.02277" transform="rotate(-0 448.912602 182.02277)">1.0</text>
+     </g>
+    </g>
+    <g id="ytick_13">
+     <g id="line2d_29">
+      <path d="M 455.912602 142.918084 
+L 712.629844 142.918084 
+" clip-path="url(#pea23479adf)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_30">
+      <g>
+       <use xlink:href="#m57bf6c7ff2" x="455.912602" y="142.918084" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_23">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="448.912602" y="146.368084" transform="rotate(-0 448.912602 146.368084)">1.2</text>
+     </g>
+    </g>
+    <g id="ytick_14">
+     <g id="line2d_31">
+      <path d="M 455.912602 107.263398 
+L 712.629844 107.263398 
+" clip-path="url(#pea23479adf)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_32">
+      <g>
+       <use xlink:href="#m57bf6c7ff2" x="455.912602" y="107.263398" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_24">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="448.912602" y="110.713398" transform="rotate(-0 448.912602 110.713398)">1.4</text>
+     </g>
+    </g>
+    <g id="text_25">
+     <text style="font-size: 9.5px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="426.468305" y="221.536666" transform="rotate(-90 426.468305 221.536666)">Wall-plug power per scanner (MW)</text>
+    </g>
+   </g>
+   <g id="patch_8">
+    <path d="M 455.912602 356.846197 
+L 455.912602 86.227134 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 455.912602 356.846197 
+L 712.629844 356.846197 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 467.581568 356.846197 
+L 550.393581 356.846197 
+L 550.393581 160.745427 
+L 467.581568 160.745427 
+z
+" clip-path="url(#pea23479adf)" style="fill: #f0a33a; stroke: #0c0f0e; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 618.148865 356.846197 
+L 700.960878 356.846197 
+L 700.960878 267.709483 
+L 618.148865 267.709483 
+z
+" clip-path="url(#pea23479adf)" style="fill: #5eb8c9; stroke: #0c0f0e; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_26">
+    <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="584.271223" y="78.227134" transform="rotate(-0 584.271223 78.227134)">Energy consumed</text>
+   </g>
+   <g id="text_27">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(493.317028 141.676181)">1.1 MW</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(493.317028 152.03979)">ACTUAL</text>
+   </g>
+   <g id="text_28">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Consolas'; fill: #5eb8c9" transform="translate(643.884325 248.640238)">0.5 MW</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Consolas'; fill: #5eb8c9" transform="translate(641.272567 259.003847)">CLAIMED</text>
+   </g>
+  </g>
+  <g id="axes_4">
+   <g id="text_29">
+    <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="414.837844" y="403.904609" transform="rotate(-0 414.837844 403.904609)">Claimed FEL: 2,000 W EUV on ~0.5 MW wall-plug  ·  Actual LPP: 500 W on ~1.1 MW  ·  ~4× light, roughly half the energy</text>
+   </g>
+   <g id="text_30">
+    <text style="font-size: 8.2px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="414.837844" y="426.867017" transform="rotate(-0 414.837844 426.867017)">ASML tool context: low-NA EUV from ~USD 220M  |  High-NA over USD 400M  |  48 EUV systems shipped in 2025</text>
+   </g>
+   <g id="text_31">
+    <text style="font-size: 7.4px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="414.837844" y="449.091737" transform="rotate(-0 414.837844 449.091737)">FEL bars are lab projections (Optica OPN Nov 2025 / xLight) — no wafer exposure demonstrated. Nb3Sn cavities would cut FEL site draw to ~2 MW total (0.25 MW/scanner); also unproven at fab scale.</text>
+   </g>
+   <g id="text_32">
+    <text style="font-size: 7px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="117.045844" y="459.398906" transform="rotate(-0 117.045844 459.398906)">as of 2026-08-10</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p2262566025">
+   <rect x="117.045844" y="86.227134" width="256.717241" height="270.619063"/>
+  </clipPath>
+  <clipPath id="pea23479adf">
+   <rect x="455.912602" y="86.227134" width="256.717241" height="270.619063"/>
+  </clipPath>
+ </defs>
+</svg>

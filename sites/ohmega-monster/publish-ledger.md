@@ -586,3 +586,15 @@ cost: ~$0.3571  ·  mode: normal  ·  soft/hard: $1.00/$3.00
 analytics_skipped: req_map_coverage_gaps:failed
 cost_by_stage: editorial=$0.0855, gauntlet=$0.1916, profile=$0.0797, routing=$0.0004
 run: 0075__f607e2cc-7e05-414f-88aa-7fe7e96c71a6
+
+### PUBLISH elon-musk-s-bet-on-a-particle-accelerator-to-print-chips-5dcc3d — 2026-08-10
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$1.0229  ·  mode: slim_finish  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.2787, gauntlet=$0.5957, profile=$0.1482, routing=$0.0004
+soft_cap_crossed: yes @ editorial
+skipped: search_fallback(slim_finish), search_fallback(slim_finish), search_fallback(slim_finish)
+refused: model_turn(slim_finish)
+⚠ figures not matched to evidence: 0.1%
+run: 0076__6bb1f3ad-8558-42e8-9ce9-a73883cc9a95
