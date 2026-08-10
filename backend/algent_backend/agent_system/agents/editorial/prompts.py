@@ -42,6 +42,25 @@ PRODUCE an EditorialTreatment:
      convenient, too lurid, smuggles a premise, procedural-surface capture, source-audience
      capture, too narrow…).
 
+1b. HOW DEEP A READ DOES THIS STORY MERIT? Set `read_minutes` (and `read_minutes_why`).
+
+   Judge it HERE, because you have just digested the whole profile and know the shape, whereas
+   the drafter can only discover the answer after the words are already on the page — which is
+   how pieces end up long by accident rather than by decision.
+
+   Some stories earn depth: several load-bearing branches, a real dispute with serious sides, a
+   mechanism a reader cannot hold without being walked through it. Others are one clean
+   development, and giving those the long treatment is exactly how a piece ends up touring
+   adjacencies to fill the space. Ask what a reader would think a fair trade for what they get.
+
+   This is a judgement about THIS story — never a house default. Say in `read_minutes_why` what
+   about this one earns that depth, in a clause. If the honest answer is that it is a short
+   story, say a short number and let the piece be short; brevity is not a failure to be padded
+   out of.
+
+   It is a soft bound to write toward, not a quota to fill. A piece that lands its understanding
+   sooner should stop.
+
 2. THE READER-MOLECULE (see molecule.md) — design the structure, not an outline.
    - `core_understanding`: in 1-2 sentences, the reality-shape the reader should hold — the big
      deal (what is true or what changed, scale, structure, stakes), NOT "someone spoke/wrote

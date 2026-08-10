@@ -417,6 +417,10 @@ def _build_pipeline_report(
         hero=hero,
         article_title=str(draft.get("title", "")),
         word_count=words,
+        target_read_minutes=int(treatment.get("read_minutes") or 0),
+        # ~220 wpm, the ordinary reading rate for prose of this kind. Rounded to a tenth so a
+        # small overshoot is visible rather than hidden by integer truncation.
+        actual_read_minutes=round(words / 220.0, 1) if words else 0.0,
         barriers=draft_report.get("barriers", []),
         unverified_figures=draft_report.get("unverified_figures", []),
         analytics_warranted=bool(analytics.get("warranted")),

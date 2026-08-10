@@ -25,6 +25,19 @@ def render_treatment(t: EditorialTreatment) -> str:
     if t.reader_question:
         # The drafter's sharpest test: every paragraph must earn its place answering this.
         out += ["## The question this piece answers (for the reader)", t.reader_question, ""]
+    if t.read_minutes:
+        # Roughly 220 words a minute. Given as a range because the point is a bound to write
+        # toward, not a number to hit — and coming in under it is a good outcome, not a shortfall.
+        low, high = int(t.read_minutes * 190), int(t.read_minutes * 250)
+        out += [
+            "## How deep a read this story merits",
+            f"**~{t.read_minutes} min** (about {low}-{high} words)"
+            + (f" — {t.read_minutes_why}" if t.read_minutes_why else ""),
+            "A soft bound, judged from the whole profile before any prose existed. Write toward "
+            "it; if the understanding lands sooner, STOP — finishing short is a good outcome, "
+            "and there is nothing here to pad out to.",
+            "",
+        ]
     out += _entry_block(t)
     out += _concepts_block(t)
     if t.primitives:

@@ -107,6 +107,22 @@ class EditorialTreatment(BaseModel):
     chosen_frame: FrameOption = Field(default_factory=FrameOption)
     rejected_frames: list[FrameOption] = Field(default_factory=list)
 
+    #: How deep a read this particular story MERITS, in minutes — a judgement made here, where
+    #: the whole profile has just been digested and the shape is known, rather than discovered
+    #: by the drafter after the words are on the page.
+    #:
+    #: Minutes rather than words or sections on purpose: it is the unit the reader actually
+    #: spends, and it stays soft. It is a bound to write toward, never a quota to fill — a piece
+    #: that lands its understanding early should simply stop, and a target of 5 is not a
+    #: complaint that a piece came in at 4.
+    #:
+    #: This is NOT a house default to apply uniformly. A dense structural story with several
+    #: load-bearing branches genuinely merits a long read; a single clean development merits a
+    #: short one, and giving it the long treatment is how a piece ends up touring adjacencies.
+    #: 0 means the planner did not judge, and nothing downstream should invent a number.
+    read_minutes: int = 0
+    read_minutes_why: str = ""   # what about THIS story earns that depth
+
     # ── the reader-molecule (the reality-shape to convey) ──
     core_understanding: str = ""                       # the molecule the reader should end holding (1-2 sentences)
     # The reader-facing dual of core_understanding: the question, in the reader's words, that this

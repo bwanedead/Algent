@@ -54,6 +54,12 @@ class EditorialPipelineReport(BaseModel):
     #: Verdicts from the independent pass over claims the analytics worker contributed, as
     #: ``{"confirmed": n, "contested": n, "unconfirmed": n}``. Empty when a figure sourced
     #: nothing new, which is the common case for profile-grounded charts.
+    #: The depth the planner judged this story merits, and what the piece actually came to.
+    #: Both in minutes, so drift is legible at a glance without converting word counts. The
+    #: comprehension reviewer is deliberately NOT told the target — it reads cold, as a reader
+    #: does — so this is the only place the two meet.
+    target_read_minutes: int = 0
+    actual_read_minutes: float = 0.0
     analytics_claim_verdicts: dict[str, int] = Field(default_factory=dict)
     #: Claims an independent source materially DISAGREED with. This is louder than a failed
     #: figure: the chart was already drawn from these numbers and is on the page, so a non-empty
