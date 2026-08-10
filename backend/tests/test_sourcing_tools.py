@@ -674,3 +674,38 @@ def test_fallback_provider_contacts_are_metered(monkeypatch) -> None:
         # Tavily fail + Brave success → two keyword contacts metered
         assert out.get("provider") == "brave"
         assert abs(cost.spent_usd() - 2 * cost.estimate_call_cost("keyword")) < 1e-9
+
+
+def test_results_tell_the_agent_which_engine_answered_and_how_to_ask_it(monkeypatch) -> None:
+    """Naming the provider was never enough — the agent could see it and not know what it meant.
+
+    A quota or outage silently moves keyword search off a literal-match index onto a neural one,
+    where the same keyword-soup query performs worst. Thin results then read as "no such source"
+    rather than "wrong phrasing for whoever answered".
+    """
+    research.circuit.reset()
+
+    def invoke(provider, query, max_results):
+        if provider == "tavily":
+            raise RuntimeError("HTTP 432 quota exceeded")
+        if provider == "brave":
+            raise RuntimeError("no api key")
+        return [{"title": "ok", "url": "http://x"}]
+
+    monkeypatch.setattr(research, "_invoke_provider", invoke)
+    out = research._search(query="terafab free electron laser lithography")
+
+    assert out["provider"] == "exa"
+    # The style rides along so the agent can re-phrase without knowing vendor trivia.
+    assert "semantic" in out["provider_style"].lower()
+    # And a fallback says so explicitly, with the instruction that matters: re-ask, don't repeat.
+    assert out["fallback_from"] == "tavily"
+    assert "RE-ASK" in out["provider_note"]
+
+    # The primary carries a style too — the agent should never have to guess who answered.
+    research.circuit.reset()
+    monkeypatch.setattr(research, "_invoke_provider",
+                        lambda p, q, n: [{"title": "ok", "url": "http://x"}])
+    primary = research._search(query="q")
+    assert primary["provider"] == "tavily" and primary["provider_style"]
+    assert "fallback_from" not in primary and "provider_note" not in primary

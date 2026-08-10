@@ -274,9 +274,20 @@ def _search_web(query: str, kind: str, max_results: int) -> dict[str, Any]:
         out: dict[str, Any] = {
             "action": "search", "kind": kind, "query": query,
             "provider": provider, "results": results,
+            # WHICH engine answered decides how the next query should be phrased, and the
+            # answer changes mid-run without warning: a quota or an outage silently moves
+            # keyword search from a literal-match index onto a neural one, where the same
+            # keyword-soup query performs worst. Naming the provider was not enough — the
+            # agent could see it and had no idea what it implied.
+            "provider_style": _PROVIDER_STYLE[provider],
         }
         if provider != chain[0]:
             out["fallback_from"] = chain[0]
+            out["provider_note"] = (
+                f"{chain[0]} was unavailable, so this came from {provider}. "
+                f"If the results look off, RE-ASK in {provider}'s style rather than "
+                f"repeating the same query."
+            )
         return out
     return {
         "action": "search", "kind": kind, "query": query,
@@ -294,6 +305,26 @@ def _provider_error_payload(results: Any) -> str | None:
         if err is not None:
             return str(err)
     return None
+
+
+#: How to ask each engine, in the agent's own terms. These are retrieval styles, not vendor
+#: trivia: the same question phrased for the wrong engine comes back thin, and the agent then
+#: concludes the material does not exist rather than that it asked badly.
+_PROVIDER_STYLE = {
+    "tavily": (
+        "literal-match, news-weighted: use the actual words a page would contain — names, "
+        "places, quoted phrases. Short and concrete beats descriptive."
+    ),
+    "brave": (
+        "literal keyword index: exact strings and distinctive terms. Best for a specific name, "
+        "phrase or number; it will not infer what you meant."
+    ),
+    "exa": (
+        "neural/semantic: DESCRIBE the page you want in a natural phrase — 'a study measuring X "
+        "in Y' — rather than stacking keywords. Keyword soup is its weakest input, and an exact "
+        "phrase lookup is better served by re-asking as a description of the source."
+    ),
+}
 
 
 def _provider_chain(kind: str) -> list[str]:
@@ -327,7 +358,12 @@ def _build() -> Any:
             "the primary post rather than an outlet's summary of it, or to find credible "
             "on-the-ground dissent from the wire consensus. Web search and reads are free; "
             "'rich' and 'x' draw on a small per-run budget. Keyword search auto-falls through "
-            "providers on quota failure."
+            "providers on quota failure — so every result names the `provider` that answered "
+            "and a `provider_style` saying how that engine wants to be asked. Read it: a "
+            "literal-match engine and a semantic one reward opposite phrasing, and which one "
+            "you get can change mid-run. Thin results are often the wrong phrasing for the "
+            "engine that happened to answer, not an absent source — re-ask in its style before "
+            "concluding the material does not exist."
         ),
     )
 
