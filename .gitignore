@@ -272,3 +272,6 @@ backend/publish_held/
 # Stage leftovers on the working-tree site (live publish uses .site-live/ worktree)
 sites/ohmega-monster/publish-ledger.md
 sites/ohmega-monster/public/analytics/
+
+# Source artwork drops — originals live here; the site ships derived, committed assets.
+asset-dump/

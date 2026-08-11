@@ -30,6 +30,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="site-header">
           <div className="shell header-row">
             <Link href="/" className="brand" aria-label="Ohmega Monster home">
+              {/* Decorative: the wordmark beside it already names the site, so alt is empty
+                  rather than repeating "Ohmega Monster" to a screen reader twice. */}
+              <img className="brand-mark" src="/logo-mark.png" alt="" width={512} height={512} />
               <span>OHMEGA</span><span className="brand-separator">/</span><span>MONSTER</span>
             </Link>
             <nav className="site-nav" aria-label="Primary navigation">
