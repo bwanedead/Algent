@@ -98,7 +98,7 @@ a { color: inherit; }
 
 .brand {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   color: var(--strong);
   font-size: 12px;
   font-weight: 700;
@@ -107,6 +107,21 @@ a { color: inherit; }
 }
 
 .brand-separator { margin-inline: 7px; color: var(--accent); }
+
+/* The mark is a black silhouette on transparency, so it is invisible on the dark display and
+   correct on paper. Inverting under dark keeps ONE asset serving both themes and preserves the
+   design's own contrast — the fangs are holes in the mark, so they stay the page colour either
+   way, which is what makes them read as teeth rather than as a printing error. */
+.brand-mark {
+  height: 22px;
+  width: auto;
+  margin-inline-end: 9px;
+  display: block;
+}
+
+:root[data-theme="dark-amber"] .brand-mark,
+:root:not([data-theme="paper"]) .brand-mark { filter: invert(1); }
+:root[data-theme="paper"] .brand-mark { filter: none; }
 
 .site-nav,
 .footer-row nav {
