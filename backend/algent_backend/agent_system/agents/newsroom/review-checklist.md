@@ -212,6 +212,15 @@ read it.
   it; the meaning is at the collection layer — name the collection, not the members; the
   collection would not change what the reader takes away — cut it, leaving at most a clause
   that the direction exists.
+- **Is the mechanism explained past what the reader can use?** The most reliable overshoot, and
+  the one that hides best, because depth reads as rigour and the research supports every word. A
+  piece on printing chips with a particle accelerator opened well — the pitch, the claim, the
+  stakes — then spent itself on tin-plasma EUV physics and free-electron laser mechanics. Flag
+  it: a general run-down of how the thing works, pitched at someone deciding *whether this
+  matters*, is the target; paragraphs of apparatus are not. Cutting that depth takes nothing
+  away from the story's honesty — completeness governs the shape (the sides, the caveats, the
+  contrary evidence), never the resolution of an explanation. Do not accept "but it's all true
+  and sourced" as an answer; that was never the question.
 - **Look for a whole section that could be one sentence.** This is the biggest available win
   and the one reviewers keep missing while catching smaller things. A section walking every
   component of a tension can usually become *that the tension exists, between whom, and why it

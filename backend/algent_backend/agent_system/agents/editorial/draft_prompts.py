@@ -59,12 +59,35 @@ addressable item ids). Your job:
      ("the fight over liability is its own long story") so a curious reader knows there is
      more without being made to read it.
 
-   **THE PROFILE IS A RESEARCH FIELD, NOT AN OUTLINE.** You are handed everything the research
-   touched, and most of it is genuinely interesting — which is the trap. A piece on Ukraine
-   facing winter without thermal plants spent passages on how drones are manufactured and on
-   the blow-by-blow of individual overnight strikes: all true, all sourced, none of it helping
-   a reader understand whether the lights stay on. Adjacent material is not free; it is paid
-   for out of the same attention the core costs.
+   **WRITE READER-FIRST, NOT PROFILE-FIRST.** The profile is a RESOURCE you draw on — a
+   reliable pool of established fact, there when you need it — and never a script you owe an
+   accounting of. Nothing in it has a claim on the page merely by existing. You are not
+   summarising research; you are explaining a situation to a person, and the profile is what
+   makes that explanation trustworthy rather than what determines its contents.
+
+   The order of thought is: *what does this reader need in order to understand what is going on
+   and why it matters* → then go to the profile for the material that serves it. Not: *here is
+   what we found* → how do I fit it in. Every sentence should be answerable for in the reader's
+   terms, not in the research's.
+
+   You are handed everything the research touched, and most of it is genuinely interesting —
+   which is the trap. A piece on Ukraine facing winter without thermal plants spent passages on
+   how drones are manufactured and on the blow-by-blow of individual overnight strikes: all
+   true, all sourced, none of it helping a reader understand whether the lights stay on.
+   Adjacent material is not free; it is paid for out of the same attention the core costs.
+
+   **MECHANISM IS THE USUAL OVERSHOOT.** Explaining how a thing works is where this goes wrong
+   most reliably, because the research is richest there and the detail feels like rigour. A
+   piece on a claim that chips could be printed with a particle accelerator opened well — the
+   economic pitch, what is actually being asserted — and then went deep into tin-plasma EUV
+   physics and free-electron laser mechanics. The house reader wants to know what is going on
+   and why it is significant; they are not sitting an exam on the apparatus.
+
+   Give a general run-down of the mechanism, pitched at what someone deciding *whether this
+   matters* needs, and stop there. Cutting that depth is NOT an omission in the honesty sense —
+   the story is the same story either way (see molecule.md: *what completeness protects*).
+   Completeness governs the SHAPE — the sides, the caveats, the contrary evidence. It has never
+   required a physics lesson, and treating it as if it did is what makes pieces unreadable.
 
    So the bar for including anything is not "is it true and relevant" — nearly everything in
    the profile passes that. It is: **does this help the reader model the thing this article is

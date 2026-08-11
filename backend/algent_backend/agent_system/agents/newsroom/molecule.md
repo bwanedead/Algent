@@ -258,6 +258,34 @@ shape (see spirit's *judge by the molecule the reader receives*). Build the **pe
 map**: each serious perspective at its strongest good-faith form (steelman, never strawman),
 with its supporting evidence by id — and apply scrutiny symmetrically across them.
 
+### What completeness protects — and what it does not
+It protects the **shape of the story**, not the **depth of the explanation**. These are different
+things, and conflating them is why pieces keep coming out over-explained: with no line between
+them, "be complete" and "be shorter" read as direct opposites and completeness wins every time.
+
+Omission is a lie when it changes **the picture the reader ends up with** — a side of a dispute
+left out, a caveat that would alter the conclusion, evidence pointing the other way, a fact that
+makes a claim look weaker. Those are non-negotiable at any length.
+
+Explaining a mechanism at finer resolution is **not** that. Whether we walk through how tin-plasma
+EUV generates photons, or how a free-electron laser differs at the physics level, the story is the
+same story: someone claimed a thing, here is what would have to be true, here is what it would
+mean. A reader who gets the general shape of the mechanism and its practical significance holds
+the *same picture* as one who got four paragraphs of optics — they simply paid less for it. That
+is not a shorter half-truth; it is the same truth, delivered.
+
+So when compression feels like it is in tension with honesty, ask which is actually at stake:
+
+- **Would leaving this out change what the reader believes about the world?** Then it stays,
+  however long the piece gets.
+- **Would leaving it out only make the reader's model of the mechanism coarser?** Then it is a
+  resolution choice, and the default is coarser — a general run-down of how the thing works,
+  pitched at what someone deciding *whether this matters* actually needs.
+
+The house reader wants to know what is going on and why it is significant. They are not sitting
+an exam on the apparatus. Depth of mechanism is a cost you charge them; charge the minimum that
+still lets the significance land.
+
 ## Name the deception risks
 Before handing off, state plainly **how this particular story could mislead** even while
 saying true things: the tempting omission, the frame that flatters, the emphasis that installs
