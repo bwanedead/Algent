@@ -15,12 +15,20 @@ catches up gracefully after a gap.
 
 from __future__ import annotations
 
+import argparse
 import json
-from datetime import UTC, datetime
+import os
+import random
+import subprocess
+import sys
+import time
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
 from algent_backend.agent_system.agents.radar.sweep import sweep_pool
+from algent_backend.agent_system.runs.control_plane.process_tree import terminate_tree
+from algent_backend.publishing import radar_daemon as daemon
 from algent_backend.publishing import radar_queue as q
 from algent_backend.publishing.x_client import XWriteError, post, write_configured
 
@@ -44,8 +52,25 @@ def add_parser(sub: Any) -> None:
     d.add_argument("--dry-run", action="store_true", help="show what would be sent")
     d.set_defaults(handler=run_drain)
 
-    st = verbs.add_parser("status", help="what is queued and when it goes")
+    st = verbs.add_parser("status", help="what is queued, and whether radar is running")
     st.set_defaults(handler=run_status)
+
+    on = verbs.add_parser("start", help="run continuously in the background until stopped")
+    on.add_argument("--discovery-every", type=int, default=daemon.DISCOVERY_EVERY_MIN,
+                    help="minutes between discovery refreshes")
+    on.add_argument("--post-every", type=int, default=daemon.POST_EVERY_MIN,
+                    help="average minutes between posts (jittered)")
+    on.add_argument("--foreground", action="store_true",
+                    help="run in this terminal instead of detaching (Ctrl-C to stop)")
+    on.set_defaults(handler=run_start)
+
+    off = verbs.add_parser("stop", help="stop the background radar and verify it is gone")
+    off.set_defaults(handler=run_stop)
+
+    lp = verbs.add_parser("loop", help=argparse.SUPPRESS)
+    lp.add_argument("--discovery-every", type=int, default=daemon.DISCOVERY_EVERY_MIN)
+    lp.add_argument("--post-every", type=int, default=daemon.POST_EVERY_MIN)
+    lp.set_defaults(handler=run_loop)
 
 
 def _latest_pool() -> Path | None:
@@ -123,5 +148,203 @@ def run_drain(args: Any) -> int:
 
 
 def run_status(_args: Any) -> int:
-    _print(q.summary())
+    alive, state = daemon.running()
+    out: dict[str, Any] = {"radar_running": alive, "queue": q.summary()}
+    if state is not None:
+        out["daemon"] = {
+            "pid": state.pid,
+            "started_at": state.started_at,
+            "last_discovery_at": state.last_discovery_at,
+            "last_post_at": state.last_post_at,
+            "next_post_at": state.next_post_at,
+            "posts_sent": state.posts_sent,
+            "sweeps_run": state.sweeps_run,
+            "stopped_at": state.stopped_at,
+            "recent_errors": state.errors[-3:],
+        }
+        if not alive and not state.stopped_at:
+            out["note"] = ("radar is NOT running - the process is gone but never recorded a "
+                           "stop, so it was killed or the machine slept. Nothing was lost; the "
+                           "queue is on disk and `radar start` resumes.")
+    out["log"] = str(daemon.LOG_FILE)
+    _print(out)
     return 0
+
+
+def run_start(args: Any) -> int:
+    alive, state = daemon.running()
+    if alive and state is not None:
+        _print({"error": f"radar is already running (pid {state.pid}) - `radar stop` first",
+                "started_at": state.started_at})
+        return 1
+
+    daemon.clear_stop()
+    if args.foreground:
+        return run_loop(args)
+
+    # Detached, so closing this terminal does not take radar with it. Its output goes to the
+    # log, which is the operator's only window once this command returns.
+    argv = [sys.executable, "-m", "algent_backend.cli", "newsroom", "radar", "loop",
+            "--discovery-every", str(args.discovery_every),
+            "--post-every", str(args.post_every)]
+    kwargs: dict[str, Any] = {"stdout": subprocess.DEVNULL, "stderr": subprocess.DEVNULL,
+                              "stdin": subprocess.DEVNULL, "cwd": os.getcwd()}
+    if sys.platform == "win32":
+        kwargs["creationflags"] = (
+            subprocess.CREATE_NEW_PROCESS_GROUP | getattr(subprocess, "DETACHED_PROCESS", 0))
+    else:
+        kwargs["start_new_session"] = True
+    proc = subprocess.Popen(argv, **kwargs)
+
+    for _ in range(20):          # let the child record its own pid so we report a real one
+        time.sleep(0.25)
+        alive, state = daemon.running()
+        if alive and state is not None:
+            break
+    _print({
+        "started": True,
+        "pid": state.pid if state else proc.pid,
+        "discovery_every_min": args.discovery_every,
+        "post_every_min": f"~{args.post_every} (jittered +/-{daemon.POST_JITTER_MIN})",
+        "log": str(daemon.LOG_FILE),
+        "stop_with": "python -m algent_backend.cli newsroom radar stop",
+        "note": "closing the laptop just ends it - nothing is lost, the queue stays on disk",
+    })
+    return 0
+
+
+def run_stop(_args: Any) -> int:
+    report = daemon.stop()
+    alive, _ = daemon.running()
+    report["verified_not_running"] = not alive
+    report["queue"] = q.summary()
+    _print(report)
+    return 0 if report.get("stopped") else 1
+
+
+def run_loop(args: Any) -> int:
+    """The supervisor: discovery on one clock, posting on another."""
+    state = daemon.DaemonState(
+        pid=os.getpid(),
+        started_at=datetime.now(UTC).isoformat(),
+        discovery_every_min=args.discovery_every,
+        post_every_min=args.post_every,
+    )
+    daemon.write_state(state)
+    daemon.log(f"radar started (pid {state.pid}) - discovery every {args.discovery_every}m, "
+               f"posting about every {args.post_every}m")
+
+    next_post = datetime.now(UTC) + timedelta(minutes=_jitter(args.post_every))
+    state.next_post_at = next_post.isoformat()
+    daemon.write_state(state)
+
+    try:
+        while not daemon.stop_requested():
+            now = datetime.now(UTC)
+
+            if _stale(state.last_discovery_at, args.discovery_every, now):
+                try:
+                    queued = _refresh(state)
+                    daemon.log(f"discovery + sweep: {queued} new post(s) queued")
+                except Exception as exc:  # noqa: BLE001 - a bad cycle must not end the daemon
+                    state.errors.append(f"{now.isoformat()} discovery: {str(exc)[:160]}")
+                    daemon.log(f"discovery FAILED (continuing): {str(exc)[:160]}")
+                state.last_discovery_at = now.isoformat()
+                daemon.write_state(state)
+
+            if datetime.now(UTC) >= next_post and not daemon.stop_requested():
+                sent = _release_one(state)
+                if sent:
+                    daemon.log(f"posted: {sent}")
+                next_post = datetime.now(UTC) + timedelta(minutes=_jitter(args.post_every))
+                state.next_post_at = next_post.isoformat()
+                daemon.write_state(state)
+
+            time.sleep(daemon.HEARTBEAT_S)
+    except KeyboardInterrupt:
+        daemon.log("radar interrupted from the terminal")
+
+    state.stopped_at = datetime.now(UTC).isoformat()
+    daemon.write_state(state)
+    daemon.clear_stop()
+    daemon.log(f"radar stopped cleanly - {state.posts_sent} post(s) sent this session")
+    return 0
+
+
+def _jitter(minutes: int) -> float:
+    """A window around the target, so the timeline never shows a post on the hour every hour."""
+    return max(1.0, minutes + random.uniform(-daemon.POST_JITTER_MIN, daemon.POST_JITTER_MIN))
+
+
+def _stale(stamp: str, every_min: int, now: datetime) -> bool:
+    if not stamp:
+        return True
+    return now - datetime.fromisoformat(stamp) >= timedelta(minutes=every_min)
+
+
+def _refresh(state: daemon.DaemonState) -> int:
+    """Build a fresh t0 pool, then sweep it into the queue. Returns how many were queued."""
+    # Popen + poll rather than subprocess.run, so a stop request is honoured DURING discovery.
+    # A blocking call here meant the loop could not see the stop file for the several minutes a
+    # t0 sweep takes, which made every stop in that window a force-kill — including the one
+    # right after `start`, since discovery always runs first.
+    child = subprocess.Popen(
+        [sys.executable, "-m", "algent_backend.cli", "newsroom", "run",
+         "--from", "t0", "--to", "menu", "--pool-menu", "--fresh"],
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+    )
+    deadline = time.monotonic() + 45 * 60
+    while child.poll() is None:
+        if daemon.stop_requested() or time.monotonic() > deadline:
+            terminate_tree(child.pid)
+            child.wait(timeout=10)
+            # A tree-killed t0 cannot release its own single-flight lock. The next run's
+            # stale-pid recovery would reclaim it anyway, but an operator checking by hand
+            # should not find a lock file implying a run that is not happening.
+            _clear_dead_run_lock()
+            daemon.log("discovery cancelled" if daemon.stop_requested() else "discovery timed out")
+            return 0
+        time.sleep(2)
+    path = _latest_pool()
+    if path is None:
+        return 0
+    pool = json.loads(path.read_text(encoding="utf-8"))
+    sweep = sweep_pool(pool, already_posted={p.key for p in q.load()})
+    added, _ = q.enqueue([
+        q.RadarPost(key=p.source_key, text=p.text, created_at=datetime.now(UTC).isoformat())
+        for p in sweep.posts
+    ])
+    state.sweeps_run += 1
+    return len(added)
+
+
+def _release_one(state: daemon.DaemonState) -> str:
+    """Send at most one due post. One at a time is what keeps the cadence honest."""
+    ready = sorted(q.due(), key=lambda p: p.scheduled_for or "")
+    if not ready or not write_configured():
+        return ""
+    item = ready[0]
+    try:
+        result = post(item.text)
+    except XWriteError as exc:
+        q.mark(item.id, status="queued", note=str(exc)[:200])
+        state.errors.append(f"{datetime.now(UTC).isoformat()} post: {str(exc)[:160]}")
+        daemon.log(f"post FAILED (stays queued, will retry): {str(exc)[:160]}")
+        return ""
+    q.mark(item.id, status="posted", url=result.url)
+    state.posts_sent += 1
+    state.last_post_at = datetime.now(UTC).isoformat()
+    return result.url
+
+
+def _clear_dead_run_lock() -> None:
+    """Remove the newsroom run lock if the process it names is gone."""
+    from algent_backend.agent_system.runs.control_plane.liveness import process_alive
+
+    lock = Path("runs_data/newsroom_run.lock")
+    try:
+        pid = int(json.loads(lock.read_text(encoding="utf-8")).get("pid") or 0)
+    except (OSError, ValueError, json.JSONDecodeError):
+        return
+    if pid and not process_alive(pid):
+        lock.unlink(missing_ok=True)

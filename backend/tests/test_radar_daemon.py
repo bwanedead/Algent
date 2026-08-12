@@ -1,0 +1,96 @@
+"""The radar supervisor's control surface — above all, that stopping is reliable."""
+
+from __future__ import annotations
+
+import json
+from datetime import UTC, datetime
+
+import pytest
+
+from algent_backend.publishing import radar_daemon as d
+
+
+@pytest.fixture(autouse=True)
+def _isolated(tmp_path, monkeypatch):
+    """Never touch the real pid/stop/log files from a test."""
+    monkeypatch.setattr(d, "PID_FILE", tmp_path / "radar_daemon.json")
+    monkeypatch.setattr(d, "STOP_FILE", tmp_path / "radar_daemon.stop")
+    monkeypatch.setattr(d, "LOG_FILE", tmp_path / "radar_daemon.log")
+
+
+def _state(pid: int) -> d.DaemonState:
+    return d.DaemonState(pid=pid, started_at=datetime.now(UTC).isoformat())
+
+
+def test_a_dead_pid_is_not_running(monkeypatch) -> None:
+    """The lid closing must read as 'off', not as 'on'.
+
+    This is why liveness goes through the house probe: a local os.kill(pid, 0) is
+    CTRL_C_EVENT on Windows and reports dead pids as alive, which would leave status
+    claiming radar was running forever after a crash.
+    """
+    d.write_state(_state(4242))
+    monkeypatch.setattr(d, "process_alive", lambda pid: False)
+    alive, state = d.running()
+    assert alive is False and state is not None and state.pid == 4242
+
+
+def test_stopping_something_already_gone_is_success_not_an_error(monkeypatch) -> None:
+    """`stop` is the panic button; it must never fail because the thing already died."""
+    d.write_state(_state(4242))
+    monkeypatch.setattr(d, "process_alive", lambda pid: False)
+
+    report = d.stop()
+    assert report["stopped"] is True and report["was_running"] is False
+    # The stop flag must not survive: a stale one would kill the NEXT start immediately.
+    assert not d.STOP_FILE.exists()
+
+
+def test_a_loop_that_exits_on_the_flag_stops_gracefully(monkeypatch) -> None:
+    calls = {"n": 0}
+
+    def alive(_pid: int) -> bool:
+        calls["n"] += 1
+        return calls["n"] < 3          # dies shortly after the flag is written
+
+    monkeypatch.setattr(d, "process_alive", alive)
+    d.write_state(_state(4242))
+
+    report = d.stop(timeout_s=5)
+    assert report["stopped"] is True and "graceful" in report["how"]
+    assert not d.STOP_FILE.exists()
+
+
+def test_a_wedged_loop_is_force_killed_rather_than_left_running(monkeypatch) -> None:
+    """A radar that cannot be turned off on demand is worse than a lost discovery cycle.
+
+    The loop can be blocked inside a discovery subprocess for minutes; when it is, waiting
+    politely is the wrong answer.
+    """
+    killed: list[int] = []
+    state = {"alive": True}
+
+    monkeypatch.setattr(d, "process_alive", lambda pid: state["alive"])
+
+    def terminate(pid: int) -> bool:
+        killed.append(pid)
+        state["alive"] = False          # the tree-kill is what actually ends it
+        return True
+
+    monkeypatch.setattr(d, "terminate_tree", terminate)
+    d.write_state(_state(4242))
+
+    report = d.stop(timeout_s=1)
+    assert killed == [4242]
+    assert report["stopped"] is True and "force" in report["how"]
+    assert d.read_state().stopped_at
+
+
+def test_start_state_survives_a_crash_for_status_to_explain(monkeypatch) -> None:
+    """A pid file with no clean stop is the signature of a kill or a sleeping machine."""
+    d.write_state(_state(4242))
+    monkeypatch.setattr(d, "process_alive", lambda pid: False)
+
+    alive, state = d.running()
+    assert not alive and state.stopped_at == ""     # never stopped -> it was interrupted
+    assert json.loads(d.PID_FILE.read_text(encoding="utf-8"))["pid"] == 4242
