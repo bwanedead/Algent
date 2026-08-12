@@ -83,9 +83,13 @@ def _checked(pool: dict, sweep: Any) -> tuple[list[Any], list[dict[str, str]]]:
     """
     labels = {i.get("id"): str(i.get("label") or "")
               for i in (pool.get("items") or []) if isinstance(i, dict)}
-    checks = check_posts([
-        (p.source_key, p.text, labels.get(p.source_key, "")) for p in sweep.posts
-    ])
+    # Dedup by source id cannot see that two wire lines are the same story, so the check is
+    # shown what recently went out and judges by the event instead.
+    recent = [p.text for p in q.load() if p.status in ("posted", "queued")]
+    checks = check_posts(
+        [(p.source_key, p.text, labels.get(p.source_key, "")) for p in sweep.posts],
+        recent=recent,
+    )
     return apply_checks(list(sweep.posts), checks)
 
 

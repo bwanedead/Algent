@@ -103,6 +103,13 @@ category we can least check and the one that costs most when wrong: these travel
 embellished at each retelling, and are rarely corrected. Be most suspicious of the item you most
 want to be true.
 
+DROP A REPEAT OF SOMETHING ALREADY POSTED. You are shown what recently went out. The same event
+routinely arrives as several wire lines with different ids, so identity of source is not identity
+of story — an Indonesia ferry fire went out once, and a second line about the same fire off Bali
+was queued behind it. Judge by the EVENT, not the wording: same incident, same decision, same
+release is a repeat, even when one version has better detail. If the queued one is clearly better
+than what already went out, still drop it — we cannot unpost the first.
+
 Name the specific problem in `reason`. Echo `source_key` exactly.
 """
 
@@ -112,6 +119,7 @@ SYSTEM_PROMPT = compose_system_prompt(UNIVERSAL_AGENT_BASE, CHECK_ROLE)
 def check_posts(
     pairs: list[tuple[str, str, str]],
     *,
+    recent: list[str] | None = None,
     model_spec: ModelSpec | None = None,
     resolver: ModelResolver | None = None,
 ) -> dict[str, RadarCheck]:
@@ -126,7 +134,12 @@ def check_posts(
         return {}
     spec = model_spec or DEFAULT_MODEL
 
-    lines = ["# POSTS TO CHECK", ""]
+    lines: list[str] = []
+    if recent:
+        lines += ["# ALREADY POSTED RECENTLY - do not repeat these events", ""]
+        lines += [f"- {r}" for r in recent[-25:]]
+        lines.append("")
+    lines += ["# POSTS TO CHECK", ""]
     for key, text, label in pairs:
         lines += [f"- source_key: {key}",
                   f"  source line: {label}",
