@@ -27,6 +27,16 @@ SYNTHESIS_ENABLED = True
 # Wired into the synthesis task message so the model sees the standing aim.
 SYNTHESIS_TARGET_VECTORS = 40
 
+BRIEFING_ENABLED = True
+BRIEFING_MIN_ITEMS = 2
+BRIEFING_MAX_ITEMS = 5
+#: Minutes between briefing posts. Wider than Radar so a roundup does not sit on
+#: every short-notice slot.
+BRIEFING_SPACING_MIN = 90
+#: How many themed roundups to queue from one menu. The rest wait for a later
+#: portfolio — a full 40-vector menu would otherwise occupy the timeline all day.
+BRIEFING_MAX_CLUSTERS = 6
+
 # Structured final portfolio needs room: ~400 output tokens/vector is a safe
 # planning figure (title+thesis+rationale+questions+sources). Default ReAct
 # ceiling (4k) silently truncates larger portfolios into empty ``vectors``.
@@ -37,6 +47,7 @@ _SYNTHESIS_OUTPUT_CEILING = 32_768
 # ---------------------------------------------------------------------------
 
 _SYNTHESIS_ENV = "ALGENT_SYNTHESIS"
+_BRIEFING_ENV = "ALGENT_BRIEFING"
 _FALSEY = ("0", "false", "no", "off")
 
 
@@ -61,3 +72,26 @@ def synthesis_max_output_tokens() -> int:
     """Output-token ceiling for the synthesis ReAct + structured portfolio call."""
     need = synthesis_target_vectors() * _SYNTHESIS_TOKENS_PER_VECTOR
     return max(_SYNTHESIS_OUTPUT_FLOOR, min(_SYNTHESIS_OUTPUT_CEILING, need))
+
+
+def briefing_enabled() -> bool:
+    raw = os.environ.get(_BRIEFING_ENV)
+    if raw is not None and raw.strip() != "":
+        return raw.strip().lower() not in _FALSEY
+    return bool(BRIEFING_ENABLED)
+
+
+def briefing_min_items() -> int:
+    return max(1, int(BRIEFING_MIN_ITEMS))
+
+
+def briefing_max_items() -> int:
+    return max(briefing_min_items(), int(BRIEFING_MAX_ITEMS))
+
+
+def briefing_spacing_min() -> int:
+    return max(15, int(BRIEFING_SPACING_MIN))
+
+
+def briefing_max_clusters() -> int:
+    return max(1, int(BRIEFING_MAX_CLUSTERS))

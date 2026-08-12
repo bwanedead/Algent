@@ -128,6 +128,29 @@ def test_copy_from_run_reads_the_draft_artifact(tmp_path) -> None:
     assert x_article.copy_from_run(tmp_path / "missing") == ("", "")
 
 
+def test_a_post_can_carry_an_image_id(monkeypatch) -> None:
+    """Briefings attach a collage via media_ids. The tweets body must actually include them."""
+    import algent_backend.publishing.x_client as xc
+
+    captured: dict = {}
+
+    class _Resp:
+        status_code = 201
+
+        def json(self):
+            return {"data": {"id": "99", "text": "hi"}}
+
+    def fake_post(url, headers=None, json=None, timeout=None):
+        captured["json"] = json
+        return _Resp()
+
+    monkeypatch.setattr(xc, "assert_identity", lambda: "ohmegamonster")
+    monkeypatch.setattr("httpx.post", fake_post)
+    out = xc.post("today's headlines on energy:\n", media_ids=["555"], verify_identity=True)
+    assert out.id == "99"
+    assert captured["json"]["media"]["media_ids"] == ["555"]
+
+
 def test_the_write_ceiling_is_x_longform_not_a_classic_card() -> None:
     """A themed briefing will not fit on a 280-character card. That is not a reason to refuse it.
 

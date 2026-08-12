@@ -154,6 +154,11 @@ def mark(post_id: str, *, status: str, url: str = "", note: str = "",
     save(posts, path)
 
 
+def last_posted_at(path: Path | None = None) -> datetime | None:
+    stamps = [p.posted_at for p in load(path) if p.status == "posted" and p.posted_at]
+    return max(datetime.fromisoformat(s) for s in stamps) if stamps else None
+
+
 def summary(path: Path | None = None) -> dict[str, Any]:
     posts = load(path)
     counts: dict[str, int] = {}

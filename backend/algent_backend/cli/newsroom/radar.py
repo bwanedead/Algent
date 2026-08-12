@@ -536,6 +536,14 @@ def run_loop(args: Any) -> int:
                 state.next_post_at = next_post.isoformat()
                 daemon.write_state(state)
 
+            try:
+                from algent_backend.cli.newsroom.briefing import daemon_tick
+                note = daemon_tick()
+                if note:
+                    daemon.log(note)
+            except Exception as exc:  # noqa: BLE001 — briefing must not take radar down
+                daemon.log(f"briefing tick failed (continuing): {str(exc)[:160]}")
+
             if _stale(state.last_discovery_at, args.discovery_every, now):
                 deferred = False
                 try:

@@ -24,10 +24,14 @@ import secrets
 import time
 import urllib.parse
 from dataclasses import dataclass
+from pathlib import Path
+from typing import Any
 
 _TWEETS_ENDPOINT = "https://api.x.com/2/tweets"
 _ME_ENDPOINT = "https://api.x.com/2/users/me"
+_MEDIA_ENDPOINT = "https://upload.twitter.com/1.1/media/upload.json"
 _TIMEOUT_S = 30.0
+_MEDIA_TIMEOUT_S = 60.0
 
 #: The write credentials. Distinct from X_BEARER_TOKEN, which is read-only app auth.
 _ENV = ("X_API_KEY", "X_API_KEY_SECRET", "X_ACCESS_TOKEN", "X_ACCESS_TOKEN_SECRET")
@@ -137,7 +141,40 @@ def billable_length(text: str) -> int:
     return max(0, out - 1)
 
 
-def post(text: str, *, verify_identity: bool = True) -> Posted:
+def upload_media(path: str | os.PathLike[str]) -> str:
+    """Upload an image and return the media_id the tweets endpoint expects.
+
+    X still takes image bytes on the v1.1 upload host; v2 create-post then attaches
+    the id. A missing file or a non-image is a write error, not a silent skip.
+    """
+    import httpx
+
+    file_path = Path(path)
+    if not file_path.is_file():
+        raise XWriteError(f"media file not found: {file_path}")
+    suffix = file_path.suffix.lower()
+    mime = {".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png",
+            ".webp": "image/webp"}.get(suffix)
+    if mime is None:
+        raise XWriteError(f"unsupported media type: {file_path.suffix}")
+
+    with file_path.open("rb") as fh:
+        resp = httpx.post(
+            _MEDIA_ENDPOINT,
+            headers={"Authorization": _auth_header("POST", _MEDIA_ENDPOINT)},
+            files={"media": (file_path.name, fh, mime)},
+            timeout=_MEDIA_TIMEOUT_S,
+        )
+    if resp.status_code not in (200, 201):
+        raise XWriteError(f"media upload failed ({resp.status_code}): {resp.text[:200]}")
+    media_id = str((resp.json() or {}).get("media_id_string") or (resp.json() or {}).get("media_id") or "")
+    if not media_id:
+        raise XWriteError("media upload returned no media_id")
+    return media_id
+
+
+def post(text: str, *, media_ids: list[str] | None = None,
+         verify_identity: bool = True) -> Posted:
     """Publish one post. Raises XWriteError on anything short of success."""
     import httpx
 
@@ -152,13 +189,17 @@ def post(text: str, *, verify_identity: bool = True) -> Posted:
     handle = assert_identity() if verify_identity else (
         os.environ.get(_HANDLE_ENV) or "").lstrip("@")
 
+    payload: dict[str, Any] = {"text": text}
+    if media_ids:
+        payload["media"] = {"media_ids": [str(m) for m in media_ids]}
+
     resp = httpx.post(
         _TWEETS_ENDPOINT,
         headers={
             "Authorization": _auth_header("POST", _TWEETS_ENDPOINT),
             "Content-Type": "application/json",
         },
-        json={"text": text},
+        json=payload,
         timeout=_TIMEOUT_S,
     )
     if resp.status_code not in (200, 201):
