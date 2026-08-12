@@ -54,6 +54,10 @@ def house_model_id() -> str:
     return (os.environ.get(_ENV_MODEL) or DEFAULT_HOUSE_MODEL).strip() or DEFAULT_HOUSE_MODEL
 
 
+#: Client-side per-request ceiling. Generous: it exists to bound a HUNG call, not a slow one.
+_REQUEST_TIMEOUT_S = 900.0
+
+
 def house_spec(
     *,
     reasoning_effort: ReasoningEffort,
@@ -76,6 +80,14 @@ def house_spec(
         )
 
     payload_extra = dict(extra)
+    # A CLIENT-SIDE DEADLINE. Without one we wait on the provider's gateway ceiling: a research
+    # call hung after a single turn of searches, produced nothing for 31 minutes, and then came
+    # back 504 — killing a rail that had already paid for pool, synthesis and routing. Failing
+    # at a known bound instead makes it a retry (see reconnect) rather than a dead run.
+    #
+    # Set well above any legitimate call, including a large structured profile, because being
+    # wrong in this direction cancels real work.
+    payload_extra.setdefault("timeout", _REQUEST_TIMEOUT_S)
     if streaming:
         payload_extra.setdefault("streaming", True)
         payload_extra.setdefault("stream_usage", True)

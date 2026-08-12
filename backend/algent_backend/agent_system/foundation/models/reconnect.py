@@ -64,7 +64,14 @@ def is_connection_error(exc: BaseException) -> bool:
             "APIConnectionError", "APITimeoutError", "ConnectionError", "ConnectTimeout",
             "ReadTimeout", "ConnectError", "RemoteProtocolError", "TimeoutException",
             "ServiceUnavailableError", "InternalServerError",
+            # A gateway timeout is the provider giving up on its own slow request. It is not a
+            # judgement about our input, so retrying is right — and not retrying it cost a full
+            # rail run once, 31 minutes in.
+            "GatewayTimeoutError", "APIStatusError", "Timeout",
         }:
+            return True
+        # Same shape arriving as a status code rather than a distinct class.
+        if getattr(cur, "status_code", None) in (408, 502, 503, 504):
             return True
         cur = cur.__cause__ or cur.__context__
     return False

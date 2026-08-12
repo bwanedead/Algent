@@ -104,3 +104,36 @@ def test_any_http_answer_counts_as_reachable(monkeypatch) -> None:
 
     monkeypatch.setattr(httpx, "Client", _Client)
     assert reconnect.probe("http://x") is True
+
+
+def test_a_gateway_timeout_is_worth_retrying() -> None:
+    """A 504 is the provider giving up on its own slow request, not a verdict on our input.
+
+    Not retrying it cost a whole rail run: a research call hung after one turn of searches,
+    returned nothing for 31 minutes, then 504'd — discarding pool, synthesis and routing that
+    had already been paid for.
+    """
+    from algent_backend.agent_system.foundation.models.reconnect import is_connection_error
+
+    class _Status(Exception):
+        status_code = 504
+
+    class _Named(Exception):
+        pass
+
+    _Named.__name__ = "GatewayTimeoutError"
+
+    assert is_connection_error(_Status()) is True
+    assert is_connection_error(_Named()) is True
+    # A real refusal is still a real answer, and must not be retried forever.
+    class _BadRequest(Exception):
+        status_code = 400
+
+    assert is_connection_error(_BadRequest()) is False
+
+
+def test_house_spec_carries_a_client_side_deadline() -> None:
+    """Without one we wait on the provider's gateway ceiling instead of our own."""
+    from algent_backend.agent_system.foundation.models import house_spec
+
+    assert float(house_spec(reasoning_effort="low").extra["timeout"]) > 0
