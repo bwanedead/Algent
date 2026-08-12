@@ -8,10 +8,15 @@ import pytest
 
 from algent_backend.publishing import x_article
 
+# Bound before the autouse stub replaces the module attribute.
+_WAIT = x_article.wait_until_live
+
 
 @pytest.fixture(autouse=True)
 def _isolated(tmp_path, monkeypatch):
     monkeypatch.setattr(x_article, "LEDGER", tmp_path / "x_announced.jsonl")
+    # Announce tests are about posting, not Vercel. The wait is tested on its own.
+    monkeypatch.setattr(x_article, "wait_until_live", lambda url, **k: True)
 
 
 def test_an_article_is_never_announced_twice(monkeypatch) -> None:
@@ -116,6 +121,82 @@ def test_copy_from_draft_prefers_the_finding_over_the_topic() -> None:
 def test_copy_from_draft_is_empty_when_there_is_no_draft() -> None:
     assert x_article.copy_from_draft(None) == ("", "")
     assert x_article.copy_from_draft({}) == ("", "")
+
+
+def test_a_page_without_a_large_image_card_is_not_ready() -> None:
+    assert x_article.card_image_url("<html><title>nope</title></html>") == ""
+    assert x_article.card_image_url(
+        '<meta name="twitter:card" content="summary"/>'
+        '<meta name="twitter:image" content="https://x.test/h.jpg"/>'
+    ) == ""
+
+
+def test_a_large_image_card_yields_the_hero_url() -> None:
+    html = (
+        '<meta name="twitter:card" content="summary_large_image"/>'
+        '<meta name="twitter:image" content="https://x.test/hero.jpg"/>'
+    )
+    assert x_article.card_image_url(html) == "https://x.test/hero.jpg"
+
+
+def test_announce_waits_until_the_card_is_live_before_posting(monkeypatch) -> None:
+    """X crawls at post time. Pushing to site-live is not the same as the page being fetchable."""
+    order: list[str] = []
+
+    class _Posted:
+        url = "https://x.test/3"
+
+    import algent_backend.publishing.x_client as xc
+
+    monkeypatch.setattr(xc, "write_configured", lambda: True)
+    monkeypatch.setattr(xc, "post", lambda text, **k: (order.append("post"), _Posted())[1])
+    monkeypatch.setattr(x_article, "compose", lambda *a, **k: "A finding.")
+    monkeypatch.setattr(
+        x_article, "wait_until_live",
+        lambda url, **k: (order.append("wait"), True)[1],
+    )
+
+    out = x_article.announce("s3", "T")
+    assert out["announced"] is True and out["card_ready"] is True
+    assert order == ["wait", "post"]
+
+
+def test_wait_until_live_polls_until_the_hero_returns_bytes() -> None:
+    hits = {"page": 0, "img": 0}
+
+    def fetch(url: str) -> tuple[int, str, bytes]:
+        if url.endswith("/hero.jpg"):
+            hits["img"] += 1
+            if hits["img"] < 2:
+                return 404, "", b""
+            return 200, "", b"\xff\xd8jpeg"
+        hits["page"] += 1
+        if hits["page"] < 2:
+            return 404, "not found", b""
+        return 200, (
+            '<meta name="twitter:card" content="summary_large_image"/>'
+            '<meta name="twitter:image" content="https://x.test/hero.jpg"/>'
+        ), b""
+
+    slept: list[float] = []
+    assert _WAIT(
+        "https://x.test/articles/s",
+        timeout_s=30, poll_s=1,
+        sleep=slept.append, fetch=fetch,
+    ) is True
+    assert slept  # at least one 404 lap
+    assert hits["page"] >= 2 and hits["img"] >= 2
+
+
+def test_wait_until_live_times_out_rather_than_hanging() -> None:
+    def fetch(_url: str) -> tuple[int, str, bytes]:
+        return 404, "nope", b""
+
+    assert _WAIT(
+        "https://x.test/articles/s",
+        timeout_s=0, poll_s=1,
+        sleep=lambda _s: None, fetch=fetch,
+    ) is False
 
 
 def test_copy_from_run_reads_the_draft_artifact(tmp_path) -> None:

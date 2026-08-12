@@ -9,6 +9,10 @@ The post is a framing line plus the link. It does NOT carry the image: the site 
 `twitter:card = summary_large_image` with the hero, so X fetches the picture from the page itself
 and an upload here would only duplicate it — and would drift the moment a hero was replaced.
 
+That fetch happens at post time and is cached. ``git push`` to ``site-live`` is not Vercel-ready —
+announcing in the same breath is how a live article ships with no card. Wait until the URL returns
+the large-image tags *and* the hero bytes before posting.
+
 Never fatal. A distribution failure must not retroactively fail an article the newsroom already
 produced and published honestly, which is the same rule the site publish step follows.
 """
@@ -16,9 +20,11 @@ produced and published honestly, which is the same rule the site publish step fo
 from __future__ import annotations
 
 import json
+import re
+import time
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 SITE_URL = "https://www.ohmega.monster"
 #: Which articles we have already announced. Publishing is retryable and `resume` can run twice
@@ -26,10 +32,77 @@ SITE_URL = "https://www.ohmega.monster"
 LEDGER = Path("runs_data") / "x_announced.jsonl"
 
 _COMPOSE_CAP_USD = 0.05
+#: Vercel production builds of a new article are typically 1–2 minutes. X crawls once.
+_CARD_WAIT_S = 180.0
+_CARD_POLL_S = 5.0
+_FETCH_S = 12.0
+_TWITTERBOT = "Twitterbot/1.0"
+
+_IMAGE_ATTR = (
+    r'name="twitter:image"\s+content="([^"]+)"',
+    r'property="og:image"\s+content="([^"]+)"',
+)
+
+Fetch = Callable[[str], tuple[int, str, bytes]]
 
 
 def article_url(slug: str) -> str:
     return f"{SITE_URL}/articles/{slug}"
+
+
+def _fetch(url: str) -> tuple[int, str, bytes]:
+    """GET as Twitterbot so we see what the card crawler sees."""
+    import httpx
+
+    resp = httpx.get(
+        url,
+        headers={"User-Agent": _TWITTERBOT},
+        timeout=_FETCH_S,
+        follow_redirects=True,
+    )
+    ctype = (resp.headers.get("content-type") or "").lower()
+    if "image/" in ctype:
+        return resp.status_code, "", resp.content
+    return resp.status_code, resp.text, b""
+
+
+def card_image_url(html: str) -> str:
+    """Hero URL if this HTML would produce a large-image card, else empty."""
+    if "summary_large_image" not in html:
+        return ""
+    for pat in _IMAGE_ATTR:
+        match = re.search(pat, html)
+        if match:
+            return match.group(1)
+    return ""
+
+
+def wait_until_live(
+    url: str,
+    *,
+    timeout_s: float = _CARD_WAIT_S,
+    poll_s: float = _CARD_POLL_S,
+    sleep: Callable[[float], None] = time.sleep,
+    fetch: Fetch = _fetch,
+) -> bool:
+    """True once the article page serves a large-image card and the hero returns bytes.
+
+    False on timeout — the caller still posts. A late card is better than a silent article.
+    """
+    deadline = time.monotonic() + timeout_s
+    while True:
+        try:
+            status, html, _ = fetch(url)
+            image = card_image_url(html) if status == 200 else ""
+            if image:
+                img_status, _, img_body = fetch(image)
+                if img_status == 200 and img_body:
+                    return True
+        except Exception:  # noqa: BLE001 — deploy lag and blips are the wait's job
+            pass
+        if time.monotonic() >= deadline:
+            return False
+        sleep(poll_s)
 
 
 def already_announced(slug: str) -> bool:
@@ -156,6 +229,7 @@ def announce(slug: str, title: str, dek: str = "", gist: str = "") -> dict[str, 
         return {"announced": False, "reason": "X write credentials not configured"}
 
     url = article_url(slug)
+    ready = wait_until_live(url)
     line = compose(title, dek, gist)
     text = f"{line}\n\n{url}"
     if billable_length(text) > LIMIT:
@@ -163,11 +237,11 @@ def announce(slug: str, title: str, dek: str = "", gist: str = "") -> dict[str, 
         # as a broken post, while the title is a complete thought by construction.
         text = f"{title}\n\n{url}"
         if billable_length(text) > LIMIT:
-            return {"announced": False, "reason": "title too long for a post"}
+            return {"announced": False, "reason": "title too long for a post", "card_ready": ready}
 
     try:
         result = post(text)
     except XWriteError as exc:
-        return {"announced": False, "reason": str(exc)[:200]}
+        return {"announced": False, "reason": str(exc)[:200], "card_ready": ready}
     _record(slug, url, result.url)
-    return {"announced": True, "post_url": result.url, "text": text}
+    return {"announced": True, "post_url": result.url, "text": text, "card_ready": ready}
