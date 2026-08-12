@@ -135,6 +135,15 @@ def make_hero(
         artifact_name=name, alt=subject, hook=hook, label=IMAGE_LABEL,
         model=image.model, size=image.size, estimated_usd=image.estimated_usd,
     )
+    # Persist the RECORD beside the image. The bytes alone are not a shippable hero — the
+    # publisher needs the alt text and the AI label too, and those lived only in memory and in
+    # the pipeline report. When a run died before that report was written, the image survived
+    # and its description did not, so a finished article could not be resumed for want of one
+    # sentence that nobody could honestly reconstruct.
+    try:
+        artifacts.write_json("hero.json", asdict(record))
+    except Exception as exc:  # noqa: BLE001 — the hero itself is already safely written
+        note(f"hero: record not persisted ({str(exc)[:60]}) — resume would lose the alt text")
     note(
         f"hero: {name} ({image.size}, {image.model.split('-')[-2]}) "
         f"~${image.estimated_usd:.4f}" + (f' — "{hook}"' if hook else " — no caption")
