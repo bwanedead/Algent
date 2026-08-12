@@ -38,6 +38,8 @@ from algent_backend.agent_system.foundation.models.resolver import ModelResolver
 from algent_backend.agent_system.prompting import UNIVERSAL_AGENT_BASE, compose_system_prompt
 from algent_backend.publishing.x_client import LIMIT, billable_length
 
+from .contracts import RADAR_PREFIX
+
 #: One search-backed call per candidate. Low effort, but the search is the expensive half and
 #: the reason the lane is worth anything.
 DEFAULT_MODEL: ModelSpec = house_spec(reasoning_effort="low", temperature=0.3)
@@ -72,26 +74,38 @@ WHAT THE SEARCH IS FOR, in order:
    lose a reader's trust, and nobody needs to hear about last Tuesday's road closure.
 2. WHAT ARE THE SPECIFICS? Dates, places, numbers, names, what changed, what happens next. This
    is what turns a gesture into information.
-3. IS THERE ANYTHING WORTH SAYING? Sometimes the answer is no. Drop it. There is another sweep.
+3. IS THERE ANYTHING WORTH SAYING TO THIS ACCOUNT'S READERS? Specifics are necessary, not
+   sufficient. A mid-cap earnings print, a local road closure, a press-release "strong quarter"
+   can be perfectly dated and numbered and still carry nothing this account exists to say.
+   Drop promotional wires even when the numbers are real — they are the company talking about
+   itself. A consequential company whose result changes something (a platform, a market, a
+   policy) is a different case. Sometimes the answer is simply no. Drop it. There is another
+   sweep.
 
-THE TEST THE POST MUST PASS. A post must REDUCE THE READER'S UNCERTAINTY. Ask what they believed
-before reading it and what they believe after. If those are the same, the post carried no
+THE TEST THE POST MUST PASS. A post must REDUCE UNCERTAINTY THAT MATTERS. Ask what the reader
+believed before and what they believe after. If those are the same, or the change is a fact
+about a company this account does not already have in its world-picture, the post carried no
 information no matter how true it was.
 
     Fails:   "At least three people died in storms across the U.S. Midwest."
              A reader already assumed people die in Midwest storms. No date, no place, no scale,
              no cause. Nothing was delineated; nothing was ruled out.
+    Fails:   "A mid-cap utility reported Q2 EBITDA of $131 million, up 46% year over year."
+             Exact, recent, and worthless: putting a company nobody follows into the picture
+             does not help anyone.
     Passes:  "Tornadoes across Illinois and Indiana on Monday killed three and left 40,000
              without power, the strongest outbreak there since 2023."
              Now they know when, where, how big, and how it compares.
 
 So: prefer the specific over the general, the number over the adjective, the named place over the
-region, and what CHANGED over what merely is. If after searching you still cannot say anything
-specific, that is a drop, not a vaguer sentence.
+region, and what CHANGED over what merely is. A dry official fact (a rate decision, a plant
+going offline) still counts — this lane exists to say those. If after searching you still
+cannot say anything specific AND consequential, that is a drop, not a vaguer sentence.
 
-LENGTH IS A HARD BUDGET. The post plus its 'Radar: ' stamp must fit in 280 characters, so aim
-for about 240 and never exceed it. Density is the craft here: cut the throat-clearing, not the
-numbers. If it will not fit, the fix is fewer facts stated fully — never a truncated sentence.
+LENGTH IS A HARD BUDGET. The harness stamps 'Radar: ' onto whatever you return, so your text
+must leave room for it — about 240 characters, never more than 270. Density is the craft here:
+cut the throat-clearing, not the numbers. If it will not fit, the fix is fewer facts stated
+fully — never a truncated sentence. Do not write the 'Radar: ' stamp yourself.
 
 STYLE — the same as the rest of the account:
 - One or two sentences. Short and dense beats long.
@@ -109,11 +123,34 @@ clause or drop it. Do not fill a gap with something plausible. List the URLs you
 
 SYSTEM_PROMPT = compose_system_prompt(UNIVERSAL_AGENT_BASE, ENRICH_ROLE)
 
+#: Press-release mills. A search will confirm the numbers and still produce a post nobody
+#: asked for — the OPC Energy Q2 print was exact, recent, and worthless. Cheap to reject
+#: here rather than spend a lookup proving a non-story.
+_PR_WIRE_HOSTS = (
+    "prnewswire.com",
+    "businesswire.com",
+    "globenewswire.com",
+    "accesswire.com",
+    "einpresswire.com",
+    "newswire.ca",
+)
+
+#: Room the harness needs for the 'Radar: ' stamp. Checking against LIMIT itself let a
+#: 280-character body through, then the stamp pushed it over.
+_ROOM = LIMIT - len(RADAR_PREFIX)
+
+
+def looks_like_wire_pr(text: str) -> bool:
+    """True when the lead is a company talking about itself via a press-release wire."""
+    blob = (text or "").casefold()
+    return any(host in blob for host in _PR_WIRE_HOSTS)
+
 
 def enrich(
     lead: str,
     *,
     today: str = "",
+    url: str = "",
     model_spec: ModelSpec | None = None,
     resolver: ModelResolver | None = None,
 ) -> EnrichedPost:
@@ -121,12 +158,15 @@ def enrich(
     from algent_backend.agent_system.foundation.models.budget_gate import gate_chat_model
 
     spec = model_spec or DEFAULT_MODEL
+    if looks_like_wire_pr(lead) or looks_like_wire_pr(url):
+        return EnrichedPost(verdict="drop", reason="promotional wire")
     ask = "\n".join([
         f"TODAY: {today}" if today else "",
         f"WIRE LINE: {lead}",
+        f"URL: {url}" if url else "",
         "",
         "Search for what actually happened, then return an EnrichedPost. Drop it if it is stale, "
-        "unverifiable, or has nothing specific to say.",
+        "unverifiable, promotional, or has nothing specific and consequential to say.",
     ]).strip()
 
     try:
@@ -148,7 +188,7 @@ def enrich(
     if result.verdict != "post" or not text:
         return EnrichedPost(verdict="drop", reason=result.reason or "nothing worth posting",
                             sources=result.sources)
-    if billable_length(text) > LIMIT:
+    if billable_length(text) > _ROOM:
         # Re-ask rather than discard. The search has already been paid for and the facts are in
         # hand; throwing that away over a length overrun was pure waste, and it happened twice
         # in the first enriched sweep.
@@ -165,7 +205,7 @@ def _shorten(text: str, spec: ModelSpec, resolver: ModelResolver | None) -> str:
     """One attempt at the same post, inside budget. Returns "" if it still will not fit."""
     from algent_backend.agent_system.foundation.models.budget_gate import gate_chat_model
 
-    room = LIMIT - len("Radar: ") - 10
+    room = _ROOM - 10
     try:
         model = gate_chat_model((resolver or ModelResolver()).resolve(spec).client)
         with cost.scoped(COST_CAP_USD, spec.model):

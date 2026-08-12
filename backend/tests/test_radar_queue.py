@@ -90,40 +90,6 @@ def test_x_counts_urls_at_a_fixed_width_not_their_real_length() -> None:
     assert billable_length(text) < LIMIT  # X will accept it
 
 
-def test_every_post_is_stamped_radar_exactly_once() -> None:
-    """The label is applied by the harness so it cannot drift or be duplicated.
-
-    It says what KIND of post this is — a short notice off the wire — which is honest framing.
-    That is the opposite of "BREAKING:", which asserts an urgency the item usually lacks.
-    """
-    from algent_backend.agent_system.agents.radar import sweep as s
-
-    result = s.RadarSweep(posts=[
-        s.RadarSweep.model_fields["posts"].annotation.__args__[0](
-            source_key="k1", text="A 7.6 quake hit off Colombia's coast."),
-        s.RadarSweep.model_fields["posts"].annotation.__args__[0](
-            source_key="k2", text="Radar: the model prefixed it itself."),
-    ])
-
-    class _Model:
-        def with_structured_output(self, _schema):
-            return self
-
-        def invoke(self, _messages):
-            return result
-
-    class _Resolver:
-        def resolve(self, _spec):
-            return type("R", (), {"client": _Model()})()
-
-    out = s.sweep_pool({"items": [{"id": "k1", "label": "x", "channel": "gkg"}]},
-                       resolver=_Resolver())
-    texts = [p.text for p in out.posts]
-    assert texts[0].startswith("Radar: A 7.6 quake")
-    # Not "Radar: Radar: ..." when the model stamped it too.
-    assert texts[1] == "Radar: the model prefixed it itself."
-
-
 def test_a_gap_leaves_a_backlog_due_but_it_drains_one_at_a_time(tmp_path) -> None:
     """The laptop-was-off case.
 

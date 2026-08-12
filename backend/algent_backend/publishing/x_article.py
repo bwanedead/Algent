@@ -44,6 +44,33 @@ def already_announced(slug: str) -> bool:
     return False
 
 
+def copy_from_draft(draft: dict[str, Any] | None) -> tuple[str, str]:
+    """(dek, gist) from a draft artifact, so the post can say the finding not the topic.
+
+    The composer is only as good as what it is given. Title alone produces a teaser;
+    the dek and the quick_take are the espresso shot the account is supposed to fire.
+    """
+    if not isinstance(draft, dict):
+        return "", ""
+    dek = str(draft.get("standfirst") or "").strip()
+    qt = draft.get("quick_take") if isinstance(draft.get("quick_take"), dict) else {}
+    gist = " ".join(
+        str(qt.get(key) or "").strip()
+        for key in ("what_happened", "why_it_matters", "what_is_uncertain")
+        if str(qt.get(key) or "").strip()
+    )
+    return dek, gist
+
+
+def copy_from_run(run_dir: Path | str) -> tuple[str, str]:
+    """Read dek and gist off a run's draft.json. Empty strings if it is not there."""
+    path = Path(run_dir) / "artifacts" / "draft.json"
+    try:
+        return copy_from_draft(json.loads(path.read_text(encoding="utf-8")))
+    except (OSError, json.JSONDecodeError, TypeError):
+        return "", ""
+
+
 def _record(slug: str, url: str, post_url: str) -> None:
     LEDGER.parent.mkdir(parents=True, exist_ok=True)
     with LEDGER.open("a", encoding="utf-8") as fh:

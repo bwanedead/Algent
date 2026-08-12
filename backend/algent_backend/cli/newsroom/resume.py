@@ -164,9 +164,10 @@ def _publish(run: Path, *, title: str = "", dek: str = "") -> dict[str, Any]:
         if not ok:
             out["push_note"] = note[:160]
         if ok:
-            from algent_backend.publishing.x_article import announce
+            from algent_backend.publishing.x_article import announce, copy_from_run
 
-            out["x"] = announce(result.slug, title, dek=dek)
+            found_dek, gist = copy_from_run(run)
+            out["x"] = announce(result.slug, title, dek=dek or found_dek, gist=gist)
     return out
 
 

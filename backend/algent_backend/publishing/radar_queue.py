@@ -1,8 +1,8 @@
 """
 The radar queue — what is waiting to be posted, and when it may go.
 
-A radar sweep produces several posts at once. Firing them together would read as a bot emptying
-a buffer, so the queue spaces them.
+A radar sweep produces several candidates at once. Firing the survivors together would read
+as a bot emptying a buffer, so the queue spaces them.
 
 There is no urgency tier and no fast lane. An earlier design had one, on the reasoning that a
 live event is worth more early — true, but it required judging liveness from a pool line, which

@@ -3,14 +3,16 @@
 
 Two verbs, deliberately separate:
 
-- ``sweep`` judges a pool and QUEUES posts. It never sends, so a sweep can run right after t0
-  without deciding what the timeline looks like for the next two hours.
+- ``sweep`` picks candidates from a pool, looks each one up, and QUEUES the ones that
+  survive. It never sends, so a sweep can run right after t0 without deciding what the
+  timeline looks like for the next two hours.
 - ``drain`` sends whatever is due. It is the only thing that posts, it is idempotent, and it is
   safe to run on a timer or by hand.
 
 Splitting them is what makes the schedule survive an operator whose machine is not always on:
 the sweep's judgement is captured when the pool is fresh, and release is a separate concern that
-catches up gracefully after a gap.
+catches up gracefully after a gap. A backlog that sat through a closed laptop is reviewed
+before anything goes out.
 """
 
 from __future__ import annotations
@@ -26,10 +28,10 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from algent_backend.agent_system.agents.radar.sweep import sweep_pool
+from algent_backend.agent_system.agents.radar.contracts import stamp
 from algent_backend.agent_system.agents.radar.enrich import enrich
-from algent_backend.agent_system.agents.radar.sweep import RADAR_PREFIX
-from algent_backend.agent_system.agents.radar.verify import HISTORY_DAYS, review_queue
+from algent_backend.agent_system.agents.radar.review import HISTORY_DAYS, review_queue
+from algent_backend.agent_system.agents.radar.sweep import sweep_pool
 from algent_backend.agent_system.runs.control_plane.process_tree import terminate_tree
 from algent_backend.publishing import radar_daemon as daemon
 from algent_backend.publishing import radar_queue as q
@@ -80,34 +82,54 @@ def add_parser(sub: Any) -> None:
     lp.set_defaults(handler=run_loop)
 
 
-def _checked(pool: dict, sweep: Any) -> tuple[list[Any], list[dict[str, str]]]:
+#: After this long sitting in the queue, review before releasing. The laptop-sleep case:
+#: enrichment judged the item current at noon, and posting it at midnight would be
+#: yesterday's news wearing today's timestamp.
+STALE_REVIEW_HOURS = 3.0
+
+
+def _item_url(item: dict) -> str:
+    """A starting URL if the pool item has one — search then has somewhere to begin.
+
+    Without it, a vague wire line is easy to cross with a neighbouring pool item (a live
+    sweep claimed Argentina's YPF divested $780M from a line about the Bolsonaros).
+    """
+    for ev in item.get("evidence") or []:
+        if isinstance(ev, dict):
+            url = str(ev.get("url") or "").strip()
+            if url.startswith("http"):
+                return url
+    key = str(item.get("id") or "")
+    # Beat ids are often `beat:<url>`.
+    if "http://" in key or "https://" in key:
+        idx = key.find("http")
+        return key[idx:]
+    return ""
+
+
+def _lead_for(item: dict, fallback: str) -> str:
+    return str(item.get("label") or fallback or "").strip()
+
+
+def enrich_candidates(pool: dict, sweep: Any) -> tuple[list[Any], list[dict[str, str]]]:
     """Sweep candidates -> finished posts, each one looked up before it is written.
 
-    The sweep SELECTS from the pool; enrichment RESEARCHES and writes. That split is why the
-    old per-post check is gone from this path: it measured a post against its wire line, and
-    an enriched post is supposed to exceed its wire line — that is the entire value added.
-    Checking it against the line would trim exactly the specifics we searched for.
-
-    What replaces it is the queue review at enqueue time, which judges duplication and sanity
-    against everything already published rather than against one line.
+    The sweep SELECTS from the pool; enrichment RESEARCHES and writes.
     """
-    from datetime import datetime as _dt
-
-    today = _dt.now(UTC).strftime("%Y-%m-%d")
-    labels = {i.get("id"): str(i.get("label") or "")
-              for i in (pool.get("items") or []) if isinstance(i, dict)}
+    today = datetime.now(UTC).strftime("%Y-%m-%d")
+    items = {i.get("id"): i for i in (pool.get("items") or []) if isinstance(i, dict)}
 
     kept, rejected = [], []
     for candidate in sweep.posts:
-        lead = labels.get(candidate.source_key) or candidate.text
-        result = enrich(lead, today=today)
+        item = items.get(candidate.source_key) or {}
+        lead = _lead_for(item, "")
+        url = _item_url(item)
+        result = enrich(lead, today=today, url=url)
         if result.verdict != "post":
             rejected.append({"source_key": candidate.source_key, "verdict": "drop",
-                             "reason": result.reason, "was": lead})
+                             "reason": result.reason, "was": lead or url})
             continue
-        # The stamp is applied by the harness, so it survives the rewrite; enrichment
-        # returns the sentence, not the label.
-        candidate.text = RADAR_PREFIX + result.text
+        candidate.text = stamp(result.text)
         kept.append(candidate)
     return kept, rejected
 
@@ -128,7 +150,7 @@ def run_sweep(args: Any) -> int:
     # than a duplicate — pools are deliberately reused across runs.
     seen = {p.key for p in q.load()}
     sweep = sweep_pool(pool, already_posted=seen)
-    survived, rejected = _checked(pool, sweep)
+    survived, rejected = enrich_candidates(pool, sweep)
 
     posts = [
         q.RadarPost(key=p.source_key, text=p.text,
@@ -141,6 +163,7 @@ def run_sweep(args: Any) -> int:
         return 0
 
     added, dupes = q.enqueue(posts)
+    _review_if_stale(force=True)
     _print({
         "pool": str(path),
         "considered": sweep.considered,
@@ -154,6 +177,9 @@ def run_sweep(args: Any) -> int:
 
 
 def run_drain(args: Any) -> int:
+    # A backlog that sat through a closed laptop is due all at once. Review it before
+    # sending: enrichment judged currency at write time, not at release time.
+    _review_if_stale()
     ready = q.due()
     if not ready:
         _print({"posted": [], "note": "nothing due", **q.summary()})
@@ -206,24 +232,75 @@ def _published_history() -> list[str]:
     return out
 
 
+def _pending() -> list:
+    return sorted((p for p in q.load() if p.status == "queued"),
+                  key=lambda p: p.scheduled_for or "")
+
+
+def _oldest_hours(posts: list) -> float:
+    now = datetime.now(UTC)
+    ages = []
+    for post in posts:
+        if post.created_at:
+            ages.append((now - datetime.fromisoformat(post.created_at)).total_seconds() / 3600.0)
+    return max(ages) if ages else 0.0
+
+
+def _apply_review(review: Any, pending: list) -> list[dict[str, str]]:
+    dropped = [{"id": d.post_id, "reason": d.reason,
+                "text": next((p.text for p in pending if p.id == d.post_id), "")}
+               for d in review.drop]
+    for item in dropped:
+        q.mark(item["id"], status="skipped", note=f"queue review: {item['reason'][:160]}")
+    return dropped
+
+
+_LAST_REVIEW_AT: datetime | None = None
+#: Don't re-review a still-old backlog every release tick. One look per this window is enough;
+#: the next discovery will force another.
+_REVIEW_COOLDOWN = timedelta(hours=2)
+
+
+def _review_if_stale(*, force: bool = False) -> list[dict[str, str]]:
+    """Prune the pending queue when it has been sitting. Fails open."""
+    global _LAST_REVIEW_AT
+    pending = _pending()
+    if not pending:
+        return []
+    now = datetime.now(UTC)
+    if not force:
+        if _oldest_hours(pending) < STALE_REVIEW_HOURS:
+            return []
+        if _LAST_REVIEW_AT and now - _LAST_REVIEW_AT < _REVIEW_COOLDOWN:
+            return []
+    try:
+        review = review_queue(pending, _published_history())
+    except Exception as exc:  # noqa: BLE001 — pruning is not worth losing a release over
+        daemon.log(f"queue review failed (queue left as-is): {str(exc)[:120]}")
+        return []
+    _LAST_REVIEW_AT = now
+    dropped = _apply_review(review, pending)
+    for item in dropped:
+        daemon.log(f"queue review dropped a post: {item['reason'][:120]}")
+    return dropped
+
+
 def run_review(args: Any) -> int:
     """Look at the whole pending queue at once and prune it."""
-    pending = sorted((p for p in q.load() if p.status == "queued"),
-                     key=lambda p: p.scheduled_for or "")
+    pending = _pending()
     if not pending:
         _print({"reviewed": 0, "note": "nothing pending"})
         return 0
 
     review = review_queue(pending, _published_history())
-    dropped = [{"id": d.post_id, "reason": d.reason,
-                "text": next((p.text for p in pending if p.id == d.post_id), "")}
-               for d in review.drop]
     if args.dry_run:
+        dropped = [{"id": d.post_id, "reason": d.reason,
+                    "text": next((p.text for p in pending if p.id == d.post_id), "")}
+                   for d in review.drop]
         _print({"reviewed": len(pending), "dry_run": True, "would_drop": dropped,
                 "note": review.note})
         return 0
-    for item in dropped:
-        q.mark(item["id"], status="skipped", note=f"queue review: {item['reason'][:160]}")
+    dropped = _apply_review(review, pending)
     _print({"reviewed": len(pending), "dropped": dropped, "note": review.note,
             "remaining": sum(1 for p in q.load() if p.status == "queued")})
     return 0
@@ -345,6 +422,11 @@ def run_loop(args: Any) -> int:
     gap = timedelta(minutes=args.post_every)
     earliest = (_last_sent_at() + gap) if _last_sent_at() else now
     overdue = q.due()
+    if overdue:
+        dropped = _review_if_stale(force=True)
+        if dropped:
+            daemon.log(f"stale-queue review dropped {len(dropped)} before resume")
+        overdue = q.due()
     if overdue and earliest <= now:
         next_post = now
         daemon.log(f"resuming with {len(overdue)} post(s) overdue - releasing one now, "
@@ -472,7 +554,7 @@ def _refresh(state: daemon.DaemonState) -> int:
         return 0
     pool = json.loads(path.read_text(encoding="utf-8"))
     sweep = sweep_pool(pool, already_posted={p.key for p in q.load()})
-    survived, rejected = _checked(pool, sweep)
+    survived, rejected = enrich_candidates(pool, sweep)
     for item in rejected:
         daemon.log(f"post rejected ({item['verdict']}): {item['reason'][:120]}")
     added, _ = q.enqueue([
@@ -484,12 +566,7 @@ def _refresh(state: daemon.DaemonState) -> int:
     # Review the whole queue after enqueueing: a sweep can only see its own posts, and the
     # duplicate that matters is the one queued hours ago by a different sweep.
     try:
-        pending = sorted((p for p in q.load() if p.status == "queued"),
-                         key=lambda p: p.scheduled_for or "")
-        review = review_queue(pending, _published_history())
-        for d in review.drop:
-            q.mark(d.post_id, status="skipped", note=f"queue review: {d.reason[:160]}")
-            daemon.log(f"queue review dropped a post: {d.reason[:120]}")
+        _review_if_stale(force=True)
     except Exception as exc:  # noqa: BLE001 — pruning is not worth losing a sweep over
         daemon.log(f"queue review failed (queue left as-is): {str(exc)[:120]}")
     return len(added)
@@ -497,6 +574,10 @@ def _refresh(state: daemon.DaemonState) -> int:
 
 def _release_one(state: daemon.DaemonState) -> str:
     """Send at most one due post. One at a time is what keeps the cadence honest."""
+    # Lid-close without a process restart: the loop wakes, a post is due, and nothing
+    # else would have reviewed the backlog. Drain and resume already do this; the
+    # canonical release has to as well.
+    _review_if_stale()
     ready = sorted(q.due(), key=lambda p: p.scheduled_for or "")
     if not ready or not write_configured():
         return ""

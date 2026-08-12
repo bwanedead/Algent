@@ -76,3 +76,34 @@ def test_compose_falls_back_to_the_title_when_the_model_is_unavailable(monkeypat
         lambda self, spec: (_ for _ in ()).throw(RuntimeError("no model")),
     )
     assert x_article.compose("The title", "the dek") == "The title"
+
+
+def test_copy_from_draft_prefers_the_finding_over_the_topic() -> None:
+    """The espresso-shot composer is only as good as the dek and gist it is given."""
+    dek, gist = x_article.copy_from_draft({
+        "title": "China's 3,500 GW target",
+        "standfirst": "The plan is judged on grid integration, not gigawatts installed.",
+        "quick_take": {
+            "what_happened": "China pivoted from raw capacity to firm power.",
+            "why_it_matters": "Installed gigawatts stopped being the scoreboard.",
+            "what_is_uncertain": "Whether the grid can absorb the next 500 GW.",
+        },
+    })
+    assert "grid integration" in dek
+    assert "firm power" in gist
+    assert "scoreboard" in gist
+
+
+def test_copy_from_draft_is_empty_when_there_is_no_draft() -> None:
+    assert x_article.copy_from_draft(None) == ("", "")
+    assert x_article.copy_from_draft({}) == ("", "")
+
+
+def test_copy_from_run_reads_the_draft_artifact(tmp_path) -> None:
+    arts = tmp_path / "artifacts"
+    arts.mkdir()
+    (arts / "draft.json").write_text(
+        '{"standfirst": "a dek", "quick_take": {"what_happened": "a finding"}}',
+        encoding="utf-8")
+    assert x_article.copy_from_run(tmp_path) == ("a dek", "a finding")
+    assert x_article.copy_from_run(tmp_path / "missing") == ("", "")

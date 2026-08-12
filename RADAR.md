@@ -1,7 +1,8 @@
 # Radar — the always-on lane
 
-Radar posts short notices to X off the t0 discovery pool. No article, no research rail: a pool
-item becomes one plain sentence and goes in a queue that drains on a timer.
+Radar posts short notices to X off the t0 discovery pool. No article: a pool item becomes a
+candidate, a search looks it up, and if it is still news and worth saying it goes in a queue
+that drains on a timer.
 
 It runs until told otherwise, and the most important thing on this page is that **turning it off
 always works**.
@@ -18,8 +19,11 @@ radar log       follow the log.
 ```
 
 `radar start` accepts `--discovery-every N` and `--post-every N` in minutes. Defaults: discovery
-every **120**, a post about every **60** (jittered ±15, so roughly 45–75 — never on the hour every
+every **120**, a post about every **40** (jittered ±15, so roughly 25–55 — never on the hour every
 hour, which reads as a bot).
+
+PowerShell needs the prefix with no space: `.\radar start`. `.\ radar start` (space after `.\`)
+is a typo — PowerShell then tries to run `.\` as the command.
 
 ## Turning it off
 
@@ -52,20 +56,28 @@ next cycle rather than being dropped.
 ## What it does on a cycle
 
 1. **Discovery** (every ~2h): builds a fresh t0 pool, then sweeps it — one cheap model call that
-   picks the few items worth saying out loud and writes each as a single sentence.
-2. **Release** (about hourly): sends **one** due post. One at a time is what keeps the cadence
-   from clumping.
+   picks candidates worth looking up.
+2. **Enrichment**: each candidate gets one web search. That answers the three things a wire line
+   cannot: is it still news, what are the specifics, and is it worth saying at all. Stale,
+   unverifiable, promotional, or empty leads are dropped here. The post has to reduce uncertainty
+   that matters — a dated number about a company nobody follows still fails.
+3. **Release** (about every 40 min): sends **one** due post. One at a time is what keeps the
+   cadence from clumping.
 
 Posts are deduplicated by their source t0 item, so re-sweeping the same pool queues nothing new.
+A queue review also runs after each sweep, and again before a backlog drains after a gap, so a
+closed laptop does not dump yesterday's news when radar comes back.
 
 ## Rules it follows
 
 - No `BREAKING:`, no urgency markers, no engagement bait.
-- No liveness claims. It cannot tell how old a pool item is, so it does not guess.
-- Confidence lives inside the sentence, never as a caveat bolted on after — *"Musk says X, and a
-  two-word reply is the only public detail"*, not *"X. But nobody has confirmed X."*
+- No liveness claims in the post itself. The search checks recency; the sentence states what
+  happened.
+- Confidence lives inside the sentence, never as a caveat bolted on after.
 - One thought per post.
 - Posting nothing is a normal outcome. A quiet sweep beats filler.
+- The post is the claim, not a teaser. A reader who never clicks should still know something
+  they did not know before.
 
 ## Independence from the article rail
 

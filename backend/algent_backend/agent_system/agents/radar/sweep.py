@@ -1,4 +1,9 @@
-"""The radar sweep: one t0 pool in, a few standalone posts out."""
+"""The radar sweep: one t0 pool in, a handful of candidates out.
+
+The sweep SELECTS. A later search pass writes the post or drops the lead. That split is the
+whole design: a wire line cannot tell you whether specifics exist, which is what the search
+finds out, so this pass is generous and cheap.
+"""
 
 from __future__ import annotations
 
@@ -10,7 +15,6 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from algent_backend.agent_system.foundation import cost
 from algent_backend.agent_system.foundation.models import ModelSpec, house_spec
 from algent_backend.agent_system.foundation.models.resolver import ModelResolver
-from algent_backend.publishing.x_client import LIMIT, billable_length
 
 from .contracts import RadarSweep
 from .prompts import SYSTEM_PROMPT
@@ -25,16 +29,6 @@ COST_CAP_USD = 0.20
 #: silently excluded from consideration: a cap below the pool size is a hidden editorial
 #: decision made by list order rather than by merit.
 _MAX_ITEMS = 200
-
-#: Applied by the harness, not written by the model, so it is identical on every post and cannot
-#: drift into "RADAR!!" or get dropped.
-#:
-#: It earns its place by being a LABEL rather than a claim: it says what kind of post this is —
-#: a short notice off the wire, not a piece we researched — which is honest framing and still
-#: catches an eye in a feed. That is the opposite of "BREAKING:", which asserts an urgency the
-#: item usually does not have and which the platform discounts anyway. The handle already
-#: supplies the brand, so this stays one plain word.
-RADAR_PREFIX = "Radar: "
 
 
 def _render_items(pool: dict[str, Any]) -> str:
@@ -57,7 +51,7 @@ def sweep_pool(
     already_posted: set[str] | None = None,
     resolver: ModelResolver | None = None,
 ) -> RadarSweep:
-    """Judge a t0 pool and return the posts worth making. Empty is a normal outcome.
+    """Judge a t0 pool and return candidates worth looking up. Empty is a normal outcome.
 
     Takes a resolver rather than a full run context: this lane uses no tools and writes no
     artifacts, so requiring the run machinery would be ceremony around a single model call.
@@ -70,13 +64,14 @@ def sweep_pool(
         return RadarSweep(considered=0, note="empty pool")
 
     message = "\n".join([
-        "# T0 POOL — pick the few worth posting right now",
+        "# T0 POOL — pick the few worth looking up right now",
         "",
         "Each line is a raw discovery item. Most are not worth a post; say so by leaving them out.",
+        "Return source_key (the item's id exactly) and a short rationale. Leave text empty.",
         "",
         rendered,
         "",
-        "Return a RadarSweep. `source_key` must be the item's id exactly as given above.",
+        "Return a RadarSweep.",
     ])
 
     model = gate_chat_model((resolver or ModelResolver()).resolve(spec).client)
@@ -92,21 +87,12 @@ def sweep_pool(
     seen = already_posted or set()
     kept = []
     for post in result.posts:
-        text = (post.text or "").strip()
-        # The harness enforces what the prompt asks for: a post that cannot be sent is not a
-        # post, and an over-length one would fail at the API with a worse error much later.
-        if not text or post.source_key in seen:
+        key = (post.source_key or "").strip()
+        if not key or key in seen:
             continue
-        # Tolerate a model that prefixed it anyway rather than shipping "Radar: Radar: ...".
-        for variant in (RADAR_PREFIX, "Radar:", "RADAR:", "Ohmega Radar:"):
-            if text.lower().startswith(variant.strip().lower()):
-                text = text[len(variant.strip()):].lstrip()
-                break
-        text = RADAR_PREFIX + text
-        if billable_length(text) > LIMIT:
-            continue
-        post.text = text
+        post.source_key = key
         kept.append(post)
+        seen.add(key)
 
     result.posts = kept
     result.considered = len(pool.get("items") or [])
