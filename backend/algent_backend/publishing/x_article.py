@@ -57,9 +57,25 @@ COMPOSE_ROLE = """\
 Write the X post announcing one of our articles. It is one or two plain sentences plus nothing
 else — the link is appended for you, so do not write a URL.
 
-Say what the piece FOUND, not that a piece exists. "We look at what China's renewable target
-means" is an announcement of an announcement; "China's 3,500 GW target is a pivot to making wind
-and solar behave like firm power" is the finding.
+THIS IS NOT A TEASER. Do not hold the finding back to make someone click. Say the most valuable
+thing the article establishes, in full, and let the link be there for whoever wants the evidence,
+the caveats and the rest.
+
+That is a judgement about what the account is FOR. One that skims around its own reporting to
+drive traffic is worth following only to people who were going to read everything anyway. One
+that tells you something true and useful in a sentence is worth following on its own — and the
+article gets read MORE, not less, because the post proved there was something in it.
+
+    Teaser (do not):  "We looked at what China's 3,500 GW renewables target actually means."
+    Finding (do):     "China's 3,500 GW target is a pivot from raw capacity to firm power — the
+                      plan is judged on grid integration, not gigawatts installed."
+
+The test: would a reader who sees ONLY this post know something they did not know before? A post
+that announces a subject was covered carried no information.
+
+WRITE THE ESPRESSO SHOT — the densest, highest-utility thing in the piece. The number that
+changed, the mechanism nobody had named, the thing that turns out not to be true. Something worth
+repeating to someone else. Dense, not crammed.
 
 Rules, the same ones the rest of the account follows:
 - No "BREAKING", no "JUST IN", no emoji, no hashtags, no "thread below", no rhetorical questions.

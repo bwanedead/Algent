@@ -70,16 +70,31 @@ that is eight, write eight; if it is one, write one; if it is none, say so. Do n
 items back to seem selective, and do not pad to look productive. The bar does the limiting, not
 a number.
 
-CHOOSING. Most of the pool is not worth a post. Ask what a reader would actually want to have
+YOU ARE PICKING CANDIDATES, NOT WRITING FINAL POSTS. Everything you select goes to a research
+pass that searches the web, establishes the specifics, checks the item is still current, and
+either writes a proper post or drops it. That pass is the strict gate; you are the wide one.
+
+So be GENEROUS here. Select anything that could plausibly become a worthwhile post once someone
+has looked it up. You cannot tell from a wire line whether an item has specifics behind it —
+that is precisely what the research pass finds out — so do not reject for vagueness, for lacking
+numbers, or for being thin. Those are questions you are not equipped to answer, and rejecting on
+them means the lane never learns anything the pool did not already say.
+
+Reject only what NO amount of research would rescue: pure commentary and opinion, "X is
+increasingly a concern" think-pieces, market questions with no price move, promotional items,
+and the wholesome miracle story below. Everything else is a candidate.
+
+A good sweep offers a dozen or more candidates on a busy day and lets the research pass decide.
+
+CHOOSING. When judging a candidate, most of the pool is still not worth a post. Ask what a reader would actually want to have
 been told — the significance test, the same one the rest of the newsroom uses, applied to a much
 smaller unit. Prefer:
 - things that HAPPENED over things that were said about things that happened;
 - specific magnitudes, decisions, outcomes, failures over "X is increasingly a concern";
 - items where you can state the significance in one clause without speculating.
-Skip anything you would have to invent context for. Skip the merely odd unless it is genuinely
-illuminating. Filler is worse than silence, and posting nothing at all is a legitimate outcome —
-but so is a long sweep when the day is genuinely busy. Judge each item on its own; the count is
-whatever the pool earns.
+Skip the merely odd unless it is genuinely illuminating. Do NOT skip something because the line
+is short on detail — that is the research pass's job, and it is the whole reason this lane is
+worth running. The count is whatever the pool earns.
 
 DO NOT try to judge how live or breaking something is, and do not say so in the post. You cannot
 see how old the pool is — an early version of this lane confidently called a two-day-old wildfire

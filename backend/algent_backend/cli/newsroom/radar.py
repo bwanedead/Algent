@@ -27,12 +27,9 @@ from pathlib import Path
 from typing import Any
 
 from algent_backend.agent_system.agents.radar.sweep import sweep_pool
-from algent_backend.agent_system.agents.radar.verify import (
-    HISTORY_DAYS,
-    apply_checks,
-    check_posts,
-    review_queue,
-)
+from algent_backend.agent_system.agents.radar.enrich import enrich
+from algent_backend.agent_system.agents.radar.sweep import RADAR_PREFIX
+from algent_backend.agent_system.agents.radar.verify import HISTORY_DAYS, review_queue
 from algent_backend.agent_system.runs.control_plane.process_tree import terminate_tree
 from algent_backend.publishing import radar_daemon as daemon
 from algent_backend.publishing import radar_queue as q
@@ -84,22 +81,35 @@ def add_parser(sub: Any) -> None:
 
 
 def _checked(pool: dict, sweep: Any) -> tuple[list[Any], list[dict[str, str]]]:
-    """Sweep output -> queue-ready posts, with every one measured against its source line.
+    """Sweep candidates -> finished posts, each one looked up before it is written.
 
-    Radar has no research pass, so this is the only thing standing between a wire line and a
-    published sentence. It runs on BOTH paths (manual sweep and the daemon) rather than at the
-    call sites, because a check that can be bypassed by using the other verb is not a check.
+    The sweep SELECTS from the pool; enrichment RESEARCHES and writes. That split is why the
+    old per-post check is gone from this path: it measured a post against its wire line, and
+    an enriched post is supposed to exceed its wire line — that is the entire value added.
+    Checking it against the line would trim exactly the specifics we searched for.
+
+    What replaces it is the queue review at enqueue time, which judges duplication and sanity
+    against everything already published rather than against one line.
     """
+    from datetime import datetime as _dt
+
+    today = _dt.now(UTC).strftime("%Y-%m-%d")
     labels = {i.get("id"): str(i.get("label") or "")
               for i in (pool.get("items") or []) if isinstance(i, dict)}
-    # Dedup by source id cannot see that two wire lines are the same story, so the check is
-    # shown what recently went out and judges by the event instead.
-    recent = [p.text for p in q.load() if p.status in ("posted", "queued")]
-    checks = check_posts(
-        [(p.source_key, p.text, labels.get(p.source_key, "")) for p in sweep.posts],
-        recent=recent,
-    )
-    return apply_checks(list(sweep.posts), checks)
+
+    kept, rejected = [], []
+    for candidate in sweep.posts:
+        lead = labels.get(candidate.source_key) or candidate.text
+        result = enrich(lead, today=today)
+        if result.verdict != "post":
+            rejected.append({"source_key": candidate.source_key, "verdict": "drop",
+                             "reason": result.reason, "was": lead})
+            continue
+        # The stamp is applied by the harness, so it survives the rewrite; enrichment
+        # returns the sentence, not the label.
+        candidate.text = RADAR_PREFIX + result.text
+        kept.append(candidate)
+    return kept, rejected
 
 
 def _latest_pool() -> Path | None:
