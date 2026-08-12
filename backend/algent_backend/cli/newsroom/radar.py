@@ -66,20 +66,20 @@ def run_sweep(args: Any) -> int:
     sweep = sweep_pool(pool, already_posted=seen)
 
     posts = [
-        q.RadarPost(key=p.source_key, text=p.text, urgency=p.urgency,
+        q.RadarPost(key=p.source_key, text=p.text,
                     created_at=datetime.now(UTC).isoformat())
         for p in sweep.posts
     ]
     if args.dry_run:
         _print({"pool": str(path), "considered": sweep.considered, "dry_run": True,
-                "would_queue": [{"urgency": p.urgency, "text": p.text} for p in posts]})
+                "would_queue": [p.text for p in posts]})
         return 0
 
     added, dupes = q.enqueue(posts)
     _print({
         "pool": str(path),
         "considered": sweep.considered,
-        "queued": [{"id": p.id, "urgency": p.urgency, "scheduled_for": p.scheduled_for,
+        "queued": [{"id": p.id, "scheduled_for": p.scheduled_for,
                     "text": p.text} for p in added],
         "already_seen": len(dupes),
         "note": sweep.note,
@@ -98,7 +98,7 @@ def run_drain(args: Any) -> int:
 
     if args.dry_run:
         _print({"dry_run": True,
-                "would_post": [{"id": p.id, "urgency": p.urgency, "text": p.text} for p in batch]})
+                "would_post": [{"id": p.id, "text": p.text} for p in batch]})
         return 0
     if not write_configured():
         _print({"error": "X write credentials are not configured (X_API_KEY, X_API_KEY_SECRET, "

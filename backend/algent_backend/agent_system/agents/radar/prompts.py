@@ -49,13 +49,10 @@ Skip anything you would have to invent context for. Skip the merely odd unless i
 illuminating. A quiet sweep with two good posts beats ten filler ones — and posting nothing at
 all is a legitimate outcome.
 
-URGENCY — a RELEASE decision, not an importance one. How fast does the value decay?
-- `live`     happening now; being early is most of the value. Use sparingly and honestly: a
-             live event, not merely a recent one.
-- `today`    real news, no race.
-- `whenever` durable — a finding, a number, a study. Reads the same tomorrow.
-Getting this wrong in the `live` direction is the costly one: it jumps the queue, so an item
-that was not actually live spends that privilege for nothing.
+DO NOT try to judge how live or breaking something is, and do not say so in the post. You cannot
+see how old the pool is — an early version of this lane confidently called a two-day-old wildfire
+live — and the post reads the same without it. State what happened; a reader can tell how fresh
+that is on their own.
 
 VOICE. Plain, declarative, specific. Same standards as everything else we publish: no certainty
 the item does not support, no laundering a claim into a fact. If the pool item is itself someone

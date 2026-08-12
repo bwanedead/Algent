@@ -15,27 +15,25 @@ directions: a story worth an article going unmentioned for a day because it was 
 
 from __future__ import annotations
 
-from typing import Literal
-
 from pydantic import BaseModel, Field
-
-#: How much the value of this post decays with time — a release decision, not an importance one.
-#:
-#: - ``live``     happening now; being early is most of the value, and an hour's delay wastes it.
-#: - ``today``    real news, no race. Worth saying today, not worth jumping the queue for.
-#: - ``whenever`` durable. A finding or a number that reads the same tomorrow.
-Urgency = Literal["live", "today", "whenever"]
 
 
 class RadarPost(BaseModel):
-    """One post: what happened, and the clause that makes it mean something."""
+    """One post: what happened, and the clause that makes it mean something.
+
+    There is deliberately NO urgency or liveness field. Judging "is this happening right now"
+    from a pool line is fragile in the direction that costs most — the model cannot see how old
+    the pool is, and a first sweep confidently marked a two-day-old wildfire as live and would
+    have jumped it to the front of the queue. A misjudgement that grants priority is worse than
+    having no priority at all, and the information reads the same either way: the post says what
+    happened, and the reader can tell how fresh that is without being told.
+    """
 
     #: The t0 item id this came from — the dedup identity across sweeps.
     source_key: str
     #: The post as it will appear. Written to stand alone: a radar post usually links nowhere,
     #: so it IS the claim rather than a pointer to where the claim is defended.
     text: str
-    urgency: Urgency = "today"
     #: Why this one was worth saying at all, for the operator's review — never posted.
     rationale: str = ""
 

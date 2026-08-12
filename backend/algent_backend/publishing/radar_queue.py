@@ -1,16 +1,15 @@
 """
 The radar queue — what is waiting to be posted, and when it may go.
 
-A radar sweep produces several posts at once. Firing them together would read as a bot
-emptying a buffer, so the queue spaces them. But spacing is not the same as delaying: a live
-event is worth something *because* it is early, and holding it an hour to be polite throws away
-the only advantage it had. A three-day-old finding loses nothing by waiting.
+A radar sweep produces several posts at once. Firing them together would read as a bot emptying
+a buffer, so the queue spaces them.
 
-So urgency decides the release, not a fixed cadence:
-
-- ``live``     — happening now. Goes on the next drain, no spacing. Being early IS the value.
-- ``today``    — real news, not a race. Spaced, so a sweep does not arrive as a burst.
-- ``whenever`` — durable and interesting. Spread out; it will read the same tomorrow.
+There is no urgency tier and no fast lane. An earlier design had one, on the reasoning that a
+live event is worth more early — true, but it required judging liveness from a pool line, which
+the model cannot do reliably: it does not know how old the pool is, and a first sweep confidently
+marked a two-day-old wildfire as live. A misclassification that GRANTS priority is worse than
+having no priority, because it spends the fast lane on something stale and trains you to distrust
+the flag. One cadence for everything is duller and always right.
 
 THE UNAVOIDABLE LIMIT: this drains when something runs it, and the operator's machine is not
 always on. The queue is therefore persistent and idempotent — nothing is lost while the machine
@@ -30,11 +29,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any, Literal
 
-Urgency = Literal["live", "today", "whenever"]
-
-#: Minimum gap between posts of each class, in minutes. Live is exempt: its whole value is
-#: timeliness, and two genuinely live events in one sweep is rare enough not to design around.
-_SPACING_MIN = {"live": 0, "today": 35, "whenever": 95}
+#: Minimum gap between posts, in minutes.
+_SPACING_MIN = 40
 #: Jitter so a drained backlog does not go out on a metronome, which reads as automation.
 _JITTER_MIN = 12
 
@@ -52,7 +48,6 @@ class RadarPost:
 
     key: str
     text: str
-    urgency: Urgency = "today"
     status: Literal["queued", "posted", "failed", "skipped"] = "queued"
     scheduled_for: str = ""
     created_at: str = ""
@@ -100,7 +95,7 @@ def schedule(
     *,
     now: datetime | None = None,
 ) -> list[RadarPost]:
-    """Assign release times, spacing by urgency and never behind what is already queued.
+    """Assign release times, evenly spaced and never behind what is already queued.
 
     Scheduling from the LAST pending slot rather than from now is what stops a second sweep
     from interleaving into the first one's gaps and undoing the spacing.
@@ -115,14 +110,8 @@ def schedule(
 
     scheduled: list[RadarPost] = []
     for post in new:
-        gap = _SPACING_MIN.get(post.urgency, 35)
-        if post.urgency == "live":
-            # Early is the entire point; do not make it wait behind the queue.
-            when = start
-        else:
-            cursor = cursor + timedelta(minutes=gap + random.randint(0, _JITTER_MIN))
-            when = cursor
-        post.scheduled_for = when.isoformat()
+        cursor = cursor + timedelta(minutes=_SPACING_MIN + random.randint(0, _JITTER_MIN))
+        post.scheduled_for = cursor.isoformat()
         post.created_at = post.created_at or start.isoformat()
         scheduled.append(post)
     return scheduled
@@ -179,8 +168,7 @@ def summary(path: Path | None = None) -> dict[str, Any]:
         "by_status": counts,
         "next_due": nxt[0].scheduled_for if nxt else "",
         "queued": [
-            {"id": p.id, "urgency": p.urgency, "scheduled_for": p.scheduled_for,
-             "text": p.text[:80]}
+            {"id": p.id, "scheduled_for": p.scheduled_for, "text": p.text[:80]}
             for p in nxt[:10]
         ],
     }
