@@ -52,6 +52,7 @@ from algent_backend.agent_system.runs.context import AgentRunContext
 from algent_backend.agent_system.runs.control_plane.layout import find_run_root
 from algent_backend.publishing import publish as pb
 from algent_backend.publishing import site_git
+from algent_backend.publishing.x_article import announce as announce_article
 
 from ..discovery.synthesis.spec import build_graph as build_synthesis
 from ..editorial.pipeline_spec import build_graph as build_editorial
@@ -62,6 +63,7 @@ from .rail_contracts import NewsroomRailReport
 
 RAIL_COMPLETED = "newsroom_rail.completed"
 RAIL_STAGE = "newsroom_rail.stage"
+RAIL_ANNOUNCED = "newsroom_rail.announced"
 BACKFEED_INJECTED = "newsroom_rail.backfeed_injected"
 RAIL_PUBLISHED = "newsroom_rail.published"
 
@@ -458,6 +460,11 @@ def _publish(context: AgentRunContext, report: NewsroomRailReport) -> None:
                 report.publish_action = "push_failed"
         context.emit(RAIL_PUBLISHED, {"action": report.publish_action, "slug": report.published_slug,
                                       "published": report.published, "reasons": result.reasons})
+        # Live on the site and unmentioned on the timeline is a half-published article. Announcing
+        # is part of publishing, not a thing to remember afterwards.
+        if report.published:
+            announced = announce_article(report.published_slug, report.article_title)
+            context.emit(RAIL_ANNOUNCED, announced)
     except Exception as exc:  # noqa: BLE001 — see docstring: distribution never fails the article
         report.publish_action = f"error ({str(exc)[:90]})"
         context.emit(RAIL_PUBLISHED, {"action": report.publish_action, "published": False})

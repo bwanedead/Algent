@@ -129,12 +129,12 @@ def run_resume(args: Any) -> int:
             "note": "assembled by `newsroom resume` from surviving artifacts",
         }, indent=2), encoding="utf-8")
 
-    result = _publish(run)
+    result = _publish(run, title=draft_obj.title, dek=str(draft.get("standfirst") or ""))
     print(json.dumps({**summary, **result}, indent=2, ensure_ascii=False))
     return 0
 
 
-def _publish(run: Path) -> dict[str, Any]:
+def _publish(run: Path, *, title: str = "", dek: str = "") -> dict[str, Any]:
     """Ship it exactly the way the rail does — same worktree, same gates, same git step.
 
     Reusing the rail's route rather than calling publish_run directly is the point: a resume that
@@ -163,6 +163,10 @@ def _publish(run: Path) -> dict[str, Any]:
         out["pushed"] = ok
         if not ok:
             out["push_note"] = note[:160]
+        if ok:
+            from algent_backend.publishing.x_article import announce
+
+            out["x"] = announce(result.slug, title, dek=dek)
     return out
 
 

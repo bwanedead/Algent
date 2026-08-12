@@ -51,7 +51,14 @@ class Posted:
 
 
 def write_configured() -> bool:
-    """True when every write credential is present. Never touches the values."""
+    """True when every write credential is present. Never touches the values.
+
+    Imports the config package first because that is what loads backend/.env — without it a
+    caller that has not already touched config sees no credentials and concludes, wrongly, that
+    posting is unconfigured.
+    """
+    import algent_backend.config  # noqa: F401 — imported for the .env side effect
+
     return all(os.environ.get(name) for name in _ENV)
 
 
