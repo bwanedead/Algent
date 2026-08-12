@@ -36,7 +36,7 @@ from algent_backend.agent_system.foundation import cost
 from algent_backend.agent_system.foundation.models import ModelSpec, house_spec
 from algent_backend.agent_system.foundation.models.resolver import ModelResolver
 from algent_backend.agent_system.prompting import UNIVERSAL_AGENT_BASE, compose_system_prompt
-from algent_backend.publishing.x_client import LIMIT, billable_length
+from algent_backend.publishing.x_client import CARD, billable_length
 
 from .contracts import RADAR_PREFIX
 
@@ -135,9 +135,9 @@ _PR_WIRE_HOSTS = (
     "newswire.ca",
 )
 
-#: Room the harness needs for the 'Radar: ' stamp. Checking against LIMIT itself let a
-#: 280-character body through, then the stamp pushed it over.
-_ROOM = LIMIT - len(RADAR_PREFIX)
+#: Radar is a short notice on purpose, not because X refuses longer posts. The writer
+#: will take 25k; this lane still aims at one thought on a timeline card.
+_ROOM = CARD - len(RADAR_PREFIX)
 
 
 def looks_like_wire_pr(text: str) -> bool:

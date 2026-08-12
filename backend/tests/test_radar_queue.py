@@ -81,13 +81,13 @@ def test_a_torn_line_never_takes_the_whole_queue_down(tmp_path) -> None:
 def test_x_counts_urls_at_a_fixed_width_not_their_real_length() -> None:
     """t.co rewrites every link, so a long article slug costs the same as a short one. Counting
     raw characters would reject postable text and accept unpostable text."""
-    from algent_backend.publishing.x_client import LIMIT, billable_length
+    from algent_backend.publishing.x_client import TCO_LEN, billable_length
 
     long_url = "https://www.ohmega.monster/articles/" + "a" * 200
     text = f"Something happened, and here is why it matters. {long_url}"
 
-    assert len(text) > LIMIT              # naive counting would refuse this
-    assert billable_length(text) < LIMIT  # X will accept it
+    assert len(text) > billable_length(text)
+    assert billable_length(text) == len("Something happened, and here is why it matters. ") + TCO_LEN
 
 
 def test_a_gap_leaves_a_backlog_due_but_it_drains_one_at_a_time(tmp_path) -> None:

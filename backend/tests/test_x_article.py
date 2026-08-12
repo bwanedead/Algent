@@ -52,8 +52,8 @@ def test_a_missing_credential_is_reported_not_raised(monkeypatch) -> None:
     assert out["announced"] is False and "credentials" in out["reason"]
 
 
-def test_an_overlong_framing_line_falls_back_to_the_title(monkeypatch) -> None:
-    """A clipped sentence reads as a broken post; a title is a complete thought by construction."""
+def test_a_long_framing_line_is_not_clipped_to_a_card(monkeypatch) -> None:
+    """400 characters used to trip a house 280 guard. The post is as long as it is."""
     sent: list[str] = []
 
     class _Posted:
@@ -66,6 +66,25 @@ def test_an_overlong_framing_line_falls_back_to_the_title(monkeypatch) -> None:
     monkeypatch.setattr(x_article, "compose", lambda *a, **k: "x" * 400)
 
     out = x_article.announce("s2", "A short true title")
+    assert out["announced"] is True
+    assert sent[0].startswith("x" * 40)
+
+
+def test_an_overlong_framing_line_falls_back_to_the_title(monkeypatch) -> None:
+    """A clipped sentence reads as a broken post; a title is a complete thought by construction."""
+    sent: list[str] = []
+
+    class _Posted:
+        url = "https://x.test/2"
+
+    import algent_backend.publishing.x_client as xc
+    from algent_backend.publishing.x_client import LIMIT
+
+    monkeypatch.setattr(xc, "write_configured", lambda: True)
+    monkeypatch.setattr(xc, "post", lambda text, **k: (sent.append(text), _Posted())[1])
+    monkeypatch.setattr(x_article, "compose", lambda *a, **k: "x" * (LIMIT + 50))
+
+    out = x_article.announce("s2b", "A short true title")
     assert out["announced"] is True
     assert sent[0].startswith("A short true title")
 
@@ -107,3 +126,16 @@ def test_copy_from_run_reads_the_draft_artifact(tmp_path) -> None:
         encoding="utf-8")
     assert x_article.copy_from_run(tmp_path) == ("a dek", "a finding")
     assert x_article.copy_from_run(tmp_path / "missing") == ("", "")
+
+
+def test_the_write_ceiling_is_x_longform_not_a_classic_card() -> None:
+    """A themed briefing will not fit on a 280-character card. That is not a reason to refuse it.
+
+    280 was a house guard. X's tweets endpoint takes Premium long posts up to 25k; the
+    timeline shows a preview and Show more. Articles (~100k) are a different UI product.
+    """
+    from algent_backend.publishing.x_client import CARD, LIMIT, billable_length
+
+    cluster = "\n\n".join(f"(energy) Blurb {i}. " + ("x" * 200) for i in range(5))
+    assert billable_length(cluster) > CARD
+    assert billable_length(cluster) < LIMIT

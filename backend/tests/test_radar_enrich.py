@@ -10,7 +10,7 @@ from algent_backend.agent_system.agents.radar.enrich import (
 )
 from algent_backend.agent_system.agents.radar.sweep import sweep_pool
 from algent_backend.cli.newsroom import radar as radar_cli
-from algent_backend.publishing.x_client import LIMIT
+from algent_backend.publishing.x_client import CARD
 
 
 def test_stamp_is_applied_exactly_once() -> None:
@@ -37,10 +37,10 @@ def test_a_failed_lookup_is_a_drop_not_a_crash(monkeypatch) -> None:
 
 
 def test_overlong_text_is_checked_against_room_for_the_stamp(monkeypatch) -> None:
-    """A body that fills 280 chars leaves no room for 'Radar: ' and used to ship over-length."""
+    """A body that fills a timeline card leaves no room for 'Radar: ' and used to ship over-length."""
     from algent_backend.agent_system.agents.radar import enrich as en
 
-    long = "x" * LIMIT
+    long = "x" * CARD
     shortened = "Tornadoes in Illinois on Monday killed three."
 
     class _Structured:
@@ -67,7 +67,7 @@ def test_overlong_text_is_checked_against_room_for_the_stamp(monkeypatch) -> Non
     out = en.enrich("storms", resolver=_Resolver())
     assert out.verdict == "post"
     assert out.text == shortened
-    assert len(stamp(out.text)) <= LIMIT
+    assert len(stamp(out.text)) <= CARD
 
 
 def test_pr_wires_are_recognized_without_a_search() -> None:

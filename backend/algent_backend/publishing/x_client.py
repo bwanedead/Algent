@@ -36,7 +36,13 @@ _HANDLE_ENV = "X_POST_HANDLE"
 #: t.co rewrites every link to a fixed width, so a long URL costs the same as a short one and
 #: the raw string length is not what X counts.
 TCO_LEN = 23
-LIMIT = 280
+#: Timeline card before "Show more". Radar still writes to this size on purpose — one thought.
+#: It is not a write ceiling.
+CARD = 280
+#: What POST /2/tweets accepts for Premium long posts. The API raised this from 4k to 25k.
+#: Articles (~100k, formatted) are a different UI product and are not this endpoint.
+#: We do not invent a 280 cap on top of X's actual limit.
+LIMIT = 25_000
 
 
 class XWriteError(RuntimeError):
@@ -139,7 +145,9 @@ def post(text: str, *, verify_identity: bool = True) -> Posted:
         raise XWriteError("refusing to post empty text")
     length = billable_length(text)
     if length > LIMIT:
-        raise XWriteError(f"post is {length} characters, over X's {LIMIT} limit")
+        raise XWriteError(
+            f"post is {length} characters, over X's {LIMIT} long-post limit"
+        )
 
     handle = assert_identity() if verify_identity else (
         os.environ.get(_HANDLE_ENV) or "").lstrip("@")
