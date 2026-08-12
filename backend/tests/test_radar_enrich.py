@@ -20,6 +20,9 @@ def test_stamp_is_applied_exactly_once() -> None:
     assert stamp("Radar: the model prefixed it itself.") == (
         "Radar: the model prefixed it itself.")
     assert stamp("  RADAR: already stamped  ") == "Radar: already stamped"
+    # A queued post that was stamped twice must still ship with one label.
+    assert stamp("Radar: Radar: Eleven people were charged in Houston.") == (
+        "Radar: Eleven people were charged in Houston.")
 
 
 def test_a_failed_lookup_is_a_drop_not_a_crash(monkeypatch) -> None:

@@ -87,6 +87,60 @@ def add_parser(sub: Any) -> None:
 #: yesterday's news wearing today's timestamp.
 STALE_REVIEW_HOURS = 3.0
 
+#: How long to wait after X refuses a write (or credentials vanish) before trying again.
+#: Shorter than the posting tempo so a blip does not look like radar died; long enough
+#: that a persistent failure does not hammer the API every heartbeat.
+_UNCONFIGURED_RETRY_MIN = 5.0
+
+
+def next_release_at(
+    *,
+    now: datetime,
+    outcome: str,
+    post_every_min: int,
+    next_queued_at: datetime | None,
+    wait_min: float | None = None,
+) -> datetime:
+    """When to look again after a release attempt.
+
+    The posting tempo is a gap AFTER A SEND, not a metronome that ticks whether or not
+    anything was due. Advancing it on an empty tick is how a live daemon sat idle for two
+    hours with overdue posts in the queue: discovery had scheduled the first item 30 minutes
+    out, the first tick fired a few minutes early, nothing was due, and the clock jumped
+    another 40 minutes.
+    """
+    if outcome in ("posted", "failed"):
+        wait = post_every_min if wait_min is None else wait_min
+        return now + timedelta(minutes=max(1.0, float(wait)))
+    if outcome == "unconfigured":
+        return now + timedelta(minutes=_UNCONFIGURED_RETRY_MIN)
+    if next_queued_at is not None:
+        return next_queued_at if next_queued_at > now else now
+    return now
+
+
+def _next_queued_at() -> datetime | None:
+    pending = [p for p in q.load() if p.status == "queued" and p.scheduled_for]
+    if not pending:
+        return None
+    return min(datetime.fromisoformat(p.scheduled_for) for p in pending)
+
+
+def _restamp_pending() -> int:
+    """Peel doubled 'Radar:' labels on queued posts. Already-sent rows stay as they shipped."""
+    posts = q.load()
+    changed = 0
+    for post in posts:
+        if post.status != "queued":
+            continue
+        fixed = stamp(post.text)
+        if fixed != post.text:
+            post.text = fixed
+            changed += 1
+    if changed:
+        q.save(posts)
+    return changed
+
 
 def _item_url(item: dict) -> str:
     """A starting URL if the pool item has one — search then has somewhere to begin.
@@ -200,7 +254,7 @@ def run_drain(args: Any) -> int:
     sent, failed = [], []
     for item in batch:
         try:
-            result = post(item.text)
+            result = post(stamp(item.text))
         except XWriteError as exc:
             # Leave it QUEUED: a transient refusal should be retried on the next drain, not
             # silently dropped. Only a hard rejection of the text itself is worth burning.
@@ -394,15 +448,24 @@ def run_stop(_args: Any) -> int:
 
 def run_loop(args: Any) -> int:
     """The supervisor: discovery on one clock, posting on another."""
+    # Keep the previous discovery stamp across a stop/start so a restart to pick up a
+    # posting fix does not immediately spend another t0 sweep. The queue is the posting
+    # record; this is only the "when did we last pay for a pool" clock.
+    prior = daemon.read_state()
     state = daemon.DaemonState(
         pid=os.getpid(),
         started_at=datetime.now(UTC).isoformat(),
         discovery_every_min=args.discovery_every,
         post_every_min=args.post_every,
+        last_discovery_at=prior.last_discovery_at if prior else "",
+        sweeps_run=prior.sweeps_run if prior else 0,
     )
     daemon.write_state(state)
     daemon.log(f"radar started (pid {state.pid}) - discovery every {args.discovery_every}m, "
                f"posting about every {args.post_every}m")
+    fixed = _restamp_pending()
+    if fixed:
+        daemon.log(f"restamped {fixed} queued post(s) that had a doubled Radar: label")
 
     # RESUME, do not restart. The queue outlived the last process — a closed laptop, a kill, a
     # crash — and its schedule is still on disk, so anything whose slot has passed is due NOW.
@@ -436,13 +499,42 @@ def run_loop(args: Any) -> int:
         daemon.log(f"resuming with {len(overdue)} post(s) overdue - last post was recent, "
                    f"so the next goes out at {earliest.strftime('%H:%M')}Z")
     else:
-        next_post = now + timedelta(minutes=_jitter(args.post_every))
+        # Nothing due. Wake at the next queued slot (or immediately if the queue is
+        # empty and discovery may still fill it) — never a full tempo on an empty look.
+        nxt = _next_queued_at()
+        next_post = nxt if nxt is not None else now
+        if nxt:
+            daemon.log(f"nothing due - next queued post at {nxt.strftime('%H:%M')}Z")
     state.next_post_at = next_post.isoformat()
     daemon.write_state(state)
 
+    unconfigured_logged = False
     try:
         while not daemon.stop_requested():
             now = datetime.now(UTC)
+
+            # Posting first: discovery is a multi-minute subprocess, and a due post must
+            # not wait behind a sweep. Radar's own discovery used to block the visible clock.
+            if datetime.now(UTC) >= next_post and not daemon.stop_requested():
+                url, outcome = _release_one(state)
+                nxt = _next_queued_at()
+                if outcome == "posted":
+                    daemon.log(f"posted: {url}")
+                elif outcome == "unconfigured" and not unconfigured_logged:
+                    daemon.log("posting skipped - X write credentials not configured")
+                    unconfigured_logged = True
+                elif outcome == "empty" and nxt and nxt > datetime.now(UTC):
+                    daemon.log(f"nothing due yet - next queued post at "
+                               f"{nxt.strftime('%H:%M')}Z")
+                next_post = next_release_at(
+                    now=datetime.now(UTC),
+                    outcome=outcome,
+                    post_every_min=args.post_every,
+                    next_queued_at=nxt,
+                    wait_min=_jitter(args.post_every) if outcome in ("posted", "failed") else None,
+                )
+                state.next_post_at = next_post.isoformat()
+                daemon.write_state(state)
 
             if _stale(state.last_discovery_at, args.discovery_every, now):
                 deferred = False
@@ -458,14 +550,6 @@ def run_loop(args: Any) -> int:
                 # tries again, instead of waiting another full interval.
                 if not deferred:
                     state.last_discovery_at = now.isoformat()
-                daemon.write_state(state)
-
-            if datetime.now(UTC) >= next_post and not daemon.stop_requested():
-                sent = _release_one(state)
-                if sent:
-                    daemon.log(f"posted: {sent}")
-                next_post = datetime.now(UTC) + timedelta(minutes=_jitter(args.post_every))
-                state.next_post_at = next_post.isoformat()
                 daemon.write_state(state)
 
             time.sleep(daemon.HEARTBEAT_S)
@@ -572,27 +656,33 @@ def _refresh(state: daemon.DaemonState) -> int:
     return len(added)
 
 
-def _release_one(state: daemon.DaemonState) -> str:
-    """Send at most one due post. One at a time is what keeps the cadence honest."""
+def _release_one(state: daemon.DaemonState) -> tuple[str, str]:
+    """Send at most one due post. Returns (url, outcome).
+
+    outcome is posted | empty | failed | unconfigured. The loop needs the distinction:
+    only a real send (or a hard failure) burns a tempo slot.
+    """
     # Lid-close without a process restart: the loop wakes, a post is due, and nothing
     # else would have reviewed the backlog. Drain and resume already do this; the
     # canonical release has to as well.
     _review_if_stale()
+    if not write_configured():
+        return "", "unconfigured"
     ready = sorted(q.due(), key=lambda p: p.scheduled_for or "")
-    if not ready or not write_configured():
-        return ""
+    if not ready:
+        return "", "empty"
     item = ready[0]
     try:
-        result = post(item.text)
+        result = post(stamp(item.text))
     except XWriteError as exc:
         q.mark(item.id, status="queued", note=str(exc)[:200])
         state.errors.append(f"{datetime.now(UTC).isoformat()} post: {str(exc)[:160]}")
         daemon.log(f"post FAILED (stays queued, will retry): {str(exc)[:160]}")
-        return ""
+        return "", "failed"
     q.mark(item.id, status="posted", url=result.url)
     state.posts_sent += 1
     state.last_post_at = datetime.now(UTC).isoformat()
-    return result.url
+    return result.url, "posted"
 
 
 _refresh.deferred = False  # type: ignore[attr-defined]

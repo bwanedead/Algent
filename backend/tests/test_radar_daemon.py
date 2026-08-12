@@ -96,6 +96,33 @@ def test_start_state_survives_a_crash_for_status_to_explain(monkeypatch) -> None
     assert json.loads(d.PID_FILE.read_text(encoding="utf-8"))["pid"] == 4242
 
 
+def test_an_empty_release_tick_does_not_burn_a_tempo_slot() -> None:
+    """The live failure: daemon alive, posts overdue, clock jumped another 40 minutes.
+
+    Discovery had scheduled the first item ~30 minutes out. The first tick fired a few
+    minutes early, nothing was due, and advancing the tempo anyway left overdue posts
+    sitting until the next slot — which is how 'running' produced nothing for two hours.
+    """
+    from datetime import timedelta
+
+    from algent_backend.cli.newsroom.radar import next_release_at
+
+    now = datetime(2026, 8, 12, 21, 58, tzinfo=UTC)
+    first_slot = datetime(2026, 8, 12, 22, 7, tzinfo=UTC)
+
+    empty = next_release_at(
+        now=now, outcome="empty", post_every_min=40, next_queued_at=first_slot)
+    assert empty == first_slot
+
+    posted = next_release_at(
+        now=now, outcome="posted", post_every_min=40, next_queued_at=first_slot, wait_min=40)
+    assert posted == now + timedelta(minutes=40)
+
+    idle = next_release_at(
+        now=now, outcome="empty", post_every_min=40, next_queued_at=None)
+    assert idle == now
+
+
 def test_radar_yields_discovery_to_a_running_article_rail(monkeypatch, tmp_path) -> None:
     """Radar is the background job; it must never make the operator stop it to do real work.
 

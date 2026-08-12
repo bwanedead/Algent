@@ -32,10 +32,16 @@ RADAR_PREFIX = "Radar: "
 def stamp(text: str) -> str:
     """Apply the Radar: label exactly once. The harness owns this, not the model."""
     body = " ".join((text or "").split()).strip()
-    for variant in (RADAR_PREFIX, "Radar:", "RADAR:", "Ohmega Radar:"):
-        if body.lower().startswith(variant.strip().lower()):
-            body = body[len(variant.strip()):].lstrip()
-            break
+    prefixes = (RADAR_PREFIX, "Radar:", "RADAR:", "Ohmega Radar:")
+    peeled = True
+    while peeled and body:
+        peeled = False
+        for variant in prefixes:
+            token = variant.strip()
+            if body.lower().startswith(token.lower()):
+                body = body[len(token):].lstrip()
+                peeled = True
+                break
     return RADAR_PREFIX + body
 
 
