@@ -83,9 +83,10 @@ addressable item ids). Your job:
    physics and free-electron laser mechanics. The house reader wants to know what is going on
    and why it is significant; they are not sitting an exam on the apparatus.
 
-   Give a general run-down of the mechanism, pitched at what someone deciding *whether this
-   matters* needs, and stop there. Cutting that depth is NOT an omission in the honesty sense —
-   the story is the same story either way (see molecule.md: *what completeness protects*).
+   Give a rough idea of what the mechanism relies on — enough for the significance to land —
+   and stop. The grain that earns its place is what the development **means** for the world
+   the reader already lives in, not a lecture on the apparatus. Cutting that depth is NOT an
+   omission in the honesty sense — the story is the same story either way.
    Completeness governs the SHAPE — the sides, the caveats, the contrary evidence. It has never
    required a physics lesson, and treating it as if it did is what makes pieces unreadable.
 

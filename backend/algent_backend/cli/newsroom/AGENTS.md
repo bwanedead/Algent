@@ -31,6 +31,15 @@ Do **not** remake synthesis just to re-pick. Freeze the portfolio path (or use `
 - **t0 + synthesis → vector menu (default):** `newsroom run --to menu` — soft size `SYNTHESIS_TARGET_VECTORS` in `flags.py`.
 - **t0 pool menu only:** `--pool-menu`, or `SYNTHESIS_ENABLED = False`.
 - **Pinned picks:** `newsroom run --from menu --menu runs_data/discovery_synthesis/<run> --pick 1,2,14`.
+- **Resume a failed rail:** `newsroom resume` (newest unfinished) or `--run <id|dir>`. Assesses artifacts and continues from the next unpaid stage **in the same run** — does not re-buy a draft, profile, or figure that is already on disk. `--from editorial` (etc.) forces a redo from that stage. `--dry-run` prints the plan. Shipping always goes through the rail (skipped stages stay skipped).
+
+These three `--from` flags are **not** the same contract:
+
+| Command | Run | What `--from` means |
+|---------|-----|---------------------|
+| `newsroom resume --from editorial` | **same** run | redo editorial; reuse profile/gauntlet already on disk |
+| `newsroom run --from editorial` | **new** run | CLI ladder slice (t0/synthesis/menu only); the rail still runs in full once handed a portfolio |
+| `runs start --from-run <id>` | **new** run | reuse that run's t1 portfolio only; routing onward (cooldown still applies) |
 
 ## Operator defaults (not `.env`)
 

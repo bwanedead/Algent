@@ -7,6 +7,10 @@ Or, when a prior t1 portfolio is supplied (``--from-run`` / state.portfolio):
 
     [reuse portfolio] -> routing (cooldown) -> profile -> gauntlet -> editorial
 
+Or, when a later artifact is already in state (``newsroom resume``): skip every completed
+stage and continue from the next unpaid one. A profile on disk does not re-route; a draft
+on disk does not re-draft. The point is economic — do not re-buy finished work.
+
 It chains the stages that already work as sub-graphs under ONE run/context (the same idiom the
 gauntlets and the editorial pipeline use), so every stage's events land in this run's timeline and
 a single report closes the loop. Four deliberate properties:
@@ -96,6 +100,18 @@ class RailState(TypedDict, total=False):
     pool: dict[str, Any]            # optional t0 pool; synthesis self-sources if absent
     portfolio: dict[str, Any]       # optional t1 portfolio — when set, skip t0+synthesis (reuse)
     source_run_id: str              # prior run id when portfolio was reused (observability)
+    selected_vector: dict[str, Any] # resume: skip routing
+    profile: dict[str, Any]         # resume: skip routing + profile
+    gauntlet: dict[str, Any]        # resume: skip profile gauntlet
+    treatment: dict[str, Any]       # resume: skip editorial planning
+    draft: dict[str, Any]           # resume: skip drafting
+    analytics_plan: dict[str, Any]
+    analytics_artifacts: list[Any]
+    hero: dict[str, Any]
+    plan_report: dict[str, Any]
+    draft_report: dict[str, Any]
+    pipeline_prior: dict[str, Any]
+    analytics_confirm: dict[str, Any]
     rail: dict[str, Any]            # the NewsroomRailReport
     pipeline: dict[str, Any]        # the editorial pipeline's report (the article)
 
@@ -130,12 +146,12 @@ def _run_rail(
         return _finish_with_cost(context, report, early)
 
     profile, early = _route_profile_gauntlet(
-        context, sub, config, report, pool=pool, portfolio=portfolio)
+        context, sub, config, report, state, pool=pool, portfolio=portfolio)
     if early is not None:
         return _finish_with_cost(context, report, early)
 
     return _editorial_and_publish(
-        context, sub, config, report, profile, x_calls=x_calls,
+        context, sub, config, report, state, profile, x_calls=x_calls,
     )
 
 
@@ -276,15 +292,20 @@ def _resolve_portfolio(
     """Discovery synthesis or portfolio reuse. Returns (pool, portfolio, early_finish_or_None)."""
     pool = state.get("pool")
     reused = state.get("portfolio") or {}
-    if reused.get("vectors"):
-        portfolio = reused
+    has_later = bool(
+        (state.get("profile") or {}).get("id")
+        or (state.get("selected_vector") or {}).get("id")
+    )
+    if reused.get("vectors") or has_later:
+        portfolio = reused if reused.get("vectors") else {}
         report.portfolio_source = "reused"
         report.source_run_id = str(state.get("source_run_id") or "")
         report.vector_count = len(portfolio.get("vectors", []))
         report.pool_items = int(portfolio.get("total_considered", 0) or 0)
         report.stage_reached = "synthesis"
+        reason = "portfolio_reused" if reused.get("vectors") else "later_artifact_reused"
         sub.emit(RAIL_STAGE, {
-            "stage": "synthesis", "skipped": True, "reason": "portfolio_reused",
+            "stage": "synthesis", "skipped": True, "reason": reason,
             "source_run_id": report.source_run_id, "vector_count": report.vector_count,
         })
         return pool, portfolio, None
@@ -321,9 +342,39 @@ def _resolve_portfolio(
 
 def _route_profile_gauntlet(
     context: AgentRunContext, sub: AgentRunContext, config: RunnableConfig,
-    report: NewsroomRailReport, *, pool: dict | None, portfolio: dict[str, Any],
+    report: NewsroomRailReport, state: RailState, *, pool: dict | None, portfolio: dict[str, Any],
 ) -> tuple[dict[str, Any], dict[str, Any] | None]:
     """Routing → profile → gauntlet. Returns (profile, early_finish_or_None)."""
+    existing_profile = state.get("profile") or {}
+    existing_vector = state.get("selected_vector") or {}
+    existing_gauntlet = state.get("gauntlet") or {}
+
+    if existing_profile.get("id"):
+        vector = existing_vector if existing_vector.get("id") else {}
+        if vector:
+            report.selected_vector_id = str(vector.get("id", ""))
+            report.selected_vector_title = str(vector.get("title", ""))
+            report.pool_by_channel, report.promoted_from = _channel_provenance(
+                context, pool, vector)
+        sub.emit(RAIL_STAGE, {"stage": "routing", "skipped": True, "reason": "profile_reused"})
+        report.stage_reached = "routing"
+        sub.emit(RAIL_STAGE, {"stage": "profile", "skipped": True, "reason": "profile_reused"})
+        profile = existing_profile
+        report.profile_id = str(profile.get("id", ""))
+        report.stage_reached = "profile"
+        return _maybe_gauntlet(
+            context, sub, config, report, profile, existing_gauntlet)
+
+    if existing_vector.get("id"):
+        vector = existing_vector
+        sub.emit(RAIL_STAGE, {"stage": "routing", "skipped": True, "reason": "vector_reused"})
+        report.stage_reached = "routing"
+        report.selected_vector_id = str(vector.get("id", ""))
+        report.selected_vector_title = str(vector.get("title", ""))
+        report.pool_by_channel, report.promoted_from = _channel_provenance(context, pool, vector)
+        return _profile_then_gauntlet(
+            context, sub, config, report, vector, pool, existing_gauntlet)
+
     sub.emit(RAIL_STAGE, {"stage": "routing"})
     route = build_router(sub).invoke({"portfolio": portfolio}, config)
     vector = route.get("selected_vector")
@@ -333,7 +384,38 @@ def _route_profile_gauntlet(
     report.selected_vector_id = str(vector.get("id", ""))
     report.selected_vector_title = str(vector.get("title", ""))
     report.pool_by_channel, report.promoted_from = _channel_provenance(context, pool, vector)
+    return _profile_then_gauntlet(
+        context, sub, config, report, vector, pool, existing_gauntlet)
 
+
+def _gauntlet_verdict(blob: dict[str, Any]) -> str:
+    inner = blob.get("gauntlet") if isinstance(blob.get("gauntlet"), dict) else None
+    if inner and inner.get("final_verdict"):
+        return str(inner.get("final_verdict") or "")
+    return str(blob.get("final_verdict") or "")
+
+
+def _maybe_gauntlet(
+    context: AgentRunContext, sub: AgentRunContext, config: RunnableConfig,
+    report: NewsroomRailReport, profile: dict[str, Any], existing_gauntlet: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    verdict = _gauntlet_verdict(existing_gauntlet)
+    if verdict:
+        sub.emit(RAIL_STAGE, {"stage": "gauntlet", "skipped": True, "reason": "gauntlet_reused"})
+        inner = existing_gauntlet.get("gauntlet") if isinstance(
+            existing_gauntlet.get("gauntlet"), dict) else existing_gauntlet
+        report.gauntlet_verdict = verdict
+        report.stage_reached = "gauntlet"
+        _record_profile_disposition(report, profile, inner if isinstance(inner, dict) else {})
+        return profile, None
+    return _run_gauntlet(context, sub, config, report, profile)
+
+
+def _profile_then_gauntlet(
+    context: AgentRunContext, sub: AgentRunContext, config: RunnableConfig,
+    report: NewsroomRailReport, vector: dict[str, Any], pool: dict | None,
+    existing_gauntlet: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
     sub.emit(RAIL_STAGE, {"stage": "profile"})
     profile = build_profile(sub).invoke(
         {"vector": vector, "pool": pool}, config,
@@ -342,7 +424,13 @@ def _route_profile_gauntlet(
     if not profile.get("id"):
         return profile, _finish(context, report, note="profile research produced nothing")
     report.profile_id = str(profile.get("id", ""))
+    return _maybe_gauntlet(context, sub, config, report, profile, existing_gauntlet)
 
+
+def _run_gauntlet(
+    context: AgentRunContext, sub: AgentRunContext, config: RunnableConfig,
+    report: NewsroomRailReport, profile: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
     sub.emit(RAIL_STAGE, {"stage": "gauntlet"})
     g = build_profile_gauntlet(sub).invoke({"profile": profile}, config)
     profile = g.get("profile") or profile
@@ -353,24 +441,24 @@ def _route_profile_gauntlet(
     return profile, None
 
 
-def _record_profile_disposition(
-    report: NewsroomRailReport, profile: dict[str, Any], gauntlet: dict[str, Any],
-) -> None:
-    """Soft readiness diagnose — disposition on the report, never a hard stop."""
-    _ready, disposition, why = _profile_ready_for_prose(profile, gauntlet)
-    if disposition:
-        report.disposition = disposition
-        report.note = why
+_ED_KEYS = (
+    "treatment", "draft", "analytics_plan", "analytics_artifacts", "hero",
+    "plan_report", "draft_report", "pipeline_prior", "analytics_confirm",
+)
 
 
 def _editorial_and_publish(
     context: AgentRunContext, sub: AgentRunContext, config: RunnableConfig,
-    report: NewsroomRailReport, profile: dict[str, Any], *,
+    report: NewsroomRailReport, state: RailState, profile: dict[str, Any], *,
     x_calls: list[int],
 ) -> dict[str, Any]:
     """Draft → publish. Fail-open publish; quality status rides on the report."""
     sub.emit(RAIL_STAGE, {"stage": "editorial"})
-    pipeline = build_editorial(sub).invoke({"profile": profile}, config).get("pipeline") or {}
+    ed_in: dict[str, Any] = {"profile": profile}
+    for key in _ED_KEYS:
+        if key in state:
+            ed_in[key] = state[key]
+    pipeline = build_editorial(sub).invoke(ed_in, config).get("pipeline") or {}
     report.article_status = str(pipeline.get("status", ""))
     report.article_title = str(pipeline.get("article_title", ""))
     report.analytics_produced = int(pipeline.get("analytics_produced", 0) or 0)
@@ -383,6 +471,16 @@ def _editorial_and_publish(
     sub.emit(RAIL_STAGE, {"stage": "publish"})
     _publish(context, report)
     return _finish(context, report, pipeline=pipeline, total=report.total_usd)
+
+
+def _record_profile_disposition(
+    report: NewsroomRailReport, profile: dict[str, Any], gauntlet: dict[str, Any],
+) -> None:
+    """Soft readiness diagnose — disposition on the report, never a hard stop."""
+    _ready, disposition, why = _profile_ready_for_prose(profile, gauntlet)
+    if disposition:
+        report.disposition = disposition
+        report.note = why
 
 
 def _channel_provenance(

@@ -31,10 +31,11 @@ _QUICK_TAKE_LINE = re.compile(
 )
 # Analytic image refs the publish view embeds, e.g. "![Chart](analytic_ar_1.svg)" or
 # "![Theater](map_bab_el_mandeb.svg)". Tables are inline markdown (no asset); only real images
-# (.svg/.png) with a relative filename (no path separators / absolute URLs) become files under
+# with a relative filename (no path separators / absolute URLs) become files under
 # the site's public/ dir.
 _IMAGE_REF = re.compile(
-    r"!\[([^\]]*)\]\(((?:analytic_|map_)[^)/]+\.(?:svg|png)|[^/)\s]+\.(?:svg|png))\)"
+    r"!\[([^\]]*)\]\(((?:analytic_|map_)[^)/]+\.(?:svg|png|jpg|jpeg|webp)|[^/)\s]+\.(?:svg|png|jpg|jpeg|webp))\)",
+    re.I,
 )
 _SLUG_MAX_TITLE = 60
 
@@ -280,7 +281,8 @@ def convert(
     # floor to ship. Articles without one fall back to their flags for visual texture.
     if thumb := next((a.get("artifact_name") for a in (analytics or [])
                       if a.get("status") == "produced"
-                      and str(a.get("artifact_name", "")).endswith((".svg", ".png"))), None):
+                      and str(a.get("artifact_name", "")).lower().endswith(
+                          (".svg", ".png", ".jpg", ".jpeg", ".webp"))), None):
         fm["thumbnail"] = f"/analytics/{slug}/{thumb}"
 
     # HERO: a generated opening illustration, when the run made one. Kept separate from

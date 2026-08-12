@@ -380,6 +380,57 @@ def test_rail_reuses_portfolio_skips_synthesis_and_still_routes(monkeypatch) -> 
     )
 
 
+def test_rail_reuses_profile_skips_routing_and_profile(monkeypatch) -> None:
+    """Resume from a researched profile: do not re-route or re-research."""
+    monkeypatch.setenv(rl._BACKFEED_ENV, "0")
+    route_calls: list = []
+    profile_calls: list = []
+    gauntlet_calls: list = []
+
+    def _route(_ctx):
+        route_calls.append(1)
+        return _EmittingGraph({"selected_vector": {"id": "v99"}}, _ctx, 0.0)
+
+    def _prof(_ctx):
+        profile_calls.append(1)
+        return _EmittingGraph({"profile": {"id": "prof_new"}}, _ctx, 0.0)
+
+    def _gaunt(_ctx):
+        gauntlet_calls.append(1)
+        return _EmittingGraph(
+            {"profile": {"id": "prof_kept"}, "gauntlet": {"final_verdict": "mature"}},
+            _ctx, 0.0,
+        )
+
+    _wire(
+        monkeypatch,
+        portfolio={"vectors": [{"id": "v01", "title": "Kept"}], "total_considered": 10},
+        route={"selected_vector": {"id": "v99"}},
+        profile={"id": "prof_new"},
+        gauntlet={"profile": {"id": "prof_kept"}, "gauntlet": {"final_verdict": "mature"}},
+        pipeline={"status": "publishable", "article_title": "Kept story", "analytics_produced": 0},
+    )
+    monkeypatch.setattr(rl, "build_router", _route)
+    monkeypatch.setattr(rl, "build_profile", _prof)
+    monkeypatch.setattr(rl, "build_profile_gauntlet", _gaunt)
+    events: list = []
+    out = rl.build_newsroom_rail_graph(_ctx(events)).invoke({
+        "portfolio": {"vectors": [{"id": "v01", "title": "Kept"}], "total_considered": 10},
+        "selected_vector": {"id": "v01", "title": "Kept"},
+        "profile": {"id": "prof_kept"},
+        "gauntlet": {"final_verdict": "mature"},
+        "source_run_id": "same-run",
+    })
+    r = out["rail"]
+    assert route_calls == [] and profile_calls == [] and gauntlet_calls == []
+    assert r["profile_id"] == "prof_kept"
+    assert r["selected_vector_id"] == "v01"
+    assert r["stage_reached"] == "complete"
+    skipped = [p.get("stage") for et, p in events
+               if et == rl.RAIL_STAGE and (p or {}).get("skipped")]
+    assert "routing" in skipped and "profile" in skipped and "gauntlet" in skipped
+
+
 def test_stage_clock_times_stages_and_slow_legs() -> None:
     """Wall time per stage, the counterpart to cost_by_stage.
 

@@ -59,7 +59,7 @@ PRODUCE an EditorialTreatment:
    out of.
 
    It is a soft bound to write toward, not a quota to fill. A piece that lands its understanding
-   sooner should stop.
+   sooner should stop. Default short. A lecture on the apparatus is not depth this story earned.
 
 2. THE READER-MOLECULE (see molecule.md) — design the structure, not an outline.
    - `core_understanding`: in 1-2 sentences, the reality-shape the reader should hold — the big

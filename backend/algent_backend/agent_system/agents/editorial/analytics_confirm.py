@@ -37,7 +37,7 @@ SEARCH_CHANNELS = (policy.KEYWORD, policy.SEMANTIC, policy.READ)
 PAID_BUDGET = 0
 COST_CAP_USD = 0.25
 
-DEFAULT_MODEL: ModelSpec = house_spec(reasoning_effort="low", temperature=0.1, streaming=True)
+DEFAULT_MODEL: ModelSpec = house_spec(reasoning_effort="low", temperature=0.1, streaming=False)
 
 
 def analytics_claims(profile: dict[str, Any]) -> list[dict[str, Any]]:

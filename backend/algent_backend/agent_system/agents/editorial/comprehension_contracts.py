@@ -70,6 +70,7 @@ class ComprehensionFinding(BaseModel):
         "jargon_before_gloss",  # specialist name or initialism before plain meaning
         "unclear_causal_chain", # policy→event or mechanism link left foggy or overstated
         "method_before_payoff", # technical how-to arrives before the reader holds the finding
+        "lecture",              # apparatus taught past the grain needed for significance
         "wall_of_text",         # long uninterrupted prose with no headings / figures / breaks
         "other",
     ] = "other"

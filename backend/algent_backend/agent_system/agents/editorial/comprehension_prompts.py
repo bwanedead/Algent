@@ -216,7 +216,13 @@ the order the evidence arrived rather than the order an idea unfolds. These are 
   written as settled). Fix: `add_handhold` / `rewrite_for_reader` stating the link and its
   confidence in plain words.
 - METHOD_BEFORE_PAYOFF — technical how-to / methodology wall arrives before the reader holds
-  the finding and why it matters. Depth is fine AFTER the gist. Fix: `reorder`.
+  the finding and why it matters. Fix: `reorder`. Depth past the grain needed for significance
+  is not a free pass after the gist — that is `lecture`.
+- LECTURE — a section teaches how a thing works past the grain needed for significance. The
+  reader needed what the development means; they got the physics of the light source. Distinct
+  from method_before_payoff (that's order; this is depth). A rough idea of the mechanism is
+  enough. Fix: `cut` the excess; `rewrite_for_reader` to the meaning sentence if that sentence
+  is not already elsewhere.
 - WALL_OF_TEXT — a long uninterrupted prose run with no descriptive headings or breaks where
   a house reader would lose the thread. Fix: `reorder` / `rewrite_for_reader` suggesting
   descriptive H2s that name the section's question or finding (not generic "Background").
@@ -232,8 +238,8 @@ HARD CONSTRAINT ON YOUR FIXES — this is not optional. Your powers are **handho
   three short sentences that install what the conflict *is*, who wants what, and what the
   day's move attaches to — still no new contested claims).
 - `connect_to_thread` — the same, for an island: name the relation it should arrive on.
-- `cut` — announced-importance labels, circular restatement, or passages that cannot connect
-  and aren't needed.
+- `cut` — announced-importance labels, circular restatement, lectures on the apparatus past
+  the grain the significance needs, or passages that cannot connect and aren't needed.
 - `rewrite_for_reader` — for DRAFTER_VANTAGE, and only where the information is wanted but the
   framing is ours. An opening that rebuts a source the reader never saw, a sentence that
   justifies why an item is in the piece, our research state narrated as prose, a caption that

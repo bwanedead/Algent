@@ -75,7 +75,8 @@ def test_reviewer_is_shown_prose_only_never_the_evidence() -> None:
 
 
 def test_vague_conflict_and_announced_importance_kinds_are_valid() -> None:
-    for kind, fix in (("vague_conflict", "add_handhold"), ("announced_importance", "cut")):
+    for kind, fix in (("vague_conflict", "add_handhold"), ("announced_importance", "cut"),
+                      ("lecture", "cut")):
         f = ComprehensionFinding(id="x", kind=kind, issue="t", fix=fix)
         assert f.kind == kind
 

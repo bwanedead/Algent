@@ -41,10 +41,12 @@ from .publish import render_published_article
 
 PIPELINE_COMPLETED = "editorial_pipeline.completed"
 PIPELINE_NO_INPUT = "editorial_pipeline.no_input"
+PIPELINE_SKIPPED = "editorial_pipeline.stage_skipped"
 CAVEAT_REPAIRED = "editorial_pipeline.caveat_repaired"   # the self-heal lap ran; here's the outcome
 RAMP_REPAIRED = "editorial_pipeline.ramp_repaired"       # the comprehension repair lap ran
 HERO_IMAGE = "editorial_pipeline.hero_image"             # hero generated / skipped, with the reason
 SURFACE_REPAIRED = "editorial_pipeline.surface_repaired"  # cold-browser surface package re-ran
+ANALYTICS_CONFIRM_FAILED = "editorial_pipeline.analytics_confirm_failed"
 
 _STOPWORDS = frozenset({
     "a", "an", "the", "and", "or", "of", "in", "on", "to", "for", "with", "from",
@@ -143,6 +145,13 @@ class PipelineState(TypedDict, total=False):
     profile: dict[str, Any]    # the research profile to turn into an article (input)
     treatment: dict[str, Any]  # the planned treatment
     draft: dict[str, Any]      # the finished article
+    analytics_plan: dict[str, Any]
+    analytics_artifacts: list[Any]
+    hero: dict[str, Any]
+    plan_report: dict[str, Any]
+    draft_report: dict[str, Any]
+    pipeline_prior: dict[str, Any]
+    analytics_confirm: dict[str, Any]
     pipeline: dict[str, Any]   # the EditorialPipelineReport
 
 
@@ -158,33 +167,19 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
             )
             return {"pipeline": EditorialPipelineReport().model_dump()}
 
-        plan_out = build_planning_gauntlet_graph(context).invoke({"profile": profile}, config)
-        treatment = _ensure_treatment(plan_out.get("treatment") or {}, profile)
-        plan_report = plan_out.get("gauntlet") or {}
+        treatment, plan_report = _planning_stage(context, config, state, profile)
+        analytics_plan = _analytics_plan_stage(
+            context, config, state, profile, treatment)
 
-        # Visual PLAN early (cheap) so soft-cap repair spending cannot starve the plan.
-        # Fulfillment runs after the final surface package.
-        analytics_plan = _plan_analytics(context, config, profile, treatment)
-
-        draft_out = build_drafting_gauntlet_graph(context).invoke(
-            {"treatment": treatment, "profile": profile,
-             "analytics_plan": analytics_plan}, config)
-        draft = draft_out.get("draft") or {}
-        enriched_profile = draft_out.get("profile") or profile
-        draft_report = draft_out.get("gauntlet") or {}
-
+        draft, enriched_profile, draft_report, quality, hero, surface_issues = (
+            _drafting_stage(context, config, state, profile, treatment, analytics_plan)
+        )
         early = _hard_stop_without_draft(context, profile, treatment, draft)
         if early is not None:
             return early
 
-        # Prose repairs first; final surface package (headline/quick_take/hero) runs AFTER
-        # so title/gist match the repaired body.
-        draft, enriched_profile, quality = _post_draft_quality(
-            context, config, draft=draft, treatment=treatment, profile=enriched_profile)
-        draft, hero, surface_issues = _headline_and_hero(
-            context, config, draft, treatment=treatment)
-        produced_analytics = _fulfill_analytics(
-            context, config, analytics_plan, enriched_profile)
+        produced_analytics = _analytics_fulfill_stage(
+            context, config, state, analytics_plan, enriched_profile)
         # Data a figure went and sourced is evidence the profile did not have. Fold it into
         # the ledger rather than letting it die with the scratch folder — analytics is a
         # research act, and the numbers under a published chart should be as inspectable as
@@ -198,12 +193,10 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
         # reviews, hero and figures all done — and it killed a complete run once on a provider
         # 400. A late optional pass that can destroy finished work is worse than no pass: the
         # claims simply stay `unconfirmed`, which is what they already were.
-        try:
-            enriched_profile, confirm_report = confirm_analytics_claims(
-                context, config, enriched_profile)
-        except Exception as exc:  # noqa: BLE001 — see above
-            confirm_report = None
-            context.emit(ANALYTICS_CONFIRM_FAILED, {"error": str(exc)[:200]})
+        enriched_profile, confirm_report, confirm_note = _confirm_stage(
+            context, config, state, enriched_profile)
+        if confirm_note:
+            surface_issues = list(surface_issues) + [confirm_note]
         quality = {
             **quality,
             "analytics": analytics_plan,
@@ -248,6 +241,114 @@ def _hard_stop_without_draft(
         context.artifacts.write_json("editorial_pipeline_report.json", report.model_dump())
     context.emit(PIPELINE_COMPLETED, report.model_dump())
     return {"treatment": treatment, "draft": draft, "pipeline": report.model_dump()}
+
+
+def _planning_stage(
+    context: AgentRunContext, config: RunnableConfig,
+    state: PipelineState, profile: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    existing = state.get("treatment") or {}
+    draft = state.get("draft") or {}
+    if existing.get("id") or draft.get("id"):
+        reason = "treatment_reused" if existing.get("id") else "draft_reused"
+        context.emit(PIPELINE_SKIPPED, {"stage": "planning", "reason": reason})
+        prior = state.get("plan_report") or {}
+        return _ensure_treatment(existing, profile), prior if isinstance(prior, dict) else {}
+    plan_out = build_planning_gauntlet_graph(context).invoke({"profile": profile}, config)
+    return _ensure_treatment(plan_out.get("treatment") or {}, profile), plan_out.get("gauntlet") or {}
+
+
+def _analytics_plan_stage(
+    context: AgentRunContext, config: RunnableConfig,
+    state: PipelineState, profile: dict[str, Any], treatment: dict[str, Any],
+) -> dict[str, Any]:
+    if "analytics_plan" in state:
+        context.emit(PIPELINE_SKIPPED, {"stage": "analytics_plan", "reason": "plan_reused"})
+        plan = state.get("analytics_plan") or {}
+        return plan if isinstance(plan, dict) else {}
+    # Visual PLAN early (cheap) so soft-cap repair spending cannot starve the plan.
+    return _plan_analytics(context, config, profile, treatment)
+
+
+def _quality_from_prior(state: PipelineState) -> dict[str, Any]:
+    prior = state.get("pipeline_prior") or {}
+    if not isinstance(prior, dict):
+        prior = {}
+    return {
+        "caveat_verdict": str(prior.get("caveat_verdict") or ""),
+        "caveat_rounds": int(prior.get("caveat_rounds") or 0),
+        "caveat_findings": int(prior.get("caveat_findings") or 0),
+        "comprehension": {
+            "verdict": str(prior.get("comprehension_verdict") or ""),
+            "findings": [{}] * int(prior.get("comprehension_findings") or 0),
+            "places_to_drop": list(prior.get("places_to_drop") or []),
+        },
+        "comprehension_rounds": int(prior.get("comprehension_rounds") or 0),
+    }
+
+
+def _drafting_stage(
+    context: AgentRunContext, config: RunnableConfig,
+    state: PipelineState, profile: dict[str, Any],
+    treatment: dict[str, Any], analytics_plan: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any],
+           dict[str, Any] | None, list[str]]:
+    existing = state.get("draft") or {}
+    if existing.get("id"):
+        context.emit(PIPELINE_SKIPPED, {"stage": "drafting", "reason": "draft_reused"})
+        draft_report = state.get("draft_report") or {}
+        if not isinstance(draft_report, dict):
+            draft_report = {}
+        hero = state.get("hero") if isinstance(state.get("hero"), dict) else None
+        surface_issues: list[str] = []
+        if not (isinstance(hero, dict) and hero.get("artifact_name")):
+            existing, hero, surface_issues = _headline_and_hero(
+                context, config, existing, treatment=treatment)
+        return (
+            existing, profile, draft_report, _quality_from_prior(state),
+            hero, surface_issues,
+        )
+
+    draft_out = build_drafting_gauntlet_graph(context).invoke(
+        {"treatment": treatment, "profile": profile,
+         "analytics_plan": analytics_plan}, config)
+    draft = draft_out.get("draft") or {}
+    enriched_profile = draft_out.get("profile") or profile
+    draft_report = draft_out.get("gauntlet") or {}
+    # Prose repairs first; final surface package (headline/quick_take/hero) runs AFTER
+    # so title/gist match the repaired body.
+    draft, enriched_profile, quality = _post_draft_quality(
+        context, config, draft=draft, treatment=treatment, profile=enriched_profile)
+    draft, hero, surface_issues = _headline_and_hero(
+        context, config, draft, treatment=treatment)
+    return draft, enriched_profile, draft_report, quality, hero, surface_issues
+
+
+def _analytics_fulfill_stage(
+    context: AgentRunContext, config: RunnableConfig,
+    state: PipelineState, analytics_plan: dict[str, Any], profile: dict[str, Any],
+) -> list[dict[str, Any]]:
+    if "analytics_artifacts" in state:
+        context.emit(PIPELINE_SKIPPED, {"stage": "analytics_worker", "reason": "artifacts_reused"})
+        blob = state.get("analytics_artifacts") or []
+        return list(blob) if isinstance(blob, list) else []
+    return _fulfill_analytics(context, config, analytics_plan, profile)
+
+
+def _confirm_stage(
+    context: AgentRunContext, config: RunnableConfig,
+    state: PipelineState, profile: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any] | None, str]:
+    if "analytics_confirm" in state:
+        context.emit(PIPELINE_SKIPPED, {"stage": "analytics_confirm", "reason": "confirm_reused"})
+        report = state.get("analytics_confirm")
+        return profile, report if isinstance(report, dict) else None, ""
+    try:
+        profile, confirm_report = confirm_analytics_claims(context, config, profile)
+        return profile, confirm_report, ""
+    except Exception as exc:  # noqa: BLE001 — late optional pass; never destroy finished work
+        context.emit(ANALYTICS_CONFIRM_FAILED, {"error": str(exc)[:200]})
+        return profile, None, f"analytics_confirm_failed: {str(exc)[:80]}"
 
 
 def _plan_analytics(
@@ -639,7 +740,6 @@ def _repair_hedging(
 
 
 ANALYTICS_CLAIMS_ADDED = "editorial_pipeline.analytics_claims_added"
-ANALYTICS_CONFIRM_FAILED = "editorial_pipeline.analytics_confirm_failed"
 
 
 def _absorb_sourced_claims(

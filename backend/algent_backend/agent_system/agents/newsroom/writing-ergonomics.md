@@ -158,6 +158,15 @@ sentence true and the whole thing useless.
 - Ask what share of the piece is significance and consequence versus method and peripheral
   detail. If the second wins, you have written a walkthrough.
 
+The silent filter — never write it on the page as "how this affects you" — is: **does this
+change what a house reader would do, expect, or believe about the world they live in?** A
+chipmaking claim earns the advancement, the economics, who is ahead of whom. It does not
+earn a lecture on the physics of the light source. A rough idea of what the mechanism
+relies on is enough for the significance to land; the exam-level walkthrough is not.
+
+We will rarely need a lecture on anything. If a section could be a textbook chapter, it is
+the wrong grain.
+
 This is not an instruction to write shorter. A long piece that stays on the through-line is
 fine; a short one buried in procedure is not. Cut twigs, not length.
 

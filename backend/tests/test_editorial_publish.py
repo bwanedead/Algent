@@ -398,3 +398,23 @@ def test_a_label_inside_a_sentence_is_left_alone() -> None:
 
     body = "The paper's title: 'Ciliary flows in corals' ran in Science Advances."
     assert _clean_prose(body) == body
+
+
+def test_every_produced_chart_is_embedded() -> None:
+    """A run that drew two figures must show two figures — not silently keep one."""
+    analytics = [
+        {"request_id": "anx_01", "status": "produced", "artifact_name": "analytic_anx_01.svg",
+         "title": "Exports", "question": "How did exports move?",
+         "caption": "Exports fell then recovered.", "data_refs": ["c1"]},
+        {"request_id": "anx_02", "status": "produced", "artifact_name": "analytic_anx_02.PNG",
+         "title": "Share", "question": "Who has the capacity?",
+         "caption": "One maker holds most of the tools.", "data_refs": ["c1"]},
+        {"request_id": "anx_03", "status": "produced", "artifact_name": "analytic_anx_03.jpg",
+         "title": "Map", "question": "Where is the plant?",
+         "caption": "The plant sits on the coast.", "data_refs": ["c1"]},
+    ]
+    md = render_published_article(_draft(), _profile(), analytics)
+    body = md.split("How we know this")[0]
+    assert "![Exports](analytic_anx_01.svg)" in body
+    assert "![Share](analytic_anx_02.PNG)" in body
+    assert "![Map](analytic_anx_03.jpg)" in body

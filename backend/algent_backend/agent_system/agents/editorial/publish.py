@@ -19,7 +19,7 @@ from .analytics_contracts import AI_ANALYTIC_LABEL
 from .citations import unverified_prose_figures
 from .draft import ArticleDraft
 
-_IMAGE_SUFFIXES = (".svg", ".png")
+_IMAGE_SUFFIXES = (".svg", ".png", ".jpg", ".jpeg", ".webp")
 _TABLE_ROW = re.compile(r"^\s*\|.*\|\s*$")
 
 
@@ -429,17 +429,18 @@ def _figure_explainer(a: dict) -> str:
 def _figures(produced: list[dict]) -> list[str]:
     """Place each produced analytic in the reader view by TYPE:
 
-    - a chart/illustration (``.svg``/``.png``) is embedded as an image, with a plain explainer
+    - a chart/illustration (``.svg``/``.png``/``.jpg``) is embedded as an image, with a plain explainer
       under it (what is measured / what it shows + provenance);
     - a table/insight (markdown) is INLINED as text — an image link to a ``.md`` file would render
       as a broken image — followed by the same style of explainer.
     """
     out: list[str] = []
     for a in produced:
-        name = a.get("artifact_name", "")
+        name = str(a.get("artifact_name") or "")
         title = str(a.get("title") or "").strip()
         explainer = _figure_explainer(a)
-        if name.endswith(_IMAGE_SUFFIXES):
+        lower = name.lower()
+        if lower.endswith(_IMAGE_SUFFIXES):
             body = [f"![{title or 'analytic'}]({name})"]
             # A drawn figure already carries its title INSIDE the image, so a bold line
             # above it published the same sentence twice, a line apart. The alt text keeps

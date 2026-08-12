@@ -837,3 +837,72 @@ def test_a_repeated_row_is_not_added_twice() -> None:
                "source_ledger": []}
     arts = [{"sourced_claims": [{"text": "Exports: 2019, 542.2", "url": "https://k.net"}]}]
     assert pl._absorb_sourced_claims(_ctx([]), profile, arts) is profile
+
+
+def test_analytics_confirm_exception_still_completes_and_persists(monkeypatch) -> None:
+    """A provider 400 in claim confirmation must not trash a finished article."""
+    plan_out = {"treatment": {"id": "trt_x"}, "gauntlet": {}}
+    draft_out = {
+        "draft": {"id": "drf_x", "title": "Finished piece", "body": "word " * 200, "word_count": 200},
+        "gauntlet": {"outcome": "grounded", "promoted": True},
+    }
+    _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}})
+
+    def _boom(*_a, **_k):
+        raise RuntimeError("Error code: 400 - invalid request")
+
+    monkeypatch.setattr(pl, "confirm_analytics_claims", _boom)
+    events: list = []
+    out = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({"profile": _spine_profile()})
+    r = out["pipeline"]
+    assert r["status"] == "publishable" and r["publishable"] is True
+    assert any(et == pl.PIPELINE_COMPLETED for et, _ in events)
+    assert any(et == pl.ANALYTICS_CONFIRM_FAILED for et, _ in events)
+    assert any("analytics_confirm_failed" in s for s in (r.get("surface_issues") or []))
+
+
+def test_pipeline_reuses_draft_and_skips_planning_and_worker(monkeypatch) -> None:
+    """Resume with a finished draft: do not re-plan, re-draft, or re-draw figures."""
+    plan_calls: list = []
+    draft_calls: list = []
+    worker_calls: list = []
+    monkeypatch.setenv("ALGENT_HERO_IMAGE", "0")
+    monkeypatch.setattr(
+        pl, "build_planning_gauntlet_graph",
+        lambda ctx: plan_calls.append(1) or _Graph({"treatment": {"id": "nope"}}),
+    )
+    monkeypatch.setattr(
+        pl, "build_drafting_gauntlet_graph",
+        lambda ctx: draft_calls.append(1) or _Graph({"draft": {"id": "nope"}}),
+    )
+    monkeypatch.setattr(pl, "build_analytics_router", lambda ctx: _Graph({"analytics_plan": {}}))
+    monkeypatch.setattr(
+        pl, "build_analytics_worker_graph",
+        lambda ctx: worker_calls.append(1) or _Graph({"analytics_artifacts": []}),
+    )
+    monkeypatch.setattr(pl, "build_headline_writer", lambda ctx: _Graph({"headline": {}}))
+    monkeypatch.setattr(pl, "build_caveat_reviewer", lambda ctx: _Graph({"caveat_check": {}}))
+    monkeypatch.setattr(
+        pl, "build_comprehension_reviewer",
+        lambda ctx: _Graph({"comprehension_check": {"verdict": "clear", "findings": []}}),
+    )
+
+    events: list = []
+    body = "word " * 200
+    out = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({
+        "profile": _spine_profile(),
+        "treatment": {"id": "trt_kept"},
+        "draft": {"id": "drf_kept", "title": "Kept piece", "body": body, "word_count": 200},
+        "analytics_plan": {"warranted": False, "requests": []},
+        "analytics_artifacts": [
+            {"request_id": "anx_01", "status": "produced", "artifact_name": "analytic_anx_01.svg"},
+        ],
+        "hero": {"artifact_name": "hero.jpg"},
+        "analytics_confirm": {"checks": []},
+    })
+    assert plan_calls == [] and draft_calls == [] and worker_calls == []
+    assert out["draft"]["id"] == "drf_kept"
+    assert out["pipeline"]["status"] == "publishable"
+    skipped = [p.get("stage") for et, p in events if et == pl.PIPELINE_SKIPPED]
+    assert "planning" in skipped and "drafting" in skipped
+    assert "analytics_worker" in skipped
