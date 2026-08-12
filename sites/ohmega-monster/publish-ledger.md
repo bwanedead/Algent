@@ -605,3 +605,17 @@ caveats: ? (0 findings)
 analytics: 1 produced, 0 escapes
 cost: ~$0.0000  ·  mode: normal  ·  soft/hard: $1.00/$3.00
 run: 0078__aebfed2a-8db0-4e3d-9d0f-17ab8334ae2f
+
+### PUBLISH amazon-s-texas-ai-campus-to-run-on-a-7-65-gigawatt-private-g-9a98b8 — 2026-08-12
+status: publishable  ·  draft: grounded_with_caveats  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 0 produced, 1 escapes
+cost: ~$1.0889  ·  mode: slim_finish  ·  soft/hard: $1.00/$3.00
+analytics_skipped: req_gw_scale_comparison:failed, req_gw_locator_map:soft_cap_skipped
+cost_by_stage: editorial=$0.1605, gauntlet=$0.6662, profile=$0.2618, routing=$0.0004
+soft_cap_crossed: yes @ editorial
+skipped: search_fallback(slim_finish), draft_repair(slim_finish), caveat_check(slim_finish), comprehension_repair(slim_finish)
+disposition: needs_verification
+⚠ walled sources (carried with caveats): src_51ab46dc1f, src_5f0735fedd, src_38d443bdb0, src_0aa84b41f3, src_1f6f98b1c9, src_53177d0bf6, src_14410ec7c7, src_2e2c7c1efc, src_b2c44bd3bd, src_854cbe5106, src_9d0742e851, src_d1c0340a32
+⚠ figures not matched to evidence: 99.99%, 43%, 18%, 85%, 100%, 71%
+run: 0080__2ea8892f-3147-4eb3-acf2-249e52d4c06b
