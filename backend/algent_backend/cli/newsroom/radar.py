@@ -167,7 +167,18 @@ def run_drain(args: Any) -> int:
 
 def run_status(_args: Any) -> int:
     alive, state = daemon.running()
-    out: dict[str, Any] = {"radar_running": alive, "queue": q.summary()}
+    pending = [p for p in q.load() if p.status == "queued"]
+    ready = q.due()
+    out: dict[str, Any] = {
+        "radar_running": alive,
+        "overdue_now": len(ready),
+        # Visible so a growing backlog is noticed before it becomes a timeline full of
+        # yesterday's news. No pruning yet - the shape of the problem decides the rule.
+        "oldest_queued_hours": round(
+            max(((datetime.now(UTC) - datetime.fromisoformat(p.created_at)).total_seconds()
+                 for p in pending if p.created_at), default=0.0) / 3600.0, 1),
+        "queue": q.summary(),
+    }
     if state is not None:
         out["daemon"] = {
             "pid": state.pid,
@@ -252,7 +263,20 @@ def run_loop(args: Any) -> int:
     daemon.log(f"radar started (pid {state.pid}) - discovery every {args.discovery_every}m, "
                f"posting about every {args.post_every}m")
 
-    next_post = datetime.now(UTC) + timedelta(minutes=_jitter(args.post_every))
+    # RESUME, do not restart. The queue outlived the last process — a closed laptop, a kill, a
+    # crash — and its schedule is still on disk, so anything whose slot has passed is due NOW.
+    # Waiting a fresh interval before looking would strand a backlog for another cycle.
+    #
+    # It cannot burst: a release tick sends exactly ONE post, so ten overdue items go out one
+    # per tempo interval rather than all at once. That is the whole reason the release is capped
+    # at one rather than "everything due".
+    overdue = q.due()
+    if overdue:
+        next_post = datetime.now(UTC)
+        daemon.log(f"resuming with {len(overdue)} post(s) overdue - releasing one now, "
+                   f"then back to the normal tempo")
+    else:
+        next_post = datetime.now(UTC) + timedelta(minutes=_jitter(args.post_every))
     state.next_post_at = next_post.isoformat()
     daemon.write_state(state)
 
@@ -327,8 +351,17 @@ def _refresh(state: daemon.DaemonState) -> int:
     Posting is unaffected either way — only discovery touches the rail.
     """
     if _rail_busy():
-        daemon.log("discovery deferred - a newsroom run holds the lock; will retry shortly")
+        # Log the deferral ONCE per stretch. Not advancing the discovery clock is deliberate —
+        # losing a race should cost seconds, not another full interval — but it means this is
+        # re-attempted every heartbeat, and saying so every five seconds buries the log the
+        # operator relies on when no agent is available.
+        if not _refresh.deferred:  # type: ignore[attr-defined]
+            daemon.log("discovery deferred - a newsroom run holds the lock; retrying quietly")
+            _refresh.deferred = True  # type: ignore[attr-defined]
         return -1
+    if _refresh.deferred:  # type: ignore[attr-defined]
+        daemon.log("rail free again - resuming discovery")
+        _refresh.deferred = False  # type: ignore[attr-defined]
     # Popen + poll rather than subprocess.run, so a stop request is honoured DURING discovery.
     # A blocking call here meant the loop could not see the stop file for the several minutes a
     # t0 sweep takes, which made every stop in that window a force-kill — including the one
@@ -383,6 +416,9 @@ def _release_one(state: daemon.DaemonState) -> str:
     state.posts_sent += 1
     state.last_post_at = datetime.now(UTC).isoformat()
     return result.url
+
+
+_refresh.deferred = False  # type: ignore[attr-defined]
 
 
 def _clear_dead_run_lock() -> None:

@@ -122,3 +122,29 @@ def test_every_post_is_stamped_radar_exactly_once() -> None:
     assert texts[0].startswith("Radar: A 7.6 quake")
     # Not "Radar: Radar: ..." when the model stamped it too.
     assert texts[1] == "Radar: the model prefixed it itself."
+
+
+def test_a_gap_leaves_a_backlog_due_but_it_drains_one_at_a_time(tmp_path) -> None:
+    """The laptop-was-off case.
+
+    The schedule is on disk, so after a gap everything whose slot has passed is due at once.
+    That is correct and must NOT become a burst: a release tick sends exactly one post, so ten
+    overdue items go out one per tempo interval rather than all at once.
+    """
+    now = datetime(2026, 8, 12, 12, 0, tzinfo=UTC)
+    path = tmp_path / "q.jsonl"
+    q.enqueue([_post(k) for k in "abcde"], path=path, now=now)
+
+    # Six hours later - the machine was asleep through every slot.
+    back = now + timedelta(hours=6)
+    ready = q.due(path, now=back)
+    assert len(ready) == 5
+
+    # Releasing is one-at-a-time by construction: the daemon takes the earliest and stops.
+    first = sorted(ready, key=lambda p: p.scheduled_for)[0]
+    q.mark(first.id, status="posted", url="https://x.test/1", path=path)
+    assert len(q.due(path, now=back)) == 4
+
+    # And the queue still knows the order it was judged in, so a backlog drains oldest-first.
+    remaining = sorted(q.due(path, now=back), key=lambda p: p.scheduled_for)
+    assert [p.key for p in remaining] == ["b", "c", "d", "e"]
