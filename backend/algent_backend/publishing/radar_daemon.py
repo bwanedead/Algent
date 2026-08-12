@@ -40,9 +40,9 @@ LOG_FILE = _STATE_DIR / "radar_daemon.log"
 
 #: Defaults, overridable per start. Discovery is the expensive clock; posting is the visible one.
 DISCOVERY_EVERY_MIN = 120
-POST_EVERY_MIN = 60
+POST_EVERY_MIN = 40
 #: Posting cadence is drawn from a window around POST_EVERY_MIN rather than fixed, so the
-#: timeline never shows a post at :00 every hour. Roughly 48-75 minutes at the default.
+#: timeline never shows a post on a fixed beat. Roughly 25-55 minutes at the default.
 POST_JITTER_MIN = 15
 #: How often the loop wakes to check the clocks and the stop file. Short so a stop is felt
 #: almost immediately; the loop does nothing on the vast majority of ticks.

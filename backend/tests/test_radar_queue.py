@@ -22,7 +22,7 @@ def test_a_sweep_is_spread_out_rather_than_fired_as_a_burst(tmp_path) -> None:
     times = [datetime.fromisoformat(p.scheduled_for) for p in added]
 
     assert times == sorted(times) and times[0] > now
-    assert all(b - a >= timedelta(minutes=40) for a, b in zip(times, times[1:]))
+    assert all(b - a >= timedelta(minutes=q._SPACING_MIN) for a, b in zip(times, times[1:]))
 
 
 def test_a_second_sweep_does_not_interleave_into_the_first_one_s_gaps(tmp_path) -> None:

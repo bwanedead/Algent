@@ -30,7 +30,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 #: Minimum gap between posts, in minutes.
-_SPACING_MIN = 40
+_SPACING_MIN = 30
 #: Jitter so a drained backlog does not go out on a metronome, which reads as automation.
 _JITTER_MIN = 12
 
