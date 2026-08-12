@@ -598,3 +598,10 @@ skipped: search_fallback(slim_finish), search_fallback(slim_finish), search_fall
 refused: model_turn(slim_finish)
 ⚠ figures not matched to evidence: 0.1%
 run: 0076__6bb1f3ad-8558-42e8-9ce9-a73883cc9a95
+
+### PUBLISH china-s-3-500-gigawatt-plan-is-not-a-surge-it-s-a-pivot-to-m-6c01f0 — 2026-08-12
+status: publishable  ·  draft: ?  ·  treatment: ?
+caveats: ? (0 findings)
+analytics: 1 produced, 0 escapes
+cost: ~$0.0000  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+run: 0078__aebfed2a-8db0-4e3d-9d0f-17ab8334ae2f
