@@ -27,6 +27,7 @@ from pathlib import Path
 from typing import Any
 
 from algent_backend.agent_system.agents.radar.sweep import sweep_pool
+from algent_backend.agent_system.agents.radar.verify import apply_checks, check_posts
 from algent_backend.agent_system.runs.control_plane.process_tree import terminate_tree
 from algent_backend.publishing import radar_daemon as daemon
 from algent_backend.publishing import radar_queue as q
@@ -73,6 +74,21 @@ def add_parser(sub: Any) -> None:
     lp.set_defaults(handler=run_loop)
 
 
+def _checked(pool: dict, sweep: Any) -> tuple[list[Any], list[dict[str, str]]]:
+    """Sweep output -> queue-ready posts, with every one measured against its source line.
+
+    Radar has no research pass, so this is the only thing standing between a wire line and a
+    published sentence. It runs on BOTH paths (manual sweep and the daemon) rather than at the
+    call sites, because a check that can be bypassed by using the other verb is not a check.
+    """
+    labels = {i.get("id"): str(i.get("label") or "")
+              for i in (pool.get("items") or []) if isinstance(i, dict)}
+    checks = check_posts([
+        (p.source_key, p.text, labels.get(p.source_key, "")) for p in sweep.posts
+    ])
+    return apply_checks(list(sweep.posts), checks)
+
+
 def _latest_pool() -> Path | None:
     pools = sorted(Path("ingestion_data/pool").glob("pool_*.json"))
     return pools[-1] if pools else None
@@ -89,15 +105,16 @@ def run_sweep(args: Any) -> int:
     # than a duplicate — pools are deliberately reused across runs.
     seen = {p.key for p in q.load()}
     sweep = sweep_pool(pool, already_posted=seen)
+    survived, rejected = _checked(pool, sweep)
 
     posts = [
         q.RadarPost(key=p.source_key, text=p.text,
                     created_at=datetime.now(UTC).isoformat())
-        for p in sweep.posts
+        for p in survived
     ]
     if args.dry_run:
         _print({"pool": str(path), "considered": sweep.considered, "dry_run": True,
-                "would_queue": [p.text for p in posts]})
+                "would_queue": [p.text for p in posts], "rejected": rejected})
         return 0
 
     added, dupes = q.enqueue(posts)
@@ -107,6 +124,7 @@ def run_sweep(args: Any) -> int:
         "queued": [{"id": p.id, "scheduled_for": p.scheduled_for,
                     "text": p.text} for p in added],
         "already_seen": len(dupes),
+        "rejected": rejected,
         "note": sweep.note,
     })
     return 0
@@ -337,9 +355,12 @@ def _refresh(state: daemon.DaemonState) -> int:
         return 0
     pool = json.loads(path.read_text(encoding="utf-8"))
     sweep = sweep_pool(pool, already_posted={p.key for p in q.load()})
+    survived, rejected = _checked(pool, sweep)
+    for item in rejected:
+        daemon.log(f"post rejected ({item['verdict']}): {item['reason'][:120]}")
     added, _ = q.enqueue([
         q.RadarPost(key=p.source_key, text=p.text, created_at=datetime.now(UTC).isoformat())
-        for p in sweep.posts
+        for p in survived
     ])
     state.sweeps_run += 1
     return len(added)
