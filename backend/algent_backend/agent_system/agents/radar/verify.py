@@ -179,3 +179,97 @@ def apply_checks(
         rejected.append({"source_key": post.source_key, "verdict": check.verdict,
                          "reason": check.reason, "was": post.text})
     return kept, rejected
+
+
+# ── the queue review ──────────────────────────────────────────────────────────────────────────
+#
+# The per-post check runs at sweep time and sees one post against one wire line. That is the wrong
+# vantage for two problems:
+#
+#   - DUPLICATION ACROSS SWEEPS. Two sweeps hours apart can each queue the same story from
+#     different wire lines, and neither knew about the other.
+#   - RECIRCULATION. Wires re-run a story days later. Without memory of what we already said,
+#     it reads as a bot with no recollection of its own timeline.
+#
+# So the review looks at the WHOLE pending queue against everything we have already posted, and
+# prunes. The queue file is the memory: posted rows are never deleted, which makes "did we say
+# this already" answerable weeks later rather than only within one sweep.
+
+#: How far back the review looks for repeats. Long enough to catch a wire re-running a story,
+#: short enough that the prompt stays small on a queue with months of history behind it.
+HISTORY_DAYS = 14
+
+
+class QueueVerdict(BaseModel):
+    """One queued post the review wants gone."""
+
+    post_id: str
+    reason: str = ""
+
+
+class QueueReview(BaseModel):
+    drop: list[QueueVerdict] = Field(default_factory=list)
+    note: str = ""
+
+
+REVIEW_ROLE = """\
+You are reviewing a newsroom account's PENDING post queue before any of it goes out. You also see
+what the account has already published.
+
+Drop a pending post when:
+- IT REPEATS SOMETHING ALREADY PUBLISHED. Judge by the event, not the wording: same incident,
+  same decision, same release. Wires re-run stories for days, so a post can be a repeat even
+  when its wording is entirely fresh. Drop it even if it is better written than what went out —
+  the first is public and cannot be unposted.
+- IT REPEATS ANOTHER PENDING POST. Keep the one that says more; drop the other. Say which you
+  kept.
+- IT IS NO LONGER WORTH SAYING. A queue drains over hours, and some items expire in that time:
+  a scheduled vote that has since happened, a "so far" count certain to be stale, a prediction
+  whose date has passed.
+- IT READS AS NONSENSE ON ITS OWN. Not merely dull — genuinely unclear, mangled, or missing the
+  thing that makes it a statement.
+
+Do NOT drop for being unimportant, dry, or similar in TOPIC. Two separate earthquakes are two
+events. Two updates on one earthquake are one.
+
+Dropping nothing is a perfectly good review. Name the specific reason for each drop.
+"""
+
+REVIEW_PROMPT = compose_system_prompt(UNIVERSAL_AGENT_BASE, REVIEW_ROLE)
+
+
+def review_queue(
+    pending: list[Any],
+    published: list[str],
+    *,
+    model_spec: ModelSpec | None = None,
+    resolver: ModelResolver | None = None,
+) -> QueueReview:
+    """Judge the pending queue against what already went out. Fails OPEN."""
+    from algent_backend.agent_system.foundation.models.budget_gate import gate_chat_model
+
+    if not pending:
+        return QueueReview(note="empty queue")
+    spec = model_spec or DEFAULT_MODEL
+
+    lines: list[str] = []
+    if published:
+        lines += ["# ALREADY PUBLISHED", ""]
+        lines += [f"- {t}" for t in published]
+        lines.append("")
+    lines += ["# PENDING QUEUE (in send order)", ""]
+    for post in pending:
+        lines.append(f"- post_id: {post.id}\n  {post.text}")
+    lines += ["", "Return a QueueReview listing only the posts to drop."]
+
+    model = gate_chat_model((resolver or ModelResolver()).resolve(spec).client)
+    with cost.scoped(COST_CAP_USD, spec.model):
+        result = model.with_structured_output(QueueReview).invoke(
+            [SystemMessage(content=REVIEW_PROMPT), HumanMessage(content="\n".join(lines))],
+        )
+    if not isinstance(result, QueueReview):
+        return QueueReview(note="review returned nothing usable")
+    # Only ever act on ids we actually asked about.
+    ids = {p.id for p in pending}
+    result.drop = [d for d in result.drop if d.post_id in ids]
+    return result

@@ -193,8 +193,17 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
             context, enriched_profile, produced_analytics)
         # The worker may contribute evidence; it may not grade its own fetch. An independent
         # research pass rules on anything it added before those rows harden into the ledger.
-        enriched_profile, confirm_report = confirm_analytics_claims(
-            context, config, enriched_profile)
+        #
+        # NEVER FATAL. This is enrichment arriving after the article is finished — draft,
+        # reviews, hero and figures all done — and it killed a complete run once on a provider
+        # 400. A late optional pass that can destroy finished work is worse than no pass: the
+        # claims simply stay `unconfirmed`, which is what they already were.
+        try:
+            enriched_profile, confirm_report = confirm_analytics_claims(
+                context, config, enriched_profile)
+        except Exception as exc:  # noqa: BLE001 — see above
+            confirm_report = None
+            context.emit(ANALYTICS_CONFIRM_FAILED, {"error": str(exc)[:200]})
         quality = {
             **quality,
             "analytics": analytics_plan,
@@ -630,6 +639,7 @@ def _repair_hedging(
 
 
 ANALYTICS_CLAIMS_ADDED = "editorial_pipeline.analytics_claims_added"
+ANALYTICS_CONFIRM_FAILED = "editorial_pipeline.analytics_confirm_failed"
 
 
 def _absorb_sourced_claims(

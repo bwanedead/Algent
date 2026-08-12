@@ -27,7 +27,12 @@ from pathlib import Path
 from typing import Any
 
 from algent_backend.agent_system.agents.radar.sweep import sweep_pool
-from algent_backend.agent_system.agents.radar.verify import apply_checks, check_posts
+from algent_backend.agent_system.agents.radar.verify import (
+    HISTORY_DAYS,
+    apply_checks,
+    check_posts,
+    review_queue,
+)
 from algent_backend.agent_system.runs.control_plane.process_tree import terminate_tree
 from algent_backend.publishing import radar_daemon as daemon
 from algent_backend.publishing import radar_queue as q
@@ -52,6 +57,10 @@ def add_parser(sub: Any) -> None:
                    help="most posts to send in one drain (default 3)")
     d.add_argument("--dry-run", action="store_true", help="show what would be sent")
     d.set_defaults(handler=run_drain)
+
+    rv = verbs.add_parser("review", help="prune the pending queue (duplicates, repeats, stale)")
+    rv.add_argument("--dry-run", action="store_true", help="show what it would drop")
+    rv.set_defaults(handler=run_review)
 
     st = verbs.add_parser("status", help="what is queued, and whether radar is running")
     st.set_defaults(handler=run_status)
@@ -167,6 +176,47 @@ def run_drain(args: Any) -> int:
 
     _print({"posted": sent, "failed": failed, **q.summary()})
     return 0 if not failed else 1
+
+
+def _published_history() -> list[str]:
+    """What we have already said, within the memory window.
+
+    The queue file never deletes a posted row, so this answers "did we say this already" weeks
+    later — which is the only thing that catches a wire re-running a story days after we covered
+    it. Windowed so the prompt does not grow without bound.
+    """
+    cutoff = datetime.now(UTC) - timedelta(days=HISTORY_DAYS)
+    out = []
+    for post in q.load():
+        if post.status != "posted":
+            continue
+        stamp = post.posted_at or post.created_at
+        if stamp and datetime.fromisoformat(stamp) >= cutoff:
+            out.append(post.text)
+    return out
+
+
+def run_review(args: Any) -> int:
+    """Look at the whole pending queue at once and prune it."""
+    pending = sorted((p for p in q.load() if p.status == "queued"),
+                     key=lambda p: p.scheduled_for or "")
+    if not pending:
+        _print({"reviewed": 0, "note": "nothing pending"})
+        return 0
+
+    review = review_queue(pending, _published_history())
+    dropped = [{"id": d.post_id, "reason": d.reason,
+                "text": next((p.text for p in pending if p.id == d.post_id), "")}
+               for d in review.drop]
+    if args.dry_run:
+        _print({"reviewed": len(pending), "dry_run": True, "would_drop": dropped,
+                "note": review.note})
+        return 0
+    for item in dropped:
+        q.mark(item["id"], status="skipped", note=f"queue review: {item['reason'][:160]}")
+    _print({"reviewed": len(pending), "dropped": dropped, "note": review.note,
+            "remaining": sum(1 for p in q.load() if p.status == "queued")})
+    return 0
 
 
 def run_status(_args: Any) -> int:
@@ -420,6 +470,18 @@ def _refresh(state: daemon.DaemonState) -> int:
         for p in survived
     ])
     state.sweeps_run += 1
+
+    # Review the whole queue after enqueueing: a sweep can only see its own posts, and the
+    # duplicate that matters is the one queued hours ago by a different sweep.
+    try:
+        pending = sorted((p for p in q.load() if p.status == "queued"),
+                         key=lambda p: p.scheduled_for or "")
+        review = review_queue(pending, _published_history())
+        for d in review.drop:
+            q.mark(d.post_id, status="skipped", note=f"queue review: {d.reason[:160]}")
+            daemon.log(f"queue review dropped a post: {d.reason[:120]}")
+    except Exception as exc:  # noqa: BLE001 — pruning is not worth losing a sweep over
+        daemon.log(f"queue review failed (queue left as-is): {str(exc)[:120]}")
     return len(added)
 
 
