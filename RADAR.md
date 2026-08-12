@@ -73,6 +73,15 @@ Radar and editorial do not know about each other, on purpose. The same story may
 and also become an article, or either, or neither. Coupling them would let one lane silently veto
 the other.
 
+## Running articles while radar is on
+
+You do not have to stop it. Radar yields: only its **discovery** step touches the newsroom rail,
+and if an article run holds the lock, radar logs `discovery deferred` and retries on its next
+tick rather than racing. Posting is unaffected, so queued items keep going out while you work.
+
+The deferral does not burn the cycle — radar tries again shortly rather than waiting another
+full interval.
+
 ## The one real constraint
 
 **Only one machine may run radar.** The queue is a local file, so two machines sweeping the same

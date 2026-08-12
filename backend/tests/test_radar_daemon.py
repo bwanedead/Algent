@@ -94,3 +94,41 @@ def test_start_state_survives_a_crash_for_status_to_explain(monkeypatch) -> None
     alive, state = d.running()
     assert not alive and state.stopped_at == ""     # never stopped -> it was interrupted
     assert json.loads(d.PID_FILE.read_text(encoding="utf-8"))["pid"] == 4242
+
+
+def test_radar_yields_discovery_to_a_running_article_rail(monkeypatch, tmp_path) -> None:
+    """Radar is the background job; it must never make the operator stop it to do real work.
+
+    Only discovery touches the rail, so a deferral costs nothing visible — posting continues.
+    And a deferral must not count as a completed cycle, or radar would wait another full
+    interval after losing one race.
+    """
+    import json as _json
+
+    from algent_backend.cli.newsroom import radar as cli
+
+    lock = tmp_path / "newsroom_run.lock"
+    lock.write_text(_json.dumps({"pid": 4242}), encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "runs_data").mkdir(exist_ok=True)
+    (tmp_path / "runs_data" / "newsroom_run.lock").write_text(
+        _json.dumps({"pid": 4242}), encoding="utf-8")
+
+    monkeypatch.setattr(
+        "algent_backend.agent_system.runs.control_plane.liveness.process_alive",
+        lambda pid: True,
+    )
+    assert cli._rail_busy() is True
+
+    spawned: list[str] = []
+    monkeypatch.setattr(cli.subprocess, "Popen", lambda *a, **k: spawned.append("ran"))
+    state = d.DaemonState(pid=1, started_at="")
+    assert cli._refresh(state) == -1        # deferred
+    assert spawned == []                     # and it never spent anything
+
+    # A dead lock-holder is not busy — a crashed run must not block radar forever.
+    monkeypatch.setattr(
+        "algent_backend.agent_system.runs.control_plane.liveness.process_alive",
+        lambda pid: False,
+    )
+    assert cli._rail_busy() is False

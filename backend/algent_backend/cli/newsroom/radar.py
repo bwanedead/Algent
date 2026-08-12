@@ -243,13 +243,19 @@ def run_loop(args: Any) -> int:
             now = datetime.now(UTC)
 
             if _stale(state.last_discovery_at, args.discovery_every, now):
+                deferred = False
                 try:
                     queued = _refresh(state)
-                    daemon.log(f"discovery + sweep: {queued} new post(s) queued")
+                    deferred = queued < 0
+                    if not deferred:
+                        daemon.log(f"discovery + sweep: {queued} new post(s) queued")
                 except Exception as exc:  # noqa: BLE001 - a bad cycle must not end the daemon
                     state.errors.append(f"{now.isoformat()} discovery: {str(exc)[:160]}")
                     daemon.log(f"discovery FAILED (continuing): {str(exc)[:160]}")
-                state.last_discovery_at = now.isoformat()
+                # A deferral is not a completed cycle: leave the clock alone so the next tick
+                # tries again, instead of waiting another full interval.
+                if not deferred:
+                    state.last_discovery_at = now.isoformat()
                 daemon.write_state(state)
 
             if datetime.now(UTC) >= next_post and not daemon.stop_requested():
@@ -282,8 +288,29 @@ def _stale(stamp: str, every_min: int, now: datetime) -> bool:
     return now - datetime.fromisoformat(stamp) >= timedelta(minutes=every_min)
 
 
+def _rail_busy() -> bool:
+    """Is a newsroom run already holding the single-flight lock?"""
+    from algent_backend.agent_system.runs.control_plane.liveness import process_alive
+
+    try:
+        pid = int(json.loads(
+            Path("runs_data/newsroom_run.lock").read_text(encoding="utf-8")).get("pid") or 0)
+    except (OSError, ValueError, json.JSONDecodeError):
+        return False
+    return bool(pid) and process_alive(pid)
+
+
 def _refresh(state: daemon.DaemonState) -> int:
-    """Build a fresh t0 pool, then sweep it into the queue. Returns how many were queued."""
+    """Build a fresh t0 pool, then sweep it into the queue. Returns how many were queued.
+
+    Returns -1 when it DEFERRED: radar is the background job, so it yields to an article run
+    rather than racing it for the lock. Otherwise the operator would have to remember to stop
+    radar before doing any foreground work, which is exactly the kind of thing nobody remembers.
+    Posting is unaffected either way — only discovery touches the rail.
+    """
+    if _rail_busy():
+        daemon.log("discovery deferred - a newsroom run holds the lock; will retry shortly")
+        return -1
     # Popen + poll rather than subprocess.run, so a stop request is honoured DURING discovery.
     # A blocking call here meant the loop could not see the stop file for the several minutes a
     # t0 sweep takes, which made every stop in that window a force-kill — including the one
