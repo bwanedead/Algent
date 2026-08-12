@@ -319,6 +319,12 @@ _PROVIDER_STYLE = {
         "literal keyword index: exact strings and distinctive terms. Best for a specific name, "
         "phrase or number; it will not infer what you meant."
     ),
+    "muse": (
+        "the model's OWN web search, used because the dedicated engines were unavailable. Ask "
+        "in plain language, as you would ask a person to look something up. It chose its own "
+        "queries, so results reflect its reading of your request — if they miss, restate what "
+        "you actually need rather than reworking keywords."
+    ),
     "exa": (
         "neural/semantic: DESCRIBE the page you want in a natural phrase — 'a study measuring X "
         "in Y' — rather than stacking keywords. Keyword soup is its weakest input, and an exact "
@@ -328,9 +334,13 @@ _PROVIDER_STYLE = {
 
 
 def _provider_chain(kind: str) -> list[str]:
+    # `muse` is last on both: it is a genuine substitute at the snippet tier, but the model picks
+    # its own queries and shows us what it chose to cite, where a keyword API answers the query we
+    # wrote and returns everything. That is the right trade only once the alternatives are gone —
+    # which, with tavily near its monthly cap and brave unconfigured, is a case we now reach.
     if kind == "semantic":
-        return ["exa", "brave", "tavily"]
-    return ["tavily", "brave", "exa"]
+        return ["exa", "brave", "tavily", "muse"]
+    return ["tavily", "brave", "exa", "muse"]
 
 
 def _invoke_provider(provider: str, query: str, max_results: int) -> list[Any]:
@@ -343,6 +353,9 @@ def _invoke_provider(provider: str, query: str, max_results: int) -> list[Any]:
     if provider == "brave":
         from .brave import _search as brave_search
         return brave_search(query, max_results=max_results)
+    if provider == "muse":
+        from .muse_search import search as muse_search
+        return muse_search(query, max_results=max_results)
     raise RuntimeError(f"unknown search provider: {provider}")
 
 

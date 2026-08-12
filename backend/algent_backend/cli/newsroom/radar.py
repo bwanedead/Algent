@@ -270,13 +270,27 @@ def run_loop(args: Any) -> int:
     # It cannot burst: a release tick sends exactly ONE post, so ten overdue items go out one
     # per tempo interval rather than all at once. That is the whole reason the release is capped
     # at one rather than "everything due".
+    # The tempo has to survive a restart, and the daemon's own state does not: a fresh process
+    # starts with last_post_at empty, so "release one if overdue" fired the moment radar came
+    # back regardless of having posted minutes earlier. Three restarts in an hour produced posts
+    # 22 and then 6 minutes apart.
+    #
+    # So the clock is read from the QUEUE, which is the durable record of what actually went
+    # out. That also survives losing the pid file entirely.
+    now = datetime.now(UTC)
+    gap = timedelta(minutes=args.post_every)
+    earliest = (_last_sent_at() + gap) if _last_sent_at() else now
     overdue = q.due()
-    if overdue:
-        next_post = datetime.now(UTC)
+    if overdue and earliest <= now:
+        next_post = now
         daemon.log(f"resuming with {len(overdue)} post(s) overdue - releasing one now, "
                    f"then back to the normal tempo")
+    elif overdue:
+        next_post = earliest
+        daemon.log(f"resuming with {len(overdue)} post(s) overdue - last post was recent, "
+                   f"so the next goes out at {earliest.strftime('%H:%M')}Z")
     else:
-        next_post = datetime.now(UTC) + timedelta(minutes=_jitter(args.post_every))
+        next_post = now + timedelta(minutes=_jitter(args.post_every))
     state.next_post_at = next_post.isoformat()
     daemon.write_state(state)
 
@@ -317,6 +331,12 @@ def run_loop(args: Any) -> int:
     daemon.clear_stop()
     daemon.log(f"radar stopped cleanly - {state.posts_sent} post(s) sent this session")
     return 0
+
+
+def _last_sent_at() -> datetime | None:
+    """When a post last actually went out, from the queue rather than daemon memory."""
+    stamps = [p.posted_at for p in q.load() if p.status == "posted" and p.posted_at]
+    return max(datetime.fromisoformat(s) for s in stamps) if stamps else None
 
 
 def _jitter(minutes: int) -> float:

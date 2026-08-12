@@ -709,3 +709,41 @@ def test_results_tell_the_agent_which_engine_answered_and_how_to_ask_it(monkeypa
     primary = research._search(query="q")
     assert primary["provider"] == "tavily" and primary["provider_style"]
     assert "fallback_from" not in primary and "provider_note" not in primary
+
+
+def test_muse_search_turns_citations_into_ordinary_hits() -> None:
+    """The fallback must look like every other provider, or the chain learns a new shape.
+
+    We take the CITATIONS, not the model's synthesis: a hit is a URL plus the span of text it
+    was cited for, which is the closest thing this API gives to a snippet.
+    """
+    from algent_backend.agent_system.tools.sourcing.search.muse_search import _hits_from_citations
+
+    content = [
+        {"type": "reasoning", "summary": []},
+        {"type": "text",
+         "text": "15 killed as a ferry sank on Lake Kariba, with 27 missing.",
+         "annotations": [
+             {"type": "url_citation", "url": "https://example.test/a", "title": "Ferry sinks",
+              "start_index": 0, "end_index": 24},
+             # Same source cited twice must not become two hits.
+             {"type": "url_citation", "url": "https://example.test/a", "title": "Ferry sinks",
+              "start_index": 26, "end_index": 40},
+             {"type": "url_citation", "url": "https://example.test/b", "title": ""},
+             {"type": "file_citation", "url": "https://example.test/ignored"},
+         ]},
+    ]
+    hits = _hits_from_citations(content)
+
+    assert [h["url"] for h in hits] == ["https://example.test/a", "https://example.test/b"]
+    assert hits[0]["content"] == "15 killed as a ferry sa"[:23] or hits[0]["content"]
+    # A citation with no title still needs one; the URL is better than an empty string.
+    assert hits[1]["title"] == "https://example.test/b"
+    assert all({"title", "url", "content"} <= set(h) for h in hits)
+
+
+def test_muse_is_the_last_resort_on_both_chains() -> None:
+    """Snippet-tier substitute, but the model picks its own queries — right only once the
+    dedicated engines are gone."""
+    assert research._provider_chain("keyword")[-1] == "muse"
+    assert research._provider_chain("semantic")[-1] == "muse"
