@@ -21,9 +21,10 @@ GENERATOR = "radar_sweep/1.0"
 DEFAULT_MODEL: ModelSpec = house_spec(reasoning_effort="low", temperature=0.4)
 COST_CAP_USD = 0.20
 
-#: How many pool items to show. The pool is already novelty-filtered and significance-ranked
-#: upstream, so this is a prompt-size bound, not a judgement.
-_MAX_ITEMS = 90
+#: A prompt-size bound, not a judgement. Set above a normal pool (~110) so nothing is
+#: silently excluded from consideration: a cap below the pool size is a hidden editorial
+#: decision made by list order rather than by merit.
+_MAX_ITEMS = 200
 
 #: Applied by the harness, not written by the model, so it is identical on every post and cannot
 #: drift into "RADAR!!" or get dropped.

@@ -97,6 +97,12 @@ VERDICTS
 Also drop a post whose subject is not really the news: a wire line about an earthquake becomes a
 post about the earthquake, not about one rescue, unless the line itself is about the rescue.
 
+And drop the wholesome miracle item outright — the baby pulled from rubble, the animal that found
+its way home, the improbable act of kindness. Not because it is false, but because it is the
+category we can least check and the one that costs most when wrong: these travel furthest, get
+embellished at each retelling, and are rarely corrected. Be most suspicious of the item you most
+want to be true.
+
 Name the specific problem in `reason`. Echo `source_key` exactly.
 """
 
