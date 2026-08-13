@@ -32,6 +32,8 @@ Do **not** remake synthesis just to re-pick. Freeze the portfolio path (or use `
 - **t0 pool menu only:** `--pool-menu`, or `SYNTHESIS_ENABLED = False`.
 - **Pinned picks:** `newsroom run --from menu --menu runs_data/discovery_synthesis/<run> --pick 1,2,14`.
 - **Resume a failed rail:** `newsroom resume` (newest unfinished) or `--run <id|dir>`. Assesses artifacts and continues from the next unpaid stage **in the same run** — does not re-buy a draft, profile, or figure that is already on disk. `--from editorial` (etc.) forces a redo from that stage. `--dry-run` prints the plan. Shipping always goes through the rail (skipped stages stay skipped).
+- **Radar on/off:** `newsroom radar start` / `newsroom radar stop` — one background supervisor (discovery + Radar posts). Closing the laptop ends it; the queue stays on disk.
+- **Briefing on/off:** `newsroom briefing start` / `newsroom briefing stop` — same supervisor, not a second process. Stop pauses only the roundup lane.
 
 These three `--from` flags are **not** the same contract:
 

@@ -24,6 +24,9 @@ _QUEUE_ENV = "ALGENT_BRIEFING_QUEUE"
 _DEFAULT_QUEUE = Path("runs_data") / "briefing_queue.jsonl"
 _STATE_PATH = Path("runs_data") / "briefing_state.json"
 _IMAGES = Path("runs_data") / "briefing_images"
+#: Runtime on/off, same idea as radar's stop file: a FILE, not a process. The
+#: supervisor keeps running; ticks skip this lane until ``briefing start``.
+PAUSE_FILE = Path("runs_data") / "briefing.pause"
 _JITTER_MIN = 20
 
 
@@ -162,3 +165,16 @@ def read_state() -> dict[str, Any]:
 def write_state(state: dict[str, Any]) -> None:
     _STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
     _STATE_PATH.write_text(json.dumps(state, indent=2), encoding="utf-8")
+
+
+def paused() -> bool:
+    return PAUSE_FILE.exists()
+
+
+def request_pause() -> None:
+    PAUSE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    PAUSE_FILE.write_text(datetime.now(UTC).isoformat(), encoding="utf-8")
+
+
+def clear_pause() -> None:
+    PAUSE_FILE.unlink(missing_ok=True)

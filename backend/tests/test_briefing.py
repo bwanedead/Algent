@@ -90,3 +90,37 @@ def test_the_same_cluster_is_not_queued_twice(tmp_path, monkeypatch) -> None:
         q.BriefingPost(key="t:energy:a,b", pillar="energy", text="different wording"),
     ], now=now + timedelta(hours=1))
     assert again == [] and len(dupes2) == 1
+
+
+def test_a_pause_file_turns_the_lane_off(tmp_path, monkeypatch) -> None:
+    """``briefing stop`` is a file, not a second process — radar keeps running."""
+    from algent_backend.cli.newsroom import briefing as br
+
+    monkeypatch.setattr(q, "PAUSE_FILE", tmp_path / "briefing.pause")
+    assert br.lane_active() is True
+    q.request_pause()
+    assert q.paused() is True and br.lane_active() is False
+    assert br.daemon_tick() == ""
+    q.clear_pause()
+    assert br.lane_active() is True
+
+
+def test_briefing_start_clears_pause_without_a_second_daemon(tmp_path, monkeypatch) -> None:
+    from types import SimpleNamespace
+
+    from algent_backend.cli.newsroom import briefing as br
+    from algent_backend.publishing import radar_daemon as d
+
+    monkeypatch.setattr(q, "PAUSE_FILE", tmp_path / "briefing.pause")
+    q.request_pause()
+    spawned: list[tuple[int, int]] = []
+    monkeypatch.setattr(d, "running", lambda: (True, SimpleNamespace(pid=9)))
+    monkeypatch.setattr(
+        "algent_backend.cli.newsroom.radar.spawn_detached_loop",
+        lambda *a: spawned.append(a) or (1, SimpleNamespace(pid=9)),
+    )
+    assert br.run_stop(None) == 0
+    assert q.paused() is True
+    assert br.run_start(None) == 0
+    assert q.paused() is False
+    assert spawned == []  # supervisor already up

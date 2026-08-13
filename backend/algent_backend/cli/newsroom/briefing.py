@@ -3,6 +3,11 @@
 
 Compose never sends. Drain is the only thing that posts. The radar supervisor
 calls ``daemon_tick`` so a second process is not required.
+
+``start`` / ``stop`` are the same operator surface as radar, but they do not
+spawn a second daemon: stop writes a pause file the supervisor honors; start
+clears it and brings the supervisor up if the laptop (or a radar stop) took it
+down.
 """
 
 from __future__ import annotations
@@ -42,13 +47,24 @@ def add_parser(sub: Any) -> None:
     d.add_argument("--dry-run", action="store_true")
     d.set_defaults(handler=run_drain)
 
-    st = verbs.add_parser("status", help="what is queued")
+    st = verbs.add_parser("status", help="what is queued, and whether the lane is on")
     st.set_defaults(handler=run_status)
+
+    on = verbs.add_parser("start", help="turn the lane on (starts radar if it is down)")
+    on.set_defaults(handler=run_start)
+
+    off = verbs.add_parser("stop", help="pause briefings; radar keeps running")
+    off.set_defaults(handler=run_stop)
+
+
+def lane_active() -> bool:
+    """Standing flag plus the runtime pause file from ``briefing start`` / ``stop``."""
+    return briefing_enabled() and not q.paused()
 
 
 def run_compose(args: Any) -> int:
-    if not briefing_enabled():
-        _print({"queued": 0, "note": "briefing off (flags.BRIEFING_ENABLED)"})
+    if not lane_active():
+        _print({"queued": 0, "note": _off_note()})
         return 0
     try:
         added, dupes, t0_ref = compose(menu=args.menu, dry_run=args.dry_run)
@@ -92,9 +108,16 @@ def run_drain(args: Any) -> int:
 
 
 def run_status(_args: Any) -> int:
+    from algent_backend.publishing import radar_daemon as daemon
+
     pending = [p for p in q.load() if p.status == "queued"]
+    alive, state = daemon.running()
     _print({
-        "enabled": briefing_enabled(),
+        "on": lane_active(),
+        "paused": q.paused(),
+        "standing_flag": briefing_enabled(),
+        "supervisor_running": alive,
+        "supervisor_pid": state.pid if state and alive else None,
         "queued": len(pending),
         "due_now": len(q.due()),
         "last_posted_at": (q.last_posted_at() or datetime.min.replace(tzinfo=UTC)).isoformat()
@@ -102,8 +125,57 @@ def run_status(_args: Any) -> int:
         "next": [{"id": p.id, "pillar": p.pillar, "scheduled_for": p.scheduled_for}
                  for p in sorted(pending, key=lambda x: x.scheduled_for or "")[:8]],
         "last_composed_t0": q.read_state().get("t0_ref", ""),
+        "start_with": "python -m algent_backend.cli newsroom briefing start",
+        "stop_with": "python -m algent_backend.cli newsroom briefing stop",
     })
     return 0
+
+
+def run_start(_args: Any) -> int:
+    """Turn the lane on. Starts the shared supervisor if the laptop (or radar stop) took it down."""
+    from algent_backend.cli.newsroom import radar as radar_cli
+    from algent_backend.publishing import radar_daemon as daemon
+
+    if not briefing_enabled():
+        _print({"error": "briefing off in flags.BRIEFING_ENABLED — that is the standing default",
+                "on": False})
+        return 1
+    q.clear_pause()
+    alive, state = daemon.running()
+    started_supervisor = False
+    if not alive:
+        _pid, state = radar_cli.spawn_detached_loop(
+            daemon.DISCOVERY_EVERY_MIN, daemon.POST_EVERY_MIN)
+        started_supervisor = True
+        alive, state = daemon.running()
+    _print({
+        "on": True,
+        "paused": False,
+        "supervisor_started": started_supervisor,
+        "supervisor_running": alive,
+        "pid": state.pid if state else None,
+        "stop_with": "python -m algent_backend.cli newsroom briefing stop",
+        "note": "briefings share radar's supervisor — no second process",
+    })
+    return 0 if alive else 1
+
+
+def run_stop(_args: Any) -> int:
+    """Pause this lane. Radar keeps running; ticks skip briefings until start."""
+    q.request_pause()
+    _print({
+        "on": False,
+        "paused": True,
+        "note": "radar is still running; briefing ticks are skipped until `briefing start`",
+        "start_with": "python -m algent_backend.cli newsroom briefing start",
+    })
+    return 0
+
+
+def _off_note() -> str:
+    if q.paused():
+        return "briefing paused (`newsroom briefing start` to resume)"
+    return "briefing off (flags.BRIEFING_ENABLED)"
 
 
 def compose(*, menu: str | None = None, dry_run: bool = False,
@@ -180,7 +252,7 @@ def _quiet_gap_ok(now: datetime) -> bool:
 
 def daemon_tick() -> str:
     """Supervisor hook: compose if the menu is new, release at most one due briefing."""
-    if not briefing_enabled():
+    if not lane_active():
         return ""
     now = datetime.now(UTC)
     notes: list[str] = []

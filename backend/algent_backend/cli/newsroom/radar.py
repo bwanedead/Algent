@@ -406,11 +406,25 @@ def run_start(args: Any) -> int:
     if args.foreground:
         return run_loop(args)
 
-    # Detached, so closing this terminal does not take radar with it. Its output goes to the
-    # log, which is the operator's only window once this command returns.
+    pid, state = spawn_detached_loop(args.discovery_every, args.post_every)
+    _print({
+        "started": True,
+        "pid": state.pid if state else pid,
+        "discovery_every_min": args.discovery_every,
+        "post_every_min": f"~{args.post_every} (jittered +/-{daemon.POST_JITTER_MIN})",
+        "log": str(daemon.LOG_FILE),
+        "stop_with": "python -m algent_backend.cli newsroom radar stop",
+        "note": "closing the laptop just ends it - nothing is lost, the queue stays on disk",
+    })
+    return 0
+
+
+def spawn_detached_loop(discovery_every: int, post_every: int) -> tuple[int, Any]:
+    """Start the supervisor in the background. Caller has already checked it is not running."""
+    daemon.clear_stop()
     argv = [sys.executable, "-m", "algent_backend.cli", "newsroom", "radar", "loop",
-            "--discovery-every", str(args.discovery_every),
-            "--post-every", str(args.post_every)]
+            "--discovery-every", str(discovery_every),
+            "--post-every", str(post_every)]
     kwargs: dict[str, Any] = {"stdout": subprocess.DEVNULL, "stderr": subprocess.DEVNULL,
                               "stdin": subprocess.DEVNULL, "cwd": os.getcwd()}
     if sys.platform == "win32":
@@ -419,22 +433,13 @@ def run_start(args: Any) -> int:
     else:
         kwargs["start_new_session"] = True
     proc = subprocess.Popen(argv, **kwargs)
-
+    state = None
     for _ in range(20):          # let the child record its own pid so we report a real one
         time.sleep(0.25)
         alive, state = daemon.running()
         if alive and state is not None:
             break
-    _print({
-        "started": True,
-        "pid": state.pid if state else proc.pid,
-        "discovery_every_min": args.discovery_every,
-        "post_every_min": f"~{args.post_every} (jittered +/-{daemon.POST_JITTER_MIN})",
-        "log": str(daemon.LOG_FILE),
-        "stop_with": "python -m algent_backend.cli newsroom radar stop",
-        "note": "closing the laptop just ends it - nothing is lost, the queue stays on disk",
-    })
-    return 0
+    return proc.pid, state
 
 
 def run_stop(_args: Any) -> int:
