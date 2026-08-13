@@ -13,16 +13,14 @@ from algent_backend.cli.newsroom import radar as radar_cli
 from algent_backend.publishing.x_client import CARD
 
 
-def test_stamp_is_applied_exactly_once() -> None:
-    """The label is applied by the harness so it cannot drift or be duplicated."""
+def test_stamp_peels_a_lane_label_and_never_adds_one() -> None:
+    """Radar is the internal name. The tweet is the news item, nothing in front of it."""
     assert stamp("A 7.6 quake hit off Colombia's coast.") == (
-        "Radar: A 7.6 quake hit off Colombia's coast.")
-    assert stamp("Radar: the model prefixed it itself.") == (
-        "Radar: the model prefixed it itself.")
-    assert stamp("  RADAR: already stamped  ") == "Radar: already stamped"
-    # A queued post that was stamped twice must still ship with one label.
+        "A 7.6 quake hit off Colombia's coast.")
+    assert stamp("Radar: the model prefixed it itself.") == "the model prefixed it itself."
+    assert stamp("  RADAR: already stamped  ") == "already stamped"
     assert stamp("Radar: Radar: Eleven people were charged in Houston.") == (
-        "Radar: Eleven people were charged in Houston.")
+        "Eleven people were charged in Houston.")
 
 
 def test_a_failed_lookup_is_a_drop_not_a_crash(monkeypatch) -> None:
@@ -36,11 +34,11 @@ def test_a_failed_lookup_is_a_drop_not_a_crash(monkeypatch) -> None:
     assert out.verdict == "drop" and "lookup failed" in out.reason
 
 
-def test_overlong_text_is_checked_against_room_for_the_stamp(monkeypatch) -> None:
-    """A body that fills a timeline card leaves no room for 'Radar: ' and used to ship over-length."""
+def test_overlong_text_is_cut_to_a_timeline_card(monkeypatch) -> None:
+    """A body past the card budget is rewritten rather than shipped over-length."""
     from algent_backend.agent_system.agents.radar import enrich as en
 
-    long = "x" * CARD
+    long = "x" * (CARD + 40)
     shortened = "Tornadoes in Illinois on Monday killed three."
 
     class _Structured:

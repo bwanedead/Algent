@@ -127,7 +127,7 @@ def _next_queued_at() -> datetime | None:
 
 
 def _restamp_pending() -> int:
-    """Peel doubled 'Radar:' labels on queued posts. Already-sent rows stay as they shipped."""
+    """Peel a leftover Radar: label off queued posts. Already-sent rows stay as they shipped."""
     posts = q.load()
     changed = 0
     for post in posts:
@@ -502,7 +502,7 @@ def run_loop(args: Any) -> int:
                f"posting about every {args.post_every}m")
     fixed = _restamp_pending()
     if fixed:
-        daemon.log(f"restamped {fixed} queued post(s) that had a doubled Radar: label")
+        daemon.log(f"peeled Radar: off {fixed} queued post(s)")
 
     # RESUME, do not restart. The queue outlived the last process — a closed laptop, a kill, a
     # crash — and its schedule is still on disk, so anything whose slot has passed is due NOW.

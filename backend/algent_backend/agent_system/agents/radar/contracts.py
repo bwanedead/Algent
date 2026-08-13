@@ -21,39 +21,34 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
-#: Applied by the harness, never written by the model, so it is identical on every post and
-#: cannot drift into "RADAR!!" or get dropped. It is a LABEL rather than a claim: it says what
-#: kind of post this is — a short notice, not a piece we researched into an article — which is
-#: honest framing and still catches an eye in a feed. That is the opposite of "BREAKING:", which
-#: asserts an urgency the item usually does not have. The handle already supplies the brand.
-RADAR_PREFIX = "Radar: "
+#: Legacy labels the harness used to stamp on every post. Radar is the internal lane name;
+#: the tweet is just the news. ``stamp`` peels these so queued rows and model leakage do not
+#: ship a header, and ``body_key`` still matches a sentence we already posted with the label.
+_PREFIXES = ("Radar:", "Ohmega Radar:")
 
 
 def stamp(text: str) -> str:
-    """Apply the Radar: label exactly once. The harness owns this, not the model."""
+    """The bytes we send: whitespace-normalized news, no lane label."""
     body = " ".join((text or "").split()).strip()
-    prefixes = (RADAR_PREFIX, "Radar:", "RADAR:", "Ohmega Radar:")
     peeled = True
     while peeled and body:
         peeled = False
-        for variant in prefixes:
-            token = variant.strip()
-            if body.lower().startswith(token.lower()):
-                body = body[len(token):].lstrip()
+        for variant in _PREFIXES:
+            if body.lower().startswith(variant.lower()):
+                body = body[len(variant):].lstrip()
                 peeled = True
                 break
-    return RADAR_PREFIX + body
+    return body
 
 
 def body_key(text: str) -> str:
     """Identity of the tweet we actually send, independent of which wire it came from.
 
     Source keys differ across rewrites of the same event; X duplicates on the sentence.
-    Prefix peeling matches ``stamp``, so a queued row and the bytes on the wire compare equal.
+    Peeling a leftover ``Radar:`` means a queued row from the labeled era and a new unlabeled
+    post compare equal, so we do not say the same thing twice just because the header died.
     """
-    stamped = stamp(text)
-    body = stamped[len(RADAR_PREFIX):] if stamped.startswith(RADAR_PREFIX) else stamped
-    return " ".join(body.casefold().split())
+    return " ".join(stamp(text).casefold().split())
 
 
 class RadarPost(BaseModel):

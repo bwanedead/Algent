@@ -190,7 +190,7 @@ def test_already_said_is_skipped_before_calling_x(monkeypatch) -> None:
     url, outcome = cli._release_one(_state(1))
     assert outcome == "posted" and url == "https://x.test/1"
     assert marked == [("a", "skipped"), ("b", "posted")]
-    assert calls == ["Radar: new fact"]
+    assert calls == ["new fact"]
 
 
 def test_an_empty_release_tick_does_not_burn_a_tempo_slot() -> None:

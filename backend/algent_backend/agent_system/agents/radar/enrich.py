@@ -4,13 +4,13 @@ The radar enrichment pass — look the lead up before saying anything about it.
 The first radar posts were headline flips: a wire line went in, the same fact came out in our
 own words. That is cheap and nearly worthless, and two live posts showed why.
 
-    "Radar: At least three people died in storms across the U.S. Midwest."
+    "At least three people died in storms across the U.S. Midwest."
 
 A reader already knew, with high confidence, that people die in Midwest storms. No date, no
 place, no scale, no cause — the post moved their picture of the world by almost nothing. Judged
 as information rather than as a sentence, it carried none: it eliminated no uncertainty.
 
-    "Radar: A steel beam fell onto a bridge on Germany's A81 autobahn..."
+    "A steel beam fell onto a bridge on Germany's A81 autobahn..."
 
 True, and days old. A wire line does not say when it happened, and a pool item can be stale, so
 a lane that never checks will confidently report last week as though it were now.
@@ -37,8 +37,6 @@ from algent_backend.agent_system.foundation.models import ModelSpec, house_spec
 from algent_backend.agent_system.foundation.models.resolver import ModelResolver
 from algent_backend.agent_system.prompting import UNIVERSAL_AGENT_BASE, compose_system_prompt
 from algent_backend.publishing.x_client import CARD, billable_length
-
-from .contracts import RADAR_PREFIX
 
 #: One search-backed call per candidate. Low effort, but the search is the expensive half and
 #: the reason the lane is worth anything.
@@ -102,12 +100,12 @@ region, and what CHANGED over what merely is. A dry official fact (a rate decisi
 going offline) still counts — this lane exists to say those. If after searching you still
 cannot say anything specific AND consequential, that is a drop, not a vaguer sentence.
 
-LENGTH IS A HARD BUDGET. The harness stamps 'Radar: ' onto whatever you return, so your text
-must leave room for it — about 240 characters, never more than 270. Density is the craft here:
-cut the throat-clearing, not the numbers. If it will not fit, the fix is fewer facts stated
-fully — never a truncated sentence. Do not write the 'Radar: ' stamp yourself.
+LENGTH IS A HARD BUDGET. About 240 characters, never more than a timeline card. Density is the
+craft here: cut the throat-clearing, not the numbers. If it will not fit, the fix is fewer facts
+stated fully — never a truncated sentence.
 
 STYLE — the same as the rest of the account:
+- The post is the news itself. No header.
 - One or two sentences. Short and dense beats long.
 - No "BREAKING", no "JUST IN", no emoji, no hashtags, no rhetorical questions, no hype.
 - Confidence goes INSIDE the sentence. Never state something and then take it back; if a figure
@@ -137,7 +135,6 @@ _PR_WIRE_HOSTS = (
 
 #: Radar is a short notice on purpose, not because X refuses longer posts. The writer
 #: will take 25k; this lane still aims at one thought on a timeline card.
-_ROOM = CARD - len(RADAR_PREFIX)
 
 
 def looks_like_wire_pr(text: str) -> bool:
@@ -188,7 +185,7 @@ def enrich(
     if result.verdict != "post" or not text:
         return EnrichedPost(verdict="drop", reason=result.reason or "nothing worth posting",
                             sources=result.sources)
-    if billable_length(text) > _ROOM:
+    if billable_length(text) > CARD:
         # Re-ask rather than discard. The search has already been paid for and the facts are in
         # hand; throwing that away over a length overrun was pure waste, and it happened twice
         # in the first enriched sweep.
@@ -205,7 +202,7 @@ def _shorten(text: str, spec: ModelSpec, resolver: ModelResolver | None) -> str:
     """One attempt at the same post, inside budget. Returns "" if it still will not fit."""
     from algent_backend.agent_system.foundation.models.budget_gate import gate_chat_model
 
-    room = _ROOM - 10
+    room = CARD - 10
     try:
         model = gate_chat_model((resolver or ModelResolver()).resolve(spec).client)
         with cost.scoped(COST_CAP_USD, spec.model):
