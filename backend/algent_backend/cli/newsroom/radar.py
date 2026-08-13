@@ -256,6 +256,10 @@ def run_drain(args: Any) -> int:
         try:
             result = post(stamp(item.text))
         except XWriteError as exc:
+            if _duplicate_content(exc):
+                q.mark(item.id, status="skipped", note=str(exc)[:200])
+                failed.append({"id": item.id, "error": "duplicate on X — skipped"})
+                continue
             # Leave it QUEUED: a transient refusal should be retried on the next drain, not
             # silently dropped. Only a hard rejection of the text itself is worth burning.
             q.mark(item.id, status="queued", note=str(exc)[:200])
@@ -380,12 +384,30 @@ def run_status(_args: Any) -> int:
             "started_at": state.started_at,
             "last_discovery_at": state.last_discovery_at,
             "last_post_at": state.last_post_at,
+            "last_heartbeat_at": state.last_heartbeat_at,
             "next_post_at": state.next_post_at,
             "posts_sent": state.posts_sent,
             "sweeps_run": state.sweeps_run,
             "stopped_at": state.stopped_at,
             "recent_errors": state.errors[-3:],
         }
+        if state.last_heartbeat_at:
+            try:
+                age = (datetime.now(UTC) - datetime.fromisoformat(state.last_heartbeat_at)).total_seconds()
+            except ValueError:
+                age = None
+            if age is not None:
+                out["daemon"]["heartbeat_age_s"] = int(age)
+                if alive and age > 20 * 60:
+                    out["silence"] = (
+                        f"no loop tick in {int(age / 60)} min while pid {state.pid} is still listed — "
+                        "the laptop likely slept (Windows keeps the pid) or the loop is wedged"
+                    )
+                elif alive and age > 120:
+                    out["silence"] = (
+                        f"no loop tick in {int(age)}s — probably in a discovery sweep "
+                        "(those take minutes)"
+                    )
         if not alive and not state.stopped_at:
             out["note"] = ("radar is NOT running - the process is gone but never recorded a "
                            "stop, so it was killed or the machine slept. Nothing was lost; the "
@@ -513,24 +535,18 @@ def run_loop(args: Any) -> int:
     state.next_post_at = next_post.isoformat()
     daemon.write_state(state)
 
-    unconfigured_logged = False
+    last_status_at = datetime.now(UTC)
     try:
         while not daemon.stop_requested():
             now = datetime.now(UTC)
+            state.last_heartbeat_at = now.isoformat()
+            daemon.write_state(state)
 
             # Posting first: discovery is a multi-minute subprocess, and a due post must
             # not wait behind a sweep. Radar's own discovery used to block the visible clock.
             if datetime.now(UTC) >= next_post and not daemon.stop_requested():
                 url, outcome = _release_one(state)
                 nxt = _next_queued_at()
-                if outcome == "posted":
-                    daemon.log(f"posted: {url}")
-                elif outcome == "unconfigured" and not unconfigured_logged:
-                    daemon.log("posting skipped - X write credentials not configured")
-                    unconfigured_logged = True
-                elif outcome == "empty" and nxt and nxt > datetime.now(UTC):
-                    daemon.log(f"nothing due yet - next queued post at "
-                               f"{nxt.strftime('%H:%M')}Z")
                 next_post = next_release_at(
                     now=datetime.now(UTC),
                     outcome=outcome,
@@ -540,6 +556,7 @@ def run_loop(args: Any) -> int:
                 )
                 state.next_post_at = next_post.isoformat()
                 daemon.write_state(state)
+                _log_release(outcome, url, next_post, nxt)
 
             try:
                 from algent_backend.cli.newsroom.briefing import daemon_tick
@@ -565,7 +582,22 @@ def run_loop(args: Any) -> int:
                     state.last_discovery_at = now.isoformat()
                 daemon.write_state(state)
 
+            if datetime.now(UTC) - last_status_at >= timedelta(seconds=daemon.STATUS_EVERY_S):
+                n_queued = sum(1 for p in q.load() if p.status == "queued")
+                daemon.log(
+                    f"alive: next post {next_post.strftime('%H:%M')}Z, {n_queued} queued, "
+                    f"{state.posts_sent} sent this session"
+                )
+                last_status_at = datetime.now(UTC)
+
+            before_sleep = datetime.now(UTC)
             time.sleep(daemon.HEARTBEAT_S)
+            gap = daemon.sleep_gap_s(before_sleep, datetime.now(UTC))
+            if gap is not None:
+                daemon.log(
+                    f"woke after {gap / 60:.0f}m gap (laptop likely slept or the process was frozen); "
+                    f"next post at {next_post.strftime('%H:%M')}Z"
+                )
     except KeyboardInterrupt:
         daemon.log("radar interrupted from the terminal")
 
@@ -669,11 +701,35 @@ def _refresh(state: daemon.DaemonState) -> int:
     return len(added)
 
 
+def _log_release(outcome: str, url: str, next_post: datetime, nxt: datetime | None) -> None:
+    """Every release tick says why nothing (or something) went out, and when we look again."""
+    when = next_post.strftime("%H:%M")
+    if outcome == "posted":
+        daemon.log(f"posted: {url} — next at {when}Z")
+    elif outcome == "failed":
+        daemon.log(f"next radar attempt at {when}Z")
+    elif outcome == "unconfigured":
+        if not getattr(_log_release, "_unconfigured", False):
+            daemon.log("posting skipped - X write credentials not configured")
+            _log_release._unconfigured = True  # type: ignore[attr-defined]
+    elif outcome == "empty" and nxt and nxt > datetime.now(UTC):
+        daemon.log(f"nothing due yet - next queued post at {nxt.strftime('%H:%M')}Z")
+
+
+def _duplicate_content(exc: BaseException) -> bool:
+    """X already has this text. Retrying it forever parks the whole queue behind one item."""
+    return "duplicate content" in str(exc).lower()
+
+
 def _release_one(state: daemon.DaemonState) -> tuple[str, str]:
     """Send at most one due post. Returns (url, outcome).
 
     outcome is posted | empty | failed | unconfigured. The loop needs the distinction:
     only a real send (or a hard failure) burns a tempo slot.
+
+    Duplicate-content 403 is not a hard failure of the *lane*: X already has the text
+    (often because we posted it and crashed before marking the row). Skip that item and
+    try the next due one in the same tick.
     """
     # Lid-close without a process restart: the loop wakes, a post is due, and nothing
     # else would have reviewed the backlog. Drain and resume already do this; the
@@ -682,20 +738,25 @@ def _release_one(state: daemon.DaemonState) -> tuple[str, str]:
     if not write_configured():
         return "", "unconfigured"
     ready = sorted(q.due(), key=lambda p: p.scheduled_for or "")
-    if not ready:
-        return "", "empty"
-    item = ready[0]
-    try:
-        result = post(stamp(item.text))
-    except XWriteError as exc:
-        q.mark(item.id, status="queued", note=str(exc)[:200])
-        state.errors.append(f"{datetime.now(UTC).isoformat()} post: {str(exc)[:160]}")
-        daemon.log(f"post FAILED (stays queued, will retry): {str(exc)[:160]}")
-        return "", "failed"
-    q.mark(item.id, status="posted", url=result.url)
-    state.posts_sent += 1
-    state.last_post_at = datetime.now(UTC).isoformat()
-    return result.url, "posted"
+    for item in ready:
+        try:
+            result = post(stamp(item.text))
+        except XWriteError as exc:
+            if _duplicate_content(exc):
+                q.mark(item.id, status="skipped", note=str(exc)[:200])
+                daemon.log(
+                    f"post skipped (X already has this text): {item.id} {item.text[:80]}"
+                )
+                continue
+            q.mark(item.id, status="queued", note=str(exc)[:200])
+            state.errors.append(f"{datetime.now(UTC).isoformat()} post: {str(exc)[:160]}")
+            daemon.log(f"post FAILED (stays queued, will retry): {str(exc)[:160]}")
+            return "", "failed"
+        q.mark(item.id, status="posted", url=result.url)
+        state.posts_sent += 1
+        state.last_post_at = datetime.now(UTC).isoformat()
+        return result.url, "posted"
+    return "", "empty"
 
 
 _refresh.deferred = False  # type: ignore[attr-defined]

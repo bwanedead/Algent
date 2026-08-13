@@ -96,6 +96,64 @@ def test_start_state_survives_a_crash_for_status_to_explain(monkeypatch) -> None
     assert json.loads(d.PID_FILE.read_text(encoding="utf-8"))["pid"] == 4242
 
 
+def test_read_state_survives_a_new_field() -> None:
+    """A pid file from an older daemon must still load after we add a field."""
+    d.write_state(_state(7))
+    raw = json.loads(d.PID_FILE.read_text(encoding="utf-8"))
+    raw.pop("last_heartbeat_at", None)
+    raw["future_field"] = "ignore me"
+    d.PID_FILE.write_text(json.dumps(raw), encoding="utf-8")
+    state = d.read_state()
+    assert state is not None and state.pid == 7
+    assert state.last_heartbeat_at == ""
+
+
+def test_a_long_sleep_is_a_lid_close_not_jitter() -> None:
+    from datetime import timedelta
+
+    now = datetime(2026, 8, 13, 12, 0, tzinfo=UTC)
+    assert d.sleep_gap_s(now, now + timedelta(seconds=5)) is None
+    gap = d.sleep_gap_s(now, now + timedelta(minutes=40))
+    assert gap is not None and gap >= 40 * 60
+
+
+def test_duplicate_content_is_skipped_so_the_queue_can_move(monkeypatch) -> None:
+    """The live stall: 403 duplicate, item stays queued, every tempo retries it, nothing else ships."""
+    from algent_backend.cli.newsroom import radar as cli
+    from algent_backend.publishing import radar_queue as rq
+    from algent_backend.publishing.x_client import Posted, XWriteError
+
+    items = [
+        rq.RadarPost(id="a", key="a", text="Radar: already said", status="queued",
+                     scheduled_for="2026-08-13T00:00:00+00:00"),
+        rq.RadarPost(id="b", key="b", text="Radar: new fact", status="queued",
+                     scheduled_for="2026-08-13T00:01:00+00:00"),
+    ]
+    marked: list[tuple[str, str]] = []
+    monkeypatch.setattr(cli, "write_configured", lambda: True)
+    monkeypatch.setattr(cli, "_review_if_stale", lambda: [])
+    monkeypatch.setattr(cli.q, "due", lambda: list(items))
+
+    def mark(pid: str, **kw):
+        marked.append((pid, str(kw.get("status"))))
+        if kw.get("status") == "skipped":
+            items[:] = [p for p in items if p.id != pid]
+
+    monkeypatch.setattr(cli.q, "mark", mark)
+
+    def fake_post(text: str, **k):
+        if "already said" in text:
+            raise XWriteError(
+                'post failed (403): {"detail":"You are not allowed to create a Tweet with duplicate content."}'
+            )
+        return Posted(id="1", text=text, url="https://x.test/1")
+
+    monkeypatch.setattr(cli, "post", fake_post)
+    url, outcome = cli._release_one(_state(1))
+    assert outcome == "posted" and url == "https://x.test/1"
+    assert marked == [("a", "skipped"), ("b", "posted")]
+
+
 def test_an_empty_release_tick_does_not_burn_a_tempo_slot() -> None:
     """The live failure: daemon alive, posts overdue, clock jumped another 40 minutes.
 

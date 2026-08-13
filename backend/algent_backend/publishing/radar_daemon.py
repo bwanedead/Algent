@@ -25,7 +25,7 @@ from __future__ import annotations
 import json
 import os
 import time
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, fields
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -47,6 +47,10 @@ POST_JITTER_MIN = 15
 #: How often the loop wakes to check the clocks and the stop file. Short so a stop is felt
 #: almost immediately; the loop does nothing on the vast majority of ticks.
 HEARTBEAT_S = 5
+#: A sleep() that returns this much late is a lid-close or freeze, not scheduler jitter.
+SLEEP_SLOP_S = 45
+#: Periodic "still here" line so a quiet hour is not indistinguishable from a dead process.
+STATUS_EVERY_S = 15 * 60
 
 
 @dataclass
@@ -62,6 +66,8 @@ class DaemonState:
     sweeps_run: int = 0
     errors: list[str] = field(default_factory=list)
     stopped_at: str = ""
+    #: Written every loop tick. ``status`` uses the age to tell sleep/wedge from a quiet wait.
+    last_heartbeat_at: str = ""
 
 
 def _now() -> datetime:
@@ -79,12 +85,29 @@ def log(line: str) -> None:
 
 
 def read_state() -> DaemonState | None:
+    """Load daemon state. Missing or extra fields must not look like a crash.
+
+    Adding a field used to TypeError the whole pid file, so ``start`` thought nothing
+    was running and could spawn a second loop next to a live one.
+    """
     if not PID_FILE.exists():
         return None
     try:
-        return DaemonState(**json.loads(PID_FILE.read_text(encoding="utf-8")))
+        raw = json.loads(PID_FILE.read_text(encoding="utf-8"))
+        if not isinstance(raw, dict):
+            return None
+        allowed = {f.name for f in fields(DaemonState)}
+        return DaemonState(**{k: v for k, v in raw.items() if k in allowed})
     except (json.JSONDecodeError, TypeError, ValueError):
         return None
+
+
+def sleep_gap_s(before: datetime, after: datetime, *, heartbeat_s: float = HEARTBEAT_S) -> float | None:
+    """Seconds the machine was away, or None if this was a normal heartbeat."""
+    gap = (after - before).total_seconds()
+    if gap > heartbeat_s + SLEEP_SLOP_S:
+        return gap
+    return None
 
 
 def write_state(state: DaemonState) -> None:
