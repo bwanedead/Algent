@@ -434,7 +434,7 @@ def spawn_detached_loop(discovery_every: int, post_every: int) -> tuple[int, Any
         kwargs["start_new_session"] = True
     proc = subprocess.Popen(argv, **kwargs)
     state = None
-    for _ in range(20):          # let the child record its own pid so we report a real one
+    for _ in range(80):          # import + first write can take >5s on a cold interpreter
         time.sleep(0.25)
         alive, state = daemon.running()
         if alive and state is not None:
