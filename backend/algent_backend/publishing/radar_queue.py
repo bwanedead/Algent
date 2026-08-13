@@ -29,6 +29,9 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any, Literal
 
+from algent_backend.agent_system.agents.radar.contracts import body_key
+from algent_backend.agent_system.runs.control_plane.fsio import atomic_write_text
+
 #: Minimum gap between posts, in minutes.
 _SPACING_MIN = 30
 #: Jitter so a drained backlog does not go out on a metronome, which reads as automation.
@@ -44,7 +47,7 @@ def queue_path() -> Path:
 
 @dataclass
 class RadarPost:
-    """One queued post. ``key`` is the dedup identity — the t0 item it came from."""
+    """One queued post. Dedup is source ``key`` AND tweet body — two wires can name one event."""
 
     key: str
     text: str
@@ -82,11 +85,8 @@ def load(path: Path | None = None) -> list[RadarPost]:
 
 def save(posts: list[RadarPost], path: Path | None = None) -> None:
     p = path or queue_path()
-    p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(
-        "\n".join(json.dumps(asdict(post), ensure_ascii=False) for post in posts) + "\n",
-        encoding="utf-8",
-    )
+    body = "\n".join(json.dumps(asdict(post), ensure_ascii=False) for post in posts) + "\n"
+    atomic_write_text(p, body)
 
 
 def schedule(
@@ -117,19 +117,50 @@ def schedule(
     return scheduled
 
 
+def remembered_bodies(posts: list[RadarPost] | None = None) -> set[str]:
+    """Bodies we must not send again.
+
+    Posted rows are the honest memory. A 403 duplicate skip is the same fact: X already
+    has the sentence, even if we never recorded a URL (crash between accept and mark).
+    """
+    out: set[str] = set()
+    for post in (posts if posts is not None else load()):
+        if not post.text:
+            continue
+        if post.status == "posted":
+            out.add(body_key(post.text))
+        elif post.status == "skipped":
+            note = (post.note or "").lower()
+            if "duplicate content" in note or "already said" in note:
+                out.add(body_key(post.text))
+    return out
+
+
+def already_said(text: str, posts: list[RadarPost] | None = None) -> bool:
+    fp = body_key(text)
+    return bool(fp) and fp in remembered_bodies(posts)
+
+
 def enqueue(new: list[RadarPost], *, path: Path | None = None,
             now: datetime | None = None) -> tuple[list[RadarPost], list[RadarPost]]:
-    """Add posts, dropping any whose ``key`` we have already queued. Returns (added, duplicates).
+    """Add posts, dropping any whose source key OR tweet body we already have.
 
-    Dedup is by source key rather than text: the same t0 item can be phrased two ways across
-    sweeps, and posting it twice is the failure, not the wording.
+    Key catches the same t0 item phrased two ways. Body catches two wires that
+    enriched into the same sentence — which is what X rejects as duplicate content.
     """
     existing = load(path)
-    seen = {p.key for p in existing if p.key}
+    seen_keys = {p.key for p in existing if p.key}
+    seen_bodies = {body_key(p.text) for p in existing if p.text}
     added, dupes = [], []
     for post in new:
-        (dupes if post.key in seen else added).append(post)
-        seen.add(post.key)
+        fp = body_key(post.text) if post.text else ""
+        if post.key in seen_keys or (fp and fp in seen_bodies):
+            dupes.append(post)
+            continue
+        added.append(post)
+        seen_keys.add(post.key)
+        if fp:
+            seen_bodies.add(fp)
     if added:
         schedule(added, existing, now=now)
         save(existing + added, path)

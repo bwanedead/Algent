@@ -39,8 +39,8 @@ def test_a_second_sweep_does_not_interleave_into_the_first_one_s_gaps(tmp_path) 
 
 
 def test_the_same_source_item_is_never_queued_twice(tmp_path) -> None:
-    """Dedup is by SOURCE key, not text: pools are reused across runs, and the same item
-    phrased two ways is still the same item posted twice."""
+    """Same t0 key is one post even if the wording changed. Body identity is a second gate
+    (see test_the_same_sentence_is_never_queued_from_a_second_wire)."""
     path = tmp_path / "q.jsonl"
     q.enqueue([_post("quake-7-6")], path=path)
 
@@ -49,6 +49,39 @@ def test_the_same_source_item_is_never_queued_twice(tmp_path) -> None:
 
     assert added == [] and len(dupes) == 1
     assert len(q.load(path)) == 1
+
+
+def test_the_same_sentence_is_never_queued_from_a_second_wire(tmp_path) -> None:
+    """X duplicates on the tweet body. Two t0 keys that enrich to the same sentence
+    are one post, not two — source-key-only dedup is how Fort Hood retried forever."""
+    path = tmp_path / "q.jsonl"
+    q.enqueue([q.RadarPost(key="wire-a", text="Radar: Fort Hood helicopter crash.")], path=path)
+    added, dupes = q.enqueue(
+        [q.RadarPost(key="wire-b", text="fort hood helicopter crash.")],
+        path=path,
+    )
+    assert added == [] and len(dupes) == 1
+    assert len(q.load(path)) == 1
+
+
+def test_already_said_covers_posted_and_x_duplicate_skips(tmp_path) -> None:
+    path = tmp_path / "q.jsonl"
+    posted = q.RadarPost(key="a", text="Radar: the thing happened.")
+    q.enqueue([posted], path=path)
+    q.mark(q.load(path)[0].id, status="posted", url="https://x.test/1", path=path)
+
+    assert q.already_said("the thing happened.", posts=q.load(path))
+    assert q.already_said("Radar: THE THING HAPPENED.", posts=q.load(path))
+    assert not q.already_said("a different event entirely.", posts=q.load(path))
+
+    skip = q.RadarPost(
+        key="b",
+        text="Radar: already on the timeline.",
+        status="skipped",
+        note='403 duplicate content',
+    )
+    q.save(q.load(path) + [skip], path)
+    assert q.already_said("already on the timeline.", posts=q.load(path))
 
 
 def test_only_what_is_due_drains_and_posting_is_recorded(tmp_path) -> None:

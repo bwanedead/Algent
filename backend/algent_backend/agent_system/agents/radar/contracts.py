@@ -45,6 +45,17 @@ def stamp(text: str) -> str:
     return RADAR_PREFIX + body
 
 
+def body_key(text: str) -> str:
+    """Identity of the tweet we actually send, independent of which wire it came from.
+
+    Source keys differ across rewrites of the same event; X duplicates on the sentence.
+    Prefix peeling matches ``stamp``, so a queued row and the bytes on the wire compare equal.
+    """
+    stamped = stamp(text)
+    body = stamped[len(RADAR_PREFIX):] if stamped.startswith(RADAR_PREFIX) else stamped
+    return " ".join(body.casefold().split())
+
+
 class RadarPost(BaseModel):
     """One post: what happened, and the clause that makes it mean something.
 

@@ -28,7 +28,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from algent_backend.agent_system.agents.radar.contracts import stamp
+from algent_backend.agent_system.agents.radar.contracts import body_key, stamp
 from algent_backend.agent_system.agents.radar.enrich import enrich
 from algent_backend.agent_system.agents.radar.review import HISTORY_DAYS, review_queue
 from algent_backend.agent_system.agents.radar.sweep import sweep_pool
@@ -252,13 +252,20 @@ def run_drain(args: Any) -> int:
         return 1
 
     sent, failed = [], []
+    said = q.remembered_bodies()
     for item in batch:
+        if _skip_already_said(item, said):
+            failed.append({"id": item.id, "error": "already said — skipped"})
+            continue
         try:
             result = post(stamp(item.text))
         except XWriteError as exc:
             if _duplicate_content(exc):
                 q.mark(item.id, status="skipped", note=str(exc)[:200])
                 failed.append({"id": item.id, "error": "duplicate on X — skipped"})
+                fp = body_key(item.text)
+                if fp:
+                    said.add(fp)
                 continue
             # Leave it QUEUED: a transient refusal should be retried on the next drain, not
             # silently dropped. Only a hard rejection of the text itself is worth burning.
@@ -267,6 +274,9 @@ def run_drain(args: Any) -> int:
             break  # one failure usually means all of them will fail; stop spending
         q.mark(item.id, status="posted", url=result.url)
         sent.append({"id": item.id, "url": result.url, "text": item.text})
+        fp = body_key(item.text)
+        if fp:
+            said.add(fp)
 
     _print({"posted": sent, "failed": failed, **q.summary()})
     return 0 if not failed else 1
@@ -716,6 +726,20 @@ def _log_release(outcome: str, url: str, next_post: datetime, nxt: datetime | No
         daemon.log(f"nothing due yet - next queued post at {nxt.strftime('%H:%M')}Z")
 
 
+_ALREADY_SAID_NOTE = (
+    "already said (same body as a post that went out or that X already has)"
+)
+
+
+def _skip_already_said(item: Any, said: set[str]) -> bool:
+    """True if this sentence already went out (or X already has it). Marks skipped."""
+    fp = body_key(item.text)
+    if fp and fp in said:
+        q.mark(item.id, status="skipped", note=_ALREADY_SAID_NOTE)
+        return True
+    return False
+
+
 def _duplicate_content(exc: BaseException) -> bool:
     """X already has this text. Retrying it forever parks the whole queue behind one item."""
     return "duplicate content" in str(exc).lower()
@@ -738,7 +762,11 @@ def _release_one(state: daemon.DaemonState) -> tuple[str, str]:
     if not write_configured():
         return "", "unconfigured"
     ready = sorted(q.due(), key=lambda p: p.scheduled_for or "")
+    said = q.remembered_bodies()
     for item in ready:
+        if _skip_already_said(item, said):
+            daemon.log(f"post skipped (already said): {item.id} {item.text[:80]}")
+            continue
         try:
             result = post(stamp(item.text))
         except XWriteError as exc:
@@ -747,6 +775,9 @@ def _release_one(state: daemon.DaemonState) -> tuple[str, str]:
                 daemon.log(
                     f"post skipped (X already has this text): {item.id} {item.text[:80]}"
                 )
+                fp = body_key(item.text)
+                if fp:
+                    said.add(fp)
                 continue
             q.mark(item.id, status="queued", note=str(exc)[:200])
             state.errors.append(f"{datetime.now(UTC).isoformat()} post: {str(exc)[:160]}")

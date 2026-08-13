@@ -133,6 +133,7 @@ def test_duplicate_content_is_skipped_so_the_queue_can_move(monkeypatch) -> None
     monkeypatch.setattr(cli, "write_configured", lambda: True)
     monkeypatch.setattr(cli, "_review_if_stale", lambda: [])
     monkeypatch.setattr(cli.q, "due", lambda: list(items))
+    monkeypatch.setattr(cli.q, "remembered_bodies", lambda: set())
 
     def mark(pid: str, **kw):
         marked.append((pid, str(kw.get("status"))))
@@ -152,6 +153,44 @@ def test_duplicate_content_is_skipped_so_the_queue_can_move(monkeypatch) -> None
     url, outcome = cli._release_one(_state(1))
     assert outcome == "posted" and url == "https://x.test/1"
     assert marked == [("a", "skipped"), ("b", "posted")]
+
+
+def test_already_said_is_skipped_before_calling_x(monkeypatch) -> None:
+    """Do not ask X whether we posted this. The queue file is the memory."""
+    from algent_backend.agent_system.agents.radar.contracts import body_key
+    from algent_backend.cli.newsroom import radar as cli
+    from algent_backend.publishing import radar_queue as rq
+    from algent_backend.publishing.x_client import Posted
+
+    items = [
+        rq.RadarPost(id="a", key="a", text="Radar: already said", status="queued",
+                     scheduled_for="2026-08-13T00:00:00+00:00"),
+        rq.RadarPost(id="b", key="b", text="Radar: new fact", status="queued",
+                     scheduled_for="2026-08-13T00:01:00+00:00"),
+    ]
+    marked: list[tuple[str, str]] = []
+    monkeypatch.setattr(cli, "write_configured", lambda: True)
+    monkeypatch.setattr(cli, "_review_if_stale", lambda: [])
+    monkeypatch.setattr(cli.q, "due", lambda: list(items))
+    monkeypatch.setattr(cli.q, "remembered_bodies", lambda: {body_key("Radar: already said")})
+
+    def mark(pid: str, **kw):
+        marked.append((pid, str(kw.get("status"))))
+        if kw.get("status") == "skipped":
+            items[:] = [p for p in items if p.id != pid]
+
+    monkeypatch.setattr(cli.q, "mark", mark)
+    calls: list[str] = []
+
+    def fake_post(text: str, **k):
+        calls.append(text)
+        return Posted(id="1", text=text, url="https://x.test/1")
+
+    monkeypatch.setattr(cli, "post", fake_post)
+    url, outcome = cli._release_one(_state(1))
+    assert outcome == "posted" and url == "https://x.test/1"
+    assert marked == [("a", "skipped"), ("b", "posted")]
+    assert calls == ["Radar: new fact"]
 
 
 def test_an_empty_release_tick_does_not_burn_a_tempo_slot() -> None:
