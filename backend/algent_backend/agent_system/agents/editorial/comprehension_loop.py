@@ -53,21 +53,8 @@ def _message(draft: ArticleDraft, places: list[str] | None = None) -> str:
     return "\n\n".join(x for x in (
         f"TITLE: {draft.title}", f"STANDFIRST: {draft.standfirst}", draft.body.strip(),
         flags_block,
-        "TASK: Read this as its intended general reader (cold, not following the story day to day). "
-        "Report only where you genuinely stumbled. If it does not land, emit the next draft in "
-        "title/standfirst/body — same facts, digestible grain, no new claims. Leave those empty "
-        "when clear.\n"
-        "FRIEND TEST (required): After reading, could you explain to a friend — using only this "
-        "prose — (1) what happened / was found, (2) why it matters, (3) what the underlying "
-        "dispute/situation is, (4) who wants what, (5) what remains open? If you only hold vague "
-        "residue, that is needs_ramp: flag missing_news_kernel / vague_conflict / missing_scene "
-        "/ assumed_context / opening_order as fits, and write the piece that would pass.\n"
-        "Also flag jargon_before_gloss, unclear_causal_chain, method_before_payoff, lecture, "
-        "wall_of_text, "
-        "and announced_importance machine-slop ('That first fact matters because…', "
-        "'this sets the frame', 'put plainly') — cut those in the rewrite.\n"
-        "If the friend test passes and it reads clearly, return 'clear' with no findings and "
-        "empty title/standfirst/body.",
+        "TASK: Read this cold. If it does not land, emit the next draft in title/standfirst/body "
+        "(same facts, digestible grain, no new claims). Leave those empty when clear.",
     ) if x)
 
 

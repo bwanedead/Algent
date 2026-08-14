@@ -69,10 +69,12 @@ def test_reviewer_is_shown_prose_only_never_the_evidence() -> None:
     cl.build_comprehension_reviewer_graph(_ctx(_Model(ComprehensionCheck(id="", verdict="clear")), []),
                                           model_spec=_SPEC).invoke({"draft": _draft().model_dump()})
     shown = _Structured.last_message[1].content   # the HumanMessage
+    system = _Structured.last_message[0].content
     assert "LDL-C" in shown and "clm_" not in shown and "grounding" not in shown and "treatment" not in shown
-    # friend-test + next-draft brief are part of the cold-read (not optional flavor)
-    assert "FRIEND TEST" in shown and "next draft" in shown
-    assert "announced_importance" in shown
+    assert "next draft" in shown
+    # Friend-test lives on the role; the defect catalog lives on the register — not restated in TASK.
+    assert "FRIEND TEST" in system and "announced importance" in system
+    assert "sends the piece back" not in system
 
 
 def test_vague_conflict_and_announced_importance_kinds_are_valid() -> None:

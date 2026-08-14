@@ -32,7 +32,7 @@ from .comprehension_spec import build_graph as build_comprehension_reviewer
 from .draft import ArticleDraft
 from .draft_gauntlet import build_drafting_gauntlet_graph
 from .draft_spec import build_graph as build_drafter
-from .draft_store import render_draft
+from .draft_store import JsonDraftStore, render_draft
 from .gauntlet import build_planning_gauntlet_graph
 from .headline_spec import build_graph as build_headline_writer
 from .hero_stage import hero_enabled, is_quota_skip, make_hero
@@ -445,9 +445,8 @@ def _post_draft_quality(
 
     assigned_places = _derive_places(profile)
     if budget_policy.allow_optional("comprehension_repair"):
-        draft, profile, comprehension, comprehension_rounds = _comprehension_pass(
-            context, config, draft=draft, profile=profile,
-            places=assigned_places)
+        draft, comprehension, comprehension_rounds = _comprehension_pass(
+            context, config, draft=draft, places=assigned_places)
     else:
         comprehension, comprehension_rounds = {}, 0
 
@@ -565,6 +564,11 @@ def _persist_pipeline_artifacts(
     # then dying with the process — the ledger on disk never gained it, and nothing downstream
     # (a confirmation lap, a later story on the same subject) could ever see it.
     context.artifacts.write_json("profile.json", profile_obj.model_dump())
+    # Same home as article.md: the shipped draft, including any gate-C rewrite.
+    # draft.json used to stay first-pass (drafter/gauntlet), so social copy and
+    # resume hydration could announce the pre-rewrite dek.
+    context.artifacts.write_json("draft.json", draft_obj.model_dump())
+    JsonDraftStore().save(draft_obj)
     context.artifacts.write_text(
         "article_published.md",
         render_published_article(draft_obj, profile_obj, analytics))
@@ -842,9 +846,9 @@ def _derive_places(profile: dict[str, Any]) -> list[str]:
 
 def _comprehension_pass(
     context: AgentRunContext, config: RunnableConfig, *,
-    draft: dict[str, Any], profile: dict[str, Any],
+    draft: dict[str, Any],
     places: list[str] | None = None,
-) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], int]:
+) -> tuple[dict[str, Any], dict[str, Any], int]:
     """The review stage: read the finished prose COLD, rewrite it, bounded.
 
     The sequence is **draft → review(+rewrite) → review(+rewrite) → publish**. Two reads.
@@ -881,7 +885,7 @@ def _comprehension_pass(
 
     if drops:
         review = {**review, "places_to_drop": drops}
-    return draft, profile, review, reviews
+    return draft, review, reviews
 
 
 def _apply_reader_draft(

@@ -75,23 +75,10 @@ class ComprehensionFinding(BaseModel):
         "wall_of_text",         # long uninterrupted prose with no headings / figures / breaks
         "other",
     ] = "other"
-    where: str = ""            # a short quote / locator so the fix is targeted, not a rewrite
-    issue: str = ""            # what breaks for the reader here
-    # Mostly HANDHOLD-or-CUT — a one-clause plain-language ramp, a real transition onto the
-    # through-line, or removal. NEVER "assert more" or "add detail everywhere".
-    #
-    # ``rewrite_for_reader`` exists because handhold-or-cut cannot repair the most common defect
-    # we ship. A sentence written from our vantage — an opening that rebuts a source the reader
-    # never saw, a paragraph that justifies why an item is in the piece, our own research state
-    # narrated as prose — is not missing a handhold and is not merely cuttable: the information
-    # is wanted, the framing is wrong. It has to be said again from the reader's side, with the
-    # same facts. Without this option the reviewer could only ask for a ramp onto a sentence
-    # that should not have been phrased that way, which is why two repair laps changed nothing.
-    #
-    # ``reorder`` is the fix for a buried point or a rough seam, and it is the cheapest repair
-    # in the system: the material is already in the piece and in the right words, just in the
-    # wrong place. Naming it separately matters because the alternative repairs all ADD text,
-    # and reaching for those when the real defect is sequence is how a piece gets padded.
+    where: str = ""            # locator on the prior draft — audit trail, not a patch instruction
+    issue: str = ""            # what broke for the reader here
+    # Kind of change made in the rewrite (or why the page could not support one).
+    # Never "assert more" or "add detail everywhere".
     fix: Literal[
         "add_handhold", "connect_to_thread", "cut", "rewrite_for_reader", "reorder",
     ] = "add_handhold"
@@ -117,7 +104,7 @@ class ComprehensionCheck(BaseModel):
     #: The reviewer is the right place for this call: flags are assigned from the profile's
     #: declared geography, which is decided before anyone has read the finished prose, so
     #: nothing upstream can know whether the article actually accounts for a country. Dropping
-    #: a flag is the alternative to sending the piece back — see ``unjustified_flag``.
+    #: a flag is the alternative to earning it in the rewrite — see ``unjustified_flag``.
     places_to_drop: list[str] = Field(default_factory=list)
     reviewer: str = ""
     model: str = ""

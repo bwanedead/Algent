@@ -195,7 +195,6 @@ def publish_run(
             # in the wrong place.
             why = {
                 "needs_hedging": "the prose does not keep a promise the caveat pass flagged",
-                "needs_ramp": "a general reader could not follow it, and the repair lap did not fix it",
                 "needs_revision": "the body collapsed below publishable length",
             }.get(status, "it did not earn publishable")
             reason = f"status is '{status or 'unknown'}', not publishable — {why}"

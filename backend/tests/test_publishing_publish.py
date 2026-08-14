@@ -182,8 +182,9 @@ def test_missing_artifacts_is_a_clean_error(tmp_path: Path) -> None:
     assert r.action == "error"
 
 
-def test_a_needs_ramp_piece_is_held_and_says_why() -> None:
-    """Held pieces are triaged by a human; blaming the caveat lane sends them to the wrong place."""
+def test_a_non_publishable_status_is_held() -> None:
+    """The publisher hold queue is keyed off status != publishable. Gate C no longer
+    emits needs_ramp as a status — remaining comprehension issues ship on the report."""
     from algent_backend.publishing.publish import _PUBLISHABLE
 
     assert _PUBLISHABLE == "publishable"     # anything else routes to the held queue

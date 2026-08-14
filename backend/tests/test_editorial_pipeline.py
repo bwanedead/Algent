@@ -677,19 +677,54 @@ def test_a_bad_writer_subject_falls_back_before_spend(monkeypatch) -> None:
     assert any("falling back" in n or "rejected" in n for n in notes)
 
 
-def test_needs_ramp_after_repair_holds_instead_of_publishing() -> None:
-    """Comprehension is the one gate that speaks for the reader rather than for accuracy.
-    It used to be advisory, and two science pieces went live that the reviewer had already
-    said a general reader could not follow."""
+def test_needs_ramp_rides_on_the_report_and_does_not_hold_publish() -> None:
+    """Gate C is advisory: the pipeline never emits status=needs_ramp. A remaining
+    comprehension verdict ships as publishable, with the verdict on the report."""
     from algent_backend.agent_system.agents.editorial.pipeline_contracts import (
         EditorialPipelineReport,
     )
 
-    # The gate itself is a status branch; assert the contract can carry the verdict and that
-    # the publisher treats anything non-publishable as held (see test_publishing_publish).
-    r = EditorialPipelineReport(status="needs_ramp", comprehension_verdict="needs_ramp")
-    assert r.publishable is False
-    assert r.status == "needs_ramp"
+    r = EditorialPipelineReport(
+        status="publishable", publishable=True, comprehension_verdict="needs_ramp")
+    assert r.publishable is True
+    assert r.comprehension_verdict == "needs_ramp"
+
+
+def test_persist_writes_the_shipped_draft_json(monkeypatch) -> None:
+    """draft.json must be the piece that ships, not the first-pass gauntlet snapshot."""
+    written: dict = {}
+
+    class _Arts:
+        def write_json(self, name, payload):
+            written[name] = payload
+
+        def write_text(self, name, _text):
+            written[name] = True
+
+    class _Store:
+        def save(self, draft):
+            written["store_id"] = draft.id
+
+    monkeypatch.setattr(pl.ArticleDraft, "model_validate", staticmethod(
+        lambda d: type("D", (), {"model_dump": lambda self: d, "id": d.get("id", "")})()))
+    monkeypatch.setattr(pl.SignalProfile, "model_validate", staticmethod(
+        lambda p: type("P", (), {"model_dump": lambda self: p})()))
+    monkeypatch.setattr(pl, "render_published_article", lambda *a, **k: "")
+    monkeypatch.setattr(pl, "render_draft", lambda *a, **k: "")
+    monkeypatch.setattr(pl, "JsonDraftStore", _Store)
+    ctx = AgentRunContext(
+        run_id="t", model_resolver=object(),  # type: ignore[arg-type]
+        emit=lambda *a, **k: None, artifacts=_Arts(),  # type: ignore[arg-type]
+    )
+    pl._persist_pipeline_artifacts(
+        ctx,
+        draft={"id": "d1", "title": "rewritten", "standfirst": "new dek"},
+        profile={}, analytics=[],
+        report=pl.EditorialPipelineReport(status="publishable", publishable=True),
+    )
+    assert written["draft.json"]["title"] == "rewritten"
+    assert written["draft.json"]["standfirst"] == "new dek"
+    assert written["store_id"] == "d1"
 
 
 def _counting(*outs):
@@ -711,14 +746,14 @@ def _long(n: int = 200) -> str:
     return " ".join(["word"] * n)
 
 
-def _wire_review(monkeypatch, reviewer, drafter=None):
+def _wire_review(monkeypatch, reviewer):
     body = _long()
     _wire(monkeypatch, {"treatment": {"id": "t"}, "gauntlet": {}},
           {"draft": {"id": "d", "title": "t", "body": body, "word_count": 200},
            "gauntlet": {"outcome": "grounded"}},
           {"caveat_check": {"verdict": "verified"}})
     monkeypatch.setattr(pl, "build_comprehension_reviewer", lambda ctx: reviewer)
-    monkeypatch.setattr(pl, "build_drafter", drafter or _never_drafter)
+    monkeypatch.setattr(pl, "build_drafter", _never_drafter)
     return pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile("p")})["pipeline"]
 
 

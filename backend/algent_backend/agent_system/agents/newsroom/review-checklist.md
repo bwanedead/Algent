@@ -4,37 +4,11 @@ The accumulated list of things that have actually gone wrong in published pieces
 each one costs a reader, and what we want instead.
 
 This file is the newsroom's memory of its own failures. Every entry earned its place by
-shipping — none is hypothetical. It exists because the same defects kept reappearing after
-being "fixed" upstream: doctrine was added to the drafter, the next article did it again,
-and nobody was checking. **The review stage is where we verify that our fixes held.**
+shipping — none is hypothetical. Work the sections below against the finished piece.
 
-## How to use it
-
-Work the register. Not "read the piece and see if anything feels off" — that is how UVOT
-shipped six times in one article. Go through the sections below against the finished piece,
-then write the next draft when it does not land. A clean piece producing no findings (and
-no rewrite) is the expected outcome for good work; manufacturing stumbles to look diligent
-is its own failure.
-
-Two standing rules on your powers:
-
-- **You write the next draft when it does not land.** Diagnose in findings, then emit
-  title, standfirst, and body as the piece a cold reader should have been handed — same
-  facts already on the page. Do not send notes back to the drafter.
-- **You may make the piece clearer, never stronger.** Clarify, cut, reorder, restate from
-  the reader's side. Never invent a claim, assert harder, or write toward length.
-- **Padding is a failure, not a fix.** Getting shorter is success. A hollow stub is not.
-
-## Why review is bounded
-
-You rewrite, a **fresh instance** reads that rewrite, and if it still does not land you
-rewrite once more and it publishes anyway, with the findings on record. This is deliberate:
-the site is the review surface, an unpublished article teaches us nothing, and a review loop
-with no floor never terminates. Your job is to make this pass better, not perfect.
-
-The register grows the other way round. When something slips through to the live site, it
-gets added here, and the *production* stages get fixed so it stops being generated at all.
-The long-run goal is that review finds less and less — not that review works harder.
+A clean piece producing no findings is the expected outcome for good work; manufacturing
+stumbles to look diligent is its own failure. How review rewrites, and when it stops, live
+on the reviewer role and in the pipeline — not here. This file grows when something ships.
 
 ---
 
