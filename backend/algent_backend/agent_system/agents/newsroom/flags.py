@@ -37,6 +37,13 @@ BRIEFING_SPACING_MIN = 90
 #: portfolio — a full 40-vector menu would otherwise occupy the timeline all day.
 BRIEFING_MAX_CLUSTERS = 6
 
+INSIGHT_ENABLED = True
+#: Hours-scale, not Radar tempo. A figure is supposed to linger.
+INSIGHT_SPACING_MIN = 180
+#: How often the supervisor may commission a new figure when the queue is thin.
+INSIGHT_COMPOSE_EVERY_MIN = 240
+
+
 # Structured final portfolio needs room: ~400 output tokens/vector is a safe
 # planning figure (title+thesis+rationale+questions+sources). Default ReAct
 # ceiling (4k) silently truncates larger portfolios into empty ``vectors``.
@@ -48,6 +55,7 @@ _SYNTHESIS_OUTPUT_CEILING = 32_768
 
 _SYNTHESIS_ENV = "ALGENT_SYNTHESIS"
 _BRIEFING_ENV = "ALGENT_BRIEFING"
+_INSIGHT_ENV = "ALGENT_INSIGHT"
 _FALSEY = ("0", "false", "no", "off")
 
 
@@ -95,3 +103,18 @@ def briefing_spacing_min() -> int:
 
 def briefing_max_clusters() -> int:
     return max(1, int(BRIEFING_MAX_CLUSTERS))
+
+
+def insight_enabled() -> bool:
+    raw = os.environ.get(_INSIGHT_ENV)
+    if raw is not None and raw.strip() != "":
+        return raw.strip().lower() not in _FALSEY
+    return bool(INSIGHT_ENABLED)
+
+
+def insight_spacing_min() -> int:
+    return max(30, int(INSIGHT_SPACING_MIN))
+
+
+def insight_compose_every_min() -> int:
+    return max(30, int(INSIGHT_COMPOSE_EVERY_MIN))

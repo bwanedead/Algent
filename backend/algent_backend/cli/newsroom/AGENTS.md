@@ -34,6 +34,7 @@ Do **not** remake synthesis just to re-pick. Freeze the portfolio path (or use `
 - **Resume a failed rail:** `newsroom resume` (newest unfinished) or `--run <id|dir>`. Assesses artifacts and continues from the next unpaid stage **in the same run** — does not re-buy a draft, profile, or figure that is already on disk. `--from editorial` (etc.) forces a redo from that stage. `--dry-run` prints the plan. Shipping always goes through the rail (skipped stages stay skipped).
 - **Radar on/off:** `newsroom radar start` / `newsroom radar stop` — one background supervisor (discovery + Radar posts). Closing the laptop ends it; the queue stays on disk.
 - **Briefing on/off:** `newsroom briefing start` / `newsroom briefing stop` — same supervisor, not a second process. Stop pauses only the roundup lane.
+- **Insight on/off:** `newsroom insight start` / `newsroom insight stop` — figure-first chart/GIF posts, same supervisor. Stop pauses only that lane.
 
 These three `--from` flags are **not** the same contract:
 
@@ -45,9 +46,9 @@ These three `--from` flags are **not** the same contract:
 
 ## Operator defaults (not `.env`)
 
-`agent_system/agents/newsroom/flags.py`: `SYNTHESIS_ENABLED`, `SYNTHESIS_TARGET_VECTORS`, and
-`synthesis_max_output_tokens()` (scales with the target so large portfolios are not truncated
-into empty `vectors`). Agents edit that file — not `.env`.
+`agent_system/agents/newsroom/flags.py`: `SYNTHESIS_ENABLED`, `SYNTHESIS_TARGET_VECTORS`,
+`BRIEFING_ENABLED`, `INSIGHT_ENABLED`, and `synthesis_max_output_tokens()`. Agents edit that
+file — not `.env`.
 
 ## Single-flight (do not overlap rails)
 

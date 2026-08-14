@@ -1,0 +1,120 @@
+"""Figure-first insight lane — not Radar, not a briefing collage."""
+
+from __future__ import annotations
+
+from datetime import UTC, datetime, timedelta
+from types import SimpleNamespace
+
+from algent_backend.agent_system.agents.insight.contracts import (
+    Critique,
+    InsightSpec,
+    apply_critique,
+    spec_key,
+)
+from algent_backend.agent_system.agents.insight.copy import format_copy
+from algent_backend.agent_system.agents.insight.critique import mechanical_ok
+from algent_backend.publishing import insight_queue as q
+from algent_backend.publishing.insight_engagement import tweet_id_from_url
+
+
+def _bars() -> InsightSpec:
+    return InsightSpec(
+        beat="ai_power",
+        form="takeaway_bars",
+        takeaway="Amazon's Texas campus is 7.65 GW of private generation",
+        unit="GW",
+        highlight="Amazon Texas",
+        rows=[
+            {"label": "Amazon Texas", "value": 7.65},
+            {"label": "Large US nuclear plant", "value": 1.2},
+            {"label": "Austin peak load", "value": 2.9},
+        ],
+        source_name="EPA permit",
+        source_url="https://example.org/permit",
+        as_of="2026-08-13",
+        warranted=True,
+    )
+
+
+def test_copy_is_the_takeaway_then_the_source() -> None:
+    text = format_copy(_bars())
+    assert text.startswith("Amazon's Texas campus is 7.65 GW")
+    assert "https://example.org/permit" in text
+    assert "Radar:" not in text
+
+
+def test_thin_specs_are_abandoned_before_the_model() -> None:
+    assert mechanical_ok(InsightSpec(beat="chips", warranted=False)) == "not warranted"
+    empty = InsightSpec(beat="chips", takeaway="hello", warranted=True,
+                        source_url="https://x.test", rows=[{"label": "a", "value": 1}])
+    assert "two rows" in mechanical_ok(empty)
+
+
+def test_a_fix_rewrites_the_title_not_the_numbers() -> None:
+    spec = _bars()
+    out = apply_critique(spec, Critique(verdict="fix", takeaway="The campus is six nuclear plants"))
+    assert out.takeaway.startswith("The campus")
+    assert out.rows == spec.rows
+
+
+def test_the_same_takeaway_is_not_queued_twice(tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr(q, "queue_path", lambda: tmp_path / "i.jsonl")
+    now = datetime(2026, 8, 13, 12, 0, tzinfo=UTC)
+    spec = _bars()
+    post = q.InsightPost(key=spec_key(spec), beat=spec.beat, form=spec.form,
+                         text=format_copy(spec), takeaway=spec.takeaway)
+    added, dupes = q.enqueue([post], now=now)
+    assert len(added) == 1 and dupes == []
+    again, dupes2 = q.enqueue([
+        q.InsightPost(key=spec_key(spec), beat=spec.beat, form=spec.form, text="other"),
+    ], now=now + timedelta(hours=4))
+    assert again == [] and len(dupes2) == 1
+
+
+def test_a_pause_file_turns_the_lane_off(tmp_path, monkeypatch) -> None:
+    from algent_backend.cli.newsroom import insight as ins
+
+    monkeypatch.setattr(q, "PAUSE_FILE", tmp_path / "insight.pause")
+    assert ins.lane_active() is True
+    q.request_pause()
+    assert q.paused() is True and ins.lane_active() is False
+    assert ins.daemon_tick() == ""
+    q.clear_pause()
+    assert ins.lane_active() is True
+
+
+def test_tweet_id_comes_off_the_status_url() -> None:
+    assert tweet_id_from_url("https://x.com/ohmegamonster/status/2087868377264169402") == (
+        "2087868377264169402")
+    assert tweet_id_from_url("") == ""
+
+
+def test_compose_does_not_queue_a_dropped_warrant(tmp_path, monkeypatch) -> None:
+    from algent_backend.cli.newsroom import insight as ins
+
+    monkeypatch.setattr(q, "queue_path", lambda: tmp_path / "i.jsonl")
+    monkeypatch.setattr(q, "images_dir", lambda: tmp_path / "img")
+    monkeypatch.setattr(ins, "produce", lambda **k: (
+        InsightSpec(beat="chips", warranted=False, note="thin"), "", ""))
+    added, note = ins.compose()
+    assert added == [] and "thin" in note
+    assert q.load() == []
+
+
+def test_insight_start_clears_pause_without_a_second_daemon(tmp_path, monkeypatch) -> None:
+    from algent_backend.cli.newsroom import insight as ins
+    from algent_backend.publishing import radar_daemon as d
+
+    monkeypatch.setattr(q, "PAUSE_FILE", tmp_path / "insight.pause")
+    q.request_pause()
+    spawned: list = []
+    monkeypatch.setattr(d, "running", lambda: (True, SimpleNamespace(pid=9)))
+    monkeypatch.setattr(
+        "algent_backend.cli.newsroom.radar.spawn_detached_loop",
+        lambda *a: spawned.append(a) or (1, SimpleNamespace(pid=9)),
+    )
+    assert ins.run_stop(None) == 0
+    assert q.paused() is True
+    assert ins.run_start(None) == 0
+    assert q.paused() is False
+    assert spawned == []

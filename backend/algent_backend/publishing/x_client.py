@@ -142,10 +142,12 @@ def billable_length(text: str) -> int:
 
 
 def upload_media(path: str | os.PathLike[str]) -> str:
-    """Upload an image and return the media_id the tweets endpoint expects.
+    """Upload an image or short GIF and return the media_id the tweets endpoint expects.
 
     X still takes image bytes on the v1.1 upload host; v2 create-post then attaches
     the id. A missing file or a non-image is a write error, not a silent skip.
+    GIF is the motion path (timeline autoplay). MP4 needs chunked INIT/APPEND/FINALIZE
+    and is not this helper.
     """
     import httpx
 
@@ -154,14 +156,16 @@ def upload_media(path: str | os.PathLike[str]) -> str:
         raise XWriteError(f"media file not found: {file_path}")
     suffix = file_path.suffix.lower()
     mime = {".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png",
-            ".webp": "image/webp"}.get(suffix)
+            ".webp": "image/webp", ".gif": "image/gif"}.get(suffix)
     if mime is None:
         raise XWriteError(f"unsupported media type: {file_path.suffix}")
 
+    params = {"media_category": "tweet_gif"} if suffix == ".gif" else None
     with file_path.open("rb") as fh:
         resp = httpx.post(
             _MEDIA_ENDPOINT,
-            headers={"Authorization": _auth_header("POST", _MEDIA_ENDPOINT)},
+            params=params,
+            headers={"Authorization": _auth_header("POST", _MEDIA_ENDPOINT, params=params)},
             files={"media": (file_path.name, fh, mime)},
             timeout=_MEDIA_TIMEOUT_S,
         )
@@ -214,3 +218,35 @@ def post(text: str, *, media_ids: list[str] | None = None,
     tid = str(data.get("id") or "")
     return Posted(id=tid, text=str(data.get("text") or text),
                   url=f"https://x.com/{handle}/status/{tid}")
+
+
+def tweet_public_metrics(ids: list[str]) -> list[dict[str, Any]]:
+    """Likes/replies/reposts for posted tweets. Impressions are often missing."""
+    import httpx
+
+    clean = [i for i in ids if i][:100]
+    if not clean or not write_configured():
+        return []
+    params = {"ids": ",".join(clean), "tweet.fields": "public_metrics,created_at"}
+    resp = httpx.get(
+        _TWEETS_ENDPOINT,
+        params=params,
+        headers={"Authorization": _auth_header("GET", _TWEETS_ENDPOINT, params=params)},
+        timeout=_TIMEOUT_S,
+    )
+    if resp.status_code not in (200, 201):
+        raise XWriteError(f"metrics fetch failed ({resp.status_code}): {resp.text[:200]}")
+    rows = []
+    for item in (resp.json() or {}).get("data") or []:
+        metrics = item.get("public_metrics") or {}
+        rows.append({
+            "tweet_id": str(item.get("id") or ""),
+            "created_at": str(item.get("created_at") or ""),
+            "likes": int(metrics.get("like_count") or 0),
+            "reposts": int(metrics.get("retweet_count") or 0),
+            "replies": int(metrics.get("reply_count") or 0),
+            "quotes": int(metrics.get("quote_count") or 0),
+            "bookmarks": int(metrics.get("bookmark_count") or 0),
+            "impressions": int(metrics.get("impression_count") or 0),
+        })
+    return rows

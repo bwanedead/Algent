@@ -12,4 +12,4 @@ Use from a scratch folder via the workspace venv::
 
 from __future__ import annotations
 
-__all__ = ["theme", "charts", "maps", "animate"]
+__all__ = ["theme", "charts", "maps", "animate", "insight"]

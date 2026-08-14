@@ -11,8 +11,8 @@ These tracked paths are **runtime dependencies** of every visual article, not op
 
 | Path | Role |
 |---|---|
-| `lib/__init__.py`, `lib/theme.py`, `lib/charts.py`, `lib/maps.py`, `lib/animate.py` | Canonical helpers the worker is instructed to import |
-| `scripts/setup_venv.ps1`, `scripts/download_basemap.py`, `scripts/smoke_test.py` | Reproducible stack setup + canary |
+| `lib/__init__.py`, `lib/theme.py`, `lib/charts.py`, `lib/maps.py`, `lib/animate.py`, `lib/insight.py` | Canonical helpers the worker (and the insight lane) import |
+| `scripts/setup_venv.ps1`, `scripts/download_basemap.py`, `scripts/smoke_test.py`, `scripts/draw_insight.py` | Reproducible stack setup + canary + insight draw |
 | `data/README.md` | Documents the Natural Earth basemap location |
 | `requirements.txt`, this `AGENTS.md`, `README.md` | Pins + doctrine |
 

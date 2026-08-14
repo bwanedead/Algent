@@ -576,6 +576,14 @@ def run_loop(args: Any) -> int:
             except Exception as exc:  # noqa: BLE001 — briefing must not take radar down
                 daemon.log(f"briefing tick failed (continuing): {str(exc)[:160]}")
 
+            try:
+                from algent_backend.cli.newsroom.insight import daemon_tick as insight_tick
+                note = insight_tick()
+                if note:
+                    daemon.log(note)
+            except Exception as exc:  # noqa: BLE001 — insight must not take radar down
+                daemon.log(f"insight tick failed (continuing): {str(exc)[:160]}")
+
             if _stale(state.last_discovery_at, args.discovery_every, now):
                 deferred = False
                 try:
