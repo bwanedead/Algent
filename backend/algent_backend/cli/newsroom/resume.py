@@ -107,9 +107,6 @@ def _continue_run(run: Path, progress: Any) -> int:
         return 1
 
     request = RunRequest.model_validate_json(paths.request_file.read_text(encoding="utf-8"))
-    # Replace artifact keys rather than merge. A prior continue wrote draft/treatment into
-    # request.json; merging would resurrect them after ``--from editorial`` dropped them.
-    kept = {k: v for k, v in request.input.items() if k not in ARTIFACT_STATE_KEYS}
     request = request.model_copy(update={
         "run_id": run_id,
         "input": inject_state(request.input, progress.state),

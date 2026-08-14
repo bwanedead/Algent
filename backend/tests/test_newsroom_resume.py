@@ -107,3 +107,30 @@ def test_resume_dry_run_prints_the_plan(tmp_path: Path, capsys, monkeypatch) -> 
     out = json.loads(capsys.readouterr().out)
     assert out["dry_run"] is True
     assert out["next_step"] == "publish"
+
+
+def test_continue_run_injects_profile_and_clears_done(tmp_path: Path, monkeypatch) -> None:
+    """A leftover NameError on ARTIFACT_STATE_KEYS aborted resume before the rail started."""
+    run = _run(tmp_path)
+    _write(run, "selected_vector.json", {"id": "v1"})
+    _write(run, "profile.json", {"id": "prof_1"})
+    (run / "request.json").write_text(json.dumps({
+        "agent_id": "newsroom_rail", "run_id": "deadbeef",
+        "input": {"portfolio": {"vectors": []}},
+    }), encoding="utf-8")
+    (run / "done.json").write_text("{}", encoding="utf-8")
+
+    class _Lock:
+        def __enter__(self):
+            return self
+        def __exit__(self, *_a):
+            return False
+
+    monkeypatch.setattr("algent_backend.cli.newsroom.single_flight.NewsroomRunLock", _Lock)
+    monkeypatch.setattr("algent_backend.cli.runs.exec_run.execute", lambda *_a, **_k: 0)
+
+    progress = pg.assess(run)
+    assert rs._continue_run(run, progress) == 0
+    assert not (run / "done.json").exists()
+    req = json.loads((run / "request.json").read_text(encoding="utf-8"))
+    assert req["input"]["profile"]["id"] == "prof_1"
