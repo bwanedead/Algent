@@ -109,6 +109,7 @@ def draw_payload(spec: InsightSpec, out: str) -> dict[str, Any]:
         "series": spec.series,
         "rows": draw_rows(spec),
         "source": spec.source_name,
+        "source_url": spec.source_url,
         "as_of": spec.as_of,
         "callout": spec.callout,
         "out": out,

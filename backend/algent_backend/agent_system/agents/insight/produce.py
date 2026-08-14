@@ -82,7 +82,7 @@ def produce(
         spec.warranted = False
         return spec, "", ""
 
-    dest = Path(dest)
+    dest = Path(dest).resolve()
     dest.mkdir(parents=True, exist_ok=True)
     suffix = ".gif" if spec.form == "growing_line_gif" else ".png"
     media = dest / f"chart{suffix}"
@@ -116,7 +116,7 @@ def draw_spec(
         return "draw_insight.py missing"
     try:
         proc = subprocess.run(
-            [str(py), str(script), str(spec_path)],
+            [str(py), str(script), str(Path(spec_path).resolve())],
             cwd=str(root),
             capture_output=True,
             text=True,
