@@ -177,7 +177,8 @@ def compose(*, dry_run: bool = False,
         state["last_beat"] = spec.beat
     q.write_state(state)
     if not spec.warranted or not text or not media:
-        if dest.exists():
+        # Keep spec.json when draw failed so we can see what the model asked for.
+        if dest.exists() and not (dest / "spec.json").is_file():
             shutil.rmtree(dest, ignore_errors=True)
         return [], spec.note or "not warranted"
     if dry_run:

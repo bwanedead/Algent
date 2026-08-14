@@ -9,6 +9,7 @@ from algent_backend.agent_system.agents.insight.contracts import (
     Critique,
     InsightSpec,
     apply_critique,
+    draw_rows,
     spec_key,
 )
 from algent_backend.agent_system.agents.insight.copy import format_copy
@@ -55,6 +56,17 @@ def test_a_fix_rewrites_the_title_not_the_numbers() -> None:
     out = apply_critique(spec, Critique(verdict="fix", takeaway="The campus is six nuclear plants"))
     assert out.takeaway.startswith("The campus")
     assert out.rows == spec.rows
+
+
+def test_bar_draw_rows_accept_x_and_y() -> None:
+    spec = InsightSpec(
+        form="takeaway_bars",
+        rows=[{"x": "Plant A", "y": 7.6}, {"label": "Plant B", "value": 1.2}],
+        warranted=True,
+    )
+    rows = draw_rows(spec)
+    assert rows[0] == {"label": "Plant A", "value": 7.6}
+    assert rows[1] == {"label": "Plant B", "value": 1.2}
 
 
 def test_muse_schema_forbids_open_row_objects() -> None:

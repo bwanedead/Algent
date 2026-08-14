@@ -52,7 +52,7 @@ def mechanical_ok(spec: InsightSpec) -> str:
 def _bars_ok(spec: InsightSpec) -> str:
     if len(spec.rows) > 8:
         return "too many bars"
-    if any(r.value is None for r in spec.rows):
+    if any((r.value if r.value is not None else r.y) is None for r in spec.rows):
         return "bars need numeric values"
     return ""
 

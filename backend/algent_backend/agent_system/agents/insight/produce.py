@@ -76,6 +76,12 @@ def produce(
         if again.verdict == "fix":
             spec = apply_critique(spec, again)
 
+    gate = mechanical_ok(spec)
+    if gate:
+        spec.note = spec.note or gate
+        spec.warranted = False
+        return spec, "", ""
+
     dest = Path(dest)
     dest.mkdir(parents=True, exist_ok=True)
     suffix = ".gif" if spec.form == "growing_line_gif" else ".png"
@@ -120,5 +126,5 @@ def draw_spec(
     except (OSError, subprocess.TimeoutExpired) as exc:
         return f"draw failed: {str(exc)[:140]}"
     if proc.returncode != 0:
-        return f"draw failed: {(proc.stderr or proc.stdout or '')[:160]}"
+        return f"draw failed: {(proc.stderr or proc.stdout or '')[-800:]}"
     return ""

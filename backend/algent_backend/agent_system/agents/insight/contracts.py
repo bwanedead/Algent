@@ -71,16 +71,30 @@ def spec_key(spec: InsightSpec) -> str:
 
 
 def draw_rows(spec: InsightSpec) -> list[dict[str, Any]]:
-    """Closed rows → the dicts ``lib.insight`` templates already draw."""
+    """Closed rows → the dicts ``lib.insight`` templates already draw.
+
+    Critique may change the form without rewriting cells, so bars also accept
+    x/y and lines also accept label/value.
+    """
     if spec.form == "takeaway_bars":
-        return [{"label": r.label, "value": r.value} for r in spec.rows]
+        out: list[dict[str, Any]] = []
+        for r in spec.rows:
+            val = r.value if r.value is not None else r.y
+            if val is None:
+                val = r.y2 if r.y2 is not None else r.y3
+            out.append({"label": (r.label or r.x).strip(), "value": val})
+        return out
     names = list(spec.series)
-    out: list[dict[str, Any]] = []
+    out = []
     for r in spec.rows:
         row: dict[str, Any] = {spec.x_key: r.x or r.label}
-        for name, val in zip(names, (r.y, r.y2, r.y3), strict=False):
-            if val is not None:
-                row[name] = val
+        ys = (r.y, r.y2, r.y3)
+        if names:
+            for name, val in zip(names, ys, strict=False):
+                if val is not None:
+                    row[name] = val
+        elif r.value is not None:
+            row[r.label or "value"] = r.value
         out.append(row)
     return out
 
