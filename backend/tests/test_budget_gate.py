@@ -210,6 +210,24 @@ def test_build_react_loop_accepts_gated_model_with_tools() -> None:
     assert "tools" in bound.kwargs
 
 
+def test_stream_react_loop_ends_cleanly_when_the_provider_rejects_the_request() -> None:
+    """A 400 is not a connection blip; the loop must stop without killing the caller."""
+    from algent_backend.agent_system.agents.loop import stream_react_loop
+
+    class BadRequestError(Exception):
+        status_code = 400
+
+    class _Agent:
+        def stream(self, *_a, **_k):
+            raise BadRequestError("invalid parameters")
+
+    events: list = []
+    ctx = type("C", (), {"emit": lambda self, et, p=None: events.append((et, p or {}))})()
+    out = stream_react_loop(_Agent(), {"messages": []}, context=ctx, config={})
+    assert out is None
+    assert any("provider rejected" in str((p or {}).get("content", "")) for _, p in events)
+
+
 def test_essential_draft_model_proceeds_in_slim_keyword_tool_refused() -> None:
     """Finish-path model turns stay authorized under slim; primary search does not.
 

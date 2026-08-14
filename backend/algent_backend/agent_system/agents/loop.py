@@ -21,6 +21,7 @@ from algent_backend.agent_system.foundation.models.budget_gate import (
     gate_chat_model,
     turn_essential_scope,
 )
+from algent_backend.agent_system.foundation.models.provider_errors import is_rejected_request
 from algent_backend.agent_system.runs.events import AGENT_STEP, COST_LIMIT_REACHED, TOOL_RESULT
 
 _STEP_EXCERPT_MAX_CHARS = 2000
@@ -149,6 +150,17 @@ def stream_react_loop(
                     break
     except BudgetRefusedError:
         _emit_cost_limit(context)
+    except Exception as exc:
+        # A 400 is the provider refusing this request body. The model never sees
+        # it, so it cannot adapt. End this loop with whatever was already produced
+        # rather than killing the rail that paid for the profile.
+        if not is_rejected_request(exc):
+            raise
+        context.emit(AGENT_STEP, {
+            "content": "provider rejected this turn (invalid or oversized request); "
+                       "ending the loop with whatever was already produced",
+            "tool_calls": [],
+        })
     return structured
 
 

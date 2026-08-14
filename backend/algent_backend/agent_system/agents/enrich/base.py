@@ -70,7 +70,16 @@ def build_enrich_graph(
             )
             captured = snapshots.collected()
             estimated_usd = cost.spent_usd()   # capture inside the scope (it resets on exit)
-        additions = produced if isinstance(produced, ProfileAdditions) else ProfileAdditions()
+        if not isinstance(produced, ProfileAdditions):
+            # Loop aborted (budget or a rejected request). Do not bump revision
+            # as if this lane ran — the model never finished additions.
+            context.emit(ENRICH_NO_WORK, {
+                "message": f"'{lane}' loop ended without additions",
+                "profile_id": profile.id,
+                "estimated_usd": estimated_usd,
+            })
+            return {"profile": profile.model_dump(), "addressed": []}
+        additions = produced
 
         before = (len(profile.source_ledger), len(profile.claim_ledger), len(profile.threads))
         merged = merge_additions(profile, additions, captured, generator=generator, stage=stage)

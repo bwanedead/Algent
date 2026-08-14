@@ -20,14 +20,19 @@ Capabilities, by parameter:
   people inside a story post there before the wires digest it), not a fallback for a failed read.
 
 Guardrails: ``max_results`` is hard-capped; ``rich`` and ``x`` require a
-deliberate choice; the read path stays free unless ``richness="rich"``. The usual
-flow is cheap: search for snippets, then ``read_url`` the one result worth the
-full read.
+deliberate choice; the read path stays free unless ``richness="rich"``. Search
+hits are clipped to snippets before they enter the conversation — engines that
+return a whole PDF in ``text`` otherwise 400 the next model turn and kill the
+rail. The usual flow is cheap: search for snippets, then ``read_url`` the one
+result worth the full read (full extraction is snapshotted; the model gets an
+excerpt).
 """
 
 from __future__ import annotations
 
 from typing import Any
+
+from algent_backend.agent_system.foundation.text_hygiene import scrub_text
 
 from ....foundation import cost, snapshots
 from ...spec import GLOBAL_SCOPE, ToolSpec
@@ -37,6 +42,11 @@ from . import circuit, policy
 WEB_SEARCH_TOOL_ID = "web_search"
 
 _MAX_RESULTS_CAP = 10  # hard ceiling so a call can't fan out into a credit drain
+#: Search is snippets. Exa (and some keyword engines) return the whole page in
+#: ``text``; five of those in one turn 400 the next model call and kill the rail.
+_SEARCH_SNIPPET_CHARS = 1_800
+#: Full extraction is snapshotted for grounding. The model only needs an excerpt.
+_READ_TO_MODEL_CHARS = 8_000
 
 
 def _denied(channel: str) -> dict[str, Any]:
@@ -218,6 +228,8 @@ def _read(url: str, *, rich: bool) -> dict[str, Any]:
     if result.get("content") and result.get("quality") == "good":
         snapshots.record(result.get("url", url), result["content"])
     out = {"action": "read", **result}
+    if isinstance(out.get("content"), str):
+        out["content"] = _clip_strings(out["content"], limit=_READ_TO_MODEL_CHARS)
     if result.get("quality") != "good":
         if rich:
             out["barrier"] = True  # free + paid both degraded — a genuine wall
@@ -273,7 +285,7 @@ def _search_web(query: str, kind: str, max_results: int) -> dict[str, Any]:
         circuit.record_success(provider)
         out: dict[str, Any] = {
             "action": "search", "kind": kind, "query": query,
-            "provider": provider, "results": results,
+            "provider": provider, "results": _clip_strings(results, limit=_SEARCH_SNIPPET_CHARS),
             # WHICH engine answered decides how the next query should be phrased, and the
             # answer changes mid-run without warning: a quota or an outage silently moves
             # keyword search from a literal-match index onto a neural one, where the same
@@ -294,6 +306,31 @@ def _search_web(query: str, kind: str, max_results: int) -> dict[str, Any]:
         "error": "; ".join(errors)[:300] or "all search providers failed",
         "providers_tried": chain,
     }
+
+
+def _clip_strings(value: Any, *, limit: int) -> Any:
+    """Bound text that will sit in the next model turn. Objects become plain data first."""
+    dump = getattr(value, "model_dump", None)
+    if callable(dump):
+        try:
+            return _clip_strings(dump(), limit=limit)
+        except Exception:  # noqa: BLE001 — fall through to other shapes
+            pass
+    if isinstance(value, str):
+        cleaned = scrub_text(value)
+        if len(cleaned) <= limit:
+            return cleaned
+        return cleaned[:limit] + f" ... [truncated, {len(cleaned)} chars total]"
+    if isinstance(value, dict):
+        return {k: _clip_strings(v, limit=limit) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_clip_strings(v, limit=limit) for v in value]
+    if isinstance(value, tuple):
+        return tuple(_clip_strings(v, limit=limit) for v in value)
+    results = getattr(value, "results", None)
+    if results is not None and not isinstance(value, (bytes, bytearray)):
+        return _clip_strings(results, limit=limit)
+    return value
 
 
 def _provider_error_payload(results: Any) -> str | None:

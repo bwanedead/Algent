@@ -310,6 +310,35 @@ def test_web_search_keyword_routes_to_tavily(monkeypatch) -> None:
     assert out.get("provider") == "tavily"
 
 
+def test_web_search_clips_full_page_search_hits_to_snippets(monkeypatch) -> None:
+    """Exa/Tavily can dump a whole PDF into `text`; that 400s the next model turn."""
+    research.circuit.reset()
+    blob = "word " * 20_000
+    monkeypatch.setattr(tavily, "_build", _engine(
+        [{"url": "http://a", "title": "Hit", "text": blob}]))
+    out = research._search(query="poland coal")
+    text = out["results"][0]["text"]
+    assert out["results"][0]["title"] == "Hit"
+    assert len(text) < 2_500
+    assert "truncated" in text
+    assert text.startswith("word ")
+
+
+def test_web_search_read_snapshots_full_text_but_clips_the_model_payload(monkeypatch) -> None:
+    body = "para " * 10_000
+    seen: list[str] = []
+
+    def fake_fetch(url, allow_paid_fallback=True):
+        return {"url": url, "content": body, "via": "trafilatura", "quality": "good", "words": 10_000}
+
+    monkeypatch.setattr(fc, "_fetch", fake_fetch)
+    monkeypatch.setattr(research.snapshots, "record", lambda url, content: seen.append(content))
+    out = research._search(read_url="http://a")
+    assert seen and seen[0] == body
+    assert len(out["content"]) < 9_000
+    assert "truncated" in out["content"]
+
+
 def test_web_search_semantic_routes_to_exa(monkeypatch) -> None:
     research.circuit.reset()
     monkeypatch.setattr(exa, "_build", _engine(["s1"]))

@@ -130,6 +130,9 @@ def test_a_gateway_timeout_is_worth_retrying() -> None:
         status_code = 400
 
     assert is_connection_error(_BadRequest()) is False
+    from algent_backend.agent_system.foundation.models.provider_errors import is_rejected_request
+    assert is_rejected_request(_BadRequest()) is True
+    assert is_rejected_request(ValueError("nope")) is False
 
 
 def test_house_spec_carries_a_client_side_deadline() -> None:

@@ -142,6 +142,15 @@ def test_enrich_graph_no_findings_for_lane_is_a_noop(monkeypatch) -> None:
     assert any(et == "enrich.no_work" for et, _ in events)
 
 
+def test_enrich_loop_abort_does_not_bump_revision(monkeypatch) -> None:
+    """A swallowed 400 (or budget stop) returns None — that is not an empty successful pass."""
+    events: list = []
+    graph = _graph(_ctx(events), monkeypatch, None)
+    out = graph.invoke({"profile": _existing().model_dump(), "review": _review()})
+    assert out["profile"]["revision"] == 1
+    assert any(et == "enrich.no_work" for et, _ in events)
+
+
 def test_enrich_does_not_close_findings_without_evidence_delta(monkeypatch, tmp_path) -> None:
     """Model-claimed addressed_findings with zero new sources/claims must not close."""
     monkeypatch.setenv("ALGENT_PROFILE_STORE", str(tmp_path))
