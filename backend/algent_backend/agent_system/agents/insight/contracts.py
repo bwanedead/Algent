@@ -2,19 +2,19 @@
 
 from __future__ import annotations
 
+import re
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 Form = Literal["takeaway_bars", "takeaway_line", "growing_line_gif"]
 Verdict = Literal["ship", "fix", "abandon"]
-BeatId = Literal["ai_power", "chips"]
 
 
 class InsightSpec(BaseModel):
     """One figure. ``takeaway`` is the title on the chart and the first line of the tweet."""
 
-    beat: BeatId
+    beat: str = "world"
     form: Form = "takeaway_bars"
     takeaway: str = ""
     question: str = ""
@@ -29,6 +29,13 @@ class InsightSpec(BaseModel):
     callout: str = ""
     note: str = ""
     warranted: bool = True
+
+    @field_validator("beat", mode="before")
+    @classmethod
+    def _slug_beat(cls, value: object) -> str:
+        raw = str(value or "world")
+        slug = re.sub(r"[^a-z0-9_]+", "_", raw.casefold()).strip("_")
+        return slug or "world"
 
 
 class Critique(BaseModel):

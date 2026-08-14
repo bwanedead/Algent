@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 from .animate import frames_to_gif
-from .theme import DARK, Theme, apply_theme, series_colors
+from .theme import DARK, Theme, apply_theme, series_colors, watermark
 
 #: 4:5-ish, readable in the X crop. Wider notebooks hide the takeaway.
 _SIZE = (7.2, 9.0)
@@ -32,9 +32,10 @@ def _footer(fig: plt.Figure, theme: Theme, source: str, as_of: str) -> None:
         fig.text(0.04, 0.02, " · ".join(bits), color=theme.muted, fontsize=8, ha="left")
 
 
-def _save(fig: plt.Figure, path: Path) -> Path:
+def _save(fig: plt.Figure, path: Path, theme: Theme = DARK) -> Path:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
+    watermark(fig, theme)
     fig.savefig(path, bbox_inches="tight", pad_inches=0.28)
     plt.close(fig)
     return path
@@ -81,7 +82,7 @@ def takeaway_bars(
         ax.text(val + xmax * 0.02, lab, _fmt(val), va="center", color=theme.text, fontsize=9)
     _footer(fig, theme, source, as_of)
     fig.tight_layout(rect=(0, 0.05, 1, 1))
-    return _save(fig, Path(out))
+    return _save(fig, Path(out), theme)
 
 
 def takeaway_line(
@@ -123,7 +124,7 @@ def takeaway_line(
         ax.legend(frameon=False, labelcolor=theme.text, loc="upper left")
     _footer(fig, theme, source, as_of)
     fig.tight_layout(rect=(0, 0.05, 1, 1))
-    return _save(fig, Path(out))
+    return _save(fig, Path(out), theme)
 
 
 def growing_line_gif(
@@ -175,6 +176,7 @@ def growing_line_gif(
             ax.legend(frameon=False, labelcolor=theme.text, loc="upper left")
         _footer(fig, theme, source, as_of)
         fig.tight_layout(rect=(0, 0.05, 1, 1))
+        watermark(fig, theme)
         frame = tmp / f"f{f:03d}.png"
         fig.savefig(frame, bbox_inches="tight", pad_inches=0.28)
         plt.close(fig)

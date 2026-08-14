@@ -101,6 +101,41 @@ def test_compose_does_not_queue_a_dropped_warrant(tmp_path, monkeypatch) -> None
     assert q.load() == []
 
 
+def test_standing_lenses_are_a_map_not_two_beats() -> None:
+    from algent_backend.agent_system.agents.insight.beats import LENSES
+
+    ids = {b["id"] for b in LENSES}
+    assert {"energy", "finance", "economics", "mma", "ai_power", "chips"} <= ids
+    assert len(ids) > 4
+
+
+def test_a_beat_can_be_any_slug() -> None:
+    assert InsightSpec(beat="MMA / UFC").beat == "mma_ufc"
+    assert InsightSpec(beat="housing").beat == "housing"
+    assert InsightSpec(beat="").beat == "world"
+
+
+def test_discovery_seeds_are_optional_lines() -> None:
+    from algent_backend.agent_system.agents.insight.seeds import discovery_brief
+
+    text = discovery_brief(
+        pool={"items": [{"label": "Fed balance sheet"}]},
+        portfolio={"vectors": [{"title": "Grid queue wait"}]},
+    )
+    assert "pool: Fed balance sheet" in text
+    assert "menu: Grid queue wait" in text
+    assert discovery_brief(pool={}, portfolio={}) == ""
+
+
+def test_warrant_doctrine_is_an_open_net() -> None:
+    from algent_backend.agent_system.agents.insight.warrant import WARRANT_ROLE
+
+    body = WARRANT_ROLE.casefold()
+    assert "tie-break" in body
+    assert "prefer these when a table exists" not in body
+    assert "seeds" in body
+
+
 def test_insight_start_clears_pause_without_a_second_daemon(tmp_path, monkeypatch) -> None:
     from algent_backend.cli.newsroom import insight as ins
     from algent_backend.publishing import radar_daemon as d

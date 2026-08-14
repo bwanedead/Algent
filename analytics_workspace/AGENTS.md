@@ -11,8 +11,10 @@ These tracked paths are **runtime dependencies** of every visual article, not op
 
 | Path | Role |
 |---|---|
-| `lib/__init__.py`, `lib/theme.py`, `lib/charts.py`, `lib/maps.py`, `lib/animate.py`, `lib/insight.py` | Canonical helpers the worker (and the insight lane) import |
-| `scripts/setup_venv.ps1`, `scripts/download_basemap.py`, `scripts/smoke_test.py`, `scripts/draw_insight.py` | Reproducible stack setup + canary + insight draw |
+| `lib/__init__.py`, `lib/theme.py`, `lib/charts.py`, `lib/maps.py`, `lib/animate.py` | Canonical helpers the article worker imports |
+| `lib/assets/mark.png` | Ohmega Monster silhouette used as a faint watermark |
+| `lib/insight.py`, `scripts/draw_insight.py` | Phone-first templates for figure-first posts. An `AnalyticsRequest` uses `charts.py` / `maps.py`, not these. Do not delete. |
+| `scripts/setup_venv.ps1`, `scripts/download_basemap.py`, `scripts/smoke_test.py` | Reproducible stack setup + canary |
 | `data/README.md` | Documents the Natural Earth basemap location |
 | `requirements.txt`, this `AGENTS.md`, `README.md` | Pins + doctrine |
 
@@ -123,6 +125,7 @@ Use `lib.theme.apply_theme()` (dark default). Tokens:
 - Hue contrast across series; never two near-identical ambers.
 - Gaps in series: leave gaps; say so in the caption.
 - Monospace labels; no chartjunk; prefer SVG; honest axes.
+- Every saved figure goes through `lib.theme.watermark` (faint mark + `ohmega.monster`). Do not strip it. The mark file is `lib/assets/mark.png` — stay inside this workspace; do not read `sites/`.
 
 ## Clean up after yourself
 

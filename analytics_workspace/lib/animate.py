@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 
-from .theme import DARK, Theme, apply_theme
+from .theme import DARK, Theme, apply_theme, watermark
 
 
 def frames_to_gif(
@@ -56,6 +56,7 @@ def render_frame_series(
     for i in range(n_frames):
         fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
         draw(ax, i, theme)
+        watermark(fig, theme)
         path = out_d / f"frame_{i:03d}.png"
         fig.savefig(path, bbox_inches="tight", pad_inches=0.15)
         plt.close(fig)

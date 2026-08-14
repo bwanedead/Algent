@@ -8,12 +8,13 @@ from typing import Sequence
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from .theme import DARK, Theme, apply_theme, series_colors
+from .theme import DARK, Theme, apply_theme, series_colors, watermark
 
 
-def _save(fig: plt.Figure, path: Path) -> Path:
+def _save(fig: plt.Figure, path: Path, theme: Theme = DARK) -> Path:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
+    watermark(fig, theme)
     fig.savefig(path, bbox_inches="tight", pad_inches=0.25)
     plt.close(fig)
     return path
@@ -47,7 +48,7 @@ def line_chart(
     if as_of:
         fig.text(0.01, 0.01, f"as of {as_of}", color=theme.muted, fontsize=8)
     fig.tight_layout()
-    return _save(fig, Path(out))
+    return _save(fig, Path(out), theme)
 
 
 def bar_chart(
@@ -77,4 +78,4 @@ def bar_chart(
     if as_of:
         fig.text(0.01, 0.01, f"as of {as_of}", color=theme.muted, fontsize=8)
     fig.tight_layout()
-    return _save(fig, Path(out))
+    return _save(fig, Path(out), theme)

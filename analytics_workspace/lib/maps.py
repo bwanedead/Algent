@@ -16,7 +16,7 @@ from matplotlib.path import Path as MplPath
 from shapely.geometry import MultiPolygon, Polygon, box, shape
 from shapely.geometry.base import BaseGeometry
 
-from .theme import DARK, Theme, apply_theme
+from .theme import DARK, Theme, apply_theme, watermark
 
 _WORKSPACE = Path(__file__).resolve().parents[1]
 _DEFAULT_NE = _WORKSPACE / "data" / "natural_earth" / "ne_110m_admin_0_countries.geojson"
@@ -539,6 +539,7 @@ def country_points_map(
         footer = f"as of {as_of} · {footer}"
     fig.text(0.01, 0.01, footer, color=theme.muted, fontsize=8)
     fig.tight_layout()
+    watermark(fig, theme)
     out_p = Path(out)
     out_p.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_p, bbox_inches="tight", pad_inches=0.15, facecolor=fig.get_facecolor())
@@ -579,6 +580,7 @@ def world_highlight_map(
         footer = f"as of {as_of} · {footer}"
     fig.text(0.01, 0.01, footer, color=theme.muted, fontsize=8)
     fig.tight_layout()
+    watermark(fig, theme)
     out_p = Path(out)
     out_p.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_p, bbox_inches="tight", pad_inches=0.2)

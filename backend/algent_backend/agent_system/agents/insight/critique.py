@@ -25,7 +25,8 @@ verdict:
   pretending to be a chart. Do not fix a bad premise.
 
 Refuse dual-axis thinking, 12-slice pies, process diagrams, and titles like "X by year".
-A takeaway sounds like "TSMC's capex is now larger than Samsung's and Intel's combined."
+A takeaway sounds like "US debt service now exceeds the defense budget" — a claim, not a topic.
+Abandon a bad picture or unsourced rows, not an unfamiliar but chartable topic.
 """
 
 SYSTEM_PROMPT = compose_system_prompt(UNIVERSAL_AGENT_BASE, CRITIQUE_ROLE)

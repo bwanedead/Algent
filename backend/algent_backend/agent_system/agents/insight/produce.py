@@ -13,6 +13,7 @@ from algent_backend.agent_system.agents.insight.contracts import (
 )
 from algent_backend.agent_system.agents.insight.copy import format_copy
 from algent_backend.agent_system.agents.insight.critique import critique, mechanical_ok
+from algent_backend.agent_system.agents.insight.seeds import discovery_brief
 from algent_backend.agent_system.agents.insight.warrant import warrant
 from algent_backend.agent_system.foundation.models.resolver import ModelResolver
 
@@ -53,7 +54,7 @@ def produce(
     workspace: Path | None = None,
 ) -> tuple[InsightSpec, str, str]:
     """Returns (spec, copy, media_path). media_path empty means skip."""
-    spec = warrant(already=already, resolver=resolver)
+    spec = warrant(already=already, seeds=discovery_brief(), resolver=resolver)
     gate = mechanical_ok(spec)
     if gate:
         spec.note = spec.note or gate

@@ -1,4 +1,4 @@
-"""Pick one chartable question from the standing beats. Search is the evidence, not decoration."""
+"""Pick one chartable question. Search first; standing lenses are a tie-break."""
 
 from __future__ import annotations
 
@@ -20,8 +20,19 @@ WARRANT_ROLE = """\
 You are commissioning ONE public-data figure for a newsroom account. The figure IS the post.
 A stranger on a phone must get the insight from the picture in two seconds.
 
-STANDING BEATS (pick one; these are the only topics):
+Search the open web first. Ground every row in a named public table. Commission the
+figure a graphics desk would spend budget on today — any domain. Cross-topic is welcome
+when BOTH series are public (debt vs energy, inflation vs migration, capex vs grid load).
+A better-sourced series always wins, whether or not it matches a standing lens or a seed.
+
+Standing lenses are a TIE-BREAK when two tables are equally public, not a ranking of topics:
 """ + render_beats() + """
+
+A short beat slug names the domain (letters, numbers, underscore) — housing, shipping,
+education, or an id from the list. Outside the list is normal, not an exception.
+
+Discovery seeds (pool + research menu) are optional hints. Do not ignore a better public
+series just because it was not in the pool.
 
 FORMS (pick one):
 - takeaway_bars — 3 to 8 labeled magnitudes, one of them highlighted. Best for scale/share.
@@ -42,7 +53,7 @@ RULES:
 - highlight is the bar label the takeaway is about (bars only).
 - Do not prefix with Radar or any lane label.
 
-Drop (warranted=false) when the data is thin, unofficial, or the question is not one of the beats.
+Drop (warranted=false) when the data is thin or unofficial — not because the topic is unfamiliar.
 """
 
 SYSTEM_PROMPT = compose_system_prompt(UNIVERSAL_AGENT_BASE, WARRANT_ROLE)
@@ -52,6 +63,7 @@ def warrant(
     *,
     already: list[str] | None = None,
     today: str = "",
+    seeds: str = "",
     model_spec: ModelSpec | None = None,
     resolver: ModelResolver | None = None,
 ) -> InsightSpec:
@@ -61,8 +73,11 @@ def warrant(
     spec = model_spec or DEFAULT_MODEL
     day = today or datetime.now(UTC).strftime("%Y-%m-%d")
     seen = "\n".join(f"- {t}" for t in (already or [])[:12]) or "(none yet)"
+    seed_block = seeds.strip() or "(no pool or menu on disk — search the open web)"
     ask = (
-        f"TODAY: {day}\n\nALREADY POSTED OR QUEUED (do not repeat):\n{seen}\n\n"
+        f"TODAY: {day}\n\n"
+        f"ALREADY POSTED OR QUEUED (do not repeat):\n{seen}\n\n"
+        f"DISCOVERY SEEDS (optional; not a whitelist):\n{seed_block}\n\n"
         "Search, then return one InsightSpec."
     )
     try:
@@ -73,8 +88,8 @@ def warrant(
                 [SystemMessage(content=SYSTEM_PROMPT), HumanMessage(content=ask)],
             )
     except Exception as exc:  # noqa: BLE001 — a failed warrant is a skipped cycle
-        return InsightSpec(beat="ai_power", warranted=False,
+        return InsightSpec(beat="world", warranted=False,
                            note=f"warrant failed: {str(exc)[:140]}")
     if not isinstance(result, InsightSpec):
-        return InsightSpec(beat="ai_power", warranted=False, note="no structured result")
+        return InsightSpec(beat="world", warranted=False, note="no structured result")
     return result
