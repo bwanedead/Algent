@@ -12,7 +12,7 @@ These tracked paths are **runtime dependencies** of every visual article, not op
 | Path | Role |
 |---|---|
 | `lib/__init__.py`, `lib/theme.py`, `lib/charts.py`, `lib/maps.py`, `lib/animate.py` | Canonical helpers the article worker imports |
-| `lib/assets/mark.png` | Ohmega Monster silhouette used as a faint watermark |
+| `lib/assets/mark.png` | Ohmega Monster silhouette for the brand lockup watermark |
 | `lib/insight.py`, `scripts/draw_insight.py` | Phone-first templates for figure-first posts. An `AnalyticsRequest` uses `charts.py` / `maps.py`, not these. Do not delete. |
 | `scripts/setup_venv.ps1`, `scripts/download_basemap.py`, `scripts/smoke_test.py` | Reproducible stack setup + canary |
 | `data/README.md` | Documents the Natural Earth basemap location |
@@ -73,6 +73,7 @@ series. Two legitimate data paths:
 - Plot only **real data** — from `data.json` claims and/or rows you actually fetched. Never invent,
   extrapolate, or "smooth" data into something the evidence doesn't support. A misleading chart is
   a deception.
+- If you are plotting the source's own table, say so in the caption. Do not invent rows.
 - **No visual certainty laundering.** Do not truncate or rescale an axis to manufacture drama, and
   do not cherry-pick a window that implies a trend the full data does not support.
 - `image` requests for **maps** must use real geocodes + the Natural Earth basemap. Pure concept
@@ -125,7 +126,7 @@ Use `lib.theme.apply_theme()` (dark default). Tokens:
 - Hue contrast across series; never two near-identical ambers.
 - Gaps in series: leave gaps; say so in the caption.
 - Monospace labels; no chartjunk; prefer SVG; honest axes.
-- Every saved figure goes through `lib.theme.watermark` (faint mark + `ohmega.monster`). Do not strip it. The mark file is `lib/assets/mark.png` — stay inside this workspace; do not read `sites/`.
+- Every saved figure goes through `lib.theme.watermark` (mark stacked on `OHMEGA MONSTER` / `ohmega.monster` as one unit). Do not strip it. The mark file is `lib/assets/mark.png` — stay inside this workspace; do not read `sites/`.
 
 ## Clean up after yourself
 

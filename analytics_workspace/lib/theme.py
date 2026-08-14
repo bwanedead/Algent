@@ -116,42 +116,61 @@ def mark_path() -> Path | None:
 
 
 def watermark(fig, theme: Theme | None = None) -> None:
-    """Faint house mark + wordmark. Never raises — a miss is an unmarked figure."""
+    """Stacked mark + wordmark as one brand unit. Never raises."""
     try:
         used = theme or DARK
-        _stamp_mark(fig, used)
-        fig.text(
-            0.98, 0.034, _WORDMARK,
-            ha="right", va="bottom", fontsize=7,
-            color=used.muted, alpha=0.28, zorder=20,
+        if not fig.axes:
+            return
+        pack = _brand_stack(used)
+        from matplotlib.offsetbox import AnnotationBbox
+
+        artist = AnnotationBbox(
+            pack, (0.88, 0.14),
+            xycoords="figure fraction",
+            frameon=False, pad=0, zorder=8,
         )
-        fig.text(
-            0.98, 0.016, _SITE,
-            ha="right", va="bottom", fontsize=6,
-            color=used.muted, alpha=0.22, zorder=20,
-        )
+        fig.axes[0].add_artist(artist)
     except Exception:  # noqa: BLE001 — branding must not kill a chart
         return
 
 
-def _stamp_mark(fig, theme: Theme) -> None:
-    path = mark_path()
-    if path is None or not fig.axes:
-        return
-    from matplotlib.offsetbox import AnnotationBbox, OffsetImage
+def _brand_stack(theme: Theme):
+    """Mark beside the name — one lockup, not a floating icon and a stray caption."""
+    from matplotlib.offsetbox import HPacker, OffsetImage, TextArea, VPacker
 
+    font = resolve_font()
+    name = TextArea(
+        _WORDMARK,
+        textprops={
+            "fontsize": 13,
+            "color": theme.emphasis,
+            "alpha": 0.7,
+            "fontfamily": font,
+            "fontweight": "bold",
+            "va": "center",
+        },
+    )
+    site = TextArea(
+        _SITE,
+        textprops={
+            "fontsize": 9,
+            "color": theme.muted,
+            "alpha": 0.5,
+            "fontfamily": font,
+            "va": "center",
+        },
+    )
+    words = VPacker(children=[name, site], align="left", pad=0, sep=1)
+    path = mark_path()
+    if path is None:
+        return words
     rgba = _silhouette(path, theme)
     if rgba is None:
-        return
+        return words
     h, w = rgba.shape[:2]
-    zoom = min(0.18, 72.0 / max(h, w, 1))
-    box = OffsetImage(rgba, zoom=zoom)
-    artist = AnnotationBbox(
-        box, (0.88, 0.18),
-        xycoords="figure fraction",
-        frameon=False, pad=0, zorder=1,
-    )
-    fig.axes[0].add_artist(artist)
+    zoom = min(0.22, 88.0 / max(h, w, 1))
+    mark = OffsetImage(rgba, zoom=zoom)
+    return HPacker(children=[mark, words], align="center", pad=2, sep=6)
 
 
 def _silhouette(path: Path, theme: Theme) -> object | None:
@@ -173,7 +192,7 @@ def _silhouette(path: Path, theme: Theme) -> object | None:
     rgba[crop, 0] = r
     rgba[crop, 1] = g
     rgba[crop, 2] = b
-    rgba[crop, 3] = 36  # ~14% — readable if stolen, not a stamp over the data
+    rgba[crop, 3] = 58  # ~23% — name sits on it; still a watermark, not a stamp
     return rgba
 
 

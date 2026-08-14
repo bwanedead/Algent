@@ -83,6 +83,8 @@ def test_muse_schema_forbids_open_row_objects() -> None:
 
     walk(InsightSpec.model_json_schema())
     walk(Critique.model_json_schema())
+    from algent_backend.agent_system.agents.insight.contemplate import Brief
+    walk(Brief.model_json_schema())
 
 
 def test_the_same_takeaway_is_not_queued_twice(tmp_path, monkeypatch) -> None:
@@ -178,7 +180,29 @@ def test_warrant_doctrine_is_an_open_net() -> None:
     body = WARRANT_ROLE.casefold()
     assert "tie-break" in body
     assert "prefer these when a table exists" not in body
-    assert "seeds" in body
+    assert "contemplated" in body
+
+
+def test_ambition_rejects_a_reprint() -> None:
+    from algent_backend.agent_system.agents.insight.ambition import AMBITION
+
+    body = AMBITION.casefold()
+    assert "reprint" in body
+    assert "reality" in body
+
+
+def test_a_brief_renders_the_pick() -> None:
+    from algent_backend.agent_system.agents.insight.contemplate import (
+        Brief, Candidate, render_brief,
+    )
+
+    text = render_brief(Brief(
+        climate="Rates are moving.",
+        pick=Candidate(question="Is real debt service past defense?",
+                       table_hint="Treasury / OMB"),
+    ))
+    assert "PICK: Is real debt service past defense?" in text
+    assert render_brief(Brief()) == ""
 
 
 def test_insight_start_clears_pause_without_a_second_daemon(tmp_path, monkeypatch) -> None:

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from langchain_core.messages import HumanMessage, SystemMessage
 
+from algent_backend.agent_system.agents.insight.ambition import AMBITION
 from algent_backend.agent_system.agents.insight.contracts import Critique, InsightSpec
 from algent_backend.agent_system.foundation import cost
 from algent_backend.agent_system.foundation.models import ModelSpec, house_spec
@@ -26,10 +27,10 @@ verdict:
 
 Refuse dual-axis thinking, 12-slice pies, process diagrams, and titles like "X by year".
 A takeaway sounds like "US debt service now exceeds the defense budget" — a claim, not a topic.
-Abandon a bad picture or unsourced rows, not an unfamiliar but chartable topic.
+Abandon a bad picture, unsourced rows, or someone else's headline as the picture.
 """
 
-SYSTEM_PROMPT = compose_system_prompt(UNIVERSAL_AGENT_BASE, CRITIQUE_ROLE)
+SYSTEM_PROMPT = compose_system_prompt(UNIVERSAL_AGENT_BASE, AMBITION, CRITIQUE_ROLE)
 
 
 def mechanical_ok(spec: InsightSpec) -> str:

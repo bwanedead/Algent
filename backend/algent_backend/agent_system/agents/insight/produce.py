@@ -1,4 +1,4 @@
-"""Warrant → critique → draw (once more if the picture is salvageable) → files on disk."""
+"""Contemplate → warrant → critique → draw."""
 
 from __future__ import annotations
 
@@ -11,6 +11,7 @@ from algent_backend.agent_system.agents.insight.contracts import (
     apply_critique,
     draw_payload,
 )
+from algent_backend.agent_system.agents.insight.contemplate import contemplate, render_brief
 from algent_backend.agent_system.agents.insight.copy import format_copy
 from algent_backend.agent_system.agents.insight.critique import critique, mechanical_ok
 from algent_backend.agent_system.agents.insight.seeds import discovery_brief
@@ -54,7 +55,11 @@ def produce(
     workspace: Path | None = None,
 ) -> tuple[InsightSpec, str, str]:
     """Returns (spec, copy, media_path). media_path empty means skip."""
-    spec = warrant(already=already, seeds=discovery_brief(), resolver=resolver)
+    seeds = discovery_brief()
+    brief = contemplate(already=already, seeds=seeds, resolver=resolver)
+    brief_text = render_brief(brief)
+    spec = warrant(already=already, seeds="" if brief_text else seeds,
+                   brief=brief_text, resolver=resolver)
     gate = mechanical_ok(spec)
     if gate:
         spec.note = spec.note or gate
