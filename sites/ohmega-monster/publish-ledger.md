@@ -619,3 +619,14 @@ disposition: needs_verification
 ⚠ walled sources (carried with caveats): src_51ab46dc1f, src_5f0735fedd, src_38d443bdb0, src_0aa84b41f3, src_1f6f98b1c9, src_53177d0bf6, src_14410ec7c7, src_2e2c7c1efc, src_b2c44bd3bd, src_854cbe5106, src_9d0742e851, src_d1c0340a32
 ⚠ figures not matched to evidence: 99.99%, 43%, 18%, 85%, 100%, 71%
 run: 0080__2ea8892f-3147-4eb3-acf2-249e52d4c06b
+
+### PUBLISH poland-halves-coal-s-share-of-electricity-as-solar-drives-ju-0218b5 — 2026-08-14
+status: publishable  ·  draft: grounded_with_caveats  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 0 produced, 0 escapes
+cost: ~$0.4707  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+analytics_skipped: vis_01_coal_decline_seasonal:skipped, vis_02_coal_to_nuclear_geography:skipped
+cost_by_stage: editorial=$0.0800, gauntlet=$0.3907
+⚠ walled sources (carried with caveats): src_3a6e4c559f
+⚠ figures not matched to evidence: 53.5%, 56%, 37.9%, 12.3%, 27%, 4.4%, 17.4%, 49%
+run: 0081__95aaae3a-7fad-4126-a773-8585f76ad9fb
