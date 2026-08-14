@@ -8,10 +8,11 @@ invisible by construction to any stage that knows what the piece is trying to sa
 know, and read it cold.
 
 So this reviewer reads ONLY the prose — no profile, no treatment, no evidence — as a
-decently-informed generalist, and reports where the ramp is missing or the molecule arrives without
-its bonds. Its power is deliberately one-sided and symmetric with the rest of the system: it may
-demand a HANDHOLD or a CUT, never "assert this harder" and never "add more everywhere". It flags
-where understanding breaks; it cannot manufacture confidence.
+decently-informed generalist. When the shape does not transfer, it emits the next draft itself
+from what is already on the page. It does not telephone findings back to the drafter. Its power
+is still one-sided: it may clarify, cut, reorder, and restate from the reader's side — never
+"assert this harder" and never invent. Findings are the audit of what was wrong; the rewrite is
+the repair.
 """
 
 from __future__ import annotations
@@ -94,17 +95,24 @@ class ComprehensionFinding(BaseModel):
     fix: Literal[
         "add_handhold", "connect_to_thread", "cut", "rewrite_for_reader", "reorder",
     ] = "add_handhold"
-    suggestion: str = ""       # the handhold/transition to add, what to cut, or the reader-side rewrite
+    suggestion: str = ""       # what you changed in the rewrite (or why you could not, from the page)
 
 
 class ComprehensionCheck(BaseModel):
-    """The verdict on whether the shape actually transfers to a general reader."""
+    """The verdict on whether the shape actually transfers to a general reader.
+
+    When ``verdict`` is ``needs_ramp``, ``title`` / ``standfirst`` / ``body`` ARE the next draft —
+    written from the page, not instructions for the article drafter. Empty when ``clear``.
+    """
 
     id: str
     draft_id: str = ""
     verdict: ComprehensionVerdict = "clear"
     summary: str = ""          # one line: did it land, and if not, the biggest break
     findings: list[ComprehensionFinding] = Field(default_factory=list)
+    title: str = ""            # next draft title when needs_ramp; empty when clear
+    standfirst: str = ""
+    body: str = ""             # next draft body when needs_ramp; empty when clear
     #: Country flags this reviewer judges the piece does not earn, by display name.
     #: The reviewer is the right place for this call: flags are assigned from the profile's
     #: declared geography, which is decided before anyone has read the finished prose, so

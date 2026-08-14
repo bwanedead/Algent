@@ -61,7 +61,7 @@ def test_reads_prose_and_flags_a_missing_ramp() -> None:
 
     assert r["verdict"] == "needs_ramp" and r["draft_id"] == "d"
     assert r["findings"][0]["id"] == "cmp_01" and r["findings"][0]["kind"] == "unexplained_term"
-    assert r["reviewer"] == "comprehension_reviewer@v1"
+    assert r["reviewer"] == "comprehension_reviewer@v2"
 
 
 def test_reviewer_is_shown_prose_only_never_the_evidence() -> None:
@@ -70,8 +70,9 @@ def test_reviewer_is_shown_prose_only_never_the_evidence() -> None:
                                           model_spec=_SPEC).invoke({"draft": _draft().model_dump()})
     shown = _Structured.last_message[1].content   # the HumanMessage
     assert "LDL-C" in shown and "clm_" not in shown and "grounding" not in shown and "treatment" not in shown
-    # friend-test + slop cut are part of the cold-read brief (not optional flavor)
-    assert "FRIEND TEST" in shown and "announced_importance" in shown
+    # friend-test + next-draft brief are part of the cold-read (not optional flavor)
+    assert "FRIEND TEST" in shown and "next draft" in shown
+    assert "announced_importance" in shown
 
 
 def test_vague_conflict_and_announced_importance_kinds_are_valid() -> None:
@@ -79,6 +80,22 @@ def test_vague_conflict_and_announced_importance_kinds_are_valid() -> None:
                       ("lecture", "cut")):
         f = ComprehensionFinding(id="x", kind=kind, issue="t", fix=fix)
         assert f.kind == kind
+
+
+def test_needs_ramp_carries_the_next_draft() -> None:
+    out = ComprehensionCheck(
+        id="", verdict="needs_ramp",
+        title="FDA approves a cholesterol drug",
+        standfirst="A new pill lowers the cholesterol that drives heart risk.",
+        body="The FDA approved a pill that lowers LDL-C, the cholesterol that drives heart risk.",
+        findings=[ComprehensionFinding(id="", kind="unexplained_term", where="LDL-C",
+                                       issue="never says what LDL-C is", fix="add_handhold")],
+    )
+    r = cl.build_comprehension_reviewer_graph(_ctx(_Model(out), []), model_spec=_SPEC).invoke(
+        {"draft": _draft().model_dump()})["comprehension_check"]
+    assert r["verdict"] == "needs_ramp"
+    assert "LDL-C, the cholesterol" in r["body"]
+    assert r["title"].startswith("FDA")
 
 
 def test_clear_when_the_reader_follows_it() -> None:
@@ -109,3 +126,4 @@ def test_comprehension_reviewer_registered() -> None:
     from algent_backend.agent_system.agents.registry import default_agent_registry
     spec = default_agent_registry().get("comprehension_reviewer")
     assert spec.default_model.provider == "meta" and spec.default_model.model == "muse-spark-1.2-contributor" and spec.family == "newsroom"
+    assert spec.default_model.reasoning_effort == "medium"

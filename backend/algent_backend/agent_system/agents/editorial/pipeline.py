@@ -77,27 +77,26 @@ _ANALYTICS_CAP_ENV = "ALGENT_ANALYTICS_MAX"
 # ceiling is not a goal to reach.
 _ANALYTICS_CAP_DEFAULT = 7
 
-# A live failure mode: the comprehension "handhold" repair lap rewrote a ~400-word piece into a
+# A live failure mode: a comprehension "handhold" repair once rewrote a ~400-word piece into a
 # single sentence, then the pipeline still marked it publishable. A hollow shell is not a dud —
-# it is a corrupted repair. Floor below this → not publishable; repair that collapses the body
-# is discarded.
-#: How many read→fix laps an article gets. The full sequence is:
+# it is a corrupted repair. Floor below this → not publishable; a rewrite that collapses the body
+# to a stub is discarded. Getting shorter is the point, not a collapse.
+#: How many read→rewrite laps an article gets. The sequence is:
 #:
-#:     draft → review → draft → review → draft → publish
+#:     draft → review(+rewrite) → review(+rewrite) → publish
 #:
-#: Two, and the bound is the point. Review cannot be open-ended: an unpublished article
-#: teaches us nothing, the live site is the review surface, and a loop with no floor has no
-#: reason to ever terminate — each read can always find something. The way quality improves is
-#: not more laps; it is the register growing so the PRODUCTION stages stop generating these
-#: defects at all.
+#: Two reads. Each read that does not clear emits the next draft itself — no telephone back to
+#: the article drafter. Review cannot be open-ended: an unpublished article teaches us nothing,
+#: the live site is the review surface, and a loop with no floor has no reason to ever terminate.
+#: The way quality improves is not more laps; it is the register growing so the PRODUCTION
+#: stages stop generating these defects at all.
 #:
-#: Note the sequence ends on a FIX, not a read. A final review whose verdict cannot change
+#: Note the sequence ends on a REWRITE, not a read. A final review whose verdict cannot change
 #: whether the piece ships is spend with no consequence attached, so it is not performed — the
-#: cheap mechanical collapse guard in ``_repair_once`` still protects that last repair.
+#: cheap mechanical hollow-stub guard in ``_apply_reader_draft`` still protects that last rewrite.
 _MAX_REVIEW_LAPS = 2
 
 _MIN_PUBLISH_WORDS = 120
-_REPAIR_KEEP_FRAC = 0.55  # keep prior draft if the repair keeps less than this share of body words
 
 
 def _analytics_worker_enabled() -> bool:
@@ -447,7 +446,7 @@ def _post_draft_quality(
     assigned_places = _derive_places(profile)
     if budget_policy.allow_optional("comprehension_repair"):
         draft, profile, comprehension, comprehension_rounds = _comprehension_pass(
-            context, config, draft=draft, treatment=treatment, profile=profile,
+            context, config, draft=draft, profile=profile,
             places=assigned_places)
     else:
         comprehension, comprehension_rounds = {}, 0
@@ -843,22 +842,21 @@ def _derive_places(profile: dict[str, Any]) -> list[str]:
 
 def _comprehension_pass(
     context: AgentRunContext, config: RunnableConfig, *,
-    draft: dict[str, Any], treatment: dict[str, Any], profile: dict[str, Any],
+    draft: dict[str, Any], profile: dict[str, Any],
     places: list[str] | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], int]:
-    """The review stage: read the finished prose COLD, send it back to be fixed, bounded.
+    """The review stage: read the finished prose COLD, rewrite it, bounded.
 
-    The sequence is **draft → review → draft → review → draft → publish**. Two reads, each
-    followed by a repair, and then it ships. Note what deliberately does NOT happen: the last
-    repair is not re-reviewed. A review whose verdict cannot change the outcome is spend with
-    no consequence attached, so the loop ends on a fix rather than on an opinion.
+    The sequence is **draft → review(+rewrite) → review(+rewrite) → publish**. Two reads.
+    Each read that does not clear emits the next draft itself. The last rewrite is not
+    re-read: a review whose verdict cannot change the outcome is spend with no consequence.
 
     Advisory throughout — a hard-to-follow piece ships anyway; this only tries to make it
-    clearer first. Every repair is clarifying (handhold, cut, reorder, reader-side rewrite), so
-    it adds no claims and no honesty gate re-runs after it.
+    clearer first. The rewrite is clarifying (same facts, digestible grain), so it adds no
+    claims and no honesty gate re-runs after it. The article drafter is not re-invoked here.
 
     ``places`` are the country flags the page will carry. The reviewer may drop unearned ones
-    outright or demand the clause that earns them; a drop alone does not trigger a repair lap,
+    outright or earn them in the rewrite; a drop alone does not trigger a rewrite lap,
     since removing the flag already resolves it.
     """
     review = build_comprehension_reviewer(context).invoke(
@@ -872,12 +870,11 @@ def _comprehension_pass(
     for lap in range(_MAX_REVIEW_LAPS):
         if not draft or str(review.get("verdict", "clear")) != "needs_ramp":
             break
-        draft, profile, changed = _repair_once(
-            context, config, draft=draft, treatment=treatment, profile=profile, review=review)
+        draft, changed = _apply_reader_draft(context, draft=draft, review=review)
         if not changed:
-            break            # the drafter produced nothing usable; another lap will not help
+            break            # no usable rewrite; another lap will not help
         if lap == _MAX_REVIEW_LAPS - 1:
-            break            # final repair ships unreviewed — see the docstring
+            break            # final rewrite ships unreviewed — see the docstring
         review = build_comprehension_reviewer(context).invoke(
             {"draft": draft}, config).get("comprehension_check") or {}
         reviews += 1
@@ -887,50 +884,45 @@ def _comprehension_pass(
     return draft, profile, review, reviews
 
 
-def _repair_once(
-    context: AgentRunContext, config: RunnableConfig, *,
-    draft: dict[str, Any], treatment: dict[str, Any],
-    profile: dict[str, Any], review: dict[str, Any],
-) -> tuple[dict[str, Any], dict[str, Any], bool]:
-    """Send the review's findings back to the drafter once. Returns whether anything changed.
+def _apply_reader_draft(
+    context: AgentRunContext, *,
+    draft: dict[str, Any], review: dict[str, Any],
+) -> tuple[dict[str, Any], bool]:
+    """Take the reviewer's next draft. Returns whether the body actually changed.
 
-    Repair only — the caller decides whether the result is worth re-reading, because the last
-    repair of a run deliberately is not. The reviewer's fixes are clarifying (handhold, cut,
-    reorder, reader-side rewrite), so they add no claims and no honesty gate needs to re-run.
-
-    If the drafter produces nothing usable, keep the original draft; the caller stops looping
-    rather than burning another lap on the same failure.
-
-    CRITICAL: a repair that *collapses* the body (handholds that wipe the article) is discarded.
-    Live failure: ~400 words → ~21 words, then still published as a map + one sentence. This
-    guard is mechanical and cheap, so it still protects the final unreviewed repair.
+    The rewrite is the repair — findings are the audit, not instructions for the drafter.
+    A hollow stub (below the publish floor, from a real piece) is discarded; getting shorter
+    is success. Live failure this still catches: ~400 words → ~21 words, then published.
     """
+    body = str(review.get("body") or "").strip()
+    if not body:
+        return draft, False
+    title = str(review.get("title") or "").strip()
+    standfirst = str(review.get("standfirst") or "").strip()
+    new = {
+        **draft,
+        "body": body,
+        "title": title or str(draft.get("title") or ""),
+        "standfirst": standfirst if standfirst else str(draft.get("standfirst") or ""),
+        "revision": int(draft.get("revision") or 1) + 1,
+    }
     prior_words = _body_words(draft)
-    repaired = build_drafter(context).invoke(
-        {"treatment": treatment, "profile": profile, "prior_draft": draft,
-         "comprehension_check": review}, config)
-    new_draft = repaired.get("draft") or {}
-    if not new_draft:
-        return draft, profile, False
-    new_words = _body_words(new_draft)
-    collapsed = (
-        prior_words >= _MIN_PUBLISH_WORDS
-        and (new_words < _MIN_PUBLISH_WORDS
-             or new_words < int(prior_words * _REPAIR_KEEP_FRAC))
-    )
-    if collapsed:
+    new_words = _body_words(new)
+    new["word_count"] = new_words
+    hollow = prior_words >= _MIN_PUBLISH_WORDS and new_words < _MIN_PUBLISH_WORDS
+    if hollow:
         context.emit(RAMP_REPAIRED, {
             "verdict": "repair_rejected_collapsed",
             "prior_words": prior_words, "new_words": new_words,
             "findings_remaining": len(review.get("findings", [])),
         })
-        return draft, profile, False
+        return draft, False
     context.emit(RAMP_REPAIRED, {
         "verdict": "repaired",
         "findings_addressed": len(review.get("findings", [])),
         "prior_words": prior_words, "new_words": new_words,
     })
-    return {**new_draft, "word_count": new_words}, repaired.get("profile") or profile, True
+    return new, True
 
 
 def _preview(r: EditorialPipelineReport) -> dict[str, Any]:

@@ -30,7 +30,8 @@ class EditorialPipelineReport(BaseModel):
     # A run that repeatedly needs the lap is a signal to tune the drafter, not the reviewer.
     caveat_rounds: int = 1
     # Comprehension (gate C) — advisory, NOT a publish gate: a hard-to-follow piece is a dud, not a
-    # lie, so it ships either way, but earns one bounded ramp-repair lap first.
+    # lie, so it ships either way, but earns bounded reader-rewrites first. The reviewer emits
+    # the next draft; the article drafter is not re-invoked for this lane.
     comprehension_verdict: str = ""   # clear | needs_ramp (after any repair lap)
     comprehension_findings: int = 0   # unexplained terms / islands / lost threads still standing
     comprehension_rounds: int = 1

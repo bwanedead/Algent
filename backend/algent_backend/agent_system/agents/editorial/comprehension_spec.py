@@ -1,9 +1,9 @@
 """
 Comprehension-reviewer agent definition — the naive-reader lane (gate C).
 
-Reads the finished prose cold, as its intended general reader, and reports where the ramp is
-missing or the molecule arrives without its bonds. Tool-free, nano tier (one structured read).
-Rail-free: the graph builder lives in ``comprehension_loop.py``.
+Reads the finished prose cold, as its intended general reader. When the piece does not land,
+the same call emits the next draft. Tool-free. Rail-free: the graph builder lives in
+``comprehension_loop.py``.
 """
 
 from __future__ import annotations
@@ -20,9 +20,9 @@ AGENT_ID = "comprehension_reviewer"
 RUNTIME = "langgraph"
 FAMILY = "newsroom"
 
-# A single cold read of the prose — nano is plenty (and reading as a *normal* reader, not an
-# expert, is the job; a bigger model would be more likely to fill gaps a real reader can't).
-DEFAULT_MODEL = house_spec(reasoning_effort="low", temperature=0.3)
+# Cold read + a full rewrite when it does not land. Medium effort is the rewrite, not expertise —
+# filling gaps a real reader cannot fill is still forbidden by the role.
+DEFAULT_MODEL = house_spec(reasoning_effort="medium", temperature=0.3, max_tokens=8192)
 
 
 def build_graph(context: AgentRunContext) -> Any:
@@ -34,7 +34,7 @@ SPEC = AgentSpec(
     name="Comprehension Reviewer",
     runtime=RUNTIME,
     build_graph=build_graph,
-    description="Reads the finished prose cold as its general reader; flags missing ramps / broken threads.",
+    description="Reads the finished prose cold as its general reader; rewrites the next draft when it does not land.",
     default_model=DEFAULT_MODEL,
     family=FAMILY,
     tool_ids=(),

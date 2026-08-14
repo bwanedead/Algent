@@ -224,11 +224,17 @@ class _Sequence:
 
     def __init__(self, *outs):
         self._outs, self._i = list(outs), 0
+        self.states: list = []
 
     def invoke(self, _state, _config=None):
+        self.states.append(_state)
         out = self._outs[min(self._i, len(self._outs) - 1)]
         self._i += 1
         return out
+
+
+def _never_drafter(ctx):
+    raise AssertionError("comprehension must not reinvoke the article drafter")
 
 
 def test_needs_hedging_self_heals_and_ships(monkeypatch) -> None:
@@ -256,20 +262,20 @@ def test_needs_hedging_self_heals_and_ships(monkeypatch) -> None:
 
 
 def test_comprehension_is_advisory_repairs_but_never_blocks_publish(monkeypatch) -> None:
-    # A hard-to-follow piece is a dud, not a lie: gate C earns one ramp-repair lap, then ships either
-    # way. needs_ramp must NOT flip a publishable piece to held — if the body stays intact.
+    # A hard-to-follow piece is a dud, not a lie: gate C rewrites, then ships either way.
     body = " ".join(["word"] * 200)
+    rewrite = " ".join(["clear"] * 180)
     plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
     draft_out = {"draft": {"id": "d", "title": "t", "body": body, "word_count": 200},
                  "gauntlet": {"outcome": "grounded"}}
     _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}})
-    # first read flags a ramp gap; after the repair, it reads clear (body still long enough)
-    comp = _Sequence({"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}]}},
-                     {"comprehension_check": {"verdict": "clear", "findings": []}})
+    comp = _Sequence(
+        {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}],
+                                 "title": "t", "body": rewrite}},
+        {"comprehension_check": {"verdict": "clear", "findings": []}},
+    )
     monkeypatch.setattr(pl, "build_comprehension_reviewer", lambda ctx: comp)
-    monkeypatch.setattr(pl, "build_drafter", lambda ctx: _Sequence(
-        {"draft": {"id": "d", "title": "t", "body": body + " ramp", "word_count": 201},
-         "profile": _spine_profile("p")}))
+    monkeypatch.setattr(pl, "build_drafter", _never_drafter)
 
     events: list = []
     r = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({"profile": _spine_profile("p")})["pipeline"]
@@ -279,17 +285,16 @@ def test_comprehension_is_advisory_repairs_but_never_blocks_publish(monkeypatch)
 
 
 def test_comprehension_repair_that_collapses_the_body_is_rejected(monkeypatch) -> None:
-    # Live failure: ramp repair wiped ~400 words down to one sentence; must keep the prior draft.
+    # Live failure: a rewrite wiped ~400 words down to one sentence; must keep the prior draft.
     long_body = " ".join(["word"] * 400)
     plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
     draft_out = {"draft": {"id": "d", "title": "t", "body": long_body, "word_count": 400},
                  "gauntlet": {"outcome": "grounded"}}
     _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}})
     monkeypatch.setattr(pl, "build_comprehension_reviewer", lambda ctx: _Sequence(
-        {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}]}}))
-    monkeypatch.setattr(pl, "build_drafter", lambda ctx: _Sequence(
-        {"draft": {"id": "d", "title": "t", "body": "One hollow sentence.", "word_count": 3},
-         "profile": _spine_profile("p")}))
+        {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}],
+                                 "body": "One hollow sentence."}}))
+    monkeypatch.setattr(pl, "build_drafter", _never_drafter)
     events: list = []
     out = pl.build_editorial_pipeline_graph(_ctx(events)).invoke({"profile": _spine_profile("p")})
     r = out["pipeline"]
@@ -299,6 +304,26 @@ def test_comprehension_repair_that_collapses_the_body_is_rejected(monkeypatch) -
         et == pl.RAMP_REPAIRED and (p or {}).get("verdict") == "repair_rejected_collapsed"
         for et, p in events
     )
+
+
+def test_a_shorter_rewrite_is_kept(monkeypatch) -> None:
+    """Getting shorter is the point. The old 55% keep-floor discarded digestable rewrites."""
+    long_body = " ".join(["word"] * 400)
+    short = " ".join(["kept"] * 180)
+    plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
+    draft_out = {"draft": {"id": "d", "title": "t", "body": long_body, "word_count": 400},
+                 "gauntlet": {"outcome": "grounded"}}
+    _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}})
+    monkeypatch.setattr(pl, "build_comprehension_reviewer", lambda ctx: _Sequence(
+        {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}],
+                                 "title": "Shorter", "body": short}},
+        {"comprehension_check": {"verdict": "clear", "findings": []}},
+    ))
+    monkeypatch.setattr(pl, "build_drafter", _never_drafter)
+    out = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile("p")})
+    assert out["draft"]["body"] == short
+    assert out["pipeline"]["word_count"] == 180
+    assert out["pipeline"]["status"] == "publishable"
 
 
 def test_hollow_draft_is_not_publishable(monkeypatch) -> None:
@@ -374,16 +399,16 @@ def test_a_still_unclear_piece_ships_anyway(monkeypatch) -> None:
                  "gauntlet": {"outcome": "grounded"}}
     _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}})
     monkeypatch.setattr(pl, "build_comprehension_reviewer", lambda ctx: _Sequence(
-        {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}]}}))  # never clears
-    monkeypatch.setattr(pl, "build_drafter", lambda ctx: _Sequence(
-        {"draft": {"id": "d", "title": "t", "body": body, "word_count": 200}, "profile": _spine_profile("p")}))
+        {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}],
+                                 "body": body}}))  # never clears
+    monkeypatch.setattr(pl, "build_drafter", _never_drafter)
 
     r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile("p")})["pipeline"]
     assert r["status"] == "publishable"                       # ships; the site is the review surface
     # ...but the verdict is never hidden — it rides on the report for the operator to see.
     assert r["comprehension_verdict"] == "needs_ramp"
     # THE LOOP IS BOUNDED. A reviewer that never clears would otherwise run forever, and each
-    # read can always find something. Two reads, each followed by a fix, then it ships.
+    # read can always find something. Two reads, each carrying a rewrite, then it ships.
     assert r["comprehension_rounds"] == pl._MAX_REVIEW_LAPS == 2
 
 
@@ -686,44 +711,43 @@ def _long(n: int = 200) -> str:
     return " ".join(["word"] * n)
 
 
-def _wire_review(monkeypatch, reviewer, drafter):
+def _wire_review(monkeypatch, reviewer, drafter=None):
     body = _long()
     _wire(monkeypatch, {"treatment": {"id": "t"}, "gauntlet": {}},
           {"draft": {"id": "d", "title": "t", "body": body, "word_count": 200},
            "gauntlet": {"outcome": "grounded"}},
           {"caveat_check": {"verdict": "verified"}})
     monkeypatch.setattr(pl, "build_comprehension_reviewer", lambda ctx: reviewer)
-    monkeypatch.setattr(pl, "build_drafter", lambda ctx: drafter)
+    monkeypatch.setattr(pl, "build_drafter", drafter or _never_drafter)
     return pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile("p")})["pipeline"]
 
 
 def test_the_second_review_reads_the_repaired_draft(monkeypatch) -> None:
-    """draft -> review -> draft -> review. One lap was demonstrably not enough: the same defect
-    survived its single repair on three consecutive published articles."""
+    """draft → review(+rewrite) → review. The second read sees the reviewer's draft, not the first."""
+    rewritten = " ".join(["rewritten"] * 180)
     reviewer = _counting(
-        {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}]}},
+        {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}],
+                                 "title": "t", "body": rewritten}},
         {"comprehension_check": {"verdict": "clear", "findings": []}},
     )
-    drafter = _counting({"draft": {"id": "d", "title": "t", "body": _long(), "word_count": 200},
-                         "profile": _spine_profile("p")})
-    r = _wire_review(monkeypatch, reviewer, drafter)
+    r = _wire_review(monkeypatch, reviewer)
 
-    assert len(reviewer.calls) == 2 and len(drafter.calls) == 1
+    assert len(reviewer.calls) == 2
+    assert "rewritten" in (reviewer.states[1].get("draft") or {}).get("body", "")
     assert r["comprehension_verdict"] == "clear"
     assert r["comprehension_rounds"] == 2
 
 
 def test_the_loop_ends_on_a_fix_not_a_read(monkeypatch) -> None:
-    """The last repair is NOT re-reviewed: a read whose verdict cannot change whether the piece
-    ships is spend with no consequence attached. So two reads, two fixes, then publish."""
+    """The last rewrite is NOT re-reviewed: a read whose verdict cannot change whether the piece
+    ships is spend with no consequence attached. So two reads (each a rewrite), then publish."""
+    body = _long(180)
     reviewer = _counting(
-        {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}]}})
-    drafter = _counting({"draft": {"id": "d", "title": "t", "body": _long(), "word_count": 200},
-                         "profile": _spine_profile("p")})
-    r = _wire_review(monkeypatch, reviewer, drafter)
+        {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}],
+                                 "body": body}})
+    r = _wire_review(monkeypatch, reviewer)
 
     assert len(reviewer.calls) == 2        # never a third read
-    assert len(drafter.calls) == 2         # both fixes applied
     assert r["comprehension_rounds"] == 2
     assert r["status"] == "publishable"
 
@@ -732,16 +756,13 @@ def test_a_clean_piece_costs_no_repair_laps(monkeypatch) -> None:
     """The bound is a ceiling, not a quota — a good piece must not be rewritten for form's sake."""
     reviewer = _counting({"comprehension_check": {"verdict": "clear", "findings": []}})
 
-    def _never(ctx):
-        raise AssertionError("the drafter must not be re-invoked for a clear piece")
-
     body = _long()
     _wire(monkeypatch, {"treatment": {"id": "t"}, "gauntlet": {}},
           {"draft": {"id": "d", "title": "t", "body": body, "word_count": 200},
            "gauntlet": {"outcome": "grounded"}},
           {"caveat_check": {"verdict": "verified"}})
     monkeypatch.setattr(pl, "build_comprehension_reviewer", lambda ctx: reviewer)
-    monkeypatch.setattr(pl, "build_drafter", _never)
+    monkeypatch.setattr(pl, "build_drafter", _never_drafter)
 
     r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile("p")})["pipeline"]
     assert len(reviewer.calls) == 1
@@ -749,13 +770,12 @@ def test_a_clean_piece_costs_no_repair_laps(monkeypatch) -> None:
 
 
 def test_a_rejected_repair_stops_the_loop_early(monkeypatch) -> None:
-    """A drafter returning nothing usable will do so again; burning the second lap is waste."""
+    """A needs_ramp with no rewrite body will not grow one on the next lap."""
     reviewer = _counting(
         {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "cmp_01"}]}})
-    drafter = _counting({})                # produces no draft
-    r = _wire_review(monkeypatch, reviewer, drafter)
+    r = _wire_review(monkeypatch, reviewer)
 
-    assert len(reviewer.calls) == 1 and len(drafter.calls) == 1
+    assert len(reviewer.calls) == 1
     assert r["comprehension_rounds"] == 1
     assert r["status"] == "publishable"
 

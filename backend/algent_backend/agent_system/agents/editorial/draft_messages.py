@@ -25,14 +25,12 @@ def build_draft_message(
     prior: ArticleDraft | None = None,
     report: CitationReport | None = None,
     caveat: dict | None = None,
-    comprehension: dict | None = None,
     analytics_plan: dict | None = None,
 ) -> str:
     """The drafting task. With a prior draft + its citation audit, this is a REVISION pass.
 
-    With ``caveat`` (the v3b findings), it is the narrower HEDGING repair lap. With
-    ``comprehension`` (gate C findings), it is the RAMP repair lap: add the flagged handholds /
-    transitions or cut, and change nothing else.
+    With ``caveat`` (the v3b findings), it is the narrower HEDGING repair lap.
+    Comprehension rewrites live on the reviewer — this drafter is not that telephone.
     """
     parts = [
         f"# WRITE THE PIECE — treatment {treatment.id} (rev {treatment.revision})",
@@ -50,9 +48,7 @@ def build_draft_message(
         render_briefing(profile),
         "",
     ]
-    if prior is not None and comprehension is not None:
-        parts += _comprehension_block(prior, comprehension)
-    elif prior is not None and caveat is not None:
+    if prior is not None and caveat is not None:
         parts += _caveat_block(prior, caveat)
     elif prior is not None and report is not None:
         parts += _revision_block(prior, report, profile)
@@ -71,65 +67,6 @@ def build_draft_message(
             "`additions`. Cite the claim/source ids the prose rests on. Emit a DraftPayload."
         )
     return "\n".join(parts)
-
-
-def _comprehension_block(prior: ArticleDraft, comprehension: dict) -> list[str]:
-    """The RAMP repair lap — a general reader stumbled in specific places. Surgical, not a rewrite.
-
-    The constraint is hard and one-directional: ADD A HANDHOLD (plain ramp in your own voice,
-    uncited), CONNECT an island, CUT, or — for a drafter_vantage finding — RESTATE the same facts
-    from the reader's side. No new contested claims, no strengthening, no pad.
-    For missing_scene / assumed_context / vague_conflict, a handhold may be up to three short
-    sentences so the cold reader can hold the dispute and who wants what — still not a full rewrite.
-    announced_importance → cut the label sentence (do not rephrase into another signpost).
-
-    ``rewrite_for_reader`` was added because handhold-or-cut could not repair the defect we ship
-    most: a sentence whose *framing* is ours, not its content. Two laps of "add a ramp" changed
-    nothing on a piece that opened by rebutting a source the reader had never seen — there was no
-    ramp to add, because the sentence should not have been pointed that way.
-    """
-    lines = [
-        "## YOU ARE REPAIRING COMPREHENSION — a cold general reader stumbled in specific places",
-        "",
-        "Your prior draft is below. A reader who has NOT been following this story read it cold",
-        "and could not follow it in the places listed. Repair EXACTLY those and nothing else.",
-        "Your ONLY moves: add a plain handhold (your own voice, no citation — textbook foothold,",
-        "not evidence; usually one clause; up to three short sentences if the stumble is",
-        "missing_scene/assumed_context/vague_conflict on what the dispute *is* and who wants what),",
-        "connect an island onto the through-line with a real relation, CUT announced-importance",
-        "labels and circular restatement ('That first fact matters because…', 'this sets the frame',",
-        "'put plainly', 'phase change not closure'),",
-        "or — where the fix says rewrite_for_reader — SAY THE SAME THING FROM THE READER'S SIDE.",
-        "That last one is a re-pointing, not a rewrite of the piece: keep every fact, drop the",
-        "framing only we can see. You spent this run inside the profile and the reader has seen",
-        "none of it, so a sentence that argues with a source they never read, explains why an item",
-        "is in the piece, narrates what we could or could not confirm, or leans on a name we never",
-        "introduced, has to be said again facing outward. Use the suggested replacement sentence",
-        "when one is given; keep your own voice when it is better, but keep the facts.",
-        "Do NOT add new contested claims, do NOT strengthen any assertion, do NOT pad, do NOT",
-        "re-report, do NOT collapse the body. Every sentence not named below stays as written.",
-        "",
-        "### Where the reader stumbled",
-    ]
-    for f in (comprehension.get("findings") or []):
-        fid = f.get("id", "")
-        lines.append(f"- [{f.get('kind', 'other')} -> {f.get('fix', 'add_handhold')}] {fid}: {f.get('issue', '')}")
-        if f.get("where"):
-            lines.append(f'  at: "{f["where"]}"')
-        if f.get("suggestion"):
-            lines.append(f"  do: {f['suggestion']}")
-    lines += [
-        "",
-        "### Your prior draft",
-        f"TITLE: {prior.title}",
-        f"STANDFIRST: {prior.standfirst}",
-        "",
-        prior.body,
-        "",
-        "TASK: Emit a DraftPayload — the same piece with the flagged handholds/connections added or",
-        "the flagged passages cut. Carry the same cited ids. No new research.",
-    ]
-    return lines
 
 
 def _caveat_block(prior: ArticleDraft, caveat: dict) -> list[str]:

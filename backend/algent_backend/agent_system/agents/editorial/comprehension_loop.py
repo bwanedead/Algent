@@ -1,10 +1,11 @@
 """
 The comprehension-reviewer loop — draft -> ComprehensionCheck (the naive-reader lane, gate C).
 
-Tool-free, one nano judgment over the PROSE ALONE. Unlike the caveat lane there is no deterministic
-worklist to short-circuit on — comprehension is only visible by reading — so it always makes the
-(cheap) call when there is prose to read. It receives no profile and no treatment BY DESIGN: a
-reviewer that can see what the piece meant cannot judge whether it landed.
+Tool-free, one cold read of the PROSE ALONE. When the piece does not land, the same call emits
+the next draft (title/standfirst/body). Unlike the caveat lane there is no deterministic
+worklist to short-circuit on — comprehension is only visible by reading. It receives no profile
+and no treatment BY DESIGN: a reviewer that can see what the piece meant cannot judge whether
+it landed, and a rewrite from the page cannot grow new claims.
 """
 
 from __future__ import annotations
@@ -26,7 +27,7 @@ from .draft import ArticleDraft
 ARTIFACT_NAME = "comprehension_check.json"
 COMPREHENSION_COMPLETED = "comprehension_check.completed"
 COMPREHENSION_SKIPPED = "comprehension_check.skipped"
-GENERATOR = "comprehension_reviewer@v1"
+GENERATOR = "comprehension_reviewer@v2"
 
 
 class ComprehensionState(TypedDict, total=False):
@@ -53,19 +54,20 @@ def _message(draft: ArticleDraft, places: list[str] | None = None) -> str:
         f"TITLE: {draft.title}", f"STANDFIRST: {draft.standfirst}", draft.body.strip(),
         flags_block,
         "TASK: Read this as its intended general reader (cold, not following the story day to day). "
-        "Report only where you genuinely stumbled.\n"
+        "Report only where you genuinely stumbled. If it does not land, emit the next draft in "
+        "title/standfirst/body — same facts, digestible grain, no new claims. Leave those empty "
+        "when clear.\n"
         "FRIEND TEST (required): After reading, could you explain to a friend — using only this "
         "prose — (1) what happened / was found, (2) why it matters, (3) what the underlying "
         "dispute/situation is, (4) who wants what, (5) what remains open? If you only hold vague "
         "residue, that is needs_ramp: flag missing_news_kernel / vague_conflict / missing_scene "
-        "/ assumed_context / opening_order as fits.\n"
+        "/ assumed_context / opening_order as fits, and write the piece that would pass.\n"
         "Also flag jargon_before_gloss, unclear_causal_chain, method_before_payoff, lecture, "
         "wall_of_text, "
         "and announced_importance machine-slop ('That first fact matters because…', "
-        "'this sets the frame', 'put plainly') with fix=cut.\n"
-        "Your fixes may be add_handhold, connect_to_thread, cut, rewrite_for_reader, or reorder. "
-        "Prefer reorder for buried/opening-order defects. If the friend test passes and it reads "
-        "clearly, return 'clear' with no findings.",
+        "'this sets the frame', 'put plainly') — cut those in the rewrite.\n"
+        "If the friend test passes and it reads clearly, return 'clear' with no findings and "
+        "empty title/standfirst/body.",
     ) if x)
 
 

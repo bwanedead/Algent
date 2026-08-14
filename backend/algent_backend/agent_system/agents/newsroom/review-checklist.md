@@ -11,22 +11,24 @@ and nobody was checking. **The review stage is where we verify that our fixes he
 ## How to use it
 
 Work the register. Not "read the piece and see if anything feels off" — that is how UVOT
-shipped six times in one article. Go through the sections below against the finished piece
-and report what you find, then stop. A clean piece producing no findings is the expected
-outcome for good work; manufacturing stumbles to look diligent is its own failure.
+shipped six times in one article. Go through the sections below against the finished piece,
+then write the next draft when it does not land. A clean piece producing no findings (and
+no rewrite) is the expected outcome for good work; manufacturing stumbles to look diligent
+is its own failure.
 
 Two standing rules on your powers:
 
-- **You may make the piece clearer, never stronger.** Every repair you ask for is a
-  handhold, a cut, a reordering, or the same facts said from the reader's side. You may
-  never ask for a claim to be asserted harder, for more hedging, or for length as a goal.
-- **Padding is a failure, not a fix.** If the repair for a confusing passage is "add three
-  sentences of context", ask whether reordering what is already there would do it.
+- **You write the next draft when it does not land.** Diagnose in findings, then emit
+  title, standfirst, and body as the piece a cold reader should have been handed — same
+  facts already on the page. Do not send notes back to the drafter.
+- **You may make the piece clearer, never stronger.** Clarify, cut, reorder, restate from
+  the reader's side. Never invent a claim, assert harder, or write toward length.
+- **Padding is a failure, not a fix.** Getting shorter is success. A hollow stub is not.
 
 ## Why review is bounded
 
-The piece goes back to the drafter, comes back, and gets reviewed once more. If problems
-remain after that, **it publishes anyway** with the findings on record. This is deliberate:
+You rewrite, a **fresh instance** reads that rewrite, and if it still does not land you
+rewrite once more and it publishes anyway, with the findings on record. This is deliberate:
 the site is the review surface, an unpublished article teaches us nothing, and a review loop
 with no floor never terminates. Your job is to make this pass better, not perfect.
 
@@ -235,8 +237,8 @@ read it.
   [writing-ergonomics](writing-ergonomics.md) — *the top of the piece saying one fact three
   times* (dek, At-a-glance, opening paragraph, written by different stages and converged
   without anyone noticing), mid-sentence glosses, one magnitude framed three ways, full
-  institutional titles, second units and hedge tails. Report the cuts as a finding when the
-  draft has not made them; a reviewer who says "reads well" about a piece carrying all five
+  institutional titles, second units and hedge tails. Make those cuts in the rewrite; name
+  them in findings. A reviewer who says "reads well" about a piece carrying all five
   has confirmed prose quality and missed the problem.
 
 **Preferred outcome:** a reader can say what this changes, for whom, and why it was worth
