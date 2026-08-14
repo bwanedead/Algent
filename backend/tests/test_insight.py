@@ -57,6 +57,22 @@ def test_a_fix_rewrites_the_title_not_the_numbers() -> None:
     assert out.rows == spec.rows
 
 
+def test_muse_schema_forbids_open_row_objects() -> None:
+    def walk(node: object) -> None:
+        if not isinstance(node, dict):
+            return
+        if node.get("type") == "object":
+            assert node.get("additionalProperties") is not True
+        for value in node.values():
+            walk(value)
+            if isinstance(value, list):
+                for item in value:
+                    walk(item)
+
+    walk(InsightSpec.model_json_schema())
+    walk(Critique.model_json_schema())
+
+
 def test_the_same_takeaway_is_not_queued_twice(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(q, "queue_path", lambda: tmp_path / "i.jsonl")
     now = datetime(2026, 8, 13, 12, 0, tzinfo=UTC)
@@ -94,6 +110,7 @@ def test_compose_does_not_queue_a_dropped_warrant(tmp_path, monkeypatch) -> None
 
     monkeypatch.setattr(q, "queue_path", lambda: tmp_path / "i.jsonl")
     monkeypatch.setattr(q, "images_dir", lambda: tmp_path / "img")
+    monkeypatch.setattr(q, "_STATE_PATH", tmp_path / "state.json")
     monkeypatch.setattr(ins, "produce", lambda **k: (
         InsightSpec(beat="chips", warranted=False, note="thin"), "", ""))
     added, note = ins.compose()

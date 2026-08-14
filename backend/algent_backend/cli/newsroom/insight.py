@@ -171,6 +171,11 @@ def compose(*, dry_run: bool = False,
             now: datetime | None = None) -> tuple[list[q.InsightPost], str]:
     dest = q.images_dir() / datetime.now(UTC).strftime("%Y%m%dT%H%M%S")
     spec, text, media = produce(dest=dest, already=already_said(q.load()))
+    state = q.read_state()
+    state["composed_at"] = datetime.now(UTC).isoformat()
+    if spec.beat:
+        state["last_beat"] = spec.beat
+    q.write_state(state)
     if not spec.warranted or not text or not media:
         if dest.exists():
             shutil.rmtree(dest, ignore_errors=True)
@@ -187,10 +192,6 @@ def compose(*, dry_run: bool = False,
         image_path=media,
     )
     added, dupes = q.enqueue([post], now=now)
-    state = q.read_state()
-    state["composed_at"] = datetime.now(UTC).isoformat()
-    state["last_beat"] = spec.beat
-    q.write_state(state)
     if dupes and not added:
         return [], "already queued or posted that takeaway"
     return added, ""

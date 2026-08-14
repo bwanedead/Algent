@@ -47,8 +47,8 @@ RULES:
 - Plot the table that exists, not a window that makes the takeaway look dramatic.
 - takeaway is the chart TITLE and the tweet — a claim, not "X by year".
 - source_name + source_url of the table you used. as_of is the data's date, not today.
-- rows: for bars, objects with label + value. For line/gif, objects with the x_key field
-  and one number per series name.
+- rows: bars use label + value. Lines/gifs use x (the time or category) plus y / y2 / y3
+  matching series[0] / series[1] / series[2]. Do not invent extra keys.
 - unit is what the axis says (GW, $, %, TWh).
 - highlight is the bar label the takeaway is about (bars only).
 - Do not prefix with Radar or any lane label.
