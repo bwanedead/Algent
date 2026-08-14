@@ -99,6 +99,22 @@ def test_the_same_takeaway_is_not_queued_twice(tmp_path, monkeypatch) -> None:
     assert again == [] and len(dupes2) == 1
 
 
+def test_a_due_insight_is_not_starved_by_a_later_radar_post(monkeypatch) -> None:
+    from algent_backend.cli.newsroom import insight as ins
+    from algent_backend.publishing import briefing_queue as briefing_q
+    from algent_backend.publishing import radar_queue as radar_q
+
+    due = datetime(2026, 8, 14, 7, 22, tzinfo=UTC)
+    radar = datetime(2026, 8, 14, 7, 26, tzinfo=UTC)
+    now = datetime(2026, 8, 14, 7, 45, tzinfo=UTC)
+    monkeypatch.setattr(q, "last_posted_at", lambda: None)
+    monkeypatch.setattr(radar_q, "last_posted_at", lambda: radar)
+    monkeypatch.setattr(briefing_q, "last_posted_at", lambda: None)
+    assert ins._quiet_gap_ok(now, scheduled_for=due.isoformat()) is True
+    fresh = datetime(2026, 8, 14, 7, 40, tzinfo=UTC)
+    assert ins._quiet_gap_ok(now, scheduled_for=fresh.isoformat()) is False
+
+
 def test_a_pause_file_turns_the_lane_off(tmp_path, monkeypatch) -> None:
     from algent_backend.cli.newsroom import insight as ins
 

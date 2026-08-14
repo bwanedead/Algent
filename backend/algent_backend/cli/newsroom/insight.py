@@ -208,14 +208,28 @@ def release(item: q.InsightPost) -> str:
     return result.url
 
 
-def _quiet_gap_ok(now: datetime) -> bool:
+def _quiet_gap_ok(now: datetime, *, scheduled_for: str = "") -> bool:
+    """Do not sit a *new* figure on a Radar/briefing post that just went out.
+
+    A figure that was already due before that other-lane post keeps its slot —
+    otherwise Radar posting every ~40m resets a 25m gap forever and insight never ships.
+    """
     from algent_backend.publishing import briefing_queue as briefing_q
 
     stamps = [q.last_posted_at(), radar_q.last_posted_at(), briefing_q.last_posted_at()]
     latest = max((s for s in stamps if s is not None), default=None)
     if latest is None:
         return True
-    return now - latest >= timedelta(minutes=25)
+    if now - latest >= timedelta(minutes=25):
+        return True
+    if scheduled_for:
+        try:
+            due_at = datetime.fromisoformat(scheduled_for)
+        except ValueError:
+            due_at = now
+        if due_at <= latest:
+            return True
+    return False
 
 
 def _should_compose(now: datetime) -> bool:
@@ -253,12 +267,13 @@ def daemon_tick() -> str:
     notes = [_safe_poll()]
     notes.append(_compose_note(now))
     notes = [n for n in notes if n]
-    if not _quiet_gap_ok(now):
-        return "; ".join(notes)
     ready = sorted(q.due(now=now), key=lambda p: p.scheduled_for or "")
     if not ready or not write_configured():
         return "; ".join(notes)
     item = ready[0]
+    if not _quiet_gap_ok(now, scheduled_for=item.scheduled_for):
+        notes.append("insight due, waiting 25m so it does not sit on a Radar post")
+        return "; ".join(notes)
     try:
         url = release(item)
     except XWriteError as exc:
