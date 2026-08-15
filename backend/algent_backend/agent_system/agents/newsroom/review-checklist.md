@@ -176,9 +176,15 @@ read it.
   appendix, which we already publish.
 - **Ratio test.** Roughly, how much of this piece is *significance and consequence* versus
   *method and peripheral detail*? If the second dominates, it is a walkthrough, not an article.
-- **Not a word cap.** The fix is never "make it shorter" — it is cutting the twigs so the
-  forest is visible. A long piece that stays on the through-line is fine; a short one buried
-  in procedure is not.
+- **Stay on the premise; default five minutes.** A landed piece is a ~5-minute read
+  (~1,100 words) answering the question the title opened. Extra minutes must be earned
+  by that same premise. A section that walks a different world — jobs, contractor
+  geography, demographics after a power-share open — is the ramble, even when every
+  number is true and sourced. Roll it to the connection clause. We shipped a Poland
+  coal-exit piece at 2,354 words that opened on July's solar-driven coal low and then
+  toured Silesian employment, Social Contract leave rates, and contractor dependence;
+  review named the lecture and still wrote the encyclopedia. "Completeness outranks
+  shorter" and "not a word cap" were the lines that let it through.
 - **Resolution check: is this worth what it costs the reader?** The most reliable source of
   length is not padding but *grain* — particulars carried finer than the reader will ever use.
   A border piece named six friction points with their disengagement dates; a reader holds
@@ -205,8 +211,8 @@ read it.
   a sentence, say so and name the section. Six well-merged concepts written as six long
   sections is the same overlong article by another route — a piece can pass every upstream
   check and still spend the reader's attention on enumeration.
-- **Run the compression pass, and name what you cut.** Not a word cap, but not a pass you may
-  skip either: pieces on the through-line still land several hundred words heavy, because the
+- **Run the compression pass, and name what you cut.** Not optional, and not a substitute
+  for the ceiling: pieces on the through-line still land several hundred words heavy, because the
   padding arrives disguised as care. Check the five patterns in
   [writing-ergonomics](writing-ergonomics.md) — *the top of the piece saying one fact three
   times* (dek, At-a-glance, opening paragraph, written by different stages and converged

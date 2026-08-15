@@ -43,7 +43,7 @@ from .analytics_contracts import (
     AnalyticsPlan,
     AnalyticsRequest,
 )
-from .analytics_harness import resolve_harness
+from .analytics_harness import resolve_harness, run_with_fallback
 
 GENERATOR = "analytics_worker@v1"
 ANALYTICS_WORKER_COMPLETED = "analytics_worker.completed"
@@ -695,7 +695,7 @@ def _grok_runner(
     (codex by default, grok when quota allows). ``allow_web`` is True only for may_source
     requests — profile-held charts stay offline.
     """
-    return resolve_harness().run(prompt, folder, timeout=timeout, allow_web=allow_web)
+    return run_with_fallback(prompt, folder, timeout=timeout, allow_web=allow_web)
 
 
 Runner = Callable[[str, Path], tuple[bool, str]]
@@ -712,12 +712,14 @@ def update_grok() -> str:
     return resolve_harness().update()
 
 
-def canary(workspace: Path, *, runner: Runner | None = None, timeout: float = 120.0) -> tuple[bool, str]:
+def canary(workspace: Path, *, runner: Runner | None = None, timeout: float = 300.0) -> tuple[bool, str]:
     """Prove the freshly-updated harness still works, on fixture data, before spending on real work.
 
     Seconds of quota: draw one tiny chart from known numbers and check an artifact came back. A
     pass means the new build behaves; a fail means we skip analytics for this run and SAY SO,
-    rather than discovering the breakage halfway through an article's visuals.
+    rather than discovering the breakage halfway through an article's visuals. The timeout is
+    startup-honest (grok can sit for minutes before the first byte); the default runner also
+    tries the sibling harness, so one CLI stall is not a silent no-charts article.
     """
     folder = workspace / "_canary"
     shutil.rmtree(folder, ignore_errors=True)

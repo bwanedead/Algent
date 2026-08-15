@@ -43,6 +43,19 @@ INSIGHT_SPACING_MIN = 180
 #: How often the supervisor may commission a new figure when the queue is thin.
 INSIGHT_COMPOSE_EVERY_MIN = 240
 
+#: Default landing for a piece a friend will finish. Most stories stop here.
+#: Extra minutes must be earned by the focal thing (more sides of the same
+#: dispute, a mechanism that will not fit in a clause) — never by having
+#: researched an adjacent world. Wired into treatment briefing, drafter task,
+#: and comprehension review.
+ARTICLE_DIGEST_WORDS = 1100
+ARTICLE_DIGEST_MINUTES = 5
+#: Absolute cap even when earned. A 7-minute piece is the exception, not a
+#: generous default.
+ARTICLE_DIGEST_CEILING_WORDS = 1500
+ARTICLE_DIGEST_CEILING_MINUTES = 7
+ARTICLE_WPM = 220
+
 
 # Structured final portfolio needs room: ~400 output tokens/vector is a safe
 # planning figure (title+thesis+rationale+questions+sources). Default ReAct

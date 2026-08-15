@@ -23,6 +23,7 @@ from algent_backend.agent_system.runs.context import AgentRunContext
 from .comprehension_contracts import ComprehensionCheck
 from .comprehension_prompts import SYSTEM_PROMPT
 from .draft import ArticleDraft
+from .length import count_words, reviewer_length_task
 
 ARTIFACT_NAME = "comprehension_check.json"
 COMPREHENSION_COMPLETED = "comprehension_check.completed"
@@ -50,11 +51,13 @@ def _message(draft: ArticleDraft, places: list[str] | None = None) -> str:
           "there, is not the same as the story being ABOUT it."
         if places else ""
     )
+    words = count_words(draft.body)
     return "\n\n".join(x for x in (
         f"TITLE: {draft.title}", f"STANDFIRST: {draft.standfirst}", draft.body.strip(),
         flags_block,
         "TASK: Read this cold. If it does not land, emit the next draft in title/standfirst/body "
-        "(same facts, digestible grain, no new claims). Leave those empty when clear.",
+        "(same facts, digestible grain, no new claims). Leave those empty when clear. "
+        + reviewer_length_task(words),
     ) if x)
 
 

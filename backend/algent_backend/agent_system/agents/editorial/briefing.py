@@ -9,6 +9,7 @@ view, never the source of truth. Pure: treatment in, markdown out.
 
 from __future__ import annotations
 
+from .length import ceiling_minutes, ceiling_words, digest_minutes, digest_words, word_band
 from .treatment import EditorialTreatment
 
 
@@ -26,16 +27,19 @@ def render_treatment(t: EditorialTreatment) -> str:
         # The drafter's sharpest test: every paragraph must earn its place answering this.
         out += ["## The question this piece answers (for the reader)", t.reader_question, ""]
     if t.read_minutes:
-        # Roughly 220 words a minute. Given as a range because the point is a bound to write
-        # toward, not a number to hit — and coming in under it is a good outcome, not a shortfall.
-        low, high = int(t.read_minutes * 190), int(t.read_minutes * 250)
+        # Band is ~220 wpm; the high end is the house ceiling so a generous treatment
+        # cannot authorize a tour. Coming in under is success; over the ceiling is a miss.
+        low, high = word_band(t.read_minutes)
         out += [
             "## How deep a read this story merits",
             f"**~{t.read_minutes} min** (about {low}-{high} words)"
             + (f" — {t.read_minutes_why}" if t.read_minutes_why else ""),
-            "A soft bound, judged from the whole profile before any prose existed. Write toward "
-            "it; if the understanding lands sooner, STOP — finishing short is a good outcome, "
-            "and there is nothing here to pad out to.",
+            f"Default landing: **under {digest_words()} words (~{digest_minutes()} min)**. "
+            f"Earned ceiling: {ceiling_words()} words (~{ceiling_minutes()} min) — only if "
+            "the extra minutes stay on this premise. The band is how deep THIS story merited, "
+            "not a quota to fill. Write toward it; if the understanding lands sooner, STOP. "
+            "An adjacent world is a clause, not a section. Over the earned ceiling is a "
+            "failed draft.",
             "",
         ]
     out += _entry_block(t)

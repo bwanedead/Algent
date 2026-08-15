@@ -167,12 +167,20 @@ relies on is enough for the significance to land; the exam-level walkthrough is 
 We will rarely need a lecture on anything. If a section could be a textbook chapter, it is
 the wrong grain.
 
-This is not an instruction to write shorter. A long piece that stays on the through-line is
-fine; a short one buried in procedure is not. Cut twigs, not length.
+Cut twigs so the piece lands in about **five minutes** (~1,100 words). Extra minutes must
+be earned by the same premise the headline opened — more sides of that dispute, a mechanism
+that will not fit in a clause. A short piece buried in procedure also fails.
+
+**Stay on the premise.** A true fact from the research is not automatically in the piece.
+If a paragraph would take the reader into a different world than the title opened — labour
+markets after a power-share finding, contractor geography, demographic decline — write the
+connection as a clause ("the phase-out is politically hard because the remaining jobs sit
+in one region") and stop. Touring that world is how a tight piece turns into a ramble
+nobody asked for. Length is never earned by having researched an adjacent system.
 
 ## Do more with less — the three-tier test
 
-The aim is not a shorter piece. It is **more understanding per sentence the reader spends**. Those
+The aim is not a word count for its own sake. It is **more understanding per sentence the reader spends**. Those
 come apart constantly: a piece can be exhaustive and convey less than one that named the pattern
 and moved on, because a reader given twelve particulars holds none of them, while a reader given
 the shape holds the shape.
@@ -200,16 +208,18 @@ If yes, and nothing load-bearing is lost, replace it.
 
 Precision survives all of this. "Three main stretches" is exact; it is not hedging or vagueness,
 and rolling up is never license to blur a number, soften a finding, or duck a disagreement. What
-is being cut is *enumeration*, not accuracy — and never a load-bearing branch, a must-use item, or
-a serious perspective, which stay whatever the cost in words.
+is being cut is *enumeration*, not accuracy — and never a load-bearing side of *this* dispute.
+An adjacent world does not become a perspective that earns minutes.
 
 ## The compression pass — five patterns that pad without adding
 
 "Cut twigs, not length" is right and has not been enough: pieces keep landing near 2,500 words
-carrying several hundred that no reader needs. The reason is that padding does not arrive as
-obvious filler. It arrives as *conscientiousness* — glossing a term, crediting an institution
-fully, giving a second unit, hedging a limit. Each instance looks like care. Together they are the
-difference between a tight piece and a tiring one.
+carrying several hundred that no reader needs. The default landing is **~1,100 words (~5 min)**;
+the earned ceiling is ~1,500 / ~7 min. The compression pass is how you hit the default.
+The reason padding survives is that it does not arrive as obvious filler. It arrives as
+*conscientiousness* — glossing a term, crediting an institution fully, giving a second unit,
+hedging a limit. Each instance looks like care. Together they are the difference between a
+tight piece and a tiring one.
 
 So make one explicit pass over the finished draft against these, and expect to remove real
 volume. If nothing comes out, you have not looked hard.

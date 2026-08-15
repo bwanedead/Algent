@@ -483,6 +483,23 @@ def test_sourced_rows_become_claim_shaped_evidence() -> None:
     assert "2019" in rows[0]["text"] and "542.2" in rows[0]["text"]
 
 
+def test_default_runner_falls_back_when_the_primary_harness_dies(monkeypatch, tmp_path: Path) -> None:
+    """Poland: grok canary timed out and both warranted figures were skipped.
+
+    ``run_with_fallback`` already existed; the worker never called it. Pin the
+    ``_grok_runner`` seam — a revert to ``resolve_harness().run`` must fail this test.
+    """
+    called: dict[str, bool] = {}
+
+    def fake_fallback(*_a, **_k):
+        called["yes"] = True
+        return True, "drew"
+
+    monkeypatch.setattr(aw, "run_with_fallback", fake_fallback)
+    ok, tail = aw._grok_runner("p", tmp_path, timeout=1)
+    assert ok and tail == "drew" and called.get("yes")
+
+
 def test_unattributed_data_never_becomes_a_claim() -> None:
     """No publisher URL, no claim — an unattributed number is not evidence."""
     from algent_backend.agent_system.agents.editorial.analytics_contracts import (

@@ -72,9 +72,13 @@ def test_reviewer_is_shown_prose_only_never_the_evidence() -> None:
     system = _Structured.last_message[0].content
     assert "LDL-C" in shown and "clm_" not in shown and "grounding" not in shown and "treatment" not in shown
     assert "next draft" in shown
+    # Length without a count is how 2,300-word pieces shipped after review named the lecture.
+    assert "This draft is" in shown and "1100 words" in shown
+    assert "under 1100 words" in system
     # Friend-test lives on the role; the defect catalog lives on the register — not restated in TASK.
     assert "FRIEND TEST" in system and "announced importance" in system
     assert "sends the piece back" not in system
+    assert "completeness in what matters outranks" not in system.lower()
 
 
 def test_vague_conflict_and_announced_importance_kinds_are_valid() -> None:

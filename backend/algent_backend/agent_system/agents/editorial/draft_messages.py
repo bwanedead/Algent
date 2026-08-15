@@ -15,6 +15,7 @@ from algent_backend.agent_system.agents.research.profile import SignalProfile
 from .briefing import render_treatment
 from .citations import CitationReport
 from .draft import ArticleDraft
+from .length import ceiling_words, digest_minutes, digest_words
 from .treatment import EditorialTreatment
 
 
@@ -60,7 +61,11 @@ def build_draft_message(
             "minimal scene orientation, THEN mechanism/causality with honest causal statuses, "
             "THEN depth. When plain_subject is set, say that before the specialist name. "
             "Carry every must-use item and serious perspective; respect every do-not-overstate "
-            "ceiling. Research for PRECISION — sharpening something the piece ALREADY carries "
+            "ceiling. Land under "
+            f"{digest_words()} words (~{digest_minutes()} min). Stay on the premise the "
+            "treatment named — an adjacent world is a clause, not a section. Over "
+            f"{ceiling_words()} words is a failed draft. "
+            "Research for PRECISION — sharpening something the piece ALREADY carries "
             "(an exact quote, a figure the profile only points at) — never to open a new "
             "subject. Following an interesting thread outward is how a piece on winter power "
             "ends up explaining drone manufacturing. Put everything new you find into "

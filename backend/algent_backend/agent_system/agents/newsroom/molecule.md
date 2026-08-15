@@ -276,12 +276,14 @@ is not a shorter half-truth; it is the same truth, delivered.
 
 So when compression feels like it is in tension with honesty, ask which is actually at stake:
 
-- **Would leaving this out change what the reader believes about the world?** Then it stays,
-  however long the piece gets.
+- **Would leaving this out change what the reader believes about the FOCAL THING?** Then it
+  stays as a clause or a sentence — not as a section that blows the digest grain, and not
+  as a tour of an adjacent world (jobs, demographics) the headline did not open.
 - **Would leaving it out only make the reader's model of the mechanism coarser?** Then it is a
-  resolution choice. The target is what the development **means** for the world the reader
-  already lives in — not a lecture on how the machine (or the statute, or the protocol) works.
-  A rough idea of what it relies on is enough for that meaning to land.
+  resolution choice. Yield so the piece still lands under the house grain. The target is what
+  the development **means** for the world the reader already lives in — not a lecture on how
+  the machine (or the statute, or the protocol) works. A rough idea of what it relies on is
+  enough for that meaning to land.
 
 The house reader wants to know what is going on and why it is significant. They are not sitting
 an exam on the apparatus. Completeness governs the shape (sides, caveats, contrary evidence),

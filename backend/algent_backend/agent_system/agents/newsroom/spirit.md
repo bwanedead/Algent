@@ -262,9 +262,10 @@ enemy of honesty; it is the act of it. Everything turns on *what* is cut:
   carefully, or do not say it. Reach for the second more than you do. It earns its one line among
   the limits, where a reader can go further if they wish; it does not earn a paragraph.
 
-**Length is never an objective.** Not a floor, not a target, not a proxy for rigor. Three hundred
-words that answer the reader's question beat nine hundred that tour our research. Stop when the
-shape is transferred.
+**Length is never a quota.** Not a floor, not a proxy for rigor. Three hundred words that
+answer the reader's question beat nine hundred that tour our research. Stop when the shape
+is transferred — and land under the house digest grain ([writing-ergonomics](writing-ergonomics.md)).
+Over that grain is not completeness; it is resolution the reader will not use.
 
 ## Social platforms (X and the like) — minimize deception about *what kind of evidence* this is
 We use X (and similar platforms) because they often carry **first-party speech** and **live
