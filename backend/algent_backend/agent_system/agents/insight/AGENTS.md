@@ -6,7 +6,8 @@
 - Contemplate (`contemplate.py`) picks the question first. Warrant grounds it. t0/t1 are optional climate, not the assignment.
 - Standing lenses in `beats.py` are a tie-break, not a fence.
 - Draw uses the analytics venv + templates (`draw_insight.py`). That is not grok-build. Article `analytics_worker` is the grok-build default (`analytics_harness.DEFAULT_HARNESS = "grok"`).
-- Charts carry a stacked Ohmega Monster mark + wordmark from `lib/theme.watermark`.
+- Charts carry a small Ohmega Monster lockup in the footer strip (`lib/theme.watermark`) — never on the series.
+- Forms: slope / line / gif first; bars last. A ranked list of today's sizes is a table.
 - Critique **fixes** a salvageable picture. Abandon a bad premise or an undrawable spec.
 - Queue: `publishing/insight_queue.py`. Same supervisor as Radar; `newsroom insight start|stop`.
 - Motion on X is GIF for now (timeline autoplay). MP4 is a later chunked upload, not this lane's first cut.

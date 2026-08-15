@@ -12,11 +12,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from lib.insight import growing_line_gif, takeaway_bars, takeaway_line  # noqa: E402
+from lib.insight import growing_line_gif, takeaway_bars, takeaway_line, takeaway_slope  # noqa: E402
 
 
 def draw(spec: dict) -> Path:
-    form = spec.get("form") or "takeaway_bars"
+    form = spec.get("form") or ""
+    if not form:
+        raise ValueError("insight spec needs a form")
     out = Path(spec["out"])
     title = spec.get("title") or spec.get("takeaway") or ""
     unit = spec.get("unit") or ""
@@ -26,6 +28,13 @@ def draw(spec: dict) -> Path:
     if form == "takeaway_bars":
         return takeaway_bars(
             rows, title=title, unit=unit, out=out,
+            highlight=spec.get("highlight") or "",
+            source=source, as_of=as_of,
+        )
+    if form == "takeaway_slope":
+        return takeaway_slope(
+            rows, title=title, unit=unit, out=out,
+            series=spec.get("series") or [],
             highlight=spec.get("highlight") or "",
             source=source, as_of=as_of,
         )

@@ -116,35 +116,36 @@ def mark_path() -> Path | None:
 
 
 def watermark(fig, theme: Theme | None = None) -> None:
-    """Stacked mark + wordmark as one brand unit. Never raises."""
+    """Brand lockup in the footer strip — never on the data. Never raises."""
     try:
         used = theme or DARK
-        if not fig.axes:
-            return
         pack = _brand_stack(used)
         from matplotlib.offsetbox import AnnotationBbox
 
+        # Figure-level, bottom-right of the reserved footer. box_alignment pins
+        # the right edge so a long wordmark cannot walk into the plot.
         artist = AnnotationBbox(
-            pack, (0.88, 0.14),
+            pack, (0.96, 0.05),
             xycoords="figure fraction",
+            box_alignment=(1.0, 0.5),
             frameon=False, pad=0, zorder=8,
         )
-        fig.axes[0].add_artist(artist)
+        fig.add_artist(artist)
     except Exception:  # noqa: BLE001 — branding must not kill a chart
         return
 
 
 def _brand_stack(theme: Theme):
-    """Mark beside the name — one lockup, not a floating icon and a stray caption."""
+    """Small lockup for the footer — a credit, not a stamp on the series."""
     from matplotlib.offsetbox import HPacker, OffsetImage, TextArea, VPacker
 
     font = resolve_font()
     name = TextArea(
         _WORDMARK,
         textprops={
-            "fontsize": 13,
+            "fontsize": 8,
             "color": theme.emphasis,
-            "alpha": 0.7,
+            "alpha": 0.45,
             "fontfamily": font,
             "fontweight": "bold",
             "va": "center",
@@ -153,14 +154,14 @@ def _brand_stack(theme: Theme):
     site = TextArea(
         _SITE,
         textprops={
-            "fontsize": 9,
+            "fontsize": 7,
             "color": theme.muted,
-            "alpha": 0.5,
+            "alpha": 0.4,
             "fontfamily": font,
             "va": "center",
         },
     )
-    words = VPacker(children=[name, site], align="left", pad=0, sep=1)
+    words = VPacker(children=[name, site], align="left", pad=0, sep=0)
     path = mark_path()
     if path is None:
         return words
@@ -168,9 +169,9 @@ def _brand_stack(theme: Theme):
     if rgba is None:
         return words
     h, w = rgba.shape[:2]
-    zoom = min(0.22, 88.0 / max(h, w, 1))
+    zoom = min(0.11, 44.0 / max(h, w, 1))
     mark = OffsetImage(rgba, zoom=zoom)
-    return HPacker(children=[mark, words], align="center", pad=2, sep=6)
+    return HPacker(children=[mark, words], align="center", pad=1, sep=4)
 
 
 def _silhouette(path: Path, theme: Theme) -> object | None:

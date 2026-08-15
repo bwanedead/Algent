@@ -30,9 +30,9 @@ weather, not the assignment.
 
 Return a Brief: climate (two sentences on the present), one pick, up to two
 runners-up. The pick must be a question a public table could answer. Prefer a
-question whose answer would surprise a well-informed reader, including when
-that means leaving the mainstream wire. Do not pick a question whose answer is
-the source's own figure.
+change, a split, or a competition over time. Prefer a question whose answer
+would surprise a well-informed reader, including when that means leaving the
+mainstream wire. Do not pick a question whose answer is the source's own figure.
 """
 
 SYSTEM_PROMPT = compose_system_prompt(UNIVERSAL_AGENT_BASE, AMBITION, CONTEMPLATE_ROLE)

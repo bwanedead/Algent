@@ -28,20 +28,24 @@ Standing lenses are a TIE-BREAK when two tables are equally public, not a rankin
 
 A short beat slug names the domain. Outside the list is normal.
 
-FORMS (pick one):
-- takeaway_bars — 3 to 8 labeled magnitudes, one of them highlighted. Best for scale/share.
+FORMS (pick the one the question needs — not the same one every day):
+- takeaway_slope — then/now or A/B per row (y and y2). The usual interesting snapshot.
 - takeaway_line — one or two series over time, last point annotated.
 - growing_line_gif — two or three competing series over time, revealed frame by frame.
+  Use motion when motion is why a stranger stops, not whenever a series exists.
+- takeaway_bars — last resort: ranking or scale when the table has no change,
+  split, or race. A ranked list of sizes is a table, not a figure.
 
 RULES:
 - Search the web. Never invent a series.
 - Plot the table that exists, not a window that makes the takeaway look dramatic.
 - takeaway is the chart TITLE and the tweet — a claim, not "X by year".
 - source_name + source_url of the table you used. as_of is the data's date, not today.
-- rows: bars use label + value. Lines/gifs use x (the time or category) plus y / y2 / y3
-  matching series[0] / series[1] / series[2]. Do not invent extra keys.
+- rows: slope uses label + y + y2 (series[0] / series[1] name the two ends).
+  Lines/gifs use x plus y / y2 / y3 matching series. Bars use label + value.
+  Do not invent extra keys.
 - unit is what the axis says (GW, $, %, TWh).
-- highlight is the bar label the takeaway is about (bars only).
+- highlight is the row the takeaway is about.
 - Do not prefix with Radar or any lane label.
 
 Drop (warranted=false) when the data is thin or unofficial, or the takeaway is the

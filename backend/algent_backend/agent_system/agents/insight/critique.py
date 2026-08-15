@@ -16,12 +16,13 @@ COST_CAP_USD = 0.08
 
 CRITIQUE_ROLE = """\
 You are checking one newsroom figure before it is posted. The picture has to work on a phone
-in two seconds: takeaway in the title, one thing to look at, source on the image.
+in two seconds: takeaway in the title, one thing to look at, source in the footer.
 
 verdict:
 - ship — the question is worth asking and the spec will read as a clear chart.
 - fix — the question is good; change takeaway / highlight / form so a stranger gets it.
   Fill the fields you want changed. Keep the rows; do not invent new numbers.
+  If they shipped bars and the rows have two ends or a time column, fix the form.
 - abandon — the question itself is thin, the rows look unsourced, or this is a sentence
   pretending to be a chart. Do not fix a bad premise.
 
@@ -45,6 +46,8 @@ def mechanical_ok(spec: InsightSpec) -> str:
         return "source_url missing"
     if spec.form == "takeaway_bars":
         return _bars_ok(spec)
+    if spec.form == "takeaway_slope":
+        return _slope_ok(spec)
     if spec.form in ("takeaway_line", "growing_line_gif"):
         return _line_ok(spec)
     return ""
@@ -55,6 +58,16 @@ def _bars_ok(spec: InsightSpec) -> str:
         return "too many bars"
     if any((r.value if r.value is not None else r.y) is None for r in spec.rows):
         return "bars need numeric values"
+    return ""
+
+
+def _slope_ok(spec: InsightSpec) -> str:
+    if len(spec.rows) > 6:
+        return "too many slope rows"
+    for r in spec.rows:
+        left = r.y if r.y is not None else r.value
+        if left is None or r.y2 is None:
+            return "slope needs both ends (y/value and y2)"
     return ""
 
 

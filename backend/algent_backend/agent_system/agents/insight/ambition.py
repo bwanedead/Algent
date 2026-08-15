@@ -22,4 +22,8 @@ not a series.
 NOVELTY OF THE FACT. A stranger should stop because they have not seen that
 picture of the world — not because the stunt is loud. If they already knew it
 from the source's own chart, we added no information.
+
+THE PICTURE IS NOT A TABLE. A ranked list of magnitudes as bars is a reprint
+of the spreadsheet. Show a change, a split, or a race. Same form every day is
+how a feed earns zero attention.
 """

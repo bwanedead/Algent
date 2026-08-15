@@ -58,6 +58,28 @@ def test_a_fix_rewrites_the_title_not_the_numbers() -> None:
     assert out.rows == spec.rows
 
 
+def test_slope_draw_rows_use_both_ends() -> None:
+    spec = InsightSpec(
+        form="takeaway_slope",
+        series=["2014", "2028"],
+        rows=[{"label": "US data centers", "y": 58, "y2": 580},
+              {"label": "other load", "value": 10, "y2": 12}],
+        warranted=True,
+    )
+    rows = draw_rows(spec)
+    assert rows[0]["2014"] == 58 and rows[0]["2028"] == 580
+    assert rows[1]["2014"] == 10
+
+
+def test_slope_needs_both_ends() -> None:
+    spec = InsightSpec(
+        form="takeaway_slope", takeaway="x", source_url="https://x.test",
+        rows=[{"label": "a", "value": 1}, {"label": "b", "value": 2}],
+        warranted=True,
+    )
+    assert "both ends" in mechanical_ok(spec)
+
+
 def test_bar_draw_rows_accept_x_and_y() -> None:
     spec = InsightSpec(
         form="takeaway_bars",
@@ -181,6 +203,7 @@ def test_warrant_doctrine_is_an_open_net() -> None:
     assert "tie-break" in body
     assert "prefer these when a table exists" not in body
     assert "contemplated" in body
+    assert "last resort" in body and "takeaway_slope" in body
 
 
 def test_ambition_rejects_a_reprint() -> None:
@@ -189,6 +212,17 @@ def test_ambition_rejects_a_reprint() -> None:
     body = AMBITION.casefold()
     assert "reprint" in body
     assert "reality" in body
+    assert "not a table" in body
+
+
+def test_watermark_lives_in_the_footer_not_on_the_series() -> None:
+    from pathlib import Path
+
+    src = (Path(__file__).resolve().parents[2] / "analytics_workspace" / "lib" / "theme.py").read_text(
+        encoding="utf-8",
+    )
+    assert "(0.88, 0.14)" not in src
+    assert "box_alignment" in src
 
 
 def test_a_brief_renders_the_pick() -> None:
