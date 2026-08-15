@@ -630,3 +630,15 @@ cost_by_stage: editorial=$0.0800, gauntlet=$0.3907
 ⚠ walled sources (carried with caveats): src_3a6e4c559f
 ⚠ figures not matched to evidence: 53.5%, 56%, 37.9%, 12.3%, 27%, 4.4%, 17.4%, 49%
 run: 0081__95aaae3a-7fad-4126-a773-8585f76ad9fb
+
+### PUBLISH russia-s-war-economy-runs-through-china-on-beijing-s-terms-bfd0ed — 2026-08-15
+status: publishable  ·  draft: grounded_with_caveats  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$1.0042  ·  mode: slim_finish  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.4418, gauntlet=$0.4350, profile=$0.1271, routing=$0.0004
+soft_cap_crossed: yes @ editorial
+refused: model_turn(slim_finish)
+⚠ walled sources (carried with caveats): src_ee25734c03, src_dcd34e7ff3, src_7fce4a2623, src_ea6eb23a97, src_b7fa65130a, src_589f8da2ed
+⚠ figures not matched to evidence: 60%, 37%, 17.5%, 35%, 85%, 20%, 0.5%, 25%, 39%
+run: 0082__166813f3-0cd4-48b9-a214-d6232b708118
