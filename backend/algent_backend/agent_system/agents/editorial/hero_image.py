@@ -81,8 +81,10 @@ _PROHIBITIONS = (
 _NO_TEXT = "Do not render any text, words, letters, numbers, labels or captions anywhere. "
 
 # A social thumbnail with no words is a picture people scroll past; one with a short hook
-# gives them a reason to stop. The words are ALWAYS ours — passed in, never invented — and
-# the review gate checks that what came back says exactly what we authorised.
+# that names the premise gives them a reason to stop. The words are ALWAYS ours — passed
+# in, never invented — and the review gate checks that what came back says exactly what
+# we authorised. Eight words is a thumbnail ceiling, not a license for a slogan without
+# referents (that bar lives in the headline-writer doctrine).
 MAX_HOOK_WORDS = 8
 
 

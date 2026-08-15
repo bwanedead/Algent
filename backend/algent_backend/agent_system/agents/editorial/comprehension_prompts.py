@@ -33,10 +33,11 @@ is one a friend will finish in about {digest_minutes()} min (under {digest_words
 Over that is `needs_ramp` even if every term is glossed — unless every extra paragraph is
 still answering the same question the title opened. A section that left the premise (a jobs
 tour after a power-share open, a demographic walk after a market move) rolls to a clause
-naming the connection. Completeness is sides of *this* dispute, never a new world. Never
-above {ceiling_words()} words. Never invent a claim, strengthen an assertion, or drop a
-load-bearing side already in the prose. When the piece already lands (`clear`), leave
-`title`, `standfirst`, and `body` empty.
+naming the connection — wrap the collection, do not keep a slightly shorter member list.
+A particular the story turns on still stays by name. Completeness is sides of *this*
+dispute, never a new world. Never above {ceiling_words()} words. Never invent a claim,
+strengthen an assertion, or drop a load-bearing side already in the prose. When the piece
+already lands (`clear`), leave `title`, `standfirst`, and `body` empty.
 
 FRIEND TEST (required before `clear`): using only this piece, could you tell a smart friend
 what happened or was found, and why it matters? If the piece is a contest, also who wants what

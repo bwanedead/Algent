@@ -33,6 +33,7 @@ def test_reviewer_task_names_the_count_and_the_premise() -> None:
     assert f"{digest_words()} words" in line
     assert "10.7 min" in line
     assert "left the premise" in line
+    assert "wrap the tour" in line
 
 
 def test_drafter_task_carries_the_same_ceiling() -> None:

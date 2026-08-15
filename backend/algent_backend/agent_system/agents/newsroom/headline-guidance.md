@@ -160,6 +160,15 @@ piece investigates is the news.** Say plainly if something is contested — "dis
 - **Event over setting.** The title and image hook must express what happened or was found,
   not merely where the story sits. Geography orients after the kernel lands.
 
+- **Image hook (on the hero):** a few words a cold scroller can place. This is the
+  thumbnail line on the announcement card. It is still the event or finding — not a
+  topic label, and not a slogan whose referents live only inside the article. Name
+  who and what so a stranger knows the kind of story ("Russia's war runs through
+  China", not "Beijing holds the lifeline"). A metaphor is fine only when those
+  referents stay in the words. Curiosity is the visible premise, not a withheld
+  referent. Written fresh (not the headline trimmed); six words is the target, eight
+  the ceiling. Same honesty bar as the title: sharpen, do not overstate.
+
 ## The test
 Read the finished piece, then ask: *does this headline name the article's real subject and
 angle so a cold reader knows what they are getting — without overstating what the body earns?*

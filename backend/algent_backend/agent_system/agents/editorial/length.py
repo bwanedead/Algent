@@ -69,6 +69,7 @@ def reviewer_length_task(words: int) -> str:
     n = max(0, int(words))
     return (
         f"This draft is {n} words (~{n / wpm():.1f} min). "
-        f"If you rewrite, come in under {digest_words()} words by cutting what "
-        f"left the premise — do not drop a side of the same dispute."
+        f"If you rewrite, come in under {digest_words()} words: wrap the tour, "
+        f"do not trim it. Cut what left the premise — do not drop a side of "
+        f"the same dispute."
     )

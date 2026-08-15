@@ -26,8 +26,7 @@ class Headline(BaseModel):
     # institution, or the word chart: an image model given numbers draws numbers, and drawn
     # numbers read as data. See ``hero_image`` for why that is a hard line.
     image_subject: str = ""
-    # A few words set over the hero image, thumbnail-style — the gist that makes someone
-    # scrolling a feed stop. Written fresh, NOT the headline trimmed: a headline compressed
-    # into an image reads as awkwardly as it sounds, because it was built to survive an
-    # index page, not to be read in one glance beside a picture.
+    # A few words set over the hero image, thumbnail-style. Names the premise a cold
+    # scroller can place (who / what the piece is), written fresh — not the headline
+    # trimmed, and not a slogan whose referents live only inside the article.
     image_hook: str = ""

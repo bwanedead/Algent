@@ -184,7 +184,10 @@ read it.
   coal-exit piece at 2,354 words that opened on July's solar-driven coal low and then
   toured Silesian employment, Social Contract leave rates, and contractor dependence;
   review named the lecture and still wrote the encyclopedia. "Completeness outranks
-  shorter" and "not a word cap" were the lines that let it through.
+  shorter" and "not a word cap" were the lines that let it through. A later Russia
+  war-economy piece was the same miss in a shorter coat: review named Hormuz leaving
+  the premise and the militarization enumerations, then cut 1,827 → 1,644 and left
+  the lists standing. Diagnosis without wrap is not a rewrite.
 - **Resolution check: is this worth what it costs the reader?** The most reliable source of
   length is not padding but *grain* — particulars carried finer than the reader will ever use.
   A border piece named six friction points with their disengagement dates; a reader holds

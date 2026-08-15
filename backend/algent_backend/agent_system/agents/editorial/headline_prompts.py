@@ -85,22 +85,11 @@ headline-guidance.md.
 
 4. IMAGE_HOOK — the few words that sit ON that image, thumbnail-style.
 
-This is the gist that makes somebody scrolling a feed stop, and it is **written fresh, not
-the headline trimmed**. A headline is built to survive an index page: precise, often a bit
-longer. Compressed into a picture it reads as stilted, because it was never meant to be taken
-in at a glance. Write the hook as you would say it out loud to someone who asked what the
-piece is about.
-
-- Six words or fewer is the target; eight is the ceiling.
-- Plain and natural: "New fossils rewrite baby T. rex", "Orcas caught taking a sunfish
-  apart". Not: "2026 study provides new evidence that very young T. rex hatchlings fed
-  early, but not hunting from birth" — that is a headline wearing a hat.
-- No colons, no subordinate clauses, no "study finds", no our-verification framing.
-- Honest at a glance: it may sharpen, it may not overstate. If the finding is qualified and
-  the qualification is the story, the hook says less rather than saying it wrongly.
-- Prefer a short hook whenever the subject is set. Leave EMPTY only when there is no honest
-  short version that does not overstate.
-- The hook must make sense WITHOUT reading the article (same cold-browser bar as the title).
+Write the premise a stranger can place — the event or finding, with who/what still in the
+words. Not a slogan whose referents live only inside the article, and not the headline
+trimmed. Six words is the target; eight is the ceiling. No colons, no "study finds".
+Honest at a glance: sharpen, do not overstate. Leave EMPTY only when there is no honest
+short version. Per headline-guidance.md.
 
 Emit a Headline {title, standfirst, quick_take, image_subject, image_hook}. Read the whole
 piece first; the surface package must be true to the FINAL prose, not a working title.

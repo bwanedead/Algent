@@ -193,8 +193,10 @@ a dispute — do not default to walking it. Ask which of three things is true:
    specific one, or it is the evidence for a contested claim. Keep it, by name.
 2. **The meaning lives at the collection layer.** Then convey the *collection*, not its members:
    "three main stretches of contested border", "a running dispute over who pays for the cleanup",
-   "several agencies with overlapping authority and no lead". The reader gets the same structure
-   at a fraction of the cost, and the members are in the receipts we publish anyway.
+   "several agencies with overlapping authority and no lead", "concerns relating to dual-use
+   inputs". The reader gets the same structure at a fraction of the cost, and the members are
+   in the receipts we publish anyway. A slightly shorter inventory is not this move — wrap
+   is one named clause, not fewer bullets.
 3. **The collection itself would not change what the reader takes away.** Drop it. You may leave
    a single clause signalling the direction exists — *"the legal fight over liability is its own
    long story"* — so a curious reader knows there is more without being made to read it.
