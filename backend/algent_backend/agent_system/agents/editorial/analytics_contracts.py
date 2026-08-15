@@ -99,6 +99,9 @@ class AnalyticsArtifact(BaseModel):
     question: str = ""
     status: RequestStatus = "produced"                 # produced | skipped | failed
     artifact_name: str = ""                            # the chart/table/insight file in the artifact store
+    #: Raster sibling (PNG/GIF) for consumers that cannot take SVG. Empty when the
+    #: drawer only wrote a vector. Same path as ``artifact_name`` when that file is already raster.
+    raster_name: str = ""
     body_md: str = ""                                  # the produced markdown for a table/insight (inlined by the publish view; empty for image kinds)
     data_name: str = ""                                # the backing data.csv in the artifact store
     caption: str = ""                                  # harness-assembled: worker caption + provenance

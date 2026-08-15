@@ -58,6 +58,7 @@ from algent_backend.publishing import publish as pb
 from algent_backend.publishing import site_git
 from algent_backend.publishing.x_article import announce as announce_article
 from algent_backend.publishing.x_article import copy_from_run
+from algent_backend.publishing.x_figures import announce_figures
 
 from ..discovery.synthesis.spec import build_graph as build_synthesis
 from ..editorial.pipeline_spec import build_graph as build_editorial
@@ -69,6 +70,7 @@ from .rail_contracts import NewsroomRailReport
 RAIL_COMPLETED = "newsroom_rail.completed"
 RAIL_STAGE = "newsroom_rail.stage"
 RAIL_ANNOUNCED = "newsroom_rail.announced"
+RAIL_FIGURES = "newsroom_rail.figures"
 BACKFEED_INJECTED = "newsroom_rail.backfeed_injected"
 RAIL_PUBLISHED = "newsroom_rail.published"
 
@@ -566,6 +568,11 @@ def _publish(context: AgentRunContext, report: NewsroomRailReport) -> None:
             announced = announce_article(
                 report.published_slug, report.article_title, dek=dek, gist=gist)
             context.emit(RAIL_ANNOUNCED, announced)
+            # Charts are a second beat: each figure is its own post, article URL as a reply.
+            # Independent of the hero announce — resume must still ship figures if the card
+            # already went out.
+            figured = announce_figures(report.published_slug, run_dir)
+            context.emit(RAIL_FIGURES, figured)
     except Exception as exc:  # noqa: BLE001 — see docstring: distribution never fails the article
         report.publish_action = f"error ({str(exc)[:90]})"
         context.emit(RAIL_PUBLISHED, {"action": report.publish_action, "published": False})

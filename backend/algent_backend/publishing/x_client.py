@@ -178,7 +178,7 @@ def upload_media(path: str | os.PathLike[str]) -> str:
 
 
 def post(text: str, *, media_ids: list[str] | None = None,
-         verify_identity: bool = True) -> Posted:
+         reply_to: str | None = None, verify_identity: bool = True) -> Posted:
     """Publish one post. Raises XWriteError on anything short of success."""
     import httpx
 
@@ -196,6 +196,8 @@ def post(text: str, *, media_ids: list[str] | None = None,
     payload: dict[str, Any] = {"text": text}
     if media_ids:
         payload["media"] = {"media_ids": [str(m) for m in media_ids]}
+    if reply_to:
+        payload["reply"] = {"in_reply_to_tweet_id": str(reply_to)}
 
     resp = httpx.post(
         _TWEETS_ENDPOINT,

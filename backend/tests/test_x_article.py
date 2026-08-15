@@ -232,6 +232,29 @@ def test_a_post_can_carry_an_image_id(monkeypatch) -> None:
     assert captured["json"]["media"]["media_ids"] == ["555"]
 
 
+def test_a_post_can_reply_to_another(monkeypatch) -> None:
+    """Chart posts put the article URL on a reply, not on the figure itself."""
+    import algent_backend.publishing.x_client as xc
+
+    captured: dict = {}
+
+    class _Resp:
+        status_code = 201
+
+        def json(self):
+            return {"data": {"id": "100", "text": "link"}}
+
+    def fake_post(url, headers=None, json=None, timeout=None):
+        captured["json"] = json
+        return _Resp()
+
+    monkeypatch.setattr(xc, "assert_identity", lambda: "ohmegamonster")
+    monkeypatch.setattr("httpx.post", fake_post)
+    out = xc.post("https://www.ohmega.monster/articles/s", reply_to="99", verify_identity=True)
+    assert out.id == "100"
+    assert captured["json"]["reply"]["in_reply_to_tweet_id"] == "99"
+
+
 def test_the_write_ceiling_is_x_longform_not_a_classic_card() -> None:
     """A themed briefing will not fit on a 280-character card. That is not a reason to refuse it.
 

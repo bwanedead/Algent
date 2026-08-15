@@ -89,6 +89,8 @@ units, for whom/where, and over what time**. If they have to guess, the analytic
 - **As-of / period** visible (title, subtitle, or caption).
 - **Caption** (`caption.md`): 1–3 plain sentences: (1) what the figure shows, (2) the main
   takeaway, (3) any important limit. No pipeline vocabulary, no claim ids.
+- **Write both `chart.svg` and `chart.png`** (same `savefig`, twice). Prefer SVG for the
+  site embed; still write the PNG sibling — some consumers cannot take a vector.
 - If the data is thin or the chart could mislead, say so and prefer to skip.
 
 **Choose the form that helps most (still only from given data)**
@@ -125,7 +127,7 @@ Use `lib.theme.apply_theme()` (dark default). Tokens:
 
 - Hue contrast across series; never two near-identical ambers.
 - Gaps in series: leave gaps; say so in the caption.
-- Monospace labels; no chartjunk; prefer SVG; honest axes.
+- Monospace labels; no chartjunk; prefer SVG for the site embed (still write the PNG); honest axes.
 - Every saved figure goes through `lib.theme.watermark` (mark stacked on `OHMEGA MONSTER` / `ohmega.monster` as one unit). Do not strip it. The mark file is `lib/assets/mark.png` — stay inside this workspace; do not read `sites/`.
 
 ## Clean up after yourself

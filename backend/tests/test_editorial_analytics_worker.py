@@ -79,6 +79,26 @@ def test_produces_artifact_copies_it_out_and_empties_scratch(tmp_path: Path) -> 
     assert (tmp_path / "artifacts" / art.data_name).exists()
     # the scratch folder is emptied after — the workspace does not accumulate
     assert not (ws / "anx_01").exists()
+    # SVG-only: no raster to copy. X posts need a PNG the drawer did not write.
+    assert art.raster_name == ""
+
+
+def test_a_png_beside_the_svg_is_copied_for_social(tmp_path: Path) -> None:
+    """X cannot take SVG. When the drawer wrote chart.png, the harness keeps it."""
+    def run(_prompt: str, folder: Path) -> tuple[bool, str]:
+        (folder / "chart.svg").write_text("<svg>PCE</svg>", encoding="utf-8")
+        (folder / "chart.png").write_bytes(b"\x89PNG\r\n\x1a\n")
+        (folder / "data.csv").write_text("x,y\nApril,3.1\nMay,3.4\n", encoding="utf-8")
+        (folder / "caption.md").write_text("Core PCE ticked up.", encoding="utf-8")
+        return True, "{}"
+
+    ctx = _ctx(tmp_path, [])
+    art = aw.fulfill_request(_request(), _profile(), workspace=tmp_path / "ws",
+                             context=ctx, runner=run)
+    assert art.status == "produced"
+    assert art.raster_name.endswith(".png")
+    assert (tmp_path / "artifacts" / art.raster_name).is_file()
+    assert art.artifact_name.endswith(".svg")
 
 
 def test_table_kind_carries_body_md_for_inlining(tmp_path: Path) -> None:

@@ -76,6 +76,12 @@ _VISUAL_NAMES = {
 }
 _DATA_NAME = "data.csv"
 _CAPTION_NAME = "caption.md"
+# Raster sibling of the site vector — consumers that cannot take SVG need this file.
+_RASTER_SUFFIXES = {".png", ".gif", ".jpg", ".jpeg", ".webp"}
+_RASTER_NAMES = {
+    kind: tuple(n for n in names if Path(n).suffix.lower() in _RASTER_SUFFIXES)
+    for kind, names in _VISUAL_NAMES.items()
+}
 
 # ABSOLUTE BACKSTOPS, not expected durations. The harness now stops a worker that goes SILENT
 # (no scratch-folder activity for _IDLE_S), so these only fire on a child that is somehow both
@@ -222,6 +228,29 @@ def _grounded_data(request: AnalyticsRequest, profile: SignalProfile) -> tuple[d
     return payload, cited_claims, profile.as_of
 
 
+def _raster_emit_lines(kind: str) -> list[str]:
+    """Ask the drawer for a raster sibling — some consumers cannot take SVG."""
+    names = _RASTER_NAMES.get(kind) or ()
+    if not names:
+        return []
+    shown = " / ".join(f"`{n}`" for n in names)
+    return [
+        f"- {shown} — the SAME figure as a raster (`savefig` twice). "
+        "A vector-only figure cannot be posted where SVG is not accepted.",
+    ]
+
+
+def _raster_source(visual: Path, kind: str) -> Path | None:
+    """The file X can upload: the visual itself if it is raster, else a sibling PNG/GIF."""
+    if visual.suffix.lower() in _RASTER_SUFFIXES:
+        return visual
+    for name in _RASTER_NAMES.get(kind, ()):
+        cand = visual.parent / name
+        if cand.is_file():
+            return cand
+    return None
+
+
 def _brief(request: AnalyticsRequest) -> str:
     """The human/agent-readable request the worker reads alongside data.json."""
     names = _VISUAL_NAMES.get(request.kind, ("output.md",))
@@ -301,6 +330,7 @@ def _brief(request: AnalyticsRequest) -> str:
         "Then emit:",
         f"- `{names[0]}`" + (f" (or another allowed name: {', '.join(names)})" if len(names) > 1 else "")
         + " — the analytic itself",
+        *_raster_emit_lines(request.kind),
         f"- `{_DATA_NAME}` — the exact rows you plotted (so the harness can verify the numbers)",
         f"- `{_CAPTION_NAME}` — plain-language explainer (see above)",
         "",
@@ -900,17 +930,25 @@ def fulfill_request(
         body_md = visual.read_text(encoding="utf-8", errors="replace") if visual.suffix == ".md" else ""
 
         # (4) copy the finished artifact OUT (harness, not worker) + stamp provenance.
-        artifact_name = data_name = ""
+        artifact_name = data_name = raster_name = ""
         if context is not None and context.artifacts is not None:
             artifact_name = f"analytic_{_safe(request.id)}{visual.suffix}"
             context.artifacts.write_bytes(artifact_name, visual.read_bytes(), kind="analytic")
             if data:
                 data_name = f"analytic_{_safe(request.id)}_data.csv"
                 context.artifacts.write_text(data_name, data_text, kind="analytic_data")
+            raster = _raster_source(visual, request.kind)
+            if raster is not None:
+                if raster == visual:
+                    raster_name = artifact_name
+                else:
+                    raster_name = f"analytic_{_safe(request.id)}{raster.suffix}"
+                    context.artifacts.write_bytes(raster_name, raster.read_bytes(), kind="analytic")
 
         return _finalize(
             result, status="produced", swept=removed,
             artifact_name=artifact_name or visual.name, data_name=data_name or (data.name if data else ""),
+            raster_name=raster_name,
             body_md=body_md,
             caption=_caption(request, worker_cap, profile, cited_claims, as_of),
             figure_check=figure_check,
