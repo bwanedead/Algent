@@ -231,8 +231,14 @@ def run_sweep(args: Any) -> int:
 
 
 def run_drain(args: Any) -> int:
-    # A backlog that sat through a closed laptop is due all at once. Review it before
-    # sending: enrichment judged currency at write time, not at release time.
+    # A backlog that sat through a closed laptop is due all at once. Expire what has gone off
+    # BEFORE reviewing or sending: a model pass over week-old items is both a waste and a
+    # chance to talk itself into one. Age is mechanical, so decide it mechanically.
+    expired = q.expire_stale()
+    if expired:
+        _print({"expired": len(expired),
+                "note": f"dropped unsent posts older than {q.STALE_AFTER_H}h"})
+    # Enrichment judged currency at write time, not at release time.
     _review_if_stale()
     ready = q.due()
     if not ready:

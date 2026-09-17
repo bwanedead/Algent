@@ -32,6 +32,10 @@ from typing import Any, Literal
 from algent_backend.agent_system.agents.radar.contracts import body_key
 from algent_backend.agent_system.runs.control_plane.fsio import atomic_write_text
 
+#: How old a queued post may be before it is no longer worth sending. A day covers an overnight
+#: machine and refuses a week-old one.
+STALE_AFTER_H = 24
+
 #: Minimum gap between posts, in minutes.
 _SPACING_MIN = 30
 #: Jitter so a drained backlog does not go out on a metronome, which reads as automation.
@@ -59,12 +63,32 @@ class RadarPost:
     note: str = ""
     id: str = field(default_factory=lambda: uuid.uuid4().hex[:12])
 
+    def stale(self, now: datetime | None = None) -> bool:
+        """Past its shelf life. News queued days ago is not news.
+
+        The queue survives a stopped machine on purpose, which is right for an overnight gap and
+        wrong for a long one. After five weeks idle this held 152 posts — Fed correlation
+        analysis, index additions, an AMOC modelling result — every one of which would have gone
+        out as though it were current the moment anything ran a drain. Age is judged from when
+        the item was QUEUED, not from its slot: a backlog reschedules, but the story underneath
+        does not get any newer.
+        """
+        stamp = self.created_at or self.scheduled_for
+        if not stamp:
+            return False
+        try:
+            age = (now or datetime.now(UTC)) - datetime.fromisoformat(stamp)
+        except ValueError:
+            return False
+        return age > timedelta(hours=STALE_AFTER_H)
+
     def due(self, now: datetime | None = None) -> bool:
-        if self.status != "queued":
+        when = now or datetime.now(UTC)
+        if self.status != "queued" or self.stale(when):
             return False
         if not self.scheduled_for:
             return True
-        return (now or datetime.now(UTC)) >= datetime.fromisoformat(self.scheduled_for)
+        return when >= datetime.fromisoformat(self.scheduled_for)
 
 
 def load(path: Path | None = None) -> list[RadarPost]:
@@ -170,6 +194,24 @@ def enqueue(new: list[RadarPost], *, path: Path | None = None,
 def due(path: Path | None = None, *, now: datetime | None = None) -> list[RadarPost]:
     when = now or datetime.now(UTC)
     return [p for p in load(path) if p.due(when)]
+
+
+def expire_stale(path: Path | None = None, *, now: datetime | None = None) -> list[RadarPost]:
+    """Retire everything past its shelf life. Returns what was dropped.
+
+    Called before a drain so the queue cannot quietly accumulate a backlog of old news that one
+    restart would then publish. Marked rather than deleted: the record of what we chose not to
+    say is worth as much as the record of what we said.
+    """
+    when = now or datetime.now(UTC)
+    posts = load(path)
+    dropped = [p for p in posts if p.status == "queued" and p.stale(when)]
+    for post in dropped:
+        post.status = "skipped"
+        post.note = post.note or f"expired unsent after {STALE_AFTER_H}h"
+    if dropped:
+        save(posts, path)
+    return dropped
 
 
 def mark(post_id: str, *, status: str, url: str = "", note: str = "",

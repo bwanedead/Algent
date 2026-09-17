@@ -147,3 +147,29 @@ def test_a_gap_leaves_a_backlog_due_but_it_drains_one_at_a_time(tmp_path) -> Non
     # And the queue still knows the order it was judged in, so a backlog drains oldest-first.
     remaining = sorted(q.due(path, now=back), key=lambda p: p.scheduled_for)
     assert [p.key for p in remaining] == ["b", "c", "d", "e"]
+
+
+def test_a_long_gap_expires_the_queue_instead_of_publishing_old_news(tmp_path) -> None:
+    """The queue survives a stopped machine, which is right overnight and wrong after a week.
+
+    Five weeks idle left 152 posts queued — Fed correlation analysis, index additions, an AMOC
+    modelling result — and any drain would have sent every one as though it were current.
+    """
+    now = datetime(2026, 9, 17, 12, 0, tzinfo=UTC)
+    path = tmp_path / "q.jsonl"
+    q.enqueue([_post("old")], path=path, now=now - timedelta(days=35))
+    q.enqueue([_post("fresh")], path=path, now=now - timedelta(minutes=90))
+
+    # Due is judged on age as well as slot, so nothing stale can be released even by accident.
+    assert [p.key for p in q.due(path, now=now)] == ["fresh"]
+
+    dropped = q.expire_stale(path, now=now)
+    assert [p.key for p in dropped] == ["old"]
+
+    after = {p.key: p for p in q.load(path)}
+    assert after["old"].status == "skipped" and "expired" in after["old"].note
+    # Marked, never deleted: what we chose not to say is part of the record.
+    assert after["fresh"].status == "queued"
+
+    # Age is measured from when it was QUEUED. A backlog reschedules; the story does not get newer.
+    assert q.expire_stale(path, now=now) == []
