@@ -306,3 +306,49 @@ def test_control_chars_are_repaired_at_the_model_boundary() -> None:
     # Tool-call arguments are model text too, and become search queries and written
     # artifacts without ever passing through a message body.
     assert msg.tool_calls[0]["args"]["query"] == "Paks — Danube levels"
+
+
+class _ProseThenObject(BaseChatModel):
+    """Answers in prose first, then correctly — the live structured-output failure."""
+
+    calls: list[Any] = Field(default_factory=list)
+
+    @property
+    def _llm_type(self) -> str:
+        return "prose_then_object"
+
+    def _generate(self, messages, stop=None, run_manager=None, **kwargs):
+        self.calls.append(list(messages))
+        if len(self.calls) == 1:
+            text = "I've compiled the verified findings and will send the final update."
+        else:
+            text = '{"title": "t"}'
+        return ChatResult(generations=[ChatGeneration(message=AIMessage(content=text))])
+
+
+def test_a_prose_reply_is_re_asked_once_instead_of_killing_the_run() -> None:
+    """Three rail runs died minutes in because the model narrated instead of emitting.
+
+    "I've compiled the verified... final enrichment update." and "Portfolio drafted - no...
+    depth before delivery." are the model describing the work rather than returning it. The
+    same prompt succeeded on the next attempt every time, so one nudge is the whole fix.
+    """
+    inner = _ProseThenObject()
+    gate = BudgetGatedChatModel(inner=inner, model_id="m")
+
+    out = gate.with_structured_output(_Out).invoke([HumanMessage(content="go")])
+
+    assert isinstance(out, _Out) and out.title == "t"
+    assert len(inner.calls) == 2
+    # The retry SAYS what went wrong; re-asking identically would just invite the same reply.
+    assert "prose" in str(inner.calls[1][-1].content).lower()
+    # And it does not discard the original request.
+    assert "go" in str(inner.calls[1][0].content)
+
+
+def test_a_real_error_is_not_swallowed_by_the_structured_retry() -> None:
+    """Only the prose case retries. A provider failure must surface, not be asked twice."""
+    from algent_backend.agent_system.foundation.models.budget_gate import _is_unstructured_reply
+
+    assert _is_unstructured_reply(ValueError("1 validation error for X\n Invalid JSON")) is True
+    assert _is_unstructured_reply(RuntimeError("provider 500")) is False

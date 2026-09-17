@@ -17,7 +17,7 @@ from typing import Any
 
 from langchain_core.callbacks import CallbackManagerForLLMRun
 from langchain_core.language_models.chat_models import BaseChatModel
-from langchain_core.messages import AIMessage, BaseMessage
+from langchain_core.messages import AIMessage, BaseMessage, HumanMessage
 from langchain_core.outputs import ChatGeneration, ChatGenerationChunk, ChatResult
 from langchain_core.runnables import Runnable
 from pydantic import ConfigDict, Field
@@ -276,6 +276,50 @@ def _try_inner_structured(inner: Any, schema: Any, kwargs: dict[str, Any]) -> Ru
         return None
 
 
+#: What the model says instead of the object it was asked for. Observed live: a profile
+#: enrichment returned "I've compiled the verified... final enrichment update." and a synthesis
+#: returned "Portfolio drafted — no... depth before delivery." Both are the model NARRATING the
+#: work rather than emitting it, and both killed a rail run several minutes in.
+_STRUCTURED_NUDGE = (
+    "Your last reply was prose, not the object this call requires, so it could not be parsed. "
+    "Return ONLY the structured object — no preamble, no commentary, no description of what you "
+    "did or are about to do. If a field has nothing to report, return it empty rather than "
+    "explaining that in words."
+)
+
+
+def _is_unstructured_reply(exc: BaseException) -> bool:
+    """Did the call fail because the model answered in prose rather than in the schema?
+
+    Matched on the error text rather than an exception class: the provider SDKs, LangChain and
+    Pydantic each raise their own type for this, and the thing they agree on is the message.
+    """
+    text = f"{type(exc).__name__}: {exc}"
+    return any(marker in text for marker in (
+        # Pydantic, via LangChain or a provider's own parser.
+        "json_invalid", "Invalid JSON", "validation error", "ValidationError",
+        # json.loads reached directly, which words the same failure completely differently:
+        # "Expecting value: line 1 column 1" is what prose looks like to the stdlib parser.
+        "JSONDecodeError", "Expecting value", "Expecting property name",
+    ))
+
+
+def _structured_with_retry(call: Any, messages: list[BaseMessage]) -> Any:
+    """Run a structured call; if the model answered in prose, ask once more and say so.
+
+    One retry, not a loop: a model that ignores an explicit instruction twice is not going to
+    be talked round, and a rail run should fail fast rather than spend the same tokens three
+    times. One retry is enough because this is a formatting slip, not a refusal — the same
+    prompt succeeded on the immediately following attempt every time we have seen it.
+    """
+    try:
+        return call(messages)
+    except Exception as exc:  # noqa: BLE001 — re-raised below unless it is the prose case
+        if not _is_unstructured_reply(exc):
+            raise
+    return call([*messages, HumanMessage(content=_STRUCTURED_NUDGE)])
+
+
 def _gated_provider_runnable(
     gate: BudgetGatedChatModel,
     inner_structured: Runnable,
@@ -287,13 +331,19 @@ def _gated_provider_runnable(
 
     def _invoke(input_value: Any, config: Any = None) -> Any:
         messages = _as_messages(input_value)
-        out = _run_authorized(
-            gate,
-            messages,
-            lambda: inner_structured.invoke(input_value, config=config),
-            response_schema=schema,
-            settle_from=lambda result: _settle_amount(result, gate.model_id),
-        )
+
+        def _call(msgs: list[BaseMessage]) -> Any:
+            # On the retry the nudge is appended, so the payload differs from input_value.
+            payload = input_value if msgs is messages else msgs
+            return _run_authorized(
+                gate,
+                msgs,
+                lambda: inner_structured.invoke(payload, config=config),
+                response_schema=schema,
+                settle_from=lambda result: _settle_amount(result, gate.model_id),
+            )
+
+        out = _structured_with_retry(_call, messages)
         return _caller_structured_shape(out, include_raw=include_raw)
 
     return RunnableLambda(_invoke)
@@ -310,19 +360,22 @@ def _gated_parse_runnable(
     def _invoke(input_value: Any, config: Any = None) -> Any:
         messages = _as_messages(input_value)
 
-        def _call() -> AIMessage:
-            result = gate._call_inner_generate(messages, None, None)
+        def _call_with(msgs: list[BaseMessage]) -> AIMessage:
+            result = gate._call_inner_generate(msgs, None, None)
             msg = result.generations[0].message
             return msg if isinstance(msg, AIMessage) else AIMessage(content=str(msg))
 
-        message = _run_authorized(
-            gate,
-            messages,
-            _call,
-            response_schema=schema,
-            settle_from=lambda msg: _usage_usd(msg, gate.model_id),
-        )
-        parsed = _parse_structured(schema, _message_text(message))
+        def _attempt(msgs: list[BaseMessage]) -> Any:
+            message = _run_authorized(
+                gate,
+                msgs,
+                lambda: _call_with(msgs),
+                response_schema=schema,
+                settle_from=lambda msg: _usage_usd(msg, gate.model_id),
+            )
+            return message, _parse_structured(schema, _message_text(message))
+
+        message, parsed = _structured_with_retry(_attempt, messages)
         if include_raw:
             return {"raw": message, "parsed": parsed}
         return parsed

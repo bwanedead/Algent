@@ -56,6 +56,11 @@ def _resolve_run(spec: str | None) -> Path | None:
 
 
 def run_resume(args: Any) -> int:
+    # A pause request outlives the run it stopped. Leaving it set would halt this resume at its
+    # very first stage boundary, which reads as "resume is broken" rather than "you paused".
+    from .pause import clear as clear_pause
+
+    clear_pause()
     run = _resolve_run(args.run)
     if run is None:
         print(json.dumps({

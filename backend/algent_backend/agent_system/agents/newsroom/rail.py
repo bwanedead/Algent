@@ -142,19 +142,37 @@ def _run_rail(
     _CLOCK = clock
     report = NewsroomRailReport(generated_at=datetime.now(UTC).isoformat())
 
-    pool, portfolio, early = _resolve_portfolio(
-        context, sub, state, config, report, lead_store=lead_store)
-    if early is not None:
-        return _finish_with_cost(context, report, early)
+    from algent_backend.cli.newsroom.pause import RunPaused
 
-    profile, early = _route_profile_gauntlet(
-        context, sub, config, report, state, pool=pool, portfolio=portfolio)
-    if early is not None:
-        return _finish_with_cost(context, report, early)
+    try:
+        pool, portfolio, early = _resolve_portfolio(
+            context, sub, state, config, report, lead_store=lead_store)
+        if early is not None:
+            return _finish_with_cost(context, report, early)
 
-    return _editorial_and_publish(
-        context, sub, config, report, state, profile, x_calls=x_calls,
-    )
+        profile, early = _route_profile_gauntlet(
+            context, sub, config, report, state, pool=pool, portfolio=portfolio)
+        if early is not None:
+            return _finish_with_cost(context, report, early)
+
+        return _editorial_and_publish(
+            context, sub, config, report, state, profile, x_calls=x_calls,
+        )
+    except RunPaused as paused:
+        # A pause is a clean stop, not a failure: the last completed stage wrote its artifact,
+        # so the run finishes its report and `newsroom resume` continues from the next unpaid
+        # stage. Reporting it as an error would make an intentional stop look like a crash.
+        report.stage_reached = report.stage_reached or "paused"
+        _apply_cost_snapshot(report)
+        return _finish(context, report, note=f"paused — {paused}. Continue with `newsroom resume`")
+
+
+def _check_paused(stage: str) -> None:
+    """Exit cleanly if a pause was requested. Raises so the rail unwinds to its finish path."""
+    from algent_backend.cli.newsroom.pause import RunPaused, requested
+
+    if requested():
+        raise RunPaused(f"paused before {stage}")
 
 
 def _install_cost_tee(context: AgentRunContext) -> tuple[Any, list[int], StageClock]:
@@ -168,6 +186,11 @@ def _install_cost_tee(context: AgentRunContext) -> tuple[Any, list[int], StageCl
     def _tee(event_type: str, payload: dict[str, Any] | None = None) -> None:
         p = payload or {}
         if event_type == RAIL_STAGE and p.get("stage"):
+            # A stage boundary is the only place stopping is free: the previous stage has
+            # written its artifact and the next has spent nothing. Killing mid-stage instead
+            # throws away whatever it had bought — a profile three minutes into research dies
+            # with nothing to show and resume has to buy it again.
+            _check_paused(str(p["stage"]))
             cost.set_stage(str(p["stage"]))
             clock.enter(str(p["stage"]))
         if event_type in _SLOW_LEG_EVENTS:
