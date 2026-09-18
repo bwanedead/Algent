@@ -116,17 +116,24 @@ def build_gauntlet_graph(context: AgentRunContext) -> Any:
             rereview = review
             _write(context, "review_final.json", rereview)
 
-        final_ids = {
-            str(f.get("id")) for f in rereview.get("findings", []) if f.get("id")
-        }
-        # Re-review owns closure: findings present initially but absent after re-review.
-        addressed = sorted(initial_ids - final_ids)
+        # Closure used to be computed as `initial_ids - final_ids`. Review ids are NOT stable
+        # identities — each review numbers its own findings, and live runs went f01..f10 on the
+        # first read and F01..F10 on the re-read. A change of letter case alone made all ten look
+        # resolved while all ten were still open, so the report said the opposite of the truth.
+        # Report what can be counted honestly: which were attempted, and how many remain.
+        addressed = sorted(initial_ids)
+
+        # Nothing the gauntlet could not establish is thrown away. Each unresolved finding
+        # becomes an open question on the profile, which the planner already reads and turns
+        # into disclosed uncertainty — the reader is told what we could not verify, rather
+        # than being told nothing and left to assume we checked.
+        profile = _disclose_unresolved(profile, rereview.get("findings", []))
 
         report = GauntletReport(
             profile_id=str(profile.get("id", "")),
             starting_revision=start_rev,
             ending_revision=int(profile.get("revision", start_rev) or start_rev),
-            lanes_run=lanes_run, findings_addressed=addressed,
+            lanes_run=lanes_run, findings_attempted=addressed,
             initial_verdict=initial_verdict, final_verdict=rereview.get("verdict", ""),
             initial_findings=initial_findings,
             remaining_findings=len(rereview.get("findings", [])),
@@ -148,6 +155,38 @@ def build_gauntlet_graph(context: AgentRunContext) -> Any:
     return graph.compile()
 
 
+#: Kept short on purpose: this becomes a line the planner reads, not the full research note.
+_OPEN_QUESTION_CHARS = 260
+
+
+def _disclose_unresolved(profile: dict[str, Any], findings: list[Any]) -> dict[str, Any]:
+    """Fold the re-review's unresolved findings into the profile's open questions.
+
+    The findings are written for researchers ("search WWF ecoregion area..."), so only the
+    EXPLANATION is carried — that is the part a reader could need to know: what is missing,
+    thin, or single-sourced. Blockers are marked so the planner can weigh them; it decides what
+    the reader actually needs to hear, which is a judgement, not a rule applied here.
+    """
+    existing = list(profile.get("open_questions") or [])
+    seen = {q.strip().lower() for q in existing}
+    added = []
+    for f in findings or []:
+        if not isinstance(f, dict):
+            continue
+        text = " ".join(str(f.get("explanation") or "").split())
+        if not text:
+            continue
+        mark = "unresolved, blocking" if f.get("maturity_blocker") else "unresolved"
+        line = f"[{mark}] {text[:_OPEN_QUESTION_CHARS]}"
+        if line.strip().lower() in seen:
+            continue
+        seen.add(line.strip().lower())
+        added.append(line)
+    if not added:
+        return profile
+    return {**profile, "open_questions": existing + added}
+
+
 def _write(context: AgentRunContext, name: str, payload: Any) -> None:
     if context.artifacts is not None:
         context.artifacts.write_json(name, payload)
@@ -159,7 +198,7 @@ def _preview(report: GauntletReport) -> dict[str, Any]:
         "summary": (
             f"{report.initial_verdict} (rev {report.starting_revision}) -> "
             f"{report.final_verdict} (rev {report.ending_revision}) | lanes {report.lanes_run} | "
-            f"addressed {len(report.findings_addressed)} | remaining {report.remaining_findings} "
+            f"attempted {len(report.findings_attempted)} | remaining {report.remaining_findings} "
             f"findings ({report.remaining_blockers} blockers)"
         ),
         "items": [f"ran lane: {lane}" for lane in report.lanes_run],

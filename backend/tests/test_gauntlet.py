@@ -50,7 +50,9 @@ def test_gauntlet_reviews_enriches_sequentially_and_re_reviews(monkeypatch) -> N
     g = out["gauntlet"]
     assert g["initial_verdict"] == "needs_enrichment" and g["final_verdict"] == "needs_verification"
     assert g["lanes_run"] == ["primary_source", "counter_perspective"]  # deterministic order
-    assert set(g["findings_addressed"]) == {"f1", "f2"}
+    # Attempted, not "addressed": review ids are renumbered per review, so resolution cannot be
+    # read off an id diff. What is honestly countable is what was sent out and what remains.
+    assert set(g["findings_attempted"]) == {"f1", "f2"}
     assert g["starting_revision"] == 1 and g["ending_revision"] == 3  # each lane bumped sequentially
     assert g["remaining_blockers"] == 0 and g["remaining_findings"] == 1
     assert any(et == "gauntlet.completed" for et, _ in events)
@@ -87,3 +89,47 @@ def test_profile_gauntlet_registered_with_fixture() -> None:
     assert spec.tool_ids == ("web_search",)  # so enricher sub-graphs can reach the facade
     assert spec.test_fixture is not None and spec.test_fixture.input_key == "profile"
     assert Path(spec.test_fixture.input_file).exists()
+
+
+
+def test_ids_that_change_case_do_not_fake_resolution(monkeypatch) -> None:
+    """The live contradiction: 10 findings "addressed", 10 still open.
+
+    The first review numbered them f01..f10 and the re-review F01..F10. An id diff read that as
+    every finding resolved. Remaining is the count that tells the truth.
+    """
+    base = SignalProfile(id="p", title="t", revision=1).model_dump()
+    first = ReviewReport(id="r1", verdict="needs_enrichment", findings=[
+        ReviewFinding(id="f01", type="missing_scope", lane="primary_source",
+                      explanation="No independent peer commentary beyond one taxonomist."),
+    ]).model_dump()
+    again = ReviewReport(id="r2", verdict="needs_enrichment", findings=[
+        ReviewFinding(id="F01", type="missing_scope", lane="primary_source", maturity_blocker=True,
+                      explanation="No independent peer commentary beyond one taxonomist."),
+    ]).model_dump()
+    calls = {"n": 0}
+
+    def fake_reviewer(_c):
+        r = first if calls["n"] == 0 else again
+        calls["n"] += 1
+        return _FakeGraph({"review": r})
+
+    monkeypatch.setattr(orchestrator, "build_reviewer", fake_reviewer)
+    monkeypatch.setattr(primary_source, "build_graph",
+                        lambda c: _FakeGraph({"profile": {**base, "revision": 2}}))
+    monkeypatch.setattr(counter_perspective, "build_graph",
+                        lambda c: _FakeGraph({"profile": {**base, "revision": 2}}))
+
+    out = orchestrator.build_gauntlet_graph(_ctx([])).invoke({"profile": base})
+    assert out["gauntlet"]["remaining_findings"] == 1
+
+    # And the gap is not thrown away: it reaches the planner as disclosed uncertainty.
+    questions = out["profile"]["open_questions"]
+    assert any("No independent peer commentary" in q and "blocking" in q for q in questions)
+
+
+def test_disclosure_never_duplicates_an_open_question() -> None:
+    profile = {"open_questions": ["[unresolved] Only one source."]}
+    out = orchestrator._disclose_unresolved(
+        profile, [{"explanation": "Only one source."}, {"explanation": "  "}])
+    assert out["open_questions"] == ["[unresolved] Only one source."]
