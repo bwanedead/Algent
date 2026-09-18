@@ -478,8 +478,12 @@ def _appendix(draft: ArticleDraft, cited_sources: list, cited_claims: list, sour
                 basis = f"from claims {refs}"
             else:
                 basis = "from cited evidence"
-            check = ("" if fc.get("verified") else
-                     f" · ⚠ figures not all matched to the cited claims: {', '.join(fc.get('unverified', []))}")
+            if fc.get("verified") or not fc:
+                check = ""
+            elif fc.get("mode") == "sourced":
+                check = " · ⚠ unverified: the data's publisher could not be confirmed"
+            else:
+                check = f" · ⚠ unverified values, not traced to a cited source: {', '.join(fc.get('unverified', []))}"
             out.append(f"- {a.get('title') or 'analytic'} — {basis}{asof}{check}")
         out.append("")
 

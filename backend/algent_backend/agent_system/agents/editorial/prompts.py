@@ -216,6 +216,10 @@ PRODUCE an EditorialTreatment:
      floor as an inventory, which is what forced padding into the prose. Unsourced/low-salience ids
      are refused outright.
    - `open_questions[]`: what stays genuinely unknown or contested, to be flagged as such.
+     Gaps marked `[unresolved]` are problems our own verification raised and could not settle
+     (`blocking` = it judged them serious). They are not reasons to drop the story or the claim;
+     they set the confidence it is written at. Any claim the piece leans on that one touches is
+     stated at that confidence, in the sentence, and the question carries into this list.
 
 Be specific and grounded in THIS profile (cite ids). A treatment that could fit any story is
 useless. The frame and the molecule are the whole game — get them right.

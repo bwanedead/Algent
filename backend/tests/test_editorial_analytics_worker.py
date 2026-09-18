@@ -115,13 +115,20 @@ def test_table_kind_carries_body_md_for_inlining(tmp_path: Path) -> None:
 
 def test_figure_check_flags_a_number_not_in_the_evidence(tmp_path: Path) -> None:
     # 9.9 is nowhere in the claims/snapshot — the visual analog of unverified_prose_figures.
-    # Failed integrity must not ship as produced.
+    # An untraced value is DISCLOSED, not dropped: the figure ships and its caption says how
+    # much of it could not be traced.
     art = aw.fulfill_request(_request(), _profile(), workspace=tmp_path / "ws",
                              runner=_good_runner("x,y\nApril,3.1\nMay,9.9\n"))
-    assert art.status == "integrity_check_failed"
+    assert art.status == "produced" and art.artifact_name
     assert art.figure_check["verified"] is False and "9.9" in art.figure_check["unverified"]
     assert "9.9" in art.note
-    assert not art.artifact_name
+    assert "1 of 2 plotted values (9.9)" in art.caption
+    assert not art.sourced_claims
+
+
+def test_a_traced_figure_carries_no_disclosure(tmp_path: Path) -> None:
+    art = aw.fulfill_request(_request(), _profile(), workspace=tmp_path / "ws", runner=_good_runner())
+    assert art.figure_check["verified"] is True and "unverified" not in art.caption.lower()
 
 
 def test_may_source_without_profile_data_refs_produces(tmp_path: Path) -> None:
@@ -164,8 +171,21 @@ def test_may_source_without_publisher_url_fails_integrity(tmp_path: Path) -> Non
         req, _profile(), workspace=tmp_path / "ws",
         runner=_good_runner("week,cases\n1,10\n2,25\n"),
     )
-    assert art.status == "integrity_check_failed"
+    assert art.status == "produced"
     assert "publisher URL" in " ".join(art.figure_check.get("unverified") or [])
+    assert "publisher of this data could not be confirmed" in art.caption
+    assert not art.sourced_claims        # unconfirmed data never enters the claim ledger
+
+
+def test_a_sourced_figure_with_no_data_is_still_refused(tmp_path: Path) -> None:
+    # Nothing plotted is a broken figure, not an uncertain one.
+    req = AnalyticsRequest(
+        id="anx_src", kind="chart", title="Weekly cases", question="?", spec="line",
+        data_refs=[], may_source=True, source_hint="WHO", rationale="trajectory",
+    )
+    art = aw.fulfill_request(req, _profile(), workspace=tmp_path / "ws",
+                             runner=_good_runner("week,cases\n"))
+    assert art.status == "integrity_check_failed"
 
 
 def test_may_source_without_hint_fails(tmp_path: Path) -> None:

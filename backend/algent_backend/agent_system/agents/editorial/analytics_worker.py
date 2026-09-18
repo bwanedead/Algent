@@ -643,6 +643,26 @@ def _visual_unverified_figures(data_text: str, cited_claims: list[Claim], source
     return out
 
 
+def _plotted_values(data_text: str) -> list[str]:
+    """The significant numbers a figure plots — the denominator for how much of it is traced."""
+    return [n for n in dict.fromkeys(_SIG_NUM.findall(data_text)) if not _YEAR_LIKE.match(n)]
+
+
+def _disclosure(figure_check: dict, data_text: str) -> str:
+    """The caption tail that states, to the reader, how much of this figure is unverified."""
+    if figure_check.get("verified"):
+        return ""
+    if figure_check.get("mode") == "sourced":
+        return " Unverified: the publisher of this data could not be confirmed."
+    untraced = list(figure_check.get("unverified") or [])
+    total = max(len(_plotted_values(data_text)), len(untraced))
+    shown = ", ".join(untraced[:4]) + (", …" if len(untraced) > 4 else "")
+    if total and len(untraced) >= total:
+        return f" Unverified: none of the plotted values ({shown}) could be traced to a cited source."
+    return (f" Partly unverified: {len(untraced)} of {total} plotted values ({shown}) "
+            "could not be traced to a cited source.")
+
+
 def _timeout_for(request: AnalyticsRequest) -> float:
     if request.kind == "image" or request.may_source:
         return _TIMEOUT_SOURCED_S
@@ -917,13 +937,19 @@ def fulfill_request(
                 "sourced_claims": _sourced_claims(data_text, worker_cap, request),
             })
 
-        # Failed integrity is not a shippable figure — do not copy into the reader path.
-        if not figure_check.get("verified"):
+        # A figure with nothing plotted is broken, not uncertain — there is no picture to qualify.
+        if request.may_source and not has_table:
             return _finalize(
                 result, status="integrity_check_failed", swept=removed,
                 figure_check=figure_check,
                 note=note or "figure integrity check failed",
             )
+        # Anything short of that SHIPS, carrying the degree of what could not be traced. Dropping
+        # an untraced figure threw away work and told the reader nothing; the AlphaGenome scale
+        # chart died over two values the evidence phrased differently. Uncertainty is allowed on
+        # the page — undisclosed uncertainty is not. So the caption says it, under the picture,
+        # where the reader actually looks, and the receipts repeat it.
+        disclosure = _disclosure(figure_check, data_text)
 
         # A markdown analytic (table/insight) is INLINED by the publish view, not embedded as an
         # image — so carry its body forward. An image analytic (chart/illustration) has no body.
@@ -950,7 +976,7 @@ def fulfill_request(
             artifact_name=artifact_name or visual.name, data_name=data_name or (data.name if data else ""),
             raster_name=raster_name,
             body_md=body_md,
-            caption=_caption(request, worker_cap, profile, cited_claims, as_of),
+            caption=_caption(request, worker_cap, profile, cited_claims, as_of) + disclosure,
             figure_check=figure_check,
             note=note,
         )
