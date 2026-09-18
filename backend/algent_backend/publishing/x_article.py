@@ -185,6 +185,16 @@ Rules, the same ones the rest of the account follows:
 - Do not oversell past what the article supports. The headline and dek are your ceiling.
 - One thought. Two sentences at most, and one is often better.
 
+FIT THE CARD. Aim for about 240 characters so it reads whole on a timeline without "Show more".
+The dek is written to be read under a headline, and it is too long and too hedged to be a post.
+Do NOT paste it and do not compress it clause by clause. Pick the ONE finding worth repeating
+and say that. A composer handed the dek produced a single ~390-character sentence carrying the
+finding, the method, the stakes and the caveat — accurate, and nothing anyone would stop for.
+
+If a caveat genuinely changes the finding, fold it into the claim ("a study argues...", "the
+first new cat in a century, if the split holds") rather than appending it after a dash. If it
+only qualifies a detail, leave it for the article; that is what the link is for.
+
 You are given the title, the dek and the article's own gist. Prefer the concrete finding — a
 number, a change, a mechanism — over a summary of the topic.
 """

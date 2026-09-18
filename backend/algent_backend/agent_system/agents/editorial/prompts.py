@@ -60,10 +60,17 @@ PRODUCE an EditorialTreatment:
    mechanism that will not fit in a clause. Researching an adjacent world (jobs after a
    power-share finding, demographics after a market move) does not earn minutes; that
    world is a clause on the connection, not a concept that adds a minute. Never above
-   {ceiling_minutes()} minutes (~{ceiling_words()} words). Say in `read_minutes_why`
-   what about THIS story cannot transfer in {digest_minutes()} minutes, in a clause.
-   If the honest answer is that it is a short story, say a short number and let the piece
-   be short; brevity is not a failure to be padded out of.
+   {ceiling_minutes()} minutes (~{ceiling_words()} words). Say in `read_minutes_why`, in a
+   clause, what sets this story's depth.
+
+   Beware the question that justifies itself. "What in this story cannot fit in
+   {digest_minutes()} minutes?" can always be answered — every story has more in it than fits —
+   so asking it that way produces a case for going longer every time. Three consecutive live
+   runs each raised the target from {digest_minutes()} to {digest_minutes() + 1} with a reason
+   that sounded right, and then all three overshot even the raised target. Ask instead whether
+   the reader would feel the SHAPE was missing at {digest_minutes()} minutes — not the detail,
+   the shape. If the honest answer is no, {digest_minutes()} is the answer, and most stories
+   land there. Brevity is not a failure to be padded out of.
 
    It is a bound to write toward, not a quota to fill. A piece that lands its understanding
    sooner should stop. A lecture on the apparatus is not depth this story earned.

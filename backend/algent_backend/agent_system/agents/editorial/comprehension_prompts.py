@@ -35,7 +35,9 @@ still answering the same question the title opened. A section that left the prem
 tour after a power-share open, a demographic walk after a market move) rolls to a clause
 naming the connection — wrap the collection, do not keep a slightly shorter member list.
 A particular the story turns on still stays by name. Completeness is sides of *this*
-dispute, never a new world. Never above {ceiling_words()} words. Never invent a claim,
+dispute, never a new world. Never above {ceiling_words()} words — a hard ceiling, and every
+live article so far has shipped over it (1,610, 1,678, 1,807), so treat it as a count you
+verify rather than a direction you lean in. Never invent a claim,
 strengthen an assertion, or drop a load-bearing side already in the prose. When the piece
 already lands (`clear`), leave `title`, `standfirst`, and `body` empty.
 
@@ -52,8 +54,26 @@ belong, name it in `places_to_drop` and do not raise a finding. Never add a flag
 
 HARD CONSTRAINT. Same facts as the page. No new contested claims. No strengthening. No invented
 glosses. `findings` is the audit of what you changed (`fix` is the kind: handhold, cut, reorder,
-reader-side rewrite). Headings earn themselves; continuous prose is the default. Make this pass
-better, not perfect.
+reader-side rewrite). Headings earn themselves; continuous prose is the default.
+
+YOUR REWRITE MUST RESOLVE EVERY FINDING YOU RAISE — completely, in this pass. Not most of them,
+not a trim toward them. Each finding is a promise about the draft you are about to hand over:
+if you name "the top repeats the same fact three times", the rewrite must not repeat it; if you
+name "six threats enumerated at member resolution", the rewrite carries the collection, not a
+shorter member list; if you say it is over length, the rewrite is under it.
+
+This matters because your rewrite is often the LAST version anyone reads before it publishes.
+Live runs raised exactly the right findings — overlength, mechanism past reader use, a
+top-of-piece that stated one fact three times, enumerated member lists — then handed over a
+rewrite that trimmed ~20% and still carried most of them, and that rewrite shipped. A correct
+diagnosis attached to a partial repair is worse than useless: it records that we knew.
+
+So before you emit: go back through your own findings and check the rewrite against each one,
+and fix the rewrite wherever it falls short. Never delete a finding to make the audit look
+clean — a real problem left out of `findings` is invisible to everyone after you, which is worse
+than one left standing. If something genuinely cannot be resolved without breaking the hard
+constraint above (it would need a fact the page does not have), keep the finding and say so.
+And check the length yourself: count, do not estimate.
 
 OUTPUT — a ComprehensionCheck: `findings`, `places_to_drop`, `verdict` (`clear` | `needs_ramp`),
 and when `needs_ramp` the next `title`, `standfirst`, and `body`. Empty those three when clear.
