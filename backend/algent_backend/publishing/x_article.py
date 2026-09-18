@@ -210,11 +210,28 @@ def compose(title: str, dek: str, gist: str = "") -> str:
         body = "\n".join([f"TITLE: {title}", f"DEK: {dek}", f"GIST: {gist}" if gist else ""])
         with cost.scoped(_COMPOSE_CAP_USD, spec.model):
             out = model.invoke([SystemMessage(content=prompt), HumanMessage(content=body)])
-        text = out.content if isinstance(out.content, str) else ""
-        text = " ".join(str(text).split()).strip().strip('"')
+        text = " ".join(_text_of(out.content).split()).strip().strip('"')
         return text or title
     except Exception:  # noqa: BLE001 — the title alone is a perfectly good announcement
         return title
+
+
+def _text_of(content: Any) -> str:
+    """The prose in a model reply, whether it came back as a string or as content blocks.
+
+    On the Responses API a reply is a LIST of blocks — reasoning, then text — not a string.
+    Reading only the string case meant every announcement silently fell back to the bare
+    headline: three articles in a row went out as their title and nothing else, with no error
+    anywhere, because the fallback exists precisely to be quiet.
+    """
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        return " ".join(
+            str(block.get("text") or "") for block in content
+            if isinstance(block, dict) and block.get("type") in ("text", "output_text")
+        )
+    return ""
 
 
 def announce(slug: str, title: str, dek: str = "", gist: str = "") -> dict[str, Any]:

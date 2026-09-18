@@ -266,3 +266,22 @@ def test_the_write_ceiling_is_x_longform_not_a_classic_card() -> None:
     cluster = "\n\n".join(f"(energy) Blurb {i}. " + ("x" * 200) for i in range(5))
     assert billable_length(cluster) > CARD
     assert billable_length(cluster) < LIMIT
+
+
+def test_a_reply_in_content_blocks_is_read_not_discarded() -> None:
+    """On the Responses API a reply is a LIST of blocks, not a string.
+
+    Reading only the string case meant every announcement silently fell back to the bare
+    headline — three articles in a row went out as their title and nothing else, with no error
+    anywhere, because the fallback is designed to be quiet.
+    """
+    from algent_backend.publishing.x_article import _text_of
+
+    blocks = [
+        {"type": "reasoning", "summary": []},
+        {"type": "text", "text": "China's target is a pivot to firm power."},
+    ]
+    assert _text_of(blocks) == "China's target is a pivot to firm power."
+    assert _text_of("plain string") == "plain string"
+    # Reasoning is never the post.
+    assert _text_of([{"type": "reasoning", "text": "thinking..."}]) == ""
