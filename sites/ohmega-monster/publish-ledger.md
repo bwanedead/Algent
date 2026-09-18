@@ -642,3 +642,12 @@ refused: model_turn(slim_finish)
 ⚠ walled sources (carried with caveats): src_ee25734c03, src_dcd34e7ff3, src_7fce4a2623, src_ea6eb23a97, src_b7fa65130a, src_589f8da2ed
 ⚠ figures not matched to evidence: 60%, 37%, 17.5%, 35%, 85%, 20%, 0.5%, 25%, 39%
 run: 0082__166813f3-0cd4-48b9-a214-d6232b708118
+
+### PUBLISH museum-dna-unmasks-a-small-spotted-wild-cat-hidden-in-bolivi-9efd8f — 2026-09-18
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.6252  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.1660, gauntlet=$0.4592
+⚠ figures not matched to evidence: 0.24%, 15%
+run: 0083__58925bc8-bcc8-4265-8d09-97df2ef6c7bd

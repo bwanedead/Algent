@@ -1,0 +1,647 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="915.768pt" height="559.49pt" viewBox="0 0 915.768 559.49" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-18T04:45:30.684104</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.3, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 559.49 
+L 915.768 559.49 
+L 915.768 0 
+L 0 0 
+z
+" style="fill: #0c0f0e"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 215.208 460.008 
+L 593.462717 460.008 
+L 593.462717 124.758 
+L 215.208 124.758 
+z
+" style="fill: #111513"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 215.208 242.0955 
+L 593.462717 242.0955 
+L 593.462717 290.287688 
+L 215.208 290.287688 
+z
+" clip-path="url(#p125fc0f87f)" style="fill: #f0a33a; opacity: 0.08; stroke: #f0a33a; stroke-linejoin: miter"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <path d="M 258.359638 460.008 
+L 258.359638 124.758 
+" clip-path="url(#p125fc0f87f)" style="fill: none; stroke: #2b302d; stroke-width: 0.5; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_2">
+      <defs>
+       <path id="mfcb454cbe5" d="M 0 0 
+L 0 3.5 
+" style="stroke: #858981; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#mfcb454cbe5" x="258.359638" y="460.008" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="258.359638" y="473.908" transform="rotate(-0 258.359638 473.908)">5k</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_3">
+      <path d="M 325.380254 460.008 
+L 325.380254 124.758 
+" clip-path="url(#p125fc0f87f)" style="fill: none; stroke: #2b302d; stroke-width: 0.5; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#mfcb454cbe5" x="325.380254" y="460.008" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="325.380254" y="473.908" transform="rotate(-0 325.380254 473.908)">10k</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_5">
+      <path d="M 392.40087 460.008 
+L 392.40087 124.758 
+" clip-path="url(#p125fc0f87f)" style="fill: none; stroke: #2b302d; stroke-width: 0.5; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#mfcb454cbe5" x="392.40087" y="460.008" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="392.40087" y="473.908" transform="rotate(-0 392.40087 473.908)">20k</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_7">
+      <path d="M 480.997305 460.008 
+L 480.997305 124.758 
+" clip-path="url(#p125fc0f87f)" style="fill: none; stroke: #2b302d; stroke-width: 0.5; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#mfcb454cbe5" x="480.997305" y="460.008" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="480.997305" y="473.908" transform="rotate(-0 480.997305 473.908)">50k</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_9">
+      <defs>
+       <path id="mcf26a6308d" d="M 0 0 
+L 0 2 
+" style="stroke: #858981; stroke-width: 0.6"/>
+      </defs>
+      <g>
+       <use xlink:href="#mcf26a6308d" x="236.783819" y="460.008" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#mcf26a6308d" x="275.988366" y="460.008" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_7">
+     <g id="line2d_11">
+      <g>
+       <use xlink:href="#mcf26a6308d" x="290.893243" y="460.008" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_8">
+     <g id="line2d_12">
+      <g>
+       <use xlink:href="#mcf26a6308d" x="303.804435" y="460.008" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_9">
+     <g id="line2d_13">
+      <g>
+       <use xlink:href="#mcf26a6308d" x="315.192913" y="460.008" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_10">
+     <g id="line2d_14">
+      <g>
+       <use xlink:href="#mcf26a6308d" x="431.605417" y="460.008" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_11">
+     <g id="line2d_15">
+      <g>
+       <use xlink:href="#mcf26a6308d" x="459.421486" y="460.008" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_12">
+     <g id="line2d_16">
+      <g>
+       <use xlink:href="#mcf26a6308d" x="498.626032" y="460.008" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_13">
+     <g id="line2d_17">
+      <g>
+       <use xlink:href="#mcf26a6308d" x="513.530909" y="460.008" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_14">
+     <g id="line2d_18">
+      <g>
+       <use xlink:href="#mcf26a6308d" x="526.442101" y="460.008" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_15">
+     <g id="line2d_19">
+      <g>
+       <use xlink:href="#mcf26a6308d" x="537.830579" y="460.008" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="text_5">
+     <text style="font-size: 8.4px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="404.335358" y="490.016625" transform="rotate(-0 404.335358 490.016625)">Effective size, individuals  (log)  ·  MSMC2 estimates, not census</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_20">
+      <defs>
+       <path id="mf76dad6808" d="M 0 0 
+L -3.5 0 
+" style="stroke: #858981; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#mf76dad6808" x="215.208" y="161.425969" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 8px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(164.2205 160.602219)">L. emiliae</text>
+      <text style="font-size: 8px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(93.8405 168.771644)">eastern / Caatinga–Cerrado</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_21">
+      <g>
+       <use xlink:href="#mf76dad6808" x="215.208" y="213.808781" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="font-size: 8px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(146.6255 213.031281)">L. pardinoides</text>
+      <text style="font-size: 8px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(102.638 221.146131)">clouded / northern Andes</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_22">
+      <g>
+       <use xlink:href="#mf76dad6808" x="215.208" y="266.191594" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-size: 8px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(164.2205 265.375344)">L. tilcayo</text>
+      <text style="font-size: 8px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(49.853 273.577369)">Bolivian Yungas · 1.43 Myr · 15% mix</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_23">
+      <g>
+       <use xlink:href="#mf76dad6808" x="215.208" y="318.574406" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <text style="font-size: 8px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(159.82175 317.726906)">L. guttulus</text>
+      <text style="font-size: 8px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(36.65675 325.945181)">Atlantic Forest · 34% mix w/ Geoffroy's</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_24">
+      <g>
+       <use xlink:href="#mf76dad6808" x="215.208" y="370.957219" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_10">
+      <text style="font-size: 8px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(146.6255 370.140969)">L. t. antisuyo</text>
+      <text style="font-size: 8px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(49.853 378.342994)">Peruvian Yungas · 0.49 Myr · 15% mix</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_25">
+      <g>
+       <use xlink:href="#mf76dad6808" x="215.208" y="423.340031" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_11">
+      <text style="font-size: 8px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(146.6255 422.542531)">L. t. tigrinus</text>
+      <text style="font-size: 8px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(111.4355 430.697381)">Guiana Shield nominate</text>
+     </g>
+    </g>
+   </g>
+   <g id="patch_4">
+    <path d="M -223202.836771 161.425969 
+L 350.748336 161.425969 
+L 350.748336 179.236125 
+L -223202.836771 179.236125 
+z
+" clip-path="url(#p125fc0f87f)" style="fill: #5eb8c9"/>
+   </g>
+   <g id="patch_5">
+    <path d="M -223202.836771 213.808781 
+L 466.414193 213.808781 
+L 466.414193 231.618938 
+L -223202.836771 231.618938 
+z
+" clip-path="url(#p125fc0f87f)" style="fill: #5eb8c9"/>
+   </g>
+   <g id="patch_6">
+    <path d="M -223202.836771 266.191594 
+L 401.616441 266.191594 
+L 401.616441 284.00175 
+L -223202.836771 284.00175 
+z
+" clip-path="url(#p125fc0f87f)" style="fill: #5eb8c9"/>
+   </g>
+   <g id="patch_7">
+    <path d="M -223202.836771 318.574406 
+L 477.050213 318.574406 
+L 477.050213 336.384563 
+L -223202.836771 336.384563 
+z
+" clip-path="url(#p125fc0f87f)" style="fill: #5eb8c9"/>
+   </g>
+   <g id="patch_8">
+    <path d="M -223202.836771 370.957219 
+L 466.414193 370.957219 
+L 466.414193 388.767375 
+L -223202.836771 388.767375 
+z
+" clip-path="url(#p125fc0f87f)" style="fill: #5eb8c9"/>
+   </g>
+   <g id="patch_9">
+    <path d="M -223202.836771 423.340031 
+L 477.050213 423.340031 
+L 477.050213 441.150188 
+L -223202.836771 441.150188 
+z
+" clip-path="url(#p125fc0f87f)" style="fill: #5eb8c9"/>
+   </g>
+   <g id="patch_10">
+    <path d="M -223202.836771 143.615813 
+L 258.359638 143.615813 
+L 258.359638 161.425969 
+L -223202.836771 161.425969 
+z
+" clip-path="url(#p125fc0f87f)" style="fill: #f0a33a"/>
+   </g>
+   <g id="patch_11">
+    <path d="M -223202.836771 195.998625 
+L 303.804435 195.998625 
+L 303.804435 213.808781 
+L -223202.836771 213.808781 
+z
+" clip-path="url(#p125fc0f87f)" style="fill: #f0a33a"/>
+   </g>
+   <g id="patch_12">
+    <path d="M -223202.836771 248.381438 
+L 303.804435 248.381438 
+L 303.804435 266.191594 
+L -223202.836771 266.191594 
+z
+" clip-path="url(#p125fc0f87f)" style="fill: #f0a33a"/>
+   </g>
+   <g id="patch_13">
+    <path d="M -223202.836771 300.76425 
+L 387.441305 300.76425 
+L 387.441305 318.574406 
+L -223202.836771 318.574406 
+z
+" clip-path="url(#p125fc0f87f)" style="fill: #f0a33a"/>
+   </g>
+   <g id="patch_14">
+    <path d="M -223202.836771 353.147063 
+L 405.914495 353.147063 
+L 405.914495 370.957219 
+L -223202.836771 370.957219 
+z
+" clip-path="url(#p125fc0f87f)" style="fill: #f0a33a"/>
+   </g>
+   <g id="patch_15">
+    <path d="M -223202.836771 405.529875 
+L 468.637056 405.529875 
+L 468.637056 423.340031 
+L -223202.836771 423.340031 
+z
+" clip-path="url(#p125fc0f87f)" style="fill: #f0a33a"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 215.208 460.008 
+L 215.208 124.758 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 215.208 460.008 
+L 593.462717 460.008 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 8.2px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="215.208" y="104.677969" transform="rotate(-0 215.208 104.677969)">A   Pleistocene vs Holocene effective size   ·   amber = now</text>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #5eb8c9" x="355.465872" y="172.290422" transform="rotate(-0 355.465872 172.290422)">13k</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #f0a33a" x="263.077174" y="154.480266" transform="rotate(-0 263.077174 154.480266)">5k  -61%</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #5eb8c9" x="471.131729" y="224.673234" transform="rotate(-0 471.131729 224.673234)">43k</text>
+   </g>
+   <g id="text_16">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #f0a33a" x="308.521971" y="206.863078" transform="rotate(-0 308.521971 206.863078)">8k  -80%</text>
+   </g>
+   <g id="text_17">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #5eb8c9" x="406.333977" y="277.056047" transform="rotate(-0 406.333977 277.056047)">22k</text>
+   </g>
+   <g id="text_18">
+    <text style="font-weight: 700; font-size: 8.4px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4" x="308.521971" y="259.370109" transform="rotate(-0 308.521971 259.370109)">8k  -63%</text>
+   </g>
+   <g id="text_19">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #5eb8c9" x="481.767749" y="329.438859" transform="rotate(-0 481.767749 329.438859)">48k</text>
+   </g>
+   <g id="text_20">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #f0a33a" x="392.158841" y="311.628703" transform="rotate(-0 392.158841 311.628703)">19k  -61%</text>
+   </g>
+   <g id="text_21">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #5eb8c9" x="471.131729" y="381.821672" transform="rotate(-0 471.131729 381.821672)">43k</text>
+   </g>
+   <g id="text_22">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #f0a33a" x="410.632031" y="364.011516" transform="rotate(-0 410.632031 364.011516)">23k  -47%</text>
+   </g>
+   <g id="text_23">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #5eb8c9" x="481.767749" y="434.204484" transform="rotate(-0 481.767749 434.204484)">48k</text>
+   </g>
+   <g id="text_24">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #f0a33a" x="473.354592" y="416.394328" transform="rotate(-0 473.354592 416.394328)">44k  -8%</text>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_18">
+    <path d="M 631.975925 460.008 
+L 895.608 460.008 
+L 895.608 124.758 
+L 631.975925 124.758 
+z
+" style="fill: #111513"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 631.975925 242.0955 
+L 895.608 242.0955 
+L 895.608 290.287688 
+L 631.975925 290.287688 
+z
+" clip-path="url(#p57ed3a0ec0)" style="fill: #f0a33a; opacity: 0.08; stroke: #f0a33a; stroke-linejoin: miter"/>
+   </g>
+   <g id="matplotlib.axis_3">
+    <g id="xtick_16">
+     <g id="line2d_26">
+      <path d="M 631.975925 460.008 
+L 631.975925 124.758 
+" clip-path="url(#p57ed3a0ec0)" style="fill: none; stroke: #2b302d; stroke-width: 0.5; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_27">
+      <g>
+       <use xlink:href="#mfcb454cbe5" x="631.975925" y="460.008" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_25">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="631.975925" y="473.908" transform="rotate(-0 631.975925 473.908)">0</text>
+     </g>
+    </g>
+    <g id="xtick_17">
+     <g id="line2d_28">
+      <path d="M 694.007001 460.008 
+L 694.007001 124.758 
+" clip-path="url(#p57ed3a0ec0)" style="fill: none; stroke: #2b302d; stroke-width: 0.5; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_29">
+      <g>
+       <use xlink:href="#mfcb454cbe5" x="694.007001" y="460.008" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_26">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="694.007001" y="473.908" transform="rotate(-0 694.007001 473.908)">0.08</text>
+     </g>
+    </g>
+    <g id="xtick_18">
+     <g id="line2d_30">
+      <path d="M 756.038078 460.008 
+L 756.038078 124.758 
+" clip-path="url(#p57ed3a0ec0)" style="fill: none; stroke: #2b302d; stroke-width: 0.5; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_31">
+      <g>
+       <use xlink:href="#mfcb454cbe5" x="756.038078" y="460.008" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_27">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="756.038078" y="473.908" transform="rotate(-0 756.038078 473.908)">0.16</text>
+     </g>
+    </g>
+    <g id="xtick_19">
+     <g id="line2d_32">
+      <path d="M 818.069154 460.008 
+L 818.069154 124.758 
+" clip-path="url(#p57ed3a0ec0)" style="fill: none; stroke: #2b302d; stroke-width: 0.5; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_33">
+      <g>
+       <use xlink:href="#mfcb454cbe5" x="818.069154" y="460.008" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_28">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="818.069154" y="473.908" transform="rotate(-0 818.069154 473.908)">0.24</text>
+     </g>
+    </g>
+    <g id="text_29">
+     <text style="font-size: 8.4px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="763.791962" y="489.754125" transform="rotate(-0 763.791962 489.754125)">Autosomal heterozygosity, percent  ·  genomic estimate</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_4">
+    <g id="ytick_7"/>
+    <g id="ytick_8"/>
+    <g id="ytick_9"/>
+    <g id="ytick_10"/>
+    <g id="ytick_11"/>
+    <g id="ytick_12"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 631.975925 460.008 
+L 631.975925 124.758 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_21">
+    <path d="M 631.975925 460.008 
+L 895.608 460.008 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="PathCollection_1">
+    <path d="M 694.007001 165.953661 
+C 695.207759 165.953661 696.359499 165.476595 697.208563 164.627531 
+C 698.057627 163.778467 698.534694 162.626727 698.534694 161.425969 
+C 698.534694 160.225211 698.057627 159.073471 697.208563 158.224407 
+C 696.359499 157.375342 695.207759 156.898276 694.007001 156.898276 
+C 692.806243 156.898276 691.654503 157.375342 690.805439 158.224407 
+C 689.956375 159.073471 689.479309 160.225211 689.479309 161.425969 
+C 689.479309 162.626727 689.956375 163.778467 690.805439 164.627531 
+C 691.654503 165.476595 692.806243 165.953661 694.007001 165.953661 
+z
+" clip-path="url(#p57ed3a0ec0)" style="fill: #5eb8c9"/>
+    <path d="M 787.053616 218.336474 
+C 788.254374 218.336474 789.406114 217.859408 790.255178 217.010343 
+C 791.104242 216.161279 791.581309 215.009539 791.581309 213.808781 
+C 791.581309 212.608023 791.104242 211.456283 790.255178 210.607219 
+C 789.406114 209.758155 788.254374 209.281089 787.053616 209.281089 
+C 785.852858 209.281089 784.701118 209.758155 783.852054 210.607219 
+C 783.00299 211.456283 782.525923 212.608023 782.525923 213.808781 
+C 782.525923 215.009539 783.00299 216.161279 783.852054 217.010343 
+C 784.701118 217.859408 785.852858 218.336474 787.053616 218.336474 
+z
+" clip-path="url(#p57ed3a0ec0)" style="fill: #5eb8c9"/>
+    <path d="M 794.807501 271.892471 
+C 796.319391 271.892471 797.769562 271.29179 798.838629 270.222723 
+C 799.907697 269.153655 800.508378 267.703484 800.508378 266.191594 
+C 800.508378 264.679703 799.907697 263.229533 798.838629 262.160465 
+C 797.769562 261.091397 796.319391 260.490717 794.807501 260.490717 
+C 793.29561 260.490717 791.84544 261.091397 790.776372 262.160465 
+C 789.707304 263.229533 789.106623 264.679703 789.106623 266.191594 
+C 789.106623 267.703484 789.707304 269.153655 790.776372 270.222723 
+C 791.84544 271.29179 793.29561 271.892471 794.807501 271.892471 
+z
+" clip-path="url(#p57ed3a0ec0)" style="fill: #f0a33a"/>
+    <path d="M 818.069154 323.102099 
+C 819.269912 323.102099 820.421652 322.625033 821.270716 321.775968 
+C 822.119781 320.926904 822.596847 319.775164 822.596847 318.574406 
+C 822.596847 317.373648 822.119781 316.221908 821.270716 315.372844 
+C 820.421652 314.52378 819.269912 314.046714 818.069154 314.046714 
+C 816.868396 314.046714 815.716656 314.52378 814.867592 315.372844 
+C 814.018528 316.221908 813.541462 317.373648 813.541462 318.574406 
+C 813.541462 319.775164 814.018528 320.926904 814.867592 321.775968 
+C 815.716656 322.625033 816.868396 323.102099 818.069154 323.102099 
+z
+" clip-path="url(#p57ed3a0ec0)" style="fill: #5eb8c9"/>
+    <path d="M 763.791962 375.484911 
+C 764.99272 375.484911 766.14446 375.007845 766.993524 374.158781 
+C 767.842589 373.309717 768.319655 372.157977 768.319655 370.957219 
+C 768.319655 369.756461 767.842589 368.604721 766.993524 367.755657 
+C 766.14446 366.906592 764.99272 366.429526 763.791962 366.429526 
+C 762.591204 366.429526 761.439464 366.906592 760.5904 367.755657 
+C 759.741336 368.604721 759.26427 369.756461 759.26427 370.957219 
+C 759.26427 372.157977 759.741336 373.309717 760.5904 374.158781 
+C 761.439464 375.007845 762.591204 375.484911 763.791962 375.484911 
+z
+" clip-path="url(#p57ed3a0ec0)" style="fill: #5eb8c9"/>
+    <path d="M 787.053616 427.867724 
+C 788.254374 427.867724 789.406114 427.390658 790.255178 426.541593 
+C 791.104242 425.692529 791.581309 424.540789 791.581309 423.340031 
+C 791.581309 422.139273 791.104242 420.987533 790.255178 420.138469 
+C 789.406114 419.289405 788.254374 418.812339 787.053616 418.812339 
+C 785.852858 418.812339 784.701118 419.289405 783.852054 420.138469 
+C 783.00299 420.987533 782.525923 422.139273 782.525923 423.340031 
+C 782.525923 424.540789 783.00299 425.692529 783.852054 426.541593 
+C 784.701118 427.390658 785.852858 427.867724 787.053616 427.867724 
+z
+" clip-path="url(#p57ed3a0ec0)" style="fill: #5eb8c9"/>
+   </g>
+   <g id="text_30">
+    <text style="font-size: 8.2px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="631.975925" y="104.636969" transform="rotate(-0 631.975925 104.636969)">B   Variation left in each genome</text>
+   </g>
+   <g id="text_31">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="701.760886" y="163.385344" transform="rotate(-0 701.760886 163.385344)">0.08%</text>
+   </g>
+   <g id="text_32">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="794.807501" y="215.768156" transform="rotate(-0 794.807501 215.768156)">0.20%</text>
+   </g>
+   <g id="text_33">
+    <text style="font-weight: 700; font-size: 8.4px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4" x="802.561385" y="268.311938" transform="rotate(-0 802.561385 268.311938)">0.21%   tilcayo</text>
+   </g>
+   <g id="text_34">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="825.823039" y="320.533781" transform="rotate(-0 825.823039 320.533781)">0.24%</text>
+   </g>
+   <g id="text_35">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="771.545847" y="372.916594" transform="rotate(-0 771.545847 372.916594)">0.17%</text>
+   </g>
+   <g id="text_36">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="794.807501" y="425.299406" transform="rotate(-0 794.807501 425.299406)">0.20%</text>
+   </g>
+  </g>
+  <g id="text_37">
+   <text style="font-weight: 700; font-size: 13.5px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(20.16 29.475)">One Vulnerable cat becomes five</text>
+   <text style="font-weight: 700; font-size: 13.5px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(20.16 43.270734)">with far less room — and far less variation</text>
+  </g>
+  <g id="text_38">
+   <text style="font-size: 7.2px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="895.608" y="29.149425" transform="rotate(-0 895.608 29.149425)">IUCN census now (2016, pre-split)</text>
+  </g>
+  <g id="text_39">
+   <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: end; fill: #f0ede4" x="895.608" y="48.79145" transform="rotate(-0 895.608 48.79145)">L. tigrinus   8,932–10,208 mature  ·  Vulnerable</text>
+  </g>
+  <g id="text_40">
+   <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: end; fill: #f0ede4" x="895.608" y="65.91" transform="rotate(-0 895.608 65.91)">L. guttulus   6,047 mature  ·  Vulnerable</text>
+  </g>
+  <g id="text_41">
+   <text style="font-size: 7.2px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="895.608" y="82.564425" transform="rotate(-0 895.608 82.564425)">Five-way split: no separate census yet</text>
+  </g>
+  <g id="text_42">
+   <text style="font-size: 7.3px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="20.16" y="515.442203" transform="rotate(-0 20.16 515.442203)">as of 17 Sep 2026  ·  n = 1–5 genomes per taxon  ·  15% introgression tilcayo–antisuyo;  34% guttulus–Geoffroy's cat</text>
+  </g>
+  <g id="AnnotationBbox_1">
+   <image xlink:href="data:image/png;base64,
+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" id="imagedf87d590ba" transform="scale(1 -1) translate(0 -44.228571)" x="762.306062" y="-510.441429" width="42.171429" height="44.228571"/>
+   <g id="text_43">
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4; opacity: 0.45" x="808.3295" y="533.505703" transform="rotate(-0 808.3295 533.505703)">OHMEGA MONSTER</text>
+   </g>
+   <g id="text_44">
+    <text style="font-size: 7px; font-family: 'Consolas'; text-anchor: start; fill: #858981; opacity: 0.4" x="808.3295" y="539.599531" transform="rotate(-0 808.3295 539.599531)">ohmega.monster</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p125fc0f87f">
+   <rect x="215.208" y="124.758" width="378.254717" height="335.25"/>
+  </clipPath>
+  <clipPath id="p57ed3a0ec0">
+   <rect x="631.975925" y="124.758" width="263.632075" height="335.25"/>
+  </clipPath>
+ </defs>
+</svg>
