@@ -662,3 +662,12 @@ cost_by_stage: editorial=$0.1233, gauntlet=$0.3335
 refused: model_turn(reservation_overrun)
 ⚠ figures not matched to evidence: 25.5%
 run: 0084__e635e889-3bb1-47ce-839d-1b0e412f4e07
+
+### PUBLISH us-clears-24-3bn-stealth-fighter-sale-to-saudi-arabia-and-sa-9e3ae1 — 2026-09-18
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.6524  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.2623, gauntlet=$0.3901
+⚠ figures not matched to evidence: 15%, 2%
+run: 0085__bd2600e1-e275-4506-a164-211f59134828
