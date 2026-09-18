@@ -50,7 +50,7 @@ from algent_backend.agent_system.agents.research.leads import (
     JsonLeadStore,
     open_leads_for_discovery,
 )
-from algent_backend.agent_system.foundation import cost
+from algent_backend.agent_system.foundation import cost, read_cache
 from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.context import AgentRunContext
 from algent_backend.agent_system.runs.control_plane.layout import find_run_root
@@ -73,6 +73,7 @@ RAIL_ANNOUNCED = "newsroom_rail.announced"
 RAIL_FIGURES = "newsroom_rail.figures"
 BACKFEED_INJECTED = "newsroom_rail.backfeed_injected"
 RAIL_PUBLISHED = "newsroom_rail.published"
+RAIL_READS = "newsroom_rail.reads"
 
 # Backfeed is OFF by default. It was meant to re-queue unfinished research threads, but live
 # it re-injected the same published story-family (ICE 0020→0022) and fought cooldown. Opt in
@@ -122,14 +123,29 @@ def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | Non
     """Compile the full-rail orchestrator. ``lead_store`` is injectable (tests pass a fake)."""
 
     def run(state: RailState, config: RunnableConfig) -> dict[str, Any]:
-        with cost.article_scoped():
-            return _run_rail(context, state, config, lead_store=lead_store)
+        # ONE read cache for the whole article, across every stage and lane. The enrichment
+        # lanes each open their own snapshot scope, which resets per lane — a cache living there
+        # would forget between lanes, which is the exact bug it exists to fix. Persisted in the
+        # run directory so `newsroom resume` reuses what the interrupted attempt already read.
+        with cost.article_scoped(), read_cache.scoped(_read_cache_path(context)):
+            out = _run_rail(context, state, config, lead_store=lead_store)
+            context.emit(RAIL_READS, read_cache.stats())
+            return out
 
     graph = StateGraph(RailState)
     graph.add_node("run", run)
     graph.add_edge(START, "run")
     graph.add_edge("run", END)
     return graph.compile()
+
+
+def _read_cache_path(context: AgentRunContext) -> Any:
+    """Where this run's reads persist, or None when the run has no directory (tests)."""
+    try:
+        root = find_run_root(context.run_id)
+    except Exception:  # noqa: BLE001 — no run dir is an in-memory cache, not an error
+        return None
+    return (root / "artifacts" / "read_cache.jsonl") if root else None
 
 
 def _run_rail(

@@ -34,7 +34,7 @@ from typing import Any
 
 from algent_backend.agent_system.foundation.text_hygiene import scrub_text
 
-from ....foundation import cost, snapshots
+from ....foundation import cost, read_cache, snapshots
 from ...spec import GLOBAL_SCOPE, ToolSpec
 from .._wrap import as_structured_tool
 from . import circuit, policy
@@ -124,13 +124,28 @@ def _search(
     channel = policy.SEMANTIC if kind == "semantic" else policy.KEYWORD
     if not policy.is_allowed(channel):
         return _denied(channel)
-    return _search_web(query, kind, max_results)
+    # A blank query still spends a search credit and returns nothing a model can use. One live
+    # gauntlet sent the same empty query seven times.
+    if not (query or "").strip():
+        return {"action": "search", "kind": kind,
+                "error": "empty query — write the words you are looking for"}
+    cached = read_cache.get_search(kind, query)
+    if cached is not None:
+        return {**cached, "cached": True}
+    result = _search_web(query, kind, max_results)
+    read_cache.put_search(kind, query, result)
+    return result
 
 
 def _search_read(read_url: str, *, richness: str) -> dict[str, Any]:
     rich = richness == "rich"
     if not policy.is_allowed(policy.READ):
         return _denied(policy.READ)
+    # Checked BEFORE the rich affordability test on purpose: a page already held in full needs
+    # no crawler at all, so a paid request for it must not even reserve budget.
+    cached = _from_cache(read_url)
+    if cached is not None:
+        return cached
     if rich:
         if not policy.is_allowed(policy.RICH):
             return _denied(policy.RICH)
@@ -139,6 +154,24 @@ def _search_read(read_url: str, *, richness: str) -> dict[str, Any]:
         if refusal is not None:
             return refusal
     return _read(read_url, rich=rich)
+
+
+def _from_cache(url: str) -> dict[str, Any] | None:
+    """Serve a page this run already read in full. No fetch, no cost, same content.
+
+    The snapshot is re-recorded because grounding is judged per stage from its own snapshot
+    store, and each enrichment lane starts with an empty one — a stage handed a page from cache
+    has still read it and must not be downgraded to snippet-only for that.
+    """
+    hit = read_cache.get(url)
+    if hit is None:
+        return None
+    if hit.get("content"):
+        snapshots.record(hit.get("url", url), hit["content"])
+    out = {"action": "read", **hit, "cached": True}
+    if isinstance(out.get("content"), str):
+        out["content"] = _clip_strings(out["content"], limit=_READ_TO_MODEL_CHARS)
+    return out
 
 
 def _search_scholar(*, query: str, doi: str) -> dict[str, Any]:
@@ -227,6 +260,7 @@ def _read(url: str, *, rich: bool) -> dict[str, Any]:
     # must NOT falsely ground — snapshot (the grounding signal) only on good content.
     if result.get("content") and result.get("quality") == "good":
         snapshots.record(result.get("url", url), result["content"])
+        read_cache.put(url, result)
     out = {"action": "read", **result}
     if isinstance(out.get("content"), str):
         out["content"] = _clip_strings(out["content"], limit=_READ_TO_MODEL_CHARS)
