@@ -651,3 +651,14 @@ cost: ~$0.6252  ·  mode: normal  ·  soft/hard: $1.00/$3.00
 cost_by_stage: editorial=$0.1660, gauntlet=$0.4592
 ⚠ figures not matched to evidence: 0.24%, 15%
 run: 0083__58925bc8-bcc8-4265-8d09-97df2ef6c7bd
+
+### PUBLISH google-deepmind-releases-searchable-map-of-every-possible-dn-be2e36 — 2026-09-18
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 1 produced, 0 escapes
+cost: ~$0.4568  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+analytics_skipped: req_alphagenome_scale:integrity_check_failed
+cost_by_stage: editorial=$0.1233, gauntlet=$0.3335
+refused: model_turn(reservation_overrun)
+⚠ figures not matched to evidence: 25.5%
+run: 0084__e635e889-3bb1-47ce-839d-1b0e412f4e07
