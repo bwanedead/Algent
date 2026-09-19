@@ -352,3 +352,22 @@ def test_a_real_error_is_not_swallowed_by_the_structured_retry() -> None:
 
     assert _is_unstructured_reply(ValueError("1 validation error for X\n Invalid JSON")) is True
     assert _is_unstructured_reply(RuntimeError("provider 500")) is False
+
+
+def test_an_empty_structured_reply_is_asked_again() -> None:
+    """The Responses API can return a parse of None with no error. That is the prose slip in a
+    quieter form and gets the same single retry — not a silent fallback."""
+    from langchain_core.messages import HumanMessage
+
+    from algent_backend.agent_system.foundation.models.budget_gate import _structured_with_retry
+
+    seen: list[int] = []
+
+    def call(msgs):
+        seen.append(len(msgs))
+        return None if len(seen) == 1 else {"ok": True}
+
+    assert _structured_with_retry(call, [HumanMessage(content="x")]) == {"ok": True}
+    assert seen == [1, 2]
+    assert _structured_with_retry(lambda m: {"raw": 1, "parsed": None}, [HumanMessage(content="x")]) \
+        == {"raw": 1, "parsed": None}   # asked twice, then the caller's fallback decides

@@ -80,7 +80,7 @@ def build_comprehension_reviewer_graph(context: AgentRunContext, *, model_spec: 
             config=config,
         )
         check = raw if isinstance(raw, ComprehensionCheck) else ComprehensionCheck(
-            id="", verdict="clear", summary="reviewer returned no structured check")
+            id="", verdict="not_reviewed", summary="reviewer returned no structured check")
         return _finish(context, _finalize(check, draft, model_spec.model, places=places))
 
     graph = StateGraph(ComprehensionState)

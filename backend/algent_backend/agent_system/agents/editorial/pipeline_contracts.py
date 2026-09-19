@@ -32,7 +32,7 @@ class EditorialPipelineReport(BaseModel):
     # Comprehension (gate C) — advisory, NOT a publish gate: a hard-to-follow piece is a dud, not a
     # lie, so it ships either way, but earns bounded reader-rewrites first. The reviewer emits
     # the next draft; the article drafter is not re-invoked for this lane.
-    comprehension_verdict: str = ""   # clear | needs_ramp (after any repair lap)
+    comprehension_verdict: str = ""   # clear | needs_ramp | not_reviewed (after any repair lap)
     comprehension_findings: int = 0   # unexplained terms / islands / lost threads still standing
     comprehension_rounds: int = 1
     #: Country flags the comprehension reviewer judged the piece does not earn. Applied by the

@@ -21,7 +21,10 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-ComprehensionVerdict = Literal["clear", "needs_ramp"]
+#: ``not_reviewed`` is a review that did not happen. It must never read as ``clear``: a run once
+#: shipped a 1,772-word piece over its ceiling as "clear, 0 findings" because the reviewer
+#: returned nothing and the fallback called that a pass.
+ComprehensionVerdict = Literal["clear", "needs_ramp", "not_reviewed"]
 
 
 class ComprehensionFinding(BaseModel):

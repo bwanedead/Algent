@@ -133,3 +133,11 @@ def test_comprehension_reviewer_registered() -> None:
     spec = default_agent_registry().get("comprehension_reviewer")
     assert spec.default_model.provider == "meta" and spec.default_model.model == "muse-spark-1.2-contributor" and spec.family == "newsroom"
     assert spec.default_model.reasoning_effort == "medium"
+
+
+def test_a_review_that_returned_nothing_is_not_a_pass() -> None:
+    # Live: the second read came back empty, the fallback said "clear, 0 findings", and a piece
+    # 270 words over its ceiling shipped with its review recorded as a pass.
+    graph = cl.build_comprehension_reviewer_graph(_ctx(_Model(None), []), model_spec=_SPEC)
+    r = graph.invoke({"draft": _draft().model_dump()})["comprehension_check"]
+    assert r["verdict"] == "not_reviewed"

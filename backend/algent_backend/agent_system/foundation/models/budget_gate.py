@@ -313,11 +313,31 @@ def _structured_with_retry(call: Any, messages: list[BaseMessage]) -> Any:
     prompt succeeded on the immediately following attempt every time we have seen it.
     """
     try:
-        return call(messages)
+        out = call(messages)
     except Exception as exc:  # noqa: BLE001 — re-raised below unless it is the prose case
         if not _is_unstructured_reply(exc):
             raise
+    else:
+        if not _is_empty_structured(out):
+            return out
     return call([*messages, HumanMessage(content=_STRUCTURED_NUDGE)])
+
+
+def _is_empty_structured(out: Any) -> bool:
+    """A structured call that came back with no object and no error.
+
+    The same slip as prose, in a quieter form: the Responses API can hand back a reply whose
+    parse is simply None — no exception, so nothing retried, and every caller's fallback took
+    over. The comprehension reviewer's fallback was "clear", which is how an over-length piece
+    shipped with its review recorded as a pass.
+    """
+    if out is None:
+        return True
+    if isinstance(out, dict) and "parsed" in out:
+        return out["parsed"] is None
+    if isinstance(out, tuple) and len(out) == 2:
+        return out[1] is None
+    return False
 
 
 def _gated_provider_runnable(
