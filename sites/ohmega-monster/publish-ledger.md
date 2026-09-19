@@ -671,3 +671,14 @@ cost: ~$0.6524  ·  mode: normal  ·  soft/hard: $1.00/$3.00
 cost_by_stage: editorial=$0.2623, gauntlet=$0.3901
 ⚠ figures not matched to evidence: 15%, 2%
 run: 0085__bd2600e1-e275-4506-a164-211f59134828
+
+### PUBLISH why-giant-megaprojects-almost-always-bust-budgets-and-how-to-5dcc3d — 2026-09-19
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.9428  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.2615, gauntlet=$0.4852, profile=$0.1957, routing=$0.0004
+refused: model_turn(reservation_overrun), model_turn(reservation_overrun)
+disposition: needs_verification
+⚠ figures not matched to evidence: 91.5%, 35%
+run: 0086__82d1fc88-555a-47d7-ab01-223895537ef7

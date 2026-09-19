@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="819.537962pt" height="486.86pt" viewBox="0 0 819.537962 486.86" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-19T04:37:54.199760</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.3, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 486.86 
+L 819.537962 486.86 
+L 819.537962 0 
+L 0 0 
+z
+" style="fill: #0c0f0e"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 170.496 392.22 
+L 554.609208 392.22 
+L 554.609208 120.78 
+L 170.496 120.78 
+z
+" style="fill: #111513"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 170.496 196.08271 
+L 554.609208 196.08271 
+L 554.609208 141.79471 
+L 170.496 141.79471 
+z
+" clip-path="url(#pe6eb936cd4)" style="fill: #2b302d; opacity: 0.55"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 170.496 283.644 
+L 554.609208 283.644 
+L 554.609208 229.356 
+L 170.496 229.356 
+z
+" clip-path="url(#pe6eb936cd4)" style="fill: #2b302d; opacity: 0.55"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 170.496 371.20529 
+L 554.609208 371.20529 
+L 554.609208 316.91729 
+L 170.496 316.91729 
+z
+" clip-path="url(#pe6eb936cd4)" style="fill: #2b302d; opacity: 0.55"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <path d="M 170.496 392.22 
+L 170.496 120.78 
+" clip-path="url(#pe6eb936cd4)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_2">
+      <defs>
+       <path id="m4188e787cc" d="M 0 0 
+L 0 3.5 
+" style="stroke: #858981; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m4188e787cc" x="170.496" y="392.22" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="170.496" y="406.12" transform="rotate(-0 170.496 406.12)">0</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_3">
+      <path d="M 266.524302 392.22 
+L 266.524302 120.78 
+" clip-path="url(#pe6eb936cd4)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#m4188e787cc" x="266.524302" y="392.22" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="266.524302" y="406.12" transform="rotate(-0 266.524302 406.12)">25</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_5">
+      <path d="M 362.552604 392.22 
+L 362.552604 120.78 
+" clip-path="url(#pe6eb936cd4)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#m4188e787cc" x="362.552604" y="392.22" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="362.552604" y="406.12" transform="rotate(-0 362.552604 406.12)">50</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_7">
+      <path d="M 458.580906 392.22 
+L 458.580906 120.78 
+" clip-path="url(#pe6eb936cd4)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#m4188e787cc" x="458.580906" y="392.22" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="458.580906" y="406.12" transform="rotate(-0 458.580906 406.12)">75</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_9">
+      <path d="M 554.609208 392.22 
+L 554.609208 120.78 
+" clip-path="url(#pe6eb936cd4)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#m4188e787cc" x="554.609208" y="392.22" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="554.609208" y="406.12" transform="rotate(-0 554.609208 406.12)">100</text>
+     </g>
+    </g>
+    <g id="text_6">
+     <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="362.552604" y="419.08875" transform="rotate(-0 362.552604 419.08875)">% of projects</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_11"/>
+     <g id="text_7">
+      <text style="font-size: 9px; font-family: 'Consolas'; fill: #f0a33a" transform="translate(106.061469 168.015507)">Over budget</text>
+      <text style="font-size: 9px; font-family: 'Consolas'; fill: #f0a33a" transform="translate(106.061469 177.003413)">or schedule</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_12"/>
+     <g id="text_8">
+      <text style="font-size: 9px; font-family: 'Consolas'; fill: #5eb8c9" transform="translate(115.958656 255.576797)">On budget</text>
+      <text style="font-size: 9px; font-family: 'Consolas'; fill: #5eb8c9" transform="translate(106.061469 264.564703)">and on time</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_13"/>
+     <g id="text_9">
+      <text style="font-size: 9px; font-family: 'Consolas'; fill: #c98bb8" transform="translate(86.267094 343.164103)">On budget, time</text>
+      <text style="font-size: 9px; font-family: 'Consolas'; fill: #c98bb8" transform="translate(101.112875 352.152009)">and benefits</text>
+     </g>
+    </g>
+   </g>
+   <g id="patch_6">
+    <path d="M 170.496 196.08271 
+L 521.959585 196.08271 
+L 521.959585 141.79471 
+L 170.496 141.79471 
+z
+" clip-path="url(#pe6eb936cd4)" style="fill: #f0a33a"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 170.496 283.644 
+L 203.145623 283.644 
+L 203.145623 229.356 
+L 170.496 229.356 
+z
+" clip-path="url(#pe6eb936cd4)" style="fill: #5eb8c9"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 170.496 371.20529 
+L 172.416566 371.20529 
+L 172.416566 316.91729 
+L 170.496 316.91729 
+z
+" clip-path="url(#pe6eb936cd4)" style="fill: #c98bb8"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 170.496 392.22 
+L 554.609208 392.22 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_14">
+    <path d="M 172.416566 371.20529 
+L 172.416566 316.91729 
+" clip-path="url(#pe6eb936cd4)" style="fill: none; stroke: #c98bb8; stroke-width: 2.4; stroke-linecap: round"/>
+   </g>
+   <g id="text_10">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #0c0f0e" x="515.045547" y="171.419178" transform="rotate(-0 515.045547 171.419178)">91.5%   ·  9 in 10</text>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'Consolas'; text-anchor: start; fill: #5eb8c9" x="212.36434" y="258.980469" transform="rotate(-0 212.36434 258.980469)">8.5%   ·  1 in 12</text>
+   </g>
+   <g id="text_12">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'Consolas'; text-anchor: start; fill: #c98bb8" x="185.860528" y="346.541759" transform="rotate(-0 185.860528 346.541759)">0.5%   ·  1 in 200</text>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_10">
+    <path d="M 595.857057 395.47728 
+L 791.104755 395.47728 
+Q 799.377962 395.47728 799.377962 384.61968 
+L 799.377962 128.38032 
+Q 799.377962 117.52272 791.104755 117.52272 
+L 595.857057 117.52272 
+Q 587.583849 117.52272 587.583849 128.38032 
+L 587.583849 384.61968 
+Q 587.583849 395.47728 595.857057 395.47728 
+z
+" style="fill: #0c0f0e; stroke: #454b46; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_13">
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4" x="606.612226" y="142.9314" transform="rotate(-0 606.612226 142.9314)">FAT-TAIL EXAMPLES</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 7.5px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="606.612226" y="159.885" transform="rotate(-0 606.612226 159.885)">Reported overruns — not the bar scale</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="606.612226" y="180.588" transform="rotate(-0 606.612226 180.588)">Sydney Opera House</text>
+   </g>
+   <g id="text_16">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #f0a33a" x="606.612226" y="194.30712" transform="rotate(-0 606.612226 194.30712)">1,400%</text>
+   </g>
+   <g id="text_17">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="664.524679" y="193.61712" transform="rotate(-0 664.524679 193.61712)">cost overrun</text>
+   </g>
+   <g id="text_18">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="606.612226" y="212.12129" transform="rotate(-0 606.612226 212.12129)">Boston Big Dig</text>
+   </g>
+   <g id="text_19">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #f0a33a" x="606.612226" y="225.79416" transform="rotate(-0 606.612226 225.79416)">220%</text>
+   </g>
+   <g id="text_20">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="664.524679" y="225.10416" transform="rotate(-0 664.524679 225.10416)">cost overrun</text>
+   </g>
+   <g id="text_21">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="606.612226" y="243.56208" transform="rotate(-0 606.612226 243.56208)">Channel Tunnel</text>
+   </g>
+   <g id="text_22">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #f0a33a" x="606.612226" y="257.2812" transform="rotate(-0 606.612226 257.2812)">80%</text>
+   </g>
+   <g id="text_23">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="664.524679" y="256.5912" transform="rotate(-0 664.524679 256.5912)">construction</text>
+   </g>
+   <g id="text_24">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #f0a33a" x="606.612226" y="269.76744" transform="rotate(-0 606.612226 269.76744)">140%</text>
+   </g>
+   <g id="text_25">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="664.524679" y="269.12369" transform="rotate(-0 664.524679 269.12369)">financing</text>
+   </g>
+   <g id="text_26">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="606.612226" y="287.58161" transform="rotate(-0 606.612226 287.58161)">Rail, average</text>
+   </g>
+   <g id="text_27">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #f0a33a" x="606.612226" y="301.25448" transform="rotate(-0 606.612226 301.25448)">44.7%</text>
+   </g>
+   <g id="text_28">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="664.524679" y="300.56448" transform="rotate(-0 664.524679 300.56448)">cost overrun</text>
+   </g>
+   <g id="text_29">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #f0a33a" x="606.612226" y="313.74072" transform="rotate(-0 606.612226 313.74072)">51.4%</text>
+   </g>
+   <g id="text_30">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="664.524679" y="313.05072" transform="rotate(-0 664.524679 313.05072)">demand shortfall</text>
+   </g>
+   <g id="text_31">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="606.612226" y="331.46864" transform="rotate(-0 606.612226 331.46864)">Dams, average</text>
+   </g>
+   <g id="text_32">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #f0a33a" x="606.612226" y="345.22776" transform="rotate(-0 606.612226 345.22776)">44%</text>
+   </g>
+   <g id="text_33">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="664.524679" y="344.53776" transform="rotate(-0 664.524679 344.53776)">delay</text>
+   </g>
+   <g id="text_34">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #f0a33a" x="606.612226" y="357.714" transform="rotate(-0 606.612226 357.714)">+4.64%</text>
+   </g>
+   <g id="text_35">
+    <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="664.524679" y="357.024" transform="rotate(-0 664.524679 357.024)">cost per year delay</text>
+   </g>
+  </g>
+  <g id="text_36">
+   <text style="font-weight: 700; font-size: 14px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(20.16 30.1)">The Iron Law: almost none hit budget, time</text>
+   <text style="font-weight: 700; font-size: 14px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(20.16 45.397188)">and benefits together</text>
+  </g>
+  <g id="text_37">
+   <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="20.16" y="87.270469" transform="rotate(-0 20.16 87.270469)">Share of 16,000+ megaprojects  ·  0.5% is a subset of the 8.5%</text>
+  </g>
+  <g id="text_38">
+   <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="20.16" y="448.1275" transform="rotate(-0 20.16 448.1275)">Flyvbjerg megaproject database (16,000+)  ·  as of 2026-05-13</text>
+  </g>
+  <g id="AnnotationBbox_1">
+   <image xlink:href="data:image/png;base64,
+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" id="image53a27aeabb" transform="scale(1 -1) translate(0 -44.228571)" x="693.186062" y="-441.231429" width="42.171429" height="44.228571"/>
+   <g id="text_39">
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4; opacity: 0.45" x="739.2095" y="464.295703" transform="rotate(-0 739.2095 464.295703)">OHMEGA MONSTER</text>
+   </g>
+   <g id="text_40">
+    <text style="font-size: 7px; font-family: 'Consolas'; text-anchor: start; fill: #858981; opacity: 0.4" x="739.2095" y="470.389531" transform="rotate(-0 739.2095 470.389531)">ohmega.monster</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pe6eb936cd4">
+   <rect x="170.496" y="120.78" width="384.113208" height="271.44"/>
+  </clipPath>
+ </defs>
+</svg>
