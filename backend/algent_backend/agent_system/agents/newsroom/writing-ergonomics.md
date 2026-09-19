@@ -126,6 +126,29 @@ model instead of starting a fresh one at every header. Use a heading only where 
 turns — and if you find yourself needing several, that usually means the through-line is
 missing and a heading is being asked to hide the gap.
 
+### The exception: when the subject really is a set of things
+
+Some pieces are a survey. Eight proposed megastructures, six drugs in a class, every bidder
+in an auction: the reader wants to move through them, dwell on the one that interests them,
+compare, and come back. There the members ARE the structure, and running them together as
+continuous prose does not preserve nuance — it buries each one, and the piece arrives as an
+intimidating wall nobody wants to start. That happened: a megaproject tour ran eight
+structures into unbroken prose and the operator's first reaction was that he did not want to
+read it.
+
+So the test is not "how many headings" but **what the piece is**. One argument that develops:
+continuous prose, and a heading every few hundred words is the profile's shape leaking
+through. A survey of discrete members the reader browses: give each member its heading, and
+make the heading name the thing, not a stage of an argument.
+
+The danger in the survey shape is real and it is the reason for the default: sectioning
+invites bullets, and bullets strip out the relational, load-bearing nuance that only survives
+in articulated prose — the piece then reads as a thin summary instead of the rich thing the
+reader came for, and a reader can feel that difference even when the facts are identical. So
+a survey is sections **of written prose**, several real paragraphs each, each carrying the
+same density the piece would have had unbroken. The heading buys approachability; it does not
+buy the right to write less.
+
 ## Every sentence must land on the first pass
 
 Read each sentence once, at speed, as the reader. If you would have to go back, it fails.

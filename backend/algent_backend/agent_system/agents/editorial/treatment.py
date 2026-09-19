@@ -26,6 +26,11 @@ from pydantic import BaseModel, Field
 
 SCHEMA_VERSION = 1
 
+#: What KIND of piece this is. ``through_line`` is one argument that develops and is written as
+#: continuous prose. ``survey`` is a piece whose subject IS a set of discrete members the reader
+#: browses and compares; those get a headed section each, still fully written.
+ArticleShape = Literal["through_line", "survey"]
+
 CausalStatus = Literal["established", "supported", "possible", "unknown"]
 
 
@@ -122,6 +127,13 @@ class EditorialTreatment(BaseModel):
     #: downstream should invent a number.
     read_minutes: int = 0
     read_minutes_why: str = ""   # what about THIS story earns that depth
+    #: ``through_line`` (the default — one argument that develops) or ``survey`` (the subject IS
+    #: a set of discrete members the reader browses). The shape decides whether the piece is
+    #: continuous prose or headed member sections, and which grain its length is judged at.
+    shape: ArticleShape = "through_line"
+    shape_why: str = ""
+    #: For a survey: the members, in order, each of which will carry its own headed section.
+    members: list[str] = Field(default_factory=list)
 
     # ── the reader-molecule (the reality-shape to convey) ──
     core_understanding: str = ""                       # the molecule the reader should end holding (1-2 sentences)

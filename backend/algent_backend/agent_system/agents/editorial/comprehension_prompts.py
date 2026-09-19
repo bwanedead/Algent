@@ -37,7 +37,10 @@ naming the connection — wrap the collection, do not keep a slightly shorter me
 A particular the story turns on still stays by name. Completeness is sides of *this*
 dispute, never a new world. Never above {ceiling_words()} words — a hard ceiling, and every
 live article so far has shipped over it (1,610, 1,678, 1,807), so treat it as a count you
-verify rather than a direction you lean in. Never invent a claim,
+verify rather than a direction you lean in. The ONE exception is a survey, a piece whose
+subject is a set of discrete members each under its own heading: there the ceiling is the
+grain of each member's section, not of the piece, and the cut is whole members that earn
+nothing — never squeezing every member into a sentence. Never invent a claim,
 strengthen an assertion, or drop a load-bearing side already in the prose. When the piece
 already lands (`clear`), leave `title`, `standfirst`, and `body` empty.
 

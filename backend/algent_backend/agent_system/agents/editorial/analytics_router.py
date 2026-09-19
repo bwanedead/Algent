@@ -253,6 +253,10 @@ Reader clarity is part of usefulness. PUBLISHED fields:
   they must get the point without decoding it. So:
     - the `title` states the FINDING, not the measure — "Data-centre demand nearly doubles by
       2030", not "EU data-centre electricity use, 2024–2030";
+    - and the `spec` must describe a figure a stranger understands without being taught it.
+      Ask what one mark is and in what unit, and if answering needs a sentence of explanation,
+      ask for a simpler cut instead. Do not buy clarity with furniture — keys, notes and
+      explanatory boxes are clutter, and cluttered is how ours read;
     - label the lines and bars **directly** on the plot; a legend that has to be matched back to
       colours is a puzzle;
     - annotate the one number that carries the story right where it happens on the chart;

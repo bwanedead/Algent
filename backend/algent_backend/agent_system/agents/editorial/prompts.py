@@ -44,7 +44,27 @@ PRODUCE an EditorialTreatment:
      convenient, too lurid, smuggles a premise, procedural-surface capture, source-audience
      capture, too narrow…).
 
+1a-ii. WHAT KIND OF PIECE IS THIS? Set `shape` (and `shape_why`).
+
+   `through_line` is the default and covers nearly everything: one argument that develops, told
+   as continuous prose. Choose `survey` only when the subject genuinely IS a set of discrete
+   members the reader wants to move through, dwell on and compare — the proposed megastructures,
+   every bidder in an auction, each drug in a class. Then list them in `members`, in order, and
+   each gets its own headed section in the draft.
+
+   Getting this wrong hurts in both directions. A through-line piece cut into headed sections
+   reads as assembly and goes thin, because sectioning invites summarising. A survey run
+   together as unbroken prose arrives as a wall: a reader told us the density of one such piece
+   made him not want to start it, and each member had been compressed to a sentence that named
+   it and moved on. The question is not how long the piece is; it is whether the members are the
+   structure.
+
 1b. HOW DEEP A READ DOES THIS STORY MERIT? Set `read_minutes` (and `read_minutes_why`).
+
+   For a `survey`, judge the depth per member and set the total that follows: the house ceiling
+   applies to each member's section, not to the piece, because the reader browses it rather than
+   reading it straight through. Members still have to earn their place — the length follows from
+   how many genuinely do, and a member you can say nothing specific about is a clause elsewhere.
 
    Judge it HERE, because you have just digested the whole profile and know the shape, whereas
    the drafter can only discover the answer after the words are already on the page — which is

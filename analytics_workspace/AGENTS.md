@@ -83,7 +83,12 @@ series. Two legitimate data paths:
 **Make the figure self-explanatory (the reader must not reverse-engineer it)**
 A house reader meeting the chart cold should know in a few seconds: **what is measured, in what
 units, for whom/where, and over what time**. If they have to guess, the analytic failed.
-- **Title on the chart** (plain language): what is being measured — not a cryptic code name.
+- **Title on the chart** (plain language): the finding, in words a reader can repeat.
+- **Obvious, not decodable.** Read cold, our figures have been arriving as shapes with numbers
+  on them — the standing verdict is that you cannot tell what they even measure. Answer that by
+  making the picture plainer, never by adding furniture: a key, a note or an explanatory box is
+  clutter, and clutter is half the problem. Fewer marks, one idea, plain words sitting on the
+  thing they name.
 - **Axis labels with units** on every axis. Never bare "value" / "y" / "series1".
 - **Legend only if needed**, human names for each series.
 - **As-of / period** visible (title, subtitle, or caption).

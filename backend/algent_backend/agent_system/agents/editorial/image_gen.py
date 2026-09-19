@@ -18,7 +18,7 @@ import os
 from dataclasses import dataclass
 from typing import Any
 
-from .hero_image import IMAGE_LABEL, build_image_prompt
+from .hero_image import CONCEPT_LABEL, IMAGE_LABEL, build_image_prompt
 
 # Nano Banana 2. Lite by default — half the price for work that is decorative by
 # definition, so the standard model is reserved for a hero we actually care about.
@@ -107,6 +107,7 @@ def generate_hero_image(
     hook: str = "",
     size: str | None = None,
     mime_type: str = "image/jpeg",
+    register: str = "editorial",
     api_key: str | None = None,
     client: Any | None = None,
 ) -> GeneratedImage:
@@ -118,7 +119,7 @@ def generate_hero_image(
     """
     import httpx
 
-    prompt = build_image_prompt(subject, setting=setting, hook=hook)  # raises if unsafe
+    prompt = build_image_prompt(subject, setting=setting, hook=hook, register=register)  # raises if unsafe
     chosen = size if size in USD_PER_IMAGE else image_size()
     key = api_key or _resolve_key()
     if not key:
@@ -157,6 +158,9 @@ def generate_hero_image(
     return GeneratedImage(
         data=data, mime_type=returned_mime, model=model, size=chosen, aspect=ASPECT,
         prompt=prompt, estimated_usd=usd, hook=hook.strip(),
+        # The label travels with the bytes: a concept image that reaches the page under the
+        # plain illustration label would be claiming to be a picture of something real.
+        label=CONCEPT_LABEL if register == "concept" else IMAGE_LABEL,
     )
 
 

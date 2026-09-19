@@ -38,6 +38,16 @@ import re
 # picture beside a news story is a lie unless it is labelled one.
 IMAGE_LABEL = "AI-generated illustration — not a photograph of this story"
 
+#: A piece about things that do not exist — a proposed tower, a ship nobody has laid a keel for —
+#: needs pictures of them, and the honest description of such a picture is not "illustration" but
+#: "somebody's impression of a design". Saying so is what keeps it publishable: the reader must
+#: never take it for the architect's own rendering, which would be passing off our guess as the
+#: proposal's documentation.
+CONCEPT_LABEL = (
+    "AI-generated concept illustration — an artist's impression of the proposal, "
+    "not an official rendering"
+)
+
 # What we want: the visual register of a stock editorial photograph. Plain and legible at
 # thumbnail size, because that is how it will be seen on a feed or a shared link.
 _STYLE = (
@@ -160,7 +170,23 @@ def check_hook(hook: str) -> str | None:
     return None
 
 
-def build_image_prompt(subject: str, *, setting: str = "", hook: str = "") -> str:
+# The register for an image INSIDE a piece about a design that has not been built. A stock
+# photograph is the wrong instrument for it: the thing has no photograph, and the nearest true
+# picture is the kind of visualisation an architecture practice draws. Scale is the whole reason
+# the reader wants it, so the prompt asks for something in frame to measure it against.
+_STYLE_CONCEPT = (
+    "architectural concept visualisation, an artist's impression of a proposed design, "
+    "clean sweeping forms in daylight, wide 16:9 landscape framing, something familiar in "
+    "frame for scale (boats, trees, small figures far away), plausible engineering rather "
+    "than fantasy ornament, safe for work"
+)
+
+STYLES: dict[str, str] = {"editorial": "", "concept": _STYLE_CONCEPT}
+
+
+def build_image_prompt(
+    subject: str, *, setting: str = "", hook: str = "", register: str = "editorial",
+) -> str:
     """Assemble the generation prompt for a hero image. Raises on an unusable subject/hook.
 
     ``subject`` is the concrete physical thing to depict ("an orca surfacing in coastal
@@ -181,7 +207,8 @@ def build_image_prompt(subject: str, *, setting: str = "", hook: str = "") -> st
 
     scene = f"{subject.strip()}, {setting.strip()}" if setting.strip() else subject.strip()
     text_rule = _hook_clause(hook) if hook else _NO_TEXT
-    return f"{scene}. {_STYLE}. {text_rule}{_PROHIBITIONS}"
+    style = STYLES.get(register) or _STYLE
+    return f"{scene}. {style}. {text_rule}{_PROHIBITIONS}"
 
 
 # -- the review gate ----------------------------------------------------------

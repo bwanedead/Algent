@@ -154,6 +154,13 @@ sentences in the order the evidence arrived rather than the order an idea unfold
   reader by argument rather than by signposts, and treat every heading as needing to earn
   itself. Chopping a piece into labelled blocks is the cheap way to look organised and it
   reads as low-effort assembly.
+- **The wall.** The mirror defect, and just as real. A piece that surveys a set of discrete
+  things — eight proposed structures, every bidder, each drug in a class — run together as
+  unbroken prose gives the reader nowhere to stand, no way to find the one they care about,
+  and no way back in once they look away. Shipped: a megaproject tour whose reader said the
+  density made him not want to start. When the members ARE the subject, each gets a heading
+  that names it. Do not answer this by cutting the prose into bullets: sections stay fully
+  written, several paragraphs each, at the same density they would have had unbroken.
 
 **Preferred outcome:** it reads like one person who understands the subject explaining it
 once, well — continuous, in one voice, with no sentence that needs a second pass.

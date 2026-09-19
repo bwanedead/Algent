@@ -21,6 +21,7 @@ from langgraph.graph import END, START, StateGraph
 from algent_backend.agent_system.agents.newsroom import budget_policy
 from algent_backend.agent_system.agents.research.profile import SignalProfile
 from algent_backend.agent_system.foundation import cost
+from algent_backend.agent_system.foundation.models import house_spec
 from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.context import AgentRunContext
 
@@ -34,11 +35,16 @@ from .draft_gauntlet import build_drafting_gauntlet_graph
 from .draft_spec import build_graph as build_drafter
 from .draft_store import JsonDraftStore, render_draft
 from .gauntlet import build_planning_gauntlet_graph
+from .figure_images import FIGURE_IMAGE, make_figures, place, plan_images
 from .headline_spec import build_graph as build_headline_writer
 from .hero_stage import hero_enabled, is_quota_skip, make_hero
 from .length import count_words, wpm
 from .pipeline_contracts import EditorialPipelineReport
 from .publish import render_published_article
+
+#: Choosing pictures is a reading task, not an expert one: judge what the prose asks a reader to
+#: picture, then describe it in a dozen words for the image model.
+FIGURE_IMAGE_MODEL = house_spec(reasoning_effort="low", temperature=0.3)
 
 PIPELINE_COMPLETED = "editorial_pipeline.completed"
 PIPELINE_NO_INPUT = "editorial_pipeline.no_input"
@@ -623,7 +629,33 @@ def _headline_and_hero(
             })
             issues = remaining
         hero = make_hero(hl, context.artifacts, say=lambda m: context.emit(HERO_IMAGE, {"note": m}))
+    draft = _illustrate(context, config, draft)
     return draft, hero, issues
+
+
+def _illustrate(
+    context: AgentRunContext, config: RunnableConfig, draft: dict[str, Any],
+) -> dict[str, Any]:
+    """Draw the things the piece asks the reader to picture, into the body, beside them.
+
+    Last, deliberately: the prose is finished and reviewed by now, so an anchor copied out of
+    it still exists on the page. Advisory throughout — no plan, no budget or a failed draw all
+    mean the article ships as it would have anyway, with one hero and no interior pictures.
+    """
+    body = str(draft.get("body") or "")
+    if not body or cost.is_hard_stop():
+        return draft
+    say = lambda note: context.emit(FIGURE_IMAGE, {"note": note})   # noqa: E731
+    try:
+        plan = plan_images(context, config, draft, model_spec=FIGURE_IMAGE_MODEL)
+        figures = make_figures(plan, body, context.artifacts, say=say)
+    except Exception as exc:  # noqa: BLE001 — pictures never cost us a finished article
+        context.emit(FIGURE_IMAGE, {"note": f"figures: {type(exc).__name__}: {str(exc)[:90]}"})
+        return draft
+    if not figures:
+        say(f"figures: none — {plan.none_because or 'nothing the reader needs to see'}")
+        return draft
+    return {**draft, "body": place(body, figures), "figures": figures}
 
 
 def _apply_headline(

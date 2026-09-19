@@ -46,15 +46,23 @@ def count_words(text: str) -> int:
     return len((text or "").split())
 
 
-def word_band(minutes: int) -> tuple[int, int]:
+def word_band(minutes: int, *, survey: bool = False) -> tuple[int, int]:
     """Low/high words for a treatment depth.
 
     At or under the default digest, the high end is the digest. Above it, the high
     end is the earned ceiling — a 10-minute treatment still cannot authorize a tour.
+
+    ``survey`` is the one shape the ceiling does not fit. A piece whose subject IS a set of
+    discrete members — eight proposed structures, every bidder — is browsed, not read straight
+    through, and the grain that matters is per member. Squeezing eight structures under one
+    article's ceiling is how each of them got a paragraph that named it and moved on. So the
+    planner's minutes govern instead, and each member still has to earn its section.
     """
     m = max(0, int(minutes))
     if m <= 0:
         return 0, 0
+    if survey:
+        return int(m * _BAND_LOW_WPM), int(m * _BAND_HIGH_WPM)
     cap = ceiling_words() if m > digest_minutes() else digest_words()
     low = int(m * _BAND_LOW_WPM)
     high = min(cap, int(m * _BAND_HIGH_WPM))
@@ -71,5 +79,11 @@ def reviewer_length_task(words: int) -> str:
         f"This draft is {n} words (~{n / wpm():.1f} min). "
         f"If you rewrite, come in under {digest_words()} words: wrap the tour, "
         f"do not trim it. Cut what left the premise — do not drop a side of "
-        f"the same dispute."
+        f"the same dispute. "
+        f"UNLESS this piece is a survey — its subject IS a set of discrete members, each with "
+        f"its own heading, that a reader browses rather than reads straight through. Then the "
+        f"grain is per member: ask of each whether it earns its section and whether a reader "
+        f"learns the thing itself, and cut whole members that repeat or say nothing specific. "
+        f"Do not compress a survey's members into a list to hit a number — that is how eight "
+        f"structures became eight sentences that named them."
     )
