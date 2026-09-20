@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="627.7985pt" height="666.104pt" viewBox="0 0 627.7985 666.104" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-20T01:10:19.103745</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.3, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 666.104 
+L 627.7985 666.104 
+L 627.7985 0 
+L 0 0 
+z
+" style="fill: #0c0f0e"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 155.6225 280.273171 
+L 607.6385 280.273171 
+L 607.6385 86.4 
+L 155.6225 86.4 
+z
+" style="fill: #111513"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <path d="M 155.6225 280.273171 
+L 155.6225 86.4 
+" clip-path="url(#p518dc8d205)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_2">
+      <defs>
+       <path id="m8b98e782af" d="M 0 0 
+L 0 3.5 
+" style="stroke: #858981; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m8b98e782af" x="155.6225" y="280.273171" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="155.6225" y="294.173171" transform="rotate(-0 155.6225 294.173171)">0</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_3">
+      <path d="M 239.329167 280.273171 
+L 239.329167 86.4 
+" clip-path="url(#p518dc8d205)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#m8b98e782af" x="239.329167" y="280.273171" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="239.329167" y="294.173171" transform="rotate(-0 239.329167 294.173171)">20</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_5">
+      <path d="M 323.035833 280.273171 
+L 323.035833 86.4 
+" clip-path="url(#p518dc8d205)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#m8b98e782af" x="323.035833" y="280.273171" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="323.035833" y="294.173171" transform="rotate(-0 323.035833 294.173171)">40</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_7">
+      <path d="M 406.7425 280.273171 
+L 406.7425 86.4 
+" clip-path="url(#p518dc8d205)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#m8b98e782af" x="406.7425" y="280.273171" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="406.7425" y="294.173171" transform="rotate(-0 406.7425 294.173171)">60</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_9">
+      <path d="M 490.449167 280.273171 
+L 490.449167 86.4 
+" clip-path="url(#p518dc8d205)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#m8b98e782af" x="490.449167" y="280.273171" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="490.449167" y="294.173171" transform="rotate(-0 490.449167 294.173171)">80</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_11">
+      <path d="M 574.155833 280.273171 
+L 574.155833 86.4 
+" clip-path="url(#p518dc8d205)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_12">
+      <g>
+       <use xlink:href="#m8b98e782af" x="574.155833" y="280.273171" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="574.155833" y="294.173171" transform="rotate(-0 574.155833 294.173171)">100</text>
+     </g>
+    </g>
+    <g id="text_7">
+     <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="381.6305" y="307.074733" transform="rotate(-0 381.6305 307.074733)">million tonnes of rare-earth oxide</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_13"/>
+     <g id="text_8">
+      <text style="font-weight: 700; font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #f0ede4" x="152.1225" y="263.084567" transform="rotate(-0 152.1225 263.084567)">Greenland</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_14"/>
+     <g id="text_9">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="152.1225" y="224.935576" transform="rotate(-0 152.1225 224.935576)">United States</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_15"/>
+     <g id="text_10">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="152.1225" y="186.786585" transform="rotate(-0 152.1225 186.786585)">Brazil</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_16"/>
+     <g id="text_11">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="152.1225" y="148.637595" transform="rotate(-0 152.1225 148.637595)">China</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_17"/>
+     <g id="text_12">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="152.1225" y="110.488604" transform="rotate(-0 152.1225 110.488604)">World total</text>
+     </g>
+    </g>
+   </g>
+   <g id="patch_3">
+    <path d="M 155.6225 280.273171 
+L 155.6225 86.4 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 155.6225 280.273171 
+L 607.6385 280.273171 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 155.6225 271.460754 
+L 161.9005 271.460754 
+L 161.9005 247.80838 
+L 155.6225 247.80838 
+z
+" clip-path="url(#p518dc8d205)" style="fill: #f0a33a"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 155.6225 233.311763 
+L 163.574633 233.311763 
+L 163.574633 209.659389 
+L 155.6225 209.659389 
+z
+" clip-path="url(#p518dc8d205)" style="fill: #858981"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 155.6225 195.162772 
+L 243.5145 195.162772 
+L 243.5145 171.510398 
+L 155.6225 171.510398 
+z
+" clip-path="url(#p518dc8d205)" style="fill: #858981"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 155.6225 157.013782 
+L 339.777167 157.013782 
+L 339.777167 133.361408 
+L 155.6225 133.361408 
+z
+" clip-path="url(#p518dc8d205)" style="fill: #858981"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 155.6225 118.864791 
+L 532.3025 118.864791 
+L 532.3025 95.212417 
+L 155.6225 95.212417 
+z
+" clip-path="url(#p518dc8d205)" style="fill: #5eb8c9"/>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="155.6225" y="76.816948" transform="rotate(-0 155.6225 76.816948)">Rare-earth reserves  ·  USGS, January 2025</text>
+   </g>
+   <g id="text_14">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4" x="168.597033" y="261.866989" transform="rotate(-0 168.597033 261.866989)">1.5  ·  1.7% of world, none mined 2023–24</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="170.271167" y="223.689873" transform="rotate(-0 170.271167 223.689873)">1.9</text>
+   </g>
+   <g id="text_16">
+    <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="250.211033" y="185.540882" transform="rotate(-0 250.211033 185.540882)">21</text>
+   </g>
+   <g id="text_17">
+    <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="346.4737" y="147.391892" transform="rotate(-0 346.4737 147.391892)">44</text>
+   </g>
+   <g id="text_18">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; text-anchor: end; fill: #0c0f0e" x="525.605967" y="109.271026" transform="rotate(-0 525.605967 109.271026)">more than 90</text>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_10">
+    <path d="M 155.6225 563.328 
+L 607.6385 563.328 
+L 607.6385 369.454829 
+L 155.6225 369.454829 
+z
+" style="fill: #111513"/>
+   </g>
+   <g id="matplotlib.axis_3">
+    <g id="xtick_7">
+     <g id="line2d_18">
+      <path d="M 155.6225 563.328 
+L 155.6225 369.454829 
+" clip-path="url(#pc403ceee8f)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_19">
+      <g>
+       <use xlink:href="#m8b98e782af" x="155.6225" y="563.328" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_19">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="155.6225" y="577.228" transform="rotate(-0 155.6225 577.228)">0</text>
+     </g>
+    </g>
+    <g id="xtick_8">
+     <g id="line2d_20">
+      <path d="M 256.0705 563.328 
+L 256.0705 369.454829 
+" clip-path="url(#pc403ceee8f)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_21">
+      <g>
+       <use xlink:href="#m8b98e782af" x="256.0705" y="563.328" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_20">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="256.0705" y="577.228" transform="rotate(-0 256.0705 577.228)">5</text>
+     </g>
+    </g>
+    <g id="xtick_9">
+     <g id="line2d_22">
+      <path d="M 356.5185 563.328 
+L 356.5185 369.454829 
+" clip-path="url(#pc403ceee8f)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_23">
+      <g>
+       <use xlink:href="#m8b98e782af" x="356.5185" y="563.328" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_21">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="356.5185" y="577.228" transform="rotate(-0 356.5185 577.228)">10</text>
+     </g>
+    </g>
+    <g id="xtick_10">
+     <g id="line2d_24">
+      <path d="M 456.9665 563.328 
+L 456.9665 369.454829 
+" clip-path="url(#pc403ceee8f)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_25">
+      <g>
+       <use xlink:href="#m8b98e782af" x="456.9665" y="563.328" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_22">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="456.9665" y="577.228" transform="rotate(-0 456.9665 577.228)">15</text>
+     </g>
+    </g>
+    <g id="xtick_11">
+     <g id="line2d_26">
+      <path d="M 557.4145 563.328 
+L 557.4145 369.454829 
+" clip-path="url(#pc403ceee8f)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_27">
+      <g>
+       <use xlink:href="#m8b98e782af" x="557.4145" y="563.328" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_23">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="557.4145" y="577.228" transform="rotate(-0 557.4145 577.228)">20</text>
+     </g>
+    </g>
+    <g id="text_24">
+     <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="381.6305" y="590.187375" transform="rotate(-0 381.6305 590.187375)">US military sites in Greenland</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_4">
+    <g id="ytick_6">
+     <g id="line2d_28"/>
+     <g id="text_25">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="152.1225" y="537.296929" transform="rotate(-0 152.1225 537.296929)">Framework (target)</text>
+     </g>
+    </g>
+    <g id="ytick_7">
+     <g id="line2d_29"/>
+     <g id="text_26">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="152.1225" y="470.026571" transform="rotate(-0 152.1225 470.026571)">Today, Pituffik (actual)</text>
+     </g>
+    </g>
+    <g id="ytick_8">
+     <g id="line2d_30"/>
+     <g id="text_27">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="152.1225" y="402.756213" transform="rotate(-0 152.1225 402.756213)">Cold War peak (actual)</text>
+     </g>
+    </g>
+   </g>
+   <g id="patch_11">
+    <path d="M 155.6225 563.328 
+L 155.6225 369.454829 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 155.6225 563.328 
+L 607.6385 563.328 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 155.6225 554.515583 
+L 215.8913 554.515583 
+L 215.8913 512.807961 
+L 155.6225 512.807961 
+z
+" clip-path="url(#pc403ceee8f)" style="fill: url(#hac253da7b0); stroke: #c98bb8; stroke-width: 1.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 155.6225 487.245226 
+L 175.7121 487.245226 
+L 175.7121 445.537604 
+L 155.6225 445.537604 
+z
+" clip-path="url(#pc403ceee8f)" style="fill: #5eb8c9"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 155.6225 419.974868 
+L 497.1457 419.974868 
+L 497.1457 378.267246 
+L 155.6225 378.267246 
+z
+" clip-path="url(#pc403ceee8f)" style="fill: #5eb8c9"/>
+   </g>
+   <g id="text_28">
+    <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="155.6225" y="359.871777" transform="rotate(-0 155.6225 359.871777)">US military footprint in Greenland  ·  sites, then and now</text>
+   </g>
+   <g id="text_29">
+    <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4" x="224.93162" y="535.866069" transform="rotate(-0 224.93162 535.866069)">+3 southern sites  ·  announced, not built</text>
+   </g>
+   <g id="text_30">
+    <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="184.75242" y="468.621727" transform="rotate(-0 184.75242 468.621727)">1 site  ·  ~150 personnel</text>
+   </g>
+   <g id="text_31">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; text-anchor: end; fill: #0c0f0e" x="490.11434" y="401.443479" transform="rotate(-0 490.11434 401.443479)">17 sites  ·  ~10,000 troops</text>
+   </g>
+  </g>
+  <g id="text_32">
+   <text style="font-weight: 700; font-size: 13.5px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(31.7825 29.475)">Greenland is 1.7% of world rare-earth</text>
+   <text style="font-weight: 700; font-size: 13.5px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(31.7825 43.270734)">reserves and hosts one small US base</text>
+  </g>
+  <g id="text_33">
+   <text style="font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="31.7825" y="628.2385" transform="rotate(-0 31.7825 628.2385)">USGS MCS 2025  ·  as of 20 Sep 2026</text>
+  </g>
+  <g id="AnnotationBbox_1">
+   <image xlink:href="data:image/png;base64,
+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" id="imageabc75a32a3" transform="scale(1 -1) translate(0 -44.228571)" x="485.826062" y="-610.755429" width="42.171429" height="44.228571"/>
+   <g id="text_34">
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4; opacity: 0.45" x="531.8495" y="633.819703" transform="rotate(-0 531.8495 633.819703)">OHMEGA MONSTER</text>
+   </g>
+   <g id="text_35">
+    <text style="font-size: 7px; font-family: 'Consolas'; text-anchor: start; fill: #858981; opacity: 0.4" x="531.8495" y="639.913531" transform="rotate(-0 531.8495 639.913531)">ohmega.monster</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p518dc8d205">
+   <rect x="155.6225" y="86.4" width="452.016" height="193.873171"/>
+  </clipPath>
+  <clipPath id="pc403ceee8f">
+   <rect x="155.6225" y="369.454829" width="452.016" height="193.873171"/>
+  </clipPath>
+ </defs>
+ <defs>
+  <pattern id="hac253da7b0" patternUnits="userSpaceOnUse" x="0" y="0" width="72" height="72">
+   <rect x="0" y="0" width="73" height="73" fill="#111513"/>
+   <path d="M -36 36 
+L 36 -36 
+M -33 39 
+L 39 -33 
+M -30 42 
+L 42 -30 
+M -27 45 
+L 45 -27 
+M -24 48 
+L 48 -24 
+M -21 51 
+L 51 -21 
+M -18 54 
+L 54 -18 
+M -15 57 
+L 57 -15 
+M -12 60 
+L 60 -12 
+M -9 63 
+L 63 -9 
+M -6 66 
+L 66 -6 
+M -3 69 
+L 69 -3 
+M 0 72 
+L 72 0 
+M 3 75 
+L 75 3 
+M 6 78 
+L 78 6 
+M 9 81 
+L 81 9 
+M 12 84 
+L 84 12 
+M 15 87 
+L 87 15 
+M 18 90 
+L 90 18 
+M 21 93 
+L 93 21 
+M 24 96 
+L 96 24 
+M 27 99 
+L 99 27 
+M 30 102 
+L 102 30 
+M 33 105 
+L 105 33 
+M 36 108 
+L 108 36 
+" style="fill: #c98bb8; stroke: #c98bb8; stroke-width: 1.15; stroke-linecap: butt; stroke-linejoin: miter"/>
+  </pattern>
+ </defs>
+</svg>

@@ -682,3 +682,12 @@ refused: model_turn(reservation_overrun), model_turn(reservation_overrun)
 disposition: needs_verification
 ⚠ figures not matched to evidence: 91.5%, 35%
 run: 0086__82d1fc88-555a-47d7-ab01-223895537ef7
+
+### PUBLISH us-claims-permanent-greenland-security-control-as-allies-poi-5dcc3d — 2026-09-20
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.8181  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.3443, gauntlet=$0.3521, profile=$0.1213, routing=$0.0004
+⚠ figures not matched to evidence: 56%, 1.7%
+run: 0088__50267b5c-e466-45b2-808d-b1043113d122
