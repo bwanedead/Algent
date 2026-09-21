@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="840.304875pt" height="522.32pt" viewBox="0 0 840.304875 522.32" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-21T06:37:28.807824</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.3, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 522.32 
+L 840.304875 522.32 
+L 840.304875 0 
+L 0 0 
+z
+" style="fill: #0c0f0e"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 54.496875 402.12 
+L 386.761223 402.12 
+L 386.761223 109.8 
+L 54.496875 109.8 
+z
+" style="fill: #111513"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1"/>
+     <g id="text_1">
+      <text style="font-size: 9px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(91.178329 413.33)">13–19 Jul</text>
+      <text style="font-size: 9px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(98.60122 422.583406)">before</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2"/>
+     <g id="text_2">
+      <text style="font-size: 9px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(198.360377 413.33)">20–26 Jul</text>
+      <text style="font-size: 9px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(188.46319 422.583406)">blockade week</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3"/>
+     <g id="text_3">
+      <text style="font-size: 9px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(298.119534 413.33)">27 Jul–2 Aug</text>
+      <text style="font-size: 9px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(310.491018 422.690844)">prelim.</text>
+     </g>
+    </g>
+    <g id="text_4">
+     <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="220.629049" y="434.754281" transform="rotate(-0 220.629049 434.754281)">Bab el-Mandeb transits, July 2026</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_4">
+      <path d="M 54.496875 402.12 
+L 386.761223 402.12 
+" clip-path="url(#p1e917fee01)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_5"/>
+     <g id="text_5">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="50.996875" y="405.57" transform="rotate(-0 50.996875 405.57)">0</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_6">
+      <path d="M 54.496875 335.683636 
+L 386.761223 335.683636 
+" clip-path="url(#p1e917fee01)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_7"/>
+     <g id="text_6">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="50.996875" y="339.133636" transform="rotate(-0 50.996875 339.133636)">100</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_8">
+      <path d="M 54.496875 269.247273 
+L 386.761223 269.247273 
+" clip-path="url(#p1e917fee01)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_9"/>
+     <g id="text_7">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="50.996875" y="272.697273" transform="rotate(-0 50.996875 272.697273)">200</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_10">
+      <path d="M 54.496875 202.810909 
+L 386.761223 202.810909 
+" clip-path="url(#p1e917fee01)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_11"/>
+     <g id="text_8">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="50.996875" y="206.260909" transform="rotate(-0 50.996875 206.260909)">300</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_12">
+      <path d="M 54.496875 136.374545 
+L 386.761223 136.374545 
+" clip-path="url(#p1e917fee01)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_13"/>
+     <g id="text_9">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="50.996875" y="139.824545" transform="rotate(-0 50.996875 139.824545)">400</text>
+     </g>
+    </g>
+    <g id="text_10">
+     <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="28.5" y="255.96" transform="rotate(-90 28.5 255.96)">Vessels per week</text>
+    </g>
+   </g>
+   <g id="patch_3">
+    <path d="M 54.496875 402.12 
+L 54.496875 109.8 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 54.496875 402.12 
+L 386.761223 402.12 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 80.220566 402.12 
+L 146.673436 402.12 
+L 146.673436 166.935273 
+L 80.220566 166.935273 
+z
+" clip-path="url(#p1e917fee01)" style="fill: #f0a33a"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 187.402614 402.12 
+L 253.855484 402.12 
+L 253.855484 223.406182 
+L 187.402614 223.406182 
+z
+" clip-path="url(#p1e917fee01)" style="fill: #f0a33a"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 294.584662 402.12 
+L 361.037531 402.12 
+L 361.037531 225.399273 
+L 294.584662 225.399273 
+z
+" clip-path="url(#p1e917fee01)" style="fill: #f0a33a"/>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 700; font-size: 13px; font-family: 'Consolas'; text-anchor: middle; fill: #f0ede4" x="169.181666" y="131.626791" transform="rotate(-0 169.181666 131.626791)">−24%</text>
+   </g>
+   <g id="text_12">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'Consolas'; text-anchor: middle; fill: #f0ede4" x="113.447001" y="157.964761" transform="rotate(-0 113.447001 157.964761)">354</text>
+   </g>
+   <g id="text_13">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'Consolas'; text-anchor: middle; fill: #f0ede4" x="220.629049" y="214.43567" transform="rotate(-0 220.629049 214.43567)">269</text>
+   </g>
+   <g id="text_14">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'Consolas'; text-anchor: middle; fill: #f0ede4" x="327.811097" y="216.428761" transform="rotate(-0 327.811097 216.428761)">266</text>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_8">
+    <path d="M 486.440527 402.12 
+L 818.704875 402.12 
+L 818.704875 109.8 
+L 486.440527 109.8 
+z
+" style="fill: #111513"/>
+   </g>
+   <g id="matplotlib.axis_3">
+    <g id="xtick_4">
+     <g id="line2d_14"/>
+     <g id="text_15">
+      <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="545.390653" y="413.33" transform="rotate(-0 545.390653 413.33)">Hormuz</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_15"/>
+     <g id="text_16">
+      <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="652.572701" y="413.33" transform="rotate(-0 652.572701 413.33)">Suez + SUMED</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_16"/>
+     <g id="text_17">
+      <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="759.754749" y="413.33" transform="rotate(-0 759.754749 413.33)">Bab el-Mandeb</text>
+     </g>
+    </g>
+    <g id="text_18">
+     <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="652.572701" y="425.393437" transform="rotate(-0 652.572701 425.393437)">Oil through chokepoints, H1 2025</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_4">
+    <g id="ytick_6">
+     <g id="line2d_17">
+      <path d="M 486.440527 402.12 
+L 818.704875 402.12 
+" clip-path="url(#p2c1c95dee6)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_18"/>
+     <g id="text_19">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="482.940527" y="405.57" transform="rotate(-0 482.940527 405.57)">0</text>
+     </g>
+    </g>
+    <g id="ytick_7">
+     <g id="line2d_19">
+      <path d="M 486.440527 347.986667 
+L 818.704875 347.986667 
+" clip-path="url(#p2c1c95dee6)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_20"/>
+     <g id="text_20">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="482.940527" y="351.436667" transform="rotate(-0 482.940527 351.436667)">5</text>
+     </g>
+    </g>
+    <g id="ytick_8">
+     <g id="line2d_21">
+      <path d="M 486.440527 293.853333 
+L 818.704875 293.853333 
+" clip-path="url(#p2c1c95dee6)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_22"/>
+     <g id="text_21">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="482.940527" y="297.303333" transform="rotate(-0 482.940527 297.303333)">10</text>
+     </g>
+    </g>
+    <g id="ytick_9">
+     <g id="line2d_23">
+      <path d="M 486.440527 239.72 
+L 818.704875 239.72 
+" clip-path="url(#p2c1c95dee6)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_24"/>
+     <g id="text_22">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="482.940527" y="243.17" transform="rotate(-0 482.940527 243.17)">15</text>
+     </g>
+    </g>
+    <g id="ytick_10">
+     <g id="line2d_25">
+      <path d="M 486.440527 185.586667 
+L 818.704875 185.586667 
+" clip-path="url(#p2c1c95dee6)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_26"/>
+     <g id="text_23">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="482.940527" y="189.036667" transform="rotate(-0 482.940527 189.036667)">20</text>
+     </g>
+    </g>
+    <g id="ytick_11">
+     <g id="line2d_27">
+      <path d="M 486.440527 131.453333 
+L 818.704875 131.453333 
+" clip-path="url(#p2c1c95dee6)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_28"/>
+     <g id="text_24">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="482.940527" y="134.903333" transform="rotate(-0 482.940527 134.903333)">25</text>
+     </g>
+    </g>
+    <g id="text_25">
+     <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="465.912402" y="255.96" transform="rotate(-90 465.912402 255.96)">Million barrels per day</text>
+    </g>
+   </g>
+   <g id="patch_9">
+    <path d="M 486.440527 402.12 
+L 486.440527 109.8 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 486.440527 402.12 
+L 818.704875 402.12 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 512.164219 402.12 
+L 578.617088 402.12 
+L 578.617088 175.842667 
+L 512.164219 175.842667 
+z
+" clip-path="url(#p2c1c95dee6)" style="fill: #f0a33a"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 619.346266 402.12 
+L 685.799136 402.12 
+L 685.799136 349.069333 
+L 619.346266 349.069333 
+z
+" clip-path="url(#p2c1c95dee6)" style="fill: #c98bb8"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 726.528314 402.12 
+L 792.981184 402.12 
+L 792.981184 356.648 
+L 726.528314 356.648 
+z
+" clip-path="url(#p2c1c95dee6)" style="fill: #5eb8c9"/>
+   </g>
+   <g id="text_26">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'Consolas'; text-anchor: middle; fill: #f0ede4" x="545.390653" y="147.725698" transform="rotate(-0 545.390653 147.725698)">5× Bab el-Mandeb</text>
+   </g>
+   <g id="text_27">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="706.163725" y="306.184172" transform="rotate(-0 706.163725 306.184172)">together 6% of seaborne oil</text>
+   </g>
+   <g id="text_28">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'Consolas'; text-anchor: middle; fill: #f0ede4" x="545.390653" y="168.643792" transform="rotate(-0 545.390653 168.643792)">20.9</text>
+   </g>
+   <g id="text_29">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'Consolas'; text-anchor: middle; fill: #f0ede4" x="652.572701" y="341.870458" transform="rotate(-0 652.572701 341.870458)">4.9</text>
+   </g>
+   <g id="text_30">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'Consolas'; text-anchor: middle; fill: #f0ede4" x="759.754749" y="349.449125" transform="rotate(-0 759.754749 349.449125)">4.2</text>
+   </g>
+   <g id="line2d_29">
+    <path d="M 652.572701 313.341333 
+L 759.754749 313.341333 
+" clip-path="url(#p2c1c95dee6)" style="fill: none; stroke: #858981; stroke-width: 0.9; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_30">
+    <path d="M 652.572701 317.130667 
+L 652.572701 313.341333 
+" clip-path="url(#p2c1c95dee6)" style="fill: none; stroke: #858981; stroke-width: 0.9; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_31">
+    <path d="M 759.754749 317.130667 
+L 759.754749 313.341333 
+" clip-path="url(#p2c1c95dee6)" style="fill: none; stroke: #858981; stroke-width: 0.9; stroke-linecap: square"/>
+   </g>
+  </g>
+  <g id="text_31">
+   <text style="font-weight: 700; font-size: 13px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4" x="54.496875" y="30.83" transform="rotate(-0 54.496875 30.83)">Bab el-Mandeb traffic dipped 24% after July blockade then steadied</text>
+  </g>
+  <g id="text_32">
+   <text style="font-weight: 700; font-size: 13px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4" x="54.496875" y="55.77" transform="rotate(-0 54.496875 55.77)">Hormuz still moves 5× more oil</text>
+  </g>
+  <g id="text_33">
+   <text style="font-size: 7.5px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="54.496875" y="477.157031" transform="rotate(-0 54.496875 477.157031)">Lloyd's List Intelligence (transits, reported; 27 Jul–2 Aug preliminary)  ·  EIA World Oil Transit Chokepoints (oil, H1 2025)  ·  as of 21 Sep 2026</text>
+  </g>
+  <g id="AnnotationBbox_1">
+   <image xlink:href="data:image/png;base64,
+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" id="imagef1f3de25f5" transform="scale(1 -1) translate(0 -44.228571)" x="693.186062" y="-474.891429" width="42.171429" height="44.228571"/>
+   <g id="text_34">
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4; opacity: 0.45" x="739.2095" y="497.955703" transform="rotate(-0 739.2095 497.955703)">OHMEGA MONSTER</text>
+   </g>
+   <g id="text_35">
+    <text style="font-size: 7px; font-family: 'Consolas'; text-anchor: start; fill: #858981; opacity: 0.4" x="739.2095" y="504.049531" transform="rotate(-0 739.2095 504.049531)">ohmega.monster</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p1e917fee01">
+   <rect x="54.496875" y="109.8" width="332.264348" height="292.32"/>
+  </clipPath>
+  <clipPath id="p2c1c95dee6">
+   <rect x="486.440527" y="109.8" width="332.264348" height="292.32"/>
+  </clipPath>
+ </defs>
+</svg>

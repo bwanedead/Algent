@@ -691,3 +691,12 @@ cost: ~$0.8181  ·  mode: normal  ·  soft/hard: $1.00/$3.00
 cost_by_stage: editorial=$0.3443, gauntlet=$0.3521, profile=$0.1213, routing=$0.0004
 ⚠ figures not matched to evidence: 56%, 1.7%
 run: 0088__50267b5c-e466-45b2-808d-b1043113d122
+
+### PUBLISH china-builds-eavesdropping-capable-antennas-beside-us-base-a-78604d — 2026-09-21
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.8094  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.3359, gauntlet=$0.3781, profile=$0.0954
+x_searches: 1
+run: 0091__3a43c335-a3c2-4a69-bac0-419892476b9c
