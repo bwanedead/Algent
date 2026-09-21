@@ -101,9 +101,8 @@ def test_no_slots_is_a_normal_answer(tmp_path: Path) -> None:
     assert fi.make_figures(empty, BODY, _Artifacts(tmp_path), generate=_drawer([])) == []
 
 
-def test_a_request_for_a_photographic_register_is_drawn_as_a_concept(tmp_path: Path) -> None:
-    # The stock-photo register drew a photoreal antenna farm beside an article about a real
-    # Chinese compound. Interior pictures are impressions of unbuilt things, whatever is asked.
+def test_an_existing_thing_can_be_illustrated_in_the_editorial_register(tmp_path: Path) -> None:
+    # Real photos preferred, but a framed, labelled illustration beats none (operator ruling).
     seen: list[dict[str, Any]] = []
     fi.make_figures(_plan(style="editorial"), BODY, _Artifacts(tmp_path), generate=_drawer(seen))
-    assert seen[0]["register"] == "concept"
+    assert seen[0]["register"] == "editorial"

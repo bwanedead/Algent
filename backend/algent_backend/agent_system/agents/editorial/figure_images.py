@@ -40,15 +40,15 @@ from .image_gen import generate_hero_image
 GENERATOR = "figure_images@v1"
 FIGURE_IMAGE = "editorial_pipeline.figure_image"
 
-#: The one register an interior picture may use: an unbuilt design, drawn as an impression.
+#: Registers a slot may ask for. ``concept`` draws an unbuilt design as an architectural
+#: impression; ``editorial`` illustrates a thing that exists but that we have no photograph of.
 #:
-#: There used to be a second, ``editorial`` — a stock-photograph register "for a thing that does
-#: exist and simply has not been shown". Its first live use drew a photoreal antenna farm with two
-#: white radomes on a coast, and set it beside an article about the real Chinese compound at
-#: Doraleh — which is exactly a fabricated photograph of a specific real facility, the thing the
-#: hero rules exist to forbid. A label under it does not undo what the eye takes from a photo.
-#: A real thing is shown with a real photograph or not at all.
-REGISTERS = ("concept",)
+#: The editorial register was briefly removed after it drew a photoreal antenna farm beside the
+#: article on China's real compound at Doraleh. The operator's ruling: real photos are preferred,
+#: but a generated picture is better than none — AS LONG AS a reader knows at a glance it is
+#: generated. That is the site's job, not a reason to draw nothing: every ``figure_*`` image gets
+#: the AI signature (a cyan frame, a bright label, and a key at the top of the page).
+REGISTERS = ("concept", "editorial")
 
 
 class ImageSlot(BaseModel):
@@ -72,15 +72,14 @@ PLAN_ROLE = """\
 You are choosing the illustrations that go INSIDE an article, beside the passages they belong to.
 
 Ask one question of the finished prose: is the reader being asked to picture a physical thing
-that DOES NOT EXIST YET — a proposal, a design, a concept? A proposed tower in a bay, a ribbon
-running to orbit, a floating neighbourhood nobody has built. Those are worth drawing, because
-there is no photograph to show, and a piece that describes several of them wants several.
+they have almost certainly never seen? A proposed tower in a bay, a ribbon running to orbit, a
+floating neighbourhood, an antenna compound nobody outside the region has looked at. Those are
+worth drawing, and a piece that describes several of them wants several.
 
-NEVER draw a specific real thing that exists: a named base, a real facility, a particular ship,
-building or place. A generated picture of a real site is a fake photograph of it, and a reader
-takes it for the real one whatever the caption says. An article about a Chinese antenna compound
-in Djibouti had a photoreal antenna farm drawn beside it — that is the failure. If the real
-thing needs showing, that is a job for a real photograph, not for us.
+Every picture you ask for is shown framed and labelled as AI-generated, so a reader always
+knows it is an illustration and not a photograph. That makes drawing a real thing acceptable —
+but draw what the prose actually describes (the kinds of structures, the setting), never
+invented specifics presented as the real site's layout.
 
 Most articles want NONE. A policy fight, an economic argument, a court ruling — there is nothing
 to draw, and a picture of nothing in particular is worse than no picture. Return an empty list
@@ -97,7 +96,8 @@ For each slot:
   sentence fragment copied from the body. Copy it character for character; a slot whose anchor
   cannot be found in the piece is thrown away.
 - `alt` — one sentence for a reader who cannot see the image, describing what is depicted.
-- `style` — always `concept`: something proposed or unbuilt, drawn as an architect's impression.
+- `style` — `concept` for something proposed or unbuilt (drawn as an architect's impression),
+  `editorial` for something that exists and simply has not been shown.
 - `why` — what the reader cannot picture without it.
 
 Order them as they appear in the piece, at most one per passage. Each image costs real money and
