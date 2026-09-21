@@ -92,7 +92,7 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:
         "--brief", default=None,
         help="ad-hoc story with NO menu id: a title (and usually --angle as the thesis). "
              "Skips t0/synthesis entirely — invent a topic or revive a stale pick by "
-             "content. Comma-separate for multiple articles.",
+             "content. Separate multiple articles with '|' — commas are part of titles.",
     )
     parser.add_argument(
         "--angle", default=None,
@@ -351,7 +351,13 @@ def ad_hoc_vector(title: str, *, angle: str | None = None) -> dict[str, Any]:
 
 
 def _parse_briefs(spec: str) -> list[str]:
-    titles = [t.strip() for t in spec.split(",") if t.strip()]
+    """Split ``--brief`` into one title per article.
+
+    On ``|``, not on commas. Headlines carry commas as a matter of course, and splitting on them
+    turned "What the Greenland deal buys, and what it costs" into two runs — the second one an
+    article commissioned on the words "and what it costs".
+    """
+    titles = [t.strip() for t in spec.split("|") if t.strip()]
     if not titles:
         raise ValueError("--brief was given but resolved to no titles")
     return titles

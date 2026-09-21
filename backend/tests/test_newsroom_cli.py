@@ -291,3 +291,12 @@ def test_composed_vector_validates_against_the_contract() -> None:
 
     ResearchVector.model_validate(pipeline.compose_vector(_items(), [1, 2], angle="x"))
     ResearchVector.model_validate(pipeline.ad_hoc_vector("Ad hoc", angle="thesis"))
+
+
+def test_a_comma_in_a_brief_title_does_not_split_it() -> None:
+    from algent_backend.cli.newsroom.pipeline import _parse_briefs
+
+    assert _parse_briefs("What the deal buys, and what it costs") == [
+        "What the deal buys, and what it costs"]
+    assert _parse_briefs("First story | Second, with a comma") == [
+        "First story", "Second, with a comma"]

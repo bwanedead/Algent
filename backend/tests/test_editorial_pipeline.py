@@ -961,3 +961,31 @@ def test_pipeline_reuses_draft_and_skips_planning_and_worker(monkeypatch) -> Non
     skipped = [p.get("stage") for et, p in events if et == pl.PIPELINE_SKIPPED]
     assert "planning" in skipped and "drafting" in skipped
     assert "analytics_worker" in skipped
+
+
+def test_a_final_rewrite_still_over_the_ceiling_gets_one_measured_read(monkeypatch) -> None:
+    # Live: the last rewrite promised "under 1,100 words" and delivered 1,560, and shipped
+    # unread because the final rewrite is never re-reviewed. A measured miss is the one case
+    # where reading it again can change the outcome — so it gets exactly one more read.
+    from algent_backend.agent_system.agents.editorial.length import ceiling_words
+
+    def long(tag: str) -> str:
+        return " ".join([tag] * (ceiling_words() + 60))
+
+    plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
+    draft_out = {"draft": {"id": "d", "title": "t", "body": long("a"), "word_count": 0},
+                 "gauntlet": {"outcome": "grounded"}}
+    _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {"verdict": "verified"}})
+    short = " ".join(["tight"] * 900)
+    reviewer = _Sequence(
+        {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "c1"}], "body": long("b")}},
+        {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "c2"}], "body": long("c")}},
+        {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "c3"}], "body": short}},
+        {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "c4"}], "body": long("d")}},
+    )
+    monkeypatch.setattr(pl, "build_comprehension_reviewer", lambda ctx: reviewer)
+    monkeypatch.setattr(pl, "build_drafter", _never_drafter)
+
+    r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile("p")})["pipeline"]
+    assert r["comprehension_rounds"] == 3            # bounded: one extra read, never a loop
+    assert len(reviewer.states) == 3

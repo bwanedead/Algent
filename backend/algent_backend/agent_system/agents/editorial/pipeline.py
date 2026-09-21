@@ -38,7 +38,7 @@ from .gauntlet import build_planning_gauntlet_graph
 from .figure_images import FIGURE_IMAGE, make_figures, place, plan_images
 from .headline_spec import build_graph as build_headline_writer
 from .hero_stage import hero_enabled, is_quota_skip, make_hero
-from .length import count_words, wpm
+from .length import ceiling_words, count_words, wpm
 from .pipeline_contracts import EditorialPipelineReport
 from .publish import render_published_article
 
@@ -904,6 +904,7 @@ def _comprehension_pass(
     drops = list(review.get("places_to_drop") or [])
 
     reviews = 1
+    unreviewed = False
     for lap in range(_MAX_REVIEW_LAPS):
         if not draft or str(review.get("verdict", "clear")) != "needs_ramp":
             break
@@ -911,10 +912,24 @@ def _comprehension_pass(
         if not changed:
             break            # no usable rewrite; another lap will not help
         if lap == _MAX_REVIEW_LAPS - 1:
+            unreviewed = True
             break            # final rewrite ships unreviewed — see the docstring
         review = build_comprehension_reviewer(context).invoke(
             {"draft": draft}, config).get("comprehension_check") or {}
         reviews += 1
+
+    # The one case where reading the last rewrite CAN change the outcome: it is still over the
+    # ceiling. Reviewers diagnose length correctly and then under-deliver the cut — the Greenland
+    # piece's final rewrite announced "under 1,100 words" and handed over 1,560 — because a model
+    # cannot count its own output as it writes it. Showing it the measured count is what it was
+    # missing. One lap, only on a measured miss; a survey whose members earn their length is the
+    # reviewer's call to clear, and its doctrine says so.
+    if unreviewed and count_words(str(draft.get("body") or "")) > ceiling_words():
+        review = build_comprehension_reviewer(context).invoke(
+            {"draft": draft}, config).get("comprehension_check") or {}
+        reviews += 1
+        if str(review.get("verdict", "clear")) == "needs_ramp":
+            draft, _ = _apply_reader_draft(context, draft=draft, review=review)
 
     if drops:
         review = {**review, "places_to_drop": drops}

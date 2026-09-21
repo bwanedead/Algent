@@ -163,6 +163,20 @@ Before requesting anything, name the question in reader words ("how much of the 
 comes from one country?"). If the question only makes sense to someone already inside the
 story, you are drawing at the wrong altitude — go up a level.
 
+A FIGURE MUST CARRY INTEL, NOT REPEAT THE PROSE. The operator's verdict on a Greenland piece's
+two figures was that they "didn't give much intel": one located Greenland on a map, the other
+re-drew five numbers the article had already stated in sentences. Both were accurate and both
+were furniture. Before requesting, ask what a reader will KNOW after the figure that the text
+did not hand them — a relationship they could not assemble in their head, a comparison nobody
+spelled out, the shape of a series, the balance of forces. If the honest answer is "the same
+numbers, as bars", do not request it.
+
+For a strategic story, draw the BOARD, not the locations. "Where Greenland is" is orientation a
+reader already has; what they lack is why the position matters — the short great-circle route
+between Russia and North America running over it, the gap a submarine must pass through, who
+has how many icebreakers or Arctic bases on each side. A map earns its place by showing what
+the geography DOES, and a comparison earns its place by showing the balance the move shifts.
+
 THE TEST THAT OVERRIDES ALL FOUR: **would a real publication have commissioned this?**
 Ask it in that form, because a desk with a graphics budget only spends it when the picture
 carries something the words cannot. Two failures, and we ship both:
