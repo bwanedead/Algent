@@ -64,8 +64,9 @@ def test_the_image_lands_after_the_passage_it_belongs_to(tmp_path: Path) -> None
     image = out.index("![A vast stepped pyramid")
     prose = out.index("Shimizu proposed")
     assert heading < image < prose          # under its heading, above the paragraph
-    # Every generated picture says what it is, in the body, where the reader is.
-    assert "artist's impression" in out
+    # The file name is the disclosure contract: the site gives every `figure_` image the AI
+    # signature (frame, label, page key), so the name must never drift.
+    assert "](figure_pyramid.jpg)" in out
 
 
 def test_a_subject_that_would_draw_data_is_refused(tmp_path: Path) -> None:

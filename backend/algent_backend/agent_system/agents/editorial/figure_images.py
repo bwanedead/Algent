@@ -230,10 +230,10 @@ def place(body: str, figures: list[dict[str, Any]]) -> str:
         if at is not None:
             located.append((at, fig))
     for at, fig in sorted(located, key=lambda pair: pair[0], reverse=True):
-        block = (
-            f"\n\n![{_clean(str(fig.get('alt') or ''))}]({fig.get('artifact_name')})\n\n"
-            f"_{fig.get('label') or CONCEPT_LABEL}_\n"
-        )
+        # No label line here: the site recognises a generated picture by its ``figure_`` name
+        # and gives it the page's AI signature — frame, bright label, and the key at the top.
+        # A grey italic line from us as well was a second, weaker disclosure of the same fact.
+        block = f"\n\n![{_clean(str(fig.get('alt') or ''))}]({fig.get('artifact_name')})\n"
         body = body[:at] + block + body[at:].lstrip("\n")
     return body
 
