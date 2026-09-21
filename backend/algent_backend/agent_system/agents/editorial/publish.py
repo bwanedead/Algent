@@ -480,6 +480,8 @@ def _appendix(draft: ArticleDraft, cited_sources: list, cited_claims: list, sour
                 basis = "from cited evidence"
             if fc.get("verified") or not fc:
                 check = ""
+            elif fc.get("note"):
+                check = f" · ⚠ {fc['note']}"
             elif fc.get("mode") == "sourced":
                 check = " · ⚠ unverified: the data's publisher could not be confirmed"
             else:

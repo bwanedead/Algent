@@ -24,8 +24,13 @@ AGENT_ID = "article_drafter"
 RUNTIME = "langgraph"
 FAMILY = "newsroom"
 TOOL_IDS = (WEB_SEARCH_TOOL_ID,)
-# Free channels + paid `rich` for the occasional blocked primary that sharpens the piece.
-SEARCH_CHANNELS = (policy.KEYWORD, policy.SEMANTIC, policy.READ, policy.RICH, policy.X)
+# Reads only — free, plus paid `rich` for the occasional blocked primary the piece needs. No
+# searching: the drafter works from a profile the research and the gauntlet already built, and
+# its own searches were pure cost — 5 to 13 Tavily/Exa calls a run that added zero claims and
+# zero sources in both measured runs (Greenland, Djibouti). Reading a source the profile already
+# cites still upgrades its grounding, which is the part of drafting-time research that paid off.
+# X stays: when an official said the thing in a post, the post is the primary source.
+SEARCH_CHANNELS = (policy.READ, policy.RICH, policy.X)
 PAID_BUDGET = 4          # lighter than research — drafting is precision, not discovery
 COST_CAP_USD = 1.00
 

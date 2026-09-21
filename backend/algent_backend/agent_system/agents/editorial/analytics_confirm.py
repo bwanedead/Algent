@@ -8,6 +8,7 @@ trusted, because "confirmed" is the one word in the ledger a reader is entitled 
 
 from __future__ import annotations
 
+import re
 from datetime import UTC, datetime
 from typing import Any
 
@@ -38,6 +39,41 @@ PAID_BUDGET = 0
 COST_CAP_USD = 0.25
 
 DEFAULT_MODEL: ModelSpec = house_spec(reasoning_effort="low", temperature=0.1, streaming=False)
+
+
+_NUMBER = re.compile(r"\d[\d,]*(?:\.\d+)?%?")
+
+
+def _numbers(text: str) -> set[str]:
+    return {n.replace(",", "") for n in _NUMBER.findall(text or "")}
+
+
+def _precheck(claims: list[dict[str, Any]], sources: dict[str, str]) -> list[ClaimCheck]:
+    """Confirm, for free, each claim whose every number appears on a page it cites."""
+    from algent_backend.agent_system.tools.sourcing.search.research import _read
+
+    pages: dict[str, str] = {}
+    out: list[ClaimCheck] = []
+    for claim in claims:
+        wanted = _numbers(str(claim.get("text") or ""))
+        if not wanted:
+            continue        # nothing checkable by eye; leave it for the searched pass
+        for sid in claim.get("supported_by") or []:
+            url = sources.get(str(sid)) or ""
+            if not url:
+                continue
+            if url not in pages:
+                try:
+                    got = _read(url, rich=False)
+                    pages[url] = str(got.get("content") or "") if got.get("quality") == "good" else ""
+                except Exception:  # noqa: BLE001 — an unreadable page is just not a free confirm
+                    pages[url] = ""
+            if pages[url] and wanted <= _numbers(pages[url]):
+                out.append(ClaimCheck(
+                    claim_id=str(claim.get("id")), verdict="confirmed", checked_against=[url],
+                    reason="every figure in the claim appears on the page it cites"))
+                break
+    return out
 
 
 def analytics_claims(profile: dict[str, Any]) -> list[dict[str, Any]]:
@@ -113,6 +149,18 @@ def confirm_analytics_claims(
     sources = {str(s.get("id")): str(s.get("url") or "")
                for s in (profile.get("source_ledger") or []) if isinstance(s, dict)}
 
+    # The free check first. A sourced figure only ever had to NAME a URL — nothing looked at
+    # whether the page carries the numbers. Reading it costs nothing, and when every figure in
+    # the claim is on the page it cites, that is the confirmation. Only what the page does not
+    # carry goes on to paid searches, which were the whole of this pass's bill (~20 a run).
+    prechecked = _precheck(pending, sources)
+    done = {c.claim_id for c in prechecked}
+    remaining = [c for c in pending if str(c.get("id")) not in done]
+    if not remaining:
+        produced = AnalyticsConfirmReport(checks=prechecked,
+                                          note="every figure was found on the page it cites")
+        return _finish_report(context, profile, produced, pending)
+
     model = context.model_resolver.resolve(DEFAULT_MODEL).client
     tools = [context.tools[t] for t in TOOL_IDS]
     agent = build_react_loop(
@@ -122,7 +170,7 @@ def confirm_analytics_claims(
             cost.scoped(COST_CAP_USD, DEFAULT_MODEL.model):
         produced = stream_react_loop(
             agent,
-            {"messages": [HumanMessage(content=_message(pending, sources))]},
+            {"messages": [HumanMessage(content=_message(remaining, sources))]},
             context=context,
             config=config,
         )
@@ -130,8 +178,17 @@ def confirm_analytics_claims(
     if not isinstance(produced, AnalyticsConfirmReport):
         # No structured verdict is not a reason to upgrade anything: the claims stay
         # `unconfirmed`, which is what they already are and what they honestly remain.
-        return profile, None
+        if not prechecked:
+            return profile, None
+        produced = AnalyticsConfirmReport(note="searched checks returned nothing")
+    produced.checks = prechecked + list(produced.checks)
+    return _finish_report(context, profile, produced, pending)
 
+
+def _finish_report(
+    context: AgentRunContext, profile: dict[str, Any],
+    produced: AnalyticsConfirmReport, pending: list[dict[str, Any]],
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
     produced.profile_id = str(profile.get("id") or "")
     produced.generated_at = datetime.now(UTC).isoformat()
     produced.generator = GENERATOR

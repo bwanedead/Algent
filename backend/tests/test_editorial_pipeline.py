@@ -989,3 +989,27 @@ def test_a_final_rewrite_still_over_the_ceiling_gets_one_measured_read(monkeypat
     r = pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile("p")})["pipeline"]
     assert r["comprehension_rounds"] == 3            # bounded: one extra read, never a loop
     assert len(reviewer.states) == 3
+
+
+def test_a_failed_chart_check_reaches_the_chart() -> None:
+    """The confirmation pass used to change nothing a reader saw: a 0-for-12 chart shipped like
+    a 12-for-12 one. Its verdict now lands on the figure's caption and receipts line."""
+    profile = {"claim_ledger": [
+        {"id": "c1", "text": "Transits fell to 269 in the week of 20 July", "status": "contested"},
+        {"id": "c2", "text": "Hormuz moved 20.9 million barrels a day", "status": "confirmed"},
+        {"id": "c3", "text": "Suez moved 4.9 million barrels a day", "status": "unconfirmed"},
+    ]}
+    figs = [
+        {"request_id": "a", "caption": "Traffic dipped.", "sourced_claims": [
+            {"text": "Transits fell to 269 in the week of 20 July"},
+            {"text": "Hormuz moved 20.9 million barrels a day"}]},
+        {"request_id": "b", "caption": "Oil flows.", "sourced_claims": [
+            {"text": "Suez moved 4.9 million barrels a day"}]},
+        {"request_id": "c", "caption": "Clean.", "sourced_claims": [
+            {"text": "Hormuz moved 20.9 million barrels a day"}]},
+    ]
+    out = {f["request_id"]: f for f in pl.disclose_checked_figures(figs, profile)}
+    assert "Contested: an independent source disagrees with 1 of 2" in out["a"]["caption"]
+    assert out["a"]["figure_check"]["verified"] is False
+    assert "Partly unconfirmed: 1 of 1" in out["b"]["caption"]
+    assert out["c"]["caption"] == "Clean."                    # a clean check changes nothing

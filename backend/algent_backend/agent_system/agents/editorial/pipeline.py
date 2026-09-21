@@ -204,6 +204,8 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
             context, config, state, enriched_profile)
         if confirm_note:
             surface_issues = list(surface_issues) + [confirm_note]
+        if confirm_report:
+            produced_analytics = disclose_checked_figures(produced_analytics, enriched_profile)
         quality = {
             **quality,
             "analytics": analytics_plan,
@@ -784,6 +786,41 @@ def _repair_hedging(
 
 
 ANALYTICS_CLAIMS_ADDED = "editorial_pipeline.analytics_claims_added"
+
+
+def disclose_checked_figures(
+    artifacts: list[dict[str, Any]], profile: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Put the confirmation pass's verdict on the chart it was about, where readers see it.
+
+    The pass used to rule after the article was finished and change nothing a reader saw: a
+    figure whose data came back 0-for-12 confirmed shipped exactly like one that came back
+    12-for-12. Now a chart carries what the check found — contested values most loudly —
+    in its caption and its source-record line.
+    """
+    status = {str(c.get("text") or "").strip(): str(c.get("status") or "")
+              for c in profile.get("claim_ledger") or [] if isinstance(c, dict)}
+    out = []
+    for a in artifacts or []:
+        rows = [str(r.get("text") or "").strip() for r in (a.get("sourced_claims") or [])]
+        rows = [r for r in rows if r in status]
+        contested = [r for r in rows if status[r] == "contested"]
+        unconfirmed = [r for r in rows if status[r] == "unconfirmed"]
+        if not rows or not (contested or unconfirmed):
+            out.append(a)
+            continue
+        if contested:
+            tail = (f" Contested: an independent source disagrees with {len(contested)} of "
+                    f"{len(rows)} data points behind this figure — see the source record.")
+        else:
+            tail = (f" Partly unconfirmed: {len(unconfirmed)} of {len(rows)} data points could "
+                    "not be confirmed against a source.")
+        fc = dict(a.get("figure_check") or {})
+        fc["verified"] = False
+        fc["unverified"] = list(fc.get("unverified") or []) + (contested or unconfirmed)
+        fc["note"] = tail.strip()      # the receipts line says the same thing as the caption
+        out.append({**a, "caption": str(a.get("caption") or "") + tail, "figure_check": fc})
+    return out
 
 
 def _absorb_sourced_claims(

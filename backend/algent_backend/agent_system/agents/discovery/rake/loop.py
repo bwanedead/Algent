@@ -65,15 +65,16 @@ def run_rake(
         say(f"nothing to rake ({len(pre_vetted)} pre-vetted items pass straight through)")
         return pool, RakeSummary(pre_vetted=len(pre_vetted)), 0.0
 
+    grounded = _ground_thin(rakeable)
+    if grounded:
+        say(f"grounded {grounded} theme-coded item(s) from their page titles")
     chunks = _chunks(rakeable, max(1, chunk_size))
     say(f"raking {len(rakeable)} items in {len(chunks)} chunk(s) (nano scout; {len(pre_vetted)} pre-vetted skip)…")
 
     model = context.model_resolver.resolve(model_spec).client
     tools = [context.tools[tool_id] for tool_id in TOOL_IDS]
     agent = build_react_loop(model, tools, system_prompt=SYSTEM_PROMPT, response_format=RakeChunkResult)
-    # The scout free-reads sources to ground its keepers, so it needs room for several
-    # tool calls per chunk — give it its own step budget rather than the run's turn cap.
-    rake_config = {**(config or {}), "recursion_limit": max(int(chunk_size) * 4 + 8, 30)}
+    rake_config = {**(config or {}), "recursion_limit": 12}   # no tools: one structured reply
 
     by_id = {it.get("id"): it for it in rakeable}
     dropped: dict[str, str] = {}  # id -> reason, for items explicitly tossed
@@ -120,6 +121,61 @@ def run_rake(
         f"grounded {summary.enriched} (+{summary.pre_vetted} pre-vetted)"
     )
     return _rebuild_pool(pool, kept_items), summary, spent
+
+
+#: GDELT items arrive as a theme code, not a headline; their page title is the story. Nothing
+#: else in the pool needs its page to be judged.
+_THIN_CHANNELS = frozenset({"gkg"})
+_GROUND_WORKERS = 6
+_GROUND_TIMEOUT_S = 8.0
+
+
+def _ground_thin(items: list[dict[str, Any]]) -> int:
+    """Give theme-coded items their real headline, from the page's own title and description.
+
+    Plain HTTP and the page's meta tags — no model, no paid channel, a short timeout, a handful
+    at a time. This replaced a scout that free-read every keeper one by one: 64 minutes of a
+    72-minute menu, to write summaries for items that mostly already had real headlines.
+    A page that will not load leaves its item exactly as it was.
+    """
+    from concurrent.futures import ThreadPoolExecutor
+
+    thin = [it for it in items if it.get("channel") in _THIN_CHANNELS and (it.get("evidence") or [])]
+    if not thin:
+        return 0
+
+    def _one(item: dict[str, Any]) -> bool:
+        url = (item.get("evidence") or [{}])[0].get("url") or ""
+        meta = _page_meta(url)
+        title = (meta.get("title") or "").strip()
+        if not title:
+            return False
+        signals = item.setdefault("signals", {})
+        signals.setdefault("t0_label", item.get("label"))
+        item["label"] = title[:140]
+        if meta.get("description"):
+            signals["synopsis"] = meta["description"].strip()[:300]
+        return True
+
+    with ThreadPoolExecutor(max_workers=_GROUND_WORKERS) as pool:
+        return sum(pool.map(_one, thin))
+
+
+def _page_meta(url: str) -> dict[str, str]:
+    if not url:
+        return {}
+    try:
+        import httpx
+
+        from algent_backend.agent_system.tools.sourcing.depth.fetch_content import (
+            _BROWSER_HEADERS,
+            _extract_meta,
+        )
+
+        resp = httpx.get(url, headers=_BROWSER_HEADERS, timeout=_GROUND_TIMEOUT_S, follow_redirects=True)
+        return _extract_meta(resp.text) if resp.status_code == 200 else {}
+    except Exception:  # noqa: BLE001 — an unreachable page just stays ungrounded
+        return {}
 
 
 def _apply_enrichment(item: dict[str, Any] | None, verdict: Any) -> bool:

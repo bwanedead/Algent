@@ -549,3 +549,20 @@ def test_unattributed_data_never_becomes_a_claim() -> None:
 
     req = AnalyticsRequest(id="r1", kind="chart", may_source=True)
     assert _sourced_claims("year,v\n2019,1\n", "no url here", req) == []
+
+
+def test_the_free_check_confirms_numbers_found_on_the_cited_page(monkeypatch) -> None:
+    # A sourced figure only had to NAME a URL; nothing looked at whether the page carried the
+    # numbers. Reading it is free, and it spares the paid searches for what it does not carry.
+    from algent_backend.agent_system.agents.editorial import analytics_confirm as ac
+    from algent_backend.agent_system.tools.sourcing.search import research
+
+    monkeypatch.setattr(research, "_read", lambda url, rich=False: {
+        "quality": "good", "content": "Weekly transits: 354, then 269, then 266 (preliminary)."})
+    claims = [
+        {"id": "c1", "text": "Transits fell from 354 to 269", "supported_by": ["s1"]},
+        {"id": "c2", "text": "Hormuz moved 20.9 million barrels a day", "supported_by": ["s1"]},
+    ]
+    checks = ac._precheck(claims, {"s1": "https://lloyds.example/transits"})
+    assert [c.claim_id for c in checks] == ["c1"]             # c2's number is not on the page
+    assert checks[0].verdict == "confirmed" and checks[0].checked_against
