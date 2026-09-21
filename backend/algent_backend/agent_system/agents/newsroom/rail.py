@@ -65,10 +65,12 @@ from ..editorial.pipeline_spec import build_graph as build_editorial
 from ..gauntlet.spec import build_graph as build_profile_gauntlet
 from ..research.spec import build_graph as build_profile
 from ..routing.spec import build_graph as build_router
+from . import steer
 from .rail_contracts import NewsroomRailReport
 
 RAIL_COMPLETED = "newsroom_rail.completed"
 RAIL_STAGE = "newsroom_rail.stage"
+RAIL_STEER = "newsroom_rail.steer"          # an operator steer landed at a stage boundary
 RAIL_ANNOUNCED = "newsroom_rail.announced"
 RAIL_FIGURES = "newsroom_rail.figures"
 BACKFEED_INJECTED = "newsroom_rail.backfeed_injected"
@@ -139,6 +141,20 @@ def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | Non
     return graph.compile()
 
 
+def _artifacts_dir(context: AgentRunContext) -> Any:
+    """This run's artifacts directory, or None when the run has no directory (tests)."""
+    try:
+        root = find_run_root(context.run_id)
+    except Exception:  # noqa: BLE001
+        return None
+    return (root / "artifacts") if root else None
+
+
+def _steers(context: AgentRunContext) -> list[str]:
+    """Every operator steer this run has received so far (see ``steer.py``)."""
+    return steer.for_run(_artifacts_dir(context))
+
+
 def _read_cache_path(context: AgentRunContext) -> Any:
     """Where this run's reads persist, or None when the run has no directory (tests)."""
     try:
@@ -207,6 +223,12 @@ def _install_cost_tee(context: AgentRunContext) -> tuple[Any, list[int], StageCl
             # throws away whatever it had bought — a profile three minutes into research dies
             # with nothing to show and resume has to buy it again.
             _check_paused(str(p["stage"]))
+            # The same boundary is where a steer lands: nothing of the next stage has run, so it
+            # shapes that stage and every one after it.
+            art = _artifacts_dir(context)
+            landed = steer.drain(art, stage=str(p["stage"])) if art is not None else []
+            if landed:
+                context.emit(RAIL_STEER, {"stage": p["stage"], "steers": [e["text"] for e in landed]})
             cost.set_stage(str(p["stage"]))
             clock.enter(str(p["stage"]))
         if event_type in _SLOW_LEG_EVENTS:
@@ -459,7 +481,7 @@ def _profile_then_gauntlet(
 ) -> tuple[dict[str, Any], dict[str, Any] | None]:
     sub.emit(RAIL_STAGE, {"stage": "profile"})
     profile = build_profile(sub).invoke(
-        {"vector": vector, "pool": pool}, config,
+        {"vector": steer.apply_to_vector(vector, _steers(context)), "pool": pool}, config,
     ).get("profile") or {}
     report.stage_reached = "profile"
     if not profile.get("id"):
@@ -473,6 +495,7 @@ def _run_gauntlet(
     report: NewsroomRailReport, profile: dict[str, Any],
 ) -> tuple[dict[str, Any], dict[str, Any] | None]:
     sub.emit(RAIL_STAGE, {"stage": "gauntlet"})
+    profile = steer.apply_to_profile(profile, _steers(context))
     g = build_profile_gauntlet(sub).invoke({"profile": profile}, config)
     profile = g.get("profile") or profile
     gauntlet = g.get("gauntlet") or {}
@@ -495,7 +518,9 @@ def _editorial_and_publish(
 ) -> dict[str, Any]:
     """Draft → publish. Fail-open publish; quality status rides on the report."""
     sub.emit(RAIL_STAGE, {"stage": "editorial"})
-    ed_in: dict[str, Any] = {"profile": profile}
+    # Re-applied here rather than trusted to survive the gauntlet: enrichment rebuilds the
+    # profile, and a steer that landed after research must still reach the planner and drafter.
+    ed_in: dict[str, Any] = {"profile": steer.apply_to_profile(profile, _steers(context))}
     for key in _ED_KEYS:
         if key in state:
             ed_in[key] = state[key]

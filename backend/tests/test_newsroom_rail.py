@@ -458,3 +458,36 @@ def test_stage_clock_times_stages_and_slow_legs() -> None:
 
     # Durations read as durations, not float seconds.
     assert _hms(5) == "5s" and _hms(65) == "1m05s" and _hms(600) == "10m00s"
+
+
+def test_a_queued_steer_reaches_research_and_editorial(monkeypatch, tmp_path) -> None:
+    """The live-steer contract: a framing note lands at a stage boundary and every later stage
+    writes to it — research sees it beside the thesis, editorial sees it on the profile."""
+    from algent_backend.agent_system.agents.newsroom import steer
+
+    monkeypatch.setenv(rl._BACKFEED_ENV, "0")
+    _full(monkeypatch)
+    pending = tmp_path / "pending.jsonl"
+    monkeypatch.setattr(steer, "PENDING", pending)
+    monkeypatch.setattr(rl, "find_run_root", lambda _rid: tmp_path / "run")
+    monkeypatch.setattr(rl, "_publish", lambda *a, **k: None)
+    steer.add("read it as strategy", path=pending)
+
+    seen: dict = {}
+
+    class _Capture:
+        def __init__(self, key, out):
+            self.key, self.out = key, out
+
+        def invoke(self, state, _config=None):
+            seen[self.key] = state
+            return self.out
+
+    monkeypatch.setattr(rl, "build_profile", lambda ctx: _Capture("profile", {"profile": {"id": "prof_1"}}))
+    monkeypatch.setattr(rl, "build_editorial", lambda ctx: _Capture(
+        "editorial", {"pipeline": {"status": "publishable", "article_title": "t"}}))
+
+    rl.build_newsroom_rail_graph(_ctx([])).invoke({"pool": {"items": [], "item_count": 1}})
+    assert "read it as strategy" in seen["profile"]["vector"]["thesis"]
+    assert seen["editorial"]["profile"]["operator_steer"] == ["read it as strategy"]
+    assert steer.for_run(tmp_path / "run" / "artifacts") == ["read it as strategy"]

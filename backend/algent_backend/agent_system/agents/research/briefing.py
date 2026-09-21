@@ -25,6 +25,17 @@ def render_briefing(profile: SignalProfile) -> str:
         f"rev {profile.revision} · {profile.generator or '?'}_",
         "",
     ]
+    if profile.operator_steer:
+        # First, because it governs how everything below is read. It arrived after the research
+        # was done, so it re-weights the material rather than adding to it.
+        out += [
+            "## Operator steer — the editor's framing for this piece",
+            "Added while the piece was in progress. It sets the angle and what to emphasise; it "
+            "overrides the original framing where they differ. It is not evidence and adds no "
+            "facts — write it only from the material below.",
+            *[f"- {s}" for s in profile.operator_steer],
+            "",
+        ]
     if profile.summary:
         out += [profile.summary, ""]
     if profile.output_recommendations:

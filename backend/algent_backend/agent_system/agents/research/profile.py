@@ -217,6 +217,9 @@ class SignalProfile(BaseModel):
     parent_vector_id: str = ""       # the t1 research vector this was promoted from
     title: str
     summary: str = ""                # the holistic gist (read first)
+    #: Framing notes the operator added while the run was in progress (see newsroom/steer.py).
+    #: Angle and emphasis for every stage that reads this profile — never evidence.
+    operator_steer: list[str] = Field(default_factory=list)
     profile_status: ProfileStatus = "draft"
     as_of: str = ""                  # recency horizon of the info (latest date it reflects)
 
