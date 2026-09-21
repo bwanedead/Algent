@@ -112,6 +112,12 @@ units, for whom/where, and over what time**. If they have to guess, the analytic
    cluster of three towns with no national context.
 2. **Local detail as inset box** on that frame when the story names a village cluster.
 3. **Points only from real lat/lon** — write every plotted coordinate into `data.csv`.
+   **An inset below country scale must not draw the 1:110m coastline.** At that resolution the
+   coast is off by kilometres, so a 10-mile Djibouti inset put China's base, on the shore at
+   Doraleh, in open sea. At city scale, drop the outlines and show the points, their labels and
+   the distance ring on plain ground — a correct abstraction beats a wrong coast. And give the
+   inset its own clear space: it must never sit over the main map's labels or the strait it is
+   explaining.
 4. **Outlines only from** `data/natural_earth/ne_110m_admin_0_countries.geojson`.
 5. Never invent control polygons, heat, or freehand coastlines presented as truth. Skip if you
    cannot get honest coords/outlines.

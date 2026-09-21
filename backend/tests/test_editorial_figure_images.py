@@ -98,3 +98,11 @@ def test_several_images_keep_their_own_anchors(tmp_path: Path) -> None:
 def test_no_slots_is_a_normal_answer(tmp_path: Path) -> None:
     empty = fi.ImagePlan(none_because="nothing physical to picture")
     assert fi.make_figures(empty, BODY, _Artifacts(tmp_path), generate=_drawer([])) == []
+
+
+def test_a_request_for_a_photographic_register_is_drawn_as_a_concept(tmp_path: Path) -> None:
+    # The stock-photo register drew a photoreal antenna farm beside an article about a real
+    # Chinese compound. Interior pictures are impressions of unbuilt things, whatever is asked.
+    seen: list[dict[str, Any]] = []
+    fi.make_figures(_plan(style="editorial"), BODY, _Artifacts(tmp_path), generate=_drawer(seen))
+    assert seen[0]["register"] == "concept"

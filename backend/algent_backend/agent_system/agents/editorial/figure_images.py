@@ -40,10 +40,15 @@ from .image_gen import generate_hero_image
 GENERATOR = "figure_images@v1"
 FIGURE_IMAGE = "editorial_pipeline.figure_image"
 
-#: Registers a slot may ask for. ``concept`` draws an unbuilt design as an architectural
-#: impression; ``editorial`` is the plain stock-photograph register the hero uses, for a thing
-#: that does exist and simply has not been shown.
-REGISTERS = ("concept", "editorial")
+#: The one register an interior picture may use: an unbuilt design, drawn as an impression.
+#:
+#: There used to be a second, ``editorial`` — a stock-photograph register "for a thing that does
+#: exist and simply has not been shown". Its first live use drew a photoreal antenna farm with two
+#: white radomes on a coast, and set it beside an article about the real Chinese compound at
+#: Doraleh — which is exactly a fabricated photograph of a specific real facility, the thing the
+#: hero rules exist to forbid. A label under it does not undo what the eye takes from a photo.
+#: A real thing is shown with a real photograph or not at all.
+REGISTERS = ("concept",)
 
 
 class ImageSlot(BaseModel):
@@ -67,9 +72,15 @@ PLAN_ROLE = """\
 You are choosing the illustrations that go INSIDE an article, beside the passages they belong to.
 
 Ask one question of the finished prose: is the reader being asked to picture a physical thing
-they have almost certainly never seen? A proposed tower in a bay, a ribbon running to orbit, a
-floating neighbourhood, a machine nobody outside the field has looked at. Those are worth
-drawing, and a piece that describes several of them wants several.
+that DOES NOT EXIST YET — a proposal, a design, a concept? A proposed tower in a bay, a ribbon
+running to orbit, a floating neighbourhood nobody has built. Those are worth drawing, because
+there is no photograph to show, and a piece that describes several of them wants several.
+
+NEVER draw a specific real thing that exists: a named base, a real facility, a particular ship,
+building or place. A generated picture of a real site is a fake photograph of it, and a reader
+takes it for the real one whatever the caption says. An article about a Chinese antenna compound
+in Djibouti had a photoreal antenna farm drawn beside it — that is the failure. If the real
+thing needs showing, that is a job for a real photograph, not for us.
 
 Most articles want NONE. A policy fight, an economic argument, a court ruling — there is nothing
 to draw, and a picture of nothing in particular is worse than no picture. Return an empty list
@@ -86,8 +97,7 @@ For each slot:
   sentence fragment copied from the body. Copy it character for character; a slot whose anchor
   cannot be found in the piece is thrown away.
 - `alt` — one sentence for a reader who cannot see the image, describing what is depicted.
-- `style` — `concept` for something proposed or unbuilt (drawn as an architect's impression),
-  `editorial` for something that exists and simply has not been shown.
+- `style` — always `concept`: something proposed or unbuilt, drawn as an architect's impression.
 - `why` — what the reader cannot picture without it.
 
 Order them as they appear in the piece, at most one per passage. Each image costs real money and
