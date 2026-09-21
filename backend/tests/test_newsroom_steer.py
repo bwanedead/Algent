@@ -50,3 +50,20 @@ def test_an_empty_steer_is_refused(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError):
         steer.add("   ", path=tmp_path / "p.jsonl")
+
+
+def test_a_story_with_no_vector_id_still_gets_its_own_profile() -> None:
+    # Every brief used to become prof_unknown, and each saved over the last in the store.
+    from algent_backend.agent_system.agents.research.assembly import _profile_id
+
+    a = _profile_id({"id": "", "title": "Megaprojects"})
+    b = _profile_id({"id": "", "title": "Greenland deal"})
+    assert a != b and "unknown" not in a
+    assert _profile_id({"id": "vec_42"}) == "prof_42"
+
+
+def test_a_brief_carries_a_stable_id() -> None:
+    from algent_backend.cli.newsroom.pipeline import ad_hoc_vector
+
+    v = ad_hoc_vector("What the Greenland deal buys, and what it costs")
+    assert v["id"].startswith("brief_what_the_greenland_deal")

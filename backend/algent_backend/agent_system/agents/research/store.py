@@ -27,6 +27,20 @@ class ProfileStore(Protocol):
     """The one boundary profile data passes through."""
 
     def save(self, profile: SignalProfile) -> str: ...
+    def save_reads(self, profile_id: str, reads_file: Path) -> str | None:
+        """Keep the full text of every page this story's research read, beside its profile.
+
+        The profile holds excerpts of what it cites; the pages themselves lived only in the run
+        folder's read cache, which is pruned after five newer runs. They are the raw research —
+        the thing a later story on the same subject most wants back — so they are kept.
+        """
+        if not reads_file.exists():
+            return None
+        self._dir.mkdir(parents=True, exist_ok=True)
+        path = self._dir / f"{_safe(profile_id)}.reads.jsonl"
+        path.write_bytes(reads_file.read_bytes())
+        return str(path)
+
     def get(self, profile_id: str) -> SignalProfile | None: ...
     def list_ids(self) -> list[str]: ...
 

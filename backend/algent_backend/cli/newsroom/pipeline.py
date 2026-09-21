@@ -37,6 +37,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 from argparse import Namespace
 from datetime import UTC, datetime
 from pathlib import Path
@@ -333,7 +334,8 @@ def ad_hoc_vector(title: str, *, angle: str | None = None) -> dict[str, Any]:
         raise ValueError("--brief needs a non-empty title")
     thesis = (angle or "").strip() or cleaned
     return {
-        "id": "",
+        # A real id: the profile store is keyed on it, and every brief used to share one.
+        "id": "brief_" + re.sub(r"[^a-z0-9]+", "_", cleaned.lower()).strip("_")[:48],
         "title": cleaned[:180],
         "thesis": thesis,
         "vector_type": "story",

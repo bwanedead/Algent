@@ -132,6 +132,7 @@ def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | Non
         with cost.article_scoped(), read_cache.scoped(_read_cache_path(context)):
             out = _run_rail(context, state, config, lead_store=lead_store)
             context.emit(RAIL_READS, read_cache.stats())
+            _keep_reads(context, out)
             return out
 
     graph = StateGraph(RailState)
@@ -148,6 +149,21 @@ def _artifacts_dir(context: AgentRunContext) -> Any:
     except Exception:  # noqa: BLE001
         return None
     return (root / "artifacts") if root else None
+
+
+def _keep_reads(context: AgentRunContext, out: dict[str, Any]) -> None:
+    """Move this story's read pages out of the run folder, which is pruned, to its profile."""
+    rail = (out or {}).get("rail") or {}
+    profile_id = str(rail.get("profile_id") or "")
+    reads = _read_cache_path(context)
+    if not profile_id or profile_id == "prof_unknown" or reads is None:
+        return
+    try:
+        from ..research.store import JsonProfileStore
+
+        JsonProfileStore().save_reads(profile_id, reads)
+    except Exception:  # noqa: BLE001 — keeping the reads is a bonus, never a failure
+        pass
 
 
 def _steers(context: AgentRunContext) -> list[str]:

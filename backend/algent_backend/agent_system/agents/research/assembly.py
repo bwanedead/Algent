@@ -246,8 +246,17 @@ def _thread_id(thread: Any) -> str:
 
 
 def _profile_id(vector: dict[str, Any]) -> str:
-    vid = str(vector.get("id") or "")
-    return "prof_" + (vid.removeprefix("vec_") or "unknown")
+    """The profile's durable key in the profile store — so it must be unique per story.
+
+    A vector with no id used to become ``prof_unknown``, and every one of them saved over the
+    last: the megaprojects profile was overwritten by the Greenland one, and with the run
+    folder pruned the megaprojects research was gone entirely. No id falls back to the title.
+    """
+    vid = str(vector.get("id") or "").removeprefix("vec_")
+    if vid:
+        return "prof_" + vid
+    title = str(vector.get("title") or vector.get("thesis") or "").strip().lower()
+    return _hash(re.sub(r"\s+", " ", title), "prof_") if title else "prof_unknown"
 
 
 def _now() -> str:

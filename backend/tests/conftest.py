@@ -19,6 +19,12 @@ def _isolated_runs_dir(tmp_path, monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _isolated_profile_store(tmp_path, monkeypatch):
+    """The profile store is the newsroom's durable research record — no test may write to it."""
+    monkeypatch.setenv("ALGENT_PROFILE_STORE", str(tmp_path / "profile_store"))
+
+
+@pytest.fixture(autouse=True)
 def _no_live_beat_sweep(monkeypatch):
     """Keep ``ensure_t0`` hermetic.
 

@@ -20,6 +20,7 @@ from langgraph.graph import END, START, StateGraph
 
 from algent_backend.agent_system.agents.newsroom import budget_policy
 from algent_backend.agent_system.agents.research.profile import SignalProfile
+from algent_backend.agent_system.agents.research.store import JsonProfileStore
 from algent_backend.agent_system.foundation import cost
 from algent_backend.agent_system.foundation.models import house_spec
 from algent_backend.agent_system.runs import events as ev
@@ -571,6 +572,13 @@ def _persist_pipeline_artifacts(
     # then dying with the process — the ledger on disk never gained it, and nothing downstream
     # (a confirmation lap, a later story on the same subject) could ever see it.
     context.artifacts.write_json("profile.json", profile_obj.model_dump())
+    # And to the durable store. The run folder is pruned after five newer runs, so a profile that
+    # only lives there dies with it; the store held the gauntlet's revision and never gained the
+    # figures' sourced claims or their confirmation (43 claims stored against 54 in the run).
+    try:
+        JsonProfileStore().save(profile_obj)
+    except Exception:  # noqa: BLE001 — the run copy is already written
+        pass
     # Same home as article.md: the shipped draft, including any gate-C rewrite.
     # draft.json used to stay first-pass (drafter/gauntlet), so social copy and
     # resume hydration could announce the pre-rewrite dek.
