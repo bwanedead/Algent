@@ -6,6 +6,7 @@ import FlagRow from "@/components/FlagRow";
 import Prose from "@/components/Prose";
 import ShareButton from "@/components/ShareButton";
 import { getArticle, getSlugs } from "@/lib/articles";
+import { AI_IMAGE_LABEL, pageHasGeneratedImages } from "@/lib/generated";
 import { SITE_URL } from "@/lib/site";
 
 export function generateStaticParams() {
@@ -42,6 +43,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
   if (!a) notFound();
   const qt = a.quickTake;
   const url = `${SITE_URL}/articles/${a.slug}`;
+  const hasGenerated = pageHasGeneratedImages(a.hero, a.body);
 
   return (
     <article className="article-page">
@@ -61,6 +63,13 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
         {a.status && a.status !== "publishable" ? (
           <p className="article-status" role="status">
             Review status: {a.status.replace(/_/g, " ")}
+          </p>
+        ) : null}
+        {/* The key, once, at the top — so the frame means something before the reader meets it. */}
+        {hasGenerated ? (
+          <p className="ai-key">
+            <span className="ai-key-swatch" aria-hidden="true" />
+            <span>Pictures in this frame are AI-generated, not photographs.</span>
           </p>
         ) : null}
       </header>
@@ -89,14 +98,14 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
       ) : null}
 
       {a.hero ? (
-        <figure className="article-hero">
+        <figure className="article-hero ai-image">
           {/* Hook text is already burned into the generated image by the hero stage —
               do not overlay it again (that double-captions every hooked hero). heroHook
               stays in frontmatter for feeds/index consumers that want the plain string. */}
           <img src={a.hero} alt={a.heroAlt} />
           {/* The label is not optional furniture: a picture beside a news story is a lie
               unless it says what it is. */}
-          <figcaption>{a.heroLabel}</figcaption>
+          <figcaption className="ai-label">{a.heroLabel || AI_IMAGE_LABEL}</figcaption>
         </figure>
       ) : null}
 

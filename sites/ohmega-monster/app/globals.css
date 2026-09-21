@@ -13,6 +13,9 @@
   --rule-strong: #454b46;
   --accent: #f0a33a;
   --accent-dim: #a96b1f;
+  /* The AI-image signature. Its own hue on purpose: amber is the brand and the charts, so a
+     generated picture must never share it and read as one of our real figures. */
+  --ai: #5fd6e8;
   --selection: #5e3d16;
   --line: 24px;
   --mono: "IBM Plex Mono", "Cascadia Mono", "SFMono-Regular", Menlo, Consolas, monospace;
@@ -30,6 +33,7 @@
   --rule-strong: #9b9d96;
   --accent: #99500c;
   --accent-dim: #773d08;
+  --ai: #07707f;
   --selection: #e8bd82;
 }
 
@@ -799,4 +803,46 @@ a { color: inherit; }
   color: var(--muted);
   font-size: 10px;
   line-height: var(--line);
+}
+/* A generated hero takes the AI signature instead (see the block at the end of this file). */
+.article-hero.ai-image img { border: 3px solid var(--ai); }
+.article-hero figcaption.ai-label { font-size: 14px; color: var(--ai); }
+
+/* ── AI-generated images ─────────────────────────────────────────────────────────────────
+   Every generated picture on the page wears the same signature — a solid cyan frame and a
+   bright label under it — and the page opens with a key saying what that frame means, so a
+   reader can tell at a glance which pictures are real and which we had drawn. The label used
+   to be 10px muted grey, which is a disclosure nobody reads. It is meant to be seen. */
+.ai-image { display: block; }
+.ai-image img {
+  border: 3px solid var(--ai);
+  box-sizing: border-box;
+}
+.ai-label {
+  display: block;
+  margin-top: 8px;
+  color: var(--ai);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.03em;
+}
+.ai-key {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0 0;
+  padding: 8px 12px;
+  border: 1px solid var(--ai);
+  color: var(--ai);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.ai-key-swatch {
+  flex: none;
+  width: 22px;
+  height: 16px;
+  border: 3px solid var(--ai);
+  box-sizing: border-box;
 }

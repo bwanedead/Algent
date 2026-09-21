@@ -10,6 +10,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { AI_IMAGE_LABEL, isGeneratedImage } from "@/lib/generated";
+
 export default function ArticleImage({ src, alt }: { src?: string; alt?: string }) {
   const [open, setOpen] = useState(false);
   const close = useCallback(() => setOpen(false), []);
@@ -30,9 +32,12 @@ export default function ArticleImage({ src, alt }: { src?: string; alt?: string 
   }, [open, close]);
 
   if (!src) return null;
+  // Generated pictures wear the page's AI signature: the frame, and a label a reader will
+  // actually see. Spans, not divs — react-markdown puts an image inside a <p>.
+  const generated = isGeneratedImage(src);
 
   return (
-    <>
+    <span className={generated ? "ai-image" : undefined}>
       {/* A button, not a bare img with onClick — this is an interactive control, and it has
           to be reachable by keyboard and announce itself to a screen reader. */}
       <button
@@ -43,6 +48,7 @@ export default function ArticleImage({ src, alt }: { src?: string; alt?: string 
       >
         <img src={src} alt={alt ?? ""} loading="lazy" />
       </button>
+      {generated ? <span className="ai-label">{AI_IMAGE_LABEL}</span> : null}
 
       {open && (
         <div
@@ -59,6 +65,6 @@ export default function ArticleImage({ src, alt }: { src?: string; alt?: string 
           <img src={src} alt={alt ?? ""} onClick={(e) => e.stopPropagation()} />
         </div>
       )}
-    </>
+    </span>
   );
 }
