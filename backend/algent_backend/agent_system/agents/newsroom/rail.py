@@ -438,6 +438,22 @@ def _route_profile_gauntlet(
         return _profile_then_gauntlet(
             context, sub, config, report, vector, pool, existing_gauntlet)
 
+    # An operator pick is an instruction, not a candidate. The router exists to choose among
+    # vectors the newsroom found for itself, and its cooldowns and topic freezes are guards on
+    # THAT choice. Handed a single vector the operator named, it vetoed it: pick 42 (a Djibouti
+    # base) died in routing on a "hormuz" topic freeze, having cost nothing and published
+    # nothing, while the operator waited an hour for an article.
+    picked = portfolio.get("vectors") or []
+    if "picked_from_menu" in portfolio and len(picked) == 1:
+        vector = picked[0]
+        sub.emit(RAIL_STAGE, {"stage": "routing", "skipped": True, "reason": "operator_pick"})
+        report.stage_reached = "routing"
+        report.selected_vector_id = str(vector.get("id", ""))
+        report.selected_vector_title = str(vector.get("title", ""))
+        report.pool_by_channel, report.promoted_from = _channel_provenance(context, pool, vector)
+        return _profile_then_gauntlet(
+            context, sub, config, report, vector, pool, existing_gauntlet)
+
     sub.emit(RAIL_STAGE, {"stage": "routing"})
     route = build_router(sub).invoke({"portfolio": portfolio}, config)
     vector = route.get("selected_vector")

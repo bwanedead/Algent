@@ -491,3 +491,23 @@ def test_a_queued_steer_reaches_research_and_editorial(monkeypatch, tmp_path) ->
     assert "read it as strategy" in seen["profile"]["vector"]["thesis"]
     assert seen["editorial"]["profile"]["operator_steer"] == ["read it as strategy"]
     assert steer.for_run(tmp_path / "run" / "artifacts") == ["read it as strategy"]
+
+
+def test_an_operator_pick_is_never_vetoed_by_routing(monkeypatch) -> None:
+    """Pick 42 died in routing on a topic freeze the operator never asked for. A picked vector
+    skips the ranker entirely — the router's guards are for choices the newsroom makes itself."""
+    monkeypatch.setenv(rl._BACKFEED_ENV, "0")
+    _full(monkeypatch)
+    routed: list = []
+    monkeypatch.setattr(rl, "build_router", lambda ctx: routed.append(1) or _Refuse())
+    monkeypatch.setattr(rl, "find_run_root", lambda _rid: None)
+    picked = {"vectors": [{"id": "v42", "title": "Djibouti"}], "picked_from_menu": [42]}
+
+    r = rl.build_newsroom_rail_graph(_ctx([])).invoke({"portfolio": picked})["rail"]
+    assert routed == []
+    assert r["selected_vector_title"] == "Djibouti" and r["stage_reached"] == "complete"
+
+
+class _Refuse:
+    def invoke(self, _state, _config=None):
+        return {"selected_vector": None}
