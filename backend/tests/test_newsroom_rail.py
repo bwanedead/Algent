@@ -508,6 +508,22 @@ def test_an_operator_pick_is_never_vetoed_by_routing(monkeypatch) -> None:
     assert r["selected_vector_title"] == "Djibouti" and r["stage_reached"] == "complete"
 
 
+def test_an_operator_pick_is_written_down_so_resume_can_find_it(monkeypatch, tmp_path) -> None:
+    """A Maldives run died mid-research and could not be resumed: the pick skipped the router,
+    and with it the selected_vector.json that resume reads to know which story it was."""
+    from algent_backend.agent_system.artifacts import ArtifactWriter
+
+    monkeypatch.setenv(rl._BACKFEED_ENV, "0")
+    _full(monkeypatch)
+    monkeypatch.setattr(rl, "find_run_root", lambda _rid: None)
+    ctx = _ctx([])
+    ctx = __import__("dataclasses").replace(ctx, artifacts=ArtifactWriter(tmp_path, run_id="t"))
+    rl.build_newsroom_rail_graph(ctx).invoke(
+        {"portfolio": {"vectors": [{"id": "v8", "title": "Maldives"}], "picked_from_menu": [8]}})
+    import json
+    assert json.loads((tmp_path / "selected_vector.json").read_text(encoding="utf-8"))["id"] == "v8"
+
+
 class _Refuse:
     def invoke(self, _state, _config=None):
         return {"selected_vector": None}

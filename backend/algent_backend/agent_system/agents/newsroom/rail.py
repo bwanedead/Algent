@@ -462,6 +462,11 @@ def _route_profile_gauntlet(
     picked = portfolio.get("vectors") or []
     if "picked_from_menu" in portfolio and len(picked) == 1:
         vector = picked[0]
+        # Persisted exactly as the router would, because resume finds the story from this file.
+        # The first version skipped it, and a Maldives run that died mid-research could not be
+        # resumed: nothing on disk said which story it was.
+        if context.artifacts is not None:
+            context.artifacts.write_json("selected_vector.json", vector)
         sub.emit(RAIL_STAGE, {"stage": "routing", "skipped": True, "reason": "operator_pick"})
         report.stage_reached = "routing"
         report.selected_vector_id = str(vector.get("id", ""))
