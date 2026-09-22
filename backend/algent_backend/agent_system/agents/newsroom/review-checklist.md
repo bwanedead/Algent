@@ -154,6 +154,17 @@ sentences in the order the evidence arrived rather than the order an idea unfold
   reader by argument rather than by signposts, and treat every heading as needing to earn
   itself. Chopping a piece into labelled blocks is the cheap way to look organised and it
   reads as low-effort assembly.
+- **The doubt refrain.** Uncertainty stated once is honesty; restated every few paragraphs is
+  the piece becoming an argument about its own evidence. Shipped: a Hattusa fragment whose first
+  five paragraphs were four parts "not confirmed, not dated, not published, a ministry claim" and
+  one part story. Check where the reader first meets the THING — if doubt got there first, and
+  keeps coming back, move it into one passage and let the piece say what it knows.
+- **The ninety-word lede.** A first sentence carrying the announcer, their title, the ministry,
+  the date, the study duration and three appositives before the object arrives. The reader decides
+  in about a second; spend it on the thing, not the paperwork.
+- **No landmarks.** Above ~800 words, prose with no headings and uniform paragraphs gives a
+  skimming reader nowhere to stop. Headings should name things ("Forced return, not refuge"),
+  never stages of an argument, and reading only the headings should give the shape of the story.
 - **The wall.** The mirror defect, and just as real. A piece that surveys a set of discrete
   things — eight proposed structures, every bidder, each drug in a class — run together as
   unbroken prose gives the reader nowhere to stand, no way to find the one they care about,

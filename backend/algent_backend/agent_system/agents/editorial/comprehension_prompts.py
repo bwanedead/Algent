@@ -44,6 +44,18 @@ nothing — never squeezing every member into a sentence. Never invent a claim,
 strengthen an assertion, or drop a load-bearing side already in the prose. When the piece
 already lands (`clear`), leave `title`, `standfirst`, and `body` empty.
 
+SKIM TEST (run it before the friend test, on every piece over ~800 words): look only at the
+title, the first sentence, and the headings. Do they give the shape of the story, and is there
+somewhere for a wandering eye to stop every few hundred words? A wall of uniform paragraphs is
+`needs_ramp` even when every sentence is good — the reader we lose to it never gets to the good
+sentences. Fix it by naming what each stretch of the piece is about, not by chopping prose into
+blocks.
+
+FIRST-SENTENCE TEST: does the opening sentence carry the thing itself, in about 25 words, or
+does it carry the announcer, their title, the date and the process? And does the piece meet the
+reader with what it KNOWS before what it cannot confirm? Uncertainty belongs in one honest
+passage, hedged in its own sentence — not as a refrain over every paragraph.
+
 FRIEND TEST (required before `clear`): using only this piece, could you tell a smart friend
 what happened or was found, and why it matters? If the piece is a contest, also who wants what
 and what remains open. Vague residue is `needs_ramp` — write the piece that would pass. Do not

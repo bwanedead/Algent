@@ -133,3 +133,24 @@ def test_disclosure_never_duplicates_an_open_question() -> None:
     out = orchestrator._disclose_unresolved(
         profile, [{"explanation": "Only one source."}, {"explanation": "  "}])
     assert out["open_questions"] == ["[unresolved] Only one source."]
+
+
+def test_a_lane_does_not_pay_research_prices_to_confirm_nothing_is_wrong() -> None:
+    """Enrichment costs ~5 paid searches per finding. It was spending them on `low` findings
+    whose own text said the profile was fine. Only blockers and medium-or-worse are chased."""
+    from algent_backend.agent_system.agents.enrich.base import _select_findings
+    from algent_backend.agent_system.agents.review.contracts import ReviewFinding, ReviewReport
+
+    def f(fid: str, severity: str, blocker: bool = False) -> ReviewFinding:
+        return ReviewFinding(id=fid, type="thin_grounding", lane="primary_source",
+                             severity=severity, maturity_blocker=blocker, target="c1",
+                             explanation="x")
+
+    report = ReviewReport(id="rv", findings=[f("a", "low"), f("b", "high"), f("c", "low")])
+    assert [x.id for x in _select_findings(report, "primary_source")] == ["b"]
+
+    # A lane with nothing worth chasing does not run at all.
+    assert _select_findings(ReviewReport(id="rv", findings=[f("a", "low")]), "primary_source") == []
+    # ...unless a low finding is flagged as blocking maturity, which is a real assignment.
+    assert [x.id for x in _select_findings(
+        ReviewReport(id="rv", findings=[f("a", "low", blocker=True)]), "primary_source")] == ["a"]

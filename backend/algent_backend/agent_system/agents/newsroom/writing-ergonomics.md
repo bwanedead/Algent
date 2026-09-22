@@ -84,6 +84,49 @@ Concepts have prerequisites.
 Move **broad → specific.** That is the direction a reader instinctively expects to travel;
 traveling it keeps their model assembling instead of buckling.
 
+## Doubt has one home — it is not the spine
+
+We keep receipts, we grade claims, and we say what is not established. None of that licenses a
+piece whose SUBJECT becomes its own verification. A Hattusa piece opened with a 90-word sentence
+naming the minister, his ministry and its study timeline, and then spent four of its first five
+paragraphs on what could not be confirmed: no transcription, no named Assyriologist, not
+scientifically dated, "a ministry claim". Every line was true. The reader met an argument about
+evidence where they came for a 3,300-year-old clause saying the homes of returned fugitives must
+not be destroyed — which arrived, compressed, far below.
+
+The rule: **uncertainty is stated once, where it belongs, at the strength it deserves.**
+- A claim that is contested or thin is hedged IN ITS OWN SENTENCE — "the ministry says", "if the
+  reading holds" — and then the piece moves on. It does not come back to apologise.
+- When provenance is genuinely part of the story (an announcement nobody has published the text
+  of), it gets ONE passage that says so properly, placed where a reader has already been given
+  the thing itself. Not a refrain, not a tax on every paragraph.
+- The gist layer already carries an explicit "what is still open" line, and the receipts carry
+  the grading. The body does not have to re-earn them.
+
+A reader who cannot tell what is claimed and what is proven is a failure. So is a reader who
+gets the epistemics and never gets the story. The second failure is the one we keep shipping.
+
+## Landmarks — the reader is skimming, and that is not a defect
+
+Most readers do not read; they scan, stop where something catches, and read from there. A piece
+with no landmarks — no headings, uniform paragraphs, nothing bold — offers nowhere to stop, so
+it reads as a wall and gets abandoned by exactly the casual reader we want. Two live verdicts
+from the operator: "such a wall of text I didn't even want to read it", and "it doesn't have
+skim accessibility really".
+
+So, above roughly a screen and a half of prose (~800 words), a piece carries landmarks:
+- **Headings that name the thing, not the stage of an argument.** "Forced return, not refuge"
+  is a landmark. "Analysis" and "Background" are not. A reader should be able to read only the
+  headings and come away with the shape of the story.
+- **One every few hundred words.** Long enough that each section is real prose (see the survey
+  exception below); short enough that the eye always has a next stop in view.
+- **A strong first sentence after each one.** The paragraph under a heading is a second chance
+  at the opening bargain.
+
+This does not reopen the case for chopping prose into labelled blocks or bullets — that failure
+is catalogued above and it is still a failure. Landmarks are signposts ON continuous prose, not
+a replacement for it.
+
 ## The first two sentences carry the whole bargain
 A reader arriving on a page is deciding whether to spend the next three minutes, and they
 decide almost immediately, from the top of the piece and the shape of the block beneath it.
@@ -114,13 +157,16 @@ longer one that covers more, and never keep a paragraph because the profile held
 
 ## One continuous piece, not a set of labelled blocks
 
+(Read this with "Landmarks" above: the two are one rule. Landmarks say a reader needs places
+to stop; this says those places must be earned by the prose, not manufactured by chopping it.)
+
 Headings are for an article that genuinely has parts. Most do not. Five headed sections
 inside one piece is almost always the research profile's shape showing through — we gathered
 in sections, so we wrote in sections — and it reads as assembly rather than writing. It is
 also the cheap way to look organised: chopping prose into labelled chunks *looks* structured
 while doing none of the work of actually carrying a reader from one idea to the next.
 
-Default to continuous prose that moves by argument. Each paragraph should hand off to the
+Default to continuous prose that moves by argument — signposted, not diced. Each paragraph should hand off to the
 next: the new idea arrives attached to the one before it, so the reader keeps building one
 model instead of starting a fresh one at every header. Use a heading only where a piece truly
 turns — and if you find yourself needing several, that usually means the through-line is

@@ -117,11 +117,27 @@ def policy_scope(channels, budget):
 
 
 def _select_findings(review: ReviewReport | None, lane: str) -> list:
+    """The findings this lane will actually chase.
+
+    Severity is a filter, not just a sort order. Enrichment is the most expensive thing the
+    newsroom does — around 5 paid searches and a couple of minutes per finding, about half the
+    cost of an article — and it was spending that on whatever came top of the list, including
+    `low` findings whose own text said the profile was fine ("frame choice is sound and most
+    reality-revealing"). Paying research prices to confirm that nothing is wrong is the clearest
+    waste we have measured.
+
+    So a lane chases what would change what the reader is told: a maturity blocker, or a finding
+    graded medium or worse. Nothing that grade means the lane does not run at all, which is the
+    correct outcome for a profile that came back strong.
+    """
     if review is None:
         return []
-    lane_findings = [f for f in review.findings if f.lane == lane]
-    lane_findings.sort(key=lambda f: (not f.maturity_blocker, _SEVERITY_RANK.get(f.severity, 2)))
-    return lane_findings[:_MAX_FINDINGS]
+    worth_chasing = [
+        f for f in review.findings
+        if f.lane == lane and (f.maturity_blocker or _SEVERITY_RANK.get(f.severity, 2) <= 2)
+    ]
+    worth_chasing.sort(key=lambda f: (not f.maturity_blocker, _SEVERITY_RANK.get(f.severity, 2)))
+    return worth_chasing[:_MAX_FINDINGS]
 
 
 def _assignment_preview(profile: SignalProfile, findings: list, lane: str) -> dict[str, Any]:

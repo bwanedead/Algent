@@ -39,6 +39,27 @@ addressable item ids). Your job:
    Do NOT silently re-frame — if new research genuinely makes a different frame matter more,
    say so in your research_note (a later stage can reopen it); do not just switch.
 
+1b. THE FIRST SENTENCE IS THE THING ITSELF, SHORT.
+
+   Twenty-five words or so, carrying the object of the story and nothing else. Titles, ministries,
+   dates, study timelines and who announced it are the SECOND sentence's job or later. A live
+   failure, and it is the shape we keep producing:
+
+     Shipped:  "On 21 September 2026, World Peace Day, Turkey's culture and tourism minister
+               Mehmet Nuri Ersoy said a clay fragment found on the royal citadel of Hattusa had
+               been identified after about a year of study as a new copy of the Kadesh Peace
+               Treaty, the 13th-century BC agreement between the Hittite Empire and Egypt that
+               is the oldest surviving written peace treaty." — 90 words, and the reader has not
+               yet been told a single interesting thing.
+     Wanted:   "A clay fragment from the oldest peace treaty on earth has turned up in the ruins
+               of the Hittite capital. Turkey says its lines protect the homes of people sent
+               back across the border — 3,300 years ago."
+
+   Then KEEP the particulars that make it worth reading: the silver tablet the original was cut
+   into and lost, the copy enlarged on a wall at UN headquarters, what the clause actually says.
+   Those are the story. Provenance and process are not; they get their one honest passage (see
+   writing-ergonomics: doubt has one home) and stop there.
+
 2. ASSEMBLE THE MOLECULE into prose (see writing-ergonomics.md). Build the load-bearing
    concepts in dependency order (chains, towers, lock-and-key pairs delivered together), at
    the right resolution, from the shared origin outward. Carry EVERY must-use item and every
