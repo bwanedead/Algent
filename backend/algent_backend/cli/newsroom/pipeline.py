@@ -365,6 +365,32 @@ def _parse_briefs(spec: str) -> list[str]:
     return titles
 
 
+#: The finished menu, where the operator can open it the moment a build ends. A menu that
+#: only exists in a terminal log is a menu nobody sees until someone goes and reads the log:
+#: a 4-minute build once sat unseen for half an hour.
+MENU_FILE = Path("runs_data") / "menu_latest.md"
+
+
+def _write_menu_file(pool: dict[str, Any], portfolio: dict[str, Any], *, vectors: bool) -> Path:
+    """Write the paste-complete menus to ``MENU_FILE`` and return its path. Never raises."""
+    import io as _io
+
+    from algent_backend.data_ingestion.cli.t0 import print_menu
+
+    buf = _io.StringIO()
+    buf.write(f"# Menu — built {datetime.now(UTC).strftime('%Y-%m-%d %H:%M UTC')}\n\n")
+    if vectors:
+        print_vector_menu(portfolio, out=buf)
+        buf.write("\n\n")
+    print_menu(pool, out=buf)
+    try:
+        MENU_FILE.parent.mkdir(parents=True, exist_ok=True)
+        MENU_FILE.write_text(buf.getvalue(), encoding="utf-8")
+    except OSError:
+        pass
+    return MENU_FILE.resolve()
+
+
 def print_vector_menu(portfolio: dict[str, Any], *, out) -> None:
     """Print the portfolio as the numbered menu an operator picks from.
 
@@ -607,6 +633,7 @@ def _run_locked(
         else:
             print_menu(pool, out=sys.stderr)
             print_vector_menu(portfolio, out=sys.stderr)
+        result["menu_file"] = str(_write_menu_file(pool, portfolio, vectors=not args.pool_menu))
 
     if args.to_stage == "menu":
         result["stopped_at"] = "menu"
