@@ -700,3 +700,14 @@ cost: ~$0.8094  ·  mode: normal  ·  soft/hard: $1.00/$3.00
 cost_by_stage: editorial=$0.3359, gauntlet=$0.3781, profile=$0.0954
 x_searches: 1
 run: 0091__3a43c335-a3c2-4a69-bac0-419892476b9c
+
+### PUBLISH maldives-bets-half-a-new-artificial-island-on-a-12bn-20bn-wa-21a033 — 2026-09-22
+status: needs_hedging  ·  draft: grounded_with_caveats  ·  treatment: promoted
+caveats: needs_hedging (1 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.9416  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.2970, gauntlet=$0.4732, profile=$0.1714
+refused: model_turn(reservation_overrun), model_turn(reservation_overrun)
+⚠ walled sources (carried with caveats): src_5981497968
+⚠ figures not matched to evidence: 80%, 30%, 21%, 60%
+run: 0093__318c3589-223f-478b-9a9e-1fabc666a86f
