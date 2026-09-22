@@ -216,7 +216,13 @@ def _load_beats(say: ProgressFn) -> BeatSheet | None:
     sheet = _read_beat_sheet()
     if beat_refresh.refresh_enabled():
         try:
-            sheet = beat_refresh.refresh_sheet(sheet, on_progress=say)
+            # Inside a t0 build the refresh is opportunistic: a menu must never wait on the
+            # DOC limiter. One throttle ends it and the time budget is short — the sheet on
+            # disk is served instead, and the rotation catches up on a later build.
+            sheet = beat_refresh.refresh_sheet(
+                sheet, on_progress=say,
+                budget_s=beat_refresh.IN_T0_BUDGET_S, max_consecutive_throttles=1,
+            )
         except Exception as exc:  # noqa: BLE001 — a source hiccup must not sink t0
             say(f"beats: refresh failed ({str(exc)[:80]}) — serving what's current")
             sheet = beat_refresh.prune_stale(sheet)

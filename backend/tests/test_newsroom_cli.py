@@ -300,3 +300,21 @@ def test_a_comma_in_a_brief_title_does_not_split_it() -> None:
         "What the deal buys, and what it costs"]
     assert _parse_briefs("First story | Second, with a comma") == [
         "First story", "Second, with a comma"]
+
+
+def test_the_menu_writer_neither_searches_nor_deliberates() -> None:
+    # Synthesis web-searched while writing the menu and thought at medium effort across every
+    # turn, re-sending the whole pool each time: 9 to 20+ minutes for a list of titles. The
+    # picked vector is researched by the profile stage; the menu is judged from the pool lines.
+    from algent_backend.agent_system.agents.discovery.synthesis import spec
+
+    assert spec.TOOL_IDS == () and spec.PAID_BUDGET == 0
+    assert spec.DEFAULT_MODEL.reasoning_effort == "low"
+
+
+def test_a_menu_build_never_waits_on_the_doc_limiter() -> None:
+    # Beats spent 245 of a 267-second discovery sleeping on GDELT's rate limiter, for 1 of 8
+    # beats refreshed. Inside a t0 build the refresh is capped and stops at the first throttle.
+    from algent_backend.data_ingestion.newsroom.discovery import beat_refresh
+
+    assert beat_refresh.IN_T0_BUDGET_S <= 60

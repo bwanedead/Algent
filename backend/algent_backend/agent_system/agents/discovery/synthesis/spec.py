@@ -2,10 +2,12 @@
 Discovery synthesis agent definition (t0 -> t1).
 
 Consumes the deterministic discovery pool (t0) and produces the research-vector
-portfolio (t1). One tool — the unified ``web_search`` facade — used cheap-first.
-All search channels are granted (the agent may escalate to paid when needed), but
-restraint is enforced by free-by-default tooling, doctrine, and a hard per-run
-paid-call budget. Rail-free: imports the loop builder, names no LangGraph types.
+portfolio (t1) — the menu. No tools: it judges from the pool lines, in one structured reply.
+It used to web-search while writing the menu (~10 paid calls) and think at medium effort
+across every turn, re-sending the whole pool each time — 9 to 20+ minutes for what is a
+list of forty-odd titles with a line each. The picked vector is researched properly by the
+profile stage; the menu does not need to pre-research every candidate.
+Rail-free: imports the loop builder, names no LangGraph types.
 """
 
 from __future__ import annotations
@@ -15,8 +17,6 @@ from typing import Any
 from algent_backend.agent_system.agents.agent_spec import AgentSpec, TestFixture
 from algent_backend.agent_system.foundation.models import house_spec
 from algent_backend.agent_system.runs.context import AgentRunContext
-from algent_backend.agent_system.tools.sourcing.search import policy
-from algent_backend.agent_system.tools.sourcing.search.research import WEB_SEARCH_TOOL_ID
 
 from .loop import build_synthesis_graph
 from .prompts import SYSTEM_PROMPT
@@ -24,17 +24,15 @@ from .prompts import SYSTEM_PROMPT
 AGENT_ID = "discovery_synthesis"
 RUNTIME = "langgraph"
 FAMILY = "discovery"
-TOOL_IDS = (WEB_SEARCH_TOOL_ID,)
-# Granted all channels (free + paid) so the agent can escalate when free is dry.
-# Restraint is structural: free-default tooling + doctrine + the paid budget below.
-SEARCH_CHANNELS = (policy.KEYWORD, policy.SEMANTIC, policy.READ, policy.RICH, policy.X)
-# Hard ceiling on paid contacts per run — the runaway-cost backstop.
-PAID_BUDGET = 8
+TOOL_IDS: tuple[str, ...] = ()
+SEARCH_CHANNELS: tuple[str, ...] = ()
+PAID_BUDGET = 0
 # Hard ceiling on *estimated* total run spend (model tokens + paid calls). The
 # loop auto-halts when the estimate crosses this. Conservative for live testing.
 COST_CAP_USD = 1.00
 
-DEFAULT_MODEL = house_spec(reasoning_effort="medium", temperature=0.3, streaming=True)
+# Low effort: sorting and naming leads, not analysing them.
+DEFAULT_MODEL = house_spec(reasoning_effort="low", temperature=0.3, streaming=True)
 
 
 def build_graph(context: AgentRunContext) -> Any:

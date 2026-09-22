@@ -46,6 +46,11 @@ REFRESH_HOURS = 6.0
 # — it fetches a little and then locks the caller out for the rest of the cycle. A
 # measured 14-beat slice came back 12/14 throttled. Small and often beats big and once.
 DEFAULT_SLICE = 8
+# Wall-clock the refresh may take INSIDE a t0 build. The standalone sweep keeps its own
+# minutes-long budget; a menu build does not wait for it. Measured before this cap: builds
+# spent minutes sleeping on the DOC limiter and refreshed 0/8 and 2/8 beats — the whole
+# discovery step's worth of waiting for almost nothing.
+IN_T0_BUDGET_S = 45.0
 
 _ENV_ENABLED = "ALGENT_BEATS_REFRESH"      # "0" to disable the auto-refresh
 _ENV_SLICE = "ALGENT_BEATS_SLICE"
