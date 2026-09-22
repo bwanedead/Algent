@@ -634,6 +634,10 @@ def _run_locked(
             print_menu(pool, out=sys.stderr)
             print_vector_menu(portfolio, out=sys.stderr)
         result["menu_file"] = str(_write_menu_file(pool, portfolio, vectors=not args.pool_menu))
+        # A freshly built menu is also the day's X roundup — the first one each day posts.
+        if run_synthesis and portfolio.get("vectors"):
+            from algent_backend.cli.newsroom.briefing import post_daily_roundup
+            result["x_roundup"] = post_daily_roundup(portfolio)
 
     if args.to_stage == "menu":
         result["stopped_at"] = "menu"

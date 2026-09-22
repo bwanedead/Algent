@@ -21,6 +21,7 @@ from algent_backend.agent_system.agents.briefing.compose import (
     collage_subject,
     cluster_portfolio,
     format_briefing,
+    format_daily_roundup,
 )
 from algent_backend.agent_system.agents.editorial.hero_image import check_subject
 from algent_backend.agent_system.agents.newsroom.flags import briefing_enabled
@@ -46,6 +47,11 @@ def add_parser(sub: Any) -> None:
     d.add_argument("--max", type=int, default=1)
     d.add_argument("--dry-run", action="store_true")
     d.set_defaults(handler=run_drain)
+
+    dl = verbs.add_parser("daily", help="post the whole menu as today's preliminary roundup (once a day)")
+    dl.add_argument("--menu", help="portfolio JSON or discovery_synthesis run dir (default: latest)")
+    dl.add_argument("--dry-run", action="store_true")
+    dl.set_defaults(handler=run_daily)
 
     st = verbs.add_parser("status", help="what is queued, and whether the lane is on")
     st.set_defaults(handler=run_status)
@@ -105,6 +111,19 @@ def run_drain(args: Any) -> int:
         sent.append({"id": item.id, "url": url, "pillar": item.pillar})
     _print({"posted": sent, "failed": failed})
     return 0 if not failed else 1
+
+
+def run_daily(args: Any) -> int:
+    from algent_backend.cli.newsroom.pipeline import load_portfolio
+
+    try:
+        portfolio, path = load_portfolio(args.menu)
+    except (FileNotFoundError, ValueError) as exc:
+        _print({"error": str(exc)})
+        return 1
+    out = post_daily_roundup(portfolio, dry_run=args.dry_run)
+    _print({"menu": str(path), **out})
+    return 0 if (out.get("posted") or out.get("dry_run")) else 1
 
 
 def run_status(_args: Any) -> int:
@@ -239,6 +258,42 @@ def _render_collage(item: q.BriefingPost) -> str | None:
     path = folder / f"{item.id}{image.suffix()}"
     path.write_bytes(image.data)
     return str(path)
+
+
+def post_daily_roundup(
+    portfolio: dict[str, Any], *, now: datetime | None = None, dry_run: bool = False,
+) -> dict[str, Any]:
+    """Post the whole menu as one preliminary roundup — at most once per local day.
+
+    Called when a menu build finishes, so it does not depend on the radar supervisor (which is
+    off now that radar runs elsewhere). The first fresh menu of the day posts; later builds that
+    day are skipped. Never raises — a roundup is distribution, not the menu itself.
+    """
+    if not lane_active():
+        return {"posted": False, "reason": _off_note()}
+    when = (now or datetime.now(UTC)).astimezone()
+    today = when.date().isoformat()
+    state = q.read_state()
+    if state.get("daily_roundup_date") == today:
+        return {"posted": False, "reason": f"already posted today ({state.get('daily_roundup_url', '')})"}
+    if not (portfolio.get("vectors") or []):
+        return {"posted": False, "reason": "menu has no vectors"}
+
+    text = format_daily_roundup(portfolio, day=when.strftime("%A, %b %d").replace(" 0", " "))
+    if dry_run:
+        return {"posted": False, "dry_run": True, "text": text}
+    if not write_configured():
+        return {"posted": False, "reason": "X write credentials are not configured"}
+    try:
+        result = post(text)
+    except XWriteError as exc:
+        return {"posted": False, "reason": str(exc)[:200]}
+    except Exception as exc:  # noqa: BLE001 — never let distribution break a menu build
+        return {"posted": False, "reason": f"{type(exc).__name__}: {str(exc)[:160]}"}
+    state.update({"daily_roundup_date": today, "daily_roundup_url": result.url,
+                  "daily_roundup_t0_ref": str(portfolio.get("t0_ref") or "")})
+    q.write_state(state)
+    return {"posted": True, "url": result.url, "chars": len(text)}
 
 
 def _quiet_gap_ok(now: datetime) -> bool:

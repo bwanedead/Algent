@@ -77,6 +77,34 @@ def format_briefing(pillar: str, vectors: list[dict[str, Any]] | tuple[dict[str,
     return "\n".join(lines).rstrip() + "\n"
 
 
+#: The daily roundup's framing. "Preliminary" is load-bearing: every line is a lead the menu
+#: builder judged from headlines alone, with no research behind it. The header says so, and
+#: points at where the ones we do report end up.
+_DAILY_HEADER = "Preliminary news roundup — {day}"
+_DAILY_STANDFIRST = (
+    "Today's leads, before we've verified them. The ones we pick get the full treatment "
+    "at ohmega.monster"
+)
+
+
+def format_daily_roundup(portfolio: dict[str, Any], *, day: str) -> str:
+    """The whole synthesis menu as ONE post: header, one bullet per vector blurb.
+
+    One post a day, not one per topic: the operator's call is that X is where the readers are
+    and the menu itself is worth reading, as a single daily dump rather than a stream of
+    smaller roundups competing with the article posts.
+    """
+    lines = [_DAILY_HEADER.format(day=day), _DAILY_STANDFIRST, ""]
+    for vector in portfolio.get("vectors") or []:
+        if not isinstance(vector, dict):
+            continue
+        blurb = " ".join(str(vector.get("thesis") or vector.get("title") or "").split())
+        if blurb:
+            lines.append(f"• {blurb}")
+            lines.append("")
+    return "\n".join(lines).rstrip() + "\n"
+
+
 def collage_subject(pillar: str) -> str:
     return _COLLAGE_SUBJECT.get((pillar or "").strip(), _COLLAGE_DEFAULT)
 
