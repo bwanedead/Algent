@@ -5,13 +5,15 @@ Publishing to the site and saying so are two different acts, and only the first 
 articles went live and the timeline never mentioned them. This closes that, as part of publishing
 rather than as a thing to remember afterwards.
 
-The post is a framing line plus the link. It does NOT carry the image: the site already emits
-`twitter:card = summary_large_image` with the hero, so X fetches the picture from the page itself
-and an upload here would only duplicate it — and would drift the moment a hero was replaced.
+The post is the framing line and the hero image; the LINK goes in a self-reply underneath. X
+reaches fewer people with posts that send them off-platform, so the post itself stays on X — the
+finding, and a picture — and the article is one tap away for whoever wants it (operator ruling,
+2026-09-22). With the link out of the post there is no link card in it, which is why the hero is
+uploaded as media rather than left for X to fetch from the page.
 
-That fetch happens at post time and is cached. ``git push`` to ``site-live`` is not Vercel-ready —
-announcing in the same breath is how a live article ships with no card. Wait until the URL returns
-the large-image tags *and* the hero bytes before posting.
+The reply still carries a card, which X fetches at post time and caches. ``git push`` to
+``site-live`` is not Vercel-ready, so wait until the URL returns the large-image tags *and* the
+hero bytes before posting.
 
 Never fatal. A distribution failure must not retroactively fail an article the newsroom already
 produced and published honestly, which is the same rule the site publish step follows.
@@ -244,9 +246,11 @@ def _text_of(content: Any) -> str:
     return ""
 
 
-def announce(slug: str, title: str, dek: str = "", gist: str = "") -> dict[str, Any]:
-    """Post the article link. Returns a small report; never raises."""
-    from .x_client import LIMIT, XWriteError, billable_length, post, write_configured
+def announce(
+    slug: str, title: str, dek: str = "", gist: str = "", *, image_path: str | None = None,
+) -> dict[str, Any]:
+    """Post the finding (with the hero), then the article link as a reply. Never raises."""
+    from .x_client import LIMIT, XWriteError, billable_length, post, upload_media, write_configured
 
     if not slug:
         return {"announced": False, "reason": "no slug"}
@@ -257,18 +261,37 @@ def announce(slug: str, title: str, dek: str = "", gist: str = "") -> dict[str, 
 
     url = article_url(slug)
     ready = wait_until_live(url)
-    line = compose(title, dek, gist)
-    text = f"{line}\n\n{url}"
+    text = compose(title, dek, gist)
     if billable_length(text) > LIMIT:
         # Trim to the title rather than truncating mid-sentence: a clipped framing line reads
         # as a broken post, while the title is a complete thought by construction.
-        text = f"{title}\n\n{url}"
+        text = title
         if billable_length(text) > LIMIT:
             return {"announced": False, "reason": "title too long for a post", "card_ready": ready}
 
+    media_ids: list[str] = []
+    if image_path and Path(image_path).is_file():
+        try:
+            media_ids = [upload_media(image_path)]
+        except Exception:  # noqa: BLE001 — a post without its picture beats no post
+            media_ids = []
     try:
-        result = post(text)
+        result = post(text, media_ids=media_ids or None)
     except XWriteError as exc:
         return {"announced": False, "reason": str(exc)[:200], "card_ready": ready}
+
+    # The link, one tap down. A reply that fails leaves the finding up and says so — the post
+    # is already public, and re-posting it to retry the link would duplicate it.
+    reply_url, reply_note = "", ""
+    parent = str(getattr(result, "id", "") or "")
+    if parent:
+        try:
+            reply_url = post(url, reply_to=parent).url
+        except Exception as exc:  # noqa: BLE001
+            reply_note = f"link reply failed: {str(exc)[:160]}"
+    else:
+        reply_note = "no post id to reply to; link not posted"
     _record(slug, url, result.url)
-    return {"announced": True, "post_url": result.url, "text": text, "card_ready": ready}
+    return {"announced": True, "post_url": result.url, "text": text, "card_ready": ready,
+            "link_reply_url": reply_url, "image": bool(media_ids),
+            **({"note": reply_note} if reply_note else {})}

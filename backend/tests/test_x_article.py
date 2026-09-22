@@ -38,7 +38,6 @@ def test_an_article_is_never_announced_twice(monkeypatch) -> None:
 
     first = x_article.announce("a-slug", "A title", dek="A dek")
     assert first["announced"] is True and len(sent) == 1
-    assert "https://www.ohmega.monster/articles/a-slug" in sent[0]
 
     second = x_article.announce("a-slug", "A title", dek="A dek")
     assert second["announced"] is False and second["reason"] == "already announced"
@@ -285,3 +284,37 @@ def test_a_reply_in_content_blocks_is_read_not_discarded() -> None:
     assert _text_of("plain string") == "plain string"
     # Reasoning is never the post.
     assert _text_of([{"type": "reasoning", "text": "thinking..."}]) == ""
+
+
+def test_the_link_goes_in_a_reply_and_the_hero_rides_on_the_post(monkeypatch, tmp_path) -> None:
+    """X reaches fewer people with posts that link away (operator ruling). The finding and the
+    hero go up as the post; the article link is a reply one tap down."""
+    calls: list[dict] = []
+
+    class _Posted:
+        def __init__(self, n: int) -> None:
+            self.id, self.url = str(n), f"https://x.test/{n}"
+
+    import algent_backend.publishing.x_client as xc
+
+    monkeypatch.setattr(xc, "write_configured", lambda: True)
+    monkeypatch.setattr(xc, "upload_media", lambda path: "media-1")
+    monkeypatch.setattr(xc, "post", lambda text, **k: (
+        calls.append({"text": text, **k}), _Posted(len(calls)))[1])
+    monkeypatch.setattr(x_article, "compose", lambda *a, **k: "The finding.")
+    hero = tmp_path / "hero.jpg"
+    hero.write_bytes(b"jpeg")
+
+    out = x_article.announce("s9", "T", image_path=str(hero))
+    main, reply = calls
+    assert main["text"] == "The finding." and "ohmega.monster" not in main["text"]
+    assert main["media_ids"] == ["media-1"]
+    assert reply["text"] == "https://www.ohmega.monster/articles/s9" and reply["reply_to"] == "1"
+    assert out["link_reply_url"] == "https://x.test/2"
+
+
+def test_the_roundup_carries_no_link_either() -> None:
+    from algent_backend.agent_system.agents.briefing.compose import format_daily_roundup
+
+    text = format_daily_roundup({"vectors": [{"thesis": "A lead."}]}, day="Tuesday")
+    assert "ohmega.monster" not in text and "http" not in text

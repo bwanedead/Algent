@@ -37,6 +37,7 @@ quality status visible for the feedback loop.
 from __future__ import annotations
 
 import dataclasses
+from pathlib import Path
 import os
 import sys
 import time
@@ -666,8 +667,12 @@ def _publish(context: AgentRunContext, report: NewsroomRailReport) -> None:
         # is part of publishing, not a thing to remember afterwards.
         if report.published:
             dek, gist = copy_from_run(run_dir)
+            # The hero rides on the post itself now that the link lives in a reply.
+            hero = next((str(p) for p in sorted((Path(run_dir) / "artifacts").glob("hero.*"))
+                         if p.suffix.lower() in (".jpg", ".jpeg", ".png", ".webp")), None)
             announced = announce_article(
-                report.published_slug, report.article_title, dek=dek, gist=gist)
+                report.published_slug, report.article_title, dek=dek, gist=gist,
+                image_path=hero)
             context.emit(RAIL_ANNOUNCED, announced)
             # Charts are a second beat: each figure is its own post, article URL as a reply.
             # Independent of the hero announce — resume must still ship figures if the card
