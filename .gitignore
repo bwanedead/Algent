@@ -275,3 +275,6 @@ sites/ohmega-monster/public/analytics/
 
 # Source artwork drops — originals live here; the site ships derived, committed assets.
 asset-dump/
+
+# Git Bash crash dumps
+*.stackdump
