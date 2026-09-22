@@ -566,3 +566,14 @@ def test_the_free_check_confirms_numbers_found_on_the_cited_page(monkeypatch) ->
     checks = ac._precheck(claims, {"s1": "https://lloyds.example/transits"})
     assert [c.claim_id for c in checks] == ["c1"]             # c2's number is not on the page
     assert checks[0].verdict == "confirmed" and checks[0].checked_against
+
+
+def test_a_maps_coordinates_are_not_claims() -> None:
+    # Maldives: each vertex of a reef outline became a "claim", and the confirmation pass spent
+    # its paid searches checking them one at a time.
+    req = AnalyticsRequest(id="m", kind="image", title="Ras Male footprint", may_source=True)
+    data = "name,lat,lon\nvertex 1,4.10,73.49\nvertex 2,4.11,73.50\n"
+    assert aw._sourced_claims(data, "Source: OSM https://osm.org/way/1", req) == []
+    table = "year,transits\n2025,354\n2026,269\n"
+    assert aw._sourced_claims(table, "Source: Lloyd's https://ll.example", req.model_copy(
+        update={"kind": "chart"}))

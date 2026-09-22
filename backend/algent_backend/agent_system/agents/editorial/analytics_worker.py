@@ -620,6 +620,12 @@ def _sourced_claims(data_text: str, caption: str, request: AnalyticsRequest) -> 
     if len(rows) < 2:
         return []
     header = [h.strip() for h in rows[0].split(",")]
+    # A map's table is geometry: outline vertices and point coordinates. Those are drawing
+    # instructions, not claims about the world — the Maldives map turned each vertex of a reef
+    # outline into a "claim", and the confirmation pass spent its searches checking them one by
+    # one. The facts a map conveys (what is where, how far) are in its labels and the prose.
+    if request.visual_class == "locator_map" or _is_geometry(header):
+        return []
     subject = (request.title or request.question or "figure data").strip()
 
     out: list[dict] = []
@@ -631,6 +637,15 @@ def _sourced_claims(data_text: str, caption: str, request: AnalyticsRequest) -> 
         if pairs:
             out.append({"text": f"{subject}: {pairs}", "url": url})
     return out
+
+
+
+
+
+def _is_geometry(header: list[str]) -> bool:
+    """A table whose numeric columns are coordinates is a shape to draw, not data to claim."""
+    cols = {h.strip().lower() for h in header}
+    return bool({"lat", "latitude"} & cols and {"lon", "lng", "longitude"} & cols)
 
 
 def _visual_unverified_figures(data_text: str, cited_claims: list[Claim], sources_by_id: dict) -> list[str]:
