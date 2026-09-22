@@ -711,3 +711,13 @@ refused: model_turn(reservation_overrun), model_turn(reservation_overrun)
 ⚠ walled sources (carried with caveats): src_5981497968
 ⚠ figures not matched to evidence: 80%, 30%, 21%, 60%
 run: 0093__318c3589-223f-478b-9a9e-1fabc666a86f
+
+### PUBLISH turkey-reports-new-fragment-of-world-s-oldest-peace-treaty-a-f45689 — 2026-09-22
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.9669  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.2364, gauntlet=$0.6134, profile=$0.1171
+refused: model_turn(reservation_overrun)
+x_searches: 1
+run: 0094__c73ee204-4072-4868-9348-5cfbf256eef0
