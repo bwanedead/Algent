@@ -67,6 +67,7 @@ from ..gauntlet.spec import build_graph as build_profile_gauntlet
 from ..research.spec import build_graph as build_profile
 from ..routing.spec import build_graph as build_router
 from . import steer
+from .watchdog import Watchdog
 from .rail_contracts import NewsroomRailReport
 
 RAIL_COMPLETED = "newsroom_rail.completed"
@@ -140,10 +141,17 @@ def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | Non
             context.emit(RAIL_REFUSED, {"reason": str(exc)})
             return {"rail": {"stage_reached": "refused", "note": str(exc)}}
         hard = None if envelope_cap is None else min(cost.hard_cap_usd(), envelope_cap)
+        # A run that stops making progress ends itself rather than holding the lock all night.
+        art = _artifacts_dir(context)
+        dog = Watchdog(record=(art.parent / "audit" / "stalled.txt") if art is not None else None)
+        dog.start()
+        watched = dataclasses.replace(
+            context, emit=lambda et, p=None: (dog.touch(), context.emit(et, p))[1])
         with cost.article_scoped(hard), read_cache.scoped(_read_cache_path(context)):
             try:
-                out = _run_rail(context, state, config, lead_store=lead_store)
+                out = _run_rail(watched, state, config, lead_store=lead_store)
             finally:
+                dog.stop()
                 if envelope_cap is not None:
                     spend_budget.settle(context.run_id, cost.article_spent_usd())
             context.emit(RAIL_READS, read_cache.stats())
