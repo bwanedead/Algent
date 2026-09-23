@@ -185,15 +185,20 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
         analytics_plan = _analytics_plan_stage(
             context, config, state, profile, treatment)
 
+        # The figures draw WHILE the prose is written. They need only the plan and the profile,
+        # both final here, and they were waiting on thirteen minutes of drafting, cutting and
+        # review they do not read — then taking ten more. The worker spends nothing metered (the
+        # grok CLI is a subprocess), so the copied context only carries the budget mode it reads.
+        charts = _start_background(
+            _analytics_fulfill_stage, context, config, state, analytics_plan, profile)
+
         draft, enriched_profile, draft_report, quality, hero, surface_issues = (
             _drafting_stage(context, config, state, profile, treatment, analytics_plan)
         )
+        produced_analytics = charts.result()
         early = _hard_stop_without_draft(context, profile, treatment, draft)
         if early is not None:
             return early
-
-        produced_analytics = _analytics_fulfill_stage(
-            context, config, state, analytics_plan, enriched_profile)
         # Data a figure went and sourced is evidence the profile did not have. Fold it into
         # the ledger rather than letting it die with the scratch folder — analytics is a
         # research act, and the numbers under a published chart should be as inspectable as
@@ -238,6 +243,17 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
     graph.add_edge(START, "pipeline")
     graph.add_edge("pipeline", END)
     return graph.compile()
+
+
+def _start_background(fn: Any, *args: Any) -> Any:
+    """Run ``fn(*args)`` on its own thread in a copy of this context; returns its Future."""
+    import contextvars
+    from concurrent.futures import ThreadPoolExecutor
+
+    pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="editorial-bg")
+    future = pool.submit(contextvars.copy_context().run, fn, *args)
+    pool.shutdown(wait=False)   # the future still completes; the pool just takes no more work
+    return future
 
 
 def _hard_stop_without_draft(

@@ -134,8 +134,9 @@ def test_pipeline_applies_headline_after_repairs(monkeypatch) -> None:
     pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile()})
     assert order.index("analytics_plan") < order.index("draft")
     assert order.index("caveat") < order.index("headline")
-    assert order.index("comprehension") < order.index("headline")
-    assert order.index("headline") < order.index("analytics_worker")
+    assert order.index("comprehension") < order.index("caveat")   # honesty check reads last
+    # Figures draw alongside the prose: started once the plan exists, not after the headline.
+    assert order.index("analytics_plan") < order.index("analytics_worker")
 
 
 def test_surface_repair_reruns_headline_once(monkeypatch) -> None:
