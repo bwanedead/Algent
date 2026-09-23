@@ -1,0 +1,579 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1035.595724pt" height="594.68pt" viewBox="0 0 1035.595724 594.68" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-22T23:59:54.770025</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.3, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 594.68 
+L 1035.595724 594.68 
+L 1035.595724 0 
+L 0 0 
+z
+" style="fill: #0c0f0e"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 79.984375 326.675191 
+L 897.328375 326.675191 
+L 897.328375 98.64 
+L 79.984375 98.64 
+z
+" style="fill: #111513"/>
+   </g>
+   <g id="patch_3">
+    <path d="M -339045.368163 316.309955 
+L 263.281034 316.309955 
+L 263.281034 285.685394 
+L -339045.368163 285.685394 
+z
+" clip-path="url(#pfaf91a77a9)" style="fill: #f0a33a"/>
+   </g>
+   <g id="patch_4">
+    <path d="M -339045.368163 257.416569 
+L 351.450246 257.416569 
+L 351.450246 226.792008 
+L -339045.368163 226.792008 
+z
+" clip-path="url(#pfaf91a77a9)" style="fill: #5eb8c9"/>
+   </g>
+   <g id="patch_5">
+    <path d="M -339045.368163 198.523183 
+L 590.862623 198.523183 
+L 590.862623 167.898622 
+L -339045.368163 167.898622 
+z
+" clip-path="url(#pfaf91a77a9)" style="fill: #f0a33a"/>
+   </g>
+   <g id="patch_6">
+    <path d="M -339045.368163 139.629797 
+L 749.341875 139.629797 
+L 749.341875 109.005236 
+L -339045.368163 109.005236 
+z
+" clip-path="url(#pfaf91a77a9)" style="fill: #5eb8c9"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 749.341875 139.629797 
+L 834.876368 139.629797 
+L 834.876368 109.005236 
+L 749.341875 109.005236 
+z
+" clip-path="url(#pfaf91a77a9)" style="fill: #c98bb8; opacity: 0.75"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <defs>
+       <path id="m7d10e2fdf2" d="M 0 0 
+L 0 3.5 
+" style="stroke: #858981; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m7d10e2fdf2" x="79.984375" y="326.675191" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <!-- $\mathdefault{10^{2}}$ -->
+      <g style="fill: #858981" transform="translate(72.384375 340.575191)">
+       <text>
+        <tspan x="0" y="-0.0375" style="font-size: 10px; font-family: 'Consolas'; fill: #858981">1</tspan>
+        <tspan x="5.498047" y="-0.0375" style="font-size: 10px; font-family: 'Consolas'; fill: #858981">0</tspan>
+        <tspan x="11.081953" y="-3.471875" style="font-size: 7px; font-family: 'Consolas'; fill: #858981">2</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2">
+      <g>
+       <use xlink:href="#m7d10e2fdf2" x="418.432831" y="326.675191" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <!-- $\mathdefault{10^{3}}$ -->
+      <g style="fill: #858981" transform="translate(410.832831 340.575191)">
+       <text>
+        <tspan x="0" y="-0.0375" style="font-size: 10px; font-family: 'Consolas'; fill: #858981">1</tspan>
+        <tspan x="5.498047" y="-0.0375" style="font-size: 10px; font-family: 'Consolas'; fill: #858981">0</tspan>
+        <tspan x="11.081953" y="-3.471875" style="font-size: 7px; font-family: 'Consolas'; fill: #858981">3</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3">
+      <g>
+       <use xlink:href="#m7d10e2fdf2" x="756.881286" y="326.675191" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <!-- $\mathdefault{10^{4}}$ -->
+      <g style="fill: #858981" transform="translate(749.281286 340.575191)">
+       <text>
+        <tspan x="0" y="-0.103125" style="font-size: 10px; font-family: 'Consolas'; fill: #858981">1</tspan>
+        <tspan x="5.498047" y="-0.103125" style="font-size: 10px; font-family: 'Consolas'; fill: #858981">0</tspan>
+        <tspan x="11.081953" y="-3.5375" style="font-size: 7px; font-family: 'Consolas'; fill: #858981">4</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4">
+      <path d="M 181.867512 326.675191 
+L 181.867512 98.64 
+" clip-path="url(#pfaf91a77a9)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_5">
+      <defs>
+       <path id="m9fc8b94332" d="M 0 0 
+L 0 2 
+" style="stroke: #858981; stroke-width: 0.6"/>
+      </defs>
+      <g>
+       <use xlink:href="#m9fc8b94332" x="181.867512" y="326.675191" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_6">
+      <path d="M 241.465327 326.675191 
+L 241.465327 98.64 
+" clip-path="url(#pfaf91a77a9)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_7">
+      <g>
+       <use xlink:href="#m9fc8b94332" x="241.465327" y="326.675191" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_8">
+      <path d="M 283.750649 326.675191 
+L 283.750649 98.64 
+" clip-path="url(#pfaf91a77a9)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_9">
+      <g>
+       <use xlink:href="#m9fc8b94332" x="283.750649" y="326.675191" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_7">
+     <g id="line2d_10">
+      <path d="M 316.549693 326.675191 
+L 316.549693 98.64 
+" clip-path="url(#pfaf91a77a9)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_11">
+      <g>
+       <use xlink:href="#m9fc8b94332" x="316.549693" y="326.675191" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_8">
+     <g id="line2d_12">
+      <path d="M 343.348464 326.675191 
+L 343.348464 98.64 
+" clip-path="url(#pfaf91a77a9)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_13">
+      <g>
+       <use xlink:href="#m9fc8b94332" x="343.348464" y="326.675191" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_9">
+     <g id="line2d_14">
+      <path d="M 366.006501 326.675191 
+L 366.006501 98.64 
+" clip-path="url(#pfaf91a77a9)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_15">
+      <g>
+       <use xlink:href="#m9fc8b94332" x="366.006501" y="326.675191" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_10">
+     <g id="line2d_16">
+      <path d="M 385.633786 326.675191 
+L 385.633786 98.64 
+" clip-path="url(#pfaf91a77a9)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_17">
+      <g>
+       <use xlink:href="#m9fc8b94332" x="385.633786" y="326.675191" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_11">
+     <g id="line2d_18">
+      <path d="M 402.946279 326.675191 
+L 402.946279 98.64 
+" clip-path="url(#pfaf91a77a9)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_19">
+      <g>
+       <use xlink:href="#m9fc8b94332" x="402.946279" y="326.675191" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_12">
+     <g id="line2d_20">
+      <path d="M 520.315968 326.675191 
+L 520.315968 98.64 
+" clip-path="url(#pfaf91a77a9)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_21">
+      <g>
+       <use xlink:href="#m9fc8b94332" x="520.315968" y="326.675191" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_13">
+     <g id="line2d_22">
+      <path d="M 579.913782 326.675191 
+L 579.913782 98.64 
+" clip-path="url(#pfaf91a77a9)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_23">
+      <g>
+       <use xlink:href="#m9fc8b94332" x="579.913782" y="326.675191" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_14">
+     <g id="line2d_24">
+      <path d="M 622.199105 326.675191 
+L 622.199105 98.64 
+" clip-path="url(#pfaf91a77a9)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_25">
+      <g>
+       <use xlink:href="#m9fc8b94332" x="622.199105" y="326.675191" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_15">
+     <g id="line2d_26">
+      <path d="M 654.998149 326.675191 
+L 654.998149 98.64 
+" clip-path="url(#pfaf91a77a9)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_27">
+      <g>
+       <use xlink:href="#m9fc8b94332" x="654.998149" y="326.675191" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_16">
+     <g id="line2d_28">
+      <path d="M 681.79692 326.675191 
+L 681.79692 98.64 
+" clip-path="url(#pfaf91a77a9)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_29">
+      <g>
+       <use xlink:href="#m9fc8b94332" x="681.79692" y="326.675191" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_17">
+     <g id="line2d_30">
+      <path d="M 704.454957 326.675191 
+L 704.454957 98.64 
+" clip-path="url(#pfaf91a77a9)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_31">
+      <g>
+       <use xlink:href="#m9fc8b94332" x="704.454957" y="326.675191" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_18">
+     <g id="line2d_32">
+      <path d="M 724.082242 326.675191 
+L 724.082242 98.64 
+" clip-path="url(#pfaf91a77a9)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_33">
+      <g>
+       <use xlink:href="#m9fc8b94332" x="724.082242" y="326.675191" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_19">
+     <g id="line2d_34">
+      <path d="M 741.394734 326.675191 
+L 741.394734 98.64 
+" clip-path="url(#pfaf91a77a9)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_35">
+      <g>
+       <use xlink:href="#m9fc8b94332" x="741.394734" y="326.675191" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_20">
+     <g id="line2d_36">
+      <path d="M 858.764423 326.675191 
+L 858.764423 98.64 
+" clip-path="url(#pfaf91a77a9)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_37">
+      <g>
+       <use xlink:href="#m9fc8b94332" x="858.764423" y="326.675191" style="fill: #858981; stroke: #858981; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="text_4">
+     <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="488.656375" y="353.847066" transform="rotate(-0 488.656375 353.847066)">Satellite count (log scale; actual, planned, or approved)</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_38">
+      <defs>
+       <path id="m187005c193" d="M 0 0 
+L -3.5 0 
+" style="stroke: #858981; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m187005c193" x="79.984375" y="300.997674" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="72.984375" y="304.447674" transform="rotate(-0 72.984375 304.447674)">IRIS²</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_39">
+      <g>
+       <use xlink:href="#m187005c193" x="79.984375" y="242.104288" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="72.984375" y="245.554288" transform="rotate(-0 72.984375 245.554288)">OneWeb</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_40">
+      <g>
+       <use xlink:href="#m187005c193" x="79.984375" y="183.210902" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="72.984375" y="186.660902" transform="rotate(-0 72.984375 186.660902)">Amazon Leo</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_41">
+      <g>
+       <use xlink:href="#m187005c193" x="79.984375" y="124.317516" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="72.984375" y="127.767516" transform="rotate(-0 72.984375 127.767516)">Starlink</text>
+     </g>
+    </g>
+   </g>
+   <g id="patch_8">
+    <path d="M 79.984375 326.675191 
+L 79.984375 98.64 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 79.984375 326.675191 
+L 897.328375 326.675191 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4" x="274.593252" y="303.446893" transform="rotate(-0 274.593252 303.446893)">348 planned</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4" x="362.762464" y="244.553507" transform="rotate(-0 362.762464 244.553507)">634 actual</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4" x="602.174841" y="185.660121" transform="rotate(-0 602.174841 185.660121)">3,232 planned</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4" x="760.654093" y="126.766735" transform="rotate(-0 760.654093 126.766735)">9,500 actual</text>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #c98bb8" x="841.304871" y="126.521813" transform="rotate(-0 841.304871 126.521813)">+7,500 approved</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="79.984375" y="376.842933" transform="rotate(-0 79.984375 376.842933)">IRIS² planned total: 330 LEO + 18 MEO; +66 LEO added in Aug 2026</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="79.984375" y="86.64" transform="rotate(-0 79.984375 86.64)">SATELLITE SCALE</text>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_10">
+    <path d="M 79.984375 513.36 
+L 897.328375 513.36 
+L 897.328375 406.943578 
+L 79.984375 406.943578 
+z
+" style="fill: #111513"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 117.136375 513.36 
+L 380.79573 513.36 
+L 380.79573 454.270881 
+L 117.136375 454.270881 
+z
+" clip-path="url(#p8c64d4471b)" style="fill: #5eb8c9"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 596.51702 513.36 
+L 860.176375 513.36 
+L 860.176375 425.986516 
+L 596.51702 425.986516 
+z
+" clip-path="url(#p8c64d4471b)" style="fill: #f0a33a"/>
+   </g>
+   <g id="matplotlib.axis_3">
+    <g id="xtick_21">
+     <g id="line2d_42">
+      <g>
+       <use xlink:href="#m7d10e2fdf2" x="248.966052" y="513.36" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_16">
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(226.972302 527.26)">Dec 2024</text>
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(210.47699 537.541562)">290 satellites</text>
+     </g>
+    </g>
+    <g id="xtick_22">
+     <g id="line2d_43">
+      <g>
+       <use xlink:href="#m7d10e2fdf2" x="728.346698" y="513.36" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_17">
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(706.352948 527.21)">Aug 2026</text>
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(689.857635 537.541562)">348 satellites</text>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_4">
+    <g id="ytick_5">
+     <g id="line2d_44">
+      <g>
+       <use xlink:href="#m187005c193" x="79.984375" y="513.36" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_18">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="72.984375" y="516.81" transform="rotate(-0 72.984375 516.81)">0</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_45">
+      <g>
+       <use xlink:href="#m187005c193" x="79.984375" y="485.355678" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_19">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="72.984375" y="488.805678" transform="rotate(-0 72.984375 488.805678)">5</text>
+     </g>
+    </g>
+    <g id="ytick_7">
+     <g id="line2d_46">
+      <g>
+       <use xlink:href="#m187005c193" x="79.984375" y="457.351357" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_20">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="72.984375" y="460.801357" transform="rotate(-0 72.984375 460.801357)">10</text>
+     </g>
+    </g>
+    <g id="ytick_8">
+     <g id="line2d_47">
+      <g>
+       <use xlink:href="#m187005c193" x="79.984375" y="429.347035" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_21">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="72.984375" y="432.797035" transform="rotate(-0 72.984375 432.797035)">15</text>
+     </g>
+    </g>
+    <g id="text_22">
+     <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="55.935937" y="460.151789" transform="rotate(-90 55.935937 460.151789)">IRIS² investment (€bn)</text>
+    </g>
+   </g>
+   <g id="patch_13">
+    <path d="M 79.984375 513.36 
+L 79.984375 406.943578 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 79.984375 513.36 
+L 897.328375 513.36 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_23">
+    <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #f0ede4" x="248.966052" y="449.74893" transform="rotate(-0 248.966052 449.74893)">€10.55bn</text>
+   </g>
+   <g id="text_24">
+    <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #f0ede4" x="728.346698" y="421.464565" transform="rotate(-0 728.346698 421.464565)">&gt;€15.6bn</text>
+   </g>
+   <g id="text_25">
+    <text style="font-size: 9px; font-family: 'Consolas'; fill: #5eb8c9" transform="translate(913.675255 428.94323)">+60% EU secure</text>
+    <text style="font-size: 9px; font-family: 'Consolas'; fill: #5eb8c9" transform="translate(913.675255 438.259074)">governmental capacity</text>
+   </g>
+   <g id="text_26">
+    <text style="font-size: 9px; font-family: 'Consolas'; fill: #c98bb8" transform="translate(913.675255 473.645862)">+54% global secure</text>
+    <text style="font-size: 9px; font-family: 'Consolas'; fill: #c98bb8" transform="translate(913.675255 483.006705)">governmental capacity</text>
+   </g>
+   <g id="text_27">
+    <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="79.984375" y="394.943578" transform="rotate(-0 79.984375 394.943578)">COST ROSE AS THE SECURE CAPABILITY GREW</text>
+   </g>
+  </g>
+  <g id="text_28">
+   <text style="font-weight: 700; font-size: 18px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4" x="79.984375" y="30.78" transform="rotate(-0 79.984375 30.78)">348 vs 9,500: IRIS² is for sovereign resilience, not to outnumber Starlink</text>
+  </g>
+  <g id="text_29">
+   <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: start; fill: #d3d0c8" x="79.984375" y="72.72" transform="rotate(-0 79.984375 72.72)">Europe is buying secure, multi-orbit government connectivity at a different scale from Starlink’s mass constellation.</text>
+  </g>
+  <g id="text_30">
+   <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="79.984375" y="550.8" transform="rotate(-0 79.984375 550.8)">As of Aug 2026. OneWeb is a Sep 2023 reference; Amazon Leo is a reported planned target. €15.6bn is reported as a floor.</text>
+  </g>
+  <g id="AnnotationBbox_1">
+   <image xlink:href="data:image/png;base64,
+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" id="imageefacc70a4d" transform="scale(1 -1) translate(0 -44.228571)" x="803.778062" y="-543.651429" width="42.171429" height="44.228571"/>
+   <g id="text_31">
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4; opacity: 0.45" x="849.8015" y="566.715703" transform="rotate(-0 849.8015 566.715703)">OHMEGA MONSTER</text>
+   </g>
+   <g id="text_32">
+    <text style="font-size: 7px; font-family: 'Consolas'; text-anchor: start; fill: #858981; opacity: 0.4" x="849.8015" y="572.809531" transform="rotate(-0 849.8015 572.809531)">ohmega.monster</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pfaf91a77a9">
+   <rect x="79.984375" y="98.64" width="817.344" height="228.035191"/>
+  </clipPath>
+  <clipPath id="p8c64d4471b">
+   <rect x="79.984375" y="406.943578" width="817.344" height="106.416422"/>
+  </clipPath>
+ </defs>
+</svg>

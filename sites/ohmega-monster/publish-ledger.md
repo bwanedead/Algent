@@ -721,3 +721,12 @@ cost_by_stage: editorial=$0.2364, gauntlet=$0.6134, profile=$0.1171
 refused: model_turn(reservation_overrun)
 x_searches: 1
 run: 0094__c73ee204-4072-4868-9348-5cfbf256eef0
+
+### PUBLISH europe-can-still-reach-jupiter-alone-launching-its-own-secur-ab410a — 2026-09-23
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.7225  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.2148, gauntlet=$0.3449, profile=$0.1628
+refused: model_turn(reservation_overrun)
+run: 0095__b67b93f3-bb0e-430d-8075-3025e6918a33
