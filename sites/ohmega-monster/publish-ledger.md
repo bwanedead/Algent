@@ -762,3 +762,14 @@ refused: figure_image(slim_finish), figure_image(slim_finish)
 disposition: needs_verification
 ⚠ walled sources (carried with caveats): src_2c9c10cec8
 run: 0098__4137b1f9-f843-4a4b-9177-d98bc7ee333d
+
+### PUBLISH china-s-catl-begins-trials-at-hungary-s-huge-ev-battery-giga-f98533 — 2026-09-23
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.7524  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.0579, gauntlet=$0.5454, profile=$0.1491
+refused: model_turn(reservation_overrun)
+x_searches: 1
+⚠ figures not matched to evidence: 34%
+run: 0099__ea8381da-0113-4e2d-9db2-85e978bb1e51
