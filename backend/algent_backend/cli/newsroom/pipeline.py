@@ -150,6 +150,23 @@ def _latest_pool() -> tuple[dict[str, Any], Path]:
     return json.loads(files[-1].read_text(encoding="utf-8")), files[-1]
 
 
+def _latest_synthesis_usd() -> float:
+    """What the newest synthesis run reported spending (0 when it did not say)."""
+    from algent_backend.agent_system.runs.control_plane.layout import runs_data_root
+
+    runs = sorted(Path(runs_data_root()).glob("discovery_synthesis/*/audit/events.jsonl"),
+                  key=lambda p: p.stat().st_mtime)
+    if not runs:
+        return 0.0
+    for line in reversed(runs[-1].read_text(encoding="utf-8").splitlines()):
+        if '"synthesis.completed"' in line:
+            try:
+                return float(json.loads(line)["payload"].get("estimated_usd") or 0.0)
+            except (ValueError, KeyError, json.JSONDecodeError):
+                return 0.0
+    return 0.0
+
+
 def _latest_portfolio() -> tuple[dict[str, Any], Path]:
     """The most recent t1 portfolio — the menu the operator was last shown."""
     from algent_backend.agent_system.runs.control_plane.layout import runs_data_root
@@ -602,7 +619,17 @@ def _run_locked(
     )
     if run_synthesis:
         progress("[synthesis] turning the pool into research vectors…")
+        # Menu builds draw on the spend envelope too (dollars only, not a run slot), so an
+        # exhausted envelope cannot keep building menus unattended.
+        from algent_backend.agent_system.foundation import spend_budget
+        menu_claim = f"menu:{datetime.now(UTC).strftime('%Y%m%dT%H%M%S')}"
+        try:
+            spend_budget.claim(menu_claim, kind="menu")
+        except spend_budget.BudgetExhausted as exc:
+            print_json({**result, "error": str(exc), "exit_code": 3})
+            return 3
         code = _synthesis(args, pool_file=pool_path)
+        spend_budget.settle(menu_claim, _latest_synthesis_usd())
         if code != 0:
             print_json({**result, "error": "synthesis failed", "exit_code": code})
             return code

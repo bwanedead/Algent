@@ -51,7 +51,7 @@ from algent_backend.agent_system.agents.research.leads import (
     JsonLeadStore,
     open_leads_for_discovery,
 )
-from algent_backend.agent_system.foundation import cost, read_cache
+from algent_backend.agent_system.foundation import cost, read_cache, spend_budget
 from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.context import AgentRunContext
 from algent_backend.agent_system.runs.control_plane.layout import find_run_root
@@ -71,7 +71,8 @@ from .rail_contracts import NewsroomRailReport
 
 RAIL_COMPLETED = "newsroom_rail.completed"
 RAIL_STAGE = "newsroom_rail.stage"
-RAIL_STEER = "newsroom_rail.steer"          # an operator steer landed at a stage boundary
+RAIL_STEER = "newsroom_rail.steer"
+RAIL_REFUSED = "newsroom_rail.refused"        # the spend envelope had nothing left          # an operator steer landed at a stage boundary
 RAIL_ANNOUNCED = "newsroom_rail.announced"
 RAIL_FIGURES = "newsroom_rail.figures"
 BACKFEED_INJECTED = "newsroom_rail.backfeed_injected"
@@ -130,8 +131,21 @@ def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | Non
         # lanes each open their own snapshot scope, which resets per lane — a cache living there
         # would forget between lanes, which is the exact bug it exists to fix. Persisted in the
         # run directory so `newsroom resume` reuses what the interrupted attempt already read.
-        with cost.article_scoped(), read_cache.scoped(_read_cache_path(context)):
-            out = _run_rail(context, state, config, lead_store=lead_store)
+        # The spend envelope, when one is open, is enforced HERE — by the run, not by whoever
+        # launched it — so the ceiling holds after that session is gone. The article's hard cap
+        # becomes whatever the envelope has left; an exhausted envelope refuses before any spend.
+        try:
+            envelope_cap = spend_budget.claim(context.run_id)
+        except spend_budget.BudgetExhausted as exc:
+            context.emit(RAIL_REFUSED, {"reason": str(exc)})
+            return {"rail": {"stage_reached": "refused", "note": str(exc)}}
+        hard = None if envelope_cap is None else min(cost.hard_cap_usd(), envelope_cap)
+        with cost.article_scoped(hard), read_cache.scoped(_read_cache_path(context)):
+            try:
+                out = _run_rail(context, state, config, lead_store=lead_store)
+            finally:
+                if envelope_cap is not None:
+                    spend_budget.settle(context.run_id, cost.article_spent_usd())
             context.emit(RAIL_READS, read_cache.stats())
             _keep_reads(context, out)
             return out
