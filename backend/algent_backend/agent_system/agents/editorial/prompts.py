@@ -63,7 +63,11 @@ PRODUCE an EditorialTreatment:
 
    For a `survey`, judge the depth per member and set the total that follows: the house ceiling
    applies to each member's section, not to the piece, because the reader browses it rather than
-   reading it straight through. Members still have to earn their place — the length follows from
+   reading it straight through. `read_minutes` is still the WHOLE piece, so it is the per-member
+   depth times the members. A survey of nine proposed megastructures was given 6 minutes — about
+   160 words each, which is a paragraph that names a structure and moves on, the exact failure
+   the survey shape exists to prevent. A member worth its own heading is usually worth a minute
+   or more of reading; nine of them is not a five-minute piece. Members still have to earn their place — the length follows from
    how many genuinely do, and a member you can say nothing specific about is a clause elsewhere.
 
    Judge it HERE, because you have just digested the whole profile and know the shape, whereas
