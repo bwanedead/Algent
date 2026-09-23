@@ -730,3 +730,12 @@ cost: ~$0.7225  ·  mode: normal  ·  soft/hard: $1.00/$3.00
 cost_by_stage: editorial=$0.2148, gauntlet=$0.3449, profile=$0.1628
 refused: model_turn(reservation_overrun)
 run: 0095__b67b93f3-bb0e-430d-8075-3025e6918a33
+
+### PUBLISH ai-video-worlds-that-simulate-reality-get-two-rival-bets-for-e44637 — 2026-09-23
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 1 produced, 0 escapes
+cost: ~$0.3705  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+analytics_skipped: req_worldcrafter_revisit_benchmark:skipped
+cost_by_stage: editorial=$0.0610, gauntlet=$0.2325, profile=$0.0770
+run: 0096__65a69d64-8865-414a-aa38-ba60da4b0f8d
