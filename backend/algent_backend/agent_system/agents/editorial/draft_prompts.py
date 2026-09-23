@@ -130,7 +130,8 @@ addressable item ids). Your job:
    CONNECTION and drop the excursion: one clause saying the thing exists, not a section
    touring it.
 
-   **LAND UNDER {digest_words()} WORDS (~{digest_minutes()} min).** Extra minutes are earned
+   **LAND IN THE TREATMENT'S PLANNED LENGTH** — the task names it in words and paragraphs; with
+   no plan it is under {digest_words()} words (~{digest_minutes()} min). Extra minutes are earned
    by this premise, not by an adjacent world. A first pass that tours jobs after a
    power-share open (or any new world the headline did not open) is a failed draft. Roll
    twigs; keep sides of *this* dispute.

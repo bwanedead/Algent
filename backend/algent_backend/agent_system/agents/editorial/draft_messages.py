@@ -15,7 +15,7 @@ from algent_backend.agent_system.agents.research.profile import SignalProfile
 from .briefing import render_treatment
 from .citations import CitationReport
 from .draft import ArticleDraft
-from .length import ceiling_words, digest_minutes, digest_words
+from .length import paragraphs_for, planned_band
 from .treatment import EditorialTreatment
 
 
@@ -54,6 +54,15 @@ def build_draft_message(
     elif prior is not None and report is not None:
         parts += _revision_block(prior, report, profile)
     else:
+        # One length authority: the treatment's own band. This message used to say "under the
+        # digest, over the ceiling fails" beside a briefing that set the plan's band — three
+        # numbers for one piece — and first drafts landed at 2,200 regardless. Paragraphs are
+        # the unit a model can hold while it writes.
+        low, high = planned_band(treatment)
+        parts.append(
+            f"LENGTH: {low}-{high} words — about {paragraphs_for(high)} paragraphs of three or "
+            "four sentences, headings not counted. That is the whole piece. Count paragraphs as "
+            "you go; when you reach the budget, the piece is finished.")
         parts.append(
             "TASK: Write the article from the treatment's frame, assembling its molecule. "
             "OPEN with the treatment's news_kernel / reader_payoff / key_uncertainty (first "
@@ -61,10 +70,8 @@ def build_draft_message(
             "minimal scene orientation, THEN mechanism/causality with honest causal statuses, "
             "THEN depth. When plain_subject is set, say that before the specialist name. "
             "Carry every must-use item and serious perspective; respect every do-not-overstate "
-            "ceiling. Land under "
-            f"{digest_words()} words (~{digest_minutes()} min). Stay on the premise the "
-            "treatment named — an adjacent world is a clause, not a section. Over "
-            f"{ceiling_words()} words is a failed draft. "
+            "ceiling. Stay on the premise the "
+            "treatment named — an adjacent world is a clause, not a section. "
             "Research for PRECISION — sharpening something the piece ALREADY carries "
             "(an exact quote, a figure the profile only points at) — never to open a new "
             "subject. Following an interesting thread outward is how a piece on winter power "

@@ -7,6 +7,8 @@ Completeness is the shape (sides, caveats, contrary evidence), not more words.
 
 from __future__ import annotations
 
+from typing import Any
+
 from algent_backend.agent_system.agents.newsroom.flags import (
     ARTICLE_DIGEST_CEILING_MINUTES,
     ARTICLE_DIGEST_CEILING_WORDS,
@@ -70,6 +72,24 @@ def word_band(minutes: int, *, survey: bool = False) -> tuple[int, int]:
         low = min(low, cap)
         high = cap
     return low, high
+
+
+def planned_band(treatment: Any) -> tuple[int, int]:
+    """The (low, high) words a treatment planned — THE length authority for drafter and cut.
+
+    Accepts the treatment as a model or a dict. No planned minutes means the house digest.
+    """
+    get = treatment.get if isinstance(treatment, dict) else (lambda k: getattr(treatment, k, None))
+    minutes = int((get("read_minutes") if treatment else 0) or 0)
+    if minutes <= 0:
+        return 0, digest_words()
+    return word_band(minutes, survey=str((get("shape") if treatment else "") or "") == "survey")
+
+
+def paragraphs_for(words: int) -> int:
+    """The same length in paragraphs. A model cannot count words as it writes; it can count
+    paragraphs. ~75 words is a plain news paragraph of three or four sentences."""
+    return max(1, round(max(0, int(words)) / 75))
 
 
 def reviewer_length_task(words: int) -> str:

@@ -22,7 +22,7 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from .length import count_words, digest_words, word_band
+from .length import count_words, paragraphs_for, planned_band
 
 GENERATOR = "draft_compressor@v1"
 DRAFT_COMPRESSED = "editorial_pipeline.draft_compressed"
@@ -61,11 +61,20 @@ class Compressed(BaseModel):
 
 def target_band(treatment: dict[str, Any] | None) -> tuple[int, int]:
     """The (low, high) words this piece was planned to land in."""
-    t = treatment or {}
-    minutes = int(t.get("read_minutes") or 0)
-    if minutes <= 0:
-        return 0, digest_words()
-    return word_band(minutes, survey=str(t.get("shape") or "") == "survey")
+    return planned_band(treatment or {})
+
+
+def _cut_task(current_words: int, low: int, high: int, *, again: bool) -> str:
+    """The size of the cut in units a model can execute. "Cut to under 1,500" got 2,305 → 1,834
+    over two passes: it shaves words. Told the share and the paragraphs to lose, it removes them."""
+    goal = (low + high) // 2 if low else high
+    remove = max(0, current_words - goal)
+    share = round(100 * remove / max(1, current_words))
+    return (f"This draft is {current_words} words. Its planned length is {low}-{high} words. "
+            f"Remove about {remove} words — {share}% of it, the length of roughly "
+            f"{paragraphs_for(remove)} whole paragraphs. Trimming a word here and there will not "
+            "get there: whole sentences and paragraphs go."
+            + (" Your previous cut was measured, not estimated — it is still over." if again else ""))
 
 
 def compress(
@@ -92,9 +101,7 @@ def compress(
     # Two passes at most. The first live cut reported "~1,390 words" and delivered 1,671: the
     # model cannot count its output either. The second pass is shown the real number.
     for attempt in range(2):
-        task = (f"This draft is {current_words} words. Its planned length is {low}-{high} words. "
-                f"Cut it to under {high} words."
-                + (" Your previous cut was measured, not estimated — it is still over." if attempt else "")
+        task = (_cut_task(current_words, low, high, again=bool(attempt))
                 + f"\n\nTITLE: {draft.get('title') or ''}\n\n{current}")
         try:
             model = context.model_resolver.resolve(model_spec).client.with_structured_output(Compressed)
