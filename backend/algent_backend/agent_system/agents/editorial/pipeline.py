@@ -436,18 +436,32 @@ def _post_draft_quality(
     context: AgentRunContext, config: RunnableConfig, *,
     draft: dict[str, Any], treatment: dict[str, Any], profile: dict[str, Any],
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
-    """Caveat + comprehension repairs after the first draft — before the final surface package."""
+    """Cut → comprehension → caveat, before the final surface package.
+
+    The honesty check is LAST because it is the only lane that holds the evidence grades. The
+    cut and the cold reader both rewrite prose without them, and both push toward flatter,
+    plainer sentences — exactly the pressure that strips a "reportedly". When the caveat check
+    ran before the reader's rewrites, its verdict described a draft that never shipped: the
+    Hormuz piece was marked needs_hedging against text three rewrites old, and nothing had read
+    the published version for overclaims at all. The hedge repair is surgical (flagged sentences
+    only), so running it after the reader does not undo the reader's work.
+    """
     from algent_backend.agent_system.foundation.models.budget_gate import (
         BudgetRefusedError,
     )
 
-    # The cut comes first, so the hedging check and the review both see a piece of the planned
-    # size — and the hedging check catches any limit the cut damaged.
     if draft and budget_policy.allow_optional("comprehension_repair"):
         draft, cut = compress_draft(
             context, config, draft, treatment,
             model_spec=COMPRESS_MODEL, min_words=_MIN_PUBLISH_WORDS)
         context.emit(DRAFT_COMPRESSED, cut)
+
+    assigned_places = _derive_places(profile)
+    if budget_policy.allow_optional("comprehension_repair"):
+        draft, comprehension, comprehension_rounds = _comprehension_pass(
+            context, config, draft=draft, places=assigned_places)
+    else:
+        comprehension, comprehension_rounds = {}, 0
 
     caveat: dict[str, Any] = {}
     caveat_verdict = "verified"
@@ -467,13 +481,6 @@ def _post_draft_quality(
                 context, config, draft=draft, treatment=treatment,
                 profile=profile, caveat=caveat)
             caveat_verdict = str(caveat.get("verdict", "verified"))
-
-    assigned_places = _derive_places(profile)
-    if budget_policy.allow_optional("comprehension_repair"):
-        draft, comprehension, comprehension_rounds = _comprehension_pass(
-            context, config, draft=draft, places=assigned_places)
-    else:
-        comprehension, comprehension_rounds = {}, 0
 
     return draft, profile, {
         "caveat_verdict": caveat_verdict,
@@ -951,8 +958,8 @@ def _comprehension_pass(
     re-read: a review whose verdict cannot change the outcome is spend with no consequence.
 
     Advisory throughout — a hard-to-follow piece ships anyway; this only tries to make it
-    clearer first. The rewrite is clarifying (same facts, digestible grain), so it adds no
-    claims and no honesty gate re-runs after it. The article drafter is not re-invoked here.
+    clearer first. The rewrite is clarifying (same facts, digestible grain); the caveat check
+    runs after it, on the prose that ships. The article drafter is not re-invoked here.
 
     ``places`` are the country flags the page will carry. The reviewer may drop unearned ones
     outright or earn them in the rewrite; a drop alone does not trigger a rewrite lap,

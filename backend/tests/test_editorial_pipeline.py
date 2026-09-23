@@ -428,6 +428,38 @@ def test_still_unhedged_after_the_repair_lap_holds_the_piece(monkeypatch) -> Non
     assert r["caveat_rounds"] == 2   # the lap ran and didn't take — bounded, no third try
 
 
+def test_caveat_check_reads_the_prose_that_ships(monkeypatch) -> None:
+    # The reader's rewrite used to come AFTER the honesty check, so the verdict described a draft
+    # that never shipped. The check must see the final rewrite.
+    body = " ".join(["word"] * 200)
+    rewrite = " ".join(["clear"] * 180)
+    plan_out = {"treatment": {"id": "t"}, "gauntlet": {}}
+    draft_out = {"draft": {"id": "d", "title": "t", "body": body, "word_count": 200},
+                 "gauntlet": {"outcome": "grounded"}}
+    _wire(monkeypatch, plan_out, draft_out, {"caveat_check": {}})
+    monkeypatch.setattr(pl, "build_comprehension_reviewer", lambda ctx: _Sequence(
+        {"comprehension_check": {"verdict": "needs_ramp", "findings": [{"id": "c"}], "body": rewrite}},
+        {"comprehension_check": {"verdict": "clear", "findings": []}}))
+    caveats = _Sequence({"caveat_check": {"verdict": "verified", "findings": []}})
+    monkeypatch.setattr(pl, "build_caveat_reviewer", lambda ctx: caveats)
+
+    pl.build_editorial_pipeline_graph(_ctx([])).invoke({"profile": _spine_profile("p")})
+    assert caveats.states[0]["draft"]["body"] == rewrite
+
+
+def test_hedge_repair_is_told_what_the_reviewer_found() -> None:
+    # The repair block once read keys CaveatFinding never has, so the drafter got bare ids.
+    from algent_backend.agent_system.agents.editorial.draft import ArticleDraft
+    from algent_backend.agent_system.agents.editorial.draft_messages import _caveat_block
+
+    prior = ArticleDraft(id="d", title="t", body="Envoys resumed talks.")
+    text = "\n".join(_caveat_block(prior, {"summary": "one overstatement", "findings": [{
+        "id": "f1", "target": "clm_1", "kind": "overstatement",
+        "issue": "states the talks as fact", "fix": "attribute to Reuters"}]}))
+    assert "states the talks as fact" in text and "attribute to Reuters" in text
+    assert "clm_1" in text and "one overstatement" in text
+
+
 def test_clean_first_pass_does_not_run_the_repair_lap(monkeypatch) -> None:
     plan_out = {"treatment": {"id": "trt_x"}, "gauntlet": {}}
     draft_out = {"draft": {"id": "drf_x", "title": "t"}, "gauntlet": {"outcome": "grounded"}}

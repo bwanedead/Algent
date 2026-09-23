@@ -93,13 +93,16 @@ def _caveat_block(prior: ArticleDraft, caveat: dict) -> list[str]:
         "",
         "### What the reviewer flagged",
     ]
+    # Field names are CaveatFinding's (target / issue / fix). This block once read keys the
+    # reviewer never writes, and the repair lap was handed bare ids — a hedge it could not see.
     for f in (caveat.get("findings") or []):
-        fid = f.get("id") or f.get("claim_id") or ""
-        lines.append(f"- [{f.get('kind', 'overstatement')}] {fid} — {f.get('explanation') or f.get('detail') or ''}")
-        if f.get("quote"):
-            lines.append(f'  offending text: "{f["quote"]}"')
-    if caveat.get("note"):
-        lines += ["", f"Reviewer note: {caveat['note']}"]
+        lines.append(f"- [{f.get('kind') or 'overstatement'}] {f.get('target') or f.get('id') or ''}")
+        if f.get("issue"):
+            lines.append(f"  problem: {f['issue']}")
+        if f.get("fix"):
+            lines.append(f"  suggested fix: {f['fix']}")
+    if caveat.get("summary"):
+        lines += ["", f"Reviewer summary: {caveat['summary']}"]
     lines += [
         "",
         "### Your prior draft",
