@@ -156,6 +156,7 @@ def make_figures(
     *,
     say: Any = None,
     generate: Any = None,
+    essential: bool = False,
 ) -> list[dict[str, Any]]:
     """Draw each usable slot. Returns the records that were written; never raises.
 
@@ -175,7 +176,9 @@ def make_figures(
             note(f"figure {i}: skipped — {problem}")
             continue
         est = image_est()
-        res = cost.try_reserve(est, op="figure_image")
+        # Essential for a survey: there the pictures are the point, and the soft-cap economy mode
+        # once dropped two of a megaprojects tour's five. Still bounded by the article hard cap.
+        res = cost.try_reserve(est, op="figure_image", essential=essential)
         if res is None and cost.is_active():
             note(f"figure {i}: skipped — budget ({cost.mode()})")
             continue

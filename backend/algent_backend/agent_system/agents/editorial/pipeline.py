@@ -654,12 +654,14 @@ def _headline_and_hero(
             })
             issues = remaining
         hero = make_hero(hl, context.artifacts, say=lambda m: context.emit(HERO_IMAGE, {"note": m}))
-    draft = _illustrate(context, config, draft)
+    draft = _illustrate(context, config, draft,
+                        essential=str((treatment or {}).get("shape") or "") == "survey")
     return draft, hero, issues
 
 
 def _illustrate(
     context: AgentRunContext, config: RunnableConfig, draft: dict[str, Any],
+    *, essential: bool = False,
 ) -> dict[str, Any]:
     """Draw the things the piece asks the reader to picture, into the body, beside them.
 
@@ -673,7 +675,7 @@ def _illustrate(
     say = lambda note: context.emit(FIGURE_IMAGE, {"note": note})   # noqa: E731
     try:
         plan = plan_images(context, config, draft, model_spec=FIGURE_IMAGE_MODEL)
-        figures = make_figures(plan, body, context.artifacts, say=say)
+        figures = make_figures(plan, body, context.artifacts, say=say, essential=essential)
     except Exception as exc:  # noqa: BLE001 — pictures never cost us a finished article
         context.emit(FIGURE_IMAGE, {"note": f"figures: {type(exc).__name__}: {str(exc)[:90]}"})
         return draft
