@@ -82,24 +82,42 @@ def compress(
 
     from langchain_core.messages import HumanMessage, SystemMessage
 
-    from algent_backend.agent_system.agents.newsroom import doctrine
     from algent_backend.agent_system.prompting import UNIVERSAL_AGENT_BASE, compose_system_prompt
 
-    prompt = compose_system_prompt(UNIVERSAL_AGENT_BASE, doctrine("writing-ergonomics"), _ROLE)
-    task = (f"This draft is {words} words. Its planned length is {low}-{high} words. Cut it to "
-            f"under {high} words.\n\nTITLE: {draft.get('title') or ''}\n\n{body}")
-    try:
-        model = context.model_resolver.resolve(model_spec).client.with_structured_output(Compressed)
-        out = model.invoke([SystemMessage(content=prompt), HumanMessage(content=task)], config=config)
-    except Exception as exc:  # noqa: BLE001 — the uncut draft still goes to review
-        return draft, {**record, "reason": f"compressor failed: {type(exc).__name__}"}
-    if not isinstance(out, Compressed) or not out.body.strip():
-        return draft, {**record, "reason": "compressor returned nothing"}
+    # Role only. With the whole writing doctrine composed in, the model's reasoning over it ran
+    # past the output ceiling and the reply was cut off mid-object — the first live cut
+    # returned nothing. Cutting has its own short rules; it does not need the essay.
+    prompt = compose_system_prompt(UNIVERSAL_AGENT_BASE, _ROLE)
+    current, current_words, note = body, words, ""
+    # Two passes at most. The first live cut reported "~1,390 words" and delivered 1,671: the
+    # model cannot count its output either. The second pass is shown the real number.
+    for attempt in range(2):
+        task = (f"This draft is {current_words} words. Its planned length is {low}-{high} words. "
+                f"Cut it to under {high} words."
+                + (" Your previous cut was measured, not estimated — it is still over." if attempt else "")
+                + f"\n\nTITLE: {draft.get('title') or ''}\n\n{current}")
+        try:
+            model = context.model_resolver.resolve(model_spec).client.with_structured_output(Compressed)
+            out = model.invoke([SystemMessage(content=prompt), HumanMessage(content=task)], config=config)
+        except Exception as exc:  # noqa: BLE001 — the best cut so far (or the uncut draft) goes on
+            record["reason"] = f"compressor failed: {type(exc).__name__}"
+            break
+        if not isinstance(out, Compressed) or not out.body.strip():
+            record["reason"] = "compressor returned nothing"
+            break
+        new_words = count_words(out.body)
+        if new_words >= current_words:
+            record["reason"] = "not shorter"
+            break
+        if new_words < min_words:
+            record["reason"] = "hollow cut discarded"
+            break
+        current, current_words, note = out.body.strip(), new_words, out.cut_note[:300]
+        record["passes"] = attempt + 1
+        if current_words <= high:
+            break
 
-    new_words = count_words(out.body)
-    if new_words >= words:
-        return draft, {**record, "new_words": new_words, "reason": "not shorter"}
-    if new_words < min_words:
-        return draft, {**record, "new_words": new_words, "reason": "hollow cut discarded"}
-    return {**draft, "body": out.body.strip()}, {
-        **record, "applied": True, "new_words": new_words, "cut_note": out.cut_note[:300]}
+    if current_words >= words:
+        return draft, {**record, "new_words": current_words}
+    return {**draft, "body": current}, {
+        **record, "applied": True, "new_words": current_words, "cut_note": note}

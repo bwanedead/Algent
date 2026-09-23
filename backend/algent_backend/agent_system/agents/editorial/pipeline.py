@@ -45,9 +45,10 @@ from .length import ceiling_words, count_words, wpm
 from .pipeline_contracts import EditorialPipelineReport
 from .publish import render_published_article
 
-#: The cut rewrites a whole piece to a length, keeping every side and hedge — closer to the
-#: review's job than to a mechanical trim, so it gets the review's effort.
-COMPRESS_MODEL = house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=8192)
+#: The cut returns a whole article body, and reasoning tokens count against the same output
+#: ceiling — at medium effort and 8,192 the first live cut was truncated mid-object and came back
+#: empty. Low effort (cutting is judgement about what to drop, not analysis) and room to finish.
+COMPRESS_MODEL = house_spec(reasoning_effort="low", temperature=0.2, max_tokens=16384)
 
 #: Choosing pictures is a reading task, not an expert one: judge what the prose asks a reader to
 #: picture, then describe it in a dozen words for the image model.
