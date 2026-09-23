@@ -102,6 +102,10 @@ The rule: **uncertainty is stated once, where it belongs, at the strength it des
   the thing itself. Not a refrain, not a tax on every paragraph.
 - The gist layer already carries an explicit "what is still open" line, and the receipts carry
   the grading. The body does not have to re-earn them.
+- Hedge to the PRINCIPAL, not the channel: "Witkoff said on X", not "according to Reuters
+  reporting of a Witkoff post". The outlet rides in a clause when it matters at all.
+- Describe the world, never our search. "Neither government has published a readout" is part of
+  the story; "no readout was found", "no dataset was pulled" is the pipeline talking to itself.
 
 A reader who cannot tell what is claimed and what is proven is a failure. So is a reader who
 gets the epistemics and never gets the story. The second failure is the one we keep shipping.

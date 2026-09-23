@@ -90,6 +90,9 @@ def _caveat_block(prior: ArticleDraft, caveat: dict) -> list[str]:
         "re-frame, do NOT cut load-bearing content, and do NOT 'fix' it by deleting the claim — hedge",
         "it to the level the evidence actually supports, or state what is established and stop.",
         "Keep the title/standfirst unless a finding names them. Every other sentence stays as written.",
+        "Use the lightest hedge that reads at the right grade, in the sentence that makes the claim:",
+        "attribute to the person or body who said it, not the outlet that carried it; describe the",
+        "world, not our search; never add a disclaimer paragraph (see 'Doubt has one home').",
         "",
         "### What the reviewer flagged",
     ]
