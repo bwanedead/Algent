@@ -739,3 +739,13 @@ cost: ~$0.3705  ·  mode: normal  ·  soft/hard: $1.00/$3.00
 analytics_skipped: req_worldcrafter_revisit_benchmark:skipped
 cost_by_stage: editorial=$0.0610, gauntlet=$0.2325, profile=$0.0770
 run: 0096__65a69d64-8865-414a-aa38-ba60da4b0f8d
+
+### PUBLISH the-colorado-river-s-two-largest-reservoirs-hit-record-lows-c18d4a — 2026-09-23
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.8108  ·  mode: normal  ·  soft/hard: $1.00/$3.00
+cost_by_stage: editorial=$0.3201, gauntlet=$0.4033, profile=$0.0874
+refused: model_turn(stage_cap)
+⚠ figures not matched to evidence: 92%, 20%, 83%, 59%, 50%
+run: 0097__8810422e-ed7a-45aa-bcce-8397664038fe
