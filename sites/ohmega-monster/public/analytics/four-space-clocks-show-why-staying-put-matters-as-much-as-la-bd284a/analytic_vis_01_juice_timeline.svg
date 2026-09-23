@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="870.119pt" height="341.45pt" viewBox="0 0 870.119 341.45" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-23T08:21:25.624060</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.3, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 341.45 
+L 870.119 341.45 
+L 870.119 0 
+L 0 0 
+z
+" style="fill: #0c0f0e"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 48.599 242.922 
+L 852.119 242.922 
+L 852.119 46.65 
+L 48.599 46.65 
+z
+" style="fill: #111513"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 298.16329 227.22024 
+L 299.996974 227.22024 
+L 299.996974 62.35176 
+L 298.16329 62.35176 
+z
+" clip-path="url(#p77b228cc01)" style="fill: #c98bb8; opacity: 0.16; stroke: #c98bb8; stroke-linejoin: miter"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 67.485938 144.786 
+L 157.153048 144.786 
+L 224.082487 144.786 
+L 299.080132 144.786 
+L 453.109525 144.786 
+L 620.158069 144.786 
+L 787.940086 144.786 
+" clip-path="url(#p77b228cc01)" style="fill: none; stroke: #454b46; stroke-width: 2.2; stroke-linecap: square"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_2">
+      <path d="M 48.599 242.922 
+L 48.599 46.65 
+" clip-path="url(#p77b228cc01)" style="fill: none; stroke: #2b302d; stroke-opacity: 0.45; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_3">
+      <defs>
+       <path id="ma67185ee9d" d="M 0 0 
+L 0 3.5 
+" style="stroke: #858981; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#ma67185ee9d" x="48.599" y="242.922" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="48.599" y="256.822" transform="rotate(-0 48.599 256.822)">2023</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_4">
+      <path d="M 115.528439 242.922 
+L 115.528439 46.65 
+" clip-path="url(#p77b228cc01)" style="fill: none; stroke: #2b302d; stroke-opacity: 0.45; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_5">
+      <g>
+       <use xlink:href="#ma67185ee9d" x="115.528439" y="242.922" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="115.528439" y="256.822" transform="rotate(-0 115.528439 256.822)">2024</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_6">
+      <path d="M 182.641246 242.922 
+L 182.641246 46.65 
+" clip-path="url(#p77b228cc01)" style="fill: none; stroke: #2b302d; stroke-opacity: 0.45; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_7">
+      <g>
+       <use xlink:href="#ma67185ee9d" x="182.641246" y="242.922" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="182.641246" y="256.822" transform="rotate(-0 182.641246 256.822)">2025</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_8">
+      <path d="M 249.570684 242.922 
+L 249.570684 46.65 
+" clip-path="url(#p77b228cc01)" style="fill: none; stroke: #2b302d; stroke-opacity: 0.45; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_9">
+      <g>
+       <use xlink:href="#ma67185ee9d" x="249.570684" y="242.922" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="249.570684" y="256.822" transform="rotate(-0 249.570684 256.822)">2026</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_10">
+      <path d="M 316.500123 242.922 
+L 316.500123 46.65 
+" clip-path="url(#p77b228cc01)" style="fill: none; stroke: #2b302d; stroke-opacity: 0.45; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_11">
+      <g>
+       <use xlink:href="#ma67185ee9d" x="316.500123" y="242.922" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="316.500123" y="256.822" transform="rotate(-0 316.500123 256.822)">2027</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_12">
+      <path d="M 383.429561 242.922 
+L 383.429561 46.65 
+" clip-path="url(#p77b228cc01)" style="fill: none; stroke: #2b302d; stroke-opacity: 0.45; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_13">
+      <g>
+       <use xlink:href="#ma67185ee9d" x="383.429561" y="242.922" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="383.429561" y="256.822" transform="rotate(-0 383.429561 256.822)">2028</text>
+     </g>
+    </g>
+    <g id="xtick_7">
+     <g id="line2d_14">
+      <path d="M 450.542368 242.922 
+L 450.542368 46.65 
+" clip-path="url(#p77b228cc01)" style="fill: none; stroke: #2b302d; stroke-opacity: 0.45; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_15">
+      <g>
+       <use xlink:href="#ma67185ee9d" x="450.542368" y="242.922" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="450.542368" y="256.822" transform="rotate(-0 450.542368 256.822)">2029</text>
+     </g>
+    </g>
+    <g id="xtick_8">
+     <g id="line2d_16">
+      <path d="M 517.471807 242.922 
+L 517.471807 46.65 
+" clip-path="url(#p77b228cc01)" style="fill: none; stroke: #2b302d; stroke-opacity: 0.45; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_17">
+      <g>
+       <use xlink:href="#ma67185ee9d" x="517.471807" y="242.922" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="517.471807" y="256.822" transform="rotate(-0 517.471807 256.822)">2030</text>
+     </g>
+    </g>
+    <g id="xtick_9">
+     <g id="line2d_18">
+      <path d="M 584.401246 242.922 
+L 584.401246 46.65 
+" clip-path="url(#p77b228cc01)" style="fill: none; stroke: #2b302d; stroke-opacity: 0.45; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_19">
+      <g>
+       <use xlink:href="#ma67185ee9d" x="584.401246" y="242.922" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="584.401246" y="256.822" transform="rotate(-0 584.401246 256.822)">2031</text>
+     </g>
+    </g>
+    <g id="xtick_10">
+     <g id="line2d_20">
+      <path d="M 651.330684 242.922 
+L 651.330684 46.65 
+" clip-path="url(#p77b228cc01)" style="fill: none; stroke: #2b302d; stroke-opacity: 0.45; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_21">
+      <g>
+       <use xlink:href="#ma67185ee9d" x="651.330684" y="242.922" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_10">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="651.330684" y="256.822" transform="rotate(-0 651.330684 256.822)">2032</text>
+     </g>
+    </g>
+    <g id="xtick_11">
+     <g id="line2d_22">
+      <path d="M 718.443491 242.922 
+L 718.443491 46.65 
+" clip-path="url(#p77b228cc01)" style="fill: none; stroke: #2b302d; stroke-opacity: 0.45; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_23">
+      <g>
+       <use xlink:href="#ma67185ee9d" x="718.443491" y="242.922" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_11">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="718.443491" y="256.822" transform="rotate(-0 718.443491 256.822)">2033</text>
+     </g>
+    </g>
+    <g id="xtick_12">
+     <g id="line2d_24">
+      <path d="M 785.37293 242.922 
+L 785.37293 46.65 
+" clip-path="url(#p77b228cc01)" style="fill: none; stroke: #2b302d; stroke-opacity: 0.45; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_25">
+      <g>
+       <use xlink:href="#ma67185ee9d" x="785.37293" y="242.922" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_12">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="785.37293" y="256.822" transform="rotate(-0 785.37293 256.822)">2034</text>
+     </g>
+    </g>
+    <g id="text_13">
+     <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="450.359" y="276.093875" transform="rotate(-0 450.359 276.093875)">Mission date (year)</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2"/>
+   <g id="LineCollection_1">
+    <path d="M 67.485938 167.432769 
+L 67.485938 122.139231 
+" clip-path="url(#p77b228cc01)" style="fill: none; stroke: #f0a33a; stroke-width: 1.2"/>
+   </g>
+   <g id="LineCollection_2">
+    <path d="M 157.153048 167.432769 
+L 157.153048 122.139231 
+" clip-path="url(#p77b228cc01)" style="fill: none; stroke: #5eb8c9; stroke-width: 1.2"/>
+   </g>
+   <g id="LineCollection_3">
+    <path d="M 224.082487 167.432769 
+L 224.082487 122.139231 
+" clip-path="url(#p77b228cc01)" style="fill: none; stroke: #5eb8c9; stroke-width: 1.2"/>
+   </g>
+   <g id="LineCollection_4">
+    <path d="M 299.080132 167.432769 
+L 299.080132 122.139231 
+" clip-path="url(#p77b228cc01)" style="fill: none; stroke: #f0a33a; stroke-width: 1.2"/>
+   </g>
+   <g id="LineCollection_5">
+    <path d="M 453.109525 167.432769 
+L 453.109525 122.139231 
+" clip-path="url(#p77b228cc01)" style="fill: none; stroke: #5eb8c9; stroke-width: 1.2"/>
+   </g>
+   <g id="LineCollection_6">
+    <path d="M 620.158069 167.432769 
+L 620.158069 122.139231 
+" clip-path="url(#p77b228cc01)" style="fill: none; stroke: #c98bb8; stroke-width: 1.2"/>
+   </g>
+   <g id="LineCollection_7">
+    <path d="M 787.940086 167.432769 
+L 787.940086 122.139231 
+" clip-path="url(#p77b228cc01)" style="fill: none; stroke: #c98bb8; stroke-width: 1.2"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 48.599 242.922 
+L 48.599 46.65 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 48.599 242.922 
+L 852.119 242.922 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="PathCollection_1">
+    <defs>
+     <path id="me1468bdb1a" d="M 0 3.807887 
+C 1.009863 3.807887 1.978501 3.406664 2.692582 2.692582 
+C 3.406664 1.978501 3.807887 1.009863 3.807887 0 
+C 3.807887 -1.009863 3.406664 -1.978501 2.692582 -2.692582 
+C 1.978501 -3.406664 1.009863 -3.807887 0 -3.807887 
+C -1.009863 -3.807887 -1.978501 -3.406664 -2.692582 -2.692582 
+C -3.406664 -1.978501 -3.807887 -1.009863 -3.807887 0 
+C -3.807887 1.009863 -3.406664 1.978501 -2.692582 2.692582 
+C -1.978501 3.406664 -1.009863 3.807887 0 3.807887 
+z
+" style="stroke: #f0ede4; stroke-width: 0.7"/>
+    </defs>
+    <g clip-path="url(#p77b228cc01)">
+     <use xlink:href="#me1468bdb1a" x="67.485938" y="144.786" style="fill: #f0a33a; stroke: #f0ede4; stroke-width: 0.7"/>
+    </g>
+   </g>
+   <g id="text_14">
+    <text style="font-weight: 700; font-size: 8.2px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="67.485938" y="113.195969" transform="rotate(-0 67.485938 113.195969)">14 APR 2023</text>
+   </g>
+   <g id="text_15">
+    <text style="font-weight: 700; font-size: 9.2px; font-family: 'Consolas'; text-anchor: middle; fill: #f0ede4" x="67.485938" y="127.002062" transform="rotate(-0 67.485938 127.002062)">Launch</text>
+   </g>
+   <g id="text_16">
+    <text style="font-size: 7.5px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="67.485938" y="139.284828" transform="rotate(-0 67.485938 139.284828)">Ariane 5 · French Guiana</text>
+   </g>
+   <g id="PathCollection_2">
+    <defs>
+     <path id="ma2a3142ce8" d="M 0 3.807887 
+C 1.009863 3.807887 1.978501 3.406664 2.692582 2.692582 
+C 3.406664 1.978501 3.807887 1.009863 3.807887 0 
+C 3.807887 -1.009863 3.406664 -1.978501 2.692582 -2.692582 
+C 1.978501 -3.406664 1.009863 -3.807887 0 -3.807887 
+C -1.009863 -3.807887 -1.978501 -3.406664 -2.692582 -2.692582 
+C -3.406664 -1.978501 -3.807887 -1.009863 -3.807887 0 
+C -3.807887 1.009863 -3.406664 1.978501 -2.692582 2.692582 
+C -1.978501 3.406664 -1.009863 3.807887 0 3.807887 
+z
+" style="stroke: #f0ede4; stroke-width: 0.7"/>
+    </defs>
+    <g clip-path="url(#p77b228cc01)">
+     <use xlink:href="#ma2a3142ce8" x="157.153048" y="144.786" style="fill: #5eb8c9; stroke: #f0ede4; stroke-width: 0.7"/>
+    </g>
+   </g>
+   <g id="text_17">
+    <text style="font-weight: 700; font-size: 8.2px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="157.153048" y="180.444" transform="rotate(-0 157.153048 180.444)">AUG 2024</text>
+   </g>
+   <g id="text_18">
+    <text style="font-weight: 700; font-size: 9.2px; font-family: 'Consolas'; text-anchor: middle; fill: #f0ede4" x="157.153048" y="198.218813" transform="rotate(-0 157.153048 198.218813)">Lunar–Earth flyby</text>
+   </g>
+   <g id="text_19">
+    <text style="font-size: 7.5px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="157.153048" y="213.004359" transform="rotate(-0 157.153048 213.004359)">first double flyby · braking</text>
+   </g>
+   <g id="PathCollection_3">
+    <g clip-path="url(#p77b228cc01)">
+     <use xlink:href="#ma2a3142ce8" x="224.082487" y="144.786" style="fill: #5eb8c9; stroke: #f0ede4; stroke-width: 0.7"/>
+    </g>
+   </g>
+   <g id="text_20">
+    <text style="font-weight: 700; font-size: 8.2px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="224.082487" y="113.195969" transform="rotate(-0 224.082487 113.195969)">AUG 2025</text>
+   </g>
+   <g id="text_21">
+    <text style="font-weight: 700; font-size: 9.2px; font-family: 'Consolas'; text-anchor: middle; fill: #f0ede4" x="224.082487" y="126.898562" transform="rotate(-0 224.082487 126.898562)">Venus flyby</text>
+   </g>
+   <g id="text_22">
+    <text style="font-size: 7.5px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="224.082487" y="139.284828" transform="rotate(-0 224.082487 139.284828)">speed boost</text>
+   </g>
+   <g id="PathCollection_4">
+    <defs>
+     <path id="mf7587ac084" d="M 0 4.472136 
+C 1.186024 4.472136 2.323632 4.000923 3.162278 3.162278 
+C 4.000923 2.323632 4.472136 1.186024 4.472136 0 
+C 4.472136 -1.186024 4.000923 -2.323632 3.162278 -3.162278 
+C 2.323632 -4.000923 1.186024 -4.472136 0 -4.472136 
+C -1.186024 -4.472136 -2.323632 -4.000923 -3.162278 -3.162278 
+C -4.000923 -2.323632 -4.472136 -1.186024 -4.472136 0 
+C -4.472136 1.186024 -4.000923 2.323632 -3.162278 3.162278 
+C -2.323632 4.000923 -1.186024 4.472136 0 4.472136 
+z
+" style="stroke: #f0ede4; stroke-width: 0.7"/>
+    </defs>
+    <g clip-path="url(#p77b228cc01)">
+     <use xlink:href="#mf7587ac084" x="299.080132" y="144.786" style="fill: #f0a33a; stroke: #f0ede4; stroke-width: 0.7"/>
+    </g>
+   </g>
+   <g id="text_23">
+    <text style="font-weight: 700; font-size: 8.2px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="299.080132" y="180.444" transform="rotate(-0 299.080132 180.444)">28 SEP 2026</text>
+   </g>
+   <g id="text_24">
+    <text style="font-weight: 700; font-size: 9.2px; font-family: 'Consolas'; text-anchor: middle; fill: #f0ede4" x="299.080132" y="198.318" transform="rotate(-0 299.080132 198.318)">Earth gravity assist</text>
+   </g>
+   <g id="text_25">
+    <text style="font-size: 7.5px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(224.851226 212.961)">8,640 km · Indian Ocean · 13:45 CEST</text>
+    <text style="font-size: 7.5px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(249.594194 219.895922)">shadow: 21:24–06:03 CEST</text>
+   </g>
+   <g id="PathCollection_5">
+    <g clip-path="url(#p77b228cc01)">
+     <use xlink:href="#ma2a3142ce8" x="453.109525" y="144.786" style="fill: #5eb8c9; stroke: #f0ede4; stroke-width: 0.7"/>
+    </g>
+   </g>
+   <g id="text_26">
+    <text style="font-weight: 700; font-size: 8.2px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="453.109525" y="113.195969" transform="rotate(-0 453.109525 113.195969)">JAN 2029</text>
+   </g>
+   <g id="text_27">
+    <text style="font-weight: 700; font-size: 9.2px; font-family: 'Consolas'; text-anchor: middle; fill: #f0ede4" x="453.109525" y="126.898562" transform="rotate(-0 453.109525 126.898562)">Earth flyby</text>
+   </g>
+   <g id="text_28">
+    <text style="font-size: 7.5px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="453.109525" y="139.247328" transform="rotate(-0 453.109525 139.247328)">final shaping</text>
+   </g>
+   <g id="PathCollection_6">
+    <defs>
+     <path id="m9cceb32e64" d="M 0 3.807887 
+C 1.009863 3.807887 1.978501 3.406664 2.692582 2.692582 
+C 3.406664 1.978501 3.807887 1.009863 3.807887 0 
+C 3.807887 -1.009863 3.406664 -1.978501 2.692582 -2.692582 
+C 1.978501 -3.406664 1.009863 -3.807887 0 -3.807887 
+C -1.009863 -3.807887 -1.978501 -3.406664 -2.692582 -2.692582 
+C -3.406664 -1.978501 -3.807887 -1.009863 -3.807887 0 
+C -3.807887 1.009863 -3.406664 1.978501 -2.692582 2.692582 
+C -1.978501 3.406664 -1.009863 3.807887 0 3.807887 
+z
+" style="stroke: #f0ede4; stroke-width: 0.7"/>
+    </defs>
+    <g clip-path="url(#p77b228cc01)">
+     <use xlink:href="#m9cceb32e64" x="620.158069" y="144.786" style="fill: #c98bb8; stroke: #f0ede4; stroke-width: 0.7"/>
+    </g>
+   </g>
+   <g id="text_29">
+    <text style="font-weight: 700; font-size: 8.2px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="620.158069" y="180.444" transform="rotate(-0 620.158069 180.444)">JUL 2031</text>
+   </g>
+   <g id="text_30">
+    <text style="font-weight: 700; font-size: 9.2px; font-family: 'Consolas'; text-anchor: middle; fill: #f0ede4" x="620.158069" y="198.318" transform="rotate(-0 620.158069 198.318)">Jupiter arrival</text>
+   </g>
+   <g id="text_31">
+    <text style="font-size: 7.5px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="620.158069" y="213.004359" transform="rotate(-0 620.158069 213.004359)">end of 8-year cruise</text>
+   </g>
+   <g id="PathCollection_7">
+    <g clip-path="url(#p77b228cc01)">
+     <use xlink:href="#m9cceb32e64" x="787.940086" y="144.786" style="fill: #c98bb8; stroke: #f0ede4; stroke-width: 0.7"/>
+    </g>
+   </g>
+   <g id="text_32">
+    <text style="font-weight: 700; font-size: 8.2px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="787.940086" y="113.195969" transform="rotate(-0 787.940086 113.195969)">2034</text>
+   </g>
+   <g id="text_33">
+    <text style="font-weight: 700; font-size: 9.2px; font-family: 'Consolas'; text-anchor: middle; fill: #f0ede4" x="787.940086" y="126.898562" transform="rotate(-0 787.940086 126.898562)">Ganymede orbit</text>
+   </g>
+   <g id="text_34">
+    <text style="font-size: 7.5px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="787.940086" y="139.262563" transform="rotate(-0 787.940086 139.262563)">after 35 Jovian-moon flybys</text>
+   </g>
+   <g id="patch_6">
+    <path d="M 351.296542 94.17953 
+Q 325.907014 118.786246 300.517486 143.392963 
+" style="fill: none; stroke: #f0a33a; stroke-width: 0.9; stroke-linecap: round"/>
+   </g>
+   <g id="text_35">
+    <text style="font-weight: 700; font-size: 9.2px; font-family: 'Consolas'; fill: #f0a33a" transform="translate(341.080132 79.600525)">+3.5 km/s</text>
+    <text style="font-weight: 700; font-size: 9.2px; font-family: 'Consolas'; fill: #f0a33a" transform="translate(341.080132 89.002062)">20° bend</text>
+   </g>
+   <g id="patch_7">
+    <path d="M 299.080132 66.784371 
+Q 299.080132 104.783028 299.080132 142.781686 
+" style="fill: none; stroke: #c98bb8; stroke-width: 0.8; stroke-linecap: round"/>
+   </g>
+   <g id="text_36">
+    <text style="font-weight: 700; font-size: 8.2px; font-family: 'Consolas'; fill: #c98bb8" transform="translate(249.484226 52.816337)">Instrument calibration</text>
+    <text style="font-weight: 700; font-size: 8.2px; font-family: 'Consolas'; fill: #c98bb8" transform="translate(260.756023 61.195969)">23 SEP–3 OCT 2026</text>
+   </g>
+   <g id="text_37">
+    <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="48.599" y="36.952714" transform="rotate(-0 48.599 36.952714)">Mission route · 2023–2034 | gravity assists trade fuel for geometry</text>
+   </g>
+   <g id="text_38">
+    <text style="font-weight: 700; font-size: 15px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4" x="48.599" y="28.65" transform="rotate(-0 48.599 28.65)">Juice takes eight years and four planetary swings to reach Jupiter</text>
+   </g>
+  </g>
+  <g id="AnnotationBbox_1">
+   <image xlink:href="data:image/png;base64,
+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" id="image9d175703b6" transform="scale(1 -1) translate(0 -39.085714)" x="748.482063" y="-302.364286" width="42.171429" height="39.085714"/>
+   <g id="text_39">
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4; opacity: 0.45" x="794.5055" y="325.365703" transform="rotate(-0 794.5055 325.365703)">OHMEGA MONSTER</text>
+   </g>
+   <g id="text_40">
+    <text style="font-size: 7px; font-family: 'Consolas'; text-anchor: start; fill: #858981; opacity: 0.4" x="794.5055" y="331.459531" transform="rotate(-0 794.5055 331.459531)">ohmega.monster</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p77b228cc01">
+   <rect x="48.599" y="46.65" width="803.52" height="196.272"/>
+  </clipPath>
+ </defs>
+</svg>

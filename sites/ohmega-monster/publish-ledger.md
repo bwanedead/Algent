@@ -773,3 +773,13 @@ refused: model_turn(reservation_overrun)
 x_searches: 1
 ⚠ figures not matched to evidence: 34%
 run: 0099__ea8381da-0113-4e2d-9db2-85e978bb1e51
+
+### PUBLISH four-space-clocks-show-why-staying-put-matters-as-much-as-la-bd284a — 2026-09-23
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.5493  ·  mode: normal  ·  soft/hard: $1.00/$2.43
+cost_by_stage: editorial=$0.1337, gauntlet=$0.2829, profile=$0.1326
+refused: model_turn(reservation_overrun)
+disposition: needs_verification
+run: 0100__578aa33f-54ee-45db-9981-cfdafda76018
