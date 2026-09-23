@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="711.745188pt" height="408.388pt" viewBox="0 0 711.745188 408.388" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-23T11:00:42.606437</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.3, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 408.388 
+L 711.745188 408.388 
+L 711.745188 0 
+L 0 0 
+z
+" style="fill: #0c0f0e"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 54.817188 313.1 
+L 693.745188 313.1 
+L 693.745188 41.66 
+L 54.817188 41.66 
+z
+" style="fill: #111513"/>
+   </g>
+   <g id="FillBetweenPolyCollection_1">
+    <defs>
+     <path id="m901440294e" d="M 285.670735 -258.152 
+L 285.670735 -171.2912 
+L 321.814472 -171.2912 
+L 354.460428 -171.2912 
+L 390.604166 -171.2912 
+L 425.581976 -171.2912 
+L 461.725713 -171.2912 
+L 496.703523 -171.2912 
+L 532.84726 -171.2912 
+L 568.990998 -171.2912 
+L 603.968808 -171.2912 
+L 640.112545 -171.2912 
+L 675.090355 -171.2912 
+L 675.090355 -258.152 
+L 675.090355 -258.152 
+L 640.112545 -258.152 
+L 603.968808 -258.152 
+L 568.990998 -258.152 
+L 532.84726 -258.152 
+L 496.703523 -258.152 
+L 461.725713 -258.152 
+L 425.581976 -258.152 
+L 390.604166 -258.152 
+L 354.460428 -258.152 
+L 321.814472 -258.152 
+L 285.670735 -258.152 
+z
+"/>
+    </defs>
+    <g clip-path="url(#pb610f751e8)">
+     <use xlink:href="#m901440294e" x="0" y="408.388" style="fill: #5eb8c9; fill-opacity: 0.18"/>
+    </g>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <defs>
+       <path id="m05733d1de0" d="M 0 0 
+L 0 3.5 
+" style="stroke: #858981; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m05733d1de0" x="54.817188" y="313.1" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(46.569531 327)">Jul</text>
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(43.820313 337.281562)">2026</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2">
+      <g>
+       <use xlink:href="#m05733d1de0" x="127.104662" y="313.1" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(118.857006 327)">Sep</text>
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(116.107787 337.281562)">2026</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3">
+      <g>
+       <use xlink:href="#m05733d1de0" x="198.226209" y="313.1" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(189.978553 327)">Nov</text>
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(187.229334 337.281562)">2026</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#m05733d1de0" x="269.347757" y="313.1" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(261.100101 327)">Jan</text>
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(258.350882 337.281562)">2027</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_5">
+      <g>
+       <use xlink:href="#m05733d1de0" x="338.13745" y="313.1" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(329.889794 327)">Mar</text>
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(327.140575 337.281562)">2027</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#m05733d1de0" x="409.258998" y="313.1" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(401.011341 326.970312)">May</text>
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(398.262123 337.281562)">2027</text>
+     </g>
+    </g>
+    <g id="xtick_7">
+     <g id="line2d_7">
+      <g>
+       <use xlink:href="#m05733d1de0" x="480.380545" y="313.1" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(472.132889 327)">Jul</text>
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(469.38367 337.281562)">2027</text>
+     </g>
+    </g>
+    <g id="xtick_8">
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#m05733d1de0" x="552.66802" y="313.1" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(544.420363 327)">Sep</text>
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(541.671145 337.281562)">2027</text>
+     </g>
+    </g>
+    <g id="xtick_9">
+     <g id="line2d_9">
+      <g>
+       <use xlink:href="#m05733d1de0" x="623.789567" y="313.1" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(615.541911 327)">Nov</text>
+      <text style="font-size: 10px; font-family: 'Consolas'; fill: #858981" transform="translate(612.792692 337.281562)">2027</text>
+     </g>
+    </g>
+    <g id="text_10">
+     <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="374.281187" y="350.183125" transform="rotate(-0 374.281187 350.183125)">Month</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_10">
+      <path d="M 54.817188 313.1 
+L 693.745188 313.1 
+" clip-path="url(#pb610f751e8)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_11">
+      <defs>
+       <path id="mc81636798c" d="M 0 0 
+L -3.5 0 
+" style="stroke: #858981; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#mc81636798c" x="54.817188" y="313.1" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_11">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="47.817188" y="316.55" transform="rotate(-0 47.817188 316.55)">60</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_12">
+      <path d="M 54.817188 258.812 
+L 693.745188 258.812 
+" clip-path="url(#pb610f751e8)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_13">
+      <g>
+       <use xlink:href="#mc81636798c" x="54.817188" y="258.812" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_12">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="47.817188" y="262.262" transform="rotate(-0 47.817188 262.262)">70</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_14">
+      <path d="M 54.817188 204.524 
+L 693.745188 204.524 
+" clip-path="url(#pb610f751e8)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_15">
+      <g>
+       <use xlink:href="#mc81636798c" x="54.817188" y="204.524" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_13">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="47.817188" y="207.974" transform="rotate(-0 47.817188 207.974)">80</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_16">
+      <path d="M 54.817188 150.236 
+L 693.745188 150.236 
+" clip-path="url(#pb610f751e8)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_17">
+      <g>
+       <use xlink:href="#mc81636798c" x="54.817188" y="150.236" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_14">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="47.817188" y="153.686" transform="rotate(-0 47.817188 153.686)">90</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_18">
+      <path d="M 54.817188 95.948 
+L 693.745188 95.948 
+" clip-path="url(#pb610f751e8)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_19">
+      <g>
+       <use xlink:href="#mc81636798c" x="54.817188" y="95.948" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_15">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="47.817188" y="99.398" transform="rotate(-0 47.817188 99.398)">100</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_20">
+      <path d="M 54.817188 41.66 
+L 693.745188 41.66 
+" clip-path="url(#pb610f751e8)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_21">
+      <g>
+       <use xlink:href="#mc81636798c" x="54.817188" y="41.66" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_16">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="47.817188" y="45.11" transform="rotate(-0 47.817188 45.11)">110</text>
+     </g>
+    </g>
+    <g id="text_17">
+     <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="25.270313" y="177.38" transform="rotate(-90 25.270313 177.38)">Brent price (U.S. dollars per barrel)</text>
+    </g>
+   </g>
+   <g id="patch_3">
+    <path d="M 54.817188 313.1 
+L 54.817188 41.66 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 54.817188 313.1 
+L 693.745188 313.1 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_22">
+    <path d="M 178.40545 150.236 
+L 214.549188 150.236 
+L 249.526998 150.236 
+L 285.670735 237.0968 
+L 321.814472 237.0968 
+L 354.460428 237.0968 
+L 390.604166 237.0968 
+L 425.581976 237.0968 
+L 461.725713 237.0968 
+L 496.703523 237.0968 
+L 532.84726 237.0968 
+L 568.990998 237.0968 
+L 603.968808 237.0968 
+L 640.112545 237.0968 
+L 675.090355 237.0968 
+" clip-path="url(#pb610f751e8)" style="fill: none; stroke: #5eb8c9; stroke-width: 2.6; stroke-linecap: square"/>
+   </g>
+   <g id="text_18">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #f0a33a" x="117.283903" y="171.8072" transform="rotate(-0 117.283903 171.8072)">actual monthly average</text>
+   </g>
+   <g id="text_19">
+    <text style="font-size: 8px; font-family: 'Consolas'; fill: #c98bb8" transform="translate(159.589129 87.65155)">reported spot</text>
+    <text style="font-size: 8px; font-family: 'Consolas'; fill: #c98bb8" transform="translate(159.589129 95.8768)">$101.5</text>
+   </g>
+   <g id="text_20">
+    <text style="font-size: 8px; font-family: 'Consolas'; fill: #c98bb8" transform="translate(169.755056 101.961075)">reported dip</text>
+    <text style="font-size: 8px; font-family: 'Consolas'; fill: #c98bb8" transform="translate(169.755056 110.186325)">$97–100</text>
+   </g>
+   <g id="text_21">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #5eb8c9" x="603.090355" y="227.0968" transform="rotate(-0 603.090355 227.0968)">EIA forecast</text>
+   </g>
+   <g id="text_22">
+    <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: middle; fill: #5eb8c9" x="425.581976" y="195.870697" transform="rotate(-0 425.581976 195.870697)">~$16 lower if flows normalize</text>
+   </g>
+   <g id="text_23">
+    <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #5eb8c9" x="254.526998" y="143.236" transform="rotate(-0 254.526998 143.236)">$90</text>
+   </g>
+   <g id="text_24">
+    <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #5eb8c9" x="603.090355" y="251.0968" transform="rotate(-0 603.090355 251.0968)">$74 average</text>
+   </g>
+   <g id="text_25">
+    <g id="patch_5">
+     <path d="M 64.401107 302.503 
+L 199.937592 302.503 
+Q 202.912592 302.503 202.912592 299.528 
+L 202.912592 282.814344 
+Q 202.912592 279.839344 199.937592 279.839344 
+L 64.401107 279.839344 
+Q 61.426107 279.839344 61.426107 282.814344 
+L 61.426107 299.528 
+Q 61.426107 302.503 64.401107 302.503 
+z
+" style="fill: #0c0f0e; opacity: 0.9; stroke: #454b46; stroke-linejoin: miter"/>
+    </g>
+    <text style="font-size: 8.5px; font-family: 'Consolas'; fill: #858981" transform="translate(64.401107 288.636844)">Inventories: −400m bbl YTD</text>
+    <text style="font-size: 8.5px; font-family: 'Consolas'; fill: #858981" transform="translate(64.401107 297.784172)">Diesel crack: &gt;$2/gal Aug–Nov</text>
+   </g>
+   <g id="text_26">
+    <text style="font-size: 8.5px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="54.817188" y="35.887072" transform="rotate(-0 54.817188 35.887072)">Brent crude spot price — actuals, reported spot moves and EIA outlook | as of Sept. 23, 2026</text>
+   </g>
+   <g id="text_27">
+    <text style="font-weight: 700; font-size: 14px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4" x="54.817188" y="27.66" transform="rotate(-0 54.817188 27.66)">Oil is still $90+ because Hormuz is still constrained</text>
+   </g>
+   <g id="line2d_23">
+    <path d="M 71.140166 182.8088 
+L 107.283903 144.8072 
+" clip-path="url(#pb610f751e8)" style="fill: none; stroke: #f0a33a; stroke-width: 2.6; stroke-linecap: square"/>
+    <defs>
+     <path id="m615ee8b971" d="M 0 3 
+C 0.795609 3 1.55874 2.683901 2.12132 2.12132 
+C 2.683901 1.55874 3 0.795609 3 0 
+C 3 -0.795609 2.683901 -1.55874 2.12132 -2.12132 
+C 1.55874 -2.683901 0.795609 -3 0 -3 
+C -0.795609 -3 -1.55874 -2.683901 -2.12132 -2.12132 
+C -2.683901 -1.55874 -3 -0.795609 -3 0 
+C -3 0.795609 -2.683901 1.55874 -2.12132 2.12132 
+C -1.55874 2.683901 -0.795609 3 0 3 
+z
+" style="stroke: #f0a33a"/>
+    </defs>
+    <g clip-path="url(#pb610f751e8)">
+     <use xlink:href="#m615ee8b971" x="71.140166" y="182.8088" style="fill: #f0a33a; stroke: #f0a33a"/>
+     <use xlink:href="#m615ee8b971" x="107.283903" y="144.8072" style="fill: #f0a33a; stroke: #f0a33a"/>
+    </g>
+   </g>
+   <g id="PathCollection_1">
+    <defs>
+     <path id="m22510ed91d" d="M 0 3.464102 
+C 0.91869 3.464102 1.799877 3.099102 2.44949 2.44949 
+C 3.099102 1.799877 3.464102 0.91869 3.464102 0 
+C 3.464102 -0.91869 3.099102 -1.799877 2.44949 -2.44949 
+C 1.799877 -3.099102 0.91869 -3.464102 0 -3.464102 
+C -0.91869 -3.464102 -1.799877 -3.099102 -2.44949 -2.44949 
+C -3.099102 -1.799877 -3.464102 -0.91869 -3.464102 0 
+C -3.464102 0.91869 -3.099102 1.799877 -2.44949 2.44949 
+C -1.799877 3.099102 -0.91869 3.464102 0 3.464102 
+z
+" style="stroke: #c98bb8"/>
+    </defs>
+    <g clip-path="url(#pb610f751e8)">
+     <use xlink:href="#m22510ed91d" x="151.589129" y="87.8048" style="fill: #c98bb8; stroke: #c98bb8"/>
+    </g>
+   </g>
+   <g id="LineCollection_1">
+    <path d="M 152.755056 112.2344 
+L 152.755056 95.948 
+" clip-path="url(#pb610f751e8)" style="fill: none; stroke: #c98bb8; stroke-width: 3"/>
+   </g>
+   <g id="PathCollection_2">
+    <defs>
+     <path id="m61c00d1989" d="M 0 2.12132 
+C 0.562581 2.12132 1.102195 1.897805 1.5 1.5 
+C 1.897805 1.102195 2.12132 0.562581 2.12132 0 
+C 2.12132 -0.562581 1.897805 -1.102195 1.5 -1.5 
+C 1.102195 -1.897805 0.562581 -2.12132 0 -2.12132 
+C -0.562581 -2.12132 -1.102195 -1.897805 -1.5 -1.5 
+C -1.897805 -1.102195 -2.12132 -0.562581 -2.12132 0 
+C -2.12132 0.562581 -1.897805 1.102195 -1.5 1.5 
+C -1.102195 1.897805 -0.562581 2.12132 0 2.12132 
+z
+" style="stroke: #c98bb8"/>
+    </defs>
+    <g clip-path="url(#pb610f751e8)">
+     <use xlink:href="#m61c00d1989" x="152.755056" y="112.2344" style="fill: #c98bb8; stroke: #c98bb8"/>
+     <use xlink:href="#m61c00d1989" x="152.755056" y="95.948" style="fill: #c98bb8; stroke: #c98bb8"/>
+    </g>
+   </g>
+  </g>
+  <g id="AnnotationBbox_1">
+   <image xlink:href="data:image/png;base64,
+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" id="image7d517fe9db" transform="scale(1 -1) translate(0 -43.2)" x="596.418063" y="-365.188" width="42.171429" height="43.2"/>
+   <g id="text_28">
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4; opacity: 0.45" x="642.4415" y="388.343703" transform="rotate(-0 642.4415 388.343703)">OHMEGA MONSTER</text>
+   </g>
+   <g id="text_29">
+    <text style="font-size: 7px; font-family: 'Consolas'; text-anchor: start; fill: #858981; opacity: 0.4" x="642.4415" y="394.437531" transform="rotate(-0 642.4415 394.437531)">ohmega.monster</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pb610f751e8">
+   <rect x="54.817188" y="41.66" width="638.928" height="271.44"/>
+  </clipPath>
+ </defs>
+</svg>

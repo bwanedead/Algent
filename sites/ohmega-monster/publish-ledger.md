@@ -783,3 +783,13 @@ cost_by_stage: editorial=$0.1337, gauntlet=$0.2829, profile=$0.1326
 refused: model_turn(reservation_overrun)
 disposition: needs_verification
 run: 0100__578aa33f-54ee-45db-9981-cfdafda76018
+
+### PUBLISH u-s-and-iran-resume-indirect-talks-as-strait-of-hormuz-the-w-685d32 — 2026-09-23
+status: needs_hedging  ·  draft: grounded_with_caveats  ·  treatment: promoted
+caveats: needs_hedging (1 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.8632  ·  mode: normal  ·  soft/hard: $1.00/$1.88
+cost_by_stage: editorial=$0.1978, gauntlet=$0.5104, profile=$0.1551
+refused: model_turn(reservation_overrun), model_turn(reservation_overrun)
+x_searches: 1
+run: 0101__07b1d6b7-bcb3-4ffa-aa17-dd5646502dca
