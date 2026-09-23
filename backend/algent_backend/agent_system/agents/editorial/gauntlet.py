@@ -71,7 +71,9 @@ def build_planning_gauntlet_graph(context: AgentRunContext) -> Any:
                 review = skipped_review
         else:
             review = skipped_review
-        _write(context, "review_initial.json", review)
+        # treatment_* names: the profile gauntlet writes review_initial/final.json in the same run
+        # folder, and this one used to overwrite them — losing what the fact-check was asked to fix.
+        _write(context, "treatment_review_initial.json", review)
         initial_verdict = review.get("verdict", "")
         initial_findings = len(review.get("findings", []))
 
@@ -96,7 +98,7 @@ def build_planning_gauntlet_graph(context: AgentRunContext) -> Any:
                     review = build_treatment_reviewer(context).invoke(
                         {"treatment": treatment, "profile": profile}, config,
                     )["treatment_review"]
-                    _write(context, "review_final.json", review)
+                    _write(context, "treatment_review_final.json", review)
                 revised = True
                 addressed = [
                     f.get("id", "")
