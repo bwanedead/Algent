@@ -749,3 +749,16 @@ cost_by_stage: editorial=$0.3201, gauntlet=$0.4033, profile=$0.0874
 refused: model_turn(stage_cap)
 ⚠ figures not matched to evidence: 92%, 20%, 83%, 59%, 50%
 run: 0097__8810422e-ed7a-45aa-bcce-8397664038fe
+
+### PUBLISH nine-giant-building-projects-that-were-seriously-backed-and-49af97 — 2026-09-23
+status: publishable  ·  draft: grounded_with_caveats  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 1 produced, 0 escapes
+cost: ~$1.0064  ·  mode: slim_finish  ·  soft/hard: $1.00/$3.00
+analytics_skipped: req_mega_material_02:soft_cap_skipped
+cost_by_stage: editorial=$0.2034, gauntlet=$0.5863, profile=$0.2167
+soft_cap_crossed: yes @ editorial
+refused: figure_image(slim_finish), figure_image(slim_finish)
+disposition: needs_verification
+⚠ walled sources (carried with caveats): src_2c9c10cec8
+run: 0098__4137b1f9-f843-4a4b-9177-d98bc7ee333d
