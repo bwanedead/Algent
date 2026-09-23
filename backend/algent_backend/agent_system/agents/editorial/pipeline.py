@@ -39,6 +39,7 @@ from .draft_spec import build_graph as build_drafter
 from .draft_store import JsonDraftStore, render_draft
 from .gauntlet import build_planning_gauntlet_graph
 from .figure_images import FIGURE_IMAGE, make_figures, place, plan_images
+from .real_images import find_photo
 from .headline_spec import build_graph as build_headline_writer
 from .hero_stage import hero_enabled, is_quota_skip, make_hero
 from .length import ceiling_words, count_words, wpm
@@ -698,7 +699,13 @@ def _illustrate(
     say = lambda note: context.emit(FIGURE_IMAGE, {"note": note})   # noqa: E731
     try:
         plan = plan_images(context, config, draft, model_spec=FIGURE_IMAGE_MODEL)
-        figures = make_figures(plan, body, context.artifacts, say=say, essential=essential)
+
+        def photo(slot: Any, passage: str) -> Any:   # a real photograph before a drawing
+            return find_photo(context, config, query=slot.photo_query, subject=slot.subject,
+                              passage=passage, model_spec=FIGURE_IMAGE_MODEL)
+
+        figures = make_figures(plan, body, context.artifacts, say=say, essential=essential,
+                               find_photo=photo)
     except Exception as exc:  # noqa: BLE001 — pictures never cost us a finished article
         context.emit(FIGURE_IMAGE, {"note": f"figures: {type(exc).__name__}: {str(exc)[:90]}"})
         return draft

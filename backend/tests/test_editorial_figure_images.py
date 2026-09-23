@@ -106,3 +106,52 @@ def test_an_existing_thing_can_be_illustrated_in_the_editorial_register(tmp_path
     seen: list[dict[str, Any]] = []
     fi.make_figures(_plan(style="editorial"), BODY, _Artifacts(tmp_path), generate=_drawer(seen))
     assert seen[0]["register"] == "editorial"
+
+
+# ── real photographs first ────────────────────────────────────────────────────────────────────
+
+def _photo_finder(calls: list[str], found: bool = True):
+    from algent_backend.agent_system.agents.editorial.real_images import Candidate
+
+    pick = Candidate(title="Strait from orbit.jpg", description="", license="Public domain",
+                     license_url="", artist="NASA", date="1982", thumb_url="https://x/t.jpg",
+                     page_url="https://commons.wikimedia.org/wiki/File:S.jpg", width=4000,
+                     mime="image/jpeg")
+
+    def find(slot: Any, passage: str):
+        calls.append(passage)
+        return (pick, b"\xff\xd8real", "shows it") if found else (None, b"", "none fit")
+    return find
+
+
+def test_a_real_thing_gets_a_real_photo_with_its_credit(tmp_path: Path) -> None:
+    seen: list[dict[str, Any]] = []
+    calls: list[str] = []
+    figures = fi.make_figures(_plan(style="editorial"), BODY, _Artifacts(tmp_path),
+                              generate=_drawer(seen), find_photo=_photo_finder(calls))
+    assert seen == []                                   # nothing drawn, nothing spent
+    assert figures[0]["artifact_name"] == "photo_pyramid.jpg"
+    assert "Shimizu proposed" in calls[0]               # judged against its own passage
+    out = fi.place(BODY, figures)
+    assert "(photo_pyramid.jpg)\n\n*Photo: NASA" in out
+    assert "Wikimedia Commons" in out and "1982" in out
+
+
+def test_no_fitting_photo_falls_back_to_the_drawing(tmp_path: Path) -> None:
+    seen: list[dict[str, Any]] = []
+    figures = fi.make_figures(_plan(style="editorial"), BODY, _Artifacts(tmp_path),
+                              generate=_drawer(seen), find_photo=_photo_finder([], found=False))
+    assert len(seen) == 1 and figures[0]["artifact_name"].startswith("figure_")
+
+
+def test_a_concept_is_never_photographed(tmp_path: Path) -> None:
+    calls: list[str] = []
+    fi.make_figures(_plan(style="concept"), BODY, _Artifacts(tmp_path),
+                    generate=_drawer([]), find_photo=_photo_finder(calls))
+    assert calls == []
+
+
+def test_a_placed_image_never_swallows_the_next_paragraph() -> None:
+    out = fi.place("Para one here.\n\nPara two.",
+                   [{"anchor": "Para one", "artifact_name": "figure_1.jpg", "alt": "a"}])
+    assert out == "Para one here.\n\n![a](figure_1.jpg)\n\nPara two."

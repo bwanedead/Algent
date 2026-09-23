@@ -61,6 +61,7 @@ class ImageSlot(BaseModel):
     alt: str = ""              # what a reader who cannot see it is told
     style: str = "concept"        # which register to draw in — see REGISTERS
     why: str = ""              # what the reader cannot picture without it
+    photo_query: str = ""      # editorial only: the real thing's name, for a photo archive search
 
 
 class ImagePlan(BaseModel):
@@ -76,13 +77,15 @@ they have almost certainly never seen? A proposed tower in a bay, a ribbon runni
 floating neighbourhood, an antenna compound nobody outside the region has looked at. Those are
 worth drawing, and a piece that describes several of them wants several.
 
-Every picture you ask for is shown framed and labelled as AI-generated, so a reader always
-knows it is an illustration and not a photograph. That makes drawing a real thing acceptable —
-but draw what the prose actually describes (the kinds of structures, the setting), never
-invented specifics presented as the real site's layout.
+For a thing or place that EXISTS, we first look for a real, freely licensed photograph of it,
+and draw only when none fits. So a real place at the heart of the story — a strait, a dam, a
+factory, a compound — is worth a slot even in a hard-news piece: a reader who has never seen it
+gets to. Any picture that is drawn is shown framed and labelled as AI-generated, so draw only
+what the prose describes, never invented specifics presented as the real site's layout.
 
-Most articles want NONE. A policy fight, an economic argument, a court ruling — there is nothing
-to draw, and a picture of nothing in particular is worse than no picture. Return an empty list
+Most articles still want few or none. A policy fight, an economic argument, a court ruling, with
+no physical thing at its centre — there is nothing to show, and a picture of nothing in
+particular (a generic handshake, a flag, a building's facade) is worse than no picture. Return an empty list
 and say why. Do not pad, do not illustrate an abstraction, and never ask for a chart, a map, a
 diagram or anything carrying data: those are built from evidence elsewhere in the newsroom, and
 an image model asked for numbers invents them.
@@ -99,6 +102,9 @@ For each slot:
 - `style` — `concept` for something proposed or unbuilt (drawn as an architect's impression),
   `editorial` for something that exists and simply has not been shown.
 - `why` — what the reader cannot picture without it.
+- `photo_query` — `editorial` slots only: what a photo archive would file the real thing under,
+  proper nouns welcome ("Strait of Hormuz", "Hoover Dam", "Port of Doraleh"). Plain names, no
+  dates or adjectives. Leave empty for `concept`.
 
 Order them as they appear in the piece, at most one per passage. Each image costs real money and
 a page of pictures nobody needed is its own kind of noise, so the count follows the prose: as
@@ -157,8 +163,13 @@ def make_figures(
     say: Any = None,
     generate: Any = None,
     essential: bool = False,
+    find_photo: Any = None,
 ) -> list[dict[str, Any]]:
-    """Draw each usable slot. Returns the records that were written; never raises.
+    """Fill each usable slot — a real photo when ``find_photo`` finds one, else a drawing.
+
+    ``find_photo(slot, passage) -> (Candidate | None, bytes, note)`` is tried first for slots in
+    the ``editorial`` register (things that exist). Concepts are never photographed: an unbuilt
+    design has no photograph, and an architect's render is theirs, not a free file.
 
     Budget-aware in the ordinary way: a reservation per image, released when it fails. These
     are not essential — an article ships without them, unlike the hero — so a slim or stopped
@@ -175,6 +186,11 @@ def make_figures(
         if problem:
             note(f"figure {i}: skipped — {problem}")
             continue
+        if callable(find_photo) and slot.style == "editorial":
+            photo = _real_photo(slot, body, artifacts, find_photo, note, i)
+            if photo is not None:
+                out.append(photo)
+                continue
         est = image_est()
         # Essential for a survey: there the pictures are the point, and the soft-cap economy mode
         # once dropped two of a megaprojects tour's five. Still bounded by the article hard cap.
@@ -220,6 +236,47 @@ def make_figures(
     return out
 
 
+def _real_photo(slot: ImageSlot, body: str, artifacts: Any, find_photo: Any, note: Any,
+                i: int) -> dict[str, Any] | None:
+    """One slot's real photograph, written and recorded — or None, and the slot is drawn."""
+    from .real_images import PHOTO_PREFIX, credit_line, suffix
+
+    try:
+        pick, data, why = find_photo(slot, _passage(body, slot.anchor))
+    except Exception as exc:  # noqa: BLE001 — a failed search falls back to drawing
+        pick, data, why = None, b"", f"{type(exc).__name__}"
+    if pick is None or not data:
+        note(f"figure {i}: no real photo — {why}")
+        return None
+    name = f"{PHOTO_PREFIX}{_safe(slot.id or str(i))}{suffix(pick)}"
+    try:
+        artifacts.write_bytes(name, data, kind="image")
+    except Exception as exc:  # noqa: BLE001
+        note(f"figure {i}: photo not written — {str(exc)[:80]}")
+        return None
+    note(f"figure {i}: {name} real photo — {pick.title[:60]} ({pick.license})")
+    return {
+        "artifact_name": name, "alt": (slot.alt or slot.subject).strip(), "anchor": slot.anchor,
+        "kind": "photo", "credit": credit_line(pick), "source_url": pick.page_url,
+        "license": pick.license, "author": pick.artist, "taken": pick.date,
+        "subject": slot.subject, "estimated_usd": 0.0,
+    }
+
+
+def _passage(body: str, anchor: str) -> str:
+    """The paragraph (or heading) an anchor sits in — what the photo must show."""
+    end = _anchor_index(body, anchor)
+    if end is None:
+        return ""
+    start = body.rfind("\n\n", 0, max(0, end - 1))
+    block = body[start + 2 if start >= 0 else 0:end].strip()
+    if block.startswith("#"):
+        # Anchored to a heading: the thing is described in the paragraph under it.
+        nxt = body.find("\n\n", end + 2)
+        block += "\n\n" + body[end:nxt if nxt >= 0 else len(body)].strip()
+    return block
+
+
 def place(body: str, figures: list[dict[str, Any]]) -> str:
     """Put each image into the prose after its anchor, with its label underneath.
 
@@ -236,8 +293,15 @@ def place(body: str, figures: list[dict[str, Any]]) -> str:
         # No label line here: the site recognises a generated picture by its ``figure_`` name
         # and gives it the page's AI signature — frame, bright label, and the key at the top.
         # A grey italic line from us as well was a second, weaker disclosure of the same fact.
-        block = f"\n\n![{_clean(str(fig.get('alt') or ''))}]({fig.get('artifact_name')})\n"
-        body = body[:at] + block + body[at:].lstrip("\n")
+        # Blank lines on both sides: an image followed by a single newline is the SAME markdown
+        # paragraph as the text after it, and every illustrated piece shipped with the next
+        # paragraph glued to its picture.
+        block = f"\n\n![{_clean(str(fig.get('alt') or ''))}]({fig.get('artifact_name')})\n\n"
+        if fig.get("credit"):
+            # A real photo carries its credit on its own italic line — the site's caption style.
+            block += f"{fig['credit']}\n\n"
+        rest = body[at:].lstrip("\n")
+        body = body[:at] + (block if rest else block.rstrip("\n") + "\n") + rest
     return body
 
 
