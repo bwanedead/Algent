@@ -157,6 +157,11 @@ piece investigates is the news.** Say plainly if something is contested — "dis
   caveats live in the body and the receipts; the at-a-glance line carries "what remains
   uncertain" as well.
 
+  **A survey's dek names what connects the members, not the members.** The headings already
+  list them. A four-item space roundup shipped a dek that recited all four and then bolted a
+  caveat about one of them onto the end — a table of contents in sentence form. Say the thread
+  instead, and let the reader find the members in the piece.
+
   The dek is also the reader's **fastest route to the point**, and it is usually the last thing
   they read before deciding whether to stay. A headline can only wrap the angle; the dek is
   where the substance that makes the event worth reading fits — the stake, the scale, the
