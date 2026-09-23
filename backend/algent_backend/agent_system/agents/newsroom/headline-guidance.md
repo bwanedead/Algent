@@ -135,12 +135,27 @@ piece investigates is the news.** Say plainly if something is contested — "dis
   observations*, but beside a photograph of a spacecraft it reads as *hanging in space*. A
   headline is read once, fast, with a picture next to it — ambiguity that prose would survive
   is fatal here.
-- **Standfirst (dek):** one sentence under the headline that adds the load-bearing nuance the
-  headline had to leave out — most often the key tension, caveat, or confidence limit ("a hike
-  tail is still live", "the regeneration link remains unproven"). **This is the home for
-  hedging**, not the title. It is also a good home for a role/jurisdiction clause the headline
-  had no room for. If the dek names several actors, keep ownership explicit (who frames what)
-  so the body is not left to guess.
+- **Standfirst (dek):** one sentence under the headline that hands over the substance the
+  headline had no room for — the stake, the scale, the thing that makes it worth reading — and,
+  when the story needs one, **its single most important limit**, in plain words ("a hike tail is
+  still live", "the regeneration link remains unproven"). The limit belongs here rather than in
+  the title; that does not make the dek a place to list every caveat. It is also a good home for
+  a role/jurisdiction clause the headline had no room for. If the dek names several actors, keep
+  ownership explicit (who frames what) so the body is not left to guess.
+
+  **One limit, not the audit.** Two consecutive pieces shipped deks that were caveat lists
+  written in our own shorthand:
+  *"The startup's 5x/80% claim is limited preview with no pricing or methodology, WorldCrafter's
+  revisit-consistency gain is authors-only on 145 scenes — parallel answers to the same
+  cost-and-memory bottleneck, not a combined breakthrough."* and *"…but a crowded Ariane 6
+  manifest, a 50% cost rise to over €15.6bn and Starlink's scale leave timing uncertain, while a
+  universal-antenna demo is proven but unproven at scale."* Both articles opened well; both deks
+  undid it. A reader cannot parse "5x/80%" or "authors-only", and a sentence that is mostly
+  exceptions tells them what is doubtful about a thing before telling them the thing. Wanted:
+  *"Two labs say they have found cheaper ways to keep AI-generated video worlds consistent for
+  minutes at a time — neither result has been checked by anyone else yet."* The rest of the
+  caveats live in the body and the receipts; the at-a-glance line carries "what remains
+  uncertain" as well.
 
   The dek is also the reader's **fastest route to the point**, and it is usually the last thing
   they read before deciding whether to stay. A headline can only wrap the angle; the dek is

@@ -30,8 +30,11 @@ headline-guidance.md.
    a disclaimer clause or asserting past the evidence. The dek carries finer limits; it does
    not absolve an over-grade title.
 
-   The dek is where hedging lives: the one load-bearing nuance, scale, caveat, jurisdiction, or
-   causal limit the headline left out.
+   The dek hands over the substance the headline had no room for — the stake, the scale, what
+   was actually found — plus, when needed, the ONE limit that most changes how far to trust it.
+   One limit, in plain words. Never a list of caveats, never our shorthand ("authors-only",
+   "5x/80%", "limited preview"): two decks in a row shipped as audits and undid the good openings
+   under them. The other caveats already live in the body, the at-a-glance line and the receipts.
 
    COLD-BROWSER TEST (required): a reader who sees ONLY the title must know the SUBJECT and
    the ANGLE — without already following the beat and without opening the article. The title +

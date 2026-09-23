@@ -30,6 +30,8 @@ from .analytics_confirm import confirm_analytics_claims
 from .analytics_spec import build_graph as build_analytics_router
 from .analytics_worker import build_analytics_worker_graph
 from .caveat_spec import build_graph as build_caveat_reviewer
+from .compress import DRAFT_COMPRESSED
+from .compress import compress as compress_draft
 from .comprehension_spec import build_graph as build_comprehension_reviewer
 from .draft import ArticleDraft
 from .draft_gauntlet import build_drafting_gauntlet_graph
@@ -42,6 +44,10 @@ from .hero_stage import hero_enabled, is_quota_skip, make_hero
 from .length import ceiling_words, count_words, wpm
 from .pipeline_contracts import EditorialPipelineReport
 from .publish import render_published_article
+
+#: The cut rewrites a whole piece to a length, keeping every side and hedge — closer to the
+#: review's job than to a mechanical trim, so it gets the review's effort.
+COMPRESS_MODEL = house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=8192)
 
 #: Choosing pictures is a reading task, not an expert one: judge what the prose asks a reader to
 #: picture, then describe it in a dozen words for the image model.
@@ -433,6 +439,14 @@ def _post_draft_quality(
     from algent_backend.agent_system.foundation.models.budget_gate import (
         BudgetRefusedError,
     )
+
+    # The cut comes first, so the hedging check and the review both see a piece of the planned
+    # size — and the hedging check catches any limit the cut damaged.
+    if draft and budget_policy.allow_optional("comprehension_repair"):
+        draft, cut = compress_draft(
+            context, config, draft, treatment,
+            model_spec=COMPRESS_MODEL, min_words=_MIN_PUBLISH_WORDS)
+        context.emit(DRAFT_COMPRESSED, cut)
 
     caveat: dict[str, Any] = {}
     caveat_verdict = "verified"
