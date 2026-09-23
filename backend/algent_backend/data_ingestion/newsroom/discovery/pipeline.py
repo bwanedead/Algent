@@ -85,7 +85,15 @@ def ensure_t0(
         return json.loads(existing.read_text(encoding="utf-8")), str(existing)
 
     say(f"building t0 (channels: {', '.join(sorted(chans))})…")
-    report = _build_insights(source, say) if "gkg" in chans else None
+    report = None
+    if "gkg" in chans:
+        # One channel of six. GDELT lists each 15-minute batch before the file is always there
+        # (a live 404 on 20260923111500 killed a whole menu build), and a source hiccup must not
+        # take the other five channels down with it. The menu is built without GKG this time.
+        try:
+            report = _build_insights(source, say)
+        except Exception as exc:  # noqa: BLE001
+            say(f"GKG unavailable ({str(exc)[:100]}) — building from the other channels")
     pool, path = _build_pool(report, chans, say)
     return pool, path
 
