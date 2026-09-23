@@ -373,6 +373,7 @@ def _apply_cost_snapshot(report: NewsroomRailReport) -> None:
     report.cost_by_op = dict(snap.get("cost_by_op") or {})
     report.skipped_operations = list(snap.get("skipped_operations") or [])
     report.refused_operations = list(snap.get("refused_operations") or [])
+    report.estimate_overruns = list(snap.get("estimate_overruns") or [])
 
 
 def _finish_with_cost(

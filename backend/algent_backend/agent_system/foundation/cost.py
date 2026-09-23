@@ -178,6 +178,9 @@ class BudgetLedger:
     hard_stop: bool = False
     skipped: list[dict[str, str]] = field(default_factory=list)
     refused: list[dict[str, str]] = field(default_factory=list)
+    # Ops that RAN and cost more than their estimate. Not refusals: they used to be filed with
+    # them, and the article receipts told readers a research turn was refused when it had run.
+    overruns: list[dict[str, str]] = field(default_factory=list)
     cost_by_stage: dict[str, float] = field(default_factory=dict)
     cost_by_op: dict[str, float] = field(default_factory=dict)
     _open: dict[str, Reservation] = field(default_factory=dict)
@@ -200,6 +203,7 @@ class BudgetLedger:
             "cost_by_op": dict(self.cost_by_op),
             "skipped_operations": list(self.skipped),
             "refused_operations": list(self.refused),
+            "estimate_overruns": list(self.overruns),
         }
 
 
@@ -381,6 +385,7 @@ def snapshot() -> dict[str, Any]:
             "cost_by_op": {},
             "skipped_operations": [],
             "refused_operations": [],
+            "estimate_overruns": [],
         }
     return led.snapshot()
 
@@ -490,7 +495,8 @@ def settle(reservation: Reservation | None, actual: float) -> None:
         led.reserved_usd = round(max(0.0, led.reserved_usd - held.estimate), 6)
     _charge(led, act, op=reservation.op)
     if act > estimate + 1e-9:
-        _record_refuse(led, reservation.op, "reservation_overrun")
+        led.overruns.append({"op": reservation.op, "stage": led.current_stage,
+                             "estimate": f"{estimate:.4f}", "actual": f"{act:.4f}"})
 
 
 def release(reservation: Reservation | None) -> None:

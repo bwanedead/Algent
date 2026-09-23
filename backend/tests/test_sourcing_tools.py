@@ -634,10 +634,10 @@ def test_settle_over_reservation_stays_normal_under_soft_cap() -> None:
         cost.settle(res, 0.50)  # overrun, still under soft
         assert cost.mode() == "normal"
         assert cost.article_spent_usd() == 0.50
-        assert any(
-            r.get("reason") == "reservation_overrun"
-            for r in cost.snapshot()["refused_operations"]
-        )
+        # An overrun RAN — it is recorded as an overrun, never as a refusal (receipts show those).
+        snap = cost.snapshot()
+        assert snap["refused_operations"] == []
+        assert snap["estimate_overruns"][0]["op"] == "model_turn"
         # Non-essential work must still be allowed while under soft.
         assert cost.try_reserve(0.01, op="keyword") is not None
 

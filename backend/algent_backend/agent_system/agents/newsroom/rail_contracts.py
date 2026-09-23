@@ -80,5 +80,6 @@ class NewsroomRailReport(BaseModel):
     #: of them making no model calls at all, which from outside looks like a dead run.
     slow_legs: list[dict] = Field(default_factory=list)
     refused_operations: list[dict[str, str]] = Field(default_factory=list)
+    estimate_overruns: list[dict[str, str]] = Field(default_factory=list)   # ran; cost > estimate
     note: str = ""
     generated_at: str = ""
