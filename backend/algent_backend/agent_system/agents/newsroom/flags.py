@@ -48,6 +48,12 @@ INSIGHT_COMPOSE_EVERY_MIN = 240
 #: dispute, a mechanism that will not fit in a clause) — never by having
 #: researched an adjacent world. Wired into treatment briefing, drafter task,
 #: and comprehension review.
+#: How many charts draw at once. Each chart worker is a separate CLI process that mostly waits
+#: on a remote model, so two at a time roughly halves the charts' ~20-minute share of an article.
+#: The operator runs this on a laptop and asked for the load to be measured before trusting it:
+#: set to 1 to go back to one at a time.
+ANALYTICS_PARALLEL = 2
+
 ARTICLE_DIGEST_WORDS = 1100
 ARTICLE_DIGEST_MINUTES = 5
 #: Absolute cap even when earned. A 7-minute piece is the exception, not a

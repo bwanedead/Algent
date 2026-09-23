@@ -1087,14 +1087,23 @@ def build_analytics_worker_graph(
                 return _skip_all(f"analytics canary failed: {canary_note} (version {version})")
 
         profile = SignalProfile.model_validate(pdict)
-        artifacts: list[AnalyticsArtifact] = []
-        for request in plan.requests:
+        # Charts are independent — each works in its own scratch folder and nothing else in the
+        # run writes while they draw — so they can draw side by side (flags.ANALYTICS_PARALLEL).
+        # Sequential, two charts were 23 of a 54-minute article. Results keep the plan's order.
+        from concurrent.futures import ThreadPoolExecutor
+
+        from algent_backend.agent_system.agents.newsroom.flags import ANALYTICS_PARALLEL
+
+        def _one(request: AnalyticsRequest) -> AnalyticsArtifact:
             art = fulfill_request(request, profile, context=context, runner=runner, version=version)
-            artifacts.append(art)
             context.emit(ANALYTICS_ARTIFACT_PRODUCED, {
                 "request_id": art.request_id, "status": art.status,
                 "figure_verified": art.figure_check.get("verified"), "note": art.note,
             })
+            return art
+
+        with ThreadPoolExecutor(max_workers=max(1, int(ANALYTICS_PARALLEL))) as pool:
+            artifacts: list[AnalyticsArtifact] = list(pool.map(_one, plan.requests))
 
         dumped = [a.model_dump() for a in artifacts]
         if context.artifacts is not None:
