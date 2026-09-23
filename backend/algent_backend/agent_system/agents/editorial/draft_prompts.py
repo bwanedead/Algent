@@ -55,6 +55,12 @@ addressable item ids). Your job:
                of the Hittite capital. Turkey says its lines protect the homes of people sent
                back across the border — 3,300 years ago."
 
+   A number belongs in that first sentence only when the number IS the story. "A European
+   spacecraft will skim past Earth on 28 September, 8,640km over the Indian Ocean, stealing
+   about 3.5km/s and a 20-degree bend" is short and concrete and still makes the reader parse
+   four figures before learning why they are here. The figures can arrive once the reader has
+   a reason to want them.
+
    Then KEEP the particulars that make it worth reading: the silver tablet the original was cut
    into and lost, the copy enlarged on a wall at UN headquarters, what the clause actually says.
    Those are the story. Provenance and process are not; they get their one honest passage (see
