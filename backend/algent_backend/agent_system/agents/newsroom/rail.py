@@ -68,7 +68,7 @@ from ..gauntlet.spec import build_graph as build_profile_gauntlet
 from ..research.spec import build_graph as build_profile
 from ..routing.spec import build_graph as build_router
 from . import steer
-from .watchdog import Watchdog
+from .watchdog import Watchdog, recover_and_exit
 from .rail_contracts import NewsroomRailReport
 
 RAIL_COMPLETED = "newsroom_rail.completed"
@@ -144,11 +144,18 @@ def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | Non
         hard = None if envelope_cap is None else min(cost.hard_cap_usd(), envelope_cap)
         # A run that stops making progress ends itself rather than holding the lock all night.
         art = _artifacts_dir(context)
-        dog = Watchdog(record=(art.parent / "audit" / "stalled.txt") if art is not None else None)
+        ledger: list[Any] = []    # the article ledger, once open — the watchdog thread cannot see
+                                  # ContextVars, so it reads spend through this captured object
+        dog = Watchdog(
+            record=(art.parent / "audit" / "stalled.txt") if art is not None else None,
+            on_stall=lambda: recover_and_exit(
+                run_id=context.run_id, run_dir=art.parent if art is not None else None,
+                spent=lambda: ledger[0].spent_usd if ledger else 0.0))
         dog.start()
         watched = dataclasses.replace(
             context, emit=lambda et, p=None: (dog.touch(), context.emit(et, p))[1])
         with cost.article_scoped(hard), read_cache.scoped(_read_cache_path(context)):
+            ledger.append(cost.current_ledger())
             try:
                 out = _run_rail(watched, state, config, lead_store=lead_store)
             finally:

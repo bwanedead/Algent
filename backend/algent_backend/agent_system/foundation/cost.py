@@ -568,6 +568,12 @@ def spent_usd() -> float:
     return round(max(0.0, _spent.get() - _stage_start.get()), 6)
 
 
+def current_ledger() -> BudgetLedger | None:
+    """The open article ledger object — for a thread that cannot see this context (the rail's
+    watchdog reads spend through it when it has to end a stalled run)."""
+    return _ledger.get()
+
+
 def article_spent_usd() -> float:
     led = _ledger.get()
     if led is not None:

@@ -71,11 +71,30 @@ def close_envelope(where: Path | None = None) -> None:
 
 
 def committed(state: dict[str, Any]) -> float:
-    """Dollars spent or still reserved: settled entries at actual, open ones at their cap."""
+    """Dollars spent or still reserved: settled entries at actual, open ones at their cap plus
+    whatever an earlier attempt of the same run already spent (``prior_usd``)."""
     total = 0.0
     for e in state.get("entries") or []:
-        total += float(e["usd"]) if e.get("settled") else float(e.get("cap") or 0.0)
+        total += float(e["usd"]) if e.get("settled") else (
+            float(e.get("cap") or 0.0) + float(e.get("prior_usd") or 0.0))
     return round(total, 6)
+
+
+def record_partial(run_id: str, usd: float, *, where: Path | None = None) -> None:
+    """A run is dying mid-flight and will be resumed: bank what it spent, release its cap.
+
+    Without this, a resume reusing the open entry was handed the whole remaining envelope as
+    if the dead attempt had cost nothing — harmless by hand, a runaway once resumes are automatic.
+    """
+    state = load(where)
+    if state is None:
+        return
+    for e in state.get("entries") or []:
+        if e.get("run_id") == run_id and not e.get("settled"):
+            e["prior_usd"] = round(float(e.get("prior_usd") or 0.0) + max(0.0, float(usd)), 6)
+            e["cap"] = 0.0
+            _save(state, where)
+            return
 
 
 def runs_used(state: dict[str, Any]) -> int:
@@ -125,7 +144,7 @@ def settle(run_id: str, usd: float, *, where: Path | None = None) -> None:
         return
     for e in state.get("entries") or []:
         if e.get("run_id") == run_id and not e.get("settled"):
-            e.update({"usd": round(float(usd), 6), "settled": True,
+            e.update({"usd": round(float(usd) + float(e.get("prior_usd") or 0.0), 6), "settled": True,
                       "settled_at": datetime.now(UTC).isoformat()})
     _save(state, where)
 
@@ -149,7 +168,8 @@ def reconcile(*, where: Path | None = None, runs_root: Path | None = None) -> in
                 usd = float(json.loads(report.read_text(encoding="utf-8")).get("total_usd") or 0)
             except (OSError, ValueError, json.JSONDecodeError):
                 continue
-            e.update({"usd": round(usd, 6), "settled": True, "settled_by": "reconcile"})
+            e.update({"usd": round(usd + float(e.get("prior_usd") or 0.0), 6), "settled": True,
+                      "settled_by": "reconcile"})
             fixed += 1
     if fixed:
         _save(state, where)
