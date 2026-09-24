@@ -34,6 +34,7 @@ _FILES: tuple[tuple[str, str], ...] = (
     ("selected_vector.json", "selected_vector"),
     ("profile.json", "profile"),
     ("gauntlet_report.json", "gauntlet"),
+    ("gauntlet_progress.json", "gauntlet_progress"),
     ("treatment.json", "treatment"),
     ("planning_gauntlet_report.json", "plan_report"),
     ("draft.json", "draft"),
@@ -52,7 +53,7 @@ STAGE_OUTPUTS: dict[str, tuple[str, ...]] = {
     "synthesis": ("portfolio",),
     "routing": ("selected_vector",),
     "profile": ("profile",),
-    "gauntlet": ("gauntlet",),
+    "gauntlet": ("gauntlet", "gauntlet_progress"),
     "editorial": (
         "treatment", "plan_report", "draft", "draft_quality", "draft_report", "hero",
         "analytics_plan", "analytics_artifacts", "analytics_confirm", "pipeline_prior",

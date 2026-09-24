@@ -46,6 +46,7 @@ _LANE_MODULES = [
 
 class GauntletState(TypedDict, total=False):
     profile: dict[str, Any]   # the profile to put through the gauntlet (the input)
+    progress: dict[str, Any]  # resume: the first review + lanes already run (gauntlet_progress.json)
     gauntlet: dict[str, Any]  # the GauntletReport
 
 
@@ -58,11 +59,19 @@ def build_gauntlet_graph(context: AgentRunContext) -> Any:
             context.emit(GAUNTLET_NO_INPUT, {"message": "no profile supplied to the gauntlet"})
             return {"profile": profile or {}, "gauntlet": GauntletReport(final_verdict="unsound").model_dump()}
 
-        start_rev = int(profile.get("revision", 1) or 1)
+        # A gauntlet resumed after a pause between lanes: its first review and finished lanes are
+        # already paid for (the profile it is handed already carries those lanes' research).
+        progress = state.get("progress") if isinstance(state.get("progress"), dict) else {}
+        done = set(progress.get("lanes_done") or [])
+        start_rev = int(progress.get("start_rev") or profile.get("revision", 1) or 1)
 
         # 1. review
-        review = build_reviewer(context).invoke({"profile": profile}, config)["review"]
-        _write(context, "review_initial.json", review)
+        if isinstance(progress.get("review"), dict):
+            review = progress["review"]
+        else:
+            review = build_reviewer(context).invoke({"profile": profile}, config)["review"]
+            _write(context, "review_initial.json", review)
+        _save_progress(context, review, done, start_rev)
         initial_verdict = review.get("verdict", "")
         initial_findings = len(review.get("findings", []))
 
@@ -80,6 +89,9 @@ def build_gauntlet_graph(context: AgentRunContext) -> Any:
         for lane, module in _LANE_MODULES:
             if not any(f.get("lane") == lane for f in review.get("findings", [])):
                 continue
+            if lane in done:
+                lanes_run.append(lane)
+                continue
             if not budget_policy.allow_optional("enrich_lane"):
                 break
             try:
@@ -91,7 +103,9 @@ def build_gauntlet_graph(context: AgentRunContext) -> Any:
                 break
             profile = out.get("profile", profile)
             lanes_run.append(lane)
+            done.add(lane)
             # The lane has merged and written profile.json: a pause here keeps its research.
+            _save_progress(context, review, done, start_rev)
             checkpoint(f"gauntlet, after the {lane} lane")
 
         # 4. re-review only when enrichment ran or the profile revision moved. Skipping an
@@ -188,6 +202,13 @@ def _disclose_unresolved(profile: dict[str, Any], findings: list[Any]) -> dict[s
     if not added:
         return profile
     return {**profile, "open_questions": existing + added}
+
+
+def _save_progress(context: AgentRunContext, review: dict[str, Any], done: set[str],
+                   start_rev: int) -> None:
+    """What resume needs to continue this gauntlet mid-way (cli/newsroom/progress.py)."""
+    _write(context, "gauntlet_progress.json",
+           {"review": review, "lanes_done": sorted(done), "start_rev": start_rev})
 
 
 def _write(context: AgentRunContext, name: str, payload: Any) -> None:

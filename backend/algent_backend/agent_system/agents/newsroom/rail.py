@@ -458,6 +458,9 @@ def _route_profile_gauntlet(
     existing_profile = state.get("profile") or {}
     existing_vector = state.get("selected_vector") or {}
     existing_gauntlet = state.get("gauntlet") or {}
+    if not _gauntlet_verdict(existing_gauntlet) and isinstance(state.get("gauntlet_progress"), dict):
+        # A gauntlet paused between lanes: carry its review and finished lanes, not buy them twice.
+        existing_gauntlet = {"progress": state["gauntlet_progress"]}
 
     if existing_profile.get("id"):
         vector = existing_vector if existing_vector.get("id") else {}
@@ -539,7 +542,8 @@ def _maybe_gauntlet(
         report.stage_reached = "gauntlet"
         _record_profile_disposition(report, profile, inner if isinstance(inner, dict) else {})
         return profile, None
-    return _run_gauntlet(context, sub, config, report, profile)
+    return _run_gauntlet(context, sub, config, report, profile,
+                         progress=existing_gauntlet.get("progress"))
 
 
 def _profile_then_gauntlet(
@@ -560,11 +564,14 @@ def _profile_then_gauntlet(
 
 def _run_gauntlet(
     context: AgentRunContext, sub: AgentRunContext, config: RunnableConfig,
-    report: NewsroomRailReport, profile: dict[str, Any],
+    report: NewsroomRailReport, profile: dict[str, Any], *, progress: dict[str, Any] | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any] | None]:
     sub.emit(RAIL_STAGE, {"stage": "gauntlet"})
     profile = steer.apply_to_profile(profile, _steers(context))
-    g = build_profile_gauntlet(sub).invoke({"profile": profile}, config)
+    g_in: dict[str, Any] = {"profile": profile}
+    if progress:
+        g_in["progress"] = progress
+    g = build_profile_gauntlet(sub).invoke(g_in, config)
     profile = g.get("profile") or profile
     gauntlet = g.get("gauntlet") or {}
     report.gauntlet_verdict = str(gauntlet.get("final_verdict", ""))
