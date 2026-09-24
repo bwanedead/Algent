@@ -239,11 +239,17 @@ PRODUCE an EditorialTreatment:
      AT 3 (the harness strips beyond it, most-salient first) — marking more means you are using the
      floor as an inventory, which is what forced padding into the prose. Unsourced/low-salience ids
      are refused outright.
-   - `open_questions[]`: what stays genuinely unknown or contested, to be flagged as such.
+   - `open_questions[]`: what stays genuinely unknown ABOUT THE WORLD — the questions a reader
+     would ask and nobody can yet answer ("whether the talks produce a framework", "how much of
+     the price is risk premium"). Written in world terms, and only those the piece needs.
      Gaps marked `[unresolved]` are problems our own verification raised and could not settle
      (`blocking` = it judged them serious). They are not reasons to drop the story or the claim;
-     they set the confidence it is written at. Any claim the piece leans on that one touches is
-     stated at that confidence, in the sentence, and the question carries into this list.
+     they set the confidence it is written at: any claim the piece leans on that one touches is
+     stated at that confidence, in the sentence. They do NOT pass into this list as written —
+     they are notes about our research ("no tanker-tracking dataset was pulled", "primary
+     readouts not recovered"), and copied through they become paragraphs narrating our search.
+     Carry one only when it IS a question about the world, restated as one ("no government has
+     published a readout of the talks"); otherwise it has done its job by setting the confidence.
 
 Be specific and grounded in THIS profile (cite ids). A treatment that could fit any story is
 useless. The frame and the molecule are the whole game — get them right.
