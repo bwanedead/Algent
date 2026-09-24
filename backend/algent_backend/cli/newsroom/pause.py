@@ -40,6 +40,8 @@ def add_parser(sub: Any) -> None:
     p.add_argument("--now", action="store_true",
                    help="stop immediately (kills the run's process tree); resume redoes only the "
                         "step it was in")
+    p.add_argument("--force", action="store_true",
+                   help="with --now: kill even while charts are drawing (their grok work is lost)")
     p.set_defaults(handler=run_pause)
 
 
@@ -51,6 +53,15 @@ def _live_holder() -> Any:
     return holder if holder and _pid_alive(holder.pid) else None
 
 
+def _charts_drawing() -> bool:
+    """A chart worker wrote into its scratch folder in the last two minutes."""
+    import time
+
+    from algent_backend.agent_system.agents.newsroom.watchdog import _scratch_activity
+
+    return time.time() - _scratch_activity() < 120
+
+
 def run_pause(args: Any) -> int:
     if args.clear:
         clear()
@@ -58,6 +69,15 @@ def run_pause(args: Any) -> int:
         return 0
 
     holder = _live_holder()
+    drawing = bool(holder) and _charts_drawing()
+    if args.now and drawing and not getattr(args, "force", False):
+        # Killing mid-chart throws away grok subscription work that a normal pause would keep.
+        print(json.dumps({
+            "stopped_now": False, "charts_drawing": True,
+            "note": "charts are drawing (grok) — killing now throws that work away. "
+                    "`newsroom pause` waits for them and keeps it; `--now --force` kills anyway",
+        }, indent=2))
+        return 1
     if args.now:
         # Safe because every finished step is on disk and resume reloads it — the only loss is
         # the step in flight. No pause file: the process is gone, and a stale request would
@@ -77,7 +97,11 @@ def run_pause(args: Any) -> int:
         "pause_requested": True,
         "running": bool(holder),
         "pid": holder.pid if holder else None,
+        "charts_drawing": drawing,
         "note": (
+            "charts are drawing (grok): the run keeps that work, exiting when they finish "
+            "(up to ~10 min) — leave the machine on until it does, or `--now --force` to kill"
+            if drawing else
             "the rail stops at its next checkpoint — the end of the step it is in (a research "
             "lane, the draft, the review…) — and exits; `newsroom resume` continues from there"
             if holder else
