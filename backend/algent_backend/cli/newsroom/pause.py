@@ -1,5 +1,8 @@
 """
-``newsroom pause`` — stop a run between stages so it can be picked up later.
+``newsroom pause`` — stop a run at its next checkpoint so it can be picked up later.
+
+Checkpoints sit inside stages too (between research lanes, after each editorial step), so a
+pause lands within one step, not at the end of a 30-minute stage. ``--now`` kills outright.
 
 Killing a rail mid-stage is safe for the artifacts already on disk, but it wastes whatever
 that stage had spent: a profile three minutes into research dies with nothing to show, and
@@ -17,27 +20,16 @@ last completed stage left it, and ``newsroom resume`` continues from the next un
 from __future__ import annotations
 
 import json
-from pathlib import Path
 from typing import Any
 
-PAUSE_FILE = Path("runs_data") / "newsroom_run.pause"
-
-
-def requested() -> bool:
-    return PAUSE_FILE.exists()
-
-
-def request() -> None:
-    PAUSE_FILE.parent.mkdir(parents=True, exist_ok=True)
-    PAUSE_FILE.write_text("pause requested", encoding="utf-8")
-
-
-def clear() -> None:
-    PAUSE_FILE.unlink(missing_ok=True)
-
-
-class RunPaused(RuntimeError):
-    """Raised at a stage boundary when a pause has been requested."""
+# The signal itself lives in foundation so pipeline stages can check it without importing the CLI.
+from algent_backend.agent_system.foundation.pause import (  # noqa: F401 — re-exported
+    PAUSE_FILE,
+    RunPaused,
+    clear,
+    request,
+    requested,
+)
 
 
 def add_parser(sub: Any) -> None:
@@ -45,6 +37,9 @@ def add_parser(sub: Any) -> None:
         "pause", help="stop the running rail at the next stage boundary (resumable)")
     p.add_argument("--clear", action="store_true",
                    help="cancel a pending pause request instead of making one")
+    p.add_argument("--now", action="store_true",
+                   help="stop immediately (kills the run's process tree); resume redoes only the "
+                        "step it was in")
     p.set_defaults(handler=run_pause)
 
 
@@ -63,14 +58,28 @@ def run_pause(args: Any) -> int:
         return 0
 
     holder = _live_holder()
+    if args.now:
+        # Safe because every finished step is on disk and resume reloads it — the only loss is
+        # the step in flight. No pause file: the process is gone, and a stale request would
+        # stop the NEXT run at its first checkpoint.
+        from algent_backend.agent_system.runs.control_plane.process_tree import terminate_tree
+
+        killed = terminate_tree(holder.pid) if holder else False
+        print(json.dumps({
+            "stopped_now": killed, "pid": holder.pid if holder else None,
+            "note": ("stopped; `newsroom resume` continues from the last finished step"
+                     if killed else "nothing was running"),
+        }, indent=2))
+        return 0
+
     request()
     print(json.dumps({
         "pause_requested": True,
         "running": bool(holder),
         "pid": holder.pid if holder else None,
         "note": (
-            "the rail will finish the stage it is in, write that artifact, and exit — then "
-            "`newsroom resume` continues from the next unpaid stage"
+            "the rail stops at its next checkpoint — the end of the step it is in (a research "
+            "lane, the draft, the review…) — and exits; `newsroom resume` continues from there"
             if holder else
             "nothing is running; the request will apply to the next run that starts"
         ),

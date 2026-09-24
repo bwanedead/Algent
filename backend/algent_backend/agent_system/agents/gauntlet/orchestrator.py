@@ -27,6 +27,7 @@ from algent_backend.agent_system.agents.enrich import counter_perspective, prima
 from algent_backend.agent_system.agents.research.briefing import render_briefing
 from algent_backend.agent_system.agents.research.profile import SignalProfile
 from algent_backend.agent_system.agents.review.spec import build_graph as build_reviewer
+from algent_backend.agent_system.foundation.pause import checkpoint
 from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.context import AgentRunContext
 
@@ -90,6 +91,8 @@ def build_gauntlet_graph(context: AgentRunContext) -> Any:
                 break
             profile = out.get("profile", profile)
             lanes_run.append(lane)
+            # The lane has merged and written profile.json: a pause here keeps its research.
+            checkpoint(f"gauntlet, after the {lane} lane")
 
         # 4. re-review only when enrichment ran or the profile revision moved. Skipping an
         # unchanged re-read saves a full review pass when there was nothing to re-judge.

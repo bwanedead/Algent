@@ -214,7 +214,7 @@ def _run_rail(
     _CLOCK = clock
     report = NewsroomRailReport(generated_at=datetime.now(UTC).isoformat())
 
-    from algent_backend.cli.newsroom.pause import RunPaused
+    from algent_backend.agent_system.foundation.pause import RunPaused
 
     try:
         pool, portfolio, early = _resolve_portfolio(
@@ -241,10 +241,9 @@ def _run_rail(
 
 def _check_paused(stage: str) -> None:
     """Exit cleanly if a pause was requested. Raises so the rail unwinds to its finish path."""
-    from algent_backend.cli.newsroom.pause import RunPaused, requested
+    from algent_backend.agent_system.foundation.pause import checkpoint
 
-    if requested():
-        raise RunPaused(f"paused before {stage}")
+    checkpoint(f"the start of {stage}")
 
 
 def _install_cost_tee(context: AgentRunContext) -> tuple[Any, list[int], StageClock]:
@@ -569,7 +568,7 @@ def _run_gauntlet(
 
 _ED_KEYS = (
     "treatment", "draft", "analytics_plan", "analytics_artifacts", "hero",
-    "plan_report", "draft_report", "pipeline_prior", "analytics_confirm",
+    "plan_report", "draft_report", "pipeline_prior", "analytics_confirm", "draft_quality",
 )
 
 

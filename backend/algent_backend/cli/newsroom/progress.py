@@ -37,6 +37,7 @@ _FILES: tuple[tuple[str, str], ...] = (
     ("treatment.json", "treatment"),
     ("planning_gauntlet_report.json", "plan_report"),
     ("draft.json", "draft"),
+    ("draft_quality.json", "draft_quality"),
     ("drafting_gauntlet_report.json", "draft_report"),
     ("hero.json", "hero"),
     ("analytics_plan.json", "analytics_plan"),
@@ -53,7 +54,7 @@ STAGE_OUTPUTS: dict[str, tuple[str, ...]] = {
     "profile": ("profile",),
     "gauntlet": ("gauntlet",),
     "editorial": (
-        "treatment", "plan_report", "draft", "draft_report", "hero",
+        "treatment", "plan_report", "draft", "draft_quality", "draft_report", "hero",
         "analytics_plan", "analytics_artifacts", "analytics_confirm", "pipeline_prior",
     ),
     "publish": (),
@@ -195,7 +196,10 @@ def _next_unpaid(state: dict[str, Any]) -> str:
         return "profile"
     if not gauntlet_done(gauntlet):
         return "gauntlet"
-    if not draft.get("id") or _analytics_unfulfilled(state):
+    # Editorial is done when its final report is on disk — not when a draft is. draft.json is
+    # written after the FIRST draft, and treating that as done sent resume straight to publish,
+    # skipping the cut, the review and the honesty check. The pipeline reuses every finished step.
+    if not draft.get("id") or not state.get("pipeline_prior") or _analytics_unfulfilled(state):
         return "editorial"
     return "publish"
 

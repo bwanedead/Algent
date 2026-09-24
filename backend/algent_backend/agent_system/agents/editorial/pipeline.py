@@ -40,6 +40,7 @@ from .draft_store import JsonDraftStore, render_draft
 from .gauntlet import build_planning_gauntlet_graph
 from .figure_images import FIGURE_IMAGE, make_figures, place, plan_images
 from .real_images import find_photo
+from algent_backend.agent_system.foundation.pause import RunPaused, checkpoint
 from .headline_spec import build_graph as build_headline_writer
 from .hero_stage import hero_enabled, is_quota_skip, make_hero
 from .length import ceiling_words, count_words, wpm
@@ -167,6 +168,7 @@ class PipelineState(TypedDict, total=False):
     draft_report: dict[str, Any]
     pipeline_prior: dict[str, Any]
     analytics_confirm: dict[str, Any]
+    draft_quality: dict[str, Any]   # the post-draft checks ran (cut, review, honesty) — resume
     pipeline: dict[str, Any]   # the EditorialPipelineReport
 
 
@@ -183,8 +185,10 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
             return {"pipeline": EditorialPipelineReport().model_dump()}
 
         treatment, plan_report = _planning_stage(context, config, state, profile)
+        checkpoint("editorial, after the plan")
         analytics_plan = _analytics_plan_stage(
             context, config, state, profile, treatment)
+        checkpoint("editorial, after the figure plan")
 
         # The figures draw WHILE the prose is written. They need only the plan and the profile,
         # both final here, and they were waiting on thirteen minutes of drafting, cutting and
@@ -193,9 +197,16 @@ def build_editorial_pipeline_graph(context: AgentRunContext) -> Any:
         charts = _start_background(
             _analytics_fulfill_stage, context, config, state, analytics_plan, profile)
 
-        draft, enriched_profile, draft_report, quality, hero, surface_issues = (
-            _drafting_stage(context, config, state, profile, treatment, analytics_plan)
-        )
+        try:
+            draft, enriched_profile, draft_report, quality, hero, surface_issues = (
+                _drafting_stage(context, config, state, profile, treatment, analytics_plan)
+            )
+        except RunPaused:
+            # Figures already drawing are paid for: let them finish and land on disk (the worker
+            # writes analytics_artifacts.json), so resume does not buy them twice.
+            context.emit(PIPELINE_SKIPPED, {"stage": "pause", "reason": "finishing figures in flight"})
+            charts.result()
+            raise
         produced_analytics = charts.result()
         early = _hard_stop_without_draft(context, profile, treatment, draft)
         if early is not None:
@@ -329,32 +340,58 @@ def _drafting_stage(
     existing = state.get("draft") or {}
     if existing.get("id"):
         context.emit(PIPELINE_SKIPPED, {"stage": "drafting", "reason": "draft_reused"})
+        draft = existing
         draft_report = state.get("draft_report") or {}
         if not isinstance(draft_report, dict):
             draft_report = {}
-        hero = state.get("hero") if isinstance(state.get("hero"), dict) else None
-        surface_issues: list[str] = []
-        if not (isinstance(hero, dict) and hero.get("artifact_name")):
-            existing, hero, surface_issues = _headline_and_hero(
-                context, config, existing, treatment=treatment)
-        return (
-            existing, profile, draft_report, _quality_from_prior(state),
-            hero, surface_issues,
-        )
+        enriched_profile = profile
+    else:
+        draft_out = build_drafting_gauntlet_graph(context).invoke(
+            {"treatment": treatment, "profile": profile,
+             "analytics_plan": analytics_plan}, config)
+        draft = draft_out.get("draft") or {}
+        enriched_profile = draft_out.get("profile") or profile
+        draft_report = draft_out.get("gauntlet") or {}
+        checkpoint("editorial, after the first draft")
 
-    draft_out = build_drafting_gauntlet_graph(context).invoke(
-        {"treatment": treatment, "profile": profile,
-         "analytics_plan": analytics_plan}, config)
-    draft = draft_out.get("draft") or {}
-    enriched_profile = draft_out.get("profile") or profile
-    draft_report = draft_out.get("gauntlet") or {}
-    # Prose repairs first; final surface package (headline/quick_take/hero) runs AFTER
-    # so title/gist match the repaired body.
-    draft, enriched_profile, quality = _post_draft_quality(
-        context, config, draft=draft, treatment=treatment, profile=enriched_profile)
-    draft, hero, surface_issues = _headline_and_hero(
-        context, config, draft, treatment=treatment)
+    # A draft on disk is not a finished draft. Resume used to take draft.json as done and skip
+    # the cut, the reader's review and the honesty check — publishing a raw first draft. The
+    # quality record is what says those ran; without it they run now.
+    prior = state.get("draft_quality") if existing.get("id") else None
+    if isinstance(prior, dict) and prior:
+        quality = prior
+    elif existing.get("id") and state.get("pipeline_prior"):
+        quality = _quality_from_prior(state)      # a run from before the record existed
+    else:
+        # Prose repairs first; final surface package (headline/quick_take/hero) runs AFTER
+        # so title/gist match the repaired body.
+        draft, enriched_profile, quality = _post_draft_quality(
+            context, config, draft=draft, treatment=treatment, profile=enriched_profile)
+        _save_step(context, draft=draft, profile=enriched_profile, draft_quality=quality)
+        checkpoint("editorial, after review and the honesty check")
+
+    hero = state.get("hero") if isinstance(state.get("hero"), dict) else None
+    surface_issues: list[str] = []
+    if not (isinstance(hero, dict) and hero.get("artifact_name")):
+        draft, hero, surface_issues = _headline_and_hero(
+            context, config, draft, treatment=treatment)
+        # The title and dek live on the draft; the hero record alone would resume without them.
+        _save_step(context, draft=draft)
+        checkpoint("editorial, after the headline and pictures")
     return draft, enriched_profile, draft_report, quality, hero, surface_issues
+
+
+def _save_step(context: AgentRunContext, *, draft: dict[str, Any],
+               profile: dict[str, Any] | None = None,
+               draft_quality: dict[str, Any] | None = None) -> None:
+    """Put a finished editorial step on disk, where resume finds it (cli/newsroom/progress.py)."""
+    if context.artifacts is None or not draft:
+        return
+    context.artifacts.write_json("draft.json", draft)
+    if profile:
+        context.artifacts.write_json("profile.json", profile)
+    if draft_quality is not None:
+        context.artifacts.write_json("draft_quality.json", draft_quality)
 
 
 def _analytics_fulfill_stage(

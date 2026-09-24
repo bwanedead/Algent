@@ -26,6 +26,8 @@ def test_assess_draft_without_publish_is_ready_to_ship(tmp_path: Path) -> None:
     run = _run(tmp_path)
     _write(run, "profile.json", {"id": "prof_1"})
     _write(run, "draft.json", {"id": "drf_1", "title": "Kept"})
+    # Editorial FINISHED (its report exists) — a bare first draft now resumes into editorial.
+    _write(run, "editorial_pipeline_report.json", {"status": "publishable"})
     _write(run, "gauntlet_report.json", {"final_verdict": "mature"})
     _write(run, "analytics_artifacts.json", [
         {"status": "produced", "artifact_name": "analytic_a.svg"},
@@ -100,6 +102,8 @@ def test_resume_dry_run_prints_the_plan(tmp_path: Path, capsys, monkeypatch) -> 
     run = _run(tmp_path)
     _write(run, "profile.json", {"id": "prof_1"})
     _write(run, "draft.json", {"id": "drf_1", "title": "Kept"})
+    # Editorial FINISHED (its report exists) — a bare first draft now resumes into editorial.
+    _write(run, "editorial_pipeline_report.json", {"status": "publishable"})
     _write(run, "gauntlet_report.json", {"final_verdict": "mature"})
     monkeypatch.setattr(rs, "runs_root", lambda: tmp_path)
     args = type("A", (), {"run": str(run), "from_stage": None, "dry_run": True})()
