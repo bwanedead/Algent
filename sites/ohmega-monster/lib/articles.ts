@@ -35,6 +35,9 @@ export type ArticleMeta = {
   heroAlt: string;
   heroHook: string;
   heroLabel: string;
+  // A real-photo hero (photo_hero.*) carries a credit instead of the AI label.
+  heroCredit: string;
+  heroCreditUrl: string;
   quickTake: QuickTake | null;
 };
 
@@ -104,6 +107,8 @@ function toMeta(file: string, data: Record<string, unknown>): ArticleMeta {
     heroAlt: String(data.hero_alt ?? ""),
     heroHook: String(data.hero_hook ?? ""),
     heroLabel: String(data.hero_label ?? ""),
+    heroCredit: String(data.hero_credit ?? ""),
+    heroCreditUrl: String(data.hero_credit_url ?? ""),
     quickTake,
   };
 }

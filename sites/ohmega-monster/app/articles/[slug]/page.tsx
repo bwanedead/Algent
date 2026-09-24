@@ -6,7 +6,7 @@ import FlagRow from "@/components/FlagRow";
 import Prose from "@/components/Prose";
 import ShareButton from "@/components/ShareButton";
 import { getArticle, getSlugs } from "@/lib/articles";
-import { AI_IMAGE_LABEL, pageHasGeneratedImages } from "@/lib/generated";
+import { AI_IMAGE_LABEL, isGeneratedImage, pageHasGeneratedImages } from "@/lib/generated";
 import { SITE_URL } from "@/lib/site";
 
 export function generateStaticParams() {
@@ -97,7 +97,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
         </section>
       ) : null}
 
-      {a.hero ? (
+      {a.hero && isGeneratedImage(a.hero) ? (
         <figure className="article-hero ai-image">
           {/* Hook text is already burned into the generated image by the hero stage —
               do not overlay it again (that double-captions every hooked hero). heroHook
@@ -106,6 +106,22 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
           {/* The label is not optional furniture: a picture beside a news story is a lie
               unless it says what it is. */}
           <figcaption className="ai-label">{a.heroLabel || AI_IMAGE_LABEL}</figcaption>
+        </figure>
+      ) : a.hero ? (
+        <figure className="article-hero">
+          <img src={a.hero} alt={a.heroAlt} />
+          {/* A real photograph says who took it, under which licence, and where it lives. */}
+          <figcaption className="photo-credit">
+            {a.heroCredit || "Photo"}
+            {a.heroCreditUrl ? (
+              <>
+                {" · "}
+                <a href={a.heroCreditUrl} target="_blank" rel="noopener noreferrer">
+                  Wikimedia Commons
+                </a>
+              </>
+            ) : null}
+          </figcaption>
         </figure>
       ) : null}
 

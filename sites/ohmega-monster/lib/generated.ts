@@ -11,7 +11,8 @@ export function isGeneratedImage(src?: string): boolean {
 }
 
 export function pageHasGeneratedImages(hero: string, body: string): boolean {
-  return Boolean(hero) || /\/figure_[^)\s]+\.(?:jpe?g|png|webp)/i.test(body);
+  // A real-photo hero (photo_hero.*) is not generated — decided by name, like everything else.
+  return isGeneratedImage(hero) || /\/figure_[^)\s]+\.(?:jpe?g|png|webp)/i.test(body);
 }
 
 export const AI_IMAGE_LABEL = "AI-generated image — not a photograph";
