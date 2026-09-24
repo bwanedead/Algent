@@ -49,6 +49,11 @@ class HeroRecord:
     model: str
     size: str
     estimated_usd: float
+    # A real photograph instead of a generated image: its credit rides in the page's hero caption
+    # (and the site drops the AI frame, which it decides by the ``photo_`` file name).
+    kind: str = "generated"          # generated | photo
+    credit: str = ""                 # "Photo: NASA · Public domain · 1982"
+    credit_url: str = ""             # the file's Commons page
 
 
 def hero_enabled() -> bool:
@@ -73,8 +78,14 @@ def make_hero(
     *,
     say: Any = None,
     generate: Any = None,
+    find_photo: Any = None,
 ) -> dict[str, Any] | None:
-    """Generate the hero, return a quota-skip marker, or None (hold at publish).
+    """A real photo of the story's place when one fits; else generate the hero.
+
+    ``find_photo(query, subject) -> (Candidate | None, bytes, note)`` runs first when the writer
+    named a real place or thing (``image_photo_query``). A miss costs nothing and falls through.
+
+    Generation returns a quota-skip marker, or None (hold at publish).
 
     Returns:
       - HeroRecord dict with ``artifact_name`` on success
@@ -84,6 +95,12 @@ def make_hero(
     note = say if callable(say) else (lambda _m: None)
     if not hero_enabled() or artifacts is None:
         return None
+
+    query = str(headline.get("image_photo_query") or "").strip()
+    if query and callable(find_photo):
+        photo = _photo_hero(query, headline, artifacts, find_photo, note)
+        if photo is not None:
+            return photo
 
     written = str(headline.get("image_subject") or "").strip()
     subject = resolve_image_subject(headline)
@@ -148,6 +165,54 @@ def make_hero(
         f"hero: {name} ({image.size}, {image.model.split('-')[-2]}) "
         f"~${image.estimated_usd:.4f}" + (f' — "{hook}"' if hook else " — no caption")
     )
+    return asdict(record)
+
+
+def hero_file(artifacts_dir: Any) -> str | None:
+    """The hero image in a run's artifacts: the name its record gives, else a ``hero.*`` file.
+
+    Not a bare glob — a real-photo hero is ``photo_hero.*``, and the X post would lose it."""
+    from pathlib import Path
+
+    folder = Path(artifacts_dir)
+    try:
+        import json
+
+        name = str(json.loads((folder / "hero.json").read_text(encoding="utf-8")).get("artifact_name") or "")
+        if name and (folder / name).is_file():
+            return str(folder / name)
+    except Exception:  # noqa: BLE001 — older runs have no record; fall back to the file itself
+        pass
+    return next((str(p) for p in sorted(folder.glob("hero.*"))
+                 if p.suffix.lower() in (".jpg", ".jpeg", ".png", ".webp")), None)
+
+
+def _photo_hero(query: str, headline: dict[str, Any], artifacts: Any, find_photo: Any,
+                note: Any) -> dict[str, Any] | None:
+    """The hero as a real photograph, written with its record — or None to generate instead."""
+    from .real_images import PHOTO_PREFIX, credit_text, suffix
+
+    subject = str(headline.get("image_subject") or "").strip() or query
+    try:
+        pick, data, why = find_photo(query, subject)
+    except Exception as exc:  # noqa: BLE001 — a failed search falls back to generating
+        pick, data, why = None, b"", type(exc).__name__
+    if pick is None or not data:
+        note(f'hero: no real photo of "{query}" — {why}; generating')
+        return None
+    name = f"{PHOTO_PREFIX}{HERO_STEM}{suffix(pick)}"
+    record = HeroRecord(
+        artifact_name=name, alt=pick.description[:200] or subject, hook="", label="",
+        model="wikimedia-commons", size="", estimated_usd=0.0,
+        kind="photo", credit=credit_text(pick), credit_url=pick.page_url,
+    )
+    try:
+        artifacts.write_bytes(name, data, kind="image")
+        artifacts.write_json("hero.json", asdict(record))
+    except Exception as exc:  # noqa: BLE001
+        note(f"hero: photo not written ({str(exc)[:60]}); generating")
+        return None
+    note(f"hero: {name} real photo — {pick.title[:70]} ({pick.license})")
     return asdict(record)
 
 

@@ -80,7 +80,8 @@ def build_headline_message(
         _opening_paragraph(draft.body),
         "",
         "TASK: Write the final surface package — headline, standfirst, quick_take "
-        "(what_happened / why_it_matters / what_is_uncertain), image_subject, image_hook. "
+        "(what_happened / why_it_matters / what_is_uncertain), image_subject, image_hook, "
+        "image_photo_query (empty unless the piece centres on a real, photographed place or thing). "
         "Cold-browser test: title + dek + hook must make sense without reading the body. "
         "Specialist names need plain_subject first. "
         "DO NOT RESTATE THE BODY'S OPENING PARAGRAPH. You can see it above, and the dek and "

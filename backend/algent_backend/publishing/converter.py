@@ -297,6 +297,11 @@ def convert(
         fm["hero_label"] = str(hero.get("label") or "")
         if hero.get("hook"):
             fm["hero_hook"] = str(hero["hook"])
+        # A real photograph carries its credit instead of an AI label (the site keys the frame
+        # off the ``photo_`` file name, and shows this line with a link to the source).
+        if hero.get("credit"):
+            fm["hero_credit"] = str(hero["credit"])
+            fm["hero_credit_url"] = str(hero.get("credit_url") or "")
         assets = [*assets, hero_name]
     if corrections:
         fm["corrections"] = corrections

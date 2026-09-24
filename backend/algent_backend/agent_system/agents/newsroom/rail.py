@@ -62,6 +62,7 @@ from algent_backend.publishing.x_article import copy_from_run
 from algent_backend.publishing.x_figures import announce_figures
 
 from ..discovery.synthesis.spec import build_graph as build_synthesis
+from ..editorial.hero_stage import hero_file
 from ..editorial.pipeline_spec import build_graph as build_editorial
 from ..gauntlet.spec import build_graph as build_profile_gauntlet
 from ..research.spec import build_graph as build_profile
@@ -691,8 +692,7 @@ def _publish(context: AgentRunContext, report: NewsroomRailReport) -> None:
         if report.published:
             dek, gist = copy_from_run(run_dir)
             # The hero rides on the post itself now that the link lives in a reply.
-            hero = next((str(p) for p in sorted((Path(run_dir) / "artifacts").glob("hero.*"))
-                         if p.suffix.lower() in (".jpg", ".jpeg", ".png", ".webp")), None)
+            hero = hero_file(Path(run_dir) / "artifacts")
             announced = announce_article(
                 report.published_slug, report.article_title, dek=dek, gist=gist,
                 image_path=hero)

@@ -94,7 +94,15 @@ trimmed. Six words is the target; eight is the ceiling. No colons, no "study fin
 Honest at a glance: sharpen, do not overstate. Leave EMPTY only when there is no honest
 short version. Per headline-guidance.md.
 
-Emit a Headline {title, standfirst, quick_take, image_subject, image_hook}. Read the whole
+5. IMAGE_PHOTO_QUERY — when the piece centres on a real PLACE or THING that exists and has
+been photographed (a strait, a reservoir, a dam, a port, a factory, a spacecraft), name it the
+way a photo archive would file it: "Strait of Hormuz", "Lake Mead", "Hoover Dam". Proper nouns
+only, no dates, no adjectives. A real, credited photograph of it is then looked for first, and
+the illustration is drawn only if none fits. Leave EMPTY when the story is an argument, a
+policy, a market or a person, or when its subject is not built yet — a photo of a building
+beside the story is worse than an honest illustration.
+
+Emit a Headline {title, standfirst, quick_take, image_subject, image_hook, image_photo_query}. Read the whole
 piece first; the surface package must be true to the FINAL prose, not a working title.
 """
 

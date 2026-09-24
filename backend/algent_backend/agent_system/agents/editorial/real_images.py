@@ -186,17 +186,25 @@ def suffix(candidate: Candidate) -> str:
     return {"image/png": ".png", "image/webp": ".webp"}.get(candidate.mime, ".jpg")
 
 
+def _year(candidate: Candidate) -> str:
+    found = re.search(r"\b(1[89]\d\d|20\d\d)\b", candidate.date or "")
+    return found.group(1) if found else ""
+
+
 def credit_line(candidate: Candidate) -> str:
-    """The caption under the photo: who, which licence, when, and where it lives.
+    """The caption under an in-body photo: who, which licence, when, and where it lives.
 
     A wholly italic line on its own — the site renders that as a figure caption."""
-    year = re.search(r"\b(1[89]\d\d|20\d\d)\b", candidate.date or "")
     lic = (f"[{candidate.license}]({candidate.license_url})" if candidate.license_url
            else candidate.license)
     parts = [f"Photo: {_md(candidate.artist)}", f"[Wikimedia Commons]({candidate.page_url})", lic]
-    if year:
-        parts.append(year.group(1))
-    return "*" + " · ".join(parts) + "*"
+    return "*" + " · ".join([*parts, _year(candidate)] if _year(candidate) else parts) + "*"
+
+
+def credit_text(candidate: Candidate) -> str:
+    """The same credit as plain text, for a caption the site links to the source itself."""
+    parts = [f"Photo: {_md(candidate.artist)}", candidate.license, _year(candidate)]
+    return " · ".join(p for p in parts if p)
 
 
 def _md(text: str) -> str:

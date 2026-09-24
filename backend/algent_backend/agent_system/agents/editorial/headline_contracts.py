@@ -30,3 +30,7 @@ class Headline(BaseModel):
     # scroller can place (who / what the piece is), written fresh — not the headline
     # trimmed, and not a slogan whose referents live only inside the article.
     image_hook: str = ""
+    # The real place or thing the piece centres on, named as a photo archive would file it
+    # ("Strait of Hormuz", "Lake Mead"). When set, a real, credited photograph is looked for
+    # before anything is generated. Empty for abstract stories and for things not yet built.
+    image_photo_query: str = ""

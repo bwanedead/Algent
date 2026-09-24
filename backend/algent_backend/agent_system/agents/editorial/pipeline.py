@@ -667,7 +667,7 @@ def _headline_and_hero(
             repair_in = {**invoke_in, "draft": draft, "surface_issues": issues}
             repaired = build_headline_writer(context).invoke(repair_in, config).get("headline") or {}
             # Keep image fields from the first pass when the repair omits them — hero runs once.
-            for key in ("image_subject", "image_hook"):
+            for key in ("image_subject", "image_hook", "image_photo_query"):
                 if not str(repaired.get(key) or "").strip() and str(hl.get(key) or "").strip():
                     repaired[key] = hl[key]
             hl = repaired or hl
@@ -677,7 +677,15 @@ def _headline_and_hero(
                 "prior_issues": issues, "remaining_issues": remaining,
             })
             issues = remaining
-        hero = make_hero(hl, context.artifacts, say=lambda m: context.emit(HERO_IMAGE, {"note": m}))
+        opening = f"{draft.get('title') or ''}. {draft.get('standfirst') or ''}\n\n" + \
+            str(draft.get("body") or "").split("\n\n")[0]
+
+        def photo(query: str, subject: str) -> Any:   # a real photograph before a generated one
+            return find_photo(context, config, query=query, subject=subject, passage=opening,
+                              model_spec=FIGURE_IMAGE_MODEL)
+
+        hero = make_hero(hl, context.artifacts, say=lambda m: context.emit(HERO_IMAGE, {"note": m}),
+                         find_photo=photo)
     draft = _illustrate(context, config, draft,
                         essential=str((treatment or {}).get("shape") or "") == "survey")
     return draft, hero, issues
