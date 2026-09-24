@@ -53,6 +53,7 @@ A navigation campaign opened in mid-August; only the earliest correction burn wa
 ## A crater caught by watching for 17 years
 
 ![A fresh bowl-shaped crater about two hundred metres across with a bright ejecta blanket and dark halo on the grey, dusty lunar surface.](/analytics/four-space-clocks-show-why-staying-put-matters-as-much-as-la-bd284a/figure_crater-mcgetchin.jpg)
+
 With no atmosphere to burn them up, impacts hit the Moon constantly, but large ones are rare. NASA's Lunar Reconnaissance Orbiter has been circling for more than 17 years, carrying cameras that build monthly global maps and a heat-sensing instrument called Diviner.
 
 
@@ -74,6 +75,7 @@ The practical stake is Artemis, NASA's programme to return astronauts to the Moo
 ## Rings that changed in a decade
 
 ![A small dark icy body about 250 kilometres across encircled by two thin, close-spaced rings in black space.](/analytics/four-space-clocks-show-why-staying-put-matters-as-much-as-la-bd284a/figure_chariklo-rings.jpg)
+
 Before 2013, rings were thought to belong only to giant planets. Then a stellar occultation — watching a star blink as a distant object passes in front of it — revealed that Chariklo, a small dark body about 250 km across orbiting unstably between Saturn and Uranus, has rings at all.
 
 Chariklo is a Centaur, a small icy body on an unstable orbit between the giant planets. Its system is delicate: two narrow rings only a few kilometres wide, called C1R and C2R, circling at 390 and 405 kilometres from its centre.

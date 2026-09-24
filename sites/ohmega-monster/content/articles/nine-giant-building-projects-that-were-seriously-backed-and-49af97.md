@@ -43,6 +43,7 @@ Nine huge building ideas — a 2km pyramid over Tokyo Bay, a 96,000km ribbon to 
 ## Shimizu Mega-City Pyramid — Tokyo Bay
 
 ![An architect's impression of a colossal open-lattice pyramid rising from the sea, with stacked city blocks visible inside the truss structure.](/analytics/nine-giant-building-projects-that-were-seriously-backed-and-49af97/figure_shimizu-pyramid.jpg)
+
 Not a tower but a city as one building. Shimizu's lattice, patented in 1992 and unveiled in 2004, would stand 2,004m over Tokyo Bay — about 14 times the Great Pyramid and 2.5 times the Burj Khalifa — holding 750,000 to 1 million people in blocks hung inside an open truss.
 
 It answers Greater Tokyo's scarcity — about 33.4 million people with little buildable land — by building over water, with a truss meant to flex in quakes and typhoons. Shimizu's own timeline, start as early as 2030 and finish around 2110, signals the status: paper only. Conventional steel and concrete are too heavy. The design needs mass-produced, defect-free carbon nanotubes and graphene at strengths lab samples cannot yet deliver.
@@ -50,6 +51,7 @@ It answers Greater Tokyo's scarcity — about 33.4 million people with little bu
 ## Obayashi Space Elevator
 
 ![An architect's impression of an ultra-thin ribbon stretching vertically from a floating ocean platform through clouds into orbit, with a small climber on the line.](/analytics/nine-giant-building-projects-that-were-seriously-backed-and-49af97/figure_space-elevator.jpg)
+
 Obayashi, builder of Tokyo Skytree, proposed in 2012 the most extreme tensile structure: a 96,000km carbon-nanotube ribbon from a floating Earth Port on the equator to beyond geostationary orbit at 36,000km, ending in a counterweight, with climbers crawling at about 200 km/h — a week to orbit.
 
 Obayashi's own simulation says it is feasible only if a ribbon at 150 gigapascals — a measure of pulling strength — can be made, then built over about 20 years by launching a seed ribbon and thickening it to 7,000 tons. The physics of hanging is sound; the material is not. No one can spin continuous, defect-free ribbon at kilometre scale, let alone 96,000km. A small 2018 test with two 10cm CubeSats, mini-satellites, and a 10m tether was reported at the time as the first climber movement in space.
@@ -57,6 +59,7 @@ Obayashi's own simulation says it is feasible only if a ribbon at 150 gigapascal
 ## The Line at NEOM
 
 ![An architect's impression of two parallel mirrored walls 500m high forming a narrow linear city stretching across desert toward the sea.](/analytics/nine-giant-building-projects-that-were-seriously-backed-and-49af97/figure_the-line.jpg)
+
 The Line is the only project here with state-scale earthworks: two parallel mirrored walls 500m high, 200m wide, running 170km inland from the Red Sea, enclosing 34 sq km for 9 million people at about 265,000 per sq km, ten times Manhattan, car-free and net-zero, inside NEOM in Saudi Arabia.
 
 Backed by PIF, it moved from a $500bn pitch to internal estimates of $1.6tn then about $4.5tn. Large earthworks were visible in satellite images by October 2024, with press reports of a SAR 700m concrete factory — in Saudi riyals — and about 1,000 of 30,000-plus piles placed with 115,000 workers on site.
