@@ -77,15 +77,16 @@ def format_briefing(pillar: str, vectors: list[dict[str, Any]] | tuple[dict[str,
     return "\n".join(lines).rstrip() + "\n"
 
 
-#: The daily roundup's framing. "Preliminary" is load-bearing: every line is a lead the menu
-#: builder judged from headlines alone, with no research behind it. The header says so, and
-#: points at where the ones we do report end up.
-_DAILY_HEADER = "Preliminary news roundup — {day}"
+#: The daily roundup's framing. Every line is a lead read from other outlets' headlines, with no
+#: research of ours behind it, and the post must say so — but as a statement of WHAT IT IS, not
+#: a warning. "Preliminary" read as "don't trust this" (operator, 09-26); the brand is saying how
+#: far something has been verified, plainly, not apologising for it.
+_DAILY_HEADER = "Headline radar — {day}"
 #: No link and no bare domain in the post: X reaches fewer people with posts that send them
 #: away, and it auto-links a bare "ohmega.monster" just the same as a URL.
 _DAILY_STANDFIRST = (
-    "Today's leads, before we've verified them. The ones we pick get full reporting — "
-    "watch this account for those."
+    "What crossed the wire today, as other outlets reported it — not yet independently "
+    "verified by us. The stories we pick up get full reporting here."
 )
 
 

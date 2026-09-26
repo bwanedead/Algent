@@ -1,4 +1,4 @@
-"""The daily roundup: the whole synthesis menu as one preliminary X post, once a day."""
+"""The daily roundup: the whole synthesis menu as one X post, once a day."""
 
 from __future__ import annotations
 
@@ -16,10 +16,10 @@ MENU = {"t0_ref": "t0x", "vectors": [
 ]}
 
 
-def test_the_roundup_says_it_is_preliminary_and_carries_every_lead() -> None:
+def test_the_roundup_says_what_it_is_and_carries_every_lead() -> None:
     text = format_daily_roundup(MENU, day="Tuesday, Sep 22")
-    assert text.startswith("Preliminary news roundup — Tuesday, Sep 22")
-    assert "before we've verified them" in text
+    assert text.startswith("Headline radar — Tuesday, Sep 22")
+    assert "not yet independently verified" in text and "preliminary" not in text.lower()
     assert "• A Cascades amoeba survives record heat." in text
     assert "• Transposons became partners in evolution." in text
 

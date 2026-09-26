@@ -664,7 +664,11 @@ def _run_locked(
         # A freshly built menu is also the day's X roundup — the first one each day posts.
         if run_synthesis and portfolio.get("vectors"):
             from algent_backend.cli.newsroom.briefing import post_daily_roundup
+            from algent_backend.publishing.radar_page import publish_menu
+
             result["x_roundup"] = post_daily_roundup(portfolio)
+            # Every build goes on the site's radar, kept (X gets only the first of the day).
+            result["site_radar"] = publish_menu(portfolio)
 
     if args.to_stage == "menu":
         result["stopped_at"] = "menu"

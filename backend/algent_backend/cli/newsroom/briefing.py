@@ -48,7 +48,7 @@ def add_parser(sub: Any) -> None:
     d.add_argument("--dry-run", action="store_true")
     d.set_defaults(handler=run_drain)
 
-    dl = verbs.add_parser("daily", help="post the whole menu as today's preliminary roundup (once a day)")
+    dl = verbs.add_parser("daily", help="post the whole menu as today's headline radar post (once a day)")
     dl.add_argument("--menu", help="portfolio JSON or discovery_synthesis run dir (default: latest)")
     dl.add_argument("--dry-run", action="store_true")
     dl.set_defaults(handler=run_daily)
@@ -263,7 +263,7 @@ def _render_collage(item: q.BriefingPost) -> str | None:
 def post_daily_roundup(
     portfolio: dict[str, Any], *, now: datetime | None = None, dry_run: bool = False,
 ) -> dict[str, Any]:
-    """Post the whole menu as one preliminary roundup — at most once per local day.
+    """Post the whole menu as one headline-radar post — at most once per local day.
 
     Called when a menu build finishes, so it does not depend on the radar supervisor (which is
     off now that radar runs elsewhere). The first fresh menu of the day posts; later builds that
