@@ -846,3 +846,18 @@ a { color: inherit; }
   border: 3px solid var(--ai);
   box-sizing: border-box;
 }
+
+/* Headline radar — every synthesis menu, kept (lib/radar.ts). Reads like the index: quiet, numbered. */
+.radar-page { min-height: 65vh; padding-top: calc(var(--line) * 2); }
+.radar-note { color: var(--muted); max-width: 720px; }
+.radar-list { list-style: none; margin: var(--line) 0 0; padding: 0; border-top: 1px solid var(--rule-strong); }
+.radar-lead { display: grid; grid-template-columns: 2.5em minmax(0, 1fr); gap: 12px; padding: var(--line) 0; border-bottom: 1px solid var(--rule); }
+.radar-n { color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
+.radar-lead h2 { margin: 0; color: var(--strong); font-size: clamp(15px, 1.8vw, 18px); font-weight: 600; letter-spacing: -0.02em; line-height: var(--line); }
+.radar-lead p { margin: 4px 0 0; max-width: 780px; }
+.radar-meta { color: var(--muted); font-size: 11px; }
+.radar-pager { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin: calc(var(--line) * 1.5) 0; }
+.radar-archive h2 { font-size: 14px; margin: calc(var(--line) * 1.5) 0 6px; }
+.radar-archive ul { list-style: none; padding: 0; margin: 0; }
+.radar-archive li { padding: 2px 0; }
+.radar-count { color: var(--muted); font-size: 11px; }

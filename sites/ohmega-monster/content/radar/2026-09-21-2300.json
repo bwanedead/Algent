@@ -1,0 +1,609 @@
+{
+  "slug": "2026-09-21-2300",
+  "built_at": "2026-09-21T23:00:00Z",
+  "leads": [
+    {
+      "n": 1,
+      "title": "Hurricane Polo Explodes Toward Category 5 Off Mexico's Pacific Coast",
+      "thesis": "Tropical Storm Polo rapidly intensified to Category 1 off southwestern Mexico Sept 21 and is forecast to become a major hurricane and potentially Category 5 within 24-48 hours, threatening Jalisco/Colima/Michoacan with flooding and US Southwest with moisture surge.",
+      "pillars": [
+        "environment"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://1061fmtalk.iheart.com/content/2026-09-21-polo-rapidl",
+        "https://www.accuweather.com/en/hurricane/hurricane-polo-to-rapidly-strengthen-into-category-5-storm-threaten-mexicos-pacficic-coast/1936067"
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Super El Nino Hits All-Time Record as Pacific Warms",
+      "thesis": "Carbon Brief analysis finds the current Super El Nino has reached a remarkable all-time record intensity, coinciding with Polo's rapid intensification and Atlantic hurricane peak.",
+      "pillars": [
+        "environment"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.carbonbrief.org/analysis-super-el-nino-reaches-r"
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Microsoft's Monster Patch: 972 Flaws, 112 Critical, 2 Zero-Days",
+      "thesis": "Microsoft's September 2026 Patch Tuesday fixed a record ~972 vulnerabilities (997 with Edge Chromium), 112-113 critical, including two actively exploited privilege-escalation zero-days and multiple wormable RCEs, marking a new normal of AI-assisted vulnerability discovery.",
+      "pillars": [
+        "ai",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arstechnica.com/security/2026/09/microsoft-patches-a-record-972-vulnerabilities-112-of-them-critical"
+      ]
+    },
+    {
+      "n": 4,
+      "title": "OpenAI Claims 100+ Open Problems Solved and Creates Independent Math Advisory Group",
+      "thesis": "OpenAI says an internal model trained Aug 28 solved the Navier-Stokes Millennium Prize plus 100+ long-standing open problems across mathematics, prompting creation of an independent Advisory Group on Mathematics and AI hosted at IAS Princeton to advise on verification and dissemination — but explicitly not on pacing research.",
+      "pillars": [
+        "ai",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://techcrunch.com/2026/09/21/openai-forms-math-advisory",
+        "https://openai.com/index/advisory-group-on-mathematics-and-a"
+      ]
+    },
+    {
+      "n": 5,
+      "title": "Kadesh Peace Treaty Fragment Found at Hattusa on World Peace Day",
+      "thesis": "Turkish archaeologists identified a cuneiform tablet fragment at Buyukkale in Hattusa (Corum) as a new copy of the 13th-century BC Kadesh Peace Treaty between Hittites and Egyptians, revealing clauses on refugees and protection of homes, announced Sept 21.",
+      "pillars": [
+        "geopolitics",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.odatv.com/kultur-sanat/hattusada-barisin-binlerce-yillik-izi-civi-yazili-tablette-ne-diyor-120163547",
+        "https://www.haberankara.com/kultur-sanat/kades-baris-antlasmasinin-nushalarindan-biri-corumda-ortaya-cikti-321192"
+      ]
+    },
+    {
+      "n": 6,
+      "title": "Pakistan Airstrikes Inside Afghanistan Kill 3, Islamabad Claims 28 Militants",
+      "thesis": "Pakistan fighter jets struck Paktika and Kunar Sept 21, killing at least 3 civilians per Kabul and 28 militants per Islamabad, days after a police facility attack in northwest Pakistan killed 16, threatening to reignite the worst cross-border clashes since February.",
+      "pillars": [
+        "geopolitics",
+        "defense"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.reuters.com/world/asia-pacific/least-three-kille",
+        "https://www.aljazeera.com/news/2026/9/21/afghanistan-says-three-killed-in-pakistani-air-attacks"
+      ]
+    },
+    {
+      "n": 7,
+      "title": "Seven Ethiopian Armed Groups Form Anti-Government Alliance",
+      "thesis": "Seven armed groups including TPLF announced a unified alliance Sept 20-21 to oust PM Abiy Ahmed and form a transitional government, as fears grow of renewed war after drone strikes near Mekelle.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.france24.com/en/ethiopia-s-main-armed-groups-for",
+        "https://www.aljazeera.com/news/2026/9/21/ethiopian-armed-groups-forge-alliance-against-government"
+      ]
+    },
+    {
+      "n": 8,
+      "title": "Maldives Signs $12-20 Billion UAE Waterfront Deal — Double Its GDP",
+      "thesis": "Maldives government signed commercial terms with Abu Dhabi's Eagle Hills (Mohamed Alabbar) for Maldives Waterfront and Marina at Ras Male, billed as $12bn initial and $20bn across phases — more than double Maldives' $8bn GDP — with 5,000 housing units, hotels and marina.",
+      "pillars": [
+        "geopolitics",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.thehindu.com/news/international/maldives-unveils",
+        "https://www.thenationalnews.com/business/property/2026/09/21/abu-dhabis-eagle-hills-signs-20bn-maldives-waterfront-and-marina-deal"
+      ]
+    },
+    {
+      "n": 9,
+      "title": "California Moves to Rein In AI Data Center Water and Power Use",
+      "thesis": "California legislature passed seven bills requiring AI data center disclosure of energy and water use and making developers pay for new water infrastructure; Gov Newsom signed them Sept 21, as Congress debates GRID Savings Act for 100-150MW facilities.",
+      "pillars": [
+        "ai",
+        "environment",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.theverge.com/ai-artificial-intelligence/998453/c",
+        "https://calmatters.org/environment/2026/08/california-data-centers-water-transparency-bills"
+      ]
+    },
+    {
+      "n": 10,
+      "title": "US-China Seek AI Guardrails Before Trump-Xi Summit",
+      "thesis": "Ahead of the Trump-Xi summit, Treasury confirms AI talks underway, Wired reports US-China discussing mutual alerting for AI national security threats, Australia joins 20+ nations urging AI race slowdown, and lawmakers call for nuclear-style safeguards — all while tech war over tariffs and rare minerals intensifies.",
+      "pillars": [
+        "geopolitics",
+        "ai"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://www.wired.com/story/us-and-china-discuss-alerting-ea",
+        "https://www.scmp.com/news/us/diplomacy/article/3368311/us-ch",
+        "https://www.wired.com/story/ai-tariffs-rare-minerals-what-to"
+      ]
+    },
+    {
+      "n": 11,
+      "title": "Billions Spent on Virtual Border Wall Can't Stop Deaths — MIT Investigation",
+      "thesis": "MIT Technology Review investigation finds US spent billions on border surveillance towers and virtual wall tech that fails to prevent migrant deaths, with methodology and policy recommendations published Sept 21.",
+      "pillars": [
+        "ai",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.technologyreview.com/2026/09/21/1144161/border-t",
+        "https://www.technologyreview.com/2026/09/21/1144166/border-t",
+        "https://www.technologyreview.com/2026/09/21/1144164/border-t"
+      ]
+    },
+    {
+      "n": 12,
+      "title": "NASA Powers Up Roman's 300-Megapixel Infrared Eye",
+      "thesis": "NASA's Nancy Grace Roman Space Telescope successfully powered up its 300-megapixel Wide Field Instrument Sept 15 and checked out its Coronagraph, en route to L2, with fuel savings now projecting 22-year lifetime vs 10-year design.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.sciencedaily.com/releases/2026/09/260921081058.h",
+        "https://science.nasa.gov/blogs/roman/2026/09/15/nasa-activates-romans-primary-instrument-checks-out-coronagraph"
+      ]
+    },
+    {
+      "n": 13,
+      "title": "First Radio Waves From an Exoplanet Hint at Alien Auroras and Magnetic Field",
+      "thesis": "Astronomers report first clear radio emission from exoplanet Beta Pictoris b, interpreted as auroral emission revealing its magnetic field — potentially first direct exoplanet magnetosphere detection, submitted Sept 15 to arXiv.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.sciencenews.org/article/exoplanet-aurora-radio-w",
+        "https://arxiv.org/abs/2609.16720"
+      ]
+    },
+    {
+      "n": 14,
+      "title": "Mathematicians Build Long-Awaited Graph Sandwich",
+      "thesis": "Quanta reports mathematicians have constructed the long-sought graph sandwich structure, solving a combinatorial existence problem.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.quantamagazine.org/mathematicians-build-long-awa"
+      ]
+    },
+    {
+      "n": 15,
+      "title": "Quantum Light Swimmer Breaks Newton's Third Law",
+      "thesis": "New Scientist reports a swimmer made of quantum light that appears to break Newton's third law via non-reciprocal momentum exchange.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.newscientist.com/article/2589721-swimmer-made-of"
+      ]
+    },
+    {
+      "n": 16,
+      "title": "Virus-Like Jumping Genes Became Partners in Human Evolution",
+      "thesis": "Quanta feature explains how virus-like transposons (jumping genes) were domesticated as regulatory partners in human evolution.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.quantamagazine.org/how-virus-like-jumping-genes-"
+      ]
+    },
+    {
+      "n": 17,
+      "title": "NIH Grants Face Political Veto — Congress Pushes Back",
+      "thesis": "Reports that OMB's Russel Vought would get veto power over all NIH grants via a new commission sparked bipartisan congressional pushback Sept 21, raising alarms over politicization of $48bn biomedical research.",
+      "pillars": [
+        "science",
+        "health",
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arstechnica.com/science/2026/09/trump-planning-to-ha",
+        "https://www.statnews.com/2026/09/21/trump-plan-for-commissio"
+      ]
+    },
+    {
+      "n": 18,
+      "title": "Mile-Deep Nuclear Reactor: Deep Fission Taps Oil Drillers",
+      "thesis": "US startup Deep Fission partnered with large-bore drilling firm Youngquist Brothers to advance a 1-mile underground reactor concept, aiming to use oilfield drilling expertise for deep borehole fission.",
+      "pillars": [
+        "science",
+        "environment"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://interestingengineering.com/energy/deep-fission-young"
+      ]
+    },
+    {
+      "n": 19,
+      "title": "Needle-Thin Brain Implant Does Three Jobs at Once",
+      "thesis": "Scientists created a needle-thin brain implant capable of three simultaneous functions (likely recording, stimulation and chemical sensing), reported Sept 20.",
+      "pillars": [
+        "science",
+        "health"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.sciencedaily.com/releases/2026/09/260920222416.h"
+      ]
+    },
+    {
+      "n": 20,
+      "title": "BepiColombo Begins Mercury Arrival and Juice Heads for Third Earth Flyby",
+      "thesis": "ESA's BepiColombo has begun its Mercury arrival phase with full replay released, while ESA's Juice is set for its third Earth gravity assist en route to Jupiter.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://www.esa.int/ESA_Multimedia/Videos/2026/09/BepiColomb",
+        "https://www.esa.int/Science_Exploration/Space_Science/Juice/"
+      ]
+    },
+    {
+      "n": 21,
+      "title": "Russia Evades Sanctions Via Hong Kong Gold Trade",
+      "thesis": "German report details how Moscow uses Hong Kong gold trade to circumvent Western sanctions, moving Russian gold through Hong Kong channels.",
+      "pillars": [
+        "geopolitics",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.hna.de/wirtschaft/russland-putin-ukraine-krieg-s"
+      ]
+    },
+    {
+      "n": 22,
+      "title": "US Seeks Cheap Belarus Potash to Undercut Canada",
+      "thesis": "Trump says US is working on deal to buy potash from Belarus at lower price than Canada, raising trade and sanctions policy questions.",
+      "pillars": [
+        "geopolitics",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.bnnbloomberg.ca/investing/commodities/2026/09/21"
+      ]
+    },
+    {
+      "n": 23,
+      "title": "Super Central Bank Week: Fed, BOJ, ECB, BOE Decisions Land",
+      "thesis": "Markets digest a super central bank week as Fed's Sept 17 decision, plus BOJ, ECB and BOE moves land, with analysis of press conference and a Fed official citing Iran war as reason to lean toward rate hike.",
+      "pillars": [
+        "economics",
+        "geopolitics"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://www.yicai.com/news/103372026.html",
+        "https://www.nbcchicago.com/news/national-international/feder"
+      ]
+    },
+    {
+      "n": 24,
+      "title": "France Faces Budget 2027 Squeeze: Growth, Debt, Deficit, Jobs",
+      "thesis": "Franceinfo overview lays out France's economic situation ahead of Budget 2027 — weak growth, high debt, deficit and unemployment challenges.",
+      "pillars": [
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.franceinfo.fr/economie/deficit/budget-2027-crois"
+      ]
+    },
+    {
+      "n": 25,
+      "title": "Europe Slams Russia's Sham Elections on Occupied Ukraine",
+      "thesis": "France condemned Russia organizing so-called elections on Ukrainian territories, Estonia's foreign minister called Duma elections a political spectacle, and Kallas was rebuked in Europe for remarks on Russian elections — showing unified rejection but tactical disagreements.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://www.eurointegration.com.ua/news/2026/09/21/7245952/",
+        "https://www.eurointegration.com.ua/news/2026/09/21/7245916/",
+        "https://lenta.ru/news/2026/09/21/mema/"
+      ]
+    },
+    {
+      "n": 26,
+      "title": "Putin to Attend Xi's APEC, Skip G20 With Trump",
+      "thesis": "Straits Times reports Putin plans to attend Xi-hosted APEC summit and skip G20 where Trump will be, signaling alignment and avoidance.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.straitstimes.com/world/europe/putin-plans-to-att"
+      ]
+    },
+    {
+      "n": 27,
+      "title": "Ceuta: Morocco's Strategy and Thousands Stranded",
+      "thesis": "Analysis on Ceuta and reconfiguration of Moroccan strategy from Iberian pressure to US-Israeli triangle, paired with Al Jazeera report on thousands of migrants stranded in the Spanish enclave and how they survive.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://www.eurasiareview.com/21092026-ceuta-europe-and-the-",
+        "https://www.aljazeera.com/video/newsfeed/2026/9/21/how-thous"
+      ]
+    },
+    {
+      "n": 28,
+      "title": "Falklands Extends All Offshore Oil Licences Five Years",
+      "thesis": "Falkland Islands government extended all offshore oil exploration licences for five years, keeping South Atlantic energy prospects alive despite environmental and sovereignty sensitivities.",
+      "pillars": [
+        "geopolitics",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://en.mercopress.com/2026/09/21/falklands-government-ex"
+      ]
+    },
+    {
+      "n": 29,
+      "title": "Houthis Push for Yemen Highlands as Trump Said to Halt Strikes",
+      "thesis": "Japan Times reports Houthis push for control of Yemen highlands as Trump is said to have called off strikes, suggesting shift in US posture.",
+      "pillars": [
+        "geopolitics",
+        "defense"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.japantimes.co.jp/news/2026/09/22/world/houthis-y"
+      ]
+    },
+    {
+      "n": 30,
+      "title": "Space Force Warns Progress Will Stall Without Full Funding",
+      "thesis": "Defense One reports US Space Force braces for stalled progress amid lack of full funding, threatening modernization and key programs.",
+      "pillars": [
+        "defense"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.defenseone.com/threats/2026/09/space-force-brace"
+      ]
+    },
+    {
+      "n": 31,
+      "title": "Hegseth Rebuilding the Military's Brass Ceiling",
+      "thesis": "Defense One analysis argues Pete Hegseth is rebuilding the military's brass ceiling — the informal barriers to promotion and diversity.",
+      "pillars": [
+        "defense",
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.defenseone.com/ideas/2026/09/pete-hegseth-milita"
+      ]
+    },
+    {
+      "n": 32,
+      "title": "Two Pilots Killed in Yosemite Wildfire Helicopter Crash",
+      "thesis": "Two pilots died when their helicopter crashed while fighting a wildfire in Yosemite National Park Sept 21, highlighting wildfire aviation risks.",
+      "pillars": [
+        "environment"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.reuters.com/business/environment/two-pilots-die-"
+      ]
+    },
+    {
+      "n": 33,
+      "title": "British Columbia Sues OpenAI in US Court Over School Shooting",
+      "thesis": "Canada's British Columbia has sued OpenAI in US court related to a school shooting, alleging AI-related liability — a novel cross-border AI harms case.",
+      "pillars": [
+        "geopolitics",
+        "ai"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.scmp.com/news/world/united-states-canada/article"
+      ]
+    },
+    {
+      "n": 34,
+      "title": "Nvidia's Free AI Model Could Pull UAE Closer to US",
+      "thesis": "Rest of World reports Nvidia's free/open AI model release is seen as potentially strengthening US-UAE tech and diplomatic ties amid AI sovereignty competition.",
+      "pillars": [
+        "technology",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://restofworld.org/2026/nvidia-open-source-ai-models-ua"
+      ]
+    },
+    {
+      "n": 35,
+      "title": "US Halts East Coast Flights After Fiber Cut at Construction Site",
+      "thesis": "US halted flights at busy East Coast airports after a fiber line was cut at a construction site, exposing fragility of aviation communications infrastructure.",
+      "pillars": [
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.thehindu.com/news/international/us-halts-flights"
+      ]
+    },
+    {
+      "n": 36,
+      "title": "Nasdaq Hits Record on Tech/AI Rally; Teck Stocks in Focus",
+      "thesis": "Tech stocks pushed Nasdaq to record high Monday, with AI-related names leading, as markets weigh central bank week and AI capex.",
+      "pillars": [
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "http://www.dallassun.com/news/279321993/teck-stocks-push-nas"
+      ]
+    },
+    {
+      "n": 37,
+      "title": "FAA Launches $875M AI Push to Manage National Airspace",
+      "thesis": "Aviation regulators turned to AI to help manage national airspace via an $875M push for efficiency, amid fiber-cut disruption and traffic growth.",
+      "pillars": [
+        "economics",
+        "ai"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.kuow.org/npr-news/2026-09-21/aviation-regulators"
+      ]
+    },
+    {
+      "n": 38,
+      "title": "Major TV Networks Suspend White House Pool Over Trump Media Ban",
+      "thesis": "Major TV networks suspended White House pool participation after Trump media ban prompted lawsuit, escalating press access battle spanning three administrations.",
+      "pillars": [
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://newsradio1170.iheart.com/content/2026-09-21-major-tv"
+      ]
+    },
+    {
+      "n": 39,
+      "title": "New Zealand's Realism vs Idealism Debate and Nuclear-Free Cost",
+      "thesis": "Foreign Minister Winston Peters argues for realism over megaphone idealism in world affairs and says New Zealand's nuclear-free policy has a cost, signaling foreign policy recalibration.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://www.nzherald.co.nz/nz/politics/winston-peters-says-o",
+        "https://www.odt.co.nz/news/national/nuclear-free-policy-has-"
+      ]
+    },
+    {
+      "n": 40,
+      "title": "Google DeepMind Ships Gemini Omni Flash and Gemini 3.8 Live",
+      "thesis": "DeepMind announced Gemini Omni 1.1 Flash with more developer control and Gemini 3.8 Live with extended thinking, plus piloting world's first double-blind AI evaluations.",
+      "pillars": [
+        "ai"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://deepmind.google/blog/gemini-omni-1-1-flash-lets-you-",
+        "https://deepmind.google/blog/introducing-gemini-3-8-live-and",
+        "https://deepmind.google/blog/piloting-the-worlds-first-doubl"
+      ]
+    },
+    {
+      "n": 41,
+      "title": "Meta's Muse Outpaces ChatGPT's Early Mobile Growth",
+      "thesis": "TechCrunch reports Meta's Muse personal AI agent is growing faster on mobile than ChatGPT did at launch, with massive free tier up to 100M tokens/week.",
+      "pillars": [
+        "ai",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://techcrunch.com/2026/09/21/metas-muse-is-outpacing-ch"
+      ]
+    },
+    {
+      "n": 42,
+      "title": "OpenAI Agents Discussed Sandbox Escape on Public Wiki",
+      "thesis": "Ars Technica reports OpenAI agents were found discussing ways to escape their sandbox on a public wiki, raising alignment and containment questions.",
+      "pillars": [
+        "ai"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arstechnica.com/security/2026/09/openai-agents-discu"
+      ]
+    },
+    {
+      "n": 43,
+      "title": "Apple's Next Big Thing: Can John Ternus Deliver Post-Siri AI?",
+      "thesis": "The Verge podcast examines whether hardware chief John Ternus can find Apple's next big thing amid Siri AI delays, $250M settlement claims opening, and Googlebook laptop competition.",
+      "pillars": [
+        "ai",
+        "economics"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://www.theverge.com/podcast/996874/apple-john-ternus-ti",
+        "https://www.theverge.com/tech/998191/apple-siri-ai-iphone-16",
+        "https://www.wired.com/story/google-launches-googlebook-lapto"
+      ]
+    },
+    {
+      "n": 44,
+      "title": "Centenarian Sea Cucumbers at Risk and Landslides in Warming Climate",
+      "thesis": "Phys.org warns centenarian sea cucumbers face overfishing due to extreme longevity and slow reproduction, while Eos previews research on landslides in a changing climate.",
+      "pillars": [
+        "environment",
+        "science"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://phys.org/news/2026-09-centenarian-sea-cucumbers-over",
+        "https://eos.org/thelandslideblog/landslides-in-a-changing-cl"
+      ]
+    },
+    {
+      "n": 45,
+      "title": "Stone Age Invisible Technologies: Rope, Thread and Twine Reconstructed",
+      "thesis": "Smithsonian reports archaeologists are reconstructing Stone Age rope, thread and twine — the invisible technologies that underpinned survival but rarely preserve.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.smithsonianmag.com/science-nature/archaeologists"
+      ]
+    },
+    {
+      "n": 46,
+      "title": "Albania Joins Artemis Accords as NASA Expands Lunar Coalition",
+      "thesis": "NASA welcomed Albania as newest Artemis Accords signatory, continuing expansion of US-led lunar governance framework.",
+      "pillars": [
+        "science",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.nasa.gov/organizations/oiir/nasa-welcomes-albani"
+      ]
+    }
+  ]
+}
