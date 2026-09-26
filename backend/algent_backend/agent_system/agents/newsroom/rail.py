@@ -112,6 +112,10 @@ class RailState(TypedDict, total=False):
     selected_vector: dict[str, Any] # resume: skip routing
     profile: dict[str, Any]         # resume: skip routing + profile
     gauntlet: dict[str, Any]        # resume: skip profile gauntlet
+    gauntlet_progress: dict[str, Any]  # resume: a gauntlet paused between lanes
+    draft_quality: dict[str, Any]   # resume: the post-draft checks already ran
+    # Every resumable artifact key (cli/newsroom/progress._FILES) must be declared here: LangGraph
+    # silently DROPS input keys a state schema does not name (test_rail_state_carries_resume_keys).
     treatment: dict[str, Any]       # resume: skip editorial planning
     draft: dict[str, Any]           # resume: skip drafting
     analytics_plan: dict[str, Any]

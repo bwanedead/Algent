@@ -117,3 +117,14 @@ def test_a_pause_mid_editorial_stops_at_the_next_step(monkeypatch) -> None:
         pl._drafting_stage(ctx, None, {"draft": {"id": "d", "body": "raw"}},
                            {"id": "p"}, {"id": "t"}, {})
     assert "honesty check" in str(raised.value) and headline == []
+
+
+def test_rail_state_carries_every_resume_key() -> None:
+    """LangGraph drops input keys its state schema does not declare. draft_quality and
+    gauntlet_progress were saved and reloaded correctly, then silently dropped at the rail, so a
+    resumed run re-bought the checks it had already paid for."""
+    from algent_backend.agent_system.agents.newsroom.rail import RailState
+    from algent_backend.cli.newsroom.progress import _FILES
+
+    missing = {key for _name, key in _FILES} - set(RailState.__annotations__)
+    assert not missing, f"resume keys the rail would drop: {missing}"
