@@ -861,3 +861,14 @@ a { color: inherit; }
 .radar-archive ul { list-style: none; padding: 0; margin: 0; }
 .radar-archive li { padding: 2px 0; }
 .radar-count { color: var(--muted); font-size: 11px; }
+
+/* Radar card pinned above the feed (components/RadarCard.tsx). */
+.radar-card { display: block; margin: 0 0 var(--line); padding: 14px 16px; border: 1px solid var(--rule-strong); text-decoration: none; color: inherit; }
+.radar-card:hover, .radar-card:focus-visible { border-color: var(--accent); }
+.radar-card-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.radar-card-kicker { color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; font-size: 12px; }
+.radar-card-when { color: var(--muted); font-size: 11px; }
+.radar-card ul { margin: 8px 0; padding-left: 1.1em; }
+.radar-card li { color: var(--strong); margin: 2px 0; }
+.radar-card-foot { color: var(--muted); font-size: 11px; }
+.radar-card:hover .radar-card-foot { color: var(--accent); }
