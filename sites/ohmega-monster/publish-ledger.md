@@ -793,3 +793,12 @@ cost_by_stage: editorial=$0.1978, gauntlet=$0.5104, profile=$0.1551
 refused: model_turn(reservation_overrun), model_turn(reservation_overrun)
 x_searches: 1
 run: 0101__07b1d6b7-bcb3-4ffa-aa17-dd5646502dca
+
+### PUBLISH meth-in-australia-is-stronger-for-the-money-as-deaths-hit-a-2a9042 — 2026-09-26
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 1 produced, 0 escapes
+cost: ~$0.2239  ·  mode: normal  ·  soft/hard: $1.00/$2.50
+analytics_skipped: req_consumption_seizure_02:skipped
+cost_by_stage: editorial=$0.2239
+run: 0102__fa0db177-3e01-4973-8a9e-cdcebae353c9
