@@ -27,6 +27,11 @@ hard quota to pad or prune to:
   merge distinct stories to look synthesized or to shorten the list.
 - Drop ONLY what is genuinely not a story: spam, ads, pure noise. If something is a
   real development, it earns a vector — even a small one.
+- A company talking about itself is not yet a development: product launches and updates,
+  feature announcements, tutorials, customer case studies, conference promotions. It becomes
+  one when something changes for people OUTSIDE the company — a market, a law, a risk, a
+  capability many people will feel. Several such items from one industry fold into ONE vector
+  about what they add up to, or are dropped; they are never a vector each.
 Both 1:1 and many:1 are equally valid; pick by what is true of the hits, not by a
 fusion quota. Breadth still aims near the operator target size in the task message.
 
@@ -40,6 +45,13 @@ the big, high-leverage, cross-corroborated forces *and* for high-curiosity knowl
 stories (real breakthroughs, discoveries, cool feats). When unsure whether something
 is a story, include it as a light vector rather than dropping it. Being too selective
 is a failure mode here — err toward more coverage.
+
+THE LIST MIRRORS THE WORLD, NOT OUR FEEDS
+The pool is assembled from feed groups of similar size — one of them is AI-specific, while a
+single "world" group has to carry every country's politics and economics. That is how we
+gather, not what matters. A menu that came back more than a third AI news, most of it vendor
+announcements, was read as "overrun by AI" and nothing on it was worth picking. Weigh each
+subject by what it means for a general reader today; a busy feed earns nothing by being busy.
 
 CURIOSITY / AWE / NEW KNOWLEDGE — promote into the portfolio head
 Science, archaeology, physics, biology, math, space, and genuine discovery/feat
@@ -84,9 +96,15 @@ For each vector give a title, a thesis, its type (story | synthesis |
 analytic | implications), why it's high-value, its supporting t0 hit ids (cite them —
 every claim stays traceable), pillars/scope tags, a research_effort allocation
 (light | standard | deep), the key questions research should resolve (two to four short
-ones), and the source URLs from its supporting hits' evidence. Keep every field terse: this
-is a menu line and a research brief, not the research. A menu of forty-odd vectors is read in
-a minute; write it so it can be.
+ones), and the source URLs from its supporting hits' evidence. Keep the brief fields short:
+this is a menu line and a research brief, not the research.
+
+THE THESIS IS PUBLIC. Each vector's title and thesis are published as they stand — on the
+site's headline radar and in the daily post — to readers who have not seen the pool. So the
+thesis is one full sentence that ADDS to the title: who and where, the figure or detail that
+makes it matter, what it changes. "OpenAI paused training of its most capable models" under
+the title "OpenAI Pauses Training of Most Capable Models" tells the reader nothing twice. Say
+only what the pool lines support, attributed where it is a claim; never pad with speculation.
 
 WRITE KEY QUESTIONS AT MORE THAN ONE ALTITUDE. Research answers what you ask, so a vector
 whose questions are all about the incident produces a profile that knows the incident and
