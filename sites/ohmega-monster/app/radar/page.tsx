@@ -15,7 +15,7 @@ export default function RadarIndex() {
       <article className="radar-page">
         <header className="article-header">
           <h1>Headline radar</h1>
-          <p className="dek">No menus yet.</p>
+          <p className="dek">No radar editions yet.</p>
         </header>
       </article>
     );

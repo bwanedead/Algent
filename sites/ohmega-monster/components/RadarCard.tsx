@@ -11,7 +11,7 @@ export default function RadarCard() {
     <Link href="/radar" className="radar-card" aria-label="Open the headline radar">
       <div className="radar-card-head">
         <span className="radar-card-kicker">Headline radar</span>
-        <span className="radar-card-when">{menuLabel(m)} · {m.leads.length} leads</span>
+        <span className="radar-card-when">{menuLabel(m)} · {m.leads.length} headlines</span>
       </div>
       <ul>
         {preview.map((l) => (
@@ -19,7 +19,7 @@ export default function RadarCard() {
         ))}
       </ul>
       <span className="radar-card-foot">
-        As other outlets reported it — not yet verified by us. See all {m.leads.length} and earlier menus →
+        As other outlets reported it — not yet verified by us. See all {m.leads.length} and earlier editions →
       </span>
     </Link>
   );

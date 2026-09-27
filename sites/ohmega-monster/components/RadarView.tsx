@@ -47,13 +47,13 @@ export default function RadarView({ menu }: { menu: RadarMenu }) {
         ))}
       </ol>
 
-      <nav className="radar-pager" aria-label="Earlier and later menus">
+      <nav className="radar-pager" aria-label="Earlier and later radar editions">
         {newer ? <Link href={`/radar/${newer.slug}`}>← Newer: {menuLabel(newer)}</Link> : <span />}
         {older ? <Link href={`/radar/${older.slug}`}>Older: {menuLabel(older)} →</Link> : <span />}
       </nav>
 
-      <section className="radar-archive" aria-label="All menus">
-        <h2>Every menu</h2>
+      <section className="radar-archive" aria-label="All radar editions">
+        <h2>All radar editions</h2>
         <ul>
           {all.map((m) => (
             <li key={m.slug}>
@@ -62,7 +62,7 @@ export default function RadarView({ menu }: { menu: RadarMenu }) {
               ) : (
                 <Link href={`/radar/${m.slug}`}>{menuLabel(m)}</Link>
               )}
-              <span className="radar-count"> — {m.leads.length} leads</span>
+              <span className="radar-count"> — {m.leads.length} headlines</span>
             </li>
           ))}
         </ul>
