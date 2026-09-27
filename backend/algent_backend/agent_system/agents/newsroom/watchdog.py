@@ -108,7 +108,11 @@ def recover_and_exit(*, run_id: str, run_dir: Path | None, spent) -> None:
         spend_budget.record_partial(run_id, float(spent()))
     except Exception:  # noqa: BLE001 — the envelope then keeps the full cap reserved: safe side
         pass
-    if run_dir is not None:
+    from algent_backend.agent_system.foundation.pause import requested as pause_requested
+
+    # A pause the operator asked for outranks recovery: they are away on purpose, and resume
+    # clears the pause — relaunching would restart the run they just stopped.
+    if run_dir is not None and not pause_requested():
         marker = run_dir / "audit" / "auto_resumed.txt"
         try:
             if not marker.exists():

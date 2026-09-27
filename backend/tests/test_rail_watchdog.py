@@ -104,3 +104,15 @@ def test_a_stalled_run_relaunches_resume_once_and_banks_its_spend(tmp_path, monk
 
     wd.recover_and_exit(run_id="r1", run_dir=run, spent=lambda: 0.5)
     assert launched == [str(run)]                  # a second stall does not relaunch again
+
+
+def test_a_paused_run_is_never_relaunched(tmp_path, monkeypatch) -> None:
+    from algent_backend.agent_system.foundation import pause
+
+    monkeypatch.setattr(pause, "PAUSE_FILE", tmp_path / "newsroom_run.pause")
+    launched: list[str] = []
+    monkeypatch.setattr(wd, "_launch_resume", lambda run_dir: launched.append(str(run_dir)))
+    monkeypatch.setattr(wd.os, "_exit", lambda code: None)
+    pause.request()
+    wd.recover_and_exit(run_id="r1", run_dir=tmp_path / "run", spent=lambda: 0.0)
+    assert launched == []
