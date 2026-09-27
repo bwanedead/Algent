@@ -470,6 +470,19 @@ If a term or entity only makes sense inside a profession, either supply the hand
 not lean on it. Cold guild language is a failed ramp, not sophistication. Keep explainers
 brief — enough to plant a usable mental handle, not a digression.
 
+### The source's idiom is not ours
+Sources write in their own register: a national statistics office, a regional wire, a trade
+journal. Their shorthand arrives in our notes and slides into our prose as if it were plain
+English. An Australian-sourced piece told readers of "a record 12.8 tonnes in the year to
+August 2024". That is correct Australian statistics usage and reads as broken almost everywhere
+else. A reader who trips on a phrase trusts the sentence less, and the whole piece with it.
+- **Time spans** are said so any reader can place them: "in the 12 months to August 2024",
+  "between September 2023 and August 2024". Never "the year to", "FY24", "YTD", "2023–24"
+  left bare, or a season named from one hemisphere.
+- **Units, spellings and institutions** follow the same test: would a reader from anywhere
+  parse this on the first pass? If not, restate it in words, or give the handhold above.
+- Quote the source's exact words only inside quotation marks, where the idiom is theirs.
+
 ## Analogy and metaphor — a borrowed structure, marked at the seams
 An analogy or metaphor hands the reader a structure they already hold and says *"the new
 thing is shaped like this."* It is a powerful **download shortcut**: instead of building an

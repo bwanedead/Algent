@@ -36,6 +36,10 @@ nothing but this piece.
   system is involved, or what the prior arrangement was, before launching into chronology.
 - **Assumed context.** A sentence that only parses if you already know something the piece
   never supplied.
+- **Borrowed idiom.** A phrase that is correct in the source's register and odd everywhere
+  else. "In the year to August 2024" (Australian statistics usage) made a reader stop and ask
+  what it meant. Time spans, units and institutional shorthand are restated so a reader from
+  anywhere parses them on the first pass: "in the 12 months to August 2024".
 
 **Preferred outcome:** a reader who has never heard of any of this finishes the piece able
 to explain it to a friend.
