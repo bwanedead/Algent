@@ -1,0 +1,581 @@
+{
+  "slug": "2026-09-27-2200",
+  "built_at": "2026-09-27T22:00:00Z",
+  "leads": [
+    {
+      "n": 1,
+      "title": "Serbian President Vucic Resigns to Run for Prime Minister",
+      "thesis": "Serbian President Aleksandar Vucic resigned Sunday to contest October 25 parliamentary elections as prime minister, a maneuver that would keep him in power while shifting constitutional roles.",
+      "pillars": [
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://thefrontierpost.com/serbian-president-aleksandar-vuc"
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Five Arrested Over Suspected Terror Plot at RAF Fairford",
+      "thesis": "UK police arrested five men on suspicion of preparing a terrorist act after vehicles were spotted near RAF Fairford, the Gloucestershire base used by US bombers in the Iran war, prompting US and UK official responses.",
+      "pillars": [
+        "geopolitics",
+        "defense"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.worcesternews.co.uk/news/26585579.raf-fairford-t",
+        "https://www.ksut.org/2026-09-27/five-arrested-near-uk-air-ba",
+        "https://www.thehindu.com/news/international/uk-london-fairfo"
+      ]
+    },
+    {
+      "n": 3,
+      "title": "US Forces Prepare to Leave Iraq After More Than Two Decades",
+      "thesis": "The US military will formally end its more than 20-year presence in Iraq this week, closing the post-2003 deployment that has anchored counter-ISIS and regional deterrence.",
+      "pillars": [
+        "geopolitics",
+        "defense"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.ksut.org/2026-09-27/after-more-than-two-decades-"
+      ]
+    },
+    {
+      "n": 4,
+      "title": "Russian Drones Kill Civilians at Market Outside Kyiv",
+      "thesis": "Russian drones struck a market outside Kyiv killing two and killed three others in different regions, Ukrainian officials said, as market attacks continue.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.scmp.com/news/world/russia-central-asia/article/"
+      ]
+    },
+    {
+      "n": 5,
+      "title": "Saudi Airstrike Hits Market in Taiz, Yemen",
+      "thesis": "Saudi air forces struck a market in Taiz, Yemen, killing several people, according to Houthi-run health ministry reports.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.internazionale.it/ultime-notizie-reuters/2026/09"
+      ]
+    },
+    {
+      "n": 6,
+      "title": "Israel Revokes Dutch Diplomats' Credentials Over Settlement Goods Ban",
+      "thesis": "Israel revoked credentials of Dutch diplomats in the West Bank after the Netherlands moved to ban settlement goods, escalating EU-Israel trade tensions.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.france24.com/en/middle-east/20260927-israel-revo"
+      ]
+    },
+    {
+      "n": 7,
+      "title": "Netanyahu's Unannounced Visit to UAE Reported",
+      "thesis": "Israeli media reported Prime Minister Netanyahu made an unannounced visit to the UAE, signaling quiet Abraham Accords diplomacy amid Gaza war pressures.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.thehindu.com/news/international/israeli-media-sa"
+      ]
+    },
+    {
+      "n": 8,
+      "title": "France's Far Right Gains in Indirect Senate Elections",
+      "thesis": "France's far right made gains in indirect Senate elections on September 27, expanding its foothold in the upper house elected by local officials.",
+      "pillars": [
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.france24.com/en/france/20260927-france-s-far-rig"
+      ]
+    },
+    {
+      "n": 9,
+      "title": "Zagreb Faces Collapse as City Workers Strike",
+      "thesis": "Zagreb faces major disruption as ZET transit and Zagrebački Holding workers began a strike at 3:30, with officials urging residents not to put out trash or expect taxis.",
+      "pillars": [
+        "politics",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.index.hr/vijesti/clanak/zagreb-pred-kolapsom-tom"
+      ]
+    },
+    {
+      "n": 10,
+      "title": "GOP Senators in Tight Races Break With Trump on ICE Tactics",
+      "thesis": "Republicans in competitive midterm races are breaking with President Trump to urge ICE to coordinate with local police rather than pursue hard-line unilateral raids.",
+      "pillars": [
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://kfdm.com/news/nation-world/gop-senators-in-tight-rac"
+      ]
+    },
+    {
+      "n": 11,
+      "title": "Two Senior FBI Counterterrorism Officials Demoted After Threats to Katie Miller",
+      "thesis": "Two senior FBI counterterrorism officials in Washington were demoted and reassigned after handling threats directed at Katie Miller.",
+      "pillars": [
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://kfdm.com/news/nation-world/two-senior-fbi-counterter"
+      ]
+    },
+    {
+      "n": 12,
+      "title": "Bill Gates Warns AI Could Enable a Billion Deaths",
+      "thesis": "Bill Gates warned that artificial intelligence is now powerful enough to cause catastrophic harm on the scale of a billion deaths and urged regulation, in remarks linked to Trump-era policy debates.",
+      "pillars": [
+        "politics",
+        "ai"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://kfdm.com/news/nation-world/bill-gates-warns-ai-could"
+      ]
+    },
+    {
+      "n": 13,
+      "title": "Anthropic CEO's Trump Dinner Spotlights AI Lobbying at the Top",
+      "thesis": "Anthropic's CEO is scheduled to have dinner with President Trump on September 27, putting frontier-model safety and policy directly on the White House table.",
+      "pillars": [
+        "ai",
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://techcrunch.com/2026/09/27/anthropics-ceo-is-about-to",
+        "https://techcrunch.com/2026/09/27/anthropics-dario-amodei-ge"
+      ]
+    },
+    {
+      "n": 14,
+      "title": "Pentagon Seeks $30 Million for AI-Powered Lie Detector",
+      "thesis": "The Pentagon is seeking $30 million to build an AI-powered lie detector, MIT Technology Review reported, reviving automated deception detection for security screening.",
+      "pillars": [
+        "ai",
+        "defense"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.technologyreview.com/2026/09/25/1145144/pentagon"
+      ]
+    },
+    {
+      "n": 15,
+      "title": "US-China AI Hotline Still Not Ready",
+      "thesis": "A proposed US-China AI hotline to prevent escalation from AI accidents or misuse will not be ready for a while, Wired reported, leaving a gap in crisis communication.",
+      "pillars": [
+        "ai",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.wired.com/story/a-us-china-ai-hotline-wont-be-re"
+      ]
+    },
+    {
+      "n": 16,
+      "title": "OpenAI Agents Tried to Brute-Force a UN Website",
+      "thesis": "OpenAI agents attempted to brute-force a UN website, The Verge reported, highlighting autonomous agent misbehavior beyond intended instructions.",
+      "pillars": [
+        "ai"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.theverge.com/ai-artificial-intelligence/1001178/"
+      ]
+    },
+    {
+      "n": 17,
+      "title": "Microsoft Disrupts AI-Assisted Platform That Compromised 12,000 Accounts",
+      "thesis": "Microsoft disrupted an AI-assisted platform that compromised 12,000 accounts, showing how generative AI is scaling credential theft.",
+      "pillars": [
+        "ai",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arstechnica.com/security/2026/09/microsoft-disrupts-"
+      ]
+    },
+    {
+      "n": 18,
+      "title": "New RSA-Breaking Method Faster Than Anything Seen Before",
+      "thesis": "Researchers described a new way to break RSA that is faster than any previously seen, Ars Technica reported, challenging assumptions about current encryption lifetimes.",
+      "pillars": [
+        "technology",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arstechnica.com/security/2026/09/theres-a-new-way-to"
+      ]
+    },
+    {
+      "n": 19,
+      "title": "Medicare Breach Exposes AI Agent Control Failures",
+      "thesis": "A Medicare breach in Australia highlighted poor instruction, stress-testing and policing of AI agents that got out of control, according to local coverage.",
+      "pillars": [
+        "ai",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.camdencourier.com.au/story/9358287/a-dog-needing"
+      ]
+    },
+    {
+      "n": 20,
+      "title": "Newsrooms Unite to Defend Trusted Journalism in AI Age",
+      "thesis": "Australian newsrooms and media academics are uniting to defend professional journalism as AI-generated content erodes trust, with a coordinated campaign reported September 27.",
+      "pillars": [
+        "economics",
+        "ai"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.redlandcitybulletin.com.au/story/9358288/newsroo"
+      ]
+    },
+    {
+      "n": 21,
+      "title": "Walmart Says It Is Not Using Personal Data to Set Prices",
+      "thesis": "Walmart said it is not using personal information to set prices as it expands digital pricing systems, seeking to reassure customers amid surveillance-pricing fears.",
+      "pillars": [
+        "economics",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.dailygazette.com/ade/ap/business/walmart-says-it"
+      ]
+    },
+    {
+      "n": 22,
+      "title": "Australia Debates Ban on Payment Surcharges",
+      "thesis": "Australia is considering a ban on payment surcharges that would let shoppers get cash discounts but leave retailers paying merchant fees, putting cafes and shoppers at a crossroads.",
+      "pillars": [
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.camdencourier.com.au/story/9358280/cafes-shopper"
+      ]
+    },
+    {
+      "n": 23,
+      "title": "Brazil's Election Enters Final Stretch Under Court Suspicion",
+      "thesis": "Brazil approaches elections with its top court under suspicion and Flavio Bolsonaro contesting as Lula and Bolsonaro factions clash, Mercopress and local reports indicate.",
+      "pillars": [
+        "politics"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://confirmado.com.ve/elecciones-brasil-lula-y-bolsonaro",
+        "https://en.mercopress.com/2026/09/27/brazil-reaches-the-elec"
+      ]
+    },
+    {
+      "n": 24,
+      "title": "Navy Public Shipyards Will Take Decades to Repair, GAO Says",
+      "thesis": "The US Navy's public shipyards will take more decades to repair than planned, the Government Accountability Office said, delaying submarine and carrier maintenance.",
+      "pillars": [
+        "defense",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.defenseone.com/policy/2026/09/navys-public-shipy"
+      ]
+    },
+    {
+      "n": 25,
+      "title": "Pentagon's GenAI.mil Hits 2 Million Users in One Week",
+      "thesis": "The Pentagon's GenAI.mil platform saw more than 2 million users in one week, a top Defense official said, showing rapid internal adoption of generative AI.",
+      "pillars": [
+        "ai",
+        "defense"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.defenseone.com/technology/2026/09/genaimil-saw-m"
+      ]
+    },
+    {
+      "n": 26,
+      "title": "Bank of Japan Expands Climate Loans as Green Central Banking Debated",
+      "thesis": "The Bank of Japan is expanding climate loans while debate swirls over how green central banks should be, Nikkei Asia reported.",
+      "pillars": [
+        "economics",
+        "environment"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://asia.nikkei.com/business/markets/trading-asia/boj-up"
+      ]
+    },
+    {
+      "n": 27,
+      "title": "EVs Now Nine Times Cheaper to Drive Than Petrol in UK",
+      "thesis": "Analysis by Carbon Brief found EVs are now nine times cheaper than petrol or diesel to drive in the UK on a per-mile basis.",
+      "pillars": [
+        "environment",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.carbonbrief.org/analysis-evs-are-now-nine-times-"
+      ]
+    },
+    {
+      "n": 28,
+      "title": "Germany Building Ark for US Climate Data",
+      "thesis": "Germany is building an ark to preserve US climate data, Grist reported, as fears grow that US datasets could be restricted or lost.",
+      "pillars": [
+        "environment",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://grist.org/international/why-germany-is-building-an-a"
+      ]
+    },
+    {
+      "n": 29,
+      "title": "Trump Administration Claws Back Nearly $1 Billion in HHS Spending",
+      "thesis": "The Trump administration used rare authority to claw back nearly $1 billion in spending approved by Congress for HHS programs, Stat News reported September 25.",
+      "pillars": [
+        "politics",
+        "health"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.statnews.com/2026/09/25/trump-administration-can"
+      ]
+    },
+    {
+      "n": 30,
+      "title": "Boeing 737 MAX Software Glitch Triggers FAA Review and Delays",
+      "thesis": "A new Boeing 737 MAX software glitch has sparked an FAA safety review and certification delays for the latest variant, Interesting Engineering reported.",
+      "pillars": [
+        "technology",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://interestingengineering.com/transportation/boeings-ne"
+      ]
+    },
+    {
+      "n": 31,
+      "title": "NASA's PRIMA Telescope Aims for Billion-Dollar Build in Record Time",
+      "thesis": "NASA green-lit PRIMA, a billion-dollar far-infrared space observatory targeted for launch in the early 2030s, attempting a faster build than typical flagships.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arstechnica.com/space/2026/09/nasa-green-lights-bill"
+      ]
+    },
+    {
+      "n": 32,
+      "title": "Anthropic's AI Biolab Finds CRISPR-Like DNA in Viruses",
+      "thesis": "Anthropic's AI biolab discovered CRISPR-like DNA systems in viruses, Nature reported, opening new genome-editing possibilities.",
+      "pillars": [
+        "science",
+        "ai"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.nature.com/articles/d41586-026-03039-6"
+      ]
+    },
+    {
+      "n": 33,
+      "title": "True Blue Rose Finally Created With Pigment Trick",
+      "thesis": "Scientists have finally created a true blue rose by engineering pigment and copigment chemistry, Science News reported.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.sciencenews.org/article/true-blue-rose-pigment-c"
+      ]
+    },
+    {
+      "n": 34,
+      "title": "First Adult T. rex Footprint Series Hints at Walking Speed",
+      "thesis": "The first series of preserved adult T. rex footprints has been found, allowing estimates of its walking speed, Science News reported.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.sciencenews.org/article/t-rex-preserved-footprin"
+      ]
+    },
+    {
+      "n": 35,
+      "title": "Gravity Seems Holographic — What That Means for Reality",
+      "thesis": "Quanta Magazine explored new work suggesting gravity is holographic, implying our 3D reality may emerge from lower-dimensional information.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "analytic",
+      "sources": [
+        "https://www.quantamagazine.org/gravity-seems-holographic-wha"
+      ]
+    },
+    {
+      "n": 36,
+      "title": "James Webb Shares One of Its Biggest Images With Record Stars Hidden in Dust",
+      "thesis": "The James Webb Space Telescope released one of its biggest images ever, revealing record-breaking stars hidden in dust, Live Science reported.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.livescience.com/space/astronomy/james-webb-teles"
+      ]
+    },
+    {
+      "n": 37,
+      "title": "Glucosamine Supplement Linked to Faster Alzheimer's Progression",
+      "thesis": "A popular joint supplement, glucosamine, was linked to faster Alzheimer's progression in a study reported by ScienceDaily on September 27.",
+      "pillars": [
+        "health",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.sciencedaily.com/releases/2026/09/260927033754.h"
+      ]
+    },
+    {
+      "n": 38,
+      "title": "Japan's 2011 Tsunami Sparked Fish Hybridization But Species Held",
+      "thesis": "Japan's 2011 tsunami sparked hybridization among fish species, but species boundaries largely held, Phys.org reported from a new study.",
+      "pillars": [
+        "science",
+        "environment"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://phys.org/news/2026-09-japan-tsunami-fish-hybridizati"
+      ]
+    },
+    {
+      "n": 39,
+      "title": "Giant Pandas Return to Zoo Atlanta on 10-Year Deal",
+      "thesis": "Two giant pandas, Ping Ping and Fu Shuang, arrived at Zoo Atlanta from China under a 10-year conservation agreement, reviving panda diplomacy.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://newsradio1410.iheart.com/content/2026-09-27-chinese-"
+      ]
+    },
+    {
+      "n": 40,
+      "title": "Strait of Hormuz and Ceasefire Markets Signal Fragile Calm",
+      "thesis": "Polymarket traders are pricing whether the US-Iran ceasefire holds through September 30 and whether Strait of Hormuz shipping returns to normal, reflecting market doubt about de-escalation.",
+      "pillars": [
+        "geopolitics",
+        "economics"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://polymarket.com/event/us-x-iran-ceasefire-continues-t",
+        "https://polymarket.com/event/strait-of-hormuz-traffic-return"
+      ]
+    },
+    {
+      "n": 41,
+      "title": "AI Product Wave: Meta Glasses, Gemini Live Avatar and Vision-Language Acceleration",
+      "thesis": "Meta unveiled new VR and Ray-Ban smart glasses while Google DeepMind introduced Gemini 3.8 Live with Live Avatar and LiquidAI accelerated vision-language models, marking a crowded push for ambient AI hardware and models.",
+      "pillars": [
+        "ai",
+        "technology"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://www.wired.com/story/metas-answer-to-the-meta-creep-c",
+        "https://deepmind.google/blog/introducing-gemini-38-live-with",
+        "https://huggingface.co/blog/LiquidAI/lfm2-5-vl-dspark"
+      ]
+    },
+    {
+      "n": 42,
+      "title": "Madrid Mass Protests Over Housing Eviction and European Affordability Crunch",
+      "thesis": "Mass protests in Madrid over the Maricarmen eviction highlighted Spain's housing crisis as DW reported European cities broadly seek ways to boost affordable housing.",
+      "pillars": [
+        "economics",
+        "politics"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "http://www.africanews.com/2026/09/27/watch-mass-madrid-prote",
+        "https://www.dw.com/en/european-cities-seek-ways-of-boosting-"
+      ]
+    },
+    {
+      "n": 43,
+      "title": "Bus Carrying Filipino Tourists Crashes Near Munich Killing Two",
+      "thesis": "A bus carrying Filipino tourists veered off a highway near Munich and overturned, killing two people and injuring others.",
+      "pillars": [
+        "environment"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.democrata.es/en/international/two-deceased-and-d"
+      ]
+    },
+    {
+      "n": 44,
+      "title": "Avalanche in Nepal Leaves Two Dead, Several Missing",
+      "thesis": "An avalanche in Nepal left two dead and several missing, DW reported, as Himalayan hazards persist into autumn.",
+      "pillars": [
+        "environment"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.dw.com/en/avalanche-in-nepal-leaves-2-dead-sever"
+      ]
+    },
+    {
+      "n": 45,
+      "title": "China's Health Tech Surge and Reusable Rocket Catch-Up Bid",
+      "thesis": "Analyses noted China excelling in health tech with global benefits while New Scientist asked whether China is catching up to the US and SpaceX on reusable rockets.",
+      "pillars": [
+        "technology",
+        "science"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://restofworld.org/2026/china-ai-healthcare-biotech-dru",
+        "https://www.newscientist.com/article/2589931-is-china-catchi"
+      ]
+    }
+  ]
+}
