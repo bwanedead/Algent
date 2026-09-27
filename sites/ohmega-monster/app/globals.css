@@ -872,3 +872,6 @@ a { color: inherit; }
 .radar-card li { color: var(--strong); margin: 2px 0; }
 .radar-card-foot { color: var(--muted); font-size: 11px; }
 .radar-card:hover .radar-card-foot { color: var(--accent); }
+
+.article-correction { color: var(--muted); font-size: 12px; border-left: 2px solid var(--accent); padding-left: 8px; margin: 8px 0 0; }
+

@@ -38,6 +38,9 @@ export type ArticleMeta = {
   // A real-photo hero (photo_hero.*) carries a credit instead of the AI label.
   heroCredit: string;
   heroCreditUrl: string;
+  // Corrections a reader is shown: only those carrying a reader-facing `note`. The `reason`
+  // beside it is the newsroom's internal log and never rendered.
+  corrections: { date: string; note: string }[];
   quickTake: QuickTake | null;
 };
 
@@ -109,6 +112,11 @@ function toMeta(file: string, data: Record<string, unknown>): ArticleMeta {
     heroLabel: String(data.hero_label ?? ""),
     heroCredit: String(data.hero_credit ?? ""),
     heroCreditUrl: String(data.hero_credit_url ?? ""),
+    corrections: Array.isArray(data.corrections)
+      ? (data.corrections as Record<string, unknown>[])
+          .filter((c) => c && typeof c.note === "string" && c.note.trim())
+          .map((c) => ({ date: String(c.date ?? ""), note: String(c.note) }))
+      : [],
     quickTake,
   };
 }

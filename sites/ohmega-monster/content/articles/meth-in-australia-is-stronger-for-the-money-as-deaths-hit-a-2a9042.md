@@ -16,7 +16,7 @@ places:
 flags:
 - 🇦🇺
 quick_take:
-  what_happened: Australians consumed a record 12.8 tonnes of methamphetamine in the year to August 2024 while police seized more than 16 tonnes, as deaths, hospitalisations and wastewater traces all hit highs.
+  what_happened: Australians consumed a record 12.8 tonnes of methamphetamine in the 12 months to August 2024 while police seized more than 16 tonnes, as deaths, hospitalisations and wastewater traces all hit highs.
   why_it_matters: It explains why record seizures have not stopped record harms, who is most affected — men 35 to 54 and First Nations peoples — and where evidence for cutting deaths is strongest and where it is limited for stimulants.
   what_is_uncertain: Whether cheaper, purer supply caused the rise in deaths or how much reflects crystal dominance, more frequent use and mixing drugs — the pattern is correlational with a plausible mechanism, not a measured causal effect.
 thumbnail: /analytics/meth-in-australia-is-stronger-for-the-money-as-deaths-hit-a-2a9042/analytic_req_deaths_trajectory_01.svg
@@ -24,6 +24,10 @@ hero: /analytics/meth-in-australia-is-stronger-for-the-money-as-deaths-hit-a-2a9
 hero_alt: a wastewater treatment plant with circular tanks at dusk
 hero_label: AI-generated illustration — not a photograph of this story
 hero_hook: Stronger meth, record deaths in Australia
+corrections:
+- date: '2026-09-27'
+  reason: source idiom 'in the year to' restated (writing-ergonomics)
+  note: Two date phrases were reworded for clarity (now 'the 12 months to August 2024'). No facts changed.
 ---
 
 Methamphetamine — sold in Australia mostly as crystal meth or ice — has become stronger for the money and easier to find, even as deaths, hospitalisations and wastewater traces all hit record highs in 2024. Most deaths were unintentional and concentrated among men in mid-life.
@@ -38,7 +42,7 @@ The picture comes from two long-running national trackers: the National Wastewat
 
 ## More meth, despite record seizures
 
-What changed is scale. The Commission estimates Australians consumed about 22.2 tonnes of four major illicit drugs in the year to August 2024, up 34% as the market recovered after COVID and organised crime groups re-established and expanded. Methylamphetamine — the chemical name for methamphetamine — rose 21% to a record 12.8 tonnes.
+What changed is scale. The Commission estimates Australians consumed about 22.2 tonnes of four major illicit drugs in the 12 months to August 2024, up 34% as the market recovered after COVID and organised crime groups re-established and expanded. Methylamphetamine — the chemical name for methamphetamine — rose 21% to a record 12.8 tonnes.
 
 Police seized more than 16 tonnes of methamphetamine in 2024, and for several major drugs the amount seized exceeded the amount estimated to have been consumed. The street value of the four drugs consumed in that wastewater year was put at $11.5 billion, with methylamphetamine accounting for $8.9 billion, about three-quarters.
 

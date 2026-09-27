@@ -65,6 +65,12 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
             Review status: {a.status.replace(/_/g, " ")}
           </p>
         ) : null}
+        {/* Corrections are visible, never silent. */}
+        {a.corrections.map((c) => (
+          <p key={c.date + c.note} className="article-correction">
+            Updated {c.date}: {c.note}
+          </p>
+        ))}
         {/* The key, once, at the top — so the frame means something before the reader meets it. */}
         {hasGenerated ? (
           <p className="ai-key">
