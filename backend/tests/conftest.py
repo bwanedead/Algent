@@ -26,6 +26,15 @@ def _isolated_spend_budget(tmp_path, monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _isolated_pause_signal(tmp_path, monkeypatch):
+    """The pause file stops the operator's live run. No test may see (or write) the real one —
+    a relaunch test failed only because the operator had just paused a run."""
+    from algent_backend.agent_system.foundation import pause
+
+    monkeypatch.setattr(pause, "PAUSE_FILE", tmp_path / "newsroom_run.pause")
+
+
+@pytest.fixture(autouse=True)
 def _isolated_profile_store(tmp_path, monkeypatch):
     """The profile store is the newsroom's durable research record — no test may write to it."""
     monkeypatch.setenv("ALGENT_PROFILE_STORE", str(tmp_path / "profile_store"))
