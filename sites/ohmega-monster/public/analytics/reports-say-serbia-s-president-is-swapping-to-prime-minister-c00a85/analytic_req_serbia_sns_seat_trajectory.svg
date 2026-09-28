@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="704.068375pt" height="438.306pt" viewBox="0 0 704.068375 438.306" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-28T02:54:03.926985</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.3, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 438.306 
+L 704.068375 438.306 
+L 704.068375 0 
+L 0 0 
+z
+" style="fill: #0c0f0e"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 54.484375 352.666 
+L 686.068375 352.666 
+L 686.068375 44.65 
+L 54.484375 44.65 
+z
+" style="fill: #111513"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <defs>
+       <path id="m364b320d39" d="M 0 0 
+L 0 3.5 
+" style="stroke: #858981; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m364b320d39" x="114.863887" y="352.666" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="114.863887" y="366.566" transform="rotate(-0 114.863887 366.566)">2012</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2">
+      <g>
+       <use xlink:href="#m364b320d39" x="217.028882" y="352.666" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="217.028882" y="366.566" transform="rotate(-0 217.028882 366.566)">2014</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3">
+      <g>
+       <use xlink:href="#m364b320d39" x="319.193877" y="352.666" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="319.193877" y="366.566" transform="rotate(-0 319.193877 366.566)">2016</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#m364b320d39" x="421.358873" y="352.666" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="421.358873" y="366.566" transform="rotate(-0 421.358873 366.566)">2020</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_5">
+      <g>
+       <use xlink:href="#m364b320d39" x="523.523868" y="352.666" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="523.523868" y="366.566" transform="rotate(-0 523.523868 366.566)">2022</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#m364b320d39" x="625.688863" y="352.666" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #858981" x="625.688863" y="366.566" transform="rotate(-0 625.688863 366.566)">2023</text>
+     </g>
+    </g>
+    <g id="text_7">
+     <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="370.276375" y="379.525375" transform="rotate(-0 370.276375 379.525375)">Election year</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_7">
+      <path d="M 54.484375 352.666 
+L 686.068375 352.666 
+" clip-path="url(#p0cbddde937)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_8">
+      <defs>
+       <path id="m6c68112319" d="M 0 0 
+L -3.5 0 
+" style="stroke: #858981; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m6c68112319" x="54.484375" y="352.666" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="47.484375" y="356.116" transform="rotate(-0 47.484375 356.116)">0</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_9">
+      <path d="M 54.484375 291.0628 
+L 686.068375 291.0628 
+" clip-path="url(#p0cbddde937)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#m6c68112319" x="54.484375" y="291.0628" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="47.484375" y="294.5128" transform="rotate(-0 47.484375 294.5128)">50</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_11">
+      <path d="M 54.484375 229.4596 
+L 686.068375 229.4596 
+" clip-path="url(#p0cbddde937)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_12">
+      <g>
+       <use xlink:href="#m6c68112319" x="54.484375" y="229.4596" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_10">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="47.484375" y="232.9096" transform="rotate(-0 47.484375 232.9096)">100</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_13">
+      <path d="M 54.484375 197.425936 
+L 686.068375 197.425936 
+" clip-path="url(#p0cbddde937)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_14">
+      <g>
+       <use xlink:href="#m6c68112319" x="54.484375" y="197.425936" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_11">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="47.484375" y="200.875936" transform="rotate(-0 47.484375 200.875936)">126</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_15">
+      <path d="M 54.484375 167.8564 
+L 686.068375 167.8564 
+" clip-path="url(#p0cbddde937)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_16">
+      <g>
+       <use xlink:href="#m6c68112319" x="54.484375" y="167.8564" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_12">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="47.484375" y="171.3064" transform="rotate(-0 47.484375 171.3064)">150</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_17">
+      <path d="M 54.484375 106.2532 
+L 686.068375 106.2532 
+" clip-path="url(#p0cbddde937)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_18">
+      <g>
+       <use xlink:href="#m6c68112319" x="54.484375" y="106.2532" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_13">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="47.484375" y="109.7032" transform="rotate(-0 47.484375 109.7032)">200</text>
+     </g>
+    </g>
+    <g id="ytick_7">
+     <g id="line2d_19">
+      <path d="M 54.484375 44.65 
+L 686.068375 44.65 
+" clip-path="url(#p0cbddde937)" style="fill: none; stroke: #2b302d; stroke-width: 0.6; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_20">
+      <g>
+       <use xlink:href="#m6c68112319" x="54.484375" y="44.65" style="fill: #858981; stroke: #858981; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_14">
+      <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: end; fill: #858981" x="47.484375" y="48.1" transform="rotate(-0 47.484375 48.1)">250</text>
+     </g>
+    </g>
+    <g id="text_15">
+     <text style="font-size: 10px; font-family: 'Consolas'; text-anchor: middle; fill: #d3d0c8" x="24.957813" y="198.658" transform="rotate(-90 24.957813 198.658)">Seats in the 250-seat National Assembly</text>
+    </g>
+   </g>
+   <g id="line2d_21">
+    <path d="M 54.484375 197.425936 
+L 686.068375 197.425936 
+" clip-path="url(#p0cbddde937)" style="fill: none; stroke: #5eb8c9; stroke-width: 1.6; stroke-linecap: square"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 54.484375 352.666 
+L 54.484375 44.65 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 54.484375 352.666 
+L 686.068375 352.666 
+" style="fill: none; stroke: #454b46; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 83.192739 352.666 
+L 146.535036 352.666 
+L 146.535036 262.725328 
+L 83.192739 262.725328 
+z
+" clip-path="url(#p0cbddde937)" style="fill: #f0a33a"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 185.357734 352.666 
+L 248.700031 352.666 
+L 248.700031 157.999888 
+L 185.357734 157.999888 
+z
+" clip-path="url(#p0cbddde937)" style="fill: #f0a33a"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 287.522729 352.666 
+L 350.865026 352.666 
+L 350.865026 191.265616 
+L 287.522729 191.265616 
+z
+" clip-path="url(#p0cbddde937)" style="fill: #f0a33a"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 389.687724 352.666 
+L 453.030021 352.666 
+L 453.030021 121.037968 
+L 389.687724 121.037968 
+z
+" clip-path="url(#p0cbddde937)" style="fill: #f0a33a"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 491.852719 352.666 
+L 555.195016 352.666 
+L 555.195016 204.81832 
+L 491.852719 204.81832 
+z
+" clip-path="url(#p0cbddde937)" style="fill: #f0a33a"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 594.017714 352.666 
+L 657.360011 352.666 
+L 657.360011 193.729744 
+L 594.017714 193.729744 
+z
+" clip-path="url(#p0cbddde937)" style="fill: #f0a33a"/>
+   </g>
+   <g id="text_16">
+    <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #5eb8c9" x="157.773185" y="191.883338" transform="rotate(-0 157.773185 191.883338)">126 seats = majority</text>
+   </g>
+   <g id="text_17">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(95.069512 245.622695)">73 seats</text>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(85.172325 254.819852)">29.2% of 250</text>
+   </g>
+   <g id="text_18">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(194.76021 140.897255)">158 seats</text>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(187.33732 150.094412)">63.2% of 250</text>
+   </g>
+   <g id="text_19">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(296.925206 174.162983)">131 seats</text>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(289.502315 183.36014)">52.4% of 250</text>
+   </g>
+   <g id="text_20">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(399.090201 103.935335)">188 seats</text>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(391.66731 113.132492)">75.2% of 250</text>
+   </g>
+   <g id="text_21">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(501.255196 187.715687)">120 seats</text>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(493.832305 196.912844)">48.0% of 250</text>
+   </g>
+   <g id="text_22">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(603.420191 176.627111)">129 seats</text>
+    <text style="font-weight: 700; font-size: 9px; font-family: 'Consolas'; fill: #f0ede4" transform="translate(595.9973 185.824268)">51.6% of 250</text>
+   </g>
+   <g id="text_23">
+    <text style="font-size: 9px; font-family: 'Consolas'; text-anchor: start; fill: #858981" x="54.484375" y="38.201635" transform="rotate(-0 54.484375 38.201635)">Serbia National Assembly election results · final seats · 2012–2023</text>
+   </g>
+   <g id="patch_11">
+    <path d="M 540.579296 120.427543 
+Q 582.376956 156.426557 624.174615 192.42557 
+" style="fill: none; stroke: #c98bb8; stroke-linecap: round"/>
+   </g>
+   <g id="text_24">
+    <g id="patch_12">
+     <path d="M 471.329815 118.621978 
+L 555.455909 118.621978 
+Q 560.130909 118.621978 560.130909 113.946978 
+L 560.130909 80.078462 
+Q 560.130909 75.403462 555.455909 75.403462 
+L 471.329815 75.403462 
+Q 466.654815 75.403462 466.654815 80.078462 
+L 466.654815 113.946978 
+Q 466.654815 118.621978 471.329815 118.621978 
+z
+" style="fill: #0c0f0e; stroke: #c98bb8; stroke-linejoin: miter"/>
+    </g>
+    <text style="font-size: 8.5px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(471.329815 85.943462)">2023 context</text>
+    <text style="font-size: 8.5px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(471.329815 94.68279)">SNS party: 105</text>
+    <text style="font-size: 8.5px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(471.329815 103.447353)">SPS list: 18</text>
+    <text style="font-size: 8.5px; font-family: 'Consolas'; fill: #d3d0c8" transform="translate(471.329815 112.24565)">Opposition SPN: 65</text>
+   </g>
+   <g id="text_25">
+    <text style="font-weight: 700; font-size: 15px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4" x="54.484375" y="28.65" transform="rotate(-0 54.484375 28.65)">SNS-led lists won a majority in four of six elections since 2012</text>
+   </g>
+  </g>
+  <g id="AnnotationBbox_1">
+   <image xlink:href="data:image/png;base64,
+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" id="image46518a43ce" transform="scale(1 -1) translate(0 -44.228571)" x="596.418063" y="-393.757429" width="42.171429" height="44.228571"/>
+   <g id="text_26">
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Consolas'; text-anchor: start; fill: #f0ede4; opacity: 0.45" x="642.4415" y="416.821703" transform="rotate(-0 642.4415 416.821703)">OHMEGA MONSTER</text>
+   </g>
+   <g id="text_27">
+    <text style="font-size: 7px; font-family: 'Consolas'; text-anchor: start; fill: #858981; opacity: 0.4" x="642.4415" y="422.915531" transform="rotate(-0 642.4415 422.915531)">ohmega.monster</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p0cbddde937">
+   <rect x="54.484375" y="44.65" width="631.584" height="308.016"/>
+  </clipPath>
+ </defs>
+</svg>

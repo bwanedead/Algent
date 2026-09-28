@@ -802,3 +802,13 @@ cost: ~$0.2239  ·  mode: normal  ·  soft/hard: $1.00/$2.50
 analytics_skipped: req_consumption_seizure_02:skipped
 cost_by_stage: editorial=$0.2239
 run: 0102__fa0db177-3e01-4973-8a9e-cdcebae353c9
+
+### PUBLISH reports-say-serbia-s-president-is-swapping-to-prime-minister-c00a85 — 2026-09-28
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 2 produced, 0 escapes
+cost: ~$0.4634  ·  mode: normal  ·  soft/hard: $1.00/$1.21
+cost_by_stage: editorial=$0.2378, gauntlet=$0.2257
+disposition: needs_verification
+x_searches: 5
+run: 0103__b8cf591c-5cc8-4ad2-a450-076bf855a423
