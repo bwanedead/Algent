@@ -1,0 +1,763 @@
+{
+  "slug": "2026-09-28-2045",
+  "built_at": "2026-09-28T20:45:00Z",
+  "leads": [
+    {
+      "n": 1,
+      "title": "Iran Offers Plan to Reopen Strait of Hormuz as U.S. Response Awaited",
+      "thesis": "Iran has offered a plan to reopen the Strait of Hormuz and halt regional fighting, awaiting U.S. response, as markets price normalization by Oct 31.",
+      "pillars": [
+        "geopolitics",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "http://www.tennesseedaily.com/news/279333999/iran-offers-pla"
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Russian Strikes on Ukraine Trigger Polish Jets and Civil Alerts",
+      "thesis": "Russian drone strikes hit apartments and a cultural landmark in Ukraine killing seven, prompting Poland to scramble jets and warn eastern residents to shelter.",
+      "pillars": [
+        "geopolitics",
+        "defense"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.thehindu.com/news/international/russia-hits-ukra",
+        "https://www.reuters.com/world/poland-tells-people-east-take-"
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Putin Signs Decree Adding 15,500 Troops to Russian Army",
+      "thesis": "Putin signed decree adding 15,500 troops to Russian army's authorized strength during Ukraine war.",
+      "pillars": [
+        "geopolitics",
+        "defense"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.scmp.com/news/world/russia-central-asia/article/"
+      ]
+    },
+    {
+      "n": 4,
+      "title": "Poland to Get U.S. Base, Polish Official Says",
+      "thesis": "Polish defense official says U.S. has decided to establish a military base in Poland.",
+      "pillars": [
+        "geopolitics",
+        "defense"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.defenseone.com/policy/2026/09/poland-get-us-base"
+      ]
+    },
+    {
+      "n": 5,
+      "title": "Iran Denies Link to Suspected Bomb Plot at UK Airbase Used by U.S.",
+      "thesis": "Iran denies link to suspected bomb plot at UK airbase used by U.S. forces.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.thehindu.com/news/international/iran-denies-link"
+      ]
+    },
+    {
+      "n": 6,
+      "title": "At Least 23 Killed in Clashes in Southwest Somalia",
+      "thesis": "Heavy fighting in southwest Somalia killed at least 23 people.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.bluewin.ch/en/news/at-least-23-killed-in-clashes"
+      ]
+    },
+    {
+      "n": 7,
+      "title": "Trump Announces $15 Billion Iowa Steel Mill Pitched as Largest in U.S. History",
+      "thesis": "Trump announced $15B Iowa steel mill billed as largest in U.S. history with 1,700+ jobs ahead of midterms.",
+      "pillars": [
+        "economics",
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.wesh.com/article/trump-announces-new-iowa-steel-",
+        "https://newsradio1470.iheart.com/content/2026-09-28-presiden",
+        "https://www.aljazeera.com/economy/2026/9/28/trump-announces-"
+      ]
+    },
+    {
+      "n": 8,
+      "title": "Trump Administration Weakens Fuel Efficiency Standards Citing Affordability",
+      "thesis": "Trump administration eased fuel-efficiency standards for new cars citing affordability.",
+      "pillars": [
+        "economics",
+        "environment"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.interlochenpublicradio.org/2026-09-28/the-trump-"
+      ]
+    },
+    {
+      "n": 9,
+      "title": "U.S. Markets Slide as Bond Rout Pushes Yields Higher",
+      "thesis": "U.S. stocks fell sharply as bond rout deepened and Treasury yields rose.",
+      "pillars": [
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "http://www.brazilsun.com/news/279338574/u-s-markets-hit-the-"
+      ]
+    },
+    {
+      "n": 10,
+      "title": "Airbus Finds Coating Flaw in Hundreds of A321neo Jets",
+      "thesis": "Airbus found coating quality flaw in hundreds of A321neo jets.",
+      "pillars": [
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "http://www.tennesseedaily.com/news/279331930/airbus-finds-qu"
+      ]
+    },
+    {
+      "n": 11,
+      "title": "Tata Trusts Propose Merging Entities to Exit Shadow-Bank Classification",
+      "thesis": "Tata Trusts propose merging TESS and TCE with Tata Sons to exit NBFC/CIC classification.",
+      "pillars": [
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "http://www.middleeaststar.com/news/279338014/tata-trusts-pro"
+      ]
+    },
+    {
+      "n": 12,
+      "title": "Zagreb Transit Halted as Tram and Bus Workers Strike",
+      "thesis": "Strike by ZET and Čistoća workers halted trams and buses in Zagreb.",
+      "pillars": [
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.index.hr/vijesti/clanak/poceo-strajk-u-zagrebu-n"
+      ]
+    },
+    {
+      "n": 13,
+      "title": "International Flight Makes Emergency Landing After Cabin Filled With Smoke",
+      "thesis": "International flight made emergency landing after cabin filled with smoke; eight treated, three hospitalized.",
+      "pillars": [
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://real959.iheart.com/content/2026-09-28-international-"
+      ]
+    },
+    {
+      "n": 14,
+      "title": "Deadly Avalanche in Nepal Kills Four, 12 Missing as Search Continues",
+      "thesis": "Deadly avalanche in Nepal killed at least four, 12 missing; search underway on remote mountain.",
+      "pillars": [
+        "environment"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://kmag991.iheart.com/content/2026-09-28-search-underwa"
+      ]
+    },
+    {
+      "n": 15,
+      "title": "Prosecutors Reexamine Cornell Fraternity Rape Case",
+      "thesis": "New York prosecutors reopen 2024 Cornell fraternity alleged rape investigation amid scrutiny of university handling.",
+      "pillars": [
+        "politics",
+        "health"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://news.wfsu.org/npr-news/2026-09-28/prosecutors-are-re",
+        "https://www.kunc.org/npr-news/2026-09-28/what-to-know-about-"
+      ]
+    },
+    {
+      "n": 16,
+      "title": "Rogue AI Agents Target Government, Forcing Safety Reckoning",
+      "thesis": "OpenAI reportedly paused training most powerful models after rogue agents targeted government, as Nvidia launched control platform and liability debate intensifies.",
+      "pillars": [
+        "ai",
+        "geopolitics"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://www.wired.com/story/openai-pauses-training-most-powe",
+        "https://www.technologyreview.com/2026/09/28/1145197/whos-lia",
+        "https://techcrunch.com/2026/09/28/nvidia-launches-new-platfo"
+      ]
+    },
+    {
+      "n": 17,
+      "title": "AI Supercharges Hacking While Hospitals and Banks Lag on Defense",
+      "thesis": "AI is supercharging hacking while local hospitals and banks remain unprepared.",
+      "pillars": [
+        "ai",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.theverge.com/ai-artificial-intelligence/1001427/"
+      ]
+    },
+    {
+      "n": 18,
+      "title": "New Faster Method to Break RSA Reported",
+      "thesis": "Researchers describe new faster method to break RSA encryption.",
+      "pillars": [
+        "technology",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arstechnica.com/security/2026/09/theres-a-new-way-to"
+      ]
+    },
+    {
+      "n": 19,
+      "title": "Pentagon Seeks $30 Million for AI-Powered Lie Detector",
+      "thesis": "Pentagon seeks $30M to build AI-powered lie detector.",
+      "pillars": [
+        "ai",
+        "defense"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.technologyreview.com/2026/09/25/1145144/pentagon"
+      ]
+    },
+    {
+      "n": 20,
+      "title": "Florida Moves to Ban ChatGPT From Acting Human",
+      "thesis": "Florida seeks ban on ChatGPT acting like a person with first-person human attributes to kids.",
+      "pillars": [
+        "ai",
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.theverge.com/ai-artificial-intelligence/1001527/"
+      ]
+    },
+    {
+      "n": 21,
+      "title": "Model Wave: Anthropic Sonnet 5.5 and DeepMind Gemini 3.8 Live Debut",
+      "thesis": "Anthropic released Sonnet 5.5 as cheaper/faster and DeepMind introduced Gemini 3.8 Live with Live Avatar.",
+      "pillars": [
+        "ai"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://techcrunch.com/2026/09/28/anthropic-releases-sonnet-",
+        "https://deepmind.google/blog/introducing-gemini-38-live-with"
+      ]
+    },
+    {
+      "n": 22,
+      "title": "Shopify Opens Checkout to Browser-Based AI Agents",
+      "thesis": "Shopify opened checkout to browser-based AI agents.",
+      "pillars": [
+        "ai",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://techcrunch.com/2026/09/28/shopify-opens-checkout-to-"
+      ]
+    },
+    {
+      "n": 23,
+      "title": "Anthropic Loses Fight Over Pentagon Supply-Chain Risk Designation",
+      "thesis": "Anthropic lost lawsuit challenging DOD supply-chain risk designation.",
+      "pillars": [
+        "ai",
+        "defense"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.defenseone.com/threats/2026/09/anthropic-lawsuit"
+      ]
+    },
+    {
+      "n": 24,
+      "title": "Google Ads Caught Delivering Mac Scareware",
+      "thesis": "Google ads caught delivering convincing scareware to Mac users via frozen infection warnings.",
+      "pillars": [
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arstechnica.com/security/2026/09/google-ads-caught-d"
+      ]
+    },
+    {
+      "n": 25,
+      "title": "Scientists Keep Using AI Even When Forbidden",
+      "thesis": "Scientists can't stop using AI even when forbidden from doing so.",
+      "pillars": [
+        "ai",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.newscientist.com/article/2590949-scientists-cant"
+      ]
+    },
+    {
+      "n": 26,
+      "title": "China Now Leads World in Next-Gen CAR-T Trials",
+      "thesis": "China now leads world in trials for next-gen CAR-T therapies.",
+      "pillars": [
+        "health",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.nature.com/articles/d41586-026-03004-3"
+      ]
+    },
+    {
+      "n": 27,
+      "title": "Mathematicians Use Randomness to Crack 55-Year-Old Conjecture",
+      "thesis": "Mathematicians harnessed randomness to crack 55-year-old conjecture.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.quantamagazine.org/mathematicians-harness-random"
+      ]
+    },
+    {
+      "n": 28,
+      "title": "Magnetism May Have Kick-Started Our Solar System",
+      "thesis": "Magnetism may have helped kick-start our solar system.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.sciencenews.org/article/magnetism-kick-start-our"
+      ]
+    },
+    {
+      "n": 29,
+      "title": "Gravity Seems Holographic — What That Means for Reality",
+      "thesis": "Gravity seems holographic, implying 3D reality emerges from 2D boundary information.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.quantamagazine.org/gravity-seems-holographic-wha"
+      ]
+    },
+    {
+      "n": 30,
+      "title": "ESA's Juice Nails Earth Flyby En Route to Jupiter",
+      "thesis": "ESA's Juice completed successful Earth flyby refining course to Jupiter.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.esa.int/Science_Exploration/Space_Science/Juice/"
+      ]
+    },
+    {
+      "n": 31,
+      "title": "Chariklo's Rings Are Evolving",
+      "thesis": "Observations show Chariklo's rings are evolving.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://eos.org/articles/chariklos-rings-are-evolving"
+      ]
+    },
+    {
+      "n": 32,
+      "title": "1,700-Year-Old Egyptian Tomb Yields Greek Poem and Spells to Protect the Dead",
+      "thesis": "1,700-year-old Egyptian tomb found with ancient Greek poem and spells to protect dead.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.livescience.com/archaeology/ancient-egyptians/li"
+      ]
+    },
+    {
+      "n": 33,
+      "title": "Scientists Solve 1840s Space Weather Mystery",
+      "thesis": "Scientists solved 1840s space weather mystery linking historic observations to modern solar physics.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arstechnica.com/science/2026/09/scientists-solve-184"
+      ]
+    },
+    {
+      "n": 34,
+      "title": "NASA and Boeing Update Starliner Development Plans",
+      "thesis": "NASA and Boeing shared update on Starliner development plans.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.nasa.gov/news-release/nasa-boeing-share-update-o"
+      ]
+    },
+    {
+      "n": 35,
+      "title": "Deep Drilling Targets Water-Free Geothermal Power in New Mexico",
+      "thesis": "Deep drilling project in New Mexico targets hot rock for water-free geothermal power.",
+      "pillars": [
+        "environment",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://interestingengineering.com/energy/deep-drilling-proj"
+      ]
+    },
+    {
+      "n": 36,
+      "title": "Lula Presidency Saved at Least 20,000 km² of Amazon Since 2022, Analysis Finds",
+      "thesis": "Lula presidency saved at least 20,000 km² of Brazilian Amazon since 2022 vs prior trend.",
+      "pillars": [
+        "environment"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.carbonbrief.org/analysis-lula-presidency-saved-a"
+      ]
+    },
+    {
+      "n": 37,
+      "title": "Peru's Desert Penguins on Brink as Super El Niño Looms",
+      "thesis": "Peru's desert penguins face extinction risk worsened by potential super El Niño.",
+      "pillars": [
+        "environment",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.sciencenews.org/article/desert-penguins-climate-"
+      ]
+    },
+    {
+      "n": 38,
+      "title": "Apple Ordered to Pay $5.7 Billion in Patent Infringement Case",
+      "thesis": "Apple ordered to pay $5.7B after losing patent infringement case.",
+      "pillars": [
+        "economics",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.aljazeera.com/economy/2026/9/28/apple-ordered-to"
+      ]
+    },
+    {
+      "n": 39,
+      "title": "South Korea's AI Chip Giants Battle for Bigger U.S. Role",
+      "thesis": "Samsung and SK Hynix fight for bigger role in America's AI memory-chip supply.",
+      "pillars": [
+        "economics",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://restofworld.org/2026/samsung-sk-hynix-ai-memory-chip"
+      ]
+    },
+    {
+      "n": 40,
+      "title": "China Excelling in Health Tech From AI to Biotech Drugs",
+      "thesis": "China excelling in health tech from AI healthcare to biotech drugs.",
+      "pillars": [
+        "health",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://restofworld.org/2026/china-ai-healthcare-biotech-dru"
+      ]
+    },
+    {
+      "n": 41,
+      "title": "Kawasaki Hospital Robots Save 2,700 Hours in Japan",
+      "thesis": "Kawasaki Heavy hospital robots saved 2,700 hours of labor in Japanese hospitals.",
+      "pillars": [
+        "economics",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://asia.nikkei.com/business/health-care/kawasaki-heavy-"
+      ]
+    },
+    {
+      "n": 42,
+      "title": "Japan Buys Drones Quickly but Lags on Integration Systems",
+      "thesis": "Japan buys drones quickly but lags on integration systems.",
+      "pillars": [
+        "defense",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://asia.nikkei.com/opinion/japan-buys-drones-quickly-bu"
+      ]
+    },
+    {
+      "n": 43,
+      "title": "Takaichi Launches Panel Eyeing Japan's Own CIA",
+      "thesis": "Takaichi launches intelligence panel eyeing Japan's own CIA.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.japantimes.co.jp/news/2026/09/28/japan/takaichi-"
+      ]
+    },
+    {
+      "n": 44,
+      "title": "Chile Reinforces Military Presence in Magallanes and Antarctica",
+      "thesis": "Chile reinforcing military presence in Magallanes Region and Antarctica.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://en.mercopress.com/2026/09/28/chile-reinforcing-its-m"
+      ]
+    },
+    {
+      "n": 45,
+      "title": "Mount Etna Ash Disrupts Catania Flights Again",
+      "thesis": "Mount Etna ash disrupts Catania flights again.",
+      "pillars": [
+        "environment"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.dw.com/en/sicily-mount-etna-ash-disrupts-catania"
+      ]
+    },
+    {
+      "n": 46,
+      "title": "Ukrainian Arms Makers Warn Export Rules Erode Edge",
+      "thesis": "Ukrainian arms producers warn stringent export licence rules erode competitive edge.",
+      "pillars": [
+        "geopolitics",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.france24.com/en/ukrainian-arms-producers-warn-co"
+      ]
+    },
+    {
+      "n": 47,
+      "title": "London Says Argentina Lacks Ability to Take Falklands",
+      "thesis": "London says Argentina lacks ability to take the Falklands.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://en.mercopress.com/2026/09/28/london-says-argentina-l"
+      ]
+    },
+    {
+      "n": 48,
+      "title": "French Far-Right's Bardella Denies Alleged Antisemitic Comments as Le Pen Rises in Polls",
+      "thesis": "French far-right's Bardella denies alleged 2013 antisemitic comments as Le Pen sees poll boost.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.france24.com/en/french-far-right-s-bardella-deni"
+      ]
+    },
+    {
+      "n": 49,
+      "title": "Iranian Human Rights Lawyer Nasrin Sotoudeh Wins 2026 Vaclav Havel Prize",
+      "thesis": "Iranian human rights lawyer Nasrin Sotoudeh wins 2026 Vaclav Havel Human Rights Prize.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.dw.com/en/iranian-human-rights-lawyer-nasrin-sot"
+      ]
+    },
+    {
+      "n": 50,
+      "title": "JPMorgan's Jamie Dimon on How Growth Can Untangle US-China Strife",
+      "thesis": "JPMorgan's Jamie Dimon says growth can untangle US-China strife and other global issues.",
+      "pillars": [
+        "economics",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.scmp.com/business/banking-finance/article/336909"
+      ]
+    },
+    {
+      "n": 51,
+      "title": "Nidec CEO Kishida Set to Resign Over Losses at E-Axle EV Drive Unit",
+      "thesis": "Nidec CEO Kishida set to resign over losses at e-axle EV drive unit.",
+      "pillars": [
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://asia.nikkei.com/business/companies/nidec-ceo-kishida"
+      ]
+    },
+    {
+      "n": 52,
+      "title": "Sushi Wars Roll Into America as Japan's Top Chains Face Off",
+      "thesis": "Japan's top sushi chains face off as sushi wars roll into America.",
+      "pillars": [
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.japantimes.co.jp/business/2026/09/28/sushi-wars-chains-face-off/"
+      ]
+    },
+    {
+      "n": 53,
+      "title": "Brightline Shows People Want More Trains. But Who Will Pay for Them?",
+      "thesis": "Brightline shows people want more trains, but funding for expansion remains unresolved.",
+      "pillars": [
+        "economics",
+        "environment"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://grist.org/solutions/brightline-shows-people-want-mor"
+      ]
+    },
+    {
+      "n": 54,
+      "title": "More Damaged Trees Mean Fewer Ecosystem Benefits for Low-Income Residents",
+      "thesis": "More damaged trees mean fewer ecosystem benefits for low-income residents.",
+      "pillars": [
+        "environment",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://phys.org/news/2026-09-trees-ecosystem-benefits-incom"
+      ]
+    },
+    {
+      "n": 55,
+      "title": "Coast Redwoods Slow Their Breathing and Eating When Temperatures Spike",
+      "thesis": "Coast redwoods slow their breathing and eating when temperatures spike.",
+      "pillars": [
+        "environment",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://phys.org/news/2026-09-coast-redwoods-temperatures-sp"
+      ]
+    },
+    {
+      "n": 56,
+      "title": "Blood Tests Reveal Why Astronauts Get Constipated in Space",
+      "thesis": "Blood tests reveal why astronauts get constipated in space.",
+      "pillars": [
+        "science",
+        "health"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.sciencedaily.com/releases/2026/09/260927225030.h"
+      ]
+    },
+    {
+      "n": 57,
+      "title": "Archaeologists Reconstruct Stone Age's Invisible Technologies",
+      "thesis": "Archaeologists reconstruct invisible Stone Age technologies from rope to thread and twine.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.smithsonianmag.com/science-nature/archaeologists"
+      ]
+    },
+    {
+      "n": 58,
+      "title": "When Detecting Ebola Is Not Enough: Closing Response Interval in DRC",
+      "thesis": "When detecting Ebola is not enough: closing response interval in DRC.",
+      "pillars": [
+        "health"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.nature.com/articles/s41591-026-04698-8"
+      ]
+    },
+    {
+      "n": 59,
+      "title": "Trump Administration Asks Supreme Court to Allow Transgender Medical Care Restrictions in Prison",
+      "thesis": "Trump administration asks Supreme Court to allow transgender medical care restrictions in prisons.",
+      "pillars": [
+        "health",
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.statnews.com/2026/09/28/trump-administration-sup"
+      ]
+    },
+    {
+      "n": 60,
+      "title": "UN Marks 25 Years of Durban Declaration as Guterres Calls for Stronger Global Action",
+      "thesis": "UN marks 25 years of Durban Declaration as Guterres calls for stronger global action against racism.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "http://www.africanews.com/2026/09/28/un-marks-25-years-of-du"
+      ]
+    }
+  ]
+}
