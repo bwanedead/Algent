@@ -118,6 +118,15 @@ def claim(run_id: str, *, kind: str = "run", where: Path | None = None) -> float
     state = load(where) or state
     entries = state.setdefault("entries", [])
     mine = next((e for e in entries if e.get("run_id") == run_id and not e.get("settled")), None)
+    if mine is None and kind == "run":
+        # A paused run settled cleanly when it stopped; its resume is the same article, not a new
+        # one. Reopen its entry with what it already spent carried as prior spend. (Without this
+        # the first real pause-then-resume was refused: "all 1 runs used".)
+        done = next((e for e in entries if e.get("run_id") == run_id and e.get("settled")), None)
+        if done is not None:
+            done.update({"settled": False, "prior_usd": round(float(done.get("usd") or 0.0), 6),
+                         "usd": 0.0, "reopened_at": datetime.now(UTC).isoformat()})
+            mine = done
     if mine is None:
         if kind == "run" and runs_used(state) >= int(state["max_runs"]):
             raise BudgetExhausted(

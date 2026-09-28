@@ -85,3 +85,15 @@ def test_the_rail_refuses_before_spending_when_the_envelope_is_empty(env, monkey
     ctx = AgentRunContext(run_id="t", model_resolver=object(), emit=lambda *a, **k: None)
     out = rl.build_newsroom_rail_graph(ctx).invoke({"pool": {"items": []}})
     assert ran == [] and out["rail"]["stage_reached"] == "refused"
+
+
+def test_a_paused_run_resumes_in_its_own_slot_with_its_spend_carried() -> None:
+    from algent_backend.agent_system.foundation import spend_budget as sb
+
+    sb.open_envelope(1.5, 1)
+    sb.claim("r1")
+    sb.settle("r1", 0.29)                  # paused: the process exited cleanly and settled
+    assert round(sb.claim("r1"), 2) == 1.21   # resume: same slot, allowance net of what it spent
+    sb.settle("r1", 0.5)
+    state = sb.load()
+    assert sb.runs_used(state) == 1 and round(sb.committed(state), 2) == 0.79
