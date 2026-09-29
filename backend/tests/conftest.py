@@ -35,6 +35,12 @@ def _isolated_pause_signal(tmp_path, monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _isolated_pulse_store(tmp_path, monkeypatch):
+    """Pulse logs are append-only institutional memory — no test may write to the real one."""
+    monkeypatch.setenv("ALGENT_PULSE_STORE", str(tmp_path / "pulse_store_iso"))
+
+
+@pytest.fixture(autouse=True)
 def _isolated_profile_store(tmp_path, monkeypatch):
     """The profile store is the newsroom's durable research record — no test may write to it."""
     monkeypatch.setenv("ALGENT_PROFILE_STORE", str(tmp_path / "profile_store"))
