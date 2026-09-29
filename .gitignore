@@ -279,3 +279,4 @@ asset-dump/
 # Git Bash crash dumps
 *.stackdump
 backend/pulse_store/
+/.algent-data/

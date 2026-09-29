@@ -669,6 +669,9 @@ def _run_locked(
             result["x_roundup"] = post_daily_roundup(portfolio)
             # Every build goes on the site's radar, kept (X gets only the first of the day).
             result["site_radar"] = publish_menu(portfolio)
+            from algent_backend import data_backup
+
+            result["data_backup"] = data_backup.backup("menu build")
 
     if args.to_stage == "menu":
         result["stopped_at"] = "menu"

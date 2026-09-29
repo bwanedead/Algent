@@ -51,6 +51,7 @@ from algent_backend.agent_system.agents.research.leads import (
     JsonLeadStore,
     open_leads_for_discovery,
 )
+from algent_backend import data_backup
 from algent_backend.agent_system.foundation import cost, read_cache, spend_budget
 from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.context import AgentRunContext
@@ -74,7 +75,8 @@ from .rail_contracts import NewsroomRailReport
 RAIL_COMPLETED = "newsroom_rail.completed"
 RAIL_STAGE = "newsroom_rail.stage"
 RAIL_STEER = "newsroom_rail.steer"
-RAIL_REFUSED = "newsroom_rail.refused"        # the spend envelope had nothing left          # an operator steer landed at a stage boundary
+RAIL_REFUSED = "newsroom_rail.refused"        # the spend envelope had nothing left
+RAIL_BACKUP = "newsroom_rail.data_backup"     # durable stores mirrored to the private data repo
 RAIL_ANNOUNCED = "newsroom_rail.announced"
 RAIL_FIGURES = "newsroom_rail.figures"
 BACKFEED_INJECTED = "newsroom_rail.backfeed_injected"
@@ -166,6 +168,9 @@ def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | Non
                 dog.stop()
                 if envelope_cap is not None:
                     spend_budget.settle(context.run_id, cost.article_spent_usd())
+                # Every run — finished, paused or failed — leaves research on disk worth keeping
+                # off this machine. Never raises; a failed push is reported, not fatal.
+                context.emit(RAIL_BACKUP, data_backup.backup(f"run {context.run_id}"))
             context.emit(RAIL_READS, read_cache.stats())
             _keep_reads(context, out)
             return out
