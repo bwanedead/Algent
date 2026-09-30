@@ -670,7 +670,12 @@ def _run_locked(
             # Every build goes on the site's radar, kept (X gets only the first of the day).
             result["site_radar"] = publish_menu(portfolio)
             from algent_backend import data_backup
+            from algent_backend.agent_system.agents.pulse.freshness import record_quietly
+            from algent_backend.publishing.radar_page import slug_for
 
+            # Today's headlines make the Pulses they touch visibly stale; they never move them.
+            result["pulse_freshness"] = record_quietly(
+                portfolio, edition=slug_for(str(portfolio.get("generated_at") or "")))
             result["data_backup"] = data_backup.backup("menu build")
 
     if args.to_stage == "menu":

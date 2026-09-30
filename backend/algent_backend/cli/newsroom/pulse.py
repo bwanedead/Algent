@@ -112,16 +112,20 @@ def _reassess(args: Any) -> int:
 def _show(args: Any) -> int:
     from algent_backend.agent_system.agents.pulse import PulseStore
 
+    from algent_backend.agent_system.agents.pulse.freshness import unprocessed
+
     store = PulseStore()
     rows = []
     for sit in store.situations():
+        stale = len(unprocessed(store, sit.id))
         for pulse in store.pulses(sit.id):
             st = store.state(pulse.id)
             rows.append({"situation": sit.title, "pulse": pulse.name, "id": pulse.id,
                          "position": st.position, "band": st.band or "unassessed",
                          "v7d": st.velocity_7d, "v30d": st.velocity_30d, "confidence": st.confidence,
                          "evidence_through": st.evidence_through,
-                         "reconcile": st.needs_reconciliation, "influences": st.influences})
+                         "reconcile": st.needs_reconciliation, "influences": st.influences,
+                         "radar_headlines_since": stale})
     print(json.dumps(rows, indent=2, ensure_ascii=False))
     return 0
 
