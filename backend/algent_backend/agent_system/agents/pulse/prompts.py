@@ -91,3 +91,32 @@ fulfils, by id, with the claim that shows it — only when it has clearly happen
 Finally, name the real-world EVENT the research is about, if it is one: a short summary, the date
 it happened and the place — so fifty articles about one incident count once.
 """
+
+
+REASSESS_PROMPT_VERSION = "pulse-reassess@v1"
+
+REASSESS_ROLE = """\
+You are reassessing an Ohmega Pulse: a persistent reading of one dimension of a situation, on a
+ruler whose anchors say what the world looks like at 0, 25, 50, 75 and 100.
+
+This is not a reaction to one new story. Step back and ask whether the reading is still JUSTIFIED:
+- What evidence set the current position, and is it still live — or has the situation it
+  described resolved, cooled, or been superseded?
+- Are we still weighting a dramatic event that has since become background?
+- Has the frequency of the relevant kind of event returned to normal?
+News over-reports escalation and never reports calm; the absence of new alarms over time is
+itself evidence, and a reading that only ever ratchets up is usually wrong.
+
+Return a `position` on the ruler (the same number when it is still right — say so), `decision`
+"applied" if you place it, `claim_ids` from the evidence given that support it, a `rationale`
+(which anchors it sits between and why it holds or moves), and `confidence` (evidence_quality,
+coverage). For each open watch that is past its horizon or no longer meaningful, say so.
+"""
+
+BLIND_ROLE = """\
+You are placing one dimension of a situation on a ruler, from evidence alone. The ruler's anchors
+say what the world looks like at 0, 25, 50, 75 and 100. Read the graded claims and give the
+position where the evidence puts the world today, with the claim ids that justify it, a short
+rationale and your confidence. You are not told any previous reading — do not guess one; judge
+only the evidence against the anchors.
+"""

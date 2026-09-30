@@ -27,6 +27,8 @@ def add_parser(sub: Any) -> None:
     s.add_argument("--only", default="", help="seed just this situation id")
     c = verbs.add_parser("commit", help="persist a reviewed seed proposal")
     c.add_argument("seed_dir", help="runs_data/pulse_seed/<stamp> (or its seed.json)")
+    r = verbs.add_parser("reassess", help="weekly anchored + blind reassessment")
+    r.add_argument("--pulse", default="", help="just this pulse id")
     verbs.add_parser("show", help="every Pulse's current reading")
     lg = verbs.add_parser("log", help="one Pulse's influence history")
     lg.add_argument("pulse_id")
@@ -34,7 +36,8 @@ def add_parser(sub: Any) -> None:
 
 
 def run_pulse(args: Any) -> int:
-    return {"seed": _seed, "commit": _commit, "show": _show, "log": _log}[args.pulse_verb](args)
+    return {"seed": _seed, "commit": _commit, "reassess": _reassess, "show": _show,
+            "log": _log}[args.pulse_verb](args)
 
 
 def _seed(args: Any) -> int:
@@ -90,6 +93,19 @@ def _commit(args: Any) -> int:
               for r in json.loads(path.read_text(encoding="utf-8"))]
     made = sd.commit(PulseStore(), seeded, run_id=f"seed_{path.parent.name}")
     print(json.dumps({"committed_pulses": made, "from": str(path)}, indent=2))
+    return 0
+
+
+def _reassess(args: Any) -> int:
+    from algent_backend.agent_system.agents.pulse import PulseStore
+    from algent_backend.agent_system.agents.pulse.reassess import reassess_all
+    from algent_backend.agent_system.foundation.models import ModelResolver, house_spec
+    from algent_backend.agent_system.runs.context import AgentRunContext
+
+    ctx = AgentRunContext(run_id="pulse-reassess", model_resolver=ModelResolver())
+    out = reassess_all(ctx, None, PulseStore(), only=args.pulse,
+                       model_spec=house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=16384))
+    print(json.dumps(out, indent=2, ensure_ascii=False))
     return 0
 
 
