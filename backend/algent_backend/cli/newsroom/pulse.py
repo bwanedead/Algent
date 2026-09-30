@@ -88,7 +88,7 @@ def _seed(args: Any) -> int:
 
 
 def _commit(args: Any) -> int:
-    from algent_backend.agent_system.agents.pulse import PulseStore
+    from algent_backend.agent_system.agents.pulse.repository import pulse_store
     from algent_backend.agent_system.agents.pulse import seed as sd
     from algent_backend.agent_system.agents.pulse.catalog import SEED_SITUATIONS
 
@@ -98,30 +98,30 @@ def _commit(args: Any) -> int:
     seeded = [sd.SeededSituation(situation=catalog[r["situation_id"]], profile_ids=r["profile_ids"],
                                  problems=r["problems"], draft=sd.SituationDraft.model_validate(r["draft"]))
               for r in json.loads(path.read_text(encoding="utf-8"))]
-    made = sd.commit(PulseStore(), seeded, run_id=f"seed_{path.parent.name}")
+    made = sd.commit(pulse_store(), seeded, run_id=f"seed_{path.parent.name}")
     print(json.dumps({"committed_pulses": made, "from": str(path)}, indent=2))
     return 0
 
 
 def _reassess(args: Any) -> int:
-    from algent_backend.agent_system.agents.pulse import PulseStore
+    from algent_backend.agent_system.agents.pulse.repository import pulse_store
     from algent_backend.agent_system.agents.pulse.reassess import reassess_all
     from algent_backend.agent_system.foundation.models import ModelResolver, house_spec
     from algent_backend.agent_system.runs.context import AgentRunContext
 
     ctx = AgentRunContext(run_id="pulse-reassess", model_resolver=ModelResolver())
-    out = reassess_all(ctx, None, PulseStore(), only=args.pulse,
+    out = reassess_all(ctx, None, pulse_store(), only=args.pulse,
                        model_spec=house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=16384))
     print(json.dumps(out, indent=2, ensure_ascii=False))
     return 0
 
 
 def _show(args: Any) -> int:
-    from algent_backend.agent_system.agents.pulse import PulseStore
+    from algent_backend.agent_system.agents.pulse.repository import pulse_store
 
     from algent_backend.agent_system.agents.pulse.freshness import unprocessed
 
-    store = PulseStore()
+    store = pulse_store()
     rows = []
     for sit in store.situations():
         stale = len(unprocessed(store, sit.id))
@@ -138,7 +138,7 @@ def _show(args: Any) -> int:
 
 
 def _log(args: Any) -> int:
-    from algent_backend.agent_system.agents.pulse import PulseStore
+    from algent_backend.agent_system.agents.pulse.repository import pulse_store
 
-    print(json.dumps([i.model_dump() for i in PulseStore().log(args.pulse_id)], indent=2, ensure_ascii=False))
+    print(json.dumps([i.model_dump() for i in pulse_store().log(args.pulse_id)], indent=2, ensure_ascii=False))
     return 0

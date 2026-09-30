@@ -45,7 +45,19 @@ create table events (
     actors       jsonb not null default '[]'::jsonb,
     summary      text not null,
     claim_refs   jsonb not null default '[]'::jsonb,     -- [{profile_id, claim_id}]
+    sources      jsonb not null default '[]'::jsonb,     -- every research sighting of this event
     created_at   timestamptz not null default now()
+);
+
+-- Freshness: daily headline-radar sightings per situation. They make a Pulse stale; they never
+-- move one (unverified headlines are not evidence).
+create table radar_sightings (
+    situation_id  text not null references situations(id),
+    key           text not null,                         -- <edition>:<vector id>
+    at            timestamptz not null,
+    edition       text not null,
+    headline      text not null,
+    primary key (situation_id, key)
 );
 
 create table situation_events (
@@ -134,3 +146,4 @@ alter table pulse_influences  enable row level security;
 alter table pulse_state       enable row level security;
 alter table watches           enable row level security;
 alter table pulse_watches     enable row level security;
+alter table radar_sightings   enable row level security;

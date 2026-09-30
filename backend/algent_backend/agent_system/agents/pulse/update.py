@@ -164,11 +164,11 @@ def update_quietly(profile: dict, *, run_id: str, article_slug: str = "") -> dic
         from algent_backend.agent_system.foundation.models import ModelResolver, house_spec
         from algent_backend.agent_system.runs.context import AgentRunContext
 
-        from .store import PulseStore
+        from .repository import pulse_store
 
         ctx = AgentRunContext(run_id=run_id, model_resolver=ModelResolver())
         return update_from_profile(
-            ctx, None, PulseStore(), profile, run_id=run_id, article_slug=article_slug,
+            ctx, None, pulse_store(), profile, run_id=run_id, article_slug=article_slug,
             model_spec=house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=16384),
             attach_spec=house_spec(reasoning_effort="low", temperature=0.1))
     except Exception as exc:  # noqa: BLE001

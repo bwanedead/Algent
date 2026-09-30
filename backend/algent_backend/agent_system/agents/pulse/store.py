@@ -145,6 +145,24 @@ class PulseStore:
     def event(self, event_id: str) -> Event | None:
         return self._read(self._dir / "events" / f"{_safe(event_id)}.json", Event)
 
+    # ── radar sightings (freshness) ──────────────────────────────────────────────────────────
+    def add_sightings(self, situation_id: str, rows: list[dict]) -> int:
+        """Append radar sightings ({key, at, edition, headline}); keys already seen are skipped."""
+        path = self._dir / "radar" / f"{_safe(situation_id)}.jsonl"
+        seen = {r["key"] for r in self.sightings(situation_id)}
+        fresh = [r for r in rows if r["key"] not in seen]
+        if fresh:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with path.open("a", encoding="utf-8", newline="\n") as fh:
+                fh.writelines(json.dumps(r, ensure_ascii=False) + "\n" for r in fresh)
+        return len(fresh)
+
+    def sightings(self, situation_id: str) -> list[dict]:
+        path = self._dir / "radar" / f"{_safe(situation_id)}.jsonl"
+        if not path.is_file():
+            return []
+        return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
     # ── watches ──────────────────────────────────────────────────────────────────────────────
     def save_watch(self, watch: Watch) -> None:
         path = self._dir / "watches" / f"{_safe(watch.id)}.json"
