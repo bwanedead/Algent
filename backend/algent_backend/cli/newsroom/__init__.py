@@ -7,6 +7,6 @@ see ``pipeline.STAGES``. Registered into the unified entry point by ``cli/__main
 
 from __future__ import annotations
 
-from . import briefing, budget, corpus, insight, pause, pipeline, radar, resume, steer
+from . import briefing, budget, corpus, insight, pause, pipeline, pulse, radar, resume, steer
 
-COMMANDS = (pipeline, radar, resume, pause, steer, budget, corpus, briefing, insight)
+COMMANDS = (pipeline, radar, resume, pause, steer, budget, corpus, briefing, insight, pulse)
