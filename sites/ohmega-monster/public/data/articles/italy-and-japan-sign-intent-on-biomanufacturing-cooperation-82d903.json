@@ -1,0 +1,320 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/italy-and-japan-sign-intent-on-biomanufacturing-cooperation-82d903",
+  "title": "Italy and Japan sign intent on biomanufacturing cooperation, without a published funding plan",
+  "summary": "Italy’s CNR says the declaration targets joint bioproduction using microorganisms and enzymes, while separate Japanese official records place it within a broader action-plan relationship that also covers other science and technology areas.",
+  "published_at": "2026-07-26T13:15:32.985857+00:00",
+  "as_of": "2026-07-26",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 14,
+    "likely": 5
+  },
+  "claims": [
+    {
+      "id": "clm_8aeeaea807",
+      "text": "A recent Italy-Japan declaration of intent was signed to strengthen scientific and technological cooperation.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "http://www.notiziegeopolitiche.net/giappone-asse-roma-tokyo-diplomazia-scientifica-motore-di-nuova-partnership/",
+          "title": "Giappone, asse Roma-Tokyo: diplomazia scientifica motore di nuova partnership",
+          "publisher": "Notizie Geopolitiche",
+          "published_at": "2026-07-26"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d7d0920443",
+      "text": "The signatories named in the article were Marco Mancini for Italy's Ministry of University and Research and Yasuyoshi Kakita for Japan's MEXT side.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "http://www.notiziegeopolitiche.net/giappone-asse-roma-tokyo-diplomazia-scientifica-motore-di-nuova-partnership/",
+          "title": "Giappone, asse Roma-Tokyo: diplomazia scientifica motore di nuova partnership",
+          "publisher": "Notizie Geopolitiche",
+          "published_at": "2026-07-26"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bb4a0df4a8",
+      "text": "The cooperation described in the article is centered on biomanufacturing.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "http://www.notiziegeopolitiche.net/giappone-asse-roma-tokyo-diplomazia-scientifica-motore-di-nuova-partnership/",
+          "title": "Giappone, asse Roma-Tokyo: diplomazia scientifica motore di nuova partnership",
+          "publisher": "Notizie Geopolitiche",
+          "published_at": "2026-07-26"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a314e0cc96",
+      "text": "The article says CNR is involved and Lidia Armelao described the intent as opening the way to joint research and innovation projects in bioproduction.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "http://www.notiziegeopolitiche.net/giappone-asse-roma-tokyo-diplomazia-scientifica-motore-di-nuova-partnership/",
+          "title": "Giappone, asse Roma-Tokyo: diplomazia scientifica motore di nuova partnership",
+          "publisher": "Notizie Geopolitiche",
+          "published_at": "2026-07-26"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ca8e176d6b",
+      "text": "Japan's foreign-ministry record shows a Japan-Italy Action Plan was announced at the June 2024 G7 Apulia Summit.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.mofa.go.jp/policy/other/bluebook/2025/en_html/chapter2/c020502.html",
+          "title": "Diplomatic Bluebook 2025, Chapter 2: Regional Situations in Europe",
+          "publisher": "Ministry of Foreign Affairs of Japan",
+          "published_at": "2025-11-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d58cc0a65a",
+      "text": "Japan's foreign-ministry record shows the Japan-Italy relationship also advanced through summit-level diplomacy and formal negotiations on an Acquisition and Cross-Servicing Agreement.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.mofa.go.jp/policy/other/bluebook/2025/en_html/chapter2/c020502.html",
+          "title": "Diplomatic Bluebook 2025, Chapter 2: Regional Situations in Europe",
+          "publisher": "Ministry of Foreign Affairs of Japan",
+          "published_at": "2025-11-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5d45ec74fa",
+      "text": "The record found here does not show a single, broad, named Italy-Japan science-and-technology program with a published multi-year budget covering multiple sectors.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "http://www.notiziegeopolitiche.net/giappone-asse-roma-tokyo-diplomazia-scientifica-motore-di-nuova-partnership/",
+          "title": "Giappone, asse Roma-Tokyo: diplomazia scientifica motore di nuova partnership",
+          "publisher": "Notizie Geopolitiche",
+          "published_at": "2026-07-26"
+        },
+        {
+          "url": "https://www.mofa.go.jp/policy/other/bluebook/2025/en_html/chapter2/c020502.html",
+          "title": "Diplomatic Bluebook 2025, Chapter 2: Regional Situations in Europe",
+          "publisher": "Ministry of Foreign Affairs of Japan",
+          "published_at": "2025-11-14"
+        },
+        {
+          "url": "https://www.esteri.it/wp-content/uploads/2024/10/16-ottobre-rapporto-ad-interim-tavolo-di-lavoro-biotech.pdf",
+          "title": "Tavolo di Lavoro per l’Internazionalizzazione delle Industrie nel Settore delle Biotecnologie",
+          "publisher": "Ministero degli Affari Esteri e della Cooperazione Internazionale",
+          "published_at": "2024-10-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_33abdb8557",
+      "text": "The seed article's 'Rome-Tokyo axis' wording is an editorial/geopolitical framing rather than a phrase verified from official government sources.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "http://www.notiziegeopolitiche.net/giappone-asse-roma-tokyo-diplomazia-scientifica-motore-di-nuova-partnership/",
+          "title": "Giappone, asse Roma-Tokyo: diplomazia scientifica motore di nuova partnership",
+          "publisher": "Notizie Geopolitiche",
+          "published_at": "2026-07-26"
+        },
+        {
+          "url": "https://www.mofa.go.jp/policy/other/bluebook/2025/en_html/chapter2/c020502.html",
+          "title": "Diplomatic Bluebook 2025, Chapter 2: Regional Situations in Europe",
+          "publisher": "Ministry of Foreign Affairs of Japan",
+          "published_at": "2025-11-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5254816760",
+      "text": "The Italian foreign-ministry biotech working-group document shows Italy has been organizing biotech internationalization policy, but it does not by itself establish an Italy-Japan bilateral science program.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.esteri.it/wp-content/uploads/2024/10/16-ottobre-rapporto-ad-interim-tavolo-di-lavoro-biotech.pdf",
+          "title": "Tavolo di Lavoro per l’Internazionalizzazione delle Industrie nel Settore delle Biotecnologie",
+          "publisher": "Ministero degli Affari Esteri e della Cooperazione Internazionale",
+          "published_at": "2024-10-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_54e237371b",
+      "text": "Italy and Japan have signed a dichiarazione di intenti to strengthen scientific cooperation, launch new collaborations, and develop joint initiatives.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cnr.it/en/press-note/n-14493/italia-e-giappone-uniti-per-il-biomanufacturing",
+          "title": "Italia e Giappone uniti per il biomanufacturing",
+          "publisher": "Consiglio Nazionale delle Ricerche",
+          "published_at": "2026-07-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fb84629013",
+      "text": "The cooperation’s stated priority includes biomanufacturing, which CNR describes as a strategic priority area in the bilateral intent.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cnr.it/en/press-note/n-14493/italia-e-giappone-uniti-per-il-biomanufacturing",
+          "title": "Italia e Giappone uniti per il biomanufacturing",
+          "publisher": "Consiglio Nazionale delle Ricerche",
+          "published_at": "2026-07-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_abf31da19d",
+      "text": "CNR’s press note identifies the signatories as Marco Mancini, Sottosegretario del Ministero dell'Università e della ricerca (Mur), and Yasuyoshi Kakita, Viceministro dell'Istruzione, cultura, sport, scienza e tecnologia del Giappone (Mext).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cnr.it/en/press-note/n-14493/italia-e-giappone-uniti-per-il-biomanufacturing",
+          "title": "Italia e Giappone uniti per il biomanufacturing",
+          "publisher": "Consiglio Nazionale delle Ricerche",
+          "published_at": "2026-07-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9363f5da7f",
+      "text": "The CNR note frames the declaration as part of an ongoing bilateral collaboration path aimed at building stable, long-term scientific cooperation.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.cnr.it/en/press-note/n-14493/italia-e-giappone-uniti-per-il-biomanufacturing",
+          "title": "Italia e Giappone uniti per il biomanufacturing",
+          "publisher": "Consiglio Nazionale delle Ricerche",
+          "published_at": "2026-07-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5898495f14",
+      "text": "The CNR note says the intent opens the way to joint research and innovation projects in bioproduction, including microbial and enzymatic conversion of biomass and organic waste into high-value materials, molecules, active ingredients, bioplastics, biopolymers, biodegradable plastics, and biofuels.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cnr.it/en/press-note/n-14493/italia-e-giappone-uniti-per-il-biomanufacturing",
+          "title": "Italia e Giappone uniti per il biomanufacturing",
+          "publisher": "Consiglio Nazionale delle Ricerche",
+          "published_at": "2026-07-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_615d6dbed6",
+      "text": "The CNR press note does not mention a dedicated budget, timetable, or named funding instrument for the bilateral biomanufacturing cooperation.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.cnr.it/en/press-note/n-14493/italia-e-giappone-uniti-per-il-biomanufacturing",
+          "title": "Italia e Giappone uniti per il biomanufacturing",
+          "publisher": "Consiglio Nazionale delle Ricerche",
+          "published_at": "2026-07-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fd92f5ea69",
+      "text": "The strongest official pro-broader-program reading is that Japan and Italy are describing the partnership as extending beyond biomanufacturing into a wider bilateral package of cooperation “in all sectors,” with science and technology explicitly listed among several strands.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.mofa.go.jp/mofaj/files/100962633.pdf",
+          "title": "Japan-Italy Joint Statement (January 16, 2026)",
+          "publisher": "Ministry of Foreign Affairs of Japan",
+          "published_at": "2026-01-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2cb7bdd1f6",
+      "text": "The same Japan-Italy Joint Statement explicitly names multiple tech and industrial domains alongside biomanufacturing: AI robotics, semiconductors, pharmaceuticals, energy, space, information technologies, and industrial partnerships, investments, and trade flows.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.mofa.go.jp/mofaj/files/100962633.pdf",
+          "title": "Japan-Italy Joint Statement (January 16, 2026)",
+          "publisher": "Ministry of Foreign Affairs of Japan",
+          "published_at": "2026-01-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e24bcc4829",
+      "text": "The official Bluebook account of Japan-Italy relations also frames the relationship as multi-track, noting cooperation in security, GCAP, ACSA negotiations, and the launch of the Japan-Italy Action Plan at the 2024 G7 Apulia Summit, rather than a single science-only initiative.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.mofa.go.jp/policy/other/bluebook/2025/en_html/chapter2/c020502.html",
+          "title": "Diplomatic Bluebook 2025, Chapter 2: Regional Situations in Europe",
+          "publisher": "Ministry of Foreign Affairs of Japan",
+          "published_at": "2025-11-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_128439cff7",
+      "text": "Even so, the Italian-side official biomanufacturing note remains narrower than the broadest diplomatic framing: it says the intent is to strengthen scientific cooperation and launch new collaborations, but it centers the concrete priority on biomanufacturing and bioproduction.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.cnr.it/en/press-note/n-14493/italia-e-giappone-uniti-per-il-biomanufacturing",
+          "title": "Italia e Giappone uniti per il biomanufacturing",
+          "publisher": "Consiglio Nazionale delle Ricerche",
+          "published_at": "2026-07-09"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

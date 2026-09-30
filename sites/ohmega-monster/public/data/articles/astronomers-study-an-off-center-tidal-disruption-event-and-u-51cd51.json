@@ -1,0 +1,665 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/astronomers-study-an-off-center-tidal-disruption-event-and-u-51cd51",
+  "title": "Astronomers study an off-center tidal disruption event and use it to bound how common offset black holes are",
+  "summary": "A paper on TDE 2025abcr argues the flare—found by ZTF and followed up with SOAR and Swift—was a tidal disruption event about 9.3 kiloparsecs from its host’s nucleus, offering a first concrete example of off-nuclear supermassive black holes while suggesting highly offset TDEs are under 10% of the nuclear rate, though the black hole’s origin and survey completeness remain unresolved.",
+  "published_at": "2026-07-29T12:05:59.933046+00:00",
+  "as_of": "2026-07-28",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 30,
+    "likely": 8
+  },
+  "claims": [
+    {
+      "id": "clm_65c5df0a23",
+      "text": "NASA’s Swift Observatory observed and helped confirm a tidal disruption event designated TDE 2025abcr.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/missions/swift/nasas-swift-sees-wandering-mega-black-hole-shredding-star",
+          "title": "NASA's Swift Sees 'Wandering' Mega Black Hole ...",
+          "publisher": "NASA Science / Swift mission",
+          "published_at": "2026-07-27T16:06:37Z"
+        },
+        {
+          "url": "https://iopscience.iop.org/article/10.3847/2041-8213/ae77f3",
+          "title": "TDE 2025abcr: A Tidal Disruption Event in the Outskirts of a Massive Galaxy",
+          "publisher": "The Astrophysical Journal Letters / IOPscience",
+          "published_at": "2026-07-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0818b29703",
+      "text": "The event occurred in the outskirts of a galaxy rather than at its center.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/missions/swift/nasas-swift-sees-wandering-mega-black-hole-shredding-star",
+          "title": "NASA's Swift Sees 'Wandering' Mega Black Hole ...",
+          "publisher": "NASA Science / Swift mission",
+          "published_at": "2026-07-27T16:06:37Z"
+        },
+        {
+          "url": "https://iopscience.iop.org/article/10.3847/2041-8213/ae77f3",
+          "title": "TDE 2025abcr: A Tidal Disruption Event in the Outskirts of a Massive Galaxy",
+          "publisher": "The Astrophysical Journal Letters / IOPscience",
+          "published_at": "2026-07-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d1d361b354",
+      "text": "The source galaxy is about 750 million light-years away.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/missions/swift/nasas-swift-sees-wandering-mega-black-hole-shredding-star",
+          "title": "NASA's Swift Sees 'Wandering' Mega Black Hole ...",
+          "publisher": "NASA Science / Swift mission",
+          "published_at": "2026-07-27T16:06:37Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dc567502fa",
+      "text": "The black hole involved has a mass of about one million times the mass of the Sun.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/missions/swift/nasas-swift-sees-wandering-mega-black-hole-shredding-star",
+          "title": "NASA's Swift Sees 'Wandering' Mega Black Hole ...",
+          "publisher": "NASA Science / Swift mission",
+          "published_at": "2026-07-27T16:06:37Z"
+        },
+        {
+          "url": "https://iopscience.iop.org/article/10.3847/2041-8213/ae77f3",
+          "title": "TDE 2025abcr: A Tidal Disruption Event in the Outskirts of a Massive Galaxy",
+          "publisher": "The Astrophysical Journal Letters / IOPscience",
+          "published_at": "2026-07-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6b79d54990",
+      "text": "The flare briefly outshone its host galaxy in ultraviolet light and radiated with the light of about 10 billion suns.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/missions/swift/nasas-swift-sees-wandering-mega-black-hole-shredding-star",
+          "title": "NASA's Swift Sees 'Wandering' Mega Black Hole ...",
+          "publisher": "NASA Science / Swift mission",
+          "published_at": "2026-07-27T16:06:37Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7bbaad0be8",
+      "text": "ZTF first flagged the source in November 2025 as an unusual brightening.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/missions/swift/nasas-swift-sees-wandering-mega-black-hole-shredding-star",
+          "title": "NASA's Swift Sees 'Wandering' Mega Black Hole ...",
+          "publisher": "NASA Science / Swift mission",
+          "published_at": "2026-07-27T16:06:37Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9adfcdf988",
+      "text": "Swift’s UVOT measured a temperature of about 30,000 degrees Celsius, or 54,000 degrees Fahrenheit.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/missions/swift/nasas-swift-sees-wandering-mega-black-hole-shredding-star",
+          "title": "NASA's Swift Sees 'Wandering' Mega Black Hole ...",
+          "publisher": "NASA Science / Swift mission",
+          "published_at": "2026-07-27T16:06:37Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8b4bcdf36e",
+      "text": "The combination of ZTF, SOAR, and Swift data ruled out alternative explanations and supported the tidal disruption interpretation.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/missions/swift/nasas-swift-sees-wandering-mega-black-hole-shredding-star",
+          "title": "NASA's Swift Sees 'Wandering' Mega Black Hole ...",
+          "publisher": "NASA Science / Swift mission",
+          "published_at": "2026-07-27T16:06:37Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_084901ab33",
+      "text": "Before 2024, confirmed tidal disruption events had only been seen in galaxy cores.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/missions/swift/nasas-swift-sees-wandering-mega-black-hole-shredding-star",
+          "title": "NASA's Swift Sees 'Wandering' Mega Black Hole ...",
+          "publisher": "NASA Science / Swift mission",
+          "published_at": "2026-07-27T16:06:37Z"
+        },
+        {
+          "url": "https://news.berkeley.edu/2025/05/08/not-one-but-two-massive-black-holes-are-eating-away-at-this-galaxy",
+          "title": "Not one, but two massive black holes are eating away at this galaxy",
+          "publisher": "UC Berkeley News",
+          "published_at": "2025-05-08T15:00:00Z"
+        },
+        {
+          "url": "https://earthsky.org/space/supermassive-black-hole-roaming-between-stars-tidal-disruption-event",
+          "title": "Supermassive black hole roaming in the darkness",
+          "publisher": "EarthSky",
+          "published_at": "2025-05-11T11:36:12Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0d96c53b45",
+      "text": "Prior searches focused on galaxy centers because that is where supermassive black holes were expected and where most known ones had been found.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/missions/swift/nasas-swift-sees-wandering-mega-black-hole-shredding-star",
+          "title": "NASA's Swift Sees 'Wandering' Mega Black Hole ...",
+          "publisher": "NASA Science / Swift mission",
+          "published_at": "2026-07-27T16:06:37Z"
+        },
+        {
+          "url": "https://news.berkeley.edu/2025/05/08/not-one-but-two-massive-black-holes-are-eating-away-at-this-galaxy",
+          "title": "Not one, but two massive black holes are eating away at this galaxy",
+          "publisher": "UC Berkeley News",
+          "published_at": "2025-05-08T15:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3c594c51d1",
+      "text": "Astronomers now see this event as validation of a new technique for finding hidden supermassive black holes by searching for off-center TDEs.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/missions/swift/nasas-swift-sees-wandering-mega-black-hole-shredding-star",
+          "title": "NASA's Swift Sees 'Wandering' Mega Black Hole ...",
+          "publisher": "NASA Science / Swift mission",
+          "published_at": "2026-07-27T16:06:37Z"
+        },
+        {
+          "url": "https://news.berkeley.edu/2025/05/08/not-one-but-two-massive-black-holes-are-eating-away-at-this-galaxy",
+          "title": "Not one, but two massive black holes are eating away at this galaxy",
+          "publisher": "UC Berkeley News",
+          "published_at": "2025-05-08T15:00:00Z"
+        },
+        {
+          "url": "https://earthsky.org/space/supermassive-black-hole-roaming-between-stars-tidal-disruption-event",
+          "title": "Supermassive black hole roaming in the darkness",
+          "publisher": "EarthSky",
+          "published_at": "2025-05-11T11:36:12Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_08d11fb3c8",
+      "text": "The researchers say the method could be applied to Rubin Observatory surveys and NASA’s Roman Space Telescope surveys.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/missions/swift/nasas-swift-sees-wandering-mega-black-hole-shredding-star",
+          "title": "NASA's Swift Sees 'Wandering' Mega Black Hole ...",
+          "publisher": "NASA Science / Swift mission",
+          "published_at": "2026-07-27T16:06:37Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_eb0875d18d",
+      "text": "Rubin’s wide, deep surveys should reveal a much larger sample of tidal disruption events, including off-center ones.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/missions/swift/nasas-swift-sees-wandering-mega-black-hole-shredding-star",
+          "title": "NASA's Swift Sees 'Wandering' Mega Black Hole ...",
+          "publisher": "NASA Science / Swift mission",
+          "published_at": "2026-07-27T16:06:37Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8c006f72db",
+      "text": "Roman’s space-based surveys should extend the search to more distant events, looking back through roughly 9 billion years of cosmic history.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/missions/swift/nasas-swift-sees-wandering-mega-black-hole-shredding-star",
+          "title": "NASA's Swift Sees 'Wandering' Mega Black Hole ...",
+          "publisher": "NASA Science / Swift mission",
+          "published_at": "2026-07-27T16:06:37Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ac1acb35e4",
+      "text": "One plausible origin scenario is that the black hole came from a smaller galaxy that merged with the larger host.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/missions/swift/nasas-swift-sees-wandering-mega-black-hole-shredding-star",
+          "title": "NASA's Swift Sees 'Wandering' Mega Black Hole ...",
+          "publisher": "NASA Science / Swift mission",
+          "published_at": "2026-07-27T16:06:37Z"
+        },
+        {
+          "url": "https://news.berkeley.edu/2025/05/08/not-one-but-two-massive-black-holes-are-eating-away-at-this-galaxy",
+          "title": "Not one, but two massive black holes are eating away at this galaxy",
+          "publisher": "UC Berkeley News",
+          "published_at": "2025-05-08T15:00:00Z"
+        },
+        {
+          "url": "https://earthsky.org/space/supermassive-black-hole-roaming-between-stars-tidal-disruption-event",
+          "title": "Supermassive black hole roaming in the darkness",
+          "publisher": "EarthSky",
+          "published_at": "2025-05-11T11:36:12Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2379755a7a",
+      "text": "Another plausible origin scenario is a three-black-hole interaction in a galaxy core that kicked one black hole outward.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/missions/swift/nasas-swift-sees-wandering-mega-black-hole-shredding-star",
+          "title": "NASA's Swift Sees 'Wandering' Mega Black Hole ...",
+          "publisher": "NASA Science / Swift mission",
+          "published_at": "2026-07-27T16:06:37Z"
+        },
+        {
+          "url": "https://news.berkeley.edu/2025/05/08/not-one-but-two-massive-black-holes-are-eating-away-at-this-galaxy",
+          "title": "Not one, but two massive black holes are eating away at this galaxy",
+          "publisher": "UC Berkeley News",
+          "published_at": "2025-05-08T15:00:00Z"
+        },
+        {
+          "url": "https://earthsky.org/space/supermassive-black-hole-roaming-between-stars-tidal-disruption-event",
+          "title": "Supermassive black hole roaming in the darkness",
+          "publisher": "EarthSky",
+          "published_at": "2025-05-11T11:36:12Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b707119eb3",
+      "text": "The earlier 2025 Berkeley discovery AT2024tvd helped establish that off-center tidal disruption events can reveal wandering supermassive black holes.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://news.berkeley.edu/2025/05/08/not-one-but-two-massive-black-holes-are-eating-away-at-this-galaxy",
+          "title": "Not one, but two massive black holes are eating away at this galaxy",
+          "publisher": "UC Berkeley News",
+          "published_at": "2025-05-08T15:00:00Z"
+        },
+        {
+          "url": "https://earthsky.org/space/supermassive-black-hole-roaming-between-stars-tidal-disruption-event",
+          "title": "Supermassive black hole roaming in the darkness",
+          "publisher": "EarthSky",
+          "published_at": "2025-05-11T11:36:12Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4bff6cdb87",
+      "text": "The paper explicitly states that TDE 2025abcr was identified by a custom off-nuclear implementation of the machine-learning classifier tdescore, and that follow-up observations confirmed it as a TDE-H+He.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://iopscience.iop.org/article/10.3847/2041-8213/ae77f3",
+          "title": "TDE 2025abcr: A Tidal Disruption Event in the Outskirts of a Massive Galaxy",
+          "publisher": "The Astrophysical Journal Letters / IOPscience",
+          "published_at": "2026-07-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5cc35a086e",
+      "text": "The paper says the classification was driven by a high lower bound on blackbody temperature, a poor Type Ia supernova fit (sncosmo chi-square per degree of freedom = 4.5), and a best-fit temperature that increased with time rather than cooling (+87 K/day).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://iopscience.iop.org/article/10.3847/2041-8213/ae77f3",
+          "title": "TDE 2025abcr: A Tidal Disruption Event in the Outskirts of a Massive Galaxy",
+          "publisher": "The Astrophysical Journal Letters / IOPscience",
+          "published_at": "2026-07-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_41362cb350",
+      "text": "The paper describes luminous UV and soft X-ray emission plus spectroscopic signatures that distinguish TDEs from supernovae and other contaminants.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://iopscience.iop.org/article/10.3847/2041-8213/ae77f3",
+          "title": "TDE 2025abcr: A Tidal Disruption Event in the Outskirts of a Massive Galaxy",
+          "publisher": "The Astrophysical Journal Letters / IOPscience",
+          "published_at": "2026-07-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ac8081af48",
+      "text": "The spectral sequence shows a blue continuum with little apparent cooling, broad H lines, and a blended He II lambda 4686 plus N III lambda 4640 feature, resembling known TDEs.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://iopscience.iop.org/article/10.3847/2041-8213/ae77f3",
+          "title": "TDE 2025abcr: A Tidal Disruption Event in the Outskirts of a Massive Galaxy",
+          "publisher": "The Astrophysical Journal Letters / IOPscience",
+          "published_at": "2026-07-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_20f3e5f517",
+      "text": "The transient was measured to lie 9.5 arcseconds, or 9.3 kpc projected distance, from the host-galaxy nucleus.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://iopscience.iop.org/article/10.3847/2041-8213/ae77f3",
+          "title": "TDE 2025abcr: A Tidal Disruption Event in the Outskirts of a Massive Galaxy",
+          "publisher": "The Astrophysical Journal Letters / IOPscience",
+          "published_at": "2026-07-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e1d05a69e6",
+      "text": "The paper's localization relies on archival LS DR10 imaging that marks the transient and host center, and Figure 2 says no source is seen at the transient position to m = 23.78 / M = -12.78, ruling out a bright dwarf-galaxy origin at that position.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://iopscience.iop.org/article/10.3847/2041-8213/ae77f3",
+          "title": "TDE 2025abcr: A Tidal Disruption Event in the Outskirts of a Massive Galaxy",
+          "publisher": "The Astrophysical Journal Letters / IOPscience",
+          "published_at": "2026-07-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8a2ca9669a",
+      "text": "The source was not identified by any other ongoing TDE search effort because of its offset location, and it was the first off-nuclear tdescore discovery not also found by the classic or unbiased selections.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://iopscience.iop.org/article/10.3847/2041-8213/ae77f3",
+          "title": "TDE 2025abcr: A Tidal Disruption Event in the Outskirts of a Massive Galaxy",
+          "publisher": "The Astrophysical Journal Letters / IOPscience",
+          "published_at": "2026-07-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5f11ed110b",
+      "text": "The paper states that the rate of highly offset TDEs (greater than or equal to about 3 kpc) can be constrained to less than 10% of the nuclear TDE rate.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://iopscience.iop.org/article/10.3847/2041-8213/ae77f3",
+          "title": "TDE 2025abcr: A Tidal Disruption Event in the Outskirts of a Massive Galaxy",
+          "publisher": "The Astrophysical Journal Letters / IOPscience",
+          "published_at": "2026-07-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a5b7498b3c",
+      "text": "The paper says Rubin Observatory surveys could detect many dozens of similar sources each year with resolvable offsets.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://iopscience.iop.org/article/10.3847/2041-8213/ae77f3",
+          "title": "TDE 2025abcr: A Tidal Disruption Event in the Outskirts of a Massive Galaxy",
+          "publisher": "The Astrophysical Journal Letters / IOPscience",
+          "published_at": "2026-07-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5050324a7c",
+      "text": "The paper explicitly names three alternative transient classes considered for TDE 2025abcr beyond the TDE interpretation: an exotic supernova, an LFBOT, and an AGN flare.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://iopscience.iop.org/article/10.3847/2041-8213/ae77f3",
+          "title": "TDE 2025abcr: A Tidal Disruption Event in the Outskirts of a Massive Galaxy",
+          "publisher": "The Astrophysical Journal Letters / IOPscience",
+          "published_at": "2026-07-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_db14478b21",
+      "text": "The paper excludes an interacting supernova origin because the observed X-ray emission is soft rather than the hard X-rays typical of interacting supernovae, and the overall UV/X-ray/spectroscopic behavior matches a TDE instead.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://iopscience.iop.org/article/10.3847/2041-8213/ae77f3",
+          "title": "TDE 2025abcr: A Tidal Disruption Event in the Outskirts of a Massive Galaxy",
+          "publisher": "The Astrophysical Journal Letters / IOPscience",
+          "published_at": "2026-07-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f5ca62d2d0",
+      "text": "The paper excludes an AGN-flare interpretation because the host nucleus lacks classic AGN signatures, specifically Balmer lines and [O III] λ4959/λ5007 emission.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://iopscience.iop.org/article/10.3847/2041-8213/ae77f3",
+          "title": "TDE 2025abcr: A Tidal Disruption Event in the Outskirts of a Massive Galaxy",
+          "publisher": "The Astrophysical Journal Letters / IOPscience",
+          "published_at": "2026-07-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_703f0ac2ec",
+      "text": "The paper also excludes an AGN origin because the X-ray behavior is not the rapid hour-scale variability expected for many AGN flares.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://iopscience.iop.org/article/10.3847/2041-8213/ae77f3",
+          "title": "TDE 2025abcr: A Tidal Disruption Event in the Outskirts of a Massive Galaxy",
+          "publisher": "The Astrophysical Journal Letters / IOPscience",
+          "published_at": "2026-07-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_27879bab1c",
+      "text": "The paper treats LFBOT as a credible competing class but argues the event does not fit that picture, instead resembling known TDEs in its multiwavelength and spectroscopic properties.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://iopscience.iop.org/article/10.3847/2041-8213/ae77f3",
+          "title": "TDE 2025abcr: A Tidal Disruption Event in the Outskirts of a Massive Galaxy",
+          "publisher": "The Astrophysical Journal Letters / IOPscience",
+          "published_at": "2026-07-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_181f5a416a",
+      "text": "The paper’s strongest discriminants against non-TDE alternatives are the high lower bound on blackbody temperature, the poor Type Ia supernova fit, a temperature that rises rather than cools, luminous UV and soft X-ray emission, and TDE-like spectral features including broad H lines plus He II/N III.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://iopscience.iop.org/article/10.3847/2041-8213/ae77f3",
+          "title": "TDE 2025abcr: A Tidal Disruption Event in the Outskirts of a Massive Galaxy",
+          "publisher": "The Astrophysical Journal Letters / IOPscience",
+          "published_at": "2026-07-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fb7175f07c",
+      "text": "The remaining uncertainty emphasized by the paper is the parent black hole’s origin, not the transient classification itself.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://iopscience.iop.org/article/10.3847/2041-8213/ae77f3",
+          "title": "TDE 2025abcr: A Tidal Disruption Event in the Outskirts of a Massive Galaxy",
+          "publisher": "The Astrophysical Journal Letters / IOPscience",
+          "published_at": "2026-07-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ace1b94020",
+      "text": "TDE 2025abcr was identified by a custom off-nuclear implementation of the machine-learning classifier tdescore, and follow-up observations confirmed it as a TDE-H+He.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://iopscience.iop.org/article/10.3847/2041-8213/ae77f3",
+          "title": "TDE 2025abcr: A Tidal Disruption Event in the Outskirts of a Massive Galaxy",
+          "publisher": "The Astrophysical Journal Letters / IOPscience",
+          "published_at": "2026-07-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cd6ceb0922",
+      "text": "The source was measured at 9.5 arcseconds, or 9.3 kpc projected distance, from the host nucleus, and the paper says no source is seen at the position to m = 23.78 / M = -12.78.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://iopscience.iop.org/article/10.3847/2041-8213/ae77f3",
+          "title": "TDE 2025abcr: A Tidal Disruption Event in the Outskirts of a Massive Galaxy",
+          "publisher": "The Astrophysical Journal Letters / IOPscience",
+          "published_at": "2026-07-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7265122a79",
+      "text": "NASA says Swift’s UVOT measured a temperature of about 30,000 degrees Celsius (54,000 degrees Fahrenheit).",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/missions/swift/nasas-swift-sees-wandering-mega-black-hole-shredding-star",
+          "title": "NASA's Swift Sees 'Wandering' Mega Black Hole ...",
+          "publisher": "NASA Science / Swift mission",
+          "published_at": "2026-07-27T16:06:37Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_91d64fbb6b",
+      "text": "NASA says Rubin’s wide, deep surveys should reveal a much larger sample of tidal disruption events, including off-center ones, and Roman’s space-based surveys will extend the search to farther-away events and roughly 9 billion years of cosmic history.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/missions/swift/nasas-swift-sees-wandering-mega-black-hole-shredding-star",
+          "title": "NASA's Swift Sees 'Wandering' Mega Black Hole ...",
+          "publisher": "NASA Science / Swift mission",
+          "published_at": "2026-07-27T16:06:37Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_796a3b2879",
+      "text": "UC Berkeley says AT2024tvd was the first optically discovered off-nuclear TDE and helped motivate systematic searches for wandering black holes.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://news.berkeley.edu/2025/05/08/not-one-but-two-massive-black-holes-are-eating-away-at-this-galaxy",
+          "title": "Not one, but two massive black holes are eating away at this galaxy",
+          "publisher": "UC Berkeley News",
+          "published_at": "2025-05-08T15:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

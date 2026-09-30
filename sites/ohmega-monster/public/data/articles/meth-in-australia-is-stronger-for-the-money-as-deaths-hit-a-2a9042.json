@@ -1,0 +1,728 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/meth-in-australia-is-stronger-for-the-money-as-deaths-hit-a-2a9042",
+  "title": "Meth in Australia is stronger for the money as deaths hit a record",
+  "summary": "Police seized record amounts in 2024 but consumption also hit a high worth $8.9 billion, and the link between stronger-for-the-money supply and rising harms is plausible but not proven as cause.",
+  "published_at": "2026-09-26T22:43:12.868853+00:00",
+  "as_of": "2026-02-15",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 26,
+    "likely": 5,
+    "unconfirmed": 12
+  },
+  "claims": [
+    {
+      "id": "clm_3765a8ee25",
+      "text": "More than 750 overdose deaths involving amphetamine-type stimulants, primarily methamphetamine, occurred in Australia in 2024",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.juneesoutherncross.com.au/story/9357157/falling-",
+          "title": "Falling meth prices help drive deaths to record levels",
+          "publisher": "Junee Southern Cross (syndicating Australian Associated Press / NDARC)",
+          "published_at": "2025-09-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c220439d7b",
+      "text": "The rate of deaths involving amphetamine-type stimulants was 2.9 per 100,000 people in 2024, substantially higher than around 2 per 100,000 in 2021-2023",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.juneesoutherncross.com.au/story/9357157/falling-",
+          "title": "Falling meth prices help drive deaths to record levels",
+          "publisher": "Junee Southern Cross (syndicating Australian Associated Press / NDARC)",
+          "published_at": "2025-09-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_61ee880c6d",
+      "text": "Methamphetamine-related hospitalisations in Australia are at the highest observed levels",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.juneesoutherncross.com.au/story/9357157/falling-",
+          "title": "Falling meth prices help drive deaths to record levels",
+          "publisher": "Junee Southern Cross (syndicating Australian Associated Press / NDARC)",
+          "published_at": "2025-09-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6ebdcead07",
+      "text": "Wastewater-measured methamphetamine consumption in Australia is at the highest observed levels",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.juneesoutherncross.com.au/story/9357157/falling-",
+          "title": "Falling meth prices help drive deaths to record levels",
+          "publisher": "Junee Southern Cross (syndicating Australian Associated Press / NDARC)",
+          "published_at": "2025-09-01"
+        },
+        {
+          "url": "https://www.acic.gov.au/publications/national-wastewater-drug-monitoring-program-reports/report-24-national-wastewater-drug-monitoring-program",
+          "title": "Report 24 of the National Wastewater Drug Monitoring Program",
+          "publisher": "Australian Criminal Intelligence Commission",
+          "published_at": "2025-08-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ce5a8d800b",
+      "text": "The price of methamphetamine in Australia has declined somewhat, particularly relative to purity",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.juneesoutherncross.com.au/story/9357157/falling-",
+          "title": "Falling meth prices help drive deaths to record levels",
+          "publisher": "Junee Southern Cross (syndicating Australian Associated Press / NDARC)",
+          "published_at": "2025-09-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_82572aa904",
+      "text": "Authorities seized more than 16 tonnes of methamphetamine in Australia in 2024, significantly more than in previous years",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.juneesoutherncross.com.au/story/9357157/falling-",
+          "title": "Falling meth prices help drive deaths to record levels",
+          "publisher": "Junee Southern Cross (syndicating Australian Associated Press / NDARC)",
+          "published_at": "2025-09-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c273d4e28a",
+      "text": "Crystal methamphetamine has become increasingly dominant in Australia while powder methamphetamine has dropped in popularity among people who regularly use drugs",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.juneesoutherncross.com.au/story/9357157/falling-",
+          "title": "Falling meth prices help drive deaths to record levels",
+          "publisher": "Junee Southern Cross (syndicating Australian Associated Press / NDARC)",
+          "published_at": "2025-09-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_04c2547e5f",
+      "text": "Most methamphetamine-related deaths in Australia involved males aged 35-54 years and were unintentional",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.juneesoutherncross.com.au/story/9357157/falling-",
+          "title": "Falling meth prices help drive deaths to record levels",
+          "publisher": "Junee Southern Cross (syndicating Australian Associated Press / NDARC)",
+          "published_at": "2025-09-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_11c93a3859",
+      "text": "Methamphetamine-related harm has shifted to older age groups over the past two decades, with mortality rates increasing since 2005 among people aged 25-34, 35-44 and 45-54",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.juneesoutherncross.com.au/story/9357157/falling-",
+          "title": "Falling meth prices help drive deaths to record levels",
+          "publisher": "Junee Southern Cross (syndicating Australian Associated Press / NDARC)",
+          "published_at": "2025-09-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_db063ae976",
+      "text": "Australia continues to have one of the highest recorded rates of methamphetamine use in the world",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.juneesoutherncross.com.au/story/9357157/falling-",
+          "title": "Falling meth prices help drive deaths to record levels",
+          "publisher": "Junee Southern Cross (syndicating Australian Associated Press / NDARC)",
+          "published_at": "2025-09-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_574b58e8c4",
+      "text": "Between August 2023 and August 2024, an estimated 22.2 tonnes of methylamphetamine, cocaine, heroin and MDMA was consumed in Australia, a 34% increase from the previous year, driven by a 21% increase in methylamphetamine consumption",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.acic.gov.au/publications/national-wastewater-drug-monitoring-program-reports/report-24-national-wastewater-drug-monitoring-program",
+          "title": "Report 24 of the National Wastewater Drug Monitoring Program",
+          "publisher": "Australian Criminal Intelligence Commission",
+          "published_at": "2025-08-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c623e52f7f",
+      "text": "Drug-induced deaths in Australia reached 2,596 in 2024, the highest level on record, a 10.7% increase from 2,345 in 2023, equating to about 7 deaths per day",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.penington.org.au/australias-annual-overdose-report-2025/",
+          "title": "Australia’s Annual Overdose Report 2026",
+          "publisher": "Penington Institute",
+          "published_at": "2025-08-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_72a525a44f",
+      "text": "Unintentional drug-induced deaths in Australia surpassed 2,000 for the first time in 2024, reaching the highest rate in the 24-year data series",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.penington.org.au/australias-annual-overdose-report-2025/",
+          "title": "Australia’s Annual Overdose Report 2026",
+          "publisher": "Penington Institute",
+          "published_at": "2025-08-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_39b9b77dfa",
+      "text": "First Nations people in Australia experience a disproportionately high burden of unintentional drug-induced deaths, and that disparity has widened in recent years",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.penington.org.au/australias-annual-overdose-report-2025/",
+          "title": "Australia’s Annual Overdose Report 2026",
+          "publisher": "Penington Institute",
+          "published_at": "2025-08-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e50582f828",
+      "text": "Evidence-based approaches that reduce drug-related deaths include prevention, harm reduction (including supervised consumption, drug checking and access to naloxone where relevant), treatment access, and ongoing monitoring",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.juneesoutherncross.com.au/story/9357157/falling-",
+          "title": "Falling meth prices help drive deaths to record levels",
+          "publisher": "Junee Southern Cross (syndicating Australian Associated Press / NDARC)",
+          "published_at": "2025-09-01"
+        },
+        {
+          "url": "https://www.penington.org.au/australias-annual-overdose-report/",
+          "title": "Australia’s Annual Overdose Report 2024",
+          "publisher": "Penington Institute",
+          "published_at": "2024-08-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ad7fcc1ad7",
+      "text": "The National Alcohol and Other Drug Hotline (1800 250 015) provides free and confidential advice, information and counselling about alcohol and other drugs in Australia",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://adf.org.au/drug-facts/methamphetamine/",
+          "title": "Crystal Methamphetamine (Ice)",
+          "publisher": "Alcohol and Drug Foundation",
+          "published_at": "2024-01-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_df9782fd28",
+      "text": "In 2024, the most common drugs involved in drug-induced deaths were opioids (1,083 deaths), stimulants (843) and benzodiazepines (696)",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.penington.org.au/australias-annual-overdose-report-2025/",
+          "title": "Australia’s Annual Overdose Report 2026",
+          "publisher": "Penington Institute",
+          "published_at": "2025-08-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9a9ace60a6",
+      "text": "The National Wastewater Drug Monitoring Program covers about 55-57% of the Australian population and has operated since 2016, providing longitudinal consumption estimates",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.acic.gov.au/publications/national-wastewater-drug-monitoring-program-reports/report-24-national-wastewater-drug-monitoring-program",
+          "title": "Report 24 of the National Wastewater Drug Monitoring Program",
+          "publisher": "Australian Criminal Intelligence Commission",
+          "published_at": "2025-08-15"
+        },
+        {
+          "url": "https://www.acic.gov.au/publications/national-wastewater-drug-monitoring-program-reports",
+          "title": "National Wastewater Drug Monitoring Program reports",
+          "publisher": "Australian Criminal Intelligence Commission",
+          "published_at": "2024-07-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a456dad8fe",
+      "text": "ACIC Report 24 (Aug 2023-Aug 2024) found 22.2 tonnes of methylamphetamine, cocaine, heroin and MDMA consumed in Australia, a 34% increase year-on-year, driven by methylamphetamine +21%, cocaine +69%, MDMA +49% and heroin +14%, based on 61 wastewater plants covering ~57% of population",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.acic.gov.au/publications/national-wastewater-drug-monitoring-program-reports/report-24-national-wastewater-drug-monitoring-program",
+          "title": "Report 24 of the National Wastewater Drug Monitoring Program",
+          "publisher": "Australian Criminal Intelligence Commission",
+          "published_at": "2025-08-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b09d33d67a",
+      "text": "AIHW reports publicly funded alcohol and other drug treatment services provided ~244,400 treatment episodes to ~127,800 people aged 10+ in 2024-25; alcohol was principal drug of concern in 41% (87,600 episodes), methamphetamine was second at 24%, followed by cannabis 14% and heroin 4.3%",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.aihw.gov.au/getmedia/aa421f76-a71b-42fa-bd93-b2f36208c034/Alcohol-and-other-drug-treatment-services-in-Australia-annual-report-2024-25.pdf",
+          "title": "AIHW Alcohol and other drug treatment services in Australia annual report 2024-25",
+          "publisher": "AIHW",
+          "published_at": "2026-06-25"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d34e389953",
+      "text": "AIHW consolidated reporting records 1,948 drug-induced deaths and 1,765 alcohol-induced deaths in 2024, and ~177,000 alcohol and other drug-related ambulance attendances in 2024, differing from Penington's 2,596 drug-induced deaths due to different case definitions/coding; ABS Causes of Death 2024 is the authoritative source for underlying-cause mortality and now publishes revised 2022-2024 data via separate 'Deaths from external causes' tables",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.aihw.gov.au/getmedia/6c32eddb-b7fc-41e6-8417-3463fe7bc1b3/Alcohol-tobacco-other-drugs-in-Australia.pdf",
+          "title": "AIHW Alcohol, tobacco & other drugs in Australia - Web report 01 Jul 2026",
+          "publisher": "AIHW",
+          "published_at": "2026-07-01"
+        },
+        {
+          "url": "https://www.aihw.gov.au/reports/illicit-use-of-drugs/illicit-drug-use",
+          "title": "AIHW Illicit drug use - Web article 28 Apr 2026",
+          "publisher": "AIHW",
+          "published_at": "2026-04-28"
+        },
+        {
+          "url": "https://www.abs.gov.au/statistics/health/causes-death/causes-death-australia/latest-release",
+          "title": "Causes of Death, Australia, 2024 - ABS 3303.0 landing",
+          "publisher": "ABS",
+          "published_at": "2024-12-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a7700686ce",
+      "text": "The association between falling methamphetamine price relative to purity and rising deaths/hospitalisations is presented as correlational with plausible economic mechanism, not quantified causal effect: retrieved primary sources (ACIC wastewater, AIHW harms) provide supply/consumption and harms trends but no price-purity time series by jurisdiction/form, no elasticity estimate, and no confounder control; confounders noted in primary sources include crystal vs powder shift, more frequent use, and polysubstance involvement (opioids 1,083, stimulants 843, benzodiazepines 696 in same deaths)",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.acic.gov.au/publications/national-wastewater-drug-monitoring-program-reports/report-24-national-wastewater-drug-monitoring-program",
+          "title": "Report 24 of the National Wastewater Drug Monitoring Program",
+          "publisher": "Australian Criminal Intelligence Commission",
+          "published_at": "2025-08-15"
+        },
+        {
+          "url": "https://www.aihw.gov.au/getmedia/6c32eddb-b7fc-41e6-8417-3463fe7bc1b3/Alcohol-tobacco-other-drugs-in-Australia.pdf",
+          "title": "AIHW Alcohol, tobacco & other drugs in Australia - Web report 01 Jul 2026",
+          "publisher": "AIHW",
+          "published_at": "2026-07-01"
+        },
+        {
+          "url": "https://www.penington.org.au/australias-annual-overdose-report-2025/",
+          "title": "Australia’s Annual Overdose Report 2026",
+          "publisher": "Penington Institute",
+          "published_at": "2025-08-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3591706f30",
+      "text": "Primary NDARC Drug Trends 2024/2025 IDRS/EDRS report PDFs and ABS Causes of Death detailed tables (3303.0) for amphetamine-type stimulant deaths (>750, 2.9/100k) and methamphetamine-related hospitalisations at highest observed levels were not extractable via available crawler (NDARC returned generic template, PDFs 404; ABS detailed downloads returned 404/thin landing); those specific figures remain dependent on AAP syndication via src_3f0baba429 pending direct table retrieval",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.abs.gov.au/statistics/health/causes-death/causes-death-australia/latest-release",
+          "title": "Causes of Death, Australia, 2024 - ABS 3303.0 landing",
+          "publisher": "ABS",
+          "published_at": "2024-12-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7f22b8771e",
+      "text": "Source diversification achieved: added two independent AIHW primary sources (treatment services annual report 2024-25 and Alcohol, tobacco & other drugs in Australia 2026) and re-grounded ACIC wastewater via direct deep-read, reducing concentration on ACIC+Penington (previously 4/6 deep-reads) and providing independent verification for consumption, treatment and mortality domains",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.acic.gov.au/publications/national-wastewater-drug-monitoring-program-reports/report-24-national-wastewater-drug-monitoring-program",
+          "title": "Report 24 of the National Wastewater Drug Monitoring Program",
+          "publisher": "Australian Criminal Intelligence Commission",
+          "published_at": "2025-08-15"
+        },
+        {
+          "url": "https://www.aihw.gov.au/getmedia/aa421f76-a71b-42fa-bd93-b2f36208c034/Alcohol-and-other-drug-treatment-services-in-Australia-annual-report-2024-25.pdf",
+          "title": "AIHW Alcohol and other drug treatment services in Australia annual report 2024-25",
+          "publisher": "AIHW",
+          "published_at": "2026-06-25"
+        },
+        {
+          "url": "https://www.aihw.gov.au/getmedia/6c32eddb-b7fc-41e6-8417-3463fe7bc1b3/Alcohol-tobacco-other-drugs-in-Australia.pdf",
+          "title": "AIHW Alcohol, tobacco & other drugs in Australia - Web report 01 Jul 2026",
+          "publisher": "AIHW",
+          "published_at": "2026-07-01"
+        },
+        {
+          "url": "https://www.aihw.gov.au/reports/illicit-use-of-drugs/illicit-drug-use",
+          "title": "AIHW Illicit drug use - Web article 28 Apr 2026",
+          "publisher": "AIHW",
+          "published_at": "2026-04-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c6fae00d11",
+      "text": "ACIC frames rising consumption through supply-reduction/organised-crime lens: 34% rise to 22.2 tonnes (methylamphetamine +21% to record 12.8 tonnes) reflects in part post-COVID market recovery with transnational and domestic groups rapidly re-establishing and expanding operations, requiring concerted coordinated effort under the three pillars of the National Drug Strategy: demand reduction, supply reduction and harm reduction.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.acic.gov.au/media-centre/media-releases-and-statements/increases-consumption-four-major-drugs",
+          "title": "Increases in consumption of four major drugs — ACIC media release Report 24",
+          "publisher": "ACIC",
+          "published_at": "2025-08-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_07729f596a",
+      "text": "In 2023-24 the Australian Border Force and Australian Federal Police seized 33.7 tonnes of illicit drugs and precursors at the border and across Australia; for a number of major drugs quantities seized exceeded amounts consumed, hindering criminal networks' ability to grow and expand and creating windows of opportunity for demand-reduction strategies. ACIC estimates street value of the four drugs consumed Aug 2023-Aug 2024 at $11.5 billion, with methylamphetamine accounting for $8.9 billion (78%).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.acic.gov.au/media-centre/media-releases-and-statements/increases-consumption-four-major-drugs",
+          "title": "Increases in consumption of four major drugs — ACIC media release Report 24",
+          "publisher": "ACIC",
+          "published_at": "2025-08-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_186831f3e3",
+      "text": "AFP-led coordinated enforcement demonstrates ongoing supply-reduction activity: joint Australia-New Zealand week of action 14-18 Sep 2026 (ANZIDWG) charged 1,203 people with 3,339 offences, executed 560 search warrants, and seized 254kg methamphetamine, 16kg heroin, 11.7kg cocaine, 4.6kg MDMA, 10kg ketamine, 716kg cannabis plus 8,701 plants, $2.05m cash and 71 firearms; AFP alone seized 68kg including 8.4kg methylamphetamine and 11.4kg heroin, framed as disrupting availability to reduce harms amid continued strong demand shown in wastewater data.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.afp.gov.au/news-centre/media-release/more-1200-charged-trans-tasman-illicit-drug-trafficking-and-organised",
+          "title": "More than 1200 charged in Trans-Tasman illicit drug trafficking and organised crime operation",
+          "publisher": "AFP",
+          "published_at": "2026-09-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9389121e94",
+      "text": "Australia's official policy framework is the National Drug Strategy 2017-2026 built on three pillars — demand reduction, supply reduction and harm reduction (harm minimisation) — as summarised in AIHW's policy-context synthesis; AIHW notes federal and state/territory laws prohibit possession/supply of illegal drugs including methamphetamine, but research with people who use drugs suggests illicit drugs remain readily available from friends/relatives, dealers and online, indicating supply-reduction alone has not constrained availability.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.aihw.gov.au/getmedia/6c32eddb-b7fc-41e6-8417-3463fe7bc1b3/Alcohol-tobacco-other-drugs-in-Australia.pdf",
+          "title": "AIHW Alcohol, tobacco & other drugs in Australia - Web report 01 Jul 2026",
+          "publisher": "AIHW",
+          "published_at": "2026-07-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_45f8510a34",
+      "text": "The 2% harm-minimisation funding figure cited via Penington (Queensland, ACT, NSW, Victoria — supervised injecting, drug checking, naloxone) is contested as a framing device: government and law-enforcement sources present funding as balanced across three pillars by design, with supply-reduction (border, AFP/ABF, state police) and demand-reduction (treatment, prevention) constituting the larger shares; critics of harm-reduction scale-up argue reallocation debates must weigh opportunity costs and that expanding supervised consumption/drug-checking nationally involves significant recurrent costs, workforce and regulatory barriers.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.aihw.gov.au/getmedia/6c32eddb-b7fc-41e6-8417-3463fe7bc1b3/Alcohol-tobacco-other-drugs-in-Australia.pdf",
+          "title": "AIHW Alcohol, tobacco & other drugs in Australia - Web report 01 Jul 2026",
+          "publisher": "AIHW",
+          "published_at": "2026-07-01"
+        },
+        {
+          "url": "https://www.acic.gov.au/media-centre/media-releases-and-statements/increases-consumption-four-major-drugs",
+          "title": "Increases in consumption of four major drugs — ACIC media release Report 24",
+          "publisher": "ACIC",
+          "published_at": "2025-08-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9b2a5922ba",
+      "text": "Evidence limits for stimulant-specific harm reduction qualify the consensus claim: unlike opioids where naloxone provides a reversal agent, no equivalent pharmacological reversal exists for methamphetamine where supportive care and engagement are the mainstays; the evidence base for supervised injecting sites and drug checking is strongest for opioid overdose prevention and contaminant detection (e.g., nitazenes), with more limited direct evidence that these interventions reduce methamphetamine deaths at population scale.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.aihw.gov.au/getmedia/6c32eddb-b7fc-41e6-8417-3463fe7bc1b3/Alcohol-tobacco-other-drugs-in-Australia.pdf",
+          "title": "AIHW Alcohol, tobacco & other drugs in Australia - Web report 01 Jul 2026",
+          "publisher": "AIHW",
+          "published_at": "2026-07-01"
+        },
+        {
+          "url": "https://www.acic.gov.au/media-centre/media-releases-and-statements/increases-consumption-four-major-drugs",
+          "title": "Increases in consumption of four major drugs — ACIC media release Report 24",
+          "publisher": "ACIC",
+          "published_at": "2025-08-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_973ce222d9",
+      "text": "Alternative interpretation of falling price relative to purity: price decline coinciding with record seizures and record wastewater consumption is more consistent with a global supply glut and post-COVID market re-expansion overwhelming interdiction than with enforcement failure alone; ACIC attributes increase to criminal groups re-establishing operations and evolving trafficking methods, noting seizures exceeding consumption for some drugs — suggesting enforcement is disrupting supply but not sufficient to offset supply surge.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.acic.gov.au/media-centre/media-releases-and-statements/increases-consumption-four-major-drugs",
+          "title": "Increases in consumption of four major drugs — ACIC media release Report 24",
+          "publisher": "ACIC",
+          "published_at": "2025-08-15"
+        },
+        {
+          "url": "https://www.acic.gov.au/publications/national-wastewater-drug-monitoring-program-reports/report-24-national-wastewater-drug-monitoring-program",
+          "title": "Report 24 of the National Wastewater Drug Monitoring Program",
+          "publisher": "Australian Criminal Intelligence Commission",
+          "published_at": "2025-08-15"
+        },
+        {
+          "url": "https://www.afp.gov.au/news-centre/media-release/more-1200-charged-trans-tasman-illicit-drug-trafficking-and-organised",
+          "title": "More than 1200 charged in Trans-Tasman illicit drug trafficking and organised crime operation",
+          "publisher": "AFP",
+          "published_at": "2026-09-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_f71c778a69",
+      "text": "Drug deaths hit a record in 2024 after two decades of rise: year 2005, total_drug_induced_deaths 1278, ats_deaths 79, road_deaths_2024 1307",
+      "grade": "unconfirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.penington.org.au/australias-annual-overdose-report-2026/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_6168cfb57e",
+      "text": "Drug deaths hit a record in 2024 after two decades of rise: year 2006, total_drug_induced_deaths 1262, ats_deaths 90, road_deaths_2024 1307",
+      "grade": "unconfirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.penington.org.au/australias-annual-overdose-report-2026/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_6e4801fa18",
+      "text": "Drug deaths hit a record in 2024 after two decades of rise: year 2007, total_drug_induced_deaths 1479, ats_deaths 99, road_deaths_2024 1307",
+      "grade": "unconfirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.penington.org.au/australias-annual-overdose-report-2026/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_b7d4498ba8",
+      "text": "Drug deaths hit a record in 2024 after two decades of rise: year 2008, total_drug_induced_deaths 1654, ats_deaths 113, road_deaths_2024 1307",
+      "grade": "unconfirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.penington.org.au/australias-annual-overdose-report-2026/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_0235ecce59",
+      "text": "Drug deaths hit a record in 2024 after two decades of rise: year 2009, total_drug_induced_deaths 1792, ats_deaths 102, road_deaths_2024 1307",
+      "grade": "unconfirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.penington.org.au/australias-annual-overdose-report-2026/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_eae2709928",
+      "text": "Drug deaths hit a record in 2024 after two decades of rise: year 2010, total_drug_induced_deaths 1746, ats_deaths 110, road_deaths_2024 1307",
+      "grade": "unconfirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.penington.org.au/australias-annual-overdose-report-2026/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_f0e4a6e923",
+      "text": "Drug deaths hit a record in 2024 after two decades of rise: year 2011, total_drug_induced_deaths 1773, ats_deaths 115, road_deaths_2024 1307",
+      "grade": "unconfirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.penington.org.au/australias-annual-overdose-report-2026/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_2462a567d3",
+      "text": "Drug deaths hit a record in 2024 after two decades of rise: year 2012, total_drug_induced_deaths 1761, ats_deaths 174, road_deaths_2024 1307",
+      "grade": "unconfirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.penington.org.au/australias-annual-overdose-report-2026/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_fe2abb4532",
+      "text": "Drug deaths hit a record in 2024 after two decades of rise: year 2013, total_drug_induced_deaths 1768, ats_deaths 182, road_deaths_2024 1307",
+      "grade": "unconfirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.penington.org.au/australias-annual-overdose-report-2026/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_2c7a33ad22",
+      "text": "Drug deaths hit a record in 2024 after two decades of rise: year 2014, total_drug_induced_deaths 2074, ats_deaths 285, road_deaths_2024 1307",
+      "grade": "unconfirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.penington.org.au/australias-annual-overdose-report-2026/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_4014464edd",
+      "text": "Drug deaths hit a record in 2024 after two decades of rise: year 2015, total_drug_induced_deaths 2183, ats_deaths 352, road_deaths_2024 1307",
+      "grade": "unconfirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.penington.org.au/australias-annual-overdose-report-2026/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_581f0d82b8",
+      "text": "Drug deaths hit a record in 2024 after two decades of rise: year 2016, total_drug_induced_deaths 2296, ats_deaths 518, road_deaths_2024 1307",
+      "grade": "unconfirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.penington.org.au/australias-annual-overdose-report-2026/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [
+    {
+      "date": "2026-09-27",
+      "note": "Two date phrases were reworded for clarity (now 'the 12 months to August 2024'). No facts changed."
+    }
+  ],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

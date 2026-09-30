@@ -1,0 +1,556 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/china-s-reported-immersion-duv-tool-production-start-lacks-p-809478",
+  "title": "China’s reported immersion DUV tool production start lacks proof it can replace ASML at scale",
+  "summary": "Reuters reports Shanghai Aishengna Electronic Technology Group has begun domestic immersion deep ultraviolet lithography tools, but coverage points to tiny early outputs and further testing needs—so it’s not yet shown that the machines are qualified, reliable, and scalable enough to substitute for ASML.",
+  "published_at": "2026-07-29T12:22:45.149081+00:00",
+  "as_of": "2026-07-29",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 14,
+    "likely": 14,
+    "contested": 1,
+    "unconfirmed": 1
+  },
+  "claims": [
+    {
+      "id": "clm_23aa64b839",
+      "text": "China has begun manufacturing domestically developed immersion deep ultraviolet lithography machines.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/china/china-starts-production-home-grown-immersion-duv-chipmaking-tools-source-2026-07-28/",
+          "title": "EXCLUSIVE: China starts production of home-grown immersion DUV chipmaking tools - source - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-28T08:19:52Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/china/china-begins-making-homegrown-duv-chipmaking-tools-information-reports-2026-07-27/",
+          "title": "China begins making homegrown DUV chipmaking tools, The Information reports - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-27T14:13:16Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fb5dbcc9d1",
+      "text": "Reuters identified Shanghai Aishengna Electronic Technology Group as the state-backed company leading the production effort.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/china/china-starts-production-home-grown-immersion-duv-chipmaking-tools-source-2026-07-28/",
+          "title": "EXCLUSIVE: China starts production of home-grown immersion DUV chipmaking tools - source - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-28T08:19:52Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5093afe836",
+      "text": "The first machines are expected to be delivered in 2026 to Semiconductor Manufacturing International Corp, Hua Hong Semiconductor, and ChangXin Memory Technologies.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/china/china-starts-production-home-grown-immersion-duv-chipmaking-tools-source-2026-07-28/",
+          "title": "EXCLUSIVE: China starts production of home-grown immersion DUV chipmaking tools - source - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-28T08:19:52Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/china/china-begins-making-homegrown-duv-chipmaking-tools-information-reports-2026-07-27/",
+          "title": "China begins making homegrown DUV chipmaking tools, The Information reports - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-27T14:13:16Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_caaccda53b",
+      "text": "Reported production targets are about five immersion DUV systems in 2026 and roughly 20 in 2027.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/china/china-starts-production-home-grown-immersion-duv-chipmaking-tools-source-2026-07-28/",
+          "title": "EXCLUSIVE: China starts production of home-grown immersion DUV chipmaking tools - source - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-28T08:19:52Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/china/china-begins-making-homegrown-duv-chipmaking-tools-information-reports-2026-07-27/",
+          "title": "China begins making homegrown DUV chipmaking tools, The Information reports - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-27T14:13:16Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_026c11b679",
+      "text": "The reported Chinese immersion DUV system still lags ASML’s competing models on performance and reliability and needs further testing before mass production.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/china/china-starts-production-home-grown-immersion-duv-chipmaking-tools-source-2026-07-28/",
+          "title": "EXCLUSIVE: China starts production of home-grown immersion DUV chipmaking tools - source - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-28T08:19:52Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/china/china-begins-making-homegrown-duv-chipmaking-tools-information-reports-2026-07-27/",
+          "title": "China begins making homegrown DUV chipmaking tools, The Information reports - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-27T14:13:16Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_16cb9be351",
+      "text": "Successful deployment of a domestic immersion DUV tool would give Chinese chipmakers an alternative source of critical lithography equipment if Western governments further restrict foreign tools or servicing.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/china/china-starts-production-home-grown-immersion-duv-chipmaking-tools-source-2026-07-28/",
+          "title": "EXCLUSIVE: China starts production of home-grown immersion DUV chipmaking tools - source - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-28T08:19:52Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/china/china-begins-making-homegrown-duv-chipmaking-tools-information-reports-2026-07-27/",
+          "title": "China begins making homegrown DUV chipmaking tools, The Information reports - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-27T14:13:16Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d0ec639588",
+      "text": "ASML’s 2025 annual report says customers in China represented 29.1% of ASML’s 2025 total net sales.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.asml.com/investors/annual-report/2025",
+          "title": "ASML 2025 Annual Report",
+          "publisher": "ASML",
+          "published_at": "2026-02-25T00:00:00Z"
+        },
+        {
+          "url": "https://ourbrand.asml.com/m/6ea363f69344ebd4/original/asml-2025-annual-report-based-on-ifrs.pdf",
+          "title": "asml-2025-annual-report-based-on-ifrs.pdf",
+          "publisher": "ASML",
+          "published_at": "2026-02-25T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_61918a7cc3",
+      "text": "ASML’s 2025 annual report states that its 2025 total net sales were €32.7 billion.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.asml.com/investors/annual-report/2025",
+          "title": "ASML 2025 Annual Report",
+          "publisher": "ASML",
+          "published_at": "2026-02-25T00:00:00Z"
+        },
+        {
+          "url": "https://ourbrand.asml.com/m/6ea363f69344ebd4/original/asml-2025-annual-report-based-on-ifrs.pdf",
+          "title": "asml-2025-annual-report-based-on-ifrs.pdf",
+          "publisher": "ASML",
+          "published_at": "2026-02-25T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6dec3b8798",
+      "text": "ASML’s 2025 annual report says its 2025 net sales were driven in part by greater NXE and NXT immersion adoption, with 44 NXE systems and four EXE systems recognized in sales.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://ourbrand.asml.com/m/6ea363f69344ebd4/original/asml-2025-annual-report-based-on-ifrs.pdf",
+          "title": "asml-2025-annual-report-based-on-ifrs.pdf",
+          "publisher": "ASML",
+          "published_at": "2026-02-25T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3c6dedcea4",
+      "text": "ASML says export-control restrictions and a global push for technological sovereignty may lead to long-term shifts in trade dynamics, competition, and technology supply chains.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://ourbrand.asml.com/m/6ea363f69344ebd4/original/asml-2025-annual-report-based-on-ifrs.pdf",
+          "title": "asml-2025-annual-report-based-on-ifrs.pdf",
+          "publisher": "ASML",
+          "published_at": "2026-02-25T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6df1920b07",
+      "text": "The United States imposed major semiconductor export controls in October 2022 through BIS rules.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.federalregister.gov/documents/2022/10/13/2022-21658/implementation-of-additional-export-controls-certain-advanced-computing-and-semiconductor",
+          "title": "Implementation of Additional Export Controls: Certain Advanced Computing and Semiconductor Manufacturing Items; Supercomputer and Semiconductor End Use; Entity List Modification",
+          "publisher": "Federal Register / U.S. Department of Commerce BIS",
+          "published_at": "2022-10-13T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c444756e91",
+      "text": "BIS issued additional semiconductor manufacturing-item export controls in October 2023 and later refinements in April 2024 and December 2024.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.federalregister.gov/documents/2023/10/25/2023-23049/export-controls-on-semiconductor-manufacturing-items",
+          "title": "Export Controls on Semiconductor Manufacturing Items",
+          "publisher": "Federal Register / U.S. Department of Commerce BIS",
+          "published_at": "2023-10-25T00:00:00Z"
+        },
+        {
+          "url": "https://www.federalregister.gov/documents/2024/04/04/2024-07004/implementation-of-additional-export-controls-certain-advanced-computing-items-supercomputer-and",
+          "title": "Implementation of Additional Export Controls: Certain Advanced Computing Items; Supercomputer and Semiconductor End Use; Updates and Corrections; and Export Controls on Semiconductor Manufacturing Items; Corrections and Clarifications",
+          "publisher": "Federal Register / U.S. Department of Commerce BIS",
+          "published_at": "2024-04-04T00:00:00Z"
+        },
+        {
+          "url": "https://www.federalregister.gov/documents/2024/12/05/2024-28270/foreign-produced-direct-product-rule-additions-and-refinements-to-controls-for-advanced-computing",
+          "title": "Foreign-Produced Direct Product Rule Additions, and Refinements to Controls for Advanced Computing and Semiconductor Manufacturing Items",
+          "publisher": "Federal Register / U.S. Department of Commerce BIS",
+          "published_at": "2024-12-05T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1c8a39f5f4",
+      "text": "The reported domestic Chinese DUV breakthrough does not by itself prove that export controls accelerated substitution; the direction of causality remains unresolved from the available evidence.",
+      "grade": "unconfirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/china/china-starts-production-home-grown-immersion-duv-chipmaking-tools-source-2026-07-28/",
+          "title": "EXCLUSIVE: China starts production of home-grown immersion DUV chipmaking tools - source - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-28T08:19:52Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/china/china-begins-making-homegrown-duv-chipmaking-tools-information-reports-2026-07-27/",
+          "title": "China begins making homegrown DUV chipmaking tools, The Information reports - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-27T14:13:16Z"
+        },
+        {
+          "url": "https://ourbrand.asml.com/m/6ea363f69344ebd4/original/asml-2025-annual-report-based-on-ifrs.pdf",
+          "title": "asml-2025-annual-report-based-on-ifrs.pdf",
+          "publisher": "ASML",
+          "published_at": "2026-02-25T00:00:00Z"
+        },
+        {
+          "url": "https://www.federalregister.gov/documents/2022/10/13/2022-21658/implementation-of-additional-export-controls-certain-advanced-computing-and-semiconductor",
+          "title": "Implementation of Additional Export Controls: Certain Advanced Computing and Semiconductor Manufacturing Items; Supercomputer and Semiconductor End Use; Entity List Modification",
+          "publisher": "Federal Register / U.S. Department of Commerce BIS",
+          "published_at": "2022-10-13T00:00:00Z"
+        },
+        {
+          "url": "https://www.federalregister.gov/documents/2023/10/25/2023-23049/export-controls-on-semiconductor-manufacturing-items",
+          "title": "Export Controls on Semiconductor Manufacturing Items",
+          "publisher": "Federal Register / U.S. Department of Commerce BIS",
+          "published_at": "2023-10-25T00:00:00Z"
+        },
+        {
+          "url": "https://www.federalregister.gov/documents/2024/04/04/2024-07004/implementation-of-additional-export-controls-certain-advanced-computing-items-supercomputer-and",
+          "title": "Implementation of Additional Export Controls: Certain Advanced Computing Items; Supercomputer and Semiconductor End Use; Updates and Corrections; and Export Controls on Semiconductor Manufacturing Items; Corrections and Clarifications",
+          "publisher": "Federal Register / U.S. Department of Commerce BIS",
+          "published_at": "2024-04-04T00:00:00Z"
+        },
+        {
+          "url": "https://www.federalregister.gov/documents/2024/12/05/2024-28270/foreign-produced-direct-product-rule-additions-and-refinements-to-controls-for-advanced-computing",
+          "title": "Foreign-Produced Direct Product Rule Additions, and Refinements to Controls for Advanced Computing and Semiconductor Manufacturing Items",
+          "publisher": "Federal Register / U.S. Department of Commerce BIS",
+          "published_at": "2024-12-05T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_34f56c62e4",
+      "text": "China has begun mass producing domestically developed immersion DUV lithography machines.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/china/china-starts-production-home-grown-immersion-duv-chipmaking-tools-source-2026-07-28/",
+          "title": "EXCLUSIVE: China starts production of home-grown immersion DUV chipmaking tools - source - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-28T08:19:52Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dc7f3664fb",
+      "text": "Reuters reported that Shanghai Aishengna Electronic Technology Group is leading the production effort after incorporating teams from top Chinese lithography startups.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/china/china-starts-production-home-grown-immersion-duv-chipmaking-tools-source-2026-07-28/",
+          "title": "EXCLUSIVE: China starts production of home-grown immersion DUV chipmaking tools - source - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-28T08:19:52Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_86024cef89",
+      "text": "Reuters reported that the Chinese-made DUV machines are expected to be delivered this year to SMIC, Hua Hong Semiconductor, and CXMT.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/china/china-starts-production-home-grown-immersion-duv-chipmaking-tools-source-2026-07-28/",
+          "title": "EXCLUSIVE: China starts production of home-grown immersion DUV chipmaking tools - source - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-28T08:19:52Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_28334d1869",
+      "text": "Reuters reported that Aishengna's DUV machine still requires further testing and remains far from matching ASML's competing models on performance and reliability.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/china/china-starts-production-home-grown-immersion-duv-chipmaking-tools-source-2026-07-28/",
+          "title": "EXCLUSIVE: China starts production of home-grown immersion DUV chipmaking tools - source - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-28T08:19:52Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2c72761980",
+      "text": "Reuters reported that Aishengna was established in August 2023 with registered capital of 7 billion yuan and two state-owned shareholders: Shanghai Electric Holding and a subsidiary of Shanghai International Trust.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/china/china-starts-production-home-grown-immersion-duv-chipmaking-tools-source-2026-07-28/",
+          "title": "EXCLUSIVE: China starts production of home-grown immersion DUV chipmaking tools - source - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-28T08:19:52Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_42b8e0b7fb",
+      "text": "A credible counter-view is that the China DUV story does not imply an imminent hit to ASML’s core business because ASML’s technical lead remains large, China revenue is still mainly tied to DUV sales and servicing already under export-control pressure, and the reported domestic tools are still unproven on yield, reliability, and scale.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/commentary/breakingviews/asmls-china-chip-threat-looks-overdone-2026-07-28/",
+          "title": "Breakingviews - ASML’s China chip threat looks overdone - Reuters",
+          "publisher": "Reuters Breakingviews",
+          "published_at": "2026-07-28T10:21:23Z"
+        },
+        {
+          "url": "https://www.cnbc.com/2026/07/28/china-chipmaking-duv-tool-asml-explained.html",
+          "title": "China’s reported chip breakthrough comes with some big caveats",
+          "publisher": "CNBC",
+          "published_at": "2026-07-28T09:44:13Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_310fbd0919",
+      "text": "Skeptics argue the reported Chinese machines may only cover the low end of the market and would need yield parity, serial reliability, and multi-fab serviceability before they could materially substitute for ASML in practice.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/07/28/china-chipmaking-duv-tool-asml-explained.html",
+          "title": "China’s reported chip breakthrough comes with some big caveats",
+          "publisher": "CNBC",
+          "published_at": "2026-07-28T09:44:13Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_69eca7861d",
+      "text": "Reuters Breakingviews argues the immediate investor reaction may be exaggerated: the reported domestic DUV output is not enough by itself to prove a material near-term revenue loss for ASML, especially while ASML continues expanding DUV immersion capacity.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/commentary/breakingviews/asmls-china-chip-threat-looks-overdone-2026-07-28/",
+          "title": "Breakingviews - ASML’s China chip threat looks overdone - Reuters",
+          "publisher": "Reuters Breakingviews",
+          "published_at": "2026-07-28T10:21:23Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_85efe1392c",
+      "text": "The strongest evidence that would confirm the bearish substitution thesis would be fab-side qualification, repeatable high-yield production, and evidence that Chinese fabs shift meaningful procurement away from ASML on a sustained basis; absent that, the more conservative reading is that domestic DUV production is a partial hedge rather than a near-term replacement.",
+      "grade": "contested",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/commentary/breakingviews/asmls-china-chip-threat-looks-overdone-2026-07-28/",
+          "title": "Breakingviews - ASML’s China chip threat looks overdone - Reuters",
+          "publisher": "Reuters Breakingviews",
+          "published_at": "2026-07-28T10:21:23Z"
+        },
+        {
+          "url": "https://www.cnbc.com/2026/07/28/china-chipmaking-duv-tool-asml-explained.html",
+          "title": "China’s reported chip breakthrough comes with some big caveats",
+          "publisher": "CNBC",
+          "published_at": "2026-07-28T09:44:13Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/china/chip-toolmaker-asml-expected-shine-light-capacity-china-challenges-2026-07-14",
+          "title": "Chip toolmaker ASML expected to shine light on capacity and China challenges",
+          "publisher": "Reuters",
+          "published_at": "2026-07-14T05:04:35Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_28944ce426",
+      "text": "Reuters said the reported Chinese immersion DUV effort is led by Shanghai Aishengna Electronic Technology Group, described as a little-known Chinese state-owned company in Shanghai.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/china/china-starts-production-home-grown-immersion-duv-chipmaking-tools-source-2026-07-28/",
+          "title": "EXCLUSIVE: China starts production of home-grown immersion DUV chipmaking tools - source - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-28T08:19:52Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_367b94e6eb",
+      "text": "Reuters said the reported machines are expected to be delivered to SMIC, Hua Hong Semiconductor and CXMT, and that the source described the effort as requiring further testing and still far from matching ASML on performance and reliability.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/china/china-starts-production-home-grown-immersion-duv-chipmaking-tools-source-2026-07-28/",
+          "title": "EXCLUSIVE: China starts production of home-grown immersion DUV chipmaking tools - source - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-28T08:19:52Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7569203a6d",
+      "text": "Reuters Breakingviews argued that the immediate threat to ASML’s core business is likely overstated because ASML retains a large technical lead and the reported domestic tools are not yet the same as high-volume manufacturing tools.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/commentary/breakingviews/asmls-china-chip-threat-looks-overdone-2026-07-28/",
+          "title": "Breakingviews - ASML’s China chip threat looks overdone - Reuters",
+          "publisher": "Reuters Breakingviews",
+          "published_at": "2026-07-28T10:21:23Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_08233e8a40",
+      "text": "ASML’s public 2025 annual-report landing page states that total net sales were €32.7 billion.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.asml.com/investors/annual-report/2025",
+          "title": "ASML 2025 Annual Report",
+          "publisher": "ASML",
+          "published_at": "2026-02-25T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3b42e54b58",
+      "text": "The U.S. imposed major semiconductor export controls in October 2022, tightened the regime again in October 2023, and made further refinements in 2024.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_04266fdfa0",
+      "text": "ASML says export controls and the wider push for technological sovereignty may reshape trade dynamics, competition, and technology supply chains over time.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6943ea06a6",
+      "text": "The strongest evidence for a bearish substitution thesis would be fab-side qualification, repeatable high-yield production, and sustained procurement shifting away from ASML.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6c71c6c0a0",
+      "text": "ASML’s investor annual-report landing page states that total net sales were €32.7 billion in 2025.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.asml.com/investors/annual-report/2025",
+          "title": "ASML 2025 Annual Report",
+          "publisher": "ASML",
+          "published_at": "2026-02-25T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

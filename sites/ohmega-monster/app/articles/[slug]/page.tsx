@@ -1,3 +1,6 @@
+import fs from "node:fs";
+import path from "node:path";
+
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -17,10 +20,17 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   const a = getArticle(params.slug);
   if (!a) return {};
   const url = `${SITE_URL}/articles/${a.slug}`;
+  // The machine-readable twin (graded claims + sources) for agents — see public/llms.txt.
+  const twin = path.join(process.cwd(), "public", "data", "articles", `${a.slug}.json`);
   return {
     title: a.title, // layout template appends " · Ohmega Monster"
     description: a.dek,
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      ...(fs.existsSync(twin)
+        ? { types: { "application/json": `${SITE_URL}/data/articles/${a.slug}.json` } }
+        : {}),
+    },
     openGraph: {
       type: "article",
       url,

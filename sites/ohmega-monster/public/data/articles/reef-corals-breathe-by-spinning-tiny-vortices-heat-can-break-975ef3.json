@@ -1,0 +1,136 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/reef-corals-breathe-by-spinning-tiny-vortices-heat-can-break-975ef3",
+  "title": "Reef corals breathe by spinning tiny vortices — heat can break the pump",
+  "summary": "Scientists filmed the cilia-driven pump in the boulder coral Porites lutea and found it speeds up then fails above about 37C in acute lab warming in darkness, shifting oxygen supply from stirring to slow diffusion — a threshold that varies by species and conditions.",
+  "published_at": "2026-08-06T13:40:51.932746+00:00",
+  "as_of": "",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 6
+  },
+  "claims": [
+    {
+      "id": "clm_325de13d5d",
+      "text": "Corals actively regulate oxygen and metabolite exchange across the coral-water interface via cilia-induced vortical flows that stir the concentration boundary layer (CBL), rather than relying solely on passive diffusion.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.science.org/doi/10.1126/sciadv.aeg0950",
+          "title": "Acute temperature effects on cilia beating increase coral deoxygenation",
+          "publisher": "Science Advances",
+          "published_at": "2026-05-20"
+        },
+        {
+          "url": "https://www1.bio.ku.dk/english/news/2026/warming-oceans-can-disrupt-coral-oxygen-supply-and-trigger-coral-death",
+          "title": "Warming oceans can disrupt coral oxygen supply and trigger coral death",
+          "publisher": "University of Copenhagen",
+          "published_at": "2026-05-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ecabd82f14",
+      "text": "Primary study 'Acute temperature effects on cilia beating increase coral deoxygenation' was published 20 May 2026 in Science Advances (DOI 10.1126/sciadv.aeg0950) by Pacherres, K\u0000fchl et al., using reef-building coral Porites lutea under acute warming in darkness with high-speed cilia imaging, particle image velocimetry with O2-sensitive nanoparticles (SensPIV), and mechanistic 2D transport model.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.science.org/doi/10.1126/sciadv.aeg0950",
+          "title": "Acute temperature effects on cilia beating increase coral deoxygenation",
+          "publisher": "Science Advances",
+          "published_at": "2026-05-20"
+        },
+        {
+          "url": "https://www.eurekalert.org/news-releases/1128393",
+          "title": "Warming oceans can disrupt coral oxygen supply and trigger coral death (EurekAlert! distribution)",
+          "publisher": "EurekAlert!",
+          "published_at": "2026-05-20"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_56a4753909",
+      "text": "Moderate warming to ~35\u0000b0C enhanced ciliary activity: cilia beating frequency increased linearly ~1 Hz/\u0000b0C (Q10 1.51) from 20.78\u0000b11.35 Hz at 27\u0000b0C to 30.54\u0000b13.14 Hz at 37\u0000b0C, and vertical advective velocity increased (Q10 1.48, up to 601 \u0000b5m s-1 at 35\u0000b0C), yet paradoxically thickened CBL with O2-depleted water (<50% air saturation extending ~1200 \u0000b5m) exposing tissues to transient hypoxia.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.science.org/doi/10.1126/sciadv.aeg0950",
+          "title": "Acute temperature effects on cilia beating increase coral deoxygenation",
+          "publisher": "Science Advances",
+          "published_at": "2026-05-20"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f54e6f0c5a",
+      "text": "Above ~37\u0000b0C ciliary coordination collapsed and vortical flows dissipated (absent at ~39\u0000b0C, vertical velocity ~0), shifting transport from advection-dominated (Sherwood Sh ~137 at 27\u0000b0C, 366 at 32\u0000b0C, 152 at 35\u0000b0C, 128 at 37\u0000b0C, >99% advection) to diffusion-limited (Sh ~3 at 39\u0000b0C, 75% advection); model shows anoxic tissue expands rapidly and mortality reached 100% at 41\u0000b0C.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.science.org/doi/10.1126/sciadv.aeg0950",
+          "title": "Acute temperature effects on cilia beating increase coral deoxygenation",
+          "publisher": "Science Advances",
+          "published_at": "2026-05-20"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_486db9d860",
+      "text": "Institutional press release confirms critical thermal threshold at approximately 37\u0000b0C where cilia slowed, lost synchrony and stopped, causing dramatic drop in oxygen supply, tissue breakdown and coral death; threshold is not universal and varies with local temperature, adaptation and species composition.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www1.bio.ku.dk/english/news/2026/warming-oceans-can-disrupt-coral-oxygen-supply-and-trigger-coral-death",
+          "title": "Warming oceans can disrupt coral oxygen supply and trigger coral death",
+          "publisher": "University of Copenhagen",
+          "published_at": "2026-05-21"
+        },
+        {
+          "url": "https://www.eurekalert.org/news-releases/1128393",
+          "title": "Warming oceans can disrupt coral oxygen supply and trigger coral death (EurekAlert! distribution)",
+          "publisher": "EurekAlert!",
+          "published_at": "2026-05-20"
+        },
+        {
+          "url": "https://www.science.org/doi/10.1126/sciadv.aeg0950",
+          "title": "Acute temperature effects on cilia beating increase coral deoxygenation",
+          "publisher": "Science Advances",
+          "published_at": "2026-05-20"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8d8bd40638",
+      "text": "At night corals depend entirely on ciliary ventilation for oxygen uptake; warming-induced enhancement of ciliary beating initially compensates for higher oxygen demand but becomes detrimental as respiration outpaces supply, linking ocean warming and deoxygenation to rapid coral deoxygenation and mortality.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.science.org/doi/10.1126/sciadv.aeg0950",
+          "title": "Acute temperature effects on cilia beating increase coral deoxygenation",
+          "publisher": "Science Advances",
+          "published_at": "2026-05-20"
+        },
+        {
+          "url": "https://www1.bio.ku.dk/english/news/2026/warming-oceans-can-disrupt-coral-oxygen-supply-and-trigger-coral-death",
+          "title": "Warming oceans can disrupt coral oxygen supply and trigger coral death",
+          "publisher": "University of Copenhagen",
+          "published_at": "2026-05-21"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

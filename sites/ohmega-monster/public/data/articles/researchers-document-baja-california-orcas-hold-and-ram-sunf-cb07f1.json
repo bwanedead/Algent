@@ -1,0 +1,489 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/researchers-document-baja-california-orcas-hold-and-ram-sunf-cb07f1",
+  "title": "Researchers document Baja California orcas’ hold-and-ram sunfish sequence",
+  "summary": "A new study describes two filmed encounters in Mexico’s southern Gulf of California where one orca stabilized a sharp-tail sunfish while another rammed it hard enough to fragment it, but the paper does not prove whether that sequence is a learned local tactic or a one-off interaction.",
+  "published_at": "2026-07-25T07:42:52.382880+00:00",
+  "as_of": "2026-07-25",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 23,
+    "likely": 5,
+    "contested": 1
+  },
+  "claims": [
+    {
+      "id": "clm_b617119545",
+      "text": "A Frontiers in Ethology paper published on 23 July 2026 describes two orca predation events involving sharp-tail sunfish in the southern Gulf of California, Mexico.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e896b1d5e7",
+      "text": "In the first event, on 29 July 2024 near an offshore seamount off San José del Cabo, Baja California Sur, an adult female orca held a sharp-tail sunfish by the clavus while an adult male accelerated into it, causing the tissue to fragment.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://www.cnn.com/2026/07/23/science/orcas-ramming-sunfish",
+          "title": "Watch an orca ram a sunfish so hard that the fish explodes - CNN",
+          "publisher": "CNN",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2012377ff7",
+      "text": "In the second event, on 7 September 2025 in the channel of Isla Cerralvo, a similar hold-and-ram sequence fragmented a sharp-tail sunfish.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3a5324798e",
+      "text": "The published article names the behavior a “ram-to-fragment” behavior and describes it as previously undescribed for orcas.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dda517ee66",
+      "text": "The study proposes that the behavior may facilitate foraging for juvenile orcas, reflect play, or serve prey-processing and social-interaction functions.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://www.frontiersin.org/news/2026/07/23/orcas-ramming-worlds-heaviest-fish-explodes",
+          "title": "Orcas filmed ramming one of the world’s heaviest fish so hard it explodes, possibly for fun",
+          "publisher": "Frontiers news",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_01aad8c671",
+      "text": "In Event 1, a juvenile orca fed on smaller suspended fragments after the sunfish was fragmented.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2707da18e0",
+      "text": "The authors say the adults had already removed the sunfish’s viscera before the ramming event.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.cnn.com/2026/07/23/science/orcas-ramming-sunfish",
+          "title": "Watch an orca ram a sunfish so hard that the fish explodes - CNN",
+          "publisher": "CNN",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dd066bbbd4",
+      "text": "The paper argues that the behavior suggests high cooperative precision and could represent roles in prey processing, social interaction, and learning.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5d371db1c1",
+      "text": "The article reports that the same orcas were seen preying on a spine-tail devil ray before Event 1 and a shortfin mako shark earlier on the day of Event 2.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d401f60c97",
+      "text": "The footage in Event 1 was filmed directly by one of the authors with a GoPro Hero 10; the second event used third-party footage recorded on a DJI Osmo Action 5.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f6411ecec2",
+      "text": "Kathryn Ayres was the lead author of the paper and is affiliated with Beneath The Waves.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.cnn.com/2026/07/23/science/orcas-ramming-sunfish",
+          "title": "Watch an orca ram a sunfish so hard that the fish explodes - CNN",
+          "publisher": "CNN",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_32c5c96964",
+      "text": "The study is based on opportunistic observations from tourism and social-media-supplied footage rather than a controlled field experiment.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c7a31db710",
+      "text": "The paper states that orca-molid interactions have been documented globally and that the Gulf of California populations do not strictly follow the Northeastern Pacific resident/transient/offshore ecotype scheme.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bd5f0e601a",
+      "text": "The study says sunfishes are the most frequently observed teleost prey for orcas in the Gulf of California.",
+      "grade": "likely",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_af98669ea3",
+      "text": "The article’s “thousands of pieces” phrasing appears in both the study and downstream coverage, not just in the news outlets.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.cnn.com/2026/07/23/science/orcas-ramming-sunfish",
+          "title": "Watch an orca ram a sunfish so hard that the fish explodes - CNN",
+          "publisher": "CNN",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://www.frontiersin.org/news/2026/07/23/orcas-ramming-worlds-heaviest-fish-explodes",
+          "title": "Orcas filmed ramming one of the world’s heaviest fish so hard it explodes, possibly for fun",
+          "publisher": "Frontiers news",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c2e01fc370",
+      "text": "Event 1 occurred on 29 July 2024 at midday near an offshore seamount off San Jose del Cabo, Baja California Sur, Mexico, at 22°53.526’N 109°28.847’W; Event 2 occurred on 7 September 2025 at 13:20 in the channel of Isla Cerralvo, Gulf of California, Mexico, at 24°11’48.4”N 110°01’07.8”W.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d96c54e258",
+      "text": "The primary paper does not identify a pod name, photo-ID catalog, dorsal-fin mark set, or eye-patch identification for the orcas, and it explicitly says the authors could not determine whether the same individuals were involved in both events because high-resolution top-side images were not collected across both encounters.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9b77e8dcff",
+      "text": "In Event 1, the authors report that the sunfish's primary body remained intact but a large lateral wound indicated the viscera had already been removed before the ramming event; the paper presents this as an observational inference from the video/frames rather than a mechanically measured timing sequence.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_855fcd7e9a",
+      "text": "The authors state that both video sequences were systematically reviewed to reconstruct behavioral progression, including estimated number and relative size class of the orcas, adult/juvenile classification by comparative body size, body orientation and positioning, and the sequence of restraint, impact, release, and feeding.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_71163e6aa2",
+      "text": "The primary paper says that in Event 1 a juvenile orca, estimated to be between 50% and 75% of the adult female's length, began consuming the smaller suspended fragments after the ramming impact.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8ed310bdad",
+      "text": "The authors interpret the ramming as a processing technique rather than a killing blow because the sharp-tail sunfish were already deceased with viscera removed at the time of ramming.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_aae51a8a32",
+      "text": "The strongest primary-source continuity claim is that the same observed group context recurs across events, but the paper stops short of proving the same individual or pod identity across Event 1 and Event 2.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d2c20b17a7",
+      "text": "Independent commentary quoted in NPR says the ramming behavior could help younger orcas feed more easily or could be just for entertainment, and that more examples are needed before drawing firm conclusions.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.npr.org/2026/07/24/nx-s1-5905327/orcas-ram-sunfish-hard-explodes",
+          "title": "Video: Scientists watch orcas ram a sunfish so hard it explodes",
+          "publisher": "NPR",
+          "published_at": "2026-07-24T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6341e8ebb8",
+      "text": "Quoted expert commentary in WUSF/WUTC frames the sequence as a possible social game or sport-like behavior and says a pure-play interpretation would be strengthened if adults did it without juveniles present and did not eat the shredded sunfish.",
+      "grade": "contested",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.wusf.org/2026-07-24/video-scientists-watch-orcas-ram-a-sunfish-so-hard-it-explodes",
+          "title": "Video: Scientists watch orcas ram a sunfish so hard it explodes",
+          "publisher": "WUSF",
+          "published_at": "2026-07-24T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cd6b76770c",
+      "text": "The same commentary suggests the behavior may reflect cultural knowledge limited to a handful of local pods, which is a learning/transmission hypothesis rather than proof of individual learning.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.wusf.org/2026-07-24/video-scientists-watch-orcas-ram-a-sunfish-so-hard-it-explodes",
+          "title": "Video: Scientists watch orcas ram a sunfish so hard it explodes",
+          "publisher": "WUSF",
+          "published_at": "2026-07-24T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3cbef92ba2",
+      "text": "A separate open-access killer-whale study in Scientific Reports describes coordinated foraging and prey sharing with Pacific white-sided dolphins, while stressing that the underlying reasons for the association remain speculative.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12698851",
+          "title": "Cooperative foraging between dolphins and fish-eating killer whales",
+          "publisher": "Scientific Reports (via PMC)",
+          "published_at": "2025-12-11T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_12299a394e",
+      "text": "The paper says the targeted sharp-tail sunfish in both events were already deceased with viscera removed at the time of ramming, and the authors interpret the behavior as processing rather than a killing blow.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0c76466a18",
+      "text": "The study explicitly states that it could not determine whether the same individuals were involved across both events because high-resolution top-side images were not collected across both encounters.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2e613f033f",
+      "text": "The authors frame the behavior as a potentially coordinated and cooperative foraging strategy, but say it may also reflect play, social interaction, juvenile facilitation, or social learning.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/ethology/articles/10.3389/fetho.2026.1835536/full",
+          "title": "Fragmentation of Sharp-Tail Sunfish (Masturus lanceolatus) Caused by High-Impact Ramming Behaviour in Orcas (Orcinus orca)",
+          "publisher": "Frontiers in Ethology",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

@@ -1,0 +1,1004 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/poland-halves-coal-s-share-of-electricity-as-solar-drives-ju-0218b5",
+  "title": "Poland halves coal's share of electricity as solar drives July low",
+  "summary": "Yearly power is still just over half coal, the grid built for big central plants is curtailing wind and solar and refusing connections, and the plan to replace baseload coal hinges on a contested nuclear build already three years behind schedule.",
+  "published_at": "2026-08-14T11:38:38.761644+00:00",
+  "as_of": "2026-08-13",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 49,
+    "likely": 2
+  },
+  "claims": [
+    {
+      "id": "clm_f83462495e",
+      "text": "In 2004, when Poland joined the EU, coal generated ~92-94% of electricity (Forsal reports 92.3%, Trade.gov.pl/PEI reports 94%).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://forsal.pl/biznes/energetyka/artykuly/11289225,koniec-polski-weglowej-tak-konczy-sie-era-czarnego-zlota.html",
+          "title": "Koniec Polski węglowej. Tak kończy się era \"czarnego złota\"",
+          "publisher": "Forsal.pl",
+          "published_at": "2026-08-13T00:00:00Z"
+        },
+        {
+          "url": "https://www.trade.gov.pl/en/news/transformation-of-the-energy-sector-in-poland-after-accession-to-the-eu/",
+          "title": "Transformation of the energy sector in Poland after accession to the EU",
+          "publisher": "Trade.gov.pl / Polish Economic Institute",
+          "published_at": "2024-05-16T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_53cc8e3b41",
+      "text": "In July 2026, coal (hard coal + lignite) accounted for ~53-54% of Polish electricity generation (hard coal 35.33%, lignite 18.20% = 53.53%).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://forsal.pl/biznes/energetyka/artykuly/11289225,koniec-polski-weglowej-tak-konczy-sie-era-czarnego-zlota.html",
+          "title": "Koniec Polski węglowej. Tak kończy się era \"czarnego złota\"",
+          "publisher": "Forsal.pl",
+          "published_at": "2026-08-13T00:00:00Z"
+        },
+        {
+          "url": "https://www.bankier.pl/wiadomosc/Wegiel-kamienny-wciaz-liderem-Wiatr-i-fotowoltaika-zwiekszyly-udzial-w-produkcji-pradu-9181029.html",
+          "title": "Węgiel kamienny wciąż liderem. Wiatr i fotowoltaika zwiększyły udział w produkcji prądu",
+          "publisher": "Bankier.pl / PAP Biznes",
+          "published_at": "2026-08-12T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_72c1a88f9a",
+      "text": "In July 2026, renewables accounted for ~38-42% of generation, with solar PV ~21.4%, wind ~15.0%, hydro ~1.6% (Forsal: 21% solar, 15% wind, 2% hydro = 38%; PSE via PAP: 21.37% PV + 14.99% wind + 1.58% hydro = 37.94%; Forum Energii July monthly: 41.6% RES including 6.0 TWh).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://forsal.pl/biznes/energetyka/artykuly/11289225,koniec-polski-weglowej-tak-konczy-sie-era-czarnego-zlota.html",
+          "title": "Koniec Polski węglowej. Tak kończy się era \"czarnego złota\"",
+          "publisher": "Forsal.pl",
+          "published_at": "2026-08-13T00:00:00Z"
+        },
+        {
+          "url": "https://www.bankier.pl/wiadomosc/Wegiel-kamienny-wciaz-liderem-Wiatr-i-fotowoltaika-zwiekszyly-udzial-w-produkcji-pradu-9181029.html",
+          "title": "Węgiel kamienny wciąż liderem. Wiatr i fotowoltaika zwiększyły udział w produkcji prądu",
+          "publisher": "Bankier.pl / PAP Biznes",
+          "published_at": "2026-08-12T00:00:00Z"
+        },
+        {
+          "url": "https://forum-energii-newsroom.prowly.com/467385-monthly-magazine-july",
+          "title": "Monthly Magazine: July",
+          "publisher": "Forum Energii Monthly Magazine",
+          "published_at": "2026-08-06T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4c0def3af3",
+      "text": "Annual coal share remains higher than the July low: 51% in 2025 (Ember), 52.2% in 2025 (Fraunhofer via Notes from Poland), 56.2% in 2024 (Forum Energii), 59% in 2023 (PEI).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ember-energy.org/countries-and-regions/poland/",
+          "title": "Poland - Ember Energy",
+          "publisher": "Ember",
+          "published_at": "2026-04-14T00:00:00Z"
+        },
+        {
+          "url": "https://notesfrompoland.com/2026/01/02/share-of-renewables-in-polands-energy-mix-stagnant-in-2025-with-coal-still-dominant/",
+          "title": "Share of renewables in Poland's energy mix stagnant in 2025, with coal still dominant",
+          "publisher": "Notes from Poland",
+          "published_at": "2026-01-02T00:00:00Z"
+        },
+        {
+          "url": "https://www.forum-energii.eu/en/transformacja-energetyczna-polski-edycja-2025",
+          "title": "Energy Transition in Poland. Edition 2025",
+          "publisher": "Forum Energii",
+          "published_at": "2025-07-30T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cc9e0f5ec2",
+      "text": "Annual renewables share was ~29-31% in 2024-2025 (29.4% in 2024 Forum Energii, 29.4% in 2025 Fraunhofer, 31% low-carbon in 2025 Ember, 25.3% RES in 2024 URE), well below the July 2026 peak, showing strong seasonality.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ember-energy.org/countries-and-regions/poland/",
+          "title": "Poland - Ember Energy",
+          "publisher": "Ember",
+          "published_at": "2026-04-14T00:00:00Z"
+        },
+        {
+          "url": "https://notesfrompoland.com/2026/01/02/share-of-renewables-in-polands-energy-mix-stagnant-in-2025-with-coal-still-dominant/",
+          "title": "Share of renewables in Poland's energy mix stagnant in 2025, with coal still dominant",
+          "publisher": "Notes from Poland",
+          "published_at": "2026-01-02T00:00:00Z"
+        },
+        {
+          "url": "https://www.forum-energii.eu/en/transformacja-energetyczna-polski-edycja-2025",
+          "title": "Energy Transition in Poland. Edition 2025",
+          "publisher": "Forum Energii",
+          "published_at": "2025-07-30T00:00:00Z"
+        },
+        {
+          "url": "https://ure.gov.pl/en/markets/electricity/elctricitymrket/292,Electricity-Market-Characteristics.html",
+          "title": "Electricity Market Characteristics",
+          "publisher": "Energy Regulatory Office (URE)",
+          "published_at": "2025-06-03T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0aecf34ddc",
+      "text": "Poland's electricity system remains the EU's most coal-dependent and most carbon-intensive at 666 gCO2e/kWh vs EU average 251 gCO2e/kWh in 2024.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.adlittle.com/en/insights/report/poland-energy-outlook-2026-beyond",
+          "title": "Poland energy outlook, 2026 & beyond",
+          "publisher": "Arthur D. Little",
+          "published_at": "2025-12-01T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4151118bfa",
+      "text": "EU ETS carbon price is a primary driver of coal's declining competitiveness: EU ETS allowances made up 63% of hard coal's short-run marginal cost in 2025 (EUR70/MWh of EUR110/MWh SRMC), up from 43% in 2020.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://modoenergy.com/research/en/coal-solar-pse-tauron-enea-orlen-tge-utilities-spreads-retirement-solar-merit-gas-bess-batteries-poland-liberalised-carbon-ets-srmc",
+          "title": "Coal, solar, and volatility: inside Poland's power market",
+          "publisher": "Modo Energy",
+          "published_at": "2026-03-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_88e39efd50",
+      "text": "Poland's coal fleet is 26.5 GW and scheduled to shrink to 8.7 GW by 2049; 18 GW already has a retirement date, with Bełchatów 5.1 GW lignite complex due to close by 2036.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://modoenergy.com/research/en/coal-solar-pse-tauron-enea-orlen-tge-utilities-spreads-retirement-solar-merit-gas-bess-batteries-poland-liberalised-carbon-ets-srmc",
+          "title": "Coal, solar, and volatility: inside Poland's power market",
+          "publisher": "Modo Energy",
+          "published_at": "2026-03-27T00:00:00Z"
+        },
+        {
+          "url": "https://www.adlittle.com/en/insights/report/poland-energy-outlook-2026-beyond",
+          "title": "Poland energy outlook, 2026 & beyond",
+          "publisher": "Arthur D. Little",
+          "published_at": "2025-12-01T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3271b68162",
+      "text": "Bełchatów is Poland's largest power plant at ~5.3 GW installed capacity, supplying 20-25% of national demand at full output, and is planned to close in mid-2030s in overlap with first nuclear unit.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://forsal.pl/biznes/energetyka/artykuly/11289225,koniec-polski-weglowej-tak-konczy-sie-era-czarnego-zlota.html",
+          "title": "Koniec Polski węglowej. Tak kończy się era \"czarnego złota\"",
+          "publisher": "Forsal.pl",
+          "published_at": "2026-08-13T00:00:00Z"
+        },
+        {
+          "url": "https://modoenergy.com/research/en/coal-solar-pse-tauron-enea-orlen-tge-utilities-spreads-retirement-solar-merit-gas-bess-batteries-poland-liberalised-carbon-ets-srmc",
+          "title": "Coal, solar, and volatility: inside Poland's power market",
+          "publisher": "Modo Energy",
+          "published_at": "2026-03-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_eb8abbdf8c",
+      "text": "Poland's first nuclear plant at Lubiatowo-Kopalino (Pomerania) will be 3x Westinghouse AP1000 reactors totaling 3.75 GW.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://world-nuclear-news.org/articles/eu-approves-polish-state-aid-for-nuclear-plant",
+          "title": "EU approves Polish state aid for nuclear plant",
+          "publisher": "World Nuclear News",
+          "published_at": "2025-12-09T00:00:00Z"
+        },
+        {
+          "url": "https://www.neimagazine.com/news/polish-nuclear-finance-law-signed/",
+          "title": "Polish nuclear finance law signed",
+          "publisher": "Nuclear Engineering International",
+          "published_at": "2025-03-27T00:00:00Z"
+        },
+        {
+          "url": "https://www.neimagazine.com/news/new-schedule-delays-polands-first-npp/",
+          "title": "New schedule delays Poland's first NPP",
+          "publisher": "Nuclear Engineering International",
+          "published_at": "2024-12-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_19697b8c9d",
+      "text": "Revised official timeline for first nuclear plant: construction start (first concrete) 2028, commercial operation of unit 1 in 2036, units 2 and 3 in 2037 and 2038 — a three-year delay vs original 2033 target.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.neimagazine.com/news/new-schedule-delays-polands-first-npp/",
+          "title": "New schedule delays Poland's first NPP",
+          "publisher": "Nuclear Engineering International",
+          "published_at": "2024-12-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.neimagazine.com/news/polish-nuclear-finance-law-signed/",
+          "title": "Polish nuclear finance law signed",
+          "publisher": "Nuclear Engineering International",
+          "published_at": "2025-03-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c936ea494b",
+      "text": "Total investment cost for first nuclear plant is estimated at EUR42-45bn (PLN192bn).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://world-nuclear-news.org/articles/eu-approves-polish-state-aid-for-nuclear-plant",
+          "title": "EU approves Polish state aid for nuclear plant",
+          "publisher": "World Nuclear News",
+          "published_at": "2025-12-09T00:00:00Z"
+        },
+        {
+          "url": "https://www.neimagazine.com/news/polish-nuclear-finance-law-signed/",
+          "title": "Polish nuclear finance law signed",
+          "publisher": "Nuclear Engineering International",
+          "published_at": "2025-03-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_77361e726f",
+      "text": "Financing structure: 30% equity via state budget injection of PLN60.2bn (EUR14-15bn) 2025-2030 to PEJ (100% state-owned SPV), 70% debt via foreign export credit agencies (US Ex-Im, US DFC, Canada, France), plus state guarantees on 100% of debt.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://world-nuclear-news.org/articles/eu-approves-polish-state-aid-for-nuclear-plant",
+          "title": "EU approves Polish state aid for nuclear plant",
+          "publisher": "World Nuclear News",
+          "published_at": "2025-12-09T00:00:00Z"
+        },
+        {
+          "url": "https://www.neimagazine.com/news/polish-nuclear-finance-law-signed/",
+          "title": "Polish nuclear finance law signed",
+          "publisher": "Nuclear Engineering International",
+          "published_at": "2025-03-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1f6e96c4e8",
+      "text": "Revenue support is a two-way Contract for Difference (CfD); European Commission approved state aid on 9 Dec 2025 after in-depth investigation opened Dec 2024, with CfD duration cut from 60 to 40 years and strike price set via discounted cash flow to limit aid to funding gap.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://world-nuclear-news.org/articles/eu-approves-polish-state-aid-for-nuclear-plant",
+          "title": "EU approves Polish state aid for nuclear plant",
+          "publisher": "World Nuclear News",
+          "published_at": "2025-12-09T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_16981d892e",
+      "text": "Second nuclear plant (6-9 GW total programme) is planned with partner selection in 2027 and site confirmation in 2028; preferred locations are Bełchatów and Konin (central Poland coal sites), with Kozienice and Połaniec as alternatives; construction start around 2032, operation 2040-2042.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.neimagazine.com/news/polish-nuclear-finance-law-signed/",
+          "title": "Polish nuclear finance law signed",
+          "publisher": "Nuclear Engineering International",
+          "published_at": "2025-03-27T00:00:00Z"
+        },
+        {
+          "url": "https://www.neimagazine.com/news/new-schedule-delays-polands-first-npp/",
+          "title": "New schedule delays Poland's first NPP",
+          "publisher": "Nuclear Engineering International",
+          "published_at": "2024-12-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.adlittle.com/en/insights/report/poland-energy-outlook-2026-beyond",
+          "title": "Poland energy outlook, 2026 & beyond",
+          "publisher": "Arthur D. Little",
+          "published_at": "2025-12-01T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c21b2f65b4",
+      "text": "Poland's coal mining employment fell from ~390,000 in 1990 to ~80,000-88,000 direct jobs in 2020-2022; Silesia (Upper Silesian Basin) holds EU's largest coal workforce with ~78,500 direct + ~21,000 indirect jobs (2019).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://iopscience.iop.org/article/10.1088/2516-1083/adba38",
+          "title": "Just energy transition: navigating Poland's transition away from coal mining",
+          "publisher": "IOP Publishing / Progress in Energy",
+          "published_at": "2025-03-25T00:00:00Z"
+        },
+        {
+          "url": "https://www.worldbank.org/en/country/poland/publication/support-for-polish-coal-regions-in-transition",
+          "title": "Support for Polish Coal Regions in Transition",
+          "publisher": "World Bank",
+          "published_at": "2022-12-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_155aff615e",
+      "text": "Social Contract (2021) schedules hard-coal mine closures through 2049; government and unions agreed to keep workers employed until retirement or transfer, with severance and retraining.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://iopscience.iop.org/article/10.1088/2516-1083/adba38",
+          "title": "Just energy transition: navigating Poland's transition away from coal mining",
+          "publisher": "IOP Publishing / Progress in Energy",
+          "published_at": "2025-03-25T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6626c4618d",
+      "text": "Grid stability is stressed: Poland curtailed 1,425 GWh of renewables by end-July 2025 (61% more than same period 2024, 252 GWh in July alone), recorded 300+ hours of negative day-ahead prices in 2025, and refused 74 GW of connection requests in 2024 (exceeding total system capacity 72 GW).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://forum-energii-newsroom.prowly.com/467385-monthly-magazine-july",
+          "title": "Monthly Magazine: July",
+          "publisher": "Forum Energii Monthly Magazine",
+          "published_at": "2026-08-06T00:00:00Z"
+        },
+        {
+          "url": "https://modoenergy.com/research/en/coal-solar-pse-tauron-enea-orlen-tge-utilities-spreads-retirement-solar-merit-gas-bess-batteries-poland-liberalised-carbon-ets-srmc",
+          "title": "Coal, solar, and volatility: inside Poland's power market",
+          "publisher": "Modo Energy",
+          "published_at": "2026-03-27T00:00:00Z"
+        },
+        {
+          "url": "https://www.adlittle.com/en/insights/report/poland-energy-outlook-2026-beyond",
+          "title": "Poland energy outlook, 2026 & beyond",
+          "publisher": "Arthur D. Little",
+          "published_at": "2025-12-01T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_59d7687d1f",
+      "text": "PSE plans ~EUR15bn grid investment 2025-2034 to handle up to 18 GW offshore wind + 19 GW onshore wind + 45 GW PV; total energy transition investment 2025-2040 estimated at EUR650-670bn (~4-5% of GDP annually).",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.adlittle.com/en/insights/report/poland-energy-outlook-2026-beyond",
+          "title": "Poland energy outlook, 2026 & beyond",
+          "publisher": "Arthur D. Little",
+          "published_at": "2025-12-01T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b92c6e0088",
+      "text": "Renewables growth is driven by solar prosumer boom: 1.5 million micro-installations (12.7 GW) by end-2024, total solar 24.8 GW by end-2025, wind ~10.5 GW; renewables now >50% of installed capacity (37.8 GW) but only ~25-31% of generation due to lower capacity factors.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://ure.gov.pl/en/markets/electricity/elctricitymrket/292,Electricity-Market-Characteristics.html",
+          "title": "Electricity Market Characteristics",
+          "publisher": "Energy Regulatory Office (URE)",
+          "published_at": "2025-06-03T00:00:00Z"
+        },
+        {
+          "url": "https://www.adlittle.com/en/insights/report/poland-energy-outlook-2026-beyond",
+          "title": "Poland energy outlook, 2026 & beyond",
+          "publisher": "Arthur D. Little",
+          "published_at": "2025-12-01T00:00:00Z"
+        },
+        {
+          "url": "https://modoenergy.com/research/en/coal-solar-pse-tauron-enea-orlen-tge-utilities-spreads-retirement-solar-merit-gas-bess-batteries-poland-liberalised-carbon-ets-srmc",
+          "title": "Coal, solar, and volatility: inside Poland's power market",
+          "publisher": "Modo Energy",
+          "published_at": "2026-03-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_03e8ca0fc4",
+      "text": "EU funds provided >PLN55bn for energy transformation 2004-2024 and enabled modernization of 1,977 km of extra-high voltage lines and 1,391 km of heating network.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.trade.gov.pl/en/news/transformation-of-the-energy-sector-in-poland-after-accession-to-the-eu/",
+          "title": "Transformation of the energy sector in Poland after accession to the EU",
+          "publisher": "Trade.gov.pl / Polish Economic Institute",
+          "published_at": "2024-05-16T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1b4c72f3b4",
+      "text": "Energy Policy of Poland until 2040 (EPP2040) targets 6-9 GW nuclear, ~23-25 GW RES by 2030, offshore wind 5.9 GW by 2030 and ~11 GW by 2040, with total investment needs ~EUR200bn for fuel and energy sector.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.gov.pl/web/climate/energy-policy-of-poland-until-2040-epp2040",
+          "title": "Energy Policy of Poland until 2040 (EPP2040)",
+          "publisher": "Ministry of Climate and Environment (Gov.pl)",
+          "published_at": "2021-02-02T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4a7d896d04",
+      "text": "Poland's coal fleet is 26.5 GW and scheduled to shrink to 8.7 GW by 2049; 18 GW already has a retirement date, with Be2chat2w 5.1 GW lignite complex due to close by 2036.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://modoenergy.com/research/en/coal-solar-pse-tauron-enea-orlen-tge-utilities-spreads-retirement-solar-merit-gas-bess-batteries-poland-liberalised-carbon-ets-srmc",
+          "title": "Coal, solar, and volatility: inside Poland's power market",
+          "publisher": "Modo Energy",
+          "published_at": "2026-03-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8686425f23",
+      "text": "Grid stability is stressed: Poland curtailed 1,425 GWh of renewables by end-July 2025, recorded 300+ hours of negative day-ahead prices in 2025, and refused 74 GW of connection requests in 2024.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://modoenergy.com/research/en/coal-solar-pse-tauron-enea-orlen-tge-utilities-spreads-retirement-solar-merit-gas-bess-batteries-poland-liberalised-carbon-ets-srmc",
+          "title": "Coal, solar, and volatility: inside Poland's power market",
+          "publisher": "Modo Energy",
+          "published_at": "2026-03-27T00:00:00Z"
+        },
+        {
+          "url": "https://www.adlittle.com/en/insights/report/poland-energy-outlook-2026-beyond",
+          "title": "Poland energy outlook, 2026 & beyond",
+          "publisher": "Arthur D. Little",
+          "published_at": "2025-12-01T00:00:00Z"
+        },
+        {
+          "url": "https://www.forum-energii.eu/en/2025_wrapped",
+          "title": "2025_wrapped by Forum Energii - a rapid review of the most interesting power-sector data from 2025",
+          "publisher": "Forum Energii",
+          "published_at": "2026-01-27"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_209a172b7d",
+      "text": "Poland's coal mining employment fell from ~390,000 in 1990 to ~80,000-88,000 direct jobs in 2020-2022; Silesia holds EU's largest coal workforce with ~78,500 direct + ~21,000 indirect jobs.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.worldbank.org/en/country/poland/publication/support-for-polish-coal-regions-in-transition",
+          "title": "Support for Polish Coal Regions in Transition",
+          "publisher": "World Bank",
+          "published_at": "2022-12-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_24099bab0a",
+      "text": "Revised official timeline for first nuclear plant: construction start (first concrete) 2028, commercial operation of unit 1 in 2036, units 2 and 3 in 2037 and 2038.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.adlittle.com/en/insights/report/poland-energy-outlook-2026-beyond",
+          "title": "Poland energy outlook, 2026 & beyond",
+          "publisher": "Arthur D. Little",
+          "published_at": "2025-12-01T00:00:00Z"
+        },
+        {
+          "url": "https://world-nuclear-news.org/articles/eu-approves-polish-state-aid-for-nuclear-plant",
+          "title": "EU approves Polish state aid for nuclear plant",
+          "publisher": "World Nuclear News",
+          "published_at": "2025-12-09T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8147ea8ab7",
+      "text": "Second nuclear plant (6-9 GW total programme) is planned with partner selection in 2027 and site confirmation in 2028; preferred locations are Be2chat2w and Konin.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.adlittle.com/en/insights/report/poland-energy-outlook-2026-beyond",
+          "title": "Poland energy outlook, 2026 & beyond",
+          "publisher": "Arthur D. Little",
+          "published_at": "2025-12-01T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c299741f62",
+      "text": "Energy Policy of Poland until 2040 (EPP2040) targets 6-9 GW nuclear, ~23-25 GW RES by 2030, offshore wind 5.9 GW by 2030 and ~11 GW by 2040.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.gov.pl/web/climate/energy-policy-of-poland-until-2040-epp2040",
+          "title": "Energy Policy of Poland until 2040 (EPP2040)",
+          "publisher": "Ministry of Climate and Environment (Gov.pl)",
+          "published_at": "2021-02-02T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_133ddaef8f",
+      "text": "PSE plans ~EUR15bn grid investment 2025-2034 to handle up to 18 GW offshore wind + 19 GW onshore wind + 45 GW PV.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.adlittle.com/en/insights/report/poland-energy-outlook-2026-beyond",
+          "title": "Poland energy outlook, 2026 & beyond",
+          "publisher": "Arthur D. Little",
+          "published_at": "2025-12-01T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c13a04223d",
+      "text": "Renewables growth is driven by solar prosumer boom: 1.5 million micro-installations (12.7 GW) by end-2024, total solar 24.8 GW by end-2025.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ure.gov.pl/en/markets/electricity/elctricitymrket/292,Electricity-Market-Characteristics.html",
+          "title": "Electricity Market Characteristics",
+          "publisher": "Energy Regulatory Office (URE)",
+          "published_at": "2025-06-03T00:00:00Z"
+        },
+        {
+          "url": "https://modoenergy.com/research/en/coal-solar-pse-tauron-enea-orlen-tge-utilities-spreads-retirement-solar-merit-gas-bess-batteries-poland-liberalised-carbon-ets-srmc",
+          "title": "Coal, solar, and volatility: inside Poland's power market",
+          "publisher": "Modo Energy",
+          "published_at": "2026-03-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_aef9a626b3",
+      "text": "Revised official timeline for first nuclear plant: construction start (first concrete) Q4 2028, commercial operation unit 1 2036, units 2/3 2037/38 — three-year delay vs original 2033 target. Each reactor ~7y build + ~1y commissioning. PEJ filed construction license 31 Mar 2026 to PAA (40k pages, 200+ experts); PAA decision within 24 months; Pomeranian Voivode building permit application planned 2027.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://pej.pl/en/press-center/news/polskie-elektrownie-jadrowe-applied-for-a-construction-license-to-build-a-nuclear-power-plant-in-pomerania/",
+          "title": "Polskie Elektrownie Jadrowe applied for a construction license to build a nuclear power plant in Pomerania",
+          "publisher": "Polskie Elektrownie Jadrowe",
+          "published_at": "2026-03-31"
+        },
+        {
+          "url": "https://world-nuclear-news.org/articles/eu-approves-polish-state-aid-for-nuclear-plant",
+          "title": "EU approves Polish state aid for nuclear plant",
+          "publisher": "World Nuclear News",
+          "published_at": "2025-12-09T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_563228a0de",
+      "text": "Social Contract (Umowa Spoleczna) signed 28 May 2021 in Katowice by government, Silesian Voivodeship, mining communes and representative unions after 9 months/20+ meetings: establishes financing mechanism for hard-coal companies, wage indexation, clean-coal installations, Silesian Transformation Fund, employment guarantees until pension for those employed 25 Sep 2020, and social package (mining leave up to 4y at 80%, processing-plant leave up to 3y at 80%, one-off severance PLN120k net, allocation system, free retraining). Sets schedule for ending hard-coal exploitation in individual mines through end-2049.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.gov.pl/web/aktywa-panstwowe/umowa-spoleczna-dla-gornictwa-podpisana",
+          "title": "Umowa spoleczna dla gornictwa podpisana",
+          "publisher": "gov.pl / Ministry of State Assets",
+          "published_at": "2021-05-28"
+        },
+        {
+          "url": "https://api.sejm.gov.pl/eli/acts/DU/2021/2071/text.html",
+          "title": "Ustawa z dnia 1 pazdziernika 2021 r. o zmianie ustawy o funkcjonowaniu gornictwa wegla kamiennego",
+          "publisher": "Dziennik Ustaw",
+          "published_at": "2021-10-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_78248f037b",
+      "text": "Annual coal share 56.2% in 2024 (record low, -4.3pp y/y) and 52.7% in 2025; annual RES share 29.4% in 2024 and 31.4% in 2025. In 2024 RES 49.8 TWh (wind 24.5 TWh 14.5%, PV 15.2 TWh 9.0%, more than lignite); in 2025 hard coal 57.6 TWh, lignite 33.5 TWh, gas 24.4 TWh, onshore wind 23.8 TWh (13.8%), PV 20.3 TWh (11.8%). June 2025 monthly RES peak 45.6% vs coal 42.3% — first month RES > coal.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.forum-energii.eu/en/2025_wrapped",
+          "title": "2025_wrapped by Forum Energii - a rapid review of the most interesting power-sector data from 2025",
+          "publisher": "Forum Energii",
+          "published_at": "2026-01-27"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f441748a7d",
+      "text": "Non-market redispatch (curtailment) 731.4 GWh in 2024 (~2% of vRES potential, ~330k households; 84.5% PV, 15.5% wind) rising to ~1.4 TWh in 2025 (nearly double, 97.8% balancing reasons). Curtailment occurs ~1/3 of hours monthly, record April 2025 ~2/3 of hours. Negative day-ahead prices ~400 hours in 2025 (twice 2024), lowest volume-weighted price -528 PLN/MWh June 2025.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.forum-energii.eu/en/2025_wrapped",
+          "title": "2025_wrapped by Forum Energii - a rapid review of the most interesting power-sector data from 2025",
+          "publisher": "Forum Energii",
+          "published_at": "2026-01-27"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a16ab1c963",
+      "text": "EC approved Polish nuclear aid 9 Dec 2025 under Art 107(3)(c) TFEU after Dec 2024 in-depth investigation: CfD duration cut 60->40 years; strike price set via discounted cash flow model accounting for equity injection (~EUR14bn/PLN60.2bn, 30%) and 100% state guarantees on debt (~EUR33bn, 70%) to limit aid to funding gap; revised CfD design for efficient operation/market response; >=70% annual output sold on open power exchange (day-ahead/intraday/futures) lifetime, remainder via objective/transparent/non-discriminatory auctions; PEJ legally/functionally independent; overcompensation control via profit-sharing.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://world-nuclear-news.org/articles/eu-approves-polish-state-aid-for-nuclear-plant",
+          "title": "EU approves Polish state aid for nuclear plant",
+          "publisher": "World Nuclear News",
+          "published_at": "2025-12-09T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5bbb669b59",
+      "text": "Coal employment discrepancy reflects definitions: ~78,500 direct in Silesia (Upper Silesian Basin) vs ~88,000 nationally (2020-2022, hard coal + lignite direct) vs ~99,500 including ~21,000 indirect in Silesia. Social package applies to hard-coal underground + mechanical processing workers employed 25 Sep 2020, with allocation between production units.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.gov.pl/web/aktywa-panstwowe/umowa-spoleczna-dla-gornictwa-podpisana",
+          "title": "Umowa spoleczna dla gornictwa podpisana",
+          "publisher": "gov.pl / Ministry of State Assets",
+          "published_at": "2021-05-28"
+        },
+        {
+          "url": "https://api.sejm.gov.pl/eli/acts/DU/2021/2071/text.html",
+          "title": "Ustawa z dnia 1 pazdziernika 2021 r. o zmianie ustawy o funkcjonowaniu gornictwa wegla kamiennego",
+          "publisher": "Dziennik Ustaw",
+          "published_at": "2021-10-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_27dce97ba2",
+      "text": "On 31 March 2026 PEJ submitted construction license application to President of National Atomic Energy Agency (PAA) for Lubiatowo-Kopalino (Choczewo commune)  first such application in post-1989 Poland  comprising >40,000 pages prepared by >200 experts, including Preliminary Safety Analysis Report (PSAR), quality assurance program, physical security design, and emergency management documentation under Atomic Law Act. PAA issues decision within 24 months of submission (excluding applicant supplementation time). Construction start (first nuclear concrete) expected Q4 2028; PEJ to file building permit with Pomeranian Voivode in 2027; preparatory works since 2025. Plant: 3 AP1000, 3,750 MWe (1,250 MWe each), contractor Westinghouse/Bechtel. Each reactor ~7 years build + ~1 year testing/commissioning; commercial operation unit 1 2036, unit 2 2037, unit 3 2038  three-year delay vs original 2033 target.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://pej.pl/en/press-center/news/polskie-elektrownie-jadrowe-applied-for-a-construction-license-to-build-a-nuclear-power-plant-in-pomerania/",
+          "title": "Polskie Elektrownie Jadrowe applied for a construction license to build a nuclear power plant in Pomerania",
+          "publisher": "Polskie Elektrownie Jadrowe",
+          "published_at": "2026-03-31"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_81c35b60ca",
+      "text": "European Commission approved Polish nuclear State aid 9 December 2025 (IP/25/2963, case SA.109707) under Art 107(3)(c) TFEU after in-depth investigation opened December 2024 (notified September 2024). Approved package: up to 3,750 MW Lubiatowo-Kopalino, nominal investment ~EUR42bn (PLN 178bn) [Polish notification EUR45bn/PLN192bn], 30% equity injection ~EUR14bn (PLN60.2bn) + 100% state guarantees on ~EUR33bn debt (70%) via export credit agencies, plus two-way Contract for Difference for 40 years (cut from 60). Strike price via discounted cash flow methodology accounting for equity/guarantees to limit aid to funding gap, with profit-sharing/overcompensation control and periodic cost review. CfD remunerates availability not output. Conditions: >=70% annual output sold on open power exchange (day-ahead/intraday/futures) lifetime, remainder via objective/transparent/non-discriminatory auctions; PEJ legally/functionally independent; compliance with Regulation (EU) 2024/1747 CfD design principles.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ec.europa.eu/commission/presscorner/detail/en/ip_25_2963",
+          "title": "Commission approves Polish State aid for construction and operation of first nuclear power plant (IP/25/2963, SA.109707)",
+          "publisher": "European Commission",
+          "published_at": "2025-12-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c53727d3be",
+      "text": "Social Contract (Umowa Spoeczna) for hard-coal mining signed 28 May 2021 in Katowice at Silesian Voivodeship Office after 9 months / 20+ plenary/working/remote meetings (several hundred hours) from first draft December 2020, following September 2020 agreement between Inter-Union Protest-Strike Committee and government delegation. Signatories: government (Ministry of State Assets, Vice-Premier Jacek Sasin, Deputy Minister Artur Sobo), representative trade unions, Silesian Voivodeship, mining communes, and mining companies' management; with participation of Ministries of Finance, Funds & Regional Policy, Family & Social Policy, Development/Labour/Technology and local governments. Content: mechanism for financing hard-coal companies, wage indexation, clean-coal installations, Silesian Transformation Fund, employment guarantees, and social package for employees of liquidated Production Units; schedule for ending hard-coal exploitation in individual mines through end-2049; commitment to create additional support for specialist mining cooperators and mining communes; next step prenotification/notification to EC via UOKiK.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.gov.pl/web/aktywa-panstwowe/umowa-spoleczna-dla-gornictwa-podpisana",
+          "title": "Umowa spoleczna dla gornictwa podpisana",
+          "publisher": "gov.pl / Ministry of State Assets",
+          "published_at": "2021-05-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a7793ba372",
+      "text": "Act of 1 October 2021 amending the Act on functioning of hard-coal mining (Dz.U. 2021 poz. 2071) implements Social Contract social package: mining leave (urlop g3rniczy) up to 4 years at 80% of monthly salary (calculated as holiday pay)  75% for entitlements granted before 1 Dec 2021  conditional on acquiring pension rights before 1 Jan 2028; processing-plant leave (urlop dla pracownik3w zakadu przer3bki mechanicznej wgla) up to 3 years at 80% (75% before 1 Dec 2021) conditional on pension before 1 Jan 2027; one-off severance (jednorazowa odprawa) PLN 120,000 net for eligible employees of liquidated units (PLN 120k is correct per Social Contract/implementing act; PLN 31k figure in earlier secondary summary is outdated/incorrect); allocation system transferring employees from liquidated to operating units; free retraining; guarantees apply to employees employed as of 25 September 2020.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://api.sejm.gov.pl/eli/acts/DU/2021/2071/text.html",
+          "title": "Ustawa z dnia 1 pazdziernika 2021 r. o zmianie ustawy o funkcjonowaniu gornictwa wegla kamiennego",
+          "publisher": "Dziennik Ustaw",
+          "published_at": "2021-10-01"
+        },
+        {
+          "url": "https://www.gov.pl/web/aktywa-panstwowe/umowa-spoleczna-dla-gornictwa-podpisana",
+          "title": "Umowa spoleczna dla gornictwa podpisana",
+          "publisher": "gov.pl / Ministry of State Assets",
+          "published_at": "2021-05-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8cac85fd5b",
+      "text": "PSE primary July 2026 monthly report with TWh totals, gas 8.52% share, and offshore wind 0.02 TWh not located in PSE monthly reports portal (pse.pl/raporty-miesieczne and raporty.pse.pl) as of 13 Aug 2026; portal lists annual reports only. Therefore July 2026 percentages (53.53% coal = 35.33% hard coal + 18.20% lignite; 21.37% PV + 14.99% wind + 1.58% hydro = 37.94% RES; gas 8.52%) remain secondary-sourced via Forsal/Bankier/PAP (src_37f976ce03, src_45b8980781). PSE annual report 2025 provides primary context: total installed capacity 77,331 MW (31 Dec 2025) vs 72,188 MW (2024), with wind+other renewables 37,106 MW and professional thermal 37,794 MW. EC state-aid approval now primary-sourced via EC IP/25/2963, replacing secondary World Nuclear News for headline CfD/approval facts.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.pse.pl/dane-systemowe/funkcjonowanie-kse/raporty-roczne-z-funkcjonowania-kse-za-rok/raporty-za-rok-2025",
+          "title": "Raport 2025 KSE  Zestawienie danych ilociowych dotyczcych funkcjonowania KSE (PSE Annual Report 2025)",
+          "publisher": "PSE",
+          "published_at": "2025-12-31"
+        },
+        {
+          "url": "https://ec.europa.eu/commission/presscorner/detail/en/ip_25_2963",
+          "title": "Commission approves Polish State aid for construction and operation of first nuclear power plant (IP/25/2963, SA.109707)",
+          "publisher": "European Commission",
+          "published_at": "2025-12-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4c4f0fbc85",
+      "text": "Modo Energy SRMC methodology: hard-coal SRMC EUR110/MWh in 2025 = EUR37/MWh fuel (PSCMI-1 domestic coal index) + EUR70/MWh EU ETS allowances + EUR4/MWh variable O&M; ETS share 63% in 2025 vs 43% in 2020. Coal sets marginal price in most hours; on typical summer weekday solar peaks ~12 GW, coal must bid below zero or shut down, driving >300 hours negative prices in 2025 and intraday swings. Causality caveat: ETS price rise, solar cost decline, and EU-funded grid/prosumer expansion (PLN55bn/1,977 km EHV per Trade.gov.pl secondary, still snippet_only) are correlated with coal decline (92%->53% July 2026, 56.2%->52.7% annual 2024->2025) but no counterfactual/demand-side control; demand flat 154 TWh (2024) ->210-230 TWh (2040) per Forum Energii, so drop not demand-driven, but merit-order vs ETS marginal effect not isolated. EU ETS allowance price series (ICE EUA futures) not deep-read  remains open.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://modoenergy.com/research/en/coal-solar-pse-tauron-enea-orlen-tge-utilities-spreads-retirement-solar-merit-gas-bess-batteries-poland-liberalised-carbon-ets-srmc",
+          "title": "Coal, solar, and volatility: inside Poland's power market",
+          "publisher": "Modo Energy",
+          "published_at": "2026-03-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4dce7452b6",
+      "text": "Greenpeace-commissioned study (Weibezahn/Steigerwald, Copenhagen School/TU Berlin, June 2024) finds nuclear projects systematically suffer budget overruns, construction delays and operational reliability problems, keeping private investor appetite low to non-existent; profitability requires heavy government de-risking with taxpayers/ratepayers bearing risk, while liability insurance, decommissioning and waste costs are typically excluded from initial calculations and later fall to taxpayers.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.greenpeace.org/eu-unit/issues/climate-energy/47124/nuclear-powers-financial-problems-exposed-in-new-report/",
+          "title": "Nuclear power's financial problems exposed in new report",
+          "publisher": "Greenpeace",
+          "published_at": "2024-06-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2e5a910e95",
+      "text": "Greenpeace EU campaigner Lorelei Limousin called nuclear 'a black hole for taxpayers and consumers' and argued wind/solar are already much cheaper and declining, urging no EU public money for nuclear including SMRs; report notes Poland's plan for six reactors to 2043 via state-owned SPV (PEJ) that is supposed to be sold to investors but investors have not been found.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.greenpeace.org/eu-unit/issues/climate-energy/47124/nuclear-powers-financial-problems-exposed-in-new-report/",
+          "title": "Nuclear power's financial problems exposed in new report",
+          "publisher": "Greenpeace",
+          "published_at": "2024-06-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ef5409497d",
+      "text": "ClientEarth sued PGE GiEK in September 2019 under Art.323 Polish Environmental Protection Act demanding Be\u000142chat\u0000f (5 GW, ~1bn tonnes CO2 lifetime, EU's largest emitter) close 11 of 12 lignite units by 2030 and last by 2035; on 22 Sept 2020 District Court in \u000141\u0000f3d\u00017 ordered PGE to negotiate settlement within 3 months, with judge stating climate crisis is real and must be acted on \u0002014 first such finding in Polish court. Case cited climate, desertification, water and soil pollution.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.clientearth.org/latest/press-office/press-releases/breaking-eu-s-biggest-coal-plant-must-negotiate-closure-with-environmental-lawyers-court-decides/",
+          "title": "Breaking: EU's biggest coal plant must negotiate closure with environmental lawyers, court decides",
+          "publisher": "ClientEarth",
+          "published_at": "2020-09-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7dc2f4c5fe",
+      "text": "Polish government's December 2024 state-aid notification to European Commission disclosed CfD strike price for Lubiatowo-Kopalino at 470-550 PLN/MWh real terms (~EUR110-130/MWh) for 60-year two-way CfD at 92.7% capacity factor and PLN192bn build cost; 30% capex cut would lower to 400-480 PLN/MWh, 40% overrun raises to 600-680 PLN/MWh; 1-year delay raises to 500-580 PLN/MWh, 3-year delay to 550-630 PLN/MWh; 20% PLN depreciation raises to 550-630 PLN/MWh. Price is above current TGE 2026 forward ~459 PLN/MWh and comparable to offshore wind phase-2 caps 485-512 PLN/MWh, raising consumer-cost concerns and EC proportionality doubts that led to CfD cut 60->40 years.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.portalsamorzadowy.pl/inwestycje/tyle-zaplacimy-za-prad-z-polskiej-elektrowni-jadrowej-padly-juz-konkretne-kwoty,599067.html",
+          "title": "Tyle zaplacimy za prad z polskiej elektrowni jadrowej. Padly juz konkretne kwoty",
+          "publisher": "Portal Samorzadowy",
+          "published_at": "2025-02-21"
+        },
+        {
+          "url": "https://energia.rp.pl/atom/art41835811-bruksela-zdradzila-ile-bedzie-kosztowac-prad-z-polskiego-atomu-moze-byc-taniej",
+          "title": "Bruksela zdradzila, ile bedzie kosztowac prad z polskiego atomu. Moze byc taniej",
+          "publisher": "Rzeczpospolita Energia",
+          "published_at": "2025-02-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4dc8411c89",
+      "text": "Social Contract 2049 faces sustained union and miner resistance beyond 'uptake low': Solidarity (Solidarno\u00015b\u000107) head Dominik Kolorz said deal signed liquidation of one of most important industries; ~5,000 miners/energy workers protested in Warsaw 9 Jan 2025 against PGE closures (Rybnik 2027, Dolna Odra 2025, \u000141aziska 2028) with banners 'Polish coal, Polish electricity', demanding reversal and upholding 2021 guarantees; DW 2021 reported 7,000-10,000 protesting lack of dialogue and job protection, with Solidarity spokesman Marek Lewandowski citing lack of answers on job protection.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.climatechangenews.com/2020/09/25/poland-agrees-coal-mining-phase-unions-2049/",
+          "title": "Poland agrees coal mining phase out with unions by 2049",
+          "publisher": "Climate Home News",
+          "published_at": "2020-09-25"
+        },
+        {
+          "url": "https://notesfrompoland.com/2025/01/10/thousands-join-miners-protest-in-warsaw-against-coal-power-plant-closures/",
+          "title": "Thousands join miners protest in Warsaw against coal power plant closures",
+          "publisher": "Notes from Poland",
+          "published_at": "2025-01-10"
+        },
+        {
+          "url": "https://www.dw.com/en/polish-energy-policy-protests-reflect-power-struggle/a-57878428",
+          "title": "What are the Polish miners' protests all about?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2021-06-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5d729d00b6",
+      "text": "2049 date is widely criticized as too late and outlier: Forum Energii analyst Aleksandra Gawlikowska-Fyk said '2049 is far too late. Everybody knows there won't be place for coal in 2049'; Ember analyst Dave Jones called continued subsidies 'most blatant fossil fuel subsidy... blank cheque'; Polityka Insight analyst Robert Tomaszewski said EC unlikely to approve state aid to keep mines open, calling deal 'tactical ceasefire' with hard-coal mines expected to close within 15 years due to decarbonisation.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.climatechangenews.com/2020/09/25/poland-agrees-coal-mining-phase-unions-2049/",
+          "title": "Poland agrees coal mining phase out with unions by 2049",
+          "publisher": "Climate Home News",
+          "published_at": "2020-09-25"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ce9163829e",
+      "text": "Poland remains EU's most coal-dependent (52.2% coal in 2025 per Fraunhofer, 57% per other 2024 data) and the only EU member state without a coal phase-out date and, as of Oct 2025, the only state that had not submitted final National Energy and Climate Plan (NECP) due June 2024, prompting European Commission infringement/legal action; draft NECP envisages 65.6-68.9% renewables by 2040 and coal 0-4.8%, but not yet approved.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://notesfrompoland.com/2026/01/02/share-of-renewables-in-polands-energy-mix-stagnant-in-2025-with-coal-still-dominant/",
+          "title": "Share of renewables in Poland's energy mix stagnant in 2025, with coal still dominant",
+          "publisher": "Notes from Poland",
+          "published_at": "2026-01-02T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a1075e77a3",
+      "text": "Polish media discussion landscape frames transition as stalled and costly: Notes from Poland (Aug 2025) reports coal mining cost >900 PLN/tonne vs ~148 PLN/tonne US, subsidies 9bn PLN in 2025 (~600 PLN per household, 10% of PIT revenue), with Forum Energii VP Tobiasz Adamczewski saying without renegotiating 2049 'we are living in a world of fiction'; Wysokie Napi\u0000eacie calculation cited; PGE's 2023 carbon-neutral-by-2040 plan was abandoned within a week after union backlash demanding CEO removal.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://notesfrompoland.com/2025/08/14/why-poland-is-clinging-onto-coal-despite-the-economic-and-environmental-costs/",
+          "title": "Why Poland is clinging onto coal, despite the economic and environmental costs",
+          "publisher": "Notes from Poland",
+          "published_at": "2025-08-14"
+        },
+        {
+          "url": "https://notesfrompoland.com/2025/01/10/thousands-join-miners-protest-in-warsaw-against-coal-power-plant-closures/",
+          "title": "Thousands join miners protest in Warsaw against coal power plant closures",
+          "publisher": "Notes from Poland",
+          "published_at": "2025-01-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5c360232e0",
+      "text": "Opposition and EU criticism of nuclear financing opacity: EC opened in-depth investigation Dec 2024 doubting 60-year CfD proportionality and whether other companies could have led project for less aid; Polish press (Rzeczpospolita/Portalsamorzadowy) highlighted undisclosed strike price and sensitivity to delays/FX, with consumer advocates noting CfD will be levied via bills or budget and that 70% exchange-sale obligation was imposed to prevent market concentration.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://energia.rp.pl/atom/art41835811-bruksela-zdradzila-ile-bedzie-kosztowac-prad-z-polskiego-atomu-moze-byc-taniej",
+          "title": "Bruksela zdradzila, ile bedzie kosztowac prad z polskiego atomu. Moze byc taniej",
+          "publisher": "Rzeczpospolita Energia",
+          "published_at": "2025-02-21"
+        },
+        {
+          "url": "https://www.portalsamorzadowy.pl/inwestycje/tyle-zaplacimy-za-prad-z-polskiej-elektrowni-jadrowej-padly-juz-konkretne-kwoty,599067.html",
+          "title": "Tyle zaplacimy za prad z polskiej elektrowni jadrowej. Padly juz konkretne kwoty",
+          "publisher": "Portal Samorzadowy",
+          "published_at": "2025-02-21"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

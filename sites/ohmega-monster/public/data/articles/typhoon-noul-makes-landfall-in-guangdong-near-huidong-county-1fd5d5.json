@@ -1,0 +1,341 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/typhoon-noul-makes-landfall-in-guangdong-near-huidong-county-1fd5d5",
+  "title": "Typhoon Noul makes landfall in Guangdong near Huidong county, disrupting transport",
+  "summary": "China’s weather authorities say Noul hit the coast early on 26 July and weakened inland; officials and operators responded with evacuations and transport cancellations, while damage, casualties, and the exact mainland landfall intensity and rainfall totals remain unconfirmed.",
+  "published_at": "2026-07-26T02:52:04.437850+00:00",
+  "as_of": "2026-07-26",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 17,
+    "likely": 5,
+    "unconfirmed": 2
+  },
+  "claims": [
+    {
+      "id": "clm_6940a2373c",
+      "text": "Typhoon Noul made landfall along the coast of Huidong county in Huizhou, Guangdong province, at about 3:50 a.m. local time on 26 July 2026.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://apnews.com/article/typhoon-noul-china-rain-wind-fb42a4499529b3d33a76df23c09ecbb6",
+          "title": "Southern China is on high alert for Typhoon Noul, with over 340,000 evacuated and flights canceled",
+          "publisher": "Associated Press",
+          "published_at": "2026-07-25T03:45:56Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_950858da9d",
+      "text": "At landfall, Noul was a strong typhoon with maximum sustained winds near 145 kph (90 mph) reported by Hong Kong Observatory shortly before landfall.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.hko.gov.hk/textonly/v2/tc/tcp.htm",
+          "title": "Tropical Cyclone Position",
+          "publisher": "Hong Kong Observatory",
+          "published_at": "2026-07-26T10:00:00+08:00"
+        },
+        {
+          "url": "https://apnews.com/article/typhoon-noul-china-rain-wind-fb42a4499529b3d33a76df23c09ecbb6",
+          "title": "Southern China is on high alert for Typhoon Noul, with over 340,000 evacuated and flights canceled",
+          "publisher": "Associated Press",
+          "published_at": "2026-07-25T03:45:56Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_69ccacfb35",
+      "text": "Hong Kong Observatory’s track page showed Noul weakening after peak intensity, from severe typhoon to typhoon and then severe tropical storm by 26 July 2026.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.hko.gov.hk/textonly/v2/tc/tcp.htm",
+          "title": "Tropical Cyclone Position",
+          "publisher": "Hong Kong Observatory",
+          "published_at": "2026-07-26T10:00:00+08:00"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2cdd927d0b",
+      "text": "Hong Kong Observatory forecast Noul to move across Guangdong on 26 July 2026 and then inland over the following days.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.hko.gov.hk/textonly/v2/forecast/nday_v2.htm",
+          "title": "9-Day Weather Forecast",
+          "publisher": "Hong Kong Observatory",
+          "published_at": "2026-07-26T10:50:00+08:00"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2582bf7448",
+      "text": "More than 340,000 people were relocated for safety in Guangdong province before or during landfall.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://apnews.com/article/typhoon-noul-china-rain-wind-fb42a4499529b3d33a76df23c09ecbb6",
+          "title": "Southern China is on high alert for Typhoon Noul, with over 340,000 evacuated and flights canceled",
+          "publisher": "Associated Press",
+          "published_at": "2026-07-25T03:45:56Z"
+        },
+        {
+          "url": "https://www.bordermail.com.au/story/9317568/southern-china-drenched-as-typhoon-noul-makes-landfall/",
+          "title": "Southern China drenched as Typhoon Noul makes landfall",
+          "publisher": "Border Mail",
+          "published_at": "2026-07-26T10:35:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bd9dce0525",
+      "text": "More than 150 flights were canceled at Hong Kong airport on 25–26 July 2026.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://apnews.com/article/typhoon-noul-china-rain-wind-fb42a4499529b3d33a76df23c09ecbb6",
+          "title": "Southern China is on high alert for Typhoon Noul, with over 340,000 evacuated and flights canceled",
+          "publisher": "Associated Press",
+          "published_at": "2026-07-25T03:45:56Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d574e69f21",
+      "text": "Train services in Guangdong were canceled for Sunday because of Noul.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://apnews.com/article/typhoon-noul-china-rain-wind-fb42a4499529b3d33a76df23c09ecbb6",
+          "title": "Southern China is on high alert for Typhoon Noul, with over 340,000 evacuated and flights canceled",
+          "publisher": "Associated Press",
+          "published_at": "2026-07-25T03:45:56Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5050960f53",
+      "text": "Hong Kong’s Observatory issued a No. 9 tropical cyclone signal as Noul passed close to the city and later downgraded it to No. 8.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.bordermail.com.au/story/9317568/southern-china-drenched-as-typhoon-noul-makes-landfall/",
+          "title": "Southern China drenched as Typhoon Noul makes landfall",
+          "publisher": "Border Mail",
+          "published_at": "2026-07-26T10:35:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_716412617b",
+      "text": "Hong Kong Observatory warned of frequent heavy squally showers, thunderstorms, high seas, and swells across the region on 26 July 2026.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.hko.gov.hk/textonly/v2/forecast/nday_v2.htm",
+          "title": "9-Day Weather Forecast",
+          "publisher": "Hong Kong Observatory",
+          "published_at": "2026-07-26T10:50:00+08:00"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d7f43d064a",
+      "text": "A Vietnamese weather roundup said some areas in southern Vietnam could receive more than 100 mm of rain on 26 July 2026, but that bulletin was about Vietnam’s domestic weather rather than Noul’s Guangdong landfall itself.",
+      "grade": "likely",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://vietbao.vn/thoi-tiet-ngay-267-bao-so-2-vao-dat-lien-trung-quoc-nam-bo-co-noi-mua-tren-100mm-600395.html",
+          "title": "Thời tiết ngày 26/7: Bão số 2 vào đất liền Trung Quốc, Nam Bộ có nơi mưa trên 100mm",
+          "publisher": "VietBao / Báo Tin Tức và Dân tộc",
+          "published_at": "2026-07-26T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9f663780d1",
+      "text": "I was not able to verify a public primary-source bulletin in this pass that states Noul’s central pressure at landfall.",
+      "grade": "unconfirmed",
+      "salience": "low",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7f52f60158",
+      "text": "I was not able to verify, in this pass, a primary-source rainfall map or official measured totals tied directly to Noul over Guangdong and nearby areas.",
+      "grade": "unconfirmed",
+      "salience": "low",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_467ece675e",
+      "text": "HKO’s tropical cyclone position archive shows Noul at 05:00 HKT on 26 July 2026 as a typhoon near 22.7 N, 114.8 E with maximum sustained wind near the center of 145 km/h, at 08:00 HKT as a typhoon near 23.0 N, 114.4 E with 120 km/h winds, and at 11:00 HKT as a severe tropical storm near 23.2 N, 114.3 E with 105 km/h winds.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.hko.gov.hk/textonly/v2/tc/tcp.htm",
+          "title": "Tropical Cyclone Position",
+          "publisher": "Hong Kong Observatory",
+          "published_at": "2026-07-26T10:00:00+08:00"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_50e216631d",
+      "text": "In its 25 July 2026 tropical cyclone warning bulletin, HKO said Noul was forecast to make landfall over the vicinity of Huizhou to Shanwei on 26 July morning and warned Hong Kong to expect frequent heavy squally showers and thunderstorms, with rainstorm warning signals or localized heavy rain advisories possibly needed.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a124777a3c",
+      "text": "In the HKO primary source deep-read used here, Noul’s official intensity information was reported as maximum sustained wind near the center; a central-pressure value was not listed in the excerpt reviewed, so the pressure-at-landfall gap remains unfilled in this pass.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.hko.gov.hk/textonly/v2/tc/tcp.htm",
+          "title": "Tropical Cyclone Position",
+          "publisher": "Hong Kong Observatory",
+          "published_at": "2026-07-26T10:00:00+08:00"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a23d058f54",
+      "text": "HKO’s open-data documentation explicitly distinguishes automated “rainfall amount measured at automatic weather station during the 1-hour period ending at the observation time” from the Observatory’s official rainfall record, and notes the dataset is provisional. This is directly relevant to the profile’s rainfall-attribution uncertainty because a reported number can be a measured hourly station value without being the same thing as an official event total.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.hko.gov.hk/en/abouthko/opendata_intro.htm",
+          "title": "Hong Kong Observatory Open Data",
+          "publisher": "Hong Kong Observatory",
+          "published_at": "2026-07-26"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_474c51f2ac",
+      "text": "HKO’s open-data documentation also states that the rainfall data from automatic weather stations are provisional and only lightly validated, so any early rainfall figure should be treated as preliminary unless corroborated by an official climatological or event-summary product.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.hko.gov.hk/en/abouthko/opendata_intro.htm",
+          "title": "Hong Kong Observatory Open Data",
+          "publisher": "Hong Kong Observatory",
+          "published_at": "2026-07-26"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dd8e04b712",
+      "text": "The HKO track page shows Noul’s intensity peaking at 155 km/h at 02:00 HKT on 26 July 2026, then weakening to 145 km/h at 05:00, 120 km/h at 08:00, and 105 km/h by 11:00. That supports the dominant official framing of a strong but rapidly weakening landfalling system, but it does not by itself establish how much rain in Hong Kong or Guangdong was uniquely attributable to Noul versus broader monsoon moisture.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.hko.gov.hk/textonly/v2/tc/tcp.htm",
+          "title": "Tropical Cyclone Position",
+          "publisher": "Hong Kong Observatory",
+          "published_at": "2026-07-26T10:00:00+08:00"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dd61c3648f",
+      "text": "A more cautious reading of the rainfall issue is that the profile should distinguish between a measured hourly rainfall amount at a station and the storm-total rainfall or attribution to Noul itself; the HKO documentation shows those are not interchangeable products.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.hko.gov.hk/en/abouthko/opendata_intro.htm",
+          "title": "Hong Kong Observatory Open Data",
+          "publisher": "Hong Kong Observatory",
+          "published_at": "2026-07-26"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f94b1c96f3",
+      "text": "On the “not extraordinary” comparison, the HKO materials gathered here support only a strong-intensity characterization, not an anomaly claim. In other words, the best-grounded position remains “significant but not shown exceptional” rather than “unusual,” because I did not locate a climatological benchmark or event summary that would justify stronger language.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.hko.gov.hk/textonly/v2/tc/tcp.htm",
+          "title": "Tropical Cyclone Position",
+          "publisher": "Hong Kong Observatory",
+          "published_at": "2026-07-26T10:00:00+08:00"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_020726072d",
+      "text": "Typhoon Noul made landfall early on 26 July on the coast of Huidong county, Huizhou, Guangdong province.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c624b39c9c",
+      "text": "The Hong Kong Observatory’s track archive shows Noul weakening after peak intensity on 26 July 2026, from severe typhoon to typhoon and then severe tropical storm.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_162373570b",
+      "text": "Hong Kong Observatory’s open-data documentation says rainfall from automatic weather stations is the rainfall amount measured during the one-hour period ending at the observation time, and that the data are provisional with only limited validation.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b9cae36b85",
+      "text": "AP reported more than 340,000 relocations in Guangdong, train cancellations in the province, and more than 150 flight cancellations at Hong Kong airport.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

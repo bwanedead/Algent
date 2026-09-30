@@ -1,0 +1,759 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/u-s-imposes-25-section-301-tariffs-on-most-brazilian-imports-9fce8b",
+  "title": "U.S. imposes 25% Section 301 tariffs on most Brazilian imports, with broad exemptions",
+  "summary": "The tariff takes effect July 22, 2026 and targets Brazil’s trade practices, but USTR’s carve-outs cover major categories like food, aerospace parts and some energy and medical goods; Brazil says it will pursue reciprocity-law and WTO talks while possible retaliation options are still unconfirmed.",
+  "published_at": "2026-07-19T11:50:00.277494+00:00",
+  "as_of": "2026-07-16",
+  "status": "needs_hedging",
+  "grades": {
+    "confirmed": 31,
+    "likely": 8,
+    "unconfirmed": 1,
+    "opinion": 1
+  },
+  "claims": [
+    {
+      "id": "clm_0c2859d4b3",
+      "text": "The United States will impose a 25% tariff on most imports from Brazil.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.apnews.com/article/us-brazil-trade-tariffs-99e8c52a44c75f31c343d7ebad41f614",
+          "title": "US imposing a 25% tariff on some Brazilian imports starting July 22, citing unfair trade practices",
+          "publisher": "AP News",
+          "published_at": "2026-07-16"
+        },
+        {
+          "url": "https://apnews.com/article/brazil-us-tariffs-trump-lula-bolsonaro-0dfbd48b7f901e6c3423801377aba8c7",
+          "title": "Brazil calls Trump’s 25% tariff unjustifiable, vows to impose reciprocal tariffs",
+          "publisher": "AP News",
+          "published_at": "2026-07-16"
+        },
+        {
+          "url": "https://www.cnbc.com/2026/07/16/us-tariffs-brazil-unfair-trade-practices-section-301-.html",
+          "title": "U.S. slaps 25% tariff on most Brazilian goods over 'unfair trade practices'",
+          "publisher": "CNBC",
+          "published_at": "2026-07-16"
+        },
+        {
+          "url": "https://www.axios.com/2026/07/16/trump-tariffs-brazil",
+          "title": "Trump imposes 25% tariffs on Brazilian goods",
+          "publisher": "Axios",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4dbb090450",
+      "text": "The tariff takes effect on July 22, 2026.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.apnews.com/article/us-brazil-trade-tariffs-99e8c52a44c75f31c343d7ebad41f614",
+          "title": "US imposing a 25% tariff on some Brazilian imports starting July 22, citing unfair trade practices",
+          "publisher": "AP News",
+          "published_at": "2026-07-16"
+        },
+        {
+          "url": "https://www.cnbc.com/2026/07/16/us-tariffs-brazil-unfair-trade-practices-section-301-.html",
+          "title": "U.S. slaps 25% tariff on most Brazilian goods over 'unfair trade practices'",
+          "publisher": "CNBC",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b7c0ac109c",
+      "text": "The tariff action was taken under Section 301 of the U.S. Trade Act of 1974.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.apnews.com/article/us-brazil-trade-tariffs-99e8c52a44c75f31c343d7ebad41f614",
+          "title": "US imposing a 25% tariff on some Brazilian imports starting July 22, citing unfair trade practices",
+          "publisher": "AP News",
+          "published_at": "2026-07-16"
+        },
+        {
+          "url": "https://apnews.com/article/brazil-us-tariffs-trump-lula-bolsonaro-0dfbd48b7f901e6c3423801377aba8c7",
+          "title": "Brazil calls Trump’s 25% tariff unjustifiable, vows to impose reciprocal tariffs",
+          "publisher": "AP News",
+          "published_at": "2026-07-16"
+        },
+        {
+          "url": "https://www.cnbc.com/2026/07/16/us-tariffs-brazil-unfair-trade-practices-section-301-.html",
+          "title": "U.S. slaps 25% tariff on most Brazilian goods over 'unfair trade practices'",
+          "publisher": "CNBC",
+          "published_at": "2026-07-16"
+        },
+        {
+          "url": "https://www.axios.com/2026/07/16/trump-tariffs-brazil",
+          "title": "Trump imposes 25% tariffs on Brazilian goods",
+          "publisher": "Axios",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_40ce3a2940",
+      "text": "The U.S. Trade Representative said the action follows a yearlong investigation into Brazilian trade practices.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.apnews.com/article/us-brazil-trade-tariffs-99e8c52a44c75f31c343d7ebad41f614",
+          "title": "US imposing a 25% tariff on some Brazilian imports starting July 22, citing unfair trade practices",
+          "publisher": "AP News",
+          "published_at": "2026-07-16"
+        },
+        {
+          "url": "https://www.cnbc.com/2026/07/16/us-tariffs-brazil-unfair-trade-practices-section-301-.html",
+          "title": "U.S. slaps 25% tariff on most Brazilian goods over 'unfair trade practices'",
+          "publisher": "CNBC",
+          "published_at": "2026-07-16"
+        },
+        {
+          "url": "https://www.axios.com/2026/07/16/trump-tariffs-brazil",
+          "title": "Trump imposes 25% tariffs on Brazilian goods",
+          "publisher": "Axios",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_698cef78d1",
+      "text": "The exemption list includes coffee, beef, oranges, orange juice, some oil and gas energy products, and aerospace parts/components.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.apnews.com/article/us-brazil-trade-tariffs-99e8c52a44c75f31c343d7ebad41f614",
+          "title": "US imposing a 25% tariff on some Brazilian imports starting July 22, citing unfair trade practices",
+          "publisher": "AP News",
+          "published_at": "2026-07-16"
+        },
+        {
+          "url": "https://apnews.com/article/brazil-us-tariffs-trump-lula-bolsonaro-0dfbd48b7f901e6c3423801377aba8c7",
+          "title": "Brazil calls Trump’s 25% tariff unjustifiable, vows to impose reciprocal tariffs",
+          "publisher": "AP News",
+          "published_at": "2026-07-16"
+        },
+        {
+          "url": "https://www.cnbc.com/2026/07/16/us-tariffs-brazil-unfair-trade-practices-section-301-.html",
+          "title": "U.S. slaps 25% tariff on most Brazilian goods over 'unfair trade practices'",
+          "publisher": "CNBC",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_05b6cdc9b4",
+      "text": "Brazil says the tariff hits about 3,000 items and about 18% of its exports to the United States.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://apnews.com/article/brazil-us-tariffs-trump-lula-bolsonaro-0dfbd48b7f901e6c3423801377aba8c7",
+          "title": "Brazil calls Trump’s 25% tariff unjustifiable, vows to impose reciprocal tariffs",
+          "publisher": "AP News",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_42bdae7248",
+      "text": "Brazil’s industry ministry estimated the tariff affects about $7.4 billion in exports based on 2024 data.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://apnews.com/article/brazil-us-tariffs-trump-lula-bolsonaro-0dfbd48b7f901e6c3423801377aba8c7",
+          "title": "Brazil calls Trump’s 25% tariff unjustifiable, vows to impose reciprocal tariffs",
+          "publisher": "AP News",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_77cffd5d20",
+      "text": "Brazil’s government said it will pursue reciprocal tariffs and other countermeasures through its 2025 reciprocity law and the WTO dispute process.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://apnews.com/article/brazil-us-tariffs-trump-lula-bolsonaro-0dfbd48b7f901e6c3423801377aba8c7",
+          "title": "Brazil calls Trump’s 25% tariff unjustifiable, vows to impose reciprocal tariffs",
+          "publisher": "AP News",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9e6bdb5624",
+      "text": "Brazil is considering retaliatory measures including curbs on U.S. audiovisual companies and suspension of pharmaceutical and agricultural patents.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.agriculture.com/partners-brazil-readies-tough-response-to-new-trump-tariffs-sources-say-12021372",
+          "title": "Brazil Readies ‘Tough’ Response to New Trump Tariffs, Sources Say",
+          "publisher": "Reuters via Successful Farming",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_26279d64f0",
+      "text": "Brazil is also weighing curbs on dividend and royalty remittances by U.S. audiovisual companies.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.agriculture.com/partners-brazil-readies-tough-response-to-new-trump-tariffs-sources-say-12021372",
+          "title": "Brazil Readies ‘Tough’ Response to New Trump Tariffs, Sources Say",
+          "publisher": "Reuters via Successful Farming",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2241efdfda",
+      "text": "The U.S. government says Brazilian trade practices were unfair in areas including digital trade, preferential tariffs, ethanol market access, lax anti-corruption enforcement, and other practices.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.apnews.com/article/us-brazil-trade-tariffs-99e8c52a44c75f31c343d7ebad41f614",
+          "title": "US imposing a 25% tariff on some Brazilian imports starting July 22, citing unfair trade practices",
+          "publisher": "AP News",
+          "published_at": "2026-07-16"
+        },
+        {
+          "url": "https://apnews.com/article/brazil-us-tariffs-trump-lula-bolsonaro-0dfbd48b7f901e6c3423801377aba8c7",
+          "title": "Brazil calls Trump’s 25% tariff unjustifiable, vows to impose reciprocal tariffs",
+          "publisher": "AP News",
+          "published_at": "2026-07-16"
+        },
+        {
+          "url": "https://www.cnbc.com/2026/07/16/us-tariffs-brazil-unfair-trade-practices-section-301-.html",
+          "title": "U.S. slaps 25% tariff on most Brazilian goods over 'unfair trade practices'",
+          "publisher": "CNBC",
+          "published_at": "2026-07-16"
+        },
+        {
+          "url": "https://www.axios.com/2026/07/16/trump-tariffs-brazil",
+          "title": "Trump imposes 25% tariffs on Brazilian goods",
+          "publisher": "Axios",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f39799a613",
+      "text": "The U.S. tariff is being framed by the Trump administration as one part of a broader Section 301 tariff strategy that could eventually apply to dozens of countries.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_47a0950e7f",
+      "text": "The U.S. has run a goods trade surplus with Brazil for years.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.apnews.com/article/us-brazil-trade-tariffs-99e8c52a44c75f31c343d7ebad41f614",
+          "title": "US imposing a 25% tariff on some Brazilian imports starting July 22, citing unfair trade practices",
+          "publisher": "AP News",
+          "published_at": "2026-07-16"
+        },
+        {
+          "url": "https://apnews.com/article/brazil-us-tariffs-trump-lula-bolsonaro-0dfbd48b7f901e6c3423801377aba8c7",
+          "title": "Brazil calls Trump’s 25% tariff unjustifiable, vows to impose reciprocal tariffs",
+          "publisher": "AP News",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b3bd71fd7e",
+      "text": "Brazil’s statement says 76% of imports from the U.S. entered Brazil duty-free in 2025 and the average tariff effectively applied to U.S. products was 3.1%.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://apnews.com/article/brazil-us-tariffs-trump-lula-bolsonaro-0dfbd48b7f901e6c3423801377aba8c7",
+          "title": "Brazil calls Trump’s 25% tariff unjustifiable, vows to impose reciprocal tariffs",
+          "publisher": "AP News",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f35e1a94e3",
+      "text": "A separate U.S. forced-labor probe could add an additional 12.5% duty on Brazilian goods.",
+      "grade": "unconfirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/07/16/us-tariffs-brazil-unfair-trade-practices-section-301-.html",
+          "title": "U.S. slaps 25% tariff on most Brazilian goods over 'unfair trade practices'",
+          "publisher": "CNBC",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5e110a123a",
+      "text": "The episode is highly politicized, with U.S. officials and Brazilian officials linking it to Lula, Bolsonaro, and negotiation breakdowns.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.apnews.com/article/us-brazil-trade-tariffs-99e8c52a44c75f31c343d7ebad41f614",
+          "title": "US imposing a 25% tariff on some Brazilian imports starting July 22, citing unfair trade practices",
+          "publisher": "AP News",
+          "published_at": "2026-07-16"
+        },
+        {
+          "url": "https://apnews.com/article/brazil-us-tariffs-trump-lula-bolsonaro-0dfbd48b7f901e6c3423801377aba8c7",
+          "title": "Brazil calls Trump’s 25% tariff unjustifiable, vows to impose reciprocal tariffs",
+          "publisher": "AP News",
+          "published_at": "2026-07-16"
+        },
+        {
+          "url": "https://www.axios.com/2026/07/16/trump-tariffs-brazil",
+          "title": "Trump imposes 25% tariffs on Brazilian goods",
+          "publisher": "Axios",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ed127360b2",
+      "text": "USTR’s final action notice imposes a 25% tariff on all imports of Brazil, with certain exemptions.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ustr.gov/sites/default/files/files/Issue_Areas/Enforcement/Section%20301/Brazil%20301%20Final%20Action%20FRN%207-15-2026%20final.pdf",
+          "title": "Notice of Action: Brazil’s Acts, Policies, and Practices Related to Digital Trade and Electronic Payment Services; Unfair, Preferential Tariffs; Anti-Corruption Enforcement; Intellectual Property Protection; Ethanol Market Access; and Illegal Deforestation",
+          "publisher": "Office of the United States Trade Representative",
+          "published_at": "2026-07-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0d1aedcd7d",
+      "text": "The tariff applies to products entered for consumption, or withdrawn from warehouse for consumption, on or after 12:01 a.m. Eastern Time on July 22, 2026.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ustr.gov/sites/default/files/files/Issue_Areas/Enforcement/Section%20301/Brazil%20301%20Final%20Action%20FRN%207-15-2026%20final.pdf",
+          "title": "Notice of Action: Brazil’s Acts, Policies, and Practices Related to Digital Trade and Electronic Payment Services; Unfair, Preferential Tariffs; Anti-Corruption Enforcement; Intellectual Property Protection; Ethanol Market Access; and Illegal Deforestation",
+          "publisher": "Office of the United States Trade Representative",
+          "published_at": "2026-07-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5f1335b4e5",
+      "text": "The USTR action is based on Sections 301(b) and 304(a) of the Trade Act of 1974.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ustr.gov/sites/default/files/files/Issue_Areas/Enforcement/Section%20301/Brazil%20301%20Final%20Action%20FRN%207-15-2026%20final.pdf",
+          "title": "Notice of Action: Brazil’s Acts, Policies, and Practices Related to Digital Trade and Electronic Payment Services; Unfair, Preferential Tariffs; Anti-Corruption Enforcement; Intellectual Property Protection; Ethanol Market Access; and Illegal Deforestation",
+          "publisher": "Office of the United States Trade Representative",
+          "published_at": "2026-07-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fb3fd6c504",
+      "text": "USTR says the exemptions are listed in an annex and are justified as products that are raw materials, avoid economy-wide disruptions, are not available domestically at reasonable prices or quantities, or would not materially contribute to eliminating the actionable Brazilian measures.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ustr.gov/sites/default/files/files/Issue_Areas/Enforcement/Section%20301/Brazil%20301%20Final%20Action%20FRN%207-15-2026%20final.pdf",
+          "title": "Notice of Action: Brazil’s Acts, Policies, and Practices Related to Digital Trade and Electronic Payment Services; Unfair, Preferential Tariffs; Anti-Corruption Enforcement; Intellectual Property Protection; Ethanol Market Access; and Illegal Deforestation",
+          "publisher": "Office of the United States Trade Representative",
+          "published_at": "2026-07-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5682903aef",
+      "text": "USTR’s notice adds to the exemption list items including aluminum hydroxide, certain additional pharmaceuticals and pharmaceutical ingredients, certain additional wood products, iron and steel waste and scrap, organic honey, pig iron, unflavored instant coffee, and used clothing.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://ustr.gov/sites/default/files/files/Issue_Areas/Enforcement/Section%20301/Brazil%20301%20Final%20Action%20FRN%207-15-2026%20final.pdf",
+          "title": "Notice of Action: Brazil’s Acts, Policies, and Practices Related to Digital Trade and Electronic Payment Services; Unfair, Preferential Tariffs; Anti-Corruption Enforcement; Intellectual Property Protection; Ethanol Market Access; and Illegal Deforestation",
+          "publisher": "Office of the United States Trade Representative",
+          "published_at": "2026-07-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f1e2f740bc",
+      "text": "Brazil’s official MDIC statement says the government will immediately begin procedures under the reciprocity law and return to WTO dispute settlement.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.gov.br/mdic/pt-br/assuntos/noticias/defesa-do-brasil-no-ambito-da-secao-301",
+          "title": "Defesa do Brasil no Âmbito da Seção 301",
+          "publisher": "Ministério do Desenvolvimento, Indústria, Comércio e Serviços",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_be3ff7bd8f",
+      "text": "Brazil’s official statement says the government has remained open to dialogue since the Section 301 investigation began and that there have been more than 30 meetings since July 2025.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.gov.br/mdic/pt-br/assuntos/noticias/defesa-do-brasil-no-ambito-da-secao-301",
+          "title": "Defesa do Brasil no Âmbito da Seção 301",
+          "publisher": "Ministério do Desenvolvimento, Indústria, Comércio e Serviços",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f7cfcbfefa",
+      "text": "In the first-party Brazilian statement read here, Brazil does not specifically name audiovisual restrictions, dividend or royalty remittance curbs, or patent suspensions as adopted retaliation measures.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.gov.br/mdic/pt-br/assuntos/noticias/defesa-do-brasil-no-ambito-da-secao-301",
+          "title": "Defesa do Brasil no Âmbito da Seção 301",
+          "publisher": "Ministério do Desenvolvimento, Indústria, Comércio e Serviços",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ca4ef7580f",
+      "text": "USTR’s first-party press release frames the Brazil action as part of President Trump’s broader America First Trade Policy, but it does not say Brazil is a pilot or the opening shot of a formal multi-country Section 301 tariff campaign.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ustr.gov/about/policy-offices/press-office/press-releases/2026/july/ustr-section-301-action-brazils-unreasonable-acts-policies-and-practices",
+          "title": "USTR Section 301 Action on Brazil’s Unreasonable Acts, Policies, and Practices",
+          "publisher": "United States Trade Representative",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9c527d4878",
+      "text": "The USTR fact sheet gives a Brazil-specific timeline of investigation and negotiation beginning in April 2025 and does not identify a documented schedule for extending the same Section 301 tariff treatment to dozens of other countries.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://ustr.gov/node/14362",
+          "title": "Fact Sheet: President Trump Directs USTR Section 301 ...",
+          "publisher": "United States Trade Representative",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_41474106a8",
+      "text": "USTR says the exemptions were selected because the covered products are raw materials, could avoid economy-wide disruptions, are unavailable domestically in sufficient quantities or at reasonable prices, or would not materially contribute to eliminating Brazil’s actionable practices.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ustr.gov/node/14362",
+          "title": "Fact Sheet: President Trump Directs USTR Section 301 ...",
+          "publisher": "United States Trade Representative",
+          "published_at": "2026-07-16"
+        },
+        {
+          "url": "https://ustr.gov/sites/default/files/files/Issue_Areas/Enforcement/Section%20301/Brazil%20301%20Final%20Action%20FRN%207-15-2026%20final.pdf",
+          "title": "Notice of Action: Brazil’s Acts, Policies, and Practices Related to Digital Trade and Electronic Payment Services; Unfair, Preferential Tariffs; Anti-Corruption Enforcement; Intellectual Property Protection; Ethanol Market Access; and Illegal Deforestation",
+          "publisher": "Office of the United States Trade Representative",
+          "published_at": "2026-07-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3452886e9a",
+      "text": "The exemption rationale documented by USTR is an industrial-supply and tariff-effectiveness rationale, not an explicit anti-inflation rationale.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ustr.gov/node/14362",
+          "title": "Fact Sheet: President Trump Directs USTR Section 301 ...",
+          "publisher": "United States Trade Representative",
+          "published_at": "2026-07-16"
+        },
+        {
+          "url": "https://ustr.gov/sites/default/files/files/Issue_Areas/Enforcement/Section%20301/Brazil%20301%20Final%20Action%20FRN%207-15-2026%20final.pdf",
+          "title": "Notice of Action: Brazil’s Acts, Policies, and Practices Related to Digital Trade and Electronic Payment Services; Unfair, Preferential Tariffs; Anti-Corruption Enforcement; Intellectual Property Protection; Ethanol Market Access; and Illegal Deforestation",
+          "publisher": "Office of the United States Trade Representative",
+          "published_at": "2026-07-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7b461f5d8b",
+      "text": "A defensible interpretation is that the exemption list balances leverage against Brazil with protection of U.S. supply chains and downstream industries.",
+      "grade": "opinion",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://ustr.gov/node/14362",
+          "title": "Fact Sheet: President Trump Directs USTR Section 301 ...",
+          "publisher": "United States Trade Representative",
+          "published_at": "2026-07-16"
+        },
+        {
+          "url": "https://ustr.gov/sites/default/files/files/Issue_Areas/Enforcement/Section%20301/Brazil%20301%20Final%20Action%20FRN%207-15-2026%20final.pdf",
+          "title": "Notice of Action: Brazil’s Acts, Policies, and Practices Related to Digital Trade and Electronic Payment Services; Unfair, Preferential Tariffs; Anti-Corruption Enforcement; Intellectual Property Protection; Ethanol Market Access; and Illegal Deforestation",
+          "publisher": "Office of the United States Trade Representative",
+          "published_at": "2026-07-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8db85f11f8",
+      "text": "USTR’s notice says the United States is imposing 25 percent tariffs on all imports of Brazil, with certain exemptions.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ustr.gov/sites/default/files/files/Issue_Areas/Enforcement/Section%20301/Brazil%20301%20Final%20Action%20FRN%207-15-2026%20final.pdf",
+          "title": "Notice of Action: Brazil’s Acts, Policies, and Practices Related to Digital Trade and Electronic Payment Services; Unfair, Preferential Tariffs; Anti-Corruption Enforcement; Intellectual Property Protection; Ethanol Market Access; and Illegal Deforestation",
+          "publisher": "Office of the United States Trade Representative",
+          "published_at": "2026-07-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ff349ffa32",
+      "text": "The additional duty applies to products entered for consumption, or withdrawn from warehouse for consumption, on or after 12:01 a.m. Eastern time on July 22, 2026.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ustr.gov/sites/default/files/files/Issue_Areas/Enforcement/Section%20301/Brazil%20301%20Final%20Action%20FRN%207-15-2026%20final.pdf",
+          "title": "Notice of Action: Brazil’s Acts, Policies, and Practices Related to Digital Trade and Electronic Payment Services; Unfair, Preferential Tariffs; Anti-Corruption Enforcement; Intellectual Property Protection; Ethanol Market Access; and Illegal Deforestation",
+          "publisher": "Office of the United States Trade Representative",
+          "published_at": "2026-07-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1945141250",
+      "text": "USTR expanded the exemption list to include aluminum hydroxide, antiques, ash containing precious metals or precious metal compounds, certain animal hides, certain seafood products, certain additional pharmaceuticals and ingredients, certain wood products, iron and steel waste and scrap, organic honey, pig iron, unflavored instant coffee, and used clothing.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ustr.gov/sites/default/files/files/Issue_Areas/Enforcement/Section%20301/Brazil%20301%20Final%20Action%20FRN%207-15-2026%20final.pdf",
+          "title": "Notice of Action: Brazil’s Acts, Policies, and Practices Related to Digital Trade and Electronic Payment Services; Unfair, Preferential Tariffs; Anti-Corruption Enforcement; Intellectual Property Protection; Ethanol Market Access; and Illegal Deforestation",
+          "publisher": "Office of the United States Trade Representative",
+          "published_at": "2026-07-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d4578eb45a",
+      "text": "USTR says the exemption rationale is supply continuity, disruption avoidance, domestic availability at reasonable prices or quantities, and tariff effectiveness rather than explicit inflation targeting.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ustr.gov/sites/default/files/files/Issue_Areas/Enforcement/Section%20301/Brazil%20301%20Final%20Action%20FRN%207-15-2026%20final.pdf",
+          "title": "Notice of Action: Brazil’s Acts, Policies, and Practices Related to Digital Trade and Electronic Payment Services; Unfair, Preferential Tariffs; Anti-Corruption Enforcement; Intellectual Property Protection; Ethanol Market Access; and Illegal Deforestation",
+          "publisher": "Office of the United States Trade Representative",
+          "published_at": "2026-07-15"
+        },
+        {
+          "url": "https://ustr.gov/node/14362",
+          "title": "Fact Sheet: President Trump Directs USTR Section 301 ...",
+          "publisher": "United States Trade Representative",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f9104270fc",
+      "text": "Brazil’s government says it remained open to dialogue throughout the Section 301 process and that there were more than 30 meetings between the two sides since July 2025.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.gov.br/mdic/pt-br/assuntos/noticias/defesa-do-brasil-no-ambito-da-secao-301",
+          "title": "Defesa do Brasil no Âmbito da Seção 301",
+          "publisher": "Ministério do Desenvolvimento, Indústria, Comércio e Serviços",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3b113a17de",
+      "text": "Brazil says it will immediately begin procedures under its reciprocity law and return to WTO dispute settlement.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.gov.br/mdic/pt-br/assuntos/noticias/defesa-do-brasil-no-ambito-da-secao-301",
+          "title": "Defesa do Brasil no Âmbito da Seção 301",
+          "publisher": "Ministério do Desenvolvimento, Indústria, Comércio e Serviços",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b081546f9f",
+      "text": "Brazil’s first-party statement does not specifically name audiovisual restrictions, dividend or royalty remittance curbs, or patent suspensions as adopted retaliation measures.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.gov.br/mdic/pt-br/assuntos/noticias/defesa-do-brasil-no-ambito-da-secao-301",
+          "title": "Defesa do Brasil no Âmbito da Seção 301",
+          "publisher": "Ministério do Desenvolvimento, Indústria, Comércio e Serviços",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f8e8debe58",
+      "text": "USTR’s first-party materials describe a Brazil-specific investigation and action but do not document a formal multi-country Section 301 tariff rollout.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://ustr.gov/about/policy-offices/press-office/press-releases/2026/july/ustr-section-301-action-brazils-unreasonable-acts-policies-and-practices",
+          "title": "USTR Section 301 Action on Brazil’s Unreasonable Acts, Policies, and Practices",
+          "publisher": "United States Trade Representative",
+          "published_at": "2026-07-16"
+        },
+        {
+          "url": "https://ustr.gov/node/14362",
+          "title": "Fact Sheet: President Trump Directs USTR Section 301 ...",
+          "publisher": "United States Trade Representative",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_975415141f",
+      "text": "Reuters reported that Brazil’s government convened ministers to prepare retaliatory measures, with options including curbs on U.S. audiovisual companies and suspension of pharmaceutical and agricultural patents.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.agriculture.com/partners-brazil-readies-tough-response-to-new-trump-tariffs-sources-say-12021372",
+          "title": "Brazil Readies ‘Tough’ Response to New Trump Tariffs, Sources Say",
+          "publisher": "Reuters via Successful Farming",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ae456c5007",
+      "text": "Reuters reported that Brazil was also considering curbs on dividend and royalty remittances by U.S. audiovisual companies.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.agriculture.com/partners-brazil-readies-tough-response-to-new-trump-tariffs-sources-say-12021372",
+          "title": "Brazil Readies ‘Tough’ Response to New Trump Tariffs, Sources Say",
+          "publisher": "Reuters via Successful Farming",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_132c759676",
+      "text": "USTR’s Federal Register notice confirms the 25% tariff applies to all imports of Brazil, with exemptions grounded in supply continuity, disruption avoidance, domestic availability, and tariff effectiveness.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ustr.gov/sites/default/files/files/Issue_Areas/Enforcement/Section%20301/Brazil%20301%20Final%20Action%20FRN%207-15-2026%20final.pdf",
+          "title": "Notice of Action: Brazil’s Acts, Policies, and Practices Related to Digital Trade and Electronic Payment Services; Unfair, Preferential Tariffs; Anti-Corruption Enforcement; Intellectual Property Protection; Ethanol Market Access; and Illegal Deforestation",
+          "publisher": "Office of the United States Trade Representative",
+          "published_at": "2026-07-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dcfa645c01",
+      "text": "USTR’s notice expands the exemption list to include aluminum hydroxide, antiques, ash containing precious metals or precious metal compounds, certain animal hides, certain seafood products, additional pharmaceuticals and ingredients, certain wood products, iron and steel waste and scrap, organic honey, pig iron, unflavored instant coffee, and used clothing.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://ustr.gov/sites/default/files/files/Issue_Areas/Enforcement/Section%20301/Brazil%20301%20Final%20Action%20FRN%207-15-2026%20final.pdf",
+          "title": "Notice of Action: Brazil’s Acts, Policies, and Practices Related to Digital Trade and Electronic Payment Services; Unfair, Preferential Tariffs; Anti-Corruption Enforcement; Intellectual Property Protection; Ethanol Market Access; and Illegal Deforestation",
+          "publisher": "Office of the United States Trade Representative",
+          "published_at": "2026-07-15"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

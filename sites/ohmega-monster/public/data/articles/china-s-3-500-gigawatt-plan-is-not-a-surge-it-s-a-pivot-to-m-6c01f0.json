@@ -1,0 +1,764 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/china-s-3-500-gigawatt-plan-is-not-a-surge-it-s-a-pivot-to-m-6c01f0",
+  "title": "China's 3,500-gigawatt plan is not a surge — it's a pivot to making wind and solar act like firm power",
+  "summary": "China's planners set a 3,500 gigawatts (GW) renewable target for 2030 that implies a sharp slowdown from 2025's boom, betting that firm capacity, grid-forming plants, storage and new transmission can turn intermittent gigawatts into reliable peak power — and determine whether coal actually falls.",
+  "published_at": "2026-08-12T11:32:12.298962+00:00",
+  "as_of": "2026-07-30",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 33,
+    "likely": 4
+  },
+  "claims": [
+    {
+      "id": "clm_07d51ea39c",
+      "text": "The 15th Five-Year Plan for Renewable Energy Development (2026-2030) was jointly issued by NDRC and NEA on 6 July 2026 (document Fa Gai Neng Yuan [2026]1067) and published 23 July 2026.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nea.gov.cn/20260723/cab1eb6727674bcf9a0efea45ed525e0/20260723cab1eb6727674bcf9a0efea45ed525e0_360d36cb349c4c4279945e87bdd7369744.pdf",
+          "title": "\u0000f2\u0000f6\u0000e8\u0000c3\u0000bd\u0000e5\u0000c6\u0000a8\u0000e6\u0000ba\u0000d0\u0000e5\u0000f1\u0000d5\u0000b9\u0000e2\u0000d0\u0000a2\u0000e5\u0000d1\u0000ab\u0000e4\u0000ba\u0000d4\u0000e8\u0000a7\u0000c4\u0000e5\u0000c8\u0000d2",
+          "publisher": "National Energy Administration (NEA)",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://english.www.gov.cn/news/202607/23/content_WS6a617ed3c6d00ca5f9a0c5e8.html",
+          "title": "China unveils five-year plan for renewable energy development",
+          "publisher": "State Council / Xinhua via english.www.gov.cn",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_913776ebc0",
+      "text": "By 2030, total renewable power generation installed capacity is targeted at about 3,500 GW (35 \u00100\u0000\u0000\u0000 kW).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nea.gov.cn/20260723/cab1eb6727674bcf9a0efea45ed525e0/20260723cab1eb6727674bcf9a0efea45ed525e0_360d36cb349c4c4279945e87bdd7369744.pdf",
+          "title": "\u0000f2\u0000f6\u0000e8\u0000c3\u0000bd\u0000e5\u0000c6\u0000a8\u0000e6\u0000ba\u0000d0\u0000e5\u0000f1\u0000d5\u0000b9\u0000e2\u0000d0\u0000a2\u0000e5\u0000d1\u0000ab\u0000e4\u0000ba\u0000d4\u0000e8\u0000a7\u0000c4\u0000e5\u0000c8\u0000d2",
+          "publisher": "National Energy Administration (NEA)",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://english.www.gov.cn/news/202607/23/content_WS6a617ed3c6d00ca5f9a0c5e8.html",
+          "title": "China unveils five-year plan for renewable energy development",
+          "publisher": "State Council / Xinhua via english.www.gov.cn",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://www.carbonbrief.org/qa-what-does-chinas-15th-five-year-plan-for-renewables-mean-for-climate-change",
+          "title": "Q&A: What does China\u0000e2\u0000d9s 15th \u0000e2\u0000d8five-year plan\u0000e2\u0000d9 for renewables mean for climate change?",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-07-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d740d0d9ce",
+      "text": "By 2030, combined wind and solar capacity is targeted to exceed 2,800 GW, accounting for over 50% of total power capacity.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nea.gov.cn/20260723/cab1eb6727674bcf9a0efea45ed525e0/20260723cab1eb6727674bcf9a0efea45ed525e0_360d36cb349c4c4279945e87bdd7369744.pdf",
+          "title": "\u0000f2\u0000f6\u0000e8\u0000c3\u0000bd\u0000e5\u0000c6\u0000a8\u0000e6\u0000ba\u0000d0\u0000e5\u0000f1\u0000d5\u0000b9\u0000e2\u0000d0\u0000a2\u0000e5\u0000d1\u0000ab\u0000e4\u0000ba\u0000d4\u0000e8\u0000a7\u0000c4\u0000e5\u0000c8\u0000d2",
+          "publisher": "National Energy Administration (NEA)",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://english.www.gov.cn/news/202607/23/content_WS6a617ed3c6d00ca5f9a0c5e8.html",
+          "title": "China unveils five-year plan for renewable energy development",
+          "publisher": "State Council / Xinhua via english.www.gov.cn",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://www.carbonbrief.org/qa-what-does-chinas-15th-five-year-plan-for-renewables-mean-for-climate-change",
+          "title": "Q&A: What does China\u0000e2\u0000d9s 15th \u0000e2\u0000d8five-year plan\u0000e2\u0000d9 for renewables mean for climate change?",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-07-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e36ab2b3b7",
+      "text": "By 2030, total renewable generation is targeted at about 6,000 TWh per year, with wind and solar >4,000 TWh (about 30% of total generation).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nea.gov.cn/20260723/cab1eb6727674bcf9a0efea45ed525e0/20260723cab1eb6727674bcf9a0efea45ed525e0_360d36cb349c4c4279945e87bdd7369744.pdf",
+          "title": "\u0000f2\u0000f6\u0000e8\u0000c3\u0000bd\u0000e5\u0000c6\u0000a8\u0000e6\u0000ba\u0000d0\u0000e5\u0000f1\u0000d5\u0000b9\u0000e2\u0000d0\u0000a2\u0000e5\u0000d1\u0000ab\u0000e4\u0000ba\u0000d4\u0000e8\u0000a7\u0000c4\u0000e5\u0000c8\u0000d2",
+          "publisher": "National Energy Administration (NEA)",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://english.www.gov.cn/news/202607/23/content_WS6a617ed3c6d00ca5f9a0c5e8.html",
+          "title": "China unveils five-year plan for renewable energy development",
+          "publisher": "State Council / Xinhua via english.www.gov.cn",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://www.carbonbrief.org/qa-what-does-chinas-15th-five-year-plan-for-renewables-mean-for-climate-change",
+          "title": "Q&A: What does China\u0000e2\u0000d9s 15th \u0000e2\u0000d8five-year plan\u0000e2\u0000d9 for renewables mean for climate change?",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-07-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bf03670b23",
+      "text": "By 2030, total renewable energy consumption is targeted at about 1.8 billion tonnes of standard coal equivalent, up from about 1.18 billion tonnes in 2025.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nea.gov.cn/20260723/cab1eb6727674bcf9a0efea45ed525e0/20260723cab1eb6727674bcf9a0efea45ed525e0_360d36cb349c4c4279945e87bdd7369744.pdf",
+          "title": "\u0000f2\u0000f6\u0000e8\u0000c3\u0000bd\u0000e5\u0000c6\u0000a8\u0000e6\u0000ba\u0000d0\u0000e5\u0000f1\u0000d5\u0000b9\u0000e2\u0000d0\u0000a2\u0000e5\u0000d1\u0000ab\u0000e4\u0000ba\u0000d4\u0000e8\u0000a7\u0000c4\u0000e5\u0000c8\u0000d2",
+          "publisher": "National Energy Administration (NEA)",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://english.www.gov.cn/news/202607/23/content_WS6a617ed3c6d00ca5f9a0c5e8.html",
+          "title": "China unveils five-year plan for renewable energy development",
+          "publisher": "State Council / Xinhua via english.www.gov.cn",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://www.carbonbrief.org/qa-what-does-chinas-15th-five-year-plan-for-renewables-mean-for-climate-change",
+          "title": "Q&A: What does China\u0000e2\u0000d9s 15th \u0000e2\u0000d8five-year plan\u0000e2\u0000d9 for renewables mean for climate change?",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-07-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bcc84ffa3b",
+      "text": "At end-2025, China's renewable capacity was 2,340 GW, including wind+solar 1,840 GW (wind 640 GW, solar 1,200 GW), hydropower 450 GW (pumped storage 66 GW), solar thermal 1.82 GW.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nea.gov.cn/20260723/cab1eb6727674bcf9a0efea45ed525e0/20260723cab1eb6727674bcf9a0efea45ed525e0_360d36cb349c4c4279945e87bdd7369744.pdf",
+          "title": "\u0000f2\u0000f6\u0000e8\u0000c3\u0000bd\u0000e5\u0000c6\u0000a8\u0000e6\u0000ba\u0000d0\u0000e5\u0000f1\u0000d5\u0000b9\u0000e2\u0000d0\u0000a2\u0000e5\u0000d1\u0000ab\u0000e4\u0000ba\u0000d4\u0000e8\u0000a7\u0000c4\u0000e5\u0000c8\u0000d2",
+          "publisher": "National Energy Administration (NEA)",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://www.nea.gov.cn/20260212/742b8c6a078347b0b39de676c05c5d58/c.html",
+          "title": "2025\u0000e5\u0000b9\u0000b4\u0000e5\u0000f6\u0000af\u0000e7\u0000d4\u0000df\u0000e8\u0000c3\u0000bd\u0000e5\u0000b9\u0000b6\u0000e7\u0000bd\u0000d1\u0000e8\u0000bf\u0000d0\u0000e8\u0000a1\u0000cc\u0000e6\u0000c3\u0000b5\u0000e5\u0000c6\u0000b5",
+          "publisher": "National Energy Administration",
+          "published_at": "2026-02-12"
+        },
+        {
+          "url": "https://www.nea.gov.cn/20260130/503483f133e44016a66ddd6fad8ab695/c.html",
+          "title": "\u0000e6\u0000c8\u0000d1\u0000e5\u00009b\u0000bd\u0000e9\u0000a3\u0000ce\u0000e7\u0000d4\u0000b5\u0000e5\u0000c5\u0000c9\u0000e4\u0000b8\u0000ad\u0000e7\u0000b4\u0000af\u0000e8\u0000ae\u0000a1\u0000e8\u0000a3\u0000c5\u0000e6\u0000c9\u0000ba\u0000e9\u0000a6\u0000d6\u0000e8\u0000b6\u0000c5\u000018\u0000e4\u0000ba\u0000bf\u0000e5\u0000d1\u0000a8\u0000e7\u0000d3\u0000a6",
+          "publisher": "National Energy Administration",
+          "published_at": "2026-01-30"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_06d02c343e",
+      "text": "In 2025, renewable generation was about 3,990-4,000 TWh (wind+solar about 2,300 TWh), about 38% of total electricity; wind+solar alone was 22% of total output.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nea.gov.cn/20260212/742b8c6a078347b0b39de676c05c5d58/c.html",
+          "title": "2025\u0000e5\u0000b9\u0000b4\u0000e5\u0000f6\u0000af\u0000e7\u0000d4\u0000df\u0000e8\u0000c3\u0000bd\u0000e5\u0000b9\u0000b6\u0000e7\u0000bd\u0000d1\u0000e8\u0000bf\u0000d0\u0000e8\u0000a1\u0000cc\u0000e6\u0000c3\u0000b5\u0000e5\u0000c6\u0000b5",
+          "publisher": "National Energy Administration",
+          "published_at": "2026-02-12"
+        },
+        {
+          "url": "https://www.carbonbrief.org/qa-what-does-chinas-15th-five-year-plan-for-renewables-mean-for-climate-change",
+          "title": "Q&A: What does China\u0000e2\u0000d9s 15th \u0000e2\u0000d8five-year plan\u0000e2\u0000d9 for renewables mean for climate change?",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-07-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fc516027e6",
+      "text": "The previous 2030 target for wind+solar of 1,200 GW (set in 2020) was met six years early, by 2024.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/qa-what-does-chinas-15th-five-year-plan-for-renewables-mean-for-climate-change",
+          "title": "Q&A: What does China\u0000e2\u0000d9s 15th \u0000e2\u0000d8five-year plan\u0000e2\u0000d9 for renewables mean for climate change?",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-07-29"
+        },
+        {
+          "url": "https://www.ndrc.gov.cn/xxgk/zcfb/ghwb/202206/P020220602315308557623.pdf",
+          "title": "\u0000e2\u0000d0\u0000a2\u0000e5\u0000d1\u0000ab\u0000e4\u0000ba\u0000d4\u0000e5\u0000f6\u0000af\u0000e7\u0000d4\u0000df\u0000e8\u0000c3\u0000bd\u0000e5\u0000b9\u0000b6\u0000e5\u0000f1\u0000d5\u0000b9\u0000e8\u0000a7\u0000c4\u0000e5\u0000c8\u0000d2",
+          "publisher": "NDRC / NEA",
+          "published_at": "2022-06-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1f32581fc1",
+      "text": "The 14th Five-Year Plan (2021-2025) targeted 3,300 TWh renewable generation, 33% total electricity (18% non-hydro), and renewable consumption of 1.0 Gtce by 2025.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.ndrc.gov.cn/xxgk/zcfb/ghwb/202206/P020220602315308557623.pdf",
+          "title": "\u0000e2\u0000d0\u0000a2\u0000e5\u0000d1\u0000ab\u0000e4\u0000ba\u0000d4\u0000e5\u0000f6\u0000af\u0000e7\u0000d4\u0000df\u0000e8\u0000c3\u0000bd\u0000e5\u0000b9\u0000b6\u0000e5\u0000f1\u0000d5\u0000b9\u0000e8\u0000a7\u0000c4\u0000e5\u0000c8\u0000d2",
+          "publisher": "NDRC / NEA",
+          "published_at": "2022-06-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_34408760ba",
+      "text": "Firm capacity (6e\u0000fe1\u0000fa3\u0000a1b) is defined as guaranteed power at 95% confidence during supply-guarantee periods, including source-side storage, weighted by locally utilized grid-connected capacity.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nea.gov.cn/20260723/cab1eb6727674bcf9a0efea45ed525e0/20260723cab1eb6727674bcf9a0efea45ed525e0_360d36cb349c4c4279945e87bdd7369744.pdf",
+          "title": "\u0000f2\u0000f6\u0000e8\u0000c3\u0000bd\u0000e5\u0000c6\u0000a8\u0000e6\u0000ba\u0000d0\u0000e5\u0000f1\u0000d5\u0000b9\u0000e2\u0000d0\u0000a2\u0000e5\u0000d1\u0000ab\u0000e4\u0000ba\u0000d4\u0000e8\u0000a7\u0000c4\u0000e5\u0000c8\u0000d2",
+          "publisher": "National Energy Administration (NEA)",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://www.carbonbrief.org/qa-what-does-chinas-15th-five-year-plan-for-renewables-mean-for-climate-change",
+          "title": "Q&A: What does China\u0000e2\u0000d9s 15th \u0000e2\u0000d8five-year plan\u0000e2\u0000d9 for renewables mean for climate change?",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-07-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8fde1a9ab2",
+      "text": "Reliable substitute targets for 2030: national average wind+solar firm capacity 8% (wind ~11%, solar ~6%), wind+solar share during summer/winter evening peaks >20% (up ~10 percentage points), and +300 GW new reliable peak generation capability over 2026-2030.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nea.gov.cn/20260723/cab1eb6727674bcf9a0efea45ed525e0/20260723cab1eb6727674bcf9a0efea45ed525e0_360d36cb349c4c4279945e87bdd7369744.pdf",
+          "title": "\u0000f2\u0000f6\u0000e8\u0000c3\u0000bd\u0000e5\u0000c6\u0000a8\u0000e6\u0000ba\u0000d0\u0000e5\u0000f1\u0000d5\u0000b9\u0000e2\u0000d0\u0000a2\u0000e5\u0000d1\u0000ab\u0000e4\u0000ba\u0000d4\u0000e8\u0000a7\u0000c4\u0000e5\u0000c8\u0000d2",
+          "publisher": "National Energy Administration (NEA)",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://english.www.gov.cn/news/202607/23/content_WS6a617ed3c6d00ca5f9a0c5e8.html",
+          "title": "China unveils five-year plan for renewable energy development",
+          "publisher": "State Council / Xinhua via english.www.gov.cn",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://www.carbonbrief.org/qa-what-does-chinas-15th-five-year-plan-for-renewables-mean-for-climate-change",
+          "title": "Q&A: What does China\u0000e2\u0000d9s 15th \u0000e2\u0000d8five-year plan\u0000e2\u0000d9 for renewables mean for climate change?",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-07-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_95ed38ccdb",
+      "text": "New centralized wind/solar plants are required to achieve firm capacity of at least 10% in principle by 2030, with >20% encouraged where conditions allow.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nea.gov.cn/20260723/cab1eb6727674bcf9a0efea45ed525e0/20260723cab1eb6727674bcf9a0efea45ed525e0_360d36cb349c4c4279945e87bdd7369744.pdf",
+          "title": "\u0000f2\u0000f6\u0000e8\u0000c3\u0000bd\u0000e5\u0000c6\u0000a8\u0000e6\u0000ba\u0000d0\u0000e5\u0000f1\u0000d5\u0000b9\u0000e2\u0000d0\u0000a2\u0000e5\u0000d1\u0000ab\u0000e4\u0000ba\u0000d4\u0000e8\u0000a7\u0000c4\u0000e5\u0000c8\u0000d2",
+          "publisher": "National Energy Administration (NEA)",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://www.carbonbrief.org/qa-what-does-chinas-15th-five-year-plan-for-renewables-mean-for-climate-change",
+          "title": "Q&A: What does China\u0000e2\u0000d9s 15th \u0000e2\u0000d8five-year plan\u0000e2\u0000d9 for renewables mean for climate change?",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-07-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_93b827a414",
+      "text": "Grid-friendly (system-friendly) plants are defined as providing voltage, frequency and inertia support, grid-forming capability, multi-energy integration (wind+solar+storage, solar thermal, biomass), improved forecasting and coordinated dispatch.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nea.gov.cn/20260723/cab1eb6727674bcf9a0efea45ed525e0/20260723cab1eb6727674bcf9a0efea45ed525e0_360d36cb349c4c4279945e87bdd7369744.pdf",
+          "title": "\u0000f2\u0000f6\u0000e8\u0000c3\u0000bd\u0000e5\u0000c6\u0000a8\u0000e6\u0000ba\u0000d0\u0000e5\u0000f1\u0000d5\u0000b9\u0000e2\u0000d0\u0000a2\u0000e5\u0000d1\u0000ab\u0000e4\u0000ba\u0000d4\u0000e8\u0000a7\u0000c4\u0000e5\u0000c8\u0000d2",
+          "publisher": "National Energy Administration (NEA)",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://www.carbonbrief.org/qa-what-does-chinas-15th-five-year-plan-for-renewables-mean-for-climate-change",
+          "title": "Q&A: What does China\u0000e2\u0000d9s 15th \u0000e2\u0000d8five-year plan\u0000e2\u0000d9 for renewables mean for climate change?",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-07-29"
+        },
+        {
+          "url": "https://globalenergymonitor.org/sites/default/files/2026-07/GEM%20China%20Wind%20%26%20Solar%20brief%20July%202026.pdf.pdf",
+          "title": "China Wind & Solar brief July 2026",
+          "publisher": "Global Energy Monitor",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_473844d36e",
+      "text": "During 2026-2030, the seven major northern wind+solar bases (Sanbei, including Xinjiang, Yellow River upper reaches, Hexi Corridor, Yellow River bend, Jibei, Songliao) will add >370 GW, and new offshore wind starts will total ~100 GW to reach >100 GW cumulative offshore by 2030.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nea.gov.cn/20260723/cab1eb6727674bcf9a0efea45ed525e0/20260723cab1eb6727674bcf9a0efea45ed525e0_360d36cb349c4c4279945e87bdd7369744.pdf",
+          "title": "\u0000f2\u0000f6\u0000e8\u0000c3\u0000bd\u0000e5\u0000c6\u0000a8\u0000e6\u0000ba\u0000d0\u0000e5\u0000f1\u0000d5\u0000b9\u0000e2\u0000d0\u0000a2\u0000e5\u0000d1\u0000ab\u0000e4\u0000ba\u0000d4\u0000e8\u0000a7\u0000c4\u0000e5\u0000c8\u0000d2",
+          "publisher": "National Energy Administration (NEA)",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://english.www.gov.cn/news/202607/23/content_WS6a617ed3c6d00ca5f9a0c5e8.html",
+          "title": "China unveils five-year plan for renewable energy development",
+          "publisher": "State Council / Xinhua via english.www.gov.cn",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fe451059f1",
+      "text": "Distributed new energy is targeted to add >300 GW over 2026-2030 (about 60 GW per year).",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nea.gov.cn/20260723/cab1eb6727674bcf9a0efea45ed525e0/20260723cab1eb6727674bcf9a0efea45ed525e0_360d36cb349c4c4279945e87bdd7369744.pdf",
+          "title": "\u0000f2\u0000f6\u0000e8\u0000c3\u0000bd\u0000e5\u0000c6\u0000a8\u0000e6\u0000ba\u0000d0\u0000e5\u0000f1\u0000d5\u0000b9\u0000e2\u0000d0\u0000a2\u0000e5\u0000d1\u0000ab\u0000e4\u0000ba\u0000d4\u0000e8\u0000a7\u0000c4\u0000e5\u0000c8\u0000d2",
+          "publisher": "National Energy Administration (NEA)",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://www.carbonbrief.org/qa-what-does-chinas-15th-five-year-plan-for-renewables-mean-for-climate-change",
+          "title": "Q&A: What does China\u0000e2\u0000d9s 15th \u0000e2\u0000d8five-year plan\u0000e2\u0000d9 for renewables mean for climate change?",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-07-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_eb1d187913",
+      "text": "By 2030, pumped storage is targeted at ~160 GW (from 66 GW in 2025), new-type energy storage at 300 GW (from 136 GW end-2025), solar thermal at 15 GW (from 1.82 GW), marine energy at 0.4 GW.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nea.gov.cn/20260723/cab1eb6727674bcf9a0efea45ed525e0/20260723cab1eb6727674bcf9a0efea45ed525e0_360d36cb349c4c4279945e87bdd7369744.pdf",
+          "title": "\u0000f2\u0000f6\u0000e8\u0000c3\u0000bd\u0000e5\u0000c6\u0000a8\u0000e6\u0000ba\u0000d0\u0000e5\u0000f1\u0000d5\u0000b9\u0000e2\u0000d0\u0000a2\u0000e5\u0000d1\u0000ab\u0000e4\u0000ba\u0000d4\u0000e8\u0000a7\u0000c4\u0000e5\u0000c8\u0000d2",
+          "publisher": "National Energy Administration (NEA)",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://www.carbonbrief.org/qa-what-does-chinas-15th-five-year-plan-for-renewables-mean-for-climate-change",
+          "title": "Q&A: What does China\u0000e2\u0000d9s 15th \u0000e2\u0000d8five-year plan\u0000e2\u0000d9 for renewables mean for climate change?",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-07-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f3026e4651",
+      "text": "Non-power use of renewables is targeted at 150 Mtce by 2030, 2.5 times the 2025 level of 60 Mtce; renewable hydrogen production is targeted at 2 million tonnes (from 0.25 Mt in 2025).",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nea.gov.cn/20260723/cab1eb6727674bcf9a0efea45ed525e0/20260723cab1eb6727674bcf9a0efea45ed525e0_360d36cb349c4c4279945e87bdd7369744.pdf",
+          "title": "\u0000f2\u0000f6\u0000e8\u0000c3\u0000bd\u0000e5\u0000c6\u0000a8\u0000e6\u0000ba\u0000d0\u0000e5\u0000f1\u0000d5\u0000b9\u0000e2\u0000d0\u0000a2\u0000e5\u0000d1\u0000ab\u0000e4\u0000ba\u0000d4\u0000e8\u0000a7\u0000c4\u0000e5\u0000c8\u0000d2",
+          "publisher": "National Energy Administration (NEA)",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://www.carbonbrief.org/qa-what-does-chinas-15th-five-year-plan-for-renewables-mean-for-climate-change",
+          "title": "Q&A: What does China\u0000e2\u0000d9s 15th \u0000e2\u0000d8five-year plan\u0000e2\u0000d9 for renewables mean for climate change?",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-07-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6a83ebc2fd",
+      "text": "In 2025, China added ~430-500 GW of wind+solar (solar ~317-370 GW, wind ~120 GW), accounting for over 60% of global renewable additions; China holds about 2,258 GW of 5,149 GW global renewable capacity (~44%).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nea.gov.cn/20260212/742b8c6a078347b0b39de676c05c5d58/c.html",
+          "title": "2025\u0000e5\u0000b9\u0000b4\u0000e5\u0000f6\u0000af\u0000e7\u0000d4\u0000df\u0000e8\u0000c3\u0000bd\u0000e5\u0000b9\u0000b6\u0000e7\u0000bd\u0000d1\u0000e8\u0000bf\u0000d0\u0000e8\u0000a1\u0000cc\u0000e6\u0000c3\u0000b5\u0000e5\u0000c6\u0000b5",
+          "publisher": "National Energy Administration",
+          "published_at": "2026-02-12"
+        },
+        {
+          "url": "https://www.irena.org/-/media/Files/IRENA/Agency/Publication/2026/Mar/IRENA_DAT_RE_capacity_statistics_2026.pdf",
+          "title": "Renewable capacity statistics 2026",
+          "publisher": "IRENA",
+          "published_at": "2026-03-31"
+        },
+        {
+          "url": "https://globalenergymonitor.org/sites/default/files/2026-07/GEM%20China%20Wind%20%26%20Solar%20brief%20July%202026.pdf.pdf",
+          "title": "China Wind & Solar brief July 2026",
+          "publisher": "Global Energy Monitor",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c9651d0ed2",
+      "text": "China's solar module FOB price was about $0.112-0.119/W in mid-2026 (TOPCon), with EU DDP about \u0000.108-0.111/W; forward prices softened after the 9% export VAT rebate was cancelled on 1 April 2026.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.pv-magazine.com/2026/07/03/china-solar-module-forward-prices-ease-amid-softer-europe-demand/",
+          "title": "China solar module forward prices ease amid softer Europe demand",
+          "publisher": "pv magazine / OPIS",
+          "published_at": "2026-07-03"
+        },
+        {
+          "url": "https://www.reuters.com/sustainability/climate-energy/china-scrap-export-tax-rebates-photovoltaic-battery-products-2026-01-09/",
+          "title": "China to scrap export tax rebates for photovoltaic and battery products",
+          "publisher": "Reuters",
+          "published_at": "2026-01-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a7f568a1a3",
+      "text": "China dominates the solar supply chain with about 93% of polysilicon, 97% of wafers, 92% of cells and 86% of modules in 2024; module prices halved in 2023 and fell another 25% in 2024, with polysilicon down >70% in 2023.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.csis.org/analysis/chinas-solar-industry-upheaval-effects-will-be-global",
+          "title": "China's Solar Industry Is in Upheaval\u0000e2\u0000d4The Effects Will Be Global",
+          "publisher": "CSIS",
+          "published_at": "2026-03-12"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2b0c4a8e8e",
+      "text": "Trade barriers fragment markets: EU Net-Zero Industry Act caps single-source procurement at 50% and Foreign Subsidies Regulation filters tenders; US Section 301 imposes 50% tariffs plus anti-circumvention and UFLPA enforcement effectively decouples US market.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.csis.org/analysis/chinas-solar-industry-upheaval-effects-will-be-global",
+          "title": "China's Solar Industry Is in Upheaval\u0000e2\u0000d4The Effects Will Be Global",
+          "publisher": "CSIS",
+          "published_at": "2026-03-12"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3ef12d43ed",
+      "text": "Curtailment is rising: national solar curtailment 6.6% in H1 2025 (from 3.9% year earlier), wind 5.7% (from 3%); 10-17% solar in Qinghai/Xinjiang/Gansu in 2025, 15-30% wind+solar in Inner Mongolia/Xinjiang/Qinghai in H1 2026; about 360 TWh curtailed in H1 2026, exceeding 258 TWh demand growth.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://globalenergymonitor.org/sites/default/files/2026-07/GEM%20China%20Wind%20%26%20Solar%20brief%20July%202026.pdf.pdf",
+          "title": "China Wind & Solar brief July 2026",
+          "publisher": "Global Energy Monitor",
+          "published_at": "2026-07-21"
+        },
+        {
+          "url": "https://energyandcleanair.org/what-drove-chinas-historic-drop-in-power-sector-emissions/",
+          "title": "What drove China\u0000e2\u0000d9s historic drop in power-sector emissions?",
+          "publisher": "Centre for Research on Energy and Clean Air (CREA)",
+          "published_at": "2026-05-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fe8c6c8109",
+      "text": "Across China's UHVDC network, wind+solar account for only about 20% of transmitted electricity vs coal 42% since 2021; about 315 GW of megabase capacity will need ~27 UHVDC lines by 2030, but only 6 were completed/started 2021-2025 and the 15th plan adds about 10 lines (State Grid plans 15).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://globalenergymonitor.org/sites/default/files/2026-07/GEM%20China%20Wind%20%26%20Solar%20brief%20July%202026.pdf.pdf",
+          "title": "China Wind & Solar brief July 2026",
+          "publisher": "Global Energy Monitor",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_85242178f9",
+      "text": "Eleven planned UHVDC lines serving megabases pair 129 GW wind+solar with 40 GW coal, with dispatch split roughly evenly between coal and renewables, risking coal lock-in.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://globalenergymonitor.org/sites/default/files/2026-07/GEM%20China%20Wind%20%26%20Solar%20brief%20July%202026.pdf.pdf",
+          "title": "China Wind & Solar brief July 2026",
+          "publisher": "Global Energy Monitor",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_be0614e070",
+      "text": "Provincial market reform (Document 136) is incomplete: only 18 of 31 provinces had finalized market-based wind/solar pricing rules by 15 Oct 2025, with 10 drafts and 3 with no plan, creating investment uncertainty.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/analysis-only-half-of-chinese-provinces-finalise-key-document-136-renewable-rules",
+          "title": "Analysis: Only half of Chinese provinces finalise key \u0000e2\u0000d8Document 136\u0000e2\u0000d9 renewable rules",
+          "publisher": "Carbon Brief",
+          "published_at": "2025-10-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_26a29d3cca",
+      "text": "The 15th plan supports China's pledge to peak carbon before 2030 and carbon intensity -17% over 2026-2030, non-fossil 25% of energy by 2030, and the NDC target of 3.6 TW wind+solar by 2035 (implying ~200 GW/year vs 430 GW added in 2025).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/qa-what-does-chinas-15th-five-year-plan-for-renewables-mean-for-climate-change",
+          "title": "Q&A: What does China\u0000e2\u0000d9s 15th \u0000e2\u0000d8five-year plan\u0000e2\u0000d9 for renewables mean for climate change?",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-07-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fffa5da561",
+      "text": "A Tsinghua University study found China would need >4,000 GW non-fossil capacity by 2030 or total energy <6.5 Gtce to meet climate commitments, above the plan's 3,500 GW renewable target.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/qa-what-does-chinas-15th-five-year-plan-for-renewables-mean-for-climate-change",
+          "title": "Q&A: What does China\u0000e2\u0000d9s 15th \u0000e2\u0000d8five-year plan\u0000e2\u0000d9 for renewables mean for climate change?",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-07-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6cccbfdb26",
+      "text": "If utilization losses had been avoided in 2025, wind+solar generation would have been about 13% higher, displacing a further 5% of coal generation, valued at about $17 billion.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://energyandcleanair.org/what-drove-chinas-historic-drop-in-power-sector-emissions/",
+          "title": "What drove China\u0000e2\u0000d9s historic drop in power-sector emissions?",
+          "publisher": "Centre for Research on Energy and Clean Air (CREA)",
+          "published_at": "2026-05-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9807752258",
+      "text": "By 2030, total renewable power generation installed capacity is targeted at about 3,500 GW (35\u0000\u0000 kW).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nea.gov.cn/20260723/cab1eb6727674bcf9a0efea45ed525e0/20260723cab1eb6727674bcf9a0efea45ed525e0_360d36cb349c4c4279945e87bdd7369744.pdf",
+          "title": "\u0000f2\u0000f6\u0000e8\u0000c3\u0000bd\u0000e5\u0000c6\u0000a8\u0000e6\u0000ba\u0000d0\u0000e5\u0000f1\u0000d5\u0000b9\u0000e2\u0000d0\u0000a2\u0000e5\u0000d1\u0000ab\u0000e4\u0000ba\u0000d4\u0000e8\u0000a7\u0000c4\u0000e5\u0000c8\u0000d2",
+          "publisher": "National Energy Administration (NEA)",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://english.www.gov.cn/news/202607/23/content_WS6a617ed3c6d00ca5f9a0c5e8.html",
+          "title": "China unveils five-year plan for renewable energy development",
+          "publisher": "State Council / Xinhua via english.www.gov.cn",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://chinaenergyportal.org/en/15th-plan-for-renewable-energy-development/",
+          "title": "15th Five-Year Plan for Renewable Energy Development (translation)",
+          "publisher": "China Energy Portal",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f06512d779",
+      "text": "Firm capacity (\u00007\u0006e\u0000fe1\u0000fa3\u0000a1b) is defined as guaranteed power at 95% confidence during supply-guarantee periods, including source-side storage, weighted by locally utilized grid-connected capacity.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nea.gov.cn/20260723/cab1eb6727674bcf9a0efea45ed525e0/20260723cab1eb6727674bcf9a0efea45ed525e0_360d36cb349c4c4279945e87bdd7369744.pdf",
+          "title": "\u0000f2\u0000f6\u0000e8\u0000c3\u0000bd\u0000e5\u0000c6\u0000a8\u0000e6\u0000ba\u0000d0\u0000e5\u0000f1\u0000d5\u0000b9\u0000e2\u0000d0\u0000a2\u0000e5\u0000d1\u0000ab\u0000e4\u0000ba\u0000d4\u0000e8\u0000a7\u0000c4\u0000e5\u0000c8\u0000d2",
+          "publisher": "National Energy Administration (NEA)",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://chinaenergyportal.org/en/15th-plan-for-renewable-energy-development/",
+          "title": "15th Five-Year Plan for Renewable Energy Development (translation)",
+          "publisher": "China Energy Portal",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4413098b1a",
+      "text": "NDRC/NEA justify the ~160 GW/year wind+solar pace as 'reasonable scale and rhythm' balancing energy security and green transition, framing the pivot as 'expand quantity + improve quality, reliable substitution' (扩量提质、可靠替代) and 'establish before breaking' (先立后破、破立并举) — shifting from pursuit of installed capacity to system support capability (reliable peak power, grid-friendly plants) rather than a conservative retreat.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.news.cn/politics/20260723/4676455946f545c2b784d76625808391/c.html",
+          "title": "NDRC/NEA Q&A on 15th Renewable Plan — 扩量提质、可靠替代",
+          "publisher": "Xinhua / news.cn",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://www.nea.gov.cn/20260723/cab1eb6727674bcf9a0efea45ed525e0/20260723cab1eb6727674bcf9a0efea45ed525e0_360d36cb349c4c4279945e87bdd7369744.pdf",
+          "title": "\u0000f2\u0000f6\u0000e8\u0000c3\u0000bd\u0000e5\u0000c6\u0000a8\u0000e6\u0000ba\u0000d0\u0000e5\u0000f1\u0000d5\u0000b9\u0000e2\u0000d0\u0000a2\u0000e5\u0000d1\u0000ab\u0000e4\u0000ba\u0000d4\u0000e8\u0000a7\u0000c4\u0000e5\u0000c8\u0000d2",
+          "publisher": "National Energy Administration (NEA)",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2442587b1f",
+      "text": "State Grid presents UHVDC and grid investment as accelerating: 4 trillion yuan fixed-asset investment 2026-2030 (+40% vs 14th Plan), targeting ~200 GW/year wind+solar within its zones, +30% cross-regional transmission capacity vs end-2025, and commissioning of first 15th-Plan UHVDC (Shaanxi-Anhui ±800kV, 1,055 km, 8 GW, >50% renewable, 36 TWh/year, 11 GW renewable integrated) with 43 UHV projects already exceeding 380 GW cross-regional capacity.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.chinadaily.com.cn/a/202601/16/WS6969b2aea310d6866eb34243.html",
+          "title": "State Grid plans massive investments for 15th Five-Year Plan",
+          "publisher": "China Daily / State Grid",
+          "published_at": "2026-01-16"
+        },
+        {
+          "url": "https://news.cgtn.com/news/2026-06-30/China-launches-major-UHV-power-link-to-deliver-renewable-electricity-1OoL69sTI9W/p.html",
+          "title": "China launches major UHV power link to deliver renewable electricity",
+          "publisher": "CGTN / State Grid",
+          "published_at": "2026-06-30"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8cfb319d51",
+      "text": "Coal/power-sector view frames coal as backbone and stabilizing force for peak-load security, providing ~70% of load-regulation capacity and ~80% of peak capacity in China's coal-dominant thermal fleet where gas is limited; capacity payments (RMB 165/kW-year minimum from 2026) and 60-70% medium/long-term contract floors are defended as reliability remuneration, while CREA/GEM analysis argues they now crowd out renewables when curtailment hits 360 TWh in H1 2026.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://energyandcleanair.org/publication/built-for-backup-contracted-to-run-chinas-coal-support-system-risks-crowding-out-clean-power/",
+          "title": "Built for backup, contracted to run: China's coal support system risks crowding out clean power",
+          "publisher": "CREA / GEM",
+          "published_at": "2026-08-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bc8bf7a138",
+      "text": "Shandong Provincial DRC defends Document 136 auction feasibility: mechanism pricing works on 'volume and price' — volume set by consumption targets, clearing price by highest winning bid on lowest-price-first basis; 0.225 yuan/kWh solar result reflected panic bidding due to small solar quota (1.248 TWh vs 5.967 TWh wind) in China's first auction with >3,000 participants, not a nationally representative financeable level; officials and industry expect more flexible wind/solar quota allocation in subsequent rounds.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.newenergyera.com/news/shandong-pioneers-full-market-integration-of-renewable-power-through-pricing-auction.html",
+          "title": "Shandong Pioneers Full Market Integration of Renewable Power Through Pricing Auction",
+          "publisher": "State Grid News / Shandong DRC",
+          "published_at": "2025-09-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c3f1bdc2c9",
+      "text": "CPIA/industry and regulators present overcapacity as 'involution-style' competition being corrected via market-compliant tools: SAMR July 31 2026 Yancheng price-compliance meeting instructed 27 firms to strengthen cost accounting and self-inspection under new voluntary group standard 'General Rules for Cost Accounting Model of PV Industry' (July 27), unifying polysilicon-to-module cost boundaries; no numerical price floor imposed, enforcement via reminders/interviews, with formal action only for serious disruptors.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.pv-magazine.com/2026/08/04/china-draws-a-line-under-the-solar-price-war/",
+          "title": "China draws a line under the solar price war",
+          "publisher": "pv magazine",
+          "published_at": "2026-08-04"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b04701db4d",
+      "text": "Eight leading polysilicon producers (>90% effective capacity: Tongwei, GCL, Daqo, Xinte, Asia Silicon, East Hope, Qinghai Lihao, Goens) pledged Aug 2026 to not sell below cost calculated under the new standard, accept SAMR supervision and mutual reporting, and proactively eliminate high-energy outdated capacity — indicating industry self-discipline toward high-quality development.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.globaltimes.cn/page/202608/1367739.shtml",
+          "title": "Eight major polysilicon producers pledge to avoid below-cost sales amid anti-involution push",
+          "publisher": "Global Times / Shanghai Securities Journal",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_014f118bcb",
+      "text": "CSIS analysis offers contrary interpretation of supply-chain dominance: current price war and consolidation (top-5 firms cut >30% workforce in 2024, >40 smaller firms exited, module prices halved in 2023 +25% in 2024, polysilicon RMB 230k→65k/ton) is forging a more resilient Chinese core, embedding deeper into global value chains via overseas plants (Indonesia, Vietnam, Malaysia, Saudi Arabia) and shifting to wafers/cells exports to meet EU diversification rules, while securing technological lead (65% of global PV patents 2024, TOPCon 25.4% efficiency, perovskite/silicon tandem 34.85% record). Trade barriers (EU NZIA 50% cap, FSR, US 50% Section 301 + anti-circumvention/UFLPA) have decoupled US but not eroded global leadership.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.csis.org/analysis/chinas-solar-industry-upheaval-effects-will-be-global",
+          "title": "China's Solar Industry Is in Upheaval\u0000e2\u0000d4The Effects Will Be Global",
+          "publisher": "CSIS",
+          "published_at": "2026-03-12"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

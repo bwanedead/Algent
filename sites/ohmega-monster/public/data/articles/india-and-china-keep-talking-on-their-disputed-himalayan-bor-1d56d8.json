@@ -1,0 +1,909 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/india-and-china-keep-talking-on-their-disputed-himalayan-bor-1d56d8",
+  "title": "India and China keep talking on their disputed Himalayan border, but troops stay put",
+  "summary": "The 36th round in New Delhi on 6 August produced only a promise to keep talking, leaving disengagement complete but de-escalation undone and a new dispute over a giant upstream dam on the agenda.",
+  "published_at": "2026-08-08T12:39:49.703193+00:00",
+  "as_of": "2026-08-08",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 26,
+    "likely": 12,
+    "contested": 1
+  },
+  "claims": [
+    {
+      "id": "clm_de768f033b",
+      "text": "The 36th WMCC meeting on India-China Border Affairs was held in New Delhi on 6 August 2026, announced by MEA on 7 August 2026",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.thehindu.com/news/national/india-china-discuss-lac-situation-and-border-management-during-diplomatic-talks-mea/article71316535.ece",
+          "title": "India, China discuss LAC situation and border management during diplomatic talks: MEA",
+          "publisher": "The Hindu",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.hindustantimes.com/india-news/india-china-to-use-diplomatic-military-channels-to-resolve-outstanding-border-issues-101786082401188.html",
+          "title": "India, China to use diplomatic, military channels to resolve outstanding border issues: MEA",
+          "publisher": "Hindustan Times",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.cnbctv18.com/india/india-china-hold-fresh-border-talks-new-delhi-raises-concerns-over-mega-dam-project-19964123.htm",
+          "title": "India, China hold fresh border talks; New Delhi raises concerns over mega dam project",
+          "publisher": "CNBC-TV18",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b70f78763e",
+      "text": "The Indian delegation was led by Sujit Ghosh, Joint Secretary (East Asia), MEA; the Chinese delegation by Hou Yanqi, Director General of Boundary and Oceanic Affairs, Chinese MFA",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.thehindu.com/news/national/india-china-discuss-lac-situation-and-border-management-during-diplomatic-talks-mea/article71316535.ece",
+          "title": "India, China discuss LAC situation and border management during diplomatic talks: MEA",
+          "publisher": "The Hindu",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.hindustantimes.com/india-news/india-china-to-use-diplomatic-military-channels-to-resolve-outstanding-border-issues-101786082401188.html",
+          "title": "India, China to use diplomatic, military channels to resolve outstanding border issues: MEA",
+          "publisher": "Hindustan Times",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.cnbctv18.com/india/india-china-hold-fresh-border-talks-new-delhi-raises-concerns-over-mega-dam-project-19964123.htm",
+          "title": "India, China hold fresh border talks; New Delhi raises concerns over mega dam project",
+          "publisher": "CNBC-TV18",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5383d845e2",
+      "text": "The talks were diplomatic-level WMCC talks, not military corps-commander talks or Special Representatives talks",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.thehindu.com/news/national/india-china-discuss-lac-situation-and-border-management-during-diplomatic-talks-mea/article71316535.ece",
+          "title": "India, China discuss LAC situation and border management during diplomatic talks: MEA",
+          "publisher": "The Hindu",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://carnegieendowment.org/india/research/2026/07/threading-the-needle-indias-path-forward-with-china",
+          "title": "Threading the Needle: India's Path Forward with China",
+          "publisher": "Carnegie Endowment for International Peace",
+          "published_at": "2026-07-02"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_55d1e885b4",
+      "text": "Both sides reviewed the overall situation along the LAC and held frank discussions, underlining that peace and tranquillity in border areas is essential for overall bilateral relations",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.thehindu.com/news/national/india-china-discuss-lac-situation-and-border-management-during-diplomatic-talks-mea/article71316535.ece",
+          "title": "India, China discuss LAC situation and border management during diplomatic talks: MEA",
+          "publisher": "The Hindu",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.hindustantimes.com/india-news/india-china-to-use-diplomatic-military-channels-to-resolve-outstanding-border-issues-101786082401188.html",
+          "title": "India, China to use diplomatic, military channels to resolve outstanding border issues: MEA",
+          "publisher": "Hindustan Times",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.cnbctv18.com/india/india-china-hold-fresh-border-talks-new-delhi-raises-concerns-over-mega-dam-project-19964123.htm",
+          "title": "India, China hold fresh border talks; New Delhi raises concerns over mega dam project",
+          "publisher": "CNBC-TV18",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8b8639da30",
+      "text": "Both sides agreed to continue using existing diplomatic and military channels, including WMCC, local commander-level meetings and other agreed mechanisms, to resolve outstanding issues and avoid misunderstanding and miscalculation along the LAC",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.thehindu.com/news/national/india-china-discuss-lac-situation-and-border-management-during-diplomatic-talks-mea/article71316535.ece",
+          "title": "India, China discuss LAC situation and border management during diplomatic talks: MEA",
+          "publisher": "The Hindu",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.hindustantimes.com/india-news/india-china-to-use-diplomatic-military-channels-to-resolve-outstanding-border-issues-101786082401188.html",
+          "title": "India, China to use diplomatic, military channels to resolve outstanding border issues: MEA",
+          "publisher": "Hindustan Times",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.cnbctv18.com/india/india-china-hold-fresh-border-talks-new-delhi-raises-concerns-over-mega-dam-project-19964123.htm",
+          "title": "India, China hold fresh border talks; New Delhi raises concerns over mega dam project",
+          "publisher": "CNBC-TV18",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f0e868e44c",
+      "text": "Discussions covered boundary delimitation, border management, mechanism-building and trans-border cooperation as follow-up to the 24th Special Representatives talks",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.thehindu.com/news/national/india-china-discuss-lac-situation-and-border-management-during-diplomatic-talks-mea/article71316535.ece",
+          "title": "India, China discuss LAC situation and border management during diplomatic talks: MEA",
+          "publisher": "The Hindu",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.hindustantimes.com/india-news/india-china-to-use-diplomatic-military-channels-to-resolve-outstanding-border-issues-101786082401188.html",
+          "title": "India, China to use diplomatic, military channels to resolve outstanding border issues: MEA",
+          "publisher": "Hindustan Times",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.cnbctv18.com/india/india-china-hold-fresh-border-talks-new-delhi-raises-concerns-over-mega-dam-project-19964123.htm",
+          "title": "India, China hold fresh border talks; New Delhi raises concerns over mega dam project",
+          "publisher": "CNBC-TV18",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0a89606ec0",
+      "text": "India reiterated need for early convening of the Expert Level Mechanism on trans-border rivers and sharing of technical details on China's upstream projects",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.thehindu.com/news/national/india-china-discuss-lac-situation-and-border-management-during-diplomatic-talks-mea/article71316535.ece",
+          "title": "India, China discuss LAC situation and border management during diplomatic talks: MEA",
+          "publisher": "The Hindu",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.hindustantimes.com/india-news/india-china-to-use-diplomatic-military-channels-to-resolve-outstanding-border-issues-101786082401188.html",
+          "title": "India, China to use diplomatic, military channels to resolve outstanding border issues: MEA",
+          "publisher": "Hindustan Times",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.cnbctv18.com/india/india-china-hold-fresh-border-talks-new-delhi-raises-concerns-over-mega-dam-project-19964123.htm",
+          "title": "India, China hold fresh border talks; New Delhi raises concerns over mega dam project",
+          "publisher": "CNBC-TV18",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.hindustantimes.com/india-news/india-asks-china-to-share-details-of-upstream-water-projects-at-wmcc-meet-101786128035732.html",
+          "title": "India, China discuss border issues, upstream river projects at key talks",
+          "publisher": "Hindustan Times",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8c6c794971",
+      "text": "The 35th WMCC meeting was held in Beijing on 27 May 2026, also led by Ghosh and Hou Yanqi, described as constructive and forward-looking",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.hindustantimes.com/india-news/india-china-to-use-diplomatic-military-channels-to-resolve-outstanding-border-issues-101786082401188.html",
+          "title": "India, China to use diplomatic, military channels to resolve outstanding border issues: MEA",
+          "publisher": "Hindustan Times",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.eoibeijing.gov.in/docs/1784532097_4659_35th%20Meeting%20of%20the%20Working%20Mechanism%20for%20Consultation%20%20Coordination%20on%20India-China%20Border%20Affairs%20(May%2027,%202026).pdf",
+          "title": "35th Meeting of the Working Mechanism for Consultation & Coordination on India-China Border Affairs (May 27, 2026)",
+          "publisher": "Embassy of India, Beijing / MEA",
+          "published_at": "2026-05-27"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c9b16fbf4d",
+      "text": "The 24th round of Special Representatives talks was held in New Delhi on 18-19 August 2025 between NSA Ajit Doval and Foreign Minister Wang Yi, reaching ten points of consensus including expert/working groups on delimitation and border management",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.hindustantimes.com/india-news/india-china-to-use-diplomatic-military-channels-to-resolve-outstanding-border-issues-101786082401188.html",
+          "title": "India, China to use diplomatic, military channels to resolve outstanding border issues: MEA",
+          "publisher": "Hindustan Times",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://carnegieendowment.org/india/research/2026/07/threading-the-needle-indias-path-forward-with-china",
+          "title": "Threading the Needle: India's Path Forward with China",
+          "publisher": "Carnegie Endowment for International Peace",
+          "published_at": "2026-07-02"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_728c43f735",
+      "text": "India and China reached a patrolling agreement on 21 October 2024 for Depsang Bulge and Charding-Ninglung Nala junction near Demchok, the last two of six friction points blockaded by PLA in March-April 2020",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.orfonline.org/research/diplomacy-sanctions-and-military-might-india-s-post-galwan-strategies-in-managing-china",
+          "title": "Diplomacy, Sanctions, and Military Might: India's Post-Galwan Strategies in Managing China (ORF Occasional Paper 508)",
+          "publisher": "Observer Research Foundation",
+          "published_at": "2025-11-29"
+        },
+        {
+          "url": "https://carnegieendowment.org/india/research/2026/07/threading-the-needle-indias-path-forward-with-china",
+          "title": "Threading the Needle: India's Path Forward with China",
+          "publisher": "Carnegie Endowment for International Peace",
+          "published_at": "2026-07-02"
+        },
+        {
+          "url": "https://visionias.in/current-affairs/monthly-magazine/2024-11-14/international-relations/india-china-agreement-on-line-of-actual-control-lac",
+          "title": "India-China Agreement on Line of Actual Control (LAC)",
+          "publisher": "Vision IAS",
+          "published_at": "2024-11-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_10d67fe2e2",
+      "text": "Disengagement at the other four friction points (Galwan Valley, Pangong Tso north/south banks, Gogra PP17A, Hot Springs PP15) was completed between February 2021 and September 2022",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.orfonline.org/research/diplomacy-sanctions-and-military-might-india-s-post-galwan-strategies-in-managing-china",
+          "title": "Diplomacy, Sanctions, and Military Might: India's Post-Galwan Strategies in Managing China (ORF Occasional Paper 508)",
+          "publisher": "Observer Research Foundation",
+          "published_at": "2025-11-29"
+        },
+        {
+          "url": "https://visionias.in/current-affairs/monthly-magazine/2024-11-14/international-relations/india-china-agreement-on-line-of-actual-control-lac",
+          "title": "India-China Agreement on Line of Actual Control (LAC)",
+          "publisher": "Vision IAS",
+          "published_at": "2024-11-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_aca9aefaf4",
+      "text": "External Affairs Minister S. Jaishankar stated on 3 December 2024 that disengagement had been achieved in full in eastern Ladakh",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.orfonline.org/research/diplomacy-sanctions-and-military-might-india-s-post-galwan-strategies-in-managing-china",
+          "title": "Diplomacy, Sanctions, and Military Might: India's Post-Galwan Strategies in Managing China (ORF Occasional Paper 508)",
+          "publisher": "Observer Research Foundation",
+          "published_at": "2025-11-29"
+        },
+        {
+          "url": "https://carnegieendowment.org/india/research/2026/07/threading-the-needle-indias-path-forward-with-china",
+          "title": "Threading the Needle: India's Path Forward with China",
+          "publisher": "Carnegie Endowment for International Peace",
+          "published_at": "2026-07-02"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0f4482d052",
+      "text": "Despite disengagement, de-escalation has not been completed; an estimated 50,000-60,000 troops remain forward-deployed on each side along the LAC in eastern Ladakh as of late 2025-2026",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://carnegieendowment.org/india/research/2026/07/threading-the-needle-indias-path-forward-with-china",
+          "title": "Threading the Needle: India's Path Forward with China",
+          "publisher": "Carnegie Endowment for International Peace",
+          "published_at": "2026-07-02"
+        },
+        {
+          "url": "https://indianexpress.com/article/india/india-china-maintain-stability-lac-existing-border-mechanisms-10333567",
+          "title": "India, China agree to maintain stability along LAC, continue existing border mechanisms",
+          "publisher": "The Indian Express",
+          "published_at": "2025-10-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_12bee4a339",
+      "text": "Buffer zones where neither side patrols were created at several disengagement points (e.g., Galwan 1.5 km each side), and the October 2024 agreement introduced coordinated patrolling to avoid face-offs",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.orfonline.org/research/diplomacy-sanctions-and-military-might-india-s-post-galwan-strategies-in-managing-china",
+          "title": "Diplomacy, Sanctions, and Military Might: India's Post-Galwan Strategies in Managing China (ORF Occasional Paper 508)",
+          "publisher": "Observer Research Foundation",
+          "published_at": "2025-11-29"
+        },
+        {
+          "url": "https://carnegieendowment.org/india/research/2026/07/threading-the-needle-indias-path-forward-with-china",
+          "title": "Threading the Needle: India's Path Forward with China",
+          "publisher": "Carnegie Endowment for International Peace",
+          "published_at": "2026-07-02"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e7b833f983",
+      "text": "The LAC is 3,488 km long according to India (China considers it ~2,000 km), divided into Western (Ladakh/Aksai Chin), Middle (Uttarakhand/Himachal, ~625 km, largely undisputed) and Eastern (Sikkim/Arunachal, McMahon Line) sectors",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://visionias.in/current-affairs/monthly-magazine/2024-11-14/international-relations/india-china-agreement-on-line-of-actual-control-lac",
+          "title": "India-China Agreement on Line of Actual Control (LAC)",
+          "publisher": "Vision IAS",
+          "published_at": "2024-11-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_789acdeef7",
+      "text": "The Galwan Valley clash on 15 June 2020 killed 20 Indian soldiers and at least 4 Chinese soldiers (China officially acknowledged 4), the first fatalities on the LAC since 1975",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.cnbctv18.com/india/india-china-hold-fresh-border-talks-new-delhi-raises-concerns-over-mega-dam-project-19964123.htm",
+          "title": "India, China hold fresh border talks; New Delhi raises concerns over mega dam project",
+          "publisher": "CNBC-TV18",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.orfonline.org/research/diplomacy-sanctions-and-military-might-india-s-post-galwan-strategies-in-managing-china",
+          "title": "Diplomacy, Sanctions, and Military Might: India's Post-Galwan Strategies in Managing China (ORF Occasional Paper 508)",
+          "publisher": "Observer Research Foundation",
+          "published_at": "2025-11-29"
+        },
+        {
+          "url": "https://carnegieendowment.org/india/research/2026/07/threading-the-needle-indias-path-forward-with-china",
+          "title": "Threading the Needle: India's Path Forward with China",
+          "publisher": "Carnegie Endowment for International Peace",
+          "published_at": "2026-07-02"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cdb6174622",
+      "text": "China is building a mega hydropower dam on the Yarlung Tsangpo (Brahmaputra) at the Great Bend in Medog County, Tibet, described as the world's largest hydropower project with ~300 billion kWh annual output and cost estimates of $137-167 billion (1.2 trillion yuan)",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.hindustantimes.com/india-news/india-asks-china-to-share-details-of-upstream-water-projects-at-wmcc-meet-101786128035732.html",
+          "title": "India, China discuss border issues, upstream river projects at key talks",
+          "publisher": "Hindustan Times",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d26e57e473",
+      "text": "India-China bilateral trade reached $155.62 billion in calendar 2025, with Chinese exports to India $135.87 billion and Indian exports to China $19.75 billion, yielding a record Indian deficit of $116.12 billion",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://timesofindia.indiatimes.com/business/india-business/india-china-trade-indias-exports-to-china-rise-in-2025-deficit-climbs-to-record-116-bn/articleshow/126530984.cms",
+          "title": "India-China trade: India's exports to China rise in 2025, deficit climbs to record $116 bn",
+          "publisher": "The Times of India",
+          "published_at": "2026-01-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_15e5d3a48d",
+      "text": "India's trade deficit with China was $99.21 billion in 2024 (Chinese exports $113.45bn, Indian exports $14.25bn) and $99.2 billion in FY2024-25 per Indian data",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://timesofindia.indiatimes.com/business/india-business/india-china-trade-indias-exports-to-china-rise-in-2025-deficit-climbs-to-record-116-bn/articleshow/126530984.cms",
+          "title": "India-China trade: India's exports to China rise in 2025, deficit climbs to record $116 bn",
+          "publisher": "The Times of India",
+          "published_at": "2026-01-14"
+        },
+        {
+          "url": "https://www.reuters.com/markets/asia/india-trade-deficit-with-china-widens-record-992-bln-amid-dumping-concerns-2025-04-16",
+          "title": "India trade deficit with China widens to record $99.2 bln amid dumping concerns",
+          "publisher": "Reuters",
+          "published_at": "2025-04-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e8e881ff73",
+      "text": "India and China agreed at the 24th SR talks to set up an Expert Group under WMCC to explore early harvest in boundary delimitation and a Working Group to advance border management, plus additional General Level Mechanisms in Eastern and Middle sectors",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://carnegieendowment.org/india/research/2026/07/threading-the-needle-indias-path-forward-with-china",
+          "title": "Threading the Needle: India's Path Forward with China",
+          "publisher": "Carnegie Endowment for International Peace",
+          "published_at": "2026-07-02"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bcef1113e7",
+      "text": "No new disengagement, de-escalation or delimitation agreement was announced at the 36th WMCC; outcome was procedural commitment to continue dialogue",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.thehindu.com/news/national/india-china-discuss-lac-situation-and-border-management-during-diplomatic-talks-mea/article71316535.ece",
+          "title": "India, China discuss LAC situation and border management during diplomatic talks: MEA",
+          "publisher": "The Hindu",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.hindustantimes.com/india-news/india-china-to-use-diplomatic-military-channels-to-resolve-outstanding-border-issues-101786082401188.html",
+          "title": "India, China to use diplomatic, military channels to resolve outstanding border issues: MEA",
+          "publisher": "Hindustan Times",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.cnbctv18.com/india/india-china-hold-fresh-border-talks-new-delhi-raises-concerns-over-mega-dam-project-19964123.htm",
+          "title": "India, China hold fresh border talks; New Delhi raises concerns over mega dam project",
+          "publisher": "CNBC-TV18",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_23a9d588e4",
+      "text": "India holds the BRICS presidency in 2026 and China will hold it in 2027; both sides agreed in August 2025 to support each other's summits",
+      "grade": "likely",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://carnegieendowment.org/india/research/2026/07/threading-the-needle-indias-path-forward-with-china",
+          "title": "Threading the Needle: India's Path Forward with China",
+          "publisher": "Carnegie Endowment for International Peace",
+          "published_at": "2026-07-02"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_879d0ad4fb",
+      "text": "China's global trade surplus surged to nearly $1.2 trillion in 2025, with exports $3.77 trillion",
+      "grade": "likely",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://timesofindia.indiatimes.com/business/india-business/india-china-trade-indias-exports-to-china-rise-in-2025-deficit-climbs-to-record-116-bn/articleshow/126530984.cms",
+          "title": "India-China trade: India's exports to China rise in 2025, deficit climbs to record $116 bn",
+          "publisher": "The Times of India",
+          "published_at": "2026-01-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2ae1e879d7",
+      "text": "China is building mega hydropower dam on Yarlung Tsangpo at Great Bend in Medog County, Tibet - five cascade stations, ~300bn kWh/year (3x Three Gorges), cost 1.2tn yuan (~$167.8bn; $137bn at Dec 2024 approval), approved Dec 25 2024, groundbreaking July 19 2025 by Premier Li Qiang at Mainling, Nyingchi",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.hindustantimes.com/india-news/india-asks-china-to-share-details-of-upstream-water-projects-at-wmcc-meet-101786128035732.html",
+          "title": "India, China discuss border issues, upstream river projects at key talks",
+          "publisher": "Hindustan Times",
+          "published_at": "2026-08-08"
+        },
+        {
+          "url": "http://english.news.cn/20250719/a2e4342fa63a492c95f646c73bd3313c/c.html",
+          "title": "Chinese premier announces construction of Yarlung Zangbo hydropower project",
+          "publisher": "Xinhua (english.news.cn)",
+          "published_at": "2025-07-19"
+        },
+        {
+          "url": "https://www.thehindu.com/news/international/china-approves-worlds-largest-dam-worth-137-billion-over-brahmaputra-river-close-to-indian-border/article69029477.ece",
+          "title": "China approves world's largest, $137-billion dam on the Brahmaputra close to the Indian border",
+          "publisher": "The Hindu",
+          "published_at": "2024-12-26"
+        },
+        {
+          "url": "https://www.waterpowermagazine.com/news/china-begins-construction-of-worlds-largest-hydropower-project",
+          "title": "China begins construction of world's largest hydropower project",
+          "publisher": "International Water Power",
+          "published_at": "2025-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_24ccd4fd88",
+      "text": "Estimated 50,000-60,000 troops remain forward-deployed on each side along LAC in eastern Ladakh as of late 2025-2026 - stakeholder estimate, not officially confirmed, no independent verification, quasi-wartime readiness with no de-escalation",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.natstrat.org/articledetail/publications/india-china-relations-in-water-management-from-conflict-to-cooperation-187.html",
+          "title": "India-China Relations in Water Management: from Conflict to Cooperation",
+          "publisher": "NatStrat",
+          "published_at": "2025-03-17"
+        },
+        {
+          "url": "https://timesofindia.indiatimes.com/india/chinas-brahmaputra-mega-dam-can-it-control-river-water-flowing-into-india/articleshow/132407062.cms",
+          "title": "China's Brahmaputra mega dam: Can it control river water flowing into India?",
+          "publisher": "Times of India",
+          "published_at": "2026-07-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8b41a18c6d",
+      "text": "Chinese government approved Yarlung Zangbo hydropower project Dec 25 2024 (Xinhua) and Premier Li Qiang announced start of construction at groundbreaking at Mainling hydropower station, Nyingchi City, Xizang on July 19 2025. Project comprises five cascade stations, total investment ~1.2tn yuan (~$167.8bn; $137bn at approval), designed annual output ~300bn kWh, electricity primarily for external transmission, China Yajiang Group Co. Ltd inaugurated in Beijing to build/operate",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "http://english.news.cn/20250719/a2e4342fa63a492c95f646c73bd3313c/c.html",
+          "title": "Chinese premier announces construction of Yarlung Zangbo hydropower project",
+          "publisher": "Xinhua (english.news.cn)",
+          "published_at": "2025-07-19"
+        },
+        {
+          "url": "https://www.thehindu.com/news/international/china-approves-worlds-largest-dam-worth-137-billion-over-brahmaputra-river-close-to-indian-border/article69029477.ece",
+          "title": "China approves world's largest, $137-billion dam on the Brahmaputra close to the Indian border",
+          "publisher": "The Hindu",
+          "published_at": "2024-12-26"
+        },
+        {
+          "url": "https://www.waterpowermagazine.com/news/china-begins-construction-of-worlds-largest-hydropower-project",
+          "title": "China begins construction of world's largest hydropower project",
+          "publisher": "International Water Power",
+          "published_at": "2025-07-21"
+        },
+        {
+          "url": "https://www.dw.com/en/china-begins-construction-on-worlds-largest-dam-in-tibet/a-73349445",
+          "title": "China begins construction on world's largest dam in Tibet",
+          "publisher": "Deutsche Welle",
+          "published_at": "2025-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_eafe68095f",
+      "text": "MEA verbatim at 36th WMCC (New Delhi Aug 6 2026, released Aug 7 2026): Indian side reiterated need for early convening of next meeting of Expert Level Mechanism on trans-border rivers and emphasized importance of sharing technical details on upstream projects; talks also covered boundary delimitation, border management, mechanism-building and trans-border cooperation as follow-up to 24th SR Talks",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ddindia.co.in/2026/08/india-china-review-lac-situation-at-36th-wmcc-meeting-in-new-delhi",
+          "title": "India, China review LAC situation at 36th WMCC meeting in New Delhi",
+          "publisher": "DD India (Prasar Bharati)",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bd83fc9176",
+      "text": "Project located at Medog County Great Bend around Namcha Barwa where Yarlung Tsangpo drops ~2,000m in ~50km within world's deepest canyon, close to LAC in Arunachal Pradesh sector (nearest Indian locations Gelling/Norbuling/Bishing). Chinese geological study (China Geological Survey, Sedimentary Geology and Tethyan Geology) identifies active Paizhen Fault beneath reservoir area, active since Pleistocene/Holocene (movement as recent as 9,500 years ago), 2017 M6.9 Milin earthquake cited, warning of weakened rock and landslide/rock-collapse risk",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.bbc.com/news/articles/c4gk1251w14o",
+          "title": "China starts building world's largest dam, fuelling fears in India",
+          "publisher": "BBC",
+          "published_at": "2025-07-21"
+        },
+        {
+          "url": "https://timesofindia.indiatimes.com/india/chinas-brahmaputra-mega-dam-can-it-control-river-water-flowing-into-india/articleshow/132407062.cms",
+          "title": "China's Brahmaputra mega dam: Can it control river water flowing into India?",
+          "publisher": "Times of India",
+          "published_at": "2026-07-18"
+        },
+        {
+          "url": "https://www.dw.com/en/china-begins-construction-on-worlds-largest-dam-in-tibet/a-73349445",
+          "title": "China begins construction on world's largest dam in Tibet",
+          "publisher": "Deutsche Welle",
+          "published_at": "2025-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_efd9f81e71",
+      "text": "Chinese MFA spokesperson Guo Jiakun (July 23 2025 briefing) said project will not have any negative impact on downstream regions, China has cooperated via hydrological data sharing and flood prevention, will maintain communication and enhance cooperation, follows highest ecological standards, is matter of sovereignty; earlier Mao Ning (Dec 27 2024) cited responsible attitude and extensive scientific/environmental assessments; envoy Yao Wen assured Bangladesh July 21 2025 dam is run-of-river with no water withdrawal/diversion",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.thehindu.com/news/international/dam-on-upper-reaches-brahmaputra-will-not-impact-india-bangladesh-china/article69848041.ece",
+          "title": "Dam on upper reaches Brahmaputra will not impact India, Bangladesh: China",
+          "publisher": "The Hindu",
+          "published_at": "2025-07-24"
+        },
+        {
+          "url": "https://www.bbc.com/news/articles/c4gk1251w14o",
+          "title": "China starts building world's largest dam, fuelling fears in India",
+          "publisher": "BBC",
+          "published_at": "2025-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9eda35133d",
+      "text": "Expert Level Mechanism on trans-border rivers established 2006; Brahmaputra MoU signed 2002 (renewed 2008, 2013, 2018; expired June 2023, renewal pending) provides twice-daily rainfall/water level/discharge data June-Oct (expanded to May 15-Oct 15 under 2013 umbrella MoU) from three Tibetan stations Nugesha, Yangcun, Nuxia; Sutlej MoU 2005 (Tsada station) expired 2020; India finances data collection; Implementation Plans operationalized by Central Water Commission; data sharing suspended during 2017 Doklam standoff and resumed May 15 2018 after 11th ELM in Hangzhou",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.natstrat.org/articledetail/publications/india-china-relations-in-water-management-from-conflict-to-cooperation-187.html",
+          "title": "India-China Relations in Water Management: from Conflict to Cooperation",
+          "publisher": "NatStrat",
+          "published_at": "2025-03-17"
+        },
+        {
+          "url": "https://timesofindia.indiatimes.com/india/chinas-brahmaputra-mega-dam-can-it-control-river-water-flowing-into-india/articleshow/132407062.cms",
+          "title": "China's Brahmaputra mega dam: Can it control river water flowing into India?",
+          "publisher": "Times of India",
+          "published_at": "2026-07-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2dd8532d87",
+      "text": "Bangladesh Ministry of Water Resources sent formal letter Feb 2025 requesting four documents - EIA, feasibility study, climate impact assessment, disaster impact assessment - no reply as of March 28 2025 (adviser Syeda Rizwana Hasan); CEGIS notes 70% of dry-season flow of Ganges-Brahmaputra-Meghna basin in Bangladesh comes via Brahmaputra and >50% of sediment via Brahmaputra, critical for delta formation; disruption risks reduced dry-season flows and increased erosion",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://asianews.network/bangladesh-expresses-concern-over-chinas-brahmaputra-dam-project",
+          "title": "Bangladesh expresses concern over China's Brahmaputra Dam project",
+          "publisher": "Asia News Network / Daily Star",
+          "published_at": "2025-03-28"
+        },
+        {
+          "url": "https://www.bbc.com/news/articles/c4gk1251w14o",
+          "title": "China starts building world's largest dam, fuelling fears in India",
+          "publisher": "BBC",
+          "published_at": "2025-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7cef839880",
+      "text": "MEA verbatim for 36th WMCC (New Delhi, 6 Aug 2026, released 7 Aug 2026) states: 'The two sides engaged in frank discussions and reviewed the situation along the Line of Actual Control (LAC). Further, it was underlined that maintaining peace and tranquillity in the border areas is essential for the overall development of bilateral relations' and 'Both sides agreed to continue to use existing diplomatic and military channels, including the WMCC, local commander-level meetings and other agreed mechanisms, to resolve outstanding issues and avoid misunderstanding and miscalculation along the LAC.' Agenda is described as follow-up to 24th SR Talks covering boundary delimitation, border management, mechanism-building and trans-border cooperation, with Indian side reiterating need for early Expert Level Mechanism on trans-border rivers and sharing technical details on upstream projects.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.aninews.in/news/world/asia/india-reiterates-need-for-chinas-upstream-project-details-as-both-sides-discuss-lac-stability-border-issues-at-36th-wmcc20260807115900",
+          "title": "India reiterates need for China's upstream project details, as both sides discuss LAC stability, border issues at 36th WMCC",
+          "publisher": "ANI via aninews.in",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.tibetanreview.net/ahead-of-president-xis-arrival-india-and-china-agree-to-maintain-border-peace-to-boost-ties",
+          "title": "Ahead of President Xi's arrival, India and China agree to maintain border peace to boost ties - Tibetan Review",
+          "publisher": "Tibetan Review",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a8c46efd4f",
+      "text": "Chinese Foreign Ministry readout for same 36th WMCC (relayed Aug 7 2026 via Global Times) states: 'The two sides exchanged views on issues including boundary delineation, border management and control, mechanism building, and cross-border cooperation' and 'Both sides agreed to maintain communication through diplomatic and military channels and work together to jointly safeguard peace and tranquility in the border areas.' The Chinese summary omits MEA's 'essential for overall development of bilateral relations' linkage and omits any mention of India's Expert Level Mechanism / upstream dam technical-details ask.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.globaltimes.cn/page/202608/1367733.shtml",
+          "title": "China, India hold meeting on border affairs, pledge to jointly safeguard peace and tranquility in border areas - Global Times",
+          "publisher": "Global Times",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.tibetanreview.net/ahead-of-president-xis-arrival-india-and-china-agree-to-maintain-border-peace-to-boost-ties",
+          "title": "Ahead of President Xi's arrival, India and China agree to maintain border peace to boost ties - Tibetan Review",
+          "publisher": "Tibetan Review",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_55ca918ac9",
+      "text": "Comparison shows framing divergence: India conditions overall bilateral development on border peace and tranquillity; China frames border as issue to be jointly safeguarded and placed in 'appropriate position' so it does not affect overall ties. This delinking vs prerequisite contrast is explicit in Wang Yi's repeated formulations, not in the terse 36th WMCC Chinese readout itself.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.globaltimes.cn/page/202608/1367733.shtml",
+          "title": "China, India hold meeting on border affairs, pledge to jointly safeguard peace and tranquility in border areas - Global Times",
+          "publisher": "Global Times",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.aninews.in/news/world/asia/india-reiterates-need-for-chinas-upstream-project-details-as-both-sides-discuss-lac-stability-border-issues-at-36th-wmcc20260807115900",
+          "title": "India reiterates need for China's upstream project details, as both sides discuss LAC stability, border issues at 36th WMCC",
+          "publisher": "ANI via aninews.in",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.fmprc.gov.cn/eng/wjbzhd/202508/t20250820_11693025.html",
+          "title": "Indian Prime Minister Narendra Modi Meets with Wang Yi - Ministry of Foreign Affairs of the People's Republic of China",
+          "publisher": "Ministry of Foreign Affairs of the People's Republic of China",
+          "published_at": "2025-08-20"
+        },
+        {
+          "url": "https://www.thehindu.com/news/international/wang-yi-calls-for-india-china-to-accelerate-resumption-of-stalled-dialogue-mechanisms/article71135953.ece",
+          "title": "Wang Yi calls for India, China to accelerate resumption of stalled dialogue mechanisms - The Hindu",
+          "publisher": "The Hindu",
+          "published_at": "2026-06-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e1df351d1e",
+      "text": "China's consistent official framing (Wang Yi Aug 19 2025 FMPRC readout and June 22-23 2026 statement) is: 'adhere to correct positioning of being partners, not rivals,' 'prudently manage differences to ensure boundary disputes do not affect overall relationship,' and 'place the China-India boundary issue in its appropriate position / proper place and prevent it from affecting overall situation of bilateral relations,' coupled with 'initiating boundary delimitation negotiations in areas where conditions are met' (early harvest). This represents the credible alternative to India's 'peace prerequisite' narrative.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.fmprc.gov.cn/eng/wjbzhd/202508/t20250820_11693025.html",
+          "title": "Indian Prime Minister Narendra Modi Meets with Wang Yi - Ministry of Foreign Affairs of the People's Republic of China",
+          "publisher": "Ministry of Foreign Affairs of the People's Republic of China",
+          "published_at": "2025-08-20"
+        },
+        {
+          "url": "https://www.thehindu.com/news/international/wang-yi-calls-for-india-china-to-accelerate-resumption-of-stalled-dialogue-mechanisms/article71135953.ece",
+          "title": "Wang Yi calls for India, China to accelerate resumption of stalled dialogue mechanisms - The Hindu",
+          "publisher": "The Hindu",
+          "published_at": "2026-06-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_09f58856de",
+      "text": "Early harvest proposal is a Chinese-origin concept to settle Sikkim sector first by replacing the 1890 Great Britain-China Convention with a new China-India agreement (first publicly floated by Ambassador Luo Zhaohui 2017, clarified by Sr Col Zhao Xiaozhou, formally submitted to Jaishankar Aug 2019). Indian historical position treated this as violating the 2005 Agreement on Political Parameters and Guiding Principles which envisages a package deal covering all sectors (Articles IV/VII on mutual and equal security and settled populations, implying as-is-where-is swap of Aksai Chin/Arunachal). The Aug 19 2025 SR decision to set up an Expert Group under WMCC to 'explore Early Harvest of boundary delimitation on appropriate Sectors' is therefore a departure from package-deal principle, with strategic risks cited regarding trijunction at Batang La/Jhampheri ridge, Siliguri corridor vulnerability, and Bhutan's Doklam interests.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://m.thewire.in/article/diplomacy/what-is-chinas-early-harvest-proposal-for-border-talks-that-modi-govt-has-now-conceded",
+          "title": "What is China's 'Early Harvest' Proposal for Border Talks That Modi Govt Has Now Conceded?",
+          "publisher": "The Wire",
+          "published_at": "2025-08-19"
+        },
+        {
+          "url": "https://www.thehindu.com/news/international/india-china-the-need-for-a-border-settlement/article70025656.ece",
+          "title": "India-China: the need for a border settlement",
+          "publisher": "The Hindu",
+          "published_at": "2025-09-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a7b246ccb7",
+      "text": "On buffer zones and disengagement, Indian official view (Jaishankar 3 Dec 2024 'disengagement achieved in full' clm_aca9aefaf4, patrolling restored to pre-May 2020 extents via coordinated patrolling) is contested domestically. Credible critics cited by International Crisis Group argue some buffer zones are 'carved more out of Indian territory than Chinese,' that New Delhi 'given away patrolling rights that it previously had,' that zones encompass grazing lands affecting Ladakhi livelihoods, and that zones are 'tantamount to territorial losses' requiring reciprocity and domestic justification. This dissent qualifies the profile's presentation of disengagement as unambiguously restoring status quo ante.",
+      "grade": "contested",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.crisisgroup.org/rpt/asia/south-asia/india-china/334-thin-ice-himalayas-handling-india-china-border-dispute",
+          "title": "Thin Ice in the Himalayas: Handling the India-China Border Dispute - International Crisis Group Report 334",
+          "publisher": "International Crisis Group",
+          "published_at": "2023-11-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_53d34187cd",
+      "text": "Claims that China's 'use of ambiguity as leverage' explains settlement distance and that 36th WMCC language is 'contradictory' and 'performative in not advancing' are interpretive attributions to Carnegie/ORF analysis (Threading the Needle, ORF Occasional Paper 508), not primary negotiating positions. Primary readouts announce no breakthrough (clm_bcef1113e7) but do not characterize talks as performative; Carnegie itself notes language is exploratory ('explore' early harvest) and that dual-track approach is new. Settlement distance also reflects mutual infrastructure build-up and 50-60k forward deployments on each side, not solely Chinese ambiguity.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://m.thewire.in/article/diplomacy/what-is-chinas-early-harvest-proposal-for-border-talks-that-modi-govt-has-now-conceded",
+          "title": "What is China's 'Early Harvest' Proposal for Border Talks That Modi Govt Has Now Conceded?",
+          "publisher": "The Wire",
+          "published_at": "2025-08-19"
+        },
+        {
+          "url": "https://www.thehindu.com/news/international/india-china-the-need-for-a-border-settlement/article70025656.ece",
+          "title": "India-China: the need for a border settlement",
+          "publisher": "The Hindu",
+          "published_at": "2025-09-09"
+        },
+        {
+          "url": "https://www.crisisgroup.org/rpt/asia/south-asia/india-china/334-thin-ice-himalayas-handling-india-china-border-dispute",
+          "title": "Thin Ice in the Himalayas: Handling the India-China Border Dispute - International Crisis Group Report 334",
+          "publisher": "International Crisis Group",
+          "published_at": "2023-11-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4b2a4c907c",
+      "text": "No new disengagement, de-escalation or delimitation agreement was announced at 36th WMCC; outcome was procedural commitment to continue dialogue (fact). Whether this reflects 'substantive channel-keeping' vs 'performative' stasis is inference. Distinguishing fact from inference, and attributing leverage/ambiguity thesis to secondary analysis while presenting Chinese delinking/early-harvest and Indian buffer-zone critique as competing credible framings, provides adversarial completeness.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.globaltimes.cn/page/202608/1367733.shtml",
+          "title": "China, India hold meeting on border affairs, pledge to jointly safeguard peace and tranquility in border areas - Global Times",
+          "publisher": "Global Times",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.aninews.in/news/world/asia/india-reiterates-need-for-chinas-upstream-project-details-as-both-sides-discuss-lac-stability-border-issues-at-36th-wmcc20260807115900",
+          "title": "India reiterates need for China's upstream project details, as both sides discuss LAC stability, border issues at 36th WMCC",
+          "publisher": "ANI via aninews.in",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://m.thewire.in/article/diplomacy/what-is-chinas-early-harvest-proposal-for-border-talks-that-modi-govt-has-now-conceded",
+          "title": "What is China's 'Early Harvest' Proposal for Border Talks That Modi Govt Has Now Conceded?",
+          "publisher": "The Wire",
+          "published_at": "2025-08-19"
+        },
+        {
+          "url": "https://www.crisisgroup.org/rpt/asia/south-asia/india-china/334-thin-ice-himalayas-handling-india-china-border-dispute",
+          "title": "Thin Ice in the Himalayas: Handling the India-China Border Dispute - International Crisis Group Report 334",
+          "publisher": "International Crisis Group",
+          "published_at": "2023-11-14"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

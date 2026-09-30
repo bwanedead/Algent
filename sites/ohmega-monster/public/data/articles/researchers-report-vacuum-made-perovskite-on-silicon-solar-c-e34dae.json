@@ -1,0 +1,749 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/researchers-report-vacuum-made-perovskite-on-silicon-solar-c-e34dae",
+  "title": "Researchers report vacuum-made perovskite-on-silicon solar cells hitting 30% at wafer size",
+  "summary": "A formamidinium eutectic lowers evaporation temperature by about 36C to enable 31.5% at 1 sq cm and 30.0% on a half-cut G12 wafer with unusually low scaling loss, but the efficiencies lack independent certification and the durability data so far do not prove a 20-year lifetime.",
+  "published_at": "2026-08-06T13:13:54.184690+00:00",
+  "as_of": "2026-08-06",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 36,
+    "likely": 2
+  },
+  "claims": [
+    {
+      "id": "clm_5235fc48a8",
+      "text": "A Nature article titled 'Thermally evaporated perovskite/silicon tandems via formamidinium eutectic' by Luo, He, Ran et al. was published 5 Aug 2026 with DOI 10.1038/s41586-026-10970-1",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1_reference.pdf",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic (reference PDF)",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://bioengineer.org/thermally-evaporated-perovskite-silicon-tandems-enabled-by-formamidinium-eutectics",
+          "title": "Thermally Evaporated Perovskite\u00150Silicon Tandems Enabled by Formamidinium Eutectics",
+          "publisher": "Bioengineer.org",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9fd9dacee4",
+      "text": "Solution processing remains the dominant route to high-performance perovskite/silicon tandems but struggles to simultaneously achieve industrial scalability and long-term reliability",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1_reference.pdf",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic (reference PDF)",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://www.sciencedirect.com/science/article/abs/pii/S2542435126002771",
+          "title": "Thermal evaporation routes for perovskite photovoltaics, from fundamentals to integration",
+          "publisher": "Joule / ScienceDirect",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1f9ec5ae27",
+      "text": "Thermal evaporation is more industrially viable than solution processing for perovskite/Si tandems but had not been successfully demonstrated for large-area devices before this work, largely due to thermal degradation of formamidinium iodide (FAI) during high-temperature evaporation",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1_reference.pdf",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic (reference PDF)",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://bioengineer.org/thermally-evaporated-perovskite-silicon-tandems-enabled-by-formamidinium-eutectics",
+          "title": "Thermally Evaporated Perovskite\u00150Silicon Tandems Enabled by Formamidinium Eutectics",
+          "publisher": "Bioengineer.org",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://www.sciencedirect.com/science/article/abs/pii/S2542435126002771",
+          "title": "Thermal evaporation routes for perovskite photovoltaics, from fundamentals to integration",
+          "publisher": "Joule / ScienceDirect",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c464c5d27b",
+      "text": "The authors synthesized a formamidinium-based eutectic (Eu) that lowers the effective evaporation temperature of FAI by an average of 36\u00176C below its degradation threshold, enabling stable FAI evaporation without thermal degradation",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1_reference.pdf",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic (reference PDF)",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://bioengineer.org/thermally-evaporated-perovskite-silicon-tandems-enabled-by-formamidinium-eutectics",
+          "title": "Thermally Evaporated Perovskite\u00150Silicon Tandems Enabled by Formamidinium Eutectics",
+          "publisher": "Bioengineer.org",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_88629b2a08",
+      "text": "Evaporated perovskite films made with the Eu exhibit enhanced crystallinity and atomic-scale compositional homogeneity",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1_reference.pdf",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic (reference PDF)",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f3994bffe3",
+      "text": "Sequentially evaporated perovskite/Si tandems achieved a steady-state efficiency of 31.5% at 1 cm\u00178",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1_reference.pdf",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic (reference PDF)",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b4912a5f91",
+      "text": "The team demonstrated the first thermally evaporated large-area perovskite/Si tandem on a commercial half-cut G12 wafer, delivering 30.0% steady-state efficiency at 200 cm\u00178",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1_reference.pdf",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic (reference PDF)",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dabf214b76",
+      "text": "Scaling from 1 cm\u00178 to 200 cm\u00178 incurred only 3.99% relative efficiency loss, representing the lowest reported efficiency penalty for area scaling in perovskite-based tandems",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1_reference.pdf",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic (reference PDF)",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2d71d19a1e",
+      "text": "The Eu-based tandem retains 95% of its initial efficiency after 2000 hours of damp-heat aging at 85\u00176C and 85% relative humidity",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1_reference.pdf",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic (reference PDF)",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a76876a31c",
+      "text": "The Eu-based tandem exhibits negligible power loss after two months of real-world outdoor operation",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1_reference.pdf",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic (reference PDF)",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_286ca8ee7b",
+      "text": "The current certified laboratory record for perovskite/silicon tandem efficiency is 35.5% (LONGi, certified by ESTI, July 2026), improving on 34.85% (NREL, April 2025), 34.6% (ESTI, June 2024) and 33.9% (2023)",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.pv-magazine.com/2026/07/15/longi-sets-new-world-record-with-35-5-efficient-perovskite-silicon-tandem-cell",
+          "title": "Longi sets new world record with 35.5%-efficient perovskite-silicon tandem cell",
+          "publisher": "pv magazine",
+          "published_at": "2026-07-15"
+        },
+        {
+          "url": "https://www.longi.com/en/news/silicon-perovskite-tandem-solar-cells-new-world-efficiency",
+          "title": "34.85%! LONGi Breaks World Record for Crystalline Silicon-Perovskite Tandem Solar Cell Efficiency Again",
+          "publisher": "LONGi",
+          "published_at": "2025-04-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_65753416f3",
+      "text": "LONGi reported a 33% efficiency for a 260.9 cm\u00178 two-terminal perovskite-silicon tandem cell certified by NREL in June 2025, illustrating the gap between small-cell records and larger-area devices",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.pv-magazine.com/2026/07/15/longi-sets-new-world-record-with-35-5-efficient-perovskite-silicon-tandem-cell",
+          "title": "Longi sets new world record with 35.5%-efficient perovskite-silicon tandem cell",
+          "publisher": "pv magazine",
+          "published_at": "2026-07-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_93df843cd1",
+      "text": "A recent solution-processed perovskite-silicon tandem achieved certified 28.9% at 60 cm\u00178 and >31% at 1 cm\u00178 via homogeneous passivation with phosphonic acids and piperazinium chloride",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41467-025-63673-y",
+          "title": "60 cm2 perovskite-silicon tandem solar cells with an efficiency of 28.9% by homogeneous passivation",
+          "publisher": "Nature Communications",
+          "published_at": "2025-09-30"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1578b015a1",
+      "text": "The theoretical efficiency limit for perovskite/silicon tandems is ~43%, far exceeding the Shockley-Queisser limit of ~33.7% for single-junction cells",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.pv-magazine.com/2026/07/15/longi-sets-new-world-record-with-35-5-efficient-perovskite-silicon-tandem-cell",
+          "title": "Longi sets new world record with 35.5%-efficient perovskite-silicon tandem cell",
+          "publisher": "pv magazine",
+          "published_at": "2026-07-15"
+        },
+        {
+          "url": "https://www.longi.com/en/news/silicon-perovskite-tandem-solar-cells-new-world-efficiency",
+          "title": "34.85%! LONGi Breaks World Record for Crystalline Silicon-Perovskite Tandem Solar Cell Efficiency Again",
+          "publisher": "LONGi",
+          "published_at": "2025-04-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1c0801b714",
+      "text": "IEC 61215 requires damp-heat testing at 85\u00176C/85% RH for at least 1000 hours and thermal cycling for at least 200 cycles between -40\u00176C and 85\u00176C for design qualification of terrestrial PV modules",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41467-023-36918-x",
+          "title": "Room temperature nondestructive encapsulation via self-crosslinked fluorosilicone polymer enables damp heat-stable sustainable perovskite solar cells",
+          "publisher": "Nature Communications",
+          "published_at": "2023-03-11"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_eb0e79278b",
+      "text": "Other perovskite devices have demonstrated <4% loss after 2000h damp-heat (85\u00176C/85% RH) and 3% loss after 1200 thermal cycles, showing that 95% retention after 2000h is at the leading edge but not unprecedented for encapsulated single-junction PSCs",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41560-024-01689-2",
+          "title": "Self-assembled bilayer for perovskite solar cells with improved tolerance against thermal stresses",
+          "publisher": "Nature Energy",
+          "published_at": "2025-03-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a1f4eb5010",
+      "text": "All-vacuum-deposited perovskite-on-silicon tandems have separately achieved 27.2% at 1 cm\u00178 and retained ~80% of initial performance after 8 months outdoor operation in Italy, providing a benchmark for evaporated tandem stability",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41563-026-02494-w",
+          "title": "Crystal-facet-directed all-vacuum-deposited perovskite solar cells",
+          "publisher": "Nature Materials",
+          "published_at": "2026-06-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5cc776ce07",
+      "text": "G12 wafers are 210 mm format; a half-cut G12 device at 200 cm\u00178 corresponds to commercial wafer scale, versus laboratory 1 cm\u00178 cells",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1_reference.pdf",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic (reference PDF)",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cc65dac048",
+      "text": "Thermal evaporation offers solvent-free, vacuum-based deposition with excellent thickness uniformity and precise compositional control, compatible with textured silicon and existing semiconductor/display manufacturing infrastructure",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://bioengineer.org/thermally-evaporated-perovskite-silicon-tandems-enabled-by-formamidinium-eutectics",
+          "title": "Thermally Evaporated Perovskite\u00150Silicon Tandems Enabled by Formamidinium Eutectics",
+          "publisher": "Bioengineer.org",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://www.sciencedirect.com/science/article/abs/pii/S2542435126002771",
+          "title": "Thermal evaporation routes for perovskite photovoltaics, from fundamentals to integration",
+          "publisher": "Joule / ScienceDirect",
+          "published_at": "2026-07-23"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41563-026-02494-w",
+          "title": "Crystal-facet-directed all-vacuum-deposited perovskite solar cells",
+          "publisher": "Nature Materials",
+          "published_at": "2026-06-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d79e1e77ec",
+      "text": "The specific chemical composition of the formamidinium eutectic, its melting-point depression mechanism, and the certification laboratory for the 31.5% and 30.0% steady-state efficiencies were not disclosed in the accessible abstract",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1_reference.pdf",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic (reference PDF)",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d29f310cd5",
+      "text": "IEC 61215:2021 requires damp-heat MQT 13 at 85C/85% RH for 1000h and thermal cycling MQT 11 between -40C and 85C for 200 cycles, with pass criterion ≤5% power loss (industry benchmark).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41560-024-01689-2",
+          "title": "Self-assembled bilayer for perovskite solar cells with improved tolerance against thermal stresses",
+          "publisher": "Nature Energy",
+          "published_at": "2025-03-01"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41467-023-36918-x",
+          "title": "Room temperature nondestructive encapsulation via self-crosslinked fluorosilicone polymer enables damp heat-stable sustainable perovskite solar cells",
+          "publisher": "Nature Communications",
+          "published_at": "2023-03-11"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f369e43b98",
+      "text": "Nature Energy 2025 self-assembled bilayer (SAB) inverted PSCs: champion <4% loss after 2000h damp-heat (85C/85% RH) and 3% loss after 1200 thermal cycles (-40 to 85C); average 94% retention after 2000h (n=7, avg 24.3% PCE) and 94% after 1288 cycles, meeting IEC 61215:2021 at 2x duration and >6x cycles.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41560-024-01689-2",
+          "title": "Self-assembled bilayer for perovskite solar cells with improved tolerance against thermal stresses",
+          "publisher": "Nature Energy",
+          "published_at": "2025-03-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7dfebb0b6c",
+      "text": "HKUST Nature Materials 2026 all-vacuum tandems: 27.2% at 1cm2 with solution-processed SAM HTL (24.3% all-vacuum stack), laminated devices tested outdoors in Bolzano, Italy retained ~80% of initial temperature-corrected performance ratio (PRtc) after 8 months; negligible PRtc loss first 3 months vs HJT Si reference.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41563-026-02494-w",
+          "title": "Crystal-facet-directed all-vacuum-deposited perovskite solar cells",
+          "publisher": "Nature Materials",
+          "published_at": "2026-06-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_48c30e0d4c",
+      "text": "Luo et al. Eu tandem 95% retention after 2000h damp-heat (85C/85% RH) = 5% loss at double IEC 61215:2021 1000h duration, thus meets 5% threshold at extended stress and matches best reported encapsulated PSCs (<4% loss after 2000h, Nature Energy SAB).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41560-024-01689-2",
+          "title": "Self-assembled bilayer for perovskite solar cells with improved tolerance against thermal stresses",
+          "publisher": "Nature Energy",
+          "published_at": "2025-03-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0616c29a5f",
+      "text": "Accessible Nature abstract/reference PDF confirms verbatim: 31.5% steady-state at 1cm2, 30.0% at 200cm2 on half-cut G12, 3.99% relative scaling loss claimed as lowest reported, and 'first thermally evaporated large-area' claim; no certifying lab (NREL/ESTI/Fraunhofer), aperture vs active area, hysteresis, or MPP tracking duration disclosed; SI Notes 1-19 paywalled.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_00867c7cba",
+      "text": "Eu lowers FAI effective evaporation temperature by average 36C below degradation threshold enabling stable evaporation, yielding enhanced crystallinity and atomic-scale homogeneity; co-former identity, molar ratio, phase diagram, absolute T_evap/T_degradation, DSC/TGA, vapor pressure, ToF-SIMS residue not in accessible text, cited to SI Notes 1-19 (paywalled).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10970-1",
+          "title": "Thermally evaporated perovskite/silicon tandems via formamidinium eutectic",
+          "publisher": "Nature",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_67e5041bc9",
+      "text": "Joule review (ns3) explicitly frames thermal evaporation scale-up constraints as deposition-rate limitations, precursor/source stability, lateral flux uniformity, material utilization, and equipment capex/throughput, stating evaporation should be evaluated as complementary to solution processing, not a universal replacement",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.sciencedirect.com/science/article/abs/pii/S2542435126002771",
+          "title": "Thermal evaporation routes for perovskite photovoltaics, from fundamentals to integration",
+          "publisher": "Joule / ScienceDirect",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c352b98ea3",
+      "text": "Advanced Energy Materials meta-analysis (ns7) finds vacuum evaporation's most significant limitation is high cost, mitigated only by raising evaporation rate to \u000220720 nm min\u0002221 and number of linear sources to \u000220210 to reach cost parity with solution processing, which is considered industrially achievable but not yet demonstrated at scale",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://advanced.onlinelibrary.wiley.com/doi/full/10.1002%2Faenm.202403706",
+          "title": "Visualizing Performances Losses of Perovskite Solar Cells and Modules: From Laboratory to Industrial Scales",
+          "publisher": "Advanced Energy Materials",
+          "published_at": "2024-11-20"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6e1f006513",
+      "text": "Conventional thermal co-evaporation effective perovskite deposition rates are typically few nm min\u0002221, particularly for FA-based compositions, because limited thermal stability of FAI fundamentally constrains maximum attainable organic deposition rate, making high-throughput deposition challenging (ns1)",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41560-026-02068-9",
+          "title": "Close-space sublimation as a versatile deposition process for efficient perovskite silicon tandem solar cells",
+          "publisher": "Nature Energy",
+          "published_at": "2026-05-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2636945c6e",
+      "text": "Close-space sublimation (CSS) Nature Energy May 2026 (ns1/ns8) achieves 18.5% PCE (stabilized 18.2%) for fully vacuum-processed p-i-n single-junction MAPb(I0.79Br0.21)3 (1.64 eV) and 24.3% for monolithic perovskite/silicon tandem on micro-textured Si (23.5% planar, 23.7% nano-textured) at ~1 cm\u0002282, with 10 min conversion at 1 mbar, effective rate ~47 nm min\u0002221 (~10\u0002217 conventional point-source), reusable mixed-halide organic source stable >28 depositions and 540 min cumulative operation, and 96 cm\u0002282 large-area source demonstrated",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41560-026-02068-9",
+          "title": "Close-space sublimation as a versatile deposition process for efficient perovskite silicon tandem solar cells",
+          "publisher": "Nature Energy",
+          "published_at": "2026-05-19"
+        },
+        {
+          "url": "https://www.kit.edu/kit/english/pi_2026_047_scalable-manufacturing-of-perovskite-photovoltaics.php",
+          "title": "KIT Press Release PI 2026 Scalable Manufacturing of Perovskite Photovoltaics",
+          "publisher": "KIT",
+          "published_at": "2026-05-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7727ec3023",
+      "text": "HKUST Nature Materials all-vacuum co-evaporation with 5 mol% PbCl2 co-source (ns2) achieves certified 18.35% (19.3% lab) at 0.25 cm\u0002282 and 18.5% at 1 cm\u0002282 for 1.67 eV WBG, and tandems at 27.2% (1 cm\u0002282 with solution SAM HTL) and 24.3% all-vacuum stack, retaining 80% peak MPPT after 1,080 h ISOS-L-2 at 75\u00022115\u0002212C (1,250 h at 65\u0002212C) and ~80% temperature-corrected performance ratio after 8 months outdoor in Bolzano, Italy",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41563-026-02494-w",
+          "title": "Crystal-facet-directed all-vacuum-deposited perovskite solar cells",
+          "publisher": "Nature Materials",
+          "published_at": "2026-06-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5d243821ed",
+      "text": "Eu route efficiency (31.5% at 1 cm\u0002282, 30.0% at 200 cm\u0002282) exceeds CSS (24.3% at ~1 cm\u0002282) and HKUST all-vacuum (24.3% at 1 cm\u0002282) tandems, but CSS/HKUST provide longer stability datasets and explicit throughput metrics; direct area-normalized comparison is limited because Eu 200 cm\u0002282 is half-cut G12 while CSS/HKUST are ~1 cm\u0002282 lab cells",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41560-026-02068-9",
+          "title": "Close-space sublimation as a versatile deposition process for efficient perovskite silicon tandem solar cells",
+          "publisher": "Nature Energy",
+          "published_at": "2026-05-19"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41563-026-02494-w",
+          "title": "Crystal-facet-directed all-vacuum-deposited perovskite solar cells",
+          "publisher": "Nature Materials",
+          "published_at": "2026-06-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9bfd786880",
+      "text": "Oxford PV CEO (ns4) states current modules 25% efficiency with 15-year lifetime target in 2026, 27% with 20-year lifetime in 2027, and 30% with 30-year lifetime by 2030, calling 20-year lifetime critical for commercialization and LCOE competitiveness, implying 2-month outdoor negligible loss is insufficient as bankability proxy",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.pv-magazine.com/2026/01/16/oxford-pv-targets-20-year-lifetime-for-perovskite-silicon-tandem-modules-by-2028",
+          "title": "Oxford PV targets 20-year lifetime for perovskite-silicon tandem modules by 2028",
+          "publisher": "PV Magazine",
+          "published_at": "2026-01-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5843ab807f",
+      "text": "Oxford PV notes perovskite materials and process steps are not inherently expensive and silicon cell dominates tandem cost, but company pursues licensing to tier-one manufacturers (Trina Solar) and evaluates TOPCon vs HJT bottom cells, indicating vacuum vs solution scale-up decision hinges on yield, throughput and existing vacuum lines rather than material cost alone",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.pv-magazine.com/2026/01/16/oxford-pv-targets-20-year-lifetime-for-perovskite-silicon-tandem-modules-by-2028",
+          "title": "Oxford PV targets 20-year lifetime for perovskite-silicon tandem modules by 2028",
+          "publisher": "PV Magazine",
+          "published_at": "2026-01-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0f03de8955",
+      "text": "ISOS consensus (ns5) defines five stress categories \u0002212 dark storage (ISOS-D), outdoor (ISOS-O), light soaking (ISOS-L), thermal cycling (ISOS-T), light-humidity-thermal cycling (ISOS-LT) \u0002212 plus extensions light-dark cycling (ISOS-LC) and electrical bias (ISOS-V) and intrinsic testing (ISOS-I), explicitly stating damp-heat alone cannot assess full lifetime and that light soaking promotes ion/defect migration and phase segregation not captured by 85C/85% RH",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41560-019-0529-5",
+          "title": "Consensus statement for stability assessment and reporting for perovskite photovoltaics based on ISOS procedures",
+          "publisher": "Nature Energy",
+          "published_at": "2020-01-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c9f5649e7b",
+      "text": "Communications Materials review (ns6) finds PSCs have passed parts of IEC 61215 but often not in sequence (UV precondition \u0002212 thermal cycling \u0002212 humidity freeze) or not in air, and that accelerated tests at diverse temperatures (RT to 85\u0002212C) are not strictly comparable; outdoor demonstration is required beyond lab damp-heat because artificial aging is not equivalent to real operation and unexpected failure modes emerge",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43246-022-00281-z",
+          "title": "Degradation pathways in perovskite solar cells and how to meet international standards",
+          "publisher": "Nature Communications Materials",
+          "published_at": "2022-08-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5151ff0a41",
+      "text": "No LONGi or Oxford PV public commentary endorses thermal evaporation as lower-cost/higher-yield than solution at GW scale; LONGi's record 35.5% devices remain solution-processed and company has no mass-production plan disclosed, while Oxford PV's pilot line in Brandenburg uses vapor-based perovskite but targets lifetime over throughput \u0002212 indicating industry has not converged on vacuum as definitively more industrially viable",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.pv-magazine.com/2026/01/16/oxford-pv-targets-20-year-lifetime-for-perovskite-silicon-tandem-modules-by-2028",
+          "title": "Oxford PV targets 20-year lifetime for perovskite-silicon tandem modules by 2028",
+          "publisher": "PV Magazine",
+          "published_at": "2026-01-16"
+        },
+        {
+          "url": "https://www.sciencedirect.com/science/article/abs/pii/S2542435126002771",
+          "title": "Thermal evaporation routes for perovskite photovoltaics, from fundamentals to integration",
+          "publisher": "Joule / ScienceDirect",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_52d116e8a9",
+      "text": "Joule review and CSS paper both note lateral flux uniformity and material utilization remain unquantified for Eu route at G12 scale; CSS demonstrates conformal coverage on planar/nano/micro-textured Si without parameter adjustment and low precursor consumption per cycle with reusable sources, highlighting that Eu route's claim of topography tolerance and uniformity at 200 cm\u0002282 lacks published flux-uniformity or utilization data",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41560-026-02068-9",
+          "title": "Close-space sublimation as a versatile deposition process for efficient perovskite silicon tandem solar cells",
+          "publisher": "Nature Energy",
+          "published_at": "2026-05-19"
+        },
+        {
+          "url": "https://www.sciencedirect.com/science/article/abs/pii/S2542435126002771",
+          "title": "Thermal evaporation routes for perovskite photovoltaics, from fundamentals to integration",
+          "publisher": "Joule / ScienceDirect",
+          "published_at": "2026-07-23"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

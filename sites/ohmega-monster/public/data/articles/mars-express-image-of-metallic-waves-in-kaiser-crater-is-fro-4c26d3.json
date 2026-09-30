@@ -1,0 +1,505 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/mars-express-image-of-metallic-waves-in-kaiser-crater-is-fro-4c26d3",
+  "title": "Mars Express image of “metallic waves” in Kaiser Crater is frost-lit sand dunes, not metal",
+  "summary": "ESA and DLR say HRSC data show dark aeolian dunes whose sheen comes from winter hoarfrost on slopes, while clay and gully clues to older water-related processes remain limited to the broader crater terrain.",
+  "published_at": "2026-07-26T03:25:50.073538+00:00",
+  "as_of": "2026-07-26",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 24,
+    "likely": 4
+  },
+  "claims": [
+    {
+      "id": "clm_343d0e0017",
+      "text": "ESA’s “metallic waves” story refers to dune fields in Kaiser Crater on Mars, not metallic waves in the atmosphere.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Metallic_waves_on_ancient_Mars",
+          "title": "Metallic waves on ancient Mars",
+          "publisher": "European Space Agency",
+          "published_at": "2026-07-19"
+        },
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0fd49a9e45",
+      "text": "The feature is in Kaiser Crater in Noachis Terra, an ancient region in Mars’s southern highlands.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Metallic_waves_on_ancient_Mars",
+          "title": "Metallic waves on ancient Mars",
+          "publisher": "European Space Agency",
+          "published_at": "2026-07-19"
+        },
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_30d6543c14",
+      "text": "The relevant imagery was taken by the High Resolution Stereo Camera (HRSC) on Mars Express.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Metallic_waves_on_ancient_Mars",
+          "title": "Metallic waves on ancient Mars",
+          "publisher": "European Space Agency",
+          "published_at": "2026-07-19"
+        },
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_88757ca121",
+      "text": "The DLR release says the HRSC image was taken on 5 October 2025 during Mars Express orbit 27,461.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_388f03aa99",
+      "text": "The dune field’s metallic appearance is caused by bright hoarfrost deposits on south-facing slopes.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Metallic_waves_on_ancient_Mars",
+          "title": "Metallic waves on ancient Mars",
+          "publisher": "European Space Agency",
+          "published_at": "2026-07-19"
+        },
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3f78b2638a",
+      "text": "The dunes are composed of dark volcanic material and are shaped by wind.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ab306de847",
+      "text": "The dune field includes barchans, barchanoid ridges, and transverse dunes.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ec0403951e",
+      "text": "The wind in the area came predominantly from the west.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Metallic_waves_on_ancient_Mars",
+          "title": "Metallic waves on ancient Mars",
+          "publisher": "European Space Agency",
+          "published_at": "2026-07-19"
+        },
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ff2952f86f",
+      "text": "Wind erosion exposed light-toned clay minerals that likely formed through interaction between basalt and water.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b1bfb4d62b",
+      "text": "Some gullies in nearby crater walls may have formed from dry landslides, and some older ones may involve meltwater or groundwater.",
+      "grade": "likely",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Metallic_waves_on_ancient_Mars",
+          "title": "Metallic waves on ancient Mars",
+          "publisher": "European Space Agency",
+          "published_at": "2026-07-19"
+        },
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5d2e5a0d54",
+      "text": "The release does not establish that the dunes themselves preserve evidence of Mars’s lost atmosphere.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Metallic_waves_on_ancient_Mars",
+          "title": "Metallic waves on ancient Mars",
+          "publisher": "European Space Agency",
+          "published_at": "2026-07-19"
+        },
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_635698a8f5",
+      "text": "I did not identify a peer-reviewed paper from the consulted sources that the ESA release explicitly cites.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Metallic_waves_on_ancient_Mars",
+          "title": "Metallic waves on ancient Mars",
+          "publisher": "European Space Agency",
+          "published_at": "2026-07-19"
+        },
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3079b63f16",
+      "text": "ESA’s Kaiser Crater release does not cite an explicit journal paper in the page text that was deep-read.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Metallic_waves_on_ancient_Mars",
+          "title": "Metallic waves on ancient Mars",
+          "publisher": "European Space Agency",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_95d1958b5d",
+      "text": "DLR’s companion release is a mission/news explanation rather than a journal abstract, and it independently repeats the frost, wind, clay-mineral, and gully interpretation.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_00913f71ea",
+      "text": "The DLR release explicitly states that the HRSC images were taken on 5 October 2025 during Mars Express orbit 27,461, with ~17 m/pixel resolution and a center near 48°S, 19°E.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0eb37a8a74",
+      "text": "ESA’s release says the metallic-looking waves are sand dunes shaped by Martian winds, and that the shiny appearance comes from bright frost deposits on south-facing slopes.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Metallic_waves_on_ancient_Mars",
+          "title": "Metallic waves on ancient Mars",
+          "publisher": "European Space Agency",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5bf6e52bd3",
+      "text": "ESA’s release identifies the dune field as a mix of transverse and barchan dunes formed by sand accumulation and winds blowing from the same direction.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Metallic_waves_on_ancient_Mars",
+          "title": "Metallic waves on ancient Mars",
+          "publisher": "European Space Agency",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_66b2bb8413",
+      "text": "DLR says the dunes are composed of dark volcanic material and that winds in this part of Mars blow predominantly from the west.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f560c46c21",
+      "text": "DLR says the exposed bright deposits indicate clay minerals, which typically form through weathering of basalt in contact with water, while some older gullies may have formed with meltwater or temporary groundwater and many active gullies are best explained by dry landslides.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_16ae09613b",
+      "text": "DLR’s Kaiser Crater release ties the gully interpretation to some of the smaller craters near the dune field, not to the dunes themselves, and says the channel formation is not conclusively established.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e7464fa863",
+      "text": "In the DLR release, the strongest proposed gully formation pathway is dry landslides caused by unstable slope material, especially for gullies that are still changing today.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d0508c6143",
+      "text": "The DLR release mentions meltwater or temporary groundwater only as a possible explanation for some older gullies, not as established evidence for the immediate Kaiser dune field.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_864f159354",
+      "text": "The ESA release separately describes small gullies and narrow channels on steeper crater walls, saying they were likely formed by dry landslides, while older gullies may reflect melting ice or buried groundwater reservoirs.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Metallic_waves_on_ancient_Mars",
+          "title": "Metallic waves on ancient Mars",
+          "publisher": "European Space Agency",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4b10d2aea2",
+      "text": "Both mission releases separate the dune-field story from the gully discussion: the dunes are explained by wind and frost, while gullies are treated as nearby crater-wall features with tentative formation hypotheses.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        },
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Metallic_waves_on_ancient_Mars",
+          "title": "Metallic waves on ancient Mars",
+          "publisher": "European Space Agency",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cf4c314429",
+      "text": "ESA says Kaiser Crater is about 180 km across and a couple of kilometres deep.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Metallic_waves_on_ancient_Mars",
+          "title": "Metallic waves on ancient Mars",
+          "publisher": "European Space Agency",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": [
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ]
+    },
+    {
+      "id": "clm_ccbde19d55",
+      "text": "DLR says Kaiser Crater is over 200 km across and almost two kilometres deep.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Metallic_waves_on_ancient_Mars",
+          "title": "Metallic waves on ancient Mars",
+          "publisher": "European Space Agency",
+          "published_at": "2026-07-19"
+        }
+      ]
+    },
+    {
+      "id": "clm_5ef7aedd5f",
+      "text": "DLR says the image was taken during the second half of southern winter, when hoarfrost cover extends from the South Pole to some mid-latitudes.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dlr.de/en/latest/news/2026/piled-up-by-wind-god-aeolus-dunes-in-kaiser-crater-on-mars",
+          "title": "Piled up by wind god Aeolus – dunes in Kaiser Crater on Mars",
+          "publisher": "German Aerospace Center (DLR)",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5341392ee4",
+      "text": "ESA describes the dune field as moulded by martian winds and says the shiny appearance comes from bright frost deposits on south-facing slopes.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Metallic_waves_on_ancient_Mars",
+          "title": "Metallic waves on ancient Mars",
+          "publisher": "European Space Agency",
+          "published_at": "2026-07-19"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

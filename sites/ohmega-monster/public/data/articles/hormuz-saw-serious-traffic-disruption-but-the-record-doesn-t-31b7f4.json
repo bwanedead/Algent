@@ -1,0 +1,717 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/hormuz-saw-serious-traffic-disruption-but-the-record-doesn-t-31b7f4",
+  "title": "Hormuz saw serious traffic disruption, but the record doesn’t prove a sustained full closure",
+  "summary": "Visible tanker counts dropped sharply in mid-July and insurers treated passage as riskier, while conflicting “open/closed” statements persisted and AIS gaps mean a total shutdown wasn’t established.",
+  "published_at": "2026-07-16T10:26:28.549553+00:00",
+  "as_of": "2026-07-16",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 42,
+    "likely": 4
+  },
+  "claims": [
+    {
+      "id": "clm_99ea6aa2bf",
+      "text": "Tanker and vessel traffic through the Strait of Hormuz fell sharply in early July 2026.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/energy/tanker-traffic-slows-strait-hormuz-after-us-iran-clashes-2026-07-10/",
+          "title": "Tanker traffic slows in Strait of Hormuz after US and Iran clashes - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-10T12:01:53Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/middle-east/hormuz-traffic-slows-multi-week-low-renewed-us-iran-strikes-raise-safety-risk-2026-07-13/",
+          "title": "Hormuz traffic slows to multi-week low as renewed US, Iran strikes raise safety risk - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-13T04:52:24Z"
+        },
+        {
+          "url": "https://www.cnbc.com/2026/07/13/ship-traffic-through-hormuz-falls-as-us-and-iran-fight-for-control.html",
+          "title": "U.S. says more than 8 million barrels of oil transited Hormuz Sunday with military assistance - CNBC",
+          "publisher": "CNBC",
+          "published_at": "2026-07-13T16:29:33Z"
+        },
+        {
+          "url": "https://www.insurancejournal.com/news/international/2026/07/09/876855.htm",
+          "title": "Hormuz Ship Insurance Demand Drops as Owners Get Nervous - Insurance Journal",
+          "publisher": "Insurance Journal",
+          "published_at": "2026-07-09T15:03:20Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bf5fc70d14",
+      "text": "Reuters reported daily tanker traffic appeared to have slowed on July 10 after US-Iran hostilities intensified.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/energy/tanker-traffic-slows-strait-hormuz-after-us-iran-clashes-2026-07-10/",
+          "title": "Tanker traffic slows in Strait of Hormuz after US and Iran clashes - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-10T12:01:53Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_611e5bacd2",
+      "text": "Reuters reported vessel transits fell to multi-week lows by July 13.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/hormuz-traffic-slows-multi-week-low-renewed-us-iran-strikes-raise-safety-risk-2026-07-13/",
+          "title": "Hormuz traffic slows to multi-week low as renewed US, Iran strikes raise safety risk - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-13T04:52:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6642c0a54d",
+      "text": "CNBC reported 14 ships transited Hormuz on Sunday, down about 60% from 37 the same day a week earlier, using Kpler data.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/07/13/ship-traffic-through-hormuz-falls-as-us-and-iran-fight-for-control.html",
+          "title": "U.S. says more than 8 million barrels of oil transited Hormuz Sunday with military assistance - CNBC",
+          "publisher": "CNBC",
+          "published_at": "2026-07-13T16:29:33Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dab7430139",
+      "text": "The US Energy Department said more than 8 million barrels of oil transited Hormuz on Sunday despite the fighting.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/07/13/ship-traffic-through-hormuz-falls-as-us-and-iran-fight-for-control.html",
+          "title": "U.S. says more than 8 million barrels of oil transited Hormuz Sunday with military assistance - CNBC",
+          "publisher": "CNBC",
+          "published_at": "2026-07-13T16:29:33Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5943d72ccc",
+      "text": "The US Energy Department said total flows out of the Middle East Gulf region were averaging 15 million barrels per day.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/07/13/ship-traffic-through-hormuz-falls-as-us-and-iran-fight-for-control.html",
+          "title": "U.S. says more than 8 million barrels of oil transited Hormuz Sunday with military assistance - CNBC",
+          "publisher": "CNBC",
+          "published_at": "2026-07-13T16:29:33Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_20509aeb00",
+      "text": "The US military/JMIC said neutral transit through the Strait of Hormuz to or from non-Iranian destinations would not be impeded.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.defensenews.com/news/your-navy/2026/07/13/us-to-begin-enforcing-maritime-blockade-on-iran-on-tuesday/",
+          "title": "US to begin enforcing maritime blockade on Iran on Tuesday - Defense News",
+          "publisher": "Defense News",
+          "published_at": "2026-07-13T18:38:09Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_61c5b51a74",
+      "text": "The JMIC advisory said vessels entering or leaving the blockaded Iranian area without authorization could be intercepted, diverted, or captured.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.defensenews.com/news/your-navy/2026/07/13/us-to-begin-enforcing-maritime-blockade-on-iran-on-tuesday/",
+          "title": "US to begin enforcing maritime blockade on Iran on Tuesday - Defense News",
+          "publisher": "Defense News",
+          "published_at": "2026-07-13T18:38:09Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3554e70376",
+      "text": "London marine insurers saw fewer inquiries for Hormuz transits as shipowners grew more reluctant to commit.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.insurancejournal.com/news/international/2026/07/09/876855.htm",
+          "title": "Hormuz Ship Insurance Demand Drops as Owners Get Nervous - Insurance Journal",
+          "publisher": "Insurance Journal",
+          "published_at": "2026-07-09T15:03:20Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7609ead779",
+      "text": "Marine war-risk premiums for Hormuz transits rose to roughly 2% to 6% of vessel value, with some earlier periods reaching as high as 10%.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.insurancejournal.com/news/international/2026/07/09/876855.htm",
+          "title": "Hormuz Ship Insurance Demand Drops as Owners Get Nervous - Insurance Journal",
+          "publisher": "Insurance Journal",
+          "published_at": "2026-07-09T15:03:20Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ebdb10d3d6",
+      "text": "US officials demanded that Iran publicly commit to stopping attacks on ships in the Strait of Hormuz and accept open lanes with no tolls.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/us-insists-iran-commit-stopping-attacks-hormuz-strait-say-us-officials-2026-07-10/",
+          "title": "US insists Iran commit to stopping attacks in Hormuz strait, say US officials - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-10T21:03:39Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ea7f6683b4",
+      "text": "Iran’s IRGC navy said the Strait of Hormuz was closed until further notice after it fired on a vessel it said used an unapproved route.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/irans-irgc-navy-says-strait-hormuz-closed-until-further-notice-state-media-2026-07-11/",
+          "title": "Iran's IRGC navy says Strait of Hormuz closed until further notice, state media reports - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-11T22:31:34Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_013507da21",
+      "text": "Trump said the Strait of Hormuz is open to commercial traffic.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/energy/trump-says-strait-hormuz-open-commercial-traffic-2026-07-12/",
+          "title": "Trump says Strait of Hormuz open to commercial traffic - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-12T13:29:34Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_76c5fbdab1",
+      "text": "Before the war, the Strait of Hormuz handled about a fifth of global oil supplies.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/energy/tanker-traffic-slows-strait-hormuz-after-us-iran-clashes-2026-07-10/",
+          "title": "Tanker traffic slows in Strait of Hormuz after US and Iran clashes - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-10T12:01:53Z"
+        },
+        {
+          "url": "https://www.cnbc.com/2026/07/13/ship-traffic-through-hormuz-falls-as-us-and-iran-fight-for-control.html",
+          "title": "U.S. says more than 8 million barrels of oil transited Hormuz Sunday with military assistance - CNBC",
+          "publisher": "CNBC",
+          "published_at": "2026-07-13T16:29:33Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_872bb57549",
+      "text": "Market participants were not pricing in a complete closure of Hormuz as of the cited reports.",
+      "grade": "likely",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/07/13/ship-traffic-through-hormuz-falls-as-us-and-iran-fight-for-control.html",
+          "title": "U.S. says more than 8 million barrels of oil transited Hormuz Sunday with military assistance - CNBC",
+          "publisher": "CNBC",
+          "published_at": "2026-07-13T16:29:33Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1ff192413b",
+      "text": "Reuters said daily tanker traffic in the Strait of Hormuz appeared to have slowed on July 10, 2026, after U.S.-Iran hostilities intensified.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/energy/tanker-traffic-slows-strait-hormuz-after-us-iran-clashes-2026-07-10/",
+          "title": "Tanker traffic slows in Strait of Hormuz after US and Iran clashes - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-10T12:01:53Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f29f146b3c",
+      "text": "Reuters reported on July 13, 2026 that the number of vessels transiting the Strait of Hormuz fell to multi-week lows on Sunday.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/hormuz-traffic-slows-multi-week-low-renewed-us-iran-strikes-raise-safety-risk-2026-07-13/",
+          "title": "Hormuz traffic slows to multi-week low as renewed US, Iran strikes raise safety risk - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-13T04:52:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3b9937547e",
+      "text": "Reuters later specified that six vessels transited the Strait of Hormuz on Sunday, the lowest number in five weeks.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/hormuz-traffic-slows-multi-week-low-renewed-us-iran-strikes-raise-safety-risk-2026-07-13/",
+          "title": "Hormuz traffic slows to multi-week low as renewed US, Iran strikes raise safety risk - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-13T04:52:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ef6cfcb10e",
+      "text": "Reuters reported that U.S. officials demanded Iran publicly state it would stop attacks on ships in the Strait of Hormuz and that all lanes would be open to shipping with no tolls.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/energy/tanker-traffic-slows-strait-hormuz-after-us-iran-clashes-2026-07-10/",
+          "title": "Tanker traffic slows in Strait of Hormuz after US and Iran clashes - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-10T12:01:53Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_64b574ac19",
+      "text": "Reuters reported that Trump said the Strait of Hormuz is open to commercial traffic, while Iran earlier declared it closed after a vessel traveled on an unapproved route and was struck.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/hormuz-traffic-slows-multi-week-low-renewed-us-iran-strikes-raise-safety-risk-2026-07-13/",
+          "title": "Hormuz traffic slows to multi-week low as renewed US, Iran strikes raise safety risk - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-13T04:52:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_737c6bb25c",
+      "text": "Reuters reported that commercial traffic through the Strait of Hormuz continued at reduced levels, and shipping industry sources said vessels were increasingly switching off public AIS transponders, making full counts harder to determine.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/hormuz-traffic-slows-multi-week-low-renewed-us-iran-strikes-raise-safety-risk-2026-07-13/",
+          "title": "Hormuz traffic slows to multi-week low as renewed US, Iran strikes raise safety risk - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-13T04:52:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3e906a7ca4",
+      "text": "The EIA says the Strait of Hormuz averaged 20 million barrels per day of oil flow in 2024, about 20% of global petroleum liquids consumption.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.eia.gov/todayinenergy/detail.php?id=65504",
+          "title": "Amid regional conflict, the Strait of Hormuz remains critical oil chokepoint",
+          "publisher": "U.S. Energy Information Administration",
+          "published_at": "2025-06-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e1e7f57823",
+      "text": "The EIA says around one-fifth of global liquefied natural gas trade also transited the Strait of Hormuz in 2024.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.eia.gov/todayinenergy/detail.php?id=65504",
+          "title": "Amid regional conflict, the Strait of Hormuz remains critical oil chokepoint",
+          "publisher": "U.S. Energy Information Administration",
+          "published_at": "2025-06-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4d0e2765c6",
+      "text": "CNBC reported that the U.S. Energy Department said more than 8 million barrels of oil transited Hormuz on Sunday, and that total flows out of the Middle East Gulf region were averaging 15 million barrels per day.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/07/13/ship-traffic-through-hormuz-falls-as-us-and-iran-fight-for-control.html",
+          "title": "U.S. says more than 8 million barrels of oil transited Hormuz Sunday with military assistance - CNBC",
+          "publisher": "CNBC",
+          "published_at": "2026-07-13T16:29:33Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dcb0f349b4",
+      "text": "Defense News reported that the JMIC advisory said neutral transit through the Strait of Hormuz to or from non-Iranian destinations would not be impeded, but unauthorized vessels could be intercepted, diverted, or captured.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.defensenews.com/news/your-navy/2026/07/13/us-to-begin-enforcing-maritime-blockade-on-iran-on-tuesday/",
+          "title": "US to begin enforcing maritime blockade on Iran on Tuesday - Defense News",
+          "publisher": "Defense News",
+          "published_at": "2026-07-13T18:38:09Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cc07034a1e",
+      "text": "IMO is treating the Strait of Hormuz situation as an active maritime-safety and seafarer-protection crisis, maintaining a dedicated guidance and incident-information page, evacuation coordination, and a UN-led task force connection.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.imo.org/en/mediacentre/hottopics/pages/middle-east-strait-of-hormuz.aspx",
+          "title": "Middle East / Information related to shipping and seafarers - Strait of Hormuz and the Middle East",
+          "publisher": "International Maritime Organization",
+          "published_at": "2026-03-04"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a9981e6d26",
+      "text": "IMO’s Strait of Hormuz evacuation framework is described as a voluntary mechanism that preserves navigation rights under UNCLOS and applies to SOLAS vessels confined in the Persian Gulf that wish to depart.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.imo.org/en/mediacentre/hottopics/pages/middle-east-strait-of-hormuz.aspx",
+          "title": "Middle East / Information related to shipping and seafarers - Strait of Hormuz and the Middle East",
+          "publisher": "International Maritime Organization",
+          "published_at": "2026-03-04"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bf5a92eff9",
+      "text": "IMO’s Strait of Hormuz page says the evacuation plan is currently paused, while IMO continues to publish transits data, regional contacts, incident lists, and guidance links for shipping and seafarers.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.imo.org/en/mediacentre/hottopics/pages/middle-east-strait-of-hormuz.aspx",
+          "title": "Middle East / Information related to shipping and seafarers - Strait of Hormuz and the Middle East",
+          "publisher": "International Maritime Organization",
+          "published_at": "2026-03-04"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f03d291972",
+      "text": "IMO’s press briefing said it would begin a large-scale evacuation of more than 11,000 stranded seafarers after a US-Iran peace agreement, with safety guarantees and verified conditions for safe navigation.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.imo.org/en/mediacentre/pressbriefings/pages/imo-accounces-evacuation-plan-in-strait-of-hormuz.aspx",
+          "title": "IMO announces evacuation plan in the Strait of Hormuz",
+          "publisher": "International Maritime Organization",
+          "published_at": "2026-06-25"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ac63b19fe5",
+      "text": "Defense News’ read of the JMIC advisory says the blockade would cover Iran’s ports, oil terminals, and coastal areas, but neutral transit through the Strait of Hormuz to or from non-Iranian destinations would not be impeded.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.defensenews.com/news/your-navy/2026/07/13/us-to-begin-enforcing-maritime-blockade-on-iran-on-tuesday/",
+          "title": "US to begin enforcing maritime blockade on Iran on Tuesday - Defense News",
+          "publisher": "Defense News",
+          "published_at": "2026-07-13T18:38:09Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_238e2f1c58",
+      "text": "Reuters quoted Trump saying the Strait of Hormuz is open to commercial traffic, but the same report places that statement in the context of continued attacks and safety concerns on the route.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/energy/trump-says-strait-hormuz-open-commercial-traffic-2026-07-12/",
+          "title": "Trump says Strait of Hormuz open to commercial traffic - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-12T13:29:34Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5203f4ec4f",
+      "text": "Insurance Journal reported that the market response was caution rather than a binary shutdown: fewer quote requests, some owners reconsidering or canceling transits, terms still available, and war-risk pricing elevated to roughly 2% to 6% of vessel value.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.insurancejournal.com/news/international/2026/07/09/876855.htm",
+          "title": "Hormuz Ship Insurance Demand Drops as Owners Get Nervous - Insurance Journal",
+          "publisher": "Insurance Journal",
+          "published_at": "2026-07-09T15:03:20Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3b120890cf",
+      "text": "Taken together, the neutral institutional and market record supports a third framing: the Strait of Hormuz could be legally or rhetorically described as 'open' while still being operationally constrained by authorization requirements, interception risk, paused sailings, and elevated insurance costs.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c42d709b46",
+      "text": "Reuters reported on July 10, 2026 that tanker traffic in the Strait of Hormuz appeared to have slowed after U.S.-Iran hostilities intensified.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/energy/tanker-traffic-slows-strait-hormuz-after-us-iran-clashes-2026-07-10/",
+          "title": "Tanker traffic slows in Strait of Hormuz after US and Iran clashes - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-10T12:01:53Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4667fe0e53",
+      "text": "Reuters reported on July 13, 2026 that vessel transits through the Strait of Hormuz fell to multi-week lows.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/hormuz-traffic-slows-multi-week-low-renewed-us-iran-strikes-raise-safety-risk-2026-07-13/",
+          "title": "Hormuz traffic slows to multi-week low as renewed US, Iran strikes raise safety risk - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-13T04:52:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dd74bb4840",
+      "text": "CNBC reported that 14 ships transited Hormuz on Sunday, down from 37 the same day a week earlier, using Kpler data.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/07/13/ship-traffic-through-hormuz-falls-as-us-and-iran-fight-for-control.html",
+          "title": "U.S. says more than 8 million barrels of oil transited Hormuz Sunday with military assistance - CNBC",
+          "publisher": "CNBC",
+          "published_at": "2026-07-13T16:29:33Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d3f605d47e",
+      "text": "The U.S. Energy Department said more than 8 million barrels of oil transited Hormuz on Sunday despite the fighting.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/07/13/ship-traffic-through-hormuz-falls-as-us-and-iran-fight-for-control.html",
+          "title": "U.S. says more than 8 million barrels of oil transited Hormuz Sunday with military assistance - CNBC",
+          "publisher": "CNBC",
+          "published_at": "2026-07-13T16:29:33Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f69c83db18",
+      "text": "Defense News reported that neutral transit through the Strait of Hormuz to or from non-Iranian destinations would not be impeded, while unauthorized vessels could be intercepted, diverted, or captured.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.defensenews.com/news/your-navy/2026/07/13/us-to-begin-enforcing-maritime-blockade-on-iran-on-tuesday/",
+          "title": "US to begin enforcing maritime blockade on Iran on Tuesday - Defense News",
+          "publisher": "Defense News",
+          "published_at": "2026-07-13T18:38:09Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_edb5c189b0",
+      "text": "IMO is treating the Strait of Hormuz situation as an active maritime-safety and seafarer-protection crisis and maintaining a dedicated guidance and incident-information page.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.imo.org/en/mediacentre/hottopics/pages/middle-east-strait-of-hormuz.aspx",
+          "title": "Middle East / Information related to shipping and seafarers - Strait of Hormuz and the Middle East",
+          "publisher": "International Maritime Organization",
+          "published_at": "2026-03-04"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c50d9ee855",
+      "text": "IMO said its Strait of Hormuz evacuation plan is currently paused.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.imo.org/en/mediacentre/hottopics/pages/middle-east-strait-of-hormuz.aspx",
+          "title": "Middle East / Information related to shipping and seafarers - Strait of Hormuz and the Middle East",
+          "publisher": "International Maritime Organization",
+          "published_at": "2026-03-04"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fb2b6124d0",
+      "text": "The current evidence supports a reading of Hormuz as operationally constrained rather than verifiably and sustainably closed.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b5fd2ccbad",
+      "text": "The EIA page says maritime traffic through the Strait of Hormuz had not been blocked following the recent tensions, even as the strait remained a critical oil chokepoint.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.eia.gov/todayinenergy/detail.php?id=65504",
+          "title": "Amid regional conflict, the Strait of Hormuz remains critical oil chokepoint",
+          "publisher": "U.S. Energy Information Administration",
+          "published_at": "2025-06-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1bd70ad827",
+      "text": "The EIA page says around one-fifth of global liquefied natural gas trade also transited the Strait of Hormuz in 2024.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.eia.gov/todayinenergy/detail.php?id=65504",
+          "title": "Amid regional conflict, the Strait of Hormuz remains critical oil chokepoint",
+          "publisher": "U.S. Energy Information Administration",
+          "published_at": "2025-06-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3fed3049b9",
+      "text": "IMO says it is closely monitoring the situation, implementing an evacuation plan, and keeping guidance and incident information available for shipping and seafarers.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.imo.org/en/mediacentre/hottopics/pages/middle-east-strait-of-hormuz.aspx",
+          "title": "Middle East / Information related to shipping and seafarers - Strait of Hormuz and the Middle East",
+          "publisher": "International Maritime Organization",
+          "published_at": "2026-03-04"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e1e2654058",
+      "text": "IMO says the evacuation plan is currently paused.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.imo.org/en/mediacentre/hottopics/pages/middle-east-strait-of-hormuz.aspx",
+          "title": "Middle East / Information related to shipping and seafarers - Strait of Hormuz and the Middle East",
+          "publisher": "International Maritime Organization",
+          "published_at": "2026-03-04"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c4aa7cb053",
+      "text": "IMO's press briefing says it will begin implementing an evacuation plan for over 11,000 stranded seafarers after a peace agreement, with safety guarantees and verified conditions for safe navigation.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.imo.org/en/mediacentre/pressbriefings/pages/imo-accounces-evacuation-plan-in-strait-of-hormuz.aspx",
+          "title": "IMO announces evacuation plan in the Strait of Hormuz",
+          "publisher": "International Maritime Organization",
+          "published_at": "2026-06-25"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

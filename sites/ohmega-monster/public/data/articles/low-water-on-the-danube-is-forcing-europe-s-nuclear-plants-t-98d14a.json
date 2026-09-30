@@ -1,0 +1,842 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/low-water-on-the-danube-is-forcing-europe-s-nuclear-plants-t-98d14a",
+  "title": "Low water on the Danube is forcing Europe's nuclear plants toward shutdown",
+  "summary": "Record heat and record-low river levels have pushed reactors in Hungary and Romania toward full shutdown, cut hydropower to decade lows and driven evening prices above 300 exposing how much of Europe's electricity still depends on rivers.",
+  "published_at": "2026-08-07T23:21:04.315007+00:00",
+  "as_of": "2026-08-07",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 40,
+    "likely": 3
+  },
+  "claims": [
+    {
+      "id": "clm_de217cec8b",
+      "text": "June 2026 was the hottest June on record for western Europe, averaging 20.74\u0000b0C, 3.06\u0000b0C above 1991-2020 average, and the second-warmest June globally",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://climate.copernicus.eu/copernicus-record-heatwave-brings-hottest-june-western-europe-during-second-warmest-june-globally",
+          "title": "Copernicus: Record heatwave brings hottest June for western Europe during second-warmest June globally",
+          "publisher": "Copernicus / ECMWF",
+          "published_at": "2026-07-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8d030b99e7",
+      "text": "In June 2026 river flow was below average across large parts of France and central/eastern Europe, with widespread drier-than-average conditions",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://climate.copernicus.eu/copernicus-record-heatwave-brings-hottest-june-western-europe-during-second-warmest-june-globally",
+          "title": "Copernicus: Record heatwave brings hottest June for western Europe during second-warmest June globally",
+          "publisher": "Copernicus / ECMWF",
+          "published_at": "2026-07-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f455642f23",
+      "text": "Hungary's Paks nuclear plant (4 reactors, ~2000 MW normal, ~40-50% of Hungary's electricity) fell to 965 MW on Aug 1 and 240 MW overnight, operating at ~12% capacity, with all but one of eight turbines shut",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.newscientist.com/article/2583740-drought-and-heat-push-europes-power-grid-to-breaking-point",
+          "title": "Drought and heat push Europe's power grid to breaking point",
+          "publisher": "New Scientist",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.dw.com/en/drought-europe-electricity-supplies-danube/a-78269916",
+          "title": "How drought threatens Europe's electricity supplies",
+          "publisher": "DW",
+          "published_at": "2026-08-06"
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2026/8/2/hungary-plans-to-shut-down-only-nuclear-power-plant-amid-drought",
+          "title": "Hungary plans to shut down only nuclear power plant amid drought",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-08-02"
+        },
+        {
+          "url": "https://abcnews.com/International/wireStory/hungary-braces-full-shutdown-paks-nuclear-plant-danube-135263354",
+          "title": "Hungary braces for a full shutdown of the Paks nuclear plant as the Danube River hits record lows",
+          "publisher": "ABC News",
+          "published_at": "2026-07-31"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f210d1c0ec",
+      "text": "Danube gauge at Paks reached -106 cm on July 27 (new record), full shutdown triggered at -134 cm, forecast to -144 cm, far below previous -98 cm record in 2018",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/news/2026/8/2/hungary-plans-to-shut-down-only-nuclear-power-plant-amid-drought",
+          "title": "Hungary plans to shut down only nuclear power plant amid drought",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-08-02"
+        },
+        {
+          "url": "https://abcnews.com/International/wireStory/hungary-braces-full-shutdown-paks-nuclear-plant-danube-135263354",
+          "title": "Hungary braces for a full shutdown of the Paks nuclear plant as the Danube River hits record lows",
+          "publisher": "ABC News",
+          "published_at": "2026-07-31"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d769903e77",
+      "text": "A full shutdown of Paks would be the first in its 44-year history since 1982 and would take weeks to restart even if water levels recover",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/drought-europe-electricity-supplies-danube/a-78269916",
+          "title": "How drought threatens Europe's electricity supplies",
+          "publisher": "DW",
+          "published_at": "2026-08-06"
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2026/8/2/hungary-plans-to-shut-down-only-nuclear-power-plant-amid-drought",
+          "title": "Hungary plans to shut down only nuclear power plant amid drought",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-08-02"
+        },
+        {
+          "url": "https://abcnews.com/International/wireStory/hungary-braces-full-shutdown-paks-nuclear-plant-danube-135263354",
+          "title": "Hungary braces for a full shutdown of the Paks nuclear plant as the Danube River hits record lows",
+          "publisher": "ABC News",
+          "published_at": "2026-07-31"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3a9f9bb9f4",
+      "text": "Romania's Cernavoda nuclear plant (2x700 MW, ~20% of Romania's electricity) had one reactor taken offline; authorities blasted rock and dumped rock to divert Danube water to its intake",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.newscientist.com/article/2583740-drought-and-heat-push-europes-power-grid-to-breaking-point",
+          "title": "Drought and heat push Europe's power grid to breaking point",
+          "publisher": "New Scientist",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.dw.com/en/drought-europe-electricity-supplies-danube/a-78269916",
+          "title": "How drought threatens Europe's electricity supplies",
+          "publisher": "DW",
+          "published_at": "2026-08-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d9a4fb50a7",
+      "text": "France's EDF shut 3 nuclear reactors and reduced output at 7 others in July-Aug 2026 due to low river flows/high water temperatures on Meuse, Moselle and other rivers, causing ~9% dip in nuclear production",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/factcheck-how-nuclear-gas-wind-and-solar-power-are-affected-during-heatwaves",
+          "title": "Factcheck: How nuclear, gas, wind and solar power are affected during heatwaves",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-08-04"
+        },
+        {
+          "url": "https://www.euronews.com/business/2026/07/13/france-shuts-down-nuclear-reactors-as-heatwave-intensifies",
+          "title": "France shuts down nuclear reactors as heatwave intensifies",
+          "publisher": "Euronews",
+          "published_at": "2026-07-13"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9d7b030bc9",
+      "text": "About 2.44 GW or 40% of southeast Europe's nuclear capacity was offline on Aug 3 2026 due to Danube drought",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/factcheck-how-nuclear-gas-wind-and-solar-power-are-affected-during-heatwaves",
+          "title": "Factcheck: How nuclear, gas, wind and solar power are affected during heatwaves",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-08-04"
+        },
+        {
+          "url": "https://montelnews.com/it/news/c65ea15f-ba28-4f0e-a2c7-1504a3c411a4/40-of-se-european-nuclear-capacity-offline-amid-drought",
+          "title": "40% of SE European nuclear capacity offline amid drought",
+          "publisher": "Montel News",
+          "published_at": "2026-08-02"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1ed9b7694d",
+      "text": "Europe's hydropower generation fell to its lowest in more than a decade in July 2026; EU hydropower fell 12% in 2025 vs 2024",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.newscientist.com/article/2583740-drought-and-heat-push-europes-power-grid-to-breaking-point",
+          "title": "Drought and heat push Europe's power grid to breaking point",
+          "publisher": "New Scientist",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://ember-energy.org/latest-insights/european-electricity-review-2026",
+          "title": "European Electricity Review 2026",
+          "publisher": "Ember",
+          "published_at": "2026-01-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_68b2d6bf04",
+      "text": "32% of Italy's thermal (gas) fleet \u0000e2\u000080\u000094 up to ~20 GW \u0000e2\u000080\u000094 was at risk from lack of cooling water from rivers/canals",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.newscientist.com/article/2583740-drought-and-heat-push-europes-power-grid-to-breaking-point",
+          "title": "Drought and heat push Europe's power grid to breaking point",
+          "publisher": "New Scientist",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_09c110d313",
+      "text": "Gas power plant efficiency falls with heat: ~13% capacity loss and 7% efficiency loss at 40\u0000b0C vs 20\u0000b0C; simple gas turbines lose ~10% per 10\u0000b0C",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/factcheck-how-nuclear-gas-wind-and-solar-power-are-affected-during-heatwaves",
+          "title": "Factcheck: How nuclear, gas, wind and solar power are affected during heatwaves",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-08-04"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_74361ae6af",
+      "text": "Power demand can jump ~20% during heatwaves due to air conditioning; France daily demand rose almost 20% during June 2026 heatwave",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.newscientist.com/article/2583740-drought-and-heat-push-europes-power-grid-to-breaking-point",
+          "title": "Drought and heat push Europe's power grid to breaking point",
+          "publisher": "New Scientist",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.carbonbrief.org/factcheck-how-nuclear-gas-wind-and-solar-power-are-affected-during-heatwaves",
+          "title": "Factcheck: How nuclear, gas, wind and solar power are affected during heatwaves",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-08-04"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bb3efe680a",
+      "text": "Wholesale evening peak prices exceeded \u0000e2\u000082\u0000ac300/MWh in Poland, Slovakia, Romania and Hungary in early August 2026, vs normal \u0000e2\u000082\u0000ac100-150/MWh",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.newscientist.com/article/2583740-drought-and-heat-push-europes-power-grid-to-breaking-point",
+          "title": "Drought and heat push Europe's power grid to breaking point",
+          "publisher": "New Scientist",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7f027488b9",
+      "text": "Solar generated a record 52 TWh across the EU in June 2026 (47 TWh in May), and provided up to 80% of Hungary's daytime power, but is unavailable for evening peak without storage",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.newscientist.com/article/2583740-drought-and-heat-push-europes-power-grid-to-breaking-point",
+          "title": "Drought and heat push Europe's power grid to breaking point",
+          "publisher": "New Scientist",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.carbonbrief.org/factcheck-how-nuclear-gas-wind-and-solar-power-are-affected-during-heatwaves",
+          "title": "Factcheck: How nuclear, gas, wind and solar power are affected during heatwaves",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-08-04"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4062d0bc0c",
+      "text": "EU electricity mix in 2025: nuclear 23% (largest single source), wind+solar 30% (first time above fossil 29%), renewables 48%, coal 9.2% historic low, gas ~17%",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ember-energy.org/countries-and-regions/european-union",
+          "title": "European Union | Ember",
+          "publisher": "Ember",
+          "published_at": "2026-06-04"
+        },
+        {
+          "url": "https://ember-energy.org/latest-insights/european-electricity-review-2026",
+          "title": "European Electricity Review 2026",
+          "publisher": "Ember",
+          "published_at": "2026-01-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_aad068cf7d",
+      "text": "Global hydropower share fell to all-time low 14% in 2025 despite record absolute output 4,437 TWh",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://ember-energy.org/latest-insights/european-electricity-review-2026",
+          "title": "European Electricity Review 2026",
+          "publisher": "Ember",
+          "published_at": "2026-01-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b04ad2bbf0",
+      "text": "Nuclear plants using once-through river cooling make up ~14% of global fleet (~60 of 440 reactors, 8 in France) and are most vulnerable to heat/drought",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/factcheck-how-nuclear-gas-wind-and-solar-power-are-affected-during-heatwaves",
+          "title": "Factcheck: How nuclear, gas, wind and solar power are affected during heatwaves",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-08-04"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_006a44ea94",
+      "text": "Heatwave curtailments cut annual nuclear generation by average 0.6% 2003-2022; only France 2003 lost >1% (1.3%); France losses fell from 5.5 TWh in 2003 to 0.5 TWh in 2022 due to upgrades",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/factcheck-how-nuclear-gas-wind-and-solar-power-are-affected-during-heatwaves",
+          "title": "Factcheck: How nuclear, gas, wind and solar power are affected during heatwaves",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-08-04"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bfaf661ed1",
+      "text": "Bulgaria has 3.32-3.43 GW / 8.6 GWh battery storage, ~16% of its power system capacity, highest share globally, covering >46% of combined PV+wind capacity",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/drought-europe-electricity-supplies-danube/a-78269916",
+          "title": "How drought threatens Europe's electricity supplies",
+          "publisher": "DW",
+          "published_at": "2026-08-06"
+        },
+        {
+          "url": "https://balkangreenenergynews.com/bulgaria-surges-to-worlds-no-1-in-battery-systems-share",
+          "title": "Bulgaria surges to world's No. 1 in battery systems share",
+          "publisher": "Balkan Green Energy News",
+          "published_at": "2026-05-26"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ec17bf6b82",
+      "text": "Bulgaria's Kozloduy nuclear plant (up to 40% of Bulgaria's power) remained at almost full capacity due to better low-water cooling design, unlike Paks/Cernavoda",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/drought-europe-electricity-supplies-danube/a-78269916",
+          "title": "How drought threatens Europe's electricity supplies",
+          "publisher": "DW",
+          "published_at": "2026-08-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fba5c0742e",
+      "text": "Slovakia's Bohunice and Mochovce nuclear plants use cooling towers (closed loop) and were less affected; its Gabcikovo hydro on Danube had only 1 of 8 turbines operating but generation only ~12% down year-on-year",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/drought-europe-electricity-supplies-danube/a-78269916",
+          "title": "How drought threatens Europe's electricity supplies",
+          "publisher": "DW",
+          "published_at": "2026-08-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d4176200d9",
+      "text": "Austria generates ~60% electricity from hydropower but was less affected due to storage/pumped-storage vs run-of-river, plus ~30% other renewables",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/drought-europe-electricity-supplies-danube/a-78269916",
+          "title": "How drought threatens Europe's electricity supplies",
+          "publisher": "DW",
+          "published_at": "2026-08-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f6677bec3e",
+      "text": "Serbia's mix ~65% coal, ~25% hydro; Iron Gate hydro plants generating fraction of average; Kostolac coal plants cut output due to Danube cooling constraints; Danube shipping limited to light loads",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/drought-europe-electricity-supplies-danube/a-78269916",
+          "title": "How drought threatens Europe's electricity supplies",
+          "publisher": "DW",
+          "published_at": "2026-08-06"
+        },
+        {
+          "url": "https://www.dw.com/en/the-danube-is-drying-up-drought-paralyzes-europes-lifeline/g-78179821",
+          "title": "The Danube is drying up: Drought paralyzes Europe's lifeline",
+          "publisher": "DW",
+          "published_at": "2026-08-02"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1261847af2",
+      "text": "Hungary's energy crisis forced Audi Gyor, MOL and other large firms to scale back production; Romania's Dacia and Ford Romania also scaled back; Hungary urged voluntary conservation 5pm-10pm peak",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.newscientist.com/article/2583740-drought-and-heat-push-europes-power-grid-to-breaking-point",
+          "title": "Drought and heat push Europe's power grid to breaking point",
+          "publisher": "New Scientist",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.dw.com/en/drought-europe-electricity-supplies-danube/a-78269916",
+          "title": "How drought threatens Europe's electricity supplies",
+          "publisher": "DW",
+          "published_at": "2026-08-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ab4565d096",
+      "text": "No blackouts had occurred as of Aug 7 2026, but governments warned of critical days ahead and potential mandatory factory shutdown decrees",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.newscientist.com/article/2583740-drought-and-heat-push-europes-power-grid-to-breaking-point",
+          "title": "Drought and heat push Europe's power grid to breaking point",
+          "publisher": "New Scientist",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.dw.com/en/drought-europe-electricity-supplies-danube/a-78269916",
+          "title": "How drought threatens Europe's electricity supplies",
+          "publisher": "DW",
+          "published_at": "2026-08-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_49803c2ea5",
+      "text": "Low wind speeds during heat domes reduced wind output 30-50% in Europe during heatwaves; UK wind fell to ~15% of mix in June 2026 vs ~30% average",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/factcheck-how-nuclear-gas-wind-and-solar-power-are-affected-during-heatwaves",
+          "title": "Factcheck: How nuclear, gas, wind and solar power are affected during heatwaves",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-08-04"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2860b3291d",
+      "text": "Solar panel efficiency falls 0.2-0.5% per \u0000b0C above 25\u0000b0C, but high irradiance outweighs loss; EU solar still set records during heatwave",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/factcheck-how-nuclear-gas-wind-and-solar-power-are-affected-during-heatwaves",
+          "title": "Factcheck: How nuclear, gas, wind and solar power are affected during heatwaves",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-08-04"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a82816b8e0",
+      "text": "Hungary lacks storage, has too few modern gas plants and very little wind/hydro, making it more vulnerable than neighbours despite significant solar capacity",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/drought-europe-electricity-supplies-danube/a-78269916",
+          "title": "How drought threatens Europe's electricity supplies",
+          "publisher": "DW",
+          "published_at": "2026-08-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d871de1a89",
+      "text": "EU electricity mix 2025: 71% low-carbon, nuclear 23% largest single source (8 of top 10 nuclear-share countries are EU), wind+solar 30.1% (841 TWh) above fossil 29.0% (809 TWh) for first time, renewables 47.7% (1331 TWh), coal 9.2% (257 TWh) historic low down from 24.6% (705 TWh) a decade ago, gas ~17% (16.7%)",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ember-energy.org/latest-insights/european-electricity-review-2026",
+          "title": "European Electricity Review 2026",
+          "publisher": "Ember",
+          "published_at": "2026-01-15"
+        },
+        {
+          "url": "https://ember-energy.org/countries-and-regions/european-union",
+          "title": "European Union | Ember",
+          "publisher": "Ember",
+          "published_at": "2026-06-04"
+        },
+        {
+          "url": "https://ember-energy.org/latest-insights/european-electricity-review-2026/2025-at-a-glance",
+          "title": "European Electricity Review 2026 — Chapter 1: 2025 at a glance",
+          "publisher": "Ember",
+          "published_at": "2026-01-01T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fe588e6966",
+      "text": "EU hydro fell 12% and wind -2% in 2025 vs 2024; gas generation rose 8% (+34 TWh) largely to replace hydro, pushing EU power-sector gas import bill to €32bn, +16% YoY",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ember-energy.org/latest-insights/european-electricity-review-2026",
+          "title": "European Electricity Review 2026",
+          "publisher": "Ember",
+          "published_at": "2026-01-15"
+        },
+        {
+          "url": "https://ember-energy.org/latest-insights/european-electricity-review-2026/2025-at-a-glance",
+          "title": "European Electricity Review 2026 — Chapter 1: 2025 at a glance",
+          "publisher": "Ember",
+          "published_at": "2026-01-01T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_26712de3b9",
+      "text": "Solar generated record 369 TWh in 2025 (+20.1% YoY, 4th year >20% growth), 13% of EU electricity, capacity +65.1 GW (+19%)",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://ember-energy.org/latest-insights/european-electricity-review-2026",
+          "title": "European Electricity Review 2026",
+          "publisher": "Ember",
+          "published_at": "2026-01-15"
+        },
+        {
+          "url": "https://ember-energy.org/latest-insights/european-electricity-review-2026/2025-at-a-glance",
+          "title": "European Electricity Review 2026 — Chapter 1: 2025 at a glance",
+          "publisher": "Ember",
+          "published_at": "2026-01-01T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_edc4aad2e9",
+      "text": "Global hydropower 4,437 TWh in 2025 (+3 TWh +0.1% vs 2024, record absolute) but share fell to all-time low 14% as demand outpaced hydro; EU hydro fell 43 TWh",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ember-energy.org/latest-insights/global-electricity-review-2026/electricity-demand-and-supply-trends",
+          "title": "Global Electricity Review 2026 — Chapter 3.7 Hydro",
+          "publisher": "Ember",
+          "published_at": "2026-04-21T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5e21b26efe",
+      "text": "France EDF shut 3 reactors (Golfech 2 1300 MW, Bugey 3 900 MW, Chooz 2 1450 MW =3.65 GW ~6% of 61 GW) and reduced 7 others July 2026 for river-temperature discharge limits (Garonne <28°C), environmental not safety; curtailment ~6.4 GW by 13 July yet France remained net exporter >10 GW",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.euronews.com/business/2026/07/13/france-shuts-down-nuclear-reactors-as-heatwave-intensifies",
+          "title": "France shuts down nuclear reactors as heatwave intensifies",
+          "publisher": "Euronews",
+          "published_at": "2026-07-13"
+        },
+        {
+          "url": "https://brusselssignal.eu/2026/07/france-idles-reactors-on-cooling-rules-as-spanish-and-us-plants-run-right-through-the-heat",
+          "title": "France idles reactors on cooling rules — EDF/RTE detail via Brussels Signal",
+          "publisher": "Brussels Signal",
+          "published_at": "2026-07-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d56f762401",
+      "text": "Day-ahead evening peaks 6 Aug 2026: HUPX Hungary €298.20 at hour 21 (base €182.42), Romania €301.60, Slovenia €285.30, Croatia €288.80, Serbia €326 at hour 20; Hungary-Germany spread €82.91",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://serbia-energy.eu/southeast-europe-power-market-split-widens-as-central-markets-face-evening-supply-pressure",
+          "title": "Southeast Europe power market split widens as central markets face evening supply pressure — HUPX/OPCOM/SEEPEX day-ahead 6 Aug 2026",
+          "publisher": "Serbia SEE Energy",
+          "published_at": "2026-08-06T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7db59390b5",
+      "text": "Paks NPP (4 reactors ~2000 MW normal ~50% Hungary) fell to 965 MW Aug 1 and 240 MW (~12% one turbine) Aug 3-4 2026; Danube gauge at Paks -106 cm 27 July (record) vs -98 cm 2018, full shutdown at -134 cm, forecast -144 cm",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/energy/hungarys-nuclear-plant-shutdown-due-low-danube-gets-reprieve-until-later-week-2026-08-03",
+          "title": "Hungary's nuclear plant shutdown gets reprieve / Romania blasts rocks to reroute Danube — Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-08-03T00:00:00Z"
+        },
+        {
+          "url": "https://www.bbc.co.uk/news/articles/cn0nqv05g0do",
+          "title": "Danube's record low levels force shutdown of Hungary's only nuclear plant — BBC / MVM Paks",
+          "publisher": "BBC",
+          "published_at": "2026-07-30T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_67fe10720b",
+      "text": "Cernavoda NPP (2x706 MW ~20% Romania) had one reactor shut early week July 2026, second scheduled early Aug 2026 — first time both offline for low water; Danube at entry 1650 m3/s vs 4750 avg, forecast 1500 vs 1400 record 1985; Romanian Navy blasted Bala channel to divert water to intake",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/energy/low-danube-river-levels-force-romania-shut-down-both-its-nuclear-power-reactors-2026-07-29",
+          "title": "Low Danube river levels force Romania to shut down both nuclear power reactors — Reuters / Nuclearelectrica",
+          "publisher": "Reuters",
+          "published_at": "2026-07-29T00:00:00Z"
+        },
+        {
+          "url": "https://www.reuters.com/business/energy/hungarys-nuclear-plant-shutdown-due-low-danube-gets-reprieve-until-later-week-2026-08-03",
+          "title": "Hungary's nuclear plant shutdown gets reprieve / Romania blasts rocks to reroute Danube — Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-08-03T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c0133ef514",
+      "text": "Environmental discharge limits (e.g., Golfech 28\u00176C downstream on Garonne) exist to protect aquatic life: warm water holds less dissolved oxygen while fish metabolism rises, risking suffocation, toxic algae blooms and blocking salmon migration. Waiving limits to keep reactors online would trade power for ecological damage, a trade-off opposed by environmental regulators.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.indiatoday.in/science/story/france-nuclear-reactors-shut-heatwave-warms-rivers-cooling-limits-2947762-2026-07-14",
+          "title": "Why is France shutting down its nuclear reactors during the heatwave? - India Today",
+          "publisher": "India Today",
+          "published_at": "2026-07-14"
+        },
+        {
+          "url": "https://energyindemand.com/2026/07/25/blog-by-grace-waters-why-frances-nuclear-plants-are-shutting-down-during-peak-summer-demand",
+          "title": "Blog by Grace Waters: Why France's nuclear plants are shutting down during peak summer demand",
+          "publisher": "Energy in Demand",
+          "published_at": "2026-07-25"
+        },
+        {
+          "url": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/environment-and-human-health/water-pollution-and-human-health",
+          "title": "3.4 Water pollution and human health - European Environment Agency",
+          "publisher": "EEA",
+          "published_at": "2025-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_354064bf74",
+      "text": "Retrofitting once-through cooling to closed-cycle (cooling towers) carries a 0.8% to 8.8% energy penalty (DOE 2002 estimates cited by CRS), plus higher capital cost (dry towers 5-10x wet towers), land constraints, extended downtime and higher air emissions from compensatory fuel burn. EPA rejected universal closed-cycle mandate for existing plants in 2014 for these reasons, favoring site-specific determinations.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.everycrsreport.com/reports/R41786.html",
+          "title": "Cooling Water Intake Structures: Summary of the EPA Rule - EveryCRSReport.com",
+          "publisher": "EveryCRSReport.com",
+          "published_at": "2014-08-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_66e0a58df8",
+      "text": "EDF's climate adaptation plan is \u00178.7 billion over 15 years (to ~2040) covering nuclear, hydro and island systems. The only deployed pre-cooling retrofit cited is Civaux on the Vienne (ventilators chill discharge 3-7\u00176C before reinjection). Hybrid dry-cooling towers that would make output immune to river temperatures are described as slower and more expensive to build, fitting into outage schedules, not a near-term fix for weeks-long drought.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.indiatoday.in/science/story/france-nuclear-reactors-shut-heatwave-warms-rivers-cooling-limits-2947762-2026-07-14",
+          "title": "Why is France shutting down its nuclear reactors during the heatwave? - India Today",
+          "publisher": "India Today",
+          "published_at": "2026-07-14"
+        },
+        {
+          "url": "https://energyindemand.com/2026/07/25/blog-by-grace-waters-why-frances-nuclear-plants-are-shutting-down-during-peak-summer-demand",
+          "title": "Blog by Grace Waters: Why France's nuclear plants are shutting down during peak summer demand",
+          "publisher": "Energy in Demand",
+          "published_at": "2026-07-25"
+        },
+        {
+          "url": "https://www.politico.eu/article/warming-europe-complicate-france-nuclear-power",
+          "title": "Warming Europe complicates France's bet on nuclear power - Politico",
+          "publisher": "Politico Europe",
+          "published_at": "2026-07-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d36e0b5782",
+      "text": "Hungarian political framing is contested: PM P\u0019ter Magyar (Tisza) blames Paks vulnerability on infrastructure shortcomings inherited from Orb\u0019n, while pledging to review the \u001712.5bn Rosatom Paks II contract (awarded without tender), diversify nuclear fuel to US/French suppliers, abolish Orb\u0019n-era wind-turbine restrictions and double renewable share by 2040. Critics note Tisza will maintain utility price caps and only pledges to eliminate Russian energy dependence by 2035, eight years after EU REPowerEU deadline of 2027, and is aligned with EPP which has weakened Green Deal elements \u001a not a progressive pivot.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/qa-what-magyars-defeat-of-orban-in-hungary-means-for-climate-and-energy",
+          "title": "Q&A: What Magyar's defeat of Orban in Hungary means for climate and energy - Carbon Brief",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-04-17"
+        },
+        {
+          "url": "https://www.reuters.com/business/energy/hungarys-paks-nuclear-plant-could-shut-down-thursday-or-friday-pm-says-2026-07-30",
+          "title": "Record low water levels force nuclear output cuts in Hungary and Romania - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-30"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_85a674ff6d",
+      "text": "Hungarian authorities state import capacity of 3,600-3,800 MW could cover a full Paks shutdown (2,000 MW), but Reuters reports a critical situation remains due to +20% evening peak demand, loss of 400 MW at Sz\u0019zhalombatta gas plant, and need for voluntary curtailment 5pm-10pm of battery/car manufacturers and households. This undercuts claims that interconnection alone resolves multi-week loss of ~50% of domestic generation.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/energy/hungarys-paks-nuclear-plant-could-shut-down-thursday-or-friday-pm-says-2026-07-30",
+          "title": "Record low water levels force nuclear output cuts in Hungary and Romania - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-30"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9ee8141073",
+      "text": "Market-design analysts (Bruegel, ACER, Tony Blair Institute) argue batteries and interconnection cannot replace firm capacity for prolonged drought/Dunkelflaute: storage and demand response account for only ~3% of firm capacity payments historically; most capacity payments go to generators. Bruegel notes cross-border participation is limited by high transmission booking costs and distrust that neighbours will maintain exports in scarcity, risking over-procurement domestically or free-riding. Institute Global concludes 'storage and interconnectors help smooth volatility, but they cannot yet replace the need for abundant, always-available baseload.'",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.bruegel.org/policy-brief/europes-electricity-capacity-mechanisms-need-be-better-coordinated",
+          "title": "Europe's electricity capacity mechanisms need to be better coordinated - Bruegel",
+          "publisher": "Bruegel",
+          "published_at": "2025-11-18"
+        },
+        {
+          "url": "https://institute.global/insights/climate-and-energy/the-power-to-compete-europes-energy-reset",
+          "title": "The Power to Compete: Europe's Energy Reset - Tony Blair Institute",
+          "publisher": "Tony Blair Institute for Global Change",
+          "published_at": "2026-05-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_42520ca42d",
+      "text": "EEA warns climate change will increase pollutant concentrations when permitted discharge loads enter smaller water volumes during low flows, and warmer temperatures facilitate pathogen growth \u001a amplifying ecological and human-health costs if thermal discharge limits are waived during drought.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/environment-and-human-health/water-pollution-and-human-health",
+          "title": "3.4 Water pollution and human health - European Environment Agency",
+          "publisher": "EEA",
+          "published_at": "2025-09-28"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

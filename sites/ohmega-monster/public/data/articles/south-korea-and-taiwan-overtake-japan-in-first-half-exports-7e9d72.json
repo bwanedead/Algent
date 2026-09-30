@@ -1,0 +1,897 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/south-korea-and-taiwan-overtake-japan-in-first-half-exports-7e9d72",
+  "title": "South Korea and Taiwan overtake Japan in first-half exports on AI chip boom",
+  "summary": "First-half figures are dollar-denominated and price-driven — high-bandwidth memory and Taiwan-packaged chips for Nvidia lifted Korea and Taiwan while Japan's upstream tools missed the surge, leaving the lead fragile to currencies, tariffs and a potential supply glut after 2028.",
+  "published_at": "2026-08-07T22:41:01.329556+00:00",
+  "as_of": "2026-08-07",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 35,
+    "likely": 9,
+    "contested": 1
+  },
+  "claims": [
+    {
+      "id": "clm_4e56c8f9a8",
+      "text": "South Korea's exports in H1 2026 (January-June) totaled $496.3 billion",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        },
+        {
+          "url": "https://news.sbs.co.kr/english/article.do?news_id=N1008695373",
+          "title": "South Korea, Taiwan Surpass Japan in H1 Exports for First Time Driven by AI Boom",
+          "publisher": "SBS News",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_38ebb667a3",
+      "text": "Taiwan's exports in H1 2026 totaled $416.6 billion",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        },
+        {
+          "url": "https://news.sbs.co.kr/english/article.do?news_id=N1008695373",
+          "title": "South Korea, Taiwan Surpass Japan in H1 Exports for First Time Driven by AI Boom",
+          "publisher": "SBS News",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1e28476671",
+      "text": "Japan's exports in H1 2026 totaled $384.4 billion",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        },
+        {
+          "url": "https://news.sbs.co.kr/english/article.do?news_id=N1008695373",
+          "title": "South Korea, Taiwan Surpass Japan in H1 Exports for First Time Driven by AI Boom",
+          "publisher": "SBS News",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5245742a92",
+      "text": "H1 2026 was the first time both South Korea and Taiwan each surpassed Japan in total exports in the same half-year period",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        },
+        {
+          "url": "https://asia.nikkei.com/business/tech/semiconductors/south-korea-taiwan-top-japan-in-exports-for-first-time-on-ai-boom",
+          "title": "South Korea, Taiwan top Japan in exports for first time on AI boom",
+          "publisher": "Nikkei Asia",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://news.sbs.co.kr/english/article.do?news_id=N1008695373",
+          "title": "South Korea, Taiwan Surpass Japan in H1 Exports for First Time Driven by AI Boom",
+          "publisher": "SBS News",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d8a48b9794",
+      "text": "In H1 2026 South Korea and Taiwan exports grew close to 50% year-on-year, while Japan's exports grew nearly 10% year-on-year",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        },
+        {
+          "url": "https://news.sbs.co.kr/english/article.do?news_id=N1008695373",
+          "title": "South Korea, Taiwan Surpass Japan in H1 Exports for First Time Driven by AI Boom",
+          "publisher": "SBS News",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c3ef37cddc",
+      "text": "South Korea's integrated circuit (semiconductor) exports in H1 2026 were $149 billion, about 30% of its total exports",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        },
+        {
+          "url": "https://news.sbs.co.kr/english/article.do?news_id=N1008695373",
+          "title": "South Korea, Taiwan Surpass Japan in H1 Exports for First Time Driven by AI Boom",
+          "publisher": "SBS News",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a702eaf4b9",
+      "text": "Taiwan's integrated circuit exports in H1 2026 were $133.2 billion, about 30% of its total exports",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        },
+        {
+          "url": "https://news.sbs.co.kr/english/article.do?news_id=N1008695373",
+          "title": "South Korea, Taiwan Surpass Japan in H1 Exports for First Time Driven by AI Boom",
+          "publisher": "SBS News",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_514543db66",
+      "text": "Japan's integrated circuit exports in H1 2026 were $21.2 billion, about 5% of its total exports and roughly one-seventh of South Korea's",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        },
+        {
+          "url": "https://news.sbs.co.kr/english/article.do?news_id=N1008695373",
+          "title": "South Korea, Taiwan Surpass Japan in H1 Exports for First Time Driven by AI Boom",
+          "publisher": "SBS News",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9a9fa093ce",
+      "text": "Japan's semiconductor manufacturing equipment exports in H1 2026 were $15 billion, exceeding South Korea's $5.2 billion and Taiwan's $3.5 billion",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        },
+        {
+          "url": "https://news.sbs.co.kr/english/article.do?news_id=N1008695373",
+          "title": "South Korea, Taiwan Surpass Japan in H1 Exports for First Time Driven by AI Boom",
+          "publisher": "SBS News",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_14937ba79b",
+      "text": "South Korea's annual exports exceeded $700 billion for the first time in 2025, up from $683.6 billion in 2024",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.chosun.com/english/industry-en/2026/07/06/YBPFVZ46QRF6LHVXTOKPUYPVQY",
+          "title": "Micron's 14 Trillion Won Hiroshima Investment Sparks Semiconductor Race",
+          "publisher": "Chosun Ilbo English",
+          "published_at": "2026-07-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_050e1ec36e",
+      "text": "Taiwan's annual exports reached a record $640.75 billion in 2025, up 34.9% year-on-year",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/07/22/japan-june-exports-trade-data.html",
+          "title": "Japan exports and imports grow at fastest pace since November 2022",
+          "publisher": "CNBC",
+          "published_at": "2026-07-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fc8d57cceb",
+      "text": "South Korea's July 2026 exports were $98.89 billion, up 62.8% year-on-year, with semiconductor exports $41.01 billion up 178.8% year-on-year",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://tradingeconomics.com/south-korea/exports",
+          "title": "South Korea Exports",
+          "publisher": "Trading Economics",
+          "published_at": "2026-08-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ef256c0fc9",
+      "text": "The gap between South Korean and Japanese annual exports narrowed from over $100 billion in 2021 to $85 billion in 2023, $23.4 billion in 2024, and about $29 billion in 2025",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://koreajoongangdaily.joins.com/news/2026-05-06/business/economy/AI-chip-boom-upends-Asian-economies-Taiwan-flies-Korea-rises-Japan-drifts/2583999",
+          "title": "AI chip boom upends Asian economies: Taiwan flies, Korea rises, Japan drifts",
+          "publisher": "Korea JoongAng Daily",
+          "published_at": "2026-05-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2d665f9622",
+      "text": "In Q1 2026 South Korea's exports were $219.9 billion versus Japan's $188.8 billion, already ahead on a quarterly basis",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://koreajoongangdaily.joins.com/news/2026-05-06/business/economy/AI-chip-boom-upends-Asian-economies-Taiwan-flies-Korea-rises-Japan-drifts/2583999",
+          "title": "AI chip boom upends Asian economies: Taiwan flies, Korea rises, Japan drifts",
+          "publisher": "Korea JoongAng Daily",
+          "published_at": "2026-05-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_93eb6a2b06",
+      "text": "Taiwan's share of South Korea's semiconductor exports rose from 9.0% in 2022 ($12.78bn) to 19.9% in 2025 ($36.77bn), becoming the second-largest destination",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.techtimes.com/articles/317857/20260606/rapidus-gets-150b-japan-shifts-chip-subsidies-direct-ownership.htm",
+          "title": "Rapidus Gets \u0016150B as Japan Shifts From Chip Subsidies to Direct Ownership",
+          "publisher": "TechTimes",
+          "published_at": "2026-06-06"
+        },
+        {
+          "url": "https://en.bloomingbit.io/feed/news/117870",
+          "title": "South Korea's First-Half Exports Top Japan for First Time on AI Chip Surge",
+          "publisher": "Korea Economic Daily / BloomingBit",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://finance.biggo.com/news/082a8089-b10f-40fb-8e02-5fa75011d0b0",
+          "title": "Memory Chip Giants' Trillion-Dollar Expansion Sparks Oversupply Alarm, 2028 Seen as Critical Inflection Point",
+          "publisher": "BigGo Finance",
+          "published_at": "2026-07-20"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_671e4fe959",
+      "text": "China's share of South Korea's semiconductor exports fell from 53.1% in 2022 ($75.8bn) to 40.3% in 2025 ($74.46bn) but remained the largest destination",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.techtimes.com/articles/317857/20260606/rapidus-gets-150b-japan-shifts-chip-subsidies-direct-ownership.htm",
+          "title": "Rapidus Gets \u0016150B as Japan Shifts From Chip Subsidies to Direct Ownership",
+          "publisher": "TechTimes",
+          "published_at": "2026-06-06"
+        },
+        {
+          "url": "https://en.bloomingbit.io/feed/news/117870",
+          "title": "South Korea's First-Half Exports Top Japan for First Time on AI Chip Surge",
+          "publisher": "Korea Economic Daily / BloomingBit",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://finance.biggo.com/news/082a8089-b10f-40fb-8e02-5fa75011d0b0",
+          "title": "Memory Chip Giants' Trillion-Dollar Expansion Sparks Oversupply Alarm, 2028 Seen as Critical Inflection Point",
+          "publisher": "BigGo Finance",
+          "published_at": "2026-07-20"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_84ddf092e1",
+      "text": "For memory chips specifically, Taiwan's share of Korea's memory exports rose from 6.6% to 28.6% while China's fell from 71.5% to 50.1% between 2022 and 2025",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://en.bloomingbit.io/feed/news/117870",
+          "title": "South Korea's First-Half Exports Top Japan for First Time on AI Chip Surge",
+          "publisher": "Korea Economic Daily / BloomingBit",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_143d352016",
+      "text": "The AI supply chain now centers on Nvidia (GPU design), TSMC (foundry and advanced packaging), and Samsung Electronics/SK Hynix (HBM), with Korean HBM shipped to Taiwan for packaging before delivery to US hyperscalers",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/082a8089-b10f-40fb-8e02-5fa75011d0b0",
+          "title": "Memory Chip Giants' Trillion-Dollar Expansion Sparks Oversupply Alarm, 2028 Seen as Critical Inflection Point",
+          "publisher": "BigGo Finance",
+          "published_at": "2026-07-20"
+        },
+        {
+          "url": "https://www.techtimes.com/articles/317857/20260606/rapidus-gets-150b-japan-shifts-chip-subsidies-direct-ownership.htm",
+          "title": "Rapidus Gets \u0016150B as Japan Shifts From Chip Subsidies to Direct Ownership",
+          "publisher": "TechTimes",
+          "published_at": "2026-06-06"
+        },
+        {
+          "url": "https://en.bloomingbit.io/feed/news/117870",
+          "title": "South Korea's First-Half Exports Top Japan for First Time on AI Chip Surge",
+          "publisher": "Korea Economic Daily / BloomingBit",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c70ddc55b1",
+      "text": "SK Hynix held about 58% of global HBM market revenue in Q1 2026, with Samsung and Micron each about 21%",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://247wallst.com/investing/2026/07/21/sk-hynixs-hbm-empire-powers-65-us-revenue-is-this-the-must-own-ai-stock",
+          "title": "SK Hynix's HBM Empire Powers 65% US Revenue",
+          "publisher": "24/7 Wall St.",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4bfe7c7eb6",
+      "text": "Japan's export quantity index (volume excluding price effects) peaked before the 2008 global financial crisis and has been stagnant in recent years",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        },
+        {
+          "url": "https://news.sbs.co.kr/english/article.do?news_id=N1008695373",
+          "title": "South Korea, Taiwan Surpass Japan in H1 Exports for First Time Driven by AI Boom",
+          "publisher": "SBS News",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b8997f1db2",
+      "text": "Japan was the world's 3rd-largest exporter from the 1970s-1990s, fell to 4th in the 2000s behind China, and to 6th in 2024-2025 behind the Netherlands and Hong Kong",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        },
+        {
+          "url": "https://news.sbs.co.kr/english/article.do?news_id=N1008695373",
+          "title": "South Korea, Taiwan Surpass Japan in H1 Exports for First Time Driven by AI Boom",
+          "publisher": "SBS News",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4364481bca",
+      "text": "Record yen depreciation made Japan's dollar-denominated exports appear smaller, but the Korean won and Taiwan dollar also weakened against the dollar, so exchange rates alone do not explain the overtaking",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        },
+        {
+          "url": "https://news.sbs.co.kr/english/article.do?news_id=N1008695373",
+          "title": "South Korea, Taiwan Surpass Japan in H1 Exports for First Time Driven by AI Boom",
+          "publisher": "SBS News",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_97af35fa2d",
+      "text": "Japan retains dominant global share in semiconductor materials and equipment: top three photoresist suppliers are Japanese, Shin-Etsu leads silicon wafers, and Japan supplies over 50% of photoresists",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://eu.36kr.com/en/p/3918968758300292",
+          "title": "Global Semiconductor Materials Market Share Analysis: Japanese Enterprises Lead",
+          "publisher": "36Kr",
+          "published_at": "2026-07-31"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e41d18c335",
+      "text": "The Netherlands overtook Japan as South Korea's largest source of semiconductor manufacturing equipment imports (26.0% vs 23.7% in 2025), driven by ASML EUV lithography",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://en.bloomingbit.io/feed/news/117870",
+          "title": "South Korea's First-Half Exports Top Japan for First Time on AI Chip Surge",
+          "publisher": "Korea Economic Daily / BloomingBit",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://finance.biggo.com/news/082a8089-b10f-40fb-8e02-5fa75011d0b0",
+          "title": "Memory Chip Giants' Trillion-Dollar Expansion Sparks Oversupply Alarm, 2028 Seen as Critical Inflection Point",
+          "publisher": "BigGo Finance",
+          "published_at": "2026-07-20"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_388518790c",
+      "text": "Hyperscaler AI infrastructure capex is highly concentrated, with estimates of ~$450bn of ~$600bn total capex tied to AI in 2026 and ~$1.15 trillion from 2025-2027, with Nvidia capturing ~41.5 cents per dollar of AI hardware spend",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://intellectia.ai/blog/ai-infrastructure-investment-boom-2026",
+          "title": "The $700 Billion AI Infrastructure Boom",
+          "publisher": "Intellectia AI",
+          "published_at": "2026-07-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_974a8c9a42",
+      "text": "Chips were 34.8% of Taiwan's exports in 2024 (about 70% including ICT) versus 24.4% for Korea (32.1% including broader electronics), indicating higher concentration in Taiwan",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://koreajoongangdaily.joins.com/news/2026-05-06/business/economy/AI-chip-boom-upends-Asian-economies-Taiwan-flies-Korea-rises-Japan-drifts/2583999",
+          "title": "AI chip boom upends Asian economies: Taiwan flies, Korea rises, Japan drifts",
+          "publisher": "Korea JoongAng Daily",
+          "published_at": "2026-05-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_53c34aa6e3",
+      "text": "South Korea H1 2026 exports $496.3bn exceeded Japan $384.4bn by $111.9bn - first simultaneous overtaking per Nikkei analysis of national stats + JETRO/UN Comtrade (methodology table snapshotted via Aju/SBS; Taiwan MOF July 9 confirms $416.66bn +47.1% YoY)",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://asia.nikkei.com/business/tech/semiconductors/south-korea-taiwan-top-japan-in-exports-for-first-time-on-ai-boom",
+          "title": "South Korea, Taiwan top Japan in exports for first time on AI boom",
+          "publisher": "Nikkei Asia",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        },
+        {
+          "url": "https://news.sbs.co.kr/english/article.do?news_id=N1008695373",
+          "title": "South Korea, Taiwan Surpass Japan in H1 Exports for First Time Driven by AI Boom",
+          "publisher": "SBS News",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://modeldiplomat.com/story/taiwans-47-export-surge-and-security",
+          "title": "Taiwan H1 2026 Exports $416.66bn +47.1% - Ministry of Finance July 9 Release",
+          "publisher": "Ministry of Finance, R.O.C.",
+          "published_at": "2026-07-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7fdb42df0a",
+      "text": "Taiwan H1 2026 exports $416.6bn ($416.66bn MOF) exceeded Japan $384.4bn by $32.2bn, +47.1% YoY record, June $74.83bn +40.3% YoY",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://modeldiplomat.com/story/taiwans-47-export-surge-and-security",
+          "title": "Taiwan H1 2026 Exports $416.66bn +47.1% - Ministry of Finance July 9 Release",
+          "publisher": "Ministry of Finance, R.O.C.",
+          "published_at": "2026-07-09"
+        },
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        },
+        {
+          "url": "https://news.sbs.co.kr/english/article.do?news_id=N1008695373",
+          "title": "South Korea, Taiwan Surpass Japan in H1 Exports for First Time Driven by AI Boom",
+          "publisher": "SBS News",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_66dd29b69d",
+      "text": "Japan H1 2026 exports $384.4bn in Nikkei dollar comparison = \u000160.66trn (+13.7% YoY yen basis) per MOF customs; June \u00179.8trn +17.7% YoY",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.customs.go.jp/toukei/info/index.htm",
+          "title": "Trade Statistics of Japan - June 2026 & H1 2026 Provisional (MOF Customs)",
+          "publisher": "Ministry of Finance, Japan",
+          "published_at": "2026-07-22"
+        },
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3a22275a2f",
+      "text": "H1 2026 YoY: Korea ~48.4% / Taiwan 47.1% vs Japan ~10% dollar (~13.7% yen) - FX alone not explanatory as won/NT$ also weak per Nikkei note",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://english.motir.go.kr/eng/article/EATCLdfa319ada/2688/view",
+          "title": "Korea ICT Exports Reach Record $253.9 Billion in First Half of 2026",
+          "publisher": "MOTIR",
+          "published_at": "2026-07-14"
+        },
+        {
+          "url": "https://modeldiplomat.com/story/taiwans-47-export-surge-and-security",
+          "title": "Taiwan H1 2026 Exports $416.66bn +47.1% - Ministry of Finance July 9 Release",
+          "publisher": "Ministry of Finance, R.O.C.",
+          "published_at": "2026-07-09"
+        },
+        {
+          "url": "https://www.customs.go.jp/toukei/info/index.htm",
+          "title": "Trade Statistics of Japan - June 2026 & H1 2026 Provisional (MOF Customs)",
+          "publisher": "Ministry of Finance, Japan",
+          "published_at": "2026-07-22"
+        },
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a2a043a72e",
+      "text": "Korea annual exports exceeded $700bn first time in 2025: $709.7bn (+3.8% YoY) per MOTIR final; $700bn milestone hit ~13:00 Dec 29 2025; semiconductors $173.4bn (24.4% share)",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.businesskorea.co.kr/news/articleView.html?idxno=260046",
+          "title": "South Korea 2025 Exports Hit Record $709.7 Billion - MOTIR Annual Trends",
+          "publisher": "MOTIR via BusinessKorea",
+          "published_at": "2026-01-01"
+        },
+        {
+          "url": "https://www.chosun.com/english/industry-en/2026/07/06/YBPFVZ46QRF6LHVXTOKPUYPVQY",
+          "title": "Micron's 14 Trillion Won Hiroshima Investment Sparks Semiconductor Race",
+          "publisher": "Chosun Ilbo English",
+          "published_at": "2026-07-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ec525e6995",
+      "text": "Taiwan annual exports record $640.75bn in 2025 +34.9% YoY per MOF, Dec +43.4% YoY",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.wsj.com/economy/trade/taiwans-exports-hit-record-in-2025-on-ai-fueled-demand-bf1f8258",
+          "title": "Taiwan Exports Hit Record $640.75bn in 2025 +34.9%",
+          "publisher": "Ministry of Finance, R.O.C.",
+          "published_at": "2026-01-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8230ab9550",
+      "text": "Korea July 2026 exports $98.89bn +62.8% YoY, semiconductors $41.01bn +178.8% YoY topping $40bn second month, per MOTIR",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://english.motir.go.kr/eng/article/EATCLdfa319ada/2701/view",
+          "title": "July 2026 Exports Reach $98.89 Billion, Second-Highest on Record",
+          "publisher": "MOTIR",
+          "published_at": "2026-08-03"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dddd6cc5d9",
+      "text": "Taiwan share of Korea semiconductor exports 9.0% (2022) -> 19.9% (2025) becoming No.2, per BOK Map; driven by HBM to Taiwan for TSMC CoWoS packaging with Nvidia GPUs",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/082a8089-b10f-40fb-8e02-5fa75011d0b0",
+          "title": "Memory Chip Giants' Trillion-Dollar Expansion Sparks Oversupply Alarm, 2028 Seen as Critical Inflection Point",
+          "publisher": "BigGo Finance",
+          "published_at": "2026-07-20"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dca2509930",
+      "text": "Netherlands 26.0% of Korea chip equipment imports 2025 (vs Japan 23.7%) overtaking Japan, due to ASML EUV monopoly; Korea 25.0% of ASML sales",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/082a8089-b10f-40fb-8e02-5fa75011d0b0",
+          "title": "Memory Chip Giants' Trillion-Dollar Expansion Sparks Oversupply Alarm, 2028 Seen as Critical Inflection Point",
+          "publisher": "BigGo Finance",
+          "published_at": "2026-07-20"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3cac07a8c9",
+      "text": "Japanese government (METI) counters H1 ranking narrative with national semiconductor strategy centered on Rapidus: additional \u00165631.5bn (~$4.0bn) support for FY2026 decided April 11, bringing cumulative R&D support to \u00162.354tn (~$14.8bn), targeting 2nm mass production in H2 FY2027 at Chitose, Hokkaido, with METI Minister Ryosei Akazawa pledging 'spare no necessary support'. Primary METI action; steelmans Japanese official pushback that H1 gap reflects upstream positioning while Tokyo funds finished-chip catch-up.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_212cf56305",
+      "text": "Rapidus governance shifted from grants to direct state ownership: \u0016150bn equity via IPA (June 2026), golden share veto for METI, projected total gov support >\u00163tn (~$18.8bn) by end FY2027 vs \u0016167.6bn private from 32 firms; analysts skeptical \u0014 Semiecosystem Mark LaPedus estimates 5% probability of high-volume 2nm by 2027, 65-70% still in R&D, with funding gap to \u00165-7tn needed for stable production and TSMC/Samsung already in 2nm volume late 2025.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4656f9f6e1",
+      "text": "Mitsubishi UFJ Research and Consulting researcher Kenta Maruyama: 'Even if countries expand semiconductor exports, shipments of parts, materials and manufacturing equipment are unlikely to increase as rapidly as finished products' \u0014 explaining why Japan's $15bn equipment exports (vs $5.2bn Korea, $3.5bn Taiwan in H1) expanded more slowly than Korea/Taiwan ~30% IC share finished-chip surge.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6fd4a6d8ba",
+      "text": "Memory-cycle skeptics warn current AI-driven shortage flips to glut around 2028-2029: Counterpoint Research warns sharp price correction if supply becomes visible H2 2027; Handel Jones (IBS) says AI capex surge 5-6x since 2020 could boomerang as oversupply in 2028; Sungkyunkwan Prof Kwon Seok-jun says HBM glut probability low but commodity DRAM inflection by 2029 if AI returns disappoint; Morgan Stanley estimates China (CXMT) will account for 30% of new global DRAM capacity by 2028.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        },
+        {
+          "url": "https://www.techtimes.com/articles/317857/20260606/rapidus-gets-150b-japan-shifts-chip-subsidies-direct-ownership.htm",
+          "title": "Rapidus Gets \u0016150B as Japan Shifts From Chip Subsidies to Direct Ownership",
+          "publisher": "TechTimes",
+          "published_at": "2026-06-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9421e314da",
+      "text": "H1 overtaking is dollar-denominated, price- and FX-driven half-year reading, not volume: Japan June 2026 exports +19.3% YoY by value but volumes +0.2% only, per Capital Economics Marcel Thieliant, reflecting yen at ~163/dollar and soaring memory prices (semiconductor shipments +53.8%); won/NT$ also weak, but price effect dominates, and Japan's export quantity index flat since pre-2008.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        },
+        {
+          "url": "https://www.techtimes.com/articles/317857/20260606/rapidus-gets-150b-japan-shifts-chip-subsidies-direct-ownership.htm",
+          "title": "Rapidus Gets \u0016150B as Japan Shifts From Chip Subsidies to Direct Ownership",
+          "publisher": "TechTimes",
+          "published_at": "2026-06-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3756e96656",
+      "text": "H1 2026 simultaneous overtaking does not yet equal full-year regime change: full-year 2025 Japan still ahead of Korea by ~$29bn (and 6th globally), H1 is seasonally volatile, and Japan rebounded strongly in June (+19.3%) on semiconductor equipment to Taiwan (+46.4%) and China (+17.6%); whether H2 seasonality, yen moves, and US tariff effects (15% on Japan) narrow gap remains open.",
+      "grade": "contested",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://finance.biggo.com/news/iogle50BQ45Y7dX6lwpB",
+          "title": "Japan Approves Over \u00165630 Billion in Additional Support for Rapidus to Mass-Produce Domestic 2nm Semiconductors",
+          "publisher": "BigGo Finance / METI",
+          "published_at": "2026-04-11"
+        },
+        {
+          "url": "https://www.techtimes.com/articles/317857/20260606/rapidus-gets-150b-japan-shifts-chip-subsidies-direct-ownership.htm",
+          "title": "Rapidus Gets \u0016150B as Japan Shifts From Chip Subsidies to Direct Ownership",
+          "publisher": "TechTimes",
+          "published_at": "2026-06-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ccf7d0031e",
+      "text": "Japanese official-adjacent narrative via Micron-Hiroshima alliance: Micron investing \u00161.5tn (~14tn won) in Higashi-Hiroshima HBM fab from 2028 with METI support up to \u0016536bn (one-third), framed by METI Minister Akazawa as 'tremendous significance for Japan to produce advanced memory independently' \u0014 part of building complete supply chain (TSMC Kumamoto + Rapidus 2nm + memory) rather than conceding finished-chip race.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.techtimes.com/articles/317857/20260606/rapidus-gets-150b-japan-shifts-chip-subsidies-direct-ownership.htm",
+          "title": "Rapidus Gets \u0016150B as Japan Shifts From Chip Subsidies to Direct Ownership",
+          "publisher": "TechTimes",
+          "published_at": "2026-06-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bf1a4b4157",
+      "text": "Japan June 2026 exports +19.3% YoY by value but +0.2% by volume per Capital Economics Marcel Thieliant, yen ~163/dollar, semiconductor shipments +53.8%, equipment to Taiwan +46.4%",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/07/22/japan-june-exports-trade-data.html",
+          "title": "Japan exports and imports grow at fastest pace since November 2022",
+          "publisher": "CNBC",
+          "published_at": "2026-07-22"
+        },
+        {
+          "url": "https://en.bloomingbit.io/feed/news/117870",
+          "title": "South Korea's First-Half Exports Top Japan for First Time on AI Chip Surge",
+          "publisher": "Korea Economic Daily / BloomingBit",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_64a6521a9e",
+      "text": "Mitsubishi UFJ Kenta Maruyama quote verbatim: 'Even if countries expand semiconductor exports, shipments of parts, materials and manufacturing equipment are unlikely to increase as rapidly as finished products'",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://en.bloomingbit.io/feed/news/117870",
+          "title": "South Korea's First-Half Exports Top Japan for First Time on AI Chip Surge",
+          "publisher": "Korea Economic Daily / BloomingBit",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f3616f592b",
+      "text": "SK Hynix held about 58% of global HBM market revenue in Q1 2026 per Counterpoint Research, with Samsung and Micron each about 21%",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://247wallst.com/investing/2026/07/21/sk-hynixs-hbm-empire-powers-65-us-revenue-is-this-the-must-own-ai-stock",
+          "title": "SK Hynix's HBM Empire Powers 65% US Revenue",
+          "publisher": "24/7 Wall St.",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

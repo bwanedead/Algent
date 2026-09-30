@@ -1,0 +1,638 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/us-clears-24-3bn-stealth-fighter-sale-to-saudi-arabia-and-sa-9e3ae1",
+  "title": "US clears $24.3bn stealth fighter sale to Saudi Arabia and says Israel's edge will hold",
+  "summary": "Riyadh would be the first Arab operator of America's most advanced stealth jet, but the finding rests on classified downgrades, basing limits and compensation for Israel that analysts and Israel's air force dispute, as US intelligence warns Saudi ties to China risk exposing stealth secrets — Congress has 30 days to try to block it.",
+  "published_at": "2026-09-18T12:19:57.372295+00:00",
+  "as_of": "2026-09-18",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 23,
+    "likely": 10
+  },
+  "claims": [
+    {
+      "id": "clm_1ae7bb0b1b",
+      "text": "U.S. State Department made determination approving possible Foreign Military Sale to Saudi Arabia for F-35 Lightning II and related equipment with estimated total cost $24.3 billion (Transmittal #26-69) on Sept 17, 2026",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.state.gov/releases/bureau-of-political-military-affairs/2026/09/kingdom-of-saudi-arabia-f-35-lightning-ii-joint-strike-fighter-aircraft",
+          "title": "Kingdom of Saudi Arabia – F-35 Lightning II Joint Strike Fighter Aircraft",
+          "publisher": "U.S. Department of State, Bureau of Political-Military Affairs",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.al-monitor.com/originals/2026/09/trump-administration-approves-24b-sale-f-35-jets-saudi-arabia",
+          "title": "Trump administration approves $24B sale of F-35 jets to Saudi Arabia",
+          "publisher": "Al-Monitor",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.thehindu.com/news/international/us-approves-sale-of-48-f-35-jets-to-saudi-arabia/article71478233.ece",
+          "title": "U.S. approves sale of 48 F-35 jets to Saudi Arabia",
+          "publisher": "The Hindu",
+          "published_at": "2026-09-18T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_99fe72c31a",
+      "text": "Package includes 48 F-35 Lightning II Joint Strike Fighter aircraft with conventional takeoff and landing (F-35A) and 49 Pratt & Whitney F135-PW-100 engines (48 installed, 1 spare)",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.state.gov/releases/bureau-of-political-military-affairs/2026/09/kingdom-of-saudi-arabia-f-35-lightning-ii-joint-strike-fighter-aircraft",
+          "title": "Kingdom of Saudi Arabia – F-35 Lightning II Joint Strike Fighter Aircraft",
+          "publisher": "U.S. Department of State, Bureau of Political-Military Affairs",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.al-monitor.com/originals/2026/09/trump-administration-approves-24b-sale-f-35-jets-saudi-arabia",
+          "title": "Trump administration approves $24B sale of F-35 jets to Saudi Arabia",
+          "publisher": "Al-Monitor",
+          "published_at": "2026-09-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d11afaf9b0",
+      "text": "Non-MDE items include AN/PYQ-10 simple key loaders, KIV-78 cryptographic appliques, secure communications/precision navigation/cryptographic devices, electronic warfare database support, cartridge/propellant actuated devices, aircraft/munitions support equipment, spares, repair/return, training aids, engine component improvement program, modifications/maintenance, classified/unclassified software and publications, transportation/ferry/refueling, personnel training including simulators, clothing/textiles, studies/site surveys, and U.S. Government engineering/technical/logistics support",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.state.gov/releases/bureau-of-political-military-affairs/2026/09/kingdom-of-saudi-arabia-f-35-lightning-ii-joint-strike-fighter-aircraft",
+          "title": "Kingdom of Saudi Arabia – F-35 Lightning II Joint Strike Fighter Aircraft",
+          "publisher": "U.S. Department of State, Bureau of Political-Military Affairs",
+          "published_at": "2026-09-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8439aa20e1",
+      "text": "Principal contractors are Lockheed Martin Aeronautics (Fort Worth, Texas) and Pratt & Whitney Military Engines (East Hartford, Connecticut)",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.state.gov/releases/bureau-of-political-military-affairs/2026/09/kingdom-of-saudi-arabia-f-35-lightning-ii-joint-strike-fighter-aircraft",
+          "title": "Kingdom of Saudi Arabia – F-35 Lightning II Joint Strike Fighter Aircraft",
+          "publisher": "U.S. Department of State, Bureau of Political-Military Affairs",
+          "published_at": "2026-09-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a0db98d650",
+      "text": "State Department notified Congress; sale proceeds through Foreign Military Sales process with 30-day congressional review period",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.state.gov/releases/bureau-of-political-military-affairs/2026/09/kingdom-of-saudi-arabia-f-35-lightning-ii-joint-strike-fighter-aircraft",
+          "title": "Kingdom of Saudi Arabia – F-35 Lightning II Joint Strike Fighter Aircraft",
+          "publisher": "U.S. Department of State, Bureau of Political-Military Affairs",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.al-monitor.com/originals/2026/09/trump-administration-approves-24b-sale-f-35-jets-saudi-arabia",
+          "title": "Trump administration approves $24B sale of F-35 jets to Saudi Arabia",
+          "publisher": "Al-Monitor",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.thehindu.com/news/international/us-approves-sale-of-48-f-35-jets-to-saudi-arabia/article71478233.ece",
+          "title": "U.S. approves sale of 48 F-35 jets to Saudi Arabia",
+          "publisher": "The Hindu",
+          "published_at": "2026-09-18T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1820ac9a3a",
+      "text": "Congress could block sale via joint resolution of disapproval; president could veto, requiring two-thirds majority in both chambers to override",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.al-monitor.com/originals/2026/09/trump-administration-approves-24b-sale-f-35-jets-saudi-arabia",
+          "title": "Trump administration approves $24B sale of F-35 jets to Saudi Arabia",
+          "publisher": "Al-Monitor",
+          "published_at": "2026-09-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9da714c559",
+      "text": "State Department justification: sale supports U.S. foreign policy and national security by improving security of major non-NATO ally that is force for political stability and economic progress in Gulf; improves Saudi capability to deter current/future threats, strengthens homeland defense, improves interoperability with U.S./regional/NATO forces, augments operational aircraft and enhances air-to-air and air-to-ground self-defense capability",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.state.gov/releases/bureau-of-political-military-affairs/2026/09/kingdom-of-saudi-arabia-f-35-lightning-ii-joint-strike-fighter-aircraft",
+          "title": "Kingdom of Saudi Arabia – F-35 Lightning II Joint Strike Fighter Aircraft",
+          "publisher": "U.S. Department of State, Bureau of Political-Military Affairs",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.al-monitor.com/originals/2026/09/trump-administration-approves-24b-sale-f-35-jets-saudi-arabia",
+          "title": "Trump administration approves $24B sale of F-35 jets to Saudi Arabia",
+          "publisher": "Al-Monitor",
+          "published_at": "2026-09-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9f4603e052",
+      "text": "State Department stated proposed sale will not alter the military balance in the region",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.state.gov/releases/bureau-of-political-military-affairs/2026/09/kingdom-of-saudi-arabia-f-35-lightning-ii-joint-strike-fighter-aircraft",
+          "title": "Kingdom of Saudi Arabia – F-35 Lightning II Joint Strike Fighter Aircraft",
+          "publisher": "U.S. Department of State, Bureau of Political-Military Affairs",
+          "published_at": "2026-09-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_aee8d1afc0",
+      "text": "State Department stated Saudi Arabia will have no difficulty absorbing equipment into armed forces, no adverse impact on U.S. defense readiness, and no additional U.S. Government or contractor representatives required in Saudi Arabia",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.state.gov/releases/bureau-of-political-military-affairs/2026/09/kingdom-of-saudi-arabia-f-35-lightning-ii-joint-strike-fighter-aircraft",
+          "title": "Kingdom of Saudi Arabia – F-35 Lightning II Joint Strike Fighter Aircraft",
+          "publisher": "U.S. Department of State, Bureau of Political-Military Affairs",
+          "published_at": "2026-09-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1d59c28c15",
+      "text": "U.S. Government is not aware of any offset agreement proposed; any offset would be negotiated between purchaser and contractor",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.state.gov/releases/bureau-of-political-military-affairs/2026/09/kingdom-of-saudi-arabia-f-35-lightning-ii-joint-strike-fighter-aircraft",
+          "title": "Kingdom of Saudi Arabia – F-35 Lightning II Joint Strike Fighter Aircraft",
+          "publisher": "U.S. Department of State, Bureau of Political-Military Affairs",
+          "published_at": "2026-09-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3ee1ab6d70",
+      "text": "President Donald Trump announced in November 2025 he would approve F-35 sale to Saudi Arabia ahead of White House meeting with Crown Prince Mohammed bin Salman",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.al-monitor.com/originals/2026/09/trump-administration-approves-24b-sale-f-35-jets-saudi-arabia",
+          "title": "Trump administration approves $24B sale of F-35 jets to Saudi Arabia",
+          "publisher": "Al-Monitor",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.axios.com/2025/11/17/saudi-f35-trump-mbs-meeting",
+          "title": "U.S. will sell Saudi Arabia advanced F-35 fighter jets, Trump says",
+          "publisher": "Axios",
+          "published_at": "2025-11-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_40c855fb6e",
+      "text": "Israel is currently the only Middle East country operating the F-35; Saudi Arabia would become first Arab state to acquire/operate the jet if sale concludes",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.al-monitor.com/originals/2026/09/trump-administration-approves-24b-sale-f-35-jets-saudi-arabia",
+          "title": "Trump administration approves $24B sale of F-35 jets to Saudi Arabia",
+          "publisher": "Al-Monitor",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://responsiblestatecraft.org/israel-qualitative-military-edge",
+          "title": "Does Israel really still need a 'qualitative military edge' ?",
+          "publisher": "Responsible Statecraft / Quincy Institute",
+          "published_at": "2025-12-23T00:00:00Z"
+        },
+        {
+          "url": "https://www.eurasiantimes.com/f-35-blueprints-leaked-secrets-with-saudi-deal",
+          "title": "F-35 Blueprints Leaked, J-20 Flies On Stolen Tech: Why Is U.S. Further Compromising F-35's Secrets With Saudi Deal?",
+          "publisher": "EurAsian Times",
+          "published_at": "2025-11-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9e79b5afbe",
+      "text": "U.S. law requires preservation of Israel's Qualitative Military Edge (QME), defined in 2008 Naval Vessel Transfer Act as ability to counter/defeat credible conventional threats while sustaining minimal damage via superior means; codified via Arms Export Control Act amendments requiring QME assessment for Middle East arms transfers",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://responsiblestatecraft.org/israel-qualitative-military-edge",
+          "title": "Does Israel really still need a 'qualitative military edge' ?",
+          "publisher": "Responsible Statecraft / Quincy Institute",
+          "published_at": "2025-12-23T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0fb1d37721",
+      "text": "Israeli officials have not opposed sale in principle but sought conditions: aircraft not include most sophisticated systems available to Israel, not deployed to western Saudi bases near Israel, and linked to Saudi normalization with Israel under Abraham Accords framework",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.axios.com/2025/11/17/saudi-f35-trump-mbs-meeting",
+          "title": "U.S. will sell Saudi Arabia advanced F-35 fighter jets, Trump says",
+          "publisher": "Axios",
+          "published_at": "2025-11-17T00:00:00Z"
+        },
+        {
+          "url": "https://responsiblestatecraft.org/israel-qualitative-military-edge",
+          "title": "Does Israel really still need a 'qualitative military edge' ?",
+          "publisher": "Responsible Statecraft / Quincy Institute",
+          "published_at": "2025-12-23T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8783f45443",
+      "text": "Trump suggested Saudi F-35s should have same technology as Israel's; Secretary of State Marco Rubio walked back comment and reiterated commitment to preserve Israel's QME",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://responsiblestatecraft.org/israel-qualitative-military-edge",
+          "title": "Does Israel really still need a 'qualitative military edge' ?",
+          "publisher": "Responsible Statecraft / Quincy Institute",
+          "published_at": "2025-12-23T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c095cdfc30",
+      "text": "U.S. intelligence agencies (including Defense Intelligence Agency assessment fall 2025) warned China could gain access to sensitive F-35 technology via espionage in Saudi Arabia or via Saudi-China military/security and telecom infrastructure ties",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.i24news.tv/en/news/international/americas/artc-us-intel-raises-china-espionage-concerns-over-saudi-f-35-deal-report",
+          "title": "US Intel Raises China Espionage Concerns Over Saudi F-35 Deal - Report",
+          "publisher": "i24NEWS (summarizing NYT)",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.al-monitor.com/originals/2026/09/trump-administration-approves-24b-sale-f-35-jets-saudi-arabia",
+          "title": "Trump administration approves $24B sale of F-35 jets to Saudi Arabia",
+          "publisher": "Al-Monitor",
+          "published_at": "2026-09-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5018ae3dff",
+      "text": "Saudi Arabia has sought F-35s for years; Biden administration also discussed jets as part of broader U.S.-Saudi security arrangement and potential Saudi-Israeli normalization talks that stalled after Oct 7 2023 Hamas attack and Gaza war",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.al-monitor.com/originals/2026/09/trump-administration-approves-24b-sale-f-35-jets-saudi-arabia",
+          "title": "Trump administration approves $24B sale of F-35 jets to Saudi Arabia",
+          "publisher": "Al-Monitor",
+          "published_at": "2026-09-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_93680f17d2",
+      "text": "Royal Saudi Air Force backbone is ~232 F-15s (84 F-15SA new-build, ~68 F-15SR upgraded, ~80 F-15C/D), plus 72 Eurofighter Typhoons and ~81 Tornado IDS being phased out; F-35s likely replacement for Tornados",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://theaviationist.com/2026/02/10/saudi-arabian-military-world-defense-show",
+          "title": "Saudi Arabian Military's Modernization in the Spotlight at World Defense Show",
+          "publisher": "The Aviationist",
+          "published_at": "2026-02-10T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8d71797cac",
+      "text": "F-35 program scale: >1,200 F-35s operating from 48 bases and 12 ships across 20 nations; record 191 deliveries in 2025; full-rate production approved March 2024 at 1,000th aircraft; planned procurement 2,454-2,470 aircraft (1,763 F-35A, 280 F-35B, 413 F-35C)",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://defence-industry.eu/f-35s-1-4-trillion-sustainment-bill-rising-modernization-costs-and-production-strain-test-the-limits-of-global-fleet-expansion",
+          "title": "F-35's $1.4 trillion sustainment bill, rising modernization costs and production strain test the limits of global fleet expansion",
+          "publisher": "Defence Industry Europe (summarizing FY2027 MSAR)",
+          "published_at": "2026-08-13T00:00:00Z"
+        },
+        {
+          "url": "https://news.lockheedmartin.com/2026-01-07-F-35-Breaks-Delivery-Record,-Continues-Combat-Success-in-2025",
+          "title": "F-35 Breaks Delivery Record, Continues Combat Success in 2025",
+          "publisher": "Lockheed Martin",
+          "published_at": "2026-01-07T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9072b81a3f",
+      "text": "F-35 acquisition cost exceeds $536 billion then-year dollars (aircraft $446.66B + engine $89.58B); lifetime operations/support approaching $1.4 trillion; recurring flyaway ~$66.7M for F-35A air vehicle + $11.3M engine (FY12 dollars); recent Lots 18-19 contract for up to 296 aircraft valued at $24-24.3B",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://defence-industry.eu/f-35s-1-4-trillion-sustainment-bill-rising-modernization-costs-and-production-strain-test-the-limits-of-global-fleet-expansion",
+          "title": "F-35's $1.4 trillion sustainment bill, rising modernization costs and production strain test the limits of global fleet expansion",
+          "publisher": "Defence Industry Europe (summarizing FY2027 MSAR)",
+          "published_at": "2026-08-13T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8e16a59f0a",
+      "text": "Israel operates ~45 F-35I Adir operational of 75 ordered, with unique Israeli hardware/software and independent operation capability not expected for Saudi Arabia",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.eurasiantimes.com/f-35-blueprints-leaked-secrets-with-saudi-deal",
+          "title": "F-35 Blueprints Leaked, J-20 Flies On Stolen Tech: Why Is U.S. Further Compromising F-35's Secrets With Saudi Deal?",
+          "publisher": "EurAsian Times",
+          "published_at": "2025-11-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_61a34356da",
+      "text": "Previous U.S. approval of F-35 sale to UAE (50 jets, $23.37B package with MQ-9B and munitions) in Nov 2020 linked to Abraham Accords has not resulted in delivered UAE F-35s as of 2026",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://responsiblestatecraft.org/israel-qualitative-military-edge",
+          "title": "Does Israel really still need a 'qualitative military edge' ?",
+          "publisher": "Responsible Statecraft / Quincy Institute",
+          "published_at": "2025-12-23T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2bb697fef9",
+      "text": "Israel has ordered 75 F-35A aircraft converted to F-35I Adir configuration; currently operates 42-45 of initial 50 with staged deliveries to 50 by 2026 and 75 from 2027-2028; F-35I is the only F-35 variant contractually authorized for deep indigenous integration (Israeli EW suite, C2, weapons, software upgrade packages) funded by Israel via FMS with ~80% work in Fort Worth and remainder in Israel, providing independent sustainment not expected for Saudi Arabia",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://defence-industry.eu/lockheed-martin-awarded-contract-to-advance-software-modifications-for-israels-f-35i-adir-fleet",
+          "title": "Lockheed Martin awarded contract to advance software modifications for Israel's F-35I Adir fleet",
+          "publisher": "gov",
+          "published_at": "2026-04-07"
+        },
+        {
+          "url": "https://www.jpost.com/israel-news/article-846278",
+          "title": "WATCH: IDF strengthens air dominance with latest F-35 arrivals",
+          "publisher": "gov",
+          "published_at": "2025-03-16"
+        },
+        {
+          "url": "https://www.flightglobal.com/fixed-wing/2024/06/israel-to-add-25-more-f-35s-under-latest-3bn-deal",
+          "title": "Israel to add 25 more F-35s under latest $3bn deal",
+          "publisher": "gov",
+          "published_at": "2024-06-05"
+        },
+        {
+          "url": "https://www.timesofisrael.com/netanyahu-brushes-off-saudi-f-35-deal-says-us-will-ensure-israels-military-edge",
+          "title": "Netanyahu brushes off Saudi F-35 deal, says US will ensure Israel's military edge",
+          "publisher": "gov",
+          "published_at": "2026-09-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0d8961a341",
+      "text": "QME is defined in U.S. law as 'the ability to counter and defeat any credible conventional military threat from any individual state or possible coalition of states or from non-state actors, while sustaining minimal damages and casualties, through the use of superior military means, possessed in sufficient quantity, including weapons, command, control, communication, intelligence, surveillance, and reconnaissance capabilities that in their technical characteristics are superior in capability to those of such other individual or possible coalition of states or non-state actors' — codified in Section 36(h) of Arms Export Control Act (22 USC 2776(h)) via Naval Vessel Transfer Act of 2008 (P.L. 110-429 Sec 201), requiring President to ensure Middle East arms exports do not adversely affect Israel's QME and to conduct periodic assessments (quadrennial, amended to biennial in 2013)",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title22-section2776&num=0&edition=prelim",
+          "title": "22 USC 2776: Reports and certifications to Congress on military exports (Arms Export Control Act Sec 36)",
+          "publisher": "gov",
+          "published_at": "2023-01-01"
+        },
+        {
+          "url": "https://www.middleeasteye.net/explainers/how-us-law-protects-israels-qualitative-military-edge",
+          "title": "How US law protects Israel's Qualitative Military Edge",
+          "publisher": "gov",
+          "published_at": "2026-06-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_497cdf36b9",
+      "text": "In response to Transmittal 26-69 (Sept 17-18 2026), PM Netanyahu stated Secretary Rubio reiterated commitment that US will continue to preserve Israel's QME 'in everything related to supplying weapons and military systems to countries in the Middle East' and that advantage is legally guaranteed; government spokesperson Shosh Bedrosian cited 'long-standing understanding' QME will be preserved; U.S. officials indicated Saudi F-35s would be less advanced than Israeli F-35I Adir and limited to two squadrons",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.timesofisrael.com/netanyahu-brushes-off-saudi-f-35-deal-says-us-will-ensure-israels-military-edge",
+          "title": "Netanyahu brushes off Saudi F-35 deal, says US will ensure Israel's military edge",
+          "publisher": "gov",
+          "published_at": "2026-09-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3b1135ddac",
+      "text": "F-35 JPO and Lockheed Martin definitized Lots 18-19 contract Sept 29 2025 for 296 aircraft at $24.29B total ($11.8B Dec 2024 Lot 18 + $12.5B Sept 2025 modification), average airframe ~$82.1-82.4M excluding F135 engines contracted separately to Pratt & Whitney as government-furnished equipment; Lot 18 increased to 148 aircraft and Lot 19 adds 148 aircraft (including 52 F-35A +12 F-35B for FMS customers); Lot 19 production expected completed August 2028 with first deliveries in 2026; Saudi $24.3B for 48 jets +49 engines + support is FMS total package price, numerically identical to 296-airframe-only total, confirming extensive non-MDE tail",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://theaviationist.com/2025/09/30/f-35-contract-lots-18-and-19",
+          "title": "JPO and Lockheed Martin Finalize F-35 Contract for Lots 18 and 19",
+          "publisher": "gov",
+          "published_at": "2025-09-30"
+        },
+        {
+          "url": "https://www.airandspaceforces.com/f-35-lots-18-and-19-contract",
+          "title": "F-35 Deal for Lots 18 and 19 Covers 296 Fighters at $24.3 Billion",
+          "publisher": "gov",
+          "published_at": "2025-09-30"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_408e8f7825",
+      "text": "Israeli Ministry of Defense Ministerial Committee on Procurement approved May 2026 plan for fourth F-35I squadron (25 aircraft) toward eventual 100 F-35Is and 50 F-15IAs under Magen Israel 10-year ~$120B force buildup",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.twz.com/air/israel-to-buy-extra-f-15ia-and-f-35i-squadrons",
+          "title": "Israel To Buy Extra F-15IA And F-35I Squadrons",
+          "publisher": "gov",
+          "published_at": "2026-05-03"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6818cb301e",
+      "text": "State's 'will not alter the basic military balance in the region' / 'will not alter the military balance' language is routine boilerplate present in every DSCA/State Transmittal notification, intended to pre-empt congressional objections rather than as independently verifiable analytical finding. Same phrasing appears for Taiwan, Pakistan, Greece and other sales.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.techtimes.com/articles/321232/20260721/greece-joins-switchblade-arsenal-801m-deal-aegean-tensions-rise.htm",
+          "title": "Greece Joins Switchblade Arsenal With $80.1M Deal as Aegean Tensions Rise",
+          "publisher": "TechTimes",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_10d8119330",
+      "text": "Israeli Air Force submitted formal position paper / white paper to political leaders warning Saudi acquisition of up to 48 F-35s could 'erode or significantly degrade' Israel's qualitative military edge and regional air superiority, citing F-35's advanced detection, data-processing and networked systems.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://theaviationist.com/2025/11/21/saudi-f-35-and-us-saudi-sda",
+          "title": "Saudi Arabia's F-35 Push Advances After U.S.–Saudi Defense Pact",
+          "publisher": "The Aviationist",
+          "published_at": "2025-11-21"
+        },
+        {
+          "url": "https://www.timesofisrael.com/saudi-f-35-sale-triggers-israeli-concern-though-military-edge-may-remain-intact",
+          "title": "Saudi F-35 sale triggers Israeli concern, though military edge may remain intact",
+          "publisher": "Times of Israel",
+          "published_at": "2025-12-07"
+        },
+        {
+          "url": "https://breakingdefense.com/2025/11/is-israels-f-35-qualitative-military-edge-doa-after-saudi-announcement",
+          "title": "Is Israel's F-35 Qualitative Military Edge DOA after Saudi announcement?",
+          "publisher": "Breaking Defense",
+          "published_at": "2025-11-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8fbdeeea0e",
+      "text": "Responsible Statecraft analysis argues QME requirement creates perverse incentives: (1) compensating Israel with additional capabilities to preserve QME can fuel regional arms race, potentially in tension with AECA Sec 36(b) arms-race assessment and AECA policy to 'discourage arms races'; (2) denying or limiting sales to preserve QME pushes Arab partners to shift defense supply chains to China or Russia, which are not bound by QME.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://responsiblestatecraft.org/israel-qualitative-military-edge",
+          "title": "Does Israel really still need a 'qualitative military edge' ?",
+          "publisher": "Responsible Statecraft / Quincy Institute",
+          "published_at": "2025-12-23T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0126452943",
+      "text": "Credible Israeli and U.S. analysts dispute State's 'no change' determination: Eric Mandel assessed 'even a slightly downgraded fifth-generation F-35 in Saudi hands would be a strategic game-changer' and that IAF plus U.S. intelligence/defense officials believe sale would undermine Israel's military dominance and control of regional airspace; INSS Gulf head Yoel Guzansky stated 'The state of Israel's QME is not as good as it was before Trump's decision' and warned of arms race with Qatar, UAE and Turkey; former NSA Yaakov Amidror (JINSA/JISS) said plane in another Middle East country's hands 'will be problematic, because we will lose some uniqueness.'",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.timesofisrael.com/saudi-f-35-sale-triggers-israeli-concern-though-military-edge-may-remain-intact",
+          "title": "Saudi F-35 sale triggers Israeli concern, though military edge may remain intact",
+          "publisher": "Times of Israel",
+          "published_at": "2025-12-07"
+        },
+        {
+          "url": "https://breakingdefense.com/2025/11/is-israels-f-35-qualitative-military-edge-doa-after-saudi-announcement",
+          "title": "Is Israel's F-35 Qualitative Military Edge DOA after Saudi announcement?",
+          "publisher": "Breaking Defense",
+          "published_at": "2025-11-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b561332d85",
+      "text": "Hudson Institute assessment frames Saudi F-35 sale as 'turning point for airpower dynamics in the Middle East' with 'severe implications for three key pillars' including preserving QME 'in a worsening threat landscape,' noting Israeli conditional openness tied to normalization reflects recognition outright rejection is no longer sustainable but safeguards/restrictions/reciprocity needed.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.hudson.org/politics-government/saudi-f-35-gambit-high-end-arms-sale-meets-middle-eastern-geopolitics-can-kasapoglu",
+          "title": "The Saudi F-35 Gambit: A High-End Arms Sale Meets Middle Eastern Geopolitics",
+          "publisher": "Hudson Institute",
+          "published_at": "2025-11-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d38c8db0bd",
+      "text": "Experts warn sale to non-normalized Saudi Arabia forfeits expected Abraham Accords leverage (unlike UAE 2020 F-35 sweetener) and increases proliferation pressure as other states cite precedent; retired Gen. Charles Wald notes Israeli F-35I's unique EW/C2/weapons/software and 8-year operational experience including June 2025 12-day Iran campaign may preserve edge temporarily but does not negate long-term erosion, with 5-10 year Saudi delivery timeline as mitigating factor.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.timesofisrael.com/saudi-f-35-sale-triggers-israeli-concern-though-military-edge-may-remain-intact",
+          "title": "Saudi F-35 sale triggers Israeli concern, though military edge may remain intact",
+          "publisher": "Times of Israel",
+          "published_at": "2025-12-07"
+        },
+        {
+          "url": "https://breakingdefense.com/2025/11/is-israels-f-35-qualitative-military-edge-doa-after-saudi-announcement",
+          "title": "Is Israel's F-35 Qualitative Military Edge DOA after Saudi announcement?",
+          "publisher": "Breaking Defense",
+          "published_at": "2025-11-21"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

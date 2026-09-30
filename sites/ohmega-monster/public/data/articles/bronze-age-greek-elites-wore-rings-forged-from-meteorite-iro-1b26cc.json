@@ -1,0 +1,789 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/bronze-age-greek-elites-wore-rings-forged-from-meteorite-iro-1b26cc",
+  "title": "Bronze Age Greek elites wore rings forged from meteorite iron",
+  "summary": "A five-year scan of 91 objects finds the rare metal reserved for signet rings for 500 years and gone after about 1200 BCE, but the Egyptian desert source remains a plausible guess without a chemical match.",
+  "published_at": "2026-08-09T00:56:24.590058+00:00",
+  "as_of": "2026-08-08",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 23,
+    "likely": 10,
+    "contested": 2
+  },
+  "claims": [
+    {
+      "id": "clm_ae309d9abb",
+      "text": "Study analyzed 91 iron objects from 33 archaeological sites in southern Greece and Crete dating to 3000-4000 years ago (second millennium BCE, c.2000-1000 BCE).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.sciencenews.org/article/bronze-age-greek-rings-iron-meteorites",
+          "title": "Ancient Greek rings may have been forged with iron from meteorites",
+          "publisher": "Science News",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://greekcitytimes.com/2026/08/08/ancient-greek-rings-meteoritic-iron",
+          "title": "Ancient Greek rings may have been made from iron that fell from space",
+          "publisher": "Greek City Times",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://arkeonews.net/bronze-age-greek-rulers-wore-space-bling",
+          "title": "Bronze Age Greek Rulers Wore \"Space Bling\"",
+          "publisher": "Arkeonews",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_493966cdb9",
+      "text": "Researchers Eleni Mantzourani (University of Athens) and Matthieu Gounelle (Mus\u0000e9um national d'Histoire naturelle, Paris) used X-ray fluorescence (XRF) spectrometry to measure elemental composition, especially nickel.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.sciencenews.org/article/bronze-age-greek-rings-iron-meteorites",
+          "title": "Ancient Greek rings may have been forged with iron from meteorites",
+          "publisher": "Science News",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://greekcitytimes.com/2026/08/08/ancient-greek-rings-meteoritic-iron",
+          "title": "Ancient Greek rings may have been made from iron that fell from space",
+          "publisher": "Greek City Times",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://arkeonews.net/bronze-age-greek-rulers-wore-space-bling",
+          "title": "Bronze Age Greek Rulers Wore \"Space Bling\"",
+          "publisher": "Arkeonews",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c5ef74ab6d",
+      "text": "Meteoritic iron typically contains high nickel (sometimes up to 50%), while early smelted terrestrial iron contains little or no nickel, making nickel a diagnostic fingerprint.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.sciencenews.org/article/bronze-age-greek-rings-iron-meteorites",
+          "title": "Ancient Greek rings may have been forged with iron from meteorites",
+          "publisher": "Science News",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://greekcitytimes.com/2026/08/08/ancient-greek-rings-meteoritic-iron",
+          "title": "Ancient Greek rings may have been made from iron that fell from space",
+          "publisher": "Greek City Times",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.bbc.com/news/world-middle-east-36432635",
+          "title": "Tutankhamun's knife was 'made from meteorite iron'",
+          "publisher": "BBC News",
+          "published_at": "2016-06-02"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_90dbd41a21",
+      "text": "13 of the 91 iron objects contained notable nickel traces; all 13 were rings or ring fragments, many with large flat engraved bezels indicating signet rings.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.sciencenews.org/article/bronze-age-greek-rings-iron-meteorites",
+          "title": "Ancient Greek rings may have been forged with iron from meteorites",
+          "publisher": "Science News",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://greekcitytimes.com/2026/08/08/ancient-greek-rings-meteoritic-iron",
+          "title": "Ancient Greek rings may have been made from iron that fell from space",
+          "publisher": "Greek City Times",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://arkeonews.net/bronze-age-greek-rulers-wore-space-bling",
+          "title": "Bronze Age Greek Rulers Wore \"Space Bling\"",
+          "publisher": "Arkeonews",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_77e17294dd",
+      "text": "Of those 13 nickel-bearing rings, 9 show strong evidence of meteoritic origin, 1 is a likely match, and 3 require further study \u0000d4 summarized as about 10 probably meteoritic.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.sciencenews.org/article/bronze-age-greek-rings-iron-meteorites",
+          "title": "Ancient Greek rings may have been forged with iron from meteorites",
+          "publisher": "Science News",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://greekcitytimes.com/2026/08/08/ancient-greek-rings-meteoritic-iron",
+          "title": "Ancient Greek rings may have been made from iron that fell from space",
+          "publisher": "Greek City Times",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://arkeonews.net/bronze-age-greek-rulers-wore-space-bling",
+          "title": "Bronze Age Greek Rulers Wore \"Space Bling\"",
+          "publisher": "Arkeonews",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ee0b8f4403",
+      "text": "The project took five years, examined 105 Bronze and Early Iron Age artifacts in total (91 iron) across 19 museums.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://arkeonews.net/bronze-age-greek-rulers-wore-space-bling",
+          "title": "Bronze Age Greek Rulers Wore \"Space Bling\"",
+          "publisher": "Arkeonews",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ebdee621ab",
+      "text": "Nickel content among the 13 rings varied widely from about 1% to 50%, suggesting multiple distinct meteorite sources rather than a single fall.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://arkeonews.net/bronze-age-greek-rulers-wore-space-bling",
+          "title": "Bronze Age Greek Rulers Wore \"Space Bling\"",
+          "publisher": "Arkeonews",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bacf74d45d",
+      "text": "Nickel-rich rings came from elite contexts: 11 from Peloponnesian tholos and chamber tombs at Mycenae, Vapheio, Kakovatos, Aidonia and Dendra, plus one from Phaistos (Crete) and one from the Minoan sanctuary of Anemospilia; buried with gold vessels, amber jewelry, agate seals and carved stone seals.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://greekcitytimes.com/2026/08/08/ancient-greek-rings-meteoritic-iron",
+          "title": "Ancient Greek rings may have been made from iron that fell from space",
+          "publisher": "Greek City Times",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://arkeonews.net/bronze-age-greek-rulers-wore-space-bling",
+          "title": "Bronze Age Greek Rulers Wore \"Space Bling\"",
+          "publisher": "Arkeonews",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_92e865bbc8",
+      "text": "Many meteoritic rings were polymetallic, combining iron-nickel with gold, silver or bronze; two examples from Mycenae and Phaistos have bezels split half gold, half iron-nickel, indicating high craftsmanship and status display.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.sciencenews.org/article/bronze-age-greek-rings-iron-meteorites",
+          "title": "Ancient Greek rings may have been forged with iron from meteorites",
+          "publisher": "Science News",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://arkeonews.net/bronze-age-greek-rulers-wore-space-bling",
+          "title": "Bronze Age Greek Rulers Wore \"Space Bling\"",
+          "publisher": "Arkeonews",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_780237c6ee",
+      "text": "Greece and Crete are poor in meteorites \u0000d4 only one confirmed fall recorded at Serres in 1818 \u0000d4 because coastal geography and lack of arid deserts limit preservation, unlike Egyptian deserts.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.sciencenews.org/article/bronze-age-greek-rings-iron-meteorites",
+          "title": "Ancient Greek rings may have been forged with iron from meteorites",
+          "publisher": "Science News",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://arkeonews.net/bronze-age-greek-rulers-wore-space-bling",
+          "title": "Bronze Age Greek Rulers Wore \"Space Bling\"",
+          "publisher": "Arkeonews",
+          "published_at": "2026-08-08"
+        },
+        {
+          "url": "https://www.labrujulaverde.com/en/2026/07/power-objects-in-royal-tombs-the-rings-of-the-mycenaean-and-minoan-elite-were-forged-with-meteorite-iron",
+          "title": "Power Objects in Royal Tombs: The Rings of the Mycenaean and Minoan Elite Were Forged with Meteorite Iron",
+          "publisher": "La Br\u0000fajula Verde",
+          "published_at": "2026-07-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3e3367066b",
+      "text": "Researchers propose the meteoritic iron was imported, most likely from Egypt, where desert conditions preserve meteorites and where meteoritic iron was already valued.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.sciencenews.org/article/bronze-age-greek-rings-iron-meteorites",
+          "title": "Ancient Greek rings may have been forged with iron from meteorites",
+          "publisher": "Science News",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://greekcitytimes.com/2026/08/08/ancient-greek-rings-meteoritic-iron",
+          "title": "Ancient Greek rings may have been made from iron that fell from space",
+          "publisher": "Greek City Times",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://arkeonews.net/bronze-age-greek-rulers-wore-space-bling",
+          "title": "Bronze Age Greek Rulers Wore \"Space Bling\"",
+          "publisher": "Arkeonews",
+          "published_at": "2026-08-08"
+        },
+        {
+          "url": "https://www.labrujulaverde.com/en/2026/07/power-objects-in-royal-tombs-the-rings-of-the-mycenaean-and-minoan-elite-were-forged-with-meteorite-iron",
+          "title": "Power Objects in Royal Tombs: The Rings of the Mycenaean and Minoan Elite Were Forged with Meteorite Iron",
+          "publisher": "La Br\u0000fajula Verde",
+          "published_at": "2026-07-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_501302dc16",
+      "text": "Egyptian precedents for meteoritic iron include Gerzeh beads dated to ~3200 BCE and Tutankhamun's iron dagger (~1350 BCE), the latter confirmed by 2016 XRF study (Comelli et al., Meteoritics & Planetary Science) showing high nickel and cobalt matching meteorites within 2000 km of Egypt.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.bbc.com/news/world-middle-east-36432635",
+          "title": "Tutankhamun's knife was 'made from meteorite iron'",
+          "publisher": "BBC News",
+          "published_at": "2016-06-02"
+        },
+        {
+          "url": "https://blog.ansi.org/ansi/king-tuts-dagger-x-ray-fluorescence",
+          "title": "King Tut's Dagger and the X-ray Fluorescence Spectrometry Standard",
+          "publisher": "ANSI",
+          "published_at": "2016-06-03"
+        },
+        {
+          "url": "https://www.labrujulaverde.com/en/2026/07/power-objects-in-royal-tombs-the-rings-of-the-mycenaean-and-minoan-elite-were-forged-with-meteorite-iron",
+          "title": "Power Objects in Royal Tombs: The Rings of the Mycenaean and Minoan Elite Were Forged with Meteorite Iron",
+          "publisher": "La Br\u0000fajula Verde",
+          "published_at": "2026-07-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d0e74dba11",
+      "text": "Very few meteoritic iron objects have been found in Egypt itself during the Bronze Age, but researchers argue this does not contradict export because valuable raw materials routinely moved long distances in ancient trade without the source region retaining much.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://arkeonews.net/bronze-age-greek-rulers-wore-space-bling",
+          "title": "Bronze Age Greek Rulers Wore \"Space Bling\"",
+          "publisher": "Arkeonews",
+          "published_at": "2026-08-08"
+        },
+        {
+          "url": "https://www.labrujulaverde.com/en/2026/07/power-objects-in-royal-tombs-the-rings-of-the-mycenaean-and-minoan-elite-were-forged-with-meteorite-iron",
+          "title": "Power Objects in Royal Tombs: The Rings of the Mycenaean and Minoan Elite Were Forged with Meteorite Iron",
+          "publisher": "La Br\u0000fajula Verde",
+          "published_at": "2026-07-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2483d5c684",
+      "text": "Meteoritic ring fashion began in Crete around the 17th century BCE, reached the Peloponnese by the 16th century BCE, and disappeared after the 12th century BCE.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://arkeonews.net/bronze-age-greek-rulers-wore-space-bling",
+          "title": "Bronze Age Greek Rulers Wore \"Space Bling\"",
+          "publisher": "Arkeonews",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d8c56b85c2",
+      "text": "No meteoritic iron rings are found in the region after the 12th century BCE; all 36 Submycenaean and Protogeometric rings examined (from ~1075 BCE onward) were made of smelted terrestrial iron with no nickel.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://arkeonews.net/bronze-age-greek-rulers-wore-space-bling",
+          "title": "Bronze Age Greek Rulers Wore \"Space Bling\"",
+          "publisher": "Arkeonews",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7806b79d97",
+      "text": "Before the 12th century BCE, only two reliably dated smelted iron objects exist in the Aegean sample: a pendant from Dendra and a ring from Skoura, both 14th or 13th century BCE.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://arkeonews.net/bronze-age-greek-rulers-wore-space-bling",
+          "title": "Bronze Age Greek Rulers Wore \"Space Bling\"",
+          "publisher": "Arkeonews",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a124339cdc",
+      "text": "The two iron types had distinct uses: meteoritic iron for elaborate, decorated, polymetallic jewelry; smelted iron for knives, daggers, swords and unworked fragments, rarely paired with precious metals and generally cruder.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://arkeonews.net/bronze-age-greek-rulers-wore-space-bling",
+          "title": "Bronze Age Greek Rulers Wore \"Space Bling\"",
+          "publisher": "Arkeonews",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4206168a58",
+      "text": "Study adds seven new sites with confirmed meteoritic iron in the eastern Mediterranean \u0000d4 Phaistos, Anemospilia, Mycenae, Vapheio, Kakovatos, Aidonia, Dendra \u0000d4 doubling previously known sites (7 across Egypt, Syria, Lebanon, T\u0000fcrkiye) and increasing known Bronze Age meteoritic rings roughly tenfold.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://arkeonews.net/bronze-age-greek-rulers-wore-space-bling",
+          "title": "Bronze Age Greek Rulers Wore \"Space Bling\"",
+          "publisher": "Arkeonews",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_401b47f32e",
+      "text": "Disappearance coincides with Late Bronze Age collapse (~1200 BCE) that ended Mycenaean palatial civilization; Minoan civilization on Crete had declined earlier, possibly linked to Thera eruption, with related but distinct trajectories.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.sciencenews.org/article/bronze-age-greek-rings-iron-meteorites",
+          "title": "Ancient Greek rings may have been forged with iron from meteorites",
+          "publisher": "Science News",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://greekcitytimes.com/2026/08/08/ancient-greek-rings-meteoritic-iron",
+          "title": "Ancient Greek rings may have been made from iron that fell from space",
+          "publisher": "Greek City Times",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://www.getty.edu/publications/egypt-classical-world/02",
+          "title": "Mediterranean Encounters | Egypt and the Classical World",
+          "publisher": "Getty",
+          "published_at": "2022-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1306758cda",
+      "text": "Researchers offer multiple non-exclusive explanations for the end of the fashion: collapse of elite demand, disruption of Egyptian supply or Mediterranean trade networks, or simple change in fashion.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://arkeonews.net/bronze-age-greek-rulers-wore-space-bling",
+          "title": "Bronze Age Greek Rulers Wore \"Space Bling\"",
+          "publisher": "Arkeonews",
+          "published_at": "2026-08-08"
+        },
+        {
+          "url": "https://www.labrujulaverde.com/en/2026/07/power-objects-in-royal-tombs-the-rings-of-the-mycenaean-and-minoan-elite-were-forged-with-meteorite-iron",
+          "title": "Power Objects in Royal Tombs: The Rings of the Mycenaean and Minoan Elite Were Forged with Meteorite Iron",
+          "publisher": "La Br\u0000fajula Verde",
+          "published_at": "2026-07-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1ebc307473",
+      "text": "Paper is 'Iron in Greece in the second millennium B.C.E.' by Matthieu Gounelle and Eleni Mantzourani, published August 2026 in Journal of Archaeological Science, vol.192, doi:10.1016/j.jas.2026.106622.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://greekcitytimes.com/2026/08/08/ancient-greek-rings-meteoritic-iron",
+          "title": "Ancient Greek rings may have been made from iron that fell from space",
+          "publisher": "Greek City Times",
+          "published_at": "2026-08-07"
+        },
+        {
+          "url": "https://arkeonews.net/bronze-age-greek-rulers-wore-space-bling",
+          "title": "Bronze Age Greek Rulers Wore \"Space Bling\"",
+          "publisher": "Arkeonews",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_02cd78e1fe",
+      "text": "Before Iron Age smelting (first furnaces ~930 BCE at Tell Hammeh, Jordan; widespread after ~1200 BCE), all iron artifacts in the Near East, Egypt and China tested by Jambon (2017) were meteoritic, indicating meteoritic iron was the sole iron source in the Bronze Age.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.sci.news/archaeology/bronze-age-artifacts-meteoric-iron-05498.html",
+          "title": "Bronze Age Iron Artifacts Likely Made from Meteoric Iron: Study",
+          "publisher": "Sci.News",
+          "published_at": "2017-12-04"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_395c26a903",
+      "text": "Jambon 2017 tested Bronze Age iron artifacts from Gerzeh, Alaca H\u0000f6y\u0000fck, Umm el-Marra, Ugarit, Shang China and Tutankhamun and found all meteoritic, supporting pre-1200 BCE sole-source framing.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.sci.news/archaeology/bronze-age-artifacts-meteoric-iron-05498.html",
+          "title": "Bronze Age Iron Artifacts Likely Made from Meteoric Iron: Study",
+          "publisher": "Sci.News",
+          "published_at": "2017-12-04"
+        },
+        {
+          "url": "https://spacedaily.com/d-the-blade-that-lay-against-king-tuts-mummy-for-three-thousand-years-turned-out-to-be-extraterrestrial-its-metal-matches-the-composition-of-meteorites-meaning-the-boy-king-was-buried-with-a/",
+          "title": "The blade that lay against King Tut's mummy... (Comelli 2016 + Jambon 2017 deep-dive)",
+          "publisher": "SpaceDaily",
+          "published_at": "2026-07-30"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b219f8540c",
+      "text": "How meteoritic origin was diagnosed: nickel as fingerprint via XRF \u0000e2\u000080\u000094 now verified against primary data (1-50% Ni, 9/1/3 split, corrosion caveat).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.mnhn.fr/fr/actualites/bagues-en-meteorites-une-mode-de-l-age-du-bronze",
+          "title": "Bagues en m\u0000e9t\u0000e9orites : une mode de l'\u0000e2ge du bronze ?",
+          "publisher": "MNHN",
+          "published_at": "2026-07-22"
+        },
+        {
+          "url": "https://www.labrujulaverde.com/en/2026/07/power-objects-in-royal-tombs-the-rings-of-the-mycenaean-and-minoan-elite-were-forged-with-meteorite-iron",
+          "title": "Power Objects in Royal Tombs: The Rings of the Mycenaean and Minoan Elite Were Forged with Meteorite Iron",
+          "publisher": "La Br\u0000fajula Verde",
+          "published_at": "2026-07-10"
+        },
+        {
+          "url": "https://www.sci.news/archaeology/bronze-age-artifacts-meteoric-iron-05498.html",
+          "title": "Bronze Age Iron Artifacts Likely Made from Meteoric Iron: Study",
+          "publisher": "Sci.News",
+          "published_at": "2017-12-04"
+        },
+        {
+          "url": "https://spacedaily.com/d-the-blade-that-lay-against-king-tuts-mummy-for-three-thousand-years-turned-out-to-be-extraterrestrial-its-metal-matches-the-composition-of-meteorites-meaning-the-boy-king-was-buried-with-a/",
+          "title": "The blade that lay against King Tut's mummy... (Comelli 2016 + Jambon 2017 deep-dive)",
+          "publisher": "SpaceDaily",
+          "published_at": "2026-07-30"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c870ade7a8",
+      "text": "Why Egypt as source \u0000e2\u000080\u000094 quantified Aegean vs Egyptian meteorite finds and confirmed provenance is inferential without trace-element/Os-isotope data.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.mnhn.fr/fr/actualites/bagues-en-meteorites-une-mode-de-l-age-du-bronze",
+          "title": "Bagues en m\u0000e9t\u0000e9orites : une mode de l'\u0000e2ge du bronze ?",
+          "publisher": "MNHN",
+          "published_at": "2026-07-22"
+        },
+        {
+          "url": "https://www.labrujulaverde.com/en/2026/07/power-objects-in-royal-tombs-the-rings-of-the-mycenaean-and-minoan-elite-were-forged-with-meteorite-iron",
+          "title": "Power Objects in Royal Tombs: The Rings of the Mycenaean and Minoan Elite Were Forged with Meteorite Iron",
+          "publisher": "La Br\u0000fajula Verde",
+          "published_at": "2026-07-10"
+        },
+        {
+          "url": "https://www.lpi.usra.edu/meteor/metbull.cfm?code=12290",
+          "title": "Meteoritical Bulletin: Entry for Kharga (Egypt, IVA, Ni 11.0 wt%)",
+          "publisher": "Meteoritical Bulletin Database",
+          "published_at": "2026-07-21"
+        },
+        {
+          "url": "https://www.lpi.usra.edu/meteor/metbull.php?code=52031",
+          "title": "Meteoritical Bulletin: Entry for Gebel Kamil (Egypt, ungrouped, Ni 19.8 wt%, 1.6 t)",
+          "publisher": "Meteoritical Bulletin Database",
+          "published_at": "2010-07-12"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3f344fb4c9",
+      "text": "Egypt provenance is inferential, not geochemically sourced: paper proposes (\u0002we propose\u0002) Egyptian desert source based on scarcity/preservation asymmetry and Late Bronze Age trade plausibility, but reports no trace-element (Ga/Ge/Ir) or osmium-isotope data matching rings to a specific Egyptian strewn field (e.g., Gebel Kamil, Kharga). Alternative desert sources (Anatolian plateau, Levantine/Sinai/Negev, Arabian deserts) are not ruled out in the paper or MNHN summary, and local Aegean falls now weathered away cannot be excluded without isotopic fingerprinting.",
+      "grade": "contested",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.sciencedirect.com/science/article/abs/pii/S0305440326001524",
+          "title": "Iron in Greece in the second millennium B.C.E. (J. Archaeol. Sci. vol.192, 2026, doi:10.1016/j.jas.2026.106622) abstract/preview",
+          "publisher": "Journal of Archaeological Science",
+          "published_at": "2026-08-01"
+        },
+        {
+          "url": "https://www.mnhn.fr/fr/actualites/bagues-en-meteorites-une-mode-de-l-age-du-bronze",
+          "title": "Bagues en m\u0000e9t\u0000e9orites : une mode de l'\u0000e2ge du bronze ?",
+          "publisher": "MNHN",
+          "published_at": "2026-07-22"
+        },
+        {
+          "url": "https://www.spectroscopyonline.com/view/handheld-laser-induced-breakdown-spectroscopy-hlibs-a-valuable-tool-for-terrestrial-and-extraterrestrial-recognition-of-meteorites-in-the-field",
+          "title": "Handheld Laser-Induced Breakdown Spectroscopy (hLIBS): A Valuable Tool for Terrestrial and Extraterrestrial Recognition of Meteorites in the Field",
+          "publisher": "SpectroscopyOnline",
+          "published_at": "2022-02-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_745950867f",
+      "text": "Desert-preservation argument is not Egypt-unique: ESA Kamil expedition shows Egyptian deserts preserve irons for millennia (<10k yr pristine crater), but same taphonomy applies to other hot deserts (Atacama, Sahara broadly, Arabian). Meteoritical Bulletin asymmetry (129 Egypt vs 1 Greece) reflects modern recovery bias and aridity, not proof of Bronze Age supply route.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Enabling_Support/Operations/Egyptian_desert_expedition_confirms_spectacular_meteorite_impact",
+          "title": "Egyptian desert expedition confirms spectacular meteorite impact",
+          "publisher": "European Space Agency",
+          "published_at": "2010-09-01"
+        },
+        {
+          "url": "https://www.sciencedirect.com/science/article/abs/pii/S0305440326001524",
+          "title": "Iron in Greece in the second millennium B.C.E. (J. Archaeol. Sci. vol.192, 2026, doi:10.1016/j.jas.2026.106622) abstract/preview",
+          "publisher": "Journal of Archaeological Science",
+          "published_at": "2026-08-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4ba4a5c0a2",
+      "text": "Standard for provenance requires beyond Ni: archaeometallurgical literature (Senesi review) holds that Ni alone is preliminary; definitive classification uses Ga, Ge, Ir (and Os isotopes for irons) per Wasson-type chemical groups. No such data are reported for the 13 Greek rings, leaving source attribution at hypothesis stage.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.spectroscopyonline.com/view/handheld-laser-induced-breakdown-spectroscopy-hlibs-a-valuable-tool-for-terrestrial-and-extraterrestrial-recognition-of-meteorites-in-the-field",
+          "title": "Handheld Laser-Induced Breakdown Spectroscopy (hLIBS): A Valuable Tool for Terrestrial and Extraterrestrial Recognition of Meteorites in the Field",
+          "publisher": "SpectroscopyOnline",
+          "published_at": "2022-02-01"
+        },
+        {
+          "url": "https://www.sciencedirect.com/science/article/abs/pii/S0305440326001524",
+          "title": "Iron in Greece in the second millennium B.C.E. (J. Archaeol. Sci. vol.192, 2026, doi:10.1016/j.jas.2026.106622) abstract/preview",
+          "publisher": "Journal of Archaeological Science",
+          "published_at": "2026-08-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e5badeeb59",
+      "text": "Portable XRF is surface-sensitive and corrosion alters readings: Jambon 2017 demonstrated preferential Ni loss during long-term burial/corrosion, so low Ni (1-50% range) can still be meteoritic but requires correction via Ni/Fe vs Ni/Co alteration field; authors flag 3 of 13 rings as needing further examination (SEM/metallography/isotopic). Paper itself notes metallographic structure would be definitive but is destructive, and that tomography/MIXE/PIXE/neutron methods were not used due to transport constraints for 91 precious objects.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.sciencedirect.com/science/article/abs/pii/S0305440326001524",
+          "title": "Iron in Greece in the second millennium B.C.E. (J. Archaeol. Sci. vol.192, 2026, doi:10.1016/j.jas.2026.106622) abstract/preview",
+          "publisher": "Journal of Archaeological Science",
+          "published_at": "2026-08-01"
+        },
+        {
+          "url": "https://www.atlasobscura.com/articles/before-iron-age-most-iron-came-from-space-meteorite-egyptian-bronze",
+          "title": "Before the Iron Age, Most Iron Came From Space",
+          "publisher": "Atlas Obscura",
+          "published_at": "2017-12-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_75124a94bd",
+      "text": "XRF-only diagnosis remains contested without bulk confirmation: independent archaeometallurgists (Martin\u0000f3n-Torres quoted in Atlas Obscura) note p-XRF is favored for non-destructive screening but skepticism persisted historically because Ni abundances in artifacts are lower than in pristine irons; Jambon calibrated by measuring oxidized exterior of Morasko iron to account for this. No independent peer commentary or replication of the Greek dataset is yet published; thresholds and corrosion corrections are single-study.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.atlasobscura.com/articles/before-iron-age-most-iron-came-from-space-meteorite-egyptian-bronze",
+          "title": "Before the Iron Age, Most Iron Came From Space",
+          "publisher": "Atlas Obscura",
+          "published_at": "2017-12-22"
+        },
+        {
+          "url": "https://www.sciencedirect.com/science/article/abs/pii/S0305440326001524",
+          "title": "Iron in Greece in the second millennium B.C.E. (J. Archaeol. Sci. vol.192, 2026, doi:10.1016/j.jas.2026.106622) abstract/preview",
+          "publisher": "Journal of Archaeological Science",
+          "published_at": "2026-08-01"
+        },
+        {
+          "url": "https://www.spectroscopyonline.com/view/handheld-laser-induced-breakdown-spectroscopy-hlibs-a-valuable-tool-for-terrestrial-and-extraterrestrial-recognition-of-meteorites-in-the-field",
+          "title": "Handheld Laser-Induced Breakdown Spectroscopy (hLIBS): A Valuable Tool for Terrestrial and Extraterrestrial Recognition of Meteorites in the Field",
+          "publisher": "SpectroscopyOnline",
+          "published_at": "2022-02-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7c0220e36a",
+      "text": "Elite-signaling exclusivity may reflect sampling/preservation bias, not exclusive use: all 13 Ni-bearing objects are rings from rich tholos/chamber tombs and one sanctuary, but the corpus is 91 iron objects from 19 museums (of 140 identified), with tools notably absent and weapons under-represented; iron weapons/tools are more prone to corrosion, recycling, and looting of tombs, potentially skewing survival toward jewelry in undisturbed elite contexts. Alternative framings \u0002 ritual/temple function (Anemospilia), apotropaic/celestial symbolism, or simply that rings preserve better \u0002 are not tested against utilitarian alternatives.",
+      "grade": "contested",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.mnhn.fr/fr/actualites/bagues-en-meteorites-une-mode-de-l-age-du-bronze",
+          "title": "Bagues en m\u0000e9t\u0000e9orites : une mode de l'\u0000e2ge du bronze ?",
+          "publisher": "MNHN",
+          "published_at": "2026-07-22"
+        },
+        {
+          "url": "https://www.sciencedirect.com/science/article/abs/pii/S0305440326001524",
+          "title": "Iron in Greece in the second millennium B.C.E. (J. Archaeol. Sci. vol.192, 2026, doi:10.1016/j.jas.2026.106622) abstract/preview",
+          "publisher": "Journal of Archaeological Science",
+          "published_at": "2026-08-01"
+        },
+        {
+          "url": "https://www.atlasobscura.com/articles/before-iron-age-most-iron-came-from-space-meteorite-egyptian-bronze",
+          "title": "Before the Iron Age, Most Iron Came From Space",
+          "publisher": "Atlas Obscura",
+          "published_at": "2017-12-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_82de2d4742",
+      "text": "Authors\u0002 explanation for lack of meteoritic finds in Egypt (valuable raw material exported, leaving little behind) is post-hoc rationalization, not tested: no quantitative trade model or Egyptian workshop debris is presented; Jambon\u0002s broader survey shows meteoritic iron was used locally across the Near East (Turkey, Syria, Lebanon) and not solely exported from Egypt, weakening the necessity of an Egypt-to-Aegean vector.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.atlasobscura.com/articles/before-iron-age-most-iron-came-from-space-meteorite-egyptian-bronze",
+          "title": "Before the Iron Age, Most Iron Came From Space",
+          "publisher": "Atlas Obscura",
+          "published_at": "2017-12-22"
+        },
+        {
+          "url": "https://www.sciencedirect.com/science/article/abs/pii/S0305440326001524",
+          "title": "Iron in Greece in the second millennium B.C.E. (J. Archaeol. Sci. vol.192, 2026, doi:10.1016/j.jas.2026.106622) abstract/preview",
+          "publisher": "Journal of Archaeological Science",
+          "published_at": "2026-08-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c6eff9f3c7",
+      "text": "MNHN announcement confirms five-year study, ~100 objects from 33 sites, 91 iron objects screened, 13 Ni-bearing rings with 9 very likely +1 quite likely meteoritic, and that ~30 post-13th c rings are smelted terrestrial iron",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.mnhn.fr/fr/actualites/bagues-en-meteorites-une-mode-de-l-age-du-bronze",
+          "title": "Bagues en m\u0000e9t\u0000e9orites : une mode de l'\u0000e2ge du bronze ?",
+          "publisher": "MNHN",
+          "published_at": "2026-07-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_425c306553",
+      "text": "ScienceDirect preview Highlights/Abstract confirm 91 Bronze Age and Early Iron Age iron artefacts via p-XRF, 13 rings contain nickel (9 very +1 quite likely meteoritic), little overlap between smelted and meteoritic, and decline roughly at fall of palaces",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.sciencedirect.com/science/article/abs/pii/S0305440326001524",
+          "title": "Iron in Greece in the second millennium B.C.E. (J. Archaeol. Sci. vol.192, 2026, doi:10.1016/j.jas.2026.106622) abstract/preview",
+          "publisher": "Journal of Archaeological Science",
+          "published_at": "2026-08-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6ada2d4005",
+      "text": "Gebel Kamil iron meteorite is 1.6t ungrouped ataxite with Ni 19.8 wt% and Co 0.75 wt%, found 2009 in East Uweinat Desert, Egypt",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.lpi.usra.edu/meteor/metbull.php?code=52031",
+          "title": "Meteoritical Bulletin: Entry for Gebel Kamil (Egypt, ungrouped, Ni 19.8 wt%, 1.6 t)",
+          "publisher": "Meteoritical Bulletin Database",
+          "published_at": "2010-07-12"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

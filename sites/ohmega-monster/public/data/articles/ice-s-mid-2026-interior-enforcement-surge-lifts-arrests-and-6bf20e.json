@@ -1,0 +1,526 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/ice-s-mid-2026-interior-enforcement-surge-lifts-arrests-and-6bf20e",
+  "title": "ICE’s mid-2026 interior enforcement surge lifts arrests and detention, but removals remain hard to audit",
+  "summary": "ICE reported record-level bookings and a July arrest pace averaging 1,593 a day, while detainees include a large share without criminal convictions and ICE says its data is released with delays that complicate verifying downstream removal outcomes.",
+  "published_at": "2026-07-23T11:06:02.303280+00:00",
+  "as_of": "2026-07-22",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 29,
+    "likely": 4,
+    "speculative": 1
+  },
+  "claims": [
+    {
+      "id": "clm_b86f6841e0",
+      "text": "ICE booking into detention reached a record level in June 2026 for the Trump administration.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.usatoday.com/story/news/politics/2026/07/21/immigration-arrests-data/90993261007/",
+          "title": "Immigration arrests hit a new record, DHS says in long-awaited data",
+          "publisher": "USA Today"
+        },
+        {
+          "url": "https://www.govexec.com/management/2026/07/ice-ramps-arrests-deportation-effort-expands/414912/?oref=ge-featured-river-top",
+          "title": "ICE ramps up arrests as deportation effort expands",
+          "publisher": "GovExec / Stateline"
+        },
+        {
+          "url": "https://www.chicagotribune.com/2026/07/22/ice-immigration-arrests-us/",
+          "title": "ICE accelerates immigration arrests across US to 1,400 a day",
+          "publisher": "Chicago Tribune"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_30dc2cf5fb",
+      "text": "ICE arrested more than 43,000 people in June 2026.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.govexec.com/management/2026/07/ice-ramps-arrests-deportation-effort-expands/414912/?oref=ge-featured-river-top",
+          "title": "ICE ramps up arrests as deportation effort expands",
+          "publisher": "GovExec / Stateline"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a0c395ac4e",
+      "text": "ICE averaged about 1,300 arrests per day in June 2026.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.usatoday.com/story/news/politics/2026/07/21/immigration-arrests-data/90993261007/",
+          "title": "Immigration arrests hit a new record, DHS says in long-awaited data",
+          "publisher": "USA Today"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8049db71f4",
+      "text": "ICE averaged 1,593 arrests per day in the first 11 days of July 2026.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.govexec.com/management/2026/07/ice-ramps-arrests-deportation-effort-expands/414912/?oref=ge-featured-river-top",
+          "title": "ICE ramps up arrests as deportation effort expands",
+          "publisher": "GovExec / Stateline"
+        },
+        {
+          "url": "https://www.chicagotribune.com/2026/07/22/ice-immigration-arrests-us/",
+          "title": "ICE accelerates immigration arrests across US to 1,400 a day",
+          "publisher": "Chicago Tribune"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5ba5a14f3a",
+      "text": "ICE made 16,213 arrests during the first 11 days of July 2026.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.chicagotribune.com/2026/07/22/ice-immigration-arrests-us/",
+          "title": "ICE accelerates immigration arrests across US to 1,400 a day",
+          "publisher": "Chicago Tribune"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0e43e0daec",
+      "text": "The detained population increased again after a prior dip in the share of detainees with no criminal record.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.usatoday.com/story/news/politics/2026/07/21/immigration-arrests-data/90993261007/",
+          "title": "Immigration arrests hit a new record, DHS says in long-awaited data",
+          "publisher": "USA Today"
+        },
+        {
+          "url": "https://www.chicagotribune.com/2026/07/22/ice-immigration-arrests-us/",
+          "title": "ICE accelerates immigration arrests across US to 1,400 a day",
+          "publisher": "Chicago Tribune"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dfeca60307",
+      "text": "Detainees without criminal convictions made up 37% of the detained population in the latest published data discussed in late July 2026.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.usatoday.com/story/news/politics/2026/07/21/immigration-arrests-data/90993261007/",
+          "title": "Immigration arrests hit a new record, DHS says in long-awaited data",
+          "publisher": "USA Today"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_943030bd57",
+      "text": "Less than one-third of current detainees had a criminal conviction, and about 40% had never been accused of anything beyond non-criminal immigration violations.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.govexec.com/management/2026/07/ice-ramps-arrests-deportation-effort-expands/414912/?oref=ge-featured-river-top",
+          "title": "ICE ramps up arrests as deportation effort expands",
+          "publisher": "GovExec / Stateline"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a021f5cf82",
+      "text": "Removals have stayed roughly flat even as arrests and detention increased.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.usatoday.com/story/news/politics/2026/07/21/immigration-arrests-data/90993261007/",
+          "title": "Immigration arrests hit a new record, DHS says in long-awaited data",
+          "publisher": "USA Today"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_313b596f69",
+      "text": "DHS/ICE published the relevant detention numbers on July 20, 2026, after a roughly three-month delay.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.usatoday.com/story/news/politics/2026/07/21/immigration-arrests-data/90993261007/",
+          "title": "Immigration arrests hit a new record, DHS says in long-awaited data",
+          "publisher": "USA Today"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0d4084f542",
+      "text": "ICE statistics are published one quarter in arrears and may later be corrected or superseded.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.ice.gov/statistics",
+          "title": "ICE Enforcement and Removal Operations Statistics",
+          "publisher": "U.S. Immigration and Customs Enforcement"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_14731d63ec",
+      "text": "DHS had not updated some broader enforcement datasets since the end of 2024, limiting public oversight.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.usatoday.com/story/news/politics/2026/07/21/immigration-arrests-data/90993261007/",
+          "title": "Immigration arrests hit a new record, DHS says in long-awaited data",
+          "publisher": "USA Today"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_48d9c1426c",
+      "text": "About 2,000 detainees a month have been freed by court-ordered bond hearings.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.govexec.com/management/2026/07/ice-ramps-arrests-deportation-effort-expands/414912/?oref=ge-featured-river-top",
+          "title": "ICE ramps up arrests as deportation effort expands",
+          "publisher": "GovExec / Stateline"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4a75106b58",
+      "text": "Federal judges have been ruling against the administration’s policy of mandatory detention for many immigrants.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.govexec.com/management/2026/07/ice-ramps-arrests-deportation-effort-expands/414912/?oref=ge-featured-river-top",
+          "title": "ICE ramps up arrests as deportation effort expands",
+          "publisher": "GovExec / Stateline"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_619a38268b",
+      "text": "ICE and DHS have faced criticism over transparency and accountability in the enforcement push.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.usatoday.com/story/news/politics/2026/07/21/immigration-arrests-data/90993261007/",
+          "title": "Immigration arrests hit a new record, DHS says in long-awaited data",
+          "publisher": "USA Today"
+        },
+        {
+          "url": "https://www.govexec.com/management/2026/07/ice-ramps-arrests-deportation-effort-expands/414912/?oref=ge-featured-river-top",
+          "title": "ICE ramps up arrests as deportation effort expands",
+          "publisher": "GovExec / Stateline"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c6a6a2ff87",
+      "text": "ICE vehicle stops remained part of the enforcement campaign after deadly July 2026 shootings.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.govexec.com/management/2026/07/ice-ramps-arrests-deportation-effort-expands/414912/?oref=ge-featured-river-top",
+          "title": "ICE ramps up arrests as deportation effort expands",
+          "publisher": "GovExec / Stateline"
+        },
+        {
+          "url": "https://www.chicagotribune.com/2026/07/22/ice-immigration-arrests-us/",
+          "title": "ICE accelerates immigration arrests across US to 1,400 a day",
+          "publisher": "Chicago Tribune"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_460c2d3bd6",
+      "text": "Tom Homan said ICE officers will wear at least one body camera during vehicle stops.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.govexec.com/management/2026/07/ice-ramps-arrests-deportation-effort-expands/414912/?oref=ge-featured-river-top",
+          "title": "ICE ramps up arrests as deportation effort expands",
+          "publisher": "GovExec / Stateline"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b71e8cbb60",
+      "text": "ICE arrested Chinese human-rights lawyer Wu Shaoping in Pennsylvania in July 2026 while he was delivering parcels.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.theguardian.com/us-news/2026/jul/17/ice-arrests-human-rights-lawyer-wu-shaoping-fled-chinese-crackdown",
+          "title": "ICE arrests human rights lawyer Wu Shaoping, who fled Chinese crackdown",
+          "publisher": "The Guardian"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7031a40e04",
+      "text": "Wu Shaoping had an asylum claim pending after fleeing China in 2019.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.theguardian.com/us-news/2026/jul/17/ice-arrests-human-rights-lawyer-wu-shaoping-fled-chinese-crackdown",
+          "title": "ICE arrests human rights lawyer Wu Shaoping, who fled Chinese crackdown",
+          "publisher": "The Guardian"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ddbe010b89",
+      "text": "ICE’s ERO statistics page defines detention and arrests using three criminality buckets: people with criminal convictions, people with pending criminal charges, and people with no convictions or pending charges but who have violated U.S. immigration law.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.ice.gov/statistics",
+          "title": "ICE Enforcement and Removal Operations Statistics",
+          "publisher": "U.S. Immigration and Customs Enforcement"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c6169e17b5",
+      "text": "ICE states that ERO statistics are published one quarter in arrears and may later be corrected or superseded by future quarter-end and year-end reporting.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.ice.gov/statistics",
+          "title": "ICE Enforcement and Removal Operations Statistics",
+          "publisher": "U.S. Immigration and Customs Enforcement"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d83ace233e",
+      "text": "ICE’s Removal Division is the ERO component responsible for coordinating and facilitating removals through field offices, ICE Air Operations, Removal Management, and International Operations.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.ice.gov/ero",
+          "title": "Enforcement and Removal Operations",
+          "publisher": "U.S. Immigration and Customs Enforcement"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_06920e49a6",
+      "text": "ICE’s ERO statistics are published one quarter in arrears and may later be corrected or superseded by future quarter-end and year-end reporting.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.ice.gov/statistics",
+          "title": "ICE Enforcement and Removal Operations Statistics",
+          "publisher": "U.S. Immigration and Customs Enforcement"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4fcc2e9516",
+      "text": "ICE defines the “no convictions or pending charges” category as people with no known criminal convictions or pending charges in ICE’s system of record at the time of the enforcement action, but that category can also include repeat immigration violators, final-order fugitives, and foreign fugitives wanted for crimes abroad.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.ice.gov/statistics",
+          "title": "ICE Enforcement and Removal Operations Statistics",
+          "publisher": "U.S. Immigration and Customs Enforcement"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_35d1fb0370",
+      "text": "ICE says it detains people when necessary to secure their presence for immigration proceedings and removal, and also detains people subject to mandatory detention or deemed public-safety or flight risks by a supervisor.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.ice.gov/statistics",
+          "title": "ICE Enforcement and Removal Operations Statistics",
+          "publisher": "U.S. Immigration and Customs Enforcement"
+        },
+        {
+          "url": "https://www.dhs.gov/topics/immigration-and-customs-enforcement",
+          "title": "Immigration and Customs Enforcement",
+          "publisher": "U.S. Department of Homeland Security",
+          "published_at": "2026-05-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_365b6cff25",
+      "text": "DHS publicly frames ICE’s mission as smart immigration enforcement and humane detention, indicating the agency’s defense that detention is a legal and public-safety tool rather than merely punitive.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dhs.gov/topics/immigration-and-customs-enforcement",
+          "title": "Immigration and Customs Enforcement",
+          "publisher": "U.S. Department of Homeland Security",
+          "published_at": "2026-05-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d2b2c127dd",
+      "text": "ICE’s ERO Removal Division coordinates removals through field offices, ICE Air Operations, Removal Management, and International Operations, including collaboration with the State Department, foreign embassies and consulates, and international partners.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.ice.gov/ero",
+          "title": "Enforcement and Removal Operations",
+          "publisher": "U.S. Immigration and Customs Enforcement"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3bb375d33f",
+      "text": "A flat removals line can plausibly reflect processing and logistics lags in the removal pipeline rather than an immediate operational failure, given ICE’s multi-agency removal structure.",
+      "grade": "speculative",
+      "salience": "medium",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c9a576ef44",
+      "text": "ICE states that ERO statistics are published with data one quarter in arrears and future quarter-end and year-end reporting may include corrections and supersede previous quarter data.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.ice.gov/statistics",
+          "title": "ICE Enforcement and Removal Operations Statistics",
+          "publisher": "U.S. Immigration and Customs Enforcement"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_85008ba550",
+      "text": "ICE’s detention statistics categorize people into three criminality buckets: criminal convictions, pending criminal charges, and no convictions or pending charges but immigration-law violations.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.ice.gov/statistics",
+          "title": "ICE Enforcement and Removal Operations Statistics",
+          "publisher": "U.S. Immigration and Customs Enforcement"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c67a844dfa",
+      "text": "ICE says the no-convictions-or-pending-charges category can include repeat immigration violators, immigration fugitives with executable final orders of removal, and international fugitives wanted for crimes abroad.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.ice.gov/statistics",
+          "title": "ICE Enforcement and Removal Operations Statistics",
+          "publisher": "U.S. Immigration and Customs Enforcement"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_849d1ba5af",
+      "text": "ICE says it detains people to secure their presence for proceedings and removal, and also detains people subject to mandatory detention or deemed public-safety or flight risks.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.ice.gov/statistics",
+          "title": "ICE Enforcement and Removal Operations Statistics",
+          "publisher": "U.S. Immigration and Customs Enforcement"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_218957283a",
+      "text": "ICE’s ERO Removal Division coordinates removals through field offices, ICE Air Operations, Removal Management, and International Operations, and works with the State Department and international partners.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.ice.gov/ero",
+          "title": "Enforcement and Removal Operations",
+          "publisher": "U.S. Immigration and Customs Enforcement"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9904cf8b8f",
+      "text": "DHS says ICE’s duties focus on smart immigration enforcement, humane detention, preventing terrorism, and combating the illegal movement of people and goods.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dhs.gov/topics/immigration-and-customs-enforcement",
+          "title": "Immigration and Customs Enforcement",
+          "publisher": "U.S. Department of Homeland Security",
+          "published_at": "2026-05-05"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

@@ -1,0 +1,806 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/energy-shock-forces-central-banks-to-test-whether-inflation-9e0685",
+  "title": "Energy shock forces central banks to test whether inflation stays \"headline-only\"",
+  "summary": "Bank of Canada, the ECB and the U.S. all frame the same risk: easing in energy-driven headline inflation may not translate into core prices, wages and expectations — where headline means the total inflation measure, while core strips out volatile food and energy — so policy is still waiting on evidence of whether the impulse spreads.",
+  "published_at": "2026-07-20T11:04:13.970917+00:00",
+  "as_of": "2026-07-20",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 32,
+    "likely": 7
+  },
+  "claims": [
+    {
+      "id": "clm_0d17f6c1eb",
+      "text": "President Volodymyr Zelensky warned on Aug 8, 2026 in Belgrade that Ukraine has \"virtually no intact thermal power plants\" / \"virtually not a single thermal power plant remains intact\" due to Russian strikes, facing a difficult winter heating season",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.france24.com/en/europe/20260808-ukraine-braces-for-winter-power-crisis-after-russian-strikes-zelensky-says",
+          "title": "Ukraine braces for winter power crisis after Russian strikes, Zelensky says",
+          "publisher": "France 24",
+          "published_at": "2026-08-08T21:48:00Z"
+        },
+        {
+          "url": "https://www.aljazeera.com/amp/news/2026/8/8/serbia-and-ukraine-pledge-closer-economic-ties-eye-free-trade-deal",
+          "title": "Serbia and Ukraine pledge closer economic ties, eye free trade deal",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-08-08"
+        },
+        {
+          "url": "https://www.turkiyetoday.com/world/zelenskyy-says-ukraine-has-virtually-no-intact-thermal-power-plants-ahead-of-winter-3225658",
+          "title": "Zelenskyy says Ukraine has 'virtually no intact' thermal power plants ahead of winter",
+          "publisher": "T\u0002rkiye Today",
+          "published_at": "2026-08-08T13:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ca90f3244d",
+      "text": "Zelensky said \"Russian missiles are aimed precisely at making the lives of Ukrainians unbearable\" and that strikes target energy infrastructure",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.france24.com/en/europe/20260808-ukraine-braces-for-winter-power-crisis-after-russian-strikes-zelensky-says",
+          "title": "Ukraine braces for winter power crisis after Russian strikes, Zelensky says",
+          "publisher": "France 24",
+          "published_at": "2026-08-08T21:48:00Z"
+        },
+        {
+          "url": "https://www.turkiyetoday.com/world/zelenskyy-says-ukraine-has-virtually-no-intact-thermal-power-plants-ahead-of-winter-3225658",
+          "title": "Zelenskyy says Ukraine has 'virtually no intact' thermal power plants ahead of winter",
+          "publisher": "T\u0002rkiye Today",
+          "published_at": "2026-08-08T13:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3dcd1d26d4",
+      "text": "Overnight Aug 7-8, 2026 Russian strikes killed 4 people in Kyiv and Kyiv Oblast, including a 3-year-old boy, his grandmother and grandfather in Pukhivka village, Brovary district",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.france24.com/en/europe/20260808-ukraine-braces-for-winter-power-crisis-after-russian-strikes-zelensky-says",
+          "title": "Ukraine braces for winter power crisis after Russian strikes, Zelensky says",
+          "publisher": "France 24",
+          "published_at": "2026-08-08T21:48:00Z"
+        },
+        {
+          "url": "https://kyivindependent.com/deadly-russian-attack-in-kyiv-oblast-kills-3-including-child",
+          "title": "Another overnight Russian attack on Kyiv and Kyiv Oblast kills 4, including 3-year-old child",
+          "publisher": "Kyiv Independent",
+          "published_at": "2026-08-08T00:03:00Z"
+        },
+        {
+          "url": "https://ua.news/en/war-vs-rf/rf-atakuvala-ukrayinu-iskanderami-ta-151-dronom-ppo-znishchila-135-bezpilotnikiv",
+          "title": "Russia attacked Ukraine with Iskander missiles and 151 drones; air defense forces shot down 135 drones",
+          "publisher": "UA.NEWS",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b4c2e7863b",
+      "text": "The Pukhivka strike destroyed a two-story private home with 5 drones at ~00:40 local time; the child's parents and 15-year-old brother were hospitalized with burns/shrapnel, plus a 21-year-old neighbor injured in a double-tap strike while helping",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://kyivindependent.com/deadly-russian-attack-in-kyiv-oblast-kills-3-including-child",
+          "title": "Another overnight Russian attack on Kyiv and Kyiv Oblast kills 4, including 3-year-old child",
+          "publisher": "Kyiv Independent",
+          "published_at": "2026-08-08T00:03:00Z"
+        },
+        {
+          "url": "https://ua.news/en/war-vs-rf/rf-atakuvala-ukrayinu-iskanderami-ta-151-dronom-ppo-znishchila-135-bezpilotnikiv",
+          "title": "Russia attacked Ukraine with Iskander missiles and 151 drones; air defense forces shot down 135 drones",
+          "publisher": "UA.NEWS",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ae545c6b7a",
+      "text": "In Kyiv city, 1 person was killed and 4 injured; fires broke out in Holosiivskyi (garages/storage ~1000 sqm) and Obolonskyi (enterprise) districts",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://kyivindependent.com/deadly-russian-attack-in-kyiv-oblast-kills-3-including-child",
+          "title": "Another overnight Russian attack on Kyiv and Kyiv Oblast kills 4, including 3-year-old child",
+          "publisher": "Kyiv Independent",
+          "published_at": "2026-08-08T00:03:00Z"
+        },
+        {
+          "url": "https://ua.news/en/war-vs-rf/rf-atakuvala-ukrayinu-iskanderami-ta-151-dronom-ppo-znishchila-135-bezpilotnikiv",
+          "title": "Russia attacked Ukraine with Iskander missiles and 151 drones; air defense forces shot down 135 drones",
+          "publisher": "UA.NEWS",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3c2316dbda",
+      "text": "Combined with shelling of frontline communities, the 24-hour death toll was 13, with dozens injured",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.france24.com/en/europe/20260808-ukraine-braces-for-winter-power-crisis-after-russian-strikes-zelensky-says",
+          "title": "Ukraine braces for winter power crisis after Russian strikes, Zelensky says",
+          "publisher": "France 24",
+          "published_at": "2026-08-08T21:48:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b88e0cc5fe",
+      "text": "Russia's overnight Aug 7-8 package comprised 6 Iskander-M ballistic missiles, S-400 surface-to-surface missiles launched from Bryansk region, and 151 attack/decoy drones (Shahed-type, Gerbera, Italmas, Parodiya, jet-powered UAVs) from Russia and occupied Crimea",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ua.news/en/war-vs-rf/rf-atakuvala-ukrayinu-iskanderami-ta-151-dronom-ppo-znishchila-135-bezpilotnikiv",
+          "title": "Russia attacked Ukraine with Iskander missiles and 151 drones; air defense forces shot down 135 drones",
+          "publisher": "UA.NEWS",
+          "published_at": "2026-08-08"
+        },
+        {
+          "url": "https://mezha.net/eng/bukvy/e5273f4c_russian_forces_attack",
+          "title": "Russian Forces Attack Ukraine With Missiles and 151 Drones, Three Killed",
+          "publisher": "Mezha",
+          "published_at": "2026-08-08T06:24:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_17160b09d5",
+      "text": "Ukrainian air defenses shot down or electronically suppressed 135 of 151 drones by 09:00 Aug 8 over northern, southern and eastern Ukraine; impacts from missiles and 13 attack drones recorded at 12 locations, debris at 7 locations; several missiles failed to reach targets",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ua.news/en/war-vs-rf/rf-atakuvala-ukrayinu-iskanderami-ta-151-dronom-ppo-znishchila-135-bezpilotnikiv",
+          "title": "Russia attacked Ukraine with Iskander missiles and 151 drones; air defense forces shot down 135 drones",
+          "publisher": "UA.NEWS",
+          "published_at": "2026-08-08"
+        },
+        {
+          "url": "https://mezha.net/eng/bukvy/e5273f4c_russian_forces_attack",
+          "title": "Russian Forces Attack Ukraine With Missiles and 151 Drones, Three Killed",
+          "publisher": "Mezha",
+          "published_at": "2026-08-08T06:24:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9a7d1683e9",
+      "text": "Ukraine intercepted only 29 of 195 ballistic missiles launched by Russia in July 2026 (~15%), with another ~40 failing to reach targets; on Aug 5, none of 24 ballistic + 4 hypersonic missiles were intercepted",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://kyivindependent.com/deadly-russian-attack-in-kyiv-oblast-kills-3-including-child",
+          "title": "Another overnight Russian attack on Kyiv and Kyiv Oblast kills 4, including 3-year-old child",
+          "publisher": "Kyiv Independent",
+          "published_at": "2026-08-08T00:03:00Z"
+        },
+        {
+          "url": "https://ua.news/en/war-vs-rf/rf-atakuvala-ukrayinu-iskanderami-ta-151-dronom-ppo-znishchila-135-bezpilotnikiv",
+          "title": "Russia attacked Ukraine with Iskander missiles and 151 drones; air defense forces shot down 135 drones",
+          "publisher": "UA.NEWS",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_feb8b5dade",
+      "text": "Ukraine's air defenses shot down ~5,300 of ~9,000 drones and missiles in July 2026 (~59%)",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://ua.news/en/war-vs-rf/rf-atakuvala-ukrayinu-iskanderami-ta-151-dronom-ppo-znishchila-135-bezpilotnikiv",
+          "title": "Russia attacked Ukraine with Iskander missiles and 151 drones; air defense forces shot down 135 drones",
+          "publisher": "UA.NEWS",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_431a526456",
+      "text": "Ukraine's pre-war available dispatchable generation capacity was ~38 GW (IEA) / installed capacity ~56 GW (CSIS/Russia Matters); by mid-2024 only ~12 GW remained functional",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://tep.org.pl/ukraines-energy-infrastructure-under-siege-lessons-from-four-years-of-war-tog-8-2026",
+          "title": "Ukraine\u0002s Energy Infrastructure Under Siege: Lessons From Four Years of War (TOG 8/2026)",
+          "publisher": "Towarzystwo Ekonomist\u0002w Polskich (TEP)",
+          "published_at": "2026-04-08T19:06:00Z"
+        },
+        {
+          "url": "https://www.brookings.edu/articles/ukraines-energy-sector-is-a-key-battleground-in-the-war-with-russia",
+          "title": "Ukraine's energy sector is a key battleground in the war with Russia",
+          "publisher": "Brookings Institution",
+          "published_at": "2025-10-07T00:00:00Z"
+        },
+        {
+          "url": "https://www.iea.org/reports/ukraines-energy-security/a-pre-winter-assessment",
+          "title": "A pre-winter assessment \u0002Ukraine\u0002s Energy Security",
+          "publisher": "International Energy Agency",
+          "published_at": "2025-10-10T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f7f9d1dfcf",
+      "text": "Some 90% of Ukraine's thermal power generation was destroyed as of May 2025 (80% as of Sept 2024)",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.brookings.edu/articles/ukraines-energy-sector-is-a-key-battleground-in-the-war-with-russia",
+          "title": "Ukraine's energy sector is a key battleground in the war with Russia",
+          "publisher": "Brookings Institution",
+          "published_at": "2025-10-07T00:00:00Z"
+        },
+        {
+          "url": "https://www.iea.org/reports/ukraines-energy-security/a-pre-winter-assessment",
+          "title": "A pre-winter assessment \u0002Ukraine\u0002s Energy Security",
+          "publisher": "International Energy Agency",
+          "published_at": "2025-10-10T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dd829eb5df",
+      "text": "About 50% of hydropower installations were damaged and 40% destroyed as of May 2025",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.brookings.edu/articles/ukraines-energy-sector-is-a-key-battleground-in-the-war-with-russia",
+          "title": "Ukraine's energy sector is a key battleground in the war with Russia",
+          "publisher": "Brookings Institution",
+          "published_at": "2025-10-07T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7fc3725215",
+      "text": "Ukraine's energy infrastructure was operating at about one-third of pre-invasion generation capacity as of Fall 2025; available capacity fell from 33.7 GW at start of invasion to ~14 GW as of Jan 2026",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.brookings.edu/articles/ukraines-energy-sector-is-a-key-battleground-in-the-war-with-russia",
+          "title": "Ukraine's energy sector is a key battleground in the war with Russia",
+          "publisher": "Brookings Institution",
+          "published_at": "2025-10-07T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4d84a0866d",
+      "text": "Ahead of winter 2025-26, ~17.6 GW was reportedly back in service after restoration of ~3-3.5 GW of thermal/CHP/hydro out of >9 GW damaged; after winter strikes capacity fell to <10 GW while winter demand can reach 18 GW (16.5 GW in mild 2024-25, 18 GW in 2023-24)",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://tep.org.pl/ukraines-energy-infrastructure-under-siege-lessons-from-four-years-of-war-tog-8-2026",
+          "title": "Ukraine\u0002s Energy Infrastructure Under Siege: Lessons From Four Years of War (TOG 8/2026)",
+          "publisher": "Towarzystwo Ekonomist\u0002w Polskich (TEP)",
+          "published_at": "2026-04-08T19:06:00Z"
+        },
+        {
+          "url": "https://www.iea.org/reports/ukraines-energy-security/a-pre-winter-assessment",
+          "title": "A pre-winter assessment \u0002Ukraine\u0002s Energy Security",
+          "publisher": "International Energy Agency",
+          "published_at": "2025-10-10T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6e0c36163a",
+      "text": "Ukraine can import up to 2.1 GW from the EU in winter (1.7 GW summer) after synchronization March 16, 2022; 2024 imports were record 4,436 GWh; deficit must otherwise be managed via rolling blackouts",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://tep.org.pl/ukraines-energy-infrastructure-under-siege-lessons-from-four-years-of-war-tog-8-2026",
+          "title": "Ukraine\u0002s Energy Infrastructure Under Siege: Lessons From Four Years of War (TOG 8/2026)",
+          "publisher": "Towarzystwo Ekonomist\u0002w Polskich (TEP)",
+          "published_at": "2026-04-08T19:06:00Z"
+        },
+        {
+          "url": "https://www.brookings.edu/articles/ukraines-energy-sector-is-a-key-battleground-in-the-war-with-russia",
+          "title": "Ukraine's energy sector is a key battleground in the war with Russia",
+          "publisher": "Brookings Institution",
+          "published_at": "2025-10-07T00:00:00Z"
+        },
+        {
+          "url": "https://www.iea.org/reports/ukraines-energy-security/a-pre-winter-assessment",
+          "title": "A pre-winter assessment \u0002Ukraine\u0002s Energy Security",
+          "publisher": "International Energy Agency",
+          "published_at": "2025-10-10T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9839120d3d",
+      "text": "Nuclear provides ~50% of electricity (7.7 GW from 3 remaining plants); Zaporizhzhia NPP (6 GW, ~25% pre-war supply) remains occupied; Russia has severed NPPs from grid by destroying transmission equipment rather than plants themselves",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://tep.org.pl/ukraines-energy-infrastructure-under-siege-lessons-from-four-years-of-war-tog-8-2026",
+          "title": "Ukraine\u0002s Energy Infrastructure Under Siege: Lessons From Four Years of War (TOG 8/2026)",
+          "publisher": "Towarzystwo Ekonomist\u0002w Polskich (TEP)",
+          "published_at": "2026-04-08T19:06:00Z"
+        },
+        {
+          "url": "https://www.brookings.edu/articles/ukraines-energy-sector-is-a-key-battleground-in-the-war-with-russia",
+          "title": "Ukraine's energy sector is a key battleground in the war with Russia",
+          "publisher": "Brookings Institution",
+          "published_at": "2025-10-07T00:00:00Z"
+        },
+        {
+          "url": "https://www.iea.org/reports/ukraines-energy-security/a-pre-winter-assessment",
+          "title": "A pre-winter assessment \u0002Ukraine\u0002s Energy Security",
+          "publisher": "International Energy Agency",
+          "published_at": "2025-10-10T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_aaac5570ed",
+      "text": "Russia destroyed ~60% of Ukraine's gas production in Oct 2025 attacks (Kharkiv/Poltava), after 40% loss in early 2025; Ukraine needs at least additional 4.4 bcm imports before March 2026 and ~4-4.5 bcm total for heating season costing ~$2.5bn",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.brookings.edu/articles/ukraines-energy-sector-is-a-key-battleground-in-the-war-with-russia",
+          "title": "Ukraine's energy sector is a key battleground in the war with Russia",
+          "publisher": "Brookings Institution",
+          "published_at": "2025-10-07T00:00:00Z"
+        },
+        {
+          "url": "https://www.iea.org/reports/ukraines-energy-security/a-pre-winter-assessment",
+          "title": "A pre-winter assessment \u0002Ukraine\u0002s Energy Security",
+          "publisher": "International Energy Agency",
+          "published_at": "2025-10-10T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6585e77ede",
+      "text": "World Bank RDNA4 (Dec 2024) estimated energy damage $20.5bn and recovery needs $67.78bn; RDNA5 (Dec 2025) found total war damage $195.1bn (+10.8% vs RDNA4) and recovery needs $587.7bn, with ~21% increase in damaged/destroyed energy assets since RDNA4",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.brookings.edu/articles/ukraines-energy-sector-is-a-key-battleground-in-the-war-with-russia",
+          "title": "Ukraine's energy sector is a key battleground in the war with Russia",
+          "publisher": "Brookings Institution",
+          "published_at": "2025-10-07T00:00:00Z"
+        },
+        {
+          "url": "https://www.worldbank.org/en/news/press-release/2026/02/23/updated-ukraine-recovery-and-reconstruction-needs-assessment-released",
+          "title": "Updated Ukraine Recovery and Reconstruction Needs Assessment Released (RDNA5)",
+          "publisher": "World Bank Group",
+          "published_at": "2026-02-23T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c323841dda",
+      "text": "Restoring generating capacity damaged over winter 2025-26 will cost ~$1bn; gas production repairs $160-180m plus $600-800m for physical protection",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://tep.org.pl/ukraines-energy-infrastructure-under-siege-lessons-from-four-years-of-war-tog-8-2026",
+          "title": "Ukraine\u0002s Energy Infrastructure Under Siege: Lessons From Four Years of War (TOG 8/2026)",
+          "publisher": "Towarzystwo Ekonomist\u0002w Polskich (TEP)",
+          "published_at": "2026-04-08T19:06:00Z"
+        },
+        {
+          "url": "https://www.brookings.edu/articles/ukraines-energy-sector-is-a-key-battleground-in-the-war-with-russia",
+          "title": "Ukraine's energy sector is a key battleground in the war with Russia",
+          "publisher": "Brookings Institution",
+          "published_at": "2025-10-07T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_61630433af",
+      "text": "Ukraine is decentralizing with small modular gas turbines (5-40 MW), rooftop solar with batteries (~1,500 MW consumer solar PV by early 2024), and 200 MW/400 MWh battery storage (DTEK, Sept 2025) plus >700 MW wind under development",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.brookings.edu/articles/ukraines-energy-sector-is-a-key-battleground-in-the-war-with-russia",
+          "title": "Ukraine's energy sector is a key battleground in the war with Russia",
+          "publisher": "Brookings Institution",
+          "published_at": "2025-10-07T00:00:00Z"
+        },
+        {
+          "url": "https://www.iea.org/reports/ukraines-energy-security/a-pre-winter-assessment",
+          "title": "A pre-winter assessment \u0002Ukraine\u0002s Energy Security",
+          "publisher": "International Energy Agency",
+          "published_at": "2025-10-10T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b6a679d114",
+      "text": "Zelensky's Aug 7-8 visit was his first official visit to Serbia since becoming president in 2019; two-day trip included dinner with Vucic Aug 7 and joint press conference Aug 8 at Palace of Serbia",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.france24.com/en/europe/20260808-ukraine-braces-for-winter-power-crisis-after-russian-strikes-zelensky-says",
+          "title": "Ukraine braces for winter power crisis after Russian strikes, Zelensky says",
+          "publisher": "France 24",
+          "published_at": "2026-08-08T21:48:00Z"
+        },
+        {
+          "url": "https://www.aljazeera.com/amp/news/2026/8/8/serbia-and-ukraine-pledge-closer-economic-ties-eye-free-trade-deal",
+          "title": "Serbia and Ukraine pledge closer economic ties, eye free trade deal",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_12703a1c36",
+      "text": "Serbia and Ukraine pledged to finalize a long-stalled free-trade agreement by end of 2026 (under discussion >20 years, blocked by Ukraine since 2005 over agricultural quotas/tariffs); Serbia sees it as prerequisite for WTO and EU membership",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/amp/news/2026/8/8/serbia-and-ukraine-pledge-closer-economic-ties-eye-free-trade-deal",
+          "title": "Serbia and Ukraine pledge closer economic ties, eye free trade deal",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_48ae723759",
+      "text": "Serbia pledged \u0002m ($2.3m) to support Ukraine's energy sector and a new humanitarian aid package focused on medical and energy sectors, plus help rebuilding cities and cooperation on Danube Corridor and infrastructure/energy/food security",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/amp/news/2026/8/8/serbia-and-ukraine-pledge-closer-economic-ties-eye-free-trade-deal",
+          "title": "Serbia and Ukraine pledge closer economic ties, eye free trade deal",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ae0c91303d",
+      "text": "The two countries signed a memorandum on animal health and food safety (Serbian Agriculture Minister Dragan Glamocic and Ukrainian Ambassador Oleksandr Lytvynenko)",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/amp/news/2026/8/8/serbia-and-ukraine-pledge-closer-economic-ties-eye-free-trade-deal",
+          "title": "Serbia and Ukraine pledge closer economic ties, eye free trade deal",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_aa18f57afb",
+      "text": "Vucic reaffirmed support for Ukraine's territorial integrity (including territories seized since 2014) and EU accession, but said Serbia will not impose sanctions on Russia and that no military cooperation was discussed",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.france24.com/en/europe/20260808-ukraine-braces-for-winter-power-crisis-after-russian-strikes-zelensky-says",
+          "title": "Ukraine braces for winter power crisis after Russian strikes, Zelensky says",
+          "publisher": "France 24",
+          "published_at": "2026-08-08T21:48:00Z"
+        },
+        {
+          "url": "https://www.aljazeera.com/amp/news/2026/8/8/serbia-and-ukraine-pledge-closer-economic-ties-eye-free-trade-deal",
+          "title": "Serbia and Ukraine pledge closer economic ties, eye free trade deal",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d6071eccb3",
+      "text": "Serbia remains dependent on Russian gas and has been accused by Kremlin of Serbian firms selling munitions to Ukraine via intermediaries, which Vucic denies; Serbia is replacing Soviet MiG-29s with French Rafales",
+      "grade": "likely",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.france24.com/en/europe/20260808-ukraine-braces-for-winter-power-crisis-after-russian-strikes-zelensky-says",
+          "title": "Ukraine braces for winter power crisis after Russian strikes, Zelensky says",
+          "publisher": "France 24",
+          "published_at": "2026-08-08T21:48:00Z"
+        },
+        {
+          "url": "https://www.aljazeera.com/amp/news/2026/8/8/serbia-and-ukraine-pledge-closer-economic-ties-eye-free-trade-deal",
+          "title": "Serbia and Ukraine pledge closer economic ties, eye free trade deal",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9b44222852",
+      "text": "Russia's winter energy campaign has evolved: 2022-23 targeted grids for short blackouts; 2024 systematically destroyed generation (thermal/hydro); 2025-26 concentrated mass strikes on single locations overwhelming local air defenses and severing nuclear transmission, plus targeting gas production and district heating (18 CHP plants, 800+ boiler houses damaged by end 2024)",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://tep.org.pl/ukraines-energy-infrastructure-under-siege-lessons-from-four-years-of-war-tog-8-2026",
+          "title": "Ukraine\u0002s Energy Infrastructure Under Siege: Lessons From Four Years of War (TOG 8/2026)",
+          "publisher": "Towarzystwo Ekonomist\u0002w Polskich (TEP)",
+          "published_at": "2026-04-08T19:06:00Z"
+        },
+        {
+          "url": "https://www.brookings.edu/articles/ukraines-energy-sector-is-a-key-battleground-in-the-war-with-russia",
+          "title": "Ukraine's energy sector is a key battleground in the war with Russia",
+          "publisher": "Brookings Institution",
+          "published_at": "2025-10-07T00:00:00Z"
+        },
+        {
+          "url": "https://www.iea.org/reports/ukraines-energy-security/a-pre-winter-assessment",
+          "title": "A pre-winter assessment \u0002Ukraine\u0002s Energy Security",
+          "publisher": "International Energy Agency",
+          "published_at": "2025-10-10T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cc5ae12b93",
+      "text": "Russian Ministry of Defence frames large-scale strikes on Ukrainian energy as retaliatory and military-industrial: in July 2026 statement relayed by AP/NPR, MoD said bombardment was \"in response to Ukraine's long-range strikes on its civilian infrastructure\" and used \"high-precision long-range weapons and drones on military industry facilities and fuel and energy complexes in Kyiv and Kyiv region, as well as military airfield infrastructure\"; separate Nov 2025 MoD formulation described strikes against \"enterprises of the Ukrainian military-industrial complex and gas and energy facilities that supported their operations\" including Kinzhal missiles.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.kazu.org/npr-news/2026-07-01/a-major-russian-attack-kills-17-in-kyiv-as-ukraine-keeps-striking-moscows-oil-sector",
+          "title": "A major Russian attack kills 17 in Kyiv as Ukraine keeps striking Moscow's oil sector",
+          "publisher": "NPR / KAZU",
+          "published_at": "2026-07-02"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a648088dd2",
+      "text": "Independent CSIS Futures Lab analysis (July 2026) offers alternative to pure terror/morale-break interpretation: Russian missile/drone campaign is a \"geography of coercion\" combining denial (disrupting logistics nodes, energy, ports, rail, air-defense) and punishment (pressure on civilians/political leadership), with damage increasingly concentrated in frontline/southern industrial oblasts and major urban centers; scaling is driven by Shahed-type drone mass production (5,000-6,000/month in late 2025 vs ~250 in Oct 2022) to probe air defenses cheaply, force Ukraine to expend costly interceptors, force dispersion of defenses, and widen area requiring protection.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.csis.org/analysis/geography-coercion-russian-missile-and-drone-campaigns-ukraine",
+          "title": "The Geography of Coercion: Russian Missile and Drone Campaigns in Ukraine",
+          "publisher": "Center for Strategic and International Studies",
+          "published_at": "2026-07-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e97fbb7005",
+      "text": "Same CSIS analysis finds coercive effect is cumulative rather than decisive and has not broken Ukrainian political cohesion or forced rapid settlement, despite sharply rising damage-days (358 in 2023 to 1,553 in 2025) and winter escalation (+24% Shahed launches, +14% cruise, +8% ballistic in winter months); western oblasts are struck less often due to distance from launch areas and better layered air-defense shielding, suggesting air-defense attrition and range constraints shape targeting alongside intent to cause civilian hardship.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.csis.org/analysis/geography-coercion-russian-missile-and-drone-campaigns-ukraine",
+          "title": "The Geography of Coercion: Russian Missile and Drone Campaigns in Ukraine",
+          "publisher": "Center for Strategic and International Studies",
+          "published_at": "2026-07-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cdf2e9bc09",
+      "text": "UN OHCHR neutral humanitarian assessment (29 Jun 2026, covering 1 Dec 2025\u00031 May 2026) documented at least 423 Russian attacks on electricity generation/transmission/distribution facilities and at least 74 strikes on centralized heating infrastructure (CHP plants/heating) between Oct 2025\u0003Mar 2026, often as large coordinated salvos of hundreds of missiles/drones; attacks reduced generation capacity, caused prolonged rolling outages affecting households, hospitals, schools, water/sanitation, and left hundreds of thousands without heating during Ukraine's coldest winter since 2010; OHCHR concluded it will not be possible to fully restore generation capacity by next winter.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://news.un.org/en/story/2026/06/1167833",
+          "title": "UN details humanitarian toll of strikes on Ukrainian power industry",
+          "publisher": "United Nations",
+          "published_at": "2026-06-29"
+        },
+        {
+          "url": "https://reliefweb.int/report/ukraine/attacks-against-ukraines-energy-infrastructure-and-update-human-rights-situation-ukraine-1-december-2025-31-may-2026",
+          "title": "Attacks against Ukraine's energy infrastructure and update on human rights situation 1 Dec 2025\u00031 May 2026",
+          "publisher": "OHCHR via ReliefWeb",
+          "published_at": "2026-06-29"
+        },
+        {
+          "url": "https://ukraine.ohchr.org/en/UN-report-details-increase-in-civilian-deaths-amid-systematic-strikes-on-energy-facilities",
+          "title": "UN report details increase in civilian deaths amid systematic strikes on energy facilities",
+          "publisher": "UN Human Rights Monitoring Mission in Ukraine",
+          "published_at": "2026-06-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_869556176e",
+      "text": "OHCHR recorded 1,272 civilians killed and 6,871 injured 1 Dec 2025\u00031 May 2026, a 40% increase year-on-year, with long-range missile/drone attacks the leading cause; short-range drones near front lines further impeded evacuations and humanitarian operations.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://news.un.org/en/story/2026/06/1167833",
+          "title": "UN details humanitarian toll of strikes on Ukrainian power industry",
+          "publisher": "United Nations",
+          "published_at": "2026-06-29"
+        },
+        {
+          "url": "https://reliefweb.int/report/ukraine/attacks-against-ukraines-energy-infrastructure-and-update-human-rights-situation-ukraine-1-december-2025-31-may-2026",
+          "title": "Attacks against Ukraine's energy infrastructure and update on human rights situation 1 Dec 2025\u00031 May 2026",
+          "publisher": "OHCHR via ReliefWeb",
+          "published_at": "2026-06-29"
+        },
+        {
+          "url": "https://ukraine.ohchr.org/en/UN-report-details-increase-in-civilian-deaths-amid-systematic-strikes-on-energy-facilities",
+          "title": "UN report details increase in civilian deaths amid systematic strikes on energy facilities",
+          "publisher": "UN Human Rights Monitoring Mission in Ukraine",
+          "published_at": "2026-06-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7ed9ac6fe8",
+      "text": "UNOCHA Humanitarian Situation Snapshot Jan\u0003Feb 2026 provides neutral civilian-impact framing: nearly daily attacks on energy systems left hundreds of thousands without electricity, heating and water sometimes for weeks at \u000320\u0000C across 17 oblasts and Kyiv; 352 killed/1,523 injured in first two months of 2026 (+30% vs Feb 2025); outages impacted nearly 2 million children (avg 16.5 learning days lost, double prior year) and 90 verified attacks on health care disrupted hospital operations.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.unocha.org/publications/report/ukraine/ukraine-humanitarian-situation-snapshot-january-february-2026-enuk",
+          "title": "Ukraine: Humanitarian Situation Snapshot (January - February 2026)",
+          "publisher": "UN Office for the Coordination of Humanitarian Affairs",
+          "published_at": "2026-03-26"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ad2d850d5d",
+      "text": "UNOCHA Humanitarian Needs and Response Plan 2026 (Jan 2026) frames energy strikes as part of systematic damage to energy, water and essential services deepening needs for 10.8 million people (4.1m targeted), noting evolving warfare with more drone/long-range strikes increasing risks for civilians and humanitarians \u0003 a neutral needs-based framing rather than intent attribution.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.unocha.org/publications/report/ukraine/ukraine-humanitarian-needs-and-response-plan-2026-january-2026-enuk",
+          "title": "Ukraine Humanitarian Needs and Response Plan 2026 (January 2026)",
+          "publisher": "UN Office for the Coordination of Humanitarian Affairs",
+          "published_at": "2026-01-13"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_97563d5c40",
+      "text": "OHCHR also documented reciprocal strike: Ukrainian authorities attacked a power plant in Belgorod region, Russia, during winter 2025-26 causing temporary power/heating outages per Russian authorities \u0003 showing both sides have targeted energy infrastructure.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://reliefweb.int/report/ukraine/attacks-against-ukraines-energy-infrastructure-and-update-human-rights-situation-ukraine-1-december-2025-31-may-2026",
+          "title": "Attacks against Ukraine's energy infrastructure and update on human rights situation 1 Dec 2025\u00031 May 2026",
+          "publisher": "OHCHR via ReliefWeb",
+          "published_at": "2026-06-29"
+        },
+        {
+          "url": "https://ukraine.ohchr.org/en/UN-report-details-increase-in-civilian-deaths-amid-systematic-strikes-on-energy-facilities",
+          "title": "UN report details increase in civilian deaths amid systematic strikes on energy facilities",
+          "publisher": "UN Human Rights Monitoring Mission in Ukraine",
+          "published_at": "2026-06-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_605028f542",
+      "text": "International humanitarian law has no formal \"dual-use\" category: under AP I art.52 and DoD Law of War Manual \u00005.6, an object is either a military objective (effective contribution to military action + definite military advantage) or civilian object; energy infrastructure may be assessed as military objective case-by-case (e.g., powering military industry) but proportionality and feasible precautions still apply, and reverberating civilian harm must be counted.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://lieber.westpoint.edu/dual-use-objects-dual-purpose-attacks",
+          "title": "Dual-Use Objects and Dual-Purpose Attacks",
+          "publisher": "Lieber Institute, US Military Academy West Point",
+          "published_at": "2026-05-18"
+        },
+        {
+          "url": "https://yalelawjournal.org/article/the-dangerous-rise-of-dual-use-objects-in-war",
+          "title": "The Dangerous Rise of \"Dual-Use\" Objects in War",
+          "publisher": "Yale Law Journal",
+          "published_at": "2025-06-30"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5843d1063e",
+      "text": "IHL accountability context: Lieber Institute notes strikes against Ukrainian electrical infrastructure form basis for ICC arrest warrants against three senior Russian military officials and a defense minister for directing attacks against civilian objects and causing excessive incidental harm; Yale Law Journal notes Russia \"rarely explains the legal justifications for its targeting decisions,\" making it unclear whether Moscow claims dual-use status or simply disregards civilian-object protections.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://lieber.westpoint.edu/dual-use-objects-dual-purpose-attacks",
+          "title": "Dual-Use Objects and Dual-Purpose Attacks",
+          "publisher": "Lieber Institute, US Military Academy West Point",
+          "published_at": "2026-05-18"
+        },
+        {
+          "url": "https://yalelawjournal.org/article/the-dangerous-rise-of-dual-use-objects-in-war",
+          "title": "The Dangerous Rise of \"Dual-Use\" Objects in War",
+          "publisher": "Yale Law Journal",
+          "published_at": "2025-06-30"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e365d8e555",
+      "text": "Legal alternative interpretation: Lieber Institute's dual-purpose attacks doctrine holds that even if a military objective exists, an attack may still be unlawful if a purpose is to direct attacks against civilians/civilian objects or spread terror; ICTY Gali\u0000 precedent allows inference of unlawful purpose from apparently disproportionate or indiscriminate patterns where extensive civilian infrastructure destruction is not justified as collateral damage \u0003 qualifying any claim that energy strikes are per se lawful because they support military operations.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://lieber.westpoint.edu/dual-use-objects-dual-purpose-attacks",
+          "title": "Dual-Use Objects and Dual-Purpose Attacks",
+          "publisher": "Lieber Institute, US Military Academy West Point",
+          "published_at": "2026-05-18"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

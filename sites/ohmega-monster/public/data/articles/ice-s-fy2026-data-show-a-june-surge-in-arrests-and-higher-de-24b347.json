@@ -1,0 +1,536 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/ice-s-fy2026-data-show-a-june-surge-in-arrests-and-higher-de-24b347",
+  "title": "ICE’s FY2026 data show a June surge in arrests and higher detention, but “criminals first” doesn’t match the custody mix",
+  "summary": "A July release shows arrests/book-ins jumped in June and detainee numbers rose by early July, yet reported detainee categories still leave a large share in the “no known criminal history” bucket amid ongoing court challenges to detention rules.",
+  "published_at": "2026-07-22T12:00:29.219407+00:00",
+  "as_of": "2026-07-21",
+  "status": "needs_hedging",
+  "grades": {
+    "confirmed": 15,
+    "likely": 14
+  },
+  "claims": [
+    {
+      "id": "clm_16d43ac61c",
+      "text": "ICE and DHS published updated FY2026 immigration-enforcement statistics in July after a months-long reporting gap.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.ice.gov/statistics",
+          "title": "ICE Enforcement and Removal Operations Statistics",
+          "publisher": "U.S. Immigration and Customs Enforcement",
+          "published_at": "2026-06-22"
+        },
+        {
+          "url": "https://ohss.dhs.gov/topics/immigration/immigration-enforcement/monthly-tables",
+          "title": "Immigration Enforcement and Legal Processes Monthly Tables",
+          "publisher": "U.S. Department of Homeland Security, Office of Homeland Security Statistics",
+          "published_at": "2026-07-21"
+        },
+        {
+          "url": "https://www.govexec.com/management/2026/07/ice-ramps-up-arrests-deportation-effort-expands/414912/?oref=ge-featured-river-top",
+          "title": "ICE ramps up arrests as deportation effort expands",
+          "publisher": "Government Executive / Stateline",
+          "published_at": "2026-07-21"
+        },
+        {
+          "url": "https://www.theguardian.com/us-news/2026/jul/21/immigration-agents-arrest-june-data",
+          "title": "Trump administration arrested record number of immigrants in June, data shows",
+          "publisher": "The Guardian",
+          "published_at": "2026-07-21"
+        },
+        {
+          "url": "https://www.usatoday.com/story/news/politics/2026/07/21/immigration-arrests-data/90993261007/",
+          "title": "Immigration arrests hit a new record, DHS says in long-awaited data",
+          "publisher": "USA Today",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_72e4b114a6",
+      "text": "ICE’s June 2026 arrests/book-ins reached 43,138.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.theguardian.com/us-news/2026/jul/21/immigration-agents-arrest-june-data",
+          "title": "Trump administration arrested record number of immigrants in June, data shows",
+          "publisher": "The Guardian",
+          "published_at": "2026-07-21"
+        },
+        {
+          "url": "https://www.usatoday.com/story/news/politics/2026/07/21/immigration-arrests-data/90993261007/",
+          "title": "Immigration arrests hit a new record, DHS says in long-awaited data",
+          "publisher": "USA Today",
+          "published_at": "2026-07-21"
+        },
+        {
+          "url": "https://www.govexec.com/management/2026/07/ice-ramps-up-arrests-deportation-effort-expands/414912/?oref=ge-featured-river-top",
+          "title": "ICE ramps up arrests as deportation effort expands",
+          "publisher": "Government Executive / Stateline",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_33adc2df66",
+      "text": "June 2026 was the highest monthly ICE arrest total since at least May 2019.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.theguardian.com/us-news/2026/jul/21/immigration-agents-arrest-june-data",
+          "title": "Trump administration arrested record number of immigrants in June, data shows",
+          "publisher": "The Guardian",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3fb3772543",
+      "text": "ICE detention stood at 65,765 people as of July 11, 2026.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.theguardian.com/us-news/2026/jul/21/immigration-agents-arrest-june-data",
+          "title": "Trump administration arrested record number of immigrants in June, data shows",
+          "publisher": "The Guardian",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bbf0c5f543",
+      "text": "The ICE detained population was still lower than the January 2026 peak of 70,770.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.theguardian.com/us-news/2026/jul/21/immigration-agents-arrest-june-data",
+          "title": "Trump administration arrested record number of immigrants in June, data shows",
+          "publisher": "The Guardian",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_728d47b70c",
+      "text": "The number of detained people without any criminal history was larger than the number with pending charges or convictions.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.theguardian.com/us-news/2026/jul/21/immigration-agents-arrest-june-data",
+          "title": "Trump administration arrested record number of immigrants in June, data shows",
+          "publisher": "The Guardian",
+          "published_at": "2026-07-21"
+        },
+        {
+          "url": "https://www.ice.gov/statistics",
+          "title": "ICE Enforcement and Removal Operations Statistics",
+          "publisher": "U.S. Immigration and Customs Enforcement",
+          "published_at": "2026-06-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_81be123c66",
+      "text": "People with no criminal record made up 37% of the detained population in the latest data cited by USA Today.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.usatoday.com/story/news/politics/2026/07/21/immigration-arrests-data/90993261007/",
+          "title": "Immigration arrests hit a new record, DHS says in long-awaited data",
+          "publisher": "USA Today",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7cfcb18a8f",
+      "text": "ICE’s public statistics classify detainees into three main criminality buckets: convictions, pending charges, and no known convictions or pending charges.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.ice.gov/statistics",
+          "title": "ICE Enforcement and Removal Operations Statistics",
+          "publisher": "U.S. Immigration and Customs Enforcement",
+          "published_at": "2026-06-22"
+        },
+        {
+          "url": "https://ohss.dhs.gov/topics/immigration/immigration-enforcement/monthly-tables",
+          "title": "Immigration Enforcement and Legal Processes Monthly Tables",
+          "publisher": "U.S. Department of Homeland Security, Office of Homeland Security Statistics",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_db108b9622",
+      "text": "ICE’s statistics page says arrests, detentions, removals, and alternatives-to-detention data are published one quarter in arrears and may later be corrected.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.ice.gov/statistics",
+          "title": "ICE Enforcement and Removal Operations Statistics",
+          "publisher": "U.S. Immigration and Customs Enforcement",
+          "published_at": "2026-06-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_eb01001c9a",
+      "text": "The data show a large share of detainees came from ICE arrests rather than only from border apprehensions.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.ice.gov/statistics",
+          "title": "ICE Enforcement and Removal Operations Statistics",
+          "publisher": "U.S. Immigration and Customs Enforcement",
+          "published_at": "2026-06-22"
+        },
+        {
+          "url": "https://www.usatoday.com/story/news/politics/2026/07/21/immigration-arrests-data/90993261007/",
+          "title": "Immigration arrests hit a new record, DHS says in long-awaited data",
+          "publisher": "USA Today",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f13da60c50",
+      "text": "About 2,000 detainees a month have been freed through court-ordered bond hearings, according to the Stateline/GovExec report.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.govexec.com/management/2026/07/ice-ramps-up-arrests-deportation-effort-expands/414912/?oref=ge-featured-river-top",
+          "title": "ICE ramps up arrests as deportation effort expands",
+          "publisher": "Government Executive / Stateline",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e9b4c6db04",
+      "text": "DHS has described the crackdown as focused on people with criminal records.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.govexec.com/management/2026/07/ice-ramps-up-arrests-deportation-effort-expands/414912/?oref=ge-featured-river-top",
+          "title": "ICE ramps up arrests as deportation effort expands",
+          "publisher": "Government Executive / Stateline",
+          "published_at": "2026-07-21"
+        },
+        {
+          "url": "https://www.usatoday.com/story/news/politics/2026/07/21/immigration-arrests-data/90993261007/",
+          "title": "Immigration arrests hit a new record, DHS says in long-awaited data",
+          "publisher": "USA Today",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_aa32439fda",
+      "text": "The reported June arrest surge coincided with a more quiet, routine enforcement style, including workplaces, homes, traffic stops, and check-ins.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.theguardian.com/us-news/2026/jul/21/immigration-agents-arrest-june-data",
+          "title": "Trump administration arrested record number of immigrants in June, data shows",
+          "publisher": "The Guardian",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_37f350904c",
+      "text": "The government’s public reporting delay drew criticism for reducing transparency about immigration enforcement.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.govexec.com/management/2026/07/ice-ramps-up-arrests-deportation-effort-expands/414912/?oref=ge-featured-river-top",
+          "title": "ICE ramps up arrests as deportation effort expands",
+          "publisher": "Government Executive / Stateline",
+          "published_at": "2026-07-21"
+        },
+        {
+          "url": "https://www.theguardian.com/us-news/2026/jul/21/immigration-agents-arrest-june-data",
+          "title": "Trump administration arrested record number of immigrants in June, data shows",
+          "publisher": "The Guardian",
+          "published_at": "2026-07-21"
+        },
+        {
+          "url": "https://www.usatoday.com/story/news/politics/2026/07/21/immigration-arrests-data/90993261007/",
+          "title": "Immigration arrests hit a new record, DHS says in long-awaited data",
+          "publisher": "USA Today",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_92bcc740eb",
+      "text": "The official OHSS monthly tables page publishes the DHS series needed to verify monthly ICE enforcement counts, including administrative arrests, book-ins to detention, book-outs from detention, and removals/returns.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ohss.dhs.gov/topics/immigration/immigration-enforcement/monthly-tables",
+          "title": "Immigration Enforcement and Legal Processes Monthly Tables",
+          "publisher": "U.S. Department of Homeland Security, Office of Homeland Security Statistics",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7f36cd47f5",
+      "text": "OHSS says the monthly tables are built from the Persist Dataset, standardized monthly from DHS operational reports, and that numbers may differ from prior publications because data and methodology can be updated.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://ohss.dhs.gov/topics/immigration/immigration-enforcement/monthly-tables",
+          "title": "Immigration Enforcement and Legal Processes Monthly Tables",
+          "publisher": "U.S. Department of Homeland Security, Office of Homeland Security Statistics",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b5af123980",
+      "text": "ICE enforcement in the U.S. interior relies heavily on custodial referrals and transfers from local law enforcement, not only visible workplace or street operations.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.migrationpolicy.org/explainer/ice-arrests-deportations-us-interior",
+          "title": "ICE Arrests and Deportations from the U.S. Interior",
+          "publisher": "Migration Policy Institute",
+          "published_at": "2026-07-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4691d3950f",
+      "text": "MPI’s interior-enforcement explainer supports interpreting a June arrest surge as broader interior-enforcement capacity, rather than as evidence of a single tactical campaign.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.migrationpolicy.org/explainer/ice-arrests-deportations-us-interior",
+          "title": "ICE Arrests and Deportations from the U.S. Interior",
+          "publisher": "Migration Policy Institute",
+          "published_at": "2026-07-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_23e3dfe4fe",
+      "text": "On July 2, 2026, Reuters reported that a 5th Circuit panel said the government must provide bond hearings after 90 days of detention.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/legal/government/trump-administration-cannot-hold-migrants-without-bond-hearings-past-90-days-2026-07-02/",
+          "title": "Trump administration cannot hold migrants without bond hearings past 90 days, court rules",
+          "publisher": "Reuters",
+          "published_at": "2026-07-02"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d45355763e",
+      "text": "Reuters reported DHS said it disagreed with the July 2 bond-hearing ruling and remained confident in its mandatory-detention position.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/legal/government/trump-administration-cannot-hold-migrants-without-bond-hearings-past-90-days-2026-07-02/",
+          "title": "Trump administration cannot hold migrants without bond hearings past 90 days, court rules",
+          "publisher": "Reuters",
+          "published_at": "2026-07-02"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b88ca082d7",
+      "text": "Reuters reported in February 2026 that courts had ruled more than 4,400 times that ICE was detaining people unlawfully.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/legal/government/courts-have-ruled-4400-times-that-ice-jailed-people-illegally-it-hasnt-stopped-2026-02-14",
+          "title": "Courts have ruled 4,400 times that ICE jailed people illegally. It hasn’t stopped.",
+          "publisher": "Reuters",
+          "published_at": "2026-02-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_70a9e77df3",
+      "text": "Reuters said most of those habeas rulings centered on the administration’s shift away from the prior bond-hearing interpretation of immigration law.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/legal/government/courts-have-ruled-4400-times-that-ice-jailed-people-illegally-it-hasnt-stopped-2026-02-14",
+          "title": "Courts have ruled 4,400 times that ICE jailed people illegally. It hasn’t stopped.",
+          "publisher": "Reuters",
+          "published_at": "2026-02-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0cb3327e57",
+      "text": "USA Today reported that DHS published detention numbers after a three-month delay, the longest in its recent history.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.usatoday.com/story/news/politics/2026/07/21/immigration-arrests-data/90993261007/",
+          "title": "Immigration arrests hit a new record, DHS says in long-awaited data",
+          "publisher": "USA Today",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_edf4d86538",
+      "text": "USA Today quoted a DHS spokesperson saying the agency is delivering on Trump’s promise to arrest and deport people with criminal records.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.usatoday.com/story/news/politics/2026/07/21/immigration-arrests-data/90993261007/",
+          "title": "Immigration arrests hit a new record, DHS says in long-awaited data",
+          "publisher": "USA Today",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4e5b18f26c",
+      "text": "GovExec reported that fewer than one-third of current detainees have criminal convictions and about 40% have only non-criminal immigration violations.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.govexec.com/management/2026/07/ice-ramps-up-arrests-deportation-effort-expands/414912/?oref=ge-featured-river-top",
+          "title": "ICE ramps up arrests as deportation effort expands",
+          "publisher": "Government Executive / Stateline",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d2e578136d",
+      "text": "GovExec and USA Today both support the reading that detention increased while removals stayed roughly flat, suggesting a backlog effect rather than faster removal throughput alone.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.usatoday.com/story/news/politics/2026/07/21/immigration-arrests-data/90993261007/",
+          "title": "Immigration arrests hit a new record, DHS says in long-awaited data",
+          "publisher": "USA Today",
+          "published_at": "2026-07-21"
+        },
+        {
+          "url": "https://www.govexec.com/management/2026/07/ice-ramps-up-arrests-deportation-effort-expands/414912/?oref=ge-featured-river-top",
+          "title": "ICE ramps up arrests as deportation effort expands",
+          "publisher": "Government Executive / Stateline",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a961485e6a",
+      "text": "ICE says its enforcement statistics are published in arrears and may later be corrected, while OHSS says its monthly tables are standardized from DHS operational reports and can differ from earlier published figures.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.ice.gov/statistics",
+          "title": "ICE Enforcement and Removal Operations Statistics",
+          "publisher": "U.S. Immigration and Customs Enforcement",
+          "published_at": "2026-06-22"
+        },
+        {
+          "url": "https://ohss.dhs.gov/topics/immigration/immigration-enforcement/monthly-tables",
+          "title": "Immigration Enforcement and Legal Processes Monthly Tables",
+          "publisher": "U.S. Department of Homeland Security, Office of Homeland Security Statistics",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3db1faab80",
+      "text": "ICE’s criminality framework has three categories: convictions, pending charges, and no known convictions or pending charges; the third category includes repeat reentrants and fugitives.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.ice.gov/statistics",
+          "title": "ICE Enforcement and Removal Operations Statistics",
+          "publisher": "U.S. Immigration and Customs Enforcement",
+          "published_at": "2026-06-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f1731e3f69",
+      "text": "Reuters reported that a 5th Circuit panel said the government must provide bond hearings after 90 days of detention and that DHS disagreed with the ruling.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/legal/government/trump-administration-cannot-hold-migrants-without-bond-hearings-past-90-days-2026-07-02/",
+          "title": "Trump administration cannot hold migrants without bond hearings past 90 days, court rules",
+          "publisher": "Reuters",
+          "published_at": "2026-07-02"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

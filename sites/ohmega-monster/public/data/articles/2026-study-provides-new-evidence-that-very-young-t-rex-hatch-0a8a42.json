@@ -1,0 +1,561 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/2026-study-provides-new-evidence-that-very-young-t-rex-hatch-0a8a42",
+  "title": "2026 study provides new evidence that very young T. rex hatchlings fed early, but not hunting from birth",
+  "summary": "The *Biology* paper’s fossil identification and bone structure support hatchlings that likely fed at an early stage, while tooth-wear evidence still leaves independent hunting from birth unproven and compatible with scavenging.",
+  "published_at": "2026-07-25T07:26:38.125758+00:00",
+  "as_of": "2026-07-25",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 20,
+    "likely": 12,
+    "unconfirmed": 2
+  },
+  "claims": [
+    {
+      "id": "clm_bf15f5d427",
+      "text": "A Biology paper titled \"Hatchlings of Tyrannosaurus rex and the Evolution of Dinosaur Reproductive Strategies\" was published in July 2026.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.discovermagazine.com/fossil-evidence-indicates-baby-t-rex-were-tiny-but-deadly-49418",
+          "title": "Fossil Evidence Indicates Baby T. rex Were Tiny, but Deadly",
+          "publisher": "Discover Magazine",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7c8c36248e",
+      "text": "The research centers on newly identified juvenile T. rex material from Saskatchewan's Frenchman Formation in Canada.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.foxweather.com/earth-space/hatchling-tyrannosaurus-rex-foot-bone-discovery-science-research-museum",
+          "title": "First-known foot bone of a baby T. rex found stashed in pile of fossils after being mistakenly identified",
+          "publisher": "FOX Weather",
+          "published_at": "2026-07-21"
+        },
+        {
+          "url": "https://www.discovermagazine.com/fossil-evidence-indicates-baby-t-rex-were-tiny-but-deadly-49418",
+          "title": "Fossil Evidence Indicates Baby T. rex Were Tiny, but Deadly",
+          "publisher": "Discover Magazine",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5ec43ad2b6",
+      "text": "A left metatarsal III specimen, cataloged as RSKM P2416.82, was identified as a hatchling T. rex foot bone.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.foxweather.com/earth-space/hatchling-tyrannosaurus-rex-foot-bone-discovery-science-research-museum",
+          "title": "First-known foot bone of a baby T. rex found stashed in pile of fossils after being mistakenly identified",
+          "publisher": "FOX Weather",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b1fe83468f",
+      "text": "The specimen is from the latest Maastrichtian Frenchman Formation.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.foxweather.com/earth-space/hatchling-tyrannosaurus-rex-foot-bone-discovery-science-research-museum",
+          "title": "First-known foot bone of a baby T. rex found stashed in pile of fossils after being mistakenly identified",
+          "publisher": "FOX Weather",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_92492a8cb6",
+      "text": "CT analysis of the foot bone showed abundant blood vessels and no growth rings, supporting the interpretation that the individual was less than a year old.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.discovermagazine.com/fossil-evidence-indicates-baby-t-rex-were-tiny-but-deadly-49418",
+          "title": "Fossil Evidence Indicates Baby T. rex Were Tiny, but Deadly",
+          "publisher": "Discover Magazine",
+          "published_at": "2026-07-21"
+        },
+        {
+          "url": "https://www.foxweather.com/earth-space/hatchling-tyrannosaurus-rex-foot-bone-discovery-science-research-museum",
+          "title": "First-known foot bone of a baby T. rex found stashed in pile of fossils after being mistakenly identified",
+          "publisher": "FOX Weather",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9dc798519b",
+      "text": "Dental material attributed to tyrannosaur hatchlings showed wear consistent with feeding on vertebrates.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.discovermagazine.com/fossil-evidence-indicates-baby-t-rex-were-tiny-but-deadly-49418",
+          "title": "Fossil Evidence Indicates Baby T. rex Were Tiny, but Deadly",
+          "publisher": "Discover Magazine",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bab201572f",
+      "text": "The authors interpret the fossils to mean that T. rex hatchlings were active predators shortly after birth.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.discovermagazine.com/fossil-evidence-indicates-baby-t-rex-were-tiny-but-deadly-49418",
+          "title": "Fossil Evidence Indicates Baby T. rex Were Tiny, but Deadly",
+          "publisher": "Discover Magazine",
+          "published_at": "2026-07-21"
+        },
+        {
+          "url": "https://gizmodo.com/t-rex-babies-were-no-bigger-than-house-cats-but-already-deadly-2000790254",
+          "title": "T. Rex Babies Were No Bigger Than House Cats—But Already Deadly",
+          "publisher": "Gizmodo",
+          "published_at": "2026-07-24"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fd63d3539a",
+      "text": "The paper estimates a small adult T. rex may have laid about 20 eggs and a larger adult about 30 eggs.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.discovermagazine.com/fossil-evidence-indicates-baby-t-rex-were-tiny-but-deadly-49418",
+          "title": "Fossil Evidence Indicates Baby T. rex Were Tiny, but Deadly",
+          "publisher": "Discover Magazine",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0ec1eb99f4",
+      "text": "The authors suggest T. rex parenting involved relatively low direct investment, with hatchlings leaving the nest early.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.discovermagazine.com/fossil-evidence-indicates-baby-t-rex-were-tiny-but-deadly-49418",
+          "title": "Fossil Evidence Indicates Baby T. rex Were Tiny, but Deadly",
+          "publisher": "Discover Magazine",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dcd734f8e5",
+      "text": "The available coverage does not establish from independent primary reading whether the sample included more than one juvenile specimen or exactly how many fossils were analyzed.",
+      "grade": "unconfirmed",
+      "salience": "medium",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7d0603f06c",
+      "text": "The available coverage does not establish the full set of features used in the argument, beyond the foot bone and tooth wear references surfaced in secondary coverage.",
+      "grade": "unconfirmed",
+      "salience": "medium",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1d4c588913",
+      "text": "The paper itself could not be directly read in this run, so the study’s methods and explicit limitations remain only partially verified here.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e669ffc902",
+      "text": "The Biology paper was published on 7 July 2026 in Biology 15(13):1090, with DOI 10.3390/biology15131090.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.mdpi.com/2079-7737/15/13/1090",
+          "title": "Hatchlings of Tyrannosaurus rex and the Evolution of Dinosaur Reproductive Strategies",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ce22335721",
+      "text": "Figure 1 of the Biology paper explicitly labels RSKM P2416.82 as T. rex, left metatarsal III, from the latest Maastrichtian Frenchman Formation of Saskatchewan, and shows anterior, posterior, medial, lateral, distal, and proximal views.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.mdpi.com/2079-7737/15/13/1090",
+          "title": "Hatchlings of Tyrannosaurus rex and the Evolution of Dinosaur Reproductive Strategies",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        },
+        {
+          "url": "https://pub.mdpi-res.com/biology/biology-15-01090/article_deploy/html/images/biology-15-01090-g001.png?1783932270",
+          "title": "Figure 1: T. rex, left metatarsal III, RSKM P2416.82",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_43d2e8da5c",
+      "text": "Figure 2 reconstructs a perinate T. rex from the third metatarsal RSKM P2416.82 and states that the post-hatching individual was scaled to 84% of the linear dimensions of that bone.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.mdpi.com/2079-7737/15/13/1090",
+          "title": "Hatchlings of Tyrannosaurus rex and the Evolution of Dinosaur Reproductive Strategies",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b225a19f2e",
+      "text": "Figure 8 describes synchrotron computed microtomography of RSKM P2416.82 and identifies extensive vascularization, longitudinal canals, and well-developed cancellous structure.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.mdpi.com/2079-7737/15/13/1090",
+          "title": "Hatchlings of Tyrannosaurus rex and the Evolution of Dinosaur Reproductive Strategies",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        },
+        {
+          "url": "https://pub.mdpi-res.com/biology/biology-15-01090/article_deploy/html/images/biology-15-01090-g008.png?1783932286",
+          "title": "Figure 8: Synchrotron computed microtomography of RSKM P2416.82",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_175729ad9a",
+      "text": "Figure 9 states that serial sagittal sections of RSKM P2416.82 show highly vascularized bone characteristic of very young, rapidly growing dinosaurs.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.mdpi.com/2079-7737/15/13/1090",
+          "title": "Hatchlings of Tyrannosaurus rex and the Evolution of Dinosaur Reproductive Strategies",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        },
+        {
+          "url": "https://pub.mdpi-res.com/biology/biology-15-01090/article_deploy/html/images/biology-15-01090-g009.png?1783932288",
+          "title": "Figure 9: Serial sagittal sections of RSKM P2416.82",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_05171363d5",
+      "text": "Figure 10 compares vasculature in perinate tyrannosaurid left MT III specimens from Gorgosaurus libratus TMP 1981.16.475 and Tyrannosaurus rex RSKM P2416.82, including longitudinal and circumferential primary canals, cutting cones, secondary remodeling canals, and primary osteons.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.mdpi.com/2079-7737/15/13/1090",
+          "title": "Hatchlings of Tyrannosaurus rex and the Evolution of Dinosaur Reproductive Strategies",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        },
+        {
+          "url": "https://pub.mdpi-res.com/biology/biology-15-01090/article_deploy/html/images/biology-15-01090-g010.png?1783932290",
+          "title": "Figure 10: Vasculature in perinate tyrannosaurid left MT III",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3aed46936a",
+      "text": "Figure 11 interprets RSKM P2416.82 as showing a transition between embryonic and hatchling bone, while using cautious language such as possibly representing a hatching line and likely transition.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.mdpi.com/2079-7737/15/13/1090",
+          "title": "Hatchlings of Tyrannosaurus rex and the Evolution of Dinosaur Reproductive Strategies",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        },
+        {
+          "url": "https://pub.mdpi-res.com/biology/biology-15-01090/article_deploy/html/images/biology-15-01090-g011.png?1783932293",
+          "title": "Figure 11: Histology of perinate T. rex",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d7309f6cbd",
+      "text": "Figure 13 says bone density profiles were generated for RSKM P2416.82 using gray value as a proxy for density.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.mdpi.com/2079-7737/15/13/1090",
+          "title": "Hatchlings of Tyrannosaurus rex and the Evolution of Dinosaur Reproductive Strategies",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        },
+        {
+          "url": "https://pub.mdpi-res.com/biology/biology-15-01090/article_deploy/html/images/biology-15-01090-g013.png?1783932297",
+          "title": "Figure 13: Bone density profiles of perinate tyrannosaurids",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ee76a08d8c",
+      "text": "The article metadata shows the paper was submitted on 13 April 2026, revised on 13 June 2026, accepted on 19 June 2026, and published on 7 July 2026.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.mdpi.com/2079-7737/15/13/1090",
+          "title": "Hatchlings of Tyrannosaurus rex and the Evolution of Dinosaur Reproductive Strategies",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8c4c81f1c9",
+      "text": "The Biology paper cites comparative and methodological context for ontogenetic assessment and dinosaur growth, including Griffin et al. 2020 on assessing ontogenetic maturity in extinct saurian reptiles and prior tyrannosaur growth work.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.mdpi.com/2079-7737/15/13/1090",
+          "title": "Hatchlings of Tyrannosaurus rex and the Evolution of Dinosaur Reproductive Strategies",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a1152b4bca",
+      "text": "The paper’s figure set includes clutch/litter size and growth-curve analyses for tyrannosaurs and other amniotes, indicating that reproductive-strategy inference is an explicit analytic component of the study rather than only a news-summary extrapolation.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.mdpi.com/2079-7737/15/13/1090",
+          "title": "Hatchlings of Tyrannosaurus rex and the Evolution of Dinosaur Reproductive Strategies",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bf032ae739",
+      "text": "The accessible coverage of the 2026 Biology study supports early feeding and precociality in hatchling tyrannosaurs, but does not by itself prove routine independent hunting from birth.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.sciencealert.com/neglected-museum-fossils-turn-out-to-be-the-first-t-rex-hatchlings-ever-found",
+          "title": "Neglected Museum Fossils Turn Out to Be The First T. Rex Hatchlings Ever Found",
+          "publisher": "ScienceAlert",
+          "published_at": "2026-07-14T10:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5cefab89eb",
+      "text": "The ScienceAlert coverage explicitly phrases hatchling predation as an inference from worn teeth and comparisons to living animals, not as direct behavioral observation.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.sciencealert.com/neglected-museum-fossils-turn-out-to-be-the-first-t-rex-hatchlings-ever-found",
+          "title": "Neglected Museum Fossils Turn Out to Be The First T. Rex Hatchlings Ever Found",
+          "publisher": "ScienceAlert",
+          "published_at": "2026-07-14T10:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e3174bb129",
+      "text": "Thomas R. Holtz Jr. argued in a reappraisal of the scavenging hypothesis that tyrannosaur anatomy does not justify treating T. rex as an obligate scavenger.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.researchgate.net/publication/292603329_A_critical_reappraisal_of_the_obligate_scavenging_hypothesis_for_Tyrannosaurus_rex_and_other_tyrant_dinosaurs",
+          "title": "A critical reappraisal of the obligate scavenging hypothesis for Tyrannosaurus rex and other tyrant dinosaurs",
+          "publisher": "ResearchGate",
+          "published_at": "2008-01-01T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fa96730ac7",
+      "text": "Hone and Watabe showed that tyrannosaurid tooth marks on bones can record scavenging or postmortem carcass processing, so tooth traces alone do not prove a kill.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.researchgate.net/publication/228885141_New_Information_on_Scavenging_and_Selective_Feeding_Behaviour_of_Tyrannosaurids",
+          "title": "New Information on Scavenging and Selective Feeding Behaviour of Tyrannosaurids",
+          "publisher": "ResearchGate",
+          "published_at": "2010-12-01T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9bc84a4eab",
+      "text": "Therrien et al. explicitly note that bite marks and feeding traces are difficult to distinguish from scavenging, and that juvenile tyrannosaur bite traces may reflect later-stage carcass consumption rather than live hunting.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.researchgate.net/publication/376355974_Exceptionally_preserved_stomach_contents_of_a_young_tyrannosaurid_reveal_an_ontogenetic_dietary_shift_in_an_iconic_extinct_predator",
+          "title": "Exceptionally preserved stomach contents of a young tyrannosaurid reveal an ontogenetic dietary shift in an iconic extinct predator",
+          "publisher": "ResearchGate",
+          "published_at": "2023-12-08T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_02720f5181",
+      "text": "The paper’s abstract says the hatchling T. rex specimen weighed about 2.5 kg, the Gorgosaurus specimen about 2.4 kg, and both were under 1 year old.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.mdpi.com/2079-7737/15/13/1090/pdf?version=1783676964",
+          "title": "Hatchlings of Tyrannosaurus rex and the Evolution of Dinosaur Reproductive Strategies (PDF)",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_551fd76dc2",
+      "text": "The paper’s abstract estimates about 20 eggs for a small adult T. rex, about 30 for the largest T. rex, and says larger clutches of 50 or even 100 eggs are not impossible.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.mdpi.com/2079-7737/15/13/1090/pdf?version=1783676964",
+          "title": "Hatchlings of Tyrannosaurus rex and the Evolution of Dinosaur Reproductive Strategies (PDF)",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3373a49105",
+      "text": "The paper says it used phase-contrast synchrotron microCT, stacked 15 CT slices to approximate thin sections, and used gray values as a proxy for bone density.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.mdpi.com/2079-7737/15/13/1090/pdf?version=1783676964",
+          "title": "Hatchlings of Tyrannosaurus rex and the Evolution of Dinosaur Reproductive Strategies (PDF)",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_025dbf43f2",
+      "text": "Figure 11 says the specimen shows a transition between embryonic and hatchling bone and uses cautious wording such as 'possibly representing hatching line' and 'likely transition.'",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.mdpi.com/2079-7737/15/13/1090/pdf?version=1783676964",
+          "title": "Hatchlings of Tyrannosaurus rex and the Evolution of Dinosaur Reproductive Strategies (PDF)",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ec7ad0fe88",
+      "text": "The paper’s abstract says hatchling teeth show wear suggesting they fed on relatively large vertebrates.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.mdpi.com/2079-7737/15/13/1090/pdf?version=1783676964",
+          "title": "Hatchlings of Tyrannosaurus rex and the Evolution of Dinosaur Reproductive Strategies (PDF)",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_423d8fa035",
+      "text": "The paper’s figure set includes clutch/litter-size and growth-curve analyses across tyrannosaurs and other amniotes.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.mdpi.com/2079-7737/15/13/1090/pdf?version=1783676964",
+          "title": "Hatchlings of Tyrannosaurus rex and the Evolution of Dinosaur Reproductive Strategies (PDF)",
+          "publisher": "MDPI Biology",
+          "published_at": "2026-07-07"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

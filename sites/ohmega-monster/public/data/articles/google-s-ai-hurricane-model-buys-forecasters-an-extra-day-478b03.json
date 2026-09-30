@@ -1,0 +1,927 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/google-s-ai-hurricane-model-buys-forecasters-an-extra-day-478b03",
+  "title": "Google's AI hurricane model buys forecasters an extra day",
+  "summary": "Tested live by the US National Hurricane Center in 2025 and open-sourced to run in under a minute, the ensemble matches prior two-day accuracy at three days — but its coarse-resolution strength is still a black box and physics models beat it on record-breaking extremes.",
+  "published_at": "2026-08-08T13:58:22.667630+00:00",
+  "as_of": "2026-08-08",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 44,
+    "likely": 2,
+    "contested": 1
+  },
+  "claims": [
+    {
+      "id": "clm_e981bd7163",
+      "text": "WeatherNext Cyclones paper 'Operational Tropical Cyclone Forecasting with AI' was published in Nature on Aug 6, 2026 (DOI 10.1038/s41586-026-10953-2).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10953-2",
+          "title": "Operational Tropical Cyclone Forecasting with AI",
+          "publisher": "Nature",
+          "published_at": "2026-08-06T00:00:00Z"
+        },
+        {
+          "url": "https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/",
+          "title": "WeatherNext: AI model achieves breakthrough in forecasting cyclones",
+          "publisher": "Google DeepMind",
+          "published_at": "2026-08-06T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9977bcbe07",
+      "text": "WeatherNext Cyclones is a single AI model that predicts tropical cyclone track, intensity and size/wind structure together with state-of-the-art accuracy.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10953-2",
+          "title": "Operational Tropical Cyclone Forecasting with AI",
+          "publisher": "Nature",
+          "published_at": "2026-08-06T00:00:00Z"
+        },
+        {
+          "url": "https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/",
+          "title": "WeatherNext: AI model achieves breakthrough in forecasting cyclones",
+          "publisher": "Google DeepMind",
+          "published_at": "2026-08-06T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c0696f57d5",
+      "text": "Evaluated on tropical cyclones from 2023\u0002025, WeatherNext Cyclones offers an average of a day or more of lead-time advantage over leading operational models; its 3-day forecasts are as accurate as prior models' 2-day forecasts.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10953-2",
+          "title": "Operational Tropical Cyclone Forecasting with AI",
+          "publisher": "Nature",
+          "published_at": "2026-08-06T00:00:00Z"
+        },
+        {
+          "url": "https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/",
+          "title": "WeatherNext: AI model achieves breakthrough in forecasting cyclones",
+          "publisher": "Google DeepMind",
+          "published_at": "2026-08-06T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_78f5f2ba86",
+      "text": "The lead-time gain is described as comparable to roughly a decade of operational meteorological progress.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10953-2",
+          "title": "Operational Tropical Cyclone Forecasting with AI",
+          "publisher": "Nature",
+          "published_at": "2026-08-06T00:00:00Z"
+        },
+        {
+          "url": "https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/",
+          "title": "WeatherNext: AI model achieves breakthrough in forecasting cyclones",
+          "publisher": "Google DeepMind",
+          "published_at": "2026-08-06T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5eef9dfeb7",
+      "text": "Model was co-trained end-to-end on ~20 terabytes of global atmospheric analysis data (ERA5/HRES) and the IBTrACS historical database of ~5,000 tropical cyclones.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/",
+          "title": "WeatherNext: AI model achieves breakthrough in forecasting cyclones",
+          "publisher": "Google DeepMind",
+          "published_at": "2026-08-06T00:00:00Z"
+        },
+        {
+          "url": "https://github.com/google-deepmind/weathernext",
+          "title": "google-deepmind/weathernext GitHub repository",
+          "publisher": "Google DeepMind GitHub",
+          "published_at": "2026-08-06T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5a9da0600a",
+      "text": "Architecture uses Functional Generative Networks (FGNs): graph neural network encoder/decoder on a 6x-refined icosahedral mesh with graph transformer, ~180M parameters per seed, 768 latent dim, 24 layers, 32-dim Gaussian noise injected via conditional normalization to sample coherent ensemble members.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/",
+          "title": "WeatherNext: AI model achieves breakthrough in forecasting cyclones",
+          "publisher": "Google DeepMind",
+          "published_at": "2026-08-06T00:00:00Z"
+        },
+        {
+          "url": "https://blog.google/innovation-and-ai/models-and-research/google-deepmind/weathernext-2",
+          "title": "WeatherNext 2: Our most advanced weather forecasting model",
+          "publisher": "Google",
+          "published_at": "2025-11-17T00:00:00Z"
+        },
+        {
+          "url": "https://arxiv.org/abs/2506.10772",
+          "title": "Skillful joint probabilistic weather forecasting from marginals (arXiv:2506.10772)",
+          "publisher": "arXiv / Google DeepMind",
+          "published_at": "2025-06-01T00:00:00Z"
+        },
+        {
+          "url": "https://www.marktechpost.com/2025/11/17/google-deepminds-weathernext-2-uses-functional-generative-networks-for-8x-faster-probabilistic-weather-forecasts",
+          "title": "Google DeepMind\u0000e2\u0000e WeatherNext 2 Uses Functional Generative Networks For 8x Faster Probabilistic Weather Forecasts",
+          "publisher": "MarkTechPost",
+          "published_at": "2025-11-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_30f52d8a84",
+      "text": "Training uses Continuous Ranked Probability Score (CRPS) on per-location marginals with fair estimator, plus short autoregressive rollouts up to 8 steps; joint spatial/cross-variable structure emerges despite marginal-only supervision.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://arxiv.org/abs/2506.10772",
+          "title": "Skillful joint probabilistic weather forecasting from marginals (arXiv:2506.10772)",
+          "publisher": "arXiv / Google DeepMind",
+          "published_at": "2025-06-01T00:00:00Z"
+        },
+        {
+          "url": "https://www.marktechpost.com/2025/11/17/google-deepminds-weathernext-2-uses-functional-generative-networks-for-8x-faster-probabilistic-weather-forecasts",
+          "title": "Google DeepMind\u0000e2\u0000e WeatherNext 2 Uses Functional Generative Networks For 8x Faster Probabilistic Weather Forecasts",
+          "publisher": "MarkTechPost",
+          "published_at": "2025-11-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_08cffb5fe5",
+      "text": "WeatherNext Cyclones operates at 0.25\u0000b0 (~28x28 km) resolution, about 100x coarser than traditional high-resolution regional intensity models; WeatherNext 2-mini operates at 1\u0000b0 (~111x111 km) and still shows strong performance.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/",
+          "title": "WeatherNext: AI model achieves breakthrough in forecasting cyclones",
+          "publisher": "Google DeepMind",
+          "published_at": "2026-08-06T00:00:00Z"
+        },
+        {
+          "url": "https://github.com/google-deepmind/weathernext",
+          "title": "google-deepmind/weathernext GitHub repository",
+          "publisher": "Google DeepMind GitHub",
+          "published_at": "2026-08-06T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6cda19c690",
+      "text": "A single 15-day global forecast runs in under one minute on a single TPU; WeatherNext 2 is 8x faster than prior WeatherNext Gen and surpasses it on 99.9% of variables and lead times (0-15 days) with ~6.5% average CRPS improvement.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/",
+          "title": "WeatherNext: AI model achieves breakthrough in forecasting cyclones",
+          "publisher": "Google DeepMind",
+          "published_at": "2026-08-06T00:00:00Z"
+        },
+        {
+          "url": "https://blog.google/innovation-and-ai/models-and-research/google-deepmind/weathernext-2",
+          "title": "WeatherNext 2: Our most advanced weather forecasting model",
+          "publisher": "Google",
+          "published_at": "2025-11-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.marktechpost.com/2025/11/17/google-deepminds-weathernext-2-uses-functional-generative-networks-for-8x-faster-probabilistic-weather-forecasts",
+          "title": "Google DeepMind\u0000e2\u0000e WeatherNext 2 Uses Functional Generative Networks For 8x Faster Probabilistic Weather Forecasts",
+          "publisher": "MarkTechPost",
+          "published_at": "2025-11-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b4aebddee5",
+      "text": "Ensemble size was 50 members in 2024 (matching conventional physics ensembles) and scaled to 1,000 members in 2025-2026 to better capture rare tail events like rapid intensification.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10953-2",
+          "title": "Operational Tropical Cyclone Forecasting with AI",
+          "publisher": "Nature",
+          "published_at": "2026-08-06T00:00:00Z"
+        },
+        {
+          "url": "https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/",
+          "title": "WeatherNext: AI model achieves breakthrough in forecasting cyclones",
+          "publisher": "Google DeepMind",
+          "published_at": "2026-08-06T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3538eb5d8a",
+      "text": "Including WeatherNext Cyclones predictions in a weighted-average consensus ensemble substantially improves consensus skill.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10953-2",
+          "title": "Operational Tropical Cyclone Forecasting with AI",
+          "publisher": "Nature",
+          "published_at": "2026-08-06T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_82fb5e1739",
+      "text": "Code and model weights for WeatherNext Cyclones, WeatherNext 2 and WeatherNext 2-mini were open-sourced Aug 6, 2026 on GitHub under Apache 2.0 (code) / CC BY 4.0 (materials), with Colab notebook for mini on free v5e-1 TPU and data feeds via Google Cloud, Weather Lab and OpenMeteo.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/",
+          "title": "WeatherNext: AI model achieves breakthrough in forecasting cyclones",
+          "publisher": "Google DeepMind",
+          "published_at": "2026-08-06T00:00:00Z"
+        },
+        {
+          "url": "https://github.com/google-deepmind/weathernext",
+          "title": "google-deepmind/weathernext GitHub repository",
+          "publisher": "Google DeepMind GitHub",
+          "published_at": "2026-08-06T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_82a714721a",
+      "text": "2025 was the first year NOAA's National Hurricane Center incorporated AI model guidance operationally; WeatherNext ran live as FNV3 (NHC post-processed as GDMI) and was the top-performing individual model for track and intensity in NHC's 2025 verification.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/how-weathernext-helped-the-national-hurricane-center-better-predict-hurricane-melissas-historic-landfall-in-jamaica",
+          "title": "How WeatherNext helped the National Hurricane Center better predict Hurricane Melissa\u0000e2\u0000e historic landfall in Jamaica",
+          "publisher": "Google DeepMind",
+          "published_at": "2026-05-19T00:00:00Z"
+        },
+        {
+          "url": "https://www.noaa.gov/news-release/2025-atlantic-hurricane-season-marked-by-striking-contrasts",
+          "title": "2025 Atlantic hurricane season marked by striking contrasts",
+          "publisher": "NOAA",
+          "published_at": "2025-11-25T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1660b0a143",
+      "text": "During Hurricane Melissa (Oct 2025), WeatherNext predicted Category 5 landfall in Jamaica 5 days in advance with 80% confidence (near 100% at 3 days), helping NHC issue the first-ever Category 5 forecast from Category 1 initial intensity.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/how-weathernext-helped-the-national-hurricane-center-better-predict-hurricane-melissas-historic-landfall-in-jamaica",
+          "title": "How WeatherNext helped the National Hurricane Center better predict Hurricane Melissa\u0000e2\u0000e historic landfall in Jamaica",
+          "publisher": "Google DeepMind",
+          "published_at": "2026-05-19T00:00:00Z"
+        },
+        {
+          "url": "https://www.noaa.gov/news-release/2025-atlantic-hurricane-season-marked-by-striking-contrasts",
+          "title": "2025 Atlantic hurricane season marked by striking contrasts",
+          "publisher": "NOAA",
+          "published_at": "2025-11-25T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_159ac68b35",
+      "text": "Hurricane Melissa made landfall near New Hope, Westmoreland Parish, Jamaica on Oct 28, 2025 as a Category 5 with ~185-190 mph sustained winds, the strongest Jamaica landfall on record and tied for strongest Atlantic landfall, with ~95 deaths and ~$8.8B damage (costliest in Jamaican history).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/how-weathernext-helped-the-national-hurricane-center-better-predict-hurricane-melissas-historic-landfall-in-jamaica",
+          "title": "How WeatherNext helped the National Hurricane Center better predict Hurricane Melissa\u0000e2\u0000e historic landfall in Jamaica",
+          "publisher": "Google DeepMind",
+          "published_at": "2026-05-19T00:00:00Z"
+        },
+        {
+          "url": "https://www.noaa.gov/news-release/2025-atlantic-hurricane-season-marked-by-striking-contrasts",
+          "title": "2025 Atlantic hurricane season marked by striking contrasts",
+          "publisher": "NOAA",
+          "published_at": "2025-11-25T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bb6974988f",
+      "text": "Melissa underwent rapid intensification (70 to 130 mph in 24h; 115 mph increase and 90 mb pressure drop in 72h), the fourth RI storm of 2025; NHC track forecast 4 days before landfall was within ~13 miles.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.noaa.gov/news-release/2025-atlantic-hurricane-season-marked-by-striking-contrasts",
+          "title": "2025 Atlantic hurricane season marked by striking contrasts",
+          "publisher": "NOAA",
+          "published_at": "2025-11-25T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f7c3b4b1c4",
+      "text": "Tropical cyclones have caused >700,000 deaths and $1.4 trillion in economic losses globally over the past 50 years.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/",
+          "title": "WeatherNext: AI model achieves breakthrough in forecasting cyclones",
+          "publisher": "Google DeepMind",
+          "published_at": "2026-08-06T00:00:00Z"
+        },
+        {
+          "url": "https://wmo.int/media/news/economic-costs-of-weather-related-disasters-soars-early-warnings-save-lives",
+          "title": "Economic costs of weather-related disasters soars but early warnings save lives",
+          "publisher": "WMO",
+          "published_at": "2023-05-23T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_67192c214e",
+      "text": "Every $1 invested in early warning systems can yield up to $10 in benefits, and 24 hours' warning can cut storm damage by 30% (WMO/CREWS estimates).",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.globalreinsurance.com/home/sand-and-snow-shared-financial-risk-across-climate-extremes/1459302.article",
+          "title": "Sand and snow: Shared financial risk across climate extremes",
+          "publisher": "Global Reinsurance",
+          "published_at": "2026-08-04T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c7072da9a9",
+      "text": "WeatherNext requires orders of magnitude less compute than physics-based models \u0000d4\u0000 thesis claim of 1,000x less compute \u0000d4\u0000 enabling national met services with limited compute to run forecasts.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/",
+          "title": "WeatherNext: AI model achieves breakthrough in forecasting cyclones",
+          "publisher": "Google DeepMind",
+          "published_at": "2026-08-06T00:00:00Z"
+        },
+        {
+          "url": "https://blog.google/innovation-and-ai/models-and-research/google-deepmind/weathernext-2",
+          "title": "WeatherNext 2: Our most advanced weather forecasting model",
+          "publisher": "Google",
+          "published_at": "2025-11-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a8bc89bf8f",
+      "text": "Authors include researchers from Google DeepMind, Google Research, NOAA/NWS/NCEP National Hurricane Center, Cooperative Institute for Research in the Atmosphere (Colorado State), and UK Met Office.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10953-2",
+          "title": "Operational Tropical Cyclone Forecasting with AI",
+          "publisher": "Nature",
+          "published_at": "2026-08-06T00:00:00Z"
+        },
+        {
+          "url": "https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/",
+          "title": "WeatherNext: AI model achieves breakthrough in forecasting cyclones",
+          "publisher": "Google DeepMind",
+          "published_at": "2026-08-06T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_67a7c73f10",
+      "text": "The coarse-resolution intensity skill remains an open research question; authors state they do not fully understand how the model achieves state-of-the-art intensity at 28km and invite community investigation.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/",
+          "title": "WeatherNext: AI model achieves breakthrough in forecasting cyclones",
+          "publisher": "Google DeepMind",
+          "published_at": "2026-08-06T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8879f3ade1",
+      "text": "WeatherNext does not replace official warnings; all official alerts remain issued solely by national meteorological authorities, and the model is research code provided as-is without warranty.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/",
+          "title": "WeatherNext: AI model achieves breakthrough in forecasting cyclones",
+          "publisher": "Google DeepMind",
+          "published_at": "2026-08-06T00:00:00Z"
+        },
+        {
+          "url": "https://github.com/google-deepmind/weathernext",
+          "title": "google-deepmind/weathernext GitHub repository",
+          "publisher": "Google DeepMind GitHub",
+          "published_at": "2026-08-06T00:00:00Z"
+        },
+        {
+          "url": "https://deepmind.google/blog/how-weathernext-helped-the-national-hurricane-center-better-predict-hurricane-melissas-historic-landfall-in-jamaica",
+          "title": "How WeatherNext helped the National Hurricane Center better predict Hurricane Melissa\u0000e2\u0000e historic landfall in Jamaica",
+          "publisher": "Google DeepMind",
+          "published_at": "2026-05-19T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3833b05702",
+      "text": "2025 Atlantic season produced 13 named storms, 5 hurricanes, 4 major hurricanes, including 3 Category 5s (second-most on record); no hurricane made US landfall.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.noaa.gov/news-release/2025-atlantic-hurricane-season-marked-by-striking-contrasts",
+          "title": "2025 Atlantic hurricane season marked by striking contrasts",
+          "publisher": "NOAA",
+          "published_at": "2025-11-25T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_efcfaf487e",
+      "text": "FGN generates ensembles by passing a single 32-dimensional global noise vector into all conditional layer-norm layers, with learned parameters shared across mesh and grid spatial dimensions, so sampling different vectors per ensemble member produces globally coherent functional perturbations rather than per-pixel noise.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://arxiv.org/html/2506.10772v1",
+          "title": "Skillful joint probabilistic weather forecasting from marginals (arXiv:2506.10772v1)",
+          "publisher": "arXiv",
+          "published_at": "2025-06-12"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_758dc1a4e2",
+      "text": "FGN models epistemic uncertainty with deep ensembles of 4 independently-initialized models (each 180M parameters) and aleatoric uncertainty with learned functional perturbations where forecast samples come from networks whose parameters are sampled from a learned distribution per ensemble member and timestep.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://arxiv.org/html/2506.10772v1",
+          "title": "Skillful joint probabilistic weather forecasting from marginals (arXiv:2506.10772v1)",
+          "publisher": "arXiv",
+          "published_at": "2025-06-12"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_28264cbc66",
+      "text": "FGN is trained to minimize the fair (unbiased) Continuous Ranked Probability Score (CRPS) on per-location marginals averaged over all locations, variables and levels, initially with single-step loss then finetuned with autoregressive rollouts up to 8 steps with gradients propagated through the rollout.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://arxiv.org/html/2506.10772v1",
+          "title": "Skillful joint probabilistic weather forecasting from marginals (arXiv:2506.10772v1)",
+          "publisher": "arXiv",
+          "published_at": "2025-06-12"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d090f07a6c",
+      "text": "Despite marginal-only CRPS supervision, FGN learns skillful joint spatial and cross-variable structure because the 32-degree-of-freedom globally-shared perturbation heavily constrains the output manifold; the easiest way to jointly optimize CRPS everywhere is to encode physically consistent correlations. Even a stripped-down single-seed, no-autoregressive, smaller (512 dim, 16 layer) FGN still outperforms prior state-of-the-art across the board, and full FGN improves pooled CRPS (8.7% avg-pooled, 7.5% max-pooled) and derived variables like 10m wind speed and z300-z500 thickness.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://arxiv.org/html/2506.10772v1",
+          "title": "Skillful joint probabilistic weather forecasting from marginals (arXiv:2506.10772v1)",
+          "publisher": "arXiv",
+          "published_at": "2025-06-12"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_be326ecdd5",
+      "text": "Each FGN constituent model uses a GNN encoder/decoder mapping lat/lon grid to a 6-times-refined icosahedral mesh with graph-transformer processor, 180M parameters per seed, 768 latent dimension, 24 layers, 6-hour timestep (vs GenCast 57M total, 512 dim, 16 layers, 12-hour timestep).",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://arxiv.org/html/2506.10772v1",
+          "title": "Skillful joint probabilistic weather forecasting from marginals (arXiv:2506.10772v1)",
+          "publisher": "arXiv",
+          "published_at": "2025-06-12"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_990a83a642",
+      "text": "WMO primary sources state early warning systems provide more than tenfold return on investment: Global Commission on Adaptation reports cost-benefit ratio of 1:9 (US$1 invested yields US$9 net benefits), and WMO Bulletin states 'more than a tenfold return'; providing just 24 hours' notice of a storm or heatwave can reduce potential damage by 30%; US$800 million investment in such systems in developing countries could prevent US$3-16 billion in annual losses.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://wmo.int/media/magazine-article/triple-dividends-of-early-warning-systems-and-climate-services",
+          "title": "The Triple Dividends of Early Warning Systems and Climate Services - WMO Magazine",
+          "publisher": "World Meteorological Organization",
+          "published_at": "2024-10-30"
+        },
+        {
+          "url": "https://wmo.int/media/news/wmo-bulletin-early-warning-and-anticipatory-action",
+          "title": "WMO Bulletin: Early Warning and Anticipatory Action",
+          "publisher": "World Meteorological Organization",
+          "published_at": "2022-03-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6d7c01dac2",
+      "text": "WMO Atlas update: extreme weather, climate and water-related events caused 11,778 reported disasters between 1970 and 2021, with just over 2 million deaths and US$4.3 trillion in economic losses; storms are the leading cause of economic losses and the sole hazard with continually increasing attributed portion; over 90% of deaths in developing countries; USA alone US$1.7 trillion (39% of global losses).",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://wmo.int/media/news/economic-costs-of-weather-related-disasters-soars-early-warnings-save-lives",
+          "title": "Economic costs of weather-related disasters soars but early warnings save lives",
+          "publisher": "WMO",
+          "published_at": "2023-05-23T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7fc641bb57",
+      "text": "NHC 2025 Verification Report (30 March 2026) independent Atlantic verification: mean official track errors 20 n mi at 12h to 162 n mi at 120h, below 5-year means at all lead times (up to 14% smaller at 96h); official forecasts outperformed consensus aids TVCA, HCCA, FSSE, but Google DeepMind ensemble mean (GDMI) slightly outperformed NHC at 12-72h short-range. Intensity errors exceeded 5-year means at all times, 40-50% larger at 60-120h, with Decay-SHIFOR baseline up to 90% larger, indicating unusually difficult intensity forecasting; official forecasts beat all models at 12h and 96h and were comparable to GDMI (best model) at other times.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nhc.noaa.gov/verification/pdfs/Verification_2025.pdf",
+          "title": "National Hurricane Center Forecast Verification Report 2025 Hurricane Season (30 March 2026)",
+          "publisher": "NOAA/NWS National Hurricane Center",
+          "published_at": "2026-03-30"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d8e5596aad",
+      "text": "NHC 2025 Verification Report eastern North Pacific: mean NHC track errors 19 n mi at 12h to 100 n mi at 120h, 15-30% lower than 5-year means, breaking records for accuracy at 24-120h; GDMI beat official and all consensus aids at 48-120h. Intensity errors 20-30% lower than 5-year means at 48-120h with record accuracy at 48h and 72h; official comparable to best consensus aids HCCA and NNIC.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nhc.noaa.gov/verification/pdfs/Verification_2025.pdf",
+          "title": "National Hurricane Center Forecast Verification Report 2025 Hurricane Season (30 March 2026)",
+          "publisher": "NOAA/NWS National Hurricane Center",
+          "published_at": "2026-03-30"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1824c37b95",
+      "text": "NHC Verification Report confirms 2025 was the first year NHC incorporated AI-based models into real-time operations; GDMI was not consistently available early season, so homogeneous model comparisons exclude first two Atlantic storms and first five eastern North Pacific storms, limiting sample for GDMI vs official head-to-head.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nhc.noaa.gov/verification/pdfs/Verification_2025.pdf",
+          "title": "National Hurricane Center Forecast Verification Report 2025 Hurricane Season (30 March 2026)",
+          "publisher": "NOAA/NWS National Hurricane Center",
+          "published_at": "2026-03-30"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e69988201a",
+      "text": "NOAA primary confirms Hurricane Melissa operational value: NHC intensity forecasts for Melissa outperformed every model at nearly every lead time and provided almost three days advance notice of Category 5 Jamaica landfall from low initial intensity; 4 days before landfall NHC projected path over western Jamaica within ~13 miles; Melissa underwent rapid intensification with 115-mph wind increase and 90 mb pressure drop in 72h ending 11 a.m. EDT Oct 28, 2025.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.noaa.gov/news-release/2025-atlantic-hurricane-season-marked-by-striking-contrasts",
+          "title": "2025 Atlantic hurricane season marked by striking contrasts",
+          "publisher": "NOAA",
+          "published_at": "2025-11-25T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f6e9111595",
+      "text": "Nature paper abstract confirms WeatherNext Cyclones evaluated on 2023-2025 cyclones offers average >1 day lead-time advantage over leading operational models for track, intensity and wind radii, comparable to last decade of operational progress, using inputs orders of magnitude coarser than regional models, and that including WN-C in weighted-average consensus substantially improves skill with scalability to 1,000-member ensembles.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10953-2",
+          "title": "Operational Tropical Cyclone Forecasting with AI",
+          "publisher": "Nature",
+          "published_at": "2026-08-06T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c014c0a9ac",
+      "text": "The coarse-resolution intensity skill (28km, 100x coarser than regional models) is an unexplained black-box result that shocked the meteorological community; DeepMind authors state they do not fully understand how the model extracts intensity signal from coarse inputs, and describe it as \"a black box at the end of the day.\" This qualifies the success narrative that coarse data contains sufficient signal \u0001 the mechanism is not established and invites skepticism about physical consistency.",
+      "grade": "contested",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.wired.com/story/deepmind-ai-model-can-predict-hurricanes-earlier",
+          "title": "DeepMind Says Its AI Can Predict Hurricanes Earlier Than Everyone Else",
+          "publisher": "WIRED",
+          "published_at": "2026-08-06T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_51192ae470",
+      "text": "In a peer-reviewed out-of-distribution test of record-breaking extremes (heat/cold/wind records from 2018/2020 exceeding 1979-2017 records), the physics-based ECMWF HRES consistently outperformed leading AI models GraphCast, Pangu-Weather and FuXi; AI models systematically underestimated both intensity and frequency of records, with underestimation growing with the margin of record exceedance. Authors attribute this to neural networks' inability to extrapolate beyond training domain vs physics laws.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.kit.edu/kit/english/pi_2026_040_physics-based-weather-models-more-reliable-than-ai-for-extreme-events.php",
+          "title": "Physics-based Weather Models More Reliable Than AI for Extreme Events",
+          "publisher": "KIT",
+          "published_at": "2026-04-28T00:00:00Z"
+        },
+        {
+          "url": "https://www.carbonbrief.org/traditional-models-still-outperform-ai-for-extreme-weather-forecasts",
+          "title": "Traditional models still 'outperform AI' for extreme weather forecasts",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-04-29T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_897b7ae093",
+      "text": "Global AIWP models including ECMWF AIFS systematically underestimate tropical cyclone intensity and show larger intensity errors across all lead times vs regional high-resolution references; a key reason is training on ERA5 reanalysis at ~31km which itself underestimates intensity and cannot resolve mesoscale eyewall structures critical for intensity development.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s44304-026-00219-2",
+          "title": "A regional artificial intelligence model for skillful typhoon prediction",
+          "publisher": "Nature",
+          "published_at": "2026-05-12T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bffaad8ce3",
+      "text": "Even the hybrid regional AI system HITS-LPIPS trained on 9km high-resolution typhoon reanalysis (HiRes) and constrained by AIFS still underestimates super-typhoon intensity by ~10-15 m/s and shows limited skill for intense typhoons >50 m/s, indicating training-data resolution and rarity of extremes remain binding constraints.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s44304-026-00219-2",
+          "title": "A regional artificial intelligence model for skillful typhoon prediction",
+          "publisher": "Nature",
+          "published_at": "2026-05-12T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cdb8f6fbd1",
+      "text": "WeatherNext Cyclones' rapid-intensification skill remains limited: a standard detection metric balancing correct detections against false alarms and misses improved from below 0.3 to 0.5 under WN-C, meaning the model still gets rapid intensification wrong a meaningful fraction of time; larger 1,000-member ensembles improve tail sampling but do not eliminate misses and raise false-alarm/over-warning costs.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://san.com/cc/googles-new-ai-could-give-hurricane-forecasters-an-extra-day-of-warning",
+          "title": "Google's new AI could give hurricane forecasters an extra day of warning",
+          "publisher": "Straight Arrow News",
+          "published_at": "2026-08-08T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9f4ead30e2",
+      "text": "Operational intensity failure mode illustrated by Hurricane Milton (2024): Google AI track was miles-accurate but intensity forecast predicted <Category 2 vs actual Category 5 (most intense Gulf storm since Rita 2005), a rapid-intensification event where storm went from formation to Cat5 in ~2 days; nearly 80% of major hurricanes (Cat3-5) undergo rapid intensification, making intensity the hardest forecast dimension for both AI and physics models.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://earth.org/how-ai-is-improving-tropical-cyclone-forecasting-in-climate-change-era",
+          "title": "How AI Is Improving Tropical Cyclone Forecasting",
+          "publisher": "Earth.Org",
+          "published_at": "2025-07-18T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_832c1cc061",
+      "text": "Operational consensus vs replacement debate: In 2024 NHC official human-in-loop forecasts outperformed all individual models at almost all lead times for track, and outperformed individual models for intensity except 4-5 day LGEM; NHC Director Brennan emphasizes \"no guarantee that one model, because it did well last year or for this particular storm, is necessarily going to be best for the next storm\" and that \"a hurricane is not just a track or intensity forecast \u0001 it requires experts to translate into impacts.\" WN-C is framed by NHC as \"another tool in the toolbox,\" not a replacement, and is weighted inside consensus (75% latitude, 89% longitude, 42% intensity in two-way blend) rather than used alone.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.wired.com/story/deepmind-ai-model-can-predict-hurricanes-earlier",
+          "title": "DeepMind Says Its AI Can Predict Hurricanes Earlier Than Everyone Else",
+          "publisher": "WIRED",
+          "published_at": "2026-08-06T00:00:00Z"
+        },
+        {
+          "url": "https://san.com/cc/googles-new-ai-could-give-hurricane-forecasters-an-extra-day-of-warning",
+          "title": "Google's new AI could give hurricane forecasters an extra day of warning",
+          "publisher": "Straight Arrow News",
+          "published_at": "2026-08-08T00:00:00Z"
+        },
+        {
+          "url": "https://yaleclimateconnections.org/2025/05/which-hurricane-models-should-you-trust-in-2025",
+          "title": "Which hurricane models should you trust in 2025?",
+          "publisher": "Yale Climate Connections",
+          "published_at": "2025-05-26T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1d9bfe4132",
+      "text": "False-alarm economics are material: for tropical cyclone genesis, the European model had lowest false alarms but only ~20% correct detection, GFS 20-25% detection with more false alarms, Canadian highest detection but highest false alarms; when two+ models agree odds increase considerably. This tradeoff implies 1,000-member tail scenarios that do not materialize carry evacuation, port/airport closure, and staging costs if acted upon, a cost not quantified in the \"extra day\" framing.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://yaleclimateconnections.org/2025/05/which-hurricane-models-should-you-trust-in-2025",
+          "title": "Which hurricane models should you trust in 2025?",
+          "publisher": "Yale Climate Connections",
+          "published_at": "2025-05-26T00:00:00Z"
+        },
+        {
+          "url": "https://san.com/cc/googles-new-ai-could-give-hurricane-forecasters-an-extra-day-of-warning",
+          "title": "Google's new AI could give hurricane forecasters an extra day of warning",
+          "publisher": "Straight Arrow News",
+          "published_at": "2026-08-08T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2853026683",
+      "text": "AI models remain dependent on physics-based analysis for training and initialization and cannot currently replace classical NWP for high-risk applications; Zhang et al. authors and ECMWF commentary recommend parallel use and hybrid physics-informed approaches, with official warnings remaining solely with national meteorological authorities and liability not transferred to AI providers.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.kit.edu/kit/english/pi_2026_040_physics-based-weather-models-more-reliable-than-ai-for-extreme-events.php",
+          "title": "Physics-based Weather Models More Reliable Than AI for Extreme Events",
+          "publisher": "KIT",
+          "published_at": "2026-04-28T00:00:00Z"
+        },
+        {
+          "url": "https://www.carbonbrief.org/traditional-models-still-outperform-ai-for-extreme-weather-forecasts",
+          "title": "Traditional models still 'outperform AI' for extreme weather forecasts",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-04-29T00:00:00Z"
+        },
+        {
+          "url": "https://www.wired.com/story/deepmind-ai-model-can-predict-hurricanes-earlier",
+          "title": "DeepMind Says Its AI Can Predict Hurricanes Earlier Than Everyone Else",
+          "publisher": "WIRED",
+          "published_at": "2026-08-06T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b88f4359d9",
+      "text": "WeatherNext Cyclones operates at 0.25\u00176 (~28x28 km) resolution, about 100x coarser than traditional high-resolution regional intensity models; WeatherNext 2-mini operates at 1\u00176 (~111x111 km) and still shows strong performance.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-10953-2",
+          "title": "Operational Tropical Cyclone Forecasting with AI",
+          "publisher": "Nature",
+          "published_at": "2026-08-06T00:00:00Z"
+        },
+        {
+          "url": "https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/",
+          "title": "WeatherNext: AI model achieves breakthrough in forecasting cyclones",
+          "publisher": "Google DeepMind",
+          "published_at": "2026-08-06T00:00:00Z"
+        },
+        {
+          "url": "https://github.com/google-deepmind/weathernext",
+          "title": "google-deepmind/weathernext GitHub repository",
+          "publisher": "Google DeepMind GitHub",
+          "published_at": "2026-08-06T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3cdb432f82",
+      "text": "The coarse-resolution intensity skill (28km, 100x coarser than regional models) is an unexplained black-box result that shocked the meteorological community; DeepMind authors state they do not fully understand how the model extracts intensity signal from coarse inputs, and describe it as \"a black box at the end of the day.\"",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.wired.com/story/deepmind-ai-model-can-predict-hurricanes-earlier",
+          "title": "DeepMind Says Its AI Can Predict Hurricanes Earlier Than Everyone Else",
+          "publisher": "WIRED",
+          "published_at": "2026-08-06T00:00:00Z"
+        },
+        {
+          "url": "https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/",
+          "title": "WeatherNext: AI model achieves breakthrough in forecasting cyclones",
+          "publisher": "Google DeepMind",
+          "published_at": "2026-08-06T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ed53dd0b5c",
+      "text": "Operational consensus vs replacement debate: In 2024 NHC official human-in-loop forecasts outperformed all individual models at almost all lead times for track, and outperformed individual models for intensity except 4-5 day LGEM; NHC Director Brennan emphasizes \"no guarantee that one model, because it did well last year or for this particular storm, is necessarily going to be best for the next storm\" and that \"a hurricane is not just a track or intensity forecast \u0014 it requires experts to translate into impacts.\" WN-C is framed by NHC as \"another tool in the toolbox,\" not a replacement, and is weighted inside consensus (75% latitude, 89% longitude, 42% intensity in two-way blend) rather than used alone.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.wired.com/story/deepmind-ai-model-can-predict-hurricanes-earlier",
+          "title": "DeepMind Says Its AI Can Predict Hurricanes Earlier Than Everyone Else",
+          "publisher": "WIRED",
+          "published_at": "2026-08-06T00:00:00Z"
+        },
+        {
+          "url": "https://san.com/cc/googles-new-ai-could-give-hurricane-forecasters-an-extra-day-of-warning",
+          "title": "Google's new AI could give hurricane forecasters an extra day of warning",
+          "publisher": "Straight Arrow News",
+          "published_at": "2026-08-08T00:00:00Z"
+        },
+        {
+          "url": "https://www.nhc.noaa.gov/verification/pdfs/Verification_2025.pdf",
+          "title": "National Hurricane Center Forecast Verification Report 2025 Hurricane Season (30 March 2026)",
+          "publisher": "NOAA/NWS National Hurricane Center",
+          "published_at": "2026-03-30"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

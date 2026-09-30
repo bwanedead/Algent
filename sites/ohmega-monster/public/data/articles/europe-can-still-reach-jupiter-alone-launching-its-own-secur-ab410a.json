@@ -1,0 +1,1038 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/europe-can-still-reach-jupiter-alone-launching-its-own-secur-ab410a",
+  "title": "Europe can still reach Jupiter alone — launching its own secure network is the harder test",
+  "summary": "The EU's planned secure network has grown to 348 satellites with services targeted from 2029, but a crowded Ariane 6 manifest, a 50% cost rise to over €15.6bn and Starlink's scale leave timing uncertain, while a universal-antenna demo is proven but unproven at scale.",
+  "published_at": "2026-09-23T06:01:38.077154+00:00",
+  "as_of": "2026-09-23",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 59,
+    "likely": 4,
+    "unconfirmed": 2
+  },
+  "claims": [
+    {
+      "id": "clm_62f929063b",
+      "text": "ESA's Jupiter Icy Moons Explorer (Juice) will fly past Earth on 28 September 2026 at a closest approach of 8640 km",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/Juice_to_fly_past_Earth_for_third_gravity_assist",
+          "title": "Juice to fly past Earth for third gravity assist",
+          "publisher": "European Space Agency",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5792172cc5",
+      "text": "The 28 September 2026 Earth flyby will deflect Juice's trajectory by about 20 degrees and increase velocity by about 3.5 km/s",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/Juice_to_fly_past_Earth_for_third_gravity_assist",
+          "title": "Juice to fly past Earth for third gravity assist",
+          "publisher": "European Space Agency",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_24ff3011c9",
+      "text": "Closest approach on 28 September 2026 will be over the Indian Ocean at 13:45 CEST (11:45 UTC)",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/Juice_to_fly_past_Earth_for_third_gravity_assist",
+          "title": "Juice to fly past Earth for third gravity assist",
+          "publisher": "European Space Agency",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_57ed92b907",
+      "text": "Juice will be in Earth's shadow from 21:24 CEST on 27 September to 06:03 CEST on 28 September and must operate on battery power",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/Juice_to_fly_past_Earth_for_third_gravity_assist",
+          "title": "Juice to fly past Earth for third gravity assist",
+          "publisher": "European Space Agency",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4bdd366d98",
+      "text": "Juice's 10 science instruments will be switched on between 23 September and 3 October 2026 to collect calibration data on Earth and the Moon",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/Juice_to_fly_past_Earth_for_third_gravity_assist",
+          "title": "Juice to fly past Earth for third gravity assist",
+          "publisher": "European Space Agency",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2d1a81ba3e",
+      "text": "After the September 2026 flyby, Juice will make a final Earth flyby in January 2029 to reach Jupiter in July 2031",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/Juice_to_fly_past_Earth_for_third_gravity_assist",
+          "title": "Juice to fly past Earth for third gravity assist",
+          "publisher": "European Space Agency",
+          "published_at": "2026-09-21"
+        },
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice",
+          "title": "Juice mission factsheet",
+          "publisher": "European Space Agency",
+          "published_at": "2026-09-11"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_308b015e87",
+      "text": "Juice launched on 14 April 2023 from Europe's Spaceport in French Guiana on an Ariane 5",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice",
+          "title": "Juice mission factsheet",
+          "publisher": "European Space Agency",
+          "published_at": "2026-09-11"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8127a16229",
+      "text": "Juice carries 10 science instruments, 85 m2 solar wings, and is planned to make 35 Jovian moon flybys before orbiting Ganymede in 2034",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice",
+          "title": "Juice mission factsheet",
+          "publisher": "European Space Agency",
+          "published_at": "2026-09-11"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3fe85783aa",
+      "text": "Juice's cruise includes a lunar-Earth flyby in August 2024 and a Venus flyby in August 2025 before the two Earth flybys in 2026 and 2029",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/Juice_to_fly_past_Earth_for_third_gravity_assist",
+          "title": "Juice to fly past Earth for third gravity assist",
+          "publisher": "European Space Agency",
+          "published_at": "2026-09-21"
+        },
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice",
+          "title": "Juice mission factsheet",
+          "publisher": "European Space Agency",
+          "published_at": "2026-09-11"
+        },
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/Juice_rerouted_to_Venus_in_world_s_first_lunar-Earth_flyby",
+          "title": "Juice rerouted to Venus in world's first lunar-Earth flyby",
+          "publisher": "European Space Agency",
+          "published_at": "2024-08-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_00aab208cf",
+      "text": "IRIS² will comprise 348 satellites (330 in low Earth orbit and 18 in medium Earth orbit) after adding 66 LEO satellites in the August 2026 implementation agreement",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Applications/Connectivity_and_Secure_Communications/IRIS2_reinforced_and_accelerated_as_implementation_advances",
+          "title": "IRIS² reinforced and accelerated as implementation advances",
+          "publisher": "European Space Agency",
+          "published_at": "2026-08-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_603afcd900",
+      "text": "IRIS² first launches are planned by 2029 with progressive deployment of operational connectivity services from 2029 onwards",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Applications/Connectivity_and_Secure_Communications/IRIS2_reinforced_and_accelerated_as_implementation_advances",
+          "title": "IRIS² reinforced and accelerated as implementation advances",
+          "publisher": "European Space Agency",
+          "published_at": "2026-08-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_664b22f3e7",
+      "text": "The reinforced IRIS² architecture will increase secure governmental capacity by 60% within the EU and 54% globally",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Applications/Connectivity_and_Secure_Communications/IRIS2_reinforced_and_accelerated_as_implementation_advances",
+          "title": "IRIS² reinforced and accelerated as implementation advances",
+          "publisher": "European Space Agency",
+          "published_at": "2026-08-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b05b25aa0d",
+      "text": "IRIS² is implemented via a 12-year concession contract signed 16 December 2024 between the European Commission and the SpaceRISE consortium (SES, Eutelsat, Hispasat)",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Applications/Connectivity_and_Secure_Communications/IRIS2_reinforced_and_accelerated_as_implementation_advances",
+          "title": "IRIS² reinforced and accelerated as implementation advances",
+          "publisher": "European Space Agency",
+          "published_at": "2026-08-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e53021cba5",
+      "text": "Poland, Hungary and Spain have committed €656 million, €500 million and €1.6-2 billion respectively to IRIS² beyond the EU budget",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Applications/Connectivity_and_Secure_Communications/IRIS2_reinforced_and_accelerated_as_implementation_advances",
+          "title": "IRIS² reinforced and accelerated as implementation advances",
+          "publisher": "European Space Agency",
+          "published_at": "2026-08-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_51fe7d9fbf",
+      "text": "ESA Director General Josef Aschbacher warned Europe faces a launcher shortage around 2029-2031 as satellite launch demand peaks",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_862f20739c",
+      "text": "Ariane 6 is currently planned for 9-10 flights per year from 2027, with ESA studying increases to 15 or even 20 per year to meet demand",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_672b9d003f",
+      "text": "Europe conducted 7 launches in 2025 (4 Ariane 6 and 3 Vega C) compared to SpaceX's 170 launches placing ~2,500 satellites in orbit",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e9fec0977d",
+      "text": "The majority of European satellites are currently launched by SpaceX, making Europe highly dependent on a single US commercial provider",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.swp-berlin.org/publikation/european-autonomy-in-space",
+          "title": "European Autonomy in Space - Space Systems as a Pillar of European Defence",
+          "publisher": "Stiftung Wissenschaft und Politik (SWP)",
+          "published_at": "2026-01-14"
+        },
+        {
+          "url": "https://www.csis.org/blogs/europe-corner/strategic-ambition-vs-structural-dependency-why-europe-cant-stand-alone-space",
+          "title": "Strategic Ambition vs Structural Dependency: Why Europe Can’t Stand Alone in Space",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2025-12-11"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d5c49763bf",
+      "text": "Europe's satellite market accounts for approximately 1% of the global launch market, limiting demand for indigenous launch services",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.swp-berlin.org/publikation/european-autonomy-in-space",
+          "title": "European Autonomy in Space - Space Systems as a Pillar of European Defence",
+          "publisher": "Stiftung Wissenschaft und Politik (SWP)",
+          "published_at": "2026-01-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1b59abd558",
+      "text": "Sharp plans to develop a universal antenna that can connect to multiple different satellite communications networks to allow users to switch providers instead of relying on SpaceX's Starlink",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://asia.nikkei.com/business/technology/sharp-takes-aim-at-starlink-dominance-with-universal-satellite-antenna",
+          "title": "Sharp takes aim at Starlink dominance with universal satellite antenna",
+          "publisher": "Nikkei Asia",
+          "published_at": "2026-09-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0e3c281a48",
+      "text": "Sharp's flat-panel antenna was used in the world's first 3GPP Release 19 5G-Advanced NR-NTN connection over Eutelsat OneWeb LEO satellites at ESA's ESTEC in the Netherlands",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.mediatek.com/press-room/esa-mediatek-eutelsat-airbus-sharp-itri-and-rs-announce-worlds-first-rel-19-5g-advanced-nr-ntn-connection-over-oneweb-leo-satellites",
+          "title": "ESA, MediaTek, Eutelsat, Airbus, Sharp, ITRI, and R&S Announce World’s First Rel-19 5G-Advanced NR-NTN Connection over OneWeb LEO Satellites",
+          "publisher": "MediaTek / ESA / Eutelsat / Airbus / Sharp / ITRI / Rohde & Schwarz joint release",
+          "published_at": "2025-11-03"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d803b01751",
+      "text": "The 5G-Advanced NTN trial used 50 MHz channel bandwidth over Ku-band with conditional handover, using MediaTek NR-NTN chipset and ITRI gNB, via Airbus-built OneWeb satellites with transparent transponders",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.mediatek.com/press-room/esa-mediatek-eutelsat-airbus-sharp-itri-and-rs-announce-worlds-first-rel-19-5g-advanced-nr-ntn-connection-over-oneweb-leo-satellites",
+          "title": "ESA, MediaTek, Eutelsat, Airbus, Sharp, ITRI, and R&S Announce World’s First Rel-19 5G-Advanced NR-NTN Connection over OneWeb LEO Satellites",
+          "publisher": "MediaTek / ESA / Eutelsat / Airbus / Sharp / ITRI / Rohde & Schwarz joint release",
+          "published_at": "2025-11-03"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ca30b02257",
+      "text": "Starlink had roughly 9,500 working satellites in early 2026 with FCC approval for an additional 7,500 and about 9.2 million users in ~155 countries, holding a de facto monopoly in consumer LEO broadband",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.satellitetoday.com/connectivity/2026/02/23/the-coming-wave-of-competition-in-leo-constellations",
+          "title": "The Coming Wave of Competition in LEO Constellations",
+          "publisher": "Via Satellite",
+          "published_at": "2026-02-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d7022a05a5",
+      "text": "SpaceNews interviewed ESA Director General Josef Aschbacher at World Space Business Week in Paris about Europe's push for space sovereignty and autonomy",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://spacenews.com/inside-europes-push-for-space-autonomy-with-josef-aschbacher",
+          "title": "Inside Europe’s push for space autonomy with Josef Aschbacher",
+          "publisher": "SpaceNews",
+          "published_at": "2026-09-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_df57fa7c2c",
+      "text": "Europe remains highly dependent on the US for space situational awareness, military intelligence, navigation resilience and missile early warning",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.swp-berlin.org/publikation/european-autonomy-in-space",
+          "title": "European Autonomy in Space - Space Systems as a Pillar of European Defence",
+          "publisher": "Stiftung Wissenschaft und Politik (SWP)",
+          "published_at": "2026-01-14"
+        },
+        {
+          "url": "https://www.csis.org/blogs/europe-corner/strategic-ambition-vs-structural-dependency-why-europe-cant-stand-alone-space",
+          "title": "Strategic Ambition vs Structural Dependency: Why Europe Can’t Stand Alone in Space",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2025-12-11"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_aaacf68cc1",
+      "text": "Europe's autonomy gaps include semiconductors/chips as a distinct target area alongside launch and constellations",
+      "grade": "unconfirmed",
+      "salience": "medium",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6f53a97fcf",
+      "text": "ESA Director General Josef Aschbacher warned Europe faces a launcher shortage around 2030, with a peak in launch requirements around 2029-2031: 'If we add up all the satellites that need to be launched from current and planned constellations and missions... we see that there's a peak of launch requirements around 2029, 2030, 2031' and 'The ESA currently forecasts that Europe will face a shortage of launchers around 2030' (FT interview via RFI).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2ad6af7234",
+      "text": "Ariane 6 cadence is currently 7-8 launches per year, with Arianespace ambition to reach 9-10 annually, and ESA studying increases to 12 (doable in 2029 with manageable investment), then 15 and potentially 20 per year by ~2030.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://satnews.com/2026/06/21/arianespace-fights-back-possibly",
+          "title": "Arianespace fights back – possibly!",
+          "publisher": "SatNews",
+          "published_at": "2026-06-21"
+        },
+        {
+          "url": "https://aviationweek.com/space/commercial-space/esa-sees-12-ariane-6-launches-doable-29-effort-needed-more",
+          "title": "ESA Sees 12 Ariane 6 Launches Doable In '29, Effort Needed For More",
+          "publisher": "Aviation Week",
+          "published_at": "2026-09-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1a8b8dbe58",
+      "text": "In 2025 Europe conducted seven launches — four Ariane 6 and three Vega C — according to ESA, versus SpaceX 170 launches placing ~2,500 satellites (FAA figure); independent BryceTech data shows 325 global orbital launches in 2025 with SpaceX 165 (51% of global total).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.satellitetoday.com/launch/2026/04/10/brycetech-report-shows-spacex-accounted-for-50-of-launches-in-2025",
+          "title": "BryceTech Report Shows SpaceX Accounted for 50% of Launches in 2025",
+          "publisher": "SatelliteToday / BryceTech",
+          "published_at": "2026-04-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1339e6b24f",
+      "text": "Arianespace's Ariane 6 order book stands at 30 launches including 18 for Amazon's Project Kuiper (now Amazon Leo).",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.thespacereview.com/article/4825/1",
+          "title": "Coping with Starship",
+          "publisher": "The Space Review",
+          "published_at": "2024-07-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ad970ed928",
+      "text": "Starlink began 2026 with roughly 9,500 working satellites in orbit and FCC approval for an additional 7,500, with customer base nearly doubled to 9.2 million users in about 155 countries, maintaining a de facto monopoly in consumer NGSO broadband.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.satellitetoday.com/connectivity/2026/02/23/the-coming-wave-of-competition-in-leo-constellations",
+          "title": "The Coming Wave of Competition in LEO Constellations",
+          "publisher": "Via Satellite",
+          "published_at": "2026-02-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a0189f3d26",
+      "text": "Sharp plans to develop a universal antenna that can connect to multiple satellite communications networks to let users switch providers instead of relying on Starlink.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://asia.nikkei.com/business/technology/sharp-takes-aim-at-starlink-dominance-with-universal-satellite-antenna",
+          "title": "Sharp takes aim at Starlink dominance with universal satellite antenna",
+          "publisher": "Nikkei Asia",
+          "published_at": "2026-09-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5a75e9357e",
+      "text": "Sharp's flat-panel antenna was used in the world's first 3GPP Release 19 5G-Advanced NR-NTN connection over Eutelsat OneWeb LEO satellites at ESA ESTEC, using 50 MHz Ku-band, conditional handover, transparent transponders (Ku service / Ka feeder), Earth-moving beams, MediaTek NR-NTN chipset and ITRI gNB.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.mediatek.com/press-room/esa-mediatek-eutelsat-airbus-sharp-itri-and-rs-announce-worlds-first-rel-19-5g-advanced-nr-ntn-connection-over-oneweb-leo-satellites",
+          "title": "ESA, MediaTek, Eutelsat, Airbus, Sharp, ITRI, and R&S Announce World’s First Rel-19 5G-Advanced NR-NTN Connection over OneWeb LEO Satellites",
+          "publisher": "MediaTek / ESA / Eutelsat / Airbus / Sharp / ITRI / Rohde & Schwarz joint release",
+          "published_at": "2025-11-03"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_05483a827d",
+      "text": "SpaceNews Space Minds transcript (World Space Business Week, Paris, host Mike Gruss) shows Aschbacher framing autonomy around economic growth, geopolitics/defense linkage, dual-use, budget/ministerial, European Resilience from Space, launcher competition, partnerships and commercial collaboration; specific chips/semiconductors gap attribution to this interview remains unverified.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://spacenews.com/inside-esas-vision-with-josef-aschbacher",
+          "title": "Inside ESA's vision with Josef Aschbacher",
+          "publisher": "SpaceNews",
+          "published_at": "2025-09-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dcd65c8789",
+      "text": "IRIS² concession is a 12-year public-private partnership awarded 31 Oct 2024 and signed 16 Dec 2024 between European Commission and SpaceRISE (SES, Eutelsat, Hispasat) for >290 satellites plus ground segment to provide governmental services by 2030 while enabling commercial services.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://defence-industry-space.ec.europa.eu/iris2-european-commission-awards-concession-contract-spacerise-consortium-2024-10-31_en",
+          "title": "IRIS² - the European Commission awards the concession contract to SpaceRISE consortium",
+          "publisher": "European Commission",
+          "published_at": "2024-10-31"
+        },
+        {
+          "url": "https://www.ses.com/newsroom/ses-led-spacerise-signs-concession-contract-ec-deliver-iris2",
+          "title": "SES-led SpaceRISE Signs Concession Contract With EC to Deliver IRIS²",
+          "publisher": "SES",
+          "published_at": "2024-12-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dd74c23815",
+      "text": "After Rendezvous 1 negotiations (Jan-Aug 2026), IRIS² architecture was confirmed at 348 satellites (330 LEO + 18 MEO) after adding 66 LEO for defence/security, with total investment now >€15.6bn (€11.6bn public EC+ESA, ~€4bn private SpaceRISE), targeting first launches 2029 and progressive operational services from 2029.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://europeanspaceflight.com/iris2-gets-green-light-with-more-money-and-more-satellites",
+          "title": "IRIS2 Gets Green Light With More Money and More Satellites",
+          "publisher": "European Spaceflight",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ddf6b2b196",
+      "text": "BryceTech 2025 Year in Review: 325 orbital launches and 4,544 spacecraft deployed in 2025 (+25% launches, +54% spacecraft vs 2024); US providers ~60% of launches; SpaceX 165 launches (51% global), CASC 68, Rocket Lab 18, Roscosmos 17; small satellites (<1,200kg) 98% of spacecraft.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.satellitetoday.com/launch/2026/04/10/brycetech-report-shows-spacex-accounted-for-50-of-launches-in-2025",
+          "title": "BryceTech Report Shows SpaceX Accounted for 50% of Launches in 2025",
+          "publisher": "SatelliteToday / BryceTech",
+          "published_at": "2026-04-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ad40a235a2",
+      "text": "SWP identifies four core satellite-based defence capabilities — communications, intelligence, navigation and missile early warning — plus enablers launch and space situational awareness (SSA); Europe remains highly dependent on the US particularly in intelligence, navigation and early warning.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.swp-berlin.org/publikation/european-autonomy-in-space",
+          "title": "European Autonomy in Space - Space Systems as a Pillar of European Defence",
+          "publisher": "Stiftung Wissenschaft und Politik (SWP)",
+          "published_at": "2026-01-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ba64de2144",
+      "text": "For SSA, Europe uses ground-based radars and EU SST but relies in part on US data for operationally relevant warnings (e.g., hostile satellite approaches); SWP cites September 2025 German report of Russian satellite shadowing a Bundeswehr communications satellite as illustration.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.swp-berlin.org/publikation/european-autonomy-in-space",
+          "title": "European Autonomy in Space - Space Systems as a Pillar of European Defence",
+          "publisher": "Stiftung Wissenschaft und Politik (SWP)",
+          "published_at": "2026-01-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_44b89305e3",
+      "text": "Galileo (24 satellites in MEO) is Europe's independent alternative to US GPS, but CSIS notes with fewer satellites accuracy drops, signal gaps grow and failure risks rise if GPS denied, jeopardizing military/civilian resilience.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.swp-berlin.org/publikation/european-autonomy-in-space",
+          "title": "European Autonomy in Space - Space Systems as a Pillar of European Defence",
+          "publisher": "Stiftung Wissenschaft und Politik (SWP)",
+          "published_at": "2026-01-14"
+        },
+        {
+          "url": "https://www.csis.org/blogs/europe-corner/strategic-ambition-vs-structural-dependency-why-europe-cant-stand-alone-space",
+          "title": "Strategic Ambition vs Structural Dependency: Why Europe Can’t Stand Alone in Space",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2025-12-11"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6715b9b53d",
+      "text": "On 24 Feb 2022, hours before Russia's full invasion, Russia launched cyberattack on Viasat's KA-SAT network that took tens of thousands of modems offline across Ukraine and EU, required factory swap, caused 'huge loss in communications' at war outset and was attributed by US, UK, EU, Canada, Estonia as intended to disrupt Ukrainian command and control.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/europe/russia-behind-cyberattack-against-satellite-internet-modems-ukraine-eu-2022-05-10",
+          "title": "Russia behind cyberattack against satellite internet modems in Ukraine -Western officials",
+          "publisher": "Reuters",
+          "published_at": "2022-05-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9dace51f5a",
+      "text": "In September 2022 Elon Musk refused Ukrainian emergency request to activate Starlink coverage to Sevastopol, Crimea to enable drone attack on Russian Black Sea Fleet, stating SpaceX would be 'explicitly complicit in a major act of war'; Ukrainian drones lost connectivity and washed ashore.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/europe/musk-says-he-refused-kyiv-request-use-starlink-attack-russia-2023-09-08",
+          "title": "Musk says he refused Kyiv request for Starlink use in attack on Russia",
+          "publisher": "Reuters",
+          "published_at": "2023-09-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1dcd1295aa",
+      "text": "In February 2025 US negotiators pressing Kyiv for critical minerals access raised possibility of cutting Ukraine's Starlink access as leverage (Reuters, 3 sources); Musk denied ('Reuters is lying'), Reuters stood by reporting; Poland pays ~$50m/year for Ukraine's Starlink subscriptions.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/us-could-cut-ukraines-access-starlink-internet-services-over-minerals-say-2025-02-22",
+          "title": "US could cut Ukraine's access to Starlink internet services over minerals, say sources",
+          "publisher": "Reuters",
+          "published_at": "2025-02-22"
+        },
+        {
+          "url": "https://www.swp-berlin.org/publikation/european-autonomy-in-space",
+          "title": "European Autonomy in Space - Space Systems as a Pillar of European Defence",
+          "publisher": "Stiftung Wissenschaft und Politik (SWP)",
+          "published_at": "2026-01-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8085e3373c",
+      "text": "In spring 2025 Trump administration withheld satellite data from Ukrainian forces — including US military and commercial Maxar data — as leverage to pressure Ukraine into negotiations with Russia under unfavourable conditions, cited by SWP as political instrumentalisation of space capabilities.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.swp-berlin.org/publikation/european-autonomy-in-space",
+          "title": "European Autonomy in Space - Space Systems as a Pillar of European Defence",
+          "publisher": "Stiftung Wissenschaft und Politik (SWP)",
+          "published_at": "2026-01-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_468b036dc2",
+      "text": "SWP/CSIS deep-reads do not detail a European space-grade semiconductor/chips strategy; chips as distinct autonomy gap remains unconfirmed in primary reports (SWP focuses on SSA, reconnaissance, navigation resilience, early warning).",
+      "grade": "unconfirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.swp-berlin.org/publikation/european-autonomy-in-space",
+          "title": "European Autonomy in Space - Space Systems as a Pillar of European Defence",
+          "publisher": "Stiftung Wissenschaft und Politik (SWP)",
+          "published_at": "2026-01-14"
+        },
+        {
+          "url": "https://www.csis.org/blogs/europe-corner/strategic-ambition-vs-structural-dependency-why-europe-cant-stand-alone-space",
+          "title": "Strategic Ambition vs Structural Dependency: Why Europe Can’t Stand Alone in Space",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2025-12-11"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a4150305cc",
+      "text": "IRIS² cost grew from €10.55bn at Dec 2024 concession (290 sats, initial capacity 2030) to >€15.6bn after Aug 2026 Rendez-vous 1 (348 sats: 330 LEO + 18 MEO; €11.6bn public + ~€4bn private SES/Eutelsat/Hispasat); European Spaceflight notes 'acceleration' to 2029 amounts to handful of months while budget grew ~50%.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://europeanspaceflight.com/iris2-gets-green-light-with-more-money-and-more-satellites",
+          "title": "IRIS2 Gets Green Light With More Money and More Satellites",
+          "publisher": "European Spaceflight",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2846f9375a",
+      "text": "IRIS² first launches targeted 2029 with progressive services from 2029, but Ariane 6 near-term goal is only up to 10/year (still uncertain), with 30 launches already booked including 18 for Amazon Kuiper/Leo, creating 2029-2031 peak-demand bottleneck that ESA studies raising to 15-20/year may not resolve.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://europeanspaceflight.com/iris2-gets-green-light-with-more-money-and-more-satellites",
+          "title": "IRIS2 Gets Green Light With More Money and More Satellites",
+          "publisher": "European Spaceflight",
+          "published_at": "2026-08-08"
+        },
+        {
+          "url": "https://www.swp-berlin.org/publikation/european-autonomy-in-space",
+          "title": "European Autonomy in Space - Space Systems as a Pillar of European Defence",
+          "publisher": "Stiftung Wissenschaft und Politik (SWP)",
+          "published_at": "2026-01-14"
+        },
+        {
+          "url": "https://www.intereconomics.eu/contents/year/2025/number/2/article/the-missing-rocket-an-economic-and-engineering-analysis-of-the-reusability-dilemma-in-the-european-space-sector.html",
+          "title": "The Missing Rocket: An Economic and Engineering Analysis of the Reusability Dilemma in the European Space Sector",
+          "publisher": "Intereconomics",
+          "published_at": "2025-04-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_56af7544ca",
+      "text": "Europe's satellite market is ~1% of global launch market (SWP), and reusability is economically sustainable only with high-frequency LEO demand (SpaceX 138 Falcon 9 flights in 2023 vs Ariane 6 one inaugural flight); without Starlink-like internal demand, Europe lacks market to justify reusable economics, making 15-20/year cadence dependent on demand consolidation via European Launcher Challenge / Flight Ticket Initiative — both still early stage, too soon to assess.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.swp-berlin.org/publikation/european-autonomy-in-space",
+          "title": "European Autonomy in Space - Space Systems as a Pillar of European Defence",
+          "publisher": "Stiftung Wissenschaft und Politik (SWP)",
+          "published_at": "2026-01-14"
+        },
+        {
+          "url": "https://www.intereconomics.eu/contents/year/2025/number/2/article/the-missing-rocket-an-economic-and-engineering-analysis-of-the-reusability-dilemma-in-the-european-space-sector.html",
+          "title": "The Missing Rocket: An Economic and Engineering Analysis of the Reusability Dilemma in the European Space Sector",
+          "publisher": "Intereconomics",
+          "published_at": "2025-04-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_654f9e535e",
+      "text": "ESA geographic-return principle (allocating contracts proportional to member contributions) reinforces inefficiency and fragmentation, per CSIS/SWP, undermining cost competitiveness of IRIS² and launch market.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.swp-berlin.org/publikation/european-autonomy-in-space",
+          "title": "European Autonomy in Space - Space Systems as a Pillar of European Defence",
+          "publisher": "Stiftung Wissenschaft und Politik (SWP)",
+          "published_at": "2026-01-14"
+        },
+        {
+          "url": "https://www.csis.org/blogs/europe-corner/strategic-ambition-vs-structural-dependency-why-europe-cant-stand-alone-space",
+          "title": "Strategic Ambition vs Structural Dependency: Why Europe Can’t Stand Alone in Space",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2025-12-11"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_535dabfaf5",
+      "text": "Starlink's vertical integration advantage: ~9,500 working satellites early 2026 (+7,500 FCC approved), 9.2m users in ~155 countries, de facto consumer monopoly, $0.30-0.50 per Mbps plans with further price erosion expected, 51% of global launches (SpaceX 165/325 in 2025), reusable Falcon 9 and planned Starship (150t at ~1/10 Falcon 9 per-kg cost) and V3 satellites (10x capacity).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.satellitetoday.com/connectivity/2026/02/23/the-coming-wave-of-competition-in-leo-constellations",
+          "title": "The Coming Wave of Competition in LEO Constellations",
+          "publisher": "Via Satellite",
+          "published_at": "2026-02-23"
+        },
+        {
+          "url": "https://www.intereconomics.eu/contents/year/2025/number/2/article/the-missing-rocket-an-economic-and-engineering-analysis-of-the-reusability-dilemma-in-the-european-space-sector.html",
+          "title": "The Missing Rocket: An Economic and Engineering Analysis of the Reusability Dilemma in the European Space Sector",
+          "publisher": "Intereconomics",
+          "published_at": "2025-04-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_603fb7c0d5",
+      "text": "Industry analysis (Via Satellite, quoting consultant Carlos Placido) advises competition should no longer be assessed solely on transport cost per bit; sustainable competition requires differentiated ecosystems/verticals rather than undercutting Starlink on cost — Starlink is 'exceptionally difficult competitor to challenge.'",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.satellitetoday.com/connectivity/2026/02/23/the-coming-wave-of-competition-in-leo-constellations",
+          "title": "The Coming Wave of Competition in LEO Constellations",
+          "publisher": "Via Satellite",
+          "published_at": "2026-02-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_13c28e2888",
+      "text": "3GPP 5G NTN standards path (Rel-17/18/19) adopted by OneWeb and Telesat Lightspeed for interoperability, but IEEE ComSoc analysis concludes IRIS² is 'materially behind Starlink in deployed scale, launch capacity, terminals and service maturity' and standardized 5G NR-NTN 'cannot independently offset those scale advantages'; IRIS² should be assessed as sovereign-connectivity/resilience program, not like-for-like retail broadband challenger.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://techblog.comsoc.org/category/non-terrestrial-network-ntn",
+          "title": "Non Terrestrial Network (NTN) - IRIS² / Starlink analysis",
+          "publisher": "IEEE Communications Society Technology Blog",
+          "published_at": "2026-09-07"
+        },
+        {
+          "url": "https://www.satellitetoday.com/connectivity/2026/02/23/the-coming-wave-of-competition-in-leo-constellations",
+          "title": "The Coming Wave of Competition in LEO Constellations",
+          "publisher": "Via Satellite",
+          "published_at": "2026-02-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_82777f96a7",
+      "text": "Microlauncher viability skepticism: European Launcher Challenge requires orbital launch by 2027 but structural transformation requires consolidated demand and long-term political commitment; Intereconomics suggests Europe may be better served by distinct strategy rather than blindly copying SpaceX reusability model.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.intereconomics.eu/contents/year/2025/number/2/article/the-missing-rocket-an-economic-and-engineering-analysis-of-the-reusability-dilemma-in-the-european-space-sector.html",
+          "title": "The Missing Rocket: An Economic and Engineering Analysis of the Reusability Dilemma in the European Space Sector",
+          "publisher": "Intereconomics",
+          "published_at": "2025-04-10"
+        },
+        {
+          "url": "https://www.swp-berlin.org/publikation/european-autonomy-in-space",
+          "title": "European Autonomy in Space - Space Systems as a Pillar of European Defence",
+          "publisher": "Stiftung Wissenschaft und Politik (SWP)",
+          "published_at": "2026-01-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_8dc27518b7",
+      "text": "Europe's launch gap: 7 flights vs SpaceX's 170 — and the cadence Europe needs by 2030: panel 2025 orbital launches, item Europe (Ariane 6 and Vega C), bar_height 7, range_low 7, range_high 7, status actual, shown_as bar, publisher ESA via RFI, source_url https://www.rfi.fr/en/international/20260814-europe-faces-rocket-shortage-by-2030-as-satellite-demand-surges, note Four Ariane 6 and three Vega C. BryceTech counts the same 7 under Arianespace/ArianeGroup.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://brycetech.com/reports/report-documents/global-orbital-activity-2025/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_beeed6892b",
+      "text": "Europe's launch gap: 7 flights vs SpaceX's 170 — and the cadence Europe needs by 2030: panel 2025 orbital launches, item Ariane 6 within the Europe bar, bar_height 4, range_low 4, range_high 4, status actual, shown_as category label under the Europe bar, publisher ESA via RFI, source_url https://www.rfi.fr/en/international/20260814-europe-faces-rocket-shortage-by-2030-as-satellite-demand-surges, note Component of the 7. Not a separate bar.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://brycetech.com/reports/report-documents/global-orbital-activity-2025/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_1a8ddcab1d",
+      "text": "Europe's launch gap: 7 flights vs SpaceX's 170 — and the cadence Europe needs by 2030: panel 2025 orbital launches, item Vega C within the Europe bar, bar_height 3, range_low 3, range_high 3, status actual, shown_as category label under the Europe bar, publisher ESA via RFI, source_url https://www.rfi.fr/en/international/20260814-europe-faces-rocket-shortage-by-2030-as-satellite-demand-surges, note Component of the 7. Not a separate bar.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://brycetech.com/reports/report-documents/global-orbital-activity-2025/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_766ace009a",
+      "text": "Europe's launch gap: 7 flights vs SpaceX's 170 — and the cadence Europe needs by 2030: panel 2025 orbital launches, item SpaceX, bar_height 165, range_low 165, range_high 165, status actual orbital, shown_as bar, publisher BryceTech, source_url https://brycetech.com/reports/report-documents/global-orbital-activity-2025/, note Orbital launches. The FAA figure of 170 is annotated above this bar and is not its height.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://brycetech.com/reports/report-documents/global-orbital-activity-2025/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_f4628e40e1",
+      "text": "Europe's launch gap: 7 flights vs SpaceX's 170 — and the cadence Europe needs by 2030: panel 2025 orbital launches, item SpaceX FAA count, bar_height 170, range_low 170, range_high 170, status reported launches, shown_as annotation above the SpaceX bar, publisher FAA via RFI, source_url https://www.rfi.fr/en/international/20260814-europe-faces-rocket-shortage-by-2030-as-satellite-demand-surges, note Not part of the 325 partition. Five higher than BryceTech's orbital count.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://brycetech.com/reports/report-documents/global-orbital-activity-2025/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_8fbefc9c1f",
+      "text": "Europe's launch gap: 7 flights vs SpaceX's 170 — and the cadence Europe needs by 2030: panel 2025 orbital launches, item Everyone else, bar_height 153, range_low 153, range_high 153, status residual of one published total, shown_as bar, publisher BryceTech, source_url https://brycetech.com/reports/report-documents/global-orbital-activity-2025/, note 325 minus SpaceX 165 minus Arianespace/ArianeGroup 7. Includes Isar Aerospace's 1 launch on the same BryceTech chart.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://brycetech.com/reports/report-documents/global-orbital-activity-2025/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_3bb41445e6",
+      "text": "Europe's launch gap: 7 flights vs SpaceX's 170 — and the cadence Europe needs by 2030: panel 2025 orbital launches, item Worldwide, bar_height 325, range_low 325, range_high 325, status actual, shown_as y-axis label, publisher BryceTech, source_url https://brycetech.com/reports/report-documents/global-orbital-activity-2025/, note 7 + 153 + 165 = 325.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://brycetech.com/reports/report-documents/global-orbital-activity-2025/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_91f2eb2328",
+      "text": "Europe's launch gap: 7 flights vs SpaceX's 170 — and the cadence Europe needs by 2030: panel Ariane 6 cadence, item 2026 aim, bar_height 8, range_low 7, range_high 8, status target, shown_as bar labeled 7-8, publisher ArianeGroup via La Stampa, source_url https://www.lastampa.it/scienza/2026/06/01/news/con_ariane_6_l_europa_si_rilancia_verso_lo_spazio-15643891/, note Bar height is the top of the stated 7-8 range. La Tribune (23 Sept 2026) says a technical snag may force Arianespace to revise the 2026 manifest.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://brycetech.com/reports/report-documents/global-orbital-activity-2025/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_0a786fbdc1",
+      "text": "Europe's launch gap: 7 flights vs SpaceX's 170 — and the cadence Europe needs by 2030: panel Ariane 6 cadence, item End of 2029, bar_height 12, range_low 12, range_high 12, status plan ESA says is doable without a major new outlay, shown_as bar, publisher ESA (Geraldine Naja) via La Tribune, source_url https://www.latribune.fr/article/defense-aerospatiale/spatial/15329037405102/lanceurs-spatiaux-comment-lagence-spatiale-europeenne-prevoit-la-montee-en-cadence-dariane-6-et-de-vega-c-1-3, note First step of the two-step ramp. Inside the shaded 2029-2031 demand window.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://brycetech.com/reports/report-documents/global-orbital-activity-2025/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_a53890ee4f",
+      "text": "Europe's launch gap: 7 flights vs SpaceX's 170 — and the cadence Europe needs by 2030: panel Ariane 6 cadence, item After 2030, bar_height 15, range_low 15, range_high 15, status next step; needs significant investment, shown_as bar, publisher ESA (Geraldine Naja) via La Tribune, source_url https://www.latribune.fr/article/defense-aerospatiale/spatial/15329037405102/lanceurs-spatiaux-comment-lagence-spatiale-europeenne-prevoit-la-montee-en-cadence-dariane-6-et-de-vega-c-1-3, note Second step. Naja said visibility on the following three years would be better by then. Inside the shaded window.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://brycetech.com/reports/report-documents/global-orbital-activity-2025/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_86e7a9e8a2",
+      "text": "Europe's launch gap: 7 flights vs SpaceX's 170 — and the cadence Europe needs by 2030: panel Ariane 6 cadence, item Study only, bar_height 20, range_low 20, range_high 20, status studied; not the scheduled step, shown_as open bar, publisher Josef Aschbacher via European Spaceflight (FT interview), source_url https://europeanspaceflight.com/rocket-lab-establishes-german-subsidiary, note Named as a figure under study (from about 10 to 15 or even 20). Naja's September plan stops at 15. No year is set on this bar.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://brycetech.com/reports/report-documents/global-orbital-activity-2025/",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_8e4628923a",
+      "text": "348 vs 9,500: why IRIS² is built for sovereign resilience, not to outnumber Starlink: panel satellite_scale, system OneWeb, measure in orbit, value 634, status actual reference (Sep 2023), unit satellites, source_note Eutelsat filing",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Applications/Connectivity_and_Secure_Communications/IRIS2_reinforced_and_accelerated_as_implementation_advances",
+          "title": "IRIS² reinforced and accelerated as implementation advances",
+          "publisher": "European Space Agency",
+          "published_at": "2026-08-10"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

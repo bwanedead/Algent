@@ -1,0 +1,1213 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/turkey-reports-new-fragment-of-world-s-oldest-peace-treaty-a-f45689",
+  "title": "Turkey reports new fragment of world's oldest peace treaty at Hattusa",
+  "summary": "The piece is said to preserve a 3,300-year-old clause that homes not be destroyed after fugitives were sent back — protection after forced return, not a right to remain — and the reading still awaits a published transcription and peer review.",
+  "published_at": "2026-09-22T09:33:55.281569+00:00",
+  "as_of": "2026-09-22",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 33,
+    "likely": 8,
+    "contested": 1,
+    "unconfirmed": 3
+  },
+  "claims": [
+    {
+      "id": "clm_84c5f0bbd4",
+      "text": "A cuneiform tablet fragment was discovered near Building E at Büyükkale, the fortified royal citadel area of Hattusa, near Boğazkale in Çorum Province, central Türkiye",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://en.yenisafak.com/life/turkiye-discovers-new-kadesh-peace-treaty-fragment-3723515",
+          "title": "Türkiye discovers new Kadesh Peace Treaty fragment",
+          "publisher": "Yeni Şafak",
+          "published_at": "2026-09-21T14:29:00Z"
+        },
+        {
+          "url": "https://www.turkiyetoday.com/culture/cuneiform-fragment-found-at-hattusa-identified-as-part-of-kadesh-peace-treaty-3228616",
+          "title": "Cuneiform fragment found at Hattusa identified as part of Kadesh Peace Treaty",
+          "publisher": "Türkiye Today",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://news.az/news/ancient-peace-treaty-fragment-found-at-hittite-capital-in-turkiye",
+          "title": "Ancient peace treaty fragment found at Hittite capital in Türkiye",
+          "publisher": "News.az",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        },
+        {
+          "url": "https://www.heritagedaily.com/2026/09/fragment-of-kadesh-peace-treaty-discovered-at-hattusa/159359",
+          "title": "Fragment of Kadesh Peace Treaty discovered at Hattusa",
+          "publisher": "HeritageDaily",
+          "published_at": "2026-09-21T21:42:00Z"
+        },
+        {
+          "url": "https://www.odatv.com/kultur-sanat/hattusada-barisin-binlerce-yillik-izi-civi-yazili-tablette-ne-diyor-120163547",
+          "title": "Hattusa'da barışın binlerce yıllık izi: Çivi yazılı tablette ne diyor",
+          "publisher": "Odatv",
+          "published_at": "2026-09-21T12:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c468b11772",
+      "text": "The fragment is an Akkadian-language cuneiform clay tablet copy of the Kadesh Peace Treaty, with only one face preserved and other parts broken/missing",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://en.yenisafak.com/life/turkiye-discovers-new-kadesh-peace-treaty-fragment-3723515",
+          "title": "Türkiye discovers new Kadesh Peace Treaty fragment",
+          "publisher": "Yeni Şafak",
+          "published_at": "2026-09-21T14:29:00Z"
+        },
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        },
+        {
+          "url": "https://www.odatv.com/kultur-sanat/hattusada-barisin-binlerce-yillik-izi-civi-yazili-tablette-ne-diyor-120163547",
+          "title": "Hattusa'da barışın binlerce yıllık izi: Çivi yazılı tablette ne diyor",
+          "publisher": "Odatv",
+          "published_at": "2026-09-21T12:00:00Z"
+        },
+        {
+          "url": "https://arkeofili.com/hattusada-kades-antlasmasinin-yeni-bir-nushasi-bulundu",
+          "title": "Hattusa'da Kadeş Antlaşması'nın Yeni Bir Nüshası Bulundu",
+          "publisher": "Arkeofili",
+          "published_at": "2026-09-21T14:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b714fc2f7f",
+      "text": "The fragment was subjected to detailed scientific examination for approximately one year before researchers confirmed its identification as part of the Kadesh Peace Treaty",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://en.yenisafak.com/life/turkiye-discovers-new-kadesh-peace-treaty-fragment-3723515",
+          "title": "Türkiye discovers new Kadesh Peace Treaty fragment",
+          "publisher": "Yeni Şafak",
+          "published_at": "2026-09-21T14:29:00Z"
+        },
+        {
+          "url": "https://www.turkiyetoday.com/culture/cuneiform-fragment-found-at-hattusa-identified-as-part-of-kadesh-peace-treaty-3228616",
+          "title": "Cuneiform fragment found at Hattusa identified as part of Kadesh Peace Treaty",
+          "publisher": "Türkiye Today",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://news.az/news/ancient-peace-treaty-fragment-found-at-hittite-capital-in-turkiye",
+          "title": "Ancient peace treaty fragment found at Hittite capital in Türkiye",
+          "publisher": "News.az",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        },
+        {
+          "url": "https://www.heritagedaily.com/2026/09/fragment-of-kadesh-peace-treaty-discovered-at-hattusa/159359",
+          "title": "Fragment of Kadesh Peace Treaty discovered at Hattusa",
+          "publisher": "HeritageDaily",
+          "published_at": "2026-09-21T21:42:00Z"
+        },
+        {
+          "url": "https://www.odatv.com/kultur-sanat/hattusada-barisin-binlerce-yillik-izi-civi-yazili-tablette-ne-diyor-120163547",
+          "title": "Hattusa'da barışın binlerce yıllık izi: Çivi yazılı tablette ne diyor",
+          "publisher": "Odatv",
+          "published_at": "2026-09-21T12:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_aff607d1a3",
+      "text": "The Kadesh Peace Treaty was concluded between Hittite King Hattusili III and Egyptian Pharaoh Ramesses II in the 13th century BC, dated to around 1259 BC, following the Battle of Kadesh (~1274 BC) between Ramesses II and Hittite King Muwatalli II",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://en.yenisafak.com/life/turkiye-discovers-new-kadesh-peace-treaty-fragment-3723515",
+          "title": "Türkiye discovers new Kadesh Peace Treaty fragment",
+          "publisher": "Yeni Şafak",
+          "published_at": "2026-09-21T14:29:00Z"
+        },
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        },
+        {
+          "url": "https://arkeofili.com/hattusada-kades-antlasmasinin-yeni-bir-nushasi-bulundu",
+          "title": "Hattusa'da Kadeş Antlaşması'nın Yeni Bir Nüshası Bulundu",
+          "publisher": "Arkeofili",
+          "published_at": "2026-09-21T14:00:00Z"
+        },
+        {
+          "url": "https://www.nationalgeographic.com/history/article/hittite-ancient-empire-disappear-mystery",
+          "title": "The Hittite Empire transformed the world—and then the world forgot it",
+          "publisher": "National Geographic",
+          "published_at": "2025-04-15T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9ef956e4c9",
+      "text": "The newly identified fragment preserves lines corresponding to Articles 12 to 20 of the treaty, which regulate the treatment of people who fled from one kingdom and sought refuge in the other",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://en.yenisafak.com/life/turkiye-discovers-new-kadesh-peace-treaty-fragment-3723515",
+          "title": "Türkiye discovers new Kadesh Peace Treaty fragment",
+          "publisher": "Yeni Şafak",
+          "published_at": "2026-09-21T14:29:00Z"
+        },
+        {
+          "url": "https://www.turkiyetoday.com/culture/cuneiform-fragment-found-at-hattusa-identified-as-part-of-kadesh-peace-treaty-3228616",
+          "title": "Cuneiform fragment found at Hattusa identified as part of Kadesh Peace Treaty",
+          "publisher": "Türkiye Today",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://news.az/news/ancient-peace-treaty-fragment-found-at-hittite-capital-in-turkiye",
+          "title": "Ancient peace treaty fragment found at Hittite capital in Türkiye",
+          "publisher": "News.az",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        },
+        {
+          "url": "https://www.heritagedaily.com/2026/09/fragment-of-kadesh-peace-treaty-discovered-at-hattusa/159359",
+          "title": "Fragment of Kadesh Peace Treaty discovered at Hattusa",
+          "publisher": "HeritageDaily",
+          "published_at": "2026-09-21T21:42:00Z"
+        },
+        {
+          "url": "https://www.odatv.com/kultur-sanat/hattusada-barisin-binlerce-yillik-izi-civi-yazili-tablette-ne-diyor-120163547",
+          "title": "Hattusa'da barışın binlerce yıllık izi: Çivi yazılı tablette ne diyor",
+          "publisher": "Odatv",
+          "published_at": "2026-09-21T12:00:00Z"
+        },
+        {
+          "url": "https://arkeofili.com/hattusada-kades-antlasmasinin-yeni-bir-nushasi-bulundu",
+          "title": "Hattusa'da Kadeş Antlaşması'nın Yeni Bir Nüshası Bulundu",
+          "publisher": "Arkeofili",
+          "published_at": "2026-09-21T14:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5b624383b6",
+      "text": "Readable sections of the fragment refer to people fleeing the lands of Egypt and Hatti and include wording related to preventing the destruction of their homes",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://en.yenisafak.com/life/turkiye-discovers-new-kadesh-peace-treaty-fragment-3723515",
+          "title": "Türkiye discovers new Kadesh Peace Treaty fragment",
+          "publisher": "Yeni Şafak",
+          "published_at": "2026-09-21T14:29:00Z"
+        },
+        {
+          "url": "https://www.turkiyetoday.com/culture/cuneiform-fragment-found-at-hattusa-identified-as-part-of-kadesh-peace-treaty-3228616",
+          "title": "Cuneiform fragment found at Hattusa identified as part of Kadesh Peace Treaty",
+          "publisher": "Türkiye Today",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://news.az/news/ancient-peace-treaty-fragment-found-at-hittite-capital-in-turkiye",
+          "title": "Ancient peace treaty fragment found at Hittite capital in Türkiye",
+          "publisher": "News.az",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        },
+        {
+          "url": "https://www.heritagedaily.com/2026/09/fragment-of-kadesh-peace-treaty-discovered-at-hattusa/159359",
+          "title": "Fragment of Kadesh Peace Treaty discovered at Hattusa",
+          "publisher": "HeritageDaily",
+          "published_at": "2026-09-21T21:42:00Z"
+        },
+        {
+          "url": "https://www.odatv.com/kultur-sanat/hattusada-barisin-binlerce-yillik-izi-civi-yazili-tablette-ne-diyor-120163547",
+          "title": "Hattusa'da barışın binlerce yıllık izi: Çivi yazılı tablette ne diyor",
+          "publisher": "Odatv",
+          "published_at": "2026-09-21T12:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a07c259973",
+      "text": "The broader treaty's fugitive provisions established reciprocal obligations to return fugitives and prohibited punishment and harm to returned individuals and their families",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        },
+        {
+          "url": "https://www.heritagedaily.com/2026/09/fragment-of-kadesh-peace-treaty-discovered-at-hattusa/159359",
+          "title": "Fragment of Kadesh Peace Treaty discovered at Hattusa",
+          "publisher": "HeritageDaily",
+          "published_at": "2026-09-21T21:42:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_73c6225cdc",
+      "text": "The identification was announced on September 21, 2026, timed to coincide with World Peace Day / International Day of Peace",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://en.yenisafak.com/life/turkiye-discovers-new-kadesh-peace-treaty-fragment-3723515",
+          "title": "Türkiye discovers new Kadesh Peace Treaty fragment",
+          "publisher": "Yeni Şafak",
+          "published_at": "2026-09-21T14:29:00Z"
+        },
+        {
+          "url": "https://www.turkiyetoday.com/culture/cuneiform-fragment-found-at-hattusa-identified-as-part-of-kadesh-peace-treaty-3228616",
+          "title": "Cuneiform fragment found at Hattusa identified as part of Kadesh Peace Treaty",
+          "publisher": "Türkiye Today",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://news.az/news/ancient-peace-treaty-fragment-found-at-hittite-capital-in-turkiye",
+          "title": "Ancient peace treaty fragment found at Hittite capital in Türkiye",
+          "publisher": "News.az",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        },
+        {
+          "url": "https://www.heritagedaily.com/2026/09/fragment-of-kadesh-peace-treaty-discovered-at-hattusa/159359",
+          "title": "Fragment of Kadesh Peace Treaty discovered at Hattusa",
+          "publisher": "HeritageDaily",
+          "published_at": "2026-09-21T21:42:00Z"
+        },
+        {
+          "url": "https://www.odatv.com/kultur-sanat/hattusada-barisin-binlerce-yillik-izi-civi-yazili-tablette-ne-diyor-120163547",
+          "title": "Hattusa'da barışın binlerce yıllık izi: Çivi yazılı tablette ne diyor",
+          "publisher": "Odatv",
+          "published_at": "2026-09-21T12:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d48c671311",
+      "text": "The announcement was made by Türkiye's Culture and Tourism Minister Mehmet Nuri Ersoy via statement/social media post",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://en.yenisafak.com/life/turkiye-discovers-new-kadesh-peace-treaty-fragment-3723515",
+          "title": "Türkiye discovers new Kadesh Peace Treaty fragment",
+          "publisher": "Yeni Şafak",
+          "published_at": "2026-09-21T14:29:00Z"
+        },
+        {
+          "url": "https://www.turkiyetoday.com/culture/cuneiform-fragment-found-at-hattusa-identified-as-part-of-kadesh-peace-treaty-3228616",
+          "title": "Cuneiform fragment found at Hattusa identified as part of Kadesh Peace Treaty",
+          "publisher": "Türkiye Today",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://news.az/news/ancient-peace-treaty-fragment-found-at-hittite-capital-in-turkiye",
+          "title": "Ancient peace treaty fragment found at Hittite capital in Türkiye",
+          "publisher": "News.az",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        },
+        {
+          "url": "https://www.heritagedaily.com/2026/09/fragment-of-kadesh-peace-treaty-discovered-at-hattusa/159359",
+          "title": "Fragment of Kadesh Peace Treaty discovered at Hattusa",
+          "publisher": "HeritageDaily",
+          "published_at": "2026-09-21T21:42:00Z"
+        },
+        {
+          "url": "https://www.odatv.com/kultur-sanat/hattusada-barisin-binlerce-yillik-izi-civi-yazili-tablette-ne-diyor-120163547",
+          "title": "Hattusa'da barışın binlerce yıllık izi: Çivi yazılı tablette ne diyor",
+          "publisher": "Odatv",
+          "published_at": "2026-09-21T12:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4a47199765",
+      "text": "Ersoy said 'We have found traces of peace dating back thousands of years in the soil of Anatolia' and that statements concerning destruction of homes carry a powerful message from thousands of years ago to the present",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://en.yenisafak.com/life/turkiye-discovers-new-kadesh-peace-treaty-fragment-3723515",
+          "title": "Türkiye discovers new Kadesh Peace Treaty fragment",
+          "publisher": "Yeni Şafak",
+          "published_at": "2026-09-21T14:29:00Z"
+        },
+        {
+          "url": "https://www.turkiyetoday.com/culture/cuneiform-fragment-found-at-hattusa-identified-as-part-of-kadesh-peace-treaty-3228616",
+          "title": "Cuneiform fragment found at Hattusa identified as part of Kadesh Peace Treaty",
+          "publisher": "Türkiye Today",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://news.az/news/ancient-peace-treaty-fragment-found-at-hittite-capital-in-turkiye",
+          "title": "Ancient peace treaty fragment found at Hittite capital in Türkiye",
+          "publisher": "News.az",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://www.heritagedaily.com/2026/09/fragment-of-kadesh-peace-treaty-discovered-at-hattusa/159359",
+          "title": "Fragment of Kadesh Peace Treaty discovered at Hattusa",
+          "publisher": "HeritageDaily",
+          "published_at": "2026-09-21T21:42:00Z"
+        },
+        {
+          "url": "https://www.odatv.com/kultur-sanat/hattusada-barisin-binlerce-yillik-izi-civi-yazili-tablette-ne-diyor-120163547",
+          "title": "Hattusa'da barışın binlerce yıllık izi: Çivi yazılı tablette ne diyor",
+          "publisher": "Odatv",
+          "published_at": "2026-09-21T12:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_566eb5761c",
+      "text": "Ersoy linked the ancient text to contemporary responsibility to protect human life and dignity and expressed hope for peace and security for Palestinians and all people to live in safety",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://en.yenisafak.com/life/turkiye-discovers-new-kadesh-peace-treaty-fragment-3723515",
+          "title": "Türkiye discovers new Kadesh Peace Treaty fragment",
+          "publisher": "Yeni Şafak",
+          "published_at": "2026-09-21T14:29:00Z"
+        },
+        {
+          "url": "https://www.turkiyetoday.com/culture/cuneiform-fragment-found-at-hattusa-identified-as-part-of-kadesh-peace-treaty-3228616",
+          "title": "Cuneiform fragment found at Hattusa identified as part of Kadesh Peace Treaty",
+          "publisher": "Türkiye Today",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://news.az/news/ancient-peace-treaty-fragment-found-at-hittite-capital-in-turkiye",
+          "title": "Ancient peace treaty fragment found at Hittite capital in Türkiye",
+          "publisher": "News.az",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        },
+        {
+          "url": "https://www.odatv.com/kultur-sanat/hattusada-barisin-binlerce-yillik-izi-civi-yazili-tablette-ne-diyor-120163547",
+          "title": "Hattusa'da barışın binlerce yıllık izi: Çivi yazılı tablette ne diyor",
+          "publisher": "Odatv",
+          "published_at": "2026-09-21T12:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_03562bede4",
+      "text": "Hattusa was the capital of the Hittite Empire and is a UNESCO World Heritage Site inscribed in 1986",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://en.yenisafak.com/life/turkiye-discovers-new-kadesh-peace-treaty-fragment-3723515",
+          "title": "Türkiye discovers new Kadesh Peace Treaty fragment",
+          "publisher": "Yeni Şafak",
+          "published_at": "2026-09-21T14:29:00Z"
+        },
+        {
+          "url": "https://news.az/news/ancient-peace-treaty-fragment-found-at-hittite-capital-in-turkiye",
+          "title": "Ancient peace treaty fragment found at Hittite capital in Türkiye",
+          "publisher": "News.az",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://www.heritagedaily.com/2026/09/fragment-of-kadesh-peace-treaty-discovered-at-hattusa/159359",
+          "title": "Fragment of Kadesh Peace Treaty discovered at Hattusa",
+          "publisher": "HeritageDaily",
+          "published_at": "2026-09-21T21:42:00Z"
+        },
+        {
+          "url": "https://www.unesco.org/en/fight-illicit-trafficking/return-and-restitution-under-icprcp",
+          "title": "Return and Restitution under the aegis of the ICPRCP / Boğazköy Archive",
+          "publisher": "UNESCO",
+          "published_at": "2024-11-28T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4b0d8c13f8",
+      "text": "Archaeological excavations at Hattusa began in 1906 (first systematic excavations 1906-1912) and continue today; current investigations at Hattusa are conducted by the Istanbul branch of the German Archaeological Institute under Prof Dr Andreas Schachner",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://en.yenisafak.com/life/turkiye-discovers-new-kadesh-peace-treaty-fragment-3723515",
+          "title": "Türkiye discovers new Kadesh Peace Treaty fragment",
+          "publisher": "Yeni Şafak",
+          "published_at": "2026-09-21T14:29:00Z"
+        },
+        {
+          "url": "https://news.az/news/ancient-peace-treaty-fragment-found-at-hittite-capital-in-turkiye",
+          "title": "Ancient peace treaty fragment found at Hittite capital in Türkiye",
+          "publisher": "News.az",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://www.heritagedaily.com/2026/09/fragment-of-kadesh-peace-treaty-discovered-at-hattusa/159359",
+          "title": "Fragment of Kadesh Peace Treaty discovered at Hattusa",
+          "publisher": "HeritageDaily",
+          "published_at": "2026-09-21T21:42:00Z"
+        },
+        {
+          "url": "https://www.unesco.org/en/fight-illicit-trafficking/return-and-restitution-under-icprcp",
+          "title": "Return and Restitution under the aegis of the ICPRCP / Boğazköy Archive",
+          "publisher": "UNESCO",
+          "published_at": "2024-11-28T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9180372c79",
+      "text": "Previously discovered fragments of the Kadesh Peace Treaty's Akkadian clay-tablet copies from Hattusa are held in the Istanbul Archaeological Museums, the Museum of Anatolian Civilizations in Ankara, the Vorderasiatisches Museum (Museum of the Ancient Near East) in Berlin, and the State Hermitage Museum in St Petersburg",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://en.yenisafak.com/life/turkiye-discovers-new-kadesh-peace-treaty-fragment-3723515",
+          "title": "Türkiye discovers new Kadesh Peace Treaty fragment",
+          "publisher": "Yeni Şafak",
+          "published_at": "2026-09-21T14:29:00Z"
+        },
+        {
+          "url": "https://www.turkiyetoday.com/culture/cuneiform-fragment-found-at-hattusa-identified-as-part-of-kadesh-peace-treaty-3228616",
+          "title": "Cuneiform fragment found at Hattusa identified as part of Kadesh Peace Treaty",
+          "publisher": "Türkiye Today",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://news.az/news/ancient-peace-treaty-fragment-found-at-hittite-capital-in-turkiye",
+          "title": "Ancient peace treaty fragment found at Hittite capital in Türkiye",
+          "publisher": "News.az",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        },
+        {
+          "url": "https://www.odatv.com/kultur-sanat/hattusada-barisin-binlerce-yillik-izi-civi-yazili-tablette-ne-diyor-120163547",
+          "title": "Hattusa'da barışın binlerce yıllık izi: Çivi yazılı tablette ne diyor",
+          "publisher": "Odatv",
+          "published_at": "2026-09-21T12:00:00Z"
+        },
+        {
+          "url": "https://arkeofili.com/hattusada-kades-antlasmasinin-yeni-bir-nushasi-bulundu",
+          "title": "Hattusa'da Kadeş Antlaşması'nın Yeni Bir Nüshası Bulundu",
+          "publisher": "Arkeofili",
+          "published_at": "2026-09-21T14:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_177dafd648",
+      "text": "The Egyptian version of the treaty was inscribed in hieroglyphs on temple walls (Karnak and Ramesseum), while the original diplomatic documents were on silver tablets which have not survived; Hittite copies were in Akkadian cuneiform on clay",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://en.yenisafak.com/life/turkiye-discovers-new-kadesh-peace-treaty-fragment-3723515",
+          "title": "Türkiye discovers new Kadesh Peace Treaty fragment",
+          "publisher": "Yeni Şafak",
+          "published_at": "2026-09-21T14:29:00Z"
+        },
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        },
+        {
+          "url": "https://arkeofili.com/hattusada-kades-antlasmasinin-yeni-bir-nushasi-bulundu",
+          "title": "Hattusa'da Kadeş Antlaşması'nın Yeni Bir Nüshası Bulundu",
+          "publisher": "Arkeofili",
+          "published_at": "2026-09-21T14:00:00Z"
+        },
+        {
+          "url": "https://www.nationalgeographic.com/history/article/hittite-ancient-empire-disappear-mystery",
+          "title": "The Hittite Empire transformed the world—and then the world forgot it",
+          "publisher": "National Geographic",
+          "published_at": "2025-04-15T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0137638a25",
+      "text": "The Kadesh Peace Treaty is widely regarded as one of the earliest known written peace treaties and the oldest surviving parity treaty between major powers, describing the rulers as equals",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://en.yenisafak.com/life/turkiye-discovers-new-kadesh-peace-treaty-fragment-3723515",
+          "title": "Türkiye discovers new Kadesh Peace Treaty fragment",
+          "publisher": "Yeni Şafak",
+          "published_at": "2026-09-21T14:29:00Z"
+        },
+        {
+          "url": "https://news.az/news/ancient-peace-treaty-fragment-found-at-hittite-capital-in-turkiye",
+          "title": "Ancient peace treaty fragment found at Hittite capital in Türkiye",
+          "publisher": "News.az",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        },
+        {
+          "url": "https://arkeofili.com/hattusada-kades-antlasmasinin-yeni-bir-nushasi-bulundu",
+          "title": "Hattusa'da Kadeş Antlaşması'nın Yeni Bir Nüshası Bulundu",
+          "publisher": "Arkeofili",
+          "published_at": "2026-09-21T14:00:00Z"
+        },
+        {
+          "url": "https://www.nationalgeographic.com/history/article/hittite-ancient-empire-disappear-mystery",
+          "title": "The Hittite Empire transformed the world—and then the world forgot it",
+          "publisher": "National Geographic",
+          "published_at": "2025-04-15T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_72db9d54f8",
+      "text": "A enlarged copy of the Kadesh Peace Treaty is displayed at the United Nations Headquarters in New York as a symbol of international diplomacy",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://arkeofili.com/hattusada-kades-antlasmasinin-yeni-bir-nushasi-bulundu",
+          "title": "Hattusa'da Kadeş Antlaşması'nın Yeni Bir Nüshası Bulundu",
+          "publisher": "Arkeofili",
+          "published_at": "2026-09-21T14:00:00Z"
+        },
+        {
+          "url": "https://www.nationalgeographic.com/history/article/hittite-ancient-empire-disappear-mystery",
+          "title": "The Hittite Empire transformed the world—and then the world forgot it",
+          "publisher": "National Geographic",
+          "published_at": "2025-04-15T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_70aadfc22b",
+      "text": "The Boğazköy/Hattusa cuneiform archive comprises nearly 25,000 tablets and was inscribed on UNESCO's Memory of the World Register in 2001",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        },
+        {
+          "url": "https://www.unesco.org/en/fight-illicit-trafficking/return-and-restitution-under-icprcp",
+          "title": "Return and Restitution under the aegis of the ICPRCP / Boğazköy Archive",
+          "publisher": "UNESCO",
+          "published_at": "2024-11-28T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3eeabca8ff",
+      "text": "The newly identified fragment is expected to help reconstruct the Hattusa clay-tablet copies of the treaty, and excavations at Büyükkale are continuing in hopes of finding additional missing fragments",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://en.yenisafak.com/life/turkiye-discovers-new-kadesh-peace-treaty-fragment-3723515",
+          "title": "Türkiye discovers new Kadesh Peace Treaty fragment",
+          "publisher": "Yeni Şafak",
+          "published_at": "2026-09-21T14:29:00Z"
+        },
+        {
+          "url": "https://www.turkiyetoday.com/culture/cuneiform-fragment-found-at-hattusa-identified-as-part-of-kadesh-peace-treaty-3228616",
+          "title": "Cuneiform fragment found at Hattusa identified as part of Kadesh Peace Treaty",
+          "publisher": "Türkiye Today",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://news.az/news/ancient-peace-treaty-fragment-found-at-hittite-capital-in-turkiye",
+          "title": "Ancient peace treaty fragment found at Hittite capital in Türkiye",
+          "publisher": "News.az",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        },
+        {
+          "url": "https://www.heritagedaily.com/2026/09/fragment-of-kadesh-peace-treaty-discovered-at-hattusa/159359",
+          "title": "Fragment of Kadesh Peace Treaty discovered at Hattusa",
+          "publisher": "HeritageDaily",
+          "published_at": "2026-09-21T21:42:00Z"
+        },
+        {
+          "url": "https://www.odatv.com/kultur-sanat/hattusada-barisin-binlerce-yillik-izi-civi-yazili-tablette-ne-diyor-120163547",
+          "title": "Hattusa'da barışın binlerce yıllık izi: Çivi yazılı tablette ne diyor",
+          "publisher": "Odatv",
+          "published_at": "2026-09-21T12:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8bd158eb0c",
+      "text": "The fugitive/home-protection clauses were diplomatic extradition obligations between rulers, not asylum protections comparable to modern refugee law, but they offer insight into Bronze Age regulation of cross-border movement and treatment",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7f087e54a2",
+      "text": "The full scholarly transcription and translation of the newly identified fragment has not yet been publicly released by the Ministry",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8ca5baa8c0",
+      "text": "The specific conservation location and future display venue for the new fragment have not been announced in the sources reviewed",
+      "grade": "unconfirmed",
+      "salience": "low",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f1c627064a",
+      "text": "The new fragment's reference to preventing destruction of homes adds wording not emphasized in previously published summaries of the treaty, highlighting protection of property alongside persons",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://en.yenisafak.com/life/turkiye-discovers-new-kadesh-peace-treaty-fragment-3723515",
+          "title": "Türkiye discovers new Kadesh Peace Treaty fragment",
+          "publisher": "Yeni Şafak",
+          "published_at": "2026-09-21T14:29:00Z"
+        },
+        {
+          "url": "https://www.turkiyetoday.com/culture/cuneiform-fragment-found-at-hattusa-identified-as-part-of-kadesh-peace-treaty-3228616",
+          "title": "Cuneiform fragment found at Hattusa identified as part of Kadesh Peace Treaty",
+          "publisher": "Türkiye Today",
+          "published_at": "2026-09-21T11:00:00Z"
+        },
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        },
+        {
+          "url": "https://www.odatv.com/kultur-sanat/hattusada-barisin-binlerce-yillik-izi-civi-yazili-tablette-ne-diyor-120163547",
+          "title": "Hattusa'da barışın binlerce yıllık izi: Çivi yazılı tablette ne diyor",
+          "publisher": "Odatv",
+          "published_at": "2026-09-21T12:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_25e617d8c6",
+      "text": "Announcement was made on 21 September 2026 (World Peace Day) via Culture and Tourism Minister Mehmet Nuri Ersoy's social-media post, with verbatim wording: \"Barışın binlerce yıllık izini Anadolu'nun toprağında bulduk! Çorum Hattuşa'daki Büyükkale kazılarında bulunan çivi yazılı tablet parçasının, Kadeş Barış Antlaşması'nın nüshalarından birine ait olduğu bilimsel incelemelerle belirlendi\" / English: \"We have found traces of peace dating back thousands of years in the soil of Anatolia... Scientific examinations have determined that a fragment... belongs to one of the copies of the Kadesh Peace Treaty.\"",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.aa.com.tr/tr/kultur/hattusada-bulunan-civi-yazili-tablet-parcasinin-kades-baris-antlasmasinin-nushalarindan-oldugu-belirlendi-/4063172",
+          "title": "Hattuşa'da bulunan çivi yazılı tablet parçasının Kadeş Barış Antlaşması'nın nüshalarından olduğu belirlendi",
+          "publisher": "Anadolu Ajansı (AA) Turkish",
+          "published_at": "2026-09-21"
+        },
+        {
+          "url": "https://www.aa.com.tr/en/culture/tablet-fragment-found-in-turkiye-adds-piece-to-world-s-oldest-known-peace-treaty/4063280",
+          "title": "Tablet fragment found in Türkiye adds piece to world's oldest known peace treaty",
+          "publisher": "Anadolu Agency (AA) English",
+          "published_at": "2026-09-21"
+        },
+        {
+          "url": "https://ankahaber.net/haber/hattusa-da-kades-baris-antlasmasi-na-ait-yeni-tablet-parcasi-bulundu-da1ce9d6",
+          "title": "Hattuşa'da Kadeş Barış Antlaşması'na ait yeni tablet parçası bulundu",
+          "publisher": "Anka Haber",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bc76ebe366",
+      "text": "Fragment was found during archaeological excavations near Building E at Büyükkale, the royal citadel area of Hattusa (Boğazkale, Çorum).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.aa.com.tr/tr/kultur/hattusada-bulunan-civi-yazili-tablet-parcasinin-kades-baris-antlasmasinin-nushalarindan-oldugu-belirlendi-/4063172",
+          "title": "Hattuşa'da bulunan çivi yazılı tablet parçasının Kadeş Barış Antlaşması'nın nüshalarından olduğu belirlendi",
+          "publisher": "Anadolu Ajansı (AA) Turkish",
+          "published_at": "2026-09-21"
+        },
+        {
+          "url": "https://www.aa.com.tr/en/culture/tablet-fragment-found-in-turkiye-adds-piece-to-world-s-oldest-known-peace-treaty/4063280",
+          "title": "Tablet fragment found in Türkiye adds piece to world's oldest known peace treaty",
+          "publisher": "Anadolu Agency (AA) English",
+          "published_at": "2026-09-21"
+        },
+        {
+          "url": "https://www.diken.com.tr/corumda-kades-baris-antlasmasinin-parcasi-bulundu",
+          "title": "Çorum'da Kadeş Barış Antlaşması'nın parçası bulundu",
+          "publisher": "Diken",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_43d8a2233c",
+      "text": "Only one face of the cuneiform fragment is preserved; text is fragmentary with broken/missing sections.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.aa.com.tr/tr/kultur/hattusada-bulunan-civi-yazili-tablet-parcasinin-kades-baris-antlasmasinin-nushalarindan-oldugu-belirlendi-/4063172",
+          "title": "Hattuşa'da bulunan çivi yazılı tablet parçasının Kadeş Barış Antlaşması'nın nüshalarından olduğu belirlendi",
+          "publisher": "Anadolu Ajansı (AA) Turkish",
+          "published_at": "2026-09-21"
+        },
+        {
+          "url": "https://www.aa.com.tr/en/culture/tablet-fragment-found-in-turkiye-adds-piece-to-world-s-oldest-known-peace-treaty/4063280",
+          "title": "Tablet fragment found in Türkiye adds piece to world's oldest known peace treaty",
+          "publisher": "Anadolu Agency (AA) English",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7a5ee632fb",
+      "text": "Identification followed approximately one year of detailed scientific examination before researchers confirmed attribution to the Kadesh treaty.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.aa.com.tr/tr/kultur/hattusada-bulunan-civi-yazili-tablet-parcasinin-kades-baris-antlasmasinin-nushalarindan-oldugu-belirlendi-/4063172",
+          "title": "Hattuşa'da bulunan çivi yazılı tablet parçasının Kadeş Barış Antlaşması'nın nüshalarından olduğu belirlendi",
+          "publisher": "Anadolu Ajansı (AA) Turkish",
+          "published_at": "2026-09-21"
+        },
+        {
+          "url": "https://www.aa.com.tr/en/culture/tablet-fragment-found-in-turkiye-adds-piece-to-world-s-oldest-known-peace-treaty/4063280",
+          "title": "Tablet fragment found in Türkiye adds piece to world's oldest known peace treaty",
+          "publisher": "Anadolu Agency (AA) English",
+          "published_at": "2026-09-21"
+        },
+        {
+          "url": "https://www.diken.com.tr/corumda-kades-baris-antlasmasinin-parcasi-bulundu",
+          "title": "Çorum'da Kadeş Barış Antlaşması'nın parçası bulundu",
+          "publisher": "Diken",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_112391534a",
+      "text": "New fragment preserves lines corresponding to Articles 12-20 of the treaty, regulating treatment of persons who fled one kingdom for the other; readable sections mention people fleeing Egypt and Hatti and include provisions that their homes not be destroyed (evlerin tahrip edilmemesine ilişkin ifadeler).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.aa.com.tr/tr/kultur/hattusada-bulunan-civi-yazili-tablet-parcasinin-kades-baris-antlasmasinin-nushalarindan-oldugu-belirlendi-/4063172",
+          "title": "Hattuşa'da bulunan çivi yazılı tablet parçasının Kadeş Barış Antlaşması'nın nüshalarından olduğu belirlendi",
+          "publisher": "Anadolu Ajansı (AA) Turkish",
+          "published_at": "2026-09-21"
+        },
+        {
+          "url": "https://www.aa.com.tr/en/culture/tablet-fragment-found-in-turkiye-adds-piece-to-world-s-oldest-known-peace-treaty/4063280",
+          "title": "Tablet fragment found in Türkiye adds piece to world's oldest known peace treaty",
+          "publisher": "Anadolu Agency (AA) English",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fdc78b7e9b",
+      "text": "Authentication is described only as bilimsel incelemelerle belirlendi / scientific examinations / researchers determined with thanks to kazı ekibi ve bilim insanları — no named epigrapher, Assyriologist, university, or DAI-affiliated scholar is identified in the Ministry statement or AA verbatim reproduction; no paleographic criteria, Akkadian philological analysis, or peer-reviewed publication is provided, leaving independent peer review pending.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.aa.com.tr/tr/kultur/hattusada-bulunan-civi-yazili-tablet-parcasinin-kades-baris-antlasmasinin-nushalarindan-oldugu-belirlendi-/4063172",
+          "title": "Hattuşa'da bulunan çivi yazılı tablet parçasının Kadeş Barış Antlaşması'nın nüshalarından olduğu belirlendi",
+          "publisher": "Anadolu Ajansı (AA) Turkish",
+          "published_at": "2026-09-21"
+        },
+        {
+          "url": "https://www.aa.com.tr/en/culture/tablet-fragment-found-in-turkiye-adds-piece-to-world-s-oldest-known-peace-treaty/4063280",
+          "title": "Tablet fragment found in Türkiye adds piece to world's oldest known peace treaty",
+          "publisher": "Anadolu Agency (AA) English",
+          "published_at": "2026-09-21"
+        },
+        {
+          "url": "https://ankahaber.net/haber/hattusa-da-kades-baris-antlasmasi-na-ait-yeni-tablet-parcasi-bulundu-da1ce9d6",
+          "title": "Hattuşa'da Kadeş Barış Antlaşması'na ait yeni tablet parçası bulundu",
+          "publisher": "Anka Haber",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e88f872a06",
+      "text": "No conservation location, dimensions, condition report, or future display venue for the new fragment is announced in the Ministry statement; sources state only that the find will contribute to efforts to reconstruct the clay tablet copies and that excavations at Buyukkale are ongoing hoping to find additional missing fragments.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.aa.com.tr/tr/kultur/hattusada-bulunan-civi-yazili-tablet-parcasinin-kades-baris-antlasmasinin-nushalarindan-oldugu-belirlendi-/4063172",
+          "title": "Hattuşa'da bulunan çivi yazılı tablet parçasının Kadeş Barış Antlaşması'nın nüshalarından olduğu belirlendi",
+          "publisher": "Anadolu Ajansı (AA) Turkish",
+          "published_at": "2026-09-21"
+        },
+        {
+          "url": "https://www.aa.com.tr/en/culture/tablet-fragment-found-in-turkiye-adds-piece-to-world-s-oldest-known-peace-treaty/4063280",
+          "title": "Tablet fragment found in Türkiye adds piece to world's oldest known peace treaty",
+          "publisher": "Anadolu Agency (AA) English",
+          "published_at": "2026-09-21"
+        },
+        {
+          "url": "https://bianet.org/haber/hattusada-kades-baris-antlasmasinin-bir-nushasi-bulundu-323636",
+          "title": "Hattuşa'da Kadeş Barış Antlaşması'nın bir nüshası bulundu",
+          "publisher": "Bianet",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7a838d8955",
+      "text": "No German Archaeological Institute Istanbul excavation bulletin or Andreas Schachner-authored report on the 2026 Büyükkale Building E tablet was located; Ministry/AA attribution does not state whether identification is joint Ministry-DAI scholarly statement or Ministry claim alone.",
+      "grade": "unconfirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.aa.com.tr/tr/kultur/hattusada-bulunan-civi-yazili-tablet-parcasinin-kades-baris-antlasmasinin-nushalarindan-oldugu-belirlendi-/4063172",
+          "title": "Hattuşa'da bulunan çivi yazılı tablet parçasının Kadeş Barış Antlaşması'nın nüshalarından olduğu belirlendi",
+          "publisher": "Anadolu Ajansı (AA) Turkish",
+          "published_at": "2026-09-21"
+        },
+        {
+          "url": "https://www.aa.com.tr/en/culture/tablet-fragment-found-in-turkiye-adds-piece-to-world-s-oldest-known-peace-treaty/4063280",
+          "title": "Tablet fragment found in Türkiye adds piece to world's oldest known peace treaty",
+          "publisher": "Anadolu Agency (AA) English",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ccb1b50287",
+      "text": "Scholarly caution: Articles 12-20 fugitive provisions are reciprocal extradition obligations between monarchs to return persons who fled, not modern refugee asylum or humanitarian protection. Arkeonews: 'These were diplomatic obligations negotiated between two ancient rulers, rather than asylum protections comparable to modern refugee law.'",
+      "grade": "contested",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8f18a73da9",
+      "text": "What treaty actually requires vs ministerial gloss: broader fugitive clauses oblige each side to return fugitives and prohibit punishment/harm to returned individuals and families; the newly highlighted 'homes not be destroyed' wording sits inside that forced-return framework. This is a Bronze Age interstate control mechanism, not a right to remain or modern non-refoulement. Ersoy's framing as timeless protection of homes/human dignity inverts the clause's function (protection after forced return, not protection from return).",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        },
+        {
+          "url": "https://www.milliyet.com.tr/news/newly-discovered-tablet-fragment-expands-kadesh-peace-treaty-record-7664794",
+          "title": "Newly discovered tablet fragment expands Kadesh Peace Treaty record",
+          "publisher": "Milliyet",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8d8f5a8265",
+      "text": "Presentist media reproduction illustrates risk: SyriacPress headlined same fragment as 'provisions on the treatment of asylum seekers' and 'individuals seeking asylum,' while Arkeonews on same Ministry material cautions it is not asylum.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://syriacpress.com/blog/2026/09/22/new-cuneiform-fragment-from-the-treaty-of-kadesh-found-contains-provisions-on-the-treatment-of-asylum-seekers",
+          "title": "New cuneiform fragment from the Treaty of Kadesh found, contains provisions on the treatment of asylum seekers",
+          "publisher": "SyriacPress",
+          "published_at": "2026-09-22"
+        },
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_eedc1f3560",
+      "text": "Heritage-politics analysts note pattern of Türkiye instrumentalizing archaeology for soft power/nationalist narrative. Hyperallergic documents superlative claims ('firsts,' 'oldest,' 'center of civilization') to re-center Anatolia as epicenter of heritage, citing Lynn Meskell (UNESCO 'firsts/bests/onlys' incentivizing sensationalism), Bahar Aykan ('cultural heritage is not something that is just out there, free from human concerns'), and Kate Elizabeth Creasey (ethnonationalism drives battle for ancient heritage). Kadesh fragment's World Peace Day rollout fits this communications pattern.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://hyperallergic.com/discovery-of-8600-year-old-bread-gives-rise-to-half-baked-claims",
+          "title": "Discovery of 8,600-Year-Old Bread Gives Rise to Half-Baked Claims",
+          "publisher": "Hyperallergic",
+          "published_at": "2024-03-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5b5544372f",
+      "text": "Heritage as political resource: The Art Newspaper documents new Turkish law allowing central government to seize historic properties from opposition-run municipalities, described as heritage becoming 'the latest front' and a 'Kulturkampf' where cultural assets provide income and legitimacy. Context supports analysts' caution that Hattusa/UNESCO announcements should be read also as state soft-power messaging, not purely scholarly communication.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.theartnewspaper.com/2026/02/20/turkeys-heritage-power-grab-new-law-threatens-istanbuls-opposition-run-cultural-sites",
+          "title": "Turkey's heritage power grab: new law threatens Istanbul's opposition-run cultural sites",
+          "publisher": "The Art Newspaper",
+          "published_at": "2026-02-20"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bd7b3289b1",
+      "text": "No independent Egyptian, German Archaeological Institute, or international Hittitologist response to Ersoy's Palestine-linked framing or Articles 12-20 reading was located in sources reviewed. Absence of external corroboration leaves ministerial gloss as sole framing in circulation.",
+      "grade": "unconfirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.milliyet.com.tr/news/newly-discovered-tablet-fragment-expands-kadesh-peace-treaty-record-7664794",
+          "title": "Newly discovered tablet fragment expands Kadesh Peace Treaty record",
+          "publisher": "Milliyet",
+          "published_at": "2026-09-21"
+        },
+        {
+          "url": "https://arkeonews.net/new-fragment-of-one-of-the-worlds-oldest-peace-treaties-found-in-turkiye-reveals-ancient-rules-for-fugitives",
+          "title": "New Fragment of One of the World's Oldest Peace Treaties Found in Türkiye Reveals Ancient Rules for Fugitives",
+          "publisher": "Arkeonews",
+          "published_at": "2026-09-21T11:06:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d83abefeb8",
+      "text": "Modern extradition principles (double criminality, specificity, political-offense exception, specialty) underscore anachronism of equating Bronze Age forced-return clauses with contemporary refugee law, which centers on non-refoulement and individual right to seek asylum — protections absent from Kadesh framework.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.britannica.com/topic/extradition",
+          "title": "Extradition",
+          "publisher": "Encyclopaedia Britannica",
+          "published_at": "2026-09-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_fcf627f758",
+      "text": "Where the world's oldest peace treaty was made — and where its new piece was found: name Hattusa / Bogazkale, role Hittite capital; new fragment, latitude 40.019722222222, longitude 34.615277777778, coordinate_source Wikidata entities queried in source-at-analytics-time",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.wikidata.org/wiki/Q181007",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_cbcad12335",
+      "text": "Where the world's oldest peace treaty was made — and where its new piece was found: name Buyukkale citadel, role royal citadel, latitude 40.015, longitude 34.618611, coordinate_source Wikidata entities queried in source-at-analytics-time",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.wikidata.org/wiki/Q181007",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_9984a783a3",
+      "text": "Where the world's oldest peace treaty was made — and where its new piece was found: name Kadesh / Tell Nebi Mend, role battlefield, latitude 34.5576, longitude 36.52, coordinate_source Wikidata entities queried in source-at-analytics-time",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.wikidata.org/wiki/Q181007",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_9ac009fdbd",
+      "text": "Where the world's oldest peace treaty was made — and where its new piece was found: name Karnak / Thebes, role Egyptian treaty inscription, latitude 25.718333333333, longitude 32.658333333333, coordinate_source Wikidata entities queried in source-at-analytics-time",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.wikidata.org/wiki/Q181007",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_b81b9000d3",
+      "text": "Where the world's oldest peace treaty was made — and where its new piece was found: name Ramesseum / Thebes, role Egyptian treaty inscription, latitude 25.727777777778, longitude 32.610555555556, coordinate_source Wikidata entities queried in source-at-analytics-time",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.wikidata.org/wiki/Q181007",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_c4d6f2b250",
+      "text": "Where the world's oldest peace treaty was made — and where its new piece was found: name Ankara, role modern reference, latitude 39.93576, longitude 32.83869, coordinate_source Wikidata entities queried in source-at-analytics-time",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.wikidata.org/wiki/Q181007",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_a44505ccae",
+      "text": "Where the world's oldest peace treaty was made — and where its new piece was found: name Istanbul, role modern reference; museum, latitude 41.01, longitude 28.960277777778, coordinate_source Wikidata entities queried in source-at-analytics-time",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.wikidata.org/wiki/Q181007",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

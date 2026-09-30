@@ -1,0 +1,873 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/ai-infrastructure-is-increasingly-a-credit-market-risk-with-1d951d",
+  "title": "AI infrastructure is increasingly a credit-market risk, with stress concerns still unproven",
+  "summary": "A Bank of America survey flagged AI hyperscaler capex as the most likely source of a systemic credit event, meaning a broad market-wide credit shock rather than an isolated borrower problem, while deals and bond/loan activity show the buildout is being financed—and power constraints may be a bigger near-term bottleneck than borrower insolvency.",
+  "published_at": "2026-07-21T11:03:19.744362+00:00",
+  "as_of": "2026-07-21",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 44,
+    "likely": 7,
+    "unconfirmed": 4
+  },
+  "claims": [
+    {
+      "id": "clm_745bb927a0",
+      "text": "In Bank of America’s July Global Fund Manager Survey, 48% of respondents identified AI hyperscaler capital expenditure as the most likely source of a systemic credit event.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.benzinga.com/markets/tech/26/07/60570926/why-fun",
+          "title": "Why Fun?",
+          "publisher": "Benzinga",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b2cc3393b8",
+      "text": "A record 54% of survey respondents expected a no-landing global economy over the next 12 months, while 39% expected a soft landing and 2% expected a hard landing.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.benzinga.com/markets/tech/26/07/60570926/why-fun",
+          "title": "Why Fun?",
+          "publisher": "Benzinga",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_706aaddcff",
+      "text": "Benzinga’s report said BofA estimated AI-related spending would add 0.3 percentage points to true GDP growth and 0.1 percentage points to measured GDP growth in 2026.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.benzinga.com/markets/tech/26/07/60570926/why-fun",
+          "title": "Why Fun?",
+          "publisher": "Benzinga",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1bc090c912",
+      "text": "Bank of America’s report described semiconductors as the world’s most crowded trade, with 82% of fund managers selecting long global semiconductors.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.benzinga.com/markets/tech/26/07/60570926/why-fun",
+          "title": "Why Fun?",
+          "publisher": "Benzinga",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0c7f2b26fb",
+      "text": "Corporate credit spreads remained relatively tight despite the correction in semiconductor shares, according to the Benzinga summary of market positioning.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.benzinga.com/markets/tech/26/07/60570926/why-fun",
+          "title": "Why Fun?",
+          "publisher": "Benzinga",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_950da99527",
+      "text": "JPMorgan’s second-quarter results were described by Bank of America as benefiting from revenue growth tied in part to capital markets activity and AI capex.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/07/16/jpm-has-more-upside-ahead-after-its-blockbuster-earnings-report-says-bank-of-america.html",
+          "title": "JPM has more upside ahead after its blockbuster earnings report, says Bank of America",
+          "publisher": "CNBC",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_48d1c77d5b",
+      "text": "JPMorgan’s reported adjusted second-quarter earnings were $6.14 per share on revenue of $52.42 billion.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/07/16/jpm-has-more-upside-ahead-after-its-blockbuster-earnings-report-says-bank-of-america.html",
+          "title": "JPM has more upside ahead after its blockbuster earnings report, says Bank of America",
+          "publisher": "CNBC",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2793be5ee6",
+      "text": "Reuters reported that Wall Street bankers said AI infrastructure demand is boosting dealmaking and financing activity.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/legal/transactional/wall-street-banks-see-ai-super-cycle-set-boost-deals-financing-2026-07-14/",
+          "title": "Wall Street banks see AI 'super cycle' set to boost deals, financing",
+          "publisher": "Reuters",
+          "published_at": "2026-07-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bfaf10583e",
+      "text": "Reuters reported that Bank of America extended a $520 million credit line to OpenAI, described as its first loan to the company.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/legal/transactional/wall-street-banks-see-ai-super-cycle-set-boost-deals-financing-2026-07-14/",
+          "title": "Wall Street banks see AI 'super cycle' set to boost deals, financing",
+          "publisher": "Reuters",
+          "published_at": "2026-07-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d0474cd7a7",
+      "text": "PitchBook reported that Blackstone’s QTS secured an upsized $3.25 billion leveraged loan for data-center financing.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://pitchbook.com/news/articles/blackstones-qts-secures-upsized-3-25b-leveraged-loan",
+          "title": "Blackstone’s QTS secures upsized $3.25B leveraged loan",
+          "publisher": "PitchBook",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_36f4a410d2",
+      "text": "Reuters reported that Brookfield-backed Csquare debuted on the NYSE with shares trading below the marketed range.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/brookfield-backed-csquare-valued-324-billion-shares-fall-nyse-debut-2026-07-16/",
+          "title": "Brookfield-backed Csquare valued at $3.24 billion in NYSE debut",
+          "publisher": "Reuters",
+          "published_at": "2026-07-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6a477bbc17",
+      "text": "Forbes reported that Morgan Stanley forecasts about $570 billion in global AI-related debt issuance in 2026.",
+      "grade": "unconfirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.forbes.com/sites/robertszczerba/2026/07/17/bond-investors-push-back-as-ai-debt-heads-toward-570-billion/",
+          "title": "Bond Investors Push Back As AI Debt Heads Toward $570 Billion",
+          "publisher": "Forbes",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bc7f2aabdd",
+      "text": "Forbes reported that Apollo said hyperscaler-bond order coverage fell from nearly five times offered in February to below two times by July.",
+      "grade": "unconfirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.forbes.com/sites/robertszczerba/2026/07/17/bond-investors-push-back-as-ai-debt-heads-toward-570-billion/",
+          "title": "Bond Investors Push Back As AI Debt Heads Toward $570 Billion",
+          "publisher": "Forbes",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b5c393d90e",
+      "text": "Forbes reported that Morgan Stanley’s analysis treated the $1.5 trillion figure as a funding gap, not a debt forecast.",
+      "grade": "unconfirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.forbes.com/sites/robertszczerba/2026/07/17/bond-investors-push-back-as-ai-debt-heads-toward-570-billion/",
+          "title": "Bond Investors Push Back As AI Debt Heads Toward $570 Billion",
+          "publisher": "Forbes",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_62cc410358",
+      "text": "Forbes reported that Morgan Stanley estimated an approximately $800 billion private-credit opportunity in data-center financing through 2028.",
+      "grade": "unconfirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.forbes.com/sites/robertszczerba/2026/07/17/bond-investors-push-back-as-ai-debt-heads-toward-570-billion/",
+          "title": "Bond Investors Push Back As AI Debt Heads Toward $570 Billion",
+          "publisher": "Forbes",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1167bd058c",
+      "text": "The available reporting suggests AI infrastructure financing is spreading across public bonds, leveraged loans, private credit, and off-balance-sheet/project-finance structures.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.forbes.com/sites/robertszczerba/2026/07/17/bond-investors-push-back-as-ai-debt-heads-toward-570-billion/",
+          "title": "Bond Investors Push Back As AI Debt Heads Toward $570 Billion",
+          "publisher": "Forbes",
+          "published_at": "2026-07-17"
+        },
+        {
+          "url": "https://www.reuters.com/legal/transactional/wall-street-banks-see-ai-super-cycle-set-boost-deals-financing-2026-07-14/",
+          "title": "Wall Street banks see AI 'super cycle' set to boost deals, financing",
+          "publisher": "Reuters",
+          "published_at": "2026-07-14"
+        },
+        {
+          "url": "https://pitchbook.com/news/articles/blackstones-qts-secures-upsized-3-25b-leveraged-loan",
+          "title": "Blackstone’s QTS secures upsized $3.25B leveraged loan",
+          "publisher": "PitchBook",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c9fb688d5b",
+      "text": "The available reporting does not yet show a broad market repricing in public credit tied specifically to AI capex risk.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.benzinga.com/markets/tech/26/07/60570926/why-fun",
+          "title": "Why Fun?",
+          "publisher": "Benzinga",
+          "published_at": "2026-07-17"
+        },
+        {
+          "url": "https://www.forbes.com/sites/robertszczerba/2026/07/17/bond-investors-push-back-as-ai-debt-heads-toward-570-billion/",
+          "title": "Bond Investors Push Back As AI Debt Heads Toward $570 Billion",
+          "publisher": "Forbes",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c83b59b875",
+      "text": "Reuters reported that a rush by technology companies to fund AI infrastructure is boosting dealmaking and financing activity for Wall Street, generating fees from capital raising and loans.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/legal/transactional/wall-street-banks-see-ai-super-cycle-set-boost-deals-financing-2026-07-14/",
+          "title": "Wall Street banks see AI 'super cycle' set to boost deals, financing",
+          "publisher": "Reuters",
+          "published_at": "2026-07-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_79dc263d2a",
+      "text": "Reuters attributed a $520 million credit line to OpenAI to Bank of America and described it as OpenAI's first loan from the bank.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/legal/transactional/wall-street-banks-see-ai-super-cycle-set-boost-deals-financing-2026-07-14/",
+          "title": "Wall Street banks see AI 'super cycle' set to boost deals, financing",
+          "publisher": "Reuters",
+          "published_at": "2026-07-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_00017dde2a",
+      "text": "Reuters quoted Goldman Sachs CEO David Solomon saying AI infrastructure spending remains in an early, multi-year cycle and that the industry is in the middle of an AI capex super cycle requiring every financing instrument.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/legal/transactional/wall-street-banks-see-ai-super-cycle-set-boost-deals-financing-2026-07-14/",
+          "title": "Wall Street banks see AI 'super cycle' set to boost deals, financing",
+          "publisher": "Reuters",
+          "published_at": "2026-07-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bc088887c7",
+      "text": "Reuters reported Morgan Stanley CEO Ted Pick said 2026 U.S. data-center capex expectations had risen to about $850 billion, from a late-2025 view of $575 billion, with 2027 at $1.3 trillion and 2028 at $1.5 trillion.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/legal/transactional/wall-street-banks-see-ai-super-cycle-set-boost-deals-financing-2026-07-14/",
+          "title": "Wall Street banks see AI 'super cycle' set to boost deals, financing",
+          "publisher": "Reuters",
+          "published_at": "2026-07-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2a15e25c2a",
+      "text": "Reuters reported Bank of America had helped raise nearly $500 billion for AI-related companies since 2025, accounting for 60% of such fundraising across investment-grade debt, leveraged finance, and equity capital markets, according to internal data seen by Reuters.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/legal/transactional/wall-street-banks-see-ai-super-cycle-set-boost-deals-financing-2026-07-14/",
+          "title": "Wall Street banks see AI 'super cycle' set to boost deals, financing",
+          "publisher": "Reuters",
+          "published_at": "2026-07-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_13b86228cf",
+      "text": "Reuters reported JPMorgan was financing data centers and seeing loan demand from companies with indirect AI links, while its CFO said some of that demand was hard to classify as directly AI-related.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/legal/transactional/wall-street-banks-see-ai-super-cycle-set-boost-deals-financing-2026-07-14/",
+          "title": "Wall Street banks see AI 'super cycle' set to boost deals, financing",
+          "publisher": "Reuters",
+          "published_at": "2026-07-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bb2630434d",
+      "text": "PitchBook reported QTS wrapped a $3.25 billion seven-year term loan B priced at S+225 with a 0% floor and 99.5 OID.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://pitchbook.com/news/articles/blackstones-qts-secures-upsized-3-25b-leveraged-loan",
+          "title": "Blackstone’s QTS secures upsized $3.25B leveraged loan",
+          "publisher": "PitchBook",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d771f9b419",
+      "text": "PitchBook said the QTS facility was upsized twice from an initial $1 billion launch.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://pitchbook.com/news/articles/blackstones-qts-secures-upsized-3-25b-leveraged-loan",
+          "title": "Blackstone’s QTS secures upsized $3.25B leveraged loan",
+          "publisher": "PitchBook",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f842f6315e",
+      "text": "PitchBook reported the QTS loan proceeds were to repay existing debt under construction credit facilities, fund a debt service reserve account if needed, and support general corporate purposes.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://pitchbook.com/news/articles/blackstones-qts-secures-upsized-3-25b-leveraged-loan",
+          "title": "Blackstone’s QTS secures upsized $3.25B leveraged loan",
+          "publisher": "PitchBook",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_83724aa44c",
+      "text": "PitchBook identified QTS as a data-center operator that builds and operates facilities housing servers supporting cloud computing and AI.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://pitchbook.com/news/articles/blackstones-qts-secures-upsized-3-25b-leveraged-loan",
+          "title": "Blackstone’s QTS secures upsized $3.25B leveraged loan",
+          "publisher": "PitchBook",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_32b11b6263",
+      "text": "Reuters reported JPMorgan CFO Jeremy Barnum said some of the loan and capex demand around data centers may be indirectly related to AI and is difficult to classify as directly AI-related.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/legal/transactional/wall-street-banks-see-ai-super-cycle-set-boost-deals-financing-2026-07-14/",
+          "title": "Wall Street banks see AI 'super cycle' set to boost deals, financing",
+          "publisher": "Reuters",
+          "published_at": "2026-07-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1e3585e3db",
+      "text": "PitchBook reported QTS's $3.25 billion leveraged loan was upsized twice from an initial $1 billion launch and priced at S+225 with a 0% floor and 99.5 OID.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://pitchbook.com/news/articles/blackstones-qts-secures-upsized-3-25b-leveraged-loan",
+          "title": "Blackstone’s QTS secures upsized $3.25B leveraged loan",
+          "publisher": "PitchBook",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_82652bbc3b",
+      "text": "PitchBook said QTS loan proceeds will repay construction credit facilities, fund a debt service reserve account if needed, and support general corporate purposes.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://pitchbook.com/news/articles/blackstones-qts-secures-upsized-3-25b-leveraged-loan",
+          "title": "Blackstone’s QTS secures upsized $3.25B leveraged loan",
+          "publisher": "PitchBook",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_78a5519a6d",
+      "text": "Utility Dive's summary of BofA's power-market analysis says the binding constraint is increasingly where power can be delivered, not borrower demand or solvency.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.utilitydive.com/news/ai-data-center-growth-utilities-generation-plans/825541/",
+          "title": "AI data center growth could force US utilities to rethink generation plans, BofA says",
+          "publisher": "Utility Dive",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_646fcaafd3",
+      "text": "Utility Dive reported that more than 7.5 GW of data-center projects with on-site generation are already under construction, with another 60 GW-plus in pre-construction.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.utilitydive.com/news/ai-data-center-growth-utilities-generation-plans/825541/",
+          "title": "AI data center growth could force US utilities to rethink generation plans, BofA says",
+          "publisher": "Utility Dive",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dcda82457e",
+      "text": "Forbes' summary says the AI debt story is not a looming crisis and that softer hyperscaler bond demand mainly implies higher borrowing costs, not immediate systemic stress.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.forbes.com/sites/robertszczerba/2026/07/17/bond-investors-push-back-as-ai-debt-heads-toward-570-billion/",
+          "title": "Bond Investors Push Back As AI Debt Heads Toward $570 Billion",
+          "publisher": "Forbes",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_024971ec59",
+      "text": "Forbes says Morgan Stanley's $1.5 trillion figure is a funding gap, not a debt forecast.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.forbes.com/sites/robertszczerba/2026/07/17/bond-investors-push-back-as-ai-debt-heads-toward-570-billion/",
+          "title": "Bond Investors Push Back As AI Debt Heads Toward $570 Billion",
+          "publisher": "Forbes",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4cd23d980e",
+      "text": "Forbes says public bond markets are not flashing red and that spreads remain near cycle lows.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.forbes.com/sites/robertszczerba/2026/07/17/bond-investors-push-back-as-ai-debt-heads-toward-570-billion/",
+          "title": "Bond Investors Push Back As AI Debt Heads Toward $570 Billion",
+          "publisher": "Forbes",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2ac0181536",
+      "text": "Reuters reported that Goldman Sachs CEO David Solomon called the AI buildout a multi-year investment cycle and said the industry is in an AI capex super cycle that requires every financing instrument.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/legal/transactional/wall-street-banks-see-ai-super-cycle-set-boost-deals-financing-2026-07-14/",
+          "title": "Wall Street banks see AI 'super cycle' set to boost deals, financing",
+          "publisher": "Reuters",
+          "published_at": "2026-07-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_42130f5f4a",
+      "text": "Reuters reported that Bank of America extended OpenAI a $520 million credit line and had helped raise nearly $500 billion for AI-related companies since 2025, according to internal data seen by Reuters.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/legal/transactional/wall-street-banks-see-ai-super-cycle-set-boost-deals-financing-2026-07-14/",
+          "title": "Wall Street banks see AI 'super cycle' set to boost deals, financing",
+          "publisher": "Reuters",
+          "published_at": "2026-07-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cc0829e60c",
+      "text": "PitchBook reported that QTS closed a $3.25 billion seven-year term loan B at S+225 with a 0% floor and 99.5 original issue discount after the deal was upsized twice from an initial $1 billion launch.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://pitchbook.com/news/articles/blackstones-qts-secures-upsized-3-25b-leveraged-loan",
+          "title": "Blackstone’s QTS secures upsized $3.25B leveraged loan",
+          "publisher": "PitchBook",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3c2d4a8d9a",
+      "text": "PitchBook said QTS's loan proceeds were intended to repay existing construction credit facilities, fund a debt service reserve account if needed, and support general corporate purposes.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://pitchbook.com/news/articles/blackstones-qts-secures-upsized-3-25b-leveraged-loan",
+          "title": "Blackstone’s QTS secures upsized $3.25B leveraged loan",
+          "publisher": "PitchBook",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cb614d45dc",
+      "text": "Forbes reported that Apollo said hyperscaler bond order coverage fell from nearly five times offered in February to below two times by July.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.forbes.com/sites/robertszczerba/2026/07/17/bond-investors-push-back-as-ai-debt-heads-toward-570-billion/",
+          "title": "Bond Investors Push Back As AI Debt Heads Toward $570 Billion",
+          "publisher": "Forbes",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_978725e4b9",
+      "text": "Forbes said Morgan Stanley's $1.5 trillion figure is a funding gap, not a debt forecast, and that public bond spreads remain near cycle lows.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.forbes.com/sites/robertszczerba/2026/07/17/bond-investors-push-back-as-ai-debt-heads-toward-570-billion/",
+          "title": "Bond Investors Push Back As AI Debt Heads Toward $570 Billion",
+          "publisher": "Forbes",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2d23911ae3",
+      "text": "Utility Dive, summarizing Bank of America analysis, said the market is constrained by where power can actually be delivered rather than by demand alone.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.utilitydive.com/news/ai-data-center-growth-utilities-generation-plans/825541/",
+          "title": "AI data center growth could force US utilities to rethink generation plans, BofA says",
+          "publisher": "Utility Dive",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cef04a959f",
+      "text": "Reuters reported that global equity funds attracted inflows for an eighth consecutive week through July 15, a sign of continuing risk appetite in broader markets.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/finance/global-markets-flows-graphic-2026-07-17/",
+          "title": "Global equity funds draw inflows for the eighth week on earnings optimism",
+          "publisher": "Reuters",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4e0740d13c",
+      "text": "Goldman Sachs CEO David Solomon said the buildout is still in its early stages and called it an AI capex super cycle that requires every financing instrument.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/legal/transactional/wall-street-banks-see-ai-super-cycle-set-boost-deals-financing-2026-07-14/",
+          "title": "Wall Street banks see AI 'super cycle' set to boost deals, financing",
+          "publisher": "Reuters",
+          "published_at": "2026-07-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f6365e3173",
+      "text": "Reuters reported that JPMorgan is financing data centers and seeing loan demand from companies with indirect AI links.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/legal/transactional/wall-street-banks-see-ai-super-cycle-set-boost-deals-financing-2026-07-14/",
+          "title": "Wall Street banks see AI 'super cycle' set to boost deals, financing",
+          "publisher": "Reuters",
+          "published_at": "2026-07-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6be34947d8",
+      "text": "Reuters reported that JPMorgan CFO Jeremy Barnum said some of that demand may not be AI-related and is hard to classify as directly AI-related.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/legal/transactional/wall-street-banks-see-ai-super-cycle-set-boost-deals-financing-2026-07-14/",
+          "title": "Wall Street banks see AI 'super cycle' set to boost deals, financing",
+          "publisher": "Reuters",
+          "published_at": "2026-07-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_beff635d58",
+      "text": "PitchBook reported that QTS closed a $3.25 billion seven-year term loan B at S+225, with a 0% floor and 99.5 original issue discount, after the deal was upsized twice from an initial $1 billion launch.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://pitchbook.com/news/articles/blackstones-qts-secures-upsized-3-25b-leveraged-loan",
+          "title": "Blackstone’s QTS secures upsized $3.25B leveraged loan",
+          "publisher": "PitchBook",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6e7aa6848b",
+      "text": "PitchBook said the QTS loan proceeds would repay existing debt under construction credit facilities, fund a debt service reserve account if needed, and support general corporate purposes.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://pitchbook.com/news/articles/blackstones-qts-secures-upsized-3-25b-leveraged-loan",
+          "title": "Blackstone’s QTS secures upsized $3.25B leveraged loan",
+          "publisher": "PitchBook",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ee40c7d9a7",
+      "text": "PitchBook identified QTS as a data-center operator that builds and operates facilities supporting cloud computing and AI.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://pitchbook.com/news/articles/blackstones-qts-secures-upsized-3-25b-leveraged-loan",
+          "title": "Blackstone’s QTS secures upsized $3.25B leveraged loan",
+          "publisher": "PitchBook",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_378da35349",
+      "text": "Forbes said Morgan Stanley’s $1.5 trillion figure is a funding gap, not a debt forecast.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.forbes.com/sites/robertszczerba/2026/07/17/bond-investors-push-back-as-ai-debt-heads-toward-570-billion/",
+          "title": "Bond Investors Push Back As AI Debt Heads Toward $570 Billion",
+          "publisher": "Forbes",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b43cbb3694",
+      "text": "Forbes said public bond spreads remain near cycle lows.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.forbes.com/sites/robertszczerba/2026/07/17/bond-investors-push-back-as-ai-debt-heads-toward-570-billion/",
+          "title": "Bond Investors Push Back As AI Debt Heads Toward $570 Billion",
+          "publisher": "Forbes",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_328b85fd7a",
+      "text": "Forbes reported that Apollo said hyperscaler bond order coverage fell from nearly five times the amount offered in February to below two times by July.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.forbes.com/sites/robertszczerba/2026/07/17/bond-investors-push-back-as-ai-debt-heads-toward-570-billion/",
+          "title": "Bond Investors Push Back As AI Debt Heads Toward $570 Billion",
+          "publisher": "Forbes",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cb00a82718",
+      "text": "Utility Dive, summarizing Bank of America analysis, said the market is constrained by where power can actually be delivered, not just by demand.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.utilitydive.com/news/ai-data-center-growth-utilities-generation-plans/825541/",
+          "title": "AI data center growth could force US utilities to rethink generation plans, BofA says",
+          "publisher": "Utility Dive",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7a8cf58b82",
+      "text": "Utility Dive said more than 7.5 gigawatts of data-center projects with on-site generation are already under construction, with another 60 gigawatts-plus in pre-construction.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.utilitydive.com/news/ai-data-center-growth-utilities-generation-plans/825541/",
+          "title": "AI data center growth could force US utilities to rethink generation plans, BofA says",
+          "publisher": "Utility Dive",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_68453a1b3e",
+      "text": "Available reporting suggests AI infrastructure financing is spreading across public bonds, leveraged loans, private credit, and off-balance-sheet/project-finance structures.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/legal/transactional/wall-street-banks-see-ai-super-cycle-set-boost-deals-financing-2026-07-14/",
+          "title": "Wall Street banks see AI 'super cycle' set to boost deals, financing",
+          "publisher": "Reuters",
+          "published_at": "2026-07-14"
+        },
+        {
+          "url": "https://pitchbook.com/news/articles/blackstones-qts-secures-upsized-3-25b-leveraged-loan",
+          "title": "Blackstone’s QTS secures upsized $3.25B leveraged loan",
+          "publisher": "PitchBook",
+          "published_at": "2026-07-17"
+        },
+        {
+          "url": "https://www.forbes.com/sites/robertszczerba/2026/07/17/bond-investors-push-back-as-ai-debt-heads-toward-570-billion/",
+          "title": "Bond Investors Push Back As AI Debt Heads Toward $570 Billion",
+          "publisher": "Forbes",
+          "published_at": "2026-07-17"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

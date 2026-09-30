@@ -1,0 +1,806 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/google-deepmind-releases-searchable-map-of-every-possible-dn-be2e36",
+  "title": "Google DeepMind releases searchable map of every possible DNA letter change",
+  "summary": "A 1-petabyte precomputed Atlas puts billions of regulatory predictions behind a free browser to filter the 98% non-coding genome, but its ranking score is uncalibrated for clinical use and every hit still needs lab proof.",
+  "published_at": "2026-09-18T11:33:28.722100+00:00",
+  "as_of": "2026-09-09",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 34,
+    "likely": 3
+  },
+  "claims": [
+    {
+      "id": "clm_e3c927ae41",
+      "text": "Google DeepMind released AlphaGenome Atlas on 8 September 2026 containing precomputed predictions for all ~9 billion possible single-nucleotide variants in the human genome (every position × 3 alternative bases).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/alphagenome-atlas-a-predictive-map-of-every-possible-dna-letter-change-in-the-human-genome",
+          "title": "AlphaGenome Atlas: A predictive map of every possible DNA letter change in the human genome",
+          "publisher": "Google DeepMind Blog",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://www.nature.com/articles/d41586-026-02835-4",
+          "title": "DeepMind's new genome 'atlas' charts effects of all nine billion human gene mutations",
+          "publisher": "Nature News",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://fortune.com/2026/09/08/google-deepmind-ai-predictions-9-billion-mutation-human-genome/",
+          "title": "Google DeepMind publishes AI-powered predictions for the effect of all 9 billion possible single-point mutations to human DNA",
+          "publisher": "Fortune",
+          "published_at": "2026-09-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cb1c8e6343",
+      "text": "Atlas dataset is ~1 petabyte, more than 30 times larger than the AlphaFold Database as expanded in 2022 (200M+ structures).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/alphagenome-atlas-a-predictive-map-of-every-possible-dna-letter-change-in-the-human-genome",
+          "title": "AlphaGenome Atlas: A predictive map of every possible DNA letter change in the human genome",
+          "publisher": "Google DeepMind Blog",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://www.techtimes.com/articles/327056/20260909/alphagenome-atlas-scores-all-9-billion-dna-mutations-doubles-rare-disease-hit-rate.htm",
+          "title": "AlphaGenome Atlas Scores All 9 Billion DNA Mutations, Doubles Rare-Disease Hit Rate",
+          "publisher": "TechTimes",
+          "published_at": "2026-09-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4163bf68c5",
+      "text": "Atlas was built by in silico saturation mutagenesis: running AlphaGenome across every position in the hg38 human reference genome and comparing each reference base to its three alternatives, plus scoring >100 million short insertions/deletions observed in gnomAD, UK Biobank and All of Us.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/alphagenome-atlas-a-predictive-map-of-every-possible-dna-letter-change-in-the-human-genome",
+          "title": "AlphaGenome Atlas: A predictive map of every possible DNA letter change in the human genome",
+          "publisher": "Google DeepMind Blog",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://fortune.com/2026/09/08/google-deepmind-ai-predictions-9-billion-mutation-human-genome/",
+          "title": "Google DeepMind publishes AI-powered predictions for the effect of all 9 billion possible single-point mutations to human DNA",
+          "publisher": "Fortune",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://www.techtimes.com/articles/327056/20260909/alphagenome-atlas-scores-all-9-billion-dna-mutations-doubles-rare-disease-hit-rate.htm",
+          "title": "AlphaGenome Atlas Scores All 9 Billion DNA Mutations, Doubles Rare-Disease Hit Rate",
+          "publisher": "TechTimes",
+          "published_at": "2026-09-09"
+        },
+        {
+          "url": "https://www.unite.ai/alphagenome-atlas-predicts-effects-of-all-9-billion-human-dna-variants",
+          "title": "AlphaGenome Atlas Predicts Effects of All 9 Billion Human DNA Variants",
+          "publisher": "Unite.AI",
+          "published_at": "2026-09-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_eb31f3aaca",
+      "text": "AlphaGenome model takes up to 1 million base pairs (1 Mb) of DNA as input and predicts thousands of functional genomic tracks at single-base-pair resolution.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/alphagenome-ai-for-better-understanding-the-genome",
+          "title": "AlphaGenome: AI for better understanding the genome",
+          "publisher": "Google DeepMind Blog",
+          "published_at": "2025-06-25"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41586-025-10014-0",
+          "title": "Advancing regulatory variant effect prediction with AlphaGenome",
+          "publisher": "Nature",
+          "published_at": "2026-01-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_04632ec564",
+      "text": "Predicted modalities include gene expression (RNA-seq, CAGE, PRO-cap), transcription initiation, chromatin accessibility (DNase-seq, ATAC-seq), histone modifications, transcription factor binding, chromatin contact maps (Hi-C/Micro-C), and splice site usage plus splice junction coordinates and strength, across hundreds of human and mouse cell types/tissues.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/alphagenome-ai-for-better-understanding-the-genome",
+          "title": "AlphaGenome: AI for better understanding the genome",
+          "publisher": "Google DeepMind Blog",
+          "published_at": "2025-06-25"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41586-025-10014-0",
+          "title": "Advancing regulatory variant effect prediction with AlphaGenome",
+          "publisher": "Nature",
+          "published_at": "2026-01-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cd58c82ac1",
+      "text": "AlphaGenome achieved state-of-the-art on 22 of 24 genome-track prediction tasks and 25 of 26 variant-effect prediction tasks in the Nature peer-reviewed evaluation (blog preprint version reported 24 of 26).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-025-10014-0",
+          "title": "Advancing regulatory variant effect prediction with AlphaGenome",
+          "publisher": "Nature",
+          "published_at": "2026-01-01"
+        },
+        {
+          "url": "https://deepmind.google/blog/alphagenome-ai-for-better-understanding-the-genome",
+          "title": "AlphaGenome: AI for better understanding the genome",
+          "publisher": "Google DeepMind Blog",
+          "published_at": "2025-06-25"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7089e8861f",
+      "text": "On variant-effect benchmarks, AlphaGenome improved eQTL sign prediction by +25.5% versus Borzoi and accessibility QTL by +8% versus ChromBPNet, and was top on 6 of 7 splicing benchmarks.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-025-10014-0",
+          "title": "Advancing regulatory variant effect prediction with AlphaGenome",
+          "publisher": "Nature",
+          "published_at": "2026-01-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_083dbd6705",
+      "text": "Each variant in Atlas carries on average ~27,000 scalar predictions spanning hundreds of cell types/tissues, totaling >240 trillion predictive values.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://fortune.com/2026/09/08/google-deepmind-ai-predictions-9-billion-mutation-human-genome/",
+          "title": "Google DeepMind publishes AI-powered predictions for the effect of all 9 billion possible single-point mutations to human DNA",
+          "publisher": "Fortune",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://www.techtimes.com/articles/327056/20260909/alphagenome-atlas-scores-all-9-billion-dna-mutations-doubles-rare-disease-hit-rate.htm",
+          "title": "AlphaGenome Atlas Scores All 9 Billion DNA Mutations, Doubles Rare-Disease Hit Rate",
+          "publisher": "TechTimes",
+          "published_at": "2026-09-09"
+        },
+        {
+          "url": "https://www.unite.ai/alphagenome-atlas-predicts-effects-of-all-9-billion-human-dna-variants",
+          "title": "AlphaGenome Atlas Predicts Effects of All 9 Billion Human DNA Variants",
+          "publisher": "Unite.AI",
+          "published_at": "2026-09-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4e090fe314",
+      "text": "Atlas releases the AlphaGenome Variant Impact (AVI) score, a single number per variant that integrates AlphaGenome regulatory predictions with AlphaMissense protein-impact predictions plus conservation and loss-of-function features, with per-variant feature attributions (splicing, expression, accessibility, etc.).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/alphagenome-atlas-a-predictive-map-of-every-possible-dna-letter-change-in-the-human-genome",
+          "title": "AlphaGenome Atlas: A predictive map of every possible DNA letter change in the human genome",
+          "publisher": "Google DeepMind Blog",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://fortune.com/2026/09/08/google-deepmind-ai-predictions-9-billion-mutation-human-genome/",
+          "title": "Google DeepMind publishes AI-powered predictions for the effect of all 9 billion possible single-point mutations to human DNA",
+          "publisher": "Fortune",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://www.unite.ai/alphagenome-atlas-predicts-effects-of-all-9-billion-human-dna-variants",
+          "title": "AlphaGenome Atlas Predicts Effects of All 9 Billion Human DNA Variants",
+          "publisher": "Unite.AI",
+          "published_at": "2026-09-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4a4cd5b800",
+      "text": "AVI score works across both the ~2% protein-coding genome and the ~98% non-coding regulatory genome, unlike AlphaMissense which only scores coding missense variants.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/alphagenome-atlas-a-predictive-map-of-every-possible-dna-letter-change-in-the-human-genome",
+          "title": "AlphaGenome Atlas: A predictive map of every possible DNA letter change in the human genome",
+          "publisher": "Google DeepMind Blog",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://fortune.com/2026/09/08/google-deepmind-ai-predictions-9-billion-mutation-human-genome/",
+          "title": "Google DeepMind publishes AI-powered predictions for the effect of all 9 billion possible single-point mutations to human DNA",
+          "publisher": "Fortune",
+          "published_at": "2026-09-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ac46b0f1d9",
+      "text": "AVI score calibration: 10 places a variant among the top 10% most impactful genome-wide, 30 among the top 0.1% (1 in 1,000).",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://fortune.com/2026/09/08/google-deepmind-ai-predictions-9-billion-mutation-human-genome/",
+          "title": "Google DeepMind publishes AI-powered predictions for the effect of all 9 billion possible single-point mutations to human DNA",
+          "publisher": "Fortune",
+          "published_at": "2026-09-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f716174e63",
+      "text": "Atlas includes a compendium of ~2,500-2,601 recurrent DNA sequence motifs (regulatory 'words' including transcription-factor binding sites) mapped across the genome and cell types.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/alphagenome-atlas-a-predictive-map-of-every-possible-dna-letter-change-in-the-human-genome",
+          "title": "AlphaGenome Atlas: A predictive map of every possible DNA letter change in the human genome",
+          "publisher": "Google DeepMind Blog",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://fortune.com/2026/09/08/google-deepmind-ai-predictions-9-billion-mutation-human-genome/",
+          "title": "Google DeepMind publishes AI-powered predictions for the effect of all 9 billion possible single-point mutations to human DNA",
+          "publisher": "Fortune",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://www.unite.ai/alphagenome-atlas-predicts-effects-of-all-9-billion-human-dna-variants",
+          "title": "AlphaGenome Atlas Predicts Effects of All 9 Billion Human DNA Variants",
+          "publisher": "Unite.AI",
+          "published_at": "2026-09-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c91c327387",
+      "text": "Before Atlas, accessing AlphaGenome required writing code against an API and GPU compute, limiting use to ~9,000 researchers globally.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/d41586-026-02835-4",
+          "title": "DeepMind's new genome 'atlas' charts effects of all nine billion human gene mutations",
+          "publisher": "Nature News",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://www.techtimes.com/articles/327056/20260909/alphagenome-atlas-scores-all-9-billion-dna-mutations-doubles-rare-disease-hit-rate.htm",
+          "title": "AlphaGenome Atlas Scores All 9 Billion DNA Mutations, Doubles Rare-Disease Hit Rate",
+          "publisher": "TechTimes",
+          "published_at": "2026-09-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_da9a602e40",
+      "text": "Atlas is available from launch via an intuitive free web portal requiring zero coding skills, plus API and as a skill in Google Antigravity, free for non-commercial academic research.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/alphagenome-atlas-a-predictive-map-of-every-possible-dna-letter-change-in-the-human-genome",
+          "title": "AlphaGenome Atlas: A predictive map of every possible DNA letter change in the human genome",
+          "publisher": "Google DeepMind Blog",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://www.nature.com/articles/d41586-026-02835-4",
+          "title": "DeepMind's new genome 'atlas' charts effects of all nine billion human gene mutations",
+          "publisher": "Nature News",
+          "published_at": "2026-09-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e955748451",
+      "text": "Commercial access to Atlas will be via licensing through Google Cloud (timing 'soon'); DeepMind's sister company Isomorphic Labs will also require a commercial license.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://fortune.com/2026/09/08/google-deepmind-ai-predictions-9-billion-mutation-human-genome/",
+          "title": "Google DeepMind publishes AI-powered predictions for the effect of all 9 billion possible single-point mutations to human DNA",
+          "publisher": "Fortune",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://www.techtimes.com/articles/327056/20260909/alphagenome-atlas-scores-all-9-billion-dna-mutations-doubles-rare-disease-hit-rate.htm",
+          "title": "AlphaGenome Atlas Scores All 9 Billion DNA Mutations, Doubles Rare-Disease Hit Rate",
+          "publisher": "TechTimes",
+          "published_at": "2026-09-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9d48ed1030",
+      "text": "Broad Institute researchers Laura Covill and Anne O'Donnell-Luria with the GREGoR Consortium used AVI to reprioritize unsolved rare-disease cases and surfaced a deep intronic DNM1 variant creating a brain-specific cryptic splice site that extends the protein by 13 amino acids, causing epileptic encephalopathy; the prediction was experimentally validated and the variant reclassified as likely pathogenic.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/alphagenome-atlas-a-predictive-map-of-every-possible-dna-letter-change-in-the-human-genome",
+          "title": "AlphaGenome Atlas: A predictive map of every possible DNA letter change in the human genome",
+          "publisher": "Google DeepMind Blog",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://fortune.com/2026/09/08/google-deepmind-ai-predictions-9-billion-mutation-human-genome/",
+          "title": "Google DeepMind publishes AI-powered predictions for the effect of all 9 billion possible single-point mutations to human DNA",
+          "publisher": "Fortune",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://www.techtimes.com/articles/327056/20260909/alphagenome-atlas-scores-all-9-billion-dna-mutations-doubles-rare-disease-hit-rate.htm",
+          "title": "AlphaGenome Atlas Scores All 9 Billion DNA Mutations, Doubles Rare-Disease Hit Rate",
+          "publisher": "TechTimes",
+          "published_at": "2026-09-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8067ce8025",
+      "text": "In retrospective testing on solved GREGoR cases, AVI placed the known causal variant in the top 50 candidates 29.5% of the time versus 12.5% for CADD, a ~2.4× improvement.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://fortune.com/2026/09/08/google-deepmind-ai-predictions-9-billion-mutation-human-genome/",
+          "title": "Google DeepMind publishes AI-powered predictions for the effect of all 9 billion possible single-point mutations to human DNA",
+          "publisher": "Fortune",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://www.techtimes.com/articles/327056/20260909/alphagenome-atlas-scores-all-9-billion-dna-mutations-doubles-rare-disease-hit-rate.htm",
+          "title": "AlphaGenome Atlas Scores All 9 Billion DNA Mutations, Doubles Rare-Disease Hit Rate",
+          "publisher": "TechTimes",
+          "published_at": "2026-09-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_78a93c9cc3",
+      "text": "MRC fellow Gareth Hawkes at University of Exeter applied Atlas to whole-genome data from >54,000 UK Biobank participants; grouping rare variants by predicted molecular effect uncovered 22% more non-coding associations with circulating protein levels (e.g., PLA2G7 linked to aging, EGLN1 oxygen sensor), narrowing one locus from 526 candidates to 4.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/alphagenome-atlas-a-predictive-map-of-every-possible-dna-letter-change-in-the-human-genome",
+          "title": "AlphaGenome Atlas: A predictive map of every possible DNA letter change in the human genome",
+          "publisher": "Google DeepMind Blog",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://fortune.com/2026/09/08/google-deepmind-ai-predictions-9-billion-mutation-human-genome/",
+          "title": "Google DeepMind publishes AI-powered predictions for the effect of all 9 billion possible single-point mutations to human DNA",
+          "publisher": "Fortune",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://www.techtimes.com/articles/327056/20260909/alphagenome-atlas-scores-all-9-billion-dna-mutations-doubles-rare-disease-hit-rate.htm",
+          "title": "AlphaGenome Atlas Scores All 9 Billion DNA Mutations, Doubles Rare-Disease Hit Rate",
+          "publisher": "TechTimes",
+          "published_at": "2026-09-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3e029cf387",
+      "text": "DeepMind states Atlas is not approved or validated for clinical use and is not a substitute for professional medical advice; predictions are hypotheses requiring independent laboratory validation before informing diagnosis.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.techtimes.com/articles/327056/20260909/alphagenome-atlas-scores-all-9-billion-dna-mutations-doubles-rare-disease-hit-rate.htm",
+          "title": "AlphaGenome Atlas Scores All 9 Billion DNA Mutations, Doubles Rare-Disease Hit Rate",
+          "publisher": "TechTimes",
+          "published_at": "2026-09-09"
+        },
+        {
+          "url": "https://www.nature.com/articles/d41586-026-02835-4",
+          "title": "DeepMind's new genome 'atlas' charts effects of all nine billion human gene mutations",
+          "publisher": "Nature News",
+          "published_at": "2026-09-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ddfd408a78",
+      "text": "Limitations include: 1 Mb input window misses distal enhancers acting over longer distances; performance is stronger for promoters/splicing than enhancers; overall accuracy is below AlphaFold's protein-structure accuracy; single-variant predictions do not capture multi-variant combinatorial effects or environmental/developmental context.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.techtimes.com/articles/327056/20260909/alphagenome-atlas-scores-all-9-billion-dna-mutations-doubles-rare-disease-hit-rate.htm",
+          "title": "AlphaGenome Atlas Scores All 9 Billion DNA Mutations, Doubles Rare-Disease Hit Rate",
+          "publisher": "TechTimes",
+          "published_at": "2026-09-09"
+        },
+        {
+          "url": "https://fortune.com/2026/09/08/google-deepmind-ai-predictions-9-billion-mutation-human-genome/",
+          "title": "Google DeepMind publishes AI-powered predictions for the effect of all 9 billion possible single-point mutations to human DNA",
+          "publisher": "Fortune",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://deepmind.google/blog/alphagenome-ai-for-better-understanding-the-genome",
+          "title": "AlphaGenome: AI for better understanding the genome",
+          "publisher": "Google DeepMind Blog",
+          "published_at": "2025-06-25"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8024bcb195",
+      "text": "Human genome comprises ~3-3.2 billion base pairs of four letters (A, C, G, T); 9 billion possible single-letter substitutions; ~2% codes for proteins, ~98% is non-coding regulatory DNA where most trait-associated variants lie.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://fortune.com/2026/09/08/google-deepmind-ai-predictions-9-billion-mutation-human-genome/",
+          "title": "Google DeepMind publishes AI-powered predictions for the effect of all 9 billion possible single-point mutations to human DNA",
+          "publisher": "Fortune",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://www.techtimes.com/articles/327056/20260909/alphagenome-atlas-scores-all-9-billion-dna-mutations-doubles-rare-disease-hit-rate.htm",
+          "title": "AlphaGenome Atlas Scores All 9 Billion DNA Mutations, Doubles Rare-Disease Hit Rate",
+          "publisher": "TechTimes",
+          "published_at": "2026-09-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dba4841b32",
+      "text": "AlphaGenome was trained on ENCODE, GTEx, 4D Nucleome and FANTOM5 data, uses a U-Net-style encoder-transformer-decoder with sequence parallelism across TPUs (pre-training on 256 TPUv3), and was distilled to run all-modality predictions for a variant in <1 second on an NVIDIA H100, achieving ~80× speedup needed to make 9B-variant precomputation feasible.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/alphagenome-ai-for-better-understanding-the-genome",
+          "title": "AlphaGenome: AI for better understanding the genome",
+          "publisher": "Google DeepMind Blog",
+          "published_at": "2025-06-25"
+        },
+        {
+          "url": "https://www.techtimes.com/articles/327056/20260909/alphagenome-atlas-scores-all-9-billion-dna-mutations-doubles-rare-disease-hit-rate.htm",
+          "title": "AlphaGenome Atlas Scores All 9 Billion DNA Mutations, Doubles Rare-Disease Hit Rate",
+          "publisher": "TechTimes",
+          "published_at": "2026-09-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5a66dffb7b",
+      "text": "Atlas follows the AlphaFold Database precedent, which in 2022 expanded from ~190,000 experimental structures to >200 million predicted structures.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/alphagenome-atlas-a-predictive-map-of-every-possible-dna-letter-change-in-the-human-genome",
+          "title": "AlphaGenome Atlas: A predictive map of every possible DNA letter change in the human genome",
+          "publisher": "Google DeepMind Blog",
+          "published_at": "2026-09-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_798c5c176d",
+      "text": "University of Exeter MRC fellow Gareth Hawkes applied AlphaGenome Atlas to whole-genome data from >54,000 UK Biobank participants (54,189 in preprint analysis across 2,028 circulating proteins), grouping rare variants by predicted molecular effect to uncover 22% more non-coding genetic associations (728 vs 595 significant associations) including PLA2G7 and EGLN1, and identified 19 BMI-associated regions by focusing on top 1% most impactful non-coding variants.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://news.exeter.ac.uk/faculty-of-health-and-life-sciences/exeter-researcher-pioneers-alphagenome-atlas-identifying-genetic-regions-that-could-link-to-disease",
+          "title": "Exeter researcher pioneers AlphaGenome Atlas, identifying genetic regions that could link to disease",
+          "publisher": "University of Exeter",
+          "published_at": "2026-09-10"
+        },
+        {
+          "url": "https://winbuzzer.com/2026/09/09/google-alphagenome-atlas-nine-billion-dna-substitutions-searchable-xcxwbn",
+          "title": "Google's AlphaGenome Atlas Makes Nine Billion Possible DNA Substitutions Searchable",
+          "publisher": "WinBuzzer",
+          "published_at": "2026-09-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_acd3f91655",
+      "text": "AlphaGenome Variant Impact (AVI) score is an 18-feature model: 10 aggregated AlphaGenome predictions + AlphaMissense + 2 conservation features + 3 protein loss-of-function annotations + 2 indel indicators, trained to distinguish variants above vs below population allele-frequency threshold (rarity as proxy for impact), output as PHRED-like rank (10=top 10%, 20=top 1%, 30=top 0.1%) with per-variant feature attributions.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://winbuzzer.com/2026/09/09/google-alphagenome-atlas-nine-billion-dna-substitutions-searchable-xcxwbn",
+          "title": "Google's AlphaGenome Atlas Makes Nine Billion Possible DNA Substitutions Searchable",
+          "publisher": "WinBuzzer",
+          "published_at": "2026-09-09"
+        },
+        {
+          "url": "https://www.linkedin.com/pulse/alphagenome-atlas-what-headlines-missing-kristin-gleitsman-pjxqc",
+          "title": "AlphaGenome Atlas: What the Headlines Are Missing",
+          "publisher": "LinkedIn",
+          "published_at": "2026-09-12"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_df0d8225a5",
+      "text": "Motif compendium comprises 2,601 recurrent DNA sequence motifs derived from patterns the model learned, mapped across genome and cell types with inferred roles (activating, repressing, altering accessibility); some match known biology with experimental support, others labeled broad/unresolved/unknown.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://winbuzzer.com/2026/09/09/google-alphagenome-atlas-nine-billion-dna-substitutions-searchable-xcxwbn",
+          "title": "Google's AlphaGenome Atlas Makes Nine Billion Possible DNA Substitutions Searchable",
+          "publisher": "WinBuzzer",
+          "published_at": "2026-09-09"
+        },
+        {
+          "url": "https://www.nature.com/articles/d41586-026-02835-4",
+          "title": "DeepMind's new genome 'atlas' charts effects of all nine billion human gene mutations",
+          "publisher": "Nature News",
+          "published_at": "2026-09-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_915bbf80a3",
+      "text": "GREGoR/Broad 29.5% vs 12.5% CADD top-50 recall figure is retrospective testing on solved GREGoR cases selected by DeepMind collaborators, with DNM1 cryptic splice validated by minigene assay across 5 cell lines; no independent replication outside DeepMind-selected cases, no prospective diagnostic yield, and CADD version not specified.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://winbuzzer.com/2026/09/09/google-alphagenome-atlas-nine-billion-dna-substitutions-searchable-xcxwbn",
+          "title": "Google's AlphaGenome Atlas Makes Nine Billion Possible DNA Substitutions Searchable",
+          "publisher": "WinBuzzer",
+          "published_at": "2026-09-09"
+        },
+        {
+          "url": "https://www.gadgetreview.com/alphagenome-atlas-maps-every-dna-mutation-free-to-any-researcher",
+          "title": "AlphaGenome Atlas Maps Every DNA Mutation, Free to Any Researcher",
+          "publisher": "GadgetReview",
+          "published_at": "2026-09-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bc03d606e8",
+      "text": "Broad Institute researchers Laura Covill and Anne O'Donnell-Luria with GREGoR Consortium used AVI to prioritize deep intronic DNM1 variant creating brain-specific cryptic splice site extending protein by 13 amino acids, causing epileptic encephalopathy, experimentally validated via minigene assay.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/d41586-026-02835-4",
+          "title": "DeepMind's new genome 'atlas' charts effects of all nine billion human gene mutations",
+          "publisher": "Nature News",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://winbuzzer.com/2026/09/09/google-alphagenome-atlas-nine-billion-dna-substitutions-searchable-xcxwbn",
+          "title": "Google's AlphaGenome Atlas Makes Nine Billion Possible DNA Substitutions Searchable",
+          "publisher": "WinBuzzer",
+          "published_at": "2026-09-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ebb54d3202",
+      "text": "AlphaGenome Atlas charts effects of 9 billion single-letter changes using AlphaGenome AI model predictions, 1 petabyte including >100M indels, freely available for non-commercial use.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/d41586-026-02835-4",
+          "title": "DeepMind's new genome 'atlas' charts effects of all nine billion human gene mutations",
+          "publisher": "Nature News",
+          "published_at": "2026-09-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f1104cb164",
+      "text": "AVI score calibration: 10=top 10% most impactful genome-wide, 20=top 1%, 30=top 0.1% (1 in 1,000), as PHRED-like rank.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://winbuzzer.com/2026/09/09/google-alphagenome-atlas-nine-billion-dna-substitutions-searchable-xcxwbn",
+          "title": "Google's AlphaGenome Atlas Makes Nine Billion Possible DNA Substitutions Searchable",
+          "publisher": "WinBuzzer",
+          "published_at": "2026-09-09"
+        },
+        {
+          "url": "https://www.linkedin.com/pulse/alphagenome-atlas-what-headlines-missing-kristin-gleitsman-pjxqc",
+          "title": "AlphaGenome Atlas: What the Headlines Are Missing",
+          "publisher": "LinkedIn",
+          "published_at": "2026-09-12"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8beb1cc858",
+      "text": "AVI works across both ~2% protein-coding and ~98% non-coding regulatory genome, unlike AlphaMissense which only scores coding missense variants, by combining regulatory and protein-impact signals.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://winbuzzer.com/2026/09/09/google-alphagenome-atlas-nine-billion-dna-substitutions-searchable-xcxwbn",
+          "title": "Google's AlphaGenome Atlas Makes Nine Billion Possible DNA Substitutions Searchable",
+          "publisher": "WinBuzzer",
+          "published_at": "2026-09-09"
+        },
+        {
+          "url": "https://www.linkedin.com/pulse/alphagenome-atlas-what-headlines-missing-kristin-gleitsman-pjxqc",
+          "title": "AlphaGenome Atlas: What the Headlines Are Missing",
+          "publisher": "LinkedIn",
+          "published_at": "2026-09-12"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_36dcd9b32b",
+      "text": "ACMG/AMP 2015 guidelines (Richards et al., Genet Med 17:405-423) limit computational (in silico) predictor evidence to supporting-level only (PP3 for pathogenic, BP4 for benign), explicitly warning 'Not overestimating computational evidence is important, particularly given that different algorithms may rely on the same (or similar) data to support predictions and most algorithms have not been validated against well-established pathogenic variants' and that 'algorithms can have vastly different predictive capabilities for different genes.' If predictions disagree, evidence cannot be counted as supporting. This constrains AVI to supporting at most without independent ClinGen calibration.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/gim201530",
+          "title": "Standards and guidelines for the interpretation of sequence variants: a joint consensus recommendation of the American College of Medical Genetics and Genomics and the Association for Molecular Pathology",
+          "publisher": "Nature / Genetics in Medicine",
+          "published_at": "2015-03-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7ed88360ef",
+      "text": "ClinGen Sequence Variant Interpretation Working Group calibration (Pejaver et al. 2022 Am J Hum Genet 109:2163-2177, expanded Bergquist et al. 2025 Genet Med 27:101402) found only 4 of 13 evaluated tools could reach PP3 strong, 9 topped out at moderate/supporting, and GERP++ failed to meet even PP3 supporting; CADD's developer-recommended threshold of 20.0 falls within BP4 moderate range, meaning it was being misapplied as pathogenic evidence. REVEL is the only tool covering PP3 strong (≥0.932) to BP4 very strong (≤0.003). AVI (18-feature model trained on allele-frequency threshold as rarity proxy) is not among ClinGen-calibrated tools and has no published PP3/BP4 thresholds; clinical labs therefore cannot apply it above supporting without formal calibration.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://3billion.io/blog/acmg-pp3-revel-variant-classification-3cnet-2",
+          "title": "How AI Prediction Tools Are Changing Rare Disease Diagnosis — ACMG PP3 Evidence Strength, REVEL, and 3Cnet (summarizing Pejaver et al. 2022 and Bergquist et al. 2025)",
+          "publisher": "3billion Inc. (clinical lab)",
+          "published_at": "2026-06-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_239118e93a",
+      "text": "Variant-effect predictor benchmarks are inflated by Type 1 circularity (same variant in train and test) and Type 2 circularity (same gene in train and test even with distinct variants), especially where genes have all-benign or all-pathogenic labels; ensemble methods (REVEL, MetaLR) and supervised models are prone to this bias. In a 46-method comparison, only 19 methods met criteria for unbiased clinical evaluation (not trained on ClinVar/HGMD, not using features from such methods, not using allele frequency), because 'the vast majority... have been trained on clinical databases like ClinVar, leading to circularity issues.' AVI's training on allele-frequency threshold and inclusion of conservation/LoF features risks similar allele-frequency leakage, and the 22/24 and 25/26 (vs preprint 24/26) SOTA claims depend on comparator and task selection.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41598-024-51489-7",
+          "title": "Enhancing missense variant pathogenicity prediction with protein language models using VariPred",
+          "publisher": "Nature / Scientific Reports",
+          "published_at": "2024-04-07"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41588-023-01465-0",
+          "title": "Genome-wide prediction of disease variant effects with a deep protein language model",
+          "publisher": "Nature Genetics",
+          "published_at": "2023-09-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_51c9d25056",
+      "text": "Independent genomic-model developer Carl de Boer (University of British Columbia, author of framework for comparing models like AlphaGenome) called AlphaGenome the 'field's leading model' but 'very slow and computationally intensive,' and warned the Atlas single-number AVI score 'has a clear use, but it also is probably going to be easily misinterpreted. We're talking about a very complex system, and there's a lot of moving parts.' He and IEEE Spectrum note the 1 Mb receptive field misses enhancers acting over longer distances, and many diseases involve multiple variants, limiting single-variant scores.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://spectrum.ieee.org/alphagenome-atlas",
+          "title": "AlphaGenome Atlas Maps 9 Billion Possible DNA Variants",
+          "publisher": "IEEE Spectrum",
+          "published_at": "2026-09-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1e0a24befe",
+      "text": "Precomputed 1 PB Atlas trades on-demand freshness for convenience: locked to hg38 reference, no ancestry breakdown or false-positive rate for AVI disclosed in DeepMind post, no bulk-download/egress pricing, and commercial access requires separate Google Cloud license (non-commercial free) — a two-tier structure unlike AlphaFold DB's fully open release. This creates equity and staleness risks: reference-genome bias, inability to update for new cell types or hg38 successors without recomputation, and pharma/academic access asymmetry.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://spectrum.ieee.org/alphagenome-atlas",
+          "title": "AlphaGenome Atlas Maps 9 Billion Possible DNA Variants",
+          "publisher": "IEEE Spectrum",
+          "published_at": "2026-09-08"
+        },
+        {
+          "url": "https://aiweekly.co/alerts/google-deepmind-ships-1pb-alphagenome-atlas-of-9b-dna-variants",
+          "title": "Google DeepMind Ships 1PB AlphaGenome Atlas of 9B DNA Variants",
+          "publisher": "AI Weekly",
+          "published_at": "2026-09-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ddaea37a86",
+      "text": "Hybrid predictors that integrate protein structure, multiple sequence alignments, or population genetics data gain accuracy but add complexity, limited applicability where data are unavailable, and circularity risk; sequence-only PLM versions of TranceptEVE and SaProt 'decrease substantially' without MSA/3D structure, and 'the use of population genetics data can lead to data circularity concerns in clinical genetics applications.' This frames AVI's design choice (10 AlphaGenome + AlphaMissense + conservation + LoF + indel features trained on rarity) as inheriting both the power and the circularity/interpretability tradeoffs of hybrid models.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41592-026-03050-9",
+          "title": "Compressing the collective knowledge of ESM into a single protein language model",
+          "publisher": "Nature Methods",
+          "published_at": "2026-04-01"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41588-023-01465-0",
+          "title": "Genome-wide prediction of disease variant effects with a deep protein language model",
+          "publisher": "Nature Genetics",
+          "published_at": "2023-09-01"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

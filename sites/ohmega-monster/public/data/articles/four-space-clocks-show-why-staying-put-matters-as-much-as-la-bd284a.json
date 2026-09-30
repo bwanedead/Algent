@@ -1,0 +1,586 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/four-space-clocks-show-why-staying-put-matters-as-much-as-la-bd284a",
+  "title": "Four space clocks show why staying put matters as much as launching",
+  "summary": "Curiosity nears 5,000 Martian days while climbing Mount Sharp, Juice borrows Earth's momentum on 28 September for Jupiter, a 222-metre lunar crater is dated to spring 2024 and a distant ring system has thinned in a decade — the lunar record is the largest yet found by modern orbiters, not proven the largest ever formed.",
+  "published_at": "2026-09-23T14:22:22.374256+00:00",
+  "as_of": "2026-09-23",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 30,
+    "likely": 1,
+    "unconfirmed": 1
+  },
+  "claims": [
+    {
+      "id": "clm_b193a000df",
+      "text": "ESA's Jupiter Icy Moons Explorer (Juice) will fly past Earth on 28 September 2026 within 8,640 km to perform a gravity assist en route to Jupiter",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/Juice_to_fly_past_Earth_for_third_gravity_assist",
+          "title": "Juice to fly past Earth for third gravity assist",
+          "publisher": "ESA",
+          "published_at": "2026-09-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9a23470e17",
+      "text": "The 28 September 2026 Earth flyby will deflect Juice's trajectory by about 20 degrees and increase its velocity by about 3.5 km/s",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/Juice_to_fly_past_Earth_for_third_gravity_assist",
+          "title": "Juice to fly past Earth for third gravity assist",
+          "publisher": "ESA",
+          "published_at": "2026-09-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_23c49b264f",
+      "text": "Closest approach on 28 September 2026 will be over the Indian Ocean at 13:45 CEST (11:45 UTC), passing over Australia 15-30 minutes before",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/Juice_to_fly_past_Earth_for_third_gravity_assist",
+          "title": "Juice to fly past Earth for third gravity assist",
+          "publisher": "ESA",
+          "published_at": "2026-09-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_57ed92b907",
+      "text": "Juice will be in Earth's shadow from 21:24 CEST on 27 September to 06:03 CEST on 28 September and must operate on battery power",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/Juice_to_fly_past_Earth_for_third_gravity_assist",
+          "title": "Juice to fly past Earth for third gravity assist",
+          "publisher": "ESA",
+          "published_at": "2026-09-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_308b015e87",
+      "text": "Juice launched on 14 April 2023 from Europe's Spaceport in French Guiana on an Ariane 5",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/Juice_to_fly_past_Earth_for_third_gravity_assist",
+          "title": "Juice to fly past Earth for third gravity assist",
+          "publisher": "ESA",
+          "published_at": "2026-09-01"
+        },
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/",
+          "title": "Juice - Jupiter Icy Moons Explorer",
+          "publisher": "ESA",
+          "published_at": "2023-04-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b61216f897",
+      "text": "Juice's cruise includes flybys in August 2024 (Lunar-Earth), August 2025 (Venus), September 2026 (Earth), January 2029 (Earth), with Jupiter arrival in July 2031",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/Juice_to_fly_past_Earth_for_third_gravity_assist",
+          "title": "Juice to fly past Earth for third gravity assist",
+          "publisher": "ESA",
+          "published_at": "2026-09-01"
+        },
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/",
+          "title": "Juice - Jupiter Icy Moons Explorer",
+          "publisher": "ESA",
+          "published_at": "2023-04-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_48aaa3b6b6",
+      "text": "Juice carries 10 science instruments, 85 m2 solar wings, and is planned to make 35 flybys of Jovian moons before entering orbit around Ganymede in 2034",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/Juice_to_fly_past_Earth_for_third_gravity_assist",
+          "title": "Juice to fly past Earth for third gravity assist",
+          "publisher": "ESA",
+          "published_at": "2026-09-01"
+        },
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/",
+          "title": "Juice - Jupiter Icy Moons Explorer",
+          "publisher": "ESA",
+          "published_at": "2023-04-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_099ef1cdee",
+      "text": "Juice's science goal is detailed observation of Jupiter and its three large ocean-bearing moons Ganymede, Callisto and Europa to characterize them as planetary objects and possible habitats",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/Juice_to_fly_past_Earth_for_third_gravity_assist",
+          "title": "Juice to fly past Earth for third gravity assist",
+          "publisher": "ESA",
+          "published_at": "2026-09-01"
+        },
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/",
+          "title": "Juice - Jupiter Icy Moons Explorer",
+          "publisher": "ESA",
+          "published_at": "2023-04-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1717c40a3a",
+      "text": "A new lunar crater named McGetchin after Apollo-era lunar scientist Tom McGetchin formed on the Moon's eastern edge between 11 April and 22 May 2024",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/solar-system/moon/nasas-moon-orbiter-spots-new-once-in-century-moon-crater/",
+          "title": "NASA’s Moon Orbiter Spots New, ‘Once-in-Century’ Moon Crater",
+          "publisher": "NASA Science",
+          "published_at": "2026-09-16"
+        },
+        {
+          "url": "https://science.nasa.gov/image-article/apod-2026-september-23-the-mcgetchin-crater/",
+          "title": "APOD: 2026 September 23 – A New Lunar Crater: McGetchin",
+          "publisher": "NASA APOD",
+          "published_at": "2026-09-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_588ce02c64",
+      "text": "McGetchin crater is 728 feet (222 m) wide and 141 feet deep, spanning two football fields, created by an impactor 10-20 meters (30-60 feet) across, described as humpback-whale-sized or 3-6 story building-sized",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/solar-system/moon/nasas-moon-orbiter-spots-new-once-in-century-moon-crater/",
+          "title": "NASA’s Moon Orbiter Spots New, ‘Once-in-Century’ Moon Crater",
+          "publisher": "NASA Science",
+          "published_at": "2026-09-16"
+        },
+        {
+          "url": "https://science.nasa.gov/image-article/apod-2026-september-23-the-mcgetchin-crater/",
+          "title": "APOD: 2026 September 23 – A New Lunar Crater: McGetchin",
+          "publisher": "NASA APOD",
+          "published_at": "2026-09-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b6574d0ae8",
+      "text": "An impact creating a crater of McGetchin's size is expected only about once per century (once every 100-132 years) on the Moon",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/solar-system/moon/nasas-moon-orbiter-spots-new-once-in-century-moon-crater/",
+          "title": "NASA’s Moon Orbiter Spots New, ‘Once-in-Century’ Moon Crater",
+          "publisher": "NASA Science",
+          "published_at": "2026-09-16"
+        },
+        {
+          "url": "https://science.nasa.gov/image-article/apod-2026-september-23-the-mcgetchin-crater/",
+          "title": "APOD: 2026 September 23 – A New Lunar Crater: McGetchin",
+          "publisher": "NASA APOD",
+          "published_at": "2026-09-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_978dea82ca",
+      "text": "McGetchin is the largest newly formed crater ever found in the solar system, discovered by Robert Wagner (Intuitive Machines/LROC) during a routine LRO data-quality check comparing before/after images",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/solar-system/moon/nasas-moon-orbiter-spots-new-once-in-century-moon-crater/",
+          "title": "NASA’s Moon Orbiter Spots New, ‘Once-in-Century’ Moon Crater",
+          "publisher": "NASA Science",
+          "published_at": "2026-09-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4ebc46f2d4",
+      "text": "LRO has operated for more than 17 years, identifying at least 1,000 new impact craters and flagging 100,000+ surface changes; smallest distinguishable craters are ~30 feet wide from ~43-inch impactors, with ~140 new craters of that scale per year",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/solar-system/moon/nasas-moon-orbiter-spots-new-once-in-century-moon-crater/",
+          "title": "NASA’s Moon Orbiter Spots New, ‘Once-in-Century’ Moon Crater",
+          "publisher": "NASA Science",
+          "published_at": "2026-09-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6b5974b243",
+      "text": "LRO's Diviner thermal instrument found a 4-mile-wide cold spot around McGetchin that is about 16°F cooler at night because the impact fluffed up regolith, reducing density and heat retention",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/solar-system/moon/nasas-moon-orbiter-spots-new-once-in-century-moon-crater/",
+          "title": "NASA’s Moon Orbiter Spots New, ‘Once-in-Century’ Moon Crater",
+          "publisher": "NASA Science",
+          "published_at": "2026-09-16"
+        },
+        {
+          "url": "https://science.nasa.gov/image-article/apod-2026-september-23-the-mcgetchin-crater/",
+          "title": "APOD: 2026 September 23 – A New Lunar Crater: McGetchin",
+          "publisher": "NASA APOD",
+          "published_at": "2026-09-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_86651a933e",
+      "text": "Chariklo is a small dark body about 250 km across orbiting between Saturn and Uranus, discovered in 2013 to have two narrow rings (C1R and C2R) at 390 and 405 km from its center, only a few km wide and ~7 km apart, via stellar occultation",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://arstechnica.com/science/2026/09/rings-around-a-tiny-body-have-changed-over-the-past-decade/",
+          "title": "Rings around a tiny body have changed over the past decade",
+          "publisher": "Ars Technica",
+          "published_at": "2026-09-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fa37258cbe",
+      "text": "A recent study by Pablo Santos-Sanz and colleagues using JWST to observe a new stellar occultation by Chariklo found one ring had grown denser and the other had almost vanished",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://arstechnica.com/science/2026/09/rings-around-a-tiny-body-have-changed-over-the-past-decade/",
+          "title": "Rings around a tiny body have changed over the past decade",
+          "publisher": "Ars Technica",
+          "published_at": "2026-09-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_234c84c818",
+      "text": "The cause of the change in Chariklo's rings is not yet known",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://arstechnica.com/science/2026/09/rings-around-a-tiny-body-have-changed-over-the-past-decade/",
+          "title": "Rings around a tiny body have changed over the past decade",
+          "publisher": "Ars Technica",
+          "published_at": "2026-09-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3fe90b0c58",
+      "text": "Before 2013, rings were thought to exist only around giant planets; Chariklo's rings were a surprise",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://arstechnica.com/science/2026/09/rings-around-a-tiny-body-have-changed-over-the-past-decade/",
+          "title": "Rings around a tiny body have changed over the past decade",
+          "publisher": "Ars Technica",
+          "published_at": "2026-09-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_469f3f64d8",
+      "text": "NASA's Curiosity rover, part of Mars Science Laboratory, was the largest and most capable rover at launch, is car-sized with a 7-foot arm, 10 instruments and 17 cameras, and explores Gale Crater and Mount Sharp",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/mission/msl-curiosity/",
+          "title": "Mars Science Laboratory: Curiosity Rover",
+          "publisher": "NASA Science",
+          "published_at": "2026-08-26"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1434498850",
+      "text": "Curiosity reached a 1-kilometer elevation gain climbing Mount Sharp on 26 August 2026, marking a pinnacle of its 14-year mission",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/mission/msl-curiosity/",
+          "title": "Mars Science Laboratory: Curiosity Rover",
+          "publisher": "NASA Science",
+          "published_at": "2026-08-26"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_883bf5cef4",
+      "text": "Curiosity has reached 5,000 sols/days on Mars and a Live Science feature lists its top 10 most revealing photos including alien sunsets and stone structures",
+      "grade": "unconfirmed",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_244bbc8791",
+      "text": "Juice's 10 instruments will be switched on between 23 September and 3 October 2026 to collect calibration data on Earth and the Moon, and to measure Earth's magnetotail",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/Juice_to_fly_past_Earth_for_third_gravity_assist",
+          "title": "Juice to fly past Earth for third gravity assist",
+          "publisher": "ESA",
+          "published_at": "2026-09-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_766178e3ab",
+      "text": "NASA Mars mission update dated 4 Sept 2026 (Benjamin Tutolo) states Curiosity has marked 5,000 sols on Mars, 14 years on Mars, and 1 km elevation gain since landing; NASA Science MSL page confirms sol 4,740 was 6 Dec 2025 (MAHLI nighttime LED image) and 1-km gain on 26 Aug 2026",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://mars.nasa.gov/msl/mission-updates/",
+          "title": "Curiosity Rover Updates - Mission Updates Index",
+          "publisher": "NASA JPL",
+          "published_at": "2026-09-04"
+        },
+        {
+          "url": "https://science.nasa.gov/mission/msl-curiosity/",
+          "title": "Mars Science Laboratory: Curiosity Rover",
+          "publisher": "NASA Science",
+          "published_at": "2026-08-26"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f213a45d62",
+      "text": "Live Science URL https://www.livescience.com/space/mars/curiositys-top-10-photos-after-5-000-days-on-mars returns 404 and no corrected URL was retrieved; specific image descriptions (alien sunsets, stone structures) cannot be verified and should not be carried",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3a4e39ea46",
+      "text": "Primary study 'JWST occultation reveals unforeseen complexity in Chariklo's ring system' by Pablo Santos-Sanz et al. (IAA, Granada) reports near-infrared JWST stellar occultation of (10199) Chariklo: inner dense ring C1R became significantly more opaque than previous visible-light observations (replenishment/dynamical restructuring), outer ring C2R shows much weaker near-infrared signature than earlier detections (possible material loss/transient or wavelength-dependent opacity); scenarios not mutually exclusive",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://arxiv.org/search/?query=Santos-Sanz+Chariklo+JWST+occultation&searchtype=all",
+          "title": "JWST occultation reveals unforeseen complexity in Chariklo's ring system",
+          "publisher": "arXiv",
+          "published_at": "2025-10-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a6e3c6e598",
+      "text": "Robinson et al., Science Advances 12(38) 16 Sep 2026 DOI 10.1126/sciadv.aeh7812, reports 222-m (728-ft) McGetchin crater at 1.3536N 67.1765E formed spring 2024, discovered via LROC WAC monthly global imaging and confirmed with LROC NAC meter-scale images; largest contemporary impact crater discovered anywhere in Solar System, exceeding previous 70-m record; energy 6.5e10 kJ; crater production models predict once every 132 years on the Moon",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.science.org/doi/10.1126/sciadv.aeh7812",
+          "title": "A new 222-m diameter lunar crater - Science Advances DOI 10.1126/sciadv.aeh7812",
+          "publisher": "Science Advances",
+          "published_at": "2026-09-16"
+        },
+        {
+          "url": "https://science.nasa.gov/solar-system/moon/nasas-moon-orbiter-spots-new-once-in-century-moon-crater/",
+          "title": "NASA’s Moon Orbiter Spots New, ‘Once-in-Century’ Moon Crater",
+          "publisher": "NASA Science",
+          "published_at": "2026-09-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_88ca07cc4c",
+      "text": "Powell et al., Science Advances 12(38) 16 Sep 2026 DOI 10.1126/sciadv.aeh9568, reports Diviner nighttime temperatures reveal ~7-km-wide (~4-mile) cold spot around McGetchin 8-9 K (~16F) cooler than surroundings, consistent with decompaction of upper centimeters to decimeters of regolith reducing thermal inertia; all newly formed craters >~30m produce detectable cold spots, anomaly increases with crater size; cold spots fade on ~100 ka to ~2 Ma timescales",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.science.org/doi/10.1126/sciadv.aeh9568",
+          "title": "New lunar crater reveals extensive distal regolith modification - Science Advances DOI 10.1126/sciadv.aeh9568",
+          "publisher": "Science Advances",
+          "published_at": "2026-09-16"
+        },
+        {
+          "url": "https://science.nasa.gov/solar-system/moon/nasas-moon-orbiter-spots-new-once-in-century-moon-crater/",
+          "title": "NASA’s Moon Orbiter Spots New, ‘Once-in-Century’ Moon Crater",
+          "publisher": "NASA Science",
+          "published_at": "2026-09-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3d40e57730",
+      "text": "Impactor was comet or asteroid 10-20 m (30-60 ft) across, described as 3-6 story building-sized (NASA feature) / humpback-whale-sized (APOD); discovery via routine temporal comparison of WAC image sets under similar lighting enabling automated change detection, followed by NAC photometric/topographic analysis documenting surface changes extending >1000 crater radii",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.science.org/doi/10.1126/sciadv.aeh7812",
+          "title": "A new 222-m diameter lunar crater - Science Advances DOI 10.1126/sciadv.aeh7812",
+          "publisher": "Science Advances",
+          "published_at": "2026-09-16"
+        },
+        {
+          "url": "https://science.nasa.gov/solar-system/moon/nasas-moon-orbiter-spots-new-once-in-century-moon-crater/",
+          "title": "NASA’s Moon Orbiter Spots New, ‘Once-in-Century’ Moon Crater",
+          "publisher": "NASA Science",
+          "published_at": "2026-09-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2c1853d50a",
+      "text": "Science Advances Robinson et al. abstract states 'This is the largest contemporary impact crater found in the Solar System' and introduction states 'the largest contemporary impact crater discovered anywhere in the Solar System' — qualified to instrumentally observed new craters in space-age monitoring era (LRO WAC monthly imaging since 2010), not largest crater ever formed in solar-system history. NASA feature paraphrases as 'largest, newly formed crater ever found in the solar system' without 'contemporary/discovered' qualifier.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.science.org/doi/10.1126/sciadv.aeh7812",
+          "title": "A new 222-m diameter lunar crater - Science Advances DOI 10.1126/sciadv.aeh7812",
+          "publisher": "Science Advances",
+          "published_at": "2026-09-16"
+        },
+        {
+          "url": "https://science.nasa.gov/solar-system/moon/nasas-moon-orbiter-spots-new-once-in-century-moon-crater/",
+          "title": "NASA’s Moon Orbiter Spots New, ‘Once-in-Century’ Moon Crater",
+          "publisher": "NASA Science",
+          "published_at": "2026-09-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4f2b4af99e",
+      "text": "Frequency estimate is model-dependent: Robinson et al. crater production model predicts once every 132 years on the Moon on average; NASA feature hedges as 'about once in a century or even longer' and APOD states 'only expected once every 132 years.' Conflation of 'once-in-a-century' (100 years) and 132 years reflects uncertainty range/hedging.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.science.org/doi/10.1126/sciadv.aeh7812",
+          "title": "A new 222-m diameter lunar crater - Science Advances DOI 10.1126/sciadv.aeh7812",
+          "publisher": "Science Advances",
+          "published_at": "2026-09-16"
+        },
+        {
+          "url": "https://science.nasa.gov/solar-system/moon/nasas-moon-orbiter-spots-new-once-in-century-moon-crater/",
+          "title": "NASA’s Moon Orbiter Spots New, ‘Once-in-Century’ Moon Crater",
+          "publisher": "NASA Science",
+          "published_at": "2026-09-16"
+        },
+        {
+          "url": "https://science.nasa.gov/image-article/apod-2026-september-23-the-mcgetchin-crater/",
+          "title": "APOD: 2026 September 23 – A New Lunar Crater: McGetchin",
+          "publisher": "NASA APOD",
+          "published_at": "2026-09-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_63501f12ce",
+      "text": "Largest fresh Martian craters discovered by MRO/HiRISE in contemporary era are smaller than McGetchin: Posiolova et al. Science 2022 reports 'Two >130-meter-diameter impact craters formed on Mars during the later half of 2021. These are the two largest fresh impact craters discovered by the Mars Reconnaissance Orbiter since operations started 16 years ago' including ~150-m crater on 24 Dec 2021, both smaller than McGetchin's 222 m.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.science.org/doi/10.1126/science.abq7704",
+          "title": "Posiolova et al. Science 2022 DOI 10.1126/science.abq7704",
+          "publisher": ".",
+          "published_at": "."
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c97ad61261",
+      "text": "Superlative should be framed as 'largest discovered/known contemporary crater' rather than largest ever formed: LRO WAC since 2010 and MRO/HiRISE since 2006 provide baseline; larger ancient craters exist, and undetected contemporary craters could exist outside monitored areas/times. ScienceAdviser paraphrase as 'Solar System's largest known impact crater to have recently formed' captures 'known/discovered' limitation.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.science.org/doi/10.1126/science.aem6455",
+          "title": "ScienceAdviser: Once-in-a-century crater discovered on the Moon DOI 10.1126/science.aem6455",
+          "publisher": ".",
+          "published_at": "."
+        },
+        {
+          "url": "https://www.science.org/doi/10.1126/sciadv.aeh7812",
+          "title": "A new 222-m diameter lunar crater - Science Advances DOI 10.1126/sciadv.aeh7812",
+          "publisher": "Science Advances",
+          "published_at": "2026-09-16"
+        },
+        {
+          "url": "https://www.science.org/doi/10.1126/science.abq7704",
+          "title": "Posiolova et al. Science 2022 DOI 10.1126/science.abq7704",
+          "publisher": ".",
+          "published_at": "."
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

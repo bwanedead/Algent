@@ -1,0 +1,252 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/supreme-court-issues-notice-refuses-interim-stay-in-shiv-sen-dd6593",
+  "title": "Supreme Court issues notice, refuses interim stay in Shiv Sena (UBT) challenge to Lok Sabha Speaker’s merger recognition of rebel MPs",
+  "summary": "The court has taken up the anti-defection dispute over six rebel MPs’ merger with the Eknath Shinde-led Shiv Sena but has not ruled on the merits yet; the case returns after two weeks.",
+  "published_at": "2026-07-22T11:04:08.214929+00:00",
+  "as_of": "2026-07-22",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 8,
+    "likely": 8
+  },
+  "claims": [
+    {
+      "id": "clm_20870c769f",
+      "text": "The underlying dispute concerns disqualification proceedings involving rebel Shiv Sena MPs and the Lok Sabha Speaker’s office.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a7fa9f1632",
+      "text": "The constitutional issue appears to be the timing and handling of disqualification petitions under the anti-defection framework.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_26578835c9",
+      "text": "The Supreme Court is reportedly being drawn into a review of, or pressure on, the Speaker’s discretion or delay.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c23cbf6eab",
+      "text": "If the Court does engage, the case could create a precedent on judicial oversight of Speaker inaction in defection disputes.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_316a832675",
+      "text": "The dispute may affect the MPs’ legislative status and the Speaker’s practical discretion, but the exact legal effect is unverified here.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_248f647101",
+      "text": "In this run, the Supreme Court material located for the Shiv Sena UBT merger dispute shows a notice stage only: the bench issued notice, sought responses from the Lok Sabha Speaker and other respondents, and listed the matter for later hearing.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.newindianexpress.com/india/2026/Jul/22/sc-agrees-to-hear-shiv-sena-ubt-plea-against-speakers-nod-to-merger-of-six-mps-with-shinde-faction",
+          "title": "SC agrees to hear Shiv Sena (UBT) plea against Speaker's nod to merger of six MPs with Shinde faction",
+          "publisher": "The New Indian Express",
+          "published_at": "2026-07-22"
+        },
+        {
+          "url": "https://www.verdictum.in/amp/supreme-court/shiv-sena-ubt-challenge-lok-sabha-speaker-mp-merger-shinde-faction-1618284",
+          "title": "Supreme Court Issues Notice On Shiv Sena UBT Challenge To Lok Sabha Speaker’s Recognition Of MPs' Merger With Shinde Faction, Refuses Interim Stay",
+          "publisher": "Verdictum",
+          "published_at": "2026-07-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d4981cfc87",
+      "text": "At the notice stage, the Court refused to grant immediate interim relief in the merger challenge.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.verdictum.in/amp/supreme-court/shiv-sena-ubt-challenge-lok-sabha-speaker-mp-merger-shinde-faction-1618284",
+          "title": "Supreme Court Issues Notice On Shiv Sena UBT Challenge To Lok Sabha Speaker’s Recognition Of MPs' Merger With Shinde Faction, Refuses Interim Stay",
+          "publisher": "Verdictum",
+          "published_at": "2026-07-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ae07c2b857",
+      "text": "According to the hearing reports, the petitioner argued that six MPs elected on the party symbol had moved to a rival faction and that the Speaker lacked jurisdiction to pass a merger order, while respondents argued that existing Constitution Bench law had already rejected the relevant contentions.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.verdictum.in/amp/supreme-court/shiv-sena-ubt-challenge-lok-sabha-speaker-mp-merger-shinde-faction-1618284",
+          "title": "Supreme Court Issues Notice On Shiv Sena UBT Challenge To Lok Sabha Speaker’s Recognition Of MPs' Merger With Shinde Faction, Refuses Interim Stay",
+          "publisher": "Verdictum",
+          "published_at": "2026-07-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3dc7d19cbe",
+      "text": "The Supreme Court issued notice in a Shiv Sena (UBT) challenge to the Lok Sabha Speaker’s approval/recognition of the merger of six rebel MPs with the Eknath Shinde-led Shiv Sena.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.newindianexpress.com/india/2026/Jul/22/sc-agrees-to-hear-shiv-sena-ubt-plea-against-speakers-nod-to-merger-of-six-mps-with-shinde-faction",
+          "title": "SC agrees to hear Shiv Sena (UBT) plea against Speaker's nod to merger of six MPs with Shinde faction",
+          "publisher": "The New Indian Express",
+          "published_at": "2026-07-22"
+        },
+        {
+          "url": "https://www.verdictum.in/amp/supreme-court/shiv-sena-ubt-challenge-lok-sabha-speaker-mp-merger-shinde-faction-1618284",
+          "title": "Supreme Court Issues Notice On Shiv Sena UBT Challenge To Lok Sabha Speaker’s Recognition Of MPs' Merger With Shinde Faction, Refuses Interim Stay",
+          "publisher": "Verdictum",
+          "published_at": "2026-07-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b9946a5cd1",
+      "text": "The bench of Justices P.S. Narasimha and Alok Aradhe sought responses from the Lok Sabha Speaker and other respondents and posted the matter for hearing after two weeks.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.newindianexpress.com/india/2026/Jul/22/sc-agrees-to-hear-shiv-sena-ubt-plea-against-speakers-nod-to-merger-of-six-mps-with-shinde-faction",
+          "title": "SC agrees to hear Shiv Sena (UBT) plea against Speaker's nod to merger of six MPs with Shinde faction",
+          "publisher": "The New Indian Express",
+          "published_at": "2026-07-22"
+        },
+        {
+          "url": "https://www.verdictum.in/amp/supreme-court/shiv-sena-ubt-challenge-lok-sabha-speaker-mp-merger-shinde-faction-1618284",
+          "title": "Supreme Court Issues Notice On Shiv Sena UBT Challenge To Lok Sabha Speaker’s Recognition Of MPs' Merger With Shinde Faction, Refuses Interim Stay",
+          "publisher": "Verdictum",
+          "published_at": "2026-07-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6d68d80755",
+      "text": "The Court refused immediate interim relief at the notice stage.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.verdictum.in/amp/supreme-court/shiv-sena-ubt-challenge-lok-sabha-speaker-mp-merger-shinde-faction-1618284",
+          "title": "Supreme Court Issues Notice On Shiv Sena UBT Challenge To Lok Sabha Speaker’s Recognition Of MPs' Merger With Shinde Faction, Refuses Interim Stay",
+          "publisher": "Verdictum",
+          "published_at": "2026-07-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7669616814",
+      "text": "According to the hearing reports, the petitioner said six MPs elected on the party symbol moved to a rival faction and argued that the Speaker lacked jurisdiction to pass an order of merger, while the respondent side said existing Constitution Bench law had already rejected the relevant contentions.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.verdictum.in/amp/supreme-court/shiv-sena-ubt-challenge-lok-sabha-speaker-mp-merger-shinde-faction-1618284",
+          "title": "Supreme Court Issues Notice On Shiv Sena UBT Challenge To Lok Sabha Speaker’s Recognition Of MPs' Merger With Shinde Faction, Refuses Interim Stay",
+          "publisher": "Verdictum",
+          "published_at": "2026-07-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c70f664fac",
+      "text": "Verdictum identified the cause title as Arvind Ganpat Sawant v. Hon’ble Speaker, Lok Sabha and Ors., W.P.(C) No. 886/2026.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.verdictum.in/amp/supreme-court/shiv-sena-ubt-challenge-lok-sabha-speaker-mp-merger-shinde-faction-1618284",
+          "title": "Supreme Court Issues Notice On Shiv Sena UBT Challenge To Lok Sabha Speaker’s Recognition Of MPs' Merger With Shinde Faction, Refuses Interim Stay",
+          "publisher": "Verdictum",
+          "published_at": "2026-07-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e1832e874c",
+      "text": "One report said the merger increased the Shinde-led Shiv Sena’s strength in the Lok Sabha from 7 to 13, while another said the party’s overall strength rose to 13.",
+      "grade": "likely",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.newindianexpress.com/india/2026/Jul/22/sc-agrees-to-hear-shiv-sena-ubt-plea-against-speakers-nod-to-merger-of-six-mps-with-shinde-faction",
+          "title": "SC agrees to hear Shiv Sena (UBT) plea against Speaker's nod to merger of six MPs with Shinde faction",
+          "publisher": "The New Indian Express",
+          "published_at": "2026-07-22"
+        },
+        {
+          "url": "https://www.verdictum.in/amp/supreme-court/shiv-sena-ubt-challenge-lok-sabha-speaker-mp-merger-shinde-faction-1618284",
+          "title": "Supreme Court Issues Notice On Shiv Sena UBT Challenge To Lok Sabha Speaker’s Recognition Of MPs' Merger With Shinde Faction, Refuses Interim Stay",
+          "publisher": "Verdictum",
+          "published_at": "2026-07-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7dfe69c03d",
+      "text": "The petitioner argued that six MPs elected on the party symbol had moved to a rival faction and that the Speaker lacked jurisdiction to pass a merger order, while respondents argued that existing Constitution Bench law had already rejected the relevant contentions.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.verdictum.in/amp/supreme-court/shiv-sena-ubt-challenge-lok-sabha-speaker-mp-merger-shinde-faction-1618284",
+          "title": "Supreme Court Issues Notice On Shiv Sena UBT Challenge To Lok Sabha Speaker’s Recognition Of MPs' Merger With Shinde Faction, Refuses Interim Stay",
+          "publisher": "Verdictum",
+          "published_at": "2026-07-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_899e3a43c5",
+      "text": "Official sources said the merger increased the Shinde-led Shiv Sena's strength in the Lok Sabha from 7 to 13.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.newindianexpress.com/india/2026/Jul/22/sc-agrees-to-hear-shiv-sena-ubt-plea-against-speakers-nod-to-merger-of-six-mps-with-shinde-faction",
+          "title": "SC agrees to hear Shiv Sena (UBT) plea against Speaker's nod to merger of six MPs with Shinde faction",
+          "publisher": "The New Indian Express",
+          "published_at": "2026-07-22"
+        },
+        {
+          "url": "https://www.verdictum.in/amp/supreme-court/shiv-sena-ubt-challenge-lok-sabha-speaker-mp-merger-shinde-faction-1618284",
+          "title": "Supreme Court Issues Notice On Shiv Sena UBT Challenge To Lok Sabha Speaker’s Recognition Of MPs' Merger With Shinde Faction, Refuses Interim Stay",
+          "publisher": "Verdictum",
+          "published_at": "2026-07-22"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

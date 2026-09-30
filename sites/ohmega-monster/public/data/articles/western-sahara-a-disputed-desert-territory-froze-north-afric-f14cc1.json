@@ -1,0 +1,1142 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/western-sahara-a-disputed-desert-territory-froze-north-afric-f14cc1",
+  "title": "Western Sahara, a disputed desert territory, froze North Africa for 50 years — now its fallout spills into Spain",
+  "summary": "About 50,000 to 60,000 people crossed into Spain's Ceuta exclave in a day in late July 2026, dramatizing a rivalry that has kept the Algeria-Morocco border shut since 1994 and left a regional union without a summit in 30 years — while whether Morocco engineered the surge and whether a new UN push for autonomy will bring talks remain contested.",
+  "published_at": "2026-08-06T14:07:15.697986+00:00",
+  "as_of": "2026-08-06",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 39,
+    "likely": 14,
+    "unconfirmed": 2
+  },
+  "claims": [
+    {
+      "id": "clm_1b473014f9",
+      "text": "The Western Sahara conflict began when Spain withdrew from the territory in 1975.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-s-behind-the-algeria-morocco-rivalry/a-78258062?maca=en-rss-en-world-4025-rdf",
+          "title": "What's behind the Algeria-Morocco rivalry?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2026-08-06T05:10:03Z"
+        },
+        {
+          "url": "https://gjia.georgetown.edu/conflict-security/the-rules-based-order-and-the-high-stakes-of-western-sahara",
+          "title": "The High Stakes of Western Sahara",
+          "publisher": "Georgetown Journal of International Affairs",
+          "published_at": "2024-07-06T19:52:09Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c2ecbf9459",
+      "text": "The Polisario Front fights for the Sahrawi people's right to self-determination and independence for Western Sahara.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-s-behind-the-algeria-morocco-rivalry/a-78258062?maca=en-rss-en-world-4025-rdf",
+          "title": "What's behind the Algeria-Morocco rivalry?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2026-08-06T05:10:03Z"
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2021/8/24/algeria-cuts-diplomatic-ties-with-morocco",
+          "title": "Algeria cuts diplomatic ties with Morocco over \u0002b8hostile actions\u0002b9",
+          "publisher": "Al Jazeera",
+          "published_at": "2021-08-24T17:55:33Z"
+        },
+        {
+          "url": "https://gjia.georgetown.edu/conflict-security/the-rules-based-order-and-the-high-stakes-of-western-sahara",
+          "title": "The High Stakes of Western Sahara",
+          "publisher": "Georgetown Journal of International Affairs",
+          "published_at": "2024-07-06T19:52:09Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_577678d799",
+      "text": "Morocco considers Western Sahara an indispensable part of its national territory based on historical claims and proposes autonomy under Moroccan sovereignty.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-s-behind-the-algeria-morocco-rivalry/a-78258062?maca=en-rss-en-world-4025-rdf",
+          "title": "What's behind the Algeria-Morocco rivalry?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2026-08-06T05:10:03Z"
+        },
+        {
+          "url": "https://www.hrw.org/news/2026/03/25/un-western-sahara-peoples-self-determination-at-risk",
+          "title": "UN: Western Sahara Peoples\u0002b9 Self-Determination at Risk",
+          "publisher": "Human Rights Watch",
+          "published_at": "2026-03-25T04:00:00Z"
+        },
+        {
+          "url": "https://asil.org/ilib/security-council-renews-minurso-mandate",
+          "title": "Security Council Renews MINURSO Mandate",
+          "publisher": "American Society of International Law",
+          "published_at": "2025-12-19T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_528bac54e5",
+      "text": "Algeria supports Western Sahara's independence and backs the Polisario Front.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-s-behind-the-algeria-morocco-rivalry/a-78258062?maca=en-rss-en-world-4025-rdf",
+          "title": "What's behind the Algeria-Morocco rivalry?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2026-08-06T05:10:03Z"
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2021/8/24/algeria-cuts-diplomatic-ties-with-morocco",
+          "title": "Algeria cuts diplomatic ties with Morocco over \u0002b8hostile actions\u0002b9",
+          "publisher": "Al Jazeera",
+          "published_at": "2021-08-24T17:55:33Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c76da777b2",
+      "text": "A conflict between the Polisario Front and Morocco ended in 1991 with a UN-brokered ceasefire.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-s-behind-the-algeria-morocco-rivalry/a-78258062?maca=en-rss-en-world-4025-rdf",
+          "title": "What's behind the Algeria-Morocco rivalry?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2026-08-06T05:10:03Z"
+        },
+        {
+          "url": "https://gjia.georgetown.edu/conflict-security/the-rules-based-order-and-the-high-stakes-of-western-sahara",
+          "title": "The High Stakes of Western Sahara",
+          "publisher": "Georgetown Journal of International Affairs",
+          "published_at": "2024-07-06T19:52:09Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_782fc1c916",
+      "text": "The UN established the Mission for the Referendum in Western Sahara (MINURSO) in 1991 to maintain the ceasefire and organize a referendum on self-determination.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-s-behind-the-algeria-morocco-rivalry/a-78258062?maca=en-rss-en-world-4025-rdf",
+          "title": "What's behind the Algeria-Morocco rivalry?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2026-08-06T05:10:03Z"
+        },
+        {
+          "url": "https://gjia.georgetown.edu/conflict-security/the-rules-based-order-and-the-high-stakes-of-western-sahara",
+          "title": "The High Stakes of Western Sahara",
+          "publisher": "Georgetown Journal of International Affairs",
+          "published_at": "2024-07-06T19:52:09Z"
+        },
+        {
+          "url": "https://asil.org/ilib/security-council-renews-minurso-mandate",
+          "title": "Security Council Renews MINURSO Mandate",
+          "publisher": "American Society of International Law",
+          "published_at": "2025-12-19T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a79fc49f11",
+      "text": "The planned referendum to allow Sahrawis to determine Western Sahara's future has never taken place.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-s-behind-the-algeria-morocco-rivalry/a-78258062?maca=en-rss-en-world-4025-rdf",
+          "title": "What's behind the Algeria-Morocco rivalry?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2026-08-06T05:10:03Z"
+        },
+        {
+          "url": "https://gjia.georgetown.edu/conflict-security/the-rules-based-order-and-the-high-stakes-of-western-sahara",
+          "title": "The High Stakes of Western Sahara",
+          "publisher": "Georgetown Journal of International Affairs",
+          "published_at": "2024-07-06T19:52:09Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a10a540372",
+      "text": "The UN considers Western Sahara Africa's last non-self-governing territory.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-s-behind-the-algeria-morocco-rivalry/a-78258062?maca=en-rss-en-world-4025-rdf",
+          "title": "What's behind the Algeria-Morocco rivalry?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2026-08-06T05:10:03Z"
+        },
+        {
+          "url": "https://gjia.georgetown.edu/conflict-security/the-rules-based-order-and-the-high-stakes-of-western-sahara",
+          "title": "The High Stakes of Western Sahara",
+          "publisher": "Georgetown Journal of International Affairs",
+          "published_at": "2024-07-06T19:52:09Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_40fc56304c",
+      "text": "The ceasefire broke down in November 2020 when Moroccan troops entered the Guerguerat buffer zone and the Polisario declared resumption of armed struggle.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://gjia.georgetown.edu/conflict-security/the-rules-based-order-and-the-high-stakes-of-western-sahara",
+          "title": "The High Stakes of Western Sahara",
+          "publisher": "Georgetown Journal of International Affairs",
+          "published_at": "2024-07-06T19:52:09Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_81baa57bf1",
+      "text": "The land border between Algeria and Morocco has been closed since 1994.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/news/2021/8/24/algeria-cuts-diplomatic-ties-with-morocco",
+          "title": "Algeria cuts diplomatic ties with Morocco over \u0002b8hostile actions\u0002b9",
+          "publisher": "Al Jazeera",
+          "published_at": "2021-08-24T17:55:33Z"
+        },
+        {
+          "url": "https://carnegieendowment.org/sada/2022/05/morocco-and-algeria-a-long-rivalry",
+          "title": "Morocco and Algeria: A Long Rivalry",
+          "publisher": "Carnegie Endowment for International Peace",
+          "published_at": "2022-05-03T15:42:24Z"
+        },
+        {
+          "url": "https://www.washingtoninstitute.org/policy-analysis/algeria-morocco-peace-deal-managing-us-diplomacy-and-expectations",
+          "title": "An Algeria-Morocco \u0002b8Peace Deal\u0002b9? Managing U.S. Diplomacy and Expectations",
+          "publisher": "Washington Institute for Near East Policy",
+          "published_at": "2025-10-23T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d1e56ba437",
+      "text": "Algeria severed diplomatic relations with Morocco on August 24, 2021, citing hostile actions including alleged support for the Kabylia separatist movement (MAK).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/news/2021/8/24/algeria-cuts-diplomatic-ties-with-morocco",
+          "title": "Algeria cuts diplomatic ties with Morocco over \u0002b8hostile actions\u0002b9",
+          "publisher": "Al Jazeera",
+          "published_at": "2021-08-24T17:55:33Z"
+        },
+        {
+          "url": "https://www.washingtoninstitute.org/policy-analysis/algeria-morocco-peace-deal-managing-us-diplomacy-and-expectations",
+          "title": "An Algeria-Morocco \u0002b8Peace Deal\u0002b9? Managing U.S. Diplomacy and Expectations",
+          "publisher": "Washington Institute for Near East Policy",
+          "published_at": "2025-10-23T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f5f8dc5055",
+      "text": "Algeria closed its airspace to Moroccan aircraft and cut off gas supplies via the Maghreb-Europe pipeline in late 2021, rerouting gas to Spain via Medgaz.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://carnegieendowment.org/sada/2022/05/morocco-and-algeria-a-long-rivalry",
+          "title": "Morocco and Algeria: A Long Rivalry",
+          "publisher": "Carnegie Endowment for International Peace",
+          "published_at": "2022-05-03T15:42:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4308e9afbf",
+      "text": "The European Court of Justice ruled on 4 October 2024 that Morocco and Western Sahara are separate and distinct territories and annulled EU-Morocco trade and fisheries agreements in their application to Western Sahara.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-s-behind-the-algeria-morocco-rivalry/a-78258062?maca=en-rss-en-world-4025-rdf",
+          "title": "What's behind the Algeria-Morocco rivalry?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2026-08-06T05:10:03Z"
+        },
+        {
+          "url": "https://wsrw.org/en/news/eu-seeks-new-trade-talks-with-morocco-western-sahara-included",
+          "title": "EU seeks new trade talks with Morocco - Western Sahara included",
+          "publisher": "Western Sahara Resource Watch",
+          "published_at": "2025-08-25T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e4fdbfdcaa",
+      "text": "Morocco normalized relations with Israel on December 10, 2020 as part of the Abraham Accords, in exchange for U.S. recognition of Moroccan sovereignty over Western Sahara.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-s-behind-the-algeria-morocco-rivalry/a-78258062?maca=en-rss-en-world-4025-rdf",
+          "title": "What's behind the Algeria-Morocco rivalry?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2026-08-06T05:10:03Z"
+        },
+        {
+          "url": "https://www.inss.org.il/publication/western-sahara",
+          "title": "Israeli Recognition of Moroccan Sovereignty in Western Sahara",
+          "publisher": "Institute for National Security Studies (Israel)",
+          "published_at": "2023-07-26T09:20:09Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2483e41e99",
+      "text": "Israel recognized Morocco's claims to Western Sahara on July 17, 2023.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-s-behind-the-algeria-morocco-rivalry/a-78258062?maca=en-rss-en-world-4025-rdf",
+          "title": "What's behind the Algeria-Morocco rivalry?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2026-08-06T05:10:03Z"
+        },
+        {
+          "url": "https://www.inss.org.il/publication/western-sahara",
+          "title": "Israeli Recognition of Moroccan Sovereignty in Western Sahara",
+          "publisher": "Institute for National Security Studies (Israel)",
+          "published_at": "2023-07-26T09:20:09Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c4d21aa783",
+      "text": "Morocco and Israel signed a memorandum on security and intelligence cooperation in November 2021 and deepened defense ties, with Israel becoming a significant arms supplier to Morocco.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a38058f273",
+      "text": "Algeria views Israel's military and intelligence cooperation with Morocco as a threat to its security and to the regional balance of power.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-s-behind-the-algeria-morocco-rivalry/a-78258062?maca=en-rss-en-world-4025-rdf",
+          "title": "What's behind the Algeria-Morocco rivalry?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2026-08-06T05:10:03Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1700cf4d6c",
+      "text": "Spain abandoned its long-standing neutrality and backed Morocco's autonomy proposal for Western Sahara in 2022.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-s-behind-the-algeria-morocco-rivalry/a-78258062?maca=en-rss-en-world-4025-rdf",
+          "title": "What's behind the Algeria-Morocco rivalry?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2026-08-06T05:10:03Z"
+        },
+        {
+          "url": "https://www.lamoncloa.gob.es/lang/en/presidente/news/Paginas/2026/20260720-visit-to-algeria.aspx",
+          "title": "Spain and Algeria have agreed to usher in a new phase in their bilateral relations by holding the 8th High-Level Meeting in October",
+          "publisher": "La Moncloa (Spanish Government)",
+          "published_at": "2026-07-20T00:00:00Z"
+        },
+        {
+          "url": "https://www.france24.com/en/africa/20260720-spain-pm-sanchez-visits-algeria-first-time-four-years-ties-thaw",
+          "title": "Spain PM Sanchez visits Algeria for first time in four years as ties thaw",
+          "publisher": "France 24",
+          "published_at": "2026-07-20T19:49:50Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4adf45a119",
+      "text": "Algeria suspended its 20-year friendship treaty with Spain in June 2022 in response to Spain's shift on Western Sahara.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.france24.com/en/africa/20260720-spain-pm-sanchez-visits-algeria-first-time-four-years-ties-thaw",
+          "title": "Spain PM Sanchez visits Algeria for first time in four years as ties thaw",
+          "publisher": "France 24",
+          "published_at": "2026-07-20T19:49:50Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_49d0e02090",
+      "text": "Spanish Prime Minister Pedro S\u001anchez traveled to Algeria on July 20, 2026 for talks with President Abdelmadjid Tebboune and Prime Minister Sifi Ghrieb to resolve the diplomatic row.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-s-behind-the-algeria-morocco-rivalry/a-78258062?maca=en-rss-en-world-4025-rdf",
+          "title": "What's behind the Algeria-Morocco rivalry?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2026-08-06T05:10:03Z"
+        },
+        {
+          "url": "https://www.lamoncloa.gob.es/lang/en/presidente/news/Paginas/2026/20260720-visit-to-algeria.aspx",
+          "title": "Spain and Algeria have agreed to usher in a new phase in their bilateral relations by holding the 8th High-Level Meeting in October",
+          "publisher": "La Moncloa (Spanish Government)",
+          "published_at": "2026-07-20T00:00:00Z"
+        },
+        {
+          "url": "https://www.france24.com/en/africa/20260720-spain-pm-sanchez-visits-algeria-first-time-four-years-ties-thaw",
+          "title": "Spain PM Sanchez visits Algeria for first time in four years as ties thaw",
+          "publisher": "France 24",
+          "published_at": "2026-07-20T19:49:50Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ba668fbe5e",
+      "text": "Spain and Algeria agreed during the July 20, 2026 visit to usher in a new phase of relations and hold the 8th High-Level Meeting in October 2026, with prior political consultations.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.lamoncloa.gob.es/lang/en/presidente/news/Paginas/2026/20260720-visit-to-algeria.aspx",
+          "title": "Spain and Algeria have agreed to usher in a new phase in their bilateral relations by holding the 8th High-Level Meeting in October",
+          "publisher": "La Moncloa (Spanish Government)",
+          "published_at": "2026-07-20T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fb3d1311cf",
+      "text": "Algeria was Spain's main supplier of natural gas so far in 2026.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.lamoncloa.gob.es/lang/en/presidente/news/Paginas/2026/20260720-visit-to-algeria.aspx",
+          "title": "Spain and Algeria have agreed to usher in a new phase in their bilateral relations by holding the 8th High-Level Meeting in October",
+          "publisher": "La Moncloa (Spanish Government)",
+          "published_at": "2026-07-20T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_92e23c1bf0",
+      "text": "Tens of thousands of migrants crossed from Morocco into the Spanish exclave of Ceuta by sea and land in late July 2026, with estimates of 50,000-60,000 crossings around July 30-31.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.pbs.org/newshour/world/most-of-the-60000-migrants-who-crossed-into-spanish-territory-of-ceuta-have-left-voluntarily",
+          "title": "Most of the 60,000 migrants who crossed into territory of Ceuta have left voluntarily, Spain says",
+          "publisher": "PBS / Associated Press",
+          "published_at": "2026-07-31T20:13:09Z"
+        },
+        {
+          "url": "https://time.com/article/2026/07/31/ceuta-spain-morocco-africa-explainer",
+          "title": "Why Thousands of Moroccan Migrants Crossed Into the Spanish Exclave Ceuta",
+          "publisher": "TIME",
+          "published_at": "2026-07-31T19:40:18Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/europe/spains-ceuta-overwhelmed-as-thousands-remain-after-migrant-border-rush-2026-08-03",
+          "title": "Spain's Ceuta overwhelmed as thousands remain after migrant border rush",
+          "publisher": "Reuters",
+          "published_at": "2026-08-03T11:51:28Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ef514782cb",
+      "text": "At least 57 to more than 70 migrants died during the Ceuta crossings in late July 2026.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.pbs.org/newshour/world/most-of-the-60000-migrants-who-crossed-into-spanish-territory-of-ceuta-have-left-voluntarily",
+          "title": "Most of the 60,000 migrants who crossed into territory of Ceuta have left voluntarily, Spain says",
+          "publisher": "PBS / Associated Press",
+          "published_at": "2026-07-31T20:13:09Z"
+        },
+        {
+          "url": "https://time.com/article/2026/07/31/ceuta-spain-morocco-africa-explainer",
+          "title": "Why Thousands of Moroccan Migrants Crossed Into the Spanish Exclave Ceuta",
+          "publisher": "TIME",
+          "published_at": "2026-07-31T19:40:18Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cda44dc4d2",
+      "text": "Most of the migrants who crossed into Ceuta had voluntarily returned to Morocco by August 2-3, 2026, with thousands remaining and overwhelming local facilities.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.pbs.org/newshour/world/most-of-the-60000-migrants-who-crossed-into-spanish-territory-of-ceuta-have-left-voluntarily",
+          "title": "Most of the 60,000 migrants who crossed into territory of Ceuta have left voluntarily, Spain says",
+          "publisher": "PBS / Associated Press",
+          "published_at": "2026-07-31T20:13:09Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/europe/spains-ceuta-overwhelmed-as-thousands-remain-after-migrant-border-rush-2026-08-03",
+          "title": "Spain's Ceuta overwhelmed as thousands remain after migrant border rush",
+          "publisher": "Reuters",
+          "published_at": "2026-08-03T11:51:28Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5071ad3024",
+      "text": "Moroccan Interior Ministry spokesperson Rachid El Khalfi rejected accusations of deliberate facilitation, attributing the incident to malicious exploitation of digital space, misleading information, and misinterpretation of a Spanish Supreme Court ruling.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-s-behind-the-algeria-morocco-rivalry/a-78258062?maca=en-rss-en-world-4025-rdf",
+          "title": "What's behind the Algeria-Morocco rivalry?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2026-08-06T05:10:03Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a988b31b74",
+      "text": "Spanish daily El Pais entertained the possibility that Morocco deliberately allowed the Ceuta crossings to coincide with S\u001anchez's Algeria trip as migration leverage.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-s-behind-the-algeria-morocco-rivalry/a-78258062?maca=en-rss-en-world-4025-rdf",
+          "title": "What's behind the Algeria-Morocco rivalry?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2026-08-06T05:10:03Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e8b5d77393",
+      "text": "Spanish intelligence services concluded that Morocco did not plan the mass crossing but allowed it to happen by gradually relaxing border controls in July, removing them during Throne Day holiday crowds at Tarajal.",
+      "grade": "unconfirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/europe/spains-ceuta-overwhelmed-as-thousands-remain-after-migrant-border-rush-2026-08-03",
+          "title": "Spain's Ceuta overwhelmed as thousands remain after migrant border rush",
+          "publisher": "Reuters",
+          "published_at": "2026-08-03T11:51:28Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a5d9ac435e",
+      "text": "Experts interviewed by DW said potentially deliberate inaction by Moroccan border guards contributed to the breach but it is unlikely Morocco intended to instigate a major diplomatic incident.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-s-behind-the-algeria-morocco-rivalry/a-78258062?maca=en-rss-en-world-4025-rdf",
+          "title": "What's behind the Algeria-Morocco rivalry?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2026-08-06T05:10:03Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_71c104f14d",
+      "text": "The Algeria-Morocco rivalry has hindered North Africa's economic integration for decades and largely paralyzed the Arab Maghreb Union.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-s-behind-the-algeria-morocco-rivalry/a-78258062?maca=en-rss-en-world-4025-rdf",
+          "title": "What's behind the Algeria-Morocco rivalry?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2026-08-06T05:10:03Z"
+        },
+        {
+          "url": "https://www.stimson.org/2026/the-arab-maghreb-union-didnt-stall-it-collapsed",
+          "title": "The Arab Maghreb Union Didn\u0002b9t Stall. It Collapsed.",
+          "publisher": "Stimson Center",
+          "published_at": "2026-05-18T19:24:10Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2ef231b262",
+      "text": "Analysts describe the Algeria-Morocco relationship as a classic security dilemma with growing arms buildup and deepening mistrust, where neither government seeks open war but minor incidents could trigger escalation.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-s-behind-the-algeria-morocco-rivalry/a-78258062?maca=en-rss-en-world-4025-rdf",
+          "title": "What's behind the Algeria-Morocco rivalry?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2026-08-06T05:10:03Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6c83d5eb4c",
+      "text": "The UN Security Council adopted Resolution 2797 on October 31, 2025, extending MINURSO's mandate to October 31, 2026 and endorsing Morocco's 2007 autonomy proposal as the basis for negotiations, stating genuine autonomy under Moroccan sovereignty could be the most feasible solution.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.hrw.org/news/2026/03/25/un-western-sahara-peoples-self-determination-at-risk",
+          "title": "UN: Western Sahara Peoples\u0002b9 Self-Determination at Risk",
+          "publisher": "Human Rights Watch",
+          "published_at": "2026-03-25T04:00:00Z"
+        },
+        {
+          "url": "https://asil.org/ilib/security-council-renews-minurso-mandate",
+          "title": "Security Council Renews MINURSO Mandate",
+          "publisher": "American Society of International Law",
+          "published_at": "2025-12-19T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7f7eb2471d",
+      "text": "Resolution 2797 was adopted by 11 votes in favor with abstentions from China, Russia and Pakistan, and was criticized by Algeria as failing to reflect Sahrawi aspirations.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.hrw.org/news/2026/03/25/un-western-sahara-peoples-self-determination-at-risk",
+          "title": "UN: Western Sahara Peoples\u0002b9 Self-Determination at Risk",
+          "publisher": "Human Rights Watch",
+          "published_at": "2026-03-25T04:00:00Z"
+        },
+        {
+          "url": "https://asil.org/ilib/security-council-renews-minurso-mandate",
+          "title": "Security Council Renews MINURSO Mandate",
+          "publisher": "American Society of International Law",
+          "published_at": "2025-12-19T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7a4858a5c2",
+      "text": "Morocco and Algeria compete for international partners and influence with the EU, with Morocco positioning as migration/counterterrorism partner and Algeria as energy supplier and Sahel security actor.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-s-behind-the-algeria-morocco-rivalry/a-78258062?maca=en-rss-en-world-4025-rdf",
+          "title": "What's behind the Algeria-Morocco rivalry?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2026-08-06T05:10:03Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c9e4b27610",
+      "text": "About 50,000-60,000 migrants crossed from Morocco into Ceuta on 30-31 July 2026 (Spanish Interior Ministry: ~50,000 since Thursday; Ceuta President Vivas: ~60,000 in 24h, equivalent to 70% of city population)",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.pbs.org/newshour/world/most-of-the-60000-migrants-who-crossed-into-spanish-territory-of-ceuta-have-left-voluntarily",
+          "title": "Most of the 60,000 migrants who crossed into territory of Ceuta have left voluntarily, Spain says",
+          "publisher": "PBS / Associated Press",
+          "published_at": "2026-07-31T20:13:09Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/europe/spains-ceuta-overwhelmed-as-thousands-remain-after-migrant-border-rush-2026-08-03",
+          "title": "Spain's Ceuta overwhelmed as thousands remain after migrant border rush",
+          "publisher": "Reuters",
+          "published_at": "2026-08-03T11:51:28Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_147267eb0a",
+      "text": "Death toll in Ceuta crossings late July 2026 reported as at least 57 (PBS/AP 31 July) rising to 72 on Spanish side + 11 on Moroccan side per Reuters 3 Aug official balance",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.pbs.org/newshour/world/most-of-the-60000-migrants-who-crossed-into-spanish-territory-of-ceuta-have-left-voluntarily",
+          "title": "Most of the 60,000 migrants who crossed into territory of Ceuta have left voluntarily, Spain says",
+          "publisher": "PBS / Associated Press",
+          "published_at": "2026-07-31T20:13:09Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/europe/spains-ceuta-overwhelmed-as-thousands-remain-after-migrant-border-rush-2026-08-03",
+          "title": "Spain's Ceuta overwhelmed as thousands remain after migrant border rush",
+          "publisher": "Reuters",
+          "published_at": "2026-08-03T11:51:28Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_504ebd50cb",
+      "text": "Most migrants returned voluntarily within days: 48,300 by 1 Aug evening per Interior Ministry, ~69,500 over four days per Reuters 3 Aug, with 3,000-5,000 remaining",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.pbs.org/newshour/world/most-of-the-60000-migrants-who-crossed-into-spanish-territory-of-ceuta-have-left-voluntarily",
+          "title": "Most of the 60,000 migrants who crossed into territory of Ceuta have left voluntarily, Spain says",
+          "publisher": "PBS / Associated Press",
+          "published_at": "2026-07-31T20:13:09Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/europe/spains-ceuta-overwhelmed-as-thousands-remain-after-migrant-border-rush-2026-08-03",
+          "title": "Spain's Ceuta overwhelmed as thousands remain after migrant border rush",
+          "publisher": "Reuters",
+          "published_at": "2026-08-03T11:51:28Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f2eaea4d1e",
+      "text": "Spanish intelligence assessment reported via El Pais/Cadena SER concluded Morocco did not plan mass crossing but allowed it by gradually relaxing border controls in July and removing them during Throne Day at Tarajal",
+      "grade": "unconfirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/europe/spains-ceuta-overwhelmed-as-thousands-remain-after-migrant-border-rush-2026-08-03",
+          "title": "Spain's Ceuta overwhelmed as thousands remain after migrant border rush",
+          "publisher": "Reuters",
+          "published_at": "2026-08-03T11:51:28Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_45c4578482",
+      "text": "Ceasefire broke down 13 Nov 2020 when Moroccan troops entered UN-monitored buffer strip at Guerguerat to clear pro-Polisario blockade, after which Polisario declared end of ceasefire and resumed attacks",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.crisisgroup.org/brf/middle-east-north-africa/western-sahara/b082-time-international-re-engagement-western-sahara",
+          "title": "Time for International Re-engagement in Western Sahara",
+          "publisher": "International Crisis Group",
+          "published_at": "2021-03-11T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_561e34424e",
+      "text": "Algeria closed Maghreb-Europe Gas Pipeline on 1 Nov 2021 upon contract expiry; pipeline empty since, used in reverse Spain->Morocco; Medgaz direct pipeline now carries most Algerian gas to Spain",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cidob.org/en/publications/escalating-rivalry-between-algeria-and-morocco-closes-maghreb-europe-pipeline",
+          "title": "Escalating rivalry between Algeria and Morocco closes the Maghreb-Europe pipeline",
+          "publisher": "CIDOB",
+          "published_at": "2021-10-15T00:00:00Z"
+        },
+        {
+          "url": "https://www.cidob.org/en/publications/tale-two-gas-suppliers-europe-algeria-and-libya",
+          "title": "A tale of two gas suppliers to Europe: Algeria and Libya",
+          "publisher": "CIDOB",
+          "published_at": "2026-01-26T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dc018b71fb",
+      "text": "Arab Maghreb Union paralyzed/collapsed with no summit in 30 years due to Algeria-Morocco rivalry",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cidob.org/en/publications/escalating-rivalry-between-algeria-and-morocco-closes-maghreb-europe-pipeline",
+          "title": "Escalating rivalry between Algeria and Morocco closes the Maghreb-Europe pipeline",
+          "publisher": "CIDOB",
+          "published_at": "2021-10-15T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4f21b3347b",
+      "text": "UNSCR 2797 adopted 31 Oct 2025 extends MINURSO to 31 Oct 2026 and calls on parties to engage taking as basis Morocco's Autonomy Proposal, stating genuine autonomy could represent most feasible outcome",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.hrw.org/news/2026/03/25/un-western-sahara-peoples-self-determination-at-risk",
+          "title": "UN: Western Sahara Peoples\u0002b9 Self-Determination at Risk",
+          "publisher": "Human Rights Watch",
+          "published_at": "2026-03-25T04:00:00Z"
+        },
+        {
+          "url": "https://wsrw.org/en/news/uns-western-sahara-vote-raises-more-questions-than-it-answers",
+          "title": "UN's Western Sahara vote raises more questions than it answers",
+          "publisher": "WSRW",
+          "published_at": "2025-11-18T00:00:00Z"
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2025/10/31/un-security-council-supports-moroccos-plan-for-western-sahara",
+          "title": "UN Security Council supports Morocco's plan for Western Sahara",
+          "publisher": "Al Jazeera",
+          "published_at": "2025-10-31T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7917c584ea",
+      "text": "UNSCR 2797 adopted 11 in favour, 3 abstentions (China, Russia, Pakistan), Algeria did not participate, criticized by Algeria",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://wsrw.org/en/news/uns-western-sahara-vote-raises-more-questions-than-it-answers",
+          "title": "UN's Western Sahara vote raises more questions than it answers",
+          "publisher": "WSRW",
+          "published_at": "2025-11-18T00:00:00Z"
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2025/10/31/un-security-council-supports-moroccos-plan-for-western-sahara",
+          "title": "UN Security Council supports Morocco's plan for Western Sahara",
+          "publisher": "Al Jazeera",
+          "published_at": "2025-10-31T00:00:00Z"
+        },
+        {
+          "url": "https://www.hrw.org/news/2026/03/25/un-western-sahara-peoples-self-determination-at-risk",
+          "title": "UN: Western Sahara Peoples\u0002b9 Self-Determination at Risk",
+          "publisher": "Human Rights Watch",
+          "published_at": "2026-03-25T04:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2e474eeb8e",
+      "text": "CJEU Grand Chamber 4 Oct 2024 in Joined Cases C-779/21 P and C-799/21 P upheld annulment of EU-Morocco agreements as applied to Western Sahara, finding Western Sahara separate and distinct from Morocco and no consent of its people",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://verfassungsblog.de/commission-v-front-polisario",
+          "title": "Whose Consent? On the Joined Cases C-779/21 P, Commission v Front Polisario and C-799/21 P, Council v Front Polisario",
+          "publisher": "Verfassungsblog",
+          "published_at": "2024-10-05T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_159a687825",
+      "text": "Morocco-Israel defense MOU Nov 2021 and deepened ties with Israel as significant arms supplier (Barak MX, Ofek satellites, BlueBird drones) per SIPRI-cited reports",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.jpost.com/defense-and-tech/article-865814",
+          "title": "Morocco completes trial of Israeli Extra guided missile - SIPRI data",
+          "publisher": "Jerusalem Post",
+          "published_at": "2025-08-31T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7da73b8e73",
+      "text": "Polisario Front rejected the premise of UNSCR 2797 (31 Oct 2025) and issued a statement that it will not take part in \u00022any peace process or negotiations based on proposals that aim to legitimize the Moroccan military occupation\u00022 and deprive Sahrawis of self-determination. Polisario representative Sidi Omar added the resolution \u00022does not imply any recognition of Moroccan sovereignty over Western Sahara.\u00022",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/europe/un-calls-western-sahara-talks-based-moroccos-autonomy-plan-2025-10-31",
+          "title": "UN calls for Western Sahara talks based on Morocco's autonomy plan",
+          "publisher": "Reuters",
+          "published_at": "2025-10-31"
+        },
+        {
+          "url": "https://www.dw.com/en/un-security-council-backs-morocco-plan-for-western-sahara/a-74579654",
+          "title": "UN Security Council backs Morocco plan for Western Sahara",
+          "publisher": "DW",
+          "published_at": "2025-11-01"
+        },
+        {
+          "url": "https://www.hrw.org/news/2026/03/25/un-western-sahara-peoples-self-determination-at-risk",
+          "title": "UN: Western Sahara Peoples\u0002b9 Self-Determination at Risk",
+          "publisher": "Human Rights Watch",
+          "published_at": "2026-03-25T04:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f70fcc5fc8",
+      "text": "SADR/Polisario hailed the CJEU Grand Chamber rulings of 4 Oct 2024 (Joined Cases C-779/21 P and C-799/21 P) as reaffirming that Morocco has no sovereignty or administering mandate over Western Sahara, that Western Sahara is \u00022separate and distinct,\u00022 and that EU-Morocco trade/fisheries agreements cannot be applied to the territory without the consent of its people obtained via the Polisario Front as UN-recognized representative; the Court ordered effects maintained for 12 months to 4 Oct 2025.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.spsrasd.info/en/2024/10/04/5467.html",
+          "title": "EU Court ruling: Morocco has no sovereignty over Western Sahara and EU-Morocco Agreements involving the Territory are invalid",
+          "publisher": "SPS",
+          "published_at": "2024-10-04"
+        },
+        {
+          "url": "https://wsrw.org/en/news/eu-court-ruling-occupied-western-sahara-not-part-of-eu-morocco-agreements",
+          "title": "EU Court ruling: occupied Western Sahara not part of EU-Morocco agreements",
+          "publisher": "WSRW",
+          "published_at": "2024-10-04"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e96bebe5bb",
+      "text": "Morocco\u0002s 2007 Initiative for Negotiating an Autonomy Statute for the Sahara Region (UN doc S/2007/206, Annex) proposes autonomy under Moroccan sovereignty: devolved legislative, executive and judicial bodies elected by residents, while Rabat retains exclusive powers over national defense, foreign affairs, currency/monetary policy, nationality and supreme judiciary; implementation was said to be subject to approval by \u00022populations concerned\u00022 in a referendum (paras 8, 27). An expanded 40-page statute presented in Madrid in Feb 2026 (royal advisers Fassi Fihri/Aziman/Himma, FM Bourita) details exclusive vs regional powers, unicameral regional parliament (direct election + tribal appointment), regional high court, fiscal regime, and constitutional entrenchment with irreversibility clause.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.ejiltalk.org/the-security-council-and-the-future-of-western-sahara-with-a-group-of-friends-like-these",
+          "title": "The Security Council and the Future of Western Sahara",
+          "publisher": "EJIL:Talk",
+          "published_at": "2025-07-22T00:00:00Z"
+        },
+        {
+          "url": "https://www.atalayar.com/en/articulo/politics/full-details-of-moroccos-autonomy-plan-for-the-sahara/20260212105939223360.html",
+          "title": "Full details of Morocco's Autonomy Plan for the Sahara",
+          "publisher": "Atalayar",
+          "published_at": "2026-02-12"
+        },
+        {
+          "url": "https://www.reuters.com/world/europe/un-calls-western-sahara-talks-based-moroccos-autonomy-plan-2025-10-31",
+          "title": "UN calls for Western Sahara talks based on Morocco's autonomy plan",
+          "publisher": "Reuters",
+          "published_at": "2025-10-31"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0ab4ea8247",
+      "text": "Moroccan official framing: Foreign Minister Nasser Bourita (EFE interview Dec 2025) said \u00022no one has ever said that self-determination is synonymous with a referendum,\u00022 arguing self-determination can be expressed through negotiated agreement and signature within the autonomy plan; King Mohammed VI called UNSCR 2797 a \u00022historic\u00022 \u00022new chapter in consolidating the Moroccanness of the Sahara\u00022 and urged Tindouf refugees to endorse autonomy.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.moroccoworldnews.com/2025/12/270682/bourita-self-determination-is-not-synonymous-with-a-referendum/",
+          "title": "Bourita: Self-Determination is Not Synonymous with a Referendum",
+          "publisher": "MWN",
+          "published_at": "2025-12-05"
+        },
+        {
+          "url": "https://www.reuters.com/world/europe/un-calls-western-sahara-talks-based-moroccos-autonomy-plan-2025-10-31",
+          "title": "UN calls for Western Sahara talks based on Morocco's autonomy plan",
+          "publisher": "Reuters",
+          "published_at": "2025-10-31"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b75db2c67f",
+      "text": "Algerian official rejection: Algeria did not participate in the UNSCR 2797 vote; Ambassador Amar Bendjama told the Council \u00022The final decision on the future cannot, must not, belong to anyone other than the people under colonial domination. This text ignores the proposals of the Polisario Front\u00022 They are a party to the conflict, and their opinion must be heard.\u00022 An Algerian explanatory statement 31 Oct 2025 said the resolution \u00022fails to reflect the legitimate expectations and aspirations of the people of Western Sahara, represented by the Polisario Front.\u00022",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/europe/un-calls-western-sahara-talks-based-moroccos-autonomy-plan-2025-10-31",
+          "title": "UN calls for Western Sahara talks based on Morocco's autonomy plan",
+          "publisher": "Reuters",
+          "published_at": "2025-10-31"
+        },
+        {
+          "url": "https://www.dw.com/en/un-security-council-backs-morocco-plan-for-western-sahara/a-74579654",
+          "title": "UN Security Council backs Morocco plan for Western Sahara",
+          "publisher": "DW",
+          "published_at": "2025-11-01"
+        },
+        {
+          "url": "https://www.hrw.org/news/2026/03/25/un-western-sahara-peoples-self-determination-at-risk",
+          "title": "UN: Western Sahara Peoples\u0002b9 Self-Determination at Risk",
+          "publisher": "Human Rights Watch",
+          "published_at": "2026-03-25T04:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0fa75d986d",
+      "text": "Human Rights Watch documents systematic repression in Moroccan-controlled Western Sahara: authorities obstruct groups advocating self-determination, enforce laws penalizing affronts to \u00022territorial integrity,\u00022 prevent gatherings/associations, beat/torture activists, imprison after unfair trials (e.g., Gdeim Izik 19 men), and deny OHCHR access since 2015; UN Secretary-General July 2025 report cited intimidation, surveillance and discrimination against Sahrawis advocating self-determination.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.hrw.org/news/2026/03/25/un-western-sahara-peoples-self-determination-at-risk",
+          "title": "UN: Western Sahara Peoples\u0002b9 Self-Determination at Risk",
+          "publisher": "Human Rights Watch",
+          "published_at": "2026-03-25T04:00:00Z"
+        },
+        {
+          "url": "https://www.hrw.org/world-report/2026/country-chapters/morocco-and-western-sahara",
+          "title": "World Report 2026: Rights Trends in Morocco and Western Sahara",
+          "publisher": "HRW",
+          "published_at": "2026-02-04"
+        },
+        {
+          "url": "https://hrp.law.harvard.edu/fifty-years-in-exile-human-rights-and-the-forgotten-crisis-in-western-sahara",
+          "title": "Fifty Years in Exile: Human Rights and the Forgotten Crisis in Western Sahara",
+          "publisher": "Harvard HRP",
+          "published_at": "2025-09-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ba7c9c7c55",
+      "text": "Sahrawi civil society voices report tightening clampdown in 2024-2025: CODESA, ASVDH and Equipe M\u0000e9dia members subjected to surveillance, phone tapping, arbitrary detention, physical assault and checkpoint harassment (e.g., Ahmed Ettanji/Mohamed Mayara questioned 9 Oct 2024 at Cape Bojador; Hassan Zerouali detained/attacked Jan-Aug 2025; Khadijatou Douih car vandalized Oct 2024); ACAPS/NOVACT and CODESA documented 14 arrests/detentions in 2024 including 10-year sentences for Sahrawi students Hussein Bourkab/Ayman Yathribi 6 June 2024; eight UN Special Rapporteurs June 2025 denounced repression and home demolitions.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://monitor.civicus.org/explore/authorities-tighten-rights-clampdown-in-western-sahara-youths-hold-mass-protests",
+          "title": "Authorities Tighten Rights Clampdown in Western Sahara, Youths hold mass Protests",
+          "publisher": "CIVICUS",
+          "published_at": "2025-10-28"
+        },
+        {
+          "url": "https://hrp.law.harvard.edu/fifty-years-in-exile-human-rights-and-the-forgotten-crisis-in-western-sahara",
+          "title": "Fifty Years in Exile: Human Rights and the Forgotten Crisis in Western Sahara",
+          "publisher": "Harvard HRP",
+          "published_at": "2025-09-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_10081f7e4d",
+      "text": "Human rights conditions in Polisario-administered Tindouf camps (Algeria): HRW\u0002s 2013-2014 field research found no pattern of serious abuse but identified concerns \u0002d military courts trying civilians (8 of 25 prisoners in 2013), prolonged pre-trial detention without court orders, isolated torture allegations, persistence of slavery-like domestic servitude in small minority despite 2011 legal ban, and one enforced disappearance (El Khalil Ahmed, Algiers 2009); Algeria remains ultimately responsible under international law for rights on its territory despite ceding de facto administration to Polisario; MINURSO has no human rights mandate.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.hrw.org/report/2014/10/18/radar/human-rights-tindouf-refugee-camps",
+          "title": "Off the Radar: Human Rights in the Tindouf Refugee Camps",
+          "publisher": "HRW",
+          "published_at": "2014-10-18"
+        },
+        {
+          "url": "https://hrp.law.harvard.edu/fifty-years-in-exile-human-rights-and-the-forgotten-crisis-in-western-sahara",
+          "title": "Fifty Years in Exile: Human Rights and the Forgotten Crisis in Western Sahara",
+          "publisher": "Harvard HRP",
+          "published_at": "2025-09-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3113336e7f",
+      "text": "Counter-legal interpretation of UNSCR 2797: WSRW and EJIL:Talk scholars argue the resolution does not endorse Moroccan sovereignty nor exclude independence, that self-determination remains a jus cogens norm that cannot be overridden by a Security Council resolution, and that by referencing only Morocco\u0002s proposal without equal reference to Polisario\u0002s 2007/2025 referendum proposal the Council risks perception of implicit recognition and precedent for settling occupation via \u00022realism.\u00022 Former UN envoy Christopher Ross called it \u00022a step backward\u00022 favouring one party.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://wsrw.org/en/news/uns-western-sahara-vote-raises-more-questions-than-it-answers",
+          "title": "UN's Western Sahara vote raises more questions than it answers",
+          "publisher": "WSRW",
+          "published_at": "2025-11-18T00:00:00Z"
+        },
+        {
+          "url": "https://www.ejiltalk.org/the-security-council-and-the-future-of-western-sahara-with-a-group-of-friends-like-these",
+          "title": "The Security Council and the Future of Western Sahara",
+          "publisher": "EJIL:Talk",
+          "published_at": "2025-07-22T00:00:00Z"
+        },
+        {
+          "url": "https://www.hrw.org/news/2026/03/25/un-western-sahara-peoples-self-determination-at-risk",
+          "title": "UN: Western Sahara Peoples\u0002b9 Self-Determination at Risk",
+          "publisher": "Human Rights Watch",
+          "published_at": "2026-03-25T04:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0a8e2e3572",
+      "text": "Humanitarian conditions in Tindouf camps remain acute: UN agencies (WFP/WHO) June 2025 press release cited Global Acute Malnutrition 13.6% (WHO acute threshold), 65% of children and 69% of women of reproductive age anemic, one-third of children stunted, with only 34% of US funding for Sahrawi Refugee Response Plan received; UNHCR estimates ~173,000 refugees in five camps near Tindouf.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://hrp.law.harvard.edu/fifty-years-in-exile-human-rights-and-the-forgotten-crisis-in-western-sahara",
+          "title": "Fifty Years in Exile: Human Rights and the Forgotten Crisis in Western Sahara",
+          "publisher": "Harvard HRP",
+          "published_at": "2025-09-08"
+        },
+        {
+          "url": "https://www.hrw.org/world-report/2026/country-chapters/morocco-and-western-sahara",
+          "title": "World Report 2026: Rights Trends in Morocco and Western Sahara",
+          "publisher": "HRW",
+          "published_at": "2026-02-04"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

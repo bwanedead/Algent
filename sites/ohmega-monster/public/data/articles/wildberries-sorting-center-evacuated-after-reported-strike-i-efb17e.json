@@ -1,0 +1,419 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/wildberries-sorting-center-evacuated-after-reported-strike-i-efb17e",
+  "title": "Wildberries sorting center evacuated after reported strike in Simferopol, as drone attacks hit its wider network",
+  "summary": "The attack on the Russian-occupied Crimea site was first circulated on X and later acknowledged by Wildberries, but the available reporting does not independently confirm the exact location, damage level, or a dual-use role for that specific facility.",
+  "published_at": "2026-07-24T10:02:51.742396+00:00",
+  "as_of": "2026-07-24",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 12,
+    "likely": 10
+  },
+  "claims": [
+    {
+      "id": "clm_b1a71588c8",
+      "text": "A Wildberries warehouse in Simferopol, Russian-occupied Crimea, was struck by a drone attack overnight on July 23-24, 2026.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://x.com/Osinttechnical/status/2080427489298391112",
+          "title": "Ukrainian attack drones hit another Russian Wildberries distribution center tonight in Simferopol, setting it ablaze.",
+          "publisher": "X / @Osinttechnical",
+          "published_at": "2026-07-23T00:00:00Z"
+        },
+        {
+          "url": "https://kyivindependent.com/wildberries-logistics-center-in-russian-occupied-crimea-catches-fire-after-reported-drone-strike",
+          "title": "Major fire reported in St. Petersburg as Ukraine strikes Russian e-commerce giant Wildberries for fifth time in past week",
+          "publisher": "The Kyiv Independent",
+          "published_at": "2026-07-24T00:46:57Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5baed63ff5",
+      "text": "Wildberries later confirmed that one of its warehouses in Simferopol was struck.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://kyivindependent.com/wildberries-logistics-center-in-russian-occupied-crimea-catches-fire-after-reported-drone-strike",
+          "title": "Major fire reported in St. Petersburg as Ukraine strikes Russian e-commerce giant Wildberries for fifth time in past week",
+          "publisher": "The Kyiv Independent",
+          "published_at": "2026-07-24T00:46:57Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1c0769572e",
+      "text": "The strike caused a fire at the Simferopol facility.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://x.com/Osinttechnical/status/2080427489298391112",
+          "title": "Ukrainian attack drones hit another Russian Wildberries distribution center tonight in Simferopol, setting it ablaze.",
+          "publisher": "X / @Osinttechnical",
+          "published_at": "2026-07-23T00:00:00Z"
+        },
+        {
+          "url": "https://kyivindependent.com/wildberries-logistics-center-in-russian-occupied-crimea-catches-fire-after-reported-drone-strike",
+          "title": "Major fire reported in St. Petersburg as Ukraine strikes Russian e-commerce giant Wildberries for fifth time in past week",
+          "publisher": "The Kyiv Independent",
+          "published_at": "2026-07-24T00:46:57Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e7de8f49e6",
+      "text": "The Simferopol facility serves as a logistics hub for the Russian-occupied Crimean peninsula.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://kyivindependent.com/wildberries-logistics-center-in-russian-occupied-crimea-catches-fire-after-reported-drone-strike",
+          "title": "Major fire reported in St. Petersburg as Ukraine strikes Russian e-commerce giant Wildberries for fifth time in past week",
+          "publisher": "The Kyiv Independent",
+          "published_at": "2026-07-24T00:46:57Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5147ffa84b",
+      "text": "Wildberries warehouses or logistics centers were hit repeatedly in the preceding week in other locations, including Krasnodar, Nevinnomyssk, St. Petersburg, Tver, Voronezh, Elektrostal, and Kotovsk.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://kyivindependent.com/wildberries-logistics-center-in-russian-occupied-crimea-catches-fire-after-reported-drone-strike",
+          "title": "Major fire reported in St. Petersburg as Ukraine strikes Russian e-commerce giant Wildberries for fifth time in past week",
+          "publisher": "The Kyiv Independent",
+          "published_at": "2026-07-24T00:46:57Z"
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2026/7/22/russia-reports-injuries-after-top-online-retailer-wildberries-hit-again",
+          "title": "Russia reports injuries after top online retailer Wildberries hit again",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-07-22T09:30:59Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/europe/russias-largest-online-retailer-says-warehouses-attacked-again-several-injured-2026-07-22/",
+          "title": "Ukraine again hits warehouses of Russia's top online retailer Wildberries, Russia says",
+          "publisher": "Reuters",
+          "published_at": "2026-07-22T05:29:24Z"
+        },
+        {
+          "url": "https://www.reuters.com/business/retail-consumer/widening-ukrainian-attacks-russian-online-retailer-wildberries-shutter-another-2026-07-23/",
+          "title": "Widening Ukrainian attacks on Russian online retailer Wildberries shutter another warehouse",
+          "publisher": "Reuters",
+          "published_at": "2026-07-23T09:34:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_750a97a5b4",
+      "text": "Earlier Wildberries strikes injured and killed people, including reported deaths among warehouse workers on July 18.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://kyivindependent.com/wildberries-logistics-center-in-russian-occupied-crimea-catches-fire-after-reported-drone-strike",
+          "title": "Major fire reported in St. Petersburg as Ukraine strikes Russian e-commerce giant Wildberries for fifth time in past week",
+          "publisher": "The Kyiv Independent",
+          "published_at": "2026-07-24T00:46:57Z"
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2026/7/22/russia-reports-injuries-after-top-online-retailer-wildberries-hit-again",
+          "title": "Russia reports injuries after top online retailer Wildberries hit again",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-07-22T09:30:59Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/europe/russias-largest-online-retailer-says-warehouses-attacked-again-several-injured-2026-07-22/",
+          "title": "Ukraine again hits warehouses of Russia's top online retailer Wildberries, Russia says",
+          "publisher": "Reuters",
+          "published_at": "2026-07-22T05:29:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_35c1648f61",
+      "text": "Ukrainian officials have framed some of these logistics-center strikes as hitting facilities that support the Russian military, including supply of components for drones, navigation equipment, and other materiel.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://kyivindependent.com/wildberries-logistics-center-in-russian-occupied-crimea-catches-fire-after-reported-drone-strike",
+          "title": "Major fire reported in St. Petersburg as Ukraine strikes Russian e-commerce giant Wildberries for fifth time in past week",
+          "publisher": "The Kyiv Independent",
+          "published_at": "2026-07-24T00:46:57Z"
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2026/7/22/russia-reports-injuries-after-top-online-retailer-wildberries-hit-again",
+          "title": "Russia reports injuries after top online retailer Wildberries hit again",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-07-22T09:30:59Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4d467bc53e",
+      "text": "The broader targeting of Wildberries reflects an effort to disrupt Russian logistics and impose economic pressure on a major consumer-economy company.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://kyivindependent.com/wildberries-logistics-center-in-russian-occupied-crimea-catches-fire-after-reported-drone-strike",
+          "title": "Major fire reported in St. Petersburg as Ukraine strikes Russian e-commerce giant Wildberries for fifth time in past week",
+          "publisher": "The Kyiv Independent",
+          "published_at": "2026-07-24T00:46:57Z"
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2026/7/22/russia-reports-injuries-after-top-online-retailer-wildberries-hit-again",
+          "title": "Russia reports injuries after top online retailer Wildberries hit again",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-07-22T09:30:59Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/europe/russias-largest-online-retailer-says-warehouses-attacked-again-several-injured-2026-07-22/",
+          "title": "Ukraine again hits warehouses of Russia's top online retailer Wildberries, Russia says",
+          "publisher": "Reuters",
+          "published_at": "2026-07-22T05:29:24Z"
+        },
+        {
+          "url": "https://www.reuters.com/business/retail-consumer/widening-ukrainian-attacks-russian-online-retailer-wildberries-shutter-another-2026-07-23/",
+          "title": "Widening Ukrainian attacks on Russian online retailer Wildberries shutter another warehouse",
+          "publisher": "Reuters",
+          "published_at": "2026-07-23T09:34:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a35d8c67af",
+      "text": "Independent, open-source visual verification of the Simferopol strike itself was not established in the sources read.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://x.com/Osinttechnical/status/2080427489298391112",
+          "title": "Ukrainian attack drones hit another Russian Wildberries distribution center tonight in Simferopol, setting it ablaze.",
+          "publisher": "X / @Osinttechnical",
+          "published_at": "2026-07-23T00:00:00Z"
+        },
+        {
+          "url": "https://kyivindependent.com/wildberries-logistics-center-in-russian-occupied-crimea-catches-fire-after-reported-drone-strike",
+          "title": "Major fire reported in St. Petersburg as Ukraine strikes Russian e-commerce giant Wildberries for fifth time in past week",
+          "publisher": "The Kyiv Independent",
+          "published_at": "2026-07-24T00:46:57Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1d4b0e3817",
+      "text": "Interfax reported on July 24, 2026 that the Wildberries sorting center in Simferopol was evacuated in accordance with safety requirements, citing a RWB press-service Telegram message.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.interfax.ru/russia/1105177",
+          "title": "В Симферополе эвакуирован сортировочный центр Wildberries",
+          "publisher": "Interfax",
+          "published_at": "2026-07-24T02:19:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9643840e45",
+      "text": "Reuters reported that Wildberries halted operations at one warehouse after a Ukrainian drone attack and said the company had not commented on the scale of the damage.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/retail-consumer/widening-ukrainian-attacks-russian-online-retailer-wildberries-shutter-another-2026-07-23/",
+          "title": "Widening Ukrainian attacks on Russian online retailer Wildberries shutter another warehouse",
+          "publisher": "Reuters",
+          "published_at": "2026-07-23T09:34:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_074914ebcc",
+      "text": "Reuters also reported that open-source data analysis by Kommersant estimated the recent attacks had damaged approximately 10% of Wildberries' logistics capacity.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/retail-consumer/widening-ukrainian-attacks-russian-online-retailer-wildberries-shutter-another-2026-07-23/",
+          "title": "Widening Ukrainian attacks on Russian online retailer Wildberries shutter another warehouse",
+          "publisher": "Reuters",
+          "published_at": "2026-07-23T09:34:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4e747d9c50",
+      "text": "Reuters quotes Zelenskyy as saying the Wildberries strikes targeted logistics hubs involved in supplying Russian forces with drone components and other equipment.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/europe/russias-largest-online-retailer-says-warehouses-attacked-again-several-injured-2026-07-22/",
+          "title": "Ukraine again hits warehouses of Russia's top online retailer Wildberries, Russia says",
+          "publisher": "Reuters",
+          "published_at": "2026-07-22T05:29:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f65c5eb888",
+      "text": "Reuters reports that the Kremlin denied Wildberries handles military supplies.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/europe/russias-largest-online-retailer-says-warehouses-attacked-again-several-injured-2026-07-22/",
+          "title": "Ukraine again hits warehouses of Russia's top online retailer Wildberries, Russia says",
+          "publisher": "Reuters",
+          "published_at": "2026-07-22T05:29:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e85f334486",
+      "text": "Interfax reports that the Wildberries sorting center in Simferopol was evacuated for safety reasons, citing a RWB press-service Telegram message.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.interfax.ru/russia/1105177",
+          "title": "В Симферополе эвакуирован сортировочный центр Wildberries",
+          "publisher": "Interfax",
+          "published_at": "2026-07-24T02:19:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6f1c7dda3e",
+      "text": "RBC-Ukraine reports that the Simferopol warehouse fire was first associated with Russian Telegram and OSINT channels and that the company indirectly confirmed the attack by saying staff were evacuated.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://newsukraine.rbc.ua/news/crimea-attack-sets-wildberries-warehouse-1784851315.html",
+          "title": "Crimea attack sets Wildberries warehouse ablaze",
+          "publisher": "RBC-Ukraine",
+          "published_at": "2026-07-24T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_43eaf9ee49",
+      "text": "Reuters reports that Wildberries said it was redistributing goods across warehouses to restore operations, and AUREK asked the government for tax delays for businesses affected by the attacks.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/europe/russias-largest-online-retailer-says-warehouses-attacked-again-several-injured-2026-07-22/",
+          "title": "Ukraine again hits warehouses of Russia's top online retailer Wildberries, Russia says",
+          "publisher": "Reuters",
+          "published_at": "2026-07-22T05:29:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_944f087929",
+      "text": "Interfax reported that the Wildberries sorting center in Simferopol was evacuated for safety reasons, citing an RWB press-service Telegram message.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.interfax.ru/russia/1105177",
+          "title": "В Симферополе эвакуирован сортировочный центр Wildberries",
+          "publisher": "Interfax",
+          "published_at": "2026-07-24T02:19:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d7e9f82577",
+      "text": "Reuters reported that Ukraine had attacked two more Wildberries warehouses in Krasnodar and Nevinnomyssk, extending a series of drone strikes on the company.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/europe/russias-largest-online-retailer-says-warehouses-attacked-again-several-injured-2026-07-22/",
+          "title": "Ukraine again hits warehouses of Russia's top online retailer Wildberries, Russia says",
+          "publisher": "Reuters",
+          "published_at": "2026-07-22T05:29:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5c93ade345",
+      "text": "Reuters quoted Volodymyr Zelenskyy as saying the logistics hubs targeted in the Wildberries strikes were involved in supplying Russian forces with drone components and other equipment.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/europe/russias-largest-online-retailer-says-warehouses-attacked-again-several-injured-2026-07-22/",
+          "title": "Ukraine again hits warehouses of Russia's top online retailer Wildberries, Russia says",
+          "publisher": "Reuters",
+          "published_at": "2026-07-22T05:29:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3927b57e31",
+      "text": "Reuters reported that the Kremlin denied Wildberries handles military supplies.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/europe/russias-largest-online-retailer-says-warehouses-attacked-again-several-injured-2026-07-22/",
+          "title": "Ukraine again hits warehouses of Russia's top online retailer Wildberries, Russia says",
+          "publisher": "Reuters",
+          "published_at": "2026-07-22T05:29:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e3354d8dd7",
+      "text": "The Kyiv Independent reported that Wildberries later confirmed one of its warehouses in Simferopol was struck.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://kyivindependent.com/wildberries-logistics-center-in-russian-occupied-crimea-catches-fire-after-reported-drone-strike",
+          "title": "Major fire reported in St. Petersburg as Ukraine strikes Russian e-commerce giant Wildberries for fifth time in past week",
+          "publisher": "The Kyiv Independent",
+          "published_at": "2026-07-24T00:46:57Z"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

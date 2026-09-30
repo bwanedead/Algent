@@ -1,0 +1,867 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/museum-dna-unmasks-a-small-spotted-wild-cat-hidden-in-bolivi-9efd8f",
+  "title": "Museum DNA unmasks a small spotted wild cat hidden in Bolivia's cloud forests",
+  "summary": "Described from two living cats and century-old museum bones, Leopardus tilcayo would turn one Vulnerable tiger-cat into five rarer lineages — a split that could push each toward Endangered, but rests on limited samples and extensive interbreeding and has not yet been accepted by conservation bodies.",
+  "published_at": "2026-09-18T10:47:18.858879+00:00",
+  "as_of": "2026-09-17",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 31,
+    "likely": 3,
+    "contested": 1
+  },
+  "claims": [
+    {
+      "id": "clm_b68c0ddd9b",
+      "text": "A paper titled 'Phylogenomics and museomics reveal five distinct species of tiger cats in South America' was published online 17 September 2026 in Current Biology by Jonas Lescroart, Paola Nogales-Ascarrunz and colleagues, with senior/lead contact Eduardo Eizirik (PUCRS, Brazil).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cell.com/current-biology/fulltext/S0960-9822(26)01110-3",
+          "title": "Phylogenomics and museomics reveal five distinct species of tiger cats in South America",
+          "publisher": "Current Biology (Cell Press)",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.scientificamerican.com/article/see-the-first-new-species-of-cat-discovered-in-more-than-a-century-its-adorable",
+          "title": "See the first new species of cat discovered in more than a century",
+          "publisher": "Scientific American",
+          "published_at": "2026-09-17T18:00:00Z"
+        },
+        {
+          "url": "https://www.livescience.com/animals/cats/scientists-name-a-new-cat-species-for-the-first-time-in-over-a-century",
+          "title": "Scientists name a new cat species for the first time in over a century",
+          "publisher": "Live Science",
+          "published_at": "2026-09-17T15:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_41c2a0e3d4",
+      "text": "The study analyzed complete genomes of 38 individuals across the Leopardus genus, including 26 individuals representing the tiger-cat complex, plus 8 genomes generated from museum specimens (bone/skin) and 12 previously published genomes, for a total WGS dataset of 40 samples.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cell.com/current-biology/fulltext/S0960-9822(26)01110-3",
+          "title": "Phylogenomics and museomics reveal five distinct species of tiger cats in South America",
+          "publisher": "Current Biology (Cell Press)",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.nationalgeographic.com/animals/article/meet-the-first-new-cat-species-discovered-in-100-years",
+          "title": "Meet the First New Cat Species Discovered in 100 Years",
+          "publisher": "National Geographic",
+          "published_at": "2026-09-17T14:00:00Z"
+        },
+        {
+          "url": "https://www.livescience.com/animals/cats/scientists-name-a-new-cat-species-for-the-first-time-in-over-a-century",
+          "title": "Scientists name a new cat species for the first time in over a century",
+          "publisher": "Live Science",
+          "published_at": "2026-09-17T15:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2fd11a4828",
+      "text": "Museomics involved destructive sampling of historic specimens (preferentially petrous bone via auditory meatus, also tooth root, skin, vertebra) from Smithsonian and Naturalis collections (1965-1967 Guyana, Suriname, Venezuela), ancient-DNA clean-lab extraction, single-stranded library prep, sequencing at 2-20x, mapping to Geoffroy's cat reference genome GCA_018350155.1, and filtering to transversion-only SNPs to avoid deamination bias.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cell.com/current-biology/fulltext/S0960-9822(26)01110-3",
+          "title": "Phylogenomics and museomics reveal five distinct species of tiger cats in South America",
+          "publisher": "Current Biology (Cell Press)",
+          "published_at": "2026-09-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6420764dd7",
+      "text": "The tiger-cat complex comprises five distinct, reciprocally monophyletic species: Leopardus guttulus, L. emiliae, L. pardinoides, L. tigrinus (sensu stricto), and the newly described Leopardus tilcayo sp. nov.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cell.com/current-biology/fulltext/S0960-9822(26)01110-3",
+          "title": "Phylogenomics and museomics reveal five distinct species of tiger cats in South America",
+          "publisher": "Current Biology (Cell Press)",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.cell.com/cms/10.1016/j.cub.2026.08.059/attachment/c134bcab-97be-4c3b-9c54-151a3e34ed07/mmc2.pdf",
+          "title": "Description of a new felid species Leopardus tilcayo sp. nov. (Data S1)",
+          "publisher": "Current Biology Supplemental Data S1",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.scientificamerican.com/article/see-the-first-new-species-of-cat-discovered-in-more-than-a-century-its-adorable",
+          "title": "See the first new species of cat discovered in more than a century",
+          "publisher": "Scientific American",
+          "published_at": "2026-09-17T18:00:00Z"
+        },
+        {
+          "url": "https://www.livescience.com/animals/cats/scientists-name-a-new-cat-species-for-the-first-time-in-over-a-century",
+          "title": "Scientists name a new cat species for the first time in over a century",
+          "publisher": "Live Science",
+          "published_at": "2026-09-17T15:00:00Z"
+        },
+        {
+          "url": "https://www.newscientist.com/article/2589847-beautiful-new-cat-species-is-first-to-be-named-in-a-century/",
+          "title": "Beautiful new cat species is first to be named in a century",
+          "publisher": "New Scientist",
+          "published_at": "2026-09-17T15:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b8685c9987",
+      "text": "A new subspecies Leopardus tigrinus antisuyo ssp. nov. was described from the Peruvian Yungas (holotype MUSM 9401, San Juan de Cacazu, Pasco, 1000m), diverging from nominate L. t. tigrinus ~0.49 million years ago (95% HPD 0.03-0.93).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cell.com/current-biology/fulltext/S0960-9822(26)01110-3",
+          "title": "Phylogenomics and museomics reveal five distinct species of tiger cats in South America",
+          "publisher": "Current Biology (Cell Press)",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.cell.com/cms/10.1016/j.cub.2026.08.059/attachment/08c7c030-9ce6-454c-ba8d-a47d3521dfdc/mmc3.pdf",
+          "title": "Description of a new felid subspecies Leopardus tigrinus antisuyo ssp. nov. (Data S2)",
+          "publisher": "Current Biology Supplemental Data S2",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.livescience.com/animals/cats/scientists-name-a-new-cat-species-for-the-first-time-in-over-a-century",
+          "title": "Scientists name a new cat species for the first time in over a century",
+          "publisher": "Live Science",
+          "published_at": "2026-09-17T15:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fc7980cc38",
+      "text": "Leopardus tilcayo diverged from the L. tigrinus/pardinoides lineage ~1.43 million years ago (95% HPD 0.80-2.05 Myr), a distance comparable to that between modern lions and extinct cave lions and to the split between L. guigna and L. geoffroyi.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cell.com/current-biology/fulltext/S0960-9822(26)01110-3",
+          "title": "Phylogenomics and museomics reveal five distinct species of tiger cats in South America",
+          "publisher": "Current Biology (Cell Press)",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.cell.com/cms/10.1016/j.cub.2026.08.059/attachment/c134bcab-97be-4c3b-9c54-151a3e34ed07/mmc2.pdf",
+          "title": "Description of a new felid species Leopardus tilcayo sp. nov. (Data S1)",
+          "publisher": "Current Biology Supplemental Data S1",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.nationalgeographic.com/animals/article/meet-the-first-new-cat-species-discovered-in-100-years",
+          "title": "Meet the First New Cat Species Discovered in 100 Years",
+          "publisher": "National Geographic",
+          "published_at": "2026-09-17T14:00:00Z"
+        },
+        {
+          "url": "https://www.livescience.com/animals/cats/scientists-name-a-new-cat-species-for-the-first-time-in-over-a-century",
+          "title": "Scientists name a new cat species for the first time in over a century",
+          "publisher": "Live Science",
+          "published_at": "2026-09-17T15:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_434e6d03b0",
+      "text": "Diagnostic traits of L. tilcayo include light brown dorsum darkening mid-dorsally, large irregular open/partially closed rosettes that do not coalesce, shorter pelage than L. pardinoides, lower contrast, less bushy tail with irregular blotches not forming complete bands except distally, yellow/light brown tail tip, head-body length 425-505 mm, tail 250-265 mm, weight 1.5-2.0 kg (smaller than average domestic cat), and ~1.39-1.49 million diagnostic nuclear transversion sites versus L. t. antisuyo/pardinoides.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cell.com/current-biology/fulltext/S0960-9822(26)01110-3",
+          "title": "Phylogenomics and museomics reveal five distinct species of tiger cats in South America",
+          "publisher": "Current Biology (Cell Press)",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.cell.com/cms/10.1016/j.cub.2026.08.059/attachment/c134bcab-97be-4c3b-9c54-151a3e34ed07/mmc2.pdf",
+          "title": "Description of a new felid species Leopardus tilcayo sp. nov. (Data S1)",
+          "publisher": "Current Biology Supplemental Data S1",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.reuters.com/business/environment/new-cat-species-identified-bolivia-first-over-century-2026-09-17/",
+          "title": "New cat species identified in Bolivia, first in over a century",
+          "publisher": "Reuters",
+          "published_at": "2026-09-17T15:47:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_744085101a",
+      "text": "Holotype is CBF-11990, adult male, live-captured September 2021 near Arapata village, Nor Yungas, La Paz, Bolivia (-16.248594, -67.634691, 1570m), genome SRA SRX30196846, housed alive at Senda Verde Wildlife Sanctuary (to be preserved at CBF upon death); paratype is female CBF-11989 captured September 2018 near Paco and released after sampling.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cell.com/current-biology/fulltext/S0960-9822(26)01110-3",
+          "title": "Phylogenomics and museomics reveal five distinct species of tiger cats in South America",
+          "publisher": "Current Biology (Cell Press)",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.cell.com/cms/10.1016/j.cub.2026.08.059/attachment/c134bcab-97be-4c3b-9c54-151a3e34ed07/mmc2.pdf",
+          "title": "Description of a new felid species Leopardus tilcayo sp. nov. (Data S1)",
+          "publisher": "Current Biology Supplemental Data S1",
+          "published_at": "2026-09-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5472f4068e",
+      "text": "Descriptions are based on only two live individuals examined genetically, plus a small number of camera-trap records; no reliable museum specimens of L. tilcayo existed before, and population size in the wild is unknown.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cell.com/current-biology/fulltext/S0960-9822(26)01110-3",
+          "title": "Phylogenomics and museomics reveal five distinct species of tiger cats in South America",
+          "publisher": "Current Biology (Cell Press)",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.cell.com/cms/10.1016/j.cub.2026.08.059/attachment/c134bcab-97be-4c3b-9c54-151a3e34ed07/mmc2.pdf",
+          "title": "Description of a new felid species Leopardus tilcayo sp. nov. (Data S1)",
+          "publisher": "Current Biology Supplemental Data S1",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.nationalgeographic.com/animals/article/meet-the-first-new-cat-species-discovered-in-100-years",
+          "title": "Meet the First New Cat Species Discovered in 100 Years",
+          "publisher": "National Geographic",
+          "published_at": "2026-09-17T14:00:00Z"
+        },
+        {
+          "url": "https://www.livescience.com/animals/cats/scientists-name-a-new-cat-species-for-the-first-time-in-over-a-century",
+          "title": "Scientists name a new cat species for the first time in over a century",
+          "publisher": "Live Science",
+          "published_at": "2026-09-17T15:00:00Z"
+        },
+        {
+          "url": "https://www.reuters.com/business/environment/new-cat-species-identified-bolivia-first-over-century-2026-09-17/",
+          "title": "New cat species identified in Bolivia, first in over a century",
+          "publisher": "Reuters",
+          "published_at": "2026-09-17T15:47:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6c2aa7dd56",
+      "text": "The holotype male, nicknamed Tigrino, arrived at Senda Verde about 10 years ago (~2017) after a local man found it as a kitten on a forest road near La Paz, raised it at home feeding noodles, rice and eggs believing it was a domestic cat, then surrendered it when he realized it was wild.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nationalgeographic.com/animals/article/meet-the-first-new-cat-species-discovered-in-100-years",
+          "title": "Meet the First New Cat Species Discovered in 100 Years",
+          "publisher": "National Geographic",
+          "published_at": "2026-09-17T14:00:00Z"
+        },
+        {
+          "url": "https://www.livescience.com/animals/cats/scientists-name-a-new-cat-species-for-the-first-time-in-over-a-century",
+          "title": "Scientists name a new cat species for the first time in over a century",
+          "publisher": "Live Science",
+          "published_at": "2026-09-17T15:00:00Z"
+        },
+        {
+          "url": "https://www.reuters.com/business/environment/new-cat-species-identified-bolivia-first-over-century-2026-09-17/",
+          "title": "New cat species identified in Bolivia, first in over a century",
+          "publisher": "Reuters",
+          "published_at": "2026-09-17T15:47:00Z"
+        },
+        {
+          "url": "https://www.discoverwildlife.com/animal-facts/mammals/tilcayo-cat-bolivian-yungus",
+          "title": "New species of wild cat discovered in Bolivia's cloud forest",
+          "publisher": "Discover Wildlife",
+          "published_at": "2026-09-17T15:05:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a1ed0fd9f4",
+      "text": "Known distribution is restricted to the Bolivian Yungas cloud forest ecoregion on the eastern slope of the Andes (1200-3400m, perhumid montane forest above ~2600m and Yungas forest 1200-2400m), with hypothesized range across the entire Bolivian Yungas but no confirmed records outside Nor Yungas, La Paz.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cell.com/current-biology/fulltext/S0960-9822(26)01110-3",
+          "title": "Phylogenomics and museomics reveal five distinct species of tiger cats in South America",
+          "publisher": "Current Biology (Cell Press)",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.cell.com/cms/10.1016/j.cub.2026.08.059/attachment/c134bcab-97be-4c3b-9c54-151a3e34ed07/mmc2.pdf",
+          "title": "Description of a new felid species Leopardus tilcayo sp. nov. (Data S1)",
+          "publisher": "Current Biology Supplemental Data S1",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.nationalgeographic.com/animals/article/meet-the-first-new-cat-species-discovered-in-100-years",
+          "title": "Meet the First New Cat Species Discovered in 100 Years",
+          "publisher": "National Geographic",
+          "published_at": "2026-09-17T14:00:00Z"
+        },
+        {
+          "url": "https://www.reuters.com/business/environment/new-cat-species-identified-bolivia-first-over-century-2026-09-17/",
+          "title": "New cat species identified in Bolivia, first in over a century",
+          "publisher": "Reuters",
+          "published_at": "2026-09-17T15:47:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_852c214c76",
+      "text": "Leopardus tilcayo is the first entirely new living cat species formally named and described in more than a century, since the Uruguayan pampas cat Leopardus fasciatus (syn. L. munoai) in 1923; recent felid 'new species' were splits/elevations of existing names, not novel discoveries.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nationalgeographic.com/animals/article/meet-the-first-new-cat-species-discovered-in-100-years",
+          "title": "Meet the First New Cat Species Discovered in 100 Years",
+          "publisher": "National Geographic",
+          "published_at": "2026-09-17T14:00:00Z"
+        },
+        {
+          "url": "https://www.livescience.com/animals/cats/scientists-name-a-new-cat-species-for-the-first-time-in-over-a-century",
+          "title": "Scientists name a new cat species for the first time in over a century",
+          "publisher": "Live Science",
+          "published_at": "2026-09-17T15:00:00Z"
+        },
+        {
+          "url": "https://www.newscientist.com/article/2589847-beautiful-new-cat-species-is-first-to-be-named-in-a-century/",
+          "title": "Beautiful new cat species is first to be named in a century",
+          "publisher": "New Scientist",
+          "published_at": "2026-09-17T15:00:00Z"
+        },
+        {
+          "url": "https://dallasexpress.com/health/first-new-living-cat-species-in-100-years-found-in-yungas-cloud-forest",
+          "title": "First New Living Cat Species In 100 Years Found In Yungas Cloud Forest",
+          "publisher": "Dallas Express",
+          "published_at": "2026-09-17T18:16:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5e4c5d6187",
+      "text": "The century-long gap reflects cryptic morphology: the five tiger-cat species are morphologically very similar, distinguishable only by subtle pelage/tail differences and genomics, and are frequently misidentified as margays (L. wiedii) in camera traps and museum collections.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.cell.com/current-biology/fulltext/S0960-9822(26)01110-3",
+          "title": "Phylogenomics and museomics reveal five distinct species of tiger cats in South America",
+          "publisher": "Current Biology (Cell Press)",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.nationalgeographic.com/animals/article/meet-the-first-new-cat-species-discovered-in-100-years",
+          "title": "Meet the First New Cat Species Discovered in 100 Years",
+          "publisher": "National Geographic",
+          "published_at": "2026-09-17T14:00:00Z"
+        },
+        {
+          "url": "https://www.newscientist.com/article/2589847-beautiful-new-cat-species-is-first-to-be-named-in-a-century/",
+          "title": "Beautiful new cat species is first to be named in a century",
+          "publisher": "New Scientist",
+          "published_at": "2026-09-17T15:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5bd420dae6",
+      "text": "The Yungas is among the most threatened ecosystems in Bolivia/Peru, facing deforestation, agricultural expansion, coca cultivation, human-caused fires, illegal gold mining with mercury pollution, habitat fragmentation and limited government oversight; less than 40% of Cotapata National Park is suitable tilcayo habitat.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cell.com/current-biology/fulltext/S0960-9822(26)01110-3",
+          "title": "Phylogenomics and museomics reveal five distinct species of tiger cats in South America",
+          "publisher": "Current Biology (Cell Press)",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.cell.com/cms/10.1016/j.cub.2026.08.059/attachment/c134bcab-97be-4c3b-9c54-151a3e34ed07/mmc2.pdf",
+          "title": "Description of a new felid species Leopardus tilcayo sp. nov. (Data S1)",
+          "publisher": "Current Biology Supplemental Data S1",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.nationalgeographic.com/animals/article/meet-the-first-new-cat-species-discovered-in-100-years",
+          "title": "Meet the First New Cat Species Discovered in 100 Years",
+          "publisher": "National Geographic",
+          "published_at": "2026-09-17T14:00:00Z"
+        },
+        {
+          "url": "https://www.reuters.com/business/environment/new-cat-species-identified-bolivia-first-over-century-2026-09-17/",
+          "title": "New cat species identified in Bolivia, first in over a century",
+          "publisher": "Reuters",
+          "published_at": "2026-09-17T15:47:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_59b8bce0c4",
+      "text": "Tiger cats are currently assessed by the IUCN Red List as two Vulnerable species with declining populations (L. tigrinus and L. guttulus); the authors shared findings with the IUCN for an upcoming review that will assess the five lineages separately, and researchers state species like L. tilcayo could be uplisted to Endangered when assessed alone.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cell.com/current-biology/fulltext/S0960-9822(26)01110-3",
+          "title": "Phylogenomics and museomics reveal five distinct species of tiger cats in South America",
+          "publisher": "Current Biology (Cell Press)",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.livescience.com/animals/cats/scientists-name-a-new-cat-species-for-the-first-time-in-over-a-century",
+          "title": "Scientists name a new cat species for the first time in over a century",
+          "publisher": "Live Science",
+          "published_at": "2026-09-17T15:00:00Z"
+        },
+        {
+          "url": "https://www.reuters.com/business/environment/new-cat-species-identified-bolivia-first-over-century-2026-09-17/",
+          "title": "New cat species identified in Bolivia, first in over a century",
+          "publisher": "Reuters",
+          "published_at": "2026-09-17T15:47:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_27399344ed",
+      "text": "Genomic diversity metrics show L. tilcayo has autosomal heterozygosity ~0.21%, fraction of runs of homozygosity 0.0%, and a long-term decline in effective population size of -63% from Pleistocene (22k) to Holocene (8k), similar to declines in other tiger cats (-61% to -80%).",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.cell.com/current-biology/fulltext/S0960-9822(26)01110-3",
+          "title": "Phylogenomics and museomics reveal five distinct species of tiger cats in South America",
+          "publisher": "Current Biology (Cell Press)",
+          "published_at": "2026-09-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_86c99092ea",
+      "text": "The species epithet 'tilcayo' preserves the local name used by Yungas communities; interviewees reported no known meaning in Spanish or Quechua, saying 'my grandpa called it tilcayo, so I call it tilcayo,' and authors chose it to honor ancestral knowledge.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.cell.com/current-biology/fulltext/S0960-9822(26)01110-3",
+          "title": "Phylogenomics and museomics reveal five distinct species of tiger cats in South America",
+          "publisher": "Current Biology (Cell Press)",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.cell.com/cms/10.1016/j.cub.2026.08.059/attachment/c134bcab-97be-4c3b-9c54-151a3e34ed07/mmc2.pdf",
+          "title": "Description of a new felid species Leopardus tilcayo sp. nov. (Data S1)",
+          "publisher": "Current Biology Supplemental Data S1",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.nationalgeographic.com/animals/article/meet-the-first-new-cat-species-discovered-in-100-years",
+          "title": "Meet the First New Cat Species Discovered in 100 Years",
+          "publisher": "National Geographic",
+          "published_at": "2026-09-17T14:00:00Z"
+        },
+        {
+          "url": "https://www.discoverwildlife.com/animal-facts/mammals/tilcayo-cat-bolivian-yungus",
+          "title": "New species of wild cat discovered in Bolivia's cloud forest",
+          "publisher": "Discover Wildlife",
+          "published_at": "2026-09-17T15:05:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_94dde38ca9",
+      "text": "Historical taxonomy: tiger cats were lumped as single species L. tigrinus (described 1775 from French Guiana illustration) through the 20th century; modern splits recognized L. guttulus in 2013, L. emiliae in 2017, and L. pardinoides in 2024 before the 2026 five-species resolution.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.cell.com/current-biology/fulltext/S0960-9822(26)01110-3",
+          "title": "Phylogenomics and museomics reveal five distinct species of tiger cats in South America",
+          "publisher": "Current Biology (Cell Press)",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.livescience.com/animals/cats/scientists-name-a-new-cat-species-for-the-first-time-in-over-a-century",
+          "title": "Scientists name a new cat species for the first time in over a century",
+          "publisher": "Live Science",
+          "published_at": "2026-09-17T15:00:00Z"
+        },
+        {
+          "url": "https://www.newscientist.com/article/2589847-beautiful-new-cat-species-is-first-to-be-named-in-a-century/",
+          "title": "Beautiful new cat species is first to be named in a century",
+          "publisher": "New Scientist",
+          "published_at": "2026-09-17T15:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1e095f9dce",
+      "text": "All wild cats are regulated under CITES Appendix II, with six Leopardus species including L. tigrinus and L. guttulus on Appendix I; species rank is the relevant unit for escalation to stricter protection.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.cell.com/current-biology/fulltext/S0960-9822(26)01110-3",
+          "title": "Phylogenomics and museomics reveal five distinct species of tiger cats in South America",
+          "publisher": "Current Biology (Cell Press)",
+          "published_at": "2026-09-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_128e7ebb31",
+      "text": "Researchers and commentators suggest the same genomic/museomic methods may reveal additional cryptic small-cat species in Africa, Asia and within the margay (L. wiedii), which one external expert hypothesized could be four species diverged ~1 Myr ago, though authors say focused study is needed.",
+      "grade": "likely",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.nationalgeographic.com/animals/article/meet-the-first-new-cat-species-discovered-in-100-years",
+          "title": "Meet the First New Cat Species Discovered in 100 Years",
+          "publisher": "National Geographic",
+          "published_at": "2026-09-17T14:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0165456dae",
+      "text": "Museomics involved destructive sampling at Smithsonian National Museum of Natural History and Naturalis Biodiversity Center preferentially targeting petrous bone via external auditory meatus with rotary drill; 8 museum-derived genomes enabled first genetic assessment of Guiana Shield type locality for L. tigrinus (Schreber 1775). Main paper analyzed 38 Leopardus genomes including 26 tiger-cat complex individuals. No published mtDNA/nuclear sequences previously existed for Guiana Shield. Historic specimens 1965-1967 (Stanley Brock, Smithsonian Venezuelan Project). Mapping to Geoffroy's cat reference GCA_018350155.1 with transversion-only SNP filtering to avoid deamination bias; low-coverage 1.8-3.4x after subsampling; single-stranded libraries and bleach pretreatment in ancient-DNA clean lab per STAR Methods snippet. 7 historic Guiana Shield specimens + holotype pelt mitogenome (MUSM 9401) account for 8 museum genomes discrepancy (7 WGS + 1 mitogenome).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.sciencedirect.com/science/article/pii/S0960982226011103",
+          "title": "Phylogenomics and museomics reveal five distinct species of tiger cats in South America — Current Biology S0960-9822(26)01110-3 preview",
+          "publisher": "Cell Press / ScienceDirect",
+          "published_at": "2026-09-17"
+        },
+        {
+          "url": "https://www.cell.com/cms/10.1016/j.cub.2026.08.059/attachment/08c7c030-9ce6-454c-ba8d-a47d3521dfdc/mmc3.pdf",
+          "title": "Description of a new felid subspecies Leopardus tigrinus antisuyo ssp. nov. (Data S2)",
+          "publisher": "Current Biology Supplemental Data S2",
+          "published_at": "2026-09-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_366c096abc",
+      "text": "Dataset discrepancy clarified: 7 historic Guiana Shield specimens (1965-1967) plus holotype pelt mitogenome (MUSM 9401, Nanopore V14, Dorado basecalling, fastplong Q6/100bp, minimap2 to OR257581.1, ANGSD consensus minQ20/minMapQ30) comprise 8 museum-derived genomes; 38 total Leopardus genomes includes 12 previously published + 26 new tiger-cat complex + 8 museum.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.sciencedirect.com/science/article/pii/S0960982226011103",
+          "title": "Phylogenomics and museomics reveal five distinct species of tiger cats in South America — Current Biology S0960-9822(26)01110-3 preview",
+          "publisher": "Cell Press / ScienceDirect",
+          "published_at": "2026-09-17"
+        },
+        {
+          "url": "https://www.cell.com/cms/10.1016/j.cub.2026.08.059/attachment/08c7c030-9ce6-454c-ba8d-a47d3521dfdc/mmc3.pdf",
+          "title": "Description of a new felid subspecies Leopardus tigrinus antisuyo ssp. nov. (Data S2)",
+          "publisher": "Current Biology Supplemental Data S2",
+          "published_at": "2026-09-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_63f8fbd2e6",
+      "text": "Holotype CBF-11990 adult male live-captured September 2021 near Arapata village, Nor Yungas, La Paz, Bolivia (-16.248594, -67.634691, 1570m), genome SRA SRX30196846, housed alive at Senda Verde Wildlife Sanctuary (to be preserved at CBF upon death); paratype CBF-11989 female captured September 2018 near Paco and released after sampling, SRA SRX30196847; voucher tissue/hair deposited at Bolivian Collection of Wildlife (CBF), National Museum of Natural History, Bolivia.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cell.com/cms/10.1016/j.cub.2026.08.059/attachment/c134bcab-97be-4c3b-9c54-151a3e34ed07/mmc2.pdf",
+          "title": "Description of a new felid species Leopardus tilcayo sp. nov. (Data S1)",
+          "publisher": "Current Biology Supplemental Data S1",
+          "published_at": "2026-09-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3e4e2a2d2c",
+      "text": "Diagnostic traits per Data S1: light brown dorsum darkening mid-dorsally, large irregular open/partially closed rosettes not coalescing, shorter pelage than L. pardinoides, lower contrast, less bushy tail with irregular blotches not forming complete bands except distally, yellow/light brown tail tip, head-body 425-505mm, tail 250-265mm, weight 1.5-2.0kg, ~1.39-1.49M diagnostic nuclear transversion sites vs L. t. antisuyo/pardinoides. Measurements follow Anderson (1997): BL, T, E, HF, FF, W from live adult male plus TL/T/E/W from live adult female. Pelage/tail comparisons n=2 L. tilcayo vs n=3 L. pardinoides, n=1 L. t. tigrinus (RMNH.MAM.10211), n=2 L. t. antisuyo, n=3 L. guttulus. Authors acknowledge entire species description rests on n=2 live individuals plus camera-trap hints; diagnostic mitochondrial sites listed to enable future non-invasive detection; variation may emerge with larger samples.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cell.com/cms/10.1016/j.cub.2026.08.059/attachment/c134bcab-97be-4c3b-9c54-151a3e34ed07/mmc2.pdf",
+          "title": "Description of a new felid species Leopardus tilcayo sp. nov. (Data S1)",
+          "publisher": "Current Biology Supplemental Data S1",
+          "published_at": "2026-09-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_19eea9ad7f",
+      "text": "IUCN Red List current assessments pre-2026 split: Leopardus tigrinus (Northern Tiger Cat) Vulnerable (Payan & de Oliveira 2016, e.T54012637A50653881, assessed 25 May 2016, decreasing, 8,932-10,208 mature individuals) and Leopardus guttulus (Southern Tiger Cat) Vulnerable (de Oliveira et al. 2016, e.T54010476A54010576, assessed 10 May 2014, decreasing, 6,047 mature individuals). Both assessments pre-date five-way split, confirming two Vulnerable listings currently mask five narrower taxa.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.iucnredlist.org/species/54012637/50653881",
+          "title": "Leopardus tigrinus — The IUCN Red List of Threatened Species 2016: e.T54012637A50653881",
+          "publisher": "IUCN Red List",
+          "published_at": "2016-05-25"
+        },
+        {
+          "url": "https://www.iucnredlist.org/species/54010476/54010576",
+          "title": "Leopardus guttulus — The IUCN Red List of Threatened Species 2016: e.T54010476A54010576",
+          "publisher": "IUCN Red List",
+          "published_at": "2016-05-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_469538a4c6",
+      "text": "CITES Appendices valid 5 March 2026 Interpretation §§1-2,7 confirm species is relevant unit (or higher taxon via spp.), whole animal plus parts/derivatives included, Appendix I bans commercial trade while Appendix II requires permits/sustainability. Split triggers separate CITES consideration at species level. Specific Leopardus Appendix I/II rows not captured in truncated read; claim that six Leopardus spp. including L. tigrinus/guttulus are Appendix I remains snippet-only pending full Felidae pages.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://cites.org/sites/default/files/eng/app/2026/E-Appendices-2026-03-05.pdf",
+          "title": "CITES Appendices I, II and III valid from 5 March 2026",
+          "publisher": "CITES",
+          "published_at": "2026-03-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4415e1f9cc",
+      "text": "First novel living cat species in >100 years: Current Biology Highlights state 'First discovery of a novel cat species in over a century: Leopardus tilcayo' (primary paper). Data S1 establishes baseline: genus Leopardus 34 species per Kitchener et al. 2017 (IUCN Cat Specialist Group), with recent changes being elevations/splits — L. guttulus (2013), L. emiliae (2017), L. pardinoides (2024), and pampas cats L. braccatus/pajeros/garleppi/fasciatus (syn. munoai) per Nascimento et al. 2021 — not novel discoveries. Distinguishes L. tilcayo as first entirely new living cat since Uruguayan pampas cat L. fasciatus (syn. L. munoai) 1923.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.sciencedirect.com/science/article/pii/S0960982226011103",
+          "title": "Phylogenomics and museomics reveal five distinct species of tiger cats in South America — Current Biology S0960-9822(26)01110-3 preview",
+          "publisher": "Cell Press / ScienceDirect",
+          "published_at": "2026-09-17"
+        },
+        {
+          "url": "https://www.cell.com/cms/10.1016/j.cub.2026.08.059/attachment/c134bcab-97be-4c3b-9c54-151a3e34ed07/mmc2.pdf",
+          "title": "Description of a new felid species Leopardus tilcayo sp. nov. (Data S1)",
+          "publisher": "Current Biology Supplemental Data S1",
+          "published_at": "2026-09-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_11c772e1f9",
+      "text": "Main paper Summary and Data S1 Abstract link discovery to Yungas endemism and conservation urgency, noting authors shared data with IUCN for reassessment; IUCN assessments show decreasing populations supporting prediction that narrowed taxa will have smaller ranges/populations and likely uplisting to Endangered, but no formal IUCN decision yet — uplisting remains prediction, not decision. Bolivian Red List not embedded in national policy per profile gap remains unverified in primary sources read.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.sciencedirect.com/science/article/pii/S0960982226011103",
+          "title": "Phylogenomics and museomics reveal five distinct species of tiger cats in South America — Current Biology S0960-9822(26)01110-3 preview",
+          "publisher": "Cell Press / ScienceDirect",
+          "published_at": "2026-09-17"
+        },
+        {
+          "url": "https://www.cell.com/cms/10.1016/j.cub.2026.08.059/attachment/c134bcab-97be-4c3b-9c54-151a3e34ed07/mmc2.pdf",
+          "title": "Description of a new felid species Leopardus tilcayo sp. nov. (Data S1)",
+          "publisher": "Current Biology Supplemental Data S1",
+          "published_at": "2026-09-17T00:00:00Z"
+        },
+        {
+          "url": "https://www.iucnredlist.org/species/54012637/50653881",
+          "title": "Leopardus tigrinus — The IUCN Red List of Threatened Species 2016: e.T54012637A50653881",
+          "publisher": "IUCN Red List",
+          "published_at": "2016-05-25"
+        },
+        {
+          "url": "https://www.iucnredlist.org/species/54010476/54010576",
+          "title": "Leopardus guttulus — The IUCN Red List of Threatened Species 2016: e.T54010476A54010576",
+          "publisher": "IUCN Red List",
+          "published_at": "2016-05-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_34a06506b7",
+      "text": "Species concept disagreement is foundational, not settled: BSC vs PSC vs morphological/ecological concepts produce different tiger-cat counts for same organisms; no universal definition exists.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.livescience.com/animals/what-defines-a-species-inside-the-fierce-debate-thats-rocking-biology-to-its-core",
+          "title": "What defines a species? Inside the fierce debate that's rocking biology to its core",
+          "publisher": "Live Science",
+          "published_at": "2024-06-28"
+        },
+        {
+          "url": "https://www.casopis.ochranaprirody.cz/en/research-surveys-and-data-management/the-species-concept-in-nature-conservation-theory-and-practice",
+          "title": "The Species Concept in Nature Conservation Theory and Practice",
+          "publisher": "Nature Conservation",
+          "published_at": "2023-06-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dc0e2c8126",
+      "text": "PSC-driven splitting has been formally critiqued as taxonomic inflation with conservation costs, destabilizing IUCN Red List, CITES and national legislation.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/conservation-science/articles/10.3389/fcosc.2024.1391303/full",
+          "title": "Taxonomy and systematics of the Neotropical primates: a review and update",
+          "publisher": "Frontiers in Conservation Science",
+          "published_at": "2024-09-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2098641990",
+      "text": "Tiger-cat complex shows extensive ongoing introgression and mitonuclear discordance: guttulus-geoffroyi hybrid swarm, pampas cat -> NE tigrina complete mtDNA capture, and 15-34% introgression reported in Lescroart et al. 2026.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6993176/",
+          "title": "Inter-species hybridization among Neotropical cats of the genus Leopardus, and evidence for an introgressive hybrid zone between L. geoffroyi and L. tigrinus in southern Brazil",
+          "publisher": "Molecular Ecology",
+          "published_at": "2008-10-01"
+        },
+        {
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8557425/",
+          "title": "Genome-Wide SNPs Clarify a Complex Radiation and Support Recognition of an Additional Cat Species",
+          "publisher": "Molecular Biology and Evolution",
+          "published_at": "2021-11-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_250529363f",
+      "text": "Under BSC, documented fertile hybridization and 15-34% introgression supports subspecies rather than full species for recently diverged hybridizing lineages.",
+      "grade": "contested",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.livescience.com/animals/what-defines-a-species-inside-the-fierce-debate-thats-rocking-biology-to-its-core",
+          "title": "What defines a species? Inside the fierce debate that's rocking biology to its core",
+          "publisher": "Live Science",
+          "published_at": "2024-06-28"
+        },
+        {
+          "url": "https://www.casopis.ochranaprirody.cz/en/research-surveys-and-data-management/the-species-concept-in-nature-conservation-theory-and-practice",
+          "title": "The Species Concept in Nature Conservation Theory and Practice",
+          "publisher": "Nature Conservation",
+          "published_at": "2023-06-05"
+        },
+        {
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6993176/",
+          "title": "Inter-species hybridization among Neotropical cats of the genus Leopardus, and evidence for an introgressive hybrid zone between L. geoffroyi and L. tigrinus in southern Brazil",
+          "publisher": "Molecular Ecology",
+          "published_at": "2008-10-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_13a4730371",
+      "text": "No consensus among splitters: competing recent schemes recognize 2, 3, or 5 tiger-cat species; five-species resolution is not settled taxonomy.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8557425/",
+          "title": "Genome-Wide SNPs Clarify a Complex Radiation and Support Recognition of an Additional Cat Species",
+          "publisher": "Molecular Biology and Evolution",
+          "published_at": "2021-11-01"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41598-024-52379-8",
+          "title": "Ecological modeling, biogeography, and phenotypic analyses setting the tiger cats' hyperdimensional niches reveal a new species",
+          "publisher": "Scientific Reports",
+          "published_at": "2024-01-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9368115326",
+      "text": "Single-specimen and small-sample splits in Leopardus have precedent for reversal (L. narinensis -> L. pardinoides), raising caution for n=2 L. tilcayo description.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8557425/",
+          "title": "Genome-Wide SNPs Clarify a Complex Radiation and Support Recognition of an Additional Cat Species",
+          "publisher": "Molecular Biology and Evolution",
+          "published_at": "2021-11-01"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41598-024-52379-8",
+          "title": "Ecological modeling, biogeography, and phenotypic analyses setting the tiger cats' hyperdimensional niches reveal a new species",
+          "publisher": "Scientific Reports",
+          "published_at": "2024-01-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_78b087b7a8",
+      "text": "PSC-based doubling has been criticized as subjective and non-repeatable with conservation-law implications, relevant to cryptic Leopardus splits.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.audubon.org/news/new-study-doubles-worlds-number-bird-species-redefining-species",
+          "title": "New Study Doubles the World's Number of Bird Species By Redefining 'Species'",
+          "publisher": "Audubon",
+          "published_at": "2016-12-15"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

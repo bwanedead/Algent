@@ -1,0 +1,509 @@
+{
+  "schema": "ohmega.index/1",
+  "articles": [
+    {
+      "url": "https://www.ohmega.monster/articles/reports-say-serbia-s-president-is-swapping-to-prime-minister-c00a85",
+      "data": "https://www.ohmega.monster/data/articles/reports-say-serbia-s-president-is-swapping-to-prime-minister-c00a85.json",
+      "title": "Reports say Serbia's president is swapping to prime minister to stay in power",
+      "published_at": "2026-09-28T08:58:24.603239+00:00",
+      "as_of": "2026-09-28",
+      "claims": 51
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/meth-in-australia-is-stronger-for-the-money-as-deaths-hit-a-2a9042",
+      "data": "https://www.ohmega.monster/data/articles/meth-in-australia-is-stronger-for-the-money-as-deaths-hit-a-2a9042.json",
+      "title": "Meth in Australia is stronger for the money as deaths hit a record",
+      "published_at": "2026-09-26T22:43:12.868853+00:00",
+      "as_of": "2026-02-15",
+      "claims": 43
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/u-s-and-iran-resume-indirect-talks-as-strait-of-hormuz-the-w-685d32",
+      "data": "https://www.ohmega.monster/data/articles/u-s-and-iran-resume-indirect-talks-as-strait-of-hormuz-the-w-685d32.json",
+      "title": "U.S. and Iran resume indirect talks as Strait of Hormuz, the world's key oil waterway, stays mostly closed",
+      "published_at": "2026-09-23T17:03:32.419645+00:00",
+      "as_of": "2026-09-23",
+      "claims": 61
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/four-space-clocks-show-why-staying-put-matters-as-much-as-la-bd284a",
+      "data": "https://www.ohmega.monster/data/articles/four-space-clocks-show-why-staying-put-matters-as-much-as-la-bd284a.json",
+      "title": "Four space clocks show why staying put matters as much as launching",
+      "published_at": "2026-09-23T14:22:22.374256+00:00",
+      "as_of": "2026-09-23",
+      "claims": 32
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/china-s-catl-begins-trials-at-hungary-s-huge-ev-battery-giga-f98533",
+      "data": "https://www.ohmega.monster/data/articles/china-s-catl-begins-trials-at-hungary-s-huge-ev-battery-giga-f98533.json",
+      "title": "China's CATL begins trials at Hungary's huge EV battery gigafactory",
+      "published_at": "2026-09-23T13:52:35.850857+00:00",
+      "as_of": "2026-09-22",
+      "claims": 48
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/nine-giant-building-projects-that-were-seriously-backed-and-49af97",
+      "data": "https://www.ohmega.monster/data/articles/nine-giant-building-projects-that-were-seriously-backed-and-49af97.json",
+      "title": "Nine giant building projects that were seriously backed — and why only one is rising",
+      "published_at": "2026-09-23T13:04:17.382038+00:00",
+      "as_of": "2026-09-23",
+      "claims": 51
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/the-colorado-river-s-two-largest-reservoirs-hit-record-lows-c18d4a",
+      "data": "https://www.ohmega.monster/data/articles/the-colorado-river-s-two-largest-reservoirs-hit-record-lows-c18d4a.json",
+      "title": "The Colorado River's two largest reservoirs hit record lows together, 27 feet from losing power",
+      "published_at": "2026-09-23T12:24:41.786353+00:00",
+      "as_of": "2026-09-22",
+      "claims": 50
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/ai-video-worlds-that-simulate-reality-get-two-rival-bets-for-e44637",
+      "data": "https://www.ohmega.monster/data/articles/ai-video-worlds-that-simulate-reality-get-two-rival-bets-for-e44637.json",
+      "title": "AI video worlds that simulate reality get two rival bets for cheaper, longer memory",
+      "published_at": "2026-09-23T06:47:49.944708+00:00",
+      "as_of": "2026-09-23",
+      "claims": 41
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/europe-can-still-reach-jupiter-alone-launching-its-own-secur-ab410a",
+      "data": "https://www.ohmega.monster/data/articles/europe-can-still-reach-jupiter-alone-launching-its-own-secur-ab410a.json",
+      "title": "Europe can still reach Jupiter alone — launching its own secure network is the harder test",
+      "published_at": "2026-09-23T06:01:38.077154+00:00",
+      "as_of": "2026-09-23",
+      "claims": 65
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/turkey-reports-new-fragment-of-world-s-oldest-peace-treaty-a-f45689",
+      "data": "https://www.ohmega.monster/data/articles/turkey-reports-new-fragment-of-world-s-oldest-peace-treaty-a-f45689.json",
+      "title": "Turkey reports new fragment of world's oldest peace treaty at Hattusa",
+      "published_at": "2026-09-22T09:33:55.281569+00:00",
+      "as_of": "2026-09-22",
+      "claims": 45
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/maldives-bets-half-a-new-artificial-island-on-a-12bn-20bn-wa-21a033",
+      "data": "https://www.ohmega.monster/data/articles/maldives-bets-half-a-new-artificial-island-on-a-12bn-20bn-wa-21a033.json",
+      "title": "Maldives bets half a new artificial island on a $12bn-$20bn waterfront and marina",
+      "published_at": "2026-09-22T08:46:08.631530+00:00",
+      "as_of": "2026-09-22",
+      "claims": 55
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/china-builds-eavesdropping-capable-antennas-beside-us-base-a-78604d",
+      "data": "https://www.ohmega.monster/data/articles/china-builds-eavesdropping-capable-antennas-beside-us-base-a-78604d.json",
+      "title": "China builds eavesdropping-capable antennas beside US base at Red Sea chokepoint",
+      "published_at": "2026-09-21T12:40:00.753832+00:00",
+      "as_of": "2026-09-21",
+      "claims": 44
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/us-clears-24-3bn-stealth-fighter-sale-to-saudi-arabia-and-sa-9e3ae1",
+      "data": "https://www.ohmega.monster/data/articles/us-clears-24-3bn-stealth-fighter-sale-to-saudi-arabia-and-sa-9e3ae1.json",
+      "title": "US clears $24.3bn stealth fighter sale to Saudi Arabia and says Israel's edge will hold",
+      "published_at": "2026-09-18T12:19:57.372295+00:00",
+      "as_of": "2026-09-18",
+      "claims": 33
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/google-deepmind-releases-searchable-map-of-every-possible-dn-be2e36",
+      "data": "https://www.ohmega.monster/data/articles/google-deepmind-releases-searchable-map-of-every-possible-dn-be2e36.json",
+      "title": "Google DeepMind releases searchable map of every possible DNA letter change",
+      "published_at": "2026-09-18T11:33:28.722100+00:00",
+      "as_of": "2026-09-09",
+      "claims": 37
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/museum-dna-unmasks-a-small-spotted-wild-cat-hidden-in-bolivi-9efd8f",
+      "data": "https://www.ohmega.monster/data/articles/museum-dna-unmasks-a-small-spotted-wild-cat-hidden-in-bolivi-9efd8f.json",
+      "title": "Museum DNA unmasks a small spotted wild cat hidden in Bolivia's cloud forests",
+      "published_at": "2026-09-18T10:47:18.858879+00:00",
+      "as_of": "2026-09-17",
+      "claims": 35
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/russia-s-war-economy-runs-through-china-on-beijing-s-terms-bfd0ed",
+      "data": "https://www.ohmega.monster/data/articles/russia-s-war-economy-runs-through-china-on-beijing-s-terms-bfd0ed.json",
+      "title": "Russia's war economy runs through China, on Beijing's terms",
+      "published_at": "2026-08-15T09:33:13.848965+00:00",
+      "as_of": "2026-05-13",
+      "claims": 33
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/poland-halves-coal-s-share-of-electricity-as-solar-drives-ju-0218b5",
+      "data": "https://www.ohmega.monster/data/articles/poland-halves-coal-s-share-of-electricity-as-solar-drives-ju-0218b5.json",
+      "title": "Poland halves coal's share of electricity as solar drives July low",
+      "published_at": "2026-08-14T11:38:38.761644+00:00",
+      "as_of": "2026-08-13",
+      "claims": 51
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/amazon-s-texas-ai-campus-to-run-on-a-7-65-gigawatt-private-g-9a98b8",
+      "data": "https://www.ohmega.monster/data/articles/amazon-s-texas-ai-campus-to-run-on-a-7-65-gigawatt-private-g-9a98b8.json",
+      "title": "Amazon's Texas AI campus to run on a 7.65-gigawatt private gas plant",
+      "published_at": "2026-08-12T23:22:14.075427+00:00",
+      "as_of": "2026-08-12",
+      "claims": 39
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/china-s-3-500-gigawatt-plan-is-not-a-surge-it-s-a-pivot-to-m-6c01f0",
+      "data": "https://www.ohmega.monster/data/articles/china-s-3-500-gigawatt-plan-is-not-a-surge-it-s-a-pivot-to-m-6c01f0.json",
+      "title": "China's 3,500-gigawatt plan is not a surge — it's a pivot to making wind and solar act like firm power",
+      "published_at": "2026-08-12T11:32:12.298962+00:00",
+      "as_of": "2026-07-30",
+      "claims": 37
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/butterflies-are-shifting-worldwide-but-the-losses-are-going-ae5c62",
+      "data": "https://www.ohmega.monster/data/articles/butterflies-are-shifting-worldwide-but-the-losses-are-going-ae5c62.json",
+      "title": "Butterflies are shifting worldwide, but the losses are going unseen",
+      "published_at": "2026-08-09T12:36:10.108486+00:00",
+      "as_of": "2026-08-09",
+      "claims": 33
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/bronze-age-greek-elites-wore-rings-forged-from-meteorite-iro-1b26cc",
+      "data": "https://www.ohmega.monster/data/articles/bronze-age-greek-elites-wore-rings-forged-from-meteorite-iro-1b26cc.json",
+      "title": "Bronze Age Greek elites wore rings forged from meteorite iron",
+      "published_at": "2026-08-09T00:56:24.590058+00:00",
+      "as_of": "2026-08-08",
+      "claims": 35
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/zelensky-warns-ukraine-s-heating-and-power-system-has-almost-9e0685",
+      "data": "https://www.ohmega.monster/data/articles/zelensky-warns-ukraine-s-heating-and-power-system-has-almost-9e0685.json",
+      "title": "Zelensky warns Ukraine's heating and power system has almost no thermal plants left for winter",
+      "published_at": "2026-08-08T23:52:52.718316+00:00",
+      "as_of": "2026-08-08",
+      "claims": 39
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/google-s-ai-hurricane-model-buys-forecasters-an-extra-day-478b03",
+      "data": "https://www.ohmega.monster/data/articles/google-s-ai-hurricane-model-buys-forecasters-an-extra-day-478b03.json",
+      "title": "Google's AI hurricane model buys forecasters an extra day",
+      "published_at": "2026-08-08T13:58:22.667630+00:00",
+      "as_of": "2026-08-08",
+      "claims": 47
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/india-and-china-keep-talking-on-their-disputed-himalayan-bor-1d56d8",
+      "data": "https://www.ohmega.monster/data/articles/india-and-china-keep-talking-on-their-disputed-himalayan-bor-1d56d8.json",
+      "title": "India and China keep talking on their disputed Himalayan border, but troops stay put",
+      "published_at": "2026-08-08T12:39:49.703193+00:00",
+      "as_of": "2026-08-08",
+      "claims": 39
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/low-water-on-the-danube-is-forcing-europe-s-nuclear-plants-t-98d14a",
+      "data": "https://www.ohmega.monster/data/articles/low-water-on-the-danube-is-forcing-europe-s-nuclear-plants-t-98d14a.json",
+      "title": "Low water on the Danube is forcing Europe's nuclear plants toward shutdown",
+      "published_at": "2026-08-07T23:21:04.315007+00:00",
+      "as_of": "2026-08-07",
+      "claims": 43
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/south-korea-and-taiwan-overtake-japan-in-first-half-exports-7e9d72",
+      "data": "https://www.ohmega.monster/data/articles/south-korea-and-taiwan-overtake-japan-in-first-half-exports-7e9d72.json",
+      "title": "South Korea and Taiwan overtake Japan in first-half exports on AI chip boom",
+      "published_at": "2026-08-07T22:41:01.329556+00:00",
+      "as_of": "2026-08-07",
+      "claims": 45
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/western-sahara-a-disputed-desert-territory-froze-north-afric-f14cc1",
+      "data": "https://www.ohmega.monster/data/articles/western-sahara-a-disputed-desert-territory-froze-north-afric-f14cc1.json",
+      "title": "Western Sahara, a disputed desert territory, froze North Africa for 50 years — now its fallout spills into Spain",
+      "published_at": "2026-08-06T14:07:15.697986+00:00",
+      "as_of": "2026-08-06",
+      "claims": 55
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/the-microscopic-hairs-that-let-corals-breathe-94-and-why-hea-975ef3",
+      "data": "https://www.ohmega.monster/data/articles/the-microscopic-hairs-that-let-corals-breathe-94-and-why-hea-975ef3.json",
+      "title": "The microscopic hairs that let corals breathe \u000094 and why heat makes the pump fail",
+      "published_at": "2026-08-06T13:43:14.190962+00:00",
+      "as_of": "2026-08-05",
+      "claims": 6
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/reef-corals-breathe-by-spinning-tiny-vortices-heat-can-break-975ef3",
+      "data": "https://www.ohmega.monster/data/articles/reef-corals-breathe-by-spinning-tiny-vortices-heat-can-break-975ef3.json",
+      "title": "Reef corals breathe by spinning tiny vortices — heat can break the pump",
+      "published_at": "2026-08-06T13:40:51.932746+00:00",
+      "as_of": "",
+      "claims": 6
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/researchers-report-vacuum-made-perovskite-on-silicon-solar-c-e34dae",
+      "data": "https://www.ohmega.monster/data/articles/researchers-report-vacuum-made-perovskite-on-silicon-solar-c-e34dae.json",
+      "title": "Researchers report vacuum-made perovskite-on-silicon solar cells hitting 30% at wafer size",
+      "published_at": "2026-08-06T13:13:54.184690+00:00",
+      "as_of": "2026-08-06",
+      "claims": 38
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/seismic-noise-points-to-yellowstone-scale-magma-reservoir-be-6adf04",
+      "data": "https://www.ohmega.monster/data/articles/seismic-noise-points-to-yellowstone-scale-magma-reservoir-be-6adf04.json",
+      "title": "Seismic noise points to Yellowstone-scale magma reservoir beneath Tuscany",
+      "published_at": "2026-08-06T13:02:25.740437+00:00",
+      "as_of": "2026-08-05",
+      "claims": 40
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/dr-congo-bans-raw-copper-and-cobalt-exports-to-force-refinin-3f2614",
+      "data": "https://www.ohmega.monster/data/articles/dr-congo-bans-raw-copper-and-cobalt-exports-to-force-refinin-3f2614.json",
+      "title": "DR Congo bans raw copper and cobalt exports to force refining at home",
+      "published_at": "2026-08-06T12:59:16.600626+00:00",
+      "as_of": "2026-08-06",
+      "claims": 26
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/nature-podcast-cites-a-lead-for-ancient-amazon-earthworks-bu-f98533",
+      "data": "https://www.ohmega.monster/data/articles/nature-podcast-cites-a-lead-for-ancient-amazon-earthworks-bu-f98533.json",
+      "title": "Nature Podcast cites a lead for “ancient Amazon earthworks,” but the underlying archaeology paper isn’t provided",
+      "published_at": "2026-07-30T08:58:11.559218+00:00",
+      "as_of": "2026-07-30",
+      "claims": 48
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/satyress-s-centaur-robot-threehalves-has-detailed-rescue-des-c18d4a",
+      "data": "https://www.ohmega.monster/data/articles/satyress-s-centaur-robot-threehalves-has-detailed-rescue-des-c18d4a.json",
+      "title": "Satyress’s centaur robot Threehalves has detailed rescue design claims, but no validated disaster-zone performance",
+      "published_at": "2026-07-30T08:54:20.797491+00:00",
+      "as_of": "2026-07-30",
+      "claims": 50
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/china-s-reported-immersion-duv-tool-production-start-lacks-p-809478",
+      "data": "https://www.ohmega.monster/data/articles/china-s-reported-immersion-duv-tool-production-start-lacks-p-809478.json",
+      "title": "China’s reported immersion DUV tool production start lacks proof it can replace ASML at scale",
+      "published_at": "2026-07-29T12:22:45.149081+00:00",
+      "as_of": "2026-07-29",
+      "claims": 30
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/astronomers-study-an-off-center-tidal-disruption-event-and-u-51cd51",
+      "data": "https://www.ohmega.monster/data/articles/astronomers-study-an-off-center-tidal-disruption-event-and-u-51cd51.json",
+      "title": "Astronomers study an off-center tidal disruption event and use it to bound how common offset black holes are",
+      "published_at": "2026-07-29T12:05:59.933046+00:00",
+      "as_of": "2026-07-28",
+      "claims": 38
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/europe-s-electrification-is-running-into-grid-connection-que-08ce7d",
+      "data": "https://www.ohmega.monster/data/articles/europe-s-electrification-is-running-into-grid-connection-que-08ce7d.json",
+      "title": "Europe’s electrification is running into grid-connection queues",
+      "published_at": "2026-07-26T13:29:48.945186+00:00",
+      "as_of": "2026-07-26",
+      "claims": 38
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/italy-and-japan-sign-intent-on-biomanufacturing-cooperation-82d903",
+      "data": "https://www.ohmega.monster/data/articles/italy-and-japan-sign-intent-on-biomanufacturing-cooperation-82d903.json",
+      "title": "Italy and Japan sign intent on biomanufacturing cooperation, without a published funding plan",
+      "published_at": "2026-07-26T13:15:32.985857+00:00",
+      "as_of": "2026-07-26",
+      "claims": 19
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/mars-express-image-of-metallic-waves-in-kaiser-crater-is-fro-4c26d3",
+      "data": "https://www.ohmega.monster/data/articles/mars-express-image-of-metallic-waves-in-kaiser-crater-is-fro-4c26d3.json",
+      "title": "Mars Express image of “metallic waves” in Kaiser Crater is frost-lit sand dunes, not metal",
+      "published_at": "2026-07-26T03:25:50.073538+00:00",
+      "as_of": "2026-07-26",
+      "claims": 28
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/typhoon-noul-makes-landfall-in-guangdong-near-huidong-county-1fd5d5",
+      "data": "https://www.ohmega.monster/data/articles/typhoon-noul-makes-landfall-in-guangdong-near-huidong-county-1fd5d5.json",
+      "title": "Typhoon Noul makes landfall in Guangdong near Huidong county, disrupting transport",
+      "published_at": "2026-07-26T02:52:04.437850+00:00",
+      "as_of": "2026-07-26",
+      "claims": 24
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/florida-s-1-8-trillion-economy-claim-is-backed-by-bea-data-b-95e359",
+      "data": "https://www.ohmega.monster/data/articles/florida-s-1-8-trillion-economy-claim-is-backed-by-bea-data-b-95e359.json",
+      "title": "Florida’s $1.8 trillion economy claim is backed by BEA data—but the “14th-largest” ranking can’t be verified from the Chamber release alone",
+      "published_at": "2026-07-25T07:56:53.170477+00:00",
+      "as_of": "2026-07-25",
+      "claims": 32
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/researchers-document-baja-california-orcas-hold-and-ram-sunf-cb07f1",
+      "data": "https://www.ohmega.monster/data/articles/researchers-document-baja-california-orcas-hold-and-ram-sunf-cb07f1.json",
+      "title": "Researchers document Baja California orcas’ hold-and-ram sunfish sequence",
+      "published_at": "2026-07-25T07:42:52.382880+00:00",
+      "as_of": "2026-07-25",
+      "claims": 29
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/2026-study-provides-new-evidence-that-very-young-t-rex-hatch-0a8a42",
+      "data": "https://www.ohmega.monster/data/articles/2026-study-provides-new-evidence-that-very-young-t-rex-hatch-0a8a42.json",
+      "title": "2026 study provides new evidence that very young T. rex hatchlings fed early, but not hunting from birth",
+      "published_at": "2026-07-25T07:26:38.125758+00:00",
+      "as_of": "2026-07-25",
+      "claims": 34
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/houthis-declare-naval-blockade-on-saudi-arabia-with-immediat-ce7cbd",
+      "data": "https://www.ohmega.monster/data/articles/houthis-declare-naval-blockade-on-saudi-arabia-with-immediat-ce7cbd.json",
+      "title": "Houthis declare naval blockade on Saudi Arabia with immediate effect",
+      "published_at": "2026-07-24T10:03:03.767235+00:00",
+      "as_of": "2026-07-24",
+      "claims": 21
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/wildberries-sorting-center-evacuated-after-reported-strike-i-efb17e",
+      "data": "https://www.ohmega.monster/data/articles/wildberries-sorting-center-evacuated-after-reported-strike-i-efb17e.json",
+      "title": "Wildberries sorting center evacuated after reported strike in Simferopol, as drone attacks hit its wider network",
+      "published_at": "2026-07-24T10:02:51.742396+00:00",
+      "as_of": "2026-07-24",
+      "claims": 22
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/sonam-wangchuk-ends-26-day-delhi-hunger-strike-but-exam-leak-6cba5d",
+      "data": "https://www.ohmega.monster/data/articles/sonam-wangchuk-ends-26-day-delhi-hunger-strike-but-exam-leak-6cba5d.json",
+      "title": "Sonam Wangchuk ends 26-day Delhi hunger strike, but exam-leak protest demands continue",
+      "published_at": "2026-07-24T08:55:25.968293+00:00",
+      "as_of": "2026-07-24",
+      "claims": 25
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/u-s-reinforces-aerial-refueling-fleet-in-israel-as-escalatio-a5549f",
+      "data": "https://www.ohmega.monster/data/articles/u-s-reinforces-aerial-refueling-fleet-in-israel-as-escalatio-a5549f.json",
+      "title": "U.S. adds aerial refueling aircraft in Israel; on X, open-source accounts claim a Europe-to-Middle East airbridge",
+      "published_at": "2026-07-23T22:06:52.691541+00:00",
+      "as_of": "2026-07-23",
+      "claims": 23
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/nicaragua-s-ortega-says-there-will-be-no-more-elections-but-809478",
+      "data": "https://www.ohmega.monster/data/articles/nicaragua-s-ortega-says-there-will-be-no-more-elections-but-809478.json",
+      "title": "Nicaragua’s Ortega says there will be no more elections, but 2027 election dates remain in law",
+      "published_at": "2026-07-23T20:50:24.181940+00:00",
+      "as_of": "2026-07-23",
+      "claims": 30
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/ice-s-mid-2026-interior-enforcement-surge-lifts-arrests-and-6bf20e",
+      "data": "https://www.ohmega.monster/data/articles/ice-s-mid-2026-interior-enforcement-surge-lifts-arrests-and-6bf20e.json",
+      "title": "ICE’s mid-2026 interior enforcement surge lifts arrests and detention, but removals remain hard to audit",
+      "published_at": "2026-07-23T11:06:02.303280+00:00",
+      "as_of": "2026-07-22",
+      "claims": 34
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/ice-s-fy2026-data-show-a-june-surge-in-arrests-and-higher-de-24b347",
+      "data": "https://www.ohmega.monster/data/articles/ice-s-fy2026-data-show-a-june-surge-in-arrests-and-higher-de-24b347.json",
+      "title": "ICE’s FY2026 data show a June surge in arrests and higher detention, but “criminals first” doesn’t match the custody mix",
+      "published_at": "2026-07-22T12:00:29.219407+00:00",
+      "as_of": "2026-07-21",
+      "claims": 29
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/supreme-court-issues-notice-refuses-interim-stay-in-shiv-sen-dd6593",
+      "data": "https://www.ohmega.monster/data/articles/supreme-court-issues-notice-refuses-interim-stay-in-shiv-sen-dd6593.json",
+      "title": "Supreme Court issues notice, refuses interim stay in Shiv Sena (UBT) challenge to Lok Sabha Speaker’s merger recognition of rebel MPs",
+      "published_at": "2026-07-22T11:04:08.214929+00:00",
+      "as_of": "2026-07-22",
+      "claims": 16
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/lebanon-begins-pilot-zone-deployments-in-three-southern-vill-dd6593",
+      "data": "https://www.ohmega.monster/data/articles/lebanon-begins-pilot-zone-deployments-in-three-southern-vill-dd6593.json",
+      "title": "Lebanon begins pilot-zone deployments in three southern villages, but Hezbollah rejects the deal’s link to disarmament",
+      "published_at": "2026-07-21T12:32:54.161775+00:00",
+      "as_of": "2026-07-21",
+      "claims": 16
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/ai-infrastructure-is-increasingly-a-credit-market-risk-with-1d951d",
+      "data": "https://www.ohmega.monster/data/articles/ai-infrastructure-is-increasingly-a-credit-market-risk-with-1d951d.json",
+      "title": "AI infrastructure is increasingly a credit-market risk, with stress concerns still unproven",
+      "published_at": "2026-07-21T11:03:19.744362+00:00",
+      "as_of": "2026-07-21",
+      "claims": 55
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/energy-shock-forces-central-banks-to-test-whether-inflation-9e0685",
+      "data": "https://www.ohmega.monster/data/articles/energy-shock-forces-central-banks-to-test-whether-inflation-9e0685.json",
+      "title": "Energy shock forces central banks to test whether inflation stays \"headline-only\"",
+      "published_at": "2026-07-20T11:04:13.970917+00:00",
+      "as_of": "2026-07-20",
+      "claims": 39
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/ebola-outbreak-in-eastern-dr-congo-still-expanding-despite-r-c00a85",
+      "data": "https://www.ohmega.monster/data/articles/ebola-outbreak-in-eastern-dr-congo-still-expanding-despite-r-c00a85.json",
+      "title": "Ebola outbreak in eastern DR Congo still expanding despite rising surveillance, as conflict and labor unrest slow response",
+      "published_at": "2026-07-20T09:43:29.808319+00:00",
+      "as_of": "2026-07-17",
+      "claims": 51
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/u-s-imposes-25-section-301-tariffs-on-most-brazilian-imports-9fce8b",
+      "data": "https://www.ohmega.monster/data/articles/u-s-imposes-25-section-301-tariffs-on-most-brazilian-imports-9fce8b.json",
+      "title": "U.S. imposes 25% Section 301 tariffs on most Brazilian imports, with broad exemptions",
+      "published_at": "2026-07-19T11:50:00.277494+00:00",
+      "as_of": "2026-07-16",
+      "claims": 41
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/telstra-ceo-vicki-brady-says-july-outage-was-caused-by-fault-9fce8b",
+      "data": "https://www.ohmega.monster/data/articles/telstra-ceo-vicki-brady-says-july-outage-was-caused-by-fault-9fce8b.json",
+      "title": "Telstra CEO Vicki Brady says July outage was caused by faulty time-server software configuration and documentation gaps",
+      "published_at": "2026-07-19T11:04:14.601097+00:00",
+      "as_of": "2026-07-17",
+      "claims": 41
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/andy-burnham-pledges-to-scrap-labour-s-digital-id-but-the-pl-e29dfa",
+      "data": "https://www.ohmega.monster/data/articles/andy-burnham-pledges-to-scrap-labour-s-digital-id-but-the-pl-e29dfa.json",
+      "title": "Andy Burnham pledges to scrap Labour’s digital ID, but the plan was already being scaled back",
+      "published_at": "2026-07-19T10:34:07.716133+00:00",
+      "as_of": "2026-07-19",
+      "claims": 30
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/strait-of-hormuz-traffic-fell-and-mariners-were-evacuated-bu-1dd039",
+      "data": "https://www.ohmega.monster/data/articles/strait-of-hormuz-traffic-fell-and-mariners-were-evacuated-bu-1dd039.json",
+      "title": "Strait of Hormuz traffic fell and mariners were evacuated, but durable closure remains unproven",
+      "published_at": "2026-07-19T09:38:18.846642+00:00",
+      "as_of": "2026-07-19",
+      "claims": 34
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/cisa-warns-sharepoint-server-subscription-edition-2019-and-2-1d951d",
+      "data": "https://www.ohmega.monster/data/articles/cisa-warns-sharepoint-server-subscription-edition-2019-and-2-1d951d.json",
+      "title": "CISA warns SharePoint Server Subscription Edition, 2019, and 2016 are under active exploitation—patches plus compromise hunting needed",
+      "published_at": "2026-07-18T22:26:08.796461+00:00",
+      "as_of": "2026-07-17",
+      "claims": 55
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/strait-of-hormuz-impaired-not-closed-strikes-and-vessel-dama-24b347",
+      "data": "https://www.ohmega.monster/data/articles/strait-of-hormuz-impaired-not-closed-strikes-and-vessel-dama-24b347.json",
+      "title": "Strait of Hormuz impaired, not closed: strikes and vessel damage reduce traffic despite ongoing transits",
+      "published_at": "2026-07-18T11:32:49.915224+00:00",
+      "as_of": "2026-07-17",
+      "claims": 29
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/fda-approves-merck-s-oral-lipfendra-enlicitide-to-lower-ldl-c00a85",
+      "data": "https://www.ohmega.monster/data/articles/fda-approves-merck-s-oral-lipfendra-enlicitide-to-lower-ldl-c00a85.json",
+      "title": "FDA approves Merck’s oral Lipfendra (enlicitide) to lower LDL-C, but outcomes and access remain unproven",
+      "published_at": "2026-07-16T21:07:58.959911+00:00",
+      "as_of": "2026-07-16",
+      "claims": 51
+    },
+    {
+      "url": "https://www.ohmega.monster/articles/hormuz-saw-serious-traffic-disruption-but-the-record-doesn-t-31b7f4",
+      "data": "https://www.ohmega.monster/data/articles/hormuz-saw-serious-traffic-disruption-but-the-record-doesn-t-31b7f4.json",
+      "title": "Hormuz saw serious traffic disruption, but the record doesn’t prove a sustained full closure",
+      "published_at": "2026-07-16T10:26:28.549553+00:00",
+      "as_of": "2026-07-16",
+      "claims": 46
+    }
+  ]
+}

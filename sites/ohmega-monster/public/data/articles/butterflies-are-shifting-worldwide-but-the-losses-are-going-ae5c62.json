@@ -1,0 +1,661 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/butterflies-are-shifting-worldwide-but-the-losses-are-going-ae5c62",
+  "title": "Butterflies are shifting worldwide, but the losses are going unseen",
+  "summary": "Synthesis of 1,758 species in 105 countries finds climate the most cited driver, but English-language and European monitoring skews the record toward expansions while tropical contractions and upslope moves go undercounted.",
+  "published_at": "2026-08-09T12:36:10.108486+00:00",
+  "as_of": "2026-08-09",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 29,
+    "likely": 4
+  },
+  "claims": [
+    {
+      "id": "clm_c6bf0c5b3b",
+      "text": "Global study published 5 August 2026 in Nature Ecology & Evolution titled 'Extensive climate-induced range shifts in butterflies across the globe' with DOI 10.1038/s41559-026-03117-y",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://studyfinds.com/butterfly-moving-territory-earth-heats-up",
+          "title": "4 Out Of 5 Butterfly Species Moving Into New Territory As Earth Heats Up",
+          "publisher": "StudyFinds",
+          "published_at": "2026-08-06"
+        },
+        {
+          "url": "https://www.eurekalert.org/news-releases/1138655",
+          "title": "Butterflies worldwide are on the move as the climate warms",
+          "publisher": "EurekAlert! / Monash University",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://phys.org/news/2026-08-butterfly-ranges-shift-worldwide-climate.html",
+          "title": "Butterfly ranges shift worldwide amid climate change, with most species expanding their reach",
+          "publisher": "Phys.org / German Centre for Integrative Biodiversity Research (iDiv)",
+          "published_at": "2026-08-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dc1e53c90c",
+      "text": "Study led by Dr Shawan Chowdhury (Global Change Ecology Lab, School of Biological Sciences, Monash University, Australia) with senior authors Guy Pe'er (iDiv / UFZ / University of Jena) and Jonathan Lenoir, involving co-authors from more than 49 countries",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://studyfinds.com/butterfly-moving-territory-earth-heats-up",
+          "title": "4 Out Of 5 Butterfly Species Moving Into New Territory As Earth Heats Up",
+          "publisher": "StudyFinds",
+          "published_at": "2026-08-06"
+        },
+        {
+          "url": "https://www.eurekalert.org/news-releases/1138655",
+          "title": "Butterflies worldwide are on the move as the climate warms",
+          "publisher": "EurekAlert! / Monash University",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_98afe23200",
+      "text": "Dataset comprises 6,182 range-shift records from 567 unique studies plus 68 expert assessments, covering 1,758 butterfly species across 105 countries and territories on every continent where butterflies occur",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://studyfinds.com/butterfly-moving-territory-earth-heats-up",
+          "title": "4 Out Of 5 Butterfly Species Moving Into New Territory As Earth Heats Up",
+          "publisher": "StudyFinds",
+          "published_at": "2026-08-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f15c1a5d4f",
+      "text": "1,758 species represents ~10% of known global butterfly diversity (19,327 species across six families: Nymphalidae 6,387, Lycaenidae 5,364, Hesperiidae 4,290, Riodinidae 1,571, Pieridae 1,165, Papilionidae ~550)",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://studyfinds.com/butterfly-moving-territory-earth-heats-up",
+          "title": "4 Out Of 5 Butterfly Species Moving Into New Territory As Earth Heats Up",
+          "publisher": "StudyFinds",
+          "published_at": "2026-08-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_85a4311724",
+      "text": "Literature search covered 1991-2022, used Web of Science and Google Scholar plus language-specific systems, in 15 languages, to reduce English-language bias",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://studyfinds.com/butterfly-moving-territory-earth-heats-up",
+          "title": "4 Out Of 5 Butterfly Species Moving Into New Territory As Earth Heats Up",
+          "publisher": "StudyFinds",
+          "published_at": "2026-08-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_761db54ee1",
+      "text": "80% of species in dataset (1,427 species from 97 countries) showed horizontal range expansions",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://studyfinds.com/butterfly-moving-territory-earth-heats-up",
+          "title": "4 Out Of 5 Butterfly Species Moving Into New Territory As Earth Heats Up",
+          "publisher": "StudyFinds",
+          "published_at": "2026-08-06"
+        },
+        {
+          "url": "https://www.eurekalert.org/news-releases/1138655",
+          "title": "Butterflies worldwide are on the move as the climate warms",
+          "publisher": "EurekAlert! / Monash University",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f719ab962a",
+      "text": "27% of species (480 species from 27 countries) showed horizontal range contractions and 22% (381 species from 18 countries) showed elevational range shifts; categories overlap because 23% of species (409 species) showed multiple types",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://studyfinds.com/butterfly-moving-territory-earth-heats-up",
+          "title": "4 Out Of 5 Butterfly Species Moving Into New Territory As Earth Heats Up",
+          "publisher": "StudyFinds",
+          "published_at": "2026-08-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5e0c2c8248",
+      "text": "79% of all recorded range shifts (278 of 352 species with threat data) were associated with climate change and severe weather as the most frequently reported driver",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://studyfinds.com/butterfly-moving-territory-earth-heats-up",
+          "title": "4 Out Of 5 Butterfly Species Moving Into New Territory As Earth Heats Up",
+          "publisher": "StudyFinds",
+          "published_at": "2026-08-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0b6acaa970",
+      "text": "Study did not provide standardized poleward (km per decade) or upslope (m per decade) rates; it is a semi-quantitative synthesis of documented presence/absence of shift types, and authors note they could not compile comparable quantitative rates and uncertainties",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a071baa033",
+      "text": "Horizontal expansions were documented on every continent, with high numbers in tropical countries (e.g., Brazil, Benin); contractions were concentrated in temperate Europe and North America (e.g., Belgium, UK, Sweden); elevational shifts were almost exclusively in the Northern Hemisphere and rarely documented in the tropics",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://studyfinds.com/butterfly-moving-territory-earth-heats-up",
+          "title": "4 Out Of 5 Butterfly Species Moving Into New Territory As Earth Heats Up",
+          "publisher": "StudyFinds",
+          "published_at": "2026-08-06"
+        },
+        {
+          "url": "https://www.uwa.edu.au/news/article/2026/august/butterflies-on-the-move-worldwide-due-to-climate-change",
+          "title": "Butterflies on the move worldwide due to climate change",
+          "publisher": "University of Western Australia",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_529e769d62",
+      "text": "Country-level documentation coverage: Czech Republic 84% for expansions, Sweden 85% for contractions, Mexico 39% for elevational shifts (percentages relative to species with at least one shift record anywhere); five European nations (Czech Republic, Finland, Luxembourg, Spain, Sweden) have shift records for >50% of national butterfly fauna",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://studyfinds.com/butterfly-moving-territory-earth-heats-up",
+          "title": "4 Out Of 5 Butterfly Species Moving Into New Territory As Earth Heats Up",
+          "publisher": "StudyFinds",
+          "published_at": "2026-08-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_750dd06a6f",
+      "text": "Tropical species are especially vulnerable because they live near upper thermal limits, have restricted ranges, narrow thermal flexibility, and are isolated from cool refugia; two-thirds of butterfly species are primarily mountain-dwelling",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://www.uwa.edu.au/news/article/2026/august/butterflies-on-the-move-worldwide-due-to-climate-change",
+          "title": "Butterflies on the move worldwide due to climate change",
+          "publisher": "University of Western Australia",
+          "published_at": "2026-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8cba4dfdaf",
+      "text": "Recent global analysis cited projects up to 64% loss of temperature niche space for butterflies by 2100 (or 2070 in related study) even assuming full dispersal within biogeographical realms, implying major future contractions and particular risk for rare tropical high-elevation species",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41559-025-02664-0",
+          "title": "Global hotspots of butterfly diversity are threatened in a warming world",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2025-03-24"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7fe93a7f38",
+      "text": "Butterflies are sensitive bioindicators due to high sensitivity to temperature, host-plant associations, short lifecycles and dispersal capacity, and serve as early-warning sentinels for climate impacts",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://www.frontiersin.org/journals/environmental-science/articles/10.3389/fenvs.2023.1146052/full",
+          "title": "Insects as bioindicator: A hidden gem for environmental monitoring",
+          "publisher": "Frontiers in Environmental Science",
+          "published_at": "2023-08-07"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ed39a3c779",
+      "text": "Current protected-area network inadequately covers shifting species: 85% of migratory butterfly species and 76% of insect species are inadequately represented, and most protected areas were designed around fixed boundaries",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e412b5fa1c",
+      "text": "English-language sources over-represented expansions and under-represented contractions; expert assessments showed opposite pattern, indicating reliance on English literature alone biases global summaries toward expansions",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://studyfinds.com/butterfly-moving-territory-earth-heats-up",
+          "title": "4 Out Of 5 Butterfly Species Moving Into New Territory As Earth Heats Up",
+          "publisher": "StudyFinds",
+          "published_at": "2026-08-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0917caf405",
+      "text": "65% of species had only a single range-shift record from a single study and country; only 94 species (5%) had >10 independent records, limiting inference about rates and causality",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cac3385cd6",
+      "text": "Dataset comprises 6,182 range-shift reports from 567 unique studies plus 68 expert assessments, covering 1,758 butterfly species (~10% of 19,327 known species across six families) across 105 countries/territories on every continent where butterflies occur; 1,427 species expansions (80%), 480 contractions (27%), 381 elevational shifts (22%), with 409 species (23%) showing multiple types.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7af3b04978",
+      "text": "Study is explicitly semi-quantitative: it documents presence/absence of shift types and does not compile comparable standardized poleward (km/decade) or upslope (m/decade) rates with uncertainties; authors state future work could conduct a targeted meta-analysis of standardized rates which they were not able to compile here; 65% of species have a single record and only 94 species (5%) have >10 records, limiting rate inference.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_21c28c3f3c",
+      "text": "Literature search covered 1991\u00002022, used Web of Science (5,498 studies) and Google Scholar (7 keywords \u0000d7200 hits) plus language-specific systems in 15 languages (Supplementary Information Section 1, Extended Data Fig. 5) and 68 expert assessments from 49 countries; English-language sources over-represented expansions (standardized residual 2.94) and under-represented contractions (\u00004.14), expert assessments showed opposite pattern (contraction 5.73, expansion \u00004.68), Pearson \u0003c7\u0000b2=38.14, P<0.001.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_882c2331d8",
+      "text": "Cited global analysis (Pinkert et al. 2025, ns2) integrating 12,119 butterfly species finds two-thirds are primarily mountain-dwelling, hotspots concentrated above 2,000 m, and projects up to 64% erosion of temperature niche space by 2070 (RCP 8.5, 2061\u00002080 ensemble) even assuming full dispersal within biogeographical realms, with rare tropical high-elevation species most exposed; ns1 cites this as ref 46 for future contraction risk.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41559-025-02664-0",
+          "title": "Global hotspots of butterfly diversity are threatened in a warming world",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2025-03-24"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e8b50ee5de",
+      "text": "Standardized rate benchmark absent from ns1: Chen et al. 2011 meta-analysis of range shifts across taxa estimates median shifts of 16.9 km per decade poleward (latitudinal) and 11.0 m per decade upslope (elevational), ~2\u00003\u0000d7 faster than previously reported, with rates greatest where warming is highest and high interspecific variation. This provides the quantitative km/decade and m/decade context that ns1 explicitly states it could not compile, anchoring interpretation of its semi-quantitative percentages.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.science.org/doi/10.1126/science.1206432",
+          "title": "Rapid range shifts of species associated with high levels of climate warming",
+          "publisher": "Science",
+          "published_at": "2011-08-19T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_076aeab42d",
+      "text": "Geographic asymmetry documented in primary text: horizontal expansions on every continent including tropics (e.g., Brazil, Benin) contradicting prior synthesis claiming little tropical expansion; contractions concentrated in temperate Europe/North America (Belgium, UK, Sweden); elevational shifts almost exclusively Northern Hemisphere despite steeper tropical lapse rates theoretically favoring faster upslope shifts. Country coverage percentages quantify documentation in evidence database, not absolute prevalence.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2ba8c82339",
+      "text": "Threat attributions are reporting frequencies, not effect sizes: climate change and severe weather most frequently reported (278/352 species with threat data; 163 expansions, 131 contractions, 61 elevational), while agriculture/aquaculture and human intrusions/disturbance dominate contractions (143 species); authors note climate covariates are more readily available than fine-scale habitat degradation, potentially inflating climate dominance, but effort-adjusted sensitivity analysis yields qualitatively similar rankings.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3693871ada",
+      "text": "The 79% figure (278/352 species, clm_5e0c2c8248) is a reporting frequency of attributed drivers in heterogeneous literature/expert elicitation, not a quantified causal effect size or variance-explained estimate; most primary studies did not estimate multi-driver effect sizes and climate covariates are more readily available than fine-scale habitat degradation, potentially inflating climate's apparent dominance. Authors explicitly warn these are prevalence of reported attributions rather than magnitude of impact.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41598-019-51582-2",
+          "title": "Habitat availability explains variation in climate-driven range shifts across multiple taxonomic groups",
+          "publisher": "Scientific Reports",
+          "published_at": "2019-10-21"
+        },
+        {
+          "url": "https://www.nature.com/articles/s42003-023-04967-z",
+          "title": "Century-long butterfly range expansions in northern Europe depend on climate, land use and species traits",
+          "publisher": "Communications Biology",
+          "published_at": "2023-06-03"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f9d51d1ea6",
+      "text": "Across 291 British invertebrate species, habitat availability at range margins explains substantially more variation in poleward range-shift rates than climate exposure alone (habitat availability R2m=13%, R2c=21%; climate exposure R2m=4%, R2c=4%; for best-recorded groups habitat R2m=22% vs climate R2m=16%). Model including habitat + climate + interaction explains up to 44% (R2m) for well-recorded groups and extrapolates to >50% with universal recording coverage, indicating climate forcing is strongly masked by habitat constraints.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41598-019-51582-2",
+          "title": "Habitat availability explains variation in climate-driven range shifts across multiple taxonomic groups",
+          "publisher": "Scientific Reports",
+          "published_at": "2019-10-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d352c54186",
+      "text": "Land-use and landscape context constrain butterfly tracking of climate: in Sweden/Finland 1901-2019, provincial colonisation rate associations with forest cover, grassland cover and human settlements varied among periods (forest cover \u0000d7 period P=0.010; urbanisation negative trend P=0.081) even after accounting for temperature change; colonisation peaked at intermediate warming (~0.30\u0000b0C/decade) with diminishing returns at faster warming, consistent with time-lags/climatic debt. Host-plant availability, habitat fragmentation and limited dispersal across islands/mountaintops are cited as direct restrictions on range shifts even where climate becomes suitable.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s42003-023-04967-z",
+          "title": "Century-long butterfly range expansions in northern Europe depend on climate, land use and species traits",
+          "publisher": "Communications Biology",
+          "published_at": "2023-06-03"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4a3d45e55e",
+      "text": "Butterflies accumulate significant climatic debt \u0000d4\u0000 lag between realized distribution and shifting climatic suitability. At continental scale, butterfly communities shifted 114 km north 1990-2008 but temperature isotherms shifted faster, leaving a 135 km lag (birds 212 km lag); in northern Europe butterfly expansions averaged ~1-3 km/yr while isotherms moved ~3 km/yr on average and up to 8 km/yr in recent periods, with weak or non-significant correlation between expansion rate and temperature velocity (1901-2019 r=0.16, P=0.077). This demonstrates many species fail to track climate despite expansions elsewhere.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/nclimate1347",
+          "title": "Differences in the climatic debts of birds and butterflies at a continental scale",
+          "publisher": "Nature Climate Change",
+          "published_at": "2012-01-10"
+        },
+        {
+          "url": "https://www.nature.com/articles/s42003-023-04967-z",
+          "title": "Century-long butterfly range expansions in northern Europe depend on climate, land use and species traits",
+          "publisher": "Communications Biology",
+          "published_at": "2023-06-03"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1fbcdf0cde",
+      "text": "Expansions are trait-filtered, not uniform success: establishment success increased with larger European range size (P<0.001), broader thermal niche mean and range (both P<0.001, slope ~0.73-0.74), and forest habitat association; multivoltine species that advanced phenology increased abundance and expanded range margins, whereas univoltine species showed no benefit. This supports generalist, broad-niche, high-dispersal winners driving the 80% expansion signal.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s42003-023-04967-z",
+          "title": "Century-long butterfly range expansions in northern Europe depend on climate, land use and species traits",
+          "publisher": "Communications Biology",
+          "published_at": "2023-06-03"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41467-019-12479-w",
+          "title": "Climate-induced phenology shifts linked to range expansions in species with multiple reproductive cycles per year",
+          "publisher": "Nature Communications",
+          "published_at": "2019-10-24"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4f2b283e16",
+      "text": "Specialist and univoltine habitat specialists are losers in the same warming: phenology advances led to abundance declines among univoltine habitat specialists (n=21 specialists vs 109 generalists) but not among univoltine generalists; univoltine species overall showed neutral or negative abundance trends with earlier emergence, including reduced abundance in year t+1. This indicates net biodiversity outcome is reshuffling toward generalist, multivoltine communities, not just loss.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41467-019-12479-w",
+          "title": "Climate-induced phenology shifts linked to range expansions in species with multiple reproductive cycles per year",
+          "publisher": "Nature Communications",
+          "published_at": "2019-10-24"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_64b950ccaf",
+      "text": "Species traits are weak overall predictors of range shifts when considered alone. Meta-analyses cited show no combination of intrinsic traits explains a large proportion of variation across taxa; habitat specialization is the most consistent predictor but explains only R2m=4% (R2c=6%) vs habitat availability R2m=13%, because trait effects depend on extrinsic landscape context (whether required habitat is common/rare at the margin). This limits deterministic prediction of which species will track climate.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41598-019-51582-2",
+          "title": "Habitat availability explains variation in climate-driven range shifts across multiple taxonomic groups",
+          "publisher": "Scientific Reports",
+          "published_at": "2019-10-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2072929651",
+      "text": "The 80% expansion prevalence (clm_761db54ee1) may partly reflect detection/reporting bias rather than ecological success: English-language sources significantly over-represented expansions (standardized residual 2.94) and under-represented contractions (-4.14), while expert assessments showed opposite pattern; 65% of species have single record, and century-long northern Europe data show no national extinctions but documented local extirpations due to habitat degradation, suggesting expansions can co-occur with declines and that apparent dominance of expansions is sensitive to evidence source.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41559-026-03117-y",
+          "title": "Extensive climate-induced range shifts in butterflies across the globe",
+          "publisher": "Nature Ecology & Evolution",
+          "published_at": "2026-08-05"
+        },
+        {
+          "url": "https://www.nature.com/articles/s42003-023-04967-z",
+          "title": "Century-long butterfly range expansions in northern Europe depend on climate, land use and species traits",
+          "publisher": "Communications Biology",
+          "published_at": "2023-06-03"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dd25d24bfa",
+      "text": "In one analysis of 291 British invertebrate species cited in the synthesis, habitat specialization explained only about 4% of variation in shift rates vs about 13% for habitat availability at the margin, suggesting trait effects may depend on extrinsic landscape context",
+      "grade": "likely",
+      "salience": "low",
+      "sources": [],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

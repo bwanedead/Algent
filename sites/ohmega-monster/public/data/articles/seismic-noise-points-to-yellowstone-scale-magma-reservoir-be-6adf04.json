@@ -1,0 +1,793 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/seismic-noise-points-to-yellowstone-scale-magma-reservoir-be-6adf04",
+  "title": "Seismic noise points to Yellowstone-scale magma reservoir beneath Tuscany",
+  "summary": "Thousands of cubic kilometres of hot, partly molten rock imaged 8 to 15 kilometres down under Larderello's geothermal fields match Yellowstone in scale but are cool, viscous and quiet — and whether the slow seismic signal really means that much liquid magma remains contested.",
+  "published_at": "2026-08-06T13:02:25.740437+00:00",
+  "as_of": "2026-08-05",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 31,
+    "likely": 7,
+    "contested": 1,
+    "unconfirmed": 1
+  },
+  "claims": [
+    {
+      "id": "clm_1556aa5f7e",
+      "text": "A peer-reviewed paper 'High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma' was published 14 April 2026 in Communications Earth & Environment (Vol 7, Art 269, DOI 10.1038/s43247-026-03334-0) by Lupi et al.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        },
+        {
+          "url": "https://www.sciencedaily.com/releases/2026/08/260804034645.htm",
+          "title": "A colossal magma system has been hiding beneath Tuscany",
+          "publisher": "ScienceDaily",
+          "published_at": "2026-08-05T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d5d03802b4",
+      "text": "Lead author is Matteo Lupi, associate professor in Department of Earth Sciences, University of Geneva (UNIGE), with co-authors from Institute of Geosciences and Earth Resources (CNR-IGG) and National Institute of Geophysics and Volcanology (INGV).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        },
+        {
+          "url": "https://www.sciencedaily.com/releases/2026/08/260804034645.htm",
+          "title": "A colossal magma system has been hiding beneath Tuscany",
+          "publisher": "ScienceDaily",
+          "published_at": "2026-08-05T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_05439305f4",
+      "text": "Study used ambient-noise tomography (ANT) to build a 3-D shear-wave velocity (Vs) model of the upper 15 km of crust in southern Tuscany.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        },
+        {
+          "url": "https://www.sciencedaily.com/releases/2026/08/260804034645.htm",
+          "title": "A colossal magma system has been hiding beneath Tuscany",
+          "publisher": "ScienceDaily",
+          "published_at": "2026-08-05T00:00:00Z"
+        },
+        {
+          "url": "https://www.discovermagazine.com/massive-magma-reservoir-comparable-in-size-to-yellowstone-discovered-beneath-tuscany-48961",
+          "title": "Massive Magma Reservoir Comparable in Volume to Yellowstone Discovered Beneath Tuscany",
+          "publisher": "Discover Magazine",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f7d0525375",
+      "text": "Data came from >60 broadband seismometers: 30 stations deployed Sept 2020-Sept 2021 (TEMPEST network, code 1K) integrated with the permanent Italian INGV network (IV) plus Z3 and FR networks, archived at EIDA and IRIS-DMC.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_529245dfd8",
+      "text": "ANT workflow included pre-processing ambient noise, cross-correlation for station pairs, extraction of dispersion curves, 2-D group-velocity maps via regularized linear least-square inversion, and 1-D depth inversion via McMC transdimensional Bayesian inversion (BayHunter).",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d32c380ae1",
+      "text": "Model shows prominent low-Vs anomalies beneath Larderello-Travale and Amiata geothermal fields, with absolute Vs as low as ~1.2-1.25 km/s at ~10-12 km depth, corresponding to ~-40% relative anomaly versus 1-D average Vs profile.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        },
+        {
+          "url": "https://www.discovermagazine.com/massive-magma-reservoir-comparable-in-size-to-yellowstone-discovered-beneath-tuscany-48961",
+          "title": "Massive Magma Reservoir Comparable in Volume to Yellowstone Discovered Beneath Tuscany",
+          "publisher": "Discover Magazine",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e765b2a4ed",
+      "text": "Low velocities are interpreted as magma/partial melt; authors define three anomaly thresholds: -40% (Vs \u0002241.3 km/s), -30% (1.3-1.8 km/s), -20% (1.8-2.4 km/s).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cca934a0bf",
+      "text": "Using thermodynamic modeling with MageMin (Gibbs energy minimizer) assuming melt-saturated porous granite, 20-40% melt fractions are required to explain extremely low Vs, with detailed modeling indicating a core >80% liquid and outer crystal-mush ~20% liquid.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f2cbda6a01",
+      "text": "Paper estimates more than 5,000 km\u0000b3 of magma and partial melt stored in middle crust of Tuscan Magmatic Province; press summaries round to ~6,000 km\u0000b3 (equivalent to 2.4 billion Olympic swimming pools).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        },
+        {
+          "url": "https://www.sciencedaily.com/releases/2026/08/260804034645.htm",
+          "title": "A colossal magma system has been hiding beneath Tuscany",
+          "publisher": "ScienceDaily",
+          "published_at": "2026-08-05T00:00:00Z"
+        },
+        {
+          "url": "https://www.discovermagazine.com/massive-magma-reservoir-comparable-in-size-to-yellowstone-discovered-beneath-tuscany-48961",
+          "title": "Massive Magma Reservoir Comparable in Volume to Yellowstone Discovered Beneath Tuscany",
+          "publisher": "Discover Magazine",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_367b463436",
+      "text": "For the Larderello anomaly alone, authors calculate ~3,000 km\u0000b3 of partial melt surrounded by ~5,000 km\u0000b3 of crystal mush; the Amiata anomaly holds at least twice as large volume but is near model resolution limits and requires additional acquisition for robust assessment.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5785a1ed99",
+      "text": "Anomaly extends across Tuscany at depths 8-15 km, with a sub-vertical low-Vs domain rising to ~8 km beneath Larderello and extending sub-horizontally south to Amiata; resolution tests (checkerboard, kernels) support reliability to 15 km depth.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        },
+        {
+          "url": "https://www.sciencedaily.com/releases/2026/08/260804034645.htm",
+          "title": "A colossal magma system has been hiding beneath Tuscany",
+          "publisher": "ScienceDaily",
+          "published_at": "2026-08-05T00:00:00Z"
+        },
+        {
+          "url": "https://www.discovermagazine.com/massive-magma-reservoir-comparable-in-size-to-yellowstone-discovered-beneath-tuscany-48961",
+          "title": "Massive Magma Reservoir Comparable in Volume to Yellowstone Discovered Beneath Tuscany",
+          "publisher": "Discover Magazine",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cd56c3e1d7",
+      "text": "Volume is comparable to mid-crust reservoirs beneath recognized supervolcanoes: Yellowstone, Toba, Taup\u00014d, and Long Valley (paper Table 1 compares ~5,000 km\u0000b3 Larderello to Long Valley).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        },
+        {
+          "url": "https://www.discovermagazine.com/massive-magma-reservoir-comparable-in-size-to-yellowstone-discovered-beneath-tuscany-48961",
+          "title": "Massive Magma Reservoir Comparable in Volume to Yellowstone Discovered Beneath Tuscany",
+          "publisher": "Discover Magazine",
+          "published_at": "2026-04-14T00:00:00Z"
+        },
+        {
+          "url": "https://www.ecoticias.com/en/scientists-have-found-6000-cubic-kilometers-of-magma-beneath-tuscany-a-yellowstone-scale-reservoir-hidden-under-one-of-europes-calmest-looking-landscapes/32066",
+          "title": "Scientists have found 6,000 cubic kilometers of magma beneath Tuscany, a Yellowstone-scale reservoir hidden under one of Europe\u0002019s calmest-looking landscapes",
+          "publisher": "ECOticias",
+          "published_at": "2026-05-13T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_57fd1a49ff",
+      "text": "Tuscan Magmatic Province shows sparse Quaternary volcanism and no major Holocene eruptions; most recent eruption is Mt. Amiata ~300-200 ka with only ~10 km\u0000b3 eruptive volume, and no recognized caldera or cone associated with Larderello.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e887b3996e",
+      "text": "Despite Yellowstone-scale volume, system poses no immediate volcanic threat; there is no current surface deformation, anomalous gas emission, or unrest indicating imminent eruption.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        },
+        {
+          "url": "https://www.sciencedaily.com/releases/2026/08/260804034645.htm",
+          "title": "A colossal magma system has been hiding beneath Tuscany",
+          "publisher": "ScienceDaily",
+          "published_at": "2026-08-05T00:00:00Z"
+        },
+        {
+          "url": "https://www.discovermagazine.com/massive-magma-reservoir-comparable-in-size-to-yellowstone-discovered-beneath-tuscany-48961",
+          "title": "Massive Magma Reservoir Comparable in Volume to Yellowstone Discovered Beneath Tuscany",
+          "publisher": "Discover Magazine",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_da2245166d",
+      "text": "Authors attribute lack of eruptivity to peraluminous anatectic granitoids formed by crustal anatexis of metasedimentary basement: low-temperature, highly viscous magmas that form a viscous barrier, hinder ascent, and promote top-down pluton formation via downward accretion.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_66aa8b59a7",
+      "text": "Reservoir fuels the high-enthalpy Larderello-Travale geothermal system, which exhibits extreme heat flow locally up to 1,000 mW/m\u0000b2, geothermal gradient >150\u0000b0C/km, temperatures >500\u0000b0C at ~3 km depth, and supercritical fluids at 2.8 km (42.5 MPa, 512\u0000b0C in Venelle-2 well).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c6882df0b9",
+      "text": "The K-horizon (3-4 km depth transition seen on CROP-18A seismic profile) is interpreted as a transition zone enveloping the low-velocity mid-crustal domain, possibly representing supercritical fluid accumulation, tectonic or rheological boundary.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e146b4fcf3",
+      "text": "Ambient-noise tomography is presented as faster and lower-cost than active seismic for large-scale subsurface imaging, with potential to locate geothermal reservoirs and lithium/rare-earth element deposits associated with deep magmatic systems.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        },
+        {
+          "url": "https://www.sciencedaily.com/releases/2026/08/260804034645.htm",
+          "title": "A colossal magma system has been hiding beneath Tuscany",
+          "publisher": "ScienceDaily",
+          "published_at": "2026-08-05T00:00:00Z"
+        },
+        {
+          "url": "https://www.discovermagazine.com/massive-magma-reservoir-comparable-in-size-to-yellowstone-discovered-beneath-tuscany-48961",
+          "title": "Massive Magma Reservoir Comparable in Volume to Yellowstone Discovered Beneath Tuscany",
+          "publisher": "Discover Magazine",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4bc7f61c80",
+      "text": "ScienceDaily summary was published 5 Aug 2026, repackaging the 14 Apr 2026 paper and UNIGE press release; the 6,000 km\u0000b3 figure in headlines is a rounded press value, while the paper's conservative text is '>5,000 km\u0000b3'.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        },
+        {
+          "url": "https://www.sciencedaily.com/releases/2026/08/260804034645.htm",
+          "title": "A colossal magma system has been hiding beneath Tuscany",
+          "publisher": "ScienceDaily",
+          "published_at": "2026-08-05T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_928ed88dcd",
+      "text": "Model is based on Rayleigh waves; authors note radial anisotropy (Love faster than Rayleigh) in supervolcano plumbing due to interlayered sills could affect velocity interpretation.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b997edb649",
+      "text": "Reservoir fuels the high-enthalpy Larderello-Travale geothermal system, which exhibits extreme heat flow locally up to 1,000 mW/m\u00178, geothermal gradient >150\u00176C/km, temperatures >500\u00176C at ~3 km depth, and supercritical fluids at 2.8 km (42.5 MPa, 512\u00176C in Venelle-2 well).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        },
+        {
+          "url": "https://www.enelgreenpower.com/our-projects/operating/geothermal-power-plant-larderello",
+          "title": "The \"Valle Secolo\" geothermal power plant in Larderello",
+          "publisher": "Enel Green Power",
+          "published_at": "2023-08-04T00:00:00Z"
+        },
+        {
+          "url": "https://www.enel.com/learning-hub/renewables/geothermal-energy/italy",
+          "title": "Geothermal energy in Italy: where and how it is produced",
+          "publisher": "Enel",
+          "published_at": "2025-11-11T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_eb8ade31f9",
+      "text": "Volume is comparable to mid-crust reservoirs beneath recognized supervolcanoes: Yellowstone, Toba, Taup\u00178, and Long Valley (paper Table 1 compares ~5,000 km\u00178 Larderello to Long Valley).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.unige.ch/medias/en/2026/des-super-reservoirs-de-magma-decouverts-sous-la-toscane",
+          "title": "Super Magma Reservoirs Discovered Beneath Tuscany",
+          "publisher": "UNIGE",
+          "published_at": "2026-04-14T00:00:00Z"
+        },
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        },
+        {
+          "url": "https://www.ingv.it/stampa-urp/ufficio-stampa/comunicati-stampa/geotermia-la-toscana-custodisce-enormi-serbatoi-di-magma",
+          "title": "GEOTERMIA | La Toscana custodisce enormi serbatoi di magma",
+          "publisher": "INGV",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_59a4dfb4e3",
+      "text": "Low velocities are interpreted as magma/partial melt; authors define three anomaly thresholds: -40% (Vs \u0018241.3 km/s), -30% (1.3-1.8 km/s), -20% (1.8-2.4 km/s).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e228260ab4",
+      "text": "Paper estimates more than 5,000 km\u00178 of magma and partial melt stored in middle crust of Tuscan Magmatic Province; press summaries round to ~6,000 km\u00178 (equivalent to 2.4 billion Olympic swimming pools).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.unige.ch/medias/en/2026/des-super-reservoirs-de-magma-decouverts-sous-la-toscane",
+          "title": "Super Magma Reservoirs Discovered Beneath Tuscany",
+          "publisher": "UNIGE",
+          "published_at": "2026-04-14T00:00:00Z"
+        },
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        },
+        {
+          "url": "https://www.ingv.it/stampa-urp/ufficio-stampa/comunicati-stampa/geotermia-la-toscana-custodisce-enormi-serbatoi-di-magma",
+          "title": "GEOTERMIA | La Toscana custodisce enormi serbatoi di magma",
+          "publisher": "INGV",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b21cdcd8f2",
+      "text": "UNIGE official press release (14 Apr 2026) confirms ~6,000 km\u00179 of magma/fluids at 8\u001315 km depth beneath Tuscany detected via ambient-noise tomography with ~60 sensors, comparable to Yellowstone/Toba/Taupo, currently poses no threat, and presents tomography as faster/lower-cost tool for geothermal and lithium/REE exploration.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.unige.ch/medias/en/2026/des-super-reservoirs-de-magma-decouverts-sous-la-toscane",
+          "title": "Super Magma Reservoirs Discovered Beneath Tuscany",
+          "publisher": "UNIGE",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e681a3cbb8",
+      "text": "Paper deep-read verifies extreme geothermal parameters: heat flow up to 1,000 mW/m\u00178, gradient >150\u00176C/km, >500\u00176C at ~3 km, and Venelle-2 well at 2.8 km with 42.5 MPa / 512\u00176C (supercritical brines per Driesner & Heinrich), with sharp gradient increase at 2750 m (380\u00176C); K-horizon at 3\u00134 km on CROP-18A envelops low-Vs cupola.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1218787c8e",
+      "text": "MageMin modeling assumes melt-saturated porous granite with three Vs thresholds (-40% Vs\b241.3 km/s, -30% 1.3\u00131.8 km/s, -20% 1.8\u00132.4 km/s); 20\u001340% melt required for extremely low Vs; Larderello core >80% liquid (~3,000 km\u00179) surrounded by ~20% liquid mush (~5,000 km\u00179); Amiata at least twice as large but flagged as near resolution limits requiring additional acquisition; Rayleigh-only model noted with radial anisotropy caveat.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bf409889a3",
+      "text": "ANT workflow verified as pre-processing, cross-correlation, dispersion curves, 2-D group-velocity maps via regularized linear least-square inversion, and 1-D depth inversion via McMC transdimensional Bayesian inversion (BayHunter); resolution to 15 km supported by checkerboard (Fig S9), kernels (S11), Vs uncertainty (S16); absolute Vs as low as ~1.2\u00131.25 km/s (-40%) at 10\u001312 km core.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7c9708ad72",
+      "text": "Enel Green Power operates 34 geothermal plants with 37 generating units totaling ~800 MW in Tuscany; Valle Secolo plant (largest in Europe) has 117.6 MW operating capacity (2\u001360 MW sections), 854 million kWh/year average production, with ~40% condensate reinjection and real-time microseismic monitoring.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.enelgreenpower.com/our-projects/operating/geothermal-power-plant-larderello",
+          "title": "The \"Valle Secolo\" geothermal power plant in Larderello",
+          "publisher": "Enel Green Power",
+          "published_at": "2023-08-04T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0feaf9c79b",
+      "text": "Italy has 916 MW installed geothermal capacity producing ~5.7 TWh/year (1.6\u00131.8% of national electricity, ~5% of renewables), concentrated in Tuscany across 34 plants in 10 concessions providing ~31% of Tuscany's electricity; PNIEC targets 7.5 TWh by 2030.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.enel.com/learning-hub/renewables/geothermal-energy/italy",
+          "title": "Geothermal energy in Italy: where and how it is produced",
+          "publisher": "Enel",
+          "published_at": "2025-11-11T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ff416631b8",
+      "text": "INGV-Regione Toscana integrated seismic monitoring system for Larderello-Travale and Monte Amiata operates under formal agreement with defined monitoring domains, homogeneous data-sharing protocols, real-time acquisition at INGV Bologna Centro di Monitoraggio del Sottosuolo, ILG-compliant monitoring (localization, PGV, ML), with 9 published technical reports from July 2020 to July 2026.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://cms.ingv.it/sperimentazioni/geotermia-toscana",
+          "title": "Geotermia Toscana - INGV CMS",
+          "publisher": "INGV",
+          "published_at": "2022-06-27T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b861598134",
+      "text": "INGV official comunicato (with CNR-IGG, 14 Apr 2026) independently confirms thousands of km\u00179 of magmatic fluids at 8\u001315 km beneath Larderello and Amiata, comparable to Yellowstone/Toba/Taupo, via zero-impact ambient-noise tomography; notes Tuscany magmatism has been predominantly plutonic for millions of years with no surface eruption signals, consistent with no Holocene eruption / no caldera / no current unrest.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.ingv.it/stampa-urp/ufficio-stampa/comunicati-stampa/geotermia-la-toscana-custodisce-enormi-serbatoi-di-magma",
+          "title": "GEOTERMIA | La Toscana custodisce enormi serbatoi di magma",
+          "publisher": "INGV",
+          "published_at": "2026-04-14T00:00:00Z"
+        },
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_038ea86a54",
+      "text": "Copernicus Sentinel-1 provides operational regional InSAR deformation monitoring for Tuscany at centimetre precision (University of Florence / Civil Protection / Regione Toscana / TRE ALTAMIRA), with regularly updated ground deformation maps routinely sent to geohazard authorities; public ESA summary reports no Larderello/Amiata volcanic inflation anomaly, consistent with 'no current surface deformation', though specific GNSS velocity and CO2 flux time series for 2020\u00132026 were not retrieved in this pass.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-1/Monitoring_Earth_s_shifting_land",
+          "title": "Monitoring Earth's shifting land - Copernicus Sentinel-1 Tuscany",
+          "publisher": "ESA",
+          "published_at": "2019-05-15T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_48b2bb4b58",
+      "text": "Low shear-wave velocity anomalies of -30% to -40% (Vs ~1.2-1.3 km/s) are not uniquely diagnostic of partial melt; peer-reviewed attenuation and velocity studies show identical low-Vs / low-Vp/Vs signatures can be produced by aqueous/saline fluids, supercritical brines, gas-saturated fractured rock, and hydrothermal alteration without requiring 20-40% melt. Ebeko study states \"velocity-based anomalies alone are inherently ambiguous and may reflect different physical processes, including gas saturation, dry fracturing, elevated temperature, or partial melt\" and La Palma study shows high-attenuation zones with low Vs/low resistivity interpreted as hydrothermal alteration and fractured fluid pathways, not melt. Kuju study interprets plume-shaped Vp/Vs <1.4 as crack-dominant thermally altered formation + gas from supercritical fluid phase transition, with high Vp/Vs below seal as pressurized supercritical fluid.",
+      "grade": "contested",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41598-026-43820-1",
+          "title": "Melt, fluids, and fractures beneath Ebeko Volcano (Kuril Islands) revealed by ambient noise attenuation tomography",
+          "publisher": "Nature Scientific Reports",
+          "published_at": "2026-03-26"
+        },
+        {
+          "url": "https://www.nature.com/articles/s43247-025-02774-4",
+          "title": "Supercritical fluid flow through permeable window and phase transitions at volcanic brittle\u0001ductile transition zone",
+          "publisher": "Nature Communications Earth & Environment",
+          "published_at": "2025-09-24"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41598-024-79076-w",
+          "title": "3-D intrinsic attenuation tomography using ambient seismic noise applied to La Palma Island (Canary Islands)",
+          "publisher": "Nature Scientific Reports",
+          "published_at": "2024-11-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_66b8bdc503",
+      "text": "Rayleigh-wave-only Vs model as used in Tuscany is susceptible to radial anisotropy bias; positive radial anisotropy (Vsh > Vsv) from sub-horizontal sill complexes makes Love waves faster than Rayleigh waves and can bias isotropic Vs low if not jointly inverted. Cascades arc joint Rayleigh-Love inversion finds isotropic low-Vs zones of 3.45-3.55 km/s at 15-30 km depth interpreted as only 2.5-6% melt assuming near-equilibrium geometry, and notes same Vs could alternatively be explained by sub-solidus crustal compositions; positive anisotropy adjacent to low-Vs is interpreted as mostly crystallized sill complexes, not melt. Lupi et al. explicitly note \"Radial anisotropy is strongly positively anomalous in the plumbing systems of supervolcanoes because of the interlayered sill structure. This may result in Love waves being faster than Rayleigh waves\" but do not perform joint inversion.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2022GC010738",
+          "title": "Segmentation and Radial Anisotropy of the Deep Crustal Magmatic System Beneath the Cascades Arc",
+          "publisher": "AGU / Geochemistry Geophysics Geosystems",
+          "published_at": "2023-03-03"
+        },
+        {
+          "url": "https://www.nature.com/articles/s43247-026-03334-0",
+          "title": "High-enthalpy Larderello geothermal system, Italy, powered by thousands of cubic kilometres of mid-crustal magma",
+          "publisher": "Communications Earth & Environment (Nature)",
+          "published_at": "2026-04-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_84d2fa29a2",
+      "text": "Thermodynamic conversion of Vs to melt fraction via MageMin assuming melt-saturated porous granite is highly non-unique; modeling incorporating crystallographic preferred orientation, melt shape, orientation and matrix anisotropy shows \"nonlinear behavior\" and \"huge variations in the same seismic property even if the melt fraction remains the same.\" Authors warn \"Interpretation of seismic data to infer melt percentages or extent of melting should always be underpinned by robust modeling... and examination of multiple seismic properties\" and that \"different geophysical methods yield different results\" (e.g., Tibet bright spots interpreted as 10% melt vs 3-7% vs no widespread melt). This directly qualifies the 20-40% and >80% liquid core estimates and the 5,000-6,000 km3 inventory as order-of-magnitude, assumption-dependent.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2016GC006705",
+          "title": "Modeling the impact of melt on seismic properties during mountain building",
+          "publisher": "AGU / Geochemistry Geophysics Geosystems",
+          "published_at": "2017-02-27"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e9d9d0910f",
+      "text": "Intrinsic attenuation (Qc-1) is more sensitive to fluid content, fracture density and thermo-mechanical state than Vs alone; La Palma ANAT study concludes \"intrinsic attenuation retrieved from the coda of Rayleigh waves is more sensitive to the presence of fluids than velocity\" and Ebeko study shows shallow high-attenuation (>0.45) maps fracture-controlled fluid reservoirs while a 4-6 km low-attenuation core (<0.1) suggests consolidated crystalline mush \u0001 the inverse of a simple low-Vs = melt mapping. Without joint Qc-1, Vp/Vs, resistivity or attenuation constraints, Tuscany low-Vs cannot discriminate melt vs fluid-filled fractures.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41598-026-43820-1",
+          "title": "Melt, fluids, and fractures beneath Ebeko Volcano (Kuril Islands) revealed by ambient noise attenuation tomography",
+          "publisher": "Nature Scientific Reports",
+          "published_at": "2026-03-26"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41598-024-79076-w",
+          "title": "3-D intrinsic attenuation tomography using ambient seismic noise applied to La Palma Island (Canary Islands)",
+          "publisher": "Nature Scientific Reports",
+          "published_at": "2024-11-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_be745b0098",
+      "text": "High viscosity of peraluminous, high-silica anatectic magmas does not by itself suppress eruption; silicate-melt physics shows viscosity is strongly modulated by temperature, dissolved H2O, and crystal/bubble content, and high viscosity traps volatiles, increasing explosivity and fragmentation potential. Zhang review details that rhyolitic melt viscosity varies by orders of magnitude with water content and that fragmentation criteria depend on bubble overpressure and strain rate, not viscosity alone. Viscosity as a \"barrier\" is therefore a conditional, not deterministic, control on eruptibility.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2006RG000216",
+          "title": "Silicate melt properties and volcanic eruptions",
+          "publisher": "AGU / Reviews of Geophysics",
+          "published_at": "2007-12-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cfa1394d51",
+      "text": "Tuscan Magmatic Province peraluminous magmas have erupted despite high viscosity: Botro ai Marmi granite (SiO2 68-72 wt%, ASI 1.1-1.3, cordierite-bearing peraluminous monzo-syenogranite) and San Vincenzo Type-A/B rhyolites at Campiglia Marittima (5.4-4.4 Ma) erupted as viscous lava flows/domes (~1 km3 preserved) and dykes; Type-B hybrid rhyolite demonstrates remobilization and mingling of crustal and mantle melts after ~500 ka of melt-present storage. System remained in melt-present condition for ~500 ka per cycle with antecryst recycling, showing crystal mush can be remobilized. This demonstrates peraluminous anatectic magmas are eruptible and that a 300 kyr quiescence at Amiata does not prove permanent viscous lock.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41598-025-19201-5",
+          "title": "Asynchronous transfer of magmas and mineralizing fluids in a plutonic-subvolcanic-volcanic plumbing system",
+          "publisher": "Nature Scientific Reports",
+          "published_at": "2025-12-05"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a28e792be7",
+      "text": "No independent peer commentary or published critique specifically addressing Lupi et al. 2026 Tuscany interpretation was retrieved in this pass; counter-perspective above is built from analogous peer-reviewed studies of similar low-Vs anomalies and melt-physics reviews, not direct rebuttal of the Tuscany paper. Gap remains for targeted volcanology/seismology commentary.",
+      "grade": "unconfirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2022GC010738",
+          "title": "Segmentation and Radial Anisotropy of the Deep Crustal Magmatic System Beneath the Cascades Arc",
+          "publisher": "AGU / Geochemistry Geophysics Geosystems",
+          "published_at": "2023-03-03"
+        },
+        {
+          "url": "https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2016GC006705",
+          "title": "Modeling the impact of melt on seismic properties during mountain building",
+          "publisher": "AGU / Geochemistry Geophysics Geosystems",
+          "published_at": "2017-02-27"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41598-026-43820-1",
+          "title": "Melt, fluids, and fractures beneath Ebeko Volcano (Kuril Islands) revealed by ambient noise attenuation tomography",
+          "publisher": "Nature Scientific Reports",
+          "published_at": "2026-03-26"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

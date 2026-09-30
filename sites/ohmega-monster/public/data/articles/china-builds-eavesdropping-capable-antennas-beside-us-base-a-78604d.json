@@ -1,0 +1,845 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/china-builds-eavesdropping-capable-antennas-beside-us-base-a-78604d",
+  "title": "China builds eavesdropping-capable antennas beside US base at Red Sea chokepoint",
+  "summary": "Satellite images reviewed by Washington researchers show two linked compounds that would almost certainly support monitoring nearby forces if tasked, but cannot prove active interception or what is hidden inside two radomes.",
+  "published_at": "2026-09-21T12:40:00.753832+00:00",
+  "as_of": "2026-09-21",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 37,
+    "likely": 7
+  },
+  "claims": [
+    {
+      "id": "clm_4930a7e889",
+      "text": "China has added two new communications facilities at its PLA Support Base in Djibouti since mid-2024, in the base's southeastern and northwestern corners",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://features.csis.org/hiddenreach/china-djibouti-base-upgrade",
+          "title": "Extended Range: China Upgrades Its Military Base in Djibouti",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2026-09-17T04:00:00Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/china/chinas-djibouti-base-upgrades-should-boost-its-monitoring-reach-report-says-2026-09-17",
+          "title": "China's Djibouti base upgrades should boost its monitoring reach, report says",
+          "publisher": "Reuters",
+          "published_at": "2026-09-17T22:27:49Z"
+        },
+        {
+          "url": "https://www.scmp.com/news/china/military/article/3368246/djibouti-base-upgrade-may-offer-pla-window-foreign-military-middle-east-operations",
+          "title": "Djibouti base upgrade may offer PLA window on foreign military Middle East operations",
+          "publisher": "South China Morning Post",
+          "published_at": "2026-09-21T09:58:37Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a822d33f8e",
+      "text": "The larger southeastern facility includes a main control building, three 30-meter dipole HF antennas, two V/UHF antennas, three mobile SATCOM dishes, four probable 5G towers, and a radome with unidentified asset; the northwestern facility has crossed dipole HF antennas and a radome with control building and reinforced cable trenches laid in 2025 suggesting future antennas",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://features.csis.org/hiddenreach/china-djibouti-base-upgrade",
+          "title": "Extended Range: China Upgrades Its Military Base in Djibouti",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2026-09-17T04:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8e8593bca2",
+      "text": "The two facilities very likely work as two halves of one base-wide C4ISR (command, control, communications, computers, intelligence, surveillance, reconnaissance) architecture",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://features.csis.org/hiddenreach/china-djibouti-base-upgrade",
+          "title": "Extended Range: China Upgrades Its Military Base in Djibouti",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2026-09-17T04:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bd38f43d82",
+      "text": "The type and orientation of the new equipment is varied, enabling transmission and detection across a wide range of signals and frequencies (HF, V/UHF, SATCOM, 5G)",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://features.csis.org/hiddenreach/china-djibouti-base-upgrade",
+          "title": "Extended Range: China Upgrades Its Military Base in Djibouti",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2026-09-17T04:00:00Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/china/chinas-djibouti-base-upgrades-should-boost-its-monitoring-reach-report-says-2026-09-17",
+          "title": "China's Djibouti base upgrades should boost its monitoring reach, report says",
+          "publisher": "Reuters",
+          "published_at": "2026-09-17T22:27:49Z"
+        },
+        {
+          "url": "https://maritime-executive.com/article/china-upgrades-djibouti-naval-base-as-an-intelligence-site",
+          "title": "China Upgrades Djibouti Naval Base as an Intelligence Site",
+          "publisher": "The Maritime Executive",
+          "published_at": "2026-09-18T09:25:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_10092d26ae",
+      "text": "Open-source imagery methods cannot confirm whether passive SIGINT collection is actively underway at the base",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://features.csis.org/hiddenreach/china-djibouti-base-upgrade",
+          "title": "Extended Range: China Upgrades Its Military Base in Djibouti",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2026-09-17T04:00:00Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/china/chinas-djibouti-base-upgrades-should-boost-its-monitoring-reach-report-says-2026-09-17",
+          "title": "China's Djibouti base upgrades should boost its monitoring reach, report says",
+          "publisher": "Reuters",
+          "published_at": "2026-09-17T22:27:49Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8b427d7752",
+      "text": "The new assets would almost certainly support a SIGINT mission and likely enable PLA to monitor activities of other militaries operating nearby",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://features.csis.org/hiddenreach/china-djibouti-base-upgrade",
+          "title": "Extended Range: China Upgrades Its Military Base in Djibouti",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2026-09-17T04:00:00Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/china/chinas-djibouti-base-upgrades-should-boost-its-monitoring-reach-report-says-2026-09-17",
+          "title": "China's Djibouti base upgrades should boost its monitoring reach, report says",
+          "publisher": "Reuters",
+          "published_at": "2026-09-17T22:27:49Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c5f0b03817",
+      "text": "Even though military communications are encrypted, PLA could draw valuable insights by observing direction, origin, frequency and pace of signals",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://features.csis.org/hiddenreach/china-djibouti-base-upgrade",
+          "title": "Extended Range: China Upgrades Its Military Base in Djibouti",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2026-09-17T04:00:00Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/china/chinas-djibouti-base-upgrades-should-boost-its-monitoring-reach-report-says-2026-09-17",
+          "title": "China's Djibouti base upgrades should boost its monitoring reach, report says",
+          "publisher": "Reuters",
+          "published_at": "2026-09-17T22:27:49Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4318265ec5",
+      "text": "The equipment allows PLA to maintain redundant, over-the-horizon communications with Chinese ships and aircraft in the region and secure channels with headquarters in China",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://features.csis.org/hiddenreach/china-djibouti-base-upgrade",
+          "title": "Extended Range: China Upgrades Its Military Base in Djibouti",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2026-09-17T04:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6864874497",
+      "text": "The PLA Support Base in Djibouti (Doraleh) opened in 2017 and is China's only formally acknowledged overseas military base",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://features.csis.org/hiddenreach/china-djibouti-base-upgrade",
+          "title": "Extended Range: China Upgrades Its Military Base in Djibouti",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2026-09-17T04:00:00Z"
+        },
+        {
+          "url": "https://www.kas.de/en/country-reports/detail/-/content/djibouti-s-geostrategic-importance",
+          "title": "Djibouti's geostrategic importance",
+          "publisher": "Konrad-Adenauer-Stiftung (KAS)",
+          "published_at": "2026-07-16T00:00:00Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/china/chinas-djibouti-base-upgrades-should-boost-its-monitoring-reach-report-says-2026-09-17",
+          "title": "China's Djibouti base upgrades should boost its monitoring reach, report says",
+          "publisher": "Reuters",
+          "published_at": "2026-09-17T22:27:49Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_85b8b6aeae",
+      "text": "The base includes a 341-metre-long quay completed in 2022 and is described as one of the largest foreign bases in Djibouti, with reported capacity for 2,500 personnel and estimates up to 10,000",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.kas.de/en/country-reports/detail/-/content/djibouti-s-geostrategic-importance",
+          "title": "Djibouti's geostrategic importance",
+          "publisher": "Konrad-Adenauer-Stiftung (KAS)",
+          "published_at": "2026-07-16T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_40bfcdca04",
+      "text": "The base sits near the Bab el-Mandeb Strait, a 20-mile-wide chokepoint carrying an estimated 16% of global maritime trade (and about one-tenth of seaborne oil trade and one-fourth of container trade per Britannica)",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://features.csis.org/hiddenreach/china-djibouti-base-upgrade",
+          "title": "Extended Range: China Upgrades Its Military Base in Djibouti",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2026-09-17T04:00:00Z"
+        },
+        {
+          "url": "https://africa.businessinsider.com/local/markets/china-upgrades-military-operation-in-an-african-country-where-the-us-boasts-its/txjlz93",
+          "title": "China upgrades military operation in an African country where the US boasts its largest military base",
+          "publisher": "Business Insider Africa",
+          "published_at": "2026-09-18T14:30:22Z"
+        },
+        {
+          "url": "https://www.britannica.com/place/Bab-El-Mandeb-Strait",
+          "title": "Bab el-Mandeb Strait",
+          "publisher": "Encyclopaedia Britannica",
+          "published_at": "1998-07-20T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c01fc96751",
+      "text": "US, French, Italian and Japanese bases operate less than 10 miles (16 km) from China's base in Djibouti",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://features.csis.org/hiddenreach/china-djibouti-base-upgrade",
+          "title": "Extended Range: China Upgrades Its Military Base in Djibouti",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2026-09-17T04:00:00Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/china/chinas-djibouti-base-upgrades-should-boost-its-monitoring-reach-report-says-2026-09-17",
+          "title": "China's Djibouti base upgrades should boost its monitoring reach, report says",
+          "publisher": "Reuters",
+          "published_at": "2026-09-17T22:27:49Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1c2a71a84f",
+      "text": "The US base is Camp Lemonnier, the only permanent US military base in Africa, hosting Combined Joint Task Force-Horn of Africa (CJTF-HOA) with more than 4,000 personnel",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/news/2026/4/8/our-geography-is-our-oil-why-djibouti-hosts-many-foreign-military-bases",
+          "title": "'Our geography is our oil': Why Djibouti hosts many foreign military bases",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-04-08T08:09:10Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_34a44dda94",
+      "text": "Recent conflicts — Houthi attacks on Red Sea shipping since late 2023 and escalation of US and Israeli operations against Iran — have sharply increased the intelligence value of SIGINT capabilities in Djibouti",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://features.csis.org/hiddenreach/china-djibouti-base-upgrade",
+          "title": "Extended Range: China Upgrades Its Military Base in Djibouti",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2026-09-17T04:00:00Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/china/chinas-djibouti-base-upgrades-should-boost-its-monitoring-reach-report-says-2026-09-17",
+          "title": "China's Djibouti base upgrades should boost its monitoring reach, report says",
+          "publisher": "Reuters",
+          "published_at": "2026-09-17T22:27:49Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f8b93e5488",
+      "text": "By July 2026, more than 20 US Navy warships including two carrier strike groups and hundreds of aircraft were supporting operations against Iran and around the Strait of Hormuz",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://features.csis.org/hiddenreach/china-djibouti-base-upgrade",
+          "title": "Extended Range: China Upgrades Its Military Base in Djibouti",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2026-09-17T04:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7e567bdea5",
+      "text": "Houthis declared a naval blockade on Saudi Arabia in July 2026, saying they would target Saudi, Israeli and US-linked tankers in the Bab el-Mandeb",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/economy/2026/7/24/as-oil-soars-experts-watch-red-sea-tankers-for-clarity-on-houthi-blockade",
+          "title": "As oil soars, experts watch Red Sea tankers for clarity on Houthi blockade",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-07-24T03:34:10Z"
+        },
+        {
+          "url": "https://www.cfr.org/articles/another-hormuz-the-red-seas-threat-to-the-global-economy",
+          "title": "Another Hormuz? What to Know About the Houthi Threat to the Red Sea",
+          "publisher": "Council on Foreign Relations",
+          "published_at": "2026-07-20T19:12:43Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_be82d14fd8",
+      "text": "Vessel traffic through the Bab el-Mandeb fell by around 24% after the Houthi blockade (269 transits week of July 20 vs 354 before) before stabilizing at early-2026 levels",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.lloydslist.com/LL1158141/The-Week-in-Charts-Red-Sea-shipping-stabilises-after-Julys-Houthi-blockade-shock--War-disruption-and-rerouting-fail-to-derail-container-demand",
+          "title": "The Week in Charts: Red Sea shipping stabilises after July's Houthi blockade shock",
+          "publisher": "Lloyd's List",
+          "published_at": "2026-08-10T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_33563a4234",
+      "text": "China's foreign ministry said it was unaware of the specific situation regarding the upgrades, stating China is a builder of peace and will uphold mutual respect and play constructive role in regional stability",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/china/chinas-djibouti-base-upgrades-should-boost-its-monitoring-reach-report-says-2026-09-17",
+          "title": "China's Djibouti base upgrades should boost its monitoring reach, report says",
+          "publisher": "Reuters",
+          "published_at": "2026-09-17T22:27:49Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bfcacd8ae6",
+      "text": "SCMP reported the upgrade may offer PLA a window on foreign military Middle East operations, citing the CSIS commercial imagery findings",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.scmp.com/news/china/military/article/3368246/djibouti-base-upgrade-may-offer-pla-window-foreign-military-middle-east-operations",
+          "title": "Djibouti base upgrade may offer PLA window on foreign military Middle East operations",
+          "publisher": "South China Morning Post",
+          "published_at": "2026-09-21T09:58:37Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bca18eb0e9",
+      "text": "The September 2026 upgrade cycle described by CSIS is communications/SIGINT-focused; CSIS report does not describe new pier or airfield construction in this period",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://features.csis.org/hiddenreach/china-djibouti-base-upgrade",
+          "title": "Extended Range: China Upgrades Its Military Base in Djibouti",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2026-09-17T04:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a859762ae9",
+      "text": "Maritime Executive analysis assessed the new arrays are likely for passive interception because PLAN has operated escort groups since 2008 with adequate secure comms, and the full-spectrum profile matches a signals collection site, though Doraleh may lack height to intercept VHF at longer ranges",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://maritime-executive.com/article/china-upgrades-djibouti-naval-base-as-an-intelligence-site",
+          "title": "China Upgrades Djibouti Naval Base as an Intelligence Site",
+          "publisher": "The Maritime Executive",
+          "published_at": "2026-09-18T09:25:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ec20a8c756",
+      "text": "US Air Force budget documents describe nearby Chabelley Airfield as the only location in East Africa from which armed ISR assets are authorized to operate; Japan began flying P-1 maritime patrol aircraft from its Djibouti facility in August for counter-piracy and information-gathering",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.scmp.com/news/china/military/article/3368246/djibouti-base-upgrade-may-offer-pla-window-foreign-military-middle-east-operations",
+          "title": "Djibouti base upgrade may offer PLA window on foreign military Middle East operations",
+          "publisher": "South China Morning Post",
+          "published_at": "2026-09-21T09:58:37Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_82a464ed9e",
+      "text": "Camp Lemonnier, Djibouti is the U.S. military's only permanent base in Africa — corroborates clm_1c2a71a84f",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.dvidshub.net/news/468620/us-navy-capt-eilis-cancel-assumes-command-camp-lemonnier-djibouti",
+          "title": "U.S. Navy Capt. Eilis Cancel Assumes Command of Camp Lemonnier, Djibouti",
+          "publisher": "Defense Visual Information Distribution Service",
+          "published_at": "2024-04-16"
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2026/4/8/our-geography-is-our-oil-why-djibouti-hosts-many-foreign-military-bases",
+          "title": "'Our geography is our oil': Why Djibouti hosts many foreign military bases",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-04-08T08:09:10Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c603b3c7eb",
+      "text": "Camp Lemonnier hosts Combined Joint Task Force-Horn of Africa (CJTF-HOA) and more than 4,000 military and civilian personnel — corroborates clm_1c2a71a84f",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/news/2026/4/8/our-geography-is-our-oil-why-djibouti-hosts-many-foreign-military-bases",
+          "title": "'Our geography is our oil': Why Djibouti hosts many foreign military bases",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-04-08T08:09:10Z"
+        },
+        {
+          "url": "https://manaramagazine.org/2025/07/assessing-the-houthi-threat-to-camp-lemonnier-in-djibouti",
+          "title": "Assessing the Houthi Threat to Camp Lemonnier in Djibouti",
+          "publisher": "Manara Magazine",
+          "published_at": "2025-07-02"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9fac5eeedf",
+      "text": "On July 20, 2026 the Houthis (Ansar Allah) declared a complete naval blockade on Saudi Arabia, stating they would target Saudi, Israeli and US-linked tankers in the Bab el-Mandeb — corroborates clm_7e567bdea5",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cfr.org/articles/another-hormuz-the-red-seas-threat-to-the-global-economy",
+          "title": "Another Hormuz? What to Know About the Houthi Threat to the Red Sea",
+          "publisher": "Council on Foreign Relations",
+          "published_at": "2026-07-20T19:12:43Z"
+        },
+        {
+          "url": "https://www.aljazeera.com/economy/2026/7/24/as-oil-soars-experts-watch-red-sea-tankers-for-clarity-on-houthi-blockade",
+          "title": "As oil soars, experts watch Red Sea tankers for clarity on Houthi blockade",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-07-24T03:34:10Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_352356ad71",
+      "text": "Lloyd's List Intelligence data shows 269 vessels transited the Bab el-Mandeb in week beginning July 20, down 24% from 354 transits the week before the blockade, with preliminary 266 transits July 27-Aug 2 indicating stabilization at early-2026 levels — corroborates clm_be82d14fd8",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.lloydslist.com/LL1158141/The-Week-in-Charts-Red-Sea-shipping-stabilises-after-Julys-Houthi-blockade-shock--War-disruption-and-rerouting-fail-to-derail-container-demand",
+          "title": "The Week in Charts: Red Sea shipping stabilises after July's Houthi blockade shock",
+          "publisher": "Lloyd's List",
+          "published_at": "2026-08-10T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3d0a967d9f",
+      "text": "CSIS explicitly cautions open-source imagery methods cannot confirm whether passive SIGINT collection is actively underway, while assessing new assets would almost certainly support a SIGINT mission — corroborates clm_10092d26ae, clm_8b427d7752",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://features.csis.org/hiddenreach/china-djibouti-base-upgrade",
+          "title": "Extended Range: China Upgrades Its Military Base in Djibouti",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2026-09-17T04:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_da961bab33",
+      "text": "CSIS states although military communications are encrypted, PLA could draw valuable insights by observing direction, origin, frequency and pace of signals (metadata exploitation) — corroborates clm_c5f0b03817",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://features.csis.org/hiddenreach/china-djibouti-base-upgrade",
+          "title": "Extended Range: China Upgrades Its Military Base in Djibouti",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2026-09-17T04:00:00Z"
+        },
+        {
+          "url": "https://tcf.org/content/report/surveillance-without-borders-the-traffic-shaping-loophole-and-why-it-matters",
+          "title": "Surveillance without Borders: The Traffic Shaping Loophole and Why It Matters",
+          "publisher": "The Century Foundation",
+          "published_at": "2017-06-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6f029941e4",
+      "text": "Maritime Executive independent assessment notes Doraleh lacks height to intercept VHF communications at longer ranges, while HF interception (which regional militaries still use for long-distance) is practical from Doraleh; full-spectrum profile suggests collection rather than just secure comms — corroborates clm_a859762ae9",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://maritime-executive.com/article/china-upgrades-djibouti-naval-base-as-an-intelligence-site",
+          "title": "China Upgrades Djibouti Naval Base as an Intelligence Site",
+          "publisher": "The Maritime Executive",
+          "published_at": "2026-09-18T09:25:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_09c9ab9d2f",
+      "text": "The two new facilities very likely work as two halves of one base-wide C4ISR architecture enabling redundant over-the-horizon communications and secure reach-back to China — corroborates clm_8e8593bca2, clm_4318265ec5",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://features.csis.org/hiddenreach/china-djibouti-base-upgrade",
+          "title": "Extended Range: China Upgrades Its Military Base in Djibouti",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2026-09-17T04:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4fd9475b1b",
+      "text": "By July 2026 more than 20 U.S. Navy warships including two carrier strike groups (USS Abraham Lincoln and USS George H.W. Bush) plus hundreds of aircraft were operating in the Arabian Sea/5th Fleet AOR supporting operations against Iran and around Strait of Hormuz — corroborates clm_f8b93e5488",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.twz.com/sea/here-are-the-u-s-navy-warships-available-to-support-the-blockade-of-iran",
+          "title": "Here Are The U.S. Navy Warships Available To Support The Blockade Of Iran",
+          "publisher": "The War Zone",
+          "published_at": "2026-07-15"
+        },
+        {
+          "url": "https://features.csis.org/hiddenreach/china-djibouti-base-upgrade",
+          "title": "Extended Range: China Upgrades Its Military Base in Djibouti",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2026-09-17T04:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_396514ced2",
+      "text": "EIA data: ~4.2 million bpd crude oil and petroleum products transited Bab el-Mandeb and ~4.9 million bpd transited Suez Canal + SUMED pipeline in H1 2025 (~6% of seaborne oil together), down from ~9.3 million bpd via Bab el-Mandeb in 2023; Hormuz averaged ~20 million bpd in 2024 (~20% of global petroleum liquids, >25% of seaborne oil)",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cfr.org/articles/another-hormuz-the-red-seas-threat-to-the-global-economy",
+          "title": "Another Hormuz? What to Know About the Houthi Threat to the Red Sea",
+          "publisher": "Council on Foreign Relations",
+          "published_at": "2026-07-20T19:12:43Z"
+        },
+        {
+          "url": "https://www.eia.gov/todayinenergy/detail.php?id=65504",
+          "title": "Amid regional conflict, the Strait of Hormuz remains critical oil chokepoint",
+          "publisher": "EIA",
+          "published_at": "2025-06-16"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_665921234f",
+      "text": "After initial 24% drop, Red Sea/Bab el-Mandeb vessel traffic stabilized at early-2026 levels, indicating adaptation rather than continued collapse",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.lloydslist.com/LL1158141/The-Week-in-Charts-Red-Sea-shipping-stabilises-after-Julys-Houthi-blockade-shock--War-disruption-and-rerouting-fail-to-derail-container-demand",
+          "title": "The Week in Charts: Red Sea shipping stabilises after July's Houthi blockade shock",
+          "publisher": "Lloyd's List",
+          "published_at": "2026-08-10T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ec53c9660f",
+      "text": "KAS baseline: PLA Support Base includes 341-metre quay completed in 2022, described as one of largest foreign bases in Djibouti with reported capacity 2,500 personnel (estimates up to 10,000) — distinguishes baseline from 2024-2026 communications upgrade — corroborates clm_85b8b6aeae",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.kas.de/en/country-reports/detail/-/content/djibouti-s-geostrategic-importance",
+          "title": "Djibouti's geostrategic importance",
+          "publisher": "Konrad-Adenauer-Stiftung (KAS)",
+          "published_at": "2026-07-16T00:00:00Z"
+        },
+        {
+          "url": "https://features.csis.org/hiddenreach/china-djibouti-base-upgrade",
+          "title": "Extended Range: China Upgrades Its Military Base in Djibouti",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2026-09-17T04:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2946facb0a",
+      "text": "Maritime Executive provides independent second-analyst review of same Planet Labs/Vantor commercial imagery, concurring that two new communications compounds cover HF, V/UHF, SATCOM and 5G and likely serve passive interception — triangulates clm_4930a7e889, clm_a822d33f8e, clm_bd38f43d82 beyond sole CSIS citation",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://maritime-executive.com/article/china-upgrades-djibouti-naval-base-as-an-intelligence-site",
+          "title": "China Upgrades Djibouti Naval Base as an Intelligence Site",
+          "publisher": "The Maritime Executive",
+          "published_at": "2026-09-18T09:25:00Z"
+        },
+        {
+          "url": "https://features.csis.org/hiddenreach/china-djibouti-base-upgrade",
+          "title": "Extended Range: China Upgrades Its Military Base in Djibouti",
+          "publisher": "Center for Strategic and International Studies (CSIS)",
+          "published_at": "2026-09-17T04:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_114f7e4f83",
+      "text": "No on-record AFRICOM/CJTF-HOA/Camp Lemonnier public statement specifically assessing the September 2026 Chinese communications upgrade was found in sources reviewed; the May 2026 AFRICOM posture testimony does not mention the Doraleh communications compounds.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.africom.mil/article/36583/africom-commander-gen-anderson-testifies-before-congress",
+          "title": "AFRICOM commander Gen. Anderson testifies before Congress",
+          "publisher": "AFRICOM",
+          "published_at": "2026-05-20"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_103df54134",
+      "text": "French Forces stationed in Djibouti (FFDj) number ~1,500-1,900 personnel and constitute France's largest permanent contingent in Africa; France renewed its mutual defence pact with Djibouti in 2024. No French MFA/Ministry of Armed Forces public reaction to the September 2026 Chinese upgrade was found in sources reviewed.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/news/2026/4/8/our-geography-is-our-oil-why-djibouti-hosts-many-foreign-military-bases",
+          "title": "'Our geography is our oil': Why Djibouti hosts many foreign military bases",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-04-08T08:09:10Z"
+        },
+        {
+          "url": "https://www.kas.de/en/country-reports/detail/-/content/djibouti-s-geostrategic-importance",
+          "title": "Djibouti's geostrategic importance",
+          "publisher": "Konrad-Adenauer-Stiftung (KAS)",
+          "published_at": "2026-07-16T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_10b6b3653b",
+      "text": "Japan's Self-Defense Force facility in Djibouti resumed P-1 maritime patrol aircraft operations in August 2026 for counter-piracy and Middle East information-gathering. No Japanese MoD public assessment of the Chinese communications upgrade was found in sources reviewed.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.scmp.com/news/china/military/article/3368246/djibouti-base-upgrade-may-offer-pla-window-foreign-military-middle-east-operations",
+          "title": "Djibouti base upgrade may offer PLA window on foreign military Middle East operations",
+          "publisher": "South China Morning Post",
+          "published_at": "2026-09-21T09:58:37Z"
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2026/4/8/our-geography-is-our-oil-why-djibouti-hosts-many-foreign-military-bases",
+          "title": "'Our geography is our oil': Why Djibouti hosts many foreign military bases",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-04-08T08:09:10Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a8e7ec471d",
+      "text": "Djiboutian government has issued no public comment on the September 2026 communications upgrade in sources reviewed. Djibouti's established policy is balancing external powers for rent and development, with ties elevated to comprehensive strategic partnership with China in September 2024.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/news/2026/4/8/our-geography-is-our-oil-why-djibouti-hosts-many-foreign-military-bases",
+          "title": "'Our geography is our oil': Why Djibouti hosts many foreign military bases",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-04-08T08:09:10Z"
+        },
+        {
+          "url": "https://www.kas.de/en/country-reports/detail/-/content/djibouti-s-geostrategic-importance",
+          "title": "Djibouti's geostrategic importance",
+          "publisher": "Konrad-Adenauer-Stiftung (KAS)",
+          "published_at": "2026-07-16T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a5295aa8d9",
+      "text": "Independent analyst counter-frame: Defense Priorities assessment argues China's Djibouti base is of limited capacity for blue-water power projection, suggesting the new communications compounds may be more consistent with redundant C4ISR to sustain far-seas escort task forces than with a dedicated SIGINT collection site.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.defensepriorities.org/explainers/challenges-to-chinese-blue-water-operations",
+          "title": "Challenges to Chinese blue-water operations",
+          "publisher": "Defense Priorities",
+          "published_at": "2024-05-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3916cf65f3",
+      "text": "Pentagon December 2025 report to Congress states the Djibouti base has had minimal participation in protection of Chinese citizens or investments and has neither supported noncombatant evacuations nor assisted with the Red Sea crisis.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://migflug.com/afterburner/china-yy-20-tanker-fleet-pla-global-reach-2026",
+          "title": "China's YY-20 Tanker Fleet and the PLA's Reach",
+          "publisher": "MiGFlug",
+          "published_at": "2026-09-03"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_95b5d60780",
+      "text": "CRS synthesis of DoD reporting notes prior friction at Djibouti — PLA elements used lasers to harass US flights and in 2024 China sought to restrict Djiboutian airspace over the PLA base — but no declassified US disclosure of specific OPSEC/emissions-control mitigations for the 2026 upgrade.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.everycrsreport.com/reports/R49080.html",
+          "title": "China-Sub-Saharan Africa Ties and U.S. Policy",
+          "publisher": "EveryCRSReport",
+          "published_at": "2026-08-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b30d3b468f",
+      "text": "Evidentiary separation required: (a) confirmed — two compounds with HF/V/UHF/SATCOM/5G/radomes exist since mid-2024; (b) likely — hardware is SIGINT-capable and would almost certainly support SIGINT if tasked; (c) unproven — whether passive interception is actively underway, which bands/targets, radome payloads, and whether data is shared onward to Iran/Houthis.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.africom.mil/article/36583/africom-commander-gen-anderson-testifies-before-congress",
+          "title": "AFRICOM commander Gen. Anderson testifies before Congress",
+          "publisher": "AFRICOM",
+          "published_at": "2026-05-20"
+        },
+        {
+          "url": "https://www.defensepriorities.org/explainers/challenges-to-chinese-blue-water-operations",
+          "title": "Challenges to Chinese blue-water operations",
+          "publisher": "Defense Priorities",
+          "published_at": "2024-05-01"
+        },
+        {
+          "url": "https://www.everycrsreport.com/reports/R49080.html",
+          "title": "China-Sub-Saharan Africa Ties and U.S. Policy",
+          "publisher": "EveryCRSReport",
+          "published_at": "2026-08-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1847e51f5d",
+      "text": "US and allied forces co-located within 10 miles routinely operate under emissions-control assumptions given known proximity; however, no public US/French/Japanese disclosure details specific mitigation measures for the 2026 upgrade, leaving net intelligence gain uncertain.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.defensepriorities.org/explainers/challenges-to-chinese-blue-water-operations",
+          "title": "Challenges to Chinese blue-water operations",
+          "publisher": "Defense Priorities",
+          "published_at": "2024-05-01"
+        },
+        {
+          "url": "https://www.everycrsreport.com/reports/R49080.html",
+          "title": "China-Sub-Saharan Africa Ties and U.S. Policy",
+          "publisher": "EveryCRSReport",
+          "published_at": "2026-08-06"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

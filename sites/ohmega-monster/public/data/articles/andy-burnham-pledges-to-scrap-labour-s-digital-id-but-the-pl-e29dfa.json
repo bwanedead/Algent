@@ -1,0 +1,478 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/andy-burnham-pledges-to-scrap-labour-s-digital-id-but-the-pl-e29dfa",
+  "title": "Andy Burnham pledges to scrap Labour’s digital ID, but the plan was already being scaled back",
+  "summary": "By the time Burnham made his cost-of-living pledge, ministers had already dropped mandatory digital ID for individuals and reframed parts of the scheme as voluntary after backlash and parliamentary scrutiny.",
+  "published_at": "2026-07-19T10:34:07.716133+00:00",
+  "as_of": "2026-07-19",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 30
+  },
+  "claims": [
+    {
+      "id": "clm_a1f82e2e66",
+      "text": "Andy Burnham will scrap plans for a government-issued digital ID for all British adults when he becomes prime minister.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.bbc.com/news/articles/c5y08z25q8eo",
+          "title": "Burnham to scrap digital ID to focus on cost of living in first major policy pledge",
+          "publisher": "BBC News",
+          "published_at": "2026-07-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6b02095c2a",
+      "text": "Burnham's office says the move is intended to shift focus toward the daily priorities facing people across the country, including the cost of living.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.bbc.com/news/articles/c5y08z25q8eo",
+          "title": "Burnham to scrap digital ID to focus on cost of living in first major policy pledge",
+          "publisher": "BBC News",
+          "published_at": "2026-07-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1ebd5413e3",
+      "text": "Under Sir Keir Starmer, the government had already watered down proposals to introduce a mandatory digital ID for workers in the UK.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.bbc.com/news/articles/c5y08z25q8eo",
+          "title": "Burnham to scrap digital ID to focus on cost of living in first major policy pledge",
+          "publisher": "BBC News",
+          "published_at": "2026-07-18"
+        },
+        {
+          "url": "https://researchbriefings.files.parliament.uk/documents/CBP-10369/CBP-10369.pdf",
+          "title": "Digital ID in the UK",
+          "publisher": "UK House of Commons Library",
+          "published_at": "2026-03-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e5184123e5",
+      "text": "The Starmer government initially proposed a mandatory digital ID for proving the right to work.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://researchbriefings.files.parliament.uk/documents/CBP-10369/CBP-10369.pdf",
+          "title": "Digital ID in the UK",
+          "publisher": "UK House of Commons Library",
+          "published_at": "2026-03-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_641e859f32",
+      "text": "The mandatory element of the digital ID scheme was dropped after political and public backlash, and the scheme became voluntary.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://researchbriefings.files.parliament.uk/documents/CBP-10369/CBP-10369.pdf",
+          "title": "Digital ID in the UK",
+          "publisher": "UK House of Commons Library",
+          "published_at": "2026-03-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1d05e72b24",
+      "text": "The government had said the scheme would be mandatory as a means of proving the right to work in order to help tackle illegal immigration.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://researchbriefings.files.parliament.uk/documents/CBP-10369/CBP-10369.pdf",
+          "title": "Digital ID in the UK",
+          "publisher": "UK House of Commons Library",
+          "published_at": "2026-03-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_18c4d0e4a0",
+      "text": "The government had also argued the scheme would help people use public services more easily.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://researchbriefings.files.parliament.uk/documents/CBP-10369/CBP-10369.pdf",
+          "title": "Digital ID in the UK",
+          "publisher": "UK House of Commons Library",
+          "published_at": "2026-03-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bcb04c5c9a",
+      "text": "The Office for Budget Responsibility estimated in November that the programme would cost £1.8 billion over three years.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.bbc.com/news/articles/c5y08z25q8eo",
+          "title": "Burnham to scrap digital ID to focus on cost of living in first major policy pledge",
+          "publisher": "BBC News",
+          "published_at": "2026-07-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7fd66d7958",
+      "text": "Downing Street rejected the OBR's £1.8 billion estimate.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.bbc.com/news/articles/c5y08z25q8eo",
+          "title": "Burnham to scrap digital ID to focus on cost of living in first major policy pledge",
+          "publisher": "BBC News",
+          "published_at": "2026-07-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_60cb09b37b",
+      "text": "The government had not clearly stated the final cost of the scheme because it said the cost would depend on design choices made after consultation.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://researchbriefings.files.parliament.uk/documents/CBP-10369/CBP-10369.pdf",
+          "title": "Digital ID in the UK",
+          "publisher": "UK House of Commons Library",
+          "published_at": "2026-03-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f280b42691",
+      "text": "The Commons Library says the digital ID will no longer be mandatory and that the only mandatory element originally proposed has been removed.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://researchbriefings.files.parliament.uk/documents/CBP-10369/CBP-10369.pdf",
+          "title": "Digital ID in the UK",
+          "publisher": "UK House of Commons Library",
+          "published_at": "2026-03-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4ddc91b3ca",
+      "text": "Conservative critics argue Burnham may be claiming credit for a decision that had already been taken, rather than making a fresh reversal.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.bbc.com/news/articles/c5y08z25q8eo",
+          "title": "Burnham to scrap digital ID to focus on cost of living in first major policy pledge",
+          "publisher": "BBC News",
+          "published_at": "2026-07-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_061c549efe",
+      "text": "Lucy Powell said the money saved from scrapping the scheme was 'not an insignificant amount' and would be reprioritised.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.bbc.com/news/articles/c5y08z25q8eo",
+          "title": "Burnham to scrap digital ID to focus on cost of living in first major policy pledge",
+          "publisher": "BBC News",
+          "published_at": "2026-07-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ad2af135e6",
+      "text": "Burnham's team presents the move as a reprioritisation of public resources rather than simply a policy retreat.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.bbc.com/news/articles/c5y08z25q8eo",
+          "title": "Burnham to scrap digital ID to focus on cost of living in first major policy pledge",
+          "publisher": "BBC News",
+          "published_at": "2026-07-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_89caa36107",
+      "text": "The government’s own announcement said the digital ID would be mandatory only for Right to Work checks by the end of the Parliament, while also saying there would be no requirement for individuals to carry it or be asked to produce it in ordinary life.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.gov.uk/government/news/new-digital-id-scheme-to-be-rolled-out-across-uk",
+          "title": "New digital ID scheme to be rolled out across UK",
+          "publisher": "GOV.UK",
+          "published_at": "2025-09-26"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9170a1d6b7",
+      "text": "In the January 2026 Commons clarification, ministers said the scheme had become 'free, voluntary digital infrastructure'; access to public services would not be conditional on having a digital ID, but digital right-to-work checks would remain mandatory by the end of the Parliament.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://hansard.parliament.uk/commons/2026-01-15/debates/04B89325-7FA2-4541-946D-6E5571AEAAE4/DigitalID",
+          "title": "Digital ID",
+          "publisher": "UK Parliament (Hansard)",
+          "published_at": "2026-01-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_08942ae314",
+      "text": "In that January statement, the minister said the digital right-to-work check system would be developed alongside the digital ID programme, and that the system would create a record of businesses that had conducted checks to support enforcement.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://hansard.parliament.uk/commons/2026-01-15/debates/04B89325-7FA2-4541-946D-6E5571AEAAE4/DigitalID",
+          "title": "Digital ID",
+          "publisher": "UK Parliament (Hansard)",
+          "published_at": "2026-01-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_efc591f381",
+      "text": "The March 2026 consultation document says there will be no legal obligation for people to have or present the digital ID, and that access to public services will not be made dependent on having it.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://assets.publishing.service.gov.uk/media/69b2bd51c8010d37b34e008a/Making_public_services_work_for_you_with_your_digital_identity_2026.pdf",
+          "title": "Making public services work for you with your digital identity",
+          "publisher": "Cabinet Office",
+          "published_at": "2026-03-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c393369b27",
+      "text": "The consultation document also says the government intends to legislate and seek parliamentary scrutiny for the measures that create and issue the digital ID, administer the identity and eligibility information, and manage the ID across its lifecycle.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://assets.publishing.service.gov.uk/media/69b2bd51c8010d37b34e008a/Making_public_services_work_for_you_with_your_digital_identity_2026.pdf",
+          "title": "Making public services work for you with your digital identity",
+          "publisher": "Cabinet Office",
+          "published_at": "2026-03-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_55a1c5f486",
+      "text": "The consultation says the digital ID would build on existing infrastructure, specifically GOV.UK One Login, GOV.UK Wallet, the passport service, the eVisa service, and the digital verification trust framework.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://assets.publishing.service.gov.uk/media/69b2bd51c8010d37b34e008a/Making_public_services_work_for_you_with_your_digital_identity_2026.pdf",
+          "title": "Making public services work for you with your digital identity",
+          "publisher": "Cabinet Office",
+          "published_at": "2026-03-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7918b2b312",
+      "text": "The consultation says the right-to-work change would not eliminate all alternatives immediately: employees would be able to choose between using the government digital ID and using a passport, eVisa, or other alternative method, but the employer would need to complete a digitally checked prescribed right-to-work check.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://assets.publishing.service.gov.uk/media/69b2bd51c8010d37b34e008a/Making_public_services_work_for_you_with_your_digital_identity_2026.pdf",
+          "title": "Making public services work for you with your digital identity",
+          "publisher": "Cabinet Office",
+          "published_at": "2026-03-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a2c6bf1139",
+      "text": "The consultation says services would remain on separate IT systems in their own departments, and that the NHS app and citizens’ health data would remain separate from the new digital ID front door.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://assets.publishing.service.gov.uk/media/69b2bd51c8010d37b34e008a/Making_public_services_work_for_you_with_your_digital_identity_2026.pdf",
+          "title": "Making public services work for you with your digital identity",
+          "publisher": "Cabinet Office",
+          "published_at": "2026-03-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e0d4e674e1",
+      "text": "By March 2026, the minister said the big near-term build was the app and login system, with old services moving later and over a number of years; he also said the system would be designed within government and built on One Login.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://hansard.parliament.uk/commons/2026-03-10/debates/3F57FDEF-F6B4-4BBA-B058-C360D5A9EA21/DigitalIDPublicConsultation",
+          "title": "Digital ID: Public Consultation",
+          "publisher": "UK Parliament (Hansard)",
+          "published_at": "2026-03-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d576753cbf",
+      "text": "In the March 2026 parliamentary statement, the minister said the government would not create a single depository containing the data of millions of citizens.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://hansard.parliament.uk/commons/2026-03-10/debates/3F57FDEF-F6B4-4BBA-B058-C360D5A9EA21/DigitalIDPublicConsultation",
+          "title": "Digital ID: Public Consultation",
+          "publisher": "UK Parliament (Hansard)",
+          "published_at": "2026-03-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f83da5bdfc",
+      "text": "The BBC report says Burnham’s office framed the digital-ID move as a reprioritisation of public resource toward the cost of living and everyday priorities.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.bbc.com/news/articles/c5y08z25q8eo",
+          "title": "Burnham to scrap digital ID to focus on cost of living in first major policy pledge",
+          "publisher": "BBC News",
+          "published_at": "2026-07-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c26f4f1185",
+      "text": "The Commons Library briefing says the government initially proposed mandatory digital ID for right-to-work checks, then dropped the mandatory element after backlash, and later shifted messaging toward convenience and public services.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://researchbriefings.files.parliament.uk/documents/CBP-10369/CBP-10369.pdf",
+          "title": "Digital ID in the UK",
+          "publisher": "UK House of Commons Library",
+          "published_at": "2026-03-23"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_be7cef333e",
+      "text": "The March 2026 consultation says there is no legal obligation for people to have or present the digital ID and that access to public services will not be made conditional on having it.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://assets.publishing.service.gov.uk/media/69b2bd51c8010d37b34e008a/Making_public_services_work_for_you_with_your_digital_identity_2026.pdf",
+          "title": "Making public services work for you with your digital identity",
+          "publisher": "Cabinet Office",
+          "published_at": "2026-03-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3ee16b2f37",
+      "text": "The October 2025 Commons statement said the digital ID would be mandatory for right-to-work checks by the end of the parliament and that services would remain on separate IT systems, with NHS data kept separate.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://hansard.parliament.uk/commons/2025-10-13/debates/37D3137B-302E-4E1B-A6E4-0676456F26D0/DigitalID",
+          "title": "Digital ID",
+          "publisher": "UK Parliament (Hansard)",
+          "published_at": "2025-10-13"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3dbcc7d90e",
+      "text": "The January 2026 Commons statement described the scheme as free and voluntary digital infrastructure while keeping digital right-to-work checks as the mandatory element by the end of the parliament.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://hansard.parliament.uk/commons/2026-01-15/debates/04B89325-7FA2-4541-946D-6E5571AEAAE4/DigitalID",
+          "title": "Digital ID",
+          "publisher": "UK Parliament (Hansard)",
+          "published_at": "2026-01-15"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_553a9396e9",
+      "text": "The March 2026 Commons statement said the scheme would be built in-house on existing government systems and that the next near-term build was the app and login system rather than an immediate all-at-once overhaul.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://hansard.parliament.uk/commons/2026-03-10/debates/3F57FDEF-F6B4-4BBA-B058-C360D5A9EA21/DigitalIDPublicConsultation",
+          "title": "Digital ID: Public Consultation",
+          "publisher": "UK Parliament (Hansard)",
+          "published_at": "2026-03-10"
+        },
+        {
+          "url": "https://assets.publishing.service.gov.uk/media/69b2bd51c8010d37b34e008a/Making_public_services_work_for_you_with_your_digital_identity_2026.pdf",
+          "title": "Making public services work for you with your digital identity",
+          "publisher": "Cabinet Office",
+          "published_at": "2026-03-10"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

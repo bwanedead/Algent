@@ -1,0 +1,605 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/strait-of-hormuz-traffic-fell-and-mariners-were-evacuated-bu-1dd039",
+  "title": "Strait of Hormuz traffic fell and mariners were evacuated, but durable closure remains unproven",
+  "summary": "U.S. claims of degrading Iran’s ability to attack shipping align with evidence of reduced tanker traffic and AIS, the ships’ broadcast tracking data used by other vessels and traffic managers, shutdowns, while IMO evacuation planning suggests security pressure rather than a verified, sustained blockade.",
+  "published_at": "2026-07-19T09:38:18.846642+00:00",
+  "as_of": "2026-07-19",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 28,
+    "likely": 5,
+    "unconfirmed": 1
+  },
+  "claims": [
+    {
+      "id": "clm_bb41d20cea",
+      "text": "The U.S. launched repeated strikes on Iranian military targets in July 2026.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.centcom.mil/MEDIA/PUBLIC-RELEASES/Article/4538814/us-forces-complete-another-round-of-strikes-against-iran/",
+          "title": "U.S. Forces Complete Another Round of Strikes Against Iran",
+          "publisher": "U.S. Central Command",
+          "published_at": "2026-07-08T00:00:00Z"
+        },
+        {
+          "url": "https://www.centcom.mil/MEDIA/PUBLIC-RELEASES/Article/4541002/centcom-completes-another-wave-of-strikes-against-iran/",
+          "title": "CENTCOM Completes Another Wave of Strikes Against Iran",
+          "publisher": "U.S. Central Command",
+          "published_at": "2026-07-12T00:00:00Z"
+        },
+        {
+          "url": "https://www.centcom.mil/MEDIA/PUBLIC-RELEASES/Article/4528488/us-forces-conduct-additional-strikes-after-irans-latest-commercial-ship-attack/",
+          "title": "U.S. Forces Conduct Additional Strikes After Iran's Latest Commercial Ship Attack",
+          "publisher": "U.S. Central Command",
+          "published_at": "2026-07-12T00:00:00Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/iran-war-live-us-launches-new-strikes-iran-more-tankers-attacked-hormuz-2026-07-14/",
+          "title": "Live: Iran hits tankers after third night of US attacks; Trump reimposes naval blockade",
+          "publisher": "Reuters",
+          "published_at": "2026-07-14T01:23:55Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b51c404fd0",
+      "text": "CENTCOM said the strikes were intended to degrade Iran’s ability to threaten commercial shipping in the Strait of Hormuz.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.centcom.mil/MEDIA/PUBLIC-RELEASES/Article/4538814/us-forces-complete-another-round-of-strikes-against-iran/",
+          "title": "U.S. Forces Complete Another Round of Strikes Against Iran",
+          "publisher": "U.S. Central Command",
+          "published_at": "2026-07-08T00:00:00Z"
+        },
+        {
+          "url": "https://www.centcom.mil/MEDIA/PUBLIC-RELEASES/Article/4541002/centcom-completes-another-wave-of-strikes-against-iran/",
+          "title": "CENTCOM Completes Another Wave of Strikes Against Iran",
+          "publisher": "U.S. Central Command",
+          "published_at": "2026-07-12T00:00:00Z"
+        },
+        {
+          "url": "https://www.centcom.mil/MEDIA/PUBLIC-RELEASES/Article/4528488/us-forces-conduct-additional-strikes-after-irans-latest-commercial-ship-attack/",
+          "title": "U.S. Forces Conduct Additional Strikes After Iran's Latest Commercial Ship Attack",
+          "publisher": "U.S. Central Command",
+          "published_at": "2026-07-12T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_005035ea21",
+      "text": "Reuters reported that the number of vessels transiting the Strait of Hormuz fell to multi-week lows on July 13, 2026.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/hormuz-traffic-slows-multi-week-low-renewed-us-iran-strikes-raise-safety-risk-2026-07-13/",
+          "title": "Hormuz traffic slows to multi-week low as renewed US, Iran strikes raise safety risk",
+          "publisher": "Reuters",
+          "published_at": "2026-07-13T04:52:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_65d06b0d96",
+      "text": "Reuters reported that Trump said the Strait of Hormuz was open to commercial traffic on July 12, 2026.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/energy/trump-says-strait-hormuz-open-commercial-traffic-2026-07-12/",
+          "title": "Trump says Strait of Hormuz open to commercial traffic",
+          "publisher": "Reuters",
+          "published_at": "2026-07-12T13:29:34Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/middle-east/hormuz-traffic-slows-multi-week-low-renewed-us-iran-strikes-raise-safety-risk-2026-07-13/",
+          "title": "Hormuz traffic slows to multi-week low as renewed US, Iran strikes raise safety risk",
+          "publisher": "Reuters",
+          "published_at": "2026-07-13T04:52:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d41c4f3baa",
+      "text": "Iran declared that it had closed the Strait of Hormuz after a vessel traveled on an unapproved route and was struck.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/hormuz-traffic-slows-multi-week-low-renewed-us-iran-strikes-raise-safety-risk-2026-07-13/",
+          "title": "Hormuz traffic slows to multi-week low as renewed US, Iran strikes raise safety risk",
+          "publisher": "Reuters",
+          "published_at": "2026-07-13T04:52:24Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/iran-war-live-us-launches-new-strikes-iran-more-tankers-attacked-hormuz-2026-07-14/",
+          "title": "Live: Iran hits tankers after third night of US attacks; Trump reimposes naval blockade",
+          "publisher": "Reuters",
+          "published_at": "2026-07-14T01:23:55Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bdd5bbca3d",
+      "text": "Iran said the Strait of Hormuz was an inviolable red line on July 16, 2026.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/iran-warns-strait-hormuz-is-red-line-will-resist-until-end-2026-07-16/",
+          "title": "Iran warns Strait of Hormuz is a 'red line' and will resist until the end",
+          "publisher": "Reuters",
+          "published_at": "2026-07-16T07:51:57Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_65983b4a73",
+      "text": "Iran warned it would strike infrastructure across the Gulf region if the U.S. attacked Iranian infrastructure.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/iran-warns-strait-hormuz-is-red-line-will-resist-until-end-2026-07-16/",
+          "title": "Iran warns Strait of Hormuz is a 'red line' and will resist until the end",
+          "publisher": "Reuters",
+          "published_at": "2026-07-16T07:51:57Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d08213094c",
+      "text": "JMIC advisories said transit through the Strait of Hormuz remained possible, with specific routing and mine-risk precautions.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://wwwcdn.imo.org/localresources/en/MediaCentre/HotTopics/Documents/JMIC%20Advisory%20Note%2000926%20SoH%20open.pdf",
+          "title": "JMIC Advisory Note: 009-26 | June 18, 2026",
+          "publisher": "JMIC / IMO-linked maritime advisory",
+          "published_at": "2026-06-18T00:00:00Z"
+        },
+        {
+          "url": "https://wwwcdn.imo.org/localresources/en/MediaCentre/HotTopics/Documents/JMIC%20Advisory%20Note%2001026%20SoH%20procedure.pdf",
+          "title": "JMIC Advisory Note: 010-26 | June 20, 2026",
+          "publisher": "JMIC / IMO-linked maritime advisory",
+          "published_at": "2026-06-20T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9972fd5d92",
+      "text": "The maritime-security threat level in the Strait of Hormuz was described as moderate in JMIC advisories.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://wwwcdn.imo.org/localresources/en/MediaCentre/HotTopics/Documents/JMIC%20Advisory%20Note%2001026%20SoH%20procedure.pdf",
+          "title": "JMIC Advisory Note: 010-26 | June 20, 2026",
+          "publisher": "JMIC / IMO-linked maritime advisory",
+          "published_at": "2026-06-20T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3b2b73cfbd",
+      "text": "The IMO later said it would implement an evacuation plan for more than 11,000 stranded seafarers in the region.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.imo.org/en/mediacentre/pressbriefings/pages/imo-accounces-evacuation-plan-in-strait-of-hormuz.aspx",
+          "title": "IMO announces evacuation plan in the Strait of Hormuz",
+          "publisher": "International Maritime Organization",
+          "published_at": "2026-07-21T09:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4d8be041cd",
+      "text": "The exact physical damage from the strikes to civilian infrastructure and the scale of civilian harm are not established in the sources verified here.",
+      "grade": "unconfirmed",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7a10d960d2",
+      "text": "The sources verified here do not establish a sustained, complete operational blockade of Hormuz.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/energy/trump-says-strait-hormuz-open-commercial-traffic-2026-07-12/",
+          "title": "Trump says Strait of Hormuz open to commercial traffic",
+          "publisher": "Reuters",
+          "published_at": "2026-07-12T13:29:34Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/middle-east/hormuz-traffic-slows-multi-week-low-renewed-us-iran-strikes-raise-safety-risk-2026-07-13/",
+          "title": "Hormuz traffic slows to multi-week low as renewed US, Iran strikes raise safety risk",
+          "publisher": "Reuters",
+          "published_at": "2026-07-13T04:52:24Z"
+        },
+        {
+          "url": "https://www.imo.org/en/mediacentre/pressbriefings/pages/imo-accounces-evacuation-plan-in-strait-of-hormuz.aspx",
+          "title": "IMO announces evacuation plan in the Strait of Hormuz",
+          "publisher": "International Maritime Organization",
+          "published_at": "2026-07-21T09:00:00Z"
+        },
+        {
+          "url": "https://wwwcdn.imo.org/localresources/en/MediaCentre/HotTopics/Documents/JMIC%20Advisory%20Note%2000926%20SoH%20open.pdf",
+          "title": "JMIC Advisory Note: 009-26 | June 18, 2026",
+          "publisher": "JMIC / IMO-linked maritime advisory",
+          "published_at": "2026-06-18T00:00:00Z"
+        },
+        {
+          "url": "https://wwwcdn.imo.org/localresources/en/MediaCentre/HotTopics/Documents/JMIC%20Advisory%20Note%2001026%20SoH%20procedure.pdf",
+          "title": "JMIC Advisory Note: 010-26 | June 20, 2026",
+          "publisher": "JMIC / IMO-linked maritime advisory",
+          "published_at": "2026-06-20T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5538a12a21",
+      "text": "The IMO said it would begin implementing an evacuation plan for over 11,000 seafarers still stranded in the region, describing it as a large-scale operation with Iran, Oman, other coastal States, the United States, and the maritime industry.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.imo.org/en/mediacentre/pressbriefings/pages/imo-accounces-evacuation-plan-in-strait-of-hormuz.aspx",
+          "title": "IMO announces evacuation plan in the Strait of Hormuz",
+          "publisher": "International Maritime Organization",
+          "published_at": "2026-07-21T09:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e624976c4e",
+      "text": "The IMO statement framed the plan as restoring maritime security and ending attacks against civilian shipping, and the text read here did not mention a Hormuz blockade.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.imo.org/en/mediacentre/pressbriefings/pages/imo-accounces-evacuation-plan-in-strait-of-hormuz.aspx",
+          "title": "IMO announces evacuation plan in the Strait of Hormuz",
+          "publisher": "International Maritime Organization",
+          "published_at": "2026-07-21T09:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e5ce01f1c2",
+      "text": "CENTCOM’s stated operational rationale for the July 8 strikes was to further degrade Iran’s ability to attack commercial shipping and innocent civilian mariners in the Strait of Hormuz.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.centcom.mil/MEDIA/PUBLIC-RELEASES/Article/4538814/us-forces-complete-another-round-of-strikes-against-iran/",
+          "title": "U.S. Forces Complete Another Round of Strikes Against Iran",
+          "publisher": "U.S. Central Command",
+          "published_at": "2026-07-08T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e2736ca4ad",
+      "text": "CENTCOM’s July 12 statement said the strikes were intended to degrade Iran’s ability to continue attacking international shipping flowing through the Strait of Hormuz and framed the mission as ensuring freedom of navigation for commercial shipping.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.centcom.mil/MEDIA/PUBLIC-RELEASES/Article/4541002/centcom-completes-another-wave-of-strikes-against-iran/",
+          "title": "CENTCOM Completes Another Wave of Strikes Against Iran",
+          "publisher": "U.S. Central Command",
+          "published_at": "2026-07-12T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_da71ec8eba",
+      "text": "CENTCOM’s June 27 statement said the additional strikes were conducted at the Commander in Chief’s direction and were a direct response to continued Iranian aggression against commercial shipping, targeting surveillance, communications, air defense, drone storage, and minelayer capabilities.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.centcom.mil/MEDIA/PUBLIC-RELEASES/Article/4528488/us-forces-conduct-additional-strikes-after-irans-latest-commercial-ship-attack/",
+          "title": "U.S. Forces Conduct Additional Strikes After Iran's Latest Commercial Ship Attack",
+          "publisher": "U.S. Central Command",
+          "published_at": "2026-07-12T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bd66ae06af",
+      "text": "The U.S. strike releases read here do not publicly invoke UN Charter Article 51 or publish a formal legal memorandum in the releases themselves.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.centcom.mil/MEDIA/PUBLIC-RELEASES/Article/4538814/us-forces-complete-another-round-of-strikes-against-iran/",
+          "title": "U.S. Forces Complete Another Round of Strikes Against Iran",
+          "publisher": "U.S. Central Command",
+          "published_at": "2026-07-08T00:00:00Z"
+        },
+        {
+          "url": "https://www.centcom.mil/MEDIA/PUBLIC-RELEASES/Article/4541002/centcom-completes-another-wave-of-strikes-against-iran/",
+          "title": "CENTCOM Completes Another Wave of Strikes Against Iran",
+          "publisher": "U.S. Central Command",
+          "published_at": "2026-07-12T00:00:00Z"
+        },
+        {
+          "url": "https://www.centcom.mil/MEDIA/PUBLIC-RELEASES/Article/4528488/us-forces-conduct-additional-strikes-after-irans-latest-commercial-ship-attack/",
+          "title": "U.S. Forces Conduct Additional Strikes After Iran's Latest Commercial Ship Attack",
+          "publisher": "U.S. Central Command",
+          "published_at": "2026-07-12T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_20e3e75f37",
+      "text": "Iran’s public framing, as reported by Reuters, was that the Strait of Hormuz was an inviolable red line and that reopening it depended on U.S. compliance with a memorandum of understanding and with Iranian regulations governing ship traffic in the strait.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/iran-warns-strait-hormuz-is-red-line-will-resist-until-end-2026-07-16/",
+          "title": "Iran warns Strait of Hormuz is a 'red line' and will resist until the end",
+          "publisher": "Reuters",
+          "published_at": "2026-07-16T07:51:57Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_26d46850cb",
+      "text": "Reuters reported that Iranian sources said Tehran sought to establish its authority over the strait, while an Iranian military spokesperson said U.S. strikes would not work because Iran could strike the strait from anywhere in its territory.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/iran-warns-strait-hormuz-is-red-line-will-resist-until-end-2026-07-16/",
+          "title": "Iran warns Strait of Hormuz is a 'red line' and will resist until the end",
+          "publisher": "Reuters",
+          "published_at": "2026-07-16T07:51:57Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_11f454aa53",
+      "text": "The UN human-rights office said reported attacks by Iran on commercial ships, reported attacks by the U.S. against civilian infrastructure in Iran, and attacks by Iran against such objects in other countries must stop immediately, and it explicitly called on all parties to respect international humanitarian law and international human rights law.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.ohchr.org/en/press-releases/2026/07/turk-iran-us-hostilities-huge-setback-civilians",
+          "title": "Türk: Iran-US hostilities huge setback for civilians",
+          "publisher": "Office of the High Commissioner for Human Rights",
+          "published_at": "2026-07-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1ca58aed8c",
+      "text": "The UN human-rights office warned that reported closure of the Strait of Hormuz would have severe humanitarian consequences and urged an immediate return to the ceasefire consistent with international law.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.ohchr.org/en/press-releases/2026/07/turk-iran-us-hostilities-huge-setback-civilians",
+          "title": "Türk: Iran-US hostilities huge setback for civilians",
+          "publisher": "Office of the High Commissioner for Human Rights",
+          "published_at": "2026-07-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b5a01db25a",
+      "text": "CENTCOM said on July 8 that it had struck about 90 Iranian military targets, including air defense systems, coastal surveillance assets, missile and drone storage sites, naval capabilities, and military logistics infrastructure along Iran’s coastline.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.centcom.mil/MEDIA/PUBLIC-RELEASES/Article/4538814/us-forces-complete-another-round-of-strikes-against-iran/",
+          "title": "U.S. Forces Complete Another Round of Strikes Against Iran",
+          "publisher": "U.S. Central Command",
+          "published_at": "2026-07-08T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5facd0e712",
+      "text": "CENTCOM said on July 12 that it had hit dozens of targets at multiple locations with precision munitions, including air-defense systems, coastal radar sites, missile and drone capabilities, and small boats.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.centcom.mil/MEDIA/PUBLIC-RELEASES/Article/4541002/centcom-completes-another-wave-of-strikes-against-iran/",
+          "title": "CENTCOM Completes Another Wave of Strikes Against Iran",
+          "publisher": "U.S. Central Command",
+          "published_at": "2026-07-12T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5367d7b0cd",
+      "text": "The July 12 CENTCOM release said the Strait of Hormuz is a vital maritime corridor for global trade and that Iran does not control it.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.centcom.mil/MEDIA/PUBLIC-RELEASES/Article/4541002/centcom-completes-another-wave-of-strikes-against-iran/",
+          "title": "CENTCOM Completes Another Wave of Strikes Against Iran",
+          "publisher": "U.S. Central Command",
+          "published_at": "2026-07-12T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3e0abdb804",
+      "text": "JMIC Advisory Note 009-26 said the maritime security threat level in the Strait of Hormuz had been reduced to MODERATE, said the strait was open, and warned of mines and naval presence.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://wwwcdn.imo.org/localresources/en/MediaCentre/HotTopics/Documents/JMIC%20Advisory%20Note%2000926%20SoH%20open.pdf",
+          "title": "JMIC Advisory Note: 009-26 | June 18, 2026",
+          "publisher": "JMIC / IMO-linked maritime advisory",
+          "published_at": "2026-06-18T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_60257542cf",
+      "text": "JMIC Advisory Note 010-26 said the threat level remained MODERATE and that ships could transit the southern route day or night with AIS on, radars radiating, running lights on, and normal VHF.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://wwwcdn.imo.org/localresources/en/MediaCentre/HotTopics/Documents/JMIC%20Advisory%20Note%2001026%20SoH%20procedure.pdf",
+          "title": "JMIC Advisory Note: 010-26 | June 20, 2026",
+          "publisher": "JMIC / IMO-linked maritime advisory",
+          "published_at": "2026-06-20T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e6a0ca254b",
+      "text": "The IMO said it would begin implementing an evacuation plan for over 11,000 stranded seafarers in cooperation with Iran, Oman, other coastal states, the United States, and the maritime industry.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.imo.org/en/mediacentre/pressbriefings/pages/imo-accounces-evacuation-plan-in-strait-of-hormuz.aspx",
+          "title": "IMO announces evacuation plan in the Strait of Hormuz",
+          "publisher": "International Maritime Organization",
+          "published_at": "2026-07-21T09:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a16b9181e5",
+      "text": "OHCHR said reported closure of the Strait of Hormuz would have severe humanitarian consequences and urged an immediate return to the ceasefire consistent with international law.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.ohchr.org/en/press-releases/2026/07/turk-iran-us-hostilities-huge-setback-civilians",
+          "title": "Türk: Iran-US hostilities huge setback for civilians",
+          "publisher": "Office of the High Commissioner for Human Rights",
+          "published_at": "2026-07-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b31b21bc6c",
+      "text": "Reuters reported on July 13 that tanker traffic through the Strait of Hormuz fell to the lowest level in two months.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/hormuz-traffic-slows-multi-week-low-renewed-us-iran-strikes-raise-safety-risk-2026-07-13/",
+          "title": "Hormuz traffic slows to multi-week low as renewed US, Iran strikes raise safety risk",
+          "publisher": "Reuters",
+          "published_at": "2026-07-13T04:52:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1b5af5127d",
+      "text": "Reuters reported that shipping sources said vessels were increasingly switching off their AIS transponders while crossing the Strait of Hormuz.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/hormuz-traffic-slows-multi-week-low-renewed-us-iran-strikes-raise-safety-risk-2026-07-13/",
+          "title": "Hormuz traffic slows to multi-week low as renewed US, Iran strikes raise safety risk",
+          "publisher": "Reuters",
+          "published_at": "2026-07-13T04:52:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1c0190278d",
+      "text": "Reuters reported that JMIC said commercial traffic through Hormuz continued at reduced levels and that operator caution persisted after recent attacks.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/hormuz-traffic-slows-multi-week-low-renewed-us-iran-strikes-raise-safety-risk-2026-07-13/",
+          "title": "Hormuz traffic slows to multi-week low as renewed US, Iran strikes raise safety risk",
+          "publisher": "Reuters",
+          "published_at": "2026-07-13T04:52:24Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2a6e333317",
+      "text": "Reuters reported on July 14 that Iran declared Hormuz closed after a vessel traveled on an unapproved route and was struck.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/iran-war-live-us-launches-new-strikes-iran-more-tankers-attacked-hormuz-2026-07-14/",
+          "title": "Live: Iran hits tankers after third night of US attacks; Trump reimposes naval blockade",
+          "publisher": "Reuters",
+          "published_at": "2026-07-14T01:23:55Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c9488ab679",
+      "text": "Reuters reported that U.S. President Donald Trump said on July 12 that the Strait of Hormuz was open to commercial traffic.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/energy/trump-says-strait-hormuz-open-commercial-traffic-2026-07-12/",
+          "title": "Trump says Strait of Hormuz open to commercial traffic",
+          "publisher": "Reuters",
+          "published_at": "2026-07-12T13:29:34Z"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

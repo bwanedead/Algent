@@ -1,0 +1,453 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/houthis-declare-naval-blockade-on-saudi-arabia-with-immediat-ce7cbd",
+  "title": "Houthis declare naval blockade on Saudi Arabia with immediate effect",
+  "summary": "The Iran-aligned group says the move is retaliation for Saudi actions in Yemen, but it is not yet clear how—and to what extent—shipping through Bab el-Mandeb will be disrupted.",
+  "published_at": "2026-07-24T10:03:03.767235+00:00",
+  "as_of": "2026-07-24",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 19,
+    "likely": 1,
+    "unconfirmed": 1
+  },
+  "claims": [
+    {
+      "id": "clm_9f058e2015",
+      "text": "Yemen’s Houthis announced a maritime embargo or naval blockade against Saudi Arabia effective immediately.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://x.com/OSN_Reports/status/2078471788963463497",
+          "title": "Houthi ultimatum escalates tensions with Saudi Arabia",
+          "publisher": "X / @OSN_Reports",
+          "published_at": "2026-07-20T00:00:00Z"
+        },
+        {
+          "url": "https://apnews.com/article/yemen-saudi-arabia-maritime-embargo-fd7c4a3911f7eee18251483fc8af768c",
+          "title": "Yemen’s Iranian-backed Houthis say they will block Saudi shipping at Red Sea gateway",
+          "publisher": "AP News",
+          "published_at": "2026-07-20T00:00:00Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/middle-east/yemens-houthis-declare-naval-blockade-against-saudi-arabia-statement-2026-07-20/",
+          "title": "Yemen's Houthis declare naval blockade against Saudi Arabia - statement",
+          "publisher": "Reuters",
+          "published_at": "2026-07-20T00:00:00Z"
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2026/7/20/yemens-houthis-declare-naval-blockade-of-saudi-arabia-what-to-know",
+          "title": "Yemen’s Houthis declare naval blockade of Saudi Arabia: What to know",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-07-20T00:00:00Z"
+        },
+        {
+          "url": "https://www.npr.org/2026/07/21/nx-s1-5901846/us-iran-updates",
+          "title": "Amid U.S.-Iran war, Houthi rebels threaten to blockade another key strait",
+          "publisher": "NPR",
+          "published_at": "2026-07-21T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d2e59ff081",
+      "text": "The Houthis said the blockade was retaliation for a blockade on Yemen and a recent strike on Sanaa International Airport.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://apnews.com/article/yemen-saudi-arabia-maritime-embargo-fd7c4a3911f7eee18251483fc8af768c",
+          "title": "Yemen’s Iranian-backed Houthis say they will block Saudi shipping at Red Sea gateway",
+          "publisher": "AP News",
+          "published_at": "2026-07-20T00:00:00Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/middle-east/yemens-houthis-declare-naval-blockade-against-saudi-arabia-statement-2026-07-20/",
+          "title": "Yemen's Houthis declare naval blockade against Saudi Arabia - statement",
+          "publisher": "Reuters",
+          "published_at": "2026-07-20T00:00:00Z"
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2026/7/20/yemens-houthis-declare-naval-blockade-of-saudi-arabia-what-to-know",
+          "title": "Yemen’s Houthis declare naval blockade of Saudi Arabia: What to know",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-07-20T00:00:00Z"
+        },
+        {
+          "url": "https://www.npr.org/2026/07/21/nx-s1-5901846/us-iran-updates",
+          "title": "Amid U.S.-Iran war, Houthi rebels threaten to blockade another key strait",
+          "publisher": "NPR",
+          "published_at": "2026-07-21T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9c628f42e2",
+      "text": "The Houthi statement used escalation language such as an 'eye for an eye' response and a willingness to escalate further.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://apnews.com/article/yemen-saudi-arabia-maritime-embargo-fd7c4a3911f7eee18251483fc8af768c",
+          "title": "Yemen’s Iranian-backed Houthis say they will block Saudi shipping at Red Sea gateway",
+          "publisher": "AP News",
+          "published_at": "2026-07-20T00:00:00Z"
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2026/7/20/yemens-houthis-declare-naval-blockade-of-saudi-arabia-what-to-know",
+          "title": "Yemen’s Houthis declare naval blockade of Saudi Arabia: What to know",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-07-20T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3208af4536",
+      "text": "Saudi Arabia’s military said it would keep the waterway open and treat Houthi threats as piracy and a violation of international law.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://apnews.com/article/yemen-saudi-arabia-maritime-embargo-fd7c4a3911f7eee18251483fc8af768c",
+          "title": "Yemen’s Iranian-backed Houthis say they will block Saudi shipping at Red Sea gateway",
+          "publisher": "AP News",
+          "published_at": "2026-07-20T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d6124fc9fb",
+      "text": "Bab el-Mandeb is the relevant choke point and a major gateway for Red Sea shipping.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://apnews.com/article/yemen-saudi-arabia-maritime-embargo-fd7c4a3911f7eee18251483fc8af768c",
+          "title": "Yemen’s Iranian-backed Houthis say they will block Saudi shipping at Red Sea gateway",
+          "publisher": "AP News",
+          "published_at": "2026-07-20T00:00:00Z"
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2026/7/20/yemens-houthis-declare-naval-blockade-of-saudi-arabia-what-to-know",
+          "title": "Yemen’s Houthis declare naval blockade of Saudi Arabia: What to know",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-07-20T00:00:00Z"
+        },
+        {
+          "url": "https://www.npr.org/2026/07/21/nx-s1-5901846/us-iran-updates",
+          "title": "Amid U.S.-Iran war, Houthi rebels threaten to blockade another key strait",
+          "publisher": "NPR",
+          "published_at": "2026-07-21T00:00:00Z"
+        },
+        {
+          "url": "https://understandingwar.org/research/middle-east/iran-update-special-report-july-20-2026/",
+          "title": "Iran Update Special Report, July 20, 2026",
+          "publisher": "Institute for the Study of War / Critical Threats Project",
+          "published_at": "2026-07-21T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9b82d370bc",
+      "text": "The declared Houthi action could raise shipping costs and disrupt Saudi oil exports routed through the Red Sea.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://apnews.com/article/yemen-saudi-arabia-maritime-embargo-fd7c4a3911f7eee18251483fc8af768c",
+          "title": "Yemen’s Iranian-backed Houthis say they will block Saudi shipping at Red Sea gateway",
+          "publisher": "AP News",
+          "published_at": "2026-07-20T00:00:00Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/middle-east/houthi-red-sea-threat-would-challenge-stretched-us-military-2026-07-22/",
+          "title": "Houthi Red Sea threat would challenge stretched US military",
+          "publisher": "Reuters",
+          "published_at": "2026-07-22T00:00:00Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/middle-east/houthis-warn-shipping-companies-avoid-saudi-ports-email-shows-2026-07-21/",
+          "title": "Houthis warn shipping companies to avoid Saudi ports, email shows",
+          "publisher": "Reuters",
+          "published_at": "2026-07-21T00:00:00Z"
+        },
+        {
+          "url": "https://understandingwar.org/research/middle-east/iran-update-special-report-july-20-2026/",
+          "title": "Iran Update Special Report, July 20, 2026",
+          "publisher": "Institute for the Study of War / Critical Threats Project",
+          "published_at": "2026-07-21T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ca3eed22ca",
+      "text": "The Houthis have previously demonstrated the capacity to disrupt Red Sea shipping at scale.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://apnews.com/article/yemen-saudi-arabia-maritime-embargo-fd7c4a3911f7eee18251483fc8af768c",
+          "title": "Yemen’s Iranian-backed Houthis say they will block Saudi shipping at Red Sea gateway",
+          "publisher": "AP News",
+          "published_at": "2026-07-20T00:00:00Z"
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2026/7/20/yemens-houthis-declare-naval-blockade-of-saudi-arabia-what-to-know",
+          "title": "Yemen’s Houthis declare naval blockade of Saudi Arabia: What to know",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-07-20T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fe5c1e9c2d",
+      "text": "The specific peace talks that were allegedly rejected or failed are not identified with enough precision in the sources read for this profile.",
+      "grade": "unconfirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://x.com/OSN_Reports/status/2078471788963463497",
+          "title": "Houthi ultimatum escalates tensions with Saudi Arabia",
+          "publisher": "X / @OSN_Reports",
+          "published_at": "2026-07-20T00:00:00Z"
+        },
+        {
+          "url": "https://apnews.com/article/yemen-saudi-arabia-maritime-embargo-fd7c4a3911f7eee18251483fc8af768c",
+          "title": "Yemen’s Iranian-backed Houthis say they will block Saudi shipping at Red Sea gateway",
+          "publisher": "AP News",
+          "published_at": "2026-07-20T00:00:00Z"
+        },
+        {
+          "url": "https://press.un.org/en/2026/sc16412.doc.htm",
+          "title": "Security Council Extends Secretary-General’s Reporting Mandate on Houthi Attacks in Red Sea for Six Months, Adopting Resolution 2826 (2026)",
+          "publisher": "UN press",
+          "published_at": "2026-07-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d10c86c664",
+      "text": "The Houthi statement said the maritime embargo was 'based on the equation of \"an eye for an eye\"' and took effect 'effective immediately.'",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/yemens-houthis-declare-naval-blockade-against-saudi-arabia-statement-2026-07-20/",
+          "title": "Yemen's Houthis declare naval blockade against Saudi Arabia - statement",
+          "publisher": "Reuters",
+          "published_at": "2026-07-20T00:00:00Z"
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2026/7/20/yemens-houthis-declare-naval-blockade-of-saudi-arabia-what-to-know",
+          "title": "Yemen’s Houthis declare naval blockade of Saudi Arabia: What to know",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-07-20T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c1eb6d910e",
+      "text": "The Houthis described Saudi Arabia's actions as an 'unjust and oppressive siege' lasting nearly 12 years, saying it included a 'comprehensive blockade' on ports and airports by land, sea, and air.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/yemens-houthis-declare-naval-blockade-against-saudi-arabia-statement-2026-07-20/",
+          "title": "Yemen's Houthis declare naval blockade against Saudi Arabia - statement",
+          "publisher": "Reuters",
+          "published_at": "2026-07-20T00:00:00Z"
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2026/7/20/yemens-houthis-declare-naval-blockade-of-saudi-arabia-what-to-know",
+          "title": "Yemen’s Houthis declare naval blockade of Saudi Arabia: What to know",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-07-20T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0c38b87364",
+      "text": "The Houthi announcement included explicit escalation language: 'all escalation with escalation,' 'complete readiness for all options,' and a call for general mobilisation and a general call to arms.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/news/2026/7/20/yemens-houthis-declare-naval-blockade-of-saudi-arabia-what-to-know",
+          "title": "Yemen’s Houthis declare naval blockade of Saudi Arabia: What to know",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-07-20T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2f47dfd133",
+      "text": "Al Jazeera's read of the Houthi statement says the group warned that any 'foolish' Saudi act would be met with a 'comprehensive and decisive' response.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/news/2026/7/20/yemens-houthis-declare-naval-blockade-of-saudi-arabia-what-to-know",
+          "title": "Yemen’s Houthis declare naval blockade of Saudi Arabia: What to know",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-07-20T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5b0040f5ff",
+      "text": "Saudi Arabia's Foreign Ministry said it would take 'all necessary measures' to protect its ships.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/news/2026/7/21/saudi-condemns-houthi-blockade-how-will-the-rest-of-the-world-be-impacted",
+          "title": "Saudi Arabia slams Houthi blockade: How will rest of the world be impacted?",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-07-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7b9630d6dd",
+      "text": "The Saudi coalition response, as published by SPA, said it had begun protection measures for Coalition vessels transiting Bab al-Mandab Strait and would deal with Houthi threats 'swiftly and firmly,' characterizing them as maritime piracy and a violation of international law.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.spa.gov.sa/en/N2638100",
+          "title": "Joint Forces Command of the Coalition: We Will Protect Our Commercial Vessels in Bab Al-Mandab Strait, Respond to Threat Sources with Strength and Determination",
+          "publisher": "Saudi Press Agency",
+          "published_at": "2026-07-20"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7243a9e3a4",
+      "text": "SPA's published statement also rejected the Houthi 'blockade narrative' as false and attributed the closure of Sana'a International Airport to the Houthi side, while claiming more than 300 commercial vessels entered Hodeida, Salif, and Ras Isa in the first half of 2026.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.spa.gov.sa/en/N2638100",
+          "title": "Joint Forces Command of the Coalition: We Will Protect Our Commercial Vessels in Bab Al-Mandab Strait, Respond to Threat Sources with Strength and Determination",
+          "publisher": "Saudi Press Agency",
+          "published_at": "2026-07-20"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f53c23345a",
+      "text": "Reuters said the Houthis were imposing a naval blockade on Saudi Arabia effective immediately and called it a maritime embargo against the ‘criminal Saudi enemy’ based on the equation of ‘an eye for an eye’.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/yemens-houthis-declare-naval-blockade-against-saudi-arabia-statement-2026-07-20/",
+          "title": "Yemen's Houthis declare naval blockade against Saudi Arabia - statement",
+          "publisher": "Reuters",
+          "published_at": "2026-07-20T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1ce4f6892e",
+      "text": "Reuters said the Houthis described the move as a response to an ‘unjust and oppressive siege’ on Yemen imposed by the Saudis.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/yemens-houthis-declare-naval-blockade-against-saudi-arabia-statement-2026-07-20/",
+          "title": "Yemen's Houthis declare naval blockade against Saudi Arabia - statement",
+          "publisher": "Reuters",
+          "published_at": "2026-07-20T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_66276bf906",
+      "text": "Reuters reported the Saudi-led coalition said it had begun protection measures for its ships transiting through Bab el-Mandeb and would treat the threat as maritime piracy and a violation of international law.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/saudi-condemns-houthi-maritime-blockade-threat-group-warns-escalation-2026-07-20",
+          "title": "Saudi condemns Houthi maritime blockade threat; group warns of escalation",
+          "publisher": "Reuters",
+          "published_at": "2026-07-20"
+        },
+        {
+          "url": "https://www.spa.gov.sa/en/N2638100",
+          "title": "Joint Forces Command of the Coalition: We Will Protect Our Commercial Vessels in Bab Al-Mandab Strait, Respond to Threat Sources with Strength and Determination",
+          "publisher": "Saudi Press Agency",
+          "published_at": "2026-07-20"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_06e9117175",
+      "text": "SPA said the coalition had initiated protection measures for Coalition vessels transiting Bab al-Mandab Strait and rejected the Houthi blockade narrative as false.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.spa.gov.sa/en/N2638100",
+          "title": "Joint Forces Command of the Coalition: We Will Protect Our Commercial Vessels in Bab Al-Mandab Strait, Respond to Threat Sources with Strength and Determination",
+          "publisher": "Saudi Press Agency",
+          "published_at": "2026-07-20"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a6cc9ce9cc",
+      "text": "Al Jazeera reported the Houthis said the declaration was based on ‘an eye for an eye,’ promised ‘all escalation with escalation,’ and said they were ready for all options.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/news/2026/7/20/yemens-houthis-declare-naval-blockade-of-saudi-arabia-what-to-know",
+          "title": "Yemen’s Houthis declare naval blockade of Saudi Arabia: What to know",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-07-20T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b83b012bcf",
+      "text": "Al Jazeera said it was not immediately clear how the Houthis would implement the maritime blockade or whether it could signal a return to attacks on shipping off Yemen.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/news/2026/7/20/yemens-houthis-declare-naval-blockade-of-saudi-arabia-what-to-know",
+          "title": "Yemen’s Houthis declare naval blockade of Saudi Arabia: What to know",
+          "publisher": "Al Jazeera",
+          "published_at": "2026-07-20T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

@@ -1,0 +1,369 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/u-s-reinforces-aerial-refueling-fleet-in-israel-as-escalatio-a5549f",
+  "title": "U.S. adds aerial refueling aircraft in Israel; on X, open-source accounts claim a Europe-to-Middle East airbridge",
+  "summary": "The U.S. is reinforcing tanker aircraft in Israel as fighting with Iran intensifies — planes that top up other aircraft in flight so they can stay on station longer. Separately, people on X watching flight trackers said they were seeing a surge of transport flights from Europe into the Middle East. That airbridge claim is social sensing here, not independently verified logistics fact.",
+  "published_at": "2026-07-23T22:06:52.691541+00:00",
+  "as_of": "2026-07-23",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 15,
+    "likely": 4,
+    "contested": 1,
+    "unconfirmed": 2,
+    "speculative": 1
+  },
+  "claims": [
+    {
+      "id": "clm_394da25924",
+      "text": "OSINTtechnical posted that the full-scale U.S. airbridge to the Middle East has returned as the Iran war re-escalates.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://x.com/Osinttechnical/status/2080393908685566041",
+          "title": "Post by @Osinttechnical",
+          "publisher": "X / @Osinttechnical",
+          "published_at": "2026-07-23T20:45:34Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a1aa953aec",
+      "text": "OSINTtechnical posted that dozens of USAF transport flights moved from key bases in Europe to the Middle East on 2026-07-23.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://x.com/Osinttechnical/status/2080393908685566041",
+          "title": "Post by @Osinttechnical",
+          "publisher": "X / @Osinttechnical",
+          "published_at": "2026-07-23T20:45:34Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d678696f42",
+      "text": "The post cites Flightradar24 as the tracking basis for its observation.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://x.com/Osinttechnical/status/2080393908685566041",
+          "title": "Post by @Osinttechnical",
+          "publisher": "X / @Osinttechnical",
+          "published_at": "2026-07-23T20:45:34Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_61420ce755",
+      "text": "Reuters reported that the United States had adjusted its force posture in the region.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/aerospace-defense/israel-receive-more-us-refuelling-planes-iran-attacks-intensify-israeli-2026-07-19/",
+          "title": "Israel to receive more US refuelling planes as Iran attacks intensify, Israeli officials say",
+          "publisher": "Reuters",
+          "published_at": "2026-07-19T11:50:56Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8f1b39d847",
+      "text": "Reuters reported that the United States was reinforcing the existing fleet of aerial refueling aircraft stationed in Israel with additional refueling aircraft.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/aerospace-defense/israel-receive-more-us-refuelling-planes-iran-attacks-intensify-israeli-2026-07-19/",
+          "title": "Israel to receive more US refuelling planes as Iran attacks intensify, Israeli officials say",
+          "publisher": "Reuters",
+          "published_at": "2026-07-19T11:50:56Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_555807523f",
+      "text": "The flight movements described in the OSINT post are independently verified in this pass by a directly readable flight-tracking record.",
+      "grade": "unconfirmed",
+      "salience": "medium",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_459685e43e",
+      "text": "The exact aircraft types involved in the reported movement are identifiable from the sources read in this pass.",
+      "grade": "unconfirmed",
+      "salience": "medium",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1a414c9dc2",
+      "text": "The logistical activity described is more consistent with sustained regional reinforcement than with a one-off transit.",
+      "grade": "speculative",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://x.com/Osinttechnical/status/2080393908685566041",
+          "title": "Post by @Osinttechnical",
+          "publisher": "X / @Osinttechnical",
+          "published_at": "2026-07-23T20:45:34Z"
+        },
+        {
+          "url": "https://www.reuters.com/business/aerospace-defense/israel-receive-more-us-refuelling-planes-iran-attacks-intensify-israeli-2026-07-19/",
+          "title": "Israel to receive more US refuelling planes as Iran attacks intensify, Israeli officials say",
+          "publisher": "Reuters",
+          "published_at": "2026-07-19T11:50:56Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_63d68a876f",
+      "text": "Reuters reported that U.S. forces employed fighter aircraft, aerial drones, and warships in addition to other assets in the July 17-18 Iran strikes.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/us-military-says-it-completed-latest-strikes-iran-marking-7th-consecutive-night-2026-07-18/",
+          "title": "US military says it completed latest strikes on Iran, marking 7th consecutive night of attacks - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-18T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_eab0b46d98",
+      "text": "Reuters reported that the U.S. strikes hit surveillance sites, military logistics infrastructure, underground weapons storage, and maritime capabilities.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/us-military-says-it-completed-latest-strikes-iran-marking-7th-consecutive-night-2026-07-18/",
+          "title": "US military says it completed latest strikes on Iran, marking 7th consecutive night of attacks - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-18T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4d0dc41fc5",
+      "text": "The Reuters article does not mention transport-airbridge movements from Europe to the Middle East or any increase in airlift flights.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/us-military-says-it-completed-latest-strikes-iran-marking-7th-consecutive-night-2026-07-18/",
+          "title": "US military says it completed latest strikes on Iran, marking 7th consecutive night of attacks - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-18T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_89ac5ba0e9",
+      "text": "The Reuters article can corroborate heightened U.S. military activity in the region, but it cannot by itself substantiate the claim that dozens of USAF transport flights moved from Europe to the Middle East on 2026-07-23.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/us-military-says-it-completed-latest-strikes-iran-marking-7th-consecutive-night-2026-07-18/",
+          "title": "US military says it completed latest strikes on Iran, marking 7th consecutive night of attacks - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-18T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2b7a28cb5e",
+      "text": "Reuters’ July 19 reporting supports a force-posture-adjustment interpretation rather than a uniquely discrete one-off reinforcement event.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/aerospace-defense/israel-receive-more-us-refuelling-planes-iran-attacks-intensify-israeli-2026-07-19/",
+          "title": "Israel to receive more US refuelling planes as Iran attacks intensify, Israeli officials say",
+          "publisher": "Reuters",
+          "published_at": "2026-07-19T11:50:56Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b26836f997",
+      "text": "A routine rotational or basing-management explanation remains plausible because Reuters says the U.S. had already stationed dozens of refuelling aircraft in Israel and had placed some aircraft at Israeli Air Force bases and commercial airports for operational and logistical reasons.",
+      "grade": "contested",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/aerospace-defense/israel-receive-more-us-refuelling-planes-iran-attacks-intensify-israeli-2026-07-19/",
+          "title": "Israel to receive more US refuelling planes as Iran attacks intensify, Israeli officials say",
+          "publisher": "Reuters",
+          "published_at": "2026-07-19T11:50:56Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ba52cda212",
+      "text": "Because Reuters does not provide a Europe-to-Middle-East flight log or a baseline tanker/airlift series here, the alleged one-day surge cannot be cleanly distinguished from normal scheduling variability or theater resupply in this pass.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/aerospace-defense/israel-receive-more-us-refuelling-planes-iran-attacks-intensify-israeli-2026-07-19/",
+          "title": "Israel to receive more US refuelling planes as Iran attacks intensify, Israeli officials say",
+          "publisher": "Reuters",
+          "published_at": "2026-07-19T11:50:56Z"
+        },
+        {
+          "url": "https://www.reuters.com/world/middle-east/iran-launches-fresh-attacks-after-sixth-day-us-strikes-2026-07-17/",
+          "title": "Iran launches fresh attacks after sixth day of US strikes",
+          "publisher": "Reuters",
+          "published_at": "2026-07-17T03:50:36Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_31a3d18212",
+      "text": "OSINTtechnical posted that the full-scale US airbridge to the Middle East has returned as the Iran war re-escalates and said dozens of USAF transport flights hopped from key bases in Europe to the Middle East today, citing Flightradar24.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://x.com/i/web/status/2080393908685566041",
+          "title": "X web status wrapper for @Osinttechnical post",
+          "publisher": "X",
+          "published_at": "2026-07-23T20:45:34Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d488bc08a0",
+      "text": "Reuters reported that the United States had decided to adjust its force posture in the region and to reinforce the existing fleet of aerial refuelling aircraft stationed in Israel with additional refuelling aircraft.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/aerospace-defense/israel-receive-more-us-refuelling-planes-iran-attacks-intensify-israeli-2026-07-19/",
+          "title": "Israel to receive more US refuelling planes as Iran attacks intensify, Israeli officials say",
+          "publisher": "Reuters",
+          "published_at": "2026-07-19T11:50:56Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_77d6901567",
+      "text": "Reuters reported that as of June 25 there were a total of 98 U.S. military planes in Israel, and that some of the refuelling aircraft were stationed at Israeli Air Force bases and commercial airports for operational and logistical reasons.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/business/aerospace-defense/israel-receive-more-us-refuelling-planes-iran-attacks-intensify-israeli-2026-07-19/",
+          "title": "Israel to receive more US refuelling planes as Iran attacks intensify, Israeli officials say",
+          "publisher": "Reuters",
+          "published_at": "2026-07-19T11:50:56Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_55270b5c31",
+      "text": "Reuters reported that U.S. forces employed fighter aircraft, aerial drones and warships, and that strikes hit surveillance sites, military logistics infrastructure, underground weapons storage and maritime capabilities.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/us-military-says-it-completed-latest-strikes-iran-marking-7th-consecutive-night-2026-07-18/",
+          "title": "US military says it completed latest strikes on Iran, marking 7th consecutive night of attacks - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-18T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c43490ccfb",
+      "text": "Reuters’ Iran-strikes report did not mention transport-airbridge movements from Europe to the Middle East or any increase in airlift flights.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.reuters.com/world/middle-east/us-military-says-it-completed-latest-strikes-iran-marking-7th-consecutive-night-2026-07-18/",
+          "title": "US military says it completed latest strikes on Iran, marking 7th consecutive night of attacks - Reuters",
+          "publisher": "Reuters",
+          "published_at": "2026-07-18T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_132bcc3f1b",
+      "text": "OSINTtechnical posted that the full-scale U.S. airbridge to the Middle East has returned as the Iran war re-escalates, and said dozens of USAF transport flights hopped from key bases in Europe to the Middle East that day, citing @flightradar24.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://x.com/Osinttechnical/status/2080393908685566041",
+          "title": "Post by @Osinttechnical",
+          "publisher": "X / @Osinttechnical",
+          "published_at": "2026-07-23T20:45:34Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_01ff6ed360",
+      "text": "The post itself does not provide a readable flight log, route list, aircraft list, or destination list.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://x.com/Osinttechnical/status/2080393908685566041",
+          "title": "Post by @Osinttechnical",
+          "publisher": "X / @Osinttechnical",
+          "published_at": "2026-07-23T20:45:34Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2da9ef7932",
+      "text": "The OSINTtechnical post says the full-scale U.S. airbridge to the Middle East has returned and that dozens of USAF transport flights hopped from key bases in Europe to the Middle East that day, citing Flightradar24.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://x.com/Osinttechnical/status/2080393908685566041",
+          "title": "Post by @Osinttechnical",
+          "publisher": "X / @Osinttechnical",
+          "published_at": "2026-07-23T20:45:34Z"
+        },
+        {
+          "url": "https://x.com/i/web/status/2080393908685566041",
+          "title": "X web status wrapper for @Osinttechnical post",
+          "publisher": "X",
+          "published_at": "2026-07-23T20:45:34Z"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

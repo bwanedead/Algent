@@ -1,0 +1,542 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/europe-s-electrification-is-running-into-grid-connection-que-08ce7d",
+  "title": "Europe’s electrification is running into grid-connection queues",
+  "summary": "The European Commission and the IEA warn that rising demand and new generation are colliding with a connection system — capacity, planning, transparency, and administrative procedures — that cannot absorb the load fast enough, even as flexibility and storage could ease pressure.",
+  "published_at": "2026-07-26T13:29:48.945186+00:00",
+  "as_of": "2026-07-26",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 32,
+    "likely": 5,
+    "unconfirmed": 1
+  },
+  "claims": [
+    {
+      "id": "clm_6bcc8ceb37",
+      "text": "The European Commission’s electrification plan aims to raise electricity’s share of total final energy consumption from about 23% today to 46% by 2040.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.kathimerini.com.cy/gr/prosopikotites-stin-k/oi-prokliseis-gia-ilektriko-metasximatismo-tis-eyrwpis",
+          "title": "Οι προκλήσεις για ηλεκτρικό μετασχηματισμό της Ευρώπης",
+          "publisher": "Kathimerini Cyprus"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_67033e7fc3",
+      "text": "The Commission says electrification could reduce EU energy-import costs by up to 260 billion euros per year by 2040.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.kathimerini.com.cy/gr/prosopikotites-stin-k/oi-prokliseis-gia-ilektriko-metasximatismo-tis-eyrwpis",
+          "title": "Οι προκλήσεις για ηλεκτρικό μετασχηματισμό της Ευρώπης",
+          "publisher": "Kathimerini Cyprus"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ce06347df6",
+      "text": "The EU still gets more than 60% of its total energy mix from fossil fuels, while renewables supply about one-fifth.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.kathimerini.com.cy/gr/prosopikotites-stin-k/oi-prokliseis-gia-ilektriko-metasximatismo-tis-eyrwpis",
+          "title": "Οι προκλήσεις για ηλεκτρικό μετασχηματισμό της Ευρώπης",
+          "publisher": "Kathimerini Cyprus"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c7f2a1dd3d",
+      "text": "Electricity has remained at roughly 23% of total final energy consumption in Europe for more than a decade.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.kathimerini.com.cy/gr/prosopikotites-stin-k/oi-prokliseis-gia-ilektriko-metasximatismo-tis-eyrwpis",
+          "title": "Οι προκλήσεις για ηλεκτρικό μετασχηματισμό της Ευρώπης",
+          "publisher": "Kathimerini Cyprus"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_06d4219983",
+      "text": "The IEA says global electricity demand is forecast to grow at an average annual rate of 3.6% from 2026 to 2030, driven in part by industry, EVs, air conditioning, and data centres.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.iea.org/reports/electricity-2026/executive-summary",
+          "title": "Electricity 2026 – Executive summary",
+          "publisher": "International Energy Agency",
+          "published_at": "2026-02-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_aa74aeb526",
+      "text": "The IEA expects EU electricity demand to rise by around 2% per year through 2030, after growing by less than 1% in 2025.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.iea.org/reports/electricity-2026/executive-summary",
+          "title": "Electricity 2026 – Executive summary",
+          "publisher": "International Energy Agency",
+          "published_at": "2026-02-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7d2ca78277",
+      "text": "More than 2,500 GW of projects worldwide, including renewables, storage, and large-load projects such as data centres, remain stuck in grid-connection queues.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.iea.org/reports/electricity-2026/executive-summary",
+          "title": "Electricity 2026 – Executive summary",
+          "publisher": "International Energy Agency",
+          "published_at": "2026-02-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_09dc6fbc39",
+      "text": "Meeting forecast electricity demand through 2030 would require annual grid investment to rise by roughly 50% from about 400 billion dollars today.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.iea.org/reports/electricity-2026/executive-summary",
+          "title": "Electricity 2026 – Executive summary",
+          "publisher": "International Energy Agency",
+          "published_at": "2026-02-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9698175baf",
+      "text": "The IEA estimates that grid-flexibility measures and grid-enhancing technologies could free enough capacity to connect about 1,200 GW to 1,600 GW of advanced-stage projects now stuck in queues worldwide.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.iea.org/reports/electricity-2026/executive-summary",
+          "title": "Electricity 2026 – Executive summary",
+          "publisher": "International Energy Agency",
+          "published_at": "2026-02-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_29ecff2738",
+      "text": "The European Commission says data centres consumed about 70 TWh of electricity in the EU in 2024.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://energy.ec.europa.eu/news/focus-data-centres-energy-hungry-challenge-2025-11-17_en",
+          "title": "In focus: Data centres – an energy-hungry challenge",
+          "publisher": "European Commission, DG Energy",
+          "published_at": "2025-11-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_02a1661bf2",
+      "text": "The European Commission expects EU data-centre electricity use to rise to about 115 TWh by 2030.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://energy.ec.europa.eu/news/focus-data-centres-energy-hungry-challenge-2025-11-17_en",
+          "title": "In focus: Data centres – an energy-hungry challenge",
+          "publisher": "European Commission, DG Energy",
+          "published_at": "2025-11-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0e598ab268",
+      "text": "The Commission says data-centre growth is often meeting a lack of available grid capacity to connect.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://energy.ec.europa.eu/news/focus-data-centres-energy-hungry-challenge-2025-11-17_en",
+          "title": "In focus: Data centres – an energy-hungry challenge",
+          "publisher": "European Commission, DG Energy",
+          "published_at": "2025-11-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d93185982d",
+      "text": "The Commission says the European power networks face insufficient grid capacity for growing connection requests on both the demand and supply sides, along with delays in project implementation.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://energy.ec.europa.eu/topics/infrastructure/european-grids_en",
+          "title": "European grids",
+          "publisher": "European Commission",
+          "published_at": "2025-12-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e798ba9e24",
+      "text": "The Commission’s grid guidance explicitly addresses rising grid connection queues by promoting flexible connection agreements and transparency on grid hosting capacity.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://energy.ec.europa.eu/topics/infrastructure/european-grids_en",
+          "title": "European grids",
+          "publisher": "European Commission",
+          "published_at": "2025-12-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cd5a457856",
+      "text": "The seed article frames Europe’s electrification challenge as a potential ‘valley of death’ for industry because electricity remains more expensive than the fossil fuels it would replace.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.kathimerini.com.cy/gr/prosopikotites-stin-k/oi-prokliseis-gia-ilektriko-metasximatismo-tis-eyrwpis",
+          "title": "Οι προκλήσεις για ηλεκτρικό μετασχηματισμό της Ευρώπης",
+          "publisher": "Kathimerini Cyprus"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_08efbfafc2",
+      "text": "The seed article says electricity prices in Europe remain more than twice U.S. prices and about 50% higher than in China.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.kathimerini.com.cy/gr/prosopikotites-stin-k/oi-prokliseis-gia-ilektriko-metasximatismo-tis-eyrwpis",
+          "title": "Οι προκλήσεις για ηλεκτρικό μετασχηματισμό της Ευρώπης",
+          "publisher": "Kathimerini Cyprus"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fd0003681f",
+      "text": "The seed article says Europe must accommodate expanding electricity demand from artificial intelligence and data centres while keeping energy-intensive industry competitive.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.kathimerini.com.cy/gr/prosopikotites-stin-k/oi-prokliseis-gia-ilektriko-metasximatismo-tis-eyrwpis",
+          "title": "Οι προκλήσεις για ηλεκτρικό μετασχηματισμό της Ευρώπης",
+          "publisher": "Kathimerini Cyprus"
+        },
+        {
+          "url": "https://www.iea.org/reports/electricity-2026/executive-summary",
+          "title": "Electricity 2026 – Executive summary",
+          "publisher": "International Energy Agency",
+          "published_at": "2026-02-06"
+        },
+        {
+          "url": "https://energy.ec.europa.eu/news/focus-data-centres-energy-hungry-challenge-2025-11-17_en",
+          "title": "In focus: Data centres – an energy-hungry challenge",
+          "publisher": "European Commission, DG Energy",
+          "published_at": "2025-11-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c89358063a",
+      "text": "Cyprus is relevant mainly as the publication lens and as a small EU member with a stake in grid-constrained electrification and interconnection.",
+      "grade": "likely",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.kathimerini.com.cy/gr/prosopikotites-stin-k/oi-prokliseis-gia-ilektriko-metasximatismo-tis-eyrwpis",
+          "title": "Οι προκλήσεις για ηλεκτρικό μετασχηματισμό της Ευρώπης",
+          "publisher": "Kathimerini Cyprus"
+        },
+        {
+          "url": "https://clean-energy-islands.ec.europa.eu/countries/cyprus/legal",
+          "title": "Policies in Cyprus",
+          "publisher": "European Commission clean-energy-islands portal",
+          "published_at": "2024-05-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_18aff4c98f",
+      "text": "The Commission states that Europe’s power networks face insufficient grid capacity to meet growing connection requests on both the demand and supply sides, and also cites delays in project implementation as part of the challenge.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://energy.ec.europa.eu/topics/infrastructure/european-grids_en",
+          "title": "European grids",
+          "publisher": "European Commission",
+          "published_at": "2025-12-09"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_86b91938e4",
+      "text": "The Commission notice says rising grid connection queues are already evident and that the guidance aims to provide a toolbox of measures to prevent, optimise, and tackle lengthy grid connection queues.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_10e254fc48",
+      "text": "The Commission identifies flexible connection agreements and transparency on grid hosting capacities and connection-request handling as the main policy instruments for addressing queues.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_519d862801",
+      "text": "The notice specifies implementation details: DSOs should provide hosting-capacity information at least quarterly, TSOs at least monthly, and grid users should get a connection-status update within three months and regular updates thereafter; it also mentions a fully digital connection procedure option.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_4f7f99324b",
+      "text": "The Commission’s 2025 competitiveness report says EU electricity prices are currently 2–3 times higher than in the US, supporting the general direction of the seed article’s price-competitiveness argument.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://single-market-economy.ec.europa.eu/document/download/e566634a-29cf-4adf-a98d-1e708c873af8_en?filename=COM_2025_26_F1_COMMUNICATION_FROM_COMMISSION_TO_INST_EN_V10_P1_3877708.PDF",
+          "title": "The 2025 Annual Single Market and Competitiveness Report",
+          "publisher": "European Commission",
+          "published_at": "2025-01-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b8711f805b",
+      "text": "The deep-read evidence here does not establish whether the seed article’s price comparison is retail or industrial, pre-tax or post-tax, or how the China comparison was converted; that part remains unverified.",
+      "grade": "unconfirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://single-market-economy.ec.europa.eu/document/download/e566634a-29cf-4adf-a98d-1e708c873af8_en?filename=COM_2025_26_F1_COMMUNICATION_FROM_COMMISSION_TO_INST_EN_V10_P1_3877708.PDF",
+          "title": "The 2025 Annual Single Market and Competitiveness Report",
+          "publisher": "European Commission",
+          "published_at": "2025-01-29"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6bcf2cedf3",
+      "text": "Ember’s 2024 Europe grid report argues that many transmission plans are still based on outdated scenarios, so grid planning often lags policy updates rather than simply failing from a lack of raw engineering capacity.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ember-energy.org/app/uploads/2024/10/Grids-for-Europes-Energy-Transition-Report-1.pdf",
+          "title": "Putting the mission in transmission: Grids for Europe’s energy transition",
+          "publisher": "Ember",
+          "published_at": "2024-03-13T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ca1293d698",
+      "text": "Ember says the grid challenge can be addressed in two complementary ways: physical expansion and better use of existing networks through refurbishment, digitalisation, demand flexibility, and storage.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ember-energy.org/app/uploads/2024/10/Grids-for-Europes-Energy-Transition-Report-1.pdf",
+          "title": "Putting the mission in transmission: Grids for Europe’s energy transition",
+          "publisher": "Ember",
+          "published_at": "2024-03-13T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fce7e80874",
+      "text": "Ember explicitly says that using existing line corridors can reduce the need for additional permitting in some cases, but new corridors may still be unavoidable where new renewable supply needs to be connected.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://ember-energy.org/app/uploads/2024/10/Grids-for-Europes-Energy-Transition-Report-1.pdf",
+          "title": "Putting the mission in transmission: Grids for Europe’s energy transition",
+          "publisher": "Ember",
+          "published_at": "2024-03-13T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6eb024e6e4",
+      "text": "Ember reports that TSOs can alleviate grid pressure with non-wire solutions such as dynamic line rating and load flexibility, and notes that some operators already use consumer incentives to reduce peak demand.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://ember-energy.org/app/uploads/2024/10/Grids-for-Europes-Energy-Transition-Report-1.pdf",
+          "title": "Putting the mission in transmission: Grids for Europe’s energy transition",
+          "publisher": "Ember",
+          "published_at": "2024-03-13T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_35ebd31d69",
+      "text": "The Commission says the electrification rate has been relatively stable at 23% of total energy consumption for the past decade and is expected to increase to 32% by 2030 under the Clean Industrial Deal.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c82c8991a0",
+      "text": "The Commission says at least 16 member states faced grid connection queues as of mid-2025.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f41f732882",
+      "text": "The Commission says the main root causes of grid connection backlogs are inadequate grid planning and development, lack of transparency and locational signals, and grid connection procedures slowed by speculative applications, non-digitalised processes and administrative constraints.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b5b1abe8df",
+      "text": "The Commission says grid operators should plan for future demand and generation on both the demand side and the generation side, not only react to existing connection requests.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3d9dd336e7",
+      "text": "The Commission says DSO hosting-capacity information should be updated at least quarterly, TSO information at least monthly, users should receive a status update within three months and regular updates thereafter, and fully digital connection procedures should be available.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_88f34f4b3d",
+      "text": "Ember says some transmission plans are based on outdated wind and solar scenarios, so planning can lag policy before physical scarcity becomes binding.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://ember-energy.org/latest-insights/putting-the-mission-in-transmission-grids-for-europes-energy-transition",
+          "title": "Putting the mission in transmission: Grids for Europe’s energy transition",
+          "publisher": "Ember",
+          "published_at": "2024-03-13"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0ec1141493",
+      "text": "Ember says grid pressure can be eased through refurbishment, digitalisation, demand flexibility and storage, and that using existing corridors can reduce permitting needs in some cases.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://ember-energy.org/latest-insights/putting-the-mission-in-transmission-grids-for-europes-energy-transition",
+          "title": "Putting the mission in transmission: Grids for Europe’s energy transition",
+          "publisher": "Ember",
+          "published_at": "2024-03-13"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a717bf3687",
+      "text": "The IEA says more than 2,500 GW of renewables, storage and large-load projects remain in grid-connection queues worldwide, and flexibility measures and grid-enhancing technologies could free enough capacity to connect about 1,200 GW to 1,600 GW of advanced-stage projects.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.iea.org/reports/electricity-2026/executive-summary",
+          "title": "Electricity 2026 – Executive summary",
+          "publisher": "International Energy Agency",
+          "published_at": "2026-02-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_638d0d9086",
+      "text": "The IEA says annual grid investment would need to rise by roughly 50% from about $400 billion today to meet forecast electricity demand through 2030.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.iea.org/reports/electricity-2026/executive-summary",
+          "title": "Electricity 2026 – Executive summary",
+          "publisher": "International Energy Agency",
+          "published_at": "2026-02-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e29aaa9d91",
+      "text": "The Commission says EU data-centre electricity use was about 70 TWh in 2024 and is expected to rise to about 115 TWh by 2030.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://energy.ec.europa.eu/news/focus-data-centres-energy-hungry-challenge-2025-11-17_en",
+          "title": "In focus: Data centres – an energy-hungry challenge",
+          "publisher": "European Commission, DG Energy",
+          "published_at": "2025-11-17"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

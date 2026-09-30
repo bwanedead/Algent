@@ -1,0 +1,713 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/russia-s-war-economy-runs-through-china-on-beijing-s-terms-bfd0ed",
+  "title": "Russia's war economy runs through China, on Beijing's terms",
+  "summary": "China supplies most of Russia's battlefield technology and buys about a quarter of its oil, but headline shares hinge on how you count — and the leverage flows one way.",
+  "published_at": "2026-08-15T09:33:13.848965+00:00",
+  "as_of": "2026-05-13",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 18,
+    "likely": 8,
+    "contested": 7
+  },
+  "claims": [
+    {
+      "id": "clm_62c208406b",
+      "text": "China supplies about 87% of Russia's dual-use goods imports",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.bankier.pl/wiadomosc/Rosja-coraz-bardziej-zalezna-od-Chin-Pekin-dostarcza-technologie-komponenty-i-kupuje-surowce-9181005.html",
+          "title": "Rosja coraz bardziej zależna od Chin. Pekin dostarcza technologie, komponenty i kupuje surowce",
+          "publisher": "Bankier.pl",
+          "published_at": "2025-08-15T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_42c8c1ede3",
+      "text": "China buys about 45% of Russia's crude oil exports",
+      "grade": "contested",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.bankier.pl/wiadomosc/Rosja-coraz-bardziej-zalezna-od-Chin-Pekin-dostarcza-technologie-komponenty-i-kupuje-surowce-9181005.html",
+          "title": "Rosja coraz bardziej zależna od Chin. Pekin dostarcza technologie, komponenty i kupuje surowce",
+          "publisher": "Bankier.pl",
+          "published_at": "2025-08-15T00:00:00Z"
+        },
+        {
+          "url": "https://merics.org/en/china-russia-dashboard-facts-and-figures-special-relationship",
+          "title": "China-Russia Dashboard: Facts and figures on a special relationship",
+          "publisher": "MERICS China-Russia Dashboard",
+          "published_at": "2026-04-30T00:00:00Z"
+        }
+      ],
+      "contradicted_by": [
+        {
+          "url": "https://publications.bof.fi/bitstream/handle/10024/54004/bpb2510.pdf",
+          "title": "Russia's ever-increasing economic dependence on China",
+          "publisher": "Bank of Finland Institute for Emerging Economies (BOFIT)",
+          "published_at": "2025-05-19T00:00:00Z"
+        },
+        {
+          "url": "https://www.eia.gov/international/content/analysis/countries_long/Russia/pdf/Russia%20CAB_2025.pdf",
+          "title": "Country Analysis Brief: Russia",
+          "publisher": "U.S. Energy Information Administration",
+          "published_at": "2025-07-24T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "clm_a6dd3fe552",
+      "text": "China is Russia's largest crude oil buyer, importing ~108.5 million tonnes (2.17 million b/d) in 2024, about 21.5% of China's total crude imports",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.uscc.gov/sites/default/files/2025-11/Chinas_Facilitation_of_Sanctions_and_Export_Control_Evasion.pdf",
+          "title": "China's Facilitation of Sanctions and Export Control Evasion",
+          "publisher": "U.S.-China Economic and Security Review Commission",
+          "published_at": "2025-11-14T00:00:00Z"
+        },
+        {
+          "url": "https://www.eia.gov/international/content/analysis/countries_long/Russia/pdf/Russia%20CAB_2025.pdf",
+          "title": "Country Analysis Brief: Russia",
+          "publisher": "U.S. Energy Information Administration",
+          "published_at": "2025-07-24T00:00:00Z"
+        },
+        {
+          "url": "https://www.osw.waw.pl/en/publikacje/osw-commentary/2025-12-12/closing-ranks-russia-china-energy-cooperation-amid-escalating",
+          "title": "Closing ranks: Russia-China energy cooperation amid escalating confrontation with the West",
+          "publisher": "Centre for Eastern Studies (OSW)",
+          "published_at": "2025-12-12T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f4bc8e0fba",
+      "text": "China-Russia bilateral goods trade reached $245 billion in 2024, roughly double the 2020 level, and fell 6.9% year-on-year in 2025",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.osw.waw.pl/en/publikacje/analyses/2025-07-30/china-russia-trade-early-2025-fueling-moscows-war-despite-headwinds",
+          "title": "China-Russia trade in early 2025: Fueling Moscow's war despite headwinds",
+          "publisher": "Centre for Eastern Studies (OSW)",
+          "published_at": "2025-07-30T00:00:00Z"
+        },
+        {
+          "url": "https://www.uscc.gov/sites/default/files/2025-11/Chinas_Facilitation_of_Sanctions_and_Export_Control_Evasion.pdf",
+          "title": "China's Facilitation of Sanctions and Export Control Evasion",
+          "publisher": "U.S.-China Economic and Security Review Commission",
+          "published_at": "2025-11-14T00:00:00Z"
+        },
+        {
+          "url": "https://merics.org/en/china-russia-dashboard-facts-and-figures-special-relationship",
+          "title": "China-Russia Dashboard: Facts and figures on a special relationship",
+          "publisher": "MERICS China-Russia Dashboard",
+          "published_at": "2026-04-30T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e5adbd92d0",
+      "text": "Russia's exports to China are dominated by raw materials: mineral fuels >70% of value since Feb 2022, while China's exports to Russia are manufactured goods (machinery ~24%, vehicles ~16%, electrical equipment ~15%)",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://merics.org/en/china-russia-dashboard-facts-and-figures-special-relationship",
+          "title": "China-Russia Dashboard: Facts and figures on a special relationship",
+          "publisher": "MERICS China-Russia Dashboard",
+          "published_at": "2026-04-30T00:00:00Z"
+        },
+        {
+          "url": "https://www.osw.waw.pl/en/publikacje/osw-commentary/2025-12-12/closing-ranks-russia-china-energy-cooperation-amid-escalating",
+          "title": "Closing ranks: Russia-China energy cooperation amid escalating confrontation with the West",
+          "publisher": "Centre for Eastern Studies (OSW)",
+          "published_at": "2025-12-12T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_33f3d835c8",
+      "text": "In H1 2025 China exported $1.9 billion of Common High Priority List dual-use items to Russia, down ~7% YoY, but remained Moscow's key supplier as other partners collapsed",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.osw.waw.pl/en/publikacje/analyses/2025-07-30/china-russia-trade-early-2025-fueling-moscows-war-despite-headwinds",
+          "title": "China-Russia trade in early 2025: Fueling Moscow's war despite headwinds",
+          "publisher": "Centre for Eastern Studies (OSW)",
+          "published_at": "2025-07-30T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0284110944",
+      "text": "Dominant dual-use categories include semiconductors/process units, telecom transmission apparatus, machine tools, optical devices, navigation/radar parts, and bearings; in 2023 machine tools accounted for ~40% of YoY rise",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.osw.waw.pl/en/publikacje/analyses/2025-07-30/china-russia-trade-early-2025-fueling-moscows-war-despite-headwinds",
+          "title": "China-Russia trade in early 2025: Fueling Moscow's war despite headwinds",
+          "publisher": "Centre for Eastern Studies (OSW)",
+          "published_at": "2025-07-30T00:00:00Z"
+        },
+        {
+          "url": "https://carnegieendowment.org/russia-eurasia/politika/2024/05/behind-the-scenes-chinas-increasing-role-in-russias-defense-industry",
+          "title": "Behind the Scenes: China's Increasing Role in Russia's Defense Industry",
+          "publisher": "Carnegie Endowment for International Peace",
+          "published_at": "2024-05-06T00:00:00Z"
+        },
+        {
+          "url": "https://www.uscc.gov/sites/default/files/2025-11/Chinas_Facilitation_of_Sanctions_and_Export_Control_Evasion.pdf",
+          "title": "China's Facilitation of Sanctions and Export Control Evasion",
+          "publisher": "U.S.-China Economic and Security Review Commission",
+          "published_at": "2025-11-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a2930c2119",
+      "text": "Dual-use goods are routed via direct sales from Chinese firms (49% of CHPL items), Western factories in China (16%), transshipment of non-China-made goods via China/Hong Kong (18%), third-country re-exports, and customs-code fraud/mislabeling",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.osw.waw.pl/en/publikacje/analyses/2025-07-30/china-russia-trade-early-2025-fueling-moscows-war-despite-headwinds",
+          "title": "China-Russia trade in early 2025: Fueling Moscow's war despite headwinds",
+          "publisher": "Centre for Eastern Studies (OSW)",
+          "published_at": "2025-07-30T00:00:00Z"
+        },
+        {
+          "url": "https://www.uscc.gov/sites/default/files/2025-11/Chinas_Facilitation_of_Sanctions_and_Export_Control_Evasion.pdf",
+          "title": "China's Facilitation of Sanctions and Export Control Evasion",
+          "publisher": "U.S.-China Economic and Security Review Commission",
+          "published_at": "2025-11-14T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3456623668",
+      "text": "China buys Russian crude at a discount averaging 7.7% between April 2022-Feb 2026, saving an estimated $18.3 billion; discount peaked ~18% in 2022, eased to ~5%, rose again late 2025 after new US sanctions",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://merics.org/en/china-russia-dashboard-facts-and-figures-special-relationship",
+          "title": "China-Russia Dashboard: Facts and figures on a special relationship",
+          "publisher": "MERICS China-Russia Dashboard",
+          "published_at": "2026-04-30T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_aafee4d76d",
+      "text": "Over 90% of China-Russia trade was settled in rubles or yuan by early 2024, up from <2% in yuan before the war; yuan share later fell to ~30% after US secondary sanctions threats, with ruble share rising",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.uscc.gov/sites/default/files/2025-11/Chinas_Facilitation_of_Sanctions_and_Export_Control_Evasion.pdf",
+          "title": "China's Facilitation of Sanctions and Export Control Evasion",
+          "publisher": "U.S.-China Economic and Security Review Commission",
+          "published_at": "2025-11-14T00:00:00Z"
+        },
+        {
+          "url": "https://merics.org/en/china-russia-dashboard-facts-and-figures-special-relationship",
+          "title": "China-Russia Dashboard: Facts and figures on a special relationship",
+          "publisher": "MERICS China-Russia Dashboard",
+          "published_at": "2026-04-30T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_263c68d5da",
+      "text": "Russia's dependence on China is asymmetric: China accounts for ~30% of Russian exports and ~35-50% of imports in 2024-2025, while Russia accounts for only ~3% of China's exports and ~5% of imports",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.iss.europa.eu/publications/analysis/dependence-gap-russia-china-relations",
+          "title": "The dependence gap in Russia-China relations",
+          "publisher": "EU Institute for Security Studies",
+          "published_at": "2025-10-02T00:00:00Z"
+        },
+        {
+          "url": "https://publications.bof.fi/bitstream/handle/10024/54004/bpb2510.pdf",
+          "title": "Russia's ever-increasing economic dependence on China",
+          "publisher": "Bank of Finland Institute for Emerging Economies (BOFIT)",
+          "published_at": "2025-05-19T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2e424f96ef",
+      "text": "A full one-month closure of the Strait of Hormuz would raise Brent by ~$12-15/bbl (Goldman Sachs) or to $120/bbl short-term and $158/bbl medium-term after inventories deplete (FREE model), with ~16 mbd of petroleum flows at risk",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://freepolicybriefs.org/wp-content/uploads/2026/03/20260320.pdf",
+          "title": "The Hormuz Blockade: Winners, losers, and vulnerabilities",
+          "publisher": "FREE Network / Swedish Institute of International Affairs",
+          "published_at": "2026-03-20T00:00:00Z"
+        },
+        {
+          "url": "https://www.goldmansachs.com/insights/articles/how-will-the-iran-conflict-impact-oil-prices",
+          "title": "How Will the Iran Conflict Impact Oil Prices?",
+          "publisher": "Goldman Sachs",
+          "published_at": "2026-03-03T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6d308a14cf",
+      "text": "Under Hormuz blockade scenarios, Russia would profit substantially (6-11% of GDP) from higher prices and elimination of sanctions discount, while China and India would lose (India 2-4% GDP, China less), and Gulf exporters would lose except Saudi Arabia/UAE via bypass pipelines",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://freepolicybriefs.org/wp-content/uploads/2026/03/20260320.pdf",
+          "title": "The Hormuz Blockade: Winners, losers, and vulnerabilities",
+          "publisher": "FREE Network / Swedish Institute of International Affairs",
+          "published_at": "2026-03-20T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_057c0e6289",
+      "text": "Beijing's leverage over Moscow includes dictating gas pipeline terms (Power of Siberia 2 stalled over price and cost-sharing), imposing recycling fees and certification barriers on Chinese vehicles, and controlling yuan liquidity and payment channels",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.bankier.pl/wiadomosc/Rosja-coraz-bardziej-zalezna-od-Chin-Pekin-dostarcza-technologie-komponenty-i-kupuje-surowce-9181005.html",
+          "title": "Rosja coraz bardziej zależna od Chin. Pekin dostarcza technologie, komponenty i kupuje surowce",
+          "publisher": "Bankier.pl",
+          "published_at": "2025-08-15T00:00:00Z"
+        },
+        {
+          "url": "https://www.osw.waw.pl/en/publikacje/analyses/2025-07-30/china-russia-trade-early-2025-fueling-moscows-war-despite-headwinds",
+          "title": "China-Russia trade in early 2025: Fueling Moscow's war despite headwinds",
+          "publisher": "Centre for Eastern Studies (OSW)",
+          "published_at": "2025-07-30T00:00:00Z"
+        },
+        {
+          "url": "https://www.osw.waw.pl/en/publikacje/osw-commentary/2025-12-12/closing-ranks-russia-china-energy-cooperation-amid-escalating",
+          "title": "Closing ranks: Russia-China energy cooperation amid escalating confrontation with the West",
+          "publisher": "Centre for Eastern Studies (OSW)",
+          "published_at": "2025-12-12T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8ba5e76725",
+      "text": "China's dual-use exports are sensitive to secondary sanctions: they fell sharply after Dec 2023 US threat, rebounded H2 2024, and fell again early 2025, showing Beijing calibrates support to economic cost",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.iss.europa.eu/publications/analysis/dependence-gap-russia-china-relations",
+          "title": "The dependence gap in Russia-China relations",
+          "publisher": "EU Institute for Security Studies",
+          "published_at": "2025-10-02T00:00:00Z"
+        },
+        {
+          "url": "https://merics.org/en/china-russia-dashboard-facts-and-figures-special-relationship",
+          "title": "China-Russia Dashboard: Facts and figures on a special relationship",
+          "publisher": "MERICS China-Russia Dashboard",
+          "published_at": "2026-04-30T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ab1c987889",
+      "text": "Russia's oil and gas revenues provide ~30-31% of federal budget; falling Chinese demand and lower prices in H1 2025 are projected to push 2025 oil/gas revenues 24% below budget assumptions",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.osw.waw.pl/en/publikacje/analyses/2025-07-30/china-russia-trade-early-2025-fueling-moscows-war-despite-headwinds",
+          "title": "China-Russia trade in early 2025: Fueling Moscow's war despite headwinds",
+          "publisher": "Centre for Eastern Studies (OSW)",
+          "published_at": "2025-07-30T00:00:00Z"
+        },
+        {
+          "url": "https://www.osw.waw.pl/en/publikacje/osw-commentary/2025-12-12/closing-ranks-russia-china-energy-cooperation-amid-escalating",
+          "title": "Closing ranks: Russia-China energy cooperation amid escalating confrontation with the West",
+          "publisher": "Centre for Eastern Studies (OSW)",
+          "published_at": "2025-12-12T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_14e9e241c1",
+      "text": "China supplies about 87% of Russia's dual-use goods imports (NATO/OSW characterization; deep-read corroboration shows 80-90%+ for CHPL-50, broader militarization beyond 50 items)",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.bankier.pl/wiadomosc/Rosja-coraz-bardziej-zalezna-od-Chin-Pekin-dostarcza-technologie-komponenty-i-kupuje-surowce-9181005.html",
+          "title": "Rosja coraz bardziej zależna od Chin. Pekin dostarcza technologie, komponenty i kupuje surowce",
+          "publisher": "Bankier.pl",
+          "published_at": "2025-08-15T00:00:00Z"
+        },
+        {
+          "url": "https://www.osw.waw.pl/en/publikacje/analyses/2025-07-30/china-russia-trade-early-2025-fueling-moscows-war-despite-headwinds",
+          "title": "China-Russia trade in early 2025: Fueling Moscow's war despite headwinds",
+          "publisher": "Centre for Eastern Studies (OSW)",
+          "published_at": "2025-07-30T00:00:00Z"
+        },
+        {
+          "url": "https://merics.org/en/china-russia-dashboard-facts-and-figures-special-relationship",
+          "title": "China-Russia Dashboard: Facts and figures on a special relationship",
+          "publisher": "MERICS China-Russia Dashboard",
+          "published_at": "2026-04-30T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_786ade6332",
+      "text": "China buys about 45% of Russia's crude oil exports on seaborne basis (CREA 47%); on total-exports pipeline-inclusive basis 26% in 2024 (EIA) / 32% (BOFIT/IEA) \u0002d band 26-47% depending on methodology",
+      "grade": "contested",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.bankier.pl/wiadomosc/Rosja-coraz-bardziej-zalezna-od-Chin-Pekin-dostarcza-technologie-komponenty-i-kupuje-surowce-9181005.html",
+          "title": "Rosja coraz bardziej zależna od Chin. Pekin dostarcza technologie, komponenty i kupuje surowce",
+          "publisher": "Bankier.pl",
+          "published_at": "2025-08-15T00:00:00Z"
+        },
+        {
+          "url": "https://www.eia.gov/international/content/analysis/countries_long/Russia/pdf/Russia%20CAB_2025.pdf",
+          "title": "Country Analysis Brief: Russia",
+          "publisher": "U.S. Energy Information Administration",
+          "published_at": "2025-07-24T00:00:00Z"
+        },
+        {
+          "url": "https://publications.bof.fi/handle/10024/54004",
+          "title": "Russia's ever-increasing economic dependence on China - BOFIT Policy Brief 10/2025",
+          "publisher": "Bank of Finland Institute for Emerging Economies (BOFIT)",
+          "published_at": "2025-05-19"
+        },
+        {
+          "url": "https://kse.ua/wp-content/uploads/2025/05/ROT_APR25.pdf",
+          "title": "Russian Oil Tracker April 2025",
+          "publisher": "KSE Institute",
+          "published_at": "2025-04-01"
+        }
+      ],
+      "contradicted_by": [
+        {
+          "url": "https://www.eia.gov/international/content/analysis/countries_long/Russia/pdf/Russia%20CAB_2025.pdf",
+          "title": "Country Analysis Brief: Russia",
+          "publisher": "U.S. Energy Information Administration",
+          "published_at": "2025-07-24T00:00:00Z"
+        },
+        {
+          "url": "https://publications.bof.fi/handle/10024/54004",
+          "title": "Russia's ever-increasing economic dependence on China - BOFIT Policy Brief 10/2025",
+          "publisher": "Bank of Finland Institute for Emerging Economies (BOFIT)",
+          "published_at": "2025-05-19"
+        }
+      ]
+    },
+    {
+      "id": "clm_eedb997376",
+      "text": "China is Russia's largest crude oil buyer, importing ~108.5 million tonnes (2.17 million b/d) in 2024, about 21.5% of China's total crude imports; 26% of Russia's total crude exports in 2024 (EIA total basis)",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://merics.org/en/china-russia-dashboard-facts-and-figures-special-relationship",
+          "title": "China-Russia Dashboard: Facts and figures on a special relationship",
+          "publisher": "MERICS China-Russia Dashboard",
+          "published_at": "2026-04-30T00:00:00Z"
+        },
+        {
+          "url": "https://www.eia.gov/international/content/analysis/countries_long/Russia/pdf/Russia%20CAB_2025.pdf",
+          "title": "Country Analysis Brief: Russia",
+          "publisher": "U.S. Energy Information Administration",
+          "published_at": "2025-07-24T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d9480c445e",
+      "text": "Dominant dual-use categories include semiconductors/process units, telecom transmission apparatus, machine tools, optical devices, navigation/radar parts, and bearings; H1 2025 growth in HS 85299049 x4, 85291010 x5, 853400 x2, 90131000 x4; broader militarization in manganese ores, turbojets >25kN, ballistic fibers, and nes codes 84079090/91069000",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.osw.waw.pl/en/publikacje/analyses/2025-07-30/china-russia-trade-early-2025-fueling-moscows-war-despite-headwinds",
+          "title": "China-Russia trade in early 2025: Fueling Moscow's war despite headwinds",
+          "publisher": "Centre for Eastern Studies (OSW)",
+          "published_at": "2025-07-30T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_08560c7932",
+      "text": "Dual-use goods are routed via direct sales, Western factories in China, transshipment via China/HK, third-country re-exports, and customs-code fraud/mislabeling (including nes categories)",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.osw.waw.pl/en/publikacje/analyses/2025-07-30/china-russia-trade-early-2025-fueling-moscows-war-despite-headwinds",
+          "title": "China-Russia trade in early 2025: Fueling Moscow's war despite headwinds",
+          "publisher": "Centre for Eastern Studies (OSW)",
+          "published_at": "2025-07-30T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_994182ce99",
+      "text": "Russia's dependence on China is asymmetric: China accounts for ~30% of Russian exports and ~35-50% of imports in 2024-2025 (70-90% in machinery/vehicles), while Russia accounts for only ~3% of China's exports and ~5% of imports",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://publications.bof.fi/handle/10024/54004",
+          "title": "Russia's ever-increasing economic dependence on China - BOFIT Policy Brief 10/2025",
+          "publisher": "Bank of Finland Institute for Emerging Economies (BOFIT)",
+          "published_at": "2025-05-19"
+        },
+        {
+          "url": "https://merics.org/en/china-russia-dashboard-facts-and-figures-special-relationship",
+          "title": "China-Russia Dashboard: Facts and figures on a special relationship",
+          "publisher": "MERICS China-Russia Dashboard",
+          "published_at": "2026-04-30T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c7d65bb114",
+      "text": "A full one-month closure of the Strait of Hormuz would raise Brent to $120/bbl short-term (with 5 mbd inventory draw) and $158/bbl medium-term after inventories deplete, with ~14.2 mbd Gulf seaborne disruption (model-dependent scenario, not forecast)",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://freepolicybriefs.org/wp-content/uploads/2026/03/20260320.pdf",
+          "title": "The Hormuz Blockade: Winners, losers, and vulnerabilities",
+          "publisher": "FREE Network / Swedish Institute of International Affairs",
+          "published_at": "2026-03-20T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a3835e7daf",
+      "text": "Under Hormuz blockade scenarios, Russia would profit substantially (6% short-term to 11% medium-term of GDP) from higher prices and assumed elimination of sanctions discount, while China and India would lose (India 2-4% GDP, China less), and Gulf exporters would lose except Saudi Arabia/UAE via bypass pipelines \u0002d model-dependent, key uncertainty is discount disappearance",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://freepolicybriefs.org/wp-content/uploads/2026/03/20260320.pdf",
+          "title": "The Hormuz Blockade: Winners, losers, and vulnerabilities",
+          "publisher": "FREE Network / Swedish Institute of International Affairs",
+          "published_at": "2026-03-20T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_03f1c6c6ef",
+      "text": "Russia's oil and gas revenues provide ~30% of federal budget; falling Chinese demand and lower prices in H1 2025 are projected to push 2025 oil/gas revenues 24% below budget assumptions",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.osw.waw.pl/en/publikacje/analyses/2025-07-30/china-russia-trade-early-2025-fueling-moscows-war-despite-headwinds",
+          "title": "China-Russia trade in early 2025: Fueling Moscow's war despite headwinds",
+          "publisher": "Centre for Eastern Studies (OSW)",
+          "published_at": "2025-07-30T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d2b7dd3d66",
+      "text": "Beijing officially denies providing lethal weapons to any party in Ukraine and asserts strictest worldwide controls on dual-use items including drones, characterizing China-Russia trade as normal, WTO-consistent, and not targeted at third parties; it opposes unilateral sanctions lacking international law/UNSC authorization as double standards and vows to defend Chinese firms.",
+      "grade": "contested",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.mfa.gov.cn/eng/xw/fyrbt/202412/t20241218_11501312.html",
+          "title": "Foreign Ministry Spokesperson Lin Jian's Regular Press Conference on December 17, 2024",
+          "publisher": "Ministry of Foreign Affairs of the People's Republic of China",
+          "published_at": "2024-12-17"
+        },
+        {
+          "url": "https://sl.china-embassy.gov.cn/eng/fyrth/202505/t20250508_11617555.htm",
+          "title": "Foreign Ministry Spokesperson Lin Jian's Regular Press Conference on May 8, 2025",
+          "publisher": "Ministry of Foreign Affairs of the People's Republic of China",
+          "published_at": "2025-05-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ceb0d8b5c5",
+      "text": "Beijing's counter-narrative on attribution: MFA argues most countries including US/EU continue trading with Russia and that accusations against normal China-Russia exchanges are blame-shifting/political manipulation.",
+      "grade": "contested",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.mfa.gov.cn/eng/xw/fyrbt/202412/t20241218_11501312.html",
+          "title": "Foreign Ministry Spokesperson Lin Jian's Regular Press Conference on December 17, 2024",
+          "publisher": "Ministry of Foreign Affairs of the People's Republic of China",
+          "published_at": "2024-12-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_43122604dc",
+      "text": "Moscow's official import-substitution narrative claims technological sovereignty is achievable: government plan mandates Mikron serial 65nm production by 2028 and 70% domestic share of equipment/materials and finished microelectronics by 2030, backed by 210bn RUB state support in 2024 (vs <10bn in 2020), with domestic lithographs 350nm (2024) \u0003 130nm prototype (2026).",
+      "grade": "contested",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.kommersant.ru/doc/6800285",
+          "title": "\u0000c0\u0000d8\u0000c8\u0000ba\u0000c0\u0000c0\u0000c0\u0000bd\u0000c0\u0000c0 \u0000ba 2028 \u0000b3\u0000be\u0000b4\u0000c3\u0000bb \u0000bd\u0000b0\u0000bb\u0000b0\u0000b4\u0000b8\u0000c2\u0000cC \u0000c1\u0000b5\u0000c0\u0000b8\u0000b9\u0000bd\u0000be\u0000b5 \u0000bf\u0000c0\u0000be\u0000b8\u0000b7\u0000b2\u0000be\u0000b4\u0000c1\u0000c2\u0000b2\u0000be \u0000bd\u0000b0 65 \u0000bd\u0000bc",
+          "publisher": "Kommersant",
+          "published_at": "2024-07-01"
+        },
+        {
+          "url": "https://www.interfax.com/newsroom/top-stories/95286/",
+          "title": "State support for microelectronics to total 210 bln rubles in 2024, share of Russian goods should reach 70% by 2030 - Manturov",
+          "publisher": "Interfax",
+          "published_at": "2023-10-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6ec74a345c",
+      "text": "Moscow's 65nm/70% targets face credible expert qualification: 65nm was mass-produced globally in 2006-2007 while TSMC now at 2nm; Mikron currently limited to 180-90nm for transport cards/IoT; achieving 65nm requires foreign equipment and 300mm wafers not produced in Russia; STMicroelectronics transfer failed in 2014 due to sanctions.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.kommersant.ru/doc/6800285",
+          "title": "\u0000c0\u0000d8\u0000c8\u0000ba\u0000c0\u0000c0\u0000c0\u0000bd\u0000c0\u0000c0 \u0000ba 2028 \u0000b3\u0000be\u0000b4\u0000c3\u0000bb \u0000bd\u0000b0\u0000bb\u0000b0\u0000b4\u0000b8\u0000c2\u0000cC \u0000c1\u0000b5\u0000c0\u0000b8\u0000b9\u0000bd\u0000be\u0000b5 \u0000bf\u0000c0\u0000be\u0000b8\u0000b7\u0000b2\u0000be\u0000b4\u0000c1\u0000c2\u0000b2\u0000be \u0000bd\u0000b0 65 \u0000bd\u0000bc",
+          "publisher": "Kommersant",
+          "published_at": "2024-07-01"
+        },
+        {
+          "url": "https://www.interfax.com/newsroom/top-stories/95286/",
+          "title": "State support for microelectronics to total 210 bln rubles in 2024, share of Russian goods should reach 70% by 2030 - Manturov",
+          "publisher": "Interfax",
+          "published_at": "2023-10-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0c815117d5",
+      "text": "Western sanctions-effectiveness debate is split: hawks argue secondary sanctions leverage dollar/financial system and have measurable bite (US vessel designations ~80% activity drop; Dec 2023 US secondary-sanctions threat caused Chinese banks to pause transactions and raised Russian costs), while skeptics argue sanctions are leaky, easily evaded via shadow fleet (1,400 tankers), yuan/crypto/barter, shell companies, and risk retaliation and fragmentation \u0002 many researchers view secondary sanctions as having all the worst attributes plus instigating new conflicts with allies/adversaries and should be used only in narrow circumstances.",
+      "grade": "contested",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-are-us-secondary-sanctions-and-how-do-they-work/a-73599628",
+          "title": "Why does the US use secondary sanctions, and do they work?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2025-08-14"
+        },
+        {
+          "url": "https://www.brookings.edu/articles/an-update-on-the-efficacy-of-sanctions-against-russia/",
+          "title": "An update on the efficacy of sanctions against Russia",
+          "publisher": "Brookings Institution",
+          "published_at": "2025-08-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6e33c07d65",
+      "text": "Secondary sanctions are not a silver bullet and their credibility is decisive: DW cites Harned \u0002 like all threats, it loses its power if it is not perceived as credible or other loopholes are found \u0002 and Forrer \u0002 if deployed incorrectly, they can do more harm than good; Brookings shows effectiveness depends on US participation, which has stalled since January 2025, limiting coalition pressure.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-are-us-secondary-sanctions-and-how-do-they-work/a-73599628",
+          "title": "Why does the US use secondary sanctions, and do they work?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2025-08-14"
+        },
+        {
+          "url": "https://www.brookings.edu/articles/an-update-on-the-efficacy-of-sanctions-against-russia/",
+          "title": "An update on the efficacy of sanctions against Russia",
+          "publisher": "Brookings Institution",
+          "published_at": "2025-08-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7dda26b033",
+      "text": "Assessment of China as decisive enabler varies across institutions: USCC/Ribakova and NATO frame China as indispensable lifeline (90% of CHPL via China/HK), EUISS/MERICS note Beijing calibrates support to economic cost (exports fell after Dec 2023 threat, rebounded H2 2024), implying leverage exists, while Carnegie/CFR and sanctions-skeptic literature emphasize limits, opportunism, and that China remains wary of jeopardizing access to Western markets \u0002 suggesting secondary sanctions have deterrent effect but also overreach risks.",
+      "grade": "contested",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/what-are-us-secondary-sanctions-and-how-do-they-work/a-73599628",
+          "title": "Why does the US use secondary sanctions, and do they work?",
+          "publisher": "Deutsche Welle",
+          "published_at": "2025-08-14"
+        },
+        {
+          "url": "https://www.brookings.edu/articles/an-update-on-the-efficacy-of-sanctions-against-russia/",
+          "title": "An update on the efficacy of sanctions against Russia",
+          "publisher": "Brookings Institution",
+          "published_at": "2025-08-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5fb01c53b3",
+      "text": "According to OSW analysis of Chinese customs data, China exported about $1.9 billion of Common High Priority List dual-use items to Russia in H1 2025, down about 7% YoY, but remained Moscow's key supplier as other partners collapsed",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.osw.waw.pl/en/publikacje/analyses/2025-07-30/china-russia-trade-early-2025-fueling-moscows-war-despite-headwinds",
+          "title": "China-Russia trade in early 2025: Fueling Moscow's war despite headwinds",
+          "publisher": "Centre for Eastern Studies (OSW)",
+          "published_at": "2025-07-30T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

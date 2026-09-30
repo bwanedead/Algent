@@ -1,0 +1,778 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/ai-video-worlds-that-simulate-reality-get-two-rival-bets-for-e44637",
+  "title": "AI video worlds that simulate reality get two rival bets for cheaper, longer memory",
+  "summary": "The startup's 5x/80% claim is limited preview with no pricing or methodology, WorldCrafter's revisit-consistency gain is authors-only on 145 scenes — parallel answers to the same cost-and-memory bottleneck, not a combined breakthrough.",
+  "published_at": "2026-09-23T06:47:49.944708+00:00",
+  "as_of": "2026-09-23",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 34,
+    "likely": 4,
+    "unconfirmed": 2,
+    "speculative": 1
+  },
+  "claims": [
+    {
+      "id": "clm_3c267fc336",
+      "text": "The Biological Computing Company (TBC) made its rat-brain-derived AI model available to select AWS customers in limited preview starting 23 Sep 2026, with rollout to all AWS enterprise customers expected soon",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.wired.com/story/ai-models-built-from-rat-brains-are-about-to-become-a-reality",
+          "title": "AI Models Built From Rat Brains Just Got Closer to Reality",
+          "publisher": "WIRED",
+          "published_at": "2026-09-22T13:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d15796c4ad",
+      "text": "TBC's technology is specifically designed to improve AI for generating video by modeling how living neurons process visual information",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.wired.com/story/ai-models-built-from-rat-brains-are-about-to-become-a-reality",
+          "title": "AI Models Built From Rat Brains Just Got Closer to Reality",
+          "publisher": "WIRED",
+          "published_at": "2026-09-22T13:00:00Z"
+        },
+        {
+          "url": "https://siliconangle.com/2026/02/12/ai-startup-biological-computing-co-raises-25m-swap-silicon-living-lab-grown-neurons",
+          "title": "AI startup The Biological Computing Co. raises $25M to swap out silicon for lab-grown brains",
+          "publisher": "SiliconANGLE",
+          "published_at": "2026-02-12T12:00:44Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f448a366eb",
+      "text": "TBC claims its model is up to five times faster at video generation and significantly lowers inference cost compared to the open-source frontier video model it augments (model not named)",
+      "grade": "unconfirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.wired.com/story/ai-models-built-from-rat-brains-are-about-to-become-a-reality",
+          "title": "AI Models Built From Rat Brains Just Got Closer to Reality",
+          "publisher": "WIRED",
+          "published_at": "2026-09-22T13:00:00Z"
+        },
+        {
+          "url": "https://asia.nikkei.com/business/technology/artificial-intelligence/amazon-taps-tbc-to-make-ai-models-faster-cheaper-with-human-neurons",
+          "title": "Amazon taps TBC to make AI models faster, cheaper with human neurons",
+          "publisher": "Nikkei Asia",
+          "published_at": "2026-09-22T13:03:57Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_30ffd9c99c",
+      "text": "TBC encodes data (images/video) into living neurons and decodes neural responses into representations mapped onto frontier models via modular adapters; parallel Inspired Compute platform distills biologically derived principles into software",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.wired.com/story/ai-models-built-from-rat-brains-are-about-to-become-a-reality",
+          "title": "AI Models Built From Rat Brains Just Got Closer to Reality",
+          "publisher": "WIRED",
+          "published_at": "2026-09-22T13:00:00Z"
+        },
+        {
+          "url": "https://siliconangle.com/2026/02/12/ai-startup-biological-computing-co-raises-25m-swap-silicon-living-lab-grown-neurons",
+          "title": "AI startup The Biological Computing Co. raises $25M to swap out silicon for lab-grown brains",
+          "publisher": "SiliconANGLE",
+          "published_at": "2026-02-12T12:00:44Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_915dde08a5",
+      "text": "TBC's wet lab uses living rat brain cells and human stem-cell-derived neurons placed on 3Brain multi-electrode silicon arrays (4,096 electrodes per dish, ~100,000 neurons per culture) to record responses to electrical stimulation",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.wired.com/story/ai-models-built-from-rat-brains-are-about-to-become-a-reality",
+          "title": "AI Models Built From Rat Brains Just Got Closer to Reality",
+          "publisher": "WIRED",
+          "published_at": "2026-09-22T13:00:00Z"
+        },
+        {
+          "url": "https://asia.nikkei.com/business/technology/artificial-intelligence/amazon-taps-tbc-to-make-ai-models-faster-cheaper-with-human-neurons",
+          "title": "Amazon taps TBC to make AI models faster, cheaper with human neurons",
+          "publisher": "Nikkei Asia",
+          "published_at": "2026-09-22T13:03:57Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_60ace888e5",
+      "text": "TBC was founded in Baltimore, Maryland about four years ago (~2022) by neuroscientists/neurosurgeons Alexander Ksendzovsky (CEO) and Jon Pomeraniec (President/COO), now has ~35 employees and a San Francisco R&D lab opened in 2025",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.wired.com/story/ai-models-built-from-rat-brains-are-about-to-become-a-reality",
+          "title": "AI Models Built From Rat Brains Just Got Closer to Reality",
+          "publisher": "WIRED",
+          "published_at": "2026-09-22T13:00:00Z"
+        },
+        {
+          "url": "https://siliconangle.com/2026/02/12/ai-startup-biological-computing-co-raises-25m-swap-silicon-living-lab-grown-neurons",
+          "title": "AI startup The Biological Computing Co. raises $25M to swap out silicon for lab-grown brains",
+          "publisher": "SiliconANGLE",
+          "published_at": "2026-02-12T12:00:44Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_87fea9eb82",
+      "text": "TBC has raised more than $50 million total: $25M seed led by Primary Venture Partners (Feb/Mar 2026) plus an additional $25M shortly after, previously undisclosed until WIRED Sept 2026",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.wired.com/story/ai-models-built-from-rat-brains-are-about-to-become-a-reality",
+          "title": "AI Models Built From Rat Brains Just Got Closer to Reality",
+          "publisher": "WIRED",
+          "published_at": "2026-09-22T13:00:00Z"
+        },
+        {
+          "url": "https://siliconangle.com/2026/02/12/ai-startup-biological-computing-co-raises-25m-swap-silicon-living-lab-grown-neurons",
+          "title": "AI startup The Biological Computing Co. raises $25M to swap out silicon for lab-grown brains",
+          "publisher": "SiliconANGLE",
+          "published_at": "2026-02-12T12:00:44Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e46e336252",
+      "text": "Amazon Web Services also works with Cortical Labs (Australia) on biological computing (wetware as a service / CL-1 biological computer), indicating TBC is not AWS's first bio-computing marketplace offering",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.wired.com/story/ai-models-built-from-rat-brains-are-about-to-become-a-reality",
+          "title": "AI Models Built From Rat Brains Just Got Closer to Reality",
+          "publisher": "WIRED",
+          "published_at": "2026-09-22T13:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fdfc2e9aaf",
+      "text": "Scaling and long-horizon fidelity remain open questions for TBC's approach; AWS's global director for startups noted it remains to be seen if improvements hold for longer-form video (10 minutes to an hour) without loss of fidelity/consistency",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.wired.com/story/ai-models-built-from-rat-brains-are-about-to-become-a-reality",
+          "title": "AI Models Built From Rat Brains Just Got Closer to Reality",
+          "publisher": "WIRED",
+          "published_at": "2026-09-22T13:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c97d685eee",
+      "text": "WorldCrafter is a camera-controllable autoregressive video world model with implicit 3D-aware memory, submitted to arXiv 21 Sep 2026 (2609.24984) by Wangbo Yu et al. from ARC Lab, Tencent IEG and Peking University",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://arxiv.org/abs/2609.24984",
+          "title": "WorldCrafter: Consistent Video World Model with Implicit 3D-aware Memory",
+          "publisher": "arXiv",
+          "published_at": "2026-09-21T06:00:00Z"
+        },
+        {
+          "url": "https://drexubery.github.io/WorldCrafter",
+          "title": "WorldCrafter Project Page",
+          "publisher": "Tencent ARC / Peking University",
+          "published_at": "2026-09-23T02:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ca1fc647f1",
+      "text": "WorldCrafter's core mechanism is a jointly trained memory encoder and pose-conditioned readout that compresses selected historical latent frames into a fixed set of target-view-specific memory tokens, guided by the requested camera viewpoint, without explicit depth estimation or geometric warping",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://arxiv.org/abs/2609.24984",
+          "title": "WorldCrafter: Consistent Video World Model with Implicit 3D-aware Memory",
+          "publisher": "arXiv",
+          "published_at": "2026-09-21T06:00:00Z"
+        },
+        {
+          "url": "https://drexubery.github.io/WorldCrafter",
+          "title": "WorldCrafter Project Page",
+          "publisher": "Tencent ARC / Peking University",
+          "published_at": "2026-09-23T02:00:00Z"
+        },
+        {
+          "url": "https://artrealmai.com/article/worldcrafter-consistent-video-world-memory",
+          "title": "WorldCrafter: Camera Worlds That Remember",
+          "publisher": "ArtRealmAI",
+          "published_at": "2026-09-22T12:14:40Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_230d2b6d2a",
+      "text": "The model combines 3D-aware memory for revisit with recent temporal context for ongoing motion, operating on latent video diffusion with a Diffusion Transformer denoiser trained via conditional flow matching",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://arxiv.org/abs/2609.24984",
+          "title": "WorldCrafter: Consistent Video World Model with Implicit 3D-aware Memory",
+          "publisher": "arXiv",
+          "published_at": "2026-09-21T06:00:00Z"
+        },
+        {
+          "url": "https://artrealmai.com/article/worldcrafter-consistent-video-world-memory",
+          "title": "WorldCrafter: Camera Worlds That Remember",
+          "publisher": "ArtRealmAI",
+          "published_at": "2026-09-22T12:14:40Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d599f66271",
+      "text": "WorldCrafter enables streaming scene exploration from a single input image or text prompt, with camera poses or action strings steering generation in chunks",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://arxiv.org/abs/2609.24984",
+          "title": "WorldCrafter: Consistent Video World Model with Implicit 3D-aware Memory",
+          "publisher": "arXiv",
+          "published_at": "2026-09-21T06:00:00Z"
+        },
+        {
+          "url": "https://drexubery.github.io/WorldCrafter",
+          "title": "WorldCrafter Project Page",
+          "publisher": "Tencent ARC / Peking University",
+          "published_at": "2026-09-23T02:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_69df674a82",
+      "text": "Few-step distillation produces WorldCrafter-Fast for real-time streaming interaction; secondary reporting cites ~16 fps on a 4-GPU machine",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://artrealmai.com/article/worldcrafter-consistent-video-world-memory",
+          "title": "WorldCrafter: Camera Worlds That Remember",
+          "publisher": "ArtRealmAI",
+          "published_at": "2026-09-22T12:14:40Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_78eb02852a",
+      "text": "On a closed-loop benchmark spanning 145 scenes and 725 camera trajectories (5 per scene), WorldCrafter reports substantial gains in long-horizon revisit consistency and camera-control accuracy versus eight recent baselines, and the highest overall VBench score among evaluated methods",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://drexubery.github.io/WorldCrafter",
+          "title": "WorldCrafter Project Page",
+          "publisher": "Tencent ARC / Peking University",
+          "published_at": "2026-09-23T02:00:00Z"
+        },
+        {
+          "url": "https://artrealmai.com/article/worldcrafter-consistent-video-world-memory",
+          "title": "WorldCrafter: Camera Worlds That Remember",
+          "publisher": "ArtRealmAI",
+          "published_at": "2026-09-22T12:14:40Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5c8b6efd5d",
+      "text": "WorldCrafter code and weights are openly released (GitHub: TencentARC/WorldCrafter, Hugging Face: WorldCrafter-Base and WorldCrafter-Fast) but under academic/non-commercial license; third-party components retain their own licenses (e.g., Helios Apache-2.0, VGGT CC-BY-NC-4.0)",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://artrealmai.com/article/worldcrafter-consistent-video-world-memory",
+          "title": "WorldCrafter: Camera Worlds That Remember",
+          "publisher": "ArtRealmAI",
+          "published_at": "2026-09-22T12:14:40Z"
+        },
+        {
+          "url": "https://drexubery.github.io/WorldCrafter",
+          "title": "WorldCrafter Project Page",
+          "publisher": "Tencent ARC / Peking University",
+          "published_at": "2026-09-23T02:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_65b518fdd9",
+      "text": "Prior video world models struggle to respect observations beyond the recent context window, producing inconsistent scenes when the camera revisits a location after long exploration; WorldCrafter explicitly targets this failure mode",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://arxiv.org/abs/2609.24984",
+          "title": "WorldCrafter: Consistent Video World Model with Implicit 3D-aware Memory",
+          "publisher": "arXiv",
+          "published_at": "2026-09-21T06:00:00Z"
+        },
+        {
+          "url": "https://drexubery.github.io/WorldCrafter",
+          "title": "WorldCrafter Project Page",
+          "publisher": "Tencent ARC / Peking University",
+          "published_at": "2026-09-23T02:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bfb1150802",
+      "text": "The broader field of organoid intelligence / biological computing is receiving institutional support (e.g., NSF $14M across 7 projects in 2024 for bioengineered systems and ethical biocomputing) and includes multiple players, but faces fundamental challenges: keeping cells alive, monitoring, translation to digital, and ethical oversight",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.nsf.gov/news/nsf-invests-14m-bioengineered-systems-ethical-biocomputing",
+          "title": "NSF invests $14M in bioengineered systems and ethical biocomputing research",
+          "publisher": "NSF",
+          "published_at": "2024-08-30T14:01:43Z"
+        },
+        {
+          "url": "https://www.wired.com/story/organoids-lab-grown-brains-neural-networks",
+          "title": "AI Is Dead. Organoids Are Alive",
+          "publisher": "WIRED",
+          "published_at": "2026-08-11T10:00:00Z"
+        },
+        {
+          "url": "https://www.wired.com/story/ai-models-built-from-rat-brains-are-about-to-become-a-reality",
+          "title": "AI Models Built From Rat Brains Just Got Closer to Reality",
+          "publisher": "WIRED",
+          "published_at": "2026-09-22T13:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f7ee262ed2",
+      "text": "Video world models are increasingly positioned as simulators for robotics, embodied AI, autonomous driving, and 3D reconstruction; emergent memory and geometric consistency are key enablers for training agents and generating stable point clouds",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models",
+          "title": "Genie 3: A new frontier for world models",
+          "publisher": "Google DeepMind",
+          "published_at": "2025-08-05T00:00:00Z"
+        },
+        {
+          "url": "https://developer.nvidia.com/blog/pretrained-to-imagine-fine-tuned-to-act-the-rise-of-world-action-models",
+          "title": "Pretrained to Imagine, Fine-Tuned to Act: The Rise of World Action Models",
+          "publisher": "NVIDIA",
+          "published_at": "2026-06-15T12:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_086a85f422",
+      "text": "The thesis that bio-inspired (rat-brain) and world-model (WorldCrafter) paths are converging into a single architecture is not supported by evidence of technical integration; they are parallel approaches to the same video-consistency/efficiency problem",
+      "grade": "speculative",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.wired.com/story/ai-models-built-from-rat-brains-are-about-to-become-a-reality",
+          "title": "AI Models Built From Rat Brains Just Got Closer to Reality",
+          "publisher": "WIRED",
+          "published_at": "2026-09-22T13:00:00Z"
+        },
+        {
+          "url": "https://arxiv.org/abs/2609.24984",
+          "title": "WorldCrafter: Consistent Video World Model with Implicit 3D-aware Memory",
+          "publisher": "arXiv",
+          "published_at": "2026-09-21T06:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0b9b75fa17",
+      "text": "Genie 3 is a general-purpose world model that generates dynamic worlds navigable in real time at 24 fps at 720p, retaining consistency for a few minutes with visual memory extending ~1 minute, and is explicitly positioned to provide a vast space to train and evaluate agents like robots and autonomous systems; DeepMind tested Genie 3 worlds with its SIMA generalist agent for 3D virtual settings pursuing distinct goals via navigation actions.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models",
+          "title": "Genie 3: A new frontier for world models",
+          "publisher": "Google DeepMind",
+          "published_at": "2025-08-05T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f447b0de65",
+      "text": "World Action Models (WAMs) replace VLM backbones with pretrained video/world-model backbones as a physics prior, hypothesised to learn from diverse interaction data, generalize to unseen environments through learned dynamics, and adapt to new robot embodiments with fewer demonstrations than VLA models; modern examples include NVIDIA DreamZero, Cosmos Policy, LingBot-VA, DVA, Cortex 2.0, with early precedent UniPi (2023).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://developer.nvidia.com/blog/pretrained-to-imagine-fine-tuned-to-act-the-rise-of-world-action-models",
+          "title": "Pretrained to Imagine, Fine-Tuned to Act: The Rise of World Action Models",
+          "publisher": "NVIDIA",
+          "published_at": "2026-06-15T12:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7fcf8f44a7",
+      "text": "Cosmos 3 is an omni world foundation model (Mixture-of-Transformers, 4B Edge / 16B Nano / 64B Super) trained on ~767M images, 348M videos, 8M action samples; post-trained Cosmos3-Nano-Policy-DROID (16B) and Edge-Policy-DROID (4B) generate robot action trajectories from language + multi-camera observations while retaining joint video prediction; omni checkpoint raised RoboLab success 28.1% to 36.8% vs base checkpoint under same recipe/data/compute.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://developer.nvidia.com/blog/beyond-vlas-how-world-action-models-reshape-robot-manipulation",
+          "title": "Beyond VLAs: How World Action Models Reshape Robot Manipulation",
+          "publisher": "NVIDIA",
+          "published_at": "2026-08-04"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7752b89eed",
+      "text": "Waymo World Model is built upon Genie 3 and adapted for autonomous driving, generating photorealistic interactive 3D environments with controllability via driving action, scene layout, and language control, and multi-sensor outputs (camera + lidar) to simulate rare events (tornado, elephant encounter) and counterfactual routes at scale.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://waymo.com/blog/2026/02/the-waymo-world-model-a-new-frontier-for-autonomous-driving-simulation",
+          "title": "The Waymo World Model: A New Frontier For Autonomous Driving Simulation",
+          "publisher": "Waymo",
+          "published_at": "2026-02-06"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1afeba1bda",
+      "text": "TBC official Sept 22 2026 disclosure states optimized text-to-video model built on unnamed open-source video generation model and enhanced by lightweight proprietary software layer derived from living neural activity adding <0.1% to underlying model delivers 80% lower inference costs and 5x faster generation while improving quality vs base model, runs entirely on conventional AI infrastructure with no biological hardware required; baseline model not named, hardware/resolution/clip length/quality metric and benchmark methodology not disclosed.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.prnewswire.com/news-releases/the-biological-computing-co-partners-with-aws-to-bring-worlds-first-neuron-derived-ai-video-model-to-market-302883563.html",
+          "title": "The Biological Computing Co. Partners with AWS to Bring World's First Neuron-Derived AI Video Model to Market",
+          "publisher": "PR Newswire",
+          "published_at": "2026-09-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_526e1f3241",
+      "text": "Independent reporting notes TBC has not published benchmarks and figures could not be verified; 5x faster and 80% lower cost are mathematically the same effect (1/5 GPU time = 80% saving), not two independent breakthroughs; no controlled comparison vs purely digital optimizations (distillation/caching) on same base model; wet-lab maintenance costs (culture, incubation, arrays, personnel) excluded from inference-cost claim.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://the-decoder.com/a-tiny-software-layer-from-lab-grown-neurons-promises-faster-cheaper-ai-video",
+          "title": "A tiny software layer from lab-grown neurons promises faster, cheaper AI video",
+          "publisher": "THE DECODER",
+          "published_at": "2026-09-22"
+        },
+        {
+          "url": "https://thenextweb.com/news/biological-computing-co-aws-neuron-derived-ai-video-model",
+          "title": "The Biological Computing Co. partners with AWS to sell its neuron-derived AI video model",
+          "publisher": "The Next Web",
+          "published_at": "2026-09-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1c62355962",
+      "text": "Under AWS collaboration TBC plans to run optimized model on AWS Trainium, make it deployable through Amazon SageMaker AI, and pursue commercial distribution in AWS Marketplace; as of announcement only early-access signup is available, with no pricing, SLA, or customer names disclosed.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.prnewswire.com/news-releases/the-biological-computing-co-partners-with-aws-to-bring-worlds-first-neuron-derived-ai-video-model-to-market-302883563.html",
+          "title": "The Biological Computing Co. Partners with AWS to Bring World's First Neuron-Derived AI Video Model to Market",
+          "publisher": "PR Newswire",
+          "published_at": "2026-09-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_318c459a71",
+      "text": "TBC-AWS collaboration announced Sept 22 2026 via joint PR Newswire press release issued by TBC quoting Alex Ksendzovsky (CEO/co-founder, TBC) and Jason Bennett (Vice President and Global Head of Startups and Venture Capital, AWS); no standalone AWS Newsroom post or AWS Marketplace listing with pricing found at time of read; PR is the primary joint disclosure.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.prnewswire.com/news-releases/the-biological-computing-co-partners-with-aws-to-bring-worlds-first-neuron-derived-ai-video-model-to-market-302883563.html",
+          "title": "The Biological Computing Co. Partners with AWS to Bring World's First Neuron-Derived AI Video Model to Market",
+          "publisher": "PR Newswire",
+          "published_at": "2026-09-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_387458816b",
+      "text": "TBC describes itself as applied biological computing company headquartered in San Francisco, team of neuroscientists, biologists, AI researchers and engineers; today studies how neurons process information and translates discoveries into software, next shaping new AI architectures and ultimately enabling real-time biological computing where biology works alongside silicon; each biological experiment adds to neural-response data and library of potential algorithms.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.prnewswire.com/news-releases/the-biological-computing-co-partners-with-aws-to-bring-worlds-first-neuron-derived-ai-video-model-to-market-302883563.html",
+          "title": "The Biological Computing Co. Partners with AWS to Bring World's First Neuron-Derived AI Video Model to Market",
+          "publisher": "PR Newswire",
+          "published_at": "2026-09-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bddbeb8bcb",
+      "text": "WorldCrafter benchmark spans 145 scenes (83 dynamic object-centric + 62 static) with five metric camera trajectories per image/text pair producing 725 videos per method; trajectories span 528-1,648 frames and include closed-loop revisits; revisit metrics compare generated frames at revisited location with first-visit frames using MEt3R and LPIPS (lower-is-better) and PSNR/SSIM (higher-is-better).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://arxiv.org/html/2609.24984v1",
+          "title": "WorldCrafter: Consistent Video World Model with Implicit 3D-aware Memory",
+          "publisher": "arXiv",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d0c36ede53",
+      "text": "WorldCrafter reports leading revisit consistency with 47.6% improvement relative to strongest baseline; vs Lyra 2.0 (explicit per-frame geometry) base model reduces revisit LPIPS 0.487 to 0.255 and raises PSNR 14.050 to 18.016 dB on authors' benchmark; authors note comparison does not show implicit memory universally superior to explicit geometry and results are authors' scoreboard without independent replication.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://arxiv.org/html/2609.24984v1",
+          "title": "WorldCrafter: Consistent Video World Model with Implicit 3D-aware Memory",
+          "publisher": "arXiv",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b715e2898c",
+      "text": "Core mechanism is memory encoder initialized from pretrained 3D representation encoders mapping historical latent frames into compact memory space, jointly trained with video diffusion transformer (DiT) and pose-conditioned readout that compresses selected history into fixed set of target-view-specific tokens before denoising without explicit depth estimation/geometric warping; combines 3D-aware memory for revisit with recent temporal context for ongoing motion via conditional flow matching.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://arxiv.org/html/2609.24984v1",
+          "title": "WorldCrafter: Consistent Video World Model with Implicit 3D-aware Memory",
+          "publisher": "arXiv",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f1708e6afc",
+      "text": "Paper claims real-time streaming inference via few-step distillation (WorldCrafter-Fast) while preserving visual quality during minute-scale exploration, but extracted HTML sections do not specify ~16 fps on 4-GPU machine; that figure remains secondary reporting (src_4609c016ba) not verified in deep-read excerpts.",
+      "grade": "unconfirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://arxiv.org/html/2609.24984v1",
+          "title": "WorldCrafter: Consistent Video World Model with Implicit 3D-aware Memory",
+          "publisher": "arXiv",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f5909c69fe",
+      "text": "Biological computing scale remains orders of magnitude below silicon frontier: CL1 uses ~800,000 lab-grown human neurons per unit (TBC ~100k per dish) vs billions of parameters in frontier video models; field review cited in Singapore deployment notes current 2D neural cultures 'preclude handling complex computations or large-scale networks' and cap viable system complexity at thousands of active neurons, with electrode drift degrading signal quality over sustained operations. Biology's exponential growth claim is aspirational, not demonstrated at data-center scale.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://spectrum.ieee.org/biological-computer-for-sale",
+          "title": "Biological Computer: Human Brain Cells on a Chip",
+          "publisher": "IEEE Spectrum",
+          "published_at": "2025-06-03"
+        },
+        {
+          "url": "https://www.techtimes.com/articles/324670/20260817/worlds-first-brain-cell-server-rack-opens-singapore-neurons-expire-six-months.htm",
+          "title": "World's First Brain-Cell Server Rack Opens in Singapore: Neurons Expire in Six Months",
+          "publisher": "TechTimes",
+          "published_at": "2026-08-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e61f7c4032",
+      "text": "Six-month viability and wet-lab overhead undercut energy-saving narrative: CL1 neurons remain viable for up to six months, fed by closed life-support (pumps, 98.6F/37C incubation, CO2/O2 gas mixers, waste filtration); after window cultures must be replaced requiring sterile lab conditions and trained cell biologists. Rack of 20 CL1 draws 850-1,000W (~30W per unit, comparable to single Nvidia H100 at 700W) but figure excludes life-support, replacement cultures, and staffing; silicon servers run continuously for years with standard maintenance.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://spectrum.ieee.org/biological-computer-for-sale",
+          "title": "Biological Computer: Human Brain Cells on a Chip",
+          "publisher": "IEEE Spectrum",
+          "published_at": "2025-06-03"
+        },
+        {
+          "url": "https://www.techtimes.com/articles/324670/20260817/worlds-first-brain-cell-server-rack-opens-singapore-neurons-expire-six-months.htm",
+          "title": "World's First Brain-Cell Server Rack Opens in Singapore: Neurons Expire in Six Months",
+          "publisher": "TechTimes",
+          "published_at": "2026-08-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5d7ab456a5",
+      "text": "Reproducibility and control remain fundamental hurdles: Frontiers review lists immature fetal-state cell types, lack of organized cortical layers, high variability between organoids, absence of vascularization leading to necrotic cores, and lack of whole-brain organization/connectivity as current limitations; 2025 biocomputing field review quoted: 'biological material is unpredictable and difficult to control; neuron growth, stability, and reproducibility remain ongoing technical hurdles.'",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/artificial-intelligence/articles/10.3389/frai.2023.1307613/full",
+          "title": "Brain organoids and organoid intelligence from ethical, legal, and social points of view",
+          "publisher": "Frontiers in Artificial Intelligence",
+          "published_at": "2024-01-05"
+        },
+        {
+          "url": "https://www.techtimes.com/articles/324670/20260817/worlds-first-brain-cell-server-rack-opens-singapore-neurons-expire-six-months.htm",
+          "title": "World's First Brain-Cell Server Rack Opens in Singapore: Neurons Expire in Six Months",
+          "publisher": "TechTimes",
+          "published_at": "2026-08-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_25fa82935a",
+      "text": "Neuroscientists contest 'intelligence' and 'sentience' framing as hype: Cortical Labs 2022 Pong paper's phrase 'embodied sentience' was criticized by many neuroscientists as overstating capabilities, misleading or ethically careless; The Conversation notes term 'organoid intelligence' is catchy/media-friendly but 'risks implying parity with artificial intelligence systems, despite the vast gap'; current organoid neural activity remains primitive, far from organized firing patterns underpinning cognition or consciousness, and experts agree current organoids are not conscious nor close to it.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://theconversation.com/how-scientists-are-growing-computers-from-human-brain-cells-and-why-they-want-to-keep-doing-it-270464",
+          "title": "How scientists are growing computers from human brain cells – and why they want to keep doing it",
+          "publisher": "The Conversation",
+          "published_at": "2025-12-03"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e5c8715cdb",
+      "text": "Leading computational neuroscientists view organoid biocomputing as scientific dead-end for general-purpose compute: Cold Spring Harbor computational neuroscientist Tony Zador at Asilomar argued 'Getting them to wire up to do what we want them to do is completely beyond what we could even conceive of right now... Hoping that we can bypass that problem by putting them all together in a dish and reading out their activity in a way that's useful to us is misguided'; Stanford's Sergiu Pasca warned 'Overly expansive claims can confuse the public and policymakers'; Cambridge's Madeline Lancaster warned backlash could bring regulations that prevent all work including medical organoid research.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.statnews.com/2025/11/17/brain-organoid-pioneers-fear-backlash-over-biocomputing",
+          "title": "Brain organoid pioneers fear inflated claims about biocomputing could backfire",
+          "publisher": "STAT",
+          "published_at": "2025-11-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2e1b7ef7a5",
+      "text": "WorldCrafter is non-commercial and not production-ready: GitHub LICENSE.txt and Hugging Face distribution restrict to academic/non-commercial use; third-party components retain own licenses (e.g., Helios Apache-2.0, VGGT CC-BY-NC-4.0); interactive demo noted as 'currently being debugged'; Fast supports only 384x640 and resuming rollout only supported by Base.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://github.com/TencentARC/WorldCrafter",
+          "title": "GitHub - TencentARC/WorldCrafter",
+          "publisher": "GitHub",
+          "published_at": "2026-09-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_40ebdef907",
+      "text": "WorldCrafter benchmark is vendor scoreboard with no independent replication and no closed-model comparison: Tech Insider analysis finds as of September 2026 'there is still no standardized, third-party benchmark leaderboard covering Genie 3, Marble, Cosmos, Oasis, and HY-World' comparable to SWE-bench; 'every comparison point available right now is still demo-based or self-reported by the vendor, not validated by an independent' evaluation; WorldCrafter's 145-scene/725-trajectory closed-loop benchmark and 47.6% improvement vs Lyra 2.0 are authors' own metrics with no Genie 3 head-to-head on same metric; broader independent benchmarks show sobering limits — WorldPrediction found frontier world models at 57% accuracy vs 100% human, procedural planning as low as 38%; Genie 3 itself limited to ~60-second visual memory.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://tech-insider.org/genie-3-vs-marble-vs-nvidia-cosmos-world-models-2026",
+          "title": "Genie 3 vs Marble vs NVIDIA Cosmos: $200 AI World Model Gap [2026]",
+          "publisher": "Tech Insider",
+          "published_at": "2026-09-04"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_91c475db12",
+      "text": "Bioethics governance lags commercialization and centers on moral status/consciousness: Frontiers review notes brain organoids raise unique ethical challenges — moral status, human-animal chimeras, informed consent, oversight; NSF's 2024 Biocomputing through EnGINeering Organoid Intelligence program required ethicist as co-PI with 50-50 ethics/science weighting, described as 'very unique'; Scientific Reports experimental bioethics study finds bioethicists argue if biocomputers become conscious they have moral status limiting permissible research, while public support paradoxically increases with attributed consciousness, indicating unsettled norms; leading researchers call for urgent updates noting commercialization outpacing governance.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.frontiersin.org/journals/artificial-intelligence/articles/10.3389/frai.2023.1307613/full",
+          "title": "Brain organoids and organoid intelligence from ethical, legal, and social points of view",
+          "publisher": "Frontiers in Artificial Intelligence",
+          "published_at": "2024-01-05"
+        },
+        {
+          "url": "https://www.statnews.com/2025/11/17/brain-organoid-pioneers-fear-backlash-over-biocomputing",
+          "title": "Brain organoid pioneers fear inflated claims about biocomputing could backfire",
+          "publisher": "STAT",
+          "published_at": "2025-11-17"
+        },
+        {
+          "url": "https://www.nature.com/articles/s41598-026-43243-y",
+          "title": "Ethical concerns about embodied brain organoids shaped by foundational distinctions and perceptions of consciousness",
+          "publisher": "Nature Scientific Reports",
+          "published_at": "2026-03-27"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

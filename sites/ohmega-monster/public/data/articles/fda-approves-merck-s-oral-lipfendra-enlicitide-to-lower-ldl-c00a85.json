@@ -1,0 +1,1024 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/fda-approves-merck-s-oral-lipfendra-enlicitide-to-lower-ldl-c00a85",
+  "title": "FDA approves Merck’s oral Lipfendra (enlicitide) to lower LDL-C, but outcomes and access remain unproven",
+  "summary": "The label is based on strong LDL-C reductions versus placebo in phase 3 trials, while cardiovascular benefit, and how the oral route will affect uptake and payer coverage, are still pending CORALreef Outcomes data and nonpublic reimbursement terms.",
+  "published_at": "2026-07-16T21:07:58.959911+00:00",
+  "as_of": "2026-07-16",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 41,
+    "likely": 7,
+    "contested": 1,
+    "unconfirmed": 2
+  },
+  "claims": [
+    {
+      "id": "clm_b8bb8e8cae",
+      "text": "Serbian President Aleksandar Vucic resigned on Sunday 27 September 2026 ahead of snap parliamentary elections scheduled for 25 October 2026",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://thefrontierpost.com/serbian-president-aleksandar-vuc",
+          "title": "Serbian President Aleksandar Vucic resigns to run for prime minister in October elections",
+          "publisher": "The Frontier Post (republishing AFP)",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Aleksandar_Vu%C4%8Di%C4%87",
+          "title": "Aleksandar Vucic",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6d95764372",
+      "text": "Vucic resigned in order to run as prime ministerial candidate if his Serbian Progressive Party (SNS) wins the October vote",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://thefrontierpost.com/serbian-president-aleksandar-vuc",
+          "title": "Serbian President Aleksandar Vucic resigns to run for prime minister in October elections",
+          "publisher": "The Frontier Post (republishing AFP)",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/2026_Serbian_parliamentary_election",
+          "title": "2026 Serbian parliamentary election",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6ba93053e8",
+      "text": "Vucic has served as prime minister or president continuously since 2014",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://thefrontierpost.com/serbian-president-aleksandar-vuc",
+          "title": "Serbian President Aleksandar Vucic resigns to run for prime minister in October elections",
+          "publisher": "The Frontier Post (republishing AFP)",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Aleksandar_Vu%C4%8Di%C4%87",
+          "title": "Aleksandar Vucic",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d7a52ec977",
+      "text": "Vucic's second presidential term would otherwise end in May 2027 and he is barred by the Constitution from seeking a third term",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://thefrontierpost.com/serbian-president-aleksandar-vuc",
+          "title": "Serbian President Aleksandar Vucic resigns to run for prime minister in October elections",
+          "publisher": "The Frontier Post (republishing AFP)",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/President_of_Serbia",
+          "title": "President of Serbia",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Constitution_of_Serbia",
+          "title": "Constitution of Serbia",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://www.constituteproject.org/constitution/Serbia_2006",
+          "title": "Serbia 2006 Constitution",
+          "publisher": "Constitute Project",
+          "published_at": "2006-11-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_05b7a878f7",
+      "text": "Under Serbia's Constitution the president is directly elected for a five-year term with a maximum of two terms",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/President_of_Serbia",
+          "title": "President of Serbia",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Politics_of_Serbia",
+          "title": "Politics of Serbia",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Constitution_of_Serbia",
+          "title": "Constitution of Serbia",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://www.constituteproject.org/constitution/Serbia_2006",
+          "title": "Serbia 2006 Constitution",
+          "publisher": "Constitute Project",
+          "published_at": "2006-11-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_644d3667a3",
+      "text": "Serbia's Constitution establishes a unitary parliamentary constitutional republic where the president is head of state and the prime minister is head of government who directs the Government",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/President_of_Serbia",
+          "title": "President of Serbia",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Prime_Minister_of_Serbia",
+          "title": "Prime Minister of Serbia",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Politics_of_Serbia",
+          "title": "Politics of Serbia",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Constitution_of_Serbia",
+          "title": "Constitution of Serbia",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_57ce2d9bd9",
+      "text": "Executive power is exercised jointly by the president and the Government, but the Government headed by the prime minister is the chief executive body; the president's formal powers are limited (veto, dissolving parliament, nominating PM, appointing ambassadors, pardons) though de facto influence has been greater under Vucic",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/President_of_Serbia",
+          "title": "President of Serbia",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Prime_Minister_of_Serbia",
+          "title": "Prime Minister of Serbia",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Politics_of_Serbia",
+          "title": "Politics of Serbia",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6b8dd68d6f",
+      "text": "Upon presidential vacancy, the President of the National Assembly serves as acting president until a new president is elected within three months; presidential election must be completed within 90 days with campaign lasting 30-60 days",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://thefrontierpost.com/serbian-president-aleksandar-vuc",
+          "title": "Serbian President Aleksandar Vucic resigns to run for prime minister in October elections",
+          "publisher": "The Frontier Post (republishing AFP)",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/President_of_Serbia",
+          "title": "President of Serbia",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3f55dc735c",
+      "text": "Outgoing parliament Speaker Ana Brnabic will serve as interim (acting) president after Vucic's resignation",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://thefrontierpost.com/serbian-president-aleksandar-vuc",
+          "title": "Serbian President Aleksandar Vucic resigns to run for prime minister in October elections",
+          "publisher": "The Frontier Post (republishing AFP)",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/President_of_Serbia",
+          "title": "President of Serbia",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Aleksandar_Vu%C4%8Di%C4%87",
+          "title": "Aleksandar Vucic",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_40c84c41cc",
+      "text": "Vucic stated the first round of presidential elections will be held by end of December 2026",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://thefrontierpost.com/serbian-president-aleksandar-vuc",
+          "title": "Serbian President Aleksandar Vucic resigns to run for prime minister in October elections",
+          "publisher": "The Frontier Post (republishing AFP)",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b0e90d64bf",
+      "text": "Snap parliamentary elections on 25 October 2026 will elect all 250 members of the National Assembly by closed-list proportional representation with 3% threshold (waived for minorities) and d'Hondt allocation; 126 seats needed for majority",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/2026_Serbian_parliamentary_election",
+          "title": "2026 Serbian parliamentary election",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a333ad38d7",
+      "text": "The October 2026 election was called early by President Vucic in September 2026; it was originally scheduled by December 2027",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/2026_Serbian_parliamentary_election",
+          "title": "2026 Serbian parliamentary election",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bf6a6600bd",
+      "text": "SNS and allies will face Students Win (Student List, ballot holder Ilija Srdanovic) and European Serbia alliance of pro-Western opposition parties, plus other parties yet to nominate presidential candidates",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://thefrontierpost.com/serbian-president-aleksandar-vuc",
+          "title": "Serbian President Aleksandar Vucic resigns to run for prime minister in October elections",
+          "publisher": "The Frontier Post (republishing AFP)",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/2026_Serbian_parliamentary_election",
+          "title": "2026 Serbian parliamentary election",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_fe6998eb80",
+      "text": "SNS has been the ruling party since 2012, governing initially with Socialist Party of Serbia (SPS); it won a parliamentary majority in 2023 and holds 105 of 250 seats in the outgoing assembly",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/2026_Serbian_parliamentary_election",
+          "title": "2026 Serbian parliamentary election",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Serbian_Progressive_Party",
+          "title": "Serbian Progressive Party",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cd516b1026",
+      "text": "Serbia has experienced student-led anti-corruption protests since November 2024 triggered by the Novi Sad railway station canopy collapse, with major demonstrations of 100,000-325,000 participants and ongoing protests through May 2026",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/2026_Serbian_parliamentary_election",
+          "title": "2026 Serbian parliamentary election",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ed467f68c4",
+      "text": "International democracy assessments rate Serbia as flawed democracy / electoral autocracy / partly free with democratic backsliding, citing pressure on media, opposition and civil society under SNS rule",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Politics_of_Serbia",
+          "title": "Politics of Serbia",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/2026_Serbian_parliamentary_election",
+          "title": "2026 Serbian parliamentary election",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Serbian_Progressive_Party",
+          "title": "Serbian Progressive Party",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d8cdd7a291",
+      "text": "Serbia applied for EU membership in 2009, became candidate in 2012, began negotiations in 2014; 22 of 34 acquis chapters opened, 2 of 6 clusters opened, none closed as of 2024-2026; earliest possible entry cited as 2029-2030",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Serbia_and_the_European_Union",
+          "title": "Accession of Serbia to the European Union",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e07e2d617f",
+      "text": "EU accession progress is conditioned on rule of law reforms (chapters 23/24) and normalization of relations with Kosovo; Cluster 3 opening was postponed in 2024-2026 over rule-of-law concerns including Dutch veto threat",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Serbia_and_the_European_Union",
+          "title": "Accession of Serbia to the European Union",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_18b8b6cd21",
+      "text": "Serbia's Constitution defines Kosovo and Metohija as integral part of Serbia with substantial autonomy, creating constitutional obligations to uphold state interests there",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Constitution_of_Serbia",
+          "title": "Constitution of Serbia",
+          "publisher": "Wikipedia",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://www.constituteproject.org/constitution/Serbia_2006",
+          "title": "Serbia 2006 Constitution",
+          "publisher": "Constitute Project",
+          "published_at": "2006-11-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_66c4745ad2",
+      "text": "Vucic announced his resignation to supporters in front of the Presidency building in Belgrade, stating 'This is the last evening for me in this building' and 'I have faithfully served you and my fatherland'",
+      "grade": "likely",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://thefrontierpost.com/serbian-president-aleksandar-vuc",
+          "title": "Serbian President Aleksandar Vucic resigns to run for prime minister in October elections",
+          "publisher": "The Frontier Post (republishing AFP)",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f433fdfd98",
+      "text": "No primary source (Serbian Presidency saopstenje, Official Gazette decree, National Assembly dissolution decision, or RIK calendar) for 27 September 2026 resignation or 25 October 2026 snap election was retrievable; verification requires Official Gazette publication.",
+      "grade": "unconfirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.constituteproject.org/constitution/Serbia_2006.pdf",
+          "title": "Serbia's Constitution of 2006 (English PDF)",
+          "publisher": "Constitute Project",
+          "published_at": "2022-04-27"
+        },
+        {
+          "url": "https://www.paragraf.rs/propisi/zakon_o_predsedniku_republike.html",
+          "title": "Zakon o predsedniku Republike",
+          "publisher": "Paragraf",
+          "published_at": "2007-12-01"
+        },
+        {
+          "url": "https://www.parlament.gov.rs/national-assembly.467.html",
+          "title": "National Assembly of the Republic of Serbia homepage",
+          "publisher": "National Assembly",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c72875e8d0",
+      "text": "Under Serbia's 2006 Constitution Article 116, the President is directly elected for a five-year term and no one shall be elected President more than twice irrespective of term length.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.constituteproject.org/constitution/Serbia_2006.pdf",
+          "title": "Serbia's Constitution of 2006 (English PDF)",
+          "publisher": "Constitute Project",
+          "published_at": "2022-04-27"
+        },
+        {
+          "url": "https://www.paragraf.rs/propisi/ustav_republike_srbije.html",
+          "title": "Ustav Republike Srbije (consolidated Serbian text)",
+          "publisher": "Paragraf",
+          "published_at": "2006-11-08"
+        },
+        {
+          "url": "https://www.paragraf.rs/propisi/zakon_o_predsedniku_republike.html",
+          "title": "Zakon o predsedniku Republike",
+          "publisher": "Paragraf",
+          "published_at": "2007-12-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b1820addbd",
+      "text": "Constitution Article 112 defines the President as head of state expressing state unity; Article 123 defines the Government as holder of executive power which establishes and pursues policy; Articles 124-128 define the Prime Minister who directs the Government.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.constituteproject.org/constitution/Serbia_2006.pdf",
+          "title": "Serbia's Constitution of 2006 (English PDF)",
+          "publisher": "Constitute Project",
+          "published_at": "2022-04-27"
+        },
+        {
+          "url": "https://www.paragraf.rs/propisi/ustav_republike_srbije.html",
+          "title": "Ustav Republike Srbije (consolidated Serbian text)",
+          "publisher": "Paragraf",
+          "published_at": "2006-11-08"
+        },
+        {
+          "url": "https://www.paragraf.rs/propisi/zakon_o_vladi.html",
+          "title": "Zakon o Vladi",
+          "publisher": "Paragraf",
+          "published_at": "2005-01-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_56d84f9c51",
+      "text": "If the President resigns, is dismissed or prevented, the President of the National Assembly replaces him for at most three months (Constitution Art 120; Law on President).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.constituteproject.org/constitution/Serbia_2006.pdf",
+          "title": "Serbia's Constitution of 2006 (English PDF)",
+          "publisher": "Constitute Project",
+          "published_at": "2022-04-27"
+        },
+        {
+          "url": "https://www.paragraf.rs/propisi/ustav_republike_srbije.html",
+          "title": "Ustav Republike Srbije (consolidated Serbian text)",
+          "publisher": "Paragraf",
+          "published_at": "2006-11-08"
+        },
+        {
+          "url": "https://www.paragraf.rs/propisi/zakon_o_predsedniku_republike.html",
+          "title": "Zakon o predsedniku Republike",
+          "publisher": "Paragraf",
+          "published_at": "2007-12-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a4e9384992",
+      "text": "The President may submit a written resignation to the President of the National Assembly; mandate ends when resignation arrives in the National Assembly; President must inform the public.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.paragraf.rs/propisi/zakon_o_predsedniku_republike.html",
+          "title": "Zakon o predsedniku Republike",
+          "publisher": "Paragraf",
+          "published_at": "2007-12-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f06d3eb948",
+      "text": "The Constitution (Art 124-128) and Law on Government contain no term limit for Prime Minister and no bar on a former two-term President being nominated and elected Prime Minister by the National Assembly; incompatibility (cannot perform another public function) applies only while President.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.constituteproject.org/constitution/Serbia_2006.pdf",
+          "title": "Serbia's Constitution of 2006 (English PDF)",
+          "publisher": "Constitute Project",
+          "published_at": "2022-04-27"
+        },
+        {
+          "url": "https://www.paragraf.rs/propisi/ustav_republike_srbije.html",
+          "title": "Ustav Republike Srbije (consolidated Serbian text)",
+          "publisher": "Paragraf",
+          "published_at": "2006-11-08"
+        },
+        {
+          "url": "https://www.paragraf.rs/propisi/zakon_o_predsedniku_republike.html",
+          "title": "Zakon o predsedniku Republike",
+          "publisher": "Paragraf",
+          "published_at": "2007-12-01"
+        },
+        {
+          "url": "https://www.paragraf.rs/propisi/zakon_o_vladi.html",
+          "title": "Zakon o Vladi",
+          "publisher": "Paragraf",
+          "published_at": "2005-01-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c56ced55d3",
+      "text": "National Assembly has 250 MPs elected for four years in Serbia as a single constituency by closed-list proportional representation with mandates allocated by highest quotient system (d'Hondt) by list order.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.paragraf.rs/propisi/zakon_o_izboru_narodnih_poslanika.html",
+          "title": "Zakon o izboru narodnih poslanika",
+          "publisher": "Paragraf",
+          "published_at": "2022-01-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3bde9d0771",
+      "text": "President dissolves the National Assembly on reasoned Government proposal (within 72 hours) or as constitutional duty if no Government elected within 90 days of constitution or 30 days after mandate ends, and with dissolution decree calls parliamentary elections.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.constituteproject.org/constitution/Serbia_2006.pdf",
+          "title": "Serbia's Constitution of 2006 (English PDF)",
+          "publisher": "Constitute Project",
+          "published_at": "2022-04-27"
+        },
+        {
+          "url": "https://www.paragraf.rs/propisi/zakon_o_predsedniku_republike.html",
+          "title": "Zakon o predsedniku Republike",
+          "publisher": "Paragraf",
+          "published_at": "2007-12-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a6d1ae8cb4",
+      "text": "As of 2024 Commission Report, since January 2014, 22 of 35 chapters opened including all of Cluster 1 (Fundamentals) and Cluster 4 (Green agenda), two chapters provisionally closed (25 and 26).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://enlargement.ec.europa.eu/document/download/3c8c2d7f-bff7-44eb-b868-414730cc5902_en?filename=Serbia%20Report%202024.pdf",
+          "title": "Serbia 2024 Report SWD(2024) 695 final",
+          "publisher": "European Commission",
+          "published_at": "2024-10-30"
+        },
+        {
+          "url": "https://neighbourhood-enlargement.ec.europa.eu/enlargement-policy/serbia_en",
+          "title": "DG Enlargement Serbia country page",
+          "publisher": "European Commission",
+          "published_at": "2024-01-01"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_04320f7cb4",
+      "text": "Commission recommendations that Serbia fulfilled opening benchmarks for Cluster 3 (Competitiveness and inclusive growth) and is technically ready remain valid; overall pace depends on rule-of-law reforms (Ch 23/24) and Kosovo normalization.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://enlargement.ec.europa.eu/document/download/3c8c2d7f-bff7-44eb-b868-414730cc5902_en?filename=Serbia%20Report%202024.pdf",
+          "title": "Serbia 2024 Report SWD(2024) 695 final",
+          "publisher": "European Commission",
+          "published_at": "2024-10-30"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_52cc28ce2c",
+      "text": "Under revised enlargement methodology Serbia accepted June 2021, fundamentals first applies; Serbia adopted Reform Agenda under Reform and Growth Facility on 3 October 2024 covering business environment, green/digital, human capital, and fundamentals/rule of law.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://enlargement.ec.europa.eu/document/download/3c8c2d7f-bff7-44eb-b868-414730cc5902_en?filename=Serbia%20Report%202024.pdf",
+          "title": "Serbia 2024 Report SWD(2024) 695 final",
+          "publisher": "European Commission",
+          "published_at": "2024-10-30"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d5df2a8f11",
+      "text": "Constitution Preamble and Article 8 define Kosovo and Metohija as integral part of Serbia with substantial autonomy, creating constitutional obligations for all state bodies to uphold state interests there.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.constituteproject.org/constitution/Serbia_2006.pdf",
+          "title": "Serbia's Constitution of 2006 (English PDF)",
+          "publisher": "Constitute Project",
+          "published_at": "2022-04-27"
+        },
+        {
+          "url": "https://www.paragraf.rs/propisi/ustav_republike_srbije.html",
+          "title": "Ustav Republike Srbije (consolidated Serbian text)",
+          "publisher": "Paragraf",
+          "published_at": "2006-11-08"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a98944b36a",
+      "text": "SNS/Vučić justification frames resignation as honorable completion of two presidential terms: Vučić told supporters in front of Presidency 27.09.2026 he 'served faithfully, honorably and honestly' two mandates (2017 and 2022 first-round victories), thanked 'brave people who opposed the destruction of Serbia,' cited preserving peace and stability through Covid, Ukraine-Russia war and migrations, growing economy, 14 years stable dinar, defending traditional and democratic values, refusing to extradite Serbs to Hague Tribunal, and maintaining Serbia as 'only country in Europe with its own political stance on Ukraine' despite pressures; he expressed 'joy looking to future' with 'many more victories' and Serbia becoming strongest growth economy in Europe next year.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.sns.org.rs/novosti/vesti/vucic-hvala-hrabrim-ljudima-koji-su-se-suprotstavili-rusenju-srbije",
+          "title": "Vucic: Hvala hrabrim ljudima koji su se suprotstavili rušenju Srbije",
+          "publisher": "SNS",
+          "published_at": "2026-09-27"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ff6d68151e",
+      "text": "SNS frames the October 25 list as 'Aleksandar Vučić – Ujedinjena Srbija' as inclusive answer to divisions: SNS president Miloš Vučević on 27.09.2026 in Sjenica said 'United Serbia is not Serbia of one party or one people, it is Serbia of all citizens,' where Serbs and Bosniaks 'live together, not next to each other,' celebrating Christmas, Easter, Ramadan and Kurban Bayram together; he called it response to attempts to divide citizens 'on every basis' and to student blockades that left people not listening to each other, citing incident in Kula as danger of hatred, and urged voters to decide on families/lives and who guarantees peace, stability and new roads/school hall.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.sns.org.rs/novosti/vesti/vucevic-srbi-bosnjaci-zajedno-ujedinjena-srbija",
+          "title": "Vucevic: Srbi i Bošnjaci zajedno - to je Ujedinjena Srbija",
+          "publisher": "SNS",
+          "published_at": "2026-09-27"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bb66c5dd2c",
+      "text": "Acting president Ana Brnabić's handover narrative praises Vučić: on 28.09.2026 Vučić handed presidential seal, pardon documents and other files to Brnabić with bouquet of pink roses; Brnabić said 'I think never before have we had such a president, never again will Serbia have a president so dedicated and who put everything aside for Serbia. It is an honor to receive this duty from such a man and to guard it until the people elect a new president,' adding she 'fought against seals all her life and now has the most important seal in Serbia.'",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://n1info.rs/vesti/vucic-predsednicku-duznost-predao-ani-brnabic/",
+          "title": "Vučić predsedničku dužnost predao Ani Brnabić",
+          "publisher": "N1 Info",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_58e5612cf7",
+      "text": "Opposition/activist counter-frame rejects pardon as political maneuver: Movement of Free Citizens (PSG) said Vučić's 27.09.2026 decision to abolish 12 Novi Sad activists (part of 49 pardons) is attempt to exit a 'politically mounted process' used for media lynching, noting 6 people spent 7 months in detention without verdict, that secret recording from PSG premises was first aired on regime TVs 13 March 2025 then delivered to prosecution next day, arrests based on BIA material whose legality defense contested; PSG legal chief Aleksandar Petrović said 'abolition does not erase how procedure was initiated... regime prevented court from stating key evidence was obtained illegally and acquitting.'",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://n1info.rs/vesti/psg-abolicija-novosadskih-aktivista-vucicev-pokusaj-izlaska-iz-politicki-montiranog-procesa/",
+          "title": "PSG: Abolicija novosadskih aktivista Vučićev pokušaj izlaska iz politički montiranog procesa",
+          "publisher": "N1 Info",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3342efc1bc",
+      "text": "Novi Sad activists (STAV) reject mercy and frame abolition as proof of fabrication: STAV activists said after 500+ days exile and 7+ months detention in 'fabricated procedure constructed by authoritarian arbitrariness,' the same circle that devised it now abolished them, proving it was 'exclusively fabricated to silence activists and remove them from streets - and streets are still full'; they said 'We do not accept mercy, you did not give it to us. We got freedom that belonged to us from start and was violently taken,' accused authorities of using last instance of procedure in campaign run 'directly from Presidency' to earn 'few small political points' and create false symmetry equating them with violent actors, and demanded accountability for beatings, detentions, job losses and deaths of 16 fellow citizens.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://n1info.rs/vesti/grupa-stav-vucicu-abolicijom-montiranog-postupka-necete-dobiti-jos-jedan-politicki-poen/",
+          "title": "Grupa STAV Vučiću: Abolicijom montiranog postupka nećete dobiti još jedan politički poen",
+          "publisher": "N1 Info",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0d9608aa75",
+      "text": "Individual defendant Srđan Đurić (PSG/STAV 'Novosadska dvanaestorka' charged with attempt to overthrow constitutional order) said 'I do not seek mercy, nor pardon, nor abolition, but justice and right to fair trial,' calling Vučić's abolition 'shameless attempt for those who should be tried - SNS violent actors and criminals - to avoid justice,' stating 'I refuse that a murderer divides justice to me innocent,' after being detained 10+ times, beaten and targeted. Trial began 24 Nov 2024, six in country and six in exile tried in absentia.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://n1info.rs/vesti/djuric-o-vucicevom-pomilovanju-ne-trazim-milost-vec-pravdu/",
+          "title": "Đurić o Vučićevom pomilovanju: Ne tražim milost, već pravdu",
+          "publisher": "N1 Info",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0c26964011",
+      "text": "Media-fairness dissent alleges structural bias favoring SNS list and violating campaign rules: N1 report citing professor Aleksandra Krstić and publisher Gojko Božović says despite law requiring clearly marked electoral program and ban on functional campaign and covert political content 30 days before vote, national TVs Pink and Prva give Vučić-led list privileged positive coverage both inside and outside electoral block while Student List gets no space except negative campaign; Krstić calls it direct violation lowering personal/professional reputation of Student List figures and presenting authorities 'exclusively in dominant positive way,' while Božović says SNS lacks mobilization for large events and campaigns only through regime media; Krstić expects REM to be in permanent session and decide penalties within 48 hours.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://n1info.rs/vesti/studentska-lista-sns-predizborna-kampanja-izbori-2026/",
+          "title": "Kampanja u medijima: Iako postoje jasna pravila o zastupljenosti, za listu koju predvodi Vučić - posebni uslovi",
+          "publisher": "N1 Info",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e6cb8c0db0",
+      "text": "No Venice Commission opinion on Serbian presidential term-limit role-swap was retrievable as of 28.09.2026: Venice Commission Serbia page lists 20+ opinions (1290/2026, 1283/2026, 1275/2026, 1274/2026 etc.) focused on judicial academy, judiciary/prosecution amendments and 2021 joint opinion on constitutional framework governing democratic institutions (1071/2021), with no entry addressing Art 116 two-term limit evasion via premiership; Commission's role is advisory on constitutional matters (46 CoE members +15). Absence means neither endorsement nor condemnation of maneuver is grounded in Venice Commission source to date.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.coe.int/en/web/venice-commission/serbia",
+          "title": "Venice Commission Serbia country page",
+          "publisher": "Venice Commission",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://www.coe.int/en/web/venice-commission/",
+          "title": "Venice Commission About",
+          "publisher": "Venice Commission",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0da4d2a306",
+      "text": "No official EU, EEAS, US or Kosovo government reaction to resignation was retrievable on primary sites as of 28.09.2026: DG Enlargement news feed (2420 items) showed no Serbia resignation statement; EEAS Serbia page returned 404; U.S. Embassy Belgrade homepage showed only Chargé d'Affaires Alexander Titolo mission statement with no press release on resignation; RTS politics feed listed only domestic handover coverage. Gap noted in profile ('No official EU, US, or regional government reactions found') remains unfilled by primary sources at this snapshot.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://neighbourhood-enlargement.ec.europa.eu/news_en",
+          "title": "DG Enlargement News",
+          "publisher": "DG Enlargement",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://rs.usembassy.gov/",
+          "title": "U.S. Embassy in Serbia Homepage",
+          "publisher": "U.S. Department of State",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://www.rts.rs/lat/vesti/politika/",
+          "title": "RTS Politika section",
+          "publisher": "RTS",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_29d974be21",
+      "text": "Constitutional legality vs spirit-of-constitution framing is disputed: while Constitution Art 116 (two presidential terms) and Art 124-128/Law on Government (no PM term limit, no bar on former president becoming PM) make role-swap formally permitted if SNS wins majority and Assembly elects Vučić (existing clm_f06d3eb948, clm_c72875e8d0), opposition/activist statements frame it as authoritarian prolongation/abuse of power and 'fabricated' use of institutions, and media scholars frame it as entrenching dominant-party advantage; no Constitutional Court decision or Venice Commission assessment located to adjudicate spirit-vs-letter debate, leaving 'legally permitted' accurate on letter but contested on democratic legitimacy.",
+      "grade": "contested",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://n1info.rs/vesti/psg-abolicija-novosadskih-aktivista-vucicev-pokusaj-izlaska-iz-politicki-montiranog-procesa/",
+          "title": "PSG: Abolicija novosadskih aktivista Vučićev pokušaj izlaska iz politički montiranog procesa",
+          "publisher": "N1 Info",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://n1info.rs/vesti/grupa-stav-vucicu-abolicijom-montiranog-postupka-necete-dobiti-jos-jedan-politicki-poen/",
+          "title": "Grupa STAV Vučiću: Abolicijom montiranog postupka nećete dobiti još jedan politički poen",
+          "publisher": "N1 Info",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://n1info.rs/vesti/djuric-o-vucicevom-pomilovanju-ne-trazim-milost-vec-pravdu/",
+          "title": "Đurić o Vučićevom pomilovanju: Ne tražim milost, već pravdu",
+          "publisher": "N1 Info",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://n1info.rs/vesti/studentska-lista-sns-predizborna-kampanja-izbori-2026/",
+          "title": "Kampanja u medijima: Iako postoje jasna pravila o zastupljenosti, za listu koju predvodi Vučić - posebni uslovi",
+          "publisher": "N1 Info",
+          "published_at": "2026-09-28"
+        },
+        {
+          "url": "https://www.coe.int/en/web/venice-commission/serbia",
+          "title": "Venice Commission Serbia country page",
+          "publisher": "Venice Commission",
+          "published_at": "2026-09-28"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_9c873747b0",
+      "text": "SNS parliamentary dominance, 2012-2023: year 2012, row_type election, list_or_group SNS-led list, seats 73, share_of_250 29.2%, status actual, source_url https://arhiva.rik.parlament.gov.rs/latinica/arhiva-sednice-2012-3.php",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.stat.gov.rs/en-US/oblasti/izbori/parlementarni-izbori",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_56326f0970",
+      "text": "SNS parliamentary dominance, 2012-2023: year 2014, row_type election, list_or_group SNS-led list, seats 158, share_of_250 63.2%, status actual, source_url https://www.rts.rs/lat/vesti/izbori-2014/1556680/.html?print=true",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.stat.gov.rs/en-US/oblasti/izbori/parlementarni-izbori",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_79f83848cc",
+      "text": "SNS parliamentary dominance, 2012-2023: year 2016, row_type election, list_or_group SNS-led list, seats 131, share_of_250 52.4%, status actual, source_url https://www.srbija.gov.rs/vest/265003/objavljeni-konacni-rezultati-izbora-u-srbiji.php",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.stat.gov.rs/en-US/oblasti/izbori/parlementarni-izbori",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_3a842b8c17",
+      "text": "SNS parliamentary dominance, 2012-2023: year 2020, row_type election, list_or_group SNS-led list, seats 188, share_of_250 75.2%, status actual, source_url https://www.srbija.gov.rs/vest/476727/rik-saopstio-",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.stat.gov.rs/en-US/oblasti/izbori/parlementarni-izbori",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_a6b22a2f81",
+      "text": "SNS parliamentary dominance, 2012-2023: year 2022, row_type election, list_or_group SNS-led list, seats 120, share_of_250 48.0%, status actual, source_url https://www.srbija.gov.rs/vest/639295/rik-objavio-konacne-rezultate-parlamentarnih-izbora.php",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.stat.gov.rs/en-US/oblasti/izbori/parlementarni-izbori",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_4d1fae6c87",
+      "text": "SNS parliamentary dominance, 2012-2023: year 2023, row_type election, list_or_group SNS-led list, seats 129, share_of_250 51.6%, status actual, source_url https://data.stat.gov.rs/Home/Result/07021102?languageCode=en-US",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.stat.gov.rs/en-US/oblasti/izbori/parlementarni-izbori",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_7c77d152bd",
+      "text": "SNS parliamentary dominance, 2012-2023: year 2023, row_type annotation, list_or_group SNS party, seats 105, share_of_250 42.0%, status context, source_url https://en.wikipedia.org/wiki/2023_Serbian_parliamentary_election",
+      "grade": "unconfirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.stat.gov.rs/en-US/oblasti/izbori/parlementarni-izbori",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_f4bada7602",
+      "text": "SNS parliamentary dominance, 2012-2023: year 2023, row_type annotation, list_or_group SPS list, seats 18, share_of_250 7.2%, status context, source_url https://data.stat.gov.rs/Home/Result/07021102?languageCode=en-US",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.stat.gov.rs/en-US/oblasti/izbori/parlementarni-izbori",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_an_359c19e9a6",
+      "text": "SNS parliamentary dominance, 2012-2023: year 2023, row_type annotation, list_or_group Serbia Against Violence, seats 65, share_of_250 26.0%, status context, source_url https://data.stat.gov.rs/Home/Result/07021102?languageCode=en-US",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.stat.gov.rs/en-US/oblasti/izbori/parlementarni-izbori",
+          "title": "sourced for a figure"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

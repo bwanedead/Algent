@@ -1,0 +1,523 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/florida-s-1-8-trillion-economy-claim-is-backed-by-bea-data-b-95e359",
+  "title": "Florida’s $1.8 trillion economy claim is backed by BEA data—but the “14th-largest” ranking can’t be verified from the Chamber release alone",
+  "summary": "The Florida Chamber Foundation and Fox Business tout Florida as the world’s No. 14 in nominal GDP, using BEA’s official state GDP series as the base; but the article says the Chamber’s specific country-comparison method and calculations aren’t fully reproducible here, and the figure measures size—not resident affordability or welfare.",
+  "published_at": "2026-07-25T07:56:53.170477+00:00",
+  "as_of": "2026-07-25",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 27,
+    "likely": 5
+  },
+  "claims": [
+    {
+      "id": "clm_160af73026",
+      "text": "The Florida Chamber Foundation says Florida’s economy is $1.8 trillion and ranks as the world’s 14th-largest economy.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.flchamber.com/florida-chamber-foundation-announces-floridas-1-8-trillion-economy-is-now-the-worlds-14th-largest-economy/",
+          "title": "Florida Chamber Foundation Announces Florida’s $1.8 Trillion Economy Is Now the World’s 14th Largest Economy",
+          "publisher": "Florida Chamber of Commerce / Florida Chamber Foundation",
+          "published_at": "2026-07-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_883782e946",
+      "text": "The Chamber says Florida’s economy grew 6.3% over the past year.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.flchamber.com/florida-chamber-foundation-announces-floridas-1-8-trillion-economy-is-now-the-worlds-14th-largest-economy/",
+          "title": "Florida Chamber Foundation Announces Florida’s $1.8 Trillion Economy Is Now the World’s 14th Largest Economy",
+          "publisher": "Florida Chamber of Commerce / Florida Chamber Foundation",
+          "published_at": "2026-07-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_11ecd768f7",
+      "text": "The Chamber frames the result as evidence that free enterprise works and as progress toward the Florida 2030 Blueprint goal of becoming a top 10 global economy by 2030.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.flchamber.com/florida-chamber-foundation-announces-floridas-1-8-trillion-economy-is-now-the-worlds-14th-largest-economy/",
+          "title": "Florida Chamber Foundation Announces Florida’s $1.8 Trillion Economy Is Now the World’s 14th Largest Economy",
+          "publisher": "Florida Chamber of Commerce / Florida Chamber Foundation",
+          "published_at": "2026-07-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_43b4552f54",
+      "text": "BEA publishes an official GDP-by-state data series for the states and the District of Columbia.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.bea.gov/data/gdp/gdp-state",
+          "title": "GDP by State",
+          "publisher": "U.S. Bureau of Economic Analysis",
+          "published_at": "2026-06-25"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_298e2c766f",
+      "text": "BEA describes GDP by state as a comprehensive measure of the value of goods and services produced in a state.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.bea.gov/data/gdp/gdp-state",
+          "title": "GDP by State",
+          "publisher": "U.S. Bureau of Economic Analysis",
+          "published_at": "2026-06-25"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d64d3f31c9",
+      "text": "The BEA landing page read in this pass did not provide the specific Florida annual current-dollar value, real growth rate, or per-capita figure needed to independently verify the $1.8 trillion claim from the page alone.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.bea.gov/data/gdp/gdp-state",
+          "title": "GDP by State",
+          "publisher": "U.S. Bureau of Economic Analysis",
+          "published_at": "2026-06-25"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_532eafd7d5",
+      "text": "Fox Business repeated the Chamber’s $1.8 trillion / No. 14 claim and quoted Mark Wilson describing it as evidence of free enterprise and freedom.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.foxbusiness.com/economy/florida-stock-rising-how-became-worlds-14th-largest-economy-blue-states-continue-death-spiral",
+          "title": "Florida stock rising: How it became world's 14th largest economy as blue states continue a 'death spiral'",
+          "publisher": "Fox Business",
+          "published_at": "2026-07-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bba1827264",
+      "text": "Florida officials have publicly framed insurance premium relief as evidence that state reforms are delivering results.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.myfloridacfo.com/news/pressreleases/press-release-details/2026/01/12/icymi--governor-ron-desantis-announces-major-insurance-rate-relief-as-florida's-reforms-deliver-results",
+          "title": "ICYMI: Governor Ron DeSantis Announces Major Insurance Rate Relief as Florida's Reforms Deliver Results",
+          "publisher": "Florida Department of Financial Services / CFO press release",
+          "published_at": "2026-01-12"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_96dceaafd9",
+      "text": "Census Bureau data resources are the authoritative federal source for population and migration statistics.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.census.gov/",
+          "title": "U.S. Census Bureau homepage",
+          "publisher": "U.S. Census Bureau"
+        },
+        {
+          "url": "https://data.census.gov/",
+          "title": "Explore Census Data",
+          "publisher": "U.S. Census Bureau"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_608c832e15",
+      "text": "The chamber’s economy ranking is being used in a political environment shaped by Florida’s succession and primary politics.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.flchamber.com/florida-chamber-foundation-announces-floridas-1-8-trillion-economy-is-now-the-worlds-14th-largest-economy/",
+          "title": "Florida Chamber Foundation Announces Florida’s $1.8 Trillion Economy Is Now the World’s 14th Largest Economy",
+          "publisher": "Florida Chamber of Commerce / Florida Chamber Foundation",
+          "published_at": "2026-07-18"
+        },
+        {
+          "url": "https://www.foxbusiness.com/economy/florida-stock-rising-how-became-worlds-14th-largest-economy-blue-states-continue-death-spiral",
+          "title": "Florida stock rising: How it became world's 14th largest economy as blue states continue a 'death spiral'",
+          "publisher": "Fox Business",
+          "published_at": "2026-07-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e6cb49b1a5",
+      "text": "The Chamber’s own release states that Florida has climbed to the 14th-largest economy in the world, says the milestone means Florida has moved past Australia and Mexico in gross domestic product, and ties the claim to the Florida 2030 Blueprint.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.flchamber.com/florida-chamber-foundation-announces-floridas-1-8-trillion-economy-is-now-the-worlds-14th-largest-economy/",
+          "title": "Florida Chamber Foundation Announces Florida’s $1.8 Trillion Economy Is Now the World’s 14th Largest Economy",
+          "publisher": "Florida Chamber of Commerce / Florida Chamber Foundation",
+          "published_at": "2026-07-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_cebf860557",
+      "text": "The Chamber release says Florida’s economy grew by 6.3 percent over the past year and says Florida needs about 2 percent more growth to surpass South Korea and reach No. 13.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.flchamber.com/florida-chamber-foundation-announces-floridas-1-8-trillion-economy-is-now-the-worlds-14th-largest-economy/",
+          "title": "Florida Chamber Foundation Announces Florida’s $1.8 Trillion Economy Is Now the World’s 14th Largest Economy",
+          "publisher": "Florida Chamber of Commerce / Florida Chamber Foundation",
+          "published_at": "2026-07-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d6552aa41e",
+      "text": "BEA’s 2nd-quarter-2025 state GDP release says the agency publishes quarterly GDP by state and annual updates for 2020 to 2024, and that the release incorporates revised annual state GDP estimates through 2024.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.bea.gov/news/2025/gross-domestic-product-state-and-personal-income-state-2nd-quarter-2025-and-personal",
+          "title": "Gross Domestic Product by State and Personal Income by State, 2nd Quarter 2025 and Personal Consumption Expenditures by State, 2024",
+          "publisher": "Bureau of Economic Analysis",
+          "published_at": "2025-09-26"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_71042b38f6",
+      "text": "BEA’s release states that state GDP tables are available in BEA’s Interactive Data Application and can be downloaded in PDF, Excel, or CSV format.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.bea.gov/news/2025/gross-domestic-product-state-and-personal-income-state-2nd-quarter-2025-and-personal",
+          "title": "Gross Domestic Product by State and Personal Income by State, 2nd Quarter 2025 and Personal Consumption Expenditures by State, 2024",
+          "publisher": "Bureau of Economic Analysis",
+          "published_at": "2025-09-26"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_deb620d9f4",
+      "text": "The IMF World Economic Outlook dataset page says the WEO database is published twice a year, includes national accounts and GDP data for countries and country groups, and provides annual data from 1980 to the present.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://data.imf.org/en/datasets/IMF.RES:WEO",
+          "title": "World Economic Outlook (WEO)",
+          "publisher": "International Monetary Fund",
+          "published_at": "2026-04-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_abbeb30b9f",
+      "text": "The World Bank’s GDP (current US$) indicator page defines the series as GDP in current US dollars and lists country official statistics, NSOs/central banks, OECD national accounts files, and World Bank staff estimates as sources.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+          "title": "GDP (current US$)",
+          "publisher": "World Bank",
+          "published_at": "2026-05-20"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5b2640f500",
+      "text": "The Chamber page does not provide, in the text deep-read here, a transparent methodological footnote that identifies the exact external country-GDP dataset, currency conversion treatment, or tie/rounding rules used to produce the No. 14 global ranking.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.flchamber.com/florida-chamber-foundation-announces-floridas-1-8-trillion-economy-is-now-the-worlds-14th-largest-economy/",
+          "title": "Florida Chamber Foundation Announces Florida’s $1.8 Trillion Economy Is Now the World’s 14th Largest Economy",
+          "publisher": "Florida Chamber of Commerce / Florida Chamber Foundation",
+          "published_at": "2026-07-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0194e24b39",
+      "text": "Because the Chamber release states the comparison against Australia and Mexico but does not expose the calculation steps in the text read here, the No. 14 ranking remains non-reproducible from the Chamber page alone without an attached methodology or downloadable dataset.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.flchamber.com/florida-chamber-foundation-announces-floridas-1-8-trillion-economy-is-now-the-worlds-14th-largest-economy/",
+          "title": "Florida Chamber Foundation Announces Florida’s $1.8 Trillion Economy Is Now the World’s 14th Largest Economy",
+          "publisher": "Florida Chamber of Commerce / Florida Chamber Foundation",
+          "published_at": "2026-07-18"
+        },
+        {
+          "url": "https://www.bea.gov/news/2025/gross-domestic-product-state-and-personal-income-state-2nd-quarter-2025-and-personal",
+          "title": "Gross Domestic Product by State and Personal Income by State, 2nd Quarter 2025 and Personal Consumption Expenditures by State, 2024",
+          "publisher": "Bureau of Economic Analysis",
+          "published_at": "2025-09-26"
+        },
+        {
+          "url": "https://data.imf.org/en/datasets/IMF.RES:WEO",
+          "title": "World Economic Outlook (WEO)",
+          "publisher": "International Monetary Fund",
+          "published_at": "2026-04-14"
+        },
+        {
+          "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+          "title": "GDP (current US$)",
+          "publisher": "World Bank",
+          "published_at": "2026-05-20"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f197264c34",
+      "text": "The World Bank’s GDP (current US$) series is a country/economy indicator built from national official statistics, OECD national accounts files, and World Bank staff estimates, so it is designed for cross-economy nominal comparison.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+          "title": "GDP (current US$)",
+          "publisher": "World Bank",
+          "published_at": "2026-05-20"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bf8f4b22da",
+      "text": "The IMF World Economic Outlook database is published twice a year and includes national accounts and GDP data for countries and country groups.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://data.imf.org/en/datasets/IMF.RES:WEO",
+          "title": "World Economic Outlook (WEO)",
+          "publisher": "International Monetary Fund",
+          "published_at": "2026-04-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_072ccd95ba",
+      "text": "Fox Business presents Florida’s No. 14 GDP ranking as evidence that Florida is competing with global economies, reinforcing that proponents intend the comparison as a size/rank device.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.foxbusiness.com/economy/florida-stock-rising-how-became-worlds-14th-largest-economy-blue-states-continue-death-spiral",
+          "title": "Florida stock rising: How it became world's 14th largest economy as blue states continue a 'death spiral'",
+          "publisher": "Fox Business",
+          "published_at": "2026-07-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3ac210a457",
+      "text": "Mark Wilson explicitly says the ranking supports free enterprise and freedom and argues that following Florida’s lead would mean that “everyone wins,” which is political-vindication messaging tied to the GDP rank.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.foxbusiness.com/economy/florida-stock-rising-how-became-worlds-14th-largest-economy-blue-states-continue-death-spiral",
+          "title": "Florida stock rising: How it became world's 14th largest economy as blue states continue a 'death spiral'",
+          "publisher": "Fox Business",
+          "published_at": "2026-07-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e43dc47865",
+      "text": "In the Fox Business read, Wilson disputes the relevance of a reported cost-of-living comparison by saying the analysis compares “Miami to New York City” rather than “New York to Florida.”",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.foxbusiness.com/economy/florida-stock-rising-how-became-worlds-14th-largest-economy-blue-states-continue-death-spiral",
+          "title": "Florida stock rising: How it became world's 14th largest economy as blue states continue a 'death spiral'",
+          "publisher": "Fox Business",
+          "published_at": "2026-07-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_59522c2b3d",
+      "text": "A nominal GDP rank can legitimately indicate an economy’s scale and its ability to attract capital and talent, but it does not by itself establish broad prosperity, affordability, or household well-being.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_c92ad7ea36",
+      "text": "The strongest counter-reading is that comparing a U.S. state to sovereign countries is a rhetorical device built on nominal-dollar size, and that policy vindication from the rank is incomplete without affordability, real growth, and distributional context.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bdc672889e",
+      "text": "The Florida Chamber Foundation says Florida’s economy is $1.8 trillion, ranks it as the world’s 14th-largest economy, and says it grew 6.3% over the past year.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.flchamber.com/florida-chamber-foundation-announces-floridas-1-8-trillion-economy-is-now-the-worlds-14th-largest-economy/",
+          "title": "Florida Chamber Foundation Announces Florida’s $1.8 Trillion Economy Is Now the World’s 14th Largest Economy",
+          "publisher": "Florida Chamber of Commerce / Florida Chamber Foundation",
+          "published_at": "2026-07-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0864507d0a",
+      "text": "The Chamber ties the ranking to the Florida 2030 Blueprint and to a free-enterprise policy frame.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.flchamber.com/florida-chamber-foundation-announces-floridas-1-8-trillion-economy-is-now-the-worlds-14th-largest-economy/",
+          "title": "Florida Chamber Foundation Announces Florida’s $1.8 Trillion Economy Is Now the World’s 14th Largest Economy",
+          "publisher": "Florida Chamber of Commerce / Florida Chamber Foundation",
+          "published_at": "2026-07-18"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_313d8d121f",
+      "text": "BEA publishes an official GDP-by-state series and defines state GDP as a comprehensive measure of the value of goods and services produced in a state.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.bea.gov/data/gdp/gdp-state",
+          "title": "GDP by State",
+          "publisher": "U.S. Bureau of Economic Analysis",
+          "published_at": "2026-06-25"
+        },
+        {
+          "url": "https://www.bea.gov/news/2025/gross-domestic-product-state-and-personal-income-state-2nd-quarter-2025-and-personal",
+          "title": "Gross Domestic Product by State and Personal Income by State, 2nd Quarter 2025 and Personal Consumption Expenditures by State, 2024",
+          "publisher": "Bureau of Economic Analysis",
+          "published_at": "2025-09-26"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a865bf5d3f",
+      "text": "BEA says its state GDP tables are available through its Interactive Data Application and can be downloaded in PDF, Excel, or CSV form.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.bea.gov/news/2025/gross-domestic-product-state-and-personal-income-state-2nd-quarter-2025-and-personal",
+          "title": "Gross Domestic Product by State and Personal Income by State, 2nd Quarter 2025 and Personal Consumption Expenditures by State, 2024",
+          "publisher": "Bureau of Economic Analysis",
+          "published_at": "2025-09-26"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_05dfb8a0b2",
+      "text": "The World Bank’s GDP (current US$) series is designed for cross-economy nominal comparison, and the IMF’s WEO database also publishes country-level GDP data on a recurring basis.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+          "title": "GDP (current US$)",
+          "publisher": "World Bank",
+          "published_at": "2026-05-20"
+        },
+        {
+          "url": "https://data.imf.org/en/datasets/IMF.RES:WEO",
+          "title": "World Economic Outlook (WEO)",
+          "publisher": "International Monetary Fund",
+          "published_at": "2026-04-14"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1e7e5341be",
+      "text": "Fox Business repeated the Chamber’s claim and quoted Mark Wilson framing it as evidence that Florida’s model is working.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.foxbusiness.com/economy/florida-stock-rising-how-became-worlds-14th-largest-economy-blue-states-continue-death-spiral",
+          "title": "Florida stock rising: How it became world's 14th largest economy as blue states continue a 'death spiral'",
+          "publisher": "Fox Business",
+          "published_at": "2026-07-22"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_618f512abb",
+      "text": "The Chamber’s own release says its upcoming mid-year report will examine housing affordability, inflation, workforce, and other pressures.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.flchamber.com/florida-chamber-foundation-announces-floridas-1-8-trillion-economy-is-now-the-worlds-14th-largest-economy/",
+          "title": "Florida Chamber Foundation Announces Florida’s $1.8 Trillion Economy Is Now the World’s 14th Largest Economy",
+          "publisher": "Florida Chamber of Commerce / Florida Chamber Foundation",
+          "published_at": "2026-07-18"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}

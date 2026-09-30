@@ -1,0 +1,764 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/amazon-s-texas-ai-campus-to-run-on-a-7-65-gigawatt-private-g-9a98b8",
+  "title": "Amazon's Texas AI campus to run on a 7.65-gigawatt private gas plant",
+  "summary": "Permitted for up to 33.2 million tons a year if run flat-out — twice the largest US power-plant source — the off-grid Pecos County project is phased to 1 GW in 2028 and shows how AI is becoming a power-plant buildout.",
+  "published_at": "2026-08-12T23:22:14.075427+00:00",
+  "as_of": "2026-08-12",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 19,
+    "likely": 20
+  },
+  "claims": [
+    {
+      "id": "clm_b3900d7f38",
+      "text": "GW Ranch Energy Center is located in Pecos County, West Texas, in the Permian Basin near Fort Stockton",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.businesswire.com/news/home/20260126236053/en/Pacifico-Energy-Secures-7.65-GW-Power-Generation-Permit-for-GW-Ranch-Project",
+          "title": "Pacifico Energy Secures 7.65 GW Power Generation Permit for GW Ranch Project",
+          "publisher": "Business Wire / Pacifico Energy",
+          "published_at": "2026-01-26T00:00:00Z"
+        },
+        {
+          "url": "https://ukozvhzgrcnkcatjqfoo.supabase.co/storage/v1/object/public/03-00-air-construction/2026_01_21_GW_Ranch_Energy_Center_181033__PSDTX167_f6c9943f.pdf",
+          "title": "TCEQ Construction Permit Source Analysis & Technical Review 181033 PSDTX1672 GHGPSDTX255",
+          "publisher": "Texas Commission on Environmental Quality",
+          "published_at": "2026-01-21T00:00:00Z"
+        },
+        {
+          "url": "https://insideclimatenews.org/news/29012026/developer-calls-gw-ranch-in-pecos-county-texas-the-largest-power-project-in-u-s/",
+          "title": "Developer Calls GW Ranch in Pecos County, Texas, the 'Largest Power Project' in U.S.",
+          "publisher": "Inside Climate News",
+          "published_at": "2026-01-29T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_73fddc477e",
+      "text": "Developer is Pacifico Energy (Pacifico GW LLC), proposing 35 natural gas-fired simple-cycle turbines",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.businesswire.com/news/home/20260126236053/en/Pacifico-Energy-Secures-7.65-GW-Power-Generation-Permit-for-GW-Ranch-Project",
+          "title": "Pacifico Energy Secures 7.65 GW Power Generation Permit for GW Ranch Project",
+          "publisher": "Business Wire / Pacifico Energy",
+          "published_at": "2026-01-26T00:00:00Z"
+        },
+        {
+          "url": "https://ukozvhzgrcnkcatjqfoo.supabase.co/storage/v1/object/public/03-00-air-construction/2026_01_21_GW_Ranch_Energy_Center_181033__PSDTX167_f6c9943f.pdf",
+          "title": "TCEQ Construction Permit Source Analysis & Technical Review 181033 PSDTX1672 GHGPSDTX255",
+          "publisher": "Texas Commission on Environmental Quality",
+          "published_at": "2026-01-21T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_82885c3b67",
+      "text": "TCEQ issued air permit in January 2026 authorizing up to 7.65 GW gas-fired generation (largest US air permit for power generation)",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.businesswire.com/news/home/20260126236053/en/Pacifico-Energy-Secures-7.65-GW-Power-Generation-Permit-for-GW-Ranch-Project",
+          "title": "Pacifico Energy Secures 7.65 GW Power Generation Permit for GW Ranch Project",
+          "publisher": "Business Wire / Pacifico Energy",
+          "published_at": "2026-01-26T00:00:00Z"
+        },
+        {
+          "url": "https://ukozvhzgrcnkcatjqfoo.supabase.co/storage/v1/object/public/03-00-air-construction/2026_01_21_GW_Ranch_Energy_Center_181033__PSDTX167_f6c9943f.pdf",
+          "title": "TCEQ Construction Permit Source Analysis & Technical Review 181033 PSDTX1672 GHGPSDTX255",
+          "publisher": "Texas Commission on Environmental Quality",
+          "published_at": "2026-01-21T00:00:00Z"
+        },
+        {
+          "url": "https://insideclimatenews.org/news/29012026/developer-calls-gw-ranch-in-pecos-county-texas-the-largest-power-project-in-u-s/",
+          "title": "Developer Calls GW Ranch in Pecos County, Texas, the 'Largest Power Project' in U.S.",
+          "publisher": "Inside Climate News",
+          "published_at": "2026-01-29T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1fa5bbee9a",
+      "text": "Plant has nominal delivered output of 5,000 MW and maximum nameplate 7.65 GW; 21 Siemens SGT-800 turbines plus 14 large-frame turbines (Doosan/GE/Mitsubishi/Siemens options)",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ukozvhzgrcnkcatjqfoo.supabase.co/storage/v1/object/public/03-00-air-construction/2026_01_21_GW_Ranch_Energy_Center_181033__PSDTX167_f6c9943f.pdf",
+          "title": "TCEQ Construction Permit Source Analysis & Technical Review 181033 PSDTX1672 GHGPSDTX255",
+          "publisher": "Texas Commission on Environmental Quality",
+          "published_at": "2026-01-21T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b4c5eef977",
+      "text": "Permit allows up to 33,204,964 tons per year of greenhouse gases as CO2e",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ukozvhzgrcnkcatjqfoo.supabase.co/storage/v1/object/public/03-00-air-construction/2026_01_21_GW_Ranch_Energy_Center_181033__PSDTX167_f6c9943f.pdf",
+          "title": "TCEQ Construction Permit Source Analysis & Technical Review 181033 PSDTX1672 GHGPSDTX255",
+          "publisher": "Texas Commission on Environmental Quality",
+          "published_at": "2026-01-21T00:00:00Z"
+        },
+        {
+          "url": "https://insideclimatenews.org/news/29012026/developer-calls-gw-ranch-in-pecos-county-texas-the-largest-power-project-in-u-s/",
+          "title": "Developer Calls GW Ranch in Pecos County, Texas, the 'Largest Power Project' in U.S.",
+          "publisher": "Inside Climate News",
+          "published_at": "2026-01-29T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_84b9748ea6",
+      "text": "Permit also allows more than 12,000 tons per year of regulated air pollutants including PM, NOx, CO, VOC, SO2, ammonia, sulfuric acid mist and hazardous air pollutants",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ukozvhzgrcnkcatjqfoo.supabase.co/storage/v1/object/public/03-00-air-construction/2026_01_21_GW_Ranch_Energy_Center_181033__PSDTX167_f6c9943f.pdf",
+          "title": "TCEQ Construction Permit Source Analysis & Technical Review 181033 PSDTX1672 GHGPSDTX255",
+          "publisher": "Texas Commission on Environmental Quality",
+          "published_at": "2026-01-21T00:00:00Z"
+        },
+        {
+          "url": "https://insideclimatenews.org/news/29012026/developer-calls-gw-ranch-in-pecos-county-texas-the-largest-power-project-in-u-s/",
+          "title": "Developer Calls GW Ranch in Pecos County, Texas, the 'Largest Power Project' in U.S.",
+          "publisher": "Inside Climate News",
+          "published_at": "2026-01-29T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_92eda27534",
+      "text": "If operated at the permitted ceiling, GW Ranch would be the largest single source of greenhouse gas pollution in the US, about twice the 16.6 million tons CO2e emitted in 2023 by the current largest emitter, Alabama Power's James H. Miller Jr. coal plant",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://insideclimatenews.org/news/29012026/developer-calls-gw-ranch-in-pecos-county-texas-the-largest-power-project-in-u-s/",
+          "title": "Developer Calls GW Ranch in Pecos County, Texas, the 'Largest Power Project' in U.S.",
+          "publisher": "Inside Climate News",
+          "published_at": "2026-01-29T00:00:00Z"
+        },
+        {
+          "url": "https://insideclimatenews.org/news/16102024/alabama-coal-plant-top-greenhouse-gas-polluter-ninth-consecutive-year/",
+          "title": "Alabama Coal Plant Tops US Greenhouse Gas Polluter List for 9th Straight Year",
+          "publisher": "Inside Climate News",
+          "published_at": "2024-10-16T00:00:00Z"
+        },
+        {
+          "url": "https://www.epa.gov/system/files/documents/2024-10/powerplants_profile_2023.pdf",
+          "title": "2011-2023 Greenhouse Gas Reporting Program Sector Profile: Power Plants",
+          "publisher": "U.S. EPA Greenhouse Gas Reporting Program",
+          "published_at": "2024-10-01T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_ce474f5803",
+      "text": "Power plants rarely emit at their permitted maximum; actual emissions will likely be lower than the ceiling",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://newsletter.cleanview.co/p/scoop-amazon-is-behind-one-of-the",
+          "title": "Scoop: Amazon Is Behind One of the Largest Planned Gas Power Plants in the US",
+          "publisher": "Cleanview",
+          "published_at": "2026-08-07T00:00:00Z"
+        },
+        {
+          "url": "https://insideclimatenews.org/news/29012026/developer-calls-gw-ranch-in-pecos-county-texas-the-largest-power-project-in-u-s/",
+          "title": "Developer Calls GW Ranch in Pecos County, Texas, the 'Largest Power Project' in U.S.",
+          "publisher": "Inside Climate News",
+          "published_at": "2026-01-29T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bd43892b7a",
+      "text": "GW Ranch is designed as a private-grid, off-grid campus that will not initially sell to or draw from the ERCOT grid, with intent to transition to grid-connected service later",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.businesswire.com/news/home/20260126236053/en/Pacifico-Energy-Secures-7.65-GW-Power-Generation-Permit-for-GW-Ranch-Project",
+          "title": "Pacifico Energy Secures 7.65 GW Power Generation Permit for GW Ranch Project",
+          "publisher": "Business Wire / Pacifico Energy",
+          "published_at": "2026-01-26T00:00:00Z"
+        },
+        {
+          "url": "https://ukozvhzgrcnkcatjqfoo.supabase.co/storage/v1/object/public/03-00-air-construction/2026_01_21_GW_Ranch_Energy_Center_181033__PSDTX167_f6c9943f.pdf",
+          "title": "TCEQ Construction Permit Source Analysis & Technical Review 181033 PSDTX1672 GHGPSDTX255",
+          "publisher": "Texas Commission on Environmental Quality",
+          "published_at": "2026-01-21T00:00:00Z"
+        },
+        {
+          "url": "https://www.aboutamazon.com/news/company-news/amazon-pecos-county-texas-data-center-clean-energy-jobs",
+          "title": "Amazon's planned data center campus in Pecos County, Texas: Read Amazon's statement",
+          "publisher": "Amazon",
+          "published_at": "2026-08-10T00:00:00Z"
+        },
+        {
+          "url": "https://www.pacificoenergy.com/gw-ranch",
+          "title": "GW Ranch | Off-Grid Power Generation",
+          "publisher": "Pacifico Energy",
+          "published_at": "2026-01-26T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d4ccc5ee29",
+      "text": "Project includes 1.8 GW of battery energy storage and up to 750 MWac of solar in addition to gas",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.businesswire.com/news/home/20260126236053/en/Pacifico-Energy-Secures-7.65-GW-Power-Generation-Permit-for-GW-Ranch-Project",
+          "title": "Pacifico Energy Secures 7.65 GW Power Generation Permit for GW Ranch Project",
+          "publisher": "Business Wire / Pacifico Energy",
+          "published_at": "2026-01-26T00:00:00Z"
+        },
+        {
+          "url": "https://www.pacificoenergy.com/gw-ranch",
+          "title": "GW Ranch | Off-Grid Power Generation",
+          "publisher": "Pacifico Energy",
+          "published_at": "2026-01-26T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0e165d68f0",
+      "text": "Turbines are simple-cycle units, less efficient than combined-cycle baseload plants, chosen because efficient combined-cycle turbines are on multi-year backorder",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://insideclimatenews.org/news/29012026/developer-calls-gw-ranch-in-pecos-county-texas-the-largest-power-project-in-u-s/",
+          "title": "Developer Calls GW Ranch in Pecos County, Texas, the 'Largest Power Project' in U.S.",
+          "publisher": "Inside Climate News",
+          "published_at": "2026-01-29T00:00:00Z"
+        },
+        {
+          "url": "https://ukozvhzgrcnkcatjqfoo.supabase.co/storage/v1/object/public/03-00-air-construction/2026_01_21_GW_Ranch_Energy_Center_181033__PSDTX167_f6c9943f.pdf",
+          "title": "TCEQ Construction Permit Source Analysis & Technical Review 181033 PSDTX1672 GHGPSDTX255",
+          "publisher": "Texas Commission on Environmental Quality",
+          "published_at": "2026-01-21T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_97b9d35861",
+      "text": "At full 7.65 GW, the plant would consume 1-2 billion cubic feet of gas per day, equal to 4-7% of Permian Basin gas production in 2025",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://insideclimatenews.org/news/29012026/developer-calls-gw-ranch-in-pecos-county-texas-the-largest-power-project-in-u-s/",
+          "title": "Developer Calls GW Ranch in Pecos County, Texas, the 'Largest Power Project' in U.S.",
+          "publisher": "Inside Climate News",
+          "published_at": "2026-01-29T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d3cccf4cec",
+      "text": "Amazon confirmed in August 2026 it acquired the GW Ranch site and will buy power from Pacifico's plant for its first major off-grid AI data center campus",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://newsletter.cleanview.co/p/scoop-amazon-is-behind-one-of-the",
+          "title": "Scoop: Amazon Is Behind One of the Largest Planned Gas Power Plants in the US",
+          "publisher": "Cleanview",
+          "published_at": "2026-08-07T00:00:00Z"
+        },
+        {
+          "url": "https://www.nytimes.com/2026/08/08/climate/amazon-data-center-texas-pollution.html",
+          "title": "New Amazon Data Center Stokes Worry It Would Be the Most Polluting Power Plant in the U.S.",
+          "publisher": "The New York Times",
+          "published_at": "2026-08-08T00:00:00Z"
+        },
+        {
+          "url": "https://www.aboutamazon.com/news/company-news/amazon-pecos-county-texas-data-center-clean-energy-jobs",
+          "title": "Amazon's planned data center campus in Pecos County, Texas: Read Amazon's statement",
+          "publisher": "Amazon",
+          "published_at": "2026-08-10T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_313880acaa",
+      "text": "Amazon filed three construction permits for data center buildings and satellite imagery showed land clearing began by July 24, 2026; Pacifico targets first power H1 2027, 1 GW phase 1, scaling to over 5 GW by 2031",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://newsletter.cleanview.co/p/scoop-amazon-is-behind-one-of-the",
+          "title": "Scoop: Amazon Is Behind One of the Largest Planned Gas Power Plants in the US",
+          "publisher": "Cleanview",
+          "published_at": "2026-08-07T00:00:00Z"
+        },
+        {
+          "url": "https://www.businesswire.com/news/home/20260126236053/en/Pacifico-Energy-Secures-7.65-GW-Power-Generation-Permit-for-GW-Ranch-Project",
+          "title": "Pacifico Energy Secures 7.65 GW Power Generation Permit for GW Ranch Project",
+          "publisher": "Business Wire / Pacifico Energy",
+          "published_at": "2026-01-26T00:00:00Z"
+        },
+        {
+          "url": "https://www.pacificoenergy.com/gw-ranch",
+          "title": "GW Ranch | Off-Grid Power Generation",
+          "publisher": "Pacifico Energy",
+          "published_at": "2026-01-26T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9f8bb4b9d8",
+      "text": "Amazon co-founded The Climate Pledge in 2019 to reach net-zero carbon across global operations by 2040; 549 signatories by end 2024",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://sustainability.aboutamazon.com/2024-amazon-sustainability-report.pdf",
+          "title": "2024 Amazon Sustainability Report",
+          "publisher": "Amazon",
+          "published_at": "2025-07-01T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1425e25c2a",
+      "text": "Amazon's total carbon footprint was 68.25 million tons CO2e in 2024, up 6% year-over-year and up 33% vs 2019, while carbon intensity fell 4% to 72.6 g CO2e per dollar of gross merchandise sales",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://sustainability.aboutamazon.com/2024-amazon-sustainability-report.pdf",
+          "title": "2024 Amazon Sustainability Report",
+          "publisher": "Amazon",
+          "published_at": "2025-07-01T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_990df97013",
+      "text": "Texas ERCOT large-load interconnection queue reached ~410 GW as of March 2026 (198 new requests in Q1 2026), rising to ~474 GW by August 2026, with ~87-90% from data centers, versus Texas record peak demand of 85,508 MW",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.ercot.com/files/docs/2026/04/13/9-Interconnection-and-Grid-Analysis-Update.pdf",
+          "title": "ERCOT Interconnection and Grid Analysis Update April 2026",
+          "publisher": "ERCOT",
+          "published_at": "2026-04-13T00:00:00Z"
+        },
+        {
+          "url": "https://arstechnica.com/ai/2026/08/texas-halts-data-center-connections-to-power-grid-amid-overwhelming-demand/",
+          "title": "Texas halts data center connections to power grid amid overwhelming demand",
+          "publisher": "Ars Technica",
+          "published_at": "2026-08-04T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_997fcb8564",
+      "text": "ERCOT and state leaders forecast Texas demand could nearly double to ~175 GW by 2032, but acknowledge forecasts are inflated by speculative and duplicative queue entries",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://arstechnica.com/ai/2026/08/texas-halts-data-center-connections-to-power-grid-amid-overwhelming-demand/",
+          "title": "Texas halts data center connections to power grid amid overwhelming demand",
+          "publisher": "Ars Technica",
+          "published_at": "2026-08-04T00:00:00Z"
+        },
+        {
+          "url": "https://harcresearch.org/wp-content/uploads/2026/01/Thirsty-Data-Water-Use-and-The-Projected-Data-Center-Boom-in-Texas.pdf",
+          "title": "Thirsty Data and the Lone Star State: The Impact of Data Center Growth on Texas' Water Supply",
+          "publisher": "Houston Advanced Research Center (HARC)",
+          "published_at": "2026-01-01T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_59c091c42d",
+      "text": "Texas Governor Greg Abbott directed an audit and pause on new data center grid connections on Aug 3, 2026, delaying ERCOT's Batch Zero transmission study",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://arstechnica.com/ai/2026/08/texas-halts-data-center-connections-to-power-grid-amid-overwhelming-demand/",
+          "title": "Texas halts data center connections to power grid amid overwhelming demand",
+          "publisher": "Ars Technica",
+          "published_at": "2026-08-04T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_8b9612968c",
+      "text": "McKinsey estimates data centers will account for ~75% of US power demand growth over the next decade, requiring the equivalent of almost 30 GW per year (~20 GW for IT plus cooling/distribution/resilience)",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.itpro.com/infrastructure/analysts-ponder-whether-big-tech-is-overbuilding-as-ai-infrastructure-projects-accelerate",
+          "title": "Analysts ponder whether big tech is 'overbuilding' as AI infrastructure projects accelerate",
+          "publisher": "ITPro (summarizing McKinsey)",
+          "published_at": "2026-08-03T00:00:00Z"
+        },
+        {
+          "url": "https://www.theregister.com/on-prem/2026/08/11/building-up-the-us-power-grid-wont-be-wasted-even-if-the-ai-bubble-bursts/5285563",
+          "title": "Building up the US power grid won't be wasted, even if the AI bubble bursts",
+          "publisher": "The Register (summarizing McKinsey)",
+          "published_at": "2026-08-11T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_d547b6d10b",
+      "text": "McKinsey argues the bigger near-term risk is underbuilding, not overbuilding: even if AI demand disappoints, generation and transmission built for data centers can serve other demand (EVs, electrification) and strengthen reliability, with 30-55 GW capacity gap by 2030 after 50-75 GW retirements",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.itpro.com/infrastructure/analysts-ponder-whether-big-tech-is-overbuilding-as-ai-infrastructure-projects-accelerate",
+          "title": "Analysts ponder whether big tech is 'overbuilding' as AI infrastructure projects accelerate",
+          "publisher": "ITPro (summarizing McKinsey)",
+          "published_at": "2026-08-03T00:00:00Z"
+        },
+        {
+          "url": "https://www.theregister.com/on-prem/2026/08/11/building-up-the-us-power-grid-wont-be-wasted-even-if-the-ai-bubble-bursts/5285563",
+          "title": "Building up the US power grid won't be wasted, even if the AI bubble bursts",
+          "publisher": "The Register (summarizing McKinsey)",
+          "published_at": "2026-08-11T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0d7c97be64",
+      "text": "McKinsey survey found ~60% of power sector leaders expect data centers to retain permanent on-site generation by 2030, with 64% of those relying on natural gas; solar+storage expected to grow strongly beyond 2030",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.theregister.com/on-prem/2026/08/11/building-up-the-us-power-grid-wont-be-wasted-even-if-the-ai-bubble-bursts/5285563",
+          "title": "Building up the US power grid won't be wasted, even if the AI bubble bursts",
+          "publisher": "The Register (summarizing McKinsey)",
+          "published_at": "2026-08-11T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f325bedbea",
+      "text": "Amazon states the off-grid design means it will not raise electricity costs for Texas families and will use non-potable brackish groundwater, custom cooling minimizing water use, and exploration of produced water",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.aboutamazon.com/news/company-news/amazon-pecos-county-texas-data-center-clean-energy-jobs",
+          "title": "Amazon's planned data center campus in Pecos County, Texas: Read Amazon's statement",
+          "publisher": "Amazon",
+          "published_at": "2026-08-10T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5be7ae2fd1",
+      "text": "Critics argue off-grid gas still raises costs by competing for gas supply and locks in emissions for decades because it avoids grid competition from cheaper cleaner resources",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://insideclimatenews.org/news/29012026/developer-calls-gw-ranch-in-pecos-county-texas-the-largest-power-project-in-u-s/",
+          "title": "Developer Calls GW Ranch in Pecos County, Texas, the 'Largest Power Project' in U.S.",
+          "publisher": "Inside Climate News",
+          "published_at": "2026-01-29T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_92266a1fad",
+      "text": "Existing Texas data centers consumed ~25 billion gallons of water in 2025 (0.4% of statewide use); by 2030 demand could rise to 29-161 billion gallons (0.5-2.7% of statewide use), with local impacts much higher in arid West Texas",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://harcresearch.org/wp-content/uploads/2026/01/Thirsty-Data-Water-Use-and-The-Projected-Data-Center-Boom-in-Texas.pdf",
+          "title": "Thirsty Data and the Lone Star State: The Impact of Data Center Growth on Texas' Water Supply",
+          "publisher": "Houston Advanced Research Center (HARC)",
+          "published_at": "2026-01-01T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_afd093664e",
+      "text": "Permian Basin produces ~21 million barrels per day of produced water (~1 billion gallons/day); treatment for beneficial reuse is technically feasible but requires desalination and faces permitting and cost hurdles",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://harcresearch.org/wp-content/uploads/2026/01/Thirsty-Data-Water-Use-and-The-Projected-Data-Center-Boom-in-Texas.pdf",
+          "title": "Thirsty Data and the Lone Star State: The Impact of Data Center Growth on Texas' Water Supply",
+          "publisher": "Houston Advanced Research Center (HARC)",
+          "published_at": "2026-01-01T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_2605a507d3",
+      "text": "Dallas Fed dispatch model finds existing data centers already raised US wholesale electricity prices 2-6% on average, with larger effects in data-center corridors like Virginia (+$5/MWh), but less than $1/MWh in ERCOT due to supply buildout; future high-utilization scenarios could raise prices 20-50%",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.dallasfed.org/~/media/documents/research/papers/2026/wp2606.pdf",
+          "title": "Processing Power: The Effect of Data Centers on Wholesale Electricity Markets",
+          "publisher": "Federal Reserve Bank of Dallas",
+          "published_at": "2026-03-17T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_6765a5c879",
+      "text": "Texas gas power pipeline grew by ~58 GW in 2025, with ~40 GW directly for data centers; only China has more gas power in development than Texas",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://insideclimatenews.org/news/29012026/developer-calls-gw-ranch-in-pecos-county-texas-the-largest-power-project-in-u-s/",
+          "title": "Developer Calls GW Ranch in Pecos County, Texas, the 'Largest Power Project' in U.S.",
+          "publisher": "Inside Climate News",
+          "published_at": "2026-01-29T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0a869092a1",
+      "text": "McKinsey survey found ~60% of power sector leaders expect data centers to retain permanent on-site generation by 2030, with 64% of those relying on natural gas; solar+storage expected to grow strongly beyond 2030, nuclear/SMRs not material until mid-2030s.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.theregister.com/on-prem/2026/08/11/building-up-the-us-power-grid-wont-be-wasted-even-if-the-ai-bubble-bursts/5285563",
+          "title": "Building up the US power grid won't be wasted, even if the AI bubble bursts",
+          "publisher": "The Register (summarizing McKinsey)",
+          "published_at": "2026-08-11T00:00:00Z"
+        },
+        {
+          "url": "https://www.itpro.com/infrastructure/analysts-ponder-whether-big-tech-is-overbuilding-as-ai-infrastructure-projects-accelerate",
+          "title": "Analysts ponder whether big tech is 'overbuilding' as AI infrastructure projects accelerate",
+          "publisher": "ITPro (summarizing McKinsey)",
+          "published_at": "2026-08-03T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7c5ea7ae82",
+      "text": "Turbines are simple-cycle units (21 Siemens SGT-800 + 14 large-frame envelope) with BACT: DLN combustors + SCR (2.5 ppmvd NOx @15% O2) + oxidation catalyst (5.0/9.0 ppmvd CO, 2.0 ppmvd VOC) + 117 lb CO2/MMBtu GHG standard; simple-cycle chosen for speed vs combined-cycle backlog (secondary reporting).",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ukozvhzgrcnkcatjqfoo.supabase.co/storage/v1/object/public/03-00-air-construction/2026_01_21_GW_Ranch_Energy_Center_181033__PSDTX167_f6c9943f.pdf",
+          "title": "TCEQ Construction Permit Source Analysis & Technical Review 181033 PSDTX1672 GHGPSDTX255",
+          "publisher": "Texas Commission on Environmental Quality",
+          "published_at": "2026-01-21T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_1865f4c6ed",
+      "text": "Dallas Fed dispatch model finds existing data centers already raised US wholesale electricity prices 2-6% on average, with larger effects in data-center corridors like Virginia (+$5/MWh), but less than $1/MWh in ERCOT due to supply buildout; future high-utilization scenarios could raise prices 20-50%.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://harcresearch.org/wp-content/uploads/2026/01/Thirsty-Data-Water-Use-and-The-Projected-Data-Center-Boom-in-Texas.pdf",
+          "title": "Thirsty Data and the Lone Star State: The Impact of Data Center Growth on Texas' Water Supply",
+          "publisher": "Houston Advanced Research Center (HARC)",
+          "published_at": "2026-01-01T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_44b0d70971",
+      "text": "Existing Texas data centers consumed ~25 billion gallons of water in 2025 (0.4% of statewide use); by 2030 demand could rise to 29-161 billion gallons (0.5-2.7% of statewide use), with local impacts much higher in arid West Texas.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://harcresearch.org/wp-content/uploads/2026/01/Thirsty-Data-Water-Use-and-The-Projected-Data-Center-Boom-in-Texas.pdf",
+          "title": "Thirsty Data and the Lone Star State: The Impact of Data Center Growth on Texas' Water Supply",
+          "publisher": "Houston Advanced Research Center (HARC)",
+          "published_at": "2026-01-01T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_0d048f3efa",
+      "text": "At full 7.65 GW, the plant would consume 1-2 billion cubic feet of gas per day, equal to 4-7% of Permian Basin gas production in 2025.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://ukozvhzgrcnkcatjqfoo.supabase.co/storage/v1/object/public/03-00-air-construction/2026_01_21_GW_Ranch_Energy_Center_181033__PSDTX167_f6c9943f.pdf",
+          "title": "TCEQ Construction Permit Source Analysis & Technical Review 181033 PSDTX1672 GHGPSDTX255",
+          "publisher": "Texas Commission on Environmental Quality",
+          "published_at": "2026-01-21T00:00:00Z"
+        },
+        {
+          "url": "https://www.pacificoenergy.com/gw-ranch",
+          "title": "GW Ranch | Off-Grid Power Generation",
+          "publisher": "Pacifico Energy",
+          "published_at": "2026-01-26T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_9c98c78524",
+      "text": "Permian Basin produces ~21 million barrels per day of produced water (~1 billion gallons/day); treatment for beneficial reuse is technically feasible but requires desalination and faces permitting and cost hurdles.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://harcresearch.org/wp-content/uploads/2026/01/Thirsty-Data-Water-Use-and-The-Projected-Data-Center-Boom-in-Texas.pdf",
+          "title": "Thirsty Data and the Lone Star State: The Impact of Data Center Growth on Texas' Water Supply",
+          "publisher": "Houston Advanced Research Center (HARC)",
+          "published_at": "2026-01-01T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_06ff0aacf8",
+      "text": "Project includes 1.8 GW of battery energy storage and up to 750 MWac of solar in addition to gas — <10% of gas capacity, confirming gas-first private grid.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.pacificoenergy.com/gw-ranch",
+          "title": "GW Ranch | Off-Grid Power Generation",
+          "publisher": "Pacifico Energy",
+          "published_at": "2026-01-26T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7005706335",
+      "text": "McKinsey argues the bigger near-term risk is underbuilding, not overbuilding: even if AI demand disappoints, generation and transmission built for data centers can serve other demand (EVs, electrification) and strengthen reliability, with 30-55 GW capacity gap by 2030 after 50-75 GW retirements vs ~40 GW spare + ~100 GW committed.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.theregister.com/on-prem/2026/08/11/building-up-the-us-power-grid-wont-be-wasted-even-if-the-ai-bubble-bursts/5285563",
+          "title": "Building up the US power grid won't be wasted, even if the AI bubble bursts",
+          "publisher": "The Register (summarizing McKinsey)",
+          "published_at": "2026-08-11T00:00:00Z"
+        },
+        {
+          "url": "https://www.itpro.com/infrastructure/analysts-ponder-whether-big-tech-is-overbuilding-as-ai-infrastructure-projects-accelerate",
+          "title": "Analysts ponder whether big tech is 'overbuilding' as AI infrastructure projects accelerate",
+          "publisher": "ITPro (summarizing McKinsey)",
+          "published_at": "2026-08-03T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f5f85c7cf3",
+      "text": "McKinsey estimates data centers will account for ~75% of US power demand growth over the next decade, requiring the equivalent of almost 30 GW per year (~20 GW for IT plus cooling/distribution/resilience), with data center power demand growing ~27% annually to 121 GW IT by 2030.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.theregister.com/on-prem/2026/08/11/building-up-the-us-power-grid-wont-be-wasted-even-if-the-ai-bubble-bursts/5285563",
+          "title": "Building up the US power grid won't be wasted, even if the AI bubble bursts",
+          "publisher": "The Register (summarizing McKinsey)",
+          "published_at": "2026-08-11T00:00:00Z"
+        },
+        {
+          "url": "https://www.itpro.com/infrastructure/analysts-ponder-whether-big-tech-is-overbuilding-as-ai-infrastructure-projects-accelerate",
+          "title": "Analysts ponder whether big tech is 'overbuilding' as AI infrastructure projects accelerate",
+          "publisher": "ITPro (summarizing McKinsey)",
+          "published_at": "2026-08-03T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_3d62f362d1",
+      "text": "Critics argue off-grid gas still raises costs by competing for gas supply and locks in emissions for decades because it avoids grid competition from cheaper cleaner resources — now expanded with Energy Innovation, EDF, Ohio PUC, and ERCOT Batch Zero analyses (see nc1-nc5).",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://insideclimatenews.org/news/29012026/developer-calls-gw-ranch-in-pecos-county-texas-the-largest-power-project-in-u-s/",
+          "title": "Developer Calls GW Ranch in Pecos County, Texas, the 'Largest Power Project' in U.S.",
+          "publisher": "Inside Climate News",
+          "published_at": "2026-01-29T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_93e9349db6",
+      "text": "Amazon states the off-grid design means it will not raise electricity costs for Texas families and will use non-potable brackish groundwater — claim contested by Energy Innovation gas-market analysis, EDF transmission-cost analysis, and Ohio PUC precedent (nc1-nc3, nc5).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.aboutamazon.com/news/company-news/amazon-pecos-county-texas-data-center-clean-energy-jobs",
+          "title": "Amazon's planned data center campus in Pecos County, Texas: Read Amazon's statement",
+          "publisher": "Amazon",
+          "published_at": "2026-08-10T00:00:00Z"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}
