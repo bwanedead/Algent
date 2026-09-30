@@ -166,7 +166,9 @@ def check(sit: SeedSituation, draft: SituationDraft, citable: set[str],
             continue
         window = str(p.evidence_through or "")[:4]
         if window.isdigit():
-            recent = {window, str(int(window) - 1)}
+            # Same year as the evidence only: a precedent from last year is exactly what an anchor
+            # should be (the June 2025 Twelve-Day War anchors a Sept 2026 reading legitimately).
+            recent = {window}
             circular = [a.position for a in p.anchors if any(y in (a.example or "") for y in recent)]
             if circular:
                 problems.append(f"{slug}: anchor example(s) at {circular} may come from the evidence "
