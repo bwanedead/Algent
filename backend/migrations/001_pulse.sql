@@ -26,13 +26,16 @@ create table pulses (
 );
 create index pulses_situation on pulses(situation_id);
 
--- The ruler. A better ruler is a new version; old versions are never edited, because every
--- influence records the version it was measured with.
+-- The frame: the question plus the calm (0) and extreme (100) ends. Between them the scale is the
+-- Pulse's own history of readings (doctrine v3). A new frame is a new version; old versions are
+-- never edited, because every influence records the version it was measured with.
 create table pulse_definitions (
     pulse_id    text not null references pulses(id),
     version     integer not null check (version >= 1),
     question    text not null,
-    anchors     jsonb not null,                          -- [{position, meaning, example}]
+    low_end     text not null default '',
+    high_end    text not null default '',
+    anchors     jsonb not null default '[]'::jsonb,     -- legacy fixed-ruler seeds only
     note        text not null default '',
     created_at  timestamptz not null default now(),
     primary key (pulse_id, version)

@@ -85,16 +85,18 @@ class PgPulseStore:
                 cur.execute("insert into pulses (id, situation_id, name, status) values (%s, %s, %s, %s)",
                             (pulse.id, pulse.situation_id, pulse.name, pulse.status))
                 for i, d in enumerate(pulse.definitions, 1):
-                    cur.execute("""insert into pulse_definitions (pulse_id, version, question, anchors, note)
-                                   values (%s, %s, %s, %s, %s)""",
-                                (pulse.id, i, d.question, json.dumps([a.model_dump() for a in d.anchors]), d.note))
+                    cur.execute("""insert into pulse_definitions
+                                     (pulse_id, version, question, low_end, high_end, anchors, note)
+                                   values (%s, %s, %s, %s, %s, %s, %s)""",
+                                (pulse.id, i, d.question, d.low_end, d.high_end,
+                                 json.dumps([a.model_dump() for a in d.anchors]), d.note))
 
     def add_definition(self, pulse_id: str, definition: PulseDefinition) -> int:
         pulse = self._require(pulse_id)
         version = pulse.definition.version + 1
-        self._q("""insert into pulse_definitions (pulse_id, version, question, anchors, note)
-                   values (%s, %s, %s, %s, %s)""",
-                (pulse_id, version, definition.question,
+        self._q("""insert into pulse_definitions (pulse_id, version, question, low_end, high_end, anchors, note)
+                   values (%s, %s, %s, %s, %s, %s, %s)""",
+                (pulse_id, version, definition.question, definition.low_end, definition.high_end,
                  json.dumps([a.model_dump() for a in definition.anchors]), definition.note), rows=False)
         return version
 
@@ -102,9 +104,10 @@ class PgPulseStore:
         self._q("update pulses set status = %s where id = %s", (status, pulse_id), rows=False)
 
     def _pulse(self, row) -> Pulse:
-        defs = [PulseDefinition(version=v, question=q, anchors=a or [], note=n or "", created_at=_iso(c))
-                for v, q, a, n, c in self._q("""select version, question, anchors, note, created_at
-                    from pulse_definitions where pulse_id = %s order by version""", (row[0],))]
+        defs = [PulseDefinition(version=v, question=q, low_end=lo or "", high_end=hi or "", anchors=a or [],
+                                note=n or "", created_at=_iso(c))
+                for v, q, lo, hi, a, n, c in self._q("""select version, question, low_end, high_end, anchors,
+                    note, created_at from pulse_definitions where pulse_id = %s order by version""", (row[0],))]
         return Pulse(id=row[0], situation_id=row[1], name=row[2], status=row[3], definitions=defs)
 
     def pulse(self, pulse_id: str) -> Pulse | None:

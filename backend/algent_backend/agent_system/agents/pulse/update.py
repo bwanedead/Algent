@@ -24,6 +24,7 @@ from pydantic import BaseModel, Field
 
 from .catalog import SeedSituation
 from .contracts import Confidence, Event, Influence, Source, event_id
+from .framing import describe
 from .prompts import UPDATE_PROMPT_VERSION, UPDATE_ROLE
 from .seed import attach, evidence_block
 
@@ -56,19 +57,13 @@ class UpdatePlan(BaseModel):
 
 
 def _situation_brief(store: Any, sit: Any) -> tuple[str, dict[str, Any]]:
-    """The Pulses of one situation as the model sees them: ruler, current reading, open watches."""
+    """The Pulses of one situation as the model sees them: frame, past readings, open watches."""
     lines, pulses = [f"SITUATION: {sit.title}\n{sit.summary}"], {}
     for pulse in store.pulses(sit.id):
         if pulse.status == "dormant":
             continue
-        st = store.state(pulse.id)
-        last = next((i for i in reversed(store.log(pulse.id)) if i.decision == "applied"), None)
         pulses[pulse.id] = pulse
-        d = pulse.definition
-        lines.append(f"\n### {pulse.id} — {pulse.name} (ruler v{d.version})\n{d.question}")
-        lines += [f"  {a.position:g}: {a.meaning}" for a in d.anchors]
-        lines.append(f"  CURRENT: {'unassessed' if st.position is None else f'{st.position:g} ({st.band})'}"
-                     + (f" — {last.rationale}" if last else ""))
+        lines.append("\n" + describe(pulse, store.log(pulse.id)))
     watches = [w for w in store.watches(sit.id) if w.status == "open"]
     if watches:
         lines.append("\nOPEN WATCHES:")

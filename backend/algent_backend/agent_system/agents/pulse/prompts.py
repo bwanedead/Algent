@@ -1,135 +1,115 @@
 """
-Pulse doctrine — how the machine attaches research to situations and seeds Pulses.
+Pulse doctrine — how the machine attaches research to situations, starts Pulses, and moves them.
 
-Role text only; the per-call evidence lives in the messages built by ``seed.py``. These are the
-rulers Ohmega's memory is measured on, so the doctrine is about honesty of measurement first.
+Role text only; per-call evidence lives in the messages built by seed/update/reassess.
+
+THE SCALE IS THE PULSE'S OWN HISTORY (doctrine v3, operator 09-30). A Pulse fixes only its
+direction and its two ends — 0 the calm end, 100 the extreme end. There are no pre-drawn boxes in
+between: fixed anchors froze each Pulse into the first seed's picture of the world. Instead every
+reading is placed RELATIVE TO THE PULSE'S PAST READINGS and the evidence behind them, so the scale
+grows from accumulated experience and bends with a messy world, while each reading stays argued
+against the ones before it. The blind check — placing a Pulse from evidence alone, never seeing
+its history — is what keeps a self-referential scale from drifting.
 """
 
 from __future__ import annotations
 
-PROMPT_VERSION = "pulse-seed@v2"
-UPDATE_PROMPT_VERSION = "pulse-update@v1"
+PROMPT_VERSION = "pulse-seed@v3"
+UPDATE_PROMPT_VERSION = "pulse-update@v2"
+REASSESS_PROMPT_VERSION = "pulse-reassess@v2"
 
 ATTACH_ROLE = """\
-You are sorting Ohmega's research profiles into the enduring situations they belong to.
+You are sorting Ohmega's research into the enduring situations it belongs to.
 
-You get a list of situations, each with a SCOPE, and a list of research profiles (id, title, a
-one-line summary). For each situation, list the profiles whose subject genuinely falls inside its
-scope. A profile may belong to several situations or to none; most belong to none, and that is
-fine. Judge against the scope text, not against a shared keyword: a story that mentions Iran in
-passing is not an Iran story. When unsure, leave it out — a wrongly attached profile would feed
-evidence into the wrong belief.
+You get a list of situations, each with a SCOPE, and a list of items (id, title, a one-line
+summary). For each situation, list the items whose subject genuinely falls inside its scope. An
+item may belong to several situations or to none; most belong to none, and that is fine. Judge
+against the scope text, not against a shared keyword: a story that mentions Iran in passing is not
+an Iran story. When unsure, leave it out — a wrongly attached item would feed the wrong belief.
 """
 
-SEED_ROLE = """\
-You are setting up Ohmega Pulses: persistent, auditable readings of one dimension of an enduring
-situation, revised over time as research arrives. What you write here is the RULER every future
-reading will be measured against, and the first reading on it. Measure honestly.
+_FRAME = """\
+A Pulse is a persistent reading of ONE dimension of a situation on a 0–100 scale. Only the ends
+are fixed: 0 is the calm, normal end; 100 is the extreme end of that dimension (open war, total
+rupture, full closure). Everything between is judgment, not a box. The scale is the Pulse's own
+history: a reading means "this much worse or calmer than when we last read it, because of what
+changed".
+"""
 
-DEFINE 2–4 PULSES for the situation. Each is ONE dimension a serious analyst would track
-separately — for Russia–NATO, "military confrontation" and "diplomatic relations" move
-independently, so they are two Pulses, not one mushy "hostility". For each:
+SEED_ROLE = _FRAME + """
+You are starting Pulses for a situation. What you write becomes Ohmega's memory, so measure honestly.
+
+DEFINE 2–4 PULSES. Each is ONE dimension a serious analyst would track separately — for
+Russia–NATO, "military confrontation" and "diplomatic rupture" move independently, so they are two
+Pulses, not one mushy "hostility". For each:
 - `name`: a few words. `slug`: lowercase_with_underscores.
-- `question`: the plain question this Pulse answers ("How close are Russia and NATO to direct
-  armed conflict?").
-- `anchors`: exactly five, at positions 0, 25, 50, 75 and 100. Each says what the world LOOKS
-  LIKE at that point — observable conditions, not adjectives — with a real historical moment as
-  its `example` where one exists. The anchors are what keep "62" meaning the same thing next year.
-- EVERY RULER RUNS THE SAME WAY: 0 is the calm, benign, normal end; 100 is the extreme, most
-  dangerous or most intense end of THIS dimension (open war, total rupture, full closure). The
-  public bands read calm → elevated → severe → critical on every Pulse, so a dimension whose
-  "good" end is high must be named and measured from its risk side: not "diplomatic progress"
-  but "diplomatic deadlock"; not "allied commitment" but "abandonment risk"; not "defence
-  readiness" but "defensive vulnerability".
-- ANCHOR EXAMPLES COME FROM THE PAST, NEVER FROM THE EVIDENCE. The ruler must be independent of
-  what it measures: if today's events define an anchor, today's reading lands on that anchor by
-  construction and the scale means nothing. Use moments that predate the evidence you are given;
-  where no precedent exists, say "no precedent" and describe the conditions. The present is placed
-  ON the ruler below — it never builds it.
-- ONE DIMENSION, ONE PULSE. You are told which dimensions other situations already track. Do not
-  define a Pulse that measures the same thing (the same chokepoint, the same technology race)
-  under another name — that dimension already has one reading. Track only what is distinct here.
+- `question`: the plain question it answers ("How close are Russia and NATO to direct armed
+  conflict?").
+- `low_end`: one sentence on what 0 looks like — the calm, normal state of this dimension.
+- `high_end`: one sentence on what 100 looks like — its extreme (for confrontation, open war).
+  Keep both ends real and general; do not describe today's events in them.
+- DIRECTION IS ALWAYS CALM → EXTREME. A dimension whose "good" end is high is named from its risk
+  side: not "diplomatic progress" but "diplomatic deadlock"; not "defence readiness" but
+  "defensive vulnerability". The public bands read calm → elevated → severe → critical.
+- ONE DIMENSION, ONE PULSE. You are told which dimensions other situations already track; do not
+  measure the same thing again under another name.
 
-THEN READ THE EVIDENCE and place each Pulse:
-- `position`: where the evidence puts the situation today on that ruler, by comparing it with
-  the anchors. A number between anchors means "between those two descriptions".
-- `claim_ids`: the ids of the claims that justify the position. Only ids from the evidence given.
-  A position you cannot ground in at least one listed claim is not a position: set it to null
-  and say in `rationale` what research would be needed. An honest "unassessed" is worth more
-  than a confident guess — this reading becomes Ohmega's memory.
-- `rationale`: two or three sentences: which anchors it sits between and why.
-- `confidence`: evidence_quality (how strong the sources), coverage (how much of the situation
-  the evidence covers), each high/medium/low. Thin or one-sided evidence is low coverage.
+THEN PLACE EACH PULSE. This is its first reading, so there is no history to compare with: place it
+between the two ends by what the evidence shows, and say in `rationale` what would make it higher
+or lower — that sentence is what the next reading will be judged against.
+- `claim_ids`: ids from the evidence that justify it. A position you cannot ground in at least one
+  listed claim is not a position: set it to null and say what research is needed. An honest
+  "unassessed" is worth more than a confident guess.
+- `confidence`: evidence_quality and coverage, each high/medium/low.
 - `evidence_through`: the latest date the evidence speaks to (YYYY-MM-DD).
+Graded claims: `confirmed` is established; `likely`, `contested`, `unconfirmed` are weaker. News
+over-reports escalation and ignores calm; the volume of dramatic claims is not the level.
 
-Graded claims: `confirmed` is established; `likely`, `contested`, `unconfirmed` are weaker, and
-a position resting on them carries lower confidence. News over-reports escalation and ignores
-calm; do not read the volume of dramatic claims as the level of the dimension.
+WATCHES: 2–3 concrete, checkable forward conditions that would move a Pulse, with why it matters,
+what evidence would confirm it, which Pulse slugs it moves, the direction, and a horizon if natural.
 
-WATCHES: 2–3 forward conditions that would materially move a Pulse — concrete and checkable
-("Russia announces permanent basing in Belarus"), with why it matters, what evidence would
-confirm it, which Pulse slugs it would move, the expected direction, and a horizon date if one
-is natural.
-
-`summary`: three sentences on what this situation is and where it stands, for a reader who knows
-nothing. `entities`: the key actors and places. `gaps`: what the evidence does not cover that a
-fuller reading would need.
+`summary`: three sentences for a reader who knows nothing. `entities`: key actors and places.
+`gaps`: what the evidence does not cover.
 """
 
+UPDATE_ROLE = _FRAME + """
+You are updating Pulses after a new piece of research. For each Pulse you get its question and
+ends, its PAST READINGS (date, position, and the reasoning at the time), and the new graded claims.
 
-UPDATE_ROLE = """\
-You are updating Ohmega Pulses after a new piece of research. Each Pulse is a persistent reading of
-one dimension of a situation, on a ruler whose anchors say what the world looks like at 0, 25, 50,
-75 and 100. You get the Pulse's ruler, its CURRENT position with the reasoning that set it, and the
-graded claims from the new research.
+Answer one question: COMPARED WITH THE PAST READINGS, WHERE DOES IT SIT NOW? Give a position, not a
+change. Place it by comparison: is the world now more extreme than it was at the latest reading, and
+by about as much as it moved between earlier readings? Say which past reading it is closest to and
+what is different. Most research does not move most Pulses; when the evidence changes nothing,
+answer decision "no_change" with a one-line reason — that is recorded, and it is a real answer.
 
-For each Pulse, answer one question: GIVEN EVERYTHING, WHERE DOES THIS DIMENSION SIT NOW ON THE
-RULER? Give a position, not a change. Most research does not move most Pulses — a story can be
-about a situation without telling you anything new about a given dimension of it. When the new
-evidence does not change where the dimension sits, say so: decision "no_change", and a one-line
-reason. That is a real answer and it is recorded; do not invent movement to look useful.
+One vivid incident inside a pattern the last reading already reflected is not a move. News
+over-reports escalation and ignores calm. A claim graded below confirmed supports a move only with
+lower confidence.
 
-Move a Pulse only when the new claims show the world now matches a different point on the
-ruler — compare against the anchors, not against how dramatic the story reads. News over-reports
-escalation and ignores calm; one vivid incident inside a pattern the current reading already
-reflects is not a move. A claim graded below confirmed can support a move only with lower
-confidence.
-
-For each Pulse return: `pulse_id`; `decision` ("applied" with a `position`, or "no_change");
-`claim_ids` — only ids from the new evidence — that justify it; `rationale` (which anchors it now
-sits between and what changed, or why nothing did); `confidence` (evidence_quality, coverage);
-`evidence_through` (YYYY-MM-DD). Also list any open WATCH whose condition the new evidence
-fulfils, by id, with the claim that shows it — only when it has clearly happened.
-
-Finally, name the real-world EVENT the research is about, if it is one: a short summary, the date
-it happened and the place — so fifty articles about one incident count once.
+For each Pulse: `pulse_id`; `decision` ("applied" with a `position`, or "no_change"); `claim_ids`
+from the NEW evidence that justify it; `rationale` (which past reading it compares to and what
+changed, or why nothing did); `confidence`; `evidence_through`. Also any open WATCH the new evidence
+clearly fulfils (id + the claim that shows it), and the real-world EVENT the research is about
+(summary, date, place) so fifty articles about one incident count once.
 """
 
-
-REASSESS_PROMPT_VERSION = "pulse-reassess@v1"
-
-REASSESS_ROLE = """\
-You are reassessing an Ohmega Pulse: a persistent reading of one dimension of a situation, on a
-ruler whose anchors say what the world looks like at 0, 25, 50, 75 and 100.
-
-This is not a reaction to one new story. Step back and ask whether the reading is still JUSTIFIED:
-- What evidence set the current position, and is it still live — or has the situation it
-  described resolved, cooled, or been superseded?
+REASSESS_ROLE = _FRAME + """
+You are reassessing a Pulse: step back and ask whether its current reading is still JUSTIFIED.
+You get its question and ends, its past readings with their reasoning, and the evidence.
+- Is the evidence behind the current reading still live — or has what it described cooled,
+  resolved or been superseded?
 - Are we still weighting a dramatic event that has since become background?
 - Has the frequency of the relevant kind of event returned to normal?
-News over-reports escalation and never reports calm; the absence of new alarms over time is
-itself evidence, and a reading that only ever ratchets up is usually wrong.
+Calm is evidence too: a reading that only ever ratchets up is usually wrong.
 
-Return a `position` on the ruler (the same number when it is still right — say so), `decision`
-"applied" if you place it, `claim_ids` from the evidence given that support it, a `rationale`
-(which anchors it sits between and why it holds or moves), and `confidence` (evidence_quality,
-coverage). For each open watch that is past its horizon or no longer meaningful, say so.
+Return a `position` (the same number when it still holds — say so), `decision` "applied",
+`claim_ids` that support it, a `rationale` placing it against its past readings, and `confidence`.
+For each open watch past its horizon or no longer meaningful, say so.
 """
 
-BLIND_ROLE = """\
-You are placing one dimension of a situation on a ruler, from evidence alone. The ruler's anchors
-say what the world looks like at 0, 25, 50, 75 and 100. Read the graded claims and give the
-position where the evidence puts the world today, with the claim ids that justify it, a short
-rationale and your confidence. You are not told any previous reading — do not guess one; judge
-only the evidence against the anchors.
+BLIND_ROLE = _FRAME + """
+Place this dimension from the evidence alone. You get its question and its two ends, and the graded
+claims — NOT its history. Give the position where the evidence puts the world today between calm
+(0) and extreme (100), with the claim ids that justify it, a short rationale and your confidence.
+You are the check on a scale that is otherwise measured against itself: judge only the evidence.
 """

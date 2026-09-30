@@ -24,6 +24,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field
 
 from .contracts import Confidence, Influence, Source
+from .framing import describe
 from .prompts import BLIND_ROLE, REASSESS_PROMPT_VERSION, REASSESS_ROLE
 from .seed import evidence_block
 
@@ -65,13 +66,6 @@ def evidence_for(store: Any, pulse_id: str, profiles: dict[str, dict]) -> list[d
     return out
 
 
-def _ruler(pulse: Any) -> str:
-    d = pulse.definition
-    return "\n".join([f"PULSE: {pulse.name} (ruler v{d.version})", d.question,
-                      *[f"  {a.position:g}: {a.meaning}" + (f" (e.g. {a.example})" if a.example else "")
-                        for a in d.anchors]])
-
-
 def reassess_pulse(context: Any, config: Any, store: Any, pulse: Any, profiles: dict[str, dict], *,
                    model_spec: Any, run_id: str) -> dict:
     from langchain_core.messages import HumanMessage, SystemMessage
@@ -97,7 +91,7 @@ def reassess_pulse(context: Any, config: Any, store: Any, pulse: Any, profiles: 
                if state.needs_reconciliation and blind_last and blind_last.proposed_position is not None else "")
     anchored = resolve(REASSESS_ROLE, Reassessment).invoke([
         SystemMessage(content=compose_system_prompt(UNIVERSAL_AGENT_BASE, REASSESS_ROLE)),
-        HumanMessage(content=f"{_ruler(pulse)}\n\nCURRENT READING: {prior}{pending}\n\n"
+        HumanMessage(content=f"{describe(pulse, store.log(pulse.id))}\n\nCURRENT READING: {prior}{pending}\n\n"
                              f"OPEN WATCHES:\n" + "\n".join(f"  {w.id}: {w.condition} (horizon {w.horizon or 'none'})" for w in watches)
                              + f"\n\nEVIDENCE:{evidence}\n\nTASK: is the reading still justified? Place it.")],
         config=config)
@@ -110,7 +104,7 @@ def reassess_pulse(context: Any, config: Any, store: Any, pulse: Any, profiles: 
 
     blind = resolve(BLIND_ROLE, Reading).invoke([
         SystemMessage(content=compose_system_prompt(UNIVERSAL_AGENT_BASE, BLIND_ROLE)),
-        HumanMessage(content=f"{_ruler(pulse)}\n\nEVIDENCE:{evidence}\n\nTASK: place it from the evidence alone.")],
+        HumanMessage(content=f"{describe(pulse, blind=True)}\n\nEVIDENCE:{evidence}\n\nTASK: place it from the evidence alone.")],
         config=config)
     if isinstance(blind, Reading):
         report["blind"] = _log(store, pulse, blind, citable, mode="blind", now=now, run_id=run_id)

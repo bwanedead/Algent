@@ -26,7 +26,6 @@ from .catalog import SEED_SITUATIONS, SeedSituation
 from .contracts import Anchor, Confidence, Influence, Pulse, PulseDefinition, Situation, Source, Watch
 from .prompts import ATTACH_ROLE, PROMPT_VERSION, SEED_ROLE
 
-ANCHOR_POSITIONS = (0.0, 25.0, 50.0, 75.0, 100.0)
 _CLAIMS_PER_PROFILE = 40          # most salient first; enough to ground, bounded for the call
 _STATUS_ORDER = {"confirmed": 0, "likely": 1, "contested": 2, "unconfirmed": 3, "speculative": 4}
 _SALIENCE_ORDER = {"high": 0, "medium": 1, "low": 2}
@@ -47,7 +46,9 @@ class PulseDraft(BaseModel):
     slug: str
     name: str
     question: str
-    anchors: list[Anchor] = Field(default_factory=list)
+    low_end: str = ""                  # what 0 looks like (calm)
+    high_end: str = ""                 # what 100 looks like (extreme)
+    anchors: list[Anchor] = Field(default_factory=list)   # legacy fixed-ruler seeds only
     position: float | None = None
     claim_ids: list[str] = Field(default_factory=list)
     rationale: str = ""
@@ -160,19 +161,9 @@ def check(sit: SeedSituation, draft: SituationDraft, citable: set[str],
     pulses: list[PulseDraft] = []
     for p in draft.pulses:
         slug = re.sub(r"[^a-z0-9_]+", "_", p.slug.lower()).strip("_") or "pulse"
-        positions = sorted(a.position for a in p.anchors)
-        if tuple(positions) != ANCHOR_POSITIONS:
-            problems.append(f"{slug}: anchors at {positions}, not 0/25/50/75/100 — pulse dropped")
+        if not (p.low_end.strip() and p.high_end.strip()):
+            problems.append(f"{slug}: no calm/extreme ends — a Pulse needs its frame; pulse dropped")
             continue
-        window = str(p.evidence_through or "")[:4]
-        if window.isdigit():
-            # Same year as the evidence only: a precedent from last year is exactly what an anchor
-            # should be (the June 2025 Twelve-Day War anchors a Sept 2026 reading legitimately).
-            recent = {window}
-            circular = [a.position for a in p.anchors if any(y in (a.example or "") for y in recent)]
-            if circular:
-                problems.append(f"{slug}: anchor example(s) at {circular} may come from the evidence "
-                                f"window ({'/'.join(sorted(recent))}) — a ruler must predate what it measures")
         cited = list(p.claim_ids)
         if not cited:
             # The model sometimes cites inside its prose and leaves the field empty — a grounded
@@ -191,8 +182,7 @@ def check(sit: SeedSituation, draft: SituationDraft, citable: set[str],
         if position is not None and not 0 <= position <= 100:
             problems.append(f"{slug}: position {position} off the ruler — left unassessed")
             position = None
-        pulses.append(p.model_copy(update={"slug": slug, "claim_ids": good, "position": position,
-                                           "anchors": sorted(p.anchors, key=lambda a: a.position)}))
+        pulses.append(p.model_copy(update={"slug": slug, "claim_ids": good, "position": position}))
     slugs = {p.slug for p in pulses}
     watches = []
     for w in draft.watches:
@@ -222,7 +212,8 @@ def commit(store: Any, seeded: list[SeededSituation], *, run_id: str, model: str
         for p in s.draft.pulses:
             pid = pulse_id(sit, p.slug)
             store.create_pulse(Pulse(id=pid, situation_id=sit.id, name=p.name, definitions=[
-                PulseDefinition(question=p.question, anchors=p.anchors, note="seed")]))
+                PulseDefinition(question=p.question, low_end=p.low_end, high_end=p.high_end,
+                                anchors=p.anchors, note="seed")]))
             store.append(Influence(
                 pulse_id=pid, at=now, evidence_through=p.evidence_through, mode="seed",
                 definition_version=1, proposed_position=p.position,
@@ -260,8 +251,7 @@ def render_review(seeded: list[SeededSituation], titles: dict[str, str]) -> str:
                      else "**unassessed**")
             out += [f"### {p.name}  ·  {where}  ·  confidence {p.confidence.overall()}",
                     f"*{p.question}*", ""]
-            out += [f"- **{a.position:g}** — {a.meaning}" + (f" *(e.g. {a.example})*" if a.example else "")
-                    for a in p.anchors]
+            out += [f"- **0 (calm):** {p.low_end}", f"- **100 (extreme):** {p.high_end}"]
             through = p.evidence_through if p.evidence_through not in ("", "null", "None", "?") else "—"
             out += ["", f"Why: {p.rationale}", f"Evidence: {', '.join(p.claim_ids) or '—'} "
                     f"(through {through})", ""]

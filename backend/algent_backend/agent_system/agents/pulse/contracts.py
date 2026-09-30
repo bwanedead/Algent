@@ -54,11 +54,23 @@ class Anchor(BaseModel):
 
 
 class PulseDefinition(BaseModel):
-    """The ruler. Versioned: improving the anchors is a new version, never an edit in place."""
+    """What a Pulse measures — a loose FRAME, not a fixed ruler. Versioned; never edited in place.
+
+    Only the direction and the two ends are fixed: 0 is the calm end, 100 the extreme end. Between
+    them there are no pre-drawn boxes. A Pulse's scale is its own HISTORY: every reading is placed
+    by comparing today's evidence with the evidence behind its past readings ("worse than when we
+    said 58 on Aug 14, because…"). The scale grows from experience and bends with the world, and it
+    stays comparable because each reading is argued against the ones before it (operator, 09-30:
+    fixed anchors "box it in"; let it breathe the way the world actually is).
+
+    ``anchors`` survives only for Pulses seeded under the earlier fixed-ruler doctrine.
+    """
 
     version: int = 1
     question: str                        # the plain-words question this Pulse answers
-    anchors: list[Anchor] = Field(default_factory=list)
+    low_end: str = ""                    # what 0 looks like — the calm, normal end
+    high_end: str = ""                   # what 100 looks like — the extreme end of this dimension
+    anchors: list[Anchor] = Field(default_factory=list)   # legacy (fixed-ruler doctrine)
     created_at: str = ""
     note: str = ""                       # why this version exists (what changed)
 

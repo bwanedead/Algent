@@ -5,15 +5,15 @@ from __future__ import annotations
 from algent_backend.agent_system.agents.pulse import PulseStore
 from algent_backend.agent_system.agents.pulse import seed as sd
 from algent_backend.agent_system.agents.pulse.catalog import SEED_SITUATIONS
-from algent_backend.agent_system.agents.pulse.contracts import Anchor
+from algent_backend.agent_system.agents.pulse.framing import describe
 
 SIT = SEED_SITUATIONS[0]
-RULER = [Anchor(position=p, meaning=f"level {p}") for p in (0, 25, 50, 75, 100)]
+FRAME = dict(low_end="routine, professional contact", high_end="open war between them")
 
 
 def _draft(**pulse) -> sd.SituationDraft:
     base = dict(slug="Military Confrontation!", name="Military confrontation", question="How close?",
-                anchors=RULER, position=62, claim_ids=["clm_a"], rationale="between 50 and 75")
+                position=62, claim_ids=["clm_a"], rationale="more than routine, far from war", **FRAME)
     return sd.SituationDraft(summary="s", pulses=[sd.PulseDraft(**{**base, **pulse})],
                              watches=[sd.WatchDraft(condition="basing in Belarus",
                                                     pulse_slugs=["military_confrontation"],
@@ -35,33 +35,33 @@ def test_an_ungrounded_position_becomes_unassessed() -> None:
     assert any("left unassessed" in x for x in s.problems)
 
 
-def test_a_pulse_without_a_full_ruler_is_dropped() -> None:
-    s = sd.check(SIT, _draft(anchors=RULER[:3]), {"clm_a"}, [])
-    assert s.draft.pulses == [] and any("anchors at" in x for x in s.problems)
-
-
-def test_commit_stores_the_reviewed_proposal_as_seed_influences(tmp_path) -> None:
-    store = PulseStore(tmp_path / "ps")
-    seeded = [sd.check(SIT, _draft(), {"clm_a"}, ["prof_1"])]
-    assert sd.commit(store, seeded, run_id="seed_test") == 1
-    pid = sd.pulse_id(SIT, "military_confrontation")
-    st = store.state(pid)
-    assert st.position == 62 and st.band == "severe"
-    log = store.log(pid)
-    assert log[0].mode == "seed" and log[0].source.claim_ids == ["clm_a"]
-    w = store.watches(SIT.id)[0]
-    assert w.origin_positions == {pid: 62} and w.expected_direction == "up"
-
-
-def test_an_anchor_drawn_from_the_evidence_window_is_flagged() -> None:
-    ruler = [Anchor(position=p, meaning="m", example=("July 2026 strikes" if p == 75 else "1987 Tanker War"))
-             for p in (0, 25, 50, 75, 100)]
-    s = sd.check(SIT, _draft(anchors=ruler, evidence_through="2026-09-20"), {"clm_a"}, [])
-    assert any("evidence window" in x and "75" in x for x in s.problems)
+def test_a_pulse_without_its_calm_and_extreme_ends_is_dropped() -> None:
+    s = sd.check(SIT, _draft(high_end=""), {"clm_a"}, [])
+    assert s.draft.pulses == [] and any("frame" in x for x in s.problems)
 
 
 def test_ids_cited_only_in_the_rationale_are_recovered_if_real() -> None:
-    s = sd.check(SIT, _draft(claim_ids=[], rationale="near 100 (clm_aaaaaaaa) and (clm_ffffffff)"),
-                 {"clm_aaaaaaaa"}, [])
+    s = sd.check(SIT, _draft(claim_ids=[], rationale="(clm_aaaaaaaa) and (clm_ffffffff)"), {"clm_aaaaaaaa"}, [])
     p = s.draft.pulses[0]
     assert p.position == 62 and p.claim_ids == ["clm_aaaaaaaa"]      # the invented one is not recovered
+
+
+def test_commit_stores_the_frame_and_the_first_reading(tmp_path) -> None:
+    store = PulseStore(tmp_path / "ps")
+    assert sd.commit(store, [sd.check(SIT, _draft(), {"clm_a"}, ["prof_1"])], run_id="seed_test") == 1
+    pid = sd.pulse_id(SIT, "military_confrontation")
+    d = store.pulse(pid).definition
+    assert d.low_end.startswith("routine") and d.high_end == "open war between them" and d.anchors == []
+    assert store.state(pid).position == 62
+    assert store.log(pid)[0].source.claim_ids == ["clm_a"]
+    assert store.watches(SIT.id)[0].origin_positions == {pid: 62}
+
+
+def test_history_is_the_scale_and_the_blind_read_never_sees_it(tmp_path) -> None:
+    store = PulseStore(tmp_path / "ps")
+    sd.commit(store, [sd.check(SIT, _draft(), {"clm_a"}, ["prof_1"])], run_id="seed_test")
+    pulse = store.pulse(sd.pulse_id(SIT, "military_confrontation"))
+    seen = describe(pulse, store.log(pulse.id))
+    assert "PAST READINGS" in seen and "62 — more than routine" in seen
+    blind = describe(pulse, store.log(pulse.id), blind=True)
+    assert "PAST READINGS" not in blind and "62" not in blind and "open war" in blind

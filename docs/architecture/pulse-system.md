@@ -8,8 +8,8 @@
 | Object | What it is | Example |
 |---|---|---|
 | **Situation** | an enduring real-world subject; domain-agnostic; can split and merge with provenance | Russia–NATO |
-| **Pulse** | one assessed dimension of a situation, measured against a versioned, anchored ruler | Russia–NATO · military confrontation |
-| **Definition** | the ruler: the question plus anchors (what 0/25/50/75/100 mean, with historical examples); new versions are appended, never edited | v1, v2… |
+| **Pulse** | one assessed dimension of a situation, placed between a calm (0) and an extreme (100) end | Russia–NATO · military confrontation |
+| **Definition** | the frame: the question plus what the calm and extreme ends look like; new versions are appended, never edited | v1, v2… |
 | **Event** | a canonical real-world occurrence, so fifty articles about one incident update a Pulse once | Sep 27 arrests near RAF Fairford |
 | **Influence** | one immutable log entry: something touched a Pulse, including "no material change" | article run 0103 held the position at 62 |
 | **Watch** | a forward condition with linked Pulses, expected direction, horizon and one-way resolution | permanent Russian basing in Belarus |
@@ -24,8 +24,13 @@ publishable subset).
   and band changes are computed by replaying its influences (`pulse/projection.py`). "What did we
   believe on Aug 14?" is the same replay with a cutoff. A cached current state in the database
   is only a speed-up and can always be rebuilt.
-- **Position, not delta.** Assessments propose where the Pulse sits against its anchors. The
-  position is the latest *applied* proposal. Repeated news cannot ratchet the value.
+- **The scale is the Pulse's own history (doctrine v3).** Only the direction and the two ends are
+  fixed. Each reading is placed by comparison with the Pulse's past readings and their reasoning
+  ("worse than when we said 58 on Aug 14, because…"), so the scale grows from experience and flexes
+  with a messy world instead of being boxed into the first seed's picture. Fixed 0/25/50/75/100
+  anchors were tried first and dropped for exactly that reason.
+- **Position, not delta.** Assessments propose where the Pulse sits. The position is the latest
+  *applied* proposal. Repeated news cannot ratchet the value.
 - **Versioned rulers.** Every influence records the definition version it was made under.
 - **Idempotent history.** An influence's key is `pulse + event + run + mode`. A retried run
   cannot write the same act twice; the store and the database both refuse it.
@@ -74,9 +79,10 @@ publishable subset).
 4. Article-update hook *(wired into the rail)*, radar freshness *(wired into menu builds)*, weekly
    reassessment with blind pass *(`newsroom pulse reassess`)*, watches. *(done)*
 
-Seeding rules learned the hard way: anchor examples must predate the evidence (a ruler built from
-today's events measures nothing); every ruler runs 0 = calm → 100 = extreme; one dimension gets
-one Pulse across all situations.
+Seeding rules learned the hard way: every Pulse runs 0 = calm → 100 = extreme (name "good-high"
+dimensions from their risk side); one dimension gets one Pulse across all situations, and the catalog
+order decides which situation owns a shared one; the blind check is what keeps a history-measured
+scale from drifting, so it must never see the history.
 5. A private calibration period (1–3 weeks): nothing published externally. Check how often
    Pulses move, whether anchors are applied consistently, the anchoring gaps, and whether events
    are mapped to the right situations.
