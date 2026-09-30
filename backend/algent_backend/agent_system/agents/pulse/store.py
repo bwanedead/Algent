@@ -23,7 +23,7 @@ import re
 from datetime import UTC, datetime
 from pathlib import Path
 
-from .contracts import Influence, Pulse, PulseDefinition, Situation, Watch, influence_key
+from .contracts import Event, Influence, Pulse, PulseDefinition, Situation, Watch, influence_key
 from .projection import PulseState, project
 
 _STORE_ENV = "ALGENT_PULSE_STORE"
@@ -129,6 +129,21 @@ class PulseStore:
 
     def state(self, pulse_id: str, *, as_of: str | None = None) -> PulseState:
         return project(pulse_id, self.log(pulse_id), as_of=as_of)
+
+    # ── events ───────────────────────────────────────────────────────────────────────────────
+    def record_event(self, event: Event) -> Event:
+        """Create the event, or merge a new sighting (situations, sources) into the existing one."""
+        path = self._dir / "events" / f"{_safe(event.id)}.json"
+        old = self._read(path, Event)
+        if old is not None:
+            event = old.model_copy(update={
+                "situation_ids": list(dict.fromkeys([*old.situation_ids, *event.situation_ids])),
+                "sources": [*old.sources, *[s for s in event.sources if s not in old.sources]]})
+        self._write(path, event.model_dump())
+        return event
+
+    def event(self, event_id: str) -> Event | None:
+        return self._read(self._dir / "events" / f"{_safe(event_id)}.json", Event)
 
     # ── watches ──────────────────────────────────────────────────────────────────────────────
     def save_watch(self, watch: Watch) -> None:

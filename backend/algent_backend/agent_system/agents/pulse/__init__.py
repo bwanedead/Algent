@@ -10,6 +10,7 @@ from .contracts import (
     BANDS,
     Anchor,
     Confidence,
+    Event,
     Influence,
     Pulse,
     PulseDefinition,
@@ -17,13 +18,14 @@ from .contracts import (
     Source,
     Watch,
     band_of,
+    event_id,
     influence_key,
 )
 from .projection import RECONCILE_GAP, PulseState, project
 from .store import DuplicateInfluence, PulseStore
 
 __all__ = [
-    "BANDS", "Anchor", "Confidence", "DuplicateInfluence", "Influence", "Pulse",
+    "BANDS", "Anchor", "Confidence", "Event", "event_id", "DuplicateInfluence", "Influence", "Pulse",
     "PulseDefinition", "PulseState", "PulseStore", "RECONCILE_GAP", "Situation", "Source",
     "Watch", "band_of", "influence_key", "project",
 ]

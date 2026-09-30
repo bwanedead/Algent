@@ -77,6 +77,7 @@ RAIL_STAGE = "newsroom_rail.stage"
 RAIL_STEER = "newsroom_rail.steer"
 RAIL_REFUSED = "newsroom_rail.refused"        # the spend envelope had nothing left
 RAIL_BACKUP = "newsroom_rail.data_backup"     # durable stores mirrored to the private data repo
+RAIL_PULSES = "newsroom_rail.pulses"          # the article's research re-estimated its Pulses
 RAIL_ANNOUNCED = "newsroom_rail.announced"
 RAIL_FIGURES = "newsroom_rail.figures"
 BACKFEED_INJECTED = "newsroom_rail.backfeed_injected"
@@ -164,6 +165,9 @@ def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | Non
             ledger.append(cost.current_ledger())
             try:
                 out = _run_rail(watched, state, config, lead_store=lead_store)
+                # Inside the article's cost scope (its caps and envelope cover it) and before the
+                # backup (so the new influences are backed up with the research that caused them).
+                _feed_pulses(watched, out)
             finally:
                 dog.stop()
                 if envelope_cap is not None:
@@ -189,6 +193,25 @@ def _artifacts_dir(context: AgentRunContext) -> Any:
     except Exception:  # noqa: BLE001
         return None
     return (root / "artifacts") if root else None
+
+
+def _feed_pulses(context: AgentRunContext, out: dict[str, Any]) -> None:
+    """A finished article's research re-estimates the Pulses it touches. Never fails the run."""
+    rail = (out or {}).get("rail") or {}
+    profile_id = str(rail.get("profile_id") or "")
+    if rail.get("stage_reached") != "complete" or not profile_id or profile_id == "prof_unknown":
+        return
+    try:
+        from ..pulse.update import update_quietly
+        from ..research.store import JsonProfileStore
+
+        profile = JsonProfileStore().get(profile_id)
+        if profile is None:
+            return
+        context.emit(RAIL_PULSES, update_quietly(profile.model_dump(), run_id=context.run_id,
+                                                 article_slug=str(rail.get("published_slug") or "")))
+    except Exception as exc:  # noqa: BLE001 — Pulse is downstream of the article, never in its way
+        context.emit(RAIL_PULSES, {"error": f"{type(exc).__name__}: {str(exc)[:120]}"})
 
 
 def _keep_reads(context: AgentRunContext, out: dict[str, Any]) -> None:

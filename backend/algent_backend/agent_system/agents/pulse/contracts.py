@@ -140,6 +140,24 @@ def influence_key(pulse_id: str, event_id: str, run_id: str, mode: str) -> str:
     return "inf_" + hashlib.sha1(raw.encode("utf-8")).hexdigest()[:16]
 
 
+class Event(BaseModel):
+    """A real-world occurrence the research was about. Because assessments are POSITIONS, a
+    second article on the same event re-estimates rather than double-counts; the event record is
+    what lets the timeline show one incident once."""
+
+    id: str
+    summary: str
+    occurred_on: str = ""                # YYYY-MM-DD when known
+    place: str = ""
+    situation_ids: list[str] = Field(default_factory=list)
+    sources: list[Source] = Field(default_factory=list)
+
+
+def event_id(summary: str, occurred_on: str) -> str:
+    norm = " ".join(summary.lower().split())
+    return "evt_" + hashlib.sha1(f"{occurred_on}|{norm}".encode("utf-8")).hexdigest()[:12]
+
+
 class Watch(BaseModel):
     """A forward condition. Triggered/expired watches are the calibration dataset."""
 

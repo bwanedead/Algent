@@ -8,6 +8,7 @@ rulers Ohmega's memory is measured on, so the doctrine is about honesty of measu
 from __future__ import annotations
 
 PROMPT_VERSION = "pulse-seed@v1"
+UPDATE_PROMPT_VERSION = "pulse-update@v1"
 
 ATTACH_ROLE = """\
 You are sorting Ohmega's research profiles into the enduring situations they belong to.
@@ -60,4 +61,33 @@ is natural.
 `summary`: three sentences on what this situation is and where it stands, for a reader who knows
 nothing. `entities`: the key actors and places. `gaps`: what the evidence does not cover that a
 fuller reading would need.
+"""
+
+
+UPDATE_ROLE = """\
+You are updating Ohmega Pulses after a new piece of research. Each Pulse is a persistent reading of
+one dimension of a situation, on a ruler whose anchors say what the world looks like at 0, 25, 50,
+75 and 100. You get the Pulse's ruler, its CURRENT position with the reasoning that set it, and the
+graded claims from the new research.
+
+For each Pulse, answer one question: GIVEN EVERYTHING, WHERE DOES THIS DIMENSION SIT NOW ON THE
+RULER? Give a position, not a change. Most research does not move most Pulses — a story can be
+about a situation without telling you anything new about a given dimension of it. When the new
+evidence does not change where the dimension sits, say so: decision "no_change", and a one-line
+reason. That is a real answer and it is recorded; do not invent movement to look useful.
+
+Move a Pulse only when the new claims show the world now matches a different point on the
+ruler — compare against the anchors, not against how dramatic the story reads. News over-reports
+escalation and ignores calm; one vivid incident inside a pattern the current reading already
+reflects is not a move. A claim graded below confirmed can support a move only with lower
+confidence.
+
+For each Pulse return: `pulse_id`; `decision` ("applied" with a `position`, or "no_change");
+`claim_ids` — only ids from the new evidence — that justify it; `rationale` (which anchors it now
+sits between and what changed, or why nothing did); `confidence` (evidence_quality, coverage);
+`evidence_through` (YYYY-MM-DD). Also list any open WATCH whose condition the new evidence
+fulfils, by id, with the claim that shows it — only when it has clearly happened.
+
+Finally, name the real-world EVENT the research is about, if it is one: a short summary, the date
+it happened and the place — so fifty articles about one incident count once.
 """
