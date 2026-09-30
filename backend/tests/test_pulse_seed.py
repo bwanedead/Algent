@@ -51,3 +51,10 @@ def test_commit_stores_the_reviewed_proposal_as_seed_influences(tmp_path) -> Non
     assert log[0].mode == "seed" and log[0].source.claim_ids == ["clm_a"]
     w = store.watches(SIT.id)[0]
     assert w.origin_positions == {pid: 62} and w.expected_direction == "up"
+
+
+def test_an_anchor_drawn_from_the_evidence_window_is_flagged() -> None:
+    ruler = [Anchor(position=p, meaning="m", example=("July 2026 strikes" if p == 75 else "1987 Tanker War"))
+             for p in (0, 25, 50, 75, 100)]
+    s = sd.check(SIT, _draft(anchors=ruler, evidence_through="2026-09-20"), {"clm_a"}, [])
+    assert any("evidence window" in x and "75" in x for x in s.problems)

@@ -59,8 +59,14 @@ def _seed(args: Any) -> int:
                       model_spec=house_spec(reasoning_effort="low", temperature=0.1))
     by_id = {p["id"]: p for p in profiles}
     judge = house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=16384)
-    seeded = [sd.seed_situation(ctx, None, s, [by_id[i] for i in links.get(s.id, [])], model_spec=judge)
-              for s in situations]
+    # Sequential on purpose: each situation is told what the earlier ones already measure, so one
+    # dimension (the Strait of Hormuz, the chip race) gets one Pulse, not three readings of it.
+    seeded, tracked = [], []
+    for s in situations:
+        one = sd.seed_situation(ctx, None, s, [by_id[i] for i in links.get(s.id, [])],
+                                model_spec=judge, tracked_elsewhere=tracked)
+        seeded.append(one)
+        tracked += [f"{p.name} ({s.title}): {p.question}" for p in one.draft.pulses]
 
     out = Path(runs_data_root()) / "pulse_seed" / datetime.now(UTC).strftime("%Y%m%d-%H%M%S")
     out.mkdir(parents=True, exist_ok=True)

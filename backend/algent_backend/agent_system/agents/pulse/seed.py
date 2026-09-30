@@ -129,13 +129,15 @@ def attach(context: Any, config: Any, profiles: list[dict], *, model_spec: Any,
 
 
 def seed_situation(context: Any, config: Any, sit: SeedSituation, profiles: list[dict], *,
-                   model_spec: Any) -> SeededSituation:
+                   model_spec: Any, tracked_elsewhere: list[str] | None = None) -> SeededSituation:
     from langchain_core.messages import HumanMessage, SystemMessage
 
     from algent_backend.agent_system.prompting import UNIVERSAL_AGENT_BASE, compose_system_prompt
 
     evidence, citable = evidence_block(profiles)
-    task = (f"SITUATION: {sit.title}\nSCOPE: {sit.scope}\n\n"
+    elsewhere = ("\n\nALREADY TRACKED BY OTHER SITUATIONS — do not measure these again:\n"
+                 + "\n".join(f"- {line}" for line in tracked_elsewhere)) if tracked_elsewhere else ""
+    task = (f"SITUATION: {sit.title}\nSCOPE: {sit.scope}{elsewhere}\n\n"
             f"EVIDENCE — graded claims from Ohmega's research ({len(profiles)} profile(s)):"
             f"{evidence or ' none yet.'}\n\n"
             "TASK: define this situation's Pulses with anchored rulers, place each against the "
@@ -160,6 +162,13 @@ def check(sit: SeedSituation, draft: SituationDraft, citable: set[str],
         if tuple(positions) != ANCHOR_POSITIONS:
             problems.append(f"{slug}: anchors at {positions}, not 0/25/50/75/100 — pulse dropped")
             continue
+        window = str(p.evidence_through or "")[:4]
+        if window.isdigit():
+            recent = {window, str(int(window) - 1)}
+            circular = [a.position for a in p.anchors if any(y in (a.example or "") for y in recent)]
+            if circular:
+                problems.append(f"{slug}: anchor example(s) at {circular} may come from the evidence "
+                                f"window ({'/'.join(sorted(recent))}) — a ruler must predate what it measures")
         bad = [c for c in p.claim_ids if c not in citable]
         good = [c for c in p.claim_ids if c in citable]
         if bad:
@@ -242,8 +251,9 @@ def render_review(seeded: list[SeededSituation], titles: dict[str, str]) -> str:
                     f"*{p.question}*", ""]
             out += [f"- **{a.position:g}** — {a.meaning}" + (f" *(e.g. {a.example})*" if a.example else "")
                     for a in p.anchors]
+            through = p.evidence_through if p.evidence_through not in ("", "null", "None", "?") else "—"
             out += ["", f"Why: {p.rationale}", f"Evidence: {', '.join(p.claim_ids) or '—'} "
-                    f"(through {p.evidence_through or '?'})", ""]
+                    f"(through {through})", ""]
         if d.watches:
             out.append("**Watches**")
             out += [f"- {w.condition} → {w.expected_direction} on {', '.join(w.pulse_slugs)}"

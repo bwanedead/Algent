@@ -7,7 +7,7 @@ rulers Ohmega's memory is measured on, so the doctrine is about honesty of measu
 
 from __future__ import annotations
 
-PROMPT_VERSION = "pulse-seed@v1"
+PROMPT_VERSION = "pulse-seed@v2"
 UPDATE_PROMPT_VERSION = "pulse-update@v1"
 
 ATTACH_ROLE = """\
@@ -34,8 +34,21 @@ independently, so they are two Pulses, not one mushy "hostility". For each:
   armed conflict?").
 - `anchors`: exactly five, at positions 0, 25, 50, 75 and 100. Each says what the world LOOKS
   LIKE at that point — observable conditions, not adjectives — with a real historical moment as
-  its `example` where one exists. 100 is the extreme end of THIS dimension (open war, total
-  rupture), not merely "bad". The anchors are what keep "62" meaning the same thing next year.
+  its `example` where one exists. The anchors are what keep "62" meaning the same thing next year.
+- EVERY RULER RUNS THE SAME WAY: 0 is the calm, benign, normal end; 100 is the extreme, most
+  dangerous or most intense end of THIS dimension (open war, total rupture, full closure). The
+  public bands read calm → elevated → severe → critical on every Pulse, so a dimension whose
+  "good" end is high must be named and measured from its risk side: not "diplomatic progress"
+  but "diplomatic deadlock"; not "allied commitment" but "abandonment risk"; not "defence
+  readiness" but "defensive vulnerability".
+- ANCHOR EXAMPLES COME FROM THE PAST, NEVER FROM THE EVIDENCE. The ruler must be independent of
+  what it measures: if today's events define an anchor, today's reading lands on that anchor by
+  construction and the scale means nothing. Use moments that predate the evidence you are given;
+  where no precedent exists, say "no precedent" and describe the conditions. The present is placed
+  ON the ruler below — it never builds it.
+- ONE DIMENSION, ONE PULSE. You are told which dimensions other situations already track. Do not
+  define a Pulse that measures the same thing (the same chokepoint, the same technology race)
+  under another name — that dimension already has one reading. Track only what is distinct here.
 
 THEN READ THE EVIDENCE and place each Pulse:
 - `position`: where the evidence puts the situation today on that ruler, by comparing it with
