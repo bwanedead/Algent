@@ -153,6 +153,31 @@ def _existing_corrections(content_path: Path) -> list[dict]:
     return []
 
 
+def front_matter(markdown: str) -> dict:
+    """The YAML front matter of a site content file ({} when absent or unreadable)."""
+    import yaml
+
+    if not markdown.startswith("---"):
+        return {}
+    end = markdown.find("\n---", 3)
+    try:
+        data = yaml.safe_load(markdown[3:end]) if end > 0 else {}
+    except yaml.YAMLError:
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def _write_agent_twin(site_dir: Path, article: Any, profile: dict) -> None:
+    """The article's machine-readable twin for agents. Never blocks a publish."""
+    from .agent_twin import build_twin, write_twin
+
+    try:
+        meta = {**front_matter(article.markdown), "slug": article.slug}
+        write_twin(site_dir, build_twin(meta, profile or {}))
+    except Exception:  # noqa: BLE001 — the article is the product; the twin is a bonus layer
+        pass
+
+
 def publish_run(
     run_dir: Path,
     *,
@@ -221,6 +246,7 @@ def publish_run(
                       vector=vector, analytics=analytics,
                       hero=hero_for_site)
     _write_article(site_dir, article, run_dir)
+    _write_agent_twin(site_dir, article, profile)
     _append_publish_ledger(site_dir, article, run_id,
                            kind="correction" if is_rewrite else "publish", pushed=push)
 
