@@ -1,4 +1,4 @@
-"""python -m algent_backend.database [status|migrate]"""
+"""python -m algent_backend.database [status|migrate|load-profiles]"""
 
 import json
 import sys
@@ -11,5 +11,9 @@ if __name__ == "__main__":
         print(json.dumps({"applied": migrate()}, indent=2))
     elif verb == "status":
         print(json.dumps(status(), indent=2))
+    elif verb == "load-profiles":
+        from .corpus import load_profiles
+
+        print(json.dumps(load_profiles(), indent=2))
     else:
-        sys.exit("usage: python -m algent_backend.database [status|migrate]")
+        sys.exit("usage: python -m algent_backend.database [status|migrate|load-profiles]")
