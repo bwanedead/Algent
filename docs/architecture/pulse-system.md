@@ -66,9 +66,17 @@ publishable subset).
 ## Rollout
 
 1. Contracts, the file store and the projection, with tests. *(done)*
-2. Postgres migrations and repository; load the existing research corpus.
-3. Seed the first ten situations; review with the operator; persist.
-4. Article-update hook, radar freshness, weekly reassessment with blind pass, watches.
+2. Postgres migrations *(written: `backend/migrations/`)* and runner *(done)*; the Postgres
+   repository and the corpus load wait on the driver install and `DATABASE_URL`.
+3. Seed the first ten situations; review with the operator; persist. *(`newsroom pulse seed` →
+   review → `newsroom pulse commit`; seed doctrine v2 after the first review found circular
+   anchors, mixed ruler direction and duplicate Pulses across situations)*
+4. Article-update hook *(wired into the rail)*, radar freshness *(wired into menu builds)*, weekly
+   reassessment with blind pass *(`newsroom pulse reassess`)*, watches. *(done)*
+
+Seeding rules learned the hard way: anchor examples must predate the evidence (a ruler built from
+today's events measures nothing); every ruler runs 0 = calm → 100 = extreme; one dimension gets
+one Pulse across all situations.
 5. A private calibration period (1–3 weeks): nothing published externally. Check how often
    Pulses move, whether anchors are applied consistently, the anchoring gaps, and whether events
    are mapped to the right situations.

@@ -62,6 +62,13 @@ prose: "what is established about X as of today, on what evidence, and how sure 
 6. **Domain-agnostic machinery.** Geopolitics is the first domain. The same Situation/Pulse
    machinery must carry sports, markets or technology later without being rebuilt.
 
+## For agents, today
+
+Every published article has a machine-readable twin at `/data/articles/<slug>.json` (schema
+`ohmega.article/1`: graded claims, citable sources only, corrections), indexed at
+`/data/index.json` and described in `/llms.txt`. Source texts are never republished: we expose our
+claims and link to theirs. Pulse states join this layer once the calibration period ends.
+
 ## Where it is going
 
 - **Now:** the Pulse layer (situations, Pulses, events, watches) on a real database, seeded from
