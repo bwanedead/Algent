@@ -30,6 +30,7 @@ ANCHOR_POSITIONS = (0.0, 25.0, 50.0, 75.0, 100.0)
 _CLAIMS_PER_PROFILE = 40          # most salient first; enough to ground, bounded for the call
 _STATUS_ORDER = {"confirmed": 0, "likely": 1, "contested": 2, "unconfirmed": 3, "speculative": 4}
 _SALIENCE_ORDER = {"high": 0, "medium": 1, "low": 2}
+_CLAIM_ID = re.compile(r"\bclm_[0-9a-f]{6,}\b")
 
 
 # ── what the model returns ────────────────────────────────────────────────────────────────────
@@ -78,6 +79,7 @@ class SeededSituation(BaseModel):
     profile_ids: list[str] = Field(default_factory=list)
     draft: SituationDraft = Field(default_factory=SituationDraft)
     problems: list[str] = Field(default_factory=list)   # what the checks corrected
+    raw: SituationDraft | None = None                    # the model's answer before the checks
 
     model_config = {"arbitrary_types_allowed": True}
 
@@ -169,8 +171,15 @@ def check(sit: SeedSituation, draft: SituationDraft, citable: set[str],
             if circular:
                 problems.append(f"{slug}: anchor example(s) at {circular} may come from the evidence "
                                 f"window ({'/'.join(sorted(recent))}) — a ruler must predate what it measures")
-        bad = [c for c in p.claim_ids if c not in citable]
-        good = [c for c in p.claim_ids if c in citable]
+        cited = list(p.claim_ids)
+        if not cited:
+            # The model sometimes cites inside its prose and leaves the field empty — a grounded
+            # Ukraine reading was demoted that way. Recover ids it named, only if they exist.
+            cited = [c for c in dict.fromkeys(_CLAIM_ID.findall(p.rationale)) if c in citable]
+            if cited:
+                problems.append(f"{slug}: claim ids recovered from the rationale ({len(cited)})")
+        bad = [c for c in cited if c not in citable]
+        good = [c for c in cited if c in citable]
         if bad:
             problems.append(f"{slug}: cited ids not in the evidence dropped: {bad}")
         position = p.position
@@ -190,7 +199,7 @@ def check(sit: SeedSituation, draft: SituationDraft, citable: set[str],
             problems.append(f"watch '{w.condition[:50]}' linked to no known pulse — dropped")
             continue
         watches.append(w.model_copy(update={"pulse_slugs": linked}))
-    return SeededSituation(situation=sit, profile_ids=profile_ids, problems=problems,
+    return SeededSituation(situation=sit, profile_ids=profile_ids, problems=problems, raw=draft,
                            draft=draft.model_copy(update={"pulses": pulses, "watches": watches}))
 
 

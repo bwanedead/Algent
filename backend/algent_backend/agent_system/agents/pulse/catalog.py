@@ -19,6 +19,9 @@ class SeedSituation:
     domain: str = "geopolitics"
 
 
+# ORDER MATTERS: seeding is sequential and the first situation to define a dimension owns it,
+# so situations that own shared dimensions (shipping lanes, energy supply) come before those
+# that only touch them — Bab el-Mandeb once landed under Sahel/Horn because it was seeded first.
 SEED_SITUATIONS: tuple[SeedSituation, ...] = (
     SeedSituation("sit_russia_nato", "Russia–NATO confrontation",
                   "Direct military, hybrid and diplomatic friction between Russia and NATO/EU "
@@ -30,6 +33,13 @@ SEED_SITUATIONS: tuple[SeedSituation, ...] = (
     SeedSituation("sit_iran_gulf", "Iran, Israel and the Gulf",
                   "Iran's confrontation with Israel and the US, the Strait of Hormuz and Gulf "
                   "security, Iran's regional proxies (Houthis, Hezbollah), talks and ceasefires."),
+    SeedSituation("sit_red_sea_shipping", "Red Sea and global shipping disruption",
+                  "Threats to commercial shipping through chokepoints — Bab el-Mandeb, Suez, "
+                  "Hormuz as a shipping lane — rerouting, insurance, freight costs, naval "
+                  "escorts. The political confrontation lives in Iran, Israel and the Gulf."),
+    SeedSituation("sit_energy_security", "Global energy security",
+                  "Oil and gas supply and prices, OPEC+ decisions, strategic reserves, supply "
+                  "disruptions, and the energy transition's effect on supply security."),
     SeedSituation("sit_china_taiwan", "China–Taiwan",
                   "PLA pressure on Taiwan, cross-strait politics, US and allied commitments, "
                   "blockade and invasion risk, Taiwan's defence posture."),
@@ -37,6 +47,10 @@ SEED_SITUATIONS: tuple[SeedSituation, ...] = (
                   "Trade, tariffs, export controls, technology and chips, finance, diplomacy and "
                   "summits between the US and China. Taiwan-specific military pressure lives in "
                   "China–Taiwan."),
+    SeedSituation("sit_ai_geopolitics", "AI geopolitics",
+                  "Frontier AI as a strategic contest: compute and chip controls, state AI "
+                  "strategies, military AI, AI safety governance and incidents with state "
+                  "consequences."),
     SeedSituation("sit_israel_palestine", "Israel–Palestine and the wider region",
                   "Gaza, the West Bank, settlements, the humanitarian situation, normalisation "
                   "and regional diplomacy, and international legal and diplomatic pressure on "
@@ -45,15 +59,4 @@ SEED_SITUATIONS: tuple[SeedSituation, ...] = (
                   "Coups, insurgencies and state fragility across the Sahel and the Horn "
                   "(Mali, Burkina Faso, Niger, Sudan, Ethiopia, Somalia), foreign military "
                   "presence and displacement."),
-    SeedSituation("sit_red_sea_shipping", "Red Sea and global shipping disruption",
-                  "Threats to commercial shipping through chokepoints — Bab el-Mandeb, Suez, "
-                  "Hormuz as a shipping lane — rerouting, insurance, freight costs, naval "
-                  "escorts. The political confrontation lives in Iran, Israel and the Gulf."),
-    SeedSituation("sit_energy_security", "Global energy security",
-                  "Oil and gas supply and prices, OPEC+ decisions, strategic reserves, supply "
-                  "disruptions, and the energy transition's effect on supply security."),
-    SeedSituation("sit_ai_geopolitics", "AI geopolitics",
-                  "Frontier AI as a strategic contest: compute and chip controls, state AI "
-                  "strategies, military AI, AI safety governance and incidents with state "
-                  "consequences."),
 )

@@ -58,3 +58,10 @@ def test_an_anchor_drawn_from_the_evidence_window_is_flagged() -> None:
              for p in (0, 25, 50, 75, 100)]
     s = sd.check(SIT, _draft(anchors=ruler, evidence_through="2026-09-20"), {"clm_a"}, [])
     assert any("evidence window" in x and "75" in x for x in s.problems)
+
+
+def test_ids_cited_only_in_the_rationale_are_recovered_if_real() -> None:
+    s = sd.check(SIT, _draft(claim_ids=[], rationale="near 100 (clm_aaaaaaaa) and (clm_ffffffff)"),
+                 {"clm_aaaaaaaa"}, [])
+    p = s.draft.pulses[0]
+    assert p.position == 62 and p.claim_ids == ["clm_aaaaaaaa"]      # the invented one is not recovered

@@ -72,7 +72,8 @@ def _seed(args: Any) -> int:
     out.mkdir(parents=True, exist_ok=True)
     (out / "seed.json").write_text(json.dumps(
         [{"situation_id": x.situation.id, "profile_ids": x.profile_ids, "problems": x.problems,
-          "draft": x.draft.model_dump()} for x in seeded], ensure_ascii=False, indent=2), encoding="utf-8")
+          "draft": x.draft.model_dump(),
+          "raw_draft": x.raw.model_dump() if x.raw else None} for x in seeded], ensure_ascii=False, indent=2), encoding="utf-8")
     titles = {p["id"]: str(p.get("title") or p["id"]) for p in profiles}
     (out / "review.md").write_text(sd.render_review(seeded, titles), encoding="utf-8")
     print(json.dumps({
