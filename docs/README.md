@@ -42,6 +42,7 @@ Docs sprawl is a real failure mode. To prevent it:
 ### Architecture — `architecture/`
 - `run-control-plane.md` – run directory contract, runs CLI, observability weave.
 - `map-analytics-stack.md` – accurate country-scale map figures for the newsroom analytics path.
+- `pulse-system.md` – Ohmega Pulse: situations, anchored Pulses, append-only influences, watches, storage.
 
 ### Guides — `guides/`
 - `run-operator-entrypoint.md` – **start here** to operate runs; short hub that routes to the rest.
@@ -56,7 +57,7 @@ Docs sprawl is a real failure mode. To prevent it:
 > category folders apply to **new** docs going forward.
 
 - Architecture: `algent-backend-architecture.md`, `tech-stack.md`
-- Vision: `holistic-vision.md`, `project-vision.md`, `algo-lab-vision.md`,
+- Vision: `vision/ohmega-intelligence-engine.md` (**canonical for Ohmega's direction**), `holistic-vision.md`, `project-vision.md`, `algo-lab-vision.md`,
   `agent-network-vision.md`, `workspace-agentic-vision.md`, `aesthetic-vision.md`,
   `PHASE_2_VISION.md`
 - Guides: `credentials.md`
