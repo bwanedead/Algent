@@ -1,0 +1,543 @@
+{
+  "slug": "2026-10-01-0615",
+  "built_at": "2026-10-01T06:15:00Z",
+  "leads": [
+    {
+      "n": 1,
+      "title": "Rat-Infested Gaza Camps and Non-Healing Wounds at Nasser Hospital",
+      "thesis": "A BBC report from Nasser Hospital documents rat-infested displacement camps in the Gaza Strip where injured children, including a 6-year-old girl, suffer non-healing wounds amid dire sanitation.",
+      "pillars": [
+        "geopolitics",
+        "health"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.blic.rs/bbc/kampovi-preplavljeni-pacovima-i-rane",
+        "https://www.dw.com/en/gaza-ngo-reports-dire-camp-conditions-"
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Tennessee Execution Fails Despite Two Lethal Injections",
+      "thesis": "Tennessee halted executions after officials failed to execute Christa Gail Pike — the state's death-row woman since 1996 — despite two doses of lethal drugs, prompting a Supreme Court intervention and a governor-ordered pause.",
+      "pillars": [
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.kasu.org/2026-10-01/tennessee-governor-halts-exe",
+        "https://wgiram.iheart.com/content/2026-09-30-supreme-court-a",
+        "https://ktxs.com/news/nation-world/tennessee-unable-to-carry"
+      ]
+    },
+    {
+      "n": 3,
+      "title": "White House Blocks CNN From Press Pool Despite Court Order",
+      "thesis": "The White House blocked CNN from pool duty covering President Trump despite a judge having lifted a prior ban, escalating a press-access fight.",
+      "pillars": [
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://wmeq.iheart.com/content/2026-10-01-white-house-block"
+      ]
+    },
+    {
+      "n": 4,
+      "title": "Mersin Mayor Detained in Widening Turkey Municipal Corruption Probe",
+      "thesis": "Mersin Metropolitan Mayor Vahap Seçer was detained in a corruption investigation targeting multiple municipalities, marking the latest opposition-led city hall swept into Turkey's crackdown.",
+      "pillars": [
+        "politics",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.cnnturk.com/turkiye/son-dakika-mersin-buyuksehir"
+      ]
+    },
+    {
+      "n": 5,
+      "title": "France Unveils €54 Billion Savings Budget Before 2027 Election",
+      "thesis": "Prime Minister Sébastien Lecornu presented a budget aiming for €54 billion in savings, framing austerity as the path to fiscal credibility ahead of France's 2027 presidential election.",
+      "pillars": [
+        "economics",
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.leprogres.fr/politique/2026/10/01/54-milliards-d",
+        "https://www.dw.com/en/france-hundreds-arrested-as-student-pr"
+      ]
+    },
+    {
+      "n": 6,
+      "title": "Australia Launches Nation-First Inquiry Into AI 'Genie'",
+      "thesis": "Australia opened its first major national inquiry into the impacts of AI, warning of severe consequences if the 'genie' is left unchecked while also seeking benefits.",
+      "pillars": [
+        "ai",
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.dailyadvertiser.com.au/story/9360833/nation-firs"
+      ]
+    },
+    {
+      "n": 7,
+      "title": "Indian Pilot Hailed as Hero After FlyDubai Mid-Air Attack and Diversion",
+      "thesis": "Captain Smit Machchhar, an Indian pilot, was praised by India's Jaishankar and Israel's Netanyahu for saving 174 lives after an altercation forced a FlyDubai flight to make an emergency landing, prompting a suspension of FlyDubai Israel flights.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "http://www.myanmarnews.net/news/279344499/extraordinary-cour",
+        "http://www.heraldglobe.com/news/279344503/netanyahu-hails-in",
+        "https://www.france24.com/en/middle-east/20261001-live-flydub"
+      ]
+    },
+    {
+      "n": 8,
+      "title": "US Troops Complete 23-Year Withdrawal From Iraq",
+      "thesis": "American forces completed their withdrawal from Iraq, ending a 23-year military presence that began in 2003, with Reuters noting risks of emboldened Iranian proxies and Islamic State remnants.",
+      "pillars": [
+        "geopolitics",
+        "defense"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.reuters.com/world/us-forces-exit-iraq-emboldenin"
+      ]
+    },
+    {
+      "n": 9,
+      "title": "Hundreds Arrested as French Student Protests Escalate",
+      "thesis": "French authorities arrested hundreds as student-led protests escalated, overlapping with budget austerity announcements and broader social unrest.",
+      "pillars": [
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.dw.com/en/france-hundreds-arrested-as-student-pr"
+      ]
+    },
+    {
+      "n": 10,
+      "title": "UK Wind and Solar Saved £5.9 Billion in Gas Imports During Hormuz Crisis",
+      "thesis": "Carbon Brief analysis found UK wind and solar avoided £5.9 billion in gas imports while the Strait of Hormuz was disrupted, quantifying renewables' security value.",
+      "pillars": [
+        "environment",
+        "economics"
+      ],
+      "kind": "analytic",
+      "sources": [
+        "https://www.carbonbrief.org/analysis-wind-and-solar-save-uk-"
+      ]
+    },
+    {
+      "n": 11,
+      "title": "US States' Climate Superfund Laws Face Court Test Against Big Oil",
+      "thesis": "Courts are weighing state climate superfund laws that would make major oil companies pay for climate harms, a novel liability push now under judicial review.",
+      "pillars": [
+        "environment",
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://grist.org/accountability/state-climate-superfund-law"
+      ]
+    },
+    {
+      "n": 12,
+      "title": "Indonesia Haze Chokes Neighbors With Little Legal Recourse",
+      "thesis": "Transboundary haze from Indonesia is again choking neighboring countries, but affected populations have little legal recourse under current frameworks.",
+      "pillars": [
+        "environment",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://phys.org/news/2026-10-indonesia-haze-neighbors-legal"
+      ]
+    },
+    {
+      "n": 13,
+      "title": "Dutch Test Rice to Save Sinking Peatlands",
+      "thesis": "Researchers in the Netherlands are trialing rice as a new crop to keep peatlands wet and halt sinking, subsidence and carbon release.",
+      "pillars": [
+        "environment",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://phys.org/news/2026-10-rice-dutch-crop-peatlands.html"
+      ]
+    },
+    {
+      "n": 14,
+      "title": "New Map Ranks US Rivers Most Worth Protecting",
+      "thesis": "Scientists released a new map pinpointing US rivers most worth protecting for biodiversity and conservation value.",
+      "pillars": [
+        "environment",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.sciencenews.org/article/new-map-rivers-conservat"
+      ]
+    },
+    {
+      "n": 15,
+      "title": "CHIME Telescope Unlocks New Way to Study Universe's Expansion",
+      "thesis": "Canada's CHIME telescope used ancient hydrogen signals to open a new method for measuring the universe's baffling expansion rate.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.livescience.com/space/astronomy/ancient-hydrogen"
+      ]
+    },
+    {
+      "n": 16,
+      "title": "Surprisingly Complex Brain Waves Reveal Inner Workings",
+      "thesis": "Quanta reports that surprisingly complex traveling waves in the brain are revealing how neural circuits coordinate thought and perception.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.quantamagazine.org/surprisingly-complex-waves-re"
+      ]
+    },
+    {
+      "n": 17,
+      "title": "Mathematicians Use Randomness to Crack 55-Year-Old Conjecture",
+      "thesis": "Mathematicians harnessed randomness to resolve a 55-year-old conjecture, Quanta reports, marking a breakthrough in combinatorics/probability.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.quantamagazine.org/mathematicians-harness-random"
+      ]
+    },
+    {
+      "n": 18,
+      "title": "Dinosaur-Killing Crater May Have Teemed With Life Soon After Impact",
+      "thesis": "Research on the Chicxulub impact crater suggests it was teeming with life relatively soon after the dinosaur-killing asteroid strike.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arstechnica.com/science/2026/09/dinosaur-killing-imp"
+      ]
+    },
+    {
+      "n": 19,
+      "title": "Stratolaunch Boeing 777 Boosts US Hypersonic Testing by 35%",
+      "thesis": "Stratolaunch's modified Boeing 777 increased US hypersonic testing capacity by 35%, expanding defense programs' flight-test throughput.",
+      "pillars": [
+        "defense",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://interestingengineering.com/military/stratolaunch-boe"
+      ]
+    },
+    {
+      "n": 20,
+      "title": "Galileo Space Building Satellites That Process Signals in Orbit",
+      "thesis": "Startup Galileo Space is building satellites that turn raw signals into answers in orbit, processing data onboard rather than downlinking everything.",
+      "pillars": [
+        "science",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://spacenews.com/galileo-space-is-building-satellites-t"
+      ]
+    },
+    {
+      "n": 21,
+      "title": "NASA Crew-13 Aims for Fastest US Trip to the ISS",
+      "thesis": "NASA's Crew-13 mission could make the fastest US crewed trip to the International Space Station, testing a rapid rendezvous profile.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.sciencedaily.com/releases/2026/09/260930020312.h"
+      ]
+    },
+    {
+      "n": 22,
+      "title": "Google Unveils Gemini 4 Argon as Most Powerful Model Yet",
+      "thesis": "Google DeepMind released Gemini 4 Argon, calling it its most powerful model yet and its next era of frontier intelligence, with restricted access to trusted testers.",
+      "pillars": [
+        "ai"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://techcrunch.com/2026/09/30/google-releases-gemini-4-a",
+        "https://deepmind.google/blog/gemini-4-argon-our-next-era-of-",
+        "https://www.theverge.com/tech/1002980/google-gemini-4-argon"
+      ]
+    },
+    {
+      "n": 23,
+      "title": "OpenAI Says It Disrupted Coordinated Model-Distillation Campaign",
+      "thesis": "OpenAI disclosed disrupting a coordinated campaign to distill its models, alleging systematic extraction attempts by external actors.",
+      "pillars": [
+        "ai"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://openai.com/index/disrupting-a-coordinated-model-dist"
+      ]
+    },
+    {
+      "n": 24,
+      "title": "Cloudflare to Issue Quantum-Safe TLS Certificates",
+      "thesis": "Cloudflare plans to issue quantum-safe TLS certificates, preparing the web for post-quantum cryptography before quantum computers break current encryption.",
+      "pillars": [
+        "ai",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arstechnica.com/security/2026/09/cloudflare-plans-to"
+      ]
+    },
+    {
+      "n": 25,
+      "title": "Critical Zimbra Flaw Actively Exploited to Steal Emails",
+      "thesis": "Attackers have been actively exploiting a critical Zimbra flaw to steal emails, Ars Technica reports, putting enterprise mail servers at risk.",
+      "pillars": [
+        "ai",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arstechnica.com/security/2026/09/attackers-have-been"
+      ]
+    },
+    {
+      "n": 26,
+      "title": "Trump's AI Safety Accord Dismissed as 'Fancy Pinky-Swear'",
+      "thesis": "Wired analysis calls President Trump's AI Safety Accord a non-binding 'fancy pinky-swear' lacking enforcement mechanisms.",
+      "pillars": [
+        "ai",
+        "politics"
+      ],
+      "kind": "analytic",
+      "sources": [
+        "https://www.wired.com/story/trumps-ai-safety-accord-is-a-fan"
+      ]
+    },
+    {
+      "n": 27,
+      "title": "DeepMind Launches SynthID Bio Watermarking",
+      "thesis": "DeepMind introduced SynthID Bio, extending its watermarking toolkit to biological sequences and AI-generated bio data.",
+      "pillars": [
+        "ai",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://deepmind.google/blog/introducing-synthid-bio/"
+      ]
+    },
+    {
+      "n": 28,
+      "title": "Australia's Lynas Eyes Brazil Rare Earths via Meteoric Takeover",
+      "thesis": "Australia's Lynas Rare Earths is pursuing a takeover bid for Brazil's Meteoric Resources to diversify supply beyond China.",
+      "pillars": [
+        "economics",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://asia.nikkei.com/business/markets/commodities/austral"
+      ]
+    },
+    {
+      "n": 29,
+      "title": "China's Carmakers Target Record 12 Million Overseas Sales in 2026",
+      "thesis": "China's automakers eye a record 12 million overseas vehicle sales in 2026 as their go-global strategy pays off, SCMP reports.",
+      "pillars": [
+        "economics",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.scmp.com/business/china-business/article/3369423"
+      ]
+    },
+    {
+      "n": 30,
+      "title": "Pandora Opens $150 Million Vietnam Plant to Diversify Beyond Thailand",
+      "thesis": "Jeweler Pandora opened a $150 million plant in Vietnam to diversify its manufacturing footprint beyond Thailand.",
+      "pillars": [
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://asia.nikkei.com/spotlight/supply-chain/pandora-opens"
+      ]
+    },
+    {
+      "n": 31,
+      "title": "Trump Unveils $200 Billion in South Korean Energy Investments in US",
+      "thesis": "President Trump unveiled $200 billion in US energy investments pledged by South Korea, framing it as a win for American energy security.",
+      "pillars": [
+        "economics",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.japantimes.co.jp/news/2026/10/01/world/trump-200"
+      ]
+    },
+    {
+      "n": 32,
+      "title": "India and US Report Productive Talks on Early Trade Deal",
+      "thesis": "India's Commerce Minister Goyal reported productive discussions with USTR Greer on early conclusion of a bilateral trade deal, amid tariff tensions.",
+      "pillars": [
+        "economics",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.thehindu.com/business/Economy/productive-discuss",
+        "https://www.aljazeera.com/news/2026/10/1/modis-india-takes-o"
+      ]
+    },
+    {
+      "n": 33,
+      "title": "Kobe Shootings Leave One Dead and One Injured",
+      "thesis": "Shootings in Kobe, Japan left one dead and one injured, a rare gun violence incident in a country with strict firearm controls.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.japantimes.co.jp/news/2026/10/01/japan/crime-leg"
+      ]
+    },
+    {
+      "n": 34,
+      "title": "DR Congo Official Killed Defending Ebola Response Is Buried",
+      "thesis": "Mourners buried a DR Congo official killed after defending the Ebola response, highlighting violence against health workers.",
+      "pillars": [
+        "health",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/1/dr-congo-official-b"
+      ]
+    },
+    {
+      "n": 35,
+      "title": "South African Anti-Migrant Protesters Vow to Keep Marching",
+      "thesis": "Anti-migrant protesters in South Africa vowed to keep marching, saying there is 'no backing down' amid rising xenophobic mobilization.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "http://www.africanews.com/2026/09/30/no-backing-down-safrica"
+      ]
+    },
+    {
+      "n": 36,
+      "title": "Sanofi and Regeneron Expand Partnership After Dupixent Success",
+      "thesis": "Sanofi and Regeneron expanded their partnership following Dupixent's success, extending collaboration on immunology antibodies.",
+      "pillars": [
+        "health",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.statnews.com/2026/10/01/sanofi-regeneron-agreeme"
+      ]
+    },
+    {
+      "n": 37,
+      "title": "Intravenous Oncolytic Adenovirus With Chemotherapy Shows Promise for Metastatic Disease",
+      "thesis": "A Nature Medicine study reports an intravenous hyaluronidase-expressing oncolytic adenovirus combined with chemotherapy for metastatic disease.",
+      "pillars": [
+        "health",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.nature.com/articles/s41591-026-04705-y"
+      ]
+    },
+    {
+      "n": 38,
+      "title": "Review Links Cannabis Use to Twice the Risk of Violence",
+      "thesis": "A review found cannabis users were twice as likely to commit violence, reigniting debate over causation versus correlation in drug policy.",
+      "pillars": [
+        "health",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.sciencedaily.com/releases/2026/09/260930020255.h"
+      ]
+    },
+    {
+      "n": 39,
+      "title": "Exhaling May Speed Up Reaction Times",
+      "thesis": "New research finds exhaling may speed up reaction times, with breathing rhythms synced to brain activity.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.sciencenews.org/article/reaction-times-sync-brea"
+      ]
+    },
+    {
+      "n": 40,
+      "title": "Anglo-Saxons Got Special Treatment in Medieval Rome",
+      "thesis": "New research finds Anglo-Saxons received special treatment in medieval Rome, suggesting privileged status for English pilgrims and clergy.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.newscientist.com/article/2591306-anglo-saxons-go"
+      ]
+    },
+    {
+      "n": 41,
+      "title": "Paper Claims All Unitaries Have Constant-Depth Quantum Circuits",
+      "thesis": "An arXiv paper claims all unitaries have constant-depth quantum circuits, a striking theoretical result with implications for quantum complexity.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arxiv.org/abs/2609.40351v1"
+      ]
+    },
+    {
+      "n": 42,
+      "title": "JWST Probes Reionization History and Bubble Sizes With Lyman-Alpha",
+      "thesis": "A JWST Lyman-alpha study probes the history of cosmic reionization and the sizes of ionized bubbles in the early universe.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arxiv.org/abs/2609.40363v1"
+      ]
+    }
+  ]
+}
