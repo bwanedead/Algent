@@ -38,7 +38,7 @@ def describe(pulse: Any, log: list | None = None, *, blind: bool = False) -> str
         state = project(pulse.id, log)
         held = "unassessed" if state.position is None else f"{state.position:g}"
         lines.append(f"  ABSOLUTE VOTES — where {len(votes)} independent reader(s) put reality, ignoring the "
-                     f"history (median {state.absolute_view:g}; the Pulse holds {held}):")
+                     f"history (collective view, newer votes weighted more: {state.absolute_view:g}; the Pulse holds {held}):")
         for v in votes:
             lines.append(f"    {v.at[:10]}: {v.absolute_position:g} — {' '.join(v.rationale.split())[:160]}")
     return "\n".join(lines)

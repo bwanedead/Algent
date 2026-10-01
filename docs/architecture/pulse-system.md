@@ -35,7 +35,7 @@ publishable subset).
   side research), and holding the whole graph in one agent would be neither possible nor
   economical. So a vote never moves the Pulse. Instead, the latest vote of each of the recent
   independent sources (`projection.absolute_votes`; one research effort = one voter) is shown to
-  every later reader beside the past readings, with its median. When readers working from
+  every later reader beside the past readings, with their collective view: a median weighted by recency rank, so newer votes count for more but no single vote decides. There is no arbiter above the collective; the weekly reassessment is one more reader. When readers working from
   different research keep pulling the same way, the history has drifted, and the next reading
   moves toward them and says why. A sharper model corrects the record the same way, at the pace
   the evidence it touches allows. An adjudicator that "sees everything" was considered and

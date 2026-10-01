@@ -29,6 +29,14 @@ def test_one_research_effort_is_one_voter_and_only_recent_voters_count() -> None
     assert project("pls_x", log).absolute_view == 50
 
 
+def test_newer_votes_count_for_more_but_one_vote_does_not_decide() -> None:
+    log = [_inf(1, pos=60, mode="seed")]
+    old = [_inf(2 + n, absolute=30, profile=f"old{n}") for n in range(3)]
+    assert project("pls_x", log + old + [_inf(9, absolute=70, profile="new")]).absolute_view == 30
+    newer = [_inf(9 + n, absolute=70, profile=f"new{n}") for n in range(2)]
+    assert project("pls_x", log + old + newer).absolute_view == 70     # 2 newer outweigh 3 older
+
+
 def test_blind_reads_are_not_votes() -> None:
     log = [_inf(1, pos=60, mode="seed"), _inf(2, pos=10, absolute=10, mode="blind")]
     assert absolute_votes(log) == []
@@ -39,5 +47,5 @@ def test_every_reader_sees_the_other_readers_votes() -> None:
                   definitions=[PulseDefinition(question="q", low_end="calm", high_end="war")])
     log = [_inf(1, pos=60, mode="seed"), _inf(2, absolute=40, profile="p1"), _inf(3, absolute=44, profile="p2")]
     text = describe(pulse, log)
-    assert "ABSOLUTE VOTES" in text and "median 42" in text and "holds 60" in text
+    assert "ABSOLUTE VOTES" in text and "more: 44" in text and "holds 60" in text
     assert "ABSOLUTE VOTES" not in describe(pulse, log, blind=True)
