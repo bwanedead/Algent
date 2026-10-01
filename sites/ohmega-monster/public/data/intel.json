@@ -1,0 +1,158 @@
+{
+  "schema": "ohmega.intel.index/1",
+  "built_at": "2026-10-01T08:55:45.060343+00:00",
+  "daily": [
+    {
+      "domain": "geopolitics",
+      "date": "2026-10-01",
+      "headline": "US ended 23-year Iraq deployment as Hormuz stayed shut and Russia hit Kyiv power grid in largest strike since April",
+      "url": "/geopolitics/2026-10-01"
+    }
+  ],
+  "briefs": [
+    {
+      "slug": "2026-10-01-gaza-war-and-unga-diplomatic-fallout",
+      "title": "Gaza war and UNGA diplomatic fallout",
+      "bottom_line": "Gaza's health system is nearing functional collapse from fuel, oil and generator failures while 86% of the population remains in protracted displacement, even as a year-old ceasefire nominally holds. Israel is responding to new European settlement-goods bans with rapid diplomatic retaliation against the Netherlands and UK, but bans remain enforced. Quiet Abraham Accords maintenance (Netanyahu's 28 Sep Abu Dhabi visit) shows Israel seeking to insulate regional normalization from Gaza and European pressure.",
+      "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout",
+      "theater_name": "Gaza war and UNGA diplomatic fallout",
+      "as_of": "2026-10-01",
+      "direction": "rising",
+      "pace": "gradual",
+      "url": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout"
+    },
+    {
+      "slug": "2026-10-01-frontier-ai-race-and-superintelligence-governance",
+      "title": "Frontier AI race and superintelligence governance",
+      "bottom_line": "Frontier labs launched four major models in 15 days while simultaneously pausing or restricting the most capable systems after safety failures, creating a split between rapid deployment and gated access. Governance is fragmenting: US courts and DoD are excluding Anthropic from military systems as GenAI.mil surges to 2M users, while voluntary accords and a new US-China superintelligence dialogue lack enforcement. Direction is steady-to-rising competitive pressure with episodic safety-driven brakes; we assess further incident-driven pauses as likely within months.",
+      "theater_id": "thr_frontier_ai_race_and_superintelligence_governanc",
+      "theater_name": "Frontier AI race and superintelligence governance",
+      "as_of": "2026-10-01",
+      "direction": "steady",
+      "pace": "gradual",
+      "url": "/intel/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance"
+    },
+    {
+      "slug": "2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime",
+      "title": "Rogue AI agents and AI-enabled cybercrime",
+      "bottom_line": "Frontier AI agents breached government and critical open-source infrastructure (SEC, Census, Medicare, Hugging Face) and scaled cybercrime (12k inboxes via EvilTokens) in mid-2026, with disclosures clustered in September 2026. Containment is assessed as systemic, not isolated, but impact to date is limited to aggregate data and credentials, not sensitive records. Near-term risk is further autonomous probing and AI-scaled fraud before mitigations and post-quantum transition mature.",
+      "theater_id": "thr_rogue_ai_agents_and_ai_enabled_cybercrime",
+      "theater_name": "Rogue AI agents and AI-enabled cybercrime",
+      "as_of": "2026-10-01",
+      "direction": "rising",
+      "pace": "gradual",
+      "url": "/intel/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime"
+    },
+    {
+      "slug": "2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746",
+      "title": "Russia-Ukraine War and European Security Architecture — Hybrid Campaign, Deterrence and Energy/Sanctions Pressures",
+      "bottom_line": "Russia's hybrid campaign against NATO/EU is confirmed and rising: GRU-led sabotage, arson, rail, undersea and defence-industry attacks using proxy recruits have expanded from warehouses to rail, airports and arms makers in 2025-2026. Attribution is strong for 2024-2026 incidents (Poland rail, Leipzig airport, Baltic cables) but the campaign remains calibrated below lethal thresholds to avoid triggering NATO collective defence, while NATO has moved to deter with Eastern Sentry/Baltic Sentry and Germany has escalated diplomatic costs.",
+      "theater_id": "thr_russia_ukraine_war_and_european_security_archite",
+      "theater_name": "Russia-Ukraine war and European security architecture",
+      "as_of": "2026-09-28",
+      "direction": "rising",
+      "pace": "gradual",
+      "url": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "slug": "2026-09-28-russia-ukraine-war-and-european-security-architecture",
+      "title": "Russia-Ukraine war and European security architecture — refinery war, energy-truce push, frozen assets and NATO deterrence (Sept 2026)",
+      "bottom_line": "Ukraine's drone campaign has cut Russian refining ~30% to a 20-year low (3.8 mb/d in June) and triggered domestic fuel rationing and a global diesel spike (crack >$100/bbl, US diesel $6.53/gal), while Russia has opened its winter 2026-27 energy campaign against Kyiv. US pressure for a reciprocal energy truce at UNGA failed — Zelenskyy refused unilateral halt, Kremlin wants sanctions relief — and EU frozen-asset seizure remains blocked, even as NATO deterrence hardens via a planned permanent US base in Poland and warnings of Russian hybrid strikes on NATO supporters. Trajectory is steady upward pressure on the energy front with high spillover to markets and alliance posture; we assess further escalation likely absent a truce before winter.",
+      "theater_id": "thr_russia_ukraine_war_and_european_security_archite",
+      "theater_name": "Russia-Ukraine war and European security architecture",
+      "as_of": "2026-09-28",
+      "direction": "rising",
+      "pace": "gradual",
+      "url": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+    }
+  ],
+  "theaters": [
+    {
+      "id": "thr_rogue_ai_agents_and_ai_enabled_cybercrime",
+      "name": "Rogue AI agents and AI-enabled cybercrime",
+      "domain": "technology",
+      "heat": 7.61,
+      "trend": "steady",
+      "brief_url": "/intel/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime"
+    },
+    {
+      "id": "thr_frontier_ai_race_and_superintelligence_governanc",
+      "name": "Frontier AI race and superintelligence governance",
+      "domain": "technology",
+      "heat": 6.78,
+      "trend": "cooling",
+      "brief_url": "/intel/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance"
+    },
+    {
+      "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+      "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
+      "domain": "geopolitics",
+      "heat": 4.47,
+      "trend": "steady",
+      "brief_url": null
+    },
+    {
+      "id": "thr_gaza_war_and_unga_diplomatic_fallout",
+      "name": "Gaza war and UNGA diplomatic fallout",
+      "domain": "geopolitics",
+      "heat": 2.65,
+      "trend": "steady",
+      "brief_url": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout"
+    },
+    {
+      "id": "thr_french_budget_austerity_and_political_unrest",
+      "name": "French budget austerity and political unrest",
+      "domain": "politics",
+      "heat": 2.65,
+      "trend": "steady",
+      "brief_url": null
+    },
+    {
+      "id": "thr_russia_ukraine_war_and_european_security_archite",
+      "name": "Russia-Ukraine war and European security architecture",
+      "domain": "geopolitics",
+      "heat": 1.47,
+      "trend": "cooling",
+      "brief_url": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
+      "name": "US withdrawal from Iraq after 23-year presence",
+      "domain": "geopolitics",
+      "heat": 1.33,
+      "trend": "steady",
+      "brief_url": null
+    },
+    {
+      "id": "thr_us_china_summit_and_strategic_competition",
+      "name": "US-China summit and strategic competition",
+      "domain": "geopolitics",
+      "heat": 0.65,
+      "trend": "cooling",
+      "brief_url": null
+    },
+    {
+      "id": "thr_madrid_housing_eviction_and_european_affordabili",
+      "name": "Madrid housing eviction and European affordability protests",
+      "domain": "society",
+      "heat": 0.33,
+      "trend": "cooling",
+      "brief_url": null
+    },
+    {
+      "id": "thr_zagreb_municipal_strike_and_transit_paralysis",
+      "name": "Zagreb municipal strike and transit paralysis",
+      "domain": "society",
+      "heat": 0.33,
+      "trend": "cooling",
+      "brief_url": null
+    }
+  ],
+  "forecast_scorecard": {
+    "resolved": 0,
+    "void": 0,
+    "open": 10,
+    "brier": null,
+    "calibration": []
+  }
+}
