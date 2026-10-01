@@ -13,7 +13,11 @@ Snapshot file ``content/intel/snapshots/<slug>.json``, slug = UTC "YYYY-MM-DD-HH
                     "velocity_30d":float|null,"confidence":str,"last_assessed":str,
                     "evidence_through":str,"history":[{"at","position"}],"rationale":str}],
          "watches":[{"condition","why","direction","horizon","status"}]}],   // open watches only
-     "theaters":[{"id","name","domain","why","heat","trend","recent","prior",   // recent/prior: raw counts
+     "theaters":[{"id","name","domain","why","heat","trend","coverage","recent","prior",   // recent/prior: raw counts
+                  // trend/coverage = COVERAGE momentum (share of headlines), NOT severity: coverage is
+                  // trend as a label ("rising|steady|falling coverage"/"newly reported"; heating|steady|
+                  // cooling|new stay as stored). Escalation = the situation itself (daily/brief);
+                  // Pulse band = severity. Never present heat or trend as how bad things are.
                   "recent_share","prior_share",   // 0-1: share of all headlines in that 3-day window's
                                                   // editions; trend compares these, not the counts
                   "first_seen","series":[{"day","count","editions"}],   // editions = radar editions built
@@ -27,7 +31,8 @@ Snapshot file ``content/intel/snapshots/<slug>.json``, slug = UTC "YYYY-MM-DD-HH
                   "open":[{"statement","probability","horizon","theater_name","brief_slug"}],   // 20 soonest horizon
                   "resolved":[{"statement","probability","outcome":"yes|no|void","resolved_at","evidence"}]}}
                                                                    // 20 newest resolved; from intel_store/forecasts.jsonl
-     "daily":[{"domain","date","headline"}]}                       // every daily report, newest first
+     "daily":[{"domain","date","headline","theaters":[{"id","name"}]}]}   // every daily report, newest
+                                                                   // first; theaters lets the site cross-link
 
 Brief files: ``content/intel/briefs/<slug>.json`` = the persisted brief record
 (``intel_store/briefs/<slug>.json``, schema ``ohmega.brief/1``).
@@ -38,7 +43,7 @@ Daily files: ``content/intel/daily/<domain>/<YYYY-MM-DD>.json`` = the persisted 
     {"schema","domain","date","built_at","researched":bool,
      "summary":{"headline","the_day":[3-6 one-sentence bullets, most important first]},
      "theaters":[{"theater_id","name",
-         "temperature":{"heat","trend","recent_share","prior_share"},
+         "temperature":{"heat","trend","coverage","recent_share","prior_share"},   // coverage, as above
          "escalation":{"direction":"rising|steady|easing|unclear","pace":"fast|gradual|flat"},
          "pulses":[{"id","name","position":float|null,"band","change_24h":float|null,"change_7d":float|null}],
          "bottom_line","since_yesterday":[{"what","kind":"escalated|eased|new|resolved|unchanged"}],
@@ -46,11 +51,27 @@ Daily files: ``content/intel/daily/<domain>/<YYYY-MM-DD>.json`` = the persisted 
              "statements":[{"who","role","said","quote":bool,"when","source"}],   // quote=true: exact, <=25 words
              "significance","verification":"researched|reported","sources":[urls]}],
          "context":[{"what","when","why_relevant","source"}],   // older items that explain today
-         "outlook","watch_next":[...],"brief_slug":slug|null,"map":null}],      // map reserved
+         "outlook","watch_next":[...],"brief_slug":slug|null,
+         "key_figures":[{"label","value":number,"unit","baseline":number|null,"baseline_label",
+                         "as_of":"YYYY-MM-DD","source":url}],   // 0-4, only numbers the research states
+         "map":null|{"bbox":[w,s,e,n],"projection":"equirectangular","width":1000,"height":int,
+                     "countries":[{"name","d"}],   // SVG path in the 0..width x 0..height frame
+                     "points":[{"x","y","label","date","verification","n"}],   // n: 1-based, developments[n-1]
+                     "credit"}}],   // our own validated points over Natural Earth; null without a point
+         // each development also carries "place":{"name","country","lat","lon"}|null (validated)
      "cross_theater":[{"theaters":[names],"link"}],
      "pulse_proposals":[{"theater","name","question","low_end","high_end","why"}]}
 
-Pulse numbers and deltas are computed from the Pulse store, never by a model.
+Pulse numbers and deltas are computed from the Pulse store, never by a model. Key figures are numbers
+the research stated, kept only with a source the research cited; places are validated against the
+basemap (inside the country or within ~50 km of its border) and dropped otherwise.
+
+SYNC RULE: /intel and the daily report must never disagree because someone forgot to republish. Every
+process that changes what /intel shows ends by calling ``publish_intel()`` (never raises) exactly once:
+the rail after it feeds the Pulses, the radar menu build after ``publish_menu`` (heat and theaters derive
+from radar editions; no paid heat clustering is run for it), ``newsroom intel`` heat/brief/cycle/daily,
+and ``newsroom pulse`` commit/reassess/promote/promote-ready. A process that calls others (daily runs
+promote-ready) lets the inner step stay quiet and publishes once at its own end.
 
 Agent feed (static data files in the site checkout, beside the article twins)::
 
@@ -65,7 +86,7 @@ Agent feed (static data files in the site checkout, beside the article twins)::
         "daily":[{"domain","date","headline","url":"/geopolitics/<date>"}],        // newest first
         "briefs":[{"slug","title","bottom_line","theater_id","theater_name","as_of","direction","pace",
                    "url":"/intel/briefs/<slug>"}],
-        "theaters":[{"id","name","domain","heat","trend","brief_url":"/intel/briefs/<slug>"|null}],
+        "theaters":[{"id","name","domain","heat","trend","coverage","brief_url":"/intel/briefs/<slug>"|null}],
         "forecast_scorecard":{"resolved","void","open","brier","calibration":[...]}}
         // a compact index of the snapshot for agents; URLs are relative to the site root.
 
@@ -88,6 +109,7 @@ from typing import Any
 
 from algent_backend.agent_system.agents.intel import forecasts
 from algent_backend.agent_system.agents.intel.brief import safe_name
+from algent_backend.agent_system.agents.intel.contracts import coverage_label
 
 from . import site_git
 
@@ -188,7 +210,8 @@ def build_snapshot(store: Any, intel_dir: Path, *, now: datetime | None = None) 
         t = theaters.get(h["theater_id"], {})
         rows.append({"id": h["theater_id"], "name": h.get("name") or t.get("name", ""),
                      "domain": t.get("domain", ""), "why": t.get("why", ""), "heat": h.get("heat", 0),
-                     "trend": h.get("trend", ""), "recent": h.get("recent", 0), "prior": h.get("prior", 0),
+                     "trend": h.get("trend", ""), "coverage": coverage_label(h.get("trend", "")),
+                     "recent": h.get("recent", 0), "prior": h.get("prior", 0),
                      "recent_share": h.get("recent_share", 0.0), "prior_share": h.get("prior_share", 0.0),
                      "first_seen": h.get("first_seen", ""), "series": h.get("series", []),
                      "brief": newest.get(h["theater_id"])})
@@ -200,7 +223,9 @@ def build_snapshot(store: Any, intel_dir: Path, *, now: datetime | None = None) 
                         "pace": (b.get("escalation") or {}).get("pace", "")} for b in briefs],
             "forecasts": _forecasts(intel_dir, {b["slug"]: b.get("theater_name", "") for b in briefs}),
             "daily": [{"domain": r.get("domain", ""), "date": r.get("date", ""),
-                       "headline": (r.get("summary") or {}).get("headline", "")} for r in _daily_reports(intel_dir)]}
+                       "headline": (r.get("summary") or {}).get("headline", ""),
+                       "theaters": [{"id": t.get("theater_id", ""), "name": t.get("name", "")}
+                                    for t in r.get("theaters") or []]} for r in _daily_reports(intel_dir)]}
 
 
 def _write_if_changed(path: Path, payload: dict) -> None:
@@ -225,7 +250,7 @@ def build_index(snapshot: dict) -> dict:
             "daily": [{**d, "url": f"/geopolitics/{d['date']}"} for d in snapshot["daily"]],
             "briefs": [{**b, "url": f"/intel/briefs/{b['slug']}"} for b in snapshot["briefs"]],
             "theaters": [{"id": t["id"], "name": t["name"], "domain": t["domain"], "heat": t["heat"],
-                          "trend": t["trend"], "brief_url": f"/intel/briefs/{t['brief']}" if t["brief"] else None}
+                          "trend": t["trend"], "coverage": t["coverage"], "brief_url": f"/intel/briefs/{t['brief']}" if t["brief"] else None}
                          for t in snapshot["theaters"]],
             "forecast_scorecard": snapshot["forecasts"]["scorecard"]}
 

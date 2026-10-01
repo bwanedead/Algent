@@ -61,6 +61,20 @@ class TheaterHeat(BaseModel):
     heat: float = 0.0                # share of coverage (per 100 headlines), weighted up when heating or new
 
 
+COVERAGE_LABELS = {"heating": "rising coverage", "steady": "steady coverage", "cooling": "falling coverage",
+                   "new": "newly reported"}
+
+
+def coverage_label(trend: str) -> str:
+    """The reader-facing name of a stored ``trend``.
+
+    Three different things are easy to confuse, so the data keeps them apart: ``trend`` (and ``heat``) is
+    COVERAGE momentum, the theater's share of headlines against the window before; it says nothing about
+    how bad things are. ``escalation`` is the situation itself, judged from the evidence. Pulse ``band`` is
+    severity. Stored names stay as they are (back-compat); ``coverage`` is the label to show."""
+    return COVERAGE_LABELS.get(trend, "steady coverage" if trend else "")
+
+
 # ── the brief ─────────────────────────────────────────────────────────────────────────────────
 class TimelineItem(BaseModel):
     date: str                        # YYYY-MM-DD
@@ -163,6 +177,28 @@ class Statement(BaseModel):
     source: str = ""                 # URL
 
 
+class Place(BaseModel):
+    """Where a development happened, as the writer's best coordinates for a named city or site. The desk
+    validates it against the basemap and drops it when it does not hold; country "sea" marks a sea lane."""
+
+    name: str
+    country: str = ""
+    lat: float
+    lon: float
+
+
+class KeyFigure(BaseModel):
+    """A number the researched evidence states, nothing computed. ``baseline`` only when the source gives one."""
+
+    label: str
+    value: float
+    unit: str = ""
+    baseline: float | None = None
+    baseline_label: str = ""
+    as_of: str = ""                  # YYYY-MM-DD the source gives the number for
+    source: str = ""                 # URL, must be one the research cited
+
+
 class Development(BaseModel):
     headline: str
     detail: str = ""
@@ -173,6 +209,7 @@ class Development(BaseModel):
     significance: str = ""           # why it matters, in a line
     verification: Verification = "reported"
     sources: list[str] = Field(default_factory=list)
+    place: Place | None = None       # best coordinates for where it happened; validated, else dropped
 
 
 class ContextItem(BaseModel):
@@ -214,6 +251,7 @@ class SectionDraft(BaseModel):
     context: list[ContextItem] = Field(default_factory=list)
     outlook: str = ""
     watch_next: list[str] = Field(default_factory=list)
+    key_figures: list[KeyFigure] = Field(default_factory=list)   # 0-4, only numbers the research states
     pulses: list[str] = Field(default_factory=list)          # exact Pulse NAMES this theater bears on
     pulse_proposals: list[PulseProposal] = Field(default_factory=list)
 
