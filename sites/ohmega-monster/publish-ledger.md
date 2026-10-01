@@ -812,3 +812,12 @@ cost_by_stage: editorial=$0.2378, gauntlet=$0.2257
 disposition: needs_verification
 x_searches: 5
 run: 0103__b8cf591c-5cc8-4ad2-a450-076bf855a423
+
+### PUBLISH a-himalayan-rock-ice-avalanche-wobbled-for-months-before-out-861075 — 2026-10-01
+status: publishable  ·  draft: grounded  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 0 produced, 1 escapes
+cost: ~$0.3978  ·  mode: normal  ·  soft/hard: $1.00/$2.00
+analytics_skipped: req_langtang_velocity_001:skipped, req_langtang_cascade_map_002:failed
+cost_by_stage: editorial=$0.0783, gauntlet=$0.2461, profile=$0.0734
+run: 0104__87ba2fc0-d04f-497c-a9f9-7e4ddc072fb5
