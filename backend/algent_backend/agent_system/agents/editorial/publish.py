@@ -21,6 +21,13 @@ from .draft import ArticleDraft
 
 _IMAGE_SUFFIXES = (".svg", ".png", ".jpg", ".jpeg", ".webp")
 _TABLE_ROW = re.compile(r"^\s*\|.*\|\s*$")
+#: Why a planned visual is missing, in reader words. Internal statuses and raw worker errors stay in the
+#: run's audit log; anything not listed reads as a plain "could not be produced".
+_UNSHIPPED = {
+    "integrity_check_failed": "withheld — its numbers could not be verified against our sources",
+    "source_unavailable": "the material it needed is not available to us",
+    "soft_cap_skipped": "left out to keep the piece focused",
+}
 
 
 def _table_block(body_md: str) -> str:
@@ -492,12 +499,19 @@ def _appendix(draft: ArticleDraft, cited_sources: list, cited_claims: list, sour
     if skipped:
         out.append("**Visuals not shipped** — _planned but not fulfilled_")
         for a in skipped:
-            rid = a.get("request_id") or a.get("id") or "?"
+            # Reader-facing: a SKIPPED visual carries an editorial reason worth showing (the data does
+            # not exist as numbers). A FAILED one carries a raw worker error — internal paths, machine
+            # details — which belongs in the run's audit log, never on the page. Request ids are
+            # internal too.
             status = a.get("status") or "skipped"
-            title = a.get("title") or rid
-            note = a.get("note") or a.get("rationale") or ""
-            note_bit = f" — {note}" if note else ""
-            out.append(f"- {title} ({rid}): {status}{note_bit}")
+            title = a.get("title") or "A planned visual"
+            if status in ("skipped", "integrity_check_failed"):   # editorial reasons, written for readers
+                note = (a.get("note") or a.get("rationale") or "").strip().split("\n\n")[0]
+                note = note.removeprefix("Skipped:").strip()
+                lead = "skipped" if status == "skipped" else _UNSHIPPED[status]
+                out.append(f"- {title}: {lead}" + (f" ({note})" if note else ""))
+            else:
+                out.append(f"- {title}: {_UNSHIPPED.get(status, 'could not be produced for this edition')}")
         out.append("")
 
     out.append("**Sources**")

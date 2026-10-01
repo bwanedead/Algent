@@ -85,7 +85,7 @@ def test_produced_analytics_are_embedded_and_receipted() -> None:
     assert "AI-assisted analytic, built only from cited data" in md
     # Failed visuals are not embedded, but they are receipted so they are not "forgotten".
     assert "![anx_02" not in md and "analytic_anx_02" not in md
-    assert "**Visuals not shipped**" in md and "anx_02" in md and "failed" in md
+    assert "**Visuals not shipped**" in md and "could not be produced" in md and "anx_02" not in md
     # and it earns a receipts line carrying its claim provenance + as-of.
     assert "Charts & tables" in md and "from claims c1" in md and "as of 2026-06-26" in md
 
@@ -181,7 +181,7 @@ def test_analytic_with_unverified_figures_is_flagged_in_receipts() -> None:
                   "note": "figure check: numbers not found in cited evidence — 9.9"}]
     md = render_published_article(_draft(), _profile(), analytics)
     assert "drifty chart" not in md.split("How we know this")[0]
-    assert "**Visuals not shipped**" in md and "integrity_check_failed" in md
+    assert "**Visuals not shipped**" in md and "could not be verified" in md and "integrity_check_failed" not in md
     assert "9.9" in md
 
 

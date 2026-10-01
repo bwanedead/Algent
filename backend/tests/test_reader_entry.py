@@ -123,7 +123,9 @@ def test_receipts_list_visuals_not_shipped() -> None:
         ],
     )
     assert "**Visuals not shipped**" in md
-    assert "source_unavailable" in md and "soft_cap_skipped" in md
+    assert "Tablet photo: the material it needed is not available to us" in md
+    assert "Extra chart: left out to keep the piece focused" in md
+    assert "source_unavailable" not in md and "anx_0" not in md   # internal words stay internal
 
 
 def test_headline_message_includes_treatment_entry() -> None:
