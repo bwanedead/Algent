@@ -25,6 +25,7 @@ def add_parser(sub: Any) -> None:
     b.add_argument("--theater", default="", help="a theater id (default: the hottest ones)")
     b.add_argument("--top", type=int, default=3)
     b.add_argument("--research", action="store_true", help="commission fresh research first (paid)")
+    b.add_argument("--focus", default="", help="a question the desk wants answered; leads the research and brief")
     p.set_defaults(handler=run_intel)
 
 
@@ -94,17 +95,18 @@ def _brief(args: Any) -> int:
         if args.research:
             # The research agent caps itself at $1; this scope makes the spend visible per theater.
             with cost.article_scoped(1.0):
-                prof = br.commission_research(ctx, None, theater)
+                prof = br.commission_research(ctx, None, theater, focus=args.focus)
                 spent = cost.article_spent_usd()
             if prof:
                 profiles.append(prof)
-                update_quietly(prof, run_id=f"intel_{tid}")   # the brief's research moves the Pulses
+                update_quietly(prof, run_id=prof["id"])   # the brief's research moves the Pulses
         brief = br.write_brief(ctx, None, theater, heat.get(tid, {}), profiles=profiles, pulse_lines=[],
-                               model_spec=house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=16384))
+                               model_spec=house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=16384),
+                               focus=args.focus)
         if brief is None:
             report.append({"theater": tid, "error": "analyst returned nothing"})
             continue
-        name = br.safe_name(theater.name)
+        name = br.safe_name(theater.name) + (f"_{br.focus_tag(args.focus)}" if args.focus.strip() else "")
         (out / f"brief_{name}.json").write_text(brief.model_dump_json(indent=2), encoding="utf-8")
         (out / f"brief_{name}.html").write_text(
             render.render_brief(brief, theater_name=theater.name, heat=heat.get(tid, {}), as_of=board["as_of"]),

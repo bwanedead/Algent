@@ -68,20 +68,29 @@ Plain words a newcomer can follow; no internal jargon.
 """
 
 
-def commission_research(context: Any, config: Any, theater: Theater) -> dict | None:
-    """Research the theater with the generic questions. Returns the profile (also saved to the corpus)."""
+def focus_tag(focus: str) -> str:
+    """A short stable tag, so a focused research run and its brief never overwrite the general one."""
+    import hashlib
+
+    return hashlib.sha1(" ".join(focus.lower().split()).encode("utf-8")).hexdigest()[:6] if focus.strip() else ""
+
+
+def commission_research(context: Any, config: Any, theater: Theater, *, focus: str = "") -> dict | None:
+    """Research the theater with the generic questions, led by the desk's FOCUS question when one is
+    given (the recipe stays generic; the focus is how an operator steers it). Returns the profile
+    (also saved to the corpus)."""
     from ..research.spec import build_graph as build_profile
 
     sources = list(dict.fromkeys(u for m in theater.members for u in m.sources))[:12]
     vector = {
-        "id": f"intel_{theater.id.removeprefix('thr_')}"[:60],
-        "title": theater.name,
-        "thesis": theater.why or theater.description,
+        "id": f"intel_{theater.id.removeprefix('thr_')}"[:60] + (f"_{focus_tag(focus)}" if focus.strip() else ""),
+        "title": theater.name + (f" — {focus.strip()}" if focus.strip() else ""),
+        "thesis": (f"Desk focus: {focus.strip()}\n" if focus.strip() else "") + (theater.why or theater.description),
         "vector_type": "synthesis",
         "research_effort": "deep",
         "pillars": [theater.domain],
         "scope": [],
-        "key_questions": list(GENERIC_QUESTIONS),
+        "key_questions": ([focus.strip()] if focus.strip() else []) + list(GENERIC_QUESTIONS),
         "sources": sources,
         "supporting_hits": [f"{m.edition}#{m.n}" for m in theater.members][:20],
         "rationale": "commissioned by the intel desk: this theater is running hot",
@@ -97,7 +106,7 @@ def _reported(theater: Theater) -> str:
 
 
 def write_brief(context: Any, config: Any, theater: Theater, heat: dict, *, profiles: list[dict],
-                pulse_lines: list[str], model_spec: Any) -> Brief | None:
+                pulse_lines: list[str], model_spec: Any, focus: str = "") -> Brief | None:
     from langchain_core.messages import HumanMessage, SystemMessage
 
     from algent_backend.agent_system.prompting import UNIVERSAL_AGENT_BASE, compose_system_prompt
@@ -113,6 +122,8 @@ def write_brief(context: Any, config: Any, theater: Theater, heat: dict, *, prof
             f"SOURCE URLS FOR RESEARCHED CLAIMS: {_compact(source_urls)}\n\n"
             f"REPORTED HEADLINES (other outlets, unverified):\n{_reported(theater)}\n\n"
             + (f"OHMEGA PULSES IN THIS AREA:\n" + "\n".join(pulse_lines) + "\n\n" if pulse_lines else "")
+            + (f"DESK FOCUS: {focus.strip()}\nThe desk asked this directly: lead with it and answer it from the "
+               "evidence, then cover the rest of the theater.\n\n" if focus.strip() else "")
             + "TASK: write the brief.")
     model = context.model_resolver.resolve(model_spec).client.with_structured_output(Brief)
     brief = model.invoke([SystemMessage(content=compose_system_prompt(UNIVERSAL_AGENT_BASE, ANALYST_ROLE)),
