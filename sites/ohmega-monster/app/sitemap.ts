@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const intel = [
     { url: `${SITE_URL}/intel`, lastModified: new Date() },
     ...allBriefSlugs().map((slug) => ({ url: `${SITE_URL}/intel/briefs/${slug}` })),
+    { url: `${SITE_URL}/pulses`, lastModified: new Date() },
     { url: `${SITE_URL}/geopolitics`, lastModified: new Date() },
     ...allDailyDates("geopolitics").map((d) => ({ url: `${SITE_URL}/geopolitics/${d}`, lastModified: d })),
   ];

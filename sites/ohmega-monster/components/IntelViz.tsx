@@ -1,4 +1,4 @@
-import type { Band } from "@/lib/intel";
+import { COVERAGE_DISPLAY, type Band, type Coverage } from "@/lib/intel";
 
 // Hand-written SVG micro-visuals for the Intelligence desk. Pure server components; colors come
 // from CSS (currentColor / intel- classes) so they follow the light/dark display.
@@ -54,7 +54,7 @@ export function DayBars({ series, label }: { series: { day: string; count: numbe
 export function HeatBar({ heat }: { heat: number }) {
   const pct = Math.max(0, Math.min(100, heat <= 1 ? heat * 100 : heat));
   return (
-    <span className="intel-heat" role="img" aria-label={`Heat ${Math.round(pct)} of 100`}>
+    <span className="intel-heat" role="img" aria-label={`Share of headlines: ${Math.round(pct)} of 100`}>
       <span className="intel-heat-fill" style={{ width: `${pct}%` }} />
     </span>
   );
@@ -174,10 +174,12 @@ export function ActorMap({ relations }: { relations: Rel[] }) {
 const DIR_GLYPH: Record<string, string> = { rising: "▲", steady: "◆", easing: "▼", unclear: "?" };
 const DIR_CLASS: Record<string, string> = { rising: "severe", steady: "elevated", easing: "calm", unclear: "unassessed" };
 
-export function EscalationChips({ direction, pace }: { direction: string; pace: string }) {
+/** Escalation is the situation itself (not coverage, not Pulse severity). `labelled` spells that out. */
+export function EscalationChips({ direction, pace, labelled = false }: { direction: string; pace: string; labelled?: boolean }) {
   if (!direction && !pace) return null;
   return (
-    <span className="intel-chips">
+    <span className="intel-chips" title={labelled ? "Is the situation itself getting worse, steadier or easing" : undefined}>
+      {labelled && <span className="intel-micro intel-chips-label">Escalation:</span>}
       {direction && (
         <span className={`intel-chip intel-band-${DIR_CLASS[direction] ?? "unassessed"}`}>
           {DIR_GLYPH[direction] ?? "·"} {direction}
@@ -236,5 +238,16 @@ export function CalibrationChart({ buckets }: { buckets: { range: string; count:
       <text x={(L + W - R) / 2} y={H - 3} textAnchor="middle" className="intel-calib-axis">What we forecast (%)</text>
       <text transform={`translate(9 ${(T + H - B) / 2}) rotate(-90)`} textAnchor="middle" className="intel-calib-axis">How often it happened (%)</text>
     </svg>
+  );
+}
+
+/** Coverage: how much of the world’s headlines a theater takes. Neutral colour on purpose: never a band colour. */
+export function CoverageTag({ coverage, bare = false }: { coverage: Coverage; bare?: boolean }) {
+  const c = COVERAGE_DISPLAY[coverage];
+  return (
+    <span className="intel-cov" title="Share of today’s headlines about this theater">
+      {!bare && <span className="intel-micro">Coverage </span>}
+      <span aria-hidden="true">{c.glyph}</span> {c.label}
+    </span>
   );
 }

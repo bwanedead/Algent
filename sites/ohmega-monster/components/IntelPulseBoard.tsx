@@ -1,63 +1,9 @@
-import { BAND_LABEL, maxBand, type Pulse, type Situation } from "@/lib/intel";
+import { BAND_LABEL, maxBand, type Situation } from "@/lib/intel";
 
-import { Sparkline } from "./IntelViz";
+import PulseCard, { baseOf } from "./PulseCard";
 
-export function BandChip({ band }: { band: Pulse["band"] }) {
-  return <span className={`intel-chip intel-band-${band}`}>{BAND_LABEL[band]}</span>;
-}
-
-function fmtDelta(v: number | null): string {
-  if (v === null) return "—";
-  const r = Math.round(v * 10) / 10;
-  if (r === 0) return "◆ 0";
-  return `${r > 0 ? "▲ +" : "▼ −"}${Math.abs(r)}`;
-}
-
-function PulseTile({ p }: { p: Pulse }) {
-  const assessed = p.position !== null;
-  const d7 = p.velocity_7d;
-  const dirClass = d7 === null || Math.round(d7 * 10) === 0 ? "flat" : d7 > 0 ? "up" : "down";
-  return (
-    <details id={`pulse-${p.id}`} className={`intel-pulse intel-band-${p.band}`}>
-      <summary>
-        <span className="intel-pulse-name">{p.name}</span>
-        <span className="intel-pulse-main">
-          <span className={assessed ? "intel-num" : "intel-num intel-muted"}>{assessed ? Math.round(p.position as number) : "—"}</span>
-          <BandChip band={p.band} />
-        </span>
-        <Sparkline points={p.history.map((h) => h.position)} band={p.band} label={`${p.name}: ${p.history.length} readings`} />
-        <span className="intel-pulse-foot">
-          <span className={`intel-delta intel-delta-${dirClass}`} title="Change over 7 days">
-            {fmtDelta(d7)}
-            <span className="intel-micro"> 7d</span>
-          </span>
-          <span className="intel-micro">{p.confidence ? `${p.confidence} confidence` : "confidence n/a"}</span>
-        </span>
-      </summary>
-      <div className="intel-pulse-body">
-        {p.question && <p className="intel-pulse-q">{p.question}</p>}
-        {(p.low_end || p.high_end) && (
-          <dl className="intel-ends">
-            <div>
-              <dt>0</dt>
-              <dd>{p.low_end || "—"}</dd>
-            </div>
-            <div>
-              <dt>100</dt>
-              <dd>{p.high_end || "—"}</dd>
-            </div>
-          </dl>
-        )}
-        {p.rationale ? <p className="intel-rationale">{p.rationale}</p> : <p className="intel-muted">No reading yet.</p>}
-        <p className="intel-micro">
-          {p.last_assessed && <>Assessed {p.last_assessed.slice(0, 10)}</>}
-          {p.evidence_through && <> · evidence through {p.evidence_through.slice(0, 10)}</>}
-          {p.velocity_30d !== null && <> · 30d {fmtDelta(p.velocity_30d)}</>}
-        </p>
-      </div>
-    </details>
-  );
-}
+/** DOM id for a Situation block (deep links and the /pulses jump bar). */
+export const situationAnchor = (id: string) => `sit-${id.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
 
 const WATCH_DIR = { up: "▲ rising", down: "▼ falling", either: "◆ either way" } as const;
 
@@ -69,53 +15,53 @@ export default function PulseBoard({ situations }: { situations: Situation[] }) 
         const top = maxBand(s.pulses);
         const assessed = s.pulses.filter((p) => p.position !== null).length;
         return (
-        <section key={s.id} className={`intel-situation intel-frame intel-band-${top}`} aria-label={s.title}>
-          <header className="intel-situation-head">
-            <div className="intel-frame-band">
-              <h3>{s.title}</h3>
-              {s.domain && <span className="intel-micro">{s.domain}</span>}
-              <span className="intel-frame-meta">
-                {top !== "unassessed" && (
-                  <span className={`intel-chip intel-band-${top}`} title="Most severe reading in this Situation">
-                    Max · {BAND_LABEL[top]}
-                  </span>
-                )}
-                <span className="intel-micro">
-                  {assessed}/{s.pulses.length} Pulses assessed
-                </span>
-              </span>
-            </div>
-            {s.summary && <SituationSummary text={s.summary} />}
-          </header>
-          <div className="intel-frame-body">
-          {s.pulses.length > 0 ? (
-            <div className="intel-pulse-grid">
-              {s.pulses.map((p) => (
-                <PulseTile key={p.id} p={p} />
-              ))}
-            </div>
-          ) : (
-            <p className="intel-muted">No Pulses in this Situation yet.</p>
-          )}
-          {s.watches.length > 0 && (
-            <div className="intel-warnings">
-              <h4 className="intel-micro">Warning signs</h4>
-              <ul>
-                {s.watches.map((w, i) => (
-                  <li key={i}>
-                    <span className="intel-warn-dir">{WATCH_DIR[w.direction]}</span>
-                    <span>
-                      {w.condition}
-                      {w.why && <span className="intel-muted"> — {w.why}</span>}
+          <section key={s.id} id={situationAnchor(s.id)} className={`intel-situation intel-frame intel-band-${top}`} aria-label={s.title}>
+            <header className="intel-situation-head">
+              <div className="intel-frame-band">
+                <h3>{s.title}</h3>
+                {s.domain && <span className="intel-micro">{s.domain}</span>}
+                <span className="intel-frame-meta">
+                  {top !== "unassessed" && (
+                    <span className={`intel-chip intel-band-${top}`} title="Most severe reading in this Situation">
+                      Max · {BAND_LABEL[top]}
                     </span>
-                    {w.horizon && <span className="intel-micro">{w.horizon}</span>}
-                  </li>
-                ))}
-              </ul>
+                  )}
+                  <span className="intel-micro">
+                    {assessed}/{s.pulses.length} Pulses assessed
+                  </span>
+                </span>
+              </div>
+              {s.summary && <SituationSummary text={s.summary} />}
+            </header>
+            <div className="intel-frame-body">
+              {s.pulses.length > 0 ? (
+                <div className="intel-pulse-grid">
+                  {s.pulses.map((p) => (
+                    <PulseCard key={p.id} base={baseOf(p)} full={p} anchor />
+                  ))}
+                </div>
+              ) : (
+                <p className="intel-muted">No Pulses in this Situation yet.</p>
+              )}
+              {s.watches.length > 0 && (
+                <div className="intel-warnings">
+                  <h4 className="intel-micro">Warning signs</h4>
+                  <ul>
+                    {s.watches.map((w, i) => (
+                      <li key={i}>
+                        <span className="intel-warn-dir">{WATCH_DIR[w.direction]}</span>
+                        <span>
+                          {w.condition}
+                          {w.why && <span className="intel-muted"> — {w.why}</span>}
+                        </span>
+                        {w.horizon && <span className="intel-micro">{w.horizon}</span>}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
-          )}
-          </div>
-        </section>
+          </section>
         );
       })}
     </div>

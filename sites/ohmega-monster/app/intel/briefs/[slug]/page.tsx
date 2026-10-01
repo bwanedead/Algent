@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import PulseCard, { baseOf } from "@/components/PulseCard";
+import { SpectrumLegend } from "@/components/PulseSpectrum";
 import { ActorMap, EscalationChips, ProbBar, RELATION_KINDS } from "@/components/IntelViz";
-import { allBriefSlugs, brief as loadBrief, type ChangeKind, type Effect, latestSnapshot, type Plausibility, pulseIdByName, safeUrl } from "@/lib/intel";
+import { allBriefSlugs, brief as loadBrief, type ChangeKind, type Effect, findPulse, latestSnapshot, type Plausibility, safeUrl } from "@/lib/intel";
 
 type Params = { slug: string };
 
@@ -364,16 +366,19 @@ export default function BriefPage({ params }: { params: Params }) {
           <div className="intel-section-head">
             <h2>Related Pulses</h2>
           </div>
-          <p className="intel-chips">
-            {b.pulses.map((p) => {
-              const id = pulseIdByName(snap, p);
-              return (
-                <Link key={p} href={id ? `/intel#pulse-${id}` : "/intel#intel-pulses"} className="intel-chip intel-band-unassessed">
-                  {p}
-                </Link>
+          <SpectrumLegend />
+          <div className="intel-pulse-grid">
+            {b.pulses.map((name) => {
+              const full = findPulse(snap, "", name);
+              return full ? (
+                <PulseCard key={full.id} base={baseOf(full)} full={full} />
+              ) : (
+                <span key={name} className="intel-chip intel-band-unassessed" title="Not in the current Pulse snapshot">
+                  {name}
+                </span>
               );
             })}
-          </p>
+          </div>
         </section>
       )}
     </article>
