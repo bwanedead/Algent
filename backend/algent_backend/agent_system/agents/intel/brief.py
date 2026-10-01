@@ -105,22 +105,25 @@ def focus_tag(focus: str) -> str:
     return hashlib.sha1(" ".join(focus.lower().split()).encode("utf-8")).hexdigest()[:6] if focus.strip() else ""
 
 
-def commission_research(context: Any, config: Any, theater: Theater, *, focus: str = "") -> dict | None:
-    """Research the theater with the generic questions, led by the desk's FOCUS question when one is
-    given (the recipe stays generic; the focus is how an operator steers it). Returns the profile
-    (also saved to the corpus)."""
+def commission_research(context: Any, config: Any, theater: Theater, *, focus: str = "",
+                        questions: tuple[str, ...] | None = None, id_tag: str = "") -> dict | None:
+    """Research the theater with the generic questions (or ``questions``, e.g. the daily report's
+    recency-first set), led by the desk's FOCUS question when one is given (the recipe stays
+    generic; the focus is how an operator steers it). ``id_tag`` keeps a recurring run's profile from
+    colliding with the deep brief's. Returns the profile (also saved to the corpus)."""
     from ..research.spec import build_graph as build_profile
 
     sources = list(dict.fromkeys(u for m in theater.members for u in m.sources))[:12]
     vector = {
-        "id": f"intel_{theater.id.removeprefix('thr_')}"[:60] + (f"_{focus_tag(focus)}" if focus.strip() else ""),
+        "id": f"intel_{theater.id.removeprefix('thr_')}"[:60] + (f"_{focus_tag(focus)}" if focus.strip() else "")
+              + (f"_{id_tag}" if id_tag else ""),
         "title": theater.name + (f" — {focus.strip()}" if focus.strip() else ""),
         "thesis": (f"Desk focus: {focus.strip()}\n" if focus.strip() else "") + (theater.why or theater.description),
         "vector_type": "synthesis",
         "research_effort": "deep",
         "pillars": [theater.domain],
         "scope": [],
-        "key_questions": ([focus.strip()] if focus.strip() else []) + list(GENERIC_QUESTIONS),
+        "key_questions": ([focus.strip()] if focus.strip() else []) + list(questions or GENERIC_QUESTIONS),
         "sources": sources,
         "supporting_hits": [f"{m.edition}#{m.n}" for m in theater.members][:20],
         "rationale": "commissioned by the intel desk: this theater is running hot",

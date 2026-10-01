@@ -4,6 +4,7 @@
     newsroom intel heat                          # heat board from the radar's history (1 cheap call)
     newsroom intel brief                         # briefs on the 3 hottest theaters
     newsroom intel brief --theater thr_x --research   # commission fresh research first (paid, capped)
+    newsroom intel daily [--domain geopolitics] [--top 5] [--research]   # the daily rundown: heat -> sections -> publish -> backup
     newsroom intel publish                       # put the desk snapshot (pulses, theaters, briefs) on the site
     newsroom intel cycle [--top 2] [--research] [--domain geopolitics,politics]  # heat -> settle forecasts -> briefs -> publish -> backup, unattended
     newsroom intel import-briefs                 # one-off: runs_data briefs -> durable intel store
@@ -30,6 +31,11 @@ def add_parser(sub: Any) -> None:
     b.add_argument("--top", type=int, default=3)
     b.add_argument("--research", action="store_true", help="commission fresh research first (paid)")
     b.add_argument("--focus", default="", help="a question the desk wants answered; leads the research and brief")
+    d = verbs.add_parser("daily", help="the daily report: per-theater rundown of what happened, with Pulses")
+    d.add_argument("--domain", default="geopolitics")
+    d.add_argument("--top", type=int, default=5)
+    d.add_argument("--research", action="store_true", help="research each theater first (paid, capped)")
+    d.add_argument("--days", type=int, default=7)
     verbs.add_parser("import-briefs", help="one-off: copy runs_data briefs into the durable intel store")
     verbs.add_parser("publish", help="build the desk snapshot and put it on the site")
     c = verbs.add_parser("cycle", help="heat, brief the top theaters, publish, back up")
@@ -63,7 +69,7 @@ def _out(as_of: str) -> Path:
 
 def run_intel(args: Any) -> int:
     return {"heat": _heat, "brief": _brief, "import-briefs": _import_briefs,
-            "publish": _publish, "cycle": _cycle}[args.intel_verb](args)
+            "publish": _publish, "cycle": _cycle, "daily": _daily}[args.intel_verb](args)
 
 
 def _heat(args: Any) -> int:
@@ -148,5 +154,29 @@ def _cycle(args: Any) -> int:
         "briefs": _produce_briefs(board, desk.pick_theaters(board, args.top, domains), research=args.research)}
     report["publish"] = publish_intel()
     report["backup"] = sync.backup(note="intel cycle")
+    print(json.dumps(report, indent=2, ensure_ascii=False))
+    return 0
+
+
+def _daily(args: Any) -> int:
+    """Fresh heat board, the daily report for the domain, publish, back up. Prints a JSON report."""
+    from algent_backend.agent_system.agents.intel import daily, desk
+    from algent_backend.agent_system.foundation.models import house_spec
+    from algent_backend.data_backup import sync
+    from algent_backend.publishing.intel_page import publish_intel
+
+    if _heat(args) != 0:
+        return 1
+    board = desk.latest_board()
+    if board is None:
+        print(json.dumps({"error": "no heat board"}))
+        return 2
+    result = daily.produce_daily(_ctx("intel-daily"), domain=args.domain, top=args.top, research=args.research,
+                                 model_spec=house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=16384),
+                                 as_of=board["as_of"], board=board, out=_out(board["as_of"]))
+    report = {"date": board["as_of"], "domain": args.domain, "path": result["path"], "html": result.get("html"),
+              "headline": result["report"]["summary"]["headline"], "theaters": result["theaters"],
+              "research_usd": result["research_usd"], "publish": publish_intel(),
+              "backup": sync.backup(note="intel daily")}
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0

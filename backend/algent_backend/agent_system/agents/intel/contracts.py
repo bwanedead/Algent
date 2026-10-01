@@ -148,3 +148,82 @@ class Brief(BaseModel):
     judgments: list[Judgment] = Field(default_factory=list)  # 2–4 scored forecasts
     alternatives: list[Hypothesis] = Field(default_factory=list)   # the red team: competing explanations
     would_change_our_mind: list[str] = Field(default_factory=list)
+
+
+# ── the daily report ──────────────────────────────────────────────────────────────────────────
+# Curation, not analysis: what significantly happened per live theater, who said what, with dates
+# and sources, plus the older items the reader needs for context. The deep brief stays the
+# occasional dive; the daily links to it. Public shape: see ``publishing/intel_page.py``.
+class Statement(BaseModel):
+    who: str
+    role: str = ""
+    said: str                        # a paraphrase, or an exact quote of at most 25 words when quote=True
+    quote: bool = False
+    when: str = ""
+    source: str = ""                 # URL
+
+
+class Development(BaseModel):
+    headline: str
+    detail: str = ""
+    when: str = ""                   # YYYY-MM-DD (or a range) when known
+    where: str = ""
+    actors: list[str] = Field(default_factory=list)
+    statements: list[Statement] = Field(default_factory=list)
+    significance: str = ""           # why it matters, in a line
+    verification: Verification = "reported"
+    sources: list[str] = Field(default_factory=list)
+
+
+class ContextItem(BaseModel):
+    """An OLDER event the reader needs in order to understand today."""
+
+    what: str
+    when: str = ""
+    why_relevant: str = ""
+    source: str = ""
+
+
+class DailyChange(BaseModel):
+    what: str
+    kind: Literal["escalated", "eased", "new", "resolved", "unchanged"]
+
+
+class DailyEscalation(BaseModel):
+    direction: Literal["rising", "steady", "easing", "unclear"] = "unclear"
+    pace: Literal["fast", "gradual", "flat"] = "gradual"
+
+
+class PulseProposal(BaseModel):
+    """A dimension the theater bears on that no listed Pulse measures (calm at the low end, extreme at the high)."""
+
+    name: str
+    question: str
+    low_end: str
+    high_end: str
+    why: str = ""
+
+
+class SectionDraft(BaseModel):
+    """What the section writer returns; the engine adds temperature, Pulse numbers and the brief link."""
+
+    bottom_line: str
+    escalation: DailyEscalation = Field(default_factory=DailyEscalation)
+    since_yesterday: list[DailyChange] = Field(default_factory=list)
+    developments: list[Development] = Field(default_factory=list)
+    context: list[ContextItem] = Field(default_factory=list)
+    outlook: str = ""
+    watch_next: list[str] = Field(default_factory=list)
+    pulses: list[str] = Field(default_factory=list)          # exact Pulse NAMES this theater bears on
+    pulse_proposals: list[PulseProposal] = Field(default_factory=list)
+
+
+class CrossTheater(BaseModel):
+    theaters: list[str] = Field(default_factory=list)       # theater names
+    link: str = ""
+
+
+class DaySummary(BaseModel):
+    headline: str
+    the_day: list[str] = Field(default_factory=list)        # 3-6 one-sentence bullets, most important first
+    cross_theater: list[CrossTheater] = Field(default_factory=list)

@@ -183,3 +183,79 @@ def render_brief(brief: Brief, *, theater_name: str, heat: dict, as_of: str) -> 
           "<span class='pill reported'>reported</span> other outlets' reporting, not verified by us. "
           "Assessments use estimative language and are Ohmega's judgment, not a guarantee.</div>")
     return _page(brief.title, body)
+
+
+# ── daily report ──────────────────────────────────────────────────────────────────────────────
+def _link(url: str, label: str = "source") -> str:
+    return f" <a href='{_e(url)}'>{label}</a>" if str(url).startswith("http") else ""
+
+
+def _num(v: Any, signed: bool = False) -> str:
+    return "–" if v is None else (f"{v:+.1f}" if signed else f"{v:.0f}")
+
+
+def _statement(s: dict) -> str:
+    role = f" ({_e(s.get('role'))})" if s.get("role") else ""
+    when = f" · {_e(s.get('when'))}" if s.get("when") else ""
+    said = "“" + _e(s["said"]) + "”" if s.get("quote") else _e(s["said"])
+    return f"<li><b>{_e(s['who'])}</b>{role}{when}: {said}{_link(s.get('source', ''))}</li>"
+
+
+def _development(d: dict) -> str:
+    stmts = "".join(_statement(s) for s in d.get("statements") or [])
+    meta = " · ".join(x for x in (_e(d.get("when")), _e(d.get("where")), _e(", ".join(d.get("actors") or []))) if x)
+    srcs = "".join(_link(u, f"[{i + 1}]") for i, u in enumerate(d.get("sources") or []))
+    why = f"<div class='sub'>Why it matters: {_e(d.get('significance'))}</div>" if d.get("significance") else ""
+    return (f"<div class='card'><span class='pill {d['verification']}'>{_e(d['verification'])}</span>"
+            f"<b>{_e(d['headline'])}</b>"
+            + (f"<div class='sub'>{meta}</div>" if meta else "") + f"<div>{_e(d.get('detail'))}</div>" + why
+            + (f"<ul>{stmts}</ul>" if stmts else "")
+            + (f"<div class='sub'>Sources:{srcs}</div>" if srcs else "") + "</div>")
+
+
+def _context_item(c: dict) -> str:
+    why = f" <span class='sub'>— {_e(c.get('why_relevant'))}</span>" if c.get("why_relevant") else ""
+    return f"<li><span class='sub'>{_e(c.get('when'))}</span> {_e(c['what'])}{why}{_link(c.get('source', ''))}</li>"
+
+
+def _daily_theater(t: dict) -> str:
+    temp, esc = t["temperature"], t["escalation"]
+    pulses = "".join(f"<tr><td>{_e(p['name'])}</td><td>{_num(p['position'])}</td><td>{_e(p['band'])}</td>"
+                     f"<td>{_num(p['change_24h'], True)}</td><td>{_num(p['change_7d'], True)}</td></tr>"
+                     for p in t["pulses"])
+    since = "".join(f"<li><span class='pill {_CHANGE.get(c['kind'], 'steady')}'>{_e(c['kind'])}</span>{_e(c['what'])}</li>"
+                    for c in t["since_yesterday"])
+    ctx = "".join(_context_item(c) for c in t["context"])
+    watch = "".join(f"<li>{_e(w)}</li>" for w in t["watch_next"])
+    brief = f"<div class='sub'>Deep brief: {_e(t['brief_slug'])}</div>" if t.get("brief_slug") else ""
+    return (f"<h2>{_e(t['name'])}</h2><div class='card bluf'>{_e(t['bottom_line'])}</div>"
+            f"<div><span class='pill {esc['direction']}'>{_e(esc['direction'])}</span>"
+            f"<span class='pill steady'>pace: {_e(esc['pace'])}</span>"
+            f"<span class='pill steady'>{_e(temp['trend'])} · {temp['recent_share'] * 100:.0f}% of coverage "
+            f"(was {temp['prior_share'] * 100:.0f}%)</span></div>"
+            + (f"<h2>Since yesterday</h2><ul>{since}</ul>" if since else "")
+            + "".join(_development(d) for d in t["developments"])
+            + (f"<h2>Context</h2><ul>{ctx}</ul>" if ctx else "")
+            + ("<h2>Pulses</h2><table><tr><th>Pulse</th><th>Now</th><th>Band</th><th>24h</th><th>7d</th></tr>"
+               f"{pulses}</table>" if pulses else "")
+            + (f"<h2>Outlook</h2><div>{_e(t['outlook'])}</div>" if t.get("outlook") else "")
+            + (f"<h2>Watch next</h2><ul>{watch}</ul>" if watch else "") + brief)
+
+
+def render_daily(record: dict) -> str:
+    """The daily report as a self-contained page (operator preview; the site renders the JSON itself)."""
+    bullets = "".join(f"<li>{_e(b)}</li>" for b in record["summary"]["the_day"])
+    cross = "".join(f"<li><b>{_e(' ↔ '.join(c['theaters']))}</b>: {_e(c['link'])}</li>" for c in record["cross_theater"])
+    body = (f"<div class='sub'>Daily report · {_e(record['domain'])} · {_e(record['date'])}</div>"
+            f"<h1>{_e(record['summary']['headline'])}</h1>"
+            + (f"<div class='card'><ul>{bullets}</ul></div>" if bullets else "")
+            + (f"<h2>Across theaters</h2><ul>{cross}</ul>" if cross else "")
+            + "".join(_daily_theater(t) for t in record["theaters"])
+            + (f"<h2>Pulses we may be missing</h2><ul>" + "".join(
+                f"<li><b>{_e(p['name'])}</b> ({_e(p['theater'])}): {_e(p['question'])} "
+                f"<span class='sub'>{_e(p['low_end'])} → {_e(p['high_end'])}. {_e(p['why'])}</span></li>"
+                for p in record["pulse_proposals"]) + "</ul>" if record["pulse_proposals"] else "")
+            + "<div class='note'><span class='pill researched'>researched</span> established by Ohmega's graded "
+              "research. <span class='pill reported'>reported</span> other outlets' reporting, not verified by us. "
+              "Outlooks are Ohmega's judgment in estimative language, not a guarantee.</div>")
+    return _page(f"Daily report — {record['domain']} — {record['date']}", body)

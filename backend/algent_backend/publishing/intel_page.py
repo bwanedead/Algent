@@ -27,9 +27,30 @@ Snapshot file ``content/intel/snapshots/<slug>.json``, slug = UTC "YYYY-MM-DD-HH
                   "open":[{"statement","probability","horizon","theater_name","brief_slug"}],   // 20 soonest horizon
                   "resolved":[{"statement","probability","outcome":"yes|no|void","resolved_at","evidence"}]}}
                                                                    // 20 newest resolved; from intel_store/forecasts.jsonl
+     "daily":[{"domain","date","headline"}]}                       // every daily report, newest first
 
 Brief files: ``content/intel/briefs/<slug>.json`` = the persisted brief record
 (``intel_store/briefs/<slug>.json``, schema ``ohmega.brief/1``).
+
+Daily files: ``content/intel/daily/<domain>/<YYYY-MM-DD>.json`` = the persisted daily report
+(``intel_store/daily/<domain>/<date>.json``), schema ``ohmega.daily/1``::
+
+    {"schema","domain","date","built_at","researched":bool,
+     "summary":{"headline","the_day":[3-6 one-sentence bullets, most important first]},
+     "theaters":[{"theater_id","name",
+         "temperature":{"heat","trend","recent_share","prior_share"},
+         "escalation":{"direction":"rising|steady|easing|unclear","pace":"fast|gradual|flat"},
+         "pulses":[{"id","name","position":float|null,"band","change_24h":float|null,"change_7d":float|null}],
+         "bottom_line","since_yesterday":[{"what","kind":"escalated|eased|new|resolved|unchanged"}],
+         "developments":[{"headline","detail","when","where","actors":[...],
+             "statements":[{"who","role","said","quote":bool,"when","source"}],   // quote=true: exact, <=25 words
+             "significance","verification":"researched|reported","sources":[urls]}],
+         "context":[{"what","when","why_relevant","source"}],   // older items that explain today
+         "outlook","watch_next":[...],"brief_slug":slug|null,"map":null}],      // map reserved
+     "cross_theater":[{"theaters":[names],"link"}],
+     "pulse_proposals":[{"theater","name","question","low_end","high_end","why"}]}
+
+Pulse numbers and deltas are computed from the Pulse store, never by a model.
 
 Rules: ``rationale`` is the latest APPLIED, non-blind influence's rationale for that pulse, made
 reader-safe (claim ids stripped, ~400 chars at a word boundary). Situations that are not "active"
@@ -49,6 +70,7 @@ from pathlib import Path
 from typing import Any
 
 from algent_backend.agent_system.agents.intel import forecasts
+from algent_backend.agent_system.agents.intel.brief import safe_name
 
 from . import site_git
 
@@ -114,6 +136,12 @@ def _read_all(folder: Path) -> list[dict]:
     return out
 
 
+def _daily_reports(intel_dir: Path) -> list[dict]:
+    """Every persisted daily report, newest first (then by domain)."""
+    rows = [r for folder in sorted((intel_dir / "daily").glob("*")) if folder.is_dir() for r in _read_all(folder)]
+    return sorted(rows, key=lambda r: (r.get("date", ""), r.get("domain", "")), reverse=True)
+
+
 def _forecasts(intel_dir: Path, theater_names: dict[str, str]) -> dict:
     """The desk's track record: the scorecard, what is still open, and how the latest calls came out."""
     rows = forecasts.current(intel_dir)
@@ -153,7 +181,9 @@ def build_snapshot(store: Any, intel_dir: Path, *, now: datetime | None = None) 
                         "theater_id": b.get("theater_id", ""), "theater_name": b.get("theater_name", ""),
                         "as_of": b.get("as_of", ""), "direction": (b.get("escalation") or {}).get("direction", ""),
                         "pace": (b.get("escalation") or {}).get("pace", "")} for b in briefs],
-            "forecasts": _forecasts(intel_dir, {b["slug"]: b.get("theater_name", "") for b in briefs})}
+            "forecasts": _forecasts(intel_dir, {b["slug"]: b.get("theater_name", "") for b in briefs}),
+            "daily": [{"domain": r.get("domain", ""), "date": r.get("date", ""),
+                       "headline": (r.get("summary") or {}).get("headline", "")} for r in _daily_reports(intel_dir)]}
 
 
 def _write_if_changed(path: Path, payload: dict) -> None:
@@ -165,12 +195,14 @@ def _write_if_changed(path: Path, payload: dict) -> None:
 
 
 def write_intel(site_dir: Path, snapshot: dict, intel_dir: Path) -> Path:
-    """Write the snapshot and mirror every persisted brief into a site checkout (only what changed)."""
+    """Write the snapshot and mirror every persisted brief and daily report into a site checkout (only what changed)."""
     root = site_dir.joinpath(*INTEL_SUBDIR)
     path = root / "snapshots" / f"{snapshot['slug']}.json"
     _write_if_changed(path, snapshot)
     for record in _read_all(intel_dir / "briefs"):
         _write_if_changed(root / "briefs" / f"{record['slug']}.json", record)
+    for record in _daily_reports(intel_dir):
+        _write_if_changed(root / "daily" / safe_name(record["domain"]) / f"{record['date']}.json", record)
     return path
 
 
