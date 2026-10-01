@@ -55,7 +55,8 @@ def _intel_dir(tmp_path):
         "theaters": [{"id": "thr_1", "name": "One", "domain": "geopolitics", "why": "because", "members": []},
                      {"id": "thr_2", "name": "Two", "members": []}],
         "heat": [{"theater_id": "thr_1", "name": "One", "heat": 9, "trend": "heating", "recent": 5, "prior": 1,
-                  "first_seen": "2026-09-20", "series": [{"day": "2026-09-29", "count": 5}]},
+                  "recent_share": 0.25, "prior_share": 0.05,
+                  "first_seen": "2026-09-20", "series": [{"day": "2026-09-29", "count": 5, "editions": 2}]},
                  {"theater_id": "thr_2", "name": "Two", "heat": 3, "trend": "steady", "recent": 1, "prior": 1}]}),
         encoding="utf-8")
     (d / "briefs").mkdir()
@@ -91,6 +92,8 @@ def test_reader_safe_trims_at_a_word() -> None:
 def test_theaters_link_to_newest_brief_and_briefs_are_newest_first(tmp_path) -> None:
     snap = intel_page.build_snapshot(_store(tmp_path), _intel_dir(tmp_path), now=NOW)
     assert [t["id"] for t in snap["theaters"]] == ["thr_1", "thr_2"]
+    assert snap["theaters"][0]["recent_share"] == 0.25 and snap["theaters"][0]["series"][0]["editions"] == 2
+    assert snap["theaters"][1]["prior_share"] == 0.0
     assert snap["theaters"][0]["brief"] == "2026-09-29-one" and snap["theaters"][1]["brief"] is None
     assert [b["slug"] for b in snap["briefs"]] == ["2026-09-29-one", "2026-09-27-one"]
     assert snap["briefs"][0]["direction"] == "rising" and snap["briefs"][0]["pace"] == "fast"
@@ -152,6 +155,18 @@ def test_import_briefs_is_idempotent_and_matches_the_board(tmp_path, monkeypatch
     rec = json.loads((tmp_path / "store" / "briefs" / "2026-09-28-russia-vs-europe.json").read_text(encoding="utf-8"))
     assert rec["theater_id"] == "thr_x" and rec["heat"]["heat"] == 4 and rec["focus"] == ""
     assert desk.import_briefs(tmp_path / "runs")["imported"] == []
+
+
+def test_pick_theaters_filters_by_domain() -> None:
+    board = {"theaters": [{"id": "a", "domain": "geopolitics"}, {"id": "b", "domain": "Politics"},
+                          {"id": "c", "domain": "technology"}],
+             "heat": [{"theater_id": "c", "heat": 9, "trend": "steady"}, {"theater_id": "a", "heat": 5, "trend": "steady"},
+                      {"theater_id": "b", "heat": 3, "trend": "steady"}]}
+    assert desk.pick_theaters(board, 5) == ["c", "a", "b"]
+    assert desk.pick_theaters(board, 5, []) == ["c", "a", "b"]
+    assert desk.pick_theaters(board, 5, ["geopolitics", " POLITICS"]) == ["a", "b"]
+    assert desk.pick_theaters(board, 1, ["politics"]) == ["b"]
+    assert desk.pick_theaters(board, 5, ["science"]) == []
 
 
 def test_pick_theaters_prefers_heating_on_ties() -> None:

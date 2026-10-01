@@ -5,7 +5,7 @@
     newsroom intel brief                         # briefs on the 3 hottest theaters
     newsroom intel brief --theater thr_x --research   # commission fresh research first (paid, capped)
     newsroom intel publish                       # put the desk snapshot (pulses, theaters, briefs) on the site
-    newsroom intel cycle [--top 2] [--research]  # heat -> settle forecasts -> briefs -> publish -> backup, unattended
+    newsroom intel cycle [--top 2] [--research] [--domain geopolitics,politics]  # heat -> settle forecasts -> briefs -> publish -> backup, unattended
     newsroom intel import-briefs                 # one-off: runs_data briefs -> durable intel store
 
 Output lands in ``runs_data/intel/<as_of>/`` as HTML + JSON; briefs are
@@ -36,6 +36,9 @@ def add_parser(sub: Any) -> None:
     c.add_argument("--top", type=int, default=2)
     c.add_argument("--research", action="store_true", help="commission fresh research first (paid)")
     c.add_argument("--days", type=int, default=7)
+    c.add_argument("--domain", action="append", default=[],
+                   help="only brief theaters in these domains (repeatable or comma list, e.g. "
+                        "geopolitics,politics); the heat board still covers everything")
     p.set_defaults(handler=run_intel)
 
 
@@ -139,9 +142,10 @@ def _cycle(args: Any) -> int:
     # Settle overdue forecasts first, so this cycle's analysts see how the desk's calls came out.
     settled = desk.settle_overdue(_ctx("intel-forecasts"), board, as_of=board.get("as_of", ""),
                                   model_spec=house_spec(reasoning_effort="low", temperature=0.1, max_tokens=8192))
+    domains = [d for item in args.domain for d in item.split(",") if d.strip()]
     report: dict[str, Any] = {
         "forecasts_settled": settled,
-        "briefs": _produce_briefs(board, desk.pick_theaters(board, args.top), research=args.research)}
+        "briefs": _produce_briefs(board, desk.pick_theaters(board, args.top, domains), research=args.research)}
     report["publish"] = publish_intel()
     report["backup"] = sync.backup(note="intel cycle")
     print(json.dumps(report, indent=2, ensure_ascii=False))

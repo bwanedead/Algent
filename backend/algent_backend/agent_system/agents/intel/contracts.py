@@ -43,7 +43,8 @@ class Theater(BaseModel):
 
 class HeatPoint(BaseModel):
     day: str
-    count: int
+    count: int                       # the theater's headlines that day (raw)
+    editions: int = 0                # radar editions built that day — 0 is a coverage gap, not a quiet day
 
 
 class TheaterHeat(BaseModel):
@@ -51,11 +52,13 @@ class TheaterHeat(BaseModel):
     name: str
     series: list[HeatPoint] = Field(default_factory=list)   # headlines per day, oldest first
     total: int = 0
-    recent: int = 0                  # last 3 days
-    prior: int = 0                   # the 3 days before that
+    recent: int = 0                  # raw count, last 3 days (display)
+    prior: int = 0                   # raw count, the 3 days before that (display)
+    recent_share: float = 0.0        # 0-1: the theater's headlines / all headlines in the recent editions
+    prior_share: float = 0.0         # same for the prior window; 0 also when that window has no editions
     trend: Literal["heating", "steady", "cooling", "new"] = "steady"
     first_seen: str = ""
-    heat: float = 0.0                # recent volume, weighted up when accelerating or new
+    heat: float = 0.0                # share of coverage (per 100 headlines), weighted up when heating or new
 
 
 # ── the brief ─────────────────────────────────────────────────────────────────────────────────

@@ -119,23 +119,72 @@ def cluster(context: Any, config: Any, heads: dict[str, dict], *, model_spec: An
     return theaters
 
 
-def measure(theater: Theater, *, days: int, today: date) -> TheaterHeat:
-    """Deterministic heat: volume, acceleration (last 3 days vs the 3 before), novelty."""
+def edition_sizes(editions: list[dict]) -> dict[str, int]:
+    """Headlines per radar edition (slug -> count): the denominator that makes coverage comparable."""
+    return {e["slug"]: len(e.get("leads") or []) for e in editions}
+
+
+def _share(members: int, headlines: int) -> float:
+    return members / headlines if headlines else 0.0
+
+
+def _judge(recent_m: int, recent_n: int, prior_m: int, prior_n: int) -> str:
+    """heating / cooling / steady from two shares. A change counts only when it exceeds its own noise:
+    the standard error of the difference between two proportions (pooled), so a theater seen in 2 of 10
+    headlines vs 3 of 10 is steady while 10 of 100 vs 20 of 100 is heating. Derived, not tuned."""
+    n1, n2 = recent_n, prior_n
+    pooled = _share(recent_m + prior_m, n1 + n2)
+    se = (pooled * (1 - pooled) * (1 / n1 + 1 / n2)) ** 0.5
+    diff = _share(recent_m, n1) - _share(prior_m, n2)
+    return "heating" if diff > se else "cooling" if diff < -se else "steady"
+
+
+def measure(theater: Theater, editions: list[dict], *, days: int, today: date) -> TheaterHeat:
+    """Deterministic heat, as a SHARE of coverage — never raw volume, which swings with how many radar
+    editions we happened to build (several one day, none for three).
+
+    recent = the last 3 days, prior = the 3 before. For each window,
+    ``share = theater headlines / all headlines in that window's editions``. A window with no editions
+    is "no data": the trend is judged from what exists, never read as a drop to zero:
+      - both windows have editions: ``new`` if first seen in recent with nothing in prior; else
+        ``heating``/``cooling``/``steady`` by whether the share change beats its standard error;
+      - prior has none: ``new`` if first seen in the recent window, else ``steady``;
+      - recent has none: ``steady`` (nothing to compare).
+    heat = 100 * (w * recent_share + 0.25 * earlier_share), w = 1.5 when heating/new else 1; earlier
+    share covers the rest of the window, so a long-running theater keeps a floor. Units: headlines per
+    100 in the recent editions. (1.5 and 0.25 are weights on the ranking, not gates on a trend.)
+    """
     counts: dict[str, int] = {}
     for m in theater.members:
         counts[m.edition[:10]] = counts.get(m.edition[:10], 0) + 1
-    series = [HeatPoint(day=(today - timedelta(days=i)).isoformat(),
-                        count=counts.get((today - timedelta(days=i)).isoformat(), 0))
-              for i in range(days - 1, -1, -1)]
-    recent = sum(p.count for p in series[-3:])
-    prior = sum(p.count for p in series[-6:-3])
+    sizes = edition_sizes(editions)
+    by_day: dict[str, list[int]] = {}                   # day -> sizes of that day's editions
+    for slug, n in sizes.items():
+        by_day.setdefault(slug[:10], []).append(n)
+    day_keys = [(today - timedelta(days=i)).isoformat() for i in range(days - 1, -1, -1)]
+    series = [HeatPoint(day=d, count=counts.get(d, 0), editions=len(by_day.get(d, []))) for d in day_keys]
+
+    def window(keys: list[str]) -> tuple[int, int, int]:   # (members, headlines, editions)
+        return (sum(counts.get(d, 0) for d in keys), sum(sum(by_day.get(d, [])) for d in keys),
+                sum(len(by_day.get(d, [])) for d in keys))
+
+    (recent, recent_n, recent_e), (prior, prior_n, prior_e) = window(day_keys[-3:]), window(day_keys[-6:-3])
+    earlier, earlier_n, _ = window(day_keys[:-3])
     first = min(counts) if counts else ""
-    new = bool(first) and (today - date.fromisoformat(first)).days <= 2
-    trend = "new" if new and prior == 0 else ("heating" if recent > prior * 1.25 + 1 else
-                                              "cooling" if recent < prior * 0.75 else "steady")
-    heat = recent * (1.5 if trend in ("heating", "new") else 1.0) + 0.25 * (sum(counts.values()) - recent)
+    appeared = bool(first) and first >= day_keys[-3]   # first seen inside the recent window
+    if not recent_e or not recent_n:
+        trend = "steady"
+    elif not prior_e or not prior_n:
+        trend = "new" if appeared else "steady"
+    elif appeared and prior == 0:
+        trend = "new"
+    else:
+        trend = _judge(recent, recent_n, prior, prior_n)
+    recent_share, prior_share = _share(recent, recent_n), _share(prior, prior_n)
+    heat = 100 * ((1.5 if trend in ("heating", "new") else 1.0) * recent_share + 0.25 * _share(earlier, earlier_n))
     return TheaterHeat(theater_id=theater.id, name=theater.name, series=series, total=sum(counts.values()),
-                       recent=recent, prior=prior, trend=trend, first_seen=first, heat=round(heat, 2))
+                       recent=recent, prior=prior, recent_share=round(recent_share, 4),
+                       prior_share=round(prior_share, 4), trend=trend, first_seen=first, heat=round(heat, 2))
 
 
 def run(context: Any, config: Any, editions: list[dict], *, model_spec: Any, days: int = 7) -> dict:
@@ -149,7 +198,7 @@ def run(context: Any, config: Any, editions: list[dict], *, model_spec: Any, day
         reg[t.id] = {**entry, "name": t.name, "domain": t.domain, "description": t.description,
                      "last_seen": today.isoformat()}
     _save_registry(reg)
-    heat = sorted((measure(t, days=days, today=today) for t in theaters), key=lambda h: -h.heat)
+    heat = sorted((measure(t, editions, days=days, today=today) for t in theaters), key=lambda h: -h.heat)
     board = {"as_of": today.isoformat(), "window_days": days, "headlines": len(heads),
              "theaters": [t.model_dump() for t in theaters], "heat": [h.model_dump() for h in heat]}
     snap = store_dir() / "boards" / f"{today.isoformat()}.json"

@@ -13,9 +13,13 @@ Snapshot file ``content/intel/snapshots/<slug>.json``, slug = UTC "YYYY-MM-DD-HH
                     "velocity_30d":float|null,"confidence":str,"last_assessed":str,
                     "evidence_through":str,"history":[{"at","position"}],"rationale":str}],
          "watches":[{"condition","why","direction","horizon","status"}]}],   // open watches only
-     "theaters":[{"id","name","domain","why","heat","trend","recent","prior","first_seen",
-                  "series":[{"day","count"}],"brief":slug|null}],  // newest board, hottest first;
-                                                                   // brief = newest brief slug for that theater id
+     "theaters":[{"id","name","domain","why","heat","trend","recent","prior",   // recent/prior: raw counts
+                  "recent_share","prior_share",   // 0-1: share of all headlines in that 3-day window's
+                                                  // editions; trend compares these, not the counts
+                  "first_seen","series":[{"day","count","editions"}],   // editions = radar editions built
+                                                  // that day; 0 = coverage gap, not a quiet day
+                  "brief":slug|null}],            // newest board, hottest first;
+                                                  // brief = newest brief slug for that theater id
      "briefs":[{"slug","title","bottom_line","theater_id","theater_name","as_of","direction","pace"}],
                                                                    // every brief ever, newest first
      "forecasts":{"scorecard":{"resolved","void","open","brier":float|null,   // lower is better, .25 = coin flip
@@ -140,6 +144,7 @@ def build_snapshot(store: Any, intel_dir: Path, *, now: datetime | None = None) 
         rows.append({"id": h["theater_id"], "name": h.get("name") or t.get("name", ""),
                      "domain": t.get("domain", ""), "why": t.get("why", ""), "heat": h.get("heat", 0),
                      "trend": h.get("trend", ""), "recent": h.get("recent", 0), "prior": h.get("prior", 0),
+                     "recent_share": h.get("recent_share", 0.0), "prior_share": h.get("prior_share", 0.0),
                      "first_seen": h.get("first_seen", ""), "series": h.get("series", []),
                      "brief": newest.get(h["theater_id"])})
     return {"schema": SCHEMA, "slug": now.astimezone(UTC).strftime("%Y-%m-%d-%H%M"),

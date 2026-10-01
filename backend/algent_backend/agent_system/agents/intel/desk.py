@@ -116,10 +116,15 @@ def latest_board() -> dict | None:
     return json.loads(boards[-1].read_text(encoding="utf-8")) if boards else None
 
 
-def pick_theaters(board: dict, top: int) -> list[str]:
-    """The ``top`` hottest theaters; on equal heat, ones heating or new come first."""
+def pick_theaters(board: dict, top: int, domains: list[str] | None = None) -> list[str]:
+    """The ``top`` hottest theaters; on equal heat, ones heating or new come first. ``domains``
+    (case-insensitive, from ``board.theaters[].domain``) restricts which theaters are eligible; the board
+    itself is untouched. Empty/None means every domain."""
     rank = {"heating": 0, "new": 0, "steady": 1, "cooling": 2}
-    heat = sorted(board.get("heat", []), key=lambda h: (-h.get("heat", 0), rank.get(h.get("trend"), 1)))
+    wanted = {d.strip().lower() for d in domains or [] if d.strip()}
+    domain_of = {t["id"]: (t.get("domain") or "").lower() for t in board.get("theaters", [])}
+    rows = [h for h in board.get("heat", []) if not wanted or domain_of.get(h["theater_id"]) in wanted]
+    heat = sorted(rows, key=lambda h: (-h.get("heat", 0), rank.get(h.get("trend"), 1)))
     return [h["theater_id"] for h in heat[:max(top, 0)]]
 
 

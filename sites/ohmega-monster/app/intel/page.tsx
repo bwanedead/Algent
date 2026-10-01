@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import PulseBoard from "@/components/IntelPulseBoard";
-import { DayBars, EscalationChips, HeatBar } from "@/components/IntelViz";
+import { CalibrationChart, DayBars, EscalationChips, HeatBar } from "@/components/IntelViz";
 import { fmtUtc, latestSnapshot } from "@/lib/intel";
 
 export const metadata: Metadata = {
@@ -15,6 +15,12 @@ const TREND = {
   steady: { glyph: "◆", cls: "elevated", label: "Steady" },
   cooling: { glyph: "▼", cls: "calm", label: "Cooling" },
   new: { glyph: "●", cls: "unassessed", label: "New" },
+} as const;
+
+const OUTCOME = {
+  yes: { cls: "calm", label: "Happened" },
+  no: { cls: "elevated", label: "Didn’t happen" },
+  void: { cls: "unassessed", label: "Void" },
 } as const;
 
 export default function IntelPage() {
@@ -142,6 +148,93 @@ export default function IntelPage() {
                   </li>
                 ))}
               </ul>
+            )}
+          </section>
+
+          <section className="intel-section" aria-labelledby="intel-track">
+            <div className="intel-section-head">
+              <h2 id="intel-track">Track record</h2>
+              <span className="intel-micro">Forecasts are scored publicly when they resolve</span>
+            </div>
+            <div className="intel-strip intel-score" role="group" aria-label="Scorecard">
+              <span className="intel-strip-item">
+                <b className="intel-num-sm">{snap.forecasts.scorecard.resolved}</b> <span className="intel-micro">Resolved</span>
+              </span>
+              <span className="intel-strip-item">
+                <b className="intel-num-sm">{snap.forecasts.scorecard.open}</b> <span className="intel-micro">Open</span>
+              </span>
+              <span className="intel-strip-item">
+                <span className="intel-micro">Brier score</span> <b className="intel-num-sm">{snap.forecasts.scorecard.brier !== null ? snap.forecasts.scorecard.brier.toFixed(3) : "—"}</b>
+              </span>
+            </div>
+            <p className="intel-note">
+              {snap.forecasts.scorecard.resolved === 0 && snap.forecasts.scorecard.brier === null
+                ? "No forecasts resolved yet — the record starts now. "
+                : ""}
+              Brier score: 0 is perfect, 0.25 is a coin flip — lower is better.
+            </p>
+
+            {snap.forecasts.scorecard.calibration.length > 0 && snap.forecasts.scorecard.resolved > 0 && (
+              <figure className="intel-calib-fig">
+                <CalibrationChart buckets={snap.forecasts.scorecard.calibration} />
+                <figcaption className="intel-note">
+                  Calibration: when we said 70%, it should happen about 70% of the time. Dots on the diagonal mean we are well calibrated; bigger dots are more forecasts.
+                </figcaption>
+              </figure>
+            )}
+
+            <h3 className="intel-sub">Due soonest</h3>
+            {snap.forecasts.open.length === 0 ? (
+              <p className="intel-empty">No open forecasts.</p>
+            ) : (
+              <div className="intel-table-wrap">
+                <table className="intel-table intel-fc-table">
+                  <thead>
+                    <tr>
+                      <th scope="col" className="intel-r">Chance</th>
+                      <th scope="col">Forecast</th>
+                      <th scope="col">By</th>
+                      <th scope="col"><span className="intel-sr">Brief</span></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {snap.forecasts.open.map((o, i) => (
+                      <tr key={i}>
+                        <td className="intel-r intel-tab intel-strong">{o.probability}%</td>
+                        <td>
+                          {o.statement}
+                          {o.theater_name && <span className="intel-why">{o.theater_name}</span>}
+                        </td>
+                        <td className="intel-tab">{o.horizon}</td>
+                        <td>{/^[\w.-]+$/.test(o.brief_slug) ? <Link href={`/intel/briefs/${o.brief_slug}`}>Brief →</Link> : null}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {snap.forecasts.resolved.length > 0 && (
+              <>
+                <h3 className="intel-sub">Recently resolved</h3>
+                <ul className="intel-resolved">
+                  {snap.forecasts.resolved.map((r, i) => {
+                    const o = OUTCOME[r.outcome];
+                    return (
+                      <li key={i}>
+                        <span className={`intel-chip intel-band-${o.cls}`}>{o.label}</span>
+                        <div>
+                          <p>
+                            <span className="intel-strong intel-tab">{r.probability}%</span> {r.statement}
+                          </p>
+                          {r.evidence && <p className="intel-muted">{r.evidence}</p>}
+                          {r.resolved_at && <p className="intel-micro">Resolved {r.resolved_at.slice(0, 10)}</p>}
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </>
             )}
           </section>
         </>
