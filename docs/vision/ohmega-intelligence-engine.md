@@ -39,6 +39,8 @@ cheaper per article, judgments get steadier, and the history itself becomes valu
 | Headline radar | people | what crossed the wire today, clearly marked unverified |
 | Pulse Gallery | people | the wall of Ohmega's current reads, with movement and confidence |
 | Atlas (working name) | people | the geopolitics surface: situations on an off-axis globe |
+| Intelligence desk (/intel) | people | Pulse board, emergent theaters and their heat, deep briefs, the forecast track record |
+| Daily report (/geopolitics) | people | the daily curated rundown per theater: who said what, what happened, the older context that explains it, temperature, Pulses, outlook, maps |
 | Agent API / MCP | AI agents | dossiers, claim checks, Pulse states, what changed |
 | X | people | articles, the daily radar, and Pulse state changes |
 
@@ -68,6 +70,31 @@ Every published article has a machine-readable twin at `/data/articles/<slug>.js
 `ohmega.article/1`: graded claims, citable sources only, corrections), indexed at
 `/data/index.json` and described in `/llms.txt`. Source texts are never republished: we expose our
 claims and link to theirs. Pulse states join this layer once the calibration period ends.
+
+## The intelligence desk: craft over resources (operator, 10-01)
+
+Our edge is analytic craft, not data access. The desk runs on the radar's headlines plus our own
+graded research, and earns trust the way the best analytic shops do:
+- **Emergent theaters.** Nothing is hard-coded to a conflict. Theaters are found in what is being
+  reported, measured by their *share* of coverage (not our publishing cadence), and they persist or
+  fade on their own. A theater that lasts becomes a Pulse situation.
+- **Briefs are intelligence, not articles.** Researched facts kept apart from reported headlines;
+  estimative language; continuity (lead with what changed since our last brief); indicators tracked
+  by their exact wording over time; a red team of competing explanations weighed by what the
+  evidence rules out; what would change our mind.
+- **Scored forecasts.** Every brief makes falsifiable, dated, probability-tagged judgments into an
+  append-only ledger. A scorekeeper settles them against supplied evidence only, and the public
+  track record (Brier score, calibration) is shown on the site. The analyst sees its own misses.
+- **The daily report** is the regularly produced product (run like an article run): per theater,
+  the substance of what happened and who said what, older items that explain today, temperature,
+  Pulses with their 24h/7d moves, outlook and what to watch, and maps where they make it clearer
+  (front lines and day-over-day territorial change for Russia–Ukraine first). Maps are only drawn
+  from sources we may lawfully reuse, credited, and accurate enough to stake the brand on.
+- **Pulses grow from the work.** Every daily report and brief feeds research into Pulses; when a
+  theater bears on a dimension no Pulse measures, the writer proposes one, and proposals become
+  stable Pulses through a registry agents can also read and propose to (one dimension, one Pulse).
+- **The recipe is domain-generic.** Geopolitics first; the same machinery serves medicine,
+  politics, sports.
 
 ## Where it is going
 
