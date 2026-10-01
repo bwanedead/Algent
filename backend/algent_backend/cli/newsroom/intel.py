@@ -31,8 +31,12 @@ def add_parser(sub: Any) -> None:
 def _ctx(run_id: str) -> Any:
     from algent_backend.agent_system.foundation.models import ModelResolver
     from algent_backend.agent_system.runs.context import AgentRunContext
+    from algent_backend.agent_system.tools.registry import default_tool_registry
+    from algent_backend.agent_system.tools.resolved import ResolvedTools
 
-    return AgentRunContext(run_id=run_id, model_resolver=ModelResolver())
+    # Briefs commission research, so the sourcing tools must be there (lazy: built only if used).
+    return AgentRunContext(run_id=run_id, model_resolver=ModelResolver(),
+                           tools=ResolvedTools(default_tool_registry().list()))
 
 
 def _out(as_of: str) -> Path:
