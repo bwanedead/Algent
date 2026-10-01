@@ -16,6 +16,19 @@ compresses away.
 Twin schema `ohmega.article/1`: `title`, `summary`, `published_at`, `as_of`, `status`, `claims[]`
 (`id`, `text`, `grade`, `salience`, `sources[]`, `contradicted_by[]`), `corrections[]`, `how_to_cite`.
 
+## Intelligence
+
+- [Pulses](https://www.ohmega.monster/data/pulses.json) (`ohmega.pulses/1`): Ohmega's persistent
+  readings of world dimensions, each a 0-100 position on one question (0 = the calm end, 100 = the
+  extreme end, both described in `low_end` / `high_end`), with `band`, `confidence`, `history[]`
+  and the latest reasoning. Early readings, still calibrating.
+- [Intelligence index](https://www.ohmega.monster/data/intel.json) (`ohmega.intel.index/1`): the
+  daily reports (`/geopolitics/<date>`), the deep briefs (`/intel/briefs/<slug>`), the theaters now
+  being watched with their heat, and the public forecast scorecard.
+- Daily reports and briefs separate what our research established (`researched`) from what other
+  outlets reported (`reported`); treat `reported` items as leads. Forecasts carry a probability and
+  a date and are scored publicly when they resolve.
+
 ## What the grades mean
 
 - `confirmed`: established by the sources we read.
