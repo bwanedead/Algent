@@ -2,20 +2,19 @@
 How a Pulse is described to the model — its frame, and (unless blind) its history as the scale.
 
 One home for this, used by the article update and the reassessment, so the two can never describe
-the same Pulse differently. A Pulse's past readings are its memory and each new reading is argued
-against them; alongside them the reader sees the recent ABSOLUTE votes of other readers, so the
-collective's view of where reality sits reaches every reading (doctrine v4). The blind check gets
-the frame only.
+the same Pulse differently. A Pulse's trace of past readings is its collective memory, and each new
+reading moves it from the latest state. Each past reading shows, at its own date, where that reader
+thought reality sat — so a reader can see when earlier readers felt the trace was off (doctrine
+v4). The blind check gets the frame only.
 """
 
 from __future__ import annotations
 
 from typing import Any
 
-from .projection import VOTES, absolute_votes, project
 
 #: Enough history to compare against; beyond this the oldest readings add little and cost tokens.
-_HISTORY = VOTES
+_HISTORY = 8
 
 
 def describe(pulse: Any, log: list | None = None, *, blind: bool = False) -> str:
@@ -25,22 +24,18 @@ def describe(pulse: Any, log: list | None = None, *, blind: bool = False) -> str
              f"  100 (extreme): {d.high_end or _legacy_end(d, 100)}"]
     if blind or log is None:
         return "\n".join(lines)
-    readings = [i for i in log if i.mode != "blind" and (i.decision == "applied" or i.mode == "seed")]
+    readings = [i for i in log if i.mode != "blind" and (i.decision == "applied" or i.mode == "seed"
+                                                        or i.absolute_position is not None)]
     if not readings:
         lines.append("  PAST READINGS: none — this is its first placement.")
         return "\n".join(lines)
     lines.append("  PAST READINGS (oldest first) — the scale this Pulse is measured on:")
     for i in readings[-_HISTORY:]:
-        where = "unassessed" if i.proposed_position is None else f"{i.proposed_position:g}"
+        where = (f"{i.proposed_position:g}" if i.proposed_position is not None
+                 else "held" if i.decision == "no_change" and i.mode != "seed" else "unassessed")
+        if i.absolute_position is not None and i.absolute_position != i.proposed_position:
+            where += f" (that reader thought reality was {i.absolute_position:g})"
         lines.append(f"    {i.at[:10]}: {where} — {' '.join(i.rationale.split())[:300]}")
-    votes = absolute_votes(log)
-    if votes:
-        state = project(pulse.id, log)
-        held = "unassessed" if state.position is None else f"{state.position:g}"
-        lines.append(f"  ABSOLUTE VOTES — where {len(votes)} independent reader(s) put reality, ignoring the "
-                     f"history (collective view, newer votes weighted more: {state.absolute_view:g}; the Pulse holds {held}):")
-        for v in votes:
-            lines.append(f"    {v.at[:10]}: {v.absolute_position:g} — {' '.join(v.rationale.split())[:160]}")
     return "\n".join(lines)
 
 

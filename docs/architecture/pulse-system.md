@@ -29,18 +29,20 @@ publishable subset).
   ("worse than when we said 58 on Aug 14, because…"), so the scale grows from experience and flexes
   with a messy world instead of being boxed into the first seed's picture. Fixed 0/25/50/75/100
   anchors were tried first and dropped for exactly that reason.
-- **History is memory, not truth: absolute votes (doctrine v4).** Every reading also gives an
-  `absolute_position`: where the reader thinks reality sits if the history is ignored. No reader
-  holds the whole picture. The Pulse *is* the net of many partial readings (articles, radars,
-  side research), and holding the whole graph in one agent would be neither possible nor
-  economical. So a vote never moves the Pulse. Instead, the latest vote of each of the recent
-  independent sources (`projection.absolute_votes`; one research effort = one voter) is shown to
-  every later reader beside the past readings, with their collective view: a median weighted by recency rank, so newer votes count for more but no single vote decides. There is no arbiter above the collective; the weekly reassessment is one more reader. When readers working from
-  different research keep pulling the same way, the history has drifted, and the next reading
-  moves toward them and says why. A sharper model corrects the record the same way, at the pace
-  the evidence it touches allows. An adjudicator that "sees everything" was considered and
-  rejected for that reason. Both numbers stay on every reading, so once watches resolve, how much
-  each kind of reading deserves can be *scored*, not guessed.
+- **History is memory, not truth (doctrine v4).** The trace of readings is the collective memory.
+  Each reader starts from the latest state and moves it up or down for what changed, so the newest
+  reading always reflects the newest world. A reader that believes the *level itself* is wrong
+  corrects it, and argues that against the readings it overturns. Two designs were tried and
+  dropped the same day:
+  - **An adjudicator who "sees everything".** No reader holds the whole picture; the Pulse *is* the
+    net of many partial ones, and nothing should sit above the collective.
+  - **Pooling every reader's absolute view into a vote.** An old read reflects an old world, so a
+    Russia–EU war would still be dragged down by readings from when it was calm.
+
+  Every reading still records `absolute_position`, where its reader thought reality sat at that
+  moment. It is shown in the trace at its date ("62 (that reader thought reality was 45)"), so a
+  reader can see when earlier readers felt the trace was off. It is never applied or pooled, and it
+  is kept to score later what tracked reality best.
 - **Position, not delta.** Assessments propose where the Pulse sits. The position is the latest
   *applied* proposal. Repeated news cannot ratchet the value.
 - **Versioned rulers.** Every influence records the definition version it was made under.

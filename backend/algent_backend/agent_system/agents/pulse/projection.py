@@ -9,13 +9,6 @@ Position rule: the position is the proposed position of the latest APPLIED influ
 reassessments never set it — they are the anchoring check, recorded as a gap against the position
 held at that moment. A gap wider than one band of the ruler flags the Pulse for reconciliation;
 the two are never silently averaged.
-
-Absolute votes: every reader also records where it thinks reality sits ignoring the history. No
-reader sees the whole picture — the Pulse IS the net of many partial ones — so no single absolute
-read moves it. Instead the recent votes, one per independent source, are summarised here and shown
-to every later reader; a history that readers across different research keep disagreeing with is
-pulled back toward reality by them, one argued reading at a time. There is no arbiter above the
-collective (operator, 09-30): the view is the voters' own, with newer votes counting for more.
 """
 
 from __future__ import annotations
@@ -30,47 +23,6 @@ from .contracts import BANDS, Influence, band_of
 #: both be right about which category the world is in. One band width is taken from the ruler
 #: itself, not chosen: the bands ARE the resolution we claim.
 RECONCILE_GAP = BANDS[1][0] - BANDS[0][0]
-
-
-#: How many recent independent votes make up the collective absolute view — the same depth of
-#: memory a reader is shown as past readings (framing.py), so votes and history cover one span.
-VOTES = 8
-
-
-def _voter(inf: Influence) -> str:
-    """One research effort is one voter, however many readings it produced."""
-    s = inf.source
-    return s.profile_id or s.run_id or inf.key
-
-
-def absolute_votes(log: list[Influence]) -> list[Influence]:
-    """The latest absolute read of each of the most recent independent sources, oldest first."""
-    seen, out = set(), []
-    for inf in sorted(log, key=lambda i: i.at, reverse=True):
-        if inf.mode == "blind" or inf.absolute_position is None or _voter(inf) in seen:
-            continue
-        seen.add(_voter(inf))
-        out.append(inf)
-        if len(out) == VOTES:
-            break
-    return out[::-1]
-
-
-def collective_view(votes: list[Influence]) -> float:
-    """The weighted median of the votes (oldest first), each weighted by its recency rank.
-
-    Newer readers saw newer evidence, so they count for more, but no single vote decides: the
-    median moves only when enough of the weight sits on one side. Rank, not age in days, sets the
-    weight, so a quiet Pulse's few votes are not discounted just for being old.
-    """
-    ranked = sorted(((v.absolute_position, rank) for rank, v in enumerate(votes, start=1)),
-                    key=lambda pair: pair[0])
-    half, seen = sum(rank for _, rank in ranked) / 2, 0
-    for value, rank in ranked:
-        seen += rank
-        if seen >= half:
-            return float(value)
-    return float(ranked[-1][0])
 
 
 class Point(BaseModel):
@@ -91,8 +43,6 @@ class PulseState(BaseModel):
     last_band_change: str = ""
     evidence_through: str = ""
     anchoring_gap: float | None = None   # |latest blind − position held then|
-    absolute_view: float | None = None   # recency-weighted median of the recent independent votes
-    absolute_voters: int = 0
     needs_reconciliation: bool = False
     influences: int = 0
     history: list[Point] = Field(default_factory=list)       # every value move
@@ -134,10 +84,6 @@ def project(pulse_id: str, log: list[Influence], *, as_of: str | None = None) ->
             state.history.append(point)
             state.last_value_change = inf.at
             state.position = new
-    votes = absolute_votes(entries)
-    if votes:
-        state.absolute_view = round(collective_view(votes), 1)
-        state.absolute_voters = len(votes)
     if state.position is not None:
         state.band = band_of(state.position)
         now = cutoff or (_ts(state.last_assessed) if state.last_assessed else None)

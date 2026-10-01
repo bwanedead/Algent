@@ -11,10 +11,9 @@ After an article run, its research profile is:
    recorded as no_change with the reason; unknown Pulses and off-ruler positions are refused;
 4. open watches the evidence fulfils are resolved, and the event is recorded once.
 
-Every answer also carries the reader's ABSOLUTE vote — where reality sits ignoring the history.
-One article is one slice, so the vote never moves the Pulse; it is shown to every later reader,
-and votes from different research that keep pulling one way are how a drifted history gets
-corrected (projection.absolute_votes).
+Every answer also records the reader's ABSOLUTE read — where reality sat at this moment, setting
+the trace aside. It is never applied or pooled; it sits in the trace at its date. A reader who
+believes the level itself is wrong corrects it through its position, argued against the trace.
 
 Never raises into the caller: a Pulse problem must never cost an article (``update_quietly``).
 Consumes only graded research — it never fetches anything.
