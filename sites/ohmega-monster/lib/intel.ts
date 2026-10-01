@@ -11,6 +11,8 @@ export type Confidence = "high" | "medium" | "low" | "";
 export type Trend = "heating" | "steady" | "cooling" | "new";
 export type Direction = "rising" | "steady" | "easing" | "unclear";
 export type Pace = "fast" | "gradual" | "flat";
+/** How much the world's headlines are about a theater: a different thing from escalation or severity. */
+export type Coverage = "rising" | "steady" | "falling" | "new";
 
 export type Pulse = {
   id: string;
@@ -37,6 +39,7 @@ export type Theater = {
   why: string;
   heat: number;
   trend: Trend;
+  coverage: Coverage;
   recent: number;
   prior: number;
   first_seen: string;
@@ -61,11 +64,14 @@ export type Forecasts = {
   open: OpenForecast[];
   resolved: ResolvedForecast[];
 };
+/** Which theaters each recent daily report covered (an index only; the report itself lives in lib/daily). */
+export type SnapshotDaily = { date: string; headline: string; theaters: { theater_id: string; name: string; heat: number | null }[] };
 export type Snapshot = {
   slug: string;
   built_at: string;
   situations: Situation[];
   theaters: Theater[];
+  daily: SnapshotDaily[];
   briefs: BriefSummary[];
   forecasts: Forecasts;
 };
@@ -171,17 +177,31 @@ function parsePulse(raw: unknown): Pulse | null {
   };
 }
 
+const TREND_TO_COVERAGE: Record<Trend, Coverage> = { heating: "rising", steady: "steady", cooling: "falling", new: "new" };
+
+/** "rising coverage" / "falling coverage" / "steady coverage" / "newly reported"; falls back to the old trend word. */
+export function parseCoverage(v: unknown, trend: Trend): Coverage {
+  const t = str(v).toLowerCase();
+  if (/new/.test(t)) return "new";
+  if (/ris|grow|increas/.test(t)) return "rising";
+  if (/fall|declin|shrink|decreas/.test(t)) return "falling";
+  if (/steady|stable|flat/.test(t)) return "steady";
+  return TREND_TO_COVERAGE[trend];
+}
+
 function parseTheater(raw: unknown): Theater | null {
   if (!isObj(raw)) return null;
   const name = str(raw.name);
   if (!name) return null;
+  const trend = oneOf(raw.trend, ["heating", "steady", "cooling", "new"] as const, "steady");
   return {
     id: str(raw.id) || name,
     name,
     domain: str(raw.domain),
     why: str(raw.why),
     heat: num(raw.heat) ?? 0,
-    trend: oneOf(raw.trend, ["heating", "steady", "cooling", "new"] as const, "steady"),
+    trend,
+    coverage: parseCoverage(raw.coverage, trend),
     recent: num(raw.recent) ?? 0,
     prior: num(raw.prior) ?? 0,
     first_seen: str(raw.first_seen),
@@ -254,6 +274,16 @@ function parseSnapshot(raw: unknown, slug: string): Snapshot | null {
       }))
       .filter((s) => s.title),
     theaters: arr(raw.theaters).map(parseTheater).filter((t): t is Theater => t !== null),
+    daily: arr(raw.daily)
+      .filter(isObj)
+      .map((d) => ({
+        date: str(d.date),
+        headline: str(d.headline),
+        theaters: arr(d.theaters)
+          .map((t) => (isObj(t) ? { theater_id: str(t.theater_id) || str(t.id) || str(t.name), name: str(t.name), heat: num(t.heat) } : { theater_id: str(t), name: str(t), heat: null }))
+          .filter((t) => t.theater_id),
+      }))
+      .filter((d) => d.date),
     briefs: arr(raw.briefs)
       .filter(isObj)
       .map((b) => ({
@@ -405,12 +435,51 @@ export function hottestTheater(s: Snapshot | null): Theater | null {
   return [...s.theaters].sort((a, b) => b.heat - a.heat)[0];
 }
 
-/** A Pulse's id by its exact name in a snapshot (for /intel#pulse-<id> links). */
-export function pulseIdByName(s: Snapshot | null, name: string): string | null {
+/** A Pulse in a snapshot by id, else by exact name. */
+export function findPulse(s: Snapshot | null, id: string, name = ""): Pulse | null {
   if (!s) return null;
-  for (const sit of s.situations) for (const p of sit.pulses) if (p.name === name) return p.id;
-  return null;
+  let byName: Pulse | null = null;
+  for (const sit of s.situations)
+    for (const p of sit.pulses) {
+      if (id && p.id === id) return p;
+      if (!byName && p.name === (name || id)) byName = p;
+    }
+  return byName;
 }
+
+const pulseRank = (p: Pulse) => (p.position === null ? -1 : BAND_RANK[p.band] * 1000 + p.position);
+
+/** Situations most severe first (max band, then max position); within each, Pulses most severe first.
+ *  Unassessed Pulses, and Situations with nothing assessed, come last. */
+export function severitySorted(s: Snapshot | null): Situation[] {
+  if (!s) return [];
+  const sits = s.situations.map((sit) => ({ ...sit, pulses: [...sit.pulses].sort((a, b) => pulseRank(b) - pulseRank(a)) }));
+  const top = (sit: Situation) => (sit.pulses.length > 0 ? pulseRank(sit.pulses[0]) : -2);
+  return sits.sort((a, b) => top(b) - top(a));
+}
+
+/** Band for a 0-100 reading (calm 0-25, elevated 25-50, severe 50-75, critical 75-100). */
+export function bandAt(position: number | null): Band {
+  if (position === null) return "unassessed";
+  return position >= 75 ? "critical" : position >= 50 ? "severe" : position >= 25 ? "elevated" : "calm";
+}
+
+/** Coverage is how much of the world's headlines a theater takes; deliberately never band-coloured. */
+export const COVERAGE_DISPLAY: Record<Coverage, { glyph: string; label: string }> = {
+  rising: { glyph: "▲", label: "rising" },
+  steady: { glyph: "=", label: "steady" },
+  falling: { glyph: "▼", label: "falling" },
+  new: { glyph: "●", label: "newly reported" },
+};
+
+/** "▲ +3" / "▼ −2" / "◆ 0" / "—" for a Pulse change. */
+export function fmtDelta(v: number | null): string {
+  if (v === null) return "—";
+  const r = Math.round(v * 10) / 10;
+  if (r === 0) return "◆ 0";
+  return `${r > 0 ? "▲ +" : "▼ −"}${Math.abs(r)}`;
+}
+export const deltaClass = (v: number | null) => (v === null || Math.round(v * 10) === 0 ? "flat" : v > 0 ? "up" : "down");
 
 /** "2026-09-30T14:05:00Z" -> "2026-09-30 14:05 UTC"; date-only strings pass through. */
 export function fmtUtc(iso: string): string {

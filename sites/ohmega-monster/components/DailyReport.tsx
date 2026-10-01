@@ -1,17 +1,13 @@
 import Link from "next/link";
 
-import type { Daily, DailyChangeKind, DailyDevelopment, DailyPulse, DailyStatement, DailyTheater } from "@/lib/daily";
+import type { Daily, DailyChangeKind, DailyDevelopment, DailyStatement, DailyTheater } from "@/lib/daily";
 import { fmtDay } from "@/lib/daily";
-import { BAND_LABEL, fmtUtc, maxBand, safeUrl } from "@/lib/intel";
+import { findPulse, fmtUtc, latestSnapshot, maxBand, type Snapshot } from "@/lib/intel";
 
-import { EscalationChips, HeatBar } from "./IntelViz";
-
-const TREND = {
-  heating: { glyph: "▲", cls: "severe", label: "Heating" },
-  steady: { glyph: "◆", cls: "elevated", label: "Steady" },
-  cooling: { glyph: "▼", cls: "calm", label: "Cooling" },
-  new: { glyph: "●", cls: "unassessed", label: "New" },
-} as const;
+import { CoverageSpark, DevTimeline, KeyFigureTiles, mapIndexBase, SourceLink, TheaterMapSlot } from "./DailyVisuals";
+import { CoverageTag, EscalationChips, HeatBar } from "./IntelViz";
+import PulseCard from "./PulseCard";
+import { SpectrumLegend } from "./PulseSpectrum";
 
 const CHANGE: Record<DailyChangeKind, { glyph: string; cls: string; label: string }> = {
   escalated: { glyph: "▲", cls: "severe", label: "Escalated" },
@@ -22,60 +18,6 @@ const CHANGE: Record<DailyChangeKind, { glyph: string; cls: string; label: strin
 };
 
 const anchorId = (t: DailyTheater, i: number) => `theater-${i}-${t.theater_id.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
-
-function fmtDelta(v: number | null): string {
-  if (v === null) return "—";
-  const r = Math.round(v * 10) / 10;
-  if (r === 0) return "◆ 0";
-  return `${r > 0 ? "▲ +" : "▼ −"}${Math.abs(r)}`;
-}
-const deltaClass = (v: number | null) => (v === null || Math.round(v * 10) === 0 ? "flat" : v > 0 ? "up" : "down");
-
-function host(url: string): string {
-  try {
-    return new URL(url).hostname.replace(/^www\./, "");
-  } catch {
-    return url;
-  }
-}
-
-function SourceLink({ url, label }: { url: string; label?: string }) {
-  const href = safeUrl(url);
-  if (!href) return url ? <span className="intel-micro">{url}</span> : null;
-  return (
-    <a href={href} className="daily-src" target="_blank" rel="noopener noreferrer nofollow">
-      {label ?? host(href)} ↗
-    </a>
-  );
-}
-
-/** Reserved slot for a future theater map. Renders nothing until the data carries one. */
-export function TheaterMapSlot({ map }: { map: unknown | null }) {
-  if (map === null || map === undefined) return null;
-  return <div className="daily-map-slot" aria-hidden="true" />;
-}
-
-function PulseMini({ p }: { p: DailyPulse }) {
-  return (
-    <Link href={`/intel#pulse-${encodeURIComponent(p.id)}`} className={`daily-pulse intel-band-${p.band}`} title={`${p.name}: open on the Intelligence board`}>
-      <span className="daily-pulse-name">{p.name}</span>
-      <span className="daily-pulse-main">
-        <span className={p.position === null ? "intel-num-sm intel-muted" : "intel-num-sm"}>{p.position === null ? "—" : Math.round(p.position)}</span>
-        <span className={`intel-chip intel-band-${p.band}`}>{BAND_LABEL[p.band]}</span>
-      </span>
-      <span className="daily-pulse-deltas">
-        <span className={`intel-delta intel-delta-${deltaClass(p.change_24h)}`}>
-          {fmtDelta(p.change_24h)}
-          <span className="intel-micro"> 24h</span>
-        </span>
-        <span className={`intel-delta intel-delta-${deltaClass(p.change_7d)}`}>
-          {fmtDelta(p.change_7d)}
-          <span className="intel-micro"> 7d</span>
-        </span>
-      </span>
-    </Link>
-  );
-}
 
 function Statement({ s }: { s: DailyStatement }) {
   const attribution = (
@@ -111,17 +53,22 @@ function Statement({ s }: { s: DailyStatement }) {
   );
 }
 
-function Development({ d }: { d: DailyDevelopment }) {
+/** `n` is the development’s number when the map marks it. */
+function Development({ d, n }: { d: DailyDevelopment; n: number | null }) {
   const verified = d.verification === "researched";
+  const where = d.where || [d.place?.name, d.place?.country].filter(Boolean).join(", ");
   return (
     <li className="daily-dev">
       <div className="daily-dev-head">
-        <h4>{d.headline}</h4>
+        <h4>
+          {n !== null && <span className={`daily-map-n ${verified ? "is-solid" : "is-hollow"}`} title="Marked on the map">{n}</span>}
+          {d.headline}
+        </h4>
         <span className={`intel-chip intel-band-${verified ? "calm" : "elevated"}`} title={verified ? "Checked against sources we read" : "Reported by outlets; not independently checked"}>
           {verified ? "Researched" : "Reported — unverified"}
         </span>
       </div>
-      {(d.when || d.where) && <p className="intel-micro daily-dev-meta">{[d.when, d.where].filter(Boolean).join(" · ")}</p>}
+      {(d.when || where) && <p className="intel-micro daily-dev-meta">{[d.when, where].filter(Boolean).join(" · ")}</p>}
       {d.detail && <p className="daily-detail">{d.detail}</p>}
       {d.statements.length > 0 && (
         <div className="daily-quotes">
@@ -147,9 +94,15 @@ function Development({ d }: { d: DailyDevelopment }) {
   );
 }
 
-function Theater({ t, i }: { t: DailyTheater; i: number }) {
-  const tr = TREND[t.temperature.trend];
+function Theater({ t, i, date, snap, legend }: { t: DailyTheater; i: number; date: string; snap: Snapshot | null; legend: boolean }) {
   const top = maxBand(t.pulses);
+  const series = snap?.theaters.find((x) => x.id === t.theater_id)?.series ?? snap?.theaters.find((x) => x.name === t.name)?.series ?? [];
+  // Developments the map marks, by 1-based number, so they can wear the same badge.
+  const mapped = new Map<number, number>();
+  if (t.map) {
+    const base = mapIndexBase(t.map, t.developments.length);
+    for (const p of t.map.points) if (p.n !== null && p.n - base >= 0 && p.n - base < t.developments.length) mapped.set(p.n - base, p.n - base + 1);
+  }
   return (
     <section id={anchorId(t, i)} className={`intel-frame daily-theater intel-band-${top}`} aria-label={t.name}>
       <header className="intel-frame-band">
@@ -157,19 +110,26 @@ function Theater({ t, i }: { t: DailyTheater; i: number }) {
         <span className="intel-frame-meta">
           <span className="daily-temp">
             <HeatBar heat={t.temperature.heat} />
-            <span className={`intel-trend intel-band-${tr.cls}`}>
-              {tr.glyph} {tr.label}
-            </span>
+            <CoverageTag coverage={t.temperature.coverage} />
+            <CoverageSpark series={series} name={t.name} />
           </span>
-          <EscalationChips direction={t.escalation.direction} pace={t.escalation.pace} />
+          <EscalationChips direction={t.escalation.direction} pace={t.escalation.pace} labelled />
         </span>
       </header>
       <div className="intel-frame-body">
         {t.pulses.length > 0 && (
-          <div className="daily-pulses" aria-label="Pulses for this theater">
-            {t.pulses.map((p) => (
-              <PulseMini key={p.id} p={p} />
-            ))}
+          <div className="daily-block-pulses">
+            {legend && <SpectrumLegend />}
+            <div className="intel-pulse-grid" aria-label="Pulses for this theater">
+              {t.pulses.map((p) => (
+                <PulseCard
+                  key={p.id}
+                  base={{ id: p.id, name: p.name, position: p.position, band: p.band, d24: p.change_24h, d7: p.change_7d }}
+                  full={findPulse(snap, p.id, p.name)}
+                  reportDate={date}
+                />
+              ))}
+            </div>
           </div>
         )}
 
@@ -180,7 +140,9 @@ function Theater({ t, i }: { t: DailyTheater; i: number }) {
           </div>
         )}
 
-        <TheaterMapSlot map={t.map} />
+        <TheaterMapSlot map={t.map} developments={t.developments} />
+
+        <KeyFigureTiles figures={t.key_figures} />
 
         {t.since_yesterday.length > 0 && (
           <div className="daily-block">
@@ -204,9 +166,10 @@ function Theater({ t, i }: { t: DailyTheater; i: number }) {
         {t.developments.length > 0 && (
           <div className="daily-block">
             <h4 className="intel-sub">Developments</h4>
+            <DevTimeline developments={t.developments} reportDate={date} />
             <ol className="daily-devs">
               {t.developments.map((d, k) => (
-                <Development key={k} d={d} />
+                <Development key={k} d={d} n={mapped.get(k) ?? null} />
               ))}
             </ol>
           </div>
@@ -266,6 +229,8 @@ function Theater({ t, i }: { t: DailyTheater; i: number }) {
 }
 
 export default function DailyReport({ report, title }: { report: Daily; title: string }) {
+  const snap = latestSnapshot();
+  const firstWithPulses = report.theaters.findIndex((t) => t.pulses.length > 0);
   return (
     <>
       <div className="intel-strip" role="group" aria-label="Report status">
@@ -300,14 +265,11 @@ export default function DailyReport({ report, title }: { report: Daily; title: s
 
       {report.theaters.length > 1 && (
         <nav className="daily-index" aria-label="Theaters in this report">
-          {report.theaters.map((t, i) => {
-            const tr = TREND[t.temperature.trend];
-            return (
-              <a key={i} href={`#${anchorId(t, i)}`} className={`intel-chip intel-band-${tr.cls}`}>
-                {tr.glyph} {t.name}
-              </a>
-            );
-          })}
+          {report.theaters.map((t, i) => (
+            <a key={i} href={`#${anchorId(t, i)}`} className={`intel-chip intel-band-${maxBand(t.pulses)}`} title="Colour is the most severe Pulse reading in this theater">
+              {t.name}
+            </a>
+          ))}
         </nav>
       )}
 
@@ -316,7 +278,7 @@ export default function DailyReport({ report, title }: { report: Daily; title: s
       ) : (
         <div className="intel-frames">
           {report.theaters.map((t, i) => (
-            <Theater key={i} t={t} i={i} />
+            <Theater key={i} t={t} i={i} date={report.date} snap={snap} legend={i === firstWithPulses} />
           ))}
         </div>
       )}

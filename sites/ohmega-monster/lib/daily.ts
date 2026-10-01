@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import type { Band, Direction, Pace, Trend } from "./intel";
+import { parseCoverage, type Band, type Coverage, type Direction, type Pace, type Trend } from "./intel";
 
 // Daily reports are written by the backend to <intel dir>/daily/<domain>/<YYYY-MM-DD>.json and read
 // at build time. Parsed defensively: a missing dir or malformed file yields empty states, never a
@@ -10,11 +10,13 @@ const INTEL_DIR = process.env.OHMEGA_INTEL_DIR || path.join(process.cwd(), "cont
 
 export type DailyChangeKind = "escalated" | "eased" | "new" | "resolved" | "unchanged";
 export type DailyStatement = { who: string; role: string; said: string; quote: boolean; when: string; source: string };
+export type DailyPlace = { name: string; country: string; lat: number | null; lon: number | null };
 export type DailyDevelopment = {
   headline: string;
   detail: string;
   when: string;
   where: string;
+  place: DailyPlace | null;
   actors: string[];
   statements: DailyStatement[];
   significance: string;
@@ -22,10 +24,29 @@ export type DailyDevelopment = {
   sources: string[];
 };
 export type DailyPulse = { id: string; name: string; position: number | null; band: Band; change_24h: number | null; change_7d: number | null };
+export type KeyFigure = {
+  label: string;
+  value: number;
+  unit: string;
+  baseline: number | null;
+  baseline_label: string;
+  as_of: string;
+  source: string;
+};
+export type MapPoint = { x: number; y: number; label: string; date: string; verification: "researched" | "reported"; n: number | null };
+export type TheaterMap = {
+  bbox: number[];
+  projection: string;
+  width: number;
+  height: number;
+  countries: { name: string; d: string }[];
+  points: MapPoint[];
+  credit: string;
+};
 export type DailyTheater = {
   theater_id: string;
   name: string;
-  temperature: { heat: number; trend: Trend; recent_share: number | null; prior_share: number | null };
+  temperature: { heat: number; trend: Trend; coverage: Coverage; recent_share: number | null; prior_share: number | null };
   escalation: { direction: Direction; pace: Pace };
   pulses: DailyPulse[];
   bottom_line: string;
@@ -35,8 +56,8 @@ export type DailyTheater = {
   outlook: string;
   watch_next: string[];
   brief_slug: string | null;
-  /** Reserved for a future map; always null for now. */
-  map: unknown | null;
+  key_figures: KeyFigure[];
+  map: TheaterMap | null;
 };
 export type Daily = {
   domain: string;
@@ -71,6 +92,54 @@ function readJson(file: string): unknown {
 }
 
 // ---- parsers --------------------------------------------------------------------------------
+/** Only plain SVG path data may reach a `d` attribute. */
+const PATH_RE = /^[MmLlHhVvCcSsQqTtAaZz0-9eE.,\s+-]*$/;
+const MAX_DIM = 4000;
+const dim = (v: unknown): number | null => {
+  const n = num(v);
+  return n !== null && n > 0 && n <= MAX_DIM ? n : null;
+};
+
+function parseKeyFigure(raw: unknown): KeyFigure | null {
+  if (!isObj(raw)) return null;
+  const label = str(raw.label);
+  const value = typeof raw.value === "string" && raw.value.trim() !== "" ? Number(raw.value.replace(/,/g, "")) : num(raw.value);
+  if (!label || value === null || !Number.isFinite(value)) return null;
+  const b = typeof raw.baseline === "string" && raw.baseline.trim() !== "" ? Number(raw.baseline.replace(/,/g, "")) : num(raw.baseline);
+  return {
+    label,
+    value,
+    unit: str(raw.unit),
+    baseline: b !== null && Number.isFinite(b) ? b : null,
+    baseline_label: str(raw.baseline_label),
+    as_of: str(raw.as_of),
+    source: str(raw.source),
+  };
+}
+
+function parseMap(raw: unknown): TheaterMap | null {
+  if (!isObj(raw)) return null;
+  const width = dim(raw.width);
+  const height = dim(raw.height);
+  if (width === null || height === null) return null;
+  const countries = arr(raw.countries)
+    .filter(isObj)
+    .map((c) => ({ name: str(c.name), d: str(c.d) }))
+    .filter((c) => c.d !== "" && PATH_RE.test(c.d));
+  const points = arr(raw.points)
+    .filter(isObj)
+    .map((p) => ({ x: num(p.x), y: num(p.y), label: str(p.label), date: str(p.date), verification: oneOf(p.verification, ["researched", "reported"] as const, "reported"), n: num(p.n) }))
+    .filter((p): p is MapPoint => p.x !== null && p.y !== null && p.x >= 0 && p.x <= width && p.y >= 0 && p.y <= height);
+  if (countries.length === 0 && points.length === 0) return null;
+  return { bbox: arr(raw.bbox).map(num).filter((n): n is number => n !== null), projection: str(raw.projection), width, height, countries, points, credit: str(raw.credit) };
+}
+
+function parsePlace(raw: unknown): DailyPlace | null {
+  if (!isObj(raw)) return null;
+  const name = str(raw.name);
+  return name ? { name, country: str(raw.country), lat: num(raw.lat), lon: num(raw.lon) } : null;
+}
+
 function parseDevelopment(raw: unknown): DailyDevelopment | null {
   if (!isObj(raw)) return null;
   const headline = str(raw.headline);
@@ -80,6 +149,7 @@ function parseDevelopment(raw: unknown): DailyDevelopment | null {
     detail: str(raw.detail),
     when: str(raw.when),
     where: str(raw.where),
+    place: parsePlace(raw.place),
     actors: strs(raw.actors),
     statements: arr(raw.statements)
       .filter(isObj)
@@ -97,12 +167,14 @@ function parseTheater(raw: unknown): DailyTheater | null {
   if (!name) return null;
   const temp = isObj(raw.temperature) ? raw.temperature : {};
   const esc = isObj(raw.escalation) ? raw.escalation : {};
+  const trend = oneOf(temp.trend, ["heating", "steady", "cooling", "new"] as const, "steady");
   return {
     theater_id: str(raw.theater_id) || name,
     name,
     temperature: {
       heat: num(temp.heat) ?? 0,
-      trend: oneOf(temp.trend, ["heating", "steady", "cooling", "new"] as const, "steady"),
+      trend,
+      coverage: parseCoverage(temp.coverage, trend),
       recent_share: num(temp.recent_share),
       prior_share: num(temp.prior_share),
     },
@@ -138,7 +210,8 @@ function parseTheater(raw: unknown): DailyTheater | null {
     outlook: str(raw.outlook),
     watch_next: strs(raw.watch_next),
     brief_slug: /^[\w.-]+$/.test(str(raw.brief_slug)) ? str(raw.brief_slug) : null,
-    map: raw.map ?? null,
+    key_figures: arr(raw.key_figures).map(parseKeyFigure).filter((k): k is KeyFigure => k !== null),
+    map: parseMap(raw.map),
   };
 }
 

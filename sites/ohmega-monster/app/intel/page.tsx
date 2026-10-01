@@ -2,20 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import PulseBoard from "@/components/IntelPulseBoard";
-import { CalibrationChart, DayBars, EscalationChips, HeatBar } from "@/components/IntelViz";
+import { CalibrationChart, CoverageTag, DayBars, EscalationChips, HeatBar } from "@/components/IntelViz";
+import { SpectrumLegend } from "@/components/PulseSpectrum";
 import { fmtUtc, latestSnapshot } from "@/lib/intel";
 
 export const metadata: Metadata = {
   title: "Intelligence",
   description: "Pulses, Situations, Theaters and Briefs — a running read of where the world is moving.",
 };
-
-const TREND = {
-  heating: { glyph: "▲", cls: "severe", label: "Heating" },
-  steady: { glyph: "◆", cls: "elevated", label: "Steady" },
-  cooling: { glyph: "▼", cls: "calm", label: "Cooling" },
-  new: { glyph: "●", cls: "unassessed", label: "New" },
-} as const;
 
 const OUTCOME = {
   yes: { cls: "calm", label: "Happened" },
@@ -29,7 +23,7 @@ export default function IntelPage() {
   const pulses = situations.flatMap((s) => s.pulses);
   const assessed = pulses.filter((p) => p.position !== null).length;
   const theaters = [...(snap?.theaters ?? [])].sort((a, b) => b.heat - a.heat);
-  const heating = theaters.filter((t) => t.trend === "heating").length;
+  const rising = theaters.filter((t) => t.coverage === "rising").length;
   const briefs = [...(snap?.briefs ?? [])].sort((a, b) => b.as_of.localeCompare(a.as_of));
 
   return (
@@ -47,7 +41,7 @@ export default function IntelPage() {
           <span className="intel-micro">/{pulses.length} Pulses assessed</span>
         </span>
         <span className="intel-strip-item">
-          <b className="intel-num-sm">{heating}</b> <span className="intel-micro">Theaters heating</span>
+          <b className="intel-num-sm">{rising}</b> <span className="intel-micro">Theaters with rising coverage</span>
         </span>
         <span className="intel-strip-item">
           <b className="intel-num-sm">{briefs.length}</b> <span className="intel-micro">Briefs</span>
@@ -56,6 +50,8 @@ export default function IntelPage() {
 
       <p className="intel-note daily-xlink">
         <Link href="/geopolitics">Geopolitics — the daily report →</Link>
+        {" · "}
+        <Link href="/pulses">All Pulses — the full wall →</Link>
       </p>
 
       {!snap && <p className="intel-empty">No intelligence has been published yet. Check back soon.</p>}
@@ -70,13 +66,14 @@ export default function IntelPage() {
               </span>
             </div>
             <p className="intel-note">Each Pulse reads 0–100 on one question. Open a tile for the question, both ends of the scale, and the reasoning.</p>
+            <SpectrumLegend />
             <PulseBoard situations={situations} />
           </section>
 
           <section className="intel-section" aria-labelledby="intel-theaters">
             <div className="intel-section-head">
               <h2 id="intel-theaters">Theaters</h2>
-              <span className="intel-micro">Emerging hotspots, hottest first</span>
+              <span className="intel-micro">Most in the headlines first</span>
             </div>
             {theaters.length === 0 ? (
               <p className="intel-empty">No Theaters flagged right now.</p>
@@ -86,16 +83,15 @@ export default function IntelPage() {
                   <thead>
                     <tr>
                       <th scope="col">Theater</th>
-                      <th scope="col">Trend</th>
-                      <th scope="col">Heat</th>
-                      <th scope="col">Daily reports</th>
+                      <th scope="col" title="How much the world’s headlines are about the theater">Coverage</th>
+                      <th scope="col" title="Share of today’s headlines">Share of headlines</th>
+                      <th scope="col">Headlines/day</th>
                       <th scope="col" className="intel-r">Recent / prior</th>
                       <th scope="col"><span className="intel-sr">Brief</span></th>
                     </tr>
                   </thead>
                   <tbody>
                     {theaters.map((t) => {
-                      const tr = TREND[t.trend];
                       return (
                         <tr key={t.id}>
                           <th scope="row">
@@ -104,15 +100,13 @@ export default function IntelPage() {
                             {t.why && <span className="intel-why">{t.why}</span>}
                           </th>
                           <td>
-                            <span className={`intel-trend intel-band-${tr.cls}`} title={tr.label}>
-                              {tr.glyph} {tr.label}
-                            </span>
+                            <CoverageTag coverage={t.coverage} bare />
                           </td>
                           <td>
                             <HeatBar heat={t.heat} />
                           </td>
                           <td>
-                            <DayBars series={t.series} label={`${t.name}: daily report counts`} />
+                            <DayBars series={t.series} label={`${t.name}: headlines per day`} />
                           </td>
                           <td className="intel-r intel-tab">
                             {t.recent} / {t.prior}

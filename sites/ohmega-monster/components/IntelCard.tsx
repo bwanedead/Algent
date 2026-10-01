@@ -2,9 +2,8 @@ import Link from "next/link";
 
 import { hottestTheater, latestSnapshot, mostSeverePulses } from "@/lib/intel";
 
-import { BandChip } from "./IntelPulseBoard";
-
-const TREND = { heating: "▲ heating", steady: "◆ steady", cooling: "▼ cooling", new: "● new" } as const;
+import { CoverageTag } from "./IntelViz";
+import { BandChip } from "./PulseCard";
 
 // Home-page teaser for the Intelligence desk. Renders nothing until there is data to show.
 export default function IntelCard() {
@@ -18,9 +17,9 @@ export default function IntelCard() {
         <span className="intel-micro intel-card-title">Intelligence →</span>
         {theater && (
           <span className="intel-card-theater">
-            <span className="intel-micro">Hottest theater</span>
+            <span className="intel-micro">Most in the headlines</span>
             <strong>{theater.name}</strong>
-            <span className="intel-micro">{TREND[theater.trend]}</span>
+            <CoverageTag coverage={theater.coverage} />
           </span>
         )}
         {pulses.length > 0 && (
