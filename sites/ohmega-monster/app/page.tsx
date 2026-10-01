@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import FlagRow from "@/components/FlagRow";
+import IntelCard from "@/components/IntelCard";
 import RadarCard from "@/components/RadarCard";
 import ShareButton from "@/components/ShareButton";
 import { getAllMeta } from "@/lib/articles";
@@ -12,6 +13,7 @@ export default function Home() {
   return (
     <section className="index-page" aria-label="Reports">
       <RadarCard />
+      <IntelCard />
       <ul className="feed">
         {articles.length === 0 && (
           <li className="feed-empty">No reports available.</li>
