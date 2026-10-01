@@ -1,0 +1,168 @@
+"""
+The intel desk on the site — Pulses, hot theaters and briefs, as one data snapshot per build.
+
+The site (static Next.js) reads this contract; keep it stable.
+
+Snapshot file ``content/intel/snapshots/<slug>.json``, slug = UTC "YYYY-MM-DD-HHMM", kept forever
+(archive)::
+
+    {"schema":"ohmega.intel/1","slug","built_at",
+     "situations":[{"id","title","summary","domain",
+         "pulses":[{"id","name","question","low_end","high_end","position":float|null,
+                    "band":"calm|elevated|severe|critical|unassessed","velocity_7d":float|null,
+                    "velocity_30d":float|null,"confidence":str,"last_assessed":str,
+                    "evidence_through":str,"history":[{"at","position"}],"rationale":str}],
+         "watches":[{"condition","why","direction","horizon","status"}]}],   // open watches only
+     "theaters":[{"id","name","domain","why","heat","trend","recent","prior","first_seen",
+                  "series":[{"day","count"}],"brief":slug|null}],  // newest board, hottest first;
+                                                                   // brief = newest brief slug for that theater id
+     "briefs":[{"slug","title","bottom_line","theater_id","theater_name","as_of","direction","pace"}]}
+                                                                   // every brief ever, newest first
+
+Brief files: ``content/intel/briefs/<slug>.json`` = the persisted brief record
+(``intel_store/briefs/<slug>.json``, schema ``ohmega.brief/1``).
+
+Rules: ``rationale`` is the latest APPLIED, non-blind influence's rationale for that pulse, made
+reader-safe (claim ids stripped, ~400 chars at a word boundary). Situations that are not "active"
+and pulses that are "dormant" are skipped. ``absolute_position`` is internal and never exported.
+Situations list assessed ones first (most severe pulse first); pulses inside by position desc,
+unassessed last.
+
+Like the radar, the files are data, not markup — the site renders them.
+"""
+
+from __future__ import annotations
+
+import json
+import re
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
+
+from . import site_git
+
+INTEL_SUBDIR = ("content", "intel")
+SCHEMA = "ohmega.intel/1"
+_MAX_RATIONALE = 400
+_CLAIM_ID = re.compile(r"\bclm_[0-9a-f]+\b")
+
+
+def reader_safe(text: str, limit: int = _MAX_RATIONALE) -> str:
+    """Strip internal claim ids (and the brackets/lists they leave empty), then trim at a word boundary."""
+    out = _CLAIM_ID.sub("", text or "")
+    out = re.sub(r"[\[(][\s,;]*[\])]", "", out)                  # brackets emptied by the strip
+    out = re.sub(r"([\[(])[\s,;]+", r"\1", out)                  # separators left at the front
+    out = re.sub(r"[\s,;]+([\])])", r"\1", out)                  # ...and at the back
+    out = re.sub(r"([,;])(\s*[,;])+", r"\1", out)                # doubled separators in the middle
+    out = re.sub(r"\s+([,.;:])", r"\1", out)
+    out = " ".join(out.split())
+    if len(out) <= limit:
+        return out
+    return out[:limit].rsplit(" ", 1)[0].rstrip(" ,;:-") + "…"
+
+
+def _rationale(store: Any, pulse_id: str) -> str:
+    applied = [i for i in store.log(pulse_id) if i.decision == "applied" and i.mode != "blind"]
+    return reader_safe(max(applied, key=lambda i: i.at).rationale) if applied else ""
+
+
+def _pulse(store: Any, pulse: Any) -> dict:
+    st, d = store.state(pulse.id), pulse.definition
+    return {"id": pulse.id, "name": pulse.name, "question": d.question, "low_end": d.low_end,
+            "high_end": d.high_end, "position": st.position, "band": st.band or "unassessed",
+            "velocity_7d": st.velocity_7d, "velocity_30d": st.velocity_30d, "confidence": st.confidence,
+            "last_assessed": st.last_assessed, "evidence_through": st.evidence_through,
+            "history": [{"at": p.at, "position": p.position} for p in st.history],
+            "rationale": _rationale(store, pulse.id)}
+
+
+def _situations(store: Any) -> list[dict]:
+    out = []
+    for sit in store.situations():
+        if sit.status != "active":
+            continue
+        pulses = [_pulse(store, p) for p in store.pulses(sit.id) if p.status != "dormant"]
+        pulses.sort(key=lambda p: (p["position"] is None, -(p["position"] or 0)))
+        watches = [{"condition": w.condition, "why": w.why, "direction": w.expected_direction,
+                    "horizon": w.horizon, "status": w.status}
+                   for w in store.watches(sit.id) if w.status == "open"]
+        out.append({"id": sit.id, "title": sit.title, "summary": sit.summary, "domain": sit.domain,
+                    "pulses": pulses, "watches": watches})
+    out.sort(key=lambda s: (not any(p["position"] is not None for p in s["pulses"]),
+                            -max((p["position"] or 0 for p in s["pulses"]), default=0)))
+    return out
+
+
+def _read_all(folder: Path) -> list[dict]:
+    out = []
+    for path in sorted(folder.glob("*.json")) if folder.is_dir() else []:
+        try:
+            out.append(json.loads(path.read_text(encoding="utf-8")))
+        except (OSError, ValueError):
+            continue
+    return out
+
+
+def build_snapshot(store: Any, intel_dir: Path, *, now: datetime | None = None) -> dict:
+    """Everything the site shows of the desk, as of now. Pure read: nothing is written."""
+    now = now or datetime.now(UTC)
+    briefs = sorted(_read_all(intel_dir / "briefs"), key=lambda b: (b.get("as_of", ""), b.get("built_at", "")),
+                    reverse=True)
+    newest: dict[str, str] = {}
+    for b in briefs:                                   # newest first, so the first one seen wins
+        newest.setdefault(b.get("theater_id", ""), b["slug"])
+    boards = sorted((intel_dir / "boards").glob("*.json")) if (intel_dir / "boards").is_dir() else []
+    board = json.loads(boards[-1].read_text(encoding="utf-8")) if boards else {}
+    theaters = {t["id"]: t for t in board.get("theaters", [])}
+    rows = []
+    for h in board.get("heat", []):                    # already hottest first
+        t = theaters.get(h["theater_id"], {})
+        rows.append({"id": h["theater_id"], "name": h.get("name") or t.get("name", ""),
+                     "domain": t.get("domain", ""), "why": t.get("why", ""), "heat": h.get("heat", 0),
+                     "trend": h.get("trend", ""), "recent": h.get("recent", 0), "prior": h.get("prior", 0),
+                     "first_seen": h.get("first_seen", ""), "series": h.get("series", []),
+                     "brief": newest.get(h["theater_id"])})
+    return {"schema": SCHEMA, "slug": now.astimezone(UTC).strftime("%Y-%m-%d-%H%M"),
+            "built_at": now.isoformat(), "situations": _situations(store), "theaters": rows,
+            "briefs": [{"slug": b["slug"], "title": b.get("title", ""), "bottom_line": b.get("bottom_line", ""),
+                        "theater_id": b.get("theater_id", ""), "theater_name": b.get("theater_name", ""),
+                        "as_of": b.get("as_of", ""), "direction": (b.get("escalation") or {}).get("direction", ""),
+                        "pace": (b.get("escalation") or {}).get("pace", "")} for b in briefs]}
+
+
+def _write_if_changed(path: Path, payload: dict) -> None:
+    text = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
+    if path.is_file() and path.read_text(encoding="utf-8") == text:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8", newline="\n")
+
+
+def write_intel(site_dir: Path, snapshot: dict, intel_dir: Path) -> Path:
+    """Write the snapshot and mirror every persisted brief into a site checkout (only what changed)."""
+    root = site_dir.joinpath(*INTEL_SUBDIR)
+    path = root / "snapshots" / f"{snapshot['slug']}.json"
+    _write_if_changed(path, snapshot)
+    for record in _read_all(intel_dir / "briefs"):
+        _write_if_changed(root / "briefs" / f"{record['slug']}.json", record)
+    return path
+
+
+def publish_intel() -> dict[str, Any]:
+    """Put the desk snapshot live on the site. Never raises — the desk's work is already stored."""
+    if not site_git.publish_enabled():
+        return {"published": False, "note": "site publishing disabled"}
+    try:
+        from algent_backend.agent_system.agents.intel.heat import store_dir
+        from algent_backend.agent_system.agents.pulse.repository import pulse_store
+
+        root = site_git.repo_root()
+        worktree, note = site_git.ensure_worktree(root)
+        if worktree is None:
+            return {"published": False, "note": note}
+        snapshot = build_snapshot(pulse_store(), store_dir())
+        path = write_intel(site_git.live_site_dir(root), snapshot, store_dir())
+        ok, pushed = site_git.commit_and_push(worktree, f"intel({path.stem}): desk snapshot")
+        return {"published": ok, "slug": path.stem, "note": pushed}
+    except Exception as exc:  # noqa: BLE001
+        return {"published": False, "note": f"{type(exc).__name__}: {str(exc)[:120]}"}

@@ -4,8 +4,12 @@
     newsroom intel heat                          # heat board from the radar's history (1 cheap call)
     newsroom intel brief                         # briefs on the 3 hottest theaters
     newsroom intel brief --theater thr_x --research   # commission fresh research first (paid, capped)
+    newsroom intel publish                       # put the desk snapshot (pulses, theaters, briefs) on the site
+    newsroom intel cycle [--top 2] [--research]  # heat -> briefs -> publish -> backup, unattended
+    newsroom intel import-briefs                 # one-off: runs_data briefs -> durable intel store
 
-Output lands in ``runs_data/intel/<as_of>/`` as HTML + JSON. Research commissioned here goes into the
+Output lands in ``runs_data/intel/<as_of>/`` as HTML + JSON; briefs are
+also persisted durably to ``intel_store/briefs/``. Research commissioned here goes into the
 profile corpus and updates any Pulses it bears on, exactly as an article's research does.
 """
 
@@ -26,6 +30,12 @@ def add_parser(sub: Any) -> None:
     b.add_argument("--top", type=int, default=3)
     b.add_argument("--research", action="store_true", help="commission fresh research first (paid)")
     b.add_argument("--focus", default="", help="a question the desk wants answered; leads the research and brief")
+    verbs.add_parser("import-briefs", help="one-off: copy runs_data briefs into the durable intel store")
+    verbs.add_parser("publish", help="build the desk snapshot and put it on the site")
+    c = verbs.add_parser("cycle", help="heat, brief the top theaters, publish, back up")
+    c.add_argument("--top", type=int, default=2)
+    c.add_argument("--research", action="store_true", help="commission fresh research first (paid)")
+    c.add_argument("--days", type=int, default=7)
     p.set_defaults(handler=run_intel)
 
 
@@ -49,7 +59,8 @@ def _out(as_of: str) -> Path:
 
 
 def run_intel(args: Any) -> int:
-    return {"heat": _heat, "brief": _brief}[args.intel_verb](args)
+    return {"heat": _heat, "brief": _brief, "import-briefs": _import_briefs,
+            "publish": _publish, "cycle": _cycle}[args.intel_verb](args)
 
 
 def _heat(args: Any) -> int:
@@ -69,49 +80,63 @@ def _heat(args: Any) -> int:
 
 
 def _brief(args: Any) -> int:
-    from algent_backend.agent_system.agents.intel import brief as br
-    from algent_backend.agent_system.agents.intel import render
-    from algent_backend.agent_system.agents.intel.contracts import Theater
-    from algent_backend.agent_system.agents.intel.heat import store_dir
-    from algent_backend.agent_system.agents.pulse.update import update_quietly
-    from algent_backend.agent_system.foundation import cost
-    from algent_backend.agent_system.foundation.models import house_spec
+    from algent_backend.agent_system.agents.intel import desk
 
-    boards = sorted((store_dir() / "boards").glob("*.json"))
-    if not boards:
+    board = desk.latest_board()
+    if board is None:
         print(json.dumps({"error": "no heat board yet — run `newsroom intel heat` first"}))
         return 2
-    board = json.loads(boards[-1].read_text(encoding="utf-8"))
+    chosen = [args.theater] if args.theater else desk.pick_theaters(board, args.top)
+    print(json.dumps(_produce_briefs(board, chosen, research=args.research, focus=args.focus),
+                     indent=2, ensure_ascii=False))
+    return 0
+
+
+def _produce_briefs(board: dict, chosen: list[str], *, research: bool, focus: str = "") -> list[dict]:
+    from algent_backend.agent_system.agents.intel import desk
+    from algent_backend.agent_system.agents.intel.contracts import Theater
+    from algent_backend.agent_system.foundation.models import house_spec
+
     theaters = {t["id"]: Theater.model_validate(t) for t in board["theaters"]}
     heat = {h["theater_id"]: h for h in board["heat"]}
-    chosen = [args.theater] if args.theater else [h["theater_id"] for h in board["heat"][: args.top]]
     ctx, out, report = _ctx("intel-brief"), _out(board["as_of"]), []
+    spec = house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=16384)
     for tid in chosen:
-        theater = theaters.get(tid)
-        if theater is None:
+        if tid not in theaters:
             report.append({"theater": tid, "error": "not on the latest board"})
             continue
-        profiles, spent = [], 0.0
-        if args.research:
-            # The research agent caps itself at $1; this scope makes the spend visible per theater.
-            with cost.article_scoped(1.0):
-                prof = br.commission_research(ctx, None, theater, focus=args.focus)
-                spent = cost.article_spent_usd()
-            if prof:
-                profiles.append(prof)
-                update_quietly(prof, run_id=prof["id"])   # the brief's research moves the Pulses
-        brief = br.write_brief(ctx, None, theater, heat.get(tid, {}), profiles=profiles, pulse_lines=[],
-                               model_spec=house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=16384),
-                               focus=args.focus)
-        if brief is None:
-            report.append({"theater": tid, "error": "analyst returned nothing"})
-            continue
-        name = br.safe_name(theater.name) + (f"_{br.focus_tag(args.focus)}" if args.focus.strip() else "")
-        (out / f"brief_{name}.json").write_text(brief.model_dump_json(indent=2), encoding="utf-8")
-        (out / f"brief_{name}.html").write_text(
-            render.render_brief(brief, theater_name=theater.name, heat=heat.get(tid, {}), as_of=board["as_of"]),
-            encoding="utf-8")
-        report.append({"theater": tid, "brief": str(out / f"brief_{name}.html"),
-                       "researched": bool(profiles), "research_usd": round(spent, 4)})
+        report.append(desk.produce(ctx, theaters[tid], heat.get(tid, {}), as_of=board["as_of"], out=out,
+                                   research=research, focus=focus, model_spec=spec))
+    return report
+
+
+def _import_briefs(_args: Any) -> int:
+    from algent_backend.agent_system.agents.intel import desk
+    from algent_backend.agent_system.runs.control_plane.layout import runs_data_root
+
+    print(json.dumps(desk.import_briefs(Path(runs_data_root()) / "intel"), indent=2))
+    return 0
+
+
+def _publish(_args: Any) -> int:
+    from algent_backend.publishing.intel_page import publish_intel
+
+    print(json.dumps(publish_intel(), indent=2, ensure_ascii=False))
+    return 0
+
+
+def _cycle(args: Any) -> int:
+    """Heat, briefs on the top theaters, publish the snapshot, back up the stores."""
+    from algent_backend.agent_system.agents.intel import desk
+    from algent_backend.data_backup import sync
+    from algent_backend.publishing.intel_page import publish_intel
+
+    if _heat(args) != 0:
+        return 1
+    board = desk.latest_board() or {"heat": [], "theaters": [], "as_of": ""}
+    report: dict[str, Any] = {
+        "briefs": _produce_briefs(board, desk.pick_theaters(board, args.top), research=args.research)}
+    report["publish"] = publish_intel()
+    report["backup"] = sync.backup(note="intel cycle")
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0
