@@ -73,22 +73,49 @@ from radar editions; no paid heat clustering is run for it), ``newsroom intel`` 
 and ``newsroom pulse`` commit/reassess/promote/promote-ready. A process that calls others (daily runs
 promote-ready) lets the inner step stay quiet and publishes once at its own end.
 
-Agent feed (static data files in the site checkout, beside the article twins)::
+Agent feed (static data files in the site checkout under ``public/data``, beside the article twins; built by
+``agent_feed.py``; URLs are relative to the site root; ``data_url`` is the JSON, ``url`` the human page)::
 
-    public/data/pulses.json = {"schema":"ohmega.pulses/1","built_at",
+    pulses.json = {"schema":"ohmega.pulses/1","built_at",
         "pulses":[{"id","situation_id","situation","name","question","low_end","high_end",
                    "status":"experimental|active|dormant","position":float|null,"band",
                    "confidence","last_assessed","evidence_through","velocity_7d":float|null,
-                   "history":[{"at","position"}],"rationale"}]}     // rationale: reader-safe, latest applied
-        // the registry catalog (pulse/registry.py): what each Pulse measures and where it stands.
-        // No absolute_position. Written only when a Pulse store is passed to write_intel.
-    public/data/intel.json = {"schema":"ohmega.intel.index/1","built_at",
-        "daily":[{"domain","date","headline","url":"/geopolitics/<date>"}],        // newest first
+                   "history":[{"at","position"}],"rationale","data_url":"/data/pulses/<id>.json"}]}
+        // the registry catalog: what each Pulse measures and where it stands. Needs the Pulse store.
+    pulses/<pulse_id>.json = {"schema":"ohmega.pulse/1", id,name,situation_id,situation,status,position,band,
+        confidence,velocity_7d,last_assessed,evidence_through,history,   // as in pulses.json
+        "definition":{"version","question","low_end","high_end"},"url":"/pulses","data_url",
+        "readings":[{"at","mode":"seed|article|reassessment|audit","moves_pulse":bool,
+                     "decision":"applied|no_change","position":float|null,"rationale":reader-safe,
+                     "confidence":"high|medium|low","evidence_through","model","article_url":"/articles/<slug>"|null}]}
+        // oldest first. "audit" = a blind read from evidence alone: kept as honest provenance, never moves
+        // the Pulse (moves_pulse=false). Research-profile and claim ids are internal and omitted.
+    intel.json = {"schema":"ohmega.intel.index/1","built_at",
+        "daily":[{"domain","date","headline","theaters","url":"/geopolitics/<date>","data_url"}],   // newest first
         "briefs":[{"slug","title","bottom_line","theater_id","theater_name","as_of","direction","pace",
-                   "url":"/intel/briefs/<slug>"}],
-        "theaters":[{"id","name","domain","heat","trend","coverage","brief_url":"/intel/briefs/<slug>"|null}],
-        "forecast_scorecard":{"resolved","void","open","brier","calibration":[...]}}
-        // a compact index of the snapshot for agents; URLs are relative to the site root.
+                   "url":"/intel/briefs/<slug>","data_url":"/data/briefs/<slug>.json"}],
+        "theaters":[{"id","name","domain","heat","trend","coverage","brief_url"|null,"brief_data_url"|null}],
+        "forecast_scorecard":{"resolved","void","open","brier","calibration":[...]},
+        "forecasts_url":"/data/forecasts.json","changes_url":"/data/changes.json"}
+    daily/<domain>/<YYYY-MM-DD>.json, daily/<domain>/latest.json (same content as the newest dated file)
+        = the persisted ohmega.daily/1 record (shape above) minus the internal ``pulse_proposals``, plus
+        "url" and "data_url".
+    briefs/<slug>.json = the persisted ohmega.brief/1 record plus "url", "data_url"; each ``judgments[]``
+        entry gains "id" = its stable forecast id (the id in forecasts.json).
+    forecasts.json = {"schema":"ohmega.forecasts/1","as_of","scorecard":{...as above},
+        "forecasts":[{"id":"fc_<12 hex>","statement","probability":0-100,"horizon":"YYYY-MM-DD","basis",
+                      "resolves_yes_if","resolves_no_if","made_at","status":"open|yes|no|void","brief_slug",
+                      "brief_url","brief_data_url","theater_id","theater",
+                      "resolution":null|{"resolved_at","outcome","evidence"}}]}     // newest made first
+    changes.json = {"schema":"ohmega.changes/1","window_days":30,"as_of":newest event "at"|"",
+        "events":[{"type","at", ...}]}   // newest first; window = last 30 days by age, never by count
+        // types: pulse_created {pulse_id,name,position,band}, pulse_moved {pulse_id,name,from,to,from_band,
+        // to_band,band_changed}, brief_published {slug,title,theater}, daily_published {domain,date,headline},
+        // forecast_made {forecast_id,statement,probability}, forecast_resolved {..., outcome}; each has
+        // "url" and "data_url". Rebuilt statelessly from the stores on every publish. Needs the Pulse store.
+
+Per-item files carry no build timestamp, so an unchanged item is byte-identical and is never rewritten.
+Stale files (a Pulse retired, a report removed) are not deleted.
 
 Rules: ``rationale`` is the latest APPLIED, non-blind influence's rationale for that pulse, made
 reader-safe (claim ids stripped, ~400 chars at a word boundary). Situations that are not "active"
@@ -102,7 +129,6 @@ Like the radar, the files are data, not markup — the site renders them.
 from __future__ import annotations
 
 import json
-import re
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -111,26 +137,11 @@ from algent_backend.agent_system.agents.intel import forecasts
 from algent_backend.agent_system.agents.intel.brief import safe_name
 from algent_backend.agent_system.agents.intel.contracts import coverage_label
 
-from . import site_git
+from . import agent_feed, site_git
+from .agent_feed import reader_safe  # noqa: F401  (re-exported: the contract owner's public helper)
 
 INTEL_SUBDIR = ("content", "intel")
 SCHEMA = "ohmega.intel/1"
-_MAX_RATIONALE = 400
-_CLAIM_ID = re.compile(r"\bclm_[0-9a-f]+\b")
-
-
-def reader_safe(text: str, limit: int = _MAX_RATIONALE) -> str:
-    """Strip internal claim ids (and the brackets/lists they leave empty), then trim at a word boundary."""
-    out = _CLAIM_ID.sub("", text or "")
-    out = re.sub(r"[\[(][\s,;]*[\])]", "", out)                  # brackets emptied by the strip
-    out = re.sub(r"([\[(])[\s,;]+", r"\1", out)                  # separators left at the front
-    out = re.sub(r"[\s,;]+([\])])", r"\1", out)                  # ...and at the back
-    out = re.sub(r"([,;])(\s*[,;])+", r"\1", out)                # doubled separators in the middle
-    out = re.sub(r"\s+([,.;:])", r"\1", out)
-    out = " ".join(out.split())
-    if len(out) <= limit:
-        return out
-    return out[:limit].rsplit(" ", 1)[0].rstrip(" ,;:-") + "…"
 
 
 def _rationale(store: Any, pulse_id: str) -> str:
@@ -240,24 +251,48 @@ def build_pulse_feed(store: Any, *, now: datetime | None = None) -> dict:
     """The agent-facing Pulse list (``public/data/pulses.json``): the registry catalog plus a reader-safe rationale."""
     from algent_backend.agent_system.agents.pulse import registry
 
-    rows = [{**row, "rationale": _rationale(store, row["id"])} for row in registry.catalog(store)]
+    rows = [{**row, "rationale": _rationale(store, row["id"]), "data_url": agent_feed.pulse_data_url(row["id"])}
+            for row in registry.catalog(store)]
     return {"schema": "ohmega.pulses/1", "built_at": (now or datetime.now(UTC)).isoformat(), "pulses": rows}
 
 
 def build_index(snapshot: dict) -> dict:
     """The compact agent index (``public/data/intel.json``) distilled from a snapshot."""
     return {"schema": "ohmega.intel.index/1", "built_at": snapshot["built_at"],
-            "daily": [{**d, "url": f"/geopolitics/{d['date']}"} for d in snapshot["daily"]],
-            "briefs": [{**b, "url": f"/intel/briefs/{b['slug']}"} for b in snapshot["briefs"]],
+            "daily": [{**d, "url": agent_feed.daily_url(d["date"]),
+                       "data_url": agent_feed.daily_data_url(d["domain"], d["date"])} for d in snapshot["daily"]],
+            "briefs": [{**b, "url": agent_feed.brief_url(b["slug"]), "data_url": agent_feed.brief_data_url(b["slug"])}
+                       for b in snapshot["briefs"]],
             "theaters": [{"id": t["id"], "name": t["name"], "domain": t["domain"], "heat": t["heat"],
-                          "trend": t["trend"], "coverage": t["coverage"], "brief_url": f"/intel/briefs/{t['brief']}" if t["brief"] else None}
+                          "trend": t["trend"], "coverage": t["coverage"],
+                          "brief_url": agent_feed.brief_url(t["brief"]) if t["brief"] else None,
+                          "brief_data_url": agent_feed.brief_data_url(t["brief"]) if t["brief"] else None}
                          for t in snapshot["theaters"]],
-            "forecast_scorecard": snapshot["forecasts"]["scorecard"]}
+            "forecast_scorecard": snapshot["forecasts"]["scorecard"],
+            "forecasts_url": "/data/forecasts.json", "changes_url": "/data/changes.json"}
+
+
+def build_agent_files(snapshot: dict, intel_dir: Path, store: Any = None) -> dict[str, dict]:
+    """Every agent-feed file as ``{path under public/data: payload}``. Pulse files and the changes feed need
+    the Pulse store; without it only the store-independent files are built."""
+    from algent_backend.agent_system.agents.pulse import registry
+
+    now = datetime.fromisoformat(snapshot["built_at"])
+    briefs, reports = _read_all(intel_dir / "briefs"), _daily_reports(intel_dir)
+    files = {"intel.json": build_index(snapshot), "forecasts.json": agent_feed.forecasts_file(intel_dir, briefs),
+             **agent_feed.brief_files(briefs), **agent_feed.daily_files(reports)}
+    if store is not None:
+        catalog = registry.catalog(store)
+        files["pulses.json"] = build_pulse_feed(store, now=now)
+        files["changes.json"] = agent_feed.changes_file(store, intel_dir, catalog, reports, briefs, now)
+        files.update(agent_feed.pulse_files(store, catalog))
+    return files
 
 
 def write_intel(site_dir: Path, snapshot: dict, intel_dir: Path, store: Any = None) -> Path:
     """Write the snapshot and mirror every persisted brief and daily report into a site checkout (only what
-    changed), plus the agent feed: ``public/data/intel.json`` always, ``pulses.json`` when given the Pulse store."""
+    changed), plus the agent feed (``build_agent_files``) under ``public/data``; Pulse files and the changes
+    feed need the Pulse store."""
     root = site_dir.joinpath(*INTEL_SUBDIR)
     path = root / "snapshots" / f"{snapshot['slug']}.json"
     _write_if_changed(path, snapshot)
@@ -266,9 +301,8 @@ def write_intel(site_dir: Path, snapshot: dict, intel_dir: Path, store: Any = No
     for record in _daily_reports(intel_dir):
         _write_if_changed(root / "daily" / safe_name(record["domain"]) / f"{record['date']}.json", record)
     data = site_dir / "public" / "data"
-    _write_if_changed(data / "intel.json", build_index(snapshot))
-    if store is not None:
-        _write_if_changed(data / "pulses.json", build_pulse_feed(store, now=datetime.fromisoformat(snapshot["built_at"])))
+    for rel, payload in build_agent_files(snapshot, intel_dir, store).items():
+        _write_if_changed(data / rel, payload)
     return path
 
 

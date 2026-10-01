@@ -192,3 +192,107 @@ def test_write_intel_writes_the_agent_feed(tmp_path) -> None:
     assert "scorecard" not in index and "resolved" in index["forecast_scorecard"]
     intel_page.write_intel(tmp_path / "bare", snap, intel)                       # no store: no pulses.json
     assert not (tmp_path / "bare" / "public" / "data" / "pulses.json").exists()
+
+
+# ── the full agent feed ───────────────────────────────────────────────────────────────────────
+def _feed_fixture(tmp_path):
+    from algent_backend.agent_system.agents.intel import forecasts
+    from algent_backend.agent_system.agents.intel.contracts import Judgment
+
+    intel, store = _intel_dir(tmp_path), _store(tmp_path)
+    for date, built in (("2026-09-28", "2026-09-28T07:00:00+00:00"), ("2026-09-29", "2026-09-29T07:00:00+00:00")):
+        folder = intel / "daily" / "geopolitics"
+        folder.mkdir(parents=True, exist_ok=True)
+        (folder / f"{date}.json").write_text(json.dumps({
+            "schema": "ohmega.daily/1", "domain": "geopolitics", "date": date, "built_at": built,
+            "summary": {"headline": f"H {date}", "the_day": []}, "theaters": [],
+            "pulse_proposals": [{"theater": "One", "name": "internal"}]}), encoding="utf-8")
+    brief = intel / "briefs" / "2026-09-29-one.json"
+    rec = json.loads(brief.read_text(encoding="utf-8"))
+    rec["judgments"] = [{"statement": "X happens", "probability": 70, "horizon": "2026-10-10"}]
+    brief.write_text(json.dumps(rec), encoding="utf-8")
+    forecasts.record("2026-09-29-one", "thr_1",
+                     [Judgment(statement="X happens", probability=70, horizon="2026-10-10"),
+                      Judgment(statement="Y happens", probability=30, horizon="2026-10-12")],
+                     made_at="2026-09-29T10:00:00+00:00", root=intel)
+    forecasts.resolve(forecasts.forecast_id("2026-09-29-one", "Y happens"), "no", "it did not",
+                      at="2026-09-30T09:00:00+00:00", root=intel)
+    for pid, at, mode, pos, decision, slug in (
+            ("pls_a_hi", "2026-09-30T08:00:00+00:00", "blind", 55, "no_change", ""),
+            ("pls_a_hi", "2026-09-30T09:00:00+00:00", "article", 60, "applied", "the-slug"),
+            ("pls_a_hi", "2026-08-01T09:00:00+00:00", "reassess", 10, "applied", "")):   # outside the window
+        store.append(Influence(pulse_id=pid, at=at, mode=mode, definition_version=1, proposed_position=pos,
+                               absolute_position=77, decision=decision, rationale="Why [clm_ab12] so.",
+                               key=f"k_{at}_{mode}", model="m-1", prompt_version="secret-v9",
+                               source={"article_slug": slug, "profile_id": "prof_1", "claim_ids": ["clm_ab12"]}))
+    return intel, store
+
+
+def test_agent_feed_files_and_no_internal_fields(tmp_path) -> None:
+    intel, store = _feed_fixture(tmp_path)
+    site = tmp_path / "site"
+    intel_page.write_intel(site, intel_page.build_snapshot(store, intel, now=NOW), intel, store)
+    data = site / "public" / "data"
+    load = lambda rel: json.loads((data / rel).read_text(encoding="utf-8"))  # noqa: E731
+    daily = load("daily/geopolitics/2026-09-29.json")
+    assert "pulse_proposals" not in daily and daily["url"] == "/geopolitics/2026-09-29"
+    assert daily["data_url"] == "/data/daily/geopolitics/2026-09-29.json"
+    assert load("daily/geopolitics/latest.json") == daily
+    brief = load("briefs/2026-09-29-one.json")
+    assert brief["url"] == "/intel/briefs/2026-09-29-one" and brief["judgments"][0]["id"].startswith("fc_")
+    fc = load("forecasts.json")
+    assert fc["schema"] == "ohmega.forecasts/1" and fc["scorecard"]["resolved"] == 1
+    by = {f["statement"]: f for f in fc["forecasts"]}
+    assert by["X happens"]["id"] == brief["judgments"][0]["id"] and by["X happens"]["resolution"] is None
+    assert by["Y happens"]["status"] == "no" and by["Y happens"]["resolution"]["evidence"] == "it did not"
+    assert by["X happens"]["brief_url"] == "/intel/briefs/2026-09-29-one" and by["X happens"]["theater"] == "One"
+    pulse = load("pulses/pls_a_hi.json")
+    assert pulse["schema"] == "ohmega.pulse/1" and pulse["definition"]["question"] == "q pls_a_hi"
+    assert [r["mode"] for r in pulse["readings"]] == ["reassessment", "article", "audit", "article"]   # oldest first
+    audit, article = pulse["readings"][2], pulse["readings"][3]
+    assert audit["moves_pulse"] is False and article["moves_pulse"] is True
+    assert article["article_url"] == "/articles/the-slug" and audit["article_url"] is None
+    assert article["rationale"] == "Why so." and article["model"] == "m-1"
+    assert load("pulses.json")["pulses"][0]["data_url"].startswith("/data/pulses/")
+    index = load("intel.json")
+    assert index["daily"][0]["data_url"] == "/data/daily/geopolitics/2026-09-29.json"
+    assert index["briefs"][0]["data_url"] == "/data/briefs/2026-09-29-one.json"
+    assert index["changes_url"] == "/data/changes.json"
+    for path in data.rglob("*.json"):                                          # nothing internal anywhere
+        text = path.read_text(encoding="utf-8")
+        assert "absolute_position" not in text and "clm_" not in text and "secret-v9" not in text, path
+        assert "prof_1" not in text and "pulse_proposals" not in text, path
+
+
+def test_changes_feed_is_newest_first_and_windowed(tmp_path) -> None:
+    intel, store = _feed_fixture(tmp_path)
+    feed = intel_page.build_agent_files(intel_page.build_snapshot(store, intel, now=NOW), intel, store)["changes.json"]
+    assert feed["schema"] == "ohmega.changes/1" and feed["window_days"] == 30
+    ats = [e["at"] for e in feed["events"]]
+    assert ats == sorted(ats, reverse=True) and feed["as_of"] == ats[0]
+    assert not any(e["at"].startswith("2026-08-01") for e in feed["events"])      # older than 30 days
+    kinds = {e["type"] for e in feed["events"]}
+    assert kinds == {"pulse_created", "pulse_moved", "brief_published", "daily_published",
+                     "forecast_made", "forecast_resolved"}
+    moved = next(e for e in feed["events"] if e["type"] == "pulse_moved" and e["pulse_id"] == "pls_a_hi")
+    assert (moved["from"], moved["to"], moved["band_changed"]) == (40, 60, True)
+    assert moved["url"] == "/pulses" and moved["data_url"] == "/data/pulses/pls_a_hi.json"
+    later = intel_page.build_agent_files(
+        intel_page.build_snapshot(store, intel, now=datetime(2026, 11, 15, tzinfo=UTC)), intel, store)["changes.json"]
+    assert later["events"] == [] and later["as_of"] == ""
+
+
+def test_agent_feed_rewrites_only_what_changed(tmp_path) -> None:
+    intel, store = _feed_fixture(tmp_path)
+    site = tmp_path / "site"
+    intel_page.write_intel(site, intel_page.build_snapshot(store, intel, now=NOW), intel, store)
+    data = site / "public" / "data"
+    stamps = {p: p.stat().st_mtime_ns for p in data.rglob("*.json")}
+    later = datetime(2026, 9, 30, 14, 6, tzinfo=UTC)
+    intel_page.write_intel(site, intel_page.build_snapshot(store, intel, now=later), intel, store)
+    changed = {p.name for p, t in stamps.items() if p.stat().st_mtime_ns != t}
+    assert changed <= {"intel.json", "pulses.json"}                              # only the built_at-stamped ones
+    no_store = tmp_path / "bare"
+    intel_page.write_intel(no_store, intel_page.build_snapshot(store, intel, now=NOW), intel)
+    assert not (no_store / "public" / "data" / "changes.json").exists()
+    assert (no_store / "public" / "data" / "forecasts.json").exists()
