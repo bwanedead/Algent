@@ -1,0 +1,566 @@
+{
+  "slug": "2026-10-01-0815",
+  "built_at": "2026-10-01T08:15:00Z",
+  "leads": [
+    {
+      "n": 1,
+      "title": "Swiss Glaciers Lose a Fifth of Mass in Five Years",
+      "thesis": "Swiss glaciers have lost 20% of their ice in just five years, a rate scientists call catastrophic that threatens water, hydropower and Alpine hazards.",
+      "pillars": [
+        "environment",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://phys.org/news/2026-10-catastrophic-swiss-glaciers-ma"
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Endometriosis Drug Shows Early Promise for 190 Million Patients",
+      "thesis": "Nature reports a new endometriosis drug with early positive results for a disease affecting an estimated 190 million people worldwide that has long been under-treated.",
+      "pillars": [
+        "health",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.nature.com/articles/d41586-026-03042-x"
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Record X-Ray Flash May Capture Magnetar Birth",
+      "thesis": "Scientists report a record-breaking X-ray flash that may be the first direct observation of a magnetar being born.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.sciencedaily.com/releases/2026/09/260930020252.htm"
+      ]
+    },
+    {
+      "n": 4,
+      "title": "Quantum Teleportation Team Claims 25-Year Entanglement Hurdle Cleared",
+      "thesis": "Researchers report cracking a 25-year entanglement challenge to advance quantum teleportation, according to ScienceDaily.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.sciencedaily.com/releases/2026/09/260929053550.htm"
+      ]
+    },
+    {
+      "n": 5,
+      "title": "Claim: All Unitaries Have Constant-Depth Quantum Circuits",
+      "thesis": "An arXiv physics paper claims every unitary can be implemented with constant-depth quantum circuits, a result that would upend depth-complexity assumptions.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arxiv.org/abs/2609.40351v1"
+      ]
+    },
+    {
+      "n": 6,
+      "title": "Non-Invasive Brain-to-Text Improves by Removing Timing Shortcuts",
+      "thesis": "An arXiv AI paper shows non-invasive brain-to-text decoding improves when models are prevented from exploiting timing shortcuts.",
+      "pillars": [
+        "ai",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arxiv.org/abs/2609.40359v1"
+      ]
+    },
+    {
+      "n": 7,
+      "title": "DeepMind's AlphaGenome Atlas Maps Every Possible DNA Letter Change",
+      "thesis": "DeepMind released AlphaGenome Atlas, a predictive map of the effect of every possible single-letter DNA change across the human genome.",
+      "pillars": [
+        "ai",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://deepmind.google/blog/alphagenome-atlas-a-predictive-"
+      ]
+    },
+    {
+      "n": 8,
+      "title": "Anthropic Says It Found a CRISPR-Like System",
+      "thesis": "Anthropic says it discovered a CRISPR-like gene-editing system using AI, raising questions about AI-driven biology discovery.",
+      "pillars": [
+        "ai",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.wired.com/story/anthropic-says-it-discovered-a-c"
+      ]
+    },
+    {
+      "n": 9,
+      "title": "DeepMind Announces Gemini 4 Argon Frontier Model",
+      "thesis": "DeepMind announced Gemini 4 Argon as its next-era frontier intelligence model, signaling a new scaling push.",
+      "pillars": [
+        "ai"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://deepmind.google/blog/gemini-4-argon-our-next-era-of-"
+      ]
+    },
+    {
+      "n": 10,
+      "title": "OpenAI Sued Over Hugging Face Hack Fallout",
+      "thesis": "OpenAI faces a lawsuit over the Hugging Face hack while Hugging Face says it won't 'shoot ourselves in the foot' over fallout, highlighting supply-chain risk in AI infrastructure.",
+      "pillars": [
+        "ai",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.wired.com/story/openai-sued-over-the-hugging-face-hac",
+        "https://www.technologyreview.com/2026/09/30/1145339/were-not"
+      ]
+    },
+    {
+      "n": 11,
+      "title": "ElevenLabs Doubles Valuation to $22 Billion",
+      "thesis": "AI voice startup ElevenLabs doubled its valuation to $22 billion, underscoring investor appetite for synthetic media despite monetization doubts.",
+      "pillars": [
+        "ai",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://techcrunch.com/2026/09/30/ai-voice-startup-elevenlab"
+      ]
+    },
+    {
+      "n": 12,
+      "title": "Reddit Kills RSS and Public API Access, Blaming AI Bots",
+      "thesis": "Reddit is ending RSS feeds and public API access because of scraping by AI bots, further closing the open web.",
+      "pillars": [
+        "ai",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://techcrunch.com/2026/09/30/reddit-is-killing-rss-feed"
+      ]
+    },
+    {
+      "n": 13,
+      "title": "Google Tests Paying Publishers for AI Search",
+      "thesis": "Google is reportedly testing paying publishers for content used in AI search features, a potential shift in the AI-publisher bargain.",
+      "pillars": [
+        "ai",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.theverge.com/tech/1002665/google-paying-publishe"
+      ]
+    },
+    {
+      "n": 14,
+      "title": "Always-On AI Agents Race: OpenAI Dots vs Meta Muse",
+      "thesis": "OpenAI's new always-on Dots agents and Meta's Muse signal a race toward proactive, ambient AI that acts without prompting.",
+      "pillars": [
+        "ai"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://www.wired.com/story/openai-dots-always-on-ai-agents-",
+        "https://www.theverge.com/ai-artificial-intelligence/1002671/"
+      ]
+    },
+    {
+      "n": 15,
+      "title": "Trump Medicare Drug Pricing Rule Saves 96% Less Than Proposed",
+      "thesis": "STAT reports Trump's final Medicare drug pricing rule saves 96% less than the initial proposal, sharply watering down promised savings.",
+      "pillars": [
+        "health",
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.statnews.com/2026/09/30/trump-final-globe-rule-w"
+      ]
+    },
+    {
+      "n": 16,
+      "title": "Wind and Solar Saved UK £5.9 Billion in Gas Imports During Hormuz Crisis",
+      "thesis": "Carbon Brief analysis finds UK wind and solar avoided £5.9 billion in gas imports while the Strait of Hormuz was disrupted.",
+      "pillars": [
+        "environment",
+        "economics",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.carbonbrief.org/analysis-wind-and-solar-save-uk-"
+      ]
+    },
+    {
+      "n": 17,
+      "title": "Bank of Japan Tankan Shows Sixth Straight Rise in Manufacturer Sentiment",
+      "thesis": "The BOJ's Tankan survey shows manufacturer sentiment rising for a sixth straight quarter, signaling sustained industrial optimism.",
+      "pillars": [
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://asia.nikkei.com/economy/bank-of-japan/boj-tankan-sho"
+      ]
+    },
+    {
+      "n": 18,
+      "title": "Five EU States Plan First Deportation Center in Africa for 2027",
+      "thesis": "Five EU states plan to open the first joint deportation center in Africa in 2027, a major shift in EU migration policy.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.dw.com/en/five-eu-states-plan-first-deportation-"
+      ]
+    },
+    {
+      "n": 19,
+      "title": "Pilot Stabs Colleague on Dubai-Tel Aviv FlyDubai Flight",
+      "thesis": "A pilot stabbed another pilot on a Dubai to Tel Aviv FlyDubai flight before passengers subdued him, prompting focus on crew-related hijacking risks.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.france24.com/en/middle-east/20261001-flydubai-co",
+        "https://en.mercopress.com/2026/09/30/pilot-stabs-another-on-",
+        "https://www.thehindu.com/news/international/what-happened-on"
+      ]
+    },
+    {
+      "n": 20,
+      "title": "US Army Awards Over $4 Billion in Counter-Drone Contracts",
+      "thesis": "The US Army awarded counter-drone contracts worth more than $4 billion as drone warfare reshapes battlefield needs.",
+      "pillars": [
+        "defense",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.defenseone.com/business/2026/09/army-awards-more"
+      ]
+    },
+    {
+      "n": 21,
+      "title": "Hegseth Unveils Six Major Changes for US Military",
+      "thesis": "US Defense Secretary Hegseth outlined six major changes for the US military, as debate grows over whether the force is top-heavy with generals.",
+      "pillars": [
+        "defense",
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "http://www.wa.de/politik/hegseth-stellt-in-state-of-the-forc",
+        "https://www.defenseone.com/ideas/2026/09/hegseth-military-cu"
+      ]
+    },
+    {
+      "n": 22,
+      "title": "Glasgow Council Fire-and-Rehire of 23,000 Staff After Talks Collapse",
+      "thesis": "Glasgow council moved to sack 23,000 non-teaching staff and rehire them on new contracts after negotiations broke down, ending a pause in letters.",
+      "pillars": [
+        "economics",
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.romfordrecorder.co.uk/news/national/26596619.pau"
+      ]
+    },
+    {
+      "n": 23,
+      "title": "Super El Niño Kelvin Wave Threatens Months of High Seas Off California",
+      "thesis": "A powerful Kelvin wave triggered by a super El Niño is forecast to raise sea levels off California for months, increasing flood and erosion risk.",
+      "pillars": [
+        "environment",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.livescience.com/planet-earth/rivers-oceans/power"
+      ]
+    },
+    {
+      "n": 24,
+      "title": "Some Great Lakes Fish May Live Over 400 Years",
+      "thesis": "Smithsonian reports research suggesting some Great Lakes fish could live more than 400 years, outliving 15 human generations.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.smithsonianmag.com/science-nature/some-fish-in-t"
+      ]
+    },
+    {
+      "n": 25,
+      "title": "Implants That Talk Through Body Tissue as Wiring",
+      "thesis": "Scientists built a local network of implants that use the human body itself as wiring to communicate, Ars Technica reports.",
+      "pillars": [
+        "science",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arstechnica.com/science/2026/09/scientists-built-imp"
+      ]
+    },
+    {
+      "n": 26,
+      "title": "Long Spaceflights Over 90 Days Linked to Higher Hip Fracture Risk",
+      "thesis": "Phys.org reports studies linking spaceflights longer than 90 days to higher rates of hip fractures in astronauts.",
+      "pillars": [
+        "science",
+        "health"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://phys.org/news/2026-09-day-spaceflights-linked-higher"
+      ]
+    },
+    {
+      "n": 27,
+      "title": "Himalayan Hydropower Boom Faces Mounting Insurance Pressures",
+      "thesis": "Nikkei reports the Himalayan hydropower boom is facing mounting insurance pressures as landslides, floods and glacial risks rise.",
+      "pillars": [
+        "economics",
+        "environment"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://asia.nikkei.com/business/energy/himalayan-hydropower"
+      ]
+    },
+    {
+      "n": 28,
+      "title": "Synthetic Lethal Drug for Microsatellite Instability Cancers",
+      "thesis": "Nature Medicine reports a synthetic lethal drug showing promise against microsatellite instability cancers, a common hypermutated type.",
+      "pillars": [
+        "health",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.nature.com/articles/s41591-026-04693-z"
+      ]
+    },
+    {
+      "n": 29,
+      "title": "Medieval Remedy Studied for Antibiotic Resistance Clues",
+      "thesis": "Science News reports a medieval remedy is being investigated for ideas to combat modern antibiotic resistance.",
+      "pillars": [
+        "science",
+        "health"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.sciencenews.org/article/medieval-remedy-antibiot"
+      ]
+    },
+    {
+      "n": 30,
+      "title": "Cutting Sugar Before Antibiotics May Protect Microbiome",
+      "thesis": "New Scientist reports slashing sugar intake before antibiotics may help preserve the gut microbiome.",
+      "pillars": [
+        "health",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.newscientist.com/article/2591436-slashing-sugar-"
+      ]
+    },
+    {
+      "n": 31,
+      "title": "Complex Brain Waves Reveal Inner Workings",
+      "thesis": "Quanta Magazine reports surprisingly complex traveling brain waves are revealing new insights into how the brain organizes activity.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.quantamagazine.org/surprisingly-complex-waves-re"
+      ]
+    },
+    {
+      "n": 32,
+      "title": "Critical Zimbra Flaw Exploited to Steal Emails",
+      "thesis": "Attackers have been actively exploiting a critical Zimbra flaw to steal emails, Ars Technica reports.",
+      "pillars": [
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arstechnica.com/security/2026/09/attackers-have-been"
+      ]
+    },
+    {
+      "n": 33,
+      "title": "Cloudflare to Issue Quantum-Safe TLS Certificates",
+      "thesis": "Cloudflare plans to issue quantum-safe TLS certificates to prepare the web for post-quantum decryption risks.",
+      "pillars": [
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arstechnica.com/security/2026/09/cloudflare-plans-to"
+      ]
+    },
+    {
+      "n": 34,
+      "title": "Google Ads Caught Serving Scareware That Freezes Macs",
+      "thesis": "Ars Technica reports convincing scareware ads served via Google ads freeze Macs with fake infection warnings.",
+      "pillars": [
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arstechnica.com/security/2026/09/google-ads-caught-d"
+      ]
+    },
+    {
+      "n": 35,
+      "title": "The Virtual Border Wall's Deadly Failures",
+      "thesis": "MIT Technology Review examines how the US virtual border wall surveillance system has failed and contributed to migrant deaths.",
+      "pillars": [
+        "technology",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.technologyreview.com/2026/09/28/1144890/roundtab"
+      ]
+    },
+    {
+      "n": 36,
+      "title": "OpenAI Reviewing Report of Failed Hack Against Canada Government",
+      "thesis": "OpenAI says it is reviewing a report of a failed hacking attempt against Canada's government linked to its systems.",
+      "pillars": [
+        "geopolitics",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.aljazeera.com/economy/2026/10/1/openai-reviewing"
+      ]
+    },
+    {
+      "n": 37,
+      "title": "El Salvador Sets 2027 Election as Bukele Seeks Third Term",
+      "thesis": "El Salvador set a date for its 2027 presidential election as Nayib Bukele seeks a third term, testing constitutional limits.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.france24.com/en/americas/20261001-el-salvador-se"
+      ]
+    },
+    {
+      "n": 38,
+      "title": "South Korea Balances Dialogue as North Denies Mine Blast",
+      "thesis": "South Korea's President Lee balances dialogue offers as North Korea denies responsibility for a mine blast near the border.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://asia.nikkei.com/politics/defense/south-korea-s-lee-b"
+      ]
+    },
+    {
+      "n": 39,
+      "title": "Palestinians to Bury 105 Killed in Israeli Attack on Gaza",
+      "thesis": "Palestinians are preparing to bury the remains of 105 people killed in an Israeli attack on Gaza, Al Jazeera reports.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/1/palestinians-to-bur"
+      ]
+    },
+    {
+      "n": 40,
+      "title": "Are the Houthis Winning Against Saudi Arabia?",
+      "thesis": "DW examines whether Yemen's Houthis are gaining advantage against Saudi Arabia as conflict dynamics shift.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "analytic",
+      "sources": [
+        "https://www.dw.com/en/are-the-houthis-winning-against-saudi-"
+      ]
+    },
+    {
+      "n": 41,
+      "title": "China's Contenders to Become Its Hugging Face",
+      "thesis": "Rest of World reports open-source AI platforms in China are vying to become the country's Hugging Face for model sharing.",
+      "pillars": [
+        "ai",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://restofworld.org/2026/china-open-source-ai-hugging-fa"
+      ]
+    },
+    {
+      "n": 42,
+      "title": "Langtang Lirung Landslide Had Precursory Movement Signals",
+      "thesis": "Eos reports precursory movement was detected before the 26 August 2026 Langtang Lirung landslide in Nepal, offering lessons for early warning.",
+      "pillars": [
+        "environment",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://eos.org/thelandslideblog/langtang-lirung-1"
+      ]
+    },
+    {
+      "n": 43,
+      "title": "Doctors Strike in Australia as Pay Dispute Drags On",
+      "thesis": "Thousands of doctors at public hospitals in an Australian state walked off the job as a pay and conditions dispute remains unresolved.",
+      "pillars": [
+        "health",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.portnews.com.au/story/9361153/doctors-strike-as-"
+      ]
+    },
+    {
+      "n": 44,
+      "title": "Australia's Biggest Bank Promises No Regional Branch Closures Until 2030",
+      "thesis": "Australia's biggest bank renewed a commitment to keep regional branches open until at least 2030, addressing access fears in rural areas.",
+      "pillars": [
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.blayneychronicle.com.au/story/9360910/no-branch-"
+      ]
+    }
+  ]
+}
