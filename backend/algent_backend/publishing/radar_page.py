@@ -66,6 +66,20 @@ def write_menu(site_dir: Path, portfolio: dict[str, Any]) -> Path | None:
     return path
 
 
+def read_editions(site_dir: Path | None = None) -> list[dict[str, Any]]:
+    """Every radar edition on record, oldest first — the daily feed the intel heat detector reads."""
+    if site_dir is None:
+        site_dir = site_git.live_site_dir(site_git.repo_root(Path(__file__).resolve().parent))
+    folder = site_dir.joinpath(*RADAR_SUBDIR)
+    out = []
+    for path in sorted(folder.glob("*.json")) if folder.is_dir() else []:
+        try:
+            out.append(json.loads(path.read_text(encoding="utf-8")))
+        except (OSError, ValueError):
+            continue
+    return out
+
+
 def publish_menu(portfolio: dict[str, Any]) -> dict[str, Any]:
     """Put a freshly built menu live on the site. Never raises — the menu itself is already built."""
     if not site_git.publish_enabled():

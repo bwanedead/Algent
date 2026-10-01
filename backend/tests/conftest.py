@@ -45,6 +45,7 @@ def _isolated_pulse_store(tmp_path, monkeypatch):
     """Pulse logs are append-only institutional memory — no test may write to the real one."""
     monkeypatch.setenv("ALGENT_PULSE_STORE", str(tmp_path / "pulse_store_iso"))
     monkeypatch.setenv("ALGENT_PULSE_BACKEND", "files")     # never the live database in tests
+    monkeypatch.setenv("ALGENT_INTEL_STORE", str(tmp_path / "intel_store_iso"))
 
 
 @pytest.fixture(autouse=True)

@@ -47,8 +47,11 @@ def _sources() -> dict[str, Path]:
     def resolve(p: Path) -> Path:
         return p if p.is_absolute() else backend / p
 
+    from algent_backend.agent_system.agents.intel.heat import store_dir as intel_dir
+
     return {"profile_store": resolve(JsonProfileStore().root),
-            "pulse_store": resolve(PulseStore().root)}
+            "pulse_store": resolve(PulseStore().root),
+            "intel_store": resolve(intel_dir())}
 
 
 def _git(cwd: Path, *args: str) -> tuple[bool, str]:

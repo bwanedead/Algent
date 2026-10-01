@@ -280,3 +280,4 @@ asset-dump/
 *.stackdump
 backend/pulse_store/
 /.algent-data/
+backend/intel_store/
