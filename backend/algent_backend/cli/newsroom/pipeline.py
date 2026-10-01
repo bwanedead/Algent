@@ -669,6 +669,11 @@ def _run_locked(
             result["x_roundup"] = post_daily_roundup(portfolio)
             # Every build goes on the site's radar, kept (X gets only the first of the day).
             result["site_radar"] = publish_menu(portfolio)
+            # The board's heat and theaters derive from radar editions, so /intel is republished with it
+            # (the snapshot only; no paid heat clustering runs here).
+            from algent_backend.publishing.intel_page import publish_intel
+
+            result["site_intel"] = publish_intel()
             from algent_backend import data_backup
             from algent_backend.agent_system.agents.pulse.freshness import record_quietly
             from algent_backend.publishing.radar_page import slug_for

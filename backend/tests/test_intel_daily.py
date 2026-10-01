@@ -100,8 +100,9 @@ def test_report_shape_persistence_pulses_and_marking(tmp_path, monkeypatch) -> N
     assert [t["theater_id"] for t in rec["theaters"]] == ["thr_a", "thr_b"]          # technology theater skipped
     a = rec["theaters"][0]
     assert set(a) == {"theater_id", "name", "temperature", "escalation", "pulses", "bottom_line", "since_yesterday",
-                      "developments", "context", "outlook", "watch_next", "brief_slug", "map"}
-    assert a["temperature"] == {"heat": 9.0, "trend": "heating", "recent_share": 0.2, "prior_share": 0.1}
+                      "developments", "context", "outlook", "watch_next", "key_figures", "brief_slug", "map"}
+    assert a["temperature"] == {"heat": 9.0, "trend": "heating", "coverage": "rising coverage", "recent_share": 0.2,
+                                "prior_share": 0.1}
     assert a["map"] is None and a["brief_slug"] is None
     # Pulse numbers come from the store as of the report date: 50 now; 30 a day ago; 25 a week ago
     assert a["pulses"] == [{"id": "pls_h", "name": "Hormuz Risk", "position": 50.0, "band": a["pulses"][0]["band"],
@@ -212,8 +213,8 @@ def test_publish_mirrors_daily_files_and_snapshot_lists_them(tmp_path, monkeypat
     daily.produce_daily(ctx, domain="geopolitics", top=2, model_spec=None, as_of=AS_OF, board=_board())
     intel = tmp_path / "intel"
     snap = intel_page.build_snapshot(store, intel, now=datetime(2026, 9, 30, 12, 0, tzinfo=UTC))
-    assert snap["daily"] == [{"domain": "geopolitics", "date": AS_OF, "headline": "Alpha heats up"},
-                             {"domain": "geopolitics", "date": "2026-09-28", "headline": "Alpha heats up"}]
+    assert [(d["domain"], d["date"], d["headline"]) for d in snap["daily"]] == [
+        ("geopolitics", AS_OF, "Alpha heats up"), ("geopolitics", "2026-09-28", "Alpha heats up")]
     site = tmp_path / "site"
     intel_page.write_intel(site, snap, intel)
     files = sorted((site / "content" / "intel" / "daily" / "geopolitics").glob("*.json"))

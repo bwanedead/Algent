@@ -17,19 +17,26 @@ the deep brief (briefs stay the occasional dive; the daily links to the latest o
    the site mirrors and the next day's report reads for continuity.
 
 Numbers are never the model's: temperature comes from the board and Pulse positions/deltas from the
-Pulse store. The model only names which listed Pulses a theater bears on (exact names, filtered).
+Pulse store. The model only names which listed Pulses a theater bears on (exact names, filtered), and
+the ``key_figures`` it lists are numbers the researched evidence states, kept only when their source is
+one the research cited. Places are the model's coordinates, validated against the basemap (``geo``)
+and dropped when they do not hold; the theater ``map`` is built from the survivors.
+
+``temperature.trend`` is COVERAGE momentum (share of headlines), not severity; ``temperature.coverage`` is
+its reader-facing label, ``escalation`` is the situation itself, and a Pulse ``band`` is severity.
 """
 
 from __future__ import annotations
 
 import json
+import math
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 from . import brief as br
-from . import desk, forecasts, render
-from .contracts import DaySummary, PulseProposal, SectionDraft, Theater
+from . import desk, forecasts, geo, render
+from .contracts import DaySummary, Place, PulseProposal, SectionDraft, Theater, coverage_label
 from .heat import store_dir
 
 SCHEMA = "ohmega.daily/1"
@@ -85,6 +92,19 @@ WHAT GOOD LOOKS LIKE:
   measures. One dimension, one Pulse; a question whose low end is calm and high end is extreme, with a
   one-line reason. One question only (never two joined by "and"). Proposals that recur on later days become
   real Pulses, so make one rarely and only when it is genuinely missing. Never propose something a listed Pulse already measures.
+- `key_figures`: up to four numbers a reader can hold, which often say more than a paragraph (transits
+  per day through a strait, barrels offline, troops deployed, a price). Take a figure ONLY from the
+  RESEARCHED claims, exactly as stated, with the date it is for (`as_of`, YYYY-MM-DD) and the source URL
+  that gives it. Never compute, estimate, convert or round one yourself, and never take one from a
+  headline: a number we cannot trace to our research does not belong, and the desk discards it. When
+  the source also gives a baseline (what it was before, or normal), include `baseline` and say what it is
+  in `baseline_label` ("pre-crisis"), because a number alone does not tell the reader whether it is high.
+  None is better than a weak one.
+- `place` on a development: your best latitude and longitude for the named city or site where it
+  happened (`name`, `country` as the common English name, `lat`, `lon`), so the reader can see where
+  things are happening. Give one only when the development has a specific named location you know the
+  coordinates of; for a sea lane or open water use country "sea". A wrong point is worse than none: the
+  desk checks every one against a map and drops those that fall outside the country, so omit it when unsure.
 Plain words a newcomer can follow; no internal jargon (no claim ids, no pipeline terms). Do not
 reproduce passages from sources: facts and short attributed phrases only.
 """
@@ -98,9 +118,15 @@ the top of the daily report: one line for the whole day and the few things that 
 - `the_day`: 3-6 one-sentence bullets, most important first, each standing alone. Draw them from the
   sections; add nothing the sections do not support. Mark uncertainty where the sections do (reported
   versus researched), and do not let a single-source item read as established fact.
-- `cross_theater`: links BETWEEN theaters only when one genuinely bears on another (a ceasefire track
-  that changes another front, a sanctions move that lands elsewhere). Name the theaters exactly as given
-  and say in a sentence what connects them. Empty when nothing does; do not force a link.
+- `cross_theater`: theaters are rarely independent, and the links are often what a reader most needs
+  and cannot see from inside one section. Read the sections against each other on purpose, looking for:
+  shared actors (the same state, group or leader acting in two places), causal chains (an event in one
+  theater that feeds or follows from another), and one theater's move changing another's risk (a
+  withdrawal that frees a proxy network, a closed strait that reprices a sanctions fight). Each link is
+  one line: the theaters, named exactly as given, and what connects them and in which direction. Prefer
+  a few real links over many thin ones, and keep a link only when the sections themselves support it.
+  Empty when, after looking, nothing genuinely connects them; do not force one, and do not leave it
+  empty out of caution when the connection is plain.
 Estimative language for anything about the future. Plain words; no internal jargon.
 """
 
@@ -221,7 +247,7 @@ def write_section(context: Any, config: Any, theater: Theater, heat: dict, *, as
     task = (f"TODAY: {as_of}. Cover roughly the last three days; older items belong in `context`.\n\n"
             f"THEATER: {theater.name}\n{theater.why}\n\n"
             f"TEMPERATURE: {heat.get('recent', 0)} headlines in the last 3 days vs {heat.get('prior', 0)} before "
-            f"({heat.get('trend', '?')}).\n\n"
+            f"({coverage_label(heat.get('trend', '')) or '?'}; how much it is reported, not how severe it is).\n\n"
             + (previous_digest(previous) + "\n\n" if previous
                else "PREVIOUS DAILY SECTION: none; leave since_yesterday empty.\n\n")
             + (_brief_digest(brief) + "\n\n" if brief else "")
@@ -236,11 +262,39 @@ def write_section(context: Any, config: Any, theater: Theater, heat: dict, *, as
     return (draft if isinstance(draft, SectionDraft) else None), research_urls
 
 
+MAX_KEY_FIGURES = 4
+
+
+def _valid_date(text: str) -> bool:
+    try:
+        datetime.strptime(text, "%Y-%m-%d")
+    except (TypeError, ValueError):
+        return False
+    return True
+
+
+def _clean_figures(figures: list, research_urls: set[str]) -> list:
+    """Key figures survive only with a finite number, a label, a real date and a source the research cited;
+    a baseline that is not a finite number is dropped (with its label), never repaired."""
+    known = {_norm_url(u) for u in research_urls}
+    out = []
+    for f in figures:
+        if not f.label.strip() or not math.isfinite(f.value) or _norm_url(f.source) not in known                 or not _valid_date(f.as_of):
+            continue
+        if f.baseline is None or not math.isfinite(f.baseline):
+            f.baseline, f.baseline_label = None, ""
+        out.append(f)
+    return out[:MAX_KEY_FIGURES]
+
+
 def normalise_section(draft: SectionDraft, *, pulse_table: dict[str, str], has_previous: bool, researched: bool,
-                      research_urls: set[str], reported_urls: set[str]) -> SectionDraft:
+                      research_urls: set[str], reported_urls: set[str],
+                      countries: list[geo.Country] | None = None) -> SectionDraft:
     """Enforce what the schema cannot: Pulse names from the table, changes only with a previous section,
-    quotes at most 25 words, cited URLs only from the evidence, and 'researched' only where our research
-    ran and the item actually cites its sources."""
+    quotes at most 25 words, cited URLs only from the evidence, 'researched' only where our research
+    ran and the item actually cites its sources, key figures only from the research's own sources, and
+    places only where they validate against the basemap (``countries``; none loaded, none kept)."""
+    draft.key_figures = _clean_figures(draft.key_figures, research_urls)
     canon = {n.lower(): n for n in pulse_table}
     draft.pulses = list(dict.fromkeys(canon[p.strip().lower()] for p in draft.pulses if p.strip().lower() in canon))
     if not has_previous:
@@ -253,6 +307,8 @@ def normalise_section(draft: SectionDraft, *, pulse_table: dict[str, str], has_p
 
     draft.developments = [d for d in draft.developments if d.headline.strip()]
     for dev in draft.developments:
+        valid = geo.validate_place(dev.place, countries)
+        dev.place = Place(**valid) if valid else None
         dev.sources = [u for u in dict.fromkeys(dev.sources) if clean(u)]
         grounded = researched and any(_norm_url(u) in research_known for u in dev.sources)
         dev.verification = "researched" if dev.verification == "researched" and grounded else "reported"
@@ -276,7 +332,7 @@ def normalise_section(draft: SectionDraft, *, pulse_table: dict[str, str], has_p
 def write_summary(context: Any, config: Any, sections: list[dict], *, as_of: str, domain: str,
                   model_spec: Any) -> DaySummary | None:
     digest = "\n\n".join(
-        f"## {s['name']} ({s['temperature']['trend']}; escalation {s['escalation']['direction']}, "
+        f"## {s['name']} ({s['temperature']['coverage'] or s['temperature']['trend']}; escalation {s['escalation']['direction']}, "
         f"{s['escalation']['pace']})\n{s['bottom_line']}\n"
         + "\n".join(f"- [{d['verification']}] {d['when']} {d['headline']}" for d in s["developments"])
         for s in sections)
@@ -313,15 +369,18 @@ def record_proposals(store: Any, drafts: list[PulseProposal], *, theater: Theate
 
 
 # ── the engine ────────────────────────────────────────────────────────────────────────────────
-def _section(theater: Theater, heat: dict, draft: SectionDraft, pulses: list[dict], brief: dict | None) -> dict:
+def _section(theater: Theater, heat: dict, draft: SectionDraft, pulses: list[dict], brief: dict | None,
+             countries: list[geo.Country] | None = None) -> dict:
     d = draft.model_dump()
     return {"theater_id": theater.id, "name": theater.name,
             "temperature": {"heat": heat.get("heat", 0), "trend": heat.get("trend", ""),
+                            "coverage": coverage_label(heat.get("trend", "")),
                             "recent_share": heat.get("recent_share", 0.0), "prior_share": heat.get("prior_share", 0.0)},
             "escalation": d["escalation"], "pulses": pulses, "bottom_line": d["bottom_line"],
             "since_yesterday": d["since_yesterday"], "developments": d["developments"], "context": d["context"],
             "outlook": d["outlook"], "watch_next": d["watch_next"],
-            "brief_slug": (brief or {}).get("slug"), "map": None}
+            "key_figures": d["key_figures"], "brief_slug": (brief or {}).get("slug"),
+            "map": geo.build_map(d["developments"], countries)}
 
 
 def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, research: bool = False,
@@ -337,6 +396,7 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
     heats = {h["theater_id"]: h for h in board.get("heat", [])}
     store = pulse_store()
     table = br.pulse_catalog(store)
+    countries = geo.load()                                  # the basemap places are validated against
     now = datetime.fromisoformat(f"{as_of}T23:59:59+00:00")
     sections, rows, any_research = [], [], False
     for tid in desk.pick_theaters(board, top, [domain]):
@@ -366,8 +426,10 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
             continue
         draft = normalise_section(draft, pulse_table=table, has_previous=previous is not None,
                                   researched=bool(profiles), research_urls=research_urls,
-                                  reported_urls={u for m in theater.members for u in m.sources})
-        sections.append(_section(theater, heat, draft, pulse_rows(store, draft.pulses, now=now), latest_brief))
+                                  reported_urls={u for m in theater.members for u in m.sources},
+                                  countries=countries)
+        sections.append(_section(theater, heat, draft, pulse_rows(store, draft.pulses, now=now), latest_brief,
+                                 countries))
         proposals = [{"theater": theater.name, **p.model_dump()} for p in draft.pulse_proposals]
         row["proposals_logged"] = record_proposals(store, draft.pulse_proposals, theater=theater, domain=domain,
                                                    as_of=as_of)

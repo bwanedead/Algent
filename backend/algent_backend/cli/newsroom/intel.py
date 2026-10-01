@@ -72,9 +72,11 @@ def run_intel(args: Any) -> int:
             "publish": _publish, "cycle": _cycle, "daily": _daily}[args.intel_verb](args)
 
 
-def _heat(args: Any) -> int:
+def _heat(args: Any, *, publish: bool = True) -> int:
+    """Build the board. ``publish=False`` when a caller (cycle, daily) publishes once at its own end."""
     from algent_backend.agent_system.agents.intel import heat, render
     from algent_backend.agent_system.foundation.models import house_spec
+    from algent_backend.publishing.intel_page import publish_intel
     from algent_backend.publishing.radar_page import read_editions
 
     board = heat.run(_ctx("intel-heat"), None, read_editions(), days=args.days,
@@ -82,9 +84,12 @@ def _heat(args: Any) -> int:
     out = _out(board["as_of"])
     (out / "board.json").write_text(json.dumps(board, ensure_ascii=False, indent=2), encoding="utf-8")
     (out / "board.html").write_text(render.render_board(board), encoding="utf-8")
-    print(json.dumps({"board": str(out / "board.html"), "theaters": [
+    report: dict[str, Any] = {"board": str(out / "board.html"), "theaters": [
         {"id": h["theater_id"], "name": h["name"], "recent": h["recent"], "trend": h["trend"], "heat": h["heat"]}
-        for h in board["heat"]]}, indent=2, ensure_ascii=False))
+        for h in board["heat"]]}
+    if publish:
+        report["publish"] = publish_intel()
+    print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0
 
 
@@ -95,9 +100,11 @@ def _brief(args: Any) -> int:
     if board is None:
         print(json.dumps({"error": "no heat board yet — run `newsroom intel heat` first"}))
         return 2
+    from algent_backend.publishing.intel_page import publish_intel
+
     chosen = [args.theater] if args.theater else desk.pick_theaters(board, args.top)
-    print(json.dumps(_produce_briefs(board, chosen, research=args.research, focus=args.focus),
-                     indent=2, ensure_ascii=False))
+    report = _produce_briefs(board, chosen, research=args.research, focus=args.focus)
+    print(json.dumps({"briefs": report, "publish": publish_intel()}, indent=2, ensure_ascii=False))
     return 0
 
 
@@ -140,7 +147,7 @@ def _cycle(args: Any) -> int:
     from algent_backend.data_backup import sync
     from algent_backend.publishing.intel_page import publish_intel
 
-    if _heat(args) != 0:
+    if _heat(args, publish=False) != 0:
         return 1
     board = desk.latest_board() or {"heat": [], "theaters": [], "as_of": ""}
     from algent_backend.agent_system.foundation.models import house_spec
@@ -167,7 +174,7 @@ def _daily(args: Any) -> int:
 
     from .pulse import promote_ready_quietly
 
-    if _heat(args) != 0:
+    if _heat(args, publish=False) != 0:
         return 1
     board = desk.latest_board()
     if board is None:
@@ -176,10 +183,11 @@ def _daily(args: Any) -> int:
     result = daily.produce_daily(_ctx("intel-daily"), domain=args.domain, top=args.top, research=args.research,
                                  model_spec=house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=16384),
                                  as_of=board["as_of"], board=board, out=_out(board["as_of"]))
+    # Promote first (quietly: it does not publish) so the one publish below carries the new Pulses.
+    proposals = promote_ready_quietly()
     report = {"date": board["as_of"], "domain": args.domain, "path": result["path"], "html": result.get("html"),
               "headline": result["report"]["summary"]["headline"], "theaters": result["theaters"],
-              "research_usd": result["research_usd"], "publish": publish_intel(),
-              "pulse_proposals": promote_ready_quietly(),
+              "research_usd": result["research_usd"], "pulse_proposals": proposals, "publish": publish_intel(),
               "backup": sync.backup(note="intel daily")}
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0

@@ -78,6 +78,7 @@ RAIL_STEER = "newsroom_rail.steer"
 RAIL_REFUSED = "newsroom_rail.refused"        # the spend envelope had nothing left
 RAIL_BACKUP = "newsroom_rail.data_backup"     # durable stores mirrored to the private data repo
 RAIL_PULSES = "newsroom_rail.pulses"          # the article's research re-estimated its Pulses
+RAIL_INTEL = "newsroom_rail.intel"            # the /intel snapshot republished after the Pulses moved
 RAIL_ANNOUNCED = "newsroom_rail.announced"
 RAIL_FIGURES = "newsroom_rail.figures"
 BACKFEED_INJECTED = "newsroom_rail.backfeed_injected"
@@ -196,7 +197,8 @@ def _artifacts_dir(context: AgentRunContext) -> Any:
 
 
 def _feed_pulses(context: AgentRunContext, out: dict[str, Any]) -> None:
-    """A finished article's research re-estimates the Pulses it touches. Never fails the run."""
+    """A finished article's research re-estimates the Pulses it touches, and when any were touched /intel
+    is republished once so it never lags them. Never fails the run."""
     rail = (out or {}).get("rail") or {}
     profile_id = str(rail.get("profile_id") or "")
     if rail.get("stage_reached") != "complete" or not profile_id or profile_id == "prof_unknown":
@@ -208,8 +210,13 @@ def _feed_pulses(context: AgentRunContext, out: dict[str, Any]) -> None:
         profile = JsonProfileStore().get(profile_id)
         if profile is None:
             return
-        context.emit(RAIL_PULSES, update_quietly(profile.model_dump(), run_id=context.run_id,
-                                                 article_slug=str(rail.get("published_slug") or "")))
+        fed = update_quietly(profile.model_dump(), run_id=context.run_id,
+                             article_slug=str(rail.get("published_slug") or ""))
+        context.emit(RAIL_PULSES, fed)
+        if fed.get("touched"):
+            from algent_backend.publishing.intel_page import publish_intel
+
+            context.emit(RAIL_INTEL, publish_intel())
     except Exception as exc:  # noqa: BLE001 — Pulse is downstream of the article, never in its way
         context.emit(RAIL_PULSES, {"error": f"{type(exc).__name__}: {str(exc)[:120]}"})
 

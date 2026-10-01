@@ -213,6 +213,27 @@ def _development(d: dict) -> str:
             + (f"<div class='sub'>Sources:{srcs}</div>" if srcs else "") + "</div>")
 
 
+def _figure(f: dict) -> str:
+    base = (f" <span class='sub'>{_e(f.get('baseline_label') or 'baseline')}: {f['baseline']:g}"
+            f" {_e(f.get('unit'))}</span>" if f.get("baseline") is not None else "")
+    return (f"<div class='card' style='display:inline-block;margin-right:8px'><div class='sub'>{_e(f['label'])}</div>"
+            f"<b style='font-size:22px'>{f['value']:g}</b> {_e(f.get('unit'))}{base}"
+            f"<div class='sub'>as of {_e(f.get('as_of'))}{_link(f.get('source', ''))}</div></div>")
+
+
+def _map_svg(m: dict) -> str:
+    """The theater's where-it-happened map: the spec's own paths, drawn as one inline SVG."""
+    w, h = m["width"], m["height"]
+    land = "".join(f"<path d='{_e(c['d'])}'><title>{_e(c['name'])}</title></path>" for c in m["countries"])
+    pts = "".join(f"<g><circle cx='{p['x']}' cy='{p['y']}' r='9' fill='{'#1a7f37' if p['verification'] == 'researched' else '#9a6700'}'"
+                  f" stroke='#fff' stroke-width='2'/><text x='{p['x']}' y='{p['y'] + 4}' font-size='11' fill='#fff' "
+                  f"text-anchor='middle'>{p['n']}</text><title>{_e(p['label'])} {_e(p['date'])}</title></g>"
+                  for p in m["points"])
+    return (f"<svg viewBox='0 0 {w} {h}' style='width:100%;max-width:700px;background:#eef3f8' role='img' "
+            f"aria-label='Where it happened'><g fill='#dde3ea' stroke='#9aa5b1' stroke-width='1'>{land}</g>{pts}</svg>"
+            f"<div class='sub'>{_e(m['credit'])} Numbers match the developments below.</div>")
+
+
 def _context_item(c: dict) -> str:
     why = f" <span class='sub'>— {_e(c.get('why_relevant'))}</span>" if c.get("why_relevant") else ""
     return f"<li><span class='sub'>{_e(c.get('when'))}</span> {_e(c['what'])}{why}{_link(c.get('source', ''))}</li>"
@@ -228,11 +249,14 @@ def _daily_theater(t: dict) -> str:
     ctx = "".join(_context_item(c) for c in t["context"])
     watch = "".join(f"<li>{_e(w)}</li>" for w in t["watch_next"])
     brief = f"<div class='sub'>Deep brief: {_e(t['brief_slug'])}</div>" if t.get("brief_slug") else ""
+    figures = "".join(_figure(f) for f in t.get("key_figures") or [])
     return (f"<h2>{_e(t['name'])}</h2><div class='card bluf'>{_e(t['bottom_line'])}</div>"
             f"<div><span class='pill {esc['direction']}'>{_e(esc['direction'])}</span>"
             f"<span class='pill steady'>pace: {_e(esc['pace'])}</span>"
-            f"<span class='pill steady'>{_e(temp['trend'])} · {temp['recent_share'] * 100:.0f}% of coverage "
-            f"(was {temp['prior_share'] * 100:.0f}%)</span></div>"
+            f"<span class='pill steady'>{_e(temp.get('coverage') or temp['trend'])} · "
+            f"{temp['recent_share'] * 100:.0f}% of coverage (was {temp['prior_share'] * 100:.0f}%)</span></div>"
+            + (f"<div>{figures}</div>" if figures else "")
+            + (_map_svg(t["map"]) if t.get("map") else "")
             + (f"<h2>Since yesterday</h2><ul>{since}</ul>" if since else "")
             + "".join(_development(d) for d in t["developments"])
             + (f"<h2>Context</h2><ul>{ctx}</ul>" if ctx else "")

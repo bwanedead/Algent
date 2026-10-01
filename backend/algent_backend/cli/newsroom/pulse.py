@@ -45,6 +45,13 @@ def add_parser(sub: Any) -> None:
     p.set_defaults(handler=run_pulse)
 
 
+def _publish() -> dict:
+    """Republish the /intel snapshot: every verb that changes a Pulse ends here, once (never raises)."""
+    from algent_backend.publishing.intel_page import publish_intel
+
+    return publish_intel()
+
+
 def run_pulse(args: Any) -> int:
     return {"seed": _seed, "commit": _commit, "reassess": _reassess, "show": _show,
             "log": _log, "proposals": _proposals, "promote": _promote, "promote-ready": _promote_ready,
@@ -110,7 +117,7 @@ def _commit(args: Any) -> int:
                                  problems=r["problems"], draft=sd.SituationDraft.model_validate(r["draft"]))
               for r in json.loads(path.read_text(encoding="utf-8"))]
     made = sd.commit(pulse_store(), seeded, run_id=f"seed_{path.parent.name}")
-    print(json.dumps({"committed_pulses": made, "from": str(path)}, indent=2))
+    print(json.dumps({"committed_pulses": made, "from": str(path), "publish": _publish()}, indent=2))
     return 0
 
 
@@ -123,7 +130,7 @@ def _reassess(args: Any) -> int:
     ctx = AgentRunContext(run_id="pulse-reassess", model_resolver=ModelResolver())
     out = reassess_all(ctx, None, pulse_store(), only=args.pulse,
                        model_spec=house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=16384))
-    print(json.dumps(out, indent=2, ensure_ascii=False))
+    print(json.dumps({"reassessed": out, "publish": _publish()}, indent=2, ensure_ascii=False))
     return 0
 
 
@@ -185,12 +192,15 @@ def _promote(args: Any) -> int:
 
     out = registry.promote(_registry_ctx(), None, pulse_store(), args.proposal_id,
                            situation_id=args.situation or None, model_spec=_spec())
+    if out["status"] == "promoted":
+        out = {**out, "publish": _publish()}
     print(json.dumps(out, indent=2, ensure_ascii=False))
     return 0 if out["status"] in ("promoted", "already_promoted") else 1
 
 
 def promote_ready_quietly() -> dict:
-    """Promote every recurring proposal. Never raises: the daily run calls this after its work."""
+    """Promote every recurring proposal. Never raises: the daily run calls this after its work.
+    It does not publish: the caller (``_promote_ready`` or the daily run) publishes once at its own end."""
     try:
         from algent_backend.agent_system.agents.pulse import registry
         from algent_backend.agent_system.agents.pulse.repository import pulse_store
@@ -201,7 +211,10 @@ def promote_ready_quietly() -> dict:
 
 
 def _promote_ready(args: Any) -> int:
-    print(json.dumps(promote_ready_quietly(), indent=2, ensure_ascii=False))
+    out = promote_ready_quietly()
+    if out.get("promoted"):
+        out = {**out, "publish": _publish()}
+    print(json.dumps(out, indent=2, ensure_ascii=False))
     return 0
 
 
