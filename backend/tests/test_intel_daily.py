@@ -16,7 +16,7 @@ from algent_backend.agent_system.agents.intel.contracts import (
     SectionDraft,
     Statement,
 )
-from algent_backend.agent_system.agents.pulse import PulseStore, repository
+from algent_backend.agent_system.agents.pulse import PulseStore, registry, repository
 from algent_backend.agent_system.agents.pulse.contracts import Influence, Pulse, PulseDefinition, Situation
 from algent_backend.publishing import intel_page
 
@@ -178,15 +178,20 @@ def test_pulse_names_are_filtered_to_the_table_and_proposals_to_missing_dimensio
     assert [p.name for p in out.pulse_proposals] == ["Shipping Insurance Stress"]
 
 
-def test_proposals_are_appended_once_and_no_pulse_is_created(tmp_path, monkeypatch) -> None:
+def test_proposals_go_through_the_registry_and_no_pulse_is_created(tmp_path, monkeypatch) -> None:
     store = _store(tmp_path, monkeypatch)
-    prop = PulseProposal(name="Shipping Insurance Stress", question="q?", low_end="calm", high_end="crisis", why="gap")
+    prop = PulseProposal(name="Shipping Insurance Stress", question="How stressed is shipping insurance?",
+                         low_end="calm", high_end="crisis", why="gap")
     ctx = _ctx({"Alpha": _draft(pulse_proposals=[prop]), "Bravo": _draft(pulse_proposals=[prop])}, SUMMARY)
     rec = daily.produce_daily(ctx, domain="geopolitics", top=2, model_spec=None, as_of=AS_OF, board=_board())["report"]
-    lines = [json.loads(x) for x in daily.proposals_path().read_text(encoding="utf-8").splitlines()]
-    assert len(lines) == 1                                                            # same name not logged twice
-    assert lines[0]["date"] == AS_OF and lines[0]["domain"] == "geopolitics" and lines[0]["theater_id"] == "thr_a"
-    assert lines[0]["theater"] == "Alpha" and lines[0]["name"] == "Shipping Insurance Stress"
+    lines = store.proposals()
+    assert [r["source"]["theater_id"] for r in lines] == ["thr_a", "thr_b"]          # one sighting per theater
+    assert {r["id"] for r in lines} == {registry.proposal_id(prop.name, prop.question)}
+    assert lines[0]["source"] == {"kind": "daily", "run_id": f"daily-geopolitics-{AS_OF}", "theater_id": "thr_a",
+                                  "domain": "geopolitics"}
+    assert lines[0]["situation_hint"] == "Alpha" and lines[0]["name"] == "Shipping Insurance Stress"
+    assert not registry.ready(lines)                                                  # one run is one voice
+    assert not daily.proposals_path().exists()                                        # legacy file untouched
     assert len(rec["pulse_proposals"]) == 2 and set(rec["pulse_proposals"][0]) == {
         "theater", "name", "question", "low_end", "high_end", "why"}
     assert [p.name for p in store.pulses()] == ["Hormuz Risk"]

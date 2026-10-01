@@ -165,6 +165,8 @@ def _daily(args: Any) -> int:
     from algent_backend.data_backup import sync
     from algent_backend.publishing.intel_page import publish_intel
 
+    from .pulse import promote_ready_quietly
+
     if _heat(args) != 0:
         return 1
     board = desk.latest_board()
@@ -177,6 +179,7 @@ def _daily(args: Any) -> int:
     report = {"date": board["as_of"], "domain": args.domain, "path": result["path"], "html": result.get("html"),
               "headline": result["report"]["summary"]["headline"], "theaters": result["theaters"],
               "research_usd": result["research_usd"], "publish": publish_intel(),
+              "pulse_proposals": promote_ready_quietly(),
               "backup": sync.backup(note="intel daily")}
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0

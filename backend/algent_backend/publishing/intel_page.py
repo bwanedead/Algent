@@ -52,6 +52,23 @@ Daily files: ``content/intel/daily/<domain>/<YYYY-MM-DD>.json`` = the persisted 
 
 Pulse numbers and deltas are computed from the Pulse store, never by a model.
 
+Agent feed (static data files in the site checkout, beside the article twins)::
+
+    public/data/pulses.json = {"schema":"ohmega.pulses/1","built_at",
+        "pulses":[{"id","situation_id","situation","name","question","low_end","high_end",
+                   "status":"experimental|active|dormant","position":float|null,"band",
+                   "confidence","last_assessed","evidence_through","velocity_7d":float|null,
+                   "history":[{"at","position"}],"rationale"}]}     // rationale: reader-safe, latest applied
+        // the registry catalog (pulse/registry.py): what each Pulse measures and where it stands.
+        // No absolute_position. Written only when a Pulse store is passed to write_intel.
+    public/data/intel.json = {"schema":"ohmega.intel.index/1","built_at",
+        "daily":[{"domain","date","headline","url":"/geopolitics/<date>"}],        // newest first
+        "briefs":[{"slug","title","bottom_line","theater_id","theater_name","as_of","direction","pace",
+                   "url":"/intel/briefs/<slug>"}],
+        "theaters":[{"id","name","domain","heat","trend","brief_url":"/intel/briefs/<slug>"|null}],
+        "forecast_scorecard":{"resolved","void","open","brier","calibration":[...]}}
+        // a compact index of the snapshot for agents; URLs are relative to the site root.
+
 Rules: ``rationale`` is the latest APPLIED, non-blind influence's rationale for that pulse, made
 reader-safe (claim ids stripped, ~400 chars at a word boundary). Situations that are not "active"
 and pulses that are "dormant" are skipped. ``absolute_position`` is internal and never exported.
@@ -194,8 +211,28 @@ def _write_if_changed(path: Path, payload: dict) -> None:
     path.write_text(text, encoding="utf-8", newline="\n")
 
 
-def write_intel(site_dir: Path, snapshot: dict, intel_dir: Path) -> Path:
-    """Write the snapshot and mirror every persisted brief and daily report into a site checkout (only what changed)."""
+def build_pulse_feed(store: Any, *, now: datetime | None = None) -> dict:
+    """The agent-facing Pulse list (``public/data/pulses.json``): the registry catalog plus a reader-safe rationale."""
+    from algent_backend.agent_system.agents.pulse import registry
+
+    rows = [{**row, "rationale": _rationale(store, row["id"])} for row in registry.catalog(store)]
+    return {"schema": "ohmega.pulses/1", "built_at": (now or datetime.now(UTC)).isoformat(), "pulses": rows}
+
+
+def build_index(snapshot: dict) -> dict:
+    """The compact agent index (``public/data/intel.json``) distilled from a snapshot."""
+    return {"schema": "ohmega.intel.index/1", "built_at": snapshot["built_at"],
+            "daily": [{**d, "url": f"/geopolitics/{d['date']}"} for d in snapshot["daily"]],
+            "briefs": [{**b, "url": f"/intel/briefs/{b['slug']}"} for b in snapshot["briefs"]],
+            "theaters": [{"id": t["id"], "name": t["name"], "domain": t["domain"], "heat": t["heat"],
+                          "trend": t["trend"], "brief_url": f"/intel/briefs/{t['brief']}" if t["brief"] else None}
+                         for t in snapshot["theaters"]],
+            "forecast_scorecard": snapshot["forecasts"]["scorecard"]}
+
+
+def write_intel(site_dir: Path, snapshot: dict, intel_dir: Path, store: Any = None) -> Path:
+    """Write the snapshot and mirror every persisted brief and daily report into a site checkout (only what
+    changed), plus the agent feed: ``public/data/intel.json`` always, ``pulses.json`` when given the Pulse store."""
     root = site_dir.joinpath(*INTEL_SUBDIR)
     path = root / "snapshots" / f"{snapshot['slug']}.json"
     _write_if_changed(path, snapshot)
@@ -203,6 +240,10 @@ def write_intel(site_dir: Path, snapshot: dict, intel_dir: Path) -> Path:
         _write_if_changed(root / "briefs" / f"{record['slug']}.json", record)
     for record in _daily_reports(intel_dir):
         _write_if_changed(root / "daily" / safe_name(record["domain"]) / f"{record['date']}.json", record)
+    data = site_dir / "public" / "data"
+    _write_if_changed(data / "intel.json", build_index(snapshot))
+    if store is not None:
+        _write_if_changed(data / "pulses.json", build_pulse_feed(store, now=datetime.fromisoformat(snapshot["built_at"])))
     return path
 
 
@@ -218,8 +259,9 @@ def publish_intel() -> dict[str, Any]:
         worktree, note = site_git.ensure_worktree(root)
         if worktree is None:
             return {"published": False, "note": note}
-        snapshot = build_snapshot(pulse_store(), store_dir())
-        path = write_intel(site_git.live_site_dir(root), snapshot, store_dir())
+        store = pulse_store()
+        snapshot = build_snapshot(store, store_dir())
+        path = write_intel(site_git.live_site_dir(root), snapshot, store_dir(), store)
         ok, pushed = site_git.commit_and_push(worktree, f"intel({path.stem}): desk snapshot")
         return {"published": ok, "slug": path.stem, "note": pushed}
     except Exception as exc:  # noqa: BLE001

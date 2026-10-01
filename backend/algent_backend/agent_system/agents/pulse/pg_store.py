@@ -218,6 +218,14 @@ class PgPulseStore:
             "select key, at, edition, headline from radar_sightings where situation_id = %s order by at",
             (situation_id,))]
 
+    # ── proposals ledger (append-only; meaning lives in registry.py) ─────────────────────────
+    def propose(self, row: dict) -> None:
+        self._q("""insert into pulse_proposals (proposal_id, kind, at, body) values (%s, %s, %s, %s)""",
+                (row["id"], row["kind"], row["at"], json.dumps(row)), rows=False)
+
+    def proposals(self) -> list[dict]:
+        return [r[0] for r in self._q("select body from pulse_proposals order by seq")]
+
     # ── watches ──────────────────────────────────────────────────────────────────────────────
     _W = """select id, situation_id, condition, why, evidence_needed, expected_direction, horizon,
             origin_positions, status, created_at, resolved_at, resolved_by from watches"""

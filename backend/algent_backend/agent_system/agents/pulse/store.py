@@ -7,6 +7,7 @@ Layout under ``ALGENT_PULSE_STORE`` (default ``pulse_store/``, local like the pr
     pulses/<pulse_id>.json          definition history (versions appended, never edited)
     log/<pulse_id>.jsonl            influences — append-only, one JSON object per line
     watches/<watch_id>.json         status moves only open → a terminal state, once
+    proposals.jsonl                 Pulse proposals ledger — append-only (see registry.py)
 
 Invariants the store enforces (a Pulse's history is the valuable part, so it defends it):
 - an influence is never rewritten or removed, and one with a key already in the log is refused;
@@ -159,6 +160,19 @@ class PulseStore:
 
     def sightings(self, situation_id: str) -> list[dict]:
         path = self._dir / "radar" / f"{_safe(situation_id)}.jsonl"
+        if not path.is_file():
+            return []
+        return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+    # ── proposals ledger (append-only; meaning lives in registry.py) ─────────────────────────
+    def propose(self, row: dict) -> None:
+        path = self._dir / "proposals.jsonl"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("a", encoding="utf-8", newline="\n") as fh:
+            fh.write(json.dumps(row, ensure_ascii=False) + "\n")
+
+    def proposals(self) -> list[dict]:
+        path = self._dir / "proposals.jsonl"
         if not path.is_file():
             return []
         return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]

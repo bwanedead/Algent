@@ -6,6 +6,10 @@
     newsroom pulse commit <seed dir>       # persist exactly what was reviewed (no model re-run)
     newsroom pulse show                    # every Pulse: position, band, velocity, freshness
     newsroom pulse log <pulse_id>          # its full influence history
+    newsroom pulse proposals               # proposed Pulses: sightings, status, ready flag
+    newsroom pulse promote <proposal_id> [--situation <id>]   # dedup check, then create the Pulse
+    newsroom pulse promote-ready           # promote every recurring proposal (dedup + promote)
+    newsroom pulse migrate-proposals       # one-shot: replay the old intel_store proposals file
 
 Seeding never writes to the store: it saves ``seed.json`` + ``review.md`` under
 ``runs_data/pulse_seed/<stamp>/``. Commit reads that file, so what gets stored is what a human
@@ -32,12 +36,19 @@ def add_parser(sub: Any) -> None:
     verbs.add_parser("show", help="every Pulse's current reading")
     lg = verbs.add_parser("log", help="one Pulse's influence history")
     lg.add_argument("pulse_id")
+    verbs.add_parser("proposals", help="proposed Pulses with sightings and ready flag")
+    pr = verbs.add_parser("promote", help="promote one proposal to a Pulse (dedup first)")
+    pr.add_argument("proposal_id")
+    pr.add_argument("--situation", default="", help="place it in this situation id")
+    verbs.add_parser("promote-ready", help="promote every proposal that has recurred")
+    verbs.add_parser("migrate-proposals", help="replay intel_store/pulse_proposals.jsonl (idempotent)")
     p.set_defaults(handler=run_pulse)
 
 
 def run_pulse(args: Any) -> int:
     return {"seed": _seed, "commit": _commit, "reassess": _reassess, "show": _show,
-            "log": _log}[args.pulse_verb](args)
+            "log": _log, "proposals": _proposals, "promote": _promote, "promote-ready": _promote_ready,
+            "migrate-proposals": _migrate}[args.pulse_verb](args)
 
 
 def _seed(args: Any) -> int:
@@ -141,4 +152,63 @@ def _log(args: Any) -> int:
     from algent_backend.agent_system.agents.pulse.repository import pulse_store
 
     print(json.dumps([i.model_dump() for i in pulse_store().log(args.pulse_id)], indent=2, ensure_ascii=False))
+    return 0
+
+
+def _proposals(args: Any) -> int:
+    from algent_backend.agent_system.agents.pulse import registry
+    from algent_backend.agent_system.agents.pulse.repository import pulse_store
+
+    rows = [{k: r[k] for k in ("id", "name", "status", "ready", "sightings", "first_at", "last_at", "question")}
+            | {"runs": len(r["runs"]), "dates": len(r["dates"]), "pulse_id": r["pulse_id"]}
+            for r in registry.summarize(pulse_store().proposals())]
+    print(json.dumps(rows, indent=2, ensure_ascii=False))
+    return 0
+
+
+def _registry_ctx() -> Any:
+    from algent_backend.agent_system.foundation.models import ModelResolver
+    from algent_backend.agent_system.runs.context import AgentRunContext
+
+    return AgentRunContext(run_id="pulse-registry", model_resolver=ModelResolver())
+
+
+def _spec() -> Any:
+    from algent_backend.agent_system.foundation.models import house_spec
+
+    return house_spec(reasoning_effort="low", temperature=0.1)
+
+
+def _promote(args: Any) -> int:
+    from algent_backend.agent_system.agents.pulse import registry
+    from algent_backend.agent_system.agents.pulse.repository import pulse_store
+
+    out = registry.promote(_registry_ctx(), None, pulse_store(), args.proposal_id,
+                           situation_id=args.situation or None, model_spec=_spec())
+    print(json.dumps(out, indent=2, ensure_ascii=False))
+    return 0 if out["status"] in ("promoted", "already_promoted") else 1
+
+
+def promote_ready_quietly() -> dict:
+    """Promote every recurring proposal. Never raises: the daily run calls this after its work."""
+    try:
+        from algent_backend.agent_system.agents.pulse import registry
+        from algent_backend.agent_system.agents.pulse.repository import pulse_store
+
+        return registry.promote_ready(_registry_ctx(), None, pulse_store(), model_spec=_spec())
+    except Exception as exc:  # noqa: BLE001
+        return {"errors": [f"{type(exc).__name__}: {str(exc)[:120]}"]}
+
+
+def _promote_ready(args: Any) -> int:
+    print(json.dumps(promote_ready_quietly(), indent=2, ensure_ascii=False))
+    return 0
+
+
+def _migrate(args: Any) -> int:
+    from algent_backend.agent_system.agents.intel.daily import proposals_path
+    from algent_backend.agent_system.agents.pulse import registry
+    from algent_backend.agent_system.agents.pulse.repository import pulse_store
+
+    print(json.dumps(registry.migrate_legacy_proposals(proposals_path(), pulse_store()), indent=2))
     return 0

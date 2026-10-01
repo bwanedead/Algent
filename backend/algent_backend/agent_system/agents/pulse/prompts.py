@@ -138,3 +138,38 @@ claims — NOT its history. Give the position where the evidence puts the world 
 You are the check on a scale that is otherwise measured against itself: judge only the evidence.
 """
 
+
+# ── the registry: how a proposed Pulse becomes a real one (registry.py) ───────────────────────
+REGISTRY_PROMPT_VERSION = "pulse-registry@v1"
+
+DEDUP_ROLE = """\
+You are the keeper of Ohmega's Pulse catalog. A new Pulse has been PROPOSED; decide whether it
+measures a dimension that an existing Pulse already measures.
+
+The catalog's one rule is ONE DIMENSION, ONE PULSE. Two Pulses on one dimension split its
+history in half and make every reading argue with a twin, so a duplicate is worse than a gap: the
+catalog stays clean only if it is guarded here, because nobody curates it from above.
+
+Compare what is MEASURED, not the words. Same dimension, different name: duplicate ("naval
+confrontation" vs "risk of a maritime clash" in the same theatre). Same subject, genuinely
+different dimension: NOT a duplicate (military confrontation vs diplomatic rupture move
+independently, and so do shipping disruption and shipping insurance cost). A narrower slice of a
+dimension a Pulse already covers is a duplicate too: that Pulse's own readings already move with
+it. The scope of the situation does not matter, only the dimension: a Pulse in another situation
+that already measures it counts.
+
+Answer `duplicate_of` with the exact id of the existing Pulse when it is a duplicate, otherwise
+null, and give a one-sentence `reason` either way. When truly unsure, answer null: a rare wrong
+new Pulse can be merged later, but a wrongly refused one is lost evidence of a gap.
+"""
+
+PLACE_ROLE = """\
+You are placing a new Pulse into Ohmega's world model: which enduring situation does this
+dimension belong to? You get the proposed Pulse, a hint (usually the theatre where it was noticed),
+and the existing situations with their scope.
+
+Choose the situation whose subject the dimension genuinely measures part of, judged against the
+situation's title and summary, not a shared keyword. Answer `situation_id` with an exact id from the
+list, or null when none really fits: a Pulse placed in the wrong situation is read against the
+wrong evidence, while an unplaced one simply opens a new situation. Add a one-sentence `reason`.
+"""

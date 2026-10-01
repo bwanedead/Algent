@@ -29,7 +29,7 @@ from typing import Any
 
 from . import brief as br
 from . import desk, forecasts, render
-from .contracts import DaySummary, SectionDraft, Theater
+from .contracts import DaySummary, PulseProposal, SectionDraft, Theater
 from .heat import store_dir
 
 SCHEMA = "ohmega.daily/1"
@@ -83,8 +83,8 @@ WHAT GOOD LOOKS LIKE:
   fits. You never state Pulse numbers; the desk adds them.
 - `pulse_proposals`: propose a NEW Pulse only when the theater bears on a dimension that no listed Pulse
   measures. One dimension, one Pulse; a question whose low end is calm and high end is extreme, with a
-  one-line reason. It is a proposal for a human to weigh, so make it rarely and only when it is genuinely
-  missing. Never propose something a listed Pulse already measures.
+  one-line reason. One question only (never two joined by "and"). Proposals that recur on later days become
+  real Pulses, so make one rarely and only when it is genuinely missing. Never propose something a listed Pulse already measures.
 Plain words a newcomer can follow; no internal jargon (no claim ids, no pipeline terms). Do not
 reproduce passages from sources: facts and short attributed phrases only.
 """
@@ -111,6 +111,8 @@ def daily_dir(domain: str) -> Path:
 
 
 def proposals_path() -> Path:
+    """The LEGACY proposals file. New proposals go to the Pulse store via the registry; this path is
+    only what ``registry.migrate_legacy_proposals`` reads."""
     return store_dir() / "pulse_proposals.jsonl"
 
 
@@ -291,25 +293,23 @@ def write_summary(context: Any, config: Any, sections: list[dict], *, as_of: str
 
 
 # ── proposals ─────────────────────────────────────────────────────────────────────────────────
-def append_proposals(rows: list[dict], *, date: str, domain: str, theater_id: str) -> int:
-    """Append-only log of Pulse proposals for a human to weigh; a name already on file for the domain is
-    not logged again. Never creates a Pulse. Returns how many were added."""
-    path = proposals_path()
-    seen = set()
-    for line in path.read_text(encoding="utf-8").splitlines() if path.is_file() else []:
+def record_proposals(store: Any, drafts: list[PulseProposal], *, theater: Theater, domain: str, as_of: str) -> int:
+    """Hand the section writer's Pulse proposals to the Pulse registry (the one door). Each is one
+    sighting under this day's run; a proposal that recurs across days becomes a Pulse there, not here.
+    Never raises into the report. Returns how many sightings were recorded."""
+    from algent_backend.agent_system.agents.pulse import registry
+
+    recorded = 0
+    for p in drafts:
         try:
-            old = json.loads(line)
-        except ValueError:
+            out = registry.propose(store, {
+                **p.model_dump(), "at": f"{as_of}T12:00:00+00:00", "situation_hint": theater.name,
+                "source": {"kind": "daily", "run_id": f"daily-{domain}-{as_of}", "theater_id": theater.id,
+                           "domain": domain}})
+            recorded += out["recorded"]
+        except Exception:  # noqa: BLE001 - a proposal problem must never cost the day's report
             continue
-        seen.add((old.get("domain"), str(old.get("name", "")).lower()))
-    fresh = [r for r in rows if (domain, r["name"].lower()) not in seen]
-    if fresh:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        with path.open("a", encoding="utf-8", newline="\n") as fh:
-            for r in fresh:
-                fh.write(json.dumps({"date": date, "domain": domain, "theater_id": theater_id, **r},
-                                    ensure_ascii=False) + "\n")
-    return len(fresh)
+    return recorded
 
 
 # ── the engine ────────────────────────────────────────────────────────────────────────────────
@@ -369,7 +369,8 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
                                   reported_urls={u for m in theater.members for u in m.sources})
         sections.append(_section(theater, heat, draft, pulse_rows(store, draft.pulses, now=now), latest_brief))
         proposals = [{"theater": theater.name, **p.model_dump()} for p in draft.pulse_proposals]
-        row["proposals_logged"] = append_proposals(proposals, date=as_of, domain=domain, theater_id=tid)
+        row["proposals_logged"] = record_proposals(store, draft.pulse_proposals, theater=theater, domain=domain,
+                                                   as_of=as_of)
         row["proposals"] = proposals
         rows.append(row)
     summary = write_summary(ctx, None, sections, as_of=as_of, domain=domain, model_spec=model_spec) if sections else None

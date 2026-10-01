@@ -173,3 +173,22 @@ def test_pick_theaters_prefers_heating_on_ties() -> None:
     board = {"heat": [{"theater_id": "a", "heat": 5, "trend": "steady"}, {"theater_id": "b", "heat": 5, "trend": "new"},
                       {"theater_id": "c", "heat": 9, "trend": "cooling"}]}
     assert desk.pick_theaters(board, 2) == ["c", "b"]
+
+
+def test_write_intel_writes_the_agent_feed(tmp_path) -> None:
+    intel, store = _intel_dir(tmp_path), _store(tmp_path)
+    snap = intel_page.build_snapshot(store, intel, now=NOW)
+    site = tmp_path / "site"
+    intel_page.write_intel(site, snap, intel, store)
+    feed = json.loads((site / "public" / "data" / "pulses.json").read_text(encoding="utf-8"))
+    assert feed["schema"] == "ohmega.pulses/1" and feed["built_at"] == NOW.isoformat()
+    by = {p["id"]: p for p in feed["pulses"]}
+    assert "pls_old" not in by and set(by["pls_a_hi"]) >= {"situation", "question", "status", "history", "rationale"}
+    assert by["pls_a_hi"]["rationale"] == "Strikes rose and held." and "absolute_position" not in json.dumps(feed)
+    index = json.loads((site / "public" / "data" / "intel.json").read_text(encoding="utf-8"))
+    assert index["schema"] == "ohmega.intel.index/1"
+    assert index["briefs"][0]["url"] == "/intel/briefs/2026-09-29-one"
+    assert index["theaters"][0]["brief_url"] == "/intel/briefs/2026-09-29-one" and index["theaters"][1]["brief_url"] is None
+    assert "scorecard" not in index and "resolved" in index["forecast_scorecard"]
+    intel_page.write_intel(tmp_path / "bare", snap, intel)                       # no store: no pulses.json
+    assert not (tmp_path / "bare" / "public" / "data" / "pulses.json").exists()

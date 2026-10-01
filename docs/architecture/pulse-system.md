@@ -66,6 +66,7 @@ publishable subset).
 | Article update | after each article run | Finds the situations and event the story touches; proposes positions for touched Pulses; checks watches; always logs, including no-change |
 | Radar freshness | every daily headline scan | Counts unprocessed relevant events per situation; moves nothing |
 | Weekly reassessment | scheduled | Runs an anchored pass and a blind pass; records the anchoring gap; expires or keeps watches |
+| Proposal | any agent, the daily report, an operator | `pulse/registry.py`: appends a sighting to the Pulse store's proposals ledger; a proposal seen in two different runs on two different days is *ready*; promotion re-checks duplication (one dimension, one Pulse), places it in a situation and creates it `experimental` with no position — its first reading comes from normal updates |
 
 ## Storage
 

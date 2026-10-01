@@ -47,7 +47,8 @@ def store(request, tmp_path):
     with conn.transaction():
         conn.execute(f"create schema {schema}")
         conn.execute(f"set search_path to {schema}")
-        conn.execute((Path(__file__).resolve().parents[1] / "migrations" / "001_pulse.sql").read_text(encoding="utf-8"))
+        for name in ("001_pulse.sql", "003_pulse_proposals.sql"):
+            conn.execute((Path(__file__).resolve().parents[1] / "migrations" / name).read_text(encoding="utf-8"))
     try:
         yield PgPulseStore(conn)
     finally:
@@ -96,3 +97,13 @@ def test_events_merge_sightings_and_watches_resolve_once(store) -> None:
     with pytest.raises(ValueError):
         store.resolve_watch("w1", "expired")
     assert store.watches("sit_a")[0].pulse_ids == ["pls_a"]
+
+
+def test_proposals_ledger_is_append_only_and_ordered(store) -> None:
+    assert store.proposals() == []
+    a = {"kind": "sighting", "id": "prp_1", "at": "2026-09-30T12:00:00+00:00", "name": "n"}
+    b = {"kind": "promoted", "id": "prp_1", "at": "2026-10-01T12:00:00+00:00", "pulse_id": "pls_x"}
+    store.propose(a)
+    store.propose(a)                                   # a re-sighting is another line, not a refusal
+    store.propose(b)
+    assert store.proposals() == [a, a, b]
