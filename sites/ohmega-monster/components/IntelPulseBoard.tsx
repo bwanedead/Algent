@@ -1,4 +1,4 @@
-import { BAND_LABEL, type Pulse, type Situation } from "@/lib/intel";
+import { BAND_LABEL, maxBand, type Pulse, type Situation } from "@/lib/intel";
 
 import { Sparkline } from "./IntelViz";
 
@@ -65,13 +65,29 @@ export default function PulseBoard({ situations }: { situations: Situation[] }) 
   if (situations.length === 0) return <p className="intel-empty">No Pulses published yet.</p>;
   return (
     <div className="intel-situations">
-      {situations.map((s) => (
-        <section key={s.id} className="intel-situation" aria-label={s.title}>
+      {situations.map((s) => {
+        const top = maxBand(s.pulses);
+        const assessed = s.pulses.filter((p) => p.position !== null).length;
+        return (
+        <section key={s.id} className={`intel-situation intel-frame intel-band-${top}`} aria-label={s.title}>
           <header className="intel-situation-head">
-            <h3>{s.title}</h3>
-            {s.domain && <span className="intel-micro">{s.domain}</span>}
+            <div className="intel-frame-band">
+              <h3>{s.title}</h3>
+              {s.domain && <span className="intel-micro">{s.domain}</span>}
+              <span className="intel-frame-meta">
+                {top !== "unassessed" && (
+                  <span className={`intel-chip intel-band-${top}`} title="Most severe reading in this Situation">
+                    Max · {BAND_LABEL[top]}
+                  </span>
+                )}
+                <span className="intel-micro">
+                  {assessed}/{s.pulses.length} Pulses assessed
+                </span>
+              </span>
+            </div>
             {s.summary && <SituationSummary text={s.summary} />}
           </header>
+          <div className="intel-frame-body">
           {s.pulses.length > 0 ? (
             <div className="intel-pulse-grid">
               {s.pulses.map((p) => (
@@ -98,8 +114,10 @@ export default function PulseBoard({ situations }: { situations: Situation[] }) 
               </ul>
             </div>
           )}
+          </div>
         </section>
-      ))}
+        );
+      })}
     </div>
   );
 }
