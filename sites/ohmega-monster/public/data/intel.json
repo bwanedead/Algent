@@ -1,11 +1,33 @@
 {
   "schema": "ohmega.intel.index/1",
-  "built_at": "2026-10-01T08:55:45.060343+00:00",
+  "built_at": "2026-10-01T11:25:21.287174+00:00",
   "daily": [
     {
       "domain": "geopolitics",
       "date": "2026-10-01",
       "headline": "US ended 23-year Iraq deployment as Hormuz stayed shut and Russia hit Kyiv power grid in largest strike since April",
+      "theaters": [
+        {
+          "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+          "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea"
+        },
+        {
+          "id": "thr_gaza_war_and_unga_diplomatic_fallout",
+          "name": "Gaza war and UNGA diplomatic fallout"
+        },
+        {
+          "id": "thr_russia_ukraine_war_and_european_security_archite",
+          "name": "Russia-Ukraine war and European security architecture"
+        },
+        {
+          "id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
+          "name": "US withdrawal from Iraq after 23-year presence"
+        },
+        {
+          "id": "thr_us_china_summit_and_strategic_competition",
+          "name": "US-China summit and strategic competition"
+        }
+      ],
       "url": "/geopolitics/2026-10-01"
     }
   ],
@@ -73,6 +95,7 @@
       "domain": "technology",
       "heat": 7.61,
       "trend": "steady",
+      "coverage": "steady coverage",
       "brief_url": "/intel/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime"
     },
     {
@@ -81,6 +104,7 @@
       "domain": "technology",
       "heat": 6.78,
       "trend": "cooling",
+      "coverage": "falling coverage",
       "brief_url": "/intel/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance"
     },
     {
@@ -89,6 +113,7 @@
       "domain": "geopolitics",
       "heat": 4.47,
       "trend": "steady",
+      "coverage": "steady coverage",
       "brief_url": null
     },
     {
@@ -97,6 +122,7 @@
       "domain": "geopolitics",
       "heat": 2.65,
       "trend": "steady",
+      "coverage": "steady coverage",
       "brief_url": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout"
     },
     {
@@ -105,6 +131,7 @@
       "domain": "politics",
       "heat": 2.65,
       "trend": "steady",
+      "coverage": "steady coverage",
       "brief_url": null
     },
     {
@@ -113,6 +140,7 @@
       "domain": "geopolitics",
       "heat": 1.47,
       "trend": "cooling",
+      "coverage": "falling coverage",
       "brief_url": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
     },
     {
@@ -121,6 +149,7 @@
       "domain": "geopolitics",
       "heat": 1.33,
       "trend": "steady",
+      "coverage": "steady coverage",
       "brief_url": null
     },
     {
@@ -129,6 +158,7 @@
       "domain": "geopolitics",
       "heat": 0.65,
       "trend": "cooling",
+      "coverage": "falling coverage",
       "brief_url": null
     },
     {
@@ -137,6 +167,7 @@
       "domain": "society",
       "heat": 0.33,
       "trend": "cooling",
+      "coverage": "falling coverage",
       "brief_url": null
     },
     {
@@ -145,6 +176,7 @@
       "domain": "society",
       "heat": 0.33,
       "trend": "cooling",
+      "coverage": "falling coverage",
       "brief_url": null
     }
   ],
