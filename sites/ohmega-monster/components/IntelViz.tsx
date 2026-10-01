@@ -187,3 +187,54 @@ export function EscalationChips({ direction, pace }: { direction: string; pace: 
     </span>
   );
 }
+
+/** Thin horizontal probability bar (1-99). */
+export function ProbBar({ value }: { value: number }) {
+  const pct = Math.max(0, Math.min(100, value));
+  return (
+    <span className="intel-prob-bar" role="img" aria-label={`${Math.round(pct)} percent`}>
+      <span className="intel-prob-fill" style={{ width: `${pct}%` }} />
+    </span>
+  );
+}
+
+/** Calibration: forecast probability (x) vs how often it happened (y); diagonal = perfectly calibrated. */
+export function CalibrationChart({ buckets }: { buckets: { range: string; count: number; hit_rate: number }[] }) {
+  const W = 280;
+  const H = 240;
+  const L = 34;
+  const B = 28;
+  const T = 8;
+  const R = 10;
+  const px = (v: number) => L + (v / 100) * (W - L - R);
+  const py = (v: number) => T + (1 - v / 100) * (H - T - B);
+  const maxCount = Math.max(1, ...buckets.map((b) => b.count));
+  const ticks = [0, 25, 50, 75, 100];
+  const pts = buckets.map((b) => {
+    const m = b.range.match(/^(\d+)\D+(\d+)/);
+    const lo = m ? Number(m[1]) : parseInt(b.range, 10);
+    const hi = m ? Number(m[2]) : lo + 9;
+    const rate = b.hit_rate * 100; // backend sends a 0-1 fraction
+    return { ...b, x: (lo + hi + 1) / 2, y: Math.max(0, Math.min(100, rate)), r: 3 + 5 * Math.sqrt(b.count / maxCount) };
+  });
+  return (
+    <svg className="intel-calib" viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Calibration: how often forecasts at each probability actually happened">
+      {ticks.map((t) => (
+        <g key={t}>
+          <line x1={px(t)} x2={px(t)} y1={T} y2={H - B} className="intel-calib-grid" />
+          <line x1={L} x2={W - R} y1={py(t)} y2={py(t)} className="intel-calib-grid" />
+          <text x={px(t)} y={H - B + 13} textAnchor="middle" className="intel-calib-tick">{t}</text>
+          <text x={L - 5} y={py(t) + 3} textAnchor="end" className="intel-calib-tick">{t}</text>
+        </g>
+      ))}
+      <line x1={px(0)} y1={py(0)} x2={px(100)} y2={py(100)} className="intel-calib-diag" />
+      {pts.map((p) => (
+        <circle key={p.range} cx={px(p.x)} cy={py(p.y)} r={p.r} className="intel-calib-dot">
+          <title>{`Forecast ${p.range}%: happened ${Math.round(p.y)}% of the time (${p.count} forecast${p.count === 1 ? "" : "s"})`}</title>
+        </circle>
+      ))}
+      <text x={(L + W - R) / 2} y={H - 3} textAnchor="middle" className="intel-calib-axis">What we forecast (%)</text>
+      <text transform={`translate(9 ${(T + H - B) / 2}) rotate(-90)`} textAnchor="middle" className="intel-calib-axis">How often it happened (%)</text>
+    </svg>
+  );
+}

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { ActorMap, EscalationChips, RELATION_KINDS } from "@/components/IntelViz";
-import { allBriefSlugs, brief as loadBrief, type Effect, safeUrl } from "@/lib/intel";
+import { ActorMap, EscalationChips, ProbBar, RELATION_KINDS } from "@/components/IntelViz";
+import { allBriefSlugs, brief as loadBrief, type ChangeKind, type Effect, latestSnapshot, type Plausibility, pulseIdByName, safeUrl } from "@/lib/intel";
 
 type Params = { slug: string };
 
@@ -27,6 +27,19 @@ const LIKELIHOOD_CLASS: Record<string, string> = {
   remote: "unassessed",
 };
 const INDICATOR_CLASS: Record<string, string> = { observed: "severe", emerging: "elevated", "not seen": "unassessed" };
+
+const CHANGE: Record<ChangeKind, { glyph: string; cls: string; label: string }> = {
+  escalated: { glyph: "▲", cls: "severe", label: "Escalated" },
+  eased: { glyph: "▼", cls: "calm", label: "Eased" },
+  new: { glyph: "●", cls: "elevated", label: "New" },
+  resolved: { glyph: "✓", cls: "calm", label: "Resolved" },
+  unchanged: { glyph: "=", cls: "unassessed", label: "Unchanged" },
+};
+const PLAUSIBILITY: Record<Plausibility, { cls: string; label: string }> = {
+  leading: { cls: "severe", label: "Leading" },
+  plausible: { cls: "elevated", label: "Plausible" },
+  unlikely: { cls: "unassessed", label: "Unlikely" },
+};
 
 function Effects({ title, items }: { title: string; items: Effect[] }) {
   if (items.length === 0) return null;
@@ -58,6 +71,8 @@ export default function BriefPage({ params }: { params: Params }) {
   const b = loadBrief(params.slug);
   if (!b) notFound();
   const sorted = [...b.timeline].sort((x, y) => x.date.localeCompare(y.date));
+  const snap = latestSnapshot();
+  const hasPrevious = b.changes.length > 0;
 
   return (
     <article className="intel-page intel-brief">
@@ -83,6 +98,69 @@ export default function BriefPage({ params }: { params: Params }) {
           <span className="intel-micro">Bottom line</span>
           <p>{b.bottom_line}</p>
         </aside>
+      )}
+
+      {b.changes.length > 0 && (
+        <section className="intel-section" aria-label="Since our last brief">
+          <div className="intel-section-head">
+            <h2>Since our last brief</h2>
+          </div>
+          <ul className="intel-changes">
+            {b.changes.map((c, i) => {
+              const k = CHANGE[c.kind];
+              return (
+                <li key={i}>
+                  <span className={`intel-chip intel-band-${k.cls}`} title={k.label}>
+                    <span aria-hidden="true">{k.glyph}</span> {k.label}
+                  </span>
+                  <div>
+                    <p>{c.what}</p>
+                    {c.basis && <p className="intel-muted">{c.basis}</p>}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
+
+      {b.judgments.length > 0 && (
+        <section className="intel-section" aria-label="Key judgments">
+          <div className="intel-section-head">
+            <h2>Key judgments</h2>
+            <span className="intel-micro">Forecasts are scored publicly when they resolve.</span>
+          </div>
+          <ul className="intel-judgments">
+            {b.judgments.map((j, i) => (
+              <li key={i}>
+                <div className="intel-j-prob">
+                  <span className="intel-num intel-j-num">{j.probability}%</span>
+                  <ProbBar value={j.probability} />
+                </div>
+                <div className="intel-j-body">
+                  <p className="intel-strong">{j.statement}</p>
+                  {j.horizon && <p className="intel-micro">By {j.horizon}</p>}
+                  {(j.basis || j.resolves_yes_if || j.resolves_no_if) && (
+                    <details className="intel-j-more">
+                      <summary>Basis and how it resolves</summary>
+                      {j.basis && <p className="intel-muted">{j.basis}</p>}
+                      {j.resolves_yes_if && (
+                        <p>
+                          <span className="intel-micro">Yes if</span> {j.resolves_yes_if}
+                        </p>
+                      )}
+                      {j.resolves_no_if && (
+                        <p>
+                          <span className="intel-micro">No if</span> {j.resolves_no_if}
+                        </p>
+                      )}
+                    </details>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
 
       <section className="intel-section" aria-label="Escalation">
@@ -194,7 +272,16 @@ export default function BriefPage({ params }: { params: Params }) {
                   <tr key={i}>
                     <td>{x.signal}</td>
                     <td>
-                      <span className={`intel-chip intel-band-${INDICATOR_CLASS[x.status] ?? "unassessed"}`}>{x.status}</span>
+                      {x.previous_status && x.previous_status !== x.status ? (
+                        <span className="intel-move">
+                          <span className="intel-micro">{x.previous_status}</span>
+                          <span aria-label="to"> → </span>
+                          <span className={`intel-chip intel-band-${INDICATOR_CLASS[x.status] ?? "unassessed"}`}>{x.status}</span>
+                        </span>
+                      ) : (
+                        <span className={`intel-chip intel-band-${INDICATOR_CLASS[x.status] ?? "unassessed"}`}>{x.status}</span>
+                      )}
+                      {!x.previous_status && hasPrevious && <span className="intel-chip intel-band-elevated intel-new-chip">new</span>}
                     </td>
                     <td className="intel-muted">{x.meaning}</td>
                   </tr>
@@ -202,6 +289,44 @@ export default function BriefPage({ params }: { params: Params }) {
               </tbody>
             </table>
           </div>
+        </section>
+      )}
+
+      {b.alternatives.length > 0 && (
+        <section className="intel-section" aria-label="Competing explanations">
+          <div className="intel-section-head">
+            <h2>Competing explanations</h2>
+            <span className="intel-micro">Most to least plausible</span>
+          </div>
+          <ul className="intel-alts">
+            {b.alternatives.map((a, i) => {
+              const p = PLAUSIBILITY[a.plausibility];
+              return (
+                <li key={i}>
+                  <div className="intel-alt-head">
+                    <span className={`intel-chip intel-band-${p.cls}`}>{p.label}</span>
+                    <strong className="intel-strong">{a.hypothesis}</strong>
+                  </div>
+                  {(a.consistent_with || a.inconsistent_with) && (
+                    <dl className="intel-ends">
+                      {a.consistent_with && (
+                        <div>
+                          <dt>For</dt>
+                          <dd>{a.consistent_with}</dd>
+                        </div>
+                      )}
+                      {a.inconsistent_with && (
+                        <div>
+                          <dt>Against</dt>
+                          <dd>{a.inconsistent_with}</dd>
+                        </div>
+                      )}
+                    </dl>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
         </section>
       )}
 
@@ -221,17 +346,33 @@ export default function BriefPage({ params }: { params: Params }) {
         </section>
       )}
 
+      {b.would_change_our_mind.length > 0 && (
+        <section className="intel-section" aria-label="What would change our mind">
+          <div className="intel-section-head">
+            <h2>What would change our mind</h2>
+          </div>
+          <ul className="intel-unknowns">
+            {b.would_change_our_mind.map((u, i) => (
+              <li key={i}>{u}</li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       {b.pulses.length > 0 && (
         <section className="intel-section" aria-label="Related Pulses">
           <div className="intel-section-head">
             <h2>Related Pulses</h2>
           </div>
           <p className="intel-chips">
-            {b.pulses.map((p) => (
-              <Link key={p} href="/intel#intel-pulses" className="intel-chip intel-band-unassessed">
-                {p}
-              </Link>
-            ))}
+            {b.pulses.map((p) => {
+              const id = pulseIdByName(snap, p);
+              return (
+                <Link key={p} href={id ? `/intel#pulse-${id}` : "/intel#intel-pulses"} className="intel-chip intel-band-unassessed">
+                  {p}
+                </Link>
+              );
+            })}
           </p>
         </section>
       )}

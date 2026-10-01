@@ -18,7 +18,7 @@ function PulseTile({ p }: { p: Pulse }) {
   const d7 = p.velocity_7d;
   const dirClass = d7 === null || Math.round(d7 * 10) === 0 ? "flat" : d7 > 0 ? "up" : "down";
   return (
-    <details className={`intel-pulse intel-band-${p.band}`}>
+    <details id={`pulse-${p.id}`} className={`intel-pulse intel-band-${p.band}`}>
       <summary>
         <span className="intel-pulse-name">{p.name}</span>
         <span className="intel-pulse-main">

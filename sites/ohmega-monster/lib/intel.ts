@@ -53,7 +53,29 @@ export type BriefSummary = {
   direction: string;
   pace: string;
 };
-export type Snapshot = { slug: string; built_at: string; situations: Situation[]; theaters: Theater[]; briefs: BriefSummary[] };
+export type Outcome = "yes" | "no" | "void";
+export type OpenForecast = { statement: string; probability: number; horizon: string; theater_name: string; brief_slug: string };
+export type ResolvedForecast = { statement: string; probability: number; outcome: Outcome; resolved_at: string; evidence: string };
+export type Forecasts = {
+  scorecard: { resolved: number; void: number; open: number; brier: number | null; calibration: { range: string; count: number; hit_rate: number }[] };
+  open: OpenForecast[];
+  resolved: ResolvedForecast[];
+};
+export type Snapshot = {
+  slug: string;
+  built_at: string;
+  situations: Situation[];
+  theaters: Theater[];
+  briefs: BriefSummary[];
+  forecasts: Forecasts;
+};
+
+export type ChangeKind = "escalated" | "eased" | "new" | "resolved" | "unchanged";
+export type Change = { what: string; kind: ChangeKind; basis: string };
+export type Judgment = { statement: string; probability: number; horizon: string; basis: string; resolves_yes_if: string; resolves_no_if: string };
+export type Plausibility = "leading" | "plausible" | "unlikely";
+export type Hypothesis = { hypothesis: string; consistent_with: string; inconsistent_with: string; plausibility: Plausibility };
+export type IndicatorStatus = "not seen" | "emerging" | "observed";
 
 export type Effect = { effect: string; likelihood: string; watch_for: string };
 export type Brief = {
@@ -73,9 +95,13 @@ export type Brief = {
   relations: { source: string; target: string; kind: string; note: string; date: string }[];
   second_order: Effect[];
   peripheral: Effect[];
-  indicators: { signal: string; status: "not seen" | "emerging" | "observed"; meaning: string }[];
+  indicators: { signal: string; status: IndicatorStatus; previous_status: IndicatorStatus | ""; meaning: string }[];
   unknowns: string[];
   pulses: string[];
+  changes: Change[];
+  judgments: Judgment[];
+  alternatives: Hypothesis[];
+  would_change_our_mind: string[];
 };
 
 // ---- defensive coercion helpers -------------------------------------------------------------
@@ -166,6 +192,42 @@ function parseTheater(raw: unknown): Theater | null {
   };
 }
 
+const prob = (v: unknown): number | null => {
+  const n = num(v);
+  return n === null ? null : Math.min(99, Math.max(1, Math.round(n)));
+};
+
+function parseForecasts(raw: unknown): Forecasts {
+  const f = isObj(raw) ? raw : {};
+  const sc = isObj(f.scorecard) ? f.scorecard : {};
+  return {
+    scorecard: {
+      resolved: num(sc.resolved) ?? 0,
+      void: num(sc.void) ?? 0,
+      open: num(sc.open) ?? 0,
+      brier: num(sc.brier),
+      calibration: arr(sc.calibration)
+        .filter(isObj)
+        .map((c) => ({ range: str(c.range), count: num(c.count) ?? 0, hit_rate: num(c.hit_rate) }))
+        .filter((c): c is { range: string; count: number; hit_rate: number } => c.hit_rate !== null && c.count > 0 && /^\d+/.test(c.range)),
+    },
+    open: arr(f.open)
+      .filter(isObj)
+      .map((o) => ({ statement: str(o.statement), probability: prob(o.probability), horizon: str(o.horizon), theater_name: str(o.theater_name), brief_slug: str(o.brief_slug) }))
+      .filter((o): o is OpenForecast => o.statement !== "" && o.probability !== null),
+    resolved: arr(f.resolved)
+      .filter(isObj)
+      .map((r) => ({
+        statement: str(r.statement),
+        probability: prob(r.probability),
+        outcome: oneOf(r.outcome, ["yes", "no", "void"] as const, "void"),
+        resolved_at: str(r.resolved_at),
+        evidence: str(r.evidence),
+      }))
+      .filter((r): r is ResolvedForecast => r.statement !== "" && r.probability !== null),
+  };
+}
+
 function parseSnapshot(raw: unknown, slug: string): Snapshot | null {
   if (!isObj(raw)) return null;
   return {
@@ -205,8 +267,12 @@ function parseSnapshot(raw: unknown, slug: string): Snapshot | null {
         pace: str(b.pace),
       }))
       .filter((b) => b.slug && b.title),
+    forecasts: parseForecasts(raw.forecasts),
   };
 }
+
+const INDICATOR_STATUSES = ["not seen", "emerging", "observed"] as const;
+const PLAUS_RANK: Record<Plausibility, number> = { leading: 0, plausible: 1, unlikely: 2 };
 
 const parseEffects = (v: unknown): Effect[] =>
   arr(v)
@@ -254,12 +320,43 @@ function parseBrief(raw: unknown, slug: string): Brief | null {
       .filter(isObj)
       .map((i) => ({
         signal: str(i.signal),
-        status: oneOf(i.status, ["not seen", "emerging", "observed"] as const, "not seen"),
+        status: oneOf(i.status, INDICATOR_STATUSES, "not seen"),
+        previous_status: oneOf(i.previous_status, ["not seen", "emerging", "observed", ""] as const, ""),
         meaning: str(i.meaning),
       }))
       .filter((i) => i.signal),
     unknowns: strs(raw.unknowns),
     pulses: strs(raw.pulses),
+    changes: arr(raw.changes)
+      .filter(isObj)
+      .map((c) => ({
+        what: str(c.what),
+        kind: oneOf(c.kind, ["escalated", "eased", "new", "resolved", "unchanged"] as const, "unchanged"),
+        basis: str(c.basis),
+      }))
+      .filter((c) => c.what),
+    judgments: arr(raw.judgments)
+      .filter(isObj)
+      .map((j) => ({
+        statement: str(j.statement),
+        probability: prob(j.probability),
+        horizon: str(j.horizon),
+        basis: str(j.basis),
+        resolves_yes_if: str(j.resolves_yes_if),
+        resolves_no_if: str(j.resolves_no_if),
+      }))
+      .filter((j): j is Judgment => j.statement !== "" && j.probability !== null),
+    alternatives: arr(raw.alternatives)
+      .filter(isObj)
+      .map((a) => ({
+        hypothesis: str(a.hypothesis),
+        consistent_with: str(a.consistent_with),
+        inconsistent_with: str(a.inconsistent_with),
+        plausibility: oneOf(a.plausibility, ["leading", "plausible", "unlikely"] as const, "plausible"),
+      }))
+      .filter((a) => a.hypothesis)
+      .sort((a, b) => PLAUS_RANK[a.plausibility] - PLAUS_RANK[b.plausibility]),
+    would_change_our_mind: strs(raw.would_change_our_mind),
   };
 }
 
@@ -299,6 +396,13 @@ export function mostSeverePulses(s: Snapshot | null, n: number): (Pulse & { situ
 export function hottestTheater(s: Snapshot | null): Theater | null {
   if (!s || s.theaters.length === 0) return null;
   return [...s.theaters].sort((a, b) => b.heat - a.heat)[0];
+}
+
+/** A Pulse's id by its exact name in a snapshot (for /intel#pulse-<id> links). */
+export function pulseIdByName(s: Snapshot | null, name: string): string | null {
+  if (!s) return null;
+  for (const sit of s.situations) for (const p of sit.pulses) if (p.name === name) return p.id;
+  return null;
 }
 
 /** "2026-09-30T14:05:00Z" -> "2026-09-30 14:05 UTC"; date-only strings pass through. */
