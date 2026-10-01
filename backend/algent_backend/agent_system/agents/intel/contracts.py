@@ -14,9 +14,9 @@ know. Facts and assessments are kept apart, the way an analyst's product must.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 Verification = Literal["researched", "reported"]   # graded by our research / headline only
 
@@ -93,6 +93,40 @@ class Indicator(BaseModel):
     signal: str
     status: Literal["not seen", "emerging", "observed"] = "not seen"
     meaning: str = ""                # what it would mean if it shows
+    previous_status: str = ""        # its status in our last brief ("" when the signal is new)
+
+
+class Change(BaseModel):
+    """One thing that moved since our last brief — continuity is the first job of a repeat brief."""
+
+    what: str
+    kind: Literal["escalated", "eased", "new", "resolved", "unchanged"]
+    basis: str = ""                  # the evidence that moved it
+
+
+class Judgment(BaseModel):
+    """A key judgment as a scored forecast: falsifiable, dated, and checkable by a stranger later."""
+
+    statement: str                   # a claim about the future that events can prove wrong
+    probability: int                 # percent, 1–99
+    horizon: str                     # YYYY-MM-DD, when it should be decidable
+    basis: str = ""
+    resolves_yes_if: str = ""        # what public reporting would have to show for YES
+    resolves_no_if: str = ""         # ...and for NO
+
+    @field_validator("probability", mode="before")
+    @classmethod
+    def _clamp(cls, v: Any) -> int:
+        return max(1, min(99, int(v)))
+
+
+class Hypothesis(BaseModel):
+    """One competing explanation of the theater's core question (analysis of competing hypotheses)."""
+
+    hypothesis: str
+    consistent_with: str = ""        # evidence that fits it
+    inconsistent_with: str = ""      # evidence that cuts against it
+    plausibility: Literal["leading", "plausible", "unlikely"] = "plausible"
 
 
 class Brief(BaseModel):
@@ -106,4 +140,8 @@ class Brief(BaseModel):
     peripheral: list[Effect] = Field(default_factory=list)   # things outside the core worth watching
     indicators: list[Indicator] = Field(default_factory=list)
     unknowns: list[str] = Field(default_factory=list)
-    pulses: list[str] = Field(default_factory=list)          # dimensions this theater bears on
+    pulses: list[str] = Field(default_factory=list)          # exact Pulse NAMES this theater bears on
+    changes: list[Change] = Field(default_factory=list)      # since our last brief, most important first
+    judgments: list[Judgment] = Field(default_factory=list)  # 2–4 scored forecasts
+    alternatives: list[Hypothesis] = Field(default_factory=list)   # the red team: competing explanations
+    would_change_our_mind: list[str] = Field(default_factory=list)

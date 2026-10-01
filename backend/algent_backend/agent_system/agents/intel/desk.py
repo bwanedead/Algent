@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from . import brief as br
-from . import render
+from . import forecasts, render
 from .contracts import Brief, Theater
 from .heat import store_dir
 
@@ -43,11 +43,38 @@ def persist_brief(brief: Brief, *, as_of: str, theater: Theater, heat: dict, res
     return record
 
 
+def previous_brief(theater_id: str, *, before_slug: str = "") -> dict | None:
+    """The newest persisted brief on this theater (other than ``before_slug``, which is about to be
+    rewritten), so the next one can say what changed. None for a theater we have not briefed."""
+    found = []
+    for path in sorted(briefs_dir().glob("*.json")) if theater_id and briefs_dir().is_dir() else []:
+        try:
+            rec = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        if rec.get("theater_id") == theater_id and rec.get("slug") != before_slug:
+            found.append(rec)
+    return max(found, key=lambda r: (r.get("as_of", ""), r.get("built_at", "")), default=None)
+
+
+def board_headlines(board: dict) -> str:
+    """Every headline on the board, as evidence for settling forecasts that are past their horizon."""
+    return "\n".join(f"[{t.get('name', '')}] {br.reported(Theater.model_validate(t))}" for t in board.get("theaters", []))
+
+
+def settle_overdue(ctx: Any, board: dict, *, as_of: str, model_spec: Any) -> list[dict]:
+    """The cycle's once-a-run pass: forecasts past their horizon, judged against everything on the board."""
+    return forecasts.resolve_due(ctx, None, model_spec, board_headlines(board), as_of=as_of)
+
+
 def produce(ctx: Any, theater: Theater, heat: dict, *, as_of: str, out: Path | None = None,
             research: bool = False, focus: str = "", model_spec: Any = None) -> dict:
     """Research (optional) → brief → persist. Returns a report row; ``error`` set when no brief came."""
     from algent_backend.agent_system.agents.pulse.update import update_quietly
+    from algent_backend.agent_system.agents.pulse.repository import pulse_store
     from algent_backend.agent_system.foundation import cost
+
+    from ..pulse.seed import evidence_block
 
     profiles, spent = [], 0.0
     if research:
@@ -58,14 +85,23 @@ def produce(ctx: Any, theater: Theater, heat: dict, *, as_of: str, out: Path | N
         if prof:
             profiles.append(prof)
             update_quietly(prof, run_id=prof["id"])   # the brief's research moves the Pulses
-    brief = br.write_brief(ctx, None, theater, heat, profiles=profiles, pulse_lines=[],
-                           model_spec=model_spec, focus=focus)
+    # What we said last time, and how the desk's calls on this theater came out, go to the analyst;
+    # forecasts this evidence settles are resolved first so the analyst sees the outcomes.
+    settled = forecasts.resolve_due(
+        ctx, None, model_spec, f"{evidence_block(profiles)[0]}\n\nREPORTED HEADLINES:\n{br.reported(theater)}",
+        as_of=as_of, theater_id=theater.id)
+    brief = br.write_brief(ctx, None, theater, heat, profiles=profiles, pulse_table=br.pulse_catalog(pulse_store()),
+                           model_spec=model_spec, focus=focus,
+                           previous=previous_brief(theater.id, before_slug=brief_slug(as_of, theater.name, focus)),
+                           track_record=forecasts.track_record(theater.id))
     if brief is None:
         return {"theater": theater.id, "error": "analyst returned nothing"}
     record = persist_brief(brief, as_of=as_of, theater=theater, heat=heat, researched=bool(profiles),
                            focus=focus)
+    forecasts.record(record["slug"], theater.id, brief.judgments, made_at=record["built_at"])
     row = {"theater": theater.id, "slug": record["slug"], "researched": bool(profiles),
-           "research_usd": round(spent, 4)}
+           "research_usd": round(spent, 4), "forecasts_made": len(brief.judgments),
+           "forecasts_settled": len(settled)}
     if out is not None:
         name = br.safe_name(theater.name) + (f"_{br.focus_tag(focus)}" if focus.strip() else "")
         (out / f"brief_{name}.json").write_text(brief.model_dump_json(indent=2), encoding="utf-8")

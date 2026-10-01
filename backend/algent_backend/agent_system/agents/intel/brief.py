@@ -45,25 +45,55 @@ TWO KINDS OF EVIDENCE, KEPT APART:
 Never upgrade a reported item into a fact. When the only evidence is reported, say so.
 
 FACTS VS ASSESSMENTS. The `situation` and `timeline` are facts with dates and verification. The
-`bottom_line`, `escalation.assessment`, `second_order`, `peripheral` and `indicators` are
-assessments: use estimative language (almost certain, likely, roughly even, unlikely, remote) and
+`bottom_line`, `escalation.assessment`, `second_order`, `peripheral`, `indicators` and `judgments`
+are assessments: use estimative language (almost certain, likely, roughly even, unlikely, remote) and
 say what each rests on. Calm is evidence too: if something has NOT happened that would have been
 expected, that is worth a line. News over-reports escalation; do not read volume as intensity.
 
 WHAT A GOOD BRIEF HOLDS:
-- `bottom_line`: 2–3 sentences — what matters, which way it is moving, how sure we are.
+- `changes`: when there is a PREVIOUS BRIEF, lead the work with what changed since it, most
+  important first. Each is `escalated`, `eased`, `new`, `resolved` or `unchanged` (say so when a
+  watched thing stayed put: stasis is a finding), with the evidence that moved it. A repeat brief
+  that reads like a first brief wastes the reader's time; the reader already knows the old one.
+  Empty when there is no previous brief.
+- `bottom_line`: 2-3 sentences: what matters, which way it is moving, how sure we are. On a repeat
+  brief, say what is different now.
 - `timeline`: dated events, most recent last, each with actors, verification and a source URL.
-- `relations`: who is doing what to whom — one edge per relationship (kind: strikes, sabotage,
+- `relations`: who is doing what to whom, one edge per relationship (kind: strikes, sabotage,
   coerces, sanctions, supports, negotiates, deters, other).
 - `escalation`: direction (rising/steady/easing/unclear), pace (fast/gradual/flat) and the
   assessment with its basis, compared with the months before.
+- `judgments`: 2-4 key judgments, each a FORECAST the desk will be scored on. A judgment is a claim
+  about the future that events can prove wrong, concrete enough that a stranger could check it later
+  from public reporting ("X will happen by DATE", not "tensions will remain elevated"). Give a real
+  probability (1-99): the number is a commitment, so let it vary with your evidence. A slate of
+  all 50s says you will not commit; a slate of all 90s says you are not honest about uncertainty.
+  Set `horizon` (YYYY-MM-DD) from about two weeks to six months out, whenever the question will
+  actually be decidable. Fill `resolves_yes_if` and `resolves_no_if` with what a later reader would
+  have to see to settle it, and `basis` with what the number rests on. Keep the words consistent
+  with the number (almost certain 95+, likely 70-85, roughly even 40-60, unlikely 15-30, remote
+  under 5). If YOUR TRACK RECORD shows misses, look for the pattern (too confident? too slow to call
+  a turn?) and correct for it; do not restate a missed call unchanged.
+- `alternatives`: the red team. Take the theater's core question (what is really going on, or what
+  happens next) and set out 2-3 competing explanations, the leading one included. For each: the
+  evidence consistent with it, the evidence that cuts against it, and its plausibility (leading,
+  plausible, unlikely). Steelman the alternative honestly, as its best advocate would argue it, not
+  as a strawman. Weigh each by what the evidence rules OUT rather than by how much fits, because
+  most evidence fits several stories. The point is to catch the brief's own favourite being wrong.
+- `would_change_our_mind`: the specific observations that would make you abandon the leading
+  hypothesis or move a key judgment sharply.
 - `second_order`: what follows for outside parties, with likelihood and what to watch for.
-- `peripheral`: things outside the core that bear on it and should be watched — adjacent target
+- `peripheral`: things outside the core that bear on it and should be watched: adjacent target
   classes, neighbouring theaters, supply lines, elections, markets.
 - `indicators`: the observable signals that would mark the next rung (status: not seen, emerging,
-  observed) and what each would mean.
+  observed) and what each would mean. Indicators are tracked over time: re-assess EVERY indicator
+  from the previous brief using the SAME `signal` wording, so a reader can follow it from one brief
+  to the next, and put its old status in `previous_status` (leave it empty for new signals). Add
+  new indicators as the situation calls for them; drop one only when it is overtaken, and say so in
+  `changes`.
 - `unknowns`: what we cannot establish and would most want to.
-- `pulses`: the persistent dimensions this theater bears on, in a few words each.
+- `pulses`: which of the listed Pulses this theater bears on, by their EXACT names from the table
+  provided. Only names from that table; if none fits, leave it empty.
 Plain words a newcomer can follow; no internal jargon.
 """
 
@@ -100,13 +130,41 @@ def commission_research(context: Any, config: Any, theater: Theater, *, focus: s
     return profile if isinstance(profile, dict) and profile.get("id") else None
 
 
-def _reported(theater: Theater) -> str:
+def reported(theater: Theater) -> str:
     return "\n".join(f"- ({m.edition[:10]}) {m.title} — {m.thesis[:220]} [sources: {', '.join(m.sources[:2]) or '—'}]"
                      for m in sorted(theater.members, key=lambda m: m.edition))
 
 
+def pulse_catalog(store: Any) -> dict[str, str]:
+    """Current Pulses as ``name -> table row`` (situation, position or 'unassessed', band): the closed
+    list the analyst may tag a theater with. Dormant pulses and inactive situations are left out."""
+    titles = {s.id: s.title for s in store.situations() if s.status == "active"}
+    out = {}
+    for p in store.pulses():
+        if p.status == "dormant" or p.situation_id not in titles:
+            continue
+        st = store.state(p.id)
+        pos = "unassessed" if st.position is None else f"{st.position:.0f}"
+        out[p.name] = f"- {p.name} | {titles[p.situation_id]} | {pos} | {st.band or 'unassessed'}"
+    return out
+
+
+def previous_digest(record: dict) -> str:
+    """A compact digest of the last brief on this theater: what we said, so this one can say what moved."""
+    esc = record.get("escalation") or {}
+    lines = [f"PREVIOUS BRIEF ({record.get('as_of', '?')}): {record.get('title', '')}",
+             f"Bottom line: {record.get('bottom_line', '')}",
+             f"Escalation: {esc.get('direction', '?')}, {esc.get('pace', '?')} - {esc.get('assessment', '')[:300]}",
+             "Indicators (keep these signals, same wording):"]
+    lines += [f"- [{i.get('status', '?')}] {i.get('signal', '')}" for i in record.get("indicators") or []]
+    lines += ["Key judgments:"] + [f"- {j.get('probability')}% by {j.get('horizon')}: {j.get('statement', '')}"
+                                    for j in record.get("judgments") or []]
+    return "\n".join(lines)
+
+
 def write_brief(context: Any, config: Any, theater: Theater, heat: dict, *, profiles: list[dict],
-                pulse_lines: list[str], model_spec: Any, focus: str = "") -> Brief | None:
+                pulse_table: dict[str, str], model_spec: Any, focus: str = "", previous: dict | None = None,
+                track_record: str = "") -> Brief | None:
     from langchain_core.messages import HumanMessage, SystemMessage
 
     from algent_backend.agent_system.prompting import UNIVERSAL_AGENT_BASE, compose_system_prompt
@@ -118,17 +176,42 @@ def write_brief(context: Any, config: Any, theater: Theater, heat: dict, *, prof
     task = (f"THEATER: {theater.name}\n{theater.why}\n\n"
             f"HEAT: {heat.get('recent', 0)} headlines in the last 3 days vs {heat.get('prior', 0)} before "
             f"({heat.get('trend', '?')}); first seen {heat.get('first_seen', '?')}.\n\n"
-            f"RESEARCHED CLAIMS (graded by our research):{researched or ' none'}\n\n"
+            + (previous_digest(previous) + "\n\n" if previous else "PREVIOUS BRIEF: none, this is the first.\n\n")
+            + (f"YOUR TRACK RECORD ON THIS THEATER (the desk's earlier judgments and how they came out):\n"
+               f"{track_record}\n\n" if track_record else "")
+            + f"RESEARCHED CLAIMS (graded by our research):{researched or ' none'}\n\n"
             f"SOURCE URLS FOR RESEARCHED CLAIMS: {_compact(source_urls)}\n\n"
-            f"REPORTED HEADLINES (other outlets, unverified):\n{_reported(theater)}\n\n"
-            + (f"OHMEGA PULSES IN THIS AREA:\n" + "\n".join(pulse_lines) + "\n\n" if pulse_lines else "")
+            f"REPORTED HEADLINES (other outlets, unverified):\n{reported(theater)}\n\n"
+            + ("OHMEGA PULSES (name | situation | position | band); tag `pulses` with names from here only:\n"
+               + "\n".join(pulse_table.values()) + "\n\n" if pulse_table else "")
             + (f"DESK FOCUS: {focus.strip()}\nThe desk asked this directly: lead with it and answer it from the "
                "evidence, then cover the rest of the theater.\n\n" if focus.strip() else "")
             + "TASK: write the brief.")
     model = context.model_resolver.resolve(model_spec).client.with_structured_output(Brief)
     brief = model.invoke([SystemMessage(content=compose_system_prompt(UNIVERSAL_AGENT_BASE, ANALYST_ROLE)),
                           HumanMessage(content=task)], config=config)
-    return brief if isinstance(brief, Brief) else None
+    return normalise(brief, pulse_table=pulse_table, has_previous=bool(previous)) if isinstance(brief, Brief) else None
+
+
+def normalise(brief: Brief, *, pulse_table: dict[str, str], has_previous: bool) -> Brief:
+    """Enforce what the schema cannot: Pulse names come from the table (canonical spelling, no
+    inventions), changes need a previous brief, judgments are at most four and carry a real date."""
+    canon = {n.lower(): n for n in pulse_table}
+    brief.pulses = list(dict.fromkeys(canon[p.strip().lower()] for p in brief.pulses if p.strip().lower() in canon))
+    if not has_previous:
+        brief.changes = []
+    brief.judgments = [j for j in brief.judgments if _is_date(j.horizon) and j.statement.strip()][:4]
+    return brief
+
+
+def _is_date(text: str) -> bool:
+    from datetime import date
+
+    try:
+        date.fromisoformat(text)
+    except ValueError:
+        return False
+    return True
 
 
 def _compact(urls: dict) -> str:

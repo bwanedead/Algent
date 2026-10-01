@@ -16,8 +16,13 @@ Snapshot file ``content/intel/snapshots/<slug>.json``, slug = UTC "YYYY-MM-DD-HH
      "theaters":[{"id","name","domain","why","heat","trend","recent","prior","first_seen",
                   "series":[{"day","count"}],"brief":slug|null}],  // newest board, hottest first;
                                                                    // brief = newest brief slug for that theater id
-     "briefs":[{"slug","title","bottom_line","theater_id","theater_name","as_of","direction","pace"}]}
+     "briefs":[{"slug","title","bottom_line","theater_id","theater_name","as_of","direction","pace"}],
                                                                    // every brief ever, newest first
+     "forecasts":{"scorecard":{"resolved","void","open","brier":float|null,   // lower is better, .25 = coin flip
+                               "calibration":[{"range":"70-79","count","hit_rate"}]},
+                  "open":[{"statement","probability","horizon","theater_name","brief_slug"}],   // 20 soonest horizon
+                  "resolved":[{"statement","probability","outcome":"yes|no|void","resolved_at","evidence"}]}}
+                                                                   // 20 newest resolved; from intel_store/forecasts.jsonl
 
 Brief files: ``content/intel/briefs/<slug>.json`` = the persisted brief record
 (``intel_store/briefs/<slug>.json``, schema ``ohmega.brief/1``).
@@ -38,6 +43,8 @@ import re
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+from algent_backend.agent_system.agents.intel import forecasts
 
 from . import site_git
 
@@ -103,6 +110,19 @@ def _read_all(folder: Path) -> list[dict]:
     return out
 
 
+def _forecasts(intel_dir: Path, theater_names: dict[str, str]) -> dict:
+    """The desk's track record: the scorecard, what is still open, and how the latest calls came out."""
+    rows = forecasts.current(intel_dir)
+    open_ = sorted((f for f in rows if f["status"] == "open"), key=lambda f: f["horizon"])[:20]
+    done = sorted((f for f in rows if f["status"] != "open"), key=lambda f: f["resolved_at"], reverse=True)[:20]
+    return {"scorecard": forecasts.scorecard(intel_dir),
+            "open": [{"statement": f["statement"], "probability": f["probability"], "horizon": f["horizon"],
+                      "theater_name": theater_names.get(f["brief_slug"], ""), "brief_slug": f["brief_slug"]}
+                     for f in open_],
+            "resolved": [{"statement": f["statement"], "probability": f["probability"], "outcome": f["status"],
+                          "resolved_at": f["resolved_at"], "evidence": f["evidence"]} for f in done]}
+
+
 def build_snapshot(store: Any, intel_dir: Path, *, now: datetime | None = None) -> dict:
     """Everything the site shows of the desk, as of now. Pure read: nothing is written."""
     now = now or datetime.now(UTC)
@@ -127,7 +147,8 @@ def build_snapshot(store: Any, intel_dir: Path, *, now: datetime | None = None) 
             "briefs": [{"slug": b["slug"], "title": b.get("title", ""), "bottom_line": b.get("bottom_line", ""),
                         "theater_id": b.get("theater_id", ""), "theater_name": b.get("theater_name", ""),
                         "as_of": b.get("as_of", ""), "direction": (b.get("escalation") or {}).get("direction", ""),
-                        "pace": (b.get("escalation") or {}).get("pace", "")} for b in briefs]}
+                        "pace": (b.get("escalation") or {}).get("pace", "")} for b in briefs],
+            "forecasts": _forecasts(intel_dir, {b["slug"]: b.get("theater_name", "") for b in briefs})}
 
 
 def _write_if_changed(path: Path, payload: dict) -> None:

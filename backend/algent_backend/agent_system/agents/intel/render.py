@@ -105,6 +105,9 @@ _KIND = {"strikes": "var(--hot)", "sabotage": "var(--hot)", "coerces": "var(--wa
          "deters": "var(--cool)", "supports": "var(--good)", "negotiates": "var(--good)", "other": "var(--muted)"}
 
 
+_CHANGE = {"escalated": "rising", "eased": "easing", "new": "rising", "resolved": "easing", "unchanged": "steady"}
+
+
 def actors_svg(brief: Brief) -> str:
     rels = brief.relations
     actors = list(dict.fromkeys([a for r in rels for a in (r.source, r.target)]))
@@ -145,7 +148,18 @@ def render_brief(brief: Brief, *, theater_name: str, heat: dict, as_of: str) -> 
         f"<li><b>{_e(x.likelihood)}:</b> {_e(x.effect)}{f' <span class=sub>— watch for {_e(x.watch_for)}</span>' if x.watch_for else ''}</li>"
         for x in items)
     inds = "".join(f"<tr><td><span class='pill {'rising' if i.status == 'observed' else 'steady'}'>{_e(i.status)}"
-                   f"</span></td><td>{_e(i.signal)}</td><td class='sub'>{_e(i.meaning)}</td></tr>" for i in brief.indicators)
+                   f"</span>{f' <span class=sub>was {_e(i.previous_status)}</span>' if i.previous_status and i.previous_status != i.status else ''}"
+                   f"</td><td>{_e(i.signal)}</td><td class='sub'>{_e(i.meaning)}</td></tr>" for i in brief.indicators)
+    changes = "".join(f"<li><span class='pill {_CHANGE.get(c.kind, 'steady')}'>{_e(c.kind)}</span>{_e(c.what)}"
+                      f"{f' <span class=sub>— {_e(c.basis)}</span>' if c.basis else ''}</li>" for c in brief.changes)
+    judgments = "".join(f"<tr><td><b>{j.probability}%</b><div class='sub'>by {_e(j.horizon)}</div></td>"
+                        f"<td>{_e(j.statement)}<div class='sub'>{_e(j.basis)}</div></td>"
+                        f"<td class='sub'>Yes if: {_e(j.resolves_yes_if)}<br>No if: {_e(j.resolves_no_if)}</td></tr>"
+                        for j in brief.judgments)
+    alts = "".join(f"<div class='card'><span class='pill {'rising' if a.plausibility == 'leading' else 'steady'}'>"
+                   f"{_e(a.plausibility)}</span><b>{_e(a.hypothesis)}</b>"
+                   f"<div class='sub'>Fits: {_e(a.consistent_with)}</div>"
+                   f"<div class='sub'>Cuts against: {_e(a.inconsistent_with)}</div></div>" for a in brief.alternatives)
     body = (
         f"<div class='sub'>Intelligence brief · {_e(theater_name)} · as of {_e(as_of)}</div><h1>{_e(brief.title)}</h1>"
         f"<div class='card bluf'>{_e(brief.bottom_line)}</div>"
@@ -153,12 +167,17 @@ def render_brief(brief: Brief, *, theater_name: str, heat: dict, as_of: str) -> 
         f"<span class='pill steady'>pace: {_e(esc.pace)}</span>"
         f"<span class='pill steady'>{heat.get('recent', 0)} headlines in 3 days · {_e(heat.get('trend'))}</span>"
         f"<div style='margin-top:8px'>{_e(esc.assessment)}</div></div>"
-        f"<h2>Where things stand</h2><div>{_e(brief.situation)}</div>"
+        + (f"<h2>What changed since the last brief</h2><ul>{changes}</ul>" if changes else "")
+        + f"<h2>Where things stand</h2><div>{_e(brief.situation)}</div>"
         + (f"<h2>Who is doing what to whom</h2><div class='card'>{actors_svg(brief)}</div>" if brief.relations else "")
         + (f"<h2>Timeline</h2><table><tr><th>Date</th><th>Event</th><th>Actors</th></tr>{tl}</table>" if tl else "")
+        + (f"<h2>Key judgments</h2><table><tr><th>Odds</th><th>Judgment</th><th>How it will be settled</th></tr>{judgments}</table>" if judgments else "")
+        + (f"<h2>Competing explanations</h2>{alts}" if alts else "")
+        + (f"<h2>What would change our mind</h2><ul>{''.join(f'<li>{_e(u)}</li>' for u in brief.would_change_our_mind)}</ul>" if brief.would_change_our_mind else "")
         + (f"<h2>What follows</h2><ul>{effects(brief.second_order)}</ul>" if brief.second_order else "")
         + (f"<h2>Watch the periphery</h2><ul>{effects(brief.peripheral)}</ul>" if brief.peripheral else "")
         + (f"<h2>Indicators &amp; warnings</h2><table><tr><th>Status</th><th>Signal</th><th>What it would mean</th></tr>{inds}</table>" if inds else "")
+        + (f"<h2>Pulses</h2><div class='sub'>{_e(', '.join(brief.pulses))}</div>" if brief.pulses else "")
         + (f"<h2>What we do not know</h2><ul>{''.join(f'<li>{_e(u)}</li>' for u in brief.unknowns)}</ul>" if brief.unknowns else "")
         + "<div class='note'><span class='pill researched'>researched</span> established by Ohmega's graded research. "
           "<span class='pill reported'>reported</span> other outlets' reporting, not verified by us. "
