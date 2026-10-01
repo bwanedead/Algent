@@ -37,6 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </Link>
             <nav className="site-nav" aria-label="Primary navigation">
               <Link href="/">Index</Link>
+              <Link href="/radar">Radar</Link>
               <Link href="/intel" className="nav-keep">Intelligence</Link>
               <Link href="/geopolitics" className="nav-keep">Geopolitics</Link>
               <Link href="/pulses" className="nav-keep">Pulses</Link>

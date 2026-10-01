@@ -1,8 +1,9 @@
 import Link from "next/link";
 
-import DailyCard from "@/components/DailyCard";
 import FlagRow from "@/components/FlagRow";
+import DailyCard from "@/components/DailyCard";
 import IntelCard from "@/components/IntelCard";
+import RadarCard from "@/components/RadarCard";
 import ShareButton from "@/components/ShareButton";
 import { getAllMeta } from "@/lib/articles";
 import { SITE_URL } from "@/lib/site";
@@ -12,6 +13,7 @@ export default function Home() {
   const articles = getAllMeta();
   return (
     <section className="index-page" aria-label="Reports">
+      <RadarCard />
       <IntelCard />
       <DailyCard domain="geopolitics" title="Geopolitics" href="/geopolitics" />
       <ul className="feed">
