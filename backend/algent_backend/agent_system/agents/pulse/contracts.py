@@ -137,6 +137,10 @@ class Influence(BaseModel):
     mode: Mode
     definition_version: int
     proposed_position: float | None = None   # None = considered, no position taken
+    # The reader's ABSOLUTE read — where reality sits now, ignoring the Pulse's history. One vote:
+    # it never moves the Pulse, but every later reader sees the votes (projection.absolute_votes),
+    # so a history that many independent readers disagree with gets corrected through them.
+    absolute_position: float | None = None
     decision: Decision
     rationale: str
     confidence: Confidence = Field(default_factory=Confidence)

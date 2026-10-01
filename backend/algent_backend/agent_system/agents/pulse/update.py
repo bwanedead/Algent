@@ -11,6 +11,11 @@ After an article run, its research profile is:
    recorded as no_change with the reason; unknown Pulses and off-ruler positions are refused;
 4. open watches the evidence fulfils are resolved, and the event is recorded once.
 
+Every answer also carries the reader's ABSOLUTE vote — where reality sits ignoring the history.
+One article is one slice, so the vote never moves the Pulse; it is shown to every later reader,
+and votes from different research that keep pulling one way are how a drifted history gets
+corrected (projection.absolute_votes).
+
 Never raises into the caller: a Pulse problem must never cost an article (``update_quietly``).
 Consumes only graded research — it never fetches anything.
 """
@@ -33,6 +38,7 @@ class PulseUpdate(BaseModel):
     pulse_id: str
     decision: Literal["applied", "no_change"] = "no_change"
     position: float | None = None
+    absolute_position: float | None = None
     claim_ids: list[str] = Field(default_factory=list)
     rationale: str = ""
     confidence: Confidence = Field(default_factory=Confidence)
@@ -89,7 +95,8 @@ def update_from_profile(context: Any, config: Any, store: Any, profile: dict, *,
     now = datetime.now(UTC).isoformat()
     report: dict = {"touched": [s.id for s in touched], "influences": [], "watches": [], "problems": []}
     prompt = compose_system_prompt(UNIVERSAL_AGENT_BASE, UPDATE_ROLE)
-    model = context.model_resolver.resolve(model_spec).client.with_structured_output(UpdatePlan)
+    resolved = context.model_resolver.resolve(model_spec)
+    model = resolved.client.with_structured_output(UpdatePlan)
 
     for sit in touched:
         brief, pulses = _situation_brief(store, sit)
@@ -111,7 +118,7 @@ def update_from_profile(context: Any, config: Any, store: Any, profile: dict, *,
         for u in plan.updates:
             inf = _checked_influence(u, pulses, citable, report["problems"], now=now, run_id=run_id,
                                      article_slug=article_slug, profile_id=str(profile.get("id") or ""),
-                                     event=evt.id if evt else "")
+                                     event=evt.id if evt else "", model=getattr(resolved, "model", "") or "")
             if inf is None:
                 continue
             try:
@@ -131,7 +138,8 @@ def update_from_profile(context: Any, config: Any, store: Any, profile: dict, *,
 
 
 def _checked_influence(u: PulseUpdate, pulses: dict, citable: set[str], problems: list[str], *,
-                       now: str, run_id: str, article_slug: str, profile_id: str, event: str) -> Influence | None:
+                       now: str, run_id: str, article_slug: str, profile_id: str, event: str,
+                       model: str = "") -> Influence | None:
     pulse = pulses.get(u.pulse_id)
     if pulse is None:
         problems.append(f"unknown pulse {u.pulse_id} refused")
@@ -144,11 +152,13 @@ def _checked_influence(u: PulseUpdate, pulses: dict, citable: set[str], problems
         rationale = f"[move refused: no valid evidence] {rationale}"
     if decision == "no_change":
         position = None
+    absolute = u.absolute_position if u.absolute_position is not None and 0 <= u.absolute_position <= 100 else None
     return Influence(
         pulse_id=u.pulse_id, at=now, evidence_through=u.evidence_through, mode="article",
-        definition_version=pulse.definition.version, proposed_position=position, decision=decision,
+        definition_version=pulse.definition.version, proposed_position=position,
+        absolute_position=absolute, decision=decision,
         rationale=rationale or "no rationale given", confidence=u.confidence,
-        prompt_version=UPDATE_PROMPT_VERSION,
+        prompt_version=UPDATE_PROMPT_VERSION, model=model,
         source=Source(run_id=run_id, stage="pulse_update", profile_id=profile_id,
                       article_slug=article_slug, claim_ids=good, event_id=event))
 

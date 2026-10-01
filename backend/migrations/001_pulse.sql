@@ -77,6 +77,7 @@ create table pulse_influences (
     mode                 text not null check (mode in ('seed', 'article', 'reassess', 'blind')),
     definition_version   integer not null,
     proposed_position    numeric(5, 1) check (proposed_position between 0 and 100),
+    absolute_position    numeric(5, 1) check (absolute_position between 0 and 100),   -- history-free read: one vote
     decision             text not null check (decision in ('applied', 'no_change', 'rejected', 'reconcile')),
     rationale            text not null,
     confidence           jsonb not null default '{}'::jsonb,   -- quality / coverage / agreement

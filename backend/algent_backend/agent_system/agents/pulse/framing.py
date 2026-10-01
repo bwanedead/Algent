@@ -2,16 +2,20 @@
 How a Pulse is described to the model — its frame, and (unless blind) its history as the scale.
 
 One home for this, used by the article update and the reassessment, so the two can never describe
-the same Pulse differently. Under doctrine v3 a Pulse's past readings ARE its ruler: each new
-reading is argued against them. The blind check gets the frame only.
+the same Pulse differently. A Pulse's past readings are its memory and each new reading is argued
+against them; alongside them the reader sees the recent ABSOLUTE votes of other readers, so the
+collective's view of where reality sits reaches every reading (doctrine v4). The blind check gets
+the frame only.
 """
 
 from __future__ import annotations
 
 from typing import Any
 
+from .projection import VOTES, absolute_votes, project
+
 #: Enough history to compare against; beyond this the oldest readings add little and cost tokens.
-_HISTORY = 8
+_HISTORY = VOTES
 
 
 def describe(pulse: Any, log: list | None = None, *, blind: bool = False) -> str:
@@ -29,6 +33,14 @@ def describe(pulse: Any, log: list | None = None, *, blind: bool = False) -> str
     for i in readings[-_HISTORY:]:
         where = "unassessed" if i.proposed_position is None else f"{i.proposed_position:g}"
         lines.append(f"    {i.at[:10]}: {where} — {' '.join(i.rationale.split())[:300]}")
+    votes = absolute_votes(log)
+    if votes:
+        state = project(pulse.id, log)
+        held = "unassessed" if state.position is None else f"{state.position:g}"
+        lines.append(f"  ABSOLUTE VOTES — where {len(votes)} independent reader(s) put reality, ignoring the "
+                     f"history (median {state.absolute_view:g}; the Pulse holds {held}):")
+        for v in votes:
+            lines.append(f"    {v.at[:10]}: {v.absolute_position:g} — {' '.join(v.rationale.split())[:160]}")
     return "\n".join(lines)
 
 

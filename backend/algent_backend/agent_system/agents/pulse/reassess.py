@@ -32,6 +32,7 @@ from .seed import evidence_block
 class Reading(BaseModel):
     decision: Literal["applied", "no_change"] = "applied"
     position: float | None = None
+    absolute_position: float | None = None
     claim_ids: list[str] = Field(default_factory=list)
     rationale: str = ""
     confidence: Confidence = Field(default_factory=Confidence)
@@ -79,7 +80,9 @@ def reassess_pulse(context: Any, config: Any, store: Any, pulse: Any, profiles: 
         return {"pulse": pulse.id, "skipped": "no evidence yet"}
     now = datetime.now(UTC).isoformat()
     report: dict = {"pulse": pulse.id, "before": state.position}
-    resolve = lambda role, schema: context.model_resolver.resolve(model_spec).client.with_structured_output(schema)  # noqa: E731
+    resolved = context.model_resolver.resolve(model_spec)
+    model_name = getattr(resolved, "model", "") or ""
+    resolve = lambda role, schema: resolved.client.with_structured_output(schema)  # noqa: E731
 
     last = next((i for i in reversed(store.log(pulse.id)) if i.decision == "applied" and i.mode != "blind"), None)
     blind_last = next((i for i in reversed(store.log(pulse.id)) if i.mode == "blind"), None)
@@ -96,7 +99,8 @@ def reassess_pulse(context: Any, config: Any, store: Any, pulse: Any, profiles: 
                              + f"\n\nEVIDENCE:{evidence}\n\nTASK: is the reading still justified? Place it.")],
         config=config)
     if isinstance(anchored, Reassessment):
-        report["anchored"] = _log(store, pulse, anchored, citable, mode="reassess", now=now, run_id=run_id)
+        report["anchored"] = _log(store, pulse, anchored, citable, mode="reassess", now=now, run_id=run_id,
+                                  model=model_name)
         for v in anchored.watches:
             if v.status != "keep" and any(w.id == v.watch_id for w in watches):
                 store.resolve_watch(v.watch_id, v.status, by=Source(run_id=run_id, stage="pulse_reassess"))
@@ -107,24 +111,29 @@ def reassess_pulse(context: Any, config: Any, store: Any, pulse: Any, profiles: 
         HumanMessage(content=f"{describe(pulse, blind=True)}\n\nEVIDENCE:{evidence}\n\nTASK: place it from the evidence alone.")],
         config=config)
     if isinstance(blind, Reading):
-        report["blind"] = _log(store, pulse, blind, citable, mode="blind", now=now, run_id=run_id)
+        report["blind"] = _log(store, pulse, blind, citable, mode="blind", now=now, run_id=run_id,
+                               model=model_name)
     after = store.state(pulse.id)
     report.update({"after": after.position, "anchoring_gap": after.anchoring_gap,
                    "needs_reconciliation": after.needs_reconciliation})
     return report
 
 
-def _log(store: Any, pulse: Any, r: Reading, citable: set[str], *, mode: str, now: str, run_id: str) -> Any:
+def _log(store: Any, pulse: Any, r: Reading, citable: set[str], *, mode: str, now: str, run_id: str,
+         model: str = "") -> Any:
     good = [c for c in r.claim_ids if c in citable]
     position = r.position if (r.decision == "applied" and r.position is not None
                               and 0 <= r.position <= 100 and good) else None
     decision = "applied" if position is not None else "no_change"
+    absolute = r.absolute_position if r.absolute_position is not None and 0 <= r.absolute_position <= 100 else None
+    if mode == "blind":
+        absolute = None          # the blind position IS history-free; a second number would double-count
     try:
         store.append(Influence(
             pulse_id=pulse.id, at=now, evidence_through=r.evidence_through, mode=mode,
             definition_version=pulse.definition.version, proposed_position=position,
-            decision=decision, rationale=r.rationale or "—", confidence=r.confidence,
-            prompt_version=REASSESS_PROMPT_VERSION,
+            absolute_position=absolute, decision=decision, rationale=r.rationale or "—",
+            confidence=r.confidence, prompt_version=REASSESS_PROMPT_VERSION, model=model,
             source=Source(run_id=run_id, stage=f"pulse_{mode}", claim_ids=good)))
     except Exception as exc:  # noqa: BLE001 — the same week twice is the idempotency working
         return {"refused": f"{type(exc).__name__}"}

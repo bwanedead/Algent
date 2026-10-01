@@ -140,12 +140,12 @@ class PgPulseStore:
         try:
             self._q("""insert into pulse_influences (key, pulse_id, at, evidence_through, mode,
                          definition_version, proposed_position, decision, rationale, confidence, source,
-                         prompt_version, model, watch_ids_triggered)
-                       values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+                         prompt_version, model, watch_ids_triggered, absolute_position)
+                       values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
                     (i.key, i.pulse_id, i.at, _date_or_none(i.evidence_through), i.mode, i.definition_version,
                      i.proposed_position, i.decision, i.rationale, json.dumps(i.confidence.model_dump()),
                      json.dumps(i.source.model_dump()), i.prompt_version, i.model,
-                     json.dumps(i.watch_ids_triggered)), rows=False)
+                     json.dumps(i.watch_ids_triggered), i.absolute_position), rows=False)
         except psycopg.errors.UniqueViolation as exc:
             raise DuplicateInfluence(f"{i.key} already in {i.pulse_id}'s log") from exc
         self._cache_state(i.pulse_id)
@@ -155,13 +155,14 @@ class PgPulseStore:
         out = []
         for r in self._q("""select key, pulse_id, at, evidence_through, mode, definition_version,
                    proposed_position, decision, rationale, confidence, source, prompt_version, model,
-                   watch_ids_triggered from pulse_influences where pulse_id = %s
+                   watch_ids_triggered, absolute_position from pulse_influences where pulse_id = %s
                    order by at, recorded_at""", (pulse_id,)):
             out.append(Influence(key=r[0], pulse_id=r[1], at=_iso(r[2]), evidence_through=_iso(r[3]),
                                  mode=r[4], definition_version=r[5],
                                  proposed_position=float(r[6]) if r[6] is not None else None,
                                  decision=r[7], rationale=r[8], confidence=r[9] or {}, source=r[10] or {},
-                                 prompt_version=r[11], model=r[12], watch_ids_triggered=r[13] or []))
+                                 prompt_version=r[11], model=r[12], watch_ids_triggered=r[13] or [],
+                                 absolute_position=float(r[14]) if r[14] is not None else None))
         return out
 
     def state(self, pulse_id: str, *, as_of: str | None = None) -> PulseState:

@@ -10,13 +10,24 @@ reading is placed RELATIVE TO THE PULSE'S PAST READINGS and the evidence behind 
 grows from accumulated experience and bends with a messy world, while each reading stays argued
 against the ones before it. The blind check — placing a Pulse from evidence alone, never seeing
 its history — is what keeps a self-referential scale from drifting.
+
+HISTORY IS MEMORY, NOT TRUTH (doctrine v4, operator 09-30). A scale measured only against itself
+inherits every past reader's mistakes. So every reading gives TWO numbers: the history-relative
+position, and an ABSOLUTE vote — "forget what we said before: where is reality now?". No reader
+holds the whole picture — the Pulse is the net of many partial ones, built from articles, radars
+and side research — so no single vote overrules the history. But every reader sees the recent
+votes of the others, and when readers working from different research keep placing it away from
+the history in the same direction, that is the collective saying the history is off: the next
+reading moves toward them and says why. A sharper model corrects the record the same way, as
+fast as the evidence it touches justifies. Both numbers stay on every reading, so the balance can
+later be scored against resolved watches rather than guessed.
 """
 
 from __future__ import annotations
 
-PROMPT_VERSION = "pulse-seed@v3"
-UPDATE_PROMPT_VERSION = "pulse-update@v2"
-REASSESS_PROMPT_VERSION = "pulse-reassess@v2"
+PROMPT_VERSION = "pulse-seed@v4"
+UPDATE_PROMPT_VERSION = "pulse-update@v3"
+REASSESS_PROMPT_VERSION = "pulse-reassess@v3"
 
 ATTACH_ROLE = """\
 You are sorting Ohmega's research into the enduring situations it belongs to.
@@ -31,9 +42,11 @@ an Iran story. When unsure, leave it out — a wrongly attached item would feed 
 _FRAME = """\
 A Pulse is a persistent reading of ONE dimension of a situation on a 0–100 scale. Only the ends
 are fixed: 0 is the calm, normal end; 100 is the extreme end of that dimension (open war, total
-rupture, full closure). Everything between is judgment, not a box. The scale is the Pulse's own
-history: a reading means "this much worse or calmer than when we last read it, because of what
-changed".
+rupture, full closure). Everything between is judgment, not a box. The Pulse's past readings are
+its memory — the accumulated judgment of every reader before you — and a reading is normally
+argued against them: "this much worse or calmer than when we last read it, because of what
+changed". But memory is not truth. Past readers had less evidence or were simply wrong, so you
+also say plainly where YOU think reality sits, whatever the history says.
 """
 
 SEED_ROLE = _FRAME + """
@@ -86,6 +99,16 @@ One vivid incident inside a pattern the last reading already reflected is not a 
 over-reports escalation and ignores calm. A claim graded below confirmed supports a move only with
 lower confidence.
 
+WEIGH THE OTHER READERS. You may see ABSOLUTE VOTES: where other readers, working from other
+research, put reality when they set the history aside. Each saw one slice, as you do. One vote
+far off is noise; several from different research pulling the same way mean the history has
+drifted from reality — then your position moves toward them, and your rationale says so.
+
+THEN YOUR OWN VOTE. Set the history aside and give `absolute_position`: where, between the two
+ends, you believe reality actually sits today, from everything you understand about this
+dimension — not only the new research. Give it on every Pulse, including no_change ones. It is
+one vote; it does not move the Pulse by itself.
+
 For each Pulse: `pulse_id`; `decision` ("applied" with a `position`, or "no_change"); `claim_ids`
 from the NEW evidence that justify it; `rationale` (which past reading it compares to and what
 changed, or why nothing did); `confidence`; `evidence_through`. Also any open WATCH the new evidence
@@ -104,6 +127,11 @@ Calm is evidence too: a reading that only ever ratchets up is usually wrong.
 
 Return a `position` (the same number when it still holds — say so), `decision` "applied",
 `claim_ids` that support it, a `rationale` placing it against its past readings, and `confidence`.
+Weigh the ABSOLUTE VOTES of other readers as the update does: several from different research
+pulling the same way mean the history has drifted, and your position should move toward them.
+Then give your own `absolute_position`: where YOU believe reality sits today, ignoring what earlier
+readers said. If the history looks off — readers kept nudging from a starting point that was
+never right — this is where you say so.
 For each open watch past its horizon or no longer meaningful, say so.
 """
 
@@ -113,3 +141,4 @@ claims — NOT its history. Give the position where the evidence puts the world 
 (0) and extreme (100), with the claim ids that justify it, a short rationale and your confidence.
 You are the check on a scale that is otherwise measured against itself: judge only the evidence.
 """
+

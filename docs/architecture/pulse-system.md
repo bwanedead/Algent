@@ -29,6 +29,18 @@ publishable subset).
   ("worse than when we said 58 on Aug 14, because…"), so the scale grows from experience and flexes
   with a messy world instead of being boxed into the first seed's picture. Fixed 0/25/50/75/100
   anchors were tried first and dropped for exactly that reason.
+- **History is memory, not truth: absolute votes (doctrine v4).** Every reading also gives an
+  `absolute_position`: where the reader thinks reality sits if the history is ignored. No reader
+  holds the whole picture. The Pulse *is* the net of many partial readings (articles, radars,
+  side research), and holding the whole graph in one agent would be neither possible nor
+  economical. So a vote never moves the Pulse. Instead, the latest vote of each of the recent
+  independent sources (`projection.absolute_votes`; one research effort = one voter) is shown to
+  every later reader beside the past readings, with its median. When readers working from
+  different research keep pulling the same way, the history has drifted, and the next reading
+  moves toward them and says why. A sharper model corrects the record the same way, at the pace
+  the evidence it touches allows. An adjudicator that "sees everything" was considered and
+  rejected for that reason. Both numbers stay on every reading, so once watches resolve, how much
+  each kind of reading deserves can be *scored*, not guessed.
 - **Position, not delta.** Assessments propose where the Pulse sits. The position is the latest
   *applied* proposal. Repeated news cannot ratchet the value.
 - **Versioned rulers.** Every influence records the definition version it was made under.

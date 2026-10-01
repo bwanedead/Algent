@@ -105,9 +105,9 @@ class PulseStore:
         versions = {d.version for d in pulse.definitions}
         if influence.definition_version not in versions:
             raise ValueError(f"{influence.pulse_id} has no definition v{influence.definition_version}")
-        pos = influence.proposed_position
-        if pos is not None and not 0.0 <= pos <= 100.0:
-            raise ValueError(f"position {pos} is off the 0–100 ruler")
+        for pos in (influence.proposed_position, influence.absolute_position):
+            if pos is not None and not 0.0 <= pos <= 100.0:
+                raise ValueError(f"position {pos} is off the 0–100 ruler")
         if not influence.key:
             src = influence.source
             influence = influence.model_copy(update={"key": influence_key(
