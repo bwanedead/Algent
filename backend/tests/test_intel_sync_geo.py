@@ -282,3 +282,18 @@ def test_rail_republishes_intel_once_after_pulses_move(monkeypatch) -> None:
     monkeypatch.setattr(update, "update_quietly", lambda *a, **k: {"touched": ["sit_a"]})
     rail._feed_pulses(ctx, out)
     assert calls == ["publish"] and rail.RAIL_INTEL in events
+
+
+def test_base_map_draws_recognised_borders_crimea_is_ukraine() -> None:
+    from algent_backend.agent_system.agents.intel import geo
+
+    square = lambda w, s, e, n: [[[w, s], [e, s], [e, n], [w, n], [w, s]]]   # noqa: E731
+    data = {"features": [
+        {"properties": {"NAME": "Ukraine"}, "geometry": {"type": "Polygon", "coordinates": square(24, 46, 38, 52)}},
+        {"properties": {"NAME": "Russia"}, "geometry": {"type": "MultiPolygon", "coordinates": [
+            square(38, 45, 60, 60), square(33, 44.5, 36, 46)]}},          # mainland, and Crimea drawn de facto
+    ]}
+    countries = geo.parse(data)
+    ua, ru = geo.find_country(countries, "Ukraine"), geo.find_country(countries, "Russia")
+    assert geo.contains(ua, 33.5, 44.9) and not geo.contains(ru, 33.5, 44.9)   # Sevastopol
+    assert geo.contains(ru, 45, 55) and not geo.contains(ua, 45, 55)           # mainland untouched

@@ -88,9 +88,41 @@ def _rings(geometry: dict) -> list[list[Ring]]:
     return [[[(float(x), float(y)) for x, y, *_ in ring] for ring in poly] for poly in polys]
 
 
+#: Natural Earth's default layer draws DE FACTO control, which puts Crimea inside Russia. Ohmega's base
+#: maps draw internationally recognised borders (UN GA resolution 68/262); de facto control belongs to a
+#: front-line layer from a source we may lawfully use (docs/editorial/map-data-sources.md), never to the
+#: base map. So any piece of another country lying wholly inside this box is drawn — and validated — as
+#: Ukraine. The box encloses the peninsula and nothing else of Russia's territory.
+_RECOGNISED = {"ukraine": (32.3, 44.3, 36.7, 46.3)}   # Crimea, by its own extent
+
+
+def _reassign(data: dict) -> dict:
+    feats = data.get("features", [])
+    by_name = {str((f.get("properties") or {}).get("NAME") or "").lower(): f for f in feats}
+    for owner, (w, s, e, n) in _RECOGNISED.items():
+        target = by_name.get(owner)
+        if target is None:
+            continue
+        for feat in feats:
+            geom = feat.get("geometry") or {}
+            if feat is target or geom.get("type") != "MultiPolygon":
+                continue
+            keep, moved = [], []
+            for poly in geom["coordinates"]:
+                pts = [p for ring in poly for p in ring]
+                inside = all(w <= p[0] <= e and s <= p[1] <= n for p in pts)
+                (moved if inside else keep).append(poly)
+            if moved and keep:
+                geom["coordinates"] = keep
+                tg = target.setdefault("geometry", {})
+                base = tg["coordinates"] if tg.get("type") == "MultiPolygon" else [tg.get("coordinates")]
+                tg["type"], tg["coordinates"] = "MultiPolygon", [*base, *moved]
+    return data
+
+
 def parse(data: dict) -> list[Country]:
     out = []
-    for feat in data.get("features", []):
+    for feat in _reassign(data).get("features", []):
         props, polys = feat.get("properties") or {}, _rings(feat.get("geometry") or {})
         if not polys:
             continue
