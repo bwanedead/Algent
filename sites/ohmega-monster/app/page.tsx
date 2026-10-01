@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import FlagRow from "@/components/FlagRow";
+import DailyCard from "@/components/DailyCard";
 import IntelCard from "@/components/IntelCard";
 import RadarCard from "@/components/RadarCard";
 import ShareButton from "@/components/ShareButton";
@@ -14,6 +15,7 @@ export default function Home() {
     <section className="index-page" aria-label="Reports">
       <RadarCard />
       <IntelCard />
+      <DailyCard domain="geopolitics" title="Geopolitics" href="/geopolitics" />
       <ul className="feed">
         {articles.length === 0 && (
           <li className="feed-empty">No reports available.</li>

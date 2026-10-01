@@ -54,6 +54,10 @@ export default function IntelPage() {
         </span>
       </div>
 
+      <p className="intel-note daily-xlink">
+        <Link href="/geopolitics">Geopolitics — the daily report →</Link>
+      </p>
+
       {!snap && <p className="intel-empty">No intelligence has been published yet. Check back soon.</p>}
 
       {snap && (

@@ -383,6 +383,13 @@ export function brief(slug: string): Brief | null {
 export const BAND_LABEL: Record<Band, string> = { calm: "Calm", elevated: "Elevated", severe: "Severe", critical: "Critical", unassessed: "Not yet assessed" };
 const BAND_RANK: Record<Band, number> = { calm: 1, elevated: 2, severe: 3, critical: 4, unassessed: 0 };
 
+/** The most severe band among the given Pulses (assessed only); "unassessed" when none. */
+export function maxBand(pulses: { band: Band; position: number | null }[]): Band {
+  let best: Band = "unassessed";
+  for (const p of pulses) if (p.position !== null && BAND_RANK[p.band] > BAND_RANK[best]) best = p.band;
+  return best;
+}
+
 /** Pulses most severe first (band, then position). Unassessed excluded. */
 export function mostSeverePulses(s: Snapshot | null, n: number): (Pulse & { situation: string })[] {
   if (!s) return [];
