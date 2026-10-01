@@ -75,10 +75,9 @@ The stakes for getting that chain right are rising because exposure is. Rasuwa i
 **How this piece is framed:** A months-long wobble seen only in hindsight — why a Himalayan cascade outran every clock
 
 **Visuals not shipped** — _planned but not fulfilled_
-- The failing slope accelerated for months while its neighbor did not (req_langtang_velocity_001): skipped — Skipped: the velocity time series this chart needs is not published as numbers.
+- The failing slope accelerated for months while its neighbor did not: skipped (the velocity time series this chart needs is not published as numbers)
+- From mountain to border in 7.5 minutes, downriver for 100 km: could not be produced for this edition
 
-Wang et al. 2026 (Landslides, https://doi.org/10.1007/s10346-026-02842-6) is closed. The public Figure 2c is cumulative displacement in metres, not speed. The only rates printed on it are a straight-line glacier fit of
-- From mountain to border in 7.5 minutes, downriver for 100 km (req_langtang_cascade_map_002): failed — worker wrote outside analytics_workspace/: C:\projects\Algent\backend\draft_store\drf_5192ab29e5.json, C:\projects\Algent\backend\profile_store\_history\prof_v42_langtang_landslide\r004__20261001T095723089989Z.json, C:\projects\Algent\backend\profile_store\prof_v42_langtang_landslide.json
 
 **Sources**
 - (primary) Precursor of a powerful large glacier landslide causing tsunami floods in the 26 August 2026 Nepal disaster — Landslides (Springer) — https://doi.org/10.1007/s10346-026-02842-6  ·  _read in full · captured 2026-10-01_
