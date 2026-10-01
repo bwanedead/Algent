@@ -1,0 +1,74 @@
+{
+  "schema": "ohmega.pulse/1",
+  "id": "pls_iran_gulf_iran_proxy_axis_escalation",
+  "name": "Iran Proxy Axis Escalation",
+  "situation_id": "sit_iran_gulf",
+  "situation": "Iran, Israel and the Gulf",
+  "status": "experimental",
+  "position": 77.0,
+  "band": "critical",
+  "confidence": "high",
+  "velocity_7d": null,
+  "last_assessed": "2026-10-01T08:28:58.928568+00:00",
+  "evidence_through": "2026-10-01",
+  "history": [
+    {
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "position": 64.0
+    },
+    {
+      "at": "2026-10-01T07:48:19.756517+00:00",
+      "position": 72.0
+    },
+    {
+      "at": "2026-10-01T08:28:58.928568+00:00",
+      "position": 77.0
+    }
+  ],
+  "definition": {
+    "version": 1,
+    "question": "How intense is escalation by Iran-linked proxies (Houthis, Hezbollah, Iraqi militias) across the region?",
+    "low_end": "Proxy networks dormant with no attacks on shipping or neighbors, and full compliance with disarmament and de-escalation agreements.",
+    "high_end": "Coordinated full-scale proxy war with sustained Houthi/Hezbollah/Iraqi militia attacks on shipping, Gulf infrastructure and Israel, triggering major retaliation."
+  },
+  "url": "/pulses",
+  "data_url": "/data/pulses/pls_iran_gulf_iran_proxy_axis_escalation.json",
+  "readings": [
+    {
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "mode": "seed",
+      "moves_pulse": true,
+      "decision": "applied",
+      "position": 64.0,
+      "rationale": "Houthis declared an immediate naval blockade on Saudi Arabia with 'eye for an eye' and 'all escalation' language, Saudi coalition mobilized anti-piracy measures, and a drone attack shut Saudi's 7m b/d East-West pipeline until Sept 22; Hezbollah rejected disarmament and pilot/safe zones while Lebanese Army began limited deployments in three southern villages. Higher if Houthis actually interdict…",
+      "confidence": "medium",
+      "evidence_through": "2026-09-23",
+      "model": "",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-01T07:48:19.756517+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "applied",
+      "position": 72.0,
+      "rationale": "Compared to 2026-10-01 at 64 (Houthi blockade declared 20 July, Saudi anti-piracy mobilization, pipeline shut until Sept 22, Hezbollah rejection of disarmament). New confirmed evidence moves from threat to action: Houthis seized Mokha and Hanish Islands 10 Sep expanding control over Bab el-Mandeb, fired ballistic missile at Riyadh 19 Sep (first in years) and two missiles at Khamis Mushait plus…",
+      "confidence": "high",
+      "evidence_through": "2026-10-01",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-01T08:28:58.928568+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "applied",
+      "position": 77.0,
+      "rationale": "Closest to 2026-10-01 at 72 (Houthi blockade declared 20 July, seizure of Mokha/Hanish Islands 10 Sep). New confirmed moves from threat/control to kinetic exchange: Houthis seized Red Sea coast/islands overseeing Bab el-Mandeb and disabled 1,200km East-West pipeline/Jazan hub, threatened 25 Sep to strike Saudi bases/economic targets, launched 2 ballistic missiles near Khamis Mushait and 2 drones…",
+      "confidence": "high",
+      "evidence_through": "2026-10-01",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    }
+  ]
+}

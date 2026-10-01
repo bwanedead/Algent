@@ -1,0 +1,66 @@
+{
+  "schema": "ohmega.pulse/1",
+  "id": "pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe",
+  "name": "Gaza Combat and Humanitarian Catastrophe",
+  "situation_id": "sit_israel_palestine",
+  "situation": "Israel–Palestine and the wider region",
+  "status": "experimental",
+  "position": 85.0,
+  "band": "critical",
+  "confidence": "high",
+  "velocity_7d": null,
+  "last_assessed": "2026-10-01T08:39:39.312641+00:00",
+  "evidence_through": "null",
+  "history": [
+    {
+      "at": "2026-10-01T08:09:19.809131+00:00",
+      "position": 85.0
+    }
+  ],
+  "definition": {
+    "version": 1,
+    "question": "How intense is combat in Gaza and how severe is humanitarian collapse?",
+    "low_end": "A sustained ceasefire holds with minimal combat, effective civilian protection, and adequate humanitarian aid, medical care and reconstruction access across Gaza.",
+    "high_end": "Sustained high-intensity combat with mass civilian casualties, famine and total collapse of medical and aid systems, and large-scale forced displacement across Gaza."
+  },
+  "url": "/pulses",
+  "data_url": "/data/pulses/pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe.json",
+  "readings": [
+    {
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "mode": "seed",
+      "moves_pulse": true,
+      "decision": "no_change",
+      "position": null,
+      "rationale": "Unassessed - no graded claims provided on IDF operations, casualties, aid flows, or health system status. Would be higher with verified evidence of major offensive, mass casualties, famine/IPC 5, and aid blockade; lower with confirmed ceasefire, reduced casualties, and restored aid and medical services. Requires research on combat activity, casualty counts, aid truck volumes, IPC assessments, and…",
+      "confidence": "low",
+      "evidence_through": "null",
+      "model": "",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-01T08:09:19.809131+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "applied",
+      "position": 85.0,
+      "rationale": "First assessed reading (past unassessed). Combat is lower-intensity than 2023-24 peak but persistent: 1,381 killed since Oct 2025 ceasefire, ongoing strikes per OCHA. Humanitarian collapse is near-extreme: only 19/38 hospitals functioning, ~270/630 health centres, 70% generators non-operational, Nasser Hospital rotating cuts, fuel/oil far below 94,000L diesel/2,500L oil monthly needs, WHO ending…",
+      "confidence": "high",
+      "evidence_through": "2026-10-01",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-01T08:39:39.312641+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "no_change",
+      "position": null,
+      "rationale": "No change from 85 on 2026-10-01. New claims confirm persistent low-intensity combat (1,408 killed since ceasefire vs 1,381 prior, 5 killed/35 injured in 24h to Sept 25, total 73,928) and near-extreme humanitarian collapse already captured: DRC report 1.8m (86%) in displacement sites, 80% water shortages, cesspits, disease, plus 630 bodies recovered Nov 2025-Sep 2026 and building collapse killing…",
+      "confidence": "high",
+      "evidence_through": "2026-10-01",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    }
+  ]
+}

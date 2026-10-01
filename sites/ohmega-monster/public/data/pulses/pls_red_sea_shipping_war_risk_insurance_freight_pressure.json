@@ -1,0 +1,78 @@
+{
+  "schema": "ohmega.pulse/1",
+  "id": "pls_red_sea_shipping_war_risk_insurance_freight_pressure",
+  "name": "War-Risk Insurance and Freight Cost Pressure",
+  "situation_id": "sit_red_sea_shipping",
+  "situation": "Red Sea and global shipping disruption",
+  "status": "experimental",
+  "position": 65.0,
+  "band": "severe",
+  "confidence": "medium",
+  "velocity_7d": null,
+  "last_assessed": "2026-10-01T11:36:13.230643+00:00",
+  "evidence_through": "2026-10-01",
+  "history": [
+    {
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "position": 65.0
+    }
+  ],
+  "definition": {
+    "version": 1,
+    "question": "How elevated are war-risk premiums and freight costs for shipping through threatened chokepoints?",
+    "low_end": "War-risk premiums and freight rates are at normal baseline levels with readily available insurance and no chokepoint surcharges.",
+    "high_end": "War-risk premiums and freight rates spike to prohibitive levels, insurance becomes unavailable or highly conditional, and most owners refuse chokepoint transits on cost/risk grounds."
+  },
+  "url": "/pulses",
+  "data_url": "/data/pulses/pls_red_sea_shipping_war_risk_insurance_freight_pressure.json",
+  "readings": [
+    {
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "mode": "seed",
+      "moves_pulse": true,
+      "decision": "applied",
+      "position": 65.0,
+      "rationale": "London market war-risk premiums for Hormuz transits rose to ~2-6% of vessel value, with earlier periods up to 10%, with fewer inquiries as owners grew reluctant and traffic drops driven by operator caution not just physical blockade; Houthi embargo is assessed as likely to raise shipping costs and disrupt Saudi oil exports via Red Sea. Higher if Red Sea/Bab el-Mandeb premiums exceed 6-10% broadly…",
+      "confidence": "medium",
+      "evidence_through": "2026-07-24",
+      "model": "",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-01T07:48:19.756517+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "no_change",
+      "position": null,
+      "rationale": "No_change: past 65 already captured Hormuz war-risk 2-6% (up to 10%) and owner reluctance; new evidence confirms prolonged Hormuz disruption but provides no new Red Sea/Bab el-Mandeb premium quotes or withdrawal to justify move above 65.",
+      "confidence": "medium",
+      "evidence_through": "2026-10-01",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-01T08:28:58.928568+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "no_change",
+      "position": null,
+      "rationale": "Closest to past reading 65 (2026-10-01) which captured Hormuz war-risk 2-6% (up to 10%) and owner reluctance. New confirmed evidence shows prolonged Hormuz disruption (80 attacks, 22 killed, 6,000 trapped; 80 mines; 2,000 ships stranded; prediction markets ~2-3% for July/Sept normalization) and elevated energy costs (UK gas 189p/therm Sep), but provides no new London market quotes for Red Sea/Bab…",
+      "confidence": "medium",
+      "evidence_through": "2026-10-01",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-01T11:36:13.230643+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "no_change",
+      "position": null,
+      "rationale": "No_change: past 65 already captured Hormuz war-risk 2-6% (up to 10%) and owner reluctance. New confirmed evidence shows prolonged Hormuz disruption (70% traffic decline, prediction markets 18-23% normalization) but provides no new Red Sea/Bab el-Mandeb premium quotes or insurer withdrawal to justify move above 65. Spillover risk implied but not verified.",
+      "confidence": "medium",
+      "evidence_through": "2026-10-01",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    }
+  ]
+}

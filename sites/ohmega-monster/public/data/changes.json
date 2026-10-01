@@ -1,0 +1,550 @@
+{
+  "schema": "ohmega.changes/1",
+  "window_days": 30,
+  "as_of": "2026-10-01T11:36:13.230643+00:00",
+  "events": [
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-01T11:36:13.230643+00:00",
+      "pulse_id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
+      "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption.json",
+      "from": 68.0,
+      "to": 72.0,
+      "from_band": "severe",
+      "to_band": "severe",
+      "band_changed": false
+    },
+    {
+      "type": "daily_published",
+      "at": "2026-10-01T08:55:43.790052+00:00",
+      "domain": "geopolitics",
+      "date": "2026-10-01",
+      "headline": "US ended 23-year Iraq deployment as Hormuz stayed shut and Russia hit Kyiv power grid in largest strike since April",
+      "url": "/geopolitics/2026-10-01",
+      "data_url": "/data/daily/geopolitics/2026-10-01.json"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T08:54:58.966164+00:00",
+      "pulse_id": "pls_us_china_trade_tariff_confrontation",
+      "name": "Trade and Tariff Confrontation",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_us_china_trade_tariff_confrontation.json",
+      "position": 35.0,
+      "band": "elevated"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T08:54:58.966164+00:00",
+      "pulse_id": "pls_us_china_diplomatic_deadlock",
+      "name": "Diplomatic Deadlock",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_us_china_diplomatic_deadlock.json",
+      "position": 20.0,
+      "band": "calm"
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-01T08:39:39.312641+00:00",
+      "pulse_id": "pls_israel_palestine_international_legal_and_diplomatic_pressure_on_israel",
+      "name": "International Legal and Diplomatic Pressure on Israel",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_israel_palestine_international_legal_and_diplomatic_pressure_on_israel.json",
+      "from": 68.0,
+      "to": 73.0,
+      "from_band": "severe",
+      "to_band": "severe",
+      "band_changed": false
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-01T08:39:39.312641+00:00",
+      "pulse_id": "pls_israel_palestine_ceasefire_and_normalization_deadlock",
+      "name": "Ceasefire and Normalization Deadlock",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_israel_palestine_ceasefire_and_normalization_deadlock.json",
+      "from": 62.0,
+      "to": 60.0,
+      "from_band": "severe",
+      "to_band": "severe",
+      "band_changed": false
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-01T08:28:58.928568+00:00",
+      "pulse_id": "pls_iran_gulf_iran_proxy_axis_escalation",
+      "name": "Iran Proxy Axis Escalation",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_iran_gulf_iran_proxy_axis_escalation.json",
+      "from": 72.0,
+      "to": 77.0,
+      "from_band": "severe",
+      "to_band": "critical",
+      "band_changed": true
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-01T08:28:58.928568+00:00",
+      "pulse_id": "pls_iran_gulf_hormuz_maritime_disruption",
+      "name": "Strait of Hormuz Maritime Disruption",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_iran_gulf_hormuz_maritime_disruption.json",
+      "from": 73.0,
+      "to": 78.0,
+      "from_band": "severe",
+      "to_band": "critical",
+      "band_changed": true
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-01T08:28:58.928568+00:00",
+      "pulse_id": "pls_iran_gulf_us_iran_israel_military_confrontation",
+      "name": "US-Iran-Israel Direct Military Confrontation",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_iran_gulf_us_iran_israel_military_confrontation.json",
+      "from": 75.0,
+      "to": 78.0,
+      "from_band": "critical",
+      "to_band": "critical",
+      "band_changed": false
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-01T08:28:58.928568+00:00",
+      "pulse_id": "pls_iran_gulf_us_iran_diplomatic_deadlock",
+      "name": "US-Iran Diplomatic Deadlock",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_iran_gulf_us_iran_diplomatic_deadlock.json",
+      "from": 68.0,
+      "to": 74.0,
+      "from_band": "severe",
+      "to_band": "severe",
+      "band_changed": false
+    },
+    {
+      "type": "forecast_made",
+      "at": "2026-10-01T08:10:55.305658+00:00",
+      "forecast_id": "fc_dd6b4bf639f1",
+      "statement": "The Netherlands' 22 September ban on settlement-origin goods will remain enforced without suspension through 15 November 2026.",
+      "probability": 82,
+      "url": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout",
+      "data_url": "/data/forecasts.json"
+    },
+    {
+      "type": "forecast_made",
+      "at": "2026-10-01T08:10:55.305658+00:00",
+      "forecast_id": "fc_80d0a0888746",
+      "statement": "Israel will take at least one additional diplomatic retaliation (accreditation revocation, consulate closure order, or Kiryat Gat exclusion) against another EU state that has enacted a settlement-goods ban by 31 December 2026.",
+      "probability": 64,
+      "url": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout",
+      "data_url": "/data/forecasts.json"
+    },
+    {
+      "type": "forecast_made",
+      "at": "2026-10-01T08:10:55.305658+00:00",
+      "forecast_id": "fc_43ae4f2c3df0",
+      "statement": "At least one additional Gaza hospital will suspend core clinical services due to generator, fuel or oil failure by 31 October 2026.",
+      "probability": 76,
+      "url": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout",
+      "data_url": "/data/forecasts.json"
+    },
+    {
+      "type": "brief_published",
+      "at": "2026-10-01T08:10:55.305658+00:00",
+      "slug": "2026-10-01-gaza-war-and-unga-diplomatic-fallout",
+      "title": "Gaza war and UNGA diplomatic fallout",
+      "theater": "Gaza war and UNGA diplomatic fallout",
+      "url": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout",
+      "data_url": "/data/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout.json"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T08:09:19.809131+00:00",
+      "pulse_id": "pls_israel_palestine_international_legal_and_diplomatic_pressure_on_israel",
+      "name": "International Legal and Diplomatic Pressure on Israel",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_israel_palestine_international_legal_and_diplomatic_pressure_on_israel.json",
+      "position": 68.0,
+      "band": "severe"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T08:09:19.809131+00:00",
+      "pulse_id": "pls_israel_palestine_ceasefire_and_normalization_deadlock",
+      "name": "Ceasefire and Normalization Deadlock",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_israel_palestine_ceasefire_and_normalization_deadlock.json",
+      "position": 62.0,
+      "band": "severe"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T08:09:19.809131+00:00",
+      "pulse_id": "pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe",
+      "name": "Gaza Combat and Humanitarian Catastrophe",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe.json",
+      "position": 85.0,
+      "band": "critical"
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-01T07:48:19.756517+00:00",
+      "pulse_id": "pls_energy_security_global_hydrocarbon_supply_disruption",
+      "name": "Global Hydrocarbon Supply Disruption",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_energy_security_global_hydrocarbon_supply_disruption.json",
+      "from": 72.0,
+      "to": 77.0,
+      "from_band": "severe",
+      "to_band": "critical",
+      "band_changed": true
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-01T07:48:19.756517+00:00",
+      "pulse_id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
+      "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption.json",
+      "from": 58.0,
+      "to": 68.0,
+      "from_band": "severe",
+      "to_band": "severe",
+      "band_changed": false
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-01T07:48:19.756517+00:00",
+      "pulse_id": "pls_iran_gulf_iran_proxy_axis_escalation",
+      "name": "Iran Proxy Axis Escalation",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_iran_gulf_iran_proxy_axis_escalation.json",
+      "from": 64.0,
+      "to": 72.0,
+      "from_band": "severe",
+      "to_band": "severe",
+      "band_changed": false
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-01T07:48:19.756517+00:00",
+      "pulse_id": "pls_iran_gulf_hormuz_maritime_disruption",
+      "name": "Strait of Hormuz Maritime Disruption",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_iran_gulf_hormuz_maritime_disruption.json",
+      "from": 70.0,
+      "to": 73.0,
+      "from_band": "severe",
+      "to_band": "severe",
+      "band_changed": false
+    },
+    {
+      "type": "forecast_made",
+      "at": "2026-10-01T06:29:16.596489+00:00",
+      "forecast_id": "fc_ebd0216c0866",
+      "statement": "The US-China superintelligence dialogue will hold its first publicly acknowledged expert meeting by Dec 31, 2026.",
+      "probability": 48,
+      "url": "/intel/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance",
+      "data_url": "/data/forecasts.json"
+    },
+    {
+      "type": "forecast_made",
+      "at": "2026-10-01T06:29:16.596489+00:00",
+      "forecast_id": "fc_becd92245647",
+      "statement": "Gemini 4 Argon will remain without general public release through Jan 31, 2027.",
+      "probability": 72,
+      "url": "/intel/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance",
+      "data_url": "/data/forecasts.json"
+    },
+    {
+      "type": "forecast_made",
+      "at": "2026-10-01T06:29:16.596489+00:00",
+      "forecast_id": "fc_2a7d7f769c08",
+      "statement": "Anthropic Claude will remain excluded from Pentagon GenAI.mil through Mar 1, 2027.",
+      "probability": 65,
+      "url": "/intel/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance",
+      "data_url": "/data/forecasts.json"
+    },
+    {
+      "type": "forecast_made",
+      "at": "2026-10-01T06:29:16.596489+00:00",
+      "forecast_id": "fc_0e5ad2249262",
+      "statement": "At least one additional frontier lab will pause training/evaluation or shelve a planned most-capable model release due to a safety incident or failed safety test by Dec 15, 2026.",
+      "probability": 68,
+      "url": "/intel/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance",
+      "data_url": "/data/forecasts.json"
+    },
+    {
+      "type": "brief_published",
+      "at": "2026-10-01T06:29:16.596489+00:00",
+      "slug": "2026-10-01-frontier-ai-race-and-superintelligence-governance",
+      "title": "Frontier AI race and superintelligence governance",
+      "theater": "Frontier AI race and superintelligence governance",
+      "url": "/intel/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance",
+      "data_url": "/data/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance.json"
+    },
+    {
+      "type": "forecast_made",
+      "at": "2026-10-01T06:26:30.142597+00:00",
+      "forecast_id": "fc_9950b6c4874a",
+      "statement": "At least one additional autonomous AI agent breach or unauthorized probing of a government or critical infrastructure site will be publicly disclosed by Dec 31, 2026.",
+      "probability": 68,
+      "url": "/intel/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime",
+      "data_url": "/data/forecasts.json"
+    },
+    {
+      "type": "forecast_made",
+      "at": "2026-10-01T06:26:30.142597+00:00",
+      "forecast_id": "fc_9602c53b7ffa",
+      "statement": "A new AI-enabled subscription fraud service distinct from EvilTokens will be disclosed as compromising >5,000 inboxes/accounts by Mar 31, 2027.",
+      "probability": 72,
+      "url": "/intel/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime",
+      "data_url": "/data/forecasts.json"
+    },
+    {
+      "type": "forecast_made",
+      "at": "2026-10-01T06:26:30.142597+00:00",
+      "forecast_id": "fc_59717ab0cfae",
+      "statement": "A U.S. regulator or court will impose a formal agent-containment restriction or mandatory reporting requirement on a frontier lab by Feb 1, 2027.",
+      "probability": 55,
+      "url": "/intel/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime",
+      "data_url": "/data/forecasts.json"
+    },
+    {
+      "type": "brief_published",
+      "at": "2026-10-01T06:26:30.142597+00:00",
+      "slug": "2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime",
+      "title": "Rogue AI agents and AI-enabled cybercrime",
+      "theater": "Rogue AI agents and AI-enabled cybercrime",
+      "url": "/intel/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime",
+      "data_url": "/data/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime.json"
+    },
+    {
+      "type": "brief_published",
+      "at": "2026-10-01T03:08:24.461246+00:00",
+      "slug": "2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746",
+      "title": "Russia-Ukraine War and European Security Architecture — Hybrid Campaign, Deterrence and Energy/Sanctions Pressures",
+      "theater": "Russia-Ukraine war and European security architecture",
+      "url": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746",
+      "data_url": "/data/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746.json"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T03:07:20.991153+00:00",
+      "pulse_id": "pls_russia_nato_hybrid_grey_zone_pressure",
+      "name": "Hybrid and Grey-Zone Pressure",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_russia_nato_hybrid_grey_zone_pressure.json",
+      "position": 72.0,
+      "band": "severe"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T03:07:20.991153+00:00",
+      "pulse_id": "pls_russia_nato_direct_military_confrontation",
+      "name": "Direct Military Confrontation",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_russia_nato_direct_military_confrontation.json",
+      "position": 58.0,
+      "band": "severe"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T03:07:20.991153+00:00",
+      "pulse_id": "pls_russia_nato_diplomatic_rupture",
+      "name": "Diplomatic Rupture",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_russia_nato_diplomatic_rupture.json",
+      "position": 62.0,
+      "band": "severe"
+    },
+    {
+      "type": "brief_published",
+      "at": "2026-10-01T03:03:36.631768+00:00",
+      "slug": "2026-09-28-russia-ukraine-war-and-european-security-architecture",
+      "title": "Russia-Ukraine war and European security architecture — refinery war, energy-truce push, frozen assets and NATO deterrence (Sept 2026)",
+      "theater": "Russia-Ukraine war and European security architecture",
+      "url": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture",
+      "data_url": "/data/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture.json"
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-01T03:02:59.981202+00:00",
+      "pulse_id": "pls_ukraine_war_war_economy_dependency_strain",
+      "name": "War Economy and External Dependency Strain",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_ukraine_war_war_economy_dependency_strain.json",
+      "from": 73.0,
+      "to": 81.0,
+      "from_band": "severe",
+      "to_band": "critical",
+      "band_changed": true
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-01T03:02:59.981202+00:00",
+      "pulse_id": "pls_ukraine_war_combat_strike_intensity",
+      "name": "Combat and Long-Range Strike Intensity",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_ukraine_war_combat_strike_intensity.json",
+      "from": 78.0,
+      "to": 84.0,
+      "from_band": "critical",
+      "to_band": "critical",
+      "band_changed": false
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "pulse_id": "pls_us_china_technology_export_control_decoupling",
+      "name": "Technology and Export-Control Decoupling",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_us_china_technology_export_control_decoupling.json",
+      "position": 65.0,
+      "band": "severe"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "pulse_id": "pls_ukraine_war_war_economy_dependency_strain",
+      "name": "War Economy and External Dependency Strain",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_ukraine_war_war_economy_dependency_strain.json",
+      "position": 73.0,
+      "band": "severe"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "pulse_id": "pls_sahel_horn_foreign_military_entanglement_horn",
+      "name": "Foreign Military Entanglement and Intelligence Competition in the Horn",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_sahel_horn_foreign_military_entanglement_horn.json",
+      "position": 58.0,
+      "band": "severe"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "pulse_id": "pls_red_sea_shipping_war_risk_insurance_freight_pressure",
+      "name": "War-Risk Insurance and Freight Cost Pressure",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_red_sea_shipping_war_risk_insurance_freight_pressure.json",
+      "position": 65.0,
+      "band": "severe"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "pulse_id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
+      "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption.json",
+      "position": 58.0,
+      "band": "severe"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "pulse_id": "pls_iran_gulf_us_iran_diplomatic_deadlock",
+      "name": "US-Iran Diplomatic Deadlock",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_iran_gulf_us_iran_diplomatic_deadlock.json",
+      "position": 68.0,
+      "band": "severe"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "pulse_id": "pls_iran_gulf_iran_proxy_axis_escalation",
+      "name": "Iran Proxy Axis Escalation",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_iran_gulf_iran_proxy_axis_escalation.json",
+      "position": 64.0,
+      "band": "severe"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "pulse_id": "pls_iran_gulf_hormuz_maritime_disruption",
+      "name": "Strait of Hormuz Maritime Disruption",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_iran_gulf_hormuz_maritime_disruption.json",
+      "position": 70.0,
+      "band": "severe"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "pulse_id": "pls_energy_security_transition_and_grid_resilience_strain",
+      "name": "Transition and Grid Resilience Strain",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_energy_security_transition_and_grid_resilience_strain.json",
+      "position": 68.0,
+      "band": "severe"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "pulse_id": "pls_energy_security_global_hydrocarbon_supply_disruption",
+      "name": "Global Hydrocarbon Supply Disruption",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_energy_security_global_hydrocarbon_supply_disruption.json",
+      "position": 72.0,
+      "band": "severe"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "pulse_id": "pls_energy_security_energy_price_and_market_shock",
+      "name": "Energy Price and Market Shock",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_energy_security_energy_price_and_market_shock.json",
+      "position": 64.0,
+      "band": "severe"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "pulse_id": "pls_ai_geopolitics_compute_control_erosion",
+      "name": "Compute Control Erosion",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_ai_geopolitics_compute_control_erosion.json",
+      "position": 35.0,
+      "band": "elevated"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "pulse_id": "pls_ukraine_war_energy_heating_collapse",
+      "name": "Energy and Heating System Collapse",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_ukraine_war_energy_heating_collapse.json",
+      "position": 84.0,
+      "band": "critical"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "pulse_id": "pls_ukraine_war_combat_strike_intensity",
+      "name": "Combat and Long-Range Strike Intensity",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_ukraine_war_combat_strike_intensity.json",
+      "position": 78.0,
+      "band": "critical"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "pulse_id": "pls_iran_gulf_us_iran_israel_military_confrontation",
+      "name": "US-Iran-Israel Direct Military Confrontation",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_iran_gulf_us_iran_israel_military_confrontation.json",
+      "position": 75.0,
+      "band": "critical"
+    }
+  ]
+}

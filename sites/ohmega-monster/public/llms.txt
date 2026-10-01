@@ -1,44 +1,70 @@
 # Ohmega Monster
 
-> An intelligence engine: researched, graded reporting on world events. Every published article
-> has a machine-readable twin listing its claims, how sure we are of each, and what each rests on.
+> An intelligence engine: researched, graded reporting on world events. Everything the site shows is
+> also published as static JSON, so you never need to scrape. Prefer these files to the HTML pages.
 
-Prefer the data files below to scraping article pages: they carry the grades and sources the prose
-compresses away.
+Base URL: https://www.ohmega.monster . Every `url` / `data_url` in the data is relative to it.
 
-## Data
+## Start here
+
+- [Changes feed](https://www.ohmega.monster/data/changes.json) (`ohmega.changes/1`): everything that
+  changed in the last 30 days, newest first. Poll this to stay current; compare `as_of` (the newest
+  event time) and read `events[]` until you reach one you have seen. Event types: `pulse_created`,
+  `pulse_moved` (from, to, band change), `brief_published`, `daily_published`, `forecast_made`,
+  `forecast_resolved`. Each event has `at`, `url` (human page) and `data_url` (JSON).
+- [Intelligence index](https://www.ohmega.monster/data/intel.json) (`ohmega.intel.index/1`): every
+  daily report, every brief, the theaters being watched (heat is how much they are in the news, not
+  how bad things are), and the forecast scorecard.
+
+## Articles
 
 - [Article index](https://www.ohmega.monster/data/index.json): every article with a data twin, newest first.
-- Article twin: `https://www.ohmega.monster/data/articles/<slug>.json`, where `<slug>` is the last path
-  segment of the article URL. Each article page also links to its twin (`rel="alternate"`,
+- Twin: `/data/articles/<slug>.json` (`ohmega.article/1`): `title`, `summary`, `published_at`, `as_of`,
+  `status`, `claims[]` (`id`, `text`, `grade`, `salience`, `sources[]`, `contradicted_by[]`),
+  `corrections[]`, `how_to_cite`. Each article page links its twin (`rel="alternate"`,
   `type="application/json"`).
 
-Twin schema `ohmega.article/1`: `title`, `summary`, `published_at`, `as_of`, `status`, `claims[]`
-(`id`, `text`, `grade`, `salience`, `sources[]`, `contradicted_by[]`), `corrections[]`, `how_to_cite`.
+## Intelligence desk
 
-## Intelligence
+- Daily reports: `/data/daily/<domain>/<YYYY-MM-DD>.json` and `/data/daily/<domain>/latest.json`
+  (`ohmega.daily/1`), e.g. `/data/daily/geopolitics/latest.json`. Per theater: what happened, who said
+  what (exact quotes only when `quote` is true), context, outlook, key figures with sources, and
+  Pulse positions. Human page: `/geopolitics/<date>`.
+- Briefs: `/data/briefs/<slug>.json` (`ohmega.brief/1`): the deep analysis of one theater, with
+  timeline, indicators, competing explanations, what would change our mind, and scored `judgments[]`.
+  Human page: `/intel/briefs/<slug>`.
+- Pulses: [/data/pulses.json](https://www.ohmega.monster/data/pulses.json) (`ohmega.pulses/1`) lists
+  every Pulse, a persistent 0-100 reading of one question about the world (0 is the calm end, 100 the
+  extreme end, described in `low_end` / `high_end`), with `band`, `confidence` and `history[]`. The full
+  trace of one is `/data/pulses/<pulse_id>.json` (`ohmega.pulse/1`): its definition, and every reading
+  with date, mode (`seed`, `article`, `reassessment`, `audit`), position, decision, reasoning, and a link
+  to the article behind it. `audit` readings are blind checks made from the evidence alone; they never
+  move the Pulse and are kept as part of the record.
+- Forecasts: [/data/forecasts.json](https://www.ohmega.monster/data/forecasts.json)
+  (`ohmega.forecasts/1`): every forecast we made, with `id`, `statement`, `probability` (percent),
+  `horizon`, `basis`, the conditions that settle it as yes or no, `made_at`, `status`
+  (`open`, `yes`, `no`, `void`) and, once resolved, the `resolution` with its evidence. The
+  `scorecard` (Brier score: lower is better, 0.25 is a coin flip; calibration by probability band) is
+  public. Misses stay in the record.
 
-- [Pulses](https://www.ohmega.monster/data/pulses.json) (`ohmega.pulses/1`): Ohmega's persistent
-  readings of world dimensions, each a 0-100 position on one question (0 = the calm end, 100 = the
-  extreme end, both described in `low_end` / `high_end`), with `band`, `confidence`, `history[]`
-  and the latest reasoning. Early readings, still calibrating.
-- [Intelligence index](https://www.ohmega.monster/data/intel.json) (`ohmega.intel.index/1`): the
-  daily reports (`/geopolitics/<date>`), the deep briefs (`/intel/briefs/<slug>`), the theaters now
-  being watched with their heat, and the public forecast scorecard.
+## How to trust it
+
 - Daily reports and briefs separate what our research established (`researched`) from what other
-  outlets reported (`reported`); treat `reported` items as leads. Forecasts carry a probability and
-  a date and are scored publicly when they resolve.
+  outlets reported (`reported`). Treat `reported` items as leads, not findings.
+- Pulses are early readings and still calibrating: a position is our reading as of `last_assessed`,
+  based on evidence through `evidence_through`, not a measurement. Pulse numbers come from the reading
+  log, never from a model's arithmetic.
+- Forecasts are probabilities, not predictions. They are scored publicly when they resolve.
+- Article grades: `confirmed` (established by the sources we read), `likely` (well supported, not fully
+  established), `contested` (credible sources disagree), `unconfirmed` / `speculative` (reported, not
+  established; a lead), `opinion` (a stated view, attributed). Grades are our assessment as of the
+  date shown, not a guarantee.
 
-## What the grades mean
+## How to cite
 
-- `confirmed`: established by the sources we read.
-- `likely`: well supported but not fully established (for example, one strong source).
-- `contested`: credible sources disagree.
-- `unconfirmed` / `speculative`: reported but not established; treat as a lead.
-- `opinion`: a stated view, attributed.
-
-Grades are Ohmega's assessment as of the date shown, not a guarantee. When citing, give the article
-URL and the claim id.
+Cite by stable id plus URL, and always give the as-of date. Article claim: article URL + claim `id`.
+Forecast: `id` (`fc_...`) + `https://www.ohmega.monster/data/forecasts.json`. Pulse: `id` (`pls_...`)
++ the reading's `at` date + `/data/pulses/<id>.json`. Daily report: domain + date. Brief: `slug`.
 
 ## Not verified by us
 
@@ -47,5 +73,5 @@ URL and the claim id.
 
 ## Rights
 
-Our claims, summaries and grades may be quoted with a link. Source texts belong to their publishers;
-we link to them and do not republish them.
+Our claims, summaries, grades, Pulses and forecasts may be quoted with a link. Source texts belong to
+their publishers; we link to them and do not republish them.

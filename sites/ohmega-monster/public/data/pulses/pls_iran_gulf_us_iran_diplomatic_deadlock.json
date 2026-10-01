@@ -1,0 +1,70 @@
+{
+  "schema": "ohmega.pulse/1",
+  "id": "pls_iran_gulf_us_iran_diplomatic_deadlock",
+  "name": "US-Iran Diplomatic Deadlock",
+  "situation_id": "sit_iran_gulf",
+  "situation": "Iran, Israel and the Gulf",
+  "status": "experimental",
+  "position": 74.0,
+  "band": "severe",
+  "confidence": "medium",
+  "velocity_7d": null,
+  "last_assessed": "2026-10-01T08:28:58.928568+00:00",
+  "evidence_through": "2026-10-01",
+  "history": [
+    {
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "position": 68.0
+    },
+    {
+      "at": "2026-10-01T08:28:58.928568+00:00",
+      "position": 74.0
+    }
+  ],
+  "definition": {
+    "version": 1,
+    "question": "How deadlocked are US-Iran talks and ceasefire efforts for the Gulf?",
+    "low_end": "Active direct negotiations with agreed framework for ceasefire, Hormuz reopening, and sanctions relief.",
+    "high_end": "Complete diplomatic rupture with no channels, no mediators, and no prospect for talks or ceasefire."
+  },
+  "url": "/pulses",
+  "data_url": "/data/pulses/pls_iran_gulf_us_iran_diplomatic_deadlock.json",
+  "readings": [
+    {
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "mode": "seed",
+      "moves_pulse": true,
+      "decision": "applied",
+      "position": 68.0,
+      "rationale": "First indirect shuttle talks in months occurred Sept 22-23 via Qatari mediators (Witkoff/Kushner-Araqchi) aiming only for a short-term restart, but Iran demands lifting blockade, asset release and end to war on all resistance fronts while US demands public halt to ship attacks and open toll-free lanes; June interim deal collapsed over Hormuz control/fees and both sides expect the other to blink.…",
+      "confidence": "medium",
+      "evidence_through": "2026-09-23",
+      "model": "",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-01T07:48:19.756517+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "no_change",
+      "position": null,
+      "rationale": "2026-10-01 at 68 already reflected indirect shuttle talks Sept 22-23 via Qatar/Oman seeking limited restart, deadlocked over Hormuz control/sanctions. New confirmed roadmap presented 25 Sep via Qatar (release funds/lift sanctions/end blockade in 4-5 days then Hormuz reopen) and Trump rejection 26 Sep as not acceptable, plus Araghchi 'will not back down' and Pezeshkian 'no longer trusts talks,'…",
+      "confidence": "medium",
+      "evidence_through": "2026-10-01",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-01T08:28:58.928568+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "applied",
+      "position": 74.0,
+      "rationale": "Closest to 2026-10-01 at 68 (held, reader thought 70) which captured indirect shuttle talks 22-23 Sep via Qatar/Oman deadlocked over Hormuz control/sanctions. New confirmed: 14-point MoU 17 June (end blockade in 30 days, clear mines, toll-free passage) expired 17 Aug over Hormuz routing ambiguity and Lebanon strikes, Iran's 7-day roadmap 25 Sep via Qatar (release funds/lift sanctions/end blockade…",
+      "confidence": "medium",
+      "evidence_through": "2026-10-01",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    }
+  ]
+}

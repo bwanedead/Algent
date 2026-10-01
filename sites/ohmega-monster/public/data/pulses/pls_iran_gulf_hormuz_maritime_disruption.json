@@ -1,0 +1,74 @@
+{
+  "schema": "ohmega.pulse/1",
+  "id": "pls_iran_gulf_hormuz_maritime_disruption",
+  "name": "Strait of Hormuz Maritime Disruption",
+  "situation_id": "sit_iran_gulf",
+  "situation": "Iran, Israel and the Gulf",
+  "status": "experimental",
+  "position": 78.0,
+  "band": "critical",
+  "confidence": "high",
+  "velocity_7d": null,
+  "last_assessed": "2026-10-01T08:28:58.928568+00:00",
+  "evidence_through": "2026-10-01",
+  "history": [
+    {
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "position": 70.0
+    },
+    {
+      "at": "2026-10-01T07:48:19.756517+00:00",
+      "position": 73.0
+    },
+    {
+      "at": "2026-10-01T08:28:58.928568+00:00",
+      "position": 78.0
+    }
+  ],
+  "definition": {
+    "version": 1,
+    "question": "How severely is commercial shipping and energy flow through the Strait of Hormuz disrupted?",
+    "low_end": "Strait fully open with normal traffic volumes, routine insurance pricing, and no attacks or interception risk for commercial shipping.",
+    "high_end": "Strait of Hormuz fully closed to commercial traffic with no transits, sustained sinkings/mining, and prolonged halt to oil and LNG flows."
+  },
+  "url": "/pulses",
+  "data_url": "/data/pulses/pls_iran_gulf_hormuz_maritime_disruption.json",
+  "readings": [
+    {
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "mode": "seed",
+      "moves_pulse": true,
+      "decision": "applied",
+      "position": 70.0,
+      "rationale": "Traffic fell to multi-week lows (14 vs 37 ships, then 6 transits), 58 IMO-confirmed incidents with 17 fatalities and two Emirati tankers struck, war-risk premiums at 2-6% (up to 10%), and JMIC SEVERE then MODERATE warnings, yet 8m b/d still transited and 800+ vessels were facilitated; by September traffic remained a fraction of pre-war with EIA forecasting constraints through end-2026. Higher if…",
+      "confidence": "high",
+      "evidence_through": "2026-09-23",
+      "model": "",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-01T07:48:19.756517+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "applied",
+      "position": 73.0,
+      "rationale": "Closest to 2026-10-01 reading at 70 which already captured severe impairment (14 vs 37 ships then 6 transits, 58 incidents/17 fatalities, premiums 2-6% up to 10%, JMIC SEVERE/MODERATE, yet 8m b/d still transited). New confirmed claims show Iran closed/restricted Hormuz 28 Feb triggering largest disruption, tanker traffic down ~70%, Brent >$138, IEA 400m barrel release, LNG exports down 95% and…",
+      "confidence": "high",
+      "evidence_through": "2026-10-01",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-01T08:28:58.928568+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "applied",
+      "position": 78.0,
+      "rationale": "Closest to 2026-10-01 reading at 73 (already severe: 14 vs 37 ships then 6 transits, 58 incidents/17 fatalities, premiums 2-6%). New confirmed evidence is more extreme: war began 28 Feb with Hormuz closure/restriction, 80 IMO-verified attacks/22 killed (vs 58/17), ~80 mines making central lanes unsafe requiring weeks to 6 months to clear, ~2,000 ships stranded and 6,000 seafarers trapped vs…",
+      "confidence": "high",
+      "evidence_through": "2026-10-01",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    }
+  ]
+}

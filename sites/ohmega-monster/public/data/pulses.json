@@ -1,6 +1,6 @@
 {
   "schema": "ohmega.pulses/1",
-  "built_at": "2026-10-01T11:25:21.287174+00:00",
+  "built_at": "2026-10-01T12:19:21.582036+00:00",
   "pulses": [
     {
       "id": "pls_ai_geopolitics_ai_safety_governance_fracture",
@@ -18,7 +18,8 @@
       "evidence_through": "2026-07-29",
       "velocity_7d": null,
       "history": [],
-      "rationale": ""
+      "rationale": "",
+      "data_url": "/data/pulses/pls_ai_geopolitics_ai_safety_governance_fracture.json"
     },
     {
       "id": "pls_ai_geopolitics_compute_control_erosion",
@@ -41,7 +42,8 @@
           "position": 35.0
         }
       ],
-      "rationale": "Early domestic immersion DUV manufacturing has begun (5 systems targeted in 2026, ~20 in 2027 for SMIC/Hua Hong/CXMT) but tools still require further testing and remain far from ASML on performance/reliability with no fab qualification or sustained procurement shift yet; would be higher with demonstrated high-yield qualification and ASML displacement, lower if targets slip or tools remain low-end…"
+      "rationale": "Early domestic immersion DUV manufacturing has begun (5 systems targeted in 2026, ~20 in 2027 for SMIC/Hua Hong/CXMT) but tools still require further testing and remain far from ASML on performance/reliability with no fab qualification or sustained procurement shift yet; would be higher with demonstrated high-yield qualification and ASML displacement, lower if targets slip or tools remain low-end…",
+      "data_url": "/data/pulses/pls_ai_geopolitics_compute_control_erosion.json"
     },
     {
       "id": "pls_ai_geopolitics_military_ai_weaponization",
@@ -59,7 +61,8 @@
       "evidence_through": "2026-07-29",
       "velocity_7d": null,
       "history": [],
-      "rationale": ""
+      "rationale": "",
+      "data_url": "/data/pulses/pls_ai_geopolitics_military_ai_weaponization.json"
     },
     {
       "id": "pls_china_taiwan_cross_strait_political_rupture",
@@ -77,7 +80,8 @@
       "evidence_through": "",
       "velocity_7d": null,
       "history": [],
-      "rationale": ""
+      "rationale": "",
+      "data_url": "/data/pulses/pls_china_taiwan_cross_strait_political_rupture.json"
     },
     {
       "id": "pls_china_taiwan_external_deterrence_failure_and_intervention_risk",
@@ -95,7 +99,8 @@
       "evidence_through": "",
       "velocity_7d": null,
       "history": [],
-      "rationale": ""
+      "rationale": "",
+      "data_url": "/data/pulses/pls_china_taiwan_external_deterrence_failure_and_intervention_risk.json"
     },
     {
       "id": "pls_china_taiwan_pla_military_pressure_and_blockade_invasion_risk",
@@ -113,7 +118,8 @@
       "evidence_through": "",
       "velocity_7d": null,
       "history": [],
-      "rationale": ""
+      "rationale": "",
+      "data_url": "/data/pulses/pls_china_taiwan_pla_military_pressure_and_blockade_invasion_risk.json"
     },
     {
       "id": "pls_china_taiwan_taiwan_defence_vulnerability",
@@ -131,7 +137,8 @@
       "evidence_through": "",
       "velocity_7d": null,
       "history": [],
-      "rationale": ""
+      "rationale": "",
+      "data_url": "/data/pulses/pls_china_taiwan_taiwan_defence_vulnerability.json"
     },
     {
       "id": "pls_energy_security_energy_price_and_market_shock",
@@ -154,7 +161,8 @@
           "position": 64.0
         }
       ],
-      "rationale": "Brent around $101.30-101.52 Sept 22 near low since Sept 10 but averaged $91 in August (+$7 vs July), EIA forecasts ~$90 in 2H26 falling to $74 in 2027 as inventories rebuild; U.S. energy prices +15.7% y/y in June, OECD sees headline PCE peaking ~4% mid-2026 then easing, core CPI flat m/m at 2.6% y/y suggesting shock still headline-only. Distillate inventories below 100m barrels and diesel cracks…"
+      "rationale": "Brent around $101.30-101.52 Sept 22 near low since Sept 10 but averaged $91 in August (+$7 vs July), EIA forecasts ~$90 in 2H26 falling to $74 in 2027 as inventories rebuild; U.S. energy prices +15.7% y/y in June, OECD sees headline PCE peaking ~4% mid-2026 then easing, core CPI flat m/m at 2.6% y/y suggesting shock still headline-only. Distillate inventories below 100m barrels and diesel cracks…",
+      "data_url": "/data/pulses/pls_energy_security_energy_price_and_market_shock.json"
     },
     {
       "id": "pls_energy_security_global_hydrocarbon_supply_disruption",
@@ -181,7 +189,8 @@
           "position": 77.0
         }
       ],
-      "rationale": "More extreme than 2026-10-01 at 72 which reflected Hormuz-only operational constraint (20m b/d normal vs 8m b/d Sunday/15m avg, -60% transits, 800+ vessels facilitated). New evidence shows severely impaired but not fully closed system now with second chokepoint: Hormuz -70% traffic plus Houthi complete blockade on Saudi 20 Jul and seizure of Mokha/Hanish Islands 10 Sep controlling Bab el-Mandeb…"
+      "rationale": "More extreme than 2026-10-01 at 72 which reflected Hormuz-only operational constraint (20m b/d normal vs 8m b/d Sunday/15m avg, -60% transits, 800+ vessels facilitated). New evidence shows severely impaired but not fully closed system now with second chokepoint: Hormuz -70% traffic plus Houthi complete blockade on Saudi 20 Jul and seizure of Mokha/Hanish Islands 10 Sep controlling Bab el-Mandeb…",
+      "data_url": "/data/pulses/pls_energy_security_global_hydrocarbon_supply_disruption.json"
     },
     {
       "id": "pls_energy_security_transition_and_grid_resilience_strain",
@@ -204,7 +213,8 @@
           "position": 68.0
         }
       ],
-      "rationale": "Concurrent stress: Paks ~2000MW fell to 965MW then 240MW (~12%, one turbine) with Danube at record -106cm, Cernavoda one reactor offline with second scheduled, EDF shut 3 reactors (3.65GW) and reduced 7 others (~9% nuclear dip), EU hydro lowest in decade (-12% in 2025, -43TWh), wind -30-50% during heat dome, demand +20% on AC, evening peaks €285-326/MWh. No blackouts as of Aug 7 but voluntary…"
+      "rationale": "Concurrent stress: Paks ~2000MW fell to 965MW then 240MW (~12%, one turbine) with Danube at record -106cm, Cernavoda one reactor offline with second scheduled, EDF shut 3 reactors (3.65GW) and reduced 7 others (~9% nuclear dip), EU hydro lowest in decade (-12% in 2025, -43TWh), wind -30-50% during heat dome, demand +20% on AC, evening peaks €285-326/MWh. No blackouts as of Aug 7 but voluntary…",
+      "data_url": "/data/pulses/pls_energy_security_transition_and_grid_resilience_strain.json"
     },
     {
       "id": "pls_iran_gulf_hormuz_maritime_disruption",
@@ -235,7 +245,8 @@
           "position": 78.0
         }
       ],
-      "rationale": "Closest to 2026-10-01 reading at 73 (already severe: 14 vs 37 ships then 6 transits, 58 incidents/17 fatalities, premiums 2-6%). New confirmed evidence is more extreme: war began 28 Feb with Hormuz closure/restriction, 80 IMO-verified attacks/22 killed (vs 58/17), ~80 mines making central lanes unsafe requiring weeks to 6 months to clear, ~2,000 ships stranded and 6,000 seafarers trapped vs…"
+      "rationale": "Closest to 2026-10-01 reading at 73 (already severe: 14 vs 37 ships then 6 transits, 58 incidents/17 fatalities, premiums 2-6%). New confirmed evidence is more extreme: war began 28 Feb with Hormuz closure/restriction, 80 IMO-verified attacks/22 killed (vs 58/17), ~80 mines making central lanes unsafe requiring weeks to 6 months to clear, ~2,000 ships stranded and 6,000 seafarers trapped vs…",
+      "data_url": "/data/pulses/pls_iran_gulf_hormuz_maritime_disruption.json"
     },
     {
       "id": "pls_iran_gulf_iran_proxy_axis_escalation",
@@ -266,7 +277,8 @@
           "position": 77.0
         }
       ],
-      "rationale": "Closest to 2026-10-01 at 72 (Houthi blockade declared 20 July, seizure of Mokha/Hanish Islands 10 Sep). New confirmed moves from threat/control to kinetic exchange: Houthis seized Red Sea coast/islands overseeing Bab el-Mandeb and disabled 1,200km East-West pipeline/Jazan hub, threatened 25 Sep to strike Saudi bases/economic targets, launched 2 ballistic missiles near Khamis Mushait and 2 drones…"
+      "rationale": "Closest to 2026-10-01 at 72 (Houthi blockade declared 20 July, seizure of Mokha/Hanish Islands 10 Sep). New confirmed moves from threat/control to kinetic exchange: Houthis seized Red Sea coast/islands overseeing Bab el-Mandeb and disabled 1,200km East-West pipeline/Jazan hub, threatened 25 Sep to strike Saudi bases/economic targets, launched 2 ballistic missiles near Khamis Mushait and 2 drones…",
+      "data_url": "/data/pulses/pls_iran_gulf_iran_proxy_axis_escalation.json"
     },
     {
       "id": "pls_iran_gulf_us_iran_diplomatic_deadlock",
@@ -293,7 +305,8 @@
           "position": 74.0
         }
       ],
-      "rationale": "Closest to 2026-10-01 at 68 (held, reader thought 70) which captured indirect shuttle talks 22-23 Sep via Qatar/Oman deadlocked over Hormuz control/sanctions. New confirmed: 14-point MoU 17 June (end blockade in 30 days, clear mines, toll-free passage) expired 17 Aug over Hormuz routing ambiguity and Lebanon strikes, Iran's 7-day roadmap 25 Sep via Qatar (release funds/lift sanctions/end blockade…"
+      "rationale": "Closest to 2026-10-01 at 68 (held, reader thought 70) which captured indirect shuttle talks 22-23 Sep via Qatar/Oman deadlocked over Hormuz control/sanctions. New confirmed: 14-point MoU 17 June (end blockade in 30 days, clear mines, toll-free passage) expired 17 Aug over Hormuz routing ambiguity and Lebanon strikes, Iran's 7-day roadmap 25 Sep via Qatar (release funds/lift sanctions/end blockade…",
+      "data_url": "/data/pulses/pls_iran_gulf_us_iran_diplomatic_deadlock.json"
     },
     {
       "id": "pls_iran_gulf_us_iran_israel_military_confrontation",
@@ -320,7 +333,8 @@
           "position": 78.0
         }
       ],
-      "rationale": "Closest to 2026-10-01 at 75 (held, reader thought 75) which reflected July CENTCOM waves hitting 300+ targets and Iran threats to Gulf infrastructure. New confirmed raises baseline: war began 28 Feb with strikes killing Khamenei and targeting nuclear/military/leadership, MoU 17 June declared permanent termination then expired 17 Aug, Trump rejected roadmap 26 Sep, plus geographic expansion…"
+      "rationale": "Closest to 2026-10-01 at 75 (held, reader thought 75) which reflected July CENTCOM waves hitting 300+ targets and Iran threats to Gulf infrastructure. New confirmed raises baseline: war began 28 Feb with strikes killing Khamenei and targeting nuclear/military/leadership, MoU 17 June declared permanent termination then expired 17 Aug, Trump rejected roadmap 26 Sep, plus geographic expansion…",
+      "data_url": "/data/pulses/pls_iran_gulf_us_iran_israel_military_confrontation.json"
     },
     {
       "id": "pls_israel_palestine_ceasefire_and_normalization_deadlock",
@@ -347,7 +361,8 @@
           "position": 60.0
         }
       ],
-      "rationale": "Closest to 62 on 2026-10-01 which already reflected paper-only ceasefire (1,381 killed). New research confirms same pattern (1,408 killed since Oct 11 2025 per, DRC/OCHA say ceasefire exists largely in name only) so no worsening, but adds quiet Gulf diplomacy not in prior reading: Netanyahu's unannounced Sept 27 Abu Dhabi meeting with MBZ confirmed by both offices with Mossad/NSC accompaniment…"
+      "rationale": "Closest to 62 on 2026-10-01 which already reflected paper-only ceasefire (1,381 killed). New research confirms same pattern (1,408 killed since Oct 11 2025 per, DRC/OCHA say ceasefire exists largely in name only) so no worsening, but adds quiet Gulf diplomacy not in prior reading: Netanyahu's unannounced Sept 27 Abu Dhabi meeting with MBZ confirmed by both offices with Mossad/NSC accompaniment…",
+      "data_url": "/data/pulses/pls_israel_palestine_ceasefire_and_normalization_deadlock.json"
     },
     {
       "id": "pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe",
@@ -370,7 +385,8 @@
           "position": 85.0
         }
       ],
-      "rationale": "First assessed reading (past unassessed). Combat is lower-intensity than 2023-24 peak but persistent: 1,381 killed since Oct 2025 ceasefire, ongoing strikes per OCHA. Humanitarian collapse is near-extreme: only 19/38 hospitals functioning, ~270/630 health centres, 70% generators non-operational, Nasser Hospital rotating cuts, fuel/oil far below 94,000L diesel/2,500L oil monthly needs, WHO ending…"
+      "rationale": "First assessed reading (past unassessed). Combat is lower-intensity than 2023-24 peak but persistent: 1,381 killed since Oct 2025 ceasefire, ongoing strikes per OCHA. Humanitarian collapse is near-extreme: only 19/38 hospitals functioning, ~270/630 health centres, 70% generators non-operational, Nasser Hospital rotating cuts, fuel/oil far below 94,000L diesel/2,500L oil monthly needs, WHO ending…",
+      "data_url": "/data/pulses/pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe.json"
     },
     {
       "id": "pls_israel_palestine_international_legal_and_diplomatic_pressure_on_israel",
@@ -397,7 +413,8 @@
           "position": 73.0
         }
       ],
-      "rationale": "Up from 68 on 2026-10-01 which reflected Netherlands/UK settlement-goods bans. New research shows escalation: Dutch ban entered force Sept 22 covering commercial and personal luggage with Schiphol checks and up to 6-year prison penalties, Israel retaliated Sept 27 by revoking Dutch diplomats' Ramallah accreditation and in Aug/Sep removed Dutch from US-backed Gaza Support Center, coordinated…"
+      "rationale": "Up from 68 on 2026-10-01 which reflected Netherlands/UK settlement-goods bans. New research shows escalation: Dutch ban entered force Sept 22 covering commercial and personal luggage with Schiphol checks and up to 6-year prison penalties, Israel retaliated Sept 27 by revoking Dutch diplomats' Ramallah accreditation and in Aug/Sep removed Dutch from US-backed Gaza Support Center, coordinated…",
+      "data_url": "/data/pulses/pls_israel_palestine_international_legal_and_diplomatic_pressure_on_israel.json"
     },
     {
       "id": "pls_israel_palestine_west_bank_annexation_and_settler_violence",
@@ -415,7 +432,8 @@
       "evidence_through": "null",
       "velocity_7d": null,
       "history": [],
-      "rationale": ""
+      "rationale": "",
+      "data_url": "/data/pulses/pls_israel_palestine_west_bank_annexation_and_settler_violence.json"
     },
     {
       "id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
@@ -426,10 +444,10 @@
       "low_end": "Bab el-Mandeb and the Red Sea are open with normal commercial traffic volumes, no attacks or credible blockade threats, and routine transit without special routing or naval escort.",
       "high_end": "Bab el-Mandeb and the Red Sea are effectively closed to commercial shipping due to sustained attacks, enforced blockade, or mass avoidance with near-zero transits and prolonged Suez disruption.",
       "status": "experimental",
-      "position": 68.0,
+      "position": 72.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-01T08:28:58.928568+00:00",
+      "last_assessed": "2026-10-01T11:36:13.230643+00:00",
       "evidence_through": "2026-10-01",
       "velocity_7d": null,
       "history": [
@@ -440,9 +458,14 @@
         {
           "at": "2026-10-01T07:48:19.756517+00:00",
           "position": 68.0
+        },
+        {
+          "at": "2026-10-01T11:36:13.230643+00:00",
+          "position": 72.0
         }
       ],
-      "rationale": "Closest to past reading 58 (2026-10-01) which reflected only declared embargo and Saudi escort measures. Now confirmed 20 July blockade plus physical control of Bab el-Mandeb islands/Mokha 10 Sep and kinetic strikes on Riyadh/Khamis Mushait 19/26 Sep plus threat to Yanbu bypass that carries 12-15% global trade. Moves ~10 points more severe than declaration-only, but not to 100 as no verified…"
+      "rationale": "Closest to past reading 68 (2026-10-01) which reflected declared embargo, physical control of islands/Mokha and kinetic strikes. New confirmed evidence moves from threat to realized disruption: 10 commercial vessels attacked since July (majority tankers, 6+ struck, sinking 4 Aug, 4 killed 11 Aug) and confirmed 150km advance capturing Mocha to Bab al-Mandab plus 25 days of missile/drone attacks on…",
+      "data_url": "/data/pulses/pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption.json"
     },
     {
       "id": "pls_red_sea_shipping_suez_canal_rerouting_strain",
@@ -456,11 +479,12 @@
       "position": null,
       "band": "unassessed",
       "confidence": "",
-      "last_assessed": "2026-10-01T08:28:58.928568+00:00",
+      "last_assessed": "2026-10-01T11:36:13.230643+00:00",
       "evidence_through": "2026-10-01",
       "velocity_7d": null,
       "history": [],
-      "rationale": ""
+      "rationale": "",
+      "data_url": "/data/pulses/pls_red_sea_shipping_suez_canal_rerouting_strain.json"
     },
     {
       "id": "pls_red_sea_shipping_war_risk_insurance_freight_pressure",
@@ -474,7 +498,7 @@
       "position": 65.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-01T08:28:58.928568+00:00",
+      "last_assessed": "2026-10-01T11:36:13.230643+00:00",
       "evidence_through": "2026-10-01",
       "velocity_7d": null,
       "history": [
@@ -483,7 +507,8 @@
           "position": 65.0
         }
       ],
-      "rationale": "London market war-risk premiums for Hormuz transits rose to ~2-6% of vessel value, with earlier periods up to 10%, with fewer inquiries as owners grew reluctant and traffic drops driven by operator caution not just physical blockade; Houthi embargo is assessed as likely to raise shipping costs and disrupt Saudi oil exports via Red Sea. Higher if Red Sea/Bab el-Mandeb premiums exceed 6-10% broadly…"
+      "rationale": "London market war-risk premiums for Hormuz transits rose to ~2-6% of vessel value, with earlier periods up to 10%, with fewer inquiries as owners grew reluctant and traffic drops driven by operator caution not just physical blockade; Houthi embargo is assessed as likely to raise shipping costs and disrupt Saudi oil exports via Red Sea. Higher if Red Sea/Bab el-Mandeb premiums exceed 6-10% broadly…",
+      "data_url": "/data/pulses/pls_red_sea_shipping_war_risk_insurance_freight_pressure.json"
     },
     {
       "id": "pls_russia_nato_diplomatic_rupture",
@@ -506,7 +531,8 @@
           "position": 62.0
         }
       ],
-      "rationale": "First assessed reading; prior 2026-10-01 was unassessed. Evidence shows significant strain but not complete severance: mass expulsions of ~400 officers in 2022 rising to ~750 by Oct 2024, plus consulate closures (Poland closed Kraków May 2025, Germany closed Bonn 18 Sep 2026 and terminated Russia House lease, summoned ambassador). Counterbalanced by functioning crisis-management: Poland invoked…"
+      "rationale": "First assessed reading; prior 2026-10-01 was unassessed. Evidence shows significant strain but not complete severance: mass expulsions of ~400 officers in 2022 rising to ~750 by Oct 2024, plus consulate closures (Poland closed Kraków May 2025, Germany closed Bonn 18 Sep 2026 and terminated Russia House lease, summoned ambassador). Counterbalanced by functioning crisis-management: Poland invoked…",
+      "data_url": "/data/pulses/pls_russia_nato_diplomatic_rupture.json"
     },
     {
       "id": "pls_russia_nato_direct_military_confrontation",
@@ -529,7 +555,8 @@
           "position": 58.0
         }
       ],
-      "rationale": "First assessed reading; prior unassessed. Moves well above routine peacetime posture due to 19-23 Russian Gerbera decoy drones violating Polish airspace for 7h15m on 9-10 Sep 2025, intercepted and shot down (3-4) by Polish F-16s/Dutch F-35s with AWACS/Patriot support, triggering Poland's Article 4 request and NAC solidarity statement 10 Sep 2025. NATO responded with Operation Eastern Sentry 12…"
+      "rationale": "First assessed reading; prior unassessed. Moves well above routine peacetime posture due to 19-23 Russian Gerbera decoy drones violating Polish airspace for 7h15m on 9-10 Sep 2025, intercepted and shot down (3-4) by Polish F-16s/Dutch F-35s with AWACS/Patriot support, triggering Poland's Article 4 request and NAC solidarity statement 10 Sep 2025. NATO responded with Operation Eastern Sentry 12…",
+      "data_url": "/data/pulses/pls_russia_nato_direct_military_confrontation.json"
     },
     {
       "id": "pls_russia_nato_hybrid_grey_zone_pressure",
@@ -552,7 +579,8 @@
           "position": 72.0
         }
       ],
-      "rationale": "First assessed reading; prior unassessed. Evidence establishes sustained, coordinated, multi-domain pressure well above minimal: confirmed GRU Unit 29155-led campaign since Feb 2022 using gig-economy proxies after 2022 expulsions; sabotage attacks nearly tripled 2023 (12) to 2024 (34), ~200 incidents tracked by AP, >50 by IISS; specific confirmed attributions include Warsaw-Lublin C4/rail…"
+      "rationale": "First assessed reading; prior unassessed. Evidence establishes sustained, coordinated, multi-domain pressure well above minimal: confirmed GRU Unit 29155-led campaign since Feb 2022 using gig-economy proxies after 2022 expulsions; sabotage attacks nearly tripled 2023 (12) to 2024 (34), ~200 incidents tracked by AP, >50 by IISS; specific confirmed attributions include Warsaw-Lublin C4/rail…",
+      "data_url": "/data/pulses/pls_russia_nato_hybrid_grey_zone_pressure.json"
     },
     {
       "id": "pls_sahel_horn_displacement_humanitarian_collapse",
@@ -570,7 +598,8 @@
       "evidence_through": "2026-09-21",
       "velocity_7d": null,
       "history": [],
-      "rationale": ""
+      "rationale": "",
+      "data_url": "/data/pulses/pls_sahel_horn_displacement_humanitarian_collapse.json"
     },
     {
       "id": "pls_sahel_horn_foreign_military_entanglement_horn",
@@ -593,7 +622,8 @@
           "position": 58.0
         }
       ],
-      "rationale": "First reading at elevated 58: two new PLA communications compounds since mid-2024 with HF/V/UHF/SATCOM/5G/radomes and reinforced trenches co-located <10 miles from US (4,000+ personnel at Camp Lemonnier), French (1,500-1,900), Italian and Japanese bases at the 20-mile-wide Bab el-Mandeb chokepoint, assessed as almost certainly SIGINT-capable with heightened value amid Houthi Red Sea attacks and…"
+      "rationale": "First reading at elevated 58: two new PLA communications compounds since mid-2024 with HF/V/UHF/SATCOM/5G/radomes and reinforced trenches co-located <10 miles from US (4,000+ personnel at Camp Lemonnier), French (1,500-1,900), Italian and Japanese bases at the 20-mile-wide Bab el-Mandeb chokepoint, assessed as almost certainly SIGINT-capable with heightened value amid Houthi Red Sea attacks and…",
+      "data_url": "/data/pulses/pls_sahel_horn_foreign_military_entanglement_horn.json"
     },
     {
       "id": "pls_sahel_horn_state_fragility_insurgent_control",
@@ -611,7 +641,8 @@
       "evidence_through": "2026-09-21",
       "velocity_7d": null,
       "history": [],
-      "rationale": ""
+      "rationale": "",
+      "data_url": "/data/pulses/pls_sahel_horn_state_fragility_insurgent_control.json"
     },
     {
       "id": "pls_ukraine_war_combat_strike_intensity",
@@ -625,7 +656,7 @@
       "position": 84.0,
       "band": "critical",
       "confidence": "high",
-      "last_assessed": "2026-10-01T08:42:50.869222+00:00",
+      "last_assessed": "2026-10-01T11:48:41.282520+00:00",
       "evidence_through": "2026-09-30",
       "velocity_7d": null,
       "history": [
@@ -638,7 +669,8 @@
           "position": 84.0
         }
       ],
-      "rationale": "Closest to 2026-10-01 reading 78 which already reflected severe salvos (151 drones + 6 Iskander, 195 ballistics in July ~15% intercept, Wildberries 10% damage). New research shows more extreme tempo: 170 drones (76 jet) 26-27 Sep and 190 drones+ballistics 29-30 Sep on Kyiv energy marking winter campaign start, plus systematic refinery interdiction (28/32 refineries hit, 204 strikes, avg every 3…"
+      "rationale": "Closest to 2026-10-01 reading 78 which already reflected severe salvos (151 drones + 6 Iskander, 195 ballistics in July ~15% intercept, Wildberries 10% damage). New research shows more extreme tempo: 170 drones (76 jet) 26-27 Sep and 190 drones+ballistics 29-30 Sep on Kyiv energy marking winter campaign start, plus systematic refinery interdiction (28/32 refineries hit, 204 strikes, avg every 3…",
+      "data_url": "/data/pulses/pls_ukraine_war_combat_strike_intensity.json"
     },
     {
       "id": "pls_ukraine_war_energy_heating_collapse",
@@ -652,7 +684,7 @@
       "position": 84.0,
       "band": "critical",
       "confidence": "high",
-      "last_assessed": "2026-10-01T08:42:50.869222+00:00",
+      "last_assessed": "2026-10-01T11:48:41.282520+00:00",
       "evidence_through": "2026-09-30",
       "velocity_7d": null,
       "history": [
@@ -661,7 +693,8 @@
           "position": 84.0
         }
       ],
-      "rationale": "Virtually no intact thermal plants, ~90% thermal generation destroyed, ~50% hydro damaged, capacity <10 GW vs 18 GW winter demand (from 38 GW pre-war), 423 attacks on electricity +74 on heating Oct 2025-Mar 2026, 60% gas production destroyed requiring 4.4 bcm imports ($2.5bn), and OHCHR assessment that full restoration before next winter is impossible. Higher if nuclear plants are severed from…"
+      "rationale": "Virtually no intact thermal plants, ~90% thermal generation destroyed, ~50% hydro damaged, capacity <10 GW vs 18 GW winter demand (from 38 GW pre-war), 423 attacks on electricity +74 on heating Oct 2025-Mar 2026, 60% gas production destroyed requiring 4.4 bcm imports ($2.5bn), and OHCHR assessment that full restoration before next winter is impossible. Higher if nuclear plants are severed from…",
+      "data_url": "/data/pulses/pls_ukraine_war_energy_heating_collapse.json"
     },
     {
       "id": "pls_ukraine_war_war_economy_dependency_strain",
@@ -675,7 +708,7 @@
       "position": 81.0,
       "band": "critical",
       "confidence": "high",
-      "last_assessed": "2026-10-01T08:42:50.869222+00:00",
+      "last_assessed": "2026-10-01T11:48:41.282520+00:00",
       "evidence_through": "2026-09-30",
       "velocity_7d": null,
       "history": [
@@ -688,7 +721,8 @@
           "position": 81.0
         }
       ],
-      "rationale": "Closest to 2026-10-01 reading 73 (China 87% dual-use, oil/gas ~30% budget 24% below plan). New research shows materially more strained: refinery throughput 3.8mb/d -30% YoY, gasoline -20% diesel -30%, emergency export bans to 31 Oct/31 Jan, shortages in 92% regions with rationing/40hr waits, prices +19% gasoline +18% diesel, Euro 2/3/4 standards reimposed, diesel crack >$100, plus fiscal deficit…"
+      "rationale": "Closest to 2026-10-01 reading 73 (China 87% dual-use, oil/gas ~30% budget 24% below plan). New research shows materially more strained: refinery throughput 3.8mb/d -30% YoY, gasoline -20% diesel -30%, emergency export bans to 31 Oct/31 Jan, shortages in 92% regions with rationing/40hr waits, prices +19% gasoline +18% diesel, Euro 2/3/4 standards reimposed, diesel crack >$100, plus fiscal deficit…",
+      "data_url": "/data/pulses/pls_ukraine_war_war_economy_dependency_strain.json"
     },
     {
       "id": "pls_us_china_diplomatic_deadlock",
@@ -711,7 +745,8 @@
           "position": 20.0
         }
       ],
-      "rationale": "Previously unassessed 2026-10-01 for lack of summit/dialogue evidence. New confirmed evidence shows full leader-level engagement: state visit Sep 23-25 2026 with tarmac greeting, White House state dinner, National Archives tour, truce extension to Jan 10 2027, new AI incident channel/Super Intelligence Dialogue with Nov 2026 follow-up, military MOU on crisis communication, and agreed next summits…"
+      "rationale": "Previously unassessed 2026-10-01 for lack of summit/dialogue evidence. New confirmed evidence shows full leader-level engagement: state visit Sep 23-25 2026 with tarmac greeting, White House state dinner, National Archives tour, truce extension to Jan 10 2027, new AI incident channel/Super Intelligence Dialogue with Nov 2026 follow-up, military MOU on crisis communication, and agreed next summits…",
+      "data_url": "/data/pulses/pls_us_china_diplomatic_deadlock.json"
     },
     {
       "id": "pls_us_china_technology_export_control_decoupling",
@@ -734,7 +769,8 @@
           "position": 65.0
         }
       ],
-      "rationale": "US controls are confirmed as major and repeatedly tightened (Oct 2022, Oct 2023, refinements Apr/Dec 2024) and ASML itself warns controls plus tech-sovereignty push may reshape supply chains, placing the dimension well above calm. China has likely begun low-volume domestic immersion DUV production (5 systems in 2026, ~20 in 2027) via Shanghai Aishengna for SMIC/Hua Hong/CXMT, but sources and…"
+      "rationale": "US controls are confirmed as major and repeatedly tightened (Oct 2022, Oct 2023, refinements Apr/Dec 2024) and ASML itself warns controls plus tech-sovereignty push may reshape supply chains, placing the dimension well above calm. China has likely begun low-volume domestic immersion DUV production (5 systems in 2026, ~20 in 2027) via Shanghai Aishengna for SMIC/Hua Hong/CXMT, but sources and…",
+      "data_url": "/data/pulses/pls_us_china_technology_export_control_decoupling.json"
     },
     {
       "id": "pls_us_china_trade_tariff_confrontation",
@@ -757,7 +793,8 @@
           "position": 35.0
         }
       ],
-      "rationale": "Previously unassessed 2026-10-01 for lack of tariff/trade data. New confirmed evidence shows de-escalation from prohibitive-tariff extreme: Busan Nov 2025 truce (US tariff cuts, Chinese pledges on rare earths/25Mt soybeans/fentanyl) extended to Jan 10 2027 with $30B non-sensitive goods each way for reduced tariffs and likely 10Mt coal imports 2027-28. However Chinese rare-earth exports remain…"
+      "rationale": "Previously unassessed 2026-10-01 for lack of tariff/trade data. New confirmed evidence shows de-escalation from prohibitive-tariff extreme: Busan Nov 2025 truce (US tariff cuts, Chinese pledges on rare earths/25Mt soybeans/fentanyl) extended to Jan 10 2027 with $30B non-sensitive goods each way for reduced tariffs and likely 10Mt coal imports 2027-28. However Chinese rare-earth exports remain…",
+      "data_url": "/data/pulses/pls_us_china_trade_tariff_confrontation.json"
     }
   ]
 }

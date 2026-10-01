@@ -1,6 +1,6 @@
 {
   "schema": "ohmega.intel.index/1",
-  "built_at": "2026-10-01T11:25:21.287174+00:00",
+  "built_at": "2026-10-01T12:19:21.582036+00:00",
   "daily": [
     {
       "domain": "geopolitics",
@@ -28,7 +28,8 @@
           "name": "US-China summit and strategic competition"
         }
       ],
-      "url": "/geopolitics/2026-10-01"
+      "url": "/geopolitics/2026-10-01",
+      "data_url": "/data/daily/geopolitics/2026-10-01.json"
     }
   ],
   "briefs": [
@@ -41,7 +42,8 @@
       "as_of": "2026-10-01",
       "direction": "rising",
       "pace": "gradual",
-      "url": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout"
+      "url": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout",
+      "data_url": "/data/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout.json"
     },
     {
       "slug": "2026-10-01-frontier-ai-race-and-superintelligence-governance",
@@ -52,7 +54,8 @@
       "as_of": "2026-10-01",
       "direction": "steady",
       "pace": "gradual",
-      "url": "/intel/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance"
+      "url": "/intel/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance",
+      "data_url": "/data/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance.json"
     },
     {
       "slug": "2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime",
@@ -63,7 +66,8 @@
       "as_of": "2026-10-01",
       "direction": "rising",
       "pace": "gradual",
-      "url": "/intel/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime"
+      "url": "/intel/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime",
+      "data_url": "/data/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime.json"
     },
     {
       "slug": "2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746",
@@ -74,7 +78,8 @@
       "as_of": "2026-09-28",
       "direction": "rising",
       "pace": "gradual",
-      "url": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+      "url": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746",
+      "data_url": "/data/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746.json"
     },
     {
       "slug": "2026-09-28-russia-ukraine-war-and-european-security-architecture",
@@ -85,7 +90,8 @@
       "as_of": "2026-09-28",
       "direction": "rising",
       "pace": "gradual",
-      "url": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+      "url": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture",
+      "data_url": "/data/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture.json"
     }
   ],
   "theaters": [
@@ -93,10 +99,11 @@
       "id": "thr_rogue_ai_agents_and_ai_enabled_cybercrime",
       "name": "Rogue AI agents and AI-enabled cybercrime",
       "domain": "technology",
-      "heat": 7.61,
+      "heat": 7.45,
       "trend": "steady",
       "coverage": "steady coverage",
-      "brief_url": "/intel/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime"
+      "brief_url": "/intel/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime",
+      "brief_data_url": "/data/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime.json"
     },
     {
       "id": "thr_frontier_ai_race_and_superintelligence_governanc",
@@ -105,7 +112,8 @@
       "heat": 6.78,
       "trend": "cooling",
       "coverage": "falling coverage",
-      "brief_url": "/intel/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance"
+      "brief_url": "/intel/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance",
+      "brief_data_url": "/data/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance.json"
     },
     {
       "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
@@ -114,16 +122,18 @@
       "heat": 4.47,
       "trend": "steady",
       "coverage": "steady coverage",
-      "brief_url": null
+      "brief_url": null,
+      "brief_data_url": null
     },
     {
       "id": "thr_gaza_war_and_unga_diplomatic_fallout",
       "name": "Gaza war and UNGA diplomatic fallout",
       "domain": "geopolitics",
-      "heat": 2.65,
+      "heat": 2.82,
       "trend": "steady",
       "coverage": "steady coverage",
-      "brief_url": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout"
+      "brief_url": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout",
+      "brief_data_url": "/data/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout.json"
     },
     {
       "id": "thr_french_budget_austerity_and_political_unrest",
@@ -132,7 +142,8 @@
       "heat": 2.65,
       "trend": "steady",
       "coverage": "steady coverage",
-      "brief_url": null
+      "brief_url": null,
+      "brief_data_url": null
     },
     {
       "id": "thr_russia_ukraine_war_and_european_security_archite",
@@ -141,7 +152,8 @@
       "heat": 1.47,
       "trend": "cooling",
       "coverage": "falling coverage",
-      "brief_url": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+      "brief_url": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746",
+      "brief_data_url": "/data/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746.json"
     },
     {
       "id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
@@ -150,7 +162,8 @@
       "heat": 1.33,
       "trend": "steady",
       "coverage": "steady coverage",
-      "brief_url": null
+      "brief_url": null,
+      "brief_data_url": null
     },
     {
       "id": "thr_us_china_summit_and_strategic_competition",
@@ -159,7 +172,8 @@
       "heat": 0.65,
       "trend": "cooling",
       "coverage": "falling coverage",
-      "brief_url": null
+      "brief_url": null,
+      "brief_data_url": null
     },
     {
       "id": "thr_madrid_housing_eviction_and_european_affordabili",
@@ -168,7 +182,8 @@
       "heat": 0.33,
       "trend": "cooling",
       "coverage": "falling coverage",
-      "brief_url": null
+      "brief_url": null,
+      "brief_data_url": null
     },
     {
       "id": "thr_zagreb_municipal_strike_and_transit_paralysis",
@@ -177,7 +192,8 @@
       "heat": 0.33,
       "trend": "cooling",
       "coverage": "falling coverage",
-      "brief_url": null
+      "brief_url": null,
+      "brief_data_url": null
     }
   ],
   "forecast_scorecard": {
@@ -186,5 +202,7 @@
     "open": 10,
     "brier": null,
     "calibration": []
-  }
+  },
+  "forecasts_url": "/data/forecasts.json",
+  "changes_url": "/data/changes.json"
 }

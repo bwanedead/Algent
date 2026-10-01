@@ -1,0 +1,42 @@
+{
+  "schema": "ohmega.pulse/1",
+  "id": "pls_sahel_horn_foreign_military_entanglement_horn",
+  "name": "Foreign Military Entanglement and Intelligence Competition in the Horn",
+  "situation_id": "sit_sahel_horn",
+  "situation": "Sahel and Horn of Africa instability",
+  "status": "experimental",
+  "position": 58.0,
+  "band": "severe",
+  "confidence": "medium",
+  "velocity_7d": null,
+  "last_assessed": "2026-10-01T03:00:57.470982+00:00",
+  "evidence_through": "2026-09-21",
+  "history": [
+    {
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "position": 58.0
+    }
+  ],
+  "definition": {
+    "version": 1,
+    "question": "How intense is foreign military entanglement and intelligence competition in the Horn of Africa, centered on Djibouti?",
+    "low_end": "Minimal foreign military presence with routine logistics and no intelligence competition or interference between co-located forces.",
+    "high_end": "Dense co-location of rival bases engaged in active SIGINT interception, harassment (lasers, airspace denial), and operational interference forcing emissions-control and deconfliction failures."
+  },
+  "url": "/pulses",
+  "data_url": "/data/pulses/pls_sahel_horn_foreign_military_entanglement_horn.json",
+  "readings": [
+    {
+      "at": "2026-10-01T03:00:57.470982+00:00",
+      "mode": "seed",
+      "moves_pulse": true,
+      "decision": "applied",
+      "position": 58.0,
+      "rationale": "First reading at elevated 58: two new PLA communications compounds since mid-2024 with HF/V/UHF/SATCOM/5G/radomes and reinforced trenches co-located <10 miles from US (4,000+ personnel at Camp Lemonnier), French (1,500-1,900), Italian and Japanese bases at the 20-mile-wide Bab el-Mandeb chokepoint, assessed as almost certainly SIGINT-capable with heightened value amid Houthi Red Sea attacks and…",
+      "confidence": "medium",
+      "evidence_through": "2026-09-21",
+      "model": "",
+      "article_url": null
+    }
+  ]
+}
