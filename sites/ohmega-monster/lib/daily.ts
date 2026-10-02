@@ -266,3 +266,74 @@ export function fmtDay(date: string): string {
   if (Number.isNaN(d.getTime())) return date;
   return d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 }
+
+// ---- pure presentation helpers shared by the daily surfaces (server components only: this module reads fs) --
+/** Stable in-page anchor of a theater section. */
+export const theaterAnchor = (t: { theater_id: string }, i: number): string =>
+  `theater-${i}-${t.theater_id.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
+
+/** A short label for a theater: "US-Iran-Houthi confrontation over Hormuz and Red Sea" -> "US-Iran-Houthi confrontation". */
+export function shortTheater(name: string): string {
+  const head = name.split(/\s+(?:over|and|after|amid|during)\s+/i)[0].trim();
+  return head.length >= 3 ? head : name;
+}
+
+/** First sentence of `s` (initials such as "U.S." do not end it). */
+function firstSentence(s: string): string {
+  const re = /[.!?]+(?=\s+[A-Z“"(\[]|$)/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(s)) !== null) {
+    if (/(^|[^A-Za-z])[A-Za-z]$/.test(s.slice(0, m.index))) continue;
+    return s.slice(0, m.index + m[0].length);
+  }
+  return s;
+}
+
+/**
+ * The claim in a passage: its first sentence, cut at a clause boundary when longer than `max`
+ * (never mid-word, never before 45% of `max`). Text only; the full passage belongs behind a popover.
+ */
+export function claimOf(text: string, max = 120): string {
+  const s = text.replace(/\s+/g, " ").trim();
+  if (!s) return "";
+  const one = firstSentence(s).replace(/[.!?]+$/, "");
+  if (one.length <= max) return one;
+  const min = Math.floor(max * 0.45);
+  const lastWithin = (re: RegExp): number => {
+    let best = -1;
+    for (const m of one.matchAll(re)) {
+      const i = m.index ?? -1;
+      if (i >= min && i <= max && i > best) best = i;
+    }
+    return best;
+  };
+  const strong = lastWithin(/;|:\s| — |,\s+(?:while|as|but|with|and|then|after|though|amid|which|keeping|including)\b/g);
+  const at = strong >= 0 ? strong : lastWithin(/,\s/g);
+  if (at >= 0) return one.slice(0, at).trim();
+  const words = one.slice(0, max).replace(/\s+\S*$/, "");
+  return `${words || one.slice(0, max)}…`;
+}
+
+/** True when `claim` (from claimOf) leaves part of `full` unsaid. */
+export const isCut = (full: string, claim: string): boolean => full.replace(/\s+/g, " ").trim().replace(/[.!?]+$/, "").length > claim.replace(/…$/, "").length;
+
+/** "Saudi-Houthi exchange: Medina …" -> lead "Saudi-Houthi exchange", tail "Medina …". No short lead: all tail. */
+export function splitLead(what: string): { lead: string; tail: string } {
+  const i = what.indexOf(": ");
+  if (i > 2 && i <= 56 && !/[.;]/.test(what.slice(0, i))) return { lead: what.slice(0, i), tail: what.slice(i + 2) };
+  return { lead: "", tail: what };
+}
+
+/** The backend writes cross-theater links as "A -> B: text" (or "<->"). Returns the text and whether it runs both ways. */
+export function crossParts(c: { theaters: string[]; link: string }): { mutual: boolean; text: string } {
+  const i = c.link.indexOf(": ");
+  const head = i > 0 ? c.link.slice(0, i) : "";
+  const arrowed = /<->|->|→|↔/.test(head);
+  return { mutual: !arrowed || /<->|↔/.test(head), text: arrowed ? c.link.slice(i + 2) : c.link };
+}
+
+/** "2026-10-01" -> "1 Oct" (UTC). Anything else passes through. */
+export function shortDay(d: string): string {
+  const dt = new Date(`${d}T00:00:00Z`);
+  return Number.isNaN(dt.getTime()) ? d : dt.toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
+}

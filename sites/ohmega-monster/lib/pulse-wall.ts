@@ -1,8 +1,9 @@
 // Pure logic behind the /pulses wall: period change, sort orders, spiral layout. No node imports
 // (it runs in the client component) and no React, so it is easy to reason about in isolation.
-import type { Band, Confidence } from "./intel";
+// Type-only imports from ./intel (which reads node:fs) are erased at build time, so this stays client-safe.
+import type { Band, Confidence, Pulse } from "./intel";
 
-/** One Pulse, flattened and serialisable, as the server hands it to the wall. */
+/** One Pulse, flattened and serialisable: what every Pulse tile and popover is drawn from. */
 export type WallPulse = {
   id: string;
   name: string;
@@ -17,6 +18,24 @@ export type WallPulse = {
   history: { at: string; position: number }[];
   rationale: string;
 };
+
+/** A snapshot Pulse as a WallPulse, labelled with the title of the Situation it belongs to. */
+export function toWallPulse(p: Pulse, situationTitle: string): WallPulse {
+  return {
+    id: p.id,
+    name: p.name,
+    situation: situationTitle,
+    question: p.question,
+    low_end: p.low_end,
+    high_end: p.high_end,
+    position: p.position,
+    band: p.band,
+    confidence: p.confidence,
+    last_assessed: p.last_assessed,
+    history: p.history,
+    rationale: p.rationale,
+  };
+}
 
 export const PERIODS = ["24h", "7d", "30d"] as const;
 export type Period = (typeof PERIODS)[number];

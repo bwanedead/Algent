@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import PulseCard, { baseOf } from "@/components/PulseCard";
+import Popover from "@/components/Popover";
+import PulseTile from "@/components/PulseTile";
 import { SpectrumLegend } from "@/components/PulseSpectrum";
 import { ActorMap, EscalationChips, ProbBar, RELATION_KINDS } from "@/components/IntelViz";
-import { allBriefSlugs, brief as loadBrief, type ChangeKind, type Effect, findPulse, latestSnapshot, type Plausibility, safeUrl } from "@/lib/intel";
+import { allBriefSlugs, brief as loadBrief, type ChangeKind, type Effect, findPulse, latestSnapshot, type Plausibility, safeUrl, type Snapshot } from "@/lib/intel";
+import { toWallPulse, type WallPulse } from "@/lib/pulse-wall";
 
 type Params = { slug: string };
 
@@ -42,6 +44,14 @@ const PLAUSIBILITY: Record<Plausibility, { cls: string; label: string }> = {
   plausible: { cls: "elevated", label: "Plausible" },
   unlikely: { cls: "unassessed", label: "Unlikely" },
 };
+
+/** A snapshot Pulse (by exact name) as a tile-ready WallPulse plus its 7-day change; null when absent. */
+function tileFor(snap: Snapshot | null, name: string): { pulse: WallPulse; d7: number | null } | null {
+  const p = findPulse(snap, "", name);
+  if (!p) return null;
+  const sit = snap?.situations.find((x) => x.pulses.includes(p));
+  return { pulse: toWallPulse(p, sit?.title ?? ""), d7: p.velocity_7d };
+}
 
 function Effects({ title, items }: { title: string; items: Effect[] }) {
   if (items.length === 0) return null;
@@ -143,8 +153,7 @@ export default function BriefPage({ params }: { params: Params }) {
                   <p className="intel-strong">{j.statement}</p>
                   {j.horizon && <p className="intel-micro">By {j.horizon}</p>}
                   {(j.basis || j.resolves_yes_if || j.resolves_no_if) && (
-                    <details className="intel-j-more">
-                      <summary>Basis and how it resolves</summary>
+                    <Popover label={`Basis and resolution: ${j.statement}`} trigger="Basis and how it resolves" triggerClassName="pop-link">
                       {j.basis && <p className="intel-muted">{j.basis}</p>}
                       {j.resolves_yes_if && (
                         <p>
@@ -156,7 +165,7 @@ export default function BriefPage({ params }: { params: Params }) {
                           <span className="intel-micro">No if</span> {j.resolves_no_if}
                         </p>
                       )}
-                    </details>
+                    </Popover>
                   )}
                 </div>
               </li>
@@ -367,11 +376,11 @@ export default function BriefPage({ params }: { params: Params }) {
             <h2>Related Pulses</h2>
           </div>
           <SpectrumLegend />
-          <div className="intel-pulse-grid">
+          <div className="pt-grid">
             {b.pulses.map((name) => {
-              const full = findPulse(snap, "", name);
-              return full ? (
-                <PulseCard key={full.id} base={baseOf(full)} full={full} />
+              const t = tileFor(snap, name);
+              return t ? (
+                <PulseTile key={t.pulse.id} pulse={t.pulse} delta={t.d7 ?? undefined} period="7d" />
               ) : (
                 <span key={name} className="intel-chip intel-band-unassessed" title="Not in the current Pulse snapshot">
                   {name}

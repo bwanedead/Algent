@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import DailyArchive from "@/components/DailyArchive";
 import DailyReport from "@/components/DailyReport";
 import { allDailyDates, daily, fmtDay } from "@/lib/daily";
+
+import "../geopolitics.css";
 
 const DOMAIN = "geopolitics";
 
@@ -30,6 +33,7 @@ export default function GeopoliticsDayPage({ params }: { params: Params }) {
         ← Geopolitics
       </Link>
       <DailyReport report={report} title="Geopolitics" />
+      <DailyArchive dates={allDailyDates(DOMAIN).filter((d) => d !== report.date)} domain={DOMAIN} href="/geopolitics" />
     </div>
   );
 }

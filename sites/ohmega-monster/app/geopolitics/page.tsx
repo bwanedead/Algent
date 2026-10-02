@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import DailyArchive from "@/components/DailyArchive";
 import DailyReport from "@/components/DailyReport";
-import { allDailyDates, daily, fmtDay, latestDaily } from "@/lib/daily";
+import { allDailyDates, latestDaily } from "@/lib/daily";
+
+import "./geopolitics.css";
 
 const DOMAIN = "geopolitics";
 
@@ -28,35 +31,10 @@ export default function GeopoliticsPage() {
         </>
       )}
 
-      {past.length > 0 && (
-        <section className="intel-section" aria-labelledby="daily-archive">
-          <div className="intel-section-head">
-            <h2 id="daily-archive">Earlier days</h2>
-            <span className="intel-micro">Latest first</span>
-          </div>
-          <ul className="intel-brief-list">
-            {past.map((d) => {
-              const r = daily(DOMAIN, d);
-              return (
-                <li key={d}>
-                  <Link href={`/geopolitics/${d}`}>
-                    <span className="intel-brief-meta">
-                      <time className="intel-micro" dateTime={d}>{fmtDay(d)}</time>
-                    </span>
-                    <span className="intel-brief-body">
-                      <strong>{r?.headline || `Daily report, ${d}`}</strong>
-                      {r && r.theaters.length > 0 && <span className="intel-micro"> {r.theaters.length} theaters</span>}
-                    </span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      )}
+      <DailyArchive dates={past} domain={DOMAIN} href="/geopolitics" />
 
-      <p className="intel-note daily-xlink">
-        <Link href="/intel">Intelligence board — Pulses, Theaters and Briefs →</Link>
+      <p className="geo-xlink">
+        <Link href="/intel">Intelligence board: Pulses, Theaters and Briefs →</Link>
       </p>
     </div>
   );
