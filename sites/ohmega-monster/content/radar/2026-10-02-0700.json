@@ -1,0 +1,597 @@
+{
+  "slug": "2026-10-02-0700",
+  "built_at": "2026-10-02T07:00:00Z",
+  "leads": [
+    {
+      "n": 1,
+      "title": "Forever Chemicals Found in Croatian Blood, Gospić Worst Hit",
+      "thesis": "Testing in Croatia found elevated PFAS 'forever chemicals' in citizens' blood, with the town of Gospić showing especially concerning levels that raise questions about local water and soil exposure.",
+      "pillars": [
+        "science",
+        "health"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.index.hr/vijesti/clanak/gospicaninu-u-krvi-nadje"
+      ]
+    },
+    {
+      "n": 2,
+      "title": "SpaceX Crew-13 Docks With ISS on Fast-Track Mission",
+      "thesis": "SpaceX Crew-13 successfully docked with the International Space Station for a six-month science mission, described as the quickest US express flight yet.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://newsradio1410.iheart.com/content/2026-10-02-spacex-c",
+        "https://phys.org/news/2026-10-astronauts-international-space"
+      ]
+    },
+    {
+      "n": 3,
+      "title": "TSA Removes Chairs at Checkpoints to Keep Officers Standing",
+      "thesis": "The TSA removed chairs at airport checkpoints to keep officers alert on their feet, a move criticized by the union as harming working conditions.",
+      "pillars": [
+        "economics",
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://wwnc.iheart.com/content/2026-10-02-tsa-removes-chair"
+      ]
+    },
+    {
+      "n": 4,
+      "title": "Medibank Faces Dual Court Actions Over Data Hack Leak",
+      "thesis": "Australia's Medibank faces two concurrent court actions after a hacker leaked sensitive customer data from its major breach.",
+      "pillars": [
+        "science",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.singletonargus.com.au/story/9361741/medibank-fac"
+      ]
+    },
+    {
+      "n": 5,
+      "title": "Hospital Glove Failure Sparks Chemical Exposure Fears",
+      "thesis": "Staff at a major Australian hospital feared toxic chemical exposure after a batch of gloves failed, prompting a health department review.",
+      "pillars": [
+        "science",
+        "health"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.crookwellgazette.com.au/story/9361712/hospital-g"
+      ]
+    },
+    {
+      "n": 6,
+      "title": "US Expedition Hunts 'Taraia Object' to Solve Amelia Earhart Mystery",
+      "thesis": "A new US expedition is targeting the 'Taraia Object' near Nikumaroro to test whether it is Amelia Earhart's lost Lockheed Electra.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "http://www.hna.de/welt/forscher-jagen-das-taraia-objekt-us-e"
+      ]
+    },
+    {
+      "n": 7,
+      "title": "Christa Pike Survives Two Lethal Injections, Now Critical",
+      "thesis": "Death-row inmate Christa Pike is in critical condition after surviving two attempted lethal injections in the US, with new details emerging about the botched execution.",
+      "pillars": [
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "http://www.hna.de/welt/christa-pike-nach-abgebrochener-hinri"
+      ]
+    },
+    {
+      "n": 8,
+      "title": "Wave of Burglaries Targets Finnish Politicians, Motive Unclear",
+      "thesis": "Finland has seen a series of burglaries targeting politicians' homes, shaking the political class while police say motive remains unknown.",
+      "pillars": [
+        "politics",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "http://www.hna.de/welt/serie-von-einbruechen-bei-politikern-"
+      ]
+    },
+    {
+      "n": 9,
+      "title": "Musk Returns to Trump Orbit With New Power Position",
+      "thesis": "Elon Musk has returned to Donald Trump's circle with a newly defined position of power, according to German press reports.",
+      "pillars": [
+        "politics",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "http://www.hna.de/politik/elon-musk-kehrt-mit-neuer-machtpos"
+      ]
+    },
+    {
+      "n": 10,
+      "title": "Bertelsmann Study Challenges Myth of a Divided Germany",
+      "thesis": "A new Bertelsmann Foundation study finds Germany far less divided between East and West than popular narrative suggests, on attitudes and living conditions.",
+      "pillars": [
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "http://www.hna.de/welt/neue-bertelsmann-studie-widerlegt-das"
+      ]
+    },
+    {
+      "n": 11,
+      "title": "Romania on Brink of State Crisis With No End in Sight",
+      "thesis": "Serbian press reports Romania is on the brink of a state crisis with prolonged political deadlock and no resolution visible.",
+      "pillars": [
+        "politics",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.blic.rs/vesti/svet/krah-drzave-na-balkanu-rumunija-na-ivici-krizi-se-ne-vidi-kraj/snklg7d"
+      ]
+    },
+    {
+      "n": 12,
+      "title": "Slovakia's Coalition Crisis Deepens Over Environment Ministry",
+      "thesis": "Slovakia's ruling coalition is losing its footing as Prime Minister Fico temporarily took over the environment ministry while SNS pushes Filip Kuffa as minister and coalition council talks loom Friday.",
+      "pillars": [
+        "politics"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://www.cas.sk/spravy/danko-pozval-fica-na-rokovanie-sns-tohto-muza-chce-za-noveho-ministra-ostre-slova-o-tarabovi",
+        "https://www.noviny.sk/slovensko/1266649-fico-docasne-prevzal-vedenie-envirorezortu-kuffa-tvrdi-ze-sa-coskoro-stane-ministrom",
+        "https://www.teraz.sk/slovensko/v-piatok-by-mala-rokovat-koalicna-rad/996439-clanok.html"
+      ]
+    },
+    {
+      "n": 13,
+      "title": "Czech Government Survives No-Confidence Vote Under Babiš",
+      "thesis": "Czech Prime Minister Andrej Babiš's government survived a parliamentary no-confidence motion, with opposition efforts rejected.",
+      "pillars": [
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "http://french.xinhuanet.com/20261002/77adab46b42b43f899b205f9a76e235b/c.html",
+        "https://abcnews.com/International/wireStory/czech-prime-minister-andrej-babis-government-survives-confidence-136928617"
+      ]
+    },
+    {
+      "n": 14,
+      "title": "Poland's Fuel Price War: President Signs Windfall Law as Tusk and Nawrocki Clash",
+      "thesis": "Poland's president signed a law on fuel concern profits while Prime Minister Tusk and President Nawrocki clash over pump prices, with the government promising cuts at stations.",
+      "pillars": [
+        "politics",
+        "economics"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://wiadomosci.wp.pl/wojna-o-ceny-paliw-na-szczytach-wladzy-tusk-i-nawrocki-w-klinczu-7335341667316289v",
+        "https://www.wnp.pl/rynki/prezydent-podpisal-ustawe-o-zyskach-koncernow-paliwowych-domanski-zapowiada-obnizki-na-stacjach-paliw-synteza,1104856.html"
+      ]
+    },
+    {
+      "n": 15,
+      "title": "Latvia Election Preview: New Premier, 'Latvian Trump,' and Russian-Speakers",
+      "thesis": "Latvia heads toward elections featuring a new premier contender, a populist dubbed the 'Latvian Trump,' and Russian-speaking candidates vying for influence.",
+      "pillars": [
+        "politics",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.lrt.lt/naujienos/pasaulyje/6/3068138/naujas-premjeras-latviu-trumpas-rusakalbiu-kandidatai-kas-laimes-rinkimus-latvijoje"
+      ]
+    },
+    {
+      "n": 16,
+      "title": "AfD Hunts for Partners or Defectors to Expand Power",
+      "thesis": "Germany's AfD is seeking coalition partners or party-switchers to expand its influence beyond its current parliamentary base.",
+      "pillars": [
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.danas.rs/svet/afd-trazi-partnere-ili-preletace/"
+      ]
+    },
+    {
+      "n": 17,
+      "title": "German Chancellor's Approval Falls to 10%, Lowest Since Taking Office",
+      "thesis": "South Korean press reports Germany's chancellor has fallen to 10% approval, the lowest since taking office, darkening the government's outlook.",
+      "pillars": [
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.segye.com:443/newsView/20261002504512"
+      ]
+    },
+    {
+      "n": 18,
+      "title": "Slovenia's Golob Warns Plebiscite on Janša Government Carries Highest Stakes",
+      "thesis": "Prime Minister Robert Golob framed a potential plebiscite on a Janša-led government as carrying the highest stakes in terms of damage, previewing a polarized contest.",
+      "pillars": [
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://vecer.com/slovenija/golob-intervju-jansa-plebiscit-diktatura-10428968"
+      ]
+    },
+    {
+      "n": 19,
+      "title": "Morocco Gets First Female Prime Minister: Fatima Ezzahra El Mansouri",
+      "thesis": "Fatima Ezzahra El Mansouri has become Morocco's first female prime minister, a historic appointment profiled across African press.",
+      "pillars": [
+        "politics",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://allafrica.com/stories/202610010003.html"
+      ]
+    },
+    {
+      "n": 20,
+      "title": "Japan Moves to Tighten Controls on Important Land Near Security Sites",
+      "thesis": "Japan's prime minister is pushing a permit system to regulate land transactions in important zones near defense and border facilities.",
+      "pillars": [
+        "politics",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.chunichi.co.jp:443/article/1319271"
+      ]
+    },
+    {
+      "n": 21,
+      "title": "South Korea's Lee Strips Prosecutors Who Indicted Him",
+      "thesis": "South Korean President Lee has moved to strip power from prosecutors, including those who previously indicted him, in a major judicial reform.",
+      "pillars": [
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.japantimes.co.jp/news/2026/10/02/asia-pacific/so"
+      ]
+    },
+    {
+      "n": 22,
+      "title": "Ethiopia and Eritrea Sever Ties as Tigray Fighting Intensifies",
+      "thesis": "Ethiopia and Eritrea have severed ties as fighting intensifies around Tigray, marking a sharp escalation in the Horn of Africa.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "http://www.africanews.com/2026/10/02/ethiopia-and-eritrea-se"
+      ]
+    },
+    {
+      "n": 23,
+      "title": "Greece Pushes EU to Suspend Asylum During Mass Migration Surges",
+      "thesis": "Greece is pushing the EU to allow suspension of asylum processing during mass migration surges, a proposal with major legal implications.",
+      "pillars": [
+        "geopolitics",
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/2/greece-pushes-eu-to"
+      ]
+    },
+    {
+      "n": 24,
+      "title": "Turkey Stock Market Scandal Hits Nearly Half a Million Investors",
+      "thesis": "A stock market scandal in Turkey has affected nearly half a million investors, raising questions about market manipulation and oversight.",
+      "pillars": [
+        "economics",
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.dw.com/en/turkey-s-stock-market-scandal-affects-"
+      ]
+    },
+    {
+      "n": 25,
+      "title": "Guinea-Bissau Junta Blocks Ex-President Embalo's Return",
+      "thesis": "Guinea-Bissau's junta blocked former President Embalo's planned return, citing security concerns amid political turmoil.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "http://www.africanews.com/2026/10/02/guinea-bissau-junta-blo"
+      ]
+    },
+    {
+      "n": 26,
+      "title": "RSF Drone Strike Kills Five in Sudan Dormitory",
+      "thesis": "Five people were killed when Sudan's Rapid Support Forces hit a dormitory with a drone strike, amid the ongoing civil war.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://sudantribune.com/article/319476"
+      ]
+    },
+    {
+      "n": 27,
+      "title": "Israeli Settlers Kill Palestinian Man at Home in Yasuf, West Bank",
+      "thesis": "Israeli settlers shot and killed a Palestinian man at his home in Yasuf in the West Bank, officials said, amid rising settler violence.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.reuters.com/world/middle-east/israeli-settlers-k"
+      ]
+    },
+    {
+      "n": 28,
+      "title": "UK-Iranian Man Held Over Airbase Incident as UK Reaffirms Falklands Support",
+      "thesis": "A UK-Iranian man was held over an incident at a UK airbase while Britain's foreign secretary separately reaffirmed support for the Falkland Islands' status.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.thehindu.com/news/international/uk-iranian-man-h",
+        "https://en.mercopress.com/2026/10/01/british-foreign-secreta"
+      ]
+    },
+    {
+      "n": 29,
+      "title": "Ukraine-South Korea Clash Over Two North Korean Prisoners",
+      "thesis": "Ukraine and South Korea clashed over the transfer of two North Korean prisoners captured while fighting for Russia, raising legal and diplomatic stakes.",
+      "pillars": [
+        "geopolitics",
+        "defense"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.dw.com/en/ukraine-south-korea-clash-over-transfe"
+      ]
+    },
+    {
+      "n": 30,
+      "title": "France: Hundreds of Schools Closed as Student Protests Turn Violent",
+      "thesis": "Hundreds of French schools remained closed after student protests turned violent, disrupting the start of the school year.",
+      "pillars": [
+        "politics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.france24.com/en/france/20261002-hundreds-of-fren"
+      ]
+    },
+    {
+      "n": 31,
+      "title": "DeepMind Unveils WeatherNext 3 and Gemini 4 Argon Frontier Models",
+      "thesis": "DeepMind announced WeatherNext 3 as its most advanced global weather AI and Gemini 4 Argon as its next era of frontier intelligence, marking two major model releases.",
+      "pillars": [
+        "ai",
+        "science"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://deepmind.google/blog/introducing-weathernext-3-our-m",
+        "https://deepmind.google/blog/gemini-4-argon-our-next-era-of-"
+      ]
+    },
+    {
+      "n": 32,
+      "title": "RAM Shortage Expected to Last Through 2028, Memory Execs Warn",
+      "thesis": "Memory executives including Micron's CEO expect the RAM shortage to continue through 2028 as supplies tighten, pressuring AI infrastructure costs.",
+      "pillars": [
+        "ai",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arstechnica.com/information-technology/2026/10/memor"
+      ]
+    },
+    {
+      "n": 33,
+      "title": "Two Federal Agency Hacks and Zimbra Zero-Day Spill Sensitive Data",
+      "thesis": "Hacks of two federal agencies in a month spilled sensitive data while attackers actively exploited a critical Zimbra flaw to steal emails.",
+      "pillars": [
+        "ai",
+        "politics"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://arstechnica.com/security/2026/10/hacks-of-2-federal-",
+        "https://arstechnica.com/security/2026/09/attackers-have-been"
+      ]
+    },
+    {
+      "n": 34,
+      "title": "Trump's 'Morally Binding' AI Safety Accord Dismissed as Pinky Swear",
+      "thesis": "The Trump administration's 'morally binding' AI Safety Accord is being criticized as a fancy pinky-swear with no enforcement, as debate over AI agents and risk grows.",
+      "pillars": [
+        "ai",
+        "politics"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://www.wired.com/story/uncanny-valley-podcast-trumps-pi",
+        "https://www.wired.com/story/trumps-ai-safety-accord-is-a-fan"
+      ]
+    },
+    {
+      "n": 35,
+      "title": "Judge Dismisses Antitrust Suits Over Google AI Overviews",
+      "thesis": "A judge dismissed antitrust lawsuits from Chegg and Penske over Google's AI Overviews, a key test of whether AI summaries illegally divert traffic.",
+      "pillars": [
+        "ai",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.theverge.com/tech/1003589/google-ai-overviews-ch"
+      ]
+    },
+    {
+      "n": 36,
+      "title": "Grok Reportedly Encouraged Trump to Capture Venezuela's President",
+      "thesis": "Musk's AI chatbot Grok reportedly encouraged Donald Trump to capture Venezuela's president, raising alarms about AI political influence.",
+      "pillars": [
+        "ai",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://techcrunch.com/2026/10/01/musks-ai-chatbot-grok-repo"
+      ]
+    },
+    {
+      "n": 37,
+      "title": "Black Hole Jets Have a Halo Effect, Nature Reports",
+      "thesis": "A Nature study finds black hole jets create a halo effect around their host galaxies, reshaping understanding of feedback.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.nature.com/articles/d41586-026-03036-9"
+      ]
+    },
+    {
+      "n": 38,
+      "title": "Venus's Mysterious Haze Is Actually Cosmic Dust",
+      "thesis": "Venus's long-mysterious haze is actually cosmic dust, not volcanic or chemical aerosols as previously thought.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arstechnica.com/science/2026/10/venus-mysterious-haz"
+      ]
+    },
+    {
+      "n": 39,
+      "title": "Underwater Umbrellas Reduce and Reverse Coral Bleaching in Caribbean",
+      "thesis": "Researchers found underwater umbrellas that shade reefs can reduce and even reverse coral bleaching in the Caribbean during heat stress.",
+      "pillars": [
+        "science",
+        "environment"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://eos.org/articles/underwater-umbrellas-reduce-and-rev"
+      ]
+    },
+    {
+      "n": 40,
+      "title": "Diet May Slow Brain Aging by 2.5 Years; APOE4 Weakness May Be Reversible",
+      "thesis": "New studies suggest a specific diet may slow brain aging by 2.5 years and that the Alzheimer's risk gene APOE4 has a reversible weakness.",
+      "pillars": [
+        "science",
+        "health"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://www.sciencedaily.com/releases/2026/09/260930225503.h",
+        "https://www.sciencedaily.com/releases/2026/09/260930225450.h"
+      ]
+    },
+    {
+      "n": 41,
+      "title": "Surprisingly Complex Brain Waves Reveal Inner Workings",
+      "thesis": "Surprisingly complex wave patterns in the brain are revealing how neural circuits coordinate, challenging simple oscillation models.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.quantamagazine.org/surprisingly-complex-waves-re"
+      ]
+    },
+    {
+      "n": 42,
+      "title": "Humpback Whale and Dead Calf Video Reveals Animal Bond",
+      "thesis": "A video of a humpback whale carrying her dead calf reveals prolonged bonding behavior, offering rare insight into cetacean grief.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.sciencenews.org/article/video-humpback-whale-dea"
+      ]
+    },
+    {
+      "n": 43,
+      "title": "Ukraine Deploys Razor Fence to Stop Drones; US Prioritizes Election Defense",
+      "thesis": "Ukraine rolled out drone-stopping razor fence to thwart attacks while US Defense Secretary Hegseth ordered cyber and intelligence agencies to prioritize election defense, with a Navy destroyer returning after 40 days of combat.",
+      "pillars": [
+        "defense",
+        "geopolitics"
+      ],
+      "kind": "synthesis",
+      "sources": [
+        "https://www.newscientist.com/article/2591491-ukraine-technol",
+        "https://www.defenseone.com/threats/2026/09/hegseth-orders-cy",
+        "https://www.defenseone.com/threats/2026/09/after-40-days-com"
+      ]
+    },
+    {
+      "n": 44,
+      "title": "Wind and Solar Saved UK £5.9bn in Gas Imports During Hormuz Crisis",
+      "thesis": "Carbon Brief analysis finds wind and solar saved the UK £5.9bn in gas imports during the Strait of Hormuz crisis, underscoring renewables' security value.",
+      "pillars": [
+        "environment",
+        "economics",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.carbonbrief.org/analysis-wind-and-solar-save-uk-"
+      ]
+    },
+    {
+      "n": 45,
+      "title": "Medicare Advantage Shifts More Costs Onto Seniors in 2027",
+      "thesis": "STAT reports Medicare Advantage plans will shift more costs onto seniors in 2027 through higher deductibles and fewer benefits.",
+      "pillars": [
+        "health",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.statnews.com/2026/10/01/medicare-advantage-plans"
+      ]
+    },
+    {
+      "n": 46,
+      "title": "AI Voice Clock May Reveal How Fast You're Aging",
+      "thesis": "A new AI 'speech clock' can estimate biological aging rate from voice alone, suggesting vocal biomarkers of aging.",
+      "pillars": [
+        "science",
+        "ai"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.livescience.com/health/aging/your-voice-may-reve"
+      ]
+    }
+  ]
+}
