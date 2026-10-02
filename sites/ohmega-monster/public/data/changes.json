@@ -1,8 +1,43 @@
 {
   "schema": "ohmega.changes/1",
   "window_days": 30,
-  "as_of": "2026-10-01T11:36:13.230643+00:00",
+  "as_of": "2026-10-02T07:46:27.933292+00:00",
   "events": [
+    {
+      "type": "daily_published",
+      "at": "2026-10-02T07:46:27.933292+00:00",
+      "domain": "geopolitics",
+      "date": "2026-10-02",
+      "headline": "Hormuz stays shut with no US reply as Washington shifts Patriots to Gulf, Moscow opens winter strikes on Kyiv, and Iraq withdrawal holds quiet",
+      "url": "/geopolitics/2026-10-02",
+      "data_url": "/data/daily/geopolitics/2026-10-02.json"
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-02T07:16:04.035132+00:00",
+      "pulse_id": "pls_ukraine_war_war_economy_dependency_strain",
+      "name": "War Economy and External Dependency Strain",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_ukraine_war_war_economy_dependency_strain.json",
+      "from": 81.0,
+      "to": 82.0,
+      "from_band": "critical",
+      "to_band": "critical",
+      "band_changed": false
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-02T07:06:21.526172+00:00",
+      "pulse_id": "pls_iran_gulf_iran_proxy_axis_escalation",
+      "name": "Iran Proxy Axis Escalation",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_iran_gulf_iran_proxy_axis_escalation.json",
+      "from": 77.0,
+      "to": 80.0,
+      "from_band": "critical",
+      "to_band": "critical",
+      "band_changed": false
+    },
     {
       "type": "pulse_moved",
       "at": "2026-10-01T11:36:13.230643+00:00",

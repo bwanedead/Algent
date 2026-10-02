@@ -1,7 +1,36 @@
 {
   "schema": "ohmega.intel.index/1",
-  "built_at": "2026-10-02T07:03:00.447108+00:00",
+  "built_at": "2026-10-02T07:46:29.439473+00:00",
   "daily": [
+    {
+      "domain": "geopolitics",
+      "date": "2026-10-02",
+      "headline": "Hormuz stays shut with no US reply as Washington shifts Patriots to Gulf, Moscow opens winter strikes on Kyiv, and Iraq withdrawal holds quiet",
+      "theaters": [
+        {
+          "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+          "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea"
+        },
+        {
+          "id": "thr_russia_ukraine_war_and_european_security_archite",
+          "name": "Russia-Ukraine war and European security architecture"
+        },
+        {
+          "id": "thr_gaza_war_and_unga_diplomatic_fallout",
+          "name": "Gaza war and UNGA diplomatic fallout"
+        },
+        {
+          "id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
+          "name": "US withdrawal from Iraq after 23-year presence"
+        },
+        {
+          "id": "thr_us_china_summit_and_strategic_competition",
+          "name": "US-China summit and strategic competition"
+        }
+      ],
+      "url": "/geopolitics/2026-10-02",
+      "data_url": "/data/daily/geopolitics/2026-10-02.json"
+    },
     {
       "domain": "geopolitics",
       "date": "2026-10-01",
@@ -96,50 +125,30 @@
   ],
   "theaters": [
     {
+      "id": "thr_frontier_ai_race_and_superintelligence_governanc",
+      "name": "Frontier AI race and superintelligence governance",
+      "domain": "technology",
+      "heat": 5.85,
+      "trend": "steady",
+      "coverage": "steady coverage",
+      "brief_url": "/intel/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance",
+      "brief_data_url": "/data/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance.json"
+    },
+    {
       "id": "thr_rogue_ai_agents_and_ai_enabled_cybercrime",
       "name": "Rogue AI agents and AI-enabled cybercrime",
       "domain": "technology",
-      "heat": 7.45,
+      "heat": 5.42,
       "trend": "steady",
       "coverage": "steady coverage",
       "brief_url": "/intel/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime",
       "brief_data_url": "/data/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime.json"
     },
     {
-      "id": "thr_frontier_ai_race_and_superintelligence_governanc",
-      "name": "Frontier AI race and superintelligence governance",
-      "domain": "technology",
-      "heat": 6.78,
-      "trend": "cooling",
-      "coverage": "falling coverage",
-      "brief_url": "/intel/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance",
-      "brief_data_url": "/data/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance.json"
-    },
-    {
       "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
       "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
       "domain": "geopolitics",
-      "heat": 4.47,
-      "trend": "steady",
-      "coverage": "steady coverage",
-      "brief_url": null,
-      "brief_data_url": null
-    },
-    {
-      "id": "thr_gaza_war_and_unga_diplomatic_fallout",
-      "name": "Gaza war and UNGA diplomatic fallout",
-      "domain": "geopolitics",
-      "heat": 2.82,
-      "trend": "steady",
-      "coverage": "steady coverage",
-      "brief_url": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout",
-      "brief_data_url": "/data/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout.json"
-    },
-    {
-      "id": "thr_french_budget_austerity_and_political_unrest",
-      "name": "French budget austerity and political unrest",
-      "domain": "politics",
-      "heat": 2.65,
+      "heat": 4.77,
       "trend": "steady",
       "coverage": "steady coverage",
       "brief_url": null,
@@ -149,17 +158,37 @@
       "id": "thr_russia_ukraine_war_and_european_security_archite",
       "name": "Russia-Ukraine war and European security architecture",
       "domain": "geopolitics",
-      "heat": 1.47,
+      "heat": 2.99,
       "trend": "cooling",
       "coverage": "falling coverage",
       "brief_url": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746",
       "brief_data_url": "/data/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746.json"
     },
     {
+      "id": "thr_gaza_war_and_unga_diplomatic_fallout",
+      "name": "Gaza war and UNGA diplomatic fallout",
+      "domain": "geopolitics",
+      "heat": 2.76,
+      "trend": "steady",
+      "coverage": "steady coverage",
+      "brief_url": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout",
+      "brief_data_url": "/data/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout.json"
+    },
+    {
+      "id": "thr_french_budget_austerity_and_political_unrest",
+      "name": "French budget austerity and political unrest",
+      "domain": "politics",
+      "heat": 2.44,
+      "trend": "steady",
+      "coverage": "steady coverage",
+      "brief_url": null,
+      "brief_data_url": null
+    },
+    {
       "id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
       "name": "US withdrawal from Iraq after 23-year presence",
       "domain": "geopolitics",
-      "heat": 1.33,
+      "heat": 0.92,
       "trend": "steady",
       "coverage": "steady coverage",
       "brief_url": null,

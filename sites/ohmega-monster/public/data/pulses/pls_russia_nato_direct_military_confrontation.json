@@ -9,8 +9,8 @@
   "band": "severe",
   "confidence": "high",
   "velocity_7d": null,
-  "last_assessed": "2026-10-01T03:07:20.991153+00:00",
-  "evidence_through": "2026-09-02",
+  "last_assessed": "2026-10-02T07:16:04.035132+00:00",
+  "evidence_through": "2026-10-02",
   "history": [
     {
       "at": "2026-10-01T03:07:20.991153+00:00",
@@ -47,6 +47,18 @@
       "rationale": "First assessed reading; prior unassessed. Moves well above routine peacetime posture due to 19-23 Russian Gerbera decoy drones violating Polish airspace for 7h15m on 9-10 Sep 2025, intercepted and shot down (3-4) by Polish F-16s/Dutch F-35s with AWACS/Patriot support, triggering Poland's Article 4 request and NAC solidarity statement 10 Sep 2025. NATO responded with Operation Eastern Sentry 12…",
       "confidence": "high",
       "evidence_through": "2026-09-02",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-02T07:16:04.035132+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "no_change",
+      "position": null,
+      "rationale": "Closest to 58 on 2026-10-01 which reflected 19-23 Gerbera drones violating Poland for 7h15m with shootdowns and Article 4. New Sept 2026 incidents are within that pattern but less severe: single Mi-8 42-sec violation near Kaliningrad and scrambles Sept 16-17 and Sept 30-Oct 1 with no incursions detected and no shootdowns. Force posture signals - Decree 700 +15,500 to 1,550,500 active (fourth 2026…",
+      "confidence": "high",
+      "evidence_through": "2026-10-02",
       "model": "muse-spark-1.2-contributor",
       "article_url": null
     }
