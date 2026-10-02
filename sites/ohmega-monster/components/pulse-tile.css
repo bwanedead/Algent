@@ -1,0 +1,51 @@
+/* Pulse tile (components/PulseTile.tsx) and Pulse popover body (components/PulseDetail.tsx).
+   Band colour = severity only: --band comes from the intel-band-* class on the tile / .pd root. */
+
+/* ---- tile ---- */
+.pt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; min-width: 0; }
+.pt {
+  --tint: color-mix(in srgb, var(--band) 8%, var(--panel));
+  position: relative; /* contains the .intel-sr label */
+  display: flex; flex-direction: column; justify-content: space-between; gap: 2px; min-width: 0; padding: 7px 9px 8px;
+  font: inherit; text-align: left; color: var(--text); cursor: pointer; background: var(--tint);
+  border: 1px solid color-mix(in srgb, var(--band) 38%, var(--rule)); border-top: 2px solid var(--band);
+}
+.pt:hover { border-color: var(--band); }
+.pt:focus-visible, .pt[aria-expanded="true"] { outline: 1px solid var(--accent); outline-offset: 1px; }
+.pt-name {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere;
+  color: var(--strong); font-size: 11px; font-weight: 600; line-height: 14px; height: 28px;
+}
+.pt-row { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; min-width: 0; }
+.pt-num { color: var(--strong); font-size: 26px; line-height: 28px; font-weight: 600; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.pt-num-none { color: var(--faint); }
+.pt-delta { font-size: 11px; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--muted); }
+.pt-note { color: var(--muted); font-size: 10px; line-height: 12px; overflow-wrap: anywhere; }
+.pt-meter { position: relative; display: block; height: 5px; background: color-mix(in srgb, var(--band) 16%, var(--bg)); flex: none; }
+.pt-fill { position: absolute; inset: 0 auto 0 0; background: var(--band); opacity: 0.75; }
+.pt-mark { position: absolute; top: -2px; bottom: -2px; width: 2px; margin-left: -1px; background: var(--strong); }
+.pt-ghost { position: absolute; top: -1px; bottom: -1px; width: 2px; margin-left: -1px; background: var(--muted); opacity: 0.55; }
+.pt-meter-empty { background: transparent; border: 1px dashed var(--rule-strong); }
+
+.pt-s { padding: 5px 7px 6px; }
+.pt-s .pt-num { font-size: 20px; line-height: 22px; }
+
+@media (max-width: 640px) {
+  .pt-grid { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); }
+  .pt-m { padding: 6px 7px 7px; }
+  .pt-m .pt-num { font-size: 22px; line-height: 24px; }
+}
+
+/* ---- popover body ---- */
+.pd { display: grid; gap: 10px; min-width: 0; }
+.pop-scroll > .pd:first-child { padding-right: 0; } /* the head clears the × itself */
+.pd > * { min-width: 0; margin: 0; }
+.pd-head { padding-right: 30px; }
+.pd-title { margin: 0; color: var(--strong); font-size: 14px; line-height: 18px; overflow-wrap: anywhere; }
+.pd-stats { display: flex; align-items: center; flex-wrap: wrap; gap: 0 10px; }
+.pd .pulse-q { font-size: 12px; }
+.pd .pulse-ends { grid-template-columns: minmax(0, 1fr); }
+.pd .pulse-hist { max-width: none; }
+.pd-why {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; color: var(--text); overflow-wrap: anywhere;
+}

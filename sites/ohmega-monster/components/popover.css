@@ -1,0 +1,31 @@
+/* The one popover grammar (components/Popover.tsx): detail opens in a layer over the page, never
+   reflowing it; under 640px it is a bottom sheet with a scrim. Colours/fonts come from globals.css tokens. */
+
+.pop-scrim { display: none; }
+.pop-panel {
+  --pop-max: min(70vh, calc(100vh - 16px));
+  position: fixed; z-index: 60; left: var(--pop-x, 0); top: var(--pop-y, 0); width: min(420px, calc(100vw - 16px));
+  visibility: hidden; background: var(--panel); border: 1px solid var(--rule-strong); box-shadow: 0 8px 28px rgb(0 0 0 / 0.4);
+  color: var(--text); font-size: 12px; outline: none;
+}
+.pop-panel[data-wide] { width: min(640px, calc(100vw - 16px)); }
+.pop-panel[data-ready] { visibility: visible; }
+.pop-scroll { display: grid; align-content: start; gap: 10px; max-height: var(--pop-max); overflow-y: auto; overscroll-behavior: contain; padding: 12px 14px 14px; }
+.pop-scroll > * { min-width: 0; margin: 0; }
+.pop-scroll > :first-child { padding-right: 30px; } /* clear of the × */
+.pop-x {
+  position: absolute; top: 8px; right: 8px; width: 26px; height: 26px; font: inherit; font-size: 18px; line-height: 1;
+  color: var(--muted); background: var(--panel); border: 1px solid var(--rule-strong); cursor: pointer;
+}
+.pop-x:hover, .pop-x:focus-visible { color: var(--accent); border-color: var(--accent-dim); outline: none; }
+
+/* A quiet text trigger for any popover that is not a tile ("Basis and how it resolves"). */
+.pop-link { font: inherit; font-size: 11px; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; }
+.pop-link:hover { text-decoration-style: solid; }
+.pop-link:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
+
+@media (max-width: 639px) {
+  .pop-scrim { display: block; position: fixed; inset: 0; z-index: 55; background: rgb(0 0 0 / 0.45); }
+  .pop-panel, .pop-panel[data-wide] { --pop-max: 80vh; left: 0; right: 0; top: auto; bottom: 0; width: auto; border-width: 1px 0 0; }
+  .pop-scroll { padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+}

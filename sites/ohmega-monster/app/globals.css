@@ -1069,9 +1069,6 @@ a { color: inherit; }
 .intel-prob-fill { display: block; height: 100%; background: var(--accent); }
 .intel-j-body { min-width: 0; }
 .intel-j-body p { margin: 0 0 4px; overflow-wrap: anywhere; }
-.intel-j-more { margin-top: 6px; font-size: 12px; }
-.intel-j-more > summary { cursor: pointer; color: var(--accent); font-size: 11px; }
-.intel-j-more p { margin: 6px 0 0; max-width: 80ch; }
 .intel-alts { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
 .intel-alts li { padding: 10px 0; border-bottom: 1px solid var(--rule); }
 .intel-alt-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
@@ -1161,19 +1158,6 @@ a { color: inherit; }
 }
 
 /* ===== Pulse card + spectrum (one component everywhere; expands in place) ===== */
-.pulse-card { background: var(--panel); border: 1px solid var(--rule); border-top: 2px solid var(--band); min-width: 0; }
-.pulse-card[open] { border-color: var(--rule-strong); border-top-color: var(--band); grid-column: 1 / -1; }
-.pulse-card > summary { position: relative; list-style: none; cursor: pointer; display: grid; gap: 4px; padding: 8px 10px; line-height: 18px; }
-.pulse-card > summary::-webkit-details-marker { display: none; }
-.pulse-card > summary::after { content: "▾"; position: absolute; top: 8px; right: 10px; color: var(--muted); font-size: 11px; }
-.pulse-card[open] > summary::after { content: "▴"; }
-.pulse-card > summary:hover .pulse-card-name { color: var(--accent); }
-.pulse-card > summary:focus-visible { outline: 1px solid var(--accent-dim); outline-offset: -2px; }
-.pulse-card-name { color: var(--strong); font-size: 12px; font-weight: 600; overflow-wrap: anywhere; padding-right: 18px; }
-.pulse-card-main { display: flex; align-items: center; flex-wrap: wrap; gap: 0 8px; }
-.pulse-card-deltas { display: flex; flex-wrap: wrap; gap: 0 12px; font-size: 11px; }
-.pulse-card-body { display: grid; gap: 10px; padding: 8px 10px 12px; border-top: 1px solid var(--rule); font-size: 12px; min-width: 0; }
-.pulse-card-body p { margin: 0; overflow-wrap: anywhere; }
 .pulse-q { color: var(--strong); font-size: 13px; max-width: 80ch; }
 .pulse-spec-wrap { max-width: 640px; min-width: 0; }
 .pulse-ends { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4px 14px; margin-top: 6px; color: var(--muted); }
@@ -1288,7 +1272,7 @@ a { color: inherit; }
   .daily-figs { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
 }
 
-/* ---- /pulses scanner wall (components/PulseWall.tsx) ---- */
+/* ---- /pulses scanner wall (components/PulseWall.tsx; tiles and popover: components/pulse-tile.css, popover.css) ---- */
 .wall-page { padding-top: calc(var(--line) * 1); }
 .wall-strip { align-items: center; margin-bottom: 8px; }
 .wall-key { display: inline-flex; align-items: center; gap: 8px; }
@@ -1304,55 +1288,9 @@ a { color: inherit; }
 .wall-seg button:focus-visible { outline: 1px solid var(--accent); outline-offset: -2px; }
 
 .wall-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); grid-auto-rows: 86px; gap: 6px; min-width: 0; }
-.wall-tile {
-  --tint: color-mix(in srgb, var(--band) 8%, var(--panel));
-  display: flex; flex-direction: column; justify-content: space-between; gap: 2px; min-width: 0; height: 100%; padding: 7px 9px 8px;
-  font: inherit; text-align: left; color: var(--text); cursor: pointer; background: var(--tint);
-  border: 1px solid color-mix(in srgb, var(--band) 38%, var(--rule)); border-top: 2px solid var(--band);
-}
-.wall-tile:hover { border-color: var(--band); }
-.wall-tile:focus-visible, .wall-tile.is-open { outline: 1px solid var(--accent); outline-offset: 1px; }
-.wall-name {
-  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere;
-  color: var(--strong); font-size: 11px; font-weight: 600; line-height: 14px; height: 28px;
-}
-.wall-row { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; min-width: 0; }
-.wall-num { color: var(--strong); font-size: 26px; line-height: 28px; font-weight: 600; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
-.wall-num-none { color: var(--faint); }
-.wall-delta { font-size: 11px; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--muted); }
-.wall-meter { position: relative; display: block; height: 5px; background: color-mix(in srgb, var(--band) 16%, var(--bg)); flex: none; }
-.wall-fill { position: absolute; inset: 0 auto 0 0; background: var(--band); opacity: 0.75; }
-.wall-mark { position: absolute; top: -2px; bottom: -2px; width: 2px; margin-left: -1px; background: var(--strong); }
-.wall-ghost { position: absolute; top: -1px; bottom: -1px; width: 2px; margin-left: -1px; background: var(--muted); opacity: 0.55; }
-.wall-meter-empty { background: transparent; border: 1px dashed var(--rule-strong); height: 5px; }
-
-.wall-scrim { display: none; }
-.wall-pop {
-  position: fixed; z-index: 60; left: var(--pop-x, 0); top: var(--pop-y, 0); width: min(400px, calc(100vw - 16px));
-  max-height: calc(100vh - 16px); overflow-y: auto; visibility: hidden; display: grid; gap: 10px; padding: 12px 14px 14px;
-  background: var(--panel); border: 1px solid var(--rule-strong); box-shadow: 0 8px 28px rgb(0 0 0 / 0.4); font-size: 12px; outline: none;
-}
-.wall-pop[data-ready] { visibility: visible; }
-.wall-pop > * { min-width: 0; margin: 0; }
-.wall-pop-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
-.wall-pop-title { margin: 0; color: var(--strong); font-size: 14px; line-height: 18px; overflow-wrap: anywhere; }
-.wall-pop-x {
-  flex: none; width: 28px; height: 28px; font: inherit; font-size: 18px; line-height: 1; color: var(--muted); background: transparent;
-  border: 1px solid var(--rule-strong); cursor: pointer;
-}
-.wall-pop-x:hover, .wall-pop-x:focus-visible { color: var(--accent); border-color: var(--accent-dim); outline: none; }
-.wall-pop-stats { display: flex; align-items: center; flex-wrap: wrap; gap: 0 10px; }
-.wall-pop .pulse-q { font-size: 12px; }
-.wall-pop .pulse-ends { grid-template-columns: minmax(0, 1fr); }
-.wall-hist { max-width: none; }
-.wall-pop-why {
-  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; color: var(--text); overflow-wrap: anywhere;
-}
+.wall-cell { display: flex; min-width: 0; } /* the grid item; the tile (components/pulse-tile.css) stretches to the fixed row height */
+.wall-cell > .pt { flex: 1 1 auto; }
 @media (max-width: 640px) {
   .wall-grid { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); grid-auto-rows: 80px; }
-  .wall-tile { padding: 6px 7px 7px; }
-  .wall-num { font-size: 22px; line-height: 24px; }
   .wall-controls { margin-left: 0; }
-  .wall-scrim { display: block; position: fixed; inset: 0; z-index: 55; background: rgb(0 0 0 / 0.45); }
-  .wall-pop { left: 0; right: 0; top: auto; bottom: 0; width: auto; max-height: 80vh; border-width: 1px 0 0; padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
 }

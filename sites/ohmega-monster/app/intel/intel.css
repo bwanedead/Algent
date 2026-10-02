@@ -1,0 +1,181 @@
+/* Situation Room (/intel) and the home teaser. Doctrine: docs/ethos/information-ergonomics-ethos.md.
+   One meaning per colour: band colour = severity, the accent = new since the last visit, greys carry
+   structure. Whitespace and alignment group things; rules and boxes are used only where they carry data.
+   Tokens come from globals.css (:root / [data-theme]); nothing here hard-codes a colour. */
+
+.intel-page.sit-page { padding-top: var(--line); }
+/* globals.css paints every .intel-page link in the accent; here the accent is reserved for "new". */
+.intel-page.sit-page a { color: var(--strong); text-decoration-color: var(--rule-strong); }
+.intel-page.sit-page a:hover { text-decoration-color: var(--strong); }
+.sit-accent { color: var(--accent); font-variant-numeric: tabular-nums; }
+
+/* The accent dot: newer than the reader's last visit. */
+.sit-new { display: inline-block; flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); vertical-align: 1px; }
+
+/* ---- top strip ---- */
+.sit-strip { align-items: center; }
+.sit-strip .intel-strip-title { color: var(--strong); }
+.sit-since { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 0 6px; }
+.sit-since .sit-new { align-self: center; }
+.sit-strip-links { display: inline-flex; flex-wrap: wrap; gap: 0 16px; margin-left: auto; font-size: 11px; }
+
+/* ---- sections: a claim heading, then the picture ---- */
+.sit-sec { margin-top: calc(var(--line) * 1.75); min-width: 0; }
+.sit-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; margin-bottom: 10px; }
+.sit-head h2 { flex: 1 1 280px; min-width: 0; margin: 0; color: var(--strong); font-size: 15px; line-height: 22px; letter-spacing: -0.01em; overflow-wrap: anywhere; }
+.sit-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; font-size: 11px; }
+.sit-sub { margin: 0 0 4px; color: var(--strong); font-size: 12px; font-weight: 400; line-height: 20px; }
+.sit-foot { margin: 8px 0 0; text-transform: none; letter-spacing: 0.02em; }
+.sit-quiet { margin: 14px 0 0; }
+
+.sit-seg { display: inline-flex; border: 1px solid var(--rule-strong); }
+.sit-seg button {
+  padding: 0 10px; border: 0; border-left: 1px solid var(--rule-strong); background: none; color: var(--muted);
+  font: inherit; font-size: 11px; line-height: 22px; cursor: pointer;
+}
+.sit-seg button:first-child { border-left: 0; }
+.sit-seg button:hover { color: var(--strong); }
+.sit-seg button[aria-pressed="true"] { background: var(--strong); color: var(--bg); }
+.sit-seg button:focus-visible { outline: 1px solid var(--accent); outline-offset: -2px; }
+
+.sit-linkbtn {
+  padding: 0; border: 0; background: none; color: var(--strong); font: inherit; font-size: 11px; cursor: pointer;
+  text-decoration: underline; text-decoration-color: var(--rule-strong); text-underline-offset: 3px;
+}
+.sit-linkbtn:hover { text-decoration-color: var(--strong); }
+
+/* ---- biggest moves: dumbbells on one shared axis ---- */
+.sit-moves { list-style: none; margin: 0; padding: 0; }
+.sit-row {
+  position: relative; display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 0 16px; align-items: center;
+  padding: 3px 0 3px 12px; min-width: 0;
+}
+.sit-row > .sit-new { position: absolute; left: 0; top: 50%; margin-top: -3px; }
+.sit-axis-row { padding-block: 0; }
+.sit-row-tile, .sit-row-chart { min-width: 0; }
+.sit-row-chart { padding-inline: 6px; } /* room for the end dots at 0 and 100 */
+.sit-axis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); font-size: 10px; line-height: 16px; letter-spacing: 0.07em; text-transform: uppercase; text-align: center; }
+.sit-axis span { min-width: 0; overflow: hidden; color: var(--band); white-space: nowrap; }
+
+.sit-db { display: block; overflow: visible; max-width: 100%; }
+.sit-db-arrowbox { overflow: visible; }
+.sit-db-tick { stroke: var(--rule); stroke-width: 1; }
+.sit-db-base { stroke: var(--rule-strong); stroke-width: 1; }
+.sit-db-link { stroke: var(--muted); stroke-width: 2; }
+.sit-db-arrow { fill: var(--muted); }
+.sit-db-from { fill: var(--bg); stroke: var(--muted); stroke-width: 1.5; }
+.sit-db-to { fill: var(--band); }
+
+/* ---- coverage: small multiples on one scale ---- */
+.sit-cov { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px 20px; }
+.sit-cov li { min-width: 0; }
+.sit-cov-card { display: grid; gap: 6px; min-width: 0; color: var(--text); text-decoration: none; }
+.intel-page.sit-page a.sit-cov-card { color: var(--text); text-decoration: none; }
+.sit-cov-card:hover .sit-cov-name { text-decoration: underline; text-decoration-color: var(--strong); text-underline-offset: 3px; }
+.sit-cov-name {
+  color: var(--strong); font-size: 12px; line-height: 18px; overflow-wrap: anywhere;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; min-height: 36px;
+}
+.sit-bars { display: block; width: 100%; height: 30px; }
+.sit-bars-base { stroke: var(--rule-strong); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.sit-bar { fill: var(--faint); }
+.sit-bar-last { fill: var(--strong); }
+.sit-cov-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 6px; }
+.sit-cov-tag { flex-basis: 100%; text-transform: none; letter-spacing: 0.02em; }
+
+/* ---- forecasts: due-soon timeline ---- */
+.sit-tl { position: relative; margin-top: 6px; }
+.sit-tl-plot { position: relative; margin-inline: 22px; } /* the inset keeps edge markers and labels inside the page */
+.sit-tl-line { position: absolute; left: 0; right: 0; border-top: 1px solid var(--rule-strong); }
+.sit-tl-tick { position: absolute; width: 1px; height: 6px; background: var(--rule-strong); }
+.sit-tl-lab { position: absolute; top: 8px; left: 0; transform: translateX(-50%); color: var(--muted); font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; white-space: nowrap; }
+.sit-pin-wrap { position: absolute; }
+.sit-pin-wrap::after { content: ""; position: absolute; left: 50%; top: 100%; width: 1px; height: var(--stem, 0); background: var(--rule-strong); pointer-events: none; }
+.sit-pin {
+  position: relative; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 0;
+  border: 1.5px solid var(--strong); border-radius: 50%; background: var(--panel); color: var(--strong);
+  font: inherit; font-size: 10px; line-height: 1; font-variant-numeric: tabular-nums; cursor: pointer;
+}
+.sit-pin:hover { background: var(--strong); color: var(--bg); }
+.sit-pin:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
+.sit-pin .sit-new { position: absolute; top: -3px; right: -3px; }
+
+/* ---- forecasts: just resolved + track record ---- */
+.sit-record { margin-top: calc(var(--line) * 1); }
+.sit-res { list-style: none; margin: 0; padding: 0; }
+.sit-res li { position: relative; padding-left: 12px; min-width: 0; }
+.sit-res li > .sit-new { position: absolute; left: 0; top: 14px; }
+.sit-res-btn { display: flex; align-items: baseline; gap: 4px 10px; width: 100%; min-width: 0; padding: 5px 0; border: 0; background: none; color: var(--text); font: inherit; text-align: left; cursor: pointer; }
+.sit-res-btn:hover .sit-res-st { color: var(--strong); }
+.sit-res-p { flex: none; color: var(--muted); font-size: 11px; }
+.sit-res-st { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sit-miss { flex: none; color: var(--strong); }
+.sit-chip { display: inline-block; flex: none; padding: 0 6px; font-size: 10px; line-height: 18px; letter-spacing: 0.07em; text-transform: uppercase; white-space: nowrap; border: 1px solid var(--strong); }
+.sit-chip-yes { background: var(--strong); color: var(--bg); }
+.sit-chip-no { color: var(--strong); }
+.sit-chip-void { border: 1px dashed var(--rule-strong); color: var(--muted); }
+
+.sit-rec { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 300px); gap: 16px 32px; align-items: start; margin-top: calc(var(--line) * 1); }
+.sit-rec-score { min-width: 0; }
+.sit-rec-score .intel-num { font-size: 22px; line-height: 28px; }
+.sit-brier { display: block; max-width: 420px; overflow: visible; }
+.sit-brier-base { stroke: var(--rule-strong); stroke-width: 1; }
+.sit-brier-tick { stroke: var(--rule-strong); stroke-width: 1; }
+.sit-brier-fill { stroke: var(--muted); stroke-width: 3; }
+.sit-brier-dot { fill: var(--strong); }
+.sit-brier-lab { fill: var(--muted); font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; }
+.sit-calib { margin: 0; min-width: 0; }
+.sit-calib .intel-calib { display: block; width: 100%; height: auto; max-width: 300px; }
+
+/* ---- popover contents (the shared Popover supplies the frame) ---- */
+.sit-pop { display: grid; gap: 8px; min-width: 0; }
+.sit-pop p, .sit-pop dl, .sit-pop dd, .sit-pop h4 { margin: 0; overflow-wrap: anywhere; }
+.sit-pop-prob { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; }
+.sit-pop-st { color: var(--strong); font-size: 14px; line-height: 22px; }
+.sit-pop-h { font-weight: 400; }
+.sit-pop-p { color: var(--text); }
+.sit-pop-cond { display: grid; gap: 8px; }
+.sit-pop-cond dt { margin: 0; }
+.sit-all { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.sit-all li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 10px; }
+.sit-all-meta { display: block; text-transform: none; letter-spacing: 0.02em; }
+
+/* ---- new: compact list ---- */
+.sit-news { list-style: none; margin: 0; padding: 0; }
+.sit-news li { position: relative; display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; padding: 6px 0 6px 12px; }
+.sit-news li > .sit-new { position: absolute; left: 0; top: 14px; }
+.sit-news-when { padding-top: 2px; text-transform: none; letter-spacing: 0.02em; }
+.intel-page.sit-page a.sit-news-body { display: block; min-width: 0; color: var(--text); text-decoration: none; }
+.sit-news-body strong { color: var(--strong); font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }
+.sit-news-body:hover strong { text-decoration: underline; text-decoration-color: var(--strong); text-underline-offset: 3px; }
+.sit-news-kind { margin-right: 8px; }
+.sit-news-detail { display: block; color: var(--muted); font-size: 12px; max-width: 80ch; overflow-wrap: anywhere; }
+
+/* ---- home teaser ---- */
+.sit-card-link { display: grid; gap: 6px; padding: 10px 12px; color: var(--text); text-decoration: none; min-width: 0; }
+.intel-page .sit-card-link, .sit-card .sit-card-link { color: var(--text); text-decoration: none; }
+.sit-card-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0 12px; }
+.sit-card-title { color: var(--strong); }
+.sit-since-compact { font-size: 11px; color: var(--muted); }
+.sit-card-moves { list-style: none; margin: 0; padding: 0; font-size: 12px; line-height: 20px; }
+.sit-card-moves li { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.6fr) 44px; gap: 12px; align-items: center; min-width: 0; }
+.sit-card-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--strong); }
+.sit-card-chart { min-width: 0; padding-inline: 5px; }
+.sit-card-delta { color: var(--muted); text-align: right; font-size: 11px; white-space: nowrap; }
+.sit-card:hover .sit-card-title { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---- phones: one column, nothing wider than the screen ---- */
+@media (max-width: 640px) {
+  .sit-strip-links { margin-left: 0; flex-basis: 100%; }
+  .sit-row { grid-template-columns: minmax(0, 1fr); gap: 2px; padding: 6px 0 6px 12px; }
+  .sit-axis-row > .sit-row-tile { display: none; }
+  .sit-axis-row { padding-block: 0; }
+  .sit-rec { grid-template-columns: minmax(0, 1fr); }
+  .sit-tl-plot { margin-inline: 18px; }
+  .sit-news li { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .sit-news-when { padding-top: 0; }
+  .sit-card-moves li { grid-template-columns: minmax(0, 1fr) 44px; gap: 0 8px; }
+  .sit-card-moves .sit-card-chart { grid-column: 1 / -1; grid-row: 2; }
+  .sit-card-moves .sit-card-name { grid-row: 1; }
+  .sit-card-moves .sit-card-delta { grid-row: 1; grid-column: 2; }
+}

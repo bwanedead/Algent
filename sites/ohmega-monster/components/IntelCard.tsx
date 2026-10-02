@@ -1,39 +1,45 @@
 import Link from "next/link";
 
-import { hottestTheater, latestSnapshot, mostSeverePulses } from "@/lib/intel";
+import { situationRoom } from "@/lib/situation";
+import "@/app/intel/intel.css";
 
-import { CoverageTag } from "./IntelViz";
-import { BandChip } from "./PulseCard";
+import { Dumbbell } from "./SituationDumbbell";
+import { SituationSince, SituationVisitProvider } from "./SituationVisit";
 
-// Home-page teaser for the Intelligence desk. Renders nothing until there is data to show.
+// Home-page teaser for the Situation Room: the biggest moves this week as a mini dumbbell on the
+// shared 0–100 axis, plus how many changes are new since the reader's last visit (read-only: only
+// /intel records a visit). Falls back to the 30-day moves when the week is quiet.
+// Renders nothing until there is data to show.
 export default function IntelCard() {
-  const snap = latestSnapshot();
-  const theater = hottestTheater(snap);
-  const pulses = mostSeverePulses(snap, 3);
-  if (!theater && pulses.length === 0) return null;
+  const room = situationRoom();
+  if (!room) return null;
+  const top = room.moves["7d"].top.length > 0 ? room.moves["7d"].top : room.moves["30d"].top;
+  const shown = top.slice(0, 3).map((m) => ({ id: m.pulse.id, name: m.pulse.name, from: m.from, to: m.to, delta: m.delta }));
+  if (shown.length === 0 && room.changeTimes.length === 0) return null;
+  const sign = (d: number) => `${d > 0 ? "▲ +" : "▼ −"}${Math.abs(Math.round(d))}`;
   return (
-    <aside className="intel-card" aria-label="Intelligence">
-      <Link href="/intel" className="intel-card-link">
-        <span className="intel-micro intel-card-title">Intelligence →</span>
-        {theater && (
-          <span className="intel-card-theater">
-            <span className="intel-micro">Most in the headlines</span>
-            <strong>{theater.name}</strong>
-            <CoverageTag coverage={theater.coverage} />
+    <aside className="intel-card sit-card" aria-label="Situation room">
+      <SituationVisitProvider touch={false}>
+        <Link href="/intel" className="sit-card-link">
+          <span className="sit-card-head">
+            <span className="intel-micro sit-card-title">Situation room →</span>
+            <SituationSince times={room.changeTimes} compact />
           </span>
-        )}
-        {pulses.length > 0 && (
-          <ul className="intel-card-pulses">
-            {pulses.map((p) => (
-              <li key={p.id}>
-                <span className="intel-num intel-num-sm">{Math.round(p.position as number)}</span>
-                <span>{p.name}</span>
-                <BandChip band={p.band} />
-              </li>
-            ))}
-          </ul>
-        )}
-      </Link>
+          {shown.length > 0 && (
+            <ul className="sit-card-moves" aria-label="Biggest Pulse moves this week">
+              {shown.map((r) => (
+                <li key={r.id}>
+                  <span className="sit-card-name">{r.name}</span>
+                  <span className="sit-card-chart">
+                    <Dumbbell from={r.from} to={r.to} compact label={`${r.name}: ${Math.round(r.from)} to ${Math.round(r.to)}`} />
+                  </span>
+                  <span className="intel-tab sit-card-delta">{sign(r.delta)}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Link>
+      </SituationVisitProvider>
     </aside>
   );
 }
