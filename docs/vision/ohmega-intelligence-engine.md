@@ -96,6 +96,20 @@ graded research, and earns trust the way the best analytic shops do:
 - **The recipe is domain-generic.** Geopolitics first; the same machinery serves medicine,
   politics, sports.
 
+## Research subdivision: Ohmega Research
+
+Ohmega Research is the subdivision that conducts **reproducible studies** of AI systems: a
+prespecified protocol, auditable trial records, and analysis under stated rules. Its first
+program is the **non-interference goal frontier**. That program asks how far a tested system
+(model + harness + settings) carries a goal to completion without human intervention, within
+an assigned budget. Goal distance is a prespecified vector of task demands, not human task
+duration. Research follows the same trust rules as the rest of the engine: every terminal
+trial recorded, rescued runs never counted as unaided, unknowns kept visible, and no growth
+claim without matched cohorts. Today it has instrumentation (trial contract, validator,
+offline report, a synthetic demo) and one third-party source audit; its standardized trials
+are still synthetic. The clean `analysis.json` export is meant to feed a future `/research`
+page. Canonical doc: `docs/vision/ohmega-research.md`.
+
 ## Where it is going
 
 - **Now:** the Pulse layer (situations, Pulses, events, watches) on a real database, seeded from
