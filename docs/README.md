@@ -34,6 +34,7 @@ Docs sprawl is a real failure mode. To prevent it:
 - `architecture-ethos.md` – layer separation, no God objects.
 - `structural-ethos.md` – weight-bearing layers, robustness over cleverness.
 - `modularity-ethos.md` – decomposition: one home per responsibility, no junk drawers.
+- `information-ergonomics-ethos.md` – how reader-facing pages are built: overview→detail, one meaning per colour, shared scales, change made explicit, one popover grammar.
 - `raptor-3-ethos.md` – native-integration / subtractive design.
 - `doctrine-drafting-ethos.md` – how to author agent prompt doctrine.
 - `harness-ethos.md` – mechanics vs. semantic authorship; the agent-native rule.
