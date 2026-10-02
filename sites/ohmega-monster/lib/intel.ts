@@ -410,7 +410,8 @@ export function brief(slug: string): Brief | null {
 }
 
 // ---- small shared presentation helpers ------------------------------------------------------
-export const BAND_LABEL: Record<Band, string> = { calm: "Calm", elevated: "Elevated", severe: "Severe", critical: "Critical", unassessed: "Not yet assessed" };
+// BAND_LABEL, bandAt, fmtDelta and deltaClass live in ./band (no node:fs) so client components can use them.
+export { BAND_LABEL, bandAt, deltaClass, fmtDelta } from "./band";
 const BAND_RANK: Record<Band, number> = { calm: 1, elevated: 2, severe: 3, critical: 4, unassessed: 0 };
 
 /** The most severe band among the given Pulses (assessed only); "unassessed" when none. */
@@ -458,12 +459,6 @@ export function severitySorted(s: Snapshot | null): Situation[] {
   return sits.sort((a, b) => top(b) - top(a));
 }
 
-/** Band for a 0-100 reading (calm 0-25, elevated 25-50, severe 50-75, critical 75-100). */
-export function bandAt(position: number | null): Band {
-  if (position === null) return "unassessed";
-  return position >= 75 ? "critical" : position >= 50 ? "severe" : position >= 25 ? "elevated" : "calm";
-}
-
 /** Coverage is how much of the world's headlines a theater takes; deliberately never band-coloured. */
 export const COVERAGE_DISPLAY: Record<Coverage, { glyph: string; label: string }> = {
   rising: { glyph: "▲", label: "rising" },
@@ -471,15 +466,6 @@ export const COVERAGE_DISPLAY: Record<Coverage, { glyph: string; label: string }
   falling: { glyph: "▼", label: "falling" },
   new: { glyph: "●", label: "newly reported" },
 };
-
-/** "▲ +3" / "▼ −2" / "◆ 0" / "—" for a Pulse change. */
-export function fmtDelta(v: number | null): string {
-  if (v === null) return "—";
-  const r = Math.round(v * 10) / 10;
-  if (r === 0) return "◆ 0";
-  return `${r > 0 ? "▲ +" : "▼ −"}${Math.abs(r)}`;
-}
-export const deltaClass = (v: number | null) => (v === null || Math.round(v * 10) === 0 ? "flat" : v > 0 ? "up" : "down");
 
 /** "2026-09-30T14:05:00Z" -> "2026-09-30 14:05 UTC"; date-only strings pass through. */
 export function fmtUtc(iso: string): string {
