@@ -1,6 +1,7 @@
-"""python -m algent_backend.ohmega_research {validate,report,demo}
+"""python -m algent_backend.ohmega_research {validate,report,demo,audit-metr}
 
-Offline only: reads a local JSONL file and writes ``analysis.json`` + ``report.html``.
+Offline only: reads local files and writes ``analysis.json`` + ``report.html`` (trials) or
+``source-audit.json`` + ``source-audit.html`` (a METR source audit).
 Default outputs go under the runs-data root (``backend/runs_data`` or ``ALGENT_RUNS_DIR``),
 and nothing is ever written into the source tree.
 """
@@ -15,6 +16,7 @@ from collections import Counter
 from collections.abc import Sequence
 from pathlib import Path
 
+from .benchmarks import SourceValidationError, write_source_audit
 from .contracts import TrialValidationError, load_trials
 from .demo import write_demo
 from .report import write_report
@@ -79,10 +81,18 @@ def _demo(args: argparse.Namespace) -> int:
     return 0
 
 
+def _audit_metr(args: argparse.Namespace) -> int:
+    output = _output_dir(args.output, "audit-metr")
+    _print_paths(write_source_audit(Path(args.input), Path(args.source_metadata), output))
+    print("Source audit only: intervention is not recorded; no trials or growth were derived.")
+    return 0
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m algent_backend.ohmega_research",
-        description="Validate trial records and build the offline exploratory report.",
+        description="Validate trial records, build the offline exploratory report, or audit a "
+        "local METR snapshot.",
     )
     verbs = parser.add_subparsers(dest="verb", required=True)
     validate = verbs.add_parser("validate", help="strictly validate a trial JSONL file")
@@ -95,6 +105,11 @@ def _parser() -> argparse.ArgumentParser:
     demo = verbs.add_parser("demo", help="write a deterministic SYNTHETIC set and its report")
     demo.add_argument("--output", help="output directory (default: runs-data root)")
     demo.set_defaults(handler=_demo)
+    metr = verbs.add_parser("audit-metr", help="audit a local METR runs.jsonl snapshot")
+    metr.add_argument("--input", required=True, help="local METR runs.jsonl snapshot")
+    metr.add_argument("--source-metadata", required=True, help="pinned source metadata JSON")
+    metr.add_argument("--output", help="output directory (default: runs-data root)")
+    metr.set_defaults(handler=_audit_metr)
     return parser
 
 
@@ -102,7 +117,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
         return args.handler(args)
-    except TrialValidationError as exc:
+    except (TrialValidationError, SourceValidationError) as exc:
         for error in exc.errors:
             print(error, file=sys.stderr)
         print(f"rejected: {len(exc.errors)} problem(s); nothing was written", file=sys.stderr)

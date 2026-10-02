@@ -1,19 +1,19 @@
 """Offline report artefacts: ``analysis.json`` plus one standalone ``report.html``.
 
-The page loads nothing external (no fonts, scripts, stylesheets or images). Every
-input-derived string is HTML-escaped, and the embedded JSON is escaped so it cannot close
-its script element.
+The page loads nothing external (no fonts, scripts, stylesheets or images). Escaping, the
+embedded-JSON guard and the base stylesheet come from ``html_page``. The trial-specific
+rendering, styles and filter script live here.
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
-from html import escape
 from pathlib import Path
 
 from .analysis import build_analysis
 from .contracts import decode_trials
+from .html_page import CSS, escape, format_number, percent, script_json, table
 
 ANALYSIS_FILE = "analysis.json"
 REPORT_FILE = "report.html"
@@ -49,26 +49,10 @@ def render_html(analysis: dict) -> str:
         '<!doctype html>\n<html lang="en"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width, initial-scale=1">'
         "<title>Ohmega Research: exploratory trial report</title>"
-        f"<style>{_CSS}</style></head><body><main>{''.join(sections)}</main>"
-        f'<script type="application/json" id="ohmega-research-analysis">{_script_json(analysis)}'
+        f"<style>{CSS}{_TRIAL_CSS}</style></head><body><main>{''.join(sections)}</main>"
+        f'<script type="application/json" id="ohmega-research-analysis">{script_json(analysis)}'
         f"</script><script>{_FILTER_JS}</script></body></html>\n"
     )
-
-
-def _e(value: object) -> str:
-    return escape(str(value), quote=True)
-
-
-def _script_json(data: dict) -> str:
-    text = json.dumps(data, ensure_ascii=False)
-    for char, code in (("&", "\\u0026"), ("<", "\\u003c"), (">", "\\u003e"),
-                       ("\u2028", "\\u2028"), ("\u2029", "\\u2029")):
-        text = text.replace(char, code)
-    return text
-
-
-def _pct(value: float | None) -> str:
-    return "n/a" if value is None else f"{value * 100:.0f}%"
 
 
 def _signed(value: float | None) -> str:
@@ -79,7 +63,7 @@ def _interval(rate: dict) -> str:
     if rate["wilson95"] is None:
         return "n/a"
     low, high = rate["wilson95"]
-    return f"{_pct(rate['rate'])} [{_pct(low)}, {_pct(high)}]"
+    return f"{percent(rate['rate'])} [{percent(low)}, {percent(high)}]"
 
 
 def _system_label(system: dict) -> str:
@@ -96,9 +80,9 @@ def _policy_label(policy: dict) -> str:
 
 def _series_label(item: dict) -> str:
     """Escaped "task vN · system · budget · attempt policy" label shared by all views."""
-    return (f'{_e(item["task"]["id"])} v{_e(item["task"]["version"])} · '
-            f'{_e(_system_label(item["system"]))} · {_e(item["budget_label"])} · '
-            f'max {_e(item["attempt_policy"]["max_allowed"])} attempt(s)')
+    return (f'{escape(item["task"]["id"])} v{escape(item["task"]["version"])} · '
+            f'{escape(_system_label(item["system"]))} · {escape(item["budget_label"])} · '
+            f'max {escape(item["attempt_policy"]["max_allowed"])} attempt(s)')
 
 
 def _banner(analysis: dict) -> str:
@@ -121,13 +105,13 @@ def _banner(analysis: dict) -> str:
 
 def _overview(analysis: dict) -> str:
     claims = "".join(
-        f'<p class="claim"><b>{_e(p["dataset_kind"])}:</b> {_e(p["temporal_statement"])}</p>'
+        f'<p class="claim"><b>{escape(p["dataset_kind"])}:</b> {escape(p["temporal_statement"])}</p>'
         for p in analysis["partitions"]
     )
     return (
         "<h1>Non-interference goal frontier: exploratory trial report</h1>"
         f'<p class="muted">{analysis["input"]["records"]} terminal trials from '
-        f"<code>{_e(analysis['input']['name'])}</code>. Credited success = solved with no "
+        f"<code>{escape(analysis['input']['name'])}</code>. Credited success = solved with no "
         "observed human intervention and within the assigned budget. The confirmed rate covers "
         "trials whose outcome and intervention were ascertained; the operational yield counts "
         "every terminal trial and is a floor, not a capability estimate. Descriptive only.</p>"
@@ -146,7 +130,7 @@ _FILTERS = (
 def _filter_attrs(kind: str, cell: dict,
                   keys: tuple[str, ...] = ("kind", "system", "family", "cohort")) -> str:
     return " ".join(
-        f'data-{name}="{_e(get(kind, cell))}"' for name, _, get in _FILTERS if name in keys
+        f'data-{name}="{escape(get(kind, cell))}"' for name, _, get in _FILTERS if name in keys
     )
 
 
@@ -155,12 +139,16 @@ def _filters(analysis: dict) -> str:
     selects = []
     for name, label, get in _FILTERS:
         values = sorted({get(kind, cell) for kind, cell in cells})
-        options = "".join(f'<option value="{_e(v)}">{_e(v)}</option>' for v in values)
+        options = "".join(f'<option value="{escape(v)}">{escape(v)}</option>' for v in values)
         selects.append(
-            f'<label>{_e(label)} <select data-filter="{name}"><option value="">all</option>'
+            f'<label>{escape(label)} <select data-filter="{name}"><option value="">all</option>'
             f"{options}</select></label>"
         )
-    return f'<div class="filters">{"".join(selects)}</div>'
+    return (
+        f'<div class="filters">{"".join(selects)}<span class="muted" data-shown></span>'
+        '<span class="muted">Filters hide rows only; the full-file inventory counts in each '
+        "section stay unchanged.</span></div>"
+    )
 
 
 def _scale(confirmed: dict, all_outcomes: dict) -> str:
@@ -171,7 +159,7 @@ def _scale(confirmed: dict, all_outcomes: dict) -> str:
                      f'width:{(high - low) * 100:.1f}%"></span>')
     if all_outcomes["rate"] is not None:
         marks.append(f'<span class="pt all" style="left:{all_outcomes["rate"] * 100:.1f}%" '
-                     f'title="operational yield {_pct(all_outcomes["rate"])}"></span>')
+                     f'title="operational yield {percent(all_outcomes["rate"])}"></span>')
     if confirmed["rate"] is not None:
         marks.append(f'<span class="pt conf" style="left:{confirmed["rate"] * 100:.1f}%" '
                      f'title="confirmed {_interval(confirmed)}"></span>')
@@ -206,7 +194,7 @@ def _rate_spans(confirmed: dict, all_outcomes: dict) -> str:
     return (
         f'<span>n {all_outcomes["n"]}</span>'
         f'<span>{confirmed["k"]}/{confirmed["n"]} confirmed<br>'
-        f'<span class="muted">coverage {_pct(confirmed["coverage"])}</span></span>'
+        f'<span class="muted">coverage {percent(confirmed["coverage"])}</span></span>'
         f"{_scale(confirmed, all_outcomes)}"
     )
 
@@ -214,18 +202,12 @@ def _rate_spans(confirmed: dict, all_outcomes: dict) -> str:
 def _cell(kind: str, cell: dict) -> str:
     summary = cell["summary"]
     head = (
-        f'<summary class="row"><span><b>{_e(cell["cohort"])}</b> · {_series_label(cell)}</span>'
+        f'<summary class="row"><span><b>{escape(cell["cohort"])}</b> · {_series_label(cell)}</span>'
         f'{_rate_spans(summary["confirmed"], summary["all_outcomes"])}'
-        f'<span class="muted">{_e(_flags(summary))}</span></summary>'
+        f'<span class="muted">{escape(_flags(summary))}</span></summary>'
     )
     attrs = _filter_attrs(kind, cell)
     return f'<details class="cell" data-row {attrs}>{head}{_drill(cell)}</details>'
-
-
-def _table(header: tuple[str, ...], rows: list[tuple]) -> str:
-    head = "".join(f"<th>{_e(h)}</th>" for h in header)
-    body = "".join("<tr>" + "".join(f"<td>{_e(v)}</td>" for v in row) + "</tr>" for row in rows)
-    return f"<table><tr>{head}</tr>{body}</table>"
 
 
 def _counts(counts: dict) -> str:
@@ -259,32 +241,28 @@ def _drill(cell: dict) -> str:
     ]
     resources = [
         (r["metric"], r["unit"], r["observed"], r["reported_unknown"], r["not_reported"],
-         _pct(r["coverage"]), _fmt(r["min"]), _fmt(r["median"]), _fmt(r["max"]))
+         percent(r["coverage"]), *(format_number(r[k]) for k in ("min", "median", "max")))
         for r in s["resources"]
     ]
     return (
         '<div class="drill">'
-        + _table(("fact", "value"), facts)
+        + table(("fact", "value"), facts)
         + "<h4>Resources (each metric separately; unreported is unknown, never zero)</h4>"
-        + _table(("metric", "unit", "observed", "null", "absent", "coverage", "min", "median",
-                  "max"), resources)
+        + table(("metric", "unit", "observed", "null", "absent", "coverage", "min", "median",
+                 "max"), resources)
         + "</div>"
     )
 
 
-def _fmt(value: float | None) -> str:
-    return "n/a" if value is None else f"{value:g}"
-
-
 def _series(kind: str, series: dict) -> str:
     rows = "".join(
-        f'<div class="row"><span>{_e(p["cohort"])} <span class="muted">{_e(p["dates"][0])} to '
-        f'{_e(p["dates"][1])}</span></span>{_rate_spans(p["confirmed"], p["all_outcomes"])}'
+        f'<div class="row"><span>{escape(p["cohort"])} <span class="muted">{escape(p["dates"][0])} to '
+        f'{escape(p["dates"][1])}</span></span>{_rate_spans(p["confirmed"], p["all_outcomes"])}'
         "<span></span></div>"
         for p in series["points"]
     )
     changes = "".join(
-        f'<li>{_e(c["from"])} → {_e(c["to"])}: confirmed '
+        f'<li>{escape(c["from"])} → {escape(c["to"])}: confirmed '
         f'<span class="delta">{_signed(c["confirmed_rate_delta"])}</span>, operational yield '
         f'<span class="delta">{_signed(c["all_outcomes_rate_delta"])}</span>; intervals '
         f'{_overlap(c["confirmed_intervals_overlap"])}</li>'
@@ -293,7 +271,7 @@ def _series(kind: str, series: dict) -> str:
     attrs = _filter_attrs(kind, series, ("kind", "system", "family"))
     return (
         f'<div class="series" data-row {attrs}><h4>{_series_label(series)}</h4>{rows}'
-        f'<ul>{changes}</ul><p class="muted">{_e(series["statement"])}</p></div>'
+        f'<ul>{changes}</ul><p class="muted">{escape(series["statement"])}</p></div>'
     )
 
 
@@ -309,22 +287,22 @@ def _temporal(kind: str, partition: dict) -> str:
     body = "".join(_series(kind, s) for s in matched) or (
         '<p class="muted">No series spans two ordered, matched cohorts.</p>'
     )
-    rest = "".join(f'<li>{_series_label(s)}: {_e(s["statement"])}</li>' for s in single)
+    rest = "".join(f'<li>{_series_label(s)}: {escape(s["statement"])}</li>' for s in single)
     if rest:
         body += (f"<details><summary>{len(single)} series not comparable over time"
                  f"</summary><ul>{rest}</ul></details>")
-    return f"<h3>Matched cohorts over time: {_e(partition['temporal_statement'])}</h3>{body}"
+    return f"<h3>Matched cohorts over time: {escape(partition['temporal_statement'])}</h3>{body}"
 
 
 def _unpooled(partition: dict) -> str:
     if not partition["unpooled"]:
         return ""
     items = "".join(
-        f'<li><b>{_e(u["task_id"])}</b> · {_e(_system_label(u["system"]))}: '
-        f'{_e(u["statement"])} ('
-        + "; ".join(f'v{_e(s["task_version"])}, {_e(s["budget_label"])}, '
-                    f'{_e(_policy_label(s["attempt_policy"]))}, cohorts '
-                    f'{_e(", ".join(s["cohorts"]))}' for s in u["series"])
+        f'<li><b>{escape(u["task_id"])}</b> · {escape(_system_label(u["system"]))}: '
+        f'{escape(u["statement"])} ('
+        + "; ".join(f'v{escape(s["task_version"])}, {escape(s["budget_label"])}, '
+                    f'{escape(_policy_label(s["attempt_policy"]))}, cohorts '
+                    f'{escape(", ".join(s["cohorts"]))}' for s in u["series"])
         + ")</li>"
         for u in partition["unpooled"]
     )
@@ -337,14 +315,14 @@ def _rollups(partition: dict) -> str:
          r["budget_label"], _policy_label(r["attempt_policy"]), r["cohort"],
          ", ".join(f'{m["id"]} v{m["version"]} ({m["n"]})' for m in r["task_mix"]),
          f'{r["summary"]["confirmed"]["k"]}/{r["summary"]["confirmed"]["n"]}',
-         _interval(r["summary"]["confirmed"]), _pct(r["summary"]["confirmed"]["coverage"]))
+         _interval(r["summary"]["confirmed"]), percent(r["summary"]["confirmed"]["coverage"]))
         for r in partition["family_rollups"]
     ]
     return (
         "<details><summary><b>Task-family pools</b> (descriptive task mix; no temporal claims)"
         "</summary>"
-        + _table(("family", "demands", "system", "budget", "attempt policy", "cohort",
-                  "task mix", "confirmed", "rate [95%]", "coverage"), rows)
+        + table(("family", "demands", "system", "budget", "attempt policy", "cohort",
+                 "task mix", "confirmed", "rate [95%]", "coverage"), rows)
         + "</details>"
     )
 
@@ -358,19 +336,21 @@ def _partition(partition: dict) -> str:
     kpis = (
         ("trials", inventory["n"]),
         ("cells", len(partition["cells"])),
-        ("confirmed coverage", _pct(inventory["confirmed_coverage"])),
+        ("confirmed coverage", percent(inventory["confirmed_coverage"])),
         ("matched series", partition["matched_series"]),
     )
-    warnings = "".join(f"<li>{_e(w)}</li>" for w in partition["warnings"])
+    warnings = "".join(f"<li>{escape(w)}</li>" for w in partition["warnings"])
     cells = "".join(_cell(kind, c) for c in partition["cells"])
     return (
-        f'<section class="partition" data-row data-kind="{_e(kind)}">'
-        f"<h2>{_e(kind.upper())} records{_PARTITION_NOTES.get(kind, '')}</h2>"
+        f'<section class="partition" data-row data-kind="{escape(kind)}">'
+        f"<h2>{escape(kind.upper())} records{_PARTITION_NOTES.get(kind, '')}</h2>"
+        '<p class="muted inventory">Full-file inventory (filters do not change these counts)</p>'
         '<div class="kpis">'
-        + "".join(f'<span class="kpi"><b>{_e(v)}</b>{_e(k)}</span>' for k, v in kpis)
-        + f'</div><ul class="warnings">{warnings}</ul>'
-        "<h3>Credited success per cell, on one 0–100% scale</h3>"
+        + "".join(f'<span class="kpi"><b>{escape(v)}</b>{escape(k)}</span>' for k, v in kpis)
+        + "</div><h3>Credited success per cell, on one 0–100% scale</h3>"
         f"{_LEGEND}{_AXIS}{cells}"
+        f'<details class="notes"><summary>{len(partition["warnings"])} data-quality notes'
+        f'</summary><ul class="warnings">{warnings}</ul></details>'
         f"{_temporal(kind, partition)}{_unpooled(partition)}{_rollups(partition)}"
         "</section>"
     )
@@ -379,71 +359,66 @@ def _partition(partition: dict) -> str:
 def _provenance(analysis: dict) -> str:
     provenance = analysis["provenance"]
     methodology = "".join(
-        f"<li><b>{_e(k.replace('_', ' '))}:</b> {_e(v)}</li>"
+        f"<li><b>{escape(k.replace('_', ' '))}:</b> {escape(v)}</li>"
         for k, v in analysis["methodology"].items()
     )
     return (
         "<h2>Provenance and data quality</h2>"
-        + _table(("input", "sha256", "records", "trial schema", "analysis schema"), [(
+        + table(("input", "sha256", "records", "trial schema", "analysis schema"), [(
             analysis["input"]["name"], analysis["input"]["sha256"], analysis["input"]["records"],
             analysis["trial_schema"], analysis["schema"])])
         + "<h3>Sources</h3>"
-        + _table(("source", "reference", "dataset", "trials"),
-                 [(s["source"], s["reference"], s["dataset_kind"], s["n"])
-                  for s in provenance["sources"]])
+        + table(("source", "reference", "dataset", "trials"),
+                [(s["source"], s["reference"], s["dataset_kind"], s["n"])
+                 for s in provenance["sources"]])
         + "<h3>Evaluation</h3>"
-        + _table(("rubric", "version", "evaluator", "trials"),
-                 [(e["rubric"], e["rubric_version"], e["evaluator"], e["n"])
-                  for e in provenance["evaluations"]])
+        + table(("rubric", "version", "evaluator", "trials"),
+                [(e["rubric"], e["rubric_version"], e["evaluator"], e["n"])
+                 for e in provenance["evaluations"]])
         + "<h3>Studies and protocols</h3>"
-        + _table(("study", "protocol", "trials"),
-                 [(p["study_id"], p["protocol_version"], p["n"]) for p in provenance["protocols"]])
-        + f"<h3>Method</h3><ul>{methodology}</ul>"
+        + table(("study", "protocol", "trials"),
+                [(p["study_id"], p["protocol_version"], p["n"]) for p in provenance["protocols"]])
+        + f"<details><summary><b>Method</b></summary><ul>{methodology}</ul></details>"
     )
 
 
-_CSS = """
-:root{--ink:#1d1f21;--muted:#6b7075;--rule:#e3e5e8;--soft:#f5f6f8;--accent:#0b62d6;
---warn:#7a4f00;--warnbg:#fff3d1}
-*{box-sizing:border-box}[hidden]{display:none!important}
-body{margin:0;font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink)}
-main{max-width:1200px;margin:0 auto;padding:24px 20px 64px}
-h1{font-size:22px;margin:0 0 6px}h2{font-size:18px;margin:36px 0 6px}
-h3{font-size:15px;margin:24px 0 6px}h4{font-size:13px;margin:12px 0 4px}
-.muted{color:var(--muted)}.claim{font-size:16px;margin:6px 0}
+_TRIAL_CSS = """
+:root{--accent:#0b62d6;--warn:#7a4f00;--warnbg:#fff3d1}
+.claim{font-size:16px;margin:6px 0;overflow-wrap:anywhere}
 .synthetic{border:3px dashed var(--warn);background:var(--warnbg);color:var(--warn);
 padding:12px 16px;font-weight:700;margin-bottom:18px}
-.kpis{display:flex;gap:32px;flex-wrap:wrap;margin:8px 0}.kpi b{display:block;font-size:22px}
-.warnings{color:var(--muted);font-size:13px;padding-left:18px}
-.filters{display:flex;gap:16px;flex-wrap:wrap;margin:14px 0;padding:8px 0;
-border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
-.row{display:grid;grid-template-columns:minmax(240px,2.4fr) 56px 120px minmax(220px,3fr) 1.6fr;
+.inventory{margin:4px 0 0;font-size:12px}
+.warnings{color:var(--muted);font-size:13px;padding-left:18px}.notes{margin:10px 0}
+.filters{display:flex;gap:10px 16px;flex-wrap:wrap;align-items:center;margin:14px 0;
+padding:8px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.filters label{display:flex;gap:6px;align-items:center;min-width:0;max-width:100%}
+.filters select{min-width:0;max-width:16rem}
+.row{display:grid;grid-template-columns:minmax(0,2.4fr) 56px 120px minmax(160px,3fr) 1.6fr;
 gap:12px;align-items:center;padding:6px 4px;border-bottom:1px solid var(--rule)}
+.row>*{min-width:0;overflow-wrap:anywhere}
 .axis{border-bottom:0;font-size:11px;padding-bottom:0}
 .ticks{display:flex;justify-content:space-between}.ticks i{font-style:normal}
-.scale{position:relative;display:block;height:14px;border-left:1px solid var(--rule);
-border-right:1px solid var(--rule);background:linear-gradient(90deg,transparent 49.8%,
-var(--rule) 49.8%,var(--rule) 50.2%,transparent 50.2%)}
-.ci{position:absolute;top:6px;height:2px;background:var(--ink)}
-.pt{position:absolute;top:2px;width:10px;height:10px;margin-left:-5px;border-radius:50%}
-.pt.conf,.key.conf{background:var(--ink)}
-.pt.all,.key.all{border:2px solid var(--muted);background:#fff}
 .key{display:inline-block;width:10px;height:10px;border-radius:50%;vertical-align:middle}
-details>summary{cursor:pointer}details.cell>summary{list-style:none}
-details.cell>summary::-webkit-details-marker{display:none}
-details[open]>summary{background:var(--soft)}
+.key.conf{background:var(--ink)}
+.pt.all,.key.all{border:2px solid var(--muted);background:#fff}
+details.cell>summary{list-style:none}details.cell>summary::-webkit-details-marker{display:none}
 .drill{padding:8px 12px 14px;background:var(--soft);font-size:13px}
 .series{margin:10px 0 18px}.series ul{margin:6px 0;padding-left:18px}
 .delta{color:var(--accent);font-weight:600}
-table{border-collapse:collapse;font-size:13px;margin:4px 0}
-td,th{padding:3px 12px 3px 0;text-align:left;vertical-align:top}th{color:var(--muted);font-weight:600}
-code{font-size:12px}
+@media (max-width:760px){
+.row{grid-template-columns:minmax(0,1fr) auto;gap:4px 12px}
+.row>:first-child,.row>.scale{grid-column:1/-1}
+.axis>span:not(.ticks){display:none}.axis>.ticks{grid-column:1/-1}
+.filters label{flex:1 1 100%}.filters select{flex:1;max-width:none}
+}
 """
 
 _FILTER_JS = """
 (function () {
   var controls = Array.prototype.slice.call(document.querySelectorAll("[data-filter]"));
   var rows = Array.prototype.slice.call(document.querySelectorAll("[data-row]"));
+  var cells = Array.prototype.slice.call(document.querySelectorAll("details.cell"));
+  var shown = document.querySelector("[data-shown]");
   function apply() {
     rows.forEach(function (row) {
       row.hidden = !controls.every(function (control) {
@@ -451,7 +426,12 @@ _FILTER_JS = """
         return !control.value || have === null || have === control.value;
       });
     });
+    if (shown) {
+      var visible = cells.filter(function (cell) { return !cell.closest("[hidden]"); });
+      shown.textContent = "Showing " + visible.length + " of " + cells.length + " cells.";
+    }
   }
   controls.forEach(function (control) { control.addEventListener("change", apply); });
+  apply();
 })();
 """

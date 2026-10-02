@@ -33,6 +33,13 @@ human stepping in**, under an assigned resource budget.
 - **Credited success** = the goal was met, **no intervention was observed**, and the assigned
   budget was respected. A run a human rescued is a *helped* success. It is visible, but it is
   not credited.
+- **Intervention means injected human cognition**: a hint, a diagnosis, choosing the next
+  action, or a repair. Routine authorization that contributes no task decision (approving a
+  tool permission or a spend, confirming a scheduled step) is not cognitive interference. It
+  is recorded in `provenance` or the intervention `evidence` note, so a reviewer can check
+  that it carried no task decision. If an "approval" did carry one (the human chose between
+  options, or edited the plan), it is an intervention. This is a recording policy on
+  existing fields, not a new event store.
 - **Two rates, never conflated.** The *confirmed capability rate* covers trials whose outcome,
   intervention and budget compliance were ascertained. The *credited operational yield* counts
   every terminal trial, outages included. That makes it a conservative floor on what the
@@ -74,7 +81,9 @@ are listed in the guide. The rules that matter scientifically:
    denominator. Nothing becomes "missing" quietly.
 4. **Record interventions with evidence.** `observed_none` and `observed_present` need
    supporting evidence (a transcript review, an operator log). Without it the status is
-   `unknown`, and an unknown never enters the confirmed denominator.
+   `unknown`, and an unknown never enters the confirmed denominator. Routine,
+   non-cognitive approvals are noted in the evidence or provenance and do not by themselves
+   make the status `observed_present` (definition above).
 5. **Declare the attempt policy and count resources over all attempts.** The allowed
    attempts and the retry policy are fixed conditions. The attempts actually used are an
    outcome. Resources are totals across attempts, not the best attempt.
@@ -110,7 +119,8 @@ paired variants, budgets and configurations. Exit criteria:
 1. **Instrumentation (done in this slice).** Trial contract, strict validator, descriptive
    analysis with an explicit denominator policy, offline report, synthetic demo.
 2. **Source audit and pilot.** Audit external evidence (below) for rights, schema and what
-   is actually recorded. Then run the 72-attempt pilot on our own harness.
+   is actually recorded. The METR audit is now reproducible (`audit-metr`). Then run the
+   72-attempt pilot on our own harness.
 3. **Matched longitudinal evidence.** Repeat matched cohorts over time. Add clustering-aware
    intervals before anything is called a trend.
 4. **Research publication.** A `/research` page on the site, fed by the clean
@@ -147,9 +157,28 @@ The lead inspected a pinned snapshot of METR's Time Horizon 1.1 run data locally
 | Distance metric | Human completion time, not our prespecified demand vector |
 | Reuse terms | Not verified |
 
+**Reproducible audit.** `python -m algent_backend.ohmega_research audit-metr` re-derives
+these facts from the local snapshot plus a pinned metadata file. It refuses to write
+anything unless byte count, SHA-256 and row count all match, and every row passes strict
+validation. It writes `source-audit.json` (`ohmega.research.source-audit/1`, aggregates
+only) and `source-audit.html`. It is a separate module (`ohmega_research/benchmarks/`) and
+never produces trial records, so it cannot fabricate an intervention status or a budget.
+The audit also surfaced that:
+- the 773 rows with `model: "human"` are human baselines, not a tested system. They are
+  reported separately and excluded from
+  system counts. `task_version` and `scaffold` are null in 1,829 rows, which is more than
+  the baselines alone; a missing scaffold is shown as "unknown", never inferred;
+- only Unix-millisecond timestamps between 2020 and 2030 count as evaluation dates
+  (22,414 per field). The rest are flagged as null (1,056), zero (538 started; 4 completed)
+  or short (534 completed). Evaluation dates (Jan 2025–Feb 2026) are not model release
+  dates and may not reflect the current model generation;
+- outcome shares by reported model + scaffold and by task source/family are descriptive.
+  Task mix differs between groups, and dependence between repeated runs per task may
+  overstate the precision of Wilson intervals, so they are not a capability ranking.
+
 What follows from this: the snapshot is candidate evidence for operational and resource
-context only. If converted, intervention must stay explicitly `unknown`, so no METR run
-could enter a confirmed non-interference denominator. **This audit does not establish
+context only. Intervention is absent, so no METR run can enter a confirmed
+non-interference denominator. Tokens are not compute. **This audit does not establish
 horizon growth.**
 
 ### Not yet audited
@@ -169,5 +198,6 @@ These URLs have not been re-checked in this slice.
 - Temporal comparison is descriptive: deltas between matched cohorts, with interval overlap
   shown. No significance test, no trend, no extrapolation.
 - Task-family pools are descriptive only; their task mix can change between cohorts.
-- No ingestion adapter for external sources exists yet. The METR audit was an inspection,
-  not an import.
+- External sources are audited, not imported. The METR source audit is reproducible, but no
+  adapter converts benchmark rows into trials, and none should until a source records
+  intervention and assigned budgets.

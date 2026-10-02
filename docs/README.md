@@ -49,10 +49,10 @@ Docs sprawl is a real failure mode. To prevent it:
 - `run-operator-entrypoint.md` – **start here** to operate runs; short hub that routes to the rest.
 - `agent-cli-testing.md` – **canonical CLI guide**: full `runs` command/flag set, newsroom rail,
   post-t0 `--from-run`, promotion cooldown, watch/stop, cost rails, run layout.
-- `ohmega-research.md` – Ohmega Research CLI: validate trial JSONL, build the offline report, synthetic demo; record schema and denominator policy.
+- `ohmega-research.md` – Ohmega Research CLI: validate trial JSONL, build the offline report, synthetic demo, reproducible METR source audit (`audit-metr`); record schema and denominator policy.
 
 ### Vision — `vision/`
-- `ohmega-research.md` – Ohmega Research: reproducible-studies charter; first program (non-interference goal frontier), hypothesis vs finding, trial protocol, 72-attempt pilot, roadmap, evidence inventory (METR source audit).
+- `ohmega-research.md` – Ohmega Research: reproducible-studies charter; first program (non-interference goal frontier), intervention definition, hypothesis vs finding, trial protocol, 72-attempt pilot, roadmap, evidence inventory (METR source audit).
 
 ### Linting — `linting/`
 - `static-governance.md` – lint toolchain, rules, and what blocks vs. warns.

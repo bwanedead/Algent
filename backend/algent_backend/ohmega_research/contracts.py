@@ -7,14 +7,14 @@ defaulted, merged or reweighted to make a file "mostly" usable.
 
 from __future__ import annotations
 
-import json
-import math
 from collections.abc import Iterable
 from dataclasses import dataclass
 from dataclasses import fields as dataclass_fields
 from datetime import date
 from pathlib import Path
 from typing import TypeVar
+
+from . import strict_json
 
 TRIAL_SCHEMA = "ohmega.research.trial/1"
 
@@ -164,7 +164,7 @@ def parse_trials(lines: Iterable[str]) -> list[TrialRecord]:
 
 def _parse_line(text: str, line_no: int, errors: list[str]) -> TrialRecord | None:
     try:
-        obj = json.loads(text, parse_constant=_reject_constant, object_pairs_hook=_unique_keys)
+        obj = strict_json.loads(text)
     except ValueError as exc:
         errors.append(f"line {line_no}: not valid JSON ({exc})")
         return None
@@ -176,19 +176,6 @@ def _parse_line(text: str, line_no: int, errors: list[str]) -> TrialRecord | Non
     local.extend(_semantic_problems(record))
     errors.extend(f"line {line_no}: {message}" for message in local)
     return None if local else record
-
-
-def _reject_constant(name: str) -> float:
-    raise ValueError(f"non-finite number {name} is not allowed")
-
-
-def _unique_keys(pairs: list[tuple[str, object]]) -> dict[str, object]:
-    obj: dict[str, object] = {}
-    for key, value in pairs:
-        if key in obj:
-            raise ValueError(f"duplicate key {key!r}")
-        obj[key] = value
-    return obj
 
 
 class _Fields:
@@ -260,7 +247,7 @@ class _Fields:
         value = self.raw(key)
         if value is _MISSING or (value is None and nullable):
             return None
-        parsed, problem = _parse_amount(value)
+        parsed, problem = strict_json.parse_amount(value)
         if problem:
             self.fail(key, problem)
         return parsed
@@ -292,20 +279,6 @@ class _Fields:
     def close(self) -> None:
         for key in sorted(set(self._obj) - self._read):
             self.fail(key, "unexpected field (not in the trial schema)")
-
-
-def _parse_amount(value: object) -> tuple[float | None, str | None]:
-    if isinstance(value, bool) or not isinstance(value, int | float):
-        return None, "must be a number (booleans and strings are not numbers)"
-    try:
-        as_float = float(value)
-    except OverflowError:
-        return None, "must be finite"
-    if not math.isfinite(as_float):
-        return None, "must be finite"
-    if as_float < 0:
-        return None, "must be non-negative"
-    return as_float, None
 
 
 def _parse_record(obj: dict, line_no: int, errors: list[str]) -> TrialRecord:

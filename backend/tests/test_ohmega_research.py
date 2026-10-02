@@ -436,6 +436,15 @@ def test_report_escapes_hostile_input_and_loads_nothing_external():
     assert json.loads(embedded) == json.loads(json.dumps(analysis))
 
 
+def test_report_layout_stays_narrow_screen_safe():
+    page = render_html(_analysis(_trial("a"), _failure("b")))
+    assert ".row{grid-template-columns:minmax(0,1fr) auto" in page  # trial rows stack
+    assert 'class="tablewrap"' in page
+    assert "Full-file inventory (filters do not change these counts)" in page
+    assert 'class="notes"' in page and "data-shown" in page
+    assert page.index("Credited success per cell") < page.index("data-quality notes")
+
+
 # --- CLI ----------------------------------------------------------------------------------
 
 def test_cli_demo_validate_report_happy_path(tmp_path, capsys):

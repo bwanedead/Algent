@@ -9,13 +9,16 @@ How to validate trial records and build the offline report. The why and the road
 .venv\Scripts\python.exe -m algent_backend.ohmega_research validate --input PATH
 .venv\Scripts\python.exe -m algent_backend.ohmega_research report --input PATH --output DIR
 .venv\Scripts\python.exe -m algent_backend.ohmega_research demo --output DIR
+.venv\Scripts\python.exe -m algent_backend.ohmega_research audit-metr --input PATH --source-metadata PATH --output DIR
 ```
 
 - `validate` checks the whole file and prints a short JSON summary. On failure it prints
   every problem with its line number and exits 1.
 - `report` writes `analysis.json` and `report.html` to `DIR`. An invalid input writes nothing.
 - `demo` writes `synthetic_trials.jsonl` (deterministic, **SYNTHETIC**) and its report.
-- Without `--output`, results go to `<runs-data>/ohmega_research/{report,demo}`. The
+- `audit-metr` writes `source-audit.json` and `source-audit.html` for a local METR
+  `runs.jsonl` snapshot (see "METR source audit" below). It never produces trial records.
+- Without `--output`, results go to `<runs-data>/ohmega_research/{report,demo,audit-metr}`. The
   runs-data root is `backend/runs_data` (gitignored), or `ALGENT_RUNS_DIR` if that is set.
   Inside the repository the CLI refuses any output directory outside the runs-data root, so
   nothing lands in the source tree.
@@ -92,6 +95,45 @@ The canonical wording is `METHODOLOGY` in `ohmega_research/analysis.py`, and eve
   (`k`, `n`, `rate`, `wilson95`, plus `coverage` on `confirmed`), outcome, intervention,
   budget and terminal-reason counts, `helped_success`, `attempts`, `resources[]` and
   `clustering`.
+- **Report layout.** The first screen keeps the synthetic/mixed banner and the key coverage
+  numbers visible. Data-quality notes and the method sit behind `<details>`. Tables scroll
+  inside their own container, and below 760px the cell rows stack so the page itself never
+  scrolls sideways. The filters hide rows only; the "full-file inventory" counts in each
+  section never change with a filter.
+
+## METR source audit (`ohmega.research.source-audit/1`)
+
+An inspection of third-party evidence, kept apart from the trial estimator in
+`ohmega_research/benchmarks/`. It reads only local files and never fetches anything.
+
+- **Metadata file** (JSON, all fields required, no others): `source_url`, `commit`,
+  `sha256` (64 lowercase hex), `bytes`, `rows`, `license_status`, `purpose`. Byte count,
+  SHA-256 are checked before parsing; row count is checked after parsing. All checks finish
+  before output. A mismatch is an error.
+- **Rows** need `run_id` (string, or non-negative integer for human baselines), `task_id`,
+  `task_version` (present; may be null), `task_family`, `task_source`, `alias`, `model`,
+  `score_binarized` (0 or 1, not a boolean), `score_cont` (within [0, 1]), `human_minutes`
+  and `human_source`. The optional fields `scaffold`, `tokens_count`, `generation_cost`,
+  `time_limit`, `started_at`, `completed_at`, `cloned` and `fatal_error_from` are validated
+  when present. Other fields (`human_score`, …) are allowed, unused and counted. Duplicate
+  keys, duplicate `run_id`s, malformed JSON, NaN/Infinity, negative or boolean numbers are
+  rejected with line numbers, and a rejected snapshot writes nothing.
+- **Never inferred**: intervention (every run is `unknown`), budgets (`time_limit` has no
+  verified unit or enforcement), compute (tokens are not FLOPs), a "free run" from a zero
+  cost, or goal distance (`human_minutes` is task metadata). A missing scaffold is "unknown".
+- **Timestamps**: `plausible_ms` (Unix ms from 2020 to 2030) gives the evaluation-date range.
+  `null`, `absent`, `zero`, `short` (below 2020 as ms) and `above_range` are counted and
+  flagged; those runs stay in every other count.
+- **Output keys**: `schema`, `kind`, `headline`, `source` (metadata, `input_name`,
+  `verified`, `raw_rows_copied: false`), `overview` (runs, AI and human-baseline runs,
+  aliases, models, `(model, scaffold)` systems, tasks, versions, families, sources),
+  `intervention`, `resources[]` (records, absent, null, zero, positive, min, median, p95,
+  max, note), `timestamps[]`, `data_quality`, `outcomes_by_system[]`,
+  `outcomes_by_task_group[]` (each with `n`, `score_binarized_1`, `rate`, `wilson95`, task
+  count, `max_runs_per_task`, `task_version_mix`) and `caveats[]`. Output is deterministic
+  and holds aggregates only, never raw rows.
+- Rows with `model: "human"` are human baselines. They are listed with their own label and
+  excluded from AI system counts.
 
 ## Checks
 
@@ -99,15 +141,15 @@ Use a repo-local pytest temp directory, so tests never write outside the repo:
 
 ```powershell
 cd backend
-.venv\Scripts\python.exe -m pytest tests/test_ohmega_research.py --basetemp=runs_data/pytest-ohmega-research -p no:cacheprovider
-.venv\Scripts\python.exe -m ruff check algent_backend/ohmega_research tests/test_ohmega_research.py
+.venv\Scripts\python.exe -m pytest tests/test_ohmega_research.py tests/test_ohmega_research_metr.py --basetemp=runs_data/pytest-ohmega-research -p no:cacheprovider
+.venv\Scripts\python.exe -m ruff check algent_backend/ohmega_research tests/test_ohmega_research.py tests/test_ohmega_research_metr.py
 .venv\Scripts\python.exe -m algent_backend.ohmega_research demo --output runs_data/ohmega_research/smoke
 ```
 
 ## Limitations
 
-Every standardized trial so far is synthetic. The METR source audit (see the vision doc) is
-an inspection of a third-party file, not converted trial records, and no ingestion adapter
-exists yet. Intervals have no
-clustering adjustment, and the temporal view runs no significance test and fits no trend.
+Every standardized trial so far is synthetic. The METR source audit is an inspection of a
+third-party file, not converted trial records, and no ingestion adapter exists. Intervals
+have no clustering adjustment, and the temporal view runs no significance test and fits no
+trend.
 See the vision doc for the roadmap.
