@@ -219,6 +219,7 @@ class ContextItem(BaseModel):
     when: str = ""
     why_relevant: str = ""
     source: str = ""
+    verification: Verification = "reported"   # researched only with a cited source our research holds
 
 
 class DailyChange(BaseModel):

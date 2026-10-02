@@ -94,6 +94,8 @@ def render_briefing(profile: SignalProfile) -> str:
             line = f"- [{c.status}/{c.grounding}] {c.text}  <- {sup}  `{c.id}`{warn}"
             if c.contradicted_by:
                 line += "  (contradicted: " + ", ".join(src_name.get(s, s) for s in c.contradicted_by) + ")"
+            if c.contradicts_claims:
+                line += "  (contradicts earlier: " + ", ".join(c.contradicts_claims) + ")"
             out.append(line)
         out.append("")
 

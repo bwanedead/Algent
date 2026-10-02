@@ -125,6 +125,10 @@ class Claim(BaseModel):
     grounding: GroundingStatus = "unsourced"  # HARNESS-computed from snapshots, not the model
     supported_by: list[str] = Field(default_factory=list)     # SourceArtifact ids
     contradicted_by: list[str] = Field(default_factory=list)  # SourceArtifact ids
+    # Earlier claims (any profile, by claim id) this claim's new evidence contradicts. Distinct from
+    # ``contradicted_by`` (sources): this one is the graph edge from the new knowledge to the old.
+    # Harness-validated: only ids the run was actually shown survive (see assembly.finalize_profile).
+    contradicts_claims: list[str] = Field(default_factory=list)
     note: str = ""
     provenance: ItemProvenance | None = None
 
@@ -248,8 +252,8 @@ class SignalProfile(BaseModel):
     visual_opportunities: list[str] = Field(default_factory=list)  # charts/maps a production could use
     watch_triggers: list[str] = Field(default_factory=list)   # what to monitor for a refresh
     derived_leads: list[DerivedLead] = Field(default_factory=list)
-    related_profiles: list[str] = Field(default_factory=list)  # graph edges (corpus; empty now)
-    corpus_context: list[str] = Field(default_factory=list)    # what we already knew (empty now)
+    related_profiles: list[str] = Field(default_factory=list)  # graph edges: the earlier profiles this research was given (corpus.related)
+    corpus_context: list[str] = Field(default_factory=list)    # one line per earlier claim this research was handed
 
     # ── provenance / versioning (manifest seed) ──
     schema_version: int = SCHEMA_VERSION

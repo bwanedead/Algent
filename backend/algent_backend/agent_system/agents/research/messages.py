@@ -14,8 +14,11 @@ from typing import Any
 from .x_seeds import is_x_url
 
 
-def build_vector_message(vector: dict[str, Any]) -> str:
-    """Render a selected signal vector (a ResearchVector dict) into the task message."""
+def build_vector_message(vector: dict[str, Any], prior_knowledge: str = "") -> str:
+    """Render a selected signal vector (a ResearchVector dict) into the task message.
+
+    ``prior_knowledge`` is the rendered corpus context (``CorpusContext.render()``): our own earlier
+    graded claims on this ground. Empty means the corpus had nothing, and no block (or doctrine) is added."""
     x_seeds = [str(u) for u in (vector.get("x_seed_urls") or []) if u]
     if not x_seeds:
         x_seeds = [str(u) for u in (vector.get("sources") or []) if is_x_url(str(u))]
@@ -60,8 +63,29 @@ def build_vector_message(vector: dict[str, Any]) -> str:
             *(f"  - {u}" for u in x_seeds or ["(reconstruct from supporting hit / find via source=x)"]),
             "",
         ]
+    if prior_knowledge.strip():
+        lines += ["# WHAT WE ALREADY KNOW", PRIOR_KNOWLEDGE_DOCTRINE, "", prior_knowledge.strip(), ""]
     lines.append(_DIRECTIVE)
     return "\n".join(lines)
+
+
+# Why each rule: a corpus that is trusted blindly launders old errors into new work under our name;
+# one that is ignored makes every run re-buy facts we already graded. So: footing, not truth.
+PRIOR_KNOWLEDGE_DOCTRINE = (
+    "Our own earlier research on related ground: graded, dated claims with their ids. Treat it as a "
+    "STARTING POINT, NOT TRUTH. It was sound when written and the world has kept moving. "
+    "(1) Do not spend searches re-establishing stable, confirmed facts: take them as footing and put "
+    "your effort into what is new, missing or disputed. "
+    "(2) VERIFY what may have changed: anything time-sensitive (prices, counts, who holds an office, "
+    "the status of an ongoing event) and anything older than the horizon this assignment asks about. "
+    "(3) A prior claim is a lead, not a citation. If you rely on one in your own claim ledger, back it "
+    "with a source you have read in THIS run (the URLs listed are the cheapest place to start); never "
+    "cite a claim id as evidence. "
+    "(4) FLAG CONTRADICTIONS. When what you find contradicts a prior claim, do not quietly overwrite "
+    "it: write the new claim and put the prior claim's id in its `contradicts_claims`, naming the "
+    "disagreement in `note`. A reader auditing us needs to see that our view changed and why. "
+    "Ignore anything here that turns out to be irrelevant to the assignment."
+)
 
 
 _DIRECTIVE = (

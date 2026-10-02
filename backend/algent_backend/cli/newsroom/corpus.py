@@ -8,6 +8,7 @@ saving new stories over old ones. This is the view that would have caught it.
 
     newsroom corpus            # totals, growth, links between stories, integrity
     newsroom corpus --json     # the same, machine-readable
+    newsroom corpus related "<text>"   # what the researchers would be handed for that text
 
 Integrity is the section to read first: collisions, profiles that are only recovered, and
 stories whose read pages were not kept all show up there instead of disappearing.
@@ -27,6 +28,10 @@ from algent_backend.agent_system.agents.research.store import JsonProfileStore
 def add_parser(sub: Any) -> None:
     p = sub.add_parser("corpus", help="show the profile knowledge base: size, growth, links, integrity")
     p.add_argument("--json", action="store_true", help="machine-readable output")
+    p.add_argument("verb", nargs="?", choices=["related"], help="related: preview corpus retrieval for TEXT")
+    p.add_argument("text", nargs="?", default="", help="the query text for `related`")
+    p.add_argument("--budget", type=int, default=None, help="related: character budget for claims")
+    p.add_argument("--limit", type=int, default=None, help="related: max profiles consulted")
     p.set_defaults(handler=run_corpus)
 
 
@@ -94,7 +99,31 @@ def summarize(store: JsonProfileStore) -> dict[str, Any]:
     }
 
 
+def run_related(args: Any) -> int:
+    """Operator debugging: exactly what ``corpus.related`` would hand a researcher for this text."""
+    from algent_backend.agent_system.agents.research import corpus as memory
+
+    if not args.text.strip():
+        print("usage: newsroom corpus related \"<text>\"")
+        return 2
+    kw = {k: v for k, v in (("budget_chars", args.budget), ("limit", args.limit)) if v is not None}
+    found = memory.related(JsonProfileStore(), query_text=args.text, **kw)
+    if args.json:
+        print(json.dumps(found.to_dict(), indent=2, ensure_ascii=False))
+        return 0
+    if not found.profiles:
+        print("nothing related in the corpus")
+        return 0
+    print("RELATED PROFILES")
+    for p in found.profiles:
+        print(f"  {p.score:.3f}  {p.id}  {p.title[:70]}  ({p.date or 'undated'})  <- {'; '.join(p.reasons)}")
+    print(f"\nWHAT WE ALREADY KNOW  ({len(found.claims)} claims)\n{found.render()}")
+    return 0
+
+
 def run_corpus(args: Any) -> int:
+    if getattr(args, "verb", None) == "related":
+        return run_related(args)
     report = summarize(JsonProfileStore())
     if args.json:
         print(json.dumps(report, indent=2, ensure_ascii=False))

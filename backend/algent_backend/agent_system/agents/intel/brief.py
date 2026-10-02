@@ -133,6 +133,37 @@ def commission_research(context: Any, config: Any, theater: Theater, *, focus: s
     return profile if isinstance(profile, dict) and profile.get("id") else None
 
 
+def recall(theater: Theater, *, as_of: str, window_days: int, exclude_ids: list[str] | None = None,
+           store: Any = None) -> Any:
+    """Our own earlier research on this theater, from before the research window (the window's evidence
+    is already in hand). The CorpusContext is empty when the corpus has nothing; never raises."""
+    from datetime import date, timedelta
+
+    from ..research import corpus
+    from ..research.store import JsonProfileStore
+
+    try:
+        cutoff = (date.fromisoformat(as_of) - timedelta(days=window_days)).isoformat()
+        query = "\n".join([theater.name, theater.why, theater.description,
+                           *(f"{m.title} {m.thesis}" for m in theater.members)])
+        sources = [u for m in theater.members for u in m.sources]
+        return corpus.related(store or JsonProfileStore(), query_text=query, sources=sources,
+                              exclude_ids=exclude_ids or (), as_of=as_of, older_than=cutoff)
+    except Exception:  # noqa: BLE001 - memory is an aid, not a dependency
+        return corpus.CorpusContext()
+
+
+def corpus_block(found: Any) -> str:
+    """The prompt section for a CorpusContext ('' when it has nothing)."""
+    if found is None or found.empty:
+        return ""
+    return ("OUR EARLIER RESEARCH (graded, dated; from before this run's window). Our own corpus, for "
+            "background and the older half of the timeline. Cite only the URLs listed; an item built on one of "
+            "these is `researched` ONLY with that URL attached, otherwise `reported`. Dates are when the thing "
+            "was said or learned, so never present it as today's news; it may have changed since:\n"
+            f"{found.render()}\n\n")
+
+
 def reported(theater: Theater) -> str:
     return "\n".join(f"- ({m.edition[:10]}) {m.title} — {m.thesis[:220]} [sources: {', '.join(m.sources[:2]) or '—'}]"
                      for m in sorted(theater.members, key=lambda m: m.edition))
@@ -167,7 +198,7 @@ def previous_digest(record: dict) -> str:
 
 def write_brief(context: Any, config: Any, theater: Theater, heat: dict, *, profiles: list[dict],
                 pulse_table: dict[str, str], model_spec: Any, focus: str = "", previous: dict | None = None,
-                track_record: str = "") -> Brief | None:
+                track_record: str = "", corpus_ctx: Any = None) -> Brief | None:
     from langchain_core.messages import HumanMessage, SystemMessage
 
     from algent_backend.agent_system.prompting import UNIVERSAL_AGENT_BASE, compose_system_prompt
@@ -182,6 +213,7 @@ def write_brief(context: Any, config: Any, theater: Theater, heat: dict, *, prof
             + (previous_digest(previous) + "\n\n" if previous else "PREVIOUS BRIEF: none, this is the first.\n\n")
             + (f"YOUR TRACK RECORD ON THIS THEATER (the desk's earlier judgments and how they came out):\n"
                f"{track_record}\n\n" if track_record else "")
+            + corpus_block(corpus_ctx)
             + f"RESEARCHED CLAIMS (graded by our research):{researched or ' none'}\n\n"
             f"SOURCE URLS FOR RESEARCHED CLAIMS: {_compact(source_urls)}\n\n"
             f"REPORTED HEADLINES (other outlets, unverified):\n{reported(theater)}\n\n"
@@ -193,12 +225,23 @@ def write_brief(context: Any, config: Any, theater: Theater, heat: dict, *, prof
     model = context.model_resolver.resolve(model_spec).client.with_structured_output(Brief)
     brief = model.invoke([SystemMessage(content=compose_system_prompt(UNIVERSAL_AGENT_BASE, ANALYST_ROLE)),
                           HumanMessage(content=task)], config=config)
-    return normalise(brief, pulse_table=pulse_table, has_previous=bool(previous)) if isinstance(brief, Brief) else None
+    if not isinstance(brief, Brief):
+        return None
+    allowed = {u for u in source_urls.values() if u} | (corpus_ctx.source_urls if corpus_ctx is not None else set())
+    return normalise(brief, pulse_table=pulse_table, has_previous=bool(previous), research_urls=allowed)
 
 
-def normalise(brief: Brief, *, pulse_table: dict[str, str], has_previous: bool) -> Brief:
+def normalise(brief: Brief, *, pulse_table: dict[str, str], has_previous: bool,
+              research_urls: set[str] | None = None) -> Brief:
     """Enforce what the schema cannot: Pulse names come from the table (canonical spelling, no
-    inventions), changes need a previous brief, judgments are at most four and carry a real date."""
+    inventions), changes need a previous brief, judgments are at most four and carry a real date, and
+    (when ``research_urls`` is given: the researched profiles' sources plus our earlier corpus claims')
+    a timeline item is `researched` only if its source is one of those URLs."""
+    if research_urls is not None:
+        known = {u.strip().rstrip("/") for u in research_urls}
+        for item in brief.timeline:
+            if item.verification == "researched" and item.source.strip().rstrip("/") not in known:
+                item.verification = "reported"
     canon = {n.lower(): n for n in pulse_table}
     brief.pulses = list(dict.fromkeys(canon[p.strip().lower()] for p in brief.pulses if p.strip().lower() in canon))
     if not has_previous:

@@ -41,6 +41,7 @@ from .heat import store_dir
 
 SCHEMA = "ohmega.daily/1"
 MAX_QUOTE_WORDS = 25
+RESEARCH_WINDOW_DAYS = 3        # the daily's research covers ~72 hours; earlier corpus claims are the background
 
 DAILY_QUESTIONS = (
     "What happened in this dynamic in the last 72 hours? Date every event and say where it happened.",
@@ -241,9 +242,11 @@ def _ask(context: Any, config: Any, model_spec: Any, schema: Any, role: str, tas
 
 def write_section(context: Any, config: Any, theater: Theater, heat: dict, *, as_of: str, profiles: list[dict],
                   pulse_table: dict[str, str], model_spec: Any, previous: dict | None = None,
-                  brief: dict | None = None) -> tuple[SectionDraft | None, set[str]]:
-    """One structured call for one theater. Returns the raw draft and the URLs it may cite."""
+                  brief: dict | None = None, corpus_ctx: Any = None) -> tuple[SectionDraft | None, set[str]]:
+    """One structured call for one theater. Returns the raw draft and the URLs it may cite (the research's
+    sources plus our earlier corpus claims')."""
     researched, research_urls = research_evidence(profiles)
+    research_urls = research_urls | (corpus_ctx.source_urls if corpus_ctx is not None else set())
     task = (f"TODAY: {as_of}. Cover roughly the last three days; older items belong in `context`.\n\n"
             f"THEATER: {theater.name}\n{theater.why}\n\n"
             f"TEMPERATURE: {heat.get('recent', 0)} headlines in the last 3 days vs {heat.get('prior', 0)} before "
@@ -251,6 +254,7 @@ def write_section(context: Any, config: Any, theater: Theater, heat: dict, *, as
             + (previous_digest(previous) + "\n\n" if previous
                else "PREVIOUS DAILY SECTION: none; leave since_yesterday empty.\n\n")
             + (_brief_digest(brief) + "\n\n" if brief else "")
+            + br.corpus_block(corpus_ctx)
             + f"RESEARCHED CLAIMS (graded by our research):{researched or ' none'}\n\n"
             f"REPORTED HEADLINES (other outlets, unverified):\n{br.reported(theater)}\n\n"
             + ("OHMEGA PULSES (name | situation | position | band); tag `pulses` with names from here only, "
@@ -321,6 +325,8 @@ def normalise_section(draft: SectionDraft, *, pulse_table: dict[str, str], has_p
                 st.said = " ".join(words[:MAX_QUOTE_WORDS]) + " …"
     for item in draft.context:
         item.source = clean(item.source)
+        item.verification = ("researched" if researched and item.verification == "researched"
+                             and _norm_url(item.source) in research_known else "reported")
     draft.context = [c for c in draft.context if c.what.strip()]
     seen = {n.lower() for n in pulse_table}
     draft.pulse_proposals = [p for p in draft.pulse_proposals
@@ -418,14 +424,17 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
                                                              theater_id=tid))
         previous = previous_section(domain, tid, before=as_of)
         latest_brief = desk.previous_brief(tid)
+        earlier = br.recall(theater, as_of=as_of, window_days=RESEARCH_WINDOW_DAYS,
+                            exclude_ids=[p["id"] for p in profiles])
         draft, research_urls = write_section(ctx, None, theater, heat, as_of=as_of, profiles=profiles,
                                              pulse_table=table, model_spec=model_spec, previous=previous,
-                                             brief=latest_brief)
+                                             brief=latest_brief, corpus_ctx=earlier)
         if draft is None:
             rows.append({**row, "error": "section writer returned nothing"})
             continue
         draft = normalise_section(draft, pulse_table=table, has_previous=previous is not None,
-                                  researched=bool(profiles), research_urls=research_urls,
+                                  researched=bool(profiles) or not earlier.empty,
+                                  research_urls=research_urls,
                                   reported_urls={u for m in theater.members for u in m.sources},
                                   countries=countries)
         sections.append(_section(theater, heat, draft, pulse_rows(store, draft.pulses, now=now), latest_brief,

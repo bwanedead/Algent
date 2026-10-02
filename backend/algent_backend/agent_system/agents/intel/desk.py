@@ -21,6 +21,7 @@ from .contracts import Brief, Theater
 from .heat import store_dir
 
 SCHEMA = "ohmega.brief/1"
+BRIEF_WINDOW_DAYS = 30          # a brief's research covers the last 30 days; earlier corpus claims are the background
 
 
 def briefs_dir() -> Path:
@@ -90,8 +91,9 @@ def produce(ctx: Any, theater: Theater, heat: dict, *, as_of: str, out: Path | N
     settled = forecasts.resolve_due(
         ctx, None, model_spec, f"{evidence_block(profiles)[0]}\n\nREPORTED HEADLINES:\n{br.reported(theater)}",
         as_of=as_of, theater_id=theater.id)
+    earlier = br.recall(theater, as_of=as_of, window_days=BRIEF_WINDOW_DAYS, exclude_ids=[p["id"] for p in profiles])
     brief = br.write_brief(ctx, None, theater, heat, profiles=profiles, pulse_table=br.pulse_catalog(pulse_store()),
-                           model_spec=model_spec, focus=focus,
+                           model_spec=model_spec, focus=focus, corpus_ctx=earlier,
                            previous=previous_brief(theater.id, before_slug=brief_slug(as_of, theater.name, focus)),
                            track_record=forecasts.track_record(theater.id))
     if brief is None:

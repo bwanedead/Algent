@@ -132,8 +132,16 @@ class JsonProfileStore:
     def list_ids(self) -> list[str]:
         if not self._dir.exists():
             return []
-        ids = [self.get(p.stem) for p in self._dir.glob("*.json")]
-        return sorted(p.id for p in ids if p is not None)
+        return sorted(p.id for p in self.iter_profiles())
+
+    def iter_profiles(self):
+        """Every current profile, each file read once (the corpus index and ``list_ids`` share this)."""
+        if not self._dir.exists():
+            return
+        for path in sorted(self._dir.glob("*.json")):
+            profile = self.get(path.stem)
+            if profile is not None:
+                yield profile
 
     def history(self, profile_id: str) -> list[Path]:
         hist = self._dir / "_history" / _safe(profile_id)
