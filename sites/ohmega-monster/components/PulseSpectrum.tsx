@@ -1,4 +1,5 @@
-import { BAND_LABEL, bandAt, type Band } from "@/lib/intel";
+import { BAND_LABEL, bandAt } from "@/lib/band";
+import type { Band } from "@/lib/intel";
 
 // The 0-100 spectrum behind every Pulse number: four muted band segments, a marker at the reading.
 // Pure server component; colours come from the intel-band-* classes so both displays work.
