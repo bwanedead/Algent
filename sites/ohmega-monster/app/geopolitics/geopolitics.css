@@ -166,10 +166,30 @@ button.geo-x-btn { display: flex; align-items: baseline; gap: 8px; width: 100%; 
 .geo-x-line { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
 button.geo-x-btn:hover .geo-x-line { color: var(--strong); }
 
-.geo-archive { margin-top: calc(var(--line) * 3); min-width: 0; }
+/* ---- day navigator (components/DayNav.tsx) and its "All days" list (components/DailyArchive.tsx) -- */
+.geo-daynav { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 0 14px; align-items: baseline; min-width: 0; padding: 0 0 6px; font-size: 12px; line-height: 20px; }
+.geo-daynav.is-bottom { margin-top: calc(var(--line) * 3); padding: 0; }
+.geo-daynav-prev { justify-self: start; min-width: 0; white-space: nowrap; }
+.geo-daynav-next { justify-self: end; min-width: 0; white-space: nowrap; }
+.intel-page .geo-daynav a { color: var(--text); text-decoration: none; }
+.intel-page .geo-daynav a:hover { color: var(--strong); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+.geo-daynav-mid { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 0 10px; min-width: 0; }
+.geo-daynav-cur { color: var(--strong); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.intel-page .geo-daynav a.geo-daynav-latest { color: var(--muted); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+button.geo-daynav-all { font: inherit; font-size: 11px; color: var(--muted); background: none; border: 0; padding: 0; margin: 0; cursor: pointer; text-decoration: underline dotted var(--rule-strong); text-underline-offset: 3px; white-space: nowrap; }
+button.geo-daynav-all:hover { color: var(--strong); }
+button.geo-daynav-all:focus-visible { outline: 1px solid var(--accent-dim); outline-offset: 2px; }
+
+.geo-archive { min-width: 0; }
+.geo-arch-month + .geo-arch-month { margin-top: 10px; }
 .geo-archive ul { list-style: none; margin: 0; padding: 0; }
-body .geo-archive a { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 0 12px; align-items: baseline; padding: 1px 0; color: var(--text); font-size: 12px; line-height: 20px; text-decoration: none; }
+body .geo-archive a { display: grid; grid-template-columns: 54px minmax(0, 1fr); gap: 0 10px; align-items: baseline; padding: 1px 0; color: var(--text); font-size: 12px; line-height: 20px; text-decoration: none; }
 body .geo-archive a:hover .geo-arch-line { color: var(--strong); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+.geo-arch-day { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* The one accent here: where you are. */
+body .geo-archive a.is-here { color: var(--accent); }
+body .geo-archive a.is-here .geo-arch-day,
+body .geo-archive a.is-here .geo-arch-line { color: var(--accent); font-weight: 600; }
 .geo-arch-line { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .geo-xlink { margin: calc(var(--line) * 2) 0 0; font-size: 11px; }
 body .geo-xlink a { color: var(--muted); }
@@ -224,9 +244,14 @@ body .geo-card a.geo-card-head { display: flex; flex-direction: column; gap: 2px
   .geo-map-svg, .geo-map-credit { max-width: 100%; }
   .geo-ctx li { grid-template-columns: minmax(0, 1fr); gap: 0; }
 }
+@media (max-width: 560px) {
+  .geo-daynav { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "mid mid" "prev next"; gap: 2px 14px; }
+  .geo-daynav-mid { grid-area: mid; justify-content: flex-start; }
+  .geo-daynav-prev { grid-area: prev; }
+  .geo-daynav-next { grid-area: next; }
+}
 @media (max-width: 480px) {
   .geo-tl { --day-w: 40px; }
   .geo-figs { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
   .geo-pulses { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
-  .geo-archive a { grid-template-columns: 76px minmax(0, 1fr); }
 }
