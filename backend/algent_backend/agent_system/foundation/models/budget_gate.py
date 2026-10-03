@@ -25,6 +25,8 @@ from pydantic import ConfigDict, Field
 from algent_backend.agent_system.foundation import cost
 from algent_backend.agent_system.foundation.text_hygiene import scrub
 
+from .provider_errors import is_stream_required
+
 _CHARS_PER_TOKEN = 3
 _MSG_FRAMING_TOKENS = 64
 
@@ -340,9 +342,37 @@ def _is_empty_structured(out: Any) -> bool:
     return False
 
 
+def _invoke_structured(
+    gate: BudgetGatedChatModel,
+    plain: Runnable | None,
+    streamed: Runnable | None,
+    payload: Any,
+    config: Any,
+) -> Any:
+    """One provider structured request: held through connection blips, streamed when it must be.
+
+    ``plain`` and ``streamed`` are the same structured runnable over the plain and the streaming
+    twin of the provider client. A request is streamed when the spec asked for it, or when the
+    provider answers a plain one with "exceeded the non-streaming server time limit" — a
+    deterministic refusal that retrying unstreamed cannot fix (see ``provider_errors``). The
+    whole thing runs inside the caller's single reserve/settle, so retries and the escalation
+    are one logical call to the ledger, billed once on the call that succeeded.
+    """
+    first = streamed if streamed is not None and (gate.stream_structured or plain is None) else plain
+    assert first is not None
+    try:
+        return gate._hold(lambda: first.invoke(payload, config=config))
+    except Exception as exc:  # noqa: BLE001 — re-raised unless it is the stream-required refusal
+        if first is not plain or streamed is None or not is_stream_required(exc):
+            raise
+    gate._say("provider refused the non-streaming request as too large; retrying it as a stream")
+    return gate._hold(lambda: streamed.invoke(payload, config=config))
+
+
 def _gated_provider_runnable(
     gate: BudgetGatedChatModel,
-    inner_structured: Runnable,
+    plain: Runnable | None,
+    streamed: Runnable | None,
     schema: Any,
     *,
     include_raw: bool,
@@ -358,7 +388,7 @@ def _gated_provider_runnable(
             return _run_authorized(
                 gate,
                 msgs,
-                lambda: inner_structured.invoke(payload, config=config),
+                lambda: _invoke_structured(gate, plain, streamed, payload, config),
                 response_schema=schema,
                 settle_from=lambda result: _settle_amount(result, gate.model_id),
             )
@@ -444,6 +474,13 @@ class BudgetGatedChatModel(BaseChatModel):
     #: "OpenAI is down" when the call went to Meta. Errors are re-labelled with these.
     provider: str = ""
     base_url: str = ""
+    #: The same client with streaming on, built by the model target (the only module that knows
+    #: how). ``None`` when the provider has none. The plain ``inner`` stays non-streaming because
+    #: ``_generate`` below calls it directly and a streaming client would hand it a Stream.
+    stream_inner: Any = Field(default=None, exclude=True)
+    #: The spec asked for streaming: send structured calls (the large ones — a profile, a draft)
+    #: as streams from the start rather than only after the provider refuses them unstreamed.
+    stream_structured: bool = False
 
     @property
     def _llm_type(self) -> str:
@@ -463,6 +500,26 @@ class BudgetGatedChatModel(BaseChatModel):
             response_schema=schema,
         )
 
+    def _say(self, message: str) -> None:
+        print(f"[model:{self.provider or '?'}] {message}", flush=True)
+
+    def _hold(self, fn: Any) -> Any:
+        """Run one provider request, waiting out a dropped connection (see ``reconnect``).
+
+        THE single place every model call reaches a provider, so it is where a dropped
+        connection is worth surviving. A rail died mid-gauntlet on one APIConnectionError
+        after the pool, synthesis and a full profile had already been paid for; the outage
+        lasted seconds and the pipeline has no resume, so recovery meant re-buying all of
+        it. Holding the call here loses nothing, because nothing upstream unwinds.
+
+        Plain turns AND structured calls both come through here. The structured path used to
+        invoke the provider client directly and so had no retry at all, which is how a single
+        gateway 504 killed a rail run in its enrich step.
+        """
+        from .reconnect import call_with_reconnect
+
+        return call_with_reconnect(fn, probe_url=self.base_url, on_wait=self._say)
+
     def _call_inner_generate(
         self,
         messages: list[BaseMessage],
@@ -472,27 +529,38 @@ class BudgetGatedChatModel(BaseChatModel):
     ) -> ChatResult:
         def _call() -> ChatResult:
             if isinstance(self.inner, BaseChatModel):
-                return self.inner._generate(  # noqa: SLF001 — intentional inner delegation
-                    messages, stop=stop, run_manager=run_manager, **kwargs,
-                )
+                try:
+                    return self.inner._generate(  # noqa: SLF001 — intentional inner delegation
+                        messages, stop=stop, run_manager=run_manager, **kwargs,
+                    )
+                except Exception as exc:  # noqa: BLE001 — re-raised unless stream-required
+                    if self.stream_inner is None or not is_stream_required(exc):
+                        raise
+                self._say("provider refused the non-streaming request as too large; retrying it as a stream")
+                return self._generate_streamed(messages, stop, run_manager, **kwargs)
             msg = self.inner.invoke(messages, stop=stop, **kwargs)
             if not isinstance(msg, AIMessage):
                 msg = AIMessage(content=str(msg))
             return ChatResult(generations=[ChatGeneration(message=msg)])
 
-        # THE single place every model call reaches a provider, so it is where a dropped
-        # connection is worth surviving. A rail died mid-gauntlet on one APIConnectionError
-        # after the pool, synthesis and a full profile had already been paid for; the outage
-        # lasted seconds and the pipeline has no resume, so recovery meant re-buying all of
-        # it. Holding the call here loses nothing, because nothing upstream unwinds.
-        from .reconnect import call_with_reconnect
-
-        result = call_with_reconnect(
-            _call,
-            probe_url=self.base_url,
-            on_wait=lambda m: print(f"[model:{self.provider or '?'}] {m}", flush=True),
-        )
+        result = self._hold(_call)
         return _scrub_result(result)
+
+    def _generate_streamed(
+        self,
+        messages: list[BaseMessage],
+        stop: list[str] | None,
+        run_manager: CallbackManagerForLLMRun | None,
+        **kwargs: Any,
+    ) -> ChatResult:
+        """One turn over the streaming twin, folded back into a single ``ChatResult``."""
+        from langchain_core.language_models.chat_models import generate_from_stream
+
+        return generate_from_stream(
+            self.stream_inner._stream(  # noqa: SLF001 — intentional inner delegation
+                messages, stop=stop, run_manager=run_manager, **kwargs,
+            )
+        )
 
     def _generate(
         self,
@@ -583,10 +651,14 @@ class BudgetGatedChatModel(BaseChatModel):
         """
         want_raw = bool(kwargs.get("include_raw", False))
         provider_kwargs = {**kwargs, "include_raw": True}
-        inner_structured = _try_inner_structured(self.inner, schema, provider_kwargs)
-        if inner_structured is not None:
+        plain = _try_inner_structured(self.inner, schema, provider_kwargs)
+        streamed = (
+            _try_inner_structured(self.stream_inner, schema, provider_kwargs)
+            if self.stream_inner is not None else None
+        )
+        if plain is not None or streamed is not None:
             return _gated_provider_runnable(
-                self, inner_structured, schema, include_raw=want_raw,
+                self, plain, streamed, schema, include_raw=want_raw,
             )
         return _gated_parse_runnable(self, schema, include_raw=want_raw)
 
@@ -599,6 +671,8 @@ def gate_chat_model(
     essential: bool | None = None,
     provider: str = "",
     base_url: str = "",
+    stream_inner: Any = None,
+    stream_structured: bool = False,
 ) -> Any:
     """Wrap a chat model so every generation is budget-authorized. Idempotent."""
     max_out = (
@@ -625,5 +699,7 @@ def gate_chat_model(
             essential=bool(essential) if essential is not None else False,
             provider=provider,
             base_url=base_url or str(getattr(model, "openai_api_base", "") or ""),
+            stream_inner=stream_inner,
+            stream_structured=bool(stream_structured),
         )
     return model

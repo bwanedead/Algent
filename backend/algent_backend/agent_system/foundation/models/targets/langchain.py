@@ -47,9 +47,24 @@ class LangChainTarget(ModelTarget):
 
     def resolve(self, spec: ModelSpec) -> ResolvedModel:
         chat_cls = self._chat_class(spec.provider)
-        client = chat_cls(**self._build_kwargs(spec))
+        kwargs = self._build_kwargs(spec)
+        client = chat_cls(**kwargs)
         from algent_backend.agent_system.foundation.models.budget_gate import (
             gate_chat_model,
+        )
+
+        # The streaming twin. ``_build_kwargs`` must hold ``streaming`` off on the client the
+        # ReAct loop drives (see there), which also meant a spec's ``streaming=True`` did
+        # nothing at all: every house spec has a reasoning effort, so every one was forced back
+        # to non-streaming — and the provider 504s a big non-streaming structured request
+        # ("exceeded the non-streaming server time limit"), killing the rail run. The gate gets
+        # a second, streaming copy to send those requests through. ``model_copy`` shares the
+        # HTTP clients; setting ``streaming`` explicitly is what makes LangChain route
+        # ``invoke`` through the stream and aggregate it (a bare ``stream=True`` call kwarg
+        # loses to an instance that has ``streaming`` pinned False).
+        stream_inner = (
+            client.model_copy(update={"streaming": True, "stream_usage": True})
+            if spec.provider in _OPENAI_COMPAT else None
         )
 
         # Every resolved LangChain client is budget-gated so structured one-shots
@@ -63,8 +78,10 @@ class LangChainTarget(ModelTarget):
             # Meta — which is exactly how one outage got misdiagnosed. Also gives the
             # reconnect probe somewhere to knock.
             provider=spec.provider,
-            base_url=str(self._build_kwargs(spec).get("base_url") or ""),
+            base_url=str(kwargs.get("base_url") or ""),
             max_output_tokens=spec.max_tokens,
+            stream_inner=stream_inner,
+            stream_structured=bool(spec.extra.get("streaming")),
         )
         return ResolvedModel(
             provider=spec.provider,
@@ -127,7 +144,8 @@ class LangChainTarget(ModelTarget):
         # ChatOpenAI with streaming=True puts stream=true into Responses ``create``
         # even on the non-stream ``_generate`` path used by ReAct ``invoke``. The
         # SDK then returns a Stream object and construction crashes. Prefer correct
-        # tool+reasoning calls over token streaming for these models.
+        # tool+reasoning calls over token streaming for these models. (Streaming is
+        # not lost: ``resolve`` builds a streaming twin the gate uses for structured calls.)
         #
         # OpenAI Luna also needs previous_response_id + truncation to avoid
         # replaying full reasoning blocks every ReAct turn. Meta's 1M context does
