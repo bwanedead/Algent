@@ -1,6 +1,6 @@
 {
   "schema": "ohmega.pulses/1",
-  "built_at": "2026-10-03T11:38:59.755953+00:00",
+  "built_at": "2026-10-03T20:54:08.469824+00:00",
   "pulses": [
     {
       "id": "pls_ai_geopolitics_ai_safety_governance_fracture",
@@ -152,8 +152,8 @@
       "position": 64.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-02T07:06:21.526172+00:00",
-      "evidence_through": "2026-10-02",
+      "last_assessed": "2026-10-03T12:27:17.793320+00:00",
+      "evidence_through": "2026-10-03",
       "velocity_7d": null,
       "history": [
         {
@@ -176,8 +176,8 @@
       "position": 77.0,
       "band": "critical",
       "confidence": "high",
-      "last_assessed": "2026-10-02T07:06:21.526172+00:00",
-      "evidence_through": "2026-10-02",
+      "last_assessed": "2026-10-03T12:27:17.793320+00:00",
+      "evidence_through": "2026-10-03",
       "velocity_7d": null,
       "history": [
         {
@@ -204,8 +204,8 @@
       "position": 68.0,
       "band": "severe",
       "confidence": "high",
-      "last_assessed": "2026-10-02T07:06:21.526172+00:00",
-      "evidence_through": "2026-10-02",
+      "last_assessed": "2026-10-03T12:27:17.793320+00:00",
+      "evidence_through": "2026-10-03",
       "velocity_7d": null,
       "history": [
         {
@@ -228,7 +228,7 @@
       "position": 78.0,
       "band": "critical",
       "confidence": "high",
-      "last_assessed": "2026-10-02T07:06:21.526172+00:00",
+      "last_assessed": "2026-10-03T20:41:29.107298+00:00",
       "evidence_through": "2026-10-02",
       "velocity_7d": null,
       "history": [
@@ -260,7 +260,7 @@
       "position": 80.0,
       "band": "critical",
       "confidence": "high",
-      "last_assessed": "2026-10-02T07:06:21.526172+00:00",
+      "last_assessed": "2026-10-03T20:41:29.107298+00:00",
       "evidence_through": "2026-10-02",
       "velocity_7d": null,
       "history": [
@@ -296,7 +296,7 @@
       "position": 74.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-02T07:06:21.526172+00:00",
+      "last_assessed": "2026-10-03T20:41:29.107298+00:00",
       "evidence_through": "2026-10-02",
       "velocity_7d": null,
       "history": [
@@ -324,7 +324,7 @@
       "position": 78.0,
       "band": "critical",
       "confidence": "medium",
-      "last_assessed": "2026-10-02T07:06:21.526172+00:00",
+      "last_assessed": "2026-10-03T20:41:29.107298+00:00",
       "evidence_through": "2026-10-02",
       "velocity_7d": null,
       "history": [
@@ -352,7 +352,7 @@
       "position": 60.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-02T07:30:53.225622+00:00",
+      "last_assessed": "2026-10-03T12:54:56.085103+00:00",
       "evidence_through": "unknown - research header dated 'as of ?' with no claims",
       "velocity_7d": null,
       "history": [
@@ -380,7 +380,7 @@
       "position": 85.0,
       "band": "critical",
       "confidence": "high",
-      "last_assessed": "2026-10-02T07:30:53.225622+00:00",
+      "last_assessed": "2026-10-03T12:54:56.085103+00:00",
       "evidence_through": "unknown - research header dated 'as of ?' with no claims",
       "velocity_7d": null,
       "history": [
@@ -404,7 +404,7 @@
       "position": 73.0,
       "band": "severe",
       "confidence": "high",
-      "last_assessed": "2026-10-02T07:30:53.225622+00:00",
+      "last_assessed": "2026-10-03T12:54:56.085103+00:00",
       "evidence_through": "unknown - research header dated 'as of ?' with no claims",
       "velocity_7d": null,
       "history": [
@@ -429,14 +429,19 @@
       "low_end": "Settlement activity is frozen, rule of law restrains settler violence, and the Palestinian Authority maintains stable administrative control with low intercommunal violence.",
       "high_end": "Formal annexation is enacted with rapid settlement expansion, systematic settler violence and mass displacement, and collapse of Palestinian Authority control.",
       "status": "experimental",
-      "position": null,
-      "band": "unassessed",
-      "confidence": "",
-      "last_assessed": "2026-10-02T07:30:53.225622+00:00",
+      "position": 55.0,
+      "band": "severe",
+      "confidence": "medium",
+      "last_assessed": "2026-10-03T12:54:56.085103+00:00",
       "evidence_through": "unknown - research header dated 'as of ?' with no claims",
       "velocity_7d": null,
-      "history": [],
-      "rationale": "",
+      "history": [
+        {
+          "at": "2026-10-03T12:54:56.085103+00:00",
+          "position": 55.0
+        }
+      ],
+      "rationale": "Applied move up from held 50 (reader thought reality 50, unassessed baseline with no graded claims). New confirmed settler attack Oct 2 in Yasuf killing Mashour Yassin 51 plus likely UN figure of >80 Palestinians killed by military/settlers in West Bank since Jan 2026 provides first graded evidence of persistent settler violence. Not yet formal annexation, >5,000-unit approval, or mass…",
       "data_url": "/data/pulses/pls_israel_palestine_west_bank_annexation_and_settler_violence.json"
     },
     {
@@ -451,8 +456,8 @@
       "position": 72.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-01T11:36:13.230643+00:00",
-      "evidence_through": "2026-10-01",
+      "last_assessed": "2026-10-03T20:41:29.107298+00:00",
+      "evidence_through": "2026-10-03",
       "velocity_7d": null,
       "history": [
         {
@@ -483,8 +488,8 @@
       "position": null,
       "band": "unassessed",
       "confidence": "",
-      "last_assessed": "2026-10-01T11:36:13.230643+00:00",
-      "evidence_through": "2026-10-01",
+      "last_assessed": "2026-10-03T20:41:29.107298+00:00",
+      "evidence_through": "2026-10-03",
       "velocity_7d": null,
       "history": [],
       "rationale": "",
@@ -502,8 +507,8 @@
       "position": 65.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-01T11:36:13.230643+00:00",
-      "evidence_through": "2026-10-01",
+      "last_assessed": "2026-10-03T20:41:29.107298+00:00",
+      "evidence_through": "2026-10-03",
       "velocity_7d": null,
       "history": [
         {

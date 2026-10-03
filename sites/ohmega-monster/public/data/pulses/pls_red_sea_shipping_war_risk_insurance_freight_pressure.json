@@ -9,8 +9,8 @@
   "band": "severe",
   "confidence": "medium",
   "velocity_7d": null,
-  "last_assessed": "2026-10-01T11:36:13.230643+00:00",
-  "evidence_through": "2026-10-01",
+  "last_assessed": "2026-10-03T20:41:29.107298+00:00",
+  "evidence_through": "2026-10-03",
   "history": [
     {
       "at": "2026-10-01T03:00:57.470982+00:00",
@@ -71,6 +71,30 @@
       "rationale": "No_change: past 65 already captured Hormuz war-risk 2-6% (up to 10%) and owner reluctance. New confirmed evidence shows prolonged Hormuz disruption (70% traffic decline, prediction markets 18-23% normalization) but provides no new Red Sea/Bab el-Mandeb premium quotes or insurer withdrawal to justify move above 65. Spillover risk implied but not verified.",
       "confidence": "medium",
       "evidence_through": "2026-10-01",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-03T12:27:17.793320+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "no_change",
+      "position": null,
+      "rationale": "No_change: past 65 already captured Hormuz war-risk 2-6% (up to 10%) and owner reluctance. New evidence confirms prolonged Hormuz depression and Houthi blockade/pipeline/Yanbu attacks implying spillover risk but provides no new Red Sea/Bab el-Mandeb premium quotes above 6-10% or insurer withdrawal to move above 65.",
+      "confidence": "high",
+      "evidence_through": "2026-10-03",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-03T20:41:29.107298+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "no_change",
+      "position": null,
+      "rationale": "Past 65 already captured Hormuz war-risk 2-6% (up to 10%) and owner reluctance/paused transits. New evidence confirms same Hormuz pressure and notes likely spillover to Red Sea if Houthi threat enforced, but provides no new Red Sea/Bab el-Mandeb premium quotes above 6-10% or insurer withdrawal to justify move.",
+      "confidence": "medium",
+      "evidence_through": "2026-10-03",
       "model": "muse-spark-1.2-contributor",
       "article_url": null
     }

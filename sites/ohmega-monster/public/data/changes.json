@@ -1,8 +1,27 @@
 {
   "schema": "ohmega.changes/1",
   "window_days": 30,
-  "as_of": "2026-10-02T07:46:27.933292+00:00",
+  "as_of": "2026-10-03T20:54:07.158040+00:00",
   "events": [
+    {
+      "type": "daily_published",
+      "at": "2026-10-03T20:54:07.158040+00:00",
+      "domain": "geopolitics",
+      "date": "2026-10-03",
+      "headline": "No live theaters in this domain today.",
+      "url": "/geopolitics/2026-10-03",
+      "data_url": "/data/daily/geopolitics/2026-10-03.json"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-03T12:54:56.085103+00:00",
+      "pulse_id": "pls_israel_palestine_west_bank_annexation_and_settler_violence",
+      "name": "West Bank Annexation and Settler Violence",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_israel_palestine_west_bank_annexation_and_settler_violence.json",
+      "position": 55.0,
+      "band": "severe"
+    },
     {
       "type": "daily_published",
       "at": "2026-10-02T07:46:27.933292+00:00",

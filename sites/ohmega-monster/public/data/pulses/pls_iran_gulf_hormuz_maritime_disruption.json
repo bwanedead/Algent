@@ -9,7 +9,7 @@
   "band": "critical",
   "confidence": "high",
   "velocity_7d": null,
-  "last_assessed": "2026-10-02T07:06:21.526172+00:00",
+  "last_assessed": "2026-10-03T20:41:29.107298+00:00",
   "evidence_through": "2026-10-02",
   "history": [
     {
@@ -77,6 +77,18 @@
       "decision": "no_change",
       "position": null,
       "rationale": "Closest to 2026-10-01 reading at 78 which already captured severe impairment (80 IMO attacks/22 killed, ~80 mines, war-risk 2-6%, central lanes unsafe). New confirmed claims show continuity not escalation: Q1 flows 14.6 vs 20.4 mb/d (~30% drop), Brent >$100, Saudi East-West pipeline up to 4.9 mb/d but shut 11 days after Sept 11 Iraq-launched drone, no corroborated Houthi maritime attacks since…",
+      "confidence": "high",
+      "evidence_through": "2026-10-02",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-03T20:41:29.107298+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "no_change",
+      "position": null,
+      "rationale": "No new graded claims provided. Closest to 2026-10-02 held at 78 which already captured severe impairment (80 IMO attacks/22 killed, ~80 mines, 14.6 vs 20.4 mb/d ~30% drop, premiums 2-6%, 6-14 transits vs 37 normal, 8m b/d still transiting). Situation summary describes same severe impairment without verifiable closure or recovery.",
       "confidence": "high",
       "evidence_through": "2026-10-02",
       "model": "muse-spark-1.2-contributor",
