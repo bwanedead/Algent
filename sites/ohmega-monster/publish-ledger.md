@@ -821,3 +821,13 @@ cost: ~$0.3978  ·  mode: normal  ·  soft/hard: $1.00/$2.00
 analytics_skipped: req_langtang_velocity_001:skipped, req_langtang_cascade_map_002:failed
 cost_by_stage: editorial=$0.0783, gauntlet=$0.2461, profile=$0.0734
 run: 0104__87ba2fc0-d04f-497c-a9f9-7e4ddc072fb5
+
+### PUBLISH el-ni-o-breaks-daily-pacific-heat-record-as-forecasts-point-3e7f96 — 2026-10-03
+status: blocked  ·  draft: blocked_omission  ·  treatment: promoted
+caveats: verified (0 findings)
+analytics: 0 produced, 2 escapes
+cost: ~$0.2895  ·  mode: normal  ·  soft/hard: $1.00/$1.71
+analytics_skipped: req_el_nino_record_margin:failed, req_wmo_tercile_map:failed
+cost_by_stage: editorial=$0.0683, gauntlet=$0.2212
+disposition: needs_verification
+run: 0105__916efa87-5c54-4b07-a960-e03e66548f07
