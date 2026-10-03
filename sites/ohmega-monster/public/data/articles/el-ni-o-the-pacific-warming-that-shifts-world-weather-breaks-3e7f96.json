@@ -1,0 +1,368 @@
+{
+  "schema": "ohmega.article/1",
+  "url": "https://www.ohmega.monster/articles/el-ni-o-the-pacific-warming-that-shifts-world-weather-breaks-3e7f96",
+  "title": "El Niño, the Pacific warming that shifts world weather, breaks its daily heat record",
+  "summary": "The monthly record still stands, but all 674 forecasts point to a winter peak beyond any since 1877 — at a size no seasonal system has been tested against and after summer runs came in 0.3C too warm.",
+  "published_at": "2026-10-03T23:21:08.861617+00:00",
+  "as_of": "2026-09-23",
+  "status": "publishable",
+  "grades": {
+    "confirmed": 15,
+    "likely": 4
+  },
+  "claims": [
+    {
+      "id": "clm_1d329202e2",
+      "text": "Daily Niño 3.4 sea-surface temperature anomaly reached 3.11C as of 21 September 2026, surpassing the previous daily record of 3.08C set on 18 November 2015, calculated using the ONI convention (centered 30-year climatology, NOAA OISSTv2.1).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/analysis-super-el-nino-reaches-remarkable-all-time-record",
+          "title": "Analysis: ‘Super El Niño’ breaks ‘remarkable’ all-time record",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_dadf1bc8e6",
+      "text": "August 2026 monthly Niño 3.4 anomaly was around 2.45C, higher than the peak of every prior El Niño on record except 2015-16 (2.75C) and 1877-78 (~2.7C from sparse ship-data reconstruction).",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/analysis-super-el-nino-reaches-remarkable-all-time-record",
+          "title": "Analysis: ‘Super El Niño’ breaks ‘remarkable’ all-time record",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bdfd5aa44b",
+      "text": "The 2026 El Niño began in June 2026, reached the strong threshold (>1.5C) by June at 1.6C, exceeded 2C in early July, and has developed faster than any previous event on record.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/analysis-super-el-nino-reaches-remarkable-all-time-record",
+          "title": "Analysis: ‘Super El Niño’ breaks ‘remarkable’ all-time record",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-09-21"
+        },
+        {
+          "url": "https://www.carbonbrief.org/state-of-the-climate-rapidly-developing-el-nino-raises-chance-of-record-warm-2026",
+          "title": "State of the climate: Rapidly developing El Niño raises chance of record-warm 2026",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-07-24"
+        },
+        {
+          "url": "https://wmo.int/news/media-centre/el-nino-set-become-very-strong-raising-risks-of-extreme-weather-2027",
+          "title": "El Niño set to become very strong, raising risks of extreme weather into 2027",
+          "publisher": "World Meteorological Organization",
+          "published_at": "2026-09-03"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_e5d268e6e8",
+      "text": "El Niño strength is classed as weak at 0.5C, moderate above 1C, strong above 1.5C, and very strong/super above 2.0C Niño 3.4 anomaly.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/analysis-super-el-nino-reaches-remarkable-all-time-record",
+          "title": "Analysis: ‘Super El Niño’ breaks ‘remarkable’ all-time record",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-09-21"
+        },
+        {
+          "url": "https://www.carbonbrief.org/state-of-the-climate-rapidly-developing-el-nino-raises-chance-of-record-warm-2026",
+          "title": "State of the climate: Rapidly developing El Niño raises chance of record-warm 2026",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-07-24"
+        },
+        {
+          "url": "https://www.climate.gov/news-features/blogs/enso/december-2023-el-nino-update-adventure",
+          "title": "December 2023 El Niño update: adventure!",
+          "publisher": "NOAA Climate.gov",
+          "published_at": "2023-12-13"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_b4e7add7fe",
+      "text": "NOAA's Oceanic Niño Index (ONI) uses a rolling centered 30-year average to remove long-term warming; the Relative ONI (RONI), adopted by NOAA CPC in February 2026, subtracts the tropical-mean (20N-20S) anomaly to better isolate ENSO variability.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/analysis-super-el-nino-reaches-remarkable-all-time-record",
+          "title": "Analysis: ‘Super El Niño’ breaks ‘remarkable’ all-time record",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-09-21"
+        },
+        {
+          "url": "https://www.drought.gov/news/new-noaa-el-nino-southern-oscillation-index-supports-drought-early-warning-2026-03-11",
+          "title": "New NOAA El Niño-Southern Oscillation Index Supports Drought Early Warning",
+          "publisher": "NOAA / Drought.gov",
+          "published_at": "2026-03-11"
+        },
+        {
+          "url": "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/probabilities",
+          "title": "Official NOAA CPC ENSO Probabilities - September 2026",
+          "publisher": "NOAA Climate Prediction Center",
+          "published_at": "2026-09-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_233d7a1830",
+      "text": "On RONI, daily values stood around 2.5C in mid-September 2026, about 0.7C below the all-time daily RONI record set in late December 1982-83, but were record-setting for that time of year.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/analysis-super-el-nino-reaches-remarkable-all-time-record",
+          "title": "Analysis: ‘Super El Niño’ breaks ‘remarkable’ all-time record",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_eeeff7a6d5",
+      "text": "A 14-model ensemble (674 individual runs) projects a median peak monthly ONI anomaly around 4.1C later in 2026, with 80% of runs between 3.4C and 4.6C, every run above the 2015-16 record, and a margin over that record of ~1.3C larger than the gap between the strongest and fifth-strongest El Niños in 150 years.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/analysis-super-el-nino-reaches-remarkable-all-time-record",
+          "title": "Analysis: ‘Super El Niño’ breaks ‘remarkable’ all-time record",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-09-21"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5c0c201007",
+      "text": "An earlier 667-run analysis projected a median peak of 3.59C (ONI) and 3.1C (RONI) for July-December 2026, with 91% of runs (ONI) and 77% (RONI) exceeding the strongest event in the modern record (2.75C ONI in 2015-16, 2.69C RONI in 1982-83).",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/state-of-the-climate-rapidly-developing-el-nino-raises-chance-of-record-warm-2026",
+          "title": "State of the climate: Rapidly developing El Niño raises chance of record-warm 2026",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-07-24"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_058f2142fa",
+      "text": "WMO reported Niño 3.4 averaged +1.5C in May-July 2026 and +2.0C in July, with weekly values +2.2C to +2.6C in late July to mid-August, and subsurface temperatures more than 8C above average in July-early August.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://wmo.int/news/media-centre/el-nino-set-become-very-strong-raising-risks-of-extreme-weather-2027",
+          "title": "El Niño set to become very strong, raising risks of extreme weather into 2027",
+          "publisher": "World Meteorological Organization",
+          "published_at": "2026-09-03"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_16a22e2d19",
+      "text": "NOAA CPC's 10 September 2026 diagnostic reported August Niño 3.4 anomaly +1.8C, Niño 3 +2.5C, Niño 1+2 +3.4C, and subsurface anomalies exceeding +10C at depth.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://watchers.news/2026/09/11/noaa-raises-chance-of-historic-strength-el-nino-to-75-for-october-december-2026",
+          "title": "NOAA raises chance of historic-strength El Niño to 75% for October–December 2026",
+          "publisher": "The Watchers",
+          "published_at": "2026-09-11"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_aca23d1a45",
+      "text": "WMO forecasts an exceptionally high likelihood of nearly 100% that El Niño will persist through February 2027, strengthening to very strong intensity and peaking toward the end of 2026, with climate impacts continuing into 2027.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://wmo.int/news/media-centre/el-nino-set-become-very-strong-raising-risks-of-extreme-weather-2027",
+          "title": "El Niño set to become very strong, raising risks of extreme weather into 2027",
+          "publisher": "World Meteorological Organization",
+          "published_at": "2026-09-03"
+        },
+        {
+          "url": "https://reliefweb.int/report/world/global-update-september-2026-inter-agency-report-global-enso-analysis-cell-el-nino-status-humanitarian-outlook",
+          "title": "Global Update September 2026: El Niño Status & Humanitarian Outlook",
+          "publisher": "Global ENSO Analysis Cell via ReliefWeb",
+          "published_at": "2026-09-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_5b314f02bd",
+      "text": "NOAA CPC September 2026 probabilities show 100% chance of El Niño from August-October 2026 through December-February 2027, then 97% February-April, 82% March-May, 43% April-June, with La Niña 0% through JFM and 2% by AMJ; very strong (>2C RONI) probabilities are 98% for October-December, 93% for November-January, 75% for December-February.",
+      "grade": "confirmed",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/probabilities",
+          "title": "Official NOAA CPC ENSO Probabilities - September 2026",
+          "publisher": "NOAA Climate Prediction Center",
+          "published_at": "2026-09-10"
+        },
+        {
+          "url": "https://watchers.news/2026/09/11/noaa-raises-chance-of-historic-strength-el-nino-to-75-for-october-december-2026",
+          "title": "NOAA raises chance of historic-strength El Niño to 75% for October–December 2026",
+          "publisher": "The Watchers",
+          "published_at": "2026-09-11"
+        },
+        {
+          "url": "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/lanina/enso_evolution-status-fcsts-web.pdf",
+          "title": "ENSO: Recent Evolution, Current Status and Predictions - 10 September 2026",
+          "publisher": "NOAA CPC",
+          "published_at": "2026-09-10"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_23686f2339",
+      "text": "The first six months of 2026 were the third-warmest January-June on record (~1.4C above pre-industrial), with May and June the second-warmest ever behind 2024, and June 2026 was western Europe's hottest June on record.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/state-of-the-climate-rapidly-developing-el-nino-raises-chance-of-record-warm-2026",
+          "title": "State of the climate: Rapidly developing El Niño raises chance of record-warm 2026",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-07-24"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_f96921a968",
+      "text": "Carbon Brief estimated a 35% chance 2026 beats 2024 as warmest year (up from 19% in April), with a central estimate of ~1.51C above pre-industrial, and projects 2027 around 1.7C, which would comfortably set a new warmest-year record; El Niño's global temperature impact typically lags ocean warming by several months.",
+      "grade": "likely",
+      "salience": "high",
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/analysis-super-el-nino-reaches-remarkable-all-time-record",
+          "title": "Analysis: ‘Super El Niño’ breaks ‘remarkable’ all-time record",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-09-21"
+        },
+        {
+          "url": "https://www.carbonbrief.org/state-of-the-climate-rapidly-developing-el-nino-raises-chance-of-record-warm-2026",
+          "title": "State of the climate: Rapidly developing El Niño raises chance of record-warm 2026",
+          "publisher": "Carbon Brief",
+          "published_at": "2026-07-24"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_bac9428457",
+      "text": "A very strong El Niño increases likelihood of major rainfall and temperature shifts but does not guarantee specific regional outcomes; WMO notes a positive Indian Ocean Dipole is expected to develop (~0.9C September-November) and the tropical Atlantic will remain warmer than normal, which may reinforce or alter typical El Niño teleconnections.",
+      "grade": "confirmed",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://wmo.int/news/media-centre/el-nino-set-become-very-strong-raising-risks-of-extreme-weather-2027",
+          "title": "El Niño set to become very strong, raising risks of extreme weather into 2027",
+          "publisher": "World Meteorological Organization",
+          "published_at": "2026-09-03"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_92b3ed882c",
+      "text": "Inter-agency and research estimates warn of large humanitarian risks: WFP via Global ENSO Analysis Cell estimates up to 50 million people could be affected over the next 6-9 months, and the University of Chicago Climate Impact Lab projected ~451,000 excess deaths by February 2027, with drought risk in the Greater Horn of Africa, Indonesia, Philippines, Australia and Central America and flood risk in coastal South America and southern Brazil.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://reliefweb.int/report/world/global-update-september-2026-inter-agency-report-global-enso-analysis-cell-el-nino-status-humanitarian-outlook",
+          "title": "Global Update September 2026: El Niño Status & Humanitarian Outlook",
+          "publisher": "Global ENSO Analysis Cell via ReliefWeb",
+          "published_at": "2026-09-17"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_66c9974a9a",
+      "text": "Since 1970, five recorded super El Niño events have been followed by a swift decline to neutral or La Niña conditions, a pattern cited as a precedent for a potential rapid collapse after the 2026-27 peak.",
+      "grade": "likely",
+      "salience": "medium",
+      "sources": [
+        {
+          "url": "https://watchers.news/2026/09/11/noaa-raises-chance-of-historic-strength-el-nino-to-75-for-october-december-2026",
+          "title": "NOAA raises chance of historic-strength El Niño to 75% for October–December 2026",
+          "publisher": "The Watchers",
+          "published_at": "2026-09-11"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_a06c334cb1",
+      "text": "El Niño typically occurs every 2-7 years, lasts 9-12 months, begins developing March-June and peaks November-February, with its largest influence on global temperatures felt in the year after development.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://wmo.int/news/media-centre/el-nino-set-become-very-strong-raising-risks-of-extreme-weather-2027",
+          "title": "El Niño set to become very strong, raising risks of extreme weather into 2027",
+          "publisher": "World Meteorological Organization",
+          "published_at": "2026-09-03"
+        }
+      ],
+      "contradicted_by": []
+    },
+    {
+      "id": "clm_7f1f26a467",
+      "text": "The 2023-24 El Niño peaked around 2.0-2.1C on ONI (fifth-highest since 1950) but only ~1.5C on RONI (borderline strong), and the winters of 2024-25 and 2025-26 classified as ENSO-neutral on ONI would be classified as definitive La Niñas on RONI.",
+      "grade": "confirmed",
+      "salience": "low",
+      "sources": [
+        {
+          "url": "https://www.drought.gov/news/new-noaa-el-nino-southern-oscillation-index-supports-drought-early-warning-2026-03-11",
+          "title": "New NOAA El Niño-Southern Oscillation Index Supports Drought Early Warning",
+          "publisher": "NOAA / Drought.gov",
+          "published_at": "2026-03-11"
+        },
+        {
+          "url": "https://yaleclimateconnections.org/2026/05/whats-a-super-el-nino-and-other-el-nino-questions-answered",
+          "title": "What's a 'super El Niño'? And other El Niño questions, answered",
+          "publisher": "Yale Climate Connections",
+          "published_at": "2026-05-15"
+        }
+      ],
+      "contradicted_by": []
+    }
+  ],
+  "corrections": [],
+  "how_to_cite": "Cite the article URL and the claim id. Grades are Ohmega's assessment of each claim as of the date shown, not a guarantee. Source texts belong to their publishers."
+}
