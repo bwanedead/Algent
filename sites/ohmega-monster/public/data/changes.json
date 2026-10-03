@@ -1,8 +1,43 @@
 {
   "schema": "ohmega.changes/1",
   "window_days": 30,
-  "as_of": "2026-10-03T12:54:56.085103+00:00",
+  "as_of": "2026-10-03T23:00:16.715732+00:00",
   "events": [
+    {
+      "type": "daily_published",
+      "at": "2026-10-03T23:00:16.715732+00:00",
+      "domain": "geopolitics",
+      "date": "2026-10-03",
+      "headline": "Hormuz stayed shut with bypass pipeline out as Russia pounded Kyiv's bridges for a third day and Ethiopia claimed Mekelle airport back amid Gaza strikes",
+      "url": "/geopolitics/2026-10-03",
+      "data_url": "/data/daily/geopolitics/2026-10-03.json"
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-03T22:02:09.104168+00:00",
+      "pulse_id": "pls_israel_palestine_west_bank_annexation_and_settler_violence",
+      "name": "West Bank Annexation and Settler Violence",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_israel_palestine_west_bank_annexation_and_settler_violence.json",
+      "from": 55.0,
+      "to": 58.0,
+      "from_band": "severe",
+      "to_band": "severe",
+      "band_changed": false
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-03T21:55:50.660077+00:00",
+      "pulse_id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
+      "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption.json",
+      "from": 72.0,
+      "to": 65.0,
+      "from_band": "severe",
+      "to_band": "severe",
+      "band_changed": false
+    },
     {
       "type": "pulse_created",
       "at": "2026-10-03T12:54:56.085103+00:00",

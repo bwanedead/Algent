@@ -1,6 +1,6 @@
 {
   "schema": "ohmega.pulses/1",
-  "built_at": "2026-10-03T20:55:23.992997+00:00",
+  "built_at": "2026-10-03T23:00:18.320709+00:00",
   "pulses": [
     {
       "id": "pls_ai_geopolitics_ai_safety_governance_fracture",
@@ -228,8 +228,8 @@
       "position": 78.0,
       "band": "critical",
       "confidence": "high",
-      "last_assessed": "2026-10-03T20:41:29.107298+00:00",
-      "evidence_through": "2026-10-02",
+      "last_assessed": "2026-10-03T21:55:50.660077+00:00",
+      "evidence_through": "2026-10-03",
       "velocity_7d": null,
       "history": [
         {
@@ -260,8 +260,8 @@
       "position": 80.0,
       "band": "critical",
       "confidence": "high",
-      "last_assessed": "2026-10-03T20:41:29.107298+00:00",
-      "evidence_through": "2026-10-02",
+      "last_assessed": "2026-10-03T21:55:50.660077+00:00",
+      "evidence_through": "2026-10-03",
       "velocity_7d": null,
       "history": [
         {
@@ -296,8 +296,8 @@
       "position": 74.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-03T20:41:29.107298+00:00",
-      "evidence_through": "2026-10-02",
+      "last_assessed": "2026-10-03T21:55:50.660077+00:00",
+      "evidence_through": "2026-10-03",
       "velocity_7d": null,
       "history": [
         {
@@ -324,8 +324,8 @@
       "position": 78.0,
       "band": "critical",
       "confidence": "medium",
-      "last_assessed": "2026-10-03T20:41:29.107298+00:00",
-      "evidence_through": "2026-10-02",
+      "last_assessed": "2026-10-03T21:55:50.660077+00:00",
+      "evidence_through": "2026-10-03",
       "velocity_7d": null,
       "history": [
         {
@@ -352,7 +352,7 @@
       "position": 60.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-03T12:54:56.085103+00:00",
+      "last_assessed": "2026-10-03T22:02:09.104168+00:00",
       "evidence_through": "unknown - research header dated 'as of ?' with no claims",
       "velocity_7d": null,
       "history": [
@@ -380,7 +380,7 @@
       "position": 85.0,
       "band": "critical",
       "confidence": "high",
-      "last_assessed": "2026-10-03T12:54:56.085103+00:00",
+      "last_assessed": "2026-10-03T22:02:09.104168+00:00",
       "evidence_through": "unknown - research header dated 'as of ?' with no claims",
       "velocity_7d": null,
       "history": [
@@ -404,7 +404,7 @@
       "position": 73.0,
       "band": "severe",
       "confidence": "high",
-      "last_assessed": "2026-10-03T12:54:56.085103+00:00",
+      "last_assessed": "2026-10-03T22:02:09.104168+00:00",
       "evidence_through": "unknown - research header dated 'as of ?' with no claims",
       "velocity_7d": null,
       "history": [
@@ -429,19 +429,23 @@
       "low_end": "Settlement activity is frozen, rule of law restrains settler violence, and the Palestinian Authority maintains stable administrative control with low intercommunal violence.",
       "high_end": "Formal annexation is enacted with rapid settlement expansion, systematic settler violence and mass displacement, and collapse of Palestinian Authority control.",
       "status": "experimental",
-      "position": 55.0,
+      "position": 58.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-03T12:54:56.085103+00:00",
+      "last_assessed": "2026-10-03T22:02:09.104168+00:00",
       "evidence_through": "unknown - research header dated 'as of ?' with no claims",
       "velocity_7d": null,
       "history": [
         {
           "at": "2026-10-03T12:54:56.085103+00:00",
           "position": 55.0
+        },
+        {
+          "at": "2026-10-03T22:02:09.104168+00:00",
+          "position": 58.0
         }
       ],
-      "rationale": "Applied move up from held 50 (reader thought reality 50, unassessed baseline with no graded claims). New confirmed settler attack Oct 2 in Yasuf killing Mashour Yassin 51 plus likely UN figure of >80 Palestinians killed by military/settlers in West Bank since Jan 2026 provides first graded evidence of persistent settler violence. Not yet formal annexation, >5,000-unit approval, or mass…",
+      "rationale": "Applied move up from 55 on 2026-10-03 (which reflected single Yasuf killing Oct 2). New confirmed evidence shows sustained systematic surge beyond single incident: Oct 1 Yasuf killing by Havat Anton outpost (est. July 2026) plus Oct 3 coordinated attacks under army protection across Nablus governorate (Beita/Awarta/Osarin) injuring 16 and burning 55 trees with journalists detained. Likely claim…",
       "data_url": "/data/pulses/pls_israel_palestine_west_bank_annexation_and_settler_violence.json"
     },
     {
@@ -453,10 +457,10 @@
       "low_end": "Bab el-Mandeb and the Red Sea are open with normal commercial traffic volumes, no attacks or credible blockade threats, and routine transit without special routing or naval escort.",
       "high_end": "Bab el-Mandeb and the Red Sea are effectively closed to commercial shipping due to sustained attacks, enforced blockade, or mass avoidance with near-zero transits and prolonged Suez disruption.",
       "status": "experimental",
-      "position": 72.0,
+      "position": 65.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-03T20:41:29.107298+00:00",
+      "last_assessed": "2026-10-03T21:55:50.660077+00:00",
       "evidence_through": "2026-10-03",
       "velocity_7d": null,
       "history": [
@@ -471,9 +475,13 @@
         {
           "at": "2026-10-01T11:36:13.230643+00:00",
           "position": 72.0
+        },
+        {
+          "at": "2026-10-03T21:55:50.660077+00:00",
+          "position": 65.0
         }
       ],
-      "rationale": "Closest to past reading 68 (2026-10-01) which reflected declared embargo, physical control of islands/Mokha and kinetic strikes. New confirmed evidence moves from threat to realized disruption: 10 commercial vessels attacked since July (majority tankers, 6+ struck, sinking 4 Aug, 4 killed 11 Aug) and confirmed 150km advance capturing Mocha to Bab al-Mandab plus 25 days of missile/drone attacks on…",
+      "rationale": "Closest to past reading 68 (2026-10-01) which reflected declared embargo, physical control of Bab el-Mandeb islands/Mokha and kinetic strikes on Riyadh. New confirmed evidence confirms sustained control of entire Red Sea coast and Mayun Island 11 Sep and Saudi-only ban with explicit assurance navigation safe for non-Saudi firms, plus pipeline strike and French/Italian protection deployments.…",
       "data_url": "/data/pulses/pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption.json"
     },
     {
@@ -488,7 +496,7 @@
       "position": null,
       "band": "unassessed",
       "confidence": "",
-      "last_assessed": "2026-10-03T20:41:29.107298+00:00",
+      "last_assessed": "2026-10-03T21:55:50.660077+00:00",
       "evidence_through": "2026-10-03",
       "velocity_7d": null,
       "history": [],
@@ -507,7 +515,7 @@
       "position": 65.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-03T20:41:29.107298+00:00",
+      "last_assessed": "2026-10-03T21:55:50.660077+00:00",
       "evidence_through": "2026-10-03",
       "velocity_7d": null,
       "history": [
@@ -603,8 +611,8 @@
       "position": null,
       "band": "unassessed",
       "confidence": "",
-      "last_assessed": "2026-10-01T03:00:57.470982+00:00",
-      "evidence_through": "2026-09-21",
+      "last_assessed": "2026-10-03T22:33:19.511055+00:00",
+      "evidence_through": "2026-10-03",
       "velocity_7d": null,
       "history": [],
       "rationale": "",
@@ -622,8 +630,8 @@
       "position": 58.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-01T03:00:57.470982+00:00",
-      "evidence_through": "2026-09-21",
+      "last_assessed": "2026-10-03T22:33:19.511055+00:00",
+      "evidence_through": "2026-10-03",
       "velocity_7d": null,
       "history": [
         {
@@ -646,8 +654,8 @@
       "position": null,
       "band": "unassessed",
       "confidence": "",
-      "last_assessed": "2026-10-01T03:00:57.470982+00:00",
-      "evidence_through": "2026-09-21",
+      "last_assessed": "2026-10-03T22:33:19.511055+00:00",
+      "evidence_through": "2026-10-03",
       "velocity_7d": null,
       "history": [],
       "rationale": "",
@@ -665,8 +673,8 @@
       "position": 84.0,
       "band": "critical",
       "confidence": "high",
-      "last_assessed": "2026-10-02T07:16:04.035132+00:00",
-      "evidence_through": "2026-10-02",
+      "last_assessed": "2026-10-03T22:18:16.537119+00:00",
+      "evidence_through": "2026-10-03",
       "velocity_7d": null,
       "history": [
         {
@@ -693,8 +701,8 @@
       "position": 84.0,
       "band": "critical",
       "confidence": "high",
-      "last_assessed": "2026-10-02T07:16:04.035132+00:00",
-      "evidence_through": "2026-10-02",
+      "last_assessed": "2026-10-03T22:18:16.537119+00:00",
+      "evidence_through": "2026-10-03",
       "velocity_7d": null,
       "history": [
         {
@@ -717,8 +725,8 @@
       "position": 82.0,
       "band": "critical",
       "confidence": "medium",
-      "last_assessed": "2026-10-02T07:16:04.035132+00:00",
-      "evidence_through": "2026-10-02",
+      "last_assessed": "2026-10-03T22:18:16.537119+00:00",
+      "evidence_through": "2026-10-03",
       "velocity_7d": null,
       "history": [
         {

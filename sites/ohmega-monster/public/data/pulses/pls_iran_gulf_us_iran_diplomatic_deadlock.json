@@ -9,8 +9,8 @@
   "band": "severe",
   "confidence": "medium",
   "velocity_7d": null,
-  "last_assessed": "2026-10-03T20:41:29.107298+00:00",
-  "evidence_through": "2026-10-02",
+  "last_assessed": "2026-10-03T21:55:50.660077+00:00",
+  "evidence_through": "2026-10-03",
   "history": [
     {
       "at": "2026-10-01T03:00:57.470982+00:00",
@@ -87,6 +87,18 @@
       "rationale": "No new graded claims provided. Closest to 2026-10-01 at 74 (held 2026-10-02) which already captured 14-point MoU 17 June expired 17 Aug over Hormuz routing and 22-26 Sep shuttle talks/roadmap (reopen in 4-7 days for sanctions/asset relief) rejected by Trump 26 Sep. Situation summary still describes only indirect Qatar/Oman shuttle talks deadlocked over Hormuz control/sanctions.",
       "confidence": "high",
       "evidence_through": "2026-10-02",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-03T21:55:50.660077+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "no_change",
+      "position": null,
+      "rationale": "No change from 2026-10-03 held at 74 (reader thought 74). New confirmed seven-day plan 25 Sep via Qatar (release funds/lift sanctions/end blockade/ceasefire, open day 6) and Trump rejection 26 Sep 'not acceptable' plus Iran awaiting definitive response replicate 25-26 Sep roadmap deadlock already captured; no direct talks or framework.",
+      "confidence": "high",
+      "evidence_through": "2026-10-03",
       "model": "muse-spark-1.2-contributor",
       "article_url": null
     }

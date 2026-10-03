@@ -9,7 +9,7 @@
   "band": "severe",
   "confidence": "high",
   "velocity_7d": null,
-  "last_assessed": "2026-10-03T12:54:56.085103+00:00",
+  "last_assessed": "2026-10-03T22:02:09.104168+00:00",
   "evidence_through": "unknown - research header dated 'as of ?' with no claims",
   "history": [
     {
@@ -85,6 +85,18 @@
       "decision": "no_change",
       "position": null,
       "rationale": "No change from held 73 (up from 68). New research repeats same Dutch ban enforcement Sept 22 and Israeli retaliation revoking Dutch Ramallah accreditation Sept 27 (/) already reflected in 73 rationale (Schiphol checks, 6-year penalties). UK ban retaliation - order to close East Jerusalem Consulate and remove from CMCC Kiryat Gat - is additional tit-for-tat but reflects same UK settlement-goods…",
+      "confidence": "high",
+      "evidence_through": "2026-10-03",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-03T22:02:09.104168+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "no_change",
+      "position": null,
+      "rationale": "No change from held 73 (up from 68, reader thought reality 73). New research repeats same Dutch settlement-goods ban enforced Sept 22 and Israeli retaliation revoking Dutch Ramallah accreditation Sept 27 (/) already reflected in 73 rationale (Schiphol checks, 6-year penalties). UK Consulate closure order Sept 8-9 is same retaliation pattern for UK ban, not new coordinated sanctions. Netanyahu…",
       "confidence": "high",
       "evidence_through": "2026-10-03",
       "model": "muse-spark-1.2-contributor",

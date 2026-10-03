@@ -1,7 +1,36 @@
 {
   "schema": "ohmega.intel.index/1",
-  "built_at": "2026-10-03T20:55:23.992997+00:00",
+  "built_at": "2026-10-03T23:00:18.320709+00:00",
   "daily": [
+    {
+      "domain": "geopolitics",
+      "date": "2026-10-03",
+      "headline": "Hormuz stayed shut with bypass pipeline out as Russia pounded Kyiv's bridges for a third day and Ethiopia claimed Mekelle airport back amid Gaza strikes",
+      "theaters": [
+        {
+          "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+          "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea"
+        },
+        {
+          "id": "thr_gaza_war_and_unga_diplomatic_fallout",
+          "name": "Gaza war and UNGA diplomatic fallout"
+        },
+        {
+          "id": "thr_russia_ukraine_war_and_european_security_archite",
+          "name": "Russia-Ukraine war and European security architecture"
+        },
+        {
+          "id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
+          "name": "Ethiopia-Eritrea rupture and Tigray offensive"
+        },
+        {
+          "id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
+          "name": "US withdrawal from Iraq after 23-year presence"
+        }
+      ],
+      "url": "/geopolitics/2026-10-03",
+      "data_url": "/data/daily/geopolitics/2026-10-03.json"
+    },
     {
       "domain": "geopolitics",
       "date": "2026-10-02",
@@ -168,7 +197,7 @@
       "id": "thr_russia_ukraine_war_and_european_security_archite",
       "name": "Russia-Ukraine war and European security architecture",
       "domain": "geopolitics",
-      "heat": 3.28,
+      "heat": 2.93,
       "trend": "cooling",
       "coverage": "falling coverage",
       "brief_url": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746",
@@ -197,10 +226,10 @@
     {
       "id": "thr_ai_driven_ram_and_memory_supply_crunch",
       "name": "AI-driven RAM and memory supply crunch",
-      "domain": "economics",
-      "heat": 1.74,
-      "trend": "new",
-      "coverage": "newly reported",
+      "domain": "technology",
+      "heat": 1.4,
+      "trend": "steady",
+      "coverage": "steady coverage",
       "brief_url": null,
       "brief_data_url": null
     },

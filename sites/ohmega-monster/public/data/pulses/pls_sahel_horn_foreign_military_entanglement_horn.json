@@ -9,8 +9,8 @@
   "band": "severe",
   "confidence": "medium",
   "velocity_7d": null,
-  "last_assessed": "2026-10-01T03:00:57.470982+00:00",
-  "evidence_through": "2026-09-21",
+  "last_assessed": "2026-10-03T22:33:19.511055+00:00",
+  "evidence_through": "2026-10-03",
   "history": [
     {
       "at": "2026-10-01T03:00:57.470982+00:00",
@@ -36,6 +36,18 @@
       "confidence": "medium",
       "evidence_through": "2026-09-21",
       "model": "",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-03T22:33:19.511055+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "no_change",
+      "position": null,
+      "rationale": "Closest to 2026-10-01 reading at 58. New batch provides no evidence on PLA communications compounds, SIGINT collection, or harassment (lasers/airspace) at Djibouti. Ethiopia-Eritrea rupture and TPLF claim war is 'to control the Red Sea' and Afar fighting threatening Djibouti corridor raise strategic stakes for Bab el-Mandeb chokepoint but do not demonstrate increased foreign-base entanglement or…",
+      "confidence": "high",
+      "evidence_through": "2026-10-03",
+      "model": "muse-spark-1.2-contributor",
       "article_url": null
     }
   ]
