@@ -1,38 +1,27 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import DailyArchive from "@/components/DailyArchive";
-import DailyReport from "@/components/DailyReport";
-import { allDailyDates, latestDaily } from "@/lib/daily";
+import { latestDaily } from "@/lib/daily";
 
+import GeopoliticsDay, { BASE, DOMAIN } from "./GeopoliticsDay";
 import "./geopolitics.css";
-
-const DOMAIN = "geopolitics";
 
 export const metadata: Metadata = {
   title: "Geopolitics — daily report",
   description: "A daily rundown of the world's hot spots: what happened, who said what, and what to watch next.",
+  alternates: { canonical: BASE },
 };
 
 export default function GeopoliticsPage() {
   const report = latestDaily(DOMAIN);
-  const past = allDailyDates(DOMAIN).filter((d) => d !== report?.date);
+  if (report) return <GeopoliticsDay report={report} />;
 
   return (
     <div className="intel-page">
-      {report ? (
-        <DailyReport report={report} title="Geopolitics" />
-      ) : (
-        <>
-          <div className="intel-strip" role="group" aria-label="Report status">
-            <span className="intel-strip-title">Geopolitics · Daily</span>
-          </div>
-          <p className="intel-empty">No daily report has been published yet. Check back soon.</p>
-        </>
-      )}
-
-      <DailyArchive dates={past} domain={DOMAIN} href="/geopolitics" />
-
+      <div className="intel-strip" role="group" aria-label="Report status">
+        <span className="intel-strip-title">Geopolitics · Daily</span>
+      </div>
+      <p className="intel-empty">No daily report has been published yet. Check back soon.</p>
       <p className="geo-xlink">
         <Link href="/intel">Intelligence board: Pulses, Theaters and Briefs →</Link>
       </p>

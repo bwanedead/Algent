@@ -332,6 +332,27 @@ export function crossParts(c: { theaters: string[]; link: string }): { mutual: b
   return { mutual: !arrowed || /<->|↔/.test(head), text: arrowed ? c.link.slice(i + 2) : c.link };
 }
 
+/** "2026-10-03" -> "Fri 3 Oct" (UTC): the day-navigator step label. */
+export function dayStep(d: string): string {
+  const dt = new Date(`${d}T00:00:00Z`);
+  return Number.isNaN(dt.getTime()) ? d : dt.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" });
+}
+
+/** "2026-10-03" -> "Fri 3" (UTC): a day inside its month group. */
+export function dayInMonth(d: string): string {
+  const dt = new Date(`${d}T00:00:00Z`);
+  return Number.isNaN(dt.getTime()) ? d : dt.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", timeZone: "UTC" });
+}
+
+/** "2026-10-03" -> "October 2026" (UTC). */
+export function monthLabel(d: string): string {
+  const dt = new Date(`${d}T00:00:00Z`);
+  return Number.isNaN(dt.getTime()) ? d.slice(0, 7) : dt.toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" });
+}
+
+/** Where a day's report lives: the newest (`dates[0]`, newest-first) is the section root, the rest are /<base>/<date>. */
+export const dayHref = (base: string, date: string, dates: string[]): string => (date === dates[0] ? base : `${base}/${date}`);
+
 /** "2026-10-01" -> "1 Oct" (UTC). Anything else passes through. */
 export function shortDay(d: string): string {
   const dt = new Date(`${d}T00:00:00Z`);
