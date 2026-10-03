@@ -278,6 +278,15 @@ def _try_inner_structured(inner: Any, schema: Any, kwargs: dict[str, Any]) -> Ru
         return None
 
 
+def _try_stream_structured(stream_inner: Any, schema: Any, kwargs: dict[str, Any]) -> Runnable | None:
+    """The streaming twin's structured runnable: strict-schema for pydantic, LangChain's otherwise."""
+    from .strict_stream import structured_over_stream
+
+    return structured_over_stream(stream_inner, schema, kwargs) or _try_inner_structured(
+        stream_inner, schema, kwargs,
+    )
+
+
 #: What the model says instead of the object it was asked for. Observed live: a profile
 #: enrichment returned "I've compiled the verified... final enrichment update." and a synthesis
 #: returned "Portfolio drafted — no... depth before delivery." Both are the model NARRATING the
@@ -653,7 +662,7 @@ class BudgetGatedChatModel(BaseChatModel):
         provider_kwargs = {**kwargs, "include_raw": True}
         plain = _try_inner_structured(self.inner, schema, provider_kwargs)
         streamed = (
-            _try_inner_structured(self.stream_inner, schema, provider_kwargs)
+            _try_stream_structured(self.stream_inner, schema, provider_kwargs)
             if self.stream_inner is not None else None
         )
         if plain is not None or streamed is not None:
