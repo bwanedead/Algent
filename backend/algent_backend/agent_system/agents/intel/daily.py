@@ -390,9 +390,16 @@ def _section(theater: Theater, heat: dict, draft: SectionDraft, pulses: list[dic
 
 
 def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, research: bool = False,
-                  model_spec: Any = None, as_of: str, board: dict | None = None, out: Path | None = None) -> dict:
+                  model_spec: Any = None, as_of: str, board: dict | None = None, out: Path | None = None,
+                  fresh_research: bool = False) -> dict:
     """Board -> per-theater sections -> summary -> persisted daily record. Returns a report with the
-    record, a row per theater (research spend, forecasts settled, proposals, errors) and the HTML path."""
+    record, a row per theater (research spend, forecasts settled, proposals, errors) and the HTML path.
+
+    Research already done for a theater today (same deterministic profile id, claims in the corpus) is
+    reused, not repeated: its row says ``research_reused`` and costs nothing. ``fresh_research`` forces new.
+
+    A run that attempted theaters but wrote no section is a FAILED run: nothing is persisted, the result
+    carries ``error`` and no ``path``/``html``, and the caller must not publish."""
     from algent_backend.agent_system.agents.pulse.repository import pulse_store
     from algent_backend.agent_system.agents.pulse.update import update_quietly
     from algent_backend.agent_system.foundation import cost
@@ -407,15 +414,16 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
     sections, rows, any_research = [], [], False
     for tid in desk.pick_theaters(board, top, [domain]):
         theater, heat = theaters[tid], heats.get(tid, {})
-        row: dict[str, Any] = {"theater": tid, "researched": False, "research_usd": 0.0}
+        row: dict[str, Any] = {"theater": tid, "researched": False, "research_usd": 0.0, "research_reused": False}
         profiles: list[dict] = []
         if research:
             prof = None
             try:
                 with cost.article_scoped(1.0):              # the research agent caps itself; this makes spend visible
                     try:
-                        prof = br.commission_research(ctx, None, theater, questions=DAILY_QUESTIONS,
-                                                      id_tag=f"daily_{as_of.replace('-', '')}")
+                        prof, row["research_reused"] = br.obtain_research(
+                            ctx, None, theater, fresh=fresh_research, questions=DAILY_QUESTIONS,
+                            id_tag=f"daily_{as_of.replace('-', '')}")
                     finally:
                         row["research_usd"] = round(cost.article_spent_usd(), 4)
             except Exception as exc:  # noqa: BLE001 - one theater's research must never kill the day's report
@@ -426,7 +434,9 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
                       flush=True)
             if prof:
                 profiles.append(prof)
-                update_quietly(prof, run_id=prof["id"])     # the day's research moves the Pulses it bears on
+                # The day's research moves the Pulses it bears on; once=True so a rerun that reuses
+                # this profile does not move them a second time.
+                update_quietly(prof, run_id=prof["id"], once=True)
         row["researched"] = bool(profiles)
         any_research = any_research or bool(profiles)
         evidence = f"{research_evidence(profiles)[0]}\n\nREPORTED HEADLINES:\n{br.reported(theater)}"
@@ -463,6 +473,11 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
                                                    as_of=as_of)
         row["proposals"] = proposals
         rows.append(row)
+    if rows and not sections:
+        errors = "; ".join(f"{r['theater']}: {r.get('error', 'no section')}" for r in rows)
+        print(f"[daily] no theater section was written; nothing persisted: {errors}", flush=True)
+        return {"report": None, "theaters": rows, "research_usd": round(sum(r["research_usd"] for r in rows), 4),
+                "error": f"no theater section was written ({len(rows)} attempted); daily not persisted: {errors}"}
     summary, summary_error = None, ""
     if sections:
         try:

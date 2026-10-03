@@ -258,7 +258,7 @@ def test_daily_promotes_quietly_then_publishes_exactly_once(publishes, monkeypat
     monkeypatch.setattr(pulse_cli, "promote_ready_quietly", lambda: order.append("promote") or {"promoted": []})
     monkeypatch.setattr(sync, "backup", lambda note="": {"ok": True})
     monkeypatch.setattr(intel_page, "publish_intel", lambda: order.append("publish") or {"published": True})
-    args = type("A", (), {"domain": "geopolitics", "top": 1, "research": False, "days": 7})()
+    args = type("A", (), {"domain": "geopolitics", "top": 1, "research": False, "fresh_research": False, "days": 7})()
     assert cli._daily(args) == 0
     assert order == ["heat:False", "promote", "publish"]               # one publish, after the Pulses moved
 

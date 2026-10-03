@@ -162,8 +162,31 @@ def _checked_influence(u: PulseUpdate, pulses: dict, citable: set[str], problems
                       article_slug=article_slug, claim_ids=good, event_id=event))
 
 
-def update_quietly(profile: dict, *, run_id: str, article_slug: str = "") -> dict:
-    """The rail's entry point. Never raises: a Pulse problem must never cost an article."""
+def _when(text: str) -> datetime | None:
+    try:
+        at = datetime.fromisoformat(text)
+    except ValueError:
+        return None
+    return at if at.tzinfo else at.replace(tzinfo=UTC)
+
+
+def already_applied(store: Any, profile: dict, run_id: str) -> bool:
+    """Has this run already fed THIS version of the profile into the Pulses? An influence's key hangs
+    off the model's own event wording, which differs on every call, so the log's duplicate guard cannot
+    catch a rerun; the (run, profile) pair on an existing influence does. Only influences made at or
+    after the profile was built count, so freshly redone research under the same id still applies."""
+    built = _when(str(profile.get("generated_at") or ""))
+    pid = str(profile.get("id") or "")
+    return any(i.source.run_id == run_id and i.source.profile_id == pid
+               and (built is None or (_when(i.at) or built) >= built)
+               for p in store.pulses() for i in store.log(p.id))
+
+
+def update_quietly(profile: dict, *, run_id: str, article_slug: str = "", once: bool = False) -> dict:
+    """The rail's entry point. Never raises: a Pulse problem must never cost an article.
+
+    ``once``: skip (no model call, no influences) when this run already applied this profile; for
+    callers that reuse saved research on a rerun and must not move the Pulses twice."""
     try:
         from algent_backend.agent_system.foundation.models import ModelResolver, house_spec
         from algent_backend.agent_system.runs.context import AgentRunContext
@@ -171,8 +194,11 @@ def update_quietly(profile: dict, *, run_id: str, article_slug: str = "") -> dic
         from .repository import pulse_store
 
         ctx = AgentRunContext(run_id=run_id, model_resolver=ModelResolver())
+        store = pulse_store()
+        if once and already_applied(store, profile, run_id):
+            return {"touched": [], "skipped": "already applied by this run"}
         return update_from_profile(
-            ctx, None, pulse_store(), profile, run_id=run_id, article_slug=article_slug,
+            ctx, None, store, profile, run_id=run_id, article_slug=article_slug,
             model_spec=house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=16384),
             attach_spec=house_spec(reasoning_effort="low", temperature=0.1))
     except Exception as exc:  # noqa: BLE001

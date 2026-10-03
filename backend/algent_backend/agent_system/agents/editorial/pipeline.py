@@ -43,7 +43,7 @@ from .real_images import find_photo
 from algent_backend.agent_system.foundation.pause import RunPaused, checkpoint
 from .headline_spec import build_graph as build_headline_writer
 from .hero_stage import hero_enabled, is_quota_skip, make_hero
-from .length import ceiling_words, count_words, wpm
+from .length import MIN_PUBLISH_WORDS, ceiling_words, count_words, wpm
 from .pipeline_contracts import EditorialPipelineReport
 from .publish import render_published_article
 
@@ -113,7 +113,7 @@ _ANALYTICS_CAP_DEFAULT = 7
 #: cheap mechanical hollow-stub guard in ``_apply_reader_draft`` still protects that last rewrite.
 _MAX_REVIEW_LAPS = 2
 
-_MIN_PUBLISH_WORDS = 120
+_MIN_PUBLISH_WORDS = MIN_PUBLISH_WORDS
 
 
 def _analytics_worker_enabled() -> bool:

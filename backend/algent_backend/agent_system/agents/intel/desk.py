@@ -69,22 +69,26 @@ def settle_overdue(ctx: Any, board: dict, *, as_of: str, model_spec: Any) -> lis
 
 
 def produce(ctx: Any, theater: Theater, heat: dict, *, as_of: str, out: Path | None = None,
-            research: bool = False, focus: str = "", model_spec: Any = None) -> dict:
-    """Research (optional) → brief → persist. Returns a report row; ``error`` set when no brief came."""
+            research: bool = False, focus: str = "", model_spec: Any = None, fresh_research: bool = False) -> dict:
+    """Research (optional) → brief → persist. Returns a report row; ``error`` set when no brief came.
+
+    Research already done for this theater today is reused (``research_reused``), not repeated, unless
+    ``fresh_research``. A brief with no bottom line is not a brief: it is reported as an error, never persisted."""
     from algent_backend.agent_system.agents.pulse.update import update_quietly
     from algent_backend.agent_system.agents.pulse.repository import pulse_store
     from algent_backend.agent_system.foundation import cost
 
     from ..pulse.seed import evidence_block
 
-    profiles, spent, research_error = [], 0.0, ""
+    profiles, spent, research_error, reused = [], 0.0, "", False
     if research:
         # The research agent caps itself at $1; this scope makes the spend visible per theater.
         prof = None
         try:
             with cost.article_scoped(1.0):
                 try:
-                    prof = br.commission_research(ctx, None, theater, focus=focus)
+                    prof, reused = br.obtain_research(ctx, None, theater, fresh=fresh_research, focus=focus,
+                                                      on_date=as_of)
                 finally:
                     spent = cost.article_spent_usd()
         except Exception as exc:  # noqa: BLE001 - fall back to a headlines-only brief rather than lose the theater
@@ -93,7 +97,7 @@ def produce(ctx: Any, theater: Theater, heat: dict, *, as_of: str, out: Path | N
                   flush=True)
         if prof:
             profiles.append(prof)
-            update_quietly(prof, run_id=prof["id"])   # the brief's research moves the Pulses
+            update_quietly(prof, run_id=prof["id"], once=True)   # moves the Pulses once per research version
     # What we said last time, and how the desk's calls on this theater came out, go to the analyst;
     # forecasts this evidence settles are resolved first so the analyst sees the outcomes.
     try:
@@ -109,11 +113,13 @@ def produce(ctx: Any, theater: Theater, heat: dict, *, as_of: str, out: Path | N
                            track_record=forecasts.track_record(theater.id))
     if brief is None:
         return {"theater": theater.id, "error": "analyst returned nothing"}
+    if not brief.bottom_line.strip():
+        return {"theater": theater.id, "error": "analyst returned an empty brief; not persisted"}
     record = persist_brief(brief, as_of=as_of, theater=theater, heat=heat, researched=bool(profiles),
                            focus=focus)
     forecasts.record(record["slug"], theater.id, brief.judgments, made_at=record["built_at"])
     row = {"theater": theater.id, "slug": record["slug"], "researched": bool(profiles),
-           "research_usd": round(spent, 4), "forecasts_made": len(brief.judgments),
+           "research_usd": round(spent, 4), "research_reused": reused, "forecasts_made": len(brief.judgments),
            "forecasts_settled": len(settled)}
     if research_error:
         row["research_error"] = research_error

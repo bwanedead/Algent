@@ -17,6 +17,10 @@ from algent_backend.agent_system.agents.newsroom.flags import (
     ARTICLE_WPM,
 )
 
+#: Below this a piece is a stub, not an article: the pipeline marks it ``needs_revision`` and the
+#: publish layer refuses to put it on the site whatever the status gate says.
+MIN_PUBLISH_WORDS = 120
+
 # Same band the briefing has always shown (~220 wpm ± slack). The high end is then
 # capped: treatments at or under the default cannot authorize past the digest;
 # treatments that claimed more still cannot authorize past the earned ceiling.

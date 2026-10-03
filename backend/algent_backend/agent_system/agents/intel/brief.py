@@ -110,6 +110,48 @@ def focus_tag(focus: str) -> str:
     return hashlib.sha1(" ".join(focus.lower().split()).encode("utf-8")).hexdigest()[:6] if focus.strip() else ""
 
 
+def research_vector_id(theater: Theater, *, focus: str = "", id_tag: str = "") -> str:
+    """The deterministic id of the research vector for this theater (and focus / day tag)."""
+    return (f"intel_{theater.id.removeprefix('thr_')}"[:60] + (f"_{focus_tag(focus)}" if focus.strip() else "")
+            + (f"_{id_tag}" if id_tag else ""))
+
+
+def reusable_research(theater: Theater, *, focus: str = "", id_tag: str = "", on_date: str = "",
+                      store: Any = None) -> dict | None:
+    """Research we already did for exactly this commission, so it is never paid for twice.
+
+    The profile id is deterministic (theater + focus + day tag), so a rerun finds the earlier profile in
+    the corpus. It is reused only when COMPLETE (a non-empty claim ledger: a profile cut short by a failed
+    run is re-researched) and, when ``on_date`` is given, only if it was built that day (a brief's id has
+    no date, so an older profile of the same theater must not stand in for today's research).
+    """
+    from ..research.assembly import profile_id_for
+    from ..research.store import JsonProfileStore
+
+    try:
+        found = (store or JsonProfileStore()).get(
+            profile_id_for({"id": research_vector_id(theater, focus=focus, id_tag=id_tag)}))
+    except Exception:  # noqa: BLE001 - an unreadable profile is simply not reusable
+        return None
+    if found is None or not found.claim_ledger:
+        return None
+    if on_date and not (found.generated_at or "").startswith(on_date):
+        return None
+    return found.model_dump(mode="json")
+
+
+def obtain_research(context: Any, config: Any, theater: Theater, *, fresh: bool = False, focus: str = "",
+                    questions: tuple[str, ...] | None = None, id_tag: str = "",
+                    on_date: str = "") -> tuple[dict | None, bool]:
+    """Reuse the research we already have for this commission, else commission it. Returns
+    ``(profile, reused)``. ``fresh`` forces new research (the operator asked for it)."""
+    if not fresh:
+        found = reusable_research(theater, focus=focus, id_tag=id_tag, on_date=on_date)
+        if found:
+            return found, True
+    return commission_research(context, config, theater, focus=focus, questions=questions, id_tag=id_tag), False
+
+
 def commission_research(context: Any, config: Any, theater: Theater, *, focus: str = "",
                         questions: tuple[str, ...] | None = None, id_tag: str = "") -> dict | None:
     """Research the theater with the generic questions (or ``questions``, e.g. the daily report's
@@ -120,8 +162,7 @@ def commission_research(context: Any, config: Any, theater: Theater, *, focus: s
 
     sources = list(dict.fromkeys(u for m in theater.members for u in m.sources))[:12]
     vector = {
-        "id": f"intel_{theater.id.removeprefix('thr_')}"[:60] + (f"_{focus_tag(focus)}" if focus.strip() else "")
-              + (f"_{id_tag}" if id_tag else ""),
+        "id": research_vector_id(theater, focus=focus, id_tag=id_tag),
         "title": theater.name + (f" — {focus.strip()}" if focus.strip() else ""),
         "thesis": (f"Desk focus: {focus.strip()}\n" if focus.strip() else "") + (theater.why or theater.description),
         "vector_type": "synthesis",

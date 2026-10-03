@@ -272,5 +272,8 @@ def _profile_id(vector: dict[str, Any]) -> str:
     return _hash(re.sub(r"\s+", " ", title), "prof_") if title else "prof_unknown"
 
 
+profile_id_for = _profile_id    # public: callers that must predict the id a vector will get
+
+
 def _now() -> str:
     return datetime.now(UTC).isoformat()

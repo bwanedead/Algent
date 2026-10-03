@@ -42,7 +42,7 @@ def _run(tmp: Path, article: str, entities: list) -> Path:
     # A hero is a publish floor now ("every article must ship with a hero"), so a fixture
     # without one holds for that reason and never reaches the lane under test.
     (art / "editorial_pipeline_report.json").write_text(json.dumps(
-        {"profile_id": "prof_x", "status": "publishable", "caveat_verdict": "verified",
+        {"profile_id": "prof_x", "status": "publishable", "caveat_verdict": "verified", "word_count": 400,
          "hero": {"artifact_name": "hero.jpg"}}), encoding="utf-8")
     (art / "newsroom_rail_report.json").write_text(json.dumps({"total_usd": 0.1}), encoding="utf-8")
     (art / "profile.json").write_text(json.dumps({"id": "prof_x", "entities": entities}), encoding="utf-8")
@@ -53,7 +53,8 @@ def _run(tmp: Path, article: str, entities: list) -> Path:
 
 
 def test_named_individual_lane_holds_a_publishable_piece(tmp_path: Path) -> None:
-    article = "# X\n*dek*\n\nProsecutors allege John Doe embezzled funds.\n\n## How we know this\n_r_\n"
+    article = ("# X\n*dek*\n\nProsecutors allege John Doe embezzled funds.\n\n## How we know this\n_r_\n\n"
+               "**Sources**\n- (news) Wire — https://wire.example/a  ·  _read in full_\n")
     run = _run(tmp_path, article, [{"name": "John Doe", "type": "person"}])
     # off by default: publishes despite the accusation (the caveat floor already vetted it)
     off = pb.publish_run(run, site_dir=tmp_path / "s1", held_dir=tmp_path / "h1", today="2026-07-15")

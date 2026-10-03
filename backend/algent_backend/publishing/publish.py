@@ -9,6 +9,10 @@ for a human before it ships — the design bet is that the grounding floor, figu
 reviewer, and receipts make the machine trustworthy enough to run itself, and that CORRECTIONS
 (visible, dated, first-class) are the post-publish safety valve.
 
+Independent of that gate there is a HARD FLOOR (``hard_floor``): a ``blocked`` article, an empty or
+stub body, or one with no cited sources is never written to the site; it goes to the held queue with
+the reasons in the ledger and the run reports it as held.
+
 This module owns the file/ledger/gating logic (pure enough to test against a tmp site dir). The git
 commit+push to the ``site-live`` branch lives in ``site_git.py`` and runs by default
 (``ALGENT_SITE_PUBLISH`` ON unless explicitly set to 0/false/off).
@@ -78,6 +82,47 @@ class PublishResult:
     reasons: list[str] = field(default_factory=list)
     digest: str = ""
     content_path: str = ""
+
+
+_RECEIPTS_HEAD = "\n---\n## How we know this"
+
+
+def _cited_source_count(article_md: str) -> int:
+    """Source lines under the receipts' ``**Sources**`` heading (one ``- (type) label — url`` each)."""
+    lines = article_md.splitlines()
+    try:
+        start = next(i for i, ln in enumerate(lines) if ln.strip() == "**Sources**") + 1
+    except StopIteration:
+        return 0
+    n = 0
+    for ln in lines[start:]:
+        if ln.startswith("**"):
+            break
+        n += ln.lstrip().startswith("- ")
+    return n
+
+
+def hard_floor(article_md: str, pipeline: dict) -> list[str]:
+    """Why this piece may NEVER reach the site, whatever the (off-by-default) status gate says.
+
+    These are not quality judgments but "this is not an article": a ``blocked`` status (the draft
+    dropped required evidence), a missing or stub body, or nothing cited. An empty shell once went
+    live because the status gate is off; the floor is independent of it. Empty list = may proceed.
+    """
+    from algent_backend.agent_system.agents.editorial.length import MIN_PUBLISH_WORDS, count_words
+
+    reasons: list[str] = []
+    if str(pipeline.get("status") or "") == _BLOCKED:
+        reasons.append("status is blocked: the draft dropped required evidence")
+    words = pipeline.get("word_count")
+    if words is None:
+        _t, _d, rest = parse_published_article(article_md)
+        words = count_words(rest.split(_RECEIPTS_HEAD, 1)[0])
+    if int(words) < MIN_PUBLISH_WORDS:
+        reasons.append(f"body is empty or below the publish floor ({int(words)} words, need {MIN_PUBLISH_WORDS})")
+    if _cited_source_count(article_md) == 0:
+        reasons.append("no cited sources: nothing in the piece can be checked")
+    return reasons
 
 
 def _hero_required_and_missing(run_dir: Path, pipeline: dict) -> str | None:
@@ -201,6 +246,12 @@ def publish_run(
     profile_id = str(pipeline.get("profile_id") or rail.get("profile_id") or "")
     slug = build_slug(title, profile_id)
     run_id = run_dir.name
+
+    # Hard floor, ahead of everything (and independent of the status gate below): a blocked, empty or
+    # sourceless piece is held with the reasons in the ledger, never written to the site.
+    if floor := hard_floor(article_md, pipeline):
+        return _hold(held_dir, slug, status or "unknown", [f"hard floor: {r}" for r in floor],
+                     run_id, rail, pipeline)
 
     # Hard floor: every article ships with a hero, except Gemini quota skip
     # (``hero.skipped == quota`` / ``hero_quota_skipped``) or ALGENT_HERO_IMAGE=0.
