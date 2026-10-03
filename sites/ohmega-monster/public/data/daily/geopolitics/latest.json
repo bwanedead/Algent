@@ -1,15 +1,1368 @@
 {
   "schema": "ohmega.daily/1",
   "domain": "geopolitics",
-  "date": "2026-10-03",
-  "built_at": "2026-10-03T20:54:07.158040+00:00",
+  "date": "2026-10-02",
+  "built_at": "2026-10-02T07:46:27.933292+00:00",
   "researched": true,
   "summary": {
-    "headline": "No live theaters in this domain today.",
-    "the_day": []
+    "headline": "Hormuz stays shut with no US reply as Washington shifts Patriots to Gulf, Moscow opens winter strikes on Kyiv, and Iraq withdrawal holds quiet",
+    "the_day": [
+      "Hormuz remained closed as of Oct 2 with no official US reply via mediators keeping about 6 mb/d off the market, while the US deployed two additional Patriot batteries to Saudi Arabia and Qatar and the confrontation widened to a Saudi-Houthi strike exchange over Medina and Sanaa and a UK probe into an alleged Iran-linked plot at RAF Fairford.",
+      "Russia opened its winter energy campaign with its largest Kyiv strike since April damaging the Trypillya plant and then hit a school, Kyiv's Southern Bridge in the first bridge strike since the invasion, and a nuclear research institute, paired with a conditional nuclear warning over Kaliningrad.",
+      "The US withdrawal from Iraq completed Sept 30 held quiet Oct 1-2 with no reported clashes, but left an air-defense gap over Kurdistan and a stalled militia disarmament after major Iran-backed groups rejected the plan extended to June 2027.",
+      "NATO and Denmark warned of an intensifying systematic Russian hybrid campaign as NATO scrambled aircraft in Poland and Romania during the Kyiv strikes.",
+      "Single-source reported accounts on Oct 1-2 described rat-infested camps and non-healing wounds at Gaza's Nasser Hospital and a reported lethal settler attack in Yasuf in the West Bank, with no new EU or UAE-Israel diplomatic fallout — none independently verified."
+    ]
   },
-  "theaters": [],
-  "cross_theater": [],
-  "url": "/geopolitics/2026-10-03",
-  "data_url": "/data/daily/geopolitics/2026-10-03.json"
+  "theaters": [
+    {
+      "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+      "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
+      "temperature": {
+        "heat": 4.77,
+        "trend": "steady",
+        "coverage": "steady coverage",
+        "recent_share": 0.0379,
+        "prior_share": 0.0476
+      },
+      "escalation": {
+        "direction": "rising",
+        "pace": "gradual"
+      },
+      "pulses": [
+        {
+          "id": "pls_iran_gulf_hormuz_maritime_disruption",
+          "name": "Strait of Hormuz Maritime Disruption",
+          "position": 78.0,
+          "band": "critical",
+          "change_24h": 0.0,
+          "change_7d": null
+        },
+        {
+          "id": "pls_iran_gulf_us_iran_diplomatic_deadlock",
+          "name": "US-Iran Diplomatic Deadlock",
+          "position": 74.0,
+          "band": "severe",
+          "change_24h": 0.0,
+          "change_7d": null
+        },
+        {
+          "id": "pls_iran_gulf_us_iran_israel_military_confrontation",
+          "name": "US-Iran-Israel Direct Military Confrontation",
+          "position": 78.0,
+          "band": "critical",
+          "change_24h": 0.0,
+          "change_7d": null
+        },
+        {
+          "id": "pls_iran_gulf_iran_proxy_axis_escalation",
+          "name": "Iran Proxy Axis Escalation",
+          "position": 80.0,
+          "band": "critical",
+          "change_24h": 3.0,
+          "change_7d": null
+        },
+        {
+          "id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
+          "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
+          "position": 72.0,
+          "band": "severe",
+          "change_24h": 0.0,
+          "change_7d": null
+        },
+        {
+          "id": "pls_energy_security_global_hydrocarbon_supply_disruption",
+          "name": "Global Hydrocarbon Supply Disruption",
+          "position": 77.0,
+          "band": "critical",
+          "change_24h": 0.0,
+          "change_7d": null
+        },
+        {
+          "id": "pls_energy_security_energy_price_and_market_shock",
+          "name": "Energy Price and Market Shock",
+          "position": 64.0,
+          "band": "severe",
+          "change_24h": 0.0,
+          "change_7d": null
+        },
+        {
+          "id": "pls_russia_nato_hybrid_grey_zone_pressure",
+          "name": "Hybrid and Grey-Zone Pressure",
+          "position": 72.0,
+          "band": "severe",
+          "change_24h": 0.0,
+          "change_7d": null
+        }
+      ],
+      "bottom_line": "Hormuz remains closed with no official US reply via mediators as of Oct 2, keeping about 6 mb/d off the market, while the confrontation widened on two other fronts: a Saudi-Houthi strike exchange centered on Medina and Sanaa, and a UK investigation into an alleged Iran-linked plot at RAF Fairford that drew a public attribution from the UK prime minister. US deployment of two additional Patriot batteries to Saudi Arabia and Qatar signals preparation to protect Gulf energy sites ahead of possible renewed operations against Iran. Confidence is high on the military and investigative facts, lower on attribution and private US intentions.",
+      "since_yesterday": [
+        {
+          "what": "Saudi-Houthi exchange: Medina power station accusation Oct 1 followed by 27 strikes on Taiz and explosions in Sanaa late Oct 1 — new kinetic step beyond prior Marib/Bab al-Mandab strikes watched yesterday.",
+          "kind": "escalated"
+        },
+        {
+          "what": "US force posture: two additional Patriot batteries deployed to Saudi Arabia and Qatar Oct 1-2 to protect energy sites — not in yesterday's watch list which flagged French/UK deployment to Yanbu.",
+          "kind": "new"
+        },
+        {
+          "what": "RAF Fairford probe: new arrest of dual UK-Iranian national Oct 1 and PM's public attribution to Iran with Iranian denial — moves beyond Sept 28 arrests and bail noted yesterday.",
+          "kind": "escalated"
+        },
+        {
+          "what": "Hormuz diplomacy: still no official US response via Qatar mediators; Trump's Sept 26 public rejection remains the only US position, as yesterday.",
+          "kind": "unchanged"
+        },
+        {
+          "what": "Hormuz shipping: no IMO or commercial data showing resumed transits or mine-clearance; flows remain at Q1 depressed levels.",
+          "kind": "unchanged"
+        }
+      ],
+      "developments": [
+        {
+          "headline": "US deploys two additional Patriot batteries to Saudi Arabia and Qatar to protect energy sites",
+          "detail": "Axios reported Oct 1-2, citing two US officials and a regional source, that the US deployed two additional Patriot batteries — one to Saudi Arabia to protect a key oil facility and one to Qatar to protect a gas facility — to reassure allies ahead of possible renewed major operations against Iran. US officials said Saudi and Qatari leaders had lobbied Trump in early August against striking Iranian energy infrastructure.",
+          "when": "2026-10-01",
+          "where": "Saudi Arabia and Qatar",
+          "actors": [
+            "United States",
+            "Saudi Arabia",
+            "Qatar"
+          ],
+          "statements": [],
+          "significance": "First concrete US force posture move since Trump's public rejection of Iran's Hormuz offer; signals Washington is hedging for escalation while trying to keep Gulf allies on board, whose airspace would be needed for major operations.",
+          "verification": "researched",
+          "sources": [
+            "https://www.aa.com.tr/en/world/us-sends-additional-patriot-batteries-to-protect-saudi-qatari-energy-sites-report/4075620"
+          ],
+          "place": null
+        },
+        {
+          "headline": "Medina power station hit Sept 29; Saudi coalition accuses Houthis Oct 1, Houthis deny",
+          "detail": "Drone struck Taibah electricity distribution station in Medina at 05:11 local time Sept 29, knocking one transformer out of service without wider network disruption; the station supplies the Prophet's Mosque. On Oct 1 coalition spokesman Maj. Gen. Turki Al-Malki accused Houthis of planning and executing the strike based on wreckage analysis. Houthi political bureau member Dhaifallah Al-Shami rejected the accusation as fabricated.",
+          "when": "2026-10-01",
+          "where": "Medina, Saudi Arabia",
+          "actors": [
+            "Houthi movement (Ansarallah)",
+            "Saudi-led coalition"
+          ],
+          "statements": [],
+          "significance": "First claimed Houthi strike on Medina's holy-site infrastructure in this escalation; targeting energy infrastructure near religious site raises political stakes and justification for retaliation.",
+          "verification": "researched",
+          "sources": [
+            "https://shafaq.com/en/Middle-East/Saudi-coalition-accuses-Houthis-of-Medina-strike",
+            "https://www.ndtvprofit.com/world/saudi-coalition-accuses-houthis-of-attacking-medina-power-station-yemeni-militia-calls-charge-lie-12127606"
+          ],
+          "place": {
+            "name": "Medina",
+            "country": "Saudi Arabia",
+            "lat": 24.4672,
+            "lon": 39.6111
+          }
+        },
+        {
+          "headline": "Retaliatory strikes hit Sanaa and Taiz late Oct 1 after Medina accusation",
+          "detail": "Late Oct 1 explosions heard in Houthi-controlled Sanaa; Houthi-run SABA accused Saudi Arabia of aggression targeting Sanaa and Saada, Taiz and Amran provinces. Yemen government forces said they carried out 27 airstrikes on Houthi positions in Taiz targeting missile depots and command centers.",
+          "when": "2026-10-01",
+          "where": "Sanaa, Yemen",
+          "actors": [
+            "Saudi Arabia / Yemen government forces",
+            "Houthi movement (Ansarallah)"
+          ],
+          "statements": [],
+          "significance": "Immediate kinetic response to Medina incident extends Saudi-Houthi exchange beyond border areas to capital and Red Sea-adjacent Taiz, increasing risk to Bab al-Mandab shipping lanes Houthis now control.",
+          "verification": "researched",
+          "sources": [
+            "https://aa.com.tr/en/middle-east/houthis-say-saudi-arabia-launches-strikes-on-sanaa-3-yemeni-provinces/4075617",
+            "https://gulfnews.com/world/mena/strong-explosions-heard-in-yemen-capital-afp-journalist-1.500695494"
+          ],
+          "place": {
+            "name": "Sanaa",
+            "country": "Yemen",
+            "lat": 15.3694,
+            "lon": 44.191
+          }
+        },
+        {
+          "headline": "UK makes new arrest in RAF Fairford plot probe as PM cites strong indications of Iran link; Iran denies",
+          "detail": "Five British nationals arrested Sept 28 near RAF Fairford (160 km west of London, used by US B-1/B-52s for Iran strikes since Feb 28) were released on bail by Sept 29-30; police found no explosives but retrieved petrol and continue to investigate whether it was surveillance, dry run or stunt. On Oct 1 UK counter-terror police arrested a 27-year-old dual UK-Iranian national in London on suspicion of preparing terrorist acts linked to the incident. PM Andy Burnham said Oct 1 there were \"strong indications\" Iran played a part, without providing evidence; Iran's embassy Sept 28 and Foreign Minister Abbas Araghchi Oct 1 categorically denied any link.",
+          "when": "2026-10-01",
+          "where": "RAF Fairford, United Kingdom",
+          "actors": [
+            "United Kingdom",
+            "Iran"
+          ],
+          "statements": [],
+          "significance": "Investigation moves from foiled approach to attribution debate; if Iran link is evidenced, it would mark expansion of US-Iran confrontation to direct plotting on NATO soil against a US bomber base.",
+          "verification": "researched",
+          "sources": [
+            "https://www.aljazeera.com/news/2026/10/1/uk-says-iran-may-be-linked-to-alleged-airbase-plot-drawing-angry-denial",
+            "https://www.npr.org/2026/09/28/g-s1-145245/britain-us-base-suspected-foiled-attack"
+          ],
+          "place": null
+        },
+        {
+          "headline": "Hormuz diplomatic deadlock persists with no official US reply via mediators",
+          "detail": "No definitive official US response conveyed via Qatar/Oman mediators as of Oct 2 after Trump's Sept 26 public rejection of Iran's seven-day Hormuz reopening proposal. Iran's Foreign Minister Abbas Araghchi said Sept 27 on Telegram Iran had seen the public rejection but awaited an official reply and would not back down from conditions (lift naval blockade, waive oil sanctions, release frozen assets, regional ceasefire).",
+          "when": "2026-10-02",
+          "where": "Washington and Tehran via Doha/Muscat",
+          "actors": [
+            "United States",
+            "Iran",
+            "Qatar",
+            "Oman"
+          ],
+          "statements": [],
+          "significance": "Keeps Strait closed and ~6 mb/d disrupted; public rejection may be tactical but without a counter-offer through mediators, de-escalation and mine-clearance cannot proceed.",
+          "verification": "researched",
+          "sources": [
+            "https://www.aljazeera.com/news/2026/9/26/trump-rejects-irans-seven-day-roadmap-to-reopen-strait-of-hormuz",
+            "https://www.wionews.com/world/will-wait-for-official-us-response-says-araghchi-after-trump-rejects-iran-s-strait-of-hormuz-proposal-1790482861014"
+          ],
+          "place": null
+        }
+      ],
+      "context": [
+        {
+          "what": "US-Israel war on Iran (Operation Epic Fury) began Feb 28, 2026, including strikes that killed Supreme Leader Ali Khamenei, triggering Iranian retaliation and Hormuz disruption.",
+          "when": "2026-02-28",
+          "why_relevant": "Origin of current Hormuz closure and legal basis for Iran's warning that bases used to attack Iran are legitimate targets.",
+          "source": "https://www.aljazeera.com/news/2026/8/17/us-iran-memorandum-of-understanding-expires-how-and-why-it-fell-apart"
+        },
+        {
+          "what": "US and Iran signed 14-point Memorandum of Understanding June 17, 2026 in Islamabad for permanent ceasefire, blockade end within 30 days, sanctions relief and Hormuz demining; expired Aug 17 after breakdown over route control.",
+          "when": "2026-06-17",
+          "why_relevant": "Framework whose collapse explains why Iran's current seven-day reopening offer demands blockade end and sanctions relief before demining.",
+          "source": "https://www.aljazeera.com/news/2026/8/17/us-iran-memorandum-of-understanding-expires-how-and-why-it-fell-apart"
+        },
+        {
+          "what": "In early September 2026 Houthis advanced ~150 km along Yemen's Red Sea coast, capturing Mocha and reaching Bab al-Mandab including Dhubab and Perim Island, controlling Yemen's entire Red Sea coast.",
+          "when": "2026-09-01",
+          "why_relevant": "Gives Houthis ability to threaten Bab al-Mandab shipping and to sustain drone/missile campaign against Saudi Arabia seen in late September-October.",
+          "source": "https://acleddata.com/report/houthi-gains-around-bab-al-mandab-raise-risks-red-sea-shipping-and-global-oil-markets"
+        },
+        {
+          "what": "Saudi Arabia raised East-West pipeline shipments to Yanbu from ~1 mb/d to 4.9 mb/d after Hormuz restrictions; pipeline shut 11 days after Sept 11 drone attack launched from Iraq.",
+          "when": "2026-09-11",
+          "why_relevant": "Shows alternative export route exists but is vulnerable, explaining why Patriot deployment to protect oil/gas facilities matters for global supply.",
+          "source": "https://acleddata.com/report/houthi-gains-around-bab-al-mandab-raise-risks-red-sea-shipping-and-global-oil-markets"
+        }
+      ],
+      "outlook": "Hormuz is likely to stay closed in the near term absent a US counter-offer through Qatar/Oman; Iran has almost certainly not dropped its conditions. Saudi-Houthi strikes are likely to continue around Taiz and the Red Sea coast, with a roughly even chance of further Houthi drone/missile launches toward Saudi energy or aviation targets. A renewed major US operation against Iran remains unlikely before the November midterms but more likely after, contingent on Saudi airspace permission and Patriot coverage.",
+      "watch_next": [
+        "Formal US reply or counter-offer conveyed via Qatar/Oman mediators and Iran's response",
+        "UK police/CPS charging decision and any evidence disclosed linking RAF Fairford suspects to Iran",
+        "Further Houthi launches toward Riyadh/Khamis Mushait/Jizan or Saudi strikes on Houthi Red Sea positions around Mocha/Bab al-Mandab",
+        "Confirmation of Patriot battery operational status and any French/UK air-defense moves to Yanbu",
+        "Tanker traffic or EIA/IMO updates on Hormuz transits and any demining activity"
+      ],
+      "key_figures": [
+        {
+          "label": "Strait of Hormuz oil flows Q1 2026",
+          "value": 14.6,
+          "unit": "million barrels per day",
+          "baseline": 20.4,
+          "baseline_label": "Q1 2025 flows",
+          "as_of": "2026-03-31",
+          "source": "https://www.instituteforenergyresearch.org/fossil-fuels/gas-and-oil/new-eia-report-shows-extent-of-hormuz-oil-disruptions"
+        },
+        {
+          "label": "Brent crude average March 2026 within Q2 range $72-$118",
+          "value": 103.0,
+          "unit": "USD per barrel",
+          "baseline": 72.0,
+          "baseline_label": "Q2 2026 low",
+          "as_of": "2026-09-30",
+          "source": "https://www.eia.gov/todayinenergy/detail.php?id=67865"
+        },
+        {
+          "label": "Saudi East-West pipeline shipments to Yanbu after Hormuz restrictions",
+          "value": 4.9,
+          "unit": "million barrels per day",
+          "baseline": 1.0,
+          "baseline_label": "pre-crisis via East-West pipeline",
+          "as_of": "2026-09-11",
+          "source": "https://acleddata.com/report/houthi-gains-around-bab-al-mandab-raise-risks-red-sea-shipping-and-global-oil-markets"
+        }
+      ],
+      "brief_slug": null,
+      "map": {
+        "bbox": [
+          37.365,
+          13.095,
+          46.437,
+          26.742
+        ],
+        "projection": "equirectangular",
+        "width": 1000,
+        "height": 1600,
+        "countries": [
+          {
+            "name": "Sudan",
+            "d": "M0 908.4L12.9 952.9L54.9 981.8L115.2 1025.1L59.4 1092L0 1106.1Z"
+          },
+          {
+            "name": "Eritrea",
+            "d": "M0 1106.1L59.4 1092L115.2 1025.1L179.2 1160.8L209.5 1268.5L270 1325.6L420.4 1436.3L481.7 1503.1L541.4 1570.8L566.4 1600L494.3 1600L466.7 1558.1L417.8 1520.5L389.3 1480L293.3 1433L217.8 1431.6L191.2 1407.1L126.5 1434.6L59.6 1381.4L25.2 1468.9L0 1464.1Z"
+          },
+          {
+            "name": "Yemen",
+            "d": "M1000 1566.3L938.3 1570.4L910.5 1577L892.6 1600L651.9 1600L645.7 1585.2L648.9 1521.1L630.8 1486.5L609.3 1399.8L577.6 1351.6L599.6 1345.9L588.3 1292.4L601.7 1269.7L596.8 1218.6L645.2 1181.2L633.9 1131.8L663.1 1074.2L708.4 1104.6L738.3 1094L865.5 1091.3L885.7 1103.1L992.2 1114.8L1000 1113.7Z"
+          },
+          {
+            "name": "Saudi Arabia",
+            "d": "M0 0L1000 0L1000 1113.7L992.2 1114.8L885.7 1103.1L865.5 1091.3L738.3 1094L708.4 1104.6L663.1 1074.2L633.9 1131.8L645.2 1181.2L596.8 1218.6L582.5 1168.6L549.3 1133.3L540.8 1086.5L483.8 1044.5L425.1 946.2L394 850.6L317.7 769.9L268.6 750.7L195.6 639L182.8 557.5L187.5 488L124.3 358L72.6 312.2L13.1 288L0 263.8Z"
+          },
+          {
+            "name": "Ethiopia",
+            "d": "M0 1600L0 1464.1L25.2 1468.9L59.6 1381.4L126.5 1434.6L191.2 1407.1L217.8 1431.6L293.3 1433L389.3 1480L417.8 1520.5L466.7 1558.1L494.3 1600Z"
+          }
+        ],
+        "points": [
+          {
+            "x": 247.6,
+            "y": 266.7,
+            "label": "Medina",
+            "date": "2026-10-01",
+            "verification": "researched",
+            "n": 2
+          },
+          {
+            "x": 752.4,
+            "y": 1333.3,
+            "label": "Sanaa",
+            "date": "2026-10-01",
+            "verification": "researched",
+            "n": 3
+          }
+        ],
+        "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate."
+      }
+    },
+    {
+      "theater_id": "thr_russia_ukraine_war_and_european_security_archite",
+      "name": "Russia-Ukraine war and European security architecture",
+      "temperature": {
+        "heat": 2.99,
+        "trend": "cooling",
+        "coverage": "falling coverage",
+        "recent_share": 0.0152,
+        "prior_share": 0.0476
+      },
+      "escalation": {
+        "direction": "rising",
+        "pace": "gradual"
+      },
+      "pulses": [
+        {
+          "id": "pls_ukraine_war_combat_strike_intensity",
+          "name": "Combat and Long-Range Strike Intensity",
+          "position": 84.0,
+          "band": "critical",
+          "change_24h": 0.0,
+          "change_7d": null
+        },
+        {
+          "id": "pls_ukraine_war_energy_heating_collapse",
+          "name": "Energy and Heating System Collapse",
+          "position": 84.0,
+          "band": "critical",
+          "change_24h": 0.0,
+          "change_7d": null
+        },
+        {
+          "id": "pls_ukraine_war_war_economy_dependency_strain",
+          "name": "War Economy and External Dependency Strain",
+          "position": 82.0,
+          "band": "critical",
+          "change_24h": 1.0,
+          "change_7d": null
+        },
+        {
+          "id": "pls_russia_nato_hybrid_grey_zone_pressure",
+          "name": "Hybrid and Grey-Zone Pressure",
+          "position": 72.0,
+          "band": "severe",
+          "change_24h": 0.0,
+          "change_7d": null
+        },
+        {
+          "id": "pls_russia_nato_direct_military_confrontation",
+          "name": "Direct Military Confrontation",
+          "position": 58.0,
+          "band": "severe",
+          "change_24h": 0.0,
+          "change_7d": null
+        },
+        {
+          "id": "pls_russia_nato_diplomatic_rupture",
+          "name": "Diplomatic Rupture",
+          "position": 62.0,
+          "band": "severe",
+          "change_24h": 0.0,
+          "change_7d": null
+        }
+      ],
+      "bottom_line": "The last 48 hours confirmed Russia has opened its winter energy campaign with the largest Kyiv strike since April, then widened targeting to a school, Kyiv's Southern Bridge and a nuclear research site without causing mass casualties. At the same time Moscow paired battlefield pressure with explicit nuclear signaling over Kaliningrad and a formal force expansion, while NATO and Denmark warned the hybrid campaign will intensify. Confidence is high on strikes, damage and warnings (multiple confirmed sources); lower on casualty and refinery-impact figures which rest on single-side estimates.",
+      "since_yesterday": [
+        {
+          "what": "Follow-up strikes expanded beyond energy to school, bridge and nuclear research site Oct 1, confirming widened target set we were watching for.",
+          "kind": "escalated"
+        },
+        {
+          "what": "Putin issued conditional nuclear warning over Kaliningrad at Valdai Oct 1 and acknowledged 1% GDP cost from refinery strikes; NATO SecGen Rutte Oct 1 warned of systematic sabotage/arson campaign.",
+          "kind": "new"
+        },
+        {
+          "what": "NATO scrambles recurred Sept 30-Oct 1 in Poland and Romania during Kyiv strikes, matching pattern of September violations, but no new incursion detected.",
+          "kind": "escalated"
+        },
+        {
+          "what": "No confirmation of Patriot technology licensing terms or date/venue for proposed UAE talks; Trypillya repair timeline still withheld for security reasons.",
+          "kind": "unchanged"
+        }
+      ],
+      "developments": [
+        {
+          "headline": "Sept 29-30 massive combined strike opens winter energy campaign, damages Trypillya plant",
+          "detail": "On night of Sept 29-30, 2026 Russia launched a massive combined strike with nearly 190 drones and ballistic missiles primarily at energy infrastructure in Kyiv City and Kyiv Oblast, hitting 11 regions nationwide, killing 5 including a child and wounding 14. Generating equipment at Trypillya (Trypilska) Thermal Power Plant in Kyiv Oblast was damaged; Centrenergo CEO said assessment and repairs would begin when security allows. Ukrainian PM Serhii Koretskyi called it the largest combined strike on energy infrastructure since early April 2026, marking start of Winter 2026-2027 energy degradation campaign.",
+          "when": "2026-09-29",
+          "where": "Kyiv City and Kyiv Oblast, Ukraine",
+          "actors": [
+            "Russian Armed Forces",
+            "Ukrainian energy system",
+            "Centrenergo / Trypillya Thermal Power Plant"
+          ],
+          "statements": [],
+          "significance": "Confirms Russia has resumed systematic winter strikes on power generation; Trypillya damage and scale suggest prolonged heating and grid strain ahead.",
+          "verification": "researched",
+          "sources": [
+            "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-1-2026",
+            "https://www.kyivpost.com/post/85742"
+          ],
+          "place": {
+            "name": "Trypillya Thermal Power Plant, Kyiv Oblast",
+            "country": "Ukraine",
+            "lat": 50.131,
+            "lon": 30.754
+          }
+        },
+        {
+          "headline": "Oct 1 drones hit Kyiv school and Southern Bridge in first bridge strike since invasion; Sept 30 drone hits nuclear research institute grounds",
+          "detail": "On Sept 30 ~18:18 a Russian drone struck grounds of the Institute for Nuclear Research in Kyiv where a research reactor shut since 2022 is located; fire extinguished, no injuries, no reactor damage, radiation normal. On Oct 1 ~09:00 a drone struck School No.12 in Solomianskyi district with 104 children and 60 staff inside; all sheltered underground after alert, no injuries, warhead failed to detonate and was recovered. Also Oct 1 two drones struck near the support structure of Kyiv's Southern Bridge over the Dnipro, temporarily suspending metro and surface transport; first drone strike on a Kyiv bridge since Feb 2022. Metro/bridge traffic reopened Oct 1 after inspection, though an overnight Oct 1-2 strike again damaged road surface/guardrail.",
+          "when": "2026-10-01",
+          "where": "Kyiv, Ukraine",
+          "actors": [
+            "Russian drone forces",
+            "Kyiv School No.12",
+            "Kyiv Southern Bridge (Pivdennyi)",
+            "Institute for Nuclear Research of National Academy of Sciences"
+          ],
+          "statements": [],
+          "significance": "Expands target set from energy to civilian, transport and nuclear-adjacent sites, raising escalation and risk to critical infrastructure even without mass casualties.",
+          "verification": "researched",
+          "sources": [
+            "https://www.aljazeera.com/news/2026/10/1/russian-drone-hits-school-in-ukraines-kyiv-as-moscow-presses-air-assault",
+            "https://www.kyivpost.com/post/85896",
+            "https://meduza.io/en/feature/2026/10/01/russian-drones-strike-kyiv-s-southern-bridge-in-first-drone-attack-on-a-kyiv-bridge-since-the-full-scale-invasion-a-subway-train-was-crossing-it-at-the-time",
+            "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-1-2026"
+          ],
+          "place": {
+            "name": "Kyiv",
+            "country": "Ukraine",
+            "lat": 50.45,
+            "lon": 30.523
+          }
+        },
+        {
+          "headline": "Putin issues conditional nuclear warning over Kaliningrad at Valdai",
+          "detail": "On Oct 1, 2026 at Valdai Discussion Club in Moscow, Putin warned that if Kaliningrad or other Russian territory came under direct attack Russia would be ready to use all weapons including nuclear, while saying Russia has no plans to attack Europe in 2029/2030/2050 but would respond to aggression. He also acknowledged Ukrainian strikes on refineries cost Russia ~1% of GDP and that Ukraine had knocked out over 100 Russian ships in the Black Sea.",
+          "when": "2026-10-01",
+          "where": "Moscow, Russia",
+          "actors": [
+            "President Vladimir Putin",
+            "Valdai Discussion Club"
+          ],
+          "statements": [],
+          "significance": "Explicit nuclear signaling tied to Russian territory raises deterrence stakes as NATO air activity and Ukrainian long-range strikes continue.",
+          "verification": "researched",
+          "sources": [
+            "https://www.cnn.com/2026/10/01/europe/putin-kaliningrad-warning-ukraine-latam-intl",
+            "https://www.bbc.co.uk/news/articles/cqg7k7v499jjo"
+          ],
+          "place": {
+            "name": "Moscow",
+            "country": "Russia",
+            "lat": 55.7558,
+            "lon": 37.6173
+          }
+        },
+        {
+          "headline": "NATO and Denmark warn of intensifying systematic hybrid campaign",
+          "detail": "On Sept 24 in Copenhagen, Danish Defence Minister Bruus and DDIS Chief Ahrenkiel warned Russia will intensify hybrid warfare in coming months with more frequent attacks and greater consequences, assessing a limited military attack on one or several NATO countries bordering Russia cannot be ruled out and situation is most serious since Cold War. On Oct 1 NATO Secretary General Rutte warned Europe to brace for systematic Russian sabotage, arson and hybrid attacks, saying Russia is testing security across Europe and allies must remain vigilant for a prolonged campaign.",
+          "when": "2026-10-01",
+          "where": "Copenhagen, Denmark and Brussels",
+          "actors": [
+            "NATO Secretary General Mark Rutte",
+            "Danish Defence Minister Jeppe Bruus",
+            "Danish Defence Intelligence Service (DDIS) Chief Thomas Ahrenkiel"
+          ],
+          "statements": [],
+          "significance": "Allied intelligence shifts from sporadic sabotage to expectation of sustained, more damaging hybrid pressure, shaping force posture and civil resilience planning.",
+          "verification": "researched",
+          "sources": [
+            "https://www.dw.com/en/russia-expected-to-intensify-hybrid-war-on-europe/a-79444596"
+          ],
+          "place": null
+        },
+        {
+          "headline": "NATO scrambles in Poland and Romania during Kyiv strikes continue September air-alert pattern",
+          "detail": "During the Sept 29-30 and Oct 1 strikes on Kyiv, NATO aircraft scrambled in Poland and Romania (Spanish F-18s in Romania); no incursions detected Sept 30-Oct 1. This follows September pattern: Sept 16-17 Poland scrambled after drones/missiles near western Ukraine, Sept 23 Russian Mi-8 violated Polish airspace for 42 seconds near Kaliningrad, and Sept 15 Poland reinforced Dorohusk, Medyka, Korczowa crossings after Sept 13 drone hit on passenger train locomotive near border.",
+          "when": "2026-09-30",
+          "where": "Poland and Romania",
+          "actors": [
+            "Polish Air Force",
+            "Romanian Air Force (Spanish F-18s)",
+            "Russian Air Force"
+          ],
+          "statements": [],
+          "significance": "Sustained scramble tempo shows persistent spillover risk to NATO airspace during large Russian salvos, even without confirmed violations this time.",
+          "verification": "researched",
+          "sources": [
+            "https://www.dw.com/en/russia-expected-to-intensify-hybrid-war-on-europe/a-79444596",
+            "https://abcnews.com/International/russian-strikes-kill-2-kyiv-prompt-nato-scramble/story?id=136881319"
+          ],
+          "place": {
+            "name": "Warsaw",
+            "country": "Poland",
+            "lat": 52.2297,
+            "lon": 21.0122
+          }
+        }
+      ],
+      "context": [
+        {
+          "what": "On Sept 28, 2026 Putin signed Decree No.700 raising authorized Armed Forces strength to 2,441,630 including 1,550,500 active servicemen (+15,500), the fourth expansion in 2026 totaling +47,860 since March.",
+          "when": "2026-09-28",
+          "why_relevant": "Shows structural force growth underpinning sustained strike tempo and winter campaign, not a one-off salvo.",
+          "source": "https://www.kyivpost.com/post/85603"
+        },
+        {
+          "what": "Russian government documents seen by Reuters plan 2027 defense at 17.1 trillion rubles (~$202.6bn), +27% vs 13.5 trillion originally budgeted, with 50 trillion rubles over 2027-2029 and deficit revised to 3.2% GDP.",
+          "when": "2026-09-28",
+          "why_relevant": "Budget trajectory explains how Russia intends to fund larger force and continued long-range strikes despite acknowledged 1% GDP cost from Ukrainian refinery hits.",
+          "source": "https://www.i24news.tv/en/news/international/ukraine-russia-war/artc-russia-hikes-2027-defense-budget-by-27-as-putin-orders-fourth-troop-expansion-of-the-year-report"
+        },
+        {
+          "what": "Poland requested a new permanent US base June 3, 2026; President Nawrocki said Sept 23 it is confirmed as possible 'Fort Trump' for 3,000-5,000 troops (4,500 brigade most realistic) raising total US presence to ~15,000 vs ~10,000 rotational baseline. Poland already hosts ~10,000 rotational plus Camp Kosciuszko in Poznan (since March 21, 2023) and Aegis Ashore at Redzikowo, spending 4.48% GDP on defense.",
+          "when": "2026-06-03",
+          "why_relevant": "Basing debate frames why Polish airspace scrambles and border reinforcements carry alliance significance beyond tactical alerts.",
+          "source": "https://notesfrompoland.com/2026/09/23/new-us-fort-trump-military-base-in-poland-confirmed-says-president-nawrocki"
+        },
+        {
+          "what": "Russia's hybrid campaign against NATO/EU (GRU-led sabotage, arson, rail, undersea cables, defence-industry attacks) has expanded in 2025-2026 but remains calibrated below lethal thresholds to avoid triggering collective defence, while NATO runs Eastern Sentry/Baltic Sentry.",
+          "when": "2026-09-28",
+          "why_relevant": "Baseline for interpreting Danish and NATO warnings that hybrid attacks will become more frequent and consequential.",
+          "source": "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-1-2026"
+        },
+        {
+          "what": "North Korea has sent ~14,000-15,000 soldiers since 2024 to support Russia; Ukraine captured two North Korean POWs in Kursk in Jan 2025 and transferred them to South Korea, disclosed by Zelensky Sept 23 at UNGA, prompting Seoul's regret over broken nondisclosure claim.",
+          "when": "2024-01-01",
+          "why_relevant": "Explains diplomatic friction and legal stakes around prisoner transfers as foreign troop involvement continues.",
+          "source": "https://www.jpost.com/international/article-909506"
+        }
+      ],
+      "outlook": "Continued large combined strikes on Kyiv energy and transport are likely in coming days as the winter degradation campaign has just started, with further NATO scrambles almost certain during salvos. A more consequential hybrid incident (rail, airport or undersea infrastructure) is increasingly likely over weeks given Danish and NATO warnings, though a direct kinetic attack on NATO territory remains unlikely. Ukrainian long-range strikes on refineries will likely persist, sustaining pressure on Russian fuel supply despite Moscow's budget increase.",
+      "watch_next": [
+        "Whether Ukrenergo extends emergency outages or Trypillya damage forces rolling blackouts in Kyiv Oblast",
+        "Any Russian claim or evidence of repeated bridge strikes causing compounding structural damage",
+        "Further Polish/Romanian scrambles or Moldovan airspace incidents during next large salvo, and any hybrid incident (rail, airport, cable) flagged by DDIS/Rutte warnings"
+      ],
+      "key_figures": [
+        {
+          "label": "Russian strike drones launched in Sept 29-30 salvo (part of 3,177 up to Sept 29)",
+          "value": 190.0,
+          "unit": "drones",
+          "baseline": 2850.0,
+          "baseline_label": "August 2026 total",
+          "as_of": "2026-09-30",
+          "source": "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-1-2026"
+        },
+        {
+          "label": "Authorized active servicemen after Decree No.700",
+          "value": 1550500.0,
+          "unit": "personnel",
+          "baseline": 1534985.0,
+          "baseline_label": "Aug 1, 2026 authorized active servicemen",
+          "as_of": "2026-09-28",
+          "source": "https://www.kyivpost.com/post/85603"
+        },
+        {
+          "label": "Planned 2027 Russian defense spending",
+          "value": 17.1,
+          "unit": "trillion rubles",
+          "baseline": 13.5,
+          "baseline_label": "originally budgeted 2027 defense",
+          "as_of": "2026-09-28",
+          "source": "https://www.i24news.tv/en/news/international/ukraine-russia-war/artc-russia-hikes-2027-defense-budget-by-27-as-putin-orders-fourth-troop-expansion-of-the-year-report"
+        },
+        {
+          "label": "Children inside Kyiv School No.12 during drone strike (no injuries)",
+          "value": 104.0,
+          "unit": "children",
+          "baseline": 60.0,
+          "baseline_label": "staff also sheltered",
+          "as_of": "2026-10-01",
+          "source": "https://www.aljazeera.com/news/2026/10/1/russian-drone-hits-school-in-ukraines-kyiv-as-moscow-presses-air-assault"
+        }
+      ],
+      "brief_slug": "2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746",
+      "map": {
+        "bbox": [
+          16.861,
+          48.725,
+          41.769,
+          57.162
+        ],
+        "projection": "equirectangular",
+        "width": 1000,
+        "height": 562,
+        "countries": [
+          {
+            "name": "Russia",
+            "d": "M1000 0L1000 562L916.9 562L915.9 558.1L932.2 523.2L931.8 503.6L872.6 482L849.1 482.7L824.3 451.5L793.5 462L742.6 438.6L743.4 425.5L729.1 396.6L697.1 393.4L693.8 372.7L703.8 359.2L678.2 321.5L636.5 328L624.4 324.6L614.2 339.8L599.2 337.1L589.3 294.4L579.9 272.3L587.6 266.1L620 268.4L635.7 253.8L624.1 236.1L597 224.3L599.4 212.3L583.1 200.2L557.9 156.5L566.5 138.6L562.6 107.3L523.3 91.4L502.3 99.4L496.6 82.8L454.3 66.1L441.4 26.8L438.6 0ZM235.7 188.8L161.9 189.8L112.4 182.2L121.6 152.9L177 131.3L219 143L236.7 153.6L232.5 171.8L235.7 188.8Z"
+          },
+          {
+            "name": "Belarus",
+            "d": "M454.3 66.1L496.6 82.8L502.3 99.4L523.3 91.4L562.6 107.3L566.5 138.6L557.9 156.5L583.1 200.2L599.4 212.3L597 224.3L624.1 236.1L635.7 253.8L620 268.4L587.6 266.1L579.9 272.3L589.3 294.4L599.2 337.1L564.8 341L552.4 355.6L549.8 389.2L533.8 382.7L497.6 385.9L487.1 370.3L472 382L456.9 372.3L425.3 371L380.5 355L339.9 349.8L308.8 351.3L286.8 369.3L267.6 371.9L266.9 342.3L254.5 311.4L278.6 297.8L278.8 271.3L267.7 245.9L265.9 216.4L304.7 216.9L348.3 191.8L357.6 154.2L390.5 132.9L386.8 103L411.2 91.8L454.3 66.1Z"
+          },
+          {
+            "name": "Ukraine",
+            "d": "M599.2 337.1L614.2 339.8L624.4 324.6L636.5 328L678.2 321.5L703.8 359.2L693.8 372.7L697.1 393.4L729.1 396.6L743.4 425.5L742.6 438.6L793.5 462L824.3 451.5L849.1 482.7L872.6 482L931.8 503.6L932.2 523.2L915.9 558.1L916.9 562L215.6 562L217.6 555.3L228.7 538L237.5 541.8L227.1 511.9L263.6 456.5L283.5 448.8L287.8 430.1L267.6 371.9L286.8 369.3L308.8 351.3L339.9 349.8L380.5 355L425.3 371L456.9 372.3L472 382L487.1 370.3L497.6 385.9L533.8 382.7L549.8 389.2L552.4 355.6L564.8 341L599.2 337.1Z"
+          },
+          {
+            "name": "Poland",
+            "d": "M265.9 216.4L267.7 245.9L278.8 271.3L278.6 297.8L254.5 311.4L266.9 342.3L267.6 371.9L287.8 430.1L283.5 448.8L263.6 456.5L227.1 511.9L237.5 541.8L228.7 538L190.6 512.4L161.7 521.8L142.7 514.9L119 529.2L98.8 505.6L82.2 514.6L80 510.6L61.5 477.8L31.7 473.8L27.8 452.9L0.3 445.5L0 167.5L30.6 153.9L70.7 165.2L73.7 181.4L112.4 182.2L161.9 189.8L235.7 188.8L256.3 195.9L265.9 216.4Z"
+          },
+          {
+            "name": "Lithuania",
+            "d": "M386.8 103L390.5 132.9L357.6 154.2L348.3 191.8L304.7 216.9L265.9 216.4L256.3 195.9L235.7 188.8L232.5 171.8L236.7 153.6L219 143L177 131.3L168.4 75.3L214.4 54.9L281.7 59.2L321.2 52.6L326.8 66.4L348.2 70.7L386.8 103Z"
+          },
+          {
+            "name": "Latvia",
+            "d": "M438.6 0L441.4 26.8L454.3 66.1L411.2 91.8L386.8 103L348.2 70.7L326.8 66.4L321.2 52.6L281.7 59.2L214.4 54.9L168.4 75.3L169.8 25.2L181.7 0L252.6 0L259.3 10.4L291.5 9.1L292.8 0Z"
+          },
+          {
+            "name": "Slovakia",
+            "d": "M228.7 538L217.6 555.3L215.6 562L7.3 562L9.7 555.9L27.5 557L41.2 550.1L42.3 543.9L49.9 540.7L52.6 525.6L61.8 522.7L68 510.7L80 510.6L82.2 514.6L98.8 505.6L119 529.2L142.7 514.9L161.7 521.8L190.6 512.4L228.7 538Z"
+          },
+          {
+            "name": "Czechia",
+            "d": "M0 562L0 446.4L27.8 452.9L31.7 473.8L61.5 477.8L80 510.6L68 510.7L61.8 522.7L52.6 525.6L49.9 540.7L42.3 543.9L41.2 550.1L27.5 557L9.7 555.9L7.3 562Z"
+          }
+        ],
+        "points": [
+          {
+            "x": 557.8,
+            "y": 468.3,
+            "label": "Trypillya Thermal Power Plant, Kyiv Oblast",
+            "date": "2026-09-29",
+            "verification": "researched",
+            "n": 1
+          },
+          {
+            "x": 548.5,
+            "y": 447.1,
+            "label": "Kyiv",
+            "date": "2026-10-01",
+            "verification": "researched",
+            "n": 2
+          },
+          {
+            "x": 833.3,
+            "y": 93.7,
+            "label": "Moscow",
+            "date": "2026-10-01",
+            "verification": "researched",
+            "n": 3
+          },
+          {
+            "x": 166.7,
+            "y": 328.5,
+            "label": "Warsaw",
+            "date": "2026-09-30",
+            "verification": "researched",
+            "n": 5
+          }
+        ],
+        "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate."
+      }
+    },
+    {
+      "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout",
+      "name": "Gaza war and UNGA diplomatic fallout",
+      "temperature": {
+        "heat": 2.76,
+        "trend": "steady",
+        "coverage": "steady coverage",
+        "recent_share": 0.0227,
+        "prior_share": 0.019
+      },
+      "escalation": {
+        "direction": "rising",
+        "pace": "gradual"
+      },
+      "pulses": [
+        {
+          "id": "pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe",
+          "name": "Gaza Combat and Humanitarian Catastrophe",
+          "position": 85.0,
+          "band": "critical",
+          "change_24h": 0.0,
+          "change_7d": null
+        },
+        {
+          "id": "pls_israel_palestine_west_bank_annexation_and_settler_violence",
+          "name": "West Bank Annexation and Settler Violence",
+          "position": null,
+          "band": "unassessed",
+          "change_24h": null,
+          "change_7d": null
+        },
+        {
+          "id": "pls_israel_palestine_international_legal_and_diplomatic_pressure_on_israel",
+          "name": "International Legal and Diplomatic Pressure on Israel",
+          "position": 73.0,
+          "band": "severe",
+          "change_24h": 0.0,
+          "change_7d": null
+        },
+        {
+          "id": "pls_israel_palestine_ceasefire_and_normalization_deadlock",
+          "name": "Ceasefire and Normalization Deadlock",
+          "position": 60.0,
+          "band": "severe",
+          "change_24h": 0.0,
+          "change_7d": null
+        }
+      ],
+      "bottom_line": "Gaza's humanitarian aftermath remains severe with new clinical reporting from Nasser Hospital on 2026-10-01 of rat-infested camps and non-healing wounds, while a reported lethal settler attack on 2026-10-02 in Yasuf extends fallout to the West Bank. Diplomatic spillover is unchanged from yesterday — no new EU settlement-goods bans or accreditation actions beyond the Netherlands, and no UAE-Israel follow-up. All of today's items rest on single-source reported headlines, not independently verified research, so confidence is low.",
+      "since_yesterday": [
+        {
+          "what": "Lethal settler violence in West Bank: 2026-10-02 Yasuf home killing reported, not present yesterday.",
+          "kind": "new"
+        },
+        {
+          "what": "Clinical humanitarian detail: 2026-10-01 Nasser Hospital rat-infested camps and non-healing wounds adds specificity to displacement crisis.",
+          "kind": "new"
+        },
+        {
+          "what": "Mass burial of 105: same Al Jazeera 2026-10-01 report as yesterday; no new confirmation of burial completion.",
+          "kind": "unchanged"
+        },
+        {
+          "what": "Diplomatic track: no new EU settlement-goods bans beyond Netherlands Sept 22, no additional accreditation revocations, and no public UAE-Israel deliverable from Sept 27 visit.",
+          "kind": "unchanged"
+        }
+      ],
+      "developments": [
+        {
+          "headline": "Israeli settlers kill Palestinian man at home in Yasuf, West Bank",
+          "detail": "On 2026-10-02 Reuters reported Israeli settlers shot and killed a Palestinian man at his home in Yasuf in the West Bank, citing officials, amid rising settler violence. Single source (Reuters) — a lead, not a settled fact, and no independent verification in our research.",
+          "when": "2026-10-02",
+          "where": "Yasuf, West Bank",
+          "actors": [
+            "Israeli settlers",
+            "Palestinian resident"
+          ],
+          "statements": [],
+          "significance": "First reported lethal settler home invasion in this 3-day window; shows Gaza-war fallout spreading to West Bank and raises risk of further settler violence.",
+          "verification": "reported",
+          "sources": [
+            "https://www.reuters.com/world/middle-east/israeli-settlers-k"
+          ],
+          "place": {
+            "name": "Yasuf",
+            "country": "Palestine",
+            "lat": 32.108,
+            "lon": 35.235
+          }
+        },
+        {
+          "headline": "Rat-infested camps and non-healing wounds reported at Nasser Hospital",
+          "detail": "On 2026-10-01 BBC reporting (syndicated via Blic/DW) from Nasser Hospital documented rat-infested displacement camps and non-healing wounds among injured children, including a 6-year-old girl, amid dire sanitation. Single reporting chain, not independently verified by our research.",
+          "when": "2026-10-01",
+          "where": "Nasser Hospital, Khan Younis, Gaza Strip",
+          "actors": [
+            "Nasser Hospital staff",
+            "displaced Palestinians in Gaza camps"
+          ],
+          "statements": [],
+          "significance": "Adds clinical detail to protracted displacement and health-system strain; indicates sanitation-driven complications even without new combat.",
+          "verification": "reported",
+          "sources": [
+            "https://www.blic.rs/bbc/kampovi-preplavljeni-pacovima-i-rane",
+            "https://www.dw.com/en/gaza-ngo-reports-dire-camp-conditions-"
+          ],
+          "place": null
+        },
+        {
+          "headline": "Palestinians prepare mass burial of 105 recovered from rubble",
+          "detail": "On 2026-10-01 Al Jazeera reported Palestinians preparing to bury remains of 105 people killed in an Israeli attack, recovered from rubble. Single source; same 105-person burial noted in previous daily section, with no new researched confirmation of completion.",
+          "when": "2026-10-01",
+          "where": "Gaza Strip",
+          "actors": [
+            "Palestinian civil authorities",
+            "families of deceased"
+          ],
+          "statements": [],
+          "significance": "Underscores ongoing recovery of war dead and scale of missing under rubble, even as ceasefire nominally holds.",
+          "verification": "reported",
+          "sources": [
+            "https://www.aljazeera.com/news/2026/10/1/palestinians-to-bur"
+          ],
+          "place": {
+            "name": "Gaza City",
+            "country": "Palestine",
+            "lat": 31.5,
+            "lon": 34.466
+          }
+        }
+      ],
+      "context": [
+        {
+          "what": "A year-old ceasefire nominally holds in Gaza but 86% of population remains in protracted displacement with severe water/sanitation failures and ongoing recovery of remains from rubble.",
+          "when": "2026-10-01",
+          "why_relevant": "Frames today's Nasser Hospital/camp report and 105 burial as continuation of collapse, not new combat.",
+          "source": ""
+        },
+        {
+          "what": "Netherlands settlement-goods ban took effect Sept 22; Israel revoked Dutch diplomats' Ramallah accreditation Sept 27.",
+          "when": "2026-09-27",
+          "why_relevant": "Baseline for assessing whether diplomatic retaliation spreads beyond Netherlands.",
+          "source": "https://www.france24.com/en/middle-east/20260927-israel-revo"
+        },
+        {
+          "what": "Netanyahu made unannounced Sept 27-28 visit to Abu Dhabi with no joint initiative announced; Saudi Arabia denied participation.",
+          "when": "2026-09-27",
+          "why_relevant": "Baseline for judging whether quiet Abraham Accords maintenance produces any public deliverable.",
+          "source": "https://www.thehindu.com/news/international/israeli-media-sa"
+        },
+        {
+          "what": "Israeli opposition parties agreed Sept 26 to act jointly against Netanyahu government.",
+          "when": "2026-09-26",
+          "why_relevant": "Domestic political pressure context as Gaza war and diplomatic fallout continue; no new action reported in last 3 days.",
+          "source": "https://www.milliyet.com.tr/dunya/israil-muhalefeti-netanyah"
+        }
+      ],
+      "outlook": "West Bank settler violence is likely to remain elevated in coming days given the reported lethal incident, but whether it triggers wider clashes or Israeli enforcement action is roughly even without verified follow-up. Gaza humanitarian conditions are almost certain to stay critical barring fuel/generator resupply, resting on protracted displacement and sanitation failures already documented. Diplomatic spillover likely stays contained near-term unless another EU state announces a settlement-goods ban or Israel revokes another mission's accreditation.",
+      "watch_next": [
+        "Whether Israeli authorities announce investigation/arrests or further incidents follow the Yasuf killing",
+        "Whether any of Gaza's 19 functioning hospitals suspend ICU/imaging/surgery citing fuel/generator failure",
+        "Whether additional EU states announce or begin enforcing settlement-goods bans, or Israel revokes status for another EU mission beyond Netherlands"
+      ],
+      "key_figures": [],
+      "brief_slug": "2026-10-01-gaza-war-and-unga-diplomatic-fallout",
+      "map": {
+        "bbox": [
+          30.85,
+          27.804,
+          38.85,
+          35.804
+        ],
+        "projection": "equirectangular",
+        "width": 1000,
+        "height": 1177,
+        "countries": [
+          {
+            "name": "Israel",
+            "d": "M608.7 455.3L586.9 501.7L541.7 481.3L515.5 579.3L546.9 595.8L515 616L509.6 654.8L568.4 634.8L571.3 692.1L509 927.3L496.6 889.1L426.9 674.5L463.2 626L454.7 617.7L487.8 548.9L513.1 437.9L531 400.7L534.4 399.2L576.3 399.4L587.8 373.7L621.3 371.7L623.2 431.9L606.3 454.3L608.7 455.3Z"
+          },
+          {
+            "name": "Lebanon",
+            "d": "M621.3 371.7L587.8 373.7L576.3 399.4L534.4 399.2L579 279.3L641.1 175.7L643.5 170.5L699.7 178L720.2 235.7L652 291.2L621.3 371.7Z"
+          },
+          {
+            "name": "Palestine",
+            "d": "M568.4 634.8L509.6 654.8L515 616L546.9 595.8L515.5 579.3L541.7 481.3L586.9 501.7L586.8 591.7L568.4 634.8Z"
+          },
+          {
+            "name": "Jordan",
+            "d": "M586.9 501.7L608.7 455.3L747.9 513.6L992.7 356.8L1000 382.7L1000 563.9L769 632L893.5 779.1L852.2 804.1L831.6 853.4L736.3 873.7L706.3 926.7L652.3 972L513.2 948.6L509 927.3L571.3 692.1L568.4 634.8L586.8 591.7L586.9 501.7Z"
+          },
+          {
+            "name": "Iraq",
+            "d": "M1000 382.7L992.7 356.8L1000 352.8Z"
+          },
+          {
+            "name": "Syria",
+            "d": "M608.7 455.3L606.3 454.3L623.2 431.9L621.3 371.7L652 291.2L720.2 235.7L699.7 178L643.5 170.5L631.8 58L661.1 0L1000 0L1000 352.8L992.7 356.8L747.9 513.6L608.7 455.3Z"
+          },
+          {
+            "name": "Saudi Arabia",
+            "d": "M513.2 948.6L652.3 972L706.3 926.7L736.3 873.7L831.6 853.4L852.2 804.1L893.5 779.1L769 632L1000 563.9L1000 1177L559 1177L535 1138.8L472.7 1139.5L492.2 1058.8L497.7 1007.3L513.2 948.6Z"
+          },
+          {
+            "name": "N. Cyprus",
+            "d": "M235.2 97.7L244 96.9L262.1 61.4L352.1 63.4L465.7 19.5L381.3 82.1L390.4 109.7L377 104.5L353.1 115.7L334.4 112.6L328.2 118.2L325.7 103.4L316.7 94.3L292.6 92.8L258.6 105.4L235.2 97.7Z"
+          },
+          {
+            "name": "Cyprus",
+            "d": "M235.2 97.7L258.6 105.4L292.6 92.8L316.7 94.3L325.7 103.4L328.2 118.2L334.4 112.6L353.1 115.7L377 104.5L390.4 109.7L394.3 121.5L266.2 181.3L205 162.2L175.8 103.1L235.2 97.7Z"
+          },
+          {
+            "name": "Egypt",
+            "d": "M0 1177L0 626.7L15.8 625L104.7 643.6L138.7 716.6L167.7 668.5L267.9 703.2L365.4 711.6L426.9 674.5L496.6 889.1L509 927.3L473.9 986.4L447 1097.6L413 1174.2L409.8 1177L363.8 1177L342.2 1152.4L285.8 1086.7L196.6 875.8L183.7 889.2L235.5 1044.4L304.3 1177Z"
+          }
+        ],
+        "points": [
+          {
+            "x": 548.1,
+            "y": 543.8,
+            "label": "Yasuf",
+            "date": "2026-10-02",
+            "verification": "reported",
+            "n": 1
+          },
+          {
+            "x": 451.9,
+            "y": 633.2,
+            "label": "Gaza City",
+            "date": "2026-10-01",
+            "verification": "reported",
+            "n": 3
+          }
+        ],
+        "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate."
+      }
+    },
+    {
+      "theater_id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
+      "name": "US withdrawal from Iraq after 23-year presence",
+      "temperature": {
+        "heat": 0.92,
+        "trend": "steady",
+        "coverage": "steady coverage",
+        "recent_share": 0.0076,
+        "prior_share": 0.0095
+      },
+      "escalation": {
+        "direction": "steady",
+        "pace": "flat"
+      },
+      "pulses": [
+        {
+          "id": "pls_iran_gulf_iran_proxy_axis_escalation",
+          "name": "Iran Proxy Axis Escalation",
+          "position": 80.0,
+          "band": "critical",
+          "change_24h": 3.0,
+          "change_7d": null
+        },
+        {
+          "id": "pls_iran_gulf_us_iran_israel_military_confrontation",
+          "name": "US-Iran-Israel Direct Military Confrontation",
+          "position": 78.0,
+          "band": "critical",
+          "change_24h": 0.0,
+          "change_7d": null
+        }
+      ],
+      "bottom_line": "The US withdrawal from Iraq completed September 30 remains the defining fact, with high confidence based on multiple confirmed official statements. October 1-2 was quiet with no reported clashes, ISIS attacks, or new security arrangements announced, leaving the air-defense gap over Kurdistan and the stalled militia disarmament as the central uncertainties.",
+      "since_yesterday": [
+        {
+          "what": "No new attacks or security incidents reported October 1-2; withdrawal completion remains the last major change from September 30.",
+          "kind": "unchanged"
+        },
+        {
+          "what": "Militia disarmament stasis: no new handovers announced; June 30, 2027 deadline still stands and powerful Iran-linked groups still rejecting.",
+          "kind": "unchanged"
+        },
+        {
+          "what": "No announcement of replacement air defenses for Erbil or new bilateral security arrangements; Kurdistan vulnerability flagged September 30 remains unaddressed.",
+          "kind": "unchanged"
+        }
+      ],
+      "developments": [
+        {
+          "headline": "US completes withdrawal from Erbil, ending 23-year presence and 12-year anti-ISIS mission",
+          "detail": "US and coalition forces completed orderly departure of troops and equipment from Erbil Air Base on September 30, 2026, ending Operation Inherent Resolve's mission in Iraq. The departure ends a 23-year US presence since 2003 and a 12-year anti-ISIS mission since 2014. CJTF-OIR remains operational headquartered in Jordan with hundreds of US troops continuing counter-ISIS operations in Syria.",
+          "when": "2026-09-30",
+          "where": "Erbil Air Base",
+          "actors": [
+            "US Department of Defense",
+            "Combined Joint Task Force-Operation Inherent Resolve",
+            "Iraqi government"
+          ],
+          "statements": [],
+          "significance": "Closes the post-2003 basing footprint in Iraq and shifts US-Iraq ties to a bilateral security relationship without US enablers on Iraqi soil.",
+          "verification": "researched",
+          "sources": [
+            "https://www.aljazeera.com/news/2026/9/30/pentagon-says-us-troop-withdrawal-from-iraq-is-complete",
+            "https://www.aljazeera.com/news/2026/9/30/how-does-iraqs-security-change-after-us-forces-withdraw",
+            "https://www.dailysabah.com/world/mid-east/pentagon-announces-military-withdrawal-from-iraq-complete/amp"
+          ],
+          "place": {
+            "name": "Erbil Air Base",
+            "country": "Iraq",
+            "lat": 36.235,
+            "lon": 43.963
+          }
+        },
+        {
+          "headline": "Baghdad declares Sovereignty Days holiday and holds ceremony marking withdrawal",
+          "detail": "Iraq declared a four-day public holiday September 30-October 3 for Sovereignty Days, with September 30 as National Sovereignty Day, and held a Sovereignty Day ceremony in Baghdad presided over by Prime Minister Ali al-Zaidi.",
+          "when": "2026-09-30",
+          "where": "Baghdad",
+          "actors": [
+            "Iraqi government",
+            "Prime Minister Ali al-Zaidi"
+          ],
+          "statements": [],
+          "significance": "Political framing of withdrawal as sovereignty milestone; sets public expectation for Iraqi-led security.",
+          "verification": "researched",
+          "sources": [
+            "https://www.kurdistan24.net/en/story/942173",
+            "https://www.aljazeera.com/news/2026/9/30/how-does-iraqs-security-change-after-us-forces-withdraw",
+            "https://www.dailysabah.com/world/mid-east/pentagon-announces-military-withdrawal-from-iraq-complete/amp"
+          ],
+          "place": {
+            "name": "Baghdad",
+            "country": "Iraq",
+            "lat": 33.3152,
+            "lon": 44.3661
+          }
+        },
+        {
+          "headline": "US air defenses leave with troops, raising Kurdistan vulnerability",
+          "detail": "With the withdrawal, US air defense systems, intelligence, logistical support and drones were removed. Kurdish officials warned this leaves the Kurdistan Region exposed, which had come under more than 1,000 drone and ballistic missile attacks since February 28, 2026, the start of the US-Israeli war on Iran.",
+          "when": "2026-09-30",
+          "where": "Erbil",
+          "actors": [
+            "US forces",
+            "Kurdistan Regional Government"
+          ],
+          "statements": [],
+          "significance": "Creates immediate gap in air and ISR coverage in the north where attacks have been frequent since February.",
+          "verification": "researched",
+          "sources": [
+            "https://www.aljazeera.com/news/2026/9/30/how-does-iraqs-security-change-after-us-forces-withdraw"
+          ],
+          "place": {
+            "name": "Erbil",
+            "country": "Iraq",
+            "lat": 36.191,
+            "lon": 44.009
+          }
+        },
+        {
+          "headline": "Iraq extends militia disarmament deadline to June 2027 as major Iran-backed groups reject plan",
+          "detail": "Iraq initially linked the September 30 deadline to disarmament of non-state armed groups. A handful of less-influential militias agreed to turn over weapons while powerful Iran-linked groups rejected or conditioned disarmament, prompting Baghdad to extend the roadmap deadline to no later than June 30, 2027.",
+          "when": "2026-09-30",
+          "where": "Baghdad",
+          "actors": [
+            "Iraqi government",
+            "Iran-aligned militias"
+          ],
+          "statements": [],
+          "significance": "Shows proxy entrenchment remains unresolved; the extended deadline is the key test of whether sovereignty translates into state monopoly on arms.",
+          "verification": "researched",
+          "sources": [
+            "https://www.dailysabah.com/world/mid-east/pentagon-announces-military-withdrawal-from-iraq-complete/amp",
+            "https://www.aljazeera.com/news/2026/9/30/how-does-iraqs-security-change-after-us-forces-withdraw",
+            "https://global.chinadaily.com.cn/a/202610/01/WS6abe38cde4b06d4aa0561262.html"
+          ],
+          "place": {
+            "name": "Baghdad",
+            "country": "Iraq",
+            "lat": 33.3152,
+            "lon": 44.3661
+          }
+        }
+      ],
+      "context": [
+        {
+          "what": "The 23-year US presence began with the 2003 US-led invasion to topple Saddam Hussein.",
+          "when": "2003-03-01",
+          "why_relevant": "Frames the scale of the basing shift ending September 30, 2026.",
+          "source": "https://www.aljazeera.com/news/2026/9/30/how-does-iraqs-security-change-after-us-forces-withdraw"
+        },
+        {
+          "what": "US forces withdrew in December 2011 under President Barack Obama after Operation Iraqi Freedom, then returned in 2014 at Iraq's invitation after ISIS seized large areas.",
+          "when": "2014-01-01",
+          "why_relevant": "Precedent for withdrawal and return; shows reversibility if ISIS resurges.",
+          "source": "https://www.aljazeera.com/news/2026/9/30/how-does-iraqs-security-change-after-us-forces-withdraw"
+        },
+        {
+          "what": "Joint US-Iraq statement announced two-stage wind-down: end of Global Coalition combat operations in Iraq no later than end of September 2025, and continued coalition support for counter-ISIS operations in Syria from Iraq through September 2026 via Higher Military Commission mechanism.",
+          "when": "2024-09-27",
+          "why_relevant": "The formal framework that produced the September 30, 2026 completion.",
+          "source": "https://www.kurdistan24.net/en/story/942173"
+        },
+        {
+          "what": "ISIS was territorially defeated in Iraq in December 2017 and is now at its weakest with a few hundred fighters/sleeper cells per UN report, but retains cells capable of planning attacks.",
+          "when": "2017-12-01",
+          "why_relevant": "Baseline for judging whether Iraqi forces can contain ISIS without US enablers.",
+          "source": "https://www.aljazeera.com/news/2026/9/30/how-does-iraqs-security-change-after-us-forces-withdraw"
+        }
+      ],
+      "outlook": "No new clashes or ISIS attacks in the first 48 hours after withdrawal is likely to continue in the near term, but the underlying risks are unchanged. The air-defense gap and the extended militia disarmament timeline make it likely that the next test will be whether proxies probe Kurdistan or whether Baghdad announces replacement defenses or a new bilateral security arrangement.",
+      "watch_next": [
+        "Whether Iran-aligned militias observe a halt to attacks on Kurdistan/federal Iraq and begin any weapons handover",
+        "Any ISIS-claimed attacks timed to the withdrawal in federal Iraq or Kurdistan",
+        "Announcement of replacement air defenses for Erbil or new US-Iraq bilateral security arrangements"
+      ],
+      "key_figures": [
+        {
+          "label": "US troops in Iraq at height of occupation in 2007",
+          "value": 170000.0,
+          "unit": "troops",
+          "baseline": null,
+          "baseline_label": "",
+          "as_of": "2007-12-31",
+          "source": "https://www.aljazeera.com/news/2026/9/30/how-does-iraqs-security-change-after-us-forces-withdraw"
+        },
+        {
+          "label": "US military personnel in Iraq in recent years before final drawdown",
+          "value": 2500.0,
+          "unit": "troops",
+          "baseline": null,
+          "baseline_label": "",
+          "as_of": "2026-09-30",
+          "source": "https://www.aljazeera.com/news/2026/9/30/how-does-iraqs-security-change-after-us-forces-withdraw"
+        },
+        {
+          "label": "Drone and ballistic missile attacks on Kurdistan Region since Feb 28, 2026",
+          "value": 1000.0,
+          "unit": "attacks",
+          "baseline": null,
+          "baseline_label": "",
+          "as_of": "2026-09-30",
+          "source": "https://www.aljazeera.com/news/2026/9/30/how-does-iraqs-security-change-after-us-forces-withdraw"
+        }
+      ],
+      "brief_slug": null,
+      "map": {
+        "bbox": [
+          40.165,
+          30.775,
+          48.165,
+          38.775
+        ],
+        "projection": "equirectangular",
+        "width": 1000,
+        "height": 1217,
+        "countries": [
+          {
+            "name": "Iraq",
+            "d": "M0 722.8L105.2 662.6L152.4 478.7L140.6 367.6L209.1 330L273.1 235.1L326.8 211.4L472.2 231.1L516.1 269.8L576 244.1L657 425.6L739 471.2L748.4 560.1L685.5 612.6L656.5 731.3L743.1 875.9L896.3 959.3L960.6 1074.9L940.1 1185.1L980 1185L980.5 1217L288.4 1217L215.7 1153.9L29.4 1047.4L0 1039.3Z"
+          },
+          {
+            "name": "Iran",
+            "d": "M1000 1217L980.5 1217L980 1185L940.1 1185.1L960.6 1074.9L896.3 959.3L743.1 875.9L656.5 731.3L685.5 612.6L748.4 560.1L739 471.2L657 425.6L576 244.1L507.7 122.2L532.1 75.1L515.3 0L725.5 0L747.4 5.2L792.6 0.7L793.5 0L983.6 0L1000 16.8Z"
+          },
+          {
+            "name": "Syria",
+            "d": "M0 281.4L63.6 256.2L130.9 258.7L273.1 235.1L209.1 330L140.6 367.6L152.4 478.7L105.2 662.6L0 722.8Z"
+          },
+          {
+            "name": "Armenia",
+            "d": "M792.6 0.7L747.4 5.2L744.4 0L792.6 0Z"
+          },
+          {
+            "name": "Turkey",
+            "d": "M576 244.1L516.1 269.8L472.2 231.1L326.8 211.4L273.1 235.1L130.9 258.7L63.6 256.2L0 281.4L0 0L515.3 0L532.1 75.1L507.7 122.2L576 244.1Z"
+          },
+          {
+            "name": "Azerbaijan",
+            "d": "M1000 0L1000 16.8L983.6 0L793.5 0L792.6 0.7ZM747.4 5.2L725.5 0L744.4 0L747.4 5.2Z"
+          },
+          {
+            "name": "Saudi Arabia",
+            "d": "M0 1217L0 1039.3L29.4 1047.4L215.7 1153.9L288.4 1217Z"
+          }
+        ],
+        "points": [
+          {
+            "x": 474.8,
+            "y": 386.4,
+            "label": "Erbil Air Base",
+            "date": "2026-09-30",
+            "verification": "researched",
+            "n": 1
+          },
+          {
+            "x": 525.2,
+            "y": 830.6,
+            "label": "Baghdad",
+            "date": "2026-09-30",
+            "verification": "researched",
+            "n": 2
+          },
+          {
+            "x": 480.6,
+            "y": 393.1,
+            "label": "Erbil",
+            "date": "2026-09-30",
+            "verification": "researched",
+            "n": 3
+          },
+          {
+            "x": 525.2,
+            "y": 830.6,
+            "label": "Baghdad",
+            "date": "2026-09-30",
+            "verification": "researched",
+            "n": 4
+          }
+        ],
+        "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate."
+      }
+    },
+    {
+      "theater_id": "thr_us_china_summit_and_strategic_competition",
+      "name": "US-China summit and strategic competition",
+      "temperature": {
+        "heat": 0.65,
+        "trend": "cooling",
+        "coverage": "falling coverage",
+        "recent_share": 0.0,
+        "prior_share": 0.0286
+      },
+      "escalation": {
+        "direction": "steady",
+        "pace": "flat"
+      },
+      "pulses": [
+        {
+          "id": "pls_us_china_diplomatic_deadlock",
+          "name": "Diplomatic Deadlock",
+          "position": 20.0,
+          "band": "calm",
+          "change_24h": 0.0,
+          "change_7d": null
+        },
+        {
+          "id": "pls_us_china_trade_tariff_confrontation",
+          "name": "Trade and Tariff Confrontation",
+          "position": 35.0,
+          "band": "elevated",
+          "change_24h": 0.0,
+          "change_7d": null
+        },
+        {
+          "id": "pls_us_china_technology_export_control_decoupling",
+          "name": "Technology and Export-Control Decoupling",
+          "position": 65.0,
+          "band": "severe",
+          "change_24h": 0.0,
+          "change_7d": null
+        },
+        {
+          "id": "pls_ai_geopolitics_ai_safety_governance_fracture",
+          "name": "AI Safety Governance Fracture",
+          "position": null,
+          "band": "unassessed",
+          "change_24h": null,
+          "change_7d": null
+        }
+      ],
+      "bottom_line": "No new US-China policy moves in the last three days; the picture is unchanged from the Sept 23-25 Washington summit. The two-month truce extension to Jan 10, 2027, panda renewal, and announced AI/military channels remain pageantry and promises, with core gaps — undefined AI incident benchmarks and rare-earth flows still below historical levels — unresolved. Confidence is high that the truce holds for now, lower that safeguards will be operational before the November Shenzhen and December Miami meetings.",
+      "since_yesterday": [
+        {
+          "what": "No new researched moves Sept 30-Oct 2; prior picture stands — truce extended to Jan 10, 2027, AI Super Intelligence Dialogue and incident channel announced but not operational, pandas arrived Sept 27 in quarantine, rare-earth flows still below historical levels.",
+          "kind": "unchanged"
+        }
+      ],
+      "developments": [],
+      "context": [
+        {
+          "what": "US and China agreed in Busan to a one-year economic truce (US tariff relief for Chinese rare-earth access, 25 million metric tons/year US soybeans, fentanyl precursor crackdown), extended Sept 24 in Washington by two months to Jan 10, 2027 with consensus on more favorable tariff treatment for $30 billion of non-sensitive goods each way and new Board of Trade and Board of Investment.",
+          "when": "2025-10-30",
+          "why_relevant": "Defines what the current truce covers and what it does not — tariff relief is limited and purchase/rare-earth commitments are the test of compliance before Jan 10.",
+          "source": ""
+        },
+        {
+          "what": "Xi's framing of 'constructive strategic stability' / 'strategic stability on basis of respect, fairness, reciprocity' introduced in Beijing and reaffirmed in Washington as basis for relations.",
+          "when": "2026-05-13",
+          "why_relevant": "Explains the language Xi used at the summit and why panda/youth exchanges are presented as stability signals rather than substantive concessions.",
+          "source": ""
+        },
+        {
+          "what": "Treasury Secretary Scott Bessent proposed a government-to-government AI incident notification system for national-security-level AI incidents (rogue models, bioweapons, critical infrastructure); as of Sept 24-26 benchmarks, Chinese sign-on, enforcement and staffing were undefined, with export controls on advanced AI chips explicitly excluded.",
+          "when": "2026-09-20",
+          "why_relevant": "The missing hotline is the core safeguard gap; without defined triggers it cannot prevent escalation from AI accidents or misuse.",
+          "source": ""
+        },
+        {
+          "what": "Two giant pandas Ping Ping and Fu Shuang arrived Atlanta Sept 27 on 10-year loan under China Wildlife Conservation Association agreement finalized April 2026, to be quarantined about a month before public debut; Xi announced the pair Sept 24 and invited 100,000 young Americans to visit China over five years.",
+          "when": "2026-09-27",
+          "why_relevant": "Panda renewal is the most visible deliverable of the summit, used to frame growth/people-to-people ties vs rivalry, but does not address trade/tech frictions.",
+          "source": ""
+        },
+        {
+          "what": "Historical US-China hotlines repeatedly failed in crises; Washington-Moscow Direct Communications Link after Cuban Missile Crisis was text-based to create record and reduce mistranslation. Chinese rare-earth exports to US remain below historical levels despite truce pledges.",
+          "when": "2026-09-24",
+          "why_relevant": "Shows why an AI hotline's design matters and why rare-earth data is the near-term indicator of whether the truce is being implemented.",
+          "source": ""
+        }
+      ],
+      "outlook": "Almost certain the truce holds until the next leader meetings, with no new tariffs or breakdown expected before APEC Shenzhen in November 2026, given the Jan 10, 2027 extension and falling coverage. Likely the AI notification system remains undefined until the Bessent-He follow-up in Shenzhen in about two months, with functionality unlikely before year-end 2026, leaving crisis communication gaps. Roughly even whether rare-earth shipments rise toward historical levels before November, which would be the first tangible sign the truce is being implemented beyond pageantry.",
+      "watch_next": [
+        "November 2026 Shenzhen APEC bilateral and Bessent-He talks — whether AI incident benchmarks, notification triggers and staffing are defined",
+        "US customs and Chinese export data on rare-earth shipments to US — any rise toward historical levels",
+        "Formal signing/operating procedures for US-China military crisis-communication MOU and Super Intelligence Dialogue",
+        "Zoo Atlanta public debut after ~1-month panda quarantine — any follow-on people-to-people announcements"
+      ],
+      "key_figures": [
+        {
+          "label": "Chinese pledge to purchase US soybeans per year under Busan truce",
+          "value": 25.0,
+          "unit": "million metric tons",
+          "baseline": null,
+          "baseline_label": "",
+          "as_of": "2025-10-30",
+          "source": "https://www.cfr.org/articles/the-limits-of-trump-and-xis-photo-op-summit"
+        },
+        {
+          "label": "Non-sensitive goods each direction to receive more favorable tariff treatment",
+          "value": 30.0,
+          "unit": "$ billion",
+          "baseline": null,
+          "baseline_label": "",
+          "as_of": "2026-09-24",
+          "source": "https://www.whitehouse.gov/fact-sheets/2026/09/fact-sheet-president-donald-j-trump-advances-a-fair-and-reciprocal-relationship-with-china-while-hosting-historic-state-visit"
+        },
+        {
+          "label": "Chinese coal imports from US committed for 2027 (and again 2028)",
+          "value": 10.0,
+          "unit": "million metric tons",
+          "baseline": null,
+          "baseline_label": "",
+          "as_of": "2026-09-24",
+          "source": "https://www.whitehouse.gov/fact-sheets/2026/09/fact-sheet-president-donald-j-trump-advances-a-fair-and-reciprocal-relationship-with-china-while-hosting-historic-state-visit"
+        }
+      ],
+      "brief_slug": null,
+      "map": null
+    }
+  ],
+  "cross_theater": [
+    {
+      "theaters": [
+        "US withdrawal from Iraq after 23-year presence",
+        "US-Iran-Houthi confrontation over Hormuz and Red Sea"
+      ],
+      "link": "US withdrawal from Iraq after 23-year presence -> US-Iran-Houthi confrontation over Hormuz and Red Sea: US air defenses left Iraq with troops creating a Kurdistan gap as Patriots were shifted to Saudi Arabia and Qatar to protect Gulf energy sites, while Iran-backed militias in Iraq rejected disarmament as Iran sustains Hormuz closure and pressure via Houthi strikes and the alleged RAF Fairford plot"
+    },
+    {
+      "theaters": [
+        "US-Iran-Houthi confrontation over Hormuz and Red Sea",
+        "Russia-Ukraine war and European security architecture"
+      ],
+      "link": "US-Iran-Houthi confrontation over Hormuz and Red Sea <-> Russia-Ukraine war and European security architecture: simultaneous energy pressure from Hormuz closure keeping ~6 mb/d off market and Russia's winter strikes on Kyiv energy infrastructure including Trypillya compounds European risk, while both theaters show intensifying hybrid and nuclear signaling via NATO's hybrid warning and Putin's Kaliningrad warning alongside the UK's Iran-linked plot probe"
+    }
+  ],
+  "url": "/geopolitics/2026-10-02",
+  "data_url": "/data/daily/geopolitics/2026-10-02.json"
 }

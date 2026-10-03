@@ -1,15 +1,7 @@
 {
   "schema": "ohmega.intel.index/1",
-  "built_at": "2026-10-03T20:54:08.469824+00:00",
+  "built_at": "2026-10-03T20:55:23.992997+00:00",
   "daily": [
-    {
-      "domain": "geopolitics",
-      "date": "2026-10-03",
-      "headline": "No live theaters in this domain today.",
-      "theaters": [],
-      "url": "/geopolitics/2026-10-03",
-      "data_url": "/data/daily/geopolitics/2026-10-03.json"
-    },
     {
       "domain": "geopolitics",
       "date": "2026-10-02",

@@ -1,17 +1,8 @@
 {
   "schema": "ohmega.changes/1",
   "window_days": 30,
-  "as_of": "2026-10-03T20:54:07.158040+00:00",
+  "as_of": "2026-10-03T12:54:56.085103+00:00",
   "events": [
-    {
-      "type": "daily_published",
-      "at": "2026-10-03T20:54:07.158040+00:00",
-      "domain": "geopolitics",
-      "date": "2026-10-03",
-      "headline": "No live theaters in this domain today.",
-      "url": "/geopolitics/2026-10-03",
-      "data_url": "/data/daily/geopolitics/2026-10-03.json"
-    },
     {
       "type": "pulse_created",
       "at": "2026-10-03T12:54:56.085103+00:00",
