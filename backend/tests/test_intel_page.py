@@ -296,3 +296,40 @@ def test_agent_feed_rewrites_only_what_changed(tmp_path) -> None:
     intel_page.write_intel(no_store, intel_page.build_snapshot(store, intel, now=NOW), intel)
     assert not (no_store / "public" / "data" / "changes.json").exists()
     assert (no_store / "public" / "data" / "forecasts.json").exists()
+
+
+def test_a_brief_whose_research_fails_is_written_headlines_only(tmp_path, monkeypatch) -> None:
+    from algent_backend.agent_system.agents.intel import brief as br
+
+    monkeypatch.setenv("ALGENT_INTEL_STORE", str(tmp_path / "store"))
+
+    def _boom(*_a, **_k):
+        raise RuntimeError("504 gateway_timeout")
+    monkeypatch.setattr(br, "commission_research", _boom)
+    brief = Brief(title="T", bottom_line="bl", escalation=Escalation(direction="rising", pace="fast"))
+    ctx = type("X", (), {"model_resolver": type("R", (), {
+        "resolve": lambda _s, _spec: type("C", (), {"client": _Model(brief)})()})()})()
+    row = desk.produce(ctx, Theater(id="thr_x", name="Russia vs Europe"), {"recent": 3}, as_of="2026-09-29",
+                       research=True)
+    assert row["researched"] is False and "504" in row["research_error"] and "error" not in row
+    assert (tmp_path / "store" / "briefs" / f"{row['slug']}.json").is_file()
+
+
+def test_one_theaters_failed_brief_does_not_abort_the_others(tmp_path, monkeypatch) -> None:
+    from algent_backend.cli.newsroom import intel as cli
+
+    seen: list[str] = []
+
+    def _produce(_ctx, theater, _heat, **_k):
+        seen.append(theater.id)
+        if theater.id == "thr_a":
+            raise RuntimeError("504 gateway_timeout")
+        return {"theater": theater.id, "slug": "s"}
+    monkeypatch.setattr(desk, "produce", _produce)
+    monkeypatch.setattr(cli, "_ctx", lambda _n: object())
+    monkeypatch.setattr(cli, "_out", lambda _a: tmp_path)
+    board = {"as_of": "2026-09-29", "theaters": [{"id": "thr_a", "name": "A"}, {"id": "thr_b", "name": "B"}],
+             "heat": []}
+    report = cli._produce_briefs(board, ["thr_a", "thr_b"], research=False)
+    assert seen == ["thr_a", "thr_b"]
+    assert "brief failed" in report[0]["error"] and report[1]["slug"] == "s"

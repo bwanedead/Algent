@@ -77,20 +77,31 @@ def produce(ctx: Any, theater: Theater, heat: dict, *, as_of: str, out: Path | N
 
     from ..pulse.seed import evidence_block
 
-    profiles, spent = [], 0.0
+    profiles, spent, research_error = [], 0.0, ""
     if research:
         # The research agent caps itself at $1; this scope makes the spend visible per theater.
-        with cost.article_scoped(1.0):
-            prof = br.commission_research(ctx, None, theater, focus=focus)
-            spent = cost.article_spent_usd()
+        prof = None
+        try:
+            with cost.article_scoped(1.0):
+                try:
+                    prof = br.commission_research(ctx, None, theater, focus=focus)
+                finally:
+                    spent = cost.article_spent_usd()
+        except Exception as exc:  # noqa: BLE001 - fall back to a headlines-only brief rather than lose the theater
+            research_error = br.describe_failure(exc)
+            print(f"[brief] research failed for {theater.id}; continuing headlines-only: {research_error}",
+                  flush=True)
         if prof:
             profiles.append(prof)
             update_quietly(prof, run_id=prof["id"])   # the brief's research moves the Pulses
     # What we said last time, and how the desk's calls on this theater came out, go to the analyst;
     # forecasts this evidence settles are resolved first so the analyst sees the outcomes.
-    settled = forecasts.resolve_due(
-        ctx, None, model_spec, f"{evidence_block(profiles)[0]}\n\nREPORTED HEADLINES:\n{br.reported(theater)}",
-        as_of=as_of, theater_id=theater.id)
+    try:
+        settled = forecasts.resolve_due(
+            ctx, None, model_spec, f"{evidence_block(profiles)[0]}\n\nREPORTED HEADLINES:\n{br.reported(theater)}",
+            as_of=as_of, theater_id=theater.id)
+    except Exception:  # noqa: BLE001 - settling is a side duty; it must not cost the brief
+        settled = []
     earlier = br.recall(theater, as_of=as_of, window_days=BRIEF_WINDOW_DAYS, exclude_ids=[p["id"] for p in profiles])
     brief = br.write_brief(ctx, None, theater, heat, profiles=profiles, pulse_table=br.pulse_catalog(pulse_store()),
                            model_spec=model_spec, focus=focus, corpus_ctx=earlier,
@@ -104,6 +115,8 @@ def produce(ctx: Any, theater: Theater, heat: dict, *, as_of: str, out: Path | N
     row = {"theater": theater.id, "slug": record["slug"], "researched": bool(profiles),
            "research_usd": round(spent, 4), "forecasts_made": len(brief.judgments),
            "forecasts_settled": len(settled)}
+    if research_error:
+        row["research_error"] = research_error
     if out is not None:
         name = br.safe_name(theater.name) + (f"_{br.focus_tag(focus)}" if focus.strip() else "")
         (out / f"brief_{name}.json").write_text(brief.model_dump_json(indent=2), encoding="utf-8")

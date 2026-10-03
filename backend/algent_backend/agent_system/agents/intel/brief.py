@@ -98,6 +98,11 @@ Plain words a newcomer can follow; no internal jargon.
 """
 
 
+def describe_failure(exc: BaseException) -> str:
+    """One line for a report row: what failed, never the whole traceback."""
+    return f"{type(exc).__name__}: {str(exc).strip()[:300]}"
+
+
 def focus_tag(focus: str) -> str:
     """A short stable tag, so a focused research run and its brief never overwrite the general one."""
     import hashlib

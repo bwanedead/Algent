@@ -23,6 +23,8 @@ import os
 import time
 from typing import Any, Callable, TypeVar
 
+from .provider_errors import is_stream_required
+
 _ENV_ENABLED = "ALGENT_RECONNECT_WAIT"
 _ENV_INTERVAL = "ALGENT_RECONNECT_INTERVAL_S"
 _ENV_MAX_WAIT = "ALGENT_RECONNECT_MAX_WAIT_S"
@@ -54,7 +56,14 @@ def is_connection_error(exc: BaseException) -> bool:
     whether the client underneath is OpenAI-shaped, Anthropic-shaped or something added
     later, and importing every SDK to catch its errors is exactly the coupling the model
     target exists to prevent.
+
+    A "non-streaming time limit" 504 is deliberately NOT a connection error even though it
+    arrives as a gateway timeout: the endpoint is fine, the request is simply too big to serve
+    unstreamed, and re-sending it unstreamed for 15 minutes would just time out 15 minutes'
+    worth of times. The caller escalates it to a streamed request instead.
     """
+    if is_stream_required(exc):
+        return False
     seen: set[int] = set()
     cur: BaseException | None = exc
     while cur is not None and id(cur) not in seen:

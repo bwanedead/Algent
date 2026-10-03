@@ -410,25 +410,44 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
         row: dict[str, Any] = {"theater": tid, "researched": False, "research_usd": 0.0}
         profiles: list[dict] = []
         if research:
-            with cost.article_scoped(1.0):                  # the research agent caps itself; this makes spend visible
-                prof = br.commission_research(ctx, None, theater, questions=DAILY_QUESTIONS,
-                                              id_tag=f"daily_{as_of.replace('-', '')}")
-                row["research_usd"] = round(cost.article_spent_usd(), 4)
+            prof = None
+            try:
+                with cost.article_scoped(1.0):              # the research agent caps itself; this makes spend visible
+                    try:
+                        prof = br.commission_research(ctx, None, theater, questions=DAILY_QUESTIONS,
+                                                      id_tag=f"daily_{as_of.replace('-', '')}")
+                    finally:
+                        row["research_usd"] = round(cost.article_spent_usd(), 4)
+            except Exception as exc:  # noqa: BLE001 - one theater's research must never kill the day's report
+                # Fall back to headlines-only for this theater: the section is still written, from the
+                # reported headlines and our earlier corpus, and marked unresearched.
+                row["research_error"] = br.describe_failure(exc)
+                print(f"[daily] research failed for {tid}; continuing headlines-only: {row['research_error']}",
+                      flush=True)
             if prof:
                 profiles.append(prof)
                 update_quietly(prof, run_id=prof["id"])     # the day's research moves the Pulses it bears on
         row["researched"] = bool(profiles)
         any_research = any_research or bool(profiles)
         evidence = f"{research_evidence(profiles)[0]}\n\nREPORTED HEADLINES:\n{br.reported(theater)}"
-        row["forecasts_settled"] = len(forecasts.resolve_due(ctx, None, model_spec, evidence, as_of=as_of,
-                                                             theater_id=tid))
+        try:
+            row["forecasts_settled"] = len(forecasts.resolve_due(ctx, None, model_spec, evidence, as_of=as_of,
+                                                                 theater_id=tid))
+        except Exception as exc:  # noqa: BLE001 - settling is a side duty of the report, never its gate
+            row["forecasts_settled"] = 0
+            row["forecasts_error"] = br.describe_failure(exc)
         previous = previous_section(domain, tid, before=as_of)
         latest_brief = desk.previous_brief(tid)
         earlier = br.recall(theater, as_of=as_of, window_days=RESEARCH_WINDOW_DAYS,
                             exclude_ids=[p["id"] for p in profiles])
-        draft, research_urls = write_section(ctx, None, theater, heat, as_of=as_of, profiles=profiles,
-                                             pulse_table=table, model_spec=model_spec, previous=previous,
-                                             brief=latest_brief, corpus_ctx=earlier)
+        try:
+            draft, research_urls = write_section(ctx, None, theater, heat, as_of=as_of, profiles=profiles,
+                                                 pulse_table=table, model_spec=model_spec, previous=previous,
+                                                 brief=latest_brief, corpus_ctx=earlier)
+        except Exception as exc:  # noqa: BLE001 - skip this theater, keep the others
+            rows.append({**row, "error": f"section writer failed: {br.describe_failure(exc)}"})
+            print(f"[daily] section writer failed for {tid}; theater skipped: {rows[-1]['error']}", flush=True)
+            continue
         if draft is None:
             rows.append({**row, "error": "section writer returned nothing"})
             continue
@@ -444,7 +463,13 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
                                                    as_of=as_of)
         row["proposals"] = proposals
         rows.append(row)
-    summary = write_summary(ctx, None, sections, as_of=as_of, domain=domain, model_spec=model_spec) if sections else None
+    summary, summary_error = None, ""
+    if sections:
+        try:
+            summary = write_summary(ctx, None, sections, as_of=as_of, domain=domain, model_spec=model_spec)
+        except Exception as exc:  # noqa: BLE001 - the sections stand on their own; the top is a convenience
+            summary_error = br.describe_failure(exc)
+            print(f"[daily] summary writer failed; publishing sections without it: {summary_error}", flush=True)
     record = {"schema": SCHEMA, "domain": domain, "date": as_of, "built_at": datetime.now(UTC).isoformat(),
               "researched": any_research,
               "summary": {"headline": summary.headline if summary else
@@ -457,6 +482,8 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
     desk._write(path, record)
     result: dict[str, Any] = {"report": record, "path": str(path), "theaters": rows,
                               "research_usd": round(sum(r["research_usd"] for r in rows), 4)}
+    if summary_error:
+        result["summary_error"] = summary_error
     if out is not None:
         html = out / f"daily_{br.safe_name(domain)}.html"
         html.write_text(render.render_daily(record), encoding="utf-8")

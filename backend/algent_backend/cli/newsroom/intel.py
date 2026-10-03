@@ -110,19 +110,23 @@ def _brief(args: Any) -> int:
 
 def _produce_briefs(board: dict, chosen: list[str], *, research: bool, focus: str = "") -> list[dict]:
     from algent_backend.agent_system.agents.intel import desk
+    from algent_backend.agent_system.agents.intel.brief import describe_failure
     from algent_backend.agent_system.agents.intel.contracts import Theater
     from algent_backend.agent_system.foundation.models import house_spec
 
     theaters = {t["id"]: Theater.model_validate(t) for t in board["theaters"]}
     heat = {h["theater_id"]: h for h in board["heat"]}
     ctx, out, report = _ctx("intel-brief"), _out(board["as_of"]), []
-    spec = house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=16384)
+    spec = house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=16384, streaming=True)
     for tid in chosen:
         if tid not in theaters:
             report.append({"theater": tid, "error": "not on the latest board"})
             continue
-        report.append(desk.produce(ctx, theaters[tid], heat.get(tid, {}), as_of=board["as_of"], out=out,
-                                   research=research, focus=focus, model_spec=spec))
+        try:
+            report.append(desk.produce(ctx, theaters[tid], heat.get(tid, {}), as_of=board["as_of"], out=out,
+                                       research=research, focus=focus, model_spec=spec))
+        except Exception as exc:  # noqa: BLE001 - one theater's failure must not abort the others' briefs
+            report.append({"theater": tid, "error": f"brief failed: {describe_failure(exc)}"})
     return report
 
 
@@ -181,7 +185,8 @@ def _daily(args: Any) -> int:
         print(json.dumps({"error": "no heat board"}))
         return 2
     result = daily.produce_daily(_ctx("intel-daily"), domain=args.domain, top=args.top, research=args.research,
-                                 model_spec=house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=16384),
+                                 model_spec=house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=16384,
+                                                       streaming=True),
                                  as_of=board["as_of"], board=board, out=_out(board["as_of"]))
     # Promote first (quietly: it does not publish) so the one publish below carries the new Pulses.
     proposals = promote_ready_quietly()

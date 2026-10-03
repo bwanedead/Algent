@@ -36,8 +36,13 @@ class _Model:
         task = messages[1].content
         self.tasks.append(task)
         if self.schema is DaySummary:
+            if isinstance(self.summary, Exception):
+                raise self.summary
             return self.summary
-        return next(d for name, d in self.drafts.items() if f"THEATER: {name}" in task)
+        out = next(d for name, d in self.drafts.items() if f"THEATER: {name}" in task)
+        if isinstance(out, Exception):
+            raise out
+        return out
 
 
 def _ctx(drafts, summary, tasks=None):
@@ -240,3 +245,49 @@ def test_an_empty_domain_still_yields_a_valid_report(tmp_path, monkeypatch) -> N
     _store(tmp_path, monkeypatch)
     res = daily.produce_daily(_ctx({}, SUMMARY), domain="science", top=3, model_spec=None, as_of=AS_OF, board=_board())
     assert res["report"]["theaters"] == [] and res["report"]["summary"]["the_day"] == []
+
+
+# ── one theater must never kill the whole daily ───────────────────────────────────────────────
+class _Down(Exception):
+    """Stands in for the provider's 504 once retries are exhausted."""
+
+
+def test_a_failed_section_writer_skips_that_theater_and_the_day_still_ships(tmp_path, monkeypatch) -> None:
+    _store(tmp_path, monkeypatch)
+    ctx = _ctx({"Alpha": _draft(), "Bravo": _Down("504 gateway_timeout")}, SUMMARY)
+    res = daily.produce_daily(ctx, domain="geopolitics", top=5, model_spec=None, as_of=AS_OF, board=_board())
+    assert [t["theater_id"] for t in res["report"]["theaters"]] == ["thr_a"]
+    bravo = next(r for r in res["theaters"] if r["theater"] == "thr_b")
+    assert "section writer failed" in bravo["error"] and "504" in bravo["error"]
+    assert res["report"]["summary"]["headline"] == "Alpha heats up"                  # the summary still ran
+    assert (tmp_path / "intel" / "daily" / "geopolitics" / f"{AS_OF}.json").is_file()
+
+
+def test_failed_research_falls_back_to_a_headlines_only_section(tmp_path, monkeypatch) -> None:
+    _store(tmp_path, monkeypatch)
+
+    def _boom(*_a, **_k):
+        raise _Down("504 gateway_timeout")
+    monkeypatch.setattr(daily.br, "commission_research", _boom)
+    tasks: list[str] = []
+    ctx = _ctx({"Alpha": _draft(), "Bravo": _draft(pulses=[])}, SUMMARY, tasks)
+    res = daily.produce_daily(ctx, domain="geopolitics", top=5, research=True, model_spec=None, as_of=AS_OF,
+                              board=_board())
+    assert [t["theater_id"] for t in res["report"]["theaters"]] == ["thr_a", "thr_b"]    # both still written
+    assert all("504" in r["research_error"] and r["researched"] is False and "error" not in r
+               for r in res["theaters"])
+    assert res["report"]["researched"] is False
+    # headlines-only: the writer is told there are no researched claims
+    assert "RESEARCHED CLAIMS (graded by our research): none" in next(t for t in tasks if "THEATER: Alpha" in t)
+    # and nothing "researched" survives without research behind it
+    assert res["report"]["theaters"][0]["developments"][0]["verification"] == "reported"
+
+
+def test_a_failed_summary_writer_still_persists_the_sections(tmp_path, monkeypatch) -> None:
+    _store(tmp_path, monkeypatch)
+    ctx = _ctx({"Alpha": _draft(), "Bravo": _draft(pulses=[])}, _Down("504 gateway_timeout"))
+    res = daily.produce_daily(ctx, domain="geopolitics", top=5, model_spec=None, as_of=AS_OF, board=_board())
+    assert "504" in res["summary_error"]
+    assert len(res["report"]["theaters"]) == 2
+    assert res["report"]["summary"] == {"headline": "Today's rundown.", "the_day": []}
+    assert (tmp_path / "intel" / "daily" / "geopolitics" / f"{AS_OF}.json").is_file()
