@@ -1,0 +1,519 @@
+{
+  "slug": "2026-10-03-1134",
+  "built_at": "2026-10-03T11:34:00.416908+00:00",
+  "leads": [
+    {
+      "n": 1,
+      "title": "Apple to Curb AI Agents' Full-Disk Access on Macs",
+      "thesis": "Apple will restrict full-disk access on macOS because AI agents have 'substantially' increased abuse risk, a shift that will change how autonomous assistants operate on Macs.",
+      "pillars": [
+        "ai",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arstechnica.com/security/2026/10/apple-changes-full-",
+        "https://www.theverge.com/tech/1004295/apple-limit-mac-disk-a"
+      ]
+    },
+    {
+      "n": 2,
+      "title": "DeepMind Unveils Gemini 4 Argon as Next Frontier Era",
+      "thesis": "DeepMind announced Gemini 4 Argon as its next era of frontier intelligence, positioning it as a step-change in reasoning and multimodal capability.",
+      "pillars": [
+        "ai"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://deepmind.google/blog/gemini-4-argon-our-next-era-of-"
+      ]
+    },
+    {
+      "n": 3,
+      "title": "White House Issues 'Superintelligence' Executive Order With Industry Accord",
+      "thesis": "The White House unveiled an executive order on superintelligence alongside a voluntary industry accord, attempting to set federal guardrails for frontier AI development.",
+      "pillars": [
+        "ai",
+        "geopolitics",
+        "defense"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.defenseone.com/policy/2026/09/white-house-unveil"
+      ]
+    },
+    {
+      "n": 4,
+      "title": "China-Linked Hackers Impersonated US Officials to Target AI Experts",
+      "thesis": "China-linked hackers posed as former US officials and an Anthropic employee to target AI experts, according to a Defense One report on a spear-phishing campaign.",
+      "pillars": [
+        "defense",
+        "ai",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.defenseone.com/threats/2026/10/china-linked-hack"
+      ]
+    },
+    {
+      "n": 5,
+      "title": "Memory Makers Warn RAM Shortage Will Last Through 2028",
+      "thesis": "Memory executives including Micron's CEO expect the RAM shortage to continue through 2028 as AI data-center demand tightens supply.",
+      "pillars": [
+        "technology",
+        "economics",
+        "ai"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arstechnica.com/information-technology/2026/10/memor"
+      ]
+    },
+    {
+      "n": 6,
+      "title": "Two US Federal Agency Hacks Spill Sensitive Data in a Month",
+      "thesis": "Hacks of two federal agencies within a month spilled a bonanza of sensitive data, Ars Technica reports, raising questions about federal cybersecurity posture.",
+      "pillars": [
+        "defense",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arstechnica.com/security/2026/10/hacks-of-2-federal-"
+      ]
+    },
+    {
+      "n": 7,
+      "title": "Flaw in ChatGPT Mac App Could Have Exposed Sensitive Data",
+      "thesis": "A flaw in OpenAI's ChatGPT Mac app could have let hackers grab sensitive user data, Wired reports, before a fix was issued.",
+      "pillars": [
+        "ai",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.wired.com/story/a-flaw-in-chatgpts-mac-app-could"
+      ]
+    },
+    {
+      "n": 8,
+      "title": "Meta Open-Sources Code for Muse AI Gadgets",
+      "thesis": "Meta open-sourced code to let developers build Muse-infused gadgets, pushing its AI assistant into DIY hardware.",
+      "pillars": [
+        "ai",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.theverge.com/tech/1004330/meta-muse-ai-gadgets-h",
+        "https://techcrunch.com/2026/10/02/meta-wants-you-to-build-yo"
+      ]
+    },
+    {
+      "n": 9,
+      "title": "Trillium Labs Pushes High-Risk AI Research in the Open",
+      "thesis": "A group of AI experts behind Trillium Labs wants to conduct high-stakes AI research openly rather than behind closed lab doors, Wired reports.",
+      "pillars": [
+        "ai",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.wired.com/story/trillium-labs-wants-to-do-high-r"
+      ]
+    },
+    {
+      "n": 10,
+      "title": "Sean Parker Rebuilds Stability AI Around Music",
+      "thesis": "Sean Parker is rebuilding Stability AI with a focus on music generation, TechCrunch reports, after the company's turbulent leadership changes.",
+      "pillars": [
+        "ai",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://techcrunch.com/2026/10/02/sean-parker-is-rebuilding-"
+      ]
+    },
+    {
+      "n": 11,
+      "title": "OpenAI Publishes Practical Guide for Building With GPT-6",
+      "thesis": "OpenAI published a practical guide for building with its GPT-6 family, detailing how developers should use the new models.",
+      "pillars": [
+        "ai"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://openai.com/index/practical-guide-building-gpt-6"
+      ]
+    },
+    {
+      "n": 12,
+      "title": "DeepMind Introduces SynthID Bio Watermarking",
+      "thesis": "DeepMind introduced SynthID Bio, a watermarking system for AI-generated biological sequences and data.",
+      "pillars": [
+        "ai",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://deepmind.google/blog/introducing-synthid-bio/"
+      ]
+    },
+    {
+      "n": 13,
+      "title": "Africa Demands Seat at Table on AI Safety Governance",
+      "thesis": "African leaders are pressing for a voice in global AI safety decisions, including at the UN Security Council, Rest of World reports.",
+      "pillars": [
+        "ai",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://restofworld.org/2026/african-leaders-un-security-cou"
+      ]
+    },
+    {
+      "n": 14,
+      "title": "Ethiopian Forces Retake Mekelle Airport From Tigray Rebels",
+      "thesis": "Ethiopia's government forces retook the airport in Mekelle as they advanced against Tigray rebels, Al Jazeera reports, marking a potential turning point in the renewed conflict.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/3/rebels-pulling-back"
+      ]
+    },
+    {
+      "n": 15,
+      "title": "China Launches Anti-Dumping Probe Into EU Chemical Imports",
+      "thesis": "China launched an anti-dumping investigation into EU p-nitrotoluene imports ahead of scheduled trade talks, The Hindu reports.",
+      "pillars": [
+        "geopolitics",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.thehindu.com/business/china-launches-anti-dumpin"
+      ]
+    },
+    {
+      "n": 16,
+      "title": "Chinese Troops Join Russia's Tsentr-2026 Exercise",
+      "thesis": "Chinese troops lined up for Russia's Tsentr-2026 military exercise as bilateral military ties tighten, SCMP reports.",
+      "pillars": [
+        "geopolitics",
+        "defense"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.scmp.com/news/china/military/article/3369657/chi"
+      ]
+    },
+    {
+      "n": 17,
+      "title": "Vietnam's Economy Grew 9.95% in Q3, Fastest in Four Years",
+      "thesis": "Vietnam's economy grew 9.95% in the third quarter, its fastest pace in four years, Nikkei Asia reports, on strong exports and manufacturing.",
+      "pillars": [
+        "economics",
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://asia.nikkei.com/economy/vietnam-s-economy-grew-9.95-"
+      ]
+    },
+    {
+      "n": 18,
+      "title": "Morocco Appoints First Female Head of Government",
+      "thesis": "Morocco appointed its first female head of government, prompting debate over whether the move is symbolic or substantive reform, DW reports.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.dw.com/en/morocco-s-first-female-head-of-governm"
+      ]
+    },
+    {
+      "n": 19,
+      "title": "Argentina to Sell Citizenship for $350,000",
+      "thesis": "Argentina plans to sell citizenship to foreigners for $350,000 to raise dollars, Mercopress reports, joining a small club of citizenship-by-investment programs.",
+      "pillars": [
+        "geopolitics",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://en.mercopress.com/2026/10/03/argentina-to-sell-citiz"
+      ]
+    },
+    {
+      "n": 20,
+      "title": "Taiwan Foreign Minister to Visit Arizona to Deepen Economic Ties",
+      "thesis": "Taiwan's foreign minister will visit Arizona to deepen economic ties, likely linked to TSMC's semiconductor investments, Japan Times reports.",
+      "pillars": [
+        "geopolitics",
+        "economics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.japantimes.co.jp/news/2026/10/03/asia-pacific/po"
+      ]
+    },
+    {
+      "n": 21,
+      "title": "43 Killed in Political Hits Ahead of South Africa Polls",
+      "thesis": "A report found 43 people were killed in political assassinations ahead of South Africa's elections, Africanews reports.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "http://www.africanews.com/2026/10/02/43-killed-in-political-"
+      ]
+    },
+    {
+      "n": 22,
+      "title": "Israeli Airstrike on Gaza City Apartment Kills Five",
+      "thesis": "At least five civilians were killed in an Israeli airstrike on a residential apartment in Gaza City, Al Jazeera reports.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/3/israeli-air-attack-"
+      ]
+    },
+    {
+      "n": 23,
+      "title": "Gunmen Kill Three in Damascus Countryside Village",
+      "thesis": "Unknown gunmen killed three and injured seven in Ras al-Maara in the Damascus countryside, Hawar News reports.",
+      "pillars": [
+        "geopolitics"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://hawarnews.com/en/3-killed-7-injured-in-ras-al-maara-"
+      ]
+    },
+    {
+      "n": 24,
+      "title": "'Super El Niño' Breaks All-Time Record",
+      "thesis": "Analysis shows the recent 'super El Niño' reached a remarkable all-time record, Carbon Brief reports, with implications for global heat and extremes.",
+      "pillars": [
+        "environment",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.carbonbrief.org/analysis-super-el-nino-reaches-r"
+      ]
+    },
+    {
+      "n": 25,
+      "title": "California Legalizes Balcony Solar Power Plants",
+      "thesis": "California made it legal to turn balconies into tiny power plants with plug-in solar, Grist reports, easing rules for apartment dwellers.",
+      "pillars": [
+        "environment",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://grist.org/solutions/california-just-made-it-legal-to"
+      ]
+    },
+    {
+      "n": 26,
+      "title": "Cooper Pairs Found Above Superconducting Critical Temperature",
+      "thesis": "Physicists found Cooper pairs persisting above the superconducting critical temperature in a pairing regime, Phys.org reports, challenging textbook boundaries.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://phys.org/news/2026-10-cooper-pairs-superconducting-c"
+      ]
+    },
+    {
+      "n": 27,
+      "title": "Sea Monkeys Rewrite a Rule of Turbulence",
+      "thesis": "Experiments with brine shrimp (sea monkeys) show how collective swimming can rewrite a rule of turbulence, Quanta Magazine reports.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.quantamagazine.org/sea-monkeys-show-scientists-h"
+      ]
+    },
+    {
+      "n": 28,
+      "title": "Ancient Pottery Reveals Earliest Chocolate East of the Rockies",
+      "thesis": "Ancient pottery analysis revealed the earliest known traces of chocolate east of the Rockies in the Americas, Smithsonian reports.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.smithsonianmag.com/science-nature/ancient-potter"
+      ]
+    },
+    {
+      "n": 29,
+      "title": "ESA Spots Galaxy Spinning Out of Sync",
+      "thesis": "ESA highlighted a galaxy spinning out of sync, with misaligned rotation suggesting a past merger or gas accretion.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.esa.int/ESA_Multimedia/Images/2026/09/A_galaxy_sp"
+      ]
+    },
+    {
+      "n": 30,
+      "title": "Giant Stick Insect Fooled Scientists for Decades",
+      "thesis": "A giant stick insect long thought to be one species was revealed to be distinct after decades of confusion, SciDaily reports.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.sciencedaily.com/releases/2026/09/260930020315.h"
+      ]
+    },
+    {
+      "n": 31,
+      "title": "Yosemite Toads Survive Winter Only to Succumb to Fungus",
+      "thesis": "Young Yosemite toads survive winter hibernation then emerge with deadly chytrid fungus infections, Science News reports.",
+      "pillars": [
+        "science",
+        "environment"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.sciencenews.org/article/yosemite-toads-fungus-ch"
+      ]
+    },
+    {
+      "n": 32,
+      "title": "Mathematicians and AI Battle Over What Counts as True",
+      "thesis": "Mathematicians and AI systems are in a behind-the-scenes battle over what counts as true proof, New Scientist reports.",
+      "pillars": [
+        "science",
+        "ai"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.newscientist.com/article/2591256-mathematicians-"
+      ]
+    },
+    {
+      "n": 33,
+      "title": "Toyota Opens $50M Battery Center in Michigan",
+      "thesis": "Toyota opened a $50 million battery center in Michigan targeting EVs, hybrids and longer-lasting batteries, Interesting Engineering reports.",
+      "pillars": [
+        "technology",
+        "environment"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://interestingengineering.com/energy/toyota-us-battery-"
+      ]
+    },
+    {
+      "n": 34,
+      "title": "NIH Rolls Out Streamlined Public Website",
+      "thesis": "NIH is rolling out a streamlined website to help the public find health information more easily, STAT reports.",
+      "pillars": [
+        "health",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://www.statnews.com/2026/10/02/nih-launching-streamline"
+      ]
+    },
+    {
+      "n": 35,
+      "title": "California Coastal Wave to Raise Sea Levels Statewide",
+      "thesis": "A coastal wave surging up the US West Coast is set to raise sea levels in California, Phys.org reports, amplifying flood risk.",
+      "pillars": [
+        "environment",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://phys.org/news/2026-10-sea-california-coastal-surges-"
+      ]
+    },
+    {
+      "n": 36,
+      "title": "AI Emulation of Sudden Stratospheric Warming Shows Promise",
+      "thesis": "A new paper presents AI emulation of stochastic sudden stratospheric warming with interpretable dynamics, offering faster polar vortex forecasts.",
+      "pillars": [
+        "environment",
+        "ai",
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arxiv.org/abs/2610.02069v1"
+      ]
+    },
+    {
+      "n": 37,
+      "title": "KaliBench Tests AI Cybersecurity Tool Use on Kali Linux",
+      "thesis": "Researchers released KaliBench, a fine-grained benchmark for cybersecurity tool use on Kali Linux, to test AI agents' hacking skills.",
+      "pillars": [
+        "ai",
+        "technology"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arxiv.org/abs/2610.02206v1"
+      ]
+    },
+    {
+      "n": 38,
+      "title": "From DNA Design to Slimming: Auditable Agentic Discovery",
+      "thesis": "A paper demonstrates auditable agentic discovery from DNA design to DNA slimming, showing AI agents that design and minimize genetic constructs.",
+      "pillars": [
+        "science",
+        "ai"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arxiv.org/abs/2609.40143v1"
+      ]
+    },
+    {
+      "n": 39,
+      "title": "Learning SYK Hamiltonians With Machine Learning",
+      "thesis": "A physics preprint on learning SYK Hamiltonians explores how machine learning can reconstruct Sachdev-Ye-Kitaev models from data.",
+      "pillars": [
+        "science",
+        "ai"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arxiv.org/abs/2610.02178v1"
+      ]
+    },
+    {
+      "n": 40,
+      "title": "Trace-Anomaly Dark Matter Scaling in Compact Objects",
+      "thesis": "A preprint proposes trace-anomaly decomposition and universal dark matter scaling in compact objects like neutron stars.",
+      "pillars": [
+        "science"
+      ],
+      "kind": "story",
+      "sources": [
+        "https://arxiv.org/abs/2610.01991v1"
+      ]
+    }
+  ]
+}
