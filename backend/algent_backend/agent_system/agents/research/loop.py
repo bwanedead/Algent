@@ -39,6 +39,7 @@ ARTIFACT_NAME = "profile.json"
 BRIEFING_NAME = "briefing.md"
 PROFILE_COMPLETED = "profile.completed"
 PROFILE_NO_INPUT = "profile.no_input"
+PROFILE_EMPTY = "profile.empty"          # finished with no sourced claim: a failed attempt, not research
 GROUNDING_CAPPED = "grounding.capped"   # the floor overrode the model's asserted maturity
 GENERATOR = "signal_profile@v2"
 STAGE = "signal_profile"
@@ -167,8 +168,14 @@ def _finish(
         context.artifacts.write_text(BRIEFING_NAME, render_briefing(profile))
         link = "../artifacts/" + BRIEFING_NAME
     context.emit(ev.OUTPUT_PREVIEW, _profile_preview(profile, link))
+    if event == PROFILE_COMPLETED and not profile.is_complete:
+        context.emit(PROFILE_EMPTY, {
+            "profile_id": profile.id, "claims": len(profile.claim_ledger), "sources": len(profile.source_ledger),
+            "note": "no sourced claim; the store keeps any earlier complete profile as current",
+        })
     context.emit(event, {
         "profile_id": profile.id,
+        "complete": profile.is_complete,
         "status": profile.profile_status,
         "claims": len(profile.claim_ledger),
         "threads": len(profile.threads),

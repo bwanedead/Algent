@@ -9,6 +9,8 @@ saving new stories over old ones. This is the view that would have caught it.
     newsroom corpus            # totals, growth, links between stories, integrity
     newsroom corpus --json     # the same, machine-readable
     newsroom corpus related "<text>"   # what the researchers would be handed for that text
+    newsroom corpus repair             # profiles a failed run left empty: what would be restored (dry run)
+    newsroom corpus repair --apply     # ...and actually restore the newest complete version of each
 
 Integrity is the section to read first: collisions, profiles that are only recovered, and
 stories whose read pages were not kept all show up there instead of disappearing.
@@ -28,10 +30,12 @@ from algent_backend.agent_system.agents.research.store import JsonProfileStore
 def add_parser(sub: Any) -> None:
     p = sub.add_parser("corpus", help="show the profile knowledge base: size, growth, links, integrity")
     p.add_argument("--json", action="store_true", help="machine-readable output")
-    p.add_argument("verb", nargs="?", choices=["related"], help="related: preview corpus retrieval for TEXT")
+    p.add_argument("verb", nargs="?", choices=["related", "repair"],
+                   help="related: preview corpus retrieval for TEXT; repair: restore profiles a failed run emptied")
     p.add_argument("text", nargs="?", default="", help="the query text for `related`")
     p.add_argument("--budget", type=int, default=None, help="related: character budget for claims")
     p.add_argument("--limit", type=int, default=None, help="related: max profiles consulted")
+    p.add_argument("--apply", action="store_true", help="repair: write the restorations (default is a dry run)")
     p.set_defaults(handler=run_corpus)
 
 
@@ -95,8 +99,15 @@ def summarize(store: JsonProfileStore) -> dict[str, Any]:
             "recovered_profiles": len(recovered),
             "full_profiles_without_kept_reads": len(no_reads),
             "history_versions": sum(len(store.history(i)) for i in titles),
+            "failed_attempts_set_aside": _log_lines(store, "_rejections.jsonl"),
+            "restorations": _log_lines(store, "_restorations.jsonl"),
         },
     }
+
+
+def _log_lines(store: JsonProfileStore, name: str) -> int:
+    log = store.root / name
+    return len(log.read_text(encoding="utf-8").splitlines()) if log.exists() else 0
 
 
 def run_related(args: Any) -> int:
@@ -121,9 +132,34 @@ def run_related(args: Any) -> int:
     return 0
 
 
+def run_repair(args: Any) -> int:
+    """Restore the newest complete version of every profile whose current version a failed run emptied."""
+    from algent_backend.agent_system.agents.research import repair
+
+    store = JsonProfileStore()
+    repairs = repair.plan(store)
+    if args.apply:
+        repair.apply(store, repairs)
+    if args.json:
+        print(json.dumps({"applied": bool(args.apply), "repairs": [
+            {"id": r.profile_id, "restore_from": r.version.name, "current": r.current, "restored": r.restored}
+            for r in repairs]}, indent=2, ensure_ascii=False))
+        return 0
+    verb = "RESTORED" if args.apply else "WOULD RESTORE"
+    for r in repairs:
+        c, b = r.current, r.restored
+        print(f"{verb}  {r.profile_id}")
+        print(f"    now:  {c['claims']} claims, {c['sources']} sources ({c['generated_at'][:19]})")
+        print(f"    from: {r.version.name}  {b['claims']} claims, {b['sources']} sources ({b['generated_at'][:19]})")
+    print(f"\n{len(repairs)} profile(s) " + ("restored." if args.apply else "need repair (dry run; pass --apply to write)."))
+    return 0
+
+
 def run_corpus(args: Any) -> int:
     if getattr(args, "verb", None) == "related":
         return run_related(args)
+    if getattr(args, "verb", None) == "repair":
+        return run_repair(args)
     report = summarize(JsonProfileStore())
     if args.json:
         print(json.dumps(report, indent=2, ensure_ascii=False))
@@ -148,4 +184,6 @@ def run_corpus(args: Any) -> int:
     print(f"  recovered-only profiles (receipts, no threads):   {i['recovered_profiles']}")
     print(f"  full profiles without kept read pages:            {i['full_profiles_without_kept_reads']}")
     print(f"  saved versions in history:                        {i['history_versions']}")
+    print(f"  failed attempts set aside (good profile kept):    {i['failed_attempts_set_aside']}")
+    print(f"  profiles restored from history:                   {i['restorations']}")
     return 0
