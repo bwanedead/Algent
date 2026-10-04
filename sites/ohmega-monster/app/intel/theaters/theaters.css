@@ -59,10 +59,10 @@ button.th-link-btn:focus-visible { outline: 1px solid var(--accent-dim); outline
 .th-m-unclear { fill: none; stroke: var(--muted); stroke-dasharray: 2 2; }
 
 .th-screen { display: grid; gap: 18px 24px; align-items: start; margin: 18px 0 0; }
-.th-screen.is-two { grid-template-columns: minmax(0, 1fr) minmax(0, 320px); }
+.th-screen.is-two { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); }
 .th-screen > * { min-width: 0; }
 .th-map { min-width: 0; }
-.th-map .geo-map-svg, .th-map .geo-map-credit { max-width: 100%; }
+.th-map .geo-map { max-width: none; }
 
 /* Pulses: tile + sparkline, one shape, one 0-100 scale, one time axis. */
 .th-h2 { margin: 0 0 8px; color: var(--strong); font-size: 13px; line-height: 18px; font-weight: 600; overflow-wrap: anywhere; }
@@ -208,7 +208,6 @@ button.th-res-btn:focus-visible { outline: 1px solid var(--accent-dim); outline-
 }
 @media (max-width: 760px) {
   .th-screen.is-two { grid-template-columns: minmax(0, 1fr); }
-  .th-map .geo-map-svg { max-width: 360px; }
 }
 @media (max-width: 560px) {
   .th-ind { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "signal signal" "strip now"; gap: 2px 12px; padding: 7px 0; }

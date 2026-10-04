@@ -19,8 +19,20 @@ _PORTWATCH_LICENCE = "IMF PortWatch — open data, attribute IMF PortWatch; veri
 _YAHOO_LICENCE = "Unofficial Yahoo endpoint; no published terms — internal only until reviewed"
 
 
-def _chokepoint(slug: str, label: str, port: str, tags: list[str]) -> list[Series]:
+#: Where each tracked chokepoint sits, for maps. PortWatch's feature service carries no coordinates for
+#: these ports (the query returns date/portname/counts only), so they are set by hand at the narrowest
+#: point of the passage (approximate, ~10 km). Filled by ``_chokepoint``; read via ``chokepoint_sites()``.
+_SITES: list[dict] = []
+
+
+def chokepoint_sites() -> list[dict]:
+    """[{series_id, label, lat, lon}] — one per tracked chokepoint; ``series_id`` is its all-vessel series."""
+    return [dict(s) for s in _SITES]
+
+
+def _chokepoint(slug: str, label: str, port: str, tags: list[str], lat: float, lon: float) -> list[Series]:
     """Two series per chokepoint: all-vessel transits and tanker transits (a Hormuz/oil lens)."""
+    _SITES.append({"series_id": f"chk_{slug}_transits", "label": label, "lat": lat, "lon": lon})
     common = dict(unit="ships/day", frequency="daily", source="IMF PortWatch", source_url=_PORTWATCH_PAGE,
                   fetcher="portwatch", licence=_PORTWATCH_LICENCE, public_display=True,
                   tags=["chokepoint", "shipping", *tags])
@@ -44,13 +56,13 @@ def _yf(symbol: str) -> str:
 
 CATALOG: list[Series] = [
     # --- chokepoints: what actually moved through the straits (IMF PortWatch, ~1 week lag) ---
-    *_chokepoint("hormuz", "Strait of Hormuz", "Strait of Hormuz", ["hormuz", "iran", "gulf", "oil", "energy"]),
-    *_chokepoint("bab_el_mandeb", "Bab el-Mandeb", "Bab el-Mandeb Strait", ["bab-el-mandeb", "red-sea", "yemen", "houthi"]),
-    *_chokepoint("suez", "Suez Canal", "Suez Canal", ["suez", "egypt", "red-sea"]),
-    *_chokepoint("panama", "Panama Canal", "Panama Canal", ["panama", "americas", "drought"]),
-    *_chokepoint("malacca", "Strait of Malacca", "Malacca Strait", ["malacca", "asia", "china", "singapore"]),
-    *_chokepoint("bosporus", "Bosporus", "Bosporus Strait", ["bosporus", "turkey", "black-sea", "russia", "ukraine"]),
-    *_chokepoint("cape", "Cape of Good Hope", "Cape of Good Hope", ["cape-of-good-hope", "africa", "red-sea", "rerouting"]),
+    *_chokepoint("hormuz", "Strait of Hormuz", "Strait of Hormuz", ["hormuz", "iran", "gulf", "oil", "energy"], 26.57, 56.25),
+    *_chokepoint("bab_el_mandeb", "Bab el-Mandeb", "Bab el-Mandeb Strait", ["bab-el-mandeb", "red-sea", "yemen", "houthi"], 12.58, 43.33),
+    *_chokepoint("suez", "Suez Canal", "Suez Canal", ["suez", "egypt", "red-sea"], 30.46, 32.35),
+    *_chokepoint("panama", "Panama Canal", "Panama Canal", ["panama", "americas", "drought"], 9.08, -79.68),
+    *_chokepoint("malacca", "Strait of Malacca", "Malacca Strait", ["malacca", "asia", "china", "singapore"], 2.5, 101.2),
+    *_chokepoint("bosporus", "Bosporus", "Bosporus Strait", ["bosporus", "turkey", "black-sea", "russia", "ukraine"], 41.12, 29.07),
+    *_chokepoint("cape", "Cape of Good Hope", "Cape of Good Hope", ["cape-of-good-hope", "africa", "red-sea", "rerouting"], -34.36, 18.47),
 
     # --- energy ---
     _yahoo("px_brent", "Brent crude (front month)", "USD/bbl", "BZ=F",
