@@ -55,30 +55,68 @@ Profile and analytics are SEPARATE concerns. The profile is a researched story m
 a data warehouse. Do NOT refuse a useful chart just because a multi-row series is not already
 in the claim ledger. Ask: would a figure help, and is the data reasonably available?
 
-- If something useful exists: request that one analytic.
+- If something useful exists: request it. If two genuinely different questions each need a
+  figure — one spatial, one quantitative — request both.
 - If nothing would help: warranted=false. That is success.
 - Never decorate, never fill a quota, never invent numbers or a map without data.
 
-UTILITY CLASSES (pick the one that helps most — geography often beats trajectory for place stories):
+HOW MANY IS A JUDGEMENT, NOT A BUDGET. Request what the story warrants — no quota to fill, and no
+small ceiling to ration against. There is a hard cap far above what any normal story needs; if you
+find yourself dropping a figure you judged useful in order to stay under a number, that is the
+wrong instinct.
+
+Orientation and quantity in particular do not compete: a map answers *where and in what relation*,
+a chart answers *how much*. A reader who cannot place the geography is not helped by a better bar
+chart, and a reader who can place it still needs the numbers. When a story turns on both, ask for
+both.
+
+UTILITY CLASSES (geography often beats trajectory for place stories; more than one may apply):
 1. GEOGRAPHY / ORIENTATION MAP — warranted when the story turns on **spatial relationships a
    sentence cannot carry**: chokepoints (Bab el-Mandeb, Hormuz, Suez), multi-city strike patterns,
    borders, spread, theaters a cold Western reader cannot hold from prose alone. Prefer a
    **labeled map** (country/theater basemap + real lat/lon points) over a speculative
    shipping-cost series you may not fetch.
 
-   **HARD RULE: a map must show a RELATIONSHIP BETWEEN AT LEAST TWO THINGS THE STORY IS ABOUT.**
-   A distance, a route, a spread, a boundary, a chokepoint between two places both named in the
-   piece. If the map's honest one-line description is "where X is", it is banned — no matter how
-   load-bearing the place feels, no matter that the reader might wonder where it is. A named
-   place plus a reader's general knowledge already answers "where is X" better than an outline
-   with a dot, and we have now shipped that same useless figure three times:
+   **THE ONLY TEST: would seeing this actually help the reader understand the story?** If a map
+   gives real geographic orientation, or pairs with the content so the reader grasps something
+   they would otherwise have to assemble in their head, request it. That is a judgement about
+   this story and this reader — make it, and do not look for a threshold to pass instead.
+
+   Two failure directions, and the second is the live one.
+
+   OVER-MAPPING is decoration, and we went through a period of it — a figure attached to a story
+   because the story mentioned a place. What made those bad was not a rule they broke; it was that
+   they taught the reader nothing:
      - a Canada-and-US outline with one point, for a fossil found in Saskatchewan;
      - a whole-Mars outline with one point, for dunes in Kaiser Crater — which did not even
        show the crater, let alone the dunes the article is about;
      - two Baja coordinates, where the story was the behaviour, not the geography.
-   Asking "name the spatial question" was not enough of a filter, because a plausible-sounding
-   question can be invented for any location. So: **count the things being related. Fewer than
-   two, no map.**
+   In each, a reader who roughly knew where the place was gained nothing, and a reader who did not
+   still could not see the thing the article was about. "Where is X", answered by an outline with a
+   dot, is not orientation. That — not an arity count — is the bar those figures failed.
+
+   UNDER-MAPPING is where the correction landed, and it cost the reader more. That guidance had
+   hardened into a rule that a map must relate at least two named things, which made maps awkward
+   to justify at all, and a drought story about the **Danube** shipped with no river on the page.
+   Its course through six of the countries in the piece is *why* one drought took out plants in
+   several of them at once. Nobody judged that map unhelpful; the rule just made it hard to ask
+   for. When one physical feature — river, basin, pipeline, strait, corridor, fault line — is the
+   mechanism connecting events across places, its course is usually worth drawing: trace it, mark
+   the sites the story names along it, label what it crosses.
+
+   Border and enclave relationships are the same judgement, not a special exemption: Ceuta against
+   Morocco, mainland Spain and the Strait is geography a cold reader cannot hold from prose, so it
+   is worth showing.
+
+   For any map: set visual_class=`locator_map`, `may_source=true` (coordinates and basemap geometry
+   are public reference data, never in a claim ledger), name the entities in `spec`, and use
+   `priority=essential_context` when the piece does not work without it. Whether to map is a
+   judgement; accuracy is not — see the map rules below, which are not negotiable.
+
+   SOURCE SPECIMEN / COMPARISON panels (visual_class=`source_specimen`) are NOT yet
+   shippable — the licensed source-media lane is unfinished. Do not request them. Prefer a
+   locator_map, data_chart, comparison, or timeline when those genuinely help. When a
+   specimen would be ideal, set warranted=false rather than inventing glyphs or unlicensed media.
 
    And a map may never be schematic. An approximated band, an indicative boundary, a "not an
    exact ice boundary" frost zone — a figure that has to disclaim its own geometry is not
@@ -111,6 +149,33 @@ UTILITY CLASSES (pick the one that helps most — geography often beats trajecto
    baseline the reader can hold (prior peak, share of population, share of a total, another
    country) when those numbers exist or are publicly standard.
 4. STRUCTURE — a before/after or part-of-whole that prose makes the reader assemble row by row.
+
+PICK THE SCOPE A READER IS ACTUALLY ASKING ABOUT. The profile now carries claims at several
+scales — the incident, the system it sits in, who depends on it, who gains and loses, the
+larger story it belongs to. A figure should almost always be drawn at the scale where the
+reader's question lives, which is rarely the incident itself. For a Congo cobalt export ban,
+the figure worth commissioning is Congo's share of world supply, or which industries depend on
+that supply — not a timeline of the decree's procedural steps. A chart about a sub-process of
+the specific event is the single most common way we produce something nobody wanted: it is
+technically about the story and answers a question no reader had.
+
+Before requesting anything, name the question in reader words ("how much of the world's cobalt
+comes from one country?"). If the question only makes sense to someone already inside the
+story, you are drawing at the wrong altitude — go up a level.
+
+A FIGURE MUST CARRY INTEL, NOT REPEAT THE PROSE. The operator's verdict on a Greenland piece's
+two figures was that they "didn't give much intel": one located Greenland on a map, the other
+re-drew five numbers the article had already stated in sentences. Both were accurate and both
+were furniture. Before requesting, ask what a reader will KNOW after the figure that the text
+did not hand them — a relationship they could not assemble in their head, a comparison nobody
+spelled out, the shape of a series, the balance of forces. If the honest answer is "the same
+numbers, as bars", do not request it.
+
+For a strategic story, draw the BOARD, not the locations. "Where Greenland is" is orientation a
+reader already has; what they lack is why the position matters — the short great-circle route
+between Russia and North America running over it, the gap a submarine must pass through, who
+has how many icebreakers or Arctic bases on each side. A map earns its place by showing what
+the geography DOES, and a comparison earns its place by showing the balance the move shifts.
 
 THE TEST THAT OVERRIDES ALL FOUR: **would a real publication have commissioned this?**
 Ask it in that form, because a desk with a graphics budget only spends it when the picture
@@ -170,7 +235,59 @@ Reader clarity is part of usefulness. PUBLISHED fields:
   the story is a ranking or a standing, show the whole field or an explicit top-N *and* bottom-N,
   and put the rank numbers on it when the rank is the point. Seven unexplained peers invites the
   question "why these seven?".
+
+  **ENOUGH POINTS TO SHOW THE SHAPE.** Two numbers are not a trend, they are a pair — and we
+  shipped "EU data-centre electricity use, 2024–2030" as exactly two bars, which tells a reader
+  the endpoints and hides the thing they actually want, which is how fast it is bending. If the
+  story is growth, decline or acceleration, ask for the **series**: several years of history
+  before the present, and the projection after it, so the curve is visible and the reader can see
+  whether the future line continues the past one or breaks from it. History is usually the
+  cheapest part to source and the part that makes the figure worth having.
+
+  **SAY WHAT IS BEING COUNTED, AND WHETHER IT HAPPENED.** A shipped chart carried the label
+  "279 total DUV systems, 47% immersion" and a reader could not tell what a "DUV system" is,
+  whether 279 was a year's shipments or a running total, or whether the two bars beside it were
+  actual output, capacity or an announced target. Every figure must state, on the figure:
+    - the **unit** in words a general reader holds ("lithography machines shipped per year");
+    - the **status** of each number — actual, reported, estimated, or *target*. Never plot a
+      target adjacent to an actual without labelling which is which; that is the difference
+      between a comparison and a false equivalence;
+    - that the compared quantities are **the same kind of thing**. If our side is
+      immersion-only and theirs is all types, either compute the comparable subset or separate
+      the two visibly. Comparing a subset to a total silently overstates the gap.
+
+  **A TIMELINE MUST EARN ITS SPACE.** A shipped Swift timeline put a 2004 launch at one end and
+  a cluster of 2026 events at the other, leaving two-thirds of the canvas empty and crushing
+  every event that mattered into the right margin — where the labels then ran off the edge. If
+  most of a time axis is empty, break or compress the quiet span and give the room to the period
+  where things happen. And if the sequence tells the reader nothing they did not get from the
+  prose, do not request it: dates are not a finding.
+
+  **INSTANTLY LEGIBLE, NOT STUDIABLE.** A reader gives a figure about three seconds. In that time
+  they must get the point without decoding it. So:
+    - the `title` states the FINDING, not the measure — "Data-centre demand nearly doubles by
+      2030", not "EU data-centre electricity use, 2024–2030";
+    - and the `spec` must describe a figure a stranger understands without being taught it.
+      Ask what one mark is and in what unit, and if answering needs a sentence of explanation,
+      ask for a simpler cut instead. Do not buy clarity with furniture — keys, notes and
+      explanatory boxes are clutter, and cluttered is how ours read;
+    - label the lines and bars **directly** on the plot; a legend that has to be matched back to
+      colours is a puzzle;
+    - annotate the one number that carries the story right where it happens on the chart;
+    - units and scale in words a non-specialist holds — say what a terawatt-hour is comparable to
+      if the quantity is unfamiliar;
+    - few series, no dual axes, no stacked everything. If the figure needs a paragraph of study,
+      it has failed and a simpler cut of the same data is the fix.
 - `data_refs` and/or `may_source` + `source_hint` as above.
+- ALSO SET on every request:
+  - `visual_class`: locator_map | data_chart | comparison | timeline | process_diagram |
+    source_specimen | other
+  - `priority`: essential_context (cold reader cannot hold the article's central shape
+    without it — locator OR scale/trajectory when that IS the story) | high_value | optional.
+    Slim runs may keep only one essential_context visual.
+  - `placement`: after_quick_take | after_opening | after_section | mid_body
+  - `reader_gap`: the mental model this supplies that prose alone cannot
+  - `factual_basis`: cited data, public reference geometry, or sourced media basis
 
 Prefer zero, one, or two requests. Do not ship three.
 
@@ -191,6 +308,7 @@ SYSTEM_PROMPT = compose_system_prompt(UNIVERSAL_AGENT_BASE, NEWSROOM_SYSTEM_MAP,
 
 class AnalyticsState(TypedDict, total=False):
     profile: dict[str, Any]         # the profile to assess (input)
+    treatment: dict[str, Any]       # optional governing frame / entry fields
     analytics_plan: dict[str, Any]  # the produced AnalyticsPlan
 
 
@@ -204,8 +322,16 @@ def build_analytics_router_graph(context: AgentRunContext, *, model_spec: ModelS
             return _finish(context, AnalyticsPlan(id="analytics_none", warranted=False,
                                                   note="no profile supplied"))
         profile = SignalProfile.model_validate(pdict)
+        treatment = None
+        if state.get("treatment"):
+            try:
+                from .treatment import EditorialTreatment
+                treatment = EditorialTreatment.model_validate(state["treatment"])
+            except Exception:  # noqa: BLE001
+                treatment = None
         raw = structured.invoke(
-            [SystemMessage(content=SYSTEM_PROMPT), HumanMessage(content=_message(profile))],
+            [SystemMessage(content=SYSTEM_PROMPT),
+             HumanMessage(content=_message(profile, treatment))],
             config=config,
         )
         plan = raw if isinstance(raw, AnalyticsPlan) else AnalyticsPlan(id="", warranted=False)
@@ -218,29 +344,42 @@ def build_analytics_router_graph(context: AgentRunContext, *, model_spec: ModelS
     return graph.compile()
 
 
-def _message(profile: SignalProfile) -> str:
+def _message(profile: SignalProfile, treatment=None) -> str:
     ids = [
         "- claims: " + ", ".join(f"{c.id} ({c.salience})" for c in profile.claim_ledger),
         "- sources: " + ", ".join(s.id for s in profile.source_ledger),
     ]
     # Researcher flags are optional hints only — never a quota to fill.
     flags = profile.data_notes + profile.visual_opportunities
+    entry: list[str] = []
+    if treatment is not None:
+        entry = ["", "## Governing treatment (visuals must serve THIS frame — not a rejected one)"]
+        if treatment.chosen_frame.frame:
+            entry.append(f"- chosen_frame: {treatment.chosen_frame.frame}")
+        if treatment.reader_question:
+            entry.append(f"- reader_question: {treatment.reader_question}")
+        if treatment.news_kernel:
+            entry.append(f"- news_kernel: {treatment.news_kernel}")
+        if treatment.plain_subject:
+            entry.append(f"- plain_subject: {treatment.plain_subject}")
     return "\n".join([
         f"# ASSESS FOR ANALYTICS — {profile.id}",
         "",
         "## Profile data ids (optional grounding when numbers are already held)",
         *ids,
+        *entry,
         *(["", "## Optional researcher notes (not a mandate to chart):",
            *[f"- {f}" for f in flags]] if flags else []),
         "",
         render_briefing(profile),
         "",
-        "TASK: Decide only by usefulness for a house reader. A multi-row series need NOT already "
+        "TASK: Decide only by usefulness for a house reader. Align with the treatment's "
+        "chosen frame and news_kernel when present. A multi-row series need NOT already "
         "live in the profile — if a trajectory, place breakdown, or scale comparison would help "
         "and public data is a reasonable hunch, set may_source=true with a concrete source_hint. "
-        "When key numbers are already in claims, set data_refs. Title what is measured; question "
-        "what the figure shows. Never evidence ledgers or claim-status tables. Zero is a normal "
-        "success.",
+        "When key numbers are already in claims, set data_refs. Set visual_class, priority, "
+        "placement, reader_gap, factual_basis. Title what is measured; question what the figure "
+        "shows. Never evidence ledgers or claim-status tables. Zero is a normal success.",
     ])
 
 
@@ -280,12 +419,33 @@ def _finalize(plan: AnalyticsPlan, profile: SignalProfile, model: str) -> Analyt
                 r = r.model_copy(update={"source_hint": r.spec.strip()})
             kept.append(r)
     requests = [r for r in kept if _is_reader_facing(r)]
+    # Licensed source-media lane is not built yet — keep specimen requests on the plan as
+    # explicit skips so digests/receipts show why they did not ship, but do not fulfill them.
+    active: list[AnalyticsRequest] = []
+    deferred: list[AnalyticsRequest] = []
+    for r in requests:
+        if r.visual_class == "source_specimen":
+            deferred.append(r.model_copy(update={
+                "status": "source_unavailable",
+                "rationale": (
+                    (r.rationale + " | " if r.rationale else "")
+                    + "licensed media lane not ready"
+                ).strip(),
+            }))
+        else:
+            # Fulfillment status is owned by the worker — never by the router model.
+            # Muse (and others) sometimes emit status="produced" on the plan; that used
+            # to skip the worker entirely while the report counted fake productions.
+            active.append(r.model_copy(update={"status": "requested"}))
     note = plan.note
-    if plan.requests and not requests:
+    if deferred:
+        note = (note + " | dropped source_specimen (licensed media lane not ready)").strip(" |")
+    if plan.requests and not active and not deferred:
         note = (note + " | dropped non-reader-facing / ungrounded / unsourceable analytics").strip(" |")
     return plan.model_copy(update={
         "id": f"analytics_{profile.id}", "profile_id": profile.id,
-        "warranted": bool(requests) and plan.warranted, "requests": requests,
+        "warranted": bool(active) and plan.warranted,
+        "requests": active + deferred,
         "note": note,
         "generator": GENERATOR, "model": model, "generated_at": datetime.now(UTC).isoformat(),
     })

@@ -25,6 +25,7 @@ from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.context import AgentRunContext
 from algent_backend.agent_system.tools.sourcing.search import policy
 
+from . import corpus
 from .assembly import finalize_profile
 from .briefing import render_briefing
 from .grounding import grounding_gap
@@ -38,6 +39,7 @@ ARTIFACT_NAME = "profile.json"
 BRIEFING_NAME = "briefing.md"
 PROFILE_COMPLETED = "profile.completed"
 PROFILE_NO_INPUT = "profile.no_input"
+PROFILE_EMPTY = "profile.empty"          # finished with no sourced claim: a failed attempt, not research
 GROUNDING_CAPPED = "grounding.capped"   # the floor overrode the model's asserted maturity
 GENERATOR = "signal_profile@v2"
 STAGE = "signal_profile"
@@ -81,6 +83,7 @@ def build_profile_graph(
                 "items": list(vector["x_seed_urls"])[:8],
             })
         context.emit(ev.INPUT_PREVIEW, _vector_preview(vector))
+        prior = _recall(context, vector)
 
         # Scope the search gate + paid budget + USD cap, and collect source snapshots,
         # for the whole research loop.
@@ -88,7 +91,7 @@ def build_profile_graph(
                 cost.scoped(cost_cap_usd, model_spec.model), snapshots.scoped():
             produced = stream_react_loop(
                 agent,
-                {"messages": [HumanMessage(content=build_vector_message(vector))]},
+                {"messages": [HumanMessage(content=build_vector_message(vector, prior.render()))]},
                 context=context,
                 config=config,
             )
@@ -106,7 +109,9 @@ def build_profile_graph(
 
         asserted_status = profile.profile_status
         profile = finalize_profile(
-            profile, vector, captured, model=model_spec.model, generator=GENERATOR, stage=STAGE
+            profile, vector, captured, model=model_spec.model, generator=GENERATOR, stage=STAGE,
+            related_profiles=prior.profile_ids, corpus_context=prior.summaries(),
+            prior_claim_ids=prior.claim_ids,
         )
         # Telemetry: the deterministic grounding floor overrode the model's maturity claim.
         # This is free doctrine-failure measurement AND the exact worklist enrichment can act on.
@@ -122,6 +127,26 @@ def build_profile_graph(
     graph.add_edge(START, "research")
     graph.add_edge("research", END)
     return graph.compile()
+
+
+def _recall(context: AgentRunContext, vector: dict[str, Any]) -> corpus.CorpusContext:
+    """What the corpus already knows about this vector. Memory is an aid: a store hiccup is an empty
+    recall, never a failed run."""
+    query = "\n".join([str(vector.get("title", "")), str(vector.get("thesis", "")),
+                       str(vector.get("rationale", "")), *map(str, vector.get("key_questions") or [])])
+    try:
+        found = corpus.related(JsonProfileStore(), query_text=query, entities=vector.get("entities") or (),
+                               sources=vector.get("sources") or ())
+    except Exception:  # noqa: BLE001
+        return corpus.CorpusContext()
+    if found.profiles:
+        context.emit(ev.INPUT_PREVIEW, {
+            "title": "corpus memory: what we already know",
+            "summary": f"{len(found.claims)} earlier claim(s) from {len(found.profiles)} related profile(s)",
+            "items": [f"{p.id} {p.title[:60]} ({'; '.join(p.reasons)})" for p in found.profiles[:6]],
+            "link": None,
+        })
+    return found
 
 
 def _finish(
@@ -143,8 +168,14 @@ def _finish(
         context.artifacts.write_text(BRIEFING_NAME, render_briefing(profile))
         link = "../artifacts/" + BRIEFING_NAME
     context.emit(ev.OUTPUT_PREVIEW, _profile_preview(profile, link))
+    if event == PROFILE_COMPLETED and not profile.is_complete:
+        context.emit(PROFILE_EMPTY, {
+            "profile_id": profile.id, "claims": len(profile.claim_ledger), "sources": len(profile.source_ledger),
+            "note": "no sourced claim; the store keeps any earlier complete profile as current",
+        })
     context.emit(event, {
         "profile_id": profile.id,
+        "complete": profile.is_complete,
         "status": profile.profile_status,
         "claims": len(profile.claim_ledger),
         "threads": len(profile.threads),

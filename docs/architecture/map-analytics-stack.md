@@ -66,3 +66,20 @@ unavailable.
 - Heatmaps or "areas controlled by X" without real region values or official boundaries.
 - `pip install` inside a run; mid-run dependency sprawl.
 - Downloading global OSM/elevation dumps into the workspace.
+
+## Daily-report maps (spec v2)
+
+The geopolitics daily and the theater dossiers draw ONE map: `geo.build_map` (backend/algent_backend/agent_system/agents/intel/geo.py, with `geo_draw.py` for pure geometry and `geo_layers.py` for reference layers) produces a self-contained spec embedded in the daily record; `sites/ohmega-monster/components/map/GeoMap.tsx` draws it for both `/geopolitics` and `/intel/theaters/[id]`. Doctrine: `docs/ethos/information-ergonomics-ethos.md` — clear, accurate, utilitarian, not stylised.
+
+**Data** (`analytics_workspace/scripts/download_basemap.py`, Natural Earth, public domain, gitignored under `data/natural_earth/`): 110m countries (~0.8 MB, fallback), 50m countries (3.1 MB, drawing and validation), 10m populated places simple (4.9 MB), 50m rivers + lake centerlines (0.8 MB), 50m lakes (0.9 MB). Every layer is optional: without 50m the map draws from 110m; without the rest it is land + marks. Crimea is drawn as Ukraine (`_RECOGNISED`) for land, validation and cities.
+
+**Spec v2** (version 1 specs in stored records have only `bbox/projection/width/height/countries/points/credit`; the site defaults every v2 layer to empty):
+`version, bbox, projection, width(1000), height, countries[{name,d}], labels[{name,x,y,r,key}], rivers[{d}], lakes[{d}], cities[{name,x,y,capital}], annotations[{kind,x,y,title,lines,series_id,source}], scale{km,px,label}, locator{width,height,d,rect}|null, points[...], credit`.
+- Frame: points padded 35%, never narrower than 12 degrees, aspect 0.5-0.9 — a reader can always place the region.
+- Simplification: Douglas-Peucker, tolerance 0.6 frame units at a 12-degree frame (~0.4 px), growing with sqrt(span), capped at 2.
+- Labels: country name at a point inside its largest visible piece (`r` = room); countries holding an event are `key`.
+- Cities: capitals first (all at country scale, fewer as the frame widens, but capitals of event countries always), then largest cities by population with minimum spacing and a budget that falls with frame width.
+- Scale bar: round 1-2-5 km, exact at mid-latitude. Locator: world inset with the frame outlined, omitted for frames over half the world.
+- Annotations: tracked chokepoints (`instruments/catalog.chokepoint_sites()`; hand-set coordinates, PortWatch gives none) inside the frame get the latest stored reading beside a year-ago reading ("37 ships/day · 35 a year ago / as of 27 Sep"). Store only, never network; `public_display` series only; nothing when the store is empty.
+
+**Style** (map-local colours in `geopolitics.css`, identical in both themes — a light printed-map panel): pale water, light land, grey borders, thin blue rivers, dark labels with a white halo, numbered markers matching the development list (solid = researched, hollow = reported), small city dots, capitals bold, teal callout for instrument readings. Label placement is client-side (`layout.ts`) from the real rendered width: marks, callout, place names, capitals, country names, other cities, collision-checked — fewer labels on a phone, never overlapping ones.

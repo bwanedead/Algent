@@ -52,7 +52,7 @@ def _ctx(model, events):
 
 
 def _spec():
-    return ModelSpec(provider="openai", model="gpt-5.4-nano")
+    return ModelSpec(provider="openai", model="gpt-5.6-luna")
 
 
 def _clean_profile() -> SignalProfile:
@@ -107,4 +107,4 @@ def test_caveat_reviewer_registered_on_nano() -> None:
     from algent_backend.agent_system.agents.registry import default_agent_registry
 
     spec = default_agent_registry().get("caveat_reviewer")
-    assert spec.tool_ids == () and spec.default_model.model == "gpt-5.4-nano"
+    assert spec.tool_ids == () and spec.default_model.provider == "meta" and spec.default_model.model == "muse-spark-1.2-contributor"

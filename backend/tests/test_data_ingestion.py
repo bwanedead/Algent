@@ -289,7 +289,7 @@ def test_x_grok_scrubs_keys_and_parses_json(monkeypatch) -> None:
     def fake_run(cmd, **kw):
         return type("R", (), {"stdout": 'prose…\n[{"topic":"Quake","summary":"big","urls":["http://a"]}]\nmore'})()
 
-    monkeypatch.setattr(x_grok_cli.subprocess, "run", fake_run)
+    monkeypatch.setattr(x_grok_cli, "run_capturing", fake_run)
     hits = x_grok_cli.fetch_x_grok(limit=5, lanes=("ai",))
     assert hits == [{"topic": "Quake", "summary": "big", "urls": ["http://a"],
                      "lane": "ai", "source": "x_grok"}]
@@ -304,7 +304,7 @@ def test_x_grok_fans_out_lanes_and_tags(monkeypatch) -> None:
         topic = "UFC 320 booked" if "UFC" in prompt else "GPT-6 launch"
         return type("R", (), {"stdout": f'[{{"topic":"{topic}","summary":"s","urls":[]}}]'})()
 
-    monkeypatch.setattr(x_grok_cli.subprocess, "run", fake_run)
+    monkeypatch.setattr(x_grok_cli, "run_capturing", fake_run)
     hits = x_grok_cli.fetch_x_grok(limit=3, lanes=("ai", "mma"), max_workers=2)
     tagged = {h["topic"]: h["lane"] for h in hits}
     assert tagged == {"GPT-6 launch": "ai", "UFC 320 booked": "mma"}
@@ -379,6 +379,7 @@ def test_x_api_discovery_uses_news_stories_not_trends(monkeypatch) -> None:
     monkeypatch.setenv(x_native._USE_AI_ENV, "0")
     monkeypatch.setenv(x_native._USE_NOVELTY_ENV, "0")
     monkeypatch.setenv(x_native._USE_SPECTRUM_ENV, "0")
+    monkeypatch.setenv(x_native._USE_LISTS_ENV, "0")
 
     class _Resp:
         status_code = 200
@@ -424,6 +425,7 @@ def test_x_api_discovery_pulls_general_aggregators(monkeypatch) -> None:
     monkeypatch.setenv(x_native._USE_AI_ENV, "0")
     monkeypatch.setenv(x_native._USE_NOVELTY_ENV, "0")
     monkeypatch.setenv(x_native._USE_SPECTRUM_ENV, "0")
+    monkeypatch.setenv(x_native._USE_LISTS_ENV, "0")
     monkeypatch.setenv(x_native._AGGS_ENV, "MarioNawfal")
     monkeypatch.setenv(x_native._AGGS_PER_ENV, "2")
 
@@ -482,6 +484,7 @@ def test_x_api_discovery_ai_pulse_is_dedicated_not_general_only(monkeypatch) -> 
     monkeypatch.setenv(x_native._USE_AGGS_ENV, "0")
     monkeypatch.setenv(x_native._USE_NOVELTY_ENV, "0")
     monkeypatch.setenv(x_native._USE_SPECTRUM_ENV, "0")
+    monkeypatch.setenv(x_native._USE_LISTS_ENV, "0")
     monkeypatch.setenv(x_native._AI_ACCOUNTS_ENV, "OpenAI,sama")
     monkeypatch.setenv(x_native._AI_NEWS_SEEDS_ENV, "none")
     monkeypatch.setenv(x_native._AI_MAX_POSTS_ENV, "10")
@@ -612,7 +615,8 @@ def test_resolve_channels_precedence(monkeypatch) -> None:
 
     monkeypatch.delenv(pipeline._ENV_CHANNELS, raising=False)
     assert pipeline.resolve_channels(None) == pipeline.DEFAULT_CHANNELS  # default
-    assert "x" in pipeline.DEFAULT_CHANNELS  # X on by default (sparse trends; cheap)
+    assert "x" not in pipeline.DEFAULT_CHANNELS  # X opt-in (sparse yield vs spend)
+    assert "x" in pipeline.ALL_CHANNELS  # still available via --channels / env
     # Explicit arg wins, filtered to valid channels.
     assert pipeline.resolve_channels({"gkg", "x", "bogus"}) == frozenset({"gkg", "x"})
     # Env var used when no explicit arg; an all-invalid set falls back to default.
@@ -1077,11 +1081,35 @@ def test_run_sweep_backs_off_harder_across_beats_while_throttled() -> None:
     def always_limited(q, **kw):
         raise gdelt_doc.RateLimited("slow down")
 
+    # Raise the consecutive-throttle abort so this test can observe multi-beat backoff.
     run_sweep(
         [_beat(f"pillar:b{i}") for i in range(4)], search=always_limited, sleep=slept.append,
         pace_s=10.0, cooldown_s=20.0, max_gap_s=60.0, budget_s=10_000.0,
+        max_consecutive_throttles=10,
     )
     assert slept == [20.0, 40.0, 60.0]  # escalates, then holds at the ceiling
+
+
+def test_run_sweep_aborts_after_consecutive_throttles() -> None:
+    """Once DOC has refused us twice, further asks this cycle only deepen the penalty."""
+    attempts: list[str] = []
+
+    def always_limited(q, **kw):
+        attempts.append(q)
+        raise gdelt_doc.RateLimited("slow down")
+
+    sheet = run_sweep(
+        [_beat(f"pillar:b{i}") for i in range(6)],
+        search=always_limited,
+        sleep=lambda _s: None,
+        budget_s=10_000.0,
+        max_consecutive_throttles=2,
+    )
+    assert len(attempts) == 2
+    assert sheet.beats_swept == 2
+    assert sheet.aborted_for_throttle is True
+    assert sheet.last_throttle_at
+    assert sheet.beats_failed == 2
 
 
 def test_run_sweep_relaxes_the_gap_again_after_a_success() -> None:
@@ -1097,6 +1125,7 @@ def test_run_sweep_relaxes_the_gap_again_after_a_success() -> None:
     run_sweep(
         [_beat(f"pillar:b{i}") for i in range(5)], search=limited_then_ok, sleep=slept.append,
         pace_s=10.0, cooldown_s=20.0, max_gap_s=60.0, budget_s=10_000.0,
+        max_consecutive_throttles=10,
     )
     assert slept[:2] == [20.0, 40.0]
     assert slept[2] == 28.0  # 40 * 0.7 — recovering, not snapping straight back
@@ -1464,6 +1493,64 @@ def test_refresh_sheet_schedules_no_work_when_the_sheet_is_current() -> None:
         standing, limit=5, eligible_after=6.0, hours=24.0, now=_NOW, sweep=never,
         registry=[_beat("pillar:science")],
     )
+    assert merged.results[0].hits[0].url == "http://s"
+
+
+def test_refresh_sheet_skips_doc_while_cooldown_is_owed() -> None:
+    """Do not walk into a DOC limit we already recorded on the standing sheet."""
+    from algent_backend.data_ingestion.newsroom.discovery import beat_refresh
+    from algent_backend.data_ingestion.newsroom.discovery.report import BeatSheet
+
+    standing = BeatSheet(
+        generated_at="t",
+        timespan="24h",
+        beats_swept=1,
+        beats_failed=0,
+        total_hits=1,
+        results=[_stamped("science", 20, _hit("old", "http://s"))],
+        last_gap_s=40.0,
+        last_throttle_at=_NOW.isoformat(),
+    )
+    notes: list[str] = []
+
+    def never(targets, **kw):  # pragma: no cover
+        raise AssertionError("asked DOC during cooldown")
+
+    merged = beat_refresh.refresh_sheet(
+        standing,
+        limit=5,
+        eligible_after=6.0,
+        hours=24.0,
+        now=_NOW,
+        sweep=never,
+        registry=[_beat("pillar:science")],
+        on_progress=notes.append,
+    )
+    assert merged is not None
+    assert any("DOC cooldown" in n for n in notes)
+    assert merged.results[0].hits[0].url == "http://s"
+
+
+def test_merge_clears_throttle_stamp_after_a_clean_sweep() -> None:
+    from algent_backend.data_ingestion.newsroom.discovery import beat_refresh
+    from algent_backend.data_ingestion.newsroom.discovery.report import BeatSheet
+
+    prior = BeatSheet(
+        generated_at="t",
+        timespan="24h",
+        beats_swept=1,
+        beats_failed=1,
+        total_hits=0,
+        results=[_stamped("science", None, error="rate_limited")],
+        last_gap_s=40.0,
+        last_throttle_at="2026-01-01T00:00:00+00:00",
+        aborted_for_throttle=True,
+    )
+    clean = _sheet_with(_stamped("science", 0, _hit("ok", "http://s")))
+    # _sheet_with leaves last_throttle_at empty — merge must adopt that clear.
+    merged = beat_refresh.merge(prior, clean)
+    assert merged.last_throttle_at == ""
+    assert merged.aborted_for_throttle is False
     assert merged.results[0].hits[0].url == "http://s"
 
 

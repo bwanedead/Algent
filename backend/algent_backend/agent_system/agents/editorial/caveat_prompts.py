@@ -26,11 +26,24 @@ prose that concern it and judge:
    fails when the claim is "regulators are investigating whether the firm misled clients."
 
 2. UNHEDGED SOURCE — a claim resting on a source we did NOT read in full. The prose must attribute
-   it ("Reuters reported…") and signal it isn't independently verified — not state it flat.
+   it (to whoever said it, see below) and signal it isn't independently verified — not state it flat.
 
 3. BARE FIGURE — a figure the harness could not match to the captured evidence (often a live,
    moving number). The prose must carry an as-of or an uncertainty signal ("as of June 26,
    ~81%"), not present it as a fixed truth.
+
+WHAT A GOOD HEDGE LOOKS LIKE — this governs both your verdicts and the `fix` you write, because
+the piece is also read for clarity, and a hedge written as clutter gets rewritten out again:
+- The lightest mark that reads at the right grade, IN THE SENTENCE THAT MAKES THE CLAIM, at its
+  first appearance: "Witkoff said", "reportedly", "if the reading holds". Then the piece moves on.
+- Attribute to the PRINCIPAL — the person or body who said or did it — not to the channel that
+  carried it. "Witkoff said on X" beats "according to Reuters reporting of a Witkoff post". A
+  principal speaking on the record IS the attribution; the outlet rides in a clause at most.
+- Describe the world, never our search. "Neither government has published a readout" is a fact
+  about the story; "no readout was found" or "no dataset was pulled" is our pipeline talking.
+- Never ask for a disclaimer paragraph, a repeated caveat, or a list of documents that do not
+  exist. Provenance that is genuinely part of the story gets ONE passage, and a claim hedged at
+  its first appearance does not need re-hedging each time it is referred to afterwards.
 
 For each item: if the prose ALREADY hedges / attributes / dates it appropriately, it PASSES —
 emit no finding. Emit a finding ONLY where the prose fails, naming the target, the `kind`, the

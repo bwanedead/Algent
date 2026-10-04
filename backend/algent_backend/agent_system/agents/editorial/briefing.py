@@ -9,6 +9,7 @@ view, never the source of truth. Pure: treatment in, markdown out.
 
 from __future__ import annotations
 
+from .length import ceiling_minutes, ceiling_words, digest_minutes, digest_words, word_band
 from .treatment import EditorialTreatment
 
 
@@ -25,6 +26,47 @@ def render_treatment(t: EditorialTreatment) -> str:
     if t.reader_question:
         # The drafter's sharpest test: every paragraph must earn its place answering this.
         out += ["## The question this piece answers (for the reader)", t.reader_question, ""]
+    survey = t.shape == "survey"
+    if survey:
+        # The members ARE the structure here, so say so before the depth block: the drafter is
+        # otherwise working under a doctrine that treats every heading as a defect.
+        out += [
+            "## Shape: a survey",
+            "The subject of this piece is a SET of things the reader moves through and compares"
+            + (f" — {t.shape_why}" if t.shape_why else "") + ".",
+            "Give each member its own heading, named for the thing itself, and write each one as "
+            "real prose — several paragraphs at the density the piece would have had unbroken. "
+            "Headings buy approachability; they do not buy the right to write less, and a member "
+            "reduced to bullets loses exactly the relational nuance the reader came for. A member "
+            "with nothing of its own to say is a clause inside another one, not a section.",
+            "",
+        ]
+        if t.members:
+            out += ["**Members, in order:**", *[f"- {m}" for m in t.members], ""]
+    if t.read_minutes:
+        # Band is ~220 wpm; the high end is the house ceiling so a generous treatment
+        # cannot authorize a tour. Coming in under is success; over the ceiling is a miss.
+        low, high = word_band(t.read_minutes, survey=survey)
+        grain = (
+            "This is a survey, so the house ceiling is judged PER MEMBER, not across the piece: "
+            "the whole is as long as the members that genuinely earn their place, and no longer. "
+            "A member that repeats another one, or that you cannot say anything specific about, "
+            "comes out."
+            if survey else
+            f"Default landing: **under {digest_words()} words (~{digest_minutes()} min)**. "
+            f"Earned ceiling: {ceiling_words()} words (~{ceiling_minutes()} min) — only if "
+            "the extra minutes stay on this premise. An adjacent world is a clause, not a "
+            "section. Over the earned ceiling is a failed draft."
+        )
+        out += [
+            "## How deep a read this story merits",
+            f"**~{t.read_minutes} min** (about {low}-{high} words)"
+            + (f" — {t.read_minutes_why}" if t.read_minutes_why else ""),
+            grain + " The band is how deep THIS story merited, not a quota to fill. Write "
+            "toward it; if the understanding lands sooner, STOP.",
+            "",
+        ]
+    out += _entry_block(t)
     out += _concepts_block(t)
     if t.primitives:
         # The ramp — speak these in your own voice, uncited, where each concept first bears weight.
@@ -51,6 +93,27 @@ def _frame_block(t: EditorialTreatment) -> list[str]:
         out.append(f"_{t.chosen_frame.rationale}_")
     if t.rejected_frames:
         out += ["", "_Rejected frames:_"] + [f"- ~~{f.frame}~~ — {f.rationale}" for f in t.rejected_frames]
+    return out + [""]
+
+
+def _entry_block(t: EditorialTreatment) -> list[str]:
+    """Cold-reader entry: kernel → payoff → uncertainty → causal honesty → plain subject."""
+    if not any((t.news_kernel, t.reader_payoff, t.key_uncertainty, t.plain_subject, t.causal_chain)):
+        return []
+    out = ["## Reader entry (open with this — before landscape or methodology)"]
+    if t.news_kernel:
+        out.append(f"**News kernel:** {t.news_kernel}")
+    if t.reader_payoff:
+        out.append(f"**Why it matters:** {t.reader_payoff}")
+    if t.key_uncertainty:
+        out.append(f"**Key uncertainty:** {t.key_uncertainty}")
+    if t.plain_subject:
+        out.append(f"**Plain subject (use before specialist names):** {t.plain_subject}")
+    if t.causal_chain:
+        out.append("**Causal chain (do not blur these statuses):**")
+        for link in t.causal_chain:
+            note = f" — {link.note}" if link.note else ""
+            out.append(f"- [{link.status}] {link.cause} → {link.effect}{note}")
     return out + [""]
 
 

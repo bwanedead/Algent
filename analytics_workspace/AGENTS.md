@@ -5,6 +5,29 @@ This directory is the **only** place the analytics worker (the grok-build stage 
 early-days sandbox: strict doctrine + light guardrails, not a container fortress. Keep it that way
 until we genuinely need more.
 
+## Weight-bearing stack (do not delete)
+
+These tracked paths are **runtime dependencies** of every visual article, not optional samples:
+
+| Path | Role |
+|---|---|
+| `lib/__init__.py`, `lib/theme.py`, `lib/charts.py`, `lib/maps.py`, `lib/animate.py` | Canonical helpers the article worker imports |
+| `lib/assets/mark.png` | Ohmega Monster silhouette for the brand lockup watermark |
+| `lib/insight.py`, `scripts/draw_insight.py` | Phone-first templates for figure-first posts. An `AnalyticsRequest` uses `charts.py` / `maps.py`, not these. Do not delete. |
+| `scripts/setup_venv.ps1`, `scripts/download_basemap.py`, `scripts/smoke_test.py` | Reproducible stack setup + canary |
+| `data/README.md` | Documents the Natural Earth basemap location |
+| `requirements.txt`, this `AGENTS.md`, `README.md` | Pins + doctrine |
+
+Scratch folders (`<request_id>/`, `_canary/`), `.venv/`, and downloaded `data/natural_earth/` are
+local/gitignored. Deleting or “cleaning up” `lib/` or `scripts/` breaks map/chart production even
+when the editorial pipeline is healthy — the worker will refuse the stack rather than freehand
+geography. If a helper must change, edit it in place or replace it with an equivalent import path
+and update `analytics_worker` briefs in the same change.
+
+**Pipeline invariant:** `sweep_stale_scratch` may only remove scratch-shaped dirs (`anx_*`,
+`req_*`, `_canary`). It must never age-delete `lib/`, `scripts/`, or `data/` — that bug
+previously wiped the stack after ~2h idle and shipped articles with zero visuals.
+
 ## Python environment (use this — do not pip install mid-run)
 
 A **dedicated venv** lives at `analytics_workspace/.venv` with a pinned stack
@@ -50,6 +73,7 @@ series. Two legitimate data paths:
 - Plot only **real data** — from `data.json` claims and/or rows you actually fetched. Never invent,
   extrapolate, or "smooth" data into something the evidence doesn't support. A misleading chart is
   a deception.
+- If you are plotting the source's own table, say so in the caption. Do not invent rows.
 - **No visual certainty laundering.** Do not truncate or rescale an axis to manufacture drama, and
   do not cherry-pick a window that implies a trend the full data does not support.
 - `image` requests for **maps** must use real geocodes + the Natural Earth basemap. Pure concept
@@ -59,12 +83,19 @@ series. Two legitimate data paths:
 **Make the figure self-explanatory (the reader must not reverse-engineer it)**
 A house reader meeting the chart cold should know in a few seconds: **what is measured, in what
 units, for whom/where, and over what time**. If they have to guess, the analytic failed.
-- **Title on the chart** (plain language): what is being measured — not a cryptic code name.
+- **Title on the chart** (plain language): the finding, in words a reader can repeat.
+- **Obvious, not decodable.** Read cold, our figures have been arriving as shapes with numbers
+  on them — the standing verdict is that you cannot tell what they even measure. Answer that by
+  making the picture plainer, never by adding furniture: a key, a note or an explanatory box is
+  clutter, and clutter is half the problem. Fewer marks, one idea, plain words sitting on the
+  thing they name.
 - **Axis labels with units** on every axis. Never bare "value" / "y" / "series1".
 - **Legend only if needed**, human names for each series.
 - **As-of / period** visible (title, subtitle, or caption).
 - **Caption** (`caption.md`): 1–3 plain sentences: (1) what the figure shows, (2) the main
   takeaway, (3) any important limit. No pipeline vocabulary, no claim ids.
+- **Write both `chart.svg` and `chart.png`** (same `savefig`, twice). Prefer SVG for the
+  site embed; still write the PNG sibling — some consumers cannot take a vector.
 - If the data is thin or the chart could mislead, say so and prefer to skip.
 
 **Choose the form that helps most (still only from given data)**
@@ -81,6 +112,12 @@ units, for whom/where, and over what time**. If they have to guess, the analytic
    cluster of three towns with no national context.
 2. **Local detail as inset box** on that frame when the story names a village cluster.
 3. **Points only from real lat/lon** — write every plotted coordinate into `data.csv`.
+   **An inset below country scale must not draw the 1:110m coastline.** At that resolution the
+   coast is off by kilometres, so a 10-mile Djibouti inset put China's base, on the shore at
+   Doraleh, in open sea. At city scale, drop the outlines and show the points, their labels and
+   the distance ring on plain ground — a correct abstraction beats a wrong coast. And give the
+   inset its own clear space: it must never sit over the main map's labels or the strait it is
+   explaining.
 4. **Outlines only from** `data/natural_earth/ne_110m_admin_0_countries.geojson`.
 5. Never invent control polygons, heat, or freehand coastlines presented as truth. Skip if you
    cannot get honest coords/outlines.
@@ -101,7 +138,8 @@ Use `lib.theme.apply_theme()` (dark default). Tokens:
 
 - Hue contrast across series; never two near-identical ambers.
 - Gaps in series: leave gaps; say so in the caption.
-- Monospace labels; no chartjunk; prefer SVG; honest axes.
+- Monospace labels; no chartjunk; prefer SVG for the site embed (still write the PNG); honest axes.
+- Every saved figure goes through `lib.theme.watermark` (mark stacked on `OHMEGA MONSTER` / `ohmega.monster` as one unit). Do not strip it. The mark file is `lib/assets/mark.png` — stay inside this workspace; do not read `sites/`.
 
 ## Clean up after yourself
 

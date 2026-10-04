@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from algent_backend.agent_system.agents.newsroom import rail as rl
 from algent_backend.agent_system.agents.research.profile import DerivedLead
+from algent_backend.agent_system.foundation import cost
 from algent_backend.agent_system.runs.context import AgentRunContext
 
 
@@ -17,7 +18,8 @@ class _EmittingGraph:
         self._out, self._ctx, self._usd = out, ctx, usd
 
     def invoke(self, _state, _config=None):
-        if self._usd:                       # surface spend the way real stages do (a *_completed event)
+        if self._usd:  # charge the article meter the way live stages do (cost.add / spent_usd)
+            cost.add(float(self._usd))
             self._ctx.emit("stage.completed", {"estimated_usd": self._usd})
         return self._out
 
@@ -123,11 +125,112 @@ def test_rail_runs_end_to_end_and_reports(monkeypatch) -> None:
     assert any(et == rl.RAIL_COMPLETED for et, _ in events)
 
 
+def test_immature_profile_still_enters_editorial(monkeypatch) -> None:
+    """Soft diagnose: disposition recorded, editorial still runs (site = review surface)."""
+    monkeypatch.setenv(rl._BACKFEED_ENV, "0")
+    editorial_calls: list = []
+    _wire(
+        monkeypatch,
+        portfolio={"vectors": [{"id": "vec_1", "title": "Amazon earthworks"}], "total_considered": 10},
+        route={"selected_vector": {"id": "vec_1", "title": "Amazon earthworks"}},
+        profile={"id": "prof_1", "profile_status": "needs_verification"},
+        gauntlet={
+            "profile": {"id": "prof_1", "profile_status": "needs_verification"},
+            "gauntlet": {"final_verdict": "needs_verification", "remaining_blockers": 3},
+        },
+        pipeline={"status": "thin_spine", "article_title": "Honest thin piece", "analytics_produced": 0},
+    )
+    monkeypatch.setattr(
+        rl, "build_editorial",
+        lambda ctx: editorial_calls.append(1) or _EmittingGraph(
+            {"pipeline": {"status": "thin_spine", "article_title": "Honest thin piece",
+                          "analytics_produced": 0}},
+            ctx, 0.0,
+        ),
+    )
+    monkeypatch.setattr(rl, "find_run_root", lambda _rid: None)
+    r = rl.build_newsroom_rail_graph(_ctx([])).invoke({"pool": {"items": [], "item_count": 1}})["rail"]
+    assert editorial_calls == [1]
+    assert r["stage_reached"] == "complete"
+    assert r["disposition"] == "needs_verification"
+    assert "soft-warn" in r["note"]
+    assert r["article_status"] == "thin_spine"
+
+
+def test_needs_enrichment_still_enters_editorial(monkeypatch) -> None:
+    """Soft enrichment leftovers (Centaur path) may still draft; spine gate handles thin stubs."""
+    monkeypatch.setenv(rl._BACKFEED_ENV, "0")
+    _wire(
+        monkeypatch,
+        portfolio={"vectors": [{"id": "vec_1", "title": "Centaur"}], "total_considered": 10},
+        route={"selected_vector": {"id": "vec_1", "title": "Centaur"}},
+        profile={"id": "prof_1"},
+        gauntlet={
+            "profile": {"id": "prof_1"},
+            "gauntlet": {"final_verdict": "needs_enrichment", "remaining_blockers": 6},
+        },
+        pipeline={"status": "publishable", "article_title": "Centaur piece", "analytics_produced": 0},
+    )
+    monkeypatch.setattr(rl, "find_run_root", lambda _rid: None)  # skip publish path
+    r = rl.build_newsroom_rail_graph(_ctx([])).invoke({"pool": {"items": [], "item_count": 1}})["rail"]
+    assert r["stage_reached"] == "complete"
+    assert r["gauntlet_verdict"] == "needs_enrichment"
+    assert r["disposition"] == ""
+
+
 def test_rail_sums_per_stage_cost(monkeypatch) -> None:
     monkeypatch.setenv(rl._BACKFEED_ENV, "0")
     _full(monkeypatch, costs={"syn": 0.02, "prof": 0.5, "ed": 0.25})   # router/gauntlet report none
     r = rl.build_newsroom_rail_graph(_ctx([])).invoke({"pool": {"items": [], "item_count": 1}})["rail"]
     assert abs(r["total_usd"] - 0.77) < 1e-9   # every surfaced estimated_usd, summed
+    assert r["cost_by_stage"]["synthesis"] == 0.02
+    assert r["cost_by_stage"]["profile"] == 0.5
+    assert r["cost_by_stage"]["editorial"] == 0.25
+
+
+def test_rail_writes_report_before_publish(monkeypatch) -> None:
+    """Publisher reads newsroom_rail_report.json — it must already carry disposition/cost."""
+    monkeypatch.setenv(rl._BACKFEED_ENV, "0")
+    _full(monkeypatch, costs={"syn": 0.01, "ed": 0.02})
+    written: list[dict] = []
+
+    class _Arts:
+        def write_json(self, name, data):
+            if name == "newsroom_rail_report.json":
+                written.append(dict(data))
+
+        def write_text(self, *a, **k):
+            return None
+
+    seen_digest_fields: dict = {}
+
+    def fake_publish(run_dir, **kw):
+        # Simulate publish reading the on-disk report (what converter/digest use).
+        snap = written[-1] if written else {}
+        seen_digest_fields.update({
+            "total_usd": snap.get("total_usd"),
+            "cost_by_stage": snap.get("cost_by_stage"),
+            "disposition": snap.get("disposition", ""),
+        })
+        return type("R", (), {
+            "action": "staged", "slug": "x", "status": "publishable",
+            "digest": "d", "reasons": [],
+        })()
+
+    monkeypatch.setattr(rl, "find_run_root", lambda _rid: __import__("pathlib").Path("/runs/x"))
+    monkeypatch.setattr(rl.site_git, "publish_enabled", lambda: False)
+    monkeypatch.setattr(rl.site_git, "repo_root", lambda _p: __import__("pathlib").Path("/repo"))
+    monkeypatch.setattr(rl.site_git, "site_dir", lambda _r: __import__("pathlib").Path("/repo/site"))
+    monkeypatch.setattr(rl.pb, "publish_run", fake_publish)
+
+    ctx = _ctx([])
+    ctx = __import__("dataclasses").replace(ctx, artifacts=_Arts())
+    rl.build_newsroom_rail_graph(ctx).invoke({"pool": {"items": [], "item_count": 1}})
+
+    assert written, "report must be written before publish"
+    assert seen_digest_fields["total_usd"] == 0.03
+    assert seen_digest_fields["cost_by_stage"]["synthesis"] == 0.01
+    assert "editorial" in seen_digest_fields["cost_by_stage"]
 
 
 def test_backfeed_leads_are_injected_and_consumed(monkeypatch) -> None:
@@ -275,3 +378,152 @@ def test_rail_reuses_portfolio_skips_synthesis_and_still_routes(monkeypatch) -> 
         et == rl.RAIL_STAGE and (p or {}).get("skipped") is True
         for et, p in events
     )
+
+
+def test_rail_reuses_profile_skips_routing_and_profile(monkeypatch) -> None:
+    """Resume from a researched profile: do not re-route or re-research."""
+    monkeypatch.setenv(rl._BACKFEED_ENV, "0")
+    route_calls: list = []
+    profile_calls: list = []
+    gauntlet_calls: list = []
+
+    def _route(_ctx):
+        route_calls.append(1)
+        return _EmittingGraph({"selected_vector": {"id": "v99"}}, _ctx, 0.0)
+
+    def _prof(_ctx):
+        profile_calls.append(1)
+        return _EmittingGraph({"profile": {"id": "prof_new"}}, _ctx, 0.0)
+
+    def _gaunt(_ctx):
+        gauntlet_calls.append(1)
+        return _EmittingGraph(
+            {"profile": {"id": "prof_kept"}, "gauntlet": {"final_verdict": "mature"}},
+            _ctx, 0.0,
+        )
+
+    _wire(
+        monkeypatch,
+        portfolio={"vectors": [{"id": "v01", "title": "Kept"}], "total_considered": 10},
+        route={"selected_vector": {"id": "v99"}},
+        profile={"id": "prof_new"},
+        gauntlet={"profile": {"id": "prof_kept"}, "gauntlet": {"final_verdict": "mature"}},
+        pipeline={"status": "publishable", "article_title": "Kept story", "analytics_produced": 0},
+    )
+    monkeypatch.setattr(rl, "build_router", _route)
+    monkeypatch.setattr(rl, "build_profile", _prof)
+    monkeypatch.setattr(rl, "build_profile_gauntlet", _gaunt)
+    events: list = []
+    out = rl.build_newsroom_rail_graph(_ctx(events)).invoke({
+        "portfolio": {"vectors": [{"id": "v01", "title": "Kept"}], "total_considered": 10},
+        "selected_vector": {"id": "v01", "title": "Kept"},
+        "profile": {"id": "prof_kept"},
+        "gauntlet": {"final_verdict": "mature"},
+        "source_run_id": "same-run",
+    })
+    r = out["rail"]
+    assert route_calls == [] and profile_calls == [] and gauntlet_calls == []
+    assert r["profile_id"] == "prof_kept"
+    assert r["selected_vector_id"] == "v01"
+    assert r["stage_reached"] == "complete"
+    skipped = [p.get("stage") for et, p in events
+               if et == rl.RAIL_STAGE and (p or {}).get("skipped")]
+    assert "routing" in skipped and "profile" in skipped and "gauntlet" in skipped
+
+
+def test_stage_clock_times_stages_and_slow_legs() -> None:
+    """Wall time per stage, the counterpart to cost_by_stage.
+
+    A run went ten minutes with no model calls and looked dead from outside; it was a figure
+    timing out in a subprocess. Cost was attributed by stage from the start, time was not, so
+    that could only be diagnosed by reading raw event timestamps afterwards.
+    """
+    from algent_backend.agent_system.agents.newsroom.rail import StageClock, _hms
+
+    clock = StageClock()
+    clock.enter("profile")
+    clock.enter("editorial")
+    clock.mark("analytics_worker.artifact", {"request_id": "req_map", "note": "timed out"})
+    summary = clock.summary()
+
+    # Every stage closes, including the last one — which only ends when the run does.
+    assert set(summary["by_stage"]) == {"profile", "editorial"}
+    assert all(v is not None for v in summary["by_stage"].values())
+    assert summary["total_seconds"] >= 0
+
+    # Legs carry what identifies the slow thing, ranked slowest first, private fields dropped.
+    leg = summary["slow_legs"][0]
+    assert leg["event"] == "analytics_worker.artifact" and leg["detail"] == "req_map"
+    assert not any(k.startswith("_") for k in leg)
+
+    # Durations read as durations, not float seconds.
+    assert _hms(5) == "5s" and _hms(65) == "1m05s" and _hms(600) == "10m00s"
+
+
+def test_a_queued_steer_reaches_research_and_editorial(monkeypatch, tmp_path) -> None:
+    """The live-steer contract: a framing note lands at a stage boundary and every later stage
+    writes to it — research sees it beside the thesis, editorial sees it on the profile."""
+    from algent_backend.agent_system.agents.newsroom import steer
+
+    monkeypatch.setenv(rl._BACKFEED_ENV, "0")
+    _full(monkeypatch)
+    pending = tmp_path / "pending.jsonl"
+    monkeypatch.setattr(steer, "PENDING", pending)
+    monkeypatch.setattr(rl, "find_run_root", lambda _rid: tmp_path / "run")
+    monkeypatch.setattr(rl, "_publish", lambda *a, **k: None)
+    steer.add("read it as strategy", path=pending)
+
+    seen: dict = {}
+
+    class _Capture:
+        def __init__(self, key, out):
+            self.key, self.out = key, out
+
+        def invoke(self, state, _config=None):
+            seen[self.key] = state
+            return self.out
+
+    monkeypatch.setattr(rl, "build_profile", lambda ctx: _Capture("profile", {"profile": {"id": "prof_1"}}))
+    monkeypatch.setattr(rl, "build_editorial", lambda ctx: _Capture(
+        "editorial", {"pipeline": {"status": "publishable", "article_title": "t"}}))
+
+    rl.build_newsroom_rail_graph(_ctx([])).invoke({"pool": {"items": [], "item_count": 1}})
+    assert "read it as strategy" in seen["profile"]["vector"]["thesis"]
+    assert seen["editorial"]["profile"]["operator_steer"] == ["read it as strategy"]
+    assert steer.for_run(tmp_path / "run" / "artifacts") == ["read it as strategy"]
+
+
+def test_an_operator_pick_is_never_vetoed_by_routing(monkeypatch) -> None:
+    """Pick 42 died in routing on a topic freeze the operator never asked for. A picked vector
+    skips the ranker entirely — the router's guards are for choices the newsroom makes itself."""
+    monkeypatch.setenv(rl._BACKFEED_ENV, "0")
+    _full(monkeypatch)
+    routed: list = []
+    monkeypatch.setattr(rl, "build_router", lambda ctx: routed.append(1) or _Refuse())
+    monkeypatch.setattr(rl, "find_run_root", lambda _rid: None)
+    picked = {"vectors": [{"id": "v42", "title": "Djibouti"}], "picked_from_menu": [42]}
+
+    r = rl.build_newsroom_rail_graph(_ctx([])).invoke({"portfolio": picked})["rail"]
+    assert routed == []
+    assert r["selected_vector_title"] == "Djibouti" and r["stage_reached"] == "complete"
+
+
+def test_an_operator_pick_is_written_down_so_resume_can_find_it(monkeypatch, tmp_path) -> None:
+    """A Maldives run died mid-research and could not be resumed: the pick skipped the router,
+    and with it the selected_vector.json that resume reads to know which story it was."""
+    from algent_backend.agent_system.artifacts import ArtifactWriter
+
+    monkeypatch.setenv(rl._BACKFEED_ENV, "0")
+    _full(monkeypatch)
+    monkeypatch.setattr(rl, "find_run_root", lambda _rid: None)
+    ctx = _ctx([])
+    ctx = __import__("dataclasses").replace(ctx, artifacts=ArtifactWriter(tmp_path, run_id="t"))
+    rl.build_newsroom_rail_graph(ctx).invoke(
+        {"portfolio": {"vectors": [{"id": "v8", "title": "Maldives"}], "picked_from_menu": [8]}})
+    import json
+    assert json.loads((tmp_path / "selected_vector.json").read_text(encoding="utf-8"))["id"] == "v8"
+
+
+class _Refuse:
+    def invoke(self, _state, _config=None):
+        return {"selected_vector": None}

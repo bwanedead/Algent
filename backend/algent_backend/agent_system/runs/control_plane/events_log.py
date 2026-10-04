@@ -9,6 +9,7 @@ plain append is safe; readers tolerate a partial trailing line.
 from __future__ import annotations
 
 import json
+import threading
 from datetime import UTC, datetime
 from typing import Any
 
@@ -27,8 +28,15 @@ class RunEventLog:
         # sequence after the run's own events rather than colliding from 1.
         self._seq = start_seq
         self._appended: list[RunEvent] = []
+        # Stages may emit from worker threads (charts draw side by side): the sequence number and
+        # the line append must not interleave.
+        self._lock = threading.Lock()
 
     def append(self, event_type: str, payload: dict[str, Any] | None = None) -> RunEvent:
+        with self._lock:
+            return self._append(event_type, payload)
+
+    def _append(self, event_type: str, payload: dict[str, Any] | None) -> RunEvent:
         self._seq += 1
         event = RunEvent(
             seq=self._seq,

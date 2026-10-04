@@ -20,7 +20,18 @@ from pydantic import BaseModel, Field
 #   similar) may land as a separate honest "AI atmosphere" asset with its own label — not as
 #   evidence and not as a stand-in for a map.
 AnalyticKind = Literal["chart", "table", "insight", "image"]
-RequestStatus = Literal["requested", "produced", "skipped", "failed"]
+RequestStatus = Literal[
+    "requested", "produced", "skipped", "failed",
+    # Explicit visual-plan outcomes so digests/receipts never imply "forgotten".
+    "not_warranted", "soft_cap_skipped", "worker_disabled",
+    "source_unavailable", "integrity_check_failed",
+]
+VisualClass = Literal[
+    "locator_map", "data_chart", "comparison", "timeline",
+    "process_diagram", "source_specimen", "other",
+]
+VisualPriority = Literal["essential_context", "high_value", "optional"]
+VisualPlacement = Literal["after_quick_take", "after_opening", "after_section", "mid_body"]
 
 
 class AnalyticsRequest(BaseModel):
@@ -42,6 +53,13 @@ class AnalyticsRequest(BaseModel):
     may_source: bool = False
     source_hint: str = ""                              # where/what to fetch (e.g. "WHO weekly Ebola cases DRC")
     rationale: str = ""                                # why it aids understanding (not decoration)
+    visual_class: VisualClass = "other"
+    priority: VisualPriority = "optional"
+    placement: VisualPlacement = "after_opening"
+    reader_gap: str = ""   # the mental model the visual supplies that prose alone cannot
+    factual_basis: str = ""  # cited data / public reference geometry / sourced media basis
+    # Router emits ``requested`` (or ``source_unavailable`` for deferred classes).
+    # Never ``produced`` — that status is owned exclusively by the analytics worker.
     status: RequestStatus = "requested"
 
 
@@ -81,6 +99,9 @@ class AnalyticsArtifact(BaseModel):
     question: str = ""
     status: RequestStatus = "produced"                 # produced | skipped | failed
     artifact_name: str = ""                            # the chart/table/insight file in the artifact store
+    #: Raster sibling (PNG/GIF) for consumers that cannot take SVG. Empty when the
+    #: drawer only wrote a vector. Same path as ``artifact_name`` when that file is already raster.
+    raster_name: str = ""
     body_md: str = ""                                  # the produced markdown for a table/insight (inlined by the publish view; empty for image kinds)
     data_name: str = ""                                # the backing data.csv in the artifact store
     caption: str = ""                                  # harness-assembled: worker caption + provenance
@@ -88,8 +109,21 @@ class AnalyticsArtifact(BaseModel):
     as_of: str = ""                                    # recency horizon of the underlying data
     ai_label: str = AI_ANALYTIC_LABEL
     figure_check: dict = Field(default_factory=dict)   # {checked, verified, unverified:[...]} — visual drift catch
+    #: Data the worker SOURCED that the profile did not already hold, as claim-shaped rows
+    #: ``{"text": ..., "url": ...}``.
+    #:
+    #: Analytics is a research act, not a decoration step. When a figure legitimately fetches
+    #: public data — a decade of export totals the profile never gathered — that data is
+    #: evidence, and throwing it away the moment the chart is drawn is the waste this field
+    #: exists to stop. It flows back into the claim ledger, so the numbers under a figure are
+    #: as inspectable as any other claim and the next stage can use them in prose.
+    sourced_claims: list[dict] = Field(default_factory=list)
     swept: list[str] = Field(default_factory=list)     # files removed by the artifact-type/size sweep
     escaped_writes: list[str] = Field(default_factory=list)  # repo paths the worker touched OUTSIDE its lane (a hard fail)
+    visual_class: VisualClass = "other"
+    priority: VisualPriority = "optional"
+    placement: VisualPlacement = "after_opening"
+    reader_gap: str = ""
     note: str = ""
     generated_at: str = ""
     model: str = ""              # the harness + its exact version (provenance: which tool drew this)

@@ -20,13 +20,16 @@ from .brave import BRAVE
 from .exa import EXA
 from .firecrawl import FIRECRAWL
 from .google import GOOGLE
+from .meta import META
 from .openai import OPENAI
 from .tavily import TAVILY
 from .x import X
 from .xai import XAI
 
 PROVIDERS: dict[str, ProviderConfig] = {
-    p.id: p for p in (OPENAI, ANTHROPIC, GOOGLE, XAI, TAVILY, EXA, BRAVE, FIRECRAWL, X)
+    p.id: p for p in (
+        OPENAI, ANTHROPIC, GOOGLE, META, XAI, TAVILY, EXA, BRAVE, FIRECRAWL, X,
+    )
 }
 
 

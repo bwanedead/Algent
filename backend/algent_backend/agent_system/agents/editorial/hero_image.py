@@ -38,6 +38,16 @@ import re
 # picture beside a news story is a lie unless it is labelled one.
 IMAGE_LABEL = "AI-generated illustration — not a photograph of this story"
 
+#: A piece about things that do not exist — a proposed tower, a ship nobody has laid a keel for —
+#: needs pictures of them, and the honest description of such a picture is not "illustration" but
+#: "somebody's impression of a design". Saying so is what keeps it publishable: the reader must
+#: never take it for the architect's own rendering, which would be passing off our guess as the
+#: proposal's documentation.
+CONCEPT_LABEL = (
+    "AI-generated concept illustration — an artist's impression of the proposal, "
+    "not an official rendering"
+)
+
 # What we want: the visual register of a stock editorial photograph. Plain and legible at
 # thumbnail size, because that is how it will be seen on a feed or a shared link.
 _STYLE = (
@@ -66,22 +76,44 @@ _PROHIBITIONS = (
     "Do not depict a recognisable real, identifiable person. "
     "Do not stage it as documentary or news photography of a specific real event, and do "
     "not imply it is a photograph of the events described. "
-    "A generic, representative illustration of the subject is exactly what is wanted."
+    "A generic, representative illustration of the subject is exactly what is wanted. "
+    # A named real object has a real shape, and a reader who looks it up finds out. Our Swift
+    # hero grew a robotic arm the actual spacecraft does not have, which quietly teaches the
+    # reader something false about a thing they can go and check. Invented ATMOSPHERE is fine;
+    # invented STRUCTURE is not.
+    "If the subject is a specific real object — a named spacecraft, aircraft, instrument, "
+    "vehicle or building — keep its overall form plausible for that class of object and do "
+    "NOT add major structures it would not have (no robotic arms, docking rigs, domes or "
+    "extra booms invented for effect). When in doubt, frame it more distantly or more "
+    "generically rather than inventing hardware."
 )
 
 _NO_TEXT = "Do not render any text, words, letters, numbers, labels or captions anywhere. "
 
 # A social thumbnail with no words is a picture people scroll past; one with a short hook
-# gives them a reason to stop. The words are ALWAYS ours — passed in, never invented — and
-# the review gate checks that what came back says exactly what we authorised.
+# that names the premise gives them a reason to stop. The words are ALWAYS ours — passed
+# in, never invented — and the review gate checks that what came back says exactly what
+# we authorised. Eight words is a thumbnail ceiling, not a license for a slogan without
+# referents (that bar lives in the headline-writer doctrine).
 MAX_HOOK_WORDS = 8
 
 
 def _hook_clause(hook: str) -> str:
+    """The caption treatment, pinned so every hero looks like it came from one publication.
+
+    Left unspecified, the model picks a different treatment each time — one image came back
+    with the words flat on the picture and the next with them inside a filled panel, which
+    reads as two different sites. Flat is the choice: it looks like an editorial cover rather
+    than a slide, and it stays legible at thumbnail size where a box just eats the picture.
+    """
     return (
-        f'Set exactly these words as a short bold caption over the image: "{hook}". '
-        "Use a clean heavy sans-serif, high contrast against the picture, positioned so it "
-        "does not cover the subject, sized to stay legible in a small feed thumbnail. "
+        f'Set exactly these words as a caption over the image: "{hook}". '
+        "TYPOGRAPHY, follow exactly so every image in this publication matches: heavy "
+        "sans-serif, pure white text, set FLAT directly on the photograph — no box, no "
+        "banner, no panel, no plate, no coloured block, no outline, no scrim and no border "
+        "behind or around the words. A soft drop shadow for legibility is the only effect "
+        "permitted. Place it in the upper-left over a calm area of the picture, left-aligned, "
+        "large enough to read in a small feed thumbnail, and never covering the main subject. "
         "Render THESE WORDS ONLY — reproduce them exactly, with no other text, no extra "
         "words, no invented figures, and no caption of your own devising anywhere. "
     )
@@ -138,7 +170,23 @@ def check_hook(hook: str) -> str | None:
     return None
 
 
-def build_image_prompt(subject: str, *, setting: str = "", hook: str = "") -> str:
+# The register for an image INSIDE a piece about a design that has not been built. A stock
+# photograph is the wrong instrument for it: the thing has no photograph, and the nearest true
+# picture is the kind of visualisation an architecture practice draws. Scale is the whole reason
+# the reader wants it, so the prompt asks for something in frame to measure it against.
+_STYLE_CONCEPT = (
+    "architectural concept visualisation, an artist's impression of a proposed design, "
+    "clean sweeping forms in daylight, wide 16:9 landscape framing, something familiar in "
+    "frame for scale (boats, trees, small figures far away), plausible engineering rather "
+    "than fantasy ornament, safe for work"
+)
+
+STYLES: dict[str, str] = {"editorial": "", "concept": _STYLE_CONCEPT}
+
+
+def build_image_prompt(
+    subject: str, *, setting: str = "", hook: str = "", register: str = "editorial",
+) -> str:
     """Assemble the generation prompt for a hero image. Raises on an unusable subject/hook.
 
     ``subject`` is the concrete physical thing to depict ("an orca surfacing in coastal
@@ -159,7 +207,8 @@ def build_image_prompt(subject: str, *, setting: str = "", hook: str = "") -> st
 
     scene = f"{subject.strip()}, {setting.strip()}" if setting.strip() else subject.strip()
     text_rule = _hook_clause(hook) if hook else _NO_TEXT
-    return f"{scene}. {_STYLE}. {text_rule}{_PROHIBITIONS}"
+    style = STYLES.get(register) or _STYLE
+    return f"{scene}. {style}. {text_rule}{_PROHIBITIONS}"
 
 
 # -- the review gate ----------------------------------------------------------

@@ -63,6 +63,12 @@ def test_a_plain_image_still_forbids_all_lettering() -> None:
     assert "Do not render any text" in build_image_prompt("an orca surfacing in coastal water")
 
 
+def test_a_premise_named_hook_fits_the_thumbnail_ceiling() -> None:
+    """A cold scroller has to place the story. Eight words is enough to name the parties."""
+    assert check_hook("Russia's war economy runs through China") is None
+    assert check_hook("Poland's coal share just halved") is None
+
+
 def test_a_hook_that_is_really_a_headline_is_refused() -> None:
     assert "too long" in check_hook(
         "Florida claims the fourteenth largest economy on earth right now today"

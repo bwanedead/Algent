@@ -35,6 +35,7 @@ MAX_ROUNDS = 3  # initial + up to 2 revisions — bounded; the loop exits early 
 class GauntletState(TypedDict, total=False):
     treatment: dict[str, Any]  # the promoted treatment to draft from (input)
     profile: dict[str, Any]    # its source profile (input; enriched as reads land)
+    analytics_plan: dict[str, Any]  # early visual plan — informational for the drafter
     draft: dict[str, Any]      # the final draft
     gauntlet: dict[str, Any]   # the DraftingGauntletReport
 
@@ -49,8 +50,12 @@ def build_drafting_gauntlet_graph(context: AgentRunContext) -> Any:
             return {"gauntlet": DraftingGauntletReport(
                 outcome="blocked_omission", final_verdict="drops_must_use").model_dump()}
 
+        analytics_plan = state.get("analytics_plan") or {}
         # Round 1: draft + audit.
-        out = build_drafter(context).invoke({"treatment": treatment, "profile": profile}, config)
+        out = build_drafter(context).invoke(
+            {"treatment": treatment, "profile": profile, "analytics_plan": analytics_plan},
+            config,
+        )
         draft, profile, report = out["draft"], out["profile"], out["citation_report"]
         _write(context, "draft_round1.json", draft)
         initial_verdict = report["verdict"]
@@ -61,12 +66,19 @@ def build_drafting_gauntlet_graph(context: AgentRunContext) -> Any:
         #    earlier one (a revision once dropped must-use items and blocked a promotable draft).
         #  - STOP ON NO PROGRESS: if a round doesn't reduce problems, the remaining sources are
         #    walled — more rounds only burn cost and risk regression. Exit to the honest-barrier.
+        from algent_backend.agent_system.agents.newsroom import budget_policy
+
         best = (draft, profile, report)
         rounds = 1
-        while report["verdict"] != "grounded" and rounds < MAX_ROUNDS:
+        while (
+            report["verdict"] != "grounded"
+            and rounds < MAX_ROUNDS
+            and budget_policy.allow_optional("draft_repair")
+        ):
             prev = _problems(report)
             out = build_drafter(context).invoke(
                 {"treatment": treatment, "profile": profile,
+                 "analytics_plan": analytics_plan,
                  "prior_draft": draft, "citation_report": report}, config)
             draft, profile, report = out["draft"], out["profile"], out["citation_report"]
             rounds += 1

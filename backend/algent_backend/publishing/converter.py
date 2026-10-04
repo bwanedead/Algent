@@ -25,14 +25,25 @@ from .tagging import derive_all
 
 # The receipts appendix heading the pipeline emits and the site splits on (substring-matched there).
 _RECEIPTS_HEADING = "## How we know this"
+_AT_A_GLANCE = "## At a glance"
+_QUICK_TAKE_LINE = re.compile(
+    r"^- \*\*(What happened|Why it matters|What remains uncertain):\*\*\s*(.+)$"
+)
 # Analytic image refs the publish view embeds, e.g. "![Chart](analytic_ar_1.svg)" or
 # "![Theater](map_bab_el_mandeb.svg)". Tables are inline markdown (no asset); only real images
-# (.svg/.png) with a relative filename (no path separators / absolute URLs) become files under
+# with a relative filename (no path separators / absolute URLs) become files under
 # the site's public/ dir.
 _IMAGE_REF = re.compile(
-    r"!\[([^\]]*)\]\(((?:analytic_|map_)[^)/]+\.(?:svg|png)|[^/)\s]+\.(?:svg|png))\)"
+    r"!\[([^\]]*)\]\(((?:analytic_|map_)[^)/]+\.(?:svg|png|jpg|jpeg|webp)|[^/)\s]+\.(?:svg|png|jpg|jpeg|webp))\)",
+    re.I,
 )
 _SLUG_MAX_TITLE = 60
+
+_QUICK_TAKE_KEYS = {
+    "What happened": "what_happened",
+    "Why it matters": "why_it_matters",
+    "What remains uncertain": "what_is_uncertain",
+}
 
 
 @dataclass
@@ -56,6 +67,12 @@ def parse_published_article(md: str) -> tuple[str, str, str]:
     Title and dek move into frontmatter; everything from the first body line onward is carried as-is
     (the site itself splits the receipts at the heading).
     """
+    from algent_backend.agent_system.foundation.text_hygiene import scrub_text
+
+    # Last line of defence before a title becomes a permanent slug. A published URL still
+    # reads ".../corals-breathe-94-and-why..." because a NUL rode this far unnoticed, and a
+    # slug is the one field we cannot correct later without breaking every link to it.
+    md = scrub_text(md)
     lines = md.splitlines()
     title, dek, cut = "", "", 0
     for i, ln in enumerate(lines):
@@ -71,6 +88,37 @@ def parse_published_article(md: str) -> tuple[str, str, str]:
         cut = j + 1
     rest = "\n".join(lines[cut:]).strip()
     return title, dek, rest
+
+
+def extract_quick_take(rest: str) -> tuple[dict[str, str], str]:
+    """Lift ``## At a glance`` into frontmatter fields and strip it from the body.
+
+    The site renders a dedicated QuickTake block from frontmatter; leaving the markdown
+    section in the body would duplicate it.
+    """
+    lines = rest.splitlines()
+    start = next((i for i, ln in enumerate(lines) if ln.strip() == _AT_A_GLANCE), None)
+    if start is None:
+        return {}, rest
+    end = start + 1
+    qt: dict[str, str] = {}
+    while end < len(lines):
+        ln = lines[end].strip()
+        if not ln:
+            end += 1
+            continue
+        m = _QUICK_TAKE_LINE.match(ln)
+        if not m:
+            break
+        key = _QUICK_TAKE_KEYS.get(m.group(1))
+        if key:
+            qt[key] = m.group(2).strip()
+        end += 1
+    # Drop a trailing blank left after the section so the body does not open with empty lines.
+    while end < len(lines) and not lines[end].strip():
+        end += 1
+    body = "\n".join(lines[:start] + lines[end:]).strip()
+    return qt, body
 
 
 def build_slug(title: str, profile_id: str) -> str:
@@ -105,9 +153,51 @@ def quality_digest(rail: dict, pipeline: dict, *, run_id: str = "") -> str:
         f"status: {pipeline.get('status', '?')}  ·  draft: {pipeline.get('draft_outcome', '?')}"
         f"  ·  treatment: {pipeline.get('treatment_verdict', '?')}",
         f"caveats: {pipeline.get('caveat_verdict', '?')} ({pipeline.get('caveat_findings', 0)} findings)",
-        f"analytics: {pipeline.get('analytics_produced', 0)} produced, {pipeline.get('analytics_escapes', 0)} escapes",
-        f"cost: ~${float(rail.get('total_usd', 0.0) or 0.0):.4f}",
+        f"analytics: {pipeline.get('analytics_produced', 0)} produced,"
+        f" {pipeline.get('analytics_escapes', 0)} escapes",
+        f"cost: ~${float(rail.get('total_usd', 0.0) or 0.0):.4f}"
+        f"  ·  mode: {rail.get('budget_mode') or 'normal'}"
+        f"  ·  soft/hard: ${float(rail.get('soft_cap_usd') or 1):.2f}"
+        f"/${float(rail.get('hard_cap_usd') or 3):.2f}",
     ]
+    if skipped_vis := pipeline.get("analytics_skipped") or []:
+        lines.append(
+            "analytics_skipped: " + ", ".join(str(s) for s in skipped_vis[:12])
+        )
+    if surface := pipeline.get("surface_issues") or []:
+        lines.append(
+            "surface_issues: " + "; ".join(str(s) for s in surface[:6])
+        )
+    if by_stage := rail.get("cost_by_stage"):
+        parts = [f"{k}=${float(v):.4f}" for k, v in sorted(by_stage.items())]
+        if parts:
+            lines.append("cost_by_stage: " + ", ".join(parts))
+    if rail.get("soft_cap_crossed"):
+        lines.append(
+            "soft_cap_crossed: yes"
+            + (f" @ {rail['soft_crossed_at_stage']}" if rail.get("soft_crossed_at_stage") else "")
+        )
+    if rail.get("hard_stop"):
+        lines.append(
+            "hard_stop: yes"
+            + (f" @ {rail['hard_stop_stage']}" if rail.get("hard_stop_stage") else "")
+        )
+    skipped = rail.get("skipped_operations") or []
+    if skipped:
+        lines.append(
+            "skipped: " + ", ".join(
+                f"{s.get('op', '?')}({s.get('reason', '')})" for s in skipped[:12]
+            )
+        )
+    refused = rail.get("refused_operations") or []
+    if refused:
+        lines.append(
+            "refused: " + ", ".join(
+                f"{s.get('op', '?')}({s.get('reason', '')})" for s in refused[:12]
+            )
+        )
+    if disp := rail.get("disposition"):
+        lines.append(f"disposition: {disp}")
     # Discovery observability across runs: pool share vs what fed the winner (overfit signal).
     if pool := rail.get("pool_by_channel"):
         lines.append("pool: " + ", ".join(f"{k}={v}" for k, v in sorted(pool.items())))
@@ -131,6 +221,27 @@ def _frontmatter(data: dict) -> str:
     return f"---\n{body}---\n"
 
 
+def _derived_frontmatter(profile: dict, vector: dict | None, pipeline: dict) -> dict:
+    """Derived tags/places/flags, with the reviewer's rejected flags removed.
+
+    Flags are assigned from the profile's declared geography, which is settled before anyone has
+    read the finished article — so the only stage that can tell whether the prose accounts for a
+    country is the comprehension reviewer, which reads both. Its removals are applied here.
+    Places and flags are positionally paired, so they must be filtered together.
+    """
+    derived = derive_all(profile, vector)
+    drop = {str(p).strip().casefold() for p in (pipeline.get("places_to_drop") or []) if p}
+    if not drop:
+        return derived
+
+    places = list(derived.get("places") or [])
+    flags = list(derived.get("flags") or [])
+    kept = [(p, f) for p, f in zip(places, flags) if p.strip().casefold() not in drop]
+    return {**derived,
+            "places": [p for p, _ in kept],
+            "flags": [f for _, f in kept]}
+
+
 def convert(
     *, article_md: str, rail: dict, pipeline: dict, profile: dict,
     date: str, run_id: str = "", corrections: list[dict] | None = None,
@@ -143,6 +254,7 @@ def convert(
     the facts) is carried separately so the page can say "reporting as of X · published Y".
     """
     title, dek, rest = parse_published_article(article_md)
+    quick_take, rest = extract_quick_take(rest)
     profile_id = str(pipeline.get("profile_id") or rail.get("profile_id") or "")
     slug = build_slug(title, profile_id)
     body, assets = rewrite_image_refs(rest, slug)
@@ -157,16 +269,20 @@ def convert(
         "published_at": published_at or datetime.now(UTC).isoformat(),
         "as_of": str(profile.get("as_of") or ""),
         "status": str(pipeline.get("status") or ""),
-        # Tags: derived. Places/flags: from agent countries_of_relevance only (see tagging.py).
-        **{k: v for k, v in derive_all(profile, vector).items() if v},
+        # Tags: derived. Places/flags: from agent countries_of_relevance only (see tagging.py),
+        # minus anything the comprehension reviewer judged the finished prose does not earn.
+        **{k: v for k, v in _derived_frontmatter(profile, vector, pipeline).items() if v},
     }
+    if quick_take:
+        fm["quick_take"] = quick_take
     # THUMBNAIL: a produced analytic is the best thumbnail this article can have — a real visual
     # built from the piece's own cited evidence, on-brand via the worker's spec, with zero
     # fabrication risk. Strictly better than a generated illustration, and it needs no AI-image
     # floor to ship. Articles without one fall back to their flags for visual texture.
     if thumb := next((a.get("artifact_name") for a in (analytics or [])
                       if a.get("status") == "produced"
-                      and str(a.get("artifact_name", "")).endswith((".svg", ".png"))), None):
+                      and str(a.get("artifact_name", "")).lower().endswith(
+                          (".svg", ".png", ".jpg", ".jpeg", ".webp"))), None):
         fm["thumbnail"] = f"/analytics/{slug}/{thumb}"
 
     # HERO: a generated opening illustration, when the run made one. Kept separate from
@@ -181,6 +297,11 @@ def convert(
         fm["hero_label"] = str(hero.get("label") or "")
         if hero.get("hook"):
             fm["hero_hook"] = str(hero["hook"])
+        # A real photograph carries its credit instead of an AI label (the site keys the frame
+        # off the ``photo_`` file name, and shows this line with a link to the source).
+        if hero.get("credit"):
+            fm["hero_credit"] = str(hero["credit"])
+            fm["hero_credit_url"] = str(hero.get("credit_url") or "")
         assets = [*assets, hero_name]
     if corrections:
         fm["corrections"] = corrections

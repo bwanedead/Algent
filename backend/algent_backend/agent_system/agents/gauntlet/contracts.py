@@ -19,7 +19,10 @@ class GauntletReport(BaseModel):
     starting_revision: int = 1
     ending_revision: int = 1
     lanes_run: list[str] = Field(default_factory=list)
-    findings_addressed: list[str] = Field(default_factory=list)
+    #: Findings the lanes were sent to work on. NOT a claim that they were resolved —
+    #: review ids are renumbered per review, so resolution cannot be read off an id
+    #: diff. `remaining_findings` is the honest count of what is still open.
+    findings_attempted: list[str] = Field(default_factory=list)
     initial_verdict: str = ""
     final_verdict: str = ""
     initial_findings: int = 0

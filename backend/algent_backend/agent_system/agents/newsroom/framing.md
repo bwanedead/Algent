@@ -38,10 +38,12 @@ deserves the reporting's center of mass?**
 
 That focal thing is not always the newest procedural layer in the dossier. Profiles often
 arrive via a **hearing, testimony, advisory, press conference, paper release, earnings call,
-or secondary write-up** that *discusses, reacts to, or updates* something else. The procedure
-or reaction can be useful evidence; it is often **not** the story. The same miss has many
-shapes: the world event is treated as background while the microphone, memo, or recap is
-treated as the piece.
+podcast segment, or secondary write-up** that *discusses, reacts to, or updates* something
+else. The procedure or reaction can be useful evidence; it is often **not** the story. The
+same miss has many shapes: the world event is treated as background while the microphone,
+memo, podcast listing, or recap is treated as the piece — including the especially bad shape
+where the article becomes *"Outlet X said Y and we could not verify the primary"* instead of
+a first-principles landscape of the underlying claim.
 
 **Prefer the load-bearing reality as the frame's subject** when the latest surface mainly
 *reveals* or *comments on* it — then fold the hearing, statement, or paper in as how we know

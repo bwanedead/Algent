@@ -37,6 +37,7 @@ _MAX_FINDINGS = 4  # bound the work per enrich pass
 class EnrichState(TypedDict, total=False):
     profile: dict[str, Any]  # the profile to enrich
     review: dict[str, Any]   # its ReviewReport (the assignments)
+    addressed: list[str]     # finding ids closed only after a validated evidence delta
 
 
 def build_enrich_graph(
@@ -69,10 +70,22 @@ def build_enrich_graph(
             )
             captured = snapshots.collected()
             estimated_usd = cost.spent_usd()   # capture inside the scope (it resets on exit)
-        additions = produced if isinstance(produced, ProfileAdditions) else ProfileAdditions()
+        if not isinstance(produced, ProfileAdditions):
+            # Loop aborted (budget or a rejected request). Do not bump revision
+            # as if this lane ran — the model never finished additions.
+            context.emit(ENRICH_NO_WORK, {
+                "message": f"'{lane}' loop ended without additions",
+                "profile_id": profile.id,
+                "estimated_usd": estimated_usd,
+            })
+            return {"profile": profile.model_dump(), "addressed": []}
+        additions = produced
 
         before = (len(profile.source_ledger), len(profile.claim_ledger), len(profile.threads))
         merged = merge_additions(profile, additions, captured, generator=generator, stage=stage)
+        # Model-claimed closure is not authoritative — re-review owns finding closure.
+        # Keep claimed ids on the event for observability; return none as "addressed".
+        addressed: list[str] = []
         try:
             JsonProfileStore().save(merged)
         except Exception:  # noqa: BLE001
@@ -80,15 +93,16 @@ def build_enrich_graph(
         if context.artifacts is not None:
             context.artifacts.write_json("profile.json", merged.model_dump())
             context.artifacts.write_text("briefing.md", render_briefing(merged))
-        context.emit(ev.OUTPUT_PREVIEW, _enrich_preview(merged, before, additions, lane))
+        context.emit(ev.OUTPUT_PREVIEW, _enrich_preview(merged, before, additions, lane, addressed))
         context.emit(ENRICH_COMPLETED, {
             "profile_id": merged.id, "lane": lane, "revision": merged.revision,
             "added_sources": len(merged.source_ledger) - before[0],
             "added_claims": len(merged.claim_ledger) - before[1],
-            "addressed": additions.addressed_findings,
+            "addressed": addressed,
+            "addressed_claimed": additions.addressed_findings,
             "estimated_usd": estimated_usd,
         })
-        return {"profile": merged.model_dump(), "addressed": additions.addressed_findings}
+        return {"profile": merged.model_dump(), "addressed": addressed}
 
     graph = StateGraph(EnrichState)
     graph.add_node("enrich", enrich)
@@ -103,11 +117,27 @@ def policy_scope(channels, budget):
 
 
 def _select_findings(review: ReviewReport | None, lane: str) -> list:
+    """The findings this lane will actually chase.
+
+    Severity is a filter, not just a sort order. Enrichment is the most expensive thing the
+    newsroom does — around 5 paid searches and a couple of minutes per finding, about half the
+    cost of an article — and it was spending that on whatever came top of the list, including
+    `low` findings whose own text said the profile was fine ("frame choice is sound and most
+    reality-revealing"). Paying research prices to confirm that nothing is wrong is the clearest
+    waste we have measured.
+
+    So a lane chases what would change what the reader is told: a maturity blocker, or a finding
+    graded medium or worse. Nothing that grade means the lane does not run at all, which is the
+    correct outcome for a profile that came back strong.
+    """
     if review is None:
         return []
-    lane_findings = [f for f in review.findings if f.lane == lane]
-    lane_findings.sort(key=lambda f: (not f.maturity_blocker, _SEVERITY_RANK.get(f.severity, 2)))
-    return lane_findings[:_MAX_FINDINGS]
+    worth_chasing = [
+        f for f in review.findings
+        if f.lane == lane and (f.maturity_blocker or _SEVERITY_RANK.get(f.severity, 2) <= 2)
+    ]
+    worth_chasing.sort(key=lambda f: (not f.maturity_blocker, _SEVERITY_RANK.get(f.severity, 2)))
+    return worth_chasing[:_MAX_FINDINGS]
 
 
 def _assignment_preview(profile: SignalProfile, findings: list, lane: str) -> dict[str, Any]:
@@ -119,14 +149,18 @@ def _assignment_preview(profile: SignalProfile, findings: list, lane: str) -> di
     }
 
 
-def _enrich_preview(merged: SignalProfile, before: tuple, additions: ProfileAdditions, lane: str) -> dict[str, Any]:
+def _enrich_preview(
+    merged: SignalProfile, before: tuple, additions: ProfileAdditions, lane: str,
+    addressed: list[str] | None = None,
+) -> dict[str, Any]:
     snap = sum(1 for s in merged.source_ledger if s.snapshot is not None)
+    kept = addressed if addressed is not None else additions.addressed_findings
     return {
         "title": f"profile enriched (lane: {lane}, rev {merged.revision})",
         "summary": (
             f"+{len(merged.source_ledger) - before[0]} sources (+{snap} deep-read total), "
             f"+{len(merged.claim_ledger) - before[1]} claims, +{len(merged.threads) - before[2]} threads | "
-            f"addressed: {additions.addressed_findings}"
+            f"addressed: {kept}"
         ),
         "items": [f"+source: {s.title or s.url}" for s in additions.sources[:6]],
         "link": "../artifacts/briefing.md",

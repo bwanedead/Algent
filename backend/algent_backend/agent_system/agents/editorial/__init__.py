@@ -9,11 +9,12 @@ they are built. Re-exports the contract for ergonomic imports.
 from __future__ import annotations
 
 from .citations import CitationReport, check_citations
-from .draft import ArticleDraft, DraftPayload
+from .draft import ArticleDraft, DraftPayload, QuickTake
 from .draft_gauntlet_contracts import DraftingGauntletReport
 from .gauntlet_contracts import PlanningGauntletReport
 from .review_contracts import TreatmentFinding, TreatmentReview
 from .treatment import (
+    CausalLink,
     EditorialTreatment,
     FrameOption,
     PerspectiveTake,
@@ -22,9 +23,11 @@ from .treatment import (
 
 __all__ = [
     "ArticleDraft",
+    "CausalLink",
     "CitationReport",
     "DraftPayload",
     "DraftingGauntletReport",
+    "QuickTake",
     "check_citations",
     "EditorialTreatment",
     "FrameOption",

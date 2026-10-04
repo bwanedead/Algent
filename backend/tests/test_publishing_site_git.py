@@ -39,15 +39,22 @@ def _run(tmp: Path, article: str, entities: list) -> Path:
     art = tmp / "runs" / "0001__x" / "artifacts"
     art.mkdir(parents=True)
     (art / "article_published.md").write_text(article, encoding="utf-8")
+    # A hero is a publish floor now ("every article must ship with a hero"), so a fixture
+    # without one holds for that reason and never reaches the lane under test.
     (art / "editorial_pipeline_report.json").write_text(json.dumps(
-        {"profile_id": "prof_x", "status": "publishable", "caveat_verdict": "verified"}), encoding="utf-8")
+        {"profile_id": "prof_x", "status": "publishable", "caveat_verdict": "verified", "word_count": 400,
+         "hero": {"artifact_name": "hero.jpg"}}), encoding="utf-8")
     (art / "newsroom_rail_report.json").write_text(json.dumps({"total_usd": 0.1}), encoding="utf-8")
     (art / "profile.json").write_text(json.dumps({"id": "prof_x", "entities": entities}), encoding="utf-8")
+    # The floor checks the hero BYTES exist, not just the reference — a report naming a hero
+    # that was never written is exactly the empty-artifact failure it was added to catch.
+    (art / "hero.jpg").write_bytes(b"not-a-real-jpeg-but-non-empty")
     return art.parent
 
 
 def test_named_individual_lane_holds_a_publishable_piece(tmp_path: Path) -> None:
-    article = "# X\n*dek*\n\nProsecutors allege John Doe embezzled funds.\n\n## How we know this\n_r_\n"
+    article = ("# X\n*dek*\n\nProsecutors allege John Doe embezzled funds.\n\n## How we know this\n_r_\n\n"
+               "**Sources**\n- (news) Wire — https://wire.example/a  ·  _read in full_\n")
     run = _run(tmp_path, article, [{"name": "John Doe", "type": "person"}])
     # off by default: publishes despite the accusation (the caveat floor already vetted it)
     off = pb.publish_run(run, site_dir=tmp_path / "s1", held_dir=tmp_path / "h1", today="2026-07-15")
@@ -56,3 +63,30 @@ def test_named_individual_lane_holds_a_publishable_piece(tmp_path: Path) -> None
     on = pb.publish_run(run, site_dir=tmp_path / "s2", held_dir=tmp_path / "h2",
                         today="2026-07-15", hold_named_individuals=True)
     assert on.action == "held" and "named-individual lane" in on.reasons[0]
+
+
+def test_commit_force_adds_the_ignored_asset_path(tmp_path, monkeypatch) -> None:
+    """Published figures live under a gitignored path — right for the dev tree, catastrophic in
+    the live worktree. `git add -A` skipped them, so every auto-published chart, map and hero
+    shipped with a correct <img> ref pointing at a file that was never committed, and 404'd."""
+    from algent_backend.publishing import site_git as sg
+
+    calls: list[tuple] = []
+    monkeypatch.setattr(sg, "_git", lambda wt, *a: (calls.append(a), (True, ""))[1])
+
+    assets = tmp_path / sg._ASSET_PATH
+    assets.mkdir(parents=True)
+    sg.commit_and_push(tmp_path, "publish(x): publishable")
+
+    assert ("add", "-A") in calls
+    assert ("add", "-f", sg._ASSET_PATH) in calls          # the ignored path, staged anyway
+    assert calls.index(("add", "-A")) < calls.index(("add", "-f", sg._ASSET_PATH))
+
+
+def test_no_asset_dir_means_no_force_add(tmp_path, monkeypatch) -> None:
+    from algent_backend.publishing import site_git as sg
+
+    calls: list[tuple] = []
+    monkeypatch.setattr(sg, "_git", lambda wt, *a: (calls.append(a), (True, ""))[1])
+    sg.commit_and_push(tmp_path, "publish(x): publishable")
+    assert not any(a[:2] == ("add", "-f") for a in calls)

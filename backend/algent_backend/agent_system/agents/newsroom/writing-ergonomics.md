@@ -24,6 +24,43 @@ writing by the molecule the reader is left holding at the end** — not by the s
 emitted. (When that molecule is missing a load-bearing branch, that is a spirit failure, not
 just an ergonomics one — see spirit.md.)
 
+## The target we are aiming at
+Most of this file is written as corrections — cut this, do not do that — and a set of
+prohibitions is not an objective. So state the thing itself:
+
+> **The shortest, most natural article that leaves the reader holding everything they are glad
+> to have been told.**
+
+Three properties, and the piece has to hit all three at once — which is why none of them can be
+pursued alone:
+
+- **Short.** Not because brevity is a virtue, but because every sentence spends attention the
+  reader will not get back, and a piece that spends it on things they will not use has charged
+  them for nothing.
+- **Natural.** It should read as one continuous act of explaining — the download-into-the-brain
+  feel — not as assembled blocks a reader has to re-enter one at a time. Friction is a cost even
+  when nothing is wrong with the content.
+- **Complete in what matters.** Everything load-bearing is there: what connects the dots, what
+  carries the weight, what the reader would have felt the absence of.
+
+Optimising any one alone gives you a familiar failure. Short alone is a stub. Natural alone is
+smooth and empty. Complete alone is the 2,500-word tour that is accurate and exhausting. The
+craft is the frontier where all three hold.
+
+**The test for any piece of information** — a fact, a name, a date, a whole concept:
+
+> Does this genuinely add to what the house reader takes away, and would its absence leave a
+> gap in their understanding?
+
+That is a higher bar than "true", "interesting", or "we researched it". Information that passes
+is substance the reader gained understanding from; without it the article would feel thinner or
+leave a hole. Information that fails is detail for its own sake — accurate, unobjectionable, and
+charging the reader for nothing. Cut it, or roll it up into the group that does carry weight.
+
+Note the bar cuts both ways, and the second direction is the one to watch: a piece that omits
+what the reader needed to connect the dots has failed this test exactly as badly as one that
+padded. Compression is not the goal — the frontier is.
+
 ## Start from a shared origin — context before nuance
 A reader can only follow directions from a known starting point. Establish the **context** —
 the foundational ground you and the reader already share — before introducing the specific
@@ -46,6 +83,305 @@ Concepts have prerequisites.
 
 Move **broad → specific.** That is the direction a reader instinctively expects to travel;
 traveling it keeps their model assembling instead of buckling.
+
+## Doubt has one home — it is not the spine
+
+We keep receipts, we grade claims, and we say what is not established. None of that licenses a
+piece whose SUBJECT becomes its own verification. A Hattusa piece opened with a 90-word sentence
+naming the minister, his ministry and its study timeline, and then spent four of its first five
+paragraphs on what could not be confirmed: no transcription, no named Assyriologist, not
+scientifically dated, "a ministry claim". Every line was true. The reader met an argument about
+evidence where they came for a 3,300-year-old clause saying the homes of returned fugitives must
+not be destroyed — which arrived, compressed, far below.
+
+The rule: **uncertainty is stated once, where it belongs, at the strength it deserves.**
+- A claim that is contested or thin is hedged IN ITS OWN SENTENCE — "the ministry says", "if the
+  reading holds" — and then the piece moves on. It does not come back to apologise.
+- When provenance is genuinely part of the story (an announcement nobody has published the text
+  of), it gets ONE passage that says so properly, placed where a reader has already been given
+  the thing itself. Not a refrain, not a tax on every paragraph.
+- The gist layer already carries an explicit "what is still open" line, and the receipts carry
+  the grading. The body does not have to re-earn them.
+- Hedge to the PRINCIPAL, not the channel: "Witkoff said on X", not "according to Reuters
+  reporting of a Witkoff post". The outlet rides in a clause when it matters at all.
+- Describe the world, never our search. "Neither government has published a readout" is part of
+  the story; "no readout was found", "no dataset was pulled" is the pipeline talking to itself.
+
+A reader who cannot tell what is claimed and what is proven is a failure. So is a reader who
+gets the epistemics and never gets the story. The second failure is the one we keep shipping.
+
+## Landmarks — the reader is skimming, and that is not a defect
+
+Most readers do not read; they scan, stop where something catches, and read from there. A piece
+with no landmarks — no headings, uniform paragraphs, nothing bold — offers nowhere to stop, so
+it reads as a wall and gets abandoned by exactly the casual reader we want. Two live verdicts
+from the operator: "such a wall of text I didn't even want to read it", and "it doesn't have
+skim accessibility really".
+
+So, above roughly a screen and a half of prose (~800 words), a piece carries landmarks:
+- **Headings that name the thing, not the stage of an argument.** "Forced return, not refuge"
+  is a landmark. "Analysis" and "Background" are not. A reader should be able to read only the
+  headings and come away with the shape of the story.
+- **One every few hundred words.** Long enough that each section is real prose (see the survey
+  exception below); short enough that the eye always has a next stop in view.
+- **A strong first sentence after each one.** The paragraph under a heading is a second chance
+  at the opening bargain.
+
+This does not reopen the case for chopping prose into labelled blocks or bullets — that failure
+is catalogued above and it is still a failure. Landmarks are signposts ON continuous prose, not
+a replacement for it.
+
+## The first two sentences carry the whole bargain
+A reader arriving on a page is deciding whether to spend the next three minutes, and they
+decide almost immediately, from the top of the piece and the shape of the block beneath it.
+If working out *what this is and why it is interesting* takes a paragraph of effort, most
+people will not spend it — and a piece nobody finishes conveyed nothing, however accurate.
+
+So the opening two sentences must hand over, in plain words, **what happened and what makes
+it worth knowing**. Not a label saying it matters — that is the machine signature and it is
+banned (style.md 2). The substance itself, which is what makes announcement unnecessary:
+
+- *"Italy and Japan sign intent on biomanufacturing cooperation"* leaves a reader asking why
+  two governments signing a letter is their business. The answer was in the piece, several
+  paragraphs down: it is about turning waste and biomass into industrial materials, and the
+  declaration has no money attached. Put that up top — the thing being attempted, and the
+  catch — and a reader knows within seconds whether they want the rest.
+- *"Europe's electrification is running into grid-connection queues"* is closer, because the
+  obstacle is named. What it still owes the reader immediately is the size of the thing:
+  2,500 GW of projects waiting.
+
+The test: **after two sentences, could the reader tell a friend what this is about and why
+somebody would care?** If not, you have front-loaded context that should be second, or buried
+the finding that should be first. Ordering is the whole fix here — no new words are needed,
+and padding an opening is the opposite of the point.
+
+Length is the other half of the same problem. Every paragraph a reader must cross before the
+substance arrives is friction they may not pay. Prefer the shorter piece that lands over the
+longer one that covers more, and never keep a paragraph because the profile held the material.
+
+## One continuous piece, not a set of labelled blocks
+
+(Read this with "Landmarks" above: the two are one rule. Landmarks say a reader needs places
+to stop; this says those places must be earned by the prose, not manufactured by chopping it.)
+
+Headings are for an article that genuinely has parts. Most do not. Five headed sections
+inside one piece is almost always the research profile's shape showing through — we gathered
+in sections, so we wrote in sections — and it reads as assembly rather than writing. It is
+also the cheap way to look organised: chopping prose into labelled chunks *looks* structured
+while doing none of the work of actually carrying a reader from one idea to the next.
+
+Default to continuous prose that moves by argument — signposted, not diced. Each paragraph should hand off to the
+next: the new idea arrives attached to the one before it, so the reader keeps building one
+model instead of starting a fresh one at every header. Use a heading only where a piece truly
+turns — and if you find yourself needing several, that usually means the through-line is
+missing and a heading is being asked to hide the gap.
+
+### The exception: when the subject really is a set of things
+
+Some pieces are a survey. Eight proposed megastructures, six drugs in a class, every bidder
+in an auction: the reader wants to move through them, dwell on the one that interests them,
+compare, and come back. There the members ARE the structure, and running them together as
+continuous prose does not preserve nuance — it buries each one, and the piece arrives as an
+intimidating wall nobody wants to start. That happened: a megaproject tour ran eight
+structures into unbroken prose and the operator's first reaction was that he did not want to
+read it.
+
+So the test is not "how many headings" but **what the piece is**. One argument that develops:
+continuous prose, and a heading every few hundred words is the profile's shape leaking
+through. A survey of discrete members the reader browses: give each member its heading, and
+make the heading name the thing, not a stage of an argument.
+
+The danger in the survey shape is real and it is the reason for the default: sectioning
+invites bullets, and bullets strip out the relational, load-bearing nuance that only survives
+in articulated prose — the piece then reads as a thin summary instead of the rich thing the
+reader came for, and a reader can feel that difference even when the facts are identical. So
+a survey is sections **of written prose**, several real paragraphs each, each carrying the
+same density the piece would have had unbroken. The heading buys approachability; it does not
+buy the right to write less.
+
+## Every sentence must land on the first pass
+
+Read each sentence once, at speed, as the reader. If you would have to go back, it fails.
+This shipped:
+
+> Ambient-noise tomography images Vs, not melt. Converting Vs to melt fraction and volume is
+> the most assumption-dependent step.
+
+Four pieces of unexplained apparatus in two sentences, and a reader who learns only that they
+are not the audience. The fix is a lower ramp into the idea, never just a shorter sentence:
+
+> The method measures how fast waves travel through rock, not how much of it is molten — so
+> turning one into the other is where the estimate gets softest.
+
+Same content, same length, no apparatus, one pass. When an idea genuinely needs specialist
+vocabulary, build the ramp first and put the term at the top of it, not at the bottom.
+
+## The forest, not the twigs
+
+Research hands you method and detail, and the draft will narrate them unless you decide
+otherwise. A piece on perovskite-on-silicon solar cells shipped without ever establishing that
+the subject was making solar panels cheaper — it walked through procedure instead, every
+sentence true and the whole thing useless.
+
+- Say early and plainly what the thing **does in the world**, and who would notice if it
+  worked. That comes before any apparatus.
+- A number, a step or a parameter earns its place only if it changes what the reader
+  concludes. Detail that merely shows the work belongs in the appendix, which we publish
+  anyway.
+- Ask what share of the piece is significance and consequence versus method and peripheral
+  detail. If the second wins, you have written a walkthrough.
+
+The silent filter — never write it on the page as "how this affects you" — is: **does this
+change what a house reader would do, expect, or believe about the world they live in?** A
+chipmaking claim earns the advancement, the economics, who is ahead of whom. It does not
+earn a lecture on the physics of the light source. A rough idea of what the mechanism
+relies on is enough for the significance to land; the exam-level walkthrough is not.
+
+We will rarely need a lecture on anything. If a section could be a textbook chapter, it is
+the wrong grain.
+
+Cut twigs so the piece lands in about **five minutes** (~1,100 words). Extra minutes must
+be earned by the same premise the headline opened — more sides of that dispute, a mechanism
+that will not fit in a clause. A short piece buried in procedure also fails.
+
+**Stay on the premise.** A true fact from the research is not automatically in the piece.
+If a paragraph would take the reader into a different world than the title opened — labour
+markets after a power-share finding, contractor geography, demographic decline — write the
+connection as a clause ("the phase-out is politically hard because the remaining jobs sit
+in one region") and stop. Touring that world is how a tight piece turns into a ramble
+nobody asked for. Length is never earned by having researched an adjacent system.
+
+## Do more with less — the three-tier test
+
+The aim is not a word count for its own sake. It is **more understanding per sentence the reader spends**. Those
+come apart constantly: a piece can be exhaustive and convey less than one that named the pattern
+and moved on, because a reader given twelve particulars holds none of them, while a reader given
+the shape holds the shape.
+
+Themes and generalities are usually worth more than an inventory. So when you face a *collection*
+of anything — friction points, agencies, court filings, plant types, parameters, the components of
+a dispute — do not default to walking it. Ask which of three things is true:
+
+1. **The individual detail carries weight on its own.** It recurs, the story turns on that
+   specific one, or it is the evidence for a contested claim. Keep it, by name.
+2. **The meaning lives at the collection layer.** Then convey the *collection*, not its members:
+   "three main stretches of contested border", "a running dispute over who pays for the cleanup",
+   "several agencies with overlapping authority and no lead", "concerns relating to dual-use
+   inputs". The reader gets the same structure at a fraction of the cost, and the members are
+   in the receipts we publish anyway. A slightly shorter inventory is not this move — wrap
+   is one named clause, not fewer bullets.
+3. **The collection itself would not change what the reader takes away.** Drop it. You may leave
+   a single clause signalling the direction exists — *"the legal fight over liability is its own
+   long story"* — so a curious reader knows there is more without being made to read it.
+
+**This applies to whole sections, not just phrases.** The largest wins are structural: a section
+that walks every component of a tension can very often become one or two sentences stating *that
+the tension exists, between whom, and why it is unresolved*. If a passage's honest summary is
+"there is a fight here and it has many moving parts", write that sentence rather than the parts.
+Ask it of every section you have written: could this be replaced by naming what it establishes?
+If yes, and nothing load-bearing is lost, replace it.
+
+Precision survives all of this. "Three main stretches" is exact; it is not hedging or vagueness,
+and rolling up is never license to blur a number, soften a finding, or duck a disagreement. What
+is being cut is *enumeration*, not accuracy — and never a load-bearing side of *this* dispute.
+An adjacent world does not become a perspective that earns minutes.
+
+## The compression pass — five patterns that pad without adding
+
+"Cut twigs, not length" is right and has not been enough: pieces keep landing near 2,500 words
+carrying several hundred that no reader needs. The default landing is **~1,100 words (~5 min)**;
+the earned ceiling is ~1,500 / ~7 min. The compression pass is how you hit the default.
+The reason padding survives is that it does not arrive as obvious filler. It arrives as
+*conscientiousness* — glossing a term, crediting an institution fully, giving a second unit,
+hedging a limit. Each instance looks like care. Together they are the difference between a
+tight piece and a tiring one.
+
+So make one explicit pass over the finished draft against these, and expect to remove real
+volume. If nothing comes out, you have not looked hard.
+
+1. **The same fact stated three times at the top.** The worst one, and structural rather than
+   stylistic — the dek, the At-a-glance bullet and the opening paragraph are written by different
+   stages, so nobody notices they have converged. Observed, near-verbatim across all three:
+   *"Record heat and record-low Danube levels ... forced Hungary's and Romania's nuclear plants
+   toward full shutdown, cut European hydropower to decade lows and drove evening prices above
+   €300."* A reader meets that sentence, then meets it again, then meets it a third time before
+   learning anything new. These three surfaces are a **ladder, not an echo**: the dek adds the
+   load-bearing caveat, the gist layer serves someone who will not open the body, the opening
+   paragraph starts the actual telling. If two of them could be swapped without loss, two of them
+   are wasted.
+2. **Glossing inside the sentence it interrupts.** *"met by scarce dispatchable plants — those
+   that can be switched on on demand — and imports"* stops the sentence to teach a term, and that
+   paragraph carried three such asides. Define in a short following sentence, or choose a word
+   that needs no gloss. See *Terms, entities, and field-internal language* — this is that rule
+   costing words as well as rhythm.
+3. **Saying "a lot" three ways.** *"3.3-3.4 GW / 8.6 GWh of battery storage — about 16% of its
+   system capacity and more than 46% of combined solar and wind capacity."* Three framings of one
+   point. Pick the single comparison that makes the magnitude holdable and drop the others; the
+   rest is in the appendix we publish anyway.
+4. **Full titles where a short one identifies.** *"the Copernicus Climate Change Service run by
+   the European Centre for Medium-Range Weather Forecasts"* — the parent body changes nothing the
+   reader concludes. Identify well enough to place the source; the receipts carry the rest.
+5. **Second units and hedge tails.** *"43 degrees Celsius (109.4 degrees Fahrenheit)"* — pick the
+   unit your reader thinks in. And a thread whose honest ceiling is *"not confirmed in this
+   event"* belongs in the limits as one line, not in the body as a sentence that gives and then
+   takes away.
+
+An exhaustive country-by-country tour is a sixth pattern and a judgement call, not a rule: when
+each case shows a *different mechanism* — cooling towers, storage hydro, batteries — the tour
+carries the argument and earns its length. When the third and fourth case repeat the second, name
+the pattern and cite them together.
+
+## Say what the thing is before you say its name
+
+The order is not stylistic. An unfamiliar label arriving before its meaning forces the
+reader to hold a placeholder and keep reading in the hope it resolves, and that is where
+people quit. Put the plain-language function first, the specialist term second:
+
+- ✗ *"China has reportedly begun domestic production of immersion deep ultraviolet
+  lithography tools, a high-end chipmaking category used to print fine circuit patterns."*
+- ✓ *"A Chinese company has reportedly begun making the machines that print microscopic
+  circuit patterns onto computer chips — a technique called immersion deep-ultraviolet
+  lithography, and one of the few things the Dutch firm ASML still dominates."*
+
+Same facts, same length. The second one is readable on the first pass because the concrete
+object arrives before the vocabulary.
+
+**Every specialist initialism gets a key at first use, and the key says what it DOES.**
+Not `UVOT` — *"its Ultraviolet/Optical Telescope, or UVOT, sees light that never reaches
+the ground."* For a company or product where an expansion helps nobody, a short descriptor
+does the same work: *"the Dutch lithography maker ASML."* After that the short form is
+fine. We have shipped UVOT, XRT, DUV, DLR, HRSC and HEASARC with no key at all — in one
+case while the article's own tags carried the expansion — so treat this as a hard rule
+rather than a preference. A term the reader can only decode by searching is a term we
+failed to report.
+
+## State the causal chain; never leave the reader to deduce it
+
+A reader should never have to work out *why* the situation exists. The Swift piece left
+open whether the observatory was built without propulsion, had lost its propulsion, or was
+failing some other way — a guess a careful reader could make, but a guess. Say it outright:
+
+> Swift was launched without any engine of its own, so it cannot fight the thin
+> atmospheric drag that has been slowly pulling it down since 2004.
+
+Write the mechanism as **X is happening because Y, which means Z** — and put it near the
+top, not paragraph five. If something is broken, say what broke, whose it is, and what it
+prevents. In that same piece the failed reaction wheels belonged to the *rescue vehicle*,
+not to the telescope being rescued; a reader who blurred the two would misunderstand the
+entire story.
+
+## Every section earns its place on the through-line
+
+A block that is interesting but unheralded reads as a digression, even when it turns out
+to be relevant. The Swift piece cut from a failing spacecraft to a black hole tearing a
+star apart with no bridge, then justified the detour afterwards. Establish the connection
+*before* entering the material:
+
+> What is at risk becomes concrete in the kind of event Swift exists to catch. In November,
+> it helped confirm…
+
+The reader should never be asking "why am I reading this now?" — and never encounter the
+same point twice, as that piece did when it closed by re-arguing what it had already shown.
 
 ## The reader's starting state — you and they do not share a world
 This is the failure this doctrine exists to prevent, and it is the one we keep shipping. It is
@@ -134,6 +470,19 @@ If a term or entity only makes sense inside a profession, either supply the hand
 not lean on it. Cold guild language is a failed ramp, not sophistication. Keep explainers
 brief — enough to plant a usable mental handle, not a digression.
 
+### The source's idiom is not ours
+Sources write in their own register: a national statistics office, a regional wire, a trade
+journal. Their shorthand arrives in our notes and slides into our prose as if it were plain
+English. An Australian-sourced piece told readers of "a record 12.8 tonnes in the year to
+August 2024". That is correct Australian statistics usage and reads as broken almost everywhere
+else. A reader who trips on a phrase trusts the sentence less, and the whole piece with it.
+- **Time spans** are said so any reader can place them: "in the 12 months to August 2024",
+  "between September 2023 and August 2024". Never "the year to", "FY24", "YTD", "2023–24"
+  left bare, or a season named from one hemisphere.
+- **Units, spellings and institutions** follow the same test: would a reader from anywhere
+  parse this on the first pass? If not, restate it in words, or give the handhold above.
+- Quote the source's exact words only inside quotation marks, where the idiom is theirs.
+
 ## Analogy and metaphor — a borrowed structure, marked at the seams
 An analogy or metaphor hands the reader a structure they already hold and says *"the new
 thing is shaped like this."* It is a powerful **download shortcut**: instead of building an
@@ -210,6 +559,44 @@ The piece should read as one **thread of understanding**, not a segmented invent
 speakers, jurisdictions, or sources. Revisit the same reader question; each block should
 change that answer. Prefer fewer, better-connected moves over parallel sections that never
 rejoin. Island blocks that do not change the molecule belong cut, not stitched with signposts.
+
+**Where the chop actually comes from.** The treatment hands you concepts, and the path of least
+resistance is to write one self-contained block per concept and set them side by side. Each block
+is true, each is well-grounded, and the piece still reads as a list because nothing carries
+*across* the seam. The reader feels this as work: they finish a paragraph, park it, and start
+again cold.
+
+The repair is at the joins, not inside the blocks. Ask of each move: *what did the last one leave
+the reader holding, and how does this one act on it?* Then write the connection rather than
+implying it. Two facts placed next to each other are a stack; one sentence saying how the second
+bears on the first is a thread. And prefer that connective sentence over a signpost heading — a
+heading announces a topic change, which is the opposite of continuity.
+
+Watch for the stacking tells: a colon followed by a run of clauses that are really three separate
+facts; a paragraph of sentences that could be reordered without loss; consecutive sentences that
+each introduce a new noun the previous one never mentioned.
+
+## An increment needs its baseline
+Most news is a *change to an ongoing situation*, and a piece that reports the change while
+assuming the situation reads as insider correspondence — accurate to someone already following,
+faintly disorienting to everyone else. The tell is prior states referenced as known.
+
+Observed, in one opening: *"India and China held their **36th** border-management talks … calm
+enough for **flights and pilgrimages to resume**."* Both phrases assume the reader already knows
+there is a long-running series of talks, and that flights and pilgrimages had been suspended in
+the first place. Nothing in the piece had said either. A reader who has not been following stalls
+on the second clause and never fully recovers.
+
+So before the increment lands, the reader needs the standing state it is an increment *to*: what
+the situation has been, how the parties currently stand, what was already broken or already fixed.
+This is not a history lesson and it is not license to lengthen — usually it is a clause or a
+sentence, and it *replaces* the detail you were about to spend on the newest surface. The
+question is not "have I explained the background" but "can a reader who has never heard of this
+tell what state the world was in before today."
+
+Two failure modes bracket this. Assuming the baseline is the one above. Reciting it — opening with
+a chronology of everything that led here — is the other, and it buries the news. Give the standing
+state, then the change, in that order and in as few words as it takes.
 
 ## Ergonomics never overrides accuracy
 If a smoother phrasing would bend the meaning, the meaning wins. If a cleaner ordering would

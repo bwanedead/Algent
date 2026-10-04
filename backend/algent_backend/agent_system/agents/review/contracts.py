@@ -24,6 +24,12 @@ FindingType = Literal[
     "unresolved_causality",  # asserts a cause that isn't established
     "needs_data",            # would be much stronger with analytics (chart/metric/table)
     "weak_context",          # the surrounding field is thin / under-mapped
+    # Depth without altitude: the profile knows the incident thoroughly and the SYSTEM it sits
+    # in barely at all — no share of the larger flow, no idea who depends on it or who gains
+    # and loses, no sense of which ongoing story this is an episode of. A profile like this
+    # can only produce an instruction manual for one occurrence, and it is where our thinnest
+    # articles come from. The reader's questions live at those scales, not at the incident.
+    "missing_scope",
     "source_concentration",  # too few independent sources / one outlet dominates
     "other",
 ]

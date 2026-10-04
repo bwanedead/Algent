@@ -39,8 +39,15 @@ _GROUNDING_ORDER = {"snapshotted": 0, "snippet_only": 1, "unsourced": 2}
 def finalize_profile(
     profile: SignalProfile, vector: dict[str, Any], captured: dict[str, dict],
     *, model: str, generator: str, stage: str,
+    related_profiles: list[str] | None = None, corpus_context: list[str] | None = None,
+    prior_claim_ids: set[str] | None = None,
 ) -> SignalProfile:
-    """First build: assemble the model's items, stamp the profile id + provenance."""
+    """First build: assemble the model's items, stamp the profile id + provenance.
+
+    ``related_profiles`` / ``corpus_context`` record what the corpus handed the researcher (graph
+    edges + the earlier claims shown). ``prior_claim_ids`` is the set of earlier claim ids the
+    researcher was shown: a claim's ``contradicts_claims`` keeps only ids from it, so a model cannot
+    point at a claim it was never given."""
     revision = profile.revision or 1
     prov = ItemProvenance(added_by_stage=stage, revision=revision, created_at=_now())
     # First build: the harness is the sole snapshot authority — discard all model snapshots
@@ -50,7 +57,11 @@ def finalize_profile(
     sources, entities, claims, threads = _assemble(
         profile.source_ledger, profile.entities, profile.claim_ledger, profile.threads, captured, prov
     )
+    shown = prior_claim_ids or set()
+    for c in claims:
+        c.contradicts_claims = [i for i in dict.fromkeys(c.contradicts_claims) if i in shown]
     return profile.model_copy(update={
+        "related_profiles": list(related_profiles or []), "corpus_context": list(corpus_context or []),
         "id": _profile_id(vector),
         "parent_vector_id": vector.get("id", ""),
         "source_ledger": sources, "claim_ledger": claims, "entities": entities, "threads": threads,
@@ -83,6 +94,8 @@ def merge_additions(
     # Entities are lightweight nodes with no provenance field; only these carry it.
     for item in (*additions.sources, *additions.claims, *additions.threads):
         item.provenance = None
+    for c in additions.claims:      # an enricher is shown no earlier corpus claims, so it cannot point at any
+        c.contradicts_claims = []
     sources, entities, claims, threads = _assemble(
         profile.source_ledger + additions.sources,
         profile.entities + additions.entities,
@@ -246,8 +259,20 @@ def _thread_id(thread: Any) -> str:
 
 
 def _profile_id(vector: dict[str, Any]) -> str:
-    vid = str(vector.get("id") or "")
-    return "prof_" + (vid.removeprefix("vec_") or "unknown")
+    """The profile's durable key in the profile store — so it must be unique per story.
+
+    A vector with no id used to become ``prof_unknown``, and every one of them saved over the
+    last: the megaprojects profile was overwritten by the Greenland one, and with the run
+    folder pruned the megaprojects research was gone entirely. No id falls back to the title.
+    """
+    vid = str(vector.get("id") or "").removeprefix("vec_")
+    if vid:
+        return "prof_" + vid
+    title = str(vector.get("title") or vector.get("thesis") or "").strip().lower()
+    return _hash(re.sub(r"\s+", " ", title), "prof_") if title else "prof_unknown"
+
+
+profile_id_for = _profile_id    # public: callers that must predict the id a vector will get
 
 
 def _now() -> str:

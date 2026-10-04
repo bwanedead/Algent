@@ -20,9 +20,31 @@ no storage or rail imports; round-trips to JSON.
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 SCHEMA_VERSION = 1
+
+#: What KIND of piece this is. ``through_line`` is one argument that develops and is written as
+#: continuous prose. ``survey`` is a piece whose subject IS a set of discrete members the reader
+#: browses and compares; those get a headed section each, still fully written.
+ArticleShape = Literal["through_line", "survey"]
+
+CausalStatus = Literal["established", "supported", "possible", "unknown"]
+
+
+class CausalLink(BaseModel):
+    """One explicit cause→effect relation the reader must not have to invent.
+
+    Status is honesty about the evidence, not hedging theater: ``established`` only when the
+    profile actually settles it; ``unknown`` when the piece must say the link is open.
+    """
+
+    cause: str = ""
+    effect: str = ""
+    status: CausalStatus = "possible"
+    note: str = ""
 
 
 class FrameOption(BaseModel):
@@ -90,12 +112,44 @@ class EditorialTreatment(BaseModel):
     chosen_frame: FrameOption = Field(default_factory=FrameOption)
     rejected_frames: list[FrameOption] = Field(default_factory=list)
 
+    #: How deep a read this particular story MERITS, in minutes — a judgement made here, where
+    #: the whole profile has just been digested and the shape is known, rather than discovered
+    #: by the drafter after the words are on the page.
+    #:
+    #: Minutes rather than words or sections on purpose: it is the unit the reader actually
+    #: spends. It is a bound to write toward, never a quota to fill — a piece that lands its
+    #: understanding early should simply stop, and a target of 5 is not a complaint that a
+    #: piece came in at 4.
+    #:
+    #: Default landing is ``ARTICLE_DIGEST_MINUTES`` (~5). Extra minutes must be earned by
+    #: the focal thing and still sit under ``ARTICLE_DIGEST_CEILING_MINUTES``. Adjacent
+    #: worlds do not earn minutes. 0 means the planner did not judge, and nothing
+    #: downstream should invent a number.
+    read_minutes: int = 0
+    read_minutes_why: str = ""   # what about THIS story earns that depth
+    #: ``through_line`` (the default — one argument that develops) or ``survey`` (the subject IS
+    #: a set of discrete members the reader browses). The shape decides whether the piece is
+    #: continuous prose or headed member sections, and which grain its length is judged at.
+    shape: ArticleShape = "through_line"
+    shape_why: str = ""
+    #: For a survey: the members, in order, each of which will carry its own headed section.
+    members: list[str] = Field(default_factory=list)
+
     # ── the reader-molecule (the reality-shape to convey) ──
     core_understanding: str = ""                       # the molecule the reader should end holding (1-2 sentences)
     # The reader-facing dual of core_understanding: the question, in the reader's words, that this
     # piece answers. The shape is what they hold; this is why they wanted it. Every concept either
     # serves answering it or does not belong — and a vector that can't state one isn't a story.
     reader_question: str = ""
+    # Cold-reader ENTRY fields — the first-screen bargain before landscape/methodology.
+    # Distinct from core_understanding (end-state molecule) and reader_question (why they came).
+    news_kernel: str = ""        # one plain sentence: what concretely happened / was found
+    reader_payoff: str = ""      # why a non-specialist should care (usable so-what / reduction)
+    key_uncertainty: str = ""    # the most important open, contested, or unresolved link
+    # Plain-language subject for specialist topics ("an undeciphered Bronze Age script", not
+    # just the guild name). Empty when the subject is already house-readable.
+    plain_subject: str = ""
+    causal_chain: list[CausalLink] = Field(default_factory=list)
     concepts: list[TreatmentConcept] = Field(default_factory=list)
     reader_path: list[str] = Field(default_factory=list)  # suggested concept-id order (dependency order, NOT prose sections)
     # The ramp: textbook primitives a cold house reader must hold to build the molecule

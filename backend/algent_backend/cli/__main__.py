@@ -11,8 +11,12 @@ This is the integration point the rest of the system targets; the per-category
 dispatchers (``algent_backend.cli.runs``, ``algent_backend.data_ingestion.cli``)
 remain valid entry points and register the very same command modules.
 
-    python -m algent_backend.cli runs start general_discovery
+    python -m algent_backend.cli newsroom run --to menu          # discovery -> the menu
+    python -m algent_backend.cli newsroom run --from menu --pick 74,131
+    python -m algent_backend.cli newsroom run                    # the whole pipeline
     python -m algent_backend.cli ingest fetch gdelt_ngrams
+
+``newsroom run`` is the front door — see docs/guides/newsroom-pipeline.md for outcome -> command.
 """
 
 from __future__ import annotations
@@ -22,6 +26,7 @@ import sys
 
 from algent_backend.data_ingestion.cli import COMMANDS as INGEST_COMMANDS
 
+from .newsroom import COMMANDS as NEWSROOM_COMMANDS
 from .runs import agents, exec_run, list_runs, show, start, status, stop, watch
 from .site import held as site_held
 from .site import publish as site_publish
@@ -31,7 +36,10 @@ RUNS_COMMANDS = (start, exec_run, status, watch, stop, agents, list_runs, show)
 SITE_COMMANDS = (site_publish, site_retract, site_held)
 
 # Category id -> (help, command modules registered under it).
+# ``newsroom`` is first because it is the one most operators want: it drives the
+# story pipeline by stage range. The other categories are the layers underneath it.
 _CATEGORIES = {
+    "newsroom": ("run the story pipeline, or a slice of it", NEWSROOM_COMMANDS),
     "runs": ("agent run control plane", RUNS_COMMANDS),
     "ingest": ("data-ingestion pipelines", INGEST_COMMANDS),
     "site": ("publish finished runs to the live site", SITE_COMMANDS),

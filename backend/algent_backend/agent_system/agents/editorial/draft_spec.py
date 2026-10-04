@@ -12,7 +12,7 @@ from __future__ import annotations
 from typing import Any
 
 from algent_backend.agent_system.agents.agent_spec import AgentSpec, TestFixture
-from algent_backend.agent_system.foundation.models import ModelSpec
+from algent_backend.agent_system.foundation.models import house_spec
 from algent_backend.agent_system.runs.context import AgentRunContext
 from algent_backend.agent_system.tools.sourcing.search import policy
 from algent_backend.agent_system.tools.sourcing.search.research import WEB_SEARCH_TOOL_ID
@@ -24,17 +24,17 @@ AGENT_ID = "article_drafter"
 RUNTIME = "langgraph"
 FAMILY = "newsroom"
 TOOL_IDS = (WEB_SEARCH_TOOL_ID,)
-# Free channels + paid `rich` for the occasional blocked primary that sharpens the piece.
-SEARCH_CHANNELS = (policy.KEYWORD, policy.SEMANTIC, policy.READ, policy.RICH, policy.X)
+# Reads only — free, plus paid `rich` for the occasional blocked primary the piece needs. No
+# searching: the drafter works from a profile the research and the gauntlet already built, and
+# its own searches were pure cost — 5 to 13 Tavily/Exa calls a run that added zero claims and
+# zero sources in both measured runs (Greenland, Djibouti). Reading a source the profile already
+# cites still upgrades its grounding, which is the part of drafting-time research that paid off.
+# X stays: when an official said the thing in a post, the post is the primary source.
+SEARCH_CHANNELS = (policy.READ, policy.RICH, policy.X)
 PAID_BUDGET = 4          # lighter than research — drafting is precision, not discovery
 COST_CAP_USD = 1.00
 
-DEFAULT_MODEL = ModelSpec(
-    provider="openai",
-    model="gpt-5.4-mini",
-    temperature=0.4,     # prose wants a little more room than judgment
-    extra={"streaming": True, "stream_usage": True},
-)
+DEFAULT_MODEL = house_spec(reasoning_effort="medium", temperature=0.4, streaming=True)
 
 
 def build_graph(context: AgentRunContext) -> Any:

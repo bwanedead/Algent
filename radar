@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Radar control — the switch you can reach without an agent.
+#
+#   ./radar start    begin posting (background; close the terminal freely)
+#   ./radar stop     stop it, and verify nothing is left running
+#   ./radar status   what is queued, what is running, when the next post goes
+#   ./radar log      follow the log
+#
+# Deliberately a plain script at the repo root: when the point is "turn it off NOW", it must
+# not depend on remembering a module path, activating a venv, or having an agent available.
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PY="$ROOT/backend/.venv/Scripts/python.exe"
+[ -x "$PY" ] || PY="$ROOT/backend/.venv/bin/python"
+[ -x "$PY" ] || PY="python3"
+
+if [ "${1:-}" = "log" ]; then
+  exec tail -n 40 -f "$ROOT/backend/runs_data/radar_daemon.log"
+fi
+if [ $# -eq 0 ]; then
+  echo "Usage: ./radar [start|stop|status|log]" >&2
+  exit 1
+fi
+cd "$ROOT/backend"
+exec "$PY" -m algent_backend.cli newsroom radar "$@"

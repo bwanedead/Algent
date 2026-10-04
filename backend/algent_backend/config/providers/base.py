@@ -31,3 +31,6 @@ class ProviderConfig:
     key_env: str | None = None
     #: Keyring username for the stored key, or ``None`` when keyless.
     keyring_name: str | None = None
+    #: Optional OpenAI-compatible API root (e.g. Meta Model API). Mechanisms may
+    #: override via env; never put secrets here.
+    base_url: str | None = None

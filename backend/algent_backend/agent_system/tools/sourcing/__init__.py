@@ -6,7 +6,7 @@ inside each ``build()``:
 
     search/      tavily (web_search), brave (brave_search), exa (semantic_search)
     social/      xai_x_search — Grok-mediated live X search (derived intelligence)
-    depth/       fetch_content — full-page extraction (trafilatura -> Firecrawl)
+    depth/       fetch_content — full-page extraction (trafilatura -> optional Playwright -> Firecrawl)
     discovery/   rss_feed, gdelt_events, news_feeds — what's-happening + feed catalog
 
 Adding a channel never touches agent orchestration: register the spec here,

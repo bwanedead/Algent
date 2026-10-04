@@ -22,7 +22,7 @@ from algent_backend.agent_system.runs.control_plane.layout import (
 from algent_backend.agent_system.runs.control_plane.state import RunState, read_state, write_state
 from algent_backend.cli.runs import agents, stop
 
-_AGENT = "general_discovery"
+_AGENT = "newsroom_rail"
 
 
 def _fabricate_running_run(run_id: str) -> RunPaths:
@@ -127,4 +127,6 @@ def test_recorder_writes_error_log_on_run_error(tmp_path) -> None:
 def test_agents_lists_the_catalog(capsys) -> None:
     assert agents.run(SimpleNamespace()) == 0
     catalog = json.loads(capsys.readouterr().out)
-    assert "general_discovery" in {entry["agent_id"] for entry in catalog}
+    ids = {entry["agent_id"] for entry in catalog}
+    assert "newsroom_rail" in ids
+    assert "general_discovery" not in ids  # retired — see registry.py

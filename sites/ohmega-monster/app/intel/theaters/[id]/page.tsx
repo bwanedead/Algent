@@ -49,8 +49,8 @@ export default function TheaterDossierPage({ params }: { params: Params }) {
 
       {(d.pulses.length > 0 || d.map) && (
         <div className={`th-screen${d.pulses.length > 0 && d.map ? " is-two" : ""}`}>
-          <DossierPulses pulses={d.pulses} snap={snap} />
           <DossierMap d={d} />
+          <DossierPulses pulses={d.pulses} snap={snap} />
         </div>
       )}
 

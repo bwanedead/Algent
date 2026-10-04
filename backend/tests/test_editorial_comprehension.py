@@ -44,7 +44,7 @@ def _ctx(model, events):
     )
 
 
-_SPEC = ModelSpec(provider="openai", model="gpt-5.4-nano")
+_SPEC = ModelSpec(provider="openai", model="gpt-5.6-luna")
 
 
 def _draft(body="The FDA approved the drug. It lowers LDL-C.") -> ArticleDraft:
@@ -61,7 +61,7 @@ def test_reads_prose_and_flags_a_missing_ramp() -> None:
 
     assert r["verdict"] == "needs_ramp" and r["draft_id"] == "d"
     assert r["findings"][0]["id"] == "cmp_01" and r["findings"][0]["kind"] == "unexplained_term"
-    assert r["reviewer"] == "comprehension_reviewer@v1"
+    assert r["reviewer"] == "comprehension_reviewer@v2"
 
 
 def test_reviewer_is_shown_prose_only_never_the_evidence() -> None:
@@ -69,15 +69,39 @@ def test_reviewer_is_shown_prose_only_never_the_evidence() -> None:
     cl.build_comprehension_reviewer_graph(_ctx(_Model(ComprehensionCheck(id="", verdict="clear")), []),
                                           model_spec=_SPEC).invoke({"draft": _draft().model_dump()})
     shown = _Structured.last_message[1].content   # the HumanMessage
+    system = _Structured.last_message[0].content
     assert "LDL-C" in shown and "clm_" not in shown and "grounding" not in shown and "treatment" not in shown
-    # friend-test + slop cut are part of the cold-read brief (not optional flavor)
-    assert "FRIEND TEST" in shown and "announced_importance" in shown
+    assert "next draft" in shown
+    # Length without a count is how 2,300-word pieces shipped after review named the lecture.
+    assert "This draft is" in shown and "1100 words" in shown
+    assert "under 1100 words" in system
+    # Friend-test lives on the role; the defect catalog lives on the register — not restated in TASK.
+    assert "FRIEND TEST" in system and "announced importance" in system
+    assert "sends the piece back" not in system
+    assert "completeness in what matters outranks" not in system.lower()
 
 
 def test_vague_conflict_and_announced_importance_kinds_are_valid() -> None:
-    for kind, fix in (("vague_conflict", "add_handhold"), ("announced_importance", "cut")):
+    for kind, fix in (("vague_conflict", "add_handhold"), ("announced_importance", "cut"),
+                      ("lecture", "cut")):
         f = ComprehensionFinding(id="x", kind=kind, issue="t", fix=fix)
         assert f.kind == kind
+
+
+def test_needs_ramp_carries_the_next_draft() -> None:
+    out = ComprehensionCheck(
+        id="", verdict="needs_ramp",
+        title="FDA approves a cholesterol drug",
+        standfirst="A new pill lowers the cholesterol that drives heart risk.",
+        body="The FDA approved a pill that lowers LDL-C, the cholesterol that drives heart risk.",
+        findings=[ComprehensionFinding(id="", kind="unexplained_term", where="LDL-C",
+                                       issue="never says what LDL-C is", fix="add_handhold")],
+    )
+    r = cl.build_comprehension_reviewer_graph(_ctx(_Model(out), []), model_spec=_SPEC).invoke(
+        {"draft": _draft().model_dump()})["comprehension_check"]
+    assert r["verdict"] == "needs_ramp"
+    assert "LDL-C, the cholesterol" in r["body"]
+    assert r["title"].startswith("FDA")
 
 
 def test_clear_when_the_reader_follows_it() -> None:
@@ -107,4 +131,13 @@ def test_empty_prose_skips_the_read() -> None:
 def test_comprehension_reviewer_registered() -> None:
     from algent_backend.agent_system.agents.registry import default_agent_registry
     spec = default_agent_registry().get("comprehension_reviewer")
-    assert spec.default_model.model == "gpt-5.4-nano" and spec.family == "newsroom"
+    assert spec.default_model.provider == "meta" and spec.default_model.model == "muse-spark-1.2-contributor" and spec.family == "newsroom"
+    assert spec.default_model.reasoning_effort == "medium"
+
+
+def test_a_review_that_returned_nothing_is_not_a_pass() -> None:
+    # Live: the second read came back empty, the fallback said "clear, 0 findings", and a piece
+    # 270 words over its ceiling shipped with its review recorded as a pass.
+    graph = cl.build_comprehension_reviewer_graph(_ctx(_Model(None), []), model_spec=_SPEC)
+    r = graph.invoke({"draft": _draft().model_dump()})["comprehension_check"]
+    assert r["verdict"] == "not_reviewed"

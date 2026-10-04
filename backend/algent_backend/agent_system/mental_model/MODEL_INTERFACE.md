@@ -65,8 +65,16 @@ Examples:
 - `openai`
 - `anthropic`
 - `google`
+- `meta` (OpenAI-compatible Muse Spark at `https://api.meta.ai/v1`)
+
+House newsroom defaults go through `house_spec()` → Meta
+`muse-spark-1.2-contributor` unless `ALGENT_META_ENABLED=0` or
+`ALGENT_HOUSE_PROVIDER`/`ALGENT_HOUSE_MODEL` override. Explicit OpenAI Luna
+remains available via `openai_spec()` / `ALGENT_OPENAI_MODEL`.
 
 Provider SDK packages are raw API clients, such as `openai` or `anthropic`.
+Meta reuses the OpenAI SDK / `ChatOpenAI` with a Meta base URL and
+`META_MODEL_API_KEY`.
 
 ## Target
 

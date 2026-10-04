@@ -79,6 +79,26 @@ def test_produces_artifact_copies_it_out_and_empties_scratch(tmp_path: Path) -> 
     assert (tmp_path / "artifacts" / art.data_name).exists()
     # the scratch folder is emptied after — the workspace does not accumulate
     assert not (ws / "anx_01").exists()
+    # SVG-only: no raster to copy. X posts need a PNG the drawer did not write.
+    assert art.raster_name == ""
+
+
+def test_a_png_beside_the_svg_is_copied_for_social(tmp_path: Path) -> None:
+    """X cannot take SVG. When the drawer wrote chart.png, the harness keeps it."""
+    def run(_prompt: str, folder: Path) -> tuple[bool, str]:
+        (folder / "chart.svg").write_text("<svg>PCE</svg>", encoding="utf-8")
+        (folder / "chart.png").write_bytes(b"\x89PNG\r\n\x1a\n")
+        (folder / "data.csv").write_text("x,y\nApril,3.1\nMay,3.4\n", encoding="utf-8")
+        (folder / "caption.md").write_text("Core PCE ticked up.", encoding="utf-8")
+        return True, "{}"
+
+    ctx = _ctx(tmp_path, [])
+    art = aw.fulfill_request(_request(), _profile(), workspace=tmp_path / "ws",
+                             context=ctx, runner=run)
+    assert art.status == "produced"
+    assert art.raster_name.endswith(".png")
+    assert (tmp_path / "artifacts" / art.raster_name).is_file()
+    assert art.artifact_name.endswith(".svg")
 
 
 def test_table_kind_carries_body_md_for_inlining(tmp_path: Path) -> None:
@@ -95,16 +115,25 @@ def test_table_kind_carries_body_md_for_inlining(tmp_path: Path) -> None:
 
 def test_figure_check_flags_a_number_not_in_the_evidence(tmp_path: Path) -> None:
     # 9.9 is nowhere in the claims/snapshot — the visual analog of unverified_prose_figures.
+    # An untraced value is DISCLOSED, not dropped: the figure ships and its caption says how
+    # much of it could not be traced.
     art = aw.fulfill_request(_request(), _profile(), workspace=tmp_path / "ws",
                              runner=_good_runner("x,y\nApril,3.1\nMay,9.9\n"))
-    assert art.status == "produced"
+    assert art.status == "produced" and art.artifact_name
     assert art.figure_check["verified"] is False and "9.9" in art.figure_check["unverified"]
     assert "9.9" in art.note
+    assert "1 of 2 plotted values (9.9)" in art.caption
+    assert not art.sourced_claims
+
+
+def test_a_traced_figure_carries_no_disclosure(tmp_path: Path) -> None:
+    art = aw.fulfill_request(_request(), _profile(), workspace=tmp_path / "ws", runner=_good_runner())
+    assert art.figure_check["verified"] is True and "unverified" not in art.caption.lower()
 
 
 def test_may_source_without_profile_data_refs_produces(tmp_path: Path) -> None:
     # Profile and analytics are separate: worker may fulfill a sourced series that the profile
-    # never held as claims. Figure check is against the produced data table, not claim substrings.
+    # never held as claims. Provenance requires a data table AND a publisher URL in caption.md.
     req = AnalyticsRequest(
         id="anx_src", kind="chart", title="Weekly cases",
         question="Is the outbreak accelerating?",
@@ -113,14 +142,50 @@ def test_may_source_without_profile_data_refs_produces(tmp_path: Path) -> None:
         source_hint="WHO weekly Ebola case counts DRC last 8 weeks",
         rationale="trajectory",
     )
-    art = aw.fulfill_request(
-        req, _profile(), workspace=tmp_path / "ws",
-        runner=_good_runner("week,cases\n1,10\n2,25\n3,40\n"),
-    )
+
+    def run(_p: str, folder: Path) -> tuple[bool, str]:
+        (folder / "chart.svg").write_text("<svg>cases</svg>", encoding="utf-8")
+        (folder / "data.csv").write_text("week,cases\n1,10\n2,25\n3,40\n", encoding="utf-8")
+        (folder / "caption.md").write_text(
+            "Weekly cases rose. Source: WHO https://www.who.int/ebola", encoding="utf-8",
+        )
+        return True, "{}"
+
+    art = aw.fulfill_request(req, _profile(), workspace=tmp_path / "ws", runner=run)
     assert art.status == "produced"
     assert art.figure_check.get("mode") == "sourced"
     assert art.figure_check["verified"] is True
     assert "sourced" in art.ai_label.lower() or "Sourced" in art.caption
+
+
+def test_may_source_without_publisher_url_fails_integrity(tmp_path: Path) -> None:
+    req = AnalyticsRequest(
+        id="anx_src", kind="chart", title="Weekly cases",
+        question="Is the outbreak accelerating?",
+        spec="line of weekly confirmed cases",
+        data_refs=[], may_source=True,
+        source_hint="WHO weekly Ebola case counts",
+        rationale="trajectory",
+    )
+    art = aw.fulfill_request(
+        req, _profile(), workspace=tmp_path / "ws",
+        runner=_good_runner("week,cases\n1,10\n2,25\n"),
+    )
+    assert art.status == "produced"
+    assert "publisher URL" in " ".join(art.figure_check.get("unverified") or [])
+    assert "publisher of this data could not be confirmed" in art.caption
+    assert not art.sourced_claims        # unconfirmed data never enters the claim ledger
+
+
+def test_a_sourced_figure_with_no_data_is_still_refused(tmp_path: Path) -> None:
+    # Nothing plotted is a broken figure, not an uncertain one.
+    req = AnalyticsRequest(
+        id="anx_src", kind="chart", title="Weekly cases", question="?", spec="line",
+        data_refs=[], may_source=True, source_hint="WHO", rationale="trajectory",
+    )
+    art = aw.fulfill_request(req, _profile(), workspace=tmp_path / "ws",
+                             runner=_good_runner("week,cases\n"))
+    assert art.status == "integrity_check_failed"
 
 
 def test_may_source_without_hint_fails(tmp_path: Path) -> None:
@@ -156,54 +221,141 @@ def test_no_output_is_a_clean_failure(tmp_path: Path) -> None:
     assert art.status == "failed" and art.artifact_name == ""
 
 
-def test_new_escapes_diffs_against_baseline() -> None:
-    # only paths that appear DURING the run count — the user's pre-existing dirt is ignored.
-    assert aw._new_escapes({"a"}, {"a", "backend/evil.py"}) == ["backend/evil.py"]
-    assert aw._new_escapes({"a"}, {"a"}) == []
-    assert aw._new_escapes(None, {"x"}) == []   # git unavailable -> tripwire simply doesn't arm
+# ── escape guard: attribution is about the WORKER, not the repo ─────────────────────────────────
+
+def _with_side_effect(effect):
+    """The good runner, plus ``effect()`` happening on the filesystem during the run."""
+    good = _good_runner()
+
+    def run(prompt: str, folder: Path) -> tuple[bool, str]:
+        effect(folder)
+        return good(prompt, folder)
+    return run
 
 
-def test_escape_tripwire_fails_loudly_even_on_a_good_chart(tmp_path: Path, monkeypatch) -> None:
-    # A good-looking chart from a lane-breaking run is NOT trustworthy: hard fail + loud event.
-    seen = iter([set(), {"backend/secrets.py"}])   # before -> after: a new write outside the lane
-    monkeypatch.setattr(aw, "_git_status", lambda _root: next(seen))
-    events: list = []
-    ctx = _ctx(tmp_path, events)
-    art = aw.fulfill_request(_request(), _profile(), workspace=tmp_path / "ws",
-                             context=ctx, runner=_good_runner())
-    assert art.status == "failed" and art.escaped_writes == ["backend/secrets.py"]
-    assert any(et == aw.ANALYTICS_WORKER_ESCAPE for et, _ in events)
-    assert not (tmp_path / "ws" / "anx_01").exists()   # scratch still emptied
+def _repo(tmp_path: Path) -> Path:
+    """A fake repo: workspace stack + the pipeline's stores + a .env. Returns the workspace."""
+    ws = tmp_path / "ws"
+    (ws / "lib").mkdir(parents=True, exist_ok=True)
+    (ws / "lib" / "charts.py").write_text("print('helpers')\n", encoding="utf-8")
+    (ws / "AGENTS.md").write_text("doctrine\n", encoding="utf-8")
+    (tmp_path / "backend" / "profile_store").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "backend" / "profile_store" / "prof_old.json").write_text('{"a": 1}', encoding="utf-8")
+    (tmp_path / ".env").write_text("SECRET=1", encoding="utf-8")
+    return ws
 
 
-def test_store_escapes_catches_new_and_modified_files() -> None:
-    # git status can't see gitignored stores; this fingerprint diff is the complement.
-    before = {"p/prof_a.json": (100, 10)}
-    after = {"p/prof_a.json": (200, 10),   # same size, newer mtime -> a silent overwrite
-             "p/prof_b.json": (50, 5)}     # a brand-new file
-    assert aw._store_escapes(before, after) == ["p/prof_a.json", "p/prof_b.json"]
-    assert aw._store_escapes(before, before) == []   # unchanged -> nothing
+def _run(tmp_path: Path, ws: Path, runner, events: list | None = None):
+    events = events if events is not None else []
+    art = aw.fulfill_request(_request(), _profile(), workspace=ws,
+                             context=_ctx(tmp_path, events), runner=runner)
+    return art, events
 
 
-def test_store_fingerprint_covers_stores_and_env(tmp_path: Path) -> None:
-    (tmp_path / "backend" / "profile_store").mkdir(parents=True)
-    (tmp_path / "backend" / "profile_store" / "p.json").write_text("{}", encoding="utf-8")
-    (tmp_path / ".env").write_text("SECRET=1", encoding="utf-8")   # the classic escape target
-    fp = aw._store_fingerprint(tmp_path)
-    assert any("p.json" in k for k in fp)
-    assert any(k.endswith(".env") for k in fp)   # .env is fingerprinted (metadata only, never read)
+def test_unrelated_concurrent_changes_do_not_fail_the_chart(tmp_path: Path, monkeypatch) -> None:
+    # The regression: a developer editing sites/ and the pipeline writing its own stores during
+    # the worker's window used to fail every chart. Neither is the worker's write.
+    ws = _repo(tmp_path)
+    dirty = iter([set(), {"sites/ohmega-monster/app/intel/page.tsx", "backend/backend_note.py"}])
+    monkeypatch.setattr(aw.analytics_guard, "_git_dirty", lambda _root: next(dirty))
+
+    def concurrent_activity(_folder: Path) -> None:
+        site = tmp_path / "sites" / "ohmega-monster" / "app" / "intel"
+        site.mkdir(parents=True)
+        (site / "page.tsx").write_text("export default 1", encoding="utf-8")
+        store = tmp_path / "backend" / "profile_store"
+        (store / "prof_new.json").write_text('{"fresh": true}', encoding="utf-8")   # pipeline write
+        (store / "prof_old.json").write_text('{"a": 1, "rev": 2}', encoding="utf-8")  # pipeline rewrite
+        (tmp_path / "backend" / "draft_store").mkdir()
+        (tmp_path / "backend" / "draft_store" / "d.json").write_text("{}", encoding="utf-8")
+
+    art, events = _run(tmp_path, ws, _with_side_effect(concurrent_activity))
+    assert art.status == "produced" and art.escaped_writes == []
+    churn = [p for et, p in events if et == aw.ANALYTICS_WORKER_CHURN]
+    assert churn and "sites/ohmega-monster/app/intel/page.tsx" in churn[0]["paths"]   # logged, not blamed
+    assert not any(et == aw.ANALYTICS_WORKER_ESCAPE for et, _ in events)
 
 
-def test_tripwire_catches_a_poisoned_store_json(tmp_path: Path, monkeypatch) -> None:
-    # A worker that overwrites a gitignored profile JSON must be caught even though git is clean.
-    monkeypatch.setattr(aw, "_git_status", lambda _root: set())   # git sees nothing (ignored path)
-    fps = iter([{}, {"backend/profile_store/prof_x.json": (1, 2)}])   # before -> after: a new write
-    monkeypatch.setattr(aw, "_store_fingerprint", lambda _root: next(fps))
-    events: list = []
-    art = aw.fulfill_request(_request(), _profile(), workspace=tmp_path / "ws",
-                             context=_ctx(tmp_path, events), runner=_good_runner())
-    assert art.status == "failed" and "prof_x.json" in art.escaped_writes[0]
-    assert any(et == aw.ANALYTICS_WORKER_ESCAPE for et, _ in events)
+def test_worker_editing_the_helper_stack_is_caught_and_reverted(tmp_path: Path) -> None:
+    ws = _repo(tmp_path)
+
+    def tamper(_folder: Path) -> None:
+        (ws / "lib" / "charts.py").write_text("import os; os.system('x')\n", encoding="utf-8")
+        (ws / "lib" / "evil.py").write_text("pwn\n", encoding="utf-8")
+        (ws / "AGENTS.md").unlink()
+
+    art, events = _run(tmp_path, ws, _with_side_effect(tamper))
+    assert art.status == "failed"
+    assert "analytics_workspace/lib/charts.py" in art.escaped_writes
+    assert "analytics_workspace/lib/evil.py" in art.escaped_writes
+    esc = next(p for et, p in events if et == aw.ANALYTICS_WORKER_ESCAPE)
+    assert "analytics_workspace/lib/charts.py" in esc["reverted"]
+    # reverted: edit undone, stray removed, deleted file restored
+    assert (ws / "lib" / "charts.py").read_text(encoding="utf-8") == "print('helpers')\n"
+    assert not (ws / "lib" / "evil.py").exists()
+    assert (ws / "AGENTS.md").read_text(encoding="utf-8") == "doctrine\n"
+    assert not (ws / "anx_01").exists()   # scratch still emptied
+
+
+def test_a_sibling_requests_scratch_is_not_the_workers_escape(tmp_path: Path) -> None:
+    ws = _repo(tmp_path)
+
+    def sibling(_folder: Path) -> None:
+        (ws / "anx_other").mkdir()
+        (ws / "anx_other" / "chart.svg").write_text("<svg/>", encoding="utf-8")
+
+    art, _ = _run(tmp_path, ws, _with_side_effect(sibling))
+    assert art.status == "produced"
+
+
+def test_worker_output_landing_at_the_repo_root_is_caught_and_removed(tmp_path: Path) -> None:
+    # the classic ``..\..`` mistake: the worker's own file names, one folder too high.
+    ws = _repo(tmp_path)
+
+    def misplaced(_folder: Path) -> None:
+        (tmp_path / "chart.svg").write_text("<svg/>", encoding="utf-8")
+        (tmp_path / "backend" / "data.csv").write_text("x,y\n", encoding="utf-8")
+
+    art, _ = _run(tmp_path, ws, _with_side_effect(misplaced))
+    assert art.status == "failed"
+    assert set(art.escaped_writes) == {"chart.svg", "backend/data.csv"}
+    assert not (tmp_path / "chart.svg").exists() and not (tmp_path / "backend" / "data.csv").exists()
+
+
+def test_a_developers_new_root_file_is_not_mistaken_for_the_worker(tmp_path: Path) -> None:
+    ws = _repo(tmp_path)
+    art, _ = _run(tmp_path, ws, _with_side_effect(
+        lambda _f: (tmp_path / "notes.md").write_text("dev notes", encoding="utf-8")))
+    assert art.status == "produced"
+    assert (tmp_path / "notes.md").exists()   # never touched
+
+
+def test_env_touched_during_the_run_is_an_escape(tmp_path: Path) -> None:
+    ws = _repo(tmp_path)
+    art, _ = _run(tmp_path, ws, _with_side_effect(
+        lambda _f: (tmp_path / ".env").write_text("SECRET=stolen!", encoding="utf-8")))
+    assert art.status == "failed" and art.escaped_writes == [".env"]
+
+
+def test_store_damage_is_caught_but_legit_pipeline_writes_are_not(tmp_path: Path) -> None:
+    # a pre-existing store file deleted, or one left unparsable, is damage a pipeline never does.
+    ws = _repo(tmp_path)
+    store = tmp_path / "backend" / "profile_store"
+    art, _ = _run(tmp_path, ws, _with_side_effect(lambda _f: (store / "prof_old.json").unlink()))
+    assert art.status == "failed" and art.escaped_writes == ["backend/profile_store/prof_old.json (deleted)"]
+
+    ws = _repo(tmp_path)
+    (store / "prof_old.json").write_text('{"a": 1}', encoding="utf-8")
+    art, _ = _run(tmp_path, ws, _with_side_effect(
+        lambda _f: (store / "prof_old.json").write_text("<<garbage", encoding="utf-8")))
+    assert art.status == "failed" and "(unparsable)" in art.escaped_writes[0]
+
+
+def test_pct_supported_by_corpus_allows_derived_ratios() -> None:
+    corpus = "About 60,000 people crossed into a city of 85,000 residents."
+    assert aw._pct_supported_by_corpus("71%", corpus)  # 60000/85000
+    assert not aw._pct_supported_by_corpus("164%", corpus)  # not a ratio of cited counts
+    assert aw._pct_supported_by_corpus("50%", "growth hit 50% year over year")
 
 
 def test_worker_graph_loops_warranted_requests(tmp_path: Path) -> None:
@@ -236,6 +388,32 @@ def test_sweep_removes_orphaned_scratch_but_spares_a_live_one(tmp_path: Path) ->
     assert (ws / "req_live").exists()               # a concurrent run's live scratch is untouched
 
 
+def test_sweep_never_deletes_weight_bearing_stack_dirs(tmp_path: Path) -> None:
+    """Regression: age-sweep used to rmtree *any* old dir, including lib/scripts/data.
+
+    That silently deleted the chart/map helpers after ~2h idle and zeroed every visual.
+    """
+    import os
+    import time as _t
+
+    ws = tmp_path / "ws"
+    for name in ("lib", "scripts", "data", "anx_01", "req_dead", "_canary"):
+        (ws / name).mkdir(parents=True)
+        (ws / name / "marker.txt").write_text("x", encoding="utf-8")
+    old = _t.time() - (5 * 60 * 60)
+    for name in ("lib", "scripts", "data", "anx_01", "req_dead", "_canary"):
+        os.utime(ws / name, (old, old))
+
+    cleaned = aw.sweep_stale_scratch(ws)
+    assert set(cleaned) == {"anx_01", "req_dead", "_canary"}
+    assert (ws / "lib" / "marker.txt").exists()
+    assert (ws / "scripts" / "marker.txt").exists()
+    assert (ws / "data" / "marker.txt").exists()
+    assert not (ws / "anx_01").exists()
+    assert not (ws / "req_dead").exists()
+    assert not (ws / "_canary").exists()
+
+
 def test_sweep_is_a_noop_on_a_clean_workspace(tmp_path: Path) -> None:
     ws = tmp_path / "ws"
     ws.mkdir()
@@ -265,9 +443,12 @@ def test_a_failed_canary_skips_analytics_without_breaking_the_article(tmp_path: 
     graph = aw.build_analytics_worker_graph(_ctx(tmp_path, events), runner=_good_runner(), refresh=True)
     out = graph.invoke({"analytics_plan": plan.model_dump(), "profile": _profile().model_dump()})
 
-    assert out["analytics_artifacts"] == []            # degraded, not crashed
+    # Degraded, not crashed — each planned request is an explicit skip (never "forgotten").
+    arts = out["analytics_artifacts"]
+    assert len(arts) == 1 and arts[0]["status"] == "skipped"
+    assert "canary" in arts[0]["note"]
     done = next(p for et, p in events if et == aw.ANALYTICS_WORKER_COMPLETED)
-    assert "analytics skipped" in done["note"] and "9.9.9" in done["note"]   # and it says why
+    assert "canary failed" in done["note"] and "9.9.9" in done["note"]
     ready = next(p for et, p in events if et == aw.ANALYTICS_WORKER_READY)
     assert ready["version"] == "grok 9.9.9"            # version stamped even on the failure path
 
@@ -285,14 +466,27 @@ def test_worker_graph_does_nothing_when_not_warranted(tmp_path: Path) -> None:
     assert out["analytics_artifacts"] == []
 
 
-# -- the coding harness seam: codex by default, grok when quota allows ----------
+# -- the coding harness seam: grok by default, codex when quota runs out ----------
 
 
-def test_codex_is_the_default_harness_and_stays_offline_unless_asked() -> None:
+def test_grok_is_the_default_harness(monkeypatch) -> None:
     from pathlib import Path
 
     from algent_backend.agent_system.agents.editorial.analytics_harness import resolve_harness
 
+    monkeypatch.delenv("ALGENT_ANALYTICS_HARNESS", raising=False)
+    h = resolve_harness()
+    assert h.name == "grok"
+    assert "--disable-web-search" in h.argv("draw it", Path("/scratch"), allow_web=False)
+    assert "--disable-web-search" not in h.argv("draw it", Path("/scratch"), allow_web=True)
+
+
+def test_codex_stays_offline_unless_asked(monkeypatch) -> None:
+    from pathlib import Path
+
+    from algent_backend.agent_system.agents.editorial.analytics_harness import resolve_harness
+
+    monkeypatch.setenv("ALGENT_ANALYTICS_HARNESS", "codex")
     h = resolve_harness()
     assert h.name == "codex"
 
@@ -328,7 +522,7 @@ def test_harness_model_is_selectable(monkeypatch) -> None:
 
     from algent_backend.agent_system.agents.editorial.analytics_harness import resolve_harness
 
-    monkeypatch.delenv("ALGENT_ANALYTICS_HARNESS", raising=False)
+    monkeypatch.setenv("ALGENT_ANALYTICS_HARNESS", "codex")
     monkeypatch.setenv("ALGENT_CODEX_MODEL", "gpt-5.6-terra")
     argv = resolve_harness().argv("d", Path("/s"), allow_web=False)
     assert "gpt-5.6-terra" in argv
@@ -342,3 +536,122 @@ def test_a_missing_cli_is_a_missing_figure_not_a_crash(monkeypatch) -> None:
     monkeypatch.setattr(ah, "executable", lambda _n: None)
     ok, tail = ah.CodexHarness().run("d", Path("/s"), timeout=1.0)
     assert ok is False and "not found on PATH" in tail
+
+
+# -- why figures kept failing integrity ---------------------------------------
+
+def test_a_part_of_whole_remainder_is_not_fabrication() -> None:
+    """The real rejection: claims held Korea's total ($496.3bn) and its chips ($149bn);
+    the chart plotted chips against the NON-chip remainder, 496.3 - 149 = 347.3. Demanding
+    every plotted value be quoted verbatim forbids arithmetic, i.e. forbids most charts."""
+    from algent_backend.agent_system.agents.editorial.analytics_worker import (
+        _arithmetic_supported,
+    )
+
+    nums = [496.3, 149.0, 416.6, 133.2]
+    assert _arithmetic_supported(347.3, nums) is True     # 496.3 - 149
+    assert _arithmetic_supported(283.4, nums) is True     # 416.6 - 133.2
+    assert _arithmetic_supported(645.3, nums) is True     # 496.3 + 149
+    assert _arithmetic_supported(999.9, nums) is False    # invented still fails
+
+
+def test_years_written_as_floats_are_not_treated_as_figures() -> None:
+    """A CSV renders its year column as 2019.0 (pandas does this), which slips past the
+    bare-integer exclusion — so a decade-long trajectory was rejected for citing its decade."""
+    from algent_backend.agent_system.agents.editorial.analytics_worker import (
+        _visual_unverified_figures,
+    )
+
+    class _C:
+        text = "Korea exported $496.3 billion in H1 2026"
+        supported_by: list = []
+
+    data = "year,korea\n2019.0,542.2\n2020.0,512.5\n"
+    out = _visual_unverified_figures(data, [_C()], {})
+    assert not any(y in out for y in ("2019.0", "2020.0")), out
+
+
+def test_a_sourced_request_is_not_held_to_the_profile_standard() -> None:
+    """may_source exists so a figure can fetch what the profile lacks. Gating on
+    'may_source AND no claims' meant a grounded+sourced request could only ever fail:
+    anything fetched was by definition absent from the ledger."""
+    import inspect
+
+    from algent_backend.agent_system.agents.editorial import analytics_worker as aw
+
+    src = inspect.getsource(aw.fulfill_request)
+    assert "if request.may_source and not cited_claims:" not in src
+    assert "if request.may_source:" in src
+
+
+def test_sourced_rows_become_claim_shaped_evidence() -> None:
+    from algent_backend.agent_system.agents.editorial.analytics_contracts import (
+        AnalyticsRequest,
+    )
+    from algent_backend.agent_system.agents.editorial.analytics_worker import _sourced_claims
+
+    req = AnalyticsRequest(id="r1", kind="chart", title="Exports by year", may_source=True)
+    rows = _sourced_claims(
+        "year,korea_bn\n2019,542.2\n2020,512.5\n",
+        "Series from KITA. https://stat.kita.net/x — as of 2026",
+        req,
+    )
+    assert len(rows) == 2
+    assert rows[0]["url"] == "https://stat.kita.net/x"
+    assert "2019" in rows[0]["text"] and "542.2" in rows[0]["text"]
+
+
+def test_default_runner_falls_back_when_the_primary_harness_dies(monkeypatch, tmp_path: Path) -> None:
+    """Poland: grok canary timed out and both warranted figures were skipped.
+
+    ``run_with_fallback`` already existed; the worker never called it. Pin the
+    ``_grok_runner`` seam — a revert to ``resolve_harness().run`` must fail this test.
+    """
+    called: dict[str, bool] = {}
+
+    def fake_fallback(*_a, **_k):
+        called["yes"] = True
+        return True, "drew"
+
+    monkeypatch.setattr(aw, "run_with_fallback", fake_fallback)
+    ok, tail = aw._grok_runner("p", tmp_path, timeout=1)
+    assert ok and tail == "drew" and called.get("yes")
+
+
+def test_unattributed_data_never_becomes_a_claim() -> None:
+    """No publisher URL, no claim — an unattributed number is not evidence."""
+    from algent_backend.agent_system.agents.editorial.analytics_contracts import (
+        AnalyticsRequest,
+    )
+    from algent_backend.agent_system.agents.editorial.analytics_worker import _sourced_claims
+
+    req = AnalyticsRequest(id="r1", kind="chart", may_source=True)
+    assert _sourced_claims("year,v\n2019,1\n", "no url here", req) == []
+
+
+def test_the_free_check_confirms_numbers_found_on_the_cited_page(monkeypatch) -> None:
+    # A sourced figure only had to NAME a URL; nothing looked at whether the page carried the
+    # numbers. Reading it is free, and it spares the paid searches for what it does not carry.
+    from algent_backend.agent_system.agents.editorial import analytics_confirm as ac
+    from algent_backend.agent_system.tools.sourcing.search import research
+
+    monkeypatch.setattr(research, "_read", lambda url, rich=False: {
+        "quality": "good", "content": "Weekly transits: 354, then 269, then 266 (preliminary)."})
+    claims = [
+        {"id": "c1", "text": "Transits fell from 354 to 269", "supported_by": ["s1"]},
+        {"id": "c2", "text": "Hormuz moved 20.9 million barrels a day", "supported_by": ["s1"]},
+    ]
+    checks = ac._precheck(claims, {"s1": "https://lloyds.example/transits"})
+    assert [c.claim_id for c in checks] == ["c1"]             # c2's number is not on the page
+    assert checks[0].verdict == "confirmed" and checks[0].checked_against
+
+
+def test_a_maps_coordinates_are_not_claims() -> None:
+    # Maldives: each vertex of a reef outline became a "claim", and the confirmation pass spent
+    # its paid searches checking them one at a time.
+    req = AnalyticsRequest(id="m", kind="image", title="Ras Male footprint", may_source=True)
+    data = "name,lat,lon\nvertex 1,4.10,73.49\nvertex 2,4.11,73.50\n"
+    assert aw._sourced_claims(data, "Source: OSM https://osm.org/way/1", req) == []
+    table = "year,transits\n2025,354\n2026,269\n"
+    assert aw._sourced_claims(table, "Source: Lloyd's https://ll.example", req.model_copy(
+        update={"kind": "chart"}))

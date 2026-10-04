@@ -11,6 +11,9 @@ subprocess can't launder its way past it):
   1. the subprocess runs with ``cwd`` pinned to a per-request scratch folder under the workspace;
   2. a post-run SWEEP enforces an artifact-type allowlist (png/svg/csv/md) and a size cap,
      deleting anything else the subprocess left;
+  2b. an ESCAPE GUARD (``analytics_guard``) blames the worker only for writes it can attribute
+     (workspace stack, worker-named strays at the repo roots, .env, store damage) and reverts
+     them; unrelated concurrent repo activity is logged, never blamed;
   3. a FIGURE CHECK diffs the numbers in the produced data table against the cited claims — the
      visual analog of ``unverified_prose_figures`` (a chart can drift off its evidence too);
   4. the harness (not the worker) copies the finished artifact OUT into the run's artifact store,
@@ -23,7 +26,6 @@ from __future__ import annotations
 
 import re
 import shutil
-import subprocess
 import time
 from collections.abc import Callable
 from datetime import UTC, datetime
@@ -36,6 +38,7 @@ from langgraph.graph import END, START, StateGraph
 from algent_backend.agent_system.agents.research.profile import Claim, SignalProfile
 from algent_backend.agent_system.runs.context import AgentRunContext
 
+from . import analytics_guard
 from .analytics_contracts import (
     AI_ANALYTIC_LABEL,
     AI_ANALYTIC_LABEL_SOURCED,
@@ -43,24 +46,18 @@ from .analytics_contracts import (
     AnalyticsPlan,
     AnalyticsRequest,
 )
-from .analytics_harness import resolve_harness
+from .analytics_harness import resolve_harness, run_with_fallback
 
 GENERATOR = "analytics_worker@v1"
 ANALYTICS_WORKER_COMPLETED = "analytics_worker.completed"
 ANALYTICS_ARTIFACT_PRODUCED = "analytics_worker.artifact"
 ANALYTICS_WORKER_ESCAPE = "analytics_worker.escape"   # loud: the worker wrote outside its lane
+ANALYTICS_WORKER_CHURN = "analytics_worker.unattributed_churn"   # advisory: repo changed, not blamed
 ANALYTICS_WORKER_READY = "analytics_worker.ready"     # update + canary result, before any spend
 
 # The sandbox: a per-request scratch folder lives under here; AGENTS.md at its root carries the
 # worker doctrine (discovered by grok walking up from the scratch cwd).
 _WORKSPACE_DIRNAME = "analytics_workspace"
-
-# The gitignored content stores the git tripwire is BLIND to (git status --porcelain omits ignored
-# paths) — and precisely the pipeline-poisoning targets: overwrite one profile/treatment/draft JSON
-# and every downstream stage inherits the corruption. So we fingerprint them separately. Small-JSON
-# dirs, cheap to stat; NOT runs_data (the run's own legitimately-churning control plane) or
-# ingestion_data (large, and not a per-request corruption target).
-_GUARDED_STORE_DIRS = ("profile_store", "treatment_store", "draft_store", "lead_store")
 
 # The artifact-type allowlist + size cap the post-run sweep enforces (mechanical, not doctrinal).
 _ALLOWED_SUFFIXES = {".png", ".svg", ".csv", ".md", ".json", ".txt", ".gif"}
@@ -76,8 +73,31 @@ _VISUAL_NAMES = {
 }
 _DATA_NAME = "data.csv"
 _CAPTION_NAME = "caption.md"
+# Names ONLY this worker gives files: a new one landing at the repo root / backend/ / workspace root
+# is attributable to a ``..`` mistake by the worker (see ``analytics_guard``). Generic names
+# (table.md, insight.md, data.json) are left out — a developer could plausibly create those.
+_SIGNATURE_NAMES = frozenset(
+    {n for names in _VISUAL_NAMES.values() for n in names if Path(n).suffix != ".md"}
+    | {_DATA_NAME, _CAPTION_NAME, "SKIPPED.md", "REQUEST.md"}
+)
+# Raster sibling of the site vector — consumers that cannot take SVG need this file.
+_RASTER_SUFFIXES = {".png", ".gif", ".jpg", ".jpeg", ".webp"}
+_RASTER_NAMES = {
+    kind: tuple(n for n in names if Path(n).suffix.lower() in _RASTER_SUFFIXES)
+    for kind, names in _VISUAL_NAMES.items()
+}
 
-_TIMEOUT_S = 240.0
+# ABSOLUTE BACKSTOPS, not expected durations. The harness now stops a worker that goes SILENT
+# (no scratch-folder activity for _IDLE_S), so these only fire on a child that is somehow both
+# busy and useless — they should essentially never decide anything.
+#
+# They used to be the real limit, and were set inside the range where figures actually finish.
+# Measured across nine produced figures: 180s to 605s, with two landing at 601s and 605s against
+# a 600s cap — and one killed at 602s having written nothing. A ceiling that cuts off work in
+# progress spends its whole budget and returns no artifact, which is the worst trade available.
+_TIMEOUT_S = 1200.0
+# Maps / may_source fetches routinely need longer than a profile-held line chart.
+_TIMEOUT_SOURCED_S = 1800.0
 
 # A measured quantity: a percentage or a decimal — the values a chart could FABRICATE. Bare
 # integers are deliberately excluded: they are the axis/date labels (years, month numbers,
@@ -86,8 +106,31 @@ _TIMEOUT_S = 240.0
 # semantic judge) — err toward missing a drift, never toward inventing one.
 _SIG_NUM = re.compile(r"\d+\.\d+%?|\d+%")
 
+#: Years written as floats. The exclusion above only skips bare integers, so a CSV that
+#: renders its time column as ``2019.0`` (which is simply what pandas does to a numeric
+#: year) sails past it and every year on the axis is reported as an unverified figure —
+#: which is precisely how a decade-long trajectory chart was rejected for citing the
+#: decade it covered.
+_YEAR_LIKE = re.compile(r"^(?:19|20|21)\d{2}\.0+$")
+_CORPUS_NUM = re.compile(r"\d+(?:\.\d+)?")
+
 
 _STALE_SCRATCH_AGE_S = 2 * 60 * 60   # a live request's scratch is minutes old, never hours
+
+# Weight-bearing stack dirs — never age-sweep these even if the scratch allowlist drifts.
+_PROTECTED_WORKSPACE_DIRS = frozenset({"lib", "scripts", "data"})
+
+
+def _is_scratch_dir(name: str) -> bool:
+    """True for per-request / canary scratch folders — the only things age-sweep may remove.
+
+    Production ids are ``anx_*`` (router); tests may use ``req_*``. Never treat ``lib`` /
+    ``scripts`` / ``data`` as scratch — an earlier bug deleted any old directory and wiped
+    the chart helpers after ~2h idle.
+    """
+    if name in _PROTECTED_WORKSPACE_DIRS or name.startswith("."):
+        return False
+    return name == "_canary" or name.startswith(("anx_", "req_"))
 
 
 def sweep_stale_scratch(workspace: Path, *, max_age_s: float = _STALE_SCRATCH_AGE_S) -> list[str]:
@@ -99,13 +142,16 @@ def sweep_stale_scratch(workspace: Path, *, max_age_s: float = _STALE_SCRATCH_AG
 
     Age-gated rather than sweeping everything, so a CONCURRENT run's live scratch is never deleted:
     an in-flight request's folder is minutes old; anything hours old belongs to a run that is gone.
+
+    Only scratch-shaped directories (``anx_*``, ``req_*``, ``_canary``) are candidates.
+    ``lib/``, ``scripts/``, and ``data/`` are never removed here regardless of mtime.
     """
     cleaned: list[str] = []
     if not workspace.is_dir():
         return cleaned
     cutoff = time.time() - max_age_s
     for child in workspace.iterdir():
-        if not child.is_dir() or child.name.startswith("."):
+        if not child.is_dir() or not _is_scratch_dir(child.name):
             continue
         try:
             if child.stat().st_mtime < cutoff:
@@ -119,6 +165,33 @@ def sweep_stale_scratch(workspace: Path, *, max_age_s: float = _STALE_SCRATCH_AG
 def default_workspace() -> Path:
     """The repo-root ``analytics_workspace/`` (5 up: editorial→agents→agent_system→algent_backend→backend→root)."""
     return Path(__file__).resolve().parents[5] / _WORKSPACE_DIRNAME
+
+
+_STACK_FILES = (
+    "lib/__init__.py",
+    "lib/theme.py",
+    "lib/charts.py",
+    "lib/maps.py",
+    "lib/animate.py",
+    "AGENTS.md",
+)
+
+
+def workspace_stack_ready(workspace: Path | None = None) -> tuple[bool, str]:
+    """True when the tracked helper stack the worker imports is present on disk.
+
+    ``lib/`` is weight-bearing (see ``analytics_workspace/AGENTS.md``). Deleting it looks like a
+    tidy-up but silently disables every map/chart; fail closed with an explicit skip reason.
+    """
+    root = workspace or default_workspace()
+    missing = [rel for rel in _STACK_FILES if not (root / rel).is_file()]
+    if not missing:
+        return True, ""
+    return False, (
+        "analytics_workspace missing tracked helpers: "
+        + ", ".join(missing)
+        + " — restore from git; do not delete lib/ (see analytics_workspace/AGENTS.md)"
+    )
 
 
 # ── the grounded hand-off ────────────────────────────────────────────────────────────────────
@@ -159,6 +232,29 @@ def _grounded_data(request: AnalyticsRequest, profile: SignalProfile) -> tuple[d
     return payload, cited_claims, profile.as_of
 
 
+def _raster_emit_lines(kind: str) -> list[str]:
+    """Ask the drawer for a raster sibling — some consumers cannot take SVG."""
+    names = _RASTER_NAMES.get(kind) or ()
+    if not names:
+        return []
+    shown = " / ".join(f"`{n}`" for n in names)
+    return [
+        f"- {shown} — the SAME figure as a raster (`savefig` twice). "
+        "A vector-only figure cannot be posted where SVG is not accepted.",
+    ]
+
+
+def _raster_source(visual: Path, kind: str) -> Path | None:
+    """The file X can upload: the visual itself if it is raster, else a sibling PNG/GIF."""
+    if visual.suffix.lower() in _RASTER_SUFFIXES:
+        return visual
+    for name in _RASTER_NAMES.get(kind, ()):
+        cand = visual.parent / name
+        if cand.is_file():
+            return cand
+    return None
+
+
 def _brief(request: AnalyticsRequest) -> str:
     """The human/agent-readable request the worker reads alongside data.json."""
     names = _VISUAL_NAMES.get(request.kind, ("output.md",))
@@ -172,7 +268,9 @@ def _brief(request: AnalyticsRequest) -> str:
             "Rules when sourcing:",
             "- Fetch only what the hint names (official dashboards, statistical releases, primary",
             "  public tables). Prefer primary publishers over secondary rewrites.",
-            "- Put every plotted row in `data.csv` and name the publisher + URL in `caption.md`.",
+            "- Put every plotted row in `data.csv` and name the publisher + a full `https://` URL",
+            "  in `caption.md`. The harness rejects sourced figures without a URL — a table alone",
+            "  is not provenance.",
             "- NEVER invent, extrapolate, or smooth numbers. If the series is not findable or is",
             "  contested, write `SKIPPED.md` with the reason — do not improvise a chart.",
             "- You may use any claims/sources already in data.json as context for the story, but",
@@ -201,23 +299,84 @@ def _brief(request: AnalyticsRequest) -> str:
         "cluster (readable theater), not full-country bounds — Russia/Canada/USA full outlines "
         "make multi-city stories unreadable. Never freehand coastlines.",
         "",
-        "The figure must be self-explanatory to a cold house reader:",
-        "- Chart title = what is measured (plain words).",
-        "- Every axis labeled with units; series named in human language (no series1/y).",
+        "The figure must land in about THREE SECONDS on a cold house reader who will not study it:",
+        "- Chart title = the FINDING in plain words, not the measure. 'Data-centre demand nearly",
+        "  doubles by 2030' — not 'EU data-centre electricity use, 2024-2030'. If the title only",
+        "  names the axes, the reader has to derive the point, and most will not.",
+        "- THE FIGURE MUST BE OBVIOUS, NOT DECODABLE. The standing verdict on our charts is 'I",
+        "  have no idea what the figures are even a measurement of'. The fix is never more",
+        "  furniture — a key, a note, a second legend, an explanatory box all make it worse, and",
+        "  clutter is most of why they fail. The fix is a simpler picture: fewer marks, plain",
+        "  words on the marks themselves, one idea per figure, and labels that say the thing",
+        "  ('height, metres') where a reader's eye already is. If what a mark means still is not",
+        "  obvious, you are drawing the wrong cut of the data — redraw it simpler.",
+        "- Annotate the number that carries the story directly on the plot, at the place it happens.",
+        "- Every axis labeled with units; series named in human language (no series1/y). Where the",
+        "  unit is one a general reader does not hold (TWh, GW), give a comparison in the caption.",
         "- Multi-series: use the AGENTS.md hue-contrast palette (amber + cyan + mauve) — never two",
-        "  near-identical browns. Legend with human series names.",
+        "  near-identical browns. Label series DIRECTLY at the end of each line or on each band;",
+        "  fall back to a legend only when direct labels would collide. A legend is a lookup table",
+        "  the reader has to run in their head.",
+        "- Keep it simple enough to read at a glance: few series, one axis, no stacked-everything.",
+        "  If the figure needs study, plot a simpler cut of the same data instead.",
+        "- EVERYTHING MUST FIT INSIDE THE CANVAS. A published timeline had its right-hand labels",
+        "  running off the edge, so the reader got half a word. Use `constrained_layout` or",
+        "  `bbox_inches='tight'`, keep long labels short or wrapped, and after saving, confirm no",
+        "  text extends past the figure bounds. A clipped label is a failed figure and the harness",
+        "  now rejects it, so this costs you the whole attempt.",
+        "- On a time axis, do not let one distant point stretch the whole scale: if most of the span",
+        "  is empty, break or compress the quiet years and give the space to where events cluster.",
+        "- State the UNIT in plain words, and mark each number's STATUS — actual, reported,",
+        "  estimated or target. Never place a target beside an actual without saying which is which,",
+        "  and never compare a subset to a total without separating them.",
+        "- A trajectory needs enough points to show its SHAPE. Two endpoints are a pair, not a trend:",
+        "  plot the history running into the present as well as any projection, so the reader can see",
+        "  the rate and whether the forecast continues the past curve or breaks from it.",
         "- If a real gap exists in the series, leave it and explain it in the caption; if the public",
         "  series is continuous, fetch the missing period — do not invent points.",
         "- Period or as-of visible on the figure or in the caption.",
-        f"- `{_CAPTION_NAME}`: 1–3 sentences — what it shows, the main takeaway, any limit.",
-        "  No claim ids, no pipeline jargon.",
+        f"- `{_CAPTION_NAME}`: one or two short sentences a reader takes in at a glance — the",
+        "  takeaway, and a limit only if it changes how to read the figure. No claim ids, no",
+        "  pipeline jargon, and NO source lists: the page prints the sources itself. A shipped",
+        "  caption ran a whole paragraph of publishers, dates and forecasts in parentheses under",
+        "  a chart that already showed them. (Sourced figures still name their one publisher URL",
+        "  — provenance needs it — and the harness moves it out of the reader's caption.)",
         "",
         "Then emit:",
         f"- `{names[0]}`" + (f" (or another allowed name: {', '.join(names)})" if len(names) > 1 else "")
         + " — the analytic itself",
+        *_raster_emit_lines(request.kind),
         f"- `{_DATA_NAME}` — the exact rows you plotted (so the harness can verify the numbers)",
         f"- `{_CAPTION_NAME}` — plain-language explainer (see above)",
-        "\nIf the data is too thin, contested, or would force a misleading visual: do NOT improvise —",
+        "",
+        "LOOK AT WHAT YOU MADE BEFORE YOU FINISH. Save the figure, then OPEN THE RENDERED FILE",
+        "and read it as a reader who has not seen the data. This step is not optional and it is",
+        "not a re-read of your code — every defect below shipped from a script that ran without",
+        "error, because a successful matplotlib call says nothing about whether the picture works:",
+        "  0. WHAT AM I LOOKING AT — cover the article and the caption and look at the image",
+        "     alone. Can you say, in one breath, what is measured, in what unit, about what",
+        "     population, over what period, and what one mark on the plot represents? Anything you",
+        "     can only answer because you built it is not in the figure. Fix it by making the",
+        "     picture plainer — clearer words on the axis, fewer things in frame, a simpler cut —",
+        "     not by adding a key or a note. The reader clicks a figure with no context around it",
+        "     at all, and ours have been arriving as shapes with numbers on them.",
+        "  1. TITLE — does it name the finding in plain words? Published titles that failed:",
+        "     'EU data-centre electricity use, 2024-2030' (names the axes, not the point) and",
+        "     '279 total DUV systems, 47% immersion' (a reader cannot tell what a DUV system is,",
+        "     whether 279 is a year or a total, or whether the bars beside it are actual or target).",
+        "     A reader should learn the headline finding from the title alone.",
+        "  2. OVERLAP — is any text colliding with another label, a bar, a line, the legend, or",
+        "     another title? Competing or duplicated headers, a legend sitting on the data, tick",
+        "     labels running into each other: all of these have shipped. Fix by rotating, wrapping,",
+        "     shortening, moving, or dropping the element — never by shrinking text to unreadable.",
+        "  3. CLIPPING — is every label fully inside the frame, with nothing cut at any edge?",
+        "  4. ONE HEADER — the figure carries exactly one title. The article prints its own heading",
+        "     and caption above it, so a second title inside the image reads as a stutter.",
+        "  5. THE THREE-SECOND TEST — could a reader state what this compares and what the answer is,",
+        "     in one sentence, without studying it? If not, simplify the cut of the data and redraw.",
+        "If any check fails, FIX IT AND RE-RENDER. Iterate until the file passes, then finish.",
+        "",
+        "If the data is too thin, contested, or would force a misleading visual: do NOT improvise —",
         "write `SKIPPED.md` with the reason instead. Faithful and bounded beats clever.",
     ]) + "\n"
 
@@ -284,92 +443,186 @@ def _sweep(folder: Path) -> list[str]:
     return removed
 
 
-def _git_status(root: Path) -> set[str] | None:
-    """Repo-relative paths currently dirty in ``root`` — the tripwire baseline.
+def _pct_supported_by_corpus(token: str, corpus: str) -> bool:
+    """True when ``token`` is literally in evidence, or is a ratio of two corpus numbers.
 
-    Excludes ``analytics_workspace/`` itself (the worker's legitimate, gitignored home). Returns
-    None when ``root`` is not a git repo or git is unavailable — the tripwire then simply doesn't
-    arm (it is a free bonus check, never a hard dependency of the worker).
-
-    BLIND SPOT: ``git status`` omits gitignored paths, so a worker that overwrote a gitignored
-    store JSON would not surface here. ``_store_fingerprint`` covers exactly those stores; the two
-    checks are complementary and both feed the escape decision.
+    Charts often derive ``60k / 85k → 71%``; requiring the percentage string itself in a claim
+    rejects honest arithmetic. Invented percentages that match no pair still fail.
     """
+    if token in corpus:
+        return True
+    bare = token.rstrip("%")
     try:
-        proc = subprocess.run(
-            ["git", "-C", str(root), "status", "--porcelain"],
-            capture_output=True, text=True, timeout=15, encoding="utf-8", errors="replace",
-        )
-    except (FileNotFoundError, OSError, subprocess.SubprocessError):
-        return None
-    if proc.returncode != 0:
-        return None
-    paths: set[str] = set()
-    for line in proc.stdout.splitlines():
-        p = line[3:].strip().split(" -> ")[-1].strip('"')   # drop the XY prefix; take a rename's dest
-        if p and not p.startswith((_WORKSPACE_DIRNAME + "/", _WORKSPACE_DIRNAME + "\\")):
-            paths.add(p)
-    return paths
+        target = float(bare)
+    except ValueError:
+        return False
+    # "71 percent" / "71 pct" without a % sign in the claim text
+    if re.search(rf"(?<!\d){re.escape(bare)}\s*(?:%|percent|pct)\b", corpus, re.I):
+        return True
+    # Comma-grouped counts ("60,000") must parse as single magnitudes for ratio checks.
+    nums = [float(x) for x in _CORPUS_NUM.findall(corpus.replace(",", ""))]
+    for i, a in enumerate(nums):
+        if a == 0:
+            continue
+        for b in nums[i + 1 :]:
+            if b == 0:
+                continue
+            for num, den in ((a, b), (b, a)):
+                ratio = 100.0 * num / den
+                if abs(ratio - target) <= max(0.75, 0.02 * abs(target)):
+                    return True
+    return _arithmetic_supported(target, nums)
 
 
-def _new_escapes(before: set[str] | None, after: set[str] | None) -> list[str]:
-    """Paths that became dirty DURING the worker run, outside its lane — a detected escape.
+def _arithmetic_supported(target: float, nums: list[float]) -> bool:
+    """Is ``target`` a plain sum or difference of two cited numbers?
 
-    Diffed against a baseline so the user's own pre-existing uncommitted work never trips it.
+    The case that killed a real figure: the claims held South Korea's total exports
+    ($496.3bn) and its chip exports ($149bn), and the chart plotted chips against the
+    NON-chip remainder — 496.3 - 149 = 347.3. That is the whole point of a
+    part-of-whole split, and it was rejected because 347.3 appears in no claim.
+    Demanding that every plotted value be quoted verbatim forbids arithmetic, which
+    means forbidding most honest charts.
+
+    Deliberately shallow: two operands, add or subtract. A number that matches no pair
+    is still unverified, so an invented figure fails exactly as before.
     """
-    if before is None or after is None:
+    tol = max(0.05, 0.005 * abs(target))
+    for i, a in enumerate(nums):
+        for b in nums[i + 1:]:
+            if abs((a - b) - target) <= tol or abs((b - a) - target) <= tol:
+                return True
+            if abs((a + b) - target) <= tol:
+                return True
+    return False
+
+
+#: How many sourced rows become claims. A figure's series can be long; the ledger wants the
+#: shape of the evidence, not a transcription of the CSV, which is published beside it anyway.
+_MAX_SOURCED_CLAIMS = 12
+
+#: Provenance the WORKER wrote into its own caption. The harness owns provenance — it stamps the
+#: AI label, the publishers and the as-of itself — so a worker that also writes them produces a
+#: caption carrying every line twice. Observed under one map: a bare URL for each of eight plotted
+#: points, then "As of <date>" and a Source list, then the harness's own label, Source list and
+#: as-of again. ~1,400 characters, the largest block of text on the page, and nothing a reader
+#: wants to read. The full per-row attribution already ships in the figure's data.csv and the
+#: article's receipts, which is where an inspectable audit trail belongs; the caption's job is to
+#: say what the figure shows.
+_WORKER_PROVENANCE = re.compile(
+    r"(?:\*\*)?(?:Sources?|Data source|Basemap|Geocodes?)(?:\*\*)?\s*:.*$"
+    r"|\bAs of \d{4}-\d{2}-\d{2}\.?"
+    r"|\(?https?://\S+\)?",
+    re.IGNORECASE | re.DOTALL,
+)
+
+
+#: Labels left standing when their URL is removed. Stripping the link out of
+#: "WeatherNext confidence: https://…" leaves "WeatherNext confidence:" dangling at the end of the
+#: caption, which reads as truncation — worse than the duplication being fixed.
+_ORPHAN_LABEL = re.compile(r"(?:^|[.;])\s*[^.;:]{0,60}:\s*(?=[.;]|$)")
+
+
+def _strip_provenance(text: str) -> str:
+    """Drop worker-authored source/as-of/URL text so the harness's stamp is the only one."""
+    out = _WORKER_PROVENANCE.sub("", text or "")
+    out = _ORPHAN_LABEL.sub(".", out)
+    out = re.sub(r"\s*([.;])\s*(?=[.;])", "", out)          # collapse punctuation left adjacent
+    return re.sub(r"\s*[—,;:]\s*$", "", out.strip())
+
+
+def _sourced_claims(data_text: str, caption: str, request: AnalyticsRequest) -> list[dict]:
+    """Turn a sourced figure's data table into claim-shaped rows for the profile.
+
+    One claim per data row, phrased so it reads as a statement rather than a CSV line, and
+    every one carries the publisher URL the sourced-mode provenance check already required.
+    Without a URL nothing is emitted: an unattributed number is not a claim.
+    """
+    url_match = re.search(r"https?://\S+", caption or "")
+    if not url_match:
         return []
-    return sorted(after - before)
+    url = url_match.group(0).rstrip(").,;")
+
+    rows = [ln.strip() for ln in (data_text or "").splitlines() if ln.strip()]
+    if len(rows) < 2:
+        return []
+    header = [h.strip() for h in rows[0].split(",")]
+    # A map's table is geometry: outline vertices and point coordinates. Those are drawing
+    # instructions, not claims about the world — the Maldives map turned each vertex of a reef
+    # outline into a "claim", and the confirmation pass spent its searches checking them one by
+    # one. The facts a map conveys (what is where, how far) are in its labels and the prose.
+    if request.visual_class == "locator_map" or _is_geometry(header):
+        return []
+    subject = (request.title or request.question or "figure data").strip()
+
+    out: list[dict] = []
+    for row in rows[1:  _MAX_SOURCED_CLAIMS + 1]:
+        cells = [c.strip() for c in row.split(",")]
+        if len(cells) != len(header):
+            continue
+        pairs = ", ".join(f"{h} {c}" for h, c in zip(header, cells) if c)
+        if pairs:
+            out.append({"text": f"{subject}: {pairs}", "url": url})
+    return out
 
 
-def _store_fingerprint(repo_root: Path) -> dict[str, tuple[int, int]]:
-    """(mtime_ns, size) of the guarded gitignored files — the git tripwire's blind spot. Cheap:
-    small per-item JSON, not dependency-scale trees. Covers the content stores AND ``.env`` files
-    (credential poisoning is the classic sandbox escape, and ``.env`` is gitignored + not a store,
-    so nothing else would catch it). Metadata only — NEVER reads any file's contents."""
-    fp: dict[str, tuple[int, int]] = {}
-
-    def _stamp(p: Path) -> None:
-        try:
-            st = p.stat()
-            fp[str(p)] = (st.st_mtime_ns, st.st_size)
-        except OSError:
-            pass
-
-    for name in _GUARDED_STORE_DIRS:
-        d = repo_root / "backend" / name
-        if d.is_dir():
-            for p in d.rglob("*"):
-                if p.is_file():
-                    _stamp(p)
-    # .env at the repo root and under backend/ — mtime+size only, contents never touched.
-    for base in (repo_root, repo_root / "backend"):
-        for p in (*base.glob(".env"), *base.glob(".env.*")):
-            if p.is_file():
-                _stamp(p)
-    return fp
 
 
-def _store_escapes(before: dict[str, tuple[int, int]], after: dict[str, tuple[int, int]]) -> list[str]:
-    """Store files created OR modified during the run — a worker corrupting the pipeline's state.
 
-    Baseline-diffed like the git check: any pre-existing file that legitimately changed outside the
-    run window cancels; only a write during the run surfaces. Reports the offending file paths.
-    """
-    return sorted(k for k, v in after.items() if before.get(k) != v)
+def _is_geometry(header: list[str]) -> bool:
+    """A table whose numeric columns are coordinates is a shape to draw, not data to claim."""
+    cols = {h.strip().lower() for h in header}
+    return bool({"lat", "latitude"} & cols and {"lon", "lng", "longitude"} & cols)
 
 
 def _visual_unverified_figures(data_text: str, cited_claims: list[Claim], sources_by_id: dict) -> list[str]:
     """Significant numbers in the plotted data that appear NOWHERE in the cited evidence — the
     visual analog of ``unverified_prose_figures``. Same conservative stance (substring, err toward
-    missing a drift rather than inventing one)."""
+    missing a drift rather than inventing one). Derived percentages from cited counts are allowed."""
     corpus = " ".join(c.text for c in cited_claims)
     for c in cited_claims:
         for sid in c.supported_by:
             s = sources_by_id.get(sid)
             if s and s.snapshot and s.snapshot.excerpt:
                 corpus += " " + s.snapshot.excerpt
-    return [n for n in dict.fromkeys(_SIG_NUM.findall(data_text)) if n not in corpus]
+    out: list[str] = []
+    for n in dict.fromkeys(_SIG_NUM.findall(data_text)):
+        if _YEAR_LIKE.match(n):
+            continue        # an axis label, not a claim — see _YEAR_LIKE
+        if n.endswith("%"):
+            if not _pct_supported_by_corpus(n, corpus):
+                out.append(n)
+        elif n not in corpus and not _pct_supported_by_corpus(n, corpus):
+            # Bare values get the same arithmetic leeway percentages already had: a
+            # part-of-whole split derives its remainder, and that is not fabrication.
+            out.append(n)
+    return out
+
+
+def _plotted_values(data_text: str) -> list[str]:
+    """The significant numbers a figure plots — the denominator for how much of it is traced."""
+    return [n for n in dict.fromkeys(_SIG_NUM.findall(data_text)) if not _YEAR_LIKE.match(n)]
+
+
+def _disclosure(figure_check: dict, data_text: str) -> str:
+    """The caption tail that states, to the reader, how much of this figure is unverified."""
+    if figure_check.get("verified"):
+        return ""
+    if figure_check.get("mode") == "sourced":
+        return " Unverified: the publisher of this data could not be confirmed."
+    untraced = list(figure_check.get("unverified") or [])
+    total = max(len(_plotted_values(data_text)), len(untraced))
+    shown = ", ".join(untraced[:4]) + (", …" if len(untraced) > 4 else "")
+    if total and len(untraced) >= total:
+        return f" Unverified: none of the plotted values ({shown}) could be traced to a cited source."
+    return (f" Partly unverified: {len(untraced)} of {total} plotted values ({shown}) "
+            "could not be traced to a cited source.")
+
+
+def _timeout_for(request: AnalyticsRequest) -> float:
+    if request.kind == "image" or request.may_source:
+        return _TIMEOUT_SOURCED_S
+    return _TIMEOUT_S
 
 
 def _collect(folder: Path, kind: str) -> tuple[Path | None, Path | None, str]:
@@ -394,6 +647,7 @@ def _caption(
     """
     def _clean(text: str) -> str:
         text = re.sub(r"\b(?:clm_|src_)[0-9a-fA-F]+\b", "", text or "")
+        text = _strip_provenance(text)
         return re.sub(r"\s{2,}", " ", text).strip(" —,-")
 
     shows = _clean(request.question or request.title)
@@ -404,7 +658,10 @@ def _caption(
     if worker and shows and shows.lower() in worker.lower():
         body = worker
     elif worker and shows:
-        body = f"{shows} {worker}"
+        # Two independent sentences, so punctuate between them. Bare concatenation published
+        # "...how much depends on water EU electricity generation in 2025, by source share",
+        # which reads as one broken sentence and hides where the summary ends.
+        body = f"{shows.rstrip('.')}. {worker}"
     else:
         body = worker or shows or _clean(request.title)
 
@@ -444,7 +701,7 @@ def _grok_runner(
     (codex by default, grok when quota allows). ``allow_web`` is True only for may_source
     requests — profile-held charts stay offline.
     """
-    return resolve_harness().run(prompt, folder, timeout=timeout, allow_web=allow_web)
+    return run_with_fallback(prompt, folder, timeout=timeout, allow_web=allow_web)
 
 
 Runner = Callable[[str, Path], tuple[bool, str]]
@@ -461,12 +718,14 @@ def update_grok() -> str:
     return resolve_harness().update()
 
 
-def canary(workspace: Path, *, runner: Runner | None = None, timeout: float = 120.0) -> tuple[bool, str]:
+def canary(workspace: Path, *, runner: Runner | None = None, timeout: float = 300.0) -> tuple[bool, str]:
     """Prove the freshly-updated harness still works, on fixture data, before spending on real work.
 
     Seconds of quota: draw one tiny chart from known numbers and check an artifact came back. A
     pass means the new build behaves; a fail means we skip analytics for this run and SAY SO,
-    rather than discovering the breakage halfway through an article's visuals.
+    rather than discovering the breakage halfway through an article's visuals. The timeout is
+    startup-honest (grok can sit for minutes before the first byte); the default runner also
+    tries the sibling harness, so one CLI stall is not a silent no-charts article.
     """
     folder = workspace / "_canary"
     shutil.rmtree(folder, ignore_errors=True)
@@ -491,7 +750,7 @@ def fulfill_request(
     workspace: Path | None = None,
     context: AgentRunContext | None = None,
     runner: Runner | None = None,
-    timeout: float = _TIMEOUT_S,
+    timeout: float | None = None,
     version: str = "",
 ) -> AnalyticsArtifact:
     """Build one request into an artifact, with the harness owning integrity end-to-end.
@@ -506,11 +765,15 @@ def fulfill_request(
         if request.may_source and not request.data_refs
         else AI_ANALYTIC_LABEL
     )
-    result = AnalyticsArtifact(request_id=request.id, kind=request.kind, title=request.title,
-                               question=request.question,
-                               data_refs=request.data_refs, as_of=as_of, ai_label=ai_label,
-                               generator=GENERATOR, model=version or "grok-build",
-                               generated_at=datetime.now(UTC).isoformat())
+    result = AnalyticsArtifact(
+        request_id=request.id, kind=request.kind, title=request.title,
+        question=request.question,
+        data_refs=request.data_refs, as_of=as_of, ai_label=ai_label,
+        visual_class=request.visual_class, priority=request.priority,
+        placement=request.placement, reader_gap=request.reader_gap,
+        generator=GENERATOR, model=version or "grok-build",
+        generated_at=datetime.now(UTC).isoformat(),
+    )
 
     if not request.data_refs and not (request.may_source and (request.source_hint or request.spec)):
         return result.model_copy(update={
@@ -522,32 +785,39 @@ def fulfill_request(
     if folder.exists():
         shutil.rmtree(folder, ignore_errors=True)
     folder.mkdir(parents=True, exist_ok=True)
-    repo_root = workspace.parent                        # analytics_workspace/ sits at the repo root
     try:
         import json
         (folder / "data.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
         (folder / "REQUEST.md").write_text(_brief(request), encoding="utf-8")
 
-        before_git = _git_status(repo_root)             # tripwire baseline (see _git_status)
-        before_store = _store_fingerprint(repo_root)    # + the gitignored stores git can't see
+        baseline = analytics_guard.snapshot(            # attributable surfaces (see analytics_guard)
+            workspace, signature_names=_SIGNATURE_NAMES, is_scratch=_is_scratch_dir)
         prompt = _prompt(may_source=bool(request.may_source))
         allow_web = bool(request.may_source)
+        run_timeout = _timeout_for(request) if timeout is None else timeout
         ok, tail = (runner or (lambda p, f: _grok_runner(
-            p, f, timeout=timeout, allow_web=allow_web)))(prompt, folder)
+            p, f, timeout=run_timeout, allow_web=allow_web)))(prompt, folder)
 
         removed = _sweep(folder)                        # (2) artifact-type + size sweep
 
-        # (2b) ESCAPE tripwire — "stay in your lane" as a DETECTED invariant, not just doctrine. If
-        # the worker wrote anything in the repo outside analytics_workspace/ — tracked files (git)
-        # OR the gitignored content stores it could poison — distrust it entirely (a good-looking
-        # chart from a lane-breaking run is not trustworthy) and alert loudly.
-        escaped = (_new_escapes(before_git, _git_status(repo_root))
-                   + _store_escapes(before_store, _store_fingerprint(repo_root)))
-        if escaped:
+        # (2b) ESCAPE guard — "stay in your lane" as a DETECTED invariant, not just doctrine. It
+        # judges only surfaces where the writer is identifiable (the workspace stack, worker-named
+        # strays at the repo roots, .env, store damage) and reverts the worker's own writes. Other
+        # concurrent repo activity (a developer's edits, the pipeline's own stores) is NOT blamed —
+        # that used to fail every chart whenever anything else in the repo changed.
+        verdict = analytics_guard.check(
+            workspace, baseline, signature_names=_SIGNATURE_NAMES, is_scratch=_is_scratch_dir)
+        if verdict.observed_churn and context is not None:
+            context.emit(ANALYTICS_WORKER_CHURN, {"request_id": request.id,
+                                                  "paths": verdict.observed_churn[:20]})
+        if verdict.escaped:
             if context is not None:
-                context.emit(ANALYTICS_WORKER_ESCAPE, {"request_id": request.id, "escaped": escaped})
-            return _finalize(result, status="failed", swept=removed, escaped_writes=escaped,
-                             note="worker wrote outside analytics_workspace/: " + ", ".join(escaped[:5]))
+                context.emit(ANALYTICS_WORKER_ESCAPE, {"request_id": request.id,
+                                                       "escaped": verdict.escaped,
+                                                       "reverted": verdict.reverted})
+            return _finalize(result, status="failed", swept=removed, escaped_writes=verdict.escaped,
+                             note="worker wrote outside analytics_workspace/: "
+                                  + ", ".join(verdict.escaped[:5]))
 
         skipped = (folder / "SKIPPED.md")
         if skipped.exists():
@@ -561,19 +831,37 @@ def fulfill_request(
             return _finalize(result, status="failed", swept=removed, note="no output artifact found")
 
         # (3) figure check — profile-held path: numbers must appear in cited evidence.
-        # Source-at-time path: require a non-empty data table (series is the evidence of record);
-        # claim-substring check would false-fail every newly fetched row.
+        # Source-at-time path: non-empty data table PLUS a publisher URL in caption.md.
+        # A CSV alone is not provenance — without a URL we refuse to call the figure verified.
         data_text = data.read_text(encoding="utf-8", errors="replace") if data else ""
         sources_by_id = {s.id: s for s in profile.source_ledger}
-        if request.may_source and not cited_claims:
+        # ``may_source`` decides the standard, NOT "may_source and no claims". A request can
+        # be both grounded in the profile and permitted to fetch what the profile lacks — that
+        # is the normal shape for a trajectory, where the claims hold this year and the series
+        # needs the prior decade. Requiring every plotted number to appear in a claim made such
+        # a request impossible to satisfy: anything the worker fetched was, by definition, not
+        # in the ledger, so a grounded+sourced figure could only ever fail. Provenance is still
+        # enforced — a sourced figure must carry its publisher URL — it is the standard that
+        # changes, not the rigour.
+        if request.may_source:
             rows = [ln for ln in data_text.splitlines() if ln.strip()]
+            has_table = len(rows) >= 2  # header + ≥1 data row
+            has_url = bool(re.search(r"https?://\S+", worker_cap or "", re.I))
+            unverified: list[str] = []
+            if not has_table:
+                unverified.append("empty or missing sourced data.csv")
+            if not has_url:
+                unverified.append("caption.md must name the publisher URL for sourced figures")
             figure_check = {
-                "checked": bool(data_text),
-                "verified": len(rows) >= 2,  # header + ≥1 data row
-                "unverified": [] if len(rows) >= 2 else ["empty or missing sourced data.csv"],
+                "checked": True,
+                "verified": not unverified,
+                "unverified": unverified,
                 "mode": "sourced",
             }
-            note = "" if figure_check["verified"] else "sourced analytic produced no data table"
+            note = (
+                "" if figure_check["verified"]
+                else "sourced analytic failed provenance check: " + ", ".join(unverified)
+            )
         else:
             unverified = (
                 _visual_unverified_figures(data_text, cited_claims, sources_by_id)
@@ -590,24 +878,67 @@ def fulfill_request(
                 if unverified else ""
             )
 
+        # (3b) geometry check — is the picture LEGIBLE, not just honest? Every other gate here
+        # asks whether the numbers are true; none asked whether the labels survive to the edge of
+        # the frame, and a timeline shipped with its right-hand text running off the canvas.
+        # Decidable from the file, invisible to the worker (matplotlib reports success), and fatal
+        # to the one thing a label is for — so it is checked, not requested.
+        if visual.suffix == ".svg":
+            from .analytics_geometry import check_fit
+
+            misfit = check_fit(visual.read_text(encoding="utf-8", errors="replace"))
+            if misfit:
+                return _finalize(result, status="failed", swept=removed,
+                                 note=f"figure does not fit its canvas: {misfit}")
+
+        # Data the worker went and fetched is EVIDENCE, not scratch. Carry it back so it can
+        # enter the claim ledger instead of dying with the scratch folder — the numbers under
+        # a published figure should be as inspectable as any other claim.
+        if request.may_source and figure_check.get("verified"):
+            result = result.model_copy(update={
+                "sourced_claims": _sourced_claims(data_text, worker_cap, request),
+            })
+
+        # A figure with nothing plotted is broken, not uncertain — there is no picture to qualify.
+        if request.may_source and not has_table:
+            return _finalize(
+                result, status="integrity_check_failed", swept=removed,
+                figure_check=figure_check,
+                note=note or "figure integrity check failed",
+            )
+        # Anything short of that SHIPS, carrying the degree of what could not be traced. Dropping
+        # an untraced figure threw away work and told the reader nothing; the AlphaGenome scale
+        # chart died over two values the evidence phrased differently. Uncertainty is allowed on
+        # the page — undisclosed uncertainty is not. So the caption says it, under the picture,
+        # where the reader actually looks, and the receipts repeat it.
+        disclosure = _disclosure(figure_check, data_text)
+
         # A markdown analytic (table/insight) is INLINED by the publish view, not embedded as an
         # image — so carry its body forward. An image analytic (chart/illustration) has no body.
         body_md = visual.read_text(encoding="utf-8", errors="replace") if visual.suffix == ".md" else ""
 
         # (4) copy the finished artifact OUT (harness, not worker) + stamp provenance.
-        artifact_name = data_name = ""
+        artifact_name = data_name = raster_name = ""
         if context is not None and context.artifacts is not None:
             artifact_name = f"analytic_{_safe(request.id)}{visual.suffix}"
             context.artifacts.write_bytes(artifact_name, visual.read_bytes(), kind="analytic")
             if data:
                 data_name = f"analytic_{_safe(request.id)}_data.csv"
                 context.artifacts.write_text(data_name, data_text, kind="analytic_data")
+            raster = _raster_source(visual, request.kind)
+            if raster is not None:
+                if raster == visual:
+                    raster_name = artifact_name
+                else:
+                    raster_name = f"analytic_{_safe(request.id)}{raster.suffix}"
+                    context.artifacts.write_bytes(raster_name, raster.read_bytes(), kind="analytic")
 
         return _finalize(
             result, status="produced", swept=removed,
             artifact_name=artifact_name or visual.name, data_name=data_name or (data.name if data else ""),
+            raster_name=raster_name,
             body_md=body_md,
-            caption=_caption(request, worker_cap, profile, cited_claims, as_of),
+            caption=_caption(request, worker_cap, profile, cited_claims, as_of) + disclosure,
             figure_check=figure_check,
             note=note,
         )
@@ -652,6 +983,25 @@ def build_analytics_worker_graph(
         # article), then prove it still works on fixture data before spending on real requests.
         # A bad release costs this run's visuals, not the article — that graceful degradation is
         # exactly what makes an always-update policy affordable here.
+        def _skip_all(reason: str) -> dict[str, Any]:
+            skipped = [
+                {
+                    **r.model_dump(),
+                    "request_id": r.id,
+                    "status": "skipped",
+                    "note": reason,
+                }
+                for r in plan.requests
+            ]
+            context.emit(ANALYTICS_WORKER_COMPLETED, {
+                "produced": 0, "total": len(skipped), "note": reason,
+            })
+            return {"analytics_artifacts": skipped}
+
+        stack_ok, stack_note = workspace_stack_ready()
+        if not stack_ok:
+            return _skip_all(stack_note)
+
         version = ""
         if refresh:
             # Self-heal first: a killed run can't empty its own scratch, so clean up anything a
@@ -663,19 +1013,26 @@ def build_analytics_worker_graph(
             context.emit(ANALYTICS_WORKER_READY, {"version": version, "update": note,
                                                   "canary": canary_note, "swept_stale": cleaned})
             if not ok:
-                context.emit(ANALYTICS_WORKER_COMPLETED, {
-                    "produced": 0, "note": f"analytics skipped — {canary_note} (version {version})"})
-                return {"analytics_artifacts": []}
+                return _skip_all(f"analytics canary failed: {canary_note} (version {version})")
 
         profile = SignalProfile.model_validate(pdict)
-        artifacts: list[AnalyticsArtifact] = []
-        for request in plan.requests:
+        # Charts are independent — each works in its own scratch folder and nothing else in the
+        # run writes while they draw — so they can draw side by side (flags.ANALYTICS_PARALLEL).
+        # Sequential, two charts were 23 of a 54-minute article. Results keep the plan's order.
+        from concurrent.futures import ThreadPoolExecutor
+
+        from algent_backend.agent_system.agents.newsroom.flags import ANALYTICS_PARALLEL
+
+        def _one(request: AnalyticsRequest) -> AnalyticsArtifact:
             art = fulfill_request(request, profile, context=context, runner=runner, version=version)
-            artifacts.append(art)
             context.emit(ANALYTICS_ARTIFACT_PRODUCED, {
                 "request_id": art.request_id, "status": art.status,
                 "figure_verified": art.figure_check.get("verified"), "note": art.note,
             })
+            return art
+
+        with ThreadPoolExecutor(max_workers=max(1, int(ANALYTICS_PARALLEL))) as pool:
+            artifacts: list[AnalyticsArtifact] = list(pool.map(_one, plan.requests))
 
         dumped = [a.model_dump() for a in artifacts]
         if context.artifacts is not None:

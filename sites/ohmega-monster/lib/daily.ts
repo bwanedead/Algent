@@ -34,12 +34,26 @@ export type KeyFigure = {
   source: string;
 };
 export type MapPoint = { x: number; y: number; label: string; date: string; verification: "researched" | "reported"; n: number | null };
+export type MapCountryLabel = { name: string; x: number; y: number; r: number; key: boolean };
+export type MapCity = { name: string; x: number; y: number; capital: boolean };
+export type MapAnnotation = { kind: string; x: number; y: number; title: string; lines: string[]; source: string };
+export type MapLocator = { width: number; height: number; d: string; rect: { x: number; y: number; w: number; h: number } };
+/** Map spec. Version 1 (stored in past daily records) has only bbox/countries/points/credit; every v2 layer
+ *  defaults to empty, so an old spec renders as land + marks. The geometry is the backend's (`geo.build_map`). */
 export type TheaterMap = {
+  version: number;
   bbox: number[];
   projection: string;
   width: number;
   height: number;
   countries: { name: string; d: string }[];
+  labels: MapCountryLabel[];
+  rivers: string[];
+  lakes: string[];
+  cities: MapCity[];
+  annotations: MapAnnotation[];
+  scale: { km: number; px: number; label: string } | null;
+  locator: MapLocator | null;
   points: MapPoint[];
   credit: string;
 };
@@ -131,7 +145,35 @@ export function parseMap(raw: unknown): TheaterMap | null {
     .map((p) => ({ x: num(p.x), y: num(p.y), label: str(p.label), date: str(p.date), verification: oneOf(p.verification, ["researched", "reported"] as const, "reported"), n: num(p.n) }))
     .filter((p): p is MapPoint => p.x !== null && p.y !== null && p.x >= 0 && p.x <= width && p.y >= 0 && p.y <= height);
   if (countries.length === 0 && points.length === 0) return null;
-  return { bbox: arr(raw.bbox).map(num).filter((n): n is number => n !== null), projection: str(raw.projection), width, height, countries, points, credit: str(raw.credit) };
+  const inFrame = (x: number | null, y: number | null): x is number => x !== null && y !== null && x >= 0 && x <= width && y >= 0 && y <= height;
+  const paths = (v: unknown): string[] =>
+    arr(v).filter(isObj).map((o) => str(o.d)).filter((d) => d !== "" && PATH_RE.test(d));
+  const labels = arr(raw.labels).filter(isObj)
+    .map((l) => ({ name: str(l.name), x: num(l.x), y: num(l.y), r: num(l.r) ?? 0, key: l.key === true }))
+    .filter((l): l is MapCountryLabel => l.name !== "" && inFrame(l.x, l.y));
+  const cities = arr(raw.cities).filter(isObj)
+    .map((c) => ({ name: str(c.name), x: num(c.x), y: num(c.y), capital: c.capital === true }))
+    .filter((c): c is MapCity => c.name !== "" && inFrame(c.x, c.y));
+  const annotations = arr(raw.annotations).filter(isObj)
+    .map((a) => ({ kind: str(a.kind), x: num(a.x), y: num(a.y), title: str(a.title), lines: strs(a.lines), source: str(a.source) }))
+    .filter((a): a is MapAnnotation => a.title !== "" && inFrame(a.x, a.y));
+  const sc = isObj(raw.scale) ? { km: num(raw.scale.km), px: num(raw.scale.px), label: str(raw.scale.label) } : null;
+  const scale = sc && sc.km !== null && sc.px !== null && sc.px > 0 && sc.px <= width && sc.label ? { km: sc.km, px: sc.px, label: sc.label } : null;
+  const lc = isObj(raw.locator) ? raw.locator : null;
+  const rect = lc && isObj(lc.rect) ? { x: num(lc.rect.x), y: num(lc.rect.y), w: num(lc.rect.w), h: num(lc.rect.h) } : null;
+  const lw = lc ? dim(lc.width) : null;
+  const lh = lc ? dim(lc.height) : null;
+  const locator = lc && lw !== null && lh !== null && rect && rect.x !== null && rect.y !== null && rect.w !== null && rect.h !== null && PATH_RE.test(str(lc.d))
+    ? { width: lw, height: lh, d: str(lc.d), rect: { x: rect.x, y: rect.y, w: rect.w, h: rect.h } }
+    : null;
+  return {
+    version: num(raw.version) ?? 1,
+    bbox: arr(raw.bbox).map(num).filter((n): n is number => n !== null),
+    projection: str(raw.projection),
+    width, height, countries, labels,
+    rivers: paths(raw.rivers), lakes: paths(raw.lakes), cities, annotations, scale, locator,
+    points, credit: str(raw.credit),
+  };
 }
 
 function parsePlace(raw: unknown): DailyPlace | null {

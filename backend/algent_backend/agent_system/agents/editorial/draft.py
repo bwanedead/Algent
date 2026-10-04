@@ -25,16 +25,32 @@ from algent_backend.agent_system.agents.research.profile import ProfileAdditions
 SCHEMA_VERSION = 1
 
 
+class QuickTake(BaseModel):
+    """Cold-reader gist layer — enough to leave with if the body is never opened.
+
+    Three one-sentence fields. Final authority is the headline/surface stage after repairs;
+    the drafter may seed them from the treatment's entry fields.
+    """
+
+    what_happened: str = ""
+    why_it_matters: str = ""
+    what_is_uncertain: str = ""
+
+    def filled(self) -> bool:
+        return bool(self.what_happened.strip() or self.why_it_matters.strip()
+                    or self.what_is_uncertain.strip())
+
+
 class DraftPayload(BaseModel):
     """What the drafter model returns — prose + the evidence it turned up while writing."""
 
     title: str = ""
     standfirst: str = ""                # one-line dek: the piece's core in a sentence
     body: str = ""                      # the prose (markdown)
-    cited_claim_ids: list[str] = Field(default_factory=list)   # profile claim ids the prose rests on
-    cited_source_ids: list[str] = Field(default_factory=list)  # profile source ids the prose attributes to
-    research_note: str = ""             # what the drafter went and found (precision research summary)
-    additions: ProfileAdditions = Field(default_factory=ProfileAdditions)  # enrich-back into the profile
+    cited_claim_ids: list[str] = Field(default_factory=list)
+    cited_source_ids: list[str] = Field(default_factory=list)
+    research_note: str = ""
+    additions: ProfileAdditions = Field(default_factory=ProfileAdditions)
 
 
 class ArticleDraft(BaseModel):
@@ -43,17 +59,18 @@ class ArticleDraft(BaseModel):
     id: str
     treatment_id: str = ""
     profile_id: str = ""
-    profile_revision: int = 0           # the profile revision the prose was written against
-    frame: str = ""                     # the governing frame it was drafted under (from the treatment)
+    profile_revision: int = 0
+    frame: str = ""
 
     title: str = ""
     standfirst: str = ""
     body: str = ""
-    cited_claim_ids: list[str] = Field(default_factory=list)    # validated against the profile
-    cited_source_ids: list[str] = Field(default_factory=list)   # validated against the profile
+    quick_take: QuickTake = Field(default_factory=QuickTake)
+    cited_claim_ids: list[str] = Field(default_factory=list)
+    cited_source_ids: list[str] = Field(default_factory=list)
     research_note: str = ""
     word_count: int = 0
-    grounding_verdict: str = ""         # deterministic citation-harness verdict (see citations.py)
+    grounding_verdict: str = ""
 
     # ── meta / lineage ──
     schema_version: int = SCHEMA_VERSION

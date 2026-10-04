@@ -27,7 +27,7 @@ class NewsroomRailReport(BaseModel):
     vector_count: int = 0               # t1 vectors synthesized
     # Launch mode: "fresh" runs t0+synthesis; "reused" skips them and re-routes a prior portfolio
     # (still cooldown-guarded) so a second on-deck vector can be tried without re-paying t0.
-    portfolio_source: str = "fresh"     # "fresh" | "reused"
+    portfolio_source: str = "fresh"     # "fresh" | "reused" | "paused"
     source_run_id: str = ""             # prior run id when portfolio_source=reused (observability)
     # Measured, not inferred: how often any stage actually reached for live X. Zero across a run
     # means the source class is wired but unused — which is what two doctrine passes failed to fix.
@@ -44,8 +44,11 @@ class NewsroomRailReport(BaseModel):
     # ── research ──
     profile_id: str = ""
     gauntlet_verdict: str = ""          # profile gauntlet's final verdict
+    # Disposition when the rail stops short of a full article (held research lead).
+    # Empty when editorial ran; otherwise watch | needs_verification | unsound | held.
+    disposition: str = ""
     # ── editorial ──
-    article_status: str = ""            # publishable | needs_hedging | blocked
+    article_status: str = ""            # publishable | needs_hedging | blocked | needs_revision
     article_title: str = ""
     analytics_produced: int = 0
     # ── distribution ──
@@ -56,6 +59,27 @@ class NewsroomRailReport(BaseModel):
     published_slug: str = ""
     publish_action: str = ""
     # ── accounting ──
-    total_usd: float = 0.0              # summed est. spend across every stage that surfaced it
+    total_usd: float = 0.0              # settled spend under the article ledger
+    soft_cap_usd: float = 1.0
+    hard_cap_usd: float = 3.0
+    budget_mode: str = "normal"         # normal | slim_finish | hard_stop
+    soft_cap_crossed: bool = False
+    soft_crossed_at_stage: str = ""
+    hard_stop: bool = False
+    hard_stop_stage: str = ""
+    cost_by_stage: dict[str, float] = Field(default_factory=dict)
+    cost_by_op: dict[str, float] = Field(default_factory=dict)
+    skipped_operations: list[dict[str, str]] = Field(default_factory=list)
+    #: Wall time, the counterpart to cost_by_stage. Spend was attributed by stage from the start;
+    #: TIME was not, so "why has this been running twenty minutes" could only be answered by
+    #: reading raw event timestamps out of a timeline afterwards.
+    total_seconds: float = 0.0
+    stage_seconds: dict[str, float] = Field(default_factory=dict)
+    #: The slowest legs INSIDE stages, longest first. A rail stage like "editorial" is many
+    #: minutes and they are not evenly spread — one figure timing out in a subprocess spends ten
+    #: of them making no model calls at all, which from outside looks like a dead run.
+    slow_legs: list[dict] = Field(default_factory=list)
+    refused_operations: list[dict[str, str]] = Field(default_factory=list)
+    estimate_overruns: list[dict[str, str]] = Field(default_factory=list)   # ran; cost > estimate
     note: str = ""
     generated_at: str = ""

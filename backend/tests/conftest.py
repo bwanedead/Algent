@@ -19,6 +19,42 @@ def _isolated_runs_dir(tmp_path, monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _isolated_spend_budget(tmp_path, monkeypatch):
+    """The spend envelope caps REAL unattended spend. A test run once claimed five run slots
+    from a live overnight envelope — so no test may ever see the real file."""
+    monkeypatch.setenv("ALGENT_SPEND_BUDGET", str(tmp_path / "spend_budget.json"))
+
+
+@pytest.fixture(autouse=True)
+def _isolated_pause_signal(tmp_path, monkeypatch):
+    """The pause file stops the operator's live run. No test may see (or write) the real one —
+    a relaunch test failed only because the operator had just paused a run."""
+    from algent_backend.agent_system.foundation import pause
+
+    monkeypatch.setattr(pause, "PAUSE_FILE", tmp_path / "newsroom_run.pause")
+
+
+@pytest.fixture(autouse=True)
+def _no_data_backup(monkeypatch):
+    """A test must never push anything to the private data repo."""
+    monkeypatch.setenv("ALGENT_DATA_BACKUP", "0")
+
+
+@pytest.fixture(autouse=True)
+def _isolated_pulse_store(tmp_path, monkeypatch):
+    """Pulse logs are append-only institutional memory — no test may write to the real one."""
+    monkeypatch.setenv("ALGENT_PULSE_STORE", str(tmp_path / "pulse_store_iso"))
+    monkeypatch.setenv("ALGENT_PULSE_BACKEND", "files")     # never the live database in tests
+    monkeypatch.setenv("ALGENT_INTEL_STORE", str(tmp_path / "intel_store_iso"))
+
+
+@pytest.fixture(autouse=True)
+def _isolated_profile_store(tmp_path, monkeypatch):
+    """The profile store is the newsroom's durable research record — no test may write to it."""
+    monkeypatch.setenv("ALGENT_PROFILE_STORE", str(tmp_path / "profile_store"))
+
+
+@pytest.fixture(autouse=True)
 def _no_live_beat_sweep(monkeypatch):
     """Keep ``ensure_t0`` hermetic.
 

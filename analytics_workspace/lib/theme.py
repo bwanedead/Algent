@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
 import matplotlib as mpl
 from matplotlib import font_manager
@@ -102,3 +103,100 @@ def apply_theme(theme: Theme = DARK) -> Theme:
 
 def series_colors(theme: Theme = DARK) -> list[str]:
     return [theme.series1, theme.series2, theme.series3]
+
+
+# Wordmark + silhouette live in this workspace so the grok worker never reaches into sites/.
+_MARK = Path(__file__).resolve().parent / "assets" / "mark.png"
+_WORDMARK = "OHMEGA MONSTER"
+_SITE = "ohmega.monster"
+
+
+def mark_path() -> Path | None:
+    return _MARK if _MARK.is_file() else None
+
+
+def watermark(fig, theme: Theme | None = None) -> None:
+    """Brand lockup in the footer strip — never on the data. Never raises."""
+    try:
+        used = theme or DARK
+        pack = _brand_stack(used)
+        from matplotlib.offsetbox import AnnotationBbox
+
+        # Figure-level, bottom-right of the reserved footer. box_alignment pins
+        # the right edge so a long wordmark cannot walk into the plot.
+        artist = AnnotationBbox(
+            pack, (0.96, 0.05),
+            xycoords="figure fraction",
+            box_alignment=(1.0, 0.5),
+            frameon=False, pad=0, zorder=8,
+        )
+        fig.add_artist(artist)
+    except Exception:  # noqa: BLE001 — branding must not kill a chart
+        return
+
+
+def _brand_stack(theme: Theme):
+    """Small lockup for the footer — a credit, not a stamp on the series."""
+    from matplotlib.offsetbox import HPacker, OffsetImage, TextArea, VPacker
+
+    font = resolve_font()
+    name = TextArea(
+        _WORDMARK,
+        textprops={
+            "fontsize": 8,
+            "color": theme.emphasis,
+            "alpha": 0.45,
+            "fontfamily": font,
+            "fontweight": "bold",
+            "va": "center",
+        },
+    )
+    site = TextArea(
+        _SITE,
+        textprops={
+            "fontsize": 7,
+            "color": theme.muted,
+            "alpha": 0.4,
+            "fontfamily": font,
+            "va": "center",
+        },
+    )
+    words = VPacker(children=[name, site], align="left", pad=0, sep=0)
+    path = mark_path()
+    if path is None:
+        return words
+    rgba = _silhouette(path, theme)
+    if rgba is None:
+        return words
+    h, w = rgba.shape[:2]
+    zoom = min(0.11, 44.0 / max(h, w, 1))
+    mark = OffsetImage(rgba, zoom=zoom)
+    return HPacker(children=[mark, words], align="center", pad=1, sep=4)
+
+
+def _silhouette(path: Path, theme: Theme) -> object | None:
+    """Dark-on-black mark → tinted RGBA so it reads on both dark and paper charts."""
+    import numpy as np
+    from PIL import Image
+
+    gray = np.asarray(Image.open(path).convert("L"))
+    mask = gray > 18
+    if not mask.any():
+        return None
+    rows = np.any(mask, axis=1)
+    cols = np.any(mask, axis=0)
+    r0, r1 = int(np.argmax(rows)), int(len(rows) - np.argmax(rows[::-1]))
+    c0, c1 = int(np.argmax(cols)), int(len(cols) - np.argmax(cols[::-1]))
+    crop = mask[r0:r1, c0:c1]
+    r, g, b = _rgb(theme.emphasis)
+    rgba = np.zeros((crop.shape[0], crop.shape[1], 4), dtype=np.uint8)
+    rgba[crop, 0] = r
+    rgba[crop, 1] = g
+    rgba[crop, 2] = b
+    rgba[crop, 3] = 58  # ~23% — name sits on it; still a watermark, not a stamp
+    return rgba
+
+
+def _rgb(hex_color: str) -> tuple[int, int, int]:
+    h = hex_color.lstrip("#")
+    return int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)

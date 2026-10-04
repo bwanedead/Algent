@@ -19,10 +19,12 @@ from langgraph.graph import END, START, StateGraph
 
 from algent_backend.agent_system.agents.discovery.portfolio import (
     ResearchPortfolio,
+    coerce_portfolio,
     ensure_vector_ids,
 )
 from algent_backend.agent_system.agents.discovery.rake.loop import run_rake
 from algent_backend.agent_system.agents.loop import build_react_loop, stream_react_loop
+from algent_backend.agent_system.agents.newsroom.flags import synthesis_max_output_tokens
 from algent_backend.agent_system.foundation import cost
 from algent_backend.agent_system.foundation.models import ModelSpec
 from algent_backend.agent_system.runs import events as ev
@@ -36,6 +38,7 @@ ARTIFACT_NAME = "research_portfolio.json"
 SYNTHESIS_COMPLETED = "synthesis.completed"
 SYNTHESIS_NO_T0 = "synthesis.no_t0"
 SYNTHESIS_NO_STRUCTURED_OUTPUT = "synthesis.no_structured_output"
+SYNTHESIS_EMPTY_PORTFOLIO = "synthesis.empty_portfolio"
 
 
 class SynthesisState(TypedDict, total=False):
@@ -54,9 +57,17 @@ def build_synthesis_graph(
     cost_cap_usd: float,
 ) -> Any:
     """Compile the synthesis graph for an agent's model, tools, and gate."""
+    # Large t1 portfolios (tens of vectors) do not fit the shared 4k default —
+    # truncated structured output shows up as vectors=[] + a lying dropped_note.
+    max_out = synthesis_max_output_tokens()
     model = context.model_resolver.resolve(model_spec).client
     tools = [context.tools[tool_id] for tool_id in tool_ids]
-    agent = build_react_loop(model, tools, system_prompt=system_prompt, response_format=ResearchPortfolio)
+    agent = build_react_loop(
+        model, tools,
+        system_prompt=system_prompt,
+        response_format=ResearchPortfolio,
+        max_output_tokens=max_out,
+    )
 
     def synthesize(state: SynthesisState, config: RunnableConfig) -> dict[str, Any]:
         # Self-source t0: produce (or reuse a fresh) discovery pool right here, so
@@ -114,17 +125,30 @@ def build_synthesis_graph(
             )
             estimated_usd = cost.spent_usd() + rake_usd
 
-        if isinstance(produced, ResearchPortfolio):
-            portfolio = produced
-        else:
-            context.emit(SYNTHESIS_NO_STRUCTURED_OUTPUT, {"raw_type": type(produced).__name__})
-            portfolio = ResearchPortfolio(
-                generated_at=_now(), dropped_note="model returned no structured portfolio"
+        portfolio = _portfolio_from_model(produced, context=context)
+        item_count = int(pool.get("item_count", len(pool.get("items", []))) or 0)
+        if not portfolio.vectors and item_count > 0:
+            # Empty structured portfolio after a non-empty pool is a hard failure —
+            # usually output truncation (too-small max_tokens) or a schema miss.
+            # Do not exit 0 with a fake dropped_note claiming delivery.
+            note = (portfolio.dropped_note or "").strip()
+            context.emit(SYNTHESIS_EMPTY_PORTFOLIO, {
+                "raw_type": type(produced).__name__,
+                "dropped_note": note,
+                "max_output_tokens": max_out,
+                "item_count": item_count,
+            })
+            raise RuntimeError(
+                "synthesis returned 0 vectors after a non-empty t0 pool "
+                f"(max_output_tokens={max_out}). "
+                + (f"model note was: {note!r}. " if note else "")
+                + "Re-run after raising the synthesis output ceiling if this persists."
             )
+
         portfolio = portfolio.model_copy(update={
             "generated_at": portfolio.generated_at or _now(),
             "t0_ref": portfolio.t0_ref or pool.get("gkg_batch_id") or pool.get("generated_at"),
-            "total_considered": pool.get("item_count", len(pool.get("items", []))),
+            "total_considered": item_count,
         })
         portfolio = ensure_vector_ids(portfolio)  # durable ids before anything references a vector
         # Attach x.com evidence URLs onto vectors whose supporting_hits are X band items
@@ -146,6 +170,18 @@ def build_synthesis_graph(
     graph.add_edge("synthesize", END)
     return graph.compile()
 
+
+def _portfolio_from_model(produced: Any, *, context: AgentRunContext) -> ResearchPortfolio:
+    """Normalize model output into a ResearchPortfolio (or an empty one + event)."""
+    if isinstance(produced, ResearchPortfolio):
+        return produced
+    coerced = coerce_portfolio(produced, generated_at=_now())
+    if coerced is not None:
+        return coerced
+    context.emit(SYNTHESIS_NO_STRUCTURED_OUTPUT, {"raw_type": type(produced).__name__})
+    return ResearchPortfolio(
+        generated_at=_now(), dropped_note="model returned no structured portfolio"
+    )
 
 def _finish(
     context: AgentRunContext,

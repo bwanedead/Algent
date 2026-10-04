@@ -13,7 +13,8 @@ If neither is present, provider calls will fail until keys are supplied.
 
 | Provider  | Env Var               | Keyring Username      | Default Model         |
 |-----------|----------------------|-----------------------|-----------------------|
-| OpenAI    | `OPENAI_API_KEY`     | `openai_api_key`      | `gpt-4o-mini`         |
+| OpenAI    | `OPENAI_API_KEY`     | `openai_api_key`      | `gpt-5.6-luna` (via `openai_spec`) |
+| Meta      | `META_MODEL_API_KEY` | `meta_model_api_key`  | `muse-spark-1.2-contributor` (house default) |
 | Anthropic | `ANTHROPIC_API_KEY`  | `anthropic_api_key`   | `claude-3-5-sonnet`   |
 | Gemini    | `GEMINI_API_KEY` \*  | `gemini_api_key`      | `gemini-1.5-pro`      |
 | xAI       | `XAI_API_KEY`        | `xai_api_key`         | `grok-beta`           |

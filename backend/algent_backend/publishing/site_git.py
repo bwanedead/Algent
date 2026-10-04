@@ -64,9 +64,21 @@ def ensure_worktree(root: Path) -> tuple[Path | None, str]:
     return wt, "worktree created"
 
 
+#: Published figure assets. Ignored repo-wide so the DEV working tree stays clean of staged
+#: leftovers (see .gitignore), which is right there and catastrophic here: inside the live
+#: worktree these files are the site's images, and `git add -A` skipped every one of them.
+#: The article HTML shipped with correct <img> refs pointing at files that had never been
+#: committed, so every automatically published chart, map and hero 404'd — while the handful
+#: force-added by hand during earlier manual fixes kept working, which is exactly why this
+#: looked like a rendering bug rather than a publishing one.
+_ASSET_PATH = "sites/ohmega-monster/public/analytics"
+
+
 def commit_and_push(worktree: Path, message: str) -> tuple[bool, str]:
     """Stage everything in the worktree, commit with ``message``, and push to ``origin/site-live``."""
     _git(worktree, "add", "-A")
+    if (worktree / _ASSET_PATH).exists():
+        _git(worktree, "add", "-f", _ASSET_PATH)   # ignored path, but these must ship
     ok, out = _git(worktree, "commit", "-m", message)
     if not ok and "nothing to commit" in out:
         return True, "nothing to commit (already live)"

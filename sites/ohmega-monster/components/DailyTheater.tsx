@@ -6,7 +6,8 @@ import { claimOf, isCut, shortDay, splitLead } from "@/lib/daily";
 import { dossierPath } from "@/lib/dossier";
 import type { Direction, Snapshot } from "@/lib/intel";
 
-import { DevelopmentTimeline, KeyFigures, PulseTiles, SourceLink, TheaterMapFigure } from "./DailyVisuals";
+import { DevelopmentTimeline, KeyFigures, PulseTiles, SourceLink } from "./DailyVisuals";
+import GeoMap from "./map/GeoMap";
 import "@/app/intel/theaters/theaters.css";
 
 // One theater of the daily report. Reading order: the claim (bottom line up front), the picture
@@ -96,7 +97,7 @@ export default function DailyTheaterSection({ t, id, date, snap }: { t: DailyThe
 
       {(hasMap || hasFigs) && (
         <div className={`geo-visual${hasMap && hasFigs ? " is-two" : ""}`}>
-          <TheaterMapFigure map={t.map} developments={t.developments} />
+          <GeoMap map={t.map} developments={t.developments} />
           <KeyFigures figures={t.key_figures} />
         </div>
       )}

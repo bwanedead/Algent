@@ -65,7 +65,7 @@ def build_t0_message(
         lines.append(f"## OTHER CHANNELS ({len(other)} hits) — gkg / markets / beats / backfeed")
         lines.extend(_fmt_item(item) for item in other)
         lines.append("")
-    lines.append(_DIRECTIVE)
+    lines.append(_directive())
     return "\n".join(lines)
 
 
@@ -75,6 +75,15 @@ def _fmt_item(item: dict[str, Any]) -> str:
     for key in ("velocity", "rising", "novel", "language_count", "avg_tone", "count"):
         if sig.get(key) not in (None, False):
             bits.append(f"{key}={sig[key]}")
+    # Provenance for X items. t0 filters nothing, so YOU are the stage that decides what a
+    # post is worth — and that needs to be visible. `list:<name>` says which curated roster
+    # vouched for the account; `RETWEET of @x` says the account amplified rather than
+    # reported, which is weaker evidence for a claim but a real signal about what a trusted
+    # roster is attending to. Weigh it; do not treat it as equivalent to first-hand reporting.
+    if sig.get("list_label"):
+        bits.append(f"list:{sig['list_label']}")
+    if sig.get("is_retweet"):
+        bits.append(f"RETWEET of @{sig.get('retweet_of') or '?'}")
     evidence = item.get("evidence", []) or []
     url = evidence[0].get("url", "") if evidence else ""
     pillars = ",".join(item.get("pillars", [])) or "-"
@@ -101,7 +110,15 @@ _DIRECTIVE = (
     "distinct stories to look synthesized. "
     "X BAND: when an X hit is a real development (not empty engagement bait), give it "
     "its own vector with primary supporting_hit from channel x — do not only absorb X "
-    "into Iran/Fed/macro mega-vectors. Aim for many vectors, long tail as 'light'. "
+    "into Iran/Fed/macro mega-vectors. Aim for about {target} vectors (operator "
+    "target) — more if the pool truly has more real stories, fewer only if the pool "
+    "is thin. Prefer covering near that size over pruning to a short highlight reel; "
+    "long tail as 'light'. "
     "Double-click free-first; use source=x when a live X-native strand is missing from "
     "wires. Return a broad, effort-tiered ResearchPortfolio; cite supporting t0 hit ids."
 )
+
+
+def _directive() -> str:
+    from algent_backend.agent_system.agents.newsroom.flags import synthesis_target_vectors
+    return _DIRECTIVE.format(target=synthesis_target_vectors())

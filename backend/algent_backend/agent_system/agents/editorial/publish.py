@@ -19,8 +19,15 @@ from .analytics_contracts import AI_ANALYTIC_LABEL
 from .citations import unverified_prose_figures
 from .draft import ArticleDraft
 
-_IMAGE_SUFFIXES = (".svg", ".png")
+_IMAGE_SUFFIXES = (".svg", ".png", ".jpg", ".jpeg", ".webp")
 _TABLE_ROW = re.compile(r"^\s*\|.*\|\s*$")
+#: Why a planned visual is missing, in reader words. Internal statuses and raw worker errors stay in the
+#: run's audit log; anything not listed reads as a plain "could not be produced".
+_UNSHIPPED = {
+    "integrity_check_failed": "withheld — its numbers could not be verified against our sources",
+    "source_unavailable": "the material it needed is not available to us",
+    "soft_cap_skipped": "left out to keep the piece focused",
+}
 
 
 def _table_block(body_md: str) -> str:
@@ -45,8 +52,14 @@ def _table_block(body_md: str) -> str:
     if start is None:
         return ""
     head = start
-    if start > 0 and lines[start - 1].strip() and not _TABLE_ROW.match(lines[start - 1]):
-        head = start - 1                           # one adjacent heading/label line, if any
+    # Only a markdown heading or a bold-only label may ride above the table — never free prose.
+    if start > 0:
+        prev = lines[start - 1].strip()
+        if prev and (
+            re.match(r"^#{1,3}\s+\S", prev)
+            or re.fullmatch(r"\*\*[^*]+\*\*", prev)
+        ):
+            head = start - 1
     return "\n".join(lines[head:end + 1]).strip()
 
 # Inline machine markers the drafter emits. The prompt asks for the bracketed list form
@@ -66,6 +79,14 @@ _MARKER_MD_LINK = re.compile(
 )
 # Stray wrapper crumbs left after link-form strip: bare `[` / trailing backticks near punctuation
 _MARKER_CRUMBS = re.compile(r"(?:\s*`+\[`*)+|\s*`+(?=\s|$|[.,;:])")
+
+# Our own pipeline vocabulary, leaking onto the page. "The signed text was not available in
+# this run" tells a reader that a research pass they know nothing about did not find something;
+# the fact about the world is simply that it was not available. These exact phrases are banned in
+# two doctrine files and shipped anyway, so they are removed mechanically — safe to do because
+# each is a trailing prepositional phrase whose deletion leaves a correct sentence, and because
+# there is no context in which either is right on a reader-facing page.
+_PROCESS_PHRASE = re.compile(r"\s+in this (?:run|pass|review|iteration)\b", re.I)
 
 _GROUNDING_WORDS = {
     "snapshotted": "read in full",
@@ -119,15 +140,46 @@ def _source_label(source) -> str:
     return title or publisher or url
 
 
+#: Field labels the drafter sometimes emits INSIDE the body, having been asked for a titled
+#: package and answered with the labels attached. A published piece opened, verbatim:
+#:
+#:     TITLE: The Tiny Pump That Lets Corals Breathe  and Why Heat Makes It Suffocate Them
+#:     STANDFIRST: Reef corals beat microscopic hairs to spin millimetre-scale vortices...
+#:
+#: above a body that then said the same thing again in prose. The real title and dek were
+#: already parsed out of the markdown heading, so this is pure scaffolding — the shape of the
+#: request showing through the answer — and it is duplicated content as well as a tell that a
+#: machine wrote the page. Anchored to line starts so a sentence mentioning a title is safe.
+_SCAFFOLD_LABEL = re.compile(
+    r"^[ \t]*(?:\*\*|__)?"
+    r"(?:TITLE|HEADLINE|STANDFIRST|DEK|SUBTITLE|SUBHEAD|BODY|ARTICLE|DRAFT|LEDE|LEAD|"
+    r"SUMMARY|QUICK[ _-]?TAKE|REVIEW[ _-]?STATUS|VERDICT|STATUS|NOTES?|OUTPUT)"
+    r"(?:\*\*|__)?[ \t]*:[ \t]*",
+    re.IGNORECASE | re.MULTILINE,
+)
+
+
+def _strip_scaffold_lines(body: str) -> str:
+    """Remove whole lines that are nothing but an agent field label and its value.
+
+    A label mid-paragraph is left alone: "the paper's title: 'X'" is prose, not scaffolding.
+    Only a line that STARTS with the label is machine furniture.
+    """
+    kept = [line for line in body.splitlines() if not _SCAFFOLD_LABEL.match(line)]
+    return "\n".join(kept)
+
+
 def _clean_prose(body: str) -> str:
     """Strip the machine-citation markers for the reader view (the appendix carries the trace)."""
     # Order: markdown-link form first (would otherwise leave ` [` crumbs), then bracket lists,
     # then bare/backticked ids, then residual wrapper crumbs and comma trails the model left
     # between markers ("fact. `[`[clm…](#)`, `[`[clm…](#)`" → "fact.,," without this).
-    out = _MARKER_MD_LINK.sub("", body)
+    out = _strip_scaffold_lines(body)
+    out = _MARKER_MD_LINK.sub("", out)
     out = _MARKER.sub("", out)
     out = _MARKER_TOKEN.sub("", out)
     out = _MARKER_CRUMBS.sub("", out)
+    out = _PROCESS_PHRASE.sub("", out)
     out = re.sub(r"([.!?])\s*,+", r"\1", out)          # "end.,," → "end."
     out = re.sub(r",\s*,+", ", ", out)                   # leftover ", ," runs
     out = re.sub(r"[ \t]+,", ",", out)
@@ -159,17 +211,40 @@ def render_published_article(
     cited_claims = [claims[c] for c in draft.cited_claim_ids if c in claims]
     cited_src_ids = set(draft.cited_source_ids) | {s for c in cited_claims for s in c.supported_by}
     cited_sources = [sources[s] for s in cited_src_ids if s in sources]
-    produced = [a for a in (analytics or [])
+    all_analytics = list(analytics or [])
+    produced = [a for a in all_analytics
                 if a.get("status") == "produced" and (a.get("artifact_name") or a.get("body_md"))]
+    skipped = [
+        a for a in all_analytics
+        if a.get("status") and a.get("status") != "produced"
+    ]
 
     body = _ensure_x_embed_links(_clean_prose(draft.body), cited_sources)
 
     out = [f"# {draft.title or '(untitled)'}"]
     if draft.standfirst:
         out += [f"*{draft.standfirst}*"]
+    out += _quick_take_block(draft)
     out += ["", *_body_with_figures(body, produced)]
-    out += ["---", *_appendix(draft, cited_sources, cited_claims, sources, produced)]
+    out += ["---", *_appendix(
+        draft, cited_sources, cited_claims, sources, produced, skipped=skipped,
+    )]
     return "\n".join(out).rstrip() + "\n"
+
+
+def _quick_take_block(draft: ArticleDraft) -> list[str]:
+    """Cold-reader gist between dek and body — machine-contract heading for the site converter."""
+    qt = getattr(draft, "quick_take", None)
+    if qt is None or not getattr(qt, "filled", lambda: False)():
+        return []
+    lines = ["", "## At a glance"]
+    if qt.what_happened.strip():
+        lines.append(f"- **What happened:** {qt.what_happened.strip()}")
+    if qt.why_it_matters.strip():
+        lines.append(f"- **Why it matters:** {qt.why_it_matters.strip()}")
+    if qt.what_is_uncertain.strip():
+        lines.append(f"- **What remains uncertain:** {qt.what_is_uncertain.strip()}")
+    return lines if len(lines) > 2 else []
 
 
 def _ensure_x_embed_links(body: str, cited_sources: list) -> str:
@@ -207,6 +282,8 @@ def _ensure_x_embed_links(body: str, cited_sources: list) -> str:
 
 
 def _is_map_figure(a: dict) -> bool:
+    if str(a.get("visual_class") or "") == "locator_map":
+        return True
     name = str(a.get("artifact_name") or "").lower()
     title = str(a.get("title") or "").lower()
     kind = str(a.get("kind") or "").lower()
@@ -219,34 +296,102 @@ def _is_map_figure(a: dict) -> bool:
 
 
 def _body_with_figures(body: str, produced: list[dict]) -> list[str]:
-    """Put orientation maps early (after the first prose block); other figures after the body.
+    """Place figures by declared placement; maps still default early.
 
-    Geographic figures help most when the reader still needs the landscape — not after a wall of
-    text. Trajectory charts etc. still trail the prose.
+    - after_quick_take → before the first body paragraph (quick-take already precedes body)
+    - after_opening / maps → after the opening paragraph(s), never before the open
+    - after_section → after the first ``##``/``###`` section body
+    - mid_body → near the midpoint of the prose blocks
+    - anything else → after the prose
     """
     if not produced:
         return [body, ""]
-    early = [a for a in produced if _is_map_figure(a)]
-    late = [a for a in produced if a not in early]
-    if not early:
-        return [body, ""] + _figures(produced)
 
-    # Split after the first paragraph (or first two short ones if the open is a single sentence).
-    parts = re.split(r"\n\n+", body.strip(), maxsplit=1)
-    if len(parts) == 1:
-        return [body, ""] + _figures(early) + _figures(late)
+    at_qt: list[dict] = []
+    early: list[dict] = []
+    after_sec: list[dict] = []
+    mid: list[dict] = []
+    late: list[dict] = []
+    for a in produced:
+        place = str(a.get("placement") or "")
+        if place == "after_quick_take":
+            at_qt.append(a)
+        elif place == "after_section":
+            after_sec.append(a)
+        elif place == "mid_body":
+            mid.append(a)
+        elif place == "after_opening" or _is_map_figure(a):
+            early.append(a)
+        else:
+            late.append(a)
 
-    head, tail = parts[0], parts[1]
-    # If the first block is very short, take one more paragraph so the map lands after landscape setup.
-    if len(head.split()) < 40 and "\n\n" in tail:
-        more = re.split(r"\n\n+", tail, maxsplit=1)
-        head = head + "\n\n" + more[0]
-        tail = more[1] if len(more) > 1 else ""
-    out = [head, ""] + _figures(early)
-    if tail.strip():
-        out += [tail.strip(), ""]
-    out += _figures(late)
-    return out
+    if not (at_qt or early or after_sec or mid):
+        return [body, ""] + _figures(late)
+
+    blocks = [b for b in re.split(r"\n\n+", body.strip()) if b]
+    if not blocks:
+        return _figures(produced)
+
+    # Absorb a second opening block only when it is still prose — never a section heading.
+    open_at = 1
+    if (
+        len(blocks[0].split()) < 40
+        and len(blocks) > 1
+        and not re.match(r"^#{2,3}\s", blocks[1])
+    ):
+        open_at = 2
+
+    section_at = open_at
+    headings = [i for i, b in enumerate(blocks) if re.match(r"^#{2,3}\s", b)]
+    if len(headings) >= 2:
+        section_at = headings[1]
+    elif len(headings) == 1:
+        section_at = len(blocks)
+
+    mid_at = max(open_at, len(blocks) // 2)
+
+    pieces: list[str] = []
+    placed = {"qt": False, "early": False, "sec": False, "mid": False}
+
+    def _blank() -> None:
+        if pieces and pieces[-1] != "":
+            pieces.append("")
+
+    def _place(bucket: list[dict], which: str) -> None:
+        if not bucket or placed[which]:
+            return
+        _blank()
+        pieces.extend(_figures(bucket))
+        placed[which] = True
+
+    for i, block in enumerate(blocks):
+        if i == 0:
+            _place(at_qt, "qt")
+        if i == open_at:
+            _place(early, "early")
+        if i == section_at:
+            _place(after_sec, "sec")
+        if i == mid_at:
+            _place(mid, "mid")
+        _blank()
+        pieces.append(block)
+
+    # open_at / section_at / mid_at may equal len(blocks) — place after the body, never before it.
+    if early and not placed["early"]:
+        _blank()
+        pieces.extend(_figures(early))
+    if after_sec and not placed["sec"]:
+        _blank()
+        pieces.extend(_figures(after_sec))
+    if mid and not placed["mid"]:
+        _blank()
+        pieces.extend(_figures(mid))
+    if at_qt and not placed["qt"]:
+        pieces[0:0] = _figures(at_qt) + ([""] if pieces else [])
+    if late:
+        _blank()
+        pieces.extend(_figures(late))
+    return pieces
 
 
 # A caption that opens by explaining the figure's purpose *to us* — "This map orients a reader
@@ -291,29 +436,36 @@ def _figure_explainer(a: dict) -> str:
 def _figures(produced: list[dict]) -> list[str]:
     """Place each produced analytic in the reader view by TYPE:
 
-    - a chart/illustration (``.svg``/``.png``) is embedded as an image, with a plain explainer
+    - a chart/illustration (``.svg``/``.png``/``.jpg``) is embedded as an image, with a plain explainer
       under it (what is measured / what it shows + provenance);
     - a table/insight (markdown) is INLINED as text — an image link to a ``.md`` file would render
       as a broken image — followed by the same style of explainer.
     """
     out: list[str] = []
     for a in produced:
-        name = a.get("artifact_name", "")
+        name = str(a.get("artifact_name") or "")
         title = str(a.get("title") or "").strip()
         explainer = _figure_explainer(a)
-        if name.endswith(_IMAGE_SUFFIXES):
+        lower = name.lower()
+        if lower.endswith(_IMAGE_SUFFIXES):
             body = [f"![{title or 'analytic'}]({name})"]
+            # A drawn figure already carries its title INSIDE the image, so a bold line
+            # above it published the same sentence twice, a line apart. The alt text keeps
+            # the title for readers who cannot see the image.
+            heading = ""
         elif table := _table_block(str(a.get("body_md") or "")):
             body = [table]
+            # A markdown table draws no title of its own, so it still needs one.
+            heading = f"**{title}**" if title else ""
         else:
             continue
-        # Heading = what is measured; italic line under = what it shows + source/as-of.
-        out += [f"**{title}**" if title else "", "", *body, "", f"*{explainer}*", ""]
+        # Heading only where the artifact lacks one; italic line under = what it shows + source.
+        out += [heading, "", *body, "", f"*{explainer}*", ""]
     return [ln for ln in out if ln is not None]
 
 
 def _appendix(draft: ArticleDraft, cited_sources: list, cited_claims: list, sources: dict,
-              produced: list[dict] | None = None) -> list[str]:
+              produced: list[dict] | None = None, skipped: list[dict] | None = None) -> list[str]:
     # The heading is the machine contract (the site splits the receipts here) and the site's own
     # disclosure label already says what this is — so no preamble explaining the receipts to the
     # reader. Show the record; don't narrate it.
@@ -322,14 +474,44 @@ def _appendix(draft: ArticleDraft, cited_sources: list, cited_claims: list, sour
         out += [f"**How this piece is framed:** {draft.frame}", ""]
 
     if produced:
-        out.append("**Charts & tables** — _each built only from the cited claims below, by an AI tool_")
+        out.append("**Charts & tables** — _AI-assisted; provenance on each line_")
         for a in produced:
-            refs = ", ".join(a.get("data_refs", []))
+            refs = ", ".join(a.get("data_refs", []) or [])
             asof = f" · as of {a['as_of']}" if a.get("as_of") else ""
             fc = a.get("figure_check") or {}
-            check = ("" if fc.get("verified") else
-                     f" · ⚠ figures not all matched to the cited claims: {', '.join(fc.get('unverified', []))}")
-            out.append(f"- {a.get('title') or 'analytic'} — from claims {refs}{asof}{check}")
+            if fc.get("mode") == "sourced":
+                basis = "sourced for this figure"
+            elif refs:
+                basis = f"from claims {refs}"
+            else:
+                basis = "from cited evidence"
+            if fc.get("verified") or not fc:
+                check = ""
+            elif fc.get("note"):
+                check = f" · ⚠ {fc['note']}"
+            elif fc.get("mode") == "sourced":
+                check = " · ⚠ unverified: the data's publisher could not be confirmed"
+            else:
+                check = f" · ⚠ unverified values, not traced to a cited source: {', '.join(fc.get('unverified', []))}"
+            out.append(f"- {a.get('title') or 'analytic'} — {basis}{asof}{check}")
+        out.append("")
+
+    if skipped:
+        out.append("**Visuals not shipped** — _planned but not fulfilled_")
+        for a in skipped:
+            # Reader-facing: a SKIPPED visual carries an editorial reason worth showing (the data does
+            # not exist as numbers). A FAILED one carries a raw worker error — internal paths, machine
+            # details — which belongs in the run's audit log, never on the page. Request ids are
+            # internal too.
+            status = a.get("status") or "skipped"
+            title = a.get("title") or "A planned visual"
+            if status in ("skipped", "integrity_check_failed"):   # editorial reasons, written for readers
+                note = (a.get("note") or a.get("rationale") or "").strip().split("\n\n")[0]
+                note = note.removeprefix("Skipped:").strip()
+                lead = "skipped" if status == "skipped" else _UNSHIPPED[status]
+                out.append(f"- {title}: {lead}" + (f" ({note})" if note else ""))
+            else:
+                out.append(f"- {title}: {_UNSHIPPED.get(status, 'could not be produced for this edition')}")
         out.append("")
 
     out.append("**Sources**")

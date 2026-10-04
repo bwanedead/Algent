@@ -262,9 +262,10 @@ enemy of honesty; it is the act of it. Everything turns on *what* is cut:
   carefully, or do not say it. Reach for the second more than you do. It earns its one line among
   the limits, where a reader can go further if they wish; it does not earn a paragraph.
 
-**Length is never an objective.** Not a floor, not a target, not a proxy for rigor. Three hundred
-words that answer the reader's question beat nine hundred that tour our research. Stop when the
-shape is transferred.
+**Length is never a quota.** Not a floor, not a proxy for rigor. Three hundred words that
+answer the reader's question beat nine hundred that tour our research. Stop when the shape
+is transferred — and land under the house digest grain ([writing-ergonomics](writing-ergonomics.md)).
+Over that grain is not completeness; it is resolution the reader will not use.
 
 ## Social platforms (X and the like) — minimize deception about *what kind of evidence* this is
 We use X (and similar platforms) because they often carry **first-party speech** and **live
@@ -310,6 +311,24 @@ attributing and asserting is not a matter of caution:
   action, a published figure, a force posture change that reporting has established. Go check it,
   then say it. Routing a checkable fact through whoever mentioned it does not make us careful —
   it makes us silent about the thing itself.
+
+### Understand the idea before you weigh it
+When the subject is a proposal, a design, a theory, an unbuilt thing, the reader came to find
+out **what it actually is** — how it is supposed to work, at what scale, what it would be like
+if it existed. Give them that first, in enough detail to picture it and on its own terms: what
+holds it up, how people would move through it, what the designers were solving for, what makes
+it interesting enough that someone drew it at all.
+
+Then weigh it, as hard as the evidence deserves. Both halves are the job, and skipping the
+first is not rigour — it is a shortcut that produces the same paragraph about every idea:
+mentioned, then costed, then dismissed for materials that do not exist. That is what we
+shipped on a piece about visionary megastructures, and it left the reader with no sense of
+what any of them were. A reader who cannot picture the thing has no idea what is being ruled
+out, and our scepticism means nothing applied to something they never saw.
+
+This is not licence to sell the fantasy. It is the ordinary rule that you have to state a
+position properly before you answer it, applied to objects instead of arguments — and the
+feasibility verdict lands harder when the reader has been inside the idea first.
 
 ### Landscape before the day's move
 A cold reader who cannot state **what the conflict is about** and **who wants what** after the

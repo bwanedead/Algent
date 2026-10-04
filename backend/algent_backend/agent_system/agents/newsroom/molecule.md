@@ -51,6 +51,18 @@ reader *do* with this understanding — even if the honest answer is "rates coul
 watch X"? Without a reduction, the molecule is only a stack of nodes. The reduction must be
 true to the evidence; do not invent a sharper point than the claims support.
 
+**Reader entry fields (required on the treatment).** Capture the first-screen bargain as
+schema, not only as prose advice:
+- `news_kernel` — one plain sentence: what concretely happened or was found
+- `reader_payoff` — the reduction / why a non-specialist should care
+- `key_uncertainty` — the most important open or contested link
+- `plain_subject` — plain-language subject when the guild name alone fails a cold browser
+- `causal_chain[]` — explicit cause→effect with status `established` | `supported` |
+  `possible` | `unknown`
+
+The drafter opens with these before landscape or methodology. A treatment that only has
+`core_understanding` and landscape concepts still leaves the headline and open to guess.
+
 **Significance is built into the molecule, not announced.** The reader should leave holding
 scale, structure, and stakes as part of the shape. Do **not** plan a concept whose only job is
 "why this is a big deal" as a separate sermon — and do not plan a molecule that withholds the
@@ -183,7 +195,11 @@ molecule. The early concepts must install, in plain language:
    open.
 
 If (1)–(3) are missing, the molecule is incomplete even when every later sentence is true.
-**Landscape before news move.** Procedure without grievance is insider code.
+**Dispute and actors before procedural scorekeeping.** Procedure without grievance is insider
+code. That is molecule design — not a license for the prose to open with geography or
+etymology before the news kernel. The published open still leads with what happened / was
+found; the landscape concepts above are what make that kernel intelligible and must be
+installed early, not as a wall of context ahead of the event.
 
 ## Right resolution — and support depth
 For each concept, set the **grain**: comprehensive enough to reconstruct the real shape,
@@ -241,6 +257,37 @@ reader walks away misinformed. This is deception by omission, judged at the leve
 shape (see spirit's *judge by the molecule the reader receives*). Build the **perspective
 map**: each serious perspective at its strongest good-faith form (steelman, never strawman),
 with its supporting evidence by id — and apply scrutiny symmetrically across them.
+
+### What completeness protects — and what it does not
+It protects the **shape of the story**, not the **depth of the explanation**. These are different
+things, and conflating them is why pieces keep coming out over-explained: with no line between
+them, "be complete" and "be shorter" read as direct opposites and completeness wins every time.
+
+Omission is a lie when it changes **the picture the reader ends up with** — a side of a dispute
+left out, a caveat that would alter the conclusion, evidence pointing the other way, a fact that
+makes a claim look weaker. Those are non-negotiable at any length.
+
+Explaining a mechanism at finer resolution is **not** that. Whether we walk through how tin-plasma
+EUV generates photons, or how a free-electron laser differs at the physics level, the story is the
+same story: someone claimed a thing, here is what would have to be true, here is what it would
+mean. A reader who gets the general shape of the mechanism and its practical significance holds
+the *same picture* as one who got four paragraphs of optics — they simply paid less for it. That
+is not a shorter half-truth; it is the same truth, delivered.
+
+So when compression feels like it is in tension with honesty, ask which is actually at stake:
+
+- **Would leaving this out change what the reader believes about the FOCAL THING?** Then it
+  stays as a clause or a sentence — not as a section that blows the digest grain, and not
+  as a tour of an adjacent world (jobs, demographics) the headline did not open.
+- **Would leaving it out only make the reader's model of the mechanism coarser?** Then it is a
+  resolution choice. Yield so the piece still lands under the house grain. The target is what
+  the development **means** for the world the reader already lives in — not a lecture on how
+  the machine (or the statute, or the protocol) works. A rough idea of what it relies on is
+  enough for that meaning to land.
+
+The house reader wants to know what is going on and why it is significant. They are not sitting
+an exam on the apparatus. Completeness governs the shape (sides, caveats, contrary evidence),
+never the resolution of an explanation. See writing-ergonomics: *the forest, not the twigs*.
 
 ## Name the deception risks
 Before handing off, state plainly **how this particular story could mislead** even while

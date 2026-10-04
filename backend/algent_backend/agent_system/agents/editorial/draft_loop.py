@@ -35,7 +35,7 @@ from algent_backend.agent_system.runs.context import AgentRunContext
 from algent_backend.agent_system.tools.sourcing.search import policy
 
 from .citations import CitationReport, check_citations, render_citation_report
-from .draft import ArticleDraft, DraftPayload
+from .draft import ArticleDraft, DraftPayload, QuickTake
 from .draft_messages import build_draft_message
 from .draft_store import JsonDraftStore, render_draft
 from .treatment import EditorialTreatment
@@ -51,10 +51,10 @@ STAGE = "drafting"
 class DraftState(TypedDict, total=False):
     treatment: dict[str, Any]        # the promoted treatment to write from (input)
     profile: dict[str, Any]          # its source profile — evidence + enrich-back target (input)
+    analytics_plan: dict[str, Any]   # early visual plan (informational; figures land at publish)
     prior_draft: dict[str, Any]      # a prior draft to revise (drafting-gauntlet revision pass)
     citation_report: dict[str, Any]  # the audit that revision must clear (worklist + missing)
     caveat_check: dict[str, Any]     # v3b findings -> the narrower HEDGING repair lap
-    comprehension_check: dict[str, Any]  # gate C findings -> the RAMP repair lap
     draft: dict[str, Any]            # the produced ArticleDraft
     # NOTE: `profile` is also the OUTPUT — the enriched (revision++) profile after drafting.
 
@@ -72,7 +72,10 @@ def build_draft_graph(
     """Compile the drafting graph for an agent's model, tools, and gate."""
     model = context.model_resolver.resolve(model_spec).client
     tools = [context.tools[tool_id] for tool_id in tool_ids]
-    agent = build_react_loop(model, tools, system_prompt=system_prompt, response_format=DraftPayload)
+    agent = build_react_loop(
+        model, tools, system_prompt=system_prompt, response_format=DraftPayload,
+        essential=True,
+    )
 
     def draft(state: DraftState, config: RunnableConfig) -> dict[str, Any]:
         tdict, pdict = state.get("treatment"), state.get("profile")
@@ -93,8 +96,8 @@ def build_draft_graph(
                 agent,
                 {"messages": [HumanMessage(content=build_draft_message(
                     treatment, profile, prior=prior, report=report, caveat=state.get("caveat_check"),
-                    comprehension=state.get("comprehension_check")))]},
-                context=context, config=config,
+                    analytics_plan=state.get("analytics_plan")))]},
+                context=context, config=config, essential=True,
             )
             captured = snapshots.collected()
             estimated_usd = cost.spent_usd()   # capture inside the scope (it resets on exit)
@@ -149,6 +152,12 @@ def _finalize_draft(
         title=payload.title or treatment.title,
         standfirst=payload.standfirst,
         body=payload.body,
+        # Mechanical fallback from treatment entry; headline surface package overwrites later.
+        quick_take=QuickTake(
+            what_happened=treatment.news_kernel,
+            why_it_matters=treatment.reader_payoff,
+            what_is_uncertain=treatment.key_uncertainty,
+        ),
         cited_claim_ids=[c for c in dict.fromkeys(payload.cited_claim_ids) if c in valid_claims],
         cited_source_ids=[s for s in dict.fromkeys(payload.cited_source_ids) if s in valid_sources],
         research_note=payload.research_note,

@@ -25,7 +25,7 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 
 # The gateable channels (intent names; provider in parentheses).
-KEYWORD = "keyword"  # Tavily
+KEYWORD = "keyword"  # DuckDuckGo (free), then Tavily/Brave
 SEMANTIC = "semantic"  # Exa
 READ = "read"  # trafilatura — free
 RICH = "rich"  # Firecrawl — paid
@@ -54,6 +54,16 @@ def set_allowed(channels: object) -> contextvars.Token:
 
 def reset_allowed(token: contextvars.Token) -> None:
     _allowed.reset(token)
+
+
+def channel_for_kind(kind: str) -> str:
+    """The gateable channel a search ``kind`` draws on.
+
+    ``news`` (Google News RSS, free) has no channel of its own: it is a lens on keyword search,
+    so it is allowed exactly wherever keyword is — one more allow-set entry per agent would only
+    be a way to forget to grant it.
+    """
+    return SEMANTIC if kind == "semantic" else KEYWORD
 
 
 def allowed() -> frozenset[str]:

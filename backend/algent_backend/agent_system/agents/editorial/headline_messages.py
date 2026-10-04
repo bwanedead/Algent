@@ -1,24 +1,95 @@
-"""The headline task message — the finished prose + a task to convey it truthfully."""
+"""The headline task message — the finished prose + planned entry fields + surface-package task."""
 
 from __future__ import annotations
 
 from .draft import ArticleDraft
+from .treatment import EditorialTreatment
 
 
-def build_headline_message(draft: ArticleDraft) -> str:
+def _opening_paragraph(body: str) -> str:
+    """The first real prose paragraph — skipping any heading or figure the body opens with."""
+    for block in (body or "").split("\n\n"):
+        text = block.strip()
+        if not text or text.startswith(("#", "!", "|", ">", "-")):
+            continue
+        # A figure caption is a wholly italic block and sits right under the image, so it is the
+        # first non-heading thing in any piece that leads with a chart. It is not the opening.
+        if text.startswith("*") and text.endswith("*"):
+            continue
+        return text
+    return (body or "").strip()[:600]
+
+
+def build_headline_message(
+    draft: ArticleDraft,
+    treatment: EditorialTreatment | None = None,
+    *,
+    surface_issues: list[str] | None = None,
+) -> str:
     lines = [
-        "# WRITE THE HEADLINE — for the finished piece below",
+        "# WRITE THE FINAL SURFACE PACKAGE — for the finished piece below",
         "",
         f"Working title (improve on it if you can): {draft.title}",
     ]
     if draft.frame:
         lines.append(f"Frame the piece was written from: {draft.frame}")
+    if treatment is not None:
+        lines += ["", "## Planned reader entry (revise if the final prose moved)"]
+        if treatment.news_kernel:
+            lines.append(f"- news_kernel: {treatment.news_kernel}")
+        if treatment.reader_payoff:
+            lines.append(f"- reader_payoff: {treatment.reader_payoff}")
+        if treatment.key_uncertainty:
+            lines.append(f"- key_uncertainty: {treatment.key_uncertainty}")
+        if treatment.plain_subject:
+            lines.append(f"- plain_subject: {treatment.plain_subject}")
+        if treatment.reader_question:
+            lines.append(f"- reader_question: {treatment.reader_question}")
+        for link in treatment.causal_chain:
+            note = f" ({link.note})" if link.note else ""
+            lines.append(
+                f"- causal: [{link.status}] {link.cause} → {link.effect}{note}"
+            )
+        if draft.quick_take.filled():
+            lines += [
+                "",
+                "## Current quick_take (revise if incomplete or stale)",
+                f"- what_happened: {draft.quick_take.what_happened}",
+                f"- why_it_matters: {draft.quick_take.why_it_matters}",
+                f"- what_is_uncertain: {draft.quick_take.what_is_uncertain}",
+            ]
+    if surface_issues:
+        lines += [
+            "",
+            "## COLD-BROWSER REPAIR — fix these before emitting",
+            *[f"- {issue}" for issue in surface_issues],
+            "The prior surface package failed a cold-browser check. Rewrite title / standfirst "
+            "/ quick_take so a reader who has never heard of this beat understands the subject "
+            "and stakes. When plain_subject is set, put that plain description in the title "
+            "(or dek) before any guild name.",
+        ]
     lines += [
         "",
         "## The finished article",
         draft.body.strip(),
         "",
-        "TASK: Write a headline + standfirst that conveys what THIS article actually says, at the "
-        "confidence its evidence supports — plain, specific, no deception. Emit a Headline.",
+        # The body is long, so its opening paragraph — the one surface the dek and quick_take
+        # keep colliding with — is buried thousands of words above the task. Repeating it here,
+        # adjacent to the instruction, is what makes the echo visible at the moment of writing.
+        "## The body already opens with this paragraph — DO NOT RESTATE IT",
+        _opening_paragraph(draft.body),
+        "",
+        "TASK: Write the final surface package — headline, standfirst, quick_take "
+        "(what_happened / why_it_matters / what_is_uncertain), image_subject, image_hook, "
+        "image_photo_query (empty unless the piece centres on a real, photographed place or thing). "
+        "Cold-browser test: title + dek + hook must make sense without reading the body. "
+        "Specialist names need plain_subject first. "
+        "DO NOT RESTATE THE BODY'S OPENING PARAGRAPH. You can see it above, and the dek and "
+        "what_happened keep converging on it because all three summarise the same lead — one "
+        "piece shipped the same sentence about Danube levels, shutdowns and €300 prices three "
+        "times before the reader learned anything new. These are a ladder: the dek adds the "
+        "load-bearing caveat or consequence the title had no room for, what_happened serves a "
+        "reader who will never open the body, and the opening paragraph begins the telling. "
+        "Write each to add what the others do not. Emit a Headline.",
     ]
     return "\n".join(lines)

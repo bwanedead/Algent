@@ -27,6 +27,7 @@ from algent_backend.agent_system.agents.enrich import counter_perspective, prima
 from algent_backend.agent_system.agents.research.briefing import render_briefing
 from algent_backend.agent_system.agents.research.profile import SignalProfile
 from algent_backend.agent_system.agents.review.spec import build_graph as build_reviewer
+from algent_backend.agent_system.foundation.pause import checkpoint
 from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.context import AgentRunContext
 
@@ -45,6 +46,7 @@ _LANE_MODULES = [
 
 class GauntletState(TypedDict, total=False):
     profile: dict[str, Any]   # the profile to put through the gauntlet (the input)
+    progress: dict[str, Any]  # resume: the first review + lanes already run (gauntlet_progress.json)
     gauntlet: dict[str, Any]  # the GauntletReport
 
 
@@ -57,34 +59,98 @@ def build_gauntlet_graph(context: AgentRunContext) -> Any:
             context.emit(GAUNTLET_NO_INPUT, {"message": "no profile supplied to the gauntlet"})
             return {"profile": profile or {}, "gauntlet": GauntletReport(final_verdict="unsound").model_dump()}
 
-        start_rev = int(profile.get("revision", 1) or 1)
+        # A gauntlet resumed after a pause between lanes: its first review and finished lanes are
+        # already paid for (the profile it is handed already carries those lanes' research).
+        progress = state.get("progress") if isinstance(state.get("progress"), dict) else {}
+        done = set(progress.get("lanes_done") or [])
+        start_rev = int(progress.get("start_rev") or profile.get("revision", 1) or 1)
 
         # 1. review
-        review = build_reviewer(context).invoke({"profile": profile}, config)["review"]
-        _write(context, "review_initial.json", review)
+        if isinstance(progress.get("review"), dict):
+            review = progress["review"]
+        else:
+            review = build_reviewer(context).invoke({"profile": profile}, config)["review"]
+            _write(context, "review_initial.json", review)
+        _save_progress(context, review, done, start_rev)
         initial_verdict = review.get("verdict", "")
         initial_findings = len(review.get("findings", []))
 
         # 2-3. enrich per lane, sequentially — each merges on the prior result.
+        from algent_backend.agent_system.agents.newsroom import budget_policy
+        from algent_backend.agent_system.foundation.models.budget_gate import (
+            BudgetRefusedError,
+        )
+
         lanes_run: list[str] = []
-        addressed: list[str] = []
+        start_profile = profile
+        initial_ids = {
+            str(f.get("id")) for f in review.get("findings", []) if f.get("id")
+        }
         for lane, module in _LANE_MODULES:
             if not any(f.get("lane") == lane for f in review.get("findings", [])):
                 continue
-            out = module.build_graph(context).invoke({"profile": profile, "review": review}, config)
+            if lane in done:
+                lanes_run.append(lane)
+                continue
+            if not budget_policy.allow_optional("enrich_lane"):
+                break
+            try:
+                out = module.build_graph(context).invoke(
+                    {"profile": profile, "review": review}, config,
+                )
+            except BudgetRefusedError:
+                # Soft/hard crossed mid-lane: keep what we have and stop enriching.
+                break
             profile = out.get("profile", profile)
             lanes_run.append(lane)
-            addressed.extend(out.get("addressed", []))
+            done.add(lane)
+            # The lane has merged and written profile.json: a pause here keeps its research.
+            _save_progress(context, review, done, start_rev)
+            checkpoint(f"gauntlet, after the {lane} lane")
 
-        # 4. re-review the enriched profile (closes the loop).
-        rereview = build_reviewer(context).invoke({"profile": profile}, config)["review"]
-        _write(context, "review_final.json", rereview)
+        # 4. re-review only when enrichment ran or the profile revision moved. Skipping an
+        # unchanged re-read saves a full review pass when there was nothing to re-judge.
+        # Under slim_finish this re-pass is optional — keep the initial review and proceed
+        # toward publish rather than dying on a refused model call.
+        profile_changed = (
+            int(profile.get("revision", start_rev) or start_rev) != start_rev
+            or profile is not start_profile
+        )
+        if (lanes_run or profile_changed) and budget_policy.allow_optional(
+            "gauntlet_rereview",
+        ):
+            try:
+                rereview = build_reviewer(context).invoke(
+                    {"profile": profile}, config,
+                )["review"]
+            except BudgetRefusedError:
+                from algent_backend.agent_system.foundation import cost
+
+                cost.record_skip("gauntlet_rereview", cost.mode())
+                rereview = review
+            _write(context, "review_final.json", rereview)
+        else:
+            rereview = review
+            _write(context, "review_final.json", rereview)
+
+        # Closure used to be computed as `initial_ids - final_ids`. Review ids are NOT stable
+        # identities — each review numbers its own findings, and live runs went f01..f10 on the
+        # first read and F01..F10 on the re-read. A change of letter case alone made all ten look
+        # resolved while all ten were still open, so the report said the opposite of the truth.
+        # Report what can be counted honestly: which were attempted, and how many remain.
+        addressed = sorted(initial_ids)
+
+        # Nothing the gauntlet could not establish is thrown away. Each unresolved finding
+        # becomes an open question on the profile, which the planner already reads and turns
+        # into disclosed uncertainty — the reader is told what we could not verify, rather
+        # than being told nothing and left to assume we checked.
+        profile = _disclose_unresolved(profile, rereview.get("findings", []))
 
         report = GauntletReport(
             profile_id=str(profile.get("id", "")),
             starting_revision=start_rev,
             ending_revision=int(profile.get("revision", start_rev) or start_rev),
-            lanes_run=lanes_run, findings_addressed=addressed,
+            lanes_run=lanes_run, findings_attempted=addressed,
             initial_verdict=initial_verdict, final_verdict=rereview.get("verdict", ""),
             initial_findings=initial_findings,
             remaining_findings=len(rereview.get("findings", [])),
@@ -106,6 +172,45 @@ def build_gauntlet_graph(context: AgentRunContext) -> Any:
     return graph.compile()
 
 
+#: Kept short on purpose: this becomes a line the planner reads, not the full research note.
+_OPEN_QUESTION_CHARS = 260
+
+
+def _disclose_unresolved(profile: dict[str, Any], findings: list[Any]) -> dict[str, Any]:
+    """Fold the re-review's unresolved findings into the profile's open questions.
+
+    The findings are written for researchers ("search WWF ecoregion area..."), so only the
+    EXPLANATION is carried — that is the part a reader could need to know: what is missing,
+    thin, or single-sourced. Blockers are marked so the planner can weigh them; it decides what
+    the reader actually needs to hear, which is a judgement, not a rule applied here.
+    """
+    existing = list(profile.get("open_questions") or [])
+    seen = {q.strip().lower() for q in existing}
+    added = []
+    for f in findings or []:
+        if not isinstance(f, dict):
+            continue
+        text = " ".join(str(f.get("explanation") or "").split())
+        if not text:
+            continue
+        mark = "unresolved, blocking" if f.get("maturity_blocker") else "unresolved"
+        line = f"[{mark}] {text[:_OPEN_QUESTION_CHARS]}"
+        if line.strip().lower() in seen:
+            continue
+        seen.add(line.strip().lower())
+        added.append(line)
+    if not added:
+        return profile
+    return {**profile, "open_questions": existing + added}
+
+
+def _save_progress(context: AgentRunContext, review: dict[str, Any], done: set[str],
+                   start_rev: int) -> None:
+    """What resume needs to continue this gauntlet mid-way (cli/newsroom/progress.py)."""
+    _write(context, "gauntlet_progress.json",
+           {"review": review, "lanes_done": sorted(done), "start_rev": start_rev})
+
+
 def _write(context: AgentRunContext, name: str, payload: Any) -> None:
     if context.artifacts is not None:
         context.artifacts.write_json(name, payload)
@@ -117,7 +222,7 @@ def _preview(report: GauntletReport) -> dict[str, Any]:
         "summary": (
             f"{report.initial_verdict} (rev {report.starting_revision}) -> "
             f"{report.final_verdict} (rev {report.ending_revision}) | lanes {report.lanes_run} | "
-            f"addressed {len(report.findings_addressed)} | remaining {report.remaining_findings} "
+            f"attempted {len(report.findings_attempted)} | remaining {report.remaining_findings} "
             f"findings ({report.remaining_blockers} blockers)"
         ),
         "items": [f"ran lane: {lane}" for lane in report.lanes_run],

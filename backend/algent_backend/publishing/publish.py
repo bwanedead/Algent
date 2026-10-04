@@ -9,6 +9,10 @@ for a human before it ships — the design bet is that the grounding floor, figu
 reviewer, and receipts make the machine trustworthy enough to run itself, and that CORRECTIONS
 (visible, dated, first-class) are the post-publish safety valve.
 
+Independent of that gate there is a HARD FLOOR (``hard_floor``): a ``blocked`` article, an empty or
+stub body, or one with no cited sources is never written to the site; it goes to the held queue with
+the reasons in the ledger and the run reports it as held.
+
 This module owns the file/ledger/gating logic (pure enough to test against a tmp site dir). The git
 commit+push to the ``site-live`` branch lives in ``site_git.py`` and runs by default
 (``ALGENT_SITE_PUBLISH`` ON unless explicitly set to 0/false/off).
@@ -80,6 +84,71 @@ class PublishResult:
     content_path: str = ""
 
 
+_RECEIPTS_HEAD = "\n---\n## How we know this"
+
+
+def _cited_source_count(article_md: str) -> int:
+    """Source lines under the receipts' ``**Sources**`` heading (one ``- (type) label — url`` each)."""
+    lines = article_md.splitlines()
+    try:
+        start = next(i for i, ln in enumerate(lines) if ln.strip() == "**Sources**") + 1
+    except StopIteration:
+        return 0
+    n = 0
+    for ln in lines[start:]:
+        if ln.startswith("**"):
+            break
+        n += ln.lstrip().startswith("- ")
+    return n
+
+
+def hard_floor(article_md: str, pipeline: dict) -> list[str]:
+    """Why this piece may NEVER reach the site, whatever the (off-by-default) status gate says.
+
+    These are not quality judgments but "this is not an article": a ``blocked`` status (the draft
+    dropped required evidence), a missing or stub body, or nothing cited. An empty shell once went
+    live because the status gate is off; the floor is independent of it. Empty list = may proceed.
+    """
+    from algent_backend.agent_system.agents.editorial.length import MIN_PUBLISH_WORDS, count_words
+
+    reasons: list[str] = []
+    if str(pipeline.get("status") or "") == _BLOCKED:
+        reasons.append("status is blocked: the draft dropped required evidence")
+    words = pipeline.get("word_count")
+    if words is None:
+        _t, _d, rest = parse_published_article(article_md)
+        words = count_words(rest.split(_RECEIPTS_HEAD, 1)[0])
+    if int(words) < MIN_PUBLISH_WORDS:
+        reasons.append(f"body is empty or below the publish floor ({int(words)} words, need {MIN_PUBLISH_WORDS})")
+    if _cited_source_count(article_md) == 0:
+        reasons.append("no cited sources: nothing in the piece can be checked")
+    return reasons
+
+
+def _hero_required_and_missing(run_dir: Path, pipeline: dict) -> str | None:
+    """None when a hero is present, opted out, or quota-skipped; else a hold reason."""
+    from algent_backend.agent_system.agents.editorial.hero_stage import (
+        hero_enabled,
+        is_quota_skip,
+    )
+
+    if not hero_enabled():
+        return None
+    hero = pipeline.get("hero") if isinstance(pipeline.get("hero"), dict) else None
+    if is_quota_skip(hero):
+        return None
+    issues = pipeline.get("surface_issues") or []
+    if "hero_quota_skipped" in issues:
+        return None
+    name = str((hero or {}).get("artifact_name") or "").strip()
+    if not name:
+        return "hero image required — every article must ship with a hero (quota is the only exception)"
+    path = run_dir / "artifacts" / name
+    if not path.exists() or path.stat().st_size <= 0:
+        return f"hero artifact missing or empty ({name})"
+    return None
+
+
 def _load(art: Path, name: str) -> Any:
     f = art / name
     if not f.exists():
@@ -129,6 +198,31 @@ def _existing_corrections(content_path: Path) -> list[dict]:
     return []
 
 
+def front_matter(markdown: str) -> dict:
+    """The YAML front matter of a site content file ({} when absent or unreadable)."""
+    import yaml
+
+    if not markdown.startswith("---"):
+        return {}
+    end = markdown.find("\n---", 3)
+    try:
+        data = yaml.safe_load(markdown[3:end]) if end > 0 else {}
+    except yaml.YAMLError:
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def _write_agent_twin(site_dir: Path, article: Any, profile: dict) -> None:
+    """The article's machine-readable twin for agents. Never blocks a publish."""
+    from .agent_twin import build_twin, write_twin
+
+    try:
+        meta = {**front_matter(article.markdown), "slug": article.slug}
+        write_twin(site_dir, build_twin(meta, profile or {}))
+    except Exception:  # noqa: BLE001 — the article is the product; the twin is a bonus layer
+        pass
+
+
 def publish_run(
     run_dir: Path,
     *,
@@ -153,6 +247,19 @@ def publish_run(
     slug = build_slug(title, profile_id)
     run_id = run_dir.name
 
+    # Hard floor, ahead of everything (and independent of the status gate below): a blocked, empty or
+    # sourceless piece is held with the reasons in the ledger, never written to the site.
+    if floor := hard_floor(article_md, pipeline):
+        return _hold(held_dir, slug, status or "unknown", [f"hard floor: {r}" for r in floor],
+                     run_id, rail, pipeline)
+
+    # Hard floor: every article ships with a hero, except Gemini quota skip
+    # (``hero.skipped == quota`` / ``hero_quota_skipped``) or ALGENT_HERO_IMAGE=0.
+    hero_block = _hero_required_and_missing(run_dir, pipeline)
+    if hero_block:
+        return _hold(held_dir, slug, status or "needs_hero", [hero_block],
+                     run_id, rail, pipeline)
+
     # ── the gate (OFF by default — see _gate_enabled) ─────────────────────────────────────────
     if _gate_enabled():
         if status == _BLOCKED:
@@ -164,7 +271,6 @@ def publish_run(
             # in the wrong place.
             why = {
                 "needs_hedging": "the prose does not keep a promise the caveat pass flagged",
-                "needs_ramp": "a general reader could not follow it, and the repair lap did not fix it",
                 "needs_revision": "the body collapsed below publishable length",
             }.get(status, "it did not earn publishable")
             reason = f"status is '{status or 'unknown'}', not publishable — {why}"
@@ -184,11 +290,14 @@ def publish_run(
     if is_rewrite:
         corrections = [*corrections, {"date": today, "reason": correction}]
 
+    raw_hero = pipeline.get("hero") if isinstance(pipeline.get("hero"), dict) else None
+    hero_for_site = raw_hero if raw_hero and raw_hero.get("artifact_name") else None
     article = convert(article_md=article_md, rail=rail, pipeline=pipeline, profile=profile,
                       date=today, run_id=run_id, corrections=corrections or None,
                       vector=vector, analytics=analytics,
-                      hero=(pipeline.get("hero") or None))
+                      hero=hero_for_site)
     _write_article(site_dir, article, run_dir)
+    _write_agent_twin(site_dir, article, profile)
     _append_publish_ledger(site_dir, article, run_id,
                            kind="correction" if is_rewrite else "publish", pushed=push)
 

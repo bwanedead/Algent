@@ -1,0 +1,15 @@
+---
+description: Commit and push coherent work chunks; keep a sane worktree and remote backup
+alwaysApply: true
+---
+
+# Git hygiene (standing duty)
+
+This overrides any generic “only commit when asked” habit for **this repo**.
+
+- After a coherent chunk of work is done and correct, **commit it** on the feature branch (`organic-dev` or a topic branch — never `main`).
+- **Push to `origin` after committing** so remote holds the backup. Do not wait for the human to ask unless push is blocked.
+- Prefer several small scoped commits over one mega-commit. Do not let large dirty trees accumulate.
+- Before every commit: `git status` + diff. Never commit `.env`/secrets, `backend/runs_data/`, caches, build outputs, or one-shot scratch.
+- Pause only for consequential ops: force-push, history rewrite, deleting others’ work, or secret-adjacent ambiguity.
+- Canonical detail: root `AGENTS.md` → **Git hygiene**.

@@ -34,11 +34,15 @@ def _fmt_item(item: dict[str, Any]) -> str:
     evidence = item.get("evidence", []) or []
     url = evidence[0].get("url", "") if evidence else ""
     pillars = ",".join(item.get("pillars", [])) or "-"
+    synopsis = sig.get("synopsis") or ""
+    lead = f"[{item.get('id', '?')}] {item.get('label', '')[:90]} "
+    if synopsis:
+        lead += f"— {synopsis[:140]} "
     return (
-        f"[{item.get('id', '?')}] {item.get('label', '')[:70]} "
-        f"| {item.get('channel', '?')}/{item.get('kind', '?')} "
-        f"| pillars={pillars} | {' '.join(bits)} "
-        f"| {len(evidence)} urls {url[:60]}"
+        lead
+        + f"| {item.get('channel', '?')}/{item.get('kind', '?')} "
+        + f"| pillars={pillars} | {' '.join(bits)} "
+        + f"| {len(evidence)} urls {url[:60]}"
     )
 
 
@@ -46,7 +50,5 @@ _DIRECTIVE = (
     "TASK: Return a RakeChunkResult with one verdict per id above. DEFAULT to keep — "
     "toss (keep=false) ONLY obvious junk: ads/spam/boilerplate/evergreen and pure "
     "price-or-roster bets. Keep small, niche, or fringe real stories. When in any "
-    "doubt, keep. For keepers whose meaning isn't obvious from the line (e.g. an "
-    "abstract theme label), FREE-read the evidence URL and fill headline + synopsis "
-    "from the article. Echo each id exactly."
+    "doubt, keep. Judge from the line — no reads. Echo each id exactly."
 )

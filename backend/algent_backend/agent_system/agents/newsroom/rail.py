@@ -7,12 +7,17 @@ Or, when a prior t1 portfolio is supplied (``--from-run`` / state.portfolio):
 
     [reuse portfolio] -> routing (cooldown) -> profile -> gauntlet -> editorial
 
+Or, when a later artifact is already in state (``newsroom resume``): skip every completed
+stage and continue from the next unpaid one. A profile on disk does not re-route; a draft
+on disk does not re-draft. The point is economic — do not re-buy finished work.
+
 It chains the stages that already work as sub-graphs under ONE run/context (the same idiom the
 gauntlets and the editorial pipeline use), so every stage's events land in this run's timeline and
 a single report closes the loop. Four deliberate properties:
 
-  (i)   COST — the rail tees the event stream and sums each stage's reported ``estimated_usd``, so
-        every finished article carries what it actually cost to make.
+  (i)   COST — the rail wraps the run in ``cost.article_scoped`` and buckets
+        ``article_spent_usd`` by ``RAIL_STAGE``, so every finished article carries
+        what it actually cost to make (stage allowances draw from one remaining pool).
   (ii)  BOUNDED — the rail inherits each stage's own floors (models, paid budgets, USD caps, review
         gates); it re-litigates none of them. It promotes the router's single #1 vector — one article
         per run — rather than fanning out.
@@ -24,12 +29,18 @@ a single report closes the loop. Four deliberate properties:
         until they fall off the ring). Saves t0/synthesis cost only — not a variety bypass.
 
 Each stage can legitimately be the end: no promotable vector is a valid outcome, not an error.
+Profile readiness is diagnosed honestly (disposition on the report) but does not hard-stop the
+rail — the site is the review surface, so immature profiles still draft and publish with their
+quality status visible for the feedback loop.
 """
 
 from __future__ import annotations
 
 import dataclasses
+from pathlib import Path
 import os
+import sys
+import time
 from datetime import UTC, datetime
 from typing import Any, TypedDict
 
@@ -40,23 +51,39 @@ from algent_backend.agent_system.agents.research.leads import (
     JsonLeadStore,
     open_leads_for_discovery,
 )
+from algent_backend import data_backup
+from algent_backend.agent_system.foundation import cost, read_cache, spend_budget
 from algent_backend.agent_system.runs import events as ev
 from algent_backend.agent_system.runs.context import AgentRunContext
 from algent_backend.agent_system.runs.control_plane.layout import find_run_root
 from algent_backend.publishing import publish as pb
 from algent_backend.publishing import site_git
+from algent_backend.publishing.x_article import announce as announce_article
+from algent_backend.publishing.x_article import copy_from_run
+from algent_backend.publishing.x_figures import announce_figures
 
 from ..discovery.synthesis.spec import build_graph as build_synthesis
+from ..editorial.hero_stage import hero_file
 from ..editorial.pipeline_spec import build_graph as build_editorial
 from ..gauntlet.spec import build_graph as build_profile_gauntlet
 from ..research.spec import build_graph as build_profile
 from ..routing.spec import build_graph as build_router
+from . import steer
+from .watchdog import Watchdog, recover_and_exit
 from .rail_contracts import NewsroomRailReport
 
 RAIL_COMPLETED = "newsroom_rail.completed"
 RAIL_STAGE = "newsroom_rail.stage"
+RAIL_STEER = "newsroom_rail.steer"
+RAIL_REFUSED = "newsroom_rail.refused"        # the spend envelope had nothing left
+RAIL_BACKUP = "newsroom_rail.data_backup"     # durable stores mirrored to the private data repo
+RAIL_PULSES = "newsroom_rail.pulses"          # the article's research re-estimated its Pulses
+RAIL_INTEL = "newsroom_rail.intel"            # the /intel snapshot republished after the Pulses moved
+RAIL_ANNOUNCED = "newsroom_rail.announced"
+RAIL_FIGURES = "newsroom_rail.figures"
 BACKFEED_INJECTED = "newsroom_rail.backfeed_injected"
 RAIL_PUBLISHED = "newsroom_rail.published"
+RAIL_READS = "newsroom_rail.reads"
 
 # Backfeed is OFF by default. It was meant to re-queue unfinished research threads, but live
 # it re-injected the same published story-family (ICE 0020→0022) and fought cooldown. Opt in
@@ -86,6 +113,22 @@ class RailState(TypedDict, total=False):
     pool: dict[str, Any]            # optional t0 pool; synthesis self-sources if absent
     portfolio: dict[str, Any]       # optional t1 portfolio — when set, skip t0+synthesis (reuse)
     source_run_id: str              # prior run id when portfolio was reused (observability)
+    selected_vector: dict[str, Any] # resume: skip routing
+    profile: dict[str, Any]         # resume: skip routing + profile
+    gauntlet: dict[str, Any]        # resume: skip profile gauntlet
+    gauntlet_progress: dict[str, Any]  # resume: a gauntlet paused between lanes
+    draft_quality: dict[str, Any]   # resume: the post-draft checks already ran
+    # Every resumable artifact key (cli/newsroom/progress._FILES) must be declared here: LangGraph
+    # silently DROPS input keys a state schema does not name (test_rail_state_carries_resume_keys).
+    treatment: dict[str, Any]       # resume: skip editorial planning
+    draft: dict[str, Any]           # resume: skip drafting
+    analytics_plan: dict[str, Any]
+    analytics_artifacts: list[Any]
+    hero: dict[str, Any]
+    plan_report: dict[str, Any]
+    draft_report: dict[str, Any]
+    pipeline_prior: dict[str, Any]
+    analytics_confirm: dict[str, Any]
     rail: dict[str, Any]            # the NewsroomRailReport
     pipeline: dict[str, Any]        # the editorial pipeline's report (the article)
 
@@ -94,112 +137,530 @@ def build_newsroom_rail_graph(context: AgentRunContext, *, lead_store: Any | Non
     """Compile the full-rail orchestrator. ``lead_store`` is injectable (tests pass a fake)."""
 
     def run(state: RailState, config: RunnableConfig) -> dict[str, Any]:
-        # (i) COST tee — a context whose emit forwards to the real sink AND captures every stage's
-        # reported estimated_usd, so the rail can total the run's spend.
-        costs: list[float] = []
-
-        # Also counts X searches: we spent two doctrine passes trying to raise X adoption while
-        # only INFERRING usage from artifacts. Measure it instead — an X result carries kind="x".
-        x_calls = [0]
-
-        def _tee(event_type: str, payload: dict[str, Any] | None = None) -> None:
-            p = payload or {}
-            usd = p.get("estimated_usd")
-            if isinstance(usd, (int, float)):
-                costs.append(float(usd))
-            if event_type == ev.TOOL_RESULT and '"kind": "x"' in str(p.get("content", "")):
-                x_calls[0] += 1
-            context.emit(event_type, p)
-
-        sub = dataclasses.replace(context, emit=_tee)
-        report = NewsroomRailReport(generated_at=datetime.now(UTC).isoformat())
-
-        # 1. discovery synthesis (pool -> t1 portfolio) — OR reuse a prior portfolio and skip t0.
-        # Reuse path: operator supplies ``portfolio`` (e.g. --from-run). Saves discovery cost only.
-        # Routing always applies the same headline-ring cooldown as a fresh run — cooled families
-        # cannot promote until they fall off the ring. Backfeed only applies to a fresh discovery pass.
-        pool = state.get("pool")
-        reused = state.get("portfolio") or {}
-        if reused.get("vectors"):
-            portfolio = reused
-            report.portfolio_source = "reused"
-            report.source_run_id = str(state.get("source_run_id") or "")
-            report.vector_count = len(portfolio.get("vectors", []))
-            report.pool_items = int(portfolio.get("total_considered", 0) or 0)
-            report.stage_reached = "synthesis"
-            context.emit(RAIL_STAGE, {
-                "stage": "synthesis", "skipped": True, "reason": "portfolio_reused",
-                "source_run_id": report.source_run_id, "vector_count": report.vector_count,
-            })
-        else:
-            if _backfeed_enabled():
-                pool, injected = _inject_backfeed(context, pool, lead_store or JsonLeadStore())
-                report.backfeed_leads_injected = injected
-
-            context.emit(RAIL_STAGE, {"stage": "synthesis"})
-            syn_input: dict[str, Any] = {"pool": pool} if pool is not None else {}
-            portfolio = build_synthesis(sub).invoke(syn_input, config).get("portfolio") or {}
-            report.portfolio_source = "fresh"
-            report.vector_count = len(portfolio.get("vectors", []))
-            report.pool_items = int(portfolio.get("total_considered", 0) or 0)
-            report.stage_reached = "synthesis"
-            if not portfolio.get("vectors"):
-                return _finish(context, report, note="synthesis produced no vectors")
-
-        # 2. routing (portfolio -> the #1 vector to promote). Always runs under the same cooldown
-        # ring whether the portfolio is fresh or reused (variety is not optional).
-        context.emit(RAIL_STAGE, {"stage": "routing"})
-        route = build_router(sub).invoke({"portfolio": portfolio}, config)
-        vector = route.get("selected_vector")
-        report.stage_reached = "routing"
-        if not vector:
-            return _finish(context, report, note="routing promoted no vector")
-        report.selected_vector_id = str(vector.get("id", ""))
-        report.selected_vector_title = str(vector.get("title", ""))
-        report.pool_by_channel, report.promoted_from = _channel_provenance(context, pool, vector)
-
-        # 3. profile (the #1 vector -> a researched t2 profile).
-        # Pass pool so research can hydrate X post URLs from supporting_hits.
-        context.emit(RAIL_STAGE, {"stage": "profile"})
-        profile = build_profile(sub).invoke(
-            {"vector": vector, "pool": pool}, config,
-        ).get("profile") or {}
-        report.stage_reached = "profile"
-        if not profile.get("id"):
-            return _finish(context, report, note="profile research produced nothing")
-        report.profile_id = str(profile.get("id", ""))
-
-        # 4. profile gauntlet (review/enrich the profile to maturity).
-        context.emit(RAIL_STAGE, {"stage": "gauntlet"})
-        g = build_profile_gauntlet(sub).invoke({"profile": profile}, config)
-        profile = g.get("profile") or profile
-        report.gauntlet_verdict = str((g.get("gauntlet") or {}).get("final_verdict", ""))
-        report.stage_reached = "gauntlet"
-
-        # 5. editorial pipeline (profile -> planned, drafted, headlined, caveated, receipted article).
-        context.emit(RAIL_STAGE, {"stage": "editorial"})
-        pipeline = build_editorial(sub).invoke({"profile": profile}, config).get("pipeline") or {}
-        report.article_status = str(pipeline.get("status", ""))
-        report.article_title = str(pipeline.get("article_title", ""))
-        report.analytics_produced = int(pipeline.get("analytics_produced", 0) or 0)
-        report.stage_reached = "complete"
-        report.total_usd = round(sum(costs), 6)
-        report.x_searches = x_calls[0]
-
-        # 6. PUBLISH — by virtue of the pipeline, not by someone running a command. A piece that
-        # earned `publishable` goes live here; the floors already decided, so there is nothing left
-        # for a human to approve. (The gate still holds: anything short of publishable routes to the
-        # held ledger instead, and the ALGENT_SITE_PUBLISH kill switch can pause pushing entirely.)
-        context.emit(RAIL_STAGE, {"stage": "publish"})
-        _publish(context, report)
-
-        return _finish(context, report, pipeline=pipeline, total=report.total_usd)
+        # ONE read cache for the whole article, across every stage and lane. The enrichment
+        # lanes each open their own snapshot scope, which resets per lane — a cache living there
+        # would forget between lanes, which is the exact bug it exists to fix. Persisted in the
+        # run directory so `newsroom resume` reuses what the interrupted attempt already read.
+        # The spend envelope, when one is open, is enforced HERE — by the run, not by whoever
+        # launched it — so the ceiling holds after that session is gone. The article's hard cap
+        # becomes whatever the envelope has left; an exhausted envelope refuses before any spend.
+        try:
+            envelope_cap = spend_budget.claim(context.run_id)
+        except spend_budget.BudgetExhausted as exc:
+            context.emit(RAIL_REFUSED, {"reason": str(exc)})
+            return {"rail": {"stage_reached": "refused", "note": str(exc)}}
+        hard = None if envelope_cap is None else min(cost.hard_cap_usd(), envelope_cap)
+        # A run that stops making progress ends itself rather than holding the lock all night.
+        art = _artifacts_dir(context)
+        ledger: list[Any] = []    # the article ledger, once open — the watchdog thread cannot see
+                                  # ContextVars, so it reads spend through this captured object
+        dog = Watchdog(
+            record=(art.parent / "audit" / "stalled.txt") if art is not None else None,
+            on_stall=lambda: recover_and_exit(
+                run_id=context.run_id, run_dir=art.parent if art is not None else None,
+                spent=lambda: ledger[0].spent_usd if ledger else 0.0))
+        dog.start()
+        watched = dataclasses.replace(
+            context, emit=lambda et, p=None: (dog.touch(), context.emit(et, p))[1])
+        with cost.article_scoped(hard), read_cache.scoped(_read_cache_path(context)):
+            ledger.append(cost.current_ledger())
+            try:
+                out = _run_rail(watched, state, config, lead_store=lead_store)
+                # Inside the article's cost scope (its caps and envelope cover it) and before the
+                # backup (so the new influences are backed up with the research that caused them).
+                _feed_pulses(watched, out)
+            finally:
+                dog.stop()
+                if envelope_cap is not None:
+                    spend_budget.settle(context.run_id, cost.article_spent_usd())
+                # Every run — finished, paused or failed — leaves research on disk worth keeping
+                # off this machine. Never raises; a failed push is reported, not fatal.
+                context.emit(RAIL_BACKUP, data_backup.backup(f"run {context.run_id}"))
+            context.emit(RAIL_READS, read_cache.stats())
+            _keep_reads(context, out)
+            return out
 
     graph = StateGraph(RailState)
     graph.add_node("run", run)
     graph.add_edge(START, "run")
     graph.add_edge("run", END)
     return graph.compile()
+
+
+def _artifacts_dir(context: AgentRunContext) -> Any:
+    """This run's artifacts directory, or None when the run has no directory (tests)."""
+    try:
+        root = find_run_root(context.run_id)
+    except Exception:  # noqa: BLE001
+        return None
+    return (root / "artifacts") if root else None
+
+
+def _feed_pulses(context: AgentRunContext, out: dict[str, Any]) -> None:
+    """A finished article's research re-estimates the Pulses it touches, and when any were touched /intel
+    is republished once so it never lags them. Never fails the run."""
+    rail = (out or {}).get("rail") or {}
+    profile_id = str(rail.get("profile_id") or "")
+    if rail.get("stage_reached") != "complete" or not profile_id or profile_id == "prof_unknown":
+        return
+    try:
+        from ..pulse.update import update_quietly
+        from ..research.store import JsonProfileStore
+
+        profile = JsonProfileStore().get(profile_id)
+        if profile is None:
+            return
+        fed = update_quietly(profile.model_dump(), run_id=context.run_id,
+                             article_slug=str(rail.get("published_slug") or ""))
+        context.emit(RAIL_PULSES, fed)
+        if fed.get("touched"):
+            from algent_backend.publishing.intel_page import publish_intel
+
+            context.emit(RAIL_INTEL, publish_intel())
+    except Exception as exc:  # noqa: BLE001 — Pulse is downstream of the article, never in its way
+        context.emit(RAIL_PULSES, {"error": f"{type(exc).__name__}: {str(exc)[:120]}"})
+
+
+def _keep_reads(context: AgentRunContext, out: dict[str, Any]) -> None:
+    """Move this story's read pages out of the run folder, which is pruned, to its profile."""
+    rail = (out or {}).get("rail") or {}
+    profile_id = str(rail.get("profile_id") or "")
+    reads = _read_cache_path(context)
+    if not profile_id or profile_id == "prof_unknown" or reads is None:
+        return
+    try:
+        from ..research.store import JsonProfileStore
+
+        JsonProfileStore().save_reads(profile_id, reads)
+    except Exception:  # noqa: BLE001 — keeping the reads is a bonus, never a failure
+        pass
+
+
+def _steers(context: AgentRunContext) -> list[str]:
+    """Every operator steer this run has received so far (see ``steer.py``)."""
+    return steer.for_run(_artifacts_dir(context))
+
+
+def _read_cache_path(context: AgentRunContext) -> Any:
+    """Where this run's reads persist, or None when the run has no directory (tests)."""
+    try:
+        root = find_run_root(context.run_id)
+    except Exception:  # noqa: BLE001 — no run dir is an in-memory cache, not an error
+        return None
+    return (root / "artifacts" / "read_cache.jsonl") if root else None
+
+
+def _run_rail(
+    context: AgentRunContext, state: RailState, config: RunnableConfig, *, lead_store: Any | None,
+) -> dict[str, Any]:
+    sub, x_calls, clock = _install_cost_tee(context)
+    # Module-level so every _finish path picks up timings without threading the clock through
+    # six signatures. Safe because the single-flight lock guarantees one rail per process.
+    global _CLOCK
+    _CLOCK = clock
+    report = NewsroomRailReport(generated_at=datetime.now(UTC).isoformat())
+
+    from algent_backend.agent_system.foundation.pause import RunPaused
+
+    try:
+        pool, portfolio, early = _resolve_portfolio(
+            context, sub, state, config, report, lead_store=lead_store)
+        if early is not None:
+            return _finish_with_cost(context, report, early)
+
+        profile, early = _route_profile_gauntlet(
+            context, sub, config, report, state, pool=pool, portfolio=portfolio)
+        if early is not None:
+            return _finish_with_cost(context, report, early)
+
+        return _editorial_and_publish(
+            context, sub, config, report, state, profile, x_calls=x_calls,
+        )
+    except RunPaused as paused:
+        # A pause is a clean stop, not a failure: the last completed stage wrote its artifact,
+        # so the run finishes its report and `newsroom resume` continues from the next unpaid
+        # stage. Reporting it as an error would make an intentional stop look like a crash.
+        report.stage_reached = report.stage_reached or "paused"
+        _apply_cost_snapshot(report)
+        return _finish(context, report, note=f"paused — {paused}. Continue with `newsroom resume`")
+
+
+def _check_paused(stage: str) -> None:
+    """Exit cleanly if a pause was requested. Raises so the rail unwinds to its finish path."""
+    from algent_backend.agent_system.foundation.pause import checkpoint
+
+    checkpoint(f"the start of {stage}")
+
+
+def _install_cost_tee(context: AgentRunContext) -> tuple[Any, list[int], StageClock]:
+    """Forward events; label the article ledger from RAIL_STAGE. Returns (sub_ctx, x_calls, clock).
+
+    Also the natural place to TIME the rail, because it already sees every stage transition.
+    """
+    x_calls = [0]
+    clock = StageClock()
+
+    def _tee(event_type: str, payload: dict[str, Any] | None = None) -> None:
+        p = payload or {}
+        if event_type == RAIL_STAGE and p.get("stage"):
+            # A stage boundary is the only place stopping is free: the previous stage has
+            # written its artifact and the next has spent nothing. Killing mid-stage instead
+            # throws away whatever it had bought — a profile three minutes into research dies
+            # with nothing to show and resume has to buy it again.
+            _check_paused(str(p["stage"]))
+            # The same boundary is where a steer lands: nothing of the next stage has run, so it
+            # shapes that stage and every one after it.
+            art = _artifacts_dir(context)
+            landed = steer.drain(art, stage=str(p["stage"])) if art is not None else []
+            if landed:
+                context.emit(RAIL_STEER, {"stage": p["stage"], "steers": [e["text"] for e in landed]})
+            cost.set_stage(str(p["stage"]))
+            clock.enter(str(p["stage"]))
+        if event_type in _SLOW_LEG_EVENTS:
+            clock.mark(event_type, p)
+        if event_type == ev.TOOL_RESULT and '"kind": "x"' in str(p.get("content", "")):
+            x_calls[0] += 1
+        context.emit(event_type, p)
+
+    return dataclasses.replace(context, emit=_tee), x_calls, clock
+
+
+#: Events worth timing INSIDE a stage. "editorial" is one rail stage but many minutes, and the
+#: minutes are not evenly spread — a figure that times out spends ten of them in a subprocess
+#: whose calls never appear on the model dashboard, which reads from outside as a dead run.
+_SLOW_LEG_EVENTS = frozenset({
+    "analytics_worker.ready",
+    "analytics_worker.artifact",
+    "editorial_pipeline.hero_image",
+    "editorial_pipeline.analytics_claims_confirmed",
+    "draft.completed",
+    "comprehension_check.completed",
+    "headline.completed",
+})
+
+
+#: Set per run in _run_rail; read by every _finish path. See the note there.
+_CLOCK: StageClock | None = None
+
+
+class StageClock:
+    """Wall time per rail stage, printed as it happens and kept for the report.
+
+    Cost was already attributed by stage; TIME was not, so "why has this been running for
+    twenty minutes" could only be answered by reading raw event timestamps out of a run's
+    timeline after the fact. This makes it answerable while the run is still going.
+    """
+
+    def __init__(self) -> None:
+        self.stages: list[dict[str, Any]] = []
+        self.legs: list[dict[str, Any]] = []
+        self._t0 = time.monotonic()
+
+    def enter(self, stage: str) -> None:
+        now = time.monotonic()
+        if self.stages:
+            prev = self.stages[-1]
+            prev["seconds"] = round(now - prev["_start"], 1)
+            self._say(f"[stage] {prev['stage']} finished in {_hms(prev['seconds'])}")
+        self.stages.append({"stage": stage, "_start": now, "seconds": None})
+        self._say(f"[stage] {stage} started (+{_hms(now - self._t0)} into the run)")
+
+    def mark(self, event_type: str, payload: dict[str, Any]) -> None:
+        """Note a slow leg inside the current stage, so a long stage is not opaque."""
+        now = time.monotonic()
+        last = self.legs[-1]["_at"] if self.legs else (
+            self.stages[-1]["_start"] if self.stages else self._t0)
+        label = event_type.split(".")[-1]
+        detail = str(payload.get("request_id") or payload.get("note") or "")[:80]
+        self.legs.append({"event": event_type, "detail": detail,
+                          "since_previous_s": round(now - last, 1), "_at": now})
+        self._say(f"[leg]   {label} (+{_hms(now - last)}){f' — {detail}' if detail else ''}")
+
+    def close(self) -> None:
+        if self.stages and self.stages[-1]["seconds"] is None:
+            last = self.stages[-1]
+            last["seconds"] = round(time.monotonic() - last["_start"], 1)
+            self._say(f"[stage] {last['stage']} finished in {_hms(last['seconds'])}")
+
+    def summary(self) -> dict[str, Any]:
+        self.close()
+        return {
+            "total_seconds": round(time.monotonic() - self._t0, 1),
+            "by_stage": {s["stage"]: s["seconds"] for s in self.stages},
+            "slow_legs": [
+                {k: v for k, v in leg.items() if not k.startswith("_")}
+                for leg in sorted(self.legs, key=lambda x: -x["since_previous_s"])[:12]
+            ],
+        }
+
+    @staticmethod
+    def _say(line: str) -> None:
+        print(line, file=sys.stderr, flush=True)
+
+
+def _hms(seconds: float) -> str:
+    seconds = max(0.0, float(seconds))
+    if seconds < 60:
+        return f"{seconds:.0f}s"
+    return f"{int(seconds // 60)}m{int(seconds % 60):02d}s"
+
+
+def _apply_cost_snapshot(report: NewsroomRailReport) -> None:
+    snap = cost.snapshot()
+    report.total_usd = float(snap.get("spent_usd") or 0.0)
+    report.soft_cap_usd = float(snap.get("soft_cap_usd") or cost.soft_cap_usd())
+    report.hard_cap_usd = float(snap.get("hard_cap_usd") or cost.hard_cap_usd())
+    report.budget_mode = str(snap.get("mode") or "normal")
+    report.soft_cap_crossed = bool(snap.get("soft_cap_crossed"))
+    report.soft_crossed_at_stage = str(snap.get("soft_crossed_at_stage") or "")
+    report.hard_stop = bool(snap.get("hard_stop"))
+    report.hard_stop_stage = str(snap.get("hard_stop_stage") or "")
+    report.cost_by_stage = dict(snap.get("cost_by_stage") or {})
+    report.cost_by_op = dict(snap.get("cost_by_op") or {})
+    report.skipped_operations = list(snap.get("skipped_operations") or [])
+    report.refused_operations = list(snap.get("refused_operations") or [])
+    report.estimate_overruns = list(snap.get("estimate_overruns") or [])
+
+
+def _finish_with_cost(
+    context: AgentRunContext, report: NewsroomRailReport, early: dict[str, Any],
+) -> dict[str, Any]:
+    """Re-finish an early exit after snapshotting the article ledger onto the report."""
+    _apply_cost_snapshot(report)
+    return _finish(
+        context, report,
+        pipeline=early.get("pipeline") or {},
+        total=report.total_usd,
+    )
+
+
+def _resolve_portfolio(
+    context: AgentRunContext, sub: AgentRunContext, state: RailState, config: RunnableConfig,
+    report: NewsroomRailReport, *, lead_store: Any | None,
+) -> tuple[dict | None, dict[str, Any], dict[str, Any] | None]:
+    """Discovery synthesis or portfolio reuse. Returns (pool, portfolio, early_finish_or_None)."""
+    pool = state.get("pool")
+    reused = state.get("portfolio") or {}
+    has_later = bool(
+        (state.get("profile") or {}).get("id")
+        or (state.get("selected_vector") or {}).get("id")
+    )
+    if reused.get("vectors") or has_later:
+        portfolio = reused if reused.get("vectors") else {}
+        report.portfolio_source = "reused"
+        report.source_run_id = str(state.get("source_run_id") or "")
+        report.vector_count = len(portfolio.get("vectors", []))
+        report.pool_items = int(portfolio.get("total_considered", 0) or 0)
+        report.stage_reached = "synthesis"
+        reason = "portfolio_reused" if reused.get("vectors") else "later_artifact_reused"
+        sub.emit(RAIL_STAGE, {
+            "stage": "synthesis", "skipped": True, "reason": reason,
+            "source_run_id": report.source_run_id, "vector_count": report.vector_count,
+        })
+        return pool, portfolio, None
+
+    if _backfeed_enabled():
+        pool, injected = _inject_backfeed(context, pool, lead_store or JsonLeadStore())
+        report.backfeed_leads_injected = injected
+
+    # Durable operator pause (flags.SYNTHESIS_ENABLED): when off the rail needs an
+    # explicit portfolio (compose / pick / --from-run), not a fresh t1 build.
+    from .flags import synthesis_enabled
+    if not synthesis_enabled():
+        report.portfolio_source = "paused"
+        report.stage_reached = "synthesis"
+        sub.emit(RAIL_STAGE, {
+            "stage": "synthesis", "skipped": True, "reason": "synthesis_disabled",
+        })
+        return pool, {}, _finish(
+            context, report,
+            note="synthesis off (flags.SYNTHESIS_ENABLED) — compose/pick a t0 lead or set True",
+        )
+
+    sub.emit(RAIL_STAGE, {"stage": "synthesis"})
+    syn_input: dict[str, Any] = {"pool": pool} if pool is not None else {}
+    portfolio = build_synthesis(sub).invoke(syn_input, config).get("portfolio") or {}
+    report.portfolio_source = "fresh"
+    report.vector_count = len(portfolio.get("vectors", []))
+    report.pool_items = int(portfolio.get("total_considered", 0) or 0)
+    report.stage_reached = "synthesis"
+    if not portfolio.get("vectors"):
+        return pool, portfolio, _finish(context, report, note="synthesis produced no vectors")
+    return pool, portfolio, None
+
+
+def _route_profile_gauntlet(
+    context: AgentRunContext, sub: AgentRunContext, config: RunnableConfig,
+    report: NewsroomRailReport, state: RailState, *, pool: dict | None, portfolio: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    """Routing → profile → gauntlet. Returns (profile, early_finish_or_None)."""
+    existing_profile = state.get("profile") or {}
+    existing_vector = state.get("selected_vector") or {}
+    existing_gauntlet = state.get("gauntlet") or {}
+    if not _gauntlet_verdict(existing_gauntlet) and isinstance(state.get("gauntlet_progress"), dict):
+        # A gauntlet paused between lanes: carry its review and finished lanes, not buy them twice.
+        existing_gauntlet = {"progress": state["gauntlet_progress"]}
+
+    if existing_profile.get("id"):
+        vector = existing_vector if existing_vector.get("id") else {}
+        if vector:
+            report.selected_vector_id = str(vector.get("id", ""))
+            report.selected_vector_title = str(vector.get("title", ""))
+            report.pool_by_channel, report.promoted_from = _channel_provenance(
+                context, pool, vector)
+        sub.emit(RAIL_STAGE, {"stage": "routing", "skipped": True, "reason": "profile_reused"})
+        report.stage_reached = "routing"
+        sub.emit(RAIL_STAGE, {"stage": "profile", "skipped": True, "reason": "profile_reused"})
+        profile = existing_profile
+        report.profile_id = str(profile.get("id", ""))
+        report.stage_reached = "profile"
+        return _maybe_gauntlet(
+            context, sub, config, report, profile, existing_gauntlet)
+
+    if existing_vector.get("id"):
+        vector = existing_vector
+        sub.emit(RAIL_STAGE, {"stage": "routing", "skipped": True, "reason": "vector_reused"})
+        report.stage_reached = "routing"
+        report.selected_vector_id = str(vector.get("id", ""))
+        report.selected_vector_title = str(vector.get("title", ""))
+        report.pool_by_channel, report.promoted_from = _channel_provenance(context, pool, vector)
+        return _profile_then_gauntlet(
+            context, sub, config, report, vector, pool, existing_gauntlet)
+
+    # An operator pick is an instruction, not a candidate. The router exists to choose among
+    # vectors the newsroom found for itself, and its cooldowns and topic freezes are guards on
+    # THAT choice. Handed a single vector the operator named, it vetoed it: pick 42 (a Djibouti
+    # base) died in routing on a "hormuz" topic freeze, having cost nothing and published
+    # nothing, while the operator waited an hour for an article.
+    picked = portfolio.get("vectors") or []
+    if "picked_from_menu" in portfolio and len(picked) == 1:
+        vector = picked[0]
+        # Persisted exactly as the router would, because resume finds the story from this file.
+        # The first version skipped it, and a Maldives run that died mid-research could not be
+        # resumed: nothing on disk said which story it was.
+        if context.artifacts is not None:
+            context.artifacts.write_json("selected_vector.json", vector)
+        sub.emit(RAIL_STAGE, {"stage": "routing", "skipped": True, "reason": "operator_pick"})
+        report.stage_reached = "routing"
+        report.selected_vector_id = str(vector.get("id", ""))
+        report.selected_vector_title = str(vector.get("title", ""))
+        report.pool_by_channel, report.promoted_from = _channel_provenance(context, pool, vector)
+        return _profile_then_gauntlet(
+            context, sub, config, report, vector, pool, existing_gauntlet)
+
+    sub.emit(RAIL_STAGE, {"stage": "routing"})
+    route = build_router(sub).invoke({"portfolio": portfolio}, config)
+    vector = route.get("selected_vector")
+    report.stage_reached = "routing"
+    if not vector:
+        return {}, _finish(context, report, note="routing promoted no vector")
+    report.selected_vector_id = str(vector.get("id", ""))
+    report.selected_vector_title = str(vector.get("title", ""))
+    report.pool_by_channel, report.promoted_from = _channel_provenance(context, pool, vector)
+    return _profile_then_gauntlet(
+        context, sub, config, report, vector, pool, existing_gauntlet)
+
+
+def _gauntlet_verdict(blob: dict[str, Any]) -> str:
+    inner = blob.get("gauntlet") if isinstance(blob.get("gauntlet"), dict) else None
+    if inner and inner.get("final_verdict"):
+        return str(inner.get("final_verdict") or "")
+    return str(blob.get("final_verdict") or "")
+
+
+def _maybe_gauntlet(
+    context: AgentRunContext, sub: AgentRunContext, config: RunnableConfig,
+    report: NewsroomRailReport, profile: dict[str, Any], existing_gauntlet: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    verdict = _gauntlet_verdict(existing_gauntlet)
+    if verdict:
+        sub.emit(RAIL_STAGE, {"stage": "gauntlet", "skipped": True, "reason": "gauntlet_reused"})
+        inner = existing_gauntlet.get("gauntlet") if isinstance(
+            existing_gauntlet.get("gauntlet"), dict) else existing_gauntlet
+        report.gauntlet_verdict = verdict
+        report.stage_reached = "gauntlet"
+        _record_profile_disposition(report, profile, inner if isinstance(inner, dict) else {})
+        return profile, None
+    return _run_gauntlet(context, sub, config, report, profile,
+                         progress=existing_gauntlet.get("progress"))
+
+
+def _profile_then_gauntlet(
+    context: AgentRunContext, sub: AgentRunContext, config: RunnableConfig,
+    report: NewsroomRailReport, vector: dict[str, Any], pool: dict | None,
+    existing_gauntlet: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    sub.emit(RAIL_STAGE, {"stage": "profile"})
+    profile = build_profile(sub).invoke(
+        {"vector": steer.apply_to_vector(vector, _steers(context)), "pool": pool}, config,
+    ).get("profile") or {}
+    report.stage_reached = "profile"
+    if not profile.get("id"):
+        return profile, _finish(context, report, note="profile research produced nothing")
+    report.profile_id = str(profile.get("id", ""))
+    return _maybe_gauntlet(context, sub, config, report, profile, existing_gauntlet)
+
+
+def _run_gauntlet(
+    context: AgentRunContext, sub: AgentRunContext, config: RunnableConfig,
+    report: NewsroomRailReport, profile: dict[str, Any], *, progress: dict[str, Any] | None = None,
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    sub.emit(RAIL_STAGE, {"stage": "gauntlet"})
+    profile = steer.apply_to_profile(profile, _steers(context))
+    g_in: dict[str, Any] = {"profile": profile}
+    if progress:
+        g_in["progress"] = progress
+    g = build_profile_gauntlet(sub).invoke(g_in, config)
+    profile = g.get("profile") or profile
+    gauntlet = g.get("gauntlet") or {}
+    report.gauntlet_verdict = str(gauntlet.get("final_verdict", ""))
+    report.stage_reached = "gauntlet"
+    _record_profile_disposition(report, profile, gauntlet)
+    return profile, None
+
+
+_ED_KEYS = (
+    "treatment", "draft", "analytics_plan", "analytics_artifacts", "hero",
+    "plan_report", "draft_report", "pipeline_prior", "analytics_confirm", "draft_quality",
+)
+
+
+def _editorial_and_publish(
+    context: AgentRunContext, sub: AgentRunContext, config: RunnableConfig,
+    report: NewsroomRailReport, state: RailState, profile: dict[str, Any], *,
+    x_calls: list[int],
+) -> dict[str, Any]:
+    """Draft → publish. Fail-open publish; quality status rides on the report."""
+    sub.emit(RAIL_STAGE, {"stage": "editorial"})
+    # Re-applied here rather than trusted to survive the gauntlet: enrichment rebuilds the
+    # profile, and a steer that landed after research must still reach the planner and drafter.
+    ed_in: dict[str, Any] = {"profile": steer.apply_to_profile(profile, _steers(context))}
+    for key in _ED_KEYS:
+        if key in state:
+            ed_in[key] = state[key]
+    pipeline = build_editorial(sub).invoke(ed_in, config).get("pipeline") or {}
+    report.article_status = str(pipeline.get("status", ""))
+    report.article_title = str(pipeline.get("article_title", ""))
+    report.analytics_produced = int(pipeline.get("analytics_produced", 0) or 0)
+    report.stage_reached = "complete"
+    _apply_cost_snapshot(report)
+    report.x_searches = x_calls[0]
+    # Write the report BEFORE publish so the digest sees disposition, provenance, and cost.
+    if context.artifacts is not None:
+        context.artifacts.write_json("newsroom_rail_report.json", report.model_dump())
+    sub.emit(RAIL_STAGE, {"stage": "publish"})
+    _publish(context, report)
+    return _finish(context, report, pipeline=pipeline, total=report.total_usd)
+
+
+def _record_profile_disposition(
+    report: NewsroomRailReport, profile: dict[str, Any], gauntlet: dict[str, Any],
+) -> None:
+    """Soft readiness diagnose — disposition on the report, never a hard stop."""
+    _ready, disposition, why = _profile_ready_for_prose(profile, gauntlet)
+    if disposition:
+        report.disposition = disposition
+        report.note = why
 
 
 def _channel_provenance(
@@ -278,6 +739,21 @@ def _publish(context: AgentRunContext, report: NewsroomRailReport) -> None:
                 report.publish_action = "push_failed"
         context.emit(RAIL_PUBLISHED, {"action": report.publish_action, "slug": report.published_slug,
                                       "published": report.published, "reasons": result.reasons})
+        # Live on the site and unmentioned on the timeline is a half-published article. Announcing
+        # is part of publishing, not a thing to remember afterwards.
+        if report.published:
+            dek, gist = copy_from_run(run_dir)
+            # The hero rides on the post itself now that the link lives in a reply.
+            hero = hero_file(Path(run_dir) / "artifacts")
+            announced = announce_article(
+                report.published_slug, report.article_title, dek=dek, gist=gist,
+                image_path=hero)
+            context.emit(RAIL_ANNOUNCED, announced)
+            # Charts are a second beat: each figure is its own post, article URL as a reply.
+            # Independent of the hero announce — resume must still ship figures if the card
+            # already went out.
+            figured = announce_figures(report.published_slug, run_dir)
+            context.emit(RAIL_FIGURES, figured)
     except Exception as exc:  # noqa: BLE001 — see docstring: distribution never fails the article
         report.publish_action = f"error ({str(exc)[:90]})"
         context.emit(RAIL_PUBLISHED, {"action": report.publish_action, "published": False})
@@ -337,6 +813,36 @@ def _lead_to_item(lead: Any) -> dict[str, Any]:
     }
 
 
+# Profile gauntlet verdicts that are ready without a soft-warning disposition.
+# Soft enrichment leftovers are fine; verification/unsound get a disposition note but
+# still proceed — the site is the review surface.
+_PROSE_READY_VERDICTS = frozenset({"mature", "needs_enrichment"})
+_BLOCKING_PROFILE_STATUSES = frozenset({
+    "needs_verification", "insufficient_evidence", "unsound",
+})
+
+
+def _profile_ready_for_prose(
+    profile: dict[str, Any], gauntlet: dict[str, Any],
+) -> tuple[bool, str, str]:
+    """Return (ready, disposition, note). Soft diagnose only — never hard-stops the rail.
+
+    Review already diagnosed maturity; we surface that as disposition so the published
+    artifact carries why it was weak. Editorial still runs: publishing is the feedback loop.
+    """
+    verdict = str(gauntlet.get("final_verdict") or "").strip()
+    status = str(profile.get("profile_status") or "").strip()
+
+    if verdict in ("needs_verification", "unsound") or not verdict:
+        disposition = verdict or "held"
+        return False, disposition, f"profile soft-warn (gauntlet: {disposition})"
+    if status in _BLOCKING_PROFILE_STATUSES:
+        return False, status, f"profile soft-warn (status: {status})"
+    if verdict not in _PROSE_READY_VERDICTS:
+        return False, "held", f"profile soft-warn (gauntlet: {verdict})"
+    return True, "", ""
+
+
 def _finish(
     context: AgentRunContext, report: NewsroomRailReport, *,
     pipeline: dict | None = None, total: float = 0.0, note: str = "",
@@ -344,6 +850,13 @@ def _finish(
     if note:
         report.note = note
     report.total_usd = total
+    if _CLOCK is not None:
+        timings = _CLOCK.summary()
+        report.total_seconds = float(timings["total_seconds"])
+        report.stage_seconds = {k: v for k, v in timings["by_stage"].items() if v is not None}
+        report.slow_legs = timings["slow_legs"]
+        if context.artifacts is not None:
+            context.artifacts.write_json("stage_timings.json", timings)
     if context.artifacts is not None:
         context.artifacts.write_json("newsroom_rail_report.json", report.model_dump())
     context.emit(ev.OUTPUT_PREVIEW, _preview(report))
@@ -367,13 +880,16 @@ def _preview(r: NewsroomRailReport) -> dict[str, Any]:
         "summary": (
             origin
             + (f" -> promoted: {r.selected_vector_title[:50]}" if r.selected_vector_title else "")
+            + (f" -> held: {r.disposition}" if r.disposition else "")
             + (f" -> article: {r.article_status}" if r.article_status else "")
             + (f" -> {r.publish_action}" if r.publish_action else "")
             + f"  ·  ~${r.total_usd:.4f}"
+            + (f"  ·  {_hms(r.total_seconds)}" if r.total_seconds else "")
             + (f"  ·  {r.note}" if r.note else "")
         ),
         "items": [
-            f"profile: {r.profile_id or '—'} ({r.gauntlet_verdict or 'n/a'})",
+            f"profile: {r.profile_id or '—'} ({r.gauntlet_verdict or 'n/a'})"
+            + (f" · disposition: {r.disposition}" if r.disposition else ""),
             f"article: {r.article_title or '—'}",
         ],
         "link": "../artifacts/article_published.md",

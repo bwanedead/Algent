@@ -54,11 +54,18 @@ INTERROGATE the treatment:
   reader rather than serve their judgment?
 - CORE: Does `core_understanding` actually capture the real shape of the thing? Does
   `reader_question` serve a smart non-specialist?
+- READER ENTRY (blocking when missing or landscape-only): Does `news_kernel` name the
+  concrete event/finding in plain words a cold browser understands? Does `reader_payoff`
+  give a usable so-what? Does `key_uncertainty` hold the real open link rather than a
+  process note? When the subject is specialist, is `plain_subject` present so the headline
+  stage can lead with the plain thing before the guild name? Are `causal_chain` statuses
+  honest (no `possible` written as `established`)?
 - LANDSCAPE (blocking when clear): Could a cold house reader state **what the underlying
   dispute is**, **who wants what**, and **why the day's move attaches to that** from the
   molecule alone — or does the treatment only name an event surface (ended a strike, a vote,
   a hearing) while leaving paper-leak / exam / resignation / bargain substance foggy?
   Procedure without grievance is incomplete (molecule.md hunger-strike failure mode).
+  Entry fields do not replace landscape — they precede it.
 
 OUTPUT — a TreatmentReview (task-generating, not prose criticism)
 - findings[]: each with a `type`, `severity` (low|medium|high|blocking), a `target` ("frame"

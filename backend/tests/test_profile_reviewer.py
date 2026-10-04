@@ -102,3 +102,16 @@ def test_profile_reviewer_registered_with_fixture() -> None:
     assert spec.tool_ids == ()  # tool-free judgment
     assert spec.test_fixture is not None and spec.test_fixture.input_key == "profile"
     assert Path(spec.test_fixture.input_file).exists()
+
+
+def test_missing_scope_is_an_available_finding_type() -> None:
+    """Depth without altitude is the most common thinness we ship, and the profile reviewer
+    is the only stage that can send a profile back for it — the drafter cannot invent a
+    supply share that research never gathered."""
+    from algent_backend.agent_system.agents.review.contracts import ReviewFinding
+
+    finding = ReviewFinding(
+        id="rv_01", type="missing_scope", severity="high", target="profile",
+        note="carries the decree but not Congo's share of world cobalt",
+    )
+    assert finding.type == "missing_scope"

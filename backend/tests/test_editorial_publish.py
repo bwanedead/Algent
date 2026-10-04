@@ -77,10 +77,15 @@ def test_produced_analytics_are_embedded_and_receipted() -> None:
     md = render_published_article(_draft(), _profile(), analytics)
     # the produced chart is embedded in the body with its AI-labelled caption; the failed one is not.
     assert "![Core PCE, Mar-May](analytic_anx_01.svg)" in md
-    assert "**Core PCE, Mar-May**" in md  # labelled figure heading
+    # A DRAWN figure carries its title inside the image, so a bold heading above it published the
+    # same sentence twice, a line apart. The alt text keeps the title for readers who cannot see
+    # the image; the explainer under it still says what the figure shows.
+    assert "**Core PCE, Mar-May**" not in md
     assert "How did core PCE change" in md  # cold-reader explainer under the chart
     assert "AI-assisted analytic, built only from cited data" in md
-    assert "anx_02" not in md
+    # Failed visuals are not embedded, but they are receipted so they are not "forgotten".
+    assert "![anx_02" not in md and "analytic_anx_02" not in md
+    assert "**Visuals not shipped**" in md and "could not be produced" in md and "anx_02" not in md
     # and it earns a receipts line carrying its claim provenance + as-of.
     assert "Charts & tables" in md and "from claims c1" in md and "as of 2026-06-26" in md
 
@@ -117,6 +122,9 @@ def test_table_analytic_is_inlined_not_image_embedded() -> None:
     md = render_published_article(_draft(), _profile(), analytics)
     assert "| Outcome | P |" in md and "| Hold | 81% |" in md   # the table itself is present
     assert "![" not in md.split("How we know this")[0]           # no image embed in the body
+    # Unlike a drawn figure, a markdown table renders no title of its own, so it KEEPS the bold
+    # heading a chart no longer gets — otherwise the table arrives unlabelled.
+    assert "**Odds table**" in md
     # The honesty label still travels. Asserted against the constant, not a copy of its
     # wording: this test held a hand-typed version and silently went red when the label
     # was reworded, which reads for months like the disclosure had been dropped.
@@ -166,11 +174,15 @@ def test_prose_only_analytic_inlines_nothing_but_still_receipts() -> None:
 
 
 def test_analytic_with_unverified_figures_is_flagged_in_receipts() -> None:
-    analytics = [{"request_id": "anx_09", "status": "produced", "artifact_name": "a.svg",
+    # Integrity failures are not embedded; they appear under Visuals not shipped.
+    analytics = [{"request_id": "anx_09", "status": "integrity_check_failed",
                   "title": "drifty chart", "caption": "c", "data_refs": ["c1"],
-                  "figure_check": {"verified": False, "unverified": ["9.9"]}}]
+                  "figure_check": {"verified": False, "unverified": ["9.9"]},
+                  "note": "figure check: numbers not found in cited evidence — 9.9"}]
     md = render_published_article(_draft(), _profile(), analytics)
-    assert "figures not all matched to the cited claims: 9.9" in md
+    assert "drifty chart" not in md.split("How we know this")[0]
+    assert "**Visuals not shipped**" in md and "could not be verified" in md and "integrity_check_failed" not in md
+    assert "9.9" in md
 
 
 def test_x_status_url_injected_for_embed_when_handle_named_without_link() -> None:
@@ -212,7 +224,9 @@ def test_map_figure_is_placed_after_opening_paragraph() -> None:
     draft = ArticleDraft(
         id="d", title="Fed piece", standfirst="the dek", frame="a market-pricing story",
         body=(
-            "First landscape paragraph about the choke point and the theater.\n\n"
+            "First landscape paragraph about the choke point and the theater, with enough "
+            "context that the publisher treats this block as a complete opening before any "
+            "map is inserted for the cold reader who still needs the geography of the region.\n\n"
             "Second paragraph continues the news move and the dispute."
         ),
         cited_claim_ids=["c1", "c2", "c3"], cited_source_ids=["s1", "s2"],
@@ -328,3 +342,79 @@ def test_published_figure_caption_drops_the_meta_sentence() -> None:
     md = render_published_article(_draft(), _profile(), analytics)
     assert "orients a reader" not in md
     assert "The bone came from southern Saskatchewan." in md
+
+
+def test_our_process_vocabulary_is_stripped_from_reader_prose() -> None:
+    """"Not available in this run" tells a reader about a research pass they know nothing about;
+    the fact about the world is that it was not available. Banned in two doctrine files and
+    shipped anyway, so it is removed mechanically."""
+    from algent_backend.agent_system.agents.editorial.publish import _clean_prose
+
+    assert _clean_prose("The signed text was not available in this run.") == (
+        "The signed text was not available."
+    )
+    assert _clean_prose("It was unclear in this pass whether talks resumed.") == (
+        "It was unclear whether talks resumed."
+    )
+
+
+def test_the_process_strip_does_not_eat_real_prose() -> None:
+    """The word boundary is load-bearing — "in this region"/"in this runoff" must survive."""
+    from algent_backend.agent_system.agents.editorial.publish import _clean_prose
+
+    for keep in ("The run of storms continued in this region.",
+                 "Turnout was low in this runoff election.",
+                 "Rainfall in this rural county broke records."):
+        assert _clean_prose(keep) == keep
+
+
+def test_agent_scaffolding_never_reaches_the_page() -> None:
+    """A published piece opened with the drafter's own field labels above the prose:
+
+        TITLE: The Tiny Pump That Lets Corals Breathe ...
+        STANDFIRST: Reef corals beat microscopic hairs ...
+
+    The real title and dek were already parsed from the markdown heading, so this was pure
+    scaffolding — the shape of the request showing through the answer — duplicated content
+    and a plain tell that a machine wrote the page.
+    """
+    from algent_backend.agent_system.agents.editorial.publish import _clean_prose
+
+    out = _clean_prose(
+        "TITLE: The Tiny Pump That Lets Corals Breathe\n"
+        "STANDFIRST: Reef corals beat microscopic hairs to spin vortices.\n"
+        "**Review status:** needs hedging\n\n"
+        "Corals that cannot move beat microscopic hairs to pull oxygen.\n"
+    )
+    assert "TITLE:" not in out
+    assert "STANDFIRST:" not in out
+    assert "Review status" not in out
+    assert out.startswith("Corals that cannot move")
+
+
+def test_a_label_inside_a_sentence_is_left_alone() -> None:
+    """Only a line that STARTS with the label is furniture; prose mentioning one is prose."""
+    from algent_backend.agent_system.agents.editorial.publish import _clean_prose
+
+    body = "The paper's title: 'Ciliary flows in corals' ran in Science Advances."
+    assert _clean_prose(body) == body
+
+
+def test_every_produced_chart_is_embedded() -> None:
+    """A run that drew two figures must show two figures — not silently keep one."""
+    analytics = [
+        {"request_id": "anx_01", "status": "produced", "artifact_name": "analytic_anx_01.svg",
+         "title": "Exports", "question": "How did exports move?",
+         "caption": "Exports fell then recovered.", "data_refs": ["c1"]},
+        {"request_id": "anx_02", "status": "produced", "artifact_name": "analytic_anx_02.PNG",
+         "title": "Share", "question": "Who has the capacity?",
+         "caption": "One maker holds most of the tools.", "data_refs": ["c1"]},
+        {"request_id": "anx_03", "status": "produced", "artifact_name": "analytic_anx_03.jpg",
+         "title": "Map", "question": "Where is the plant?",
+         "caption": "The plant sits on the coast.", "data_refs": ["c1"]},
+    ]
+    md = render_published_article(_draft(), _profile(), analytics)
+    body = md.split("How we know this")[0]
+    assert "![Exports](analytic_anx_01.svg)" in body
+    assert "![Share](analytic_anx_02.PNG)" in body
+    assert "![Map](analytic_anx_03.jpg)" in body

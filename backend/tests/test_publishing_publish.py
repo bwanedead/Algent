@@ -10,23 +10,37 @@ import yaml
 from algent_backend.publishing import publish as pb
 
 _ARTICLE = ("# Fed holds, hike tail still live\n*A hold is the base case, but a hike is not off.*\n\n"
-            "The committee held rates.\n\n---\n## How we know this — sources & verification\n_Receipts._\n")
+            "The committee held rates.\n\n---\n## How we know this — sources & verification\n_Receipts._\n\n"
+            "**Sources**\n- (news) Wire — https://wire.example/a  ·  _read in full_\n")
 
 
-def _run(tmp: Path, *, status="publishable", name="0001__abc", article=_ARTICLE, assets=None) -> Path:
+def _run(tmp: Path, *, status="publishable", name="0001__abc", article=_ARTICLE, assets=None,
+         hero=True, hero_quota_skipped=False, word_count=400) -> Path:
     art = tmp / "runs" / name / "artifacts"
     art.mkdir(parents=True)
     (art / "article_published.md").write_text(article, encoding="utf-8")
-    (art / "editorial_pipeline_report.json").write_text(json.dumps({
-        "profile_id": "prof_x", "status": status, "draft_outcome": "grounded",
+    report: dict = {
+        "profile_id": "prof_x", "status": status, "draft_outcome": "grounded", "word_count": word_count,
         "treatment_verdict": "promoted", "caveat_verdict": "verified", "caveat_findings": 0,
         "analytics_produced": 0, "analytics_escapes": 0, "barriers": [], "unverified_figures": [],
-    }), encoding="utf-8")
+    }
+    asset_names = list(assets or [])
+    if hero_quota_skipped:
+        report["hero"] = {"skipped": "quota"}
+        report["issues"] = ["hero_quota_skipped"]
+    elif hero:
+        report["hero"] = {
+            "artifact_name": "hero.jpg", "alt": "a quiet landscape under soft daylight",
+            "hook": "", "label": "AI-generated illustration", "model": "test", "size": "1K",
+            "estimated_usd": 0.03,
+        }
+        asset_names = [*asset_names, "hero.jpg"]
+    (art / "editorial_pipeline_report.json").write_text(json.dumps(report), encoding="utf-8")
     (art / "newsroom_rail_report.json").write_text(json.dumps(
         {"profile_id": "prof_x", "total_usd": 0.2314}), encoding="utf-8")
     (art / "profile.json").write_text(json.dumps({"id": "prof_x", "as_of": "2026-07-14"}), encoding="utf-8")
-    for a in assets or []:
-        (art / a).write_bytes(b"<svg/>")
+    for a in asset_names:
+        (art / a).write_bytes(b"<svg/>" if a.endswith(".svg") else b"\xff\xd8\xff")  # jpeg-ish
     return art.parent
 
 
@@ -44,6 +58,27 @@ def test_publishable_is_staged_when_push_off(tmp_path: Path) -> None:
     assert fm["status"] == "publishable" and fm["date"] == "2026-07-15" and fm["as_of"] == "2026-07-14"
     ledger = (d["site_dir"] / "publish-ledger.md").read_text(encoding="utf-8")
     assert "staged; push paused" in ledger and "cost: ~$0.2314" in ledger
+
+
+def test_missing_hero_holds_even_when_status_gate_is_off(tmp_path: Path) -> None:
+    """Hero is a hard floor — soft-skipping decoration previously shipped hero-less pieces."""
+    d = _dirs(tmp_path)
+    r = pb.publish_run(_run(tmp_path, hero=False), today="2026-07-15", **d)
+    assert r.action == "held"
+    assert "hero image required" in r.reasons[0]
+    assert not (d["site_dir"] / "content" / "articles").exists()
+
+
+def test_quota_skipped_hero_still_publishes(tmp_path: Path) -> None:
+    """Gemini quota is the only allowed ship-without-hero exception."""
+    d = _dirs(tmp_path)
+    r = pb.publish_run(_run(tmp_path, hero=False, hero_quota_skipped=True),
+                       today="2026-07-15", **d)
+    assert r.action == "staged"
+    content = (d["site_dir"] / "content" / "articles" / f"{r.slug}.md")
+    assert content.exists()
+    fm = yaml.safe_load(content.read_text(encoding="utf-8").split("---\n")[1])
+    assert "hero" not in fm or not fm.get("hero")
 
 
 def test_publishable_is_published_when_push_on(tmp_path: Path) -> None:
@@ -64,9 +99,9 @@ def test_everything_publishes_by_default_status_rides_along_honestly(tmp_path: P
     assert fm["status"] == "needs_hedging"      # published, but never silently — the reader sees it
 
 
-def test_even_blocked_publishes_when_the_gate_is_off(tmp_path: Path) -> None:
+def test_a_non_publishable_status_still_publishes_when_the_gate_is_off(tmp_path: Path) -> None:
     d = _dirs(tmp_path)
-    r = pb.publish_run(_run(tmp_path, status="blocked"), today="2026-07-15", **d)
+    r = pb.publish_run(_run(tmp_path, status="needs_hedging"), today="2026-07-15", **d)
     assert r.action == "staged" and (d["site_dir"] / "content" / "articles" / f"{r.slug}.md").exists()
 
 
@@ -80,7 +115,7 @@ def test_the_gate_still_works_when_restored(tmp_path: Path, monkeypatch) -> None
     assert (d["held_dir"] / "held-ledger.md").exists()
 
     blocked = pb.publish_run(_run(tmp_path, status="blocked", name="0002__b"), today="2026-07-15", **d)
-    assert blocked.action == "blocked"
+    assert blocked.action == "held"      # blocked is caught by the hard floor, gate or no gate
 
 
 def test_assets_are_copied_into_the_site_public_dir(tmp_path: Path) -> None:
@@ -148,8 +183,51 @@ def test_missing_artifacts_is_a_clean_error(tmp_path: Path) -> None:
     assert r.action == "error"
 
 
-def test_a_needs_ramp_piece_is_held_and_says_why() -> None:
-    """Held pieces are triaged by a human; blaming the caveat lane sends them to the wrong place."""
+def test_a_non_publishable_status_is_held() -> None:
+    """The publisher hold queue is keyed off status != publishable. Gate C no longer
+    emits needs_ramp as a status — remaining comprehension issues ship on the report."""
     from algent_backend.publishing.publish import _PUBLISHABLE
 
     assert _PUBLISHABLE == "publishable"     # anything else routes to the held queue
+
+
+# ── the hard floor: never write a non-article to the site, whatever the status gate says ───────
+def _held_ledger(tmp: Path) -> str:
+    return (tmp / "held" / "held-ledger.md").read_text(encoding="utf-8")
+
+
+def _nothing_on_site(tmp: Path) -> bool:
+    return not (tmp / "site").exists() or not list((tmp / "site").rglob("*.md"))
+
+
+def _floor_words() -> int:
+    from algent_backend.agent_system.agents.editorial.length import MIN_PUBLISH_WORDS
+
+    return MIN_PUBLISH_WORDS
+
+
+def test_a_blocked_article_is_held_not_published_even_with_the_gate_off(tmp_path: Path) -> None:
+    r = pb.publish_run(_run(tmp_path, status="blocked"), push=True, today="2026-07-15", **_dirs(tmp_path))
+    assert r.action == "held" and r.status == "blocked"
+    assert "status is blocked" in _held_ledger(tmp_path) and _nothing_on_site(tmp_path)
+
+
+def test_an_empty_or_stub_body_is_held(tmp_path: Path) -> None:
+    for i, words in enumerate((0, _floor_words() - 1)):
+        r = pb.publish_run(_run(tmp_path, name=f"000{i}__w", word_count=words), push=True, today="2026-07-15",
+                           **_dirs(tmp_path))
+        assert r.action == "held" and any("below the publish floor" in x for x in r.reasons)
+    assert _nothing_on_site(tmp_path)
+
+
+def test_an_article_with_no_cited_sources_is_held(tmp_path: Path) -> None:
+    bare = _ARTICLE.split("**Sources**")[0]
+    r = pb.publish_run(_run(tmp_path, article=bare), push=True, today="2026-07-15", **_dirs(tmp_path))
+    assert r.action == "held" and "no cited sources" in _held_ledger(tmp_path) and _nothing_on_site(tmp_path)
+
+
+def test_the_floor_reasons_accumulate_and_a_real_article_still_ships(tmp_path: Path) -> None:
+    shell = pb.hard_floor(_ARTICLE.split("**Sources**")[0], {"status": "blocked", "word_count": 0})
+    assert len(shell) == 3
+    ok = pb.publish_run(_run(tmp_path, name="0009__ok"), push=True, today="2026-07-15", **_dirs(tmp_path))
+    assert ok.action == "published"

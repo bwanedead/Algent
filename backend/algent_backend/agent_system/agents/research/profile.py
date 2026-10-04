@@ -125,6 +125,10 @@ class Claim(BaseModel):
     grounding: GroundingStatus = "unsourced"  # HARNESS-computed from snapshots, not the model
     supported_by: list[str] = Field(default_factory=list)     # SourceArtifact ids
     contradicted_by: list[str] = Field(default_factory=list)  # SourceArtifact ids
+    # Earlier claims (any profile, by claim id) this claim's new evidence contradicts. Distinct from
+    # ``contradicted_by`` (sources): this one is the graph edge from the new knowledge to the old.
+    # Harness-validated: only ids the run was actually shown survive (see assembly.finalize_profile).
+    contradicts_claims: list[str] = Field(default_factory=list)
     note: str = ""
     provenance: ItemProvenance | None = None
 
@@ -217,6 +221,9 @@ class SignalProfile(BaseModel):
     parent_vector_id: str = ""       # the t1 research vector this was promoted from
     title: str
     summary: str = ""                # the holistic gist (read first)
+    #: Framing notes the operator added while the run was in progress (see newsroom/steer.py).
+    #: Angle and emphasis for every stage that reads this profile — never evidence.
+    operator_steer: list[str] = Field(default_factory=list)
     profile_status: ProfileStatus = "draft"
     as_of: str = ""                  # recency horizon of the info (latest date it reflects)
 
@@ -245,8 +252,8 @@ class SignalProfile(BaseModel):
     visual_opportunities: list[str] = Field(default_factory=list)  # charts/maps a production could use
     watch_triggers: list[str] = Field(default_factory=list)   # what to monitor for a refresh
     derived_leads: list[DerivedLead] = Field(default_factory=list)
-    related_profiles: list[str] = Field(default_factory=list)  # graph edges (corpus; empty now)
-    corpus_context: list[str] = Field(default_factory=list)    # what we already knew (empty now)
+    related_profiles: list[str] = Field(default_factory=list)  # graph edges: the earlier profiles this research was given (corpus.related)
+    corpus_context: list[str] = Field(default_factory=list)    # one line per earlier claim this research was handed
 
     # ── provenance / versioning (manifest seed) ──
     schema_version: int = SCHEMA_VERSION
@@ -254,3 +261,13 @@ class SignalProfile(BaseModel):
     generated_at: str = ""           # when this profile was built
     generator: str = ""              # agent id / version that built it
     model: str = ""                  # model that produced it
+
+    @property
+    def is_complete(self) -> bool:
+        """THE definition of a usable profile, used by the store, finalisation, reuse and repair.
+
+        Complete = at least one claim traced to a source, and a source ledger to trace it into.
+        A run cut short (a failed model call, a schema error) yields no claims and no sources; that
+        is a failed attempt, never an asset, and must not stand in for one.
+        """
+        return bool(self.source_ledger) and any(c.supported_by for c in self.claim_ledger)

@@ -34,6 +34,7 @@ Docs sprawl is a real failure mode. To prevent it:
 - `architecture-ethos.md` – layer separation, no God objects.
 - `structural-ethos.md` – weight-bearing layers, robustness over cleverness.
 - `modularity-ethos.md` – decomposition: one home per responsibility, no junk drawers.
+- `information-ergonomics-ethos.md` – how reader-facing pages are built: overview→detail, one meaning per colour, shared scales, change made explicit, one popover grammar.
 - `raptor-3-ethos.md` – native-integration / subtractive design.
 - `doctrine-drafting-ethos.md` – how to author agent prompt doctrine.
 - `harness-ethos.md` – mechanics vs. semantic authorship; the agent-native rule.
@@ -42,11 +43,18 @@ Docs sprawl is a real failure mode. To prevent it:
 ### Architecture — `architecture/`
 - `run-control-plane.md` – run directory contract, runs CLI, observability weave.
 - `map-analytics-stack.md` – accurate country-scale map figures for the newsroom analytics path.
+- `pulse-system.md` – Ohmega Pulse: situations, anchored Pulses, append-only influences, watches, storage.
+- `instruments.md` – the numbers layer: free programmatic series (chokepoint transits, energy, rates, FX…), append-only store, moves vs each series' own history, evidence API.
+- `statements.md` – the record of who said what: primary transcripts (Kremlin, White House, State, FCDO, No 10, EC, China MFA), quote-validated extraction, append-only ledger, recall API.
 
 ### Guides — `guides/`
 - `run-operator-entrypoint.md` – **start here** to operate runs; short hub that routes to the rest.
 - `agent-cli-testing.md` – **canonical CLI guide**: full `runs` command/flag set, newsroom rail,
   post-t0 `--from-run`, promotion cooldown, watch/stop, cost rails, run layout.
+- `ohmega-research.md` – Ohmega Research CLI: validate trial JSONL, build the offline report, synthetic demo, reproducible METR source audit (`audit-metr`); record schema and denominator policy.
+
+### Vision — `vision/`
+- `ohmega-research.md` – Ohmega Research: reproducible-studies charter; first program (non-interference goal frontier), intervention definition, hypothesis vs finding, trial protocol, 72-attempt pilot, roadmap, evidence inventory (METR source audit).
 
 ### Linting — `linting/`
 - `static-governance.md` – lint toolchain, rules, and what blocks vs. warns.
@@ -56,7 +64,7 @@ Docs sprawl is a real failure mode. To prevent it:
 > category folders apply to **new** docs going forward.
 
 - Architecture: `algent-backend-architecture.md`, `tech-stack.md`
-- Vision: `holistic-vision.md`, `project-vision.md`, `algo-lab-vision.md`,
+- Vision: `vision/ohmega-intelligence-engine.md` (**canonical for Ohmega's direction**), `holistic-vision.md`, `project-vision.md`, `algo-lab-vision.md`,
   `agent-network-vision.md`, `workspace-agentic-vision.md`, `aesthetic-vision.md`,
   `PHASE_2_VISION.md`
 - Guides: `credentials.md`

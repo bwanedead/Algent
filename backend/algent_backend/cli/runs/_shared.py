@@ -11,7 +11,11 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from algent_backend.agent_system.runs.control_plane.liveness import process_alive
+# Liveness + tree-kill live in the control plane; CLI keeps the established names.
+from algent_backend.agent_system.runs.control_plane.liveness import process_alive as pid_alive
+from algent_backend.agent_system.runs.control_plane.process_tree import (
+    terminate_tree as terminate_process,
+)
 
 
 def print_json(payload: Any) -> None:
@@ -60,42 +64,3 @@ def parse_input_arg(
     if goal is not None:
         payload["goal"] = goal
     return payload
-
-
-# One liveness implementation, owned by the control plane (state.py needs it to reconcile a run
-# whose process vanished). Re-exported here so the CLI keeps its established name.
-pid_alive = process_alive
-
-
-def terminate_process(pid: int | None) -> bool:
-    """Best-effort hard-terminate a run's process (and its child tree).
-
-    A run is a single blocking model loop with no cooperative checkpoint, so the
-    operator stop is a hard kill, not a graceful pause. Returns whether a live
-    process was signalled.
-    """
-    if pid is None or not pid_alive(pid):
-        return False
-    try:
-        if sys.platform == "win32":
-            import subprocess
-
-            # /T kills the child tree, /F forces it.
-            subprocess.run(
-                ["taskkill", "/F", "/T", "/PID", str(pid)],
-                capture_output=True,
-                check=False,
-            )
-        else:
-            import os
-            import signal
-
-            try:
-                os.killpg(pid, signal.SIGTERM)  # child is its own session/group leader
-            except (ProcessLookupError, PermissionError):
-                os.kill(pid, signal.SIGTERM)
-        return True
-    except Exception:
-        return False
-
-

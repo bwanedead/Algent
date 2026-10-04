@@ -44,6 +44,10 @@ COOLDOWN_S = 25.0    # the gap floor once we've been throttled at all
 MAX_GAP_S = 120.0    # ceiling — past here we are not getting in this cycle
 DECAY = 0.7          # how fast the gap relaxes after a success
 BUDGET_S = 300.0     # wall-clock cap for one sweep
+# Stop asking DOC once we know we are locked out. Continuing after consecutive
+# throttles is how a "paced" sweep still burns the rest of the slice for nothing
+# and digs the penalty deeper for the next cycle.
+MAX_CONSECUTIVE_THROTTLES = 2
 
 SearchFn = Callable[..., list[dict]]
 ClockFn = Callable[[], float]
@@ -60,6 +64,7 @@ def run_sweep(
     max_gap_s: float = MAX_GAP_S,
     budget_s: float = BUDGET_S,
     start_gap_s: float = 0.0,
+    max_consecutive_throttles: int = MAX_CONSECUTIVE_THROTTLES,
     clock: ClockFn = time.monotonic,
     rng: random.Random | None = None,
     on_progress: Callable[[int, int, BeatResult], None] | None = None,
@@ -68,8 +73,9 @@ def run_sweep(
 
     ``on_progress(done, total, result)`` is called after each beat so a caller can
     narrate this otherwise-silent, minutes-long paced sweep. Beats not reached inside
-    ``budget_s`` are omitted from the sheet rather than recorded as failures — they
-    were never asked, and the rotation will ask them first next time.
+    ``budget_s`` (or after consecutive throttles abort the slice) are omitted from the
+    sheet rather than recorded as failures — they were never asked, and the rotation
+    will ask them first next time.
 
     ``start_gap_s`` seeds the adaptive gap from the last sweep's ending gap. Starting
     optimistic every time made the first few beats sacrificial, and because a throttled
@@ -87,6 +93,8 @@ def run_sweep(
     results: list[BeatResult] = []
     started = clock()
     gap = max(pace_s, min(max_gap_s, start_gap_s or pace_s))
+    consecutive_throttles = 0
+    aborted_for_throttle = False
 
     for index, beat in enumerate(targets):
         if index:
@@ -96,8 +104,21 @@ def run_sweep(
         result = _sweep_one(beat, max_records, search)
         results.append(result)
         gap = _next_gap(gap, result, pace_s=pace_s, cooldown_s=cooldown_s, max_gap_s=max_gap_s)
+        if result.error == "rate_limited":
+            consecutive_throttles += 1
+        else:
+            consecutive_throttles = 0
         if on_progress is not None:
             on_progress(index + 1, len(targets), result)
+        # Sanity: once DOC has refused us twice in a row, further asks this cycle
+        # only deepen the penalty. Leave the remaining targets for a later cycle.
+        if consecutive_throttles >= max_consecutive_throttles:
+            aborted_for_throttle = True
+            break
+
+    throttle_at = ""
+    if any(r.error == "rate_limited" for r in results):
+        throttle_at = datetime.now(UTC).isoformat()
 
     return BeatSheet(
         generated_at=datetime.now(UTC).isoformat(),
@@ -107,6 +128,8 @@ def run_sweep(
         total_hits=sum(r.hit_count for r in results),
         results=results,
         last_gap_s=gap,
+        last_throttle_at=throttle_at,
+        aborted_for_throttle=aborted_for_throttle,
     )
 
 

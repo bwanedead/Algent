@@ -1,0 +1,252 @@
+"""
+The radar queue — what is waiting to be posted, and when it may go.
+
+A radar sweep produces several candidates at once. Firing the survivors together would read
+as a bot emptying a buffer, so the queue spaces them.
+
+There is no urgency tier and no fast lane. An earlier design had one, on the reasoning that a
+live event is worth more early — true, but it required judging liveness from a pool line, which
+the model cannot do reliably: it does not know how old the pool is, and a first sweep confidently
+marked a two-day-old wildfire as live. A misclassification that GRANTS priority is worse than
+having no priority, because it spends the fast lane on something stale and trains you to distrust
+the flag. One cadence for everything is duller and always right.
+
+THE UNAVOIDABLE LIMIT: this drains when something runs it, and the operator's machine is not
+always on. The queue is therefore persistent and idempotent — nothing is lost while the machine
+sleeps, and a drain after a long gap releases the backlog on its own spacing rather than dumping
+it. Genuinely continuous posting needs an always-on host; the queue is shaped so that moving
+there later changes the scheduler, not the data.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import random
+import uuid
+from dataclasses import asdict, dataclass, field
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+from typing import Any, Literal
+
+from algent_backend.agent_system.agents.radar.contracts import body_key
+from algent_backend.agent_system.runs.control_plane.fsio import atomic_write_text
+
+#: How old a queued post may be before it is no longer worth sending. A day covers an overnight
+#: machine and refuses a week-old one.
+STALE_AFTER_H = 24
+
+#: Minimum gap between posts, in minutes.
+_SPACING_MIN = 30
+#: Jitter so a drained backlog does not go out on a metronome, which reads as automation.
+_JITTER_MIN = 12
+
+_QUEUE_ENV = "ALGENT_RADAR_QUEUE"
+_DEFAULT_QUEUE = Path("runs_data") / "radar_queue.jsonl"
+
+
+def queue_path() -> Path:
+    return Path(os.environ.get(_QUEUE_ENV) or _DEFAULT_QUEUE)
+
+
+@dataclass
+class RadarPost:
+    """One queued post. Dedup is source ``key`` AND tweet body — two wires can name one event."""
+
+    key: str
+    text: str
+    status: Literal["queued", "posted", "failed", "skipped"] = "queued"
+    scheduled_for: str = ""
+    created_at: str = ""
+    posted_at: str = ""
+    post_url: str = ""
+    note: str = ""
+    id: str = field(default_factory=lambda: uuid.uuid4().hex[:12])
+
+    def stale(self, now: datetime | None = None) -> bool:
+        """Past its shelf life. News queued days ago is not news.
+
+        The queue survives a stopped machine on purpose, which is right for an overnight gap and
+        wrong for a long one. After five weeks idle this held 152 posts — Fed correlation
+        analysis, index additions, an AMOC modelling result — every one of which would have gone
+        out as though it were current the moment anything ran a drain. Age is judged from when
+        the item was QUEUED, not from its slot: a backlog reschedules, but the story underneath
+        does not get any newer.
+        """
+        stamp = self.created_at or self.scheduled_for
+        if not stamp:
+            return False
+        try:
+            age = (now or datetime.now(UTC)) - datetime.fromisoformat(stamp)
+        except ValueError:
+            return False
+        return age > timedelta(hours=STALE_AFTER_H)
+
+    def due(self, now: datetime | None = None) -> bool:
+        when = now or datetime.now(UTC)
+        if self.status != "queued" or self.stale(when):
+            return False
+        if not self.scheduled_for:
+            return True
+        return when >= datetime.fromisoformat(self.scheduled_for)
+
+
+def load(path: Path | None = None) -> list[RadarPost]:
+    p = path or queue_path()
+    if not p.exists():
+        return []
+    out: list[RadarPost] = []
+    for line in p.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            out.append(RadarPost(**json.loads(line)))
+        except (json.JSONDecodeError, TypeError):
+            continue  # a torn line must never take the whole queue down
+    return out
+
+
+def save(posts: list[RadarPost], path: Path | None = None) -> None:
+    p = path or queue_path()
+    body = "\n".join(json.dumps(asdict(post), ensure_ascii=False) for post in posts) + "\n"
+    atomic_write_text(p, body)
+
+
+def schedule(
+    new: list[RadarPost],
+    existing: list[RadarPost],
+    *,
+    now: datetime | None = None,
+) -> list[RadarPost]:
+    """Assign release times, evenly spaced and never behind what is already queued.
+
+    Scheduling from the LAST pending slot rather than from now is what stops a second sweep
+    from interleaving into the first one's gaps and undoing the spacing.
+    """
+    start = now or datetime.now(UTC)
+    pending = [
+        datetime.fromisoformat(p.scheduled_for)
+        for p in existing
+        if p.status == "queued" and p.scheduled_for
+    ]
+    cursor = max([start, *pending]) if pending else start
+
+    scheduled: list[RadarPost] = []
+    for post in new:
+        cursor = cursor + timedelta(minutes=_SPACING_MIN + random.randint(0, _JITTER_MIN))
+        post.scheduled_for = cursor.isoformat()
+        post.created_at = post.created_at or start.isoformat()
+        scheduled.append(post)
+    return scheduled
+
+
+def remembered_bodies(posts: list[RadarPost] | None = None) -> set[str]:
+    """Bodies we must not send again.
+
+    Posted rows are the honest memory. A 403 duplicate skip is the same fact: X already
+    has the sentence, even if we never recorded a URL (crash between accept and mark).
+    """
+    out: set[str] = set()
+    for post in (posts if posts is not None else load()):
+        if not post.text:
+            continue
+        if post.status == "posted":
+            out.add(body_key(post.text))
+        elif post.status == "skipped":
+            note = (post.note or "").lower()
+            if "duplicate content" in note or "already said" in note:
+                out.add(body_key(post.text))
+    return out
+
+
+def already_said(text: str, posts: list[RadarPost] | None = None) -> bool:
+    fp = body_key(text)
+    return bool(fp) and fp in remembered_bodies(posts)
+
+
+def enqueue(new: list[RadarPost], *, path: Path | None = None,
+            now: datetime | None = None) -> tuple[list[RadarPost], list[RadarPost]]:
+    """Add posts, dropping any whose source key OR tweet body we already have.
+
+    Key catches the same t0 item phrased two ways. Body catches two wires that
+    enriched into the same sentence — which is what X rejects as duplicate content.
+    """
+    existing = load(path)
+    seen_keys = {p.key for p in existing if p.key}
+    seen_bodies = {body_key(p.text) for p in existing if p.text}
+    added, dupes = [], []
+    for post in new:
+        fp = body_key(post.text) if post.text else ""
+        if post.key in seen_keys or (fp and fp in seen_bodies):
+            dupes.append(post)
+            continue
+        added.append(post)
+        seen_keys.add(post.key)
+        if fp:
+            seen_bodies.add(fp)
+    if added:
+        schedule(added, existing, now=now)
+        save(existing + added, path)
+    return added, dupes
+
+
+def due(path: Path | None = None, *, now: datetime | None = None) -> list[RadarPost]:
+    when = now or datetime.now(UTC)
+    return [p for p in load(path) if p.due(when)]
+
+
+def expire_stale(path: Path | None = None, *, now: datetime | None = None) -> list[RadarPost]:
+    """Retire everything past its shelf life. Returns what was dropped.
+
+    Called before a drain so the queue cannot quietly accumulate a backlog of old news that one
+    restart would then publish. Marked rather than deleted: the record of what we chose not to
+    say is worth as much as the record of what we said.
+    """
+    when = now or datetime.now(UTC)
+    posts = load(path)
+    dropped = [p for p in posts if p.status == "queued" and p.stale(when)]
+    for post in dropped:
+        post.status = "skipped"
+        post.note = post.note or f"expired unsent after {STALE_AFTER_H}h"
+    if dropped:
+        save(posts, path)
+    return dropped
+
+
+def mark(post_id: str, *, status: str, url: str = "", note: str = "",
+         path: Path | None = None) -> None:
+    posts = load(path)
+    for p in posts:
+        if p.id == post_id:
+            p.status = status  # type: ignore[assignment]
+            p.post_url = url or p.post_url
+            p.note = note or p.note
+            if status == "posted":
+                p.posted_at = datetime.now(UTC).isoformat()
+    save(posts, path)
+
+
+def last_posted_at(path: Path | None = None) -> datetime | None:
+    stamps = [p.posted_at for p in load(path) if p.status == "posted" and p.posted_at]
+    return max(datetime.fromisoformat(s) for s in stamps) if stamps else None
+
+
+def summary(path: Path | None = None) -> dict[str, Any]:
+    posts = load(path)
+    counts: dict[str, int] = {}
+    for p in posts:
+        counts[p.status] = counts.get(p.status, 0) + 1
+    nxt = sorted(
+        (p for p in posts if p.status == "queued" and p.scheduled_for),
+        key=lambda p: p.scheduled_for,
+    )
+    return {
+        "total": len(posts),
+        "by_status": counts,
+        "next_due": nxt[0].scheduled_for if nxt else "",
+        "queued": [
+            {"id": p.id, "scheduled_for": p.scheduled_for, "text": p.text[:80]}
+            for p in nxt[:10]
+        ],
+    }
