@@ -1,6 +1,7 @@
 import Popover from "@/components/Popover";
 import PulseTile from "@/components/PulseTile";
 import type { DailyDevelopment, DailyPulse, DailyStatement, KeyFigure, TheaterMap } from "@/lib/daily";
+import { mappedNumbers } from "@/components/map/numbering";
 import { shortDay } from "@/lib/daily";
 import { COVERAGE_DISPLAY, safeUrl, type Coverage, type Pulse, type Snapshot } from "@/lib/intel";
 import { toWallPulse, type WallPulse } from "@/lib/pulse-wall";
@@ -182,103 +183,6 @@ export function KeyFigures({ figures }: { figures: KeyFigure[] }) {
         );
       })}
     </div>
-  );
-}
-
-// ---- theater map ------------------------------------------------------------------------------
-/** The map's numbers index the developments. Zero-based unless the data plainly counts from 1. */
-export function mapIndexBase(map: TheaterMap, devCount: number): 0 | 1 {
-  const ns = map.points.map((p) => p.n).filter((n): n is number => n !== null);
-  return !ns.includes(0) && ns.includes(devCount) ? 1 : 0;
-}
-
-/** Development index -> the number the map marks it with (1-based). */
-function mappedNumbers(map: TheaterMap | null, devCount: number): Map<number, number> {
-  const out = new Map<number, number>();
-  if (!map) return out;
-  const base = mapIndexBase(map, devCount);
-  for (const p of map.points) if (p.n !== null && p.n - base >= 0 && p.n - base < devCount) out.set(p.n - base, p.n - base + 1);
-  return out;
-}
-
-/** Where it happened. Numbers match the numbered marks in the developments timeline beside it. */
-/** A country's label goes at the centre of its largest visible piece, and only when that piece is wide
- *  enough to hold the name — a label hanging over the sea or the neighbour misleads more than none. */
-function countryLabels(map: TheaterMap, r: number): { name: string; x: number; y: number; size: number }[] {
-  const size = r * 1.05;
-  const out: { name: string; x: number; y: number; size: number }[] = [];
-  for (const c of map.countries) {
-    if (!c.name) continue;
-    let best: { w: number; h: number; x: number; y: number } | null = null;
-    for (const sub of c.d.split(/(?=M)/)) {
-      const nums = (sub.match(/-?\d+(?:\.\d+)?/g) ?? []).map(Number);
-      if (nums.length < 6) continue;
-      let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
-      for (let i = 0; i + 1 < nums.length; i += 2) {
-        x0 = Math.min(x0, nums[i]); x1 = Math.max(x1, nums[i]);
-        y0 = Math.min(y0, nums[i + 1]); y1 = Math.max(y1, nums[i + 1]);
-      }
-      const w = x1 - x0, h = y1 - y0;
-      if (!best || w * h > best.w * best.h) best = { w, h, x: (x0 + x1) / 2, y: (y0 + y1) / 2 };
-    }
-    const label = c.name.toUpperCase();
-    if (best && best.w > label.length * size * 0.62 && best.h > size * 2) {
-      out.push({ name: label, x: best.x, y: best.y + size * 0.35, size });
-    }
-  }
-  return out;
-}
-
-/** "Taiz, Yemen" → "Taiz": the country is already written on the map. */
-function shortPlace(label: string): string {
-  const head = label.split(/[,(—–-]/)[0].trim();
-  return head.length > 22 ? head.slice(0, 21) + "…" : head;
-}
-
-export function TheaterMapFigure({ map, developments, label }: { map: TheaterMap | null; developments: DailyDevelopment[]; label?: string }) {
-  if (!map) return null;
-  const base = mapIndexBase(map, developments.length);
-  // Radius in viewBox units so a mark is ~10px whatever the map's shape (the longest side renders at ~320px).
-  const r = Math.max(map.width, map.height) * 0.03;
-  const marks = map.points.map((p, i) => {
-    const di = p.n === null ? -1 : p.n - base;
-    const dev = di >= 0 && di < developments.length ? developments[di] : null;
-    return { p, num: dev ? di + 1 : p.n ?? i + 1, headline: dev ? dev.headline : p.label };
-  });
-  return (
-    <figure className="geo-map">
-      <svg viewBox={`0 0 ${map.width} ${map.height}`} role="img" aria-label={label ?? `Map: ${marks.length} marked place${marks.length === 1 ? "" : "s"}, numbered as in the timeline.`} className="geo-map-svg">
-        <rect width={map.width} height={map.height} className="geo-map-sea" />
-        {map.countries.map((c, i) => (
-          <path key={i} d={c.d} className="geo-map-land">
-            {c.name && <title>{c.name}</title>}
-          </path>
-        ))}
-        {/* Unlabelled shapes do not read as places: name every country with room for its name, so the
-            eye knows where it is before it reads a single marker (doctrine: a picture must land alone). */}
-        {countryLabels(map, r).map((l, i) => (
-          <text key={`c${i}`} x={l.x} y={l.y} textAnchor="middle" fontSize={l.size} className="geo-map-country">
-            {l.name}
-          </text>
-        ))}
-        {marks.map(({ p, num, headline }, i) => (
-          <g key={i} transform={`translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})`} className={p.verification === "researched" ? "geo-pt geo-pt-solid" : "geo-pt geo-pt-hollow"}>
-            <title>{[headline, p.date, p.verification === "researched" ? "researched" : "reported"].filter(Boolean).join(" · ")}</title>
-            <circle r={r} strokeWidth={r * 0.14} />
-            <text textAnchor="middle" dy="0.35em" fontSize={r * 1.1}>
-              {num}
-            </text>
-            {p.label && marks.length <= 6 && (
-              <text x={p.x > map.width * 0.7 ? -r * 1.4 : r * 1.4} dy="0.35em" fontSize={r * 0.95}
-                    textAnchor={p.x > map.width * 0.7 ? "end" : "start"} className="geo-map-place">
-                {shortPlace(p.label)}
-              </text>
-            )}
-          </g>
-        ))}
-      </svg>
-      {map.credit && <figcaption className="geo-micro geo-map-credit">{map.credit}</figcaption>}
-    </figure>
   );
 }
 

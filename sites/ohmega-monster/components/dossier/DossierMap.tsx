@@ -1,4 +1,4 @@
-import { TheaterMapFigure } from "@/components/DailyVisuals";
+import GeoMap from "@/components/map/GeoMap";
 import type { Dossier } from "@/lib/dossier";
 
 import { VerifyKey } from "./parts";
@@ -11,7 +11,7 @@ export default function DossierMap({ d }: { d: Dossier }) {
   const top = [...d.places].sort((a, b) => b.count - a.count || a.name.localeCompare(b.name)).slice(0, 3);
   return (
     <div className="th-map">
-      <TheaterMapFigure map={d.map} developments={[]} label={`Map of ${d.map.points.length} place${d.map.points.length === 1 ? "" : "s"} where ${d.name} events were reported.`} />
+      <GeoMap map={d.map} developments={[]} label={`Map of ${d.map.points.length} place${d.map.points.length === 1 ? "" : "s"} where ${d.name} events were reported.`} />
       <p className="th-note">
         <VerifyKey />
         {top.length > 0 && (

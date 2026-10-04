@@ -93,11 +93,11 @@ def test_no_validated_point_no_map(countries) -> None:
 def test_map_spec_projection_bbox_and_culling(countries) -> None:
     spec = geo.build_map([_dev(None), _dev({"name": "Town", "country": "Aland", "lat": 5.0, "lon": 5.0},
                                            verification="researched")], countries)
-    # one point: a minimum 8-degree span around it, so its region still shows
-    assert spec["bbox"] == [1.0, 1.0, 9.0, 9.0] and spec["projection"] == "equirectangular" and spec["width"] == 1000
-    assert spec["height"] == round(1000 * 8 / (8 * __import__("math").cos(__import__("math").radians(5.0))))
+    # one point: a minimum 12-degree span around it, so its region still shows
+    assert spec["bbox"] == [-1.692, -1.0, 11.692, 11.0] and spec["version"] == 2 and spec["projection"] == "equirectangular" and spec["width"] == 1000
+    assert spec["height"] == 900
     (pt,) = spec["points"]
-    assert pt == {"x": 500.0, "y": round(4 / 8 * spec["height"], 1), "label": "Town", "date": "2026-09-28",
+    assert pt == {"x": 500.0, "y": round(6 / 12 * spec["height"], 1), "label": "Town", "date": "2026-09-28",
                   "verification": "researched", "n": 2}                      # n is 1-based: developments[1]
     assert [c["name"] for c in spec["countries"]] == ["Aland"]               # Bland and Farland are outside the frame
     nums = [float(v) for v in re.findall(r"-?\d+(?:\.\d+)?", spec["countries"][0]["d"])]
