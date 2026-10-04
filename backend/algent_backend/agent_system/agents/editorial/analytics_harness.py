@@ -142,7 +142,10 @@ class CodexHarness(Harness):
             "codex", "exec", prompt,
             "-C", str(folder),
             "-m", self.model(),
-            # Sandboxed auto-execution with write access to the pinned folder.
+            # Sandboxed auto-execution (= workspace-write): codex can WRITE only under the -C
+            # folder (+ its temp), so this is real confinement. grok has no verified equivalent
+            # (--sandbox takes an undocumented profile name), so for it ``analytics_guard`` is
+            # the only line of defence on the surfaces it can attribute.
             "--full-auto",
             # The scratch folder is not a git repo, and must not be treated as one.
             "--skip-git-repo-check",

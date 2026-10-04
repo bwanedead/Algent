@@ -221,35 +221,134 @@ def test_no_output_is_a_clean_failure(tmp_path: Path) -> None:
     assert art.status == "failed" and art.artifact_name == ""
 
 
-def test_new_escapes_diffs_against_baseline() -> None:
-    # only paths that appear DURING the run count — the user's pre-existing dirt is ignored.
-    assert aw._new_escapes({"a"}, {"a", "backend/evil.py"}) == ["backend/evil.py"]
-    assert aw._new_escapes({"a"}, {"a"}) == []
-    assert aw._new_escapes(None, {"x"}) == []   # git unavailable -> tripwire simply doesn't arm
+# ── escape guard: attribution is about the WORKER, not the repo ─────────────────────────────────
+
+def _with_side_effect(effect):
+    """The good runner, plus ``effect()`` happening on the filesystem during the run."""
+    good = _good_runner()
+
+    def run(prompt: str, folder: Path) -> tuple[bool, str]:
+        effect(folder)
+        return good(prompt, folder)
+    return run
 
 
-def test_escape_tripwire_fails_loudly_even_on_a_good_chart(tmp_path: Path, monkeypatch) -> None:
-    # A good-looking chart from a lane-breaking run is NOT trustworthy: hard fail + loud event.
-    seen = iter([set(), {"backend/secrets.py"}])   # before -> after: a new write outside the lane
-    monkeypatch.setattr(aw, "_git_status", lambda _root: next(seen))
-    events: list = []
-    ctx = _ctx(tmp_path, events)
-    art = aw.fulfill_request(_request(), _profile(), workspace=tmp_path / "ws",
-                             context=ctx, runner=_good_runner())
-    assert art.status == "failed" and art.escaped_writes == ["backend/secrets.py"]
-    assert any(et == aw.ANALYTICS_WORKER_ESCAPE for et, _ in events)
-    assert not (tmp_path / "ws" / "anx_01").exists()   # scratch still emptied
+def _repo(tmp_path: Path) -> Path:
+    """A fake repo: workspace stack + the pipeline's stores + a .env. Returns the workspace."""
+    ws = tmp_path / "ws"
+    (ws / "lib").mkdir(parents=True, exist_ok=True)
+    (ws / "lib" / "charts.py").write_text("print('helpers')\n", encoding="utf-8")
+    (ws / "AGENTS.md").write_text("doctrine\n", encoding="utf-8")
+    (tmp_path / "backend" / "profile_store").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "backend" / "profile_store" / "prof_old.json").write_text('{"a": 1}', encoding="utf-8")
+    (tmp_path / ".env").write_text("SECRET=1", encoding="utf-8")
+    return ws
 
 
-def test_store_escapes_catches_new_and_resized_files() -> None:
-    # git status can't see gitignored stores; this fingerprint diff is the complement.
-    # mtime-only bumps (scanners / concurrent touch) must NOT trip — size or new path must.
-    before = {"p/prof_a.json": (100, 10), "p/prof_c.json": (50, 8)}
-    after = {"p/prof_a.json": (200, 10),   # same size, newer mtime -> ignore
-             "p/prof_b.json": (50, 5),     # brand-new file
-             "p/prof_c.json": (90, 12)}    # resized -> escape
-    assert aw._store_escapes(before, after) == ["p/prof_b.json", "p/prof_c.json"]
-    assert aw._store_escapes(before, before) == []   # unchanged -> nothing
+def _run(tmp_path: Path, ws: Path, runner, events: list | None = None):
+    events = events if events is not None else []
+    art = aw.fulfill_request(_request(), _profile(), workspace=ws,
+                             context=_ctx(tmp_path, events), runner=runner)
+    return art, events
+
+
+def test_unrelated_concurrent_changes_do_not_fail_the_chart(tmp_path: Path, monkeypatch) -> None:
+    # The regression: a developer editing sites/ and the pipeline writing its own stores during
+    # the worker's window used to fail every chart. Neither is the worker's write.
+    ws = _repo(tmp_path)
+    dirty = iter([set(), {"sites/ohmega-monster/app/intel/page.tsx", "backend/backend_note.py"}])
+    monkeypatch.setattr(aw.analytics_guard, "_git_dirty", lambda _root: next(dirty))
+
+    def concurrent_activity(_folder: Path) -> None:
+        site = tmp_path / "sites" / "ohmega-monster" / "app" / "intel"
+        site.mkdir(parents=True)
+        (site / "page.tsx").write_text("export default 1", encoding="utf-8")
+        store = tmp_path / "backend" / "profile_store"
+        (store / "prof_new.json").write_text('{"fresh": true}', encoding="utf-8")   # pipeline write
+        (store / "prof_old.json").write_text('{"a": 1, "rev": 2}', encoding="utf-8")  # pipeline rewrite
+        (tmp_path / "backend" / "draft_store").mkdir()
+        (tmp_path / "backend" / "draft_store" / "d.json").write_text("{}", encoding="utf-8")
+
+    art, events = _run(tmp_path, ws, _with_side_effect(concurrent_activity))
+    assert art.status == "produced" and art.escaped_writes == []
+    churn = [p for et, p in events if et == aw.ANALYTICS_WORKER_CHURN]
+    assert churn and "sites/ohmega-monster/app/intel/page.tsx" in churn[0]["paths"]   # logged, not blamed
+    assert not any(et == aw.ANALYTICS_WORKER_ESCAPE for et, _ in events)
+
+
+def test_worker_editing_the_helper_stack_is_caught_and_reverted(tmp_path: Path) -> None:
+    ws = _repo(tmp_path)
+
+    def tamper(_folder: Path) -> None:
+        (ws / "lib" / "charts.py").write_text("import os; os.system('x')\n", encoding="utf-8")
+        (ws / "lib" / "evil.py").write_text("pwn\n", encoding="utf-8")
+        (ws / "AGENTS.md").unlink()
+
+    art, events = _run(tmp_path, ws, _with_side_effect(tamper))
+    assert art.status == "failed"
+    assert "analytics_workspace/lib/charts.py" in art.escaped_writes
+    assert "analytics_workspace/lib/evil.py" in art.escaped_writes
+    esc = next(p for et, p in events if et == aw.ANALYTICS_WORKER_ESCAPE)
+    assert "analytics_workspace/lib/charts.py" in esc["reverted"]
+    # reverted: edit undone, stray removed, deleted file restored
+    assert (ws / "lib" / "charts.py").read_text(encoding="utf-8") == "print('helpers')\n"
+    assert not (ws / "lib" / "evil.py").exists()
+    assert (ws / "AGENTS.md").read_text(encoding="utf-8") == "doctrine\n"
+    assert not (ws / "anx_01").exists()   # scratch still emptied
+
+
+def test_a_sibling_requests_scratch_is_not_the_workers_escape(tmp_path: Path) -> None:
+    ws = _repo(tmp_path)
+
+    def sibling(_folder: Path) -> None:
+        (ws / "anx_other").mkdir()
+        (ws / "anx_other" / "chart.svg").write_text("<svg/>", encoding="utf-8")
+
+    art, _ = _run(tmp_path, ws, _with_side_effect(sibling))
+    assert art.status == "produced"
+
+
+def test_worker_output_landing_at_the_repo_root_is_caught_and_removed(tmp_path: Path) -> None:
+    # the classic ``..\..`` mistake: the worker's own file names, one folder too high.
+    ws = _repo(tmp_path)
+
+    def misplaced(_folder: Path) -> None:
+        (tmp_path / "chart.svg").write_text("<svg/>", encoding="utf-8")
+        (tmp_path / "backend" / "data.csv").write_text("x,y\n", encoding="utf-8")
+
+    art, _ = _run(tmp_path, ws, _with_side_effect(misplaced))
+    assert art.status == "failed"
+    assert set(art.escaped_writes) == {"chart.svg", "backend/data.csv"}
+    assert not (tmp_path / "chart.svg").exists() and not (tmp_path / "backend" / "data.csv").exists()
+
+
+def test_a_developers_new_root_file_is_not_mistaken_for_the_worker(tmp_path: Path) -> None:
+    ws = _repo(tmp_path)
+    art, _ = _run(tmp_path, ws, _with_side_effect(
+        lambda _f: (tmp_path / "notes.md").write_text("dev notes", encoding="utf-8")))
+    assert art.status == "produced"
+    assert (tmp_path / "notes.md").exists()   # never touched
+
+
+def test_env_touched_during_the_run_is_an_escape(tmp_path: Path) -> None:
+    ws = _repo(tmp_path)
+    art, _ = _run(tmp_path, ws, _with_side_effect(
+        lambda _f: (tmp_path / ".env").write_text("SECRET=stolen!", encoding="utf-8")))
+    assert art.status == "failed" and art.escaped_writes == [".env"]
+
+
+def test_store_damage_is_caught_but_legit_pipeline_writes_are_not(tmp_path: Path) -> None:
+    # a pre-existing store file deleted, or one left unparsable, is damage a pipeline never does.
+    ws = _repo(tmp_path)
+    store = tmp_path / "backend" / "profile_store"
+    art, _ = _run(tmp_path, ws, _with_side_effect(lambda _f: (store / "prof_old.json").unlink()))
+    assert art.status == "failed" and art.escaped_writes == ["backend/profile_store/prof_old.json (deleted)"]
+
+    ws = _repo(tmp_path)
+    (store / "prof_old.json").write_text('{"a": 1}', encoding="utf-8")
+    art, _ = _run(tmp_path, ws, _with_side_effect(
+        lambda _f: (store / "prof_old.json").write_text("<<garbage", encoding="utf-8")))
+    assert art.status == "failed" and "(unparsable)" in art.escaped_writes[0]
 
 
 def test_pct_supported_by_corpus_allows_derived_ratios() -> None:
@@ -257,27 +356,6 @@ def test_pct_supported_by_corpus_allows_derived_ratios() -> None:
     assert aw._pct_supported_by_corpus("71%", corpus)  # 60000/85000
     assert not aw._pct_supported_by_corpus("164%", corpus)  # not a ratio of cited counts
     assert aw._pct_supported_by_corpus("50%", "growth hit 50% year over year")
-
-
-def test_store_fingerprint_covers_stores_and_env(tmp_path: Path) -> None:
-    (tmp_path / "backend" / "profile_store").mkdir(parents=True)
-    (tmp_path / "backend" / "profile_store" / "p.json").write_text("{}", encoding="utf-8")
-    (tmp_path / ".env").write_text("SECRET=1", encoding="utf-8")   # the classic escape target
-    fp = aw._store_fingerprint(tmp_path)
-    assert any("p.json" in k for k in fp)
-    assert any(k.endswith(".env") for k in fp)   # .env is fingerprinted (metadata only, never read)
-
-
-def test_tripwire_catches_a_poisoned_store_json(tmp_path: Path, monkeypatch) -> None:
-    # A worker that overwrites a gitignored profile JSON must be caught even though git is clean.
-    monkeypatch.setattr(aw, "_git_status", lambda _root: set())   # git sees nothing (ignored path)
-    fps = iter([{}, {"backend/profile_store/prof_x.json": (1, 2)}])   # before -> after: a new write
-    monkeypatch.setattr(aw, "_store_fingerprint", lambda _root: next(fps))
-    events: list = []
-    art = aw.fulfill_request(_request(), _profile(), workspace=tmp_path / "ws",
-                             context=_ctx(tmp_path, events), runner=_good_runner())
-    assert art.status == "failed" and "prof_x.json" in art.escaped_writes[0]
-    assert any(et == aw.ANALYTICS_WORKER_ESCAPE for et, _ in events)
 
 
 def test_worker_graph_loops_warranted_requests(tmp_path: Path) -> None:

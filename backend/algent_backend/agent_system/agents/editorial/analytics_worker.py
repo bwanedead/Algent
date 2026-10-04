@@ -11,6 +11,9 @@ subprocess can't launder its way past it):
   1. the subprocess runs with ``cwd`` pinned to a per-request scratch folder under the workspace;
   2. a post-run SWEEP enforces an artifact-type allowlist (png/svg/csv/md) and a size cap,
      deleting anything else the subprocess left;
+  2b. an ESCAPE GUARD (``analytics_guard``) blames the worker only for writes it can attribute
+     (workspace stack, worker-named strays at the repo roots, .env, store damage) and reverts
+     them; unrelated concurrent repo activity is logged, never blamed;
   3. a FIGURE CHECK diffs the numbers in the produced data table against the cited claims — the
      visual analog of ``unverified_prose_figures`` (a chart can drift off its evidence too);
   4. the harness (not the worker) copies the finished artifact OUT into the run's artifact store,
@@ -23,7 +26,6 @@ from __future__ import annotations
 
 import re
 import shutil
-import subprocess
 import time
 from collections.abc import Callable
 from datetime import UTC, datetime
@@ -36,6 +38,7 @@ from langgraph.graph import END, START, StateGraph
 from algent_backend.agent_system.agents.research.profile import Claim, SignalProfile
 from algent_backend.agent_system.runs.context import AgentRunContext
 
+from . import analytics_guard
 from .analytics_contracts import (
     AI_ANALYTIC_LABEL,
     AI_ANALYTIC_LABEL_SOURCED,
@@ -49,18 +52,12 @@ GENERATOR = "analytics_worker@v1"
 ANALYTICS_WORKER_COMPLETED = "analytics_worker.completed"
 ANALYTICS_ARTIFACT_PRODUCED = "analytics_worker.artifact"
 ANALYTICS_WORKER_ESCAPE = "analytics_worker.escape"   # loud: the worker wrote outside its lane
+ANALYTICS_WORKER_CHURN = "analytics_worker.unattributed_churn"   # advisory: repo changed, not blamed
 ANALYTICS_WORKER_READY = "analytics_worker.ready"     # update + canary result, before any spend
 
 # The sandbox: a per-request scratch folder lives under here; AGENTS.md at its root carries the
 # worker doctrine (discovered by grok walking up from the scratch cwd).
 _WORKSPACE_DIRNAME = "analytics_workspace"
-
-# The gitignored content stores the git tripwire is BLIND to (git status --porcelain omits ignored
-# paths) — and precisely the pipeline-poisoning targets: overwrite one profile/treatment/draft JSON
-# and every downstream stage inherits the corruption. So we fingerprint them separately. Small-JSON
-# dirs, cheap to stat; NOT runs_data (the run's own legitimately-churning control plane) or
-# ingestion_data (large, and not a per-request corruption target).
-_GUARDED_STORE_DIRS = ("profile_store", "treatment_store", "draft_store", "lead_store")
 
 # The artifact-type allowlist + size cap the post-run sweep enforces (mechanical, not doctrinal).
 _ALLOWED_SUFFIXES = {".png", ".svg", ".csv", ".md", ".json", ".txt", ".gif"}
@@ -76,6 +73,13 @@ _VISUAL_NAMES = {
 }
 _DATA_NAME = "data.csv"
 _CAPTION_NAME = "caption.md"
+# Names ONLY this worker gives files: a new one landing at the repo root / backend/ / workspace root
+# is attributable to a ``..`` mistake by the worker (see ``analytics_guard``). Generic names
+# (table.md, insight.md, data.json) are left out — a developer could plausibly create those.
+_SIGNATURE_NAMES = frozenset(
+    {n for names in _VISUAL_NAMES.values() for n in names if Path(n).suffix != ".md"}
+    | {_DATA_NAME, _CAPTION_NAME, "SKIPPED.md", "REQUEST.md"}
+)
 # Raster sibling of the site vector — consumers that cannot take SVG need this file.
 _RASTER_SUFFIXES = {".png", ".gif", ".jpg", ".jpeg", ".webp"}
 _RASTER_NAMES = {
@@ -439,87 +443,6 @@ def _sweep(folder: Path) -> list[str]:
     return removed
 
 
-def _git_status(root: Path) -> set[str] | None:
-    """Repo-relative paths currently dirty in ``root`` — the tripwire baseline.
-
-    Excludes ``analytics_workspace/`` itself (the worker's legitimate, gitignored home). Returns
-    None when ``root`` is not a git repo or git is unavailable — the tripwire then simply doesn't
-    arm (it is a free bonus check, never a hard dependency of the worker).
-
-    BLIND SPOT: ``git status`` omits gitignored paths, so a worker that overwrote a gitignored
-    store JSON would not surface here. ``_store_fingerprint`` covers exactly those stores; the two
-    checks are complementary and both feed the escape decision.
-    """
-    try:
-        proc = subprocess.run(
-            ["git", "-C", str(root), "status", "--porcelain"],
-            capture_output=True, text=True, timeout=15, encoding="utf-8", errors="replace",
-        )
-    except (FileNotFoundError, OSError, subprocess.SubprocessError):
-        return None
-    if proc.returncode != 0:
-        return None
-    paths: set[str] = set()
-    for line in proc.stdout.splitlines():
-        p = line[3:].strip().split(" -> ")[-1].strip('"')   # drop the XY prefix; take a rename's dest
-        if p and not p.startswith((_WORKSPACE_DIRNAME + "/", _WORKSPACE_DIRNAME + "\\")):
-            paths.add(p)
-    return paths
-
-
-def _new_escapes(before: set[str] | None, after: set[str] | None) -> list[str]:
-    """Paths that became dirty DURING the worker run, outside its lane — a detected escape.
-
-    Diffed against a baseline so the user's own pre-existing uncommitted work never trips it.
-    """
-    if before is None or after is None:
-        return []
-    return sorted(after - before)
-
-
-def _store_fingerprint(repo_root: Path) -> dict[str, tuple[int, int]]:
-    """(mtime_ns, size) of the guarded gitignored files — the git tripwire's blind spot. Cheap:
-    small per-item JSON, not dependency-scale trees. Covers the content stores AND ``.env`` files
-    (credential poisoning is the classic sandbox escape, and ``.env`` is gitignored + not a store,
-    so nothing else would catch it). Metadata only — NEVER reads any file's contents."""
-    fp: dict[str, tuple[int, int]] = {}
-
-    def _stamp(p: Path) -> None:
-        try:
-            st = p.stat()
-            fp[str(p)] = (st.st_mtime_ns, st.st_size)
-        except OSError:
-            pass
-
-    for name in _GUARDED_STORE_DIRS:
-        d = repo_root / "backend" / name
-        if d.is_dir():
-            for p in d.rglob("*"):
-                if p.is_file():
-                    _stamp(p)
-    # .env at the repo root and under backend/ — mtime+size only, contents never touched.
-    for base in (repo_root, repo_root / "backend"):
-        for p in (*base.glob(".env"), *base.glob(".env.*")):
-            if p.is_file():
-                _stamp(p)
-    return fp
-
-
-def _store_escapes(before: dict[str, tuple[int, int]], after: dict[str, tuple[int, int]]) -> list[str]:
-    """Store files created or resized during the run — a worker corrupting pipeline state.
-
-    Size (not mtime) is the signal for an existing path: concurrent rails and scanners bump
-    mtimes without rewriting bytes, and that used to false-positive the tripwire into discarding
-    real charts. A new path, or a path whose byte length changed, still fails loudly.
-    """
-    escaped: list[str] = []
-    for path, (_mtime_ns, size) in after.items():
-        prior = before.get(path)
-        if prior is None or prior[1] != size:
-            escaped.append(path)
-    return sorted(escaped)
-
-
 def _pct_supported_by_corpus(token: str, corpus: str) -> bool:
     """True when ``token`` is literally in evidence, or is a ratio of two corpus numbers.
 
@@ -862,14 +785,13 @@ def fulfill_request(
     if folder.exists():
         shutil.rmtree(folder, ignore_errors=True)
     folder.mkdir(parents=True, exist_ok=True)
-    repo_root = workspace.parent                        # analytics_workspace/ sits at the repo root
     try:
         import json
         (folder / "data.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
         (folder / "REQUEST.md").write_text(_brief(request), encoding="utf-8")
 
-        before_git = _git_status(repo_root)             # tripwire baseline (see _git_status)
-        before_store = _store_fingerprint(repo_root)    # + the gitignored stores git can't see
+        baseline = analytics_guard.snapshot(            # attributable surfaces (see analytics_guard)
+            workspace, signature_names=_SIGNATURE_NAMES, is_scratch=_is_scratch_dir)
         prompt = _prompt(may_source=bool(request.may_source))
         allow_web = bool(request.may_source)
         run_timeout = _timeout_for(request) if timeout is None else timeout
@@ -878,17 +800,24 @@ def fulfill_request(
 
         removed = _sweep(folder)                        # (2) artifact-type + size sweep
 
-        # (2b) ESCAPE tripwire — "stay in your lane" as a DETECTED invariant, not just doctrine. If
-        # the worker wrote anything in the repo outside analytics_workspace/ — tracked files (git)
-        # OR the gitignored content stores it could poison — distrust it entirely (a good-looking
-        # chart from a lane-breaking run is not trustworthy) and alert loudly.
-        escaped = (_new_escapes(before_git, _git_status(repo_root))
-                   + _store_escapes(before_store, _store_fingerprint(repo_root)))
-        if escaped:
+        # (2b) ESCAPE guard — "stay in your lane" as a DETECTED invariant, not just doctrine. It
+        # judges only surfaces where the writer is identifiable (the workspace stack, worker-named
+        # strays at the repo roots, .env, store damage) and reverts the worker's own writes. Other
+        # concurrent repo activity (a developer's edits, the pipeline's own stores) is NOT blamed —
+        # that used to fail every chart whenever anything else in the repo changed.
+        verdict = analytics_guard.check(
+            workspace, baseline, signature_names=_SIGNATURE_NAMES, is_scratch=_is_scratch_dir)
+        if verdict.observed_churn and context is not None:
+            context.emit(ANALYTICS_WORKER_CHURN, {"request_id": request.id,
+                                                  "paths": verdict.observed_churn[:20]})
+        if verdict.escaped:
             if context is not None:
-                context.emit(ANALYTICS_WORKER_ESCAPE, {"request_id": request.id, "escaped": escaped})
-            return _finalize(result, status="failed", swept=removed, escaped_writes=escaped,
-                             note="worker wrote outside analytics_workspace/: " + ", ".join(escaped[:5]))
+                context.emit(ANALYTICS_WORKER_ESCAPE, {"request_id": request.id,
+                                                       "escaped": verdict.escaped,
+                                                       "reverted": verdict.reverted})
+            return _finalize(result, status="failed", swept=removed, escaped_writes=verdict.escaped,
+                             note="worker wrote outside analytics_workspace/: "
+                                  + ", ".join(verdict.escaped[:5]))
 
         skipped = (folder / "SKIPPED.md")
         if skipped.exists():
