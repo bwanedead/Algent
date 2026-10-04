@@ -1,0 +1,381 @@
+{
+  "store": "_scratch_library_store\\library.db",
+  "elapsed_s": 580.1,
+  "pages_attempted": 300,
+  "totals": {
+    "new": 287,
+    "revised": 0,
+    "unchanged": 0,
+    "failed": 8,
+    "robots": 5,
+    "feeds_ok": 67,
+    "feeds_failed": 5,
+    "feeds_not_modified": 0,
+    "feeds_parked": 0
+  },
+  "retention": {
+    "old_revisions": 0,
+    "aged": 0,
+    "over_budget": 0
+  },
+  "sources": {
+    "un_news": {
+      "feeds_ok": 1,
+      "pending": 28,
+      "new": 5
+    },
+    "reliefweb": {
+      "feeds_ok": 1,
+      "pending": 20,
+      "new": 4,
+      "failed": 1,
+      "errors": [
+        "https://reliefweb.int/report/syrian-arab-republic/health-sector-bulletin-september-2026-final: RuntimeError: Could not extract content from https://reliefweb.int/report/syrian-arab-republic/healt"
+      ]
+    },
+    "ocha": {
+      "feeds_ok": 1,
+      "pending": 8,
+      "new": 5
+    },
+    "iaea": {
+      "feeds_ok": 1,
+      "pending": 15,
+      "failed": 5,
+      "errors": [
+        "http://www.iaea.org/newscenter/pressreleases/update-369-iaea-director-general-statement-on-situation-in-ukraine: RuntimeError: Could not extract content from http://www.iaea.org/newscenter/pressreleases/update-369",
+        "http://www.iaea.org/newscenter/multimedia/videos/iaea-medical-assistance-supports-ukraines-nuclear-workers: RuntimeError: Could not extract content from http://www.iaea.org/newscenter/multimedia/videos/iaea-m",
+        "http://www.iaea.org/newscenter/news/iaea-lise-meitner-programme-advances-womens-nuclear-careers-through-visit-to-the-russian-federation: RuntimeError: Could not extract content from http://www.iaea.org/newscenter/news/iaea-lise-meitner-p",
+        "http://www.iaea.org/newscenter/news/how-nuclear-science-helps-tackle-food-waste: RuntimeError: Could not extract content from http://www.iaea.org/newscenter/news/how-nuclear-science",
+        "http://www.iaea.org/newscenter/pressreleases/iaea-and-inter-american-development-bank-sign-partnership-agreement-on-nuclear-energy-for-development: RuntimeError: Could not extract content from http://www.iaea.org/newscenter/pressreleases/iaea-and-i"
+      ]
+    },
+    "icrc": {
+      "feeds_ok": 1,
+      "pending": 18,
+      "new": 5
+    },
+    "wto": {
+      "feeds_ok": 1,
+      "pending": 8,
+      "new": 5
+    },
+    "eu_council": {
+      "feeds_failed": 1,
+      "pending": 0,
+      "errors": [
+        "https://www.consilium.europa.eu/en/rss/pressreleases.ashx: robots: robots.txt forbids access (HTTP 403)"
+      ]
+    },
+    "fed": {
+      "feeds_ok": 1,
+      "pending": 18,
+      "new": 5
+    },
+    "fed_speeches": {
+      "feeds_ok": 1,
+      "pending": 13,
+      "new": 5
+    },
+    "ecb": {
+      "feeds_ok": 1,
+      "pending": 9,
+      "new": 5
+    },
+    "boe": {
+      "feeds_ok": 1,
+      "pending": 48,
+      "new": 5
+    },
+    "boe_speeches": {
+      "feeds_ok": 1,
+      "pending": 48,
+      "new": 5
+    },
+    "boj": {
+      "feeds_ok": 1,
+      "pending": 17,
+      "new": 5
+    },
+    "bis_speeches": {
+      "feeds_ok": 1,
+      "pending": 48,
+      "new": 5
+    },
+    "us_dod": {
+      "feeds_failed": 1,
+      "pending": 0,
+      "errors": [
+        "https://www.defense.gov/DesktopModules/ArticleCS/RSS.ashx?ContentType=1&Site=945&max=10: robots: robots.txt forbids access (HTTP 403)"
+      ]
+    },
+    "uk_mod": {
+      "feeds_ok": 1,
+      "pending": 18,
+      "new": 5
+    },
+    "eia": {
+      "feeds_ok": 1,
+      "pending": 20,
+      "new": 5
+    },
+    "us_treasury": {
+      "feeds_failed": 1,
+      "pending": 0,
+      "errors": [
+        "https://home.treasury.gov/news/press-releases/rss.xml: ReadTimeout: The read operation timed out"
+      ]
+    },
+    "crisisgroup": {
+      "feeds_failed": 1,
+      "pending": 0,
+      "errors": [
+        "https://www.crisisgroup.org/rss.xml: robots: robots.txt forbids access (HTTP 403)"
+      ]
+    },
+    "atlanticcouncil": {
+      "feeds_ok": 1,
+      "pending": 98,
+      "new": 5
+    },
+    "warontherocks": {
+      "feeds_ok": 1,
+      "pending": 98,
+      "new": 5
+    },
+    "lowy": {
+      "feeds_ok": 1,
+      "pending": 48,
+      "new": 5
+    },
+    "bellingcat": {
+      "feeds_ok": 1,
+      "pending": 8,
+      "new": 5
+    },
+    "hrw": {
+      "feeds_ok": 1,
+      "pending": 18,
+      "new": 5
+    },
+    "amnesty": {
+      "feeds_ok": 1,
+      "pending": 10,
+      "new": 5
+    },
+    "aljazeera": {
+      "feeds_ok": 2,
+      "pending": 254,
+      "new": 5
+    },
+    "bbc": {
+      "feeds_ok": 4,
+      "pending": 1008,
+      "new": 5
+    },
+    "guardian": {
+      "feeds_ok": 2,
+      "pending": 354,
+      "new": 5
+    },
+    "dw": {
+      "feeds_ok": 1,
+      "pending": 130,
+      "new": 5
+    },
+    "france24": {
+      "feeds_ok": 1,
+      "pending": 22,
+      "new": 5
+    },
+    "npr": {
+      "feeds_ok": 1,
+      "pending": 8,
+      "robots": 5,
+      "errors": [
+        "https://www.npr.org/2026/10/03/nx-s1-5989699/for-some-brazilians-this-election-is-a-vote-on-trump: robots.txt unreachable (ReadTimeout: The read operation timed out)",
+        "https://www.npr.org/2026/10/03/nx-s1-5989532/france-arrests-5-000-people-mostly-teens-as-school-protests-spread: robots.txt unreachable (ReadTimeout: The read operation timed out)",
+        "https://www.npr.org/2026/10/03/nx-s1-5987758/u-s-withdrawal-from-iraq-is-complete: robots.txt unreachable (ReadTimeout: The read operation timed out)",
+        "https://www.npr.org/2026/10/03/nx-s1-5981108/lula-or-bolsonaro-some-brazilian-voters-say-they-dont-want-either: robots.txt unreachable (ReadTimeout: The read operation timed out)",
+        "https://www.npr.org/2026/10/02/nx-s1-5989727/brazil-election-lula-bolsonaro-flavio-democracy: robots.txt unreachable (ReadTimeout: The read operation timed out)"
+      ]
+    },
+    "kyivindependent": {
+      "feeds_ok": 2,
+      "pending": 28,
+      "new": 5
+    },
+    "almonitor": {
+      "feeds_ok": 1,
+      "pending": 18,
+      "new": 5
+    },
+    "mee": {
+      "feeds_ok": 1,
+      "pending": 18,
+      "new": 5
+    },
+    "jpost": {
+      "feeds_ok": 1,
+      "pending": 24,
+      "new": 5
+    },
+    "aa": {
+      "feeds_ok": 1,
+      "pending": 28,
+      "new": 5
+    },
+    "arabnews": {
+      "feeds_ok": 1,
+      "pending": 48,
+      "new": 5
+    },
+    "tass": {
+      "feeds_ok": 1,
+      "pending": 60,
+      "new": 5
+    },
+    "moscowtimes": {
+      "feeds_ok": 1,
+      "pending": 48,
+      "new": 5
+    },
+    "meduza": {
+      "feeds_ok": 1,
+      "pending": 28,
+      "new": 5
+    },
+    "politico_eu": {
+      "feeds_ok": 1,
+      "pending": 8,
+      "new": 5
+    },
+    "scmp": {
+      "feeds_ok": 1,
+      "pending": 48,
+      "new": 5
+    },
+    "thehindu": {
+      "feeds_ok": 2,
+      "pending": 439,
+      "new": 5
+    },
+    "dawn": {
+      "feeds_ok": 1,
+      "pending": 27,
+      "new": 5
+    },
+    "cna": {
+      "feeds_ok": 1,
+      "pending": 18,
+      "new": 5
+    },
+    "straitstimes": {
+      "feeds_ok": 1,
+      "pending": 48,
+      "new": 5
+    },
+    "japantimes": {
+      "feeds_ok": 1,
+      "pending": 28,
+      "new": 5
+    },
+    "yonhap": {
+      "feeds_ok": 1,
+      "pending": 105,
+      "new": 5
+    },
+    "taipeitimes": {
+      "feeds_ok": 1,
+      "pending": 46,
+      "new": 5
+    },
+    "cgtn": {
+      "feeds_ok": 1,
+      "pending": 48,
+      "new": 5
+    },
+    "thediplomat": {
+      "feeds_ok": 1,
+      "pending": 95,
+      "new": 3,
+      "failed": 2,
+      "errors": [
+        "https://thediplomat.com/2026/10/concerns-about-wwii-allies-at-us-china-summit/: RuntimeError: Could not extract content from https://thediplomat.com/2026/10/concerns-about-wwii-all",
+        "https://thediplomat.com/2026/10/japan-and-australia-toward-a-more-autonomous-and-resilient-partnership/: RuntimeError: Could not extract content from https://thediplomat.com/2026/10/japan-and-australia-tow"
+      ]
+    },
+    "abc_au": {
+      "feeds_ok": 1,
+      "pending": 23,
+      "new": 5
+    },
+    "africanews": {
+      "feeds_ok": 1,
+      "pending": 48,
+      "new": 5
+    },
+    "allafrica": {
+      "feeds_ok": 1,
+      "pending": 30,
+      "new": 5
+    },
+    "premiumtimes": {
+      "feeds_ok": 1,
+      "pending": 13,
+      "new": 5
+    },
+    "dailymaverick": {
+      "feeds_ok": 1,
+      "pending": 51,
+      "new": 5
+    },
+    "mercopress": {
+      "feeds_ok": 1,
+      "pending": 8,
+      "new": 5
+    },
+    "stmt_kremlin_transcripts": {
+      "feeds_ok": 1,
+      "pending": 18,
+      "new": 5
+    },
+    "stmt_kremlin_news": {
+      "feeds_ok": 1,
+      "pending": 18,
+      "new": 5
+    },
+    "stmt_whitehouse": {
+      "feeds_ok": 1,
+      "pending": 28,
+      "new": 5
+    },
+    "stmt_state_dept": {
+      "feeds_failed": 1,
+      "pending": 0,
+      "errors": [
+        "https://www.state.gov/rss-feed/press-releases/feed/: robots: robots.txt forbids access (HTTP 403)"
+      ]
+    },
+    "stmt_fcdo": {
+      "feeds_ok": 1,
+      "pending": 18,
+      "new": 5
+    },
+    "stmt_uk_pmo": {
+      "feeds_ok": 1,
+      "pending": 18,
+      "new": 5
+    },
+    "stmt_un_press": {
+      "feeds_ok": 1,
+      "pending": 8,
+      "new": 5
+    },
+    "stmt_ec_presscorner": {
+      "feeds_ok": 1,
+      "pending": 8,
+      "new": 5
+    }
+  }
+}
