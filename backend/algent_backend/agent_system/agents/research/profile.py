@@ -261,3 +261,13 @@ class SignalProfile(BaseModel):
     generated_at: str = ""           # when this profile was built
     generator: str = ""              # agent id / version that built it
     model: str = ""                  # model that produced it
+
+    @property
+    def is_complete(self) -> bool:
+        """THE definition of a usable profile, used by the store, finalisation, reuse and repair.
+
+        Complete = at least one claim traced to a source, and a source ledger to trace it into.
+        A run cut short (a failed model call, a schema error) yields no claims and no sources; that
+        is a failed attempt, never an asset, and must not stand in for one.
+        """
+        return bool(self.source_ledger) and any(c.supported_by for c in self.claim_ledger)

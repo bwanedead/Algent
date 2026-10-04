@@ -13,7 +13,7 @@ from algent_backend.agent_system.agents.intel.contracts import Brief, Escalation
 from algent_backend.agent_system.agents.pulse import PulseStore, repository
 from algent_backend.agent_system.agents.pulse import update as pulse_update
 from algent_backend.agent_system.agents.pulse.contracts import Influence, Pulse, PulseDefinition, Situation, Source
-from algent_backend.agent_system.agents.research.profile import Claim, SignalProfile
+from algent_backend.agent_system.agents.research.profile import Claim, SignalProfile, SourceArtifact
 from algent_backend.agent_system.agents.research.store import JsonProfileStore
 
 from test_intel_daily import AS_OF, SUMMARY, _board, _ctx, _draft, _store
@@ -23,7 +23,8 @@ DAY_TAG = AS_OF.replace("-", "")
 
 def _profile(pid: str, *, claims: bool = True, generated_at: str = f"{AS_OF}T10:00:00+00:00") -> SignalProfile:
     return SignalProfile(id=pid, title=pid, generated_at=generated_at,
-                         claim_ledger=[Claim(id="clm_1", text="a claim")] if claims else [])
+                         source_ledger=[SourceArtifact(id="src_1", url="https://x.example/a")] if claims else [],
+                         claim_ledger=[Claim(id="clm_1", text="a claim", supported_by=["src_1"])] if claims else [])
 
 
 def _daily_ids() -> dict[str, str]:
