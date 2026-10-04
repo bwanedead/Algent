@@ -1,0 +1,387 @@
+{
+  "schema": "ohmega.dossier/1",
+  "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
+  "name": "Ethiopia-Eritrea rupture and Tigray offensive",
+  "domain": "geopolitics",
+  "built_at": "2026-10-04T07:26:06.472952+00:00",
+  "first_seen": "2026-10-02",
+  "last_seen": "2026-10-03",
+  "days_covered": 1,
+  "primer": {
+    "text": "Ethiopia and Eritrea are two states in the Horn of Africa, and Tigray is a region within Ethiopia where Ethiopian government forces and Tigray-aligned forces have contested control. Mekelle is the main city in Tigray and the location of its airport, so control of the airport signals control of the regional center. A rupture in relations between Ethiopia and Eritrea and intensified fighting inside Tigray are understood as one escalation because the interstate relationship and the internal contest over Tigray affect each other, with implications for security across the Horn.",
+    "built_at": "2026-10-04T07:26:06.472952+00:00"
+  },
+  "current": {
+    "date": "2026-10-03",
+    "bottom_line": "Ethiopia and Eritrea severed all diplomatic ties on Oct 1, ending the 2018 rapprochement, as the worst fighting since the 2020-2022 Tigray war spread to the capital. On Oct 3 government forces appeared to reverse rebel gains by retaking Mekelle's airport as TPLF fighters pulled back, but telecom blackouts and restricted access mean battlefield claims remain difficult to verify independently.",
+    "escalation": {
+      "direction": "rising",
+      "pace": "fast"
+    },
+    "coverage": "newly reported",
+    "source": "daily",
+    "url": "/geopolitics/2026-10-03"
+  },
+  "pulses": [
+    {
+      "id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
+      "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
+      "situation": "Red Sea and global shipping disruption",
+      "position": 65.0,
+      "band": "severe",
+      "history": [
+        {
+          "at": "2026-10-01T03:00:57.470982+00:00",
+          "position": 58.0
+        },
+        {
+          "at": "2026-10-01T07:48:19.756517+00:00",
+          "position": 68.0
+        },
+        {
+          "at": "2026-10-01T11:36:13.230643+00:00",
+          "position": 72.0
+        },
+        {
+          "at": "2026-10-03T21:55:50.660077+00:00",
+          "position": 65.0
+        }
+      ]
+    },
+    {
+      "id": "pls_sahel_horn_foreign_military_entanglement_horn",
+      "name": "Foreign Military Entanglement and Intelligence Competition in the Horn",
+      "situation": "Sahel and Horn of Africa instability",
+      "position": 58.0,
+      "band": "severe",
+      "history": [
+        {
+          "at": "2026-10-01T03:00:57.470982+00:00",
+          "position": 58.0
+        }
+      ]
+    },
+    {
+      "id": "pls_sahel_horn_displacement_humanitarian_collapse",
+      "name": "Displacement and Humanitarian Collapse Pressure",
+      "situation": "Sahel and Horn of Africa instability",
+      "position": null,
+      "band": "unassessed",
+      "history": []
+    },
+    {
+      "id": "pls_sahel_horn_state_fragility_insurgent_control",
+      "name": "State Fragility and Insurgent Control",
+      "situation": "Sahel and Horn of Africa instability",
+      "position": null,
+      "band": "unassessed",
+      "history": []
+    }
+  ],
+  "escalation_history": [
+    {
+      "date": "2026-10-03",
+      "direction": "rising",
+      "pace": "fast"
+    }
+  ],
+  "coverage_series": [
+    {
+      "day": "2026-09-27",
+      "count": 0,
+      "editions": 1
+    },
+    {
+      "day": "2026-09-28",
+      "count": 0,
+      "editions": 1
+    },
+    {
+      "day": "2026-09-29",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-09-30",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-01",
+      "count": 0,
+      "editions": 2
+    },
+    {
+      "day": "2026-10-02",
+      "count": 1,
+      "editions": 1
+    },
+    {
+      "day": "2026-10-03",
+      "count": 1,
+      "editions": 1
+    }
+  ],
+  "timeline": [
+    {
+      "date": "2026-10-03",
+      "headline": "Government forces retake Mekelle airport as rebels pull back from city",
+      "detail": "On Oct 3, 2026 Ethiopian National Defence Forces and allied fighters regained control of Alula Aba Nega Airport about 10km east of Mekelle city centre, which TPLF forces had seized Sept 23 along with two other Tigray airports. Same day, TPLF fighters and leaders were observed leaving Mekelle, with government offices and police stations left without security personnel and reports of looting. Telecom/internet severely disrupted and media access restricted, limiting independent verification.",
+      "where": "Mekelle, Tigray",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/3/rebels-pulling-back-as-addis-ababas-forces-advance-reports-say",
+        "https://www.aljazeera.com/news/2026/10/3/ethiopian-govt-forces-advance-in-tigray-as-rebels-retreat-what-to-know"
+      ],
+      "from": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-10-01",
+      "headline": "Explosions and claimed drone strikes hit Addis Ababa; indefinite drone ban imposed",
+      "detail": "Overnight Oct 1-2, 2026 explosions were heard in Addis Ababa, including near the military headquarters in the west and near intelligence headquarters in the south. A source linked to the opposition alliance claimed it carried out drone strikes in the capital, including targeting military headquarters (unconfirmed). On Oct 1 Ethiopia's National Intelligence and Security Service imposed an indefinite ban on drone flights over Addis Ababa and surrounding areas citing protection of senior officials and infrastructure.",
+      "where": "Addis Ababa",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/1/eritrea-severs-diplomatic-ties-with-ethiopia-in-tit-for-tat-move",
+        "https://www.bbc.com/news/articles/crpd0d0jl0y0o",
+        "https://www.aljazeera.com/news/2026/10/3/ethiopian-govt-forces-advance-in-tigray-as-rebels-retreat-what-to-know"
+      ],
+      "from": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-10-01",
+      "headline": "Ethiopia and Eritrea sever all diplomatic ties in tit-for-tat expulsions; Egypt drawn in",
+      "detail": "On Oct 1, 2026 Ethiopia announced closure of its embassy in Asmara and declared 10 Eritrean diplomats in Addis Ababa persona non grata to leave within 48 hours for activities posing a direct threat to national security in breach of Vienna Convention. Late Oct 1 Eritrea's Ministry of Foreign Affairs announced severing all diplomatic ties with Ethiopia, saying it had 'no option but to reciprocate in kind.' Ethiopia also declared Egyptian diplomat Ahmed Moharam Ahmed Soliman persona non grata Oct 1; Egypt expelled an Ethiopian counsellor in Cairo Oct 2 in reciprocal move.",
+      "where": "Addis Ababa and Asmara",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/1/eritrea-severs-diplomatic-ties-with-ethiopia-in-tit-for-tat-move",
+        "https://www.bbc.com/news/articles/crpd0d0jl0y0o",
+        "https://www.aa.com.tr/en/africa/ethiopia-closes-embassy-in-eritrea-expels-10-eritrean-diplomats/4075305"
+      ],
+      "from": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-09-23",
+      "headline": "Worst fighting since 2020-2022 war spreads across three regions, threatening Djibouti corridor and aid operations",
+      "detail": "Fighting erupted Sept 23, 2026 between federal forces and TPLF-led alliance across Tigray, Afar and Amhara, after TPLF joined six other armed movements including Fano and OLA to form Alliance for Survival / Ethiopian Peoples' Forces Alliance for Survival aiming to remove Prime Minister Abiy Ahmed. At least 52 civilians were killed in three days around Alamata in southern Tigray in late September (likely). Fighting in Afar threatens Ethiopia's Djibouti transport corridor; tens of thousands estimated displaced in Afar. On Oct 2 UN warned drone activity and air strikes put civilians, infrastructure and aid operations at risk with road closures restricting humanitarian movements.",
+      "where": "Tigray, Afar and Amhara regions",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/3/ethiopian-govt-forces-advance-in-tigray-as-rebels-retreat-what-to-know",
+        "https://www.bbc.com/news/articles/crpd0d0jl0y0o",
+        "https://www.aljazeera.com/news/2026/9/23/ethiopian-airlines-suspends-flights-to-three-northern-tigray-airports"
+      ],
+      "from": "/geopolitics/2026-10-03"
+    }
+  ],
+  "places": [
+    {
+      "name": "Addis Ababa",
+      "country": "Ethiopia",
+      "lat": 9.03,
+      "lon": 38.74,
+      "count": 2,
+      "last_date": "2026-10-01"
+    },
+    {
+      "name": "Mekelle",
+      "country": "Ethiopia",
+      "lat": 13.4967,
+      "lon": 39.4753,
+      "count": 1,
+      "last_date": "2026-10-03"
+    },
+    {
+      "name": "Alamata",
+      "country": "Ethiopia",
+      "lat": 12.4167,
+      "lon": 39.55,
+      "count": 1,
+      "last_date": "2026-09-23"
+    }
+  ],
+  "map": {
+    "bbox": [
+      35.145,
+      7.263,
+      43.145,
+      15.263
+    ],
+    "projection": "equirectangular",
+    "width": 1000,
+    "height": 1020,
+    "countries": [
+      {
+        "name": "Sudan",
+        "d": "M0 0L163.4 0L147.3 56.2L160.6 107.3L140.7 216.8L89.8 342.3L14.4 405.5L0 431.7Z"
+      },
+      {
+        "name": "Eritrea",
+        "d": "M160.6 107.3L147.3 56.2L163.4 0L614.8 0L754.3 98.5L823.7 171.1L891.5 244.7L930.6 288.5L992 326.9L954.3 358L900.8 346.9L858.1 305.7L806.7 230.9L751.3 190L719 146L610.2 94.8L524.5 93.3L494.3 66.6L421 96.6L345.1 38.7L306.1 133.9L160.6 107.3Z"
+      },
+      {
+        "name": "Yemen",
+        "d": "M1000 0L1000 166.2L992.9 153.1L968.4 58.8L932.5 6.4L957.5 0.2Z"
+      },
+      {
+        "name": "Ethiopia",
+        "d": "M1000 1020L0 1020L0 431.7L14.4 405.5L89.8 342.3L140.7 216.8L160.6 107.3L306.1 133.9L345.1 38.7L421 96.6L494.3 66.6L524.5 93.3L610.2 94.8L719 146L751.3 190L806.7 230.9L858.1 305.7L900.8 346.9L856.9 403.3L814.6 463.1L824.3 498.3L826.3 537.1L896.1 539.2L926.2 530.2L954 552.9L926.7 598.1L972.9 668.3L1000 704.4Z"
+      },
+      {
+        "name": "Djibouti",
+        "d": "M900.8 346.9L954.3 358L992 326.9L1000 337.5L1000 426.8L946.4 449.8L1000 484.6L954 552.9L926.2 530.2L896.1 539.2L826.3 537.1L824.3 498.3L814.6 463.1L856.9 403.3L900.8 346.9Z"
+      },
+      {
+        "name": "Somaliland",
+        "d": "M1000 704.4L972.9 668.3L926.7 598.1L954 552.9L1000 484.7Z"
+      }
+    ],
+    "points": [
+      {
+        "x": 449.4,
+        "y": 794.8,
+        "label": "Addis Ababa",
+        "date": "2026-10-01",
+        "verification": "researched",
+        "n": 1,
+        "weight": 1.0
+      },
+      {
+        "x": 541.3,
+        "y": 225.2,
+        "label": "Mekelle",
+        "date": "2026-10-03",
+        "verification": "researched",
+        "n": 2,
+        "weight": 0.552
+      },
+      {
+        "x": 550.6,
+        "y": 362.9,
+        "label": "Alamata",
+        "date": "2026-09-23",
+        "verification": "researched",
+        "n": 3,
+        "weight": 0.336
+      }
+    ],
+    "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate."
+  },
+  "actors": [
+    {
+      "name": "Civilians in Tigray and Afar",
+      "mentions": 1,
+      "first": "2026-09-23",
+      "last": "2026-09-23"
+    },
+    {
+      "name": "Egypt",
+      "mentions": 1,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "Eritrea (government)",
+      "mentions": 1,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "Ethiopia (government)",
+      "mentions": 1,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "Ethiopia National Intelligence and Security Service",
+      "mentions": 1,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "Ethiopian National Defence Forces",
+      "mentions": 1,
+      "first": "2026-10-03",
+      "last": "2026-10-03"
+    },
+    {
+      "name": "Federal government forces",
+      "mentions": 1,
+      "first": "2026-09-23",
+      "last": "2026-09-23"
+    },
+    {
+      "name": "Opposition alliance (source linked)",
+      "mentions": 1,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "TPLF and six allied movements (Fano, Oromo Liberation Army)",
+      "mentions": 1,
+      "first": "2026-09-23",
+      "last": "2026-09-23"
+    },
+    {
+      "name": "TPLF-led Alliance for Survival",
+      "mentions": 1,
+      "first": "2026-10-03",
+      "last": "2026-10-03"
+    }
+  ],
+  "relations": [],
+  "figures": [
+    {
+      "label": "Eritrean diplomats declared persona non grata in Addis Ababa",
+      "unit": "people",
+      "series": [
+        {
+          "as_of": "2026-10-01",
+          "value": 10.0,
+          "source": "https://www.aa.com.tr/en/africa/ethiopia-closes-embassy-in-eritrea-expels-10-eritrean-diplomats/4075305"
+        }
+      ]
+    },
+    {
+      "label": "Share of Ethiopia import-export trade via Djibouti corridor",
+      "unit": "%",
+      "series": [
+        {
+          "as_of": "2026-10-01",
+          "value": 95.0,
+          "source": "https://www.bbc.com/news/articles/crpd0d0jl0y0o"
+        }
+      ]
+    },
+    {
+      "label": "Civilians killed in three days of fighting around Alamata, southern Tigray (late September",
+      "unit": "deaths",
+      "series": [
+        {
+          "as_of": "2026-09-30",
+          "value": 52.0,
+          "source": "https://www.bbc.com/news/articles/crpd0d0jl0y0o"
+        }
+      ]
+    }
+  ],
+  "forecasts": [],
+  "indicators": [],
+  "statements": [],
+  "links": [
+    {
+      "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+      "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
+      "link": "Ethiopia-Eritrea rupture and Tigray offensive -> US-Iran-Houthi confrontation over Hormuz and Red Sea: fighting threatening the Djibouti corridor compounds Red Sea shipping risk while Hormuz remains closed and its main Saudi bypass pipeline is out for weeks after a drone strike.",
+      "date": "2026-10-03"
+    }
+  ],
+  "reports": [
+    {
+      "date": "2026-10-03",
+      "url": "/geopolitics/2026-10-03"
+    }
+  ],
+  "briefs": []
+}

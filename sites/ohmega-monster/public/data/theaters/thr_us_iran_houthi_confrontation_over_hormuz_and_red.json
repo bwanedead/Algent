@@ -1,0 +1,692 @@
+{
+  "schema": "ohmega.dossier/1",
+  "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+  "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
+  "domain": "geopolitics",
+  "built_at": "2026-10-04T07:26:06.472952+00:00",
+  "first_seen": "2026-09-27",
+  "last_seen": "2026-10-03",
+  "days_covered": 3,
+  "primer": {
+    "text": "The standoff centers on the United States and Israel, Iran, and Iran-aligned Houthis in Yemen over two oil chokepoints. Washington and its ally aim to degrade Iran's nuclear and military capacity and keep shipping moving; Tehran uses control of the Strait of Hormuz to deter attacks and extract concessions; the Houthis press the Red Sea front. It sharpened after a U.S.-Israeli operation in late February 2026 struck Iranian nuclear, military and leadership sites, after which Iran restricted Hormuz. The strait carries 20 million barrels a day — a fifth of world oil and LNG — far more than pipeline bypasses can replace, so disruption lifts energy and freight costs. Saudi Arabia's Red Sea pipeline workaround is vulnerable to Houthi attacks.",
+    "built_at": "2026-10-04T07:26:06.472952+00:00"
+  },
+  "current": {
+    "date": "2026-10-03",
+    "bottom_line": "Hormuz remains closed with no formal US reply via Qatari mediators as of Oct 2-3, keeping the core deadlock in place. The confrontation widened off the water: a new British-Iranian arrest near RAF Fairford drew a public UK attribution to Iran and an Iranian diplomatic protest, while the Saudi East-West pipeline — the main Hormuz bypass — is out for weeks after a drone strike, prompting France to deploy to Yanbu. Confidence is high on the investigative and energy facts; attribution of the UK plot to Iran remains contested.",
+    "escalation": {
+      "direction": "steady",
+      "pace": "flat"
+    },
+    "coverage": "steady coverage",
+    "source": "daily",
+    "url": "/geopolitics/2026-10-03"
+  },
+  "pulses": [
+    {
+      "id": "pls_iran_gulf_iran_proxy_axis_escalation",
+      "name": "Iran Proxy Axis Escalation",
+      "situation": "Iran, Israel and the Gulf",
+      "position": 80.0,
+      "band": "critical",
+      "history": [
+        {
+          "at": "2026-10-01T03:00:57.470982+00:00",
+          "position": 64.0
+        },
+        {
+          "at": "2026-10-01T07:48:19.756517+00:00",
+          "position": 72.0
+        },
+        {
+          "at": "2026-10-01T08:28:58.928568+00:00",
+          "position": 77.0
+        },
+        {
+          "at": "2026-10-02T07:06:21.526172+00:00",
+          "position": 80.0
+        }
+      ]
+    },
+    {
+      "id": "pls_iran_gulf_hormuz_maritime_disruption",
+      "name": "Strait of Hormuz Maritime Disruption",
+      "situation": "Iran, Israel and the Gulf",
+      "position": 78.0,
+      "band": "critical",
+      "history": [
+        {
+          "at": "2026-10-01T03:00:57.470982+00:00",
+          "position": 70.0
+        },
+        {
+          "at": "2026-10-01T07:48:19.756517+00:00",
+          "position": 73.0
+        },
+        {
+          "at": "2026-10-01T08:28:58.928568+00:00",
+          "position": 78.0
+        }
+      ]
+    },
+    {
+      "id": "pls_iran_gulf_us_iran_israel_military_confrontation",
+      "name": "US-Iran-Israel Direct Military Confrontation",
+      "situation": "Iran, Israel and the Gulf",
+      "position": 78.0,
+      "band": "critical",
+      "history": [
+        {
+          "at": "2026-10-01T03:00:57.470982+00:00",
+          "position": 75.0
+        },
+        {
+          "at": "2026-10-01T08:28:58.928568+00:00",
+          "position": 78.0
+        }
+      ]
+    },
+    {
+      "id": "pls_energy_security_global_hydrocarbon_supply_disruption",
+      "name": "Global Hydrocarbon Supply Disruption",
+      "situation": "Global energy security",
+      "position": 77.0,
+      "band": "critical",
+      "history": [
+        {
+          "at": "2026-10-01T03:00:57.470982+00:00",
+          "position": 72.0
+        },
+        {
+          "at": "2026-10-01T07:48:19.756517+00:00",
+          "position": 77.0
+        }
+      ]
+    },
+    {
+      "id": "pls_iran_gulf_us_iran_diplomatic_deadlock",
+      "name": "US-Iran Diplomatic Deadlock",
+      "situation": "Iran, Israel and the Gulf",
+      "position": 74.0,
+      "band": "severe",
+      "history": [
+        {
+          "at": "2026-10-01T03:00:57.470982+00:00",
+          "position": 68.0
+        },
+        {
+          "at": "2026-10-01T08:28:58.928568+00:00",
+          "position": 74.0
+        }
+      ]
+    },
+    {
+      "id": "pls_russia_nato_hybrid_grey_zone_pressure",
+      "name": "Hybrid and Grey-Zone Pressure",
+      "situation": "Russia–NATO confrontation",
+      "position": 72.0,
+      "band": "severe",
+      "history": [
+        {
+          "at": "2026-10-01T03:07:20.991153+00:00",
+          "position": 72.0
+        }
+      ]
+    },
+    {
+      "id": "pls_energy_security_transition_and_grid_resilience_strain",
+      "name": "Transition and Grid Resilience Strain",
+      "situation": "Global energy security",
+      "position": 68.0,
+      "band": "severe",
+      "history": [
+        {
+          "at": "2026-10-01T03:00:57.470982+00:00",
+          "position": 68.0
+        }
+      ]
+    },
+    {
+      "id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
+      "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
+      "situation": "Red Sea and global shipping disruption",
+      "position": 65.0,
+      "band": "severe",
+      "history": [
+        {
+          "at": "2026-10-01T03:00:57.470982+00:00",
+          "position": 58.0
+        },
+        {
+          "at": "2026-10-01T07:48:19.756517+00:00",
+          "position": 68.0
+        },
+        {
+          "at": "2026-10-01T11:36:13.230643+00:00",
+          "position": 72.0
+        },
+        {
+          "at": "2026-10-03T21:55:50.660077+00:00",
+          "position": 65.0
+        }
+      ]
+    },
+    {
+      "id": "pls_energy_security_energy_price_and_market_shock",
+      "name": "Energy Price and Market Shock",
+      "situation": "Global energy security",
+      "position": 64.0,
+      "band": "severe",
+      "history": [
+        {
+          "at": "2026-10-01T03:00:57.470982+00:00",
+          "position": 64.0
+        }
+      ]
+    }
+  ],
+  "escalation_history": [
+    {
+      "date": "2026-10-01",
+      "direction": "rising",
+      "pace": "gradual"
+    },
+    {
+      "date": "2026-10-02",
+      "direction": "rising",
+      "pace": "gradual"
+    },
+    {
+      "date": "2026-10-03",
+      "direction": "steady",
+      "pace": "flat"
+    }
+  ],
+  "coverage_series": [
+    {
+      "day": "2026-09-27",
+      "count": 3,
+      "editions": 1
+    },
+    {
+      "day": "2026-09-28",
+      "count": 2,
+      "editions": 1
+    },
+    {
+      "day": "2026-09-29",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-09-30",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-01",
+      "count": 3,
+      "editions": 2
+    },
+    {
+      "day": "2026-10-02",
+      "count": 2,
+      "editions": 1
+    },
+    {
+      "day": "2026-10-03",
+      "count": 0,
+      "editions": 1
+    }
+  ],
+  "timeline": [
+    {
+      "date": "2026-10-02",
+      "headline": "RAF Fairford plot probe advances with new British-Iranian arrest, bail releases and tit-for-tat diplomatic protest",
+      "detail": "Five British men in their early 20s arrested near RAF Fairford on 28 September on suspicion of explosives offences were released on bail 29 September under stringent conditions after searches of three vans found no weapons or explosives but recovered petrol. On 1 October PM Andy Burnham said there are strong indications Iran played a part. On 2 October a 25-year-old British-Iranian dual national was arrested in Westminster on suspicion of preparation of terrorist acts linked to the Fairford incident and released on bail 3 October after searches of two London properties. Iran's Foreign Ministry summoned British Ambassador Hugo Shorter in Tehran on 2 October to protest the claims; Iran's embassy had denied any link on 28-29 September.",
+      "where": "RAF Fairford, Gloucestershire and London, United Kingdom",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/2/uk-arrests-british-iranian-suspect-over-raf-plot-what-we-know",
+        "https://www.aljazeera.com/news/2026/10/1/uk-says-iran-may-be-linked-to-alleged-airbase-plot-drawing-angry-denial",
+        "https://www.thehindu.com/news/international/iran-denies-link-to-suspected-bomb-plot-at-uk-airbase-used-by-us/article71521258.ece",
+        "https://www.aa.com.tr/en/middle-east/iran-summons-british-ambassador-for-claims-linking-tehran-to-raf-fairford-plot/4075255",
+        "https://www.npr.org/2026/09/28/g-s1-145245/britain-us-base-suspected-foiled-attack"
+      ],
+      "from": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-10-02",
+      "headline": "Hormuz diplomatic deadlock persists with no formal US reply via mediators",
+      "detail": "Iran's seven-day roadmap presented via Qatari mediators at the UN General Assembly on 25 September — US to release frozen funds, lift oil sanctions and end naval blockade within 4-5 days, then Hormuz reopens day 6 and talks resume day 7 — remains stalled. President Trump publicly rejected it 26 September as unacceptable, and Foreign Minister Abbas Araghchi said 26-29 September Iran awaits a definitive US response delivered by mediators and will not back down on conditions. As of 2 October no official US reply via mediators had been conveyed.",
+      "where": "New York (UNGA) / Washington / Doha mediation channel",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/9/26/trump-rejects-irans-seven-day-roadmap-to-reopen-strait-of-hormuz",
+        "https://www.cbsnews.com/live-updates/iran-war-us-trump-strait-of-hormuz-7-day-proposal",
+        "https://www.nbcnews.com/world/iran/iran-says-choice-reopening-hormuz-rests-united-states-offer-rcna599956",
+        "https://edition.cnn.com/2026/09/26/middleeast/trump-rejects-iran-proposal-hormuz-intl?gsid=6d39c66d-07e5-45a2-a416-de979bf95088",
+        "https://www.wionews.com/world/will-wait-for-official-us-response-says-araghchi-after-trump-rejects-iran-s-strait-of-hormuz-proposal-1790482861014"
+      ],
+      "from": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-10-01",
+      "headline": "US deploys two additional Patriot batteries to Saudi Arabia and Qatar to protect energy sites",
+      "detail": "Axios reported Oct 1-2, citing two US officials and a regional source, that the US deployed two additional Patriot batteries — one to Saudi Arabia to protect a key oil facility and one to Qatar to protect a gas facility — to reassure allies ahead of possible renewed major operations against Iran. US officials said Saudi and Qatari leaders had lobbied Trump in early August against striking Iranian energy infrastructure.",
+      "where": "Saudi Arabia and Qatar",
+      "verification": "researched",
+      "sources": [
+        "https://www.aa.com.tr/en/world/us-sends-additional-patriot-batteries-to-protect-saudi-qatari-energy-sites-report/4075620"
+      ],
+      "from": "/geopolitics/2026-10-02"
+    },
+    {
+      "date": "2026-10-01",
+      "headline": "UK renewables offset £5.9bn in gas imports as Hormuz disruption drives gas to 189p/therm",
+      "detail": "UK wind and solar generated a record 41% share of UK electricity in 2026 to date vs 25% from gas; gas generation down ~10% year-on-year while wind+solar up 14%. Analysis found wind+solar avoided £5.9 billion in gas imports since February, equivalent to >100 LNG tankers, with £1.3 billion saved in September alone on ~10 TWh output. UK wholesale gas averaged 189p per therm in September, highest since 2022 crisis, vs 90p from 2023-early 2026 and 134p since March, driven by Hormuz disruption and low European stocks. Prediction markets priced prolonged closure at ~2-3% chance of normalization by July/September after July 7 vessel attacks (likely, market snapshot).",
+      "where": "United Kingdom; global gas and shipping markets",
+      "verification": "researched",
+      "sources": [
+        "https://www.carbonbrief.org/analysis-wind-and-solar-save-uk-from-gas-imports-worth-5-9bn-during-hormuz-crisis",
+        "https://decrypt.co/364914/prediction-markets-strait-of-hormuz-oil-traders"
+      ],
+      "from": "/geopolitics/2026-10-01"
+    },
+    {
+      "date": "2026-10-01",
+      "headline": "Saudi Hormuz-bypass pipeline knocked out for weeks; France to deploy air defences to Yanbu",
+      "detail": "Saudi Arabia's 1,200-km East-West crude pipeline (5 million b/d, temporarily expanded to 7 million b/d in 2019) from Abqaiq to Yanbu on the Red Sea was struck by drones reportedly launched from Iraq and will be mostly out of service for weeks as of mid-September. France announced it will send soldiers, radar and air defence to protect Yanbu, terminus of the pipeline, while Italy said it will secure passage for its merchant ships via Operation Aspides. Houthi attacks on Saudi Arabia since July have injured about 100 people and included an intercepted ballistic missile toward Riyadh on 19 September.",
+      "where": "Yanbu, Saudi Arabia",
+      "verification": "researched",
+      "sources": [
+        "https://www.eia.gov/todayinenergy/detail.php?id=65504",
+        "https://www.dw.com/en/saudi-arabia-faces-hard-choices-as-houthis-gain-in-yemen/a-79274826",
+        "https://www.dw.com/en/are-the-houthis-winning-against-saudi-arabia/a-79492476",
+        "https://apnews.com/article/yemen-houthis-saudi-shipping-mandeb-8c18d82c109a8ea91347ce53c0096c53"
+      ],
+      "from": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-10-01",
+      "headline": "Retaliatory strikes hit Sanaa and Taiz late Oct 1 after Medina accusation",
+      "detail": "Late Oct 1 explosions heard in Houthi-controlled Sanaa; Houthi-run SABA accused Saudi Arabia of aggression targeting Sanaa and Saada, Taiz and Amran provinces. Yemen government forces said they carried out 27 airstrikes on Houthi positions in Taiz targeting missile depots and command centers.",
+      "where": "Sanaa, Yemen",
+      "verification": "researched",
+      "sources": [
+        "https://aa.com.tr/en/middle-east/houthis-say-saudi-arabia-launches-strikes-on-sanaa-3-yemeni-provinces/4075617",
+        "https://gulfnews.com/world/mena/strong-explosions-heard-in-yemen-capital-afp-journalist-1.500695494"
+      ],
+      "from": "/geopolitics/2026-10-02"
+    },
+    {
+      "date": "2026-10-01",
+      "headline": "Medina power station hit Sept 29; Saudi coalition accuses Houthis Oct 1, Houthis deny",
+      "detail": "Drone struck Taibah electricity distribution station in Medina at 05:11 local time Sept 29, knocking one transformer out of service without wider network disruption; the station supplies the Prophet's Mosque. On Oct 1 coalition spokesman Maj. Gen. Turki Al-Malki accused Houthis of planning and executing the strike based on wreckage analysis. Houthi political bureau member Dhaifallah Al-Shami rejected the accusation as fabricated.",
+      "where": "Medina, Saudi Arabia",
+      "verification": "researched",
+      "sources": [
+        "https://shafaq.com/en/Middle-East/Saudi-coalition-accuses-Houthis-of-Medina-strike",
+        "https://www.ndtvprofit.com/world/saudi-coalition-accuses-houthis-of-attacking-medina-power-station-yemeni-militia-calls-charge-lie-12127606"
+      ],
+      "from": "/geopolitics/2026-10-02"
+    },
+    {
+      "date": "2026-09-28",
+      "headline": "Five arrested near US bomber base RAF Fairford; UK PM cites strong indications of Iran link, Iran denies",
+      "detail": "Five British nationals aged 23-25 from London were arrested in early hours of Sept 28 near RAF Fairford in Gloucestershire after three white vans were reported heading toward the base; all were released on bail Sept 29. RAF Fairford is US Air Force-operated and has been used for B-1 missions against Iran; IRGC said in July any base used to attack Iran is a legitimate target. A three-day search including bomb disposal found no explosives but retrieved a quantity of petrol (likely, single sourcing); one suspect reportedly called 999 about an hour before a farmer alerted authorities. UK counter-terrorism head Laurence Taylor said a line of inquiry is whether offences were by proxies working for a foreign state; Defence Secretary Wes Streeting declined to speculate.",
+      "where": "RAF Fairford, Gloucestershire, UK",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/1/uk-says-iran-may-be-linked-to-alleged-airbase-plot-drawing-angry-denial",
+        "https://www.cnn.com/2026/09/30/uk/suspect-police-terrorism-uk-base-fairford-intl-hnk"
+      ],
+      "from": "/geopolitics/2026-10-01"
+    },
+    {
+      "date": "2026-09-26",
+      "headline": "Trump publicly rejects Iran's seven-day Hormuz reopening offer; mediators still working",
+      "detail": "Iran, via Foreign Minister Abbas Araghchi at the UN General Assembly and via Qatar, offered to reopen the Strait and resume nuclear talks within seven days if the US released frozen funds, lifted oil sanctions and ended its naval blockade within 4-5 days. Trump publicly rejected outside the White House South Lawn on Sept 26, saying the proposal would not be acceptable because Iran is \"losing so badly.\" As of Sept 28 mediators were still working and the US had not conveyed a formal rejection through channels; three regional officials and a senior US official told AP the public rejection may be a negotiating tactic (likely, single AP sourcing). The Wall Street Journal, citing unnamed US officials (likely, single outlet), reported Trump privately doubts Tehran will meet his demands and expects a renewed bombing campaign after the November midterms.",
+      "where": "Washington, D.C. and UN General Assembly, New York",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/9/26/trump-rejects-irans-seven-day-roadmap-to-reopen-strait-of-hormuz",
+        "https://www.cnbc.com/2026/09/26/trump-rejects-irans-conditional-ceasefire-proposal-wsj-reports.html",
+        "https://www.pbs.org/newshour/world/mediators-still-working-on-u-s-iran-deal-after-trump-rejected-latest-tehran-proposal"
+      ],
+      "from": "/geopolitics/2026-10-01"
+    },
+    {
+      "date": "2026-09-26",
+      "headline": "Saudi-led forces strike Houthi logistics in Marib and near Bab al-Mandeb; Houthis claim 27 Saudi airstrikes",
+      "detail": "Saudi and Yemeni government-aligned forces launched drone strikes Sept 26 on a Houthi weapons depot in Jubah District (southern Marib) and a vehicle in al Kasara (northwestern Marib), and operated on high ground at Jabal Naman and Jabal Kahbub near the Bab al-Mandeb. Houthi military spokesperson Yahya Sarea claimed (likely, single source) Saudi Arabia launched 27 airstrikes Sept 26 on bridges and roads in Taiz, Marib, Saada, Amran, Ibb and Hajjah, including damage to al Dalil Bridge in Ibb, to disrupt Houthi ground lines.",
+      "where": "Marib, Ibb, Taiz and Bab al-Mandeb area, Yemen",
+      "verification": "researched",
+      "sources": [
+        "https://www.criticalthreats.org/analysis/iran-update-special-evening-edition-september-26-2026"
+      ],
+      "from": "/geopolitics/2026-10-01"
+    },
+    {
+      "date": "2026-09-25",
+      "headline": "Houthis hit Saudi airspace and threaten wider strikes while controlling Bab al-Mandeb approaches",
+      "detail": "Saudi air defenses intercepted two Houthi ballistic missiles near Khamis Mushait and two drones near Riyadh on Sept 25-26, with civil defense warnings for Khamis Mushait, Jizan and Abha. Houthi Defense Minister Mohammed al Atifi and Chief of Staff Yusuf al Madani threatened Sept 25 to attack Saudi military bases and strategic/economic targets if red lines are violated. In recent weeks Houthis seized territory along Yemen's Red Sea coast and islands overseeing the Bab al-Mandeb and disabled the 1,200-km Saudi East-West pipeline and disrupted the Jazan export hub that had been used to bypass Hormuz. France announced Sept 24 it will deploy soldiers, radar and air-defense to protect Yanbu, terminus of the pipeline; UK pledged defensive support.",
+      "where": "Khamis Mushait, Riyadh, Jizan, Abha, Saudi Arabia; Bab al-Mandeb, Red Sea",
+      "verification": "researched",
+      "sources": [
+        "https://www.criticalthreats.org/analysis/iran-update-special-evening-edition-september-26-2026",
+        "https://www.dw.com/en/are-the-houthis-winning-against-saudi-arabia/a-79492476"
+      ],
+      "from": "/geopolitics/2026-10-01"
+    }
+  ],
+  "places": [
+    {
+      "name": "Medina",
+      "country": "Saudi Arabia",
+      "lat": 24.4672,
+      "lon": 39.6111,
+      "count": 1,
+      "last_date": "2026-10-01"
+    },
+    {
+      "name": "Sanaa",
+      "country": "Yemen",
+      "lat": 15.3694,
+      "lon": 44.191,
+      "count": 1,
+      "last_date": "2026-10-01"
+    },
+    {
+      "name": "Yanbu",
+      "country": "Saudi Arabia",
+      "lat": 24.089,
+      "lon": 38.061,
+      "count": 1,
+      "last_date": "2026-10-01"
+    }
+  ],
+  "map": {
+    "bbox": [
+      36.529,
+      13.095,
+      45.724,
+      26.742
+    ],
+    "projection": "equirectangular",
+    "width": 1000,
+    "height": 1579,
+    "countries": [
+      {
+        "name": "Sudan",
+        "d": "M0 548.6L36.7 548.6L71.8 662.2L48 683.2L63.8 802.3L103.7 940.4L145.1 968.9L204.6 1011.7L149.6 1077.7L69.5 1096.7L35.2 1132.2L24.5 1209.1L0 1298.1Z"
+      },
+      {
+        "name": "Eritrea",
+        "d": "M0 1298.1L24.5 1209.1L35.2 1132.2L69.5 1096.7L149.6 1077.7L204.6 1011.7L267.8 1145.6L297.7 1251.8L357.3 1308.2L505.8 1417.5L566.2 1483.4L625.2 1550.2L649.8 1579L578.6 1579L551.4 1537.7L503.2 1500.5L475.1 1460.6L380.4 1414.2L305.8 1412.8L279.6 1388.6L215.8 1415.8L149.8 1363.3L115.9 1449.6L0 1427.5Z"
+      },
+      {
+        "name": "Yemen",
+        "d": "M1000 1553.8L989.3 1556.3L971.6 1579L734.1 1579L728 1564.4L731.2 1501.2L713.4 1467L692.1 1381.5L660.8 1333.9L682.6 1328.3L671.4 1275.4L684.6 1253.1L679.8 1202.6L727.6 1165.7L716.4 1116.9L745.2 1060.1L789.9 1090.1L819.4 1079.7L944.9 1077L964.8 1088.6L1000 1092.5Z"
+      },
+      {
+        "name": "Saudi Arabia",
+        "d": "M0 0L1000 0L1000 1092.5L964.8 1088.6L944.9 1077L819.4 1079.7L789.9 1090.1L745.2 1060.1L716.4 1116.9L727.6 1165.7L679.8 1202.6L665.7 1153.2L632.9 1118.4L624.5 1072.2L568.3 1030.8L510.4 933.8L479.7 839.5L404.5 759.8L356 740.8L283.9 630.6L271.4 550.2L276 481.6L213.6 353.3L162.6 308.1L103.9 284.2L68.1 217.9L74.1 191.7L43.8 131.8L12.1 105.9L0 81.4Z"
+      },
+      {
+        "name": "Egypt",
+        "d": "M36.7 548.6L0 548.6L0 510.5L17.6 524.9L36.7 548.6Z"
+      },
+      {
+        "name": "Ethiopia",
+        "d": "M0 1579L0 1427.5L115.9 1449.6L149.8 1363.3L215.8 1415.8L279.6 1388.6L305.8 1412.8L380.4 1414.2L475.1 1460.6L503.2 1500.5L551.4 1537.7L578.6 1579Z"
+      }
+    ],
+    "points": [
+      {
+        "x": 335.2,
+        "y": 263.2,
+        "label": "Medina",
+        "date": "2026-10-01",
+        "verification": "researched",
+        "n": 1,
+        "weight": 1.0
+      },
+      {
+        "x": 833.3,
+        "y": 1315.8,
+        "label": "Sanaa",
+        "date": "2026-10-01",
+        "verification": "researched",
+        "n": 2,
+        "weight": 1.0
+      },
+      {
+        "x": 166.7,
+        "y": 306.9,
+        "label": "Yanbu",
+        "date": "2026-10-01",
+        "verification": "researched",
+        "n": 3,
+        "weight": 1.0
+      }
+    ],
+    "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate."
+  },
+  "actors": [
+    {
+      "name": "Houthis",
+      "mentions": 3,
+      "first": "2026-09-25",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "Iran",
+      "mentions": 3,
+      "first": "2026-10-01",
+      "last": "2026-10-02"
+    },
+    {
+      "name": "United States",
+      "mentions": 3,
+      "first": "2026-10-01",
+      "last": "2026-10-02"
+    },
+    {
+      "name": "Abbas Araghchi",
+      "mentions": 2,
+      "first": "2026-09-26",
+      "last": "2026-09-28"
+    },
+    {
+      "name": "Carbon Brief",
+      "mentions": 2,
+      "first": "2026-09-30",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "Houthi movement (Ansarallah)",
+      "mentions": 2,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "Qatar",
+      "mentions": 2,
+      "first": "2026-10-01",
+      "last": "2026-10-02"
+    },
+    {
+      "name": "Saudi Arabia",
+      "mentions": 2,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "United Kingdom",
+      "mentions": 2,
+      "first": "2026-09-30",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "Andy Burnham",
+      "mentions": 1,
+      "first": "2026-09-28",
+      "last": "2026-09-28"
+    },
+    {
+      "name": "British-Iranian dual national (25)",
+      "mentions": 1,
+      "first": "2026-10-02",
+      "last": "2026-10-02"
+    },
+    {
+      "name": "Donald Trump",
+      "mentions": 1,
+      "first": "2026-09-26",
+      "last": "2026-09-26"
+    },
+    {
+      "name": "France",
+      "mentions": 1,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "Iranian Embassy London",
+      "mentions": 1,
+      "first": "2026-09-28",
+      "last": "2026-09-28"
+    },
+    {
+      "name": "Iranian Foreign Ministry",
+      "mentions": 1,
+      "first": "2026-10-02",
+      "last": "2026-10-02"
+    }
+  ],
+  "relations": [],
+  "figures": [
+    {
+      "label": "Brent crude average March 2026 within Q2 range $72-$118",
+      "unit": "USD per barrel",
+      "series": [
+        {
+          "as_of": "2026-09-30",
+          "value": 103.0,
+          "source": "https://www.eia.gov/todayinenergy/detail.php?id=67865"
+        }
+      ]
+    },
+    {
+      "label": "UK gas imports avoided by wind+solar since Feb 2026",
+      "unit": "£bn",
+      "series": [
+        {
+          "as_of": "2026-09-30",
+          "value": 5.9,
+          "source": "https://www.carbonbrief.org/analysis-wind-and-solar-save-uk-from-gas-imports-worth-5-9bn-during-hormuz-crisis"
+        }
+      ]
+    },
+    {
+      "label": "UK wholesale gas since March 2026",
+      "unit": "p per therm",
+      "series": [
+        {
+          "as_of": "2026-09-30",
+          "value": 134.0,
+          "source": "https://www.carbonbrief.org/analysis-wind-and-solar-save-uk-from-gas-imports-worth-5-9bn-during-hormuz-crisis"
+        }
+      ]
+    },
+    {
+      "label": "Saudi East-West pipeline shipments to Yanbu after Hormuz restrictions",
+      "unit": "million barrels per day",
+      "series": [
+        {
+          "as_of": "2026-09-11",
+          "value": 4.9,
+          "source": "https://acleddata.com/report/houthi-gains-around-bab-al-mandab-raise-risks-red-sea-shipping-and-global-oil-markets"
+        }
+      ]
+    },
+    {
+      "label": "Hormuz oil flow Q1 2026",
+      "unit": "million b/d",
+      "series": [
+        {
+          "as_of": "2026-03-31",
+          "value": 14.6,
+          "source": "https://www.eia.gov/todayinenergy/detail.php?id=65504"
+        }
+      ]
+    },
+    {
+      "label": "Strait of Hormuz oil flows Q1 2026",
+      "unit": "million barrels per day",
+      "series": [
+        {
+          "as_of": "2026-03-31",
+          "value": 14.6,
+          "source": "https://www.instituteforenergyresearch.org/fossil-fuels/gas-and-oil/new-eia-report-shows-extent-of-hormuz-oil-disruptions"
+        }
+      ]
+    },
+    {
+      "label": "Hormuz oil flow 2024 average",
+      "unit": "million b/d",
+      "series": [
+        {
+          "as_of": "2024-01-01",
+          "value": 20.0,
+          "source": "https://www.eia.gov/todayinenergy/detail.php?id=65504"
+        }
+      ]
+    }
+  ],
+  "forecasts": [],
+  "indicators": [],
+  "statements": [],
+  "links": [
+    {
+      "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
+      "name": "Ethiopia-Eritrea rupture and Tigray offensive",
+      "link": "Ethiopia-Eritrea rupture and Tigray offensive -> US-Iran-Houthi confrontation over Hormuz and Red Sea: fighting threatening the Djibouti corridor compounds Red Sea shipping risk while Hormuz remains closed and its main Saudi bypass pipeline is out for weeks after a drone strike.",
+      "date": "2026-10-03"
+    },
+    {
+      "theater_id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
+      "name": "US withdrawal from Iraq after 23-year presence",
+      "link": "US withdrawal from Iraq after 23-year presence -> US-Iran-Houthi confrontation over Hormuz and Red Sea: reported completion of the 23-year US withdrawal with no replacement security arrangements coincides with Hormuz diplomatic deadlock and no formal US reply via Qatari mediators as of Oct 2-3, leaving US regional posture in flux on two fronts.",
+      "date": "2026-10-03"
+    },
+    {
+      "theater_id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
+      "name": "US withdrawal from Iraq after 23-year presence",
+      "link": "US withdrawal from Iraq after 23-year presence -> US-Iran-Houthi confrontation over Hormuz and Red Sea: US air defenses left Iraq with troops creating a Kurdistan gap as Patriots were shifted to Saudi Arabia and Qatar to protect Gulf energy sites, while Iran-backed militias in Iraq rejected disarmament as Iran sustains Hormuz closure and pressure via Houthi strikes and the alleged RAF Fairford plot",
+      "date": "2026-10-02"
+    },
+    {
+      "theater_id": "thr_russia_ukraine_war_and_european_security_archite",
+      "name": "Russia-Ukraine war and European security architecture",
+      "link": "US-Iran-Houthi confrontation over Hormuz and Red Sea <-> Russia-Ukraine war and European security architecture: simultaneous energy pressure from Hormuz closure keeping ~6 mb/d off market and Russia's winter strikes on Kyiv energy infrastructure including Trypillya compounds European risk, while both theaters show intensifying hybrid and nuclear signaling via NATO's hybrid warning and Putin's Kaliningrad warning alongside the UK's Iran-linked plot probe",
+      "date": "2026-10-02"
+    }
+  ],
+  "reports": [
+    {
+      "date": "2026-10-03",
+      "url": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-10-02",
+      "url": "/geopolitics/2026-10-02"
+    },
+    {
+      "date": "2026-10-01",
+      "url": "/geopolitics/2026-10-01"
+    }
+  ],
+  "briefs": []
+}

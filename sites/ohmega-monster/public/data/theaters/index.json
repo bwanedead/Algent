@@ -1,0 +1,110 @@
+{
+  "schema": "ohmega.dossier.index/1",
+  "built_at": "2026-10-04T07:26:06.472952+00:00",
+  "theaters": [
+    {
+      "theater_id": "thr_frontier_ai_race_and_superintelligence_governanc",
+      "name": "Frontier AI race and superintelligence governance",
+      "domain": "technology",
+      "first_seen": "2026-09-27",
+      "last_seen": "2026-10-03",
+      "days_covered": 0,
+      "heat": 11.02,
+      "coverage": "rising coverage",
+      "escalation_direction": "steady",
+      "max_band": "severe",
+      "url": "/intel/theaters/thr_frontier_ai_race_and_superintelligence_governanc"
+    },
+    {
+      "theater_id": "thr_rogue_ai_agents_and_ai_enabled_cybercrime",
+      "name": "Rogue AI agents and AI-enabled cybercrime",
+      "domain": "technology",
+      "first_seen": "2026-09-27",
+      "last_seen": "2026-10-03",
+      "days_covered": 0,
+      "heat": 7.72,
+      "coverage": "steady coverage",
+      "escalation_direction": "rising",
+      "max_band": "severe",
+      "url": "/intel/theaters/thr_rogue_ai_agents_and_ai_enabled_cybercrime"
+    },
+    {
+      "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+      "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
+      "domain": "geopolitics",
+      "first_seen": "2026-09-27",
+      "last_seen": "2026-10-03",
+      "days_covered": 3,
+      "heat": 4.1,
+      "coverage": "steady coverage",
+      "escalation_direction": "steady",
+      "max_band": "critical",
+      "url": "/intel/theaters/thr_us_iran_houthi_confrontation_over_hormuz_and_red"
+    },
+    {
+      "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout",
+      "name": "Gaza war and UNGA diplomatic fallout",
+      "domain": "geopolitics",
+      "first_seen": "2026-09-27",
+      "last_seen": "2026-10-03",
+      "days_covered": 3,
+      "heat": 3.96,
+      "coverage": "rising coverage",
+      "escalation_direction": "rising",
+      "max_band": "critical",
+      "url": "/intel/theaters/thr_gaza_war_and_unga_diplomatic_fallout"
+    },
+    {
+      "theater_id": "thr_russia_ukraine_war_and_european_security_archite",
+      "name": "Russia-Ukraine war and European security architecture",
+      "domain": "geopolitics",
+      "first_seen": "2026-09-27",
+      "last_seen": "2026-10-03",
+      "days_covered": 3,
+      "heat": 2.93,
+      "coverage": "falling coverage",
+      "escalation_direction": "rising",
+      "max_band": "critical",
+      "url": "/intel/theaters/thr_russia_ukraine_war_and_european_security_archite"
+    },
+    {
+      "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
+      "name": "Ethiopia-Eritrea rupture and Tigray offensive",
+      "domain": "geopolitics",
+      "first_seen": "2026-10-02",
+      "last_seen": "2026-10-03",
+      "days_covered": 1,
+      "heat": 1.74,
+      "coverage": "newly reported",
+      "escalation_direction": "rising",
+      "max_band": "severe",
+      "url": "/intel/theaters/thr_ethiopia_eritrea_rupture_and_tigray_offensive"
+    },
+    {
+      "theater_id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
+      "name": "US withdrawal from Iraq after 23-year presence",
+      "domain": "geopolitics",
+      "first_seen": "2026-09-27",
+      "last_seen": "2026-10-03",
+      "days_covered": 3,
+      "heat": 0.82,
+      "coverage": "steady coverage",
+      "escalation_direction": "steady",
+      "max_band": "critical",
+      "url": "/intel/theaters/thr_us_withdrawal_from_iraq_after_23_year_presence"
+    },
+    {
+      "theater_id": "thr_us_china_summit_and_strategic_competition",
+      "name": "US-China summit and strategic competition",
+      "domain": "geopolitics",
+      "first_seen": "2026-09-26",
+      "last_seen": "2026-10-02",
+      "days_covered": 2,
+      "heat": 0.65,
+      "coverage": "falling coverage",
+      "escalation_direction": "steady",
+      "max_band": "severe",
+      "url": "/intel/theaters/thr_us_china_summit_and_strategic_competition"
+    }
+  ]
+}

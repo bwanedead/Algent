@@ -1,0 +1,453 @@
+{
+  "schema": "ohmega.dossier/1",
+  "theater_id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
+  "name": "US withdrawal from Iraq after 23-year presence",
+  "domain": "geopolitics",
+  "built_at": "2026-10-04T07:26:06.472952+00:00",
+  "first_seen": "2026-09-27",
+  "last_seen": "2026-10-03",
+  "days_covered": 3,
+  "primer": {
+    "text": "The United States has kept forces in Iraq for more than two decades, and Iraq is the country where that presence has been based. A withdrawal is the formal end of that long presence through a drawdown — the planned removal of troops and the closing out of the deployment. That presence has been part of the region's security arrangement, so how it ends matters beyond the two countries. Changes to who provides security inside Iraq carry implications for neighboring states and for broader regional security.",
+    "built_at": "2026-10-04T07:26:06.472952+00:00"
+  },
+  "current": {
+    "date": "2026-10-03",
+    "bottom_line": "The September 30 completion of the 23-year US presence remains the defining fact; October 1-3 was quiet with no new verified clashes, ISIS attacks, or replacement security arrangements. Confidence is limited to reported headlines — one Reuters-noted withdrawal completion on October 1 — with no new researched confirmation in this window.",
+    "escalation": {
+      "direction": "steady",
+      "pace": "flat"
+    },
+    "coverage": "steady coverage",
+    "source": "daily",
+    "url": "/geopolitics/2026-10-03"
+  },
+  "pulses": [
+    {
+      "id": "pls_iran_gulf_iran_proxy_axis_escalation",
+      "name": "Iran Proxy Axis Escalation",
+      "situation": "Iran, Israel and the Gulf",
+      "position": 80.0,
+      "band": "critical",
+      "history": [
+        {
+          "at": "2026-10-01T03:00:57.470982+00:00",
+          "position": 64.0
+        },
+        {
+          "at": "2026-10-01T07:48:19.756517+00:00",
+          "position": 72.0
+        },
+        {
+          "at": "2026-10-01T08:28:58.928568+00:00",
+          "position": 77.0
+        },
+        {
+          "at": "2026-10-02T07:06:21.526172+00:00",
+          "position": 80.0
+        }
+      ]
+    },
+    {
+      "id": "pls_iran_gulf_us_iran_israel_military_confrontation",
+      "name": "US-Iran-Israel Direct Military Confrontation",
+      "situation": "Iran, Israel and the Gulf",
+      "position": 78.0,
+      "band": "critical",
+      "history": [
+        {
+          "at": "2026-10-01T03:00:57.470982+00:00",
+          "position": 75.0
+        },
+        {
+          "at": "2026-10-01T08:28:58.928568+00:00",
+          "position": 78.0
+        }
+      ]
+    }
+  ],
+  "escalation_history": [
+    {
+      "date": "2026-10-01",
+      "direction": "steady",
+      "pace": "flat"
+    },
+    {
+      "date": "2026-10-02",
+      "direction": "steady",
+      "pace": "flat"
+    },
+    {
+      "date": "2026-10-03",
+      "direction": "steady",
+      "pace": "flat"
+    }
+  ],
+  "coverage_series": [
+    {
+      "day": "2026-09-27",
+      "count": 1,
+      "editions": 1
+    },
+    {
+      "day": "2026-09-28",
+      "count": 0,
+      "editions": 1
+    },
+    {
+      "day": "2026-09-29",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-09-30",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-01",
+      "count": 1,
+      "editions": 2
+    },
+    {
+      "day": "2026-10-02",
+      "count": 0,
+      "editions": 1
+    },
+    {
+      "day": "2026-10-03",
+      "count": 0,
+      "editions": 1
+    }
+  ],
+  "timeline": [
+    {
+      "date": "2026-10-01",
+      "headline": "US Troops Complete 23-Year Withdrawal From Iraq",
+      "detail": "Reuters noted on 2026-10-01 that American forces completed withdrawal from Iraq, ending 23-year presence that began in 2003, and flagged risks of emboldened Iranian proxies and Islamic State remnants. Single reported source; no new researched confirmation in this window and no location detail beyond Iraq in the headline.",
+      "where": "Iraq",
+      "verification": "reported",
+      "sources": [
+        "https://www.reuters.com/world/us-forces-exit-iraq-emboldenin"
+      ],
+      "from": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-09-30",
+      "headline": "US completes withdrawal from Erbil, ending 23-year presence and 12-year anti-ISIS mission",
+      "detail": "US and coalition forces completed orderly departure of troops and equipment from Erbil Air Base on September 30, 2026, ending Operation Inherent Resolve's mission in Iraq. The departure ends a 23-year US presence since 2003 and a 12-year anti-ISIS mission since 2014. CJTF-OIR remains operational headquartered in Jordan with hundreds of US troops continuing counter-ISIS operations in Syria.",
+      "where": "Erbil Air Base",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/9/30/pentagon-says-us-troop-withdrawal-from-iraq-is-complete",
+        "https://www.aljazeera.com/news/2026/9/30/how-does-iraqs-security-change-after-us-forces-withdraw",
+        "https://www.dailysabah.com/world/mid-east/pentagon-announces-military-withdrawal-from-iraq-complete/amp",
+        "https://www.cbsnews.com/news/us-military-iraq-withdrawal-isis-operation-inherent-resolve-over",
+        "https://www.cnn.com/2026/09/30/middleeast/us-military-withdrawal-iraq-intl",
+        "https://www.i24news.tv/en/news/international/americas/artc-centcom-us-withdraws-forces-from-iraq-marking-an-end-to-operation-inherent-resolve"
+      ],
+      "from": "/geopolitics/2026-10-02"
+    },
+    {
+      "date": "2026-09-30",
+      "headline": "US air defenses leave with troops, raising Kurdistan vulnerability",
+      "detail": "Patriot and C-RAM air defense systems deployed at Erbil were withdrawn with personnel, removing a key interception layer for Iranian missiles and drones. KRG Prime Minister Masrour Barzani warned leaving the Kurdistan Region without air defenses is a cause for concern, citing more than 1,000 drone and ballistic missile attacks since the US-Israeli war on Iran began Feb. 28, 2026.",
+      "where": "Erbil, Kurdistan Region, Iraq",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/9/30/how-does-iraqs-security-change-after-us-forces-withdraw",
+        "https://www.thenationalnews.com/news/mena/2026/09/08/us-air-defence-exit-from-iraq-risks-creating-wider-regional-security-gap",
+        "https://www.forbes.com/sites/pauliddon/2026/09/27/why-iraqi-kurdistan-fears-looming-loss-of-us-air-defense-umbrella"
+      ],
+      "from": "/geopolitics/2026-10-01"
+    },
+    {
+      "date": "2026-09-30",
+      "headline": "Iraq extends militia disarmament deadline as major Iran-backed groups reject plan",
+      "detail": "Baghdad extended the deadline for disarmament and integration of Iran-aligned militias from Sept. 30, 2026 to June 30, 2027, envisioning a 90-day halt to attacks followed by progressive handover of weapons and individual integration into the Popular Mobilization Forces. Powerful groups including Kataib Hezbollah, Harakat al-Nujaba and Kataib Sayyid al-Shuhada have rejected disarmament or set conditions unlikely to be met.",
+      "where": "Baghdad, Iraq",
+      "verification": "researched",
+      "sources": [
+        "https://www.dw.com/en/iraq-us-troops-withdraw-from-their-iraqi-us-led-operation-inherent-resolve-mission-against-isis-after-12-years/a-79462926",
+        "https://www.iranintl.com/en/202609217867",
+        "https://www.cnn.com/2026/09/30/middleeast/us-military-withdrawal-iraq-intl",
+        "https://www.dailysabah.com/world/mid-east/pentagon-announces-military-withdrawal-from-iraq-complete/amp",
+        "https://www.aljazeera.com/news/2026/9/30/how-does-iraqs-security-change-after-us-forces-withdraw",
+        "https://global.chinadaily.com.cn/a/202610/01/WS6abe38cde4b06d4aa0561262.html"
+      ],
+      "from": "/geopolitics/2026-10-01"
+    },
+    {
+      "date": "2026-09-30",
+      "headline": "Baghdad declares sovereignty holiday and holds parades as US forces leave",
+      "detail": "Iraqi Prime Minister Ali al-Zaidi declared Oct. 1 a new day with Iraq free of foreign military presence and announced Sovereignty Days as a national holiday Sept. 30-Oct. 3, 2026. Security forces held parades and convoys with national flags in Baghdad and Najaf on Sept. 30.",
+      "where": "Baghdad and Najaf, Iraq",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/9/30/how-does-iraqs-security-change-after-us-forces-withdraw",
+        "https://www.dw.com/en/iraq-us-troops-withdraw-from-their-iraqi-us-led-operation-inherent-resolve-mission-against-isis-after-12-years/a-79462926",
+        "https://www.iraqinews.com/iraq/iraqi-security-forces-mark-sovereignty-day-as-us-forces-leave",
+        "https://www.kurdistan24.net/en/story/942173",
+        "https://www.dailysabah.com/world/mid-east/pentagon-announces-military-withdrawal-from-iraq-complete/amp"
+      ],
+      "from": "/geopolitics/2026-10-01"
+    }
+  ],
+  "places": [
+    {
+      "name": "Baghdad",
+      "country": "Iraq",
+      "lat": 33.3152,
+      "lon": 44.3661,
+      "count": 2,
+      "last_date": "2026-09-30"
+    },
+    {
+      "name": "Erbil",
+      "country": "Iraq",
+      "lat": 36.191,
+      "lon": 44.009,
+      "count": 1,
+      "last_date": "2026-09-30"
+    },
+    {
+      "name": "Erbil Air Base",
+      "country": "Iraq",
+      "lat": 36.235,
+      "lon": 43.963,
+      "count": 1,
+      "last_date": "2026-09-30"
+    }
+  ],
+  "map": {
+    "bbox": [
+      40.165,
+      30.775,
+      48.165,
+      38.775
+    ],
+    "projection": "equirectangular",
+    "width": 1000,
+    "height": 1217,
+    "countries": [
+      {
+        "name": "Iraq",
+        "d": "M0 722.8L105.2 662.6L152.4 478.7L140.6 367.6L209.1 330L273.1 235.1L326.8 211.4L472.2 231.1L516.1 269.8L576 244.1L657 425.6L739 471.2L748.4 560.1L685.5 612.6L656.5 731.3L743.1 875.9L896.3 959.3L960.6 1074.9L940.1 1185.1L980 1185L980.5 1217L288.4 1217L215.7 1153.9L29.4 1047.4L0 1039.3Z"
+      },
+      {
+        "name": "Iran",
+        "d": "M1000 1217L980.5 1217L980 1185L940.1 1185.1L960.6 1074.9L896.3 959.3L743.1 875.9L656.5 731.3L685.5 612.6L748.4 560.1L739 471.2L657 425.6L576 244.1L507.7 122.2L532.1 75.1L515.3 0L725.5 0L747.4 5.2L792.6 0.7L793.5 0L983.6 0L1000 16.8Z"
+      },
+      {
+        "name": "Syria",
+        "d": "M0 281.4L63.6 256.2L130.9 258.7L273.1 235.1L209.1 330L140.6 367.6L152.4 478.7L105.2 662.6L0 722.8Z"
+      },
+      {
+        "name": "Armenia",
+        "d": "M792.6 0.7L747.4 5.2L744.4 0L792.6 0Z"
+      },
+      {
+        "name": "Turkey",
+        "d": "M576 244.1L516.1 269.8L472.2 231.1L326.8 211.4L273.1 235.1L130.9 258.7L63.6 256.2L0 281.4L0 0L515.3 0L532.1 75.1L507.7 122.2L576 244.1Z"
+      },
+      {
+        "name": "Azerbaijan",
+        "d": "M1000 0L1000 16.8L983.6 0L793.5 0L792.6 0.7ZM747.4 5.2L725.5 0L744.4 0L747.4 5.2Z"
+      },
+      {
+        "name": "Saudi Arabia",
+        "d": "M0 1217L0 1039.3L29.4 1047.4L215.7 1153.9L288.4 1217Z"
+      }
+    ],
+    "points": [
+      {
+        "x": 525.2,
+        "y": 830.6,
+        "label": "Baghdad",
+        "date": "2026-09-30",
+        "verification": "researched",
+        "n": 1,
+        "weight": 1.0
+      },
+      {
+        "x": 480.6,
+        "y": 393.1,
+        "label": "Erbil",
+        "date": "2026-09-30",
+        "verification": "researched",
+        "n": 2,
+        "weight": 0.5
+      },
+      {
+        "x": 474.8,
+        "y": 386.4,
+        "label": "Erbil Air Base",
+        "date": "2026-09-30",
+        "verification": "researched",
+        "n": 3,
+        "weight": 0.5
+      }
+    ],
+    "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate."
+  },
+  "actors": [
+    {
+      "name": "Government of Iraq",
+      "mentions": 3,
+      "first": "2026-09-30",
+      "last": "2026-09-30"
+    },
+    {
+      "name": "Iraqi government",
+      "mentions": 3,
+      "first": "2026-09-30",
+      "last": "2026-09-30"
+    },
+    {
+      "name": "United States",
+      "mentions": 3,
+      "first": "2026-09-30",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "Combined Joint Task Force-Operation Inherent Resolve",
+      "mentions": 2,
+      "first": "2026-09-30",
+      "last": "2026-09-30"
+    },
+    {
+      "name": "Kurdistan Regional Government",
+      "mentions": 2,
+      "first": "2026-09-30",
+      "last": "2026-09-30"
+    },
+    {
+      "name": "Harakat al-Nujaba",
+      "mentions": 1,
+      "first": "2026-09-30",
+      "last": "2026-09-30"
+    },
+    {
+      "name": "Iran-aligned militias",
+      "mentions": 1,
+      "first": "2026-09-30",
+      "last": "2026-09-30"
+    },
+    {
+      "name": "Iraq",
+      "mentions": 1,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "Iraqi security forces",
+      "mentions": 1,
+      "first": "2026-09-30",
+      "last": "2026-09-30"
+    },
+    {
+      "name": "Islamic Resistance in Iraq",
+      "mentions": 1,
+      "first": "2026-09-30",
+      "last": "2026-09-30"
+    },
+    {
+      "name": "Kataib Hezbollah",
+      "mentions": 1,
+      "first": "2026-09-30",
+      "last": "2026-09-30"
+    },
+    {
+      "name": "Kataib Sayyid al-Shuhada",
+      "mentions": 1,
+      "first": "2026-09-30",
+      "last": "2026-09-30"
+    },
+    {
+      "name": "Prime Minister Ali al-Zaidi",
+      "mentions": 1,
+      "first": "2026-09-30",
+      "last": "2026-09-30"
+    },
+    {
+      "name": "US Department of Defense",
+      "mentions": 1,
+      "first": "2026-09-30",
+      "last": "2026-09-30"
+    },
+    {
+      "name": "US forces",
+      "mentions": 1,
+      "first": "2026-09-30",
+      "last": "2026-09-30"
+    }
+  ],
+  "relations": [],
+  "figures": [
+    {
+      "label": "Drone and ballistic missile attacks on Kurdistan Region since, 2026",
+      "unit": "attacks",
+      "series": [
+        {
+          "as_of": "2026-09-30",
+          "value": 1000.0,
+          "source": "https://www.aljazeera.com/news/2026/9/30/how-does-iraqs-security-change-after-us-forces-withdraw"
+        }
+      ]
+    },
+    {
+      "label": "US military personnel in Iraq in recent years before final drawdown",
+      "unit": "troops",
+      "series": [
+        {
+          "as_of": "2026-09-30",
+          "value": 2500.0,
+          "source": "https://www.aljazeera.com/news/2026/9/30/how-does-iraqs-security-change-after-us-forces-withdraw"
+        }
+      ]
+    },
+    {
+      "label": "US troops in Iraq at height of occupation in 2007",
+      "unit": "troops",
+      "series": [
+        {
+          "as_of": "2007-12-31",
+          "value": 170000.0,
+          "source": "https://www.aljazeera.com/news/2026/9/30/how-does-iraqs-security-change-after-us-forces-withdraw"
+        }
+      ]
+    }
+  ],
+  "forecasts": [],
+  "indicators": [],
+  "statements": [],
+  "links": [
+    {
+      "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+      "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
+      "link": "US withdrawal from Iraq after 23-year presence -> US-Iran-Houthi confrontation over Hormuz and Red Sea: reported completion of the 23-year US withdrawal with no replacement security arrangements coincides with Hormuz diplomatic deadlock and no formal US reply via Qatari mediators as of Oct 2-3, leaving US regional posture in flux on two fronts.",
+      "date": "2026-10-03"
+    },
+    {
+      "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+      "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
+      "link": "US withdrawal from Iraq after 23-year presence -> US-Iran-Houthi confrontation over Hormuz and Red Sea: US air defenses left Iraq with troops creating a Kurdistan gap as Patriots were shifted to Saudi Arabia and Qatar to protect Gulf energy sites, while Iran-backed militias in Iraq rejected disarmament as Iran sustains Hormuz closure and pressure via Houthi strikes and the alleged RAF Fairford plot",
+      "date": "2026-10-02"
+    }
+  ],
+  "reports": [
+    {
+      "date": "2026-10-03",
+      "url": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-10-02",
+      "url": "/geopolitics/2026-10-02"
+    },
+    {
+      "date": "2026-10-01",
+      "url": "/geopolitics/2026-10-01"
+    }
+  ],
+  "briefs": []
+}

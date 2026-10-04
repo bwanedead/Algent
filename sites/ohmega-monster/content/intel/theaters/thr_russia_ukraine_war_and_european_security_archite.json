@@ -1,0 +1,1635 @@
+{
+  "schema": "ohmega.dossier/1",
+  "theater_id": "thr_russia_ukraine_war_and_european_security_archite",
+  "name": "Russia-Ukraine war and European security architecture",
+  "domain": "geopolitics",
+  "built_at": "2026-10-04T07:26:06.472952+00:00",
+  "first_seen": "2026-09-27",
+  "last_seen": "2026-10-03",
+  "days_covered": 3,
+  "primer": {
+    "text": "Russia's war on Ukraine has become a contest between battlefield attrition and economic endurance that directly involves European security. Ukraine tries to hold territory while using long-range drones against Russian oil refineries and logistics to cut Moscow's war funding; Russia tries to sustain its offensive and pressure NATO through airspace incursions, sabotage of rail and infrastructure, and drone operations attributed to its services. NATO's eastern members seek protection through alliance mechanisms. Article 4 is a call for consultations when a member feels threatened, and Eastern Sentry is the alliance's reinforced air-defence posture along that flank. Russia's reliance on China for dual-use components and export markets shapes how sanctions bite.",
+    "built_at": "2026-10-04T07:26:06.472952+00:00"
+  },
+  "current": {
+    "date": "2026-10-03",
+    "bottom_line": "Oct 1-3 confirmed a shift from single strikes to a sustained campaign against Kyiv's Dnipro bridges — Southern Bridge hit in four waves Oct 1-2 and Northern Bridge damaged Oct 3 — while nationwide drone barrages continued (8 killed, 81 injured Oct 2-3). Moscow paired this with explicit threats to European weapons factories and a renewed nuclear warning over Kaliningrad, and NATO's eastern flank moved from scrambling jets to changing engagement rules. Confidence is high on bridge damage, casualties and official statements (multiple confirmed sources); lower on Russian intent doctrine which rests on Ukrainian intelligence documents cited by Zelensky.",
+    "escalation": {
+      "direction": "rising",
+      "pace": "gradual"
+    },
+    "coverage": "falling coverage",
+    "source": "daily",
+    "url": "/geopolitics/2026-10-03"
+  },
+  "pulses": [
+    {
+      "id": "pls_ukraine_war_combat_strike_intensity",
+      "name": "Combat and Long-Range Strike Intensity",
+      "situation": "The war in Ukraine",
+      "position": 84.0,
+      "band": "critical",
+      "history": [
+        {
+          "at": "2026-10-01T03:00:57.470982+00:00",
+          "position": 78.0
+        },
+        {
+          "at": "2026-10-01T03:02:59.981202+00:00",
+          "position": 84.0
+        }
+      ]
+    },
+    {
+      "id": "pls_ukraine_war_energy_heating_collapse",
+      "name": "Energy and Heating System Collapse",
+      "situation": "The war in Ukraine",
+      "position": 84.0,
+      "band": "critical",
+      "history": [
+        {
+          "at": "2026-10-01T03:00:57.470982+00:00",
+          "position": 84.0
+        }
+      ]
+    },
+    {
+      "id": "pls_ukraine_war_war_economy_dependency_strain",
+      "name": "War Economy and External Dependency Strain",
+      "situation": "The war in Ukraine",
+      "position": 82.0,
+      "band": "critical",
+      "history": [
+        {
+          "at": "2026-10-01T03:00:57.470982+00:00",
+          "position": 73.0
+        },
+        {
+          "at": "2026-10-01T03:02:59.981202+00:00",
+          "position": 81.0
+        },
+        {
+          "at": "2026-10-02T07:16:04.035132+00:00",
+          "position": 82.0
+        }
+      ]
+    },
+    {
+      "id": "pls_russia_nato_hybrid_grey_zone_pressure",
+      "name": "Hybrid and Grey-Zone Pressure",
+      "situation": "Russia–NATO confrontation",
+      "position": 72.0,
+      "band": "severe",
+      "history": [
+        {
+          "at": "2026-10-01T03:07:20.991153+00:00",
+          "position": 72.0
+        }
+      ]
+    },
+    {
+      "id": "pls_russia_nato_diplomatic_rupture",
+      "name": "Diplomatic Rupture",
+      "situation": "Russia–NATO confrontation",
+      "position": 62.0,
+      "band": "severe",
+      "history": [
+        {
+          "at": "2026-10-01T03:07:20.991153+00:00",
+          "position": 62.0
+        }
+      ]
+    },
+    {
+      "id": "pls_russia_nato_direct_military_confrontation",
+      "name": "Direct Military Confrontation",
+      "situation": "Russia–NATO confrontation",
+      "position": 58.0,
+      "band": "severe",
+      "history": [
+        {
+          "at": "2026-10-01T03:07:20.991153+00:00",
+          "position": 58.0
+        }
+      ]
+    }
+  ],
+  "escalation_history": [
+    {
+      "date": "2026-10-01",
+      "direction": "rising",
+      "pace": "gradual"
+    },
+    {
+      "date": "2026-10-02",
+      "direction": "rising",
+      "pace": "gradual"
+    },
+    {
+      "date": "2026-10-03",
+      "direction": "rising",
+      "pace": "gradual"
+    }
+  ],
+  "coverage_series": [
+    {
+      "day": "2026-09-27",
+      "count": 1,
+      "editions": 1
+    },
+    {
+      "day": "2026-09-28",
+      "count": 4,
+      "editions": 1
+    },
+    {
+      "day": "2026-09-29",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-09-30",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-01",
+      "count": 0,
+      "editions": 2
+    },
+    {
+      "day": "2026-10-02",
+      "count": 2,
+      "editions": 1
+    },
+    {
+      "day": "2026-10-03",
+      "count": 1,
+      "editions": 1
+    }
+  ],
+  "timeline": [
+    {
+      "date": "2026-10-03",
+      "headline": "Russia sustains three-day campaign against Kyiv's Dnipro bridges",
+      "detail": "Russian forces conducted four waves of drone strikes against the Southern Bridge over the Dnipro in Kyiv Oct 1-2, suspending metro and surface transport, then on early Oct 3 damaged the Northern Bridge, injuring two and suspending traffic for a third consecutive day. Kyiv Independent and Al Jazeera confirmed both bridges hit; ISW confirmed the four-wave pattern on the Southern Bridge.",
+      "where": "Kyiv, Ukraine",
+      "verification": "researched",
+      "sources": [
+        "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-2-2026",
+        "https://www.aljazeera.com/news/2026/10/3/five-killed-as-kyiv-and-moscow-trade-strikes-russia-hits-second-bridge",
+        "https://kyivindependent.com/russian-strikes-kill-8-injure-81-across-ukraine-hit-kyiv-bridge-2"
+      ],
+      "from": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-10-02",
+      "headline": "Ukraine-South Korea rift over North Korean POW transfer as DPRK troop presence cited",
+      "detail": "On Sept 23 at the UN General Assembly Zelensky disclosed Ukraine had transferred two North Korean POWs captured in Kursk to South Korea. On Oct 2 South Korean President Lee Jae Myung demanded Ukraine acknowledge a confidentiality agreement and apologize, warning of 'additional measures' and saying disclosure risked war on the Korean Peninsula. Separately Zelensky said Sept 28, citing HUR, that more than 8,000 North Korean personnel are in Russia with preparations for another 10,000 and a longer-term plan up to 50,000, with Shahed-type production established in North Korea.",
+      "where": "New York / Seoul",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/2/row-between-ukraine-south-korea-mounts-over-north-korean-pows",
+        "https://www.kyivpost.com/post/85602"
+      ],
+      "from": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-10-02",
+      "headline": "Russia holds Center-2026 exercise with Chinese troops as war continues",
+      "detail": "From Sept 28 to Oct 3 Russia held Center-2026 (Tsentr-2026) at Chebarkul training ground in Chelyabinsk Oblast and the Caspian Sea with more than 47,000 personnel from SCO countries, about 700 pieces of equipment, over 600 UAVs and over 60 UGVs, with a Chinese contingent in joint deployment. President Putin observed the exercise Oct 2 with Defence Minister Andrei Belousov.",
+      "where": "Chebarkul, Chelyabinsk Oblast, Russia",
+      "verification": "researched",
+      "sources": [
+        "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-2-2026",
+        "https://www.scmp.com/news/china/military/article/3369657/chinese-troops-line-russias-tsentr-2026-exercise-military-ties-tighten",
+        "https://apnews.com/article/russia-putin-military-drills-chebarkul-china-135efde9d1f078bd2bd14b5d1e072711",
+        "https://www.kyivpost.com/post/85603"
+      ],
+      "from": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-10-02",
+      "headline": "Nationwide drone barrage kills 8, injures 81; Kharkiv residential area hit",
+      "detail": "Over Oct 2-3 Ukraine's Air Force reported 157 Shahed/Gerbera/Parodiya drones launched, with hits at 12 locations and debris at 5 sites; 131 intercepted. Strikes killed at least 8 and injured 81 nationwide, including a residential strike in Kharkiv Oct 2 that killed 2 and injured 36 including three children.",
+      "where": "Kharkiv and across Ukraine",
+      "verification": "researched",
+      "sources": [
+        "https://kyivindependent.com/russian-strikes-kill-8-injure-81-across-ukraine-hit-kyiv-bridge-2",
+        "https://www.aljazeera.com/news/2026/10/3/five-killed-as-kyiv-and-moscow-trade-strikes-russia-hits-second-bridge"
+      ],
+      "from": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-10-01",
+      "headline": "Poland lowers shoot-down threshold and puts FA-50GFs on air-defence alert",
+      "detail": "On Oct 1 Poland's 12 FA-50GF aircraft began combat alert duty tasked to counter jet-powered drones and free F-16 hours, and simplified rules allowing the military to identify and shoot down foreign objects without visual confirmation took effect, confirmed by Defence Minister Władysław Kosiniak-Kamysz.",
+      "where": "Poland",
+      "verification": "researched",
+      "sources": [
+        "https://www.aviacionline.com/english/defence/europe/poland-s-fa-50gfs-enter-combat-service-to-bolster-air-defence-against-drones_a6ac002dd1821be823da98516",
+        "https://united24media.com/world/poland-simplifies-shoot-down-rules-as-russian-drones-threaten-its-airspace-23035"
+      ],
+      "from": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-10-01",
+      "headline": "Oct 1 drones hit Kyiv school and Southern Bridge in first bridge strike since invasion; Sept 30 drone hits nuclear research institute grounds",
+      "detail": "On Sept 30 ~18:18 a Russian drone struck grounds of the Institute for Nuclear Research in Kyiv where a research reactor shut since 2022 is located; fire extinguished, no injuries, no reactor damage, radiation normal. On Oct 1 ~09:00 a drone struck School No.12 in Solomianskyi district with 104 children and 60 staff inside; all sheltered underground after alert, no injuries, warhead failed to detonate and was recovered. Also Oct 1 two drones struck near the support structure of Kyiv's Southern Bridge over the Dnipro, temporarily suspending metro and surface transport; first drone strike on a Kyiv bridge since Feb 2022. Metro/bridge traffic reopened Oct 1 after inspection, though an overnight Oct 1-2 strike again damaged road surface/guardrail.",
+      "where": "Kyiv, Ukraine",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/1/russian-drone-hits-school-in-ukraines-kyiv-as-moscow-presses-air-assault",
+        "https://www.kyivpost.com/post/85896",
+        "https://meduza.io/en/feature/2026/10/01/russian-drones-strike-kyiv-s-southern-bridge-in-first-drone-attack-on-a-kyiv-bridge-since-the-full-scale-invasion-a-subway-train-was-crossing-it-at-the-time",
+        "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-1-2026"
+      ],
+      "from": "/geopolitics/2026-10-02"
+    },
+    {
+      "date": "2026-10-01",
+      "headline": "NATO and Denmark warn of intensifying systematic hybrid campaign",
+      "detail": "On Sept 24 in Copenhagen, Danish Defence Minister Bruus and DDIS Chief Ahrenkiel warned Russia will intensify hybrid warfare in coming months with more frequent attacks and greater consequences, assessing a limited military attack on one or several NATO countries bordering Russia cannot be ruled out and situation is most serious since Cold War. On Oct 1 NATO Secretary General Rutte warned Europe to brace for systematic Russian sabotage, arson and hybrid attacks, saying Russia is testing security across Europe and allies must remain vigilant for a prolonged campaign.",
+      "where": "Copenhagen, Denmark and Brussels",
+      "verification": "researched",
+      "sources": [
+        "https://www.dw.com/en/russia-expected-to-intensify-hybrid-war-on-europe/a-79444596"
+      ],
+      "from": "/geopolitics/2026-10-02"
+    },
+    {
+      "date": "2026-10-01",
+      "headline": "Moscow threatens European arms factories; EU and Putin trade Article 5 and nuclear warnings",
+      "detail": "On Sept 30 Russian Foreign Ministry spokeswoman Maria Zakharova warned European factories producing weapons for Ukraine are potential military targets. On Oct 1 EU Defence Commissioner Andrius Kubilius said a Russian strike on a weapons factory in European NATO territory would trigger NATO Article 5. On Oct 1 at Valdai, President Vladimir Putin warned a direct attack on Kaliningrad or other Russian territory would put use of all weapons at Russia's disposal, including nuclear, on the agenda.",
+      "where": "Moscow / Brussels",
+      "verification": "researched",
+      "sources": [
+        "https://www.kyivpost.com/post/85889",
+        "https://www.cnn.com/2026/10/01/europe/putin-kaliningrad-warning-ukraine-latam-intl",
+        "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-2-2026",
+        "https://www.bbc.co.uk/news/articles/cqg7k7v499jjo"
+      ],
+      "from": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-09-30",
+      "headline": "NATO scrambles in Poland and Romania during Kyiv strikes continue September air-alert pattern",
+      "detail": "During the Sept 29-30 and Oct 1 strikes on Kyiv, NATO aircraft scrambled in Poland and Romania (Spanish F-18s in Romania); no incursions detected Sept 30-Oct 1. This follows September pattern: Sept 16-17 Poland scrambled after drones/missiles near western Ukraine, Sept 23 Russian Mi-8 violated Polish airspace for 42 seconds near Kaliningrad, and Sept 15 Poland reinforced Dorohusk, Medyka, Korczowa crossings after Sept 13 drone hit on passenger train locomotive near border.",
+      "where": "Poland and Romania",
+      "verification": "researched",
+      "sources": [
+        "https://www.dw.com/en/russia-expected-to-intensify-hybrid-war-on-europe/a-79444596",
+        "https://abcnews.com/International/russian-strikes-kill-2-kyiv-prompt-nato-scramble/story?id=136881319"
+      ],
+      "from": "/geopolitics/2026-10-02"
+    },
+    {
+      "date": "2026-09-29",
+      "headline": "Sept 29-30 massive combined strike opens winter energy campaign, damages Trypillya plant",
+      "detail": "On night of Sept 29-30, 2026 Russia launched a massive combined strike with nearly 190 drones and ballistic missiles primarily at energy infrastructure in Kyiv City and Kyiv Oblast, hitting 11 regions nationwide, killing 5 including a child and wounding 14. Generating equipment at Trypillya (Trypilska) Thermal Power Plant in Kyiv Oblast was damaged; Centrenergo CEO said assessment and repairs would begin when security allows. Ukrainian PM Serhii Koretskyi called it the largest combined strike on energy infrastructure since early April 2026, marking start of Winter 2026-2027 energy degradation campaign.",
+      "where": "Kyiv City and Kyiv Oblast, Ukraine",
+      "verification": "researched",
+      "sources": [
+        "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-1-2026",
+        "https://www.kyivpost.com/post/85742",
+        "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-september-30-2026"
+      ],
+      "from": "/geopolitics/2026-10-02"
+    },
+    {
+      "date": "2026-09-28",
+      "headline": "Russian drone strikes hit apartments and cultural landmark in Ukraine killing seven, prompting Poland to scramble jets and warn eastern residents to shelter.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.thehindu.com/news/international/russia-hits-ukra"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2026-09-28",
+      "headline": "Putin raises authorized force size by 15,500; draft budget points to 27% defence rise in 2027",
+      "detail": "On Sept 28, Putin signed a decree raising the authorized strength of the Russian Armed Forces by 15,500 to 2,441,630 personnel including 1,550,500 active-duty, effective on signing. Draft budget documents reviewed by Reuters separately point to 17.1 trillion rubles (~$202.6 billion) for defence in 2027, about 27% above the original 2026 budget and 50 trillion rubles over three years.",
+      "where": "Russia",
+      "verification": "researched",
+      "sources": [
+        "https://www.sofx.com/russia-raises-its-troop-ceiling-a-fourth-time-in-2026-as-losses-mount",
+        "https://www.reuters.com/world/russia-raises-2027-military-spending-by-27-budget-documents-show-2026-09-28",
+        "https://www.scmp.com/news/world/russia-central-asia/article/"
+      ],
+      "from": "/geopolitics/2026-10-01"
+    },
+    {
+      "date": "2026-09-28",
+      "headline": "Poland and Romania scramble jets; Russian drone crashes in Moldova",
+      "detail": "On Sept 28, Poland's Government Centre for Security issued then minutes later lifted a shelter warning for the eastern Lublin region during Russian strikes on Ukraine, saying Polish jets were operating in Polish airspace and later that there was no threat within Polish territory. On the night of Sept 29-30, Poland and Romania scrambled aircraft during Russian attacks on Ukraine with no incursions detected. On the morning of Sept 30, a likely Russian drone violated Moldovan airspace and crashed and exploded near Hirbovat, Anenii Noi Raion about 18 km from the Ukrainian border, hitting a radio tower with no injuries reported.",
+      "where": "Poland, Romania, Moldova",
+      "verification": "researched",
+      "sources": [
+        "https://www.reuters.com/world/poland-tells-people-east-take-shelter-russia-strikes-ukraine-2026-09-28",
+        "https://en.apa.az/europe/poland-and-romania-scramble-aircraft-amid-russian-attacks-on-ukraine-527222",
+        "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-september-30-2026"
+      ],
+      "from": "/geopolitics/2026-10-01"
+    },
+    {
+      "date": "2026-09-27",
+      "headline": "Russian strikes hit Kyiv market, central Kyiv and telecom data centres",
+      "detail": "On the evening of Sept 27, a Russian strike drone hit the Stolichny wholesale food market in Sofiivska Borshchahivka outside Kyiv, killing 2 and injuring 4 and causing a parking-lot fire. On Sept 28, drone and missile strikes hit central Kyiv including the National Academy of Sciences building, offices, gas stations, a pharmaceutical company and residential areas, killing at least 1 in Kyiv and injuring at least 24 (at least 7 dead and 80+ wounded nationwide that day). On Sept 27-28, strikes also hit Kyivstar headquarters and data centres and Vodafone Ukraine infrastructure.",
+      "where": "Kyiv and Sofiivska Borshchahivka, Bucha District",
+      "verification": "researched",
+      "sources": [
+        "https://kyivindependent.com/russian-drones-missiles-continue-to-batter-kyiv-for-fourth-consecutive-night-of-strikes",
+        "https://www.thehindu.com/news/international/russia-hits-ukraines-largest-mobile-provider-strikes-data-centres/article71518164.ece",
+        "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-september-30-2026"
+      ],
+      "from": "/geopolitics/2026-10-01"
+    },
+    {
+      "date": "2026-09-27",
+      "headline": "Russian drones struck market outside Kyiv killing two and killed three others in different regions, Ukrainian officials said.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.scmp.com/news/world/russia-central-asia/article/"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2026-09-27",
+      "headline": "Russia conducted massive combined strike overnight 26-27 Sep: ~170 drones (76 jet-powered) targeting Kyiv energy, marking start of winter 2026-27 campaign",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+    },
+    {
+      "date": "2026-09-26",
+      "headline": "Trump pressed Zelenskyy to settle with Putin as strikes killed 10",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.enfieldindependent.co.uk/news/national/26584757."
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+    },
+    {
+      "date": "2026-09-26",
+      "headline": "Reports say Russia expected to intensify hybrid war on Europe.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.dw.com/en/russia-expected-to-intensify-hybrid-wa"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2026-09-26",
+      "headline": "Polish official says US decided to establish base in Poland.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.defenseone.com/policy/2026/09/poland-get-us-base"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2026-09-25",
+      "headline": "Lukoil Perm refinery (~12.6mn t/yr, 7th largest) halted after 25 Sep drone strike, fourth shutdown in <1 week (Ryazan 6 Sep, Saratov 8 & 11 Sep, Syzran 15 Sep, YANOS 17 Sep, Moscow 20 Sep, Kuibyshev 22 Sep, Ilsky 26 Sep, Novoshakhtinsk 25 Sep)",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+    },
+    {
+      "date": "2026-09-24",
+      "headline": "~477,000 t/day primary refining capacity (~53% of standard, ~3.5 mb/d of 6.6 mb/d) idle for unplanned repairs as of 24 Sep; 8 refineries damaged in first 3 weeks Sep (12 strikes 1-23 Sep)",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+    },
+    {
+      "date": "2026-09-24",
+      "headline": "Poland FM Sikorski announced near deal for permanent US base; Trump noted major progress 17 Sep; plan ~5,000 troops, total ~15,000, PLN15-17bn (€3.5-4.4bn), western Poland (Poznań/Wrocław/Szczecin), location pending Pentagon review",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+    },
+    {
+      "date": "2026-09-24",
+      "headline": "Croatian court approved extradition in Nord Stream bombing case while Macron says CIA did not inform France of possible Russian drone attacks.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/9/24/croatian-court-appr"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2026-09-23",
+      "headline": "Zelenskyy warned at UNGA if no energy truce before winter Ukraine will make winter painful for Russia; 51 UN states issued joint statement urging ceasefire and Black Sea navigation protection",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+    },
+    {
+      "date": "2026-09-23",
+      "headline": "Taiwan press reports Trump plans to pressure Zelensky into ceasefire deal on UNGA sidelines.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.ettoday.net/news/20260922/3241773.htm"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2026-09-23",
+      "headline": "Russian Mi-8 violated Polish airspace 23 Sep for 42 seconds, 300m depth near Braniewo from Kaliningrad; Polish fighters scrambled",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+    },
+    {
+      "date": "2026-09-23",
+      "headline": "Chinese coverage frames Ukrainian refinery strikes as deepening global refining crunch, not just battlefield damage.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://news.china.com/socialgd/10000169/20260922/49760556.html"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2026-09-22",
+      "headline": "Zelenskyy-Trump UNGA talks on energy truce; Kremlin welcomed moratorium idea but sought to broaden to seaborne energy exports/sanctions, has not accepted reciprocal pause",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+    },
+    {
+      "date": "2026-09-22",
+      "headline": "Zelensky tells Trump Ukraine ready for energy truce with Russia as reports say Trump will press Zelensky to sign ceasefire at UNGA; energy infrastructure pause as possible off-ramp.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.scmp.com/news/world/russia-central-asia/article/",
+        "https://www.ettoday.net/news/20260922/3241773.htm"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2026-09-22",
+      "headline": "US presses settlement track at UNGA while offering Patriot tech licensing",
+      "detail": "On Sept 22 in New York on the sidelines of the UN General Assembly, Trump and Zelensky met bilaterally on ending the war. During UNGA week Sept 22-28, US envoys Witkoff and Kushner held marathon meetings with Zelensky and Putin envoy Dmitriev that yielded no permanent truce but, according to reports, an agreement for the US to license Patriot defensive missile technology to Ukraine; Zelensky said Sept 25 the US proposed a new round of peace talks in the UAE.",
+      "where": "New York and Washington",
+      "verification": "researched",
+      "sources": [
+        "https://www.jpost.com/international/internationalrussia-ukraine-war/article-909346",
+        "https://www.themoscowtimes.com/2026/09/25/us-proposed-new-round-of-ukraine-peace-talks-in-uae-zelensky-says-a93795"
+      ],
+      "from": "/geopolitics/2026-10-01"
+    },
+    {
+      "date": "2026-09-22",
+      "headline": "Trump backs idea of diesel export ban as Ukraine hits Russian refineries; Chinese press links strikes to global refining crisis.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.sidneyherald.com/news/national/trump-says-he-bac"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2026-09-22",
+      "headline": "Russian foreign intelligence claims EU plotting to move ~$300bn frozen Russian assets out of Euroclear Belgium; Belgium's De Wever government pivotal veto point.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "http://www.shanghainews.net/news/279324396/eu-plotting-new-s"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2026-09-22",
+      "headline": "Reports detail Russian gold routed via Hong Kong to evade sanctions as Swiss billionaire lobbies to overturn Putin sanctions and EU ambassadors debate extension.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.hna.de/wirtschaft/russland-putin-ukraine-krieg-s"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2026-09-21",
+      "headline": "Ukrainian General Staff claimed >45% of Russian refining capacity offline after Moscow strike",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+    },
+    {
+      "date": "2026-09-20",
+      "headline": "Gazprom Neft Moscow refinery (Kapotnya ~12mn t/yr, ~245k b/d) halted crude processing after 20 Sep drone strike damaging AVT-6; fuel vanished from St Petersburg exchange 21-23 Sep",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+    },
+    {
+      "date": "2026-09-18",
+      "headline": "Germany closed Russian consulate in Bonn effective 18 Sep 2026, terminated Russia House lease in Berlin, summoned ambassador, tightened entry controls and proposed additional EU hybrid-sanctions and shadow-fleet pressure.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.npr.org/2026/09/02/g-s1-141502/germany-russia-attempted-drone-attack"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2026-09-17",
+      "headline": "Polish PM Tusk warned parliament intel indicates Russia plans hybrid drone/missile strikes on NATO supporters including Poland disguised as accidents to test Article 5",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+    },
+    {
+      "date": "2026-09-15",
+      "headline": "Trump urged Zelenskyy to stop hitting Russian diesel refineries (raised again at 40-min UNGA meeting 22 Sep); Zelenskyy refused unilateral halt, offered reciprocal energy truce",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+    },
+    {
+      "date": "2026-09-15",
+      "headline": "28 of 32 major Russian refineries (6.5 mb/d capacity) hit by drones as of late Aug/15 Sep, 204 strikes tracked; only 5 in eastern Siberia/far east untouched; average 1 refinery hit per 3 days Jan-Aug",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+    },
+    {
+      "date": "2026-09-01",
+      "headline": "German government attributed Leipzig drone attack to Russia, citing drone configuration, components, explosives/detonator known from other Russian hybrid operations and intelligence pointing to persons acting for Russian state entities.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.npr.org/2026/09/02/g-s1-141502/germany-russia-attempted-drone-attack"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2026-08-27",
+      "headline": "Four EU states called to reopen frozen-asset debate; 122 MEPs letter 9 Sep backed EU custodian to shield Belgium; Commission 11 Sep said assets not primary focus",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+    },
+    {
+      "date": "2026-08-26",
+      "headline": "Average gasoline price +19% since start 2026 and diesel +18% by 26 Aug (Rosstat); fuel-quality standards lowered to Euro 2/3/4 through 1 July 2027",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+    },
+    {
+      "date": "2026-08-10",
+      "headline": "Concentrated wave hit defence industry: EMCO factory Bulgaria (10 Aug truck fire near 155mm ammo warehouse), KNDS Ammo Italy near Rome (13 Aug gunpowder explosion), Milrem Robotics Tallinn Estonia (15 Aug drone supplier to Ukraine, 2 arrested, 3 Latvians detained), Poland WB Group drone-maker…",
+      "detail": "Concentrated wave hit defence industry: EMCO factory Bulgaria (10 Aug truck fire near 155mm ammo warehouse), KNDS Ammo Italy near Rome (13 Aug gunpowder explosion), Milrem Robotics Tallinn Estonia (15 Aug drone supplier to Ukraine, 2 arrested, 3 Latvians detained), Poland WB Group drone-maker incendiary and Lublin helicopter parts fire 30-31 Aug.",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.npr.org/2026/09/02/g-s1-141502/germany-russia-attempted-drone-attack"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2026-08-04",
+      "headline": "Small quadcopter with explosives/detonator found on tarmac at Leipzig/Halle airport near Ukrainian Antonov cargo planes; DHL cargo plane reported collision, third drone with ~50g military explosives found nearby.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.npr.org/2026/09/02/g-s1-141502/germany-russia-attempted-drone-attack"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2026-06-30",
+      "headline": "Russian refinery throughput fell to 3.8 mb/d in June, lowest in >20 years, ~30% below year earlier; gasoline output -20% vs 2025, diesel -30% mid-2026",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+    },
+    {
+      "date": "2026-06-30",
+      "headline": "Fuel shortages reported across 92% of regions by end-June, two-thirds introduced rationing (limits, QR codes), waits up to 40 hours",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+    },
+    {
+      "date": "2026-06-15",
+      "headline": "Russia imposed jet fuel export ban (first ever), followed by diesel ban 8 July (first ever), extended to 31 Aug then 30 Sep",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+    },
+    {
+      "date": "2026-04-01",
+      "headline": "Russia imposed emergency gasoline export ban (first in sequence)",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+    },
+    {
+      "date": "2025-11-15",
+      "headline": "Two sabotage acts on Warsaw-Lublin line (Warsaw-Dorohusk aid corridor): C4 explosive detonated near Mika as freight train passed (21:00 15 Nov) and steel clamp/destroyed overhead line near Puławy/Gołąb forced 475-passenger train to emergency brake. Polish prosecutors charged two Ukrainians acting…",
+      "detail": "Two sabotage acts on Warsaw-Lublin line (Warsaw-Dorohusk aid corridor): C4 explosive detonated near Mika as freight train passed (21:00 15 Nov) and steel clamp/destroyed overhead line near Puławy/Gołąb forced 475-passenger train to emergency brake. Polish prosecutors charged two Ukrainians acting for FSB/GRU, fled to Belarus.",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.gov.pl/web/special-services/act-of-sabotage-on-the-railway-the-safety-of-citizens-and-infrastructure-as-a-government-priority"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2025-09-12",
+      "headline": "NATO launched Operation Eastern Sentry to bolster eastern flank with Denmark (2 F-16s + frigate), France (3 Rafales), Germany (4 Eurofighters), UK and others, with integrated air defence and counter-drone sensors.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.nato.int/en/news-and-events/articles/news/2025/09/12/nato-launches-eastern-sentry-to-bolster-posture-along-eastern-flank"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2025-09-10",
+      "headline": "Poland requested NATO Article 4 consultations; North Atlantic Council met, expressed solidarity and denounced Russia's reckless behaviour.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.gov.pl/web/primeminister/poland-moves-to-invoke-nato-article-4-after-airspace-violation"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2025-09-09",
+      "headline": "19-23 Russian Gerbera-type decoy drones violated Polish airspace for 7h15m from Belarus; Polish F-16s, Dutch F-35s, Italian AWACS, German Patriots shot down 3-4, last at 06:45 CEST 10 Sep.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.gov.pl/web/primeminister/poland-moves-to-invoke-nato-article-4-after-airspace-violation"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2025-01-14",
+      "headline": "NATO launched Operation Baltic Sentry to protect critical undersea infrastructure in Baltic Sea after repeated cable cuts (11 cables cut since 2023, 6 suspected sabotage since 2022).",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.nato.int/en/news-and-events/articles/news/2025/09/12/nato-launches-eastern-sentry-to-bolster-posture-along-eastern-flank"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2024-07-01",
+      "headline": "GRU-linked proxies planted magnesium incendiary devices in electric massagers that ignited at DHL hubs in Leipzig, near Warsaw (Jablonow) and Birmingham UK to test parcel transfer channels to US/Canada.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.bbc.com/news/articles/czx020k4056o"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2024-05-08",
+      "headline": "GRU-ordered arson by hired proxies: IKEA Vilnius 8 May 2024 and Marywilska 44 Warsaw shopping centre 11 May 2024 (1,000+ shops destroyed); Poland closed Russian consulate in Kraków May 2025 in response.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.bbc.co.uk/news/articles/clyx3ly54veo"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "date": "2022-02-24",
+      "headline": "Russia began coordinated sabotage/arson/espionage campaign against Europe after full-scale invasion of Ukraine, aimed at destabilizing support for Ukraine and NATO/EU response.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [
+        "https://www.csis.org/analysis/russias-shadow-war-against-west"
+      ],
+      "from": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    }
+  ],
+  "places": [
+    {
+      "name": "Kyiv",
+      "country": "Ukraine",
+      "lat": 50.4501,
+      "lon": 30.5234,
+      "count": 2,
+      "last_date": "2026-10-03"
+    },
+    {
+      "name": "Moscow",
+      "country": "Russia",
+      "lat": 55.7558,
+      "lon": 37.6173,
+      "count": 2,
+      "last_date": "2026-10-01"
+    },
+    {
+      "name": "Warsaw",
+      "country": "Poland",
+      "lat": 52.2297,
+      "lon": 21.0122,
+      "count": 2,
+      "last_date": "2026-10-01"
+    },
+    {
+      "name": "Chebarkul",
+      "country": "Russia",
+      "lat": 54.977,
+      "lon": 60.369,
+      "count": 1,
+      "last_date": "2026-10-02"
+    },
+    {
+      "name": "Kharkiv",
+      "country": "Ukraine",
+      "lat": 49.9935,
+      "lon": 36.2304,
+      "count": 1,
+      "last_date": "2026-10-02"
+    },
+    {
+      "name": "New York",
+      "country": "United States of America",
+      "lat": 40.7128,
+      "lon": -74.006,
+      "count": 1,
+      "last_date": "2026-10-02"
+    },
+    {
+      "name": "Trypillya Thermal Power Plant, Kyiv Oblast",
+      "country": "Ukraine",
+      "lat": 50.131,
+      "lon": 30.754,
+      "count": 1,
+      "last_date": "2026-09-29"
+    }
+  ],
+  "map": {
+    "bbox": [
+      -107.6,
+      21.383,
+      93.963,
+      75.086
+    ],
+    "projection": "equirectangular",
+    "width": 1000,
+    "height": 400,
+    "countries": [
+      {
+        "name": "W. Sahara",
+        "d": "M490.8 353.3L490.7 355.2L490.7 366.5L474.4 366.1L474.6 385.2L470 385.8L468.7 389.7L469.6 400L449.4 400L460.6 399.1L461.2 396.4L463.3 393.1L464.9 382.8L471.8 374.8L474.1 365.4L475.7 364.8L477.3 359L481.5 358.2L483.3 359.2L485.5 359.2L487.1 357.5L490.2 357.3L490.1 353.3Z"
+      },
+      {
+        "name": "Canada",
+        "d": "M0 47.7L3.2 47.6L7.2 46.8L11.2 48.6L16.2 52.6L21.7 52.1L30.5 55.4L38.2 54.2L45.4 54.4L44.9 49.8L49.3 48.5L57 51L56.9 58L60.1 52.1L64.1 52.3L66.3 44.8L61 40.2L55.2 37.2L55.6 29L61.5 23.6L68 24.8L73 28.1L79.8 36.5L75.4 40.1L84.6 41.6L84.6 49.2L91.2 43.4L97.1 48.2L95.7 53.7L100.5 58.7L105.6 53.4L109.3 46.9L109.5 38.8L116.6 39.3L123.9 40.4L130.6 44.1L130.9 47.8L127.2 51.8L130.7 55.8L130.1 59.4L120.3 64.6L113.4 65.8L108.3 63.5L106.8 67.3L102 73.5L100.6 76.8L94.8 81.8L87.7 82.3L83.8 85.5L83.5 90.3L77.7 91.2L71.7 97.3L66.3 105.7L64.3 111.5L64.1 120.2L71.4 121.4L73.6 128.4L75.9 134.1L82.9 132.6L92.1 135.8L97 138.6L100.6 142.2L106.8 144.2L112.1 147.4L120.3 147.8L125.7 148.5L124.8 155L126.4 162.4L130 170.8L137.4 177.8L141.2 175.4L143.9 167.8L141.3 156L137.8 152.1L145.7 148.6L151.3 143.4L154.1 138.2L153.7 133.2L150.3 126.9L144.3 121.3L150.1 113.5L148 106.7L146.3 95.1L149.8 93.4L158.3 95.4L163.4 96.1L167.5 94.2L172.1 96.7L178.2 101L179.7 103.9L188.6 104.5L188.4 110.7L190.1 120.1L194.6 121.3L198.2 125.7L205.4 121.5L210.1 113.3L213.4 109.9L217.3 116.5L223.7 126L229.2 135L227.2 139.6L233.8 143.8L238.3 148.1L246.2 150L249.4 152.4L251.4 158.7L255.2 159.7L257.2 162.5L257.6 170.9L254 173.7L250.4 176.3L242.2 178.9L236 185L227.6 186.2L217 184.7L209.5 184.6L204.4 185.1L200.3 190.5L193.9 193.8L186.8 203.6L181.1 210.5L185.3 209.3L193.2 199.5L203.6 193.3L211.1 192.6L215.5 196.2L210.8 201.2L212.3 209.2L214 214.9L220.4 218.6L228.6 217.5L233.6 209.1L233.9 214.5L237.1 217.2L231 222.1L220 226.5L215.1 229.6L209.5 234.9L205.8 234.4L205.6 228.1L214.2 221.9L206.3 222.2L200.7 223.1L197.5 218.9L197.5 208.7L195.3 206.6L192 207.8L190.3 205.9L186.5 211.5L185 217.3L183.3 220.7L181.2 221.8L179.6 222.2L179.1 224L169.9 224L162.4 224.1L160.2 225.5L154.9 230.8L152.7 234.3L148.2 234.3L143.3 234.3L141 235.5L141.8 237L142.3 239.2L135.7 243.7L130.6 244.9L124.8 248.9L123.6 248.9L121.9 247.7L121.3 246.6L122.5 243.2L124.9 239.1L126.3 234.7L125.3 228.3L124.3 221.5L119.1 218L119.7 216.7L119 215.8L117.6 215.8L116.6 214.6L116.4 212.8L115.4 213.6L114.1 213.4L113.2 211.9L112.7 209.9L108.9 207.6L104.9 205.1L100 202.2L95.4 199.5L90.9 201.6L89.3 201.7L83.2 199.7L79.2 200.7L74.4 198.4L69.3 197.2L65.8 196.7L64.3 195.5L63.4 191.4L61.7 191.4L61.7 194.3L51.5 194.3L34.5 194.3L17.6 194.3L2.7 194.3L0 194.3ZM117.1 94.1L120.8 90.7L127.6 90.7L127.5 92.2L121.7 96.3L118.2 96.1L117.1 94.1ZM138 17L132.6 13.1L132.8 10.4L135.2 9.9L146.5 10.7L155.1 14.8L155.5 16.8L150.3 16.6L144.9 16.5L139.5 17.5L138 17ZM135.4 96.8L137.3 94.6L139.3 94.8L140.6 96.3L138.6 100.2L136.4 99.6L135.1 97.3ZM69.4 0.8L66.7 3.7L59.5 3.1L53.5 1.2L54.4 0L68.8 0ZM96.5 5.2L88.5 4.2L75.3 1.8L74.5 0L137.3 0L137.8 1.2L134.7 3.2L127.3 4.8L120.9 3.9L106.7 5L96.5 5.2ZM258 177L255.3 181.7L252.1 188.2L255.3 185.7L258.6 187.3L256.9 189.9L261.3 192L263.6 190.2L268.5 192.4L267 197.9L270.5 196.6L271.1 200.6L272.6 205.2L270.5 211.8L268.3 212L265 210.6L266.1 204.5L264.7 203.6L259 210.1L256 209.8L259.5 206.3L254.8 204.5L249.4 204.9L239.8 204.7L239 202.5L242.1 199.9L240 197.8L244.1 193.4L249.3 181.5L252.3 177.3L256.6 174.7L258.9 175L258 177ZM117.7 74.3L123.1 76.9L128.8 79.2L129.2 82.7L132.9 82.1L136.4 84.6L132 87L124.3 85.2L121.5 81.8L116.6 85.8L109.5 89.6L107.8 85.3L101.1 86L105.4 82.3L106 76.4L107.7 69.6L111.3 70.2L112.2 73.5L114.8 72.4L117.7 74.3ZM143 20.4L147.7 17.4L158.7 21.2L165.6 24.7L166.2 28L175.4 26.3L180.6 31L192.6 34L196.9 37L201.6 43.9L192.5 47.4L204.2 52.3L212 53.9L219.2 60.8L227 61.3L225.4 66.5L216.7 75.1L210.6 72L202.8 64.8L196.4 65.7L195.8 70L201 74.3L207.7 77.7L209.8 79.7L213 87.1L211.3 92.4L205 90.4L192.6 84.5L199.6 90.9L204.8 95.4L205.6 98L192.1 95L181.5 90.7L175.5 87.1L177.2 85L169.8 81.1L162.6 77.5L162.6 79.7L148.3 80.9L144.1 78.3L147.4 72.8L156.7 72.7L166.9 71.7L165.2 69.1L167 65.4L173.4 58.1L172 54.8L170.1 52.3L162.5 48.6L152.5 46.1L155.6 44.2L150.4 39.6L146 39.2L142.1 36.6L139.4 38.8L130.5 39.8L112.4 38.1L101.9 35.9L93.9 34.8L89.7 32.2L94.9 28.8L87.9 28.8L86.3 21.2L90.1 14.6L95.2 11.5L108 9.5L104.4 14.4L108.3 19L112.9 13L125.4 9.9L134 17.6L133.2 22.5L143 20.4ZM65 7.1L75.3 7.3L84.8 9.2L77.4 15.8L71.5 17.2L66.1 22.8L60.5 22.5L57.4 16L57.5 12.3L60.1 9.1L65 7.1ZM0 0L6.9 0L0 1ZM5.3 15L10.9 18L14 25.2L15.6 30.5L23.9 34.2L32.8 37.7L32.3 41L24.2 41.6L27.3 44.4L25.6 47.2L16.7 46L8.1 44L2.4 44.4L0 45.1L0 13.9L5.3 15ZM35.5 17.7L30.1 12.9L35.9 9.3L41.9 10.8L50.7 9.9L52 12L47.4 15.6L54.9 18.8L54 25.5L45.8 28.4L41.1 27.8L37.6 24.9L25.3 19.2L25.4 16.8L35.5 17.7ZM5 11.1L11.6 10.8L15.4 12.4L11 17.3L3.3 12.1L5 11.1ZM47.1 0L38.7 1.4L33.3 0.2ZM160.7 56.9L157.4 59.1L151.9 59.5L150.6 55.8L152.7 51.7L157.3 50.6L161.2 52.7L161.2 55.9L160.7 56.9ZM56.3 41.7L59.3 44.5L56.2 47.1L49.5 44.9L45.5 45.7L38.7 42.4L43.1 40L46.5 36.8L51.8 38.9L54.8 40.3L56.3 41.7ZM213.7 187.8L215.4 187.2L222 189L227 192.1L227.2 193.5L224.8 193.6L218.3 191.3L213.7 187.8ZM216.2 208.9L218 212.5L221.6 213.5L226.2 213.3L223.7 216.4L221.9 216.9L215.6 213.7L214.4 211.2L216.2 208.9Z"
+      },
+      {
+        "name": "United States of America",
+        "d": "M0 194.3L2.7 194.3L17.6 194.3L34.5 194.3L51.5 194.3L61.7 194.3L61.7 191.4L63.4 191.4L64.3 195.5L65.8 196.7L69.3 197.2L74.4 198.4L79.2 200.7L83.2 199.7L89.3 201.7L90.9 201.6L95.4 199.5L100 202.2L104.9 205.1L108.9 207.6L112.7 209.9L113.2 211.9L114.4 212.6L115.4 213.6L116.4 212.8L116.6 214.6L117.6 215.8L119 215.8L119.7 216.7L119.1 218L124.3 221.5L125.3 228.3L126.3 234.7L124.9 239.1L122.5 243.2L121.4 245.8L121.9 247.7L123.6 248.9L124.8 248.9L130.6 244.9L135.7 243.7L142.2 240L141.8 237L141 235.5L143.3 234.3L148.2 234.3L152.7 234.3L154.3 231.4L160.2 225.5L162.4 224.1L169.9 224L179.1 224L179.6 222.2L181.2 221.8L183.3 220.7L185 217.3L186.5 211.5L190.3 205.9L192 207.8L195.3 206.6L197.5 208.7L197.5 218.9L200.7 223.1L201.6 225.5L196.3 229.1L191.2 231.7L186 233.9L183.3 238.3L182.5 240L182.4 243.9L184.1 247.9L186.1 248.1L185.6 245.4L187.1 247L186.7 249.1L183.4 250.3L181 250.2L177.3 251.5L175.2 251.9L172.3 252.2L168.1 254.4L175.4 253L176.9 254.4L169.9 256.6L166.8 256.7L165.4 257.8L166.9 258.1L165.8 263.5L162.2 269.2L161.8 267.3L160.7 266.9L159.1 265.1L160.1 269.1L161.4 270.4L161.5 273.2L159.9 276.1L157.1 282.1L158.2 276.7L155.6 273.9L155 267.7L154.1 270.9L155.1 275.6L151.9 274.4L155.3 276.8L155.5 283.9L156.9 284.4L157.4 287L158.1 294.5L155 300L149.8 302.2L146.6 306.6L144.1 307.1L141.6 309.8L140.9 312.3L135.4 317.1L132.6 320.7L130.3 325.1L129.5 330.4L130.4 335.6L132.1 341.9L134.3 347.2L134.3 350.4L136.6 359.1L136.5 364.1L136.3 367L135 371.5L133.6 372.5L131.1 371.6L130.3 368.3L128.4 366.6L125.8 360.2L123.5 354.5L122.8 351.6L123.8 346.6L122.4 342.5L118.5 336.3L116.6 335.1L111.6 338.5L108.3 334.7L105.2 332.8L99.6 333.8L95.2 332.9L91.4 333.5L89.3 334.6L90.2 336.6L90.1 339.6L91.2 341.1L90.3 342.1L88.4 341L86.5 342.4L82.9 342.2L79.2 338.2L74.9 339.2L71.3 337.4L68.2 337.9L64 339.7L59.5 345.2L54.6 348.4L51.9 352L50.8 355.3L50.7 360.5L51 364L51.9 366.6L50 366.8L46.4 365.2L42.6 362.9L41.2 359.4L40.1 354.1L37.2 349.9L35.4 345.5L33 340.4L29.5 337.5L25.4 337.6L22.3 343.5L18.2 341.3L15.6 339L14.4 334.9L12.7 331L9.8 327.7L7.2 325.4L5.4 322.7L0 322.7Z"
+      },
+      {
+        "name": "Kazakhstan",
+        "d": "M967.2 192.7L963.5 197.7L959.3 198.4L959.1 205.8L956.3 209.2L946.5 206.7L942.9 220.1L940.4 221.7L930.6 224.7L935 237.6L931.6 239.6L932 243.8L929 242.7L926.5 240.1L919.1 239.3L910.9 239.1L909.1 239.9L902 236.8L899.2 238.3L898.4 242.7L890.3 240.1L887 241.2L885.9 244.5L883 245.8L876.5 251L874.3 256.4L872.5 256.4L871.1 252.9L864.8 252.6L863.8 246.5L861.4 246.5L861.8 239L855.8 233.6L847.3 234.1L841.5 235.2L836.8 228.5L832.7 225.7L825 220.4L824.1 219.7L811.3 224.1L811.5 251.6L809 251.9L805.5 246.1L802.1 244L796.5 245.6L794.3 248L794 246.2L795.2 243.1L794.3 240.5L788.6 238L786.3 231.3L783.6 229.4L783.4 227L788.2 227.7L788.4 222.3L792.6 221L797 222.2L797.9 214.9L797 210.3L792 210.6L787.8 208.8L782.1 212.1L777.4 213.7L774.9 212.5L775.4 208.6L772.3 203.7L768.6 203.9L764.4 198.8L767.2 193.2L765.8 191.6L769.7 183.5L774.8 187.8L775.5 182.3L785.7 174.2L793.4 174L804.4 179.2L810.3 182.2L815.5 179.1L823.4 178.9L829.7 182.8L831.2 180.6L838.1 180.9L839.4 177.4L831.3 172.2L836.1 168.6L835.2 166.6L839.9 164.7L836.4 159.6L838.6 157L857.2 154.4L859.6 152.6L872 149.8L876.5 146.7L885.4 148.3L887 156.1L892.1 154.2L898.5 156.8L898.1 160.9L902.9 160.4L915.3 153.4L913.5 155.7L919.8 161.5L930.9 180.4L933.5 176.5L940.4 180.8L947.5 178.9L950.3 180.2L952.6 184.5L956.1 186L958.2 189.1L964.6 188.1L967.2 192.7Z"
+      },
+      {
+        "name": "Uzbekistan",
+        "d": "M811.5 251.6L811.3 224.1L824.1 219.7L825 220.4L832.7 225.7L836.8 228.5L841.5 235.2L847.3 234.1L855.8 233.6L861.8 239L861.4 246.5L863.8 246.5L864.8 252.6L871.1 252.9L872.5 256.4L874.3 256.4L876.5 251L883 245.8L885.9 244.5L887.4 245.2L883.2 250L886.9 252.8L890.4 251L896.3 254.9L889.9 260.2L886.1 259.5L884.1 259.7L883.4 257.6L884.4 254.2L877.8 255.9L876.2 260.7L873.9 264.8L869.7 264.5L868.4 267.7L872.1 269.5L873.1 275.1L870.3 282.6L866.6 281L863.8 281L864 276.4L857.4 273.2L852.2 269.6L849 266.1L843.3 260.9L840.8 253.3L839.2 251.9L833.8 252.2L831.9 250.7L831.4 244.8L824.7 240.8L820.5 245.2L816.3 247.7L817.1 251.5L811.5 251.6Z"
+      },
+      {
+        "name": "Sudan",
+        "d": "M657.9 400L657.9 395.4L677.8 395.4L697.1 395.4L716.7 395.4L717.7 400Z"
+      },
+      {
+        "name": "Chad",
+        "d": "M608.7 400L607.5 389L612.5 384.9L632.3 399.2L633.5 400Z"
+      },
+      {
+        "name": "Russia",
+        "d": "M777.4 213.7L775.2 218.1L770.4 219.3L765.4 227L769.9 234.1L769.5 239.1L774.9 247.9L771.9 250.9L771.1 252.8L768.9 252.2L765.4 247.7L764.1 247.5L760.9 245.7L759.4 242.7L754.8 241.1L751.8 242.3L750.9 240.9L744.2 237.3L736.9 236.1L732.7 234.9L732.1 235.7L725.7 229.5L720.1 226.6L715.8 222.3L719.4 221.1L723.5 214.8L720.7 211.9L728 208.9L727.9 207.2L723.5 208.4L723.6 205.1L726.2 203L731 202.5L731.8 200L730.7 195.9L732.7 192L732.6 189.8L725.3 187.4L722.4 187.5L719.3 184L715.5 185.2L709.2 182.5L709.3 181.1L707.6 177.9L703.6 177.5L703.2 175.2L704.5 173.7L701.3 169.5L696.1 170.2L694.6 169.8L693.4 171.5L691.5 171.2L690.3 166.4L689.1 164L690.1 163.3L694.1 163.5L696 161.9L694.6 159.9L691.3 158.6L691.6 157.2L689.5 155.9L686.4 151L687.5 149L687 145.5L682.2 143.7L679.5 144.6L678.8 142.8L673.6 140.9L672 136.5L671.6 132.9L669.2 131.2L671.3 128.8L669.9 121.9L673.4 117.6L672.6 116.3L678.3 112.2L673.1 108.6L683.7 99.1L688.3 94.8L690.2 91L682.8 85.9L684.9 81L680.4 75.5L683.7 69.1L678 60.6L682.6 55L675 50.1L675.7 44.8L679.7 44.2L688.1 41.2L693.2 38.6L701.4 43.1L715 44.9L733.7 53.3L737.5 56.8L737.9 61.8L732.4 65.7L724.3 67.7L702.1 62L698.5 63L706.6 68.4L706.9 71.9L707.2 79.5L713.6 81.8L717.5 83.7L718.1 80.1L715.1 76.9L718.3 74.1L730.3 78.7L734.4 76.9L731.1 71.4L742.7 64.1L747.2 64.6L751.9 67.2L754.8 62L750.6 57.6L753.1 53.1L749.4 48.5L763.3 50.9L766.1 55.1L759.8 56L759.9 60.2L763.8 62.7L771.4 61.1L772.7 56.3L783 52.8L800.3 46.4L804.1 46.8L799.2 51.3L805.3 52.1L808.9 49.5L818.2 49.3L825.6 46.2L831.2 50.7L836.9 45.8L831.7 41.5L834.2 39L848.9 41.3L855.8 43.6L873.7 52.1L877.1 48.2L872 44.3L871.9 42.7L865.9 41.9L867.5 38.4L864.9 32.6L864.7 30.2L873.9 23.5L877.1 16.7L880.8 15.2L894 17.2L895 21.3L890.3 27.4L893.4 29.8L895 35L893.8 45.2L899.3 49.7L897.2 54.7L887.5 65.3L893.1 66.4L895.1 63.7L900.6 61.8L901.9 58.1L906.2 54.6L903.3 50.3L905.6 45.4L900.2 44.8L899 40.7L902.9 33.2L896.5 27.1L905.4 22.1L904.2 16.8L906.7 16.6L909.3 20.7L907.4 27.9L912.7 29.3L910.4 23.9L918.7 21L929 20.6L938.2 24.8L933.8 18.6L933.3 10.7L941.9 9.2L953.8 9.5L964.6 8.6L960.5 4.7L966 0L1000 0L1000 183.2L995.7 183.2L991.4 180.9L983.9 184.4L974.4 190.8L969.2 192.1L967.2 192.7L964.6 188.1L958.2 189.1L956.1 186L952.6 184.5L950.3 180.2L947.5 178.9L940.4 180.8L933.5 176.5L930.9 180.4L919.8 161.5L913.5 155.7L915.3 153.4L902.9 160.4L898.1 160.9L898.5 156.8L892.1 154.2L887 156.1L885.4 148.3L876.5 146.7L872 149.8L859.6 152.6L857.2 154.4L838.6 157L836.4 159.6L839.9 164.7L835.2 166.6L836.1 168.6L831.3 172.2L839.4 177.4L838.1 180.9L831.2 180.6L829.7 182.8L823.4 178.9L815.5 179.1L810.3 182.2L804.4 179.2L793.4 174L785.7 174.2L775.5 182.3L774.8 187.8L769.7 183.5L765.8 191.6L767.2 193.2L764.4 198.8L768.6 203.9L772.3 203.7L775.4 208.6L774.9 212.5L777.4 213.7ZM646.6 154.6L637.5 154.7L631.4 153.9L632.5 150.6L639.3 148.2L644.5 149.5L646.7 150.7L646.2 152.7L646.6 154.6ZM799.3 10L811.2 3.4L809.8 0L836.5 0L823.9 5.8L816.6 13.1L808.8 20.2L809.8 26.4L819.3 32.5L816.3 33.2L800.1 32.2L798.8 28.9L789.8 26.9L789.1 22.9L794.2 21.3L794 17.2L803.9 10.9L799.3 10Z"
+      },
+      {
+        "name": "Bahamas",
+        "d": "M142 359.7L144.3 359.1L147.6 359.4L147.7 361.3L142.3 362.5L142 359.7ZM147.9 357.9L151.8 361.2L151 366.5L150 365.6L150.1 361.7L147.9 358.7ZM145.9 371.5L147.4 371.8L149.1 378L149.2 382.3L147.9 382.7L146.7 378.4L144.8 376.2L145.9 371.5Z"
+      },
+      {
+        "name": "Norway",
+        "d": "M688.1 41.2L679.7 44.2L675.7 44.8L677.8 39.6L671.4 36.7L663.7 39.2L661.3 44.6L656.5 47.9L651.2 46.1L644.7 46.5L639.2 42.6L636.3 44.5L633.2 44.8L632.5 49.7L623.1 48.6L621.8 52.7L617 52.7L613.7 58L608.8 66.2L601.1 76.7L602.9 79.3L601.2 82.2L596.2 82.1L593 89.1L593.3 99L596.5 102.7L594.9 111.5L590.7 116.6L588.5 120.9L585.2 116.3L575.4 124.9L568.8 126.7L561.9 122.9L560.2 114.9L558.6 97.7L563.2 92.9L576.3 86.6L586.1 79L595.1 68.6L607.1 54.2L615.4 48.6L629 39.2L639.9 36L648.1 36.4L655.6 30.2L664.7 30.5L673.6 29.1L689.1 34.5L682.7 36.5L688.1 41.2Z"
+      },
+      {
+        "name": "Greenland",
+        "d": "M431.8 0L437.7 5.9L426.7 6.4L432.4 9.5L430.8 12.1L423.8 13.2L416.9 13.3L423.1 18.3L423.2 21.6L413.4 18.5L410.8 20.5L417.5 22.4L424 26.9L425.9 32.9L417.1 34.4L413.2 31.5L407.1 27.2L408.8 32.3L403 36.2L416.1 36.5L422.9 36.9L409.7 43.4L396.2 49.3L381.6 51.8L376.2 51.9L371 54.7L364.1 62.6L353.5 67.8L350 68.1L343.4 70L336.3 71.7L332.1 76.3L332 81.5L329.5 86.4L321.4 92.4L323.4 98.2L321.2 104.4L318.6 111.6L311.6 112.1L304.3 106L294.4 106L289.6 101.9L286.3 94.6L277.7 85.4L275.1 80.5L274.5 73.8L267.6 66.9L269.4 61.4L266.1 58.8L271 50.1L278.4 47.3L280.4 44.2L281.4 38.4L275.8 41L273.1 42.2L268.6 43.2L262.5 40.8L262.2 35.7L264.1 31.8L268.7 31.7L278.9 33.6L270.3 28.9L265.9 26.4L261 27.4L256.8 25.6L262.4 18.6L259.3 15.8L255.4 10.7L249.4 2.8L243.3 0Z"
+      },
+      {
+        "name": "Mexico",
+        "d": "M0 322.7L5.4 322.7L7.2 325.4L9.8 327.7L12.7 331L14.4 334.9L15.6 339L18.2 341.3L22.3 343.5L25.4 337.6L29.5 337.5L33 340.4L35.4 345.5L37.2 349.9L40.1 354.1L41.2 359.4L42.6 362.9L46.4 365.2L50 366.8L51.9 366.6L50 373.1L49.1 378.5L48.7 388.5L48.3 392.1L49.1 396.2L50.7 399.8L92 400L94.5 399.2L98.9 399.4L101.9 398.8L102.8 400L11.6 400L9.9 396.4L9.5 393.4L7.8 389.6L3.4 382.2L0 378.2Z"
+      },
+      {
+        "name": "France",
+        "d": "M564.5 190.8L566.9 192.8L574 194.2L571.5 199.3L570.9 204.6L569.5 205.8L567.2 205.2L567.4 207.1L563.8 211.2L563.7 214.6L566.1 213.4L567.8 216.7L567.6 218.8L569 221.6L567.3 223.9L568.6 229.6L571.3 230.6L570.7 233.8L566.2 238L556.4 236L549.2 238.4L548.6 242.9L542.9 243.9L537.3 240.5L535.5 242.1L526.4 238.7L524.4 235.8L527 231.4L527.9 216.5L522.8 208.7L519.1 204.9L511.5 202.1L511 196.6L517.5 195L525.8 196.9L524.2 188.5L528.9 191.7L540.5 185.9L542 179.8L546.3 178.3L547 180.9L549.3 181L551.6 184L555.1 187.5L557.6 187L562 190.4L563.1 191L564.5 190.8ZM577.2 241.8L580.4 238.9L581.3 245.3L579.6 251.1L577.4 249.5L576.2 244.5L577.2 241.8Z"
+      },
+      {
+        "name": "Cuba",
+        "d": "M125.7 386.5L130 387.1L133.9 387.2L138.5 389.7L140.5 392.4L145.1 391.6L146.9 393.3L151.1 398L153 400L143.7 400L143.3 398.4L140.5 398.7L135.9 396.7L134.4 395.1L127.9 394L126.2 392.5L128 390.7L123.2 390.3L119.6 394.1L117.5 394.3L116.8 396.1L114.4 396.9L112.2 396.2L114.9 393.9L115.9 391.2L118.2 389.5L120.7 388.1L124.5 387.4L125.7 386.5Z"
+      },
+      {
+        "name": "Mali",
+        "d": "M503.8 400L501.8 373.4L509.4 373.2L526.1 389.5L537 400Z"
+      },
+      {
+        "name": "Mauritania",
+        "d": "M469.6 400L468.7 389.7L470 385.8L474.6 385.2L474.4 366.1L490.7 366.5L490.7 355.2L509.4 373.2L501.8 373.4L503.8 400Z"
+      },
+      {
+        "name": "Niger",
+        "d": "M607.5 389L608.7 400L575 400L576.4 398.6L593.4 384.4L601.2 387.7L604 391.7L607.5 389Z"
+      },
+      {
+        "name": "Israel",
+        "d": "M711 315.6L710.2 318L708.4 317L707.3 321.9L708.6 322.7L707.3 323.8L707.1 325.7L709.4 324.7L709.6 327.6L707.1 339.5L706.6 337.6L703.8 326.7L705.3 324.3L706.2 320.4L707.3 314.8L708 312.9L709.8 312.8L710.2 311.5L711.5 311.4L711.6 314.5L710.9 315.6Z"
+      },
+      {
+        "name": "Lebanon",
+        "d": "M711.5 311.4L710.2 311.5L709.8 312.8L708.1 312.8L709.9 306.7L712.3 301.5L714.7 301.6L715.5 304.5L712.8 307.3L711.5 311.4Z"
+      },
+      {
+        "name": "Palestine",
+        "d": "M709.4 324.7L707.1 325.7L707.3 323.8L708.6 322.7L707.3 321.9L708.4 317L710.2 318L710.2 322.5L709.4 324.7Z"
+      },
+      {
+        "name": "Tunisia",
+        "d": "M580.9 333.5L578.8 320.2L575.7 317.1L575.7 315.3L571.6 310.9L571.2 305.3L574.2 301.1L575.4 295L574.6 287.9L575.6 284.1L581 281.1L584.5 282L584.3 285.7L588.5 283L588.9 284.4L586.4 288.1L586.4 291.5L588.1 293.4L587.4 299.8L584.2 303.6L585.1 307.6L587.7 307.7L588.9 311.3L590.8 312.4L590.5 318.2L588.1 320.3L586.6 322.7L583.2 325.6L583.7 328.7L583.3 331.8L580.9 333.5Z"
+      },
+      {
+        "name": "Algeria",
+        "d": "M490.7 355.2L490.8 353.8L490.8 344.4L498.8 338.9L503.8 337.8L507.8 335.8L509.7 332.1L515.5 329.1L515.7 323.6L518.6 323L520.8 320.2L527.3 319L528.2 316.1L526.9 314.5L525.2 306.6L524.9 302.1L523.1 297.3L527.8 293.2L533.2 292L536.3 288.9L541.1 286.6L549.5 285.3L557.7 284.7L560.2 285.8L564.9 282.9L570.2 282.8L572.2 284.5L575.6 284.1L574.6 287.9L575.4 295L574.2 301.1L571.2 305.3L571.6 310.9L575.7 315.3L575.7 317.1L578.8 320.2L580.9 333.5L582.5 340.1L582.7 343.6L581.9 349.6L582.2 353L581.6 357.1L582 361.8L580.1 364.9L583 370.3L583.2 373.5L584.9 377.7L587.3 376.3L591.2 379.8L593.4 384.4L576.4 398.6L575 400L537 400L526.1 389.5L509.4 373.2L490.7 355.2Z"
+      },
+      {
+        "name": "Jordan",
+        "d": "M710.2 318L711 315.6L716.6 318.6L726.3 310.6L728.3 319.7L727.3 320.8L717.4 324.6L722.3 332L720.7 333.3L719.9 335.8L716.1 336.8L714.9 339.5L712.8 341.8L707.3 340.6L707.1 339.5L709.6 327.6L709.4 324.7L710.2 322.5L710.2 318Z"
+      },
+      {
+        "name": "United Arab Emirates",
+        "d": "M789.7 378.7L790.8 380.4L794.7 379.2L798.8 379.4L801.8 379.6L805.2 374.6L808.9 369.8L812 365.2L813 367.7L813.6 373.6L811.1 373.6L810.7 378.5L811.6 379.5L809.3 381L809.3 384L807.9 387.1L807.7 390.1L806.7 391.7L791.8 387.9L789.9 380.4L789.7 378.7Z"
+      },
+      {
+        "name": "Qatar",
+        "d": "M785.9 374.9L785.6 369.5L786.9 365.6L788.3 364.8L789.8 367.1L789.9 371.5L788.8 375.8L787.4 376.4L785.9 374.9Z"
+      },
+      {
+        "name": "Kuwait",
+        "d": "M771.8 336L772.9 339.3L772.4 341L774 346.6L770.5 346.8L769.3 343.2L764.9 342.5L768.5 335.4L771.8 336Z"
+      },
+      {
+        "name": "Iraq",
+        "d": "M728.3 319.7L726.3 310.6L737.3 302.9L739.1 293.9L738.7 288.5L741.4 286.6L743.9 282L746.1 280.8L751.8 281.8L753.6 283.7L756 282.4L759.2 291.3L762.4 293.5L762.8 297.9L760.3 300.4L759.2 306.3L762.6 313.3L768.7 317.4L771.2 323.1L770.4 328.5L772 328.5L772 332.4L774.8 336.4L771.8 336L768.5 335.4L764.9 342.5L755.6 341.9L741.7 327L734.3 321.7L728.3 319.7Z"
+      },
+      {
+        "name": "Oman",
+        "d": "M807.7 390.1L807.9 387.1L809.3 384L809.3 381L811.6 379.5L810.7 378.5L811.1 373.6L813.6 373.6L815.9 378.7L818.6 381.4L822.3 382.4L825.2 383.7L827.4 388L828.8 390.5L830.6 391.4L830.5 393.1L828.7 397.5L827.9 399.6L809 400L810 395.4L807.7 390.1ZM813 367.7L812 365.2L813.5 362.7L813.6 366.4L813 367.7Z"
+      },
+      {
+        "name": "Myanmar",
+        "d": "M1000 400L991.8 400L992.8 400L993.6 395.1L996 393.3L995.5 390.2L996.6 387.6L996.8 379.9L1000 381.3Z"
+      },
+      {
+        "name": "Mongolia",
+        "d": "M969.2 192.1L974.4 190.8L983.9 184.4L991.4 180.9L995.7 183.2L1000 183.2L1000 226.1L997.6 224.3L990.9 223.2L985 222L983.2 218.7L985.2 210L981.7 204L974.7 201.2L970.5 197.3L969.2 192.1Z"
+      },
+      {
+        "name": "India",
+        "d": "M1000 381.3L996.8 379.9L996.6 387.6L995.5 390.2L996 393.3L993.6 395.1L991 383.3L989.6 383.3L988.8 388.1L986.1 384.2L987.6 380L989.8 379.5L992.1 373.2L989.3 372L984.7 372.1L979.9 371L979.5 365.9L977.1 365.5L973.2 362.3L971.5 367.3L975 371.3L971.9 374.1L970.8 376.8L973.9 378.8L973 383.3L974.8 388.9L975.5 395L974.8 397.7L971.5 397.6L965.3 399.2L880.7 400L877 394.7L879.4 392L877.9 389.1L872.1 382.8L875.4 377.8L886.3 377.8L885.3 371.5L882.5 367.7L882 361.9L878.7 358.6L884.2 350.8L889.9 351.4L895.1 343.5L898.2 336L903.1 328.5L903 323.2L907.2 318.9L903.2 315.2L901.5 310.2L899.7 303.7L902.2 300.4L909.7 302.3L915.2 301.2L920 294.9L925.3 303.6L924.8 309.7L926.8 313.5L926.6 317.3L923.1 316.3L924.5 324.5L929.3 329.2L936.2 334.4L933.1 337.8L931.2 344.8L936 347.6L940.6 351.3L947.1 355.4L953.9 356.4L956.8 360.2L960.6 360.9L966.6 362.6L970.7 362.5L971.3 359.6L970.6 354.8L971 351.6L974 350.1L974.5 355.9L974.6 357.4L979.1 360.3L982.2 359.1L986.4 359.6L990.4 359.4L990.8 354.8L988.8 352.4L992.8 351.5L997.3 345.9L1000 343.7Z"
+      },
+      {
+        "name": "Bangladesh",
+        "d": "M993.6 395.1L993.5 400L991.8 399.3L990.6 400L990.4 397.6L989.4 394L987.4 389.7L982.8 389.4L983.3 392.5L981.7 396.6L979.6 395.1L978.9 396.5L977.5 395.7L975.5 395L974.8 388.9L973 383.3L973.9 378.8L970.8 376.8L971.9 374.1L975 371.3L971.5 367.3L973.2 362.3L977.1 365.5L979.5 365.9L979.9 371L984.7 372.1L989.3 372L992.1 373.2L989.8 379.5L987.6 380L986.1 384.2L988.8 388.1L989.6 383.3L991 383.3L993.6 395.1Z"
+      },
+      {
+        "name": "Bhutan",
+        "d": "M988.8 352.4L990.8 354.8L990.4 359.4L986.4 359.6L982.2 359.1L979.1 360.3L974.6 357.4L974.5 355.9L977.7 350.4L980.4 348.5L984 350.2L986.6 350.4L988.8 352.4Z"
+      },
+      {
+        "name": "Nepal",
+        "d": "M971 351.6L970.6 354.8L971.3 359.6L970.7 362.5L966.6 362.6L960.6 360.9L956.8 360.2L953.9 356.4L947.1 355.4L940.6 351.3L936 347.6L931.2 344.8L933.1 337.8L936.2 334.4L938.3 332.7L942.3 335L947.3 339.8L950.1 340.9L951.7 344.5L955.6 345.9L959.6 349.2L965.2 350.9L971 351.6Z"
+      },
+      {
+        "name": "Pakistan",
+        "d": "M920 294.9L915.2 301.2L909.7 302.3L902.2 300.4L899.7 303.7L901.5 310.2L903.2 315.2L907.2 318.9L903 323.2L903.1 328.5L898.2 336L895.1 343.5L889.9 351.4L884.2 350.8L878.7 358.6L882 361.9L882.5 367.7L885.3 371.5L886.3 377.8L875.4 377.8L872.1 382.8L868.4 380.9L867 375.6L863.1 369.9L854 371.3L845.9 371.4L838.9 372.5L840.8 363.8L848 360L847.5 356.5L845.2 355.3L845 348.8L840.3 345.5L838.3 341L835.8 337.1L844.2 340.9L849.1 339.8L852.1 340.7L853.1 339.1L856.5 339.7L863 336.7L863.2 330.3L865.9 326.1L869.6 326.1L870.2 324L874 323.1L875.8 323.7L877.7 321.7L877.5 317.2L879.6 312.7L882.7 310.8L880.8 305.9L885.5 306.1L886.9 303.4L886.6 300.6L889.1 297.4L888.6 293.7L887.4 290.6L890.3 287.3L895.6 285.8L901.3 284.9L903.8 283.5L906.7 282.7L910.4 286.2L911.8 291.9L920 294.9Z"
+      },
+      {
+        "name": "Afghanistan",
+        "d": "M863.8 281L866.6 281L870.3 282.6L871.9 283.5L875.5 281.1L877.1 282.6L878.7 279.1L881.7 279.3L882.5 278.2L883 275.2L885.1 272.6L887.8 274.3L887.3 276.6L888.8 276.9L888.3 283.2L890.3 285.6L892 284.1L894.2 283.3L897.3 280L900.7 280.5L905.8 280.5L906.7 282.7L903.8 283.5L901.3 284.9L895.6 285.8L890.3 287.3L887.4 290.6L888.6 293.7L889.1 297.4L886.6 300.6L886.9 303.4L885.5 306.1L880.8 305.9L882.7 310.8L879.6 312.7L877.5 317.2L877.7 321.7L875.8 323.7L874 323.1L870.2 324L869.6 326.1L865.9 326.1L863.2 330.3L863 336.7L856.5 339.7L853.1 339.1L852.1 340.7L849.1 339.8L844.2 340.9L835.8 337.1L840.3 330.3L839.9 325.5L836.2 324.3L835.8 319.6L834.2 313.6L836.3 309.5L834.1 308.4L835.5 303L837.5 293.7L842.6 296.6L846.3 295.6L847.3 292.2L851.3 291.1L854.1 288.8L855 282.8L859.2 281.4L860 278.8L862.3 280.7L863.8 281Z"
+      },
+      {
+        "name": "Tajikistan",
+        "d": "M870.3 282.6L873.1 275.1L872.1 269.5L868.4 267.7L869.7 264.5L873.9 264.8L876.2 260.7L877.8 255.9L884.4 254.2L883.4 257.6L884.1 259.7L886.1 259.5L884.3 261.8L878.9 260.6L878.5 264.9L883.8 264.3L890 266.7L899.3 265.6L900.6 272.5L902.2 271.7L905.3 273.4L905.1 276.3L905.8 280.5L900.7 280.5L897.3 280L894.2 283.3L892 284.1L890.3 285.6L888.3 283.2L888.8 276.9L887.3 276.6L887.8 274.3L885.1 272.6L883 275.2L882.5 278.2L881.7 279.3L878.7 279.1L877.1 282.6L875.5 281.1L871.9 283.5L870.3 282.6Z"
+      },
+      {
+        "name": "Kyrgyzstan",
+        "d": "M885.9 244.5L887 241.2L890.3 240.1L898.4 242.7L899.2 238.3L902 236.8L909.1 239.9L910.9 239.1L919.1 239.3L926.5 240.1L929 242.7L932 243.8L931.3 245.5L923.5 249.5L921.7 252.5L915.4 253.4L913.5 258.1L908.2 257.1L904.8 258.6L900.1 262.1L900.8 263.9L899.3 265.6L890 266.7L883.8 264.3L878.5 264.9L878.9 260.6L884.3 261.8L886.1 259.5L889.9 260.2L896.3 254.9L890.4 251L886.9 252.8L883.2 250L887.4 245.2L885.9 244.5Z"
+      },
+      {
+        "name": "Turkmenistan",
+        "d": "M794.3 248L796.5 245.6L802.1 244L805.5 246.1L809 251.9L811.5 251.6L817.1 251.5L816.3 247.7L820.5 245.2L824.7 240.8L831.4 244.8L831.9 250.7L833.8 252.2L839.2 251.9L840.8 253.3L843.3 260.9L849 266.1L852.2 269.6L857.4 273.2L864 276.4L863.8 281L862.3 280.7L860 278.8L859.2 281.4L855 282.8L854.1 288.8L851.3 291.1L847.3 292.2L846.3 295.6L842.6 296.6L837.5 293.7L837.1 287.5L833.4 287.2L827.7 280.6L823.7 279.8L818.3 276L814.7 275.3L812.6 276.7L809.2 276.5L805.7 280.8L801.3 282.2L800.4 276.9L801.1 269.1L797.3 266.6L798.5 261.5L795.3 261.1L796.4 254.8L801 256.6L805.4 254.2L801.8 249.8L800.4 245.5L796.4 247.4L795.9 252.9L794.3 248Z"
+      },
+      {
+        "name": "Iran",
+        "d": "M774.8 336.4L772 332.4L772 328.5L770.4 328.5L771.2 323.1L768.7 317.4L762.6 313.3L759.2 306.3L760.3 300.4L762.8 297.9L762.4 293.5L759.2 291.3L756 282.4L753.2 276.4L754.2 274.1L752.7 265.6L756.1 263.5L756.8 266.3L759.4 269.7L762.8 270.7L764.6 270.5L770.4 265L772.3 264.4L773.7 266.6L772 270.3L775.1 274.2L776.3 273.8L777.9 279.3L782.6 280.9L786.1 284.6L793.1 285.9L800.9 283.9L801.3 282.2L805.7 280.8L809.2 276.5L812.6 276.7L814.7 275.3L818.3 276L823.7 279.8L827.7 280.6L833.4 287.2L837.1 287.5L837.5 293.7L835.5 303L834.1 308.4L836.3 309.5L834.2 313.6L835.8 319.6L836.2 324.3L839.9 325.5L840.3 330.3L835.8 337.1L838.3 341L840.3 345.5L845 348.8L845.2 355.3L847.5 356.5L848 360L840.8 363.8L838.9 372.5L829.6 370.2L824.2 368.5L818.6 367.5L816.5 358.4L814.1 357.1L810.3 358.4L805.3 362L799.2 359.6L794.2 353.8L789.4 351.7L786.1 344.6L782.5 334.7L779.8 335.9L776.6 333.5L774.8 336.4Z"
+      },
+      {
+        "name": "Syria",
+        "d": "M711 315.6L711.6 314.5L711.5 311.4L712.8 307.3L715.5 304.5L714.7 301.6L712.4 301.2L712 295.5L713.2 292.5L714.5 290.8L715.8 289.2L716.1 285L717.7 286.5L723.2 284.4L725.8 285.8L729.9 285.8L735.6 283L738.3 283.1L743.9 282L741.4 286.6L738.7 288.5L739.1 293.9L737.3 302.9L726.3 310.6L716.6 318.6L711 315.6Z"
+      },
+      {
+        "name": "Armenia",
+        "d": "M764.6 270.5L762.8 270.7L760.7 266.4L760.8 265.2L758.6 265.3L757.1 263.3L756.1 263.5L754.1 261.3L750.4 259.4L750.9 255.8L750.1 253.2L756.9 252L758 254L759.9 255.3L758.9 257.1L761.5 259.7L760.1 262.1L762.2 264.1L764.4 265.3L764.6 270.5Z"
+      },
+      {
+        "name": "Sweden",
+        "d": "M588.5 120.9L590.7 116.6L594.9 111.5L596.5 102.7L593.3 99L593 89.1L596.2 82.1L601.2 82.2L602.9 79.3L601.1 76.7L608.8 66.2L613.7 58L617 52.7L621.8 52.7L623.1 48.6L632.5 49.7L633.2 44.8L636.3 44.5L642.9 48.2L650.6 53.3L650.7 64.7L652.4 67.6L643.9 69.7L639.1 74.9L639.8 79.5L632 85.5L622.4 91.9L618.8 102.4L622.3 107.6L627 111.8L622.5 120.2L617.3 121.9L615.4 134.4L612.6 141.4L606.6 140.7L603.8 146.6L598 146.9L596.5 139.9L592.3 131.4L588.5 120.9Z"
+      },
+      {
+        "name": "Belarus",
+        "d": "M673.6 140.9L678.8 142.8L679.5 144.6L682.2 143.7L687 145.5L687.5 149L686.4 151L689.5 155.9L691.6 157.2L691.3 158.6L694.6 159.9L696 161.9L694.1 163.5L690.1 163.3L689.1 164L690.3 166.4L691.5 171.2L687.3 171.6L685.7 173.3L685.4 177L683.4 176.3L679 176.7L677.7 174.9L675.8 176.2L673.9 175.1L670 175L664.5 173.2L659.5 172.6L655.6 172.8L652.9 174.8L650.6 175.1L650.5 171.8L648.9 168.3L651.9 166.8L651.9 163.8L650.6 161L650.3 157.7L655.1 157.8L660.5 155L661.7 150.7L665.7 148.4L665.3 145L668.3 143.8L673.6 140.9Z"
+      },
+      {
+        "name": "Ukraine",
+        "d": "M691.5 171.2L693.4 171.5L694.6 169.8L696.1 170.2L701.3 169.5L704.5 173.7L703.2 175.2L703.6 177.5L707.6 177.9L709.3 181.1L709.2 182.5L715.5 185.2L719.3 184L722.4 187.5L725.3 187.4L732.6 189.8L732.7 192L730.7 195.9L731.8 200L731 202.5L726.2 203L723.6 205.1L723.5 208.4L719.5 209L716.2 211.4L711.6 211.8L707.3 214.6L707.5 218.6L706.1 216.9L704.5 216.6L701 215L699.7 216.9L699 216L691.3 214.2L691 211.4L686.4 212.3L684.5 216.4L680.7 221.9L678.4 220.6L676.1 221.8L673.9 220.5L675.2 219.6L676 217.1L677.4 214.7L677 213.4L678.1 212.8L678.6 213.8L681.5 214L682.8 213.5L681.9 212.7L682.2 211.6L680.5 209.7L679.8 206.6L678 205.4L678.3 202.9L676.1 200.9L674 200.6L670.4 198.3L667.1 199L665.9 200.1L663.8 200.1L662.6 201.8L658.9 202.6L657.2 203.7L654.9 201.9L651.7 201.9L648.6 201L646.5 202.6L646.2 200.6L643.4 198.6L644.4 195.6L645.7 193.7L646.8 194.1L645.5 190.7L650.1 184.6L652.5 183.7L653 181.6L650.6 175.1L652.9 174.8L655.6 172.8L659.5 172.6L664.5 173.2L670 175L673.9 175.1L675.8 176.2L677.7 174.9L679 176.7L683.4 176.3L685.4 177L685.7 173.3L687.3 171.6L691.5 171.2ZM699.7 216.9L701 215L704.5 216.6L706.1 216.9L706.8 218.4L707.6 219.2L710 221L715.1 220.6L714.1 223.2L708.7 224.5L701.9 228.8L699.2 227.3L700.3 223.8L694.8 221.7L695.7 220.2L700.5 217.7L699.7 216.9Z"
+      },
+      {
+        "name": "Poland",
+        "d": "M650.3 157.7L650.6 161L651.9 163.8L651.9 166.8L648.9 168.3L650.5 171.8L650.6 175.1L653 181.6L652.5 183.7L650.1 184.6L645.5 190.7L646.8 194.1L645.7 193.7L641 190.8L637.5 191.8L635.1 191.1L632.2 192.7L629.7 190L627.6 191.1L625.1 186.9L621.4 186.5L620.9 184.2L617.5 183.3L616.8 185.2L614.1 183.7L614.4 181.7L610.7 181L608.3 178.6L606.3 173.8L606.7 171.3L605.5 167.3L603.7 164.6L605 162.7L603.9 158.9L607.3 156.7L615 153.2L621.3 150.7L626.2 152L626.6 153.8L631.4 153.9L637.5 154.7L646.6 154.6L649.1 155.4L650.3 157.7Z"
+      },
+      {
+        "name": "Austria",
+        "d": "M618.1 200.8L617.7 203.9L614.9 203.9L615.9 205.5L614.2 210.3L613.3 211.6L608.9 211.7L606.4 213.4L602.3 212.8L595.2 210.9L594.1 208.3L589.2 209.6L588.6 211L585.6 210L583.1 209.8L580.9 208.4L581.6 206.6L581.4 205.3L582.9 204.9L585.4 206.9L586.1 205L590.5 205.3L594.1 204L596.4 204.2L598 205.7L598.5 204.4L597.7 199.6L599.5 198.6L601.3 195.2L605 197.6L607.8 194.6L609.5 194L613.4 196.3L615.7 195.9L618 197.3L617.6 198.2L618.1 200.8Z"
+      },
+      {
+        "name": "Hungary",
+        "d": "M643.4 198.6L646.2 200.6L646.5 202.6L643.5 204.2L641.1 209.2L638.1 214.3L634.1 215.7L631 215.4L627.2 217.3L625.4 218.4L621.3 217L617.6 213.8L616 212.9L615 210.4L615.9 205.5L614.9 203.9L617.7 203.9L618.1 200.8L620.6 202.7L622.4 203.5L626.6 202.6L627 201.1L629 200.9L631.4 199.8L634.2 199.3L635.4 197.6L637 197.1L642.3 199.4L643.4 198.6Z"
+      },
+      {
+        "name": "Moldova",
+        "d": "M665.9 200.1L667.1 199L670.4 198.3L674 200.6L676.1 200.9L678.3 202.9L678 205.4L679.8 206.6L680.5 209.7L682.2 211.6L681.9 212.7L682.8 213.5L681.5 214L678.6 213.8L678.1 212.8L677 213.4L677.4 214.7L676 217.1L675.2 219.6L673.9 220.5L673 217.1L673.5 213.9L673.4 210.6L670.5 206.2L668.9 203L667.4 200.8L665.9 200.1Z"
+      },
+      {
+        "name": "Romania",
+        "d": "M673.9 220.5L676.1 221.8L678.4 220.6L680.7 221.9L680.8 223.8L678.4 225.4L676.9 224.7L675.5 233.7L672.6 232.9L669 230.2L663.1 232L660.7 233.9L653.4 233.5L649.6 232.3L647.7 232.9L646.2 229.8L645.3 228.5L646.5 227.2L645.3 226.3L643.7 228L640.8 225.8L640.4 222.7L637.4 221L636.8 218.6L634.1 215.7L638.1 214.3L641.1 209.2L643.5 204.2L646.5 202.6L648.6 201L651.7 201.9L654.9 201.9L657.2 203.7L658.9 202.6L662.6 201.8L663.8 200.1L665.9 200.1L667.4 200.8L668.9 203L670.5 206.2L673.4 210.6L673.5 213.9L673 217.1L673.9 220.5Z"
+      },
+      {
+        "name": "Lithuania",
+        "d": "M665.3 145L665.7 148.4L661.7 150.7L660.5 155L655.1 157.8L650.3 157.7L649.1 155.4L646.6 154.6L646.2 152.7L646.7 150.7L644.5 149.5L639.3 148.2L638.3 141.9L644 139.6L652.3 140.1L657.2 139.4L657.9 140.9L660.5 141.4L665.3 145Z"
+      },
+      {
+        "name": "Latvia",
+        "d": "M669.2 131.2L671.6 132.9L672 136.5L673.6 140.9L668.3 143.8L665.3 145L660.5 141.4L657.9 140.9L657.2 139.4L652.3 140.1L644 139.6L638.3 141.9L638.5 136.3L640.9 131.6L645.6 129.1L649.5 134.7L653.5 134.5L654.5 128.8L658.7 127.5L660.8 128.4L665.1 131.2L669.2 131.2Z"
+      },
+      {
+        "name": "Estonia",
+        "d": "M672.6 116.3L673.4 117.6L669.9 121.9L671.3 128.8L669.2 131.2L665.1 131.2L660.8 128.4L658.7 127.5L654.5 128.8L655 124.4L653.2 125.3L650.1 122.7L649.6 118.4L655.9 116.3L662.1 115.3L667.5 116.5L672.6 116.3Z"
+      },
+      {
+        "name": "Germany",
+        "d": "M603.9 158.9L605 162.7L603.7 164.6L605.5 167.3L606.7 171.3L606.3 173.8L608.3 178.6L606.1 179.4L604.8 178.5L603.6 179.9L600 181.4L598.2 183.2L594.6 184.9L595.4 187.1L595.9 190.2L598.5 192L601.3 195.2L599.5 198.6L597.7 199.6L598.5 204.4L598 205.7L596.4 204.2L594.1 204L590.5 205.3L586.1 205L585.4 206.9L582.9 204.9L581.4 205.3L576.1 203L575.1 204.6L570.9 204.6L571.5 199.3L574 194.2L566.9 192.8L564.5 190.8L564.8 187.6L563.8 185.9L564.4 180.9L563.5 173.1L566.5 173.1L567.8 170.3L569 163.4L568.1 160.9L569.1 159.3L573.2 158.9L574.1 160.6L577.5 156.9L576.4 154.1L576.1 149.9L579.9 150.9L583.1 149.7L583.1 152.6L588.2 154.3L588.1 157L593.1 155.6L595.9 153.6L601.5 156.5L603.9 158.9Z"
+      },
+      {
+        "name": "Bulgaria",
+        "d": "M646.2 229.8L647.7 232.9L649.6 232.3L653.4 233.5L660.7 233.9L663.1 232L669 230.2L672.6 232.9L675.5 233.7L672.9 236.8L671.1 242.1L672.7 246.4L668.5 245.4L663.4 247.7L663.3 251.4L658.8 252.1L655.3 249.5L651.4 251.6L647.7 251.4L647.3 246.4L644.9 244L645.7 243L645.1 242.1L646 239.7L647.9 237.4L645.5 234.2L645 231.5L646.2 229.8Z"
+      },
+      {
+        "name": "Greece",
+        "d": "M664.3 296.3L663.6 298.5L656.5 299.2L656.5 297.9L650.5 296.5L651.4 293.3L654.1 295.8L658 295.4L661.7 295.9L661.6 297.2L664.3 296.3ZM647.7 251.4L651.4 251.6L655.3 249.5L658.8 252.1L663.3 251.4L663.4 247.7L665.8 249.7L664.3 254.4L663.1 255.2L660.1 255L657.5 254.3L651.5 256.2L654.9 260.4L652.4 261.6L649.6 261.6L647 257.8L646.1 259.4L647.2 263.9L649.7 267.4L647.8 269L650.6 272.4L653 274.6L653.1 278.8L648.5 276.8L650 280.6L646.8 281.4L648.7 288L645.4 288.1L641.3 284.8L639.5 278.9L638.6 273.9L636.7 270.5L634.1 266.2L633.8 264.1L636.1 260.5L636.4 258.1L638 257L638.1 255.1L641.4 254.4L643.3 252.8L645.9 252.9L646.8 251.6Z"
+      },
+      {
+        "name": "Turkey",
+        "d": "M756 282.4L753.6 283.7L751.8 281.8L746.1 280.8L743.9 282L738.3 283.1L735.6 283L729.9 285.8L725.8 285.8L723.2 284.4L717.7 286.5L716.1 285L715.8 289.2L714.5 290.8L713.2 292.5L711.4 289.1L713.2 286.3L710.2 286.9L706.1 285.2L702.6 289.5L695.1 290.3L691.1 286.3L685.7 286.1L684.6 289.2L681.2 290.1L676.4 286.1L671 286.2L668 278.8L664.4 274.7L666.8 268.9L663.7 265.3L669.2 258.2L676.8 257.9L678.9 252.2L688.4 253.2L694.3 248.4L700.1 246.3L708.3 246.1L717 251.4L724.1 254.3L729.9 253.1L734.1 253.8L740 249.9L745.3 249.5L750.1 253.2L750.9 255.8L750.4 259.4L754.1 261.3L756.1 263.5L752.7 265.6L754.2 274.1L753.2 276.4L756 282.4ZM663.4 247.7L668.5 245.4L672.7 246.4L673.3 249.2L677.6 251.6L676.7 253.5L670.9 253.9L668.7 256.2L664.6 260.2L663 256.7L663.1 255.2L664.3 254.4L665.8 249.7L663.4 247.7Z"
+      },
+      {
+        "name": "Albania",
+        "d": "M638.1 255.1L638 257L636.4 258.1L636.1 260.5L633.8 264.1L632.9 262L630.1 259.5L629.7 255.9L630.1 250.8L630.8 248.5L629.9 247.3L629.6 245L631.8 241.3L632.1 242.7L633.4 242.1L634.5 244L635.6 244.8L636 247.5L635.4 250L636.1 253.2L638.1 255.1Z"
+      },
+      {
+        "name": "Croatia",
+        "d": "M616 212.9L617.6 213.8L621.3 217L625.4 218.4L627.2 217.3L628.5 220.2L630 222.3L628.1 225.1L625.9 223.5L622.4 223.6L618.2 222.3L615.9 222.5L614.8 224.1L613 222.3L612 225.4L614.4 228.9L615.5 231.2L617.8 234L619.6 235.7L621.5 238.8L625.9 241.6L625.4 242.9L620.7 240.1L617.8 237.4L613.3 235.2L609.1 229.7L610.1 229.2L607.9 226L607.8 223.5L604.6 222.3L603 225.6L601.6 223.1L601.7 220.5L605.3 220.6L606.2 219.4L607.9 220.6L609.9 220.7L609.9 218.6L611.6 217.9L612.1 214.9L616 212.9Z"
+      },
+      {
+        "name": "Switzerland",
+        "d": "M581.4 205.3L581.6 206.6L580.9 208.4L583.1 209.8L585.6 210L585.2 213L583.1 214.3L579.4 213.4L578.3 216.4L575.9 216.6L575.1 215.4L572.3 217.9L569.9 218.3L567.8 216.7L566.1 213.4L563.7 214.6L563.8 211.2L567.4 207.1L567.2 205.2L569.5 205.8L570.9 204.6L575.1 204.6L576.1 203L581.4 205.3Z"
+      },
+      {
+        "name": "Luxembourg",
+        "d": "M563.8 185.9L564.8 187.6L564.5 190.8L563.1 191L562 190.4L562.5 186.2L563.8 185.9Z"
+      },
+      {
+        "name": "Belgium",
+        "d": "M564.4 180.9L563.8 185.9L562.5 186.2L562 190.4L557.6 187L555.1 187.5L551.6 184L549.3 181L547 180.9L546.3 178.3L550.3 176.8L553.9 177.4L558.5 175.9L561.6 179.1L564.4 180.9Z"
+      },
+      {
+        "name": "Netherlands",
+        "d": "M568.1 160.9L569 163.4L567.8 170.3L566.5 173.1L563.5 173.1L564.4 180.9L561.6 179.1L558.5 175.9L553.9 177.4L550.3 176.8L552.8 174.8L557.2 163.8L564 160.7L568.1 160.9Z"
+      },
+      {
+        "name": "Portugal",
+        "d": "M489 247.3L490.8 245.4L492.8 244.3L494.1 248L497 248L497.9 247L500.7 247.3L502.1 251L499.8 253.1L499.8 258.9L499 260L498.8 263.5L496.6 264.1L498.6 268.6L497.2 273.4L499 275.7L498.3 277.7L496.4 280.5L496.8 282.9L494.9 284.9L492.2 283.8L489.7 284.7L490.4 278.8L490 274.2L487.8 273.6L486.6 270.7L487 265.9L488.9 263.2L489.3 260.1L490.3 255.7L490.2 252.5L489.2 249.8L489 247.3Z"
+      },
+      {
+        "name": "Spain",
+        "d": "M496.8 282.9L496.4 280.5L498.3 277.7L499 275.7L497.2 273.4L498.6 268.6L496.6 264.1L498.8 263.5L499 260L499.8 258.9L499.8 253.1L502.1 251L500.7 247.3L497.9 247L497 248L494.1 248L492.8 244.3L490.8 245.4L489 247.3L489.3 242L487.2 238.8L494.2 233.4L500.3 234.8L507 234.7L512.3 236L516.4 235.6L524.4 235.8L526.4 238.7L535.5 242.1L537.3 240.5L542.9 243.9L548.6 242.9L548.9 247.2L544.2 252.2L537.8 253.8L537.4 256.3L534.4 260.4L532.4 266.5L534.4 270.7L531.5 274.1L530.4 278.9L526.7 280.4L523.2 286.1L516.9 286.2L512.2 286.1L509 288.7L507.2 291.5L504.7 290.9L502.9 288.4L501.5 284.1L496.8 282.9Z"
+      },
+      {
+        "name": "Ireland",
+        "d": "M503.1 158L503.9 163.4L500.1 170L491.4 174.4L484.3 173.3L488.4 165.5L485.8 157.9L492.5 152.1L496.3 148.6L497.3 152.6L496.3 156.6L499.3 156.5L503.1 158Z"
+      },
+      {
+        "name": "China",
+        "d": "M932 243.8L931.6 239.6L935 237.6L930.6 224.7L940.4 221.7L942.9 220.1L946.5 206.7L956.3 209.2L959.1 205.8L959.3 198.4L963.5 197.7L967.2 192.7L969.2 192.1L970.5 197.3L974.7 201.2L981.7 204L985.2 210L983.2 218.7L985 222L990.9 223.2L997.6 224.3L1000 226.1L1000 343.7L997.3 345.9L992.8 351.5L988.8 352.4L986.6 350.4L984 350.2L980.4 348.5L977.7 350.4L974.5 355.9L974 350.1L971 351.6L965.2 350.9L959.6 349.2L955.6 345.9L951.7 344.5L950.1 340.9L947.3 339.8L942.3 335L938.3 332.7L936.2 334.4L929.3 329.2L924.5 324.5L923.1 316.3L926.6 317.3L926.8 313.5L924.8 309.7L925.3 303.6L920 294.9L911.8 291.9L910.4 286.2L906.7 282.7L905.8 280.5L905.1 276.3L905.3 273.4L902.2 271.7L900.6 272.5L899.3 265.6L900.8 263.9L900.1 262.1L904.8 258.6L908.2 257.1L913.5 258.1L915.4 253.4L921.7 252.5L923.5 249.5L931.3 245.5L932 243.8Z"
+      },
+      {
+        "name": "Italy",
+        "d": "M585.6 210L588.6 211L589.2 209.6L594.1 208.3L595.2 210.9L602.3 212.8L601.8 216.5L603 219.7L599 218.6L595 221.2L595.3 224.9L594.7 227.1L596.3 230.9L600.9 234.6L603.4 240.8L609 246.8L612.8 246.7L614.1 248.4L612.7 249.9L617.1 252.5L620.7 254.8L625 258.7L625.5 260.1L624.6 262.7L621.8 259.3L617.5 258L615.4 262.9L619 265.6L618.4 269.5L616.4 269.9L613.7 276.3L611.6 276.9L611.7 274.6L612.7 270.6L613.8 269L611.8 264.7L610.3 261L608.2 260L606.8 256.8L603.6 255.5L601.4 252.5L597.8 252L593.9 248.6L589.4 243.8L586 239.5L584.4 232.1L582 231.3L577.9 228.8L575.6 229.8L572.8 233.3L570.7 233.8L571.3 230.6L568.6 229.6L567.3 223.9L569 221.6L567.6 218.8L567.8 216.7L569.9 218.3L572.3 217.9L575.1 215.4L575.9 216.6L578.3 216.4L579.4 213.4L583.1 214.3L585.2 213L585.6 210ZM607.1 275.2L610.8 274.5L609 280.4L609.8 282.7L608.7 286.5L604.9 283.7L602.4 282.9L595.5 279.1L596.2 275.3L602 276L607.1 275.2ZM577 254.6L579.5 252.3L582.5 257.6L581.8 267.5L579.5 267L577.5 269.5L575.6 267.5L575.4 258.5L574.3 254.3L577 254.6Z"
+      },
+      {
+        "name": "Denmark",
+        "d": "M583.1 149.7L579.9 150.9L576.1 149.9L574.1 145.8L574 138.1L574.8 136.1L576.2 133.9L580.6 133.4L582.3 131.4L586.3 129.3L586.1 133.1L584.7 135.5L585.3 137.6L588 138.7L586.8 141.6L585.3 140.7L581.7 146.1L583.1 149.7ZM595.2 141.3L596.8 145.1L593.8 151.1L588.6 146.9L587.9 143.8L595.2 141.3Z"
+      },
+      {
+        "name": "United Kingdom",
+        "d": "M503.1 158L499.3 156.5L496.3 156.6L497.3 152.6L496.3 148.6L500.4 148.3L505.7 152.9L503.1 158ZM518.5 161.5L519.2 157.2L515.9 152.6L509.8 151.2L508.6 149.1L510.4 145.8L508.8 143.8L506.1 147.3L505.8 140.1L503.3 136.3L505.1 128.6L509 122.6L512.9 123.2L518.9 122.5L513.6 130.6L518.7 129.6L524.1 129.6L522.8 135.7L518.4 142.4L523.5 142.8L528.3 152.4L531.7 153.6L534.7 162.1L536.2 165L542.2 166.4L541.6 171.2L539 173.4L541 177.2L536.6 181.1L529.9 181.1L521.5 183.1L519.2 181.7L515.9 185.1L511.3 184.3L507.8 187.1L505.2 185.7L512.4 177.8L516.9 176.2L509.1 175L507.7 172L512.9 169.7L510.2 165.7L511.1 160.8L518.5 161.5Z"
+      },
+      {
+        "name": "Iceland",
+        "d": "M461.8 64.3L460.7 69.1L466.3 74.2L459.9 79.9L445.5 85L441.3 86.3L434.7 85.2L420.9 82.9L425.8 79.6L415 75.9L423.8 74.5L423.6 72.3L413.1 70.6L416.5 65.7L424 64.6L431.7 69.7L439.3 65.6L445.5 67.7L453.6 63.8L461.8 64.3Z"
+      },
+      {
+        "name": "Azerbaijan",
+        "d": "M764.1 247.5L765.4 247.7L768.9 252.2L771.1 252.8L771.9 250.9L774.9 247.9L777.5 251.8L780 257.1L782.3 257.4L783.8 259.4L779.8 260L778.9 265.8L778 268.4L776.2 270.2L776.3 273.8L775.1 274.2L772 270.3L773.7 266.6L772.3 264.4L770.4 265L764.6 270.5L764.4 265.3L762.2 264.1L760.1 262.1L761.5 259.7L758.9 257.1L759.9 255.3L758 254L756.9 252L758.2 250.8L761.9 253L764.5 253.4L765.2 252.5L762.8 248.5L764.1 247.5ZM762.8 270.7L759.4 269.7L756.8 266.3L756.1 263.5L757.1 263.3L758.6 265.3L760.8 265.2L760.7 266.4L762.8 270.7Z"
+      },
+      {
+        "name": "Georgia",
+        "d": "M732.1 235.7L732.7 234.9L736.9 236.1L744.2 237.3L750.9 240.9L751.8 242.3L754.8 241.1L759.4 242.7L760.9 245.7L764.1 247.5L762.8 248.5L765.2 252.5L764.5 253.4L761.9 253L758.2 250.8L756.9 252L750.1 253.2L745.3 249.5L740 249.9L740.7 246.7L739.5 241.6L736.6 238.9L733.9 238L732.1 235.7Z"
+      },
+      {
+        "name": "Slovenia",
+        "d": "M602.3 212.8L606.4 213.4L608.9 211.7L613.3 211.6L614.2 210.3L616 212.9L612.1 214.9L611.6 217.9L609.9 218.6L609.9 220.7L607.9 220.6L606.2 219.4L605.3 220.6L601.9 220.4L603 219.7L601.8 216.5L602.3 212.8Z"
+      },
+      {
+        "name": "Finland",
+        "d": "M675.7 44.8L675 50.1L682.6 55L678 60.6L683.7 69.1L680.4 75.5L684.9 81L682.8 85.9L690.2 91L688.3 94.8L683.7 99.1L673.1 108.6L664.1 109.2L655.4 111.9L647.3 113.5L644.4 109.4L639.6 107L640.7 99.7L638.3 92.9L640.7 88.6L645.2 83.9L656.5 75.9L659.8 74.3L659.3 71.1L652.4 67.6L650.7 64.7L650.6 53.3L642.9 48.2L636.3 44.5L639.2 42.6L644.7 46.5L651.2 46.1L656.5 47.9L661.3 44.6L663.7 39.2L671.4 36.7L677.8 39.6L675.7 44.8Z"
+      },
+      {
+        "name": "Slovakia",
+        "d": "M645.7 193.7L644.4 195.6L643.4 198.6L642.3 199.4L637 197.1L635.4 197.6L634.2 199.3L631.9 200.2L629 200.9L627 201.1L626.6 202.6L622.4 203.5L620.6 202.7L618.1 200.8L617.6 198.2L618 197.3L618.7 195.7L620.9 195.8L622.6 195L623.7 194L624 192.3L625.1 192L625.9 190.6L627.4 190.6L629.7 190L632.2 192.7L635.1 191.1L637.5 191.8L641 190.8L645.7 193.7Z"
+      },
+      {
+        "name": "Czechia",
+        "d": "M608.3 178.6L610.7 181L614.4 181.7L614.1 183.7L616.8 185.2L617.5 183.3L620.9 184.2L621.4 186.5L625.1 186.9L627.4 190.6L625.9 190.6L625.1 192L624 192.3L623.7 194L622.7 194.3L620.9 195.8L618.7 195.7L618 197.3L615.7 195.9L613.4 196.3L609.5 194L607.8 194.6L605 197.6L601.3 195.2L598.5 192L595.9 190.2L595.4 187.1L594.6 184.9L598.2 183.2L600 181.4L603.6 179.9L604.8 178.5L606.1 179.4L608.3 178.6Z"
+      },
+      {
+        "name": "Saudi Arabia",
+        "d": "M707.3 340.6L712.8 341.8L714.9 339.5L716.1 336.8L719.9 335.8L720.7 333.3L722.3 332L717.4 324.6L727.3 320.8L728.3 319.7L734.3 321.7L741.7 327L755.6 341.9L764.9 342.5L769.3 343.2L770.5 346.8L774 346.6L776 353L778.4 354.7L779.3 357.3L782.6 360.5L782.9 363.5L782.5 366L783.1 368.5L784.5 370.6L785.2 373.1L785.9 374.9L787.4 376.4L788.8 375.8L789.7 378.7L789.9 380.4L791.8 387.9L806.7 391.7L807.7 390.1L810 395.4L809 400L727.9 400L727.4 395.5L727.6 391.1L724.8 382.8L722.5 379.9L719.8 378.4L718.2 374.1L718.4 372.4L717.1 368.6L715.6 366.9L713.7 361.4L710.6 355.4L708.1 350.2L705.6 350.3L706.4 346.2L706.6 343.6L707.3 340.6Z"
+      },
+      {
+        "name": "N. Cyprus",
+        "d": "M696.2 297.5L697.3 295.7L700.9 295.8L705.4 293.6L702 296.7L702.4 298.1L700.9 298.4L699.8 297.8L698.5 297.3L697.2 297.9L696.2 297.5Z"
+      },
+      {
+        "name": "Cyprus",
+        "d": "M696.2 297.5L697.2 297.9L698.5 297.3L699.8 297.8L700.9 298.4L701.8 297.9L702.5 298.7L697.4 301.8L695 300.8L693.9 297.8L696.2 297.5Z"
+      },
+      {
+        "name": "Morocco",
+        "d": "M523.1 297.3L524.9 302.1L525.2 306.6L526.9 314.5L528.2 316.1L527.3 319L520.8 320.2L518.6 323L515.7 323.6L515.5 329.1L509.7 332.1L507.8 335.8L503.8 337.8L498.8 338.9L490.8 344.4L490.8 353.3L490.2 357.3L487.1 357.5L485.5 359.2L483.3 359.2L481.5 358.2L477.3 359L475.7 364.8L474.1 365.4L471.8 374.8L464.9 382.8L463.3 393.1L461.2 396.4L460.6 399.1L449.5 399.7L449.6 396.3L451.5 394.2L453.1 390.3L452.8 387.8L454.5 382.6L457.3 377.8L459 376.6L460.3 372.3L460.4 368.3L462.2 363.7L465.5 361L468.6 353.4L471.2 350.4L475.8 349.6L479.7 344.5L482.2 342.5L486.4 336.3L485.1 327L487 320.6L487.7 316.7L490.9 311.7L495.9 308.3L499.5 305.2L502.8 297.5L504.4 292.9L508.1 292.9L511.1 296.1L515.8 295.6L520.9 297.2L523.1 297.3Z"
+      },
+      {
+        "name": "Egypt",
+        "d": "M716.7 395.4L697.1 395.4L677.8 395.4L657.9 395.4L657.9 368L657.9 341.5L656.4 335.5L657.6 330.9L656.9 327.7L658.7 324.1L665.3 324L670.1 326L675 328.2L677.3 329.3L681.1 327L683.1 324.8L687.5 324.2L691 325.2L692.4 328.9L693.5 326.4L697.5 328.2L701.4 328.6L703.8 326.7L706.6 337.6L707.1 339.5L705.7 342.5L704.6 348.1L703.3 352L702.1 353.3L700.5 350.9L698.2 347.6L694.7 336.9L696.2 345.5L699.3 352.9L703 364.5L704.9 368.6L706.5 372.8L710.9 381.1L709.9 382.3L710.1 387.2L715.9 393.9L716.7 395.4Z"
+      },
+      {
+        "name": "Libya",
+        "d": "M657.9 395.4L657.9 400L633.5 400L632.3 399.2L612.5 384.9L607.5 389L604 391.7L601.2 387.7L593.4 384.4L591.2 379.8L587.3 376.3L584.9 377.7L583.2 373.5L583 370.3L580.1 364.9L582 361.8L581.6 357.1L582.2 353L581.9 349.6L582.7 343.6L582.5 340.1L580.9 333.5L583.3 331.8L583.7 328.7L583.2 325.6L586.6 322.7L588.1 320.3L590.5 318.2L590.8 312.4L596.7 315L598.7 314.4L602.9 315.6L609.5 318.9L611.8 325.6L616.2 327L623.2 330.1L628.5 333.8L630.9 331.9L633.3 328.5L632.2 322.8L633.7 319.1L637.3 315.7L640.7 314.6L647.4 316.2L649.1 319.5L651 319.5L652.5 320.8L657.5 321.7L658.7 324.1L656.9 327.7L657.6 330.9L656.4 335.5L657.9 341.5L657.9 368L657.9 395.4Z"
+      },
+      {
+        "name": "Bosnia and Herz.",
+        "d": "M625.9 241.6L621.5 238.8L619.6 235.7L617.8 234L615.5 231.2L614.4 228.9L612 225.4L613 222.3L614.8 224.1L615.9 222.5L618.2 222.3L622.4 223.6L625.9 223.5L628.1 225.1L629.9 225.1L628.7 228.4L631.1 231.3L630.3 234.8L629.2 235.1L628.2 235.8L626.6 237.5L625.9 241.6Z"
+      },
+      {
+        "name": "North Macedonia",
+        "d": "M644.9 244L647.3 246.4L647.7 251.4L645.9 252.9L643.3 252.8L641.4 254.4L638.1 255.1L636.1 253.2L635.4 250L636 247.5L636.8 246L639.8 244.9L640.9 244.6L642.6 244.2L644.9 244Z"
+      },
+      {
+        "name": "Serbia",
+        "d": "M627.2 217.3L631 215.4L634.1 215.7L636.8 218.6L637.4 221L640.4 222.7L640.8 225.8L643.7 228L645.3 226.3L646.5 227.2L645.3 228.5L646.2 229.8L645 231.5L645.5 234.2L647.9 237.4L646 239.7L645.1 242.1L645.7 243L644.9 244L642.6 244.2L640.9 244.6L641.3 243.2L641.9 241.4L640.2 240L638.7 238.5L637.8 238L637.1 237L635.5 239.8L634.3 240.4L632.8 238.2L631.2 237.4L630.5 236.4L629.2 235.1L630.3 234.8L631.1 231.3L628.7 228.4L629.9 225.1L628.1 225.1L630 222.3L628.5 220.2L627.2 217.3Z"
+      },
+      {
+        "name": "Montenegro",
+        "d": "M633.4 242.1L632.1 242.7L631.8 241.3L629.6 245L629.9 247.3L628.9 246.8L627.5 244.3L625.4 242.9L625.9 241.6L626.6 237.5L628.2 235.8L629.2 235.1L630.5 236.4L631.2 237.4L632.8 238.2L634.7 239.7L633.4 242.1Z"
+      },
+      {
+        "name": "Kosovo",
+        "d": "M636 247.5L635.6 244.8L634.5 244L633.4 242.1L634.3 240.4L635.5 239.8L636.2 237.4L637.8 238L638.7 238.5L639.4 239.7L641.2 241.4L641.3 243.2L640.7 244L639.8 244.9L636.8 246L636.6 247.6Z"
+      }
+    ],
+    "points": [
+      {
+        "x": 685.3,
+        "y": 183.5,
+        "label": "Kyiv",
+        "date": "2026-10-03",
+        "verification": "researched",
+        "n": 1,
+        "weight": 1.0
+      },
+      {
+        "x": 720.5,
+        "y": 144.0,
+        "label": "Moscow",
+        "date": "2026-10-01",
+        "verification": "researched",
+        "n": 2,
+        "weight": 0.951
+      },
+      {
+        "x": 638.1,
+        "y": 170.2,
+        "label": "Warsaw",
+        "date": "2026-10-01",
+        "verification": "researched",
+        "n": 3,
+        "weight": 0.928
+      },
+      {
+        "x": 833.3,
+        "y": 149.8,
+        "label": "Chebarkul",
+        "date": "2026-10-02",
+        "verification": "researched",
+        "n": 4,
+        "weight": 0.499
+      },
+      {
+        "x": 713.6,
+        "y": 186.9,
+        "label": "Kharkiv",
+        "date": "2026-10-02",
+        "verification": "researched",
+        "n": 5,
+        "weight": 0.499
+      },
+      {
+        "x": 166.7,
+        "y": 256.0,
+        "label": "New York",
+        "date": "2026-10-02",
+        "verification": "researched",
+        "n": 6,
+        "weight": 0.499
+      },
+      {
+        "x": 686.4,
+        "y": 185.9,
+        "label": "Trypillya Thermal Power Plant, Kyiv Oblast",
+        "date": "2026-09-29",
+        "verification": "researched",
+        "n": 7,
+        "weight": 0.43
+      }
+    ],
+    "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate."
+  },
+  "actors": [
+    {
+      "name": "Russia",
+      "mentions": 6,
+      "first": "2022-02-24",
+      "last": "2025-09-09"
+    },
+    {
+      "name": "Russian forces",
+      "mentions": 5,
+      "first": "2026-09-27",
+      "last": "2026-10-03"
+    },
+    {
+      "name": "Russian Armed Forces",
+      "mentions": 3,
+      "first": "2026-09-28",
+      "last": "2026-10-02"
+    },
+    {
+      "name": "Vladimir Putin",
+      "mentions": 3,
+      "first": "2026-09-28",
+      "last": "2026-10-02"
+    },
+    {
+      "name": "Volodymyr Zelensky",
+      "mentions": 2,
+      "first": "2026-09-22",
+      "last": "2026-10-02"
+    },
+    {
+      "name": "Andrius Kubilius",
+      "mentions": 1,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "Baltic states/Poland",
+      "mentions": 1,
+      "first": "2025-09-09",
+      "last": "2025-09-09"
+    },
+    {
+      "name": "Centrenergo / Trypillya Thermal Power Plant",
+      "mentions": 1,
+      "first": "2026-09-29",
+      "last": "2026-09-29"
+    },
+    {
+      "name": "Chinese People's Liberation Army",
+      "mentions": 1,
+      "first": "2026-10-02",
+      "last": "2026-10-02"
+    },
+    {
+      "name": "Danish Defence Intelligence Service (DDIS) Chief Thomas Ahrenkiel",
+      "mentions": 1,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "Danish Defence Minister Jeppe Bruus",
+      "mentions": 1,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "Donald Trump",
+      "mentions": 1,
+      "first": "2026-09-22",
+      "last": "2026-09-22"
+    },
+    {
+      "name": "EU",
+      "mentions": 1,
+      "first": "2025-09-01",
+      "last": "2025-09-01"
+    },
+    {
+      "name": "EU logistics hubs",
+      "mentions": 1,
+      "first": "2024-07-01",
+      "last": "2024-07-01"
+    },
+    {
+      "name": "Institute for Nuclear Research of National Academy of Sciences",
+      "mentions": 1,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    }
+  ],
+  "relations": [
+    {
+      "source": "Russia",
+      "target": "NATO/EU",
+      "kind": "sabotage",
+      "count": 1,
+      "last_date": "2022-02-24",
+      "note": "Confirmed GRU Unit 29155-led campaign using SVR/FSB/GUGI and proxy recruits via Telegram/crypto after expulsion of ~400 officers in 2022; ~200 incidents tracked since 2022, >50 likely-linked 2022-mid2025."
+    },
+    {
+      "source": "Russia",
+      "target": "EU logistics hubs",
+      "kind": "sabotage",
+      "count": 1,
+      "last_date": "2024-07-01",
+      "note": "Magnesium incendiary devices in parcels ignited at DHL hubs Leipzig/Warsaw/Birmingham to test transfer channels for US/Canada."
+    },
+    {
+      "source": "Ukraine",
+      "target": "Russia",
+      "kind": "strikes",
+      "count": 1,
+      "last_date": "2025-01-01",
+      "note": "Ukraine dramatically increased drone strikes on Russian refineries (21 of 38 hit since Jan 2025, 14 in Aug, 8 in Sep), causing refinery suspensions and fuel shortages."
+    },
+    {
+      "source": "NATO",
+      "target": "Russia",
+      "kind": "deters",
+      "count": 1,
+      "last_date": "2025-01-14",
+      "note": "NATO launched Baltic Sentry to protect undersea infrastructure after 11 cable cuts since 2023; Eastern Sentry launched 12 Sep 2025 after Polish airspace violation with F-16s, Rafales, Eurofighters, AWACS, Patriots."
+    },
+    {
+      "source": "EU",
+      "target": "Russia",
+      "kind": "sanctions",
+      "count": 1,
+      "last_date": "2025-09-01",
+      "note": "EU immobilized ~€210bn Russian central bank assets; G7 Oct 2024 uses revenues for $50bn loan; Sep 2025 reparation loan proposal €140-172bn contested by Belgium/France/ECB."
+    },
+    {
+      "source": "US",
+      "target": "Poland",
+      "kind": "supports",
+      "count": 1,
+      "last_date": "2025-09-03",
+      "note": "US supports Poland with 8,200-10,000 rotational troops, V Corps Forward, Aegis Ashore; Trump pledged to stay and add forces; Poland seeks permanent base."
+    },
+    {
+      "source": "Russia",
+      "target": "Baltic states/Poland",
+      "kind": "other",
+      "count": 1,
+      "last_date": "2025-09-09",
+      "note": "GPS jamming/spoofing surged: Sweden 733 incidents in 2025 vs 55 in 2023, Lithuania 1,185 Jan 2025, Poland 2,732 Jan 2025, traced to Kaliningrad/Leningrad/Pskov."
+    }
+  ],
+  "figures": [
+    {
+      "label": "Russian drones launched",
+      "unit": "drones",
+      "series": [
+        {
+          "as_of": "2026-10-03",
+          "value": 157.0,
+          "source": "https://kyivindependent.com/russian-strikes-kill-8-injure-81-across-ukraine-hit-kyiv-bridge-2"
+        }
+      ]
+    },
+    {
+      "label": "drones intercepted",
+      "unit": "drones",
+      "series": [
+        {
+          "as_of": "2026-10-03",
+          "value": 131.0,
+          "source": "https://kyivindependent.com/russian-strikes-kill-8-injure-81-across-ukraine-hit-kyiv-bridge-2"
+        }
+      ]
+    },
+    {
+      "label": "personnel in Center-2026 exercise",
+      "unit": "personnel",
+      "series": [
+        {
+          "as_of": "2026-10-03",
+          "value": 47000.0,
+          "source": "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-2-2026"
+        }
+      ]
+    },
+    {
+      "label": "Children inside Kyiv School No.12 during drone strike (no injuries",
+      "unit": "children",
+      "series": [
+        {
+          "as_of": "2026-10-01",
+          "value": 104.0,
+          "source": "https://www.aljazeera.com/news/2026/10/1/russian-drone-hits-school-in-ukraines-kyiv-as-moscow-presses-air-assault"
+        }
+      ]
+    },
+    {
+      "label": "Russian strike drones launched in salvo (part of 3,177 up",
+      "unit": "drones",
+      "series": [
+        {
+          "as_of": "2026-09-30",
+          "value": 190.0,
+          "source": "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-1-2026"
+        }
+      ]
+    },
+    {
+      "label": "Authorized active servicemen after Decree No.700",
+      "unit": "personnel",
+      "series": [
+        {
+          "as_of": "2026-09-28",
+          "value": 1550500.0,
+          "source": "https://www.kyivpost.com/post/85603"
+        }
+      ]
+    },
+    {
+      "label": "Planned 2027 Russian defense spending",
+      "unit": "trillion rubles",
+      "series": [
+        {
+          "as_of": "2026-09-28",
+          "value": 17.1,
+          "source": "https://www.i24news.tv/en/news/international/ukraine-russia-war/artc-russia-hikes-2027-defense-budget-by-27-as-putin-orders-fourth-troop-expansion-of-the-year-report"
+        }
+      ]
+    }
+  ],
+  "forecasts": [],
+  "indicators": [
+    {
+      "signal": "Reciprocal energy truce announced (halt on refinery strikes + halt on Ukrainian power/heat strikes)",
+      "history": [
+        {
+          "date": "2026-09-28",
+          "status": "not seen"
+        }
+      ]
+    },
+    {
+      "signal": "EU decision to seize/transfer ~€210bn immobilized assets (€193bn at Euroclear) beyond current €3-5bn/yr windfall model",
+      "history": [
+        {
+          "date": "2026-09-28",
+          "status": "not seen"
+        }
+      ]
+    },
+    {
+      "signal": "Poland-US permanent base finalized (location/forces in western Poland, ~5,000 troops, PLN15-17bn cost)",
+      "history": [
+        {
+          "date": "2026-09-28",
+          "status": "emerging"
+        }
+      ]
+    },
+    {
+      "signal": "Nationwide fuel rationing expansion beyond 92% regions / QR codes and 40-hour waits spreading to Moscow/St Petersburg",
+      "history": [
+        {
+          "date": "2026-09-28",
+          "status": "observed"
+        }
+      ]
+    },
+    {
+      "signal": "Sustained >150-drone + ballistic missile nightly strikes on Kyiv Trypillya/Kyivska/Kyiv HPP for >1 week",
+      "history": [
+        {
+          "date": "2026-09-28",
+          "status": "emerging"
+        }
+      ]
+    },
+    {
+      "signal": "Drone/missile incident in Poland/Baltics attributed as 'accident' plus airspace violation >60 seconds or debris",
+      "history": [
+        {
+          "date": "2026-09-28",
+          "status": "emerging"
+        }
+      ]
+    },
+    {
+      "signal": "Civilian deaths directly linked to sabotage or armed Russian personnel caught conducting attacks in NATO territory",
+      "history": [
+        {
+          "date": "2026-09-28",
+          "status": "not seen"
+        }
+      ]
+    },
+    {
+      "signal": "Successful destruction of major ammunition plant, logistics hub, or sustained rail interdiction on Warsaw-Dorohusk aid corridor",
+      "history": [
+        {
+          "date": "2026-09-28",
+          "status": "emerging"
+        }
+      ]
+    },
+    {
+      "signal": "Simultaneous multiple undersea cable/pipeline cuts or power cable sabotage causing prolonged outage",
+      "history": [
+        {
+          "date": "2026-09-28",
+          "status": "observed"
+        }
+      ]
+    },
+    {
+      "signal": "Manned aircraft or armed drone incursion with kinetic strike, or repeated large drone swarms (>20) over Poland/Baltics",
+      "history": [
+        {
+          "date": "2026-09-28",
+          "status": "observed"
+        }
+      ]
+    },
+    {
+      "signal": "Coordinated drone incursions at multiple NATO airports with explosives (Leipzig pattern repeated)",
+      "history": [
+        {
+          "date": "2026-09-28",
+          "status": "observed"
+        }
+      ]
+    }
+  ],
+  "statements": [],
+  "links": [
+    {
+      "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+      "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
+      "link": "US-Iran-Houthi confrontation over Hormuz and Red Sea <-> Russia-Ukraine war and European security architecture: simultaneous energy pressure from Hormuz closure keeping ~6 mb/d off market and Russia's winter strikes on Kyiv energy infrastructure including Trypillya compounds European risk, while both theaters show intensifying hybrid and nuclear signaling via NATO's hybrid warning and Putin's Kaliningrad warning alongside the UK's Iran-linked plot probe",
+      "date": "2026-10-02"
+    }
+  ],
+  "reports": [
+    {
+      "date": "2026-10-03",
+      "url": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-10-02",
+      "url": "/geopolitics/2026-10-02"
+    },
+    {
+      "date": "2026-10-01",
+      "url": "/geopolitics/2026-10-01"
+    }
+  ],
+  "briefs": [
+    {
+      "slug": "2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746",
+      "title": "Russia-Ukraine War and European Security Architecture — Hybrid Campaign, Deterrence and Energy/Sanctions Pressures",
+      "as_of": "2026-09-28",
+      "url": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "slug": "2026-09-28-russia-ukraine-war-and-european-security-architecture",
+      "title": "Russia-Ukraine war and European security architecture — refinery war, energy-truce push, frozen assets and NATO deterrence (Sept 2026)",
+      "as_of": "2026-09-28",
+      "url": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture"
+    }
+  ]
+}

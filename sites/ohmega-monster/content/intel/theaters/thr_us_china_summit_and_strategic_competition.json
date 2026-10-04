@@ -1,0 +1,271 @@
+{
+  "schema": "ohmega.dossier/1",
+  "theater_id": "thr_us_china_summit_and_strategic_competition",
+  "name": "US-China summit and strategic competition",
+  "domain": "geopolitics",
+  "built_at": "2026-10-04T07:26:06.472952+00:00",
+  "first_seen": "2026-09-26",
+  "last_seen": "2026-10-02",
+  "days_covered": 2,
+  "primer": {
+    "text": "The United States and China are locked in strategic competition, a broad contest for economic, technological and security influence often framed as growth versus rivalry, where cooperation and rivalry run together. Summitry between the American and Chinese leaders is the main way to set direction, send alignment signals to allies and rivals, and keep crisis channels open so incidents do not escalate. In this context, strategic competition means managing rivalry without direct conflict; crisis channels, including a proposed AI hotline, are dedicated lines to defuse fast-moving military or technological incidents; panda diplomacy is the symbolic exchange of pandas used to signal goodwill or a thaw.",
+    "built_at": "2026-10-04T07:26:06.472952+00:00"
+  },
+  "current": {
+    "date": "2026-10-02",
+    "bottom_line": "No new US-China policy moves in the last three days; the picture is unchanged from the Sept 23-25 Washington summit. The two-month truce extension to Jan 10, 2027, panda renewal, and announced AI/military channels remain pageantry and promises, with core gaps — undefined AI incident benchmarks and rare-earth flows still below historical levels — unresolved. Confidence is high that the truce holds for now, lower that safeguards will be operational before the November Shenzhen and December Miami meetings.",
+    "escalation": {
+      "direction": "steady",
+      "pace": "flat"
+    },
+    "coverage": "falling coverage",
+    "source": "daily",
+    "url": "/geopolitics/2026-10-02"
+  },
+  "pulses": [
+    {
+      "id": "pls_us_china_technology_export_control_decoupling",
+      "name": "Technology and Export-Control Decoupling",
+      "situation": "US–China competition",
+      "position": 65.0,
+      "band": "severe",
+      "history": [
+        {
+          "at": "2026-10-01T03:00:57.470982+00:00",
+          "position": 65.0
+        }
+      ]
+    },
+    {
+      "id": "pls_us_china_trade_tariff_confrontation",
+      "name": "Trade and Tariff Confrontation",
+      "situation": "US–China competition",
+      "position": 35.0,
+      "band": "elevated",
+      "history": [
+        {
+          "at": "2026-10-01T08:54:58.966164+00:00",
+          "position": 35.0
+        }
+      ]
+    },
+    {
+      "id": "pls_us_china_diplomatic_deadlock",
+      "name": "Diplomatic Deadlock",
+      "situation": "US–China competition",
+      "position": 20.0,
+      "band": "calm",
+      "history": [
+        {
+          "at": "2026-10-01T08:54:58.966164+00:00",
+          "position": 20.0
+        }
+      ]
+    },
+    {
+      "id": "pls_ai_geopolitics_ai_safety_governance_fracture",
+      "name": "AI Safety Governance Fracture",
+      "situation": "AI geopolitics",
+      "position": null,
+      "band": "unassessed",
+      "history": []
+    }
+  ],
+  "escalation_history": [
+    {
+      "date": "2026-10-01",
+      "direction": "easing",
+      "pace": "gradual"
+    },
+    {
+      "date": "2026-10-02",
+      "direction": "steady",
+      "pace": "flat"
+    }
+  ],
+  "coverage_series": [
+    {
+      "day": "2026-09-26",
+      "count": 1,
+      "editions": 1
+    },
+    {
+      "day": "2026-09-27",
+      "count": 2,
+      "editions": 1
+    },
+    {
+      "day": "2026-09-28",
+      "count": 1,
+      "editions": 1
+    },
+    {
+      "day": "2026-09-29",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-09-30",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-01",
+      "count": 0,
+      "editions": 2
+    },
+    {
+      "day": "2026-10-02",
+      "count": 0,
+      "editions": 1
+    }
+  ],
+  "timeline": [
+    {
+      "date": "2026-09-27",
+      "headline": "Panda diplomacy renewed as pair arrives in Atlanta on 10-year loan",
+      "detail": "At the White House Sept 25, Xi announced two giant pandas — Ping Ping (male) and Fu Shuang (female), born in 2020 at Chengdu Research Base — would arrive in Atlanta in a few days. They landed Sept 27 at Hartsfield-Jackson International Airport via FedEx Boeing 777 charter from Chengdu Shuangliu after a 16-hour flight, on a 10-year loan.",
+      "where": "Atlanta, Georgia",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/9/27/giant-pandas-arrive-in-atlanta-as-part-of-10-year-us-china-agreement",
+        "https://www.aa.com.tr/en/asia-pacific/explainer-how-panda-diplomacy-became-part-of-us-china-ties/4069307",
+        "https://www.aljazeera.com/news/2026/9/26/china-us-to-open-ai-communication-channel-after-summit-white-house-says"
+      ],
+      "from": "/geopolitics/2026-10-01"
+    },
+    {
+      "date": "2026-09-26",
+      "headline": "AI incident hotline and military crisis MOU announced but not yet operational",
+      "detail": "On Sept 26 the White House announced a bilateral communication channel for AI incidents and a US-China Super Intelligence Dialogue on AI risks and benefits, with the next AI dialogue scheduled for November 2026 around the APEC summit in Shenzhen. The system is not yet ready; officials expect weeks to finalize, with unclear benchmarks for what counts as a national security incident and noncommittal sign-on from China. Separately, China's Foreign Ministry said Sept 26 the two militaries agreed to conclude a memorandum of understanding on crisis communication and prevention as soon as possible. Treasury Secretary Scott Bessent had first floated the AI notification proposal Sept 21 with Vice Premier He Lifeng.",
+      "where": "Washington, D.C.",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/9/26/china-us-to-open-ai-communication-channel-after-summit-white-house-says",
+        "https://www.wired.com/story/a-us-china-ai-hotline-wont-be-ready-for-a-while",
+        "https://www.cbsnews.com/live-updates/trump-china-xi-jinping-state-visit-dinner-tariffs-ai",
+        "https://www.cfr.org/articles/the-limits-of-trump-and-xis-photo-op-summit"
+      ],
+      "from": "/geopolitics/2026-10-01"
+    },
+    {
+      "date": "2026-09-23",
+      "headline": "Washington summit extends trade truce to Jan 10, 2027 with limited tariff relief and sets next meetings",
+      "detail": "Trump hosted Xi for a state visit in Washington Sept 23-25, 2026. Xi arrived at Joint Base Andrews Sept 23 and was greeted on the tarmac by Trump; a White House state dinner was held Sept 24 attended by tech executives including Nvidia CEO Jensen Huang, OpenAI leadership, Meta, Google, Microsoft, AMD CEO Lisa Su, Apple CEO Tim Cook and Elon Musk; the leaders toured the National Archives Sept 25 before Xi departed from Joint Base Andrews. They agreed to extend the one-year economic/trade truce from November 2025 by two months to Jan 10, 2027, identified $30 billion of non-sensitive goods in each direction for reduced tariffs, and agreed to meet again at the APEC summit in Shenzhen in November 2026 and the G20 summit in Miami in December 2026. A White House fact sheet also listed a likely pledge for China to import at least 10 million metric tons of US coal in each of 2027 and 2028 — single source, not confirmed by Beijing.",
+      "where": "Washington, D.C. and Joint Base Andrews, Maryland",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/9/26/china-us-to-open-ai-communication-channel-after-summit-white-house-says",
+        "https://www.aljazeera.com/news/2026/9/24/trump-xi-summit-four-key-takeaways-from-the-washington-dc-meeting",
+        "https://www.npr.org/2026/09/26/nx-s1-5980066/trump-gave-xi-jinping-a-warm-welcome-what-did-the-talks-accomplish",
+        "https://www.cbsnews.com/live-updates/trump-china-xi-jinping-state-visit-dinner-tariffs-ai",
+        "https://www.cfr.org/articles/the-limits-of-trump-and-xis-photo-op-summit",
+        "https://www.reuters.com/world/china/china-us-agree-30-billion-tariff-cut-ai-dialogue-during-xi-visit-2026-09-26/"
+      ],
+      "from": "/geopolitics/2026-10-01"
+    }
+  ],
+  "places": [],
+  "map": null,
+  "actors": [
+    {
+      "name": "China Wildlife Conservation Association",
+      "mentions": 1,
+      "first": "2026-09-27",
+      "last": "2026-09-27"
+    },
+    {
+      "name": "China's Foreign Ministry",
+      "mentions": 1,
+      "first": "2026-09-26",
+      "last": "2026-09-26"
+    },
+    {
+      "name": "President Donald Trump",
+      "mentions": 1,
+      "first": "2026-09-23",
+      "last": "2026-09-23"
+    },
+    {
+      "name": "President Xi Jinping",
+      "mentions": 1,
+      "first": "2026-09-23",
+      "last": "2026-09-23"
+    },
+    {
+      "name": "Trump administration officials",
+      "mentions": 1,
+      "first": "2026-09-26",
+      "last": "2026-09-26"
+    },
+    {
+      "name": "White House",
+      "mentions": 1,
+      "first": "2026-09-26",
+      "last": "2026-09-26"
+    },
+    {
+      "name": "Xi Jinping",
+      "mentions": 1,
+      "first": "2026-09-27",
+      "last": "2026-09-27"
+    },
+    {
+      "name": "Zoo Atlanta",
+      "mentions": 1,
+      "first": "2026-09-27",
+      "last": "2026-09-27"
+    }
+  ],
+  "relations": [],
+  "figures": [
+    {
+      "label": "Chinese coal imports from US committed for 2027 (and again 2028",
+      "unit": "million metric tons",
+      "series": [
+        {
+          "as_of": "2026-09-24",
+          "value": 10.0,
+          "source": "https://www.whitehouse.gov/fact-sheets/2026/09/fact-sheet-president-donald-j-trump-advances-a-fair-and-reciprocal-relationship-with-china-while-hosting-historic-state-visit"
+        }
+      ]
+    },
+    {
+      "label": "Non-sensitive goods each direction to receive more favorable tariff treatment",
+      "unit": "$ billion",
+      "series": [
+        {
+          "as_of": "2026-09-24",
+          "value": 30.0,
+          "source": "https://www.whitehouse.gov/fact-sheets/2026/09/fact-sheet-president-donald-j-trump-advances-a-fair-and-reciprocal-relationship-with-china-while-hosting-historic-state-visit"
+        }
+      ]
+    },
+    {
+      "label": "Chinese pledge to purchase US soybeans per year under Busan truce",
+      "unit": "million metric tons",
+      "series": [
+        {
+          "as_of": "2025-10-30",
+          "value": 25.0,
+          "source": "https://www.cfr.org/articles/the-limits-of-trump-and-xis-photo-op-summit"
+        }
+      ]
+    }
+  ],
+  "forecasts": [],
+  "indicators": [],
+  "statements": [],
+  "links": [],
+  "reports": [
+    {
+      "date": "2026-10-02",
+      "url": "/geopolitics/2026-10-02"
+    },
+    {
+      "date": "2026-10-01",
+      "url": "/geopolitics/2026-10-01"
+    }
+  ],
+  "briefs": []
+}

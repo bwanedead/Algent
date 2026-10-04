@@ -1,0 +1,755 @@
+{
+  "schema": "ohmega.dossier/1",
+  "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout",
+  "name": "Gaza war and UNGA diplomatic fallout",
+  "domain": "geopolitics",
+  "built_at": "2026-10-04T07:26:06.472952+00:00",
+  "first_seen": "2026-09-27",
+  "last_seen": "2026-10-03",
+  "days_covered": 3,
+  "primer": {
+    "text": "The Gaza war centers on fighting in Gaza, where hospitals and camps have faced mass-casualty strikes, with spillover violence in the West Bank. It sits within a wider confrontation involving Israel, the United States and Iran that has included direct strikes and disruption to shipping through the Strait of Hormuz, the narrow waterway carrying a large share of world oil and gas. At the United Nations General Assembly, diplomacy becomes leverage: walkouts, votes and proposals such as a Board of Peace are used to signal support or pressure, and can trigger bilateral fallout such as diplomatic retaliation between the Netherlands and Israel or quiet mediation by the United Arab Emirates.",
+    "built_at": "2026-10-04T07:26:06.472952+00:00"
+  },
+  "current": {
+    "date": "2026-10-03",
+    "bottom_line": "Lethal strikes continued in Gaza on 2026-10-03 with an unwarned airstrike on a Gaza City apartment killing at least five, and coordinated settler attacks on olive pickers across the Nablus governorate injured 16 on the same day, extending the West Bank escalation beyond the 2026-10-01 Yasuf killing. A 2026-10-01 Danish Refugee Council survey quantifies protracted displacement at ~1.8 million people (86% of Gaza) and alleges the Israeli-controlled Yellow Line is expanding westward. All items are now confirmed by researched evidence, raising confidence from yesterday's single-source headlines, but diplomatic spillover is unchanged with no new EU bans or accreditation revocations.",
+    "escalation": {
+      "direction": "rising",
+      "pace": "gradual"
+    },
+    "coverage": "rising coverage",
+    "source": "daily",
+    "url": "/geopolitics/2026-10-03"
+  },
+  "pulses": [
+    {
+      "id": "pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe",
+      "name": "Gaza Combat and Humanitarian Catastrophe",
+      "situation": "Israel–Palestine and the wider region",
+      "position": 85.0,
+      "band": "critical",
+      "history": [
+        {
+          "at": "2026-10-01T08:09:19.809131+00:00",
+          "position": 85.0
+        }
+      ]
+    },
+    {
+      "id": "pls_israel_palestine_international_legal_and_diplomatic_pressure_on_israel",
+      "name": "International Legal and Diplomatic Pressure on Israel",
+      "situation": "Israel–Palestine and the wider region",
+      "position": 73.0,
+      "band": "severe",
+      "history": [
+        {
+          "at": "2026-10-01T08:09:19.809131+00:00",
+          "position": 68.0
+        },
+        {
+          "at": "2026-10-01T08:39:39.312641+00:00",
+          "position": 73.0
+        }
+      ]
+    },
+    {
+      "id": "pls_israel_palestine_ceasefire_and_normalization_deadlock",
+      "name": "Ceasefire and Normalization Deadlock",
+      "situation": "Israel–Palestine and the wider region",
+      "position": 60.0,
+      "band": "severe",
+      "history": [
+        {
+          "at": "2026-10-01T08:09:19.809131+00:00",
+          "position": 62.0
+        },
+        {
+          "at": "2026-10-01T08:39:39.312641+00:00",
+          "position": 60.0
+        }
+      ]
+    },
+    {
+      "id": "pls_israel_palestine_west_bank_annexation_and_settler_violence",
+      "name": "West Bank Annexation and Settler Violence",
+      "situation": "Israel–Palestine and the wider region",
+      "position": 58.0,
+      "band": "severe",
+      "history": [
+        {
+          "at": "2026-10-03T12:54:56.085103+00:00",
+          "position": 55.0
+        },
+        {
+          "at": "2026-10-03T22:02:09.104168+00:00",
+          "position": 58.0
+        }
+      ]
+    }
+  ],
+  "escalation_history": [
+    {
+      "date": "2026-10-01",
+      "direction": "steady",
+      "pace": "gradual"
+    },
+    {
+      "date": "2026-10-02",
+      "direction": "rising",
+      "pace": "gradual"
+    },
+    {
+      "date": "2026-10-03",
+      "direction": "rising",
+      "pace": "gradual"
+    }
+  ],
+  "coverage_series": [
+    {
+      "day": "2026-09-27",
+      "count": 2,
+      "editions": 1
+    },
+    {
+      "day": "2026-09-28",
+      "count": 0,
+      "editions": 1
+    },
+    {
+      "day": "2026-09-29",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-09-30",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-01",
+      "count": 2,
+      "editions": 2
+    },
+    {
+      "day": "2026-10-02",
+      "count": 1,
+      "editions": 1
+    },
+    {
+      "day": "2026-10-03",
+      "count": 1,
+      "editions": 1
+    }
+  ],
+  "timeline": [
+    {
+      "date": "2026-10-03",
+      "headline": "Unwarned airstrike on Gaza City apartment kills at least five; eight killed Strip-wide on Oct 3",
+      "detail": "Early 2026-10-03 Israeli air attack hit the al-Asala building in Remal (Rimal) neighbourhood, western Gaza City, without prior warning, killing at least five and severely wounding at least six per al-Shifa Hospital and civil defence. Across the Strip at least eight Palestinians were killed that day, including two Christian women (Maysa Khader Ibrahim Abu Daoud and daughter Mary Hafez Michel al-Najjar) mourned by Latin and Greek Orthodox Patriarchates of Jerusalem.",
+      "where": "Remal neighbourhood, western Gaza City",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/3/israeli-air-attack-on-gaza-city-apartment-kills-at-least-five"
+      ],
+      "from": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-10-03",
+      "headline": "Coordinated settler attacks on olive harvest across Nablus governorate injure 16, burn 55 trees",
+      "detail": "On 2026-10-03 settlers under army protection attacked olive pickers across Nablus governorate — Beita (az-Zahra/Jabal Qamass), Awarta, Abu Dis, Osarin — burning 55 olive trees, stoning vehicles/homes, injuring at least 16 Palestinians per medical/local sources. Israeli forces detained and assaulted journalists in Jabal Qamass, Beita, and forced activists to leave at gunpoint.",
+      "where": "Beita, Awarta, Abu Dis, Osarin, Nablus governorate, West Bank",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/3/israeli-settlers-attack-palestinian-olive-pickers-in-the-west-bank",
+        "https://www.middleeastmonitor.com/20261003-israeli-occupiers-injure-16-palestinians-burn-55-olive-trees-in-west-bank-attacks?amp="
+      ],
+      "from": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-10-02",
+      "headline": "Israeli settlers kill Palestinian man at home in Yasuf, West Bank",
+      "detail": "On 2026-10-02 Reuters reported Israeli settlers shot and killed a Palestinian man at his home in Yasuf in the West Bank, citing officials, amid rising settler violence. Single source (Reuters) — a lead, not a settled fact, and no independent verification in our research.",
+      "where": "Yasuf, West Bank",
+      "verification": "reported",
+      "sources": [
+        "https://www.reuters.com/world/middle-east/israeli-settlers-k"
+      ],
+      "from": "/geopolitics/2026-10-02"
+    },
+    {
+      "date": "2026-10-01",
+      "headline": "Rat-infested camps and non-healing wounds reported at Nasser Hospital",
+      "detail": "On 2026-10-01 BBC reporting (syndicated via Blic/DW) from Nasser Hospital documented rat-infested displacement camps and non-healing wounds among injured children, including a 6-year-old girl, amid dire sanitation. Single reporting chain, not independently verified by our research.",
+      "where": "Nasser Hospital, Khan Younis, Gaza Strip",
+      "verification": "reported",
+      "sources": [
+        "https://www.blic.rs/bbc/kampovi-preplavljeni-pacovima-i-rane",
+        "https://www.dw.com/en/gaza-ngo-reports-dire-camp-conditions-"
+      ],
+      "from": "/geopolitics/2026-10-02"
+    },
+    {
+      "date": "2026-10-01",
+      "headline": "Mass burial of 105 from 2023 rubble and Sept 30 DRC report document protracted displacement and ongoing recoveries",
+      "detail": "On Oct 1 2026 in Gaza, Palestinians prepared to bury 105 people killed in October 2023 whose bodies were recovered from rubble of a residential block destroyed early in the war. Between November 2025 and September 2026 more than 630 bodies/remains were recovered from destroyed buildings, per Civil Defence via UN rights chief. Separately, DRC on Sept 30 published 'Confined by Design' (20 focus groups, 195 respondents across five governorates) finding ~1.8 million Palestinians (86% of population) live in displacement sites, >80% in makeshift camps, with 80% reporting water shortages, outdoor cesspits, shared latrines, rat infestations, food scarcity and rapid disease spread (e.g., >4,000 chickenpox cases in Khan Younis in July). Gaza Health Ministry Sept 24-25 put total dead at 73,928 with 175,030 injured, including 1,408 killed and 4,916 injured by ceasefire violations since Oct 11 2025.",
+      "where": "Gaza Strip",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/video/newsfeed/2026/10/1/gaza-prepares-to-bury-105-palestinians-killed-in-october-2023",
+        "https://www.ochaopt.org/content/humanitarian-situation-report-18-september-2026",
+        "https://www.dw.com/en/gaza-ngo-reports-dire-camp-conditions-says-israel-is-moving-yellow-line/a-79488777",
+        "https://www.aa.com.tr/en/middle-east/israel-kills-5-in-gaza-raising-death-toll-from-genocide-to-73-928-health-ministry/4067514",
+        "https://www.aljazeera.com/news/2026/10/1/palestinians-to-bur",
+        "https://reliefweb.int/report/occupied-palestinian-territory/confined-design-human-cost-protracted-displacement-gaza"
+      ],
+      "from": "/geopolitics/2026-10-01"
+    },
+    {
+      "date": "2026-10-01",
+      "headline": "Mass burial of 105 from 2023 Al Taj 3 strike as Health Ministry updates ceasefire toll to 1,439 killed",
+      "detail": "On 2026-10-01 Palestinians held mass funeral in Gaza City for 105 people killed 25 October 2023 when at least 20 bombs levelled Al Taj 3 building and nearby residences in Yarmouk Square; remains recovered in coordination with Egyptian committee and buried at Sheikh Radwan (Martyrs) cemetery northwest of Gaza City. Gaza Health Ministry reported same day eight killed and 26 wounded in prior 24 hours, bringing toll since ceasefire (Oct 2025) to 1,439 killed and 5,052 wounded (834 bodies recovered from rubble), and total since 7 Oct 2023 to at least 74,040 killed and 175,168 wounded.",
+      "where": "Sheikh Radwan cemetery, northwest Gaza City",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/1/palestinians-to-bury-remains-of-105-people-killed-in-israeli-attack-on-gaza",
+        "https://www.aljazeera.com/news/2026/10/1/israeli-drone-kills-palestinian-in-gaza-settlers-kill-another-in-west-bank"
+      ],
+      "from": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-10-01",
+      "headline": "Drone strike on displacement tent in al-Mawasi kills one; Yasuf settler killing confirmed",
+      "detail": "On 2026-10-01 Israeli drone strike hit tent sheltering displaced Palestinians in al-Mawasi area west of Khan Younis (Al-Iqlimi area), killing Tamer al-Hamayda, 42, and wounding three others per Nasser Medical Complex. On same day in Yasuf north of Ramallah, settlers from Havat Anton outpost (established July 2026) shot dead Mashhour Yassin, 51, and wounded his nephew per Palestinian Health Ministry and Yasuf mayor.",
+      "where": "al-Mawasi, west of Khan Younis and Yasuf, West Bank",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/1/israeli-drone-kills-palestinian-in-gaza-settlers-kill-another-in-west-bank"
+      ],
+      "from": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-09-27",
+      "headline": "Netanyahu makes unannounced Sept 27 Abu Dhabi visit; no joint initiative announced, Saudi denies participation",
+      "detail": "On Sept 27 Netanyahu traveled unannounced to Abu Dhabi for meeting with Sheikh Mohamed, accompanied by head of National Security Council, head of Mossad, military secretary and foreign policy adviser. Both offices confirmed Sept 28-29 that talks covered bilateral relations and regional challenges, with no public announcement of security, trade or diplomatic initiative. On Sept 30 a Saudi official denied Israeli media claims that Saudi representatives attended an expanded meeting in Abu Dhabi, saying no official meetings occurred and Saudi position on Israel had not changed.",
+      "where": "Abu Dhabi, UAE",
+      "verification": "researched",
+      "sources": [
+        "https://www.reuters.com/world/middle-east/uae-president-discussed-bilateral-relations-with-israels-netanyahu-state-news-2026-09-28",
+        "https://gvwire.com/2026/09/29/netanyahu-visits-emirati-leader-after-reports-on-warning-about-hamas-attack",
+        "https://ua.news/en/world/saudivska-araviia-zaperechila-peregovori-z-netaniagu-v-oae-the-hindu"
+      ],
+      "from": "/geopolitics/2026-10-01"
+    },
+    {
+      "date": "2026-09-27",
+      "headline": "Nasser Hospital (Khan Younis), last major facility in southern Gaza, faces rotating power cuts and generator failures due to diesel, engine oil and spare parts shortages; 70% of hospital generators non-operational; only 19/38 hospitals functioning; Gaza hospitals need 94,000L diesel/month and…",
+      "detail": "Nasser Hospital (Khan Younis), last major facility in southern Gaza, faces rotating power cuts and generator failures due to diesel, engine oil and spare parts shortages; 70% of hospital generators non-operational; only 19/38 hospitals functioning; Gaza hospitals need 94,000L diesel/month and ~2,500L oil/month but received only few hundred litres oil in recent months.",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout"
+    },
+    {
+      "date": "2026-09-27",
+      "headline": "Dutch settlement-goods ban takes effect Sept 22; Israel revokes Dutch diplomats' Ramallah accreditation Sept 27",
+      "detail": "Netherlands ban on import, purchase and sale of goods wholly or partly obtained/produced in Israeli settlements in West Bank, East Jerusalem and Golan Heights entered into force Sept 22 2026, applying to commercial shipments and personal luggage/souvenirs with customs checks including at Amsterdam Schiphol. Intentional violations punishable by up to six years in prison plus fines, unintentional by up to one year. On Sept 27 Saar announced Israel will revoke diplomatic accreditation of Dutch diplomats at Netherlands Representative Office in Ramallah, requiring return of Israeli-issued documents within seven days. Israel had already removed Dutch delegation from US-backed International Support Center for Gaza in Kiryat Gat in August/September.",
+      "where": "Netherlands; Ramallah, West Bank; Kiryat Gat, Israel",
+      "verification": "researched",
+      "sources": [
+        "https://www.france24.com/en/middle-east/20260927-israel-revokes-dutch-diplomats-credentials-settlement-sanctions",
+        "https://www.aljazeera.com/news/2026/9/27/israel-revokes-dutch-diplomats-status-over-sanctions-on-settlements",
+        "https://www.thejc.com/news/world/dutch-ban-israeli-settlement-goods-jail-term-lx90s4l2",
+        "https://www.dutchnews.nl/2026/09/israel-strips-dutch-diplomats-status-over-settlement-goods-ban"
+      ],
+      "from": "/geopolitics/2026-10-01"
+    },
+    {
+      "date": "2026-09-27",
+      "headline": "Dutch Foreign Minister Tom Berendsen called revocation 'unnecessary' and deeply regretted, saying temporary sanctions are not directed against Israel but stem from obligation not to contribute to illegal settlements.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout"
+    },
+    {
+      "date": "2026-09-22",
+      "headline": "Netherlands began enforcing ban on bringing in all goods wholly or partly obtained/made in unlawful Israeli settlements (West Bank, East Jerusalem, Golan Heights), covering commercial imports, personal luggage, gifts, souvenirs and online/postal orders; pre-22 Sep purchases also barred; altered…",
+      "detail": "Netherlands began enforcing ban on bringing in all goods wholly or partly obtained/made in unlawful Israeli settlements (West Bank, East Jerusalem, Golan Heights), covering commercial imports, personal luggage, gifts, souvenirs and online/postal orders; pre-22 Sep purchases also barred; altered labels penalized.",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout"
+    },
+    {
+      "date": "2026-09-22",
+      "headline": "Guterres told UNGA High-Level Week: resumption of assistance since Oct 2025 ceasefire brought some relief but conditions remain intolerable; international law brazenly violated; humanitarian access severely restricted.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout"
+    },
+    {
+      "date": "2026-09-22",
+      "headline": "Dutch customs at Amsterdam Schiphol searched luggage of passengers from Tel Aviv (including El Al flights) for wine, dates, olives and other settlement products; signage warned of new restrictions; inspections via objective risk assessments, not ethnicity/nationality.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout"
+    },
+    {
+      "date": "2026-09-19",
+      "headline": "WHO informed Gaza health authorities it would stop fuel and oil support for generators from week of 19 Sep due to funding shortage/Israeli restrictions, affecting 13 hospitals and 7 health centres.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout"
+    },
+    {
+      "date": "2026-09-16",
+      "headline": "22 Palestinians killed and 209 injured 9-16 Sep 2026; toll since ceasefire announcement 1,381 fatalities and 4,757 injuries (excluding building-collapse deaths).",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout"
+    },
+    {
+      "date": "2026-09-08",
+      "headline": "Israel told UK to close Consulate General in occupied East Jerusalem within 30 days and remove representatives from International Gaza Support Center (CMCC) in Kiryat Gat within 7 days after UK settlement-goods ban.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout"
+    },
+    {
+      "date": "2025-10-10",
+      "headline": "U.S.-brokered ceasefire announced; nearly a year later OCHA reports continued life-threatening risks, strikes, and restrictions on essential supplies.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout"
+    },
+    {
+      "date": "2023-10-07",
+      "headline": "Hamas-led attacks killed ~1,195 in southern Israel and took ~250 captives, triggering Gaza war that has killed at least 73,669 Palestinians per Al Jazeera tally 28 Sep 2026.",
+      "detail": "",
+      "where": "",
+      "verification": "reported",
+      "sources": [],
+      "from": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout"
+    }
+  ],
+  "places": [
+    {
+      "name": "Gaza City",
+      "country": "Palestine",
+      "lat": 31.5,
+      "lon": 34.4667,
+      "count": 3,
+      "last_date": "2026-10-03"
+    },
+    {
+      "name": "Nablus",
+      "country": "Palestine",
+      "lat": 32.2211,
+      "lon": 35.2544,
+      "count": 1,
+      "last_date": "2026-10-03"
+    },
+    {
+      "name": "Yasuf",
+      "country": "Palestine",
+      "lat": 32.108,
+      "lon": 35.235,
+      "count": 1,
+      "last_date": "2026-10-02"
+    },
+    {
+      "name": "Gaza Strip",
+      "country": "Palestine",
+      "lat": 31.5,
+      "lon": 34.4667,
+      "count": 1,
+      "last_date": "2026-10-01"
+    }
+  ],
+  "map": {
+    "bbox": [
+      30.861,
+      27.861,
+      38.861,
+      35.861
+    ],
+    "projection": "equirectangular",
+    "width": 1000,
+    "height": 1177,
+    "countries": [
+      {
+        "name": "Israel",
+        "d": "M607.4 463.6L585.6 510L540.4 489.6L514.3 587.6L545.7 604.1L513.7 624.4L508.4 663.1L567.1 643.2L570 700.4L507.8 935.6L495.3 897.4L425.6 682.8L462 634.4L453.4 626L486.5 557.3L511.9 446.3L529.7 409L533.2 407.5L575 407.8L586.5 382L620.1 380L622 440.3L605 462.6L607.4 463.6Z"
+      },
+      {
+        "name": "Lebanon",
+        "d": "M620.1 380L586.5 382L575 407.8L533.2 407.5L577.7 287.6L639.9 184L642.2 178.9L698.5 186.4L718.9 244L650.7 299.5L620.1 380Z"
+      },
+      {
+        "name": "Palestine",
+        "d": "M567.1 643.2L508.4 663.1L513.7 624.4L545.7 604.1L514.3 587.6L540.4 489.6L585.6 510L585.6 600L567.1 643.2Z"
+      },
+      {
+        "name": "Jordan",
+        "d": "M585.6 510L607.4 463.6L746.7 521.9L991.5 365.1L1000 395.5L1000 571.8L767.7 640.3L892.3 787.4L850.9 812.4L830.4 861.7L735 882.1L705.1 935L651 980.3L511.9 956.9L507.8 935.6L570 700.4L567.1 643.2L585.6 600L585.6 510Z"
+      },
+      {
+        "name": "Iraq",
+        "d": "M1000 395.5L991.5 365.1L1000 360.4Z"
+      },
+      {
+        "name": "Syria",
+        "d": "M607.4 463.6L605 462.6L622 440.3L620.1 380L650.7 299.5L718.9 244L698.5 186.4L642.2 178.9L630.6 66.3L661.2 5.7L667.1 0L1000 0L1000 360.4L991.5 365.1L746.7 521.9L607.4 463.6Z"
+      },
+      {
+        "name": "Turkey",
+        "d": "M667.1 0L661.2 5.7L657.2 0Z"
+      },
+      {
+        "name": "Saudi Arabia",
+        "d": "M511.9 956.9L651 980.3L705.1 935L735 882.1L830.4 861.7L850.9 812.4L892.3 787.4L767.7 640.3L1000 571.8L1000 1177L552.5 1177L533.7 1147.2L471.5 1147.9L490.9 1067.1L496.5 1015.6L511.9 956.9Z"
+      },
+      {
+        "name": "N. Cyprus",
+        "d": "M233.9 106L242.7 105.2L260.8 69.7L350.8 71.7L464.5 27.8L380 90.5L389.1 118L375.7 112.8L351.9 124L333.1 120.9L326.9 126.6L324.4 111.7L315.4 102.7L291.3 101.1L257.4 113.7L233.9 106Z"
+      },
+      {
+        "name": "Cyprus",
+        "d": "M233.9 106L257.4 113.7L291.3 101.1L315.4 102.7L324.4 111.7L326.9 126.6L333.1 120.9L351.9 124L375.7 112.8L389.1 118L393 129.8L264.9 189.6L203.7 170.5L174.5 111.4L233.9 106Z"
+      },
+      {
+        "name": "Egypt",
+        "d": "M0 1177L0 634.9L14.5 633.3L103.4 651.9L137.5 724.9L166.5 676.8L266.7 711.6L364.1 719.9L425.6 682.8L495.3 897.4L507.8 935.6L472.6 994.7L445.7 1105.9L414.2 1177L355.3 1177L340.9 1160.7L284.5 1095L195.3 884.1L182.5 897.5L234.3 1052.7L298.8 1177Z"
+      }
+    ],
+    "points": [
+      {
+        "x": 450.8,
+        "y": 641.5,
+        "label": "Gaza City",
+        "date": "2026-10-03",
+        "verification": "researched",
+        "n": 1,
+        "weight": 1.0
+      },
+      {
+        "x": 549.2,
+        "y": 535.5,
+        "label": "Nablus",
+        "date": "2026-10-03",
+        "verification": "researched",
+        "n": 2,
+        "weight": 0.356
+      },
+      {
+        "x": 546.8,
+        "y": 552.1,
+        "label": "Yasuf",
+        "date": "2026-10-02",
+        "verification": "reported",
+        "n": 3,
+        "weight": 0.339
+      },
+      {
+        "x": 450.8,
+        "y": 641.5,
+        "label": "Gaza Strip",
+        "date": "2026-10-01",
+        "verification": "researched",
+        "n": 4,
+        "weight": 0.322
+      }
+    ],
+    "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate."
+  },
+  "actors": [
+    {
+      "name": "Israel",
+      "mentions": 4,
+      "first": "2026-09-08",
+      "last": "2026-09-28"
+    },
+    {
+      "name": "Israel Defense Forces",
+      "mentions": 3,
+      "first": "2026-10-01",
+      "last": "2026-10-03"
+    },
+    {
+      "name": "Gaza Health Ministry",
+      "mentions": 2,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "Gaza health system",
+      "mentions": 2,
+      "first": "2026-09-19",
+      "last": "2026-09-22"
+    },
+    {
+      "name": "Israeli settlers",
+      "mentions": 2,
+      "first": "2026-10-02",
+      "last": "2026-10-03"
+    },
+    {
+      "name": "Netherlands",
+      "mentions": 2,
+      "first": "2026-09-22",
+      "last": "2026-09-27"
+    },
+    {
+      "name": "Agricultural Development Association (PARC)",
+      "mentions": 1,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "Danish Refugee Council",
+      "mentions": 1,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "Danish Refugee Council (DRC)",
+      "mentions": 1,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "Dutch Foreign Minister Tom Berendsen",
+      "mentions": 1,
+      "first": "2026-09-27",
+      "last": "2026-09-27"
+    },
+    {
+      "name": "Egyptian committee",
+      "mentions": 1,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "Gaza civil defence",
+      "mentions": 1,
+      "first": "2026-10-03",
+      "last": "2026-10-03"
+    },
+    {
+      "name": "Israel (settlements)",
+      "mentions": 1,
+      "first": "2026-09-22",
+      "last": "2026-09-22"
+    },
+    {
+      "name": "Israel Defense Forces (drone unit)",
+      "mentions": 1,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "Israeli Foreign Minister Gideon Saar",
+      "mentions": 1,
+      "first": "2026-09-27",
+      "last": "2026-09-27"
+    }
+  ],
+  "relations": [
+    {
+      "source": "Israel",
+      "target": "United Kingdom",
+      "kind": "coerces",
+      "count": 1,
+      "last_date": "2026-09-08",
+      "note": "Ordered UK Consulate General in East Jerusalem closed within 30 days and 7-day removal from Kiryat Gat Gaza Support Center after UK settlement-goods ban."
+    },
+    {
+      "source": "WHO",
+      "target": "Gaza health system",
+      "kind": "supports",
+      "count": 1,
+      "last_date": "2026-09-19",
+      "note": "WHO informed Gaza health authorities it would stop fuel/oil support for 13 hospitals/7 centres due to funding/Israeli restrictions."
+    },
+    {
+      "source": "Israel",
+      "target": "Gaza health system",
+      "kind": "other",
+      "count": 1,
+      "last_date": "2026-09-22",
+      "note": "COGAT dual-use classification restricts generators/spare parts requiring special approval; mechanism claims to facilitate entry under monitoring."
+    },
+    {
+      "source": "Netherlands",
+      "target": "Israel (settlements)",
+      "kind": "sanctions",
+      "count": 1,
+      "last_date": "2026-09-22",
+      "note": "Ban covers commercial imports and personal luggage, including pre-22 Sep purchases; altered labels penalized."
+    },
+    {
+      "source": "Israel",
+      "target": "Netherlands",
+      "kind": "coerces",
+      "count": 1,
+      "last_date": "2026-09-27",
+      "note": "Revoked accreditation for diplomats at Representative Office in Ramallah; 7-day return of documents; Saar: 'will not ignore measures intended to harm it'."
+    },
+    {
+      "source": "Israel",
+      "target": "UAE",
+      "kind": "negotiates",
+      "count": 1,
+      "last_date": "2026-09-28",
+      "note": "Unannounced one-day visit at MBZ invitation; WAM and Netanyahu office cite bilateral relations and regional challenges; accompanied by Mossad head, NSC head."
+    }
+  ],
+  "figures": [
+    {
+      "label": "killed in Remal airstrike, Gaza City (at least",
+      "unit": "people",
+      "series": [
+        {
+          "as_of": "2026-10-03",
+          "value": 5.0,
+          "source": "https://www.aljazeera.com/news/2026/10/3/israeli-air-attack-on-gaza-city-apartment-kills-at-least-five"
+        }
+      ]
+    },
+    {
+      "label": "Palestinians in displacement sites (86% of Gaza population",
+      "unit": "people",
+      "series": [
+        {
+          "as_of": "2026-10-01",
+          "value": 1800000.0,
+          "source": "https://www.dw.com/en/gaza-ngo-reports-dire-camp-conditions-says-israel-is-moving-yellow-line/a-79488777"
+        }
+      ]
+    },
+    {
+      "label": "killed since ceasefire took effect Oct 2025",
+      "unit": "people",
+      "series": [
+        {
+          "as_of": "2026-10-01",
+          "value": 1439.0,
+          "source": "https://www.aljazeera.com/news/2026/10/1/israeli-drone-kills-palestinian-in-gaza-settlers-kill-another-in-west-bank"
+        }
+      ]
+    },
+    {
+      "label": "total killed since 7 Oct 2023",
+      "unit": "people",
+      "series": [
+        {
+          "as_of": "2026-10-01",
+          "value": 74040.0,
+          "source": "https://www.aljazeera.com/news/2026/10/1/israeli-drone-kills-palestinian-in-gaza-settlers-kill-another-in-west-bank"
+        }
+      ]
+    }
+  ],
+  "forecasts": [
+    {
+      "id": "fc_43ae4f2c3df0",
+      "statement": "At least one additional Gaza hospital will suspend core clinical services due to generator, fuel or oil failure by 31 October 2026.",
+      "probability": 76,
+      "horizon": "2026-10-31",
+      "status": "open",
+      "resolution": null
+    },
+    {
+      "id": "fc_dd6b4bf639f1",
+      "statement": "The Netherlands' 22 September ban on settlement-origin goods will remain enforced without suspension through 15 November 2026.",
+      "probability": 82,
+      "horizon": "2026-11-15",
+      "status": "open",
+      "resolution": null
+    },
+    {
+      "id": "fc_80d0a0888746",
+      "statement": "Israel will take at least one additional diplomatic retaliation (accreditation revocation, consulate closure order, or Kiryat Gat exclusion) against another EU state that has enacted a settlement-goods ban by 31 December 2026.",
+      "probability": 64,
+      "horizon": "2026-12-31",
+      "status": "open",
+      "resolution": null
+    }
+  ],
+  "indicators": [
+    {
+      "signal": "Additional EU states announce or begin enforcing settlement-goods import bans",
+      "history": [
+        {
+          "date": "2026-10-01",
+          "status": "emerging"
+        }
+      ]
+    },
+    {
+      "signal": "Israel revokes or restricts diplomatic status for another EU mission (beyond Netherlands/UK) or expands Kiryat Gat exclusions",
+      "history": [
+        {
+          "date": "2026-10-01",
+          "status": "observed"
+        }
+      ]
+    },
+    {
+      "signal": "One or more of Gaza's 19 functioning hospitals suspends ICU, imaging or surgical services citing generator/fuel failure",
+      "history": [
+        {
+          "date": "2026-10-01",
+          "status": "emerging"
+        }
+      ]
+    },
+    {
+      "signal": "Public UAE-Israel announcement on security, trade or diplomatic initiative following 28 Sep visit",
+      "history": [
+        {
+          "date": "2026-10-01",
+          "status": "not seen"
+        }
+      ]
+    }
+  ],
+  "statements": [],
+  "links": [],
+  "reports": [
+    {
+      "date": "2026-10-03",
+      "url": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-10-02",
+      "url": "/geopolitics/2026-10-02"
+    },
+    {
+      "date": "2026-10-01",
+      "url": "/geopolitics/2026-10-01"
+    }
+  ],
+  "briefs": [
+    {
+      "slug": "2026-10-01-gaza-war-and-unga-diplomatic-fallout",
+      "title": "Gaza war and UNGA diplomatic fallout",
+      "as_of": "2026-10-01",
+      "url": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout"
+    }
+  ]
+}
