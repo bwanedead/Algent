@@ -153,6 +153,15 @@ def pulse_files(store: Any, catalog: list[dict]) -> dict[str, dict]:
             for row in catalog if store.pulse(row["id"]) is not None}
 
 
+# ── theater dossiers ──────────────────────────────────────────────────────────────────────────
+def dossier_files(built: dict) -> dict[str, dict]:
+    """``theaters/<theater_id>.json`` per dossier plus ``theaters/index.json`` (``dossier.build_all`` output).
+    No build timestamp of their own: ``built_at`` is the newest input's, so an unchanged dossier is stable."""
+    files = {f"theaters/{tid}.json": d for tid, d in built["theaters"].items()}
+    files["theaters/index.json"] = built["index"]
+    return files
+
+
 # ── changes feed ──────────────────────────────────────────────────────────────────────────────
 def _pulse_events(store: Any, catalog: list[dict]) -> list[dict]:
     out = []

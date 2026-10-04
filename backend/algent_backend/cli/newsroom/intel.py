@@ -6,6 +6,7 @@
     newsroom intel brief --theater thr_x --research   # commission fresh research first (paid, capped)
     newsroom intel daily [--domain geopolitics] [--top 5] [--research] [--fresh-research]   # the daily rundown: heat -> sections -> publish -> backup
     newsroom intel publish                       # put the desk snapshot (pulses, theaters, briefs) on the site
+    newsroom intel dossiers [--primers] [--domain geopolitics]   # rebuild + publish the theater dossiers; --primers writes the missing/stale (>7d) primers first
     newsroom intel cycle [--top 2] [--research] [--domain geopolitics,politics]  # heat -> settle forecasts -> briefs -> publish -> backup, unattended
     newsroom intel import-briefs                 # one-off: runs_data briefs -> durable intel store
 
@@ -44,6 +45,9 @@ def add_parser(sub: Any) -> None:
     d.add_argument("--days", type=int, default=7)
     verbs.add_parser("import-briefs", help="one-off: copy runs_data briefs into the durable intel store")
     verbs.add_parser("publish", help="build the desk snapshot and put it on the site")
+    t = verbs.add_parser("dossiers", help="rebuild the theater dossiers and publish them")
+    t.add_argument("--primers", action="store_true", help="write primers that are missing or older than 7 days first")
+    t.add_argument("--domain", default="", help="with --primers: only this domain's theaters (default: all)")
     c = verbs.add_parser("cycle", help="heat, brief the top theaters, publish, back up")
     c.add_argument("--top", type=int, default=2)
     c.add_argument("--research", action="store_true", help="commission fresh research first (paid)")
@@ -76,7 +80,8 @@ def _out(as_of: str) -> Path:
 
 def run_intel(args: Any) -> int:
     return {"heat": _heat, "brief": _brief, "import-briefs": _import_briefs,
-            "publish": _publish, "cycle": _cycle, "daily": _daily}[args.intel_verb](args)
+            "publish": _publish, "cycle": _cycle, "daily": _daily,
+            "dossiers": _dossiers}[args.intel_verb](args)
 
 
 def _heat(args: Any, *, publish: bool = True) -> int:
@@ -159,6 +164,40 @@ def _publish(_args: Any) -> int:
     return 0
 
 
+def _prime(domain: str = "") -> list[dict]:
+    """Primers for the dossier theaters (in ``domain`` when given) that have none or a stale one. Never raises:
+    a primer is an extra, and the daily must not fail for it."""
+    try:
+        from algent_backend.agent_system.agents.intel import dossier_store, primers
+        from algent_backend.agent_system.agents.intel.heat import store_dir
+        from algent_backend.agent_system.foundation.models import house_spec
+
+        intel = store_dir()
+        built = dossier_store.build(intel, countries=None)           # only to list the theaters
+        ids = [t["theater_id"] for t in built["index"]["theaters"] if not domain or t["domain"] == domain]
+        return primers.ensure(_ctx("intel-primers"), intel, dossier_store.describe(intel, ids),
+                              model_spec=house_spec(reasoning_effort="low", temperature=0.2, max_tokens=4096))
+    except Exception as exc:  # noqa: BLE001
+        return [{"status": "failed", "error": f"{type(exc).__name__}: {str(exc)[:160]}"}]
+
+
+def _dossiers(args: Any) -> int:
+    """Rebuild the dossiers (optionally writing due primers first) and publish them with the desk snapshot."""
+    from algent_backend.agent_system.agents.intel import dossier_store
+    from algent_backend.agent_system.agents.intel.heat import store_dir
+    from algent_backend.publishing.intel_page import publish_intel
+
+    report: dict[str, Any] = {}
+    if args.primers:
+        report["primers"] = _prime(args.domain)
+    built = dossier_store.build(store_dir(), countries=None)
+    report["theaters"] = [{"id": t["theater_id"], "name": t["name"], "days": t["days_covered"],
+                           "last_seen": t["last_seen"]} for t in built["index"]["theaters"]]
+    report["publish"] = publish_intel()
+    print(json.dumps(report, indent=2, ensure_ascii=False))
+    return 0
+
+
 def _cycle(args: Any) -> int:
     """Heat, briefs on the top theaters, publish the snapshot, back up the stores."""
     from algent_backend.agent_system.agents.intel import desk
@@ -215,9 +254,11 @@ def _daily(args: Any) -> int:
         return 1
     # Promote first (quietly: it does not publish) so the one publish below carries the new Pulses.
     proposals = promote_ready_quietly()
+    primers_report = _prime(args.domain)        # only dossiers lacking a primer or with one over 7 days old
     report = {"date": board["as_of"], "domain": args.domain, "path": result["path"], "html": result.get("html"),
               "headline": result["report"]["summary"]["headline"], "theaters": result["theaters"],
-              "research_usd": result["research_usd"], "pulse_proposals": proposals, "publish": publish_intel(),
+              "research_usd": result["research_usd"], "pulse_proposals": proposals, "primers": primers_report,
+              "publish": publish_intel(),
               "backup": sync.backup(note="intel daily")}
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0
