@@ -258,6 +258,9 @@ def test_essential_draft_model_proceeds_in_slim_keyword_tool_refused() -> None:
         # Stream-style turn essential must NOT authorize tool reserves.
         with turn_essential_scope(True):
             assert cost.try_reserve(0.008, op="keyword") is None
+            # DDG is free and would answer; take it down so only paid fallbacks remain.
+            research.circuit.record_failure("ddg", "429 rate limit")
+            research.circuit.record_failure("bing", "429 rate limit")
             out = research._search_web("soft-cap leak?", "keyword", 3)  # noqa: SLF001
             assert "error" in out
             assert "refused" in out["error"] or "slim" in out["error"]
