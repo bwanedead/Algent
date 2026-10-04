@@ -121,12 +121,6 @@ def _haystack(s: Statement) -> str:
     return " | ".join([s.speaker, s.role, s.affiliation, *s.about, *s.topics, s.paraphrase, s.quote])
 
 
-def mention_count(s: Statement, terms: list[str]) -> int:
-    """How many of ``terms`` the statement mentions (the relevance a ranking consumer sorts by)."""
-    text = _haystack(s)
-    return sum(_mentions(t, text) for t in terms if t.strip())
-
-
 def query(*, terms: list[str] | None = None, about: str = "", speaker: str = "", affiliation: str = "",
           topic: str = "", days: int | None = None, today: date | None = None, limit: int | None = None,
           root: Path | None = None) -> list[Statement]:
