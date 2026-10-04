@@ -57,6 +57,11 @@ _MAX_CHARS = 40_000  # keep one page from flooding a prompt
 _MIN_GOOD_WORDS = 120  # raised: ~80-word podcast blurbs used to false-"good"
 _MIN_PARTIAL_WORDS = 40
 _PLAYWRIGHT_ENV = "ALGENT_FETCH_PLAYWRIGHT"
+#: Standing operator default (installed 2026-10-04, headless shell only). The rung still runs only after the
+#: free fetch, Jina and Wayback all failed, one page at a time, and skips silently if the package is missing.
+#: Set False (or ALGENT_FETCH_PLAYWRIGHT=0 for one run) if the laptop struggles; `newsroom reads` shows
+#: how many reads it actually rescues.
+PLAYWRIGHT_ENABLED = True
 _CACHE_ENV = "ALGENT_FETCH_CACHE"
 _CACHE_TTL_S = 6 * 3600  # six hours — enough to stop same-run thrash, not forever
 
@@ -108,7 +113,8 @@ _TITLE_TAG_RE = re.compile(r"<title[^>]*>(.*?)</title>", re.I | re.S)
 
 
 def _playwright_enabled() -> bool:
-    return os.environ.get(_PLAYWRIGHT_ENV, "0").strip().lower() in ("1", "true", "yes", "on")
+    raw = os.environ.get(_PLAYWRIGHT_ENV, "").strip().lower()
+    return raw in ("1", "true", "yes", "on") if raw else bool(PLAYWRIGHT_ENABLED)
 
 
 def _cache_enabled() -> bool:

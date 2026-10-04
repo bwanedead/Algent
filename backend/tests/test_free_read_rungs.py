@@ -124,7 +124,8 @@ def test_not_found_short_circuits_and_is_logged(_offline, monkeypatch) -> None:
     assert _ledger()[-1]["not_found"] is True
 
 
-def test_playwright_never_imported_when_env_off(_offline, monkeypatch) -> None:
+def test_playwright_never_imported_when_switched_off(_offline, monkeypatch) -> None:
+    monkeypatch.setenv("ALGENT_FETCH_PLAYWRIGHT", "0")
     monkeypatch.setattr(fc, "_playwright_html", free_rungs.playwright_html)
     sys.modules.pop("playwright", None)
     fc._fetch("https://a.test/x", allow_paid_fallback=False)

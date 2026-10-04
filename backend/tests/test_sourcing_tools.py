@@ -212,9 +212,10 @@ def test_fetch_prefers_quality_over_word_count(monkeypatch) -> None:
     assert result["words"] == 150
 
 
-def test_fetch_playwright_stays_off_by_default(monkeypatch) -> None:
+def test_fetch_playwright_stays_off_when_the_standing_switch_is_off(monkeypatch) -> None:
     monkeypatch.setenv("ALGENT_FETCH_CACHE", "0")
     monkeypatch.delenv("ALGENT_FETCH_PLAYWRIGHT", raising=False)
+    monkeypatch.setattr(fc, "PLAYWRIGHT_ENABLED", False)
     monkeypatch.setattr(fc, "_http_get", lambda url: "<html>shell</html>")
     monkeypatch.setattr(fc, "_extract", lambda html: " ".join(["word"] * 50))
     monkeypatch.setattr(fc, "_extract_meta", lambda html: {})
@@ -223,7 +224,7 @@ def test_fetch_playwright_stays_off_by_default(monkeypatch) -> None:
     monkeypatch.setattr(fc, "_playwright_html", lambda u: pw.append(u) or None)
 
     result = fc._fetch("http://x", allow_paid_fallback=False)
-    assert pw == []  # default off — no browser launch on a low-end laptop
+    assert pw == []  # switched off — no browser launch
     assert result["quality"] == "thin"
 
 
