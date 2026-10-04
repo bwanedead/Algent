@@ -58,23 +58,43 @@ def _st(speaker, day, text, *, role="", affiliation="", about=(), stance=0, sign
                      source_url=url, transcript_id="tr")
 
 
+PUTIN = dict(role="President of Russia", affiliation="Russia")
+
+
 def _seed_statements():
+    """A Kremlin-heavy ledger shaped like the real one: generic Putin remarks about Russia and the West, one
+    Valdai speech about NATO/EU/Ukraine, unrelated Kremlin news (CSTO exercises, a space shield, the election
+    chief), a NATO reply, one French-budget statement, and one-off delegates from many countries."""
     d = lambda n: (TODAY - timedelta(days=n)).isoformat()  # noqa: E731
-    rows = [
-        _st("Vladimir Putin", d(1), "Says Europe's troops in Ukraine would be legitimate targets.", role="President of Russia",
-            affiliation="Russia", about=("EU", "Ukraine"), stance=-2, signal="threat", url=SPEECH),
-        _st("Vladimir Putin", d(40), "Says Russia is open to talks with Europe.", role="President of Russia",
-            affiliation="Russia", about=("EU",), stance=1, signal="offer"),
+    rows = [_st("Vladimir Putin", d(3 + i % 11), f"Generic remark {i}.", about=("Russia", "West"), **PUTIN) for i in range(12)]
+    rows += [
+        _st("Vladimir Putin", d(1), "Says Europe's troops in Ukraine would be legitimate targets.", about=("NATO", "EU", "Ukraine", "West"),
+            stance=-2, signal="threat", url=SPEECH, **PUTIN),
+        _st("Vladimir Putin", d(1), "Accuses NATO circles of prolonging the war.", about=("NATO", "EU", "Ukraine"), stance=-1, **PUTIN),
+        _st("Vladimir Putin", d(2), "Praises CSTO exercises.", about=("Russia", "CSTO", "Armenia"), **PUTIN),
+        _st("Vladimir Putin", d(0), "Announces a space shield.", about=("Russia", "United States", "Space"), **PUTIN),
+        _st("Vladimir Putin", d(40), "Says Russia is open to talks with NATO and the EU.", about=("NATO", "EU"), stance=1,
+            signal="offer", **PUTIN),
+        _st("Vladimir Putin", d(35), "Earlier CSTO remark.", about=("Russia", "CSTO"), **PUTIN),
+        _st("Anna Pamfilova", d(2), "Reports on the election.", role="Chair of the Election Commission",
+            affiliation="Russia", about=("Russia", "Elections")),
         _st("Mark Rutte", d(2), "NATO will defend every inch.", role="Secretary General", affiliation="NATO",
-            about=("Russia",), stance=-1),
-        _st("Quiet Official", d(2), "Welcomes the harvest report.", affiliation="Freedonia", about=("Freedonia",), signal="other"),
+            about=("Russia", "Ukraine"), stance=-1),
+        _st("Finance Ministry", d(2), "France cuts its budget deficit.", affiliation="France", about=("France", "Budget deficit")),
     ]
-    assert sstore.append_statements(rows) == 4
+    rows += [_st(f"Delegate{i}", d(2), f"Remark from land {i}.", affiliation=f"Land{i}", about=(f"Land{i}", f"Place{i}"),
+                 signal="other") for i in range(16)]
+    assert sstore.append_statements(rows) == len(rows)
     return rows
 
 
-def _theater(name="Russia and Europe", why="Putin and NATO trade threats over troops in Ukraine and the Strait of Hormuz"):
-    return Theater(id="thr_x", name=name, why=why)
+RU_UA = Theater(id="thr_ru", name="Russia-Ukraine war and European security",
+                why="NATO and the EU debate troops in Ukraine as Putin warns the West")
+FRANCE = Theater(id="thr_fr", name="French budget austerity and political unrest",
+                 why="Paris cuts its budget deficit; strikes follow", description="France protests")
+AI_CHIPS = Theater(id="thr_ai", name="AI-driven RAM supply crunch", why="Memory makers race to supply AI data centers; shares and risk",
+                   members=[])
+ZORBIA = Theater(id="thr_z", name="Zorbia", why="Zorbia and Quillon dispute fishing quotas")
 
 
 # ── selection ─────────────────────────────────────────────────────────────────────────────────
@@ -85,47 +105,84 @@ def test_instrument_tags_are_catalog_words_with_acronym_care() -> None:
     assert sensing.instrument_tags("Zorbia and Quillon dispute fishing quotas") == []
 
 
-def test_theater_gets_matching_readings_ranked_by_specific_tags_and_none_when_unrelated() -> None:
+def test_rarity_cut_is_the_median_mention_and_a_flat_vocabulary_has_no_distinctive_items() -> None:
+    docs = [{"common", "mid1"}, {"common", "mid1"}, {"common", "mid2"}, {"common", "mid2"}, {"common", "rare"}]
+    r = sensing.rarity(docs)
+    assert not r.distinctive("common") and r.distinctive("mid1") and r.distinctive("rare")
+    assert r.idf["common"] == 0 and not r.distinctive("absent")
+    flat = sensing.rarity([{"a"}, {"b"}])
+    assert flat.distinctive("a") and flat.distinctive("b")                         # all equally rare: nothing is typical
+
+
+def test_instruments_need_a_distinctive_series_subject_or_two_distinctive_tags() -> None:
     _seed_instruments()
-    ev = sensing.for_theater(_theater(), as_of=AS_OF)
-    assert "chk_hormuz_transits" in ev.instruments and ev.n_instruments >= 1
-    assert "UNUSUAL" in ev.instruments                                            # the collapse is flagged
-    assert "px_wheat" in ev.instruments                                           # Ukraine/Russia tags reach wheat too
-    lone = sensing.for_theater(_theater("Strait", "Traffic in the Strait of Hormuz"), as_of=AS_OF)
-    assert "px_wheat" not in lone.instruments and "chk_hormuz_transits" in lone.instruments.splitlines()[1]   # unusual first
+    hormuz = Theater(id="thr_h", name="Strait of Hormuz closure", why="Iran halts tanker traffic; oil and energy markets react")
+    ev = sensing.for_theater(hormuz, as_of=AS_OF)
+    assert "chk_hormuz_transits" in ev.instruments and "UNUSUAL" in ev.instruments
     assert HORMUZ_URL in ev.instrument_urls
     assert YAHOO_URL not in ev.instrument_urls                                    # internal-source URLs are never offered as citable
-    none = sensing.for_theater(_theater("Zorbia", "Zorbia and Quillon dispute fishing quotas"), as_of=AS_OF)
-    assert none.instruments == "" and none.statements == "" and none.render() == "" and not none.primary_urls
+    # generic macro words ("risk", US, "energy") do not drag the macro series into an AI theater
+    macro = Theater(id="thr_m", name="AI boom and market risk", why="US equities, risk and energy demand from data centers",
+                    members=[])
+    assert sensing.for_theater(macro, as_of=AS_OF).instruments == ""
+    assert sensing.for_theater(ZORBIA, as_of=AS_OF).instruments == ""
 
 
-def test_theater_gets_statements_by_ledger_entities_with_speaker_history() -> None:
+def test_a_tag_in_one_passing_headline_is_not_corroborated() -> None:
+    from algent_backend.agent_system.agents.intel.contracts import Member
+    one = Theater(id="thr_p", name="Border talks", why="A dispute", members=[
+        Member(edition="e", n=1, title="Hormuz mentioned in passing", thesis="")])
+    two = one.model_copy(update={"members": [*one.members, Member(edition="e", n=2, title="Hormuz again", thesis="")]})
+    find = lambda t: set(sensing.instrument_tags(t))  # noqa: E731
+    assert "hormuz" not in sensing.corroborated(find, one)
+    assert "hormuz" in sensing.corroborated(find, two)
+
+
+def test_real_failure_shapes_unrelated_theaters_get_no_kremlin_remarks_and_ru_ua_keeps_nato_eu() -> None:
     _seed_statements()
-    ev = sensing.for_theater(_theater(), as_of=AS_OF)
-    assert {"Russia", "NATO", "Ukraine", "putin"} <= set(ev.terms)
-    assert "STATEMENTS ON RECORD" in ev.statements and SPEECH in ev.statements and "defend every inch" in ev.statements
-    assert "harvest" not in ev.statements                                         # unrelated actor
-    # Putin's older, softer statement is history (not repeated in the recall block); the speech is not duplicated there
+    ru = sensing.for_theater(RU_UA, as_of=AS_OF)
+    assert SPEECH in ru.statements and "NATO circles" in ru.statements and "defend every inch" in ru.statements
+    for unrelated in ("CSTO", "space shield", "election", "Generic remark", "land "):
+        assert unrelated not in ru.statements
+    assert "STATEMENTS ON RECORD" in ru.statements and SPEECH in ru.statement_urls
+    for theater in (FRANCE, AI_CHIPS, ZORBIA):
+        ev = sensing.for_theater(theater, as_of=AS_OF)
+        assert "Putin" not in ev.statements and "Pamfilova" not in ev.statements and ev.histories == [], theater.name
+    assert "budget deficit" in sensing.for_theater(FRANCE, as_of=AS_OF).statements
+    assert sensing.for_theater(AI_CHIPS, as_of=AS_OF).statements == ""
+    assert sensing.for_theater(ZORBIA, as_of=AS_OF).render() == ""
+
+
+def test_history_is_about_the_same_counterparts_not_the_speakers_other_news() -> None:
+    _seed_statements()
+    ev = sensing.for_theater(RU_UA, as_of=AS_OF)
     assert len(ev.histories) == 1 and "STATEMENT HISTORY: Vladimir Putin" in ev.histories[0]
-    assert "open to talks" in ev.histories[0] and SPEECH not in ev.histories[0]
-    assert SPEECH in ev.statement_urls
-    none = sensing.for_theater(_theater("Zorbia", "Zorbia and Quillon dispute fishing quotas"), as_of=AS_OF)
-    assert none.statements == "" and none.histories == []
+    assert "open to talks with NATO and the EU" in ev.histories[0]                # tone toward the same counterparts
+    assert "CSTO" not in ev.histories[0] and "Generic remark" not in ev.histories[0] and SPEECH not in ev.histories[0]
+
+
+def test_surname_alias_only_for_a_speaker_whose_surname_is_theirs_alone() -> None:
+    _seed_statements()
+    voc = sensing.vocabulary(sstore.load_statements())
+    assert sensing.statement_terms("Putin warns", voc) == {"vladimir putin"}
+    assert sensing.statement_terms("putin the pronoun-less word", voc) == set()      # alias needs the capitalised surname
+    # "States" is part of an entity ("United States"), "Minister"-like words are in titles: no alias for them
+    assert not any(alias and phrase == ["states"] for _k, _s, phrase, alias in voc)
 
 
 def test_previous_actors_widen_the_text() -> None:
     _seed_statements()
     t = Theater(id="thr_y", name="Border talks", why="A dispute")
     assert sensing.for_theater(t, as_of=AS_OF).statements == ""
-    actors = sensing.prior_actors({"relations": [{"source": "Russia", "target": "EU"}]},
-                                  {"developments": [{"actors": ["NATO", "Russia"]}]})
-    assert actors == ["Russia", "EU", "NATO"]
+    actors = sensing.prior_actors({"relations": [{"source": "NATO", "target": "EU"}]}, {"developments": [{"actors": ["Ukraine", "NATO"]}]})
+    assert actors == ["NATO", "EU", "Ukraine"]
     assert "STATEMENTS ON RECORD" in sensing.for_theater(t, as_of=AS_OF, actors=actors).statements
 
 
 def test_sensing_never_raises(monkeypatch) -> None:
     monkeypatch.setattr(sensing.store, "query", lambda **_k: (_ for _ in ()).throw(OSError("disk")))
-    ev = sensing.for_theater(_theater(), as_of=AS_OF)
+    monkeypatch.setattr(sensing.store, "load_statements", lambda: (_ for _ in ()).throw(OSError("disk")))
+    ev = sensing.for_theater(RU_UA, as_of=AS_OF)
     assert ev.error.startswith("OSError") and ev.render() == ""
     assert sensing.across_theaters(as_of=AS_OF).error.startswith("OSError")
 
@@ -137,7 +194,9 @@ def test_daily_section_task_carries_the_blocks_and_report_row_counts(tmp_path, m
     _seed_statements()
     tasks: list[str] = []
     board = _board()
-    board["theaters"][0]["why"] = "Putin and NATO trade threats; Hormuz transits collapse"
+    board["theaters"][0]["name"] = "Alpha"
+    board["theaters"][0]["why"] = "NATO and the EU debate troops in Ukraine as Putin warns the West; Iran halts Hormuz tankers"
+    board["theaters"][0]["description"] = "Strait of Hormuz"
     ctx = _ctx({"Alpha": _draft(), "Bravo": _draft(pulses=[])}, SUMMARY, tasks)
     res = daily.produce_daily(ctx, domain="geopolitics", top=5, research=False, model_spec=None, as_of=AS_OF,
                               board=board)
@@ -150,12 +209,31 @@ def test_daily_section_task_carries_the_blocks_and_report_row_counts(tmp_path, m
     assert rows["thr_b"]["sensing"] == {"instruments": 0, "statements": 0}
 
 
+def _seed_drift():
+    """A debt-like series: rises most days with noisy steps; its latest reading is flagged but it only trends."""
+    sid = "fisc_us_debt"
+    vals, v = [], 30e12
+    for i in range(300, 0, -1):
+        v += (0.4e12 if i % 3 else -0.1e12) * (3 if i < 40 else 0.2)
+        vals.append(_obs(sid, TODAY - timedelta(days=i), v))
+    istore.append(sid, vals)
+
+
+def test_trending_series_drop_out_of_the_cross_theater_list_but_a_collapse_stays() -> None:
+    _seed_instruments()
+    _seed_drift()
+    day = TODAY
+    assert sensing._trending("fisc_us_debt", day) and not sensing._trending("chk_hormuz_transits", day)
+    ev = sensing.across_theaters(as_of=AS_OF)
+    assert "chk_hormuz_transits" in ev.instruments and "fisc_us_debt" not in ev.instruments
+
+
 def test_summary_gets_unusual_moves_and_top_statements_across_all_actors() -> None:
     _seed_instruments()
     _seed_statements()
     d = lambda n: (TODAY - timedelta(days=n)).isoformat()  # noqa: E731
-    sstore.append_statements([_st("Vladimir Putin", d(0), f"Remark {i}", stance=-1, signal="warning") for i in range(4)]
-                             + [_st("Vladimir Putin", d(45), "ancient", stance=-2)])
+    sstore.append_statements([_st("Vladimir Putin", d(0), f"Remark {i}", stance=-1, signal="warning", **PUTIN) for i in range(4)]
+                             + [_st("Vladimir Putin", d(45), "ancient", stance=-2, **PUTIN)])
     ev = sensing.across_theaters(as_of=AS_OF)
     assert "chk_hormuz_transits" in ev.instruments and "px_wheat" not in ev.instruments          # only flagged ones
     assert SPEECH in ev.statements
@@ -175,9 +253,9 @@ def test_brief_task_carries_blocks_with_the_longer_window_and_primary_urls_groun
     _seed_instruments()
     _seed_statements()
     d = (TODAY - timedelta(days=20)).isoformat()
-    sstore.append_statements([_st("Mark Rutte", d, "NATO is ready to deter Russia.", role="Secretary General",
-                                  affiliation="NATO", about=("Russia",))])
-    t = _theater()
+    sstore.append_statements([_st("Mark Rutte", d, "NATO is ready to deter Russia at Zaporizhzhia.", role="Secretary General",
+                                  affiliation="NATO", about=("Russia", "Zaporizhzhia"))])
+    t = RU_UA.model_copy(update={"why": RU_UA.why + "; Zaporizhzhia; Iran halts Hormuz tankers"})
     ev = sensing.for_theater(t, as_of=AS_OF, statement_days=desk.BRIEF_WINDOW_DAYS, statement_limit=desk.BRIEF_STATEMENTS)
     assert "ready to deter" in ev.statements and "last 30 days" in ev.statements
     short = sensing.for_theater(t, as_of=AS_OF)                                  # the daily's fortnight misses it
