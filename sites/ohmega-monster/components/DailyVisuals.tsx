@@ -235,7 +235,7 @@ function shortPlace(label: string): string {
   return head.length > 22 ? head.slice(0, 21) + "…" : head;
 }
 
-export function TheaterMapFigure({ map, developments }: { map: TheaterMap | null; developments: DailyDevelopment[] }) {
+export function TheaterMapFigure({ map, developments, label }: { map: TheaterMap | null; developments: DailyDevelopment[]; label?: string }) {
   if (!map) return null;
   const base = mapIndexBase(map, developments.length);
   // Radius in viewBox units so a mark is ~10px whatever the map's shape (the longest side renders at ~320px).
@@ -247,7 +247,7 @@ export function TheaterMapFigure({ map, developments }: { map: TheaterMap | null
   });
   return (
     <figure className="geo-map">
-      <svg viewBox={`0 0 ${map.width} ${map.height}`} role="img" aria-label={`Map: ${marks.length} marked place${marks.length === 1 ? "" : "s"}, numbered as in the timeline.`} className="geo-map-svg">
+      <svg viewBox={`0 0 ${map.width} ${map.height}`} role="img" aria-label={label ?? `Map: ${marks.length} marked place${marks.length === 1 ? "" : "s"}, numbered as in the timeline.`} className="geo-map-svg">
         <rect width={map.width} height={map.height} className="geo-map-sea" />
         {map.countries.map((c, i) => (
           <path key={i} d={c.d} className="geo-map-land">

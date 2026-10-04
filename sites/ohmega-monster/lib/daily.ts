@@ -117,7 +117,7 @@ function parseKeyFigure(raw: unknown): KeyFigure | null {
   };
 }
 
-function parseMap(raw: unknown): TheaterMap | null {
+export function parseMap(raw: unknown): TheaterMap | null {
   if (!isObj(raw)) return null;
   const width = dim(raw.width);
   const height = dim(raw.height);
