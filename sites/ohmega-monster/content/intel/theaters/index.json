@@ -1,6 +1,6 @@
 {
   "schema": "ohmega.dossier.index/1",
-  "built_at": "2026-10-04T07:26:06.472952+00:00",
+  "built_at": "2026-10-04T21:38:55.474453+00:00",
   "theaters": [
     {
       "theater_id": "thr_frontier_ai_race_and_superintelligence_governanc",
@@ -9,8 +9,8 @@
       "first_seen": "2026-09-27",
       "last_seen": "2026-10-03",
       "days_covered": 0,
-      "heat": 11.02,
-      "coverage": "rising coverage",
+      "heat": 4.78,
+      "coverage": "steady coverage",
       "escalation_direction": "steady",
       "max_band": "severe",
       "url": "/intel/theaters/thr_frontier_ai_race_and_superintelligence_governanc"
@@ -22,24 +22,11 @@
       "first_seen": "2026-09-27",
       "last_seen": "2026-10-03",
       "days_covered": 0,
-      "heat": 7.72,
+      "heat": 4.57,
       "coverage": "steady coverage",
       "escalation_direction": "rising",
       "max_band": "severe",
       "url": "/intel/theaters/thr_rogue_ai_agents_and_ai_enabled_cybercrime"
-    },
-    {
-      "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
-      "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
-      "domain": "geopolitics",
-      "first_seen": "2026-09-27",
-      "last_seen": "2026-10-03",
-      "days_covered": 3,
-      "heat": 4.1,
-      "coverage": "steady coverage",
-      "escalation_direction": "steady",
-      "max_band": "critical",
-      "url": "/intel/theaters/thr_us_iran_houthi_confrontation_over_hormuz_and_red"
     },
     {
       "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout",
@@ -55,13 +42,26 @@
       "url": "/intel/theaters/thr_gaza_war_and_unga_diplomatic_fallout"
     },
     {
+      "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+      "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
+      "domain": "geopolitics",
+      "first_seen": "2026-09-27",
+      "last_seen": "2026-10-03",
+      "days_covered": 3,
+      "heat": 2.8,
+      "coverage": "steady coverage",
+      "escalation_direction": "steady",
+      "max_band": "critical",
+      "url": "/intel/theaters/thr_us_iran_houthi_confrontation_over_hormuz_and_red"
+    },
+    {
       "theater_id": "thr_russia_ukraine_war_and_european_security_archite",
       "name": "Russia-Ukraine war and European security architecture",
       "domain": "geopolitics",
       "first_seen": "2026-09-27",
       "last_seen": "2026-10-03",
       "days_covered": 3,
-      "heat": 2.93,
+      "heat": 2.7,
       "coverage": "falling coverage",
       "escalation_direction": "rising",
       "max_band": "critical",

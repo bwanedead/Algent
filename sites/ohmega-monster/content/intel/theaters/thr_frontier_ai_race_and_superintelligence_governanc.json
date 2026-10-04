@@ -18,7 +18,7 @@
       "direction": "steady",
       "pace": "gradual"
     },
-    "coverage": "rising coverage",
+    "coverage": "steady coverage",
     "source": "brief",
     "url": "/intel/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance"
   },
@@ -70,7 +70,7 @@
   "coverage_series": [
     {
       "day": "2026-09-27",
-      "count": 5,
+      "count": 2,
       "editions": 1
     },
     {
@@ -90,7 +90,7 @@
     },
     {
       "day": "2026-10-01",
-      "count": 5,
+      "count": 3,
       "editions": 2
     },
     {
@@ -100,7 +100,7 @@
     },
     {
       "day": "2026-10-03",
-      "count": 4,
+      "count": 2,
       "editions": 1
     }
   ],

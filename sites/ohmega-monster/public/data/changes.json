@@ -1,14 +1,14 @@
 {
   "schema": "ohmega.changes/1",
   "window_days": 30,
-  "as_of": "2026-10-03T23:00:16.715732+00:00",
+  "as_of": "2026-10-04T21:38:55.474453+00:00",
   "events": [
     {
       "type": "daily_published",
-      "at": "2026-10-03T23:00:16.715732+00:00",
+      "at": "2026-10-04T21:38:55.474453+00:00",
       "domain": "geopolitics",
       "date": "2026-10-03",
-      "headline": "Hormuz stayed shut with bypass pipeline out as Russia pounded Kyiv's bridges for a third day and Ethiopia claimed Mekelle airport back amid Gaza strikes",
+      "headline": "Russia hit Kyiv bridges and traded nuclear-Article 5 warnings as Ethiopia and Eritrea cut ties and Gaza strikes continued under Hormuz closure",
       "url": "/geopolitics/2026-10-03",
       "data_url": "/data/daily/geopolitics/2026-10-03.json"
     },

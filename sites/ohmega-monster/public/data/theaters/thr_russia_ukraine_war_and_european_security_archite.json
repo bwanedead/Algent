@@ -3,7 +3,7 @@
   "theater_id": "thr_russia_ukraine_war_and_european_security_archite",
   "name": "Russia-Ukraine war and European security architecture",
   "domain": "geopolitics",
-  "built_at": "2026-10-04T07:26:06.472952+00:00",
+  "built_at": "2026-10-04T21:38:55.474453+00:00",
   "first_seen": "2026-09-27",
   "last_seen": "2026-10-03",
   "days_covered": 3,
@@ -13,7 +13,7 @@
   },
   "current": {
     "date": "2026-10-03",
-    "bottom_line": "Oct 1-3 confirmed a shift from single strikes to a sustained campaign against Kyiv's Dnipro bridges — Southern Bridge hit in four waves Oct 1-2 and Northern Bridge damaged Oct 3 — while nationwide drone barrages continued (8 killed, 81 injured Oct 2-3). Moscow paired this with explicit threats to European weapons factories and a renewed nuclear warning over Kaliningrad, and NATO's eastern flank moved from scrambling jets to changing engagement rules. Confidence is high on bridge damage, casualties and official statements (multiple confirmed sources); lower on Russian intent doctrine which rests on Ukrainian intelligence documents cited by Zelensky.",
+    "bottom_line": "Russia extended its Kyiv pressure campaign from energy to river crossings, hitting the Southern Bridge in four waves Oct 1-2 and the Northern Bridge Oct 3, while sustaining 150+ drone salvos that killed at least 8 and injured 81. Moscow paired the strikes with explicit nuclear signaling over Kaliningrad and threats to European arms factories, met by an EU warning that such a strike would trigger Article 5, and formalized force growth and a China-involved Tsentr-2026 exercise. Confidence is high on strikes, bridges, warnings and the exercise (multiple confirmed sources); lower on North Korean troop numbers and the claimed Russian depopulation doctrine, which rest on single-side intelligence.",
     "escalation": {
       "direction": "rising",
       "pace": "gradual"
@@ -139,7 +139,7 @@
     },
     {
       "day": "2026-09-28",
-      "count": 4,
+      "count": 3,
       "editions": 1
     },
     {
@@ -170,23 +170,10 @@
   ],
   "timeline": [
     {
-      "date": "2026-10-03",
-      "headline": "Russia sustains three-day campaign against Kyiv's Dnipro bridges",
-      "detail": "Russian forces conducted four waves of drone strikes against the Southern Bridge over the Dnipro in Kyiv Oct 1-2, suspending metro and surface transport, then on early Oct 3 damaged the Northern Bridge, injuring two and suspending traffic for a third consecutive day. Kyiv Independent and Al Jazeera confirmed both bridges hit; ISW confirmed the four-wave pattern on the Southern Bridge.",
-      "where": "Kyiv, Ukraine",
-      "verification": "researched",
-      "sources": [
-        "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-2-2026",
-        "https://www.aljazeera.com/news/2026/10/3/five-killed-as-kyiv-and-moscow-trade-strikes-russia-hits-second-bridge",
-        "https://kyivindependent.com/russian-strikes-kill-8-injure-81-across-ukraine-hit-kyiv-bridge-2"
-      ],
-      "from": "/geopolitics/2026-10-03"
-    },
-    {
       "date": "2026-10-02",
-      "headline": "Ukraine-South Korea rift over North Korean POW transfer as DPRK troop presence cited",
-      "detail": "On Sept 23 at the UN General Assembly Zelensky disclosed Ukraine had transferred two North Korean POWs captured in Kursk to South Korea. On Oct 2 South Korean President Lee Jae Myung demanded Ukraine acknowledge a confidentiality agreement and apologize, warning of 'additional measures' and saying disclosure risked war on the Korean Peninsula. Separately Zelensky said Sept 28, citing HUR, that more than 8,000 North Korean personnel are in Russia with preparations for another 10,000 and a longer-term plan up to 50,000, with Shahed-type production established in North Korea.",
-      "where": "New York / Seoul",
+      "headline": "North Korean POW transfer sparks Seoul-Kyiv rift as Zelensky cites 8,000 North Koreans in Russia",
+      "detail": "On Sept 23 Zelensky disclosed Ukraine had transferred two North Korean POWs captured in Kursk region to South Korea; on Oct 2 President Lee Jae Myung demanded Ukraine acknowledge a confidentiality agreement and apologize, warning of additional measures and saying disclosure risked war on the Korean Peninsula. Separately on Sept 28 Zelensky, citing HUR, said over 8,000 North Korean personnel are in Russia with preparations for 10,000 more (plan up to 50,000) and that Shahed-type production has been established in North Korea with Russian support.",
+      "where": "Seoul and Kyiv",
       "verification": "researched",
       "sources": [
         "https://www.aljazeera.com/news/2026/10/2/row-between-ukraine-south-korea-mounts-over-north-korean-pows",
@@ -196,34 +183,35 @@
     },
     {
       "date": "2026-10-02",
-      "headline": "Russia holds Center-2026 exercise with Chinese troops as war continues",
-      "detail": "From Sept 28 to Oct 3 Russia held Center-2026 (Tsentr-2026) at Chebarkul training ground in Chelyabinsk Oblast and the Caspian Sea with more than 47,000 personnel from SCO countries, about 700 pieces of equipment, over 600 UAVs and over 60 UGVs, with a Chinese contingent in joint deployment. President Putin observed the exercise Oct 2 with Defence Minister Andrei Belousov.",
-      "where": "Chebarkul, Chelyabinsk Oblast, Russia",
-      "verification": "researched",
-      "sources": [
-        "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-2-2026",
-        "https://www.scmp.com/news/china/military/article/3369657/chinese-troops-line-russias-tsentr-2026-exercise-military-ties-tighten",
-        "https://apnews.com/article/russia-putin-military-drills-chebarkul-china-135efde9d1f078bd2bd14b5d1e072711",
-        "https://www.kyivpost.com/post/85603"
-      ],
-      "from": "/geopolitics/2026-10-03"
-    },
-    {
-      "date": "2026-10-02",
-      "headline": "Nationwide drone barrage kills 8, injures 81; Kharkiv residential area hit",
-      "detail": "Over Oct 2-3 Ukraine's Air Force reported 157 Shahed/Gerbera/Parodiya drones launched, with hits at 12 locations and debris at 5 sites; 131 intercepted. Strikes killed at least 8 and injured 81 nationwide, including a residential strike in Kharkiv Oct 2 that killed 2 and injured 36 including three children.",
-      "where": "Kharkiv and across Ukraine",
+      "headline": "Nationwide drone barrage kills 8, injures 81 as Zelensky cites Russian doctrine to depopulate cities",
+      "detail": "Over Oct 2-3 Ukraine reported 157 Shahed/Gerbera/Parodiya drones launched with hits at 12 locations, 131 intercepted; strikes killed at least 8 and injured 81 nationwide, including 2 killed and 36 injured (three children) in a Kharkiv residential strike Oct 2. On Oct 3 Zelensky told Reuters, citing intelligence documents, that Russia's new doctrine is to strike roads, schools, hospitals and other civilian sites to pressure residents to leave Kyiv, Kharkiv, Lviv and Odesa as winter begins.",
+      "where": "Kyiv, Kharkiv and nationwide, Ukraine",
       "verification": "researched",
       "sources": [
         "https://kyivindependent.com/russian-strikes-kill-8-injure-81-across-ukraine-hit-kyiv-bridge-2",
-        "https://www.aljazeera.com/news/2026/10/3/five-killed-as-kyiv-and-moscow-trade-strikes-russia-hits-second-bridge"
+        "https://www.aljazeera.com/news/2026/10/3/five-killed-as-kyiv-and-moscow-trade-strikes-russia-hits-second-bridge",
+        "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-2-2026"
       ],
       "from": "/geopolitics/2026-10-03"
     },
     {
       "date": "2026-10-01",
-      "headline": "Poland lowers shoot-down threshold and puts FA-50GFs on air-defence alert",
-      "detail": "On Oct 1 Poland's 12 FA-50GF aircraft began combat alert duty tasked to counter jet-powered drones and free F-16 hours, and simplified rules allowing the military to identify and shoot down foreign objects without visual confirmation took effect, confirmed by Defence Minister Władysław Kosiniak-Kamysz.",
+      "headline": "Putin issues conditional nuclear warning over Kaliningrad at Valdai",
+      "detail": "On Oct 1, 2026 at Valdai Discussion Club in Moscow, Putin warned that if Kaliningrad or other Russian territory came under direct attack Russia would be ready to use all weapons including nuclear, while saying Russia has no plans to attack Europe in 2029/2030/2050 but would respond to aggression. He also acknowledged Ukrainian strikes on refineries cost Russia ~1% of GDP and that Ukraine had knocked out over 100 Russian ships in the Black Sea.",
+      "where": "Moscow, Russia",
+      "verification": "researched",
+      "sources": [
+        "https://www.cnn.com/2026/10/01/europe/putin-kaliningrad-warning-ukraine-latam-intl",
+        "https://www.bbc.co.uk/news/articles/cqg7k7v499jjo",
+        "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-2-2026",
+        "https://www.kyivpost.com/post/85889"
+      ],
+      "from": "/geopolitics/2026-10-02"
+    },
+    {
+      "date": "2026-10-01",
+      "headline": "Poland puts FA-50GFs on combat alert and eases shoot-down rules",
+      "detail": "On Oct 1 Poland's 12 FA-50GF aircraft began combat alert duty in the national air-defence system to counter jet-powered drones and free F-16 hours, and simplified rules allowing the military to identify and shoot down foreign objects without visual confirmation took effect. On Sept 24 Foreign Minister Radosław Sikorski said the US and Poland are near a deal for a base housing 10,000 troops, amid a Pentagon review.",
       "where": "Poland",
       "verification": "researched",
       "sources": [
@@ -242,7 +230,10 @@
         "https://www.aljazeera.com/news/2026/10/1/russian-drone-hits-school-in-ukraines-kyiv-as-moscow-presses-air-assault",
         "https://www.kyivpost.com/post/85896",
         "https://meduza.io/en/feature/2026/10/01/russian-drones-strike-kyiv-s-southern-bridge-in-first-drone-attack-on-a-kyiv-bridge-since-the-full-scale-invasion-a-subway-train-was-crossing-it-at-the-time",
-        "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-1-2026"
+        "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-1-2026",
+        "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-2-2026",
+        "https://www.aljazeera.com/news/2026/10/3/five-killed-as-kyiv-and-moscow-trade-strikes-russia-hits-second-bridge",
+        "https://kyivindependent.com/russian-strikes-kill-8-injure-81-across-ukraine-hit-kyiv-bridge-2"
       ],
       "from": "/geopolitics/2026-10-02"
     },
@@ -256,20 +247,6 @@
         "https://www.dw.com/en/russia-expected-to-intensify-hybrid-war-on-europe/a-79444596"
       ],
       "from": "/geopolitics/2026-10-02"
-    },
-    {
-      "date": "2026-10-01",
-      "headline": "Moscow threatens European arms factories; EU and Putin trade Article 5 and nuclear warnings",
-      "detail": "On Sept 30 Russian Foreign Ministry spokeswoman Maria Zakharova warned European factories producing weapons for Ukraine are potential military targets. On Oct 1 EU Defence Commissioner Andrius Kubilius said a Russian strike on a weapons factory in European NATO territory would trigger NATO Article 5. On Oct 1 at Valdai, President Vladimir Putin warned a direct attack on Kaliningrad or other Russian territory would put use of all weapons at Russia's disposal, including nuclear, on the agenda.",
-      "where": "Moscow / Brussels",
-      "verification": "researched",
-      "sources": [
-        "https://www.kyivpost.com/post/85889",
-        "https://www.cnn.com/2026/10/01/europe/putin-kaliningrad-warning-ukraine-latam-intl",
-        "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-2-2026",
-        "https://www.bbc.co.uk/news/articles/cqg7k7v499jjo"
-      ],
-      "from": "/geopolitics/2026-10-03"
     },
     {
       "date": "2026-09-30",
@@ -309,16 +286,20 @@
     },
     {
       "date": "2026-09-28",
-      "headline": "Putin raises authorized force size by 15,500; draft budget points to 27% defence rise in 2027",
-      "detail": "On Sept 28, Putin signed a decree raising the authorized strength of the Russian Armed Forces by 15,500 to 2,441,630 personnel including 1,550,500 active-duty, effective on signing. Draft budget documents reviewed by Reuters separately point to 17.1 trillion rubles (~$202.6 billion) for defence in 2027, about 27% above the original 2026 budget and 50 trillion rubles over three years.",
-      "where": "Russia",
+      "headline": "Putin raises authorized force to 2.44 million as Tsentr-2026 runs with Chinese troops",
+      "detail": "On Sept 28 Putin signed decree No.700 raising authorized strength to 2,441,630 personnel including 1,550,500 active-duty, the fourth increase in 2026. From Sept 28-Oct 3 Russia held strategic exercise Tsentr-2026 at Chebarkul (Chelyabinsk Oblast) and the Caspian Sea with over 47,000 personnel from SCO countries, about 700 pieces of equipment, over 600 UAVs and over 60 UGVs; a Chinese contingent participated in joint deployment and maneuvers. Putin observed the exercise Oct 2 with Defence Minister Andrei Belousov.",
+      "where": "Chebarkul, Chelyabinsk Oblast and Caspian Sea, Russia",
       "verification": "researched",
       "sources": [
+        "https://www.kyivpost.com/post/85603",
+        "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-2-2026",
+        "https://www.scmp.com/news/china/military/article/3369657/chinese-troops-line-russias-tsentr-2026-exercise-military-ties-tighten",
+        "https://apnews.com/article/russia-putin-military-drills-chebarkul-china-135efde9d1f078bd2bd14b5d1e072711",
         "https://www.sofx.com/russia-raises-its-troop-ceiling-a-fourth-time-in-2026-as-losses-mount",
         "https://www.reuters.com/world/russia-raises-2027-military-spending-by-27-budget-documents-show-2026-09-28",
         "https://www.scmp.com/news/world/russia-central-asia/article/"
       ],
-      "from": "/geopolitics/2026-10-01"
+      "from": "/geopolitics/2026-10-03"
     },
     {
       "date": "2026-09-28",
@@ -782,7 +763,7 @@
       "lat": 50.4501,
       "lon": 30.5234,
       "count": 2,
-      "last_date": "2026-10-03"
+      "last_date": "2026-10-01"
     },
     {
       "name": "Moscow",
@@ -801,14 +782,6 @@
       "last_date": "2026-10-01"
     },
     {
-      "name": "Chebarkul",
-      "country": "Russia",
-      "lat": 54.977,
-      "lon": 60.369,
-      "count": 1,
-      "last_date": "2026-10-02"
-    },
-    {
       "name": "Kharkiv",
       "country": "Ukraine",
       "lat": 49.9935,
@@ -817,10 +790,10 @@
       "last_date": "2026-10-02"
     },
     {
-      "name": "New York",
-      "country": "United States of America",
-      "lat": 40.7128,
-      "lon": -74.006,
+      "name": "Seoul",
+      "country": "South Korea",
+      "lat": 37.5665,
+      "lon": 126.978,
       "count": 1,
       "last_date": "2026-10-02"
     },
@@ -831,438 +804,922 @@
       "lon": 30.754,
       "count": 1,
       "last_date": "2026-09-29"
+    },
+    {
+      "name": "Chebarkul",
+      "country": "Russia",
+      "lat": 54.97,
+      "lon": 60.37,
+      "count": 1,
+      "last_date": "2026-09-28"
     }
   ],
   "map": {
+    "version": 2,
     "bbox": [
-      -107.6,
-      21.383,
-      93.963,
-      75.086
+      7.237,
+      42.779,
+      74.145,
+      62.97
     ],
     "projection": "equirectangular",
     "width": 1000,
-    "height": 400,
+    "height": 500,
     "countries": [
       {
-        "name": "W. Sahara",
-        "d": "M490.8 353.3L490.7 355.2L490.7 366.5L474.4 366.1L474.6 385.2L470 385.8L468.7 389.7L469.6 400L449.4 400L460.6 399.1L461.2 396.4L463.3 393.1L464.9 382.8L471.8 374.8L474.1 365.4L475.7 364.8L477.3 359L481.5 358.2L483.3 359.2L485.5 359.2L487.1 357.5L490.2 357.3L490.1 353.3Z"
-      },
-      {
-        "name": "Canada",
-        "d": "M0 47.7L3.2 47.6L7.2 46.8L11.2 48.6L16.2 52.6L21.7 52.1L30.5 55.4L38.2 54.2L45.4 54.4L44.9 49.8L49.3 48.5L57 51L56.9 58L60.1 52.1L64.1 52.3L66.3 44.8L61 40.2L55.2 37.2L55.6 29L61.5 23.6L68 24.8L73 28.1L79.8 36.5L75.4 40.1L84.6 41.6L84.6 49.2L91.2 43.4L97.1 48.2L95.7 53.7L100.5 58.7L105.6 53.4L109.3 46.9L109.5 38.8L116.6 39.3L123.9 40.4L130.6 44.1L130.9 47.8L127.2 51.8L130.7 55.8L130.1 59.4L120.3 64.6L113.4 65.8L108.3 63.5L106.8 67.3L102 73.5L100.6 76.8L94.8 81.8L87.7 82.3L83.8 85.5L83.5 90.3L77.7 91.2L71.7 97.3L66.3 105.7L64.3 111.5L64.1 120.2L71.4 121.4L73.6 128.4L75.9 134.1L82.9 132.6L92.1 135.8L97 138.6L100.6 142.2L106.8 144.2L112.1 147.4L120.3 147.8L125.7 148.5L124.8 155L126.4 162.4L130 170.8L137.4 177.8L141.2 175.4L143.9 167.8L141.3 156L137.8 152.1L145.7 148.6L151.3 143.4L154.1 138.2L153.7 133.2L150.3 126.9L144.3 121.3L150.1 113.5L148 106.7L146.3 95.1L149.8 93.4L158.3 95.4L163.4 96.1L167.5 94.2L172.1 96.7L178.2 101L179.7 103.9L188.6 104.5L188.4 110.7L190.1 120.1L194.6 121.3L198.2 125.7L205.4 121.5L210.1 113.3L213.4 109.9L217.3 116.5L223.7 126L229.2 135L227.2 139.6L233.8 143.8L238.3 148.1L246.2 150L249.4 152.4L251.4 158.7L255.2 159.7L257.2 162.5L257.6 170.9L254 173.7L250.4 176.3L242.2 178.9L236 185L227.6 186.2L217 184.7L209.5 184.6L204.4 185.1L200.3 190.5L193.9 193.8L186.8 203.6L181.1 210.5L185.3 209.3L193.2 199.5L203.6 193.3L211.1 192.6L215.5 196.2L210.8 201.2L212.3 209.2L214 214.9L220.4 218.6L228.6 217.5L233.6 209.1L233.9 214.5L237.1 217.2L231 222.1L220 226.5L215.1 229.6L209.5 234.9L205.8 234.4L205.6 228.1L214.2 221.9L206.3 222.2L200.7 223.1L197.5 218.9L197.5 208.7L195.3 206.6L192 207.8L190.3 205.9L186.5 211.5L185 217.3L183.3 220.7L181.2 221.8L179.6 222.2L179.1 224L169.9 224L162.4 224.1L160.2 225.5L154.9 230.8L152.7 234.3L148.2 234.3L143.3 234.3L141 235.5L141.8 237L142.3 239.2L135.7 243.7L130.6 244.9L124.8 248.9L123.6 248.9L121.9 247.7L121.3 246.6L122.5 243.2L124.9 239.1L126.3 234.7L125.3 228.3L124.3 221.5L119.1 218L119.7 216.7L119 215.8L117.6 215.8L116.6 214.6L116.4 212.8L115.4 213.6L114.1 213.4L113.2 211.9L112.7 209.9L108.9 207.6L104.9 205.1L100 202.2L95.4 199.5L90.9 201.6L89.3 201.7L83.2 199.7L79.2 200.7L74.4 198.4L69.3 197.2L65.8 196.7L64.3 195.5L63.4 191.4L61.7 191.4L61.7 194.3L51.5 194.3L34.5 194.3L17.6 194.3L2.7 194.3L0 194.3ZM117.1 94.1L120.8 90.7L127.6 90.7L127.5 92.2L121.7 96.3L118.2 96.1L117.1 94.1ZM138 17L132.6 13.1L132.8 10.4L135.2 9.9L146.5 10.7L155.1 14.8L155.5 16.8L150.3 16.6L144.9 16.5L139.5 17.5L138 17ZM135.4 96.8L137.3 94.6L139.3 94.8L140.6 96.3L138.6 100.2L136.4 99.6L135.1 97.3ZM69.4 0.8L66.7 3.7L59.5 3.1L53.5 1.2L54.4 0L68.8 0ZM96.5 5.2L88.5 4.2L75.3 1.8L74.5 0L137.3 0L137.8 1.2L134.7 3.2L127.3 4.8L120.9 3.9L106.7 5L96.5 5.2ZM258 177L255.3 181.7L252.1 188.2L255.3 185.7L258.6 187.3L256.9 189.9L261.3 192L263.6 190.2L268.5 192.4L267 197.9L270.5 196.6L271.1 200.6L272.6 205.2L270.5 211.8L268.3 212L265 210.6L266.1 204.5L264.7 203.6L259 210.1L256 209.8L259.5 206.3L254.8 204.5L249.4 204.9L239.8 204.7L239 202.5L242.1 199.9L240 197.8L244.1 193.4L249.3 181.5L252.3 177.3L256.6 174.7L258.9 175L258 177ZM117.7 74.3L123.1 76.9L128.8 79.2L129.2 82.7L132.9 82.1L136.4 84.6L132 87L124.3 85.2L121.5 81.8L116.6 85.8L109.5 89.6L107.8 85.3L101.1 86L105.4 82.3L106 76.4L107.7 69.6L111.3 70.2L112.2 73.5L114.8 72.4L117.7 74.3ZM143 20.4L147.7 17.4L158.7 21.2L165.6 24.7L166.2 28L175.4 26.3L180.6 31L192.6 34L196.9 37L201.6 43.9L192.5 47.4L204.2 52.3L212 53.9L219.2 60.8L227 61.3L225.4 66.5L216.7 75.1L210.6 72L202.8 64.8L196.4 65.7L195.8 70L201 74.3L207.7 77.7L209.8 79.7L213 87.1L211.3 92.4L205 90.4L192.6 84.5L199.6 90.9L204.8 95.4L205.6 98L192.1 95L181.5 90.7L175.5 87.1L177.2 85L169.8 81.1L162.6 77.5L162.6 79.7L148.3 80.9L144.1 78.3L147.4 72.8L156.7 72.7L166.9 71.7L165.2 69.1L167 65.4L173.4 58.1L172 54.8L170.1 52.3L162.5 48.6L152.5 46.1L155.6 44.2L150.4 39.6L146 39.2L142.1 36.6L139.4 38.8L130.5 39.8L112.4 38.1L101.9 35.9L93.9 34.8L89.7 32.2L94.9 28.8L87.9 28.8L86.3 21.2L90.1 14.6L95.2 11.5L108 9.5L104.4 14.4L108.3 19L112.9 13L125.4 9.9L134 17.6L133.2 22.5L143 20.4ZM65 7.1L75.3 7.3L84.8 9.2L77.4 15.8L71.5 17.2L66.1 22.8L60.5 22.5L57.4 16L57.5 12.3L60.1 9.1L65 7.1ZM0 0L6.9 0L0 1ZM5.3 15L10.9 18L14 25.2L15.6 30.5L23.9 34.2L32.8 37.7L32.3 41L24.2 41.6L27.3 44.4L25.6 47.2L16.7 46L8.1 44L2.4 44.4L0 45.1L0 13.9L5.3 15ZM35.5 17.7L30.1 12.9L35.9 9.3L41.9 10.8L50.7 9.9L52 12L47.4 15.6L54.9 18.8L54 25.5L45.8 28.4L41.1 27.8L37.6 24.9L25.3 19.2L25.4 16.8L35.5 17.7ZM5 11.1L11.6 10.8L15.4 12.4L11 17.3L3.3 12.1L5 11.1ZM47.1 0L38.7 1.4L33.3 0.2ZM160.7 56.9L157.4 59.1L151.9 59.5L150.6 55.8L152.7 51.7L157.3 50.6L161.2 52.7L161.2 55.9L160.7 56.9ZM56.3 41.7L59.3 44.5L56.2 47.1L49.5 44.9L45.5 45.7L38.7 42.4L43.1 40L46.5 36.8L51.8 38.9L54.8 40.3L56.3 41.7ZM213.7 187.8L215.4 187.2L222 189L227 192.1L227.2 193.5L224.8 193.6L218.3 191.3L213.7 187.8ZM216.2 208.9L218 212.5L221.6 213.5L226.2 213.3L223.7 216.4L221.9 216.9L215.6 213.7L214.4 211.2L216.2 208.9Z"
-      },
-      {
-        "name": "United States of America",
-        "d": "M0 194.3L2.7 194.3L17.6 194.3L34.5 194.3L51.5 194.3L61.7 194.3L61.7 191.4L63.4 191.4L64.3 195.5L65.8 196.7L69.3 197.2L74.4 198.4L79.2 200.7L83.2 199.7L89.3 201.7L90.9 201.6L95.4 199.5L100 202.2L104.9 205.1L108.9 207.6L112.7 209.9L113.2 211.9L114.4 212.6L115.4 213.6L116.4 212.8L116.6 214.6L117.6 215.8L119 215.8L119.7 216.7L119.1 218L124.3 221.5L125.3 228.3L126.3 234.7L124.9 239.1L122.5 243.2L121.4 245.8L121.9 247.7L123.6 248.9L124.8 248.9L130.6 244.9L135.7 243.7L142.2 240L141.8 237L141 235.5L143.3 234.3L148.2 234.3L152.7 234.3L154.3 231.4L160.2 225.5L162.4 224.1L169.9 224L179.1 224L179.6 222.2L181.2 221.8L183.3 220.7L185 217.3L186.5 211.5L190.3 205.9L192 207.8L195.3 206.6L197.5 208.7L197.5 218.9L200.7 223.1L201.6 225.5L196.3 229.1L191.2 231.7L186 233.9L183.3 238.3L182.5 240L182.4 243.9L184.1 247.9L186.1 248.1L185.6 245.4L187.1 247L186.7 249.1L183.4 250.3L181 250.2L177.3 251.5L175.2 251.9L172.3 252.2L168.1 254.4L175.4 253L176.9 254.4L169.9 256.6L166.8 256.7L165.4 257.8L166.9 258.1L165.8 263.5L162.2 269.2L161.8 267.3L160.7 266.9L159.1 265.1L160.1 269.1L161.4 270.4L161.5 273.2L159.9 276.1L157.1 282.1L158.2 276.7L155.6 273.9L155 267.7L154.1 270.9L155.1 275.6L151.9 274.4L155.3 276.8L155.5 283.9L156.9 284.4L157.4 287L158.1 294.5L155 300L149.8 302.2L146.6 306.6L144.1 307.1L141.6 309.8L140.9 312.3L135.4 317.1L132.6 320.7L130.3 325.1L129.5 330.4L130.4 335.6L132.1 341.9L134.3 347.2L134.3 350.4L136.6 359.1L136.5 364.1L136.3 367L135 371.5L133.6 372.5L131.1 371.6L130.3 368.3L128.4 366.6L125.8 360.2L123.5 354.5L122.8 351.6L123.8 346.6L122.4 342.5L118.5 336.3L116.6 335.1L111.6 338.5L108.3 334.7L105.2 332.8L99.6 333.8L95.2 332.9L91.4 333.5L89.3 334.6L90.2 336.6L90.1 339.6L91.2 341.1L90.3 342.1L88.4 341L86.5 342.4L82.9 342.2L79.2 338.2L74.9 339.2L71.3 337.4L68.2 337.9L64 339.7L59.5 345.2L54.6 348.4L51.9 352L50.8 355.3L50.7 360.5L51 364L51.9 366.6L50 366.8L46.4 365.2L42.6 362.9L41.2 359.4L40.1 354.1L37.2 349.9L35.4 345.5L33 340.4L29.5 337.5L25.4 337.6L22.3 343.5L18.2 341.3L15.6 339L14.4 334.9L12.7 331L9.8 327.7L7.2 325.4L5.4 322.7L0 322.7Z"
-      },
-      {
-        "name": "Kazakhstan",
-        "d": "M967.2 192.7L963.5 197.7L959.3 198.4L959.1 205.8L956.3 209.2L946.5 206.7L942.9 220.1L940.4 221.7L930.6 224.7L935 237.6L931.6 239.6L932 243.8L929 242.7L926.5 240.1L919.1 239.3L910.9 239.1L909.1 239.9L902 236.8L899.2 238.3L898.4 242.7L890.3 240.1L887 241.2L885.9 244.5L883 245.8L876.5 251L874.3 256.4L872.5 256.4L871.1 252.9L864.8 252.6L863.8 246.5L861.4 246.5L861.8 239L855.8 233.6L847.3 234.1L841.5 235.2L836.8 228.5L832.7 225.7L825 220.4L824.1 219.7L811.3 224.1L811.5 251.6L809 251.9L805.5 246.1L802.1 244L796.5 245.6L794.3 248L794 246.2L795.2 243.1L794.3 240.5L788.6 238L786.3 231.3L783.6 229.4L783.4 227L788.2 227.7L788.4 222.3L792.6 221L797 222.2L797.9 214.9L797 210.3L792 210.6L787.8 208.8L782.1 212.1L777.4 213.7L774.9 212.5L775.4 208.6L772.3 203.7L768.6 203.9L764.4 198.8L767.2 193.2L765.8 191.6L769.7 183.5L774.8 187.8L775.5 182.3L785.7 174.2L793.4 174L804.4 179.2L810.3 182.2L815.5 179.1L823.4 178.9L829.7 182.8L831.2 180.6L838.1 180.9L839.4 177.4L831.3 172.2L836.1 168.6L835.2 166.6L839.9 164.7L836.4 159.6L838.6 157L857.2 154.4L859.6 152.6L872 149.8L876.5 146.7L885.4 148.3L887 156.1L892.1 154.2L898.5 156.8L898.1 160.9L902.9 160.4L915.3 153.4L913.5 155.7L919.8 161.5L930.9 180.4L933.5 176.5L940.4 180.8L947.5 178.9L950.3 180.2L952.6 184.5L956.1 186L958.2 189.1L964.6 188.1L967.2 192.7Z"
-      },
-      {
         "name": "Uzbekistan",
-        "d": "M811.5 251.6L811.3 224.1L824.1 219.7L825 220.4L832.7 225.7L836.8 228.5L841.5 235.2L847.3 234.1L855.8 233.6L861.8 239L861.4 246.5L863.8 246.5L864.8 252.6L871.1 252.9L872.5 256.4L874.3 256.4L876.5 251L883 245.8L885.9 244.5L887.4 245.2L883.2 250L886.9 252.8L890.4 251L896.3 254.9L889.9 260.2L886.1 259.5L884.1 259.7L883.4 257.6L884.4 254.2L877.8 255.9L876.2 260.7L873.9 264.8L869.7 264.5L868.4 267.7L872.1 269.5L873.1 275.1L870.3 282.6L866.6 281L863.8 281L864 276.4L857.4 273.2L852.2 269.6L849 266.1L843.3 260.9L840.8 253.3L839.2 251.9L833.8 252.2L831.9 250.7L831.4 244.8L824.7 240.8L820.5 245.2L816.3 247.7L817.1 251.5L811.5 251.6Z"
-      },
-      {
-        "name": "Sudan",
-        "d": "M657.9 400L657.9 395.4L677.8 395.4L697.1 395.4L716.7 395.4L717.7 400Z"
-      },
-      {
-        "name": "Chad",
-        "d": "M608.7 400L607.5 389L612.5 384.9L632.3 399.2L633.5 400Z"
-      },
-      {
-        "name": "Russia",
-        "d": "M777.4 213.7L775.2 218.1L770.4 219.3L765.4 227L769.9 234.1L769.5 239.1L774.9 247.9L771.9 250.9L771.1 252.8L768.9 252.2L765.4 247.7L764.1 247.5L760.9 245.7L759.4 242.7L754.8 241.1L751.8 242.3L750.9 240.9L744.2 237.3L736.9 236.1L732.7 234.9L732.1 235.7L725.7 229.5L720.1 226.6L715.8 222.3L719.4 221.1L723.5 214.8L720.7 211.9L728 208.9L727.9 207.2L723.5 208.4L723.6 205.1L726.2 203L731 202.5L731.8 200L730.7 195.9L732.7 192L732.6 189.8L725.3 187.4L722.4 187.5L719.3 184L715.5 185.2L709.2 182.5L709.3 181.1L707.6 177.9L703.6 177.5L703.2 175.2L704.5 173.7L701.3 169.5L696.1 170.2L694.6 169.8L693.4 171.5L691.5 171.2L690.3 166.4L689.1 164L690.1 163.3L694.1 163.5L696 161.9L694.6 159.9L691.3 158.6L691.6 157.2L689.5 155.9L686.4 151L687.5 149L687 145.5L682.2 143.7L679.5 144.6L678.8 142.8L673.6 140.9L672 136.5L671.6 132.9L669.2 131.2L671.3 128.8L669.9 121.9L673.4 117.6L672.6 116.3L678.3 112.2L673.1 108.6L683.7 99.1L688.3 94.8L690.2 91L682.8 85.9L684.9 81L680.4 75.5L683.7 69.1L678 60.6L682.6 55L675 50.1L675.7 44.8L679.7 44.2L688.1 41.2L693.2 38.6L701.4 43.1L715 44.9L733.7 53.3L737.5 56.8L737.9 61.8L732.4 65.7L724.3 67.7L702.1 62L698.5 63L706.6 68.4L706.9 71.9L707.2 79.5L713.6 81.8L717.5 83.7L718.1 80.1L715.1 76.9L718.3 74.1L730.3 78.7L734.4 76.9L731.1 71.4L742.7 64.1L747.2 64.6L751.9 67.2L754.8 62L750.6 57.6L753.1 53.1L749.4 48.5L763.3 50.9L766.1 55.1L759.8 56L759.9 60.2L763.8 62.7L771.4 61.1L772.7 56.3L783 52.8L800.3 46.4L804.1 46.8L799.2 51.3L805.3 52.1L808.9 49.5L818.2 49.3L825.6 46.2L831.2 50.7L836.9 45.8L831.7 41.5L834.2 39L848.9 41.3L855.8 43.6L873.7 52.1L877.1 48.2L872 44.3L871.9 42.7L865.9 41.9L867.5 38.4L864.9 32.6L864.7 30.2L873.9 23.5L877.1 16.7L880.8 15.2L894 17.2L895 21.3L890.3 27.4L893.4 29.8L895 35L893.8 45.2L899.3 49.7L897.2 54.7L887.5 65.3L893.1 66.4L895.1 63.7L900.6 61.8L901.9 58.1L906.2 54.6L903.3 50.3L905.6 45.4L900.2 44.8L899 40.7L902.9 33.2L896.5 27.1L905.4 22.1L904.2 16.8L906.7 16.6L909.3 20.7L907.4 27.9L912.7 29.3L910.4 23.9L918.7 21L929 20.6L938.2 24.8L933.8 18.6L933.3 10.7L941.9 9.2L953.8 9.5L964.6 8.6L960.5 4.7L966 0L1000 0L1000 183.2L995.7 183.2L991.4 180.9L983.9 184.4L974.4 190.8L969.2 192.1L967.2 192.7L964.6 188.1L958.2 189.1L956.1 186L952.6 184.5L950.3 180.2L947.5 178.9L940.4 180.8L933.5 176.5L930.9 180.4L919.8 161.5L913.5 155.7L915.3 153.4L902.9 160.4L898.1 160.9L898.5 156.8L892.1 154.2L887 156.1L885.4 148.3L876.5 146.7L872 149.8L859.6 152.6L857.2 154.4L838.6 157L836.4 159.6L839.9 164.7L835.2 166.6L836.1 168.6L831.3 172.2L839.4 177.4L838.1 180.9L831.2 180.6L829.7 182.8L823.4 178.9L815.5 179.1L810.3 182.2L804.4 179.2L793.4 174L785.7 174.2L775.5 182.3L774.8 187.8L769.7 183.5L765.8 191.6L767.2 193.2L764.4 198.8L768.6 203.9L772.3 203.7L775.4 208.6L774.9 212.5L777.4 213.7ZM646.6 154.6L637.5 154.7L631.4 153.9L632.5 150.6L639.3 148.2L644.5 149.5L646.7 150.7L646.2 152.7L646.6 154.6ZM799.3 10L811.2 3.4L809.8 0L836.5 0L823.9 5.8L816.6 13.1L808.8 20.2L809.8 26.4L819.3 32.5L816.3 33.2L800.1 32.2L798.8 28.9L789.8 26.9L789.1 22.9L794.2 21.3L794 17.2L803.9 10.9L799.3 10Z"
-      },
-      {
-        "name": "Bahamas",
-        "d": "M142 359.7L144.3 359.1L147.6 359.4L147.7 361.3L142.3 362.5L142 359.7ZM147.9 357.9L151.8 361.2L151 366.5L150 365.6L150.1 361.7L147.9 358.7ZM145.9 371.5L147.4 371.8L149.1 378L149.2 382.3L147.9 382.7L146.7 378.4L144.8 376.2L145.9 371.5Z"
-      },
-      {
-        "name": "Norway",
-        "d": "M688.1 41.2L679.7 44.2L675.7 44.8L677.8 39.6L671.4 36.7L663.7 39.2L661.3 44.6L656.5 47.9L651.2 46.1L644.7 46.5L639.2 42.6L636.3 44.5L633.2 44.8L632.5 49.7L623.1 48.6L621.8 52.7L617 52.7L613.7 58L608.8 66.2L601.1 76.7L602.9 79.3L601.2 82.2L596.2 82.1L593 89.1L593.3 99L596.5 102.7L594.9 111.5L590.7 116.6L588.5 120.9L585.2 116.3L575.4 124.9L568.8 126.7L561.9 122.9L560.2 114.9L558.6 97.7L563.2 92.9L576.3 86.6L586.1 79L595.1 68.6L607.1 54.2L615.4 48.6L629 39.2L639.9 36L648.1 36.4L655.6 30.2L664.7 30.5L673.6 29.1L689.1 34.5L682.7 36.5L688.1 41.2Z"
-      },
-      {
-        "name": "Greenland",
-        "d": "M431.8 0L437.7 5.9L426.7 6.4L432.4 9.5L430.8 12.1L423.8 13.2L416.9 13.3L423.1 18.3L423.2 21.6L413.4 18.5L410.8 20.5L417.5 22.4L424 26.9L425.9 32.9L417.1 34.4L413.2 31.5L407.1 27.2L408.8 32.3L403 36.2L416.1 36.5L422.9 36.9L409.7 43.4L396.2 49.3L381.6 51.8L376.2 51.9L371 54.7L364.1 62.6L353.5 67.8L350 68.1L343.4 70L336.3 71.7L332.1 76.3L332 81.5L329.5 86.4L321.4 92.4L323.4 98.2L321.2 104.4L318.6 111.6L311.6 112.1L304.3 106L294.4 106L289.6 101.9L286.3 94.6L277.7 85.4L275.1 80.5L274.5 73.8L267.6 66.9L269.4 61.4L266.1 58.8L271 50.1L278.4 47.3L280.4 44.2L281.4 38.4L275.8 41L273.1 42.2L268.6 43.2L262.5 40.8L262.2 35.7L264.1 31.8L268.7 31.7L278.9 33.6L270.3 28.9L265.9 26.4L261 27.4L256.8 25.6L262.4 18.6L259.3 15.8L255.4 10.7L249.4 2.8L243.3 0Z"
-      },
-      {
-        "name": "Mexico",
-        "d": "M0 322.7L5.4 322.7L7.2 325.4L9.8 327.7L12.7 331L14.4 334.9L15.6 339L18.2 341.3L22.3 343.5L25.4 337.6L29.5 337.5L33 340.4L35.4 345.5L37.2 349.9L40.1 354.1L41.2 359.4L42.6 362.9L46.4 365.2L50 366.8L51.9 366.6L50 373.1L49.1 378.5L48.7 388.5L48.3 392.1L49.1 396.2L50.7 399.8L92 400L94.5 399.2L98.9 399.4L101.9 398.8L102.8 400L11.6 400L9.9 396.4L9.5 393.4L7.8 389.6L3.4 382.2L0 378.2Z"
-      },
-      {
-        "name": "France",
-        "d": "M564.5 190.8L566.9 192.8L574 194.2L571.5 199.3L570.9 204.6L569.5 205.8L567.2 205.2L567.4 207.1L563.8 211.2L563.7 214.6L566.1 213.4L567.8 216.7L567.6 218.8L569 221.6L567.3 223.9L568.6 229.6L571.3 230.6L570.7 233.8L566.2 238L556.4 236L549.2 238.4L548.6 242.9L542.9 243.9L537.3 240.5L535.5 242.1L526.4 238.7L524.4 235.8L527 231.4L527.9 216.5L522.8 208.7L519.1 204.9L511.5 202.1L511 196.6L517.5 195L525.8 196.9L524.2 188.5L528.9 191.7L540.5 185.9L542 179.8L546.3 178.3L547 180.9L549.3 181L551.6 184L555.1 187.5L557.6 187L562 190.4L563.1 191L564.5 190.8ZM577.2 241.8L580.4 238.9L581.3 245.3L579.6 251.1L577.4 249.5L576.2 244.5L577.2 241.8Z"
-      },
-      {
-        "name": "Cuba",
-        "d": "M125.7 386.5L130 387.1L133.9 387.2L138.5 389.7L140.5 392.4L145.1 391.6L146.9 393.3L151.1 398L153 400L143.7 400L143.3 398.4L140.5 398.7L135.9 396.7L134.4 395.1L127.9 394L126.2 392.5L128 390.7L123.2 390.3L119.6 394.1L117.5 394.3L116.8 396.1L114.4 396.9L112.2 396.2L114.9 393.9L115.9 391.2L118.2 389.5L120.7 388.1L124.5 387.4L125.7 386.5Z"
-      },
-      {
-        "name": "Mali",
-        "d": "M503.8 400L501.8 373.4L509.4 373.2L526.1 389.5L537 400Z"
-      },
-      {
-        "name": "Mauritania",
-        "d": "M469.6 400L468.7 389.7L470 385.8L474.6 385.2L474.4 366.1L490.7 366.5L490.7 355.2L509.4 373.2L501.8 373.4L503.8 400Z"
-      },
-      {
-        "name": "Niger",
-        "d": "M607.5 389L608.7 400L575 400L576.4 398.6L593.4 384.4L601.2 387.7L604 391.7L607.5 389Z"
-      },
-      {
-        "name": "Israel",
-        "d": "M711 315.6L710.2 318L708.4 317L707.3 321.9L708.6 322.7L707.3 323.8L707.1 325.7L709.4 324.7L709.6 327.6L707.1 339.5L706.6 337.6L703.8 326.7L705.3 324.3L706.2 320.4L707.3 314.8L708 312.9L709.8 312.8L710.2 311.5L711.5 311.4L711.6 314.5L710.9 315.6Z"
-      },
-      {
-        "name": "Lebanon",
-        "d": "M711.5 311.4L710.2 311.5L709.8 312.8L708.1 312.8L709.9 306.7L712.3 301.5L714.7 301.6L715.5 304.5L712.8 307.3L711.5 311.4Z"
-      },
-      {
-        "name": "Palestine",
-        "d": "M709.4 324.7L707.1 325.7L707.3 323.8L708.6 322.7L707.3 321.9L708.4 317L710.2 318L710.2 322.5L709.4 324.7Z"
-      },
-      {
-        "name": "Tunisia",
-        "d": "M580.9 333.5L578.8 320.2L575.7 317.1L575.7 315.3L571.6 310.9L571.2 305.3L574.2 301.1L575.4 295L574.6 287.9L575.6 284.1L581 281.1L584.5 282L584.3 285.7L588.5 283L588.9 284.4L586.4 288.1L586.4 291.5L588.1 293.4L587.4 299.8L584.2 303.6L585.1 307.6L587.7 307.7L588.9 311.3L590.8 312.4L590.5 318.2L588.1 320.3L586.6 322.7L583.2 325.6L583.7 328.7L583.3 331.8L580.9 333.5Z"
-      },
-      {
-        "name": "Algeria",
-        "d": "M490.7 355.2L490.8 353.8L490.8 344.4L498.8 338.9L503.8 337.8L507.8 335.8L509.7 332.1L515.5 329.1L515.7 323.6L518.6 323L520.8 320.2L527.3 319L528.2 316.1L526.9 314.5L525.2 306.6L524.9 302.1L523.1 297.3L527.8 293.2L533.2 292L536.3 288.9L541.1 286.6L549.5 285.3L557.7 284.7L560.2 285.8L564.9 282.9L570.2 282.8L572.2 284.5L575.6 284.1L574.6 287.9L575.4 295L574.2 301.1L571.2 305.3L571.6 310.9L575.7 315.3L575.7 317.1L578.8 320.2L580.9 333.5L582.5 340.1L582.7 343.6L581.9 349.6L582.2 353L581.6 357.1L582 361.8L580.1 364.9L583 370.3L583.2 373.5L584.9 377.7L587.3 376.3L591.2 379.8L593.4 384.4L576.4 398.6L575 400L537 400L526.1 389.5L509.4 373.2L490.7 355.2Z"
-      },
-      {
-        "name": "Jordan",
-        "d": "M710.2 318L711 315.6L716.6 318.6L726.3 310.6L728.3 319.7L727.3 320.8L717.4 324.6L722.3 332L720.7 333.3L719.9 335.8L716.1 336.8L714.9 339.5L712.8 341.8L707.3 340.6L707.1 339.5L709.6 327.6L709.4 324.7L710.2 322.5L710.2 318Z"
-      },
-      {
-        "name": "United Arab Emirates",
-        "d": "M789.7 378.7L790.8 380.4L794.7 379.2L798.8 379.4L801.8 379.6L805.2 374.6L808.9 369.8L812 365.2L813 367.7L813.6 373.6L811.1 373.6L810.7 378.5L811.6 379.5L809.3 381L809.3 384L807.9 387.1L807.7 390.1L806.7 391.7L791.8 387.9L789.9 380.4L789.7 378.7Z"
-      },
-      {
-        "name": "Qatar",
-        "d": "M785.9 374.9L785.6 369.5L786.9 365.6L788.3 364.8L789.8 367.1L789.9 371.5L788.8 375.8L787.4 376.4L785.9 374.9Z"
-      },
-      {
-        "name": "Kuwait",
-        "d": "M771.8 336L772.9 339.3L772.4 341L774 346.6L770.5 346.8L769.3 343.2L764.9 342.5L768.5 335.4L771.8 336Z"
-      },
-      {
-        "name": "Iraq",
-        "d": "M728.3 319.7L726.3 310.6L737.3 302.9L739.1 293.9L738.7 288.5L741.4 286.6L743.9 282L746.1 280.8L751.8 281.8L753.6 283.7L756 282.4L759.2 291.3L762.4 293.5L762.8 297.9L760.3 300.4L759.2 306.3L762.6 313.3L768.7 317.4L771.2 323.1L770.4 328.5L772 328.5L772 332.4L774.8 336.4L771.8 336L768.5 335.4L764.9 342.5L755.6 341.9L741.7 327L734.3 321.7L728.3 319.7Z"
-      },
-      {
-        "name": "Oman",
-        "d": "M807.7 390.1L807.9 387.1L809.3 384L809.3 381L811.6 379.5L810.7 378.5L811.1 373.6L813.6 373.6L815.9 378.7L818.6 381.4L822.3 382.4L825.2 383.7L827.4 388L828.8 390.5L830.6 391.4L830.5 393.1L828.7 397.5L827.9 399.6L809 400L810 395.4L807.7 390.1ZM813 367.7L812 365.2L813.5 362.7L813.6 366.4L813 367.7Z"
-      },
-      {
-        "name": "Myanmar",
-        "d": "M1000 400L991.8 400L992.8 400L993.6 395.1L996 393.3L995.5 390.2L996.6 387.6L996.8 379.9L1000 381.3Z"
-      },
-      {
-        "name": "Mongolia",
-        "d": "M969.2 192.1L974.4 190.8L983.9 184.4L991.4 180.9L995.7 183.2L1000 183.2L1000 226.1L997.6 224.3L990.9 223.2L985 222L983.2 218.7L985.2 210L981.7 204L974.7 201.2L970.5 197.3L969.2 192.1Z"
-      },
-      {
-        "name": "India",
-        "d": "M1000 381.3L996.8 379.9L996.6 387.6L995.5 390.2L996 393.3L993.6 395.1L991 383.3L989.6 383.3L988.8 388.1L986.1 384.2L987.6 380L989.8 379.5L992.1 373.2L989.3 372L984.7 372.1L979.9 371L979.5 365.9L977.1 365.5L973.2 362.3L971.5 367.3L975 371.3L971.9 374.1L970.8 376.8L973.9 378.8L973 383.3L974.8 388.9L975.5 395L974.8 397.7L971.5 397.6L965.3 399.2L880.7 400L877 394.7L879.4 392L877.9 389.1L872.1 382.8L875.4 377.8L886.3 377.8L885.3 371.5L882.5 367.7L882 361.9L878.7 358.6L884.2 350.8L889.9 351.4L895.1 343.5L898.2 336L903.1 328.5L903 323.2L907.2 318.9L903.2 315.2L901.5 310.2L899.7 303.7L902.2 300.4L909.7 302.3L915.2 301.2L920 294.9L925.3 303.6L924.8 309.7L926.8 313.5L926.6 317.3L923.1 316.3L924.5 324.5L929.3 329.2L936.2 334.4L933.1 337.8L931.2 344.8L936 347.6L940.6 351.3L947.1 355.4L953.9 356.4L956.8 360.2L960.6 360.9L966.6 362.6L970.7 362.5L971.3 359.6L970.6 354.8L971 351.6L974 350.1L974.5 355.9L974.6 357.4L979.1 360.3L982.2 359.1L986.4 359.6L990.4 359.4L990.8 354.8L988.8 352.4L992.8 351.5L997.3 345.9L1000 343.7Z"
-      },
-      {
-        "name": "Bangladesh",
-        "d": "M993.6 395.1L993.5 400L991.8 399.3L990.6 400L990.4 397.6L989.4 394L987.4 389.7L982.8 389.4L983.3 392.5L981.7 396.6L979.6 395.1L978.9 396.5L977.5 395.7L975.5 395L974.8 388.9L973 383.3L973.9 378.8L970.8 376.8L971.9 374.1L975 371.3L971.5 367.3L973.2 362.3L977.1 365.5L979.5 365.9L979.9 371L984.7 372.1L989.3 372L992.1 373.2L989.8 379.5L987.6 380L986.1 384.2L988.8 388.1L989.6 383.3L991 383.3L993.6 395.1Z"
-      },
-      {
-        "name": "Bhutan",
-        "d": "M988.8 352.4L990.8 354.8L990.4 359.4L986.4 359.6L982.2 359.1L979.1 360.3L974.6 357.4L974.5 355.9L977.7 350.4L980.4 348.5L984 350.2L986.6 350.4L988.8 352.4Z"
-      },
-      {
-        "name": "Nepal",
-        "d": "M971 351.6L970.6 354.8L971.3 359.6L970.7 362.5L966.6 362.6L960.6 360.9L956.8 360.2L953.9 356.4L947.1 355.4L940.6 351.3L936 347.6L931.2 344.8L933.1 337.8L936.2 334.4L938.3 332.7L942.3 335L947.3 339.8L950.1 340.9L951.7 344.5L955.6 345.9L959.6 349.2L965.2 350.9L971 351.6Z"
-      },
-      {
-        "name": "Pakistan",
-        "d": "M920 294.9L915.2 301.2L909.7 302.3L902.2 300.4L899.7 303.7L901.5 310.2L903.2 315.2L907.2 318.9L903 323.2L903.1 328.5L898.2 336L895.1 343.5L889.9 351.4L884.2 350.8L878.7 358.6L882 361.9L882.5 367.7L885.3 371.5L886.3 377.8L875.4 377.8L872.1 382.8L868.4 380.9L867 375.6L863.1 369.9L854 371.3L845.9 371.4L838.9 372.5L840.8 363.8L848 360L847.5 356.5L845.2 355.3L845 348.8L840.3 345.5L838.3 341L835.8 337.1L844.2 340.9L849.1 339.8L852.1 340.7L853.1 339.1L856.5 339.7L863 336.7L863.2 330.3L865.9 326.1L869.6 326.1L870.2 324L874 323.1L875.8 323.7L877.7 321.7L877.5 317.2L879.6 312.7L882.7 310.8L880.8 305.9L885.5 306.1L886.9 303.4L886.6 300.6L889.1 297.4L888.6 293.7L887.4 290.6L890.3 287.3L895.6 285.8L901.3 284.9L903.8 283.5L906.7 282.7L910.4 286.2L911.8 291.9L920 294.9Z"
-      },
-      {
-        "name": "Afghanistan",
-        "d": "M863.8 281L866.6 281L870.3 282.6L871.9 283.5L875.5 281.1L877.1 282.6L878.7 279.1L881.7 279.3L882.5 278.2L883 275.2L885.1 272.6L887.8 274.3L887.3 276.6L888.8 276.9L888.3 283.2L890.3 285.6L892 284.1L894.2 283.3L897.3 280L900.7 280.5L905.8 280.5L906.7 282.7L903.8 283.5L901.3 284.9L895.6 285.8L890.3 287.3L887.4 290.6L888.6 293.7L889.1 297.4L886.6 300.6L886.9 303.4L885.5 306.1L880.8 305.9L882.7 310.8L879.6 312.7L877.5 317.2L877.7 321.7L875.8 323.7L874 323.1L870.2 324L869.6 326.1L865.9 326.1L863.2 330.3L863 336.7L856.5 339.7L853.1 339.1L852.1 340.7L849.1 339.8L844.2 340.9L835.8 337.1L840.3 330.3L839.9 325.5L836.2 324.3L835.8 319.6L834.2 313.6L836.3 309.5L834.1 308.4L835.5 303L837.5 293.7L842.6 296.6L846.3 295.6L847.3 292.2L851.3 291.1L854.1 288.8L855 282.8L859.2 281.4L860 278.8L862.3 280.7L863.8 281Z"
-      },
-      {
-        "name": "Tajikistan",
-        "d": "M870.3 282.6L873.1 275.1L872.1 269.5L868.4 267.7L869.7 264.5L873.9 264.8L876.2 260.7L877.8 255.9L884.4 254.2L883.4 257.6L884.1 259.7L886.1 259.5L884.3 261.8L878.9 260.6L878.5 264.9L883.8 264.3L890 266.7L899.3 265.6L900.6 272.5L902.2 271.7L905.3 273.4L905.1 276.3L905.8 280.5L900.7 280.5L897.3 280L894.2 283.3L892 284.1L890.3 285.6L888.3 283.2L888.8 276.9L887.3 276.6L887.8 274.3L885.1 272.6L883 275.2L882.5 278.2L881.7 279.3L878.7 279.1L877.1 282.6L875.5 281.1L871.9 283.5L870.3 282.6Z"
-      },
-      {
-        "name": "Kyrgyzstan",
-        "d": "M885.9 244.5L887 241.2L890.3 240.1L898.4 242.7L899.2 238.3L902 236.8L909.1 239.9L910.9 239.1L919.1 239.3L926.5 240.1L929 242.7L932 243.8L931.3 245.5L923.5 249.5L921.7 252.5L915.4 253.4L913.5 258.1L908.2 257.1L904.8 258.6L900.1 262.1L900.8 263.9L899.3 265.6L890 266.7L883.8 264.3L878.5 264.9L878.9 260.6L884.3 261.8L886.1 259.5L889.9 260.2L896.3 254.9L890.4 251L886.9 252.8L883.2 250L887.4 245.2L885.9 244.5Z"
-      },
-      {
-        "name": "Turkmenistan",
-        "d": "M794.3 248L796.5 245.6L802.1 244L805.5 246.1L809 251.9L811.5 251.6L817.1 251.5L816.3 247.7L820.5 245.2L824.7 240.8L831.4 244.8L831.9 250.7L833.8 252.2L839.2 251.9L840.8 253.3L843.3 260.9L849 266.1L852.2 269.6L857.4 273.2L864 276.4L863.8 281L862.3 280.7L860 278.8L859.2 281.4L855 282.8L854.1 288.8L851.3 291.1L847.3 292.2L846.3 295.6L842.6 296.6L837.5 293.7L837.1 287.5L833.4 287.2L827.7 280.6L823.7 279.8L818.3 276L814.7 275.3L812.6 276.7L809.2 276.5L805.7 280.8L801.3 282.2L800.4 276.9L801.1 269.1L797.3 266.6L798.5 261.5L795.3 261.1L796.4 254.8L801 256.6L805.4 254.2L801.8 249.8L800.4 245.5L796.4 247.4L795.9 252.9L794.3 248Z"
-      },
-      {
-        "name": "Iran",
-        "d": "M774.8 336.4L772 332.4L772 328.5L770.4 328.5L771.2 323.1L768.7 317.4L762.6 313.3L759.2 306.3L760.3 300.4L762.8 297.9L762.4 293.5L759.2 291.3L756 282.4L753.2 276.4L754.2 274.1L752.7 265.6L756.1 263.5L756.8 266.3L759.4 269.7L762.8 270.7L764.6 270.5L770.4 265L772.3 264.4L773.7 266.6L772 270.3L775.1 274.2L776.3 273.8L777.9 279.3L782.6 280.9L786.1 284.6L793.1 285.9L800.9 283.9L801.3 282.2L805.7 280.8L809.2 276.5L812.6 276.7L814.7 275.3L818.3 276L823.7 279.8L827.7 280.6L833.4 287.2L837.1 287.5L837.5 293.7L835.5 303L834.1 308.4L836.3 309.5L834.2 313.6L835.8 319.6L836.2 324.3L839.9 325.5L840.3 330.3L835.8 337.1L838.3 341L840.3 345.5L845 348.8L845.2 355.3L847.5 356.5L848 360L840.8 363.8L838.9 372.5L829.6 370.2L824.2 368.5L818.6 367.5L816.5 358.4L814.1 357.1L810.3 358.4L805.3 362L799.2 359.6L794.2 353.8L789.4 351.7L786.1 344.6L782.5 334.7L779.8 335.9L776.6 333.5L774.8 336.4Z"
-      },
-      {
-        "name": "Syria",
-        "d": "M711 315.6L711.6 314.5L711.5 311.4L712.8 307.3L715.5 304.5L714.7 301.6L712.4 301.2L712 295.5L713.2 292.5L714.5 290.8L715.8 289.2L716.1 285L717.7 286.5L723.2 284.4L725.8 285.8L729.9 285.8L735.6 283L738.3 283.1L743.9 282L741.4 286.6L738.7 288.5L739.1 293.9L737.3 302.9L726.3 310.6L716.6 318.6L711 315.6Z"
-      },
-      {
-        "name": "Armenia",
-        "d": "M764.6 270.5L762.8 270.7L760.7 266.4L760.8 265.2L758.6 265.3L757.1 263.3L756.1 263.5L754.1 261.3L750.4 259.4L750.9 255.8L750.1 253.2L756.9 252L758 254L759.9 255.3L758.9 257.1L761.5 259.7L760.1 262.1L762.2 264.1L764.4 265.3L764.6 270.5Z"
-      },
-      {
-        "name": "Sweden",
-        "d": "M588.5 120.9L590.7 116.6L594.9 111.5L596.5 102.7L593.3 99L593 89.1L596.2 82.1L601.2 82.2L602.9 79.3L601.1 76.7L608.8 66.2L613.7 58L617 52.7L621.8 52.7L623.1 48.6L632.5 49.7L633.2 44.8L636.3 44.5L642.9 48.2L650.6 53.3L650.7 64.7L652.4 67.6L643.9 69.7L639.1 74.9L639.8 79.5L632 85.5L622.4 91.9L618.8 102.4L622.3 107.6L627 111.8L622.5 120.2L617.3 121.9L615.4 134.4L612.6 141.4L606.6 140.7L603.8 146.6L598 146.9L596.5 139.9L592.3 131.4L588.5 120.9Z"
-      },
-      {
-        "name": "Belarus",
-        "d": "M673.6 140.9L678.8 142.8L679.5 144.6L682.2 143.7L687 145.5L687.5 149L686.4 151L689.5 155.9L691.6 157.2L691.3 158.6L694.6 159.9L696 161.9L694.1 163.5L690.1 163.3L689.1 164L690.3 166.4L691.5 171.2L687.3 171.6L685.7 173.3L685.4 177L683.4 176.3L679 176.7L677.7 174.9L675.8 176.2L673.9 175.1L670 175L664.5 173.2L659.5 172.6L655.6 172.8L652.9 174.8L650.6 175.1L650.5 171.8L648.9 168.3L651.9 166.8L651.9 163.8L650.6 161L650.3 157.7L655.1 157.8L660.5 155L661.7 150.7L665.7 148.4L665.3 145L668.3 143.8L673.6 140.9Z"
+        "d": "M728.5 500L728.4 445.1L767 431.2L803.7 460L818.3 482.3L836.5 479L855 480.9L861.9 476.8L870.7 486.8L875.3 497.6L879.8 494.8L879.5 500Z"
       },
       {
         "name": "Ukraine",
-        "d": "M691.5 171.2L693.4 171.5L694.6 169.8L696.1 170.2L701.3 169.5L704.5 173.7L703.2 175.2L703.6 177.5L707.6 177.9L709.3 181.1L709.2 182.5L715.5 185.2L719.3 184L722.4 187.5L725.3 187.4L732.6 189.8L732.7 192L730.7 195.9L731.8 200L731 202.5L726.2 203L723.6 205.1L723.5 208.4L719.5 209L716.2 211.4L711.6 211.8L707.3 214.6L707.5 218.6L706.1 216.9L704.5 216.6L701 215L699.7 216.9L699 216L691.3 214.2L691 211.4L686.4 212.3L684.5 216.4L680.7 221.9L678.4 220.6L676.1 221.8L673.9 220.5L675.2 219.6L676 217.1L677.4 214.7L677 213.4L678.1 212.8L678.6 213.8L681.5 214L682.8 213.5L681.9 212.7L682.2 211.6L680.5 209.7L679.8 206.6L678 205.4L678.3 202.9L676.1 200.9L674 200.6L670.4 198.3L667.1 199L665.9 200.1L663.8 200.1L662.6 201.8L658.9 202.6L657.2 203.7L654.9 201.9L651.7 201.9L648.6 201L646.5 202.6L646.2 200.6L643.4 198.6L644.4 195.6L645.7 193.7L646.8 194.1L645.5 190.7L650.1 184.6L652.5 183.7L653 181.6L650.6 175.1L652.9 174.8L655.6 172.8L659.5 172.6L664.5 173.2L670 175L673.9 175.1L675.8 176.2L677.7 174.9L679 176.7L683.4 176.3L685.4 177L685.7 173.3L687.3 171.6L691.5 171.2ZM699.7 216.9L701 215L704.5 216.6L706.1 216.9L706.8 218.4L707.6 219.2L710 221L715.1 220.6L714.1 223.2L708.7 224.5L701.9 228.8L699.2 227.3L700.3 223.8L694.8 221.7L695.7 220.2L700.5 217.7L699.7 216.9Z"
-      },
-      {
-        "name": "Poland",
-        "d": "M650.3 157.7L650.6 161L651.9 163.8L651.9 166.8L648.9 168.3L650.5 171.8L650.6 175.1L653 181.6L652.5 183.7L650.1 184.6L645.5 190.7L646.8 194.1L645.7 193.7L641 190.8L637.5 191.8L635.1 191.1L632.2 192.7L629.7 190L627.6 191.1L625.1 186.9L621.4 186.5L620.9 184.2L617.5 183.3L616.8 185.2L614.1 183.7L614.4 181.7L610.7 181L608.3 178.6L606.3 173.8L606.7 171.3L605.5 167.3L603.7 164.6L605 162.7L603.9 158.9L607.3 156.7L615 153.2L621.3 150.7L626.2 152L626.6 153.8L631.4 153.9L637.5 154.7L646.6 154.6L649.1 155.4L650.3 157.7Z"
-      },
-      {
-        "name": "Austria",
-        "d": "M618.1 200.8L617.7 203.9L614.9 203.9L615.9 205.5L614.2 210.3L613.3 211.6L608.9 211.7L606.4 213.4L602.3 212.8L595.2 210.9L594.1 208.3L589.2 209.6L588.6 211L585.6 210L583.1 209.8L580.9 208.4L581.6 206.6L581.4 205.3L582.9 204.9L585.4 206.9L586.1 205L590.5 205.3L594.1 204L596.4 204.2L598 205.7L598.5 204.4L597.7 199.6L599.5 198.6L601.3 195.2L605 197.6L607.8 194.6L609.5 194L613.4 196.3L615.7 195.9L618 197.3L617.6 198.2L618.1 200.8Z"
-      },
-      {
-        "name": "Hungary",
-        "d": "M643.4 198.6L646.2 200.6L646.5 202.6L643.5 204.2L641.1 209.2L638.1 214.3L634.1 215.7L631 215.4L627.2 217.3L625.4 218.4L621.3 217L617.6 213.8L616 212.9L615 210.4L615.9 205.5L614.9 203.9L617.7 203.9L618.1 200.8L620.6 202.7L622.4 203.5L626.6 202.6L627 201.1L629 200.9L631.4 199.8L634.2 199.3L635.4 197.6L637 197.1L642.3 199.4L643.4 198.6Z"
-      },
-      {
-        "name": "Moldova",
-        "d": "M665.9 200.1L667.1 199L670.4 198.3L674 200.6L676.1 200.9L678.3 202.9L678 205.4L679.8 206.6L680.5 209.7L682.2 211.6L681.9 212.7L682.8 213.5L681.5 214L678.6 213.8L678.1 212.8L677 213.4L677.4 214.7L676 217.1L675.2 219.6L673.9 220.5L673 217.1L673.5 213.9L673.4 210.6L670.5 206.2L668.9 203L667.4 200.8L665.9 200.1Z"
-      },
-      {
-        "name": "Romania",
-        "d": "M673.9 220.5L676.1 221.8L678.4 220.6L680.7 221.9L680.8 223.8L678.4 225.4L676.9 224.7L675.5 233.7L672.6 232.9L669 230.2L663.1 232L660.7 233.9L653.4 233.5L649.6 232.3L647.7 232.9L646.2 229.8L645.3 228.5L646.5 227.2L645.3 226.3L643.7 228L640.8 225.8L640.4 222.7L637.4 221L636.8 218.6L634.1 215.7L638.1 214.3L641.1 209.2L643.5 204.2L646.5 202.6L648.6 201L651.7 201.9L654.9 201.9L657.2 203.7L658.9 202.6L662.6 201.8L663.8 200.1L665.9 200.1L667.4 200.8L668.9 203L670.5 206.2L673.4 210.6L673.5 213.9L673 217.1L673.9 220.5Z"
-      },
-      {
-        "name": "Lithuania",
-        "d": "M665.3 145L665.7 148.4L661.7 150.7L660.5 155L655.1 157.8L650.3 157.7L649.1 155.4L646.6 154.6L646.2 152.7L646.7 150.7L644.5 149.5L639.3 148.2L638.3 141.9L644 139.6L652.3 140.1L657.2 139.4L657.9 140.9L660.5 141.4L665.3 145Z"
-      },
-      {
-        "name": "Latvia",
-        "d": "M669.2 131.2L671.6 132.9L672 136.5L673.6 140.9L668.3 143.8L665.3 145L660.5 141.4L657.9 140.9L657.2 139.4L652.3 140.1L644 139.6L638.3 141.9L638.5 136.3L640.9 131.6L645.6 129.1L649.5 134.7L653.5 134.5L654.5 128.8L658.7 127.5L660.8 128.4L665.1 131.2L669.2 131.2Z"
-      },
-      {
-        "name": "Estonia",
-        "d": "M672.6 116.3L673.4 117.6L669.9 121.9L671.3 128.8L669.2 131.2L665.1 131.2L660.8 128.4L658.7 127.5L654.5 128.8L655 124.4L653.2 125.3L650.1 122.7L649.6 118.4L655.9 116.3L662.1 115.3L667.5 116.5L672.6 116.3Z"
-      },
-      {
-        "name": "Germany",
-        "d": "M603.9 158.9L605 162.7L603.7 164.6L605.5 167.3L606.7 171.3L606.3 173.8L608.3 178.6L606.1 179.4L604.8 178.5L603.6 179.9L600 181.4L598.2 183.2L594.6 184.9L595.4 187.1L595.9 190.2L598.5 192L601.3 195.2L599.5 198.6L597.7 199.6L598.5 204.4L598 205.7L596.4 204.2L594.1 204L590.5 205.3L586.1 205L585.4 206.9L582.9 204.9L581.4 205.3L576.1 203L575.1 204.6L570.9 204.6L571.5 199.3L574 194.2L566.9 192.8L564.5 190.8L564.8 187.6L563.8 185.9L564.4 180.9L563.5 173.1L566.5 173.1L567.8 170.3L569 163.4L568.1 160.9L569.1 159.3L573.2 158.9L574.1 160.6L577.5 156.9L576.4 154.1L576.1 149.9L579.9 150.9L583.1 149.7L583.1 152.6L588.2 154.3L588.1 157L593.1 155.6L595.9 153.6L601.5 156.5L603.9 158.9Z"
-      },
-      {
-        "name": "Bulgaria",
-        "d": "M646.2 229.8L647.7 232.9L649.6 232.3L653.4 233.5L660.7 233.9L663.1 232L669 230.2L672.6 232.9L675.5 233.7L672.9 236.8L671.1 242.1L672.7 246.4L668.5 245.4L663.4 247.7L663.3 251.4L658.8 252.1L655.3 249.5L651.4 251.6L647.7 251.4L647.3 246.4L644.9 244L645.7 243L645.1 242.1L646 239.7L647.9 237.4L645.5 234.2L645 231.5L646.2 229.8Z"
-      },
-      {
-        "name": "Greece",
-        "d": "M664.3 296.3L663.6 298.5L656.5 299.2L656.5 297.9L650.5 296.5L651.4 293.3L654.1 295.8L658 295.4L661.7 295.9L661.6 297.2L664.3 296.3ZM647.7 251.4L651.4 251.6L655.3 249.5L658.8 252.1L663.3 251.4L663.4 247.7L665.8 249.7L664.3 254.4L663.1 255.2L660.1 255L657.5 254.3L651.5 256.2L654.9 260.4L652.4 261.6L649.6 261.6L647 257.8L646.1 259.4L647.2 263.9L649.7 267.4L647.8 269L650.6 272.4L653 274.6L653.1 278.8L648.5 276.8L650 280.6L646.8 281.4L648.7 288L645.4 288.1L641.3 284.8L639.5 278.9L638.6 273.9L636.7 270.5L634.1 266.2L633.8 264.1L636.1 260.5L636.4 258.1L638 257L638.1 255.1L641.4 254.4L643.3 252.8L645.9 252.9L646.8 251.6Z"
-      },
-      {
-        "name": "Turkey",
-        "d": "M756 282.4L753.6 283.7L751.8 281.8L746.1 280.8L743.9 282L738.3 283.1L735.6 283L729.9 285.8L725.8 285.8L723.2 284.4L717.7 286.5L716.1 285L715.8 289.2L714.5 290.8L713.2 292.5L711.4 289.1L713.2 286.3L710.2 286.9L706.1 285.2L702.6 289.5L695.1 290.3L691.1 286.3L685.7 286.1L684.6 289.2L681.2 290.1L676.4 286.1L671 286.2L668 278.8L664.4 274.7L666.8 268.9L663.7 265.3L669.2 258.2L676.8 257.9L678.9 252.2L688.4 253.2L694.3 248.4L700.1 246.3L708.3 246.1L717 251.4L724.1 254.3L729.9 253.1L734.1 253.8L740 249.9L745.3 249.5L750.1 253.2L750.9 255.8L750.4 259.4L754.1 261.3L756.1 263.5L752.7 265.6L754.2 274.1L753.2 276.4L756 282.4ZM663.4 247.7L668.5 245.4L672.7 246.4L673.3 249.2L677.6 251.6L676.7 253.5L670.9 253.9L668.7 256.2L664.6 260.2L663 256.7L663.1 255.2L664.3 254.4L665.8 249.7L663.4 247.7Z"
-      },
-      {
-        "name": "Albania",
-        "d": "M638.1 255.1L638 257L636.4 258.1L636.1 260.5L633.8 264.1L632.9 262L630.1 259.5L629.7 255.9L630.1 250.8L630.8 248.5L629.9 247.3L629.6 245L631.8 241.3L632.1 242.7L633.4 242.1L634.5 244L635.6 244.8L636 247.5L635.4 250L636.1 253.2L638.1 255.1Z"
-      },
-      {
-        "name": "Croatia",
-        "d": "M616 212.9L617.6 213.8L621.3 217L625.4 218.4L627.2 217.3L628.5 220.2L630 222.3L628.1 225.1L625.9 223.5L622.4 223.6L618.2 222.3L615.9 222.5L614.8 224.1L613 222.3L612 225.4L614.4 228.9L615.5 231.2L617.8 234L619.6 235.7L621.5 238.8L625.9 241.6L625.4 242.9L620.7 240.1L617.8 237.4L613.3 235.2L609.1 229.7L610.1 229.2L607.9 226L607.8 223.5L604.6 222.3L603 225.6L601.6 223.1L601.7 220.5L605.3 220.6L606.2 219.4L607.9 220.6L609.9 220.7L609.9 218.6L611.6 217.9L612.1 214.9L616 212.9Z"
+        "d": "M463 393.2L453 393.6L441.8 402.5L438.2 401.3L427.3 404.8L415.8 417.7L419.1 413.3L418.4 409.3L412.7 415.5L414.1 427L410.3 420.8L406.7 421.1L397.1 415.1L394.9 414.8L391.5 418.8L388.1 415.9L377.2 418.2L367.6 413.3L370.2 409.6L363.5 406.5L375.5 408.5L378.7 405L375.4 406.2L370.8 404.3L366.5 390.2L368.8 397.3L368.2 404.1L363.1 403.8L363.6 401L361.2 404.7L352.1 406.6L343.5 423.5L334.7 427.1L335.8 438.6L331.3 434.6L322 437.3L321.7 439.2L317.1 437.8L313.5 433.8L317.8 432.2L317.7 428.5L324.5 419L324.6 408.9L328.1 407.3L328.3 410.8L329.8 408.7L335.8 409.1L337.8 411.6L342.2 409.8L339.1 406.9L338.4 399.7L333.8 396.4L333.3 388.8L327.3 383.3L327.1 371.6L324.1 371.9L321.9 367.7L317.2 368.5L314.7 364.8L303.6 358.9L298.8 361.5L293.1 361.1L285 365.7L282.9 370.9L272.4 372.9L263.9 377.7L257.8 372L253.2 373L237.7 368.5L233.7 372L232.1 368L222.6 360.7L228.7 344.1L233.4 344.4L231.2 341.7L231.2 330.9L246.2 311.8L250.1 311L251.9 308L250.2 301.7L252 299.6L245.5 288.7L244.7 281.3L250.2 281.8L255.9 274.9L277.2 273.5L297.5 277.8L299.8 281.6L305.7 282.2L305.8 284.6L308.2 281.8L313.1 281.4L319.3 283L321.3 285.7L326.8 280.9L330.4 286.9L342.6 284.6L348.4 289.9L348.9 279.4L354.9 270.5L363.7 269L371.9 270.4L376.6 264.1L382.2 265.4L396 263.1L405.9 277.1L401.8 279.6L403.2 290.1L415.9 291.4L419.6 295.3L421.1 307.8L423.8 312.1L431.6 311.1L439.1 316L451.2 311L460.5 323.2L463.6 319.9L473.5 325.5L477.3 324.8L486.4 331.8L490.9 331.7L491.3 339.7L485 345.8L489.7 350.4L486.6 350.7L484.4 356.1L487.2 357.3L489 364.1L486.4 373.5L473.2 374.3L465.3 380.4ZM370.3 415.2L363.6 413.9L362.8 411ZM393.9 417.9L394.9 414.8L397.1 415.1L406.7 421.1L410.3 420.8L421.8 437.2L432.4 433.8L438.5 435.3L435.8 443.4L427.9 444.9L422 442.6L416.3 449.9L407 451.9L401.1 459.3L394.9 459L391.8 456.1L393.3 442.6L383.8 436.4L379.2 436.9L377.7 435L395 421.5Z"
       },
       {
         "name": "Switzerland",
-        "d": "M581.4 205.3L581.6 206.6L580.9 208.4L583.1 209.8L585.6 210L585.2 213L583.1 214.3L579.4 213.4L578.3 216.4L575.9 216.6L575.1 215.4L572.3 217.9L569.9 218.3L567.8 216.7L566.1 213.4L563.7 214.6L563.8 211.2L567.4 207.1L567.2 205.2L569.5 205.8L570.9 204.6L575.1 204.6L576.1 203L581.4 205.3Z"
+        "d": "M34.2 382.5L35.7 383.9L33.6 393.9L43.3 399.1L46.5 395.8L48.1 398L47.7 406.6L42.6 405.4L43.2 414.3L40.4 411.3L34.3 412.7L30.9 408L25.7 424.4L16.9 409.2L9.2 421.5L0 422.8L0 384.9L5.7 380.8L18.2 380.7L19.9 379.3L17.4 378.4L20 376.3Z"
       },
       {
-        "name": "Luxembourg",
-        "d": "M563.8 185.9L564.8 187.6L564.5 190.8L563.1 191L562 190.4L562.5 186.2L563.8 185.9Z"
-      },
-      {
-        "name": "Belgium",
-        "d": "M564.4 180.9L563.8 185.9L562.5 186.2L562 190.4L557.6 187L555.1 187.5L551.6 184L549.3 181L547 180.9L546.3 178.3L550.3 176.8L553.9 177.4L558.5 175.9L561.6 179.1L564.4 180.9Z"
-      },
-      {
-        "name": "Netherlands",
-        "d": "M568.1 160.9L569 163.4L567.8 170.3L566.5 173.1L563.5 173.1L564.4 180.9L561.6 179.1L558.5 175.9L553.9 177.4L550.3 176.8L552.8 174.8L557.2 163.8L564 160.7L568.1 160.9Z"
-      },
-      {
-        "name": "Portugal",
-        "d": "M489 247.3L490.8 245.4L492.8 244.3L494.1 248L497 248L497.9 247L500.7 247.3L502.1 251L499.8 253.1L499.8 258.9L499 260L498.8 263.5L496.6 264.1L498.6 268.6L497.2 273.4L499 275.7L498.3 277.7L496.4 280.5L496.8 282.9L494.9 284.9L492.2 283.8L489.7 284.7L490.4 278.8L490 274.2L487.8 273.6L486.6 270.7L487 265.9L488.9 263.2L489.3 260.1L490.3 255.7L490.2 252.5L489.2 249.8L489 247.3Z"
-      },
-      {
-        "name": "Spain",
-        "d": "M496.8 282.9L496.4 280.5L498.3 277.7L499 275.7L497.2 273.4L498.6 268.6L496.6 264.1L498.8 263.5L499 260L499.8 258.9L499.8 253.1L502.1 251L500.7 247.3L497.9 247L497 248L494.1 248L492.8 244.3L490.8 245.4L489 247.3L489.3 242L487.2 238.8L494.2 233.4L500.3 234.8L507 234.7L512.3 236L516.4 235.6L524.4 235.8L526.4 238.7L535.5 242.1L537.3 240.5L542.9 243.9L548.6 242.9L548.9 247.2L544.2 252.2L537.8 253.8L537.4 256.3L534.4 260.4L532.4 266.5L534.4 270.7L531.5 274.1L530.4 278.9L526.7 280.4L523.2 286.1L516.9 286.2L512.2 286.1L509 288.7L507.2 291.5L504.7 290.9L502.9 288.4L501.5 284.1L496.8 282.9Z"
-      },
-      {
-        "name": "Ireland",
-        "d": "M503.1 158L503.9 163.4L500.1 170L491.4 174.4L484.3 173.3L488.4 165.5L485.8 157.9L492.5 152.1L496.3 148.6L497.3 152.6L496.3 156.6L499.3 156.5L503.1 158Z"
-      },
-      {
-        "name": "China",
-        "d": "M932 243.8L931.6 239.6L935 237.6L930.6 224.7L940.4 221.7L942.9 220.1L946.5 206.7L956.3 209.2L959.1 205.8L959.3 198.4L963.5 197.7L967.2 192.7L969.2 192.1L970.5 197.3L974.7 201.2L981.7 204L985.2 210L983.2 218.7L985 222L990.9 223.2L997.6 224.3L1000 226.1L1000 343.7L997.3 345.9L992.8 351.5L988.8 352.4L986.6 350.4L984 350.2L980.4 348.5L977.7 350.4L974.5 355.9L974 350.1L971 351.6L965.2 350.9L959.6 349.2L955.6 345.9L951.7 344.5L950.1 340.9L947.3 339.8L942.3 335L938.3 332.7L936.2 334.4L929.3 329.2L924.5 324.5L923.1 316.3L926.6 317.3L926.8 313.5L924.8 309.7L925.3 303.6L920 294.9L911.8 291.9L910.4 286.2L906.7 282.7L905.8 280.5L905.1 276.3L905.3 273.4L902.2 271.7L900.6 272.5L899.3 265.6L900.8 263.9L900.1 262.1L904.8 258.6L908.2 257.1L913.5 258.1L915.4 253.4L921.7 252.5L923.5 249.5L931.3 245.5L932 243.8Z"
-      },
-      {
-        "name": "Italy",
-        "d": "M585.6 210L588.6 211L589.2 209.6L594.1 208.3L595.2 210.9L602.3 212.8L601.8 216.5L603 219.7L599 218.6L595 221.2L595.3 224.9L594.7 227.1L596.3 230.9L600.9 234.6L603.4 240.8L609 246.8L612.8 246.7L614.1 248.4L612.7 249.9L617.1 252.5L620.7 254.8L625 258.7L625.5 260.1L624.6 262.7L621.8 259.3L617.5 258L615.4 262.9L619 265.6L618.4 269.5L616.4 269.9L613.7 276.3L611.6 276.9L611.7 274.6L612.7 270.6L613.8 269L611.8 264.7L610.3 261L608.2 260L606.8 256.8L603.6 255.5L601.4 252.5L597.8 252L593.9 248.6L589.4 243.8L586 239.5L584.4 232.1L582 231.3L577.9 228.8L575.6 229.8L572.8 233.3L570.7 233.8L571.3 230.6L568.6 229.6L567.3 223.9L569 221.6L567.6 218.8L567.8 216.7L569.9 218.3L572.3 217.9L575.1 215.4L575.9 216.6L578.3 216.4L579.4 213.4L583.1 214.3L585.2 213L585.6 210ZM607.1 275.2L610.8 274.5L609 280.4L609.8 282.7L608.7 286.5L604.9 283.7L602.4 282.9L595.5 279.1L596.2 275.3L602 276L607.1 275.2ZM577 254.6L579.5 252.3L582.5 257.6L581.8 267.5L579.5 267L577.5 269.5L575.6 267.5L575.4 258.5L574.3 254.3L577 254.6Z"
-      },
-      {
-        "name": "Denmark",
-        "d": "M583.1 149.7L579.9 150.9L576.1 149.9L574.1 145.8L574 138.1L574.8 136.1L576.2 133.9L580.6 133.4L582.3 131.4L586.3 129.3L586.1 133.1L584.7 135.5L585.3 137.6L588 138.7L586.8 141.6L585.3 140.7L581.7 146.1L583.1 149.7ZM595.2 141.3L596.8 145.1L593.8 151.1L588.6 146.9L587.9 143.8L595.2 141.3Z"
-      },
-      {
-        "name": "United Kingdom",
-        "d": "M503.1 158L499.3 156.5L496.3 156.6L497.3 152.6L496.3 148.6L500.4 148.3L505.7 152.9L503.1 158ZM518.5 161.5L519.2 157.2L515.9 152.6L509.8 151.2L508.6 149.1L510.4 145.8L508.8 143.8L506.1 147.3L505.8 140.1L503.3 136.3L505.1 128.6L509 122.6L512.9 123.2L518.9 122.5L513.6 130.6L518.7 129.6L524.1 129.6L522.8 135.7L518.4 142.4L523.5 142.8L528.3 152.4L531.7 153.6L534.7 162.1L536.2 165L542.2 166.4L541.6 171.2L539 173.4L541 177.2L536.6 181.1L529.9 181.1L521.5 183.1L519.2 181.7L515.9 185.1L511.3 184.3L507.8 187.1L505.2 185.7L512.4 177.8L516.9 176.2L509.1 175L507.7 172L512.9 169.7L510.2 165.7L511.1 160.8L518.5 161.5Z"
-      },
-      {
-        "name": "Iceland",
-        "d": "M461.8 64.3L460.7 69.1L466.3 74.2L459.9 79.9L445.5 85L441.3 86.3L434.7 85.2L420.9 82.9L425.8 79.6L415 75.9L423.8 74.5L423.6 72.3L413.1 70.6L416.5 65.7L424 64.6L431.7 69.7L439.3 65.6L445.5 67.7L453.6 63.8L461.8 64.3Z"
-      },
-      {
-        "name": "Azerbaijan",
-        "d": "M764.1 247.5L765.4 247.7L768.9 252.2L771.1 252.8L771.9 250.9L774.9 247.9L777.5 251.8L780 257.1L782.3 257.4L783.8 259.4L779.8 260L778.9 265.8L778 268.4L776.2 270.2L776.3 273.8L775.1 274.2L772 270.3L773.7 266.6L772.3 264.4L770.4 265L764.6 270.5L764.4 265.3L762.2 264.1L760.1 262.1L761.5 259.7L758.9 257.1L759.9 255.3L758 254L756.9 252L758.2 250.8L761.9 253L764.5 253.4L765.2 252.5L762.8 248.5L764.1 247.5ZM762.8 270.7L759.4 269.7L756.8 266.3L756.1 263.5L757.1 263.3L758.6 265.3L760.8 265.2L760.7 266.4L762.8 270.7Z"
-      },
-      {
-        "name": "Georgia",
-        "d": "M732.1 235.7L732.7 234.9L736.9 236.1L744.2 237.3L750.9 240.9L751.8 242.3L754.8 241.1L759.4 242.7L760.9 245.7L764.1 247.5L762.8 248.5L765.2 252.5L764.5 253.4L761.9 253L758.2 250.8L756.9 252L750.1 253.2L745.3 249.5L740 249.9L740.7 246.7L739.5 241.6L736.6 238.9L733.9 238L732.1 235.7Z"
-      },
-      {
-        "name": "Slovenia",
-        "d": "M602.3 212.8L606.4 213.4L608.9 211.7L613.3 211.6L614.2 210.3L616 212.9L612.1 214.9L611.6 217.9L609.9 218.6L609.9 220.7L607.9 220.6L606.2 219.4L605.3 220.6L601.9 220.4L603 219.7L601.8 216.5L602.3 212.8Z"
-      },
-      {
-        "name": "Finland",
-        "d": "M675.7 44.8L675 50.1L682.6 55L678 60.6L683.7 69.1L680.4 75.5L684.9 81L682.8 85.9L690.2 91L688.3 94.8L683.7 99.1L673.1 108.6L664.1 109.2L655.4 111.9L647.3 113.5L644.4 109.4L639.6 107L640.7 99.7L638.3 92.9L640.7 88.6L645.2 83.9L656.5 75.9L659.8 74.3L659.3 71.1L652.4 67.6L650.7 64.7L650.6 53.3L642.9 48.2L636.3 44.5L639.2 42.6L644.7 46.5L651.2 46.1L656.5 47.9L661.3 44.6L663.7 39.2L671.4 36.7L677.8 39.6L675.7 44.8Z"
+        "name": "Sweden",
+        "d": "M177 127.1L173 130.4L174.4 138L163.1 149.8L165.1 145.8L162.4 141.1L162.9 134.1L168.9 127.3L174.3 125.2ZM138.9 165.4L137.4 166.6L137 164.9L137.1 158.5L146.3 139.3L147.7 139.9ZM62 97.4L63.3 100.6L65.8 100.1L68.2 91.1L66.4 83.7L70.2 76.9L78.5 70.9L80 62.4L75.6 48.7L81.7 47.3L84.4 40.1L73.5 30.9L75.7 17L72.9 9.4L73.8 0L168.2 0L163.4 4.5L159.1 2.4L161.4 9.2L158.4 11.6L152 11.4L152.3 15.7L155.4 18.3L151.5 27.3L152.9 31.8L148.9 30.9L148 39.3L149.7 56.2L155.8 60.3L160.2 59L173.6 72.9L175.4 79.6L160.3 89.4L169.2 88.6L170.1 90.2L167.1 91.1L165.1 95.6L145.6 106.9L134.2 107.3L142.8 108.6L144.8 110.9L140.7 112.3L142.5 117.8L139.3 127.7L140.7 135.4L138.1 141.3L138.9 146.2L129.8 168.5L111.7 169.3L112.4 171.8L109.4 171.4L104.3 176.8L106.2 184.3L103.7 187.5L90.9 188.8L84.4 187.2L85.7 178.8L78.2 165.4L83.2 166.1L81 161.7L84 161.4L84.4 157.3L77.5 150.2L69.4 131L67.2 130.1L66.8 123.7L63 120.2L62.7 114.7L60 113.9L58.4 98.6L59.2 96.4ZM178.1 125L177.9 126.5L176.4 125.3L177.8 123.5L180.8 124Z"
       },
       {
         "name": "Slovakia",
-        "d": "M645.7 193.7L644.4 195.6L643.4 198.6L642.3 199.4L637 197.1L635.4 197.6L634.2 199.3L631.9 200.2L629 200.9L627 201.1L626.6 202.6L622.4 203.5L620.6 202.7L618.1 200.8L617.6 198.2L618 197.3L618.7 195.7L620.9 195.8L622.6 195L623.7 194L624 192.3L625.1 192L625.9 190.6L627.4 190.6L629.7 190L632.2 192.7L635.1 191.1L637.5 191.8L641 190.8L645.7 193.7Z"
+        "d": "M228.7 344.1L222.3 361L216.5 362.1L212.4 357L198.1 357.7L195.7 363.4L190 367.1L185.2 365.2L182.8 368L172.7 370.7L171.7 376L155.4 375.4L147.2 369.7L143.9 361.1L147.9 349.9L157.3 348.7L169.8 333.8L174.9 333.6L175.3 336.1L178 336L182.4 331.1L187.4 336.7L187.8 341.2L191.6 341.5L196.2 336.4L204.9 338.1L206.9 335.6L210.9 335.3L219 337.4L220.9 340.8Z"
       },
       {
-        "name": "Czechia",
-        "d": "M608.3 178.6L610.7 181L614.4 181.7L614.1 183.7L616.8 185.2L617.5 183.3L620.9 184.2L621.4 186.5L625.1 186.9L627.4 190.6L625.9 190.6L625.1 192L624 192.3L623.7 194L622.7 194.3L620.9 195.8L618.7 195.7L618 197.3L615.7 195.9L613.4 196.3L609.5 194L607.8 194.6L605 197.6L601.3 195.2L598.5 192L595.9 190.2L595.4 187.1L594.6 184.9L598.2 183.2L600 181.4L603.6 179.9L604.8 178.5L606.1 179.4L608.3 178.6Z"
-      },
-      {
-        "name": "Saudi Arabia",
-        "d": "M707.3 340.6L712.8 341.8L714.9 339.5L716.1 336.8L719.9 335.8L720.7 333.3L722.3 332L717.4 324.6L727.3 320.8L728.3 319.7L734.3 321.7L741.7 327L755.6 341.9L764.9 342.5L769.3 343.2L770.5 346.8L774 346.6L776 353L778.4 354.7L779.3 357.3L782.6 360.5L782.9 363.5L782.5 366L783.1 368.5L784.5 370.6L785.2 373.1L785.9 374.9L787.4 376.4L788.8 375.8L789.7 378.7L789.9 380.4L791.8 387.9L806.7 391.7L807.7 390.1L810 395.4L809 400L727.9 400L727.4 395.5L727.6 391.1L724.8 382.8L722.5 379.9L719.8 378.4L718.2 374.1L718.4 372.4L717.1 368.6L715.6 366.9L713.7 361.4L710.6 355.4L708.1 350.2L705.6 350.3L706.4 346.2L706.6 343.6L707.3 340.6Z"
-      },
-      {
-        "name": "N. Cyprus",
-        "d": "M696.2 297.5L697.3 295.7L700.9 295.8L705.4 293.6L702 296.7L702.4 298.1L700.9 298.4L699.8 297.8L698.5 297.3L697.2 297.9L696.2 297.5Z"
-      },
-      {
-        "name": "Cyprus",
-        "d": "M696.2 297.5L697.2 297.9L698.5 297.3L699.8 297.8L700.9 298.4L701.8 297.9L702.5 298.7L697.4 301.8L695 300.8L693.9 297.8L696.2 297.5Z"
-      },
-      {
-        "name": "Morocco",
-        "d": "M523.1 297.3L524.9 302.1L525.2 306.6L526.9 314.5L528.2 316.1L527.3 319L520.8 320.2L518.6 323L515.7 323.6L515.5 329.1L509.7 332.1L507.8 335.8L503.8 337.8L498.8 338.9L490.8 344.4L490.8 353.3L490.2 357.3L487.1 357.5L485.5 359.2L483.3 359.2L481.5 358.2L477.3 359L475.7 364.8L474.1 365.4L471.8 374.8L464.9 382.8L463.3 393.1L461.2 396.4L460.6 399.1L449.5 399.7L449.6 396.3L451.5 394.2L453.1 390.3L452.8 387.8L454.5 382.6L457.3 377.8L459 376.6L460.3 372.3L460.4 368.3L462.2 363.7L465.5 361L468.6 353.4L471.2 350.4L475.8 349.6L479.7 344.5L482.2 342.5L486.4 336.3L485.1 327L487 320.6L487.7 316.7L490.9 311.7L495.9 308.3L499.5 305.2L502.8 297.5L504.4 292.9L508.1 292.9L511.1 296.1L515.8 295.6L520.9 297.2L523.1 297.3Z"
-      },
-      {
-        "name": "Egypt",
-        "d": "M716.7 395.4L697.1 395.4L677.8 395.4L657.9 395.4L657.9 368L657.9 341.5L656.4 335.5L657.6 330.9L656.9 327.7L658.7 324.1L665.3 324L670.1 326L675 328.2L677.3 329.3L681.1 327L683.1 324.8L687.5 324.2L691 325.2L692.4 328.9L693.5 326.4L697.5 328.2L701.4 328.6L703.8 326.7L706.6 337.6L707.1 339.5L705.7 342.5L704.6 348.1L703.3 352L702.1 353.3L700.5 350.9L698.2 347.6L694.7 336.9L696.2 345.5L699.3 352.9L703 364.5L704.9 368.6L706.5 372.8L710.9 381.1L709.9 382.3L710.1 387.2L715.9 393.9L716.7 395.4Z"
-      },
-      {
-        "name": "Libya",
-        "d": "M657.9 395.4L657.9 400L633.5 400L632.3 399.2L612.5 384.9L607.5 389L604 391.7L601.2 387.7L593.4 384.4L591.2 379.8L587.3 376.3L584.9 377.7L583.2 373.5L583 370.3L580.1 364.9L582 361.8L581.6 357.1L582.2 353L581.9 349.6L582.7 343.6L582.5 340.1L580.9 333.5L583.3 331.8L583.7 328.7L583.2 325.6L586.6 322.7L588.1 320.3L590.5 318.2L590.8 312.4L596.7 315L598.7 314.4L602.9 315.6L609.5 318.9L611.8 325.6L616.2 327L623.2 330.1L628.5 333.8L630.9 331.9L633.3 328.5L632.2 322.8L633.7 319.1L637.3 315.7L640.7 314.6L647.4 316.2L649.1 319.5L651 319.5L652.5 320.8L657.5 321.7L658.7 324.1L656.9 327.7L657.6 330.9L656.4 335.5L657.9 341.5L657.9 368L657.9 395.4Z"
-      },
-      {
-        "name": "Bosnia and Herz.",
-        "d": "M625.9 241.6L621.5 238.8L619.6 235.7L617.8 234L615.5 231.2L614.4 228.9L612 225.4L613 222.3L614.8 224.1L615.9 222.5L618.2 222.3L622.4 223.6L625.9 223.5L628.1 225.1L629.9 225.1L628.7 228.4L631.1 231.3L630.3 234.8L629.2 235.1L628.2 235.8L626.6 237.5L625.9 241.6Z"
-      },
-      {
-        "name": "North Macedonia",
-        "d": "M644.9 244L647.3 246.4L647.7 251.4L645.9 252.9L643.3 252.8L641.4 254.4L638.1 255.1L636.1 253.2L635.4 250L636 247.5L636.8 246L639.8 244.9L640.9 244.6L642.6 244.2L644.9 244Z"
+        "name": "Slovenia",
+        "d": "M138.7 407.9L135.8 407L134.4 411L125.5 415.3L125.8 423.6L120.2 426.9L121.1 433.4L112.9 433.2L109.6 428.7L106.6 433.1L95.3 433.2L99.2 429.8L93.4 420.6L95.6 415.9L91.8 413.8L96.6 407.4L109.3 410.3L114.4 405.2L130.3 403.5L132.4 398.9L135.2 399Z"
       },
       {
         "name": "Serbia",
-        "d": "M627.2 217.3L631 215.4L634.1 215.7L636.8 218.6L637.4 221L640.4 222.7L640.8 225.8L643.7 228L645.3 226.3L646.5 227.2L645.3 228.5L646.2 229.8L645 231.5L645.5 234.2L647.9 237.4L646 239.7L645.1 242.1L645.7 243L644.9 244L642.6 244.2L640.9 244.6L641.3 243.2L641.9 241.4L640.2 240L638.7 238.5L637.8 238L637.1 237L635.5 239.8L634.3 240.4L632.8 238.2L631.2 237.4L630.5 236.4L629.2 235.1L630.3 234.8L631.1 231.3L628.7 228.4L629.9 225.1L628.1 225.1L630 222.3L628.5 220.2L627.2 217.3Z"
+        "d": "M211.1 449.3L222 456.3L228.1 452.3L231.4 454.8L228.2 457.6L231.2 463.9L226.9 469.6L226.2 475.2L228.9 483.3L235.2 489.9L231.2 497.4L227.3 500L211.6 500L202.7 488.1L195.9 498.8L178.7 482.5L183.2 478.6L179.5 470.6L184.5 468.7L177.7 461.6L181.1 448.5L175.9 448.2L176.7 441.6L181.8 439.7L175.9 435.1L174.4 421.9L185 416L193.9 417.1L202.3 426.4L202.6 433.4L213 441.3L211 444.8L213.7 447.5Z"
+      },
+      {
+        "name": "Russia",
+        "d": "M1000 0L1000 232.2L993.8 232L988.4 235.6L987.5 229.4L993 223.9L992.8 220.6L986.3 223.2L977.2 218.8L974.6 223.6L970.7 214.1L968 217L954.4 216.9L955.8 207.3L949.1 189.8L940.8 193.3L930.5 188.5L922.8 187.7L911.2 193.4L910.5 197.9L870.4 206.7L864.6 213.7L855.3 212.6L817.4 223.5L807 221.7L803.2 231.5L811.5 233.9L807 235.9L806.5 239.8L813.4 241.2L819.7 246.8L818.1 248.3L804.2 247.6L800.2 254.9L803.5 263.3L789 273.3L795.5 280.3L811.8 288.4L809.4 299.9L802.7 304L794.9 304.4L789.5 300.1L785.8 306.8L781.5 309L780.4 305.8L771.9 304L764.1 294.8L756.3 294.2L750.4 299.2L743.9 294.8L736.1 295.9L724.1 306.8L708.5 296.1L707.2 307.9L701 295.4L689 284.5L677.6 284.5L672.3 278.9L659.2 284.7L656.5 280.4L651 278.4L643.8 288.5L631.6 294.4L629 300.1L621.3 306.3L618.6 306L621.8 320.9L620.6 323L614.2 324.7L604.8 311.8L601.8 311.2L592.6 328.7L591.3 336.9L594.8 342.2L589.8 350.8L589.2 360.5L595.3 365L595.7 372L598.7 377.1L601.5 375.6L611.7 377.9L623.6 401.1L622.4 402.8L617.6 401.5L617.3 405.2L627.9 413L619.5 418.1L620.1 422.8L616.5 421.8L611.6 426.7L604.8 428L603.8 430.5L601.2 428.2L602 432.8L595.5 449.5L594.3 448.1L590.6 453.5L590.1 458.6L598.9 467.2L601.2 480.8L604 472.6L601.2 493.7L605 500L545 500L530.9 490.3L513.3 489.1L499.4 481.3L491.9 480.4L489.3 484.1L470.5 462.6L462.5 459.4L457.6 452.5L452.2 452.5L447.9 445.7L439.6 441.9L444 437.8L440.7 435.8L441.8 434.9L448 438.3L454.5 435.7L454 431L458.8 420.2L460 419.1L461 421.8L462.5 417.9L467.1 418L460.9 410.5L458.5 410.2L456.3 404.5L467.3 403.8L466.3 400.1L478.8 394.4L477.7 388.8L469.8 391.9L468 391.7L471.2 389L468.4 389.6L463 393.2L462.8 387.5L464.1 381.6L469.4 379L472.1 374.7L486.4 373.5L489 364.1L487.2 357.3L484.4 356.1L486.6 350.7L489.7 350.4L485 345.8L491.3 339.7L490.9 331.7L486.4 331.8L477.3 324.8L473.5 325.5L463.6 319.9L460.5 323.2L451.2 311L439.1 316L431.6 311.1L423.8 312.1L421.1 307.8L419.6 295.3L415.9 291.4L403.2 290.1L401.8 279.6L405.9 277.1L396 263.1L382.2 265.4L376.6 264.1L371.9 270.4L366.6 269.2L363.8 263.9L363.6 252.9L359 246.5L361.4 242L372.2 244.6L380.6 238.6L380.4 235.8L377.1 233.4L376.8 229.7L366.4 226.8L367.5 221.4L361.2 217.3L356.3 210L357.4 206.6L352.2 202.7L354.8 196.1L352.4 190.5L353.4 182.6L343.7 176.4L339.3 176.4L332.5 180.4L330.9 174.1L325.7 172.1L322.2 174L318.7 170.3L314.6 171.2L312.5 169.1L311.9 159.1L308.1 151.5L304.9 151.7L307.8 140.6L300.6 134.8L303.5 128L307 126.6L302.9 117.6L301.9 103.6L308.8 91.4L312.6 89L310.5 86.3L311.2 79L315.3 81.2L318.1 77.3L324.5 77.8L327.5 73.6L342 76.7L342.8 74.6L336 68.7L326.3 68.8L319.9 64.3L317.7 60.2L319.6 61.4L320 58.4L318 56.8L307.3 60.3L329 41.7L357.9 12.1L362.5 0ZM205.1 190.5L199.6 197.8L204 199.6L208.5 199L209.2 190.8L221.7 195.8L229.1 195.9L233 200.6L230.9 208.2L232.1 213.3L184.8 210.8L188.6 206.4L190.4 199.3L198.5 197.5Z"
+      },
+      {
+        "name": "Romania",
+        "d": "M313.5 433.8L321.7 439.2L322 437.3L331.3 434.6L335.8 438.6L333.6 448.9L326 451L326.7 445.6L323.6 447L319.1 476.1L313.6 475.4L308.6 470.1L301.7 469.3L296.7 465.6L283.7 469.6L272.9 477.9L238.9 472.9L234.4 473.9L233.6 471.1L236 467.8L228 459L231.4 454.8L228.1 452.3L222 456.3L211.1 449.3L213.7 447.5L211 444.8L213 441.3L202.6 433.4L202.3 426.4L194.4 417.5L207.5 413.2L220.6 383L237.7 368.5L253.2 373L259.2 372.4L263.9 377.7L272.4 372.9L282.9 370.9L285 365.7L291.1 364.2L295.1 366.9L304.6 387L311.4 396L313.9 404.4L311.4 430.2Z"
+      },
+      {
+        "name": "Poland",
+        "d": "M244.6 283.6L252 299.6L250.2 301.7L251.9 308L250.1 311L246.2 311.8L231.2 330.9L232.7 345.4L220.9 340.8L215.3 335.7L206.9 335.6L203.7 338.2L196.2 336.4L191.6 341.5L187.1 340.9L187.4 336.7L182.4 331.1L178 336L175.3 336.1L169.3 324.2L161.3 320.3L158.3 321.6L155.3 318.3L156.4 313.6L152.1 314.9L144.1 310.6L145.8 315.3L140.5 318.7L134.1 310.7L137.2 307L135.2 304.9L131.1 306L115.9 296.1L115.8 299.2L113.2 299.9L116.3 290.2L110.1 275.8L112.3 269.6L109.4 262.8L110.3 258.6L103 249.9L107.2 242L104.9 228.8L109.8 231.1L109.4 226.5L104.3 225.3L104.2 223.4L133.8 214.9L139.3 208.4L162.1 201.4L172.2 205.2L167.4 203.7L170.9 211.5L175.5 213.5L184.8 210.8L234 212.5L242.4 218.6L248.9 246.2L249.1 254.2L241.7 258.9L238.2 264.6L245.3 270.7Z"
+      },
+      {
+        "name": "Norway",
+        "d": "M73.8 0L72.9 9.4L75.7 17L73.5 30.9L84.4 40.1L81.7 47.3L75.6 48.7L80 62.4L78.5 70.9L70.2 76.9L66.4 83.7L68.2 91.1L65.8 100.1L63.3 100.6L61.7 95.7L53.8 93.8L50.9 88.7L50.2 79.4L49.8 83.8L47.2 85.5L47.7 91.4L44 98.1L38.9 99.3L34.7 95.5L36.2 99L31 101.9L31.2 104.6L19.2 115.6L9.5 121.1L0 122L0 45.7L5.5 43.6L1.6 41.4L3.1 38L0 44.5L0 9L5 10.5L6.8 9.5L4.5 7.4L12.8 5.9L0 5.4L0 0L15.8 0L20.7 3.1L18.3 0Z"
       },
       {
         "name": "Montenegro",
-        "d": "M633.4 242.1L632.1 242.7L631.8 241.3L629.6 245L629.9 247.3L628.9 246.8L627.5 244.3L625.4 242.9L625.9 241.6L626.6 237.5L628.2 235.8L629.2 235.1L630.5 236.4L631.2 237.4L632.8 238.2L634.7 239.7L633.4 242.1Z"
+        "d": "M178.7 481.3L185 490.2L195.9 498.8L167.8 500L167.5 495.3L170.2 493.8L170.9 488.8L173.6 485.9L176.2 487.3L175.1 481.5Z"
+      },
+      {
+        "name": "Moldova",
+        "d": "M289.7 364.3L293.1 361.1L298.8 361.5L303.6 358.9L314.7 364.8L317.2 368.5L321.9 367.7L324.1 371.9L326.7 371.3L328.2 373.6L327.3 383.3L333.3 388.8L333.8 396.4L338.4 399.7L339.1 406.9L342.2 409.8L337.8 411.6L335.8 409.1L329.8 408.7L328.3 410.8L328.1 407.3L324.6 408.9L324.5 419L317.7 428.5L317.4 432.4L313.5 433.8L311.4 430.2L314 409.1L311.4 396L304.6 387L295.1 366.9Z"
+      },
+      {
+        "name": "Lithuania",
+        "d": "M232.1 213.3L230.9 208.2L233 200.6L229.1 195.9L221.7 195.8L209.2 190.8L206.4 170.9L215.5 164.8L221.9 162.5L233.7 162.8L252.3 166.1L263.1 162.4L266.5 167.6L275.4 170L289.3 180.8L287.3 188.9L292 190.6L289.4 194.1L284.8 193.9L283 197.3L278.3 199.4L273.7 213.9L276.7 215.7L276.7 218.2L273.1 218.2L272.4 214.9L263.5 218.5L262 222.8L255.3 224.8L243.9 224.1L241.1 217.2L234 212.5Z"
+      },
+      {
+        "name": "Latvia",
+        "d": "M289.3 180.8L275.4 170L266.5 167.6L263.1 162.4L252.3 166.1L221.9 162.5L206.4 170.9L206.8 152.2L210.9 147.4L216.6 133.7L228.9 129.9L237.6 139.8L239.9 145.6L245.3 148.6L249.5 147.6L256.3 141.7L255.4 126.3L267.1 121.5L270.6 122.1L280.3 127.1L287.3 134.4L294.9 132.8L302.4 134.9L307.8 140.6L304.9 151.7L308.1 151.5L311.9 159.1L312.5 169.1L308.8 170.7L304 177.6L296.2 176.8Z"
+      },
+      {
+        "name": "Kyrgyzstan",
+        "d": "M959.1 500L990 500L992 493.3L1000 489.7L1000 500Z"
       },
       {
         "name": "Kosovo",
-        "d": "M636 247.5L635.6 244.8L634.5 244L633.4 242.1L634.3 240.4L635.5 239.8L636.2 237.4L637.8 238L638.7 238.5L639.4 239.7L641.2 241.4L641.3 243.2L640.7 244L639.8 244.9L636.8 246L636.6 247.6Z"
+        "d": "M195.9 498.8L202.7 488.1L211.7 498.7Z"
+      },
+      {
+        "name": "Kazakhstan",
+        "d": "M641.9 448.6L639.1 446.6L640.8 443L639.7 446.3ZM879.5 500L879.8 494.8L875.3 497.6L870.7 486.8L861.9 476.8L855 480.9L836.5 479L818.3 482.3L803.7 460L767 431.2L728.4 445.1L728.5 500L677.7 500L667.5 497.8L663.3 490.6L658.5 490.2L658.6 482.6L651.5 465L643.2 461L643.1 456.7L648.9 454.1L655.7 457.2L662.2 456.6L654.2 446.9L660.3 436.1L675.4 435L687 436.8L680.6 430.8L686 415.5L685 399L682.7 396.6L676.2 395.7L671.1 399.7L656.7 392.7L645.4 398.5L637.4 405.5L629.4 407.4L627.7 411.9L618 405.9L617.6 401.5L622.4 402.8L623.6 401.1L611.7 377.9L601.5 375.6L598.7 377.1L595.7 372L595.3 365L589.2 360.5L589.8 350.8L594.8 342.2L591.3 336.9L592.6 328.7L598.7 319.7L599.2 314.4L603.3 310.9L614.2 324.7L620.6 323L621.8 320.9L618.6 306L621.3 306.3L629 300.1L631.6 294.4L643.8 288.5L651 278.4L656.5 280.4L659.2 284.7L672.3 278.9L677.6 284.5L689 284.5L701 295.4L707.2 307.9L708.5 296.1L724.1 306.8L736.1 295.9L743.9 294.8L750.4 299.2L756.3 294.2L764.1 294.8L771.9 304L780.4 305.8L781.5 309L785.8 306.8L789.5 300.1L794.9 304.4L802.7 304L809.4 299.9L811.8 288.4L795.5 280.3L789 273.3L803.5 263.3L800.2 254.9L804.2 247.6L818.1 248.3L819.7 246.8L813.4 241.2L806.5 239.8L807 235.9L811.5 233.9L803.2 231.5L807 221.7L817.4 223.5L855.3 212.6L864.6 213.7L870.4 206.7L910.5 197.9L911.2 193.4L922.8 187.7L930.5 188.5L940.8 193.3L949.1 189.8L955.8 207.3L954.4 216.9L968 217L970.7 214.1L974.6 223.6L977.2 218.8L986.3 223.2L992.8 220.6L993 223.9L987.5 229.4L988.4 235.6L993.8 232L1000 232.2L1000 489.7L992 493.3L990 500Z"
+      },
+      {
+        "name": "Italy",
+        "d": "M0 422.8L9.2 421.5L13.3 416.3L12.8 413.5L17.7 409.2L18.3 414.1L26.7 424.1L30.9 408L34.3 412.7L40.4 411.3L42.5 414.6L42.6 405.4L47.7 406.6L48.1 398.8L56.1 401L59.9 396.1L73.7 393.4L77 402.8L96.6 407.4L91.8 413.8L95.6 415.9L93.4 420.6L99.2 429.8L96.9 430.4L95.5 425.9L93.1 427.4L89.2 425.9L82.6 431.5L76.5 432.8L74.6 439L79 445.8L74.9 451.9L78.5 466.4L94.6 480.4L100.5 500L54.1 500L49 495.3L44.1 471.1L25.3 459.7L19.7 461.2L11.5 472.8L3.8 475.5L6.6 467.7L6 465.7L0 465.6ZM47.2 498L47.5 500L43 500Z"
+      },
+      {
+        "name": "Hungary",
+        "d": "M222.6 360.7L232.1 368L233.7 372L229.7 376.5L225 377.4L220.6 383L213.1 402.8L206.3 414.2L194.4 417.5L185 416L167.4 426L160.3 425.9L150.6 420.3L138.7 407.9L135.2 399L132.4 398.9L137.7 395.3L137.6 385.6L141.1 382.2L137.3 378.8L139.8 376.9L146.9 378L148.1 370.6L157.3 376.4L171.7 376L172.7 370.7L182.8 368L185.2 365.2L190 367.1L195.7 363.4L198.1 357.7L212.4 357L216.5 362.1Z"
+      },
+      {
+        "name": "Germany",
+        "d": "M34.2 382.5L20 376.3L17.4 378.4L19.9 379.7L17.8 380.8L4.9 380.5L5.7 366.8L13.4 346.6L3.2 342.2L0 343L0 230.4L11.5 229.8L13 235.3L15.1 235.9L16.4 231.9L18.8 237.1L20.7 225.2L29.4 225.7L38.1 233.2L31 225.6L26 224L25 215.7L21 214.8L21.1 212.3L25.7 208.8L21.4 199.8L30.2 202.1L35.6 201L41.6 205.4L39.3 210.4L43.4 210L52.2 214.3L56.4 212.7L56.4 217.6L53.4 220.3L55 222.2L62.2 223.5L68.1 218.5L72.9 218L79.8 210.6L86.6 212L92.8 218.6L97 218.3L99.1 225.8L104.9 228.8L107.2 242L103 249.9L110.3 258.6L109.4 262.8L112.3 269.6L110.1 275.8L116.3 290.2L112.5 300.9L105.9 295.5L106.6 298.9L94.5 303.7L85.3 311.1L79.4 311.4L75.3 316.7L72.5 313.7L78.8 323.8L77 327.6L81.4 335.7L98.3 351.7L97 357.3L93.4 356.3L91.7 361.8L82.6 368.1L85.4 373.4L84.6 377.6L86.9 379.2L86.3 383.6L81.4 378.9L74.3 377.7L74 380.1L56.9 385.7L54.3 382.6L47.9 381.8L44 388.6L40.9 383L37.5 381.2ZM96.7 212.7L96.7 215.2L93.3 213.8L91.6 216L89 214.1L88.8 208.7L91.2 204.9L96 208.3L94.8 210.6ZM104.2 223.4L104.3 225.3L100 225.1L98.5 219ZM16 202.6L18.2 196L17.1 199.9L20.8 200.1Z"
+      },
+      {
+        "name": "Georgia",
+        "d": "M508.9 500L489.3 484.1L491.9 480.4L499.4 481.3L513.3 489.1L530.9 490.3L545 500Z"
+      },
+      {
+        "name": "France",
+        "d": "M33.5 499.3L31.3 500L31.8 494.1ZM5.7 380.8L0 384.9L0 465.6L6 465.7L6.6 467.7L3.8 475.5L0 477.6L0 343L3.2 342.2L13.4 346.6L5.7 366.8Z"
+      },
+      {
+        "name": "Åland",
+        "d": "M190.6 64.9L194.6 67.1L191.3 71.2L187.8 71.5L186.1 66.9L188.5 68.1L188.1 63.9ZM185.7 68.9L183.8 70L184 67.5Z"
+      },
+      {
+        "name": "Finland",
+        "d": "M362.5 0L357.9 12.1L329 41.7L305.4 61.2L298.4 60.1L288.4 63.3L288.9 58.1L286.1 63.1L279.8 61.8L281 65.1L276.8 66.9L275.3 65.3L257.2 73L242.5 73.9L235.9 78.1L238.6 73L234.3 68.4L231.9 72.1L227.6 72.8L229.4 64.1L218.5 61L217.7 58.8L214.9 60.4L212.2 58.8L211.1 49.6L214.8 34.1L209.5 24.3L210.8 17.2L207.2 8.6L212.6 0ZM220.6 65.2L217.9 64.1L218.1 61.9ZM223.3 64.4L226.9 66L226 69.5L221.8 66.5ZM212.4 60.4L210.2 61.7L209.1 58.2ZM218.2 70.1L216.1 70.7L217.1 68.6ZM215.1 70.9L213 70.4L215.2 69.4Z"
+      },
+      {
+        "name": "Estonia",
+        "d": "M300.6 134.8L294.9 132.8L287.3 134.4L280.3 127.1L269.7 121.9L255.4 126.3L258.4 114.3L255.6 113.6L252.3 116.5L247.1 114.1L243.2 106.8L245.8 103.6L243.1 103.5L242 100.3L243 93.5L251.8 91.1L251.3 89.1L256.2 86.6L272.1 85.4L273.1 82.5L295 87.2L308.7 88.1L310.5 86.3L312.6 89L308.8 91.4L301.9 103.6L302.9 117.6L307 126.3L303.5 128ZM229.9 107.7L235.1 108.1L240.4 111.9L231.6 117.4L226.2 117.7L220.6 124.8L223.5 119.3L218.9 116.6L220.4 113.5L218.6 110.8ZM234.5 102.6L228.7 106L226.8 101.7L221.5 99.7L227.6 99L230.4 96.2L234.2 98.5ZM240.7 109.5L236.5 108L240.6 107Z"
+      },
+      {
+        "name": "Denmark",
+        "d": "M79.7 177.9L79.3 181.1L74.4 185.8L77.4 190.3L72.5 192.7L71.9 201.9L69.1 203L66 192.7L60.5 192.3L55.9 179.5L61.1 178.7L63.3 174L65.6 173.7L66.6 179.3L68.5 180.1L69.2 173.4L74.5 169.7L79.8 171ZM37.4 201.7L21.4 199.8L20.6 187L13.4 182.5L13.9 157.6L21.4 160.3L24.7 154.4L27.4 152.9L29.3 155.2L30.2 147.6L26.2 147.4L22.9 154.6L18.4 156.2L15.4 153.9L17.8 148.2L20.6 145.1L32.8 143.5L40.7 133.5L50.4 129.6L47.9 133.9L49.1 141.8L45.7 147.9L45.5 157.2L55.1 161.6L52.6 166.6L46.1 167.3L44 175.9L39.9 176.5L41.6 178.5L35.2 185.2L36.4 190.8L33.1 196.4L37.3 198.2ZM50.9 182.3L53 194.1L47.9 196.2L41.1 193.3L39.2 184.6ZM61.6 200.1L67.3 202.1L67.7 205.3L63.1 206.6L56.8 203L57.1 198.8ZM52.3 203.5L50.6 201L55.5 193.5ZM79.4 198.2L73 199.5L75.3 195.8ZM81.1 182.6L79.4 183.6L80.1 180.5ZM42.2 200.2L38.4 199.7L38 195.7ZM57 141.6L54.4 141.4L57.5 139.7ZM117.3 196.8L111.3 194.8L112.5 190L118 193.8Z"
+      },
+      {
+        "name": "Czechia",
+        "d": "M173.3 333.3L169.8 333.8L163.3 339.6L162.1 344.3L157.3 348.7L147.9 349.9L145.2 355.9L139.1 351L131.8 352L115.9 345.9L111.4 355.9L103.9 356.4L81.4 335.7L77 327.6L78.8 323.8L72.5 313.7L75.3 316.7L79.4 311.4L85.3 311.1L94.5 303.7L106.6 298.9L105.3 295.7L109.2 296.6L111.9 301L115.8 299.2L115.9 296.1L131.1 306L136.4 305.8L134.1 310.7L140.5 318.7L145.8 315.3L144.1 310.6L152.1 314.9L156.4 313.6L155.3 318.3L158.3 321.6L161.3 320.3L169.3 324.2Z"
+      },
+      {
+        "name": "Croatia",
+        "d": "M94.8 432.2L99.3 434.4L101 432.4L106.6 433.1L109.6 428.7L112.9 433.2L121.1 433.4L120.2 426.9L125.8 423.6L125.1 416L134.4 411L135.8 407L142.2 409.9L150.6 420.3L158 425.4L166.2 426.4L174.4 421.9L175.9 435.1L181.8 439.7L176.7 441.6L175.9 448.2L173.4 447.9L170.8 443.1L160.8 441.5L158.1 443.1L144.7 438.1L142.8 440.1L138.9 439.6L135.4 444.8L131.4 440.3L127.8 440.6L127 450.8L132.5 456.9L135.5 466.7L149.6 482.9L155.5 495.5L144.5 484.8L136.9 481.1L130.8 481.7L130.1 478.3L118.8 465.5L117.9 463.4L123.1 463L115.7 454.8L113.9 443L109.3 437.6L105.8 436.6L99 449L95.5 442.3ZM140.7 494.6L148.7 496.6L143.7 497.1ZM142.7 487.8L138.3 487.4L137.7 484.9L143.4 485.8ZM113.2 445.6L107.8 443L109.6 439.4ZM113.5 451L111.2 450.7L111.4 448.8ZM108.4 453.4L105.7 447.5L106 440.9ZM158.8 500L146.6 494.2L156.7 498.2L157.9 496.9L160.5 500Z"
+      },
+      {
+        "name": "Bulgaria",
+        "d": "M227.3 500L231.2 497.4L235.2 489.9L228.9 483.3L226.2 475.2L226.9 469.6L231.2 463.9L236 467.8L233.6 471.1L234.4 473.9L238.9 472.9L272.9 477.9L283.7 469.6L296.7 465.6L301.7 469.3L308.6 470.1L313.6 475.4L319.1 476.1L317.3 484.9L312.3 484.7L309.3 489.9L308.7 500Z"
+      },
+      {
+        "name": "Bosnia and Herz.",
+        "d": "M181 447.9L177.6 460.8L184.5 468.7L179.5 470.6L183 479.8L175.1 481.5L176.2 487.3L173.6 485.9L170.9 488.8L170.2 493.8L167.5 495.3L167.8 500L160.5 500L154.7 496L155.6 494.4L149.6 482.9L134.2 464.4L132.5 456.9L127 450.8L127.8 440.6L131.4 440.3L135.4 444.8L138.9 439.6L142.8 440.1L144.7 438.1L158.1 443.1L160.8 441.5L170.8 443.1L173.4 447.9Z"
+      },
+      {
+        "name": "Belarus",
+        "d": "M366.6 269.2L356.3 269.8L351.5 274.3L348.2 281.7L348.4 289.9L342.6 284.6L330.4 286.9L326.8 280.9L321.3 285.7L319.3 283L313.1 281.4L308.2 281.8L305.8 284.6L305.7 282.2L299.8 281.6L297.5 277.8L277.2 273.5L255.9 274.9L250.2 281.8L246.2 280.5L244.6 283.6L245.3 270.7L238.2 264.6L249.3 252.6L242.8 223.6L255.3 224.8L262 222.8L263.5 218.5L272.4 214.9L273.1 218.2L276.7 218.2L276.7 215.7L273.7 213.9L278.3 199.4L283 197.3L284.8 193.9L289.4 194.1L292 190.6L287.3 188.9L289.3 180.8L296.2 176.8L304 177.6L310.8 169.3L315 171.3L318.7 170.3L322.2 174L325.7 172.1L329.5 173.4L332.5 180.4L339.3 176.4L343.7 176.4L353.8 183.3L352.3 189.8L354.8 196.1L352.2 202.7L357.4 206.6L356.3 210L361.2 217.3L367.5 221.4L366.4 226.8L376.8 229.7L377.1 233.4L380.7 236.5L380.6 238.6L372.2 244.6L361.4 242L359 246.5L363.6 252.9L363.8 263.9Z"
+      },
+      {
+        "name": "Austria",
+        "d": "M34.2 388.8L35.7 383.9L34.2 382.5L37.5 381.2L44.3 386.5L44 388.6L47.9 381.8L54.3 382.6L56.9 385.7L74 380.1L74.3 377.7L81.4 378.9L86.3 383.6L83.4 366.7L91.7 361.8L93.4 356.3L97 357.3L98.3 351.7L101.8 355.8L111.4 355.9L115.9 345.9L131.8 352L139.1 351L145.2 355.9L143.9 361.1L148.1 370.6L146.9 378L139.8 376.9L137.3 378.8L141.1 382.2L137.6 385.6L137.7 395.3L131.5 399.3L130.3 403.5L114.4 405.2L109.3 410.3L78.3 403.6L73.5 397.1L73.7 393.4L59.9 396.1L55.2 401.2L48.1 398.8L46.5 395.8L43.3 399.1L35 394.1Z"
       }
     ],
+    "labels": [
+      {
+        "name": "Uzbekistan",
+        "x": 760.9,
+        "y": 468.3,
+        "r": 31.7,
+        "key": false
+      },
+      {
+        "name": "Ukraine",
+        "x": 376.1,
+        "y": 338.6,
+        "r": 52.5,
+        "key": true
+      },
+      {
+        "name": "Switzerland",
+        "x": 18.9,
+        "y": 395.2,
+        "r": 14.2,
+        "key": false
+      },
+      {
+        "name": "Sweden",
+        "x": 116.9,
+        "y": 74.2,
+        "r": 37.4,
+        "key": false
+      },
+      {
+        "name": "Slovakia",
+        "x": 174.2,
+        "y": 353.6,
+        "r": 16.0,
+        "key": false
+      },
+      {
+        "name": "Slovenia",
+        "x": 113.6,
+        "y": 419.5,
+        "r": 9.9,
+        "key": false
+      },
+      {
+        "name": "Serbia",
+        "x": 204.8,
+        "y": 468.5,
+        "r": 19.6,
+        "key": false
+      },
+      {
+        "name": "Russia",
+        "x": 525.4,
+        "y": 167.8,
+        "r": 160.2,
+        "key": true
+      },
+      {
+        "name": "Romania",
+        "x": 265.1,
+        "y": 423.6,
+        "r": 45.9,
+        "key": false
+      },
+      {
+        "name": "Poland",
+        "x": 185.5,
+        "y": 268.1,
+        "r": 52.9,
+        "key": true
+      },
+      {
+        "name": "Norway",
+        "x": 40.0,
+        "y": 41.4,
+        "r": 34.6,
+        "key": false
+      },
+      {
+        "name": "Moldova",
+        "x": 314.6,
+        "y": 380.3,
+        "r": 11.9,
+        "key": false
+      },
+      {
+        "name": "Lithuania",
+        "x": 255.3,
+        "y": 190.5,
+        "r": 24.5,
+        "key": false
+      },
+      {
+        "name": "Latvia",
+        "x": 282.2,
+        "y": 152.6,
+        "r": 18.7,
+        "key": false
+      },
+      {
+        "name": "Kazakhstan",
+        "x": 890.0,
+        "y": 373.5,
+        "r": 107.1,
+        "key": false
+      },
+      {
+        "name": "Italy",
+        "x": 48.4,
+        "y": 442.9,
+        "r": 26.3,
+        "key": false
+      },
+      {
+        "name": "Hungary",
+        "x": 190.3,
+        "y": 391.5,
+        "r": 24.2,
+        "key": false
+      },
+      {
+        "name": "Germany",
+        "x": 44.9,
+        "y": 277.3,
+        "r": 44.7,
+        "key": false
+      },
+      {
+        "name": "Georgia",
+        "x": 510.2,
+        "y": 494.0,
+        "r": 5.5,
+        "key": false
+      },
+      {
+        "name": "Finland",
+        "x": 251.6,
+        "y": 36.2,
+        "r": 35.6,
+        "key": false
+      },
+      {
+        "name": "Estonia",
+        "x": 281.1,
+        "y": 104.9,
+        "r": 20.2,
+        "key": false
+      },
+      {
+        "name": "Denmark",
+        "x": 27.0,
+        "y": 173.4,
+        "r": 13.2,
+        "key": false
+      },
+      {
+        "name": "Czechia",
+        "x": 106.7,
+        "y": 324.2,
+        "r": 23.6,
+        "key": false
+      },
+      {
+        "name": "Croatia",
+        "x": 138.3,
+        "y": 426.0,
+        "r": 12.7,
+        "key": false
+      },
+      {
+        "name": "Bulgaria",
+        "x": 294.2,
+        "y": 482.9,
+        "r": 15.6,
+        "key": false
+      },
+      {
+        "name": "Bosnia and Herz.",
+        "x": 157.7,
+        "y": 462.4,
+        "r": 19.3,
+        "key": false
+      },
+      {
+        "name": "Belarus",
+        "x": 317.1,
+        "y": 234.7,
+        "r": 43.6,
+        "key": false
+      },
+      {
+        "name": "Austria",
+        "x": 111.5,
+        "y": 380.7,
+        "r": 24.7,
+        "key": false
+      }
+    ],
+    "rivers": [
+      {
+        "d": "M299.4 466.3L309.3 457.7L308.5 451.3"
+      },
+      {
+        "d": "M335.8 438.6L331.3 434.6L328.6 435L322 437.3L323.5 440.5"
+      },
+      {
+        "d": "M323.5 440.5L334.3 447.1"
+      },
+      {
+        "d": "M323.5 440.5L335.4 441.2"
+      },
+      {
+        "d": "M149 369.2L157.3 376.4L177.4 376.2L174.1 391.7L174.6 413.5L171.7 419.9L176.8 432.2L175.9 435.1L179.9 438.1L188.7 438.3L194.5 441.3L196 447.2L200.3 449.2L201.7 452.6L211.1 449.3L222 456.3L228.1 452.3L230.2 453.6L231.6 455.6L228 459L236 467.8L233.6 471.1L234.4 473.9L275.7 476.9L287.7 467.7L301.5 466.4L310.7 461.3L311.6 458L307.8 450.1L310.5 436.1L313.5 433.8L321.7 439.2"
+      },
+      {
+        "d": "M396 175.7L398.4 179.7L393.8 185L390.9 199.4"
+      },
+      {
+        "d": "M378.7 405L393.1 399.7M416.5 374.7L416.6 361L387.9 343.6M368.4 332.2L362.1 327.2M361.7 321.2L358.8 321.7L353 318.1L347.9 306.4M390.9 199.4L384.7 197.3L377.7 204.9L370.2 202.9L350.9 206.9L346.4 209.9L344.7 214.1L346.3 224.6L344.1 230.4L345.8 239.6L340.7 248L345.5 261.5L352.1 271.8L348.5 280.1L347.8 291"
+      },
+      {
+        "d": "M14.7 369.6L21.8 372.3L32.6 367.8L51.9 353.9L66.5 351L71.7 345.3L78.8 347.8M149 369.2L146.3 366.6L138.2 365.4L134.1 361.3L124.6 360.2L118.2 365.8L109.8 365.3L78.8 347.6"
+      },
+      {
+        "d": "M1000 207.8L993.8 205M993.7 205L988.1 201.1L985.4 192.6L982.8 190.8L992.8 182.1L1000 179.2M1000 146.9L998.6 143.8L984.6 137.7L954.6 130.3L945 126.9L942.4 123.6L920.4 122.7L911.5 118.9M921 45.7L930.8 51.6L935.5 57.5L936.2 67.2L933.9 70.4L936.4 76.9L922 87.1L920.3 99.9L916.7 104.4L916.4 110.2L911.4 115L911.5 119"
+      },
+      {
+        "d": "M943.3 41.3L952.7 41.4L956.8 44L973.1 41.5L1000 44.3"
+      },
+      {
+        "d": "M921 45.7L929.2 42.1L943.3 41.3"
+      },
+      {
+        "d": "M921 45.7L917 46.4L913.3 44.3L913 37.6L902 31.2L897.6 21.9L878.1 12.1L866.1 0"
+      },
+      {
+        "d": "M155.2 327.6L160.1 330.2L165.5 324L164.6 315.7L159.1 303.3L144 290.8L138.1 290.4L137.1 281.7L128.7 278L126.2 271.4L111.6 268.9L109.4 262.8L110.3 258.6L103 249.9L109.8 235.9L109.8 231.1"
+      },
+      {
+        "d": "M777.9 22.6L770.3 24.1L762.2 22.4L756.1 28.8L743.9 30.8L738.4 21.5L739.4 11.9L732.7 6.3L730.6 0"
+      },
+      {
+        "d": "M22.6 403.5L32.6 399.6M32.5 399.6L34.3 396.4L34.6 382.8"
+      },
+      {
+        "d": "M24.6 379.2L10.3 381.5L4.4 378.8L9 355L14.8 346.8"
+      },
+      {
+        "d": "M14.8 346.8L18.9 336.1L16.7 323.4L15 320.6L8.5 320.1L5.5 312.1L0 306.8"
+      },
+      {
+        "d": "M486.7 85.3L492.9 87.3L494.9 90.8L513 87.7L526.5 81L532.3 74L556.8 61.8L584.4 55M475.5 76.8L469.6 75.3"
+      },
+      {
+        "d": "M584.4 55L587.5 49.2L588.2 41.7L568.8 28L561.8 16.8L548.1 13.1L529 0"
+      },
+      {
+        "d": "M768.1 279.2L769.3 289.3L761.4 294.6L755.7 294L732.1 284.7L724.5 279.2L715.6 277.4L684.5 284.9L679.9 284.1L676.7 286.8L669.2 286.7L660 292.7L656.8 300.7L655.7 313.5L668.2 340.9L662.6 366.6L664.1 381.1L668 390.4L664.9 396.9M780 209.3L775.1 219.8L777.4 231L774 235.4L775.6 241.5L772.2 251.6L774.8 260L771.2 266.8"
+      },
+      {
+        "d": "M606.9 402L612.5 405.2L619.5 418.1M574.3 315.7L570.6 319.8L557.3 355.9L562.4 359.2L572.7 359.5L577.3 362L580.5 365.3L582.2 372.8L606.3 401.1L609.2 411.1L602.7 425.4L604 428.7M637.7 235.6L640.7 236.9L639.9 242.1L630.6 243.1L626 241.2L617.1 244.3L616.8 251.4L607.8 268.6L598.4 272.1L590.9 277.9M541 155.9L557.9 170.5L579.7 168.4L586.7 164.3L596.8 168.9L606.7 169L610.2 174.5L624.2 180.2L625.1 185.4M447 154L452 149.5L456.2 140.6M379 141.6L381 149.2L392.9 152.1L399.3 158.6L397.9 162.1L410 167.4L413.5 164.3L414 159.1L425 151.9L430.9 151.7L435.5 155.1M509.8 135.6L528.2 137.6M489.8 133.8L482.5 125.3L470.3 120.3M464.3 133.7L466.3 122.6"
+      }
+    ],
+    "lakes": [
+      {
+        "d": "M160.6 90.2L150.5 91.6L144.6 87.3L131.6 86.5L138 85.5L139.5 83.2L151.5 86L151.8 83.8L156.2 84.9L157.3 83L157.5 88.1Z"
+      },
+      {
+        "d": "M337.8 43.2L338.6 41.5L341.4 42.8L343.8 36L349.3 35.4L352.9 29.6L378 45.9L384.2 57.6L382.3 61.6L379.1 60.3L378.8 68.4L375.5 69.9L365.6 67.7L362.8 75.5L356.7 75.3L356.8 69.9L348.2 58L347.7 52.7Z"
+      },
+      {
+        "d": "M101.7 96.3L98.1 105.2L89.7 110.3L86.7 108.1L80.5 113.6L76.2 113.8L80.3 107.8L77.5 103.2L78.2 99.9L79.8 102.6L83.4 96.3L89.7 100.7L88.4 89.6L101.5 90.4L100 96.1Z"
+      },
+      {
+        "d": "M436.1 39.1L435.3 44.8L427.7 52L420.9 47.8L412.4 47.8L412.2 44.5L414.6 43.5L418.4 44.7L415.7 45.3L417.1 46.9L422.8 48.2L424.1 43.9L420.9 39.2L405.8 29.1L404.7 27.3L407.9 28.7L408.8 25.6L399.2 11.6L408.8 21.6L410.4 15L407.9 10.5L416.1 22.7L417.4 21.6L415.6 18.4L420 20.3L423.4 16.9L420.2 11.1L411 8.6L407.3 1.7L426.5 11.8L425.2 23ZM419.8 25.6L418.7 22.1L417.3 27.5Z"
+      },
+      {
+        "d": "M470 120.4L465.5 120.1L466.3 122.6L464.4 122.1L463.1 117.2L458.2 115.9L447.2 105.9L447.1 102.1L453.3 109.4L454.3 107.3L460.9 109.7L459.7 101.7L455.5 100.1L451.9 101.9L454.9 97.7L454.5 94.4L462.2 95.8L461.9 93.1L466 94L463.4 96.8L457.7 96.5L474.6 110.8L471.8 120.1L469 118.1Z"
+      },
+      {
+        "d": "M187.2 211.4L190.6 204.6L196.8 205.3Z"
+      },
+      {
+        "d": "M186.5 210.2L183 214.7L179.6 214.4Z"
+      },
+      {
+        "d": "M302.8 118.5L309.9 119.8L312.6 123.7L311.8 126.5L304.7 122.7Z"
+      },
+      {
+        "d": "M303.9 117.8L294.9 103.1L299.8 98.4L306.6 100.5L307.6 111.1Z"
+      },
+      {
+        "d": "M387.5 345.5L381.6 343.1L368.4 332.2L379.5 336.5L380.7 332.1L388 343Z"
+      },
+      {
+        "d": "M303.4 50.3L300.9 48L307.5 47.7L308.1 49.2Z"
+      },
+      {
+        "d": "M332.3 2.5L333.7 3.4L334.4 0L337.4 5.9L335.2 7.1Z"
+      },
+      {
+        "d": "M328.7 6.6L329.6 4.1L333.1 6.6L332.1 8.2Z"
+      },
+      {
+        "d": "M349.2 2.3L349.4 0.1L352.8 0L350.1 5L347.4 4.5Z"
+      },
+      {
+        "d": "M342.3 0L345.1 3.5L342.3 6.2L343.4 2.5L340.5 0Z"
+      },
+      {
+        "d": "M363.1 117.4L361 119.6L353 117.2L359.6 111.3L364.7 113.5L365.4 118.1Z"
+      },
+      {
+        "d": "M115 103.7L115.2 110.4L111.3 113.3L103.5 128.1L104.3 119.4L108.7 109.2Z"
+      },
+      {
+        "d": "M295.9 32.4L291.5 31.6L293.6 33.3L292.3 35L284.6 27.3L286.6 24.6L286 27.2L288.4 25.5L292.3 27.2L289.2 23.1L292.7 25.3Z"
+      },
+      {
+        "d": "M137 90.7L128.2 94.6L121.2 91.6Z"
+      },
+      {
+        "d": "M448.3 69.5L450.8 66.4L455.8 65.4L459.5 67.6L459.8 71L451.8 71.4Z"
+      },
+      {
+        "d": "M154.7 401.3L150 401.4L162.8 394.5L163 396.4Z"
+      },
+      {
+        "d": "M988.7 245.2L984.2 240.2L981.9 240.5L982.7 237.8L988.9 238Z"
+      },
+      {
+        "d": "M469.5 40.3L473.1 37.2L473 43.1L470.2 43.9Z"
+      },
+      {
+        "d": "M968 167.6L967.2 169.9L963.1 171L962.6 167.9Z"
+      },
+      {
+        "d": "M903.3 177.5L900.7 179.7L897.7 178.9L898.4 175.9Z"
+      },
+      {
+        "d": "M282.6 115L281.2 119.5L279.5 114.5L281.6 113.4Z"
+      },
+      {
+        "d": "M478.7 78.9L486.4 82.5L485.7 86.4Z"
+      },
+      {
+        "d": "M37.3 382.4L33.1 382.7L28 376.4Z"
+      },
+      {
+        "d": "M239.2 38.5L229.3 43.6L236.4 38.2Z"
+      },
+      {
+        "d": "M763.4 443.5L769.3 424.3L778.2 420.2L777.3 422.9L772.4 425.3L768.7 433.6L765.9 457.3L762.2 458.3Z"
+      },
+      {
+        "d": "M800.3 418.1L799.4 411L797.3 413L793.8 410.3L790.6 411.4L788.6 406.1L792.9 402.9L794.7 407.8L795.5 404.8L797.3 406.3L799.7 404.4L797.3 400.8L800.7 401.7L801.9 408.5L805.5 409.1L808.2 404.2L811.4 403.5L806.8 414.4Z"
+      },
+      {
+        "d": "M784.5 418.2L781.2 412.3L785.4 413.2Z"
+      },
+      {
+        "d": "M1000 431L999.3 445.3L997.8 440.3L989.4 429.9L989.5 425L993.9 419.9L992.5 416.5L998.1 415.2L997.1 413.1L1000 409.4Z"
+      },
+      {
+        "d": "M420.9 438.7L415.9 435.6L415.3 430L411.1 425.5L407.4 425.6L409.1 421.6L405.8 423L405.4 420.2L402.8 419.5L402.5 421.6L395.6 414.9L401.6 416.7L402.6 413.6L408.1 416.2L407.2 420.7L410.7 416.2L412.6 424.1Z"
+      },
+      {
+        "d": "M333 21L332.6 22.9L336.6 25.3L336.1 27.8L326.7 34.5L319.7 32.9L322.1 34.2L320.7 36.8L315.5 40.1L321 40.1L323.3 42.7L322.1 43.7L309.5 47.1L308.6 44.9L313.3 44.7L311.4 43L304.7 43.5L299.4 40.8L299.5 32.6L300.7 35.7L305.3 33.8L306.9 31.8L304.7 29L311.1 36.2L314.2 30.4L322.9 27.8L316.3 22.3L309.2 20.7L307.3 13.4L298.9 11.5L297.7 9.7L305.4 11.3L305.6 1.5L303.7 3L300.8 0L313.6 0L314.3 7.6L323.7 14.4L315.8 9.5L311.9 13.1L311.2 6.9L308.1 6.2L306.7 9.6L310.9 13.9L309.8 16.7L311.3 18L318.8 18.5L320.3 14.4L323.3 18.2L322.7 20.7L330.2 19.9L329.4 9.2L334.6 13.7L335.7 8.9L339.1 13.3L334.2 17.4L339.9 20.7ZM308.1 0.5L311.9 5.3L311.3 0ZM304.9 42L304.8 39.3L300.3 38.9ZM309.7 36.9L306.3 35.2L303.1 36.8L306.6 38.9ZM317.7 37L318 31.5L315.2 30.7L313.9 39ZM332.4 24.9L330.1 20.8L320.8 22L327.3 29.6L330.4 24.8Z"
+      },
+      {
+        "d": "M294.6 2.9L296.8 3.2L293.6 4.3L295.4 8.8L292.7 10.1L294 12.7L290.7 9.3L286.7 16.2L288.8 11.9L284.5 10.4L285.1 14.9L282.3 17.1L279.8 15.2L278.6 23.5L275.1 25.3L276 33.9L274.2 34.2L273.7 40.5L281.6 44L284.5 39.5L284.3 42.7L282.6 42.5L284 46.3L280.8 49.7L280.8 44.6L275.5 42L274.3 48.2L271.5 47.3L272.9 43.1L268.3 35.6L271.7 33.3L268.6 29.1L271.3 29.1L270.2 26.5L275.5 22.6L272.5 20.5L275.5 20.7L279.3 14.5L274.9 8.5L278.8 6.2L279.4 1.4L272.2 0L280.7 0L285.9 5L281.4 3.7L280.9 8.4L277.7 8.8L279.5 12.6L281.9 11.2L282.8 14.4L283.1 10.4L287.2 8.4L285.8 2.9L292.2 9L288.9 1.7L291.3 3.3L291.3 0.3L294.7 0Z"
+      },
+      {
+        "d": "M419.5 383.3L414.4 385.4L408.8 382.6L402.8 385.1L395.3 398.9L393.1 399.7L399.4 387.3L399 382.1L414.9 380.9L416.5 374.6Z"
+      },
+      {
+        "d": "M615 218L615.5 207.3L620.4 205.4L622.1 197.1L626.6 193.3L625.1 185.4L628.7 189.4L629.7 183.9L631 187.4L636 187.9L640.5 185.9L660.3 185.1L661.3 176.8L661.9 181.7L668.1 180.1L660.2 186.4L657.2 185.3L656.8 188.5L652.2 186.2L637.5 190.1L630.1 197L623.3 199.8L625.6 202.3L622.2 210.7L617.2 212.4L617.4 216.2L624.5 221.8L635.1 216.6L627.4 223.8L629.7 229.7L626.1 226.5L625.1 231.9L625.5 233.7L637.4 234.9L636.9 236.3L631.6 236.1L627.6 239.9L621.2 239.9L627.2 237.8L624.1 236L621.4 223.7Z"
+      },
+      {
+        "d": "M289 33.4L283.2 30.7L281.3 35.1L278.9 32.8L279.5 29.3L284 28L284.8 31.1L287.4 30.6Z"
+      },
+      {
+        "d": "M259.6 32.6L253.4 37.5L252.5 40.3L254.7 41.5L250.7 43.1L255.8 44.8L257.1 48L247.3 43.5L247.1 41.8L249.8 43.2L255.3 33.1L260.9 30.9Z"
+      },
+      {
+        "d": "M243.2 38.4L246.3 42.3L240.8 39.1L246.2 36.1L244.1 32.9L246.2 27.4L251 24.7L250.6 22.1L245.8 21.2L245.2 18.7L248.4 20.6L250.5 18.3L249.9 20.1L253.2 20.1L252.4 22.6L255 21.1L255.4 23.3L258 23.4L255.7 20.4L259.4 21.8L260.4 17.5L261.1 26L251.9 23.5L246.9 29.3L247.2 35.9Z"
+      },
+      {
+        "d": "M442.9 19.1L441.4 17.6L443.5 12.5L445.2 17.6Z"
+      },
+      {
+        "d": "M473.4 59L472.7 54.3L477.3 56.7L476.2 63.8Z"
+      },
+      {
+        "d": "M927.4 304.1L932.3 304.4L932.3 306L927.2 306.6L923.8 310.6L926.9 314.9L922.2 316.8L918.5 314.6L919.8 308.5Z"
+      },
+      {
+        "d": "M856.9 256.7L862.6 249.2L862.8 253.6L858.1 258L856.1 258.9Z"
+      },
+      {
+        "d": "M68.9 18.8L70.7 14L70.1 25.7L67 21.5Z"
+      }
+    ],
+    "cities": [
+      {
+        "name": "Moscow",
+        "x": 454.0,
+        "y": 178.7,
+        "capital": true
+      },
+      {
+        "name": "Kyiv",
+        "x": 347.9,
+        "y": 310.4,
+        "capital": true
+      },
+      {
+        "name": "Warsaw",
+        "x": 205.8,
+        "y": 265.9,
+        "capital": true
+      },
+      {
+        "name": "Berlin",
+        "x": 92.1,
+        "y": 258.7,
+        "capital": true
+      },
+      {
+        "name": "Vienna",
+        "x": 136.4,
+        "y": 365.7,
+        "capital": true
+      },
+      {
+        "name": "Bucharest",
+        "x": 281.9,
+        "y": 459.0,
+        "capital": true
+      },
+      {
+        "name": "Minsk",
+        "x": 303.8,
+        "y": 224.6,
+        "capital": true
+      },
+      {
+        "name": "Budapest",
+        "x": 177.0,
+        "y": 383.0,
+        "capital": true
+      },
+      {
+        "name": "Stockholm",
+        "x": 161.9,
+        "y": 90.3,
+        "capital": true
+      },
+      {
+        "name": "Prague",
+        "x": 107.4,
+        "y": 319.0,
+        "capital": true
+      },
+      {
+        "name": "Helsinki",
+        "x": 264.5,
+        "y": 69.5,
+        "capital": true
+      },
+      {
+        "name": "Belgrade",
+        "x": 197.7,
+        "y": 449.4,
+        "capital": true
+      },
+      {
+        "name": "København",
+        "x": 79.6,
+        "y": 180.5,
+        "capital": true
+      },
+      {
+        "name": "Oslo",
+        "x": 52.5,
+        "y": 75.6,
+        "capital": true
+      },
+      {
+        "name": "Riga",
+        "x": 252.0,
+        "y": 149.1,
+        "capital": true
+      },
+      {
+        "name": "Zagreb",
+        "x": 131.0,
+        "y": 425.2,
+        "capital": true
+      },
+      {
+        "name": "Sarajevo",
+        "x": 166.6,
+        "y": 473.5,
+        "capital": true
+      },
+      {
+        "name": "Chișinău",
+        "x": 323.1,
+        "y": 395.3,
+        "capital": true
+      },
+      {
+        "name": "Vilnius",
+        "x": 270.2,
+        "y": 205.2,
+        "capital": true
+      },
+      {
+        "name": "Bratislava",
+        "x": 147.7,
+        "y": 367.0,
+        "capital": true
+      },
+      {
+        "name": "Tallinn",
+        "x": 261.4,
+        "y": 87.6,
+        "capital": true
+      },
+      {
+        "name": "Nur-Sultan",
+        "x": 959.4,
+        "y": 291.9,
+        "capital": true
+      },
+      {
+        "name": "Ljubljana",
+        "x": 108.8,
+        "y": 418.9,
+        "capital": true
+      },
+      {
+        "name": "Vaduz",
+        "x": 34.1,
+        "y": 392.2,
+        "capital": true
+      },
+      {
+        "name": "San Marino",
+        "x": 77.8,
+        "y": 471.3,
+        "capital": true
+      },
+      {
+        "name": "St.  Petersburg",
+        "x": 344.9,
+        "y": 75.0,
+        "capital": false
+      },
+      {
+        "name": "Frankfurt",
+        "x": 21.5,
+        "y": 318.7,
+        "capital": false
+      },
+      {
+        "name": "Katowice",
+        "x": 176.1,
+        "y": 314.7,
+        "capital": false
+      },
+      {
+        "name": "Hamburg",
+        "x": 41.3,
+        "y": 233.2,
+        "capital": false
+      },
+      {
+        "name": "Kharkiv",
+        "x": 433.6,
+        "y": 321.1,
+        "capital": false
+      },
+      {
+        "name": "Yekaterinburg",
+        "x": 797.5,
+        "y": 151.5,
+        "capital": false
+      },
+      {
+        "name": "Nizhny Novgorod",
+        "x": 549.4,
+        "y": 164.3,
+        "capital": false
+      },
+      {
+        "name": "Samara",
+        "x": 641.4,
+        "y": 242.0,
+        "capital": false
+      },
+      {
+        "name": "Omsk",
+        "x": 988.8,
+        "y": 197.6,
+        "capital": false
+      },
+      {
+        "name": "Kazan",
+        "x": 626.0,
+        "y": 178.8,
+        "capital": false
+      },
+      {
+        "name": "Rostov",
+        "x": 485.3,
+        "y": 389.6,
+        "capital": false
+      },
+      {
+        "name": "Ufa",
+        "x": 729.4,
+        "y": 202.5,
+        "capital": false
+      },
+      {
+        "name": "Perm",
+        "x": 732.5,
+        "y": 123.0,
+        "capital": false
+      },
+      {
+        "name": "Volgograd",
+        "x": 556.9,
+        "y": 353.1,
+        "capital": false
+      },
+      {
+        "name": "Voronezh",
+        "x": 477.5,
+        "y": 279.9,
+        "capital": false
+      },
+      {
+        "name": "Saratov",
+        "x": 579.8,
+        "y": 282.0,
+        "capital": false
+      },
+      {
+        "name": "Lviv",
+        "x": 251.0,
+        "y": 325.3,
+        "capital": false
+      },
+      {
+        "name": "Zaporizhzhya",
+        "x": 417.6,
+        "y": 374.2,
+        "capital": false
+      },
+      {
+        "name": "Gdańsk",
+        "x": 170.4,
+        "y": 213.2,
+        "capital": false
+      },
+      {
+        "name": "Krasnodar",
+        "x": 474.7,
+        "y": 444.5,
+        "capital": false
+      },
+      {
+        "name": "Yaroslavl",
+        "x": 487.7,
+        "y": 132.5,
+        "capital": false
+      },
+      {
+        "name": "Orenburg",
+        "x": 715.5,
+        "y": 277.1,
+        "capital": false
+      }
+    ],
+    "annotations": [],
+    "scale": {
+      "km": 500,
+      "px": 111.2,
+      "label": "500 km"
+    },
+    "locator": {
+      "width": 200,
+      "height": 100,
+      "d": "M117 62L114 60L118 59ZM117 59L113 60L112 57L113 56L117 57L116 55L117 55L119 56ZM129 41L124 43L124 42L124 40L127 40ZM160 38L159 39L161 43L158 45L160 42L157 38ZM67 45L64 50L63 47L59 45L61 43ZM139 27L141 27L139 27L137 29L133 26L131 27L131 25L136 26L138 27ZM70 69L68 69L68 67ZM28 19L25 17L19 16L16 17L17 16L9 20L13 17L10 17L10 16L8 16L11 14L7 14L11 13L7 12L13 10L22 11L22 16ZM58 25L62 24L63 25L59 27L58 29L58 28L57 29L58 30L55 33L55 36L54 33L51 33L47 33L46 36L41 32L33 31L31 28L31 23L51 23L54 25L54 27ZM99 21L97 21L98 20L97 19L97 17L101 21ZM131 36L131 37L129 37ZM121 24L116 25L116 23L112 23L114 21L119 21L122 22ZM119 51L116 51L117 48L119 48ZM131 27L133 26L137 29L135 30L132 29L130 29L129 28L130 27L129 27ZM123 27L125 28L125 29L116 30L115 29L116 27ZM106 32L105 33L105 29L106 29ZM156 39L159 41L157 43L156 43L156 47L155 45L155 43L154 40ZM118 55L116 54L117 51L122 53L122 56L119 56ZM138 29L139 27L138 28L142 29ZM120 30L124 29L120 32ZM106 17L109 12L113 12L113 13L110 15L111 17L109 19L107 19ZM119 48L116 48L113 45L118 43ZM119 45L118 43L117 45L113 45L112 43L114 38L120 38L121 40ZM99 26L102 27L99 30L96 29L97 27L95 26ZM116 62L118 65L117 67L114 69L110 69L109 66L111 66L111 64L112 65ZM123 51L123 48L128 43ZM127 44L127 46L124 44ZM93 42L93 43L91 43L92 43L90 42L92 41ZM129 39L124 41L119 34L122 32L127 34L131 38ZM0 12L6 13L0 14ZM173 26L175 23L173 23L169 20L165 22L155 21L154 22L149 23L144 22L143 20L138 19L134 20L134 22L126 22L127 24L126 25L126 27L120 25L122 22L118 21L117 19L115 18L117 17L115 16L118 15L116 12L123 12L118 13L121 15L125 13L124 12L126 13L134 11L138 12L137 11L140 9L141 12L138 13L140 13L142 12L144 12L141 12L142 10L146 11L145 9L158 7L163 8L158 10L169 9L173 11L178 10L188 11L189 12L199 11L200 14L197 14L200 15L191 17L191 19L187 22L187 19L192 15L178 18L175 20L179 20L178 23ZM131 9L132 11L129 10ZM179 20L180 23L179 24ZM116 25L116 26L113 26L111 24L115 23ZM95 27L97 27L96 29ZM113 21L113 23L111 23L108 22L108 20L113 20ZM167 40L169 43L167 42ZM170 45L170 47L168 46ZM61 52L59 54L62 57L61 60L58 58L55 53L56 53L58 50ZM68 61L70 63L69 65L67 65L68 64L65 62L66 61ZM178 55L178 51L184 56L180 54ZM143 30L139 35L139 36L134 36L135 35L134 33L137 33L140 30ZM129 41L129 39L131 39L131 36L133 38ZM111 12L107 15L106 17L103 17L104 16L103 15L110 11L117 11ZM109 6L112 6L109 7L108 7L109 6L106 6ZM171 29L170 29L169 28L172 26ZM108 42L106 46L103 48L102 46L102 42ZM108 42L103 42L102 44L100 42L107 37L109 39ZM54 42L53 44L51 43ZM196 73L195 75L192 76ZM196 69L199 71L197 73ZM149 35L144 34L145 33ZM113 60L112 60L111 66L109 66L107 60ZM117 62L118 59L117 58L119 58L120 60L119 56L122 56L123 59L119 61L120 64L118 65ZM99 30L99 32L91 38L97 30ZM95 35L93 36L93 38L91 38ZM149 23L154 22L155 21L165 22L164 23L167 24L158 27L154 26ZM35 32L44 33L46 36L47 40L49 40L52 38L51 40L49 40L49 42L43 40L37 33L36 32L36 33L39 37ZM93 42L91 41L91 38L93 38L93 36L95 35L97 36L96 36L97 41ZM94 43L94 41L97 41L96 36L102 39L102 41L99 42L97 44ZM156 46L157 47L158 49ZM165 48L164 49L161 49L165 46L166 47ZM118 58L118 55L120 58L120 60ZM128 57L128 59L125 64L124 60ZM113 20L112 19L115 19ZM105 33L106 32L111 33L112 32L114 32L114 39L106 36ZM115 19L112 19L114 18L115 18ZM157 38L160 42L158 42L158 40L156 40ZM139 28L141 27L139 27L140 26L145 27ZM119 51L120 47L123 48L122 53ZM139 27L138 27L133 25L131 25L131 27L129 27L128 25L129 24L127 24L126 22L128 21L134 22L134 20L138 19L143 20L144 22L149 23L144 25L145 27ZM180 25L181 26L178 27L179 25ZM178 27L178 30L173 31L177 29ZM104 24L108 24L107 25L110 28L109 29ZM124 29L126 30L127 33L122 32ZM130 29L134 30L134 33L135 35L134 36L129 35L125 31L125 28ZM154 47L158 50L159 53ZM169 49L167 50L169 50L167 51L168 52L167 51L166 53L167 49ZM161 49L164 49L165 48L166 49L164 52L161 52ZM178 51L178 55L173 51ZM138 37L139 36L139 35L142 32L141 31L143 30L146 35L154 34L152 38L151 36L149 35L149 38L145 41L143 46L141 38L139 38ZM91 13L92 14L90 15L86 14ZM112 23L112 24L109 24ZM54 42L52 43L50 42ZM66 47L67 46L69 49L67 49ZM94 45L92 44L92 43L95 43L96 45ZM115 27L113 28L113 29L112 30L113 29L112 27ZM100 44L101 47L98 47L98 44ZM105 24L103 21L105 20L105 19L108 20L108 22L107 22L108 23ZM124 27L122 26L125 26L126 27ZM107 49L108 51L106 52L105 50ZM104 24L104 26L101 26L99 26L99 24L97 23L101 22ZM113 13L111 12L116 11L118 15L113 17L112 15ZM120 47L118 46L121 42L127 46L122 48ZM115 18L113 17L116 17ZM120 42L121 40L124 43ZM120 38L114 38L114 33L119 33L119 35L118 34ZM58 50L55 52L56 50ZM83 4L88 4L83 4L87 5L94 5L89 6L88 7L90 7L87 7L89 9L85 9L88 9L85 10L88 11L85 10L84 11L88 11L78 14L76 17L72 15L70 13L72 13L70 13L72 12L70 12L72 12L70 11L71 10L69 10L67 8L60 7L66 4ZM55 37L59 39L53 38ZM108 25L111 25L109 25L110 26ZM96 44L99 45L98 47L96 48ZM117 55L116 55L116 57L112 56L112 54L107 53L109 52L111 47L115 47L117 49L116 51ZM106 52L108 51L107 49L110 48L109 52ZM60 43L59 45L63 47L63 49L61 49L61 52L56 49L57 45ZM160 38L158 37L156 38L153 34L149 35L145 33L141 28L145 27L144 25L148 23L154 26L161 26L167 24L164 23L167 21L170 21L173 23L175 23L173 26L165 28L168 29L166 31L168 34L165 37ZM61 60L63 63L59 78L62 79L60 80L59 79L59 77L58 76L60 75ZM113 39L113 44L109 46L107 42L108 37ZM113 45L115 47L111 47L109 49L108 47L109 46L112 44ZM28 19L22 16L22 11L29 11L40 13L41 12L40 12L46 12L47 13L48 12L46 11L47 10L51 13L52 11L55 12L53 13L49 13L51 14L48 14L50 15L47 16L48 18L54 19L56 22L56 20L57 19L57 15L59 15L61 16L62 18L64 17L66 19L68 20L66 20L69 21L61 23L54 27L54 25L51 23L32 23L28 20ZM36 10L41 9L44 11L37 12L35 11L38 11L34 10ZM33 9L36 9L33 10L30 10L31 9ZM61 4L66 4L56 6L59 6L55 8L50 7L54 7L51 7L55 6L52 5L57 5L49 5ZM44 9L46 10L43 10ZM53 14L55 15L52 15ZM49 5L53 6L49 6L46 5ZM48 7L56 8L49 9L46 7ZM48 9L50 9L47 10ZM63 25L62 24L58 25L64 23L63 23L66 25L64 26L65 25ZM69 21L68 22L70 23L71 24L67 24ZM52 11L55 9L66 13L62 13L64 15L62 15L63 16L57 14L60 13L58 11L51 11L52 11L50 9L53 9ZM105 47L108 43L109 49L106 49ZM160 42L159 44L157 44L157 42ZM156 39L154 40L155 44L154 41L152 41L151 38L154 34ZM101 44L97 44L100 42L101 43ZM116 27L113 27L112 26L116 26ZM63 49L66 47L67 49L71 48L72 49L71 51L74 50L80 53L77 62L73 64L70 69L68 67L70 65L68 62L68 59L64 55L61 56L59 54L61 52L61 49ZM114 60L116 62L111 65L112 60ZM61 60L61 56L64 55L68 60L62 63ZM101 47L100 44L102 43ZM118 21L113 21L116 19L117 19ZM149 38L149 35L151 36L151 38L150 37ZM127 29L125 27L127 27ZM180 57L185 64L183 71L179 71L176 70L177 68L175 69L173 67L164 69L163 62L167 61L170 58L172 58L173 56L176 57L175 58L178 60ZM68 67L68 71L64 73L65 74L62 76L63 77L62 78L62 79L60 79L59 78L62 64L65 62L68 64L67 65L70 64ZM113 56L112 57L113 60L107 60L108 56L107 53L112 54ZM105 29L105 35L107 37L103 39L102 39L95 35L99 32L99 30ZM137 29L142 29L137 33L134 33L134 30ZM68 85L64 87L66 90L66 91L57 93L60 93L55 93L57 94L53 93L66 96L87 94L80 94L90 92L94 89L122 89L130 87L139 88L137 91L147 87L175 87L195 90L189 92L193 94L188 95L200 97L200 100L0 100L0 97L13 97L3 96L11 96L15 96L13 95L18 95L12 93L36 91L45 92L43 90L62 91L63 90L63 87ZM75 94L76 95L70 95ZM61 88L62 90L58 90L61 90L60 88Z",
+      "rect": {
+        "x": 104.0,
+        "y": 15.0,
+        "w": 37.2,
+        "h": 11.2
+      }
+    },
     "points": [
       {
-        "x": 685.3,
-        "y": 183.5,
+        "x": 348.0,
+        "y": 310.0,
         "label": "Kyiv",
-        "date": "2026-10-03",
+        "date": "2026-10-01",
         "verification": "researched",
         "n": 1,
         "weight": 1.0
       },
       {
-        "x": 720.5,
-        "y": 144.0,
+        "x": 454.1,
+        "y": 178.7,
         "label": "Moscow",
         "date": "2026-10-01",
         "verification": "researched",
         "n": 2,
-        "weight": 0.951
+        "weight": 1.0
       },
       {
-        "x": 638.1,
-        "y": 170.2,
+        "x": 205.9,
+        "y": 266.0,
         "label": "Warsaw",
         "date": "2026-10-01",
         "verification": "researched",
         "n": 3,
-        "weight": 0.928
+        "weight": 0.976
       },
       {
-        "x": 833.3,
-        "y": 149.8,
-        "label": "Chebarkul",
-        "date": "2026-10-02",
-        "verification": "researched",
-        "n": 4,
-        "weight": 0.499
-      },
-      {
-        "x": 713.6,
-        "y": 186.9,
+        "x": 433.3,
+        "y": 321.3,
         "label": "Kharkiv",
         "date": "2026-10-02",
         "verification": "researched",
-        "n": 5,
-        "weight": 0.499
+        "n": 4,
+        "weight": 0.525
       },
       {
-        "x": 166.7,
-        "y": 256.0,
-        "label": "New York",
-        "date": "2026-10-02",
-        "verification": "researched",
-        "n": 6,
-        "weight": 0.499
-      },
-      {
-        "x": 686.4,
-        "y": 185.9,
+        "x": 351.5,
+        "y": 317.9,
         "label": "Trypillya Thermal Power Plant, Kyiv Oblast",
         "date": "2026-09-29",
         "verification": "researched",
+        "n": 6,
+        "weight": 0.453
+      },
+      {
+        "x": 794.1,
+        "y": 198.1,
+        "label": "Chebarkul",
+        "date": "2026-09-28",
+        "verification": "researched",
         "n": 7,
-        "weight": 0.43
+        "weight": 0.431
       }
     ],
-    "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate."
+    "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate. Not on this map (too far away): 5 Seoul."
   },
   "actors": [
     {
@@ -1275,31 +1732,25 @@
       "name": "Russian forces",
       "mentions": 5,
       "first": "2026-09-27",
-      "last": "2026-10-03"
+      "last": "2026-10-02"
+    },
+    {
+      "name": "President Vladimir Putin",
+      "mentions": 3,
+      "first": "2026-09-28",
+      "last": "2026-10-01"
     },
     {
       "name": "Russian Armed Forces",
       "mentions": 3,
       "first": "2026-09-28",
-      "last": "2026-10-02"
+      "last": "2026-09-29"
     },
     {
-      "name": "Vladimir Putin",
-      "mentions": 3,
-      "first": "2026-09-28",
-      "last": "2026-10-02"
-    },
-    {
-      "name": "Volodymyr Zelensky",
+      "name": "President Volodymyr Zelensky",
       "mentions": 2,
-      "first": "2026-09-22",
+      "first": "2026-10-02",
       "last": "2026-10-02"
-    },
-    {
-      "name": "Andrius Kubilius",
-      "mentions": 1,
-      "first": "2026-10-01",
-      "last": "2026-10-01"
     },
     {
       "name": "Baltic states/Poland",
@@ -1314,10 +1765,10 @@
       "last": "2026-09-29"
     },
     {
-      "name": "Chinese People's Liberation Army",
+      "name": "Chinese military contingent",
       "mentions": 1,
-      "first": "2026-10-02",
-      "last": "2026-10-02"
+      "first": "2026-09-28",
+      "last": "2026-09-28"
     },
     {
       "name": "Danish Defence Intelligence Service (DDIS) Chief Thomas Ahrenkiel",
@@ -1327,6 +1778,12 @@
     },
     {
       "name": "Danish Defence Minister Jeppe Bruus",
+      "mentions": 1,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    },
+    {
+      "name": "Defence Minister Władysław Kosiniak-Kamysz",
       "mentions": 1,
       "first": "2026-10-01",
       "last": "2026-10-01"
@@ -1344,16 +1801,16 @@
       "last": "2025-09-01"
     },
     {
+      "name": "EU Defence Commissioner Andrius Kubilius",
+      "mentions": 1,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    },
+    {
       "name": "EU logistics hubs",
       "mentions": 1,
       "first": "2024-07-01",
       "last": "2024-07-01"
-    },
-    {
-      "name": "Institute for Nuclear Research of National Academy of Sciences",
-      "mentions": 1,
-      "first": "2026-10-01",
-      "last": "2026-10-01"
     }
   ],
   "relations": [
@@ -1416,18 +1873,7 @@
   ],
   "figures": [
     {
-      "label": "Russian drones launched",
-      "unit": "drones",
-      "series": [
-        {
-          "as_of": "2026-10-03",
-          "value": 157.0,
-          "source": "https://kyivindependent.com/russian-strikes-kill-8-injure-81-across-ukraine-hit-kyiv-bridge-2"
-        }
-      ]
-    },
-    {
-      "label": "drones intercepted",
+      "label": "Drones intercepted",
       "unit": "drones",
       "series": [
         {
@@ -1438,13 +1884,24 @@
       ]
     },
     {
-      "label": "personnel in Center-2026 exercise",
+      "label": "Personnel in Tsentr-2026 exercise",
       "unit": "personnel",
       "series": [
         {
           "as_of": "2026-10-03",
           "value": 47000.0,
           "source": "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-2-2026"
+        }
+      ]
+    },
+    {
+      "label": "Russian drones launched",
+      "unit": "drones",
+      "series": [
+        {
+          "as_of": "2026-10-03",
+          "value": 157.0,
+          "source": "https://kyivindependent.com/russian-strikes-kill-8-injure-81-across-ukraine-hit-kyiv-bridge-2"
         }
       ]
     },
@@ -1477,6 +1934,17 @@
         {
           "as_of": "2026-09-28",
           "value": 1550500.0,
+          "source": "https://www.kyivpost.com/post/85603"
+        }
+      ]
+    },
+    {
+      "label": "Authorized strength of Russian Armed Forces after decree No.700",
+      "unit": "personnel",
+      "series": [
+        {
+          "as_of": "2026-09-28",
+          "value": 2441630.0,
           "source": "https://www.kyivpost.com/post/85603"
         }
       ]

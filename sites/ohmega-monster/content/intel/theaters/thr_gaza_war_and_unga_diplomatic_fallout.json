@@ -3,7 +3,7 @@
   "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout",
   "name": "Gaza war and UNGA diplomatic fallout",
   "domain": "geopolitics",
-  "built_at": "2026-10-04T07:26:06.472952+00:00",
+  "built_at": "2026-10-04T21:38:55.474453+00:00",
   "first_seen": "2026-09-27",
   "last_seen": "2026-10-03",
   "days_covered": 3,
@@ -13,7 +13,7 @@
   },
   "current": {
     "date": "2026-10-03",
-    "bottom_line": "Lethal strikes continued in Gaza on 2026-10-03 with an unwarned airstrike on a Gaza City apartment killing at least five, and coordinated settler attacks on olive pickers across the Nablus governorate injured 16 on the same day, extending the West Bank escalation beyond the 2026-10-01 Yasuf killing. A 2026-10-01 Danish Refugee Council survey quantifies protracted displacement at ~1.8 million people (86% of Gaza) and alleges the Israeli-controlled Yellow Line is expanding westward. All items are now confirmed by researched evidence, raising confidence from yesterday's single-source headlines, but diplomatic spillover is unchanged with no new EU bans or accreditation revocations.",
+    "bottom_line": "Lethal strikes in Gaza and coordinated settler attacks in the West Bank continued on 2026-10-03 despite the year-old ceasefire, with an airstrike on a Gaza City apartment killing at least five and multi-village olive-harvest attacks injuring 16. A systematic DRC survey published 2026-10-01 quantifies the humanitarian squeeze: 1.8 million people (86%) remain in protracted displacement as the Israeli-controlled Yellow Line creeps west. Diplomatic spillover is unchanged — no new EU settlement-goods bans or accreditation revocations beyond the Netherlands/UK actions of late September — with confidence high on the new violence and displacement findings (researched) and low on any de-escalation.",
     "escalation": {
       "direction": "rising",
       "pace": "gradual"
@@ -145,9 +145,9 @@
   "timeline": [
     {
       "date": "2026-10-03",
-      "headline": "Unwarned airstrike on Gaza City apartment kills at least five; eight killed Strip-wide on Oct 3",
-      "detail": "Early 2026-10-03 Israeli air attack hit the al-Asala building in Remal (Rimal) neighbourhood, western Gaza City, without prior warning, killing at least five and severely wounding at least six per al-Shifa Hospital and civil defence. Across the Strip at least eight Palestinians were killed that day, including two Christian women (Maysa Khader Ibrahim Abu Daoud and daughter Mary Hafez Michel al-Najjar) mourned by Latin and Greek Orthodox Patriarchates of Jerusalem.",
-      "where": "Remal neighbourhood, western Gaza City",
+      "headline": "Israeli airstrike on Gaza City apartment kills at least five, eight across Gaza on 2026-10-03",
+      "detail": "Early 2026-10-03 strike hit the al-Asala building in Remal (Rimal), western Gaza City, without prior warning, killing at least five and severely wounding at least six per al-Shifa Hospital and civil defence. Across Gaza at least eight Palestinians were killed that day, including two Christian women — Maysa Khader Ibrahim Abu Daoud and daughter Mary Hafez Michel al-Najjar — mourned by both patriarchates.",
+      "where": "Gaza City, Remal neighbourhood",
       "verification": "researched",
       "sources": [
         "https://www.aljazeera.com/news/2026/10/3/israeli-air-attack-on-gaza-city-apartment-kills-at-least-five"
@@ -156,9 +156,9 @@
     },
     {
       "date": "2026-10-03",
-      "headline": "Coordinated settler attacks on olive harvest across Nablus governorate injure 16, burn 55 trees",
-      "detail": "On 2026-10-03 settlers under army protection attacked olive pickers across Nablus governorate — Beita (az-Zahra/Jabal Qamass), Awarta, Abu Dis, Osarin — burning 55 olive trees, stoning vehicles/homes, injuring at least 16 Palestinians per medical/local sources. Israeli forces detained and assaulted journalists in Jabal Qamass, Beita, and forced activists to leave at gunpoint.",
-      "where": "Beita, Awarta, Abu Dis, Osarin, Nablus governorate, West Bank",
+      "headline": "Coordinated settler attacks on olive pickers injure 16 and burn 55 trees across Nablus on 2026-10-03",
+      "detail": "On 2026-10-03 settlers under army protection attacked olive pickers across Nablus governorate — Beita (az-Zahra/Jabal Qamass), Awarta, Abu Dis, Osarin — burning olive trees, stoning vehicles/homes, and forcing activists to leave at gunpoint. Medical/local sources reported at least 16 Palestinians injured and 55 olive trees burned; forces detained and assaulted journalists in Jabal Qamass, Beita.",
+      "where": "Nablus Governorate",
       "verification": "researched",
       "sources": [
         "https://www.aljazeera.com/news/2026/10/3/israeli-settlers-attack-palestinian-olive-pickers-in-the-west-bank",
@@ -201,32 +201,10 @@
         "https://www.dw.com/en/gaza-ngo-reports-dire-camp-conditions-says-israel-is-moving-yellow-line/a-79488777",
         "https://www.aa.com.tr/en/middle-east/israel-kills-5-in-gaza-raising-death-toll-from-genocide-to-73-928-health-ministry/4067514",
         "https://www.aljazeera.com/news/2026/10/1/palestinians-to-bur",
-        "https://reliefweb.int/report/occupied-palestinian-territory/confined-design-human-cost-protracted-displacement-gaza"
+        "https://reliefweb.int/report/occupied-palestinian-territory/confined-design-human-cost-protracted-displacement-gaza",
+        "https://www.aljazeera.com/news/2026/10/1/israeli-drone-kills-palestinian-in-gaza-settlers-kill-another-in-west-bank"
       ],
       "from": "/geopolitics/2026-10-01"
-    },
-    {
-      "date": "2026-10-01",
-      "headline": "Mass burial of 105 from 2023 Al Taj 3 strike as Health Ministry updates ceasefire toll to 1,439 killed",
-      "detail": "On 2026-10-01 Palestinians held mass funeral in Gaza City for 105 people killed 25 October 2023 when at least 20 bombs levelled Al Taj 3 building and nearby residences in Yarmouk Square; remains recovered in coordination with Egyptian committee and buried at Sheikh Radwan (Martyrs) cemetery northwest of Gaza City. Gaza Health Ministry reported same day eight killed and 26 wounded in prior 24 hours, bringing toll since ceasefire (Oct 2025) to 1,439 killed and 5,052 wounded (834 bodies recovered from rubble), and total since 7 Oct 2023 to at least 74,040 killed and 175,168 wounded.",
-      "where": "Sheikh Radwan cemetery, northwest Gaza City",
-      "verification": "researched",
-      "sources": [
-        "https://www.aljazeera.com/news/2026/10/1/palestinians-to-bury-remains-of-105-people-killed-in-israeli-attack-on-gaza",
-        "https://www.aljazeera.com/news/2026/10/1/israeli-drone-kills-palestinian-in-gaza-settlers-kill-another-in-west-bank"
-      ],
-      "from": "/geopolitics/2026-10-03"
-    },
-    {
-      "date": "2026-10-01",
-      "headline": "Drone strike on displacement tent in al-Mawasi kills one; Yasuf settler killing confirmed",
-      "detail": "On 2026-10-01 Israeli drone strike hit tent sheltering displaced Palestinians in al-Mawasi area west of Khan Younis (Al-Iqlimi area), killing Tamer al-Hamayda, 42, and wounding three others per Nasser Medical Complex. On same day in Yasuf north of Ramallah, settlers from Havat Anton outpost (established July 2026) shot dead Mashhour Yassin, 51, and wounded his nephew per Palestinian Health Ministry and Yasuf mayor.",
-      "where": "al-Mawasi, west of Khan Younis and Yasuf, West Bank",
-      "verification": "researched",
-      "sources": [
-        "https://www.aljazeera.com/news/2026/10/1/israeli-drone-kills-palestinian-in-gaza-settlers-kill-another-in-west-bank"
-      ],
-      "from": "/geopolitics/2026-10-03"
     },
     {
       "date": "2026-09-27",
@@ -348,18 +326,18 @@
   ],
   "places": [
     {
-      "name": "Gaza City",
+      "name": "Beita, Nablus Governorate",
       "country": "Palestine",
-      "lat": 31.5,
-      "lon": 34.4667,
-      "count": 3,
+      "lat": 32.13,
+      "lon": 35.285,
+      "count": 1,
       "last_date": "2026-10-03"
     },
     {
-      "name": "Nablus",
+      "name": "Gaza City, Remal",
       "country": "Palestine",
-      "lat": 32.2211,
-      "lon": 35.2544,
+      "lat": 31.5,
+      "lon": 34.466,
       "count": 1,
       "last_date": "2026-10-03"
     },
@@ -372,109 +350,463 @@
       "last_date": "2026-10-02"
     },
     {
-      "name": "Gaza Strip",
+      "name": "Gaza City",
       "country": "Palestine",
       "lat": 31.5,
-      "lon": 34.4667,
+      "lon": 34.466,
+      "count": 1,
+      "last_date": "2026-10-01"
+    },
+    {
+      "name": "Gaza Strip",
+      "country": "Palestine",
+      "lat": 31.4,
+      "lon": 34.35,
       "count": 1,
       "last_date": "2026-10-01"
     }
   ],
   "map": {
+    "version": 2,
     "bbox": [
-      30.861,
-      27.861,
-      38.861,
-      35.861
+      26.976,
+      25.765,
+      42.659,
+      37.765
     ],
     "projection": "equirectangular",
     "width": 1000,
-    "height": 1177,
+    "height": 900,
     "countries": [
       {
-        "name": "Israel",
-        "d": "M607.4 463.6L585.6 510L540.4 489.6L514.3 587.6L545.7 604.1L513.7 624.4L508.4 663.1L567.1 643.2L570 700.4L507.8 935.6L495.3 897.4L425.6 682.8L462 634.4L453.4 626L486.5 557.3L511.9 446.3L529.7 409L533.2 407.5L575 407.8L586.5 382L620.1 380L622 440.3L605 462.6L607.4 463.6Z"
-      },
-      {
-        "name": "Lebanon",
-        "d": "M620.1 380L586.5 382L575 407.8L533.2 407.5L577.7 287.6L639.9 184L642.2 178.9L698.5 186.4L718.9 244L650.7 299.5L620.1 380Z"
-      },
-      {
-        "name": "Palestine",
-        "d": "M567.1 643.2L508.4 663.1L513.7 624.4L545.7 604.1L514.3 587.6L540.4 489.6L585.6 510L585.6 600L567.1 643.2Z"
-      },
-      {
-        "name": "Jordan",
-        "d": "M585.6 510L607.4 463.6L746.7 521.9L991.5 365.1L1000 395.5L1000 571.8L767.7 640.3L892.3 787.4L850.9 812.4L830.4 861.7L735 882.1L705.1 935L651 980.3L511.9 956.9L507.8 935.6L570 700.4L567.1 643.2L585.6 600L585.6 510Z"
-      },
-      {
-        "name": "Iraq",
-        "d": "M1000 395.5L991.5 365.1L1000 360.4Z"
+        "name": "Turkey",
+        "d": "M1000 0L1000 36.8L987.1 47.7L980.9 49.2L978 40.2L975.1 36.6L970.9 35.1L968.7 35.7L961.8 41.9L950.8 45.6L927.1 50.7L911.1 52.2L891.6 49.2L875.5 50L859.2 56.7L831.5 70.4L810.5 77L789.4 81.3L751.8 80.4L746.9 78.7L731.2 67.7L722.4 65.4L715.2 64.8L667 84.1L643.4 83.4L638.2 79.7L635.5 75.5L617.4 72.2L615.5 74L613.5 79.8L609.7 98.1L616.3 112.6L616 114.8L605.8 115.8L599.3 119.5L597.6 132.1L591.3 134.4L588.3 137.1L585.2 144.8L583.5 145L573.3 139.1L568.6 138.6L572.7 132.5L563.3 109.1L567.9 101.9L587.4 83L586.9 71.8L578.5 64.1L569.3 68.8L562.7 74L558.5 75.1L553.8 78.1L551.5 83.4L545.9 87.6L536.7 89.2L522.9 84.8L508 77.9L499.6 72.4L492.7 71.1L486.2 73.5L467 87.1L449.4 106.8L445 110.2L428.4 118.7L417.4 121.6L412.3 120.9L390.5 124.7L379.6 125.2L371 129.7L354.4 124.8L344.4 118.6L338.4 112.3L328.7 98.7L321.7 92.2L306.2 86.4L279.1 72.3L253.4 68.7L233.9 67.4L229.9 72.6L228.4 92.9L225.1 98.5L223.6 109.1L221.3 112.1L217.5 114.1L207.6 109.3L198.1 113.7L179.4 119.8L173 120.6L151.3 113L143.3 108L138.2 102.6L136.4 93.4L133.2 88.1L131.5 80.4L127.1 78.7L122.4 81.9L117.4 81.7L111 79.8L96.1 72.1L84.6 71.5L77.7 80.9L72.4 83.9L66.5 84.8L66.2 82.1L70.6 76L52.8 77.1L43.3 81.8L36 81.1L30.5 79L31.3 76.4L41.7 73.4L61.1 71.7L65.6 70L70.6 63.4L79.6 57.6L80.7 55.2L44.1 56.8L23.8 55.9L21.3 58.7L18.3 59.1L17.4 51.4L20.7 47.9L25 48.2L35.6 45.1L34.7 38.7L27.1 34.4L25.5 31.8L20 31.2L15.5 28.2L14.5 20.5L10.9 12.1L5.8 8L6.5 5.8L15.8 3L16.3 0Z"
       },
       {
         "name": "Syria",
-        "d": "M607.4 463.6L605 462.6L622 440.3L620.1 380L650.7 299.5L718.9 244L698.5 186.4L642.2 178.9L630.6 66.3L661.2 5.7L667.1 0L1000 0L1000 360.4L991.5 365.1L746.7 521.9L607.4 463.6Z"
-      },
-      {
-        "name": "Turkey",
-        "d": "M667.1 0L661.2 5.7L657.2 0Z"
+        "d": "M568.6 138.6L573.3 139.1L583.5 145L585.2 144.8L588.3 137.1L591.3 134.4L597.6 132.1L599.3 119.5L605.8 115.8L616 114.8L616.3 112.6L609.7 98.1L613.5 79.8L615.5 74L617.4 72.2L635.5 75.5L638.2 79.7L643.4 83.4L667 84.1L715.2 64.8L722.4 65.4L731.2 67.7L746.9 78.7L751.8 80.4L789.4 81.3L810.5 77L831.5 70.4L859.2 56.7L875.5 50L891.6 49.2L911.1 52.2L927.1 50.7L950.8 45.6L961.8 41.9L968.7 35.7L970.9 35.1L975.1 36.6L978 40.2L980.9 49.2L980.3 52.8L963.4 70.4L944.5 87.6L920.8 93.8L916.8 97.5L913.1 103.6L910.9 111.9L909.9 126.9L916.7 146.6L916.8 159.3L910.1 175.3L908 185.8L906.7 224.7L893.4 250.2L890.1 253.4L874.4 257.5L752.3 329.5L627.6 408.6L599.1 403.4L589.4 395.2L579.2 392.3L572.6 382.4L568.7 378.8L561.8 377.3L564.8 370.9L565.3 366.7L568.3 361.5L566.4 358.2L565.5 351L563.7 347.4L564.8 345.1L561.7 335.5L562.2 332.3L565.2 326.2L570 322.5L570.7 319.9L576.8 315.2L577.6 313.5L573.6 310.6L571.7 307.3L573.4 302.4L581.3 295L588.1 294.4L597.6 295.3L598.7 294.4L598.5 293.2L593.4 290.3L593.1 288L598 281.5L604.6 278.1L609.5 272.3L612.7 265.8L607.6 249.9L604.5 247.4L596.4 244.9L596.2 243.9L603 236.4L599.9 233L594.3 231.5L592.2 234.9L573.9 235.2L569 218.5L568.3 211.2L568.4 202.9L571.8 190.6L569.2 175.8L560.4 164.5L565.2 143.7Z"
       },
       {
         "name": "Saudi Arabia",
-        "d": "M511.9 956.9L651 980.3L705.1 935L735 882.1L830.4 861.7L850.9 812.4L892.3 787.4L767.7 640.3L1000 571.8L1000 1177L552.5 1177L533.7 1147.2L471.5 1147.9L490.9 1067.1L496.5 1015.6L511.9 956.9Z"
+        "d": "M1000 900L623.7 900L620.2 889.7L618.5 879.5L608.5 874.5L591.3 837.8L581.4 824.9L577.4 816.3L565.9 802.1L560.3 788L548.7 774.9L538.7 752.3L523.1 729.8L516.6 725.8L493.9 722.6L487.7 727.5L487.2 721.2L491.4 712.6L497.6 694.3L498.8 678.3L508.5 630.9L576.4 643.1L579.8 642.3L605.8 620.2L620.3 595L623.6 592.4L669.1 582.7L670.5 581.5L680.6 557.6L701.7 544.9L669.7 506.8L636.5 470.5L764.3 432.8L766.5 431.8L776 423L832.2 432.7L854 437L861 440.4L962.7 501.3L1000 534.1ZM610.2 900L610.3 896.5L612.6 893.2L612.9 900Z"
       },
       {
-        "name": "N. Cyprus",
-        "d": "M233.9 106L242.7 105.2L260.8 69.7L350.8 71.7L464.5 27.8L380 90.5L389.1 118L375.7 112.8L351.9 124L333.1 120.9L326.9 126.6L324.4 111.7L315.4 102.7L291.3 101.1L257.4 113.7L233.9 106Z"
+        "name": "Lebanon",
+        "d": "M573.9 235.2L592.2 234.9L594.3 231.5L599.9 233L603 236.4L596.2 243.9L596.4 244.9L604.5 247.4L607.6 249.9L612.7 265.8L609.5 272.3L604.6 278.1L598 281.5L593.1 288L593.4 290.3L598.5 293.2L598.7 294.4L597.6 295.3L588.1 294.4L581.3 295L576.6 298.6L573.4 302.4L571.7 307.3L573.6 310.6L577.1 312.5L576.8 315.2L573.3 317.3L570.7 319.9L570 322.5L561.9 329.6L551.6 336.7L550.1 339.3L548.6 337L545.6 338.6L543.1 348.4L537.9 351.7L525.9 350.5L518.6 351.1L524.6 338L527.7 327.9L533 319.6L544.2 291.4L550.7 280L552.9 263.8L562.9 249.6L570.4 245.4L574 241.3Z"
       },
       {
-        "name": "Cyprus",
-        "d": "M233.9 106L257.4 113.7L291.3 101.1L315.4 102.7L324.4 111.7L326.9 126.6L333.1 120.9L351.9 124L375.7 112.8L389.1 118L393 129.8L264.9 189.6L203.7 170.5L174.5 111.4L233.9 106Z"
+        "name": "Jordan",
+        "d": "M561.8 377.3L568.7 378.8L572.6 382.4L579.2 392.3L589.4 395.2L599.1 403.4L627.6 408.6L752.3 329.5L770.4 395.4L765.5 396.9L769.3 409.5L782.5 406.1L785.4 414.1L766.5 431.8L764.3 432.8L636.5 470.5L669.7 506.8L701.7 544.9L680.6 557.6L670.5 581.5L669.1 582.7L623.6 592.4L620.3 595L605.8 620.2L579.8 642.3L576.4 643.1L508.5 630.9L510.5 621L509.9 615.7L516 584L520.7 571.7L520.6 550.8L539.6 497.4L537.2 490.1L541.3 465.2L543.5 456.9L547.3 450L545.5 433.5L545.7 424.6L548.1 414.5L546.8 402.7L548.2 384.3L550.6 381.2L558.5 377.7Z"
+      },
+      {
+        "name": "Israel",
+        "d": "M565.2 326.2L562.2 332.3L561.7 335.5L563.2 341.7L564.4 342.7L564.8 345.1L563.7 347.4L565.5 351L566.4 358.2L568.3 361.5L565.3 366.7L564.8 370.9L561.8 377.3L558.5 377.7L550.6 381.2L548.2 384.3L546.8 402.7L542.5 402.3L537.3 398.6L536.3 395.4L534.7 394.3L524 392.3L515.8 397.8L508.8 420.3L511 438.9L510.3 442.4L508.7 444.3L509.2 445.6L510.6 446.1L515 444.5L519.7 446.1L524.3 449.2L524.6 451.1L513.8 456.9L508.5 462.2L503.5 477.6L504 479.8L505.8 481L518.1 479.9L537.7 471.2L540.4 471.4L537.2 490.1L539.6 497.4L520.6 550.8L520.7 571.7L516 584L509.9 615.7L505.5 621.6L489.9 568L481.6 548.9L479.1 537.7L463.5 491.8L470.1 485.4L470.2 480.2L481.4 468L478.3 463.5L491.1 440.2L499.1 417.6L506.7 386.3L516.6 359.8L518.6 351.1L525.9 350.5L537.9 351.7L543.1 348.4L545.6 338.6L548.6 337L550.1 339.3L551.6 336.7L558.5 332.4Z"
+      },
+      {
+        "name": "Palestine",
+        "d": "M478.3 463.5L481.4 468L470.2 480.2L470.1 485.4L463.5 491.8L460.5 483.2L472.6 471.1ZM546.8 402.7L548.1 414.5L545.7 424.6L545.5 433.5L547.3 450L543.5 456.9L540.4 471.4L537.7 471.2L518.1 479.9L505.8 481L504 479.8L503.5 477.6L508.5 462.2L513.8 456.9L524.6 451.1L524.3 449.2L519.7 446.1L515 444.5L510.6 446.1L508.7 444.3L510.3 442.4L511 438.9L508.8 420.3L515.8 397.8L524 392.3L534.7 394.3L536.3 395.4L537.3 398.6L542.5 402.3Z"
+      },
+      {
+        "name": "Iraq",
+        "d": "M980.9 49.2L987.1 47.7L1000 36.8L1000 534.1L962.7 501.3L861 440.4L854 437L776 423L785.4 414.1L782.5 406.1L769.3 409.5L765.5 396.9L770.4 395.4L752.3 329.5L874.4 257.5L890.1 253.4L893.4 250.2L906.7 224.7L908 185.8L910.1 175.3L916.8 159.3L916.7 146.6L909.9 126.9L910.9 111.9L913.1 103.6L916.8 97.5L920.8 93.8L944.5 87.6L963.4 70.4L980.3 52.8Z"
+      },
+      {
+        "name": "Greece",
+        "d": "M56.4 90.8L55 92L51.8 88.6L51.6 86.8L56.5 84.3ZM12.7 172.5L10.3 176.7L7.8 173.1L8.9 169L6 162.5L11.5 152.9L11.6 148.2L15.7 145.8L14.7 153.8L11.5 160.2L14.8 165.5L16.4 171.5ZM2.8 60.4L0 60.9L0 54.1L4.1 57.3ZM0 73.3L5.4 69.3L15.2 65L18.4 64.5L24 67.2L13.8 71.7L11.1 74.1L3.7 74.6L0 76.8ZM0 0L4.1 0L5 4.2L0 4.9ZM55.2 137.7L49.1 139L47.1 135.6L49.8 127.2L47.2 119.5L50.9 116.3L53.5 111.6L59.8 106.5L80.1 99.9L79.9 104.6L74.5 116.6L69.6 122.6L70.9 127.5L63.1 128.8Z"
       },
       {
         "name": "Egypt",
-        "d": "M0 1177L0 634.9L14.5 633.3L103.4 651.9L137.5 724.9L166.5 676.8L266.7 711.6L364.1 719.9L425.6 682.8L495.3 897.4L507.8 935.6L472.6 994.7L445.7 1105.9L414.2 1177L355.3 1177L340.9 1160.7L284.5 1095L195.3 884.1L182.5 897.5L234.3 1052.7L298.8 1177Z"
+        "d": "M0 900L0 475.1L17.3 479L35.9 491.4L41.1 493L54.4 492.7L63.2 500.1L98.1 503.6L116.7 511.7L127.3 518.1L133.6 520.1L139.2 519.8L146.8 517.4L156.4 512.8L166.8 506.5L188.3 490.3L196 487.5L207 488L218 473.1L229.2 471.9L251.7 464.9L249.2 468.2L228.7 476.1L237.5 477.1L256.7 472.7L258.5 469.3L259.9 463L261.9 462.1L268.9 463.3L290 473L295.2 473.2L313.3 466.8L318.1 469.7L329 481.8L325.2 481.5L313.5 471.2L312.4 476.3L305.7 485.4L314.1 489.4L320.9 490.8L326.8 500.4L333.5 498.4L338.3 492.3L334.1 485.3L336.3 485.3L341 488.2L354.3 499.8L358.8 502.2L364 501.8L374.8 498.5L377.8 499.1L392.4 494.8L396.5 501L408.2 497.6L426.6 497.6L441.7 493.8L460.5 483.2L479.1 537.7L481.6 548.9L489.9 568L505.5 621.6L502 625L494.8 637.1L487.2 675.5L476.3 705.6L475.1 724.4L473.4 731.2L461.9 750.1L450.7 745.2L432.6 728.8L422 713.2L410.6 703.1L399.9 689.8L397 680.2L397.1 674L392.4 659L388.9 651.9L375.9 635.9L372.1 627.4L366.3 618.2L361.6 597.5L356.4 584.3L350.5 588L351.5 593.5L346.4 601.2L343.3 610.1L345.7 617.3L356.4 628.4L358.5 633.2L361 643.7L360.6 658L362.4 662.8L370.4 673.4L377.6 690L385.6 699.2L397 716.8L407.8 728.6L415.7 734.3L419 740L419.2 761.8L428.6 781.8L435.2 787.3L438.3 793.5L441.1 803.7L445.3 833.7L451 841.1L468.9 880.5L480.6 900Z"
+      },
+      {
+        "name": "N. Cyprus",
+        "d": "M448.2 202.5L445.7 203.1L439.4 200.4L434.6 203.8L427.2 206L417.6 204.5L414.4 207.3L413.7 207L413.2 199.8L408.6 195.2L399.9 195.6L396.3 194.4L379 200.8L370.3 198.7L366.3 196.5L365.8 194.5L369.6 195.4L376.4 193.8L379.4 186.5L380.4 178.1L403.7 181.8L413.4 182.2L422.9 180.8L451.9 171.8L460.1 166.4L474.1 160.2L483.3 157.7L477.4 162.9L444.2 185.5L442 192.2L443.5 196.8Z"
+      },
+      {
+        "name": "Cyprus",
+        "d": "M365.8 194.5L366.3 196.5L370.3 198.7L379 200.8L396.3 194.4L399.9 195.6L408.6 195.2L413.2 199.8L413.7 207L414.4 207.3L417.6 204.5L427.2 206L434.6 203.8L439.4 200.4L445.7 203.1L448.2 202.5L451.1 208.2L443.8 209.5L428.7 209.6L416.9 221.9L410.6 226.1L403 228.5L391.5 230.2L388.1 231.8L385.7 234.6L384.6 239.7L380.4 239.2L378.6 234.7L375.6 232.8L364.5 233.7L349 227.7L340.6 210.9L339.5 201.2L345.3 203.6L350.6 200.6L355.8 195.7L361.9 193.7Z"
       }
     ],
+    "labels": [
+      {
+        "name": "Turkey",
+        "x": 378.7,
+        "y": 69.5,
+        "r": 55.6,
+        "key": false
+      },
+      {
+        "name": "Syria",
+        "x": 725.6,
+        "y": 202.7,
+        "r": 122.8,
+        "key": false
+      },
+      {
+        "name": "Saudi Arabia",
+        "x": 807.7,
+        "y": 713.9,
+        "r": 186.1,
+        "key": false
+      },
+      {
+        "name": "Lebanon",
+        "x": 579.1,
+        "y": 268.0,
+        "r": 23.3,
+        "key": false
+      },
+      {
+        "name": "Jordan",
+        "x": 601.8,
+        "y": 531.1,
+        "r": 65.1,
+        "key": false
+      },
+      {
+        "name": "Israel",
+        "x": 500.9,
+        "y": 510.8,
+        "r": 29.3,
+        "key": false
+      },
+      {
+        "name": "Palestine",
+        "x": 527.4,
+        "y": 422.4,
+        "r": 18.2,
+        "key": true
+      },
+      {
+        "name": "Iraq",
+        "x": 902.7,
+        "y": 356.5,
+        "r": 93.7,
+        "key": false
+      },
+      {
+        "name": "Greece",
+        "x": 60.5,
+        "y": 118.7,
+        "r": 9.6,
+        "key": false
+      },
+      {
+        "name": "Egypt",
+        "x": 180.5,
+        "y": 712.3,
+        "r": 180.5,
+        "key": false
+      },
+      {
+        "name": "N. Cyprus",
+        "x": 426.7,
+        "y": 193.2,
+        "r": 12.5,
+        "key": false
+      },
+      {
+        "name": "Cyprus",
+        "x": 363.4,
+        "y": 214.7,
+        "r": 17.3,
+        "key": false
+      }
+    ],
+    "rivers": [
+      {
+        "d": "M738.6 142.6L761.3 138.9L781.2 141.3L805.8 148.6L819.8 156.1L823.4 163.9L830.7 171.9L847.3 185.1L846.8 186.6L854.5 190.5L857.5 194.8L858.4 201.4L860.7 206.2L864.6 209.1L867.7 213.5L870 219.6L875.8 226L885 232.6L889.6 238.8L890.8 248L893.8 250.2M704.6 69.7L706.5 76.8L709.5 80.3L714.1 82.6L717.7 86L720.3 90.5L719.9 96.3L714.7 106.7"
+      },
+      {
+        "d": "M267 571L261.6 558L263.4 551L270 544.3L272.5 535.6L270.9 517.2L272.2 512.5L283.3 497.7L289.1 493.4L293.5 492.9L299.4 486.5L310.1 467.9"
+      },
+      {
+        "d": "M902 0L917.1 1.6L935 1.4L945.3 4.2L947.8 10L948.7 15.7L947.8 21.3L950.5 24.3L956.7 24.8L964 27.7L972.4 33.2L977.9 40.2L982 52.7"
+      },
+      {
+        "d": "M893.8 250.2L901.8 253.3L905.5 252.9L907.5 250.1L911.8 249.2L918.5 250.1L924.2 248.7L926.2 249.7L931.9 248.7L940 245.1L947 244.2L953 246.1L957.3 248.9L965.8 259.7L968.8 260.8L972 259.4L976.2 260.5L977.3 257.3L979 256.4L981.3 257.7L981.4 259.7L979.1 262.6L979.2 265L981.5 267L982.4 270L981.9 273.8L984.6 278L990.5 282.3L993.1 286.6L992.5 290.8L993.9 292.1L997.4 290.5L1000 290.6"
+      },
+      {
+        "d": "M762.4 0L761.8 1.5L756.6 3.9L755.8 5.6L756.4 7.5L754.8 9L747.7 10L741.7 12.9L736.9 17.5L730.9 20.3L718.9 22.8L716.2 25.2L711.7 25.8L705.4 24.6L700.8 25.5L697.8 28.6L693.7 35.5L694.1 48.7L696.4 52.8L699.8 53.3L702.3 57.6L704.6 69.7"
+      },
+      {
+        "d": "M271.7 573.3L274.6 572.7L280.7 561.6L287.4 554L297.4 546.1L311.7 541.1L339.7 537.9"
+      },
+      {
+        "d": "M538.6 483L537.2 490.1M548.4 378.4L546.8 402.7L548.1 414.5L545.7 424.6L545.5 433.5L547.3 450M566.7 312.6L556 325.1L551.1 339.1L549.6 349.1L549.8 364.9"
+      },
+      {
+        "d": "M365.6 900L369.1 891.4L369 879.8L367.2 872.7L363.5 870.1L355.6 871.7L343.4 877.3L334.9 876.6L330.2 869.5L321.3 867.4L318.1 860.1L312.1 854.3L308.9 849L308.4 844.2L306.4 841.7L303.1 841.6L301.6 840.1L302 837L300.9 835L298.4 834.1L291.8 825.2L278.3 803.1L274.3 798.2L254.6 780.7L248.2 769.9L249.5 761L247.8 733.5L240.3 720L240 715.1L244.5 702.3L247.5 681.3L250.1 673L265.9 647.1L270.5 636.2L270.3 628.9L274.5 611.7L274.9 598.7L271.7 573.3"
+      },
+      {
+        "d": "M271.7 573.3L259.9 567.9L254.8 564L252.5 559.4L247.3 555.8L246.9 547.1L242.9 532.4L241.9 523.9L242.9 521.6L241.4 517.4L240.5 506.6L238.4 502.5L229.1 494.6L226.2 490.2L226 485.2L223.9 480.6L218 473.1"
+      },
+      {
+        "d": "M356.1 568.8L356.4 584.3M343.3 550.6L339.7 537.9L341.6 530.7L341 488.2"
+      },
+      {
+        "d": "M982 52.7L985.6 58.1L990.5 61.8L990.7 66.7L993.6 69.9L1000 72.3"
+      }
+    ],
+    "lakes": [
+      {
+        "d": "M549 453.1L546.4 480.4L544.9 482.8L538.6 483L537.3 481.3L537.3 470.4L538.5 461L541.1 454.1L544.9 450.7L547.3 450Z"
+      },
+      {
+        "d": "M545 494.1L543.4 499.5L538.2 499.5L535.7 494L536 491.2L537.2 490.1L540.1 490Z"
+      },
+      {
+        "d": "M551.9 373.8L548.4 378.4L546.8 376.2L545.7 372.1L546 368.2L547.7 365.5L549.8 364.9L551.4 366.5Z"
+      }
+    ],
+    "cities": [
+      {
+        "name": "Cairo",
+        "x": 272.4,
+        "y": 578.5,
+        "capital": true
+      },
+      {
+        "name": "Damascus",
+        "x": 594.4,
+        "y": 319.7,
+        "capital": true
+      },
+      {
+        "name": "Beirut",
+        "x": 544.0,
+        "y": 291.8,
+        "capital": true
+      },
+      {
+        "name": "Amman",
+        "x": 571.0,
+        "y": 436.0,
+        "capital": true
+      },
+      {
+        "name": "Jerusalem",
+        "x": 524.8,
+        "y": 449.0,
+        "capital": true
+      },
+      {
+        "name": "Nicosia",
+        "x": 407.5,
+        "y": 194.9,
+        "capital": true
+      },
+      {
+        "name": "Alexandria",
+        "x": 189.5,
+        "y": 492.2,
+        "capital": false
+      },
+      {
+        "name": "Aleppo",
+        "x": 649.9,
+        "y": 115.0,
+        "capital": false
+      },
+      {
+        "name": "Adana",
+        "x": 531.9,
+        "y": 57.6,
+        "capital": false
+      },
+      {
+        "name": "Gaziantep",
+        "x": 663.6,
+        "y": 51.6,
+        "capital": false
+      },
+      {
+        "name": "Haifa",
+        "x": 510.2,
+        "y": 370.7,
+        "capital": false
+      },
+      {
+        "name": "Homs",
+        "x": 621.2,
+        "y": 227.5,
+        "capital": false
+      },
+      {
+        "name": "Antalya",
+        "x": 237.3,
+        "y": 65.5,
+        "capital": false
+      },
+      {
+        "name": "Ismaïlia",
+        "x": 336.9,
+        "y": 538.1,
+        "capital": false
+      },
+      {
+        "name": "El Mansura",
+        "x": 280.8,
+        "y": 503.6,
+        "capital": false
+      },
+      {
+        "name": "Sohag",
+        "x": 301.2,
+        "y": 841.1,
+        "capital": false
+      },
+      {
+        "name": "Tabuk",
+        "x": 610.8,
+        "y": 703.6,
+        "capital": false
+      },
+      {
+        "name": "Latakia",
+        "x": 561.4,
+        "y": 166.9,
+        "capital": false
+      },
+      {
+        "name": "El Minya",
+        "x": 240.6,
+        "y": 725.6,
+        "capital": false
+      },
+      {
+        "name": "Beni Suef",
+        "x": 262.3,
+        "y": 651.3,
+        "capital": false
+      },
+      {
+        "name": "Şanlıurfa",
+        "x": 753.6,
+        "y": 44.6,
+        "capital": false
+      },
+      {
+        "name": "Asyut",
+        "x": 268.0,
+        "y": 793.1,
+        "capital": false
+      },
+      {
+        "name": "Hail",
+        "x": 938.9,
+        "y": 768.1,
+        "capital": false
+      },
+      {
+        "name": "Dayr az Zawr",
+        "x": 838.8,
+        "y": 182.6,
+        "capital": false
+      },
+      {
+        "name": "Qena",
+        "x": 366.3,
+        "y": 871.1,
+        "capital": false
+      },
+      {
+        "name": "İskenderun",
+        "x": 586.2,
+        "y": 88.8,
+        "capital": false
+      },
+      {
+        "name": "Arar",
+        "x": 895.6,
+        "y": 508.1,
+        "capital": false
+      },
+      {
+        "name": "El Arish",
+        "x": 435.2,
+        "y": 498.0,
+        "capital": false
+      }
+    ],
+    "annotations": [
+      {
+        "kind": "chokepoint",
+        "x": 342.7,
+        "y": 547.9,
+        "title": "Suez Canal",
+        "lines": [
+          "37 ships/day · 35 a year ago",
+          "as of 27 Sep"
+        ],
+        "series_id": "chk_suez_transits",
+        "source": "IMF PortWatch"
+      }
+    ],
+    "scale": {
+      "km": 200,
+      "px": 134.7,
+      "label": "200 km"
+    },
+    "locator": {
+      "width": 200,
+      "height": 100,
+      "d": "M117 62L114 60L118 59ZM117 59L113 60L112 57L113 56L117 57L116 55L117 55L119 56ZM129 41L124 43L124 42L124 40L127 40ZM160 38L159 39L161 43L158 45L160 42L157 38ZM67 45L64 50L63 47L59 45L61 43ZM139 27L141 27L139 27L137 29L133 26L131 27L131 25L136 26L138 27ZM70 69L68 69L68 67ZM28 19L25 17L19 16L16 17L17 16L9 20L13 17L10 17L10 16L8 16L11 14L7 14L11 13L7 12L13 10L22 11L22 16ZM58 25L62 24L63 25L59 27L58 29L58 28L57 29L58 30L55 33L55 36L54 33L51 33L47 33L46 36L41 32L33 31L31 28L31 23L51 23L54 25L54 27ZM99 21L97 21L98 20L97 19L97 17L101 21ZM131 36L131 37L129 37ZM121 24L116 25L116 23L112 23L114 21L119 21L122 22ZM119 51L116 51L117 48L119 48ZM131 27L133 26L137 29L135 30L132 29L130 29L129 28L130 27L129 27ZM123 27L125 28L125 29L116 30L115 29L116 27ZM106 32L105 33L105 29L106 29ZM156 39L159 41L157 43L156 43L156 47L155 45L155 43L154 40ZM118 55L116 54L117 51L122 53L122 56L119 56ZM138 29L139 27L138 28L142 29ZM120 30L124 29L120 32ZM106 17L109 12L113 12L113 13L110 15L111 17L109 19L107 19ZM119 48L116 48L113 45L118 43ZM119 45L118 43L117 45L113 45L112 43L114 38L120 38L121 40ZM99 26L102 27L99 30L96 29L97 27L95 26ZM116 62L118 65L117 67L114 69L110 69L109 66L111 66L111 64L112 65ZM123 51L123 48L128 43ZM127 44L127 46L124 44ZM93 42L93 43L91 43L92 43L90 42L92 41ZM129 39L124 41L119 34L122 32L127 34L131 38ZM0 12L6 13L0 14ZM173 26L175 23L173 23L169 20L165 22L155 21L154 22L149 23L144 22L143 20L138 19L134 20L134 22L126 22L127 24L126 25L126 27L120 25L122 22L118 21L117 19L115 18L117 17L115 16L118 15L116 12L123 12L118 13L121 15L125 13L124 12L126 13L134 11L138 12L137 11L140 9L141 12L138 13L140 13L142 12L144 12L141 12L142 10L146 11L145 9L158 7L163 8L158 10L169 9L173 11L178 10L188 11L189 12L199 11L200 14L197 14L200 15L191 17L191 19L187 22L187 19L192 15L178 18L175 20L179 20L178 23ZM131 9L132 11L129 10ZM179 20L180 23L179 24ZM116 25L116 26L113 26L111 24L115 23ZM95 27L97 27L96 29ZM113 21L113 23L111 23L108 22L108 20L113 20ZM167 40L169 43L167 42ZM170 45L170 47L168 46ZM61 52L59 54L62 57L61 60L58 58L55 53L56 53L58 50ZM68 61L70 63L69 65L67 65L68 64L65 62L66 61ZM178 55L178 51L184 56L180 54ZM143 30L139 35L139 36L134 36L135 35L134 33L137 33L140 30ZM129 41L129 39L131 39L131 36L133 38ZM111 12L107 15L106 17L103 17L104 16L103 15L110 11L117 11ZM109 6L112 6L109 7L108 7L109 6L106 6ZM171 29L170 29L169 28L172 26ZM108 42L106 46L103 48L102 46L102 42ZM108 42L103 42L102 44L100 42L107 37L109 39ZM54 42L53 44L51 43ZM196 73L195 75L192 76ZM196 69L199 71L197 73ZM149 35L144 34L145 33ZM113 60L112 60L111 66L109 66L107 60ZM117 62L118 59L117 58L119 58L120 60L119 56L122 56L123 59L119 61L120 64L118 65ZM99 30L99 32L91 38L97 30ZM95 35L93 36L93 38L91 38ZM149 23L154 22L155 21L165 22L164 23L167 24L158 27L154 26ZM35 32L44 33L46 36L47 40L49 40L52 38L51 40L49 40L49 42L43 40L37 33L36 32L36 33L39 37ZM93 42L91 41L91 38L93 38L93 36L95 35L97 36L96 36L97 41ZM94 43L94 41L97 41L96 36L102 39L102 41L99 42L97 44ZM156 46L157 47L158 49ZM165 48L164 49L161 49L165 46L166 47ZM118 58L118 55L120 58L120 60ZM128 57L128 59L125 64L124 60ZM113 20L112 19L115 19ZM105 33L106 32L111 33L112 32L114 32L114 39L106 36ZM115 19L112 19L114 18L115 18ZM157 38L160 42L158 42L158 40L156 40ZM139 28L141 27L139 27L140 26L145 27ZM119 51L120 47L123 48L122 53ZM139 27L138 27L133 25L131 25L131 27L129 27L128 25L129 24L127 24L126 22L128 21L134 22L134 20L138 19L143 20L144 22L149 23L144 25L145 27ZM180 25L181 26L178 27L179 25ZM178 27L178 30L173 31L177 29ZM104 24L108 24L107 25L110 28L109 29ZM124 29L126 30L127 33L122 32ZM130 29L134 30L134 33L135 35L134 36L129 35L125 31L125 28ZM154 47L158 50L159 53ZM169 49L167 50L169 50L167 51L168 52L167 51L166 53L167 49ZM161 49L164 49L165 48L166 49L164 52L161 52ZM178 51L178 55L173 51ZM138 37L139 36L139 35L142 32L141 31L143 30L146 35L154 34L152 38L151 36L149 35L149 38L145 41L143 46L141 38L139 38ZM91 13L92 14L90 15L86 14ZM112 23L112 24L109 24ZM54 42L52 43L50 42ZM66 47L67 46L69 49L67 49ZM94 45L92 44L92 43L95 43L96 45ZM115 27L113 28L113 29L112 30L113 29L112 27ZM100 44L101 47L98 47L98 44ZM105 24L103 21L105 20L105 19L108 20L108 22L107 22L108 23ZM124 27L122 26L125 26L126 27ZM107 49L108 51L106 52L105 50ZM104 24L104 26L101 26L99 26L99 24L97 23L101 22ZM113 13L111 12L116 11L118 15L113 17L112 15ZM120 47L118 46L121 42L127 46L122 48ZM115 18L113 17L116 17ZM120 42L121 40L124 43ZM120 38L114 38L114 33L119 33L119 35L118 34ZM58 50L55 52L56 50ZM83 4L88 4L83 4L87 5L94 5L89 6L88 7L90 7L87 7L89 9L85 9L88 9L85 10L88 11L85 10L84 11L88 11L78 14L76 17L72 15L70 13L72 13L70 13L72 12L70 12L72 12L70 11L71 10L69 10L67 8L60 7L66 4ZM55 37L59 39L53 38ZM108 25L111 25L109 25L110 26ZM96 44L99 45L98 47L96 48ZM117 55L116 55L116 57L112 56L112 54L107 53L109 52L111 47L115 47L117 49L116 51ZM106 52L108 51L107 49L110 48L109 52ZM60 43L59 45L63 47L63 49L61 49L61 52L56 49L57 45ZM160 38L158 37L156 38L153 34L149 35L145 33L141 28L145 27L144 25L148 23L154 26L161 26L167 24L164 23L167 21L170 21L173 23L175 23L173 26L165 28L168 29L166 31L168 34L165 37ZM61 60L63 63L59 78L62 79L60 80L59 79L59 77L58 76L60 75ZM113 39L113 44L109 46L107 42L108 37ZM113 45L115 47L111 47L109 49L108 47L109 46L112 44ZM28 19L22 16L22 11L29 11L40 13L41 12L40 12L46 12L47 13L48 12L46 11L47 10L51 13L52 11L55 12L53 13L49 13L51 14L48 14L50 15L47 16L48 18L54 19L56 22L56 20L57 19L57 15L59 15L61 16L62 18L64 17L66 19L68 20L66 20L69 21L61 23L54 27L54 25L51 23L32 23L28 20ZM36 10L41 9L44 11L37 12L35 11L38 11L34 10ZM33 9L36 9L33 10L30 10L31 9ZM61 4L66 4L56 6L59 6L55 8L50 7L54 7L51 7L55 6L52 5L57 5L49 5ZM44 9L46 10L43 10ZM53 14L55 15L52 15ZM49 5L53 6L49 6L46 5ZM48 7L56 8L49 9L46 7ZM48 9L50 9L47 10ZM63 25L62 24L58 25L64 23L63 23L66 25L64 26L65 25ZM69 21L68 22L70 23L71 24L67 24ZM52 11L55 9L66 13L62 13L64 15L62 15L63 16L57 14L60 13L58 11L51 11L52 11L50 9L53 9ZM105 47L108 43L109 49L106 49ZM160 42L159 44L157 44L157 42ZM156 39L154 40L155 44L154 41L152 41L151 38L154 34ZM101 44L97 44L100 42L101 43ZM116 27L113 27L112 26L116 26ZM63 49L66 47L67 49L71 48L72 49L71 51L74 50L80 53L77 62L73 64L70 69L68 67L70 65L68 62L68 59L64 55L61 56L59 54L61 52L61 49ZM114 60L116 62L111 65L112 60ZM61 60L61 56L64 55L68 60L62 63ZM101 47L100 44L102 43ZM118 21L113 21L116 19L117 19ZM149 38L149 35L151 36L151 38L150 37ZM127 29L125 27L127 27ZM180 57L185 64L183 71L179 71L176 70L177 68L175 69L173 67L164 69L163 62L167 61L170 58L172 58L173 56L176 57L175 58L178 60ZM68 67L68 71L64 73L65 74L62 76L63 77L62 78L62 79L60 79L59 78L62 64L65 62L68 64L67 65L70 64ZM113 56L112 57L113 60L107 60L108 56L107 53L112 54ZM105 29L105 35L107 37L103 39L102 39L95 35L99 32L99 30ZM137 29L142 29L137 33L134 33L134 30ZM68 85L64 87L66 90L66 91L57 93L60 93L55 93L57 94L53 93L66 96L87 94L80 94L90 92L94 89L122 89L130 87L139 88L137 91L147 87L175 87L195 90L189 92L193 94L188 95L200 97L200 100L0 100L0 97L13 97L3 96L11 96L15 96L13 95L18 95L12 93L36 91L45 92L43 90L62 91L63 90L63 87ZM75 94L76 95L70 95ZM61 88L62 90L58 90L61 90L60 88Z",
+      "rect": {
+        "x": 115.0,
+        "y": 29.0,
+        "w": 8.7,
+        "h": 6.7
+      }
+    },
     "points": [
       {
-        "x": 450.8,
-        "y": 641.5,
-        "label": "Gaza City",
+        "x": 529.8,
+        "y": 422.6,
+        "label": "Beita, Nablus Governorate",
         "date": "2026-10-03",
         "verification": "researched",
         "n": 1,
         "weight": 1.0
       },
       {
-        "x": 549.2,
-        "y": 535.5,
-        "label": "Nablus",
+        "x": 477.6,
+        "y": 469.9,
+        "label": "Gaza City, Remal",
         "date": "2026-10-03",
         "verification": "researched",
         "n": 2,
-        "weight": 0.356
+        "weight": 1.0
       },
       {
-        "x": 546.8,
-        "y": 552.1,
+        "x": 526.6,
+        "y": 424.3,
         "label": "Yasuf",
         "date": "2026-10-02",
         "verification": "reported",
         "n": 3,
-        "weight": 0.339
+        "weight": 0.952
       },
       {
-        "x": 450.8,
-        "y": 641.5,
+        "x": 477.6,
+        "y": 469.9,
+        "label": "Gaza City",
+        "date": "2026-10-01",
+        "verification": "reported",
+        "n": 4,
+        "weight": 0.906
+      },
+      {
+        "x": 470.2,
+        "y": 477.4,
         "label": "Gaza Strip",
         "date": "2026-10-01",
         "verification": "researched",
-        "n": 4,
-        "weight": 0.322
+        "n": 5,
+        "weight": 0.906
       }
     ],
-    "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate."
+    "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate. Shipping data: IMF PortWatch."
   },
   "actors": [
     {
@@ -482,12 +814,6 @@
       "mentions": 4,
       "first": "2026-09-08",
       "last": "2026-09-28"
-    },
-    {
-      "name": "Israel Defense Forces",
-      "mentions": 3,
-      "first": "2026-10-01",
-      "last": "2026-10-03"
     },
     {
       "name": "Gaza Health Ministry",
@@ -538,13 +864,13 @@
       "last": "2026-09-27"
     },
     {
-      "name": "Egyptian committee",
+      "name": "Gaza civil defence",
       "mentions": 1,
-      "first": "2026-10-01",
-      "last": "2026-10-01"
+      "first": "2026-10-03",
+      "last": "2026-10-03"
     },
     {
-      "name": "Gaza civil defence",
+      "name": "Greek Orthodox Patriarchate of Jerusalem",
       "mentions": 1,
       "first": "2026-10-03",
       "last": "2026-10-03"
@@ -556,16 +882,22 @@
       "last": "2026-09-22"
     },
     {
-      "name": "Israel Defense Forces (drone unit)",
-      "mentions": 1,
-      "first": "2026-10-01",
-      "last": "2026-10-01"
-    },
-    {
       "name": "Israeli Foreign Minister Gideon Saar",
       "mentions": 1,
       "first": "2026-09-27",
       "last": "2026-09-27"
+    },
+    {
+      "name": "Israeli air force",
+      "mentions": 1,
+      "first": "2026-10-03",
+      "last": "2026-10-03"
+    },
+    {
+      "name": "Israeli forces",
+      "mentions": 1,
+      "first": "2026-10-03",
+      "last": "2026-10-03"
     }
   ],
   "relations": [
@@ -620,7 +952,18 @@
   ],
   "figures": [
     {
-      "label": "killed in Remal airstrike, Gaza City (at least",
+      "label": "Palestinians injured in Nablus olive-picker attacks",
+      "unit": "people",
+      "series": [
+        {
+          "as_of": "2026-10-03",
+          "value": 16.0,
+          "source": "https://www.aljazeera.com/news/2026/10/3/israeli-settlers-attack-palestinian-olive-pickers-in-the-west-bank"
+        }
+      ]
+    },
+    {
+      "label": "killed in Remal (Rimal) airstrike, Gaza City",
       "unit": "people",
       "series": [
         {
@@ -631,7 +974,7 @@
       ]
     },
     {
-      "label": "Palestinians in displacement sites (86% of Gaza population",
+      "label": "Palestinians in displacement sites (86% of population",
       "unit": "people",
       "series": [
         {
@@ -648,17 +991,6 @@
         {
           "as_of": "2026-10-01",
           "value": 1439.0,
-          "source": "https://www.aljazeera.com/news/2026/10/1/israeli-drone-kills-palestinian-in-gaza-settlers-kill-another-in-west-bank"
-        }
-      ]
-    },
-    {
-      "label": "total killed since 7 Oct 2023",
-      "unit": "people",
-      "series": [
-        {
-          "as_of": "2026-10-01",
-          "value": 74040.0,
           "source": "https://www.aljazeera.com/news/2026/10/1/israeli-drone-kills-palestinian-in-gaza-settlers-kill-another-in-west-bank"
         }
       ]
