@@ -3,9 +3,11 @@ import Link from "next/link";
 import Popover from "@/components/Popover";
 import type { DailyChangeKind, DailyTheater } from "@/lib/daily";
 import { claimOf, isCut, shortDay, splitLead } from "@/lib/daily";
+import { dossierPath } from "@/lib/dossier";
 import type { Direction, Snapshot } from "@/lib/intel";
 
 import { DevelopmentTimeline, KeyFigures, PulseTiles, SourceLink, TheaterMapFigure } from "./DailyVisuals";
+import "@/app/intel/theaters/theaters.css";
 
 // One theater of the daily report. Reading order: the claim (bottom line up front), the picture
 // (map + figures), what changed, what happened, the Pulses, what next. Detail waits in popovers.
@@ -60,12 +62,21 @@ export default function DailyTheaterSection({ t, id, date, snap }: { t: DailyThe
   const outlookCut = isCut(t.outlook, outlook) || t.watch_next.length > WATCH_SHOWN || t.watch_next.some((w, k) => isCut(w, watch[k]));
   const hasMap = t.map !== null;
   const hasFigs = t.key_figures.length > 0;
+  const dossierHref = dossierPath(t.theater_id);
 
   return (
     <section id={id} className="geo-theater" aria-labelledby={`${id}-claim`}>
       <header className="geo-th">
         <p className="geo-kicker">
-          <span>{t.name}</span>
+          <span>
+            {dossierHref ? (
+              <Link href={dossierHref} className="th-dlink" title="Open this theater's dossier: background, actors, record, outlook">
+                {t.name}
+              </Link>
+            ) : (
+              t.name
+            )}
+          </span>
           <span className={`geo-dir${dir.moving ? " is-moving" : ""}`} title={`Is the situation itself getting worse or easing: ${dir.word}, ${t.escalation.pace} pace`}>
             <span aria-hidden="true">{dir.glyph}</span> {dir.word}
           </span>

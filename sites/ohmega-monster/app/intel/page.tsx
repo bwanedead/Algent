@@ -6,6 +6,7 @@ import SituationForecasts from "@/components/SituationForecasts";
 import SituationMoves from "@/components/SituationMoves";
 import SituationNew from "@/components/SituationNew";
 import { SituationSince, SituationVisitProvider } from "@/components/SituationVisit";
+import { dossierList } from "@/lib/dossier";
 import { situationRoom } from "@/lib/situation";
 
 import "./intel.css";
@@ -19,6 +20,7 @@ export const metadata: Metadata = {
 // the other pages' jobs: /geopolitics reads the day, /pulses scans the whole state of the world.
 export default function IntelPage() {
   const room = situationRoom();
+  const dossiers = dossierList().length;
   return (
     <div className="intel-page sit-page">
       <SituationVisitProvider>
@@ -35,6 +37,7 @@ export default function IntelPage() {
             </span>
           )}
           <span className="intel-strip-item sit-strip-links">
+            {dossiers > 0 && <Link href="/intel/theaters">Every theater&apos;s dossier →</Link>}
             <Link href="/geopolitics">Read the day →</Link>
             <Link href="/pulses">Scan every Pulse →</Link>
           </span>

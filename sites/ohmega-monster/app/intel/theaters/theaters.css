@@ -1,0 +1,226 @@
+/* Theater dossiers (/intel/theaters and /intel/theaters/[id]). Governing doctrine:
+   docs/ethos/information-ergonomics-ethos.md. One meaning per visual channel: band colour = Pulse
+   severity only; the accent = what changed / is new (a rising escalation, a moved figure, a signal that
+   changed status); relation-kind colours reuse the .intel-k-* set of the brief pages; everything else is
+   neutral greys. Structure comes from whitespace and alignment, not boxes and rules.
+   Popover bodies are portaled to <body>, so nothing below may depend on a .th-page ancestor except link
+   colouring (popover links are styled by .geo-pd in geopolitics.css, which both pages import).
+   Tokens come from globals.css; nothing here hard-codes a colour. */
+
+/* globals.css paints every .intel-page link in the accent; here the accent is reserved for change. */
+.intel-page.th-page a { color: var(--strong); text-decoration-color: var(--rule-strong); text-underline-offset: 3px; }
+.intel-page.th-page a:hover { text-decoration-color: var(--accent); }
+.th-page { padding-top: var(--line); }
+.th-page > * { min-width: 0; }
+
+/* From the daily report: a theater's name links to its dossier. */
+body .geo a.th-dlink { color: inherit; text-decoration: underline dotted var(--rule-strong); text-underline-offset: 3px; }
+body .geo a.th-dlink:hover { color: var(--strong); text-decoration-color: var(--accent); }
+
+.th-k { margin-right: 4px; color: var(--muted); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+.th-when { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.th-note { margin: 6px 0 0; color: var(--muted); font-size: 10px; line-height: 15px; overflow-wrap: anywhere; }
+.th-key { margin: 4px 0 0; color: var(--muted); font-size: 10px; line-height: 16px; }
+.th-key .geo-v { width: 8px; height: 8px; margin: 0 2px 0 8px; }
+.th-key .geo-v:first-child { margin-left: 0; }
+
+/* Popover triggers that are not tiles: plain text that looks like what it is. */
+button.th-link-btn { margin: 6px 16px 0 0; padding: 0; font: inherit; font-size: 11px; line-height: 20px; color: var(--muted); background: none; border: 0; cursor: pointer; text-align: left; text-decoration: underline dotted var(--rule-strong); text-underline-offset: 3px; }
+button.th-link-btn:hover { color: var(--strong); }
+button.th-link-btn:focus-visible { outline: 1px solid var(--accent-dim); outline-offset: 2px; }
+
+/* ---- screen one: label, claim, meta strip, escalation trajectory --------------------------- */
+.th-crumb { margin: calc(var(--line) * 0.25) 0 0; font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+.intel-page.th-page .th-crumb a { color: var(--muted); text-decoration: none; }
+.intel-page.th-page .th-crumb a:hover { color: var(--strong); }
+.th-kicker { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; margin: 10px 0 0; color: var(--muted); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+.th-domain { color: var(--faint); }
+.th-claim { margin: 2px 0 0; max-width: 72ch; color: var(--strong); font-size: clamp(18px, 2.6vw, 26px); line-height: 1.25; font-weight: 600; letter-spacing: -0.02em; overflow-wrap: anywhere; }
+.th-asof { margin: 6px 0 0; color: var(--muted); font-size: 11px; overflow-wrap: anywhere; }
+
+.th-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 22px; margin: 12px 0 10px; padding: 8px 0; border-top: 1px solid var(--rule-strong); border-bottom: 1px solid var(--rule-strong); font-size: 12px; line-height: 20px; font-variant-numeric: tabular-nums; }
+.th-meta > span { min-width: 0; }
+.th-cov .geo-spark { display: inline-block; vertical-align: middle; margin-left: 8px; }
+.th-dir { white-space: nowrap; }
+.th-dir.is-moving { color: var(--accent); }
+.th-since { color: var(--muted); white-space: normal; }
+
+.th-track { margin: 0 0 4px; min-width: 0; }
+.th-track-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.th-track-grid { stroke: var(--rule); stroke-width: 1; stroke-dasharray: 2 4; }
+.th-track-line { fill: none; stroke: var(--rule-strong); stroke-width: 1.2; stroke-linejoin: round; }
+.th-track-now { fill: none; stroke: var(--strong); stroke-width: 1; }
+.th-track-axis { display: flex; justify-content: space-between; gap: 8px; margin-top: 2px; color: var(--muted); font-size: 10px; }
+/* Direction marks: glyph shape, height on the strip and colour say the same thing. */
+.th-m { stroke-width: 1.4; stroke-linejoin: round; }
+.th-m-rising { fill: var(--accent); stroke: var(--accent); }
+.th-m-steady { fill: var(--faint); stroke: var(--faint); }
+.th-m-easing { fill: var(--bg); stroke: var(--strong); }
+.th-m-unclear { fill: none; stroke: var(--muted); stroke-dasharray: 2 2; }
+
+.th-screen { display: grid; gap: 18px 24px; align-items: start; margin: 18px 0 0; }
+.th-screen.is-two { grid-template-columns: minmax(0, 1fr) minmax(0, 320px); }
+.th-screen > * { min-width: 0; }
+.th-map { min-width: 0; }
+.th-map .geo-map-svg, .th-map .geo-map-credit { max-width: 100%; }
+
+/* Pulses: tile + sparkline, one shape, one 0-100 scale, one time axis. */
+.th-h2 { margin: 0 0 8px; color: var(--strong); font-size: 13px; line-height: 18px; font-weight: 600; overflow-wrap: anywhere; }
+.th-pulse-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px 6px; min-width: 0; }
+.th-pulse { display: grid; gap: 3px; min-width: 0; }
+.th-spark { display: block; width: 100%; height: auto; }
+.th-spark-grid { stroke: var(--rule); stroke-width: 1; }
+.th-spark-line { fill: none; stroke: var(--band); stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.th-spark-dot { fill: var(--band); }
+.th-spark-empty { stroke: var(--rule-strong); stroke-dasharray: 3 3; }
+
+/* ---- sections: a claim heading, one lead line, then the picture ---------------------------- */
+.th-sec { margin-top: calc(var(--line) * 2.25); min-width: 0; scroll-margin-top: 16px; }
+.th-sec-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; }
+.th-sec-head h2 { flex: 1 1 260px; min-width: 0; margin: 0; color: var(--strong); font-size: 15px; line-height: 22px; letter-spacing: -0.01em; overflow-wrap: anywhere; }
+.th-sec-head .th-key { margin: 0; }
+.th-lead { max-width: 80ch; margin: 2px 0 12px; color: var(--text); font-size: 13px; line-height: 20px; overflow-wrap: anywhere; }
+.th-sub { margin: 16px 0 6px; color: var(--muted); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+.th-sub .th-key { margin-left: 10px; letter-spacing: 0; text-transform: none; }
+.th-foot { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 4px; margin: 4px 0 0; }
+.th-foot .th-note { margin: 6px 0 0; }
+
+.th-primer p { max-width: 72ch; margin: 0 0 8px; color: var(--text); font-size: 14px; line-height: 22px; overflow-wrap: anywhere; }
+
+/* ---- actor network ----------------------------------------------------------------------- */
+.th-net { margin: 0; min-width: 0; }
+.th-net-svg { display: block; width: 100%; max-width: 700px; height: auto; }
+.th-edge { stroke: currentColor; opacity: 0.85; stroke-linecap: round; }
+.th-node { fill: var(--bg); stroke: var(--strong); stroke-width: 1.8; }
+.th-node-label { fill: var(--strong); font-family: var(--mono); font-size: 12px; paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; }
+.th-legend { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 8px 0 0; padding: 0; list-style: none; color: var(--muted); font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; }
+.th-legend li { display: inline-flex; align-items: center; gap: 6px; }
+.th-legend .th-legend-note { letter-spacing: 0; text-transform: none; }
+.th-rels { margin: 10px 0 0; padding: 0; list-style: none; }
+.th-rel { padding: 4px 0; font-size: 13px; line-height: 20px; overflow-wrap: anywhere; }
+.th-rel-line b { color: var(--strong); font-weight: 600; }
+.th-rel-kind { font-size: 11px; font-weight: 600; }
+.th-rel-n { margin-left: 8px; color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.th-rel-last { margin-left: 8px; color: var(--faint); font-size: 11px; }
+.th-rel-note { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: var(--muted); font-size: 11px; line-height: 16px; }
+.th-actors { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 6px 0 0; padding: 0; list-style: none; font-size: 13px; }
+/* Wide: the picture carries the relations (the full table is a popover). Narrow: the ranked list does. */
+@media (min-width: 640px) { .th-rels:not(.is-solo) { display: none; } }
+@media (max-width: 639px) { .th-wide-only { display: none; } }
+@media (max-width: 639px) { .th-net { display: none; } }
+
+/* ---- tables inside popovers --------------------------------------------------------------- */
+.th-tbl-wrap { max-width: 100%; overflow-x: auto; }
+.th-tbl { width: 100%; border-collapse: collapse; font-size: 12px; line-height: 18px; }
+.th-tbl th, .th-tbl td { padding: 4px 12px 4px 0; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); overflow-wrap: anywhere; }
+.th-tbl thead th { color: var(--muted); font-size: 10px; font-weight: 400; letter-spacing: 0.09em; text-transform: uppercase; white-space: nowrap; }
+.th-tbl .th-r { text-align: right; padding-right: 16px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ---- timeline: weeks as quiet labels over the shared geo-tl rows --------------------------- */
+.th-week { margin-top: 10px; }
+.th-week-label { margin: 0 0 2px; color: var(--faint); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+.th-week .geo-tl { margin-bottom: 2px; }
+
+/* ---- the numbers ------------------------------------------------------------------------- */
+.th-figs { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; min-width: 0; }
+button.th-fig { display: flex; flex-direction: column; gap: 3px; width: 100%; min-width: 0; padding: 8px 10px; font: inherit; color: inherit; text-align: left; background: var(--panel); border: 0; cursor: pointer; line-height: 16px; }
+button.th-fig:hover { outline: 1px solid var(--rule-strong); }
+button.th-fig:focus-visible, button.th-fig[aria-expanded="true"] { outline: 1px solid var(--accent-dim); }
+.th-fig-label { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 30px; color: var(--muted); font-size: 11px; line-height: 15px; overflow-wrap: anywhere; }
+.th-fig-value { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 6px; min-width: 0; }
+.th-fig-value b { color: var(--strong); font-size: 24px; line-height: 30px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.th-fig-unit { color: var(--muted); font-size: 11px; overflow-wrap: anywhere; }
+.th-fig-chart { display: block; width: 100%; height: auto; margin: 2px 0; }
+.th-fig-base { stroke: var(--rule-strong); stroke-width: 1; stroke-dasharray: 3 3; }
+.th-fig-line { fill: none; stroke: var(--muted); stroke-width: 1.4; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.th-fig-dot { fill: var(--muted); }
+.th-fig-now { fill: var(--strong); }
+.th-fig-now.is-fresh { fill: var(--accent); }
+.th-fig-chg { color: var(--text); font-size: 10px; line-height: 14px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+
+/* ---- where it is heading ----------------------------------------------------------------- */
+.th-fcs { min-width: 0; }
+.th-fc-list, .th-res-list, .th-ind-list, .th-links { margin: 0; padding: 0; list-style: none; }
+.th-fc { display: grid; grid-template-columns: 52px minmax(0, 1fr); grid-template-areas: "p text" "p bar" "p hor"; gap: 3px 10px; padding: 6px 0; }
+.th-fc-p { grid-area: p; color: var(--strong); font-size: 20px; line-height: 24px; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.th-fc-text { grid-area: text; font-size: 13px; line-height: 19px; overflow-wrap: anywhere; }
+.th-fc-h { grid-area: hor; color: var(--muted); font-size: 11px; }
+/* One 0-100 axis for every forecast; ticks at 25 / 50 / 75. */
+.th-pbar { grid-area: bar; position: relative; display: block; width: 100%; max-width: 420px; height: 5px; background: var(--rule); }
+.th-pbar::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 calc(25% - 1px), var(--bg) calc(25% - 1px) 25%); }
+.th-pbar-fill { display: block; height: 100%; background: var(--strong); opacity: 0.8; }
+
+.th-chip { display: inline-block; padding: 0 6px; color: var(--strong); font-size: 10px; line-height: 18px; letter-spacing: 0.07em; text-transform: uppercase; white-space: nowrap; border: 1px solid var(--rule-strong); }
+button.th-res-btn { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 0 10px; align-items: baseline; width: 100%; padding: 3px 0; font: inherit; color: inherit; text-align: left; background: none; border: 0; cursor: pointer; font-size: 13px; line-height: 20px; }
+button.th-res-btn:hover .th-res-text { color: var(--strong); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+button.th-res-btn:focus-visible { outline: 1px solid var(--accent-dim); outline-offset: 2px; }
+.th-res-text { min-width: 0; overflow-wrap: anywhere; }
+.th-res-p { color: var(--muted); font-size: 11px; white-space: nowrap; }
+
+/* Indicators: dots over the same dates for every row. Hollow / half / solid, never colour alone. */
+.th-ind { display: grid; grid-template-columns: minmax(0, 1fr) calc(var(--n, 14) * 14px) 176px; gap: 0 14px; align-items: center; padding: 4px 0; font-size: 13px; line-height: 18px; }
+.th-ind-signal { min-width: 0; overflow-wrap: anywhere; }
+.th-ind-strip { display: grid; grid-template-columns: repeat(var(--n, 14), 14px); align-items: center; }
+.th-ind-now { color: var(--muted); font-size: 11px; line-height: 14px; }
+.th-ind-now.is-changed { color: var(--accent); }
+.th-ind-was { color: var(--muted); }
+.th-ind-axis { padding: 0; color: var(--muted); font-size: 10px; line-height: 14px; }
+.th-ind-ends { display: flex; justify-content: space-between; }
+.th-dot { display: inline-block; width: 11px; height: 11px; box-sizing: border-box; border: 1.5px solid var(--faint); border-radius: 50%; background: transparent; vertical-align: -1px; }
+.th-dot.is-emerging { border-color: var(--muted); background: linear-gradient(90deg, var(--muted) 50%, transparent 50%); }
+.th-dot.is-observed { border-color: var(--strong); background: var(--strong); }
+.th-dot.is-none { width: 3px; height: 3px; margin: 4px; border: 0; background: var(--rule-strong); }
+.th-dot.is-changed { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.th-out { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 4px 28px; margin-top: 8px; }
+.th-out > * { min-width: 0; }
+.th-links li { padding: 2px 0; font-size: 13px; line-height: 20px; overflow-wrap: anywhere; }
+.th-chips { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 6px; margin: 0; }
+.intel-page.th-page a.th-chip-link, a.th-chip-link { padding: 0 6px; font-size: 11px; line-height: 18px; text-decoration: none; border: 1px solid var(--rule-strong); }
+.th-built { margin: calc(var(--line) * 3) 0 0; color: var(--faint); font-size: 11px; }
+
+/* ---- the index: small multiples, one row per theater ------------------------------------- */
+.th-index-key { margin: 8px 0 0; }
+.th-group { margin-top: calc(var(--line) * 1.5); min-width: 0; }
+.th-group-h { margin: 0 0 4px; color: var(--muted); font-size: 10px; font-weight: 400; letter-spacing: 0.09em; text-transform: uppercase; }
+.th-rows { margin: 0; padding: 0; list-style: none; }
+.th-row { display: grid; grid-template-columns: minmax(0, 1.5fr) 280px 92px 210px 128px; gap: 0 20px; align-items: center; padding: 8px 0; min-width: 0; }
+.intel-page.th-page a.th-row-name { display: flex; flex-direction: column; gap: 1px; min-width: 0; text-decoration: none; overflow-wrap: anywhere; }
+.th-row-name b { color: var(--strong); font-size: 13px; line-height: 18px; }
+.th-row-name:hover b { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+.th-row-name .th-domain { font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+.th-row-track { display: flex; align-items: center; gap: 10px; min-width: 0; font-size: 11px; }
+.th-row-track .th-dir { flex: none; width: 58px; }
+.th-mini { display: block; flex: none; width: auto; height: 24px; max-width: 100%; }
+.th-row-band { min-width: 0; }
+.th-row-cov { display: flex; align-items: center; gap: 8px; min-width: 0; white-space: nowrap; }
+.th-cbars { display: block; flex: none; width: auto; height: 22px; max-width: 100%; }
+.th-row-seen { min-width: 0; text-align: right; white-space: nowrap; }
+
+/* ---- phones ------------------------------------------------------------------------------ */
+@media (max-width: 980px) {
+  .th-row { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name name" "track band" "cov seen"; gap: 4px 14px; padding: 10px 0; }
+  .th-row > .th-row-name { grid-area: name; }
+  .th-row-track { grid-area: track; }
+  .th-row-band { grid-area: band; justify-self: end; }
+  .th-row-cov { grid-area: cov; }
+  .th-row-seen { grid-area: seen; justify-self: end; }
+}
+@media (max-width: 760px) {
+  .th-screen.is-two { grid-template-columns: minmax(0, 1fr); }
+  .th-map .geo-map-svg { max-width: 360px; }
+}
+@media (max-width: 560px) {
+  .th-ind { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "signal signal" "strip now"; gap: 2px 12px; padding: 7px 0; }
+  .th-ind-signal { grid-area: signal; }
+  .th-ind-strip { grid-area: strip; }
+  .th-ind-now { grid-area: now; }
+  .th-ind-axis > :nth-child(1) { display: none; }
+  .th-ind-axis > :nth-child(2) { grid-area: strip; }
+  .th-ind-axis > :nth-child(3) { grid-area: now; }
+  button.th-res-btn { grid-template-columns: auto minmax(0, 1fr); }
+  .th-res-p { grid-column: 2; }
+  .th-fc { grid-template-columns: 44px minmax(0, 1fr); }
+  .th-pulse-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+  .th-figs { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+}
