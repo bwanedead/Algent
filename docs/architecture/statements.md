@@ -116,3 +116,12 @@ list it in the table above.
 Transcripts are kept internally so extraction and quote validation have the source text. The site and
 agents receive our extracted statements with links back to the original; full texts are never
 republished. Quotes are limited to 60 words and only where the wording matters.
+
+## Consumers
+
+The intelligence desk reads the ledger through `agent_system/agents/intel/sensing.py` (read-only; `recall.block` / `recall.history_block` print chosen rows in the canonical format):
+
+- **Daily section writer** and **brief analyst** (`daily.write_section`, `brief.write_brief` via `desk.produce`): STATEMENTS ON RECORD for the theater (a fortnight for the daily, `desk.BRIEF_WINDOW_DAYS` for a brief). Terms are the ledger's own entities (speakers, affiliations, `about`) that occur in the theater's text plus office-holders' surnames; statements rank by terms mentioned, then recency, bounded by a per-call budget. The three most frequent speakers also get a `STATEMENT HISTORY` excerpt (earlier statements, ~60 days) so a shift against their own record is visible.
+- **Daily summary writer** (`daily.write_summary`): the weightiest statements of the last ~3 days across ALL actors (strong stance and a stated kind of act first, at most two per speaker), so a major speech lands in the day's top even when no hot theater claims it.
+- **Grounding**: transcript URLs of shown statements are primary evidence in `normalise_section` / `brief.normalise` (they may ground `researched`, meaning *said*; they are never a source for key figures). A statement proves it was said, not that it is true.
+- **Refresh**: `newsroom intel daily` / `cycle` run `collect` then `extract_pending` first (best-effort; `--no-refresh` skips; transcripts already extracted cost nothing), reported as `sensing_refresh.statements`.

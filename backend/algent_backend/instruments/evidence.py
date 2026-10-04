@@ -33,14 +33,15 @@ def _num(x: float) -> str:
     return f"{x:,.4g}" if abs(x) < 10 else f"{x:,.2f}"
 
 
-def _chg(c: dict[str, Any]) -> str:
+def _chg(c: dict[str, Any], *, was: bool = False) -> str:
     pct = f" ({c['pct']:+.0f}%)" if c["pct"] is not None else ""
-    return f"{c['abs']:+,.4g}{pct}"
+    # ``was`` names the earlier value the change is measured from: the only baseline a writer may quote.
+    return f"{c['abs']:+,.4g}{pct}" + (f" [was {_num(c['from_value'])} on {c['from_period']}]" if was else "")
 
 
 def _line(m: dict[str, Any]) -> str:
     ch = m["changes"]
-    parts = [f"{label} {_chg(ch[key])}" for label, key in (("vs prev", "prev"), ("vs 7d", "7d"),
+    parts = [f"{label} {_chg(ch[key], was=key != 'prev')}" for label, key in (("vs prev", "prev"), ("vs 7d", "7d"),
                                                           ("vs 30d", "30d"), ("vs 1y", "1y")) if key in ch]
     flags = []
     if m["unusual"]:
@@ -55,11 +56,16 @@ def _line(m: dict[str, Any]) -> str:
             f"{m['latest']['period']} ({m['age_days']}d old); {tail}; source: {m['source']}{internal} {m['source_url']}")
 
 
-def evidence_block(tags: list[str], *, as_of: date | None = None) -> str:
-    """Text for agents: the matching series' latest readings and moves; '' when none are stored."""
-    rows = moves_board(tags, as_of=as_of)
+def render_block(rows: list[dict[str, Any]], *, as_of: date | None = None) -> str:
+    """The evidence text for already-chosen ``moves_board`` rows ('' for none): lets a consumer that
+    ranks or budgets the rows itself print them in the one canonical format."""
     if not rows:
         return ""
     head = (f"INSTRUMENTS — programmatic readings (no model), as of {(as_of or date.today()).isoformat()}; "
             "'unusual' means outside the series' own history, not a forecast:")
     return "\n".join([head, *map(_line, rows)])
+
+
+def evidence_block(tags: list[str], *, as_of: date | None = None) -> str:
+    """Text for agents: the matching series' latest readings and moves; '' when none are stored."""
+    return render_block(moves_board(tags, as_of=as_of), as_of=as_of)

@@ -39,10 +39,23 @@ You are the analyst on an intelligence desk writing a brief on one theater for a
 needs to understand it fast and act on it. This is not an article: no narrative arc, no scene-setting,
 no quotes for colour. Every line earns its place by changing what the reader knows or watches.
 
-TWO KINDS OF EVIDENCE, KEPT APART:
-- RESEARCHED claims — graded by our research (confirmed, likely, contested…). These can carry facts.
-- REPORTED headlines — what other outlets said, unverified by us. These can carry leads, and must be
-  marked `verification: "reported"` wherever they appear in the timeline.
+EVIDENCE, AND WHAT EACH KIND CAN CARRY. Numbers and words move when no event does: a strait emptying, a
+price repricing, a leader adding a condition are often the first sign of the next rung, and a brief built
+only from headlines misses them. So four kinds arrive, kept apart by what they can prove:
+- RESEARCHED claims, graded by our research (confirmed, likely, contested…): they carry facts.
+- INSTRUMENTS readings: programmatic numbers from public data series, each with value, as-of date and
+  source URL. A reading is primary data, so a timeline item resting on one may be `researched`. Read a
+  number against its own history (changes and UNUSUAL / full-history flags are given) and against its
+  as-of lag; never over-read one day. Readings marked [internal source] inform your judgment but are
+  not cited.
+- STATEMENTS ON RECORD: what named officials said, from primary transcripts, with links. A statement
+  proves it was SAID, not that it is true: attribute it, and test its claims against researched
+  evidence. Read it against that speaker's earlier statements (STATEMENT HISTORY) for a new condition, a
+  softened or hardened tone, a conspicuous omission, reassurance aimed at a third party: a shift against
+  their own record is often the finding, and a good indicator or judgment to track. Quote exact wording
+  only where the wording itself matters.
+- REPORTED headlines, what other outlets said, unverified by us: they carry leads, and must be marked
+  `verification: "reported"` wherever they appear in the timeline.
 Never upgrade a reported item into a fact. When the only evidence is reported, say so.
 
 FACTS VS ASSESSMENTS. The `situation` and `timeline` are facts with dates and verification. The
@@ -259,7 +272,9 @@ def previous_digest(record: dict) -> str:
 
 def write_brief(context: Any, config: Any, theater: Theater, heat: dict, *, profiles: list[dict],
                 pulse_table: dict[str, str], model_spec: Any, focus: str = "", previous: dict | None = None,
-                track_record: str = "", corpus_ctx: Any = None) -> Brief | None:
+                track_record: str = "", corpus_ctx: Any = None, sensing: Any = None) -> Brief | None:
+    """Write the brief. ``sensing`` (``sensing.Evidence``) adds the INSTRUMENTS and STATEMENTS blocks; its
+    primary-source URLs may ground a timeline item as `researched`."""
     from langchain_core.messages import HumanMessage, SystemMessage
 
     from algent_backend.agent_system.prompting import UNIVERSAL_AGENT_BASE, compose_system_prompt
@@ -277,7 +292,8 @@ def write_brief(context: Any, config: Any, theater: Theater, heat: dict, *, prof
             + corpus_block(corpus_ctx)
             + f"RESEARCHED CLAIMS (graded by our research):{researched or ' none'}\n\n"
             f"SOURCE URLS FOR RESEARCHED CLAIMS: {_compact(source_urls)}\n\n"
-            f"REPORTED HEADLINES (other outlets, unverified):\n{reported(theater)}\n\n"
+            + (sensing.render() if sensing else "")
+            + f"REPORTED HEADLINES (other outlets, unverified):\n{reported(theater)}\n\n"
             + ("OHMEGA PULSES (name | situation | position | band); tag `pulses` with names from here only:\n"
                + "\n".join(pulse_table.values()) + "\n\n" if pulse_table else "")
             + (f"DESK FOCUS: {focus.strip()}\nThe desk asked this directly: lead with it and answer it from the "
@@ -288,7 +304,8 @@ def write_brief(context: Any, config: Any, theater: Theater, heat: dict, *, prof
                           HumanMessage(content=task)], config=config)
     if not isinstance(brief, Brief):
         return None
-    allowed = {u for u in source_urls.values() if u} | (corpus_ctx.source_urls if corpus_ctx is not None else set())
+    allowed = ({u for u in source_urls.values() if u} | (corpus_ctx.source_urls if corpus_ctx is not None else set())
+               | (sensing.primary_urls if sensing else set()))
     return normalise(brief, pulse_table=pulse_table, has_previous=bool(previous), research_urls=allowed)
 
 

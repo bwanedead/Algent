@@ -17,10 +17,12 @@ from typing import Any
 
 from . import brief as br
 from . import forecasts, render
+from . import sensing as sensing_mod
 from .contracts import Brief, Theater
 from .heat import store_dir
 
 SCHEMA = "ohmega.brief/1"
+BRIEF_STATEMENTS = 16           # a month of statements is wider than a fortnight's: a wider (still bounded) block
 BRIEF_WINDOW_DAYS = 30          # a brief's research covers the last 30 days; earlier corpus claims are the background
 
 
@@ -107,10 +109,12 @@ def produce(ctx: Any, theater: Theater, heat: dict, *, as_of: str, out: Path | N
     except Exception:  # noqa: BLE001 - settling is a side duty; it must not cost the brief
         settled = []
     earlier = br.recall(theater, as_of=as_of, window_days=BRIEF_WINDOW_DAYS, exclude_ids=[p["id"] for p in profiles])
+    last = previous_brief(theater.id, before_slug=brief_slug(as_of, theater.name, focus))
+    sensed = sensing_mod.for_theater(theater, as_of=as_of, actors=sensing_mod.prior_actors(last),
+                                     statement_days=BRIEF_WINDOW_DAYS, statement_limit=BRIEF_STATEMENTS)
     brief = br.write_brief(ctx, None, theater, heat, profiles=profiles, pulse_table=br.pulse_catalog(pulse_store()),
-                           model_spec=model_spec, focus=focus, corpus_ctx=earlier,
-                           previous=previous_brief(theater.id, before_slug=brief_slug(as_of, theater.name, focus)),
-                           track_record=forecasts.track_record(theater.id))
+                           model_spec=model_spec, focus=focus, corpus_ctx=earlier, previous=last,
+                           track_record=forecasts.track_record(theater.id), sensing=sensed)
     if brief is None:
         return {"theater": theater.id, "error": "analyst returned nothing"}
     if not brief.bottom_line.strip():
@@ -120,6 +124,7 @@ def produce(ctx: Any, theater: Theater, heat: dict, *, as_of: str, out: Path | N
     forecasts.record(record["slug"], theater.id, brief.judgments, made_at=record["built_at"])
     row = {"theater": theater.id, "slug": record["slug"], "researched": bool(profiles),
            "research_usd": round(spent, 4), "research_reused": reused, "forecasts_made": len(brief.judgments),
+           "sensing": sensing_mod.summary_for_report(sensed),
            "forecasts_settled": len(settled)}
     if research_error:
         row["research_error"] = research_error

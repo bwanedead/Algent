@@ -12,6 +12,8 @@
 
 Research is reused, never repeated: a theater's research already in the corpus for the same day (daily) or
 the same brief (complete profile, built today) is fed to the writers as is; ``--fresh-research`` forces new.
+`daily` and `cycle` first refresh the sensing layers (instruments fetch, statements collect + extract; best-effort,
+never failing the run; the result is the report's `sensing_refresh`); `--no-refresh` skips it.
 A daily that wrote no section, or a brief run that produced none, persists/publishes nothing and exits 1.
 
 Output lands in ``runs_data/intel/<as_of>/`` as HTML + JSON; briefs are
@@ -43,6 +45,7 @@ def add_parser(sub: Any) -> None:
     d.add_argument("--research", action="store_true", help="research each theater first (paid, capped)")
     d.add_argument("--fresh-research", action="store_true", help="redo research even if today's already exists")
     d.add_argument("--days", type=int, default=7)
+    d.add_argument("--no-refresh", action="store_true", help="skip refreshing instruments and statements first")
     verbs.add_parser("import-briefs", help="one-off: copy runs_data briefs into the durable intel store")
     verbs.add_parser("publish", help="build the desk snapshot and put it on the site")
     t = verbs.add_parser("dossiers", help="rebuild the theater dossiers and publish them")
@@ -53,6 +56,7 @@ def add_parser(sub: Any) -> None:
     c.add_argument("--research", action="store_true", help="commission fresh research first (paid)")
     c.add_argument("--fresh-research", action="store_true", help="redo research even if today's already exists")
     c.add_argument("--days", type=int, default=7)
+    c.add_argument("--no-refresh", action="store_true", help="skip refreshing instruments and statements first")
     c.add_argument("--domain", action="append", default=[],
                    help="only brief theaters in these domains (repeatable or comma list, e.g. "
                         "geopolitics,politics); the heat board still covers everything")
@@ -82,6 +86,19 @@ def run_intel(args: Any) -> int:
     return {"heat": _heat, "brief": _brief, "import-briefs": _import_briefs,
             "publish": _publish, "cycle": _cycle, "daily": _daily,
             "dossiers": _dossiers}[args.intel_verb](args)
+
+
+def _refresh_sensing(args: Any) -> dict[str, Any]:
+    """Refresh the numbers and statements layers before the desk writes. Never raises; ``--no-refresh`` skips."""
+    if getattr(args, "no_refresh", False):
+        return {"skipped": "--no-refresh"}
+    from algent_backend.agent_system.agents.intel import refresh
+    from algent_backend.agent_system.foundation.models import house_spec
+
+    try:
+        return refresh.refresh(_ctx("intel-sensing"), house_spec(reasoning_effort="low", temperature=0.1, max_tokens=8192))
+    except Exception as exc:  # noqa: BLE001 - e.g. the model resolver cannot be built; the day goes on
+        return {"error": f"{type(exc).__name__}: {str(exc)[:200]}"}
 
 
 def _heat(args: Any, *, publish: bool = True) -> int:
@@ -204,6 +221,7 @@ def _cycle(args: Any) -> int:
     from algent_backend.data_backup import sync
     from algent_backend.publishing.intel_page import publish_intel
 
+    sensing_refresh = _refresh_sensing(args)
     if _heat(args, publish=False) != 0:
         return 1
     board = desk.latest_board() or {"heat": [], "theaters": [], "as_of": ""}
@@ -214,6 +232,7 @@ def _cycle(args: Any) -> int:
                                   model_spec=house_spec(reasoning_effort="low", temperature=0.1, max_tokens=8192))
     domains = [d for item in args.domain for d in item.split(",") if d.strip()]
     report: dict[str, Any] = {
+        "sensing_refresh": sensing_refresh,
         "forecasts_settled": settled,
         "briefs": _produce_briefs(board, desk.pick_theaters(board, args.top, domains), research=args.research,
                                   fresh_research=args.fresh_research)}
@@ -236,6 +255,7 @@ def _daily(args: Any) -> int:
 
     from .pulse import promote_ready_quietly
 
+    sensing_refresh = _refresh_sensing(args)
     if _heat(args, publish=False) != 0:
         return 1
     board = desk.latest_board()
@@ -249,7 +269,8 @@ def _daily(args: Any) -> int:
                                  fresh_research=args.fresh_research)
     if result.get("error"):         # a failed run: nothing persisted, so nothing to promote, publish or back up
         print(json.dumps({"date": board["as_of"], "domain": args.domain, "error": result["error"],
-                          "theaters": result["theaters"], "research_usd": result["research_usd"]},
+                          "theaters": result["theaters"], "research_usd": result["research_usd"],
+                          "sensing_refresh": sensing_refresh},
                          indent=2, ensure_ascii=False))
         return 1
     # Promote first (quietly: it does not publish) so the one publish below carries the new Pulses.
@@ -258,6 +279,7 @@ def _daily(args: Any) -> int:
     report = {"date": board["as_of"], "domain": args.domain, "path": result["path"], "html": result.get("html"),
               "headline": result["report"]["summary"]["headline"], "theaters": result["theaters"],
               "research_usd": result["research_usd"], "pulse_proposals": proposals, "primers": primers_report,
+              "sensing_refresh": sensing_refresh,
               "publish": publish_intel(),
               "backup": sync.backup(note="intel daily")}
     print(json.dumps(report, indent=2, ensure_ascii=False))

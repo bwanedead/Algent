@@ -27,22 +27,30 @@ def _line(s: Statement) -> str:
     return (f"- {s.date} · {who}{about} [{s.signal}, stance {s.stance:+d}]: {said}{gist}{note}\n  {s.source_url}")
 
 
-def recall(terms: list[str], *, days: int = 14, limit: int = DEFAULT_LIMIT, today: date | None = None,
-           root: Path | None = None) -> str:
-    """STATEMENTS ON RECORD matching any of ``terms`` in the last ``days`` days, newest first.
-    Empty string when nothing matches, so callers can omit the block."""
-    rows = store.query(terms=terms, days=days, today=today, limit=limit, root=root)
+def block(rows: list[Statement], days: int) -> str:
+    """The STATEMENTS ON RECORD text for already-chosen rows ('' for none), in canonical format."""
     if not rows:
         return ""
     return (f"STATEMENTS ON RECORD (last {days} days, newest first; official sources, wording as stated):\n"
             + "\n".join(_line(s) for s in rows))
 
 
-def speaker_history(speaker: str, days: int = 90, *, limit: int = 20, today: date | None = None,
-                    root: Path | None = None) -> str:
-    """One speaker's earlier statements, oldest first, so tone can be read as a trajectory."""
-    rows = store.query(speaker=speaker, days=days, today=today, root=root)[:limit]
+def history_block(speaker: str, rows: list[Statement], days: int) -> str:
+    """STATEMENT HISTORY text for already-chosen rows (given newest first), shown oldest first."""
     if not rows:
         return ""
     return (f"STATEMENT HISTORY: {speaker} (last {days} days, oldest first):\n"
             + "\n".join(_line(s) for s in reversed(rows)))
+
+
+def recall(terms: list[str], *, days: int = 14, limit: int = DEFAULT_LIMIT, today: date | None = None,
+           root: Path | None = None) -> str:
+    """STATEMENTS ON RECORD matching any of ``terms`` in the last ``days`` days, newest first.
+    Empty string when nothing matches, so callers can omit the block."""
+    return block(store.query(terms=terms, days=days, today=today, limit=limit, root=root), days)
+
+
+def speaker_history(speaker: str, days: int = 90, *, limit: int = 20, today: date | None = None,
+                    root: Path | None = None) -> str:
+    """One speaker's earlier statements, oldest first, so tone can be read as a trajectory."""
+    return history_block(speaker, store.query(speaker=speaker, days=days, today=today, root=root)[:limit], days)
