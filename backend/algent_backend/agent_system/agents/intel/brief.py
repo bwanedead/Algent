@@ -17,6 +17,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from ..research.profile import SignalProfile
 from .contracts import Brief, Theater
 
 GENERIC_QUESTIONS = (
@@ -116,24 +117,29 @@ def research_vector_id(theater: Theater, *, focus: str = "", id_tag: str = "") -
             + (f"_{id_tag}" if id_tag else ""))
 
 
+class EmptyResearch(RuntimeError):
+    """Research came back with no sourced claim: a failed attempt, reported as one (never as success)."""
+
+
 def reusable_research(theater: Theater, *, focus: str = "", id_tag: str = "", on_date: str = "",
                       store: Any = None) -> dict | None:
     """Research we already did for exactly this commission, so it is never paid for twice.
 
     The profile id is deterministic (theater + focus + day tag), so a rerun finds the earlier profile in
-    the corpus. It is reused only when COMPLETE (a non-empty claim ledger: a profile cut short by a failed
-    run is re-researched) and, when ``on_date`` is given, only if it was built that day (a brief's id has
-    no date, so an older profile of the same theater must not stand in for today's research).
+    the corpus. It is reused only when COMPLETE (``SignalProfile.is_complete``): if the current version
+    is not (a failed run saved over it), the newest complete version in history is restored and reused.
+    When ``on_date`` is given, only a profile built that day counts (a brief's id has no date, so an
+    older profile of the same theater must not stand in for today's research).
     """
     from ..research.assembly import profile_id_for
     from ..research.store import JsonProfileStore
 
     try:
-        found = (store or JsonProfileStore()).get(
+        found = (store or JsonProfileStore()).current_complete(
             profile_id_for({"id": research_vector_id(theater, focus=focus, id_tag=id_tag)}))
     except Exception:  # noqa: BLE001 - an unreadable profile is simply not reusable
         return None
-    if found is None or not found.claim_ledger:
+    if found is None:
         return None
     if on_date and not (found.generated_at or "").startswith(on_date):
         return None
@@ -144,7 +150,8 @@ def obtain_research(context: Any, config: Any, theater: Theater, *, fresh: bool 
                     questions: tuple[str, ...] | None = None, id_tag: str = "",
                     on_date: str = "") -> tuple[dict | None, bool]:
     """Reuse the research we already have for this commission, else commission it. Returns
-    ``(profile, reused)``. ``fresh`` forces new research (the operator asked for it)."""
+    ``(profile, reused)``. ``fresh`` forces new research (the operator asked for it). Research that comes
+    back empty raises ``EmptyResearch`` (callers record it as ``research_error``)."""
     if not fresh:
         found = reusable_research(theater, focus=focus, id_tag=id_tag, on_date=on_date)
         if found:
@@ -176,7 +183,15 @@ def commission_research(context: Any, config: Any, theater: Theater, *, focus: s
     }
     out = build_profile(context).invoke({"vector": vector}, config)
     profile = out.get("profile")
-    return profile if isinstance(profile, dict) and profile.get("id") else None
+    if not (isinstance(profile, dict) and profile.get("id")):
+        return None
+    if not SignalProfile.model_validate(profile).is_complete:
+        # The store has already refused to let this replace a complete profile; the money is spent,
+        # so say so upstream instead of letting the desk write from nothing as if it had researched.
+        raise EmptyResearch(f"research for {theater.name!r} returned no sourced claims "
+                            f"({len(profile.get('claim_ledger') or [])} claims, "
+                            f"{len(profile.get('source_ledger') or [])} sources)")
+    return profile
 
 
 def recall(theater: Theater, *, as_of: str, window_days: int, exclude_ids: list[str] | None = None,
