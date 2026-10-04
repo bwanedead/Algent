@@ -117,6 +117,34 @@ Agent feed (static data files in the site checkout under ``public/data``, beside
 Per-item files carry no build timestamp, so an unchanged item is byte-identical and is never rewritten.
 Stale files (a Pulse retired, a report removed) are not deleted.
 
+Theater dossiers (built by ``agents/intel/dossier.py``; a living page per theater, accumulated over every daily
+report and brief). Written to ``content/intel/theaters/<theater_id>.json`` AND ``public/data/theaters/<theater_id>.json``,
+plus ``theaters/index.json`` in both places. ``built_at`` is the newest input's timestamp (not the wall clock), so an
+unchanged dossier is byte-identical::
+
+    index = {"schema":"ohmega.dossier.index/1","built_at","theaters":[{"theater_id","name","domain","first_seen",
+        "last_seen","days_covered","heat","coverage","escalation_direction","max_band","url":"/intel/theaters/<id>"}]}
+        // most recently active first, then heat; max_band = most severe band among its Pulses ("" if none)
+    dossier = {"schema":"ohmega.dossier/1","theater_id","name","domain","built_at","first_seen","last_seen",
+      "days_covered":int,                      // daily reports covering it
+      "primer":{"text","built_at"}|null,       // <=120 words of stable background (intel_store/primers/, reused <=7 days)
+      "current":{"date","bottom_line","escalation":{"direction","pace"},"coverage","source":"daily|brief","url"}|null,
+      "pulses":[{"id","name","situation","position","band","history":[{"at","position"}]}],   // highest first
+      "escalation_history":[{"date","direction","pace"}],        // one per daily, oldest first
+      "coverage_series":[{"day","count","editions"}],            // newest heat-board row
+      "timeline":[{"date","headline","detail","where","verification","sources":[urls],"from":"/geopolitics/<date>"
+                   |"/intel/briefs/<slug>"}],                    // newest first; near-duplicates merged (dossier_timeline.py)
+      "places":[{"name","country","lat","lon","count","last_date"}],   // validated; strongest recency-weighted first
+      "map": <geo.build_map spec>|null,        // points[n-1] is places[n-1]; each point also has "weight" 0-1
+      "actors":[{"name","mentions","first","last"}],             // top 15
+      "relations":[{"source","target","kind","count","last_date","note"}],
+      "figures":[{"label","unit","series":[{"as_of","value","source"}]}],   // by label (date words removed) + unit
+      "forecasts":[{"id","statement","probability","horizon","status","resolution":null|{"resolved_at","outcome","evidence"}}],
+      "indicators":[{"signal","history":[{"date","status"}]}],   // by exact wording across briefs
+      "statements":[{"who","role","said","quote","when","source"}],   // newest 12
+      "links":[{"theater_id","name","link","date"}],             // cross-theater links from the daily summaries
+      "reports":[{"date","url"}], "briefs":[{"slug","title","as_of","url"}]}   // newest first
+
 Rules: ``rationale`` is the latest APPLIED, non-blind influence's rationale for that pulse, made
 reader-safe (claim ids stripped, ~400 chars at a word boundary). Situations that are not "active"
 and pulses that are "dormant" are skipped. ``absolute_position`` is internal and never exported.
@@ -133,7 +161,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from algent_backend.agent_system.agents.intel import forecasts
+from algent_backend.agent_system.agents.intel import dossier_store, forecasts
 from algent_backend.agent_system.agents.intel.brief import safe_name
 from algent_backend.agent_system.agents.intel.contracts import coverage_label
 
@@ -272,9 +300,22 @@ def build_index(snapshot: dict) -> dict:
             "forecasts_url": "/data/forecasts.json", "changes_url": "/data/changes.json"}
 
 
-def build_agent_files(snapshot: dict, intel_dir: Path, store: Any = None) -> dict[str, dict]:
+def build_dossiers(intel_dir: Path, store: Any = None) -> dict | None:
+    """Every theater dossier plus the index (``{"theaters": {id: dossier}, "index": {...}}``), or None if they
+    could not be built: the dossiers are a view onto stores that are already safe, so a fault in them must
+    never cost the rest of the publish."""
+    try:
+        return dossier_store.build(intel_dir, store)
+    except Exception as exc:  # noqa: BLE001
+        print(f"[intel] dossiers not built: {type(exc).__name__}: {str(exc)[:160]}", flush=True)
+        return None
+
+
+def build_agent_files(snapshot: dict, intel_dir: Path, store: Any = None,
+                      dossiers: dict | None = None) -> dict[str, dict]:
     """Every agent-feed file as ``{path under public/data: payload}``. Pulse files and the changes feed need
-    the Pulse store; without it only the store-independent files are built."""
+    the Pulse store; without it only the store-independent files are built. ``dossiers``: the
+    ``build_dossiers`` result when the caller already built it (it is built here otherwise)."""
     from algent_backend.agent_system.agents.pulse import registry
 
     now = datetime.fromisoformat(snapshot["built_at"])
@@ -286,6 +327,9 @@ def build_agent_files(snapshot: dict, intel_dir: Path, store: Any = None) -> dic
         files["pulses.json"] = build_pulse_feed(store, now=now)
         files["changes.json"] = agent_feed.changes_file(store, intel_dir, catalog, reports, briefs, now)
         files.update(agent_feed.pulse_files(store, catalog))
+    built = dossiers if dossiers is not None else build_dossiers(intel_dir, store)
+    if built is not None:
+        files.update(agent_feed.dossier_files(built))
     return files
 
 
@@ -300,8 +344,13 @@ def write_intel(site_dir: Path, snapshot: dict, intel_dir: Path, store: Any = No
         _write_if_changed(root / "briefs" / f"{record['slug']}.json", record)
     for record in _daily_reports(intel_dir):
         _write_if_changed(root / "daily" / safe_name(record["domain"]) / f"{record['date']}.json", record)
+    built = build_dossiers(intel_dir, store)
+    if built is not None:
+        for tid, record in built["theaters"].items():
+            _write_if_changed(root / "theaters" / f"{tid}.json", record)
+        _write_if_changed(root / "theaters" / "index.json", built["index"])
     data = site_dir / "public" / "data"
-    for rel, payload in build_agent_files(snapshot, intel_dir, store).items():
+    for rel, payload in build_agent_files(snapshot, intel_dir, store, built).items():
         _write_if_changed(data / rel, payload)
     return path
 
