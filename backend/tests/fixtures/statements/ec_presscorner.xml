@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Press releases - RSS</title>
+    <link>https://ec.europa.eu/commission/presscorner/api/rss</link>
+    <description>Search={format=RSS,size=10}</description>
+    <language>EN</language>
+    <copyright>Copyright European Commission DG COMM</copyright>
+    <item>
+      <title>Statement by Commissioner Lahbib on the siege of Oleshky, Ukraine</title>
+      <link>https://ec.europa.eu/commission/presscorner/detail/en/statement_26_2063</link>
+      <description>European Commission Statement Brussels, 02 Oct 2026 What is happening in Oleshky, Ukraine, is appalling. Civilians are trapped under siege by Russian forces without access to food, medicine, clean water and basic...</description>
+      <category>POLICY_AREA=ICHACR</category>
+      <pubDate>Fri, 02 Oct 2026 15:38:58 GMT</pubDate>
+      <guid>https://ec.europa.eu/commission/presscorner/detail/en/statement_26_2063</guid>
+    </item>
+  </channel>
+</rss>
