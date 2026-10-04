@@ -1,8 +1,30 @@
 {
   "schema": "ohmega.changes/1",
   "window_days": 30,
-  "as_of": "2026-10-04T21:38:55.474453+00:00",
+  "as_of": "2026-10-04T22:12:36.808470+00:00",
   "events": [
+    {
+      "type": "daily_published",
+      "at": "2026-10-04T22:12:36.808470+00:00",
+      "domain": "geopolitics",
+      "date": "2026-10-04",
+      "headline": "Russia hits Kyiv's Northern Bridge for third day as German chancellor pledges $1.1bn arms, Hormuz stays shut on Iran's seven conditions, and Ethiopian forces re-enter Mekelle",
+      "url": "/geopolitics/2026-10-04",
+      "data_url": "/data/daily/geopolitics/2026-10-04.json"
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-04T21:54:03.205317+00:00",
+      "pulse_id": "pls_iran_gulf_hormuz_maritime_disruption",
+      "name": "Strait of Hormuz Maritime Disruption",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_iran_gulf_hormuz_maritime_disruption.json",
+      "from": 78.0,
+      "to": 84.0,
+      "from_band": "critical",
+      "to_band": "critical",
+      "band_changed": false
+    },
     {
       "type": "daily_published",
       "at": "2026-10-04T21:38:55.474453+00:00",

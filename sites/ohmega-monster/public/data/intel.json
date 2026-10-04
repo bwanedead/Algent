@@ -1,7 +1,36 @@
 {
   "schema": "ohmega.intel.index/1",
-  "built_at": "2026-10-04T21:38:56.820272+00:00",
+  "built_at": "2026-10-04T22:12:38.645147+00:00",
   "daily": [
+    {
+      "domain": "geopolitics",
+      "date": "2026-10-04",
+      "headline": "Russia hits Kyiv's Northern Bridge for third day as German chancellor pledges $1.1bn arms, Hormuz stays shut on Iran's seven conditions, and Ethiopian forces re-enter Mekelle",
+      "theaters": [
+        {
+          "id": "thr_gaza_war_and_unga_diplomatic_fallout",
+          "name": "Gaza war and UNGA diplomatic fallout"
+        },
+        {
+          "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+          "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea"
+        },
+        {
+          "id": "thr_russia_ukraine_war_and_european_security_archite",
+          "name": "Russia-Ukraine war and European security architecture"
+        },
+        {
+          "id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
+          "name": "Ethiopia-Eritrea rupture and Tigray offensive"
+        },
+        {
+          "id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
+          "name": "US withdrawal from Iraq after 23-year presence"
+        }
+      ],
+      "url": "/geopolitics/2026-10-04",
+      "data_url": "/data/daily/geopolitics/2026-10-04.json"
+    },
     {
       "domain": "geopolitics",
       "date": "2026-10-03",
@@ -157,9 +186,9 @@
       "id": "thr_frontier_ai_race_and_superintelligence_governanc",
       "name": "Frontier AI race and superintelligence governance",
       "domain": "technology",
-      "heat": 4.78,
-      "trend": "steady",
-      "coverage": "steady coverage",
+      "heat": 9.28,
+      "trend": "heating",
+      "coverage": "rising coverage",
       "brief_url": "/intel/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance",
       "brief_data_url": "/data/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance.json"
     },
@@ -167,7 +196,7 @@
       "id": "thr_rogue_ai_agents_and_ai_enabled_cybercrime",
       "name": "Rogue AI agents and AI-enabled cybercrime",
       "domain": "technology",
-      "heat": 4.57,
+      "heat": 6.9,
       "trend": "steady",
       "coverage": "steady coverage",
       "brief_url": "/intel/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime",
@@ -187,7 +216,7 @@
       "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
       "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
       "domain": "geopolitics",
-      "heat": 2.8,
+      "heat": 3.28,
       "trend": "steady",
       "coverage": "steady coverage",
       "brief_url": null,
@@ -197,7 +226,7 @@
       "id": "thr_russia_ukraine_war_and_european_security_archite",
       "name": "Russia-Ukraine war and European security architecture",
       "domain": "geopolitics",
-      "heat": 2.7,
+      "heat": 2.35,
       "trend": "cooling",
       "coverage": "falling coverage",
       "brief_url": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746",

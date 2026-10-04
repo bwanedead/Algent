@@ -9,8 +9,8 @@
   "band": "critical",
   "confidence": "medium",
   "velocity_7d": null,
-  "last_assessed": "2026-10-03T21:55:50.660077+00:00",
-  "evidence_through": "2026-10-03",
+  "last_assessed": "2026-10-04T21:54:03.205317+00:00",
+  "evidence_through": "2026-10-04",
   "history": [
     {
       "at": "2026-10-01T03:00:57.470982+00:00",
@@ -99,6 +99,18 @@
       "rationale": "No change from 2026-10-03 held at 78 (reader thought 78). RAF Fairford 28 Sep-3 Oct arrests/petrol find with PM claim of 'strong indications Iran played part' vs Iran denial is unconfirmed covert plot, not confirmed mainland strike on Bushehr/Bandar Abbas or US warship/Gulf terminal, and no CENTCOM pause >14 days; open-war baseline (28 Feb Epic Fury killing Khamenei, July 300+ targets) unchanged.",
       "confidence": "medium",
       "evidence_through": "2026-10-03",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-04T21:54:03.205317+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "no_change",
+      "position": null,
+      "rationale": "Closest to 2026-10-03 held at 78 (reader thought 78) which already reflected open war baseline (28 Feb Operation Epic Fury killing Khamenei, July CENTCOM 300+ target waves, MoU permanent termination, Oct 1-2 Patriot deployments to Saudi/Qatar). New confirmed Araghchi 4 Oct warning Iran more prepared if US returns to military solutions and Houthi Aramco Riyadh strike/Saudi 97 retaliatory…",
+      "confidence": "medium",
+      "evidence_through": "2026-10-04",
       "model": "muse-spark-1.2-contributor",
       "article_url": null
     }

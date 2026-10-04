@@ -5,12 +5,12 @@
   "situation_id": "sit_iran_gulf",
   "situation": "Iran, Israel and the Gulf",
   "status": "experimental",
-  "position": 78.0,
+  "position": 84.0,
   "band": "critical",
   "confidence": "high",
   "velocity_7d": null,
-  "last_assessed": "2026-10-03T21:55:50.660077+00:00",
-  "evidence_through": "2026-10-03",
+  "last_assessed": "2026-10-04T21:54:03.205317+00:00",
+  "evidence_through": "2026-10-04",
   "history": [
     {
       "at": "2026-10-01T03:00:57.470982+00:00",
@@ -23,6 +23,10 @@
     {
       "at": "2026-10-01T08:28:58.928568+00:00",
       "position": 78.0
+    },
+    {
+      "at": "2026-10-04T21:54:03.205317+00:00",
+      "position": 84.0
     }
   ],
   "definition": {
@@ -103,6 +107,18 @@
       "rationale": "No change from 2026-10-03 held at 78 (reader thought 78). New confirmed traffic 12 avg/8 on 13 Sep vs 84-85 normal, Q1 flows 14.6 vs 20.4 mb/d ~30% drop, bypass only 2.6m b/d with East-West pipeline out for weeks, and Kalshi 17-19% for normal before Jan confirm severe impairment already captured; no evidence of reopening >30/day or total closure.",
       "confidence": "high",
       "evidence_through": "2026-10-03",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-04T21:54:03.205317+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "applied",
+      "position": 84.0,
+      "rationale": "Closest to 2026-10-03 held at 78 (reader thought 78) which already captured severe impairment (80 IMO attacks/22 killed, ~80 mines, 14.6 vs 20.4 mb/d ~30% drop, 6-14 transits vs 37 normal, premiums 2-6%, 8m b/d still transiting). New confirmed evidence is more extreme: traffic now 3-5 vessels/day vs 74-85 normal (3-5% of norm) vs 6-14 previously, war-risk premiums ~15x peacetime vs 2-6%, US naval…",
+      "confidence": "high",
+      "evidence_through": "2026-10-04",
       "model": "muse-spark-1.2-contributor",
       "article_url": null
     }

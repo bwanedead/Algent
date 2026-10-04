@@ -3,24 +3,24 @@
   "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
   "name": "Ethiopia-Eritrea rupture and Tigray offensive",
   "domain": "geopolitics",
-  "built_at": "2026-10-04T21:38:55.474453+00:00",
+  "built_at": "2026-10-04T22:12:36.808470+00:00",
   "first_seen": "2026-10-02",
-  "last_seen": "2026-10-03",
-  "days_covered": 1,
+  "last_seen": "2026-10-04",
+  "days_covered": 2,
   "primer": {
     "text": "Ethiopia and Eritrea are two states in the Horn of Africa, and Tigray is a region within Ethiopia where Ethiopian government forces and Tigray-aligned forces have contested control. Mekelle is the main city in Tigray and the location of its airport, so control of the airport signals control of the regional center. A rupture in relations between Ethiopia and Eritrea and intensified fighting inside Tigray are understood as one escalation because the interstate relationship and the internal contest over Tigray affect each other, with implications for security across the Horn.",
     "built_at": "2026-10-04T07:26:06.472952+00:00"
   },
   "current": {
-    "date": "2026-10-03",
-    "bottom_line": "Ethiopia and Eritrea severed diplomatic ties on Oct 1 in a tit-for-tat embassy closure and expulsions, ending the 2018 rapprochement as fighting in Tigray intensified. On Oct 3 federal forces likely retook Mekelle's Alula Aba Nega Airport as TPLF fighters pulled back from the city, suggesting a battlefield reversal after TPLF gains on Sept 23, but telecom blackouts prevent independent verification. The rupture has already widened to Egypt and brought explosions to Addis Ababa, raising interstate war risk in the Horn.",
+    "date": "2026-10-04",
+    "bottom_line": "Federal forces and allied Tigray Peace Forces appear to have reversed TPLF gains from Sept 23, moving from recapturing Mekelle's airport on Oct 3 to entering the city centre on Oct 4 after the TPLF said it temporarily withdrew to protect civilians. The Oct 1 Ethiopia-Eritrea diplomatic rupture remains in place with no sign of de-escalation, and telecom blackouts mean control of Mekelle cannot yet be independently verified. Interstate war risk stays elevated despite U.S. and AU calls for restraint.",
     "escalation": {
       "direction": "rising",
       "pace": "fast"
     },
     "coverage": "newly reported",
     "source": "daily",
-    "url": "/geopolitics/2026-10-03"
+    "url": "/geopolitics/2026-10-04"
   },
   "pulses": [
     {
@@ -56,6 +56,11 @@
   "escalation_history": [
     {
       "date": "2026-10-03",
+      "direction": "rising",
+      "pace": "fast"
+    },
+    {
+      "date": "2026-10-04",
       "direction": "rising",
       "pace": "fast"
     }
@@ -99,6 +104,31 @@
   ],
   "timeline": [
     {
+      "date": "2026-10-04",
+      "headline": "TPLF says it temporarily withdrew from Mekelle to operate elsewhere",
+      "detail": "Late Oct 3-4, 2026 the TPLF said it had 'temporarily moved out of Mekelle' to 'operate from somewhere else,' citing risks to civilians, as federal forces advanced.",
+      "where": "Mekelle, Tigray",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/4/government-forces-seize-capital-of-ethiopias-tigray-region-from-rebels",
+        "https://www.bbc.com/news/articles/cqm249v07j4xo"
+      ],
+      "from": "/geopolitics/2026-10-04"
+    },
+    {
+      "date": "2026-10-04",
+      "headline": "Federal forces enter Mekelle city centre Oct 4 after airport recapture",
+      "detail": "On Oct 4, 2026 federal forces and allied Tigray Peace Forces entered Mekelle city centre and were observed across various locations, taking control of the capital, after recapturing Alula Aba Nega Airport 10km east of the centre on Oct 3. Telecom blackouts prevent independent verification.",
+      "where": "Mekelle, Tigray",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/4/government-forces-seize-capital-of-ethiopias-tigray-region-from-rebels",
+        "https://www.bbc.com/news/articles/cqm249v07j4xo",
+        "https://www.afp.com/en/ethiopias-tigray-rebels-abandon-regional-capital-govt-advances"
+      ],
+      "from": "/geopolitics/2026-10-04"
+    },
+    {
       "date": "2026-10-03",
       "headline": "Federal forces retake Mekelle airport as TPLF pulls back from city",
       "detail": "On Oct 3 Ethiopian National Defence Forces and allied fighters regained control of Alula Aba Nega Airport about 10km east of Mekelle city centre. TPLF fighters and leaders were observed leaving Mekelle, with government offices and police stations left without security personnel and reports of looting of government facilities. Telecom/internet blackout and restricted media access make independent verification difficult.",
@@ -106,7 +136,9 @@
       "verification": "researched",
       "sources": [
         "https://www.aljazeera.com/news/2026/10/3/rebels-pulling-back-as-addis-ababas-forces-advance-reports-say",
-        "https://www.aljazeera.com/news/2026/10/3/ethiopian-govt-forces-advance-in-tigray-as-rebels-retreat-what-to-know"
+        "https://www.aljazeera.com/news/2026/10/3/ethiopian-govt-forces-advance-in-tigray-as-rebels-retreat-what-to-know",
+        "https://www.aljazeera.com/news/2026/10/4/government-forces-seize-capital-of-ethiopias-tigray-region-from-rebels",
+        "http://www.africanews.com/2026/10/04/ethiopian-forces-recapture-mekelle-airport-from-tigrayan-fighters/"
       ],
       "from": "/geopolitics/2026-10-03"
     },
@@ -143,8 +175,8 @@
       "country": "Ethiopia",
       "lat": 13.4967,
       "lon": 39.4753,
-      "count": 1,
-      "last_date": "2026-10-03"
+      "count": 4,
+      "last_date": "2026-10-04"
     },
     {
       "name": "Addis Ababa",
@@ -511,7 +543,7 @@
         "x": 527.0,
         "y": 351.0,
         "label": "Mekelle",
-        "date": "2026-10-03",
+        "date": "2026-10-04",
         "verification": "researched",
         "n": 1,
         "weight": 1.0
@@ -523,7 +555,7 @@
         "date": "2026-10-01",
         "verification": "researched",
         "n": 2,
-        "weight": 0.906
+        "weight": 0.221
       },
       {
         "x": 486.6,
@@ -532,7 +564,7 @@
         "date": "2026-10-01",
         "verification": "researched",
         "n": 3,
-        "weight": 0.906
+        "weight": 0.221
       }
     ],
     "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate. Shipping data: IMF PortWatch."
@@ -543,6 +575,24 @@
       "mentions": 2,
       "first": "2026-10-01",
       "last": "2026-10-01"
+    },
+    {
+      "name": "Ethiopian National Defense Force (ENDF)",
+      "mentions": 2,
+      "first": "2026-10-03",
+      "last": "2026-10-04"
+    },
+    {
+      "name": "Tigray Peace Forces",
+      "mentions": 2,
+      "first": "2026-10-03",
+      "last": "2026-10-04"
+    },
+    {
+      "name": "Tigray People's Liberation Front (TPLF)",
+      "mentions": 2,
+      "first": "2026-10-04",
+      "last": "2026-10-04"
     },
     {
       "name": "Alliance for Survival / opposition alliance",
@@ -578,6 +628,28 @@
   "relations": [],
   "figures": [
     {
+      "label": "civilians killed due to fighting in northern Ethiopia",
+      "unit": "people",
+      "series": [
+        {
+          "as_of": "2026-10-03",
+          "value": 52.0,
+          "source": "https://www.aljazeera.com/news/2026/10/3/ethiopian-govt-forces-advance-in-tigray-as-rebels-retreat-what-to-know"
+        }
+      ]
+    },
+    {
+      "label": "Eritrean diplomats declared persona non grata in Addis Ababa to leave within 48 hours",
+      "unit": "diplomats",
+      "series": [
+        {
+          "as_of": "2026-10-02",
+          "value": 10.0,
+          "source": "https://www.aljazeera.com/news/2026/10/1/eritrea-severs-diplomatic-ties-with-ethiopia-in-tit-for-tat-move"
+        }
+      ]
+    },
+    {
       "label": "Eritrean diplomats declared persona non grata in Addis Ababa",
       "unit": "",
       "series": [
@@ -598,6 +670,28 @@
           "source": "https://www.bbc.com/news/articles/crpd0d0jl0y0o"
         }
       ]
+    },
+    {
+      "label": "war-wounded patients arrived at hospitals in Korem, Alamata and Shire, Tigray (MSF",
+      "unit": "patients",
+      "series": [
+        {
+          "as_of": "2026-09-26",
+          "value": 720.0,
+          "source": "https://africacenter.org/daily-media-review/africa-media-review-for-september-29-2026"
+        }
+      ]
+    },
+    {
+      "label": "people killed in 2020-2022 Tigray war (AU mediator Olusegun Obasanjo estimate",
+      "unit": "people",
+      "series": [
+        {
+          "as_of": "2022-11-02",
+          "value": 600000.0,
+          "source": "https://www.bbc.com/news/articles/cry8zwwq21pxo"
+        }
+      ]
     }
   ],
   "forecasts": [],
@@ -605,6 +699,10 @@
   "statements": [],
   "links": [],
   "reports": [
+    {
+      "date": "2026-10-04",
+      "url": "/geopolitics/2026-10-04"
+    },
     {
       "date": "2026-10-03",
       "url": "/geopolitics/2026-10-03"

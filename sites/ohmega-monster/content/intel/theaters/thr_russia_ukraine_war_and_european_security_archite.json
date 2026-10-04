@@ -3,24 +3,24 @@
   "theater_id": "thr_russia_ukraine_war_and_european_security_archite",
   "name": "Russia-Ukraine war and European security architecture",
   "domain": "geopolitics",
-  "built_at": "2026-10-04T21:38:55.474453+00:00",
+  "built_at": "2026-10-04T22:12:36.808470+00:00",
   "first_seen": "2026-09-27",
-  "last_seen": "2026-10-03",
-  "days_covered": 3,
+  "last_seen": "2026-10-04",
+  "days_covered": 4,
   "primer": {
     "text": "Russia's war on Ukraine has become a contest between battlefield attrition and economic endurance that directly involves European security. Ukraine tries to hold territory while using long-range drones against Russian oil refineries and logistics to cut Moscow's war funding; Russia tries to sustain its offensive and pressure NATO through airspace incursions, sabotage of rail and infrastructure, and drone operations attributed to its services. NATO's eastern members seek protection through alliance mechanisms. Article 4 is a call for consultations when a member feels threatened, and Eastern Sentry is the alliance's reinforced air-defence posture along that flank. Russia's reliance on China for dual-use components and export markets shapes how sanctions bite.",
     "built_at": "2026-10-04T07:26:06.472952+00:00"
   },
   "current": {
-    "date": "2026-10-03",
-    "bottom_line": "Russia extended its Kyiv pressure campaign from energy to river crossings, hitting the Southern Bridge in four waves Oct 1-2 and the Northern Bridge Oct 3, while sustaining 150+ drone salvos that killed at least 8 and injured 81. Moscow paired the strikes with explicit nuclear signaling over Kaliningrad and threats to European arms factories, met by an EU warning that such a strike would trigger Article 5, and formalized force growth and a China-involved Tsentr-2026 exercise. Confidence is high on strikes, bridges, warnings and the exercise (multiple confirmed sources); lower on North Korean troop numbers and the claimed Russian depopulation doctrine, which rest on single-side intelligence.",
+    "date": "2026-10-04",
+    "bottom_line": "Russia sustained its Dnipro bridge campaign with a third strike in three days, hitting Kyiv's Northern Bridge again Oct 4 as Germany's chancellor visited to lock in $1.1bn in arms and long-range joint production. Moscow paired the strikes with a warning for foreigners to leave Kyiv, while closing its Tsentr-2026 exercise with 47,000 troops and a Chinese contingent. Confidence is high on strikes, visit and exercise (multiple confirmed sources); lower on the claimed Russian depopulation doctrine which rests on Ukrainian intelligence documents alone.",
     "escalation": {
       "direction": "rising",
       "pace": "gradual"
     },
     "coverage": "falling coverage",
     "source": "daily",
-    "url": "/geopolitics/2026-10-03"
+    "url": "/geopolitics/2026-10-04"
   },
   "pulses": [
     {
@@ -129,6 +129,11 @@
       "date": "2026-10-03",
       "direction": "rising",
       "pace": "gradual"
+    },
+    {
+      "date": "2026-10-04",
+      "direction": "rising",
+      "pace": "gradual"
     }
   ],
   "coverage_series": [
@@ -139,7 +144,7 @@
     },
     {
       "day": "2026-09-28",
-      "count": 3,
+      "count": 4,
       "editions": 1
     },
     {
@@ -159,7 +164,7 @@
     },
     {
       "day": "2026-10-02",
-      "count": 2,
+      "count": 1,
       "editions": 1
     },
     {
@@ -169,6 +174,66 @@
     }
   ],
   "timeline": [
+    {
+      "date": "2026-10-04",
+      "headline": "Russia hits Kyiv's Northern Bridge again Oct 4 — third Dnipro crossing strike in three days",
+      "detail": "Russian drone struck Kyiv's Northern (Pivnichnyi) Bridge Oct 4, cratering the road deck, damaging hot-water supply and injuring 2 people (one hospitalized). It was the second consecutive day the crossing was hit after a jet-powered loitering munition damaged asphalt and trolleybus lines Oct 3, following the Southern Bridge closure Oct 2 that also shut Paton and partially shut Metro Bridge.",
+      "where": "Kyiv, Ukraine",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/4/russian-strike-hits-kyiv-bridge-as-german-chancellor-visits-ukraine",
+        "https://www.kyivpost.com/post/86064",
+        "https://www.aljazeera.com/news/2026/10/3/five-killed-as-kyiv-and-moscow-trade-strikes-russia-hits-second-bridge",
+        "https://www.aljazeera.com/news/2026/10/2/ukraine-calls-for-tighter-sanctions-as-russian-attacks-spark-kyiv-gridlock"
+      ],
+      "from": "/geopolitics/2026-10-04"
+    },
+    {
+      "date": "2026-10-04",
+      "headline": "Moscow warns foreigners to leave Kyiv Oct 3-4 amid intensified strikes",
+      "detail": "Russia's Foreign Ministry warned Oct 3-4 that foreign citizens and diplomats should leave Kyiv or avoid visiting due to intensified massive strikes, as Russian Defence Ministry said drones hit Kyiv bridges, a power station near Kyiv, Izmail port near Odesa and cargo vessels claimed as military-used.",
+      "where": "Kyiv, Ukraine",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/4/russian-strike-hits-kyiv-bridge-as-german-chancellor-visits-ukraine",
+        "https://www.aljazeera.com/news/2026/10/3/five-killed-as-kyiv-and-moscow-trade-strikes-russia-hits-second-bridge"
+      ],
+      "from": "/geopolitics/2026-10-04"
+    },
+    {
+      "date": "2026-10-04",
+      "headline": "German chancellor visits Kyiv Oct 4 with $1.1bn arms and long-range joint production deal",
+      "detail": "German Chancellor Friedrich Merz made an unannounced visit to Kyiv Oct 4, meeting President Zelenskyy at the National Academy of Sciences struck Sept 28, accompanied by economy minister and executives from Siemens Energy and Diehl Defence. Germany was set to announce a $1.1 billion military aid package plus $394 million for energy-sector repairs and finalize a joint drone/weapons production deal for systems with >600-mile (965 km) range.",
+      "where": "Kyiv, Ukraine",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/4/russian-strike-hits-kyiv-bridge-as-german-chancellor-visits-ukraine"
+      ],
+      "from": "/geopolitics/2026-10-04"
+    },
+    {
+      "date": "2026-10-03",
+      "headline": "Tsentr-2026 ends Oct 3 with 47,000 troops and Chinese PLA contingent; Putin observes",
+      "detail": "Russia held strategic exercise Tsentr-2026 Sept 28-Oct 3 at Chebarkul training ground, Chelyabinsk Oblast, involving more than 47,000 personnel from SCO countries. Chinese PLA Central Theater Command contingent deployed Type 99A tanks, drone swarms, tactical drones, attack helicopters and unmanned ground vehicles for reconnaissance and multi-axis assaults. President Putin observed Oct 3 and met foreign attaches.",
+      "where": "Chebarkul, Russia",
+      "verification": "researched",
+      "sources": [
+        "https://www.scmp.com/news/china/military/article/3369657/chinese-troops-line-russias-tsentr-2026-exercise-military-ties-tighten",
+        "https://www.globaltimes.cn/page/202610/1371666.shtml"
+      ],
+      "from": "/geopolitics/2026-10-04"
+    },
+    {
+      "date": "2026-10-02",
+      "headline": "Poland hardens eastern flank: Lublin reopens 200-person shelter Oct 2 as Tusk cites constant scrambles",
+      "detail": "Polish city of Lublin reopened a modernized Cold War-era shelter beneath MPK bus premises Oct 2, capacity 200 people for 72 hours with independent air/water/power, emergency exit now facing west. Prime Minister Donald Tusk said week of Sept 29 Russian attacks near the Polish border have become constant, forcing Poland to scramble aircraft night after night and day after day.",
+      "where": "Lublin, Poland",
+      "verification": "researched",
+      "sources": [
+        "https://www.ksl.com/article/51631544/polish-city-reopens-cold-war-shelter-as-russian-attacks-in-ukraine-intensify"
+      ],
+      "from": "/geopolitics/2026-10-04"
+    },
     {
       "date": "2026-10-02",
       "headline": "North Korean POW transfer sparks Seoul-Kyiv rift as Zelensky cites 8,000 North Koreans in Russia",
@@ -762,8 +827,8 @@
       "country": "Ukraine",
       "lat": 50.4501,
       "lon": 30.5234,
-      "count": 2,
-      "last_date": "2026-10-01"
+      "count": 5,
+      "last_date": "2026-10-04"
     },
     {
       "name": "Moscow",
@@ -772,6 +837,14 @@
       "lon": 37.6173,
       "count": 2,
       "last_date": "2026-10-01"
+    },
+    {
+      "name": "Chebarkul",
+      "country": "Russia",
+      "lat": 54.9,
+      "lon": 60.37,
+      "count": 2,
+      "last_date": "2026-10-03"
     },
     {
       "name": "Warsaw",
@@ -790,6 +863,14 @@
       "last_date": "2026-10-02"
     },
     {
+      "name": "Lublin",
+      "country": "Poland",
+      "lat": 51.2465,
+      "lon": 22.5684,
+      "count": 1,
+      "last_date": "2026-10-02"
+    },
+    {
       "name": "Seoul",
       "country": "South Korea",
       "lat": 37.5665,
@@ -804,14 +885,6 @@
       "lon": 30.754,
       "count": 1,
       "last_date": "2026-09-29"
-    },
-    {
-      "name": "Chebarkul",
-      "country": "Russia",
-      "lat": 54.97,
-      "lon": 60.37,
-      "count": 1,
-      "last_date": "2026-09-28"
     }
   ],
   "map": {
@@ -1668,7 +1741,7 @@
         "x": 348.0,
         "y": 310.0,
         "label": "Kyiv",
-        "date": "2026-10-01",
+        "date": "2026-10-04",
         "verification": "researched",
         "n": 1,
         "weight": 1.0
@@ -1680,7 +1753,16 @@
         "date": "2026-10-01",
         "verification": "researched",
         "n": 2,
-        "weight": 1.0
+        "weight": 0.365
+      },
+      {
+        "x": 794.1,
+        "y": 199.8,
+        "label": "Chebarkul",
+        "date": "2026-10-03",
+        "verification": "researched",
+        "n": 3,
+        "weight": 0.359
       },
       {
         "x": 205.9,
@@ -1688,8 +1770,8 @@
         "label": "Warsaw",
         "date": "2026-10-01",
         "verification": "researched",
-        "n": 3,
-        "weight": 0.976
+        "n": 4,
+        "weight": 0.356
       },
       {
         "x": 433.3,
@@ -1697,8 +1779,17 @@
         "label": "Kharkiv",
         "date": "2026-10-02",
         "verification": "researched",
-        "n": 4,
-        "weight": 0.525
+        "n": 5,
+        "weight": 0.192
+      },
+      {
+        "x": 229.1,
+        "y": 290.3,
+        "label": "Lublin",
+        "date": "2026-10-02",
+        "verification": "researched",
+        "n": 6,
+        "weight": 0.192
       },
       {
         "x": 351.5,
@@ -1706,27 +1797,18 @@
         "label": "Trypillya Thermal Power Plant, Kyiv Oblast",
         "date": "2026-09-29",
         "verification": "researched",
-        "n": 6,
-        "weight": 0.453
-      },
-      {
-        "x": 794.1,
-        "y": 198.1,
-        "label": "Chebarkul",
-        "date": "2026-09-28",
-        "verification": "researched",
-        "n": 7,
-        "weight": 0.431
+        "n": 8,
+        "weight": 0.165
       }
     ],
-    "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate. Not on this map (too far away): 5 Seoul."
+    "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate. Not on this map (too far away): 7 Seoul."
   },
   "actors": [
     {
       "name": "Russia",
-      "mentions": 6,
+      "mentions": 9,
       "first": "2022-02-24",
-      "last": "2025-09-09"
+      "last": "2026-10-04"
     },
     {
       "name": "Russian forces",
@@ -1747,6 +1829,18 @@
       "last": "2026-09-29"
     },
     {
+      "name": "Ukraine",
+      "mentions": 3,
+      "first": "2025-01-01",
+      "last": "2026-10-04"
+    },
+    {
+      "name": "Poland",
+      "mentions": 2,
+      "first": "2025-09-03",
+      "last": "2026-10-02"
+    },
+    {
       "name": "President Volodymyr Zelensky",
       "mentions": 2,
       "first": "2026-10-02",
@@ -1763,6 +1857,12 @@
       "mentions": 1,
       "first": "2026-09-29",
       "last": "2026-09-29"
+    },
+    {
+      "name": "China",
+      "mentions": 1,
+      "first": "2026-10-03",
+      "last": "2026-10-03"
     },
     {
       "name": "Chinese military contingent",
@@ -1793,24 +1893,6 @@
       "mentions": 1,
       "first": "2026-09-22",
       "last": "2026-09-22"
-    },
-    {
-      "name": "EU",
-      "mentions": 1,
-      "first": "2025-09-01",
-      "last": "2025-09-01"
-    },
-    {
-      "name": "EU Defence Commissioner Andrius Kubilius",
-      "mentions": 1,
-      "first": "2026-10-01",
-      "last": "2026-10-01"
-    },
-    {
-      "name": "EU logistics hubs",
-      "mentions": 1,
-      "first": "2024-07-01",
-      "last": "2024-07-01"
     }
   ],
   "relations": [
@@ -1873,6 +1955,28 @@
   ],
   "figures": [
     {
+      "label": "German energy-sector repair funding",
+      "unit": "USD",
+      "series": [
+        {
+          "as_of": "2026-10-04",
+          "value": 394000000.0,
+          "source": "https://www.aljazeera.com/news/2026/10/4/russian-strike-hits-kyiv-bridge-as-german-chancellor-visits-ukraine"
+        }
+      ]
+    },
+    {
+      "label": "German military aid package announced in Kyiv",
+      "unit": "USD",
+      "series": [
+        {
+          "as_of": "2026-10-04",
+          "value": 1100000000.0,
+          "source": "https://www.aljazeera.com/news/2026/10/4/russian-strike-hits-kyiv-bridge-as-german-chancellor-visits-ukraine"
+        }
+      ]
+    },
+    {
       "label": "Drones intercepted",
       "unit": "drones",
       "series": [
@@ -1895,6 +1999,17 @@
       ]
     },
     {
+      "label": "Personnel in Tsentr-2026 exercise",
+      "unit": "people",
+      "series": [
+        {
+          "as_of": "2026-10-03",
+          "value": 47000.0,
+          "source": "https://www.scmp.com/news/china/military/article/3369657/chinese-troops-line-russias-tsentr-2026-exercise-military-ties-tighten"
+        }
+      ]
+    },
+    {
       "label": "Russian drones launched",
       "unit": "drones",
       "series": [
@@ -1902,6 +2017,17 @@
           "as_of": "2026-10-03",
           "value": 157.0,
           "source": "https://kyivindependent.com/russian-strikes-kill-8-injure-81-across-ukraine-hit-kyiv-bridge-2"
+        }
+      ]
+    },
+    {
+      "label": "Capacity of reopened Lublin Cold War shelter",
+      "unit": "people",
+      "series": [
+        {
+          "as_of": "2026-10-02",
+          "value": 200.0,
+          "source": "https://www.ksl.com/article/51631544/polish-city-reopens-cold-war-shelter-as-russian-attacks-in-ukraine-intensify"
         }
       ]
     },
@@ -2068,11 +2194,21 @@
     {
       "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
       "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
+      "link": "US-Iran-Houthi confrontation over Hormuz and Red Sea ↔ Russia-Ukraine war and European security architecture: Hormuz tanker transits near zero (1/day as of 2026-09-27, down 98% year-on-year) coincides with TTF gas at 74.76 EUR/MWh as of 2026-10-02 (+138% year-on-year, 96th percentile), sustaining European energy pressure as Russia sustains its Dnipro bridge campaign and Germany locks in $1.1bn arms.",
+      "date": "2026-10-04"
+    },
+    {
+      "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+      "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
       "link": "US-Iran-Houthi confrontation over Hormuz and Red Sea <-> Russia-Ukraine war and European security architecture: simultaneous energy pressure from Hormuz closure keeping ~6 mb/d off market and Russia's winter strikes on Kyiv energy infrastructure including Trypillya compounds European risk, while both theaters show intensifying hybrid and nuclear signaling via NATO's hybrid warning and Putin's Kaliningrad warning alongside the UK's Iran-linked plot probe",
       "date": "2026-10-02"
     }
   ],
   "reports": [
+    {
+      "date": "2026-10-04",
+      "url": "/geopolitics/2026-10-04"
+    },
     {
       "date": "2026-10-03",
       "url": "/geopolitics/2026-10-03"
