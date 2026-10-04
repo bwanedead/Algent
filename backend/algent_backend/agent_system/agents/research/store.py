@@ -66,6 +66,26 @@ def _stamp() -> str:
     return datetime.now(UTC).strftime("%Y%m%dT%H%M%S%fZ")
 
 
+def _append_only(folder: Path, stem: str, blob: str) -> str:
+    """Write ``<stem>.json`` in ``folder`` without ever replacing an existing file; returns the name used.
+
+    Timestamps alone do not make names unique: the Windows clock ticks about every 15 ms, so two saves of
+    one profile in quick succession got the SAME history filename and the second silently erased the
+    first — losing exactly the version a later repair or reuse would have restored. Exclusive creation
+    with a counter suffix keeps history truly append-only (the suffix sorts after the bare name, so
+    "newest by save time" ordering still holds)."""
+    folder.mkdir(parents=True, exist_ok=True)
+    for n in range(1000):
+        name = f"{stem}{'' if n == 0 else f'-{n}'}.json"
+        try:
+            with (folder / name).open("x", encoding="utf-8") as fh:
+                fh.write(blob)
+            return name
+        except FileExistsError:
+            continue
+    raise RuntimeError(f"could not find a free history name for {stem} in {folder}")
+
+
 def profile_shape(profile: SignalProfile) -> dict:
     """How much a profile holds, for logs and reports."""
     return {"revision": profile.revision, "generated_at": profile.generated_at, "claims": len(profile.claim_ledger),
@@ -124,9 +144,7 @@ class JsonProfileStore:
         blob = profile.model_dump_json(indent=2)
         path = self._path(profile.id)
         path.write_text(blob, encoding="utf-8")
-        hist = self._dir / "_history" / _safe(profile.id)
-        hist.mkdir(parents=True, exist_ok=True)
-        (hist / f"r{profile.revision:03d}__{_stamp()}.json").write_text(blob, encoding="utf-8")
+        _append_only(self._dir / "_history" / _safe(profile.id), f"r{profile.revision:03d}__{_stamp()}", blob)
         return str(path)
 
     def _log(self, name: str, entry: dict) -> None:
@@ -135,10 +153,8 @@ class JsonProfileStore:
 
     def _set_aside(self, profile: SignalProfile, kept: SignalProfile) -> None:
         """Keep a failed attempt where it can be inspected, without letting it replace ``kept``."""
-        aside = self._dir / "_rejected" / _safe(profile.id)
-        aside.mkdir(parents=True, exist_ok=True)
-        name = f"r{profile.revision:03d}__{_stamp()}.json"
-        (aside / name).write_text(profile.model_dump_json(indent=2), encoding="utf-8")
+        name = _append_only(self._dir / "_rejected" / _safe(profile.id), f"r{profile.revision:03d}__{_stamp()}",
+                            profile.model_dump_json(indent=2))
         self._log("_rejections.jsonl", {
             "id": profile.id, "saved_as": f"_rejected/{_safe(profile.id)}/{name}",
             "reason": "not complete (no sourced claim); would have replaced a complete profile",

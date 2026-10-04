@@ -200,3 +200,12 @@ def test_the_cli_repair_verb_is_a_dry_run_unless_applied(tmp_path, monkeypatch, 
     assert "RESTORED  prof_x" in capsys.readouterr().out
     assert store.get("prof_x").is_complete
     assert cli.summarize(store)["integrity"]["restorations"] == 1
+
+
+def test_history_is_truly_append_only_even_within_one_clock_tick(tmp_path: Path) -> None:
+    # Windows' clock ticks ~15 ms: rapid saves once shared a history filename and the later one erased
+    # the earlier — the very version repair and reuse depend on. Every save must leave its own file.
+    store = JsonProfileStore(tmp_path)
+    for _ in range(25):
+        store._write(_good("prof_burst"))  # noqa: SLF001 - the raw write path every save goes through
+    assert len(store.history("prof_burst")) == 25
