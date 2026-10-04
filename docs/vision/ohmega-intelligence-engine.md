@@ -96,6 +96,49 @@ graded research, and earns trust the way the best analytic shops do:
 - **The recipe is domain-generic.** Geopolitics first; the same machinery serves medicine,
   politics, sports.
 
+## Sensing: from headlines to the record (operator, 10-04)
+
+Diagnosis. The desk only knows what the headline radar happened to catch, one edition a day of
+roughly 40 headlines. Heat is measured on single-digit counts. A whole register of evidence never
+arrives: what leaders actually said (a long Putin speech, NATO's chief, European leaders on troops in
+Ukraine), and the hard numbers a situation moves (ship transits, prices, storage, yields). Daily
+reports read alike because the same thin input is re-summarised. Research is starved by paid search
+quotas, and starved agents guess URLs. In the 10-01 to 10-03 runs, 77% of page reads failed, mostly on
+URLs the agent made up. The fix is more and better sensing, not more prose.
+
+Three sensing layers, each its own module, each free at the margin, each feeding the same model of
+the world:
+
+1. **Free search and honest reads.** Free engines (DuckDuckGo HTML, Google News RSS) answer first,
+   and paid engines become the fallback. A read that hits a missing page says so plainly ("does not
+   exist: find it by search, do not construct URLs") and is never escalated to the paid crawler.
+   Abundant search is what lets research find the actual transcript instead of a summary of it.
+2. **Instruments: the numbers layer.** Programmatic, no model: a catalogue of series (chokepoint
+   transits from IMF PortWatch, energy prices, EU gas storage, yields, FX, inflation, debt,
+   prediction-market odds, quakes...). Each series is fetched on a schedule into an append-only
+   store and tagged to the regions and dynamics it bears on. The desk gets "what moved": changes
+   against each series' own history, flagged when unusual. Instruments are evidence with a URL and an
+   as-of date, so they ground research for free. They are the natural substrate for later Pulses and
+   watches ("Hormuz transits back above 50/day"), and Pulses consume them only once that design is
+   settled.
+3. **Statements: the record of who said what.** Primary-source transcripts and official statements
+   (Kremlin, White House, State Department, UK government, UN, foreign ministries, NATO), collected
+   independently of which theaters are hot, plus a free news search for major leaders' remarks. An
+   extractor turns each into a ledger: actor, role, date, exact wording where wording matters, the
+   relationship it speaks to (who about whom), and what kind of signal it is (threat, commitment,
+   red line, offer, reassurance, shift in tone). Rhetoric is a leading indicator. The ledger lets the
+   desk see a tone shift against the speaker's own earlier statements, and it makes the dynamics
+   between powers (Russia–NATO, Russia–EU) visible even on days without a kinetic event.
+
+Then the desk changes how it reads. Heat comes from a broad base (GDELT GKG, Wikipedia Current
+Events), not our own radar. The daily and the briefs get three evidence blocks (researched claims,
+instrument moves, statements on record), so a day with no new strikes still has texture. Maps become
+utilitarian instruments: a light, legible base, readable labels, rivers and chokepoints, a scale and an
+inset, and overlays that carry data (transit counts at the strait, not just a dot). Pulse logic is
+left alone until its next design pass. The ideas parked for that pass: Pulses seeded from instruments,
+and a reassessment that reads the condensed state plus new evidence rather than a raw re-read of the
+whole history.
+
 ## Research subdivision: Ohmega Research
 
 Ohmega Research is the subdivision that conducts **reproducible studies** of AI systems: a

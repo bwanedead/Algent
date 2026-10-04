@@ -281,3 +281,5 @@ asset-dump/
 backend/pulse_store/
 /.algent-data/
 backend/intel_store/
+backend/instruments_store/
+backend/statements_store/
