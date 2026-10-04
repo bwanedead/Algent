@@ -12,11 +12,15 @@ ladder, cheapest first:
 3. **trafilatura** extraction — precision pass, then a recall pass if it's thin.
 4. **quality scoring** — completeness (not word count alone) decides whether the
    free result is trustworthy (``good``) or needs rescue.
-5. **optional Playwright** — JS render, OFF by default (``ALGENT_FETCH_PLAYWRIGHT=1``
-   to enable). Heavy on low-end machines; skip until you want to test it.
-6. **Firecrawl** — hosted fallback for JS-heavy / bot-walled pages, attempted only
+5. **Jina Reader** — free, keyless rendered-page markdown (``via: "jina"``).
+6. **Wayback** — newest Internet Archive snapshot (``via: "wayback"``, adds ``archived_at``).
+7. **optional Playwright** — JS render, OFF by default (``ALGENT_FETCH_PLAYWRIGHT=1``).
+8. **Firecrawl** — hosted fallback for JS-heavy / bot-walled pages, attempted only
    when the free result isn't ``good`` *and* a key is set *and* the caller allows
    paid escalation (``allow_paid_fallback``).
+
+Rungs 5-7 live in ``free_rungs.py`` (pacing, privacy, cost notes there). A later rung never runs once
+one reaches ``good``; ``not_found`` stops everything. Each read is logged to ``read_ledger``.
 
 Every result reports ``via`` (which engine won) and ``quality`` so the agent
 knows how much to trust the content. Playwright is never a hard dependency —
@@ -40,6 +44,10 @@ from algent_backend.config import get_service_api_key
 
 from ...spec import GLOBAL_SCOPE, ToolSpec
 from .._wrap import as_structured_tool
+from . import read_ledger
+from .free_rungs import jina_markdown as _jina_markdown
+from .free_rungs import playwright_html as _playwright_html
+from .free_rungs import wayback_html as _wayback_html
 
 FETCH_CONTENT_TOOL_ID = "fetch_content"
 
@@ -317,27 +325,6 @@ def _firecrawl_markdown(url: str, api_key: str) -> str | None:
     return response.json().get("data", {}).get("markdown") or None
 
 
-def _playwright_html(url: str) -> str | None:
-    """Optional JS render. Soft-fails when playwright is missing or browsers aren't installed."""
-    try:
-        from playwright.sync_api import sync_playwright
-    except ImportError:
-        return None
-    try:
-        with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
-            try:
-                page = browser.new_page()
-                page.goto(url, wait_until="domcontentloaded", timeout=int(_TIMEOUT_S * 1000))
-                # Brief settle for late JSON-LD / article hydration without a long wait.
-                page.wait_for_timeout(800)
-                return page.content()
-            finally:
-                browser.close()
-    except Exception:
-        return None
-
-
 def _looks_walled(content: str) -> bool:
     head = content[:2000].lower()
     return any(marker in head for marker in _WALL_MARKERS)
@@ -414,8 +401,10 @@ def _fetch(url: str, allow_paid_fallback: bool = True) -> dict[str, Any]:
 
     Returns ``{url, content, via, quality, words, meta?}``, or ``{url, error, not_found: True}``
     when the page does not exist / cannot be fetched at all (never escalated to paid). ``via`` is the engine that
-    won; ``quality`` is ``good`` | ``thin`` | ``blocked`` | ``empty``. Set
-    ``allow_paid_fallback=False`` to stay free-only for low-value pages.
+    won; ``quality`` is ``good`` | ``thin`` | ``blocked`` | ``empty``. Wayback results add
+    ``archived_at`` and a ``hint`` (the text may predate the live page). Set
+    ``allow_paid_fallback=False`` to stay free-only for low-value pages. Every non-cached read
+    appends one line to the read ledger.
     """
     cached = _cache_get(url)
     if cached and cached.get("quality") == "good":
@@ -424,23 +413,58 @@ def _fetch(url: str, allow_paid_fallback: bool = True) -> dict[str, Any]:
     if reason:
         return {"url": url, "error": reason, "not_found": True}
 
+    started, rungs = time.monotonic(), ["http"]
+    outcome: dict[str, Any] = {"via": "none", "quality": "empty", "not_found": False}
     try:
-        html = _http_get(url)
+        result = _run_ladder(url, allow_paid_fallback, rungs)
     except PageNotFound as gone:
+        outcome["not_found"] = True
         # A missing page is a final answer: no JS render, no paid crawler, no retry hint.
         return {"url": url, "error": str(gone), "not_found": True}
-    content, via, quality, words, meta = _grade_html(html)
-    content, via, quality, words, meta = _maybe_playwright_rescue(
-        url, content, via, quality, words, meta,
-    )
-    content, via, quality, words = _maybe_firecrawl_rescue(
-        url, content, via, quality, words, meta, allow_paid_fallback,
-    )
+    else:
+        outcome.update(via=result["via"], quality=result["quality"])
+        return result
+    finally:
+        read_ledger.record(url, rungs=rungs, elapsed_ms=int((time.monotonic() - started) * 1000), **outcome)
 
+
+def _run_ladder(url: str, allow_paid_fallback: bool, rungs: list[str]) -> dict[str, Any]:
+    html = _http_get(url)  # may raise PageNotFound
+    content, via, quality, words, meta = _grade_html(html)
+    best = (content, via, quality, words, meta)
+    extra: dict[str, Any] = {}
+
+    def consider(name: str, cand: tuple | None, add: dict[str, Any] | None = None) -> None:
+        """Adopt ``cand`` (content, quality, words, meta) if it beats the best so far."""
+        nonlocal best, extra
+        if cand is None or not cand[0]:
+            return
+        c, q, w, m = cand
+        if _better_candidate(new_quality=q, new_words=w, old_quality=best[2], old_words=best[3]):
+            best, extra = (c, name, q, w, m), (add or {})
+
+    for name, attempt in _free_rungs(url, lambda: best[4]):
+        if best[2] == "good":
+            break
+        rungs.append(name)
+        got = attempt()
+        if name == "wayback" and got:
+            consider(name, got[0], got[1])
+        else:
+            consider(name, got)
+    if best[2] != "good" and allow_paid_fallback:
+        api_key = get_service_api_key("firecrawl")
+        if api_key:
+            rungs.append("firecrawl")
+            rescued = _firecrawl_markdown(url, api_key)
+            r_quality, r_words = _quality(rescued, best[4])
+            consider("firecrawl", (rescued, r_quality, r_words, best[4]))
+
+    content, via, quality, words, meta = best
     if not content:
         raise RuntimeError(
             f"Could not extract content from {url} "
-            "(free fetch empty/blocked; Playwright/Firecrawl unavailable, disallowed, or empty)."
+            "(free fetch empty/blocked; Jina/Wayback/Playwright/Firecrawl unavailable, disallowed, or empty)."
         )
     result = {
         "url": url,
@@ -448,6 +472,7 @@ def _fetch(url: str, allow_paid_fallback: bool = True) -> dict[str, Any]:
         "via": via,
         "quality": quality,
         "words": words,
+        **extra,
     }
     if meta:
         result["meta"] = meta
@@ -456,35 +481,36 @@ def _fetch(url: str, allow_paid_fallback: bool = True) -> dict[str, Any]:
     return result
 
 
-def _maybe_playwright_rescue(url, content, via, quality, words, meta):
-    if quality == "good" or not _playwright_enabled():
-        return content, via, quality, words, meta
-    rendered = _playwright_html(url)
-    if not rendered:
-        return content, via, quality, words, meta
-    p_content, _, p_quality, p_words, p_meta = _grade_html(rendered, meta)
-    if _better_candidate(
-        new_quality=p_quality, new_words=p_words,
-        old_quality=quality, old_words=words,
-    ):
-        return p_content, "playwright", p_quality, p_words, p_meta
-    return content, via, quality, words, meta
+def _free_rungs(url: str, meta_now):
+    """(name, attempt) in ladder order; each attempt returns (content, quality, words, meta) or None."""
 
+    def jina():
+        md = _jina_markdown(url)
+        q, w = _quality(md, meta_now())
+        return (md, q, w, meta_now()) if md else None
 
-def _maybe_firecrawl_rescue(url, content, via, quality, words, meta, allow_paid):
-    if quality == "good" or not allow_paid:
-        return content, via, quality, words
-    api_key = get_service_api_key("firecrawl")
-    if not api_key:
-        return content, via, quality, words
-    rescued = _firecrawl_markdown(url, api_key)
-    r_quality, r_words = _quality(rescued, meta)
-    if _better_candidate(
-        new_quality=r_quality, new_words=r_words,
-        old_quality=quality, old_words=words,
-    ):
-        return rescued, "firecrawl", r_quality, r_words
-    return content, via, quality, words
+    def wayback():
+        snap = _wayback_html(url)
+        if not snap:
+            return None
+        content, _, q, w, m = _grade_html(snap[0], meta_now())
+        stamp = snap[1]
+        note = {"archived_at": stamp, "hint": (
+            f"read from an Internet Archive snapshot taken {stamp[:4]}-{stamp[4:6]}-{stamp[6:8]}; "
+            "the live page may differ or be newer")}
+        return (content, q, w, m), note
+
+    def playwright():
+        rendered = _playwright_html(url)
+        if not rendered:
+            return None
+        content, _, q, w, m = _grade_html(rendered, meta_now())
+        return content, q, w, m
+
+    yield "jina", jina
+    yield "wayback", wayback
+    if _playwright_enabled():
+        yield "playwright", playwright
 
 
 def _build() -> Any:
