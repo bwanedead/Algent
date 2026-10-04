@@ -6,35 +6,31 @@ mostly invents dead ones). This tool hands the agent a vetted set of major outle
 feeds across beats so it can read real feeds. It just returns the catalog — no
 network, no key.
 
-Curated by hand; verify entries with ``probe_tool rss_feed <url>`` and edit
-freely. This is the obvious early tuning surface for discovery quality.
+The catalog is the source library's registry (``library.sources``) — one canonical feed list,
+shared with the library crawl and the statements desk; add or retire a feed there.
 """
 
 from __future__ import annotations
 
 from typing import Any
 
+from algent_backend.library.sources import all_sources
+
 from ...spec import GLOBAL_SCOPE, ToolSpec
 from .._wrap import as_structured_tool
 
 NEWS_FEEDS_TOOL_ID = "news_feeds"
 
-# Curated, reasonably reliable feeds. Beats let the agent pick by interest.
-_FEEDS: list[dict[str, str]] = [
-    {"name": "BBC World", "url": "https://feeds.bbci.co.uk/news/world/rss.xml", "beat": "world"},
-    {"name": "BBC Business", "url": "https://feeds.bbci.co.uk/news/business/rss.xml", "beat": "business"},
-    {"name": "BBC Technology", "url": "https://feeds.bbci.co.uk/news/technology/rss.xml", "beat": "tech"},
-    {"name": "The Guardian World", "url": "https://www.theguardian.com/world/rss", "beat": "world"},
-    {"name": "NPR News", "url": "https://feeds.npr.org/1001/rss.xml", "beat": "general"},
-    {"name": "Al Jazeera", "url": "https://www.aljazeera.com/xml/rss/all.xml", "beat": "world"},
-    {"name": "NYT World", "url": "https://rss.nytimes.com/services/xml/rss/nyt/World.xml", "beat": "world"},
-    {"name": "NYT Business", "url": "https://rss.nytimes.com/services/xml/rss/nyt/Business.xml", "beat": "business"},
-]
-
 
 def _list_feeds() -> list[dict[str, str]]:
-    """Return the curated catalog of news RSS feeds (name, url, beat)."""
-    return list(_FEEDS)
+    """Return the curated feed catalog: name, url, beat, and the source's kind and region (RSS/Atom only)."""
+    out = []
+    for source in all_sources():
+        rss = [f for f in source.feeds if f.type == "rss"]
+        for feed in rss:
+            name = source.name if len(rss) == 1 else f"{source.name} ({feed.beat})"
+            out.append({"name": name, "url": feed.url, "beat": feed.beat, "kind": source.kind, "region": source.region})
+    return out
 
 
 def _build() -> Any:

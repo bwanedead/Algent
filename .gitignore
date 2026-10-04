@@ -283,3 +283,4 @@ backend/pulse_store/
 backend/intel_store/
 backend/instruments_store/
 backend/statements_store/
+backend/library_store/

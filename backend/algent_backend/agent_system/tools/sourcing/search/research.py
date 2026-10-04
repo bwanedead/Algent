@@ -13,6 +13,8 @@ Capabilities, by parameter:
   starts on free DuckDuckGo (supports ``site:``), then Tavily/Brave/Exa on hard failure;
   semantic prefers Exa, with DuckDuckGo as first fallback; ``news`` is dated recent coverage
   from Google News (free, falls back to DuckDuckGo). The free engines never touch the cost meter.
+  Keyword and news searches also consult our own source library (``algent_backend.library``, free and
+  local): its hits come first, marked ``provider: "library"``, ahead of the engine's results.
 - **scholarly resolve** — ``web_search(doi=...)`` or ``kind="scholar"`` — free
   Crossref/OpenAlex lookup for papers (no paid budget).
 - **read a page** — ``web_search(read_url="https://…")``; free extraction by
@@ -298,6 +300,7 @@ def _search_web(query: str, kind: str, max_results: int) -> dict[str, Any]:
     """
     chain = _provider_chain(kind)
     errors: list[str] = []
+    library = _library_hits(query, kind, max_results)
     meter_kind = kind if kind in ("keyword", "semantic") else "keyword"
     unit = cost.estimate_call_cost(meter_kind)
     for i, provider in enumerate(chain):
@@ -339,6 +342,7 @@ def _search_web(query: str, kind: str, max_results: int) -> dict[str, Any]:
             # agent could see it and had no idea what it implied.
             "provider_style": _PROVIDER_STYLE[provider],
         }
+        _prepend_library(out, library)
         if provider != chain[0]:
             out["fallback_from"] = chain[0]
             out["provider_note"] = (
@@ -347,11 +351,52 @@ def _search_web(query: str, kind: str, max_results: int) -> dict[str, Any]:
                 f"repeating the same query."
             )
         return out
-    return {
+    return _library_alone(library, kind, query, errors, chain) or {
         "action": "search", "kind": kind, "query": query,
         "error": "; ".join(errors)[:300] or "all search providers failed",
         "providers_tried": chain,
     }
+
+
+#: Library hits sit ahead of the open web: they come from sources we chose and indexed ourselves.
+_LIBRARY_KINDS = ("keyword", "news")
+_LIBRARY_HITS_MAX = 5
+
+
+def _library_alone(library: list[dict[str, Any]], kind: str, query: str, errors: list[str],
+                   chain: list[str]) -> dict[str, Any] | None:
+    """Every open-web engine failed but our own index answered — that is still a result."""
+    if not library:
+        return None
+    return {
+        "action": "search", "kind": kind, "query": query, "provider": "library",
+        "results": library, "provider_style": _PROVIDER_STYLE["library"],
+        "external_search_unavailable": "; ".join(errors)[:300], "providers_tried": chain,
+    }
+
+
+def _prepend_library(out: dict[str, Any], library: list[dict[str, Any]]) -> None:
+    if library and isinstance(out["results"], list):
+        out["results"] = [*library, *out["results"]]
+        out["library_hits"] = len(library)
+        out["library_style"] = _PROVIDER_STYLE["library"]
+
+
+def _library_hits(query: str, kind: str, max_results: int) -> list[dict[str, Any]]:
+    """Hits from our own index (free, local), marked ``provider: "library"``; [] when it has nothing or is absent."""
+    if kind not in _LIBRARY_KINDS:
+        return []
+    try:
+        from algent_backend.library.search import search as library_search
+
+        hits = library_search(query, limit=min(_LIBRARY_HITS_MAX, max_results))
+    except Exception:  # noqa: BLE001 — the index is an aid; a broken one must never take web search down
+        return []
+    return _clip_strings([
+        {"title": h["title"], "url": h["url"], "content": h["snippet"], "source": h["source"],
+         "source_kind": h["kind"], "published": h["published"], "provider": "library"}
+        for h in hits
+    ], limit=_SEARCH_SNIPPET_CHARS)
 
 
 def _clip_strings(value: Any, *, limit: int) -> Any:
@@ -394,6 +439,14 @@ def _provider_error_payload(results: Any) -> str | None:
 #: trivia: the same question phrased for the wrong engine comes back thin, and the agent then
 #: concludes the material does not exist rather than that it asked badly.
 _PROVIDER_STYLE = {
+    "library": (
+        "OUR OWN INDEX of sources we curated and crawled (governments, ministries, international "
+        "organisations, central banks, think tanks, wires, regional outlets): each hit carries its "
+        "source, source_kind and publication date, and primary institutions rank above news on equal "
+        "relevance. Trusted, dated and fresh as of the last crawl — a snippet to ground a search, "
+        "not the page: read_url the hit to cite it. Words the page would contain match best; when "
+        "the library has nothing it stays silent and the open-web results below are all there is."
+    ),
     "ddg": (
         "literal keyword index (free): exact words a page would contain — names, places, quoted "
         "phrases. Supports `site:domain.tld words` to find a page on one specific site (the way "
@@ -491,7 +544,9 @@ def _build() -> Any:
             "source class, not a fallback: reach for it when a story is unfolding, when you need "
             "the primary post rather than an outlet's summary of it, or to find credible "
             "on-the-ground dissent from the wire consensus. Web search and reads are free; "
-            "'rich' and 'x' draw on a small per-run budget. Keyword search auto-falls through "
+            "'rich' and 'x' draw on a small per-run budget. Keyword and news searches list hits "
+            "from our own curated source library (provider 'library', dated) before the open web. "
+            "Keyword search auto-falls through "
             "providers on quota failure — so every result names the `provider` that answered "
             "and a `provider_style` saying how that engine wants to be asked. Read it: a "
             "literal-match engine and a semantic one reward opposite phrasing, and which one "
