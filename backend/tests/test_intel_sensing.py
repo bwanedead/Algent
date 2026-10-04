@@ -352,3 +352,36 @@ def test_a_failed_refresh_does_not_fail_the_daily_and_no_refresh_skips(tmp_path,
     A.no_refresh = True
     assert cli._daily(A()) == 0
     assert json.loads(capsys.readouterr().out)["sensing_refresh"] == {"skipped": "--no-refresh"}
+
+
+def test_the_daily_is_dated_the_day_it_is_written_not_the_radar_board(tmp_path, monkeypatch, capsys) -> None:
+    """A stale radar board (no edition today) once made 'today's' daily overwrite yesterday's record."""
+    from datetime import date
+
+    from algent_backend.agent_system.agents.intel import desk as desk_mod
+    from algent_backend.cli.newsroom import intel as cli
+    from algent_backend.cli.newsroom import pulse as pulse_cli
+    from algent_backend.data_backup import sync
+    from algent_backend.publishing import intel_page
+
+    seen: list[str] = []
+    monkeypatch.setattr(cli, "_ctx", lambda _id: object())
+    monkeypatch.setattr(cli, "_heat", lambda *_a, **_k: 0)
+    monkeypatch.setattr(cli, "_out", lambda as_of: tmp_path)
+    monkeypatch.setattr(cli, "_prime", lambda *_a, **_k: [])
+    monkeypatch.setattr(desk_mod, "latest_board", lambda: {"as_of": "2000-01-01", "theaters": [], "heat": []})
+    monkeypatch.setattr(daily, "produce_daily", lambda *_a, **k: seen.append(k["as_of"]) or {
+        "report": {"summary": {"headline": "h"}}, "path": "p", "theaters": [], "research_usd": 0.0})
+    monkeypatch.setattr(intel_page, "publish_intel", lambda: {"published": True})
+    monkeypatch.setattr(sync, "backup", lambda note="": {"ok": True})
+    monkeypatch.setattr(pulse_cli, "promote_ready_quietly", lambda: [])
+
+    class A:
+        domain, top, research, fresh_research, days, no_refresh, date = "geopolitics", 5, False, False, 7, True, ""
+    assert cli._daily(A()) == 0
+    out = json.loads(capsys.readouterr().out)
+    assert seen == [date.today().isoformat()] and out["date"] == seen[0]
+    assert out["headlines_through"] == "2000-01-01"
+    A.date = "2026-10-03"                      # an explicit rerun of a past day still works
+    assert cli._daily(A()) == 0
+    assert seen[-1] == "2026-10-03"
