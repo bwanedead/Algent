@@ -149,16 +149,70 @@ def _cache_put(url: str, payload: dict[str, Any]) -> None:
         pass
 
 
+class PageNotFound(RuntimeError):
+    """The page definitively does not exist (404/410, or the host does not resolve).
+
+    Distinct from a bot wall: a wall may yield to a better crawler, a missing page never will,
+    so this must stop the ladder instead of escalating to a paid fetch.
+    """
+
+
+_NOT_FOUND_FIX = "find the real URL by searching (site:domain …); do not construct URLs"
+_DNS_MARKERS = (
+    "getaddrinfo", "name or service not known", "nodename nor servname",
+    "temporary failure in name resolution", "no address associated",
+)
+
+
+def _is_dns_failure(exc: Exception) -> bool:
+    import socket
+
+    import httpx
+
+    if isinstance(exc, httpx.InvalidURL):
+        return True
+    chain, seen = exc, 0
+    while chain is not None and seen < 5:
+        if isinstance(chain, socket.gaierror) or any(
+            m in str(chain).lower() for m in _DNS_MARKERS
+        ):
+            return True
+        chain, seen = chain.__cause__ or chain.__context__, seen + 1
+    return False
+
+
+def _unreadable_reason(url: str) -> str | None:
+    """Why ``url`` can never be fetched, without trying (and without any paid escalation)."""
+    low = url.lower()
+    if "webcache.googleusercontent.com" in low:
+        return "Google's web cache was shut down; these links are dead — search for the live page instead"
+    if "*" in url:
+        return "wildcard (*) URLs are not fetchable pages — search for the real page URL instead"
+    return None
+
+
 def _http_get(url: str) -> str | None:
-    """Fetch raw HTML with browser headers; None on block/error/non-200."""
+    """Fetch raw HTML with browser headers; None on block/error/other non-200.
+
+    Raises ``PageNotFound`` on 404/410 and on DNS/invalid-host failure — the cases where the
+    URL itself is wrong, which the agent must hear about (it usually means a guessed URL).
+    """
     import httpx
 
     try:
         response = httpx.get(
             url, headers=_BROWSER_HEADERS, timeout=_TIMEOUT_S, follow_redirects=True
         )
-    except Exception:
+    except Exception as exc:
+        if _is_dns_failure(exc):
+            raise PageNotFound(
+                f"host does not resolve (DNS failure) — {_NOT_FOUND_FIX}"
+            ) from exc
         return None
+    if response.status_code in (404, 410):
+        raise PageNotFound(
+            f"page does not exist (HTTP {response.status_code}) — {_NOT_FOUND_FIX}"
+        )
     return response.text if response.status_code == 200 else None
 
 
@@ -358,15 +412,23 @@ def _grade_html(html: str | None, fallback_meta: dict[str, str] | None = None) -
 def _fetch(url: str, allow_paid_fallback: bool = True) -> dict[str, Any]:
     """Extract readable article content from ``url`` via the cheap-first ladder.
 
-    Returns ``{url, content, via, quality, words, meta?}``. ``via`` is the engine that
+    Returns ``{url, content, via, quality, words, meta?}``, or ``{url, error, not_found: True}``
+    when the page does not exist / cannot be fetched at all (never escalated to paid). ``via`` is the engine that
     won; ``quality`` is ``good`` | ``thin`` | ``blocked`` | ``empty``. Set
     ``allow_paid_fallback=False`` to stay free-only for low-value pages.
     """
     cached = _cache_get(url)
     if cached and cached.get("quality") == "good":
         return cached
+    reason = _unreadable_reason(url)
+    if reason:
+        return {"url": url, "error": reason, "not_found": True}
 
-    html = _http_get(url)
+    try:
+        html = _http_get(url)
+    except PageNotFound as gone:
+        # A missing page is a final answer: no JS render, no paid crawler, no retry hint.
+        return {"url": url, "error": str(gone), "not_found": True}
     content, via, quality, words, meta = _grade_html(html)
     content, via, quality, words, meta = _maybe_playwright_rescue(
         url, content, via, quality, words, meta,

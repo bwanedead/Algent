@@ -302,8 +302,14 @@ def test_web_search_rich_read_allows_paid_fallback(monkeypatch) -> None:
     assert seen["paid"] is True
 
 
-def test_web_search_keyword_routes_to_tavily(monkeypatch) -> None:
+def _ddg_down() -> None:
+    """Take the free DDG lead out of play so a test can exercise the paid keyword chain."""
     research.circuit.reset()
+    research.circuit.record_failure("ddg", "429 rate limit")
+
+
+def test_web_search_keyword_routes_to_tavily(monkeypatch) -> None:
+    _ddg_down()
     monkeypatch.setattr(tavily, "_build", _engine(["r1", "r2"]))
     out = research._search(query="china economy")
     assert out["action"] == "search" and out["kind"] == "keyword" and out["results"] == ["r1", "r2"]
@@ -361,7 +367,7 @@ def test_web_search_surfaces_engine_errors_cleanly(monkeypatch) -> None:
 
 
 def test_web_search_falls_through_on_quota_failure(monkeypatch) -> None:
-    research.circuit.reset()
+    _ddg_down()
     calls: list[str] = []
 
     def invoke(provider, query, max_results):
@@ -373,14 +379,14 @@ def test_web_search_falls_through_on_quota_failure(monkeypatch) -> None:
     monkeypatch.setattr(research, "_invoke_provider", invoke)
     out = research._search(query="amazon earthworks paper")
     assert out["results"] and out["provider"] == "brave"
-    assert out.get("fallback_from") == "tavily"
+    assert out.get("fallback_from") == "ddg"
     assert calls[0] == "tavily" and "brave" in calls
     assert research.circuit.is_open("tavily")
 
 
 def test_web_search_falls_through_on_tavily_error_payload(monkeypatch) -> None:
     """Amazon 0041 shape: Tavily returns an error dict without raising."""
-    research.circuit.reset()
+    _ddg_down()
     calls: list[str] = []
 
     def invoke(provider, query, max_results):
@@ -392,7 +398,7 @@ def test_web_search_falls_through_on_tavily_error_payload(monkeypatch) -> None:
     monkeypatch.setattr(research, "_invoke_provider", invoke)
     out = research._search(query="amazon earthworks Pärssinen")
     assert out["provider"] == "brave" and out["results"]
-    assert out.get("fallback_from") == "tavily"
+    assert out.get("fallback_from") == "ddg"
     assert research.circuit.is_open("tavily")
     assert "432" in (out.get("error") or "") or calls[0] == "tavily"
 
@@ -690,7 +696,7 @@ def test_turn_ceiling_scales_with_input_over_8k_tokens() -> None:
 
 
 def test_fallback_provider_contacts_are_metered(monkeypatch) -> None:
-    research.circuit.reset()
+    _ddg_down()
 
     def fake_invoke(provider, q, n):
         if provider == "tavily":
@@ -712,7 +718,7 @@ def test_results_tell_the_agent_which_engine_answered_and_how_to_ask_it(monkeypa
     where the same keyword-soup query performs worst. Thin results then read as "no such source"
     rather than "wrong phrasing for whoever answered".
     """
-    research.circuit.reset()
+    _ddg_down()
 
     def invoke(provider, query, max_results):
         if provider == "tavily":
@@ -728,7 +734,7 @@ def test_results_tell_the_agent_which_engine_answered_and_how_to_ask_it(monkeypa
     # The style rides along so the agent can re-phrase without knowing vendor trivia.
     assert "semantic" in out["provider_style"].lower()
     # And a fallback says so explicitly, with the instruction that matters: re-ask, don't repeat.
-    assert out["fallback_from"] == "tavily"
+    assert out["fallback_from"] == "ddg"
     assert "RE-ASK" in out["provider_note"]
 
     # The primary carries a style too — the agent should never have to guess who answered.
@@ -736,7 +742,7 @@ def test_results_tell_the_agent_which_engine_answered_and_how_to_ask_it(monkeypa
     monkeypatch.setattr(research, "_invoke_provider",
                         lambda p, q, n: [{"title": "ok", "url": "http://x"}])
     primary = research._search(query="q")
-    assert primary["provider"] == "tavily" and primary["provider_style"]
+    assert primary["provider"] == "ddg" and primary["provider_style"]
     assert "fallback_from" not in primary and "provider_note" not in primary
 
 

@@ -9,9 +9,10 @@ ethos): free/snippet results by default; paid escalation (full-content fetch via
 Firecrawl, or X) happens only when the agent deliberately asks for it.
 
 Capabilities, by parameter:
-- **search the web** — ``web_search(query, kind="keyword"|"semantic")``. Keyword
-  prefers Tavily, falls through to Brave then Exa on hard provider failure;
-  semantic prefers Exa, falls through to keyword engines.
+- **search the web** — ``web_search(query, kind="keyword"|"semantic"|"news")``. Keyword
+  starts on free DuckDuckGo (supports ``site:``), then Tavily/Brave/Exa on hard failure;
+  semantic prefers Exa, with DuckDuckGo as first fallback; ``news`` is dated recent coverage
+  from Google News (free, falls back to DuckDuckGo). The free engines never touch the cost meter.
 - **scholarly resolve** — ``web_search(doi=...)`` or ``kind="scholar"`` — free
   Crossref/OpenAlex lookup for papers (no paid budget).
 - **read a page** — ``web_search(read_url="https://…")``; free extraction by
@@ -121,7 +122,7 @@ def _search(
         return _search_scholar(query=query, doi=doi)
     if source == "x":
         return _search_x(query, max_results)
-    channel = policy.SEMANTIC if kind == "semantic" else policy.KEYWORD
+    channel = policy.channel_for_kind(kind)
     if not policy.is_allowed(channel):
         return _denied(channel)
     # A blank query still spends a search credit and returns nothing a model can use. One live
@@ -222,6 +223,8 @@ def _read(url: str, *, rich: bool) -> dict[str, Any]:
     Two honest signals accompany a read so the agent (and doctrine) can act:
     - ``retry_hint`` on a *degraded free* read — telling it a paid ``richness='rich'`` retry
       is available for this hard page (that is precisely when Firecrawl earns its cost).
+    - ``not_found: true`` when the page does not exist (404/410, dead host, uncrawlable URL
+      shape) — final, never escalated; the fix is to search for the real URL.
     - ``barrier: true`` when even a ``rich`` read is degraded/failed — free + paid both
       exhausted, so the source is genuinely walled (the cue to honestly caveat, not keep trying).
     """
@@ -247,6 +250,11 @@ def _read(url: str, *, rich: bool) -> dict[str, Any]:
                 "free read failed on a hard page — retry richness='rich' (paid crawler)"
             )
         return out
+    if result.get("not_found"):
+        # The URL is wrong, not walled: no budget spent, and no retry/barrier hint — a 'rich' retry
+        # of a nonexistent page is exactly the wasted paid call this branch exists to prevent.
+        cost.release(paid_res)
+        return {"action": "read", **result}
     # Charge rich budget only when Firecrawl actually rescued the page.
     if allow_paid and result.get("via") == "firecrawl":
         if policy.try_spend_paid():
@@ -278,39 +286,43 @@ def _read(url: str, *, rich: bool) -> dict[str, Any]:
 def _search_web(query: str, kind: str, max_results: int) -> dict[str, Any]:
     """Route by intent with automatic fallthrough on hard provider failure.
 
-    Primary: keyword→Tavily, semantic→Exa. On circuit-open or hard error, try Brave
-    (independent index) then the other intent engine. Empty results alone do not trip
+    Chains are in ``_provider_chain``: free engines (ddg, gnews) lead where they fit, paid ones
+    follow. On circuit-open or hard error, fall to the next. Empty results alone do not trip
     the breaker — only quota/auth-class failures do. Provider-returned error payloads
     (e.g. Tavily ``{"error": ValueError("Error 432 quota exceeded")}``) count as hard
     failures too — Amazon 0041 returned that shape without raising.
 
-    Every provider contact is authorized before contact and settled after.
-    Slim/hard mode refuses fallback providers (optional expenditure).
+    Every PAID provider contact is authorized before contact and settled after; free providers
+    (``_FREE_PROVIDERS``) cost nothing, so they skip the meter and are never refused by slim/hard
+    mode. Slim/hard mode refuses paid fallback providers (optional expenditure).
     """
     chain = _provider_chain(kind)
     errors: list[str] = []
     meter_kind = kind if kind in ("keyword", "semantic") else "keyword"
     unit = cost.estimate_call_cost(meter_kind)
     for i, provider in enumerate(chain):
-        if i > 0 and (cost.is_slim() or cost.is_hard_stop()):
+        free = provider in _FREE_PROVIDERS
+        if i > 0 and not free and (cost.is_slim() or cost.is_hard_stop()):
             cost.record_skip("search_fallback", cost.mode())
             errors.append(f"{provider}: skipped ({cost.mode()} — no fallback search)")
-            break
+            continue  # a later FREE provider may still answer
         if circuit.is_open(provider):
             errors.append(f"{provider}: circuit open")
             continue
-        res = cost.try_reserve(unit, op=meter_kind)
-        if res is None:
+        res = None if free else cost.try_reserve(unit, op=meter_kind)
+        if res is None and not free:
             errors.append(f"{provider}: cost refused ({cost.mode()})")
             break
         try:
             results = _invoke_provider(provider, query, max_results)
         except Exception as exc:  # noqa: BLE001
-            cost.settle(res, unit)
+            if res is not None:
+                cost.settle(res, unit)
             circuit.record_failure(provider, exc)
             errors.append(f"{provider}: {str(exc)[:120]}")
             continue
-        cost.settle(res, unit)
+        if res is not None:
+            cost.settle(res, unit)
         payload_err = _provider_error_payload(results)
         if payload_err is not None:
             circuit.record_failure(provider, payload_err)
@@ -382,6 +394,24 @@ def _provider_error_payload(results: Any) -> str | None:
 #: trivia: the same question phrased for the wrong engine comes back thin, and the agent then
 #: concludes the material does not exist rather than that it asked badly.
 _PROVIDER_STYLE = {
+    "ddg": (
+        "literal keyword index (free): exact words a page would contain — names, places, quoted "
+        "phrases. Supports `site:domain.tld words` to find a page on one specific site (the way "
+        "to locate a real URL instead of guessing one) and \"exact phrases\". Short and "
+        "concrete beats descriptive; it will not infer what you meant."
+    ),
+    "bing": (
+        "broad web index (free), weak relevance: it answers when the better engines are down. "
+        "Use distinctive words and names; it does NOT honour site: — for one specific site, "
+        "use news search or go to the outlet's own pages (a site: query here is domain-filtered "
+        "and may come back empty rather than wrong)."
+    ),
+    "gnews": (
+        "news headlines, dated (free): phrase the query like a headline or the event's key "
+        "terms. Each result is an OUTLET'S COVERAGE (title, outlet, published date), not the "
+        "primary record — read the article (resolved:true means `url` is readable; false means "
+        "search the title with site:outlet instead) to ground a claim."
+    ),
     "tavily": (
         "literal-match, news-weighted: use the actual words a page would contain — names, "
         "places, quoted phrases. Short and concrete beats descriptive."
@@ -404,17 +434,36 @@ _PROVIDER_STYLE = {
 }
 
 
+#: Providers that cost nothing and so bypass the cost meter and the slim/hard-mode refusal.
+_FREE_PROVIDERS = frozenset({"ddg", "gnews", "bing"})
+
+
 def _provider_chain(kind: str) -> list[str]:
     # `muse` is last on both: it is a genuine substitute at the snippet tier, but the model picks
     # its own queries and shows us what it chose to cite, where a keyword API answers the query we
     # wrote and returns everything. That is the right trade only once the alternatives are gone —
     # which, with tavily near its monthly cap and brave unconfigured, is a case we now reach.
+    # `ddg` leads keyword (free, literal, supports site:) and is the first semantic fallback, so a
+    # dead Exa degrades to a free engine before any paid one. `bing` (free, weak relevance) is the
+    # last real index before muse, so a blocked DDG plus dead paid engines still returns something.
+    # `news` is free-only by design.
+    if kind == "news":
+        return ["gnews", "ddg"]
     if kind == "semantic":
-        return ["exa", "brave", "tavily", "muse"]
-    return ["tavily", "brave", "exa", "muse"]
+        return ["exa", "ddg", "brave", "tavily", "bing", "muse"]
+    return ["ddg", "tavily", "brave", "exa", "bing", "muse"]
 
 
 def _invoke_provider(provider: str, query: str, max_results: int) -> list[Any]:
+    if provider == "ddg":
+        from .ddg import search as ddg_search
+        return ddg_search(query, max_results=max_results)
+    if provider == "bing":
+        from .bing import search as bing_search
+        return bing_search(query, max_results=max_results)
+    if provider == "gnews":
+        from .gnews import search as gnews_search
+        return gnews_search(query, max_results=max_results)
     if provider == "tavily":
         from .tavily import _build as build_engine
         return build_engine().invoke({"query": query})
@@ -435,7 +484,8 @@ def _build() -> Any:
         _search,
         name="web_search",
         description=(
-            "One research tool. Search the web (kind='keyword' or 'semantic'), resolve a paper "
+            "One research tool. Search the web (kind='keyword', 'semantic', or 'news' for recent "
+            "dated coverage from outlets), resolve a paper "
             "(doi=... or kind='scholar'), read a page (read_url=...; richness='rich' allows the "
             "paid crawler on a hard page), or search LIVE X POSTS (source='x'). X is a distinct "
             "source class, not a fallback: reach for it when a story is unfolding, when you need "
@@ -447,7 +497,10 @@ def _build() -> Any:
             "literal-match engine and a semantic one reward opposite phrasing, and which one "
             "you get can change mid-run. Thin results are often the wrong phrasing for the "
             "engine that happened to answer, not an absent source — re-ask in its style before "
-            "concluding the material does not exist."
+            "concluding the material does not exist. To find a page on a specific site, run a "
+            "keyword search with `site:domain words`. Read ONLY URLs that came from search "
+            "results or a source you were given — never construct or guess a URL path, id or "
+            "date: a guessed URL is a wasted call."
         ),
     )
 
