@@ -44,6 +44,7 @@ Docs sprawl is a real failure mode. To prevent it:
 - `run-control-plane.md` – run directory contract, runs CLI, observability weave.
 - `map-analytics-stack.md` – accurate country-scale map figures for the newsroom analytics path.
 - `pulse-system.md` – Ohmega Pulse: situations, anchored Pulses, append-only influences, watches, storage.
+- `instruments.md` – the numbers layer: free programmatic series (chokepoint transits, energy, rates, FX…), append-only store, moves vs each series' own history, evidence API.
 
 ### Guides — `guides/`
 - `run-operator-entrypoint.md` – **start here** to operate runs; short hub that routes to the rest.
