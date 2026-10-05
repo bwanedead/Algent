@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import ActorStrip from "@/components/actors/ActorStrip";
 import ActorNetwork from "@/components/dossier/ActorNetwork";
 import DossierFigures from "@/components/dossier/DossierFigures";
+import DossierLineage from "@/components/dossier/DossierLineage";
 import DossierMap from "@/components/dossier/DossierMap";
 import DossierOutlook from "@/components/dossier/DossierOutlook";
 import DossierRecord from "@/components/dossier/DossierRecord";
@@ -49,6 +50,7 @@ export default function TheaterDossierPage({ params }: { params: Params }) {
   return (
     <div className="intel-page th-page">
       <DossierTop d={d} />
+      <DossierLineage d={d} />
 
       {(d.pulses.length > 0 || d.map) && (
         <div className={`th-screen${d.pulses.length > 0 && d.map ? " is-two" : ""}`}>

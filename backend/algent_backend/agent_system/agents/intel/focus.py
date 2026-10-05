@@ -10,6 +10,8 @@ LIFECYCLE (``classify``; persisted per theater in the registry as ``state`` and 
   (``novelty``). It only moves forward, and it moves the moment a re-clustered headline brings the theater back.
 * ``quiet``  — nothing new for ``FOCUS_DROP_DAYS``: it falls off the focus.
 * ``new``    — first seen inside the window and never yet written up in a daily.
+* ``merged`` — absorbed into another theater (``lineage.py``); out of focus altogether, and not listed as quiet.
+  A fresh branch starts like any new theater: first seen today, never written up, so ``new``.
 * ``active`` — anything else with novelty inside ``FOCUS_DROP_DAYS``. A quiet theater is ``active`` again the
   moment its ``last_novel`` is inside the span (there is no separate "revive" step: the state is recomputed
   from the dates on every board).
@@ -39,6 +41,7 @@ from .heat import store_dir
 # desk's attention lasts, not something the data implies, so it is named here and nowhere else.
 FOCUS_DROP_DAYS = 7
 MAX_COUNTRIES = 3
+MERGED = "merged"       # lifecycle state of a theater absorbed into another (``lineage``): never in focus, watch or quiet
 
 
 def last_sections(intel_dir: Any, *, before: str) -> dict[str, dict]:
@@ -89,7 +92,9 @@ def annotate(theaters: list[Theater], heats: list[TheaterHeat], reg: dict[str, d
                            as_of=as_of, days=days)
         entry.update(last_novel=h.last_novel, state=h.state)
     for tid, entry in reg.items():
-        if tid not in by_id:
+        if entry.get("merged_into"):               # folded into another theater: gone from focus, not "quiet"
+            entry["state"] = MERGED
+        elif tid not in by_id:
             entry["last_novel"] = entry.get("last_novel") or entry.get("last_seen", "")
             entry["state"] = classify(last_novel=entry["last_novel"], first_seen=entry.get("first_seen", ""),
                                       covered=tid in covered, as_of=as_of, days=days)
@@ -101,7 +106,7 @@ def offboard(reg: dict[str, dict], on_board: set[str], *, as_of: date, days: int
     return [{"theater_id": tid, "name": e.get("name", tid), "domain": e.get("domain", ""),
              "state": e.get("state", ""), "last_novel": e.get("last_novel", ""),
              "last_section": covered.get(tid, {}).get("date", ""), "countries": covered.get(tid, {}).get("countries", [])}
-            for tid, e in reg.items() if tid not in on_board and e.get("state")]
+            for tid, e in reg.items() if tid not in on_board and e.get("state") and not e.get("merged_into")]
 
 
 @dataclass

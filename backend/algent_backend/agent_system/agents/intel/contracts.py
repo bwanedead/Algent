@@ -40,6 +40,8 @@ class Theater(BaseModel):
     why: str = ""                    # why these belong together (the dynamic, not the keyword)
     members: list[Member] = Field(default_factory=list)
     situation_id: str = ""           # the Pulse situation it maps to, when one exists
+    parent_id: str = ""              # a branch: the tracked theater it grew out of (set the day it is created)
+    absorbed: list[str] = Field(default_factory=list)   # tracked theaters this run folded into it (see lineage.py)
 
 
 class HeatPoint(BaseModel):

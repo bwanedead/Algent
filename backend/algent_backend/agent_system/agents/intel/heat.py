@@ -26,6 +26,7 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 from . import base as base_mod
+from . import lineage
 from .contracts import ClassShare, HeatPoint, Member, Theater, TheaterHeat
 
 _STORE_ENV = "ALGENT_INTEL_STORE"
@@ -49,6 +50,21 @@ airspace", "the US–Iran confrontation over Hormuz", "China's pressure on Taiwa
 - You are given the theaters the desk already tracks. When a group is the SAME dynamic, reuse its
   `existing_id` exactly — continuity is what lets heat build into a trend. Create a new theater only
   for a dynamic not already tracked.
+- Theaters BRANCH and MERGE, because readers follow the dynamic, not our filing. When a group of headlines is
+  a DISTINCT dynamic that grew out of a tracked theater — its own actors, its own stakes, its own path of
+  escalation, a contest over one place or front that now drives events on its own (a besieged enclave inside a
+  wider confrontation, a sea lane inside a regional standoff) — propose it as a NEW theater with `parent_id` set
+  to the tracked theater it came out of, and leave the rest of the headlines in the parent. A story that merely
+  happens in that place, or only illustrates the parent's dynamic, stays in the parent: branch only when
+  following it separately would tell the reader something following the parent does not. The branch keeps its
+  parent named, so its history is never lost.
+- When two TRACKED theaters have turned out to be one dynamic, say so: give one of them as `existing_id` with
+  `merge_into` set to the other (the one that should survive, usually the broader or older), and put the
+  headlines in the survivor. Merge only when the actors, stakes and escalation path are the same, not when the
+  two are neighbours or one feeds the other. Both histories are kept; future headlines go to the survivor.
+- Where SIGNALS THAT MAY DESERVE THEIR OWN THEATER are listed, they are red lines and threats on the record
+  that name a place or actor no tracked theater covers. They are leads, not instructions: a theater needs
+  headlines (at least two) that show a dynamic, and a lone statement is not one.
 - `domain`: geopolitics, economics, technology, science, health, politics, society — one word.
 - `why`: one sentence on what ties these together and what is at stake.
 """
@@ -61,6 +77,8 @@ class ProposedTheater(BaseModel):
     description: str = ""
     why: str = ""
     headline_ids: list[str] = Field(default_factory=list)
+    parent_id: str = ""        # a NEW theater that branched out of this tracked one
+    merge_into: str = ""       # with ``existing_id``: that tracked theater is the same dynamic as this one
 
 
 class TheaterPlan(BaseModel):
@@ -107,26 +125,34 @@ def cluster(context: Any, config: Any, heads: dict[str, dict], *, model_spec: An
     from algent_backend.agent_system.prompting import UNIVERSAL_AGENT_BASE, compose_system_prompt
 
     reg = registry()
-    known = "\n".join(f"- {tid}: {t['name']} — {t.get('description', '')}" for tid, t in reg.items()) or "none yet"
+    nominated = lineage.nominations_block(reg, as_of=max((date.fromisoformat(h["day"]) for h in heads.values()),
+                                                         default=date.today()))
     lines = "\n".join(f"[{hid}] {h['day']} ({h.get('kind', 'radar')}) — {h['title']}"
                       + (f": {h['thesis'][:160]}" if h.get("thesis") else "") for hid, h in heads.items())
-    task = f"THEATERS ALREADY TRACKED:\n{known}\n\nHEADLINES:\n{lines}\n\nTASK: group them into theaters."
+    signals = f"SIGNALS THAT MAY DESERVE THEIR OWN THEATER:\n{nominated}\n\n" if nominated else ""
+    task = (f"THEATERS ALREADY TRACKED:\n{lineage.describe_known(reg)}\n\n{signals}"
+            f"HEADLINES:\n{lines}\n\nTASK: group them into theaters.")
     model = context.model_resolver.resolve(model_spec).client.with_structured_output(TheaterPlan)
     plan = model.invoke([SystemMessage(content=compose_system_prompt(UNIVERSAL_AGENT_BASE, CLUSTER_ROLE)),
                          HumanMessage(content=task)], config=config)
-    theaters: list[Theater] = []
+    theaters: dict[str, Theater] = {}
     for p in getattr(plan, "theaters", []) or []:
         ids = [h for h in dict.fromkeys(p.headline_ids) if h in heads]
         if len(ids) < 2:
             continue
-        tid = p.existing_id if p.existing_id in reg else _slug(p.name)
-        theaters.append(Theater(
-            id=tid, name=p.name, domain=p.domain, description=p.description, why=p.why,
-            members=[Member(edition=heads[h]["edition"], n=heads[h]["n"], kind=heads[h].get("kind", "radar"),
-                            title=heads[h]["title"],
-                            thesis=heads[h].get("thesis", ""), sources=heads[h].get("sources", []))
-                     for h in ids]))
-    return theaters
+        r = lineage.resolve(p.existing_id, p.merge_into, p.parent_id, _slug(p.name), reg)
+        members = [Member(edition=heads[h]["edition"], n=heads[h]["n"], kind=heads[h].get("kind", "radar"),
+                          title=heads[h]["title"], thesis=heads[h].get("thesis", ""), sources=heads[h].get("sources", []))
+                   for h in ids]
+        have = theaters.get(r.id)
+        if have is None:                     # two proposals landing in one theater (a merge) become one
+            name = reg[r.id]["name"] if r.merged and r.id in reg else p.name
+            theaters[r.id] = Theater(id=r.id, name=name, domain=p.domain, description=p.description, why=p.why,
+                                     members=members, parent_id=r.parent_id, absorbed=list(r.merged))
+        else:
+            have.members += [m for m in members if (m.edition, m.n) not in {(x.edition, x.n) for x in have.members}]
+            have.absorbed += [a for a in r.merged if a not in have.absorbed]
+    return list(theaters.values())
 
 
 
@@ -259,13 +285,14 @@ def run(context: Any, config: Any, editions: list[dict], *, model_spec: Any, day
         entry = reg.get(t.id, {"first_seen": as_of.isoformat()})
         reg[t.id] = {**entry, "name": t.name, "domain": t.domain, "description": t.description,
                      "last_seen": as_of.isoformat()}
+    events = [e for t in theaters for e in lineage.apply(reg, t, as_of=as_of.isoformat())]
     heat = sorted((measure(t, editions, days=days, today=as_of, sizes=base.sizes) for t in theaters),
                   key=lambda h: -h.heat)
     focus.annotate(theaters, heat, reg, as_of=as_of, days=days, covered_before=covered_before or as_of.isoformat())
     if write:
         _save_registry(reg)
     board = {"as_of": as_of.isoformat(), "window_days": days, "headlines": len(heads), "base": base.summary(),
-             "theaters": [t.model_dump() for t in theaters], "heat": [h.model_dump() for h in heat],
+             "theaters": [t.model_dump() for t in theaters], "lineage": events, "heat": [h.model_dump() for h in heat],
              "lifecycle": focus.offboard(reg, {t.id for t in theaters}, as_of=as_of, days=days)}
     if write:
         snap = store_dir() / "boards" / f"{as_of.isoformat()}.json"

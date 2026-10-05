@@ -36,10 +36,39 @@ a week, and detection draws on a base wider than our own radar.
 - A theater in focus whose novelty is zero-ish gets a `NEW SINCE` line in the section task; the daily doctrine
   says an unchanged section is short and says so.
 
+## Lineage: branch and merge (`lineage.py`, `dossier_lineage.py`)
+
+Readers follow a dynamic, not our filing, so theaters can split and fuse without losing history. The model
+judges (it is the one clustering call, `heat.cluster`); code validates and records.
+
+- **Branch**: a distinct dynamic that grew out of a tracked theater (its own actors, stakes, escalation path)
+  is proposed as a NEW theater with `parent_id`; the remaining headlines stay in the parent. **Merge**: two
+  tracked theaters that are one dynamic: one is `existing_id` with `merge_into` = the survivor.
+- **Validation** (`lineage.resolve`): parent / merge target must be tracked and live (a merged-away id is followed
+  to its survivor); no self-merge; no merge into a theater already folded into this one (cycle); `parent_id` on a
+  reused theater is ignored (a branch is born with its parent); a branch needs >= 2 headlines like any theater.
+  Bad claims are dropped, never fatal: the theater is still clustered.
+- **Registry** (`theaters.json`): `parent_id`, `merged_into`/`merged_at`, and `lineage: [{event: branched|merged,
+  role: child|parent|absorbed|survivor, other_id, at, why}]` on both sides. Nothing is deleted: a merged theater
+  stays in the registry, is no longer shown to the model or clustered into, and the survivor takes the earlier
+  `first_seen` / later `last_novel`. Boards carry `lineage` (the events recorded that run) and each theater's
+  `parent_id` / `absorbed`.
+- **Lifecycle**: a fresh branch is `new` (first seen today, never written up); a merged theater has state
+  `merged`: out of focus, watch and quiet alike. Heat for a branch is measured from its own members only.
+- **Nomination** (`lineage.nominations_block`): red-line / threat statements from the last 14 days whose `about`
+  names a place or actor that no live theater's name or description mentions go to the clustering call as
+  "SIGNALS THAT MAY DESERVE THEIR OWN THEATER" (<= 8 entries, 3 statements each, dates and links). The ledger is
+  read only; the model decides, and a theater still needs headlines.
+- **Dossier**: `lineage` {`parent`, `branches`, `merged_into`, `absorbed`} (each with `at`, `why`, `url` only when
+  that theater has a dossier) and, for a branch, `inherited` = the parent's timeline up to the branch date (<= 12).
+  The dossier index rows carry `parent_id` / `merged_into`.
+
 ## Site
 
 `/geopolitics` daily: "Also watching" and "Quiet" after the sections (`DailyWatching.tsx`); `/intel/theaters`
-rows show the lifecycle state (from the dossier index `state`/`last_novel`).
+rows show the lifecycle state (from the dossier index `state`/`last_novel`). Branches are indented under their
+parent (or say "branch of ..." when it sits in another group); merged-away theaters leave the groups and are
+listed once under "Merged" with a link to the survivor. A dossier shows `DossierLineage.tsx` under its header.
 
 ## Numbers and power (`numbers.py`, no model)
 

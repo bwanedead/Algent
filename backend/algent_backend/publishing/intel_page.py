@@ -136,7 +136,8 @@ plus ``theaters/index.json`` in both places. ``built_at`` is the newest input's 
 unchanged dossier is byte-identical::
 
     index = {"schema":"ohmega.dossier.index/1","built_at","theaters":[{"theater_id","name","domain","first_seen",
-        "last_seen","days_covered","heat","coverage","escalation_direction","max_band","url":"/intel/theaters/<id>"}]}
+        "last_seen","days_covered","heat","coverage","escalation_direction","max_band","state","last_novel",
+        "parent_id"|"","merged_into"|"","url":"/intel/theaters/<id>"}]}
         // most recently active first, then heat; max_band = most severe band among its Pulses ("" if none)
     dossier = {"schema":"ohmega.dossier/1","theater_id","name","domain","built_at","first_seen","last_seen",
       "days_covered":int,                      // daily reports covering it
@@ -157,7 +158,8 @@ unchanged dossier is byte-identical::
       "statements":[{"who","role","said","quote","when","source"}],   // newest 12
       "on_record":[<on_record row as in the daily>],   // every statement its dailies/briefs showed, by id, newest first, <=150
       "links":[{"theater_id","name","link","date"}],             // cross-theater links from the daily summaries
-      "reports":[{"date","url"}], "briefs":[{"slug","title","as_of","url"}]}   // newest first
+      "reports":[{"date","url"}], "briefs":[{"slug","title","as_of","url"}],   // newest first
+      "lineage":{"parent","branches","merged_into","absorbed"}, "inherited":[<timeline rows>]}   // dossier_lineage.py
 
 Actors (built by ``actors_feed.py``; a power profile per state from the actors store): ``content/intel/actors/<ISO2>.json``
 (``ohmega.actor/1``) + ``index.json`` (``ohmega.actor.index/1``), mirrored to ``public/data/actors/``. Which actors, the
