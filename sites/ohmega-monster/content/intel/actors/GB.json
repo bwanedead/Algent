@@ -517,7 +517,12 @@
       {
         "id": "thr_gaza_war_and_unga_diplomatic_fallout",
         "name": "Gaza war and UNGA diplomatic fallout",
-        "mentions": 3
+        "mentions": 1
+      },
+      {
+        "id": "thr_sudan_civil_war_and_us_visa_leverage",
+        "name": "Sudan civil war and US visa leverage",
+        "mentions": 1
       }
     ],
     "pulses": [
@@ -536,6 +541,13 @@
         "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
       },
       {
+        "id": "pls_sahel_horn_state_fragility_insurgent_control",
+        "name": "State Fragility and Insurgent Control",
+        "band": "severe",
+        "position": 70.0,
+        "theater_id": "thr_sudan_civil_war_and_us_visa_leverage"
+      },
+      {
         "id": "pls_israel_palestine_ceasefire_and_normalization_deadlock",
         "name": "Ceasefire and Normalization Deadlock",
         "band": "severe",
@@ -548,6 +560,20 @@
         "band": "severe",
         "position": 58.0,
         "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
+      },
+      {
+        "id": "pls_sahel_horn_foreign_military_entanglement_horn",
+        "name": "Foreign Military Entanglement and Intelligence Competition in the Horn",
+        "band": "severe",
+        "position": 58.0,
+        "theater_id": "thr_sudan_civil_war_and_us_visa_leverage"
+      },
+      {
+        "id": "pls_sahel_horn_displacement_humanitarian_collapse",
+        "name": "Displacement and Humanitarian Collapse Pressure",
+        "band": "unassessed",
+        "position": null,
+        "theater_id": "thr_sudan_civil_war_and_us_visa_leverage"
       }
     ]
   },

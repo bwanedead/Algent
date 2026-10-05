@@ -507,7 +507,7 @@
         "unit": "usd",
         "year": 2024
       },
-      "theaters": 1,
+      "theaters": 2,
       "statements": 0,
       "url": "/intel/actors/IL",
       "data_url": "/data/actors/IL.json"
@@ -861,10 +861,44 @@
         "unit": "usd",
         "year": 2024
       },
-      "theaters": 1,
+      "theaters": 2,
       "statements": 0,
       "url": "/intel/actors/SA",
       "data_url": "/data/actors/SA.json"
+    },
+    {
+      "iso2": "SO",
+      "name": "Somalia",
+      "region": "Sub-Saharan Africa",
+      "population": {
+        "value": 19654739.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 12995200000.2658,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 661.173877723116,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 0.0,
+        "unit": "twh",
+        "year": 2016
+      },
+      "milex": {
+        "value": 201854000.0,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 1,
+      "statements": 0,
+      "url": "/intel/actors/SO",
+      "data_url": "/data/actors/SO.json"
     },
     {
       "iso2": "ZA",
@@ -933,6 +967,40 @@
       "statements": 0,
       "url": "/intel/actors/KR",
       "data_url": "/data/actors/KR.json"
+    },
+    {
+      "iso2": "SD",
+      "name": "Sudan",
+      "region": "Sub-Saharan Africa",
+      "population": {
+        "value": 51662147.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 60162634574.4689,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 1164.53991699219,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 21.614,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 375212619.388697,
+        "unit": "usd",
+        "year": 2021
+      },
+      "theaters": 1,
+      "statements": 0,
+      "url": "/intel/actors/SD",
+      "data_url": "/data/actors/SD.json"
     },
     {
       "iso2": "SR",
@@ -1061,7 +1129,7 @@
         "unit": "usd",
         "year": 2014
       },
-      "theaters": 1,
+      "theaters": 2,
       "statements": 0,
       "url": "/intel/actors/AE",
       "data_url": "/data/actors/AE.json"
@@ -1095,7 +1163,7 @@
         "unit": "usd",
         "year": 2024
       },
-      "theaters": 1,
+      "theaters": 2,
       "statements": 8,
       "url": "/intel/actors/GB",
       "data_url": "/data/actors/GB.json"

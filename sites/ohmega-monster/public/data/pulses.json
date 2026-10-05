@@ -1,6 +1,6 @@
 {
   "schema": "ohmega.pulses/1",
-  "built_at": "2026-10-05T01:51:52.476789+00:00",
+  "built_at": "2026-10-05T02:19:40.447877+00:00",
   "pulses": [
     {
       "id": "pls_ai_geopolitics_ai_safety_governance_fracture",
@@ -720,8 +720,8 @@
       "position": null,
       "band": "unassessed",
       "confidence": "",
-      "last_assessed": "2026-10-03T22:33:19.511055+00:00",
-      "evidence_through": "2026-10-03",
+      "last_assessed": "2026-10-05T02:02:06.240722+00:00",
+      "evidence_through": "2026-10-04",
       "velocity_7d": null,
       "history": [],
       "title": "Sahel–Horn of Africa · Displacement and Humanitarian Collapse Pressure",
@@ -741,8 +741,8 @@
       "position": 58.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-03T22:33:19.511055+00:00",
-      "evidence_through": "2026-10-03",
+      "last_assessed": "2026-10-05T02:02:06.240722+00:00",
+      "evidence_through": "2026-10-04",
       "velocity_7d": null,
       "history": [
         {
@@ -766,16 +766,21 @@
       "low_end": "Stable civilian governments with monopoly on force and insurgencies contained to peripheral areas.",
       "high_end": "Multiple simultaneous state collapses with juntas and jihadist/insurgent groups controlling large territories and threatening capitals across the Sahel and Horn.",
       "status": "experimental",
-      "position": null,
-      "band": "unassessed",
-      "confidence": "",
-      "last_assessed": "2026-10-03T22:33:19.511055+00:00",
-      "evidence_through": "2026-10-03",
+      "position": 70.0,
+      "band": "severe",
+      "confidence": "high",
+      "last_assessed": "2026-10-05T02:02:06.240722+00:00",
+      "evidence_through": "2026-10-04",
       "velocity_7d": null,
-      "history": [],
+      "history": [
+        {
+          "at": "2026-10-05T02:02:06.240722+00:00",
+          "position": 70.0
+        }
+      ],
       "title": "Sahel and Horn of Africa · State Fragility and Insurgent Control",
       "actors_iso2": [],
-      "rationale": "",
+      "rationale": "Closest to 2026-10-03 held reading (reader thought reality 70) which cited worst escalation since 2020-2022 war, three airports seized, and 7-group alliance. New batch now provides confirmed valid evidence: Eritrea severing ties, Ethiopia closing Asmara embassy and PNGing 10 Eritrean diplomats, reciprocal Egypt PNGs, TPLF seizure of Mekelle/Shire/Axum airports shattering Pretoria Agreement…",
       "data_url": "/data/pulses/pls_sahel_horn_state_fragility_insurgent_control.json"
     },
     {

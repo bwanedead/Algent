@@ -3,26 +3,26 @@
   "theater_id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
   "name": "US withdrawal from Iraq after 23-year presence",
   "domain": "geopolitics",
-  "built_at": "2026-10-04T22:12:36.808470+00:00",
-  "first_seen": "2026-09-27",
+  "built_at": "2026-10-04T21:38:55.474453+00:00",
+  "first_seen": "2026-09-30",
   "last_seen": "2026-10-04",
-  "days_covered": 4,
-  "state": "",
-  "last_novel": "",
+  "days_covered": 3,
+  "state": "active",
+  "last_novel": "2026-10-01",
   "primer": {
     "text": "The United States has kept forces in Iraq for more than two decades, and Iraq is the country where that presence has been based. A withdrawal is the formal end of that long presence through a drawdown — the planned removal of troops and the closing out of the deployment. That presence has been part of the region's security arrangement, so how it ends matters beyond the two countries. Changes to who provides security inside Iraq carry implications for neighboring states and for broader regional security.",
     "built_at": "2026-10-04T07:26:06.472952+00:00"
   },
   "current": {
-    "date": "2026-10-04",
-    "bottom_line": "The September 30 completion of the US withdrawal from Erbil remains the defining fact; October 1-4 has been quiet with no new verified clashes, ISIS attacks, or air-defense announcements. Iraq's October 1 reaffirmation of leadership against ISIS/Daesh, recorded in a US State Department release, is the only new on-record statement in the window, leaving the Kurdistan air-defense gap and the June 2027 weapons deadline as the central uncertainties. Confidence is high on the withdrawal itself, moderate on what follows without new verified reporting.",
+    "date": "2026-10-03",
+    "bottom_line": "The September 30 completion of the US withdrawal from Erbil remains the defining fact with high confidence, confirmed by Pentagon, CBS and Al Jazeera. October 1-3 has been quiet: no reported clashes, ISIS attacks, or new air-defense or militia-disarmament announcements, leaving the Kurdistan air-defense gap and the extended June 2027 weapons deadline as the central uncertainties.",
     "escalation": {
       "direction": "steady",
       "pace": "flat"
     },
     "coverage": "steady coverage",
     "source": "daily",
-    "url": "/geopolitics/2026-10-04"
+    "url": "/geopolitics/2026-10-03"
   },
   "pulses": [
     {
@@ -83,19 +83,9 @@
       "date": "2026-10-03",
       "direction": "steady",
       "pace": "flat"
-    },
-    {
-      "date": "2026-10-04",
-      "direction": "steady",
-      "pace": "flat"
     }
   ],
   "coverage_series": [
-    {
-      "day": "2026-09-27",
-      "count": 1,
-      "editions": 1
-    },
     {
       "day": "2026-09-28",
       "count": 0,
@@ -108,12 +98,12 @@
     },
     {
       "day": "2026-09-30",
-      "count": 0,
+      "count": 1,
       "editions": 0
     },
     {
       "day": "2026-10-01",
-      "count": 1,
+      "count": 2,
       "editions": 2
     },
     {
@@ -125,31 +115,14 @@
       "day": "2026-10-03",
       "count": 0,
       "editions": 1
+    },
+    {
+      "day": "2026-10-04",
+      "count": 0,
+      "editions": 0
     }
   ],
   "timeline": [
-    {
-      "date": "2026-10-01",
-      "headline": "Reuters reports US completed 23-year withdrawal, flags proxy and ISIS remnant risks",
-      "detail": "On 2026-10-01, Reuters reported in a single-source headline that American forces completed their 23-year withdrawal from Iraq that began in 2003, noting risks of emboldened Iranian proxies and Islamic State remnants. No additional researched confirmation in this window beyond the September 30 completion already noted.",
-      "where": "Erbil",
-      "verification": "reported",
-      "sources": [
-        "https://www.reuters.com/world/us-forces-exit-iraq-emboldenin"
-      ],
-      "from": "/geopolitics/2026-10-04"
-    },
-    {
-      "date": "2026-10-01",
-      "headline": "Iraq reaffirms leadership role against ISIS/Daesh as Coalition mandate ends",
-      "detail": "On 2026-10-01, Iraq reaffirmed its ongoing leadership role in defeating ISIS/Daesh, as recorded in the State Department release on the Ad Hoc Coalition to Defeat ISIS meeting on Iraq and Syria. The statement asserts Iraqi ownership of the counter-ISIS fight as the Coalition military mandate ends.",
-      "where": "Washington",
-      "verification": "researched",
-      "sources": [
-        "https://www.state.gov/releases/office-of-the-spokesman/2026/10/ad-hoc-coalition-to-defeat-isis-meeting-on-iraq-and-syria/"
-      ],
-      "from": "/geopolitics/2026-10-04"
-    },
     {
       "date": "2026-10-01",
       "headline": "Baghdad declares full sovereignty and sets June 2027 deadline for weapons outside state control",
@@ -241,8 +214,8 @@
       "country": "Iraq",
       "lat": 36.191,
       "lon": 44.009,
-      "count": 3,
-      "last_date": "2026-10-01"
+      "count": 2,
+      "last_date": "2026-09-30"
     },
     {
       "name": "Erbil Air Base",
@@ -625,10 +598,10 @@
         "x": 490.4,
         "y": 343.8,
         "label": "Erbil",
-        "date": "2026-10-01",
+        "date": "2026-09-30",
         "verification": "researched",
         "n": 2,
-        "weight": 0.753
+        "weight": 0.494
       },
       {
         "x": 487.6,
@@ -645,9 +618,9 @@
   "actors": [
     {
       "name": "Government of Iraq",
-      "mentions": 5,
+      "mentions": 4,
       "first": "2026-09-30",
-      "last": "2026-10-01"
+      "last": "2026-09-30"
     },
     {
       "name": "Combined Joint Task Force-Operation Inherent Resolve",
@@ -669,9 +642,9 @@
     },
     {
       "name": "United States",
-      "mentions": 3,
+      "mentions": 2,
       "first": "2026-09-30",
-      "last": "2026-10-01"
+      "last": "2026-09-30"
     },
     {
       "name": "Harakat al-Nujaba",
@@ -822,21 +795,11 @@
     {
       "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
       "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
-      "link": "US withdrawal from Iraq after 23-year presence ↔ US-Iran-Houthi confrontation over Hormuz and Red Sea: Same US-Iran rivalry spans both theaters — Iraq withdrawal completed Sept 30 leaves proxy and air-defense risks flagged Oct 1 as Iran on Oct 4 restated seven Hormuz conditions and warned it is more prepared for a US military move while Houthis claimed long-range Aramco strikes.",
-      "date": "2026-10-04"
-    },
-    {
-      "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
-      "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
       "link": "US withdrawal from Iraq after 23-year presence -> US-Iran-Houthi confrontation over Hormuz and Red Sea: US air defenses left Iraq with troops creating a Kurdistan gap as Patriots were shifted to Saudi Arabia and Qatar to protect Gulf energy sites, while Iran-backed militias in Iraq rejected disarmament as Iran sustains Hormuz closure and pressure via Houthi strikes and the alleged RAF Fairford plot",
       "date": "2026-10-02"
     }
   ],
   "reports": [
-    {
-      "date": "2026-10-04",
-      "url": "/geopolitics/2026-10-04"
-    },
     {
       "date": "2026-10-03",
       "url": "/geopolitics/2026-10-03"

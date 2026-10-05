@@ -1,16 +1,26 @@
 {
   "schema": "ohmega.changes/1",
   "window_days": 30,
-  "as_of": "2026-10-04T22:12:36.808470+00:00",
+  "as_of": "2026-10-05T02:19:07.922078+00:00",
   "events": [
     {
       "type": "daily_published",
-      "at": "2026-10-04T22:12:36.808470+00:00",
+      "at": "2026-10-05T02:19:07.922078+00:00",
       "domain": "geopolitics",
       "date": "2026-10-04",
-      "headline": "Russia hits Kyiv's Northern Bridge for third day as German chancellor pledges $1.1bn arms, Hormuz stays shut on Iran's seven conditions, and Ethiopian forces re-enter Mekelle",
+      "headline": "Russia hit Kyiv's Dnipro bridges for third straight day as Hormuz stayed shut and Saudi-Houthi strikes escalated",
       "url": "/geopolitics/2026-10-04",
       "data_url": "/data/daily/geopolitics/2026-10-04.json"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-05T02:02:06.240722+00:00",
+      "pulse_id": "pls_sahel_horn_state_fragility_insurgent_control",
+      "name": "State Fragility and Insurgent Control",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_sahel_horn_state_fragility_insurgent_control.json",
+      "position": 70.0,
+      "band": "severe"
     },
     {
       "type": "pulse_moved",

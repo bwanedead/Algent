@@ -3,24 +3,24 @@
   "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
   "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
   "domain": "geopolitics",
-  "built_at": "2026-10-04T22:12:36.808470+00:00",
-  "first_seen": "2026-09-27",
+  "built_at": "2026-10-05T02:19:07.922078+00:00",
+  "first_seen": "2026-09-28",
   "last_seen": "2026-10-04",
   "days_covered": 4,
-  "state": "",
-  "last_novel": "",
+  "state": "active",
+  "last_novel": "2026-10-04",
   "primer": {
     "text": "The standoff centers on the United States and Israel, Iran, and Iran-aligned Houthis in Yemen over two oil chokepoints. Washington and its ally aim to degrade Iran's nuclear and military capacity and keep shipping moving; Tehran uses control of the Strait of Hormuz to deter attacks and extract concessions; the Houthis press the Red Sea front. It sharpened after a U.S.-Israeli operation in late February 2026 struck Iranian nuclear, military and leadership sites, after which Iran restricted Hormuz. The strait carries 20 million barrels a day — a fifth of world oil and LNG — far more than pipeline bypasses can replace, so disruption lifts energy and freight costs. Saudi Arabia's Red Sea pipeline workaround is vulnerable to Houthi attacks.",
     "built_at": "2026-10-04T07:26:06.472952+00:00"
   },
   "current": {
     "date": "2026-10-04",
-    "bottom_line": "Hormuz stayed effectively closed on Oct 4 as Iran restated its seven conditions for reopening within seven days and warned it is more prepared for a US military move, with no US acceptance conveyed via mediators. The Red Sea/Yemen front intensified as Houthis claimed missile/drone strikes on Aramco facilities near Riyadh that produced observed fires, followed by heavy Saudi retaliatory strikes. Confidence is high on the diplomatic restatement and the observed fire/strikes; lower on Houthi damage claims which Riyadh called misleading.",
+    "bottom_line": "Hormuz remains closed with Iran restating its seven conditions on 4 Oct in Tehran and no US acceptance, keeping the core oil and LNG disruption in place. The Saudi-Houthi front escalated sharply with a claimed Houthi strike on Aramco near Riyadh on 3 Oct and heavy Saudi retaliation on 3-4 Oct, while G7 leaders on 2 Oct collectively demanded immediate restoration of Hormuz navigation. Confidence is high on the diplomatic deadlock and the observed fire at Aramco; lower on Houthi damage claims and single-source IRGC tanker seizure reports.",
     "escalation": {
       "direction": "rising",
       "pace": "gradual"
     },
-    "coverage": "steady coverage",
+    "coverage": "rising coverage",
     "source": "daily",
     "url": "/geopolitics/2026-10-04"
   },
@@ -228,11 +228,6 @@
   ],
   "coverage_series": [
     {
-      "day": "2026-09-27",
-      "count": 2,
-      "editions": 1
-    },
-    {
       "day": "2026-09-28",
       "count": 2,
       "editions": 1
@@ -249,40 +244,69 @@
     },
     {
       "day": "2026-10-01",
-      "count": 3,
+      "count": 2,
       "editions": 2
     },
     {
       "day": "2026-10-02",
-      "count": 1,
+      "count": 4,
       "editions": 1
     },
     {
       "day": "2026-10-03",
-      "count": 0,
+      "count": 1,
       "editions": 1
+    },
+    {
+      "day": "2026-10-04",
+      "count": 7,
+      "editions": 0
     }
   ],
   "timeline": [
     {
       "date": "2026-10-04",
-      "headline": "Iran restates Hormuz will stay closed until seven conditions met; sequencing deadlock persists",
-      "detail": "On 4 Oct 2026 in Tehran, Araghchi told foreign ambassadors Iran's proposal could reopen Hormuz within seven days if the US accepts Iran's conditions, and warned if the US again moves toward military solutions Iran is more prepared and will take whatever action necessary to defend itself. Ghalibaf said the strait will not reopen until seven conditions based on the Islamabad Memorandum are met. Conditions include lifting the US naval blockade of Iranian ports (reimposed mid-July), waiving sanctions on oil sales, releasing frozen assets, and observing a regional ceasefire including Lebanon (and Yemen per some reports). Deadlock centers on sequencing: Iran wants strait reopened first then blockade/sanctions lifted, Washington seeks nuclear commitments including inspector access. Trump had rejected the seven-day plan on 26 Sep as 'unacceptable.' No formal US counter-offer via Qatar/Oman mediators reported Oct 2-4.",
+      "headline": "Saudi-led coalition claims 97 strikes on Houthi reinforcements 4 Oct and 26 strikes on Sanaa 3 Oct",
+      "detail": "Early 4 Oct 2026 Saudi-led coalition said it carried out 97 precise targeting operations against Houthi reinforcements on Tor al-Baha front and Taiz axis, claiming at least 260 Houthi fighters and 44 vehicles destroyed/disabled. On 3 Oct Houthi Al-Masirah TV reported Saudi aircraft hit Sanaa with 26 strikes; AFP journalists in Sanaa reported hearing explosions and seeing warplanes firing missiles.",
+      "where": "Tor al-Baha/Taiz and Sanaa, Yemen",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/4/houthis-claim-strike-on-saudi-energy-facility-as-yemen-fighting-intensifies",
+        "https://www.rferl.org/a/iran-live-blog-trump-middle-east/33803414.html",
+        "https://www.timesofisrael.com/houthis-say-saudi-arabia-launched-dozens-of-strikes-on-yemen-capital"
+      ],
+      "from": "/geopolitics/2026-10-04"
+    },
+    {
+      "date": "2026-10-04",
+      "headline": "Reported IRGC enforcement against 7 tankers in Hormuz and explosions near tanker off southern Yemen 4 Oct",
+      "detail": "On 4 Oct 2026 CGTN reported IRGC hit 7 'violating' tankers in Strait of Hormuz in 5 days. Separately on 4 Oct UKMTO reported explosions near tanker off southern Yemen. Both single-source reports, unverified by our research.",
+      "where": "Strait of Hormuz and southern Yemen coast",
+      "verification": "reported",
+      "sources": [
+        "https://news.cgtn.com/news/2026-10-04/Iran-s-IRGC-hits-7-violating-tankers-in-Strait-of-Hormuz-in-5-days-1QXsqlhSvlK/p.html",
+        "https://www.middleeasteye.net/live-blog/live-blog-update/explosions-reported-near-tanker-southern-yemen-ukmto"
+      ],
+      "from": "/geopolitics/2026-10-04"
+    },
+    {
+      "date": "2026-10-04",
+      "headline": "Iran restates Hormuz seven conditions on 4 Oct, deadlock persists on sequencing",
+      "detail": "On 4 Oct 2026 in Tehran, Araghchi told foreign ambassadors Iran's proposal could reopen Hormuz within seven days if US accepts conditions, and Ghalibaf said strait will not reopen until seven conditions based on Islamabad Memorandum are met. Conditions include lifting US naval blockade of Iranian ports (reimposed mid-July), waiving sanctions on Iranian oil sales, releasing frozen assets, and observing regional ceasefire including Lebanon. Deadlock centers on sequencing: Iran wants strait reopened first, Washington seeks nuclear commitments including inspector access. Araghchi warned if US moves again toward military solutions Iran is more prepared and will defend itself.",
       "where": "Tehran, Iran",
       "verification": "researched",
       "sources": [
         "https://www.aljazeera.com/news/2026/10/4/iran-says-strait-of-hormuz-to-remain-closed-until-us-meets-conditions",
         "https://www.khaama.com/iran-says-strait-of-hormuz-will-not-reopen-until-us-meets-seven-conditions",
-        "https://www.jpost.com/middle-east/iran-news/article-910532",
-        "https://www.aljazeera.com/news/2026/9/26/trump-rejects-irans-seven-day-roadmap-to-reopen-strait-of-hormuz"
+        "https://www.jpost.com/middle-east/iran-news/article-910532"
       ],
       "from": "/geopolitics/2026-10-04"
     },
     {
       "date": "2026-10-03",
-      "headline": "Houthis claim Aramco strikes near Riyadh with observed fire; Saudi coalition retaliates heavily in Yemen",
-      "detail": "On 3 Oct Houthi spokesman Yahya Saree claimed ballistic missile and drone strikes on Aramco facilities in Riyadh (and Khurais per ET) causing fires. Flames and large smoke plume at an Aramco facility south of Riyadh were observed by AFP journalists and in satellite imagery on 3 Oct. On 4 Oct coalition spokesman Turki al-Maliki called Houthi claims of targeting Riyadh 'misleading.' Early 4 Oct the coalition said it carried out 97 precise targeting operations against Houthi reinforcements on Tor al-Baha front and Taiz axis, claiming at least 260 fighters and 44 vehicles destroyed/disabled. On 3 Oct Houthi Al-Masirah TV reported Saudi aircraft hit Sanaa with 26 strikes, with AFP hearing explosions and seeing warplanes firing missiles.",
-      "where": "Riyadh, Saudi Arabia and Sanaa/Tor al-Baha, Yemen",
+      "headline": "Houthis claim Aramco strike near Riyadh 3 Oct with observed fire; Saudi coalition calls claim misleading 4 Oct",
+      "detail": "On 3 Oct 2026 Houthi spokesman Yahya Saree claimed ballistic missile and drone strikes on Aramco facilities in Riyadh (and Khurais per ET) causing fires. Flames and large plume at Aramco facility south of Riyadh observed by AFP journalists and in satellite imagery on 3 Oct. On 4 Oct coalition spokesman Turki al-Maliki called Houthi claims of targeting Riyadh 'misleading'.",
+      "where": "Riyadh, Saudi Arabia",
       "verification": "researched",
       "sources": [
         "https://www.aljazeera.com/news/2026/10/4/houthis-claim-strike-on-saudi-energy-facility-as-yemen-fighting-intensifies",
@@ -318,6 +342,17 @@
         "https://www.wionews.com/world/will-wait-for-official-us-response-says-araghchi-after-trump-rejects-iran-s-strait-of-hormuz-proposal-1790482861014"
       ],
       "from": "/geopolitics/2026-10-03"
+    },
+    {
+      "date": "2026-10-02",
+      "headline": "G7 on 2 Oct condemns Iran disruption and demands immediate restoration of Hormuz navigation",
+      "detail": "On 2 Oct 2026 G7 Leaders condemned Iran's continued attacks against regional neighbours and disruption of international trade, energy security and global economy, called for immediate and full restoration of navigational rights and principles in Strait of Hormuz, and expressed determination to redouble collective efforts to that end.",
+      "where": "G7 joint statement",
+      "verification": "researched",
+      "sources": [
+        "https://www.gov.uk/government/news/g7-leaders-statement-on-global-energy-security-and-market-stability"
+      ],
+      "from": "/geopolitics/2026-10-04"
     },
     {
       "date": "2026-10-01",
@@ -394,18 +429,6 @@
       "from": "/geopolitics/2026-10-01"
     },
     {
-      "date": "2026-09-27",
-      "headline": "Shipping data show Hormuz still near-zero and Bab el-Mandeb depressed; energy prices stay elevated",
-      "detail": "As of 27 Sep (7 days old), Hormuz daily vessel transits were 1 ship/day (-99% vs 102 on 2025-09-27, 1y percentile 5, outside full-history range) and tanker transits 1/day (-98% vs 60 a year earlier). Bab el-Mandeb was 27 vessels/day (-37% vs 43 a year earlier, 1y percentile 17) and 11 tankers/day (-31% vs 16). Polymarket context notes Hormuz commercial traffic 3-5 vessels/day (~3-5% of pre-crisis 74-85/day) with war-risk premiums ~15x peacetime. Brent was $102.25/bbl on 2 Oct (-2% on week, +59% YoY, 1y percentile 82); TTF gas was €74.76/MWh on 2 Oct (+4% on week, +138% YoY, 1y percentile 96, unusual vs history).",
-      "where": "Strait of Hormuz and Bab el-Mandeb",
-      "verification": "researched",
-      "sources": [
-        "https://portwatch.imf.org/",
-        "https://polymarket.com/event/will-ships-transit-the-strait-of-hormuz-on-any-day-by-october-31?marketSlug=will-at-least-20-ships-transit-the-strait-of-hormuz-on-any-day-by-october-31-2026&outcomeIndex=0"
-      ],
-      "from": "/geopolitics/2026-10-04"
-    },
-    {
       "date": "2026-09-26",
       "headline": "Trump publicly rejects Iran's seven-day Hormuz reopening offer; mediators still working",
       "detail": "Iran, via Foreign Minister Abbas Araghchi at the UN General Assembly and via Qatar, offered to reopen the Strait and resume nuclear talks within seven days if the US released frozen funds, lifted oil sanctions and ended its naval blockade within 4-5 days. Trump publicly rejected outside the White House South Lawn on Sept 26, saying the proposal would not be acceptable because Iran is \"losing so badly.\" As of Sept 28 mediators were still working and the US had not conveyed a formal rejection through channels; three regional officials and a senior US official told AP the public rejection may be a negotiating tactic (likely, single AP sourcing). The Wall Street Journal, citing unnamed US officials (likely, single outlet), reported Trump privately doubts Tehran will meet his demands and expects a renewed bombing campaign after the November midterms.",
@@ -444,6 +467,22 @@
   ],
   "places": [
     {
+      "name": "Sanaa",
+      "country": "Yemen",
+      "lat": 15.3694,
+      "lon": 44.191,
+      "count": 2,
+      "last_date": "2026-10-04"
+    },
+    {
+      "name": "Strait of Hormuz",
+      "country": "sea",
+      "lat": 26.5,
+      "lon": 56.2,
+      "count": 1,
+      "last_date": "2026-10-04"
+    },
+    {
       "name": "Tehran",
       "country": "Iran",
       "lat": 35.6892,
@@ -474,30 +513,14 @@
       "lon": 39.6111,
       "count": 1,
       "last_date": "2026-10-01"
-    },
-    {
-      "name": "Sanaa",
-      "country": "Yemen",
-      "lat": 15.3694,
-      "lon": 44.191,
-      "count": 1,
-      "last_date": "2026-10-01"
-    },
-    {
-      "name": "Strait of Hormuz",
-      "country": "sea",
-      "lat": 26.5,
-      "lon": 56.25,
-      "count": 1,
-      "last_date": "2026-09-27"
     }
   ],
   "map": {
     "version": 2,
     "bbox": [
-      25.889,
+      25.864,
       8.257,
-      68.424,
+      68.399,
       42.801
     ],
     "projection": "equirectangular",
@@ -506,280 +529,280 @@
     "countries": [
       {
         "name": "Yemen",
-        "d": "M639.4 681.4L627.5 686L621.6 690.6L618 699.4L619 707.3L597.9 718.4L579.2 723.3L570.8 728.2L551.6 733.8L544.5 738.5L535.5 749.1L526.4 750.4L519.6 749.1L505.9 759.2L491.4 764.3L464.8 767.6L458.6 774.7L453.2 776.5L450.2 781.2L443.5 782.6L440.3 781.2L434.2 785.1L425.9 786.7L417.2 783.1L413.7 784.3L407.7 769.5L408.9 758.4L404.4 750.1L400.8 725.9L398.9 720.9L394.2 718.3L395.2 715.8L397.3 717.4L397.6 715.8L395.6 707.3L398.5 697.4L397.6 688.6L406.2 680.3L405 673.7L405.9 666.9L407.8 665.3L406.8 662.9L412.1 658.8L423.8 663.8L429.5 661.8L452.8 661.1L461.9 664.4L480.1 666.2L489.9 665.3L495.7 673.4L499.7 673.6L506.7 669.3L509.9 660.5L523.9 642.1L544.3 631L613.3 620.2ZM397.3 751.1L395.1 750.2L396.7 748.6ZM655.3 785.9L665.3 785.2L672.9 788.1L663.9 793.1L654.3 794.2L644.8 788.6L650 783.8Z"
+        "d": "M640 681.4L628.1 686L622.2 690.6L618.6 699.4L619.6 707.3L598.5 718.4L579.8 723.3L571.4 728.2L552.2 733.8L545.1 738.5L536.1 749.1L527 750.4L520.2 749.1L506.5 759.2L491.9 764.3L465.3 767.6L459.1 774.7L453.7 776.5L450.8 781.2L444.1 782.6L440.9 781.2L434.8 785.1L426.5 786.7L417.8 783.1L414.3 784.3L408.3 769.5L409.5 758.4L405 750.1L401.4 725.9L399.5 720.9L394.8 718.3L395.8 715.8L397.9 717.4L398.1 715.8L396.2 707.3L399.1 697.4L398.1 688.6L406.7 680.3L405.6 673.7L406.5 666.9L408.4 665.3L407.4 662.9L412.7 658.8L424.4 663.8L430 661.8L453.4 661.1L462.5 664.4L480.7 666.2L490.5 665.3L496.3 673.4L500.3 673.6L507.3 669.3L510.5 660.5L524.5 642.1L544.9 631L613.9 620.2ZM397.9 751.1L395.7 750.2L397.3 748.6ZM655.9 785.9L665.9 785.2L673.5 788.1L664.5 793.1L654.9 794.2L645.4 788.6L650.5 783.8Z"
       },
       {
         "name": "Uzbekistan",
-        "d": "M1000 85.2L983.4 82.8L976.5 86.9L974.7 92.7L981.8 95.6L982.9 99.2L992.5 100L992.1 112.8L998.3 119.6L996.9 124.2L985.7 138.5L984.4 146.7L978.7 144.2L971.1 145L968.1 142.4L962.5 141.5L955.3 142.1L955.4 130.7L957.3 125.4L942.3 118.7L933.9 118.9L903.3 99.6L899.8 100.2L890.4 94.9L884.4 89.2L864.3 76.7L859.4 72L856 60.8L851.2 55.2L847.9 46.1L844.3 42.7L837.1 39.7L831.2 42L822.3 40.4L812.6 41.2L804.1 36.5L805.2 31.4L803.7 27.1L806.7 26L800.6 21.6L802.1 15.9L798.6 13.2L786.8 12.4L782.2 7.5L775.6 6.2L768.8 0.6L766.2 3.6L761 2.9L758.5 4.5L766.1 13.1L764.3 13.3L761.6 9.7L755.6 8.2L750.6 15.9L738.3 17.6L730.6 24.6L731.8 35.2L734.2 37.8L731.8 40.1L707.4 38.5L707.4 0L944.9 0L943.2 20.7L954.7 21L959.7 42.3L988.5 41.8L992.7 46.2L991.2 51.9L1000 56.9Z"
+        "d": "M1000 85.3L984 82.8L977.1 86.9L975.3 92.7L982.4 95.6L983.4 99.2L993.1 100L992.7 112.8L998.9 119.6L997.5 124.2L986.3 138.5L985 146.7L979.3 144.2L971.7 145L968.7 142.4L963.1 141.5L955.9 142.1L956 130.7L957.9 125.4L942.9 118.7L934.5 118.9L903.9 99.6L900.4 100.2L891 94.9L885 89.2L864.9 76.7L859.9 72L856.6 60.8L851.8 55.2L848.5 46.1L844.9 42.7L837.7 39.7L831.7 42L822.9 40.4L813.2 41.2L804.6 36.5L805.8 31.4L804.3 27.1L807.3 26L801.2 21.6L802.7 15.9L799.2 13.2L787.4 12.4L782.8 7.5L776.1 6.2L769.4 0.6L766.7 3.6L761.6 2.9L759.1 4.5L766.7 13.1L764.9 13.3L762.2 9.7L756.2 8.2L751.2 15.9L738.8 17.6L731.2 24.6L732.4 35.2L734.8 37.8L732.4 40.1L708 38.5L708 0L945.5 0L943.8 20.7L955.3 21L960.3 42.3L989.1 41.8L993.3 46.2L991.7 51.9L1000 56.7Z"
       },
       {
         "name": "United Arab Emirates",
-        "d": "M714.9 446.8L716.5 449L717 464.3L709.4 470.6L707.2 467.5L707.9 465L705.9 464.5L703.1 467.2L702.3 483.5L706.2 484.2L707.6 488.2L695.4 491.4L696.4 497L689.1 515L688.8 523.6L687.2 525.7L626.9 517.6L603.8 486.5L604.6 481L606 483.3L608.4 483.2L609 487.9L611.7 490.2L619.8 490L629.1 485.8L658.4 487.8L670.2 482.6L678.4 468.7L706.5 443.1L709.8 436.1L711.8 436.5L711.3 445.8ZM714.5 457.7L713.4 455.9L712.9 458.2ZM645.2 483.1L641.9 482.3L647.1 479.1L647.9 480.2ZM659.2 485.2L652.3 485.4L657 483.1ZM671.8 478.3L668.8 477.6L670.3 476.7Z"
+        "d": "M715.5 446.8L717 449L717.6 464.3L710 470.6L707.8 467.5L708.5 465L706.5 464.5L703.7 467.2L702.9 483.5L706.8 484.2L708.2 488.2L696 491.4L696.9 497L689.7 515L689.4 523.6L687.8 525.7L627.5 517.6L604.4 486.5L605.2 481L606.6 483.3L609 483.2L609.6 487.9L612.3 490.2L620.4 490L629.7 485.8L659 487.8L670.8 482.6L679 468.7L707.1 443.1L710.4 436.1L712.4 436.5L711.9 445.8ZM715.1 457.7L714 455.9L713.5 458.2ZM645.8 483.1L642.5 482.3L647.7 479.1L648.4 480.2ZM659.8 485.2L652.9 485.4L657.6 483.1ZM672.4 478.3L669.4 477.6L670.8 476.7Z"
       },
       {
         "name": "Turkmenistan",
-        "d": "M707.4 38.5L731.8 40.1L734.2 37.8L731.8 35.2L730.6 24.6L738.3 17.6L750.6 15.9L755.6 8.2L761.6 9.7L764.3 13.3L766.1 13.1L758.5 4.5L761 2.9L766.2 3.6L768.8 0.6L775.6 6.2L782.2 7.5L786.8 12.4L798.6 13.2L801.6 15.4L800.6 21.6L806.7 26L803.7 27.1L805.2 31.4L804.1 36.5L812.6 41.2L822.3 40.4L831.2 42L837.1 39.7L846.7 44.5L851.2 55.2L857.8 64.3L860.3 73.6L890.4 94.9L899.8 100.2L903.3 99.6L933.9 118.9L942.3 118.7L956.5 124.8L957.8 126.9L955.4 130.7L955.3 142.1L945.6 140.3L937.5 136.3L934.6 139L932.6 144.6L921.6 144.9L915.2 147.7L908 168.3L896.2 176.9L875.5 181.2L876.5 185.6L873.8 191.6L865.2 196.6L859.9 196.7L856.2 198.8L848.6 191.7L840.1 192L833.6 186.8L831.6 187.1L831.4 180.6L829.1 177.8L830.4 172.2L828.3 160.5L810 160.6L803.4 152.1L789.1 144.6L785.5 137.8L774.1 133.3L761.1 133.8L754.5 129.5L739.7 125.8L738.7 121.7L736 119.5L718.3 118.6L714.3 123L693.4 123.8L682.1 130.9L677.3 138.9L665.4 142.5L658.9 142.2L656.7 127L657.8 100.4L653.9 93.6L645.3 90.2L641.1 92.1L640.3 87.8L642.9 83.2L646.5 85.1L651.6 84.8L648.5 81.6L648.8 75.3L637.1 73.3L636.3 75.7L638.2 78.9L632.8 71.6L631.1 62.6L636.1 45.9L640.8 51.5L651.8 51.7L657.8 56.1L669.8 54.9L668.4 51.2L677 50.2L677.4 45.1L663.1 33.4L656.3 17.8L641.2 18.4L636.7 21.5L633 28.4L634.6 29.9L633.9 41.7L625.5 26.6L638.7 17L663.7 12.1L681 21.8L694.6 39.2Z"
+        "d": "M708 38.5L732.4 40.1L734.8 37.8L732.4 35.2L731.2 24.6L738.8 17.6L751.2 15.9L756.2 8.2L762.2 9.7L764.9 13.3L766.7 13.1L759.1 4.5L761.6 2.9L766.7 3.6L769.4 0.6L776.1 6.2L782.8 7.5L787.4 12.4L799.2 13.2L802.2 15.4L801.2 21.6L807.3 26L804.3 27.1L805.8 31.4L804.6 36.5L813.2 41.2L822.9 40.4L831.7 42L837.7 39.7L847.3 44.5L851.8 55.2L858.4 64.3L860.9 73.6L891 94.9L900.4 100.2L903.9 99.6L934.5 118.9L942.9 118.7L957.1 124.8L958.4 126.9L956 130.7L955.9 142.1L946.2 140.3L938.1 136.3L935.2 139L933.1 144.6L922.2 144.9L915.8 147.7L908.6 168.3L896.8 176.9L876.1 181.2L877.1 185.6L874.4 191.6L865.7 196.6L860.4 196.7L856.8 198.8L849.2 191.7L840.7 192L834.2 186.8L832.2 187.1L832 180.6L829.6 177.8L831 172.2L828.9 160.5L810.6 160.6L804 152.1L789.7 144.6L786.1 137.8L774.7 133.3L761.7 133.8L755.1 129.5L740.3 125.8L739.3 121.7L736.6 119.5L718.9 118.6L714.9 123L693.9 123.8L682.6 130.9L677.9 138.9L666 142.5L659.5 142.2L657.3 127L658.4 100.4L654.5 93.6L645.9 90.2L641.7 92.1L640.9 87.8L643.5 83.2L647.1 85.1L652.1 84.8L649.1 81.6L649.4 75.3L637.7 73.3L636.8 75.7L638.8 78.9L633.4 71.6L631.7 62.6L636.6 45.9L641.4 51.5L652.4 51.7L658.4 56.1L670.4 54.9L669 51.2L677.6 50.2L678 45.1L663.7 33.4L656.9 17.8L641.8 18.4L637.3 21.5L633.6 28.4L635.2 29.9L634.5 41.7L626.1 26.6L639.3 17L664.3 12.1L681.6 21.8L695.2 39.2Z"
       },
       {
         "name": "Turkey",
-        "d": "M1.9 69.4L0 69.7L0 66.9ZM367.3 33.4L374.6 35.7L377 34L389.7 35.5L393 31.8L397.3 32.2L407.1 41.7L412.5 42.9L417.1 48.8L419.3 54.2L415.7 60.4L419 68.6L417.9 69.7L424.4 72.4L435.2 73.1L445 82.1L439.6 79L436.5 81.7L434.9 88L426.3 89.2L430 95.3L429.8 100.7L432.2 103.3L432.8 115L436.4 116.4L430.8 127.5L439 131.7L439.3 139.8L444.5 144.1L443.8 147.4L440 146.6L432.4 151.7L428.5 143.3L418.2 145.2L404.5 141.6L400.8 142.7L397 141.5L387.2 148.3L383.5 143.4L380.2 145.8L367.4 148.8L348.3 148.6L332.1 155.7L316.6 159.4L302.8 159.1L295.2 154.7L289.2 153.7L271.5 160.4L262.8 160.2L259.9 157.4L253.2 156.3L250.3 165.3L252.7 171.1L246.5 172.7L245.9 177.1L240.7 181.6L235.2 179.4L236.7 177.2L233.3 169.1L242.1 160L241.9 156.2L238.9 153.5L226.8 161.6L223.4 162.2L207.2 155.9L183.5 172.5L162.4 176.3L152.5 172.4L144.2 163.2L128.4 156.3L111.8 154.6L107.1 170.2L102.1 169.2L89.3 173.1L78.4 168.7L72.4 158.6L68.8 159.6L56.8 156L54.2 159.3L50.1 160.7L51.6 157.6L41.5 159.6L36.8 158.6L49.8 155.5L55.3 150.4L32.3 151.8L33.2 147.8L38.7 146.9L38.3 144.7L31.3 141L27.7 134L31.4 132.2L31.6 125.6L9.4 117.9L12.4 115.5L11.5 108.8L13 108.4L16.4 110.6L18.5 116.3L19.7 114.2L22.9 115.4L29.5 113.3L23.9 112.5L20.6 106.6L26.4 102L21.8 100.1L22.7 96L18.6 91.4L23.7 84.7L5.3 86.9L6.9 73.2L10 72.3L20 62.6L32.8 61.1L37.3 64.6L43.2 64.4L46.1 63L43.3 60.4L46.7 59.6L49.4 60.2L48.7 63.3L73.3 62.8L74.4 61.9L68.2 59.1L72.1 56.6L93.1 53.2L81.7 51.9L75.8 48.5L74.2 46.7L76.6 41.2L94.8 43L104.8 41.8L115.7 44.7L126.1 44.1L130.9 38.6L150.9 27.9L173.9 20.8L208.3 22L214.3 19.2L217.8 20.2L217.1 23.7L221.2 27.9L227.3 30.4L235.8 28.3L238.9 29.1L241.9 35.8L247.2 39.8L256 37.5L262.8 42.1L293.7 48.9L318.3 44.2L327.2 47.4L338 47.9L357.2 40.1ZM50 21.7L49.3 24.7L54.3 32.5L74.5 40.9L72.1 46.7L68 47.6L53.7 44.8L47.9 47.2L37.9 47.6L32.2 55.1L20.8 60L7.4 71L8.6 64.8L21.2 56.7L5.1 57.1L3.5 54L10.4 48.1L10.4 40.7L17.3 36.5L16.3 31.3L10.2 28.3L10.3 26.8L14.6 25.4L17.1 21.8L31.9 18.4L38.7 22.9Z"
+        "d": "M2.5 69.4L0 69.8L0 67ZM367.8 33.4L375.2 35.7L377.6 34L390.3 35.5L393.6 31.8L397.9 32.2L407.7 41.7L413.1 42.9L417.7 48.8L419.9 54.2L416.3 60.4L419.6 68.6L418.5 69.7L425 72.4L435.8 73.1L445.6 82.1L440.2 79L437.1 81.7L435.5 88L426.9 89.2L430.6 95.3L430.4 100.7L432.8 103.3L433.4 115L437 116.4L431.3 127.5L439.6 131.7L439.9 139.8L445.1 144.1L444.4 147.4L440.6 146.6L433 151.7L429.1 143.3L418.8 145.2L405 141.6L401.4 142.7L397.6 141.5L387.8 148.3L384.1 143.4L380.8 145.8L368 148.8L348.9 148.6L332.7 155.7L317.2 159.4L303.3 159.1L295.7 154.7L289.8 153.7L272.1 160.4L263.4 160.2L260.4 157.4L253.8 156.3L250.9 165.3L253.3 171.1L247.1 172.7L246.5 177.1L241.3 181.6L235.8 179.4L237.3 177.2L233.9 169.1L242.7 160L242.5 156.2L239.4 153.5L227.4 161.6L224 162.2L207.8 155.9L184.1 172.5L162.9 176.3L153.1 172.4L144.8 163.2L129 156.3L112.4 154.6L107.7 170.2L102.7 169.2L89.9 173.1L79 168.7L73 158.6L69.4 159.6L57.4 156L54.8 159.3L50.7 160.7L52.2 157.6L42.1 159.6L37.4 158.6L50.3 155.5L55.9 150.4L32.9 151.8L33.8 147.8L39.3 146.9L38.9 144.7L31.9 141L28.3 134L32 132.2L32.2 125.6L10 117.9L13 115.5L12.1 108.8L13.6 108.4L17 110.6L19 116.3L20.3 114.2L23.4 115.4L30.1 113.3L24.5 112.5L21.1 106.6L27 102L22.4 100.1L23.3 96L19.2 91.4L24.3 84.7L5.9 86.9L7.5 73.2L10.6 72.3L20.5 62.6L33.4 61.1L37.9 64.6L43.8 64.4L46.7 63L43.9 60.4L47.3 59.6L50 60.2L49.3 63.3L73.9 62.8L75 61.9L68.7 59.1L72.7 56.6L93.7 53.2L82.3 51.9L76.4 48.5L74.8 46.7L77.2 41.2L95.3 43L105.3 41.8L116.3 44.7L126.7 44.1L131.5 38.6L151.5 27.9L174.5 20.8L208.9 22L214.9 19.2L218.4 20.2L217.7 23.7L221.8 27.9L227.9 30.4L236.4 28.3L239.5 29.1L242.5 35.8L247.8 39.8L256.6 37.5L263.4 42.1L294.3 48.9L318.9 44.2L327.8 47.4L338.6 47.9L357.8 40.1ZM50.6 21.7L49.9 24.7L54.9 32.5L75.1 40.9L72.7 46.7L68.6 47.6L54.3 44.8L48.5 47.2L38.4 47.6L32.8 55.1L21.3 60L8 71L9.2 64.8L21.8 56.7L5.7 57.1L4.1 54L11 48.1L11 40.7L17.9 36.5L16.9 31.3L10.7 28.3L10.9 26.8L15.2 25.4L17.7 21.8L32.4 18.4L39.3 22.9Z"
       },
       {
         "name": "Tajikistan",
-        "d": "M984.4 146.7L986.8 136.3L998.4 120.7L992.1 112.8L992.5 100L982.9 99.2L981.8 95.6L974.9 93.4L976.5 86.9L983.4 82.8L1000 85.2L1000 147.3L991.6 152.5L989 151.9Z"
+        "d": "M985 146.7L987.4 136.3L999 120.7L992.7 112.8L993.1 100L983.4 99.2L982.4 95.6L975.5 93.4L977.1 86.9L984 82.8L1000 85.3L1000 147.5L992.2 152.5L989.6 151.9Z"
       },
       {
         "name": "Syria",
-        "d": "M235.2 179.4L241.3 181.5L242.5 178.8L245.9 177.1L246.5 172.7L252.7 171.1L250.3 165.3L253.2 156.3L259.9 157.4L262.8 160.2L271.5 160.4L289.2 153.7L295.2 154.7L302.8 159.1L316.6 159.4L332.1 155.7L348.3 148.6L367.4 148.8L380.2 145.8L383.5 143.4L387.2 148.3L373.8 161.6L365.1 163.8L362.2 167.2L361 175.3L363.6 186.6L360.3 195.7L359.8 209.3L355 218.1L302.9 245.7L256.9 273.1L246.5 271.3L232.7 262.3L235.1 256.8L232.8 246.7L238.5 240.1L236.4 238L237 236.3L239.9 233.7L246.3 233.5L244.2 231.3L251.5 223.5L249.6 218L245.5 216.3L247.9 213.3L246.7 212.2L237.2 212.9L235.1 204.6L235.4 192.3L232.2 188.4Z"
+        "d": "M235.8 179.4L241.9 181.5L243 178.8L246.5 177.1L247.1 172.7L253.3 171.1L250.9 165.3L253.8 156.3L260.4 157.4L263.4 160.2L272.1 160.4L289.8 153.7L295.7 154.7L303.3 159.1L317.2 159.4L332.7 155.7L348.9 148.6L368 148.8L380.8 145.8L384.1 143.4L387.8 148.3L374.4 161.6L365.6 163.8L362.8 167.2L361.6 175.3L364.2 186.6L360.9 195.7L360.4 209.3L355.5 218.1L303.5 245.7L257.5 273.1L247 271.3L233.3 262.3L235.7 256.8L233.4 246.7L239.1 240.1L236.9 238L237.6 236.3L240.5 233.7L246.9 233.5L244.8 231.3L252 223.5L250.2 218L246.1 216.3L248.5 213.3L247.3 212.2L237.7 212.9L235.7 204.6L236 192.3L232.8 188.4Z"
       },
       {
         "name": "S. Sudan",
-        "d": "M0 900L0 849L15.6 867L20.5 867.6L27.9 864.7L46.8 865L50.8 872.1L69.5 872.2L69.4 868.7L72.7 865.2L84.3 860.6L87.3 856.6L87.4 852.9L96.7 847.4L114.4 861.6L123.8 860.6L135.6 848.8L142.1 837.3L153.6 826.2L151.6 820.4L151.6 810L145.4 802.3L161 802.2L160.6 796.7L171.9 796.8L168.9 812.8L171.2 832.5L170.2 835.2L176.1 837.8L188.2 849.4L189.6 852.8L187.7 867.5L192.5 868.6L193.1 889.1L189.6 895.2L173.8 895.3L171.1 900Z"
+        "d": "M0 900L0 844.4L1.3 850.2L18.7 868L28.4 864.7L47.4 865L51.4 872.1L70.1 872.2L70 868.7L73.2 865.2L84.8 860.6L87.9 856.6L88 852.9L97.3 847.4L115 861.6L124.4 860.6L136.1 848.8L142.7 837.3L154.1 826.2L152.2 820.4L152.2 810L146 802.3L161.6 802.2L161.2 796.7L172.5 796.8L169.5 812.8L171.8 832.5L170.8 835.2L176.7 837.8L188.7 849.4L190.1 852.8L188.3 867.5L193.1 868.6L193.7 889.1L190.2 895.2L174.4 895.3L171.7 900Z"
       },
       {
         "name": "Sudan",
-        "d": "M192.5 868.6L187.7 867.5L189.8 858.2L188.5 849.9L175.9 837.6L170.2 835.2L171.2 832.5L168.9 812.8L171.9 796.8L160.6 796.7L161 802.2L145.4 802.3L151.6 810L151.6 820.4L153.6 826.2L142.1 837.3L135.6 848.8L123.8 860.6L114.4 861.6L96.7 847.4L87.4 852.9L87.3 856.6L84.3 860.6L72.7 865.2L69.4 868.7L69.5 872.2L50.8 872.1L46.8 865L27.9 864.7L20.5 867.6L15.6 867L0.1 849.3L0 542.1L125.1 542.1L129.6 536.7L131.6 538.1L130.4 542.1L258.2 542L259.5 552.7L267.3 565.2L267.3 567L264.8 565.3L264.5 568.5L266.6 579.6L265.8 590.9L267.1 605L272.3 624.8L278.4 628.1L289.5 639.7L291.4 638.7L299.1 646L290.7 657L279.6 660.3L274.1 663.8L270.9 670.6L261.4 670.7L258.6 682L259.2 690.6L247.7 720.9L250 743.7L246.9 760.1L241.5 774L240.7 782.8L230 786.2L216.8 807.3L213.3 821.3L212.6 832.1L208.8 835.2L204.1 831.7L198.8 837.4L197.2 840.8L198 849.6Z"
+        "d": "M193.1 868.6L188.3 867.5L190.4 858.2L189.1 849.9L176.5 837.6L170.8 835.2L171.8 832.5L169.5 812.8L172.5 796.8L161.2 796.7L161.6 802.2L146 802.3L152.2 810L152.2 820.4L154.1 826.2L142.7 837.3L136.1 848.8L124.4 860.6L115 861.6L97.3 847.4L88 852.9L87.9 856.6L84.8 860.6L73.2 865.2L70 868.7L70.1 872.2L51.4 872.1L47.4 865L28.4 864.7L21.1 867.6L16.2 867L0.6 849.3L0 542.1L125.7 542.1L130.2 536.7L132.2 538.1L131 542.1L258.8 542L260.1 552.7L267.9 565.2L267.9 567L265.3 565.3L265.1 568.5L267.2 579.6L266.3 590.9L267.6 605L272.9 624.8L279 628.1L290.1 639.7L292 638.7L299.6 646L291.3 657L280.2 660.3L274.7 663.8L271.5 670.6L262 670.7L259.2 682L259.8 690.6L248.3 720.9L250.6 743.7L247.5 760.1L242.1 774L241.2 782.8L230.5 786.2L217.4 807.3L213.9 821.3L213.2 832.1L209.4 835.2L204.7 831.7L199.4 837.4L197.8 840.8L198.6 849.6Z"
       },
       {
         "name": "Somalia",
-        "d": "M523.4 900L541.9 868.9L541.9 821.8L569.4 814.8L577.8 809.6L581.8 804L585.5 802.9L596.4 806.9L592.3 819.8L593.7 837.5L591.1 843L594.8 842.1L594.9 840.1L599 842.2L599.4 844.5L595.3 843.4L588.7 845.9L586.2 869.5L570.1 900Z"
+        "d": "M523.9 900L542.5 868.9L542.5 821.8L570 814.8L578.4 809.6L582.4 804L586.1 802.9L596.9 806.9L592.9 819.8L594.3 837.5L591.7 843L595.4 842.1L595.5 840.1L599.6 842.2L600 844.5L595.9 843.4L589.3 845.9L586.8 869.5L570.7 900Z"
       },
       {
         "name": "Somaliland",
-        "d": "M541.9 821.8L541.9 868.9L523.4 900L478.2 900L426.3 881L411.6 868.1L406.6 857.7L398.6 849.3L394.2 839L408.1 815.5L412.7 819.5L422.3 834.2L434.9 843.4L448 843.2L468.5 832.8L486.1 835.2L505.8 824L513.1 825.6L520.3 824.9L533.3 820.2Z"
+        "d": "M542.5 821.8L542.5 868.9L523.9 900L478.8 900L426.9 881L412.1 868.1L407.1 857.7L399.1 849.3L394.8 839L408.7 815.5L413.2 819.5L422.9 834.2L435.5 843.4L448.5 843.2L469.1 832.8L486.7 835.2L506.4 824L513.7 825.6L520.9 824.9L533.9 820.2Z"
       },
       {
         "name": "Saudi Arabia",
-        "d": "M258.9 453.8L250.2 448.1L250.3 445.8L260.2 453ZM378.5 679.6L380.3 679.8L380.2 677.3L382.8 679.8L382.5 683.4L380.5 680.8L376.4 680.4L373.5 676.2L375.4 675L375.5 672.2L377.5 673.9ZM613.3 620.2L544.3 631L523.9 642.1L509.9 660.5L506.7 669.3L499.7 673.6L495.7 673.4L489.9 665.3L480.1 666.2L461.9 664.4L452.8 661.1L429.5 661.8L423.8 663.8L412.1 658.8L406.8 662.9L407.8 665.3L405.9 666.9L405 673.7L406.2 680.3L397.6 688.6L395.2 679.1L387.8 669L385.7 660.9L372.9 649.1L360.7 628.5L358 618L349.6 600.4L333.6 587.1L325.4 583.9L314.7 568.7L310.4 559.9L311.7 554.5L308 545L310.5 531.7L309.7 526.5L295.6 497.4L282.8 485L274 482.2L265.5 468.5L267.5 464.8L264.7 456.2L259.4 447.1L255.6 444.2L253.6 436.7L249.9 435L243.6 422.2L218.4 384.7L207.7 382.2L205.4 383.9L213 350.4L239.3 354.3L248.9 346.7L255.5 337L272.3 333.6L276.5 324.9L284.3 320.5L260.2 294.7L307.4 281.5L311.7 278.2L340.4 283L380.5 305.4L442 354.3L506.5 359.8L512.1 371.7L530.2 371.5L538.9 388.3L538.6 392.8L548.9 398.8L547.5 400.3L552.9 407L556 407.7L570.4 420.5L567 420.1L567.5 424L571.9 429.7L570.5 435.1L567.6 434.8L568.8 438.7L587 472.1L589.6 474.9L600 475L597.6 481L603.7 482.4L604.3 487.8L626.9 517.6L686.9 525.8L688.8 523.6L699.5 541.9L683.9 594.2ZM251.7 445.2L250.5 444.7L251.4 441.5Z"
+        "d": "M259.5 453.8L250.8 448.1L250.8 445.8L260.7 453ZM379.1 679.6L380.9 679.8L380.8 677.3L383.4 679.8L383.1 683.4L381 680.8L376.9 680.4L374.1 676.2L376 675L376.1 672.2L378.1 673.9ZM613.9 620.2L544.9 631L524.5 642.1L510.5 660.5L507.3 669.3L500.3 673.6L496.3 673.4L490.5 665.3L480.7 666.2L462.5 664.4L453.4 661.1L430 661.8L424.4 663.8L412.7 658.8L407.4 662.9L408.4 665.3L406.5 666.9L405.6 673.7L406.7 680.3L398.1 688.6L395.8 679.1L388.4 669L386.3 660.9L373.5 649.1L361.2 628.5L358.6 618L350.2 600.4L334.2 587.1L325.9 583.9L315.3 568.7L311 559.9L312.3 554.5L308.5 545L311.1 531.7L310.3 526.5L296.2 497.4L283.4 485L274.6 482.2L266.1 468.5L268.1 464.8L265.3 456.2L259.9 447.1L256.2 444.2L254.2 436.7L250.5 435L244.2 422.2L219 384.7L208.3 382.2L206 383.9L213.6 350.4L239.9 354.3L249.5 346.7L256.1 337L272.8 333.6L277.1 324.9L284.8 320.5L260.8 294.7L307.9 281.5L312.2 278.2L341 283L381.1 305.4L442.6 354.3L507.1 359.8L512.7 371.7L530.8 371.5L539.4 388.3L539.2 392.8L549.5 398.8L548 400.3L553.5 407L556.6 407.7L571 420.5L567.6 420.1L568.1 424L572.5 429.7L571.1 435.1L568.2 434.8L569.3 438.7L587.6 472.1L590.2 474.9L600.6 475L598.2 481L604.3 482.4L604.9 487.8L627.5 517.6L687.4 525.8L689.4 523.6L700.1 541.9L684.5 594.2ZM252.3 445.2L251.1 444.7L252 441.5Z"
       },
       {
         "name": "Russia",
-        "d": "M513 0L513.4 3.1L528.9 22.1L533.3 24.9L529 31.2L521.1 35L514.9 41.7L503.8 39.6L499.7 33.5L490.4 25.8L486.2 26.1L485.5 24.2L471.7 20L464.3 15.5L466.4 8.5L464.7 7.4L457.4 7.1L453.1 3.3L446.3 1.2L443.9 4.8L440.9 1.7L437.7 1.4L421.7 6L419.6 4.8L421.1 1.9L417.3 0Z"
+        "d": "M513.6 0L514 3.1L529.4 22.1L533.9 24.9L529.6 31.2L521.7 35L515.5 41.7L504.4 39.6L500.3 33.5L491 25.8L486.8 26.1L486 24.2L472.3 20L464.9 15.5L467 8.5L465.3 7.4L458 7.1L453.7 3.3L446.9 1.2L444.5 4.8L441.5 1.7L438.3 1.4L422.3 6L420.2 4.8L421.6 1.9L417.9 0Z"
       },
       {
         "name": "Qatar",
-        "d": "M596.7 474L589.6 474.9L587 472.1L584.6 453.4L590.4 438.2L596.5 433.7L603.1 440.3L601.8 450.1L604.7 462.4L600.4 472.4Z"
+        "d": "M597.2 474L590.2 474.9L587.6 472.1L585.2 453.4L591 438.2L597.1 433.7L603.7 440.3L602.4 450.1L605.3 462.4L601 472.4Z"
       },
       {
         "name": "Pakistan",
-        "d": "M1000 491L993.9 493.6L992.8 496.3L986.7 492.4L985.8 494.3L982.2 494.8L981.7 491.9L979.8 492.9L973.8 485.3L970.6 470.1L959.5 467.4L959.4 457.9L955.6 451.2L950.6 448.1L946.1 450.9L951.4 450.6L954 452.2L914.3 455.8L911.5 459L897.4 453.3L894.5 454.9L885.6 454.6L884 458.3L864.6 456.9L856.4 460.3L853.6 457.9L846.8 460.4L838.8 458.9L841 444.2L843.2 441.8L845.3 431.9L851.9 428.1L854.6 428.4L859.3 423.1L876.2 420.8L879.6 407.7L876.4 405.1L866.9 405.2L868.1 398.7L866.8 379.3L862.2 379.5L857.3 374.8L846.4 371.4L840.1 365L832.9 349.9L821.8 337.2L860.2 348.9L885.8 346.6L898.3 349.4L905.3 345.4L923.7 344.5L947.2 337.8L949.8 335.6L948.6 330.7L951.2 312.6L962.5 300.6L967.2 299.6L973.3 301.8L980.5 300.2L983.9 298.5L980.6 295.7L981.3 293.4L990.4 289.8L993.8 286.5L1000 287.8Z"
+        "d": "M1000 491.1L994.5 493.6L993.3 496.3L987.3 492.4L986.4 494.3L982.8 494.8L982.3 491.9L980.4 492.9L974.4 485.3L971.1 470.1L960.1 467.4L960 457.9L956.2 451.2L951.2 448.1L946.7 450.9L952 450.6L954.6 452.2L914.8 455.8L912.1 459L898 453.3L895.1 454.9L886.2 454.6L884.6 458.3L865.2 456.9L857 460.3L854.2 457.9L847.4 460.4L839.4 458.9L841.6 444.2L843.8 441.8L845.9 431.9L852.5 428.1L855.2 428.4L859.9 423.1L876.8 420.8L880.2 407.7L877 405.1L867.5 405.2L868.7 398.7L867.4 379.3L862.8 379.5L857.9 374.8L847 371.4L840.7 365L833.5 349.9L822.4 337.2L860.8 348.9L886.4 346.6L898.9 349.4L905.8 345.4L924.3 344.5L947.8 337.8L950.3 335.6L949.2 330.7L951.8 312.6L963.1 300.6L967.8 299.6L973.9 301.8L981.1 300.2L984.5 298.5L981.2 295.7L981.8 293.4L991 289.8L994.4 286.5L1000 287.7Z"
       },
       {
         "name": "Oman",
-        "d": "M771.9 588.4L770 588.6L770 585.3L775.7 576.3L777.3 580.6ZM639.4 681.4L613.3 620.2L683.9 594.2L699.5 541.9L688.8 523.6L689.1 515L696.4 497L695.4 491.4L707.6 488.2L706.2 484.2L702.3 483.5L703.1 467.2L705.9 464.5L707.9 465L707.2 467.5L709.4 470.6L717 464.3L723 477.6L734.3 490.3L762.6 499.6L768.5 499.1L773.1 502.4L788.5 524.7L797.8 528.7L797.3 536.2L787.2 555L776 565.1L766.1 583.5L759.8 583L760.7 578.4L758.9 578.7L751.7 587.7L748.2 602.4L750.5 619.7L735.6 622.7L727.3 626.5L723.3 630.9L720.9 641.8L716.9 646.5L695.7 650.3L690.4 657L690.9 663.9L685.9 671.2L679 673.1L674.2 671.4L662.5 672.1L651.7 678.5ZM714.9 446.8L711.3 445.8L711.8 436.5L709.8 436.1L716.8 428.5L717.7 434.9ZM714.5 457.7L712.9 458.2L713.4 455.9Z"
+        "d": "M772.5 588.4L770.6 588.6L770.6 585.3L776.3 576.3L777.9 580.6ZM640 681.4L613.9 620.2L684.5 594.2L700.1 541.9L689.4 523.6L689.7 515L696.9 497L696 491.4L708.2 488.2L706.8 484.2L702.9 483.5L703.7 467.2L706.5 464.5L708.5 465L707.8 467.5L710 470.6L717.6 464.3L723.6 477.6L734.9 490.3L763.2 499.6L769.1 499.1L773.7 502.4L789.1 524.7L798.4 528.7L797.8 536.2L787.8 555L776.6 565.1L766.7 583.5L760.4 583L761.3 578.4L759.5 578.7L752.3 587.7L748.8 602.4L751.1 619.7L736.2 622.7L727.9 626.5L723.9 630.9L721.4 641.8L717.5 646.5L696.3 650.3L691 657L691.5 663.9L686.5 671.2L679.6 673.1L674.8 671.4L663.1 672.1L652.3 678.5ZM715.5 446.8L711.9 445.8L712.4 436.5L710.4 436.1L717.4 428.5L718.3 434.9ZM715.1 457.7L713.5 458.2L714 455.9Z"
       },
       {
         "name": "Lebanon",
-        "d": "M237.2 212.9L246.7 212.2L247.9 213.3L245.5 216.3L249.6 218L251.5 223.5L244.2 231.3L246.3 233.5L238.2 234.9L236.4 238L238.2 240.7L228.4 249.1L226.7 248.8L225.8 252.2L216.8 253.2L228.6 228.5L229.4 222.8L237.2 215Z"
+        "d": "M237.7 212.9L247.3 212.2L248.5 213.3L246.1 216.3L250.2 218L252 223.5L244.8 231.3L246.9 233.5L238.7 234.9L236.9 238L238.8 240.7L229 249.1L227.3 248.8L226.4 252.2L217.3 253.2L229.2 228.5L230 222.8L237.8 215Z"
       },
       {
         "name": "Kuwait",
-        "d": "M526.3 343.3L524.1 343.6L521.7 338.8L524.2 334.1L528 339.2ZM530.2 371.5L512.1 371.7L506.5 359.8L485.3 357.1L494.1 345.6L499.8 333.5L511.5 331L519.3 334L523.2 344.7L519.1 343.5L513.3 349.3L521 350.3Z"
+        "d": "M526.9 343.3L524.6 343.6L522.3 338.8L524.8 334.1L528.6 339.2ZM530.8 371.5L512.7 371.7L507.1 359.8L485.9 357.1L494.7 345.6L500.4 333.5L512 331L519.9 334L523.8 344.7L519.7 343.5L513.9 349.3L521.6 350.3Z"
       },
       {
         "name": "Kazakhstan",
-        "d": "M1000 0L1000 56.9L991.2 51.9L992.7 46.2L988.5 41.8L959.7 42.3L954.7 21L943.2 20.7L944.9 0L707.4 0L707.4 38.5L697.2 40.1L690.3 35L681 21.8L663.7 12.1L638.7 17L625.5 26.6L624.7 18.3L628.4 9.7L627.9 1.1L620.3 0Z"
+        "d": "M1000 0L1000 56.7L991.7 51.9L993.3 46.2L989.1 41.8L960.3 42.3L955.3 21L943.8 20.7L945.5 0L708 0L708 38.5L697.8 40.1L690.9 35L681.6 21.8L664.3 12.1L639.3 17L626.1 26.6L625.3 18.3L629 9.7L628.5 1.1L620.8 0Z"
       },
       {
         "name": "Jordan",
-        "d": "M232.7 262.3L246.5 271.3L256.9 273.1L302.9 245.7L309.6 268.6L307.8 269.1L309.2 273.4L314.1 272.3L315.1 275.1L307.4 281.5L260.2 294.7L284.3 320.5L276.5 324.9L272.3 333.6L255.5 337L248.9 346.7L238.1 354.6L213 350.4L217.5 329.8L217.5 322.6L224.5 304L223.6 301.5L227.3 287.5L227.7 264.7Z"
+        "d": "M233.3 262.3L247 271.3L257.5 273.1L303.5 245.7L310.2 268.6L308.4 269.1L309.8 273.4L314.6 272.3L315.7 275.1L307.9 281.5L260.8 294.7L284.8 320.5L277.1 324.9L272.8 333.6L256.1 337L249.5 346.7L238.7 354.6L213.6 350.4L218.1 329.8L218.1 322.6L225.1 304L224.2 301.5L227.9 287.5L228.3 264.7Z"
       },
       {
         "name": "Israel",
-        "d": "M234 244.5L232.7 247.8L235.1 256.8L232.7 262.3L227.7 264.7L227.2 271.1L218.7 267.5L215.7 269.4L213.2 277.2L213.3 286L219 287.9L213 291.8L211.4 297.9L216.6 297.9L224.8 295L224.5 304L217.5 322.6L217.5 329.8L211.9 347.1L196.5 302L203 293.8L201.9 292.2L206.6 284.1L216.8 253.2L223.9 253.4L226.7 248.8Z"
+        "d": "M234.6 244.5L233.2 247.8L235.7 256.8L233.3 262.3L228.3 264.7L227.8 271.1L219.3 267.5L216.3 269.4L213.8 277.2L213.9 286L219.6 287.9L213.6 291.8L212 297.9L217.2 297.9L225.4 295L225.1 304L218.1 322.6L218.1 329.8L212.5 347.1L197 302L203.6 293.8L202.5 292.2L207.2 284.1L217.3 253.2L224.5 253.4L227.3 248.8Z"
       },
       {
         "name": "Palestine",
-        "d": "M201.9 292.2L203 293.8L196.5 302L195.3 299.1ZM227.2 271.1L227.3 287.5L224.8 295L212 298.3L213 291.8L219 287.9L213.1 285.5L213.2 277.2L215.7 269.4L218.7 267.5Z"
+        "d": "M202.5 292.2L203.6 293.8L197 302L195.9 299.1ZM227.8 271.1L227.9 287.5L225.4 295L212.6 298.3L213.6 291.8L219.6 287.9L213.7 285.5L213.8 277.2L216.3 269.4L219.3 267.5Z"
       },
       {
         "name": "Iraq",
-        "d": "M387.2 148.3L397 141.5L400.8 142.7L404.5 141.6L418.2 145.2L428.5 143.3L432.4 151.7L440 146.6L443 146.8L446.5 156.4L449.8 159L450.5 164.9L455 167.9L457.8 176.8L462.5 177.8L467.6 181.8L479.2 183.1L472.7 187.4L472.2 190.8L475.4 194.9L476 199.9L465.2 208.5L464.3 214.4L461.1 214.2L459.6 218.5L462.1 223.7L458.6 230.1L466.7 239.7L470 239.5L469.8 242.5L473.3 244.5L476.2 249.4L475.5 256.5L481.7 257.2L499.2 269.3L505 270.4L508.4 277.5L515.8 286.8L512.3 297L512.3 307.4L520.1 307.7L520.2 321.4L527.6 326.1L530 332.5L532.7 334.5L523.2 332.5L519.3 334L512.1 331L501.6 332.4L485.3 357.1L442.6 354.5L380.5 305.4L340.4 283L311.7 278.2L315.1 275.1L314.1 272.3L309.2 273.4L307.8 269.1L309.6 268.6L302.9 245.7L355 218.1L359.8 209.3L360.3 195.7L363.6 186.6L361 175.3L362.2 167.2L365.1 163.8L373.8 161.6Z"
+        "d": "M387.8 148.3L397.6 141.5L401.4 142.7L405 141.6L418.8 145.2L429.1 143.3L433 151.7L440.6 146.6L443.6 146.8L447.1 156.4L450.3 159L451.1 164.9L455.6 167.9L458.4 176.8L463.1 177.8L468.1 181.8L479.8 183.1L473.3 187.4L472.8 190.8L476 194.9L476.5 199.9L465.8 208.5L464.9 214.4L461.7 214.2L460.2 218.5L462.6 223.7L459.2 230.1L467.2 239.7L470.6 239.5L470.4 242.5L473.9 244.5L476.8 249.4L476 256.5L482.3 257.2L499.8 269.3L505.6 270.4L508.9 277.5L516.4 286.8L512.9 297L512.9 307.4L520.7 307.7L520.8 321.4L528.2 326.1L530.6 332.5L533.3 334.5L523.7 332.5L519.9 334L512.7 331L502.2 332.4L485.9 357.1L443.2 354.5L381.1 305.4L341 283L312.2 278.2L315.7 275.1L314.6 272.3L309.8 273.4L308.4 269.1L310.2 268.6L303.5 245.7L355.5 218.1L360.4 209.3L360.9 195.7L364.2 186.6L361.6 175.3L362.8 167.2L365.6 163.8L374.4 161.6Z"
       },
       {
         "name": "Iran",
-        "d": "M712.3 413.7L706.8 419.5L704.3 418.7L691.7 422.3L691.4 420.6L702.3 416.6L702.2 413L705.7 414L712.9 411.6L714.5 412.9ZM658.9 142.2L665.4 142.5L677.3 138.9L682.1 130.9L693.4 123.8L714.3 123L718.3 118.6L736 119.5L738.7 121.7L739.7 125.8L754.5 129.5L761.1 133.8L774.1 133.3L785.5 137.8L789.1 144.6L803.4 152.1L810 160.6L828.3 160.5L829.5 162.3L830.5 174.6L829.1 177.8L831.4 180.6L832 189.9L829.9 195.1L827.8 196.2L829 200.8L827.3 207L824.3 212.3L819 215.8L822.9 221L817.1 221.3L813.4 226.8L813.4 236.8L815.4 240L823.5 242.2L815.1 251.8L821.5 274.9L821.2 294.6L841 297.5L843.2 300L844.5 309.7L821.8 337.2L832.9 349.9L840.1 365L846.4 371.4L857.3 374.8L862.2 379.5L866.8 379.3L868.1 398.7L866.7 404.8L876.4 405.1L879.7 408.4L876.2 420.8L859.3 423.1L854.6 428.4L851.9 428.1L845.3 431.9L843.2 441.8L841 444.2L839.3 458.5L835.2 461.1L817.6 456.4L814 452.4L811.4 455.7L792.9 453.3L789.2 451.2L779.5 452.9L773.7 449.3L759.7 448.4L753.4 445.8L750.1 446.8L748.6 444.9L739.3 443.2L733.9 428.1L732.3 416.9L725 408.4L716.3 406.5L710.7 408L699.7 412.3L694.4 417.7L691.3 417.3L682 423.2L676.1 424.5L666.7 419.6L654 418.8L648.1 413.2L630.1 403.3L625.1 395.6L614.6 390.2L604.2 389.2L596.9 382.2L591.8 366.7L587.2 363L587.4 357.9L582.7 355.8L582.1 348.6L570.8 335.6L568.5 328.3L556.4 332.8L544 324.8L544.5 323.2L549.2 322.8L548.6 321.2L543.4 320.3L544.2 321.8L540.8 325L540.3 331.9L532.7 334.5L530 332.5L527.6 326.1L520.2 321.4L520.1 307.7L512.3 307.4L512.3 297L515.8 286.8L508.4 277.5L505 270.4L499.2 269.3L481.7 257.2L475.5 256.5L476.2 249.4L473.3 244.5L469.8 242.5L470 239.5L466.7 239.7L458.6 230.1L462.1 223.7L459.6 218.5L461.1 214.2L464.3 214.4L465.2 208.5L476 199.9L475.4 194.9L472.2 190.8L472.7 187.4L479.2 183.1L467.6 181.8L462.5 177.8L457.8 176.8L455 167.9L451.3 166L449.8 159L446.5 156.4L443.8 147.6L444.5 143.6L439.3 139.8L439.7 132.6L431 128.2L436.4 116.4L432.8 115L432.2 103.3L429.8 100.7L430 95.3L426.3 89.2L434.9 88L436.5 81.7L439.6 79L445 82.1L452.6 92.4L460.6 98.9L476.8 102.4L485.9 101.5L504.3 88L514.5 82.1L519.7 81.2L527.4 88.6L522.3 92.8L526.7 98.5L521 100.7L519.7 102.8L533.8 114.4L540.3 113.7L541.6 124.7L545.2 133.7L552.1 137.6L569.9 140.5L579.4 150.8L593.1 157.8L608.3 161.2L618.3 161L655.4 153L658.9 153L653.4 155L660.2 155.9L661.5 153.7Z"
+        "d": "M712.9 413.7L707.4 419.5L704.9 418.7L692.3 422.3L692 420.6L702.9 416.6L702.8 413L706.3 414L713.5 411.6L715.1 412.9ZM659.5 142.2L666 142.5L677.9 138.9L682.6 130.9L693.9 123.8L714.9 123L718.9 118.6L736.6 119.5L739.3 121.7L740.3 125.8L755.1 129.5L761.7 133.8L774.7 133.3L786.1 137.8L789.7 144.6L804 152.1L810.6 160.6L828.9 160.5L830 162.3L831 174.6L829.6 177.8L832 180.6L832.6 189.9L830.5 195.1L828.4 196.2L829.6 200.8L827.9 207L824.9 212.3L819.6 215.8L823.5 221L817.7 221.3L814 226.8L814 236.8L816 240L824.1 242.2L815.7 251.8L822 274.9L821.8 294.6L841.6 297.5L843.8 300L845.1 309.7L822.4 337.2L833.5 349.9L840.7 365L847 371.4L857.9 374.8L862.8 379.5L867.4 379.3L868.7 398.7L867.3 404.8L877 405.1L880.2 408.4L876.8 420.8L859.9 423.1L855.2 428.4L852.5 428.1L845.9 431.9L843.8 441.8L841.6 444.2L839.9 458.5L835.7 461.1L818.1 456.4L814.5 452.4L811.9 455.7L793.5 453.3L789.8 451.2L780.1 452.9L774.3 449.3L760.3 448.4L754 445.8L750.7 446.8L749.2 444.9L739.9 443.2L734.5 428.1L732.9 416.9L725.6 408.4L716.9 406.5L711.3 408L700.3 412.3L695 417.7L691.9 417.3L682.5 423.2L676.6 424.5L667.3 419.6L654.6 418.8L648.7 413.2L630.7 403.3L625.6 395.6L615.2 390.2L604.8 389.2L597.5 382.2L592.4 366.7L587.8 363L588 357.9L583.3 355.8L582.7 348.6L571.4 335.6L569.1 328.3L557 332.8L544.6 324.8L545.1 323.2L549.7 322.8L549.2 321.2L544 320.3L544.8 321.8L541.4 325L540.9 331.9L533.3 334.5L530.6 332.5L528.2 326.1L520.8 321.4L520.7 307.7L512.9 307.4L512.9 297L516.4 286.8L508.9 277.5L505.6 270.4L499.8 269.3L482.3 257.2L476 256.5L476.8 249.4L473.9 244.5L470.4 242.5L470.6 239.5L467.2 239.7L459.2 230.1L462.6 223.7L460.2 218.5L461.7 214.2L464.9 214.4L465.8 208.5L476.5 199.9L476 194.9L472.8 190.8L473.3 187.4L479.8 183.1L468.1 181.8L463.1 177.8L458.4 176.8L455.6 167.9L451.9 166L450.3 159L447.1 156.4L444.4 147.6L445 143.6L439.9 139.8L440.2 132.6L431.6 128.2L437 116.4L433.4 115L432.8 103.3L430.4 100.7L430.6 95.3L426.9 89.2L435.5 88L437.1 81.7L440.2 79L445.6 82.1L453.2 92.4L461.2 98.9L477.4 102.4L486.4 101.5L504.9 88L515.1 82.1L520.3 81.2L528 88.6L522.9 92.8L527.3 98.5L521.6 100.7L520.3 102.8L534.4 114.4L540.8 113.7L542.2 124.7L545.8 133.7L552.7 137.6L570.5 140.5L580 150.8L593.7 157.8L608.9 161.2L618.9 161L656 153L659.5 153L653.9 155L660.8 155.9L662 153.7Z"
       },
       {
         "name": "India",
-        "d": "M993.9 493.6L1000 491L1000 501.3L1000 497.5L995.6 500.3Z"
+        "d": "M994.5 493.6L1000 491.1L998.7 499.8L996.1 500.3Z"
       },
       {
         "name": "Greece",
-        "d": "M46.3 162.8L44.6 161.4L46.4 160.5ZM30.3 191.1L29.4 192.6L28.4 191.4L27.8 187.7L31.4 181.9L29.8 186.8L31.6 190.8ZM26.6 152.2L24.2 152.6L23.5 148.9ZM24.9 158.3L31.2 153.8L34.4 154.6ZM22 130L27 131.1L27.4 132.7L22.5 134.3L16.3 132.3ZM3.3 137.3L4.6 134.6L10.9 133.6ZM0 154.7L2.6 152.8L4.1 153.7L0 156.1ZM13.4 161.9L10.4 163.9L9 162.9L11.3 160.6ZM4.8 119.4L2.6 120.9L0 118.6L2.4 115.9L0 109.9L6.4 111ZM12.2 90.5L11.8 92L16.2 96.2L16.3 98.2L14.1 97.1L15.5 99.2L6.4 98.4L5.1 96.9L9 93.9L4.3 96.5L0 95.1L0.5 91.5L6.5 89.3ZM45.9 179L42.9 178.3L43 172.7L47.6 168.2L55.1 165.9L51.7 175.5ZM0 198.7L6.6 197.6L10.1 195L8.4 202.1L6.5 202.8L0 202.7ZM10.2 28.3L16.3 31.3L17.3 36.5L10.4 40.7L10.4 48.1L3.5 54L0 51.4L0 38.7L5.8 36.9L5.1 28Z"
+        "d": "M46.9 162.8L45.2 161.4L47 160.5ZM30.8 191.1L29.9 192.6L29 191.4L28.4 187.7L32 181.9L30.4 186.8L32.2 190.8ZM27.2 152.2L24.8 152.6L24.1 148.9ZM25.5 158.3L31.8 153.8L35 154.6ZM22.6 130L27.6 131.1L28 132.7L23.1 134.3L16.9 132.3ZM3.9 137.3L5.2 134.6L11.5 133.6ZM0 155L3.2 152.8L4.7 153.7L0 156.5ZM14 161.9L11 163.9L9.5 162.9L11.9 160.6ZM5.4 119.4L3.2 120.9L0.2 118.1L3 115.9L0 110.1L7 111ZM12.8 90.5L12.4 92L16.8 96.2L16.9 98.2L14.7 97.1L16.1 99.2L7 98.4L5.7 96.9L9.6 93.9L4.9 96.5L0 94.6L1.1 91.5L7.1 89.3ZM46.5 179L43.5 178.3L43.5 172.7L48.2 168.2L55.7 165.9L52.3 175.5ZM0 199.2L7.1 197.6L10.7 195L8.9 202.1L0 202.6ZM10.7 28.3L16.9 31.3L17.9 36.5L11 40.7L11 48.1L4.1 54L0 51.1L0 38.6L6.4 36.9L5.7 28Z"
       },
       {
         "name": "Georgia",
-        "d": "M412.6 44.1L411.7 42.3L407.1 41.7L405.8 38.9L396.5 31.8L393 31.8L389.7 35.5L377 34L374.6 35.7L367.3 33.4L371.8 28.5L373.2 21.7L366.8 3.7L360.3 0L417.3 0L421.1 1.9L420.1 5.4L424.8 6.1L437.7 1.4L440.9 1.7L443.9 4.8L446.3 1.2L453.1 3.3L457.4 7.1L465.9 7.9L464.3 15.5L482.9 23.7L477.6 27.7L477.3 30.6L488.6 39.5L487.5 42.8L483.6 45.1L476.8 41.8L467.9 41.1L466.1 38.1L455.9 35.2L448.7 39.7L444.9 40.2L445.6 41.4L431.1 41.4Z"
+        "d": "M413.2 44.1L412.3 42.3L407.7 41.7L406.4 38.9L397.1 31.8L393.6 31.8L390.3 35.5L377.6 34L375.2 35.7L367.8 33.4L372.3 28.5L373.8 21.7L367.3 3.7L360.9 0L417.9 0L421.6 1.9L420.7 5.4L425.4 6.1L438.3 1.4L441.5 1.7L444.5 4.8L446.9 1.2L453.7 3.3L458 7.1L466.5 7.9L464.9 15.5L483.5 23.7L478.1 27.7L477.9 30.6L489.2 39.5L488.1 42.8L484.2 45.1L477.4 41.8L468.5 41.1L466.7 38.1L456.5 35.2L449.3 39.7L445.5 40.2L446.2 41.4L431.7 41.4Z"
       },
       {
         "name": "Ethiopia",
-        "d": "M171.1 900L173.8 895.3L189.6 895.2L192.9 891.5L192.6 867.3L198 849.6L197.2 840.8L200.8 834.1L204.1 831.7L208.8 835.2L212.6 832.1L213.3 821.3L216.8 807.3L230 786.2L240.2 783.6L250 743.7L256.8 742.2L261.8 743.3L267.3 738.6L274.6 746.5L282 728.2L289.9 733.5L294.9 739.2L303.8 737.8L310 734L312.9 737.9L320.7 736.4L329.3 738.9L335.1 738.5L351 747.5L363.8 763.4L373.2 771.6L377.6 779.5L381.9 782.4L387.7 790.3L373.9 810.7L374 829.1L377.8 830.1L391.9 826.4L400.5 828.6L394.2 839L398.6 849.3L406.6 857.7L413.6 870.8L416.9 871.9L426.3 881L478.2 900Z"
+        "d": "M171.7 900L174.4 895.3L190.2 895.2L193.5 891.5L193.1 867.3L198.6 849.6L197.8 840.8L201.4 834.1L204.7 831.7L209.4 835.2L213.2 832.1L213.9 821.3L217.4 807.3L230.5 786.2L240.8 783.6L250.6 743.7L257.4 742.2L262.4 743.3L267.9 738.6L275.2 746.5L282.6 728.2L290.5 733.5L295.5 739.2L304.4 737.8L310.6 734L313.5 737.9L321.3 736.4L329.9 738.9L335.6 738.5L351.6 747.5L364.4 763.4L373.8 771.6L378.2 779.5L382.5 782.4L388.3 790.3L374.5 810.7L374.6 829.1L378.4 830.1L392.5 826.4L401.1 828.6L394.8 839L399.1 849.3L407.1 857.7L414.2 870.8L417.5 871.9L426.9 881L478.8 900Z"
       },
       {
         "name": "Eritrea",
-        "d": "M250 743.7L247.7 720.9L259.2 690.6L258.6 682L261.4 670.7L270.9 670.6L274.1 663.8L279.6 660.3L290.7 657L299.1 646L309 670L315.3 700.3L326.7 721.1L328.5 712.1L332.7 715.6L336.5 724L344.6 726.1L350.5 731L359.4 734.2L370.7 750.8L384.5 761.1L388.2 770.9L391.1 770.7L397.5 780L401.6 781.4L402.3 779.1L405 784L399.1 786.3L395.3 792.6L390 789.1L387.7 790.3L381.9 782.4L377.6 779.5L373.2 771.6L363.8 763.4L351 747.5L335.1 738.5L329.3 738.9L320.7 736.4L312.9 737.9L308.8 734L303.8 737.8L294.9 739.2L289.9 733.5L282 728.2L274.6 746.5L267.3 738.6L261.8 743.3L256.8 742.2ZM333.5 696.1L334.3 698.6L331.7 697.2ZM335.1 706.2L336 707.6L337.6 706L341.1 709.2L331.2 708.4L330.5 706.2L333.4 706.7L330.3 704.9L331.8 702.8L330.7 701.2L334 702.5Z"
+        "d": "M250.6 743.7L248.3 720.9L259.8 690.6L259.2 682L262 670.7L271.5 670.6L274.7 663.8L280.2 660.3L291.3 657L299.6 646L309.6 670L315.9 700.3L327.3 721.1L329.1 712.1L333.3 715.6L337.1 724L345.2 726.1L351.1 731L360 734.2L371.3 750.8L385.1 761.1L388.7 770.9L391.6 770.7L398.1 780L402.2 781.4L402.8 779.1L405.6 784L399.7 786.3L395.9 792.6L390.6 789.1L388.3 790.3L382.5 782.4L378.2 779.5L373.8 771.6L364.4 763.4L351.6 747.5L335.6 738.5L329.9 738.9L321.3 736.4L313.5 737.9L309.4 734L304.4 737.8L295.5 739.2L290.5 733.5L282.6 728.2L275.2 746.5L267.9 738.6L262.4 743.3L257.4 742.2ZM334.1 696.1L334.9 698.6L332.2 697.2ZM335.7 706.2L336.6 707.6L338.2 706L341.7 709.2L331.8 708.4L331.1 706.2L334 706.7L330.9 704.9L332.3 702.8L331.3 701.2L334.6 702.5Z"
       },
       {
         "name": "Egypt",
-        "d": "M258.2 542L130.4 542.1L131.6 538.1L129.6 536.7L125.1 542.1L0 542.1L0 291.3L31.9 297.6L38.8 301.9L45.6 302.4L48.9 304.9L61.7 306.2L74.8 311.9L83.2 309.4L95 301.5L101.9 300.7L105.9 295.5L118.4 292.7L109.9 296.6L120.2 295.4L122.1 291.7L132.5 295.5L141.1 293.4L146.9 298.6L141.1 294.9L138.3 299.8L143.9 301.7L146.1 305L150.3 302.2L148.8 299.8L157.9 305.7L170.2 303.1L171.7 305.3L182.8 304.1L195.3 299.1L211.9 347.1L208 352.5L200.1 385.2L195.9 391.8L185.1 384.4L173 370.8L170.2 360.1L160.6 346L157 334.2L154.8 335.5L152.1 343.1L157.8 351.2L158.5 359.8L164.8 370.9L180 388.3L180.1 395.9L187.1 406.9L189.7 420.8L204 445.8L218.8 477.5L225.4 485.8L232.6 491.5L226.9 491.9L226.1 495.6L226.5 504.4L230.6 517.3L235.7 522.7L243.1 525.6Z"
+        "d": "M258.8 542L131 542.1L132.2 538.1L130.2 536.7L125.7 542.1L0 542.1L0 291.5L32.5 297.6L39.4 301.9L46.2 302.4L49.5 304.9L62.3 306.2L75.4 311.9L83.8 309.4L95.6 301.5L102.5 300.7L106.5 295.5L118.9 292.7L110.5 296.6L120.8 295.4L122.7 291.7L133.1 295.5L141.6 293.4L147.5 298.6L141.7 294.9L138.9 299.8L144.5 301.7L146.6 305L150.9 302.2L149.3 299.8L158.4 305.7L170.8 303.1L172.3 305.3L183.4 304.1L195.9 299.1L212.5 347.1L208.6 352.5L200.7 385.2L196.5 391.8L185.6 384.4L173.6 370.8L170.8 360.1L161.2 346L157.6 334.2L155.4 335.5L152.7 343.1L158.3 351.2L159.1 359.8L165.4 370.9L180.6 388.3L180.7 395.9L187.7 406.9L190.3 420.8L204.6 445.8L219.4 477.5L226 485.8L233.2 491.5L227.5 491.9L226.6 495.6L227.1 504.4L231.2 517.3L236.3 522.7L243.7 525.6Z"
       },
       {
         "name": "Djibouti",
-        "d": "M408.1 815.5L400.5 828.6L391.9 826.4L377.8 830.1L374 829.1L373.9 810.7L389.3 788.9L395.3 792.6L399.1 786.3L405 784L410.6 792.9L411.2 800.1L403.4 806.9L397.6 809.3L393.8 814L391 813.6L392.5 815.6L403.3 813.2Z"
+        "d": "M408.7 815.5L401.1 828.6L392.5 826.4L378.4 830.1L374.6 829.1L374.5 810.7L389.9 788.9L395.9 792.6L399.7 786.3L405.6 784L411.2 792.9L411.8 800.1L404 806.9L398.1 809.3L394.4 814L391.6 813.6L393.1 815.6L403.9 813.2Z"
       },
       {
         "name": "N. Cyprus",
-        "d": "M190.8 201.6L187.5 200.8L178.4 203.2L176.2 199L165.3 201L160.4 198.8L164.4 198.5L165.8 193.1L181.5 194L203.8 186L189.3 195.6L188.5 198Z"
+        "d": "M191.4 201.6L188.1 200.8L179 203.2L176.8 199L165.9 201L161 198.8L164.9 198.5L166.4 193.1L182.1 194L204.3 186L189.9 195.6L189.1 198Z"
       },
       {
         "name": "Cyprus",
-        "d": "M160.4 198.8L165.3 201L176.2 199L178.4 203.2L187.5 200.8L191.9 203.6L183.6 204L176.9 209.7L169.9 211.2L165.8 214.3L164.1 212.1L154.2 210.3L151.1 204.5L150.7 201.1L152.9 202Z"
+        "d": "M161 198.8L165.9 201L176.8 199L179 203.2L188.1 200.8L192.5 203.6L184.2 204L177.5 209.7L170.5 211.2L166.4 214.3L164.6 212.1L154.8 210.3L151.7 204.5L151.3 201.1L153.4 202Z"
       },
       {
         "name": "Bulgaria",
-        "d": "M50 21.7L38.7 22.9L31.9 18.4L17.1 21.8L10.2 28.3L5.1 28L5.8 36.9L0 38.7L0 0L47 0L37.5 8.7L42.8 11.8Z"
+        "d": "M50.6 21.7L39.3 22.9L32.4 18.4L17.7 21.8L10.7 28.3L5.7 28L6.4 36.9L0 38.6L0 0L47.6 0L38.1 8.7L43.4 11.8Z"
       },
       {
         "name": "Bahrain",
-        "d": "M581.1 440.8L580.4 442.8L577.8 438.6L577.9 431.8L580.6 431.5Z"
+        "d": "M581.7 440.8L581 442.8L578.4 438.6L578.5 431.8L581.2 431.5Z"
       },
       {
         "name": "Azerbaijan",
-        "d": "M445 82.1L443.9 80.7L450 79.1L453.4 84.2L455.2 83.5L460 86.2L467.7 84.8L467.3 89.2L472.3 92.7L475.5 102.2L460.6 98.9L452.6 92.4ZM540.3 113.7L533.8 114.4L519.7 102.8L521 100.7L526.7 98.5L522.3 92.8L527.4 88.6L519.7 81.2L507.5 86.1L484.3 101.5L484.3 97.2L482.2 94L486.6 93.2L481.4 88.5L484.1 84.6L477.6 83.5L462.9 73.6L470.1 72.3L472 66.9L460 59.1L458.2 55.4L463.1 50.9L459.2 47.3L451 45L453.7 43.1L449.3 39.3L455.9 35.2L466.1 38.1L466.4 40.1L471 42.1L476.8 41.8L485.4 44.6L488.6 39.5L477.1 29.8L482.9 23.7L486.2 26.1L490.4 25.8L499.7 33.5L503.8 39.6L514.9 41.7L521.1 35L529 31.2L533.3 24.9L535.5 26.4L554.1 52.1L561.6 57.8L571.1 59.8L575.5 65.7L564.9 64.7L556.3 67.9L551 83.2L551.9 89.9L547.2 98.2L546.2 98.9L543.7 95.5L539.9 103.2Z"
+        "d": "M445.6 82.1L444.4 80.7L450.6 79.1L453.9 84.2L455.8 83.5L460.6 86.2L468.3 84.8L467.9 89.2L472.9 92.7L476.1 102.2L461.2 98.9L453.2 92.4ZM540.8 113.7L534.4 114.4L520.3 102.8L521.6 100.7L527.3 98.5L522.9 92.8L528 88.6L520.3 81.2L508.1 86.1L484.9 101.5L484.9 97.2L482.8 94L487.1 93.2L482 88.5L484.7 84.6L478.1 83.5L463.5 73.6L470.7 72.3L472.6 66.9L460.6 59.1L458.8 55.4L463.7 50.9L459.7 47.3L451.5 45L454.3 43.1L449.9 39.3L456.5 35.2L466.7 38.1L466.9 40.1L471.6 42.1L477.4 41.8L486 44.6L489.2 39.5L477.7 29.8L483.5 23.7L486.8 26.1L491 25.8L500.3 33.5L504.4 39.6L515.5 41.7L521.7 35L529.6 31.2L533.9 24.9L536 26.4L554.7 52.1L562.2 57.8L571.7 59.8L576 65.7L565.5 64.7L556.9 67.9L551.6 83.2L552.5 89.9L547.8 98.2L546.8 98.9L544.2 95.5L540.5 103.2Z"
       },
       {
         "name": "Armenia",
-        "d": "M443.9 80.7L432.6 71.9L425.9 72.6L417.9 69.7L419 68.6L415.7 60.4L419.3 54.2L417.1 48.8L412.6 44.1L431.1 41.4L445.6 41.4L444.9 40.2L449.3 39.3L453.7 43.1L451 45L459.2 47.3L463.1 50.9L458.1 56.4L462.7 62.1L472 66.9L472 68.4L470.1 72.3L462.9 73.6L477.6 83.5L484.1 84.6L481.4 88.5L486.6 93.2L482.2 94L484.3 97.2L484.3 101.5L475.5 102.2L472.3 92.7L467.3 89.2L466.9 84.4L460 86.2L452.9 83.9L450 79.1Z"
+        "d": "M444.4 80.7L433.2 71.9L426.5 72.6L418.5 69.7L419.6 68.6L416.3 60.4L419.9 54.2L417.7 48.8L413.2 44.1L431.7 41.4L446.2 41.4L445.5 40.2L449.9 39.3L454.3 43.1L451.5 45L459.7 47.3L463.7 50.9L458.7 56.4L463.3 62.1L472.6 66.9L472.6 68.4L470.7 72.3L463.5 73.6L478.1 83.5L484.7 84.6L482 88.5L487.1 93.2L482.8 94L484.9 97.2L484.9 101.5L476.1 102.2L472.9 92.7L467.9 89.2L467.5 84.4L460.6 86.2L453.5 83.9L450.6 79.1Z"
       },
       {
         "name": "Afghanistan",
-        "d": "M955.3 142.1L968.1 142.4L974 145.7L978.7 144.2L983 145.2L986.1 149.5L991.6 152.5L1000 147.3L1000 287.8L993.8 286.5L990.4 289.8L981.3 293.4L980.6 295.7L983.9 298.5L980.5 300.2L973.3 301.8L967.2 299.6L962.5 300.6L951.2 312.6L948.6 330.7L949.8 335.6L947.2 337.8L923.7 344.5L905.3 345.4L898.3 349.4L885.8 346.6L860.2 348.9L821.8 337.2L844.5 309.7L843.2 300L841 297.5L821.2 294.6L821.5 274.9L815.2 253.8L815.1 251.8L823.5 242.2L814 238.7L813.4 226.8L817.1 221.3L822.9 221L819 215.8L824.3 212.3L827.3 207L829 200.8L827.8 196.2L829.9 195.1L831.6 187.1L833.6 186.8L840.1 192L848.6 191.7L856.2 198.8L859.9 196.7L865.2 196.6L873.8 191.6L876.5 185.6L875.5 181.2L896.2 176.9L908 168.3L915.2 147.7L921.6 144.9L932.6 144.6L934.6 139L937.5 136.3L945.6 140.3Z"
+        "d": "M955.9 142.1L968.7 142.4L974.6 145.7L979.3 144.2L983.6 145.2L986.7 149.5L992.2 152.5L1000 147.5L1000 287.7L994.4 286.5L991 289.8L981.8 293.4L981.2 295.7L984.5 298.5L981.1 300.2L973.9 301.8L967.8 299.6L963.1 300.6L951.8 312.6L949.2 330.7L950.3 335.6L947.8 337.8L924.3 344.5L905.8 345.4L898.9 349.4L886.4 346.6L860.8 348.9L822.4 337.2L845.1 309.7L843.8 300L841.6 297.5L821.8 294.6L822 274.9L815.8 253.8L815.7 251.8L824.1 242.2L814.6 238.7L814 226.8L817.7 221.3L823.5 221L819.6 215.8L824.9 212.3L827.9 207L829.6 200.8L828.4 196.2L830.5 195.1L832.2 187.1L834.2 186.8L840.7 192L849.2 191.7L856.8 198.8L860.4 196.7L865.7 196.6L874.4 191.6L877.1 185.6L876.1 181.2L896.8 176.9L908.6 168.3L915.8 147.7L922.2 144.9L933.1 144.6L935.2 139L938.1 136.3L946.2 140.3Z"
       }
     ],
     "labels": [
       {
         "name": "Yemen",
-        "x": 451.1,
+        "x": 451.7,
         "y": 715.3,
         "r": 51.5,
         "key": true
       },
       {
         "name": "Uzbekistan",
-        "x": 905.9,
+        "x": 906.1,
         "y": 47.1,
-        "r": 45.7,
+        "r": 46.0,
         "key": false
       },
       {
         "name": "United Arab Emirates",
-        "x": 672.6,
+        "x": 673.1,
         "y": 504.1,
         "r": 19.4,
         "key": false
       },
       {
         "name": "Turkmenistan",
-        "x": 773.8,
+        "x": 774.4,
         "y": 79.6,
         "r": 52.6,
         "key": false
       },
       {
         "name": "Turkey",
-        "x": 170.2,
+        "x": 170.8,
         "y": 96.7,
         "r": 68.5,
         "key": false
       },
       {
         "name": "Tajikistan",
-        "x": 989.1,
+        "x": 990.0,
         "y": 91.5,
-        "r": 7.8,
+        "r": 7.7,
         "key": false
       },
       {
         "name": "Syria",
-        "x": 290.3,
+        "x": 290.9,
         "y": 201.8,
         "r": 43.9,
         "key": false
       },
       {
         "name": "S. Sudan",
-        "x": 155.2,
-        "y": 870.5,
+        "x": 159.1,
+        "y": 867.0,
         "r": 29.2,
         "key": false
       },
       {
         "name": "Sudan",
-        "x": 128.2,
+        "x": 128.4,
         "y": 674.5,
         "r": 126.5,
         "key": false
       },
       {
         "name": "Somalia",
-        "x": 565.1,
+        "x": 565.7,
         "y": 848.0,
         "r": 23.2,
         "key": false
       },
       {
         "name": "Somaliland",
-        "x": 505.0,
+        "x": 505.6,
         "y": 863.8,
         "r": 34.2,
         "key": false
       },
       {
         "name": "Saudi Arabia",
-        "x": 443.6,
+        "x": 444.2,
         "y": 495.0,
         "r": 137.2,
         "key": true
       },
       {
         "name": "Russia",
-        "x": 504.3,
+        "x": 504.9,
         "y": 16.7,
         "r": 15.7,
         "key": false
       },
       {
         "name": "Qatar",
-        "x": 594.6,
+        "x": 595.2,
         "y": 460.2,
         "r": 9.1,
         "key": false
       },
       {
         "name": "Pakistan",
-        "x": 941.6,
+        "x": 941.8,
         "y": 395.2,
-        "r": 53.6,
+        "r": 53.5,
         "key": false
       },
       {
         "name": "Oman",
-        "x": 741.2,
+        "x": 741.8,
         "y": 538.0,
         "r": 41.9,
         "key": false
       },
       {
         "name": "Lebanon",
-        "x": 237.3,
+        "x": 237.9,
         "y": 226.8,
         "r": 8.1,
         "key": false
       },
       {
         "name": "Kuwait",
-        "x": 503.8,
+        "x": 504.3,
         "y": 347.9,
         "r": 9.7,
         "key": false
@@ -793,503 +816,503 @@
       },
       {
         "name": "Jordan",
-        "x": 245.6,
+        "x": 246.2,
         "y": 315.7,
         "r": 23.5,
         "key": false
       },
       {
         "name": "Israel",
-        "x": 210.2,
+        "x": 210.8,
         "y": 308.7,
         "r": 10.8,
         "key": false
       },
       {
         "name": "Iraq",
-        "x": 405.5,
+        "x": 406.1,
         "y": 253.4,
         "r": 57.6,
         "key": false
       },
       {
         "name": "Iran",
-        "x": 685.4,
+        "x": 686.0,
         "y": 278.2,
         "r": 124.9,
         "key": true
       },
       {
         "name": "Georgia",
-        "x": 435.9,
+        "x": 436.5,
         "y": 22.5,
         "r": 18.8,
         "key": false
       },
       {
         "name": "Ethiopia",
-        "x": 297.2,
+        "x": 297.8,
         "y": 826.4,
         "r": 71.3,
         "key": false
       },
       {
         "name": "Eritrea",
-        "x": 287.1,
+        "x": 287.6,
         "y": 701.2,
         "r": 27.5,
         "key": false
       },
       {
         "name": "Egypt",
-        "x": 96.8,
-        "y": 443.8,
-        "r": 95.7,
+        "x": 97.0,
+        "y": 443.9,
+        "r": 96.1,
         "key": false
       },
       {
         "name": "Djibouti",
-        "x": 391.5,
+        "x": 392.1,
         "y": 802.1,
         "r": 9.4,
         "key": false
       },
       {
         "name": "Bulgaria",
-        "x": 11.6,
+        "x": 11.7,
         "y": 11.9,
-        "r": 11.3,
+        "r": 11.5,
         "key": false
       },
       {
         "name": "Azerbaijan",
-        "x": 496.6,
+        "x": 497.2,
         "y": 64.8,
         "r": 23.1,
         "key": false
       },
       {
         "name": "Armenia",
-        "x": 439.0,
+        "x": 439.6,
         "y": 57.3,
         "r": 15.5,
         "key": false
       },
       {
         "name": "Afghanistan",
-        "x": 902.9,
+        "x": 903.2,
         "y": 258.1,
-        "r": 72.1,
+        "r": 71.9,
         "key": false
       }
     ],
     "rivers": [
       {
-        "d": "M265.4 827.6L260.8 821.1L262.4 813.4L265.5 808.9L263.9 806.3"
+        "d": "M266 827.6L261.4 821.1L263 813.4L266 808.9L264.5 806.3"
       },
       {
-        "d": "M270.3 812L280.3 821.1L295.6 827.6L296.6 841.5L293.6 851.1L276.7 857.6L272.7 854.1L268.5 853.6L265 847.7L253.6 845.2L249.1 842.4L242.6 850.6L231.1 854.6L222.5 850.6"
+        "d": "M270.9 812L280.9 821.1L296.2 827.6L297.1 841.5L294.1 851.1L277.3 857.6L273.3 854.1L269.1 853.6L265.5 847.7L254.2 845.2L249.7 842.4L243.2 850.6L231.7 854.6L223.1 850.6"
       },
       {
-        "d": "M297.9 180.8L313.6 180.3L327.8 185.4L331.9 190.9L340.6 197.4L342.9 202.8L353.6 214.2L355.1 218.1M285.3 155.4L291.1 162.7L289.1 168.3"
+        "d": "M298.5 180.8L314.2 180.3L328.4 185.4L332.4 190.9L341.2 197.4L343.5 202.8L354.2 214.2L355.7 218.1M285.9 155.4L291.7 162.7L289.6 168.3"
       },
       {
-        "d": "M995 150.6L989 151.9L984.2 145.9L978.7 144.2L974 145.7L968.1 142.4L945.6 140.3L927.4 132.6L922.6 126.7L902.4 113.8L889.5 97.8L872.8 88.6L872.4 86L862.4 77L859.4 72L857.8 64.3L851.2 55.2L846.7 44.5L840.6 40.7L831.6 39.1L814.3 25.4L804.4 14.8L796 12L786 5.5L785.4 1.5L783.5 0"
+        "d": "M995.6 150.6L989.6 151.9L984.8 145.9L979.3 144.2L974.6 145.7L968.7 142.4L946.2 140.3L928 132.6L923.2 126.7L903 113.8L890.1 97.8L873.4 88.6L873 86L863 77L859.9 72L858.4 64.3L851.8 55.2L847.3 44.5L841.2 40.7L832.2 39.1L814.9 25.4L804.9 14.8L796.5 12L786.6 5.5L786 1.5L784.1 0"
       },
       {
-        "d": "M227.9 698.3L212.9 671.7L200.6 663.9L189.6 654M228 698.2L228.6 705.7L236.5 723.2L235.9 726"
+        "d": "M228.5 698.3L213.5 671.7L201.2 663.9L190.1 654M228.6 698.2L229.2 705.7L237.1 723.2L236.5 726"
       },
       {
-        "d": "M111.8 900L112.4 893.3L116.1 887L115.9 881L123.4 869.6"
+        "d": "M112.4 900L113 893.3L116.7 887L116.5 881L124 869.6"
       },
       {
-        "d": "M104.4 900L104.6 894.1L101.4 882.4L105.3 870.4L111.2 866.8L123.1 869.4"
+        "d": "M104.9 900L105.2 894.1L101.9 882.4L105.9 870.4L111.8 866.8L123.7 869.4"
       },
       {
-        "d": "M124 329.6L122 325.1L126 317.3L125.9 309.2L135.9 300.2L139.9 293.8"
+        "d": "M124.6 329.6L122.6 325.1L126.6 317.3L126.5 309.2L136.5 300.2L140.5 293.8"
       },
       {
-        "d": "M323.4 114.3L332.2 116L337.3 122.7L337.7 127.6L341.8 129.5L374.1 132.7L375 138.6L384.1 142.8L387.6 149.5"
+        "d": "M323.9 114.3L332.8 116L337.9 122.7L338.3 127.6L342.4 129.5L374.7 132.7L375.6 138.6L384.7 142.8L388.2 149.5"
       },
       {
-        "d": "M123.1 869.4L132.3 870.9L137.7 863.5L144.5 858.9L149.9 850.8L149.4 845L146.2 841.3L158.8 825.9L161.6 807.8L162.4 776.3L157.4 765.4L157.5 759.8L150.6 749.5L147.7 738.3L154 720.9L155.2 707.8"
+        "d": "M123.7 869.4L132.9 870.9L138.3 863.5L145.1 858.9L150.5 850.8L150 845L146.7 841.3L159.4 825.9L162.2 807.8L163 776.3L158 765.4L158.1 759.8L151.2 749.5L148.3 738.3L154.6 720.9L155.8 707.8"
       },
       {
-        "d": "M222.5 850.6L219.9 841.1L217.7 839.7L218 824.9L209 820.8M199.6 808.1L198.7 794.5L194.4 788.6L194.3 783.5L190.7 779L189.1 769.7L183.4 766.5L181.1 761.5L180.7 754.6L182.6 747.5L180.5 741.4L170.3 720.2L155.2 707.8"
+        "d": "M223.1 850.6L220.5 841.1L218.3 839.7L218.6 824.9L209.6 820.8M200.2 808.1L199.3 794.5L195 788.6L194.9 783.5L191.3 779L189.6 769.7L184 766.5L181.7 761.5L181.3 754.6L183.2 747.5L181.1 741.4L170.9 720.2L155.8 707.8"
       },
       {
-        "d": "M460.2 299.5L484.2 310L507.3 308.3M355.1 218.1L359.4 219.1L374.7 216L381.6 221.4L387.4 220.7L387.6 226.3L392 232.7L395.9 232.8L395.8 235.8L399.4 240.3L417.6 245.4L428.7 254L431.8 259.8L431.8 268.5L438.7 290.6L443.9 295L460.3 299.5"
+        "d": "M460.8 299.5L484.8 310L507.9 308.3M355.7 218.1L360 219.1L375.3 216L382.2 221.4L388 220.7L388.2 226.3L392.6 232.7L396.5 232.8L396.4 235.8L400 240.3L418.1 245.4L429.2 254L432.3 259.8L432.4 268.5L439.3 290.6L444.5 295L460.9 299.5"
       },
       {
-        "d": "M302.8 103.9L295.3 106.5L293.4 110.7L310 116.2L313.9 122.4L303.8 134.3L282.8 141.1L281.5 148.1L284.5 151.2L285.3 155.4M366 68.3L363 72.6L335.7 75.7L337.4 80.9L334.6 84.2L318 81.2L296.2 87.4L294.7 90.1L302.1 97"
+        "d": "M303.4 103.9L295.9 106.5L294 110.7L310.6 116.2L314.4 122.4L304.4 134.3L283.4 141.1L282.1 148.1L285.1 151.2L285.9 155.4M366.6 68.3L363.6 72.6L336.3 75.7L338 80.9L335.2 84.2L318.6 81.2L296.8 87.4L295.3 90.1L302.7 97"
       },
       {
-        "d": "M468.3 268.3L472.5 275.7L472.5 283.5L476.4 295.6L482.3 304.5L481.4 308.4"
+        "d": "M468.9 268.3L473.1 275.7L473.1 283.5L477 295.6L482.9 304.5L482 308.4"
       },
       {
-        "d": "M839.7 302.1L843.2 307.1L845.3 320.3L849.7 325.4L865.1 328.5L871 327.3L888.1 318.7L894.8 319L903.7 297.9L905.2 290.3L917.9 276.7L924.1 273L934.1 256.3L941.5 252.2L953.6 240.1L971.6 230.5L972.8 225.2L978.2 221.3L1000 215.4"
+        "d": "M840.3 302.1L843.8 307.1L845.8 320.3L850.3 325.4L865.7 328.5L871.6 327.3L888.7 318.7L895.4 319L904.3 297.9L905.8 290.3L918.5 276.7L924.7 273L934.7 256.3L942.1 252.2L954.2 240.1L972.2 230.5L973.4 225.2L978.8 221.3L1000 215.7"
       },
       {
-        "d": "M988.3 489.8L990.4 490.1L990.9 493.8M988.3 489.8L988.3 488.4L983.3 488.1M1000 395L997.2 396.8L997 402L994.6 402.8L994.1 406.3L987.9 414L987.5 425.1L988.3 429.9L998.9 443.1L998.3 460.2L991.6 467.2L988.5 478.6L985 483.6L981.3 487.8L977.2 488.8"
+        "d": "M988.9 489.8L991 490.1L991.5 493.8M988.9 489.8L988.8 488.4L983.9 488.1M1000 395.3L997.8 396.8L997.6 402L995.2 402.8L994.7 406.3L988.5 414L988.1 425.1L988.9 429.9L998.4 441.1L1000 445.9M1000 447.2L998.2 452.2L998.9 460.2L992.2 467.2L989.1 478.6L981.8 487.8L977.8 488.8"
       },
       {
-        "d": "M125.7 330.4L135.2 320.9L150.8 318.1"
+        "d": "M126.3 330.4L135.8 320.9L151.4 318.1"
       },
       {
-        "d": "M227.8 262.6L227.3 287.5M234.5 239.8L228.7 249L228.3 258"
+        "d": "M228.3 262.6L227.9 287.5M235.1 239.8L229.3 249L228.9 258"
       },
       {
-        "d": "M155.2 707.8L158.4 691.6L165.5 685L179.4 679L183.8 673.7L184.6 665.8L188.9 657.9L189.3 643.4L181.1 626.9L179.9 615.6L176.1 609.1L167.6 606.8L150.9 623L145.4 625L143.8 630.4L131.3 644.2L123.6 646.1L115.7 642.2L108.7 625.5L107.4 607.8L104.9 599.6L110.2 594.9L110.5 588.5L109.3 585.5L105.3 583.2L104.1 578L105.3 573.9L110.2 570.6L113.1 563.4L119.4 557.6L122.3 552.1M164.3 490.2L165.3 469.8L164.1 462.8L156.4 454.7L155.3 449.1L161.6 440.9L160.9 434.4L149 435.7L144 432.5L128.2 410.2L117.1 398.6L116.9 386L114 379.6L117.8 365L125.3 352.2L126.9 339.2L125.7 330.4"
+        "d": "M155.8 707.8L159 691.6L166.1 685L180 679L184.4 673.7L185.2 665.8L189.5 657.9L189.9 643.4L181.6 626.9L180.4 615.6L176.7 609.1L168.2 606.8L151.5 623L146 625L144.4 630.4L131.9 644.2L124.2 646.1L116.2 642.2L109.2 625.5L108 607.8L105.5 599.6L110.8 594.9L111.1 588.5L109.9 585.5L105.8 583.2L104.7 578L105.9 573.9L110.8 570.6L113.7 563.4L120 557.6L122.9 552.1M164.9 490.2L165.9 469.8L164.7 462.8L157 454.7L155.8 449.1L162.2 440.9L161.5 434.4L149.6 435.7L144.6 432.5L128.8 410.2L117.6 398.6L117.5 386L114.6 379.6L118.4 365L125.9 352.2L127.5 339.2L126.3 330.4"
       },
       {
-        "d": "M262 876.7L261.9 879.3L266 884.9L265.1 889.6L273.5 900"
+        "d": "M262.6 876.7L262.5 879.3L266.6 884.9L265.7 889.6L274.1 900"
       },
       {
-        "d": "M1000 147.3L995 150.6"
+        "d": "M1000 147.5L995.6 150.6"
       },
       {
-        "d": "M125.7 330.4L116.7 324.3L114.2 307.2L105.9 295.5"
+        "d": "M126.3 330.4L117.3 324.3L114.8 307.2L106.5 295.5"
       },
       {
-        "d": "M280.4 753.6L276 751.2L267.3 738.6L261.8 743.3L256.8 742.2L239.7 744.1L235.2 741.9L235.2 734.2"
+        "d": "M281 753.6L276.6 751.2L267.9 738.6L262.4 743.3L257.4 742.2L240.3 744.1L235.8 741.9L235.8 734.2"
       },
       {
-        "d": "M507.3 308.3L516.2 320.2L521.4 321.6L527.6 326.1L530 332.5L532.7 334.5"
+        "d": "M507.9 308.3L516.8 320.2L522 321.6L528.2 326.1L530.6 332.5L533.3 334.5"
       },
       {
-        "d": "M156.9 328.8L157 334.2M152.1 322.5L150.8 318.1L151.3 300.8"
+        "d": "M157.4 328.8L157.6 334.2M152.7 322.5L151.4 318.1L151.9 300.8"
       },
       {
-        "d": "M989.8 40.3L992.1 34.9L991.6 25.2L996.7 13L995 7.8L995.3 0.2"
+        "d": "M990.4 40.3L992.7 34.9L992.2 25.2L997.3 13L995.6 7.8L995.9 0.2"
       },
       {
-        "d": "M387.6 149.5L391.9 155.5L399.8 159.2L396.9 163.1L406.2 168.5L408.4 171.8L410.4 178.6L408.4 191L415.6 203.1L422.4 224.3L424.9 226.7L435.3 230L435.6 236.1L433.1 241.5L435.1 247.7L441.7 254.7L454.6 261.1L458.3 265.7L468.3 268.3L476 264.9L489.1 269.9L489.6 277.5L494.9 283.6L499.6 286L504.9 295.5L506.7 307.5"
+        "d": "M388.2 149.5L392.5 155.5L400.4 159.2L397.5 163.1L406.8 168.5L408.9 171.8L411 178.6L409 191L416.2 203.1L423 224.3L425.4 226.7L435.8 230L436.2 236.1L433.7 241.5L435.7 247.7L442.2 254.7L455.2 261.1L458.9 265.7L468.9 268.3L476.6 264.9L489.7 269.9L490.2 277.5L495.5 283.6L500.2 286L505.4 295.5L507.3 307.5"
       }
     ],
     "lakes": [
       {
-        "d": "M267.9 807.8L262.6 806.8L261.3 804.9L261.9 798.2L263.5 795.6L267.5 796.7L272 794.6L274.3 796.7L274.8 802L270.3 812.1L268.3 811.1Z"
+        "d": "M268.5 807.8L263.2 806.8L261.9 804.9L262.5 798.2L264.1 795.6L268.1 796.7L272.6 794.6L274.9 796.7L275.4 802L270.9 812.1L268.9 811.1Z"
       },
       {
-        "d": "M408.4 236.4L404.8 231.5L403.8 222.6L405 220.7L413.9 232.2L413.5 236.4Z"
+        "d": "M409 236.4L405.4 231.5L404.4 222.6L405.6 220.7L414.5 232.2L414.1 236.4Z"
       },
       {
-        "d": "M422.9 263.5L420.9 267.5L413.6 264.7L412.2 260.3L414.2 253.8Z"
+        "d": "M423.5 263.5L421.5 267.5L414.2 264.7L412.8 260.3L414.8 253.8Z"
       },
       {
-        "d": "M228 288.6L227 298.1L224.1 299L224.1 291.4L226.5 287.8Z"
+        "d": "M228.5 288.6L227.6 298.1L224.7 299L224.7 291.4L227.1 287.8Z"
       },
       {
-        "d": "M465 131.8L466.9 132.9L468.8 142.3L464.9 143.6L461.9 147.6L459.8 147.2L457.9 145.2L454.8 131.2L451.3 128.1L451.2 125.4L453.7 122.3L449.7 121.3L449.9 120.1L451.8 118.2L457.7 118.2L460.8 123.2L459.5 130.1Z"
+        "d": "M465.6 131.8L467.4 132.9L469.4 142.3L465.5 143.6L462.5 147.6L460.4 147.2L458.5 145.2L455.4 131.2L451.9 128.1L451.8 125.4L454.3 122.3L450.3 121.3L450.5 120.1L452.4 118.2L458.3 118.2L461.3 123.2L460.1 130.1Z"
       },
       {
-        "d": "M751.8 26.8L747.5 30.4L739.5 32L735.5 27.8L732.9 28L733.6 21.7L737.8 13L740.6 12.1L744.3 14.1L747.9 23.1Z"
+        "d": "M752.3 26.8L748.1 30.4L740.1 32L736.1 27.8L733.5 28L734.2 21.7L738.4 13L741.2 12.1L744.9 14.1L748.5 23.1Z"
       },
       {
-        "d": "M177.9 102.8L183 106.5L179.7 111.5L170.9 105L174.1 99.9L174.4 95.7L177.1 97.6Z"
+        "d": "M178.5 102.8L183.6 106.5L180.3 111.5L171.5 105L174.6 99.9L174.9 95.7L177.7 97.6Z"
       },
       {
-        "d": "M402 116.1L398.9 112.5L387.1 112.1L389.5 107.1L404.1 104L406.1 103L404 101.2L405.9 100.4L416.6 100.4L407.2 106.4L406.7 109.4L409.8 112.4L407.8 114.5L405.8 116.3Z"
+        "d": "M402.6 116.1L399.5 112.5L387.7 112.1L390.1 107.1L404.7 104L406.7 103L404.6 101.2L406.4 100.4L417.2 100.4L407.8 106.4L407.3 109.4L410.4 112.4L408.4 114.5L406.3 116.3Z"
       },
       {
-        "d": "M449.1 59.6L449.6 57L458.1 60.5L463.5 64.7L464.6 67.9L455.8 68.7L453.6 62.9Z"
+        "d": "M449.6 59.6L450.2 57L458.7 60.5L464 64.7L465.2 67.9L456.4 68.7L454.2 62.9Z"
       },
       {
-        "d": "M510.6 315.6L492.1 314.6L489.5 310.9L493 309.6L503.1 313.4L508.1 312.4Z"
+        "d": "M511.2 315.6L492.7 314.6L490.1 310.9L493.6 309.6L503.7 313.4L508.7 312.4Z"
       },
       {
-        "d": "M229 261L227.2 261.9L227.5 258.2Z"
+        "d": "M229.6 261L227.7 261.9L228.1 258.2Z"
       },
       {
-        "d": "M149.2 524.4L145 524.6L139.6 532.8L135.3 533.8L130.5 539.3L127.7 546.8L122.3 552.1L130.7 536.5L138.6 529.4L136 525.6L139.5 527.2L146.8 521.6L151.6 523.9L155.4 522.2L163.8 507L163.4 503.3L157.8 503L160.3 501L158.3 500.6L159.1 499.4L163.3 499.8L164.3 490.2L166.8 497.8L165 500L167.3 502.6L165.3 503.3L167.4 509.7L165.3 509.4L163.8 512.8L166.9 517.1L161.1 515.1L151.4 527.6L149.7 528L150.7 526.5Z"
+        "d": "M149.8 524.4L145.6 524.6L140.2 532.8L135.9 533.8L131.1 539.3L128.3 546.8L122.9 552.1L131.3 536.5L139.2 529.4L136.6 525.6L140.1 527.2L147.4 521.6L152.2 523.9L156 522.2L164.4 507L164 503.3L158.3 503L160.9 501L158.9 500.6L159.7 499.4L163.9 499.8L164.9 490.2L167.4 497.8L165.6 500L167.9 502.6L165.9 503.3L167.9 509.7L165.9 509.4L164.4 512.8L167.5 517.1L161.7 515.1L152 527.6L150.2 528L151.3 526.5Z"
       },
       {
-        "d": "M416.3 247.4L413.6 250.4L409.4 247.3L411.3 244Z"
+        "d": "M416.9 247.4L414.2 250.4L410 247.3L411.8 244Z"
       },
       {
-        "d": "M989.8 40.3L999.3 42.7L1000 44.6L993.2 45.7L988.5 41.1Z"
+        "d": "M990.4 40.3L999.9 42.7L1000 44.9L993.8 45.7L989.1 41.1Z"
       }
     ],
     "cities": [
       {
         "name": "Tehran",
-        "x": 600.3,
+        "x": 600.9,
         "y": 185.7,
         "capital": true
       },
       {
         "name": "Riyadh",
-        "x": 489.7,
+        "x": 490.3,
         "y": 473.3,
         "capital": true
       },
       {
         "name": "Sanaa",
-        "x": 430.6,
+        "x": 431.2,
         "y": 715.0,
         "capital": true
       },
       {
         "name": "Cairo",
-        "x": 126.0,
+        "x": 126.6,
         "y": 332.2,
         "capital": true
       },
       {
         "name": "Baghdad",
-        "x": 435.0,
+        "x": 435.6,
         "y": 246.5,
         "capital": true
       },
       {
         "name": "Khartoum",
-        "x": 156.2,
+        "x": 156.8,
         "y": 709.0,
         "capital": true
       },
       {
         "name": "Ankara",
-        "x": 163.9,
+        "x": 164.5,
         "y": 74.8,
         "capital": true
       },
       {
         "name": "Addis Ababa",
-        "x": 301.1,
+        "x": 301.7,
         "y": 879.7,
         "capital": true
       },
       {
         "name": "Damascus",
-        "x": 244.7,
+        "x": 245.3,
         "y": 242.3,
         "capital": true
       },
       {
         "name": "Baku",
-        "x": 563.6,
+        "x": 564.2,
         "y": 62.6,
         "capital": true
       },
       {
         "name": "Kuwait City",
-        "x": 519.3,
+        "x": 519.9,
         "y": 349.9,
         "capital": true
       },
       {
         "name": "Beirut",
-        "x": 226.1,
+        "x": 226.7,
         "y": 232.6,
         "capital": true
       },
       {
         "name": "Doha",
-        "x": 602.9,
+        "x": 603.5,
         "y": 456.3,
         "capital": true
       },
       {
         "name": "Yerevan",
-        "x": 437.8,
+        "x": 438.4,
         "y": 68.2,
         "capital": true
       },
       {
         "name": "Tbilisi",
-        "x": 444.3,
+        "x": 444.9,
         "y": 28.0,
         "capital": true
       },
       {
         "name": "Amman",
-        "x": 236.1,
+        "x": 236.7,
         "y": 282.7,
         "capital": true
       },
       {
         "name": "Jerusalem",
-        "x": 219.1,
+        "x": 219.6,
         "y": 287.2,
         "capital": true
       },
       {
         "name": "Djibouti",
-        "x": 405.8,
+        "x": 406.3,
         "y": 813.0,
         "capital": true
       },
       {
         "name": "Muscat",
-        "x": 763.8,
+        "x": 764.4,
         "y": 500.7,
         "capital": true
       },
       {
         "name": "Ashgabat",
-        "x": 763.9,
+        "x": 764.5,
         "y": 126.4,
         "capital": true
       },
       {
         "name": "Asmara",
-        "x": 306.7,
+        "x": 307.3,
         "y": 715.6,
         "capital": true
       },
       {
         "name": "Abu Dhabi",
-        "x": 669.5,
+        "x": 670.1,
         "y": 477.7,
         "capital": true
       },
       {
         "name": "Manama",
-        "x": 580.6,
+        "x": 581.1,
         "y": 431.6,
         "capital": true
       },
       {
         "name": "Hargeisa",
-        "x": 427.3,
+        "x": 427.9,
         "y": 866.1,
         "capital": true
       },
       {
         "name": "Nicosia",
-        "x": 175.8,
+        "x": 176.4,
         "y": 198.9,
         "capital": true
       },
       {
         "name": "Karachi",
-        "x": 966.2,
+        "x": 966.8,
         "y": 467.1,
         "capital": false
       },
       {
         "name": "Istanbul",
-        "x": 72.5,
+        "x": 73.1,
         "y": 46.5,
         "capital": false
       },
       {
         "name": "Jeddah",
-        "x": 313.3,
+        "x": 313.9,
         "y": 554.5,
         "capital": false
       },
       {
         "name": "Aleppo",
-        "x": 265.2,
+        "x": 265.8,
         "y": 171.2,
         "capital": false
       },
       {
         "name": "İzmir",
-        "x": 29.6,
+        "x": 30.2,
         "y": 113.7,
         "capital": false
       },
       {
         "name": "Isfahan",
-        "x": 606.8,
+        "x": 607.4,
         "y": 263.1,
         "capital": false
       },
       {
         "name": "Tabriz",
-        "x": 479.8,
+        "x": 480.4,
         "y": 122.8,
         "capital": false
       },
       {
         "name": "Mosul",
-        "x": 405.6,
+        "x": 406.2,
         "y": 168.2,
         "capital": false
       },
       {
         "name": "Shiraz",
-        "x": 627.2,
+        "x": 627.8,
         "y": 343.1,
         "capital": false
       },
       {
         "name": "Medina",
-        "x": 321.8,
+        "x": 322.4,
         "y": 476.8,
         "capital": false
       },
       {
         "name": "Tarsus",
-        "x": 211.4,
+        "x": 212.0,
         "y": 153.2,
         "capital": false
       },
       {
         "name": "Kermanshah",
-        "x": 497.7,
+        "x": 498.3,
         "y": 219.4,
         "capital": false
       },
       {
         "name": "Antalya",
-        "x": 113.1,
+        "x": 113.6,
         "y": 154.0,
         "capital": false
       },
       {
         "name": "Quetta",
-        "x": 967.1,
+        "x": 967.7,
         "y": 327.7,
         "capital": false
       },
       {
         "name": "Trabzon",
-        "x": 325.2,
+        "x": 325.8,
         "y": 47.4,
         "capital": false
       },
       {
         "name": "Samarkand",
-        "x": 965.2,
+        "x": 965.8,
         "y": 81.6,
         "capital": false
       },
       {
         "name": "Diyarbakır",
-        "x": 337.2,
+        "x": 337.7,
         "y": 127.2,
         "capital": false
       },
       {
         "name": "Samsun",
-        "x": 245.8,
+        "x": 246.4,
         "y": 39.6,
         "capital": false
       },
       {
         "name": "Luxor",
-        "x": 159.0,
+        "x": 159.5,
         "y": 445.6,
         "capital": false
       },
       {
         "name": "Zahedan",
-        "x": 821.5,
+        "x": 822.1,
         "y": 346.5,
         "capital": false
       },
       {
         "name": "Rasht",
-        "x": 558.2,
+        "x": 558.7,
         "y": 143.3,
         "capital": false
       },
       {
         "name": "Kerman",
-        "x": 733.3,
+        "x": 733.9,
         "y": 325.7,
         "capital": false
       }
@@ -1297,7 +1320,7 @@
     "annotations": [
       {
         "kind": "chokepoint",
-        "x": 713.8,
+        "x": 714.4,
         "y": 422.9,
         "title": "Strait of Hormuz",
         "lines": [
@@ -1309,7 +1332,7 @@
       },
       {
         "kind": "chokepoint",
-        "x": 410.0,
+        "x": 410.6,
         "y": 787.4,
         "title": "Bab el-Mandeb",
         "lines": [
@@ -1321,7 +1344,7 @@
       },
       {
         "kind": "chokepoint",
-        "x": 151.9,
+        "x": 152.5,
         "y": 321.5,
         "title": "Suez Canal",
         "lines": [
@@ -1333,7 +1356,7 @@
       },
       {
         "kind": "chokepoint",
-        "x": 74.8,
+        "x": 75.4,
         "y": 43.8,
         "title": "Bosporus",
         "lines": [
@@ -1362,63 +1385,75 @@
     },
     "points": [
       {
-        "x": 599.5,
-        "y": 185.3,
-        "label": "Tehran",
+        "x": 430.9,
+        "y": 714.7,
+        "label": "Sanaa",
         "date": "2026-10-04",
         "verification": "researched",
         "n": 1,
         "weight": 1.0
       },
       {
-        "x": 488.7,
+        "x": 713.2,
+        "y": 424.7,
+        "label": "Strait of Hormuz",
+        "date": "2026-10-04",
+        "verification": "reported",
+        "n": 2,
+        "weight": 0.537
+      },
+      {
+        "x": 600.1,
+        "y": 185.3,
+        "label": "Tehran",
+        "date": "2026-10-04",
+        "verification": "researched",
+        "n": 3,
+        "weight": 0.537
+      },
+      {
+        "x": 489.3,
         "y": 471.3,
         "label": "Riyadh",
         "date": "2026-10-03",
         "verification": "researched",
-        "n": 2,
-        "weight": 0.952
+        "n": 4,
+        "weight": 0.511
       },
       {
-        "x": 286.2,
+        "x": 286.8,
         "y": 487.5,
         "label": "Yanbu",
         "date": "2026-10-02",
         "verification": "researched",
-        "n": 3,
-        "weight": 0.906
+        "n": 5,
+        "weight": 0.486
       },
       {
-        "x": 322.6,
+        "x": 323.2,
         "y": 477.7,
         "label": "Medina",
         "date": "2026-10-01",
         "verification": "researched",
-        "n": 4,
-        "weight": 0.862
-      },
-      {
-        "x": 430.3,
-        "y": 714.7,
-        "label": "Sanaa",
-        "date": "2026-10-01",
-        "verification": "researched",
-        "n": 5,
-        "weight": 0.862
-      },
-      {
-        "x": 713.8,
-        "y": 424.7,
-        "label": "Strait of Hormuz",
-        "date": "2026-09-27",
-        "verification": "researched",
         "n": 6,
-        "weight": 0.707
+        "weight": 0.463
       }
     ],
     "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate. Shipping data: IMF PortWatch."
   },
   "actors": [
+    {
+      "name": "Houthis",
+      "mentions": 3,
+      "first": "2026-09-25",
+      "last": "2026-10-04"
+    },
+    {
+      "name": "United States",
+      "mentions": 3,
+      "first": "2026-10-01",
+      "last": "2026-10-04"
+    },
     {
       "name": "Abbas Araghchi",
       "mentions": 2,
@@ -1430,12 +1465,6 @@
       "mentions": 2,
       "first": "2026-10-01",
       "last": "2026-10-01"
-    },
-    {
-      "name": "Houthis",
-      "mentions": 2,
-      "first": "2026-09-25",
-      "last": "2026-09-26"
     },
     {
       "name": "Iran",
@@ -1456,10 +1485,10 @@
       "last": "2026-10-02"
     },
     {
-      "name": "United States",
+      "name": "Saudi-led coalition",
       "mentions": 2,
       "first": "2026-10-01",
-      "last": "2026-10-02"
+      "last": "2026-10-04"
     },
     {
       "name": "Andy Burnham",
@@ -1468,10 +1497,10 @@
       "last": "2026-09-28"
     },
     {
-      "name": "Brent crude market",
+      "name": "Aramco",
       "mentions": 1,
-      "first": "2026-09-27",
-      "last": "2026-09-27"
+      "first": "2026-10-03",
+      "last": "2026-10-03"
     },
     {
       "name": "British Ambassador Hugo Shorter",
@@ -1496,12 +1525,6 @@
       "mentions": 1,
       "first": "2026-09-30",
       "last": "2026-09-30"
-    },
-    {
-      "name": "European gas market (TTF)",
-      "mentions": 1,
-      "first": "2026-09-27",
-      "last": "2026-09-27"
     },
     {
       "name": "France",
@@ -1535,34 +1558,12 @@
       ]
     },
     {
-      "label": "UK wind/solar avoided gas imports since Feb 2026",
-      "unit": "£bn",
-      "series": [
-        {
-          "as_of": "2026-09-30",
-          "value": 5.9,
-          "source": "https://www.carbonbrief.org/analysis-wind-and-solar-save-uk-from-gas-imports-worth-5-9bn-during-hormuz-crisis"
-        }
-      ]
-    },
-    {
       "label": "Bab el-Mandeb daily tanker transits",
       "unit": "ships/day",
       "series": [
         {
           "as_of": "2026-09-27",
           "value": 11.0,
-          "source": "https://portwatch.imf.org/"
-        }
-      ]
-    },
-    {
-      "label": "Bab el-Mandeb daily vessel transits",
-      "unit": "ships/day",
-      "series": [
-        {
-          "as_of": "2026-09-27",
-          "value": 27.0,
           "source": "https://portwatch.imf.org/"
         }
       ]
@@ -1610,23 +1611,312 @@
           "source": "https://www.instituteforenergyresearch.org/fossil-fuels/gas-and-oil/new-eia-report-shows-extent-of-hormuz-oil-disruptions"
         }
       ]
+    },
+    {
+      "label": "Available bypass capacity around Hormuz (Saudi East-West + UAE Fujairah",
+      "unit": "million b/d",
+      "series": [
+        {
+          "as_of": "2024-01-01",
+          "value": 2.6,
+          "source": "https://www.eia.gov/todayinenergy/detail.php?id=65504"
+        }
+      ]
+    },
+    {
+      "label": "Oil flow through Strait of Hormuz (2024 average",
+      "unit": "million b/d",
+      "series": [
+        {
+          "as_of": "2024-01-01",
+          "value": 20.0,
+          "source": "https://www.eia.gov/todayinenergy/detail.php?id=65504"
+        }
+      ]
     }
   ],
   "forecasts": [],
   "indicators": [],
-  "statements": [],
-  "on_record": [],
+  "statements": [
+    {
+      "who": "G7 Leaders",
+      "role": "Leaders of the G7",
+      "said": "G7 Leaders",
+      "quote": false,
+      "when": "2026-10-02",
+      "source": "https://www.gov.uk/government/news/g7-leaders-statement-on-global-energy-security-and-market-stability"
+    }
+  ],
+  "on_record": [
+    {
+      "id": "st_c33eb76690b6",
+      "speaker": "White House",
+      "role": "White House",
+      "affiliation": "United States",
+      "iso2": "US",
+      "date": "2026-10-04",
+      "venue": "other",
+      "quote": "",
+      "paraphrase": "The United States and 16 other countries jointly endorsed the Kyoto Vision for a Golden Age of Science at the STS Forum in Kyoto, reflecting a shared ambition to renew science ecosystems and usher in a golden age of discovery, including pledges to harness super intelligence for science, improve institutions of discovery, and cultivate talent.",
+      "about": [
+        "Argentina",
+        "Bulgaria",
+        "Chile",
+        "Cyprus",
+        "Germany",
+        "Greece",
+        "Indonesia",
+        "Italy",
+        "Japan",
+        "Kazakhstan",
+        "Republic of Korea",
+        "New Zealand",
+        "Poland",
+        "Singapore",
+        "United Arab Emirates",
+        "United Kingdom",
+        "United States"
+      ],
+      "about_iso2": [
+        "AR",
+        "BG",
+        "CL",
+        "CY",
+        "DE",
+        "GR",
+        "ID",
+        "IT",
+        "JP",
+        "KZ",
+        "KR",
+        "NZ",
+        "PL",
+        "SG",
+        "AE",
+        "GB",
+        "US"
+      ],
+      "signal": "commitment",
+      "stance": 1,
+      "significance": "Documents a US-led 17-country multilateral alignment on science policy centered on super intelligence and research reform, a data point for US science diplomacy.",
+      "url": "https://www.whitehouse.gov/releases/2026/10/us-leads-international-coalition-to-endorse-kyoto-vision-for-a-golden-age-of-science/"
+    },
+    {
+      "id": "st_8ffb63d5ad70",
+      "speaker": "Hans Grundberg",
+      "role": "Special Envoy for Yemen",
+      "affiliation": "United Nations",
+      "iso2": "",
+      "date": "2026-10-02",
+      "venue": "press_conference",
+      "quote": "Mr.Grundberg remains in close contact with the Government of Yemen, with Houthis, as he urges them to take steps to urgently contain the situation and ensure freedom of movement for civilians",
+      "paraphrase": "Special Envoy Hans Grundberg remains in close contact with the Government of Yemen and the Houthis and urges them to urgently contain the escalation in Taiz and ensure freedom of movement for civilians.",
+      "about": [
+        "Yemen",
+        "Houthis"
+      ],
+      "about_iso2": [
+        "YE"
+      ],
+      "signal": "demand",
+      "stance": 0,
+      "significance": "UN envoy presses both Yemeni government and Houthis to de-escalate fighting in Taiz that is blocking civilian movement and humanitarian access.",
+      "url": "https://press.un.org/en/2026/db261002.doc.htm"
+    },
+    {
+      "id": "st_9e9bf87c8383",
+      "speaker": "Representative of Yemen",
+      "role": "Delegate to the Third Committee",
+      "affiliation": "Yemen",
+      "iso2": "YE",
+      "date": "2026-10-02",
+      "venue": "other",
+      "quote": "",
+      "paraphrase": "Yemen's delegate accused Houthi militias of waging war since 2014 with severe humanitarian consequences, including killings, abductions, arbitrary detention, torture, restrictions on expression, property seizures and child recruitment in areas under their control.",
+      "about": [
+        "Houthis",
+        "Yemen"
+      ],
+      "about_iso2": [
+        "YE"
+      ],
+      "signal": "accusation",
+      "stance": -2,
+      "significance": "Government of Yemen uses UN forum to attribute humanitarian crisis and rights violations to Houthi forces.",
+      "url": "https://press.un.org/en/2026/gashc4437.doc.htm"
+    },
+    {
+      "id": "st_13109755ba2b",
+      "speaker": "G7 Leaders",
+      "role": "Leaders of the G7",
+      "affiliation": "G7",
+      "iso2": "",
+      "date": "2026-10-02",
+      "venue": "other",
+      "quote": "We condemn Iran’s continued attacks against its regional neighbours and its disruption of international trade, energy security and the global economy. We call for the immediate and full restoration of navigational rights and principles in the Strait of Hormuz and express our determination to redouble our collective efforts to that end.",
+      "paraphrase": "G7 condemns Iran's continued attacks against regional neighbours and disruption of international trade, energy security and the global economy, calls for immediate and full restoration of navigational rights and principles in the Strait of Hormuz, and expresses determination to redouble collective efforts to that end.",
+      "about": [
+        "Iran"
+      ],
+      "about_iso2": [
+        "IR"
+      ],
+      "signal": "accusation",
+      "stance": -2,
+      "significance": "Direct G7 accusation linking Iran to energy insecurity and Hormuz disruption, with collective commitment to restore freedom of navigation.",
+      "url": "https://www.gov.uk/government/news/g7-leaders-statement-on-global-energy-security-and-market-stability"
+    },
+    {
+      "id": "st_559acb397fac",
+      "speaker": "Vladimir Putin",
+      "role": "President",
+      "affiliation": "Russia",
+      "iso2": "RU",
+      "date": "2026-10-01",
+      "venue": "other",
+      "quote": "the Russian economy and its financial system show robustness. The macroeconomy is absolutely stable",
+      "paraphrase": "In response to a question about the domestic economic costs of the military-political crisis, Putin said the Russian economy and financial system show robustness and macroeconomy is absolutely stable, citing Russian public debt at 17% and budget deficit around 3% falling to 2% next year, versus Germany at 120%, Italy at 140%, and US budget deficit near 5.8%, and inflation halved from 10.5% to just over 6%.",
+      "about": [
+        "United States",
+        "Germany",
+        "Italy",
+        "Europe"
+      ],
+      "about_iso2": [
+        "US",
+        "DE",
+        "IT"
+      ],
+      "signal": "reassurance",
+      "stance": -1,
+      "significance": "Reassures domestic audience on war economy costs while contrasting Russian stability with Western fiscal stress.",
+      "url": "http://en.kremlin.ru/events/president/transcripts/80910"
+    },
+    {
+      "id": "st_b28c8e1d0026",
+      "speaker": "Vladimir Putin",
+      "role": "President",
+      "affiliation": "Russia",
+      "iso2": "RU",
+      "date": "2026-10-01",
+      "venue": "other",
+      "quote": "We have no preliminary terms whatsoever for resuming or restoring relations with either Europe as a whole or with concrete European countries.",
+      "paraphrase": "Putin said Russia has no preliminary terms for restoring relations with Europe or individual European countries, views Italy as a Eurasian partner, criticizes an EU diktat forbidding individual countries from dialogue with Russia, and predicted the EU will fall apart without Russian help.",
+      "about": [
+        "European Union",
+        "Italy",
+        "Europe"
+      ],
+      "about_iso2": [
+        "EU",
+        "IT"
+      ],
+      "signal": "offer",
+      "stance": 0,
+      "significance": "Offers unconditional re-engagement to Europe while seeking to split EU unity by encouraging bilateral ties and predicting EU fragmentation.",
+      "url": "http://en.kremlin.ru/events/president/transcripts/80910"
+    },
+    {
+      "id": "st_0b223efdb2c3",
+      "speaker": "Andy Burnham",
+      "role": "Prime Minister",
+      "affiliation": "United Kingdom",
+      "iso2": "GB",
+      "date": "2026-09-22",
+      "venue": "other",
+      "quote": "we're also working with France and other partners to support freedom of navigation in the Gulf",
+      "paraphrase": "The UK is working with France and other partners to support freedom of navigation in the Gulf.",
+      "about": [
+        "France",
+        "Gulf"
+      ],
+      "about_iso2": [
+        "FR"
+      ],
+      "signal": "commitment",
+      "stance": 0,
+      "significance": "Signals ongoing naval/security cooperation with France in strategically sensitive Gulf waterway.",
+      "url": "https://www.gov.uk/government/speeches/pm-speech-at-unga-22-september-2026"
+    },
+    {
+      "id": "st_795143e6e850",
+      "speaker": "Donald Trump",
+      "role": "President",
+      "affiliation": "United States",
+      "iso2": "US",
+      "date": "2026-09-22",
+      "venue": "other",
+      "quote": "importance of securing a lasting peace in Ukraine",
+      "paraphrase": "President Trump recognised the strength of the UK's support for the Ukrainian people since the war began, as both leaders discussed the importance of securing a lasting peace in Ukraine.",
+      "about": [
+        "Ukraine",
+        "United Kingdom"
+      ],
+      "about_iso2": [
+        "UA",
+        "GB"
+      ],
+      "signal": "reassurance",
+      "stance": 1,
+      "significance": "US acknowledgement of UK role in Ukraine and joint endorsement of lasting peace as goal.",
+      "url": "https://www.gov.uk/government/news/pm-meeting-with-president-trump-of-the-united-states-22-september-2026"
+    },
+    {
+      "id": "st_cb7916c029f4",
+      "speaker": "Andy Burnham",
+      "role": "Prime Minister",
+      "affiliation": "United Kingdom",
+      "iso2": "GB",
+      "date": "2026-09-22",
+      "venue": "other",
+      "quote": "meeting our NATO commitments and strengthening European capabilities",
+      "paraphrase": "The UK will keep investing in defence, meeting its NATO commitments and strengthening European capabilities, and will be relentless in building hard power and deterrence.",
+      "about": [
+        "NATO",
+        "Europe"
+      ],
+      "about_iso2": [],
+      "signal": "commitment",
+      "stance": 2,
+      "significance": "Reaffirms UK defence spending trajectory and burden-sharing within NATO and European pillar.",
+      "url": "https://www.gov.uk/government/speeches/pm-speech-at-unga-22-september-2026"
+    },
+    {
+      "id": "st_a9b007b14431",
+      "speaker": "Andy Burnham",
+      "role": "Prime Minister",
+      "affiliation": "United Kingdom",
+      "iso2": "GB",
+      "date": "2026-09-22",
+      "venue": "other",
+      "quote": "We have already supported Moldova to protect its elections from Russian interference",
+      "paraphrase": "The UK has already supported Moldova to protect its elections from Russian interference and is ready to share its understanding of how these actors work with other European nations facing elections.",
+      "about": [
+        "Moldova",
+        "Russia",
+        "Europe"
+      ],
+      "about_iso2": [
+        "MD",
+        "RU"
+      ],
+      "signal": "offer",
+      "stance": 1,
+      "significance": "Positions UK as provider of election-defence assistance against Russian interference, relevant to upcoming European elections.",
+      "url": "https://www.gov.uk/government/speeches/pm-speech-at-unga-22-september-2026"
+    }
+  ],
   "links": [
     {
       "theater_id": "thr_russia_ukraine_war_and_european_security_archite",
       "name": "Russia-Ukraine war and European security architecture",
-      "link": "US-Iran-Houthi confrontation over Hormuz and Red Sea ↔ Russia-Ukraine war and European security architecture: Hormuz tanker transits near zero (1/day as of 2026-09-27, down 98% year-on-year) coincides with TTF gas at 74.76 EUR/MWh as of 2026-10-02 (+138% year-on-year, 96th percentile), sustaining European energy pressure as Russia sustains its Dnipro bridge campaign and Germany locks in $1.1bn arms.",
+      "link": "US-Iran-Houthi confrontation over Hormuz and Red Sea <-> Russia-Ukraine war and European security architecture: Hormuz tanker transits at 1/day as of Sep 27 (down from 60 a year earlier, outside history) and Bosporus transits at 46/day (down 39% year-on-year) show two major chokepoints constricted at once, helping drive TTF gas to 74.76 EUR/MWh as of Oct 2 (+138% year-on-year, 96th percentile) while Russia shifts strikes to Dnipro bridges and Germany pledges about $1.5B aid.",
       "date": "2026-10-04"
     },
     {
-      "theater_id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
-      "name": "US withdrawal from Iraq after 23-year presence",
-      "link": "US withdrawal from Iraq after 23-year presence ↔ US-Iran-Houthi confrontation over Hormuz and Red Sea: Same US-Iran rivalry spans both theaters — Iraq withdrawal completed Sept 30 leaves proxy and air-defense risks flagged Oct 1 as Iran on Oct 4 restated seven Hormuz conditions and warned it is more prepared for a US military move while Houthis claimed long-range Aramco strikes.",
+      "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
+      "name": "Ethiopia-Eritrea rupture and Tigray offensive",
+      "link": "US-Iran-Houthi confrontation over Hormuz and Red Sea <-> Ethiopia-Eritrea rupture and Tigray offensive: The Red Sea is the shared geography, with Hormuz closure and Saudi-Houthi escalation (claimed Aramco strike Oct 3 and heavy Saudi retaliation Oct 3-4) coinciding with the Oct 1 Ethiopia-Eritrea rupture and the El-Alamein gathering of Red Sea littoral states, raising risk that Gulf and Horn crises compound pressure on the same shipping corridor.",
       "date": "2026-10-04"
     },
     {

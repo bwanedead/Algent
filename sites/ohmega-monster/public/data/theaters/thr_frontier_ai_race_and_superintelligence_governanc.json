@@ -4,11 +4,11 @@
   "name": "Frontier AI race and superintelligence governance",
   "domain": "technology",
   "built_at": "2026-10-04T07:26:06.472952+00:00",
-  "first_seen": "2026-09-27",
-  "last_seen": "2026-10-03",
+  "first_seen": "2026-09-28",
+  "last_seen": "2026-10-04",
   "days_covered": 0,
-  "state": "",
-  "last_novel": "",
+  "state": "new",
+  "last_novel": "2026-10-04",
   "primer": {
     "text": "The frontier AI race is a contest between the United States and China, and the labs they host, to build the most capable foundation models. It runs on funding and computing infrastructure — chips, data centers and the supply chains behind them — which governments treat as economic and security stakes and try to shape through state strategy and export controls. The debate is over how to govern superintelligence, systems that could surpass human ability across many tasks. The news keeps using frontier models for the most advanced systems, agents for AI that can act on its own over time, and governance for the rules and accords meant to keep development safe and under control.",
     "built_at": "2026-10-04T07:26:06.472952+00:00"
@@ -20,7 +20,7 @@
       "direction": "steady",
       "pace": "gradual"
     },
-    "coverage": "rising coverage",
+    "coverage": "steady coverage",
     "source": "brief",
     "url": "/intel/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance"
   },
@@ -71,11 +71,6 @@
   "escalation_history": [],
   "coverage_series": [
     {
-      "day": "2026-09-27",
-      "count": 5,
-      "editions": 1
-    },
-    {
       "day": "2026-09-28",
       "count": 1,
       "editions": 1
@@ -92,7 +87,7 @@
     },
     {
       "day": "2026-10-01",
-      "count": 4,
+      "count": 6,
       "editions": 2
     },
     {
@@ -104,6 +99,11 @@
       "day": "2026-10-03",
       "count": 3,
       "editions": 1
+    },
+    {
+      "day": "2026-10-04",
+      "count": 0,
+      "editions": 0
     }
   ],
   "timeline": [

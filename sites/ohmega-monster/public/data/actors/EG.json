@@ -422,10 +422,17 @@
       {
         "id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
         "name": "Ethiopia-Eritrea rupture and Tigray offensive",
-        "mentions": 1
+        "mentions": 3
       }
     ],
     "pulses": [
+      {
+        "id": "pls_sahel_horn_state_fragility_insurgent_control",
+        "name": "State Fragility and Insurgent Control",
+        "band": "severe",
+        "position": 70.0,
+        "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive"
+      },
       {
         "id": "pls_sahel_horn_foreign_military_entanglement_horn",
         "name": "Foreign Military Entanglement and Intelligence Competition in the Horn",
@@ -436,13 +443,6 @@
       {
         "id": "pls_sahel_horn_displacement_humanitarian_collapse",
         "name": "Displacement and Humanitarian Collapse Pressure",
-        "band": "unassessed",
-        "position": null,
-        "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive"
-      },
-      {
-        "id": "pls_sahel_horn_state_fragility_insurgent_control",
-        "name": "State Fragility and Insurgent Control",
         "band": "unassessed",
         "position": null,
         "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive"

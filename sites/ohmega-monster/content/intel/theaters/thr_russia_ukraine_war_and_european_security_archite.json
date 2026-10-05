@@ -3,24 +3,24 @@
   "theater_id": "thr_russia_ukraine_war_and_european_security_archite",
   "name": "Russia-Ukraine war and European security architecture",
   "domain": "geopolitics",
-  "built_at": "2026-10-04T22:12:36.808470+00:00",
-  "first_seen": "2026-09-27",
+  "built_at": "2026-10-05T02:19:07.922078+00:00",
+  "first_seen": "2026-09-28",
   "last_seen": "2026-10-04",
   "days_covered": 4,
-  "state": "",
-  "last_novel": "",
+  "state": "active",
+  "last_novel": "2026-10-04",
   "primer": {
     "text": "Russia's war on Ukraine has become a contest between battlefield attrition and economic endurance that directly involves European security. Ukraine tries to hold territory while using long-range drones against Russian oil refineries and logistics to cut Moscow's war funding; Russia tries to sustain its offensive and pressure NATO through airspace incursions, sabotage of rail and infrastructure, and drone operations attributed to its services. NATO's eastern members seek protection through alliance mechanisms. Article 4 is a call for consultations when a member feels threatened, and Eastern Sentry is the alliance's reinforced air-defence posture along that flank. Russia's reliance on China for dual-use components and export markets shapes how sanctions bite.",
     "built_at": "2026-10-04T07:26:06.472952+00:00"
   },
   "current": {
     "date": "2026-10-04",
-    "bottom_line": "Russia sustained its Dnipro bridge campaign with a third strike in three days, hitting Kyiv's Northern Bridge again Oct 4 as Germany's chancellor visited to lock in $1.1bn in arms and long-range joint production. Moscow paired the strikes with a warning for foreigners to leave Kyiv, while closing its Tsentr-2026 exercise with 47,000 troops and a Chinese contingent. Confidence is high on strikes, visit and exercise (multiple confirmed sources); lower on the claimed Russian depopulation doctrine which rests on Ukrainian intelligence documents alone.",
+    "bottom_line": "Kyiv's Dnipro bridges were hit for a third straight day on Oct 4, extending Russia's shift from energy to transport targets while Germany's chancellor visited to pledge about $1.5B in aid and long-range drone co-production. Moscow warned foreign diplomats to leave Kyiv and vowed to intensify strikes as Kyiv vowed reciprocal refinery hits, keeping escalation gradual but broadening. Confidence is high on bridge strikes, the German visit/aid, and Tsentr-2026 with Chinese troops; lower on the proposed October trilateral talks, which rests on a single Ukrainian statement.",
     "escalation": {
       "direction": "rising",
       "pace": "gradual"
     },
-    "coverage": "falling coverage",
+    "coverage": "rising coverage",
     "source": "daily",
     "url": "/geopolitics/2026-10-04"
   },
@@ -140,13 +140,8 @@
   ],
   "coverage_series": [
     {
-      "day": "2026-09-27",
-      "count": 1,
-      "editions": 1
-    },
-    {
       "day": "2026-09-28",
-      "count": 4,
+      "count": 6,
       "editions": 1
     },
     {
@@ -166,46 +161,49 @@
     },
     {
       "day": "2026-10-02",
-      "count": 1,
+      "count": 2,
       "editions": 1
     },
     {
       "day": "2026-10-03",
-      "count": 1,
+      "count": 3,
       "editions": 1
+    },
+    {
+      "day": "2026-10-04",
+      "count": 8,
+      "editions": 0
     }
   ],
   "timeline": [
     {
       "date": "2026-10-04",
-      "headline": "Russia hits Kyiv's Northern Bridge again Oct 4 — third Dnipro crossing strike in three days",
-      "detail": "Russian drone struck Kyiv's Northern (Pivnichnyi) Bridge Oct 4, cratering the road deck, damaging hot-water supply and injuring 2 people (one hospitalized). It was the second consecutive day the crossing was hit after a jet-powered loitering munition damaged asphalt and trolleybus lines Oct 3, following the Southern Bridge closure Oct 2 that also shut Paton and partially shut Metro Bridge.",
+      "headline": "Zelenskyy says Ukraine ready for US-proposed trilateral talks in October",
+      "detail": "Zelenskyy said Oct 4 Ukraine is ready for US-backed trilateral talks with Russia and the US in October, possibly in UAE or another US-proposed venue. Single-source claim, not confirmed by US or Russia.",
       "where": "Kyiv, Ukraine",
-      "verification": "researched",
+      "verification": "reported",
       "sources": [
-        "https://www.aljazeera.com/news/2026/10/4/russian-strike-hits-kyiv-bridge-as-german-chancellor-visits-ukraine",
-        "https://www.kyivpost.com/post/86064",
-        "https://www.aljazeera.com/news/2026/10/3/five-killed-as-kyiv-and-moscow-trade-strikes-russia-hits-second-bridge",
-        "https://www.aljazeera.com/news/2026/10/2/ukraine-calls-for-tighter-sanctions-as-russian-attacks-spark-kyiv-gridlock"
+        "https://www.aljazeera.com/news/2026/10/4/ukraine-ready-for-us-backed-talks-with-russia-zelenskyy"
       ],
       "from": "/geopolitics/2026-10-04"
     },
     {
       "date": "2026-10-04",
-      "headline": "Moscow warns foreigners to leave Kyiv Oct 3-4 amid intensified strikes",
-      "detail": "Russia's Foreign Ministry warned Oct 3-4 that foreign citizens and diplomats should leave Kyiv or avoid visiting due to intensified massive strikes, as Russian Defence Ministry said drones hit Kyiv bridges, a power station near Kyiv, Izmail port near Odesa and cargo vessels claimed as military-used.",
+      "headline": "Kyiv's Northern Bridge hit second consecutive day, extending three-day Dnipro crossing campaign",
+      "detail": "Russian drone struck Kyiv's Northern (Pivnichnyi) Bridge again on Oct 4, cratering the road deck, damaging hot-water supply and injuring 2 (one hospitalized), a day after a jet-powered loitering munition damaged asphalt and trolleybus lines and injured 2 on Oct 3. Southern Bridge was hit Oct 2, closing it and Paton Bridge and partially closing Metro Bridge. Russian MoD said Oct 2-4 it hit Kyiv bridges, a power station near Kyiv, Izmail port and cargo vessels, claiming military use.",
       "where": "Kyiv, Ukraine",
       "verification": "researched",
       "sources": [
         "https://www.aljazeera.com/news/2026/10/4/russian-strike-hits-kyiv-bridge-as-german-chancellor-visits-ukraine",
+        "https://www.kyivpost.com/post/86064",
         "https://www.aljazeera.com/news/2026/10/3/five-killed-as-kyiv-and-moscow-trade-strikes-russia-hits-second-bridge"
       ],
       "from": "/geopolitics/2026-10-04"
     },
     {
       "date": "2026-10-04",
-      "headline": "German chancellor visits Kyiv Oct 4 with $1.1bn arms and long-range joint production deal",
-      "detail": "German Chancellor Friedrich Merz made an unannounced visit to Kyiv Oct 4, meeting President Zelenskyy at the National Academy of Sciences struck Sept 28, accompanied by economy minister and executives from Siemens Energy and Diehl Defence. Germany was set to announce a $1.1 billion military aid package plus $394 million for energy-sector repairs and finalize a joint drone/weapons production deal for systems with >600-mile (965 km) range.",
+      "headline": "German Chancellor Merz visits Kyiv with $1.5B aid and long-range drone co-production deal",
+      "detail": "German Chancellor Friedrich Merz made unannounced visit to Kyiv Oct 4, meeting Zelenskyy at National Academy of Sciences (hit Sept 28), accompanied by economy minister and Siemens Energy and Diehl Defence executives. Germany was set to announce $1.1B military aid plus $394M for energy-sector repairs and finalize joint production of drones/weapons with >600-mile (965 km) range.",
       "where": "Kyiv, Ukraine",
       "verification": "researched",
       "sources": [
@@ -215,9 +213,9 @@
     },
     {
       "date": "2026-10-03",
-      "headline": "Tsentr-2026 ends Oct 3 with 47,000 troops and Chinese PLA contingent; Putin observes",
-      "detail": "Russia held strategic exercise Tsentr-2026 Sept 28-Oct 3 at Chebarkul training ground, Chelyabinsk Oblast, involving more than 47,000 personnel from SCO countries. Chinese PLA Central Theater Command contingent deployed Type 99A tanks, drone swarms, tactical drones, attack helicopters and unmanned ground vehicles for reconnaissance and multi-axis assaults. President Putin observed Oct 3 and met foreign attaches.",
-      "where": "Chebarkul, Russia",
+      "headline": "Tsentr-2026 concludes with 47,000+ troops and Chinese PLA participation observed by Putin",
+      "detail": "Strategic command-and-staff exercise Tsentr-2026 ran Sept 28-Oct 3 at Chebarkul training ground, Chelyabinsk Oblast, with more than 47,000 personnel from SCO countries. Chinese PLA Central Theater Command contingent deployed Type 99A tanks, drone swarms, attack helicopters and unmanned ground vehicles. Putin observed the exercise at Chebarkul Oct 3 and met foreign attaches.",
+      "where": "Chebarkul, Chelyabinsk Oblast, Russia",
       "verification": "researched",
       "sources": [
         "https://www.scmp.com/news/china/military/article/3369657/chinese-troops-line-russias-tsentr-2026-exercise-military-ties-tighten",
@@ -226,13 +224,16 @@
       "from": "/geopolitics/2026-10-04"
     },
     {
-      "date": "2026-10-02",
-      "headline": "Poland hardens eastern flank: Lublin reopens 200-person shelter Oct 2 as Tusk cites constant scrambles",
-      "detail": "Polish city of Lublin reopened a modernized Cold War-era shelter beneath MPK bus premises Oct 2, capacity 200 people for 72 hours with independent air/water/power, emergency exit now facing west. Prime Minister Donald Tusk said week of Sept 29 Russian attacks near the Polish border have become constant, forcing Poland to scramble aircraft night after night and day after day.",
-      "where": "Lublin, Poland",
+      "date": "2026-10-03",
+      "headline": "Russia warns diplomats to leave Kyiv and vows to step up strikes as Ukraine vows refinery retaliation",
+      "detail": "Russia's Foreign Ministry warned Oct 3-4 that foreign citizens and diplomats should leave Kyiv or avoid visiting due to intensified massive strikes. Zelenskyy said Oct 3-4 intelligence shows Russian 'new doctrine' to strike roads, schools, hospitals and civilian sites to pressure depopulation, and said Ukraine will respond by striking Russian energy but not indiscriminately targeting civilians. At least five killed Oct 2-3 in reciprocal strikes, including 2 killed/36 injured in Kharkiv Oct 2 and 1 killed on Liberian-flagged ship in Odesa Oct 3.",
+      "where": "Kyiv, Ukraine",
       "verification": "researched",
       "sources": [
-        "https://www.ksl.com/article/51631544/polish-city-reopens-cold-war-shelter-as-russian-attacks-in-ukraine-intensify"
+        "https://www.aljazeera.com/news/2026/10/4/russian-strike-hits-kyiv-bridge-as-german-chancellor-visits-ukraine",
+        "https://www.aljazeera.com/news/2026/10/3/five-killed-as-kyiv-and-moscow-trade-strikes-russia-hits-second-bridge",
+        "https://kyivindependent.com/russian-strikes-kill-8-injure-81-across-ukraine-hit-kyiv-bridge-2",
+        "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-2-2026"
       ],
       "from": "/geopolitics/2026-10-04"
     },
@@ -245,19 +246,6 @@
       "sources": [
         "https://www.aljazeera.com/news/2026/10/2/row-between-ukraine-south-korea-mounts-over-north-korean-pows",
         "https://www.kyivpost.com/post/85602"
-      ],
-      "from": "/geopolitics/2026-10-03"
-    },
-    {
-      "date": "2026-10-02",
-      "headline": "Nationwide drone barrage kills 8, injures 81 as Zelensky cites Russian doctrine to depopulate cities",
-      "detail": "Over Oct 2-3 Ukraine reported 157 Shahed/Gerbera/Parodiya drones launched with hits at 12 locations, 131 intercepted; strikes killed at least 8 and injured 81 nationwide, including 2 killed and 36 injured (three children) in a Kharkiv residential strike Oct 2. On Oct 3 Zelensky told Reuters, citing intelligence documents, that Russia's new doctrine is to strike roads, schools, hospitals and other civilian sites to pressure residents to leave Kyiv, Kharkiv, Lviv and Odesa as winter begins.",
-      "where": "Kyiv, Kharkiv and nationwide, Ukraine",
-      "verification": "researched",
-      "sources": [
-        "https://kyivindependent.com/russian-strikes-kill-8-injure-81-across-ukraine-hit-kyiv-bridge-2",
-        "https://www.aljazeera.com/news/2026/10/3/five-killed-as-kyiv-and-moscow-trade-strikes-russia-hits-second-bridge",
-        "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-2-2026"
       ],
       "from": "/geopolitics/2026-10-03"
     },
@@ -827,9 +815,9 @@
     {
       "name": "Kyiv",
       "country": "Ukraine",
-      "lat": 50.4501,
-      "lon": 30.5234,
-      "count": 5,
+      "lat": 50.45,
+      "lon": 30.523,
+      "count": 6,
       "last_date": "2026-10-04"
     },
     {
@@ -861,14 +849,6 @@
       "country": "Ukraine",
       "lat": 49.9935,
       "lon": 36.2304,
-      "count": 1,
-      "last_date": "2026-10-02"
-    },
-    {
-      "name": "Lublin",
-      "country": "Poland",
-      "lat": 51.2465,
-      "lon": 22.5684,
       "count": 1,
       "last_date": "2026-10-02"
     },
@@ -1755,7 +1735,7 @@
         "date": "2026-10-01",
         "verification": "researched",
         "n": 2,
-        "weight": 0.365
+        "weight": 0.304
       },
       {
         "x": 794.1,
@@ -1764,7 +1744,7 @@
         "date": "2026-10-03",
         "verification": "researched",
         "n": 3,
-        "weight": 0.359
+        "weight": 0.299
       },
       {
         "x": 205.9,
@@ -1773,7 +1753,7 @@
         "date": "2026-10-01",
         "verification": "researched",
         "n": 4,
-        "weight": 0.356
+        "weight": 0.296
       },
       {
         "x": 433.3,
@@ -1782,16 +1762,7 @@
         "date": "2026-10-02",
         "verification": "researched",
         "n": 5,
-        "weight": 0.192
-      },
-      {
-        "x": 229.1,
-        "y": 290.3,
-        "label": "Lublin",
-        "date": "2026-10-02",
-        "verification": "researched",
-        "n": 6,
-        "weight": 0.192
+        "weight": 0.16
       },
       {
         "x": 351.5,
@@ -1799,16 +1770,16 @@
         "label": "Trypillya Thermal Power Plant, Kyiv Oblast",
         "date": "2026-09-29",
         "verification": "researched",
-        "n": 8,
-        "weight": 0.165
+        "n": 7,
+        "weight": 0.138
       }
     ],
-    "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate. Not on this map (too far away): 7 Seoul."
+    "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate. Not on this map (too far away): 6 Seoul."
   },
   "actors": [
     {
       "name": "Russia",
-      "mentions": 9,
+      "mentions": 10,
       "first": "2022-02-24",
       "last": "2026-10-04"
     },
@@ -1817,6 +1788,12 @@
       "mentions": 5,
       "first": "2026-09-27",
       "last": "2026-10-02"
+    },
+    {
+      "name": "Ukraine",
+      "mentions": 5,
+      "first": "2025-01-01",
+      "last": "2026-10-04"
     },
     {
       "name": "President Vladimir Putin",
@@ -1831,22 +1808,16 @@
       "last": "2026-09-29"
     },
     {
-      "name": "Ukraine",
-      "mentions": 3,
-      "first": "2025-01-01",
-      "last": "2026-10-04"
-    },
-    {
-      "name": "Poland",
-      "mentions": 2,
-      "first": "2025-09-03",
-      "last": "2026-10-02"
-    },
-    {
       "name": "President Volodymyr Zelensky",
       "mentions": 2,
       "first": "2026-10-02",
       "last": "2026-10-02"
+    },
+    {
+      "name": "Vladimir Putin",
+      "mentions": 2,
+      "first": "2026-09-28",
+      "last": "2026-10-03"
     },
     {
       "name": "Baltic states/Poland",
@@ -1957,23 +1928,23 @@
   ],
   "figures": [
     {
-      "label": "German energy-sector repair funding",
+      "label": "German aid package announced in Kyiv",
       "unit": "USD",
       "series": [
         {
           "as_of": "2026-10-04",
-          "value": 394000000.0,
+          "value": 1494000000.0,
           "source": "https://www.aljazeera.com/news/2026/10/4/russian-strike-hits-kyiv-bridge-as-german-chancellor-visits-ukraine"
         }
       ]
     },
     {
-      "label": "German military aid package announced in Kyiv",
-      "unit": "USD",
+      "label": "injured in Northern Bridge strike",
+      "unit": "people",
       "series": [
         {
           "as_of": "2026-10-04",
-          "value": 1100000000.0,
+          "value": 2.0,
           "source": "https://www.aljazeera.com/news/2026/10/4/russian-strike-hits-kyiv-bridge-as-german-chancellor-visits-ukraine"
         }
       ]
@@ -2001,17 +1972,6 @@
       ]
     },
     {
-      "label": "Personnel in Tsentr-2026 exercise",
-      "unit": "people",
-      "series": [
-        {
-          "as_of": "2026-10-03",
-          "value": 47000.0,
-          "source": "https://www.scmp.com/news/china/military/article/3369657/chinese-troops-line-russias-tsentr-2026-exercise-military-ties-tighten"
-        }
-      ]
-    },
-    {
       "label": "Russian drones launched",
       "unit": "drones",
       "series": [
@@ -2023,13 +1983,13 @@
       ]
     },
     {
-      "label": "Capacity of reopened Lublin Cold War shelter",
+      "label": "personnel in Tsentr-2026 (SCO countries",
       "unit": "people",
       "series": [
         {
-          "as_of": "2026-10-02",
-          "value": 200.0,
-          "source": "https://www.ksl.com/article/51631544/polish-city-reopens-cold-war-shelter-as-russian-attacks-in-ukraine-intensify"
+          "as_of": "2026-10-03",
+          "value": 47000.0,
+          "source": "https://www.scmp.com/news/china/military/article/3369657/chinese-troops-line-russias-tsentr-2026-exercise-military-ties-tighten"
         }
       ]
     },
@@ -2085,6 +2045,17 @@
           "as_of": "2026-09-28",
           "value": 17.1,
           "source": "https://www.i24news.tv/en/news/international/ukraine-russia-war/artc-russia-hikes-2027-defense-budget-by-27-as-putin-orders-fourth-troop-expansion-of-the-year-report"
+        }
+      ]
+    },
+    {
+      "label": "authorized strength of Russian Armed Forces (decree No.700",
+      "unit": "personnel",
+      "series": [
+        {
+          "as_of": "2026-09-28",
+          "value": 2441630.0,
+          "source": "https://www.kyivpost.com/post/85603"
         }
       ]
     }
@@ -2191,13 +2162,286 @@
       ]
     }
   ],
-  "statements": [],
-  "on_record": [],
+  "statements": [
+    {
+      "who": "Vladimir Putin",
+      "role": "President",
+      "said": "Russia has acquired a reliable space-based missile defence shield as effective instrument for maintaining global strategic parity and will continue expanding orbital constellation and advanced weapons",
+      "quote": false,
+      "when": "2026-10-04",
+      "source": "http://en.kremlin.ru/events/president/news/80919"
+    }
+  ],
+  "on_record": [
+    {
+      "id": "st_c33eb76690b6",
+      "speaker": "White House",
+      "role": "White House",
+      "affiliation": "United States",
+      "iso2": "US",
+      "date": "2026-10-04",
+      "venue": "other",
+      "quote": "",
+      "paraphrase": "The United States and 16 other countries jointly endorsed the Kyoto Vision for a Golden Age of Science at the STS Forum in Kyoto, reflecting a shared ambition to renew science ecosystems and usher in a golden age of discovery, including pledges to harness super intelligence for science, improve institutions of discovery, and cultivate talent.",
+      "about": [
+        "Argentina",
+        "Bulgaria",
+        "Chile",
+        "Cyprus",
+        "Germany",
+        "Greece",
+        "Indonesia",
+        "Italy",
+        "Japan",
+        "Kazakhstan",
+        "Republic of Korea",
+        "New Zealand",
+        "Poland",
+        "Singapore",
+        "United Arab Emirates",
+        "United Kingdom",
+        "United States"
+      ],
+      "about_iso2": [
+        "AR",
+        "BG",
+        "CL",
+        "CY",
+        "DE",
+        "GR",
+        "ID",
+        "IT",
+        "JP",
+        "KZ",
+        "KR",
+        "NZ",
+        "PL",
+        "SG",
+        "AE",
+        "GB",
+        "US"
+      ],
+      "signal": "commitment",
+      "stance": 1,
+      "significance": "Documents a US-led 17-country multilateral alignment on science policy centered on super intelligence and research reform, a data point for US science diplomacy.",
+      "url": "https://www.whitehouse.gov/releases/2026/10/us-leads-international-coalition-to-endorse-kyoto-vision-for-a-golden-age-of-science/"
+    },
+    {
+      "id": "st_386ad91e76e1",
+      "speaker": "Vladimir Putin",
+      "role": "President",
+      "affiliation": "Russia",
+      "iso2": "RU",
+      "date": "2026-10-01",
+      "venue": "other",
+      "quote": "those circles within NATO which are not at all eager to pursue the path of pan-European cooperation and ending the confrontation",
+      "paraphrase": "Quoting Egon Bahr from 1990, Putin said Bahr warned that 'those circles within NATO which are not at all eager to pursue the path of pan-European cooperation and ending the confrontation' would reinforce their positions after German reunification, creating a lingering confrontation in Europe.",
+      "about": [
+        "NATO",
+        "West",
+        "Germany",
+        "Europe"
+      ],
+      "about_iso2": [
+        "DE"
+      ],
+      "signal": "accusation",
+      "stance": -1,
+      "significance": "Uses historical Bahr quote to frame current NATO as inherently opposed to pan-European security, legitimizing Russian narrative of Western obstruction.",
+      "url": "http://en.kremlin.ru/events/president/transcripts/80910"
+    },
+    {
+      "id": "st_58c328b80025",
+      "speaker": "Vladimir Putin",
+      "role": "President",
+      "affiliation": "Russia",
+      "iso2": "RU",
+      "date": "2026-10-01",
+      "venue": "other",
+      "quote": "Meanwhile, some European countries have simply seized huge enterprises belonging to us in blatant violation – and I want to emphasise this – of every conceivable rule. Take Germany, for instance.",
+      "paraphrase": "Putin said Russia has not nationalised anything but placed certain enterprises under temporary external administration, while accusing some European countries, notably Germany, of seizing huge enterprises belonging to Gazprom, Rosneft and others including Lukoil in blatant violation of every conceivable rule.",
+      "about": [
+        "Germany",
+        "EU"
+      ],
+      "about_iso2": [
+        "DE",
+        "EU"
+      ],
+      "signal": "accusation",
+      "stance": -2,
+      "significance": "Directly accuses Germany/Europe of illegal expropriation to legitimize Russian retaliatory administration of Western assets.",
+      "url": "http://en.kremlin.ru/events/president/transcripts/80910"
+    },
+    {
+      "id": "st_e55cb6d57247",
+      "speaker": "Vladimir Putin",
+      "role": "President",
+      "affiliation": "Russia",
+      "iso2": "RU",
+      "date": "2026-10-01",
+      "venue": "other",
+      "quote": "We are creating conditions that would enable us to respond if our companies were nationalised or subjected to what amounts to outright robbery.",
+      "paraphrase": "Putin said placing European enterprises under external administration is to create conditions to respond if Russian companies were nationalised or subjected to outright robbery, and confirmed they would be returned under a favourable scenario.",
+      "about": [
+        "EU",
+        "Germany"
+      ],
+      "about_iso2": [
+        "EU",
+        "DE"
+      ],
+      "signal": "warning",
+      "stance": -1,
+      "significance": "Establishes explicit conditional retaliation doctrine linking fate of Western assets in Russia to treatment of Russian assets in Europe.",
+      "url": "http://en.kremlin.ru/events/president/transcripts/80910"
+    },
+    {
+      "id": "st_559acb397fac",
+      "speaker": "Vladimir Putin",
+      "role": "President",
+      "affiliation": "Russia",
+      "iso2": "RU",
+      "date": "2026-10-01",
+      "venue": "other",
+      "quote": "the Russian economy and its financial system show robustness. The macroeconomy is absolutely stable",
+      "paraphrase": "In response to a question about the domestic economic costs of the military-political crisis, Putin said the Russian economy and financial system show robustness and macroeconomy is absolutely stable, citing Russian public debt at 17% and budget deficit around 3% falling to 2% next year, versus Germany at 120%, Italy at 140%, and US budget deficit near 5.8%, and inflation halved from 10.5% to just over 6%.",
+      "about": [
+        "United States",
+        "Germany",
+        "Italy",
+        "Europe"
+      ],
+      "about_iso2": [
+        "US",
+        "DE",
+        "IT"
+      ],
+      "signal": "reassurance",
+      "stance": -1,
+      "significance": "Reassures domestic audience on war economy costs while contrasting Russian stability with Western fiscal stress.",
+      "url": "http://en.kremlin.ru/events/president/transcripts/80910"
+    },
+    {
+      "id": "st_e8f43a958c97",
+      "speaker": "Vladimir Putin",
+      "role": "President",
+      "affiliation": "Russia",
+      "iso2": "RU",
+      "date": "2026-10-01",
+      "venue": "other",
+      "quote": "They suddenly froze our gold and foreign currency reserves, including the Central Bank's reserves, and now they even seem to be using the income generated by those reserves to fund the war. I think that this is absolutely unacceptable.",
+      "paraphrase": "Asked about transferring European assets to external administration which Europe called robbery/nationalisation, Putin denied stealing or nationalising, accused the West of freezing Russia's gold and foreign currency reserves including Central Bank reserves and using the income to fund the war, calling it absolutely unacceptable.",
+      "about": [
+        "EU",
+        "Ukraine"
+      ],
+      "about_iso2": [
+        "EU",
+        "UA"
+      ],
+      "signal": "accusation",
+      "stance": -2,
+      "significance": "Frames Western use of frozen Russian assets as illegal and escalatory, justifying Russian counter-measures.",
+      "url": "http://en.kremlin.ru/events/president/transcripts/80910"
+    },
+    {
+      "id": "st_8aab8a7fc90d",
+      "speaker": "Vladimir Putin",
+      "role": "President of Russia",
+      "affiliation": "Russian Federation",
+      "iso2": "RU",
+      "date": "2026-09-25",
+      "venue": "press_conference",
+      "quote": "they want to continue using Ukraine and Ukrainians as cannon fodder and a tool in the fight against Russia",
+      "paraphrase": "Putin accused certain aggressive circles in Europe of trying to use Ukraine and Ukrainians as cannon fodder in the fight against Russia to hinder Russia's development, and of duping European citizens with the false idea that Russia plans to attack someone to justify continued investment in aggressive behaviour.",
+      "about": [
+        "Europe",
+        "Ukraine",
+        "NATO"
+      ],
+      "about_iso2": [
+        "UA"
+      ],
+      "signal": "accusation",
+      "stance": -2,
+      "significance": "Accuses Europe of instrumentalizing Ukraine to contain Russia and manufacturing a Russian threat.",
+      "url": "http://en.kremlin.ru/events/president/transcripts/80839"
+    },
+    {
+      "id": "st_9dda16f8bb26",
+      "speaker": "Vladimir Putin",
+      "role": "President of Russia",
+      "affiliation": "Russian Federation",
+      "iso2": "RU",
+      "date": "2026-09-25",
+      "venue": "press_conference",
+      "quote": "This is certainly a provocation and a deliberate attempt by European countries to aggravate the situation.",
+      "paraphrase": "In response to a question citing Estonian Defence Minister Martin Herem's reported statement about killing Russians who cross the border and preemptive attack, Putin called it a provocation and deliberate attempt by European countries to aggravate the situation, noting many in Europe claim they expect a Russian attack and must prepare for war.",
+      "about": [
+        "Estonia",
+        "NATO",
+        "Europe"
+      ],
+      "about_iso2": [
+        "EE"
+      ],
+      "signal": "accusation",
+      "stance": -1,
+      "significance": "Frames Baltic/NATO rhetoric as deliberate escalation and rejects European war-preparation narrative.",
+      "url": "http://en.kremlin.ru/events/president/transcripts/80839"
+    },
+    {
+      "id": "st_485a5b426f0a",
+      "speaker": "Vladimir Putin",
+      "role": "President of Russia",
+      "affiliation": "Russian Federation",
+      "iso2": "RU",
+      "date": "2026-09-25",
+      "venue": "press_conference",
+      "quote": "we are not preparing for hostilities with Europe. We have no such plans, no reasons and, most importantly, no real motives for aggravating the situation with Europe",
+      "paraphrase": "Putin emphasized Russia is not preparing for hostilities with Europe and has no plans, reasons or motives to aggravate the situation with Europe, regardless of Baltic statements.",
+      "about": [
+        "Europe",
+        "NATO",
+        "Estonia"
+      ],
+      "about_iso2": [
+        "EE"
+      ],
+      "signal": "reassurance",
+      "stance": 1,
+      "significance": "Explicit denial of intent to attack Europe aimed at countering NATO threat perceptions.",
+      "url": "http://en.kremlin.ru/events/president/transcripts/80839"
+    },
+    {
+      "id": "st_3e1b2ff3b389",
+      "speaker": "Valery Pikalev",
+      "role": "Head of the Federal Customs Service",
+      "affiliation": "Russia",
+      "iso2": "RU",
+      "date": "2026-09-21",
+      "venue": "other",
+      "quote": "Our main priority has been, and remains, to provide every possible assistance to the Russian Armed Forces.",
+      "paraphrase": "Pikalev said the customs service's main priority remains assisting the Russian Armed Forces and that in H1 2026 it transferred goods worth nearly 2 billion rubles for the special military operation, including 517 drones and around 300 vehicles.",
+      "about": [
+        "Russian Armed Forces",
+        "Ukraine"
+      ],
+      "about_iso2": [
+        "UA"
+      ],
+      "signal": "commitment",
+      "stance": 2,
+      "significance": "Shows direct material contribution of customs service to war effort, quantifying drones and vehicles supplied.",
+      "url": "http://en.kremlin.ru/events/president/transcripts/80804"
+    }
+  ],
   "links": [
     {
       "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
       "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
-      "link": "US-Iran-Houthi confrontation over Hormuz and Red Sea ↔ Russia-Ukraine war and European security architecture: Hormuz tanker transits near zero (1/day as of 2026-09-27, down 98% year-on-year) coincides with TTF gas at 74.76 EUR/MWh as of 2026-10-02 (+138% year-on-year, 96th percentile), sustaining European energy pressure as Russia sustains its Dnipro bridge campaign and Germany locks in $1.1bn arms.",
+      "link": "US-Iran-Houthi confrontation over Hormuz and Red Sea <-> Russia-Ukraine war and European security architecture: Hormuz tanker transits at 1/day as of Sep 27 (down from 60 a year earlier, outside history) and Bosporus transits at 46/day (down 39% year-on-year) show two major chokepoints constricted at once, helping drive TTF gas to 74.76 EUR/MWh as of Oct 2 (+138% year-on-year, 96th percentile) while Russia shifts strikes to Dnipro bridges and Germany pledges about $1.5B aid.",
       "date": "2026-10-04"
     },
     {

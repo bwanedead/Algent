@@ -1,31 +1,31 @@
 {
   "schema": "ohmega.intel.index/1",
-  "built_at": "2026-10-05T01:51:52.476789+00:00",
+  "built_at": "2026-10-05T02:19:40.447877+00:00",
   "daily": [
     {
       "domain": "geopolitics",
       "date": "2026-10-04",
-      "headline": "Russia hits Kyiv's Northern Bridge for third day as German chancellor pledges $1.1bn arms, Hormuz stays shut on Iran's seven conditions, and Ethiopian forces re-enter Mekelle",
+      "headline": "Russia hit Kyiv's Dnipro bridges for third straight day as Hormuz stayed shut and Saudi-Houthi strikes escalated",
       "theaters": [
         {
-          "id": "thr_gaza_war_and_unga_diplomatic_fallout",
-          "name": "Gaza war and UNGA diplomatic fallout"
+          "id": "thr_russia_ukraine_war_and_european_security_archite",
+          "name": "Russia-Ukraine war and European security architecture"
         },
         {
           "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
           "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea"
         },
         {
-          "id": "thr_russia_ukraine_war_and_european_security_archite",
-          "name": "Russia-Ukraine war and European security architecture"
+          "id": "thr_sudan_civil_war_and_us_visa_leverage",
+          "name": "Sudan civil war and US visa leverage"
         },
         {
           "id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
           "name": "Ethiopia-Eritrea rupture and Tigray offensive"
         },
         {
-          "id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
-          "name": "US withdrawal from Iraq after 23-year presence"
+          "id": "thr_flydubai_hijacking_attempt_and_aviation_security",
+          "name": "FlyDubai hijacking attempt and aviation security fallout"
         }
       ],
       "url": "/geopolitics/2026-10-04",
@@ -183,42 +183,12 @@
   ],
   "theaters": [
     {
-      "id": "thr_frontier_ai_race_and_superintelligence_governanc",
-      "name": "Frontier AI race and superintelligence governance",
-      "domain": "technology",
-      "heat": 9.28,
-      "trend": "heating",
-      "coverage": "rising coverage",
-      "brief_url": "/intel/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance",
-      "brief_data_url": "/data/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance.json"
-    },
-    {
-      "id": "thr_rogue_ai_agents_and_ai_enabled_cybercrime",
-      "name": "Rogue AI agents and AI-enabled cybercrime",
-      "domain": "technology",
-      "heat": 6.9,
-      "trend": "steady",
-      "coverage": "steady coverage",
-      "brief_url": "/intel/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime",
-      "brief_data_url": "/data/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime.json"
-    },
-    {
-      "id": "thr_gaza_war_and_unga_diplomatic_fallout",
-      "name": "Gaza war and UNGA diplomatic fallout",
-      "domain": "geopolitics",
-      "heat": 3.96,
-      "trend": "heating",
-      "coverage": "rising coverage",
-      "brief_url": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout",
-      "brief_data_url": "/data/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout.json"
-    },
-    {
       "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
       "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
       "domain": "geopolitics",
-      "heat": 3.28,
-      "trend": "steady",
-      "coverage": "steady coverage",
+      "heat": 8.93,
+      "trend": "heating",
+      "coverage": "rising coverage",
       "brief_url": null,
       "brief_data_url": null
     },
@@ -226,19 +196,19 @@
       "id": "thr_russia_ukraine_war_and_european_security_archite",
       "name": "Russia-Ukraine war and European security architecture",
       "domain": "geopolitics",
-      "heat": 2.35,
-      "trend": "cooling",
-      "coverage": "falling coverage",
+      "heat": 6.07,
+      "trend": "heating",
+      "coverage": "rising coverage",
       "brief_url": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746",
       "brief_data_url": "/data/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746.json"
     },
     {
-      "id": "thr_french_budget_austerity_and_political_unrest",
-      "name": "French budget austerity and political unrest",
-      "domain": "politics",
-      "heat": 2.22,
-      "trend": "steady",
-      "coverage": "steady coverage",
+      "id": "thr_sudan_civil_war_and_us_visa_leverage",
+      "name": "Sudan civil war and US visa leverage",
+      "domain": "geopolitics",
+      "heat": 5.26,
+      "trend": "heating",
+      "coverage": "rising coverage",
       "brief_url": null,
       "brief_data_url": null
     },
@@ -246,7 +216,67 @@
       "id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
       "name": "Ethiopia-Eritrea rupture and Tigray offensive",
       "domain": "geopolitics",
-      "heat": 1.74,
+      "heat": 4.92,
+      "trend": "steady",
+      "coverage": "steady coverage",
+      "brief_url": null,
+      "brief_data_url": null
+    },
+    {
+      "id": "thr_gaza_war_and_unga_diplomatic_fallout",
+      "name": "Gaza war and UNGA diplomatic fallout",
+      "domain": "geopolitics",
+      "heat": 3.75,
+      "trend": "steady",
+      "coverage": "steady coverage",
+      "brief_url": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout",
+      "brief_data_url": "/data/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout.json"
+    },
+    {
+      "id": "thr_french_budget_austerity_and_political_unrest",
+      "name": "French budget austerity and political unrest",
+      "domain": "politics",
+      "heat": 2.96,
+      "trend": "steady",
+      "coverage": "steady coverage",
+      "brief_url": null,
+      "brief_data_url": null
+    },
+    {
+      "id": "thr_brazil_presidential_election_lula_vs_flavio_bols",
+      "name": "Brazil presidential election Lula vs Flavio Bolsonaro",
+      "domain": "politics",
+      "heat": 2.91,
+      "trend": "new",
+      "coverage": "newly reported",
+      "brief_url": null,
+      "brief_data_url": null
+    },
+    {
+      "id": "thr_frontier_ai_race_and_superintelligence_governanc",
+      "name": "Frontier AI race and superintelligence governance",
+      "domain": "technology",
+      "heat": 2.37,
+      "trend": "steady",
+      "coverage": "steady coverage",
+      "brief_url": "/intel/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance",
+      "brief_data_url": "/data/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance.json"
+    },
+    {
+      "id": "thr_rogue_ai_agents_and_ai_enabled_cybercrime",
+      "name": "Rogue AI agents and AI-enabled cybercrime",
+      "domain": "technology",
+      "heat": 2.37,
+      "trend": "steady",
+      "coverage": "steady coverage",
+      "brief_url": "/intel/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime",
+      "brief_data_url": "/data/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime.json"
+    },
+    {
+      "id": "thr_pneumonic_plague_death_and_quarantine_in_irkutsk",
+      "name": "Pneumonic plague death and quarantine in Irkutsk",
+      "domain": "health",
+      "heat": 1.75,
       "trend": "new",
       "coverage": "newly reported",
       "brief_url": null,
@@ -255,8 +285,18 @@
     {
       "id": "thr_ai_driven_ram_and_memory_supply_crunch",
       "name": "AI-driven RAM and memory supply crunch",
-      "domain": "technology",
-      "heat": 1.4,
+      "domain": "economics",
+      "heat": 1.23,
+      "trend": "heating",
+      "coverage": "rising coverage",
+      "brief_url": null,
+      "brief_data_url": null
+    },
+    {
+      "id": "thr_flydubai_hijacking_attempt_and_aviation_security",
+      "name": "FlyDubai hijacking attempt and aviation security fallout",
+      "domain": "geopolitics",
+      "heat": 1.01,
       "trend": "steady",
       "coverage": "steady coverage",
       "brief_url": null,
@@ -266,17 +306,7 @@
       "id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
       "name": "US withdrawal from Iraq after 23-year presence",
       "domain": "geopolitics",
-      "heat": 0.82,
-      "trend": "steady",
-      "coverage": "steady coverage",
-      "brief_url": null,
-      "brief_data_url": null
-    },
-    {
-      "id": "thr_zagreb_municipal_strike_and_transit_paralysis",
-      "name": "Zagreb municipal strike and transit paralysis",
-      "domain": "society",
-      "heat": 0.48,
+      "heat": 0.3,
       "trend": "cooling",
       "coverage": "falling coverage",
       "brief_url": null,

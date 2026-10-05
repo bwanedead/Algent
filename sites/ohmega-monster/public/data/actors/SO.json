@@ -1,11 +1,11 @@
 {
   "schema": "ohmega.actor/1",
   "data_as_of": "2026-10-05",
-  "iso2": "IQ",
-  "iso3": "IRQ",
-  "name": "Iraq",
-  "region": "Middle East, North Africa, Afghanistan & Pakistan",
-  "capital": "Baghdad",
+  "iso2": "SO",
+  "iso3": "SOM",
+  "name": "Somalia",
+  "region": "Sub-Saharan Africa",
+  "capital": "Mogadishu",
   "kind": "state",
   "headline": [
     {
@@ -13,60 +13,60 @@
       "label": "Population",
       "unit": "people",
       "group": "people",
-      "value": 47020774.0,
+      "value": 19654739.0,
       "year": 2025,
       "source": "wb",
-      "rank": 34,
+      "rank": 66,
       "of": 194,
-      "percentile": 82
+      "percentile": 65
     },
     {
       "id": "gdp",
       "label": "GDP",
       "unit": "usd",
       "group": "economy",
-      "value": 254367293538.462,
+      "value": 12995200000.2658,
       "year": 2025,
       "source": "wb",
-      "rank": 53,
+      "rank": 146,
       "of": 193,
-      "percentile": 72
+      "percentile": 24
     },
     {
       "id": "gdp_pc",
       "label": "GDP per person",
       "unit": "usd",
       "group": "economy",
-      "value": 5409.67899716967,
+      "value": 661.173877723116,
       "year": 2025,
       "source": "wb",
-      "rank": 116,
+      "rank": 187,
       "of": 193,
-      "percentile": 39
+      "percentile": 3
     },
     {
       "id": "energy_production",
       "label": "Fossil fuel production (oil + gas + coal)",
       "unit": "twh",
       "group": "energy",
-      "value": 2626.943,
-      "year": 2024,
+      "value": 0.0,
+      "year": 2016,
       "source": "owid",
-      "rank": 12,
+      "rank": 177,
       "of": 186,
-      "percentile": 93
+      "percentile": 4
     },
     {
       "id": "milex",
       "label": "Military spending",
       "unit": "usd",
       "group": "military",
-      "value": 6178546529.67549,
+      "value": 201854000.0,
       "year": 2024,
       "source": "wb",
-      "rank": 40,
+      "rank": 127,
       "of": 167,
-      "percentile": 76
+      "percentile": 23
     }
   ],
   "groups": {
@@ -76,7 +76,7 @@
         "label": "Population",
         "unit": "people",
         "group": "people",
-        "value": 47020774.0,
+        "value": 19654739.0,
         "year": 2025,
         "source": "wb"
       },
@@ -85,7 +85,7 @@
         "label": "Population growth",
         "unit": "pct",
         "group": "people",
-        "value": 2.10351548706844,
+        "value": 3.3397984923678,
         "year": 2025,
         "source": "wb"
       },
@@ -94,7 +94,7 @@
         "label": "Urban population",
         "unit": "pct",
         "group": "people",
-        "value": 69.9396739468105,
+        "value": 55.1399062872976,
         "year": 2025,
         "source": "wb"
       },
@@ -103,7 +103,7 @@
         "label": "Land area",
         "unit": "km2",
         "group": "people",
-        "value": 434130.0,
+        "value": 627340.0,
         "year": 2023,
         "source": "wb"
       }
@@ -114,7 +114,7 @@
         "label": "GDP",
         "unit": "usd",
         "group": "economy",
-        "value": 254367293538.462,
+        "value": 12995200000.2658,
         "year": 2025,
         "source": "wb"
       },
@@ -123,7 +123,7 @@
         "label": "GDP (purchasing power)",
         "unit": "usd",
         "group": "economy",
-        "value": 670835815567.878,
+        "value": 32288221931.2232,
         "year": 2025,
         "source": "wb"
       },
@@ -132,7 +132,7 @@
         "label": "GDP per person",
         "unit": "usd",
         "group": "economy",
-        "value": 5409.67899716967,
+        "value": 661.173877723116,
         "year": 2025,
         "source": "wb"
       },
@@ -141,7 +141,7 @@
         "label": "GDP per person (purchasing power)",
         "unit": "usd",
         "group": "economy",
-        "value": 14266.7965348226,
+        "value": 1642.77032278186,
         "year": 2025,
         "source": "wb"
       },
@@ -150,16 +150,7 @@
         "label": "GDP growth",
         "unit": "pct",
         "group": "economy",
-        "value": -2.15574219066178,
-        "year": 2025,
-        "source": "wb"
-      },
-      {
-        "id": "inflation",
-        "label": "Inflation",
-        "unit": "pct",
-        "group": "economy",
-        "value": 0.303454715219382,
+        "value": 2.99114404482197,
         "year": 2025,
         "source": "wb"
       },
@@ -168,8 +159,8 @@
         "label": "Central government debt, share of GDP",
         "unit": "pct",
         "group": "economy",
-        "value": 27.438248367378,
-        "year": 2018,
+        "value": 12.6627391994652,
+        "year": 2024,
         "source": "wb"
       },
       {
@@ -177,16 +168,7 @@
         "label": "GDP growth, IMF estimate/forecast",
         "unit": "pct",
         "group": "economy",
-        "value": -6.8,
-        "year": 2026,
-        "source": "imf"
-      },
-      {
-        "id": "gov_debt_imf",
-        "label": "General government gross debt, share of GDP (IMF)",
-        "unit": "pct",
-        "group": "economy",
-        "value": 61.7,
+        "value": 2.6,
         "year": 2026,
         "source": "imf"
       }
@@ -197,8 +179,8 @@
         "label": "Exports, share of GDP",
         "unit": "pct",
         "group": "trade",
-        "value": 39.7635173537006,
-        "year": 2024,
+        "value": 29.2484917491797,
+        "year": 2025,
         "source": "wb"
       },
       {
@@ -206,8 +188,8 @@
         "label": "Imports, share of GDP",
         "unit": "pct",
         "group": "trade",
-        "value": 37.375421957139,
-        "year": 2024,
+        "value": 98.8149470599555,
+        "year": 2025,
         "source": "wb"
       }
     ],
@@ -217,8 +199,8 @@
         "label": "Fossil fuel production (oil + gas + coal)",
         "unit": "twh",
         "group": "energy",
-        "value": 2626.943,
-        "year": 2024,
+        "value": 0.0,
+        "year": 2016,
         "source": "owid"
       },
       {
@@ -226,8 +208,8 @@
         "label": "Primary energy consumption",
         "unit": "twh",
         "group": "energy",
-        "value": 736.781,
-        "year": 2024,
+        "value": 3.49,
+        "year": 2023,
         "source": "owid"
       },
       {
@@ -235,8 +217,8 @@
         "label": "Energy use per person",
         "unit": "kwh",
         "group": "energy",
-        "value": 16002.357,
-        "year": 2024,
+        "value": 190.119,
+        "year": 2023,
         "source": "owid"
       },
       {
@@ -244,8 +226,8 @@
         "label": "Oil production",
         "unit": "twh",
         "group": "energy",
-        "value": 2507.699,
-        "year": 2024,
+        "value": 0.0,
+        "year": 2016,
         "source": "owid"
       },
       {
@@ -253,8 +235,8 @@
         "label": "Gas production",
         "unit": "twh",
         "group": "energy",
-        "value": 119.244,
-        "year": 2024,
+        "value": 0.0,
+        "year": 2016,
         "source": "owid"
       },
       {
@@ -267,38 +249,11 @@
         "source": "owid"
       },
       {
-        "id": "oil_cons",
-        "label": "Oil consumption",
-        "unit": "twh",
-        "group": "energy",
-        "value": 534.5,
-        "year": 2024,
-        "source": "owid"
-      },
-      {
-        "id": "gas_cons",
-        "label": "Gas consumption",
-        "unit": "twh",
-        "group": "energy",
-        "value": 197.714,
-        "year": 2024,
-        "source": "owid"
-      },
-      {
-        "id": "coal_cons",
-        "label": "Coal consumption",
-        "unit": "twh",
-        "group": "energy",
-        "value": 0.0,
-        "year": 2024,
-        "source": "owid"
-      },
-      {
         "id": "elec_gen",
         "label": "Electricity generation",
         "unit": "twh",
         "group": "energy",
-        "value": 149.73,
+        "value": 0.43,
         "year": 2024,
         "source": "owid"
       },
@@ -307,7 +262,7 @@
         "label": "Electricity from fossil fuels",
         "unit": "pct",
         "group": "energy",
-        "value": 98.377,
+        "value": 79.07,
         "year": 2024,
         "source": "owid"
       },
@@ -325,18 +280,9 @@
         "label": "Electricity from renewables",
         "unit": "pct",
         "group": "energy",
-        "value": 1.623,
+        "value": 20.93,
         "year": 2024,
         "source": "owid"
-      },
-      {
-        "id": "energy_import_pct",
-        "label": "Net energy imports, share of use",
-        "unit": "pct",
-        "group": "energy",
-        "value": -274.87736059498,
-        "year": 2022,
-        "source": "wb"
       }
     ],
     "military": [
@@ -345,7 +291,7 @@
         "label": "Military spending",
         "unit": "usd",
         "group": "military",
-        "value": 6178546529.67549,
+        "value": 201854000.0,
         "year": 2024,
         "source": "wb"
       },
@@ -354,7 +300,7 @@
         "label": "Military spending, share of GDP",
         "unit": "pct",
         "group": "military",
-        "value": 2.35714058035714,
+        "value": 1.58578050121769,
         "year": 2024,
         "source": "wb"
       },
@@ -363,7 +309,7 @@
         "label": "Armed forces personnel",
         "unit": "persons",
         "group": "military",
-        "value": 459000.0,
+        "value": 14000.0,
         "year": 2020,
         "source": "wb"
       },
@@ -372,37 +318,24 @@
         "label": "Arms imports (SIPRI trend-indicator value, 1990 US$)",
         "unit": "usd",
         "group": "military",
-        "value": 23000000.0,
+        "value": 4000000.0,
         "year": 2024,
-        "source": "wb"
-      },
-      {
-        "id": "arms_exports",
-        "label": "Arms exports (SIPRI trend-indicator value, 1990 US$)",
-        "unit": "usd",
-        "group": "military",
-        "value": 20000000.0,
-        "year": 1989,
         "source": "wb"
       }
     ]
   },
   "energy_role": {
-    "surplus": [
-      "oil"
-    ],
-    "deficit": [
-      "gas"
-    ]
+    "surplus": [],
+    "deficit": []
   },
   "leadership": {
     "head_of_state": {
-      "name": "Nizar Amidi",
-      "since": "2022-10-17"
+      "name": "Hassan Sheikh Mohamud",
+      "since": "2022-05-15"
     },
     "head_of_government": {
-      "name": "Muhammad Shia' al-Sudani",
-      "since": "2022-10-27"
+      "name": "Mohamed Hussein Roble",
+      "since": "2020-09-23"
     },
     "as_of": "2026-10-05",
     "nuclear": null
@@ -411,25 +344,32 @@
   "involved": {
     "theaters": [
       {
-        "id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
-        "name": "US withdrawal from Iraq after 23-year presence",
-        "mentions": 7
+        "id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
+        "name": "Ethiopia-Eritrea rupture and Tigray offensive",
+        "mentions": 1
       }
     ],
     "pulses": [
       {
-        "id": "pls_iran_gulf_iran_proxy_axis_escalation",
-        "name": "Iran Proxy Axis Escalation",
-        "band": "critical",
-        "position": 80.0,
-        "theater_id": "thr_us_withdrawal_from_iraq_after_23_year_presence"
+        "id": "pls_sahel_horn_state_fragility_insurgent_control",
+        "name": "State Fragility and Insurgent Control",
+        "band": "severe",
+        "position": 70.0,
+        "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive"
       },
       {
-        "id": "pls_iran_gulf_us_iran_israel_military_confrontation",
-        "name": "US-Iran-Israel Direct Military Confrontation",
-        "band": "critical",
-        "position": 78.0,
-        "theater_id": "thr_us_withdrawal_from_iraq_after_23_year_presence"
+        "id": "pls_sahel_horn_foreign_military_entanglement_horn",
+        "name": "Foreign Military Entanglement and Intelligence Competition in the Horn",
+        "band": "severe",
+        "position": 58.0,
+        "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive"
+      },
+      {
+        "id": "pls_sahel_horn_displacement_humanitarian_collapse",
+        "name": "Displacement and Humanitarian Collapse Pressure",
+        "band": "unassessed",
+        "position": null,
+        "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive"
       }
     ]
   },
@@ -453,7 +393,7 @@
       "name": "World Bank World Development Indicators (military figures: SIPRI)",
       "licence": "CC BY 4.0",
       "url": "https://data.worldbank.org/",
-      "years": "1989-2025"
+      "years": "2020-2025"
     },
     {
       "source": "wikidata",
@@ -463,6 +403,6 @@
       "years": ""
     }
   ],
-  "url": "/intel/actors/IQ",
-  "data_url": "/data/actors/IQ.json"
+  "url": "/intel/actors/SO",
+  "data_url": "/data/actors/SO.json"
 }

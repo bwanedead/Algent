@@ -412,6 +412,11 @@
   "involved": {
     "theaters": [
       {
+        "id": "thr_flydubai_hijacking_attempt_and_aviation_security",
+        "name": "FlyDubai hijacking attempt and aviation security fallout",
+        "mentions": 1
+      },
+      {
         "id": "thr_gaza_war_and_unga_diplomatic_fallout",
         "name": "Gaza war and UNGA diplomatic fallout",
         "mentions": 1
