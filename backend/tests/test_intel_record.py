@@ -246,3 +246,11 @@ def test_a_failed_or_empty_label_is_reported_not_cached_and_publish_uses_cached_
     assert pulse["title"] == "US–China · Deadlock" and pulse["actors_iso2"] == ["US", "CN"] and pulse["name"] == "Relationship deadlock"
     feed = intel_page.build_pulse_feed(store)["pulses"][0]
     assert feed["title"] == "US–China · Deadlock" and feed["actors_iso2"] == ["US", "CN"]
+
+
+def test_lead_with_puts_the_writers_key_statements_first_and_keeps_every_row() -> None:
+    from algent_backend.agent_system.agents.intel import on_record
+
+    rows = [{"id": "a"}, {"id": "b"}, {"id": "c"}, {"id": "d"}]
+    assert [r["id"] for r in on_record.lead_with(rows, ["S3", "[S1]", "S3", "S9", "x"])] == ["c", "a", "b", "d"]
+    assert on_record.lead_with(rows, []) == rows

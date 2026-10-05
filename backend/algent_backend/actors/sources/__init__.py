@@ -4,10 +4,11 @@ Source fetchers. An observation source is ``fetch(indicators, today) -> {indicat
 ``SourceUnavailable``). Wikidata is the odd one out: it yields leaders, not indicator observations.
 """
 
-from . import imf, owid, wikidata, worldbank
+from . import bis, imf, owid, wikidata, wits, worldbank
 
 #: key -> observation fetcher; the key is also ``Indicator.source``.
-OBSERVATION_SOURCES = {"wb": worldbank.fetch, "owid": owid.fetch, "imf": imf.fetch}
+OBSERVATION_SOURCES = {"wb": worldbank.fetch, "owid": owid.fetch, "imf": imf.fetch, "bis": bis.fetch}
 LEADER_SOURCE = "wikidata"
+TRADE_SOURCE = "wits"      # ranked trade lines, not indicator observations: its own collector path
 
-__all__ = ["LEADER_SOURCE", "OBSERVATION_SOURCES", "imf", "owid", "wikidata", "worldbank"]
+__all__ = ["LEADER_SOURCE", "OBSERVATION_SOURCES", "TRADE_SOURCE", "bis", "imf", "owid", "wikidata", "wits", "worldbank"]

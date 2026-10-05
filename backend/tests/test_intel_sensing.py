@@ -385,3 +385,17 @@ def test_the_daily_is_dated_the_day_it_is_written_not_the_radar_board(tmp_path, 
     A.date = "2026-10-03"                      # an explicit rerun of a past day still works
     assert cli._daily(A()) == 0
     assert seen[-1] == "2026-10-03"
+
+
+def test_a_joint_statement_naming_many_countries_is_not_on_the_record_of_each() -> None:
+    """10-04: a White House science pact with seventeen countries led both the Russia–Ukraine and Hormuz
+    records because it shared two names with each. A statement must be MAINLY about the theater's actors."""
+    _seed_statements()
+    d = (TODAY - timedelta(days=1)).isoformat()
+    many = ("Ukraine", "NATO", "Japan", "India", "Brazil", "Kenya", "Chile", "Peru", "Ghana", "Norway", "Fiji",
+            "Laos", "Oman", "Togo", "Chad", "Mali", "Niger")
+    sstore.append_statements([_st("White House", d, "A golden age of science pact.", affiliation="United States",
+                                  about=many, url="https://wh.example/science")])
+    ev = sensing.for_theater(RU_UA, as_of=AS_OF)
+    assert "golden age of science" not in ev.statements   # (the NATO/EU speech staying is covered above, without
+    #                                                        17 one-off names skewing this tiny ledger's rarity cut)

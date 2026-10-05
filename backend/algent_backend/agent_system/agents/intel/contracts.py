@@ -271,6 +271,9 @@ class SectionDraft(BaseModel):
     key_figures: list[KeyFigure] = Field(default_factory=list)   # 0-4, only numbers the research states
     pulses: list[str] = Field(default_factory=list)          # exact Pulse NAMES this theater bears on
     pulse_proposals: list[PulseProposal] = Field(default_factory=list)
+    key_statements: list[str] = Field(default_factory=list,  # [S#] tags from STATEMENTS ON RECORD, most consequential first
+                                      description="Up to five [S#] tags of the statements on record that matter most, "
+                                                  "most consequential first.")
 
 
 class CrossTheater(BaseModel):

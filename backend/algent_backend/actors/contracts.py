@@ -15,7 +15,7 @@ from pydantic import BaseModel
 
 Group = Literal["people", "economy", "trade", "energy", "military"]
 #: How a value is displayed: a count of people, US dollars, a share (%), TWh of energy, kWh per person, km2, a bare number.
-Unit = Literal["people", "usd", "pct", "twh", "kwh", "km2", "persons", "number"]
+Unit = Literal["people", "usd", "pct", "twh", "kwh", "km2", "persons", "months", "number"]
 
 
 class Indicator(BaseModel):
@@ -50,6 +50,28 @@ class Leaders(BaseModel):
     head_of_government: Official | None = None
     fetched_at: str
     source_url: str
+
+
+class TradeShare(BaseModel):
+    """One line of a ranking: a product group or a partner country, its value in US dollars."""
+    id: str                  # product group code ("27-27_Fuels") or partner ISO2
+    name: str
+    value: float
+
+
+class TradeRanking(BaseModel):
+    """A country's merchandise exports or imports for one year, ranked: product groups and partner countries,
+    largest first, with the year's total. The lists are the full ranking (a handful of lines); consumers cut."""
+    iso2: str
+    year: int
+    flow: Literal["exports", "imports"]
+    total: float
+    products: list[TradeShare]
+    partners: list[TradeShare]
+    source: str
+    source_url: str
+    fetched_at: str
+    revised: bool = False
 
 
 def now_iso() -> str:

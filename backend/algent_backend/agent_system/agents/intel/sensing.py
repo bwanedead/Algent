@@ -281,20 +281,40 @@ def _statement_block(theater: Theater, actors: Any, as_of: date | None, *, days:
         distinctive = {k for k in distinctive if rar.idf[k] > rar.cut}
     rows = store.query(days=days, today=as_of)
     need = min(2, len(keys))                      # one shared entity is a coincidence when two were available
-    scored = [(s, sum(rar.idf[k] for k in keys & _entities(s))) for s in rows
-              if distinctive & _entities(s) and len(keys & _entities(s)) >= need]
+
+    def focus(s: Statement) -> float:
+        """Share of the names the statement is about that this theater shares, counted, not rarity-weighted. A
+        joint statement naming seventeen countries is barely about any one of them (a White House science pact
+        led both the Russia–Ukraine and Hormuz records on 10-04), while Putin's Kaliningrad red line (about
+        NATO, Russia, Kaliningrad) is plainly about the Russia–NATO dynamic even though "Kaliningrad" is rare:
+        weighting by rarity wrongly cut it, so rarity decides QUALIFYING, and focus only diffuseness."""
+        own = _entities(s)
+        return len(keys & own) / len(own) if own else 0.0
+
+    def consequence(s: Statement) -> int:
+        """The extractor's own intensity judgment: |stance| on its -2..+2 scale. A red line or a threat outranks
+        a courtesy of equal relevance; the operator saw the Kaliningrad nuclear warning ranked below routine
+        remarks when only relevance and recency ordered the record. A red line or a threat (the extractor's
+        label) is coercive signalling, the act a reader must not miss, so it counts double: relevance sums over
+        shared names, and without this a statement listing more of the theater's names outranks it."""
+        return (1 + abs(s.stance)) * (2 if s.signal in ("red_line", "threat") else 1)
+
+    # Qualifies only when it is MAINLY about this theater's actors (at least half of what it names is shared):
+    # a statement of meaning ("this is mostly about them"), not a tuned cut. Ranked by shared rarity x focus x
+    # consequence, most consequential first; the writer then names the key ones (``key_statements``).
+    scored = [(s, sum(rar.idf[k] for k in keys & _entities(s)) * f * consequence(s)) for s in rows
+              if distinctive & _entities(s) and len(keys & _entities(s)) >= need and (f := focus(s)) >= 0.5]
     terms = sorted(keys)
     if not scored:
         return "", [], set(), terms, [], []
     newest = sorted(scored, key=lambda p: p[0].date, reverse=True)
-    picked = [s for s, _w in sorted(newest, key=lambda p: -p[1])][:limit]
-    shown = sorted(picked, key=lambda s: s.date, reverse=True)
+    shown = [s for s, _w in sorted(newest, key=lambda p: -p[1])][:limit]
     shared: dict[str, set[str]] = {}
     for s in shown:
         shared.setdefault(s.speaker, set()).update(distinctive & _entities(s))
     histories, history_urls = _histories(shown, shared, as_of=as_of, days=history_days)
-    return (statements_block(shown, days), histories, {s.source_url for s in shown} | history_urls, terms, shown,
-            sorted(s.date for s, _w in scored))
+    return (statements_block(shown, days, numbered=True, order="most consequential first"), histories,
+            {s.source_url for s in shown} | history_urls, terms, shown, sorted(s.date for s, _w in scored))
 
 
 # ── the two entry points ──────────────────────────────────────────────────────────────────────

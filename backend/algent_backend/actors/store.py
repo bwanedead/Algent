@@ -22,7 +22,7 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
-from .contracts import Leaders, Observation
+from .contracts import Leaders, Observation, TradeRanking
 
 _STORE_ENV = "ALGENT_ACTORS_STORE"
 _DEFAULT_DIR = "actors_store"
@@ -96,6 +96,49 @@ def append(indicator_id: str, observations: list[Observation]) -> AppendResult:
 def stored_ids() -> list[str]:
     root = store_dir() / "obs"
     return sorted(p.stem for p in root.glob("*.jsonl")) if root.is_dir() else []
+
+
+# --- ranked trade ---------------------------------------------------------------------------------
+def _trade_path() -> Path:
+    return store_dir() / "trade.jsonl"
+
+
+def trade_log() -> list[TradeRanking]:
+    return [TradeRanking.model_validate_json(ln) for ln in _lines(_trade_path())]
+
+
+def latest_trade() -> dict[tuple[str, str], TradeRanking]:
+    """(iso2, flow) -> the newest year's ranking (later lines win within a year)."""
+    out: dict[tuple[str, str], TradeRanking] = {}
+    for r in trade_log():
+        k = (r.iso2, r.flow)
+        if k not in out or r.year >= out[k].year:
+            out[k] = r
+    return out
+
+
+def append_trade(rows: list[TradeRanking]) -> AppendResult:
+    """Append a ranking for each (country, flow, year) never seen, or whose lines changed; same discipline as
+    ``append``: an unchanged re-fetch writes nothing."""
+    known = {(r.iso2, r.flow, r.year): r for r in trade_log()}
+    result, lines = AppendResult(), []
+    for row in rows:
+        prev = known.get((row.iso2, row.flow, row.year))
+        if prev is None:
+            result.new += 1
+        elif (prev.total, prev.products, prev.partners) != (row.total, row.products, row.partners):
+            row, result.revised = row.model_copy(update={"revised": True}), result.revised + 1
+        else:
+            result.unchanged += 1
+            continue
+        lines.append(row.model_dump_json())
+    _append_lines(_trade_path(), lines)
+    return result
+
+
+def series(indicator_id: str, iso2: str) -> list[tuple[int, float]]:
+    """One country's annual readings of an indicator, oldest first."""
+    return [(o.year, o.value) for o in history(indicator_id) if o.iso2 == iso2]
 
 
 # --- leaders ------------------------------------------------------------------------------------

@@ -105,7 +105,8 @@ def test_report_shape_persistence_pulses_and_marking(tmp_path, monkeypatch) -> N
     assert [t["theater_id"] for t in rec["theaters"]] == ["thr_a", "thr_b"]          # technology theater skipped
     a = rec["theaters"][0]
     assert set(a) == {"theater_id", "name", "temperature", "escalation", "pulses", "bottom_line", "since_yesterday",
-                      "developments", "context", "outlook", "watch_next", "key_figures", "brief_slug", "on_record", "map"}
+                      "developments", "context", "outlook", "watch_next", "key_figures", "brief_slug", "on_record", "map",
+                      "numbers"}
     assert a["temperature"] == {"heat": 9.0, "trend": "heating", "coverage": "rising coverage", "recent_share": 0.2,
                                 "prior_share": 0.1}
     assert a["map"] is None and a["brief_slug"] is None
@@ -113,6 +114,7 @@ def test_report_shape_persistence_pulses_and_marking(tmp_path, monkeypatch) -> N
     assert a["pulses"] == [{"id": "pls_h", "name": "Hormuz Risk", "position": 50.0, "band": a["pulses"][0]["band"],
                             "change_24h": 20.0, "change_7d": 25.0}]
     assert rec["theaters"][1]["pulses"] == []
+    assert set(a["numbers"]) >= {"as_of", "trackers", "actors"} and "markets" not in rec
     # no research ran: a "researched" claim is downgraded to reported
     assert a["developments"][0]["verification"] == "reported"
     assert a["since_yesterday"] == []                                                # nothing to compare with

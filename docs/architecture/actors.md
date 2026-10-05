@@ -62,3 +62,34 @@ Pulses carry no actor field, so they attach through their theater. Shapes: `acto
 leaders, five headline numbers with rank, People/Economy/Trade/Energy/Military, what its leaders said,
 involved theaters and Pulses, credits). The theater dossier gets an "Actors" strip of its actors on
 shared scales. Doctrine: `docs/ethos/information-ergonomics-ethos.md`.
+
+## Structural layer (10-04): history, balance sheet, policy rates, ranked trade
+
+- **History.** `catalog.HISTORY_YEARS = 10`: World Bank asks for `date=<year-10>:<year>`, the IMF keeps those years
+  (the current one is the IMF's estimate), OWID keeps ten years behind each country's newest. `store.series(ind,
+  iso2)` gives one country's annual readings.
+- **New indicators** (one catalog entry each): IMF fiscal balance (`GGXCNL_NGDP`) and current account (`BCA_NGDPD`);
+  WB reserves (USD, months of imports), external debt (USD, % of GNI), exports/imports in USD, goods-trade shares by
+  category (fuel, food, ores/metals, manufactures; exports and imports).
+- **`bis`**: central bank policy rates (BIS WS_CBPOL, keyless CSV, free with attribution), year-end value per country.
+  The euro area is not a country, so euro members show no policy rate. Iran and many others are not covered.
+- **`wits`**: ranked merchandise trade, World Bank WITS (UN Comtrade; keyless SDMX-JSON, free with attribution). For
+  one reporter and year: partner countries ranked, and the 16 HS product sections ranked, for exports and imports.
+  A reporter that did not file a year answers 404; the newest year inside 8 years back is used and carried on the
+  ranking (Russia: 2021, Iran: 2022, Yemen: 2019; Sudan and Eritrea file nothing and have no ranking). Stored in
+  `actors_store/trade.jsonl` (append-only; a changed ranking appends a `revised` line). `collect` fetches the G20
+  and P5 by default; `newsroom actors fetch --source wits --countries IR,YE,...` adds others (about four calls a
+  country). Rejected: UN Comtrade's own public API (rate-limited preview, key for volume), Harvard Atlas / OEC
+  (licence / key questions); WITS carries the same Comtrade data keyless.
+- Verified live 2026-10-05 for 20 countries: wb, owid, imf, bis, wits all `ok`.
+
+
+## Consumers
+
+- `publishing/actors_feed.py`: the published actor pages and index (above).
+- `agents/intel/numbers.py`: each daily theater section's `numbers.actors` (up to 5 states: structure, balance sheet,
+  energy, military with year, rank and ten-year trend, plus ranked trade and leaders), read through `profile()`,
+  `Corpus.rank` and `store`. The daily page draws two shared-scale tables; each row opens a popover with the full
+  structure and links to `/intel/actors/[iso]` (only when that actor is published). See `intel-desk.md`
+  ("Numbers and power").
+- Site nav: "Actors" (one tap from every page) opens `/intel/actors`.

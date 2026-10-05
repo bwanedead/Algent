@@ -2,7 +2,8 @@
 Our World in Data energy dataset (CC BY 4.0) — one ~10 MB CSV, streamed line by line.
 
 The file has a row per country-year and ~130 columns. Only the columns the catalog asks for are
-kept, and for each (country, column) only the newest year that has a value: the full CSV is never
+kept, and for each (country, column) the newest year that has a value plus the ``keep_years`` before it
+(``fetch`` asks for ``HISTORY_YEARS``; 0 keeps the newest only): the full CSV is never
 held in memory. Rows without a 3-letter ISO code (regions and income groups such as "Asia") and codes
 the registry does not know (OWID_KOS) are skipped.
 """
@@ -15,21 +16,22 @@ from collections.abc import Iterable
 from algent_backend.polite_http import stream_lines
 
 from .. import registry
-from ..catalog import HEADERS
+from ..catalog import HEADERS, HISTORY_YEARS
 from ..contracts import Indicator, Observation, now_iso
 
 URL = "https://raw.githubusercontent.com/owid/energy-data/master/owid-energy-data.csv"
 PAGE = "https://ourworldindata.org/energy"
 
 
-def parse_rows(lines: Iterable[str], indicators: list[Indicator], fetched_at: str) -> list[Observation]:
-    """Latest non-empty reading per (country, indicator) from CSV ``lines`` (header first)."""
+def parse_rows(lines: Iterable[str], indicators: list[Indicator], fetched_at: str, keep_years: int = 0) -> list[Observation]:
+    """Latest non-empty reading per (country, indicator) from CSV ``lines`` (header first), and ``keep_years`` of
+    earlier ones."""
     reader = csv.reader(lines)
     header = next(reader)
     col = {name: i for i, name in enumerate(header)}
     iso_i, year_i = col["iso_code"], col["year"]
     wanted = [(ind, col[ind.code]) for ind in indicators if ind.code in col]
-    best: dict[tuple[str, str], Observation] = {}
+    kept: dict[tuple[str, str], dict[int, Observation]] = {}      # pruned as it grows: the CSV has ~75 years a country
     for row in reader:
         if len(row) <= max(iso_i, year_i) or len(row[iso_i]) != 3:
             continue
@@ -40,15 +42,17 @@ def parse_rows(lines: Iterable[str], indicators: list[Indicator], fetched_at: st
         for ind, i in wanted:
             if i >= len(row) or row[i] == "":
                 continue
-            key = (iso2, ind.id)
-            if key not in best or year > best[key].year:
-                best[key] = Observation(iso2=iso2, indicator=ind.id, year=year, value=float(row[i]), source="owid",
-                                        source_url=PAGE, fetched_at=fetched_at)
-    return list(best.values())
+            years = kept.setdefault((iso2, ind.id), {})
+            years[year] = Observation(iso2=iso2, indicator=ind.id, year=year, value=float(row[i]), source="owid",
+                                      source_url=PAGE, fetched_at=fetched_at)
+            floor = max(years) - keep_years
+            for old in [y for y in years if y < floor]:
+                del years[old]
+    return [o for years in kept.values() for o in years.values()]
 
 
 def fetch(indicators: list[Indicator], today: object = None) -> dict[str, list[Observation] | str]:
-    obs = parse_rows(stream_lines(URL, headers=HEADERS), indicators, now_iso())
+    obs = parse_rows(stream_lines(URL, headers=HEADERS), indicators, now_iso(), HISTORY_YEARS)
     out: dict[str, list[Observation] | str] = {ind.id: [] for ind in indicators}
     for o in obs:
         out[o.indicator].append(o)        # type: ignore[union-attr]
