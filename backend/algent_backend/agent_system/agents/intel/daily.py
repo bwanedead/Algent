@@ -37,7 +37,7 @@ from pathlib import Path
 from typing import Any
 
 from . import brief as br
-from . import desk, focus, forecasts, geo, on_record, render
+from . import desk, focus, forecasts, geo, numbers, on_record, render
 from . import sensing as sensing_mod
 from .contracts import DaySummary, Place, PulseProposal, SectionDraft, Statement, Theater, coverage_label
 from .heat import store_dir
@@ -560,8 +560,10 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
                                   countries=countries, instrument_urls=sensed.instrument_urls,
                                   statement_urls=sensed.statement_urls, record=record)
         record = on_record.lead_with(record, draft.key_statements)   # the writer's picks first, then consequence order
-        sections.append(_section(theater, heat, draft, pulse_rows(store, draft.pulses, now=now), latest_brief,
-                                 countries, record))
+        section = _section(theater, heat, draft, pulse_rows(store, draft.pulses, now=now), latest_brief,
+                            countries, record)
+        section["numbers"] = numbers.for_section(section, sensed.instrument_rows, latest_brief, as_of=as_of)
+        sections.append(section)
         proposals = [{"theater": theater.name, **p.model_dump()} for p in draft.pulse_proposals]
         row["proposals_logged"] = record_proposals(store, draft.pulse_proposals, theater=theater, domain=domain,
                                                    as_of=as_of)

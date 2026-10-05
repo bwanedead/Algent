@@ -41,6 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/intel" className="nav-keep">Intelligence</Link>
               <Link href="/geopolitics" className="nav-keep">Geopolitics</Link>
               <Link href="/pulses" className="nav-keep">Pulses</Link>
+              <Link href="/intel/actors" className="nav-keep">Actors</Link>
               <a href="/feed.xml">RSS</a>
               <ThemeToggle />
             </nav>

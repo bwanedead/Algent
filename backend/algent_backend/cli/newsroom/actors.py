@@ -27,6 +27,8 @@ def add_parser(sub: Any) -> None:
     verbs = p.add_subparsers(dest="actors_cmd", required=True)
     f = verbs.add_parser("fetch", help="pull sources into the store (all, or --source)")
     f.add_argument("--source", action="append", choices=SOURCE_KEYS, help="source (repeatable); default all")
+    f.add_argument("--countries", help="comma-separated ISO2 codes whose ranked trade (source wits) is fetched; "
+                                       "default the G20 and UN P5")
     f.set_defaults(handler=run_fetch)
     s = verbs.add_parser("show", help="one actor's profile")
     s.add_argument("actor", help="ISO2 code or country name")
@@ -52,7 +54,7 @@ def _iso(text: str) -> str:
 
 
 def run_fetch(args: Any) -> int:
-    return _emit(collect(args.source))
+    return _emit(collect(args.source, [c.strip().upper() for c in args.countries.split(',')] if args.countries else None))
 
 
 def run_show(args: Any) -> int:

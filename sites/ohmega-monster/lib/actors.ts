@@ -10,7 +10,7 @@ const INTEL_DIR = process.env.OHMEGA_INTEL_DIR || path.join(process.cwd(), "cont
 const ACTORS_DIR = path.join(INTEL_DIR, "actors");
 const ISO_RE = /^[A-Z]{2}$/;
 
-export type Unit = "people" | "usd" | "pct" | "twh" | "kwh" | "km2" | "persons" | "number";
+export type Unit = "people" | "usd" | "pct" | "twh" | "kwh" | "km2" | "persons" | "months" | "number";
 export type Field = { id: string; label: string; unit: Unit; value: number; year: number; source: string; rank?: number; of?: number; percentile?: number };
 export type Official = { name: string; since: string };
 export type Nuclear = { status: string; stockpile: number; inventory: number; year: number; source_url: string };
@@ -155,6 +155,7 @@ export function fmt(v: number, unit: Unit): string {
     case "twh": return compact(v) + " TWh";
     case "kwh": return (v / 1000).toFixed(1) + " MWh";
     case "km2": return compact(v) + " km²";
+    case "months": return v.toFixed(1) + " mo";
     default: return compact(v);
   }
 }

@@ -58,6 +58,54 @@ export type TheaterMap = {
   points: MapPoint[];
   credit: string;
 };
+// ---- numbers and power (backend agents/intel/numbers.py). Both blocks are optional: older records have neither.
+/** One horizon of change, from -> to (to is the tracker's own value). */
+export type TrackerChange = { from: number; from_period: string; pct: number | null };
+export type TrackerHorizon = "prev" | "7d" | "30d" | "1y";
+/** A measured series: latest reading, how it changed, whether it is outside its own history, a sparkline. */
+export type Tracker = {
+  id: string;
+  name: string;
+  unit: string;
+  freq: "daily" | "weekly" | "monthly";
+  source: string;
+  /** Empty for an internal-source series: it is shown, never cited. */
+  source_url: string;
+  internal: boolean;
+  value: number;
+  as_of: string;
+  age_days: number;
+  changes: Partial<Record<TrackerHorizon, TrackerChange>>;
+  unusual: boolean;
+  reasons: string[];
+  outside: boolean;
+  percentile_1y: number | null;
+  spark: number[];
+};
+/** One annual statistic of a state: its own year, world rank, source key (wb | owid | imf | bis) and up to ten years of trend. */
+export type ActorMetric = {
+  label: string;
+  unit: string;
+  value: number;
+  year: number;
+  rank: number | null;
+  of: number | null;
+  source: string;
+  trend: [number, number][];
+};
+export type RankedLine = { name: string; iso2: string; value: number; share: number };
+/** A country's merchandise exports or imports for one year: the total and its top lines by product and by partner. */
+export type RankedTrade = { year: number; total: number; products: RankedLine[]; partners: RankedLine[] };
+/** A state a theater involves: leaders, annual statistics (metric ids are the actors catalog's), ranked trade. */
+export type NumbersActor = {
+  iso2: string;
+  name: string;
+  leaders: { head_of_state?: string; head_of_government?: string };
+  metrics: Record<string, ActorMetric>;
+  trade: { exports?: RankedTrade; imports?: RankedTrade };
+};
+export type TheaterNumbers = { as_of: string; trackers: Tracker[]; actors: NumbersActor[] };
+
 export type DailyTheater = {
   theater_id: string;
   name: string;
@@ -75,6 +123,8 @@ export type DailyTheater = {
   /** The statements the writer was shown, in the desk's order (older reports: empty). */
   on_record: OnRecord[];
   map: TheaterMap | null;
+  /** The theater's trackers and actors (older reports: null). */
+  numbers: TheaterNumbers | null;
 };
 /** A theater in the domain that is live but not written up today, or one gone quiet (see the desk's focus). */
 export type DailyWatch = { theater_id: string; name: string; note: string; last_novel: string };
@@ -184,6 +234,95 @@ export function parseMap(raw: unknown): TheaterMap | null {
   };
 }
 
+const HORIZONS = ["prev", "7d", "30d", "1y"] as const;
+
+function parseTracker(raw: unknown): Tracker | null {
+  if (!isObj(raw)) return null;
+  const id = str(raw.id);
+  const value = num(raw.value);
+  if (!id || value === null) return null;
+  const ch = isObj(raw.changes) ? raw.changes : {};
+  const changes: Tracker["changes"] = {};
+  for (const h of HORIZONS) {
+    const c = ch[h];
+    if (!isObj(c)) continue;
+    const from = num(c.from);
+    if (from !== null) changes[h] = { from, from_period: str(c.from_period), pct: num(c.pct) };
+  }
+  const url = str(raw.source_url);
+  return {
+    id,
+    name: str(raw.name) || id,
+    unit: str(raw.unit),
+    freq: oneOf(raw.freq, ["daily", "weekly", "monthly"] as const, "daily"),
+    source: str(raw.source),
+    source_url: /^https?:\/\//.test(url) ? url : "",
+    internal: raw.internal === true,
+    value,
+    as_of: str(raw.as_of),
+    age_days: num(raw.age_days) ?? 0,
+    changes,
+    unusual: raw.unusual === true,
+    reasons: strs(raw.reasons),
+    outside: raw.outside === true,
+    percentile_1y: num(raw.percentile_1y),
+    spark: arr(raw.spark).map(num).filter((n): n is number => n !== null),
+  };
+}
+
+function parseActorMetrics(raw: unknown): Record<string, ActorMetric> {
+  const metrics: Record<string, ActorMetric> = {};
+  if (!isObj(raw)) return metrics;
+  for (const [k, m] of Object.entries(raw)) {
+    if (!isObj(m)) continue;
+    const value = num(m.value);
+    if (value === null) continue;
+    const trend: [number, number][] = [];
+    for (const p of arr(m.trend)) {
+      const y = Array.isArray(p) ? num(p[0]) : null;
+      const v = Array.isArray(p) ? num(p[1]) : null;
+      if (y !== null && v !== null) trend.push([y, v]);
+    }
+    metrics[k] = { label: str(m.label) || k, unit: str(m.unit), value, year: num(m.year) ?? 0, rank: num(m.rank), of: num(m.of), source: str(m.source), trend };
+  }
+  return metrics;
+}
+
+function parseRanked(raw: unknown): RankedTrade | undefined {
+  if (!isObj(raw)) return undefined;
+  const lines = (v: unknown): RankedLine[] =>
+    arr(v)
+      .filter(isObj)
+      .map((l) => ({ name: str(l.name), iso2: str(l.iso2).toUpperCase(), value: num(l.value) ?? 0, share: num(l.share) ?? 0 }))
+      .filter((l) => l.name !== "");
+  const year = num(raw.year);
+  const products = lines(raw.products);
+  const partners = lines(raw.partners);
+  return year !== null && (products.length > 0 || partners.length > 0) ? { year, total: num(raw.total) ?? 0, products, partners } : undefined;
+}
+
+function parseNumbers(raw: unknown): TheaterNumbers | null {
+  if (!isObj(raw)) return null;
+  const actors: NumbersActor[] = [];
+  for (const a of arr(raw.actors)) {
+    if (!isObj(a)) continue;
+    const iso2 = str(a.iso2).toUpperCase();
+    const name = str(a.name);
+    if (!/^[A-Z]{2}$/.test(iso2) || !name) continue;
+    const lead = isObj(a.leaders) ? a.leaders : {};
+    const trade = isObj(a.trade) ? a.trade : {};
+    actors.push({
+      iso2,
+      name,
+      leaders: { head_of_state: str(lead.head_of_state) || undefined, head_of_government: str(lead.head_of_government) || undefined },
+      metrics: parseActorMetrics(a.metrics),
+      trade: { exports: parseRanked(trade.exports), imports: parseRanked(trade.imports) },
+    });
+  }
+  const trackers = arr(raw.trackers).map(parseTracker).filter((t): t is Tracker => t !== null);
+  return trackers.length > 0 || actors.length > 0 ? { as_of: str(raw.as_of), trackers, actors } : null;
+}
+
 function parsePlace(raw: unknown): DailyPlace | null {
   if (!isObj(raw)) return null;
   const name = str(raw.name);
@@ -265,6 +404,7 @@ function parseTheater(raw: unknown): DailyTheater | null {
     key_figures: arr(raw.key_figures).map(parseKeyFigure).filter((k): k is KeyFigure => k !== null),
     on_record: parseOnRecord(raw.on_record),
     map: parseMap(raw.map),
+    numbers: parseNumbers(raw.numbers),
   };
 }
 

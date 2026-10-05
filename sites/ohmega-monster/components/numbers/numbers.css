@@ -1,0 +1,92 @@
+/* The numbers layer of the daily (components/numbers/*): each theater's "Numbers" panel — the actors' structure
+   in annual statistics (shared-scale bars + ten-year trend lines) and the dated physical flows around it.
+   Doctrine: docs/ethos/information-ergonomics-ethos.md. One meaning per channel: the accent (.is-hot, .num-hot) =
+   unusual and nothing else; arrows show direction, never good or bad; bar length = size on a shared scale per
+   column; neutral greys carry structure. Phone first. */
+
+.num-hot { color: var(--accent); }
+.num-note { margin: 8px 0 0; max-width: 72ch; color: var(--muted); font-size: 11px; line-height: 16px; }
+
+/* ---- flow / rate tiles ------------------------------------------------------------------------- */
+.num-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; min-width: 0; }
+.num-grid > li { min-width: 0; }
+.num-more { margin-top: 6px; }
+.num-more > .num-grid { margin-top: 6px; }
+.num-more > summary { display: inline-block; color: var(--muted); font-size: 11px; line-height: 20px; cursor: pointer; text-decoration: underline dotted var(--rule-strong); text-underline-offset: 3px; }
+.num-more > summary:hover { color: var(--strong); }
+
+button.num-tile {
+  display: flex; flex-direction: column; gap: 2px; width: 100%; min-width: 0; height: 100%; padding: 7px 8px 7px;
+  font: inherit; text-align: left; color: var(--text); cursor: pointer; background: var(--panel);
+  border: 1px solid var(--rule); border-left: 2px solid var(--rule-strong);
+}
+button.num-tile.is-hot { border-left-color: var(--accent); }
+button.num-tile:hover { border-color: var(--rule-strong); }
+button.num-tile:focus-visible, button.num-tile[aria-expanded="true"] { outline: 1px solid var(--accent); outline-offset: 1px; }
+.num-name { display: block; overflow: hidden; color: var(--muted); font-size: 10px; line-height: 14px; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; text-overflow: ellipsis; }
+.num-val { display: block; color: var(--strong); line-height: 24px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.num-val b { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.num-val small { color: var(--muted); font-size: 10px; }
+.num-chg { display: flex; flex-wrap: wrap; gap: 0 8px; color: var(--muted); font-size: 11px; line-height: 16px; font-variant-numeric: tabular-nums; }
+.num-chg i { color: var(--faint); font-style: normal; font-size: 10px; }
+.num-flag { display: block; color: var(--muted); font-size: 10px; line-height: 14px; }
+button.num-tile.is-hot .num-flag { color: var(--accent); }
+
+.num-spark { display: block; width: 100%; height: auto; margin-top: 2px; overflow: visible; }
+.num-spark-line { stroke: var(--muted); stroke-width: 1.4px; stroke-linejoin: round; stroke-linecap: round; }
+.num-spark-dot { fill: var(--strong); }
+.num-spark.is-hot .num-spark-line { stroke: var(--accent); }
+.num-spark.is-hot .num-spark-dot { fill: var(--accent); }
+.num-spark.is-large { width: 100%; max-width: 360px; }
+.num-spark.is-large .num-spark-line { stroke-width: 1.6px; }
+
+/* ---- popovers ---------------------------------------------------------------------------------- */
+.num-range { margin: 0 0 8px; color: var(--muted); font-size: 12px; }
+.num-rows { margin: 0 0 8px; padding: 0; list-style: none; font-size: 12px; line-height: 20px; font-variant-numeric: tabular-nums; }
+.num-rows > li { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.3fr) auto; gap: 0 10px; padding: 1px 0; }
+.num-rows > li > :last-child { text-align: right; }
+.num-why { margin: 0 0 8px; font-size: 12px; line-height: 18px; }
+
+/* an actor's structure: label | value (year) | ten-year line | world rank */
+.num-group { margin: 0 0 10px; }
+.num-group > .geo-micro { display: block; margin: 0 0 3px; }
+.num-mrows { margin: 0; padding: 0; list-style: none; font-size: 12px; line-height: 18px; font-variant-numeric: tabular-nums; }
+.num-mrows > li { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1.35fr) 52px minmax(0, 0.7fr); gap: 0 8px; align-items: center; padding: 2px 0; border-bottom: 1px solid var(--rule); }
+.num-mrows > li > :last-child { text-align: right; font-size: 11px; }
+.num-mspark .num-spark { margin: 0; }
+.num-ranked { margin: 8px 0 0; }
+.num-ranked > .geo-micro { display: block; margin: 0 0 2px; }
+.num-ranked ul { margin: 0; padding: 0; list-style: none; font-size: 12px; line-height: 20px; font-variant-numeric: tabular-nums; }
+.num-ranked li { display: grid; grid-template-columns: minmax(0, 1fr) 72px 36px; gap: 0 8px; align-items: center; }
+.num-rname { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.num-rshare { text-align: right; color: var(--strong); }
+
+/* ---- a theater's panel ------------------------------------------------------------------------- */
+.num-panel { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px 24px; margin: 0 0 16px; min-width: 0; }
+.num-trackers > .geo-micro { display: block; margin: 0 0 6px; }
+.num-table { margin: 0 0 12px; }
+.num-table > .geo-micro { display: block; margin: 0 0 4px; }
+
+.num-arow { display: grid; grid-template-columns: minmax(76px, 1fr) repeat(4, minmax(0, 54px)); gap: 0 8px; align-items: center; min-width: 0; }
+.num-ahead { color: var(--faint); font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; }
+.num-ahead > span { overflow: hidden; text-overflow: clip; white-space: nowrap; }
+.num-alist { margin: 0; padding: 0; list-style: none; }
+button.num-actor { width: 100%; padding: 5px 0; font: inherit; text-align: left; color: var(--text); cursor: pointer; background: none; border: 0; border-bottom: 1px solid var(--rule); }
+button.num-actor:hover .num-aname { color: var(--strong); text-decoration: underline dotted var(--rule-strong); text-underline-offset: 3px; }
+button.num-actor:focus-visible, button.num-actor[aria-expanded="true"] { outline: 1px solid var(--accent); outline-offset: 1px; }
+.num-aname { overflow: hidden; color: var(--text); font-size: 12px; line-height: 18px; white-space: nowrap; text-overflow: ellipsis; }
+.num-acell { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.num-acell .ac-bar, .num-div { display: block; width: 100%; min-width: 0; height: 6px; }
+.num-acell .num-spark { height: 14px; margin: 0; }
+.num-acv { color: var(--strong); font-size: 11px; line-height: 13px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.num-none { color: var(--faint); font-size: 10px; text-align: left; }
+.num-div { position: relative; background: var(--rule); }
+.num-div::before { content: ""; position: absolute; left: 50%; top: -1px; bottom: -1px; width: 1px; background: var(--muted); }
+.num-div-fill { position: absolute; top: 0; bottom: 0; background: var(--faint); }
+
+@media (min-width: 520px) {
+  .num-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 860px) {
+  .num-arow { grid-template-columns: minmax(110px, 1fr) repeat(4, minmax(0, 84px)); }
+}

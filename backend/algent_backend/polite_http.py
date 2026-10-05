@@ -49,8 +49,10 @@ def _pace(url: str) -> None:
     _last_hit[host] = time.monotonic()
 
 
-def get(url: str, params: dict[str, Any] | None = None, *, headers: dict[str, str] | None = None) -> str:
-    """GET ``url`` and return the body text; retries transient failures, memoised per process."""
+def get(url: str, params: dict[str, Any] | None = None, *, headers: dict[str, str] | None = None,
+        missing_ok: bool = False) -> str:
+    """GET ``url`` and return the body text; retries transient failures, memoised per process. With ``missing_ok`` a
+    404 is an answer ("no such record": a year a reporter never filed), returned as "" without retrying."""
     key = (url, tuple(sorted((params or {}).items())))
     if key in _memo:
         return _memo[key]
@@ -68,6 +70,8 @@ def get(url: str, params: dict[str, Any] | None = None, *, headers: dict[str, st
             if resp.status_code == 200:
                 _memo[key] = resp.text
                 return resp.text
+            if resp.status_code == 404 and missing_ok:
+                return ""
             last = RuntimeError(f"HTTP {resp.status_code}")
         time.sleep(1.0 * (attempt + 1))
     raise SourceError(f"{url} failed after {RETRIES + 1} attempts: {last}")

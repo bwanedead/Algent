@@ -1,8 +1,8 @@
 """
 World Bank Open Data (WDI, CC BY 4.0) — one bulk call per indicator for every country.
 
-``/v2/country/all/indicator/<code>?mrnev=5`` returns each country's five most recent non-empty values
-(aggregates such as "World" come back in the same payload and are dropped: only ISO3 codes in the
+``/v2/country/all/indicator/<code>?date=<from>:<to>`` returns every country's annual values for the last
+``HISTORY_YEARS`` years (empty years come back as null and are dropped; aggregates such as "World" come back in the same payload and are dropped: only ISO3 codes in the
 registry survive). The same endpoint family serves the country list the registry is seeded from.
 """
 
@@ -14,11 +14,12 @@ from typing import Any
 from algent_backend.polite_http import SourceError, get
 
 from .. import registry
-from ..catalog import HEADERS
+from datetime import date
+
+from ..catalog import HEADERS, HISTORY_YEARS
 from ..contracts import Indicator, Observation, now_iso
 
 API = "https://api.worldbank.org/v2"
-MOST_RECENT = 5                       # non-empty values per country: enough to see a revision, small to pull
 
 
 def indicator_url(code: str) -> str:
@@ -40,14 +41,15 @@ def parse_indicator(payload: Any, indicator: Indicator, fetched_at: str) -> list
     return out
 
 
-def fetch(indicators: list[Indicator], today: object = None) -> dict[str, list[Observation] | str]:
+def fetch(indicators: list[Indicator], today: date | None = None) -> dict[str, list[Observation] | str]:
     """{indicator id: observations | error message}; one failing indicator never stops the others."""
     out: dict[str, list[Observation] | str] = {}
     fetched_at = now_iso()
+    this_year = (today or date.today()).year
     for ind in indicators:
         try:
             body = get(f"{API}/country/all/indicator/{ind.code}",
-                       {"format": "json", "per_page": 20000, "mrnev": MOST_RECENT}, headers=HEADERS)
+                       {"format": "json", "per_page": 20000, "date": f"{this_year - HISTORY_YEARS}:{this_year}"}, headers=HEADERS)
             out[ind.id] = parse_indicator(json.loads(body), ind, fetched_at)
         except (SourceError, ValueError) as exc:
             out[ind.id] = str(exc)
