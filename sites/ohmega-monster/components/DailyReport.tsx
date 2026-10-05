@@ -134,7 +134,7 @@ export default function DailyReport({ report, title }: { report: Daily; title: s
       {report.the_day.length > 0 && <TheDay items={report.the_day} />}
 
       {report.theaters.map((t, i) => (
-        <DailyTheaterSection key={t.theater_id + i} t={t} id={theaterAnchor(t, i)} date={report.date} snap={snap} />
+        <DailyTheaterSection key={t.theater_id + i} t={t} id={theaterAnchor(t, i)} date={report.date} snap={snap} first={i === 0} />
       ))}
 
       <Across report={report} />

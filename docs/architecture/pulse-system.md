@@ -102,3 +102,13 @@ scale from drifting, so it must never see the history.
    Pulses move, whether anchors are applied consistently, the anchoring gaps, and whether events
    are mapped to the right situations.
 6. Public: the Pulse Gallery, embeds, JSON twins, X posts on band changes.
+
+## Display labels
+
+A Pulse's stored `name` is its dimension ("Relationship deadlock"); on a tile that does not say whose. The
+display title ("US-China · Diplomatic deadlock") and principal actors' flags live in a cache OUTSIDE the
+Pulse store, `intel_store/pulse_labels.json` (`agents/intel/pulse_labels.py`): `{title, actors_iso2,
+label_version, built_from}` per Pulse id, from one cheap structured call per Pulse (the principal actors
+are a semantic judgment), cached forever and re-made only when the definition version changes or with
+`newsroom pulse labels --refresh`. Publishing adds `title`/`actors_iso2` to snapshot and agent-feed Pulses;
+a Pulse without a label shows `"<situation title> · <name>"`, never blocking publish. No movement logic.

@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { parseOnRecord, type OnRecord } from "./record-model";
 import { parseCoverage, type Band, type Coverage, type Direction, type Pace, type Trend } from "./intel";
 
 // Daily reports are written by the backend to <intel dir>/daily/<domain>/<YYYY-MM-DD>.json and read
@@ -23,7 +24,7 @@ export type DailyDevelopment = {
   verification: "researched" | "reported";
   sources: string[];
 };
-export type DailyPulse = { id: string; name: string; position: number | null; band: Band; change_24h: number | null; change_7d: number | null };
+export type DailyPulse = { id: string; name: string; title: string; actors_iso2: string[]; position: number | null; band: Band; change_24h: number | null; change_7d: number | null };
 export type KeyFigure = {
   label: string;
   value: number;
@@ -71,6 +72,8 @@ export type DailyTheater = {
   watch_next: string[];
   brief_slug: string | null;
   key_figures: KeyFigure[];
+  /** The statements the writer was shown, in the desk's order (older reports: empty). */
+  on_record: OnRecord[];
   map: TheaterMap | null;
 };
 export type Daily = {
@@ -232,6 +235,8 @@ function parseTheater(raw: unknown): DailyTheater | null {
         return {
           id: str(p.id) || pname,
           name: pname,
+          title: str(p.title) || pname,
+          actors_iso2: strs(p.actors_iso2).filter((c) => /^[A-Za-z]{2}$/.test(c)).map((c) => c.toUpperCase()),
           position,
           band: position === null ? ("unassessed" as Band) : oneOf(p.band, ["calm", "elevated", "severe", "critical", "unassessed"] as const, "unassessed"),
           change_24h: num(p.change_24h),
@@ -253,6 +258,7 @@ function parseTheater(raw: unknown): DailyTheater | null {
     watch_next: strs(raw.watch_next),
     brief_slug: /^[\w.-]+$/.test(str(raw.brief_slug)) ? str(raw.brief_slug) : null,
     key_figures: arr(raw.key_figures).map(parseKeyFigure).filter((k): k is KeyFigure => k !== null),
+    on_record: parseOnRecord(raw.on_record),
     map: parseMap(raw.map),
   };
 }

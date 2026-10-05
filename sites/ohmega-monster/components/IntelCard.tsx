@@ -3,6 +3,7 @@ import Link from "next/link";
 import { situationRoom } from "@/lib/situation";
 import "@/app/intel/intel.css";
 
+import IsoFlags from "./IsoFlags";
 import { Dumbbell } from "./SituationDumbbell";
 import { SituationSince, SituationVisitProvider } from "./SituationVisit";
 
@@ -14,7 +15,7 @@ export default function IntelCard() {
   const room = situationRoom();
   if (!room) return null;
   const top = room.moves["7d"].top.length > 0 ? room.moves["7d"].top : room.moves["30d"].top;
-  const shown = top.slice(0, 3).map((m) => ({ id: m.pulse.id, name: m.pulse.name, from: m.from, to: m.to, delta: m.delta }));
+  const shown = top.slice(0, 3).map((m) => ({ id: m.pulse.id, name: m.pulse.title, iso: m.pulse.actors_iso2, from: m.from, to: m.to, delta: m.delta }));
   if (shown.length === 0 && room.changeTimes.length === 0) return null;
   const sign = (d: number) => `${d > 0 ? "▲ +" : "▼ −"}${Math.abs(Math.round(d))}`;
   return (
@@ -29,7 +30,10 @@ export default function IntelCard() {
             <ul className="sit-card-moves" aria-label="Biggest Pulse moves this week">
               {shown.map((r) => (
                 <li key={r.id}>
-                  <span className="sit-card-name">{r.name}</span>
+                  <span className="sit-card-name">
+                    <IsoFlags codes={r.iso} />
+                    {r.name}
+                  </span>
                   <span className="sit-card-chart">
                     <Dumbbell from={r.from} to={r.to} compact label={`${r.name}: ${Math.round(r.from)} to ${Math.round(r.to)}`} />
                   </span>

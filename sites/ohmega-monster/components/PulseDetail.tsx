@@ -4,6 +4,7 @@
 import { BAND_LABEL, deltaClass, fmtDelta } from "@/lib/band";
 import type { WallPulse } from "@/lib/pulse-wall";
 
+import IsoFlags from "./IsoFlags";
 import PulseSpectrum from "./PulseSpectrum";
 import "./pulse-tile.css";
 
@@ -26,7 +27,7 @@ function History({ p }: { p: WallPulse }) {
   const last = xy[xy.length - 1];
   return (
     <figure className="pulse-hist">
-      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${p.name}: ${pts.length} readings, ${day(pts[0].at)} to ${day(pts[pts.length - 1].at)}`}>
+      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${p.title}: ${pts.length} readings, ${day(pts[0].at)} to ${day(pts[pts.length - 1].at)}`}>
         {[25, 50, 75].map((g) => (
           <line key={g} x1={pad} x2={W - pad} y1={y(g)} y2={y(g)} className="pulse-hist-grid" />
         ))}
@@ -56,7 +57,10 @@ export default function PulseDetail({
   return (
     <div className={`pd intel-band-${p.band}`}>
       <div className="pd-head">
-        <h2 className="pd-title">{p.name}</h2>
+        <h2 className="pd-title">
+          <IsoFlags codes={p.actors_iso2} />
+          {p.title}
+        </h2>
         {p.situation && <span className="intel-micro">{p.situation}</span>}
       </div>
       {p.question && <p className="pulse-q">{p.question}</p>}

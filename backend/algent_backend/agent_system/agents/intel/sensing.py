@@ -78,6 +78,7 @@ class Evidence:
     histories: list[str] = field(default_factory=list)
     instrument_urls: set[str] = field(default_factory=set)      # public-display sources only
     statement_urls: set[str] = field(default_factory=set)
+    shown: list[Statement] = field(default_factory=list)     # the statements in the block, in the order shown
     tags: list[str] = field(default_factory=list)
     terms: list[str] = field(default_factory=list)
     n_instruments: int = 0
@@ -264,7 +265,7 @@ def _histories(shown: list[Statement], shared: dict[str, set[str]], *, as_of: da
 
 
 def _statement_block(theater: Theater, actors: Any, as_of: date | None, *, days: int, limit: int,
-                     history_days: int) -> tuple[str, list[str], set[str], list[str], int]:
+                     history_days: int) -> tuple[str, list[str], set[str], list[str], list[Statement]]:
     """A statement qualifies when it shares at least one DISTINCTIVE corroborated entity with the theater
     (rarity is measured over the whole ledger, see ``Rarity``). Qualifiers rank by the summed idf of the
     shared entities, then recency; common entities add weight but never qualify a statement alone."""
@@ -281,7 +282,7 @@ def _statement_block(theater: Theater, actors: Any, as_of: date | None, *, days:
               if distinctive & _entities(s) and len(keys & _entities(s)) >= need]
     terms = sorted(keys)
     if not scored:
-        return "", [], set(), terms, 0
+        return "", [], set(), terms, []
     newest = sorted(scored, key=lambda p: p[0].date, reverse=True)
     picked = [s for s, _w in sorted(newest, key=lambda p: -p[1])][:limit]
     shown = sorted(picked, key=lambda s: s.date, reverse=True)
@@ -289,7 +290,7 @@ def _statement_block(theater: Theater, actors: Any, as_of: date | None, *, days:
     for s in shown:
         shared.setdefault(s.speaker, set()).update(distinctive & _entities(s))
     histories, history_urls = _histories(shown, shared, as_of=as_of, days=history_days)
-    return (statements_block(shown, days), histories, {s.source_url for s in shown} | history_urls, terms, len(shown))
+    return (statements_block(shown, days), histories, {s.source_url for s in shown} | history_urls, terms, shown)
 
 
 # ── the two entry points ──────────────────────────────────────────────────────────────────────
@@ -301,8 +302,9 @@ def for_theater(theater: Theater, *, as_of: str | date, actors: list[str] | tupl
     try:
         day = date.fromisoformat(as_of) if isinstance(as_of, str) else as_of
         ev.instruments, ev.instrument_urls, ev.tags, ev.n_instruments = _instrument_block(theater, actors, day)
-        ev.statements, ev.histories, ev.statement_urls, ev.terms, ev.n_statements = _statement_block(
+        ev.statements, ev.histories, ev.statement_urls, ev.terms, ev.shown = _statement_block(
             theater, actors, day, days=statement_days, limit=statement_limit, history_days=history_days)
+        ev.n_statements = len(ev.shown)
     except Exception as exc:  # noqa: BLE001 - sensing is an aid; a broken store must not cost the report
         return Evidence(error=f"{type(exc).__name__}: {str(exc)[:160]}")
     return ev
@@ -350,7 +352,7 @@ def across_theaters(*, as_of: str | date, days: int = CROSS_DAYS) -> Evidence:
                 shown.append(s)
         shown.sort(key=lambda s: s.date, reverse=True)
         return Evidence(instruments=evidence.render_block(rows, as_of=day), statements=statements_block(shown, days),
-                        n_instruments=len(rows), n_statements=len(shown),
+                        n_instruments=len(rows), n_statements=len(shown), shown=shown,
                         instrument_urls={r["source_url"] for r in rows if r["public_display"]},
                         statement_urls={s.source_url for s in shown})
     except Exception as exc:  # noqa: BLE001

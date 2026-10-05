@@ -5,6 +5,7 @@
 import { BAND_LABEL, deltaClass, fmtDelta } from "@/lib/band";
 import type { WallPulse } from "@/lib/pulse-wall";
 
+import IsoFlags from "./IsoFlags";
 import PulseDetail from "./PulseDetail";
 import Popover from "./Popover";
 import "./pulse-tile.css";
@@ -48,7 +49,10 @@ export default function PulseTile({
   const from = pulse.position !== null && delta !== undefined && delta !== null ? pulse.position - delta : null;
   const trigger = (
     <>
-      <span className="pt-name">{pulse.name}</span>
+      <span className="pt-name">
+        <IsoFlags codes={pulse.actors_iso2} />
+        {pulse.title}
+      </span>
       <span className="pt-row">
         <span className={pos === null ? "pt-num pt-num-none" : "pt-num"}>{pos === null ? "—" : pos}</span>
         {showDelta && delta !== undefined && <span className={`pt-delta pt-delta-${deltaClass(delta)}`}>{fmtDelta(delta)}</span>}
@@ -59,7 +63,7 @@ export default function PulseTile({
     </>
   );
   return (
-    <Popover label={pulse.name} trigger={trigger} triggerClassName={`pt pt-${size} intel-band-${pulse.band}`} id={anchor ? `pulse-${pulse.id}` : undefined}>
+    <Popover label={pulse.title} trigger={trigger} triggerClassName={`pt pt-${size} intel-band-${pulse.band}`} id={anchor ? `pulse-${pulse.id}` : undefined}>
       <PulseDetail pulse={pulse} delta={delta} period={period} />
     </Popover>
   );

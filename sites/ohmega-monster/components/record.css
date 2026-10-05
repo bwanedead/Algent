@@ -1,0 +1,29 @@
+/* The record (components/OnRecord.tsx, RecordBrowser, ToneChart). Neutral greys only: the accent is
+   reserved for change, band colours for severity. Rows are text, structure comes from whitespace. */
+.rec { margin: 12px 0 0; min-width: 0; }
+.rec-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.rec-row { min-width: 0; font-size: 13px; line-height: 19px; overflow-wrap: anywhere; }
+.rec-row p { margin: 0; }
+.rec-who { color: var(--strong); }
+.rec-muted { color: var(--muted); font-size: 12px; }
+.rec-said { color: var(--text); }
+.rec-tag { color: var(--muted); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+.rec-meta { color: var(--muted); font-size: 11px; }
+.rec-sig { color: var(--strong); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+.rec-note { margin: 8px 0 0; color: var(--faint); font-size: 10px; line-height: 15px; }
+.rec a { color: var(--muted); text-decoration-color: var(--rule-strong); text-underline-offset: 3px; }
+
+.rec-filters { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 10px 0 14px; }
+.rec-filters label { display: grid; gap: 2px; color: var(--muted); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+.rec-filters select, .rec-filters input { font: inherit; font-size: 12px; max-width: 200px; color: var(--text); background: var(--panel); border: 1px solid var(--rule-strong); padding: 3px 5px; }
+.rec-count { margin: 0 0 8px; color: var(--muted); font-size: 11px; }
+
+.tone-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; margin: 8px 0 18px; }
+.tone-cell { min-width: 0; }
+.tone-title { margin: 0 0 2px; color: var(--strong); font-size: 12px; line-height: 16px; }
+.tone-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.tone-grid-line { stroke: var(--rule); stroke-width: 1; stroke-dasharray: 2 4; }
+.tone-zero { stroke: var(--rule-strong); stroke-width: 1; }
+.tone-line { fill: none; stroke: var(--rule-strong); stroke-width: 1.2; }
+.tone-dot { fill: var(--strong); }
+.tone-ends { display: flex; justify-content: space-between; color: var(--muted); font-size: 10px; }

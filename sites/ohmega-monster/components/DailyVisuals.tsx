@@ -55,6 +55,8 @@ function wallPulseFor(snap: Snapshot | null, p: DailyPulse): { wall: WallPulse; 
   const own: Pulse = {
     id: p.id,
     name: p.name,
+    title: p.title || p.name,
+    actors_iso2: p.actors_iso2,
     question: "",
     low_end: "",
     high_end: "",

@@ -75,6 +75,14 @@ def _resolve_country_entry(entry: object) -> tuple[str, str] | None:
     return iso, display
 
 
+def iso2_for_name(name: str) -> str:
+    """ISO-3166 alpha-2 for a country NAME the caller already judged semantically (a statement's
+    affiliation, a Pulse's principal actor), or "" when the name is not a country in the registry
+    (NATO, the UN, a company). Renderer only: it identifies nothing, it spells."""
+    found = _resolve_country_entry({"name": name})
+    return found[0] if found else ""
+
+
 def derive_places(
     profile: dict, vector: dict | None = None, *, cap: int = _FLAG_CAP,
 ) -> tuple[list[str], list[str]]:

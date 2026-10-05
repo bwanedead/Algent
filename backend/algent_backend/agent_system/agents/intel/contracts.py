@@ -205,7 +205,9 @@ class Development(BaseModel):
     when: str = ""                   # YYYY-MM-DD (or a range) when known
     where: str = ""
     actors: list[str] = Field(default_factory=list)
-    statements: list[Statement] = Field(default_factory=list)
+    statements: list[Statement] = Field(default_factory=list, description=(
+        "The statements this development rests on: who said it, their role, the date and the transcript "
+        "URL from STATEMENTS ON RECORD as `source`. Empty only when the development rests on no statement."))
     significance: str = ""           # why it matters, in a line
     verification: Verification = "reported"
     sources: list[str] = Field(default_factory=list)

@@ -10,6 +10,7 @@
     newsroom pulse promote <proposal_id> [--situation <id>]   # dedup check, then create the Pulse
     newsroom pulse promote-ready           # promote every recurring proposal (dedup + promote)
     newsroom pulse migrate-proposals       # one-shot: replay the old intel_store proposals file
+    newsroom pulse labels [--refresh]      # build the missing display titles ("US-China . Diplomatic deadlock")
 
 Seeding never writes to the store: it saves ``seed.json`` + ``review.md`` under
 ``runs_data/pulse_seed/<stamp>/``. Commit reads that file, so what gets stored is what a human
@@ -42,6 +43,8 @@ def add_parser(sub: Any) -> None:
     pr.add_argument("--situation", default="", help="place it in this situation id")
     verbs.add_parser("promote-ready", help="promote every proposal that has recurred")
     verbs.add_parser("migrate-proposals", help="replay intel_store/pulse_proposals.jsonl (idempotent)")
+    lb = verbs.add_parser("labels", help="build the missing who-and-what display titles (cached; one cheap call each)")
+    lb.add_argument("--refresh", action="store_true", help="re-make every label, not only missing or outdated ones")
     p.set_defaults(handler=run_pulse)
 
 
@@ -55,7 +58,7 @@ def _publish() -> dict:
 def run_pulse(args: Any) -> int:
     return {"seed": _seed, "commit": _commit, "reassess": _reassess, "show": _show,
             "log": _log, "proposals": _proposals, "promote": _promote, "promote-ready": _promote_ready,
-            "migrate-proposals": _migrate}[args.pulse_verb](args)
+            "migrate-proposals": _migrate, "labels": _labels}[args.pulse_verb](args)
 
 
 def _seed(args: Any) -> int:
@@ -225,3 +228,16 @@ def _migrate(args: Any) -> int:
 
     print(json.dumps(registry.migrate_legacy_proposals(proposals_path(), pulse_store()), indent=2))
     return 0
+
+
+def _labels(args: Any) -> int:
+    """Build the display labels (``intel/pulse_labels.py``): one cheap structured call per Pulse that has none
+    or whose definition version changed (``--refresh``: all). Cached forever; publishing then uses them."""
+    from algent_backend.agent_system.agents.intel import pulse_labels
+    from algent_backend.agent_system.agents.pulse.repository import pulse_store
+
+    out = pulse_labels.build_missing(_registry_ctx(), pulse_store(), model_spec=_spec(), refresh=args.refresh)
+    if out["built"]:
+        out = {**out, "publish": _publish()}
+    print(json.dumps(out, indent=2, ensure_ascii=False))
+    return 1 if out["failed"] and not out["built"] else 0

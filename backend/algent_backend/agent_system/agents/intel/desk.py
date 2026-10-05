@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from . import brief as br
-from . import forecasts, render
+from . import forecasts, on_record, render
 from . import sensing as sensing_mod
 from .contracts import Brief, Theater
 from .heat import store_dir
@@ -35,13 +35,16 @@ def brief_slug(as_of: str, theater_name: str, focus: str = "") -> str:
 
 
 def persist_brief(brief: Brief, *, as_of: str, theater: Theater, heat: dict, researched: bool,
-                  focus: str = "", built_at: str = "") -> dict:
-    """Write the durable brief record (see module docstring) and return it."""
+                  focus: str = "", built_at: str = "", on_record_rows: list[dict] | None = None) -> dict:
+    """Write the durable brief record (see module docstring) and return it. ``on_record_rows`` is the brief's
+    ``on_record``: the statements its analyst was shown (``on_record.build``); omitted for older callers."""
     slug = brief_slug(as_of, theater.name, focus)
     record = {"schema": SCHEMA, "slug": slug, "as_of": as_of,
               "built_at": built_at or datetime.now(UTC).isoformat(),
               "theater_id": theater.id, "theater_name": theater.name, "heat": heat,
               "researched": researched, "focus": focus.strip(), **brief.model_dump()}
+    if on_record_rows:
+        record["on_record"] = on_record_rows
     _write(briefs_dir() / f"{slug}.json", record)
     return record
 
@@ -120,7 +123,7 @@ def produce(ctx: Any, theater: Theater, heat: dict, *, as_of: str, out: Path | N
     if not brief.bottom_line.strip():
         return {"theater": theater.id, "error": "analyst returned an empty brief; not persisted"}
     record = persist_brief(brief, as_of=as_of, theater=theater, heat=heat, researched=bool(profiles),
-                           focus=focus)
+                           focus=focus, on_record_rows=on_record.build(sensed.shown))
     forecasts.record(record["slug"], theater.id, brief.judgments, made_at=record["built_at"])
     row = {"theater": theater.id, "slug": record["slug"], "researched": bool(profiles),
            "research_usd": round(spent, 4), "research_reused": reused, "forecasts_made": len(brief.judgments),

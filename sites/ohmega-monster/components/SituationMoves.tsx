@@ -22,7 +22,7 @@ const sign = (d: number) => (d > 0 ? "+" : "−") + Math.abs(round(d));
 function claim(top: SituationMove[], period: Period): string {
   if (top.length === 0) return `No Pulse has moved in ${PERIOD_WORDS[period]}`;
   const m = top[0];
-  return `${m.pulse.name} ${m.delta > 0 ? "up" : "down"} ${Math.abs(round(m.delta))} to ${Math.round(m.to)} in ${PERIOD_WORDS[period]}`;
+  return `${m.pulse.title} ${m.delta > 0 ? "up" : "down"} ${Math.abs(round(m.delta))} to ${Math.round(m.to)} in ${PERIOD_WORDS[period]}`;
 }
 
 function note(m: SituationMove): string | undefined {
@@ -68,7 +68,7 @@ export default function SituationMoves({ moves }: { moves: MovesByPeriod }) {
                   <Dumbbell
                     from={m.from}
                     to={m.to}
-                    label={`${m.pulse.name}: ${Math.round(m.from)} to ${Math.round(m.to)} (${sign(m.delta)}) in ${PERIOD_WORDS[period]}`}
+                    label={`${m.pulse.title}: ${Math.round(m.from)} to ${Math.round(m.to)} (${sign(m.delta)}) in ${PERIOD_WORDS[period]}`}
                   />
                 </div>
               </li>

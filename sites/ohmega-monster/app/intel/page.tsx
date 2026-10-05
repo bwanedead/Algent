@@ -40,6 +40,7 @@ export default function IntelPage() {
           <span className="intel-strip-item sit-strip-links">
             {dossiers > 0 && <Link href="/intel/theaters">Every theater&apos;s dossier →</Link>}
             {actorIds().length > 0 && <Link href="/intel/actors">Who the actors are →</Link>}
+            <Link href="/intel/record">What they said →</Link>
             <Link href="/geopolitics">Read the day →</Link>
             <Link href="/pulses">Scan every Pulse →</Link>
           </span>

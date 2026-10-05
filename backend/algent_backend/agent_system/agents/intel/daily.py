@@ -30,14 +30,15 @@ from __future__ import annotations
 
 import json
 import math
+from collections.abc import Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 from . import brief as br
-from . import desk, forecasts, geo, render
+from . import desk, forecasts, geo, on_record, render
 from . import sensing as sensing_mod
-from .contracts import DaySummary, Place, PulseProposal, SectionDraft, Theater, coverage_label
+from .contracts import DaySummary, Place, PulseProposal, SectionDraft, Statement, Theater, coverage_label
 from .heat import store_dir
 
 SCHEMA = "ohmega.daily/1"
@@ -84,8 +85,11 @@ WHAT GOOD LOOKS LIKE:
   concrete: who did or said what, when (YYYY-MM-DD) and where, and `significance` in a line (why a reader
   should care). Put the actors in `actors`. Use only source URLs that appear in the evidence you were
   given; if there is none, leave `sources` empty rather than inventing one.
-- `statements`: attribute every statement to a named person or body, with their role, the date and the
-  source (a STATEMENTS ON RECORD link where one exists). Paraphrase by default. Set `quote: true` only when the exact wording matters (a threat, a
+- `statements`: a development that rests on a statement carries it here, attributed to a named person or
+  body with their role, the date and the transcript link from STATEMENTS ON RECORD as `source` (also
+  listed in the development's `sources`); the desk prints the whole record under each section, so these
+  are the statements this development turns on, and a development about what someone said is not
+  complete without them. Paraphrase by default. Set `quote: true` only when the exact wording matters (a threat, a
   commitment, a denial), and then use the exact words, at most 25 of them — trim a longer one to its
   decisive words with an ellipsis, or paraphrase.
   Never put words in someone's mouth that the evidence does not give.
@@ -316,10 +320,27 @@ def _clean_figures(figures: list, research_urls: set[str]) -> list:
     return out[:MAX_KEY_FIGURES]
 
 
+MAX_ATTACHED = 2
+
+
+def _cited_statements(dev: Any, record: Sequence[dict]) -> list[Statement]:
+    """On-record statements whose transcript the development cites and does not already carry."""
+    have = {_norm_url(st.source) for st in dev.statements}
+    cited = {_norm_url(u) for u in dev.sources}
+    out = []
+    for r in record:
+        url = _norm_url(r["url"])
+        if url in cited and url not in have and len(out) < MAX_ATTACHED:
+            out.append(Statement(who=r["speaker"], role=r["role"], said=r["quote"] or r["paraphrase"],
+                                 quote=bool(r["quote"]), when=r["date"], source=r["url"]))
+    return [st for st in out if st.said.strip()]
+
+
 def normalise_section(draft: SectionDraft, *, pulse_table: dict[str, str], has_previous: bool, researched: bool,
                       research_urls: set[str], reported_urls: set[str],
                       countries: list[geo.Country] | None = None, instrument_urls: set[str] = frozenset(),
-                      statement_urls: set[str] = frozenset()) -> SectionDraft:
+                      statement_urls: set[str] = frozenset(),
+                      record: Sequence[dict] = ()) -> SectionDraft:
     """Enforce what the schema cannot: Pulse names from the table, changes only with a previous section,
     quotes at most 25 words, cited URLs only from the evidence, 'researched' only where our research
     ran and the item actually cites its sources, key figures only from the research's own sources, and
@@ -327,7 +348,11 @@ def normalise_section(draft: SectionDraft, *, pulse_table: dict[str, str], has_p
 
     ``instrument_urls`` and ``statement_urls`` are primary evidence (primary data; the primary transcript):
     citable, and grounding `researched` even when no research ran. Key figures may come from instrument
-    sources but not from a transcript: a statement proves it was said, not that its numbers are true."""
+    sources but not from a transcript: a statement proves it was said, not that its numbers are true.
+
+    ``record`` is the section's ``on_record`` rows: a development that cites a transcript from it but left
+    `statements` empty gets those statements attached (the writer already pointed at them; this only
+    writes down what it pointed at, at most ``MAX_ATTACHED`` per development)."""
     draft.key_figures = _clean_figures(draft.key_figures, research_urls | instrument_urls)
     canon = {n.lower(): n for n in pulse_table}
     draft.pulses = list(dict.fromkeys(canon[p.strip().lower()] for p in draft.pulses if p.strip().lower() in canon))
@@ -348,6 +373,7 @@ def normalise_section(draft: SectionDraft, *, pulse_table: dict[str, str], has_p
         grounded = any(_norm_url(u) in primary for u in dev.sources) or (
             researched and any(_norm_url(u) in research_known for u in dev.sources))
         dev.verification = "researched" if dev.verification == "researched" and grounded else "reported"
+        dev.statements += _cited_statements(dev, record)
         for st in dev.statements:
             st.source = clean(st.source)
             words = st.said.split()
@@ -411,7 +437,7 @@ def record_proposals(store: Any, drafts: list[PulseProposal], *, theater: Theate
 
 # ── the engine ────────────────────────────────────────────────────────────────────────────────
 def _section(theater: Theater, heat: dict, draft: SectionDraft, pulses: list[dict], brief: dict | None,
-             countries: list[geo.Country] | None = None) -> dict:
+             countries: list[geo.Country] | None = None, record: Sequence[dict] = ()) -> dict:
     d = draft.model_dump()
     return {"theater_id": theater.id, "name": theater.name,
             "temperature": {"heat": heat.get("heat", 0), "trend": heat.get("trend", ""),
@@ -421,7 +447,7 @@ def _section(theater: Theater, heat: dict, draft: SectionDraft, pulses: list[dic
             "since_yesterday": d["since_yesterday"], "developments": d["developments"], "context": d["context"],
             "outlook": d["outlook"], "watch_next": d["watch_next"],
             "key_figures": d["key_figures"], "brief_slug": (brief or {}).get("slug"),
-            "map": geo.build_map(d["developments"], countries)}
+            "on_record": list(record), "map": geo.build_map(d["developments"], countries)}
 
 
 def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, research: bool = False,
@@ -488,6 +514,7 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
         row["sensing"] = sensing_mod.summary_for_report(sensed)
         earlier = br.recall(theater, as_of=as_of, window_days=RESEARCH_WINDOW_DAYS,
                             exclude_ids=[p["id"] for p in profiles])
+        record = on_record.build(sensed.shown)               # what the writer was shown, printed regardless of its choices
         try:
             draft, research_urls = write_section(ctx, None, theater, heat, as_of=as_of, profiles=profiles,
                                                  pulse_table=table, model_spec=model_spec, previous=previous,
@@ -504,9 +531,9 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
                                   research_urls=research_urls,
                                   reported_urls={u for m in theater.members for u in m.sources},
                                   countries=countries, instrument_urls=sensed.instrument_urls,
-                                  statement_urls=sensed.statement_urls)
+                                  statement_urls=sensed.statement_urls, record=record)
         sections.append(_section(theater, heat, draft, pulse_rows(store, draft.pulses, now=now), latest_brief,
-                                 countries))
+                                 countries, record))
         proposals = [{"theater": theater.name, **p.model_dump()} for p in draft.pulse_proposals]
         row["proposals_logged"] = record_proposals(store, draft.pulse_proposals, theater=theater, domain=domain,
                                                    as_of=as_of)

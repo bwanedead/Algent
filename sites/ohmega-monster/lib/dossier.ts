@@ -3,6 +3,7 @@ import path from "node:path";
 
 import { parseMap, type TheaterMap } from "./daily";
 import { bandAt } from "./band";
+import { parseOnRecord, type OnRecord } from "./record-model";
 import { maxBand, parseCoverage, safeUrl, type Band, type Coverage, type Direction, type IndicatorStatus, type Pace } from "./intel";
 
 // Theater dossiers: one living record per theater, written by the backend as JSON to
@@ -62,6 +63,8 @@ export type Dossier = {
   forecasts: DossierForecast[];
   indicators: IndicatorRow[];
   statements: Statement[];
+  /** Every statement its dailies and briefs showed, deduped, newest first (older dossiers: empty). */
+  on_record: OnRecord[];
   links: RelatedTheater[];
   reports: { date: string; url: string }[];
   briefs: { slug: string; title: string; as_of: string; url: string }[];
@@ -248,6 +251,7 @@ function parseDossier(raw: unknown, id: string): Dossier | null {
     statements: objs(raw.statements)
       .map((s) => ({ who: str(s.who), role: str(s.role), said: str(s.said), quote: s.quote === true, when: str(s.when), source: str(s.source) }))
       .filter((s) => s.said),
+    on_record: parseOnRecord(raw.on_record),
     links: objs(raw.links)
       .map((l) => ({ theater_id: str(l.theater_id), name: str(l.name), link: str(l.link), date: str(l.date) }))
       .filter((l) => l.theater_id && (l.name || l.link)),
