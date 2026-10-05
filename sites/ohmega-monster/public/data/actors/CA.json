@@ -542,7 +542,19 @@
     "as_of": "2026-10-05",
     "nuclear": null
   },
-  "statements": [],
+  "statements": [
+    {
+      "id": "st_50d7e98e9406",
+      "speaker": "Mark Carney",
+      "role": "Prime Minister of Canada",
+      "date": "2026-09-17",
+      "text": "would create a beacon for other democracies",
+      "is_quote": true,
+      "signal": "reassurance",
+      "stance": 2,
+      "source_url": "https://www.lowyinstitute.org/the-interpreter/why-an-eu-associate-membership-is-the-wrong-canada-story"
+    }
+  ],
   "involved": {
     "theaters": [],
     "pulses": []

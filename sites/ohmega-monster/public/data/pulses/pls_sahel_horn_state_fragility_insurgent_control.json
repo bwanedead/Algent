@@ -7,16 +7,20 @@
   "situation_id": "sit_sahel_horn",
   "situation": "Sahel and Horn of Africa instability",
   "status": "experimental",
-  "position": 70.0,
+  "position": 68.0,
   "band": "severe",
-  "confidence": "high",
+  "confidence": "medium",
   "velocity_7d": null,
-  "last_assessed": "2026-10-05T02:26:53.984541+00:00",
+  "last_assessed": "2026-10-05T08:05:49.713859+00:00",
   "evidence_through": "2026-10-05",
   "history": [
     {
       "at": "2026-10-05T02:02:06.240722+00:00",
       "position": 70.0
+    },
+    {
+      "at": "2026-10-05T08:05:49.713859+00:00",
+      "position": 68.0
     }
   ],
   "definition": {
@@ -72,6 +76,18 @@
       "position": null,
       "rationale": "Closest to 2026-10-05 reading at 70 (and 2026-10-03 held thought 70) which reflected worst escalation since 2020-2022 war, three airports seized, 7-group alliance to remove Abiy, and Eritrea severing ties/embassy closure. New confirmed drone strike in El Obeid, North Kordofan killing 5/wounding 47 confirms continued Sudan war but is a single tactical incident, not evidence of new state collapse…",
       "confidence": "low",
+      "evidence_through": "2026-10-05",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-05T08:05:49.713859+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "applied",
+      "position": 68.0,
+      "rationale": "Closest to 2026-10-05 reading at 70 (and 2026-10-03 held thought 70) which reflected worst escalation since 2020-2022 war, seizure of three airports, 7-group Alliance for Survival to remove Abiy, and Eritrea severing ties/embassy closure. New batch confirms same rupture and Addis explosions near ENDF HQ and El Alamein bloc keeping fragility high, but also confirms federal forces retook Afar towns…",
+      "confidence": "medium",
       "evidence_through": "2026-10-05",
       "model": "muse-spark-1.2-contributor",
       "article_url": null

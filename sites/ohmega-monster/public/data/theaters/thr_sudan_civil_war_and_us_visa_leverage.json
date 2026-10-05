@@ -3,7 +3,7 @@
   "theater_id": "thr_sudan_civil_war_and_us_visa_leverage",
   "name": "Sudan civil war and US visa leverage",
   "domain": "geopolitics",
-  "built_at": "2026-10-05T02:29:50.784371+00:00",
+  "built_at": "2026-10-05T08:05:49.713859+00:00",
   "first_seen": "2026-09-28",
   "last_seen": "2026-10-05",
   "days_covered": 1,
@@ -29,12 +29,16 @@
       "id": "pls_sahel_horn_state_fragility_insurgent_control",
       "name": "State Fragility and Insurgent Control",
       "situation": "Sahel and Horn of Africa instability",
-      "position": 70.0,
+      "position": 68.0,
       "band": "severe",
       "history": [
         {
           "at": "2026-10-05T02:02:06.240722+00:00",
           "position": 70.0
+        },
+        {
+          "at": "2026-10-05T08:05:49.713859+00:00",
+          "position": 68.0
         }
       ]
     },

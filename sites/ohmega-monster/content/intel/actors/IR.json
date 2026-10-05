@@ -527,37 +527,92 @@
   },
   "statements": [
     {
-      "id": "st_e15fb4c23474",
-      "speaker": "Representative of Iran",
-      "role": "Delegate to the Third Committee",
-      "date": "2026-10-02",
-      "text": "International humanitarian law does not become optional because the perpetrator sits on the Security Council,",
+      "id": "st_36b5da6fa3f6",
+      "speaker": "Esmail Baghaei",
+      "role": "Foreign Ministry Spokesman",
+      "date": "2026-10-05",
+      "text": "“structural nihilism”",
       "is_quote": true,
       "signal": "accusation",
       "stance": -2,
-      "source_url": "https://press.un.org/en/2026/gashc4437.doc.htm"
+      "source_url": "https://en.mfa.ir/portal/NewsView/795355"
     },
     {
-      "id": "st_75e6c8950625",
-      "speaker": "Representative of Iran",
-      "role": "Delegate to the Third Committee",
-      "date": "2026-10-02",
-      "text": "Silence, Mr. Chair, is a position. Selective outrage is not a principle. It is complicity dressed as diplomacy.",
+      "id": "st_43c0778f4ee0",
+      "speaker": "Esmail Baghaei",
+      "role": "Foreign Ministry Spokesman",
+      "date": "2026-10-05",
+      "text": "\"In the end we all die anyway, so it doesn't matter.\"",
       "is_quote": true,
       "signal": "accusation",
       "stance": -2,
-      "source_url": "https://press.un.org/en/2026/gashc4437.doc.htm"
+      "source_url": "https://en.mfa.ir/portal/NewsView/795355"
     },
     {
-      "id": "st_86596c18f445",
-      "speaker": "Delegate of Iran",
-      "role": "Delegate",
-      "date": "2026-10-02",
-      "text": "In right of reply, Iran said the UAE claim to the three islands is not grounded in facts, that the islands have always been integral parts of Iran's sovereign territory, and that official maps from hundreds of years ago support this.",
-      "is_quote": false,
-      "signal": "denial",
+      "id": "st_43ae4d86ef9a",
+      "speaker": "Esmail Baghaei",
+      "role": "Foreign Ministry Spokesman",
+      "date": "2026-10-05",
+      "text": "“We all die” is a fact; “so it doesn't matter” is the leap where existential dread becomes a political weapon.",
+      "is_quote": true,
+      "signal": "warning",
+      "stance": -2,
+      "source_url": "https://en.mfa.ir/portal/NewsView/795355"
+    },
+    {
+      "id": "st_17fce35f4d6e",
+      "speaker": "Esmail Baghaei",
+      "role": "Foreign Ministry Spokesman",
+      "date": "2026-10-05",
+      "text": "Appeasement buys no safety - it merely negotiates the order of the victims.",
+      "is_quote": true,
+      "signal": "warning",
+      "stance": -2,
+      "source_url": "https://en.mfa.ir/portal/NewsView/795355"
+    },
+    {
+      "id": "st_23ffe77b59ab",
+      "speaker": "Esmail Baghaei",
+      "role": "Foreign Ministry Spokesperson",
+      "date": "2026-10-05",
+      "text": "condemned the violent treatment of protesters by French security forces and called on those whose human rights claims have become deafening to respect fundamental human rights and basic freedoms when dealing with labor-related protests by school and university students",
+      "is_quote": true,
+      "signal": "accusation",
       "stance": -1,
-      "source_url": "https://press.un.org/en/2026/gaspd833.doc.htm"
+      "source_url": "https://en.mfa.ir/portal/NewsView/795379"
+    },
+    {
+      "id": "st_02012831c274",
+      "speaker": "Esmail Baghaei",
+      "role": "Foreign Ministry Spokesperson",
+      "date": "2026-10-05",
+      "text": "French officials who describe the treatment of armed terrorists trained by the Israeli regime by Iranian security forces as a violation of human rights, themselves tolerate not the slightest violent act at peaceful gatherings against the police and suppress protesters in the harshest manner",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://en.mfa.ir/portal/NewsView/795379"
+    },
+    {
+      "id": "st_ac3d9d7e7425",
+      "speaker": "Esmail Baghaei",
+      "role": "Foreign Ministry Spokesperson",
+      "date": "2026-10-05",
+      "text": "stressed the need for protesters to refrain from violent behavior and causing damage to public and private property, as well as from attacking security and law enforcement personnel",
+      "is_quote": true,
+      "signal": "other",
+      "stance": 0,
+      "source_url": "https://en.mfa.ir/portal/NewsView/795379"
+    },
+    {
+      "id": "st_40a7dd94976f",
+      "speaker": "Esmail Baghaei",
+      "role": "Foreign Ministry Spokesperson",
+      "date": "2026-10-05",
+      "text": "called for investigation into allegations that security forces had used severe violence against protesters",
+      "is_quote": true,
+      "signal": "demand",
+      "stance": -1,
+      "source_url": "https://en.mfa.ir/portal/NewsView/795379"
     }
   ],
   "involved": {
@@ -565,7 +620,7 @@
       {
         "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
         "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
-        "mentions": 3
+        "mentions": 5
       }
     ],
     "pulses": [
@@ -580,7 +635,7 @@
         "id": "pls_iran_gulf_iran_proxy_axis_escalation",
         "name": "Iran Proxy Axis Escalation",
         "band": "critical",
-        "position": 80.0,
+        "position": 83.0,
         "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       },
       {
@@ -636,7 +691,7 @@
         "id": "pls_energy_security_energy_price_and_market_shock",
         "name": "Energy Price and Market Shock",
         "band": "severe",
-        "position": 64.0,
+        "position": 62.0,
         "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       }
     ]

@@ -551,7 +551,30 @@
     "as_of": "2026-10-05",
     "nuclear": null
   },
-  "statements": [],
+  "statements": [
+    {
+      "id": "st_61de5ba56f08",
+      "speaker": "Abdel Fattah al-Sisi",
+      "role": "President of Egypt",
+      "date": "2026-10-05",
+      "text": "require cooperation, not competition, and dialogue, not confrontation, including the management and use of natural resources and transboundary rivers in accordance with international law",
+      "is_quote": true,
+      "signal": "reassurance",
+      "stance": 1,
+      "source_url": "http://www.africanews.com/2026/10/05/ethiopias-federal-forces-retake-tigrayan-capital-mekelle/"
+    },
+    {
+      "id": "st_eb42a1a73352",
+      "speaker": "Badr Abdelatty",
+      "role": "Foreign Minister",
+      "date": "2026-10-05",
+      "text": "absolutely nothing to do",
+      "is_quote": true,
+      "signal": "denial",
+      "stance": 0,
+      "source_url": "http://www.africanews.com/2026/10/05/ethiopias-federal-forces-retake-tigrayan-capital-mekelle/"
+    }
+  ],
   "involved": {
     "theaters": [
       {
@@ -565,7 +588,7 @@
         "id": "pls_sahel_horn_state_fragility_insurgent_control",
         "name": "State Fragility and Insurgent Control",
         "band": "severe",
-        "position": 70.0,
+        "position": 68.0,
         "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive"
       },
       {

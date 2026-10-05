@@ -543,7 +543,96 @@
     "as_of": "2026-10-05",
     "nuclear": null
   },
-  "statements": [],
+  "statements": [
+    {
+      "id": "st_85d61ba7e309",
+      "speaker": "Prime Minister of Australia",
+      "role": "Prime Minister of Australia",
+      "date": "2026-10-05",
+      "text": "Australia and Fiji entering into a new alliance, only our fourth alliance in Australia's history",
+      "is_quote": true,
+      "signal": "policy_announcement",
+      "stance": 2,
+      "source_url": "https://www.pm.gov.au/media/doorstop-nadi-fiji"
+    },
+    {
+      "id": "st_647daf4cc233",
+      "speaker": "Prime Minister of Australia",
+      "role": "Prime Minister of Australia",
+      "date": "2026-10-05",
+      "text": "It is important that Pacific voices are heard, because the Pacific is the front line of action on climate change",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 1,
+      "source_url": "https://www.pm.gov.au/media/doorstop-nadi-fiji"
+    },
+    {
+      "id": "st_c71b24390a84",
+      "speaker": "Prime Minister of Australia",
+      "role": "Prime Minister of Australia",
+      "date": "2026-10-05",
+      "text": "For many of the nations represented by leaders here, it is literally a threat to their very existence, which is why the world must act",
+      "is_quote": true,
+      "signal": "demand",
+      "stance": 0,
+      "source_url": "https://www.pm.gov.au/media/doorstop-nadi-fiji"
+    },
+    {
+      "id": "st_b68a45d4159d",
+      "speaker": "Anthony Albanese",
+      "role": "Prime Minister",
+      "date": "2026-10-05",
+      "text": "Australia is proud to stand with our Pacific family and co-host these events with Fiji and Tuvalu, putting our region’s priorities on the world stage.",
+      "is_quote": true,
+      "signal": "reassurance",
+      "stance": 2,
+      "source_url": "https://www.pm.gov.au/media/pre-cop-leaders-event-fiji-and-tuvalu"
+    },
+    {
+      "id": "st_c19e6cf17101",
+      "speaker": "Anthony Albanese",
+      "role": "Prime Minister",
+      "date": "2026-10-05",
+      "text": "This builds on the work we’ve been undertaking to boost stability, security and prosperity in the region – which is crucial to Australia’s national interest.",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 1,
+      "source_url": "https://www.pm.gov.au/media/pre-cop-leaders-event-fiji-and-tuvalu"
+    },
+    {
+      "id": "st_29d0700fc2ed",
+      "speaker": "Anthony Albanese",
+      "role": "Prime Minister",
+      "date": "2026-10-05",
+      "text": "Pre-COP in the Pacific will allow the world to hear directly from those on the front line of climate change and see the solutions that these nations are leading.",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 2,
+      "source_url": "https://www.pm.gov.au/media/pre-cop-leaders-event-fiji-and-tuvalu"
+    },
+    {
+      "id": "st_2541e437318b",
+      "speaker": "Prime Minister of Australia",
+      "role": "Prime Minister",
+      "date": "2026-10-05",
+      "text": "At COP30 Australia secured the role of COP31 President of Negotiations and agreement to deliver a Pacific-hosted Pre-COP including a special Leaders' event, which Australia will co-host with Fiji and Tuvalu to lay foundations for COP31 negotiations in Antalya in November 2026 and elevate Pacific priorities",
+      "is_quote": false,
+      "signal": "policy_announcement",
+      "stance": 1,
+      "source_url": "https://www.pm.gov.au/media/pre-cop-leaders-event-fiji-and-tuvalu"
+    },
+    {
+      "id": "st_a7b3ff2de20d",
+      "speaker": "Prime Minister",
+      "role": "Prime Minister of Australia",
+      "date": "2026-10-01",
+      "text": "which is why we continue to call for a de-escalation",
+      "is_quote": true,
+      "signal": "demand",
+      "stance": 0,
+      "source_url": "https://www.pm.gov.au/media/press-conference-bell-bay-tasmania"
+    }
+  ],
   "involved": {
     "theaters": [
       {

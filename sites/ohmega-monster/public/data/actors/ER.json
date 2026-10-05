@@ -332,6 +332,28 @@
   },
   "statements": [
     {
+      "id": "st_d06f3cf92b35",
+      "speaker": "Eritrea",
+      "role": "Government",
+      "date": "2026-10-05",
+      "text": "Ethiopia is planning to invade Eritrea and seize access to its coastline.",
+      "is_quote": false,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "http://www.africanews.com/2026/10/05/ethiopias-federal-forces-retake-tigrayan-capital-mekelle/"
+    },
+    {
+      "id": "st_dd3df925d870",
+      "speaker": "Eritrea",
+      "role": "Government",
+      "date": "2026-10-04",
+      "text": "sever all diplomatic ties",
+      "is_quote": true,
+      "signal": "policy_announcement",
+      "stance": -2,
+      "source_url": "http://www.africanews.com/2026/10/04/ethiopias-oromo-celebrate-irreecha-and-call-for-peace-as-federal-forces-enter-mekelle/"
+    },
+    {
       "id": "st_4e8b74da34f8",
       "speaker": "Representative of Eritrea",
       "role": "Delegate to the Third Committee",
@@ -356,7 +378,7 @@
         "id": "pls_sahel_horn_state_fragility_insurgent_control",
         "name": "State Fragility and Insurgent Control",
         "band": "severe",
-        "position": 70.0,
+        "position": 68.0,
         "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive"
       },
       {

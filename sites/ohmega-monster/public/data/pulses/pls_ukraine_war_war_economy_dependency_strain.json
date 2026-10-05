@@ -10,12 +10,12 @@
   "situation_id": "sit_ukraine_war",
   "situation": "The war in Ukraine",
   "status": "experimental",
-  "position": 82.0,
+  "position": 83.0,
   "band": "critical",
   "confidence": "medium",
   "velocity_7d": null,
-  "last_assessed": "2026-10-03T22:18:16.537119+00:00",
-  "evidence_through": "2026-10-03",
+  "last_assessed": "2026-10-05T08:14:35.334028+00:00",
+  "evidence_through": "2026-10-05",
   "history": [
     {
       "at": "2026-10-01T03:00:57.470982+00:00",
@@ -28,6 +28,10 @@
     {
       "at": "2026-10-02T07:16:04.035132+00:00",
       "position": 82.0
+    },
+    {
+      "at": "2026-10-05T08:14:35.334028+00:00",
+      "position": 83.0
     }
   ],
   "definition": {
@@ -108,6 +112,18 @@
       "rationale": "Closest to 2026-10-02 reading 82 (China ~87% dual-use, oil/gas ~30% budget 24% below plan, refinery -30% with 92% regions shortages, 17.1T ruble defense +27%). New research shows Center-2026 with Chinese contingent (47k personnel, 700 equipment, 600 UAVs) and likely 8k NK personnel + Shahed production in NK, plus decree 2.44M strength, but provides no new CHPL export, yuan settlement, crude…",
       "confidence": "medium",
       "evidence_through": "2026-10-03",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-05T08:14:35.334028+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "applied",
+      "position": 83.0,
+      "rationale": "Closest to 2026-10-02 reading 82 (China ~87% dual-use, oil/gas ~30% budget 24% below plan, refinery throughput -30% with 92% regions in shortage, 17.1T ruble defense +27%). New confirmed Oct 4 figure 51% refining capacity disabled vs 45% Sep 21 (+6pp in ~2 weeks), plus government lowering fuel standards to Euro-2/3/4 through July 2027 and counting naphtha as gasoline, confirming damage to…",
+      "confidence": "medium",
+      "evidence_through": "2026-10-05",
       "model": "muse-spark-1.2-contributor",
       "article_url": null
     }

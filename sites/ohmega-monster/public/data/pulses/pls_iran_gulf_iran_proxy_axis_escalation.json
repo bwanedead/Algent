@@ -9,12 +9,12 @@
   "situation_id": "sit_iran_gulf",
   "situation": "Iran, Israel and the Gulf",
   "status": "experimental",
-  "position": 80.0,
+  "position": 83.0,
   "band": "critical",
   "confidence": "high",
   "velocity_7d": null,
-  "last_assessed": "2026-10-04T21:54:03.205317+00:00",
-  "evidence_through": "2026-10-04",
+  "last_assessed": "2026-10-05T08:11:46.846756+00:00",
+  "evidence_through": "2026-10-05",
   "history": [
     {
       "at": "2026-10-01T03:00:57.470982+00:00",
@@ -31,6 +31,10 @@
     {
       "at": "2026-10-02T07:06:21.526172+00:00",
       "position": 80.0
+    },
+    {
+      "at": "2026-10-05T08:11:46.846756+00:00",
+      "position": 83.0
     }
   ],
   "definition": {
@@ -123,6 +127,18 @@
       "rationale": "Closest to 2026-10-03 held at 80 (reader thought 80) which already reflected sustained kinetic control (Houthi blockade 20 July, seizure of entire Red Sea coast/Mocha/Perim controlling Bab el-Mandeb, Saudi-only ban since July, East-West pipeline/Jazan disabled, Hezbollah rejection of disarmament). New confirmed Houthi claim of ballistic missile/drone strike on Aramco Riyadh with…",
       "confidence": "medium",
       "evidence_through": "2026-10-04",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-05T08:11:46.846756+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "applied",
+      "position": 83.0,
+      "rationale": "Closest to 2026-10-04 held at 80 (reader thought 80) which reflected sustained Houthi kinetic control (blockade 20 July, seizure of entire Red Sea coast/Mocha/Perim controlling Bab al-Mandab, pipeline/Jazan disabled). New confirmed moves beyond control to active multi-front war: PLC chairman 4 Oct announced operations to retake all Houthi territory, 13+ airstrikes on Sanaa 3-4 Oct plus…",
+      "confidence": "high",
+      "evidence_through": "2026-10-05",
       "model": "muse-spark-1.2-contributor",
       "article_url": null
     }

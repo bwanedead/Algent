@@ -551,13 +551,102 @@
     "as_of": "2026-10-05",
     "nuclear": null
   },
-  "statements": [],
+  "statements": [
+    {
+      "id": "st_c34a622f53af",
+      "speaker": "Volodymyr Zelenskyy",
+      "role": "President",
+      "date": "2026-10-05",
+      "text": "Kyiv had agreed to join US-proposed trilateral technical talks in the United Arab Emirates.",
+      "is_quote": false,
+      "signal": "commitment",
+      "stance": 1,
+      "source_url": "https://www.aa.com.tr/en/world/morning-briefing-oct-5-2026/4077995"
+    },
+    {
+      "id": "st_b8f47f43299f",
+      "speaker": "Volodymyr Zelenskyy",
+      "role": "President",
+      "date": "2026-10-04",
+      "text": "It includes weapons that will help us now, as well as support for our energy sector ahead of winter – an important energy package. Of course, we discussed the need for air defense, which is critical at this time,",
+      "is_quote": true,
+      "signal": "policy_announcement",
+      "stance": 1,
+      "source_url": "https://www.aa.com.tr/en/europe/zelenskyy-says-germany-provides-ukraine-with-146b-support-package/4077652"
+    },
+    {
+      "id": "st_fddeed0d8cf4",
+      "speaker": "Volodymyr Zelenskyy",
+      "role": "President",
+      "date": "2026-10-04",
+      "text": "The total value of our agreements today is more than €8.5 billion,",
+      "is_quote": true,
+      "signal": "policy_announcement",
+      "stance": 1,
+      "source_url": "https://www.aa.com.tr/en/europe/zelenskyy-says-germany-provides-ukraine-with-146b-support-package/4077652"
+    },
+    {
+      "id": "st_c8e58c3c68b4",
+      "speaker": "Volodymyr Zelenskyy",
+      "role": "President",
+      "date": "2026-10-04",
+      "text": "Ukraine and Germany reached a separate agreement to expand cooperation on joint efforts to counter drones.",
+      "is_quote": false,
+      "signal": "policy_announcement",
+      "stance": 1,
+      "source_url": "https://www.aa.com.tr/en/europe/zelenskyy-says-germany-provides-ukraine-with-146b-support-package/4077652"
+    },
+    {
+      "id": "st_c74594cfdcaf",
+      "speaker": "Volodymyr Zelenskyy",
+      "role": "President",
+      "date": "2026-10-04",
+      "text": "gives money to them for this war",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": -2,
+      "source_url": "https://www.japantimes.co.jp/news/2026/10/04/world/russia-vows-increased-strikes/"
+    },
+    {
+      "id": "st_d1a21fec3adb",
+      "speaker": "Volodymyr Zelenskyy",
+      "role": "President",
+      "date": "2026-10-04",
+      "text": "Germany's new support package comprises €1 billion in military aid and €350 million for energy sector repairs ahead of winter",
+      "is_quote": false,
+      "signal": "policy_announcement",
+      "stance": 2,
+      "source_url": "https://www.dw.com/en/germany-s-merz-visits-kyiv-as-russia-strikes-bridge/a-79534734?maca=en-rss-en-all-1573-rdf"
+    },
+    {
+      "id": "st_c11a4b1e67f2",
+      "speaker": "Volodymyr Zelenskyy",
+      "role": "President",
+      "date": "2026-10-04",
+      "text": "It is vital that Ukraine is not left alone in the face of this terror.",
+      "is_quote": true,
+      "signal": "demand",
+      "stance": -2,
+      "source_url": "https://www.dw.com/en/germany-s-merz-visits-kyiv-as-russia-strikes-bridge/a-79534734?maca=en-rss-en-all-1573-rdf"
+    },
+    {
+      "id": "st_7f8edf2b4433",
+      "speaker": "Serhii Koretskyi",
+      "role": "Prime Minister of Ukraine",
+      "date": "2026-10-03",
+      "text": "Ukraine has raised 50 million euros ($56.3 million) from the Council of Europe Development Bank and the Italian government for compensation to people whose homes were destroyed by Russian invasion forces.",
+      "is_quote": false,
+      "signal": "policy_announcement",
+      "stance": 1,
+      "source_url": "https://english.nv.ua/nation/ukraine-secures-50-million-euros-for-compensation-for-destroyed-homes-50646851.html"
+    }
+  ],
   "involved": {
     "theaters": [
       {
         "id": "thr_russia_ukraine_war_and_european_security_archite",
         "name": "Russia-Ukraine war and European security architecture",
-        "mentions": 15
+        "mentions": 16
       }
     ],
     "pulses": [
@@ -565,7 +654,7 @@
         "id": "pls_ukraine_war_combat_strike_intensity",
         "name": "Combat and Long-Range Strike Intensity",
         "band": "critical",
-        "position": 84.0,
+        "position": 85.0,
         "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
       },
       {
@@ -579,7 +668,7 @@
         "id": "pls_ukraine_war_war_economy_dependency_strain",
         "name": "War Economy and External Dependency Strain",
         "band": "critical",
-        "position": 82.0,
+        "position": 83.0,
         "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
       },
       {

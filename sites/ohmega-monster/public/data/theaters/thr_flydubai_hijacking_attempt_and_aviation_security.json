@@ -8,7 +8,7 @@
   "last_seen": "2026-10-05",
   "days_covered": 1,
   "state": "active",
-  "last_novel": "2026-10-04",
+  "last_novel": "2026-10-05",
   "primer": {
     "text": "FlyDubai operates passenger service between Dubai in the United Arab Emirates and Tel Aviv in Israel. On any commercial flight the captain and co-pilot share control of the cockpit under strict aviation security rules designed to keep the aircraft safe. A hijacking attempt means an effort to seize control of an aircraft in flight. If control is threatened, the crew can make an emergency diversion, landing at an alternate airport such as Tabuk instead of the planned destination. Because cockpit crew are trusted insiders, an attack by one crew member on another triggers a wider security review, ordered at the highest political level in Israel, and investigations into the co-pilot's motives to determine what kind of threat it represents.",
     "built_at": "2026-10-05T02:19:08.047608+00:00"
@@ -60,7 +60,7 @@
     },
     {
       "day": "2026-10-04",
-      "count": 6,
+      "count": 5,
       "editions": 0
     },
     {

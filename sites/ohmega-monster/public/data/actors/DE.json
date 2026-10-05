@@ -533,7 +533,96 @@
     "as_of": "2026-10-05",
     "nuclear": null
   },
-  "statements": [],
+  "statements": [
+    {
+      "id": "st_0668f8b79f51",
+      "speaker": "Johann Wadephul",
+      "role": "Foreign Minister",
+      "date": "2026-10-05",
+      "text": "For more than four years now, we have been witnessing Putin’s brutal and illegal war of aggression against Ukraine.",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2804288-2804288"
+    },
+    {
+      "id": "st_8ecc38221968",
+      "speaker": "Johann Wadephul",
+      "role": "Foreign Minister",
+      "date": "2026-10-05",
+      "text": "Especially with a view to the approaching winter, Russia is systematically targeting civilian heating and energy infrastructure.",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2804288-2804288"
+    },
+    {
+      "id": "st_e894ba334f57",
+      "speaker": "Johann Wadephul",
+      "role": "Foreign Minister",
+      "date": "2026-10-05",
+      "text": "There is no room in this Assembly for those who wage illegal wars of aggression!",
+      "is_quote": true,
+      "signal": "policy_announcement",
+      "stance": -2,
+      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2804288-2804288"
+    },
+    {
+      "id": "st_740a3bc68b79",
+      "speaker": "Johann Wadephul",
+      "role": "Foreign Minister",
+      "date": "2026-10-05",
+      "text": "Only today, our Estonian friends announced that Russia was clearly responsible for the arson attack in Tallinn on the night of 14 to 15 August.",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2804288-2804288"
+    },
+    {
+      "id": "st_5c0ef628218e",
+      "speaker": "Johann Wadephul",
+      "role": "Foreign Minister",
+      "date": "2026-10-05",
+      "text": "All this because Putin is under the illusion that, through these actions, he can sow uncertainty in our free societies.",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2804288-2804288"
+    },
+    {
+      "id": "st_8491d12812be",
+      "speaker": "Johann Wadephul",
+      "role": "Foreign Minister",
+      "date": "2026-10-05",
+      "text": "We stand firmly by the side of the Ukrainian people.",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 2,
+      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2804288-2804288"
+    },
+    {
+      "id": "st_4dd69f2e3e9f",
+      "speaker": "Johann Wadephul",
+      "role": "Foreign Minister",
+      "date": "2026-10-05",
+      "text": "We will complete our ratification process for Germany’s accession to the Convention establishing an International Claims Commission by the end of the year.",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 1,
+      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2804288-2804288"
+    },
+    {
+      "id": "st_da4b1c386ef4",
+      "speaker": "Johann Wadephul",
+      "role": "Foreign Minister",
+      "date": "2026-10-05",
+      "text": "Germany calls on UN member states to work towards common safety requirements for the most capable AI models, requiring providers to test models before release and report serious safety failures, supported by effective national and regional oversight.",
+      "is_quote": false,
+      "signal": "policy_announcement",
+      "stance": 0,
+      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2804084-2804084"
+    }
+  ],
   "involved": {
     "theaters": [],
     "pulses": []

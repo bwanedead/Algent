@@ -3,7 +3,7 @@
   "theater_id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
   "name": "US withdrawal from Iraq after 23-year presence",
   "domain": "geopolitics",
-  "built_at": "2026-10-04T21:38:55.474453+00:00",
+  "built_at": "2026-10-05T08:11:46.846756+00:00",
   "first_seen": "2026-09-30",
   "last_seen": "2026-10-05",
   "days_covered": 3,
@@ -29,7 +29,7 @@
       "id": "pls_iran_gulf_iran_proxy_axis_escalation",
       "name": "Iran Proxy Axis Escalation",
       "situation": "Iran, Israel and the Gulf",
-      "position": 80.0,
+      "position": 83.0,
       "band": "critical",
       "history": [
         {
@@ -47,6 +47,10 @@
         {
           "at": "2026-10-02T07:06:21.526172+00:00",
           "position": 80.0
+        },
+        {
+          "at": "2026-10-05T08:11:46.846756+00:00",
+          "position": 83.0
         }
       ]
     },

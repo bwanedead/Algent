@@ -520,13 +520,58 @@
     "as_of": "2026-10-05",
     "nuclear": null
   },
-  "statements": [],
+  "statements": [
+    {
+      "id": "st_603177fa86a9",
+      "speaker": "Ethiopia",
+      "role": "Government",
+      "date": "2026-10-05",
+      "text": "Eritrea is directly backing the Tigray rebels, with added support from Sudan and Egypt.",
+      "is_quote": false,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "http://www.africanews.com/2026/10/05/ethiopias-federal-forces-retake-tigrayan-capital-mekelle/"
+    },
+    {
+      "id": "st_057a323393d3",
+      "speaker": "Ethiopia",
+      "role": "Government",
+      "date": "2026-10-04",
+      "text": "Ethiopia accuses Eritrea and Egypt of supporting the Tigrayan rebels (TPLF).",
+      "is_quote": false,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "http://www.africanews.com/2026/10/04/ethiopias-oromo-celebrate-irreecha-and-call-for-peace-as-federal-forces-enter-mekelle/"
+    },
+    {
+      "id": "st_69fbc131a533",
+      "speaker": "Ethiopian authorities",
+      "role": "",
+      "date": "2026-10-04",
+      "text": "Ethiopian authorities accused the TPLF of allying with neighbouring Eritrea and with Ethiopian armed groups.",
+      "is_quote": false,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "http://www.africanews.com/2026/10/04/ethiopian-forces-recapture-mekelle-airport-from-tigrayan-fighters/"
+    },
+    {
+      "id": "st_a2a485fb1045",
+      "speaker": "Ethiopian general",
+      "role": "General",
+      "date": "2026-10-03",
+      "text": "The military is in full control of the airport. That much I can confirm,",
+      "is_quote": true,
+      "signal": "other",
+      "stance": -1,
+      "source_url": "http://www.africanews.com/2026/10/04/ethiopian-forces-recapture-mekelle-airport-from-tigrayan-fighters/"
+    }
+  ],
   "involved": {
     "theaters": [
       {
         "id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
         "name": "Ethiopia-Eritrea rupture and Tigray offensive",
-        "mentions": 7
+        "mentions": 8
       }
     ],
     "pulses": [
@@ -534,7 +579,7 @@
         "id": "pls_sahel_horn_state_fragility_insurgent_control",
         "name": "State Fragility and Insurgent Control",
         "band": "severe",
-        "position": 70.0,
+        "position": 68.0,
         "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive"
       },
       {

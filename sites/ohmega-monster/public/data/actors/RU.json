@@ -623,37 +623,37 @@
       "source_url": "http://en.kremlin.ru/events/president/news/80919"
     },
     {
-      "id": "st_cb7ee2ec0942",
-      "speaker": "Vladimir Putin",
-      "role": "President",
-      "date": "2026-10-02",
-      "text": "The Centre-2026 command post exercise is being held under the Armed Forces training plan, in conjunction with the Interaction-2026 exercise scheduled as part of the Collective Security Treaty Organisation's plan.",
+      "id": "st_f071196defb5",
+      "speaker": "Russian Defense Ministry",
+      "role": "Defense Ministry",
+      "date": "2026-10-04",
+      "text": "The Russian armed forces will intensify strikes against military and military-industrial facilities, as well as related infrastructure in Kyiv and other regions of Ukraine,",
       "is_quote": true,
-      "signal": "policy_announcement",
-      "stance": 1,
-      "source_url": "http://en.kremlin.ru/events/president/transcripts/80912"
+      "signal": "threat",
+      "stance": -2,
+      "source_url": "https://www.japantimes.co.jp/news/2026/10/04/world/russia-vows-increased-strikes/"
     },
     {
-      "id": "st_21ec34d7193c",
-      "speaker": "Vladimir Putin",
-      "role": "President",
-      "date": "2026-10-02",
-      "text": "The main objective of the exercise is to improve the skills of commanders at all levels in repelling external aggression.",
+      "id": "st_615f72bbf6eb",
+      "speaker": "Russian Foreign Ministry",
+      "role": "Foreign Ministry",
+      "date": "2026-10-04",
+      "text": "mortal danger",
       "is_quote": true,
-      "signal": "commitment",
-      "stance": 0,
-      "source_url": "http://en.kremlin.ru/events/president/transcripts/80912"
+      "signal": "warning",
+      "stance": -2,
+      "source_url": "https://www.japantimes.co.jp/news/2026/10/04/world/russia-vows-increased-strikes/"
     },
     {
-      "id": "st_358524e4d61e",
-      "speaker": "Vladimir Putin",
-      "role": "President",
-      "date": "2026-10-02",
-      "text": "I am confident that the results of the Centre-2026 and Interaction-2026 exercises, along with the experience gained by the personnel, will enhance our effectiveness in responding to external threats to our countries' security.",
+      "id": "st_4758bbc3b6cb",
+      "speaker": "Russian Foreign Ministry",
+      "role": "Foreign Ministry",
+      "date": "2026-10-04",
+      "text": "The responsibility for any negative consequences lies entirely with those who ignore this warning,",
       "is_quote": true,
-      "signal": "reassurance",
-      "stance": 1,
-      "source_url": "http://en.kremlin.ru/events/president/transcripts/80912"
+      "signal": "warning",
+      "stance": -2,
+      "source_url": "https://www.dw.com/en/germany-s-merz-visits-kyiv-as-russia-strikes-bridge/a-79534734?maca=en-rss-en-all-1573-rdf"
     }
   ],
   "involved": {
@@ -661,7 +661,12 @@
       {
         "id": "thr_russia_ukraine_war_and_european_security_archite",
         "name": "Russia-Ukraine war and European security architecture",
-        "mentions": 21
+        "mentions": 22
+      },
+      {
+        "id": "thr_us_china_summit_and_strategic_competition",
+        "name": "US-China summit and strategic competition",
+        "mentions": 1
       }
     ],
     "pulses": [
@@ -669,7 +674,7 @@
         "id": "pls_ukraine_war_combat_strike_intensity",
         "name": "Combat and Long-Range Strike Intensity",
         "band": "critical",
-        "position": 84.0,
+        "position": 85.0,
         "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
       },
       {
@@ -683,7 +688,7 @@
         "id": "pls_ukraine_war_war_economy_dependency_strain",
         "name": "War Economy and External Dependency Strain",
         "band": "critical",
-        "position": 82.0,
+        "position": 83.0,
         "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
       },
       {
@@ -692,6 +697,13 @@
         "band": "severe",
         "position": 72.0,
         "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      },
+      {
+        "id": "pls_us_china_technology_export_control_decoupling",
+        "name": "Technology and Export-Control Decoupling",
+        "band": "severe",
+        "position": 65.0,
+        "theater_id": "thr_us_china_summit_and_strategic_competition"
       },
       {
         "id": "pls_russia_nato_diplomatic_rupture",
@@ -706,6 +718,27 @@
         "band": "severe",
         "position": 58.0,
         "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      },
+      {
+        "id": "pls_us_china_trade_tariff_confrontation",
+        "name": "Trade and Tariff Confrontation",
+        "band": "elevated",
+        "position": 35.0,
+        "theater_id": "thr_us_china_summit_and_strategic_competition"
+      },
+      {
+        "id": "pls_us_china_diplomatic_deadlock",
+        "name": "Diplomatic Deadlock",
+        "band": "calm",
+        "position": 20.0,
+        "theater_id": "thr_us_china_summit_and_strategic_competition"
+      },
+      {
+        "id": "pls_ai_geopolitics_ai_safety_governance_fracture",
+        "name": "AI Safety Governance Fracture",
+        "band": "unassessed",
+        "position": null,
+        "theater_id": "thr_us_china_summit_and_strategic_competition"
       }
     ]
   },

@@ -557,7 +557,7 @@
         "id": "pls_ukraine_war_combat_strike_intensity",
         "name": "Combat and Long-Range Strike Intensity",
         "band": "critical",
-        "position": 84.0,
+        "position": 85.0,
         "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
       },
       {
@@ -571,7 +571,7 @@
         "id": "pls_ukraine_war_war_economy_dependency_strain",
         "name": "War Economy and External Dependency Strain",
         "band": "critical",
-        "position": 82.0,
+        "position": 83.0,
         "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
       },
       {

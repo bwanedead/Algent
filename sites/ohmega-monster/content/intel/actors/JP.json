@@ -533,7 +533,96 @@
     "as_of": "2026-10-05",
     "nuclear": null
   },
-  "statements": [],
+  "statements": [
+    {
+      "id": "st_b56a8b0584cb",
+      "speaker": "Sanae Takaichi",
+      "role": "Prime Minister of Japan",
+      "date": "2026-09-26",
+      "text": "explained the latest U.S.-China summit meeting in quite a lot of detail",
+      "is_quote": true,
+      "signal": "reassurance",
+      "stance": 0,
+      "source_url": "https://japan.kantei.go.jp/105/speech/202609/0926press.html"
+    },
+    {
+      "id": "st_89631858cfb3",
+      "speaker": "Sanae Takaichi",
+      "role": "Prime Minister of Japan",
+      "date": "2026-09-26",
+      "text": "exchanged views primarily on issues related to China, covering economic affairs, including economic security, as well as security affairs",
+      "is_quote": true,
+      "signal": "policy_announcement",
+      "stance": 0,
+      "source_url": "https://japan.kantei.go.jp/105/speech/202609/0926press.html"
+    },
+    {
+      "id": "st_eb20ea0e3f1b",
+      "speaker": "Sanae Takaichi",
+      "role": "Prime Minister of Japan",
+      "date": "2026-09-26",
+      "text": "confirmed close coordination between Japan and the United States",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 2,
+      "source_url": "https://japan.kantei.go.jp/105/speech/202609/0926press.html"
+    },
+    {
+      "id": "st_7325aa8ad6ec",
+      "speaker": "Sanae Takaichi",
+      "role": "Prime Minister of Japan",
+      "date": "2026-09-26",
+      "text": "demonstrates the strength of the bonds of the Japan-U.S. Alliance",
+      "is_quote": true,
+      "signal": "reassurance",
+      "stance": 2,
+      "source_url": "https://japan.kantei.go.jp/105/speech/202609/0926press.html"
+    },
+    {
+      "id": "st_1b78637d1968",
+      "speaker": "Sanae Takaichi",
+      "role": "Prime Minister of Japan",
+      "date": "2026-09-26",
+      "text": "I intend to continue working in close coordination with President Trump",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 1,
+      "source_url": "https://japan.kantei.go.jp/105/speech/202609/0926press.html"
+    },
+    {
+      "id": "st_2f493ed38f9f",
+      "speaker": "Sanae Takaichi",
+      "role": "Prime Minister of Japan",
+      "date": "2026-09-26",
+      "text": "Japan and the United States have now become each other's most trusted allies",
+      "is_quote": true,
+      "signal": "reassurance",
+      "stance": 2,
+      "source_url": "https://japan.kantei.go.jp/105/speech/202609/0926press.html"
+    },
+    {
+      "id": "st_de6b2ce12ef8",
+      "speaker": "Sanae Takaichi",
+      "role": "Prime Minister of Japan",
+      "date": "2026-09-26",
+      "text": "together we will contribute to peace and stability in the region and the world",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 1,
+      "source_url": "https://japan.kantei.go.jp/105/speech/202609/0926press.html"
+    },
+    {
+      "id": "st_127abcf78481",
+      "speaker": "Sanae Takaichi",
+      "role": "Prime Minister of Japan",
+      "date": "2026-09-26",
+      "text": "I will refrain from commenting, as they concern diplomatic exchanges",
+      "is_quote": true,
+      "signal": "other",
+      "stance": 0,
+      "source_url": "https://japan.kantei.go.jp/105/speech/202609/0926press.html"
+    }
+  ],
   "involved": {
     "theaters": [],
     "pulses": []

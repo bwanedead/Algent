@@ -1,6 +1,6 @@
 {
   "schema": "ohmega.pulses/1",
-  "built_at": "2026-10-05T07:14:51.929785+00:00",
+  "built_at": "2026-10-05T08:33:37.580005+00:00",
   "pulses": [
     {
       "id": "pls_ai_geopolitics_ai_safety_governance_fracture",
@@ -183,21 +183,25 @@
       "low_end": "Energy prices stable and low with little pass-through to headline inflation or consumer costs.",
       "high_end": "Sustained extreme energy price spike driving broad inflation, de-anchored expectations, fiscal strain and demand destruction.",
       "status": "experimental",
-      "position": 64.0,
+      "position": 62.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-03T12:27:17.793320+00:00",
-      "evidence_through": "2026-10-03",
+      "last_assessed": "2026-10-05T08:11:46.846756+00:00",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {
           "at": "2026-10-01T03:00:57.470982+00:00",
           "position": 64.0
+        },
+        {
+          "at": "2026-10-05T08:11:46.846756+00:00",
+          "position": 62.0
         }
       ],
       "title": "Global Economy · Energy Price and Market Shock",
       "actors_iso2": [],
-      "rationale": "Brent around $101.30-101.52 Sept 22 near low since Sept 10 but averaged $91 in August (+$7 vs July), EIA forecasts ~$90 in 2H26 falling to $74 in 2027 as inventories rebuild; U.S. energy prices +15.7% y/y in June, OECD sees headline PCE peaking ~4% mid-2026 then easing, core CPI flat m/m at 2.6% y/y suggesting shock still headline-only. Distillate inventories below 100m barrels and diesel cracks…",
+      "rationale": "Closest to 2026-10-01 at 64 (Brent ~101.3-101.5, US energy +15.7% y/y, OECD ~4% peak, core flat). New research shows same elevated-but-contained shock but modestly calmer: G7 100m barrel IEA release front-loaded diesel beginning immediately, Middle East exports above pre-war levels late Sept and Brent easing to ~101.59-101.90 on 5 Oct though still >$100, and Aramco cutting Nov Asia prices to…",
       "data_url": "/data/pulses/pls_energy_security_energy_price_and_market_shock.json"
     },
     {
@@ -212,8 +216,8 @@
       "position": 77.0,
       "band": "critical",
       "confidence": "high",
-      "last_assessed": "2026-10-03T12:27:17.793320+00:00",
-      "evidence_through": "2026-10-03",
+      "last_assessed": "2026-10-05T08:11:46.846756+00:00",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {
@@ -246,8 +250,8 @@
       "position": 68.0,
       "band": "severe",
       "confidence": "high",
-      "last_assessed": "2026-10-03T12:27:17.793320+00:00",
-      "evidence_through": "2026-10-03",
+      "last_assessed": "2026-10-05T08:11:46.846756+00:00",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {
@@ -272,8 +276,8 @@
       "position": 84.0,
       "band": "critical",
       "confidence": "high",
-      "last_assessed": "2026-10-04T21:54:03.205317+00:00",
-      "evidence_through": "2026-10-04",
+      "last_assessed": "2026-10-05T08:11:46.846756+00:00",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {
@@ -310,11 +314,11 @@
       "low_end": "Proxy networks dormant with no attacks on shipping or neighbors, and full compliance with disarmament and de-escalation agreements.",
       "high_end": "Coordinated full-scale proxy war with sustained Houthi/Hezbollah/Iraqi militia attacks on shipping, Gulf infrastructure and Israel, triggering major retaliation.",
       "status": "experimental",
-      "position": 80.0,
+      "position": 83.0,
       "band": "critical",
       "confidence": "high",
-      "last_assessed": "2026-10-04T21:54:03.205317+00:00",
-      "evidence_through": "2026-10-04",
+      "last_assessed": "2026-10-05T08:11:46.846756+00:00",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {
@@ -332,13 +336,17 @@
         {
           "at": "2026-10-02T07:06:21.526172+00:00",
           "position": 80.0
+        },
+        {
+          "at": "2026-10-05T08:11:46.846756+00:00",
+          "position": 83.0
         }
       ],
       "title": "Iran Proxy Axis · Escalation",
       "actors_iso2": [
         "IR"
       ],
-      "rationale": "Closest to 2026-10-01 at 77 (Houthi blockade, Mokha/Hanish seizure, pipeline/Jazan disabled). New confirmed moves from control/threat to sustained kinetic exchange: Houthis advanced ~150km in early Sept capturing Mocha to Bab al-Mandab including Dhubab and Perim Island controlling entire Red Sea coast, 25+ days of missile/drone attacks July13-Sept25 hitting Jizan energy, aviation and first Riyadh…",
+      "rationale": "Closest to 2026-10-04 held at 80 (reader thought 80) which reflected sustained Houthi kinetic control (blockade 20 July, seizure of entire Red Sea coast/Mocha/Perim controlling Bab al-Mandab, pipeline/Jazan disabled). New confirmed moves beyond control to active multi-front war: PLC chairman 4 Oct announced operations to retake all Houthi territory, 13+ airstrikes on Sanaa 3-4 Oct plus…",
       "data_url": "/data/pulses/pls_iran_gulf_iran_proxy_axis_escalation.json"
     },
     {
@@ -353,8 +361,8 @@
       "position": 74.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-04T21:54:03.205317+00:00",
-      "evidence_through": "2026-10-04",
+      "last_assessed": "2026-10-05T08:11:46.846756+00:00",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {
@@ -386,8 +394,8 @@
       "position": 78.0,
       "band": "critical",
       "confidence": "medium",
-      "last_assessed": "2026-10-04T21:54:03.205317+00:00",
-      "evidence_through": "2026-10-04",
+      "last_assessed": "2026-10-05T08:11:46.846756+00:00",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {
@@ -559,8 +567,8 @@
       "position": 65.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-04T21:54:03.205317+00:00",
-      "evidence_through": "2026-10-04",
+      "last_assessed": "2026-10-05T08:11:46.846756+00:00",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {
@@ -599,8 +607,8 @@
       "position": null,
       "band": "unassessed",
       "confidence": "",
-      "last_assessed": "2026-10-04T21:54:03.205317+00:00",
-      "evidence_through": "2026-10-04",
+      "last_assessed": "2026-10-05T08:11:46.846756+00:00",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [],
       "title": "Houthis–Saudi Arabia · Suez Canal Throughput and Rerouting Strain",
@@ -622,8 +630,8 @@
       "position": 65.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-04T21:54:03.205317+00:00",
-      "evidence_through": "2026-10-04",
+      "last_assessed": "2026-10-05T08:11:46.846756+00:00",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {
@@ -732,7 +740,7 @@
       "position": null,
       "band": "unassessed",
       "confidence": "",
-      "last_assessed": "2026-10-05T02:26:53.984541+00:00",
+      "last_assessed": "2026-10-05T08:05:49.713859+00:00",
       "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [],
@@ -753,7 +761,7 @@
       "position": 58.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-05T02:26:53.984541+00:00",
+      "last_assessed": "2026-10-05T08:05:49.713859+00:00",
       "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
@@ -778,21 +786,25 @@
       "low_end": "Stable civilian governments with monopoly on force and insurgencies contained to peripheral areas.",
       "high_end": "Multiple simultaneous state collapses with juntas and jihadist/insurgent groups controlling large territories and threatening capitals across the Sahel and Horn.",
       "status": "experimental",
-      "position": 70.0,
+      "position": 68.0,
       "band": "severe",
-      "confidence": "high",
-      "last_assessed": "2026-10-05T02:26:53.984541+00:00",
+      "confidence": "medium",
+      "last_assessed": "2026-10-05T08:05:49.713859+00:00",
       "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {
           "at": "2026-10-05T02:02:06.240722+00:00",
           "position": 70.0
+        },
+        {
+          "at": "2026-10-05T08:05:49.713859+00:00",
+          "position": 68.0
         }
       ],
       "title": "Sahel and Horn of Africa · State Fragility and Insurgent Control",
       "actors_iso2": [],
-      "rationale": "Closest to 2026-10-03 held reading (reader thought reality 70) which cited worst escalation since 2020-2022 war, three airports seized, and 7-group alliance. New batch now provides confirmed valid evidence: Eritrea severing ties, Ethiopia closing Asmara embassy and PNGing 10 Eritrean diplomats, reciprocal Egypt PNGs, TPLF seizure of Mekelle/Shire/Axum airports shattering Pretoria Agreement…",
+      "rationale": "Closest to 2026-10-05 reading at 70 (and 2026-10-03 held thought 70) which reflected worst escalation since 2020-2022 war, seizure of three airports, 7-group Alliance for Survival to remove Abiy, and Eritrea severing ties/embassy closure. New batch confirms same rupture and Addis explosions near ENDF HQ and El Alamein bloc keeping fragility high, but also confirms federal forces retook Afar towns…",
       "data_url": "/data/pulses/pls_sahel_horn_state_fragility_insurgent_control.json"
     },
     {
@@ -804,11 +816,11 @@
       "low_end": "Sporadic shelling and limited long-range strikes with a largely static front and few impacts on cities or rear logistics.",
       "high_end": "Continuous high-tempo offensives and mass missile/drone salvos overwhelming air defenses, with widespread strikes on cities, logistics and rear areas causing mass casualties.",
       "status": "experimental",
-      "position": 84.0,
+      "position": 85.0,
       "band": "critical",
-      "confidence": "high",
-      "last_assessed": "2026-10-03T22:18:16.537119+00:00",
-      "evidence_through": "2026-10-03",
+      "confidence": "medium",
+      "last_assessed": "2026-10-05T08:14:35.334028+00:00",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {
@@ -818,6 +830,10 @@
         {
           "at": "2026-10-01T03:02:59.981202+00:00",
           "position": 84.0
+        },
+        {
+          "at": "2026-10-05T08:14:35.334028+00:00",
+          "position": 85.0
         }
       ],
       "title": "Russia–Ukraine War · Combat and Long-Range Strike Intensity",
@@ -825,7 +841,7 @@
         "RU",
         "UA"
       ],
-      "rationale": "Closest to 2026-10-01 reading 78 which already reflected severe salvos (151 drones + 6 Iskander, 195 ballistics in July ~15% intercept, Wildberries 10% damage). New research shows more extreme tempo: 170 drones (76 jet) 26-27 Sep and 190 drones+ballistics 29-30 Sep on Kyiv energy marking winter campaign start, plus systematic refinery interdiction (28/32 refineries hit, 204 strikes, avg every 3…",
+      "rationale": "Closest to 2026-10-03 held reading 84 (reader thought 84) which already priced 157-drone Oct 2-3 salvo and initial Southern/Northern bridge hits as same severe tempo. New research extends to fourth consecutive day Oct 4 (heating main cut, 2 injured, 5 of 6 Kyiv bridges restricted, metro suspended) with explicit Russian doctrine to strike roads/schools/hospitals to depopulate cities and MoD pledge…",
       "data_url": "/data/pulses/pls_ukraine_war_combat_strike_intensity.json"
     },
     {
@@ -840,8 +856,8 @@
       "position": 84.0,
       "band": "critical",
       "confidence": "high",
-      "last_assessed": "2026-10-03T22:18:16.537119+00:00",
-      "evidence_through": "2026-10-03",
+      "last_assessed": "2026-10-05T08:14:35.334028+00:00",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {
@@ -865,11 +881,11 @@
       "low_end": "Diversified, self-sufficient war economies with stable budgets and secure supply chains for critical military inputs.",
       "high_end": "Acute fiscal and supply-chain crisis with critical dependence on a single external patron for energy revenues and dual-use military inputs, forcing severe trade-offs.",
       "status": "experimental",
-      "position": 82.0,
+      "position": 83.0,
       "band": "critical",
       "confidence": "medium",
-      "last_assessed": "2026-10-03T22:18:16.537119+00:00",
-      "evidence_through": "2026-10-03",
+      "last_assessed": "2026-10-05T08:14:35.334028+00:00",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {
@@ -883,6 +899,10 @@
         {
           "at": "2026-10-02T07:16:04.035132+00:00",
           "position": 82.0
+        },
+        {
+          "at": "2026-10-05T08:14:35.334028+00:00",
+          "position": 83.0
         }
       ],
       "title": "Russia–Ukraine · War Economy and External Dependency Strain",
@@ -890,7 +910,7 @@
         "RU",
         "UA"
       ],
-      "rationale": "Closest to 2026-10-01 reading 81 (held vs 73) which already priced China ~87% dual-use dependence, oil/gas ~30% budget 24% below plan, and refinery throughput -30% with shortages in 92% regions. New confirmed details show incrementally more acute strain: 2027 defense 17.1T rubles +27% (50T over 2027-2029), deficit revised to 3.2% GDP, debt 21.7% GDP, borrowing +43% to 7.7T rubles, fourth 2026…",
+      "rationale": "Closest to 2026-10-02 reading 82 (China ~87% dual-use, oil/gas ~30% budget 24% below plan, refinery throughput -30% with 92% regions in shortage, 17.1T ruble defense +27%). New confirmed Oct 4 figure 51% refining capacity disabled vs 45% Sep 21 (+6pp in ~2 weeks), plus government lowering fuel standards to Euro-2/3/4 through July 2027 and counting naphtha as gasoline, confirming damage to…",
       "data_url": "/data/pulses/pls_ukraine_war_war_economy_dependency_strain.json"
     },
     {
@@ -905,8 +925,8 @@
       "position": 20.0,
       "band": "calm",
       "confidence": "high",
-      "last_assessed": "2026-10-02T07:45:23.986341+00:00",
-      "evidence_through": "2026-10-02",
+      "last_assessed": "2026-10-05T08:31:43.283183+00:00",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {
@@ -934,8 +954,8 @@
       "position": 65.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-02T07:45:23.986341+00:00",
-      "evidence_through": "2026-10-02",
+      "last_assessed": "2026-10-05T08:31:43.283183+00:00",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {
@@ -963,8 +983,8 @@
       "position": 35.0,
       "band": "elevated",
       "confidence": "medium",
-      "last_assessed": "2026-10-02T07:45:23.986341+00:00",
-      "evidence_through": "2026-10-02",
+      "last_assessed": "2026-10-05T08:31:43.283183+00:00",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {

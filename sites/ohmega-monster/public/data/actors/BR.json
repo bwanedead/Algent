@@ -561,7 +561,96 @@
     "as_of": "2026-10-05",
     "nuclear": null
   },
-  "statements": [],
+  "statements": [
+    {
+      "id": "st_62f7e9878a3b",
+      "speaker": "Brazil Ministry of Foreign Affairs",
+      "role": "Ministry of Foreign Affairs",
+      "date": "2026-10-05",
+      "text": "On July 27, Brazil submitted a request for consultations with the United States under the WTO dispute settlement system.",
+      "is_quote": false,
+      "signal": "policy_announcement",
+      "stance": -1,
+      "source_url": "https://www.gov.br/mre/en/contact-us/press-area/press-releases/request-for-consultations-with-the-united-states-at-the-world-trade-organization"
+    },
+    {
+      "id": "st_8021348d36d9",
+      "speaker": "Brazil Ministry of Foreign Affairs",
+      "role": "Ministry of Foreign Affairs",
+      "date": "2026-10-05",
+      "text": "The request concerns two US tariff measures adopted under Section 301 of the Trade Act of 1974: a Brazil-specific investigation that imposed an additional 25% tariff covering digital trade and electronic payment services, preferential tariffs, anti-corruption enforcement, intellectual property protection, ethanol market access and illegal deforestation; and a 60-economy investigation that imposed an additional 12.5% tariff on Brazil concerning prohibitions on imports of goods made with forced labor.",
+      "is_quote": false,
+      "signal": "accusation",
+      "stance": -1,
+      "source_url": "https://www.gov.br/mre/en/contact-us/press-area/press-releases/request-for-consultations-with-the-united-states-at-the-world-trade-organization"
+    },
+    {
+      "id": "st_3719988de728",
+      "speaker": "Brazil Ministry of Foreign Affairs",
+      "role": "Ministry of Foreign Affairs",
+      "date": "2026-10-05",
+      "text": "Brazil considers the US measures to be unjustified and inconsistent with US obligations under the General Agreement on Tariffs and Trade 1994 (GATT 1994) and the WTO's Understanding on Rules and Procedures Governing the Settlement of Disputes.",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -1,
+      "source_url": "https://www.gov.br/mre/en/contact-us/press-area/press-releases/request-for-consultations-with-the-united-states-at-the-world-trade-organization"
+    },
+    {
+      "id": "st_8cd75bf4aad1",
+      "speaker": "Brazil Ministry of Foreign Affairs",
+      "role": "Ministry of Foreign Affairs",
+      "date": "2026-10-05",
+      "text": "Throughout his reign, Harald V worked to further strengthen Brazil-Norway relations, having visited the country on several occasions. In 2003, he paid a State visit to Brazil, accompanied by an important business delegation. Ten years later, he spent four days in a Yanomami village in the Amazon.",
+      "is_quote": true,
+      "signal": "other",
+      "stance": 2,
+      "source_url": "https://www.gov.br/mre/en/contact-us/press-area/press-releases/passing-of-king-harald-v-of-norway"
+    },
+    {
+      "id": "st_95ec4e74d2ab",
+      "speaker": "Brazil Ministry of Foreign Affairs",
+      "role": "Ministry of Foreign Affairs",
+      "date": "2026-10-05",
+      "text": "The Kingdom of Norway is the main donor to the Amazon Fund and, together with Brazil, is part of the Steering Committee of the Tropical Forests Forever Fund (TFFF), conceived to support tropical forest conservation, officially launched during COP30 in Belém.",
+      "is_quote": true,
+      "signal": "other",
+      "stance": 2,
+      "source_url": "https://www.gov.br/mre/en/contact-us/press-area/press-releases/passing-of-king-harald-v-of-norway"
+    },
+    {
+      "id": "st_0817dcfef323",
+      "speaker": "Brazil Ministry of Foreign Affairs",
+      "role": "Ministry of Foreign Affairs",
+      "date": "2026-10-05",
+      "text": "Brazil has been confirmed as co-chair of the Alliance Board of the Global Biofuels Alliance alongside India, and the Board is the Alliance's highest governance body.",
+      "is_quote": false,
+      "signal": "policy_announcement",
+      "stance": 1,
+      "source_url": "https://www.gov.br/mre/en/contact-us/press-area/press-releases/brazil-confirmed-as-co-chair-of-the-alliance-board-of-the-global-biofuels-alliance-gba"
+    },
+    {
+      "id": "st_05fb6ec64354",
+      "speaker": "Brazil Ministry of Foreign Affairs",
+      "role": "Ministry of Foreign Affairs",
+      "date": "2026-10-05",
+      "text": "Brazil will also be a member of the GBA Executive Committee, responsible for guiding implementation of the Alliance's strategy and work programme, together with India, Italy and Kenya.",
+      "is_quote": false,
+      "signal": "policy_announcement",
+      "stance": 1,
+      "source_url": "https://www.gov.br/mre/en/contact-us/press-area/press-releases/brazil-confirmed-as-co-chair-of-the-alliance-board-of-the-global-biofuels-alliance-gba"
+    },
+    {
+      "id": "st_b025d6b0a3b7",
+      "speaker": "Brazil Ministry of Foreign Affairs",
+      "role": "Ministry of Foreign Affairs",
+      "date": "2026-10-05",
+      "text": "The GBA seeks to promote production and use of biofuels, foster market development and bring together major producing and consuming countries, with planned activities including capacity-building across the value chain, technical support to national programmes, exchange of experiences and technological advances, and promotion of sustainability in biofuel production.",
+      "is_quote": false,
+      "signal": "policy_announcement",
+      "stance": 0,
+      "source_url": "https://www.gov.br/mre/en/contact-us/press-area/press-releases/brazil-confirmed-as-co-chair-of-the-alliance-board-of-the-global-biofuels-alliance-gba"
+    }
+  ],
   "involved": {
     "theaters": [],
     "pulses": []

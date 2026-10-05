@@ -527,87 +527,99 @@
       "source_url": "https://fas.org/initiatives/status-world-nuclear-forces/"
     }
   },
-  "statements": [],
+  "statements": [
+    {
+      "id": "st_d108082f1e26",
+      "speaker": "Emmanuel Macron",
+      "role": "President of the Republic",
+      "date": "2026-10-02",
+      "text": "This unity within the G7 sends a clear signal to the markets to bring down energy prices.",
+      "is_quote": true,
+      "signal": "reassurance",
+      "stance": 1,
+      "source_url": "https://www.elysee.fr/emmanuel-macron/2026/10/02/videoconference-with-g7-leaders-on-the-global-energy-situation"
+    },
+    {
+      "id": "st_955428662ad7",
+      "speaker": "President of the French Republic",
+      "role": "President of the French Republic",
+      "date": "2026-10-01",
+      "text": "to establish the concept of forward deterrence",
+      "is_quote": true,
+      "signal": "policy_announcement",
+      "stance": 1,
+      "source_url": "https://www.elysee.fr/emmanuel-macron/2026/10/01/france-and-belgium-held-their-first-nuclear-steering-group-meeting-in-paris"
+    },
+    {
+      "id": "st_867da8877eda",
+      "speaker": "Emmanuel Macron",
+      "role": "President of the Republic",
+      "date": "2026-09-28",
+      "text": "C'est précisément le sens de notre engagement indéfectible aux côtés de l'Ukraine, face à l'agression militaire de la Russie et aux côtés du droit international, en bâtissant une Europe de la défense et de la paix.",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 1,
+      "source_url": "https://www.elysee.fr/emmanuel-macron/2026/09/28/allocutions-a-metz-aux-racines-de-leurope-pour-la-paix-et-lunite"
+    },
+    {
+      "id": "st_dbaa5b13f632",
+      "speaker": "Emmanuel Macron",
+      "role": "President of the Republic",
+      "date": "2026-09-28",
+      "text": "la guerre est revenue sur notre continent et notre Europe est bousculée par le retour des empires.",
+      "is_quote": true,
+      "signal": "warning",
+      "stance": -1,
+      "source_url": "https://www.elysee.fr/emmanuel-macron/2026/09/28/allocutions-a-metz-aux-racines-de-leurope-pour-la-paix-et-lunite"
+    },
+    {
+      "id": "st_27ff776fe801",
+      "speaker": "Emmanuel Macron",
+      "role": "President of the Republic",
+      "date": "2026-09-28",
+      "text": "D'autres veulent encore aujourd'hui nous rejoindre, des Balkans jusqu'à l'Ukraine",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 2,
+      "source_url": "https://www.elysee.fr/emmanuel-macron/2026/09/28/allocutions-a-metz-aux-racines-de-leurope-pour-la-paix-et-lunite"
+    },
+    {
+      "id": "st_f9434c5e17f5",
+      "speaker": "Emmanuel Macron",
+      "role": "President of the Republic",
+      "date": "2026-09-28",
+      "text": "Pour assurer une souveraineté réelle, il nous faut donc agir. Agir d'abord pour assurer notre sécurité et préserver nos valeurs, car la paix ne se décrète pas, elle se construit patiemment par des artisans de bonne volonté, lucides et constants.",
+      "is_quote": true,
+      "signal": "policy_announcement",
+      "stance": 1,
+      "source_url": "https://www.elysee.fr/emmanuel-macron/2026/09/28/allocutions-a-metz-aux-racines-de-leurope-pour-la-paix-et-lunite"
+    },
+    {
+      "id": "st_d3317b429920",
+      "speaker": "Emmanuel Macron",
+      "role": "President of the Republic",
+      "date": "2026-09-28",
+      "text": "Agir pour nous protéger contre l'épidémie de désinformation et d'ingérence qui veulent saper nos démocraties et nous diviser, porter atteinte aux projets européens.",
+      "is_quote": true,
+      "signal": "warning",
+      "stance": -1,
+      "source_url": "https://www.elysee.fr/emmanuel-macron/2026/09/28/allocutions-a-metz-aux-racines-de-leurope-pour-la-paix-et-lunite"
+    },
+    {
+      "id": "st_3fe876c371c5",
+      "speaker": "Presidency of France",
+      "role": "President of the Republic",
+      "date": "2026-09-25",
+      "text": "The apostolic visit forms part of the traditional relations between France and the Holy See and bears witness to the depth of a dialogue based on shared values and commitments.",
+      "is_quote": false,
+      "signal": "reassurance",
+      "stance": 2,
+      "source_url": "https://www.elysee.fr/emmanuel-macron/2026/09/25/pope-leo-xivs-apostolic-journey-to-france"
+    }
+  ],
   "involved": {
-    "theaters": [
-      {
-        "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
-        "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
-        "mentions": 1
-      }
-    ],
-    "pulses": [
-      {
-        "id": "pls_iran_gulf_hormuz_maritime_disruption",
-        "name": "Strait of Hormuz Maritime Disruption",
-        "band": "critical",
-        "position": 84.0,
-        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
-      },
-      {
-        "id": "pls_iran_gulf_iran_proxy_axis_escalation",
-        "name": "Iran Proxy Axis Escalation",
-        "band": "critical",
-        "position": 80.0,
-        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
-      },
-      {
-        "id": "pls_iran_gulf_us_iran_israel_military_confrontation",
-        "name": "US-Iran-Israel Direct Military Confrontation",
-        "band": "critical",
-        "position": 78.0,
-        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
-      },
-      {
-        "id": "pls_energy_security_global_hydrocarbon_supply_disruption",
-        "name": "Global Hydrocarbon Supply Disruption",
-        "band": "critical",
-        "position": 77.0,
-        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
-      },
-      {
-        "id": "pls_iran_gulf_us_iran_diplomatic_deadlock",
-        "name": "US-Iran Diplomatic Deadlock",
-        "band": "severe",
-        "position": 74.0,
-        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
-      },
-      {
-        "id": "pls_russia_nato_hybrid_grey_zone_pressure",
-        "name": "Hybrid and Grey-Zone Pressure",
-        "band": "severe",
-        "position": 72.0,
-        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
-      },
-      {
-        "id": "pls_energy_security_transition_and_grid_resilience_strain",
-        "name": "Transition and Grid Resilience Strain",
-        "band": "severe",
-        "position": 68.0,
-        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
-      },
-      {
-        "id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
-        "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
-        "band": "severe",
-        "position": 65.0,
-        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
-      },
-      {
-        "id": "pls_red_sea_shipping_war_risk_insurance_freight_pressure",
-        "name": "War-Risk Insurance and Freight Cost Pressure",
-        "band": "severe",
-        "position": 65.0,
-        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
-      },
-      {
-        "id": "pls_energy_security_energy_price_and_market_shock",
-        "name": "Energy Price and Market Shock",
-        "band": "severe",
-        "position": 64.0,
-        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
-      }
-    ]
+    "theaters": [],
+    "pulses": []
   },
   "credits": [
     {

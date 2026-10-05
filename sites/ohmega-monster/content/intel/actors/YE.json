@@ -493,7 +493,7 @@
       {
         "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
         "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
-        "mentions": 2
+        "mentions": 3
       }
     ],
     "pulses": [
@@ -508,7 +508,7 @@
         "id": "pls_iran_gulf_iran_proxy_axis_escalation",
         "name": "Iran Proxy Axis Escalation",
         "band": "critical",
-        "position": 80.0,
+        "position": 83.0,
         "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       },
       {
@@ -564,7 +564,7 @@
         "id": "pls_energy_security_energy_price_and_market_shock",
         "name": "Energy Price and Market Shock",
         "band": "severe",
-        "position": 64.0,
+        "position": 62.0,
         "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       }
     ]
