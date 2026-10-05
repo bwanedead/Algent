@@ -320,7 +320,12 @@ def _statement_block(theater: Theater, actors: Any, as_of: date | None, *, days:
     if not scored:
         return "", [], set(), terms, [], []
     newest = sorted(scored, key=lambda p: p[0].date, reverse=True)
-    shown = [s for s, _w in sorted(newest, key=lambda p: -p[1])][:limit]
+    ranked = [s for s, _w in sorted(newest, key=lambda p: -p[1])]
+    # Every qualifying red line or threat reaches the writer (up to half the pool): which statement matters most
+    # is the writer's judgment, but it can only pick what it is shown. On 10-05 fresh German remarks outranked
+    # Putin's Kaliningrad nuclear red line on relevance and pushed it out of a 16-statement pool entirely.
+    coercive = [s for s in ranked if s.signal in ("red_line", "threat")][:limit // 2]
+    shown = (coercive + [s for s in ranked if s not in coercive])[:limit]
     shared: dict[str, set[str]] = {}
     for s in shown:
         shared.setdefault(s.speaker, set()).update(distinctive & _entities(s))
