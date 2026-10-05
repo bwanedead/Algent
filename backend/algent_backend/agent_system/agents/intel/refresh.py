@@ -13,6 +13,17 @@ from collections.abc import Callable
 from typing import Any
 
 MAX_REPORTED_ERRORS = 5          # a report line per failure is noise; the first few say what is wrong
+#: A daily crawl of the source library, bounded so the refresh stays minutes, not an hour, on a laptop. The
+#: library is the broad headline base the desk measures novelty on; on 10-05 Hormuz read "nothing new" only
+#: because nothing had crawled since the previous afternoon.
+LIBRARY_MAX_PAGES = 150
+
+
+def _library() -> dict[str, Any]:
+    from algent_backend.library.crawl import crawl
+
+    rep = crawl(max_total=LIBRARY_MAX_PAGES)
+    return {k: v for k, v in rep.items() if not isinstance(v, (list, dict))}
 
 
 def _instruments() -> dict[str, Any]:
@@ -50,11 +61,17 @@ def _statements(context: Any, model_spec: Any) -> dict[str, Any]:
 
 
 def refresh(context: Any, model_spec: Any, *, instruments: Callable[[], dict] = _instruments,
-            statements: Callable[[Any, Any], dict] = _statements) -> dict[str, Any]:
-    """Run both layers' refresh; returns ``{"instruments": ..., "statements": ...}`` where a layer that
-    raised reports ``{"error": "..."}`` instead. Never raises."""
+            statements: Callable[[Any, Any], dict] = _statements,
+            library: Callable[[], dict] | None = None) -> dict[str, Any]:
+    """Refresh the layers, library first (the reported-statements lane searches it, and the heat board's
+    novelty reads it); returns ``{"library": ..., "instruments": ..., "statements": ...}`` where a layer that
+    raised reports ``{"error": "..."}`` instead. ``library`` defaults to the real crawl only when the other
+    collectors are the real ones too, so a caller injecting fakes never crawls by accident. Never raises."""
+    if library is None:
+        library = _library if (instruments is _instruments and statements is _statements) else (lambda: {"skipped": True})
     report: dict[str, Any] = {}
-    for name, call in (("instruments", lambda: instruments()), ("statements", lambda: statements(context, model_spec))):
+    for name, call in (("library", library), ("instruments", lambda: instruments()),
+                       ("statements", lambda: statements(context, model_spec))):
         try:
             report[name] = call()
         except Exception as exc:  # noqa: BLE001 - a layer being down must never fail the day
