@@ -42,6 +42,14 @@ def _no_real_browser(monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _no_live_sensing_refresh(monkeypatch):
+    """The daily's sensing refresh crawls the library, fetches every instrument and collects + extracts
+    statements: real network and model calls. Two CLI tests built args without no_refresh and ran it for 27
+    minutes. Tests that exercise refresh inject their own collectors, which this switch does not touch."""
+    monkeypatch.setenv("ALGENT_SENSING_REFRESH", "0")
+
+
+@pytest.fixture(autouse=True)
 def _no_data_backup(monkeypatch):
     """A test must never push anything to the private data repo."""
     monkeypatch.setenv("ALGENT_DATA_BACKUP", "0")

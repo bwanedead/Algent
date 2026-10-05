@@ -9,9 +9,11 @@ the stores already hold. The collectors are injectable so tests (and any caller)
 
 from __future__ import annotations
 
+import os
 from collections.abc import Callable
 from typing import Any
 
+_REFRESH_ENV = "ALGENT_SENSING_REFRESH"
 MAX_REPORTED_ERRORS = 5          # a report line per failure is noise; the first few say what is wrong
 #: A daily crawl of the source library, bounded so the refresh stays minutes, not an hour, on a laptop. The
 #: library is the broad headline base the desk measures novelty on; on 10-05 Hormuz read "nothing new" only
@@ -67,8 +69,11 @@ def refresh(context: Any, model_spec: Any, *, instruments: Callable[[], dict] = 
     novelty reads it); returns ``{"library": ..., "instruments": ..., "statements": ...}`` where a layer that
     raised reports ``{"error": "..."}`` instead. ``library`` defaults to the real crawl only when the other
     collectors are the real ones too, so a caller injecting fakes never crawls by accident. Never raises."""
+    real = instruments is _instruments and statements is _statements
+    if real and os.environ.get(_REFRESH_ENV, "").strip().lower() in ("0", "false", "no", "off"):
+        return {"skipped": f"{_REFRESH_ENV}=0"}       # one-shot off switch; the test suite sets it for every test
     if library is None:
-        library = _library if (instruments is _instruments and statements is _statements) else (lambda: {"skipped": True})
+        library = _library if real else (lambda: {"skipped": True})
     report: dict[str, Any] = {}
     for name, call in (("library", library), ("instruments", lambda: instruments()),
                        ("statements", lambda: statements(context, model_spec))):

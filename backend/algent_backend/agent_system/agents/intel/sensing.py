@@ -62,7 +62,7 @@ CROSS_MOVES = 10
 CROSS_STATEMENTS = 8
 PER_SPEAKER_CAP = 2
 DAILY_STATEMENT_DAYS = 14
-DAILY_STATEMENTS = 10
+DAILY_STATEMENTS = 16          # the pool the writer chooses its key statements from; wider since voices broadened (10-05)
 HISTORY_DAYS = 60
 CROSS_DAYS = 3
 
@@ -267,6 +267,14 @@ def _histories(shown: list[Statement], shared: dict[str, set[str]], *, as_of: da
     return blocks, urls
 
 
+def _actors_shared(s: Statement, keys: set[str]) -> int:
+    """Distinct ACTORS a statement shares with the theater: the speaker and the country they speak for are one
+    actor, not two, so "Putin + Russia" never alone makes a generic Kremlin remark about the theater."""
+    about = {a.casefold() for a in s.about if a and a.strip()}
+    who = {e.casefold() for e in (s.speaker, s.affiliation) if e and e.strip()}
+    return len(keys & about) + (1 if (keys & who) - about else 0)
+
+
 def _statement_block(theater: Theater, actors: Any, as_of: date | None, *, days: int, limit: int,
                      history_days: int) -> tuple[str, list[str], set[str], list[str], list[Statement], list[str]]:
     """A statement qualifies when it shares at least one DISTINCTIVE corroborated entity with the theater
@@ -299,11 +307,15 @@ def _statement_block(theater: Theater, actors: Any, as_of: date | None, *, days:
         shared names, and without this a statement listing more of the theater's names outranks it."""
         return (1 + abs(s.stance)) * (2 if s.signal in ("red_line", "threat") else 1)
 
-    # Qualifies only when it is MAINLY about this theater's actors (at least half of what it names is shared):
+    # Qualifies through a distinctive shared name OR two shared names: rarity alone proved fragile, as broader
+    # voices made NATO common and Putin's Kaliningrad red line (NATO, Russia, Putin shared) lost its only
+    # distinctive name and fell out of the Russia–Ukraine record on 10-05. And only when it is MAINLY about
+    # this theater's actors (at least half of what it names is shared):
     # a statement of meaning ("this is mostly about them"), not a tuned cut. Ranked by shared rarity x focus x
     # consequence, most consequential first; the writer then names the key ones (``key_statements``).
     scored = [(s, sum(rar.idf[k] for k in keys & _entities(s)) * f * consequence(s)) for s in rows
-              if distinctive & _entities(s) and len(keys & _entities(s)) >= need and (f := focus(s)) >= 0.5]
+              if (distinctive & _entities(s) or _actors_shared(s, keys) >= 2)
+              and len(keys & _entities(s)) >= need and (f := focus(s)) >= 0.5]
     terms = sorted(keys)
     if not scored:
         return "", [], set(), terms, [], []
