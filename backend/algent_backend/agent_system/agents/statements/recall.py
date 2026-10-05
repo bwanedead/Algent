@@ -18,21 +18,23 @@ from .contracts import Statement
 DEFAULT_LIMIT = 12
 
 
-def _line(s: Statement) -> str:
+def _line(s: Statement, tag: str = "-") -> str:
     who = f"{s.speaker}" + (f", {s.role}" if s.role else "") + (f" ({s.affiliation})" if s.affiliation else "")
     said = f'"{s.quote}"' if s.quote else s.paraphrase
     gist = f" — {s.paraphrase}" if s.quote and s.paraphrase else ""
     about = f" about {', '.join(s.about)}" if s.about else ""
     note = f"\n  why it matters: {s.significance}" if s.significance else ""
-    return (f"- {s.date} · {who}{about} [{s.signal}, stance {s.stance:+d}]: {said}{gist}{note}\n  {s.source_url}")
+    return (f"{tag} {s.date} · {who}{about} [{s.signal}, stance {s.stance:+d}]: {said}{gist}{note}\n  {s.source_url}")
 
 
-def block(rows: list[Statement], days: int) -> str:
-    """The STATEMENTS ON RECORD text for already-chosen rows ('' for none), in canonical format."""
+def block(rows: list[Statement], days: int, *, numbered: bool = False, order: str = "newest first") -> str:
+    """The STATEMENTS ON RECORD text for already-chosen rows ('' for none), in canonical format. ``numbered``
+    tags each row [S1], [S2]… so a writer can name the ones that matter most (``key_statements``); ``order``
+    says how the caller ordered them."""
     if not rows:
         return ""
-    return (f"STATEMENTS ON RECORD (last {days} days, newest first; official sources, wording as stated):\n"
-            + "\n".join(_line(s) for s in rows))
+    return (f"STATEMENTS ON RECORD (last {days} days, {order}; official sources, wording as stated):\n"
+            + "\n".join(_line(s, f"[S{i}]" if numbered else "-") for i, s in enumerate(rows, 1)))
 
 
 def history_block(speaker: str, rows: list[Statement], days: int) -> str:

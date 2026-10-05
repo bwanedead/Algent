@@ -61,6 +61,19 @@ def build(shown: Iterable[Statement]) -> list[dict[str, Any]]:
     return out
 
 
+def lead_with(rows: list[dict[str, Any]], tags: Iterable[str]) -> list[dict[str, Any]]:
+    """``rows`` (in the order the writer saw them as [S1], [S2]…) with the writer's ``key_statements`` first, in
+    its order; unknown or repeated tags are ignored, and every row is kept. Which statements matter most is a
+    judgment, so the model makes it; this only applies it."""
+    picked: list[int] = []
+    for t in tags or []:
+        digits = "".join(c for c in str(t) if c.isdigit())
+        i = int(digits) - 1 if digits else -1
+        if 0 <= i < len(rows) and i not in picked:
+            picked.append(i)
+    return [rows[i] for i in picked] + [r for i, r in enumerate(rows) if i not in picked]
+
+
 def merge(lists: Iterable[Iterable[dict[str, Any]]], *, limit: int = 0) -> list[dict[str, Any]]:
     """Union of ``on_record`` lists (records without one contribute nothing), deduped by statement id,
     newest first (ties keep first-seen order). ``limit`` 0 means all."""

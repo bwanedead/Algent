@@ -94,6 +94,11 @@ WHAT GOOD LOOKS LIKE:
   commitment, a denial), and then use the exact words, at most 25 of them — trim a longer one to its
   decisive words with an ellipsis, or paraphrase.
   Never put words in someone's mouth that the evidence does not give.
+- `key_statements`: the [S#] tags of the up to five statements on record that matter MOST for a reader of
+  this theater today, most consequential first: a red line, a nuclear warning, a new condition or offer, a
+  shift against the speaker's own record outranks routine positions. The desk prints these first under the
+  section, so a reader who reads only three sees the ones that change the picture. Different voices matter:
+  when the record holds more than one side, the reader should see each side's sharpest statement.
 - `context`: OLDER items (weeks, months, years back) that the reader needs to make sense of today: the
   agreement being breached, the earlier strike this answers. Say why each is relevant now. Not a history
   lesson: only what changes how today reads.
@@ -554,6 +559,7 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
                                   reported_urls={u for m in theater.members for u in m.sources},
                                   countries=countries, instrument_urls=sensed.instrument_urls,
                                   statement_urls=sensed.statement_urls, record=record)
+        record = on_record.lead_with(record, draft.key_statements)   # the writer's picks first, then consequence order
         sections.append(_section(theater, heat, draft, pulse_rows(store, draft.pulses, now=now), latest_brief,
                                  countries, record))
         proposals = [{"theater": theater.name, **p.model_dump()} for p in draft.pulse_proposals]
