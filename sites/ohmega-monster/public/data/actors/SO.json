@@ -171,6 +171,42 @@
         "value": 2.6,
         "year": 2026,
         "source": "imf"
+      },
+      {
+        "id": "fiscal_balance_imf",
+        "label": "Government net lending/borrowing, share of GDP (IMF)",
+        "unit": "pct",
+        "group": "economy",
+        "value": -0.6,
+        "year": 2026,
+        "source": "imf"
+      },
+      {
+        "id": "current_account_imf",
+        "label": "Current account balance, share of GDP (IMF)",
+        "unit": "pct",
+        "group": "economy",
+        "value": -8.7,
+        "year": 2026,
+        "source": "imf"
+      },
+      {
+        "id": "ext_debt_usd",
+        "label": "External debt stocks",
+        "unit": "usd",
+        "group": "economy",
+        "value": 1799443760.8,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "ext_debt_gni",
+        "label": "External debt, share of national income",
+        "unit": "pct",
+        "group": "economy",
+        "value": 14.918886594174,
+        "year": 2024,
+        "source": "wb"
       }
     ],
     "trade": [
@@ -189,6 +225,24 @@
         "unit": "pct",
         "group": "trade",
         "value": 98.8149470599555,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "exports_usd",
+        "label": "Exports of goods and services",
+        "unit": "usd",
+        "group": "trade",
+        "value": 3800899999.86713,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "imports_usd",
+        "label": "Imports of goods and services",
+        "unit": "usd",
+        "group": "trade",
+        "value": 12841200000.5979,
         "year": 2025,
         "source": "wb"
       }
@@ -346,7 +400,7 @@
       {
         "id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
         "name": "Ethiopia-Eritrea rupture and Tigray offensive",
-        "mentions": 1
+        "mentions": 2
       }
     ],
     "pulses": [
@@ -354,7 +408,14 @@
         "id": "pls_sahel_horn_state_fragility_insurgent_control",
         "name": "State Fragility and Insurgent Control",
         "band": "severe",
-        "position": 70.0,
+        "position": 68.0,
+        "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive"
+      },
+      {
+        "id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
+        "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
+        "band": "severe",
+        "position": 65.0,
         "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive"
       },
       {

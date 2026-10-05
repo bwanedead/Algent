@@ -3,10 +3,10 @@
   "theater_id": "thr_flydubai_hijacking_attempt_and_aviation_security",
   "name": "FlyDubai hijacking attempt and aviation security fallout",
   "domain": "geopolitics",
-  "built_at": "2026-10-05T02:29:50.784371+00:00",
+  "built_at": "2026-10-05T09:23:51.294012+00:00",
   "first_seen": "2026-09-30",
   "last_seen": "2026-10-05",
-  "days_covered": 1,
+  "days_covered": 2,
   "state": "active",
   "last_novel": "2026-10-05",
   "primer": {
@@ -14,20 +14,25 @@
     "built_at": "2026-10-05T02:19:08.047608+00:00"
   },
   "current": {
-    "date": "2026-10-04",
-    "bottom_line": "The 30 September hijacking attempt on FlyDubai FZ1073 was contained at Tabuk with no fatalities, but the fallout has shifted to accountability and prevention. The UAE has formally framed it as an attempted terrorist act and holds the co-pilot with Israeli investigators participating, while Netanyahu's 4 October security review and Australia's counter-terrorism probe have widened scrutiny of crew vetting. Confidence is high on the sequence of the attack and diversion; motives and vetting failures remain under investigation.",
+    "date": "2026-10-05",
+    "bottom_line": "No new verified facts have emerged since 4 October; the only new signal is a single-source reported indication on 5 October that the co-pilot acted alone, which remains unverified. The core picture stands: the 30 September hijacking attempt on FlyDubai FZ1073 was contained at Tabuk with no fatalities, and fallout remains focused on accountability and prevention. Confidence is high on the flight sequence and diversion, low on motive and vetting until UAE Attorney-General and Australian findings appear.",
     "escalation": {
       "direction": "steady",
       "pace": "flat"
     },
     "coverage": "steady coverage",
     "source": "daily",
-    "url": "/geopolitics/2026-10-04"
+    "url": "/geopolitics/2026-10-05"
   },
   "pulses": [],
   "escalation_history": [
     {
       "date": "2026-10-04",
+      "direction": "steady",
+      "pace": "flat"
+    },
+    {
+      "date": "2026-10-05",
       "direction": "steady",
       "pace": "flat"
     }
@@ -60,16 +65,27 @@
     },
     {
       "day": "2026-10-04",
-      "count": 5,
+      "count": 1,
       "editions": 0
     },
     {
       "day": "2026-10-05",
-      "count": 0,
+      "count": 1,
       "editions": 0
     }
   ],
   "timeline": [
+    {
+      "date": "2026-10-05",
+      "headline": "Early indications co-pilot acted alone - single-source report",
+      "detail": "On 2026-10-05 a single outlet reported early indications that the co-pilot acted alone in the midair attack. No transcript, no named official, and no corroborating researched finding was provided in this run. If confirmed, it would narrow the investigation from network links to individual motive and crew-vetting failure.",
+      "where": "unspecified",
+      "verification": "reported",
+      "sources": [
+        "https://www.thehindu.com/videos/flydubai-co-pilot-acted-alone-in-midair-attack-early-indications-show/article71546447.ece"
+      ],
+      "from": "/geopolitics/2026-10-05"
+    },
     {
       "date": "2026-10-04",
       "headline": "Netanyahu orders security review of foreign flights to Israel",
@@ -630,6 +646,12 @@
       "last": "2026-09-30"
     },
     {
+      "name": "FlyDubai co-pilot",
+      "mentions": 1,
+      "first": "2026-10-05",
+      "last": "2026-10-05"
+    },
+    {
       "name": "Israeli investigators",
       "mentions": 1,
       "first": "2026-10-02",
@@ -694,12 +716,6 @@
       "mentions": 1,
       "first": "2026-10-04",
       "last": "2026-10-04"
-    },
-    {
-      "name": "cabin crew and off-duty pilots",
-      "mentions": 1,
-      "first": "2026-09-30",
-      "last": "2026-09-30"
     }
   ],
   "relations": [],
@@ -733,6 +749,10 @@
   "on_record": [],
   "links": [],
   "reports": [
+    {
+      "date": "2026-10-05",
+      "url": "/geopolitics/2026-10-05"
+    },
     {
       "date": "2026-10-04",
       "url": "/geopolitics/2026-10-04"

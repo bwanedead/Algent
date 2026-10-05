@@ -524,6 +524,11 @@
   "involved": {
     "theaters": [
       {
+        "id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
+        "name": "Ethiopia-Eritrea rupture and Tigray offensive",
+        "mentions": 2
+      },
+      {
         "id": "thr_sudan_civil_war_and_us_visa_leverage",
         "name": "Sudan civil war and US visa leverage",
         "mentions": 1
@@ -535,21 +540,28 @@
         "name": "State Fragility and Insurgent Control",
         "band": "severe",
         "position": 68.0,
-        "theater_id": "thr_sudan_civil_war_and_us_visa_leverage"
+        "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive"
+      },
+      {
+        "id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
+        "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
+        "band": "severe",
+        "position": 65.0,
+        "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive"
       },
       {
         "id": "pls_sahel_horn_foreign_military_entanglement_horn",
         "name": "Foreign Military Entanglement and Intelligence Competition in the Horn",
         "band": "severe",
         "position": 58.0,
-        "theater_id": "thr_sudan_civil_war_and_us_visa_leverage"
+        "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive"
       },
       {
         "id": "pls_sahel_horn_displacement_humanitarian_collapse",
         "name": "Displacement and Humanitarian Collapse Pressure",
         "band": "unassessed",
         "position": null,
-        "theater_id": "thr_sudan_civil_war_and_us_visa_leverage"
+        "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive"
       }
     ]
   },

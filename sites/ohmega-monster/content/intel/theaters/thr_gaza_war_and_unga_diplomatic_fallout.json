@@ -3,19 +3,19 @@
   "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout",
   "name": "Gaza war and UNGA diplomatic fallout",
   "domain": "geopolitics",
-  "built_at": "2026-10-05T08:33:34.208168+00:00",
+  "built_at": "2026-10-05T09:23:51.294012+00:00",
   "first_seen": "2026-09-28",
   "last_seen": "2026-10-05",
   "days_covered": 4,
   "state": "active",
-  "last_novel": "2026-10-04",
+  "last_novel": "2026-10-05",
   "primer": {
     "text": "The Gaza war centers on fighting in Gaza, where hospitals and camps have faced mass-casualty strikes, with spillover violence in the West Bank. It sits within a wider confrontation involving Israel, the United States and Iran that has included direct strikes and disruption to shipping through the Strait of Hormuz, the narrow waterway carrying a large share of world oil and gas. At the United Nations General Assembly, diplomacy becomes leverage: walkouts, votes and proposals such as a Board of Peace are used to signal support or pressure, and can trigger bilateral fallout such as diplomatic retaliation between the Netherlands and Israel or quiet mediation by the United Arab Emirates.",
     "built_at": "2026-10-04T07:26:06.472952+00:00"
   },
   "current": {
     "date": "2026-10-05",
-    "bottom_line": "A new Israeli targeted killing in Khan Younis on 2026-10-05 extends the pattern of ceasefire-violating leadership strikes beyond the 2026-10-03 Remal apartment strike that killed five civilians. No new West Bank settler attacks or EU settlement-goods bans were confirmed Oct 4-5, and no hospital service suspensions were reported, leaving the humanitarian squeeze documented Oct 1 unchanged. Confidence high on strike facts (researched), low on de-escalation.",
+    "bottom_line": "Targeted killings continued during the nominal ceasefire: after the Oct 3 Gaza City strike that Israel said aimed at Hamas political leader Ali al-Amoudi, the IDF on Oct 5 said it killed a Hamas Nukhba member it linked to a Turkish NGO in Khan Younis. Civilian deaths in the Oct 3 strike — including four women — and a new Education Ministry toll of more than 800 teachers killed since Oct 2023 underscore the ongoing human cost, with high confidence on the strike details and displacement data (researched) and no sign of de-escalation or new EU enforcement moves.",
     "escalation": {
       "direction": "rising",
       "pace": "gradual"
@@ -127,7 +127,7 @@
   "coverage_series": [
     {
       "day": "2026-09-29",
-      "count": 0,
+      "count": 2,
       "editions": 0
     },
     {
@@ -137,7 +137,7 @@
     },
     {
       "day": "2026-10-01",
-      "count": 2,
+      "count": 4,
       "editions": 2
     },
     {
@@ -152,20 +152,20 @@
     },
     {
       "day": "2026-10-04",
-      "count": 1,
+      "count": 0,
       "editions": 0
     },
     {
       "day": "2026-10-05",
-      "count": 0,
+      "count": 3,
       "editions": 0
     }
   ],
   "timeline": [
     {
       "date": "2026-10-05",
-      "headline": "IDF kills alleged Nukhba commander and Turkish NGO head in Khan Younis vehicle strike Oct 5",
-      "detail": "IDF said Oct 5 it killed Saqr Nabil Musa Qaisi in a vehicle strike in Khan Younis, describing him as a Hamas Nukhba Force member who infiltrated Israel Oct 7 2023 and as director of Turkish NGO Deniz Feneri, which IDF accused of fundraising for Hamas and ties to senior Hamas and Turkish leadership. IDF said he was advancing terrorist activities in violation of the ceasefire.",
+      "headline": "IDF says it killed Hamas Nukhba member linked to Turkish NGO in Khan Younis on Oct 5",
+      "detail": "IDF said it killed Saqr Nabil Musa Qaisi in a vehicle strike in Khan Younis, describing him as a Hamas Nukhba Force member who infiltrated Israel on Oct 7, 2023 and as director of Turkish NGO Deniz Feneri, which it accused of ties to senior Hamas figures and Turkish leadership and fundraising for Hamas. IDF said he was advancing terrorist activities in violation of the ceasefire.",
       "where": "Khan Younis, southern Gaza",
       "verification": "researched",
       "sources": [
@@ -176,9 +176,9 @@
     },
     {
       "date": "2026-10-04",
-      "headline": "Education Ministry says over 800 teachers killed since Oct 2023",
-      "detail": "On Oct 4, Palestinian Education Ministry said more than 800 teachers killed and more than 3,300 injured since Oct 7 2023, with more than 170 detained, ahead of World Teachers' Day Oct 5.",
-      "where": "Gaza and West Bank",
+      "headline": "Education Ministry says more than 800 teachers killed since Oct 2023",
+      "detail": "Palestinian Education Ministry said more than 800 teachers have been killed and more than 3,300 injured since Oct 7, 2023, with more than 170 detained in harsh conditions, ahead of World Teachers' Day on Oct 5.",
+      "where": "Gaza Strip",
       "verification": "researched",
       "sources": [
         "https://www.aa.com.tr/en/middle-east/over-800-palestinian-teachers-killed-by-israel-since-gaza-war-education-ministry/4077723"
@@ -187,9 +187,9 @@
     },
     {
       "date": "2026-10-03",
-      "headline": "IDF confirms Oct 3 Remal strike targeted senior Hamas figure Ali al-Amoudi; five civilians killed, fate unconfirmed",
-      "detail": "Early Oct 3, Israeli air attack hit al-Asala building in Remal, western Gaza City, without prior warning while residents slept, killing at least five and wounding at least six per al-Shifa Hospital and Civil Defence. Four women were among dead, including Christian mother Maysa Khader Ibrahim Abu Daoud and daughter Mary Hafez Michel al-Najjar, mourned by Greek Orthodox and Latin Patriarchates. IDF said it targeted Ali Ahmed al-Amoudi, deputy chairman of Hamas political bureau in Gaza, in an apartment used for Hamas activity, using precise munitions; results under review. As of Oct 4, whether al-Amoudi was killed remained unconfirmed; Hamas sources doubted elimination, Israeli security source said survival chances slim. Eight Palestinians were killed across Gaza Oct 3 in total.",
-      "where": "Remal, western Gaza City",
+      "headline": "IDF says Oct 3 Gaza City strike targeted Hamas political leader al-Amoudi; kill unconfirmed as five civilians killed",
+      "detail": "IDF said the early Oct 3 strike on the al-Asala building in Remal, western Gaza City, targeted Ali Ahmed al-Amoudi, deputy chairman of Hamas's political bureau in Gaza and former chief of staff to Yahya Sinwar, in an apartment used for Hamas activity, using precise munitions with steps to mitigate civilian harm. As of Oct 4, his death was unconfirmed — Hamas sources doubted elimination and an Israeli security source said survival chances were slim but not confirmed. Al-Shifa Hospital and Civil Defence said at least five were killed and six severely wounded while asleep without warning, including four women — Christian mother Maysa Khader Ibrahim Abu Daoud and daughter Mary Hafez Michel al-Najjar — mourned by the Greek Orthodox Patriarchate and Latin Patriarch.",
+      "where": "Remal neighbourhood, western Gaza City",
       "verification": "researched",
       "sources": [
         "https://www.aljazeera.com/news/2026/10/3/israeli-air-attack-on-gaza-city-apartment-kills-at-least-five",
@@ -209,18 +209,6 @@
         "https://www.middleeastmonitor.com/20261003-israeli-occupiers-injure-16-palestinians-burn-55-olive-trees-in-west-bank-attacks?amp="
       ],
       "from": "/geopolitics/2026-10-03"
-    },
-    {
-      "date": "2026-10-02",
-      "headline": "US and UK harden Hamas financing and settlement pressure Oct 2",
-      "detail": "On Oct 2, UK Permanent Representative Sarah MacIntosh said Hamas must decommission weapons and have no role in Gaza's future governance, condemned abuses by Hamas, demanded all parties uphold international law and facilitate humanitarian access, and noted UK restrictions targeting settlement activity. Separately, US State spokesman Thomas Pigott said Treasury designations Oct 2 targeted a Hamas military operative in Gaza and a France-based network using sham charities and cryptocurrency to raise nearly $2M for Hamas, calling disruption of such networks central to isolating Hamas while protecting legitimate aid.",
-      "where": "New York / Washington",
-      "verification": "researched",
-      "sources": [
-        "https://www.gov.uk/government/speeches/the-uk-will-defend-universal-rights-without-fear-or-favour-uk-statement-at-the-un-third-committee",
-        "https://www.state.gov/releases/office-of-the-spokesman/2026/10/united-states-cuts-off-hamas-financing-network/"
-      ],
-      "from": "/geopolitics/2026-10-05"
     },
     {
       "date": "2026-10-02",
@@ -385,7 +373,7 @@
       "name": "Gaza City",
       "country": "Palestine",
       "lat": 31.5,
-      "lon": 34.4667,
+      "lon": 34.466,
       "count": 2,
       "last_date": "2026-10-03"
     },
@@ -907,7 +895,7 @@
       "last": "2026-10-05"
     },
     {
-      "name": "IDF",
+      "name": "Israel Defense Forces (IDF)",
       "mentions": 2,
       "first": "2026-10-03",
       "last": "2026-10-05"
@@ -925,22 +913,16 @@
       "last": "2026-09-27"
     },
     {
-      "name": "United Kingdom",
-      "mentions": 2,
-      "first": "2026-09-08",
-      "last": "2026-10-02"
-    },
-    {
       "name": "Agricultural Development Association (PARC)",
       "mentions": 1,
       "first": "2026-10-01",
       "last": "2026-10-01"
     },
     {
-      "name": "Ambassador Sarah MacIntosh",
+      "name": "Ali Ahmed al-Amoudi",
       "mentions": 1,
-      "first": "2026-10-02",
-      "last": "2026-10-02"
+      "first": "2026-10-03",
+      "last": "2026-10-03"
     },
     {
       "name": "Danish Refugee Council",
@@ -953,6 +935,12 @@
       "mentions": 1,
       "first": "2026-10-01",
       "last": "2026-10-01"
+    },
+    {
+      "name": "Deniz Feneri (Turkish NGO)",
+      "mentions": 1,
+      "first": "2026-10-05",
+      "last": "2026-10-05"
     },
     {
       "name": "Dutch Foreign Minister Tom Berendsen",
@@ -1025,17 +1013,6 @@
   ],
   "figures": [
     {
-      "label": "Teachers killed since 2023 (Palestinian Education Ministry",
-      "unit": "killed",
-      "series": [
-        {
-          "as_of": "2026-10-04",
-          "value": 800.0,
-          "source": "https://www.aa.com.tr/en/middle-east/over-800-palestinian-teachers-killed-by-israel-since-gaza-war-education-ministry/4077723"
-        }
-      ]
-    },
-    {
       "label": "Palestinians injured in Nablus olive-picker attacks",
       "unit": "people",
       "series": [
@@ -1080,7 +1057,7 @@
       ]
     },
     {
-      "label": "Palestinians in protracted displacement",
+      "label": "Palestinians in protracted displacement in 1,739 sites",
       "unit": "people",
       "series": [
         {
@@ -1091,7 +1068,7 @@
       ]
     },
     {
-      "label": "Palestinians killed since 2025 ceasefire (Gaza Health Ministry via Al Jazeera",
+      "label": "Palestinians killed since, 2025 ceasefire (Gaza Health Ministry via Al Jazeera",
       "unit": "killed",
       "series": [
         {
@@ -1109,6 +1086,17 @@
           "as_of": "2026-10-01",
           "value": 1439.0,
           "source": "https://www.aljazeera.com/news/2026/10/1/israeli-drone-kills-palestinian-in-gaza-settlers-kill-another-in-west-bank"
+        }
+      ]
+    },
+    {
+      "label": "Palestinians killed since, 2023 (Gaza Health Ministry",
+      "unit": "killed",
+      "series": [
+        {
+          "as_of": "2026-09-26",
+          "value": 74016.0,
+          "source": "https://www.thehindu.com/news/international/palestinian-death-toll-in-gaza-war-crosses-74000-health-ministry/article71515541.ece"
         }
       ]
     }
@@ -1177,32 +1165,7 @@
       ]
     }
   ],
-  "statements": [
-    {
-      "who": "Ambassador Sarah MacIntosh",
-      "role": "UK Permanent Representative to the UN",
-      "said": "Hamas must decommission its weapons and terror infrastructure and have no role in Gaza's future governance",
-      "quote": false,
-      "when": "2026-10-02",
-      "source": "https://www.gov.uk/government/speeches/the-uk-will-defend-universal-rights-without-fear-or-favour-uk-statement-at-the-un-third-committee"
-    },
-    {
-      "who": "Ambassador Sarah MacIntosh",
-      "role": "UK Permanent Representative to the UN",
-      "said": "UK has taken recent action including restrictions targeting settlement activity and those who support, facilitate or profit from it",
-      "quote": false,
-      "when": "2026-10-02",
-      "source": "https://www.gov.uk/government/speeches/the-uk-will-defend-universal-rights-without-fear-or-favour-uk-statement-at-the-un-third-committee"
-    },
-    {
-      "who": "Thomas \"Tommy\" Pigott",
-      "role": "Spokesman, US Department of State",
-      "said": "Disrupting Hamas financing networks is central to isolating Hamas, protecting legitimate humanitarian assistance to Gazan civilians, and supporting lasting regional stability",
-      "quote": false,
-      "when": "2026-10-02",
-      "source": "https://www.state.gov/releases/office-of-the-spokesman/2026/10/united-states-cuts-off-hamas-financing-network/"
-    }
-  ],
+  "statements": [],
   "on_record": [
     {
       "id": "st_99b5965fc1e7",
@@ -1364,7 +1327,14 @@
       "reported_by": ""
     }
   ],
-  "links": [],
+  "links": [
+    {
+      "theater_id": "thr_russia_ukraine_war_and_european_security_archite",
+      "name": "Russia-Ukraine war and European security architecture",
+      "link": "Russia-Ukraine war and European security architecture ↔ Gaza war and UNGA diplomatic fallout: Latvia's Oct 5 on-record attribution of sabotage against Estonian defence firm Milrem Robotics to Russian secret services, paired with Germany's confirmed €1.3bn aid and €8.5bn co-production for Ukraine, shows Russian pressure on European defence industry persisting alongside the war in Ukraine and continued targeted killings during Gaza's nominal ceasefire",
+      "date": "2026-10-05"
+    }
+  ],
   "reports": [
     {
       "date": "2026-10-05",

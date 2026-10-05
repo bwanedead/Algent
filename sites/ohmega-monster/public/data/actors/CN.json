@@ -679,6 +679,13 @@
         "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
       },
       {
+        "id": "pls_energy_security_global_hydrocarbon_supply_disruption",
+        "name": "Global Hydrocarbon Supply Disruption",
+        "band": "critical",
+        "position": 77.0,
+        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      },
+      {
         "id": "pls_russia_nato_hybrid_grey_zone_pressure",
         "name": "Hybrid and Grey-Zone Pressure",
         "band": "severe",

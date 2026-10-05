@@ -3,7 +3,7 @@
   "theater_id": "thr_russia_ukraine_war_and_european_security_archite",
   "name": "Russia-Ukraine war and European security architecture",
   "domain": "geopolitics",
-  "built_at": "2026-10-05T08:33:34.208168+00:00",
+  "built_at": "2026-10-05T09:23:51.294012+00:00",
   "first_seen": "2026-09-28",
   "last_seen": "2026-10-05",
   "days_covered": 5,
@@ -15,7 +15,7 @@
   },
   "current": {
     "date": "2026-10-05",
-    "bottom_line": "Russia extended its Kyiv Dnipro bridge campaign to a fourth straight day Oct 4, injuring two and cutting heat, while both sides formalized a reciprocal infrastructure war: Zelensky vowed to double down on refinery strikes and Moscow vowed to intensify strikes on Kyiv. Germany's Oct 4 visit locked in a €1.3bn package plus €8.5bn in co-production deals, anchoring Ukraine's interceptor and long-range capacity. Confidence is high on bridge damage, German aid and mutual escalation pledges; lower on the 51% refining-disable claim which rests on Ukrainian defence ministry analysts.",
+    "bottom_line": "Russia extended its Kyiv Dnipro bridge campaign to a fourth straight day Oct 4, hitting the Northern Bridge and pledging intensified strikes after Zelensky vowed to double down on Russian refineries. Germany answered with a confirmed €1.3bn package and €8.5bn in co-production deals for interceptors and long-range weapons. Confidence is high on bridge damage, German aid and refinery disruption; lower on vessel and airfield claims which rest on single ministry statements.",
     "escalation": {
       "direction": "rising",
       "pace": "gradual"
@@ -81,6 +81,23 @@
         {
           "at": "2026-10-05T08:14:35.334028+00:00",
           "position": 83.0
+        }
+      ]
+    },
+    {
+      "id": "pls_energy_security_global_hydrocarbon_supply_disruption",
+      "name": "Global Hydrocarbon Supply Disruption",
+      "situation": "Global energy security",
+      "position": 77.0,
+      "band": "critical",
+      "history": [
+        {
+          "at": "2026-10-01T03:00:57.470982+00:00",
+          "position": 72.0
+        },
+        {
+          "at": "2026-10-01T07:48:19.756517+00:00",
+          "position": 77.0
         }
       ]
     },
@@ -169,55 +186,49 @@
     },
     {
       "day": "2026-10-02",
-      "count": 1,
-      "editions": 1
-    },
-    {
-      "day": "2026-10-03",
       "count": 4,
       "editions": 1
     },
     {
-      "day": "2026-10-04",
+      "day": "2026-10-03",
       "count": 6,
+      "editions": 1
+    },
+    {
+      "day": "2026-10-04",
+      "count": 3,
       "editions": 0
     },
     {
       "day": "2026-10-05",
-      "count": 2,
+      "count": 4,
       "editions": 0
     }
   ],
   "timeline": [
     {
       "date": "2026-10-05",
-      "headline": "War widens to Black Sea logistics and deep airfields as both sides report mass drone salvos",
-      "detail": "Russia Defence Ministry said Oct 4-5 it hit two dry-cargo vessels carrying military equipment to Odesa port, and earlier a vessel east of Odesa overnight plus Nova Poshta logistics center in Chornomorsk and data center in Odesa. SBU said Oct 4 its Alpha unit drones hit Su-35 and Su-34 plus ammunition depot at Khanskaya airfield in Adygea ~500km from Ukraine (estimated $100m and $50m). Russia said air defences intercepted 559 Ukrainian drones between 20:00 Oct 4 and 08:00 Oct 5 over multiple regions and Azov/Black Seas. Ukraine Air Force reported Oct 2-3 Russia launched 157 Shahed/Gerbera/Parodiya drones, hits at 12 locations, 131 intercepted; Zelensky said week to Oct 4 Russia used >1,900 attack drones (>800 jet-powered), 1,700 aerial bombs and 25 missiles. Ukraine announced first combat use of FP-7 tactical ballistic missile Oct 1 (Fire Point).",
-      "where": "Odesa / Khanskaya, Adygea",
-      "verification": "researched",
+      "headline": "Lukoil foreign-asset sale surfaces in U.S.-Russia war-termination talks as Black Sea and Kharkiv strikes widen",
+      "detail": "Moscow Times and Meduza Oct 3-5, citing NYT, reported U.S.-Russia talks on ending the war now involve a multi-billion-dollar deal over the sale of Lukoil's foreign assets. No official confirmation from Washington or Moscow. Separately Oct 4-5 Russia's Defence Ministry said it hit two dry-cargo vessels carrying military equipment to Odesa port and earlier a vessel east of Odesa plus a Nova Poshta logistics center in Chornomorsk and a data center in Odesa; and that air defences intercepted 559 Ukrainian drones overnight Oct 4-5. SBU said Oct 4 its Alpha unit hit a Su-35 and Su-34 plus ammunition depot at Khanskaya airfield in Adygea ~500km from Ukraine. Reported headlines Oct 4-5 also describe Russian Banderol double-tap strikes on Kharkiv killing 1 injuring 6 Oct 4 and 5 killed 61 injured nationwide over past day, and a shell injuring a border guard and hitting a bus at the Moldova-Ukraine border Oct 5.",
+      "where": "Odesa / Kharkiv / Black Sea",
+      "verification": "reported",
       "sources": [
-        "https://www.themoscowtimes.com/2026/10/04/russia-says-it-hit-kyiv-bridge-2-vessels-in-black-sea-a93868",
-        "https://kyivindependent.com/ukraine-war-latest-germany-supplies-kyiv-with-interceptors-air-defense-missiles-in-1-5-billion-aid-package",
-        "https://www.kyivpost.com/post/85874"
+        "https://www.themoscowtimes.com/2026/10/03/us-russia-talks-on-ukraine-involve-multi-billion-dollar-oil-deal-nyt-reports-a93862",
+        "https://www.themoscowtimes.com/2026/10/04/russia-says-it-hit-kyiv-bridge-2-vessels-in-black-sea-a93868"
       ],
       "from": "/geopolitics/2026-10-05"
     },
     {
       "date": "2026-10-04",
-      "headline": "Reciprocal infrastructure-war pledges locked in as Ukraine claims 51% of Russian refining disabled",
-      "detail": "In Reuters interview published Oct 3 Zelensky said Ukraine will double down on attacking Russian oil refineries but not civilians, citing intelligence on a Russian 'new doctrine' to strike infrastructure, logistics and 'roads, schools, hospitals' to pressure people to leave Kyiv. Russia Foreign Ministry Oct 3-4 warned it would continue 'mass retaliatory strikes' on Kyiv and urged foreign nationals/diplomats to leave, saying responsibility lies with those ignoring warning. Russia Defence Ministry Oct 4 said strikes on military facilities, defence-industry sites and related infrastructure in Kyiv and other regions will be intensified, responding to Zelensky interview. Ukraine Defence Ministry Oct 4 said >51% of Russian refining capacity disabled (up from 45% Sept 21), with Defence Minister Khmara calling it significant blow; listed recent targets Moscow, Yaroslavl, Kirishi/KINEF, Perm, Ilsky, Saratov, Syzran, Ust-Luga. Ministry said long-range strike drone production/procurement tripled in 2026.",
-      "where": "Kyiv / Moscow",
+      "headline": "Reciprocal doctrine hardens as Ukraine claims 51% of Russian refining disabled and IEA confirms throughput collapse",
+      "detail": "In a Reuters interview published Oct 3 Zelensky said Ukraine will double down on attacking Russian oil refineries in response to Moscow's new strikes, but will not target civilians, citing intelligence documents showing Russia's 'new doctrine' allows strikes on infrastructure, logistics and 'especially to attack in the cities, in the villages, everywhere — roads, schools, hospitals' to pressure people to leave Kyiv. Ukraine's Defence Ministry said Oct 4 over 51% of Russia's oil refining capacity has been disabled (up from 45% Sept 21), with long-range drone production tripled in 2026. IEA data Sept 17: Russia has 32 major refineries (~6.5 mb/d capacity); throughput fell to 3.8 mb/d in June 2026, lowest in >20 years and ~30% below a year earlier; gasoline -20% vs 2025, diesel -30%. Russia banned gasoline exports April, jet-fuel mid-June, diesel July 8 (first ever), extended to Sept 30 with reports of extension to end-October; by end-June 92% of regions reported shortages, two-thirds rationed, wait times up to 40 hours; Rosstat gasoline +19% and diesel +18% since start of year by Aug 26. Government lowered fuel standards to Euro-2/3/4 through July 1 2027.",
+      "where": "Kyiv / Russia",
       "verification": "researched",
       "sources": [
         "https://www.themoscowtimes.com/2026/10/04/russia-to-intensify-strikes-on-ukraine-after-zelensky-interview-a93867",
-        "https://www.politico.eu/article/moscow-says-it-will-step-up-strikes-on-ukraine-after-kyiv-vows-to-hit-russian-oil-refineries",
-        "https://kyivindependent.com/moscow-unveils-new-doctrine-targeting-ukrainian-civilians-zelensky-vows-to-respond-with-more-energy-strikes",
         "https://kyivindependent.com/ukraines-deep-strikes-have-wrecked-over-half-of-russias-oil-refining-capacity-defense-ministry-says",
-        "https://www.dw.com/en/germanys-merz-visits-kyiv-as-russia-strikes-bridge/a-79534734",
-        "https://www.aljazeera.com/news/2026/10/3/five-killed-as-kyiv-and-moscow-trade-strikes-russia-hits-second-bridge",
-        "https://www.aljazeera.com/news/2026/10/4/russian-strike-hits-kyiv-bridge-as-german-chancellor-visits-ukraine",
-        "https://kyivindependent.com/russian-strikes-kill-8-injure-81-across-ukraine-hit-kyiv-bridge-2",
-        "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-2-2026"
+        "https://www.iea.org/commentaries/russian-refining-sector-struggles-amid-intensifying-ukrainian-attacks",
+        "https://kyivindependent.com/moscow-unveils-new-doctrine-targeting-ukrainian-civilians-zelensky-vows-to-respond-with-more-energy-strikes"
       ],
       "from": "/geopolitics/2026-10-05"
     },
@@ -234,9 +245,9 @@
     },
     {
       "date": "2026-10-04",
-      "headline": "Merz surprise Kyiv visit delivers €1.3bn aid and €8.5bn co-production deals for interceptors and long-range weapons",
-      "detail": "Chancellor Merz arrived Kyiv by train early Oct 4 with Economy Minister Katherina Reiche and executives from Siemens Energy, Hensoldt, Diehl Defence, Quantum Systems. Joint press conference announced >€1.3bn ($1.46bn) package: ~€1bn military aid and ~€350m ($394m) energy assistance for generators/grid repairs. Military component funds Quantum Systems to produce tens of thousands of interceptor drones in Ukraine against jet-powered drones, plus thousands of IRIS-T missiles, additional IRIS-T fire units, and long-range weapons >1,000km. Fifteen agreements worth >€8.5bn ($9.57bn) signed, including Quantum-Fire Point MOU on unmanned systems, Helsing-Culver (long-range strike), ARX Robotics-Roboneers (ground drones), Hensoldt radars, Diehl IRIS-T, and frameworks for 25/40mm air-defence and 155mm artillery. Merz said 'If Russia is not stopped, it will turn its war machine against us sooner or later' and 'We are ready for talks... but these barbaric attacks on the civilian population must stop.'",
-      "where": "Kyiv, Ukraine",
+      "headline": "Merz surprise Kyiv visit locks in €1.3bn aid and €8.5bn co-production for interceptors and >1,000km weapons",
+      "detail": "Chancellor Friedrich Merz arrived in Kyiv by train early Oct 4 with Economy Minister Katherina Reiche and executives from Siemens Energy, Hensoldt, Diehl Defence and Quantum Systems. At a joint press conference he and Zelensky announced >€1.3bn ($1.46bn) support: ~€1bn military aid and ~€350m ($394m) energy aid for generators/grid repairs. Military component funds Quantum Systems to produce tens of thousands of interceptor drones in Ukraine against jet-powered drones, plus thousands of IRIS-T missiles, additional IRIS-T fire units and long-range weapons >1,000km. Fifteen agreements worth >€8.5bn ($9.57bn) were signed, including MOUs: Quantum Systems-Fire Point (unmanned systems), Helsing-Culver Aerospace (long-range strike), ARX Robotics-Roboneers (ground drones), Hensoldt (surveillance radars), Diehl (IRIS-T), plus frameworks for 25/40mm air-defence and 155mm artillery. Merz said 'If Russia is not stopped, it will turn its war machine against us sooner or later' and 'We are ready for talks... but these barbaric attacks on the civilian population must stop.'",
+      "where": "Kyiv",
       "verification": "researched",
       "sources": [
         "https://www.dw.com/en/germanys-merz-visits-kyiv-as-russia-strikes-bridge/a-79534734",
@@ -247,15 +258,14 @@
     },
     {
       "date": "2026-10-04",
-      "headline": "Kyiv Dnipro bridge campaign reaches fourth consecutive day Oct 1-4 with closures, injuries and heating cut",
-      "detail": "Oct 1 two drones struck near supports of Southern (Pivdennyi) Bridge disrupting metro link; multiple hits Oct 1-2 damaged road surface, support, guardrail and metro protection. Oct 2 city closed Southern Bridge both ways and restricted Paton and Metro bridges, gridlocking traffic via Darnytskyi Bridge. Early Oct 3 jet-powered drone damaged Northern (Pivnichnyi) Bridge road and trolleybus wires. Morning Oct 4 drone again hit Northern Bridge roadway, injuring two (one hospitalized) and damaging heating main cutting hot water in Desnianskyi district. Russia Defence Ministry Oct 4-5 said it hit Northern Bridge as route for troops/military cargo. Five of Kyiv's six Dnipro road bridges were restricted Oct 2-3.",
-      "where": "Kyiv, Ukraine",
+      "headline": "Kyiv bridge campaign reaches fourth day as Russia pledges intensified strikes and warns diplomats to leave",
+      "detail": "Early Oct 4 a Russian drone again struck the roadway of Kyiv's Northern (Pivnichnyi) Bridge, injuring two (one hospitalized) and damaging a heating main that cut hot water in Desnianskyi district. It was the fourth consecutive day (Oct 1-4) of strikes on Dnipro bridges after two drones hit near Southern Bridge supports Oct 1 and repeated hits damaged road surface, supports and metro protection Oct 1-2, forcing closure of Southern Bridge Oct 2 and restrictions on Paton/Metro bridges. Russia's Defence Ministry said Oct 4-5 it hit the Northern Bridge as a route for troops/cargo and will intensify strikes on military and defence-industry sites in Kyiv and other regions after Zelensky's Oct 3 interview. The Foreign Ministry warned Oct 3-4 it would continue 'mass retaliatory strikes' on Kyiv and urged foreign nationals/diplomats to leave, saying responsibility lies with those ignoring the warning.",
+      "where": "Kyiv",
       "verification": "researched",
       "sources": [
         "https://kyivindependent.com/russia-targets-kyiv-bridges-for-fourth-consecutive-day-hits-northern-bridge",
-        "https://kyivindependent.com/traffic-chaos-in-kyiv-after-russian-strikes-hit-key-bridge",
-        "https://www.nytimes.com/2026/10/03/world/europe/russia-ukraine-bridges-kyiv.html",
-        "https://www.bbc.co.uk/news/articles/ckreyjzzzywqo",
+        "https://www.themoscowtimes.com/2026/10/04/russia-to-intensify-strikes-on-ukraine-after-zelensky-interview-a93867",
+        "https://www.dw.com/en/germanys-merz-visits-kyiv-as-russia-strikes-bridge/a-79534734",
         "https://www.themoscowtimes.com/2026/10/04/russia-says-it-hit-kyiv-bridge-2-vessels-in-black-sea-a93868",
         "https://www.aljazeera.com/news/2026/10/4/russian-strike-hits-kyiv-bridge-as-german-chancellor-visits-ukraine",
         "https://www.kyivpost.com/post/86064",
@@ -273,6 +283,20 @@
       "sources": [
         "https://www.scmp.com/news/china/military/article/3369657/chinese-troops-line-russias-tsentr-2026-exercise-military-ties-tighten",
         "https://www.globaltimes.cn/page/202610/1371666.shtml"
+      ],
+      "from": "/geopolitics/2026-10-04"
+    },
+    {
+      "date": "2026-10-03",
+      "headline": "Reciprocal doctrine declared as Russia warns diplomats to leave Kyiv",
+      "detail": "Zelenskyy said Oct 3-4 Ukrainian intelligence reviewed documents showing Russia's 'new doctrine' is to strike roads, schools, hospitals and civilian sites to pressure people to leave Kyiv and other cities; Ukraine will respond by striking Russian energy but not indiscriminately civilian objects. Russia's Foreign Ministry warned Oct 3-4 foreign citizens and diplomats should leave Kyiv or avoid visiting due to intensified massive strikes. At least five killed Oct 2-3 in reciprocal strikes including 2 killed and 36 injured in Kharkiv residential strike Oct 2 and 1 killed on Liberian-flagged ship in Odesa Oct 3.",
+      "where": "Kyiv",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/3/five-killed-as-kyiv-and-moscow-trade-strikes-russia-hits-second-bridge",
+        "https://www.aljazeera.com/news/2026/10/4/russian-strike-hits-kyiv-bridge-as-german-chancellor-visits-ukraine",
+        "https://kyivindependent.com/russian-strikes-kill-8-injure-81-across-ukraine-hit-kyiv-bridge-2",
+        "https://understandingwar.org/research/russia-ukraine/russian-offensive-campaign-assessment-october-2-2026"
       ],
       "from": "/geopolitics/2026-10-04"
     },
@@ -1544,7 +1568,7 @@
         "y": 706.8,
         "label": "Odesa",
         "date": "2026-10-05",
-        "verification": "researched",
+        "verification": "reported",
         "n": 5,
         "weight": 0.137
       },
@@ -1581,7 +1605,7 @@
   "actors": [
     {
       "name": "Russia",
-      "mentions": 11,
+      "mentions": 10,
       "first": "2022-02-24",
       "last": "2026-10-04"
     },
@@ -1590,6 +1614,18 @@
       "mentions": 5,
       "first": "2026-09-27",
       "last": "2026-10-02"
+    },
+    {
+      "name": "President Volodymyr Zelensky",
+      "mentions": 4,
+      "first": "2026-10-02",
+      "last": "2026-10-04"
+    },
+    {
+      "name": "Russian Armed Forces",
+      "mentions": 4,
+      "first": "2026-09-28",
+      "last": "2026-10-04"
     },
     {
       "name": "Ukraine",
@@ -1604,31 +1640,13 @@
       "last": "2026-10-01"
     },
     {
-      "name": "Russian Armed Forces",
-      "mentions": 3,
-      "first": "2026-09-28",
-      "last": "2026-09-29"
-    },
-    {
-      "name": "Volodymyr Zelensky",
-      "mentions": 3,
-      "first": "2026-09-22",
-      "last": "2026-10-04"
-    },
-    {
       "name": "Poland",
       "mentions": 2,
       "first": "2025-09-03",
       "last": "2026-10-02"
     },
     {
-      "name": "President Volodymyr Zelensky",
-      "mentions": 2,
-      "first": "2026-10-02",
-      "last": "2026-10-02"
-    },
-    {
-      "name": "Russia Defence Ministry",
+      "name": "Russian Defence Ministry",
       "mentions": 2,
       "first": "2026-10-04",
       "last": "2026-10-05"
@@ -1650,6 +1668,12 @@
       "mentions": 1,
       "first": "2026-09-29",
       "last": "2026-09-29"
+    },
+    {
+      "name": "Chancellor Friedrich Merz",
+      "mentions": 1,
+      "first": "2026-10-04",
+      "last": "2026-10-04"
     },
     {
       "name": "China",
@@ -1730,17 +1754,6 @@
   ],
   "figures": [
     {
-      "label": "Ukrainian drones Russia says intercepted 20:00 to 08:00",
-      "unit": "drones",
-      "series": [
-        {
-          "as_of": "2026-10-05",
-          "value": 559.0,
-          "source": "https://www.themoscowtimes.com/2026/10/04/russia-says-it-hit-kyiv-bridge-2-vessels-in-black-sea-a93868"
-        }
-      ]
-    },
-    {
       "label": "German energy-sector repair funds",
       "unit": "$",
       "series": [
@@ -1774,7 +1787,18 @@
       ]
     },
     {
-      "label": "Share of Russian oil refining capacity Ukraine says disabled",
+      "label": "Russian drones/bombs/missiles used against Ukraine in week to (Zelensky",
+      "unit": "drones",
+      "series": [
+        {
+          "as_of": "2026-10-04",
+          "value": 1900.0,
+          "source": "https://kyivindependent.com/russia-targets-kyiv-bridges-for-fourth-consecutive-day-hits-northern-bridge"
+        }
+      ]
+    },
+    {
+      "label": "Share of Russian oil refining capacity disabled (Ukraine Defence Ministry",
       "unit": "%",
       "series": [
         {
@@ -2019,14 +2043,94 @@
     },
     {
       "who": "Friedrich Merz",
-      "role": "Chancellor",
-      "said": "Friedrich Merz",
+      "role": "Chancellor (Germany)",
+      "said": "If Russia is not stopped, it will turn its war machine against us sooner or later",
+      "quote": false,
+      "when": "2026-10-04",
+      "source": ""
+    },
+    {
+      "who": "Friedrich Merz",
+      "role": "Chancellor (Germany)",
+      "said": "German and Ukrainian companies are jointly developing technologies that benefit both countries and make them safer and stronger",
       "quote": false,
       "when": "2026-10-04",
       "source": ""
     }
   ],
   "on_record": [
+    {
+      "id": "st_8ecc38221968",
+      "speaker": "Johann Wadephul",
+      "role": "Foreign Minister",
+      "affiliation": "Germany",
+      "iso2": "DE",
+      "date": "2026-10-05",
+      "venue": "other",
+      "quote": "Especially with a view to the approaching winter, Russia is systematically targeting civilian heating and energy infrastructure.",
+      "paraphrase": "With winter approaching, Russia is systematically targeting civilian heating and energy infrastructure and is willing to accept thousands of deaths and injuries, including among its own population.",
+      "about": [
+        "Russia",
+        "Ukraine"
+      ],
+      "about_iso2": [
+        "RU",
+        "UA"
+      ],
+      "signal": "accusation",
+      "stance": -2,
+      "significance": "Accuses Russia of deliberate attacks on civilian infrastructure as a strategy to break Ukrainian resistance.",
+      "url": "https://www.auswaertiges-amt.de/en/newsroom/news/2804288-2804288",
+      "reported_by": ""
+    },
+    {
+      "id": "st_8491d12812be",
+      "speaker": "Johann Wadephul",
+      "role": "Foreign Minister",
+      "affiliation": "Germany",
+      "iso2": "DE",
+      "date": "2026-10-05",
+      "venue": "other",
+      "quote": "We stand firmly by the side of the Ukrainian people.",
+      "paraphrase": "Germany stands firmly by the Ukrainian people because they are defending not only their own but also collective European freedom, while Putin is blocking the path to a ceasefire and shows no genuine willingness to negotiate despite mediation, sanctions pressure and heavy losses.",
+      "about": [
+        "Ukraine",
+        "Russia"
+      ],
+      "about_iso2": [
+        "UA",
+        "RU"
+      ],
+      "signal": "commitment",
+      "stance": 2,
+      "significance": "Reaffirms unconditional German/European backing for Ukraine and places responsibility for lack of ceasefire squarely on Putin.",
+      "url": "https://www.auswaertiges-amt.de/en/newsroom/news/2804288-2804288",
+      "reported_by": ""
+    },
+    {
+      "id": "st_0668f8b79f51",
+      "speaker": "Johann Wadephul",
+      "role": "Foreign Minister",
+      "affiliation": "Germany",
+      "iso2": "DE",
+      "date": "2026-10-05",
+      "venue": "other",
+      "quote": "For more than four years now, we have been witnessing Putin’s brutal and illegal war of aggression against Ukraine.",
+      "paraphrase": "For more than four years, Putin has been waging a brutal and illegal war of aggression against Ukraine.",
+      "about": [
+        "Russia",
+        "Ukraine"
+      ],
+      "about_iso2": [
+        "RU",
+        "UA"
+      ],
+      "signal": "accusation",
+      "stance": -2,
+      "significance": "Frames Russia's war as prolonged illegal aggression, establishing basis for Council of Europe exclusion and continued support for Ukraine.",
+      "url": "https://www.auswaertiges-amt.de/en/newsroom/news/2804288-2804288",
+      "reported_by": ""
+    },
     {
       "id": "st_2d9d4990dfae",
       "speaker": "Friedrich Merz",
@@ -2049,6 +2153,57 @@
       "signal": "warning",
       "stance": -2,
       "significance": "Frames Ukraine war as direct future threat to Germany/Europe to justify continued support",
+      "url": "https://www.dw.com/en/germany-s-merz-visits-kyiv-as-russia-strikes-bridge/a-79534734?maca=en-rss-en-all-1573-rdf",
+      "reported_by": "Deutsche Welle"
+    },
+    {
+      "id": "st_b77d08bc46bf",
+      "speaker": "Friedrich Merz",
+      "role": "Chancellor",
+      "affiliation": "Germany",
+      "iso2": "DE",
+      "date": "2026-10-04",
+      "venue": "press_conference",
+      "quote": "German and Ukrainian companies are jointly developing technologies that benefit both countries. That makes us safer and stronger,",
+      "paraphrase": "German and Ukrainian companies are jointly developing technologies that benefit both countries and make them safer and stronger",
+      "about": [
+        "Ukraine",
+        "Germany",
+        "Russia"
+      ],
+      "about_iso2": [
+        "UA",
+        "DE",
+        "RU"
+      ],
+      "signal": "reassurance",
+      "stance": 2,
+      "significance": "Presents aid as mutual security benefit to counter domestic criticism of Ukraine spending",
+      "url": "https://www.dw.com/en/germany-s-merz-visits-kyiv-as-russia-strikes-bridge/a-79534734?maca=en-rss-en-all-1573-rdf",
+      "reported_by": "Deutsche Welle"
+    },
+    {
+      "id": "st_b68e21237e30",
+      "speaker": "Friedrich Merz",
+      "role": "Chancellor",
+      "affiliation": "Germany",
+      "iso2": "DE",
+      "date": "2026-10-04",
+      "venue": "speech",
+      "quote": "If we in Germany waver, Europe wavers,",
+      "paraphrase": "If Germany wavers, Europe wavers, and if Europe wavers, Ukraine wavers; Germany will not be divided despite pressure from the AfD and its Russian backers",
+      "about": [
+        "Germany",
+        "Europe",
+        "Ukraine"
+      ],
+      "about_iso2": [
+        "DE",
+        "UA"
+      ],
+      "signal": "commitment",
+      "stance": 1,
+      "significance": "Links German domestic resolve directly to European unity and Ukraine's survival, calling out domestic pro-Russian opposition",
       "url": "https://www.dw.com/en/germany-s-merz-visits-kyiv-as-russia-strikes-bridge/a-79534734?maca=en-rss-en-all-1573-rdf",
       "reported_by": "Deutsche Welle"
     },
@@ -2415,13 +2570,13 @@
     {
       "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
       "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
-      "link": "US-Iran-Houthi confrontation over Hormuz and Red Sea ↔ Russia-Ukraine war and European security architecture: Hormuz closure (1 vessel/day as of Sept 27, down 99% year-on-year, outside full-history range) sustains energy pressure shown by TTF gas at 74.76 EUR/MWh as of Oct 2 (96th percentile, +138% year-on-year) as Russia-Ukraine reciprocal infrastructure war cuts heat in Kyiv.",
+      "link": "Russia-Ukraine war and European security architecture ↔ US-Iran-Houthi confrontation over Hormuz and Red Sea: reciprocal strikes disabling Russian refining (Ukraine claims 51%, IEA confirms throughput collapse) and Hormuz closure together sustain energy pressure seen in TTF gas at 74.76 EUR/MWh as of Oct 2 (+138% year-on-year, 96th percentile) and G7 100-million-barrel release Oct 2, while Bosporus (46/day) and Hormuz (1/day) transits as of Sep 27 both sit outside full-history lows",
       "date": "2026-10-05"
     },
     {
-      "theater_id": "thr_us_china_summit_and_strategic_competition",
-      "name": "US-China summit and strategic competition",
-      "link": "Russia-Ukraine war and European security architecture ↔ US-China summit and strategic competition: PLA troops drilling with Russia at Tsentr-2026 through Oct 3 shows Russia-China alignment persisting alongside the US-China holding truce to Jan 10, 2027, while Germany's Oct 4 €1.3bn aid plus €8.5bn co-production deals anchor Ukraine's interceptor and long-range capacity.",
+      "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout",
+      "name": "Gaza war and UNGA diplomatic fallout",
+      "link": "Russia-Ukraine war and European security architecture ↔ Gaza war and UNGA diplomatic fallout: Latvia's Oct 5 on-record attribution of sabotage against Estonian defence firm Milrem Robotics to Russian secret services, paired with Germany's confirmed €1.3bn aid and €8.5bn co-production for Ukraine, shows Russian pressure on European defence industry persisting alongside the war in Ukraine and continued targeted killings during Gaza's nominal ceasefire",
       "date": "2026-10-05"
     },
     {

@@ -661,12 +661,7 @@
       {
         "id": "thr_russia_ukraine_war_and_european_security_archite",
         "name": "Russia-Ukraine war and European security architecture",
-        "mentions": 22
-      },
-      {
-        "id": "thr_us_china_summit_and_strategic_competition",
-        "name": "US-China summit and strategic competition",
-        "mentions": 1
+        "mentions": 21
       }
     ],
     "pulses": [
@@ -692,18 +687,18 @@
         "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
       },
       {
+        "id": "pls_energy_security_global_hydrocarbon_supply_disruption",
+        "name": "Global Hydrocarbon Supply Disruption",
+        "band": "critical",
+        "position": 77.0,
+        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      },
+      {
         "id": "pls_russia_nato_hybrid_grey_zone_pressure",
         "name": "Hybrid and Grey-Zone Pressure",
         "band": "severe",
         "position": 72.0,
         "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
-      },
-      {
-        "id": "pls_us_china_technology_export_control_decoupling",
-        "name": "Technology and Export-Control Decoupling",
-        "band": "severe",
-        "position": 65.0,
-        "theater_id": "thr_us_china_summit_and_strategic_competition"
       },
       {
         "id": "pls_russia_nato_diplomatic_rupture",
@@ -718,27 +713,6 @@
         "band": "severe",
         "position": 58.0,
         "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
-      },
-      {
-        "id": "pls_us_china_trade_tariff_confrontation",
-        "name": "Trade and Tariff Confrontation",
-        "band": "elevated",
-        "position": 35.0,
-        "theater_id": "thr_us_china_summit_and_strategic_competition"
-      },
-      {
-        "id": "pls_us_china_diplomatic_deadlock",
-        "name": "Diplomatic Deadlock",
-        "band": "calm",
-        "position": 20.0,
-        "theater_id": "thr_us_china_summit_and_strategic_competition"
-      },
-      {
-        "id": "pls_ai_geopolitics_ai_safety_governance_fracture",
-        "name": "AI Safety Governance Fracture",
-        "band": "unassessed",
-        "position": null,
-        "theater_id": "thr_us_china_summit_and_strategic_competition"
       }
     ]
   },

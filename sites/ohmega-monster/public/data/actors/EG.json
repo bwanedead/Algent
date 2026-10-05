@@ -580,7 +580,7 @@
       {
         "id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
         "name": "Ethiopia-Eritrea rupture and Tigray offensive",
-        "mentions": 4
+        "mentions": 6
       }
     ],
     "pulses": [
@@ -589,6 +589,13 @@
         "name": "State Fragility and Insurgent Control",
         "band": "severe",
         "position": 68.0,
+        "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive"
+      },
+      {
+        "id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
+        "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
+        "band": "severe",
+        "position": 65.0,
         "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive"
       },
       {

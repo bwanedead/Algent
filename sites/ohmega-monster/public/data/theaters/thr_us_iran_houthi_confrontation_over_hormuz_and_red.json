@@ -3,7 +3,7 @@
   "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
   "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
   "domain": "geopolitics",
-  "built_at": "2026-10-05T08:33:34.208168+00:00",
+  "built_at": "2026-10-05T09:23:51.294012+00:00",
   "first_seen": "2026-09-28",
   "last_seen": "2026-10-05",
   "days_covered": 5,
@@ -15,7 +15,7 @@
   },
   "current": {
     "date": "2026-10-05",
-    "bottom_line": "Hormuz remains closed with Iran on 4 Oct restating a seven-day reopening offer tied to seven US concessions and no US counter-offer conveyed via mediators. The Red Sea front escalated as Yemen's leadership on 4 Oct ordered a nationwide offensive to retake Houthi territory, with Saudi-led strikes on Sanaa and heavy fighting around Taiz, while energy markets eased modestly on a 2 Oct G7 stock release and higher Middle East exports. Confidence is high on the diplomatic deadlock and the Yemen offensive sequence; lower on single-source battlefield casualty claims.",
+    "bottom_line": "Hormuz remains closed with Iran restating on 4 Oct that reopening within seven days requires seven US steps under the Islamabad MoU, and no formal US counter-offer has been conveyed via mediators. The Yemen/Red Sea front escalated with the Yemeni presidency's 4 Oct order for a nationwide offensive to retake Houthi territory, Saudi-led strikes on Sanaa, and Houthi isolation of Taiz, while energy markets eased slightly on the G7's 2 Oct 100-million-barrel release and an Iraqi VLCC transit through Hormuz on 3 Oct. Confidence is high on the diplomatic deadlock and the Yemen offensive sequence; lower on single-source casualty counts and contested Houthi missile claims.",
     "escalation": {
       "direction": "rising",
       "pace": "gradual"
@@ -252,12 +252,12 @@
     },
     {
       "day": "2026-10-01",
-      "count": 1,
+      "count": 2,
       "editions": 2
     },
     {
       "day": "2026-10-02",
-      "count": 4,
+      "count": 6,
       "editions": 1
     },
     {
@@ -272,33 +272,20 @@
     },
     {
       "day": "2026-10-05",
-      "count": 2,
+      "count": 5,
       "editions": 0
     }
   ],
   "timeline": [
     {
-      "date": "2026-10-05",
-      "headline": "Oil eases on G7 release and higher exports; Aramco cuts Asia prices to six-year low",
-      "detail": "Brent crude futures fell to about $101.59-101.90 and WTI to $90.12-90.49 on 5 Oct as Middle East crude exports rose above pre-war levels in late September and the G7 100m barrel release eased supply anxiety, though Brent remained above $100 on infrastructure risks. Saudi Aramco unexpectedly cut November crude prices for Asia to six-year lows on 5 Oct.",
-      "where": "",
-      "verification": "researched",
-      "sources": [
-        "https://www.arabnews.com/energy/oil-slips-as-middle-east-crude-exports-rise-g7-to-release-stocks-3004677"
-      ],
-      "from": "/geopolitics/2026-10-05"
-    },
-    {
       "date": "2026-10-04",
-      "headline": "Yemen announces nationwide offensive; Sanaa struck and Taiz road cut",
-      "detail": "Yemeni PLC chairman Rashad al-Alimi announced 4 Oct in televised address start of military operations to retake remaining Houthi-held territory and extend state authority, placing institutions on full alert. Saudi or Yemeni-aligned forces struck Houthi-held Sanaa late 3 Oct and early 4 Oct with at least 13 strikes on Sanaa City plus Saada and Taiz fronts. Houthi fighters cut the Taiz-Aden road at al-Safiya 3-4 Oct, isolating Taiz, with >70 killed in past day (34 government, 39 Houthi per respective sources). UKMTO reported 4 Oct explosions near a tanker ~60nm south of Mocha, crew safe, cause not identified.",
-      "where": "Sanaa and Taiz, Yemen; Gulf of Aden off Mocha",
-      "verification": "researched",
+      "headline": "US withdraws bombers from RAF Fairford amid suspected Iran-linked plot - reported",
+      "detail": "Multiple outlets reported 4-5 Oct the US withdrew all bombers from RAF Fairford in Britain, the base at the centre of a suspected Iran-linked plot. No UK police/CPS charging decision or evidence disclosure on the Iran link has been reported in the last three days.",
+      "where": "RAF Fairford, United Kingdom",
+      "verification": "reported",
       "sources": [
-        "https://www.aljazeera.com/news/2026/10/4/yemens-leader-announces-military-operation-to-retake-houthi-held-territory",
-        "https://news.cgtn.com/news/2026-10-04/Explosions-rock-Sanaa-as-Saudi-airstrikes-target-Houthi-positions-1QXtD4nN8Lm/p.html",
-        "https://www.channelnewsasia.com/world/yemen-presidency-announces-military-drive-retake-all-houthi-territory-6431676",
-        "https://www.middleeasteye.net/live-blog/live-blog-update/explosions-reported-near-tanker-southern-yemen-ukmto"
+        "https://en.mercopress.com/2026/10/04/us-withdraws-all-its-bombers-from-britain-s-raf-fairford-base",
+        "https://www.al-monitor.com/originals/2026/10/us-removes-bombers-uk-base-centre-suspected-iranian-plot"
       ],
       "from": "/geopolitics/2026-10-05"
     },
@@ -341,9 +328,23 @@
       "from": "/geopolitics/2026-10-04"
     },
     {
+      "date": "2026-10-04",
+      "headline": "Explosions reported near tanker 60nm south of Mocha as Houthi control around Bab al-Mandab holds",
+      "detail": "UKMTO reported 4 Oct a tanker observed several explosions nearby about 60 nautical miles south of Mocha (Al Mukha) in the Gulf of Aden, crew safe, no environmental impact, authorities investigating, cause not identified. The incident follows Houthi seizure of Mocha and strategic islands in Bab al-Mandab in mid-September after a ~150km advance, strengthening surveillance and launch capacity around the strait. Houthi spokesman Yahya Saree claimed 4 Oct ballistic missile and drone strikes on Aramco facilities in Riyadh and Khurais causing large fires; Saudi-led coalition spokesman Turki al-Maliki called the Riyadh targeting claims misleading and Saudi authorities/Aramco gave no immediate confirmation.",
+      "where": "60nm south of Mocha, Gulf of Aden",
+      "verification": "researched",
+      "sources": [
+        "https://www.middleeasteye.net/live-blog/live-blog-update/explosions-reported-near-tanker-southern-yemen-ukmto",
+        "https://www.aljazeera.com/news/2026/10/4/yemens-leader-announces-military-operation-to-retake-houthi-held-territory",
+        "https://www.cnn.com/2026/10/04/middleeast/yemen-offensive-houthis-intl",
+        "https://www.aljazeera.com/news/2026/10/4/houthis-claim-strike-on-saudi-energy-facility-as-yemen-fighting-intensifies"
+      ],
+      "from": "/geopolitics/2026-10-05"
+    },
+    {
       "date": "2026-10-03",
-      "headline": "Iraq moves 2 million barrels through Hormuz on VLCC for first time in decades",
-      "detail": "Iraq's state-owned Iraqi Oil Tankers Company transported 2 million barrels of Iraqi crude aboard a VLCC through the Strait of Hormuz on 3 Oct, described by director general Ali Qais Abdul Jabbar as first such operation in decades, arranged to move crude beyond Hormuz rather than delivering at Basra to give SOMO greater pricing flexibility.",
+      "headline": "Iraq moves 2 million barrels through Hormuz on VLCC in first such transit in decades",
+      "detail": "Iraq's state-owned Iraqi Oil Tankers Company transported 2 million barrels of Iraqi crude aboard a VLCC through the Strait of Hormuz on 3 Oct, described by director general Ali Qais Abdul Jabbar as the company's first such operation in decades. The transit was arranged to move crude beyond Hormuz rather than delivering at Basra, giving state marketer SOMO greater flexibility on sales and pricing.",
       "where": "Strait of Hormuz",
       "verification": "researched",
       "sources": [
@@ -361,7 +362,12 @@
       "sources": [
         "https://www.aljazeera.com/news/2026/10/4/houthis-claim-strike-on-saudi-energy-facility-as-yemen-fighting-intensifies",
         "https://economictimes.indiatimes.com/news/defence/houthis-claim-missile-drone-strikes-on-aramco-facilities-in-saudi-arabia/articleshow/134676524.cms",
-        "https://www.rferl.org/a/iran-live-blog-trump-middle-east/33803414.html"
+        "https://www.rferl.org/a/iran-live-blog-trump-middle-east/33803414.html",
+        "https://www.aljazeera.com/news/2026/10/4/yemens-leader-announces-military-operation-to-retake-houthi-held-territory",
+        "https://www.channelnewsasia.com/world/yemen-presidency-announces-military-drive-retake-all-houthi-territory-6431676",
+        "https://www.cnn.com/2026/10/04/middleeast/yemen-offensive-houthis-intl",
+        "https://news.cgtn.com/news/2026-10-04/Explosions-rock-Sanaa-as-Saudi-airstrikes-target-Houthi-positions-1QXtD4nN8Lm/p.html",
+        "https://www.dw.com/en/yemen-launches-major-military-operation-against-houthis/a-79542723?maca=en-rss-en-all-1573-rdf"
       ],
       "from": "/geopolitics/2026-10-04"
     },
@@ -395,13 +401,15 @@
     },
     {
       "date": "2026-10-02",
-      "headline": "G7 agrees 100-million-barrel coordinated stock release via IEA",
-      "detail": "G7 leaders agreed 2 Oct 2026 to a coordinated release of 100 million barrels of diesel, gasoline and crude from emergency reserves through the IEA over four months beginning immediately, with a substantial diesel release front-loaded in the first 20 days, and reaffirmed commitment to refrain from export restrictions on energy between G7 members.",
-      "where": "",
+      "headline": "G7 agrees 100-million-barrel coordinated release; oil prices ease but remain above $100",
+      "detail": "G7 leaders agreed 2 Oct to a coordinated release of 100 million barrels of diesel, gasoline and crude from emergency reserves through the IEA over four months beginning immediately, with a substantial diesel release front-loaded in the first 20 days, and reaffirmed commitment to refrain from export restrictions among G7 and called on all producers to avoid bans. Brent fell to about $101.59-101.90 and WTI to about $90.12-90.49 on 5 Oct as Middle East crude exports rose above pre-war levels in late September and the G7 release eased anxiety, though Brent remained above $100 on infrastructure risks. Saudi Aramco unexpectedly cut November crude prices for Asia to six-year lows on 5 Oct.",
+      "where": "G7/IEA coordinated; Strait of Hormuz",
       "verification": "researched",
       "sources": [
         "https://apnews.com/article/trump-europe-diesel-fuel-prices-774a360d1646d9ce8aba764fdd9959d2",
-        "https://www.elysee.fr/en/emmanuel-macron/2026/10/02/videoconference-with-g7-leaders-on-the-global-energy-situation"
+        "https://www.elysee.fr/en/emmanuel-macron/2026/10/02/videoconference-with-g7-leaders-on-the-global-energy-situation",
+        "https://www.gov.uk/government/news/g7-leaders-statement-on-global-energy-security-and-market-stability",
+        "https://www.arabnews.com/energy/oil-slips-as-middle-east-crude-exports-rise-g7-to-release-stocks-3004677"
       ],
       "from": "/geopolitics/2026-10-05"
     },
@@ -518,18 +526,18 @@
   ],
   "places": [
     {
-      "name": "Tehran",
-      "country": "Iran",
-      "lat": 35.6892,
-      "lon": 51.389,
-      "count": 2,
-      "last_date": "2026-10-04"
-    },
-    {
       "name": "Strait of Hormuz",
       "country": "sea",
       "lat": 26.5,
       "lon": 56.25,
+      "count": 3,
+      "last_date": "2026-10-04"
+    },
+    {
+      "name": "Tehran",
+      "country": "Iran",
+      "lat": 35.6892,
+      "lon": 51.389,
       "count": 2,
       "last_date": "2026-10-04"
     },
@@ -546,6 +554,14 @@
       "country": "Yemen",
       "lat": 13.213,
       "lon": 44.121,
+      "count": 1,
+      "last_date": "2026-10-04"
+    },
+    {
+      "name": "Mocha",
+      "country": "Yemen",
+      "lat": 13.3167,
+      "lon": 43.25,
       "count": 1,
       "last_date": "2026-10-04"
     },
@@ -1492,22 +1508,22 @@
     },
     "points": [
       {
-        "x": 590.8,
-        "y": 185.3,
-        "label": "Tehran",
+        "x": 695.0,
+        "y": 401.7,
+        "label": "Strait of Hormuz",
         "date": "2026-10-04",
         "verification": "researched",
         "n": 1,
         "weight": 1.0
       },
       {
-        "x": 695.0,
-        "y": 401.7,
-        "label": "Strait of Hormuz",
+        "x": 590.8,
+        "y": 185.3,
+        "label": "Tehran",
         "date": "2026-10-04",
         "verification": "researched",
         "n": 2,
-        "weight": 0.976
+        "weight": 0.7
       },
       {
         "x": 436.4,
@@ -1516,7 +1532,7 @@
         "date": "2026-10-04",
         "verification": "researched",
         "n": 3,
-        "weight": 0.931
+        "weight": 0.652
       },
       {
         "x": 434.9,
@@ -1525,7 +1541,16 @@
         "date": "2026-10-04",
         "verification": "reported",
         "n": 4,
-        "weight": 0.5
+        "weight": 0.35
+      },
+      {
+        "x": 416.2,
+        "y": 712.3,
+        "label": "Mocha",
+        "date": "2026-10-04",
+        "verification": "researched",
+        "n": 5,
+        "weight": 0.35
       },
       {
         "x": 489.7,
@@ -1533,8 +1558,8 @@
         "label": "Riyadh",
         "date": "2026-10-03",
         "verification": "researched",
-        "n": 5,
-        "weight": 0.476
+        "n": 6,
+        "weight": 0.333
       },
       {
         "x": 305.0,
@@ -1542,8 +1567,8 @@
         "label": "Yanbu",
         "date": "2026-10-02",
         "verification": "researched",
-        "n": 6,
-        "weight": 0.453
+        "n": 7,
+        "weight": 0.317
       },
       {
         "x": 338.2,
@@ -1551,19 +1576,13 @@
         "label": "Medina",
         "date": "2026-10-01",
         "verification": "researched",
-        "n": 7,
-        "weight": 0.431
+        "n": 8,
+        "weight": 0.302
       }
     ],
     "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate. Shipping data: IMF PortWatch."
   },
   "actors": [
-    {
-      "name": "United States",
-      "mentions": 4,
-      "first": "2026-10-01",
-      "last": "2026-10-04"
-    },
     {
       "name": "Houthis",
       "mentions": 3,
@@ -1571,7 +1590,7 @@
       "last": "2026-10-04"
     },
     {
-      "name": "Iran",
+      "name": "United States",
       "mentions": 3,
       "first": "2026-10-01",
       "last": "2026-10-04"
@@ -1583,10 +1602,22 @@
       "last": "2026-09-28"
     },
     {
+      "name": "Houthi forces",
+      "mentions": 2,
+      "first": "2026-10-04",
+      "last": "2026-10-04"
+    },
+    {
       "name": "Houthi movement (Ansarallah)",
       "mentions": 2,
       "first": "2026-10-01",
       "last": "2026-10-01"
+    },
+    {
+      "name": "Iran",
+      "mentions": 2,
+      "first": "2026-10-01",
+      "last": "2026-10-02"
     },
     {
       "name": "Qatar",
@@ -1603,13 +1634,19 @@
     {
       "name": "Saudi Aramco",
       "mentions": 2,
-      "first": "2026-10-03",
-      "last": "2026-10-05"
+      "first": "2026-10-02",
+      "last": "2026-10-03"
     },
     {
       "name": "Saudi-led coalition",
       "mentions": 2,
       "first": "2026-10-01",
+      "last": "2026-10-04"
+    },
+    {
+      "name": "UKMTO",
+      "mentions": 2,
+      "first": "2026-10-04",
       "last": "2026-10-04"
     },
     {
@@ -1635,35 +1672,12 @@
       "mentions": 1,
       "first": "2026-09-26",
       "last": "2026-09-26"
-    },
-    {
-      "name": "Esmail Baghaei",
-      "mentions": 1,
-      "first": "2026-10-04",
-      "last": "2026-10-04"
-    },
-    {
-      "name": "European gas market",
-      "mentions": 1,
-      "first": "2026-09-30",
-      "last": "2026-09-30"
     }
   ],
   "relations": [],
   "figures": [
     {
-      "label": "Brent crude front month",
-      "unit": "USD/bbl",
-      "series": [
-        {
-          "as_of": "2026-10-05",
-          "value": 101.59,
-          "source": "https://www.arabnews.com/energy/oil-slips-as-middle-east-crude-exports-rise-g7-to-release-stocks-3004677"
-        }
-      ]
-    },
-    {
-      "label": "Iraqi crude transited Hormuz on VLCC",
+      "label": "Iraqi VLCC transit through Hormuz",
       "unit": "million barrels",
       "series": [
         {
@@ -1674,7 +1688,7 @@
       ]
     },
     {
-      "label": "G7 coordinated stock release via IEA",
+      "label": "G7 coordinated emergency stock release",
       "unit": "million barrels over 4 months",
       "series": [
         {
@@ -1766,28 +1780,12 @@
   "indicators": [],
   "statements": [
     {
-      "who": "Rashad Al-Alimi",
-      "role": "Chairman of the Presidential Leadership Council",
-      "said": "Rashad Al-Alimi instructed armed forces, security forces and all military formations to begin assigned tasks under an approved plan until the country is liberated from the Houthis.",
-      "quote": false,
-      "when": "2026-10-05",
-      "source": "https://www.aa.com.tr/en/world/morning-briefing-oct-5-2026/4077995"
-    },
-    {
-      "who": "Esmail Baghaei",
-      "role": "Foreign Ministry Spokesman",
-      "said": "Esmail Baghaei accused the US of structural nihilism posing a grave threat to human life and civilization, said appeasement buys no safety and merely negotiates the order of victims, and linked modern nihilism to vast stockpiles of mass destruction.",
-      "quote": false,
-      "when": "2026-10-05",
-      "source": "https://en.mfa.ir/portal/NewsView/795355"
-    },
-    {
       "who": "G7 Leaders",
-      "role": "Heads of State and Government",
-      "said": "G7 Leaders called for immediate and full restoration of navigational rights in the Strait of Hormuz and determination to redouble collective efforts, and commended US efforts to ensure free flow of commerce through the strait.",
-      "quote": false,
+      "role": "Leaders of the G7",
+      "said": "We condemn Iran’s continued attacks against its regional neighbours and its disruption of international trade, energy security and the global economy. We call for the …",
+      "quote": true,
       "when": "2026-10-02",
-      "source": "https://www.elysee.fr/emmanuel-macron/2026/10/02/g7-leaders-statement-on-global-energy-security-and-market-stability"
+      "source": "https://www.gov.uk/government/news/g7-leaders-statement-on-global-energy-security-and-market-stability"
     }
   ],
   "on_record": [
@@ -1813,28 +1811,6 @@
       "significance": "Formal announcement of nationwide offensive to retake Houthi-held territory, signaling escalation of Yemen war.",
       "url": "https://www.aa.com.tr/en/world/morning-briefing-oct-5-2026/4077995",
       "reported_by": "Anadolu Agency"
-    },
-    {
-      "id": "st_17fce35f4d6e",
-      "speaker": "Esmail Baghaei",
-      "role": "Foreign Ministry Spokesman",
-      "affiliation": "Iran",
-      "iso2": "IR",
-      "date": "2026-10-05",
-      "venue": "other",
-      "quote": "Appeasement buys no safety - it merely negotiates the order of the victims.",
-      "paraphrase": "Appeasing a nihilistic actor like Caligula provides no safety because the absurd recognizes no rule or contract; it only negotiates the order of victims.",
-      "about": [
-        "United States"
-      ],
-      "about_iso2": [
-        "US"
-      ],
-      "signal": "warning",
-      "stance": -2,
-      "significance": "Warns third parties that accommodating the US will not protect them, urging resistance over appeasement.",
-      "url": "https://en.mfa.ir/portal/NewsView/795355",
-      "reported_by": ""
     },
     {
       "id": "st_43ae4d86ef9a",
@@ -1905,6 +1881,28 @@
       "reported_by": ""
     },
     {
+      "id": "st_17fce35f4d6e",
+      "speaker": "Esmail Baghaei",
+      "role": "Foreign Ministry Spokesman",
+      "affiliation": "Iran",
+      "iso2": "IR",
+      "date": "2026-10-05",
+      "venue": "other",
+      "quote": "Appeasement buys no safety - it merely negotiates the order of the victims.",
+      "paraphrase": "Appeasing a nihilistic actor like Caligula provides no safety because the absurd recognizes no rule or contract; it only negotiates the order of victims.",
+      "about": [
+        "United States"
+      ],
+      "about_iso2": [
+        "US"
+      ],
+      "signal": "warning",
+      "stance": -2,
+      "significance": "Warns third parties that accommodating the US will not protect them, urging resistance over appeasement.",
+      "url": "https://en.mfa.ir/portal/NewsView/795355",
+      "reported_by": ""
+    },
+    {
       "id": "st_47660909e68d",
       "speaker": "Saudi-led coalition in Yemen",
       "role": "",
@@ -1948,6 +1946,100 @@
       "significance": "Frames Canada's residential school history as forced assimilation and mass abuse/death, amplifying accusation of systemic human-rights violation.",
       "url": "https://en.mfa.ir/portal/NewsView/795380",
       "reported_by": ""
+    },
+    {
+      "id": "st_02012831c274",
+      "speaker": "Esmail Baghaei",
+      "role": "Foreign Ministry Spokesperson",
+      "affiliation": "Iran",
+      "iso2": "IR",
+      "date": "2026-10-05",
+      "venue": "press_conference",
+      "quote": "French officials who describe the treatment of armed terrorists trained by the Israeli regime by Iranian security forces as a violation of human rights, themselves tolerate not the slightest violent act at peaceful gatherings against the police and suppress protesters in the harshest manner",
+      "paraphrase": "Accused French officials of hypocrisy, saying they label Iranian security forces' treatment of armed terrorists trained by the Israeli regime as a human rights violation while themselves tolerating no violent act at peaceful gatherings against police and suppressing protesters in the harshest manner.",
+      "about": [
+        "France",
+        "Israel",
+        "Iran"
+      ],
+      "about_iso2": [
+        "FR",
+        "IL",
+        "IR"
+      ],
+      "signal": "accusation",
+      "stance": -2,
+      "significance": "Frames Iranian security actions as counter-terrorism against Israeli-backed groups while portraying France as hypocritical on human rights.",
+      "url": "https://en.mfa.ir/portal/NewsView/795379",
+      "reported_by": ""
+    },
+    {
+      "id": "st_178dbb64b700",
+      "speaker": "Esmil Baghaei",
+      "role": "Foreign Ministry Spokesperson",
+      "affiliation": "Iran",
+      "iso2": "IR",
+      "date": "2026-10-05",
+      "venue": "other",
+      "quote": "",
+      "paraphrase": "Called on the Canadian government to provide evidence, transparency and accountability regarding the fate of Indigenous children and unmarked graves linked to the country's residential school system, in a post on X marking Canada's National Day for Truth and Reconciliation (September 30).",
+      "about": [
+        "Canada"
+      ],
+      "about_iso2": [
+        "CA"
+      ],
+      "signal": "demand",
+      "stance": -1,
+      "significance": "Iran publicly demands accountability from Canada on Indigenous residential schools, using human-rights framing to pressure a Western state.",
+      "url": "https://en.mfa.ir/portal/NewsView/795380",
+      "reported_by": ""
+    },
+    {
+      "id": "st_466b1df5836d",
+      "speaker": "Esmil Baghaei",
+      "role": "Foreign Ministry Spokesperson",
+      "affiliation": "Iran",
+      "iso2": "IR",
+      "date": "2026-10-05",
+      "venue": "other",
+      "quote": "",
+      "paraphrase": "Said reconciliation cannot be reduced to a commemorative day or political rhetoric, and that when serious questions remain unanswered and the history of residential schools is contested or obscured, reconciliation remains incomplete.",
+      "about": [
+        "Canada"
+      ],
+      "about_iso2": [
+        "CA"
+      ],
+      "signal": "accusation",
+      "stance": -1,
+      "significance": "Dismisses Canada's official reconciliation observance as insufficient and accuses Ottawa of obscuring/contesting history.",
+      "url": "https://en.mfa.ir/portal/NewsView/795380",
+      "reported_by": ""
+    },
+    {
+      "id": "st_df7d87b1dbf5",
+      "speaker": "Ali Fadavi",
+      "role": "Head of the advisory group to the IRGC commander-in-chief",
+      "affiliation": "Islamic Revolutionary Guard Corps",
+      "iso2": "",
+      "date": "2026-10-04",
+      "venue": "other",
+      "quote": "If the Americans launch a ground attack, then we will target every location related to the Americans, American bases and every vessel related to the Americans,",
+      "paraphrase": "",
+      "about": [
+        "United States",
+        "Iran"
+      ],
+      "about_iso2": [
+        "US",
+        "IR"
+      ],
+      "signal": "threat",
+      "stance": -2,
+      "significance": "Explicit red line threatening retaliation against all US bases and warships if US launches ground invasion, indicating escalation risk in US-Iran war.",
+      "url": "https://www.aa.com.tr/en/world/morning-briefing-oct-5-2026/4077995",
+      "reported_by": "Anadolu Agency"
     },
     {
       "id": "st_8ffb63d5ad70",
@@ -2057,6 +2149,28 @@
       "signal": "reassurance",
       "stance": 2,
       "significance": "Publicly endorses US security role in Hormuz, signaling allied backing for US operations there.",
+      "url": "https://www.elysee.fr/emmanuel-macron/2026/10/02/g7-leaders-statement-on-global-energy-security-and-market-stability",
+      "reported_by": ""
+    },
+    {
+      "id": "st_2fe1a36f23e9",
+      "speaker": "G7 Leaders",
+      "role": "Heads of State and Government",
+      "affiliation": "G7",
+      "iso2": "",
+      "date": "2026-10-02",
+      "venue": "other",
+      "quote": "We condemn Iran’s continued attacks against its regional neighbours and its disruption of international trade, energy security and the global economy.",
+      "paraphrase": "",
+      "about": [
+        "Iran"
+      ],
+      "about_iso2": [
+        "IR"
+      ],
+      "signal": "accusation",
+      "stance": -2,
+      "significance": "Directly attributes energy market disruption and regional instability to Iran, raising diplomatic pressure.",
       "url": "https://www.elysee.fr/emmanuel-macron/2026/10/02/g7-leaders-statement-on-global-energy-security-and-market-stability",
       "reported_by": ""
     },
@@ -2225,13 +2339,13 @@
     {
       "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
       "name": "Ethiopia-Eritrea rupture and Tigray offensive",
-      "link": "Ethiopia-Eritrea rupture and Tigray offensive ↔ US-Iran-Houthi confrontation over Hormuz and Red Sea: Red Sea security connects both — El Alamein four-way bloc on Red Sea/Somalia formed Oct 4-5 as Yemen's nationwide offensive and Saudi-led strikes on Sanaa escalated the Red Sea front while Hormuz remained closed.",
+      "link": "US-Iran-Houthi confrontation over Hormuz and Red Sea ↔ Ethiopia-Eritrea rupture and Tigray offensive: El Alamein summit's Oct 4-5 alignment of Egypt, Eritrea, Somalia and Sudan on Red Sea governance coincides with Houthi control around Bab al-Mandab and Hormuz closure at ~1 transit/day, linking Horn rivalries to Red Sea chokepoint risk",
       "date": "2026-10-05"
     },
     {
       "theater_id": "thr_russia_ukraine_war_and_european_security_archite",
       "name": "Russia-Ukraine war and European security architecture",
-      "link": "US-Iran-Houthi confrontation over Hormuz and Red Sea ↔ Russia-Ukraine war and European security architecture: Hormuz closure (1 vessel/day as of Sept 27, down 99% year-on-year, outside full-history range) sustains energy pressure shown by TTF gas at 74.76 EUR/MWh as of Oct 2 (96th percentile, +138% year-on-year) as Russia-Ukraine reciprocal infrastructure war cuts heat in Kyiv.",
+      "link": "Russia-Ukraine war and European security architecture ↔ US-Iran-Houthi confrontation over Hormuz and Red Sea: reciprocal strikes disabling Russian refining (Ukraine claims 51%, IEA confirms throughput collapse) and Hormuz closure together sustain energy pressure seen in TTF gas at 74.76 EUR/MWh as of Oct 2 (+138% year-on-year, 96th percentile) and G7 100-million-barrel release Oct 2, while Bosporus (46/day) and Hormuz (1/day) transits as of Sep 27 both sit outside full-history lows",
       "date": "2026-10-05"
     },
     {
