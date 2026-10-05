@@ -1,8 +1,9 @@
 """
 The daily report — the regular, stable rundown of what is happening in each live theater.
 
-Run manually (``newsroom intel daily``), like an article run. For each of the domain's hottest
-theaters it curates what significantly happened recently (who said what, events, decisions, with
+Run manually (``newsroom intel daily``), like an article run. For each theater in today's FOCUS (``focus``:
+theaters with something new, ranked by heat x novelty, ``top`` a ceiling; the rest are listed as ``watch``
+or ``quiet`` in the record) it curates what significantly happened recently (who said what, events, decisions, with
 dates and sources), the older items that matter for context, the theater's temperature and Pulses,
 an outlook and what to watch. It is curation to stay in the loop: not an article, and not a copy of
 the deep brief (briefs stay the occasional dive; the daily links to the latest one).
@@ -36,7 +37,7 @@ from pathlib import Path
 from typing import Any
 
 from . import brief as br
-from . import desk, forecasts, geo, on_record, render
+from . import desk, focus, forecasts, geo, on_record, render
 from . import sensing as sensing_mod
 from .contracts import DaySummary, Place, PulseProposal, SectionDraft, Statement, Theater, coverage_label
 from .heat import store_dir
@@ -98,7 +99,11 @@ WHAT GOOD LOOKS LIKE:
   lesson: only what changes how today reads.
 - `since_yesterday`: when there is a PREVIOUS DAILY SECTION, say what moved against it: escalated, eased,
   new, resolved, or unchanged (stasis is a finding; say when a watched thing stayed put). Empty when there
-  is no previous section. The reader already knows yesterday's; do not restate it.
+  is no previous section. The reader already knows yesterday's; do not restate it. When the NEW SINCE
+  line says nothing arrived since that section and the research finds nothing newer, the section is
+  short and says so: `bottom_line` states that nothing has changed since that date and what stands;
+  `developments` holds only what actually moved (empty is fine). Never re-describe the earlier section
+  to fill the space.
 - `bottom_line`: 2-3 sentences: what matters today and how sure we are. Calm is news too: if something
   expected has NOT happened, or the day was quiet, say so plainly. News over-reports escalation; do not
   read volume as intensity.
@@ -265,6 +270,21 @@ def _ask(context: Any, config: Any, model_spec: Any, schema: Any, role: str, tas
                          HumanMessage(content=task)], config=config)
 
 
+def new_since_line(heat: dict, previous: dict | None) -> str:
+    """What the board counted as new since the previous section (``novelty``), told to the writer plainly;
+    '' for a board without novelty data or a theater with no previous section to compare with."""
+    nov = heat.get("novelty") or {}
+    if not nov or previous is None:
+        return ""
+    if not nov.get("total"):
+        return (f"NEW SINCE {nov.get('since')}: nothing. No new headlines, statements or flagged readings have "
+                f"arrived for this theater since the previous section.\n\n")
+    heads = ", ".join(f"{n} {c}" for c, n in (nov.get("headlines") or {}).items() if n)
+    return (f"NEW SINCE {nov.get('since')} (counted by the desk, not judged): {heads or 'no headlines'}; "
+            f"{nov.get('statements', 0)} statements on record; {nov.get('instruments', 0)} readings newly outside "
+            f"their range. Newest {nov.get('newest') or '?'}.\n\n")
+
+
 def write_section(context: Any, config: Any, theater: Theater, heat: dict, *, as_of: str, profiles: list[dict],
                   pulse_table: dict[str, str], model_spec: Any, previous: dict | None = None,
                   brief: dict | None = None, corpus_ctx: Any = None,
@@ -280,6 +300,7 @@ def write_section(context: Any, config: Any, theater: Theater, heat: dict, *, as
             f"({coverage_label(heat.get('trend', '')) or '?'}; how much it is reported, not how severe it is).\n\n"
             + (previous_digest(previous) + "\n\n" if previous
                else "PREVIOUS DAILY SECTION: none; leave since_yesterday empty.\n\n")
+            + new_since_line(heat, previous)
             + (_brief_digest(brief) + "\n\n" if brief else "")
             + br.corpus_block(corpus_ctx)
             + f"RESEARCHED CLAIMS (graded by our research):{researched or ' none'}\n\n"
@@ -473,7 +494,8 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
     countries = geo.load()                                  # the basemap places are validated against
     now = datetime.fromisoformat(f"{as_of}T23:59:59+00:00")
     sections, rows, any_research = [], [], False
-    for tid in desk.pick_theaters(board, top, [domain]):
+    today_focus = focus.plan(board, top, [domain])        # `top` is a ceiling; the world decides how many
+    for tid in today_focus.focus:
         theater, heat = theaters[tid], heats.get(tid, {})
         row: dict[str, Any] = {"theater": tid, "researched": False, "research_usd": 0.0, "research_reused": False}
         profiles: list[dict] = []
@@ -555,10 +577,12 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
     record = {"schema": SCHEMA, "domain": domain, "date": as_of, "built_at": datetime.now(UTC).isoformat(),
               "researched": any_research,
               "summary": {"headline": summary.headline if summary else
-                          ("No live theaters in this domain today." if not sections else "Today's rundown."),
+                          (("Nothing new in the theaters we are watching." if today_focus.watch or today_focus.quiet
+                            else "No live theaters in this domain today.") if not sections else "Today's rundown."),
                           "the_day": summary.the_day if summary else []},
               "theaters": sections,
               "cross_theater": [c.model_dump() for c in summary.cross_theater] if summary else [],
+              "watch": today_focus.watch, "quiet": today_focus.quiet,
               "pulse_proposals": [p for r in rows for p in r.get("proposals", [])]}
     path = daily_dir(domain) / f"{as_of}.json"
     desk._write(path, record)

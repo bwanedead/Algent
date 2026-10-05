@@ -281,3 +281,7 @@ body .geo-card a.geo-card-head { display: flex; flex-direction: column; gap: 2px
   .geo-figs { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
   .geo-pulses { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
 }
+
+.geo-watching { margin-top: calc(var(--line) * 3); min-width: 0; }
+.geo-watching ul { list-style: none; margin: 0; padding: 0; font-size: 13px; line-height: 20px; }
+.geo-watching li { padding: 2px 0; }

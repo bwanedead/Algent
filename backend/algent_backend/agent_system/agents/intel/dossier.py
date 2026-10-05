@@ -424,6 +424,7 @@ def build_one(tid: str, acc: _Acc, inp: Inputs, board: dict) -> dict:
                           default=""),
         "last_seen": max((d for d in [meta.get("last_seen", ""), *covered] if d), default=""),
         "days_covered": len(days),
+        "state": meta.get("state", ""), "last_novel": meta.get("last_novel", ""),     # lifecycle (see ``focus``)
         "primer": {"text": primer["text"], "built_at": primer.get("built_at", "")} if primer else None,
         "current": _current(acc, coverage), "pulses": pulses,
         "escalation_history": [{"date": d, "direction": (acc.sections[d][1].get("escalation") or {}).get("direction", ""),
@@ -451,6 +452,7 @@ def _row(d: dict, board: dict) -> dict:
     row = board.get("row") or {}
     return {"theater_id": d["theater_id"], "name": d["name"], "domain": d["domain"], "first_seen": d["first_seen"],
             "last_seen": d["last_seen"], "days_covered": d["days_covered"], "heat": row.get("heat", 0.0),
+            "state": d["state"], "last_novel": d["last_novel"],
             "coverage": cur.get("coverage") or (coverage_label(row.get("trend", "")) if row else ""),
             "escalation_direction": (cur.get("escalation") or {}).get("direction", ""), "max_band": band,
             "url": f"/intel/theaters/{d['theater_id']}"}

@@ -83,6 +83,8 @@ class Evidence:
     terms: list[str] = field(default_factory=list)
     n_instruments: int = 0
     n_statements: int = 0
+    instrument_rows: list[dict[str, Any]] = field(default_factory=list)   # the readings shown (for novelty)
+    statement_dates: list[str] = field(default_factory=list)              # EVERY qualifying statement's date, not just those shown
     error: str = ""
 
     @property
@@ -176,12 +178,13 @@ def instrument_tags(text: str) -> list[str]:
     return [t for t in vocab if _find(words, _words(t), text)]
 
 
-def _instrument_block(theater: Theater, actors: Any, as_of: date | None) -> tuple[str, set[str], list[str], int]:
+def _instrument_block(theater: Theater, actors: Any, as_of: date | None
+                      ) -> tuple[str, set[str], list[str], int, list[dict]]:
     """Readings for series that share at least one DISTINCTIVE corroborated tag (a tag carried by few series,
     see ``Rarity``); generic tags only add weight to a series that already qualifies. Ranked by summed idf."""
     tags = sorted(corroborated(lambda t: set(instrument_tags(t)), theater, actors))
     if not tags:
-        return "", set(), [], 0
+        return "", set(), [], 0, []
     rar = rarity([set(s.tags) for s in catalog.CATALOG])
     present = set(tags)
     distinctive = {t for t in present if rar.distinctive(t)}
@@ -197,7 +200,7 @@ def _instrument_block(theater: Theater, actors: Any, as_of: date | None) -> tupl
     score = {r["series_id"]: sum(rar.idf[t] for t in present & set(r["tags"])) for r in rows}
     rows = sorted(rows, key=lambda r: (-score[r["series_id"]], not r["unusual"]))[:MAX_INSTRUMENT_LINES]
     return (evidence.render_block(rows, as_of=as_of), {r["source_url"] for r in rows if r["public_display"]},
-            tags, len(rows))
+            tags, len(rows), rows)
 
 
 # ── statements ────────────────────────────────────────────────────────────────────────────────
@@ -265,7 +268,7 @@ def _histories(shown: list[Statement], shared: dict[str, set[str]], *, as_of: da
 
 
 def _statement_block(theater: Theater, actors: Any, as_of: date | None, *, days: int, limit: int,
-                     history_days: int) -> tuple[str, list[str], set[str], list[str], list[Statement]]:
+                     history_days: int) -> tuple[str, list[str], set[str], list[str], list[Statement], list[str]]:
     """A statement qualifies when it shares at least one DISTINCTIVE corroborated entity with the theater
     (rarity is measured over the whole ledger, see ``Rarity``). Qualifiers rank by the summed idf of the
     shared entities, then recency; common entities add weight but never qualify a statement alone."""
@@ -282,7 +285,7 @@ def _statement_block(theater: Theater, actors: Any, as_of: date | None, *, days:
               if distinctive & _entities(s) and len(keys & _entities(s)) >= need]
     terms = sorted(keys)
     if not scored:
-        return "", [], set(), terms, []
+        return "", [], set(), terms, [], []
     newest = sorted(scored, key=lambda p: p[0].date, reverse=True)
     picked = [s for s, _w in sorted(newest, key=lambda p: -p[1])][:limit]
     shown = sorted(picked, key=lambda s: s.date, reverse=True)
@@ -290,7 +293,8 @@ def _statement_block(theater: Theater, actors: Any, as_of: date | None, *, days:
     for s in shown:
         shared.setdefault(s.speaker, set()).update(distinctive & _entities(s))
     histories, history_urls = _histories(shown, shared, as_of=as_of, days=history_days)
-    return (statements_block(shown, days), histories, {s.source_url for s in shown} | history_urls, terms, shown)
+    return (statements_block(shown, days), histories, {s.source_url for s in shown} | history_urls, terms, shown,
+            sorted(s.date for s, _w in scored))
 
 
 # ── the two entry points ──────────────────────────────────────────────────────────────────────
@@ -301,8 +305,10 @@ def for_theater(theater: Theater, *, as_of: str | date, actors: list[str] | tupl
     ev = Evidence()
     try:
         day = date.fromisoformat(as_of) if isinstance(as_of, str) else as_of
-        ev.instruments, ev.instrument_urls, ev.tags, ev.n_instruments = _instrument_block(theater, actors, day)
-        ev.statements, ev.histories, ev.statement_urls, ev.terms, ev.shown = _statement_block(
+        ev.instruments, ev.instrument_urls, ev.tags, ev.n_instruments, ev.instrument_rows = _instrument_block(
+            theater, actors, day)
+        (ev.statements, ev.histories, ev.statement_urls, ev.terms, ev.shown,
+         ev.statement_dates) = _statement_block(
             theater, actors, day, days=statement_days, limit=statement_limit, history_days=history_days)
         ev.n_statements = len(ev.shown)
     except Exception as exc:  # noqa: BLE001 - sensing is an aid; a broken store must not cost the report

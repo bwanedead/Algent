@@ -24,8 +24,9 @@ Verification = Literal["researched", "reported"]   # graded by our research / he
 class Member(BaseModel):
     """One headline that belongs to a theater."""
 
-    edition: str                     # radar edition slug (YYYY-MM-DD-HHMM)
+    edition: str                     # radar edition slug (YYYY-MM-DD-HHMM); other classes: YYYY-MM-DD-<class>
     n: int                           # its number in that edition
+    kind: str = "radar"              # source class: radar | wikipedia | library (see ``base``)
     title: str
     thesis: str = ""
     sources: list[str] = Field(default_factory=list)
@@ -47,6 +48,15 @@ class HeatPoint(BaseModel):
     editions: int = 0                # radar editions built that day — 0 is a coverage gap, not a quiet day
 
 
+class ClassShare(BaseModel):
+    """One source class's view of a theater: its members and the class's headlines in each window."""
+
+    recent: int = 0
+    recent_n: int = 0
+    prior: int = 0
+    prior_n: int = 0
+
+
 class TheaterHeat(BaseModel):
     theater_id: str
     name: str
@@ -59,6 +69,10 @@ class TheaterHeat(BaseModel):
     trend: Literal["heating", "steady", "cooling", "new"] = "steady"
     first_seen: str = ""
     heat: float = 0.0                # share of coverage (per 100 headlines), weighted up when heating or new
+    by_class: dict[str, ClassShare] = Field(default_factory=dict)   # per source class (shares are the mean of these)
+    novelty: dict[str, Any] = Field(default_factory=dict)           # see ``novelty.measure``; {} on old boards
+    state: str = ""                  # new | active | quiet (see ``focus``); "" on old boards
+    last_novel: str = ""             # newest date anything new was seen for this theater
 
 
 COVERAGE_LABELS = {"heating": "rising coverage", "steady": "steady coverage", "cooling": "falling coverage",

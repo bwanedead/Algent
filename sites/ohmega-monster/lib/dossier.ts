@@ -25,6 +25,9 @@ export type DossierIndexItem = {
   coverage: Coverage;
   escalation_direction: Direction;
   max_band: Band;
+  /** Lifecycle from the desk's focus: new / active / quiet ('' on older indexes). */
+  state: string;
+  last_novel: string;
 };
 export type DossierPulse = { id: string; name: string; situation: string; position: number | null; band: Band; history: { at: string; position: number }[] };
 export type EscalationPoint = { date: string; direction: Direction; pace: Pace };
@@ -129,6 +132,8 @@ function parseIndexItem(raw: Obj): DossierIndexItem | null {
     coverage: parseCoverage(raw.coverage, "steady"),
     escalation_direction: oneOf(raw.escalation_direction, DIRECTIONS, "unclear"),
     max_band: oneOf(raw.max_band, BANDS, "unassessed"),
+    state: str(raw.state),
+    last_novel: str(raw.last_novel),
   };
 }
 
@@ -283,6 +288,8 @@ function itemFromDossier(d: Dossier): DossierIndexItem {
     coverage: d.current?.coverage ?? "steady",
     escalation_direction: d.current?.direction ?? last?.direction ?? "unclear",
     max_band: maxBand(d.pulses),
+    state: "",
+    last_novel: "",
   };
 }
 
