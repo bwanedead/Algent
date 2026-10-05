@@ -3,7 +3,7 @@
   "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
   "name": "Ethiopia-Eritrea rupture and Tigray offensive",
   "domain": "geopolitics",
-  "built_at": "2026-10-05T09:23:51.294012+00:00",
+  "built_at": "2026-10-05T09:41:18.336483+00:00",
   "first_seen": "2026-10-01",
   "last_seen": "2026-10-05",
   "days_covered": 3,
@@ -15,7 +15,7 @@
   },
   "current": {
     "date": "2026-10-05",
-    "bottom_line": "Federal forces consolidated control of Mekelle centre on Oct 4-5 after the TPLF said it had temporarily withdrawn, shifting the renewed Tigray war toward insurgency. Egypt, Eritrea, Somalia and Sudan met Oct 4-5 in New Alamein and issued a joint declaration on Red Sea governance, Nile waters and Somaliland, aligning Ethiopia's rivals without verified cross-border combat. Interstate war risk remains high but still diplomatic-political as of Oct 5.",
+    "bottom_line": "Federal forces consolidated control of Mekelle on Oct 4-5 after retaking its airport Oct 3 and the TPLF said it had temporarily moved out, shifting the war toward insurgency as TPLF leader Debretsion vowed guerrilla strikes. The Oct 1 Ethiopia-Eritrea diplomatic rupture still stands with no verified direct Eritrean-Ethiopian combat, but a new four-state El Alamein bloc and hardening mutual accusations of proxy backing and invasion plans have widened the political confrontation.",
     "escalation": {
       "direction": "rising",
       "pace": "gradual"
@@ -39,31 +39,6 @@
         {
           "at": "2026-10-05T08:05:49.713859+00:00",
           "position": 68.0
-        }
-      ]
-    },
-    {
-      "id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
-      "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
-      "situation": "Red Sea and global shipping disruption",
-      "position": 65.0,
-      "band": "severe",
-      "history": [
-        {
-          "at": "2026-10-01T03:00:57.470982+00:00",
-          "position": 58.0
-        },
-        {
-          "at": "2026-10-01T07:48:19.756517+00:00",
-          "position": 68.0
-        },
-        {
-          "at": "2026-10-01T11:36:13.230643+00:00",
-          "position": 72.0
-        },
-        {
-          "at": "2026-10-03T21:55:50.660077+00:00",
-          "position": 65.0
         }
       ]
     },
@@ -139,28 +114,29 @@
     },
     {
       "day": "2026-10-05",
-      "count": 1,
+      "count": 0,
       "editions": 0
     }
   ],
   "timeline": [
     {
       "date": "2026-10-05",
-      "headline": "Mutual accusations of external sponsorship persist as Egypt denies role",
-      "detail": "Ethiopia on Oct 4-5 accused Eritrea of directly backing Tigray rebels, with added support from Sudan and Egypt, framing the war as regional and over Red Sea control. Eritrea said Ethiopia is planning to invade Eritrea to seize coastline, presenting any support as defensive. Egypt's Foreign Minister Badr Abdelatty said Cairo has absolutely nothing to do with events in Ethiopia, calling it a domestic crisis rooted in ethnic and political divisions. Eritrea, Sudan and Egypt jointly denied backing the rebels.",
-      "where": "Addis Ababa",
+      "headline": "Mutual accusations of proxy backing and invasion plans harden after diplomatic rupture",
+      "detail": "On Oct 5 Ethiopia accused Eritrea of directly backing the Tigray rebels with added support from Sudan and Egypt; Eritrea accused Ethiopia of planning to invade Eritrea to seize coastline access. Egypt's Foreign Minister Badr Abdelatty said Cairo has absolutely nothing to do with events in Ethiopia, calling them a domestic crisis rooted in ethnic and political divisions. On Oct 4 Eritrea, Sudan and Egypt had jointly denied backing the rebels. The Oct 1 reciprocal expulsions (10 Eritrean diplomats from Addis Ababa, Egyptian diplomat Ahmed Moharam Ahmed Soliman and Ethiopian counsellor Egazi Emelo Borougi) and embassy closures remain in effect.",
+      "where": "Addis Ababa / Asmara",
       "verification": "researched",
       "sources": [
         "http://www.africanews.com/2026/10/05/ethiopias-federal-forces-retake-tigrayan-capital-mekelle/",
         "http://www.africanews.com/2026/10/04/ethiopias-oromo-celebrate-irreecha-and-call-for-peace-as-federal-forces-enter-mekelle/",
-        "https://allafrica.com/stories/202610040094.html"
+        "https://www.dw.com/en/ethiopia-eritrea-embassy-diplomats-expelled/a-79507052",
+        "https://www.bbc.com/news/articles/c3vgygpqky9zo"
       ],
       "from": "/geopolitics/2026-10-05"
     },
     {
       "date": "2026-10-05",
-      "headline": "Four-state El Alamein summit aligns Ethiopia's rivals on Red Sea, Nile and Somaliland",
-      "detail": "On Oct 4-5 Presidents Abdel Fattah el-Sisi (Egypt), Isaias Afwerki (Eritrea), Hassan Sheikh Mohamud (Somalia) and Sudanese army chief Abdel Fattah al-Burhan met in New Alamein, Egypt and issued the El Alamein Joint Declaration. It backed Somalia's unity and rejected Somaliland recognition, affirmed Red Sea governance as exclusive responsibility of littoral states, and rejected unilateral Nile measures under no-harm and prior notification principles, with calls to resolve Horn disputes by peaceful means and non-interference.",
+      "headline": "Four-state El Alamein declaration aligns Egypt, Eritrea, Somalia and Sudan on Red Sea and Nile",
+      "detail": "On Oct 4-5 Presidents Abdel Fattah el-Sisi (Egypt), Isaias Afwerki (Eritrea), Hassan Sheikh Mohamud (Somalia) and Sudanese army chief Abdel Fattah al-Burhan met in New Alamein, Egypt and issued the El Alamein Joint Declaration backing Somalia's unity and rejecting Somaliland recognition, affirming Red Sea governance as exclusive responsibility of littoral states, and rejecting unilateral Nile measures under no-harm and prior notification principles. The Egyptian presidency said regional disputes should be resolved through peaceful means with respect for international law and non-interference.",
       "where": "New Alamein, Egypt",
       "verification": "researched",
       "sources": [
@@ -171,14 +147,25 @@
       "from": "/geopolitics/2026-10-05"
     },
     {
-      "date": "2026-10-04",
-      "headline": "Federal forces consolidate control of Mekelle centre as TPLF withdraws and vows insurgency",
-      "detail": "On Oct 3 ENDF and allied Tigray Peace Forces recaptured Alula Aba Nega Airport about 10km east of Mekelle. Late Oct 3-4 the TPLF said it had temporarily moved out of Mekelle to operate from elsewhere to reduce civilian risk. On Oct 4 federal and allied fighters entered Mekelle centre, patrolling key institutions; a local journalist told AFP communications were restored for the first time in more than a week, while residents reported looting of government offices and police headquarters during the vacuum. TPLF leader Debretsion Gebremichael said forces would now strike wherever they choose in guerrilla-style attacks.",
+      "date": "2026-10-05",
+      "headline": "Federal government signals new Tigray interim administration and elections within months",
+      "detail": "According to Ethiopian state media Oct 5, former Tigray interim leader Abraham Belay said the federal government is preparing a new temporary administration for Tigray and hopes to hold regional elections within months, as federal forces hold Mekelle. Media access to Tigray remains heavily restricted and telecoms had been cut for more than a week before partial restoration Oct 4.",
       "where": "Mekelle, Tigray",
       "verification": "researched",
       "sources": [
-        "https://www.aljazeera.com/news/2026/10/4/government-forces-seize-capital-of-ethiopias-tigray-region-from-rebels",
+        "https://www.aljazeera.com/news/2026/10/5/four-african-leaders-issue-joint-declaration-as-ethiopia-war-escalates"
+      ],
+      "from": "/geopolitics/2026-10-05"
+    },
+    {
+      "date": "2026-10-04",
+      "headline": "Federal forces consolidate hold on Mekelle as TPLF shifts to insurgency",
+      "detail": "On Oct 3 ENDF and allied Tigray Peace Forces recaptured Alula Aba Nega Airport about 10km east of Mekelle centre. Late Oct 3-4 TPLF said in a Facebook statement it had temporarily moved out of Mekelle to operate from elsewhere citing civilian risks. On Oct 4 federal troops and Tigray Peace Forces entered the centre, patrolling and manning key institutions; a local journalist told AFP communications were restored for first time in more than a week, while residents reported looting of government offices during the vacuum. On Oct 5 TPLF leader Debretsion Gebremichael said the group will continue guerrilla-style attacks and strike wherever it chooses, while a pro-government militia commander said forces had taken Mekelle and are marching forward.",
+      "where": "Mekelle, Tigray",
+      "verification": "researched",
+      "sources": [
         "https://www.aljazeera.com/news/2026/10/3/rebels-pulling-back-as-addis-ababas-forces-advance-reports-say",
+        "https://www.aljazeera.com/news/2026/10/4/government-forces-seize-capital-of-ethiopias-tigray-region-from-rebels",
         "https://allafrica.com/stories/202610040094.html",
         "http://www.africanews.com/2026/10/05/ethiopias-federal-forces-retake-tigrayan-capital-mekelle/",
         "https://www.aljazeera.com/news/2026/10/3/ethiopian-govt-forces-advance-in-tigray-as-rebels-retreat-what-to-know",
@@ -234,8 +221,8 @@
       "country": "Ethiopia",
       "lat": 13.4967,
       "lon": 39.4753,
-      "count": 3,
-      "last_date": "2026-10-04"
+      "count": 4,
+      "last_date": "2026-10-05"
     },
     {
       "name": "Addis Ababa",
@@ -248,7 +235,7 @@
     {
       "name": "New Alamein",
       "country": "Egypt",
-      "lat": 30.8167,
+      "lat": 30.82,
       "lon": 28.95,
       "count": 1,
       "last_date": "2026-10-05"
@@ -1190,7 +1177,7 @@
         "x": 620.2,
         "y": 606.2,
         "label": "Mekelle",
-        "date": "2026-10-04",
+        "date": "2026-10-05",
         "verification": "researched",
         "n": 1,
         "weight": 1.0
@@ -1202,16 +1189,16 @@
         "date": "2026-10-05",
         "verification": "researched",
         "n": 2,
-        "weight": 0.648
+        "weight": 0.478
       },
       {
         "x": 379.8,
-        "y": 185.4,
+        "y": 185.3,
         "label": "New Alamein",
         "date": "2026-10-05",
         "verification": "researched",
         "n": 3,
-        "weight": 0.356
+        "weight": 0.263
       },
       {
         "x": 379.8,
@@ -1220,7 +1207,7 @@
         "date": "2026-10-02",
         "verification": "researched",
         "n": 4,
-        "weight": 0.307
+        "weight": 0.226
       },
       {
         "x": 607.6,
@@ -1229,7 +1216,7 @@
         "date": "2026-10-01",
         "verification": "researched",
         "n": 5,
-        "weight": 0.292
+        "weight": 0.215
       }
     ],
     "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate. Shipping data: IMF PortWatch."
@@ -1272,12 +1259,6 @@
       "last": "2026-10-04"
     },
     {
-      "name": "Tigray People's Liberation Front",
-      "mentions": 2,
-      "first": "2026-10-04",
-      "last": "2026-10-05"
-    },
-    {
       "name": "Tigray People's Liberation Front (TPLF)",
       "mentions": 2,
       "first": "2026-10-04",
@@ -1290,7 +1271,7 @@
       "last": "2026-10-05"
     },
     {
-      "name": "Abdel Fattah al-Sisi",
+      "name": "Abraham Belay",
       "mentions": 1,
       "first": "2026-10-05",
       "last": "2026-10-05"
@@ -1321,6 +1302,12 @@
     },
     {
       "name": "Egyptian Presidency",
+      "mentions": 1,
+      "first": "2026-10-05",
+      "last": "2026-10-05"
+    },
+    {
+      "name": "Eritrea, Government",
       "mentions": 1,
       "first": "2026-10-05",
       "last": "2026-10-05"
@@ -1362,8 +1349,8 @@
       ]
     },
     {
-      "label": "Eritrean diplomats declared persona non grata in Addis Ababa with 48 hours to leave",
-      "unit": "",
+      "label": "Eritrean diplomats declared persona non grata in Addis Ababa (48 hours to leave",
+      "unit": "diplomats",
       "series": [
         {
           "as_of": "2026-10-01",
@@ -1406,8 +1393,8 @@
       ]
     },
     {
-      "label": "Estimated deaths in 2020-2022 Tigray war per AU mediators",
-      "unit": "",
+      "label": "Estimated deaths in 2020-2022 Tigray war (AU mediators",
+      "unit": "people",
       "series": [
         {
           "as_of": "2022-11-02",
@@ -1423,7 +1410,7 @@
     {
       "who": "Debretsion Gebremichael",
       "role": "Leader of the TPLF",
-      "said": "Debretsion Gebremichael, Leader of the TPLF",
+      "said": "We operate under a strategy to strike the enemy wherever we choose,",
       "quote": true,
       "when": "2026-10-05",
       "source": "http://www.africanews.com/2026/10/05/ethiopias-federal-forces-retake-tigrayan-capital-mekelle/"
@@ -1431,23 +1418,15 @@
     {
       "who": "Pro-government militia commander",
       "role": "Commander",
-      "said": "Pro-government militia commander",
+      "said": "We have taken control of Mekelle and we are marching forward,",
       "quote": true,
-      "when": "2026-10-05",
-      "source": "http://www.africanews.com/2026/10/05/ethiopias-federal-forces-retake-tigrayan-capital-mekelle/"
-    },
-    {
-      "who": "Abdel Fattah al-Sisi",
-      "role": "President of Egypt",
-      "said": "Abdel Fattah al-Sisi, President of Egypt",
-      "quote": false,
       "when": "2026-10-05",
       "source": "http://www.africanews.com/2026/10/05/ethiopias-federal-forces-retake-tigrayan-capital-mekelle/"
     },
     {
       "who": "Abdel Fattah El Sisi, Abdel Fattah Al-Burhan, Isaias Afwerki, Hassan Sheikh Mohamud",
       "role": "Presidents of Egypt, Sudan, Eritrea and Somalia",
-      "said": "Abdel Fattah El Sisi, Abdel Fattah Al-Burhan, Isaias Afwerki, Hassan Sheikh Mohamud",
+      "said": "rejected unilateral measures that could harm Egypt and Sudan's water rights and rejected interference in internal affairs under any pretext",
       "quote": false,
       "when": "2026-10-05",
       "source": "https://www.aa.com.tr/en/world/morning-briefing-oct-5-2026/4077995"
@@ -1455,7 +1434,7 @@
     {
       "who": "Egyptian Presidency",
       "role": "Presidency",
-      "said": "Egyptian Presidency",
+      "said": "peaceful means",
       "quote": true,
       "when": "2026-10-05",
       "source": "http://www.africanews.com/2026/10/05/ethiopias-federal-forces-retake-tigrayan-capital-mekelle/"
@@ -1463,7 +1442,7 @@
     {
       "who": "Ethiopia, Government",
       "role": "Government",
-      "said": "Ethiopia, Government",
+      "said": "Eritrea is directly backing the Tigray rebels, with added support from Sudan and Egypt",
       "quote": false,
       "when": "2026-10-05",
       "source": "http://www.africanews.com/2026/10/05/ethiopias-federal-forces-retake-tigrayan-capital-mekelle/"
@@ -1471,7 +1450,7 @@
     {
       "who": "Eritrea, Government",
       "role": "Government",
-      "said": "Eritrea, Government",
+      "said": "Ethiopia is planning to invade Eritrea and seize access to its coastline",
       "quote": false,
       "when": "2026-10-05",
       "source": "http://www.africanews.com/2026/10/05/ethiopias-federal-forces-retake-tigrayan-capital-mekelle/"
@@ -1479,16 +1458,16 @@
     {
       "who": "Badr Abdelatty",
       "role": "Foreign Minister",
-      "said": "Badr Abdelatty, Foreign Minister",
+      "said": "absolutely nothing to do",
       "quote": true,
       "when": "2026-10-05",
       "source": "http://www.africanews.com/2026/10/05/ethiopias-federal-forces-retake-tigrayan-capital-mekelle/"
     },
     {
       "who": "Tigray People's Liberation Front",
-      "role": "Leader of the TPLF",
-      "said": "Tigray People's Liberation Front, leadership of Tigray opposition alliance",
-      "quote": true,
+      "role": "leadership of Tigray opposition alliance",
+      "said": "temporarily moved out of Mekelle and operate from somewhere else",
+      "quote": false,
       "when": "2026-10-04",
       "source": "https://allafrica.com/stories/202610040094.html"
     },
@@ -1501,12 +1480,12 @@
       "source": "http://www.africanews.com/2026/10/04/ethiopias-oromo-celebrate-irreecha-and-call-for-peace-as-federal-forces-enter-mekelle/"
     },
     {
-      "who": "Tigray People's Liberation Front",
-      "role": "leadership of Tigray opposition alliance",
-      "said": "temporarily moved out of Mekelle and operate from somewhere else",
+      "who": "Eritrea",
+      "role": "Government",
+      "said": "sever all diplomatic ties",
       "quote": true,
       "when": "2026-10-04",
-      "source": "https://allafrica.com/stories/202610040094.html"
+      "source": "http://www.africanews.com/2026/10/04/ethiopias-oromo-celebrate-irreecha-and-call-for-peace-as-federal-forces-enter-mekelle/"
     },
     {
       "who": "Thomas \"Tommy\" Pigott",
@@ -1542,30 +1521,6 @@
       "reported_by": "Africanews"
     },
     {
-      "id": "st_d06f3cf92b35",
-      "speaker": "Eritrea",
-      "role": "Government",
-      "affiliation": "Eritrea",
-      "iso2": "ER",
-      "date": "2026-10-05",
-      "venue": "other",
-      "quote": "",
-      "paraphrase": "Ethiopia is planning to invade Eritrea and seize access to its coastline.",
-      "about": [
-        "Ethiopia",
-        "Eritrea"
-      ],
-      "about_iso2": [
-        "ET",
-        "ER"
-      ],
-      "signal": "accusation",
-      "stance": -2,
-      "significance": "Eritrea's invasion claim explains its alleged backing of Tigray rebels as defensive and highlights escalation risk on Ethiopia-Eritrea border.",
-      "url": "http://www.africanews.com/2026/10/05/ethiopias-federal-forces-retake-tigrayan-capital-mekelle/",
-      "reported_by": "Africanews"
-    },
-    {
       "id": "st_603177fa86a9",
       "speaker": "Ethiopia",
       "role": "Government",
@@ -1589,6 +1544,30 @@
       "signal": "accusation",
       "stance": -2,
       "significance": "Ethiopia accuses three regional rivals of fueling renewed Tigray war, raising risk of wider regional confrontation.",
+      "url": "http://www.africanews.com/2026/10/05/ethiopias-federal-forces-retake-tigrayan-capital-mekelle/",
+      "reported_by": "Africanews"
+    },
+    {
+      "id": "st_d06f3cf92b35",
+      "speaker": "Eritrea",
+      "role": "Government",
+      "affiliation": "Eritrea",
+      "iso2": "ER",
+      "date": "2026-10-05",
+      "venue": "other",
+      "quote": "",
+      "paraphrase": "Ethiopia is planning to invade Eritrea and seize access to its coastline.",
+      "about": [
+        "Ethiopia",
+        "Eritrea"
+      ],
+      "about_iso2": [
+        "ET",
+        "ER"
+      ],
+      "signal": "accusation",
+      "stance": -2,
+      "significance": "Eritrea's invasion claim explains its alleged backing of Tigray rebels as defensive and highlights escalation risk on Ethiopia-Eritrea border.",
       "url": "http://www.africanews.com/2026/10/05/ethiopias-federal-forces-retake-tigrayan-capital-mekelle/",
       "reported_by": "Africanews"
     },
@@ -1971,7 +1950,7 @@
     {
       "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
       "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
-      "link": "US-Iran-Houthi confrontation over Hormuz and Red Sea ↔ Ethiopia-Eritrea rupture and Tigray offensive: El Alamein summit's Oct 4-5 alignment of Egypt, Eritrea, Somalia and Sudan on Red Sea governance coincides with Houthi control around Bab al-Mandab and Hormuz closure at ~1 transit/day, linking Horn rivalries to Red Sea chokepoint risk",
+      "link": "US-Iran-Houthi confrontation over Hormuz and Red Sea — Ethiopia-Eritrea rupture and Tigray offensive: Red Sea security links both as Yemen's nationwide anti-Houthi offensive with sustained Saudi-led strikes unfolds alongside the four-state El Alamein declaration aligning Egypt, Eritrea, Somalia and Sudan on Red Sea and Nile after the Oct 1 Ethiopia-Eritrea rupture.",
       "date": "2026-10-05"
     },
     {

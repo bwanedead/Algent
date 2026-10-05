@@ -1,14 +1,14 @@
 {
   "schema": "ohmega.changes/1",
   "window_days": 30,
-  "as_of": "2026-10-05T09:23:51.294012+00:00",
+  "as_of": "2026-10-05T09:41:18.336483+00:00",
   "events": [
     {
       "type": "daily_published",
-      "at": "2026-10-05T09:23:51.294012+00:00",
+      "at": "2026-10-05T09:41:18.336483+00:00",
       "domain": "geopolitics",
       "date": "2026-10-05",
-      "headline": "Russia pounds Kyiv bridges for fourth day as Germany locks in long-range weapons and Hormuz stays shut amid Yemen offensive and Mekelle's fall",
+      "headline": "Russia sustained Dnipro bridge strikes for fourth day and vowed wider Kyiv hits as Germany locked €9.8bn arms deals; Ethiopia retook Mekelle while Hormuz stayed shut and Gaza targeted killings continued",
       "url": "/geopolitics/2026-10-05",
       "data_url": "/data/daily/geopolitics/2026-10-05.json"
     },

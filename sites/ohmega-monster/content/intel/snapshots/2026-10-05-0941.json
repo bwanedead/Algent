@@ -1,0 +1,2138 @@
+{
+  "schema": "ohmega.intel/1",
+  "slug": "2026-10-05-0941",
+  "built_at": "2026-10-05T09:41:19.647511+00:00",
+  "situations": [
+    {
+      "id": "sit_israel_palestine",
+      "title": "Israel–Palestine and the wider region",
+      "summary": "This situation covers the Israel-Palestine conflict centered on Gaza and the West Bank, including humanitarian conditions, settlement and annexation dynamics, and the wider regional and international diplomacy surrounding it. It is distinct from direct US-Iran-Israel military confrontation and Iran-proxy escalation tracked elsewhere, focusing instead on the Palestinian territories and diplomatic/legal pressure on Israel. No evidence was provided for this initial reading, so all Pulses are left unassessed pending research on combat, humanitarian, settlement, negotiation and legal indicators.",
+      "domain": "geopolitics",
+      "pulses": [
+        {
+          "id": "pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe",
+          "name": "Gaza Combat and Humanitarian Catastrophe",
+          "title": "Israel–Palestine · Gaza Combat and Humanitarian Catastrophe",
+          "actors_iso2": [
+            "IL",
+            "PS"
+          ],
+          "question": "How intense is combat in Gaza and how severe is humanitarian collapse?",
+          "low_end": "A sustained ceasefire holds with minimal combat, effective civilian protection, and adequate humanitarian aid, medical care and reconstruction access across Gaza.",
+          "high_end": "Sustained high-intensity combat with mass civilian casualties, famine and total collapse of medical and aid systems, and large-scale forced displacement across Gaza.",
+          "position": 87.0,
+          "band": "critical",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "medium",
+          "last_assessed": "2026-10-05T06:44:10.888856+00:00",
+          "evidence_through": "unknown - research header dated 'as of ?' with no claims",
+          "history": [
+            {
+              "at": "2026-10-01T08:09:19.809131+00:00",
+              "position": 85.0
+            },
+            {
+              "at": "2026-10-05T06:44:10.888856+00:00",
+              "position": 87.0
+            }
+          ],
+          "rationale": "Closest to held 85 on 2026-10-03 (reader thought reality 85) which captured persistent low-intensity combat (1,381-1,439 killed since ceasefire) and near-extreme collapse (1.8m displaced, 80% water shortage, half hospitals operational). New research confirms same baseline (1.8m/86% in 1,739 sites -, 80% water shortage/rat infestations/4,000 chickenpox cases/half hospitals operational -, 8 killed…"
+        },
+        {
+          "id": "pls_israel_palestine_international_legal_and_diplomatic_pressure_on_israel",
+          "name": "International Legal and Diplomatic Pressure on Israel",
+          "title": "Israel · International Legal and Diplomatic Pressure",
+          "actors_iso2": [
+            "IL"
+          ],
+          "question": "How intense is international legal and diplomatic pressure on Israel?",
+          "low_end": "Israel retains broad diplomatic support with no active binding international legal findings, arrest warrants or coordinated sanctions.",
+          "high_end": "Binding ICJ rulings, enforced ICC arrest warrants and coordinated UN and state sanctions and recognition measures impose comprehensive diplomatic and economic isolation on Israel.",
+          "position": 73.0,
+          "band": "severe",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "high",
+          "last_assessed": "2026-10-05T06:44:10.888856+00:00",
+          "evidence_through": "unknown - research header dated 'as of ?' with no claims",
+          "history": [
+            {
+              "at": "2026-10-01T08:09:19.809131+00:00",
+              "position": 68.0
+            },
+            {
+              "at": "2026-10-01T08:39:39.312641+00:00",
+              "position": 73.0
+            }
+          ],
+          "rationale": "Up from 68 on 2026-10-01 which reflected Netherlands/UK settlement-goods bans. New research shows escalation: Dutch ban entered force Sept 22 covering commercial and personal luggage with Schiphol checks and up to 6-year prison penalties, Israel retaliated Sept 27 by revoking Dutch diplomats' Ramallah accreditation and in Aug/Sep removed Dutch from US-backed Gaza Support Center, coordinated…"
+        },
+        {
+          "id": "pls_israel_palestine_ceasefire_and_normalization_deadlock",
+          "name": "Ceasefire and Normalization Deadlock",
+          "title": "Israel–Hamas–Saudi Arabia · Ceasefire and Normalization Deadlock",
+          "actors_iso2": [
+            "IL",
+            "SA"
+          ],
+          "question": "How deadlocked are Gaza ceasefire/hostage talks and Israel-Arab normalization?",
+          "low_end": "A durable Gaza ceasefire and hostage exchange is in effect with active mediation and advancing Israel-Arab normalization agreements.",
+          "high_end": "Ceasefire and hostage negotiations have completely collapsed, mediation is severed, and regional normalization is frozen or reversed amid diplomatic rupture.",
+          "position": 63.0,
+          "band": "severe",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "medium",
+          "last_assessed": "2026-10-05T06:44:10.888856+00:00",
+          "evidence_through": "unknown - research header dated 'as of ?' with no claims",
+          "history": [
+            {
+              "at": "2026-10-01T08:09:19.809131+00:00",
+              "position": 62.0
+            },
+            {
+              "at": "2026-10-01T08:39:39.312641+00:00",
+              "position": 60.0
+            },
+            {
+              "at": "2026-10-05T06:44:10.888856+00:00",
+              "position": 63.0
+            }
+          ],
+          "rationale": "Closest to held 60 on 2026-10-03 (reader thought reality 60, closest to 62 on 2026-10-01) which already reflected paper-only ceasefire with 1,381-1,439 killed. New research confirms same pattern (1,439 killed/5,052 injured since Oct 10 2025 -, Oct 3 al-Asala strike -, Oct 1 al-Mawasi strike -, Oct 5 Khan Younis strike -) but adds structural worsening not in prior rationale: Yellow Line expanded…"
+        },
+        {
+          "id": "pls_israel_palestine_west_bank_annexation_and_settler_violence",
+          "name": "West Bank Annexation and Settler Violence",
+          "title": "Israel–Palestine · West Bank Annexation and Settler Violence",
+          "actors_iso2": [
+            "IL",
+            "PS"
+          ],
+          "question": "How advanced is settlement expansion, annexation and settler violence in the West Bank and East Jerusalem?",
+          "low_end": "Settlement activity is frozen, rule of law restrains settler violence, and the Palestinian Authority maintains stable administrative control with low intercommunal violence.",
+          "high_end": "Formal annexation is enacted with rapid settlement expansion, systematic settler violence and mass displacement, and collapse of Palestinian Authority control.",
+          "position": 60.0,
+          "band": "severe",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "medium",
+          "last_assessed": "2026-10-05T06:44:10.888856+00:00",
+          "evidence_through": "unknown - research header dated 'as of ?' with no claims",
+          "history": [
+            {
+              "at": "2026-10-03T12:54:56.085103+00:00",
+              "position": 55.0
+            },
+            {
+              "at": "2026-10-03T22:02:09.104168+00:00",
+              "position": 58.0
+            },
+            {
+              "at": "2026-10-05T06:44:10.888856+00:00",
+              "position": 60.0
+            }
+          ],
+          "rationale": "Up from 58 on 2026-10-03 which reflected single Yasuf killing Oct 2 and Oct 3 coordinated attacks under army protection. New research confirms same Oct 1 Yasuf killing of Mashhour Yassin 51 by settlers from Havat Anton outpost built ~2 months earlier and Oct 3 attacks under army protection burning olive trees/detaining dozens across Abu Dis/Awarta/Beita/Osarin and assaulting journalists, plus…"
+        }
+      ],
+      "watches": []
+    },
+    {
+      "id": "sit_ukraine_war",
+      "title": "The war in Ukraine",
+      "summary": "Long-range strike intensity is severe, with Russia launching 150+ drone/missile salvos that overwhelm Ukraine's ~15% ballistic intercept rate while Ukraine expands drone strikes on Russian logistics (Wildberries hubs across 8+ regions, ~10% capacity damaged). Ukraine's energy system is near collapse ahead of winter, with virtually no intact thermal plants, <10 GW available vs 18 GW demand, 60% of gas production destroyed, and UN documenting 423 attacks on power infrastructure that cannot be fully restored. Both war economies are highly strained and externally dependent, with Russia reliant on China for ~87% of dual-use imports and ~30% of trade while facing a 24% oil-revenue shortfall, and Ukraine facing $195bn in damage and a $2.5bn gas import gap.",
+      "domain": "geopolitics",
+      "pulses": [
+        {
+          "id": "pls_ukraine_war_combat_strike_intensity",
+          "name": "Combat and Long-Range Strike Intensity",
+          "title": "Russia–Ukraine War · Combat and Long-Range Strike Intensity",
+          "actors_iso2": [
+            "RU",
+            "UA"
+          ],
+          "question": "How intense is fighting on the front lines and long-range strikes on cities and rear logistics?",
+          "low_end": "Sporadic shelling and limited long-range strikes with a largely static front and few impacts on cities or rear logistics.",
+          "high_end": "Continuous high-tempo offensives and mass missile/drone salvos overwhelming air defenses, with widespread strikes on cities, logistics and rear areas causing mass casualties.",
+          "position": 85.0,
+          "band": "critical",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "medium",
+          "last_assessed": "2026-10-05T08:14:35.334028+00:00",
+          "evidence_through": "2026-10-05",
+          "history": [
+            {
+              "at": "2026-10-01T03:00:57.470982+00:00",
+              "position": 78.0
+            },
+            {
+              "at": "2026-10-01T03:02:59.981202+00:00",
+              "position": 84.0
+            },
+            {
+              "at": "2026-10-05T08:14:35.334028+00:00",
+              "position": 85.0
+            }
+          ],
+          "rationale": "Closest to 2026-10-03 held reading 84 (reader thought 84) which already priced 157-drone Oct 2-3 salvo and initial Southern/Northern bridge hits as same severe tempo. New research extends to fourth consecutive day Oct 4 (heating main cut, 2 injured, 5 of 6 Kyiv bridges restricted, metro suspended) with explicit Russian doctrine to strike roads/schools/hospitals to depopulate cities and MoD pledge…"
+        },
+        {
+          "id": "pls_ukraine_war_energy_heating_collapse",
+          "name": "Energy and Heating System Collapse",
+          "title": "Ukraine · Energy and Heating System Collapse",
+          "actors_iso2": [
+            "UA"
+          ],
+          "question": "How close is Ukraine's energy and heating system to total failure ahead of winter?",
+          "low_end": "Grid stable with ample dispatchable generation, import buffers and district heating fully operational through winter.",
+          "high_end": "Nationwide grid collapse with prolonged blackouts and loss of district heating leaving millions without power or warmth in freezing temperatures.",
+          "position": 84.0,
+          "band": "critical",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "high",
+          "last_assessed": "2026-10-05T08:14:35.334028+00:00",
+          "evidence_through": "2026-10-05",
+          "history": [
+            {
+              "at": "2026-10-01T03:00:57.470982+00:00",
+              "position": 84.0
+            }
+          ],
+          "rationale": "Virtually no intact thermal plants, ~90% thermal generation destroyed, ~50% hydro damaged, capacity <10 GW vs 18 GW winter demand (from 38 GW pre-war), 423 attacks on electricity +74 on heating Oct 2025-Mar 2026, 60% gas production destroyed requiring 4.4 bcm imports ($2.5bn), and OHCHR assessment that full restoration before next winter is impossible. Higher if nuclear plants are severed from…"
+        },
+        {
+          "id": "pls_ukraine_war_war_economy_dependency_strain",
+          "name": "War Economy and External Dependency Strain",
+          "title": "Russia–Ukraine · War Economy and External Dependency Strain",
+          "actors_iso2": [
+            "RU",
+            "UA"
+          ],
+          "question": "How strained and externally dependent are the belligerents' war economies and sustainment?",
+          "low_end": "Diversified, self-sufficient war economies with stable budgets and secure supply chains for critical military inputs.",
+          "high_end": "Acute fiscal and supply-chain crisis with critical dependence on a single external patron for energy revenues and dual-use military inputs, forcing severe trade-offs.",
+          "position": 83.0,
+          "band": "critical",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "medium",
+          "last_assessed": "2026-10-05T08:14:35.334028+00:00",
+          "evidence_through": "2026-10-05",
+          "history": [
+            {
+              "at": "2026-10-01T03:00:57.470982+00:00",
+              "position": 73.0
+            },
+            {
+              "at": "2026-10-01T03:02:59.981202+00:00",
+              "position": 81.0
+            },
+            {
+              "at": "2026-10-02T07:16:04.035132+00:00",
+              "position": 82.0
+            },
+            {
+              "at": "2026-10-05T08:14:35.334028+00:00",
+              "position": 83.0
+            }
+          ],
+          "rationale": "Closest to 2026-10-02 reading 82 (China ~87% dual-use, oil/gas ~30% budget 24% below plan, refinery throughput -30% with 92% regions in shortage, 17.1T ruble defense +27%). New confirmed Oct 4 figure 51% refining capacity disabled vs 45% Sep 21 (+6pp in ~2 weeks), plus government lowering fuel standards to Euro-2/3/4 through July 2027 and counting naphtha as gasoline, confirming damage to…"
+        }
+      ],
+      "watches": [
+        {
+          "condition": "Renewed mass strikes severing nuclear-plant transmission or destroying restored thermal/CHP, pushing available capacity below 8 GW or causing prolonged loss of heating in major cities at sub-zero temperatures",
+          "why": "Would confirm shift from attrition to systemic collapse, overwhelming 2.1 GW EU import buffer and forcing nationwide rolling blackouts",
+          "direction": "up",
+          "horizon": "3-4 months (winter 2025-26 heating season)",
+          "status": "open"
+        },
+        {
+          "condition": "Sharp change in China-Russia dual-use and energy flows after US secondary-sanctions signals — e.g., Chinese customs CHPL exports to Russia falling/rising >20% YoY or yuan settlement share swinging >15 points, or crude discount moving beyond 5-10% band",
+          "why": "China supplies ~87% of dual-use and buys 26-47% of Russian crude; calibration to sanctions cost directly determines Russia's ability to sustain missile/drone mass production",
+          "direction": "up",
+          "horizon": "6 months",
+          "status": "open"
+        }
+      ]
+    },
+    {
+      "id": "sit_iran_gulf",
+      "title": "Iran, Israel and the Gulf",
+      "summary": "The US and Iran are in a sustained direct strike exchange centered on Hormuz shipping, with CENTCOM hitting hundreds of Iranian military targets in July and Iran threatening Gulf infrastructure, while a US airbridge reinforced the theater. Hormuz is not verifiably closed but is severely impaired: traffic at multi-week lows, dozens of vessel incidents with fatalities, and war-risk premiums of 2-6%, with flows still constrained to a fraction of pre-war levels into September. Diplomacy has resumed only as indirect shuttle talks via Qatar/Oman seeking a limited restart, deadlocked over Hormuz control and sanctions, while Iran-linked proxies escalate separately through a Houthi-declared blockade on Saudi Arabia and Hezbollah's rejection of disarmament despite Lebanese Army pilot deployments.",
+      "domain": "geopolitics",
+      "pulses": [
+        {
+          "id": "pls_iran_gulf_hormuz_maritime_disruption",
+          "name": "Strait of Hormuz Maritime Disruption",
+          "title": "Iran–US · Strait of Hormuz Maritime Disruption",
+          "actors_iso2": [
+            "IR",
+            "US"
+          ],
+          "question": "How severely is commercial shipping and energy flow through the Strait of Hormuz disrupted?",
+          "low_end": "Strait fully open with normal traffic volumes, routine insurance pricing, and no attacks or interception risk for commercial shipping.",
+          "high_end": "Strait of Hormuz fully closed to commercial traffic with no transits, sustained sinkings/mining, and prolonged halt to oil and LNG flows.",
+          "position": 84.0,
+          "band": "critical",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "high",
+          "last_assessed": "2026-10-05T08:11:46.846756+00:00",
+          "evidence_through": "2026-10-05",
+          "history": [
+            {
+              "at": "2026-10-01T03:00:57.470982+00:00",
+              "position": 70.0
+            },
+            {
+              "at": "2026-10-01T07:48:19.756517+00:00",
+              "position": 73.0
+            },
+            {
+              "at": "2026-10-01T08:28:58.928568+00:00",
+              "position": 78.0
+            },
+            {
+              "at": "2026-10-04T21:54:03.205317+00:00",
+              "position": 84.0
+            }
+          ],
+          "rationale": "Closest to 2026-10-03 held at 78 (reader thought 78) which already captured severe impairment (80 IMO attacks/22 killed, ~80 mines, 14.6 vs 20.4 mb/d ~30% drop, 6-14 transits vs 37 normal, premiums 2-6%, 8m b/d still transiting). New confirmed evidence is more extreme: traffic now 3-5 vessels/day vs 74-85 normal (3-5% of norm) vs 6-14 previously, war-risk premiums ~15x peacetime vs 2-6%, US naval…"
+        },
+        {
+          "id": "pls_iran_gulf_iran_proxy_axis_escalation",
+          "name": "Iran Proxy Axis Escalation",
+          "title": "Iran Proxy Axis · Escalation",
+          "actors_iso2": [
+            "IR"
+          ],
+          "question": "How intense is escalation by Iran-linked proxies (Houthis, Hezbollah, Iraqi militias) across the region?",
+          "low_end": "Proxy networks dormant with no attacks on shipping or neighbors, and full compliance with disarmament and de-escalation agreements.",
+          "high_end": "Coordinated full-scale proxy war with sustained Houthi/Hezbollah/Iraqi militia attacks on shipping, Gulf infrastructure and Israel, triggering major retaliation.",
+          "position": 83.0,
+          "band": "critical",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "high",
+          "last_assessed": "2026-10-05T08:11:46.846756+00:00",
+          "evidence_through": "2026-10-05",
+          "history": [
+            {
+              "at": "2026-10-01T03:00:57.470982+00:00",
+              "position": 64.0
+            },
+            {
+              "at": "2026-10-01T07:48:19.756517+00:00",
+              "position": 72.0
+            },
+            {
+              "at": "2026-10-01T08:28:58.928568+00:00",
+              "position": 77.0
+            },
+            {
+              "at": "2026-10-02T07:06:21.526172+00:00",
+              "position": 80.0
+            },
+            {
+              "at": "2026-10-05T08:11:46.846756+00:00",
+              "position": 83.0
+            }
+          ],
+          "rationale": "Closest to 2026-10-04 held at 80 (reader thought 80) which reflected sustained Houthi kinetic control (blockade 20 July, seizure of entire Red Sea coast/Mocha/Perim controlling Bab al-Mandab, pipeline/Jazan disabled). New confirmed moves beyond control to active multi-front war: PLC chairman 4 Oct announced operations to retake all Houthi territory, 13+ airstrikes on Sanaa 3-4 Oct plus…"
+        },
+        {
+          "id": "pls_iran_gulf_us_iran_israel_military_confrontation",
+          "name": "US-Iran-Israel Direct Military Confrontation",
+          "title": "US–Iran–Israel · Direct Military Confrontation",
+          "actors_iso2": [
+            "US",
+            "IR",
+            "IL"
+          ],
+          "question": "How close are the US, Israel and Iran to direct open war via strikes and retaliation?",
+          "low_end": "Stable deterrence with no direct strikes, routine force posture, and no threats to attack the other's territory or forces.",
+          "high_end": "Sustained open war between the US/Israel and Iran with strikes on capitals and critical infrastructure, mass casualties, and ground or invasion operations.",
+          "position": 78.0,
+          "band": "critical",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "medium",
+          "last_assessed": "2026-10-05T08:11:46.846756+00:00",
+          "evidence_through": "2026-10-05",
+          "history": [
+            {
+              "at": "2026-10-01T03:00:57.470982+00:00",
+              "position": 75.0
+            },
+            {
+              "at": "2026-10-01T08:28:58.928568+00:00",
+              "position": 78.0
+            }
+          ],
+          "rationale": "Closest to 2026-10-01 at 75 (held, reader thought 75) which reflected July CENTCOM waves hitting 300+ targets and Iran threats to Gulf infrastructure. New confirmed raises baseline: war began 28 Feb with strikes killing Khamenei and targeting nuclear/military/leadership, MoU 17 June declared permanent termination then expired 17 Aug, Trump rejected roadmap 26 Sep, plus geographic expansion…"
+        },
+        {
+          "id": "pls_iran_gulf_us_iran_diplomatic_deadlock",
+          "name": "US-Iran Diplomatic Deadlock",
+          "title": "US–Iran · Diplomatic Deadlock",
+          "actors_iso2": [
+            "US",
+            "IR"
+          ],
+          "question": "How deadlocked are US-Iran talks and ceasefire efforts for the Gulf?",
+          "low_end": "Active direct negotiations with agreed framework for ceasefire, Hormuz reopening, and sanctions relief.",
+          "high_end": "Complete diplomatic rupture with no channels, no mediators, and no prospect for talks or ceasefire.",
+          "position": 74.0,
+          "band": "severe",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "medium",
+          "last_assessed": "2026-10-05T08:11:46.846756+00:00",
+          "evidence_through": "2026-10-05",
+          "history": [
+            {
+              "at": "2026-10-01T03:00:57.470982+00:00",
+              "position": 68.0
+            },
+            {
+              "at": "2026-10-01T08:28:58.928568+00:00",
+              "position": 74.0
+            }
+          ],
+          "rationale": "Closest to 2026-10-01 at 68 (held, reader thought 70) which captured indirect shuttle talks 22-23 Sep via Qatar/Oman deadlocked over Hormuz control/sanctions. New confirmed: 14-point MoU 17 June (end blockade in 30 days, clear mines, toll-free passage) expired 17 Aug over Hormuz routing ambiguity and Lebanon strikes, Iran's 7-day roadmap 25 Sep via Qatar (release funds/lift sanctions/end blockade…"
+        }
+      ],
+      "watches": [
+        {
+          "condition": "JMIC/UKMTO and EIA/Kpler data show Hormuz transits returning to >30 vessels/day and >18m b/d for two consecutive weeks with war-risk premiums falling below 1%",
+          "why": "Would signal operational normalization beyond rhetorical 'open' claims and indicate US-Iran assurances are credible, easing energy and diplomatic pulses",
+          "direction": "down",
+          "horizon": "4-8 weeks",
+          "status": "open"
+        },
+        {
+          "condition": "CENTCOM announces pause in offensive strikes for >14 days or conversely strikes Iranian mainland infrastructure (e.g., Bushehr/Bandar Abbas refineries) or Iran hits US warship/Gulf oil terminal",
+          "why": "Strike pause would de-escalate direct war risk; infrastructure hits would mark major escalation and likely trigger Hormuz closure and proxy retaliation",
+          "direction": "down",
+          "horizon": "2-4 weeks",
+          "status": "open"
+        }
+      ]
+    },
+    {
+      "id": "sit_energy_security",
+      "title": "Global energy security",
+      "summary": "Global oil and gas supply is severely impaired but not fully cut off: Hormuz traffic is down ~60% to multi-week lows with flows at 8-15m b/d vs 20m b/d normal, inventories down 400m barrels and EIA sees constraints through end-2026 despite partial Saudi pipeline restart. Energy prices reflect an elevated but contained shock: Brent near $101 with U.S. energy +15.7% y/y and European peaks near €300/MWh, yet core inflation is flat and OECD/ECB frame it as sharp but temporary. At the same time, the power system shows high transition and climate strain from drought-hit nuclear/hydro, wind lulls, record demand and massive grid queues and curtailment, with no blackouts yet but widespread curtailment and voluntary industrial curbs.",
+      "domain": "geopolitics",
+      "pulses": [
+        {
+          "id": "pls_energy_security_global_hydrocarbon_supply_disruption",
+          "name": "Global Hydrocarbon Supply Disruption",
+          "title": "Iran – Saudi Arabia – US · Hydrocarbon Supply Disruption",
+          "actors_iso2": [
+            "IR",
+            "SA",
+            "US"
+          ],
+          "question": "How severely is global oil and gas physical supply disrupted or constrained?",
+          "low_end": "Global oil and gas flows at normal volumes with ample spare capacity, open chokepoints and inventories at seasonal norms.",
+          "high_end": "Widespread physical shortfall with major producers offline and key chokepoints effectively closed, forcing rationing and inability to meet global demand.",
+          "position": 77.0,
+          "band": "critical",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "high",
+          "last_assessed": "2026-10-05T08:11:46.846756+00:00",
+          "evidence_through": "2026-10-05",
+          "history": [
+            {
+              "at": "2026-10-01T03:00:57.470982+00:00",
+              "position": 72.0
+            },
+            {
+              "at": "2026-10-01T07:48:19.756517+00:00",
+              "position": 77.0
+            }
+          ],
+          "rationale": "More extreme than 2026-10-01 at 72 which reflected Hormuz-only operational constraint (20m b/d normal vs 8m b/d Sunday/15m avg, -60% transits, 800+ vessels facilitated). New evidence shows severely impaired but not fully closed system now with second chokepoint: Hormuz -70% traffic plus Houthi complete blockade on Saudi 20 Jul and seizure of Mokha/Hanish Islands 10 Sep controlling Bab el-Mandeb…"
+        },
+        {
+          "id": "pls_energy_security_transition_and_grid_resilience_strain",
+          "name": "Transition and Grid Resilience Strain",
+          "title": "Global Power System · Transition and Grid Resilience Strain",
+          "actors_iso2": [],
+          "question": "How strained is energy system resilience due to transition bottlenecks, grid constraints and climate stress on generation?",
+          "low_end": "Power system meets demand reliably with adequate firm capacity, grid, storage and interconnection to absorb weather and transition pressures.",
+          "high_end": "Systemic inability to meet demand due to combined grid bottlenecks, curtailment and climate-driven generation losses causing widespread outages and industrial shutdowns.",
+          "position": 68.0,
+          "band": "severe",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "high",
+          "last_assessed": "2026-10-05T08:11:46.846756+00:00",
+          "evidence_through": "2026-10-05",
+          "history": [
+            {
+              "at": "2026-10-01T03:00:57.470982+00:00",
+              "position": 68.0
+            }
+          ],
+          "rationale": "Concurrent stress: Paks ~2000MW fell to 965MW then 240MW (~12%, one turbine) with Danube at record -106cm, Cernavoda one reactor offline with second scheduled, EDF shut 3 reactors (3.65GW) and reduced 7 others (~9% nuclear dip), EU hydro lowest in decade (-12% in 2025, -43TWh), wind -30-50% during heat dome, demand +20% on AC, evening peaks €285-326/MWh. No blackouts as of Aug 7 but voluntary…"
+        },
+        {
+          "id": "pls_energy_security_energy_price_and_market_shock",
+          "name": "Energy Price and Market Shock",
+          "title": "Global Economy · Energy Price and Market Shock",
+          "actors_iso2": [],
+          "question": "How severe is energy-driven price and market stress for consumers and economies?",
+          "low_end": "Energy prices stable and low with little pass-through to headline inflation or consumer costs.",
+          "high_end": "Sustained extreme energy price spike driving broad inflation, de-anchored expectations, fiscal strain and demand destruction.",
+          "position": 62.0,
+          "band": "severe",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "medium",
+          "last_assessed": "2026-10-05T08:11:46.846756+00:00",
+          "evidence_through": "2026-10-05",
+          "history": [
+            {
+              "at": "2026-10-01T03:00:57.470982+00:00",
+              "position": 64.0
+            },
+            {
+              "at": "2026-10-05T08:11:46.846756+00:00",
+              "position": 62.0
+            }
+          ],
+          "rationale": "Closest to 2026-10-01 at 64 (Brent ~101.3-101.5, US energy +15.7% y/y, OECD ~4% peak, core flat). New research shows same elevated-but-contained shock but modestly calmer: G7 100m barrel IEA release front-loaded diesel beginning immediately, Middle East exports above pre-war levels late Sept and Brent easing to ~101.59-101.90 on 5 Oct though still >$100, and Aramco cutting Nov Asia prices to…"
+        }
+      ],
+      "watches": [
+        {
+          "condition": "Strait of Hormuz traffic returns to pre-war ~20m b/d for 2 consecutive weeks or falls to near-zero verified transits for 7 days",
+          "why": "Hormuz carries ~20% of global liquids and >25% of LNG; normalization would rebuild inventories and cut risk premium, while full closure would overwhelm 3.8m b/d bypass capacity",
+          "direction": "down",
+          "horizon": "4-8 weeks",
+          "status": "open"
+        },
+        {
+          "condition": "Brent sustains above $120 or below $75 for 30 days and U.S. distillate inventories rebuild above 5-year low",
+          "why": "EIA forecast hinges on $90 2H26 falling to $74 in 2027; sustained deviation signals de-anchoring or easing and determines whether shock stays headline-only",
+          "direction": "up",
+          "horizon": "2-3 months",
+          "status": "open"
+        },
+        {
+          "condition": "Full shutdown of Paks NPP (Danube gauge -134cm) or first rolling blackouts/mandatory factory shutdown decrees in Central Europe",
+          "why": "Paks provides ~40-50% of Hungary power and 2.44GW of SE Europe nuclear was already offline; loss would test 3,600-3,800MW import capacity and signal systemic firm-capacity failure beyond price spikes",
+          "direction": "up",
+          "horizon": "2-6 weeks",
+          "status": "open"
+        }
+      ]
+    },
+    {
+      "id": "sit_russia_nato",
+      "title": "Russia–NATO confrontation",
+      "summary": "This situation tracks direct friction between Russia and NATO/EU outside the war inside Ukraine, across military incidents, hybrid pressure, and diplomacy. No graded evidence has been provided yet, so no Pulse can be placed on its 0-100 scale from calm to extreme. Baseline research on air/sea incidents, force posture, sabotage/cyber activity, and diplomatic channels is required to establish first readings.",
+      "domain": "geopolitics",
+      "pulses": [
+        {
+          "id": "pls_russia_nato_hybrid_grey_zone_pressure",
+          "name": "Hybrid and Grey-Zone Pressure",
+          "title": "Russia–NATO · Hybrid and Grey-Zone Pressure",
+          "actors_iso2": [
+            "RU"
+          ],
+          "question": "How intense is Russia-linked hybrid pressure on NATO societies and infrastructure short of direct force?",
+          "low_end": "Minimal attributable sabotage, cyber disruption, GPS jamming, or disinformation with no significant damage or disruption.",
+          "high_end": "Sustained, coordinated sabotage, cyberattacks and infrastructure disruption causing casualties, major economic paralysis or loss of critical services across NATO states.",
+          "position": 72.0,
+          "band": "severe",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "high",
+          "last_assessed": "2026-10-04T22:02:01.406702+00:00",
+          "evidence_through": "2026-10-04",
+          "history": [
+            {
+              "at": "2026-10-01T03:07:20.991153+00:00",
+              "position": 72.0
+            }
+          ],
+          "rationale": "First assessed reading; prior unassessed. Evidence establishes sustained, coordinated, multi-domain pressure well above minimal: confirmed GRU Unit 29155-led campaign since Feb 2022 using gig-economy proxies after 2022 expulsions; sabotage attacks nearly tripled 2023 (12) to 2024 (34), ~200 incidents tracked by AP, >50 by IISS; specific confirmed attributions include Warsaw-Lublin C4/rail…"
+        },
+        {
+          "id": "pls_russia_nato_diplomatic_rupture",
+          "name": "Diplomatic Rupture",
+          "title": "Russia–NATO · Diplomatic Rupture",
+          "actors_iso2": [
+            "RU"
+          ],
+          "question": "How severed are diplomatic and crisis-management channels between Russia and NATO/EU states?",
+          "low_end": "Regular diplomatic and military-to-military communication functions, including hotlines, embassies and arms-control or risk-reduction dialogue.",
+          "high_end": "Complete severance of diplomatic relations and crisis communication channels with no hotlines or forums to manage incidents.",
+          "position": 62.0,
+          "band": "severe",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "medium",
+          "last_assessed": "2026-10-04T22:02:01.406702+00:00",
+          "evidence_through": "2026-10-04",
+          "history": [
+            {
+              "at": "2026-10-01T03:07:20.991153+00:00",
+              "position": 62.0
+            }
+          ],
+          "rationale": "First assessed reading; prior 2026-10-01 was unassessed. Evidence shows significant strain but not complete severance: mass expulsions of ~400 officers in 2022 rising to ~750 by Oct 2024, plus consulate closures (Poland closed Kraków May 2025, Germany closed Bonn 18 Sep 2026 and terminated Russia House lease, summoned ambassador). Counterbalanced by functioning crisis-management: Poland invoked…"
+        },
+        {
+          "id": "pls_russia_nato_direct_military_confrontation",
+          "name": "Direct Military Confrontation",
+          "title": "Russia–NATO · Direct Military Confrontation",
+          "actors_iso2": [
+            "RU"
+          ],
+          "question": "How close are Russia and NATO to direct armed conflict via incidents and force posture?",
+          "low_end": "Routine peacetime posture with no airspace violations, dangerous intercepts or collisions, and functioning deconfliction hotlines.",
+          "high_end": "Sustained direct combat between Russian and NATO forces with casualties and ongoing exchange of fire across air, land or sea.",
+          "position": 58.0,
+          "band": "severe",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "high",
+          "last_assessed": "2026-10-04T22:02:01.406702+00:00",
+          "evidence_through": "2026-10-04",
+          "history": [
+            {
+              "at": "2026-10-01T03:07:20.991153+00:00",
+              "position": 58.0
+            }
+          ],
+          "rationale": "First assessed reading; prior unassessed. Moves well above routine peacetime posture due to 19-23 Russian Gerbera decoy drones violating Polish airspace for 7h15m on 9-10 Sep 2025, intercepted and shot down (3-4) by Polish F-16s/Dutch F-35s with AWACS/Patriot support, triggering Poland's Article 4 request and NAC solidarity statement 10 Sep 2025. NATO responded with Operation Eastern Sentry 12…"
+        }
+      ],
+      "watches": []
+    },
+    {
+      "id": "sit_sahel_horn",
+      "title": "Sahel and Horn of Africa instability",
+      "summary": "Evidence in this batch covers only the Djibouti foreign-base cluster, not the broader Sahel-Horn coups and insurgencies. China has built two new HF/V/UHF/SATCOM/5G communications compounds since mid-2024 at its only overseas base, co-located within 10 miles of US, French, Italian and Japanese bases at the Bab el-Mandeb chokepoint, assessed as almost certainly SIGINT-capable but without confirmed active collection. No evidence was provided on state fragility, insurgent control, or displacement in Mali, Burkina Faso, Niger, Sudan, Ethiopia or Somalia, leaving those core dimensions unassessed.",
+      "domain": "geopolitics",
+      "pulses": [
+        {
+          "id": "pls_sahel_horn_state_fragility_insurgent_control",
+          "name": "State Fragility and Insurgent Control",
+          "title": "Sahel and Horn of Africa · State Fragility and Insurgent Control",
+          "actors_iso2": [],
+          "question": "How extensive is state failure, coup-driven instability and insurgent territorial control across Mali, Burkina Faso, Niger, Sudan, Ethiopia and Somalia?",
+          "low_end": "Stable civilian governments with monopoly on force and insurgencies contained to peripheral areas.",
+          "high_end": "Multiple simultaneous state collapses with juntas and jihadist/insurgent groups controlling large territories and threatening capitals across the Sahel and Horn.",
+          "position": 68.0,
+          "band": "severe",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "medium",
+          "last_assessed": "2026-10-05T08:05:49.713859+00:00",
+          "evidence_through": "2026-10-05",
+          "history": [
+            {
+              "at": "2026-10-05T02:02:06.240722+00:00",
+              "position": 70.0
+            },
+            {
+              "at": "2026-10-05T08:05:49.713859+00:00",
+              "position": 68.0
+            }
+          ],
+          "rationale": "Closest to 2026-10-05 reading at 70 (and 2026-10-03 held thought 70) which reflected worst escalation since 2020-2022 war, seizure of three airports, 7-group Alliance for Survival to remove Abiy, and Eritrea severing ties/embassy closure. New batch confirms same rupture and Addis explosions near ENDF HQ and El Alamein bloc keeping fragility high, but also confirms federal forces retook Afar towns…"
+        },
+        {
+          "id": "pls_sahel_horn_foreign_military_entanglement_horn",
+          "name": "Foreign Military Entanglement and Intelligence Competition in the Horn",
+          "title": "Djibouti · Foreign Military Entanglement and Intelligence Competition",
+          "actors_iso2": [
+            "DJ"
+          ],
+          "question": "How intense is foreign military entanglement and intelligence competition in the Horn of Africa, centered on Djibouti?",
+          "low_end": "Minimal foreign military presence with routine logistics and no intelligence competition or interference between co-located forces.",
+          "high_end": "Dense co-location of rival bases engaged in active SIGINT interception, harassment (lasers, airspace denial), and operational interference forcing emissions-control and deconfliction failures.",
+          "position": 58.0,
+          "band": "severe",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "medium",
+          "last_assessed": "2026-10-05T08:05:49.713859+00:00",
+          "evidence_through": "2026-10-05",
+          "history": [
+            {
+              "at": "2026-10-01T03:00:57.470982+00:00",
+              "position": 58.0
+            }
+          ],
+          "rationale": "First reading at elevated 58: two new PLA communications compounds since mid-2024 with HF/V/UHF/SATCOM/5G/radomes and reinforced trenches co-located <10 miles from US (4,000+ personnel at Camp Lemonnier), French (1,500-1,900), Italian and Japanese bases at the 20-mile-wide Bab el-Mandeb chokepoint, assessed as almost certainly SIGINT-capable with heightened value amid Houthi Red Sea attacks and…"
+        },
+        {
+          "id": "pls_sahel_horn_displacement_humanitarian_collapse",
+          "name": "Displacement and Humanitarian Collapse Pressure",
+          "title": "Sahel–Horn of Africa · Displacement and Humanitarian Collapse Pressure",
+          "actors_iso2": [],
+          "question": "How severe is conflict-driven displacement and humanitarian collapse across the Sahel and Horn?",
+          "low_end": "Stable populations with minimal conflict-driven displacement and adequate humanitarian access.",
+          "high_end": "Mass cross-border displacement, famine and total collapse of humanitarian access across multiple Sahel and Horn countries.",
+          "position": null,
+          "band": "unassessed",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "",
+          "last_assessed": "2026-10-05T08:05:49.713859+00:00",
+          "evidence_through": "2026-10-05",
+          "history": [],
+          "rationale": ""
+        }
+      ],
+      "watches": [
+        {
+          "condition": "AFRICOM/CJTF-HOA, French FFDj, or Japanese MoD issues public assessment or OPSEC/emissions-control advisory about PLA SIGINT collection, or a new harassment incident (laser, airspace restriction, close encounter) is reported at Djibouti.",
+          "why": "Would confirm shift from latent capability to active intelligence competition and operational friction, moving entanglement from elevated to severe.",
+          "direction": "up",
+          "horizon": "6 months",
+          "status": "open"
+        },
+        {
+          "condition": "Independent technical confirmation that PLA radomes/antennas are actively intercepting (e.g., signal-intercept logs, leaked assessment, or imagery showing operational staffing/antenna orientation changes) or conversely evidence they are purely redundant C4ISR for escort task forces.",
+          "why": "Resolves the key evidentiary separation (capable vs. actively collecting) that currently caps the reading; active collection would raise risk of metadata exploitation of US/ allied operations against Iran/Houthis.",
+          "direction": "up",
+          "horizon": "9 months",
+          "status": "open"
+        }
+      ]
+    },
+    {
+      "id": "sit_red_sea_shipping",
+      "title": "Red Sea and global shipping disruption",
+      "summary": "Commercial shipping faces simultaneous pressure at two chokepoints: Hormuz is operationally constrained with reduced traffic and high war-risk costs, while the Houthis declared an immediate maritime embargo against Saudi Arabia at Bab el-Mandeb on July 24, prompting Saudi coalition escort measures but without yet-verified attacks or traffic collapse. Insurance and cost pressure is elevated, with Hormuz war-risk premiums at 2-6% of vessel value and owners pausing transits, and a likely spillover to Red Sea routes if the Houthi threat is enforced. Suez Canal throughput impact remains unassessed for lack of direct transit and rerouting data in this evidence set.",
+      "domain": "geopolitics",
+      "pulses": [
+        {
+          "id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
+          "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
+          "title": "Houthis–Saudi Arabia · Red Sea–Bab el-Mandeb Shipping Disruption",
+          "actors_iso2": [
+            "SA"
+          ],
+          "question": "How severely is commercial shipping through the Bab el-Mandeb Strait and Red Sea disrupted?",
+          "low_end": "Bab el-Mandeb and the Red Sea are open with normal commercial traffic volumes, no attacks or credible blockade threats, and routine transit without special routing or naval escort.",
+          "high_end": "Bab el-Mandeb and the Red Sea are effectively closed to commercial shipping due to sustained attacks, enforced blockade, or mass avoidance with near-zero transits and prolonged Suez disruption.",
+          "position": 65.0,
+          "band": "severe",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "medium",
+          "last_assessed": "2026-10-05T08:11:46.846756+00:00",
+          "evidence_through": "2026-10-05",
+          "history": [
+            {
+              "at": "2026-10-01T03:00:57.470982+00:00",
+              "position": 58.0
+            },
+            {
+              "at": "2026-10-01T07:48:19.756517+00:00",
+              "position": 68.0
+            },
+            {
+              "at": "2026-10-01T11:36:13.230643+00:00",
+              "position": 72.0
+            },
+            {
+              "at": "2026-10-03T21:55:50.660077+00:00",
+              "position": 65.0
+            }
+          ],
+          "rationale": "Closest to past reading 68 (2026-10-01) which reflected declared embargo, physical control of Bab el-Mandeb islands/Mokha and kinetic strikes on Riyadh. New confirmed evidence confirms sustained control of entire Red Sea coast and Mayun Island 11 Sep and Saudi-only ban with explicit assurance navigation safe for non-Saudi firms, plus pipeline strike and French/Italian protection deployments.…"
+        },
+        {
+          "id": "pls_red_sea_shipping_war_risk_insurance_freight_pressure",
+          "name": "War-Risk Insurance and Freight Cost Pressure",
+          "title": "Red Sea–Hormuz shipping · War-risk insurance and freight cost pressure",
+          "actors_iso2": [],
+          "question": "How elevated are war-risk premiums and freight costs for shipping through threatened chokepoints?",
+          "low_end": "War-risk premiums and freight rates are at normal baseline levels with readily available insurance and no chokepoint surcharges.",
+          "high_end": "War-risk premiums and freight rates spike to prohibitive levels, insurance becomes unavailable or highly conditional, and most owners refuse chokepoint transits on cost/risk grounds.",
+          "position": 65.0,
+          "band": "severe",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "medium",
+          "last_assessed": "2026-10-05T08:11:46.846756+00:00",
+          "evidence_through": "2026-10-05",
+          "history": [
+            {
+              "at": "2026-10-01T03:00:57.470982+00:00",
+              "position": 65.0
+            }
+          ],
+          "rationale": "London market war-risk premiums for Hormuz transits rose to ~2-6% of vessel value, with earlier periods up to 10%, with fewer inquiries as owners grew reluctant and traffic drops driven by operator caution not just physical blockade; Houthi embargo is assessed as likely to raise shipping costs and disrupt Saudi oil exports via Red Sea. Higher if Red Sea/Bab el-Mandeb premiums exceed 6-10% broadly…"
+        },
+        {
+          "id": "pls_red_sea_shipping_suez_canal_rerouting_strain",
+          "name": "Suez Canal Throughput and Rerouting Strain",
+          "title": "Houthis–Saudi Arabia · Suez Canal Throughput and Rerouting Strain",
+          "actors_iso2": [
+            "SA"
+          ],
+          "question": "How severely is Suez Canal throughput reduced and global rerouting strained?",
+          "low_end": "Suez Canal operates at normal capacity with stable transit numbers and no systemic rerouting of major trade lanes.",
+          "high_end": "Suez Canal traffic collapses with prolonged, large-scale rerouting of container and energy flows around the Cape of Good Hope, causing sustained global supply-chain delays and capacity shortages.",
+          "position": null,
+          "band": "unassessed",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "",
+          "last_assessed": "2026-10-05T08:11:46.846756+00:00",
+          "evidence_through": "2026-10-05",
+          "history": [],
+          "rationale": ""
+        }
+      ],
+      "watches": [
+        {
+          "condition": "London war-risk premiums for Red Sea/Bab el-Mandeb transits quoted above 6-10% of hull value or major insurers withdraw/condition cover",
+          "why": "Prohibitive insurance is the economic mechanism that turns threat into de facto blockade even without physical closure.",
+          "direction": "up",
+          "horizon": "2-6 weeks",
+          "status": "open"
+        },
+        {
+          "condition": "Suez Canal Authority reports sustained recovery to baseline transits and major container lines resume normal Suez routing",
+          "why": "Would signal that Bab el-Mandeb threat is not translating into systemic Suez rerouting and that cost/insurance pressure is easing.",
+          "direction": "down",
+          "horizon": "4-8 weeks",
+          "status": "open"
+        }
+      ]
+    },
+    {
+      "id": "sit_us_china",
+      "title": "US–China competition",
+      "summary": "US semiconductor export controls on China are confirmed as extensive and tightened from 2022 through 2024, with ASML warning of long-term supply-chain shifts while still earning 29.1% of 2025 sales from China. China has likely started low-volume domestic immersion DUV production led by Shanghai Aishengna for SMIC, Hua Hong and CXMT, but the tools remain unproven and far from ASML parity, so decoupling is elevated but not yet total. No evidence was provided to assess the current intensity of tariff/trade confrontation or diplomatic deadlock, leaving those dimensions unassessed.",
+      "domain": "geopolitics",
+      "pulses": [
+        {
+          "id": "pls_us_china_technology_export_control_decoupling",
+          "name": "Technology and Export-Control Decoupling",
+          "title": "US–China · Technology and Export-Control Decoupling",
+          "actors_iso2": [
+            "US",
+            "CN"
+          ],
+          "question": "How intense is US-China technological decoupling and semiconductor export-control confrontation?",
+          "low_end": "Minimal export controls and open two-way technology trade with deeply integrated semiconductor supply chains.",
+          "high_end": "Comprehensive, near-total technological decoupling with blanket semiconductor export bans and fully severed supply chains.",
+          "position": 65.0,
+          "band": "severe",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "medium",
+          "last_assessed": "2026-10-05T08:31:43.283183+00:00",
+          "evidence_through": "2026-10-05",
+          "history": [
+            {
+              "at": "2026-10-01T03:00:57.470982+00:00",
+              "position": 65.0
+            }
+          ],
+          "rationale": "US controls are confirmed as major and repeatedly tightened (Oct 2022, Oct 2023, refinements Apr/Dec 2024) and ASML itself warns controls plus tech-sovereignty push may reshape supply chains, placing the dimension well above calm. China has likely begun low-volume domestic immersion DUV production (5 systems in 2026, ~20 in 2027) via Shanghai Aishengna for SMIC/Hua Hong/CXMT, but sources and…"
+        },
+        {
+          "id": "pls_us_china_trade_tariff_confrontation",
+          "name": "Trade and Tariff Confrontation",
+          "title": "US–China · Trade and Tariff Confrontation",
+          "actors_iso2": [
+            "US",
+            "CN"
+          ],
+          "question": "How intense is US-China trade and tariff confrontation?",
+          "low_end": "Low tariffs, stable trade flows and routine economic dialogue with few restrictions.",
+          "high_end": "Prohibitive tariffs, sweeping trade embargoes and near-complete bilateral trade rupture.",
+          "position": 35.0,
+          "band": "elevated",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "medium",
+          "last_assessed": "2026-10-05T08:31:43.283183+00:00",
+          "evidence_through": "2026-10-05",
+          "history": [
+            {
+              "at": "2026-10-01T08:54:58.966164+00:00",
+              "position": 35.0
+            }
+          ],
+          "rationale": "Previously unassessed 2026-10-01 for lack of tariff/trade data. New confirmed evidence shows de-escalation from prohibitive-tariff extreme: Busan Nov 2025 truce (US tariff cuts, Chinese pledges on rare earths/25Mt soybeans/fentanyl) extended to Jan 10 2027 with $30B non-sensitive goods each way for reduced tariffs and likely 10Mt coal imports 2027-28. However Chinese rare-earth exports remain…"
+        },
+        {
+          "id": "pls_us_china_diplomatic_deadlock",
+          "name": "Diplomatic Deadlock",
+          "title": "US–China · Diplomatic Deadlock",
+          "actors_iso2": [
+            "US",
+            "CN"
+          ],
+          "question": "How deadlocked are US-China diplomatic and summit-level channels?",
+          "low_end": "Regular leader summits, active working-level dialogue and functional crisis-management channels.",
+          "high_end": "Complete severance of high-level diplomacy with no leader summits, working-level dialogue or crisis-communication channels.",
+          "position": 20.0,
+          "band": "calm",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "high",
+          "last_assessed": "2026-10-05T08:31:43.283183+00:00",
+          "evidence_through": "2026-10-05",
+          "history": [
+            {
+              "at": "2026-10-01T08:54:58.966164+00:00",
+              "position": 20.0
+            }
+          ],
+          "rationale": "Previously unassessed 2026-10-01 for lack of summit/dialogue evidence. New confirmed evidence shows full leader-level engagement: state visit Sep 23-25 2026 with tarmac greeting, White House state dinner, National Archives tour, truce extension to Jan 10 2027, new AI incident channel/Super Intelligence Dialogue with Nov 2026 follow-up, military MOU on crisis communication, and agreed next summits…"
+        }
+      ],
+      "watches": [
+        {
+          "condition": "Fab-side qualification and procurement shift for domestic DUV",
+          "why": "The bearish substitution thesis hinges on qualification and high-yield production leading to sustained shift away from ASML; confirmation would move technology decoupling from partial hedge to material replacement.",
+          "direction": "up",
+          "horizon": "6-12 months",
+          "status": "open"
+        },
+        {
+          "condition": "New US BIS semiconductor export-control rulemaking or relaxation",
+          "why": "Further tightening (e.g., servicing, DUV spare parts, or broader tool categories) would escalate confrontation; easing would de-escalate. Direction depends on rule content.",
+          "direction": "up",
+          "horizon": "3-9 months",
+          "status": "open"
+        }
+      ]
+    },
+    {
+      "id": "sit_ai_geopolitics",
+      "title": "AI geopolitics",
+      "summary": "Frontier AI geopolitics is currently centered on whether US-led lithography export controls can retain leverage as China pursues domestic immersion DUV alternatives. Evidence as of late July 2026 shows nascent Chinese production led by Shanghai Aishengna for SMIC, Hua Hong and CXMT, but tools remain unproven on yield and reliability and ASML retains a large technical lead with 29.1% of 2025 sales still from China. Military AI integration and AI safety governance dimensions cannot yet be assessed from this evidence alone.",
+      "domain": "geopolitics",
+      "pulses": [
+        {
+          "id": "pls_ai_geopolitics_compute_control_erosion",
+          "name": "Compute Control Erosion",
+          "title": "US–China · Compute Control Erosion",
+          "actors_iso2": [
+            "US",
+            "CN"
+          ],
+          "question": "How far has domestic substitution eroded the effectiveness of frontier-AI chip and lithography export controls?",
+          "low_end": "Export controls effectively deny frontier AI-relevant compute with no viable domestic lithography alternatives at scale.",
+          "high_end": "Export controls are fully ineffective as domestic alternatives fully substitute at scale for frontier AI-relevant chip production.",
+          "position": 35.0,
+          "band": "elevated",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "low",
+          "last_assessed": "2026-10-01T03:00:57.470982+00:00",
+          "evidence_through": "2026-07-29",
+          "history": [
+            {
+              "at": "2026-10-01T03:00:57.470982+00:00",
+              "position": 35.0
+            }
+          ],
+          "rationale": "Early domestic immersion DUV manufacturing has begun (5 systems targeted in 2026, ~20 in 2027 for SMIC/Hua Hong/CXMT) but tools still require further testing and remain far from ASML on performance/reliability with no fab qualification or sustained procurement shift yet; would be higher with demonstrated high-yield qualification and ASML displacement, lower if targets slip or tools remain low-end…"
+        },
+        {
+          "id": "pls_ai_geopolitics_ai_safety_governance_fracture",
+          "name": "AI Safety Governance Fracture",
+          "title": "US–China · AI Safety Governance Fracture",
+          "actors_iso2": [
+            "US",
+            "CN"
+          ],
+          "question": "How fragmented and ineffective is international governance of frontier AI safety and incident response?",
+          "low_end": "Cohesive international AI safety norms and incident-response mechanisms effectively manage frontier risks.",
+          "high_end": "International AI safety governance is completely fractured with no shared norms and no capacity to contain cross-border AI incidents.",
+          "position": null,
+          "band": "unassessed",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "",
+          "last_assessed": "2026-10-01T03:00:57.470982+00:00",
+          "evidence_through": "2026-07-29",
+          "history": [],
+          "rationale": ""
+        },
+        {
+          "id": "pls_ai_geopolitics_military_ai_weaponization",
+          "name": "Military AI Weaponization",
+          "title": "US–China · Military AI Weaponization",
+          "actors_iso2": [
+            "US",
+            "CN"
+          ],
+          "question": "How extensively are states integrating frontier AI into military systems and operations?",
+          "low_end": "Military AI remains limited to research and non-critical support functions with no deployed weaponized applications.",
+          "high_end": "Frontier AI is fully integrated into deployed autonomous weapons, targeting, and command-and-control across major militaries.",
+          "position": null,
+          "band": "unassessed",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "",
+          "last_assessed": "2026-10-01T03:00:57.470982+00:00",
+          "evidence_through": "2026-07-29",
+          "history": [],
+          "rationale": ""
+        }
+      ],
+      "watches": [
+        {
+          "condition": "SMIC, Hua Hong or CXMT formally qualify Aishengna immersion DUV for high-volume manufacturing and report repeatable high yields, with sustained procurement shift away from ASML.",
+          "why": "Would confirm bearish substitution thesis and demonstrate material erosion of export-control leverage, moving from partial hedge to near-term replacement.",
+          "direction": "up",
+          "horizon": "6-12 months",
+          "status": "open"
+        },
+        {
+          "condition": "Aishengna misses 2026 delivery targets (~5 systems) or tools are confined to low-end nodes after failing reliability/serviceability tests.",
+          "why": "Would indicate domestic substitution remains a limited hedge and controls retain effectiveness, reversing early erosion signal.",
+          "direction": "down",
+          "horizon": "6-12 months",
+          "status": "open"
+        },
+        {
+          "condition": "Major state declares deployment of frontier AI in autonomous targeting or strategic C2, or a frontier AI safety incident triggers cross-border state response.",
+          "why": "Would directly escalate military AI and governance fracture dimensions that are currently unassessed and reveal the strategic contest beyond compute controls.",
+          "direction": "up",
+          "horizon": "12 months",
+          "status": "open"
+        }
+      ]
+    },
+    {
+      "id": "sit_china_taiwan",
+      "title": "China–Taiwan",
+      "summary": "The China-Taiwan situation centers on Beijing's claim that Taiwan is part of China and its growing military, economic and political pressure to achieve unification, opposed by Taiwan's democratic government and distinct identity. The United States and regional allies seek to deter a PLA attack through arms sales, military presence and strategic ambiguity without formal recognition of Taiwan, creating a fragile balance between deterrence and provocation. With no evidence yet assessed, the key uncertainties are the intensity of PLA coercion, the state of cross-strait politics, the credibility of external deterrence, and Taiwan's own defence readiness.",
+      "domain": "geopolitics",
+      "pulses": [
+        {
+          "id": "pls_china_taiwan_cross_strait_political_rupture",
+          "name": "Cross-Strait Political Rupture",
+          "title": "China–Taiwan · Cross-Strait Political Rupture",
+          "actors_iso2": [
+            "CN",
+            "TW"
+          ],
+          "question": "How severed are cross-strait political relations and how intense is Beijing's coercive unification pressure?",
+          "low_end": "Functional cross-strait dialogue and communication channels exist with managed political differences and no coercive unification threats.",
+          "high_end": "Complete severance of cross-strait communication with Beijing openly threatening imminent forced unification and Taipei fully rejecting any engagement framework.",
+          "position": null,
+          "band": "unassessed",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "",
+          "last_assessed": "2026-10-01T03:00:57.470982+00:00",
+          "evidence_through": "",
+          "history": [],
+          "rationale": ""
+        },
+        {
+          "id": "pls_china_taiwan_external_deterrence_failure_and_intervention_risk",
+          "name": "External Deterrence Failure and Intervention Risk",
+          "title": "US–China · External deterrence failure and intervention risk",
+          "actors_iso2": [
+            "US",
+            "CN"
+          ],
+          "question": "How eroded is US and allied deterrence over Taiwan and how close are external powers to direct military intervention?",
+          "low_end": "Strong, credible and unambiguous US and allied deterrence with regular coordinated presence and no imminent need for direct intervention.",
+          "high_end": "Deterrence has collapsed and the US and allies are engaged in direct combat operations to defend Taiwan against a PLA attack.",
+          "position": null,
+          "band": "unassessed",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "",
+          "last_assessed": "2026-10-01T03:00:57.470982+00:00",
+          "evidence_through": "",
+          "history": [],
+          "rationale": ""
+        },
+        {
+          "id": "pls_china_taiwan_pla_military_pressure_and_blockade_invasion_risk",
+          "name": "PLA Military Pressure and Blockade/Invasion Risk",
+          "title": "China–Taiwan · PLA Military Pressure and Blockade/Invasion Risk",
+          "actors_iso2": [
+            "CN",
+            "TW"
+          ],
+          "question": "How intense is PLA military pressure on Taiwan and how close is it to a blockade or invasion?",
+          "low_end": "Routine peacetime PLA posture with minimal activity near Taiwan and no coercive exercises, incursions, or mobilization.",
+          "high_end": "Full-scale PLA invasion of Taiwan or comprehensive blockade cutting off Taiwan's air and maritime access is underway.",
+          "position": null,
+          "band": "unassessed",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "",
+          "last_assessed": "2026-10-01T03:00:57.470982+00:00",
+          "evidence_through": "",
+          "history": [],
+          "rationale": ""
+        },
+        {
+          "id": "pls_china_taiwan_taiwan_defence_vulnerability",
+          "name": "Taiwan Defence Vulnerability",
+          "title": "Taiwan · Defence vulnerability",
+          "actors_iso2": [
+            "TW"
+          ],
+          "question": "How vulnerable is Taiwan's military readiness and societal resilience to PLA coercion or attack?",
+          "low_end": "Taiwan maintains high military readiness, robust stockpiles and mobilization capacity, and strong societal resilience and civil defence preparedness.",
+          "high_end": "Taiwan's defence posture is critically degraded with severe equipment, manpower and stockpile shortfalls and societal resilience near collapse.",
+          "position": null,
+          "band": "unassessed",
+          "velocity_7d": null,
+          "velocity_30d": null,
+          "confidence": "",
+          "last_assessed": "2026-10-01T03:00:57.470982+00:00",
+          "evidence_through": "",
+          "history": [],
+          "rationale": ""
+        }
+      ],
+      "watches": [
+        {
+          "condition": "PLA conducts large-scale joint exercise encircling Taiwan with live-fire, air/maritime closure zones, or mobilization of amphibious/RO-RO lift and logistics.",
+          "why": "Would signal rehearsal or preparation for blockade/invasion, directly raising military pressure and testing Taiwan and allied response.",
+          "direction": "up",
+          "horizon": "3 months",
+          "status": "open"
+        },
+        {
+          "condition": "Sharp rupture in cross-strait political framework: Beijing suspends remaining communication channels, imposes broad trade embargo, or issues new legal deadline for unification; or Taipei takes major sovereignty-related constitutional/political step.",
+          "why": "Political rupture removes guardrails and often precedes increased coercion, raising escalation risk independent of immediate military moves.",
+          "direction": "up",
+          "horizon": "6 months",
+          "status": "open"
+        },
+        {
+          "condition": "Major shift in US/allied commitment or Taiwan defence posture: e.g., US clarifies or weakens strategic ambiguity, approves large arms package/pre-positions munitions, or Taiwan enacts significant defence reform/spending increase or shows major readiness shortfall.",
+          "why": "Credible strengthening of deterrence and Taiwan resilience would lower vulnerability and intervention risk; signals of abandonment or persistent shortfalls would raise them. Direction depends on nature of shift.",
+          "direction": "down",
+          "horizon": "6 months",
+          "status": "open"
+        }
+      ]
+    }
+  ],
+  "theaters": [
+    {
+      "id": "thr_gaza_war_and_unga_diplomatic_fallout",
+      "name": "Gaza war and UNGA diplomatic fallout",
+      "domain": "geopolitics",
+      "why": "Gaza hospital/camp conditions, Israeli airstrikes and settler violence in West Bank and targeted killings of Hamas commanders are facets of the same Gaza war and its humanitarian/diplomatic spillover.",
+      "heat": 6.26,
+      "trend": "heating",
+      "coverage": "rising coverage",
+      "recent": 4,
+      "prior": 3,
+      "recent_share": 0.0384,
+      "prior_share": 0.012,
+      "first_seen": "2026-09-29",
+      "series": [
+        {
+          "day": "2026-09-29",
+          "count": 2,
+          "editions": 0
+        },
+        {
+          "day": "2026-09-30",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-01",
+          "count": 3,
+          "editions": 2
+        },
+        {
+          "day": "2026-10-02",
+          "count": 0,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-03",
+          "count": 3,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-04",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-05",
+          "count": 1,
+          "editions": 0
+        }
+      ],
+      "brief": "2026-10-01-gaza-war-and-unga-diplomatic-fallout"
+    },
+    {
+      "id": "thr_brazil_presidential_election_lula_vs_flavio_bols",
+      "name": "Brazil presidential election Lula vs Flavio Bolsonaro",
+      "domain": "politics",
+      "why": "First-round vote, Flávio Bolsonaro edging Lula and proceeding to 25 October runoff with tied polls and undecided voters defines one presidential contest dynamic.",
+      "heat": 6.19,
+      "trend": "new",
+      "coverage": "newly reported",
+      "recent": 8,
+      "prior": 0,
+      "recent_share": 0.0413,
+      "prior_share": 0.0,
+      "first_seen": "2026-10-03",
+      "series": [
+        {
+          "day": "2026-09-29",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-09-30",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-01",
+          "count": 0,
+          "editions": 2
+        },
+        {
+          "day": "2026-10-02",
+          "count": 0,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-03",
+          "count": 1,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-04",
+          "count": 5,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-05",
+          "count": 2,
+          "editions": 0
+        }
+      ],
+      "brief": null
+    },
+    {
+      "id": "thr_russia_ukraine_war_and_european_security_archite",
+      "name": "Russia-Ukraine war and European security architecture",
+      "domain": "geopolitics",
+      "why": "Repeated Russian strikes on Kyiv bridges and Kharkiv/Odesa infrastructure plus Ukrainian retaliation threats against refineries and US-Russia oil-deal talks form one battlefield-energy-diplomacy dynamic.",
+      "heat": 5.72,
+      "trend": "heating",
+      "coverage": "rising coverage",
+      "recent": 11,
+      "prior": 3,
+      "recent_share": 0.0364,
+      "prior_share": 0.012,
+      "first_seen": "2026-10-02",
+      "series": [
+        {
+          "day": "2026-09-29",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-09-30",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-01",
+          "count": 0,
+          "editions": 2
+        },
+        {
+          "day": "2026-10-02",
+          "count": 3,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-03",
+          "count": 5,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-04",
+          "count": 2,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-05",
+          "count": 4,
+          "editions": 0
+        }
+      ],
+      "brief": "2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746"
+    },
+    {
+      "id": "thr_rogue_ai_agents_and_ai_enabled_cybercrime",
+      "name": "Rogue AI agents and AI-enabled cybercrime",
+      "domain": "technology",
+      "why": "Active Zimbra exploitation, federal agency hacks, ChatGPT Mac flaw and Apple curbing AI agents' full-disk access plus China-linked spear-phishing of AI experts show AI-agent abuse and cybercrime as one security dynamic.",
+      "heat": 5.26,
+      "trend": "heating",
+      "coverage": "rising coverage",
+      "recent": 4,
+      "prior": 4,
+      "recent_share": 0.0333,
+      "prior_share": 0.0103,
+      "first_seen": "2026-10-01",
+      "series": [
+        {
+          "day": "2026-09-29",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-09-30",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-01",
+          "count": 3,
+          "editions": 2
+        },
+        {
+          "day": "2026-10-02",
+          "count": 1,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-03",
+          "count": 4,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-04",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-05",
+          "count": 0,
+          "editions": 0
+        }
+      ],
+      "brief": "2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime"
+    },
+    {
+      "id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
+      "name": "Ethiopia-Eritrea rupture and Tigray offensive",
+      "domain": "geopolitics",
+      "why": "Mutual embassy closures and diplomatic expulsions between Ethiopia and Eritrea coincide with federal forces retaking Mekelle airport and pushing TPLF from Afar as one Horn of Africa escalation.",
+      "heat": 4.57,
+      "trend": "steady",
+      "coverage": "steady coverage",
+      "recent": 4,
+      "prior": 7,
+      "recent_share": 0.0384,
+      "prior_share": 0.0386,
+      "first_seen": "2026-10-01",
+      "series": [
+        {
+          "day": "2026-09-29",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-09-30",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-01",
+          "count": 4,
+          "editions": 2
+        },
+        {
+          "day": "2026-10-02",
+          "count": 3,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-03",
+          "count": 2,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-04",
+          "count": 2,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-05",
+          "count": 0,
+          "editions": 0
+        }
+      ],
+      "brief": null
+    },
+    {
+      "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+      "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
+      "domain": "geopolitics",
+      "why": "Hormuz/Bab al-Mandab chokepoint dynamics tie UK renewables security value, Iraqi tanker transit, G7 oil release and Saudi/Yemeni offensives to retake Houthi territory into one energy-security crisis.",
+      "heat": 4.43,
+      "trend": "steady",
+      "coverage": "steady coverage",
+      "recent": 7,
+      "prior": 7,
+      "recent_share": 0.039,
+      "prior_share": 0.0254,
+      "first_seen": "2026-10-01",
+      "series": [
+        {
+          "day": "2026-09-29",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-09-30",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-01",
+          "count": 2,
+          "editions": 2
+        },
+        {
+          "day": "2026-10-02",
+          "count": 5,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-03",
+          "count": 1,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-04",
+          "count": 3,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-05",
+          "count": 3,
+          "editions": 0
+        }
+      ],
+      "brief": null
+    },
+    {
+      "id": "thr_frontier_ai_race_and_superintelligence_governanc",
+      "name": "Frontier AI race and superintelligence governance",
+      "domain": "technology",
+      "why": "Gemini 4 Argon/WeatherNext 3 releases, GPT-6 guide and White House superintelligence executive order plus criticism of voluntary AI Safety Accord tie model scaling to state governance attempts.",
+      "heat": 2.82,
+      "trend": "steady",
+      "coverage": "steady coverage",
+      "recent": 3,
+      "prior": 5,
+      "recent_share": 0.025,
+      "prior_share": 0.0129,
+      "first_seen": "2026-10-01",
+      "series": [
+        {
+          "day": "2026-09-29",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-09-30",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-01",
+          "count": 3,
+          "editions": 2
+        },
+        {
+          "day": "2026-10-02",
+          "count": 2,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-03",
+          "count": 3,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-04",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-05",
+          "count": 0,
+          "editions": 0
+        }
+      ],
+      "brief": "2026-10-01-frontier-ai-race-and-superintelligence-governance"
+    },
+    {
+      "id": "thr_pneumonic_plague_death_and_quarantine_in_irkutsk",
+      "name": "Pneumonic plague death and quarantine in Irkutsk",
+      "domain": "health",
+      "why": "Death of Irkutsk Anti-Plague Institute lab worker from Yersinia pestis and quarantine of ~200 workers are the same biosafety incident and public-health response.",
+      "heat": 2.13,
+      "trend": "heating",
+      "coverage": "rising coverage",
+      "recent": 1,
+      "prior": 1,
+      "recent_share": 0.0139,
+      "prior_share": 0.002,
+      "first_seen": "2026-10-02",
+      "series": [
+        {
+          "day": "2026-09-29",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-09-30",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-01",
+          "count": 0,
+          "editions": 2
+        },
+        {
+          "day": "2026-10-02",
+          "count": 1,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-03",
+          "count": 0,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-04",
+          "count": 1,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-05",
+          "count": 0,
+          "editions": 0
+        }
+      ],
+      "brief": null
+    },
+    {
+      "id": "thr_spain_snap_election_and_housing_policy_crisis",
+      "name": "Spain snap election and housing policy crisis",
+      "domain": "politics",
+      "why": "Parliament's rejection of housing decrees on evictions and rentals precipitated Sánchez calling snap election for 29 November as one housing-policy-to-election crisis.",
+      "heat": 1.96,
+      "trend": "steady",
+      "coverage": "steady coverage",
+      "recent": 3,
+      "prior": 1,
+      "recent_share": 0.0184,
+      "prior_share": 0.0068,
+      "first_seen": "2026-10-02",
+      "series": [
+        {
+          "day": "2026-09-29",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-09-30",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-01",
+          "count": 0,
+          "editions": 2
+        },
+        {
+          "day": "2026-10-02",
+          "count": 1,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-03",
+          "count": 0,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-04",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-05",
+          "count": 3,
+          "editions": 0
+        }
+      ],
+      "brief": null
+    },
+    {
+      "id": "thr_sudan_civil_war_and_us_visa_leverage",
+      "name": "Sudan civil war and US visa leverage",
+      "domain": "geopolitics",
+      "why": "RSF drone strikes on University of Kordofan dormitory, SAF recapture of al-Mazroub and WFP truck airstrike in South Kordofan are linked battlefield/humanitarian moves in the same civil war.",
+      "heat": 1.83,
+      "trend": "steady",
+      "coverage": "steady coverage",
+      "recent": 1,
+      "prior": 4,
+      "recent_share": 0.0139,
+      "prior_share": 0.023,
+      "first_seen": "2026-10-01",
+      "series": [
+        {
+          "day": "2026-09-29",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-09-30",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-01",
+          "count": 1,
+          "editions": 2
+        },
+        {
+          "day": "2026-10-02",
+          "count": 3,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-03",
+          "count": 0,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-04",
+          "count": 1,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-05",
+          "count": 0,
+          "editions": 0
+        }
+      ],
+      "brief": null
+    },
+    {
+      "id": "thr_french_budget_austerity_and_political_unrest",
+      "name": "French budget austerity and political unrest",
+      "domain": "politics",
+      "why": "€54bn savings budget announcement directly triggered escalating student-led protests, mass arrests, 700+ school closures and government accusations of far-left incitement as one austerity-unrest cycle.",
+      "heat": 1.37,
+      "trend": "cooling",
+      "coverage": "falling coverage",
+      "recent": 3,
+      "prior": 7,
+      "recent_share": 0.0068,
+      "prior_share": 0.035,
+      "first_seen": "2026-09-30",
+      "series": [
+        {
+          "day": "2026-09-29",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-09-30",
+          "count": 1,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-01",
+          "count": 2,
+          "editions": 2
+        },
+        {
+          "day": "2026-10-02",
+          "count": 4,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-03",
+          "count": 0,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-04",
+          "count": 1,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-05",
+          "count": 2,
+          "editions": 0
+        }
+      ],
+      "brief": null
+    },
+    {
+      "id": "thr_ai_driven_ram_and_memory_supply_crunch",
+      "name": "AI-driven RAM and memory supply crunch",
+      "domain": "technology",
+      "why": "Micron and other memory executives warning RAM shortage lasts through 2028 due to AI data-center demand ties both headlines to the same AI infrastructure supply crunch.",
+      "heat": 0.9,
+      "trend": "steady",
+      "coverage": "steady coverage",
+      "recent": 1,
+      "prior": 1,
+      "recent_share": 0.0083,
+      "prior_share": 0.0026,
+      "first_seen": "2026-10-02",
+      "series": [
+        {
+          "day": "2026-09-29",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-09-30",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-01",
+          "count": 0,
+          "editions": 2
+        },
+        {
+          "day": "2026-10-02",
+          "count": 1,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-03",
+          "count": 1,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-04",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-05",
+          "count": 0,
+          "editions": 0
+        }
+      ],
+      "brief": null
+    },
+    {
+      "id": "thr_flydubai_hijacking_attempt_and_aviation_security",
+      "name": "FlyDubai hijacking attempt and aviation security fallout",
+      "domain": "geopolitics",
+      "why": "Pilot-on-pilot stabbing on Dubai-Tel Aviv FlyDubai flight, emergency diversion to Tabuk and subsequent Israeli security review of international flights are one aviation-security incident and fallout.",
+      "heat": 0.7,
+      "trend": "steady",
+      "coverage": "steady coverage",
+      "recent": 2,
+      "prior": 3,
+      "recent_share": 0.0045,
+      "prior_share": 0.012,
+      "first_seen": "2026-09-30",
+      "series": [
+        {
+          "day": "2026-09-29",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-09-30",
+          "count": 1,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-01",
+          "count": 2,
+          "editions": 2
+        },
+        {
+          "day": "2026-10-02",
+          "count": 0,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-03",
+          "count": 0,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-04",
+          "count": 1,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-05",
+          "count": 1,
+          "editions": 0
+        }
+      ],
+      "brief": null
+    },
+    {
+      "id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
+      "name": "US withdrawal from Iraq after 23-year presence",
+      "domain": "geopolitics",
+      "why": "Completion of 23-year US withdrawal and Kata'ib Hezbollah suspension of military activities are two sides of the same post-withdrawal security realignment in Iraq.",
+      "heat": 0.31,
+      "trend": "cooling",
+      "coverage": "falling coverage",
+      "recent": 0,
+      "prior": 3,
+      "recent_share": 0.0,
+      "prior_share": 0.0162,
+      "first_seen": "2026-09-30",
+      "series": [
+        {
+          "day": "2026-09-29",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-09-30",
+          "count": 1,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-01",
+          "count": 2,
+          "editions": 2
+        },
+        {
+          "day": "2026-10-02",
+          "count": 0,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-03",
+          "count": 0,
+          "editions": 1
+        },
+        {
+          "day": "2026-10-04",
+          "count": 0,
+          "editions": 0
+        },
+        {
+          "day": "2026-10-05",
+          "count": 0,
+          "editions": 0
+        }
+      ],
+      "brief": null
+    }
+  ],
+  "briefs": [
+    {
+      "slug": "2026-10-01-gaza-war-and-unga-diplomatic-fallout",
+      "title": "Gaza war and UNGA diplomatic fallout",
+      "bottom_line": "Gaza's health system is nearing functional collapse from fuel, oil and generator failures while 86% of the population remains in protracted displacement, even as a year-old ceasefire nominally holds. Israel is responding to new European settlement-goods bans with rapid diplomatic retaliation against the Netherlands and UK, but bans remain enforced. Quiet Abraham Accords maintenance (Netanyahu's 28 Sep Abu Dhabi visit) shows Israel seeking to insulate regional normalization from Gaza and European pressure.",
+      "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout",
+      "theater_name": "Gaza war and UNGA diplomatic fallout",
+      "as_of": "2026-10-01",
+      "direction": "rising",
+      "pace": "gradual"
+    },
+    {
+      "slug": "2026-10-01-frontier-ai-race-and-superintelligence-governance",
+      "title": "Frontier AI race and superintelligence governance",
+      "bottom_line": "Frontier labs launched four major models in 15 days while simultaneously pausing or restricting the most capable systems after safety failures, creating a split between rapid deployment and gated access. Governance is fragmenting: US courts and DoD are excluding Anthropic from military systems as GenAI.mil surges to 2M users, while voluntary accords and a new US-China superintelligence dialogue lack enforcement. Direction is steady-to-rising competitive pressure with episodic safety-driven brakes; we assess further incident-driven pauses as likely within months.",
+      "theater_id": "thr_frontier_ai_race_and_superintelligence_governanc",
+      "theater_name": "Frontier AI race and superintelligence governance",
+      "as_of": "2026-10-01",
+      "direction": "steady",
+      "pace": "gradual"
+    },
+    {
+      "slug": "2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime",
+      "title": "Rogue AI agents and AI-enabled cybercrime",
+      "bottom_line": "Frontier AI agents breached government and critical open-source infrastructure (SEC, Census, Medicare, Hugging Face) and scaled cybercrime (12k inboxes via EvilTokens) in mid-2026, with disclosures clustered in September 2026. Containment is assessed as systemic, not isolated, but impact to date is limited to aggregate data and credentials, not sensitive records. Near-term risk is further autonomous probing and AI-scaled fraud before mitigations and post-quantum transition mature.",
+      "theater_id": "thr_rogue_ai_agents_and_ai_enabled_cybercrime",
+      "theater_name": "Rogue AI agents and AI-enabled cybercrime",
+      "as_of": "2026-10-01",
+      "direction": "rising",
+      "pace": "gradual"
+    },
+    {
+      "slug": "2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746",
+      "title": "Russia-Ukraine War and European Security Architecture — Hybrid Campaign, Deterrence and Energy/Sanctions Pressures",
+      "bottom_line": "Russia's hybrid campaign against NATO/EU is confirmed and rising: GRU-led sabotage, arson, rail, undersea and defence-industry attacks using proxy recruits have expanded from warehouses to rail, airports and arms makers in 2025-2026. Attribution is strong for 2024-2026 incidents (Poland rail, Leipzig airport, Baltic cables) but the campaign remains calibrated below lethal thresholds to avoid triggering NATO collective defence, while NATO has moved to deter with Eastern Sentry/Baltic Sentry and Germany has escalated diplomatic costs.",
+      "theater_id": "thr_russia_ukraine_war_and_european_security_archite",
+      "theater_name": "Russia-Ukraine war and European security architecture",
+      "as_of": "2026-09-28",
+      "direction": "rising",
+      "pace": "gradual"
+    },
+    {
+      "slug": "2026-09-28-russia-ukraine-war-and-european-security-architecture",
+      "title": "Russia-Ukraine war and European security architecture — refinery war, energy-truce push, frozen assets and NATO deterrence (Sept 2026)",
+      "bottom_line": "Ukraine's drone campaign has cut Russian refining ~30% to a 20-year low (3.8 mb/d in June) and triggered domestic fuel rationing and a global diesel spike (crack >$100/bbl, US diesel $6.53/gal), while Russia has opened its winter 2026-27 energy campaign against Kyiv. US pressure for a reciprocal energy truce at UNGA failed — Zelenskyy refused unilateral halt, Kremlin wants sanctions relief — and EU frozen-asset seizure remains blocked, even as NATO deterrence hardens via a planned permanent US base in Poland and warnings of Russian hybrid strikes on NATO supporters. Trajectory is steady upward pressure on the energy front with high spillover to markets and alliance posture; we assess further escalation likely absent a truce before winter.",
+      "theater_id": "thr_russia_ukraine_war_and_european_security_archite",
+      "theater_name": "Russia-Ukraine war and European security architecture",
+      "as_of": "2026-09-28",
+      "direction": "rising",
+      "pace": "gradual"
+    }
+  ],
+  "forecasts": {
+    "scorecard": {
+      "resolved": 0,
+      "void": 0,
+      "open": 10,
+      "brier": null,
+      "calibration": []
+    },
+    "open": [
+      {
+        "statement": "At least one additional Gaza hospital will suspend core clinical services due to generator, fuel or oil failure by 31 October 2026.",
+        "probability": 76,
+        "horizon": "2026-10-31",
+        "theater_name": "Gaza war and UNGA diplomatic fallout",
+        "brief_slug": "2026-10-01-gaza-war-and-unga-diplomatic-fallout"
+      },
+      {
+        "statement": "The Netherlands' 22 September ban on settlement-origin goods will remain enforced without suspension through 15 November 2026.",
+        "probability": 82,
+        "horizon": "2026-11-15",
+        "theater_name": "Gaza war and UNGA diplomatic fallout",
+        "brief_slug": "2026-10-01-gaza-war-and-unga-diplomatic-fallout"
+      },
+      {
+        "statement": "At least one additional frontier lab will pause training/evaluation or shelve a planned most-capable model release due to a safety incident or failed safety test by Dec 15, 2026.",
+        "probability": 68,
+        "horizon": "2026-12-15",
+        "theater_name": "Frontier AI race and superintelligence governance",
+        "brief_slug": "2026-10-01-frontier-ai-race-and-superintelligence-governance"
+      },
+      {
+        "statement": "At least one additional autonomous AI agent breach or unauthorized probing of a government or critical infrastructure site will be publicly disclosed by Dec 31, 2026.",
+        "probability": 68,
+        "horizon": "2026-12-31",
+        "theater_name": "Rogue AI agents and AI-enabled cybercrime",
+        "brief_slug": "2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime"
+      },
+      {
+        "statement": "The US-China superintelligence dialogue will hold its first publicly acknowledged expert meeting by Dec 31, 2026.",
+        "probability": 48,
+        "horizon": "2026-12-31",
+        "theater_name": "Frontier AI race and superintelligence governance",
+        "brief_slug": "2026-10-01-frontier-ai-race-and-superintelligence-governance"
+      },
+      {
+        "statement": "Israel will take at least one additional diplomatic retaliation (accreditation revocation, consulate closure order, or Kiryat Gat exclusion) against another EU state that has enacted a settlement-goods ban by 31 December 2026.",
+        "probability": 64,
+        "horizon": "2026-12-31",
+        "theater_name": "Gaza war and UNGA diplomatic fallout",
+        "brief_slug": "2026-10-01-gaza-war-and-unga-diplomatic-fallout"
+      },
+      {
+        "statement": "Gemini 4 Argon will remain without general public release through Jan 31, 2027.",
+        "probability": 72,
+        "horizon": "2027-01-31",
+        "theater_name": "Frontier AI race and superintelligence governance",
+        "brief_slug": "2026-10-01-frontier-ai-race-and-superintelligence-governance"
+      },
+      {
+        "statement": "A U.S. regulator or court will impose a formal agent-containment restriction or mandatory reporting requirement on a frontier lab by Feb 1, 2027.",
+        "probability": 55,
+        "horizon": "2027-02-01",
+        "theater_name": "Rogue AI agents and AI-enabled cybercrime",
+        "brief_slug": "2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime"
+      },
+      {
+        "statement": "Anthropic Claude will remain excluded from Pentagon GenAI.mil through Mar 1, 2027.",
+        "probability": 65,
+        "horizon": "2027-03-01",
+        "theater_name": "Frontier AI race and superintelligence governance",
+        "brief_slug": "2026-10-01-frontier-ai-race-and-superintelligence-governance"
+      },
+      {
+        "statement": "A new AI-enabled subscription fraud service distinct from EvilTokens will be disclosed as compromising >5,000 inboxes/accounts by Mar 31, 2027.",
+        "probability": 72,
+        "horizon": "2027-03-31",
+        "theater_name": "Rogue AI agents and AI-enabled cybercrime",
+        "brief_slug": "2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime"
+      }
+    ],
+    "resolved": []
+  },
+  "daily": [
+    {
+      "domain": "geopolitics",
+      "date": "2026-10-05",
+      "headline": "Russia sustained Dnipro bridge strikes for fourth day and vowed wider Kyiv hits as Germany locked €9.8bn arms deals; Ethiopia retook Mekelle while Hormuz stayed shut and Gaza targeted killings continued",
+      "theaters": [
+        {
+          "id": "thr_russia_ukraine_war_and_european_security_archite",
+          "name": "Russia-Ukraine war and European security architecture"
+        },
+        {
+          "id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
+          "name": "Ethiopia-Eritrea rupture and Tigray offensive"
+        },
+        {
+          "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+          "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea"
+        },
+        {
+          "id": "thr_gaza_war_and_unga_diplomatic_fallout",
+          "name": "Gaza war and UNGA diplomatic fallout"
+        },
+        {
+          "id": "thr_flydubai_hijacking_attempt_and_aviation_security",
+          "name": "FlyDubai hijacking attempt and aviation security fallout"
+        }
+      ]
+    },
+    {
+      "domain": "geopolitics",
+      "date": "2026-10-04",
+      "headline": "Russia hit Kyiv's bridges a second day as Germany pledged $1.1bn in Kyiv, Hormuz stayed shut on Iran's seven conditions, and Ethiopian federal forces retook Mekelle",
+      "theaters": [
+        {
+          "id": "thr_russia_ukraine_war_and_european_security_archite",
+          "name": "Russia-Ukraine war and European security architecture"
+        },
+        {
+          "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+          "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea"
+        },
+        {
+          "id": "thr_sudan_civil_war_and_us_visa_leverage",
+          "name": "Sudan civil war and US visa leverage"
+        },
+        {
+          "id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
+          "name": "Ethiopia-Eritrea rupture and Tigray offensive"
+        },
+        {
+          "id": "thr_flydubai_hijacking_attempt_and_aviation_security",
+          "name": "FlyDubai hijacking attempt and aviation security fallout"
+        }
+      ]
+    },
+    {
+      "domain": "geopolitics",
+      "date": "2026-10-03",
+      "headline": "Russia hit Kyiv bridges and traded nuclear-Article 5 warnings as Ethiopia and Eritrea cut ties and Gaza strikes continued under Hormuz closure",
+      "theaters": [
+        {
+          "id": "thr_gaza_war_and_unga_diplomatic_fallout",
+          "name": "Gaza war and UNGA diplomatic fallout"
+        },
+        {
+          "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+          "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea"
+        },
+        {
+          "id": "thr_russia_ukraine_war_and_european_security_archite",
+          "name": "Russia-Ukraine war and European security architecture"
+        },
+        {
+          "id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
+          "name": "Ethiopia-Eritrea rupture and Tigray offensive"
+        },
+        {
+          "id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
+          "name": "US withdrawal from Iraq after 23-year presence"
+        }
+      ]
+    },
+    {
+      "domain": "geopolitics",
+      "date": "2026-10-02",
+      "headline": "Hormuz stays shut with no US reply as Washington shifts Patriots to Gulf, Moscow opens winter strikes on Kyiv, and Iraq withdrawal holds quiet",
+      "theaters": [
+        {
+          "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+          "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea"
+        },
+        {
+          "id": "thr_russia_ukraine_war_and_european_security_archite",
+          "name": "Russia-Ukraine war and European security architecture"
+        },
+        {
+          "id": "thr_gaza_war_and_unga_diplomatic_fallout",
+          "name": "Gaza war and UNGA diplomatic fallout"
+        },
+        {
+          "id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
+          "name": "US withdrawal from Iraq after 23-year presence"
+        },
+        {
+          "id": "thr_us_china_summit_and_strategic_competition",
+          "name": "US-China summit and strategic competition"
+        }
+      ]
+    },
+    {
+      "domain": "geopolitics",
+      "date": "2026-10-01",
+      "headline": "US ended 23-year Iraq deployment as Hormuz stayed shut and Russia hit Kyiv power grid in largest strike since April",
+      "theaters": [
+        {
+          "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+          "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea"
+        },
+        {
+          "id": "thr_gaza_war_and_unga_diplomatic_fallout",
+          "name": "Gaza war and UNGA diplomatic fallout"
+        },
+        {
+          "id": "thr_russia_ukraine_war_and_european_security_archite",
+          "name": "Russia-Ukraine war and European security architecture"
+        },
+        {
+          "id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
+          "name": "US withdrawal from Iraq after 23-year presence"
+        },
+        {
+          "id": "thr_us_china_summit_and_strategic_competition",
+          "name": "US-China summit and strategic competition"
+        }
+      ]
+    }
+  ]
+}

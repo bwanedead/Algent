@@ -412,13 +412,6 @@
         "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive"
       },
       {
-        "id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
-        "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
-        "band": "severe",
-        "position": 65.0,
-        "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive"
-      },
-      {
         "id": "pls_sahel_horn_foreign_military_entanglement_horn",
         "name": "Foreign Military Entanglement and Intelligence Competition in the Horn",
         "band": "severe",

@@ -3,7 +3,7 @@
   "theater_id": "thr_flydubai_hijacking_attempt_and_aviation_security",
   "name": "FlyDubai hijacking attempt and aviation security fallout",
   "domain": "geopolitics",
-  "built_at": "2026-10-05T09:23:51.294012+00:00",
+  "built_at": "2026-10-05T09:41:18.336483+00:00",
   "first_seen": "2026-09-30",
   "last_seen": "2026-10-05",
   "days_covered": 2,
@@ -15,7 +15,7 @@
   },
   "current": {
     "date": "2026-10-05",
-    "bottom_line": "No new verified facts have emerged since 4 October; the only new signal is a single-source reported indication on 5 October that the co-pilot acted alone, which remains unverified. The core picture stands: the 30 September hijacking attempt on FlyDubai FZ1073 was contained at Tabuk with no fatalities, and fallout remains focused on accountability and prevention. Confidence is high on the flight sequence and diversion, low on motive and vetting until UAE Attorney-General and Australian findings appear.",
+    "bottom_line": "No new official findings published since 4 October; the picture remains the contained 30 September attack on FZ1073 and widening accountability reviews. A single-source report on 5 October that early indications point to a lone actor, if confirmed, would narrow the investigation to vetting failures rather than a directed network. Confidence is high on the attack sequence and diversion, moderate on motive and vetting gaps pending UAE and Israeli updates.",
     "escalation": {
       "direction": "steady",
       "pace": "flat"
@@ -77,9 +77,9 @@
   "timeline": [
     {
       "date": "2026-10-05",
-      "headline": "Early indications co-pilot acted alone - single-source report",
-      "detail": "On 2026-10-05 a single outlet reported early indications that the co-pilot acted alone in the midair attack. No transcript, no named official, and no corroborating researched finding was provided in this run. If confirmed, it would narrow the investigation from network links to individual motive and crew-vetting failure.",
-      "where": "unspecified",
+      "headline": "Early indications point to lone-actor attack, no network found yet",
+      "detail": "Single-source video report on 5 October said early indications show the co-pilot acted alone in the 30 September axe attack on FZ1073. No new UAE Attorney-General statement has been published since the 3 October 'terrorist act' framing; investigations into motive, links and prior planning were said to continue.",
+      "where": "sea",
       "verification": "reported",
       "sources": [
         "https://www.thehindu.com/videos/flydubai-co-pilot-acted-alone-in-midair-attack-early-indications-show/article71546447.ece"
@@ -94,7 +94,9 @@
       "verification": "researched",
       "sources": [
         "https://www.arabnews.com/middle-east/netanyahu-orders-security-review-of-international-flights-to-israel-after-flydubai-attack-3004607",
-        "https://www.dawn.com/news/2034750"
+        "https://www.dawn.com/news/2034750",
+        "https://www.haaretz.com/israel-news/israel-security/2026-10-04/ty-article/.premium/netanyahu-orders-aviation-guidelines-probe-four-days-after-flydubai-incident/000001a1-07c1-dca1-afb9-37c9f6a30001",
+        "https://www.washingtonpost.com/world/2026/10/04/israel-orders-security-review-incoming-flights-after-co-pilot-attack/"
       ],
       "from": "/geopolitics/2026-10-04"
     },
@@ -121,7 +123,8 @@
         "https://www.chinadaily.com.cn/a/202610/03/WS6ac0b21ce4b06d4aa05614d4.html",
         "https://www.france24.com/en/middle-east/20261003-co-pilot-on-flydubai-flight-was-banned-from-flying-by-oman-for-holding-extremist-views",
         "https://www.dw.com/en/co-pilot-on-flydubai-flight-was-banned-from-flying-by-oman/a-79526641",
-        "https://www.cbsnews.com/news/flydubai-co-pilot-alleged-hijacking-lone-wolf/"
+        "https://www.cbsnews.com/news/flydubai-co-pilot-alleged-hijacking-lone-wolf/",
+        "https://www.nbcnews.com/world/middle-east/flydubai-pilot-attacked-captain-cockpits-crash-axe-attempted-terrorist-rcna601259"
       ],
       "from": "/geopolitics/2026-10-04"
     },
@@ -169,6 +172,22 @@
   ],
   "places": [
     {
+      "name": "Jerusalem",
+      "country": "Israel",
+      "lat": 31.7683,
+      "lon": 35.2137,
+      "count": 2,
+      "last_date": "2026-10-04"
+    },
+    {
+      "name": "Abu Dhabi",
+      "country": "United Arab Emirates",
+      "lat": 24.4539,
+      "lon": 54.3773,
+      "count": 2,
+      "last_date": "2026-10-03"
+    },
+    {
       "name": "Tabuk",
       "country": "Saudi Arabia",
       "lat": 28.3835,
@@ -177,28 +196,12 @@
       "last_date": "2026-10-02"
     },
     {
-      "name": "Jerusalem",
-      "country": "Israel",
-      "lat": 31.7683,
-      "lon": 35.2137,
-      "count": 1,
-      "last_date": "2026-10-04"
-    },
-    {
       "name": "Melbourne",
       "country": "Australia",
       "lat": -37.8136,
       "lon": 144.9631,
       "count": 1,
       "last_date": "2026-10-04"
-    },
-    {
-      "name": "Abu Dhabi",
-      "country": "United Arab Emirates",
-      "lat": 24.4539,
-      "lon": 54.3773,
-      "count": 1,
-      "last_date": "2026-10-03"
     },
     {
       "name": "Tel Aviv",
@@ -597,22 +600,22 @@
     },
     "points": [
       {
-        "x": 557.8,
-        "y": 588.8,
-        "label": "Tabuk",
-        "date": "2026-10-02",
-        "verification": "researched",
-        "n": 1,
-        "weight": 1.0
-      },
-      {
         "x": 470.2,
         "y": 335.0,
         "label": "Jerusalem",
         "date": "2026-10-04",
         "verification": "researched",
-        "n": 2,
-        "weight": 0.579
+        "n": 1,
+        "weight": 1.0
+      },
+      {
+        "x": 557.8,
+        "y": 588.8,
+        "label": "Tabuk",
+        "date": "2026-10-02",
+        "verification": "researched",
+        "n": 3,
+        "weight": 0.863
       },
       {
         "x": 442.2,
@@ -621,16 +624,22 @@
         "date": "2026-09-30",
         "verification": "researched",
         "n": 5,
-        "weight": 0.475
+        "weight": 0.41
       }
     ],
-    "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate. Shipping data: IMF PortWatch. Not on this map (too far away): 3 Melbourne, 4 Abu Dhabi."
+    "credit": "Base map: Natural Earth (public domain). Locations: Ohmega, from today's developments; approximate. Shipping data: IMF PortWatch. Not on this map (too far away): 2 Abu Dhabi, 4 Melbourne."
   },
   "actors": [
     {
       "name": "co-pilot",
       "mentions": 2,
       "first": "2026-09-30",
+      "last": "2026-10-04"
+    },
+    {
+      "name": "Benjamin Netanyahu",
+      "mentions": 1,
+      "first": "2026-10-04",
       "last": "2026-10-04"
     },
     {
@@ -646,7 +655,13 @@
       "last": "2026-09-30"
     },
     {
-      "name": "FlyDubai co-pilot",
+      "name": "Hamad Saif Al Shamsi",
+      "mentions": 1,
+      "first": "2026-10-03",
+      "last": "2026-10-03"
+    },
+    {
+      "name": "Hamam al-Hammami",
       "mentions": 1,
       "first": "2026-10-05",
       "last": "2026-10-05"
@@ -694,25 +709,13 @@
       "last": "2026-09-30"
     },
     {
-      "name": "Transport Minister Miri Regev",
+      "name": "Shmuel Ben Ezra",
       "mentions": 1,
       "first": "2026-10-04",
       "last": "2026-10-04"
     },
     {
-      "name": "UAE Attorney-General Hamad Saif Al Shamsi",
-      "mentions": 1,
-      "first": "2026-10-03",
-      "last": "2026-10-03"
-    },
-    {
-      "name": "UAE authorities",
-      "mentions": 1,
-      "first": "2026-10-02",
-      "last": "2026-10-02"
-    },
-    {
-      "name": "Victorian Joint Counter Terrorism Team (AFP, Victoria Police, ASIO)",
+      "name": "Transport Minister Miri Regev",
       "mentions": 1,
       "first": "2026-10-04",
       "last": "2026-10-04"
