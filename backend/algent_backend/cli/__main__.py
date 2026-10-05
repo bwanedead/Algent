@@ -58,6 +58,12 @@ def main(argv: list[str] | None = None) -> int:
         for module in modules:
             module.add_parser(commands)
 
+    # Every command prints one JSON document, and the world's names are not cp1252: on Windows a redirected
+    # stdout defaulted to the console code page and a Turkish dotless i in Erdogan's statements crashed the
+    # 10-05 daily at its final print, after the work was done. UTF-8 out, whatever the console.
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
     args = parser.parse_args(argv)
     return args.handler(args)
 
