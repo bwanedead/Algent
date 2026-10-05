@@ -3,7 +3,7 @@
   "theater_id": "thr_sudan_civil_war_and_us_visa_leverage",
   "name": "Sudan civil war and US visa leverage",
   "domain": "geopolitics",
-  "built_at": "2026-10-05T02:19:08.047608+00:00",
+  "built_at": "2026-10-05T02:29:50.784371+00:00",
   "first_seen": "2026-09-28",
   "last_seen": "2026-10-04",
   "days_covered": 1,
@@ -15,9 +15,9 @@
   },
   "current": {
     "date": "2026-10-04",
-    "bottom_line": "Kordofan was the focal point Oct 1-4: a confirmed RSF drone strike on a university dormitory in El Obeid killed civilians, a reported WFP truck strike killed an aid driver in South Kordofan, and the army claimed a town recapture nearby. A UK statement at the UN on Oct 2 publicly blamed external weapons flows for sustaining the war. Confidence is high for the initial dormitory toll and the UK statement; the higher death toll, the town recapture, and the WFP strike rest on single unverified reports.",
+    "bottom_line": "Kordofan became the focal point of Sudan's war in the last three days, with a confirmed RSF drone strike on civilian student housing in El Obeid killing five and wounding 47, a reported deadly strike on a WFP aid truck in South Kordofan, and a reported SAF recapture of al-Mazroub. The UK on Oct 2 publicly blamed external weapons flows for sustaining the conflict. No new US visa-leverage actions appeared in the evidence window.",
     "escalation": {
-      "direction": "steady",
+      "direction": "rising",
       "pace": "gradual"
     },
     "coverage": "rising coverage",
@@ -63,7 +63,7 @@
   "escalation_history": [
     {
       "date": "2026-10-04",
-      "direction": "steady",
+      "direction": "rising",
       "pace": "gradual"
     }
   ],
@@ -107,8 +107,8 @@
   "timeline": [
     {
       "date": "2026-10-04",
-      "headline": "Airstrike hits WFP truck in South Kordofan, killing driver",
-      "detail": "On Oct 4, WFP reported an airstrike on a UN truck in South Kordofan state killed the driver. Reporting did not attribute the strike to a specific belligerent and provided no further casualty details.",
+      "headline": "WFP reports airstrike on UN aid truck in South Kordofan kills driver",
+      "detail": "On 2026-10-04 the World Food Programme reported an airstrike on a UN truck in South Kordofan state that killed the driver, per a single outlet report.",
       "where": "South Kordofan, Sudan",
       "verification": "reported",
       "sources": [
@@ -118,8 +118,8 @@
     },
     {
       "date": "2026-10-02",
-      "headline": "UK at UN blames external weapons flows for sustaining Sudan war",
-      "detail": "On Oct 2 at the UN Third Committee, UK Permanent Representative Sarah MacIntosh said the illegal flow of weapons and external support is sustaining the Sudan conflict and demanded all states stop supporting warring parties, respect international humanitarian law, and use influence to protect civilians and secure humanitarian access.",
+      "headline": "UK at UN blames external arms flows for sustaining Sudan war",
+      "detail": "On 2026-10-02 the UK Permanent Representative to the UN said the illegal flow of weapons and external support is sustaining the conflict in Sudan and demanded all states stop supporting the warring parties, respect international humanitarian law and use influence to protect civilians and secure humanitarian access.",
       "where": "United Nations, New York",
       "verification": "researched",
       "sources": [
@@ -129,8 +129,8 @@
     },
     {
       "date": "2026-10-02",
-      "headline": "SAF says it recaptured al-Mazroub in North Kordofan",
-      "detail": "On Oct 2, Sudan's armed forces announced they had recaptured the North Kordofan town of al-Mazroub, described as an RSF stronghold. Single-source report; no independent confirmation in evidence provided.",
+      "headline": "SAF says it recaptured North Kordofan town of al-Mazroub",
+      "detail": "On 2026-10-02 Sudan's armed forces announced they had recaptured the North Kordofan town of al-Mazroub, described as an RSF stronghold, per a single outlet report.",
       "where": "al-Mazroub, North Kordofan, Sudan",
       "verification": "reported",
       "sources": [
@@ -140,13 +140,12 @@
     },
     {
       "date": "2026-10-01",
-      "headline": "RSF drone strike hits University of Kordofan dormitory in El Obeid",
-      "detail": "On Oct 1, a drone strike hit student housing of the University of Kordofan in El Obeid, North Kordofan. Researched confirmation: 5 civilians killed and 47 wounded. One outlet later reported Oct 2 that the death toll had risen to 10 (single source, unverified). RSF attributed as attacker in initial reporting.",
+      "headline": "RSF drone strike hits University of Kordofan dormitory in El Obeid, killing 5 confirmed",
+      "detail": "On 2026-10-01 a drone strike hit student housing belonging to the University of Kordofan in El Obeid, North Kordofan, killing five civilians and wounding 47, per confirmed research. The strike was attributed to the RSF in multiple outlet reports. One outlet later reported the death toll had risen to 10, single source, not confirmed by our research.",
       "where": "El Obeid, North Kordofan, Sudan",
       "verification": "researched",
       "sources": [
-        "https://sudantribune.com/article/319476",
-        "https://www.arabnews.com/middle-east/drone-strikes-on-dormitory-shelter-kill-10-in-sudans-el-obeid-3004303"
+        "https://sudantribune.com/article/319476"
       ],
       "from": "/geopolitics/2026-10-04"
     }
@@ -415,16 +414,16 @@
   },
   "actors": [
     {
+      "name": "Rapid Support Forces (RSF)",
+      "mentions": 2,
+      "first": "2026-10-01",
+      "last": "2026-10-02"
+    },
+    {
       "name": "Ambassador Sarah MacIntosh",
       "mentions": 1,
       "first": "2026-10-02",
       "last": "2026-10-02"
-    },
-    {
-      "name": "Rapid Support Forces (RSF)",
-      "mentions": 1,
-      "first": "2026-10-01",
-      "last": "2026-10-01"
     },
     {
       "name": "Sudanese Armed Forces (SAF)",
@@ -439,6 +438,18 @@
       "last": "2026-10-02"
     },
     {
+      "name": "United Nations aid convoy",
+      "mentions": 1,
+      "first": "2026-10-04",
+      "last": "2026-10-04"
+    },
+    {
+      "name": "University of Kordofan students/civilians",
+      "mentions": 1,
+      "first": "2026-10-01",
+      "last": "2026-10-01"
+    },
+    {
       "name": "World Food Programme (WFP)",
       "mentions": 1,
       "first": "2026-10-04",
@@ -448,7 +459,7 @@
   "relations": [],
   "figures": [
     {
-      "label": "civilians killed in University of Kordofan dormitory drone strike (El Obeid",
+      "label": "civilians killed in University of Kordofan dormitory drone strike",
       "unit": "people",
       "series": [
         {
@@ -459,7 +470,7 @@
       ]
     },
     {
-      "label": "wounded in University of Kordofan dormitory drone strike (El Obeid",
+      "label": "wounded in University of Kordofan dormitory drone strike",
       "unit": "people",
       "series": [
         {
@@ -476,16 +487,8 @@
     {
       "who": "Ambassador Sarah MacIntosh",
       "role": "UK Permanent Representative to the UN",
-      "said": "The illegal flow of weapons and external support is sustaining that conflict.",
-      "quote": false,
-      "when": "2026-10-02",
-      "source": "https://www.gov.uk/government/speeches/the-uk-will-defend-universal-rights-without-fear-or-favour-uk-statement-at-the-un-third-committee"
-    },
-    {
-      "who": "Ambassador Sarah MacIntosh",
-      "role": "UK Permanent Representative to the UN",
-      "said": "All states must stop supporting the warring parties, respect international humanitarian law and use their influence to protect civilians, secure humanitarian access, and end the violence.",
-      "quote": false,
+      "said": "Ambassador Sarah MacIntosh",
+      "quote": true,
       "when": "2026-10-02",
       "source": "https://www.gov.uk/government/speeches/the-uk-will-defend-universal-rights-without-fear-or-favour-uk-statement-at-the-un-third-committee"
     }
@@ -534,14 +537,7 @@
       "url": "https://www.gov.uk/government/speeches/the-uk-will-defend-universal-rights-without-fear-or-favour-uk-statement-at-the-un-third-committee"
     }
   ],
-  "links": [
-    {
-      "theater_id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
-      "name": "Ethiopia-Eritrea rupture and Tigray offensive",
-      "link": "Ethiopia-Eritrea rupture and Tigray offensive <-> Sudan civil war and US visa leverage: Egypt, Eritrea and Sudan are actors in both theaters, with a planned Oct 5 meeting in El-Alamein of Egypt, Eritrea, Somalia and Sudan tying the Horn rupture to Sudan's war, while the UK on Oct 2 blamed external weapons flows for sustaining Sudan's war as the US warned Ethiopia-Eritrea tensions risk regional war.",
-      "date": "2026-10-04"
-    }
-  ],
+  "links": [],
   "reports": [
     {
       "date": "2026-10-04",

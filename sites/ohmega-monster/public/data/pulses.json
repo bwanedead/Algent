@@ -1,6 +1,6 @@
 {
   "schema": "ohmega.pulses/1",
-  "built_at": "2026-10-05T02:19:40.447877+00:00",
+  "built_at": "2026-10-05T02:29:51.920947+00:00",
   "pulses": [
     {
       "id": "pls_ai_geopolitics_ai_safety_governance_fracture",
@@ -720,8 +720,8 @@
       "position": null,
       "band": "unassessed",
       "confidence": "",
-      "last_assessed": "2026-10-05T02:02:06.240722+00:00",
-      "evidence_through": "2026-10-04",
+      "last_assessed": "2026-10-05T02:26:53.984541+00:00",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [],
       "title": "Sahel–Horn of Africa · Displacement and Humanitarian Collapse Pressure",
@@ -741,8 +741,8 @@
       "position": 58.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-05T02:02:06.240722+00:00",
-      "evidence_through": "2026-10-04",
+      "last_assessed": "2026-10-05T02:26:53.984541+00:00",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {
@@ -769,8 +769,8 @@
       "position": 70.0,
       "band": "severe",
       "confidence": "high",
-      "last_assessed": "2026-10-05T02:02:06.240722+00:00",
-      "evidence_through": "2026-10-04",
+      "last_assessed": "2026-10-05T02:26:53.984541+00:00",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {

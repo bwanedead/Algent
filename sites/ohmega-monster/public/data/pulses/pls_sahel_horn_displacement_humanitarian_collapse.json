@@ -11,8 +11,8 @@
   "band": "unassessed",
   "confidence": "",
   "velocity_7d": null,
-  "last_assessed": "2026-10-05T02:02:06.240722+00:00",
-  "evidence_through": "2026-10-04",
+  "last_assessed": "2026-10-05T02:26:53.984541+00:00",
+  "evidence_through": "2026-10-05",
   "history": [],
   "definition": {
     "version": 1,
@@ -56,6 +56,18 @@
       "rationale": "Closest to 2026-10-03 held reading (reader thought reality 62) which already reflected worst fighting since 2020-2022 war, three airports seized, and aid/road closures. New batch confirms continued fighting across Tigray/Afar/Amhara, airport seizures, 720 war-wounded and ~52 civilian deaths (likely) but provides no new UNHCR/IOM displacement counts, refugee flows, famine declarations or…",
       "confidence": "low",
       "evidence_through": "2026-10-04",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-05T02:26:53.984541+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "no_change",
+      "position": null,
+      "rationale": "Closest to 2026-10-05 held (reader thought reality 62) and 2026-10-03 held (62) which already reflected worst fighting since 2020-2022 war, three airports seized, and UN-confirmed aid/road closures. New batch provides only one confirmed tactical incident - drone strike on University of Kordofan housing in El Obeid killing 5/wounding 47 - with no data on IDP/refugee numbers, famine, or…",
+      "confidence": "low",
+      "evidence_through": "2026-10-05",
       "model": "muse-spark-1.2-contributor",
       "article_url": null
     }

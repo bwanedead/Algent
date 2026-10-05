@@ -1,14 +1,14 @@
 {
   "schema": "ohmega.changes/1",
   "window_days": 30,
-  "as_of": "2026-10-05T02:19:07.922078+00:00",
+  "as_of": "2026-10-05T02:29:50.784371+00:00",
   "events": [
     {
       "type": "daily_published",
-      "at": "2026-10-05T02:19:07.922078+00:00",
+      "at": "2026-10-05T02:29:50.784371+00:00",
       "domain": "geopolitics",
       "date": "2026-10-04",
-      "headline": "Russia hit Kyiv's Dnipro bridges for third straight day as Hormuz stayed shut and Saudi-Houthi strikes escalated",
+      "headline": "Russia hit Kyiv's bridges a second day as Germany pledged $1.1bn in Kyiv, Hormuz stayed shut on Iran's seven conditions, and Ethiopian federal forces retook Mekelle",
       "url": "/geopolitics/2026-10-04",
       "data_url": "/data/daily/geopolitics/2026-10-04.json"
     },
