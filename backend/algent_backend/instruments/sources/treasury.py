@@ -14,7 +14,7 @@ import xml.etree.ElementTree as ET
 from datetime import date
 
 from ..contracts import Observation, Series, now_iso
-from ..http import get
+from algent_backend.polite_http import get
 
 URL = "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml"
 _D = "{http://schemas.microsoft.com/ado/2007/08/dataservices}"

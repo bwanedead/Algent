@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import OnRecordBlock from "@/components/OnRecord";
 import Popover from "@/components/Popover";
 import PulseTile from "@/components/PulseTile";
 import { SpectrumLegend } from "@/components/PulseSpectrum";
@@ -369,6 +370,8 @@ export default function BriefPage({ params }: { params: Params }) {
           </ul>
         </section>
       )}
+
+      <OnRecordBlock rows={b.on_record} title={b.title} note />
 
       {b.pulses.length > 0 && (
         <section className="intel-section" aria-label="Related Pulses">

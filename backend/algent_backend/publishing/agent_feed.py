@@ -140,7 +140,7 @@ def pulse_file(store: Any, row: dict, pulse: Any) -> dict:
     log = sorted(store.log(pulse.id), key=lambda i: i.at)
     readings = [_reading(i) for i in log if i.decision in ("applied", "no_change") or i.mode == "blind"]
     d = pulse.definition
-    keep = ("id", "name", "situation_id", "situation", "status", "position", "band", "confidence",
+    keep = ("id", "name", "title", "actors_iso2", "situation_id", "situation", "status", "position", "band", "confidence",
             "velocity_7d", "last_assessed", "evidence_through", "history")
     return {"schema": "ohmega.pulse/1", **{k: row[k] for k in keep},
             "definition": {"version": d.version, "question": d.question, "low_end": d.low_end,

@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { parseOnRecord, type OnRecord } from "./record-model";
 import { parseCoverage, type Band, type Coverage, type Direction, type Pace, type Trend } from "./intel";
 
 // Daily reports are written by the backend to <intel dir>/daily/<domain>/<YYYY-MM-DD>.json and read
@@ -23,7 +24,7 @@ export type DailyDevelopment = {
   verification: "researched" | "reported";
   sources: string[];
 };
-export type DailyPulse = { id: string; name: string; position: number | null; band: Band; change_24h: number | null; change_7d: number | null };
+export type DailyPulse = { id: string; name: string; title: string; actors_iso2: string[]; position: number | null; band: Band; change_24h: number | null; change_7d: number | null };
 export type KeyFigure = {
   label: string;
   value: number;
@@ -71,8 +72,13 @@ export type DailyTheater = {
   watch_next: string[];
   brief_slug: string | null;
   key_figures: KeyFigure[];
+  /** The statements the writer was shown, in the desk's order (older reports: empty). */
+  on_record: OnRecord[];
   map: TheaterMap | null;
 };
+/** A theater in the domain that is live but not written up today, or one gone quiet (see the desk's focus). */
+export type DailyWatch = { theater_id: string; name: string; note: string; last_novel: string };
+export type DailyQuiet = { theater_id: string; name: string; last_novel: string; countries: string[] };
 export type Daily = {
   domain: string;
   date: string;
@@ -82,6 +88,8 @@ export type Daily = {
   the_day: string[];
   theaters: DailyTheater[];
   cross_theater: { theaters: string[]; link: string }[];
+  watch: DailyWatch[];
+  quiet: DailyQuiet[];
 };
 
 // ---- defensive coercion helpers -------------------------------------------------------------
@@ -232,6 +240,8 @@ function parseTheater(raw: unknown): DailyTheater | null {
         return {
           id: str(p.id) || pname,
           name: pname,
+          title: str(p.title) || pname,
+          actors_iso2: strs(p.actors_iso2).filter((c) => /^[A-Za-z]{2}$/.test(c)).map((c) => c.toUpperCase()),
           position,
           band: position === null ? ("unassessed" as Band) : oneOf(p.band, ["calm", "elevated", "severe", "critical", "unassessed"] as const, "unassessed"),
           change_24h: num(p.change_24h),
@@ -253,6 +263,7 @@ function parseTheater(raw: unknown): DailyTheater | null {
     watch_next: strs(raw.watch_next),
     brief_slug: /^[\w.-]+$/.test(str(raw.brief_slug)) ? str(raw.brief_slug) : null,
     key_figures: arr(raw.key_figures).map(parseKeyFigure).filter((k): k is KeyFigure => k !== null),
+    on_record: parseOnRecord(raw.on_record),
     map: parseMap(raw.map),
   };
 }
@@ -272,6 +283,14 @@ function parseDaily(raw: unknown, domain: string, date: string): Daily | null {
       .filter(isObj)
       .map((c) => ({ theaters: strs(c.theaters), link: str(c.link) }))
       .filter((c) => c.link),
+    watch: arr(raw.watch)
+      .filter(isObj)
+      .map((w) => ({ theater_id: str(w.theater_id), name: str(w.name), note: str(w.note), last_novel: str(w.last_novel) }))
+      .filter((w) => w.name),
+    quiet: arr(raw.quiet)
+      .filter(isObj)
+      .map((q) => ({ theater_id: str(q.theater_id), name: str(q.name), last_novel: str(q.last_novel), countries: strs(q.countries) }))
+      .filter((q) => q.name),
   };
 }
 

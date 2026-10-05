@@ -7,17 +7,23 @@ one place that turns "a theater" into "the readings and statements that bear on 
 names a country, a leader or a commodity.
 
 SELECTION IS MECHANICAL AND DERIVED FROM THE DATA, NOT FROM A LIST OF OURS
-* Instruments: the vocabulary is the catalog's own tags. A tag is present when it occurs as a word
-  (or contiguous phrase, with a plain suffix such as -n/-an/-ian/-s allowed) in the theater's text:
-  name, description, why, member headlines, and the actors of the previous brief/section. Tags of one
-  or two letters ("US", "EU") must be capitalised in the text, or "us" would match every pronoun.
-  Series sharing a present tag are ranked by the sum of 1/(series carrying that tag), so a rare tag
-  ("hormuz") outweighs a common one ("risk"); ties put unusual readings first.
-* Statements: the vocabulary is the ledger's own entities (speakers, affiliations, `about`). An entity
-  is a term when it occurs in the theater's text; a person's surname also counts when it appears
-  capitalised in the text (speakers with an office only: institutions are not given surnames). A
-  statement is relevant by how many terms it mentions, then by recency.
-* A theater whose text meets no tag and no entity gets nothing; the blocks are then simply absent.
+* Presence. The instruments' vocabulary is the catalog's tags; the statements' is the ledger's entities
+  (speakers, affiliations, `about`). An item is present when it occurs as a word or contiguous phrase
+  (a plain suffix such as -n/-an/-ian/-s allowed; one- and two-letter items must be capitalised, or "us"
+  would match every pronoun). A speaker's surname stands for the speaker only when the ledger shows it
+  belongs to that speaker alone: it is not part of their title and not a word of any other entity
+  ("States" belongs to "United States", "Minister" to every minister).
+* Corroboration. An item counts for a theater only when it is in the theater's own account of itself
+  (name, description, why, previous actors) or in at least two of its member headlines: one headline
+  mentioning a country in passing does not make the theater about it.
+* Distinctiveness (``Rarity``). Items are weighted by idf over their own vocabulary (statements for
+  entities, series for tags), and a statement/series qualifies only through at least one DISTINCTIVE
+  item: rarer than the median mention. In a Kremlin-heavy ledger "Russia" is the typical mention and
+  cannot alone tie a statement to a theater; a tag carried by many series ("energy", "risk") cannot alone
+  tie a series. Qualifiers rank by summed idf (then recency / unusual-first).
+* Histories: a speaker's earlier statements are shown only for speakers whose shown statements qualified,
+  and only those about the same distinctive counterparts (tone toward them, not the speaker's other news).
+* A theater that meets no distinctive item gets nothing; the blocks are then simply absent.
 
 BUDGETS exist only because every line is prompt the writer must read: ``MAX_INSTRUMENT_LINES`` readings,
 a statement budget per call (a daily wants the last fortnight's most relevant, a brief the month's), up
@@ -30,13 +36,19 @@ Every function here is best-effort: a broken store yields an empty ``Evidence``,
 
 from __future__ import annotations
 
+import math
 import re
+import statistics
 from collections import Counter
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import date
 from typing import Any
 
 from algent_backend.instruments import catalog, evidence
+from algent_backend.instruments import store as istore
+from algent_backend.instruments import moves
+from algent_backend.instruments.contracts import period_date
 
 from ..statements import store
 from ..statements.recall import block as statements_block, history_block
@@ -66,10 +78,13 @@ class Evidence:
     histories: list[str] = field(default_factory=list)
     instrument_urls: set[str] = field(default_factory=set)      # public-display sources only
     statement_urls: set[str] = field(default_factory=set)
+    shown: list[Statement] = field(default_factory=list)     # the statements in the block, in the order shown
     tags: list[str] = field(default_factory=list)
     terms: list[str] = field(default_factory=list)
     n_instruments: int = 0
     n_statements: int = 0
+    instrument_rows: list[dict[str, Any]] = field(default_factory=list)   # the readings shown (for novelty)
+    statement_dates: list[str] = field(default_factory=list)              # EVERY qualifying statement's date, not just those shown
     error: str = ""
 
     @property
@@ -94,16 +109,21 @@ def _find(words: list[str], phrase: list[str], raw: str) -> bool:
         return False
     if n == 1 and len(phrase[0]) <= 2 and not re.search(rf"\b(?:{phrase[0].capitalize()}|{phrase[0].upper()})\b", raw):
         return False                                    # "us" the pronoun is not "US" the country
-    last = {phrase[-1] + suf for suf in (_SUFFIXES if len(phrase[-1]) >= 4 else ("", "s"))}
-    return any(words[i:i + n - 1] == phrase[:-1] and words[i + n - 1] in last for i in range(len(words) - n + 1))
+    return any(words[i:i + n - 1] == phrase[:-1] and _same(words[i + n - 1], phrase[-1]) for i in range(len(words) - n + 1))
 
 
-def theater_text(theater: Theater, actors: list[str] | tuple[str, ...] = ()) -> str:
-    """Everything the theater says about itself, plus the actors of its previous brief/section."""
-    parts = [theater.name, theater.description, theater.why, *actors]
-    for m in theater.members:
-        parts += [m.title, m.thesis]
-    return "\n".join(p for p in parts if p)
+def _same(a: str, b: str) -> bool:
+    """Equal, or one is the other plus a plain suffix ("Houthi"/"Houthis", "Iran"/"Iranian"), stem of 4+ letters."""
+    short, long_ = sorted((a, b), key=len)
+    return a == b or (len(short) >= 4 and long_.startswith(short) and long_[len(short):] in _SUFFIXES)
+
+
+def corroborated(find: Callable[[str], set[str]], theater: Theater, actors: list[str] | tuple[str, ...] = ()) -> set[str]:
+    """Items ``find`` extracts from the theater that it stands behind: those in its own account (name,
+    description, why, previous actors) or in at least two member headlines (two independent mentions)."""
+    core = find("\n".join(p for p in (theater.name, theater.description, theater.why, *actors) if p))
+    members = Counter(k for m in theater.members for k in find(f"{m.title}\n{m.thesis}"))
+    return core | {k for k, n in members.items() if n >= 2}
 
 
 def prior_actors(brief: dict | None = None, section: dict | None = None) -> list[str]:
@@ -116,6 +136,40 @@ def prior_actors(brief: dict | None = None, section: dict | None = None) -> list
     return list(dict.fromkeys(n.strip() for n in names if isinstance(n, str) and n.strip()))
 
 
+# ── informativeness (shared by both layers) ───────────────────────────────────────────────────
+@dataclass
+class Rarity:
+    """How informative each item of a vocabulary is, from the vocabulary's own statistics.
+
+    ``idf`` is ln(N / df): N documents (ledger statements; catalog series), df those carrying the item.
+    An item in every document has idf 0 and says nothing. ``cut`` is the idf of the MEDIAN MENTION: sort
+    all mentions by idf and take the one halfway through, so the cut sits where the typical mention sits,
+    not where the typical (mostly one-off) item sits. An item is DISTINCTIVE when its idf is above the
+    cut, i.e. at least as rare as the typical thing people are said to talk about ("at least" because a flat
+    vocabulary such as the catalog's tags has many items at the median and none above it). In a Kremlin-heavy ledger
+    "Russia", "Putin", "NATO" and "EU" are the typical mentions and so cannot, alone, tie a statement to
+    a theater; a ledger where every item is equally common has no distinctive item at all."""
+
+    idf: dict[str, float]
+    cut: float
+
+    def distinctive(self, key: str) -> bool:
+        return self.idf.get(key, 0.0) > 0 and self.idf[key] >= self.cut
+
+
+def rarity(documents: list[set[str]]) -> Rarity:
+    n = len(documents)
+    df = Counter(k for doc in documents for k in doc)
+    idf = {k: math.log(n / c) for k, c in df.items()}
+    half, seen, cut = sum(df.values()) / 2, 0, 0.0
+    for k in sorted(df, key=lambda k: idf[k]):
+        seen += df[k]
+        if seen >= half:
+            cut = idf[k]
+            break
+    return Rarity(idf, cut)
+
+
 # ── instruments ───────────────────────────────────────────────────────────────────────────────
 def instrument_tags(text: str) -> list[str]:
     """Catalog tags present in ``text`` (see module docstring)."""
@@ -124,61 +178,123 @@ def instrument_tags(text: str) -> list[str]:
     return [t for t in vocab if _find(words, _words(t), text)]
 
 
-def _instrument_block(text: str, as_of: date | None) -> tuple[str, set[str], list[str], int]:
-    tags = instrument_tags(text)
+def _instrument_block(theater: Theater, actors: Any, as_of: date | None
+                      ) -> tuple[str, set[str], list[str], int, list[dict]]:
+    """Readings for series that share at least one DISTINCTIVE corroborated tag (a tag carried by few series,
+    see ``Rarity``); generic tags only add weight to a series that already qualifies. Ranked by summed idf."""
+    tags = sorted(corroborated(lambda t: set(instrument_tags(t)), theater, actors))
     if not tags:
-        return "", set(), [], 0
-    carriers = Counter(t for s in catalog.CATALOG for t in set(s.tags))
-    rows = evidence.moves_board(tags, as_of=as_of)
+        return "", set(), [], 0, []
+    rar = rarity([set(s.tags) for s in catalog.CATALOG])
     present = set(tags)
-    score = {r["series_id"]: sum(1 / carriers[t] for t in present & set(r["tags"])) for r in rows}
+    distinctive = {t for t in present if rar.distinctive(t)}
+    # A series qualifies on STRENGTH >= 2: each shared distinctive tag counts once, twice when the tag names
+    # what the series IS (it is a word of the series' name: "hormuz", "brent"). One shared tag that merely
+    # relates ("africa" is on a shipping lane, "risk" on a volatility index) is a coincidence; a second
+    # independent one, or a tag that is the series' own subject, is a topic.
+    def strength(r: dict) -> int:
+        name = set(_words(r["name"]))
+        return sum(2 if set(_words(t)) <= name else 1 for t in distinctive & set(r["tags"]))
+
+    rows = [r for r in evidence.moves_board(tags, as_of=as_of) if strength(r) >= 2]
+    score = {r["series_id"]: sum(rar.idf[t] for t in present & set(r["tags"])) for r in rows}
     rows = sorted(rows, key=lambda r: (-score[r["series_id"]], not r["unusual"]))[:MAX_INSTRUMENT_LINES]
     return (evidence.render_block(rows, as_of=as_of), {r["source_url"] for r in rows if r["public_display"]},
-            tags, len(rows))
+            tags, len(rows), rows)
 
 
 # ── statements ────────────────────────────────────────────────────────────────────────────────
-def statement_terms(text: str, rows: list[Statement]) -> list[str]:
-    """Ledger entities (and office-holders' surnames) that occur in ``text``."""
+def _entities(s: Statement) -> set[str]:
+    return {e.casefold() for e in (s.speaker, s.affiliation, *s.about) if e and e.strip()}
+
+
+Vocabulary = list[tuple[str, str, list[str], bool]]      # (key, surface form, phrase words, surname alias?)
+
+
+def vocabulary(ledger: list[Statement]) -> Vocabulary:
+    """The ledger's entities as matchable phrases, plus a surname alias for speakers that earn one (see the
+    module docstring): the speaker holds an office, the surname is not in that office's title, and no other
+    entity in the ledger contains the word."""
+    forms: dict[str, str] = {}
+    for st in ledger:
+        for e in (st.speaker, st.affiliation, *st.about):
+            if e and e.strip():
+                forms.setdefault(e.casefold(), e)
+    word_owners: dict[str, set[str]] = {}
+    for key in forms:
+        for w in _words(key):
+            word_owners.setdefault(w, set()).add(key)
+    vocab: Vocabulary = [(k, f, _words(f), False) for k, f in forms.items()]
+    speakers = {st.speaker.casefold() for st in ledger}
+    done: set[str] = set()
+    for st in ledger:
+        sw, key = _words(st.speaker), st.speaker.casefold()
+        if key in done or not st.role or len(sw) < 2 or len(sw[-1]) < 4 or sw[-1] in _words(st.role):
+            continue
+        done.add(key)
+        # every entity holding the word must be this speaker (or another form of the same surname's speaker)
+        if all(o == key or (o in speakers and _words(o)[-1] == sw[-1]) for o in word_owners.get(sw[-1], set())):
+            vocab.append((key, st.speaker, [sw[-1]], True))
+    return vocab
+
+
+def statement_terms(text: str, vocab: Vocabulary) -> set[str]:
+    """Keys of the vocabulary's entities that occur in ``text``."""
     words = _words(text)
-    found: dict[str, str] = {}
-    for s in rows:
-        for entity in {s.speaker, s.affiliation, *s.about}:
-            if entity and _find(words, _words(entity), text):
-                found.setdefault(entity.casefold(), entity)
-        sw = _words(s.speaker)
-        if s.role and len(sw) > 1 and len(sw[-1]) >= 4 and re.search(rf"\b(?:{sw[-1].capitalize()}|{sw[-1].upper()})\b", text):
-            found.setdefault(sw[-1], sw[-1])
-    return list(found.values())
+    out = set()
+    for key, _surface, phrase, alias in vocab:
+        if key in out or not _find(words, phrase, text):
+            continue
+        if alias and not re.search(rf"\b(?:{phrase[0].capitalize()}|{phrase[0].upper()})\b", text):
+            continue
+        out.add(key)
+    return out
 
 
-def _by_relevance(rows: list[Statement], terms: list[str]) -> list[Statement]:
-    newest = sorted(rows, key=lambda s: s.date, reverse=True)
-    return sorted(newest, key=lambda s: -store.mention_count(s, terms))
-
-
-def _histories(shown: list[Statement], *, as_of: date | None, days: int) -> tuple[list[str], set[str]]:
-    """Earlier statements by the most frequent speakers in ``shown``, so tone can be read as a trajectory."""
+def _histories(shown: list[Statement], shared: dict[str, set[str]], *, as_of: date | None, days: int
+               ) -> tuple[list[str], set[str]]:
+    """Earlier statements by the most frequent speakers in ``shown`` ABOUT THE SAME distinctive counterparts
+    the shown ones qualified on: the question is whether tone toward them shifted, not what else the speaker said."""
     seen = {s.id for s in shown}
     blocks, urls = [], set()
     for speaker, _n in Counter(s.speaker for s in shown).most_common(MAX_SPEAKER_HISTORIES):
-        earlier = [s for s in store.query(speaker=speaker, days=days, today=as_of) if s.id not in seen][:HISTORY_LINES]
+        keys = shared.get(speaker, set())
+        earlier = [s for s in store.query(speaker=speaker, days=days, today=as_of)
+                   if s.id not in seen and keys & _entities(s)][:HISTORY_LINES]
         if earlier:
             blocks.append(history_block(speaker, earlier, days))
             urls |= {s.source_url for s in earlier}
     return blocks, urls
 
 
-def _statement_block(text: str, as_of: date | None, *, days: int, limit: int, history_days: int
-                     ) -> tuple[str, list[str], set[str], list[str], int]:
+def _statement_block(theater: Theater, actors: Any, as_of: date | None, *, days: int, limit: int,
+                     history_days: int) -> tuple[str, list[str], set[str], list[str], list[Statement], list[str]]:
+    """A statement qualifies when it shares at least one DISTINCTIVE corroborated entity with the theater
+    (rarity is measured over the whole ledger, see ``Rarity``). Qualifiers rank by the summed idf of the
+    shared entities, then recency; common entities add weight but never qualify a statement alone."""
+    ledger = store.load_statements()
+    rar = rarity([_entities(s) for s in ledger])
+    vocab = vocabulary(ledger)
+    keys = corroborated(lambda t: statement_terms(t, vocab), theater, actors)
+    distinctive = {k for k in keys if rar.distinctive(k)}
+    if len(keys) == 1:        # a lone entity must be rarer than the typical mention, not merely as rare
+        distinctive = {k for k in distinctive if rar.idf[k] > rar.cut}
     rows = store.query(days=days, today=as_of)
-    terms = statement_terms(text, rows)
-    if not terms:
-        return "", [], set(), [], 0
-    picked = [s for s in _by_relevance(rows, terms) if store.mention_count(s, terms)][:limit]
+    need = min(2, len(keys))                      # one shared entity is a coincidence when two were available
+    scored = [(s, sum(rar.idf[k] for k in keys & _entities(s))) for s in rows
+              if distinctive & _entities(s) and len(keys & _entities(s)) >= need]
+    terms = sorted(keys)
+    if not scored:
+        return "", [], set(), terms, [], []
+    newest = sorted(scored, key=lambda p: p[0].date, reverse=True)
+    picked = [s for s, _w in sorted(newest, key=lambda p: -p[1])][:limit]
     shown = sorted(picked, key=lambda s: s.date, reverse=True)
-    histories, history_urls = _histories(shown, as_of=as_of, days=history_days)
-    return (statements_block(shown, days), histories, {s.source_url for s in shown} | history_urls, terms, len(shown))
+    shared: dict[str, set[str]] = {}
+    for s in shown:
+        shared.setdefault(s.speaker, set()).update(distinctive & _entities(s))
+    histories, history_urls = _histories(shown, shared, as_of=as_of, days=history_days)
+    return (statements_block(shown, days), histories, {s.source_url for s in shown} | history_urls, terms, shown,
+            sorted(s.date for s, _w in scored))
 
 
 # ── the two entry points ──────────────────────────────────────────────────────────────────────
@@ -189,10 +305,12 @@ def for_theater(theater: Theater, *, as_of: str | date, actors: list[str] | tupl
     ev = Evidence()
     try:
         day = date.fromisoformat(as_of) if isinstance(as_of, str) else as_of
-        text = theater_text(theater, actors)
-        ev.instruments, ev.instrument_urls, ev.tags, ev.n_instruments = _instrument_block(text, day)
-        ev.statements, ev.histories, ev.statement_urls, ev.terms, ev.n_statements = _statement_block(
-            text, day, days=statement_days, limit=statement_limit, history_days=history_days)
+        ev.instruments, ev.instrument_urls, ev.tags, ev.n_instruments, ev.instrument_rows = _instrument_block(
+            theater, actors, day)
+        (ev.statements, ev.histories, ev.statement_urls, ev.terms, ev.shown,
+         ev.statement_dates) = _statement_block(
+            theater, actors, day, days=statement_days, limit=statement_limit, history_days=history_days)
+        ev.n_statements = len(ev.shown)
     except Exception as exc:  # noqa: BLE001 - sensing is an aid; a broken store must not cost the report
         return Evidence(error=f"{type(exc).__name__}: {str(exc)[:160]}")
     return ev
@@ -204,12 +322,32 @@ def _weight(s: Statement) -> int:
     return abs(s.stance) + (s.signal != "other")
 
 
+def _trending(series_id: str, day: date) -> bool:
+    """A series that keeps drifting one way is not departing from anything: a debt total is always rising, so
+    "unusual" or "outside its full-history range" says nothing about it. Test: over the last 90 days (the
+    longest recent window ``moves`` uses), is the mean period-over-period change distinguishable from zero
+    against the scatter of those changes (a t-statistic above ``moves.Z_LIMIT``, the same two-sigma convention,
+    with at least ``moves.MIN_SAMPLE`` changes)? A collapse is different: one or two large steps and then
+    noise around the new level, so the scatter swamps the mean."""
+    obs = [(period_date(o.period), o.value) for o in istore.history(series_id) if period_date(o.period) <= day]
+    if not obs:
+        return False
+    recent = [v for d, v in obs if (obs[-1][0] - d).days <= 90]
+    steps = [b - a for a, b in zip(recent, recent[1:])]
+    if len(steps) < moves.MIN_SAMPLE:
+        return False
+    sd = statistics.pstdev(steps)
+    return sd > 0 and abs(statistics.fmean(steps)) / (sd / math.sqrt(len(steps))) > moves.Z_LIMIT
+
+
 def across_theaters(*, as_of: str | date, days: int = CROSS_DAYS) -> Evidence:
-    """For the day's top: the flagged moves across ALL series and the weightiest recent statements across
-    ALL actors, so a major speech or number lands even when no hot theater claims it. Never raises."""
+    """For the day's top: the flagged moves across ALL series (except ones that merely trend) and the weightiest
+    recent statements across ALL actors, so a major speech or number lands even when no hot theater claims
+    it. Never raises."""
     try:
         day = date.fromisoformat(as_of) if isinstance(as_of, str) else as_of
-        rows = [r for r in evidence.moves_board(None, as_of=day) if r["unusual"] or r["long_run_outside"]]
+        rows = [r for r in evidence.moves_board(None, as_of=day)
+                if (r["unusual"] or r["long_run_outside"]) and not _trending(r["series_id"], day)]
         rows = rows[:CROSS_MOVES]                                  # moves_board lists unusual ones first
         taken: Counter[str] = Counter()
         shown: list[Statement] = []
@@ -220,7 +358,7 @@ def across_theaters(*, as_of: str | date, days: int = CROSS_DAYS) -> Evidence:
                 shown.append(s)
         shown.sort(key=lambda s: s.date, reverse=True)
         return Evidence(instruments=evidence.render_block(rows, as_of=day), statements=statements_block(shown, days),
-                        n_instruments=len(rows), n_statements=len(shown),
+                        n_instruments=len(rows), n_statements=len(shown), shown=shown,
                         instrument_urls={r["source_url"] for r in rows if r["public_display"]},
                         statement_urls={s.source_url for s in shown})
     except Exception as exc:  # noqa: BLE001

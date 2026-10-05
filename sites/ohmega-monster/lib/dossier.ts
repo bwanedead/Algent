@@ -3,6 +3,7 @@ import path from "node:path";
 
 import { parseMap, type TheaterMap } from "./daily";
 import { bandAt } from "./band";
+import { parseOnRecord, type OnRecord } from "./record-model";
 import { maxBand, parseCoverage, safeUrl, type Band, type Coverage, type Direction, type IndicatorStatus, type Pace } from "./intel";
 
 // Theater dossiers: one living record per theater, written by the backend as JSON to
@@ -24,6 +25,9 @@ export type DossierIndexItem = {
   coverage: Coverage;
   escalation_direction: Direction;
   max_band: Band;
+  /** Lifecycle from the desk's focus: new / active / quiet ('' on older indexes). */
+  state: string;
+  last_novel: string;
 };
 export type DossierPulse = { id: string; name: string; situation: string; position: number | null; band: Band; history: { at: string; position: number }[] };
 export type EscalationPoint = { date: string; direction: Direction; pace: Pace };
@@ -62,6 +66,8 @@ export type Dossier = {
   forecasts: DossierForecast[];
   indicators: IndicatorRow[];
   statements: Statement[];
+  /** Every statement its dailies and briefs showed, deduped, newest first (older dossiers: empty). */
+  on_record: OnRecord[];
   links: RelatedTheater[];
   reports: { date: string; url: string }[];
   briefs: { slug: string; title: string; as_of: string; url: string }[];
@@ -126,6 +132,8 @@ function parseIndexItem(raw: Obj): DossierIndexItem | null {
     coverage: parseCoverage(raw.coverage, "steady"),
     escalation_direction: oneOf(raw.escalation_direction, DIRECTIONS, "unclear"),
     max_band: oneOf(raw.max_band, BANDS, "unassessed"),
+    state: str(raw.state),
+    last_novel: str(raw.last_novel),
   };
 }
 
@@ -248,6 +256,7 @@ function parseDossier(raw: unknown, id: string): Dossier | null {
     statements: objs(raw.statements)
       .map((s) => ({ who: str(s.who), role: str(s.role), said: str(s.said), quote: s.quote === true, when: str(s.when), source: str(s.source) }))
       .filter((s) => s.said),
+    on_record: parseOnRecord(raw.on_record),
     links: objs(raw.links)
       .map((l) => ({ theater_id: str(l.theater_id), name: str(l.name), link: str(l.link), date: str(l.date) }))
       .filter((l) => l.theater_id && (l.name || l.link)),
@@ -279,6 +288,8 @@ function itemFromDossier(d: Dossier): DossierIndexItem {
     coverage: d.current?.coverage ?? "steady",
     escalation_direction: d.current?.direction ?? last?.direction ?? "unclear",
     max_band: maxBand(d.pulses),
+    state: "",
+    last_novel: "",
   };
 }
 

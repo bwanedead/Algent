@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import ActorStrip from "@/components/actors/ActorStrip";
 import ActorNetwork from "@/components/dossier/ActorNetwork";
 import DossierFigures from "@/components/dossier/DossierFigures";
 import DossierMap from "@/components/dossier/DossierMap";
 import DossierOutlook from "@/components/dossier/DossierOutlook";
+import DossierRecord from "@/components/dossier/DossierRecord";
 import DossierPulses from "@/components/dossier/DossierPulses";
 import DossierTimeline from "@/components/dossier/DossierTimeline";
 import { DossierPrimer, DossierTop } from "@/components/dossier/DossierTop";
+import { actorsForTheater } from "@/lib/actors";
 import { claimOf } from "@/lib/daily";
 import { dossier, dossierIds } from "@/lib/dossier";
 import { latestSnapshot } from "@/lib/intel";
@@ -56,6 +59,8 @@ export default function TheaterDossierPage({ params }: { params: Params }) {
 
       <DossierPrimer primer={d.primer} />
       <ActorNetwork actors={d.actors} relations={d.relations} statements={d.statements} />
+      <ActorStrip actors={actorsForTheater(d.theater_id)} />
+      <DossierRecord rows={d.on_record} />
       <DossierTimeline items={d.timeline} since={d.first_seen || first} />
       <DossierFigures figures={d.figures} />
       <DossierOutlook d={d} known={known} />

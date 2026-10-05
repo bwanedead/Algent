@@ -14,7 +14,7 @@ import json
 from datetime import date
 
 from ..contracts import Observation, Series, now_iso
-from ..http import SourceError, get
+from algent_backend.polite_http import SourceError, get
 
 BASE = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data"
 

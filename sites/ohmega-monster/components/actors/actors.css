@@ -1,0 +1,54 @@
+/* Actor pages (/intel/actors, /intel/actors/[iso]) and the dossier's Actors strip. Doctrine:
+   docs/ethos/information-ergonomics-ethos.md. Bar length = size on a shared scale; rank is text; the accent
+   is reserved for change (unused here); neutral greys carry structure. Tokens come from globals.css. */
+
+.ac-flag { display: inline-flex; vertical-align: middle; margin-right: 2px; }
+.ac-bar { display: inline-block; flex: 1 1 auto; min-width: 40px; height: 8px; background: var(--rule); }
+.ac-bar-fill { display: block; height: 100%; background: var(--faint); }
+.ac-none { color: var(--faint); }
+
+/* shared-scale rows (strip, profile comparisons) */
+.ac-scales { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px 28px; margin-top: 8px; }
+.ac-scale-k { margin: 0 0 4px; color: var(--muted); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+.ac-scale-row { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 12px; line-height: 22px; font-variant-numeric: tabular-nums; }
+.ac-scale-name { flex: 0 0 96px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ac-scale-v { flex: 0 0 64px; text-align: right; color: var(--strong); }
+.ac-chips { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.ac-chip { white-space: nowrap; }
+
+/* index table */
+.ac-table td, .ac-table th { vertical-align: middle; }
+.ac-cell { min-width: 120px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ac-cell .ac-bar { width: 56px; min-width: 56px; margin-right: 6px; }
+.ac-cell-v { display: inline-block; min-width: 52px; text-align: right; }
+button.ac-sort { padding: 0; font: inherit; color: var(--muted); background: none; border: 0; cursor: pointer; text-transform: inherit; letter-spacing: inherit; }
+button.ac-sort.is-on, button.ac-sort:hover { color: var(--strong); }
+.ac-row-name { white-space: nowrap; }
+
+/* profile: headline tiles */
+.ac-head { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px 24px; margin: 12px 0 4px; }
+.ac-tile { min-width: 0; }
+.ac-tile-v { display: block; color: var(--strong); font-size: 22px; line-height: 28px; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.ac-tile-k { display: block; color: var(--muted); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+.ac-tile-r { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.ac-tile .ac-bar { display: block; width: 100%; margin-top: 4px; }
+
+/* profile: field lists and energy bars */
+.ac-fields { margin: 6px 0 0; padding: 0; list-style: none; }
+.ac-field { display: flex; justify-content: space-between; gap: 12px; padding: 2px 0; font-size: 12px; line-height: 20px; font-variant-numeric: tabular-nums; }
+.ac-field-k { color: var(--muted); }
+.ac-field-v { color: var(--strong); text-align: right; }
+.ac-field-y { margin-left: 6px; color: var(--faint); font-size: 10px; }
+.ac-fuel { display: grid; grid-template-columns: 56px 1fr 72px; align-items: center; gap: 2px 8px; margin: 6px 0 0; font-size: 12px; font-variant-numeric: tabular-nums; }
+.ac-fuel .ac-bar { height: 7px; }
+.ac-fuel-k { grid-row: span 2; color: var(--strong); }
+.ac-fuel-lab { color: var(--muted); font-size: 10px; text-align: right; }
+.ac-fuel-v { text-align: right; color: var(--strong); }
+
+.ac-said { margin: 8px 0 0; padding: 0; list-style: none; }
+.ac-said li { margin: 0 0 10px; max-width: 72ch; font-size: 13px; line-height: 20px; }
+.ac-said-who { color: var(--muted); font-size: 11px; }
+.ac-said-sig { margin-left: 6px; color: var(--muted); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+.ac-said q { quotes: "“" "”"; }
+.ac-credits { margin: 6px 0 0; padding: 0; list-style: none; color: var(--muted); font-size: 11px; line-height: 18px; }
+.ac-nuke { color: var(--strong); }

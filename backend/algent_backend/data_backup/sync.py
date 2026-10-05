@@ -48,6 +48,7 @@ def _sources() -> dict[str, Path]:
         return p if p.is_absolute() else backend / p
 
     from algent_backend.agent_system.agents.intel.heat import store_dir as intel_dir
+    from algent_backend.actors.store import store_dir as actors_dir
     from algent_backend.agent_system.agents.statements.store import store_dir as statements_dir
     from algent_backend.instruments.store import store_dir as instruments_dir
 
@@ -55,7 +56,8 @@ def _sources() -> dict[str, Path]:
             "pulse_store": resolve(PulseStore().root),
             "intel_store": resolve(intel_dir()),
             "instruments_store": resolve(instruments_dir()),
-            "statements_store": resolve(statements_dir())}
+            "statements_store": resolve(statements_dir()),
+            "actors_store": resolve(actors_dir())}
 
 
 def _git(cwd: Path, *args: str) -> tuple[bool, str]:

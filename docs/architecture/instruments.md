@@ -19,7 +19,7 @@ wired yet — only clean consumption APIs exist).
 | `contracts.py` | `Series` (catalog metadata) and `Observation` (one reading with provenance), `period_date` |
 | `catalog.py` | the curated, code-defined series list grouped by theme; `get_series`, `match(tags)` |
 | `sources/<provider>.py` | one fetcher per provider: `fetch(series, since) -> list[Observation]` plus a pure `parse(text, series, fetched_at)`; registered in `sources/__init__.PROVIDERS` |
-| `http.py` | the only HTTP path: browser UA, 60 s timeout, 2 retries, 0.25 s per-host pacing, per-process memo, `SourceError` / `SourceUnavailable` naming the URL |
+| `algent_backend/polite_http.py` (shared with `actors/`) | the only HTTP path: browser UA, 60 s timeout, 2 retries, 0.25 s per-host pacing, per-process memo, `SourceError` / `SourceUnavailable` naming the URL |
 | `store.py` | append-only JSONL per series |
 | `moves.py` | pure maths: changes, percentile, unusual flags |
 | `evidence.py` | consumption API: `evidence_block`, `moves_board` |
@@ -104,7 +104,7 @@ append/revision, moves maths on synthetic series (outliers, regimes, short/month
 
 The intelligence desk reads this layer through `agent_system/agents/intel/sensing.py` (read-only; `evidence.render_block` prints chosen `moves_board` rows in the canonical format):
 
-- **Daily section writer** (`intel/daily.py` `write_section`) and **brief analyst** (`intel/brief.py` `write_brief`, via `desk.produce`): the INSTRUMENTS block for the theater. Series are chosen by intersecting the theater's text (name, why, headlines, previous actors) with the catalog's tag vocabulary, ranked by tag rarity, bounded to `MAX_INSTRUMENT_LINES`.
-- **Daily summary writer** (`daily.write_summary`): every series flagged unusual or outside its full-history range, across all series, whether or not a theater claims it.
+- **Daily section writer** (`intel/daily.py` `write_section`) and **brief analyst** (`intel/brief.py` `write_brief`, via `desk.produce`): the INSTRUMENTS block for the theater. A series qualifies with strength 2 from distinctive tags the theater corroborates (its own account, or 2+ member headlines): 1 per shared distinctive tag, 2 when the tag names the series itself ("hormuz", "brent"). Distinctive = tag rarity at or above the catalog's median-mention idf, so generic tags ("risk", "energy") add weight but never qualify a series alone. Bounded to `MAX_INSTRUMENT_LINES`.
+- **Daily summary writer** (`daily.write_summary`): series flagged unusual, or outside their full-history range unless merely trending (a two-sigma t-test on the last 90 days of changes: steady debt or yield climbs drop out, a collapse like Hormuz stays), across all series, whether or not a theater claims it.
 - **Grounding**: public-display series' source URLs are primary evidence in `normalise_section` / `brief.normalise` (they may ground `researched` and key figures). `[internal source]` series inform the writer but their URLs are not offered as citable.
 - **Refresh**: `newsroom intel daily` / `cycle` run `instruments.collect.collect()` first (best-effort; `--no-refresh` skips), reported as `sensing_refresh.instruments`.

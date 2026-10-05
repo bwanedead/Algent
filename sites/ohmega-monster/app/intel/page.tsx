@@ -6,6 +6,7 @@ import SituationForecasts from "@/components/SituationForecasts";
 import SituationMoves from "@/components/SituationMoves";
 import SituationNew from "@/components/SituationNew";
 import { SituationSince, SituationVisitProvider } from "@/components/SituationVisit";
+import { actorIds } from "@/lib/actors";
 import { dossierList } from "@/lib/dossier";
 import { situationRoom } from "@/lib/situation";
 
@@ -38,6 +39,8 @@ export default function IntelPage() {
           )}
           <span className="intel-strip-item sit-strip-links">
             {dossiers > 0 && <Link href="/intel/theaters">Every theater&apos;s dossier →</Link>}
+            {actorIds().length > 0 && <Link href="/intel/actors">Who the actors are →</Link>}
+            <Link href="/intel/record">What they said →</Link>
             <Link href="/geopolitics">Read the day →</Link>
             <Link href="/pulses">Scan every Pulse →</Link>
           </span>

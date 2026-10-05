@@ -42,7 +42,7 @@ function Axis({ t, snap, interactive }: { t: DailyTheater; snap: Snapshot | null
           <i className="intel-band-critical" />
         </span>
         {placed.map((p, i) => (
-          <i key={`${p.id}-${i}`} className={`geo-dot intel-band-${p.band}`} style={{ left: `${clamp(p.position ?? 0)}%` }} title={`${p.name}: ${Math.round(p.position ?? 0)} of 100`} />
+          <i key={`${p.id}-${i}`} className={`geo-dot intel-band-${p.band}`} style={{ left: `${clamp(p.position ?? 0)}%` }} title={`${p.title}: ${Math.round(p.position ?? 0)} of 100`} />
         ))}
       </span>
       <b className="geo-peak" title="Highest Pulse in this theater">

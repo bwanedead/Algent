@@ -8,13 +8,15 @@ Tags + country flags.
 Why: live failures (Nicaragua story → US flag because Rubio was mentioned; ICE story →
 no flag because "United States" never landed as an exact entity). Geography for the feed
 is a semantic judgment the researcher already makes — capture it in the contract, render
-it to ISO flag emoji/PNG. The ISO table here is a *renderer* (name + iso2 → display),
-not a story identifier.
+it to ISO flag emoji/PNG. The country table lives in ``actors/registry.py`` (the one table in the
+codebase); here it is only a *renderer* (name + iso2 → display), not a story identifier.
 """
 
 from __future__ import annotations
 
 import re
+
+from algent_backend.actors import registry
 
 _TAG_CAP = 5
 _FLAG_CAP = 3  # enough for a multi-country story; more is noise on the feed
@@ -38,56 +40,12 @@ _TOPIC_VOCAB: dict[str, tuple[str, ...]] = {
     "law": ("law", "legal", "court", "ruling", "prosecut", "regulat"),
 }
 
-# Display labels for known ISO codes (renderer only).
-_ISO_DISPLAY: dict[str, str] = {
-    "IR": "Iran", "IL": "Israel", "OM": "Oman", "YE": "Yemen", "SA": "Saudi Arabia",
-    "AE": "United Arab Emirates", "QA": "Qatar", "KW": "Kuwait", "IQ": "Iraq",
-    "SY": "Syria", "LB": "Lebanon", "TR": "Turkey", "EG": "Egypt",
-    "US": "United States", "GB": "United Kingdom", "FR": "France", "DE": "Germany",
-    "IT": "Italy", "ES": "Spain", "NL": "Netherlands", "PL": "Poland", "SE": "Sweden",
-    "NO": "Norway", "FI": "Finland", "DK": "Denmark", "IE": "Ireland", "CH": "Switzerland",
-    "RU": "Russia", "UA": "Ukraine", "BY": "Belarus", "CN": "China", "TW": "Taiwan",
-    "JP": "Japan", "KR": "South Korea", "KP": "North Korea", "IN": "India", "PK": "Pakistan",
-    "AF": "Afghanistan", "BD": "Bangladesh", "ID": "Indonesia", "VN": "Vietnam", "PH": "Philippines",
-    "TH": "Thailand", "MY": "Malaysia", "SG": "Singapore", "AU": "Australia", "NZ": "New Zealand",
-    "CA": "Canada", "MX": "Mexico", "BR": "Brazil", "AR": "Argentina", "CL": "Chile",
-    "CO": "Colombia", "VE": "Venezuela", "PE": "Peru", "CU": "Cuba", "HT": "Haiti",
-    "NI": "Nicaragua", "CR": "Costa Rica", "PA": "Panama", "GT": "Guatemala", "HN": "Honduras",
-    "SV": "El Salvador", "BZ": "Belize",
-    "NG": "Nigeria", "ZA": "South Africa", "KE": "Kenya", "ET": "Ethiopia", "UG": "Uganda",
-    "SS": "South Sudan", "SD": "Sudan",
-    "CD": "Democratic Republic of the Congo", "CG": "Republic of the Congo",
-    "LY": "Libya", "DZ": "Algeria", "MA": "Morocco", "TN": "Tunisia", "GH": "Ghana",
-    "GR": "Greece", "PT": "Portugal", "AT": "Austria", "BE": "Belgium", "CZ": "Czechia",
-    "HU": "Hungary", "RO": "Romania", "RS": "Serbia", "HR": "Croatia", "BG": "Bulgaria",
-    "EU": "European Union",
-}
-
-# Optional name → ISO when the agent fills name but botches iso2 (still not story-scan).
-_NAME_TO_ISO: dict[str, str] = {
-    "nicaragua": "NI", "united states": "US", "usa": "US", "u.s.": "US", "america": "US",
-    "united kingdom": "GB", "uk": "GB", "britain": "GB", "iran": "IR", "israel": "IL",
-    "russia": "RU", "ukraine": "UA", "china": "CN", "germany": "DE", "france": "FR",
-    "saudi arabia": "SA", "yemen": "YE", "lebanon": "LB", "syria": "SY", "iraq": "IQ",
-    "turkey": "TR", "egypt": "EG", "india": "IN", "japan": "JP", "south korea": "KR",
-    "north korea": "KP", "australia": "AU", "canada": "CA", "mexico": "MX", "brazil": "BR",
-    "south africa": "ZA", "kenya": "KE", "ethiopia": "ET", "uganda": "UG",
-    "democratic republic of the congo": "CD", "south sudan": "SS", "sudan": "SD",
-    "european union": "EU", "croatia": "HR", "spain": "ES", "italy": "IT",
-    "netherlands": "NL", "poland": "PL", "sweden": "SE", "norway": "NO",
-}
-
 _ISO2_RE = re.compile(r"^[A-Za-z]{2}$")
-_NON_WORD = re.compile(r"[^a-z0-9]+", re.I)
 
 
 def flag_emoji(iso2: str) -> str:
     """ISO-3166 alpha-2 -> regional-indicator flag emoji (deterministic)."""
     return "".join(chr(0x1F1E6 + ord(c) - ord("A")) for c in iso2.upper())
-
-
-def _normalize_label(text: str) -> str:
-    return _NON_WORD.sub(" ", (text or "").strip().lower()).strip()
 
 
 def _normalize_iso2(raw: str) -> str | None:
@@ -110,11 +68,19 @@ def _resolve_country_entry(entry: object) -> tuple[str, str] | None:
 
     iso = _normalize_iso2(str(iso_raw))
     if not iso and name:
-        iso = _NAME_TO_ISO.get(_normalize_label(name))
+        iso = registry.resolve(name)
     if not iso:
         return None
-    display = name or _ISO_DISPLAY.get(iso, iso)
+    display = name or registry.display_name(iso, iso)
     return iso, display
+
+
+def iso2_for_name(name: str) -> str:
+    """ISO-3166 alpha-2 for a country NAME the caller already judged semantically (a statement's
+    affiliation, a Pulse's principal actor), or "" when the name is not a country in the registry
+    (NATO, the UN, a company). Renderer only: it identifies nothing, it spells."""
+    found = _resolve_country_entry({"name": name})
+    return found[0] if found else ""
 
 
 def derive_places(

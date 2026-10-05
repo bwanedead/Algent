@@ -53,7 +53,9 @@ only from headlines misses them. So four kinds arrive, kept apart by what they c
   evidence. Read it against that speaker's earlier statements (STATEMENT HISTORY) for a new condition, a
   softened or hardened tone, a conspicuous omission, reassurance aimed at a third party: a shift against
   their own record is often the finding, and a good indicator or judgment to track. Quote exact wording
-  only where the wording itself matters.
+  only where the wording itself matters. A timeline item that rests on a
+  statement names the speaker in `actors` and cites the transcript link as its `source`; the desk prints
+  the whole record beside the brief, so cite the statements a finding turns on, not every one.
 - REPORTED headlines, what other outlets said, unverified by us: they carry leads, and must be marked
   `verification: "reported"` wherever they appear in the timeline.
 Never upgrade a reported item into a fact. When the only evidence is reported, say so.

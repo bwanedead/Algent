@@ -15,7 +15,7 @@ import json
 from datetime import date, datetime, timezone
 
 from ..contracts import Observation, Series, now_iso
-from ..http import SourceError, get
+from algent_backend.polite_http import SourceError, get
 
 URL = (
     "https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/"

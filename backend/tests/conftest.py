@@ -35,6 +35,13 @@ def _isolated_pause_signal(tmp_path, monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _no_real_browser(monkeypatch):
+    """Playwright is installed and on by default for live reads. A test must never launch a real browser
+    (slow, heavy on the operator's laptop, and network-bound); tests that exercise the switch set it."""
+    monkeypatch.setenv("ALGENT_FETCH_PLAYWRIGHT", "0")
+
+
+@pytest.fixture(autouse=True)
 def _no_data_backup(monkeypatch):
     """A test must never push anything to the private data repo."""
     monkeypatch.setenv("ALGENT_DATA_BACKUP", "0")

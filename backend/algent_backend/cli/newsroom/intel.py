@@ -41,11 +41,13 @@ def add_parser(sub: Any) -> None:
     b.add_argument("--fresh-research", action="store_true", help="redo research even if today's already exists")
     d = verbs.add_parser("daily", help="the daily report: per-theater rundown of what happened, with Pulses")
     d.add_argument("--domain", default="geopolitics")
-    d.add_argument("--top", type=int, default=5)
+    d.add_argument("--top", type=int, default=5, help="ceiling on theater sections; only theaters with something new are written")
     d.add_argument("--research", action="store_true", help="research each theater first (paid, capped)")
     d.add_argument("--fresh-research", action="store_true", help="redo research even if today's already exists")
     d.add_argument("--days", type=int, default=7)
     d.add_argument("--no-refresh", action="store_true", help="skip refreshing instruments and statements first")
+    d.add_argument("--date", default="", help="YYYY-MM-DD to (re)write; default today. The headline board is "
+                                               "only an input: its date says how fresh the radar is")
     verbs.add_parser("import-briefs", help="one-off: copy runs_data briefs into the durable intel store")
     verbs.add_parser("publish", help="build the desk snapshot and put it on the site")
     t = verbs.add_parser("dossiers", help="rebuild the theater dossiers and publish them")
@@ -108,8 +110,14 @@ def _heat(args: Any, *, publish: bool = True) -> int:
     from algent_backend.publishing.intel_page import publish_intel
     from algent_backend.publishing.radar_page import read_editions
 
+    from datetime import date
+
+    from algent_backend.agent_system.agents.intel import base
+
+    # The window ends today (the radar may not have run); radar + Wikipedia Current Events + our library.
     board = heat.run(_ctx("intel-heat"), None, read_editions(), days=args.days,
-                     model_spec=house_spec(reasoning_effort="low", temperature=0.1, max_tokens=16384))
+                     model_spec=house_spec(reasoning_effort="low", temperature=0.1, max_tokens=16384),
+                     loaders=base.default_loaders(), today=date.today(), covered_before=date.today().isoformat())
     out = _out(board["as_of"])
     (out / "board.json").write_text(json.dumps(board, ensure_ascii=False, indent=2), encoding="utf-8")
     (out / "board.html").write_text(render.render_board(board), encoding="utf-8")
@@ -262,13 +270,18 @@ def _daily(args: Any) -> int:
     if board is None:
         print(json.dumps({"error": "no heat board"}))
         return 2
+    # The report is dated the day it is written. It used to take the board's date, which is the newest radar
+    # edition's: on a day the radar had not run, "today's" daily silently overwrote yesterday's record.
+    from datetime import date
+
+    as_of = getattr(args, "date", "") or date.today().isoformat()
     result = daily.produce_daily(_ctx("intel-daily"), domain=args.domain, top=args.top, research=args.research,
                                  model_spec=house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=16384,
                                                        streaming=True),
-                                 as_of=board["as_of"], board=board, out=_out(board["as_of"]),
+                                 as_of=as_of, board=board, out=_out(as_of),
                                  fresh_research=args.fresh_research)
     if result.get("error"):         # a failed run: nothing persisted, so nothing to promote, publish or back up
-        print(json.dumps({"date": board["as_of"], "domain": args.domain, "error": result["error"],
+        print(json.dumps({"date": as_of, "domain": args.domain, "error": result["error"],
                           "theaters": result["theaters"], "research_usd": result["research_usd"],
                           "sensing_refresh": sensing_refresh},
                          indent=2, ensure_ascii=False))
@@ -276,7 +289,8 @@ def _daily(args: Any) -> int:
     # Promote first (quietly: it does not publish) so the one publish below carries the new Pulses.
     proposals = promote_ready_quietly()
     primers_report = _prime(args.domain)        # only dossiers lacking a primer or with one over 7 days old
-    report = {"date": board["as_of"], "domain": args.domain, "path": result["path"], "html": result.get("html"),
+    report = {"date": as_of, "headlines_through": board["as_of"], "domain": args.domain, "path": result["path"],
+              "html": result.get("html"),
               "headline": result["report"]["summary"]["headline"], "theaters": result["theaters"],
               "research_usd": result["research_usd"], "pulse_proposals": proposals, "primers": primers_report,
               "sensing_refresh": sensing_refresh,

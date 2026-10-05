@@ -39,6 +39,11 @@ function Row({ r, days, max }: { r: TheaterRow; days: string[]; max: number }) {
       <Link href={`/intel/theaters/${item.theater_id}`} className="th-row-name">
         <b>{item.name}</b>
         {item.domain && <span className="th-domain">{item.domain}</span>}
+        {item.state && (
+          <span className={`th-state is-${item.state}`} title={item.last_novel ? `Last new development ${item.last_novel}` : undefined}>
+            {item.state}
+          </span>
+        )}
       </Link>
       <span className="th-row-track">
         <span className={moving ? "th-dir is-moving" : "th-dir"}>

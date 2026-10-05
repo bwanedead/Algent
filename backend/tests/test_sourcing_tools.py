@@ -100,7 +100,30 @@ def test_missing_env_file_is_fine(tmp_path: Path) -> None:
 
 # -- fetch_content cheap-first ladder -----------------------------------------
 
+import pytest  # noqa: E402
+
 from algent_backend.agent_system.tools.sourcing.depth import fetch_content as fc  # noqa: E402
+
+
+@pytest.fixture(autouse=True)
+def _no_free_rescue_network(monkeypatch) -> None:
+    """The Jina/Wayback rungs are live HTTP; these ladder tests must stay offline."""
+    monkeypatch.setattr(fc, "_jina_markdown", lambda u: None)
+    monkeypatch.setattr(fc, "_wayback_html", lambda u: None)
+
+
+@pytest.fixture(autouse=True)
+def _no_free_search_network(monkeypatch) -> None:
+    """DDG and Bing are live keyless engines at the head of the keyword chain. Unstubbed, a test that mocks
+    Tavily silently reaches the real web whenever DDG is not blocking us (and passed only while it was).
+    Raising 'rate limit' sends the chain on to the mocked engines, the same path a real block takes."""
+    from algent_backend.agent_system.tools.sourcing.search import bing, ddg
+
+    def offline(*_a, **_k):
+        raise RuntimeError("rate limit (tests are offline)")
+
+    monkeypatch.setattr(ddg, "search", offline)
+    monkeypatch.setattr(bing, "search", offline)
 
 
 def test_quality_grades_content() -> None:
@@ -189,9 +212,10 @@ def test_fetch_prefers_quality_over_word_count(monkeypatch) -> None:
     assert result["words"] == 150
 
 
-def test_fetch_playwright_stays_off_by_default(monkeypatch) -> None:
+def test_fetch_playwright_stays_off_when_the_standing_switch_is_off(monkeypatch) -> None:
     monkeypatch.setenv("ALGENT_FETCH_CACHE", "0")
     monkeypatch.delenv("ALGENT_FETCH_PLAYWRIGHT", raising=False)
+    monkeypatch.setattr(fc, "PLAYWRIGHT_ENABLED", False)
     monkeypatch.setattr(fc, "_http_get", lambda url: "<html>shell</html>")
     monkeypatch.setattr(fc, "_extract", lambda html: " ".join(["word"] * 50))
     monkeypatch.setattr(fc, "_extract_meta", lambda html: {})
@@ -200,7 +224,7 @@ def test_fetch_playwright_stays_off_by_default(monkeypatch) -> None:
     monkeypatch.setattr(fc, "_playwright_html", lambda u: pw.append(u) or None)
 
     result = fc._fetch("http://x", allow_paid_fallback=False)
-    assert pw == []  # default off — no browser launch on a low-end laptop
+    assert pw == []  # switched off — no browser launch
     assert result["quality"] == "thin"
 
 

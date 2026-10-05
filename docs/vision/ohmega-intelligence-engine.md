@@ -139,6 +139,37 @@ left alone until its next design pass. The ideas parked for that pass: Pulses se
 and a reassessment that reads the condensed state plus new evidence rather than a raw re-read of the
 whole history.
 
+## Depth: from dashboard to model (operator, 10-04)
+
+North star, in the operator's words: understand the larger, complex dynamics of the world more
+accurately — acquire, research, process and present information so it is maximally useful for
+understanding them. The dashboard (/geopolitics, /intel) is the right FIRST surface; it must be the top
+of a stack the reader can descend, never the whole of it:
+
+    day (what changed) → theater (the dynamic, its record, its numbers, its map)
+      → actor (what this power is: people, economy, energy, military, leaders, what it has said)
+      → record (every statement and reading, filterable) → source
+
+- **Actors are modelled.** Every state the desk touches has a power profile built from open data
+  (World Bank, Our World in Data energy, Wikidata leaders, IMF): population, GDP and GDP per capita,
+  growth, debt, trade exposure, energy produced and consumed by fuel, military spending and size, who
+  leads it. A theater shows its actors side by side on shared scales, so the reader sees the balance of
+  power, not just the news. Non-state actors follow from the research corpus.
+- **The record is visible.** What leaders said is shown as what they said: speaker, office, flag,
+  date, the exact words where they matter, the link — deterministically selected from the statements
+  ledger for each theater and actor, not left to a writer's choice. Tone toward a counterpart is a
+  series the reader can follow.
+- **Focus follows the world.** Theaters enter the day's focus when something new happens (headlines,
+  statements, unusual readings, our library) and leave it after a week with nothing new, kept on a quiet
+  strip with their last change and still one click deep. Detection draws on a broad base, not only our
+  own radar.
+- **Names are explicit.** A Pulse, a theater or a figure says who and what in its title (flags allowed):
+  "🇺🇸🇨🇳 US–China: diplomatic deadlock", never a bare "Relationship deadlock" the reader must click
+  to decode. Clicking gives the definition, not the identity.
+- **Territory is shown honestly.** Disputed and occupied areas from public-domain data; front lines only
+  from a source we are licensed to redraw (DeepState, on written permission); otherwise our own dated,
+  researched event points, labelled as such.
+
 ## Research subdivision: Ohmega Research
 
 Ohmega Research is the subdivision that conducts **reproducible studies** of AI systems: a

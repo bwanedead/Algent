@@ -16,7 +16,7 @@ import json
 from datetime import date, datetime, timedelta, timezone
 
 from ..contracts import Observation, Series, now_iso
-from ..http import SourceError, get
+from algent_backend.polite_http import SourceError, get
 
 URL = "https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
 # The API takes named ranges only; pick the smallest that covers what was asked for.

@@ -46,6 +46,9 @@ Docs sprawl is a real failure mode. To prevent it:
 - `pulse-system.md` – Ohmega Pulse: situations, anchored Pulses, append-only influences, watches, storage.
 - `instruments.md` – the numbers layer: free programmatic series (chokepoint transits, energy, rates, FX…), append-only store, moves vs each series' own history, evidence API.
 - `statements.md` – the record of who said what: primary transcripts (Kremlin, White House, State, FCDO, No 10, EC, China MFA), quote-validated extraction, append-only ledger, recall API.
+- `library.md` – Ohmega's own source library: curated trusted sources crawled politely into a local FTS5 index; ranked search that answers first in web_search.
+- `actors.md` – power profiles of states: the one country registry, World Bank/OWID/Wikidata/IMF sources, append-only store, profile/compare, publish feed and actor pages.
+- `intel-desk.md` – the intelligence desk: broad headline base, heat, per-theater novelty, new/active/quiet lifecycle, budgeted daily focus.
 
 ### Guides — `guides/`
 - `run-operator-entrypoint.md` – **start here** to operate runs; short hub that routes to the rest.

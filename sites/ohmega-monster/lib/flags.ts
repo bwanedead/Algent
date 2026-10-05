@@ -21,6 +21,11 @@ export function flagEmojiToIso(flag: string): string | null {
   return String.fromCharCode(65 + aa, 65 + bb);
 }
 
+/** ISO-3166 alpha-2 -> regional-indicator pair (the shape FlagRow takes). */
+export function isoToFlagEmoji(iso2: string): string {
+  return [...iso2.toUpperCase()].map((c) => String.fromCodePoint(RI_A + c.charCodeAt(0) - 65)).join("");
+}
+
 /** Small flag image URL (flagcdn — static PNGs, no JS). EU is supported. */
 export function flagImageUrl(iso2: string, width = 20): string {
   const w = width <= 20 ? 20 : width <= 40 ? 40 : 80;

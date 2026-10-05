@@ -8,7 +8,10 @@ Snapshot file ``content/intel/snapshots/<slug>.json``, slug = UTC "YYYY-MM-DD-HH
 
     {"schema":"ohmega.intel/1","slug","built_at",
      "situations":[{"id","title","summary","domain",
-         "pulses":[{"id","name","question","low_end","high_end","position":float|null,
+         "pulses":[{"id","name","title","actors_iso2":["US","CN"],   // title = who + what ("US-China . Diplomatic
+                    // deadlock"), from the display-label cache ``intel_store/pulse_labels.json``
+                    // (``pulse_labels.py``); no label yet -> "<situation title> . <name>", actors_iso2 []
+                    "question","low_end","high_end","position":float|null,
                     "band":"calm|elevated|severe|critical|unassessed","velocity_7d":float|null,
                     "velocity_30d":float|null,"confidence":str,"last_assessed":str,
                     "evidence_through":str,"history":[{"at","position"}],"rationale":str}],
@@ -35,7 +38,14 @@ Snapshot file ``content/intel/snapshots/<slug>.json``, slug = UTC "YYYY-MM-DD-HH
                                                                    // first; theaters lets the site cross-link
 
 Brief files: ``content/intel/briefs/<slug>.json`` = the persisted brief record
-(``intel_store/briefs/<slug>.json``, schema ``ohmega.brief/1``).
+(``intel_store/briefs/<slug>.json``, schema ``ohmega.brief/1``); it carries ``on_record`` as the daily does.
+
+The record ledger (``content/intel/record.json`` and ``public/data/record.json``, ``on_record.export``)::
+
+    {"schema":"ohmega.record/1","window_days":60,"max_statements":1500,"as_of","count","newest",
+     "statements":[<on_record row>],        // statements dated within the last 60 days, newest first, <=1500
+     "tone":[{"affiliation","iso2","about","about_iso2","n","mean","points":[{"date","stance","n"}]}]}
+        // stance -2 hostile .. +2 conciliatory toward `about`; dyads with >=4 statements on >=2 days, <=12
 
 Daily files: ``content/intel/daily/<domain>/<YYYY-MM-DD>.json`` = the persisted daily report
 (``intel_store/daily/<domain>/<date>.json``), schema ``ohmega.daily/1``::
@@ -46,6 +56,9 @@ Daily files: ``content/intel/daily/<domain>/<YYYY-MM-DD>.json`` = the persisted 
          "temperature":{"heat","trend","coverage","recent_share","prior_share"},   // coverage, as above
          "escalation":{"direction":"rising|steady|easing|unclear","pace":"fast|gradual|flat"},
          "pulses":[{"id","name","position":float|null,"band","change_24h":float|null,"change_7d":float|null}],
+         "on_record":[{"id","speaker","role","affiliation","iso2","date","venue","quote","paraphrase","about":[..],
+                       "about_iso2":[..],"signal","stance":-2..2,"significance","url"}],   // the statements the writer
+                       // was shown, in sensing's order (``on_record.build``); absent in older records
          "bottom_line","since_yesterday":[{"what","kind":"escalated|eased|new|resolved|unchanged"}],
          "developments":[{"headline","detail","when","where","actors":[...],
              "statements":[{"who","role","said","quote":bool,"when","source"}],   // quote=true: exact, <=25 words
@@ -142,8 +155,13 @@ unchanged dossier is byte-identical::
       "forecasts":[{"id","statement","probability","horizon","status","resolution":null|{"resolved_at","outcome","evidence"}}],
       "indicators":[{"signal","history":[{"date","status"}]}],   // by exact wording across briefs
       "statements":[{"who","role","said","quote","when","source"}],   // newest 12
+      "on_record":[<on_record row as in the daily>],   // every statement its dailies/briefs showed, by id, newest first, <=150
       "links":[{"theater_id","name","link","date"}],             // cross-theater links from the daily summaries
       "reports":[{"date","url"}], "briefs":[{"slug","title","as_of","url"}]}   // newest first
+
+Actors (built by ``actors_feed.py``; a power profile per state from the actors store): ``content/intel/actors/<ISO2>.json``
+(``ohmega.actor/1``) + ``index.json`` (``ohmega.actor.index/1``), mirrored to ``public/data/actors/``. Which actors, the
+semantic rule that finds them, and the shapes are documented in ``actors_feed.py``.
 
 Rules: ``rationale`` is the latest APPLIED, non-blind influence's rationale for that pulse, made
 reader-safe (claim ids stripped, ~400 chars at a word boundary). Situations that are not "active"
@@ -161,11 +179,11 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from algent_backend.agent_system.agents.intel import dossier_store, forecasts
+from algent_backend.agent_system.agents.intel import dossier_store, forecasts, on_record, pulse_labels
 from algent_backend.agent_system.agents.intel.brief import safe_name
 from algent_backend.agent_system.agents.intel.contracts import coverage_label
 
-from . import agent_feed, site_git
+from . import actors_feed, agent_feed, site_git
 from .agent_feed import reader_safe  # noqa: F401  (re-exported: the contract owner's public helper)
 
 INTEL_SUBDIR = ("content", "intel")
@@ -177,9 +195,9 @@ def _rationale(store: Any, pulse_id: str) -> str:
     return reader_safe(max(applied, key=lambda i: i.at).rationale) if applied else ""
 
 
-def _pulse(store: Any, pulse: Any) -> dict:
+def _pulse(store: Any, pulse: Any, label: dict) -> dict:
     st, d = store.state(pulse.id), pulse.definition
-    return {"id": pulse.id, "name": pulse.name, "question": d.question, "low_end": d.low_end,
+    return {"id": pulse.id, "name": pulse.name, **label, "question": d.question, "low_end": d.low_end,
             "high_end": d.high_end, "position": st.position, "band": st.band or "unassessed",
             "velocity_7d": st.velocity_7d, "velocity_30d": st.velocity_30d, "confidence": st.confidence,
             "last_assessed": st.last_assessed, "evidence_through": st.evidence_through,
@@ -188,11 +206,12 @@ def _pulse(store: Any, pulse: Any) -> dict:
 
 
 def _situations(store: Any) -> list[dict]:
-    out = []
+    out, labels = [], pulse_labels.load()
     for sit in store.situations():
         if sit.status != "active":
             continue
-        pulses = [_pulse(store, p) for p in store.pulses(sit.id) if p.status != "dormant"]
+        pulses = [_pulse(store, p, pulse_labels.display(labels, p.id, sit.title, p.name))
+                  for p in store.pulses(sit.id) if p.status != "dormant"]
         pulses.sort(key=lambda p: (p["position"] is None, -(p["position"] or 0)))
         watches = [{"condition": w.condition, "why": w.why, "direction": w.expected_direction,
                     "horizon": w.horizon, "status": w.status}
@@ -275,12 +294,18 @@ def _write_if_changed(path: Path, payload: dict) -> None:
     path.write_text(text, encoding="utf-8", newline="\n")
 
 
+def _labelled(catalog: list[dict]) -> list[dict]:
+    """Catalog rows with their display ``title`` and ``actors_iso2`` (cached label, else the fallback)."""
+    labels = pulse_labels.load()
+    return [{**row, **pulse_labels.display(labels, row["id"], row.get("situation", ""), row["name"])} for row in catalog]
+
+
 def build_pulse_feed(store: Any, *, now: datetime | None = None) -> dict:
     """The agent-facing Pulse list (``public/data/pulses.json``): the registry catalog plus a reader-safe rationale."""
     from algent_backend.agent_system.agents.pulse import registry
 
     rows = [{**row, "rationale": _rationale(store, row["id"]), "data_url": agent_feed.pulse_data_url(row["id"])}
-            for row in registry.catalog(store)]
+            for row in _labelled(registry.catalog(store))]
     return {"schema": "ohmega.pulses/1", "built_at": (now or datetime.now(UTC)).isoformat(), "pulses": rows}
 
 
@@ -323,14 +348,27 @@ def build_agent_files(snapshot: dict, intel_dir: Path, store: Any = None,
     files = {"intel.json": build_index(snapshot), "forecasts.json": agent_feed.forecasts_file(intel_dir, briefs),
              **agent_feed.brief_files(briefs), **agent_feed.daily_files(reports)}
     if store is not None:
-        catalog = registry.catalog(store)
+        catalog = _labelled(registry.catalog(store))
         files["pulses.json"] = build_pulse_feed(store, now=now)
         files["changes.json"] = agent_feed.changes_file(store, intel_dir, catalog, reports, briefs, now)
         files.update(agent_feed.pulse_files(store, catalog))
     built = dossiers if dossiers is not None else build_dossiers(intel_dir, store)
     if built is not None:
         files.update(agent_feed.dossier_files(built))
+    record = build_record()
+    if record is not None:
+        files["record.json"] = record
     return files
+
+
+def build_record() -> dict | None:
+    """The bounded statements ledger for ``/intel/record`` (``on_record.export``), or None when the ledger
+    cannot be read: like the dossiers, a view onto a store that is already safe must not cost the publish."""
+    try:
+        return on_record.export()
+    except Exception as exc:  # noqa: BLE001
+        print(f"[intel] record not built: {type(exc).__name__}: {str(exc)[:160]}", flush=True)
+        return None
 
 
 def write_intel(site_dir: Path, snapshot: dict, intel_dir: Path, store: Any = None) -> Path:
@@ -350,8 +388,14 @@ def write_intel(site_dir: Path, snapshot: dict, intel_dir: Path, store: Any = No
             _write_if_changed(root / "theaters" / f"{tid}.json", record)
         _write_if_changed(root / "theaters" / "index.json", built["index"])
     data = site_dir / "public" / "data"
-    for rel, payload in build_agent_files(snapshot, intel_dir, store, built).items():
+    files = build_agent_files(snapshot, intel_dir, store, built)
+    for rel, payload in files.items():
         _write_if_changed(data / rel, payload)
+    for rel, payload in actors_feed.build_actor_files(built).items():        # the actor pages' data (see actors_feed.py)
+        _write_if_changed(root / "actors" / rel, payload)
+        _write_if_changed(data / "actors" / rel, payload)
+    if "record.json" in files:                         # the site reads it at build time, like the other desk files
+        _write_if_changed(root / "record.json", files["record.json"])
     return path
 
 
