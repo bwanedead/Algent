@@ -2,6 +2,11 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_us_china_diplomatic_deadlock",
   "name": "Diplomatic Deadlock",
+  "title": "US–China · Diplomatic Deadlock",
+  "actors_iso2": [
+    "US",
+    "CN"
+  ],
   "situation_id": "sit_us_china",
   "situation": "US–China competition",
   "status": "experimental",

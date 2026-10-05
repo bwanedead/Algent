@@ -1,0 +1,291 @@
+{
+  "schema": "ohmega.actor/1",
+  "data_as_of": "2026-10-05",
+  "iso2": "KP",
+  "iso3": "PRK",
+  "name": "North Korea",
+  "region": "East Asia & Pacific",
+  "capital": "Pyongyang",
+  "kind": "state",
+  "headline": [
+    {
+      "id": "population",
+      "label": "Population",
+      "unit": "people",
+      "group": "people",
+      "value": 26571036.0,
+      "year": 2025,
+      "source": "wb",
+      "rank": 56,
+      "of": 194,
+      "percentile": 71
+    },
+    {
+      "id": "energy_production",
+      "label": "Fossil fuel production (oil + gas + coal)",
+      "unit": "twh",
+      "group": "energy",
+      "value": 233.824,
+      "year": 2016,
+      "source": "owid",
+      "rank": 44,
+      "of": 186,
+      "percentile": 76
+    },
+    {
+      "id": "milex",
+      "label": "Military spending",
+      "unit": "usd",
+      "group": "military",
+      "value": 1604444444.44444,
+      "year": 2018,
+      "source": "wb",
+      "rank": 70,
+      "of": 167,
+      "percentile": 58
+    }
+  ],
+  "groups": {
+    "people": [
+      {
+        "id": "population",
+        "label": "Population",
+        "unit": "people",
+        "group": "people",
+        "value": 26571036.0,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "pop_growth",
+        "label": "Population growth",
+        "unit": "pct",
+        "group": "people",
+        "value": 0.272143344374275,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "urban_pct",
+        "label": "Urban population",
+        "unit": "pct",
+        "group": "people",
+        "value": 64.1897858311258,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "land_area",
+        "label": "Land area",
+        "unit": "km2",
+        "group": "people",
+        "value": 120410.0,
+        "year": 2023,
+        "source": "wb"
+      }
+    ],
+    "economy": [],
+    "trade": [],
+    "energy": [
+      {
+        "id": "energy_production",
+        "label": "Fossil fuel production (oil + gas + coal)",
+        "unit": "twh",
+        "group": "energy",
+        "value": 233.824,
+        "year": 2016,
+        "source": "owid"
+      },
+      {
+        "id": "energy_use",
+        "label": "Primary energy consumption",
+        "unit": "twh",
+        "group": "energy",
+        "value": 184.504,
+        "year": 2023,
+        "source": "owid"
+      },
+      {
+        "id": "energy_pc",
+        "label": "Energy use per person",
+        "unit": "kwh",
+        "group": "energy",
+        "value": 6983.977,
+        "year": 2023,
+        "source": "owid"
+      },
+      {
+        "id": "oil_prod",
+        "label": "Oil production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 0.0,
+        "year": 2016,
+        "source": "owid"
+      },
+      {
+        "id": "gas_prod",
+        "label": "Gas production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 0.0,
+        "year": 2016,
+        "source": "owid"
+      },
+      {
+        "id": "coal_prod",
+        "label": "Coal production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 233.824,
+        "year": 2016,
+        "source": "owid"
+      },
+      {
+        "id": "elec_gen",
+        "label": "Electricity generation",
+        "unit": "twh",
+        "group": "energy",
+        "value": 27.1,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "elec_fossil",
+        "label": "Electricity from fossil fuels",
+        "unit": "pct",
+        "group": "energy",
+        "value": 36.642,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "elec_nuclear",
+        "label": "Electricity from nuclear",
+        "unit": "pct",
+        "group": "energy",
+        "value": 0.0,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "elec_renew",
+        "label": "Electricity from renewables",
+        "unit": "pct",
+        "group": "energy",
+        "value": 63.358,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "energy_import_pct",
+        "label": "Net energy imports, share of use",
+        "unit": "pct",
+        "group": "energy",
+        "value": 4.89532080752115,
+        "year": 2022,
+        "source": "wb"
+      }
+    ],
+    "military": [
+      {
+        "id": "milex",
+        "label": "Military spending",
+        "unit": "usd",
+        "group": "military",
+        "value": 1604444444.44444,
+        "year": 2018,
+        "source": "wb"
+      },
+      {
+        "id": "armed_forces",
+        "label": "Armed forces personnel",
+        "unit": "persons",
+        "group": "military",
+        "value": 1469000.0,
+        "year": 2020,
+        "source": "wb"
+      },
+      {
+        "id": "arms_exports",
+        "label": "Arms exports (SIPRI trend-indicator value, 1990 US$)",
+        "unit": "usd",
+        "group": "military",
+        "value": 243000000.0,
+        "year": 2024,
+        "source": "wb"
+      }
+    ]
+  },
+  "energy_role": {
+    "surplus": [],
+    "deficit": []
+  },
+  "leadership": {
+    "head_of_state": {
+      "name": "Kim Jong-un",
+      "since": "2011-12-30"
+    },
+    "head_of_government": {
+      "name": "Pak Thae-song",
+      "since": "2024-12-01"
+    },
+    "as_of": "2026-10-05",
+    "nuclear": {
+      "status": "outside_npt",
+      "stockpile": 60,
+      "inventory": 60,
+      "year": 2026,
+      "source_url": "https://fas.org/initiatives/status-world-nuclear-forces/"
+    }
+  },
+  "statements": [
+    {
+      "id": "st_c5ecb8527731",
+      "speaker": "Representative of the Democratic People's Republic of Korea",
+      "role": "Delegate to the Third Committee",
+      "date": "2026-10-02",
+      "text": "certain forces",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://press.un.org/en/2026/gashc4437.doc.htm"
+    }
+  ],
+  "involved": {
+    "theaters": [],
+    "pulses": []
+  },
+  "credits": [
+    {
+      "source": "nuclear",
+      "name": "Federation of American Scientists, Status of World Nuclear Forces",
+      "licence": "public statements, cited",
+      "url": "https://fas.org/initiatives/status-world-nuclear-forces/",
+      "years": "2026"
+    },
+    {
+      "source": "owid",
+      "name": "Our World in Data energy dataset (Energy Institute, Ember, EIA)",
+      "licence": "CC BY 4.0",
+      "url": "https://ourworldindata.org/energy",
+      "years": "2016-2024"
+    },
+    {
+      "source": "wb",
+      "name": "World Bank World Development Indicators (military figures: SIPRI)",
+      "licence": "CC BY 4.0",
+      "url": "https://data.worldbank.org/",
+      "years": "2018-2025"
+    },
+    {
+      "source": "wikidata",
+      "name": "Wikidata (heads of state and government)",
+      "licence": "CC0",
+      "url": "https://www.wikidata.org/",
+      "years": ""
+    }
+  ],
+  "url": "/intel/actors/KP",
+  "data_url": "/data/actors/KP.json"
+}

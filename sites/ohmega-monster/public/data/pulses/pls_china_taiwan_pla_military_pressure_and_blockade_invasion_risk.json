@@ -2,6 +2,11 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_china_taiwan_pla_military_pressure_and_blockade_invasion_risk",
   "name": "PLA Military Pressure and Blockade/Invasion Risk",
+  "title": "China–Taiwan · PLA Military Pressure and Blockade/Invasion Risk",
+  "actors_iso2": [
+    "CN",
+    "TW"
+  ],
   "situation_id": "sit_china_taiwan",
   "situation": "China–Taiwan",
   "status": "experimental",

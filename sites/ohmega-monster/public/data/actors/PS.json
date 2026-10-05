@@ -1,0 +1,366 @@
+{
+  "schema": "ohmega.actor/1",
+  "data_as_of": "2026-10-05",
+  "iso2": "PS",
+  "iso3": "PSE",
+  "name": "Palestine",
+  "region": "Middle East, North Africa, Afghanistan & Pakistan",
+  "capital": "",
+  "kind": "territory",
+  "headline": [
+    {
+      "id": "population",
+      "label": "Population",
+      "unit": "people",
+      "group": "people",
+      "value": 5413596.0,
+      "year": 2025,
+      "source": "wb"
+    },
+    {
+      "id": "gdp",
+      "label": "GDP",
+      "unit": "usd",
+      "group": "economy",
+      "value": 17167100000.0,
+      "year": 2025,
+      "source": "wb"
+    },
+    {
+      "id": "gdp_pc",
+      "label": "GDP per person",
+      "unit": "usd",
+      "group": "economy",
+      "value": 3171.10844621579,
+      "year": 2025,
+      "source": "wb"
+    },
+    {
+      "id": "energy_production",
+      "label": "Fossil fuel production (oil + gas + coal)",
+      "unit": "twh",
+      "group": "energy",
+      "value": 0.0,
+      "year": 2016,
+      "source": "owid"
+    }
+  ],
+  "groups": {
+    "people": [
+      {
+        "id": "population",
+        "label": "Population",
+        "unit": "people",
+        "group": "people",
+        "value": 5413596.0,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "pop_growth",
+        "label": "Population growth",
+        "unit": "pct",
+        "group": "people",
+        "value": 2.32556364928187,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "urban_pct",
+        "label": "Urban population",
+        "unit": "pct",
+        "group": "people",
+        "value": 87.3818962963393,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "land_area",
+        "label": "Land area",
+        "unit": "km2",
+        "group": "people",
+        "value": 6025.0,
+        "year": 2023,
+        "source": "wb"
+      }
+    ],
+    "economy": [
+      {
+        "id": "gdp",
+        "label": "GDP",
+        "unit": "usd",
+        "group": "economy",
+        "value": 17167100000.0,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_ppp",
+        "label": "GDP (purchasing power)",
+        "unit": "usd",
+        "group": "economy",
+        "value": 27066426398.6286,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_pc",
+        "label": "GDP per person",
+        "unit": "usd",
+        "group": "economy",
+        "value": 3171.10844621579,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_pc_ppp",
+        "label": "GDP per person (purchasing power)",
+        "unit": "usd",
+        "group": "economy",
+        "value": 4999.71301859773,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_growth",
+        "label": "GDP growth",
+        "unit": "pct",
+        "group": "economy",
+        "value": 4.34444072337577,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "inflation",
+        "label": "Inflation",
+        "unit": "pct",
+        "group": "economy",
+        "value": 9.80840118100493,
+        "year": 2025,
+        "source": "wb"
+      }
+    ],
+    "trade": [
+      {
+        "id": "exports_pct",
+        "label": "Exports, share of GDP",
+        "unit": "pct",
+        "group": "trade",
+        "value": 21.2278136668395,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "imports_pct",
+        "label": "Imports, share of GDP",
+        "unit": "pct",
+        "group": "trade",
+        "value": 53.5326292734358,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "fuel_exports_pct",
+        "label": "Fuels, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 0.0859853021575194,
+        "year": 2023,
+        "source": "wb"
+      }
+    ],
+    "energy": [
+      {
+        "id": "energy_production",
+        "label": "Fossil fuel production (oil + gas + coal)",
+        "unit": "twh",
+        "group": "energy",
+        "value": 0.0,
+        "year": 2016,
+        "source": "owid"
+      },
+      {
+        "id": "energy_use",
+        "label": "Primary energy consumption",
+        "unit": "twh",
+        "group": "energy",
+        "value": 23.764,
+        "year": 2023,
+        "source": "owid"
+      },
+      {
+        "id": "energy_pc",
+        "label": "Energy use per person",
+        "unit": "kwh",
+        "group": "energy",
+        "value": 4393.309,
+        "year": 2023,
+        "source": "owid"
+      },
+      {
+        "id": "oil_prod",
+        "label": "Oil production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 0.0,
+        "year": 2016,
+        "source": "owid"
+      },
+      {
+        "id": "gas_prod",
+        "label": "Gas production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 0.0,
+        "year": 2016,
+        "source": "owid"
+      },
+      {
+        "id": "coal_prod",
+        "label": "Coal production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 0.0,
+        "year": 2016,
+        "source": "owid"
+      },
+      {
+        "id": "elec_gen",
+        "label": "Electricity generation",
+        "unit": "twh",
+        "group": "energy",
+        "value": 0.99,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "elec_fossil",
+        "label": "Electricity from fossil fuels",
+        "unit": "pct",
+        "group": "energy",
+        "value": 60.606,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "elec_nuclear",
+        "label": "Electricity from nuclear",
+        "unit": "pct",
+        "group": "energy",
+        "value": 0.0,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "elec_renew",
+        "label": "Electricity from renewables",
+        "unit": "pct",
+        "group": "energy",
+        "value": 39.394,
+        "year": 2024,
+        "source": "owid"
+      }
+    ],
+    "military": [
+      {
+        "id": "armed_forces",
+        "label": "Armed forces personnel",
+        "unit": "persons",
+        "group": "military",
+        "value": 0.0,
+        "year": 2020,
+        "source": "wb"
+      },
+      {
+        "id": "arms_imports",
+        "label": "Arms imports (SIPRI trend-indicator value, 1990 US$)",
+        "unit": "usd",
+        "group": "military",
+        "value": 2000000.0,
+        "year": 2023,
+        "source": "wb"
+      }
+    ]
+  },
+  "energy_role": {
+    "surplus": [],
+    "deficit": []
+  },
+  "leadership": {
+    "head_of_state": {
+      "name": "Mahmoud Abbas",
+      "since": "2005-01-15"
+    },
+    "head_of_government": {
+      "name": "Mohammad Shtayyeh",
+      "since": "2019-03-10"
+    },
+    "as_of": "2026-10-05",
+    "nuclear": null
+  },
+  "statements": [],
+  "involved": {
+    "theaters": [
+      {
+        "id": "thr_gaza_war_and_unga_diplomatic_fallout",
+        "name": "Gaza war and UNGA diplomatic fallout",
+        "mentions": 7
+      }
+    ],
+    "pulses": [
+      {
+        "id": "pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe",
+        "name": "Gaza Combat and Humanitarian Catastrophe",
+        "band": "critical",
+        "position": 85.0,
+        "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
+      },
+      {
+        "id": "pls_israel_palestine_international_legal_and_diplomatic_pressure_on_israel",
+        "name": "International Legal and Diplomatic Pressure on Israel",
+        "band": "severe",
+        "position": 73.0,
+        "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
+      },
+      {
+        "id": "pls_israel_palestine_ceasefire_and_normalization_deadlock",
+        "name": "Ceasefire and Normalization Deadlock",
+        "band": "severe",
+        "position": 60.0,
+        "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
+      },
+      {
+        "id": "pls_israel_palestine_west_bank_annexation_and_settler_violence",
+        "name": "West Bank Annexation and Settler Violence",
+        "band": "severe",
+        "position": 58.0,
+        "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
+      }
+    ]
+  },
+  "credits": [
+    {
+      "source": "owid",
+      "name": "Our World in Data energy dataset (Energy Institute, Ember, EIA)",
+      "licence": "CC BY 4.0",
+      "url": "https://ourworldindata.org/energy",
+      "years": "2016-2024"
+    },
+    {
+      "source": "wb",
+      "name": "World Bank World Development Indicators (military figures: SIPRI)",
+      "licence": "CC BY 4.0",
+      "url": "https://data.worldbank.org/",
+      "years": "2020-2025"
+    },
+    {
+      "source": "wikidata",
+      "name": "Wikidata (heads of state and government)",
+      "licence": "CC0",
+      "url": "https://www.wikidata.org/",
+      "years": ""
+    }
+  ],
+  "url": "/intel/actors/PS",
+  "data_url": "/data/actors/PS.json"
+}

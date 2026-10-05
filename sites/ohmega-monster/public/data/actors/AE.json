@@ -1,0 +1,483 @@
+{
+  "schema": "ohmega.actor/1",
+  "data_as_of": "2026-10-05",
+  "iso2": "AE",
+  "iso3": "ARE",
+  "name": "United Arab Emirates",
+  "region": "Middle East, North Africa, Afghanistan & Pakistan",
+  "capital": "Abu Dhabi",
+  "kind": "state",
+  "headline": [
+    {
+      "id": "population",
+      "label": "Population",
+      "unit": "people",
+      "group": "people",
+      "value": 11513149.0,
+      "year": 2025,
+      "source": "wb",
+      "rank": 85,
+      "of": 194,
+      "percentile": 56
+    },
+    {
+      "id": "gdp",
+      "label": "GDP",
+      "unit": "usd",
+      "group": "economy",
+      "value": 552324919095.872,
+      "year": 2024,
+      "source": "wb",
+      "rank": 30,
+      "of": 193,
+      "percentile": 84
+    },
+    {
+      "id": "gdp_pc",
+      "label": "GDP per person",
+      "unit": "usd",
+      "group": "economy",
+      "value": 50273.5126243239,
+      "year": 2024,
+      "source": "wb",
+      "rank": 24,
+      "of": 193,
+      "percentile": 87
+    },
+    {
+      "id": "energy_production",
+      "label": "Fossil fuel production (oil + gas + coal)",
+      "unit": "twh",
+      "group": "energy",
+      "value": 2704.475,
+      "year": 2024,
+      "source": "owid",
+      "rank": 10,
+      "of": 186,
+      "percentile": 94
+    },
+    {
+      "id": "milex",
+      "label": "Military spending",
+      "unit": "usd",
+      "group": "military",
+      "value": 22755071477.1954,
+      "year": 2014,
+      "source": "wb",
+      "rank": 20,
+      "of": 167,
+      "percentile": 88
+    }
+  ],
+  "groups": {
+    "people": [
+      {
+        "id": "population",
+        "label": "Population",
+        "unit": "people",
+        "group": "people",
+        "value": 11513149.0,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "pop_growth",
+        "label": "Population growth",
+        "unit": "pct",
+        "group": "people",
+        "value": 4.68316292656212,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "urban_pct",
+        "label": "Urban population",
+        "unit": "pct",
+        "group": "people",
+        "value": 85.9617641324017,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "land_area",
+        "label": "Land area",
+        "unit": "km2",
+        "group": "people",
+        "value": 71020.0,
+        "year": 2023,
+        "source": "wb"
+      }
+    ],
+    "economy": [
+      {
+        "id": "gdp",
+        "label": "GDP",
+        "unit": "usd",
+        "group": "economy",
+        "value": 552324919095.872,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_ppp",
+        "label": "GDP (purchasing power)",
+        "unit": "usd",
+        "group": "economy",
+        "value": 871702497011.261,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_pc",
+        "label": "GDP per person",
+        "unit": "usd",
+        "group": "economy",
+        "value": 50273.5126243239,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_pc_ppp",
+        "label": "GDP per person (purchasing power)",
+        "unit": "usd",
+        "group": "economy",
+        "value": 79343.7793099888,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_growth",
+        "label": "GDP growth",
+        "unit": "pct",
+        "group": "economy",
+        "value": 3.99181200361831,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "inflation",
+        "label": "Inflation",
+        "unit": "pct",
+        "group": "economy",
+        "value": 1.250865245598,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gov_debt",
+        "label": "Central government debt, share of GDP",
+        "unit": "pct",
+        "group": "economy",
+        "value": 1.80326819075483,
+        "year": 2013,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_growth_imf",
+        "label": "GDP growth, IMF estimate/forecast",
+        "unit": "pct",
+        "group": "economy",
+        "value": 3.1,
+        "year": 2026,
+        "source": "imf"
+      },
+      {
+        "id": "gov_debt_imf",
+        "label": "General government gross debt, share of GDP (IMF)",
+        "unit": "pct",
+        "group": "economy",
+        "value": 31.4,
+        "year": 2026,
+        "source": "imf"
+      }
+    ],
+    "trade": [
+      {
+        "id": "exports_pct",
+        "label": "Exports, share of GDP",
+        "unit": "pct",
+        "group": "trade",
+        "value": 106.846123390953,
+        "year": 2023,
+        "source": "wb"
+      },
+      {
+        "id": "imports_pct",
+        "label": "Imports, share of GDP",
+        "unit": "pct",
+        "group": "trade",
+        "value": 92.1988267361531,
+        "year": 2023,
+        "source": "wb"
+      },
+      {
+        "id": "fuel_exports_pct",
+        "label": "Fuels, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 68.202872587783,
+        "year": 2023,
+        "source": "wb"
+      }
+    ],
+    "energy": [
+      {
+        "id": "energy_production",
+        "label": "Fossil fuel production (oil + gas + coal)",
+        "unit": "twh",
+        "group": "energy",
+        "value": 2704.475,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "energy_use",
+        "label": "Primary energy consumption",
+        "unit": "twh",
+        "group": "energy",
+        "value": 1522.037,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "energy_pc",
+        "label": "Energy use per person",
+        "unit": "kwh",
+        "group": "energy",
+        "value": 138026.484,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "oil_prod",
+        "label": "Oil production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 2090.457,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "gas_prod",
+        "label": "Gas production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 614.018,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "coal_prod",
+        "label": "Coal production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 0.0,
+        "year": 2016,
+        "source": "owid"
+      },
+      {
+        "id": "oil_cons",
+        "label": "Oil consumption",
+        "unit": "twh",
+        "group": "energy",
+        "value": 636.577,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "gas_cons",
+        "label": "Gas consumption",
+        "unit": "twh",
+        "group": "energy",
+        "value": 713.442,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "coal_cons",
+        "label": "Coal consumption",
+        "unit": "twh",
+        "group": "energy",
+        "value": 30.563,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "elec_gen",
+        "label": "Electricity generation",
+        "unit": "twh",
+        "group": "energy",
+        "value": 177.26,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "elec_fossil",
+        "label": "Electricity from fossil fuels",
+        "unit": "pct",
+        "group": "energy",
+        "value": 68.267,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "elec_nuclear",
+        "label": "Electricity from nuclear",
+        "unit": "pct",
+        "group": "energy",
+        "value": 22.921,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "elec_renew",
+        "label": "Electricity from renewables",
+        "unit": "pct",
+        "group": "energy",
+        "value": 8.812,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "energy_import_pct",
+        "label": "Net energy imports, share of use",
+        "unit": "pct",
+        "group": "energy",
+        "value": -171.482371329992,
+        "year": 2022,
+        "source": "wb"
+      }
+    ],
+    "military": [
+      {
+        "id": "milex",
+        "label": "Military spending",
+        "unit": "usd",
+        "group": "military",
+        "value": 22755071477.1954,
+        "year": 2014,
+        "source": "wb"
+      },
+      {
+        "id": "armed_forces",
+        "label": "Armed forces personnel",
+        "unit": "persons",
+        "group": "military",
+        "value": 63000.0,
+        "year": 2020,
+        "source": "wb"
+      },
+      {
+        "id": "arms_imports",
+        "label": "Arms imports (SIPRI trend-indicator value, 1990 US$)",
+        "unit": "usd",
+        "group": "military",
+        "value": 932000000.0,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "arms_exports",
+        "label": "Arms exports (SIPRI trend-indicator value, 1990 US$)",
+        "unit": "usd",
+        "group": "military",
+        "value": 117000000.0,
+        "year": 2024,
+        "source": "wb"
+      }
+    ]
+  },
+  "energy_role": {
+    "surplus": [
+      "oil"
+    ],
+    "deficit": [
+      "gas",
+      "coal"
+    ]
+  },
+  "leadership": {
+    "head_of_state": {
+      "name": "Mohammed Bin Zayed Al Nahyan",
+      "since": "2022-05-14"
+    },
+    "head_of_government": {
+      "name": "Mohammed bin Rashid Al Maktoum",
+      "since": ""
+    },
+    "as_of": "2026-10-05",
+    "nuclear": null
+  },
+  "statements": [],
+  "involved": {
+    "theaters": [
+      {
+        "id": "thr_gaza_war_and_unga_diplomatic_fallout",
+        "name": "Gaza war and UNGA diplomatic fallout",
+        "mentions": 1
+      }
+    ],
+    "pulses": [
+      {
+        "id": "pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe",
+        "name": "Gaza Combat and Humanitarian Catastrophe",
+        "band": "critical",
+        "position": 85.0,
+        "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
+      },
+      {
+        "id": "pls_israel_palestine_international_legal_and_diplomatic_pressure_on_israel",
+        "name": "International Legal and Diplomatic Pressure on Israel",
+        "band": "severe",
+        "position": 73.0,
+        "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
+      },
+      {
+        "id": "pls_israel_palestine_ceasefire_and_normalization_deadlock",
+        "name": "Ceasefire and Normalization Deadlock",
+        "band": "severe",
+        "position": 60.0,
+        "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
+      },
+      {
+        "id": "pls_israel_palestine_west_bank_annexation_and_settler_violence",
+        "name": "West Bank Annexation and Settler Violence",
+        "band": "severe",
+        "position": 58.0,
+        "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
+      }
+    ]
+  },
+  "credits": [
+    {
+      "source": "imf",
+      "name": "IMF World Economic Outlook (DataMapper)",
+      "licence": "IMF open data, attribution",
+      "url": "https://www.imf.org/external/datamapper",
+      "years": "2026"
+    },
+    {
+      "source": "owid",
+      "name": "Our World in Data energy dataset (Energy Institute, Ember, EIA)",
+      "licence": "CC BY 4.0",
+      "url": "https://ourworldindata.org/energy",
+      "years": "2016-2024"
+    },
+    {
+      "source": "wb",
+      "name": "World Bank World Development Indicators (military figures: SIPRI)",
+      "licence": "CC BY 4.0",
+      "url": "https://data.worldbank.org/",
+      "years": "2013-2025"
+    },
+    {
+      "source": "wikidata",
+      "name": "Wikidata (heads of state and government)",
+      "licence": "CC0",
+      "url": "https://www.wikidata.org/",
+      "years": ""
+    }
+  ],
+  "url": "/intel/actors/AE",
+  "data_url": "/data/actors/AE.json"
+}

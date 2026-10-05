@@ -2,6 +2,11 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_china_taiwan_external_deterrence_failure_and_intervention_risk",
   "name": "External Deterrence Failure and Intervention Risk",
+  "title": "US–China · External deterrence failure and intervention risk",
+  "actors_iso2": [
+    "US",
+    "CN"
+  ],
   "situation_id": "sit_china_taiwan",
   "situation": "China–Taiwan",
   "status": "experimental",

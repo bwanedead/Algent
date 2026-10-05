@@ -2,6 +2,10 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_red_sea_shipping_suez_canal_rerouting_strain",
   "name": "Suez Canal Throughput and Rerouting Strain",
+  "title": "Houthis–Saudi Arabia · Suez Canal Throughput and Rerouting Strain",
+  "actors_iso2": [
+    "SA"
+  ],
   "situation_id": "sit_red_sea_shipping",
   "situation": "Red Sea and global shipping disruption",
   "status": "experimental",

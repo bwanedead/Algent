@@ -1,0 +1,371 @@
+{
+  "schema": "ohmega.actor/1",
+  "data_as_of": "2026-10-05",
+  "iso2": "SR",
+  "iso3": "SUR",
+  "name": "Suriname",
+  "region": "Latin America & Caribbean",
+  "capital": "Paramaribo",
+  "kind": "state",
+  "headline": [
+    {
+      "id": "population",
+      "label": "Population",
+      "unit": "people",
+      "group": "people",
+      "value": 639850.0,
+      "year": 2025,
+      "source": "wb",
+      "rank": 164,
+      "of": 194,
+      "percentile": 15
+    },
+    {
+      "id": "gdp",
+      "label": "GDP",
+      "unit": "usd",
+      "group": "economy",
+      "value": 4523657796.86421,
+      "year": 2025,
+      "source": "wb",
+      "rank": 162,
+      "of": 193,
+      "percentile": 16
+    },
+    {
+      "id": "gdp_pc",
+      "label": "GDP per person",
+      "unit": "usd",
+      "group": "economy",
+      "value": 7069.87230892274,
+      "year": 2025,
+      "source": "wb",
+      "rank": 101,
+      "of": 193,
+      "percentile": 47
+    },
+    {
+      "id": "energy_production",
+      "label": "Fossil fuel production (oil + gas + coal)",
+      "unit": "twh",
+      "group": "energy",
+      "value": 11.536,
+      "year": 2016,
+      "source": "owid",
+      "rank": 93,
+      "of": 186,
+      "percentile": 50
+    }
+  ],
+  "groups": {
+    "people": [
+      {
+        "id": "population",
+        "label": "Population",
+        "unit": "people",
+        "group": "people",
+        "value": 639850.0,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "pop_growth",
+        "label": "Population growth",
+        "unit": "pct",
+        "group": "people",
+        "value": 0.850523968746845,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "urban_pct",
+        "label": "Urban population",
+        "unit": "pct",
+        "group": "people",
+        "value": 65.7886836406706,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "land_area",
+        "label": "Land area",
+        "unit": "km2",
+        "group": "people",
+        "value": 160507.61,
+        "year": 2023,
+        "source": "wb"
+      }
+    ],
+    "economy": [
+      {
+        "id": "gdp",
+        "label": "GDP",
+        "unit": "usd",
+        "group": "economy",
+        "value": 4523657796.86421,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_ppp",
+        "label": "GDP (purchasing power)",
+        "unit": "usd",
+        "group": "economy",
+        "value": 14494135109.5398,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_pc",
+        "label": "GDP per person",
+        "unit": "usd",
+        "group": "economy",
+        "value": 7069.87230892274,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_pc_ppp",
+        "label": "GDP per person (purchasing power)",
+        "unit": "usd",
+        "group": "economy",
+        "value": 22652.3952637959,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_growth",
+        "label": "GDP growth",
+        "unit": "pct",
+        "group": "economy",
+        "value": 1.79169153226913,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "inflation",
+        "label": "Inflation",
+        "unit": "pct",
+        "group": "economy",
+        "value": 9.2054681878919,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_growth_imf",
+        "label": "GDP growth, IMF estimate/forecast",
+        "unit": "pct",
+        "group": "economy",
+        "value": 3.9,
+        "year": 2026,
+        "source": "imf"
+      },
+      {
+        "id": "gov_debt_imf",
+        "label": "General government gross debt, share of GDP (IMF)",
+        "unit": "pct",
+        "group": "economy",
+        "value": 87.1,
+        "year": 2026,
+        "source": "imf"
+      }
+    ],
+    "trade": [
+      {
+        "id": "fuel_exports_pct",
+        "label": "Fuels, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 3.1404327843252,
+        "year": 2024,
+        "source": "wb"
+      }
+    ],
+    "energy": [
+      {
+        "id": "energy_production",
+        "label": "Fossil fuel production (oil + gas + coal)",
+        "unit": "twh",
+        "group": "energy",
+        "value": 11.536,
+        "year": 2016,
+        "source": "owid"
+      },
+      {
+        "id": "energy_use",
+        "label": "Primary energy consumption",
+        "unit": "twh",
+        "group": "energy",
+        "value": 11.224,
+        "year": 2023,
+        "source": "owid"
+      },
+      {
+        "id": "energy_pc",
+        "label": "Energy use per person",
+        "unit": "kwh",
+        "group": "energy",
+        "value": 17846.547,
+        "year": 2023,
+        "source": "owid"
+      },
+      {
+        "id": "oil_prod",
+        "label": "Oil production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 11.536,
+        "year": 2016,
+        "source": "owid"
+      },
+      {
+        "id": "gas_prod",
+        "label": "Gas production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 0.0,
+        "year": 2016,
+        "source": "owid"
+      },
+      {
+        "id": "coal_prod",
+        "label": "Coal production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 0.0,
+        "year": 2016,
+        "source": "owid"
+      },
+      {
+        "id": "elec_gen",
+        "label": "Electricity generation",
+        "unit": "twh",
+        "group": "energy",
+        "value": 1.74,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "elec_fossil",
+        "label": "Electricity from fossil fuels",
+        "unit": "pct",
+        "group": "energy",
+        "value": 47.126,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "elec_nuclear",
+        "label": "Electricity from nuclear",
+        "unit": "pct",
+        "group": "energy",
+        "value": 0.0,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "elec_renew",
+        "label": "Electricity from renewables",
+        "unit": "pct",
+        "group": "energy",
+        "value": 52.874,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "energy_import_pct",
+        "label": "Net energy imports, share of use",
+        "unit": "pct",
+        "group": "energy",
+        "value": 12.3045212170095,
+        "year": 2023,
+        "source": "wb"
+      }
+    ],
+    "military": [
+      {
+        "id": "armed_forces",
+        "label": "Armed forces personnel",
+        "unit": "persons",
+        "group": "military",
+        "value": 2000.0,
+        "year": 2020,
+        "source": "wb"
+      },
+      {
+        "id": "arms_imports",
+        "label": "Arms imports (SIPRI trend-indicator value, 1990 US$)",
+        "unit": "usd",
+        "group": "military",
+        "value": 12000000.0,
+        "year": 2024,
+        "source": "wb"
+      }
+    ]
+  },
+  "energy_role": {
+    "surplus": [],
+    "deficit": []
+  },
+  "leadership": {
+    "head_of_state": {
+      "name": "Jennifer Geerlings-Simons",
+      "since": "2025-07-16"
+    },
+    "head_of_government": {
+      "name": "Jennifer Geerlings-Simons",
+      "since": "2025-07-16"
+    },
+    "as_of": "2026-10-05",
+    "nuclear": null
+  },
+  "statements": [
+    {
+      "id": "st_c418370fc9a0",
+      "speaker": "Representative of Suriname",
+      "role": "Delegate to the Third Committee",
+      "date": "2026-10-02",
+      "text": "It is not reasonable to expect forest-rich countries to bear these costs alone while the benefits are enjoyed globally,",
+      "is_quote": true,
+      "signal": "demand",
+      "stance": 0,
+      "source_url": "https://press.un.org/en/2026/gashc4437.doc.htm"
+    }
+  ],
+  "involved": {
+    "theaters": [],
+    "pulses": []
+  },
+  "credits": [
+    {
+      "source": "imf",
+      "name": "IMF World Economic Outlook (DataMapper)",
+      "licence": "IMF open data, attribution",
+      "url": "https://www.imf.org/external/datamapper",
+      "years": "2026"
+    },
+    {
+      "source": "owid",
+      "name": "Our World in Data energy dataset (Energy Institute, Ember, EIA)",
+      "licence": "CC BY 4.0",
+      "url": "https://ourworldindata.org/energy",
+      "years": "2016-2024"
+    },
+    {
+      "source": "wb",
+      "name": "World Bank World Development Indicators (military figures: SIPRI)",
+      "licence": "CC BY 4.0",
+      "url": "https://data.worldbank.org/",
+      "years": "2020-2025"
+    },
+    {
+      "source": "wikidata",
+      "name": "Wikidata (heads of state and government)",
+      "licence": "CC0",
+      "url": "https://www.wikidata.org/",
+      "years": ""
+    }
+  ],
+  "url": "/intel/actors/SR",
+  "data_url": "/data/actors/SR.json"
+}

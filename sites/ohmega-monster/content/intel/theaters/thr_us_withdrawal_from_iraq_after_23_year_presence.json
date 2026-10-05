@@ -7,6 +7,8 @@
   "first_seen": "2026-09-27",
   "last_seen": "2026-10-04",
   "days_covered": 4,
+  "state": "",
+  "last_novel": "",
   "primer": {
     "text": "The United States has kept forces in Iraq for more than two decades, and Iraq is the country where that presence has been based. A withdrawal is the formal end of that long presence through a drawdown — the planned removal of troops and the closing out of the deployment. That presence has been part of the region's security arrangement, so how it ends matters beyond the two countries. Changes to who provides security inside Iraq carry implications for neighboring states and for broader regional security.",
     "built_at": "2026-10-04T07:26:06.472952+00:00"
@@ -815,6 +817,7 @@
   "forecasts": [],
   "indicators": [],
   "statements": [],
+  "on_record": [],
   "links": [
     {
       "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",

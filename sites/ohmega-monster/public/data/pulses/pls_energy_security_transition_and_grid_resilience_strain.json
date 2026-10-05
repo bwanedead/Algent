@@ -2,6 +2,8 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_energy_security_transition_and_grid_resilience_strain",
   "name": "Transition and Grid Resilience Strain",
+  "title": "Global Power System · Transition and Grid Resilience Strain",
+  "actors_iso2": [],
   "situation_id": "sit_energy_security",
   "situation": "Global energy security",
   "status": "experimental",

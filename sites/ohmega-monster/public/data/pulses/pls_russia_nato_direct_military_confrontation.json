@@ -2,6 +2,10 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_russia_nato_direct_military_confrontation",
   "name": "Direct Military Confrontation",
+  "title": "Russia–NATO · Direct Military Confrontation",
+  "actors_iso2": [
+    "RU"
+  ],
   "situation_id": "sit_russia_nato",
   "situation": "Russia–NATO confrontation",
   "status": "experimental",

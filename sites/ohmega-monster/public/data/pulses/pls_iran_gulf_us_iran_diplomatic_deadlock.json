@@ -2,6 +2,11 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_iran_gulf_us_iran_diplomatic_deadlock",
   "name": "US-Iran Diplomatic Deadlock",
+  "title": "US–Iran · Diplomatic Deadlock",
+  "actors_iso2": [
+    "US",
+    "IR"
+  ],
   "situation_id": "sit_iran_gulf",
   "situation": "Iran, Israel and the Gulf",
   "status": "experimental",

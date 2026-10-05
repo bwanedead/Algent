@@ -2,6 +2,11 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_iran_gulf_hormuz_maritime_disruption",
   "name": "Strait of Hormuz Maritime Disruption",
+  "title": "Iran–US · Strait of Hormuz Maritime Disruption",
+  "actors_iso2": [
+    "IR",
+    "US"
+  ],
   "situation_id": "sit_iran_gulf",
   "situation": "Iran, Israel and the Gulf",
   "status": "experimental",

@@ -2,6 +2,12 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_energy_security_global_hydrocarbon_supply_disruption",
   "name": "Global Hydrocarbon Supply Disruption",
+  "title": "Iran – Saudi Arabia – US · Hydrocarbon Supply Disruption",
+  "actors_iso2": [
+    "IR",
+    "SA",
+    "US"
+  ],
   "situation_id": "sit_energy_security",
   "situation": "Global energy security",
   "status": "experimental",

@@ -2,6 +2,11 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_israel_palestine_ceasefire_and_normalization_deadlock",
   "name": "Ceasefire and Normalization Deadlock",
+  "title": "Israel–Hamas–Saudi Arabia · Ceasefire and Normalization Deadlock",
+  "actors_iso2": [
+    "IL",
+    "SA"
+  ],
   "situation_id": "sit_israel_palestine",
   "situation": "Israel–Palestine and the wider region",
   "status": "experimental",

@@ -2,6 +2,8 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_sahel_horn_state_fragility_insurgent_control",
   "name": "State Fragility and Insurgent Control",
+  "title": "Sahel and Horn of Africa · State Fragility and Insurgent Control",
+  "actors_iso2": [],
   "situation_id": "sit_sahel_horn",
   "situation": "Sahel and Horn of Africa instability",
   "status": "experimental",

@@ -1,0 +1,491 @@
+{
+  "schema": "ohmega.actor/1",
+  "data_as_of": "2026-10-05",
+  "iso2": "NL",
+  "iso3": "NLD",
+  "name": "Netherlands",
+  "region": "Europe & Central Asia",
+  "capital": "Amsterdam",
+  "kind": "state",
+  "headline": [
+    {
+      "id": "population",
+      "label": "Population",
+      "unit": "people",
+      "group": "people",
+      "value": 18087633.0,
+      "year": 2025,
+      "source": "wb",
+      "rank": 71,
+      "of": 194,
+      "percentile": 63
+    },
+    {
+      "id": "gdp",
+      "label": "GDP",
+      "unit": "usd",
+      "group": "economy",
+      "value": 1332767651100.39,
+      "year": 2025,
+      "source": "wb",
+      "rank": 18,
+      "of": 193,
+      "percentile": 90
+    },
+    {
+      "id": "gdp_pc",
+      "label": "GDP per person",
+      "unit": "usd",
+      "group": "economy",
+      "value": 73683.917132794,
+      "year": 2025,
+      "source": "wb",
+      "rank": 11,
+      "of": 193,
+      "percentile": 94
+    },
+    {
+      "id": "energy_production",
+      "label": "Fossil fuel production (oil + gas + coal)",
+      "unit": "twh",
+      "group": "energy",
+      "value": 95.425,
+      "year": 2024,
+      "source": "owid",
+      "rank": 61,
+      "of": 186,
+      "percentile": 67
+    },
+    {
+      "id": "milex",
+      "label": "Military spending",
+      "unit": "usd",
+      "group": "military",
+      "value": 23179211260.1708,
+      "year": 2024,
+      "source": "wb",
+      "rank": 19,
+      "of": 167,
+      "percentile": 88
+    }
+  ],
+  "groups": {
+    "people": [
+      {
+        "id": "population",
+        "label": "Population",
+        "unit": "people",
+        "group": "people",
+        "value": 18087633.0,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "pop_growth",
+        "label": "Population growth",
+        "unit": "pct",
+        "group": "people",
+        "value": 0.521869714098474,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "urban_pct",
+        "label": "Urban population",
+        "unit": "pct",
+        "group": "people",
+        "value": 95.9385903481191,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "land_area",
+        "label": "Land area",
+        "unit": "km2",
+        "group": "people",
+        "value": 33670.0,
+        "year": 2023,
+        "source": "wb"
+      }
+    ],
+    "economy": [
+      {
+        "id": "gdp",
+        "label": "GDP",
+        "unit": "usd",
+        "group": "economy",
+        "value": 1332767651100.39,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_ppp",
+        "label": "GDP (purchasing power)",
+        "unit": "usd",
+        "group": "economy",
+        "value": 1579414785562.87,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_pc",
+        "label": "GDP per person",
+        "unit": "usd",
+        "group": "economy",
+        "value": 73683.917132794,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_pc_ppp",
+        "label": "GDP per person (purchasing power)",
+        "unit": "usd",
+        "group": "economy",
+        "value": 87320.1477254029,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_growth",
+        "label": "GDP growth",
+        "unit": "pct",
+        "group": "economy",
+        "value": 1.78463214703797,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "inflation",
+        "label": "Inflation",
+        "unit": "pct",
+        "group": "economy",
+        "value": 3.2595766451366,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gov_debt",
+        "label": "Central government debt, share of GDP",
+        "unit": "pct",
+        "group": "economy",
+        "value": 54.214654102661,
+        "year": 1994,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_growth_imf",
+        "label": "GDP growth, IMF estimate/forecast",
+        "unit": "pct",
+        "group": "economy",
+        "value": 1.2,
+        "year": 2026,
+        "source": "imf"
+      },
+      {
+        "id": "gov_debt_imf",
+        "label": "General government gross debt, share of GDP (IMF)",
+        "unit": "pct",
+        "group": "economy",
+        "value": 44.1,
+        "year": 2026,
+        "source": "imf"
+      }
+    ],
+    "trade": [
+      {
+        "id": "exports_pct",
+        "label": "Exports, share of GDP",
+        "unit": "pct",
+        "group": "trade",
+        "value": 80.6693413415314,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "imports_pct",
+        "label": "Imports, share of GDP",
+        "unit": "pct",
+        "group": "trade",
+        "value": 69.4506290177353,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "fuel_exports_pct",
+        "label": "Fuels, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 12.6812336694305,
+        "year": 2024,
+        "source": "wb"
+      }
+    ],
+    "energy": [
+      {
+        "id": "energy_production",
+        "label": "Fossil fuel production (oil + gas + coal)",
+        "unit": "twh",
+        "group": "energy",
+        "value": 95.425,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "energy_use",
+        "label": "Primary energy consumption",
+        "unit": "twh",
+        "group": "energy",
+        "value": 926.465,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "energy_pc",
+        "label": "Energy use per person",
+        "unit": "kwh",
+        "group": "energy",
+        "value": 50824.402,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "oil_prod",
+        "label": "Oil production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 14.758,
+        "year": 2016,
+        "source": "owid"
+      },
+      {
+        "id": "gas_prod",
+        "label": "Gas production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 80.667,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "coal_prod",
+        "label": "Coal production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 0.0,
+        "year": 2016,
+        "source": "owid"
+      },
+      {
+        "id": "oil_cons",
+        "label": "Oil consumption",
+        "unit": "twh",
+        "group": "energy",
+        "value": 432.999,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "gas_cons",
+        "label": "Gas consumption",
+        "unit": "twh",
+        "group": "energy",
+        "value": 261.444,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "coal_cons",
+        "label": "Coal consumption",
+        "unit": "twh",
+        "group": "energy",
+        "value": 48.167,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "elec_gen",
+        "label": "Electricity generation",
+        "unit": "twh",
+        "group": "energy",
+        "value": 134.96,
+        "year": 2025,
+        "source": "owid"
+      },
+      {
+        "id": "elec_fossil",
+        "label": "Electricity from fossil fuels",
+        "unit": "pct",
+        "group": "energy",
+        "value": 45.843,
+        "year": 2025,
+        "source": "owid"
+      },
+      {
+        "id": "elec_nuclear",
+        "label": "Electricity from nuclear",
+        "unit": "pct",
+        "group": "energy",
+        "value": 2.956,
+        "year": 2025,
+        "source": "owid"
+      },
+      {
+        "id": "elec_renew",
+        "label": "Electricity from renewables",
+        "unit": "pct",
+        "group": "energy",
+        "value": 51.2,
+        "year": 2025,
+        "source": "owid"
+      },
+      {
+        "id": "energy_import_pct",
+        "label": "Net energy imports, share of use",
+        "unit": "pct",
+        "group": "energy",
+        "value": 87.0173748946605,
+        "year": 2023,
+        "source": "wb"
+      }
+    ],
+    "military": [
+      {
+        "id": "milex",
+        "label": "Military spending",
+        "unit": "usd",
+        "group": "military",
+        "value": 23179211260.1708,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "milex_pct",
+        "label": "Military spending, share of GDP",
+        "unit": "pct",
+        "group": "military",
+        "value": 1.91642541759119,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "armed_forces",
+        "label": "Armed forces personnel",
+        "unit": "persons",
+        "group": "military",
+        "value": 41000.0,
+        "year": 2020,
+        "source": "wb"
+      },
+      {
+        "id": "arms_imports",
+        "label": "Arms imports (SIPRI trend-indicator value, 1990 US$)",
+        "unit": "usd",
+        "group": "military",
+        "value": 360000000.0,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "arms_exports",
+        "label": "Arms exports (SIPRI trend-indicator value, 1990 US$)",
+        "unit": "usd",
+        "group": "military",
+        "value": 392000000.0,
+        "year": 2024,
+        "source": "wb"
+      }
+    ]
+  },
+  "energy_role": {
+    "surplus": [],
+    "deficit": [
+      "oil",
+      "gas",
+      "coal"
+    ]
+  },
+  "leadership": {
+    "head_of_state": {
+      "name": "William Alexander of the Netherlands",
+      "since": "2013-04-30"
+    },
+    "head_of_government": {
+      "name": "Rob Jetten",
+      "since": "2026-02-23"
+    },
+    "as_of": "2026-10-05",
+    "nuclear": null
+  },
+  "statements": [],
+  "involved": {
+    "theaters": [
+      {
+        "id": "thr_gaza_war_and_unga_diplomatic_fallout",
+        "name": "Gaza war and UNGA diplomatic fallout",
+        "mentions": 4
+      }
+    ],
+    "pulses": [
+      {
+        "id": "pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe",
+        "name": "Gaza Combat and Humanitarian Catastrophe",
+        "band": "critical",
+        "position": 85.0,
+        "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
+      },
+      {
+        "id": "pls_israel_palestine_international_legal_and_diplomatic_pressure_on_israel",
+        "name": "International Legal and Diplomatic Pressure on Israel",
+        "band": "severe",
+        "position": 73.0,
+        "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
+      },
+      {
+        "id": "pls_israel_palestine_ceasefire_and_normalization_deadlock",
+        "name": "Ceasefire and Normalization Deadlock",
+        "band": "severe",
+        "position": 60.0,
+        "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
+      },
+      {
+        "id": "pls_israel_palestine_west_bank_annexation_and_settler_violence",
+        "name": "West Bank Annexation and Settler Violence",
+        "band": "severe",
+        "position": 58.0,
+        "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
+      }
+    ]
+  },
+  "credits": [
+    {
+      "source": "imf",
+      "name": "IMF World Economic Outlook (DataMapper)",
+      "licence": "IMF open data, attribution",
+      "url": "https://www.imf.org/external/datamapper",
+      "years": "2026"
+    },
+    {
+      "source": "owid",
+      "name": "Our World in Data energy dataset (Energy Institute, Ember, EIA)",
+      "licence": "CC BY 4.0",
+      "url": "https://ourworldindata.org/energy",
+      "years": "2016-2025"
+    },
+    {
+      "source": "wb",
+      "name": "World Bank World Development Indicators (military figures: SIPRI)",
+      "licence": "CC BY 4.0",
+      "url": "https://data.worldbank.org/",
+      "years": "1994-2025"
+    },
+    {
+      "source": "wikidata",
+      "name": "Wikidata (heads of state and government)",
+      "licence": "CC0",
+      "url": "https://www.wikidata.org/",
+      "years": ""
+    }
+  ],
+  "url": "/intel/actors/NL",
+  "data_url": "/data/actors/NL.json"
+}

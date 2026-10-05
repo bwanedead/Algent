@@ -2,6 +2,11 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_israel_palestine_west_bank_annexation_and_settler_violence",
   "name": "West Bank Annexation and Settler Violence",
+  "title": "Israel–Palestine · West Bank Annexation and Settler Violence",
+  "actors_iso2": [
+    "IL",
+    "PS"
+  ],
   "situation_id": "sit_israel_palestine",
   "situation": "Israel–Palestine and the wider region",
   "status": "experimental",

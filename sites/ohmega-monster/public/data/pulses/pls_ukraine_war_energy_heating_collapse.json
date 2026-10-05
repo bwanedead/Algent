@@ -2,6 +2,10 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_ukraine_war_energy_heating_collapse",
   "name": "Energy and Heating System Collapse",
+  "title": "Ukraine · Energy and Heating System Collapse",
+  "actors_iso2": [
+    "UA"
+  ],
   "situation_id": "sit_ukraine_war",
   "situation": "The war in Ukraine",
   "status": "experimental",

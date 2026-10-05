@@ -1,0 +1,593 @@
+{
+  "schema": "ohmega.actor/1",
+  "data_as_of": "2026-10-05",
+  "iso2": "GB",
+  "iso3": "GBR",
+  "name": "United Kingdom",
+  "region": "Europe & Central Asia",
+  "capital": "London",
+  "kind": "state",
+  "headline": [
+    {
+      "id": "population",
+      "label": "Population",
+      "unit": "people",
+      "group": "people",
+      "value": 69487000.0,
+      "year": 2025,
+      "source": "wb",
+      "rank": 22,
+      "of": 194,
+      "percentile": 88
+    },
+    {
+      "id": "gdp",
+      "label": "GDP",
+      "unit": "usd",
+      "group": "economy",
+      "value": 4002587541846.01,
+      "year": 2025,
+      "source": "wb",
+      "rank": 5,
+      "of": 193,
+      "percentile": 97
+    },
+    {
+      "id": "gdp_pc",
+      "label": "GDP per person",
+      "unit": "usd",
+      "group": "economy",
+      "value": 57601.9621201954,
+      "year": 2025,
+      "source": "wb",
+      "rank": 20,
+      "of": 193,
+      "percentile": 89
+    },
+    {
+      "id": "energy_production",
+      "label": "Fossil fuel production (oil + gas + coal)",
+      "unit": "twh",
+      "group": "energy",
+      "value": 661.554,
+      "year": 2024,
+      "source": "owid",
+      "rank": 31,
+      "of": 186,
+      "percentile": 83
+    },
+    {
+      "id": "milex",
+      "label": "Military spending",
+      "unit": "usd",
+      "group": "military",
+      "value": 81763173069.6744,
+      "year": 2024,
+      "source": "wb",
+      "rank": 6,
+      "of": 167,
+      "percentile": 96
+    }
+  ],
+  "groups": {
+    "people": [
+      {
+        "id": "population",
+        "label": "Population",
+        "unit": "people",
+        "group": "people",
+        "value": 69487000.0,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "pop_growth",
+        "label": "Population growth",
+        "unit": "pct",
+        "group": "people",
+        "value": 0.296898638478743,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "urban_pct",
+        "label": "Urban population",
+        "unit": "pct",
+        "group": "people",
+        "value": 83.323608078271,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "land_area",
+        "label": "Land area",
+        "unit": "km2",
+        "group": "people",
+        "value": 241930.0,
+        "year": 2023,
+        "source": "wb"
+      }
+    ],
+    "economy": [
+      {
+        "id": "gdp",
+        "label": "GDP",
+        "unit": "usd",
+        "group": "economy",
+        "value": 4002587541846.01,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_ppp",
+        "label": "GDP (purchasing power)",
+        "unit": "usd",
+        "group": "economy",
+        "value": 4489311553269.46,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_pc",
+        "label": "GDP per person",
+        "unit": "usd",
+        "group": "economy",
+        "value": 57601.9621201954,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_pc_ppp",
+        "label": "GDP per person (purchasing power)",
+        "unit": "usd",
+        "group": "economy",
+        "value": 64606.4955066338,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_growth",
+        "label": "GDP growth",
+        "unit": "pct",
+        "group": "economy",
+        "value": 1.38844207858726,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "inflation",
+        "label": "Inflation",
+        "unit": "pct",
+        "group": "economy",
+        "value": 3.88306881626,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gov_debt",
+        "label": "Central government debt, share of GDP",
+        "unit": "pct",
+        "group": "economy",
+        "value": 130.735888365813,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_growth_imf",
+        "label": "GDP growth, IMF estimate/forecast",
+        "unit": "pct",
+        "group": "economy",
+        "value": 0.8,
+        "year": 2026,
+        "source": "imf"
+      },
+      {
+        "id": "gov_debt_imf",
+        "label": "General government gross debt, share of GDP (IMF)",
+        "unit": "pct",
+        "group": "economy",
+        "value": 103.6,
+        "year": 2026,
+        "source": "imf"
+      }
+    ],
+    "trade": [
+      {
+        "id": "exports_pct",
+        "label": "Exports, share of GDP",
+        "unit": "pct",
+        "group": "trade",
+        "value": 30.5969582161816,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "imports_pct",
+        "label": "Imports, share of GDP",
+        "unit": "pct",
+        "group": "trade",
+        "value": 31.8603712472379,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "fuel_exports_pct",
+        "label": "Fuels, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 7.10156229531189,
+        "year": 2025,
+        "source": "wb"
+      }
+    ],
+    "energy": [
+      {
+        "id": "energy_production",
+        "label": "Fossil fuel production (oil + gas + coal)",
+        "unit": "twh",
+        "group": "energy",
+        "value": 661.554,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "energy_use",
+        "label": "Primary energy consumption",
+        "unit": "twh",
+        "group": "energy",
+        "value": 1936.96,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "energy_pc",
+        "label": "Energy use per person",
+        "unit": "kwh",
+        "group": "energy",
+        "value": 28015.771,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "oil_prod",
+        "label": "Oil production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 353.536,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "gas_prod",
+        "label": "Gas production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 307.186,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "coal_prod",
+        "label": "Coal production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 0.832,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "oil_cons",
+        "label": "Oil consumption",
+        "unit": "twh",
+        "group": "energy",
+        "value": 744.16,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "gas_cons",
+        "label": "Gas consumption",
+        "unit": "twh",
+        "group": "energy",
+        "value": 618.572,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "coal_cons",
+        "label": "Coal consumption",
+        "unit": "twh",
+        "group": "energy",
+        "value": 46.967,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "elec_gen",
+        "label": "Electricity generation",
+        "unit": "twh",
+        "group": "energy",
+        "value": 292.31,
+        "year": 2025,
+        "source": "owid"
+      },
+      {
+        "id": "elec_fossil",
+        "label": "Electricity from fossil fuels",
+        "unit": "pct",
+        "group": "energy",
+        "value": 35.582,
+        "year": 2025,
+        "source": "owid"
+      },
+      {
+        "id": "elec_nuclear",
+        "label": "Electricity from nuclear",
+        "unit": "pct",
+        "group": "energy",
+        "value": 12.446,
+        "year": 2025,
+        "source": "owid"
+      },
+      {
+        "id": "elec_renew",
+        "label": "Electricity from renewables",
+        "unit": "pct",
+        "group": "energy",
+        "value": 51.972,
+        "year": 2025,
+        "source": "owid"
+      },
+      {
+        "id": "energy_import_pct",
+        "label": "Net energy imports, share of use",
+        "unit": "pct",
+        "group": "energy",
+        "value": 44.0436184547282,
+        "year": 2023,
+        "source": "wb"
+      }
+    ],
+    "military": [
+      {
+        "id": "milex",
+        "label": "Military spending",
+        "unit": "usd",
+        "group": "military",
+        "value": 81763173069.6744,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "milex_pct",
+        "label": "Military spending, share of GDP",
+        "unit": "pct",
+        "group": "military",
+        "value": 2.2786177901127,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "armed_forces",
+        "label": "Armed forces personnel",
+        "unit": "persons",
+        "group": "military",
+        "value": 153000.0,
+        "year": 2020,
+        "source": "wb"
+      },
+      {
+        "id": "arms_imports",
+        "label": "Arms imports (SIPRI trend-indicator value, 1990 US$)",
+        "unit": "usd",
+        "group": "military",
+        "value": 643000000.0,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "arms_exports",
+        "label": "Arms exports (SIPRI trend-indicator value, 1990 US$)",
+        "unit": "usd",
+        "group": "military",
+        "value": 756000000.0,
+        "year": 2024,
+        "source": "wb"
+      }
+    ]
+  },
+  "energy_role": {
+    "surplus": [],
+    "deficit": [
+      "oil",
+      "gas",
+      "coal"
+    ]
+  },
+  "leadership": {
+    "head_of_state": {
+      "name": "Charles III",
+      "since": "2022-09-08"
+    },
+    "head_of_government": {
+      "name": "Andy Burnham",
+      "since": "2026-07-20"
+    },
+    "as_of": "2026-10-05",
+    "nuclear": {
+      "status": "npt_recognised",
+      "stockpile": 225,
+      "inventory": 225,
+      "year": 2026,
+      "source_url": "https://fas.org/initiatives/status-world-nuclear-forces/"
+    }
+  },
+  "statements": [
+    {
+      "id": "st_ecdc88d2f76e",
+      "speaker": "Eleanor Sanders",
+      "role": "UK Human Rights Ambassador",
+      "date": "2026-10-02",
+      "text": "The UK is supporting this work with $7.5 million to the Human Rights Compliance Mechanism for the Gang Suppression Force, which will be delivered by the Office for the High Commissioner for Human Rights.",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 1,
+      "source_url": "https://www.gov.uk/government/speeches/un-human-rights-council-63-uk-statement-on-the-interactive-dialogue-on-haiti"
+    },
+    {
+      "id": "st_b655a0f7b479",
+      "speaker": "Eleanor Sanders",
+      "role": "UK Human Rights Ambassador",
+      "date": "2026-10-02",
+      "text": "Children associated with gangs must be treated as victims, not perpetrators.",
+      "is_quote": true,
+      "signal": "demand",
+      "stance": 0,
+      "source_url": "https://www.gov.uk/government/speeches/un-human-rights-council-63-uk-statement-on-the-interactive-dialogue-on-haiti"
+    },
+    {
+      "id": "st_1553689170d7",
+      "speaker": "Eleanor Sanders",
+      "role": "UK Human Rights Ambassador",
+      "date": "2026-10-02",
+      "text": "What concrete steps can the Government of Haiti take to resource and implement DDR nationwide, and deliver the safe release and reintegration of children associated with armed groups?",
+      "is_quote": true,
+      "signal": "demand",
+      "stance": 0,
+      "source_url": "https://www.gov.uk/government/speeches/un-human-rights-council-63-uk-statement-on-the-interactive-dialogue-on-haiti"
+    },
+    {
+      "id": "st_46bfc98aa766",
+      "speaker": "Ambassador Holland",
+      "role": "UK Ambassador to the OSCE",
+      "date": "2026-10-02",
+      "text": "The United Kingdom is deeply concerned by reports of the deteriorating humanitarian conditions in the temporarily occupied parts of Ukraine’s Kherson region, including Oleshky.",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -1,
+      "source_url": "https://www.gov.uk/government/speeches/humanitarian-situation-in-oleshky-uk-statement-to-the-osce"
+    },
+    {
+      "id": "st_2fb239bdd364",
+      "speaker": "Ambassador Holland",
+      "role": "UK Ambassador to the OSCE",
+      "date": "2026-10-02",
+      "text": "Russia must meet its obligations.",
+      "is_quote": true,
+      "signal": "demand",
+      "stance": -1,
+      "source_url": "https://www.gov.uk/government/speeches/humanitarian-situation-in-oleshky-uk-statement-to-the-osce"
+    },
+    {
+      "id": "st_0b62749ae005",
+      "speaker": "Ambassador Holland",
+      "role": "UK Ambassador to the OSCE",
+      "date": "2026-10-02",
+      "text": "The United Kingdom will continue to support Ukraine and in doing so to draw attention to the human consequences of Russia’s war of aggression.",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 1,
+      "source_url": "https://www.gov.uk/government/speeches/humanitarian-situation-in-oleshky-uk-statement-to-the-osce"
+    },
+    {
+      "id": "st_d1d8ec305f11",
+      "speaker": "Ambassador Holland",
+      "role": "UK Ambassador to the OSCE",
+      "date": "2026-10-02",
+      "text": "It also documents a broader rise in civilian harm and attacks affecting humanitarian personnel and operations.",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -1,
+      "source_url": "https://www.gov.uk/government/speeches/humanitarian-situation-in-oleshky-uk-statement-to-the-osce"
+    },
+    {
+      "id": "st_e9dfbf401e2e",
+      "speaker": "Eleanor Sanders",
+      "role": "UK's Human Rights Ambassador",
+      "date": "2026-10-02",
+      "text": "Sixty three percent of those interviewed reported conflict-related sexual violence at Russian hands. This included rape, genital mutilation, electric shocks and beatings to the genitals, and forced nudity - inflicted to strip prisoners of dignity and humiliate them before fellow captives and guards, sometimes over years.",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://www.gov.uk/government/speeches/un-human-rights-council-63-uk-statement-for-the-interactive-dialogue-with-the-high-commissioner-on-the-oral-update-on-ukraine"
+    }
+  ],
+  "involved": {
+    "theaters": [
+      {
+        "id": "thr_gaza_war_and_unga_diplomatic_fallout",
+        "name": "Gaza war and UNGA diplomatic fallout",
+        "mentions": 3
+      }
+    ],
+    "pulses": [
+      {
+        "id": "pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe",
+        "name": "Gaza Combat and Humanitarian Catastrophe",
+        "band": "critical",
+        "position": 85.0,
+        "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
+      },
+      {
+        "id": "pls_israel_palestine_international_legal_and_diplomatic_pressure_on_israel",
+        "name": "International Legal and Diplomatic Pressure on Israel",
+        "band": "severe",
+        "position": 73.0,
+        "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
+      },
+      {
+        "id": "pls_israel_palestine_ceasefire_and_normalization_deadlock",
+        "name": "Ceasefire and Normalization Deadlock",
+        "band": "severe",
+        "position": 60.0,
+        "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
+      },
+      {
+        "id": "pls_israel_palestine_west_bank_annexation_and_settler_violence",
+        "name": "West Bank Annexation and Settler Violence",
+        "band": "severe",
+        "position": 58.0,
+        "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
+      }
+    ]
+  },
+  "credits": [
+    {
+      "source": "imf",
+      "name": "IMF World Economic Outlook (DataMapper)",
+      "licence": "IMF open data, attribution",
+      "url": "https://www.imf.org/external/datamapper",
+      "years": "2026"
+    },
+    {
+      "source": "nuclear",
+      "name": "Federation of American Scientists, Status of World Nuclear Forces",
+      "licence": "public statements, cited",
+      "url": "https://fas.org/initiatives/status-world-nuclear-forces/",
+      "years": "2026"
+    },
+    {
+      "source": "owid",
+      "name": "Our World in Data energy dataset (Energy Institute, Ember, EIA)",
+      "licence": "CC BY 4.0",
+      "url": "https://ourworldindata.org/energy",
+      "years": "2024-2025"
+    },
+    {
+      "source": "wb",
+      "name": "World Bank World Development Indicators (military figures: SIPRI)",
+      "licence": "CC BY 4.0",
+      "url": "https://data.worldbank.org/",
+      "years": "2020-2025"
+    },
+    {
+      "source": "wikidata",
+      "name": "Wikidata (heads of state and government)",
+      "licence": "CC0",
+      "url": "https://www.wikidata.org/",
+      "years": ""
+    }
+  ],
+  "url": "/intel/actors/GB",
+  "data_url": "/data/actors/GB.json"
+}

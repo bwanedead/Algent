@@ -2,6 +2,8 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_red_sea_shipping_war_risk_insurance_freight_pressure",
   "name": "War-Risk Insurance and Freight Cost Pressure",
+  "title": "Red Sea–Hormuz shipping · War-risk insurance and freight cost pressure",
+  "actors_iso2": [],
   "situation_id": "sit_red_sea_shipping",
   "situation": "Red Sea and global shipping disruption",
   "status": "experimental",

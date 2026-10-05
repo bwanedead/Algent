@@ -2,6 +2,8 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_energy_security_energy_price_and_market_shock",
   "name": "Energy Price and Market Shock",
+  "title": "Global Economy · Energy Price and Market Shock",
+  "actors_iso2": [],
   "situation_id": "sit_energy_security",
   "situation": "Global energy security",
   "status": "experimental",

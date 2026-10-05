@@ -2,6 +2,11 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_ukraine_war_war_economy_dependency_strain",
   "name": "War Economy and External Dependency Strain",
+  "title": "Russia–Ukraine · War Economy and External Dependency Strain",
+  "actors_iso2": [
+    "RU",
+    "UA"
+  ],
   "situation_id": "sit_ukraine_war",
   "situation": "The war in Ukraine",
   "status": "experimental",

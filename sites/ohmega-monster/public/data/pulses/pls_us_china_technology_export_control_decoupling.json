@@ -2,6 +2,11 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_us_china_technology_export_control_decoupling",
   "name": "Technology and Export-Control Decoupling",
+  "title": "US–China · Technology and Export-Control Decoupling",
+  "actors_iso2": [
+    "US",
+    "CN"
+  ],
   "situation_id": "sit_us_china",
   "situation": "US–China competition",
   "status": "experimental",

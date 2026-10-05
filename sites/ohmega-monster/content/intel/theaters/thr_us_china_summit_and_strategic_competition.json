@@ -7,6 +7,8 @@
   "first_seen": "2026-09-26",
   "last_seen": "2026-10-02",
   "days_covered": 2,
+  "state": "",
+  "last_novel": "",
   "primer": {
     "text": "The United States and China are locked in strategic competition, a broad contest for economic, technological and security influence often framed as growth versus rivalry, where cooperation and rivalry run together. Summitry between the American and Chinese leaders is the main way to set direction, send alignment signals to allies and rivals, and keep crisis channels open so incidents do not escalate. In this context, strategic competition means managing rivalry without direct conflict; crisis channels, including a proposed AI hotline, are dedicated lines to defuse fast-moving military or technological incidents; panda diplomacy is the symbolic exchange of pandas used to signal goodwill or a thaw.",
     "built_at": "2026-10-04T07:26:06.472952+00:00"
@@ -256,6 +258,7 @@
   "forecasts": [],
   "indicators": [],
   "statements": [],
+  "on_record": [],
   "links": [],
   "reports": [
     {

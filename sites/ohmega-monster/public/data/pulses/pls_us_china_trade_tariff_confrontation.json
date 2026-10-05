@@ -2,6 +2,11 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_us_china_trade_tariff_confrontation",
   "name": "Trade and Tariff Confrontation",
+  "title": "US–China · Trade and Tariff Confrontation",
+  "actors_iso2": [
+    "US",
+    "CN"
+  ],
   "situation_id": "sit_us_china",
   "situation": "US–China competition",
   "status": "experimental",

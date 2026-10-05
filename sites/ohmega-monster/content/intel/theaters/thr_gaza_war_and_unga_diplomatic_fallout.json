@@ -7,6 +7,8 @@
   "first_seen": "2026-09-27",
   "last_seen": "2026-10-04",
   "days_covered": 4,
+  "state": "",
+  "last_novel": "",
   "primer": {
     "text": "The Gaza war centers on fighting in Gaza, where hospitals and camps have faced mass-casualty strikes, with spillover violence in the West Bank. It sits within a wider confrontation involving Israel, the United States and Iran that has included direct strikes and disruption to shipping through the Strait of Hormuz, the narrow waterway carrying a large share of world oil and gas. At the United Nations General Assembly, diplomacy becomes leverage: walkouts, votes and proposals such as a Board of Peace are used to signal support or pressure, and can trigger bilateral fallout such as diplomatic retaliation between the Netherlands and Israel or quiet mediation by the United Arab Emirates.",
     "built_at": "2026-10-04T07:26:06.472952+00:00"
@@ -1088,6 +1090,7 @@
     }
   ],
   "statements": [],
+  "on_record": [],
   "links": [],
   "reports": [
     {

@@ -1,0 +1,599 @@
+{
+  "schema": "ohmega.actor/1",
+  "data_as_of": "2026-10-05",
+  "iso2": "CN",
+  "iso3": "CHN",
+  "name": "China",
+  "region": "East Asia & Pacific",
+  "capital": "Beijing",
+  "kind": "state",
+  "headline": [
+    {
+      "id": "population",
+      "label": "Population",
+      "unit": "people",
+      "group": "people",
+      "value": 1406585000.0,
+      "year": 2025,
+      "source": "wb",
+      "rank": 2,
+      "of": 194,
+      "percentile": 98
+    },
+    {
+      "id": "gdp",
+      "label": "GDP",
+      "unit": "usd",
+      "group": "economy",
+      "value": 19498039388042.6,
+      "year": 2025,
+      "source": "wb",
+      "rank": 2,
+      "of": 193,
+      "percentile": 98
+    },
+    {
+      "id": "gdp_pc",
+      "label": "GDP per person",
+      "unit": "usd",
+      "group": "economy",
+      "value": 13861.970224368,
+      "year": 2025,
+      "source": "wb",
+      "rank": 73,
+      "of": 193,
+      "percentile": 62
+    },
+    {
+      "id": "energy_production",
+      "label": "Fossil fuel production (oil + gas + coal)",
+      "unit": "twh",
+      "group": "energy",
+      "value": 31204.841,
+      "year": 2024,
+      "source": "owid",
+      "rank": 1,
+      "of": 186,
+      "percentile": 99
+    },
+    {
+      "id": "milex",
+      "label": "Military spending",
+      "unit": "usd",
+      "group": "military",
+      "value": 313658330217.176,
+      "year": 2024,
+      "source": "wb",
+      "rank": 2,
+      "of": 167,
+      "percentile": 98
+    }
+  ],
+  "groups": {
+    "people": [
+      {
+        "id": "population",
+        "label": "Population",
+        "unit": "people",
+        "group": "people",
+        "value": 1406585000.0,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "pop_growth",
+        "label": "Population growth",
+        "unit": "pct",
+        "group": "people",
+        "value": -0.169770885652674,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "urban_pct",
+        "label": "Urban population",
+        "unit": "pct",
+        "group": "people",
+        "value": 66.3429910348272,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "land_area",
+        "label": "Land area",
+        "unit": "km2",
+        "group": "people",
+        "value": 9388210.0,
+        "year": 2023,
+        "source": "wb"
+      }
+    ],
+    "economy": [
+      {
+        "id": "gdp",
+        "label": "GDP",
+        "unit": "usd",
+        "group": "economy",
+        "value": 19498039388042.6,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_ppp",
+        "label": "GDP (purchasing power)",
+        "unit": "usd",
+        "group": "economy",
+        "value": 41259823532528.0,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_pc",
+        "label": "GDP per person",
+        "unit": "usd",
+        "group": "economy",
+        "value": 13861.970224368,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_pc_ppp",
+        "label": "GDP per person (purchasing power)",
+        "unit": "usd",
+        "group": "economy",
+        "value": 29333.3311051433,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_growth",
+        "label": "GDP growth",
+        "unit": "pct",
+        "group": "economy",
+        "value": 4.95994886240992,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "inflation",
+        "label": "Inflation",
+        "unit": "pct",
+        "group": "economy",
+        "value": 0.0595646916565403,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_growth_imf",
+        "label": "GDP growth, IMF estimate/forecast",
+        "unit": "pct",
+        "group": "economy",
+        "value": 4.4,
+        "year": 2026,
+        "source": "imf"
+      },
+      {
+        "id": "gov_debt_imf",
+        "label": "General government gross debt, share of GDP (IMF)",
+        "unit": "pct",
+        "group": "economy",
+        "value": 106.9,
+        "year": 2026,
+        "source": "imf"
+      }
+    ],
+    "trade": [
+      {
+        "id": "exports_pct",
+        "label": "Exports, share of GDP",
+        "unit": "pct",
+        "group": "trade",
+        "value": 21.0711983566772,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "imports_pct",
+        "label": "Imports, share of GDP",
+        "unit": "pct",
+        "group": "trade",
+        "value": 16.8851895085539,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "fuel_exports_pct",
+        "label": "Fuels, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 1.49786393169736,
+        "year": 2024,
+        "source": "wb"
+      }
+    ],
+    "energy": [
+      {
+        "id": "energy_production",
+        "label": "Fossil fuel production (oil + gas + coal)",
+        "unit": "twh",
+        "group": "energy",
+        "value": 31204.841,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "energy_use",
+        "label": "Primary energy consumption",
+        "unit": "twh",
+        "group": "energy",
+        "value": 48987.102,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "energy_pc",
+        "label": "Energy use per person",
+        "unit": "kwh",
+        "group": "energy",
+        "value": 34514.457,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "oil_prod",
+        "label": "Oil production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 2475.922,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "gas_prod",
+        "label": "Gas production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 2483.896,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "coal_prod",
+        "label": "Coal production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 26245.023,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "oil_cons",
+        "label": "Oil consumption",
+        "unit": "twh",
+        "group": "energy",
+        "value": 8964.054,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "gas_cons",
+        "label": "Gas consumption",
+        "unit": "twh",
+        "group": "energy",
+        "value": 4343.913,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "coal_cons",
+        "label": "Coal consumption",
+        "unit": "twh",
+        "group": "energy",
+        "value": 25599.307,
+        "year": 2024,
+        "source": "owid"
+      },
+      {
+        "id": "elec_gen",
+        "label": "Electricity generation",
+        "unit": "twh",
+        "group": "energy",
+        "value": 10583.36,
+        "year": 2025,
+        "source": "owid"
+      },
+      {
+        "id": "elec_fossil",
+        "label": "Electricity from fossil fuels",
+        "unit": "pct",
+        "group": "energy",
+        "value": 58.349,
+        "year": 2025,
+        "source": "owid"
+      },
+      {
+        "id": "elec_nuclear",
+        "label": "Electricity from nuclear",
+        "unit": "pct",
+        "group": "energy",
+        "value": 4.607,
+        "year": 2025,
+        "source": "owid"
+      },
+      {
+        "id": "elec_renew",
+        "label": "Electricity from renewables",
+        "unit": "pct",
+        "group": "energy",
+        "value": 37.044,
+        "year": 2025,
+        "source": "owid"
+      },
+      {
+        "id": "energy_import_pct",
+        "label": "Net energy imports, share of use",
+        "unit": "pct",
+        "group": "energy",
+        "value": 23.9617588276826,
+        "year": 2023,
+        "source": "wb"
+      }
+    ],
+    "military": [
+      {
+        "id": "milex",
+        "label": "Military spending",
+        "unit": "usd",
+        "group": "military",
+        "value": 313658330217.176,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "milex_pct",
+        "label": "Military spending, share of GDP",
+        "unit": "pct",
+        "group": "military",
+        "value": 1.71129740345228,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "armed_forces",
+        "label": "Armed forces personnel",
+        "unit": "persons",
+        "group": "military",
+        "value": 2535000.0,
+        "year": 2020,
+        "source": "wb"
+      },
+      {
+        "id": "arms_imports",
+        "label": "Arms imports (SIPRI trend-indicator value, 1990 US$)",
+        "unit": "usd",
+        "group": "military",
+        "value": 72000000.0,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "arms_exports",
+        "label": "Arms exports (SIPRI trend-indicator value, 1990 US$)",
+        "unit": "usd",
+        "group": "military",
+        "value": 1131000000.0,
+        "year": 2024,
+        "source": "wb"
+      }
+    ]
+  },
+  "energy_role": {
+    "surplus": [
+      "coal"
+    ],
+    "deficit": [
+      "oil",
+      "gas"
+    ]
+  },
+  "leadership": {
+    "head_of_state": {
+      "name": "Xi Jinping",
+      "since": "2013-03-14"
+    },
+    "head_of_government": {
+      "name": "Li Qiang",
+      "since": "2023-03-11"
+    },
+    "as_of": "2026-10-05",
+    "nuclear": {
+      "status": "npt_recognised",
+      "stockpile": 620,
+      "inventory": 620,
+      "year": 2026,
+      "source_url": "https://fas.org/initiatives/status-world-nuclear-forces/"
+    }
+  },
+  "statements": [
+    {
+      "id": "st_dd17548de306",
+      "speaker": "Guo Jiakun",
+      "role": "Foreign Ministry Spokesperson",
+      "date": "2026-10-03",
+      "text": "The strategic guidance provided by head-of-state diplomacy serves as the most important political underpinning for the steady and sustained advancement of China-Russia relations.",
+      "is_quote": true,
+      "signal": "reassurance",
+      "stance": 2,
+      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261003_12035482.html"
+    },
+    {
+      "id": "st_423f7300b7f1",
+      "speaker": "Guo Jiakun",
+      "role": "Foreign Ministry Spokesperson",
+      "date": "2026-10-03",
+      "text": "China welcomes President Putin’s attendance at the APEC Economic Leaders’ Meeting in Shenzhen this November and stands ready to work with the Russian side for fruitful outcomes of the APEC “China Year.”",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 2,
+      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261003_12035482.html"
+    },
+    {
+      "id": "st_c8c64a51c31d",
+      "speaker": "Guo Jiakun",
+      "role": "Foreign Ministry Spokesperson",
+      "date": "2026-10-03",
+      "text": "As for your specific question, I have no information to offer at the moment.",
+      "is_quote": true,
+      "signal": "denial",
+      "stance": 0,
+      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261003_12035482.html"
+    },
+    {
+      "id": "st_6cb3c42769dd",
+      "speaker": "Guo Jiakun",
+      "role": "Foreign Ministry Spokesperson",
+      "date": "2026-10-03",
+      "text": "China always acts prudently and responsibly on the export of military products, and exercises strict control over dual-use items in accordance with China’s laws and regulations on export control and due international obligations.",
+      "is_quote": true,
+      "signal": "policy_announcement",
+      "stance": 0,
+      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261003_12035482.html"
+    },
+    {
+      "id": "st_0df656c23c76",
+      "speaker": "Guo Jiakun",
+      "role": "Foreign Ministry Spokesperson",
+      "date": "2026-10-03",
+      "text": "China opposes using civilian drones for military purposes.",
+      "is_quote": true,
+      "signal": "policy_announcement",
+      "stance": 0,
+      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261003_12035482.html"
+    },
+    {
+      "id": "st_32b2d8e3e0bb",
+      "speaker": "Guo Jiakun",
+      "role": "Foreign Ministry Spokesperson",
+      "date": "2026-10-03",
+      "text": "All parties should play a constructive role in facilitating a political settlement of the Ukraine crisis, instead of making groundless speculation and ill-intentioned association.",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": 0,
+      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261003_12035482.html"
+    },
+    {
+      "id": "st_ca64984fd411",
+      "speaker": "Guo Jiakun",
+      "role": "Foreign Ministry Spokesperson",
+      "date": "2026-10-03",
+      "text": "The so-called “genocide” in Xinjiang is a blatant lie.",
+      "is_quote": true,
+      "signal": "denial",
+      "stance": -1,
+      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261003_12035482.html"
+    },
+    {
+      "id": "st_ab33d2d5f48f",
+      "speaker": "Guo Jiakun",
+      "role": "Foreign Ministry Spokesperson",
+      "date": "2026-10-03",
+      "text": "This U.S. group is known for vilifying China out of political motives and has absolutely no credibility to speak of.",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261003_12035482.html"
+    }
+  ],
+  "involved": {
+    "theaters": [
+      {
+        "id": "thr_russia_ukraine_war_and_european_security_archite",
+        "name": "Russia-Ukraine war and European security architecture",
+        "mentions": 1
+      }
+    ],
+    "pulses": [
+      {
+        "id": "pls_ukraine_war_combat_strike_intensity",
+        "name": "Combat and Long-Range Strike Intensity",
+        "band": "critical",
+        "position": 84.0,
+        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      },
+      {
+        "id": "pls_ukraine_war_energy_heating_collapse",
+        "name": "Energy and Heating System Collapse",
+        "band": "critical",
+        "position": 84.0,
+        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      },
+      {
+        "id": "pls_ukraine_war_war_economy_dependency_strain",
+        "name": "War Economy and External Dependency Strain",
+        "band": "critical",
+        "position": 82.0,
+        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      },
+      {
+        "id": "pls_russia_nato_hybrid_grey_zone_pressure",
+        "name": "Hybrid and Grey-Zone Pressure",
+        "band": "severe",
+        "position": 72.0,
+        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      },
+      {
+        "id": "pls_russia_nato_diplomatic_rupture",
+        "name": "Diplomatic Rupture",
+        "band": "severe",
+        "position": 62.0,
+        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      },
+      {
+        "id": "pls_russia_nato_direct_military_confrontation",
+        "name": "Direct Military Confrontation",
+        "band": "severe",
+        "position": 58.0,
+        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      }
+    ]
+  },
+  "credits": [
+    {
+      "source": "imf",
+      "name": "IMF World Economic Outlook (DataMapper)",
+      "licence": "IMF open data, attribution",
+      "url": "https://www.imf.org/external/datamapper",
+      "years": "2026"
+    },
+    {
+      "source": "nuclear",
+      "name": "Federation of American Scientists, Status of World Nuclear Forces",
+      "licence": "public statements, cited",
+      "url": "https://fas.org/initiatives/status-world-nuclear-forces/",
+      "years": "2026"
+    },
+    {
+      "source": "owid",
+      "name": "Our World in Data energy dataset (Energy Institute, Ember, EIA)",
+      "licence": "CC BY 4.0",
+      "url": "https://ourworldindata.org/energy",
+      "years": "2024-2025"
+    },
+    {
+      "source": "wb",
+      "name": "World Bank World Development Indicators (military figures: SIPRI)",
+      "licence": "CC BY 4.0",
+      "url": "https://data.worldbank.org/",
+      "years": "2020-2025"
+    },
+    {
+      "source": "wikidata",
+      "name": "Wikidata (heads of state and government)",
+      "licence": "CC0",
+      "url": "https://www.wikidata.org/",
+      "years": ""
+    }
+  ],
+  "url": "/intel/actors/CN",
+  "data_url": "/data/actors/CN.json"
+}

@@ -2,6 +2,12 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_iran_gulf_us_iran_israel_military_confrontation",
   "name": "US-Iran-Israel Direct Military Confrontation",
+  "title": "US–Iran–Israel · Direct Military Confrontation",
+  "actors_iso2": [
+    "US",
+    "IR",
+    "IL"
+  ],
   "situation_id": "sit_iran_gulf",
   "situation": "Iran, Israel and the Gulf",
   "status": "experimental",

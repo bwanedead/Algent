@@ -2,6 +2,10 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
   "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
+  "title": "Houthis–Saudi Arabia · Red Sea–Bab el-Mandeb Shipping Disruption",
+  "actors_iso2": [
+    "SA"
+  ],
   "situation_id": "sit_red_sea_shipping",
   "situation": "Red Sea and global shipping disruption",
   "status": "experimental",

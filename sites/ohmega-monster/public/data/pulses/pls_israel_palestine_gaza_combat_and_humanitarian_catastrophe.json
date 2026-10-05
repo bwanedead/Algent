@@ -2,6 +2,11 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe",
   "name": "Gaza Combat and Humanitarian Catastrophe",
+  "title": "Israel–Palestine · Gaza Combat and Humanitarian Catastrophe",
+  "actors_iso2": [
+    "IL",
+    "PS"
+  ],
   "situation_id": "sit_israel_palestine",
   "situation": "Israel–Palestine and the wider region",
   "status": "experimental",

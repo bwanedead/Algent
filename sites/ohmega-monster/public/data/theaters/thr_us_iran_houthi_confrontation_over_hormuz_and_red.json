@@ -7,6 +7,8 @@
   "first_seen": "2026-09-27",
   "last_seen": "2026-10-04",
   "days_covered": 4,
+  "state": "",
+  "last_novel": "",
   "primer": {
     "text": "The standoff centers on the United States and Israel, Iran, and Iran-aligned Houthis in Yemen over two oil chokepoints. Washington and its ally aim to degrade Iran's nuclear and military capacity and keep shipping moving; Tehran uses control of the Strait of Hormuz to deter attacks and extract concessions; the Houthis press the Red Sea front. It sharpened after a U.S.-Israeli operation in late February 2026 struck Iranian nuclear, military and leadership sites, after which Iran restricted Hormuz. The strait carries 20 million barrels a day — a fifth of world oil and LNG — far more than pipeline bypasses can replace, so disruption lifts energy and freight costs. Saudi Arabia's Red Sea pipeline workaround is vulnerable to Houthi attacks.",
     "built_at": "2026-10-04T07:26:06.472952+00:00"
@@ -1613,6 +1615,7 @@
   "forecasts": [],
   "indicators": [],
   "statements": [],
+  "on_record": [],
   "links": [
     {
       "theater_id": "thr_russia_ukraine_war_and_european_security_archite",

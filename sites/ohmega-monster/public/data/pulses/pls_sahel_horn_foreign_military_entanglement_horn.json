@@ -2,6 +2,10 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_sahel_horn_foreign_military_entanglement_horn",
   "name": "Foreign Military Entanglement and Intelligence Competition in the Horn",
+  "title": "Djibouti · Foreign Military Entanglement and Intelligence Competition",
+  "actors_iso2": [
+    "DJ"
+  ],
   "situation_id": "sit_sahel_horn",
   "situation": "Sahel and Horn of Africa instability",
   "status": "experimental",

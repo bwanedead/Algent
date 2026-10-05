@@ -7,6 +7,8 @@
   "first_seen": "2026-09-27",
   "last_seen": "2026-10-04",
   "days_covered": 4,
+  "state": "",
+  "last_novel": "",
   "primer": {
     "text": "Russia's war on Ukraine has become a contest between battlefield attrition and economic endurance that directly involves European security. Ukraine tries to hold territory while using long-range drones against Russian oil refineries and logistics to cut Moscow's war funding; Russia tries to sustain its offensive and pressure NATO through airspace incursions, sabotage of rail and infrastructure, and drone operations attributed to its services. NATO's eastern members seek protection through alliance mechanisms. Article 4 is a call for consultations when a member feels threatened, and Eastern Sentry is the alliance's reinforced air-defence posture along that flank. Russia's reliance on China for dual-use components and export markets shapes how sanctions bite.",
     "built_at": "2026-10-04T07:26:06.472952+00:00"
@@ -2190,6 +2192,7 @@
     }
   ],
   "statements": [],
+  "on_record": [],
   "links": [
     {
       "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",

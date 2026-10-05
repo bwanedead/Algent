@@ -2,6 +2,11 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_ai_geopolitics_ai_safety_governance_fracture",
   "name": "AI Safety Governance Fracture",
+  "title": "US–China · AI Safety Governance Fracture",
+  "actors_iso2": [
+    "US",
+    "CN"
+  ],
   "situation_id": "sit_ai_geopolitics",
   "situation": "AI geopolitics",
   "status": "experimental",

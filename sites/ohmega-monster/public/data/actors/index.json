@@ -1,0 +1,1172 @@
+{
+  "schema": "ohmega.actor.index/1",
+  "data_as_of": "2026-10-05",
+  "actors": [
+    {
+      "iso2": "AR",
+      "name": "Argentina",
+      "region": "Latin America & Caribbean",
+      "population": {
+        "value": 45851378.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 683097891618.597,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 14898.0885943842,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 1123.263,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 4177618452.20522,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 0,
+      "statements": 1,
+      "url": "/intel/actors/AR",
+      "data_url": "/data/actors/AR.json"
+    },
+    {
+      "iso2": "AU",
+      "name": "Australia",
+      "region": "East Asia & Pacific",
+      "population": {
+        "value": 27614411.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 1798518933689.21,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 65129.7227990563,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 4957.404,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 33819572368.4211,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 0,
+      "statements": 0,
+      "url": "/intel/actors/AU",
+      "data_url": "/data/actors/AU.json"
+    },
+    {
+      "iso2": "BR",
+      "name": "Brazil",
+      "region": "Latin America & Caribbean",
+      "population": {
+        "value": 212812405.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 2279920092492.13,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 10713.2856869511,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 2375.7560000000003,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 20947723265.0291,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 0,
+      "statements": 0,
+      "url": "/intel/actors/BR",
+      "data_url": "/data/actors/BR.json"
+    },
+    {
+      "iso2": "CA",
+      "name": "Canada",
+      "region": "North America",
+      "population": {
+        "value": 41651653.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 2319899772425.92,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 55697.6639660837,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 5631.263,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 29346897810.219,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 0,
+      "statements": 0,
+      "url": "/intel/actors/CA",
+      "data_url": "/data/actors/CA.json"
+    },
+    {
+      "iso2": "CN",
+      "name": "China",
+      "region": "East Asia & Pacific",
+      "population": {
+        "value": 1406585000.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 19498039388042.6,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 13861.970224368,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 31204.841,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 313658330217.176,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 1,
+      "statements": 8,
+      "url": "/intel/actors/CN",
+      "data_url": "/data/actors/CN.json"
+    },
+    {
+      "iso2": "EG",
+      "name": "Egypt",
+      "region": "Middle East, North Africa, Afghanistan & Pakistan",
+      "population": {
+        "value": 118365995.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 365254630179.737,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 3085.80712036204,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 837.345,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 2396211163.82267,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 1,
+      "statements": 0,
+      "url": "/intel/actors/EG",
+      "data_url": "/data/actors/EG.json"
+    },
+    {
+      "iso2": "ER",
+      "name": "Eritrea",
+      "region": "Sub-Saharan Africa",
+      "population": {
+        "value": 3607003.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 2065001626.01626,
+        "unit": "usd",
+        "year": 2011
+      },
+      "gdp_pc": {
+        "value": 688.68165957684,
+        "unit": "usd",
+        "year": 2011
+      },
+      "energy_production": {
+        "value": 0.0,
+        "unit": "twh",
+        "year": 2016
+      },
+      "milex": {
+        "value": 181583668.998912,
+        "unit": "usd",
+        "year": 2003
+      },
+      "theaters": 1,
+      "statements": 1,
+      "url": "/intel/actors/ER",
+      "data_url": "/data/actors/ER.json"
+    },
+    {
+      "iso2": "ET",
+      "name": "Ethiopia",
+      "region": "Sub-Saharan Africa",
+      "population": {
+        "value": 135472051.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 126358758448.356,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 932.729352775179,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 0.0,
+        "unit": "twh",
+        "year": 2016
+      },
+      "milex": {
+        "value": 921665263.86463,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 1,
+      "statements": 0,
+      "url": "/intel/actors/ET",
+      "data_url": "/data/actors/ET.json"
+    },
+    {
+      "iso2": "FR",
+      "name": "France",
+      "region": "Europe & Central Asia",
+      "population": {
+        "value": 68720337.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 3366315927447.33,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 48985.7307807924,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 10.769,
+        "unit": "twh",
+        "year": 2016
+      },
+      "milex": {
+        "value": 64675015306.1997,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 1,
+      "statements": 0,
+      "url": "/intel/actors/FR",
+      "data_url": "/data/actors/FR.json"
+    },
+    {
+      "iso2": "DE",
+      "name": "Germany",
+      "region": "Europe & Central Asia",
+      "population": {
+        "value": 83491249.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 5050922925047.05,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 60496.4350820414,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 295.004,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 88458476389.5109,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 0,
+      "statements": 0,
+      "url": "/intel/actors/DE",
+      "data_url": "/data/actors/DE.json"
+    },
+    {
+      "iso2": "IN",
+      "name": "India",
+      "region": "South Asia",
+      "population": {
+        "value": 1463865525.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 3956067115771.63,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 2702.47987141553,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 5721.151,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 86125976248.5524,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 0,
+      "statements": 0,
+      "url": "/intel/actors/IN",
+      "data_url": "/data/actors/IN.json"
+    },
+    {
+      "iso2": "ID",
+      "name": "Indonesia",
+      "region": "East Asia & Pacific",
+      "population": {
+        "value": 285721236.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 1445642584163.81,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 5059.62596411213,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 5776.067999999999,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 11042843809.9082,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 0,
+      "statements": 0,
+      "url": "/intel/actors/ID",
+      "data_url": "/data/actors/ID.json"
+    },
+    {
+      "iso2": "IR",
+      "name": "Iran",
+      "region": "Middle East, North Africa, Afghanistan & Pakistan",
+      "population": {
+        "value": 92417681.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 362682115433.364,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 3924.38017821898,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 5366.175,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 7891903306.81818,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 1,
+      "statements": 3,
+      "url": "/intel/actors/IR",
+      "data_url": "/data/actors/IR.json"
+    },
+    {
+      "iso2": "IQ",
+      "name": "Iraq",
+      "region": "Middle East, North Africa, Afghanistan & Pakistan",
+      "population": {
+        "value": 47020774.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 254367293538.462,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 5409.67899716967,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 2626.943,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 6178546529.67549,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 1,
+      "statements": 0,
+      "url": "/intel/actors/IQ",
+      "data_url": "/data/actors/IQ.json"
+    },
+    {
+      "iso2": "IL",
+      "name": "Israel",
+      "region": "Middle East, North Africa, Afghanistan & Pakistan",
+      "population": {
+        "value": 10122800.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 610777842873.595,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 60336.8477964194,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 214.52499999999998,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 46505298369.3376,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 1,
+      "statements": 0,
+      "url": "/intel/actors/IL",
+      "data_url": "/data/actors/IL.json"
+    },
+    {
+      "iso2": "IT",
+      "name": "Italy",
+      "region": "Europe & Central Asia",
+      "population": {
+        "value": 58915656.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 2551556954100.35,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 43308.6403060733,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 79.816,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 37964578316.9022,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 0,
+      "statements": 0,
+      "url": "/intel/actors/IT",
+      "data_url": "/data/actors/IT.json"
+    },
+    {
+      "iso2": "JP",
+      "name": "Japan",
+      "region": "East Asia & Pacific",
+      "population": {
+        "value": 123366734.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 4435162999976.94,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 35951.0449549304,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 43.620000000000005,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 55273904316.7083,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 0,
+      "statements": 0,
+      "url": "/intel/actors/JP",
+      "data_url": "/data/actors/JP.json"
+    },
+    {
+      "iso2": "LI",
+      "name": "Liechtenstein",
+      "region": "Europe & Central Asia",
+      "population": {
+        "value": 41024.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 8905764270.4054,
+        "unit": "usd",
+        "year": 2024
+      },
+      "gdp_pc": {
+        "value": 220167.225473557,
+        "unit": "usd",
+        "year": 2024
+      },
+      "energy_production": null,
+      "milex": null,
+      "theaters": 0,
+      "statements": 1,
+      "url": "/intel/actors/LI",
+      "data_url": "/data/actors/LI.json"
+    },
+    {
+      "iso2": "MX",
+      "name": "Mexico",
+      "region": "Latin America & Caribbean",
+      "population": {
+        "value": 131946900.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 1832641364775.52,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 13889.2339628708,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 1514.2849999999999,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 16726425452.0934,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 0,
+      "statements": 0,
+      "url": "/intel/actors/MX",
+      "data_url": "/data/actors/MX.json"
+    },
+    {
+      "iso2": "NL",
+      "name": "Netherlands",
+      "region": "Europe & Central Asia",
+      "population": {
+        "value": 18087633.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 1332767651100.39,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 73683.917132794,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 95.425,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 23179211260.1708,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 1,
+      "statements": 0,
+      "url": "/intel/actors/NL",
+      "data_url": "/data/actors/NL.json"
+    },
+    {
+      "iso2": "KP",
+      "name": "North Korea",
+      "region": "East Asia & Pacific",
+      "population": {
+        "value": 26571036.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": null,
+      "gdp_pc": null,
+      "energy_production": {
+        "value": 233.824,
+        "unit": "twh",
+        "year": 2016
+      },
+      "milex": {
+        "value": 1604444444.44444,
+        "unit": "usd",
+        "year": 2018
+      },
+      "theaters": 0,
+      "statements": 1,
+      "url": "/intel/actors/KP",
+      "data_url": "/data/actors/KP.json"
+    },
+    {
+      "iso2": "PS",
+      "name": "Palestine",
+      "region": "Middle East, North Africa, Afghanistan & Pakistan",
+      "population": {
+        "value": 5413596.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 17167100000.0,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 3171.10844621579,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 0.0,
+        "unit": "twh",
+        "year": 2016
+      },
+      "milex": null,
+      "theaters": 1,
+      "statements": 0,
+      "url": "/intel/actors/PS",
+      "data_url": "/data/actors/PS.json"
+    },
+    {
+      "iso2": "PL",
+      "name": "Poland",
+      "region": "Europe & Central Asia",
+      "population": {
+        "value": 36435861.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 1035491784197.44,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 28419.5777395638,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 434.30699999999996,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 38000728652.37,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 1,
+      "statements": 0,
+      "url": "/intel/actors/PL",
+      "data_url": "/data/actors/PL.json"
+    },
+    {
+      "iso2": "QA",
+      "name": "Qatar",
+      "region": "Middle East, North Africa, Afghanistan & Pakistan",
+      "population": {
+        "value": 2972215.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 215559615384.615,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 72524.9066385222,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 2672.354,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 15412087912.0879,
+        "unit": "usd",
+        "year": 2022
+      },
+      "theaters": 1,
+      "statements": 0,
+      "url": "/intel/actors/QA",
+      "data_url": "/data/actors/QA.json"
+    },
+    {
+      "iso2": "RU",
+      "name": "Russia",
+      "region": "Europe & Central Asia",
+      "population": {
+        "value": 143513328.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 2561310169358.74,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 17546.609375,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 14953.641,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 148967275140.483,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 1,
+      "statements": 8,
+      "url": "/intel/actors/RU",
+      "data_url": "/data/actors/RU.json"
+    },
+    {
+      "iso2": "SA",
+      "name": "Saudi Arabia",
+      "region": "Middle East, North Africa, Afghanistan & Pakistan",
+      "population": {
+        "value": 36973555.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 1276942933333.33,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 34536.6555456551,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 7148.0869999999995,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 80330666666.6667,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 1,
+      "statements": 0,
+      "url": "/intel/actors/SA",
+      "data_url": "/data/actors/SA.json"
+    },
+    {
+      "iso2": "ZA",
+      "name": "South Africa",
+      "region": "Sub-Saharan Africa",
+      "population": {
+        "value": 64747319.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 427184325997.307,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 6597.71450918774,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 1558.441,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 2835956043.23652,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 0,
+      "statements": 0,
+      "url": "/intel/actors/ZA",
+      "data_url": "/data/actors/ZA.json"
+    },
+    {
+      "iso2": "KR",
+      "name": "South Korea",
+      "region": "East Asia & Pacific",
+      "population": {
+        "value": 51684564.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 1872374961553.15,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 36226.9663637512,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 4.766,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 47571318596.7228,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 1,
+      "statements": 0,
+      "url": "/intel/actors/KR",
+      "data_url": "/data/actors/KR.json"
+    },
+    {
+      "iso2": "SR",
+      "name": "Suriname",
+      "region": "Latin America & Caribbean",
+      "population": {
+        "value": 639850.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 4523657796.86421,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 7069.87230892274,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 11.536,
+        "unit": "twh",
+        "year": 2016
+      },
+      "milex": null,
+      "theaters": 0,
+      "statements": 1,
+      "url": "/intel/actors/SR",
+      "data_url": "/data/actors/SR.json"
+    },
+    {
+      "iso2": "TR",
+      "name": "Turkey",
+      "region": "Europe & Central Asia",
+      "population": {
+        "value": 85878556.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 1597293229287.0,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 18599.4420922378,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 243.454,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 24978735534.6038,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 0,
+      "statements": 0,
+      "url": "/intel/actors/TR",
+      "data_url": "/data/actors/TR.json"
+    },
+    {
+      "iso2": "UA",
+      "name": "Ukraine",
+      "region": "Europe & Central Asia",
+      "population": {
+        "value": 38980376.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 214233312784.397,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 5865.884765625,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 314.85900000000004,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 64704990025.4782,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 1,
+      "statements": 0,
+      "url": "/intel/actors/UA",
+      "data_url": "/data/actors/UA.json"
+    },
+    {
+      "iso2": "AE",
+      "name": "United Arab Emirates",
+      "region": "Middle East, North Africa, Afghanistan & Pakistan",
+      "population": {
+        "value": 11513149.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 552324919095.872,
+        "unit": "usd",
+        "year": 2024
+      },
+      "gdp_pc": {
+        "value": 50273.5126243239,
+        "unit": "usd",
+        "year": 2024
+      },
+      "energy_production": {
+        "value": 2704.475,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 22755071477.1954,
+        "unit": "usd",
+        "year": 2014
+      },
+      "theaters": 1,
+      "statements": 0,
+      "url": "/intel/actors/AE",
+      "data_url": "/data/actors/AE.json"
+    },
+    {
+      "iso2": "GB",
+      "name": "United Kingdom",
+      "region": "Europe & Central Asia",
+      "population": {
+        "value": 69487000.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 4002587541846.01,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 57601.9621201954,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 661.554,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 81763173069.6744,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 1,
+      "statements": 8,
+      "url": "/intel/actors/GB",
+      "data_url": "/data/actors/GB.json"
+    },
+    {
+      "iso2": "US",
+      "name": "United States",
+      "region": "North America",
+      "population": {
+        "value": 341784857.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 30769700000000.0,
+        "unit": "usd",
+        "year": 2025
+      },
+      "gdp_pc": {
+        "value": 90026.5163005744,
+        "unit": "usd",
+        "year": 2025
+      },
+      "energy_production": {
+        "value": 23255.269,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 997309000000.0,
+        "unit": "usd",
+        "year": 2024
+      },
+      "theaters": 3,
+      "statements": 8,
+      "url": "/intel/actors/US",
+      "data_url": "/data/actors/US.json"
+    },
+    {
+      "iso2": "YE",
+      "name": "Yemen",
+      "region": "Middle East, North Africa, Afghanistan & Pakistan",
+      "population": {
+        "value": 41773878.0,
+        "unit": "people",
+        "year": 2025
+      },
+      "gdp": {
+        "value": 21606160663.0318,
+        "unit": "usd",
+        "year": 2018
+      },
+      "gdp_pc": {
+        "value": 633.887202451545,
+        "unit": "usd",
+        "year": 2018
+      },
+      "energy_production": {
+        "value": 26.192999999999998,
+        "unit": "twh",
+        "year": 2024
+      },
+      "milex": {
+        "value": 1714830843.68747,
+        "unit": "usd",
+        "year": 2014
+      },
+      "theaters": 1,
+      "statements": 1,
+      "url": "/intel/actors/YE",
+      "data_url": "/data/actors/YE.json"
+    }
+  ]
+}

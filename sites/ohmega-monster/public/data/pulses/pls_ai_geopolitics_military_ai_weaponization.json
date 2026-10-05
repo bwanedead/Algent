@@ -2,6 +2,11 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_ai_geopolitics_military_ai_weaponization",
   "name": "Military AI Weaponization",
+  "title": "US–China · Military AI Weaponization",
+  "actors_iso2": [
+    "US",
+    "CN"
+  ],
   "situation_id": "sit_ai_geopolitics",
   "situation": "AI geopolitics",
   "status": "experimental",

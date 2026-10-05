@@ -2,6 +2,11 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_ukraine_war_combat_strike_intensity",
   "name": "Combat and Long-Range Strike Intensity",
+  "title": "Russia–Ukraine War · Combat and Long-Range Strike Intensity",
+  "actors_iso2": [
+    "RU",
+    "UA"
+  ],
   "situation_id": "sit_ukraine_war",
   "situation": "The war in Ukraine",
   "status": "experimental",

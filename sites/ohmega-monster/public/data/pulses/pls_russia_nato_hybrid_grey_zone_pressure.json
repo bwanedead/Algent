@@ -2,6 +2,10 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_russia_nato_hybrid_grey_zone_pressure",
   "name": "Hybrid and Grey-Zone Pressure",
+  "title": "Russia–NATO · Hybrid and Grey-Zone Pressure",
+  "actors_iso2": [
+    "RU"
+  ],
   "situation_id": "sit_russia_nato",
   "situation": "Russia–NATO confrontation",
   "status": "experimental",

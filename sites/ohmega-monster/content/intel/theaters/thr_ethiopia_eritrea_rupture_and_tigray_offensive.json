@@ -7,6 +7,8 @@
   "first_seen": "2026-10-02",
   "last_seen": "2026-10-04",
   "days_covered": 2,
+  "state": "",
+  "last_novel": "",
   "primer": {
     "text": "Ethiopia and Eritrea are two states in the Horn of Africa, and Tigray is a region within Ethiopia where Ethiopian government forces and Tigray-aligned forces have contested control. Mekelle is the main city in Tigray and the location of its airport, so control of the airport signals control of the regional center. A rupture in relations between Ethiopia and Eritrea and intensified fighting inside Tigray are understood as one escalation because the interstate relationship and the internal contest over Tigray affect each other, with implications for security across the Horn.",
     "built_at": "2026-10-04T07:26:06.472952+00:00"
@@ -697,6 +699,7 @@
   "forecasts": [],
   "indicators": [],
   "statements": [],
+  "on_record": [],
   "links": [],
   "reports": [
     {

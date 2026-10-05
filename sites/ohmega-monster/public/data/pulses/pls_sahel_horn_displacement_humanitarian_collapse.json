@@ -2,6 +2,8 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_sahel_horn_displacement_humanitarian_collapse",
   "name": "Displacement and Humanitarian Collapse Pressure",
+  "title": "Sahel–Horn of Africa · Displacement and Humanitarian Collapse Pressure",
+  "actors_iso2": [],
   "situation_id": "sit_sahel_horn",
   "situation": "Sahel and Horn of Africa instability",
   "status": "experimental",

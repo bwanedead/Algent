@@ -2,6 +2,10 @@
   "schema": "ohmega.pulse/1",
   "id": "pls_israel_palestine_international_legal_and_diplomatic_pressure_on_israel",
   "name": "International Legal and Diplomatic Pressure on Israel",
+  "title": "Israel · International Legal and Diplomatic Pressure",
+  "actors_iso2": [
+    "IL"
+  ],
   "situation_id": "sit_israel_palestine",
   "situation": "Israel–Palestine and the wider region",
   "status": "experimental",
