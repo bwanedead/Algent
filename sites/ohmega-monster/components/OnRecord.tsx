@@ -40,7 +40,7 @@ export function RecordRow({ r }: { r: OnRecord }) {
           <>
             {" "}
             <a href={r.url} target="_blank" rel="noopener noreferrer">
-              transcript ↗
+              {r.reported_by ? `as reported by ${r.reported_by} ↗` : "transcript ↗"}
             </a>
           </>
         )}

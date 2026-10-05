@@ -31,6 +31,19 @@ def _statements(context: Any, model_spec: Any) -> dict[str, Any]:
     out: dict[str, Any] = {"transcripts_collected": sum(f["collected"] for f in feeds),
                            "feed_errors": [f"{f.get('feed', '?')}: {e}" for f in feeds
                                            for e in f.get("errors", [])][:MAX_REPORTED_ERRORS]}
+    # The reported lane: leaders the official feeds cannot reach (Zelensky, Baltic and Polish leaders…) as quoted
+    # by trusted outlets, budgeted inside the lane. Runs before extraction so its articles are extracted with the
+    # rest; a failure costs only this lane.
+    try:
+        from algent_backend.agent_system.agents.statements import reported
+
+        from .heat import registry
+
+        live = [f"{t.get('name', '')}. {t.get('description', '')}" for t in registry().values()
+                if isinstance(t, dict) and t.get("state") in ("new", "active") and t.get("domain") == "geopolitics"]
+        out["reported"] = reported.collect_reported(theaters=live)
+    except Exception as exc:  # noqa: BLE001 - the official record still refreshes without it
+        out["reported"] = {"error": f"{type(exc).__name__}: {str(exc)[:200]}"}
     out["extraction"] = extract.extract_pending(context, None, model_spec)
     out["extraction"]["errors"] = out["extraction"].get("errors", [])[:MAX_REPORTED_ERRORS]
     return out

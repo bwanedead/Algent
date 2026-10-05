@@ -46,7 +46,8 @@ def entry(s: Statement) -> dict[str, Any]:
     return {"id": s.id, "speaker": s.speaker, "role": s.role, "affiliation": s.affiliation,
             "iso2": _iso2(s.affiliation), "date": s.date, "venue": s.venue_kind, "quote": s.quote,
             "paraphrase": s.paraphrase, "about": list(s.about), "about_iso2": about_iso, "signal": s.signal,
-            "stance": s.stance, "significance": s.significance, "url": s.source_url}
+            "stance": s.stance, "significance": s.significance, "url": s.source_url,
+            "reported_by": s.reported_by if getattr(s, "source_kind", "") == "secondary" else ""}
 
 
 def build(shown: Iterable[Statement]) -> list[dict[str, Any]]:

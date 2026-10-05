@@ -22,6 +22,8 @@ export type OnRecord = {
   stance: number;
   significance: string;
   url: string;
+  /** The outlet that reported it, when the statement comes from a news report rather than the speaker's own text. */
+  reported_by: string;
 };
 
 export type TonePoint = { date: string; stance: number; n: number };
@@ -66,6 +68,7 @@ export function parseOnRecord(raw: unknown): OnRecord[] {
       stance: Math.max(-2, Math.min(2, Math.round(num(r.stance) ?? 0))),
       significance: str(r.significance),
       url: httpUrl(str(r.url)),
+      reported_by: str(r.reported_by),
     }))
     .filter((r) => r.id && r.speaker && (r.quote || r.paraphrase));
 }
