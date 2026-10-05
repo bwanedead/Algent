@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from algent_backend.instruments.catalog import get_series
-from algent_backend.instruments.http import SourceUnavailable
+from algent_backend.polite_http import SourceUnavailable
 from algent_backend.instruments.sources import agsi, ecb, eurostat, fiscaldata, portwatch, treasury, yahoo
 
 FIX = Path(__file__).parent / "fixtures" / "instruments"

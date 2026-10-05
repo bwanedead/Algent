@@ -17,7 +17,7 @@ import os
 from datetime import date, timedelta
 
 from ..contracts import Observation, Series, now_iso
-from ..http import SourceUnavailable, get
+from algent_backend.polite_http import SourceUnavailable, get
 
 URL = "https://agsi.gie.eu/api"
 KEY_ENV = "ALGENT_AGSI_KEY"

@@ -13,7 +13,7 @@ import json
 from datetime import date
 
 from ..contracts import Observation, Series, now_iso
-from ..http import get
+from algent_backend.polite_http import get
 
 URL = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/debt_to_penny"
 PAGE = 1000

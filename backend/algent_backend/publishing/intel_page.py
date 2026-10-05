@@ -145,6 +145,10 @@ unchanged dossier is byte-identical::
       "links":[{"theater_id","name","link","date"}],             // cross-theater links from the daily summaries
       "reports":[{"date","url"}], "briefs":[{"slug","title","as_of","url"}]}   // newest first
 
+Actors (built by ``actors_feed.py``; a power profile per state from the actors store): ``content/intel/actors/<ISO2>.json``
+(``ohmega.actor/1``) + ``index.json`` (``ohmega.actor.index/1``), mirrored to ``public/data/actors/``. Which actors, the
+semantic rule that finds them, and the shapes are documented in ``actors_feed.py``.
+
 Rules: ``rationale`` is the latest APPLIED, non-blind influence's rationale for that pulse, made
 reader-safe (claim ids stripped, ~400 chars at a word boundary). Situations that are not "active"
 and pulses that are "dormant" are skipped. ``absolute_position`` is internal and never exported.
@@ -165,7 +169,7 @@ from algent_backend.agent_system.agents.intel import dossier_store, forecasts
 from algent_backend.agent_system.agents.intel.brief import safe_name
 from algent_backend.agent_system.agents.intel.contracts import coverage_label
 
-from . import agent_feed, site_git
+from . import actors_feed, agent_feed, site_git
 from .agent_feed import reader_safe  # noqa: F401  (re-exported: the contract owner's public helper)
 
 INTEL_SUBDIR = ("content", "intel")
@@ -352,6 +356,9 @@ def write_intel(site_dir: Path, snapshot: dict, intel_dir: Path, store: Any = No
     data = site_dir / "public" / "data"
     for rel, payload in build_agent_files(snapshot, intel_dir, store, built).items():
         _write_if_changed(data / rel, payload)
+    for rel, payload in actors_feed.build_actor_files(built).items():        # the actor pages' data (see actors_feed.py)
+        _write_if_changed(root / "actors" / rel, payload)
+        _write_if_changed(data / "actors" / rel, payload)
     return path
 
 

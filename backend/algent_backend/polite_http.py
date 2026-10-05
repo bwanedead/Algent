@@ -1,5 +1,5 @@
 """
-Polite HTTP for the providers — one place for timeouts, retries, a browser UA and pacing.
+Polite HTTP for the free-data providers (instruments, actors) — one place for timeouts, retries, a browser UA and pacing.
 
 Free public endpoints are a shared resource and some (Yahoo) reject obviously-scripted clients, so
 every provider goes through ``get`` rather than building its own client. Failures raise
@@ -11,6 +11,7 @@ stops the others. Responses are memoised per process because several series shar
 from __future__ import annotations
 
 import time
+from collections.abc import Iterator
 from typing import Any
 from urllib.parse import urlsplit
 
@@ -70,3 +71,19 @@ def get(url: str, params: dict[str, Any] | None = None, *, headers: dict[str, st
             last = RuntimeError(f"HTTP {resp.status_code}")
         time.sleep(1.0 * (attempt + 1))
     raise SourceError(f"{url} failed after {RETRIES + 1} attempts: {last}")
+
+
+def stream_lines(url: str, *, headers: dict[str, str] | None = None) -> Iterator[str]:
+    """Yield a large text body line by line without holding it in memory (a big CSV); no retry or memo.
+    Raises ``SourceError`` on a non-200 status or a transport failure before the first line."""
+    hdrs = {"User-Agent": USER_AGENT, "Accept": "*/*", **(headers or {})}
+    _pace(url)
+    try:
+        with httpx.stream("GET", url, headers=hdrs, timeout=TIMEOUT_S, follow_redirects=True) as resp:
+            if resp.status_code in (401, 403):
+                raise SourceUnavailable(f"{resp.url} -> HTTP {resp.status_code} (access denied)")
+            if resp.status_code != 200:
+                raise SourceError(f"{url} -> HTTP {resp.status_code}")
+            yield from resp.iter_lines()
+    except httpx.HTTPError as exc:
+        raise SourceError(f"{url} stream failed: {exc}") from exc

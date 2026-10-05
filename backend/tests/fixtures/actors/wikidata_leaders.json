@@ -1,0 +1,187 @@
+{
+"head": {
+"vars": [
+"iso",
+"hosL",
+"hos",
+"hogL",
+"hog",
+"hosStart",
+"hogStart"
+]
+},
+"results": {
+"bindings": [
+{
+"hog": {
+"type": "uri",
+"value": "http://www.wikidata.org/entity/Q124101558"
+},
+"hos": {
+"type": "uri",
+"value": "http://www.wikidata.org/entity/Q3874799"
+},
+"hosStart": {
+"datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+"type": "literal",
+"value": "2019-05-20T00:00:00Z"
+},
+"iso": {
+"type": "literal",
+"value": "UA"
+},
+"hosL": {
+"xml:lang": "en",
+"type": "literal",
+"value": "Volodymyr Zelenskyy"
+},
+"hogL": {
+"xml:lang": "en",
+"type": "literal",
+"value": "Serhii Koretskyi"
+},
+"hogStart": {
+"datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+"type": "literal",
+"value": "2026-07-16T00:00:00Z"
+}
+},
+{
+"hog": {
+"type": "uri",
+"value": "http://www.wikidata.org/entity/Q22686"
+},
+"hogStart": {
+"datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+"type": "literal",
+"value": "2025-01-20T00:00:00Z"
+},
+"hos": {
+"type": "uri",
+"value": "http://www.wikidata.org/entity/Q22686"
+},
+"hosStart": {
+"datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+"type": "literal",
+"value": "2025-01-20T00:00:00Z"
+},
+"iso": {
+"type": "literal",
+"value": "US"
+},
+"hosL": {
+"xml:lang": "en",
+"type": "literal",
+"value": "Donald Trump"
+},
+"hogL": {
+"xml:lang": "en",
+"type": "literal",
+"value": "Donald Trump"
+}
+},
+{
+"hog": {
+"type": "uri",
+"value": "http://www.wikidata.org/entity/Q4298520"
+},
+"hogStart": {
+"datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+"type": "literal",
+"value": "2020-01-16T00:00:00Z"
+},
+"hos": {
+"type": "uri",
+"value": "http://www.wikidata.org/entity/Q7747"
+},
+"hosStart": {
+"datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+"type": "literal",
+"value": "2012-05-07T00:00:00Z"
+},
+"iso": {
+"type": "literal",
+"value": "RU"
+},
+"hosL": {
+"xml:lang": "en",
+"type": "literal",
+"value": "Vladimir Putin"
+},
+"hogL": {
+"xml:lang": "en",
+"type": "literal",
+"value": "Mikhail Mishustin"
+}
+},
+{
+"hog": {
+"type": "uri",
+"value": "http://www.wikidata.org/entity/Q566257"
+},
+"hogStart": {
+"datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+"type": "literal",
+"value": "2025-05-06T00:00:00Z"
+},
+"hos": {
+"type": "uri",
+"value": "http://www.wikidata.org/entity/Q76658"
+},
+"hosStart": {
+"datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+"type": "literal",
+"value": "2017-03-19T00:00:00Z"
+},
+"iso": {
+"type": "literal",
+"value": "DE"
+},
+"hosL": {
+"xml:lang": "en",
+"type": "literal",
+"value": "Frank-Walter Steinmeier"
+},
+"hogL": {
+"xml:lang": "en",
+"type": "literal",
+"value": "Friedrich Merz"
+}
+},
+{
+"hog": {
+"type": "uri",
+"value": "http://www.wikidata.org/entity/Q5933752"
+},
+"hogStart": {
+"datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+"type": "literal",
+"value": "2024-07-28T00:00:00Z"
+},
+"hos": {
+"type": "uri",
+"value": "http://www.wikidata.org/entity/Q2919350"
+},
+"hosStart": {
+"datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+"type": "literal",
+"value": "2026-03-08T00:00:00Z"
+},
+"iso": {
+"type": "literal",
+"value": "IR"
+},
+"hosL": {
+"xml:lang": "en",
+"type": "literal",
+"value": "Mojtaba Khamenei"
+},
+"hogL": {
+"xml:lang": "en",
+"type": "literal",
+"value": "Masoud Pezeshkian"
+}
+}
+]
+}
+}

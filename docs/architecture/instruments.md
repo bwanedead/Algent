@@ -19,7 +19,7 @@ wired yet — only clean consumption APIs exist).
 | `contracts.py` | `Series` (catalog metadata) and `Observation` (one reading with provenance), `period_date` |
 | `catalog.py` | the curated, code-defined series list grouped by theme; `get_series`, `match(tags)` |
 | `sources/<provider>.py` | one fetcher per provider: `fetch(series, since) -> list[Observation]` plus a pure `parse(text, series, fetched_at)`; registered in `sources/__init__.PROVIDERS` |
-| `http.py` | the only HTTP path: browser UA, 60 s timeout, 2 retries, 0.25 s per-host pacing, per-process memo, `SourceError` / `SourceUnavailable` naming the URL |
+| `algent_backend/polite_http.py` (shared with `actors/`) | the only HTTP path: browser UA, 60 s timeout, 2 retries, 0.25 s per-host pacing, per-process memo, `SourceError` / `SourceUnavailable` naming the URL |
 | `store.py` | append-only JSONL per series |
 | `moves.py` | pure maths: changes, percentile, unusual flags |
 | `evidence.py` | consumption API: `evidence_block`, `moves_board` |

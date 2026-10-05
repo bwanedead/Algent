@@ -21,7 +21,7 @@ from typing import Any
 from . import store
 from .catalog import CATALOG, get_series
 from .contracts import Series, period_date
-from .http import SourceError, SourceUnavailable
+from algent_backend.polite_http import SourceError, SourceUnavailable
 from .sources import PROVIDERS
 
 BACKFILL_DAYS = 5 * 365

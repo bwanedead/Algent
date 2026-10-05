@@ -14,7 +14,7 @@ import io
 from datetime import date
 
 from ..contracts import Observation, Series, now_iso
-from ..http import get
+from algent_backend.polite_http import get
 
 BASE = "https://data-api.ecb.europa.eu/service/data"
 

@@ -12,7 +12,7 @@ from algent_backend.instruments import collect as collect_mod
 from algent_backend.instruments import evidence_block, moves_board, store
 from algent_backend.instruments.catalog import CATALOG, get_series, match
 from algent_backend.instruments.contracts import Observation
-from algent_backend.instruments.http import SourceError, SourceUnavailable
+from algent_backend.polite_http import SourceError, SourceUnavailable
 from algent_backend.instruments.sources import PROVIDERS
 
 

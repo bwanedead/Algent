@@ -1,0 +1,428 @@
+[
+{
+"page": 1,
+"pages": 1,
+"per_page": 20000,
+"total": 1325,
+"sourceid": "2",
+"lastupdated": "2026-07-13"
+},
+[
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "ZH",
+"value": "Africa Eastern and Southern"
+},
+"countryiso3code": "AFE",
+"date": "2025",
+"value": 788844284,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "ZH",
+"value": "Africa Eastern and Southern"
+},
+"countryiso3code": "AFE",
+"date": "2024",
+"value": 769280888,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "ZH",
+"value": "Africa Eastern and Southern"
+},
+"countryiso3code": "AFE",
+"date": "2023",
+"value": 750491370,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "ZH",
+"value": "Africa Eastern and Southern"
+},
+"countryiso3code": "AFE",
+"date": "2022",
+"value": 731821393,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "ZH",
+"value": "Africa Eastern and Southern"
+},
+"countryiso3code": "AFE",
+"date": "2021",
+"value": 713090928,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "1W",
+"value": "World"
+},
+"countryiso3code": "WLD",
+"date": "2025",
+"value": 8215424893,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "1W",
+"value": "World"
+},
+"countryiso3code": "WLD",
+"date": "2024",
+"value": 8140897523,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "1W",
+"value": "World"
+},
+"countryiso3code": "WLD",
+"date": "2023",
+"value": 8062923417,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "1W",
+"value": "World"
+},
+"countryiso3code": "WLD",
+"date": "2022",
+"value": 7988550201,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "1W",
+"value": "World"
+},
+"countryiso3code": "WLD",
+"date": "2021",
+"value": 7919567995,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "RU",
+"value": "Russian Federation"
+},
+"countryiso3code": "RUS",
+"date": "2025",
+"value": 143513328,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "RU",
+"value": "Russian Federation"
+},
+"countryiso3code": "RUS",
+"date": "2024",
+"value": 143669648,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "RU",
+"value": "Russian Federation"
+},
+"countryiso3code": "RUS",
+"date": "2023",
+"value": 143826130,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "RU",
+"value": "Russian Federation"
+},
+"countryiso3code": "RUS",
+"date": "2022",
+"value": 144236933,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "RU",
+"value": "Russian Federation"
+},
+"countryiso3code": "RUS",
+"date": "2021",
+"value": 144746762,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "UA",
+"value": "Ukraine"
+},
+"countryiso3code": "UKR",
+"date": "2025",
+"value": 38980376,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "UA",
+"value": "Ukraine"
+},
+"countryiso3code": "UKR",
+"date": "2024",
+"value": 37860221,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "UA",
+"value": "Ukraine"
+},
+"countryiso3code": "UKR",
+"date": "2023",
+"value": 37732836,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "UA",
+"value": "Ukraine"
+},
+"countryiso3code": "UKR",
+"date": "2022",
+"value": 41048766,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "UA",
+"value": "Ukraine"
+},
+"countryiso3code": "UKR",
+"date": "2021",
+"value": 44298640,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "US",
+"value": "United States"
+},
+"countryiso3code": "USA",
+"date": "2025",
+"value": 341784857,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "US",
+"value": "United States"
+},
+"countryiso3code": "USA",
+"date": "2024",
+"value": 340003797,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "US",
+"value": "United States"
+},
+"countryiso3code": "USA",
+"date": "2023",
+"value": 336755052,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "US",
+"value": "United States"
+},
+"countryiso3code": "USA",
+"date": "2022",
+"value": 333996304,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "US",
+"value": "United States"
+},
+"countryiso3code": "USA",
+"date": "2021",
+"value": 332100166,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+},
+{
+"indicator": {
+"id": "SP.POP.TOTL",
+"value": "Population, total"
+},
+"country": {
+"id": "XD",
+"value": "High income"
+},
+"countryiso3code": "",
+"date": "2025",
+"value": 1423739902,
+"unit": "",
+"obs_status": "",
+"decimal": 0
+}
+]
+]
