@@ -262,7 +262,7 @@ def test_index_orders_by_recent_activity_then_heat() -> None:
     assert alpha["max_band"] == "severe" and alpha["escalation_direction"] == "rising" and alpha["days_covered"] == 2
     assert alpha["url"] == "/intel/theaters/thr_alpha" and alpha["heat"] == 7.5
     assert set(alpha) == {"theater_id", "name", "domain", "first_seen", "last_seen", "days_covered", "heat",
-                          "coverage", "escalation_direction", "max_band", "url"}
+                          "coverage", "escalation_direction", "max_band", "url", "state", "last_novel"}
     assert built["index"]["schema"] == "ohmega.dossier.index/1"
 
 

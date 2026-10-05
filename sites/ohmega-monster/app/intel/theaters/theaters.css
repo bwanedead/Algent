@@ -223,3 +223,7 @@ button.th-res-btn:focus-visible { outline: 1px solid var(--accent-dim); outline-
   .th-pulse-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
   .th-figs { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
 }
+
+.th-state { font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
+.th-state.is-new { color: var(--accent, currentColor); font-weight: 600; }
+.th-state.is-quiet { color: var(--faint); }

@@ -41,7 +41,7 @@ def add_parser(sub: Any) -> None:
     b.add_argument("--fresh-research", action="store_true", help="redo research even if today's already exists")
     d = verbs.add_parser("daily", help="the daily report: per-theater rundown of what happened, with Pulses")
     d.add_argument("--domain", default="geopolitics")
-    d.add_argument("--top", type=int, default=5)
+    d.add_argument("--top", type=int, default=5, help="ceiling on theater sections; only theaters with something new are written")
     d.add_argument("--research", action="store_true", help="research each theater first (paid, capped)")
     d.add_argument("--fresh-research", action="store_true", help="redo research even if today's already exists")
     d.add_argument("--days", type=int, default=7)
@@ -110,8 +110,14 @@ def _heat(args: Any, *, publish: bool = True) -> int:
     from algent_backend.publishing.intel_page import publish_intel
     from algent_backend.publishing.radar_page import read_editions
 
+    from datetime import date
+
+    from algent_backend.agent_system.agents.intel import base
+
+    # The window ends today (the radar may not have run); radar + Wikipedia Current Events + our library.
     board = heat.run(_ctx("intel-heat"), None, read_editions(), days=args.days,
-                     model_spec=house_spec(reasoning_effort="low", temperature=0.1, max_tokens=16384))
+                     model_spec=house_spec(reasoning_effort="low", temperature=0.1, max_tokens=16384),
+                     loaders=base.default_loaders(), today=date.today(), covered_before=date.today().isoformat())
     out = _out(board["as_of"])
     (out / "board.json").write_text(json.dumps(board, ensure_ascii=False, indent=2), encoding="utf-8")
     (out / "board.html").write_text(render.render_board(board), encoding="utf-8")

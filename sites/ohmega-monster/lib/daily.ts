@@ -73,6 +73,9 @@ export type DailyTheater = {
   key_figures: KeyFigure[];
   map: TheaterMap | null;
 };
+/** A theater in the domain that is live but not written up today, or one gone quiet (see the desk's focus). */
+export type DailyWatch = { theater_id: string; name: string; note: string; last_novel: string };
+export type DailyQuiet = { theater_id: string; name: string; last_novel: string; countries: string[] };
 export type Daily = {
   domain: string;
   date: string;
@@ -82,6 +85,8 @@ export type Daily = {
   the_day: string[];
   theaters: DailyTheater[];
   cross_theater: { theaters: string[]; link: string }[];
+  watch: DailyWatch[];
+  quiet: DailyQuiet[];
 };
 
 // ---- defensive coercion helpers -------------------------------------------------------------
@@ -272,6 +277,14 @@ function parseDaily(raw: unknown, domain: string, date: string): Daily | null {
       .filter(isObj)
       .map((c) => ({ theaters: strs(c.theaters), link: str(c.link) }))
       .filter((c) => c.link),
+    watch: arr(raw.watch)
+      .filter(isObj)
+      .map((w) => ({ theater_id: str(w.theater_id), name: str(w.name), note: str(w.note), last_novel: str(w.last_novel) }))
+      .filter((w) => w.name),
+    quiet: arr(raw.quiet)
+      .filter(isObj)
+      .map((q) => ({ theater_id: str(q.theater_id), name: str(q.name), last_novel: str(q.last_novel), countries: strs(q.countries) }))
+      .filter((q) => q.name),
   };
 }
 

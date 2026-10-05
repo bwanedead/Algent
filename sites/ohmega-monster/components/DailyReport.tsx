@@ -8,6 +8,7 @@ import { fmtUtc, latestSnapshot } from "@/lib/intel";
 
 import DailyGlance from "./DailyGlance";
 import DailyTheaterSection from "./DailyTheater";
+import DailyWatching from "./DailyWatching";
 
 // The daily report page body. Screen one is the day at a glance (headline, theater table, the
 // day in four lines); each theater follows as a claim, a picture and a timeline. See
@@ -138,6 +139,7 @@ export default function DailyReport({ report, title }: { report: Daily; title: s
       ))}
 
       <Across report={report} />
+      <DailyWatching watch={report.watch} quiet={report.quiet} />
     </div>
   );
 }

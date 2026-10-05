@@ -1,9 +1,12 @@
 """
 The heat detector — find what is actually boiling, without being told where to look.
 
-Reads the headline radar's history (every daily edition), groups the headlines into THEATERS by the
-dynamic they belong to (an ongoing contest between actors, not a shared keyword), and measures each
-theater's heat from how often it appears, whether that is accelerating, and whether it is new.
+Reads a broad headline base (``base``: our radar's editions, Wikipedia's Current Events, and recent
+documents from our own trusted-source library), groups the headlines into THEATERS by the dynamic they
+belong to (an ongoing contest between actors, not a shared keyword), and measures each theater's heat from
+how often it appears, whether that is accelerating, and whether it is new. Then ``novelty`` counts what is
+new in each theater since its last daily section and ``focus`` classifies its lifecycle (new / active /
+quiet) and records it on the board and in the registry.
 
 Nothing is configured per conflict. Theaters keep their identity across runs through a registry the
 clustering is shown ("reuse an existing theater when it is the same dynamic"), so a theater's heat
@@ -22,7 +25,8 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
-from .contracts import HeatPoint, Member, Theater, TheaterHeat
+from . import base as base_mod
+from .contracts import ClassShare, HeatPoint, Member, Theater, TheaterHeat
 
 _STORE_ENV = "ALGENT_INTEL_STORE"
 _DEFAULT_DIR = "intel_store"
@@ -37,6 +41,10 @@ airspace", "the US–Iran confrontation over Hormuz", "China's pressure on Taiwa
   part of the same contest; a Russian ballet tour is not part of the war.
 - Include peripheral stories that genuinely bear on a dynamic (an insurance market reacting to a
   blockade belongs to the blockade's theater).
+- Headlines come from several source classes, tagged on each line (radar = our newsroom's picks,
+  wikipedia = cited events of the day, library = documents from official and wire sources). The class is
+  where a line came from, never what it is about: group by dynamic across classes, and let an event our
+  radar and an official source both carry sit in one theater.
 - A theater needs at least two headlines. One-off stories are left out — most headlines are.
 - You are given the theaters the desk already tracks. When a group is the SAME dynamic, reuse its
   `existing_id` exactly — continuity is what lets heat build into a trend. Create a new theater only
@@ -100,7 +108,8 @@ def cluster(context: Any, config: Any, heads: dict[str, dict], *, model_spec: An
 
     reg = registry()
     known = "\n".join(f"- {tid}: {t['name']} — {t.get('description', '')}" for tid, t in reg.items()) or "none yet"
-    lines = "\n".join(f"[{hid}] {h['day']} — {h['title']}: {h.get('thesis', '')[:160]}" for hid, h in heads.items())
+    lines = "\n".join(f"[{hid}] {h['day']} ({h.get('kind', 'radar')}) — {h['title']}"
+                      + (f": {h['thesis'][:160]}" if h.get("thesis") else "") for hid, h in heads.items())
     task = f"THEATERS ALREADY TRACKED:\n{known}\n\nHEADLINES:\n{lines}\n\nTASK: group them into theaters."
     model = context.model_resolver.resolve(model_spec).client.with_structured_output(TheaterPlan)
     plan = model.invoke([SystemMessage(content=compose_system_prompt(UNIVERSAL_AGENT_BASE, CLUSTER_ROLE)),
@@ -113,10 +122,13 @@ def cluster(context: Any, config: Any, heads: dict[str, dict], *, model_spec: An
         tid = p.existing_id if p.existing_id in reg else _slug(p.name)
         theaters.append(Theater(
             id=tid, name=p.name, domain=p.domain, description=p.description, why=p.why,
-            members=[Member(edition=heads[h]["edition"], n=heads[h]["n"], title=heads[h]["title"],
+            members=[Member(edition=heads[h]["edition"], n=heads[h]["n"], kind=heads[h].get("kind", "radar"),
+                            title=heads[h]["title"],
                             thesis=heads[h].get("thesis", ""), sources=heads[h].get("sources", []))
                      for h in ids]))
     return theaters
+
+
 
 
 def edition_sizes(editions: list[dict]) -> dict[str, int]:
@@ -124,84 +136,139 @@ def edition_sizes(editions: list[dict]) -> dict[str, int]:
     return {e["slug"]: len(e.get("leads") or []) for e in editions}
 
 
+def radar_day_sizes(editions: list[dict]) -> dict[str, dict[str, int]]:
+    """The radar-only denominators (class -> day -> headlines), for callers that have no ``Base``."""
+    by_day: dict[str, int] = {}
+    for slug, n in edition_sizes(editions).items():
+        by_day[slug[:10]] = by_day.get(slug[:10], 0) + n
+    return {base_mod.RADAR: by_day}
+
+
 def _share(members: int, headlines: int) -> float:
     return members / headlines if headlines else 0.0
 
 
-def _judge(recent_m: int, recent_n: int, prior_m: int, prior_n: int) -> str:
-    """heating / cooling / steady from two shares. A change counts only when it exceeds its own noise:
-    the standard error of the difference between two proportions (pooled), so a theater seen in 2 of 10
-    headlines vs 3 of 10 is steady while 10 of 100 vs 20 of 100 is heating. Derived, not tuned."""
-    n1, n2 = recent_n, prior_n
-    pooled = _share(recent_m + prior_m, n1 + n2)
-    se = (pooled * (1 - pooled) * (1 / n1 + 1 / n2)) ** 0.5
-    diff = _share(recent_m, n1) - _share(prior_m, n2)
+def _mean(values: list[float]) -> float:
+    return sum(values) / len(values) if values else 0.0
+
+
+def _judge(pairs: list[tuple[int, int, int, int]]) -> str:
+    """heating / cooling / steady from per-class (recent_m, recent_n, prior_m, prior_n). A change counts only
+    when it exceeds its own noise: per class, the standard error of the difference between two proportions
+    (pooled), so 2 of 10 vs 3 of 10 is steady while 10 of 100 vs 20 of 100 is heating. Classes are combined
+    like the shares are: the mean of their differences against the standard error of that mean
+    (sqrt of the summed variances / k). One class reduces to the plain test. Derived, not tuned."""
+    diffs, variances = [], []
+    for m1, n1, m2, n2 in pairs:
+        if not n1 or not n2:
+            continue
+        pooled = _share(m1 + m2, n1 + n2)
+        variances.append(pooled * (1 - pooled) * (1 / n1 + 1 / n2))
+        diffs.append(_share(m1, n1) - _share(m2, n2))
+    if not diffs:
+        return "steady"
+    diff, se = _mean(diffs), sum(variances) ** 0.5 / len(diffs)
     return "heating" if diff > se else "cooling" if diff < -se else "steady"
 
 
-def measure(theater: Theater, editions: list[dict], *, days: int, today: date) -> TheaterHeat:
+def measure(theater: Theater, editions: list[dict], *, days: int, today: date,
+            sizes: dict[str, dict[str, int]] | None = None) -> TheaterHeat:
     """Deterministic heat, as a SHARE of coverage — never raw volume, which swings with how many radar
-    editions we happened to build (several one day, none for three).
+    editions we happened to build (several one day, none for three) and with how big each source class is.
 
-    recent = the last 3 days, prior = the 3 before. For each window,
-    ``share = theater headlines / all headlines in that window's editions``. A window with no editions
-    is "no data": the trend is judged from what exists, never read as a drop to zero:
-      - both windows have editions: ``new`` if first seen in recent with nothing in prior; else
-        ``heating``/``cooling``/``steady`` by whether the share change beats its standard error;
+    ``sizes`` is class -> day -> headlines in the base (``base.Base.sizes``); without it the radar editions
+    are the whole base. For each source class and window, ``share = theater members of that class /
+    headlines of that class``; the theater's share in a window is the MEAN of the shares of the classes that
+    have headlines in it, so no class outvotes another and a class with no data (the radar skipped three days)
+    is absent, never a zero.
+
+    recent = the last 3 days, prior = the 3 before. A window with no headlines in any class is "no data": the
+    trend is judged from what exists, never read as a drop to zero:
+      - both windows have headlines: ``new`` if first seen in recent with nothing in prior; else
+        ``heating``/``cooling``/``steady`` by whether the mean share change beats its standard error (``_judge``);
       - prior has none: ``new`` if first seen in the recent window, else ``steady``;
       - recent has none: ``steady`` (nothing to compare).
     heat = 100 * (w * recent_share + 0.25 * earlier_share), w = 1.5 when heating/new else 1; earlier
     share covers the rest of the window, so a long-running theater keeps a floor. Units: headlines per
-    100 in the recent editions. (1.5 and 0.25 are weights on the ranking, not gates on a trend.)
+    100 in the recent window. (1.5 and 0.25 are weights on the ranking, not gates on a trend.)
     """
-    counts: dict[str, int] = {}
+    sizes = sizes if sizes is not None else radar_day_sizes(editions)
+    counts: dict[str, dict[str, int]] = {}                  # class -> day -> this theater's members
     for m in theater.members:
-        counts[m.edition[:10]] = counts.get(m.edition[:10], 0) + 1
-    sizes = edition_sizes(editions)
-    by_day: dict[str, list[int]] = {}                   # day -> sizes of that day's editions
-    for slug, n in sizes.items():
-        by_day.setdefault(slug[:10], []).append(n)
+        per = counts.setdefault(m.kind, {})
+        per[m.edition[:10]] = per.get(m.edition[:10], 0) + 1
+    ed_by_day: dict[str, int] = {}
+    for slug in edition_sizes(editions):
+        ed_by_day[slug[:10]] = ed_by_day.get(slug[:10], 0) + 1
     day_keys = [(today - timedelta(days=i)).isoformat() for i in range(days - 1, -1, -1)]
-    series = [HeatPoint(day=d, count=counts.get(d, 0), editions=len(by_day.get(d, []))) for d in day_keys]
+    series = [HeatPoint(day=d, count=sum(c.get(d, 0) for c in counts.values()), editions=ed_by_day.get(d, 0))
+              for d in day_keys]
+    windows = {"recent": day_keys[-3:], "prior": day_keys[-6:-3], "earlier": day_keys[:-3]}
 
-    def window(keys: list[str]) -> tuple[int, int, int]:   # (members, headlines, editions)
-        return (sum(counts.get(d, 0) for d in keys), sum(sum(by_day.get(d, [])) for d in keys),
-                sum(len(by_day.get(d, [])) for d in keys))
+    def window(cls: str, name: str) -> tuple[int, int]:      # (members, headlines)
+        keys = windows[name]
+        return (sum(counts.get(cls, {}).get(d, 0) for d in keys), sum(sizes.get(cls, {}).get(d, 0) for d in keys))
 
-    (recent, recent_n, recent_e), (prior, prior_n, prior_e) = window(day_keys[-3:]), window(day_keys[-6:-3])
-    earlier, earlier_n, _ = window(day_keys[:-3])
-    first = min(counts) if counts else ""
-    appeared = bool(first) and first >= day_keys[-3]   # first seen inside the recent window
-    if not recent_e or not recent_n:
+    classes = sorted(set(sizes) | set(counts))
+    w = {name: {c: window(c, name) for c in classes} for name in windows}
+    mean_share = {name: _mean([_share(m, n) for m, n in w[name].values() if n]) for name in windows}
+    recent_has = any(n for _, n in w["recent"].values())
+    prior_has = any(n for _, n in w["prior"].values())
+    recent = sum(m for m, _ in w["recent"].values())
+    prior = sum(m for m, _ in w["prior"].values())
+    all_days = [d for per in counts.values() for d in per]
+    first = min(all_days, default="")
+    appeared = bool(first) and first >= day_keys[-3]        # first seen inside the recent window
+    if not recent_has:
         trend = "steady"
-    elif not prior_e or not prior_n:
+    elif not prior_has:
         trend = "new" if appeared else "steady"
     elif appeared and prior == 0:
         trend = "new"
     else:
-        trend = _judge(recent, recent_n, prior, prior_n)
-    recent_share, prior_share = _share(recent, recent_n), _share(prior, prior_n)
-    heat = 100 * ((1.5 if trend in ("heating", "new") else 1.0) * recent_share + 0.25 * _share(earlier, earlier_n))
-    return TheaterHeat(theater_id=theater.id, name=theater.name, series=series, total=sum(counts.values()),
-                       recent=recent, prior=prior, recent_share=round(recent_share, 4),
-                       prior_share=round(prior_share, 4), trend=trend, first_seen=first, heat=round(heat, 2))
+        trend = _judge([(*w["recent"][c], *w["prior"][c]) for c in classes])
+    heat = 100 * ((1.5 if trend in ("heating", "new") else 1.0) * mean_share["recent"] + 0.25 * mean_share["earlier"])
+    by_class = {c: ClassShare(recent=w["recent"][c][0], recent_n=w["recent"][c][1],
+                              prior=w["prior"][c][0], prior_n=w["prior"][c][1])
+                for c in classes if counts.get(c) or any(n for _, n in (w["recent"][c], w["prior"][c]))}
+    return TheaterHeat(theater_id=theater.id, name=theater.name, series=series,
+                       total=sum(sum(c.values()) for c in counts.values()),
+                       recent=recent, prior=prior, recent_share=round(mean_share["recent"], 4),
+                       prior_share=round(mean_share["prior"], 4), trend=trend, first_seen=first, heat=round(heat, 2),
+                       by_class=by_class)
 
 
-def run(context: Any, config: Any, editions: list[dict], *, model_spec: Any, days: int = 7) -> dict:
-    """Cluster the window, measure heat, remember the theaters. Returns the heat board."""
-    heads = headlines(editions, days=days)
-    today = max(date.fromisoformat(h["day"]) for h in heads.values()) if heads else date.today()
+def run(context: Any, config: Any, editions: list[dict], *, model_spec: Any, days: int = 7,
+        loaders: dict[str, base_mod.Loader] | None = None, today: date | None = None,
+        covered_before: str = "", write: bool = True) -> dict:
+    """Assemble the base, cluster it, measure heat, record novelty and lifecycle, remember the theaters.
+    Returns the heat board.
+
+    ``loaders`` adds source classes beyond the radar (``base.default_loaders()`` for the real ones; None =
+    radar only, offline). ``covered_before`` is the date a daily written today would carry: a section on or
+    after it does not count as "already covered" (default: the board's date). ``write=False`` builds the
+    board without touching the registry or the board snapshot (the live check, tests)."""
+    from . import focus
+
+    base = base_mod.assemble(editions, days=days, today=today, loaders=loaders)
+    heads = base.heads
+    as_of = today or (max(date.fromisoformat(h["day"]) for h in heads.values()) if heads else date.today())
     theaters = cluster(context, config, heads, model_spec=model_spec)
     reg = registry()
     for t in theaters:
-        entry = reg.get(t.id, {"first_seen": today.isoformat()})
+        entry = reg.get(t.id, {"first_seen": as_of.isoformat()})
         reg[t.id] = {**entry, "name": t.name, "domain": t.domain, "description": t.description,
-                     "last_seen": today.isoformat()}
-    _save_registry(reg)
-    heat = sorted((measure(t, editions, days=days, today=today) for t in theaters), key=lambda h: -h.heat)
-    board = {"as_of": today.isoformat(), "window_days": days, "headlines": len(heads),
-             "theaters": [t.model_dump() for t in theaters], "heat": [h.model_dump() for h in heat]}
-    snap = store_dir() / "boards" / f"{today.isoformat()}.json"
-    snap.parent.mkdir(parents=True, exist_ok=True)
-    snap.write_text(json.dumps(board, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
+                     "last_seen": as_of.isoformat()}
+    heat = sorted((measure(t, editions, days=days, today=as_of, sizes=base.sizes) for t in theaters),
+                  key=lambda h: -h.heat)
+    focus.annotate(theaters, heat, reg, as_of=as_of, days=days, covered_before=covered_before or as_of.isoformat())
+    if write:
+        _save_registry(reg)
+    board = {"as_of": as_of.isoformat(), "window_days": days, "headlines": len(heads), "base": base.summary(),
+             "theaters": [t.model_dump() for t in theaters], "heat": [h.model_dump() for h in heat],
+             "lifecycle": focus.offboard(reg, {t.id for t in theaters}, as_of=as_of, days=days)}
+    if write:
+        snap = store_dir() / "boards" / f"{as_of.isoformat()}.json"
+        snap.parent.mkdir(parents=True, exist_ok=True)
+        snap.write_text(json.dumps(board, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     return board
