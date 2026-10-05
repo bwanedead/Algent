@@ -189,6 +189,51 @@
         "value": 69.8,
         "year": 2026,
         "source": "imf"
+      },
+      {
+        "id": "fiscal_balance_imf",
+        "label": "Government net lending/borrowing, share of GDP (IMF)",
+        "unit": "pct",
+        "group": "economy",
+        "value": -5.9,
+        "year": 2026,
+        "source": "imf"
+      },
+      {
+        "id": "current_account_imf",
+        "label": "Current account balance, share of GDP (IMF)",
+        "unit": "pct",
+        "group": "economy",
+        "value": 1.9,
+        "year": 2026,
+        "source": "imf"
+      },
+      {
+        "id": "reserves_usd",
+        "label": "Foreign reserves (incl. gold)",
+        "unit": "usd",
+        "group": "economy",
+        "value": 229486904238.885,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "reserves_months",
+        "label": "Foreign reserves, months of imports",
+        "unit": "months",
+        "group": "economy",
+        "value": 14.5416215671135,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "policy_rate",
+        "label": "Central bank policy rate (end of year)",
+        "unit": "pct",
+        "group": "economy",
+        "value": 3.5,
+        "year": 2026,
+        "source": "bis"
       }
     ],
     "trade": [
@@ -217,6 +262,87 @@
         "group": "trade",
         "value": 5.31969619319333,
         "year": 2022,
+        "source": "wb"
+      },
+      {
+        "id": "exports_usd",
+        "label": "Exports of goods and services",
+        "unit": "usd",
+        "group": "trade",
+        "value": 168320379115.799,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "imports_usd",
+        "label": "Imports of goods and services",
+        "unit": "usd",
+        "group": "trade",
+        "value": 155326013610.895,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "food_exports_pct",
+        "label": "Food, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 4.24995100148647,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "metal_exports_pct",
+        "label": "Ores and metals, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 1.19930105964575,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "manuf_exports_pct",
+        "label": "Manufactures, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 86.5973224988396,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "fuel_imports_pct",
+        "label": "Fuels, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 10.1731851484713,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "food_imports_pct",
+        "label": "Food, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 10.5547207249929,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "metal_imports_pct",
+        "label": "Ores and metals, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 1.38219834899269,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "manuf_imports_pct",
+        "label": "Manufactures, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 74.6001534371718,
+        "year": 2024,
         "source": "wb"
       }
     ],
@@ -442,7 +568,7 @@
         "id": "pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe",
         "name": "Gaza Combat and Humanitarian Catastrophe",
         "band": "critical",
-        "position": 85.0,
+        "position": 87.0,
         "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
       },
       {
@@ -456,19 +582,26 @@
         "id": "pls_israel_palestine_ceasefire_and_normalization_deadlock",
         "name": "Ceasefire and Normalization Deadlock",
         "band": "severe",
-        "position": 60.0,
+        "position": 63.0,
         "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
       },
       {
         "id": "pls_israel_palestine_west_bank_annexation_and_settler_violence",
         "name": "West Bank Annexation and Settler Violence",
         "band": "severe",
-        "position": 58.0,
+        "position": 60.0,
         "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
       }
     ]
   },
   "credits": [
+    {
+      "source": "bis",
+      "name": "Bank for International Settlements, central bank policy rates",
+      "licence": "BIS statistics, free reuse with attribution",
+      "url": "https://data.bis.org/topics/CBPOL",
+      "years": "2026"
+    },
     {
       "source": "imf",
       "name": "IMF World Economic Outlook (DataMapper)",

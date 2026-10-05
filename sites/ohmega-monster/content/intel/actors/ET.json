@@ -189,6 +189,60 @@
         "value": 40.4,
         "year": 2026,
         "source": "imf"
+      },
+      {
+        "id": "fiscal_balance_imf",
+        "label": "Government net lending/borrowing, share of GDP (IMF)",
+        "unit": "pct",
+        "group": "economy",
+        "value": -1.8,
+        "year": 2026,
+        "source": "imf"
+      },
+      {
+        "id": "current_account_imf",
+        "label": "Current account balance, share of GDP (IMF)",
+        "unit": "pct",
+        "group": "economy",
+        "value": -2.4,
+        "year": 2026,
+        "source": "imf"
+      },
+      {
+        "id": "reserves_usd",
+        "label": "Foreign reserves (incl. gold)",
+        "unit": "usd",
+        "group": "economy",
+        "value": 3784387425.19121,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "reserves_months",
+        "label": "Foreign reserves, months of imports",
+        "unit": "months",
+        "group": "economy",
+        "value": 1.7806234891991,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "ext_debt_usd",
+        "label": "External debt stocks",
+        "unit": "usd",
+        "group": "economy",
+        "value": 36548259483.3,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "ext_debt_gni",
+        "label": "External debt, share of national income",
+        "unit": "pct",
+        "group": "economy",
+        "value": 24.2638688064282,
+        "year": 2022,
+        "source": "wb"
       }
     ],
     "trade": [
@@ -216,6 +270,87 @@
         "unit": "pct",
         "group": "trade",
         "value": 0.0317976469871324,
+        "year": 2023,
+        "source": "wb"
+      },
+      {
+        "id": "exports_usd",
+        "label": "Exports of goods and services",
+        "unit": "usd",
+        "group": "trade",
+        "value": 16785187367.6025,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "imports_usd",
+        "label": "Imports of goods and services",
+        "unit": "usd",
+        "group": "trade",
+        "value": 25494178576.2035,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "food_exports_pct",
+        "label": "Food, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 80.3857509910765,
+        "year": 2023,
+        "source": "wb"
+      },
+      {
+        "id": "metal_exports_pct",
+        "label": "Ores and metals, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 0.720590411591821,
+        "year": 2023,
+        "source": "wb"
+      },
+      {
+        "id": "manuf_exports_pct",
+        "label": "Manufactures, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 9.18928021346834,
+        "year": 2023,
+        "source": "wb"
+      },
+      {
+        "id": "fuel_imports_pct",
+        "label": "Fuels, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 15.4335701862855,
+        "year": 2023,
+        "source": "wb"
+      },
+      {
+        "id": "food_imports_pct",
+        "label": "Food, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 13.8401468775133,
+        "year": 2023,
+        "source": "wb"
+      },
+      {
+        "id": "metal_imports_pct",
+        "label": "Ores and metals, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 0.991556317467589,
+        "year": 2023,
+        "source": "wb"
+      },
+      {
+        "id": "manuf_imports_pct",
+        "label": "Manufactures, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 69.1901061883513,
         "year": 2023,
         "source": "wb"
       }
@@ -391,7 +526,7 @@
       {
         "id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
         "name": "Ethiopia-Eritrea rupture and Tigray offensive",
-        "mentions": 6
+        "mentions": 7
       }
     ],
     "pulses": [

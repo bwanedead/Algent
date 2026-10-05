@@ -189,6 +189,69 @@
         "value": 19.1,
         "year": 2026,
         "source": "imf"
+      },
+      {
+        "id": "fiscal_balance_imf",
+        "label": "Government net lending/borrowing, share of GDP (IMF)",
+        "unit": "pct",
+        "group": "economy",
+        "value": -2.0,
+        "year": 2026,
+        "source": "imf"
+      },
+      {
+        "id": "current_account_imf",
+        "label": "Current account balance, share of GDP (IMF)",
+        "unit": "pct",
+        "group": "economy",
+        "value": 2.9,
+        "year": 2026,
+        "source": "imf"
+      },
+      {
+        "id": "reserves_usd",
+        "label": "Foreign reserves (incl. gold)",
+        "unit": "usd",
+        "group": "economy",
+        "value": 608360767884.902,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "reserves_months",
+        "label": "Foreign reserves, months of imports",
+        "unit": "months",
+        "group": "economy",
+        "value": 16.7768277290964,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "ext_debt_usd",
+        "label": "External debt stocks",
+        "unit": "usd",
+        "group": "economy",
+        "value": 376117000821.9,
+        "year": 2022,
+        "source": "wb"
+      },
+      {
+        "id": "ext_debt_gni",
+        "label": "External debt, share of national income",
+        "unit": "pct",
+        "group": "economy",
+        "value": 16.757438584072,
+        "year": 2022,
+        "source": "wb"
+      },
+      {
+        "id": "policy_rate",
+        "label": "Central bank policy rate (end of year)",
+        "unit": "pct",
+        "group": "economy",
+        "value": 14.0,
+        "year": 2026,
+        "source": "bis"
       }
     ],
     "trade": [
@@ -216,6 +279,87 @@
         "unit": "pct",
         "group": "trade",
         "value": 43.1468587746174,
+        "year": 2021,
+        "source": "wb"
+      },
+      {
+        "id": "exports_usd",
+        "label": "Exports of goods and services",
+        "unit": "usd",
+        "group": "trade",
+        "value": 466237273304.333,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "imports_usd",
+        "label": "Imports of goods and services",
+        "unit": "usd",
+        "group": "trade",
+        "value": 397181687664.146,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "food_exports_pct",
+        "label": "Food, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 6.58356390019312,
+        "year": 2021,
+        "source": "wb"
+      },
+      {
+        "id": "metal_exports_pct",
+        "label": "Ores and metals, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 7.40377266771173,
+        "year": 2021,
+        "source": "wb"
+      },
+      {
+        "id": "manuf_exports_pct",
+        "label": "Manufactures, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 22.1259534734508,
+        "year": 2021,
+        "source": "wb"
+      },
+      {
+        "id": "fuel_imports_pct",
+        "label": "Fuels, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 0.775995923832277,
+        "year": 2021,
+        "source": "wb"
+      },
+      {
+        "id": "food_imports_pct",
+        "label": "Food, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 10.8585376848486,
+        "year": 2021,
+        "source": "wb"
+      },
+      {
+        "id": "metal_imports_pct",
+        "label": "Ores and metals, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 2.90782270428842,
+        "year": 2021,
+        "source": "wb"
+      },
+      {
+        "id": "manuf_imports_pct",
+        "label": "Manufactures, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 79.7535840766555,
         "year": 2021,
         "source": "wb"
       }
@@ -424,6 +568,28 @@
   },
   "statements": [
     {
+      "id": "st_e1ea3ef298cb",
+      "speaker": "Vladimir Putin",
+      "role": "President",
+      "date": "2026-10-05",
+      "text": "It would be hard to overestimate your personal contribution to the development of the strategic partnership and alliance between Tajikistan and Russia.",
+      "is_quote": true,
+      "signal": "reassurance",
+      "stance": 2,
+      "source_url": "http://en.kremlin.ru/events/president/news/80922"
+    },
+    {
+      "id": "st_88996869b5e0",
+      "speaker": "Vladimir Putin",
+      "role": "President",
+      "date": "2026-10-05",
+      "text": "I will be delighted to continue our constructive and friendly communication and our fruitful cooperation on the topical issues of the bilateral, regional and international agendas.",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 2,
+      "source_url": "http://en.kremlin.ru/events/president/news/80922"
+    },
+    {
       "id": "st_9b2b2cc0512a",
       "speaker": "Vladimir Putin",
       "role": "President",
@@ -488,28 +654,6 @@
       "signal": "reassurance",
       "stance": 1,
       "source_url": "http://en.kremlin.ru/events/president/transcripts/80912"
-    },
-    {
-      "id": "st_15d71560bf8c",
-      "speaker": "Andrei Belousov",
-      "role": "Minister of Defence",
-      "date": "2026-10-02",
-      "text": "The exercise involves troops from the Central Military District, Aerospace Forces, Airborne Forces, formations under Central Command, and the Caspian Flotilla, with training objectives in the Central Asian strategic area and Caspian Sea.",
-      "is_quote": false,
-      "signal": "policy_announcement",
-      "stance": 0,
-      "source_url": "http://en.kremlin.ru/events/president/transcripts/80912"
-    },
-    {
-      "id": "st_c2fdf83651f2",
-      "speaker": "Andrei Belousov",
-      "role": "Minister of Defence",
-      "date": "2026-10-02",
-      "text": "Seven countries have deployed military contingents; the defence agency of the Republic of the Congo is represented by an operational group; and 51 countries have sent observers.",
-      "is_quote": true,
-      "signal": "policy_announcement",
-      "stance": 0,
-      "source_url": "http://en.kremlin.ru/events/president/transcripts/80912"
     }
   ],
   "involved": {
@@ -566,6 +710,13 @@
     ]
   },
   "credits": [
+    {
+      "source": "bis",
+      "name": "Bank for International Settlements, central bank policy rates",
+      "licence": "BIS statistics, free reuse with attribution",
+      "url": "https://data.bis.org/topics/CBPOL",
+      "years": "2026"
+    },
     {
       "source": "imf",
       "name": "IMF World Economic Outlook (DataMapper)",

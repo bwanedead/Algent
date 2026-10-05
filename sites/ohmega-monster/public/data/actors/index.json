@@ -867,40 +867,6 @@
       "data_url": "/data/actors/SA.json"
     },
     {
-      "iso2": "SO",
-      "name": "Somalia",
-      "region": "Sub-Saharan Africa",
-      "population": {
-        "value": 19654739.0,
-        "unit": "people",
-        "year": 2025
-      },
-      "gdp": {
-        "value": 12995200000.2658,
-        "unit": "usd",
-        "year": 2025
-      },
-      "gdp_pc": {
-        "value": 661.173877723116,
-        "unit": "usd",
-        "year": 2025
-      },
-      "energy_production": {
-        "value": 0.0,
-        "unit": "twh",
-        "year": 2016
-      },
-      "milex": {
-        "value": 201854000.0,
-        "unit": "usd",
-        "year": 2024
-      },
-      "theaters": 1,
-      "statements": 0,
-      "url": "/intel/actors/SO",
-      "data_url": "/data/actors/SO.json"
-    },
-    {
       "iso2": "ZA",
       "name": "South Africa",
       "region": "Sub-Saharan Africa",

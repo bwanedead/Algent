@@ -180,6 +180,42 @@
         "value": 37.3,
         "year": 2026,
         "source": "imf"
+      },
+      {
+        "id": "fiscal_balance_imf",
+        "label": "Government net lending/borrowing, share of GDP (IMF)",
+        "unit": "pct",
+        "group": "economy",
+        "value": -5.2,
+        "year": 2026,
+        "source": "imf"
+      },
+      {
+        "id": "current_account_imf",
+        "label": "Current account balance, share of GDP (IMF)",
+        "unit": "pct",
+        "group": "economy",
+        "value": -1.8,
+        "year": 2026,
+        "source": "imf"
+      },
+      {
+        "id": "ext_debt_usd",
+        "label": "External debt stocks",
+        "unit": "usd",
+        "group": "economy",
+        "value": 9654298895.5,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "ext_debt_gni",
+        "label": "External debt, share of national income",
+        "unit": "pct",
+        "group": "economy",
+        "value": 2.21280566524888,
+        "year": 2024,
+        "source": "wb"
       }
     ],
     "trade": [
@@ -207,6 +243,87 @@
         "unit": "pct",
         "group": "trade",
         "value": 56.361512409332,
+        "year": 2022,
+        "source": "wb"
+      },
+      {
+        "id": "exports_usd",
+        "label": "Exports of goods and services",
+        "unit": "usd",
+        "group": "trade",
+        "value": 93406513015.3745,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "imports_usd",
+        "label": "Imports of goods and services",
+        "unit": "usd",
+        "group": "trade",
+        "value": 125082704285.68,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "food_exports_pct",
+        "label": "Food, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 5.93159350718198,
+        "year": 2022,
+        "source": "wb"
+      },
+      {
+        "id": "metal_exports_pct",
+        "label": "Ores and metals, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 6.07369800540942,
+        "year": 2022,
+        "source": "wb"
+      },
+      {
+        "id": "manuf_exports_pct",
+        "label": "Manufactures, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 31.3155329521183,
+        "year": 2022,
+        "source": "wb"
+      },
+      {
+        "id": "fuel_imports_pct",
+        "label": "Fuels, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 2.01147553606513,
+        "year": 2022,
+        "source": "wb"
+      },
+      {
+        "id": "food_imports_pct",
+        "label": "Food, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 29.4601700206271,
+        "year": 2022,
+        "source": "wb"
+      },
+      {
+        "id": "metal_imports_pct",
+        "label": "Ores and metals, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 1.9548182039689,
+        "year": 2022,
+        "source": "wb"
+      },
+      {
+        "id": "manuf_imports_pct",
+        "label": "Manufactures, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 58.1104089277879,
         "year": 2022,
         "source": "wb"
       }

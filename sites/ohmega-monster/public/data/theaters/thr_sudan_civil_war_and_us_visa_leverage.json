@@ -5,9 +5,9 @@
   "domain": "geopolitics",
   "built_at": "2026-10-05T02:29:50.784371+00:00",
   "first_seen": "2026-09-28",
-  "last_seen": "2026-10-04",
+  "last_seen": "2026-10-05",
   "days_covered": 1,
-  "state": "new",
+  "state": "active",
   "last_novel": "2026-10-04",
   "primer": {
     "text": "Sudan's civil war is fought between SAF and RSF, rival armed forces each seeking control on the ground. The conflict has produced a humanitarian front centered on areas like Kordofan, where civilian sites such as a university dormitory, contested towns like al-Mazroub, and aid routes used by WFP trucks are at risk. That front is why outside leverage matters. The United States can use visas needed to attend the UN General Assembly (UNGA) as pressure to push the warring parties toward a ceasefire. In this context, UNGA is the United Nations General Assembly, the gathering of countries at the United Nations, and WFP is the humanitarian group that moves food aid.",
@@ -69,11 +69,6 @@
   ],
   "coverage_series": [
     {
-      "day": "2026-09-28",
-      "count": 0,
-      "editions": 1
-    },
-    {
       "day": "2026-09-29",
       "count": 0,
       "editions": 0
@@ -101,6 +96,11 @@
     {
       "day": "2026-10-04",
       "count": 1,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-05",
+      "count": 0,
       "editions": 0
     }
   ],

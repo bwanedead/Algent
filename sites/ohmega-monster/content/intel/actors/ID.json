@@ -189,6 +189,69 @@
         "value": 41.5,
         "year": 2026,
         "source": "imf"
+      },
+      {
+        "id": "fiscal_balance_imf",
+        "label": "Government net lending/borrowing, share of GDP (IMF)",
+        "unit": "pct",
+        "group": "economy",
+        "value": -2.9,
+        "year": 2026,
+        "source": "imf"
+      },
+      {
+        "id": "current_account_imf",
+        "label": "Current account balance, share of GDP (IMF)",
+        "unit": "pct",
+        "group": "economy",
+        "value": -1.1,
+        "year": 2026,
+        "source": "imf"
+      },
+      {
+        "id": "reserves_usd",
+        "label": "Foreign reserves (incl. gold)",
+        "unit": "usd",
+        "group": "economy",
+        "value": 156542507869.671,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "reserves_months",
+        "label": "Foreign reserves, months of imports",
+        "unit": "months",
+        "group": "economy",
+        "value": 5.51085431823322,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "ext_debt_usd",
+        "label": "External debt stocks",
+        "unit": "usd",
+        "group": "economy",
+        "value": 421059208493.8,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "ext_debt_gni",
+        "label": "External debt, share of national income",
+        "unit": "pct",
+        "group": "economy",
+        "value": 30.9729980083421,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "policy_rate",
+        "label": "Central bank policy rate (end of year)",
+        "unit": "pct",
+        "group": "economy",
+        "value": 5.75,
+        "year": 2026,
+        "source": "bis"
       }
     ],
     "trade": [
@@ -216,6 +279,87 @@
         "unit": "pct",
         "group": "trade",
         "value": 16.0120291720516,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "exports_usd",
+        "label": "Exports of goods and services",
+        "unit": "usd",
+        "group": "trade",
+        "value": 330279431218.799,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "imports_usd",
+        "label": "Imports of goods and services",
+        "unit": "usd",
+        "group": "trade",
+        "value": 297002335694.886,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "food_exports_pct",
+        "label": "Food, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 22.924230601164,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "metal_exports_pct",
+        "label": "Ores and metals, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 9.15253296016074,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "manuf_exports_pct",
+        "label": "Manufactures, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 47.4319713001732,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "fuel_imports_pct",
+        "label": "Fuels, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 15.2330529611284,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "food_imports_pct",
+        "label": "Food, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 10.2078672862174,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "metal_imports_pct",
+        "label": "Ores and metals, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 4.68152657882251,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "manuf_imports_pct",
+        "label": "Manufactures, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 65.4151685386219,
         "year": 2025,
         "source": "wb"
       }
@@ -423,6 +567,13 @@
     "pulses": []
   },
   "credits": [
+    {
+      "source": "bis",
+      "name": "Bank for International Settlements, central bank policy rates",
+      "licence": "BIS statistics, free reuse with attribution",
+      "url": "https://data.bis.org/topics/CBPOL",
+      "years": "2026"
+    },
     {
       "source": "imf",
       "name": "IMF World Economic Outlook (DataMapper)",

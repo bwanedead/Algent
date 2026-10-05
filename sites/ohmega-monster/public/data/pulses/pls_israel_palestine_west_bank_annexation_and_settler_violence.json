@@ -10,11 +10,11 @@
   "situation_id": "sit_israel_palestine",
   "situation": "Israel–Palestine and the wider region",
   "status": "experimental",
-  "position": 58.0,
+  "position": 60.0,
   "band": "severe",
   "confidence": "medium",
   "velocity_7d": null,
-  "last_assessed": "2026-10-03T22:02:09.104168+00:00",
+  "last_assessed": "2026-10-05T06:44:10.888856+00:00",
   "evidence_through": "unknown - research header dated 'as of ?' with no claims",
   "history": [
     {
@@ -24,6 +24,10 @@
     {
       "at": "2026-10-03T22:02:09.104168+00:00",
       "position": 58.0
+    },
+    {
+      "at": "2026-10-05T06:44:10.888856+00:00",
+      "position": 60.0
     }
   ],
   "definition": {
@@ -104,6 +108,18 @@
       "rationale": "Applied move up from 55 on 2026-10-03 (which reflected single Yasuf killing Oct 2). New confirmed evidence shows sustained systematic surge beyond single incident: Oct 1 Yasuf killing by Havat Anton outpost (est. July 2026) plus Oct 3 coordinated attacks under army protection across Nablus governorate (Beita/Awarta/Osarin) injuring 16 and burning 55 trees with journalists detained. Likely claim…",
       "confidence": "medium",
       "evidence_through": "2026-10-03",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-05T06:44:10.888856+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "applied",
+      "position": 60.0,
+      "rationale": "Up from 58 on 2026-10-03 which reflected single Yasuf killing Oct 2 and Oct 3 coordinated attacks under army protection. New research confirms same Oct 1 Yasuf killing of Mashhour Yassin 51 by settlers from Havat Anton outpost built ~2 months earlier and Oct 3 attacks under army protection burning olive trees/detaining dozens across Abu Dis/Awarta/Beita/Osarin and assaulting journalists, plus…",
+      "confidence": "medium",
+      "evidence_through": "2026-10-05",
       "model": "muse-spark-1.2-contributor",
       "article_url": null
     }

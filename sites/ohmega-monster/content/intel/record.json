@@ -2,9 +2,55 @@
   "schema": "ohmega.record/1",
   "window_days": 60,
   "max_statements": 1500,
-  "as_of": "2026-10-04",
-  "count": 425,
+  "as_of": "2026-10-05",
+  "count": 427,
   "statements": [
+    {
+      "id": "st_e1ea3ef298cb",
+      "speaker": "Vladimir Putin",
+      "role": "President",
+      "affiliation": "Russia",
+      "iso2": "RU",
+      "date": "2026-10-05",
+      "venue": "other",
+      "quote": "It would be hard to overestimate your personal contribution to the development of the strategic partnership and alliance between Tajikistan and Russia.",
+      "paraphrase": "Putin said Rahmon's personal contribution to the development of the strategic partnership and alliance between Tajikistan and Russia would be hard to overestimate.",
+      "about": [
+        "Tajikistan",
+        "Russia"
+      ],
+      "about_iso2": [
+        "TJ",
+        "RU"
+      ],
+      "signal": "reassurance",
+      "stance": 2,
+      "significance": "Reaffirms Russia's official framing of ties with Tajikistan as a strategic partnership and alliance and personalizes the relationship to Rahmon.",
+      "url": "http://en.kremlin.ru/events/president/news/80922"
+    },
+    {
+      "id": "st_88996869b5e0",
+      "speaker": "Vladimir Putin",
+      "role": "President",
+      "affiliation": "Russia",
+      "iso2": "RU",
+      "date": "2026-10-05",
+      "venue": "other",
+      "quote": "I will be delighted to continue our constructive and friendly communication and our fruitful cooperation on the topical issues of the bilateral, regional and international agendas.",
+      "paraphrase": "Putin expressed desire to continue constructive and friendly communication and fruitful cooperation with Rahmon on bilateral, regional and international issues.",
+      "about": [
+        "Tajikistan",
+        "Russia"
+      ],
+      "about_iso2": [
+        "TJ",
+        "RU"
+      ],
+      "signal": "commitment",
+      "stance": 2,
+      "significance": "Signals intent to sustain close bilateral and regional cooperation with Tajikistan across multiple agendas.",
+      "url": "http://en.kremlin.ru/events/president/news/80922"
+    },
     {
       "id": "st_9b2b2cc0512a",
       "speaker": "Vladimir Putin",
@@ -9718,5 +9764,5 @@
       ]
     }
   ],
-  "newest": "2026-10-04"
+  "newest": "2026-10-05"
 }

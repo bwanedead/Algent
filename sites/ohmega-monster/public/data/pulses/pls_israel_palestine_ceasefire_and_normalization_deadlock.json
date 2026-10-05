@@ -10,11 +10,11 @@
   "situation_id": "sit_israel_palestine",
   "situation": "Israel–Palestine and the wider region",
   "status": "experimental",
-  "position": 60.0,
+  "position": 63.0,
   "band": "severe",
   "confidence": "medium",
   "velocity_7d": null,
-  "last_assessed": "2026-10-03T22:02:09.104168+00:00",
+  "last_assessed": "2026-10-05T06:44:10.888856+00:00",
   "evidence_through": "unknown - research header dated 'as of ?' with no claims",
   "history": [
     {
@@ -24,6 +24,10 @@
     {
       "at": "2026-10-01T08:39:39.312641+00:00",
       "position": 60.0
+    },
+    {
+      "at": "2026-10-05T06:44:10.888856+00:00",
+      "position": 63.0
     }
   ],
   "definition": {
@@ -104,6 +108,18 @@
       "rationale": "No change from held 60 (closest to 62 on 2026-10-01, reader thought reality 60). New research confirms same paper-only ceasefire pattern: 1,439 killed/5,052 wounded since Oct 2025 vs 1,381-1,408 prior, plus Oct 3 Remal strike (/) and Oct 1 al-Mawasi tent strike are vivid incidents within pattern already reflected. No new mediation collapse or normalization advance; UAE UNGA call for…",
       "confidence": "high",
       "evidence_through": "2026-10-03",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-05T06:44:10.888856+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "applied",
+      "position": 63.0,
+      "rationale": "Closest to held 60 on 2026-10-03 (reader thought reality 60, closest to 62 on 2026-10-01) which already reflected paper-only ceasefire with 1,381-1,439 killed. New research confirms same pattern (1,439 killed/5,052 injured since Oct 10 2025 -, Oct 3 al-Asala strike -, Oct 1 al-Mawasi strike -, Oct 5 Khan Younis strike -) but adds structural worsening not in prior rationale: Yellow Line expanded…",
+      "confidence": "medium",
+      "evidence_through": "2026-10-05",
       "model": "muse-spark-1.2-contributor",
       "article_url": null
     }

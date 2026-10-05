@@ -138,6 +138,24 @@
         "value": 9.80840118100493,
         "year": 2025,
         "source": "wb"
+      },
+      {
+        "id": "reserves_usd",
+        "label": "Foreign reserves (incl. gold)",
+        "unit": "usd",
+        "group": "economy",
+        "value": 1825200000.0,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "reserves_months",
+        "label": "Foreign reserves, months of imports",
+        "unit": "months",
+        "group": "economy",
+        "value": 2.34819177993939,
+        "year": 2025,
+        "source": "wb"
       }
     ],
     "trade": [
@@ -165,6 +183,87 @@
         "unit": "pct",
         "group": "trade",
         "value": 0.0859853021575194,
+        "year": 2023,
+        "source": "wb"
+      },
+      {
+        "id": "exports_usd",
+        "label": "Exports of goods and services",
+        "unit": "usd",
+        "group": "trade",
+        "value": 3644200000.0,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "imports_usd",
+        "label": "Imports of goods and services",
+        "unit": "usd",
+        "group": "trade",
+        "value": 9190000000.0,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "food_exports_pct",
+        "label": "Food, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 21.3953024551424,
+        "year": 2023,
+        "source": "wb"
+      },
+      {
+        "id": "metal_exports_pct",
+        "label": "Ores and metals, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 14.4323282782474,
+        "year": 2023,
+        "source": "wb"
+      },
+      {
+        "id": "manuf_exports_pct",
+        "label": "Manufactures, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 63.3233160547246,
+        "year": 2023,
+        "source": "wb"
+      },
+      {
+        "id": "fuel_imports_pct",
+        "label": "Fuels, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 21.1903465189919,
+        "year": 2023,
+        "source": "wb"
+      },
+      {
+        "id": "food_imports_pct",
+        "label": "Food, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 30.9230514954555,
+        "year": 2023,
+        "source": "wb"
+      },
+      {
+        "id": "metal_imports_pct",
+        "label": "Ores and metals, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 1.47874560985103,
+        "year": 2023,
+        "source": "wb"
+      },
+      {
+        "id": "manuf_imports_pct",
+        "label": "Manufactures, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 45.9361278825331,
         "year": 2023,
         "source": "wb"
       }
@@ -304,7 +403,7 @@
       {
         "id": "thr_gaza_war_and_unga_diplomatic_fallout",
         "name": "Gaza war and UNGA diplomatic fallout",
-        "mentions": 5
+        "mentions": 7
       }
     ],
     "pulses": [
@@ -312,7 +411,7 @@
         "id": "pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe",
         "name": "Gaza Combat and Humanitarian Catastrophe",
         "band": "critical",
-        "position": 85.0,
+        "position": 87.0,
         "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
       },
       {
@@ -326,14 +425,14 @@
         "id": "pls_israel_palestine_ceasefire_and_normalization_deadlock",
         "name": "Ceasefire and Normalization Deadlock",
         "band": "severe",
-        "position": 60.0,
+        "position": 63.0,
         "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
       },
       {
         "id": "pls_israel_palestine_west_bank_annexation_and_settler_violence",
         "name": "West Bank Annexation and Settler Violence",
         "band": "severe",
-        "position": 58.0,
+        "position": 60.0,
         "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
       }
     ]

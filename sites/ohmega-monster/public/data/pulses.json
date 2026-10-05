@@ -1,6 +1,6 @@
 {
   "schema": "ohmega.pulses/1",
-  "built_at": "2026-10-05T02:29:51.920947+00:00",
+  "built_at": "2026-10-05T07:14:51.929785+00:00",
   "pulses": [
     {
       "id": "pls_ai_geopolitics_ai_safety_governance_fracture",
@@ -417,10 +417,10 @@
       "low_end": "A durable Gaza ceasefire and hostage exchange is in effect with active mediation and advancing Israel-Arab normalization agreements.",
       "high_end": "Ceasefire and hostage negotiations have completely collapsed, mediation is severed, and regional normalization is frozen or reversed amid diplomatic rupture.",
       "status": "experimental",
-      "position": 60.0,
+      "position": 63.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-03T22:02:09.104168+00:00",
+      "last_assessed": "2026-10-05T06:44:10.888856+00:00",
       "evidence_through": "unknown - research header dated 'as of ?' with no claims",
       "velocity_7d": null,
       "history": [
@@ -431,6 +431,10 @@
         {
           "at": "2026-10-01T08:39:39.312641+00:00",
           "position": 60.0
+        },
+        {
+          "at": "2026-10-05T06:44:10.888856+00:00",
+          "position": 63.0
         }
       ],
       "title": "Israel–Hamas–Saudi Arabia · Ceasefire and Normalization Deadlock",
@@ -438,7 +442,7 @@
         "IL",
         "SA"
       ],
-      "rationale": "Closest to 62 on 2026-10-01 which already reflected paper-only ceasefire (1,381 killed). New research confirms same pattern (1,408 killed since Oct 11 2025 per, DRC/OCHA say ceasefire exists largely in name only) so no worsening, but adds quiet Gulf diplomacy not in prior reading: Netanyahu's unannounced Sept 27 Abu Dhabi meeting with MBZ confirmed by both offices with Mossad/NSC accompaniment…",
+      "rationale": "Closest to held 60 on 2026-10-03 (reader thought reality 60, closest to 62 on 2026-10-01) which already reflected paper-only ceasefire with 1,381-1,439 killed. New research confirms same pattern (1,439 killed/5,052 injured since Oct 10 2025 -, Oct 3 al-Asala strike -, Oct 1 al-Mawasi strike -, Oct 5 Khan Younis strike -) but adds structural worsening not in prior rationale: Yellow Line expanded…",
       "data_url": "/data/pulses/pls_israel_palestine_ceasefire_and_normalization_deadlock.json"
     },
     {
@@ -450,16 +454,20 @@
       "low_end": "A sustained ceasefire holds with minimal combat, effective civilian protection, and adequate humanitarian aid, medical care and reconstruction access across Gaza.",
       "high_end": "Sustained high-intensity combat with mass civilian casualties, famine and total collapse of medical and aid systems, and large-scale forced displacement across Gaza.",
       "status": "experimental",
-      "position": 85.0,
+      "position": 87.0,
       "band": "critical",
-      "confidence": "high",
-      "last_assessed": "2026-10-03T22:02:09.104168+00:00",
+      "confidence": "medium",
+      "last_assessed": "2026-10-05T06:44:10.888856+00:00",
       "evidence_through": "unknown - research header dated 'as of ?' with no claims",
       "velocity_7d": null,
       "history": [
         {
           "at": "2026-10-01T08:09:19.809131+00:00",
           "position": 85.0
+        },
+        {
+          "at": "2026-10-05T06:44:10.888856+00:00",
+          "position": 87.0
         }
       ],
       "title": "Israel–Palestine · Gaza Combat and Humanitarian Catastrophe",
@@ -467,7 +475,7 @@
         "IL",
         "PS"
       ],
-      "rationale": "First assessed reading (past unassessed). Combat is lower-intensity than 2023-24 peak but persistent: 1,381 killed since Oct 2025 ceasefire, ongoing strikes per OCHA. Humanitarian collapse is near-extreme: only 19/38 hospitals functioning, ~270/630 health centres, 70% generators non-operational, Nasser Hospital rotating cuts, fuel/oil far below 94,000L diesel/2,500L oil monthly needs, WHO ending…",
+      "rationale": "Closest to held 85 on 2026-10-03 (reader thought reality 85) which captured persistent low-intensity combat (1,381-1,439 killed since ceasefire) and near-extreme collapse (1.8m displaced, 80% water shortage, half hospitals operational). New research confirms same baseline (1.8m/86% in 1,739 sites -, 80% water shortage/rat infestations/4,000 chickenpox cases/half hospitals operational -, 8 killed…",
       "data_url": "/data/pulses/pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe.json"
     },
     {
@@ -482,7 +490,7 @@
       "position": 73.0,
       "band": "severe",
       "confidence": "high",
-      "last_assessed": "2026-10-03T22:02:09.104168+00:00",
+      "last_assessed": "2026-10-05T06:44:10.888856+00:00",
       "evidence_through": "unknown - research header dated 'as of ?' with no claims",
       "velocity_7d": null,
       "history": [
@@ -511,10 +519,10 @@
       "low_end": "Settlement activity is frozen, rule of law restrains settler violence, and the Palestinian Authority maintains stable administrative control with low intercommunal violence.",
       "high_end": "Formal annexation is enacted with rapid settlement expansion, systematic settler violence and mass displacement, and collapse of Palestinian Authority control.",
       "status": "experimental",
-      "position": 58.0,
+      "position": 60.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-03T22:02:09.104168+00:00",
+      "last_assessed": "2026-10-05T06:44:10.888856+00:00",
       "evidence_through": "unknown - research header dated 'as of ?' with no claims",
       "velocity_7d": null,
       "history": [
@@ -525,6 +533,10 @@
         {
           "at": "2026-10-03T22:02:09.104168+00:00",
           "position": 58.0
+        },
+        {
+          "at": "2026-10-05T06:44:10.888856+00:00",
+          "position": 60.0
         }
       ],
       "title": "Israel–Palestine · West Bank Annexation and Settler Violence",
@@ -532,7 +544,7 @@
         "IL",
         "PS"
       ],
-      "rationale": "Applied move up from 55 on 2026-10-03 (which reflected single Yasuf killing Oct 2). New confirmed evidence shows sustained systematic surge beyond single incident: Oct 1 Yasuf killing by Havat Anton outpost (est. July 2026) plus Oct 3 coordinated attacks under army protection across Nablus governorate (Beita/Awarta/Osarin) injuring 16 and burning 55 trees with journalists detained. Likely claim…",
+      "rationale": "Up from 58 on 2026-10-03 which reflected single Yasuf killing Oct 2 and Oct 3 coordinated attacks under army protection. New research confirms same Oct 1 Yasuf killing of Mashhour Yassin 51 by settlers from Havat Anton outpost built ~2 months earlier and Oct 3 attacks under army protection burning olive trees/detaining dozens across Abu Dis/Awarta/Beita/Osarin and assaulting journalists, plus…",
       "data_url": "/data/pulses/pls_israel_palestine_west_bank_annexation_and_settler_violence.json"
     },
     {
