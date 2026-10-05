@@ -13,6 +13,17 @@ from collections.abc import Callable
 from typing import Any
 
 MAX_REPORTED_ERRORS = 5          # a report line per failure is noise; the first few say what is wrong
+#: A daily crawl of the source library, bounded so the refresh stays minutes, not an hour, on a laptop. The
+#: library is the broad headline base the desk measures novelty on; on 10-05 Hormuz read "nothing new" only
+#: because nothing had crawled since the previous afternoon.
+LIBRARY_MAX_PAGES = 150
+
+
+def _library() -> dict[str, Any]:
+    from algent_backend.library.crawl import crawl
+
+    rep = crawl(max_total=LIBRARY_MAX_PAGES)
+    return {k: v for k, v in rep.items() if not isinstance(v, (list, dict))}
 
 
 def _instruments() -> dict[str, Any]:
@@ -31,17 +42,36 @@ def _statements(context: Any, model_spec: Any) -> dict[str, Any]:
     out: dict[str, Any] = {"transcripts_collected": sum(f["collected"] for f in feeds),
                            "feed_errors": [f"{f.get('feed', '?')}: {e}" for f in feeds
                                            for e in f.get("errors", [])][:MAX_REPORTED_ERRORS]}
+    # The reported lane: leaders the official feeds cannot reach (Zelensky, Baltic and Polish leaders…) as quoted
+    # by trusted outlets, budgeted inside the lane. Runs before extraction so its articles are extracted with the
+    # rest; a failure costs only this lane.
+    try:
+        from algent_backend.agent_system.agents.statements import reported
+
+        from .heat import registry
+
+        live = [f"{t.get('name', '')}. {t.get('description', '')}" for t in registry().values()
+                if isinstance(t, dict) and t.get("state") in ("new", "active") and t.get("domain") == "geopolitics"]
+        out["reported"] = reported.collect_reported(theaters=live)
+    except Exception as exc:  # noqa: BLE001 - the official record still refreshes without it
+        out["reported"] = {"error": f"{type(exc).__name__}: {str(exc)[:200]}"}
     out["extraction"] = extract.extract_pending(context, None, model_spec)
     out["extraction"]["errors"] = out["extraction"].get("errors", [])[:MAX_REPORTED_ERRORS]
     return out
 
 
 def refresh(context: Any, model_spec: Any, *, instruments: Callable[[], dict] = _instruments,
-            statements: Callable[[Any, Any], dict] = _statements) -> dict[str, Any]:
-    """Run both layers' refresh; returns ``{"instruments": ..., "statements": ...}`` where a layer that
-    raised reports ``{"error": "..."}`` instead. Never raises."""
+            statements: Callable[[Any, Any], dict] = _statements,
+            library: Callable[[], dict] | None = None) -> dict[str, Any]:
+    """Refresh the layers, library first (the reported-statements lane searches it, and the heat board's
+    novelty reads it); returns ``{"library": ..., "instruments": ..., "statements": ...}`` where a layer that
+    raised reports ``{"error": "..."}`` instead. ``library`` defaults to the real crawl only when the other
+    collectors are the real ones too, so a caller injecting fakes never crawls by accident. Never raises."""
+    if library is None:
+        library = _library if (instruments is _instruments and statements is _statements) else (lambda: {"skipped": True})
     report: dict[str, Any] = {}
-    for name, call in (("instruments", lambda: instruments()), ("statements", lambda: statements(context, model_spec))):
+    for name, call in (("library", library), ("instruments", lambda: instruments()),
+                       ("statements", lambda: statements(context, model_spec))):
         try:
             report[name] = call()
         except Exception as exc:  # noqa: BLE001 - a layer being down must never fail the day

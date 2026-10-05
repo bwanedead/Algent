@@ -24,7 +24,8 @@ def _line(s: Statement, tag: str = "-") -> str:
     gist = f" — {s.paraphrase}" if s.quote and s.paraphrase else ""
     about = f" about {', '.join(s.about)}" if s.about else ""
     note = f"\n  why it matters: {s.significance}" if s.significance else ""
-    return (f"{tag} {s.date} · {who}{about} [{s.signal}, stance {s.stance:+d}]: {said}{gist}{note}\n  {s.source_url}")
+    via = f" (as reported by {s.reported_by or 'a news outlet'}, not the speaker's own text)" if s.source_kind == "secondary" else ""
+    return (f"{tag} {s.date} · {who}{about} [{s.signal}, stance {s.stance:+d}]: {said}{gist}{via}{note}\n  {s.source_url}")
 
 
 def block(rows: list[Statement], days: int, *, numbered: bool = False, order: str = "newest first") -> str:
@@ -33,7 +34,7 @@ def block(rows: list[Statement], days: int, *, numbered: bool = False, order: st
     says how the caller ordered them."""
     if not rows:
         return ""
-    return (f"STATEMENTS ON RECORD (last {days} days, {order}; official sources, wording as stated):\n"
+    return (f"STATEMENTS ON RECORD (last {days} days, {order}; official texts as stated; any reported by an outlet is marked):\n"
             + "\n".join(_line(s, f"[S{i}]" if numbered else "-") for i, s in enumerate(rows, 1)))
 
 
