@@ -31,7 +31,9 @@ CHUNK_CHARS = 24_000                  # ~6k tokens: a multi-hour Q&A becomes sev
 EXTRACTOR_ROLE = """\
 You keep the record of what powers say about one another. You are given one primary text — a
 transcript, press release, readout or spokesperson briefing — and you extract the statements in it
-that an analyst of international relations would want on file.
+that an analyst of international relations would want on file. Sometimes the text is instead a
+news report of what a leader said (the task header says so); the same record is kept, with the
+rules under "Reported texts" below.
 
 Why this exists: rhetoric is a leading indicator. A threat, a new condition, a softened tone, an
 offer, a reassurance aimed at a third party all show up in words before they show up in events, and
@@ -56,6 +58,18 @@ never tidy, translate or stitch two passages together. A fabricated or altered q
 record other people will cite; when unsure, paraphrase instead. Otherwise write a faithful,
 neutral `paraphrase`. Never invent: every statement must be in the text, attributed to the person
 who actually said it. In a Q&A, the speaker is whoever spoke the line, not the host or the source.
+
+Reported texts: when the task header says the text is a news report, the speaker is the person
+the outlet quotes or reports, never the outlet or its journalist, and the statement is only what the
+article attributes to them. Words the outlet prints inside quotation marks as the person's own may
+be `quote`, copied exactly as printed in the article (in the original language if it is not English,
+with an English `paraphrase` beside it). Everything else the article says they said — reported
+speech, summaries, "told reporters that…" — is `paraphrase` only, and the article's own analysis or
+background is not a statement at all. The outlet's characterisation ("slammed", "warned") is not the
+speaker's tone: judge `signal` and `stance` from what is attributed to them. The date is when they
+spoke, as the article gives it, not necessarily the publication date. When the article does not say
+who said a line, leave it out. The same force as above holds: never invent, never attribute a
+journalist's gloss to the speaker.
 
 Fields: `speaker` is the person (or the institution when no individual is named) and `role` their
 office; `affiliation` is who they speak for. `about` names the actors or targets the statement
@@ -126,7 +140,8 @@ def validate(proposed: list[ExtractedStatement], transcript: Transcript, *, sour
             paraphrase=paraphrase, about=[a.strip() for a in p.about if a.strip()],
             topics=[t.strip() for t in p.topics if t.strip()], signal=p.signal,
             stance=max(-2, min(2, int(p.stance))), significance=" ".join(p.significance.split()),
-            source_url=transcript.url, source_kind=source_kind, transcript_id=transcript.id)  # type: ignore[arg-type]
+            source_url=transcript.url, source_kind=source_kind, transcript_id=transcript.id,  # type: ignore[arg-type]
+            reported_by=transcript.outlet if source_kind == "secondary" else "")
         out.setdefault(s.id, s)                        # chunk boundaries can repeat a statement
     return list(out.values())
 
@@ -134,7 +149,8 @@ def validate(proposed: list[ExtractedStatement], transcript: Transcript, *, sour
 # ── the call ──────────────────────────────────────────────────────────────────────────────────
 def _task(transcript: Transcript, chunk: str, index: int, total: int, lead: str) -> str:
     source = by_id(transcript.feed)
-    who = f"{source.name} ({source.affiliation})" if source else transcript.feed
+    who = (f"{source.name} ({source.affiliation})" if source
+           else f"NEWS REPORT by {transcript.outlet or 'an outlet'} (secondary: the speaker is the person quoted, not the outlet)")
     part = f"\nPART {index + 1} OF {total}. The start of the text, for who is speaking:\n{lead}\n" if total > 1 else ""
     return (f"SOURCE: {who}\nTITLE: {transcript.title}\nPUBLISHED: {transcript.published or 'unknown'}\n"
             f"URL: {transcript.url}\n{part}\nTEXT:\n{chunk}\n\n"

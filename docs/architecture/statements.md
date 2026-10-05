@@ -23,6 +23,8 @@ sources.py  (catalog) -> collect.py (free) -> store: transcripts/ + seen.json
 | `collect.py` | polling, new-item detection, full text (feed body or FREE page read), per-feed reports |
 | `extract.py` | the extractor doctrine (`EXTRACTOR_ROLE`), chunking, mechanical validation |
 | `store.py` | append-only persistence and `query` |
+| `reported.py` | the reported (secondary) lane: targets, search, read, budget, cache |
+| `dedupe.py` | primary-over-secondary and cross-outlet de-duplication |
 | `recall.py` | `recall(terms, days, limit)`, `speaker_history(speaker, days)` |
 
 Harness ethos split: the model reads and judges (what is load-bearing, the signal, the stance);
@@ -69,7 +71,7 @@ newest first. Matching is word-level (`Putin` matches `Vladimir Putin`; `US` nev
 ## CLI
 
 ```
-newsroom statements collect [--no-extract] [--feed ID ...] [--days 14] [--max-new 15]
+newsroom statements collect [--no-extract] [--feed ID ...] [--days 14] [--max-new 15] [--reported | --no-reported]
 newsroom statements show [--about X] [--speaker Y] [--affiliation Z] [--topic T] [--days 14] [--limit 40]
 ```
 
@@ -90,16 +92,79 @@ document with per-feed counts and errors. One feed failing never aborts the run.
 | `un_press` | press.un.org | page read | partial: most pages behind a JS client challenge, so reads fail and are parked after 3 tries |
 | `ec_presscorner` | European Commission | RSS + press-corner JSON API (`/api/documents?reference=`) | working |
 | `china_mfa` | mfa.gov.cn spokesperson remarks | HTML listing + page read | working; no RSS, listing parsed by link pattern (dates from the URL) |
+| `nato_transcripts` | nato.int SecGen speeches, remarks, press conferences | JSON listing (the site's own search servlet, `.../transcripts/jcr:content/root/container/general_search_copy.search.json?sortBy=dateDesc`) + page read | working; the date is in each link (/YYYY/MM/DD/); old `/cps/` pages redirect to the new site |
+| `elysee` | Elysee (Macron) | RSS (French titles) + page read of the French page | working; the feed links `/en/...` pages that 404, so urls are rewritten to `/emmanuel-macron/...`; ministers' council minutes and appointments skipped |
+| `presidentti_fi` | President of Finland (Stubb) | RSS, full text in feed | working |
+| `pm_au` | Prime Minister of Australia | RSS + page read | working; feed dates like "Monday 5 October 2026" are parsed from text; full press-conference transcripts |
+| `un_sg` | UN Secretary-General quotes | RSS, text in feed | working but sparse (a few items a month); `un_press` stays partial |
+| `auswaertiges_amt` | German Foreign Office newsroom (Wadephul speeches, statements) | HTML listing + page read | working; the listing has no dates (ledger date falls back to the collection day unless the text states it) |
+| `tccb` | Presidency of Turkiye (Erdogan) | HTML listing (date before link) + page read | working |
+| `kantei` | Prime Minister of Japan | HTML listing from the home page + page read | working; only the latest few are listed; dates from the url (two filename styles) |
+| `iran_mfa` | Iran MFA English (spokesperson, FM statements) | HTML listing (date after link) + page read | working; some items undated |
+| `brazil_mre` | Brazil MRE press notes | HTML listing + page read | working; mostly condolences and consular notes |
+| `president_lv` | President of Latvia (Rinkevics) | HTML listing + page read | working; image links are titled from the slug; photo posts skipped |
+| `mfa_lv` | Latvia MFA | HTML listing + page read | working; includes Latvian-language articles |
 
-Open (checked, not added):
+Open (checked 2026-10-04, not added; reason):
 
-- NATO: old `nato.int/cps/...rss` is 404; the new site (`/en/news-and-events/...`) is JS-rendered with no feed found.
-- Russian MFA (`mid.ru`): behind a JS bot challenge, no usable feed or listing for plain HTTP.
-- Ukrainian presidency (`president.gov.ua`): 403.
-- European Council (`consilium.europa.eu`): the press-release RSS works but entries are one-line stubs and the article pages return 403.
-- EEAS: no RSS at the tried URLs (404); press-material page has no feed link.
-- Iran MFA 404; Elysee `/en/rss` 404; German government `/breg-en/service/rss` 404; Israeli PMO TLS handshake failure and `gov.il` 403; Japan MOFA 403; India MEA returns HTML, not a feed.
-- Candidates to try next: a free news search for major leaders' remarks (the vision's secondary lane), NATO press conferences via YouTube transcripts, Kremlin Russian-language feeds for fuller Q&A.
+- Ukrainian presidency (`president.gov.ua`): Akamai 403 to plain fetch; the free read ladder got through once (likely a Wayback copy) and was blocked the next time. MFA (`mfa.gov.ua`): Cloudflare challenge. Covered by the reported lane.
+- Poland: `gov.pl` returns its portal home for every RSS/news path (JS app); `president.pl` Cloudflare challenge. Lithuania `lrp.lt`, `urm.lt` and Finland MFA `um.fi`: Cloudflare "Just a moment". Estonia: `president.ee` is a JS shell, `vm.ee/en/news` 404. Latvian PM host does not resolve. Norway and Sweden governments: Cloudflare.
+- Russian MFA (`mid.ru`): JS bot challenge, no usable feed or listing for plain HTTP.
+- European Council (`consilium.europa.eu`): browser-check page (403). EEAS: press page has no feed.
+- Germany government (`bundesregierung.de`): speech listings are JS-loaded; the Foreign Office listing is used instead. France MFA RSS 404.
+- India MEA: press-release listing is JS-filled (no item links); `/rss-feeds.htm` 404. Japan MOFA: 403. South Korea MOFA: list page has no item links (JS).
+- Israel (`gov.il`): Cloudflare. Saudi SPA: TLS timeouts, HTML only. UAE WAM: JS shell. Qatar MOFA: 404. Turkey MFA: press page redirects home. Canada PM: listing has no item links (JS). Brazil Planalto: login redirect.
+- NATO news articles (`/articles/news`) use the same servlet and could be added; transcripts were chosen as the Secretary General's own words.
+
+## The reported lane (secondary statements)
+
+`reported.py`. For the voices whose own sites we cannot read, find news reports of what they said in
+the last 3 days and keep them as **secondary** statements: `source_kind="secondary"`, `reported_by` =
+the outlet, `source_url` = the article, quotes validated against the ARTICLE text (a quote the outlet
+printed must still be a substring of what we read). The extractor is told the text is a report: the
+speaker is the person quoted, only words the outlet puts in quotation marks may be `quote`, the rest is
+paraphrase, the outlet's gloss is not the speaker's tone.
+
+Flow: `plan_targets` -> per target, library search (our trusted outlets; primary-kind documents are
+excluded, they are the speakers' own text) then free news search (`gnews`, resolved links only) ->
+keep recent articles whose headline/snippet mention the person -> read (the library's stored text when
+it has the page, else the free read ladder, paced) -> `Transcript(feed="reported", outlet=...)` ->
+the ordinary `extract_pending`.
+
+Targets, in tiers: 0 = heads of state/government (actors store, Wikidata) and foreign/defence
+ministers named on the ledger, of countries named by live geopolitical theaters, **excluding countries
+whose own site the primary lane already reads** (those drop to tier 3); 1 = standing offices (NATO
+SecGen, Commission, European Council, EU foreign-policy chief, UN SecGen); 2 = the standing list of
+other states (UA PL LT LV EE FI FR DE TR JP IN IR IL SA QA AE KR AU CA BR).
+
+Budget (constants in `reported.py`, each with its reason): 24 targets/run (40% reserved for tiers 0-1,
+the rest rotates by longest-unsearched), 2 articles/target, 20 articles/run (a target not fully served
+when the budget ends is not stamped, so it leads next run), 12h search cooldown per target, 120-word
+minimum for an article, URL cache in `seen.json` (a URL read once is never read or extracted again;
+three failures park it). Free throughout; extraction (one cheap call per article) is the only spend.
+
+Dedupe (`dedupe.py`): same speaker, dates within a day, shared verbatim quote or >=50% of content words.
+A secondary is skipped on write if anything on file covers it, and hidden on read if a primary (arriving
+later) covers it; two outlets reporting one remark keep one. Primaries are only ever deduped by id.
+`recall` marks secondary rows "as reported by <outlet>"; consumers that show the ledger as "official
+text" should filter on `source_kind` or show `reported_by`.
+
+CLI: `newsroom statements collect --reported` (or `--no-reported`; `reported.RUN_BY_DEFAULT = False`).
+Theaters come from `intel_store/theaters.json` (new/active geopolitics). Callers (the intel refresh) use
+`reported.collect_reported(theaters=[...])` then `extract.extract_pending`.
+
+## Social (X): design only
+
+Many leaders speak first on X. A leader-account lane would reuse the same shape: targets = the same
+people with their handles (a small curated map; handles are not in the actors store), posts become
+`Transcript(feed="x", outlet="@handle")` with `venue_kind="post"`, and the posts are PRIMARY (the leader's own
+words), so quotes validate against the post text. Routes in the repo: `x_native`/`x_search` (X API,
+paid per call: not for a standing lane under the paid-API-sparingly rule) and `x_grok_cli` (Grok Build CLI,
+subscription quota, no metered spend, but built for topic discovery with lanes, not per-account timelines,
+and slow: up to 600s per lane). Cheapest viable path: one Grok CLI instance per ~10 handles asked for each
+account's posts of the last 48h as JSONL, off by default behind a flag in `agents/newsroom/flags.py`. Not
+implemented: it needs a handle map, a per-run time budget decision, and a check that Grok returns verbatim
+post text (quote validation drops anything it paraphrased).
 
 ## Adding a feed
 

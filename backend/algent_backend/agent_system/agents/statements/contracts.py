@@ -33,6 +33,7 @@ class Transcript(BaseModel):
     text: str
     fetched_at: str
     language: str = "en"
+    outlet: str = ""                # reported lane only: the outlet whose article this is (feed == "reported")
 
 
 class ExtractedStatement(BaseModel):
@@ -75,6 +76,7 @@ class Statement(BaseModel):
     source_url: str
     source_kind: SourceKind = "primary"
     transcript_id: str
+    reported_by: str = ""           # secondary only: the outlet that printed it (source_url is its article)
 
 
 def statement_id(source_url: str, speaker: str, text: str) -> str:
