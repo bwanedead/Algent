@@ -281,8 +281,19 @@ def _statement_block(theater: Theater, actors: Any, as_of: date | None, *, days:
         distinctive = {k for k in distinctive if rar.idf[k] > rar.cut}
     rows = store.query(days=days, today=as_of)
     need = min(2, len(keys))                      # one shared entity is a coincidence when two were available
-    scored = [(s, sum(rar.idf[k] for k in keys & _entities(s))) for s in rows
-              if distinctive & _entities(s) and len(keys & _entities(s)) >= need]
+
+    def focus(s: Statement) -> float:
+        """Share of the statement's own information weight that this theater shares. A joint statement naming
+        seventeen countries is barely about any one of them: a White House science pact led both the
+        Russia–Ukraine and Hormuz records on 10-04 because it shared two names with each."""
+        own = _entities(s)
+        total = sum(rar.idf.get(k, 0.0) for k in own)
+        return sum(rar.idf.get(k, 0.0) for k in keys & own) / total if total else 0.0
+
+    # Qualifies only when it is MAINLY about this theater's actors (at least half its weight is shared): a
+    # statement of meaning ("this is mostly about them"), not a tuned cut. Ranked by shared rarity x focus.
+    scored = [(s, sum(rar.idf[k] for k in keys & _entities(s)) * f) for s in rows
+              if distinctive & _entities(s) and len(keys & _entities(s)) >= need and (f := focus(s)) >= 0.5]
     terms = sorted(keys)
     if not scored:
         return "", [], set(), terms, [], []
