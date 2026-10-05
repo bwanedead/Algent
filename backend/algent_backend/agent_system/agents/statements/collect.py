@@ -12,11 +12,12 @@ Network seams (``http_get``, ``read_page``, ``sleep``) are injectable so tests r
 from __future__ import annotations
 
 import hashlib
+import html as html_lib
 import re
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from email.utils import parsedate_to_datetime
 from typing import Any
 from urllib.parse import urljoin
@@ -35,7 +36,16 @@ _BROWSER_HEADERS = {
 }
 _EC_API = "https://ec.europa.eu/commission/presscorner/api/documents?language=en&reference="
 _EC_DETAIL = re.compile(r"detail/en/([a-z]+)_(\d+)_(\d+)", re.I)
-_URL_DATE = re.compile(r"t(\d{4})(\d{2})(\d{2})_")
+_URL_DATE = re.compile(r"t(\d{4})(\d{2})(\d{2})_")               # China MFA: .../t20261003_123.html
+_URL_SLASH_DATE = re.compile(r"/(20\d{2})/(\d{2})/(\d{2})/")        # NATO, Elysee: .../2026/10/01/...
+_URL_KANTEI = re.compile(r"/(20\d{2})(\d{2})/(\d{2})(\d{2})?")      # Kantei: /202610/1003x.html (MMDD) or /202609/29x.html (DD)
+_MONTHS = {m: i for i, m in enumerate(["january", "february", "march", "april", "may", "june", "july", "august",
+                                       "september", "october", "november", "december"], 1)}
+_TEXT_DATES = (
+    re.compile(r"\b(\d{1,2})\.(\d{1,2})\.(20\d{2})\b"),             # 03.10.2026 (day first)
+    re.compile(r"\b(20\d{2})[/-](\d{1,2})[/-](\d{1,2})\b"),         # 2026/10/03, 2026-10-03
+    re.compile(r"\b(\d{1,2}) ([A-Za-z]{3,9}) (20\d{2})\b"),         # 3 October 2026
+)
 
 
 @dataclass
@@ -100,6 +110,41 @@ def _iso(raw: str, parsed: Any) -> str:
             pass
     if parsed:
         return datetime(*parsed[:6], tzinfo=UTC).isoformat()
+    return _text_date(raw)
+
+
+def _ymd(y: int, m: int, d: int) -> str:
+    try:
+        return date(y, m, d).isoformat()
+    except ValueError:
+        return ""
+
+
+def _text_date(text: str) -> str:
+    """The first calendar date written in ``text`` ("03.10.2026", "2026/10/03", "Monday 5 October 2026"), ISO; '' if none."""
+    for i, pat in enumerate(_TEXT_DATES):
+        m = pat.search(text or "")
+        if not m:
+            continue
+        a, b, c = m.groups()
+        if i == 0:
+            return _ymd(int(c), int(b), int(a))
+        if i == 1:
+            return _ymd(int(a), int(b), int(c))
+        month = _MONTHS.get(b.casefold())
+        if month:
+            return _ymd(int(c), month, int(a))
+    return ""
+
+
+def _url_date(url: str) -> str:
+    for pat in (_URL_DATE, _URL_SLASH_DATE):
+        if m := pat.search(url):
+            return _ymd(int(m.group(1)), int(m.group(2)), int(m.group(3)))
+    if m := _URL_KANTEI.search(url):
+        y, mo, a, b = m.groups()
+        # the first four filename digits are MMDD when they start with the folder's month, else the day comes first
+        return _ymd(int(y), int(mo), int(b) if b and a == mo else int(a))
     return ""
 
 
@@ -119,18 +164,51 @@ def parse_feed(payload: bytes) -> list[Entry]:
     return entries
 
 
+def _slug_title(url: str) -> str:
+    return " ".join(re.sub(r"[-_]+", " ", url.rstrip("/").rsplit("/", 1)[-1].rsplit(".", 1)[0]).split()).capitalize()
+
+
+def _plain(fragment: str) -> str:
+    return " ".join(re.sub(r"<[^>]+>", " ", html_lib.unescape(fragment)).split())
+
+
 def parse_listing(payload: bytes, source: Source) -> list[Entry]:
-    """Items from an HTML index page: anchors whose href matches ``link_pattern``; date read from the url."""
+    """Items from an HTML index page: anchors whose href matches ``link_pattern``. The date comes from the
+    url when it carries one, else from the page text just before/after the link (``date_side``). A link with
+    no text of its own (an image link) is titled from its url slug."""
     html = payload.decode("utf-8", "replace")
     pattern = re.compile(rf"""<a[^>]+href=["']([^"']*{source.link_pattern})["'][^>]*>(.*?)</a>""", re.S | re.I)
     seen: dict[str, Entry] = {}
     for m in pattern.finditer(html):
-        title = " ".join(re.sub(r"<[^>]+>", " ", m.group(2)).split())
-        url = urljoin(source.url, m.group(1))
-        d = _URL_DATE.search(url)
-        if title and url not in seen:
-            seen[url] = Entry(url=url, title=title, published=f"{d.group(1)}-{d.group(2)}-{d.group(3)}" if d else "")
+        url = urljoin(source.url, html_lib.unescape(m.group(1)))
+        if url in seen:
+            continue
+        published = _url_date(url)
+        if not published and source.date_side == "before":
+            published = _text_date(_plain(html[max(0, m.start() - 300):m.start()])[-60:])
+        elif not published and source.date_side == "after":
+            published = _text_date(_plain(html[m.end():m.end() + 500]))
+        seen[url] = Entry(url=url, title=_plain(m.group(2)) or _slug_title(url), published=published)
     return list(seen.values())
+
+
+def parse_nato(payload: bytes, source: Source) -> list[Entry]:
+    """NATO's listing API (the site's own search servlet): each page carries title, description and a link
+    that holds the date (/YYYY/MM/DD/). Title and description together name the speaker and the event."""
+    import json
+
+    out = []
+    for p in json.loads(payload).get("pages", []):
+        if not p.get("link"):
+            continue
+        url = urljoin("https://www.nato.int", p["link"])
+        out.append(Entry(url=url, title=" ".join(f"{p.get('title', '')} {p.get('description', '')}".split()),
+                         published=_url_date(url)))
+    return out
+
+
+#: Readers for ``Source.kind == "json"``, by ``Source.parser``.
+JSON_PARSERS: dict[str, Callable[[bytes, Source], list[Entry]]] = {"nato": parse_nato}
 
 
 # ── per-source collection ─────────────────────────────────────────────────────────────────────
@@ -174,7 +252,11 @@ def collect_source(source: Source, *, root: Any = None, days: int = 14, max_new:
                               "failed": 0, "errors": []}
     try:
         payload = http_get(source.url)
-        entries = parse_listing(payload, source) if source.kind == "listing" else parse_feed(payload)
+        entries = (parse_listing(payload, source) if source.kind == "listing"
+                   else JSON_PARSERS[source.parser](payload, source) if source.kind == "json" else parse_feed(payload))
+        if source.rewrite[0]:                           # a feed that links to pages that only exist at another path
+            for e in entries:
+                e.url = e.url.replace(*source.rewrite)
     except Exception as exc:  # noqa: BLE001 - this feed is down; the others carry on
         report["errors"].append(f"feed: {str(exc)[:160]}")
         return report

@@ -198,6 +198,7 @@ _STATEMENT_KINDS: dict[str, tuple[str, str]] = {
     "whitehouse": ("government", "north_america"), "state_dept": ("ministry", "north_america"),
     "fcdo": ("ministry", "europe"), "uk_pmo": ("government", "europe"),
     "un_press": ("international_org", "global"), "ec_presscorner": ("international_org", "europe"),
+    "presidentti_fi": ("government", "europe"), "pm_au": ("government", "oceania"),
 }
 
 

@@ -5,7 +5,7 @@ The statements store — append-only, on disk, the single home of persistence fo
       transcripts/<id>.json   raw collected texts (internal; never republished)
       statements.jsonl        one extracted statement per line, append-only; ids dedupe
       seen.json               collection state: urls collected, failed attempts, titles (cross-feed dedupe),
-                              transcripts extracted
+                              transcripts extracted, reported-lane search times per target
 
 Root: env ``ALGENT_STATEMENTS_STORE`` or ``statements_store`` (relative to the working directory,
 like ``intel_store``). Every function takes an optional ``root`` so tests and callers can pin it.
@@ -19,6 +19,7 @@ import re
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
+from . import dedupe
 from .contracts import Statement, Transcript
 
 _STORE_ENV = "ALGENT_STATEMENTS_STORE"
@@ -37,7 +38,8 @@ def load_seen(root: Path | None = None) -> dict:
     except (OSError, ValueError):
         raw = {}
     return {"collected": raw.get("collected", {}), "failed": raw.get("failed", {}),
-            "extracted": raw.get("extracted", {}), "titles": raw.get("titles", {})}
+            "extracted": raw.get("extracted", {}), "titles": raw.get("titles", {}),
+            "reported": raw.get("reported", {})}
 
 
 def save_seen(seen: dict, root: Path | None = None) -> None:
@@ -85,12 +87,14 @@ def load_statements(root: Path | None = None) -> list[Statement]:
 
 
 def append_statements(statements: list[Statement], root: Path | None = None) -> int:
-    """Append statements whose id is not already in the ledger. Returns how many were written."""
-    known = {s.id for s in load_statements(root)}
+    """Append statements whose id is not already in the ledger, and that no statement already on file covers
+    (``dedupe``: the same speaker's near-identical words within a day — a report of what a primary already
+    says, or a second outlet's report of the same remark). Returns how many were written."""
+    on_file = load_statements(root)
     fresh = []
     for s in statements:
-        if s.id not in known:
-            known.add(s.id)
+        if dedupe.covered_by(s, on_file) is None:
+            on_file.append(s)
             fresh.append(s)
     if fresh:
         path = _ledger(root)
@@ -130,7 +134,7 @@ def query(*, terms: list[str] | None = None, about: str = "", speaker: str = "",
     floor = ((today or datetime.now(UTC).date()) - timedelta(days=days)).isoformat() if days is not None else ""
     wanted = [t for t in (terms or []) if t.strip()]
     rows = []
-    for s in load_statements(root):
+    for s in dedupe.visible(load_statements(root)):
         if floor and s.date < floor:
             continue
         if speaker and not names_match(speaker, s.speaker):
