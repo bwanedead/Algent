@@ -25,6 +25,8 @@ function wallFor(snap: Snapshot | null, p: DossierPulse): WallPulse {
   return {
     id: p.id,
     name: p.name,
+    title: p.situation ? `${p.situation} · ${p.name}` : p.name,
+    actors_iso2: [],
     situation: p.situation,
     question: "",
     low_end: "",
@@ -52,7 +54,7 @@ function Spark({ pulse, t0, t1 }: { pulse: WallPulse; t0: number; t1: number }) 
   const xy = pts.map((h, i) => [x(i), yOf(h.position)] as const);
   const last = xy[xy.length - 1];
   return (
-    <svg className={`th-spark intel-band-${pulse.band}`} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${pulse.name}: ${pts.length} reading${pts.length === 1 ? "" : "s"} on a 0 to 100 scale`}>
+    <svg className={`th-spark intel-band-${pulse.band}`} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${pulse.title}: ${pts.length} reading${pts.length === 1 ? "" : "s"} on a 0 to 100 scale`}>
       {[25, 50, 75].map((g) => (
         <line key={g} x1={PAD} x2={W - PAD} y1={yOf(g)} y2={yOf(g)} className="th-spark-grid" />
       ))}
@@ -87,7 +89,7 @@ export default function DossierPulses({ pulses, snap }: { pulses: DossierPulse[]
     <section className="th-pulses" aria-labelledby="th-pulses-h">
       <h2 id="th-pulses-h" className="th-h2">
         {top.position !== null
-          ? `Hottest Pulse: ${top.name}, ${Math.round(top.position)} of 100 (${BAND_LABEL[top.band].toLowerCase()})`
+          ? `Hottest Pulse: ${top.title}, ${Math.round(top.position)} of 100 (${BAND_LABEL[top.band].toLowerCase()})`
           : `${items.length} Pulse${items.length === 1 ? "" : "s"}, none assessed yet`}
       </h2>
       <div className="th-pulse-grid">

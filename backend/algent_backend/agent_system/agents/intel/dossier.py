@@ -33,13 +33,14 @@ from datetime import UTC, date, datetime
 from typing import Any
 
 from . import dossier_timeline as tl
-from . import geo
+from . import geo, on_record
 from .contracts import coverage_label
 
 SCHEMA = "ohmega.dossier/1"
 INDEX_SCHEMA = "ohmega.dossier.index/1"
 TOP_ACTORS = 15
 RECENT_STATEMENTS = 12
+MAX_ON_RECORD = 150            # the theater's visible record: every statement its reports showed, newest first, bounded
 MAP_HALF_LIFE_DAYS = 14.0       # a place's pull on the map halves every two weeks (ranking weight, not a gate)
 _BANDS = ("unassessed", "calm", "elevated", "severe", "critical")
 _HEADLINE_LIMIT, _DETAIL_LIMIT, _TEXT_LIMIT = 300, 1500, 700
@@ -341,6 +342,13 @@ def _statements(acc: _Acc) -> list[dict]:
     return [row for _at, row in sorted(seen.values(), key=lambda v: v[0], reverse=True)[:RECENT_STATEMENTS]]
 
 
+def _on_record(acc: _Acc) -> list[dict]:
+    """Every statement the theater's dailies and briefs showed (their ``on_record``), deduped by statement
+    id, newest first. Reports older than the field contribute nothing."""
+    return on_record.merge([*(s.get("on_record") for _d, (_r, s) in sorted(acc.sections.items())),
+                            *(b.get("on_record") for b in acc.briefs)], limit=MAX_ON_RECORD)
+
+
 def _forecasts(tid: str, rows: list[dict]) -> list[dict]:
     mine = [f for f in rows if f.get("theater_id") == tid]
     open_ = sorted((f for f in mine if f["status"] == "open"), key=lambda f: f["horizon"])
@@ -424,7 +432,7 @@ def build_one(tid: str, acc: _Acc, inp: Inputs, board: dict) -> dict:
                             for p in row.get("series") or []],
         "timeline": _timeline(acc), "places": places, "map": spec, "actors": actors, "relations": relations,
         "figures": _figures(acc), "forecasts": forecasts, "indicators": _indicators(acc),
-        "statements": _statements(acc),
+        "statements": _statements(acc), "on_record": _on_record(acc),
         "links": _links(acc),
         "reports": [{"date": d, "url": _daily_url(d)} for d in reversed(days)],
         "briefs": [{"slug": b["slug"], "title": _clean(b.get("title", ""), _HEADLINE_LIMIT), "as_of": b.get("as_of", ""),

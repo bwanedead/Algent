@@ -6,6 +6,7 @@ import { claimOf, isCut, shortDay, splitLead } from "@/lib/daily";
 import { dossierPath } from "@/lib/dossier";
 import type { Direction, Snapshot } from "@/lib/intel";
 
+import OnRecordBlock from "./OnRecord";
 import { DevelopmentTimeline, KeyFigures, PulseTiles, SourceLink } from "./DailyVisuals";
 import GeoMap from "./map/GeoMap";
 import "@/app/intel/theaters/theaters.css";
@@ -53,7 +54,7 @@ function ContextList({ t }: { t: DailyTheater }) {
   );
 }
 
-export default function DailyTheaterSection({ t, id, date, snap }: { t: DailyTheater; id: string; date: string; snap: Snapshot | null }) {
+export default function DailyTheaterSection({ t, id, date, snap, first = false }: { t: DailyTheater; id: string; date: string; snap: Snapshot | null; first?: boolean }) {
   const dir = DIR[t.escalation.direction];
   const claim = claimOf(t.bottom_line, 150) || claimOf(t.since_yesterday[0]?.what ?? "", 150) || t.name;
   const changed = t.since_yesterday.filter((c) => c.kind !== "unchanged");
@@ -148,6 +149,8 @@ export default function DailyTheaterSection({ t, id, date, snap }: { t: DailyThe
       )}
 
       <DevelopmentTimeline developments={t.developments} map={t.map} reportDate={date} />
+
+      <OnRecordBlock rows={t.on_record} title={t.name} note={first} />
 
       <PulseTiles pulses={t.pulses} snap={snap} />
 

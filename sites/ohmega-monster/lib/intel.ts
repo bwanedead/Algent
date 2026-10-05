@@ -1,6 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { parseOnRecord, type OnRecord } from "./record-model";
+
 // The Intelligence desk's data is written by the backend as JSON into the content dir and read at
 // build time. Everything is parsed defensively: a missing/empty dir yields empty states, never a
 // build failure.
@@ -17,6 +19,10 @@ export type Coverage = "rising" | "steady" | "falling" | "new";
 export type Pulse = {
   id: string;
   name: string;
+  /** Who and what ("US–China · Diplomatic deadlock"); the backend's cached label, else "<situation> · <name>". */
+  title: string;
+  /** ISO alpha-2 codes of the principal actors the title names (flags). Empty when none is principal. */
+  actors_iso2: string[];
   question: string;
   low_end: string;
   high_end: string;
@@ -108,6 +114,8 @@ export type Brief = {
   judgments: Judgment[];
   alternatives: Hypothesis[];
   would_change_our_mind: string[];
+  /** The statements the analyst was shown (older briefs: empty). */
+  on_record: OnRecord[];
 };
 
 // ---- defensive coercion helpers -------------------------------------------------------------
@@ -159,6 +167,8 @@ function parsePulse(raw: unknown): Pulse | null {
   return {
     id: str(raw.id) || name,
     name,
+    title: str(raw.title) || name,
+    actors_iso2: strs(raw.actors_iso2).filter((c) => /^[A-Za-z]{2}$/.test(c)).map((c) => c.toUpperCase()),
     question: str(raw.question),
     low_end: str(raw.low_end),
     high_end: str(raw.high_end),
@@ -387,6 +397,7 @@ function parseBrief(raw: unknown, slug: string): Brief | null {
       .filter((a) => a.hypothesis)
       .sort((a, b) => PLAUS_RANK[a.plausibility] - PLAUS_RANK[b.plausibility]),
     would_change_our_mind: strs(raw.would_change_our_mind),
+    on_record: parseOnRecord(raw.on_record),
   };
 }
 

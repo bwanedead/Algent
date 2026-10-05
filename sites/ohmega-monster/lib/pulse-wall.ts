@@ -7,6 +7,10 @@ import type { Band, Confidence, Pulse } from "./intel";
 export type WallPulse = {
   id: string;
   name: string;
+  /** Who and what: what a tile, a popover and a link show. `name` stays the dimension's own name. */
+  title: string;
+  /** ISO alpha-2 of the principal actors (flags beside the title). */
+  actors_iso2: string[];
   situation: string;
   question: string;
   low_end: string;
@@ -24,6 +28,8 @@ export function toWallPulse(p: Pulse, situationTitle: string): WallPulse {
   return {
     id: p.id,
     name: p.name,
+    title: p.title,
+    actors_iso2: p.actors_iso2,
     situation: situationTitle,
     question: p.question,
     low_end: p.low_end,
