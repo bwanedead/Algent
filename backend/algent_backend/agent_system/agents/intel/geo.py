@@ -20,6 +20,7 @@ cos(mid-latitude)) in 0..width x 0..height units, and layers drawn in it, all cl
      "countries":[{"name","d"}],                        # land, simplified (Douglas-Peucker) to ~0.4 px
      "labels":[{"name","x","y","r","key"}],             # where to write a country's name; r = room (inscribed radius)
      "rivers":[{"d"}], "lakes":[{"d"}],                 # polylines / polygons; "d" are SVG paths
+     "disputed":[{"name","d","note","status","claimants":[..],"source","x","y","r"}],   # hatched; see geo_disputed; may be []
      "cities":[{"name","x","y","capital"}],            # capitals + the largest cities, most important first
      "annotations":[{"kind":"chokepoint","x","y","title","lines":[..],"series_id","source"}],  # instruments, may be []
      "scale":{"km","px","label"},                       # a round-number bar, true at mid-latitude
@@ -27,8 +28,8 @@ cos(mid-latitude)) in 0..width x 0..height units, and layers drawn in it, all cl
      "points":[{"x","y","label","date","verification","n"}],   # n = 1-based: developments[n-1]
      "credit":str}
 
-Version 1 (no ``version``, no layers) maps already stored in past daily records still render: the site treats the
-missing keys as empty. Drawing prefers the 50m countries file and degrades to 110m (``default_path``). No
+Version 1 (no ``version``, no layers) and early version-2 maps (no ``disputed``) already stored in past daily
+records still render: the site treats the missing keys as empty. Drawing prefers the 50m countries file and degrades to 110m (``default_path``). No
 validated point, no map (None). Pure functions apart from reading the Natural Earth files and the instruments
 STORE; no shapely.
 """
@@ -45,6 +46,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+from .geo_disputed import entry as disputed_entry, top_areas
 from .geo_draw import anchor, clip_line, clip_ring, line_path, ring_area, ring_path, scale_bar, simplify
 from .geo_layers import NO_LAYERS, Layers, chokepoint_notes, load_layers, rivers_in_frame, select_cities
 
@@ -399,6 +401,8 @@ def build_map(developments: list[dict], countries: list[Country] | None, *, laye
         for drawn in _drawn([poly], _bounds([poly[0]]), frame, proj, box):
             if d := ring_path(drawn, tol, min_extent=max(4.0, 3 * tol)):
                 lakes.append({"d": d})
+    disputed = top_areas([ent for a in layers.disputed
+                          if (polys := _drawn(a.polygons, a.bbox, frame, proj, box)) and (ent := disputed_entry(a, polys, tol))])
     cities = select_cities(layers, proj, frame, MAP_WIDTH, height, lon_span, event_countries)
     notes = chokepoint_notes(frame, proj, [(p["lon"], p["lat"]) for _, p, _ in pts], lon_span, as_of)
 
@@ -406,10 +410,10 @@ def build_map(developments: list[dict], countries: list[Country] | None, *, laye
     for (n_, place, dev), (x, y) in zip(pts, placed, strict=True):
         points.append({"x": round(x, 1), "y": round(y, 1), "label": place["name"], "date": dev.get("when", ""),
                        "verification": dev.get("verification", "reported"), "n": n_})
-    credit = CREDIT + (" Shipping data: IMF PortWatch." if notes else "") \
+    credit = CREDIT + (" Disputed areas: Natural Earth (public domain)." if disputed else "") + (" Shipping data: IMF PortWatch." if notes else "") \
         + (f" Not on this map (too far away): {', '.join(elsewhere)}." if elsewhere else "")
     return {"version": 2, "bbox": [round(w, 3), round(s, 3), round(e, 3), round(n, 3)],
             "projection": "equirectangular", "width": MAP_WIDTH, "height": height, "countries": land,
-            "labels": labels, "rivers": rivers, "lakes": lakes, "cities": cities, "annotations": notes,
+            "labels": labels, "rivers": rivers, "lakes": lakes, "disputed": disputed, "cities": cities, "annotations": notes,
             "scale": scale_bar(w, e, (s + n) / 2, MAP_WIDTH), "locator": _locator(countries, frame),
             "points": points, "credit": credit}

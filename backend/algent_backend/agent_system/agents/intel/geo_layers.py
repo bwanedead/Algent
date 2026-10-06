@@ -1,7 +1,7 @@
 """
-The reference layers of a daily map: cities, rivers, lakes, and instrument annotations.
+The reference layers of a daily map: cities, rivers, lakes, disputed areas, and instrument annotations.
 
-Natural Earth (public domain) supplies the first three; the numbers layer (``algent_backend.instruments``)
+Natural Earth (public domain) supplies the first four; the numbers layer (``algent_backend.instruments``)
 supplies the last. Loading is cheap and cached; every layer is optional, so a map degrades to land and
 points when a file is missing. Selection is by rank and frame size, never a fixed list: a country-scale
 frame shows many towns, a continent-scale frame only the largest cities and the capitals.
@@ -19,10 +19,12 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+from .geo_disputed import Disputed, from_feature
 from .geo_draw import Pt
 
 FILES = {"cities": "ne_10m_populated_places_simple.geojson", "rivers": "ne_50m_rivers_lake_centerlines.geojson",
-         "lakes": "ne_50m_lakes.geojson"}
+         "lakes": "ne_50m_lakes.geojson", "disputed": "ne_10m_admin_0_disputed_areas.geojson"}
+DISPUTED_FALLBACK = "ne_50m_admin_0_breakaway_disputed_areas.geojson"    # lighter and without Gaza/West Bank
 CITY_SPACING = 55.0            # frame units between non-capital cities: room for a ~12px label at ~0.7 px/unit
 MIN_CITY_POP = 100_000
 Proj = Callable[[float, float], Pt]
@@ -43,6 +45,7 @@ class Layers:
     cities: list[City] = field(default_factory=list)
     rivers: list[tuple[float, list[list[Pt]]]] = field(default_factory=list)    # (min_zoom, lines (lon, lat))
     lakes: list[list[list[Pt]]] = field(default_factory=list)                    # polygons: outer ring + holes
+    disputed: list[Disputed] = field(default_factory=list)                       # disputed / occupied areas (geo_disputed)
 
 
 NO_LAYERS = Layers()
@@ -74,6 +77,7 @@ def load_layers(find: Callable[[str], Path | None], recognised: dict[str, tuple[
     """Layers from the Natural Earth files ``find(name)`` can locate. ``recognised`` is the {country: box}
     table that re-seats disputed places (Crimea is Ukraine) so a city is never labelled by de facto control."""
     paths = {k: find(n) for k, n in FILES.items()}
+    paths["disputed"] = paths["disputed"] or find(DISPUTED_FALLBACK)
     key = tuple(str(p) for p in paths.values())
     if key in _CACHE:
         return _CACHE[key]
@@ -97,7 +101,9 @@ def load_layers(find: Callable[[str], Path | None], recognised: dict[str, tuple[
         if p.get("featurecla") == "River":
             rivers.append((float(p.get("min_zoom") or 5.0), _lines(f.get("geometry") or {})))
     lakes = [poly for f in _features(paths["lakes"]) for poly in _polys(f.get("geometry") or {})]
-    _CACHE[key] = Layers(cities=cities, rivers=rivers, lakes=lakes)
+    disputed = [a for f in _features(paths["disputed"])
+                if (a := from_feature(f.get("properties") or {}, _polys(f.get("geometry") or {})))]
+    _CACHE[key] = Layers(cities=cities, rivers=rivers, lakes=lakes, disputed=disputed)
     return _CACHE[key]
 
 

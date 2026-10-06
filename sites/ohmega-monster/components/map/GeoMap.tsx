@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 
 import type { DailyDevelopment, TheaterMap } from "@/lib/daily";
 
@@ -14,6 +14,8 @@ import { mapIndexBase } from "./numbering";
 // (colours are map-local variables in app/geopolitics/geopolitics.css, not theme tokens).
 // Geometry is the backend's (geo.build_map); label PLACEMENT is done here because it depends on the real
 // rendered size: the same map shows fewer labels on a phone than on a desktop, and never overlapping ones.
+// Disputed/occupied areas (spec `disputed`, Natural Earth + a cited status table) are one quiet diagonal hatch
+// over the land, in a hue used for nothing else on the map; the status note and its source open on tap/Enter.
 // Doctrine: docs/ethos/information-ergonomics-ethos.md. Spec: docs/architecture/map-analytics-stack.md.
 
 const DEFAULT_K = 0.7; // rendered px per viewBox unit before the browser has measured the figure (`initialK` overrides it: server render, previews)
@@ -21,6 +23,8 @@ const DEFAULT_K = 0.7; // rendered px per viewBox unit before the browser has me
 export default function GeoMap({ map, developments, label, initialK = DEFAULT_K }: { map: TheaterMap | null; developments: DailyDevelopment[]; label?: string; initialK?: number }) {
   const ref = useRef<SVGSVGElement>(null);
   const [k, setK] = useState(initialK);
+  const [openArea, setOpenArea] = useState<number | null>(null); // index into map.disputed whose note is shown
+  const hatchId = `geo-hatch-${useId().replace(/:/g, "")}`;
   useEffect(() => {
     const el = ref.current;
     if (!el || !map || typeof ResizeObserver === "undefined") return;
@@ -43,14 +47,31 @@ export default function GeoMap({ map, developments, label, initialK = DEFAULT_K 
   });
   const r = u(lay.markR);
   const loc = lay.locator;
+  const areas = map.disputed;
+  const area = openArea !== null && openArea < areas.length ? areas[openArea] : null;
+  const toggle = (i: number) => setOpenArea((cur) => (cur === i ? null : i));
   return (
     <figure className="geo-map">
       <svg ref={ref} viewBox={`0 0 ${map.width} ${map.height}`} role="img" className="geo-map-svg" style={{ ["--u" as string]: (1 / k).toFixed(3) }}
            aria-label={label ?? `Map: ${marks.length} marked place${marks.length === 1 ? "" : "s"}, numbered as in the timeline.`}>
+        {areas.length > 0 && (
+          <defs>
+            <pattern id={hatchId} patternUnits="userSpaceOnUse" width={u(6)} height={u(6)} patternTransform="rotate(45)">
+              <line x1={0} y1={0} x2={0} y2={u(6)} className="geo-hatch-line" strokeWidth={u(1.2)} />
+            </pattern>
+          </defs>
+        )}
         <rect width={map.width} height={map.height} className="geo-map-sea" />
         {map.countries.map((c, i) => (
           <path key={i} d={c.d} className="geo-map-land">
             {c.name && <title>{c.name}</title>}
+          </path>
+        ))}
+        {areas.map((a, i) => (
+          <path key={`x${i}`} d={a.d} fill={`url(#${hatchId})`} className={openArea === i ? "geo-disputed is-open" : "geo-disputed"} role="button" tabIndex={0}
+                aria-label={`${a.name}: disputed or occupied territory. Press for the status note.`}
+                onClick={() => toggle(i)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(i); } }}>
+            <title>{`${a.name} — ${a.note}`}</title>
           </path>
         ))}
         {map.lakes.map((d, i) => <path key={`l${i}`} d={d} className="geo-map-lake" />)}
@@ -58,6 +79,12 @@ export default function GeoMap({ map, developments, label, initialK = DEFAULT_K 
 
         {lay.countryLabels.map((l, i) => (
           <text key={`c${i}`} x={l.x} y={l.y} textAnchor="middle" dominantBaseline="central" fontSize={u(l.px)} className="geo-map-country">
+            {l.text}
+          </text>
+        ))}
+
+        {lay.disputedLabels.map((l, i) => (
+          <text key={`d${i}`} x={l.x} y={l.y} textAnchor={l.anchor} dominantBaseline="central" fontSize={u(l.px)} className="geo-map-disputed">
             {l.text}
           </text>
         ))}
@@ -123,6 +150,25 @@ export default function GeoMap({ map, developments, label, initialK = DEFAULT_K 
           </g>
         )}
       </svg>
+      {areas.length > 0 && (
+        <div className="geo-map-legend">
+          <p className="geo-micro geo-legend-line">
+            <span className="geo-hatch-swatch" aria-hidden="true" />
+            Hatched: disputed or occupied territory, as of the dataset; see note.
+          </p>
+          <p className="geo-legend-note" aria-live="polite">
+            {area ? (
+              <>
+                <strong className="geo-strong">{area.name}</strong> — {area.note}{" "}
+                {area.source && <a href={area.source} target="_blank" rel="noopener noreferrer">Source</a>}{" "}
+                <button type="button" className="geo-link-btn geo-legend-close" onClick={() => setOpenArea(null)}>Close</button>
+              </>
+            ) : (
+              <span className="geo-muted">Tap a hatched area for its status and source.</span>
+            )}
+          </p>
+        </div>
+      )}
       {map.credit && <figcaption className="geo-micro geo-map-credit">{map.credit}</figcaption>}
     </figure>
   );
