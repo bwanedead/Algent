@@ -142,8 +142,15 @@ def test_real_failure_shapes_unrelated_theaters_get_no_kremlin_remarks_and_ru_ua
     _seed_statements()
     ru = sensing.for_theater(RU_UA, as_of=AS_OF)
     assert SPEECH in ru.statements and "NATO circles" in ru.statements and "defend every inch" in ru.statements
-    for unrelated in ("CSTO", "space shield", "election", "Generic remark", "land "):
+    # "space shield" (a Russian strategic-defence claim aimed at the US and NATO) is part of the European security
+    # dynamic since 10-05: two shared names (Russia, NATO) qualify a statement that is mainly about them.
+    for unrelated in ("CSTO", "election", "land "):
         assert unrelated not in ru.statements
+    # Routine remarks naming the theater's own actors ("Russia", "the West") may sit in the writer's pool; names
+    # cannot tell routine from consequential. What must hold is the ORDER: none of them outranks the speech.
+    order = [s.paraphrase for s in ru.shown]
+    first_routine = next((i for i, p in enumerate(order) if p.startswith("Generic remark")), len(order))
+    assert any(SPEECH == s.source_url for s in ru.shown[:first_routine])
     assert "STATEMENTS ON RECORD" in ru.statements and SPEECH in ru.statement_urls
     for theater in (FRANCE, AI_CHIPS, ZORBIA):
         ev = sensing.for_theater(theater, as_of=AS_OF)
@@ -399,3 +406,14 @@ def test_a_joint_statement_naming_many_countries_is_not_on_the_record_of_each() 
     ev = sensing.for_theater(RU_UA, as_of=AS_OF)
     assert "golden age of science" not in ev.statements   # (the NATO/EU speech staying is covered above, without
     #                                                        17 one-off names skewing this tiny ledger's rarity cut)
+
+
+def test_every_qualifying_red_line_reaches_the_writer_even_when_relevance_ranks_it_low() -> None:
+    """10-05: fresh remarks outranked Putin's Kaliningrad red line on relevance and pushed it out of the pool."""
+    _seed_statements()
+    d = (TODAY - timedelta(days=1)).isoformat()
+    sstore.append_statements([_st("Vladimir Putin", d, "Russia would use all its weapons if Kaliningrad were attacked.",
+                                  about=("NATO", "Russia", "Kaliningrad"), signal="red_line", stance=-2,
+                                  url="https://kremlin.example/redline", **PUTIN)])
+    ev = sensing.for_theater(RU_UA, as_of=AS_OF, statement_limit=4)
+    assert "https://kremlin.example/redline" in {x.source_url for x in ev.shown}    # shown to the writer, who picks

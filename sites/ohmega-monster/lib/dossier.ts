@@ -28,6 +28,9 @@ export type DossierIndexItem = {
   /** Lifecycle from the desk's focus: new / active / quiet ('' on older indexes). */
   state: string;
   last_novel: string;
+  /** Lineage: the theater this one branched from, or the one that absorbed it ('' when neither). */
+  parent_id: string;
+  merged_into: string;
 };
 export type DossierPulse = { id: string; name: string; situation: string; position: number | null; band: Band; history: { at: string; position: number }[] };
 export type EscalationPoint = { date: string; direction: Direction; pace: Pace };
@@ -43,6 +46,15 @@ export type ForecastStatus = "open" | "yes" | "no" | "void";
 export type DossierForecast = { id: string; statement: string; probability: number; horizon: string; status: ForecastStatus; resolution: Record<string, string> | null };
 export type IndicatorRow = { signal: string; history: { date: string; status: IndicatorStatus }[] };
 export type Statement = { who: string; role: string; said: string; quote: boolean; when: string; source: string };
+/** The other end of a branch or merge. `url` is null when that theater has no dossier page. */
+export type LineageRef = { theater_id: string; name: string; at: string; why: string; url: string | null };
+export type AbsorbedRef = LineageRef & { first_seen: string; last_seen: string; days_covered: number };
+export type Lineage = {
+  parent: LineageRef | null;
+  branches: LineageRef[];
+  merged_into: LineageRef | null;
+  absorbed: AbsorbedRef[];
+};
 export type RelatedTheater = { theater_id: string; name: string; link: string; date: string };
 export type Dossier = {
   theater_id: string;
@@ -69,6 +81,10 @@ export type Dossier = {
   /** Every statement its dailies and briefs showed, deduped, newest first (older dossiers: empty). */
   on_record: OnRecord[];
   links: RelatedTheater[];
+  /** Branches and merges (older dossiers: all empty). */
+  lineage: Lineage;
+  /** A branch only: its parent's timeline up to the branch date, newest first. */
+  inherited: TimelineItem[];
   reports: { date: string; url: string }[];
   briefs: { slug: string; title: string; as_of: string; url: string }[];
 };
@@ -134,6 +150,41 @@ function parseIndexItem(raw: Obj): DossierIndexItem | null {
     max_band: oneOf(raw.max_band, BANDS, "unassessed"),
     state: str(raw.state),
     last_novel: str(raw.last_novel),
+    parent_id: str(raw.parent_id),
+    merged_into: str(raw.merged_into),
+  };
+}
+
+function parseRef(v: unknown): LineageRef | null {
+  if (!isObj(v) || !str(v.theater_id)) return null;
+  const url = str(v.url);
+  return { theater_id: str(v.theater_id), name: str(v.name) || str(v.theater_id), at: str(v.at), why: str(v.why), url: url && linkTarget(url) ? url : null };
+}
+
+function parseAbsorbed(v: Obj): AbsorbedRef | null {
+  const ref = parseRef(v);
+  return ref ? { ...ref, first_seen: str(v.first_seen), last_seen: str(v.last_seen), days_covered: num(v.days_covered) ?? 0 } : null;
+}
+
+function parseLineage(v: unknown): Lineage {
+  const raw = isObj(v) ? v : {};
+  return {
+    parent: parseRef(raw.parent),
+    branches: arr(raw.branches).map(parseRef).filter((r): r is LineageRef => r !== null),
+    merged_into: parseRef(raw.merged_into),
+    absorbed: objs(raw.absorbed).map(parseAbsorbed).filter((a): a is AbsorbedRef => a !== null),
+  };
+}
+
+function parseTimelineItem(t: Obj): TimelineItem {
+  return {
+    date: str(t.date),
+    headline: str(t.headline),
+    detail: str(t.detail),
+    where: str(t.where),
+    verification: oneOf(t.verification, ["researched", "reported"] as const, "reported"),
+    sources: strs(t.sources),
+    from: str(t.from),
   };
 }
 
@@ -205,17 +256,7 @@ function parseDossier(raw: unknown, id: string): Dossier | null {
       .map((c) => ({ day: str(c.day), count: num(c.count) ?? 0, editions: num(c.editions) ?? 0 }))
       .filter((c) => c.day)
       .sort(byDate((c) => c.day)),
-    timeline: objs(raw.timeline)
-      .map((t) => ({
-        date: str(t.date),
-        headline: str(t.headline),
-        detail: str(t.detail),
-        where: str(t.where),
-        verification: oneOf(t.verification, ["researched", "reported"] as const, "reported"),
-        sources: strs(t.sources),
-        from: str(t.from),
-      }))
-      .filter((t) => t.headline),
+    timeline: objs(raw.timeline).map(parseTimelineItem).filter((t) => t.headline),
     places: objs(raw.places)
       .map((p) => ({ name: str(p.name), country: str(p.country), count: num(p.count) ?? 0, last_date: str(p.last_date) }))
       .filter((p) => p.name),
@@ -260,6 +301,8 @@ function parseDossier(raw: unknown, id: string): Dossier | null {
     links: objs(raw.links)
       .map((l) => ({ theater_id: str(l.theater_id), name: str(l.name), link: str(l.link), date: str(l.date) }))
       .filter((l) => l.theater_id && (l.name || l.link)),
+    lineage: parseLineage(raw.lineage),
+    inherited: objs(raw.inherited).map(parseTimelineItem).filter((t) => t.headline),
     reports: objs(raw.reports)
       .map((r) => ({ date: str(r.date), url: str(r.url) }))
       .filter((r) => r.date),
@@ -290,6 +333,8 @@ function itemFromDossier(d: Dossier): DossierIndexItem {
     max_band: maxBand(d.pulses),
     state: "",
     last_novel: "",
+    parent_id: d.lineage.parent?.theater_id ?? "",
+    merged_into: d.lineage.merged_into?.theater_id ?? "",
   };
 }
 

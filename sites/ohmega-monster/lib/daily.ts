@@ -37,6 +37,8 @@ export type KeyFigure = {
 export type MapPoint = { x: number; y: number; label: string; date: string; verification: "researched" | "reported"; n: number | null };
 export type MapCountryLabel = { name: string; x: number; y: number; r: number; key: boolean };
 export type MapCity = { name: string; x: number; y: number; capital: boolean };
+/** A disputed or occupied area (backend `geo_disputed`): hatched on the map, with a factual status note and its source. */
+export type MapDisputed = { name: string; d: string; note: string; status: string; claimants: string[]; source: string; x: number; y: number; r: number };
 export type MapAnnotation = { kind: string; x: number; y: number; title: string; lines: string[]; source: string };
 export type MapLocator = { width: number; height: number; d: string; rect: { x: number; y: number; w: number; h: number } };
 /** Map spec. Version 1 (stored in past daily records) has only bbox/countries/points/credit; every v2 layer
@@ -51,6 +53,8 @@ export type TheaterMap = {
   labels: MapCountryLabel[];
   rivers: string[];
   lakes: string[];
+  /** Older records have none. */
+  disputed: MapDisputed[];
   cities: MapCity[];
   annotations: MapAnnotation[];
   scale: { km: number; px: number; label: string } | null;
@@ -209,6 +213,10 @@ export function parseMap(raw: unknown): TheaterMap | null {
   const labels = arr(raw.labels).filter(isObj)
     .map((l) => ({ name: str(l.name), x: num(l.x), y: num(l.y), r: num(l.r) ?? 0, key: l.key === true }))
     .filter((l): l is MapCountryLabel => l.name !== "" && inFrame(l.x, l.y));
+  const disputed = arr(raw.disputed).filter(isObj)
+    .map((a) => ({ name: str(a.name), d: str(a.d), note: str(a.note), status: str(a.status), claimants: strs(a.claimants),
+      source: /^https:\/\//.test(str(a.source)) ? str(a.source) : "", x: num(a.x), y: num(a.y), r: num(a.r) ?? 0 }))
+    .filter((a): a is MapDisputed => a.name !== "" && a.d !== "" && PATH_RE.test(a.d) && inFrame(a.x, a.y));
   const cities = arr(raw.cities).filter(isObj)
     .map((c) => ({ name: str(c.name), x: num(c.x), y: num(c.y), capital: c.capital === true }))
     .filter((c): c is MapCity => c.name !== "" && inFrame(c.x, c.y));
@@ -229,7 +237,7 @@ export function parseMap(raw: unknown): TheaterMap | null {
     bbox: arr(raw.bbox).map(num).filter((n): n is number => n !== null),
     projection: str(raw.projection),
     width, height, countries, labels,
-    rivers: paths(raw.rivers), lakes: paths(raw.lakes), cities, annotations, scale, locator,
+    rivers: paths(raw.rivers), lakes: paths(raw.lakes), disputed, cities, annotations, scale, locator,
     points, credit: str(raw.credit),
   };
 }

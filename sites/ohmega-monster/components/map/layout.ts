@@ -3,7 +3,7 @@ import type { MapCountryLabel, TheaterMap } from "@/lib/daily";
 // Label placement for GeoMap, as a pure function of the spec and the rendered scale `k` (CSS px per
 // viewBox unit). The backend sends candidates in priority order; what actually fits depends on the screen,
 // so placement is greedy and collision-checked here: event marks first, then the instrument callout,
-// then place names, capitals, country names, and finally the other cities. Whatever does not fit is
+// then place names, the names of disputed areas, capitals, country names, and finally the other cities. Whatever does not fit is
 // dropped — a label is never drawn over another, and the map never needs a legend to be read.
 
 type Box = { x0: number; y0: number; x1: number; y1: number };
@@ -17,6 +17,7 @@ export type MapLayout = {
   notePx: number;
   markPos: { x: number; y: number }[];
   placeLabels: (Placed | null)[];
+  disputedLabels: { text: string; x: number; y: number; anchor: Anchor; px: number }[];
   countryLabels: { text: string; x: number; y: number; px: number }[];
   cities: { name: string; x: number; y: number; capital: boolean; label: Placed | null }[];
   annotations: { x: number; y: number; box: { x: number; y: number; w: number; h: number }; rows: string[]; leader: { x: number; y: number } }[];
@@ -135,6 +136,28 @@ export function layoutMap(map: TheaterMap, k: number): MapLayout {
     });
   }
 
+  // Disputed/occupied areas: named at the area (centred if it fits, else beside it); one name per area name.
+  const disputedLabels: MapLayout["disputedLabels"] = [];
+  const named = new Set<string>();
+  const dpx = cityPx - 1;
+  for (const a of map.disputed) {
+    if (named.has(a.name)) continue;
+    const text = a.name.length > 24 ? a.name.slice(0, 23) + "…" : a.name;
+    const w = textW(text, dpx), h = u(dpx * 1.3);
+    const b = { x0: a.x - w / 2, x1: a.x + w / 2, y0: a.y - h / 2, y1: a.y + h / 2 };
+    if (free(b)) {
+      taken.push(b);
+      disputedLabels.push({ text, x: a.x, y: a.y, anchor: "middle", px: dpx });
+      named.add(a.name);
+      continue;
+    }
+    const beside = side(a.x, a.y, text, dpx, u(4));
+    if (beside) {
+      disputedLabels.push({ text, x: beside.x, y: beside.y, anchor: beside.anchor, px: dpx });
+      named.add(a.name);
+    }
+  }
+
   const placeCity = (c: { name: string; x: number; y: number; capital: boolean }) => {
     const dot = { x0: c.x - u(4), x1: c.x + u(4), y0: c.y - u(4), y1: c.y + u(4) };
     if (!free(dot)) return null; // sits under a mark or another label: the mark already says where
@@ -171,5 +194,5 @@ export function layoutMap(map: TheaterMap, k: number): MapLayout {
     if (placed?.label) cities.push(placed);
   }
 
-  return { markR: markPx === 9 ? 9 : 10, markPx, cityPx, notePx, markPos, placeLabels, countryLabels, cities, annotations, locator };
+  return { markR: markPx === 9 ? 9 : 10, markPx, cityPx, notePx, markPos, placeLabels, disputedLabels, countryLabels, cities, annotations, locator };
 }

@@ -19,6 +19,7 @@ Rules this module owns:
 - Reader-safe: every free text passes ``reader_safe``; internal ids (``src_...``) and non-http(s) URLs are
   dropped; a brief relation whose endpoints are not names (an id, or several relations jammed into one
   string) is skipped.
+- Lineage (branched from / absorbed) lives in ``dossier_lineage.py``.
 - Timeline merging lives in ``dossier_timeline.py`` (the merge rule is documented there).
 """
 
@@ -32,6 +33,7 @@ from dataclasses import dataclass, field
 from datetime import UTC, date, datetime
 from typing import Any
 
+from . import dossier_lineage
 from . import dossier_timeline as tl
 from . import geo, on_record
 from .contracts import coverage_label
@@ -455,6 +457,8 @@ def _row(d: dict, board: dict) -> dict:
             "state": d["state"], "last_novel": d["last_novel"],
             "coverage": cur.get("coverage") or (coverage_label(row.get("trend", "")) if row else ""),
             "escalation_direction": (cur.get("escalation") or {}).get("direction", ""), "max_band": band,
+            "parent_id": (d["lineage"]["parent"] or {}).get("theater_id", ""),
+            "merged_into": (d["lineage"]["merged_into"] or {}).get("theater_id", ""),
             "url": f"/intel/theaters/{d['theater_id']}"}
 
 
@@ -463,6 +467,8 @@ def build_all(inp: Inputs) -> dict:
     acc = _collect(inp)
     boards = newest_board_rows(inp.boards, set(acc))
     dossiers = {tid: build_one(tid, a, inp, boards.get(tid, {})) for tid, a in sorted(acc.items())}
+    for tid, d in dossiers.items():                       # needs the other dossiers (links, the parent's history)
+        d.update(dossier_lineage.build(tid, inp.registry, dossiers))
     rows = [_row(d, boards.get(tid, {})) for tid, d in dossiers.items()]
     rows.sort(key=lambda r: (r["last_seen"], r["heat"]), reverse=True)
     return {"theaters": dossiers,

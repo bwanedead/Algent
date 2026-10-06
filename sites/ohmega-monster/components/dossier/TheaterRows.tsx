@@ -29,16 +29,17 @@ function CoverBars({ series, days, max, name }: { series: { day: string; count: 
   );
 }
 
-function Row({ r, days, max }: { r: TheaterRow; days: string[]; max: number }) {
+function Row({ r, days, max, branch = false, branchOf = "" }: { r: TheaterRow; days: string[]; max: number; branch?: boolean; branchOf?: string }) {
   const { item, dossier: d } = r;
   const dir = DIRECTION[item.escalation_direction];
   const cov = COVERAGE_DISPLAY[item.coverage];
   const moving = item.escalation_direction === "rising" || item.escalation_direction === "easing";
   return (
-    <li className="th-row">
+    <li className={branch ? "th-row is-branch" : "th-row"}>
       <Link href={`/intel/theaters/${item.theater_id}`} className="th-row-name">
         <b>{item.name}</b>
         {item.domain && <span className="th-domain">{item.domain}</span>}
+        {branchOf && <span className="th-branch-of">branch of {branchOf}</span>}
         {item.state && (
           <span className={`th-state is-${item.state}`} title={item.last_novel ? `Last new development ${item.last_novel}` : undefined}>
             {item.state}
@@ -79,15 +80,28 @@ function Row({ r, days, max }: { r: TheaterRow; days: string[]; max: number }) {
   );
 }
 
-export function TheaterGroup({ title, rows, days, max }: { title: string; rows: TheaterRow[]; days: string[]; max: number }) {
+/** A group's rows with each branch indented under its parent when the parent is in the same group; a branch whose
+ * parent sits in another group stays where it is and names its parent instead. */
+export function TheaterGroup({ title, rows, days, max, names }: { title: string; rows: TheaterRow[]; days: string[]; max: number; names?: Map<string, string> }) {
   if (rows.length === 0) return null;
+  const ids = new Set(rows.map((r) => r.item.theater_id));
+  const kids = new Map<string, TheaterRow[]>();
+  const parentOf = new Map(rows.map((r) => [r.item.theater_id, r.item.parent_id]));
+  const top = rows.filter((r) => {
+    const p = r.item.parent_id;
+    // one level of indent: a branch of a branch (whose parent is itself nested) stays at the top level
+    if (!p || !ids.has(p) || ids.has(parentOf.get(p) ?? "")) return true;
+    kids.set(p, [...(kids.get(p) ?? []), r]);
+    return false;
+  });
   return (
     <section className="th-group" aria-label={title}>
       <h2 className="th-group-h">{title}</h2>
       <ul className="th-rows">
-        {rows.map((r) => (
-          <Row key={r.item.theater_id} r={r} days={days} max={max} />
-        ))}
+        {top.flatMap((r) => [
+          <Row key={r.item.theater_id} r={r} days={days} max={max} branchOf={r.item.parent_id ? (names?.get(r.item.parent_id) ?? "") : ""} />,
+          ...(kids.get(r.item.theater_id) ?? []).map((k) => <Row key={k.item.theater_id} r={k} days={days} max={max} branch />),
+        ])}
       </ul>
     </section>
   );

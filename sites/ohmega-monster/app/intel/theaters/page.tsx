@@ -23,9 +23,13 @@ const bySeverity = (a: TheaterRow, b: TheaterRow) =>
 // The index: every theater as one row of a small-multiples table. The page's claim counts what is
 // moving; rows are grouped by direction so the first chunk is the one that matters.
 export default function TheatersIndexPage() {
-  const rows: TheaterRow[] = dossierList()
+  const all: TheaterRow[] = dossierList()
     .map((item) => ({ item, dossier: dossier(item.theater_id) }))
     .filter((r) => r.dossier !== null); // an unreadable dossier would be a dead link
+  // A theater absorbed into another leaves the groups: it is listed once, below, as "merged into ...".
+  const rows = all.filter((r) => !r.item.merged_into);
+  const merged = all.filter((r) => r.item.merged_into);
+  const names = new Map(all.map((r) => [r.item.theater_id, r.item.name]));
   if (rows.length === 0) {
     return (
       <div className="intel-page th-page">
@@ -73,9 +77,22 @@ export default function TheatersIndexPage() {
       <p className="th-key th-index-key">
         <span aria-hidden="true">▲</span> rising <span aria-hidden="true">◆</span> steady <span aria-hidden="true">▼</span> easing · coloured chip = most severe Pulse · bars = headlines per day, one scale for every row
       </p>
-      <TheaterGroup title={`Escalating (${rising.length})`} rows={rising} days={days} max={max} />
-      <TheaterGroup title={`Holding steady (${steady.length})`} rows={steady} days={days} max={max} />
-      <TheaterGroup title={`Easing (${easing.length})`} rows={easing} days={days} max={max} />
+      <TheaterGroup title={`Escalating (${rising.length})`} rows={rising} days={days} max={max} names={names} />
+      <TheaterGroup title={`Holding steady (${steady.length})`} rows={steady} days={days} max={max} names={names} />
+      <TheaterGroup title={`Easing (${easing.length})`} rows={easing} days={days} max={max} names={names} />
+      {merged.length > 0 && (
+        <section className="th-group" aria-label="Merged theaters">
+          <h2 className="th-group-h">Merged ({merged.length})</h2>
+          <ul className="th-merged-list">
+            {merged.map((r) => (
+              <li key={r.item.theater_id}>
+                <Link href={`/intel/theaters/${r.item.theater_id}`}>{r.item.name}</Link> · merged into{" "}
+                {names.has(r.item.merged_into) ? <Link href={`/intel/theaters/${r.item.merged_into}`}>{names.get(r.item.merged_into)}</Link> : r.item.merged_into}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   );
 }

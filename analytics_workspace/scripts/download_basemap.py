@@ -6,6 +6,8 @@ Layers (the 110m file is the always-available fallback; the rest draw the daily 
   10m_places       populated places (simple)   reference cities and capitals
   50m_rivers       rivers + lake centerlines   rivers
   50m_lakes        lakes                       lakes
+  10m_disputed     disputed/occupied areas     hatched "disputed or occupied" overlay (preferred)
+  50m_breakaway    breakaway + disputed areas  lighter fallback (no Gaza/West Bank)
 Water is drawn as the map background (no ocean polygon needed). Sizes are printed on download and
 recorded in docs/architecture/map-analytics-stack.md.
 
@@ -31,6 +33,8 @@ LAYERS = {
     "10m_places": ("ne_10m_populated_places_simple.geojson", 1000),
     "50m_rivers": ("ne_50m_rivers_lake_centerlines.geojson", 100),
     "50m_lakes": ("ne_50m_lakes.geojson", 50),
+    "10m_disputed": ("ne_10m_admin_0_disputed_areas.geojson", 50),
+    "50m_breakaway": ("ne_50m_admin_0_breakaway_disputed_areas.geojson", 15),
 }
 
 

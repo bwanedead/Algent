@@ -227,3 +227,13 @@ button.th-res-btn:focus-visible { outline: 1px solid var(--accent-dim); outline-
 .th-state { font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
 .th-state.is-new { color: var(--accent, currentColor); font-weight: 600; }
 .th-state.is-quiet { color: var(--faint); }
+
+/* lineage: where a theater came from and what folded into it */
+.th-lineage { margin: 4px 0 12px; font-size: 12px; line-height: 20px; }
+.th-lineage-line { max-width: 80ch; margin: 0 0 2px; color: var(--text); overflow-wrap: anywhere; }
+.th-lineage-line.is-merged { color: var(--strong); }
+.th-lineage-history { margin: 0; padding: 0; list-style: none; font-size: 12px; line-height: 20px; }
+.th-lineage-history li { margin: 0 0 4px; }
+.th-row.is-branch { padding-left: 18px; border-left: 2px solid var(--rule-strong); }
+.th-branch-of { color: var(--muted); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+.th-merged-list { margin: 0; padding: 0; list-style: none; font-size: 12px; line-height: 20px; color: var(--muted); }

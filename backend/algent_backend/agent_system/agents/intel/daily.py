@@ -433,6 +433,9 @@ def write_summary(context: Any, config: Any, sections: list[dict], *, as_of: str
     out = _ask(context, config, model_spec, DaySummary, SUMMARY_ROLE, task)
     if not isinstance(out, DaySummary):
         return None
+    # Normalise a copy, never the object handed back: a shared instance (a cached or faked reply) was emptied of its
+    # cross-theater links by one run and every later run inherited the damage.
+    out = out.model_copy(deep=True)
     names = {s["name"].lower(): s["name"] for s in sections}
     out.the_day = [b for b in out.the_day if b.strip()][:6]
     for link in out.cross_theater:

@@ -8,7 +8,7 @@ doubt.** A public endpoint is not a licence.
 
 | Source | What it gives | Terms (source) | Verdict |
 |---|---|---|---|
-| **Natural Earth** | country/admin/coast base layers | public domain, credit unnecessary ([terms](https://www.naturalearthdata.com/about/terms-of-use/)) | **Use** for base maps. Caption disputed areas (Crimea, Donbas) ourselves. |
+| **Natural Earth** | country/admin/coast base layers | public domain, credit unnecessary ([terms](https://www.naturalearthdata.com/about/terms-of-use/)) | **Use** for base maps and the disputed-areas layer (`ne_10m_admin_0_disputed_areas`, fallback `ne_50m_admin_0_breakaway_disputed_areas`), hatched on the map with a cited status note (`geo_disputed.STATUS`). Credit "Disputed areas: Natural Earth (public domain)". The layer is a static snapshot of who administers/claims what, not a front line, and is not current for Ukraine (Donetsk/Luhansk are the dataset's older outlines; Zaporizhzhia/Kherson occupation is absent). |
 | **OpenStreetMap** | detailed base (cities, rivers, roads) | free with credit "© OpenStreetMap contributors" + ODbL link ([copyright](https://www.openstreetmap.org/copyright)); OSM tile servers restrict third-party use ([tile policy](https://operations.osmfoundation.org/policies/tiles/)) | **Use**, rendered by us from extracts, never their tiles. Confirm "produced work" status before publishing. |
 | **Copernicus Sentinel** | satellite imagery | free/open; notice "Contains modified Copernicus Sentinel data [Year]" ([licence](https://cds.climate.copernicus.eu/licences/ec-sentinel)) | **Use** for imagery context. |
 | **NASA FIRMS** | thermal anomalies | NASA data CC0 unless marked ([policy](https://www.earthdata.nasa.gov/engage/open-data-services-software-policies/data-use-policy)); needs a free MAP_KEY | **Use** as corroboration only, labelled "thermal anomalies", never as strike or front-line evidence. |
@@ -30,6 +30,16 @@ doubt.** A public endpoint is not a licence.
   noise; treat tiny changes as unreliable. Caption: "Front line: DeepStateMap.live (open-source
   assessment; accuracy not guaranteed). Changes computed by Ohmega from successive daily DeepState
   snapshots." with link and logo.
+- **Disputed and occupied territory (live):** Natural Earth disputed areas, drawn by `geo_disputed.py` as a hatch over
+  the internationally recognised base map (Crimea stays Ukraine's, hatched as occupied). Wording per area is factual
+  — recognised status, who controls it now, since when — each with a source URL; areas not in the table carry only
+  the dataset's own note.
+- **Front-line seam (not built — needs DeepState permission):** a licensed control layer plugs in beside
+  `Layers.disputed` in `geo_layers.load_layers` as a dated polygon of control per side
+  (`{as_of, side, polygons}`) read from our own daily snapshot archive, plus the day-over-day diff above as
+  `{gained_km2, lost_km2}` per side. `geo.build_map` would draw it as a distinct layer (a solid control fill, not the
+  disputed hatch — one meaning per visual channel) and the caption above would be added to the credit. Until
+  permission is in writing, no front-line data is fetched, stored or drawn.
 - **Other theaters:** our own report's developments plotted on Natural Earth (fully ours); UCDP for
   history; FIRMS/Sentinel as labelled corroboration; ACLED aggregates only if licensed. Maritime
   incidents (Hormuz, Red Sea: UKMTO, IMO, …) need their own source review.
