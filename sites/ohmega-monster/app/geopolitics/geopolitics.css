@@ -100,7 +100,7 @@ button.geo-axis-btn:hover .geo-peak { text-decoration: underline; text-decoratio
    constant number of screen pixels however large the map renders. */
 .geo-map {
   --map-sea: #cfe3f1; --map-land: #f4f1e8; --map-border: #8e98a3; --map-river: #5b9bd0; --map-ink: #1b2430;
-  --map-ink-2: #4d5967; --map-halo: #ffffff; --map-accent: #0a6b73;
+  --map-ink-2: #4d5967; --map-halo: #ffffff; --map-accent: #0a6b73; --map-hatch: #6b4a82; --map-hatch-ink: #4a3260;
   margin: 0; min-width: 0; max-width: 820px;
 }
 .geo-map-svg { display: block; width: 100%; height: auto; border: 1px solid var(--rule-strong); background: var(--map-sea); }
@@ -108,9 +108,22 @@ button.geo-axis-btn:hover .geo-peak { text-decoration: underline; text-decoratio
 .geo-map-land { fill: var(--map-land); stroke: var(--map-border); stroke-width: 0.9px; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
 .geo-map-lake { fill: var(--map-sea); stroke: #8fb4d0; stroke-width: 0.7px; vector-effect: non-scaling-stroke; }
 .geo-map-river { fill: none; stroke: var(--map-river); stroke-width: 1px; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; opacity: 0.9; }
-.geo-map-country, .geo-city text, .geo-map-place, .geo-note text, .geo-scale text {
+.geo-map-country, .geo-map-disputed, .geo-city text, .geo-map-place, .geo-note text, .geo-scale text {
   paint-order: stroke; stroke: var(--map-halo); stroke-width: calc(var(--u, 1.5) * 3); stroke-linejoin: round; font-family: inherit; pointer-events: none;
 }
+/* Disputed/occupied territory: one hue (plum) that nothing else on the map uses — not the accent teal, not the
+   locator's red — as a thin diagonal hatch plus a dashed outline. Readable on the cream land and the pale sea. */
+.geo-hatch-line { stroke: var(--map-hatch); opacity: 0.75; }
+.geo-disputed { stroke: var(--map-hatch); stroke-width: 1px; stroke-dasharray: 4 3; stroke-linejoin: round; fill-rule: evenodd; vector-effect: non-scaling-stroke; cursor: pointer; }
+.geo-disputed:hover, .geo-disputed.is-open { stroke-width: 1.8px; }
+.geo-disputed:focus-visible { outline: 2px solid var(--map-hatch-ink); outline-offset: 1px; }
+.geo-map-disputed { fill: var(--map-hatch-ink); font-style: italic; font-weight: 600; }
+.geo-map-legend { margin-top: 4px; }
+.geo-legend-line { display: flex; align-items: center; gap: 6px; margin: 0; letter-spacing: 0; text-transform: none; }
+.geo-hatch-swatch { flex: none; width: 16px; height: 10px; border: 1px dashed var(--map-hatch); background: repeating-linear-gradient(45deg, var(--map-hatch) 0 1px, transparent 1px 4px); }
+.geo-legend-note { margin: 2px 0 0; min-height: 3.2em; max-width: 72ch; font-size: 12px; line-height: 1.35; overflow-wrap: anywhere; }
+.geo-legend-note a { white-space: nowrap; }
+.geo-legend-close { display: inline; margin: 0; font-size: 11px; }
 .geo-map-country { fill: var(--map-ink-2); letter-spacing: 0.1em; font-weight: 600; }
 .geo-city circle { fill: #fff; stroke: var(--map-ink); stroke-width: calc(var(--u, 1.5) * 1.2); }
 .geo-city.is-cap circle { fill: var(--map-ink); stroke: #fff; }
