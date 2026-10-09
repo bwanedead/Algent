@@ -327,9 +327,11 @@ def test_web_search_rich_read_allows_paid_fallback(monkeypatch) -> None:
 
 
 def _ddg_down() -> None:
-    """Take the free DDG lead out of play so a test can exercise the paid keyword chain."""
+    """Take the free engines (DDG, and Bing, which precedes the paid ones since 10-09) out of play so a test
+    can exercise the paid keyword chain."""
     research.circuit.reset()
     research.circuit.record_failure("ddg", "429 rate limit")
+    research.circuit.record_failure("bing", "429 rate limit")
 
 
 def test_web_search_keyword_routes_to_tavily(monkeypatch) -> None:
@@ -806,3 +808,14 @@ def test_muse_is_the_last_resort_on_both_chains() -> None:
     dedicated engines are gone."""
     assert research._provider_chain("keyword")[-1] == "muse"
     assert research._provider_chain("semantic")[-1] == "muse"
+
+
+@pytest.fixture(autouse=True)
+def _chain_without_searxng(monkeypatch):
+    """These tests pin fallback MECHANICS on the engines they fake; our own SearXNG (first in every chain since
+    10-09, and unreachable in tests) is taken out so each chain starts where the test expects. The new order
+    itself is asserted in test_search_searxng_quota.py."""
+    from algent_backend.agent_system.tools.sourcing.search import research as _r
+
+    real = _r._provider_chain
+    monkeypatch.setattr(_r, "_provider_chain", lambda kind: [p for p in real(kind) if not p.startswith("searxng")])

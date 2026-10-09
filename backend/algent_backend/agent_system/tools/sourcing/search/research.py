@@ -40,7 +40,7 @@ from algent_backend.agent_system.foundation.text_hygiene import scrub_text
 from ....foundation import cost, read_cache, snapshots
 from ...spec import GLOBAL_SCOPE, ToolSpec
 from .._wrap import as_structured_tool
-from . import circuit, policy
+from . import circuit, policy, quota
 
 WEB_SEARCH_TOOL_ID = "web_search"
 
@@ -312,11 +312,16 @@ def _search_web(query: str, kind: str, max_results: int) -> dict[str, Any]:
         if circuit.is_open(provider):
             errors.append(f"{provider}: circuit open")
             continue
+        if not free and not quota.allow(provider):
+            errors.append(f"{provider}: monthly cap reached")
+            continue
         res = None if free else cost.try_reserve(unit, op=meter_kind)
         if res is None and not free:
             errors.append(f"{provider}: cost refused ({cost.mode()})")
             break
         try:
+            if not free:
+                quota.spend(provider)            # a paid contact counts against the month whether or not it answers
             results = _invoke_provider(provider, query, max_results)
         except Exception as exc:  # noqa: BLE001
             if res is not None:
@@ -453,6 +458,16 @@ _PROVIDER_STYLE = {
         "to locate a real URL instead of guessing one) and \"exact phrases\". Short and "
         "concrete beats descriptive; it will not infer what you meant."
     ),
+    "searxng": (
+        "Ohmega's own metasearch (free, no quota): your query goes to several engines at once "
+        "(Google, DuckDuckGo, Brave…) and the answers are merged. Write it like a normal search: "
+        "names, places, quoted phrases; `site:domain words` and \"exact phrases\" work. Results "
+        "carry which engines found them, and a date when the engine knew one."
+    ),
+    "searxng_news": (
+        "Ohmega's own metasearch, news category (free): recent dated coverage merged from several "
+        "news engines. Phrase it like a headline; read the article to ground a claim."
+    ),
     "bing": (
         "broad web index (free), weak relevance: it answers when the better engines are down. "
         "Use distinctive words and names; it does NOT honour site: — for one specific site, "
@@ -488,7 +503,7 @@ _PROVIDER_STYLE = {
 
 
 #: Providers that cost nothing and so bypass the cost meter and the slim/hard-mode refusal.
-_FREE_PROVIDERS = frozenset({"ddg", "gnews", "bing"})
+_FREE_PROVIDERS = frozenset({"searxng", "searxng_news", "ddg", "gnews", "bing"})
 
 
 def _provider_chain(kind: str) -> list[str]:
@@ -500,14 +515,20 @@ def _provider_chain(kind: str) -> list[str]:
     # dead Exa degrades to a free engine before any paid one. `bing` (free, weak relevance) is the
     # last real index before muse, so a blocked DDG plus dead paid engines still returns something.
     # `news` is free-only by design.
+    # 10-09: every FREE engine now answers before any paid one. Our own SearXNG leads (no quota; it rotates
+    # engines itself), then DDG and Bing; the paid engines (monthly-capped, see ``quota``) are the last resort.
+    # Before this, a DDG block handed every remaining search of a run to Tavily and drained its month.
     if kind == "news":
-        return ["gnews", "ddg"]
+        return ["gnews", "searxng_news", "ddg"]
     if kind == "semantic":
-        return ["exa", "ddg", "brave", "tavily", "bing", "muse"]
-    return ["ddg", "tavily", "brave", "exa", "bing", "muse"]
+        return ["searxng", "exa", "ddg", "bing", "brave", "tavily", "muse"]
+    return ["searxng", "ddg", "bing", "tavily", "brave", "exa", "muse"]
 
 
 def _invoke_provider(provider: str, query: str, max_results: int) -> list[Any]:
+    if provider in ("searxng", "searxng_news"):
+        from .searxng import search as searxng_search
+        return searxng_search(query, max_results=max_results, news=provider == "searxng_news")
     if provider == "ddg":
         from .ddg import search as ddg_search
         return ddg_search(query, max_results=max_results)

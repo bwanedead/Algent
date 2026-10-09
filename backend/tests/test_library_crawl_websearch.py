@@ -242,3 +242,14 @@ def test_a_broken_library_never_breaks_web_search(lib_store, monkeypatch) -> Non
     _external(monkeypatch)
     out = research._search_web("federal reserve", "keyword", 5)
     assert out["results"][0]["url"] == "https://w.test/1"
+
+
+@pytest.fixture(autouse=True)
+def _chain_without_searxng(monkeypatch):
+    """These tests pin fallback MECHANICS on the engines they fake; our own SearXNG (first in every chain since
+    10-09, and unreachable in tests) is taken out so each chain starts where the test expects. The new order
+    itself is asserted in test_search_searxng_quota.py."""
+    from algent_backend.agent_system.tools.sourcing.search import research as _r
+
+    real = _r._provider_chain
+    monkeypatch.setattr(_r, "_provider_chain", lambda kind: [p for p in real(kind) if not p.startswith("searxng")])
