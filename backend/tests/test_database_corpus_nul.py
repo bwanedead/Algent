@@ -8,3 +8,9 @@ from algent_backend.database.corpus import _jsonb
 def test_nul_is_dropped_and_the_rest_survives() -> None:
     out = _jsonb({"claim": "33.2 million tons\x00 per year", "n": 1})
     assert "\u0000" not in out and json.loads(out) == {"claim": "33.2 million tons per year", "n": 1}
+
+
+def test_text_columns_drop_nul_too() -> None:
+    from algent_backend.database.corpus import _text
+
+    assert _text("Title\x00 here") == "Title here" and _text(None) == ""
