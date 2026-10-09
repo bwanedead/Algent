@@ -52,6 +52,7 @@ Docs sprawl is a real failure mode. To prevent it:
 
 ### Guides — `guides/`
 - `run-operator-entrypoint.md` – **start here** to operate runs; short hub that routes to the rest.
+- `worker-server.md` – the always-on server: what runs where (free jobs on timers, paid runs on request), how to trigger a run over SSH, access it holds, rebuild from nothing.
 - `agent-cli-testing.md` – **canonical CLI guide**: full `runs` command/flag set, newsroom rail,
   post-t0 `--from-run`, promotion cooldown, watch/stop, cost rails, run layout.
 - `ohmega-research.md` – Ohmega Research CLI: validate trial JSONL, build the offline report, synthetic demo, reproducible METR source audit (`audit-metr`); record schema and denominator policy.
