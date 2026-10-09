@@ -35,6 +35,13 @@ langchain-exa==1.1.0
 trafilatura==2.1.0
 feedparser==6.0.12
 # brave_search, x_search, gdelt_events, firecrawl fallback use httpx (above) directly
-# Optional (NOT installed by default — enable when your machine can afford it):
-#   pip install playwright && playwright install chromium
-#   then set ALGENT_FETCH_PLAYWRIGHT=1 for JS-rendered page rescue in fetch_content
+lxml==6.1.1
+lxml_html_clean==0.4.5
+python-dotenv==1.2.1
+PyYAML==6.0.3
+aiohttp==3.14.0
+# Headless-browser rung of the free read ladder (on by default, fetch_content.PLAYWRIGHT_ENABLED); after
+# installing: `python -m playwright install --only-shell chromium` (Linux also: `install-deps chromium`)
+playwright==1.63.0
+# Postgres driver for the Supabase-backed stores (imported only when DATABASE_URL is set)
+psycopg[binary]==3.2.10
