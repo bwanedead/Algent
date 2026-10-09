@@ -22,7 +22,7 @@
         "year": 2025
       },
       "energy_production": {
-        "value": 1123.263,
+        "value": 1123.2630000000001,
         "unit": "twh",
         "year": 2024
       },
@@ -762,7 +762,7 @@
         "year": 2025
       },
       "energy_production": {
-        "value": 1514.2849999999999,
+        "value": 1514.285,
         "unit": "twh",
         "year": 2024
       },
@@ -1290,7 +1290,7 @@
         "year": 2025
       },
       "energy_production": {
-        "value": 314.85900000000004,
+        "value": 314.859,
         "unit": "twh",
         "year": 2024
       },

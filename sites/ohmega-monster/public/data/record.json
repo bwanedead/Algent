@@ -2,7 +2,7 @@
   "schema": "ohmega.record/1",
   "window_days": 60,
   "max_statements": 1500,
-  "as_of": "2026-10-05",
+  "as_of": "2026-10-09",
   "count": 906,
   "statements": [
     {

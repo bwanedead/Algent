@@ -471,5 +471,12 @@
       "as_of": "2026-10-01",
       "url": "/intel/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime"
     }
-  ]
+  ],
+  "lineage": {
+    "parent": null,
+    "branches": [],
+    "merged_into": null,
+    "absorbed": []
+  },
+  "inherited": []
 }

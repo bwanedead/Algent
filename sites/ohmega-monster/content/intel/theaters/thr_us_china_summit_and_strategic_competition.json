@@ -270,5 +270,12 @@
       "url": "/geopolitics/2026-10-01"
     }
   ],
-  "briefs": []
+  "briefs": [],
+  "lineage": {
+    "parent": null,
+    "branches": [],
+    "merged_into": null,
+    "absorbed": []
+  },
+  "inherited": []
 }

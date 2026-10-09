@@ -49,7 +49,7 @@
       "label": "Fossil fuel production (oil + gas + coal)",
       "unit": "twh",
       "group": "energy",
-      "value": 1123.263,
+      "value": 1123.2630000000001,
       "year": 2024,
       "source": "owid",
       "rank": 21,
@@ -361,7 +361,7 @@
         "label": "Fossil fuel production (oil + gas + coal)",
         "unit": "twh",
         "group": "energy",
-        "value": 1123.263,
+        "value": 1123.2630000000001,
         "year": 2024,
         "source": "owid"
       },
