@@ -96,10 +96,10 @@ function MetricTable({ title, cols, actors, asOfYear, known }: { title: string; 
   );
 }
 
-export default function TheaterNumbersPanel({ numbers, name }: { numbers: TheaterNumbers | null; name: string }) {
+export default async function TheaterNumbersPanel({ numbers, name }: { numbers: TheaterNumbers | null; name: string }) {
   if (!numbers || (numbers.trackers.length === 0 && numbers.actors.length === 0)) return null;
   const { trackers, actors } = numbers;
-  const known = new Set(actorIds());
+  const known = new Set(await actorIds());
   const asOfYear = Number(numbers.as_of.slice(0, 4)) || new Date().getUTCFullYear();
   const unusual = trackers.filter((t) => t.unusual).length;
   const rest = trackers.slice(TRACKERS_SHOWN);

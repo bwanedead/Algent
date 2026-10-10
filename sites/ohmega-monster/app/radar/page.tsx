@@ -8,8 +8,10 @@ export const metadata: Metadata = {
   description: "What crossed the wire, as other outlets reported it — not yet independently verified.",
 };
 
-export default function RadarIndex() {
-  const newest = getMenus()[0];
+export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+
+export default async function RadarIndex() {
+  const newest = (await getMenus())[0];
   if (!newest) {
     return (
       <article className="radar-page">

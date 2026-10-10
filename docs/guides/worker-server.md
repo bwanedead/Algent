@@ -48,9 +48,12 @@ Supabase (next step) becomes the working database.
 
 ## Access it holds
 
-- Two GitHub deploy keys, one per repo: `Algent` (write: publish to `site-live` until the site reads from the
-  database, then read-only; once Vercel has `NEXT_PUBLIC_SUPABASE_*` set and the site serves from Supabase
-  — `docs/architecture/published-content.md` — switch it to read-only, keeping a write path only for assets) and `algent-data` (write: backups). Revoke under each repo → Settings → Deploy keys.
+- Two GitHub deploy keys, one per repo: `Algent` (write while `SITE_PUBLISH_VIA = "git"`: publish to `site-live`;
+  **after the cut-over to `"db"` (`docs/architecture/published-content.md`) it can become read-only**: a publish is
+  then database rows plus Storage uploads and never pushes; keep read access for `git pull`) and `algent-data`
+  (write: backups). Revoke or downgrade under each repo → Settings → Deploy keys.
+- In db mode the worker env also needs `DATABASE_URL`, `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` (see
+  `docs/credentials.md`). The `.site-live/` directory stays as a local staging area; no git runs against it.
 - Secrets: `~/algent.env` (chmod 600), copied from the laptop by `scp`, linked as `backend/.env`. Key names and
   purposes: `docs/credentials.md` (manifest).
 - Still to log in on the server (operator, interactive): the chart harnesses `grok-build` and `codex`.

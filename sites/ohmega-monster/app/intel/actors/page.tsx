@@ -16,8 +16,10 @@ export const metadata: Metadata = {
 
 // The index: every published actor as one row of a small-multiples table, each column on one shared
 // scale. The claim names the biggest of each kind, so the first screen answers "who is big at what".
-export default function ActorsIndexPage() {
-  const actors = allActors();
+export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+
+export default async function ActorsIndexPage() {
+  const actors = await allActors();
   if (actors.length === 0) {
     return (
       <div className="intel-page th-page">

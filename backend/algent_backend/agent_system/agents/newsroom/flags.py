@@ -27,6 +27,12 @@ SYNTHESIS_ENABLED = True
 # Wired into the synthesis task message so the model sees the standing aim.
 SYNTHESIS_TARGET_VECTORS = 40
 
+#: How a publish reaches the site (docs/architecture/published-content.md). "git" = commit + push to the
+#: `site-live` branch (the original path; Vercel redeploys). "db" = write Supabase rows + upload assets to
+#: Supabase Storage and make NO git commit (the site reads them live). Flip to "db" at cut-over, after the
+#: migrations and backfills have run. One-shot override: ALGENT_SITE_PUBLISH_VIA.
+SITE_PUBLISH_VIA = "git"
+
 BRIEFING_ENABLED = True
 BRIEFING_MIN_ITEMS = 2
 BRIEFING_MAX_ITEMS = 5
@@ -137,3 +143,9 @@ def insight_spacing_min() -> int:
 
 def insight_compose_every_min() -> int:
     return max(30, int(INSIGHT_COMPOSE_EVERY_MIN))
+
+
+def site_publish_via() -> str:
+    """``"db"`` or ``"git"`` — anything but an explicit ``db`` is the git path."""
+    raw = (os.environ.get("ALGENT_SITE_PUBLISH_VIA") or SITE_PUBLISH_VIA).strip().lower()
+    return "db" if raw == "db" else "git"

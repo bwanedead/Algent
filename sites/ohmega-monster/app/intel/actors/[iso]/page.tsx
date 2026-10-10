@@ -15,10 +15,10 @@ import "../../theaters/theaters.css";
 
 type Params = { iso: string };
 
-export const dynamicParams = false;
+export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
 
-export function generateStaticParams(): Params[] {
-  return actorIds().map((iso) => ({ iso }));
+export async function generateStaticParams(): Promise<Params[]> {
+  return (await actorIds()).map((iso) => ({ iso }));
 }
 
 const val = (a: Actor, id: string) => fieldOf(a, id);
@@ -36,8 +36,8 @@ function claimOf(a: Actor): string {
   return parts.length ? `${a.name}: ${parts.join(", ")}` : `${a.name}: what it is, what it produces, who leads it`;
 }
 
-export function generateMetadata({ params }: { params: Params }): Metadata {
-  const a = actor(params.iso);
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const a = await actor(params.iso);
   if (!a) return { title: "Actor" };
   return { title: `${a.name}: power profile`, description: claimOf(a), alternates: { canonical: `/intel/actors/${a.iso2}` } };
 }
@@ -133,10 +133,10 @@ const TITLE: Record<GroupId, (a: Actor) => string> = {
 };
 const ANCHOR: Record<GroupId, string> = { people: "people", economy: "economy", trade: "trade", energy: "energy", military: "military" };
 
-export default function ActorPage({ params }: { params: Params }) {
-  const a = actor(params.iso);
+export default async function ActorPage({ params }: { params: Params }) {
+  const a = await actor(params.iso);
   if (!a) notFound();
-  const snap = latestSnapshot();
+  const snap = await latestSnapshot();
   const lookup = new Map((snap?.situations ?? []).flatMap((s) => s.pulses.map((p) => [p.id, toWallPulse(p, s.title)] as const)));
   const pulses = a.involved.pulses.map((p) => lookup.get(p.id)).filter((p): p is NonNullable<typeof p> => !!p);
   const { head_of_state: hos, head_of_government: hog, nuclear: nuke } = a.leadership;

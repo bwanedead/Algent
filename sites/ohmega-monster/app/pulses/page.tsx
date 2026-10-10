@@ -9,8 +9,10 @@ export const metadata: Metadata = {
   description: "Every Pulse we track: one question, one 0–100 reading. Early readings — still calibrating.",
 };
 
-export default function PulsesPage() {
-  const snap = latestSnapshot();
+export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+
+export default async function PulsesPage() {
+  const snap = await latestSnapshot();
   // Flat and serialisable: the wall sorts and draws everything client-side.
   const pulses: WallPulse[] = severitySorted(snap).flatMap((s) => s.pulses.map((p) => toWallPulse(p, s.title)));
   return (

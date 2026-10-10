@@ -3,8 +3,8 @@ import Link from "next/link";
 import { getMenus, menuLabel } from "@/lib/radar";
 
 // The newest headline-radar menu, pinned above the feed — the nav item alone was easy to miss.
-export default function RadarCard() {
-  const m = getMenus()[0];
+export default async function RadarCard() {
+  const m = (await getMenus())[0];
   if (!m) return null;
   const preview = m.leads.slice(0, 4);
   return (
