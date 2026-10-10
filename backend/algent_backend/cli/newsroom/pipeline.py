@@ -487,6 +487,12 @@ def run(args: argparse.Namespace) -> int:
     if not needs_lock:
         return _run_locked(args, stages, result)
 
+    from algent_backend.data_backup import runner  # one runner at a time (paid work only runs on the runner)
+
+    if why := runner.refusal("run paid work"):
+        print_json({"error": why})
+        return 3
+
     try:
         with NewsroomRunLock():
             return _run_locked(args, stages, result)

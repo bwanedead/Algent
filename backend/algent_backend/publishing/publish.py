@@ -237,6 +237,10 @@ def publish_run(
     """Gate a finished run and stage/hold it. ``push`` (live ship, ON by default) is applied by the
     caller's git step; here it only distinguishes the recorded action (``staged`` vs ``published``)."""
     today = today or _today()
+    from algent_backend.data_backup import runner  # one runner at a time: a non-runner machine never publishes
+
+    if why := runner.refusal("publish"):
+        return PublishResult(action="error", reasons=[why])
     loaded = _read_run(run_dir)
     if loaded is None:
         return PublishResult(action="error", reasons=["run has no article_published.md + pipeline report"])

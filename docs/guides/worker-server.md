@@ -31,6 +31,15 @@ ssh -i ~/.ssh/ohmega_ops ohmega@146.190.243.152 'cd ~/Algent/backend && .venv/bi
 
 Logs: `journalctl -u ohmega-<job> -n 50`; timers: `systemctl list-timers 'ohmega-*'`.
 
+## Readiness and who runs
+
+- `newsroom doctor` (run on the server over SSH) checks keys by name, database, SearXNG, the free engines, page
+  reads, chart harnesses, the publish path, disk/memory and paid quota; it spends nothing. Run it after any
+  rebuild or key change.
+- The server is not a dependency: `newsroom runner status|claim|release` records which machine runs paid work
+  and publishes, and the laptop can take over. Procedure: `docs/guides/runner-handover.md`.
+- `newsroom search-usage` shows how search is doing (who answers, free vs paid, failures).
+
 ## Source of truth for data
 
 Once runs happen on the server, **its stores are the live ones**; the laptop stops running jobs so the two
@@ -54,3 +63,4 @@ Supabase (next step) becomes the working database.
 4. `scp` the `.env` to `~/algent.env`; `infra/server/app_setup.sh`; `infra/server/searxng/deploy.sh ohmega@HOST`.
 5. Restore the stores: `python -c "from algent_backend.data_backup import sync; print(sync.restore())"`.
 6. `infra/server/install_schedules.sh`.
+7. `newsroom runner claim`, then `newsroom doctor`.

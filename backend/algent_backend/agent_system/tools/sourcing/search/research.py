@@ -33,6 +33,7 @@ excerpt).
 
 from __future__ import annotations
 
+import time
 from typing import Any
 
 from algent_backend.agent_system.foundation.text_hygiene import scrub_text
@@ -40,7 +41,7 @@ from algent_backend.agent_system.foundation.text_hygiene import scrub_text
 from ....foundation import cost, read_cache, snapshots
 from ...spec import GLOBAL_SCOPE, ToolSpec
 from .._wrap import as_structured_tool
-from . import circuit, policy, quota
+from . import circuit, policy, quota, search_ledger
 
 WEB_SEARCH_TOOL_ID = "web_search"
 
@@ -123,7 +124,11 @@ def _search(
     if doi or kind == "scholar":
         return _search_scholar(query=query, doi=doi)
     if source == "x":
-        return _search_x(query, max_results)
+        started = time.monotonic()
+        out = _search_x(query, max_results)
+        search_ledger.record_result("x", query, {**out, "provider": "x" if "error" not in out else "none"}, ["x"],
+                                    cached=False, elapsed_ms=int((time.monotonic() - started) * 1000))
+        return out
     channel = policy.channel_for_kind(kind)
     if not policy.is_allowed(channel):
         return _denied(channel)
@@ -132,10 +137,15 @@ def _search(
     if not (query or "").strip():
         return {"action": "search", "kind": kind,
                 "error": "empty query — write the words you are looking for"}
+    chain = _provider_chain(kind)
     cached = read_cache.get_search(kind, query)
     if cached is not None:
+        search_ledger.record_result(kind, query, cached, chain, cached=True, elapsed_ms=0)
         return {**cached, "cached": True}
+    started = time.monotonic()
     result = _search_web(query, kind, max_results)
+    search_ledger.record_result(kind, query, result, chain, cached=False,
+                                elapsed_ms=int((time.monotonic() - started) * 1000))
     read_cache.put_search(kind, query, result)
     return result
 

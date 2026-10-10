@@ -85,6 +85,12 @@ def _out(as_of: str) -> Path:
 
 
 def run_intel(args: Any) -> int:
+    if args.intel_verb in ("daily", "cycle", "publish"):   # the verbs that spend or ship
+        from algent_backend.data_backup import runner
+
+        if why := runner.refusal(f"run intel {args.intel_verb}"):
+            print(json.dumps({"error": why}))
+            return 3
     return {"heat": _heat, "brief": _brief, "import-briefs": _import_briefs,
             "publish": _publish, "cycle": _cycle, "daily": _daily,
             "dossiers": _dossiers}[args.intel_verb](args)
