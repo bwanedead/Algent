@@ -30,7 +30,7 @@ from typing import Any
 
 import yaml
 
-from . import published_db
+from . import asset_store, published_db, site_git
 from .converter import SiteArticle, build_slug, convert, parse_published_article
 
 # The pipeline's terminal statuses.
@@ -214,12 +214,17 @@ def front_matter(markdown: str) -> dict:
 
 
 def _write_agent_twin(site_dir: Path, article: Any, profile: dict) -> None:
-    """The article's machine-readable twin for agents. Never blocks a publish."""
+    """The article's machine-readable twin for agents (+ the refreshed ``/data/index.json``), to files and to
+    the database (``data/articles/<slug>.json``, ``data/index.json``). Never blocks a publish."""
     from .agent_twin import build_twin, write_twin
 
     try:
         meta = {**front_matter(article.markdown), "slug": article.slug}
-        write_twin(site_dir, build_twin(meta, profile or {}))
+        twin = build_twin(meta, profile or {})
+        path = write_twin(site_dir, twin)
+        index = path.parent.parent / "index.json"
+        published_db.publish_documents({f"data/articles/{path.name}": twin,
+                                        "data/index.json": json.loads(index.read_text(encoding="utf-8"))})
     except Exception:  # noqa: BLE001 — the article is the product; the twin is a bonus layer
         pass
 
@@ -297,9 +302,18 @@ def publish_run(
                       date=today, run_id=run_id, corrections=corrections or None,
                       vector=vector, analytics=analytics,
                       hero=hero_for_site)
-    _write_article(site_dir, article, run_dir)
+    # Assets first, then the row: the page must never go live ahead of its images. In db mode this IS the
+    # publish, so a failure is an error (nothing written locally, a retry is clean); in git mode the commit
+    # ships the files and the database is the transitional mirror.
+    assets = _article_assets(article, run_dir)
+    uploaded = asset_store.upload({f"/analytics/{article.slug}/{n}": d for n, d in assets.items()})
+    row = published_db.publish_article(article.slug, article.markdown, title=article.title, status=article.status)
+    if site_git.via_db() and not (row.get("db") and uploaded.get("ok")):
+        why = row.get("note") or "; ".join(uploaded.get("failed") or []) or "database write failed"
+        return PublishResult(action="error", slug=article.slug, status=status,
+                             reasons=[f"db publish failed: {why}"])
+    _write_article(site_dir, article, assets)
     _write_agent_twin(site_dir, article, profile)
-    published_db.publish_article(article.slug, article.markdown, title=article.title, status=article.status)
     _append_publish_ledger(site_dir, article, run_id,
                            kind="correction" if is_rewrite else "publish", pushed=push)
 
@@ -333,8 +347,10 @@ def retract(slug: str, reason: str, *, site_dir: Path, today: str | None = None)
             "the URL does not silently disappear.\n")
     content_path.write_text("---\n" + yaml.safe_dump(fm, allow_unicode=True, sort_keys=False, width=4096)
                             + "---\n\n" + body, encoding="utf-8")
-    published_db.publish_article(slug, content_path.read_text(encoding="utf-8"),
-                                 title=str(fm["title"]), status="retracted")
+    row = published_db.publish_article(slug, content_path.read_text(encoding="utf-8"),
+                                       title=str(fm["title"]), status="retracted")
+    if site_git.via_db() and not row.get("db"):
+        return PublishResult(action="error", slug=slug, reasons=[f"db publish failed: {row.get('note')}"])
     _append_ledger(site_dir / "publish-ledger.md",
                    f"### RETRACTED {slug} — {today}\nReason: {reason}\n")
     return PublishResult(action="retracted", slug=slug, reasons=[reason], content_path=str(content_path))
@@ -358,19 +374,26 @@ def _sanitize_svg(data: bytes) -> bytes:
     return _SVG_JS_HREF.sub(rb'\1=\2#\2', data)
 
 
-def _write_article(site_dir: Path, article: SiteArticle, run_dir: Path) -> None:
+def _article_assets(article: SiteArticle, run_dir: Path) -> dict[str, bytes]:
+    """The article's image files as ``{name: bytes}`` (SVGs sanitized), read from the run's artifacts."""
+    out: dict[str, bytes] = {}
+    for name in article.assets:
+        src = run_dir / "artifacts" / name
+        if src.exists():
+            data = src.read_bytes()
+            out[name] = _sanitize_svg(data) if name.lower().endswith(".svg") else data
+    return out
+
+
+def _write_article(site_dir: Path, article: SiteArticle, assets: dict[str, bytes]) -> None:
     content_path = site_dir / "content" / "articles" / f"{article.slug}.md"
     content_path.parent.mkdir(parents=True, exist_ok=True)
     content_path.write_text(article.markdown, encoding="utf-8")
-    if article.assets:
+    if assets:
         dest = site_dir / "public" / "analytics" / article.slug
         dest.mkdir(parents=True, exist_ok=True)
-        for name in article.assets:
-            src = run_dir / "artifacts" / name
-            if not src.exists():
-                continue
-            data = src.read_bytes()
-            (dest / name).write_bytes(_sanitize_svg(data) if name.lower().endswith(".svg") else data)
+        for name, data in assets.items():
+            (dest / name).write_bytes(data)
 
 
 def _hold(

@@ -19,7 +19,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from . import site_git
+from . import published_db, site_git
 
 RADAR_SUBDIR = ("content", "radar")
 _MAX_SOURCES = 3
@@ -92,6 +92,11 @@ def publish_menu(portfolio: dict[str, Any]) -> dict[str, Any]:
         path = write_menu(site_git.live_site_dir(root), portfolio)
         if path is None:
             return {"published": False, "note": "menu had no leads"}
+        # The edition is also a database document (`radar/<slug>.json`) the site reads live; in db mode that
+        # write is the publish, so a failure must not read as success.
+        row = published_db.publish_documents({f"radar/{path.name}": json.loads(path.read_text(encoding="utf-8"))})
+        if site_git.via_db() and not row.get("db"):
+            return {"published": False, "note": f"db publish failed: {row.get('note')}"}
         ok, pushed = site_git.commit_and_push(worktree, f"radar({path.stem}): headline menu")
         return {"published": ok, "slug": path.stem, "note": pushed}
     except Exception as exc:  # noqa: BLE001

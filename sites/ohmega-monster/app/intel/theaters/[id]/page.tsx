@@ -21,16 +21,15 @@ import "../theaters.css";
 
 type Params = { id: string };
 
-export const dynamicParams = false;
+// A theater published after the last deploy renders on demand (dynamicParams stays on): publishing is a database write.
+export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
 
-export function generateStaticParams(): Params[] {
-  return dossierIds()
-    .filter((id) => dossier(id) !== null)
-    .map((id) => ({ id }));
+export async function generateStaticParams(): Promise<Params[]> {
+  return (await dossierIds()).map((id) => ({ id }));
 }
 
-export function generateMetadata({ params }: { params: Params }): Metadata {
-  const d = dossier(params.id);
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const d = await dossier(params.id);
   if (!d) return { title: "Theater" };
   return {
     title: `${d.name}: dossier`,
@@ -41,11 +40,12 @@ export function generateMetadata({ params }: { params: Params }): Metadata {
 
 // One living page per theater: the claim and its picture first (screen one), then the on-ramp, the
 // actors, the record, the numbers and the outlook. Doctrine: docs/ethos/information-ergonomics-ethos.md.
-export default function TheaterDossierPage({ params }: { params: Params }) {
-  const d = dossier(params.id);
+export default async function TheaterDossierPage({ params }: { params: Params }) {
+  const d = await dossier(params.id);
   if (!d) notFound();
-  const snap = latestSnapshot();
-  const known = new Set(dossierIds());
+  const snap = await latestSnapshot();
+  const known = new Set(await dossierIds());
+  const involved = await actorsForTheater(d.theater_id);
   const first = d.timeline.map((t) => t.date).filter(Boolean).sort()[0] ?? "";
   return (
     <div className="intel-page th-page">
@@ -61,7 +61,7 @@ export default function TheaterDossierPage({ params }: { params: Params }) {
 
       <DossierPrimer primer={d.primer} />
       <ActorNetwork actors={d.actors} relations={d.relations} statements={d.statements} />
-      <ActorStrip actors={actorsForTheater(d.theater_id)} />
+      <ActorStrip actors={involved} />
       <DossierRecord rows={d.on_record} />
       <DossierTimeline items={d.timeline} since={d.first_seen || first} />
       <DossierFigures figures={d.figures} />

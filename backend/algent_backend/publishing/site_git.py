@@ -27,6 +27,13 @@ def publish_enabled() -> bool:
     return os.environ.get(_PUBLISH_ENV, "1").strip().lower() not in ("0", "false", "no", "off")
 
 
+def via_db() -> bool:
+    """True when publishing is a database write + asset upload with no git commit (flags.SITE_PUBLISH_VIA)."""
+    from algent_backend.agent_system.agents.newsroom.flags import site_publish_via   # lazy: avoids an import cycle
+
+    return site_publish_via() == "db"
+
+
 def _git(cwd: Path, *args: str) -> tuple[bool, str]:
     try:
         proc = subprocess.run(["git", *args], cwd=str(cwd), capture_output=True, text=True,
@@ -53,6 +60,15 @@ def live_site_dir(root: Path) -> Path:
 def ensure_worktree(root: Path) -> tuple[Path | None, str]:
     """Ensure a ``.site-live`` worktree on ``site-live``, pulled to latest. (path, note) — path None on failure."""
     wt = root / _WORKTREE_DIRNAME
+    if via_db():
+        # No git in this mode: the directory is only a local staging area for the writers (and the history
+        # some readers consult). An existing worktree is used as-is — no pull, so a read-only deploy key is fine.
+        from . import published_db
+
+        if not published_db.enabled():
+            return None, "db publish mode needs DATABASE_URL (and ALGENT_DB_PUBLISH not off)"
+        wt.mkdir(parents=True, exist_ok=True)
+        return wt, "db mode: staging dir (no git)"
     if wt.exists():
         ok, out = _git(wt, "pull", "--ff-only", "origin", DEPLOY_BRANCH)
         return wt, ("worktree updated" if ok else f"pull warning: {out}")
@@ -75,7 +91,10 @@ _ASSET_PATH = "sites/ohmega-monster/public/analytics"
 
 
 def commit_and_push(worktree: Path, message: str) -> tuple[bool, str]:
-    """Stage everything in the worktree, commit with ``message``, and push to ``origin/site-live``."""
+    """Stage everything in the worktree, commit with ``message``, and push to ``origin/site-live``.
+    In db mode there is nothing to commit: the rows and assets are already live."""
+    if via_db():
+        return True, "db mode: live via database (no git commit)"
     _git(worktree, "add", "-A")
     if (worktree / _ASSET_PATH).exists():
         _git(worktree, "add", "-f", _ASSET_PATH)   # ignored path, but these must ship

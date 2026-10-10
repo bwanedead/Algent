@@ -4,6 +4,7 @@ import { Fragment } from "react";
 import Popover from "@/components/Popover";
 import type { Daily } from "@/lib/daily";
 import { claimOf, crossParts, fmtDay, isCut, shortTheater, theaterAnchor } from "@/lib/daily";
+import { dossierIds } from "@/lib/dossier";
 import { fmtUtc, latestSnapshot } from "@/lib/intel";
 
 import DailyGlance from "./DailyGlance";
@@ -105,8 +106,9 @@ function Across({ report }: { report: Daily }) {
   );
 }
 
-export default function DailyReport({ report, title }: { report: Daily; title: string }) {
-  const snap = latestSnapshot();
+export default async function DailyReport({ report, title }: { report: Daily; title: string }) {
+  const snap = await latestSnapshot();
+  const dossiers = new Set(await dossierIds());
   return (
     <div className="geo">
       <div className="intel-strip" role="group" aria-label="Report status">
@@ -135,11 +137,11 @@ export default function DailyReport({ report, title }: { report: Daily; title: s
       {report.the_day.length > 0 && <TheDay items={report.the_day} />}
 
       {report.theaters.map((t, i) => (
-        <DailyTheaterSection key={t.theater_id + i} t={t} id={theaterAnchor(t, i)} date={report.date} snap={snap} first={i === 0} />
+        <DailyTheaterSection key={t.theater_id + i} t={t} id={theaterAnchor(t, i)} date={report.date} snap={snap} dossiers={dossiers} first={i === 0} />
       ))}
 
       <Across report={report} />
-      <DailyWatching watch={report.watch} quiet={report.quiet} />
+      <DailyWatching watch={report.watch} quiet={report.quiet} dossiers={dossiers} />
     </div>
   );
 }

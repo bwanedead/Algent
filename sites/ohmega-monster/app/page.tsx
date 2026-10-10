@@ -6,6 +6,7 @@ import IntelCard from "@/components/IntelCard";
 import RadarCard from "@/components/RadarCard";
 import ShareButton from "@/components/ShareButton";
 import { getAllMeta } from "@/lib/articles";
+import { assetUrl } from "@/lib/assets";
 import { SITE_URL } from "@/lib/site";
 
 // The hub: a dense, wiki/terminal-style index of pieces, newest first.
@@ -45,7 +46,7 @@ export default async function Home() {
                 {a.hero || a.thumbnail ? (
                   <img
                     className="feed-thumb"
-                    src={a.hero || a.thumbnail}
+                    src={assetUrl(a.hero || a.thumbnail)}
                     alt=""
                     aria-hidden="true"
                     loading="lazy"

@@ -22,10 +22,11 @@ const bySeverity = (a: TheaterRow, b: TheaterRow) =>
 
 // The index: every theater as one row of a small-multiples table. The page's claim counts what is
 // moving; rows are grouped by direction so the first chunk is the one that matters.
-export default function TheatersIndexPage() {
-  const all: TheaterRow[] = dossierList()
-    .map((item) => ({ item, dossier: dossier(item.theater_id) }))
-    .filter((r) => r.dossier !== null); // an unreadable dossier would be a dead link
+export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+
+export default async function TheatersIndexPage() {
+  const loaded = await Promise.all((await dossierList()).map(async (item) => ({ item, dossier: await dossier(item.theater_id) })));
+  const all: TheaterRow[] = loaded.filter((r) => r.dossier !== null); // an unreadable dossier would be a dead link
   // A theater absorbed into another leaves the groups: it is listed once, below, as "merged into ...".
   const rows = all.filter((r) => !r.item.merged_into);
   const merged = all.filter((r) => r.item.merged_into);

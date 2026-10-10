@@ -399,12 +399,18 @@ def write_intel(site_dir: Path, snapshot: dict, intel_dir: Path, store: Any = No
     files = build_agent_files(snapshot, intel_dir, store, built)
     for rel, payload in files.items():
         _write_if_changed(data / rel, payload)
+        docs[f"data/{rel}"] = payload                  # the agent feeds are served from the database too (/data/*)
     for rel, payload in actors_feed.build_actor_files(built).items():        # the actor pages' data (see actors_feed.py)
         put(f"actors/{rel}", payload)
         _write_if_changed(data / "actors" / rel, payload)
+        docs[f"data/actors/{rel}"] = payload
     if "record.json" in files:                         # the site reads it at build time, like the other desk files
         put("record.json", files["record.json"])
-    published_db.publish_documents(docs)   # TRANSITIONAL: the files above are the fallback reader (published-content.md)
+    # TRANSITIONAL: the files above are the fallback reader and the git publish (published-content.md). In db
+    # mode the rows are the publish, so a failed write must not read as success.
+    result = published_db.publish_documents(docs)
+    if site_git.via_db() and not result.get("db"):
+        raise RuntimeError(f"db publish failed: {result.get('note')}")
     return path
 
 

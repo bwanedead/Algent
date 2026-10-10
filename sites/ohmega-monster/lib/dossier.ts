@@ -1,17 +1,13 @@
-import fs from "node:fs";
-import path from "node:path";
-
 import { parseMap, type TheaterMap } from "./daily";
 import { bandAt } from "./band";
 import { parseOnRecord, type OnRecord } from "./record-model";
 import { maxBand, parseCoverage, safeUrl, type Band, type Coverage, type Direction, type IndicatorStatus, type Pace } from "./intel";
+import { intelDoc, intelSlugs } from "./store";
 
 // Theater dossiers: one living record per theater, written by the backend as JSON to
-// <intel dir>/theaters/index.json and <intel dir>/theaters/<theater_id>.json (ohmega.dossier/1) and read
-// at build time. Parsed defensively: a missing dir, a missing index or a malformed file yields empty
-// states, never a build failure.
-const INTEL_DIR = process.env.OHMEGA_INTEL_DIR || path.join(process.cwd(), "content", "intel");
-const THEATERS_DIR = path.join(INTEL_DIR, "theaters");
+// the documents theaters/index.json and theaters/<theater_id>.json (ohmega.dossier/1), read through
+// lib/store.ts (Supabase, content files as the fallback). Parsed defensively: a missing document, a missing
+// index or a malformed file yields empty states, never a build failure.
 const ID_RE = /^[\w.-]+$/;
 
 export type DossierIndexItem = {
@@ -122,16 +118,6 @@ export function linkTarget(u: string): { href: string; external: boolean } | nul
   const s = safeUrl(u);
   return s ? { href: s, external: true } : null;
 }
-
-function readJson(file: string): unknown {
-  try {
-    return JSON.parse(fs.readFileSync(file, "utf8"));
-  } catch {
-    return null;
-  }
-}
-
-const dossierFile = (id: string) => path.join(THEATERS_DIR, `${id}.json`);
 
 // ---- parsers --------------------------------------------------------------------------------
 function parseIndexItem(raw: Obj): DossierIndexItem | null {
@@ -313,9 +299,9 @@ function parseDossier(raw: unknown, id: string): Dossier | null {
 }
 
 // ---- public readers -------------------------------------------------------------------------
-export function dossier(id: string): Dossier | null {
+export async function dossier(id: string): Promise<Dossier | null> {
   if (!ID_RE.test(id) || id === "index") return null;
-  return parseDossier(readJson(dossierFile(id)), id);
+  return parseDossier(await intelDoc(`theaters/${id}.json`), id);
 }
 
 function itemFromDossier(d: Dossier): DossierIndexItem {
@@ -339,27 +325,21 @@ function itemFromDossier(d: Dossier): DossierIndexItem {
 }
 
 /** Every theater that has a readable dossier. The index drives it; with no usable index, the dossier files do. */
-export function dossierList(): DossierIndexItem[] {
-  const raw = readJson(path.join(THEATERS_DIR, "index.json"));
+export async function dossierList(): Promise<DossierIndexItem[]> {
+  const files = (await intelSlugs("theaters")).filter((n) => n !== "index");
+  const raw = await intelDoc("theaters/index.json");
   const fromIndex = (isObj(raw) ? objs(raw.theaters) : [])
     .map(parseIndexItem)
-    .filter((i): i is DossierIndexItem => i !== null && i.theater_id !== "index" && fs.existsSync(dossierFile(i.theater_id)));
+    .filter((i): i is DossierIndexItem => i !== null && i.theater_id !== "index" && files.includes(i.theater_id));
   if (fromIndex.length > 0) return fromIndex;
-  try {
-    return fs
-      .readdirSync(THEATERS_DIR)
-      .filter((f) => f.endsWith(".json") && f !== "index.json")
-      .map((f) => dossier(f.slice(0, -5)))
-      .filter((d): d is Dossier => d !== null)
-      .map(itemFromDossier);
-  } catch {
-    return [];
-  }
+  const all = await Promise.all(files.map((f) => dossier(f)));
+  return all.filter((d): d is Dossier => d !== null).map(itemFromDossier);
 }
 
-export const dossierIds = (): string[] => dossierList().map((i) => i.theater_id);
+export const dossierIds = async (): Promise<string[]> => (await dossierList()).map((i) => i.theater_id);
 
-/** Where a theater's dossier lives, or null when it has none (so callers link only what exists). */
-export function dossierPath(theaterId: string): string | null {
-  return ID_RE.test(theaterId) && dossierIds().includes(theaterId) ? `/intel/theaters/${theaterId}` : null;
+/** Where a theater's dossier lives, or null when it has none (so callers link only what exists). `known` is
+ *  the set from `dossierIds()`, fetched once per page so rendering stays synchronous. */
+export function dossierPath(theaterId: string, known: ReadonlySet<string>): string | null {
+  return ID_RE.test(theaterId) && known.has(theaterId) ? `/intel/theaters/${theaterId}` : null;
 }

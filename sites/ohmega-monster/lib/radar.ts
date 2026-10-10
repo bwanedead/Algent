@@ -1,9 +1,8 @@
-import fs from "node:fs";
-import path from "node:path";
+import { intelDoc, intelSlugs } from "./store";
 
-// Headline radar: every synthesis menu the newsroom builds, one JSON file per build, dropped here by
-// the publish pipeline (backend publishing/radar_page.py). Kept forever — the archive is the point.
-const RADAR_DIR = path.join(process.cwd(), "content", "radar");
+// Headline radar: every synthesis menu the newsroom builds, one JSON document per build
+// (radar/<slug>.json), written by the publish pipeline (backend publishing/radar_page.py) to Supabase, with
+// content/radar as the transitional fallback (lib/store.ts). Kept forever — the archive is the point.
 
 export type RadarLead = {
   n: number;
@@ -20,11 +19,11 @@ export type RadarMenu = {
   leads: RadarLead[];
 };
 
-function read(file: string): RadarMenu | null {
+function parse(d: Record<string, unknown> | null, name: string): RadarMenu | null {
   try {
-    const d = JSON.parse(fs.readFileSync(path.join(RADAR_DIR, file), "utf8"));
+    if (!d || typeof d !== "object") return null;
     return {
-      slug: String(d.slug || file.replace(/\.json$/, "")),
+      slug: String(d.slug || name),
       builtAt: String(d.built_at || ""),
       leads: Array.isArray(d.leads)
         ? d.leads.map((l: Record<string, unknown>) => ({
@@ -45,18 +44,16 @@ function read(file: string): RadarMenu | null {
 }
 
 /** Every menu, newest first. */
-export function getMenus(): RadarMenu[] {
-  if (!fs.existsSync(RADAR_DIR)) return [];
-  return fs
-    .readdirSync(RADAR_DIR)
-    .filter((f) => f.endsWith(".json"))
-    .map(read)
+export async function getMenus(): Promise<RadarMenu[]> {
+  const names = await intelSlugs("radar");
+  const menus = await Promise.all(names.map(async (n) => parse((await intelDoc(`radar/${n}.json`)) as Record<string, unknown> | null, n)));
+  return menus
     .filter((m): m is RadarMenu => m !== null && m.leads.length > 0)
     .sort((a, b) => b.slug.localeCompare(a.slug));
 }
 
-export function getMenu(slug: string): RadarMenu | null {
-  return getMenus().find((m) => m.slug === slug) ?? null;
+export async function getMenu(slug: string): Promise<RadarMenu | null> {
+  return (await getMenus()).find((m) => m.slug === slug) ?? null;
 }
 
 /** "Thu, Sep 24, 2026 · 22:17 UTC" — the build time a reader can place. */

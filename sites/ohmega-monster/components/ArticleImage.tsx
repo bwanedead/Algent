@@ -10,6 +10,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { assetUrl } from "@/lib/assets";
 import { AI_IMAGE_LABEL, isGeneratedImage } from "@/lib/generated";
 
 export default function ArticleImage({ src, alt }: { src?: string; alt?: string }) {
@@ -35,6 +36,7 @@ export default function ArticleImage({ src, alt }: { src?: string; alt?: string 
   // Generated pictures wear the page's AI signature: the frame, and a label a reader will
   // actually see. Spans, not divs — react-markdown puts an image inside a <p>.
   const generated = isGeneratedImage(src);
+  const url = assetUrl(src); // Supabase Storage when configured, else /public (lib/assets.ts)
 
   return (
     <span className={generated ? "ai-image" : undefined}>
@@ -46,7 +48,7 @@ export default function ArticleImage({ src, alt }: { src?: string; alt?: string 
         onClick={() => setOpen(true)}
         aria-label={alt ? `Enlarge: ${alt}` : "Enlarge figure"}
       >
-        <img src={src} alt={alt ?? ""} loading="lazy" />
+        <img src={url} alt={alt ?? ""} loading="lazy" />
       </button>
       {generated ? <span className="ai-label">{AI_IMAGE_LABEL}</span> : null}
 
@@ -62,7 +64,7 @@ export default function ArticleImage({ src, alt }: { src?: string; alt?: string 
             ×
           </button>
           {/* Stop propagation so clicking the image itself doesn't dismiss it mid-pinch-zoom. */}
-          <img src={src} alt={alt ?? ""} onClick={(e) => e.stopPropagation()} />
+          <img src={url} alt={alt ?? ""} onClick={(e) => e.stopPropagation()} />
         </div>
       )}
     </span>

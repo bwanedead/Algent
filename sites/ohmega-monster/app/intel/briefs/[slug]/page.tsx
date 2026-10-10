@@ -12,14 +12,15 @@ import { toWallPulse, type WallPulse } from "@/lib/pulse-wall";
 
 type Params = { slug: string };
 
-export const dynamicParams = false;
+// A brief published after the last deploy renders on demand (dynamicParams stays on): publishing is a database write.
+export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
 
-export function generateStaticParams(): Params[] {
-  return allBriefSlugs().map((slug) => ({ slug }));
+export async function generateStaticParams(): Promise<Params[]> {
+  return (await allBriefSlugs()).map((slug) => ({ slug }));
 }
 
-export function generateMetadata({ params }: { params: Params }): Metadata {
-  const b = loadBrief(params.slug);
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const b = await loadBrief(params.slug);
   if (!b) return { title: "Brief" };
   return { title: b.title, description: b.bottom_line.slice(0, 200) || undefined };
 }
@@ -80,11 +81,11 @@ function Effects({ title, items }: { title: string; items: Effect[] }) {
   );
 }
 
-export default function BriefPage({ params }: { params: Params }) {
-  const b = loadBrief(params.slug);
+export default async function BriefPage({ params }: { params: Params }) {
+  const b = await loadBrief(params.slug);
   if (!b) notFound();
   const sorted = [...b.timeline].sort((x, y) => x.date.localeCompare(y.date));
-  const snap = latestSnapshot();
+  const snap = await latestSnapshot();
   const hasPrevious = b.changes.length > 0;
 
   return (
