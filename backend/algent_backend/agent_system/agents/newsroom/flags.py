@@ -31,7 +31,7 @@ SYNTHESIS_TARGET_VECTORS = 40
 #: `site-live` branch (the original path; Vercel redeploys). "db" = write Supabase rows + upload assets to
 #: Supabase Storage and make NO git commit (the site reads them live). Flip to "db" at cut-over, after the
 #: migrations and backfills have run. One-shot override: ALGENT_SITE_PUBLISH_VIA.
-SITE_PUBLISH_VIA = "git"
+SITE_PUBLISH_VIA = "db"
 
 BRIEFING_ENABLED = True
 BRIEFING_MIN_ITEMS = 2
