@@ -63,8 +63,10 @@ class Probes:
     """Everything that touches the world. Defaults are real; tests override methods."""
 
     def db_select1(self) -> None:
-        from algent_backend.database import migrate
+        import importlib
 
+        # the package re-exports a function named `migrate`, which shadows the module on attribute import
+        migrate = importlib.import_module("algent_backend.database.migrate")
         with migrate.connect() as conn:
             conn.execute("select 1")
 
@@ -231,7 +233,7 @@ def check_harnesses(probes: Probes) -> dict[str, Any]:
                                           "logged in" if rc == 0 else f"not logged in: {scrub(text)}")
         except Exception as exc:  # noqa: BLE001
             out["harness:codex"] = _check(WARN, f"status check failed: {scrub(exc)}")
-    grok = probes.which("grok")
+    grok = probes.which("grok") or probes.which(str(Path.home() / ".grok" / "bin" / "grok"))
     if not grok:
         out["harness:grok"] = _check(WARN, "not installed")
     else:
