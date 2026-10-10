@@ -56,6 +56,7 @@ worker server the file is `~/algent.env` (chmod 600), linked as `backend/.env` b
 | `X_API_KEY`, `X_API_KEY_SECRET`, `X_ACCESS_TOKEN`, `X_ACCESS_TOKEN_SECRET`, `X_POST_HANDLE` | X **posting** as the Ohmega account | `publishing/x_client.py` | radar/briefing/article posts |
 | `LANGSMITH_*` | optional deep traces | LangChain | nothing (optional) |
 | `DATABASE_URL` | Supabase Postgres (session-pooler URI) | `database/migrate.py`, `pulse/repository.py` | the database (once set up) |
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | the **site's** read access (set in Vercel, not the backend). The anon key is public by design: RLS limits it to `published_*` rows. **Never put the service-role key or `DATABASE_URL` on the site.** | `sites/ohmega-monster/lib/store.ts` | unset: the site reads its content files |
 | `ALGENT_JINA_KEY`, `ALGENT_AGSI_KEY` | optional: higher Jina limits; EU gas storage series | `depth/free_rungs.py`, `instruments` | optional |
 
 **Not keys but per-machine logins** (subscription-funded, no API key): the chart harnesses `grok-build` (default)

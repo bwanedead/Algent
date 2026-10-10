@@ -30,6 +30,7 @@ from typing import Any
 
 import yaml
 
+from . import published_db
 from .converter import SiteArticle, build_slug, convert, parse_published_article
 
 # The pipeline's terminal statuses.
@@ -298,6 +299,7 @@ def publish_run(
                       hero=hero_for_site)
     _write_article(site_dir, article, run_dir)
     _write_agent_twin(site_dir, article, profile)
+    published_db.publish_article(article.slug, article.markdown, title=article.title, status=article.status)
     _append_publish_ledger(site_dir, article, run_id,
                            kind="correction" if is_rewrite else "publish", pushed=push)
 
@@ -331,6 +333,8 @@ def retract(slug: str, reason: str, *, site_dir: Path, today: str | None = None)
             "the URL does not silently disappear.\n")
     content_path.write_text("---\n" + yaml.safe_dump(fm, allow_unicode=True, sort_keys=False, width=4096)
                             + "---\n\n" + body, encoding="utf-8")
+    published_db.publish_article(slug, content_path.read_text(encoding="utf-8"),
+                                 title=str(fm["title"]), status="retracted")
     _append_ledger(site_dir / "publish-ledger.md",
                    f"### RETRACTED {slug} — {today}\nReason: {reason}\n")
     return PublishResult(action="retracted", slug=slug, reasons=[reason], content_path=str(content_path))

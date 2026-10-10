@@ -7,8 +7,10 @@ import { allBriefSlugs } from "@/lib/intel";
 import { SITE_URL } from "@/lib/site";
 
 // A self-populating site needs machines (indexers) to notice new articles without being told.
-export default function sitemap(): MetadataRoute.Sitemap {
-  const articles = getAllMeta().map((a) => ({
+export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const articles = (await getAllMeta()).map((a) => ({
     url: `${SITE_URL}/articles/${a.slug}`,
     lastModified: a.date || undefined,
   }));
@@ -19,7 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...dossierIds().map((id) => ({ url: `${SITE_URL}/intel/theaters/${id}`, lastModified: new Date() })),
     { url: `${SITE_URL}/pulses`, lastModified: new Date() },
     { url: `${SITE_URL}/geopolitics`, lastModified: new Date() },
-    ...allDailyDates("geopolitics").map((d) => ({ url: `${SITE_URL}/geopolitics/${d}`, lastModified: d })),
+    ...(await allDailyDates("geopolitics")).map((d) => ({ url: `${SITE_URL}/geopolitics/${d}`, lastModified: d })),
   ];
   return [{ url: SITE_URL, lastModified: new Date() }, ...articles, ...intel];
 }

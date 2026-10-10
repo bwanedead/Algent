@@ -8,25 +8,26 @@ import "../geopolitics.css";
 
 type Params = { date: string };
 
-export const dynamicParams = false;
+// New days appear without a redeploy: unknown dates render on demand (404 if no report) and are cached.
+export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
 
-export function generateStaticParams(): Params[] {
-  return allDailyDates(DOMAIN).map((date) => ({ date }));
+export async function generateStaticParams(): Promise<Params[]> {
+  return (await allDailyDates(DOMAIN)).map((date) => ({ date }));
 }
 
-export function generateMetadata({ params }: { params: Params }): Metadata {
-  const r = daily(DOMAIN, params.date);
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const r = await daily(DOMAIN, params.date);
   if (!r) return { title: "Geopolitics — daily report" };
   return {
     title: `Geopolitics — ${fmtDay(r.date)}`,
     description: r.headline.slice(0, 200) || undefined,
     // The newest report is one page with two addresses; /geopolitics is the one to index.
-    alternates: allDailyDates(DOMAIN)[0] === r.date ? { canonical: BASE } : undefined,
+    alternates: (await allDailyDates(DOMAIN))[0] === r.date ? { canonical: BASE } : undefined,
   };
 }
 
-export default function GeopoliticsDayPage({ params }: { params: Params }) {
-  const report = daily(DOMAIN, params.date);
+export default async function GeopoliticsDayPage({ params }: { params: Params }) {
+  const report = await daily(DOMAIN, params.date);
   if (!report) notFound();
   return <GeopoliticsDay report={report} />;
 }

@@ -78,7 +78,8 @@ publishable subset).
 - **Access** goes through repository interfaces. The file-backed `PulseStore` is the reference
   implementation and the test double; a Postgres implementation sits behind the same surface.
 - **Access classes:** the backend holds the only write credential. The public site reads only
-  published objects through row-level-security policies. User data comes later.
+  published objects through row-level-security policies. User data comes later. The published
+  tables and the site's reader are in `published-content.md`.
 - **Archive:** the private `bwanedead/algent-data` repo mirrors the stores after every run and
   menu build. It only adds and updates files, never deletes. It is the independent
   disaster-recovery copy.

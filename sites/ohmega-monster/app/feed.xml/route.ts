@@ -4,7 +4,7 @@ import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 // The RSS feed is the contract between "published" and "announced": indexers and readers consume it,
 // and the future X-posting pipe can too ("new item in the feed -> compose a post"), fully decoupled
 // from the backend. Static — regenerated at build, which is every publish (a commit to site-live).
-export const dynamic = "force-static";
+export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
 
 function esc(s: string): string {
   return s
@@ -14,8 +14,8 @@ function esc(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
-export function GET(): Response {
-  const items = getAllMeta()
+export async function GET(): Promise<Response> {
+  const items = (await getAllMeta())
     .map((a) => {
       const url = `${SITE_URL}/articles/${a.slug}`;
       const pubDate = a.date ? `<pubDate>${new Date(a.date).toUTCString()}</pubDate>` : "";
