@@ -1,13 +1,10 @@
-import fs from "node:fs";
-import path from "node:path";
-
 import { safeUrl, type Band } from "./intel";
+import { intelDoc, intelNames } from "./store";
 
 // Actors: one power profile per state, written by the backend (publishing/actors_feed.py) as
-// <intel dir>/actors/<ISO2>.json (ohmega.actor/1) plus index.json, read at build time. Parsed
-// defensively: a missing dir or malformed file yields empty states, never a build failure.
-const INTEL_DIR = process.env.OHMEGA_INTEL_DIR || path.join(process.cwd(), "content", "intel");
-const ACTORS_DIR = path.join(INTEL_DIR, "actors");
+// the documents actors/<ISO2>.json (ohmega.actor/1) plus index.json, read through lib/store.ts (Supabase,
+// content files as the fallback). Parsed defensively: a missing document or malformed file yields empty
+// states, never a build failure.
 const ISO_RE = /^[A-Z]{2}$/;
 
 export type Unit = "people" | "usd" | "pct" | "twh" | "kwh" | "km2" | "persons" | "months" | "number";
@@ -43,14 +40,6 @@ const str = (v: unknown): string => (typeof v === "string" ? v : typeof v === "n
 const num = (v: unknown): number | null => (typeof v === "number" && Number.isFinite(v) ? v : null);
 const arr = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
 const objs = (v: unknown): Obj[] => arr(v).filter(isObj);
-
-function readJson(file: string): unknown {
-  try {
-    return JSON.parse(fs.readFileSync(file, "utf8"));
-  } catch {
-    return null;
-  }
-}
 
 function field(r: Obj): Field | null {
   const value = num(r.value);
@@ -109,25 +98,22 @@ function parseActor(raw: unknown): Actor | null {
   };
 }
 
-export function actorIds(): string[] {
-  try {
-    return fs.readdirSync(ACTORS_DIR).filter((f) => /^[A-Z]{2}\.json$/.test(f)).map((f) => f.slice(0, 2)).sort();
-  } catch {
-    return [];
-  }
+export async function actorIds(): Promise<string[]> {
+  return (await intelNames("actors")).filter((f) => /^[A-Z]{2}\.json$/.test(f)).map((f) => f.slice(0, 2)).sort();
 }
 
-export function actor(iso2: string): Actor | null {
-  return ISO_RE.test(iso2) ? parseActor(readJson(path.join(ACTORS_DIR, `${iso2}.json`))) : null;
+export async function actor(iso2: string): Promise<Actor | null> {
+  return ISO_RE.test(iso2) ? parseActor(await intelDoc(`actors/${iso2}.json`)) : null;
 }
 
-export function allActors(): Actor[] {
-  return actorIds().map(actor).filter((a): a is Actor => a !== null);
+export async function allActors(): Promise<Actor[]> {
+  const all = await Promise.all((await actorIds()).map(actor));
+  return all.filter((a): a is Actor => a !== null);
 }
 
 /** The published actors a theater involves, most mentioned first. */
-export function actorsForTheater(theaterId: string): Actor[] {
-  return allActors()
+export async function actorsForTheater(theaterId: string): Promise<Actor[]> {
+  return (await allActors())
     .map((a) => ({ a, n: a.involved.theaters.find((t) => t.id === theaterId)?.mentions ?? 0 }))
     .filter((x) => x.n > 0)
     .sort((x, y) => y.n - x.n || x.a.name.localeCompare(y.a.name))

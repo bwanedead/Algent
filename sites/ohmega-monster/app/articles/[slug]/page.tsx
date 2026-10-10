@@ -1,6 +1,3 @@
-import fs from "node:fs";
-import path from "node:path";
-
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -9,8 +6,10 @@ import FlagRow from "@/components/FlagRow";
 import Prose from "@/components/Prose";
 import ShareButton from "@/components/ShareButton";
 import { getArticle, getSlugs } from "@/lib/articles";
+import { absoluteAssetUrl, assetUrl } from "@/lib/assets";
 import { AI_IMAGE_LABEL, isGeneratedImage, pageHasGeneratedImages } from "@/lib/generated";
 import { SITE_URL } from "@/lib/site";
+import { intelDoc } from "@/lib/store";
 
 export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS; new articles render on demand, no redeploy
 
@@ -44,13 +43,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   if (!a) return {};
   const url = `${SITE_URL}/articles/${a.slug}`;
   // The machine-readable twin (graded claims + sources) for agents — see public/llms.txt.
-  const twin = path.join(process.cwd(), "public", "data", "articles", `${a.slug}.json`);
+  const hasTwin = (await intelDoc(`data/articles/${a.slug}.json`)) !== null;
   return {
     title: a.title, // layout template appends " · Ohmega Monster"
     description: a.dek,
     alternates: {
       canonical: url,
-      ...(fs.existsSync(twin)
+      ...(hasTwin
         ? { types: { "application/json": `${SITE_URL}/data/articles/${a.slug}.json` } }
         : {}),
     },
@@ -60,13 +59,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       title: a.title,
       description: a.dek,
       ...(a.date ? { publishedTime: a.date } : {}),
-      ...(a.hero ? { images: [`${SITE_URL}${a.hero}`] } : {}),
+      ...(a.hero ? { images: [absoluteAssetUrl(a.hero, SITE_URL)] } : {}),
     },
     twitter: {
       card: "summary_large_image",
       title: a.title,
       description: a.dek,
-      ...(a.hero ? { images: [`${SITE_URL}${a.hero}`] } : {}),
+      ...(a.hero ? { images: [absoluteAssetUrl(a.hero, SITE_URL)] } : {}),
     },
   };
 }
@@ -141,14 +140,14 @@ export default async function ArticlePage({ params }: { params: { slug: string }
           {/* Hook text is already burned into the generated image by the hero stage —
               do not overlay it again (that double-captions every hooked hero). heroHook
               stays in frontmatter for feeds/index consumers that want the plain string. */}
-          <img src={a.hero} alt={a.heroAlt} />
+          <img src={assetUrl(a.hero)} alt={a.heroAlt} />
           {/* The label is not optional furniture: a picture beside a news story is a lie
               unless it says what it is. */}
           <figcaption className="ai-label">{a.heroLabel || AI_IMAGE_LABEL}</figcaption>
         </figure>
       ) : a.hero ? (
         <figure className="article-hero">
-          <img src={a.hero} alt={a.heroAlt} />
+          <img src={assetUrl(a.hero)} alt={a.heroAlt} />
           {/* A real photograph says who took it, under which licence, and where it lives. */}
           <figcaption className="photo-credit">
             {a.heroCredit || "Photo"}

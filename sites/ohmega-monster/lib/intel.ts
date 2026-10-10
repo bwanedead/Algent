@@ -1,12 +1,9 @@
-import fs from "node:fs";
-import path from "node:path";
-
 import { parseOnRecord, type OnRecord } from "./record-model";
+import { intelDoc, intelSlugs } from "./store";
 
-// The Intelligence desk's data is written by the backend as JSON into the content dir and read at
-// build time. Everything is parsed defensively: a missing/empty dir yields empty states, never a
-// build failure.
-const INTEL_DIR = process.env.OHMEGA_INTEL_DIR || path.join(process.cwd(), "content", "intel");
+// The Intelligence desk's data is written by the backend as JSON documents (Supabase, with the content
+// files as the transitional fallback — lib/store.ts). Everything is parsed defensively: a missing document
+// yields empty states, never a build failure.
 
 export type Band = "calm" | "elevated" | "severe" | "critical" | "unassessed";
 export type Confidence = "high" | "medium" | "low" | "";
@@ -135,26 +132,6 @@ export function safeUrl(u: string): string | null {
     return p.protocol === "http:" || p.protocol === "https:" ? p.href : null;
   } catch {
     return null;
-  }
-}
-
-function readJson(file: string): unknown {
-  try {
-    return JSON.parse(fs.readFileSync(file, "utf8"));
-  } catch {
-    return null;
-  }
-}
-
-function jsonSlugs(sub: string): string[] {
-  try {
-    return fs
-      .readdirSync(path.join(INTEL_DIR, sub))
-      .filter((f) => f.endsWith(".json"))
-      .map((f) => f.slice(0, -5))
-      .sort();
-  } catch {
-    return [];
   }
 }
 
@@ -402,22 +379,24 @@ function parseBrief(raw: unknown, slug: string): Brief | null {
 }
 
 // ---- public readers -------------------------------------------------------------------------
-export function latestSnapshot(): Snapshot | null {
-  const slugs = jsonSlugs("snapshots");
+export async function latestSnapshot(): Promise<Snapshot | null> {
+  const slugs = await intelSlugs("snapshots");
   for (let i = slugs.length - 1; i >= 0; i--) {
-    const snap = parseSnapshot(readJson(path.join(INTEL_DIR, "snapshots", `${slugs[i]}.json`)), slugs[i]);
+    const snap = parseSnapshot(await intelDoc(`snapshots/${slugs[i]}.json`), slugs[i]);
     if (snap) return snap;
   }
   return null;
 }
 
-export function allBriefSlugs(): string[] {
-  return jsonSlugs("briefs").filter((s) => /^[\w.-]+$/.test(s) && brief(s) !== null);
+export async function allBriefSlugs(): Promise<string[]> {
+  const slugs = (await intelSlugs("briefs")).filter((s) => /^[\w.-]+$/.test(s));
+  const parsed = await Promise.all(slugs.map((s) => brief(s)));
+  return slugs.filter((_, i) => parsed[i] !== null);
 }
 
-export function brief(slug: string): Brief | null {
+export async function brief(slug: string): Promise<Brief | null> {
   if (!/^[\w.-]+$/.test(slug)) return null;
-  return parseBrief(readJson(path.join(INTEL_DIR, "briefs", `${slug}.json`)), slug);
+  return parseBrief(await intelDoc(`briefs/${slug}.json`), slug);
 }
 
 // ---- small shared presentation helpers ------------------------------------------------------

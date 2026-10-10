@@ -1,14 +1,12 @@
 // Data layer for the Situation Room (/intel) and the home teaser. Server-only: it reads the latest
-// snapshot (via lib/intel) and the agent feeds in public/data (changes.json, forecasts.json) at
-// build time, defensively — a missing or malformed feed yields an empty section, never a failure.
+// snapshot (via lib/intel) and the agent feeds (data/changes.json, data/forecasts.json) through
+// lib/store.ts, defensively — a missing or malformed feed yields an empty section, never a failure.
 //
-// Client components must only `import type` from here (this file imports node:fs).
-import fs from "node:fs";
-import path from "node:path";
-
+// Client components must only `import type` from here (this file imports the server-only store).
 import { bandAt } from "./band";
 import { fmtUtc, latestSnapshot, type Band, type Coverage, type Outcome, type Snapshot } from "./intel";
 import { PERIODS, toWallPulse, type Period, type WallPulse } from "./pulse-wall";
+import { intelDoc } from "./store";
 
 // ---- defensive coercion ---------------------------------------------------------------------
 type Obj = Record<string, unknown>;
@@ -19,14 +17,6 @@ const arr = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
 const SLUG = /^[\w.-]+$/;
 const DAY = 86_400_000;
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-function readFeed(name: string): unknown {
-  try {
-    return JSON.parse(fs.readFileSync(path.join(process.cwd(), "public", "data", name), "utf8"));
-  } catch {
-    return null;
-  }
-}
 
 const ms = (iso: string): number => {
   const t = Date.parse(iso);
@@ -170,8 +160,7 @@ const briefUrl = (url: string, slug: string): string | null =>
   /^\/intel\/briefs\/[\w.-]+$/.test(url) ? url : SLUG.test(slug) ? `/intel/briefs/${slug}` : null;
 const dated = (h: string): number | null => (/^\d{4}-\d{2}-\d{2}/.test(h) && Number.isFinite(ms(h)) ? ms(h) : null);
 
-function openForecasts(snap: Snapshot): ForecastPin[] {
-  const feed = readFeed("forecasts.json");
+function openForecasts(snap: Snapshot, feed: unknown): ForecastPin[] {
   const fromFeed: ForecastPin[] = isObj(feed)
     ? arr(feed.forecasts)
         .filter(isObj)
@@ -297,12 +286,11 @@ const firstSentence = (s: string, max = 150): string => {
   return one.length > max ? `${one.slice(0, max - 1).trimEnd()}…` : one;
 };
 
-function changes(snap: Snapshot): { news: ChangeItem[]; times: string[] } {
+function changes(snap: Snapshot, feed: unknown): { news: ChangeItem[]; times: string[] } {
   const bl = new Map(snap.briefs.map((b) => [b.slug, b.bottom_line]));
   const items: ChangeItem[] = [];
   const times: string[] = [];
   const created = new Map<string, { at: string; pulses: { id: string; name: string; position: number | null; band: Band }[] }>();
-  const feed = readFeed("changes.json");
   const events = isObj(feed) ? arr(feed.events).filter(isObj) : [];
 
   for (const e of events) {
@@ -384,9 +372,10 @@ export type SituationRoom = {
   changeTimes: string[];
 };
 
-export function situationRoom(): SituationRoom | null {
-  const snap = latestSnapshot();
+export async function situationRoom(): Promise<SituationRoom | null> {
+  const snap = await latestSnapshot();
   if (!snap) return null;
+  const [forecastsFeed, changesFeed] = await Promise.all([intelDoc("data/forecasts.json"), intelDoc("data/changes.json")]);
   const pulses = snap.situations.flatMap((s) => s.pulses.map((p) => toWallPulse(p, s.title)));
   let asOfMs = ms(snap.built_at);
   if (!Number.isFinite(asOfMs)) {
@@ -395,12 +384,12 @@ export function situationRoom(): SituationRoom | null {
     if (!Number.isFinite(asOfMs)) asOfMs = Date.now();
   }
   const moves = Object.fromEntries(PERIODS.map((p) => [p, movesView(pulses, p, asOfMs, 5)])) as MovesByPeriod;
-  const { news, times } = changes(snap);
+  const { news, times } = changes(snap, changesFeed);
   return {
     asOfLabel: snap.built_at ? fmtUtc(snap.built_at) : "—",
     moves,
     coverage: coverageView(snap),
-    forecasts: { open: openForecasts(snap), resolved: resolvedForecasts(snap), scorecard: snap.forecasts.scorecard, asOfMs },
+    forecasts: { open: openForecasts(snap, forecastsFeed), resolved: resolvedForecasts(snap), scorecard: snap.forecasts.scorecard, asOfMs },
     news,
     changeTimes: times,
   };

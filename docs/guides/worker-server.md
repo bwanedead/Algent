@@ -31,6 +31,15 @@ ssh -i ~/.ssh/ohmega_ops ohmega@146.190.243.152 'cd ~/Algent/backend && .venv/bi
 
 Logs: `journalctl -u ohmega-<job> -n 50`; timers: `systemctl list-timers 'ohmega-*'`.
 
+## Readiness and who runs
+
+- `newsroom doctor` (run on the server over SSH) checks keys by name, database, SearXNG, the free engines, page
+  reads, chart harnesses, the publish path, disk/memory and paid quota; it spends nothing. Run it after any
+  rebuild or key change.
+- The server is not a dependency: `newsroom runner status|claim|release` records which machine runs paid work
+  and publishes, and the laptop can take over. Procedure: `docs/guides/runner-handover.md`.
+- `newsroom search-usage` shows how search is doing (who answers, free vs paid, failures).
+
 ## Source of truth for data
 
 Once runs happen on the server, **its stores are the live ones**; the laptop stops running jobs so the two
@@ -39,9 +48,12 @@ Supabase (next step) becomes the working database.
 
 ## Access it holds
 
-- Two GitHub deploy keys, one per repo: `Algent` (write: publish to `site-live` until the site reads from the
-  database, then read-only; once Vercel has `NEXT_PUBLIC_SUPABASE_*` set and the site serves from Supabase
-  — `docs/architecture/published-content.md` — switch it to read-only, keeping a write path only for assets) and `algent-data` (write: backups). Revoke under each repo → Settings → Deploy keys.
+- Two GitHub deploy keys, one per repo: `Algent` (write while `SITE_PUBLISH_VIA = "git"`: publish to `site-live`;
+  **after the cut-over to `"db"` (`docs/architecture/published-content.md`) it can become read-only**: a publish is
+  then database rows plus Storage uploads and never pushes; keep read access for `git pull`) and `algent-data`
+  (write: backups). Revoke or downgrade under each repo → Settings → Deploy keys.
+- In db mode the worker env also needs `DATABASE_URL`, `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` (see
+  `docs/credentials.md`). The `.site-live/` directory stays as a local staging area; no git runs against it.
 - Secrets: `~/algent.env` (chmod 600), copied from the laptop by `scp`, linked as `backend/.env`. Key names and
   purposes: `docs/credentials.md` (manifest).
 - Still to log in on the server (operator, interactive): the chart harnesses `grok-build` and `codex`.
@@ -54,3 +66,4 @@ Supabase (next step) becomes the working database.
 4. `scp` the `.env` to `~/algent.env`; `infra/server/app_setup.sh`; `infra/server/searxng/deploy.sh ohmega@HOST`.
 5. Restore the stores: `python -c "from algent_backend.data_backup import sync; print(sync.restore())"`.
 6. `infra/server/install_schedules.sh`.
+7. `newsroom runner claim`, then `newsroom doctor`.

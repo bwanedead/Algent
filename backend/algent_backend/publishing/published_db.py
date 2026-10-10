@@ -1,9 +1,9 @@
 """
 Publish-to-database — the live path to the site (docs/architecture/published-content.md).
 
-The publishers still write files (TRANSITIONAL: the files are the site's fallback reader and the
-`site-live` commit is how assets ship; retire the file path once the site has read Supabase in
-production for a full week and assets live in object storage). Alongside them, this module upserts the
+The publishers still write files (TRANSITIONAL: the files are the site's fallback reader; with
+``flags.SITE_PUBLISH_VIA = "git"`` the `site-live` commit still ships them, with ``"db"`` there is no commit and
+the rows + Storage assets are the whole publish; retire the file path after the cut-over week). Alongside them, this module upserts the
 same content into ``published_articles`` / ``published_intel_documents`` so the site shows it within
 its revalidation window with no redeploy.
 
@@ -111,13 +111,26 @@ def publish_documents(docs: dict[str, dict], *, connect: Callable[[], Any] | Non
     return _run(work, connect)
 
 
+def _json_tree(folder, prefix: str) -> dict[str, dict]:
+    """Every ``*.json`` under ``folder`` as ``{prefix + relative path: parsed}`` (unreadable files are skipped)."""
+    out: dict[str, dict] = {}
+    for p in sorted(folder.rglob("*.json")) if folder.is_dir() else []:
+        try:
+            out[prefix + p.relative_to(folder).as_posix()] = json.loads(p.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+    return out
+
+
 def backfill(site_dir) -> dict[str, Any]:
-    """One-off: push the site's existing content files (articles + intel JSON) into the tables."""
+    """One-off: push the site's existing content files into the tables. Document paths: desk files keep their path
+    under ``content/intel`` (``daily/…``), radar editions are ``radar/<slug>.json``, and the agent feeds under
+    ``public/data`` are ``data/<rel>`` (``data/index.json``, ``data/articles/<slug>.json``, …)."""
     from pathlib import Path
 
     site = Path(site_dir)
-    intel = site / "content" / "intel"
-    docs = {p.relative_to(intel).as_posix(): json.loads(p.read_text(encoding="utf-8")) for p in sorted(intel.rglob("*.json"))}
+    docs = {**_json_tree(site / "content" / "intel", ""), **_json_tree(site / "content" / "radar", "radar/"),
+            **_json_tree(site / "public" / "data", "data/")}
     out: dict[str, Any] = {"documents": publish_documents(docs)}
     for md in sorted((site / "content" / "articles").glob("*.md")):
         text = md.read_text(encoding="utf-8")

@@ -16,9 +16,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
   const intel = [
     { url: `${SITE_URL}/intel`, lastModified: new Date() },
-    ...allBriefSlugs().map((slug) => ({ url: `${SITE_URL}/intel/briefs/${slug}` })),
+    ...(await allBriefSlugs()).map((slug) => ({ url: `${SITE_URL}/intel/briefs/${slug}` })),
     { url: `${SITE_URL}/intel/theaters`, lastModified: new Date() },
-    ...dossierIds().map((id) => ({ url: `${SITE_URL}/intel/theaters/${id}`, lastModified: new Date() })),
+    ...(await dossierIds()).map((id) => ({ url: `${SITE_URL}/intel/theaters/${id}`, lastModified: new Date() })),
     { url: `${SITE_URL}/pulses`, lastModified: new Date() },
     { url: `${SITE_URL}/geopolitics`, lastModified: new Date() },
     ...(await allDailyDates("geopolitics")).map((d) => ({ url: `${SITE_URL}/geopolitics/${d}`, lastModified: d })),

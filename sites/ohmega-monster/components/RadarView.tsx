@@ -3,8 +3,8 @@ import Link from "next/link";
 import { getMenus, hostOf, menuLabel, type RadarMenu } from "@/lib/radar";
 
 // One menu, plus the way through the archive. Shared by /radar (newest) and /radar/[slug].
-export default function RadarView({ menu }: { menu: RadarMenu }) {
-  const all = getMenus();
+export default async function RadarView({ menu }: { menu: RadarMenu }) {
+  const all = await getMenus();
   const i = all.findIndex((m) => m.slug === menu.slug);
   const newer = i > 0 ? all[i - 1] : null;
   const older = i >= 0 && i < all.length - 1 ? all[i + 1] : null;

@@ -11,8 +11,8 @@ import { SituationSince, SituationVisitProvider } from "./SituationVisit";
 // shared 0–100 axis, plus how many changes are new since the reader's last visit (read-only: only
 // /intel records a visit). Falls back to the 30-day moves when the week is quiet.
 // Renders nothing until there is data to show.
-export default function IntelCard() {
-  const room = situationRoom();
+export default async function IntelCard() {
+  const room = await situationRoom();
   if (!room) return null;
   const top = room.moves["7d"].top.length > 0 ? room.moves["7d"].top : room.moves["30d"].top;
   const shown = top.slice(0, 3).map((m) => ({ id: m.pulse.id, name: m.pulse.title, iso: m.pulse.actors_iso2, from: m.from, to: m.to, delta: m.delta }));

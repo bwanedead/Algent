@@ -55,7 +55,7 @@ function ContextList({ t }: { t: DailyTheater }) {
   );
 }
 
-export default function DailyTheaterSection({ t, id, date, snap, first = false }: { t: DailyTheater; id: string; date: string; snap: Snapshot | null; first?: boolean }) {
+export default function DailyTheaterSection({ t, id, date, snap, dossiers, first = false }: { t: DailyTheater; id: string; date: string; snap: Snapshot | null; dossiers: ReadonlySet<string>; first?: boolean }) {
   const dir = DIR[t.escalation.direction];
   const claim = claimOf(t.bottom_line, 150) || claimOf(t.since_yesterday[0]?.what ?? "", 150) || t.name;
   const changed = t.since_yesterday.filter((c) => c.kind !== "unchanged");
@@ -65,7 +65,7 @@ export default function DailyTheaterSection({ t, id, date, snap, first = false }
   const outlookCut = isCut(t.outlook, outlook) || t.watch_next.length > WATCH_SHOWN || t.watch_next.some((w, k) => isCut(w, watch[k]));
   const hasMap = t.map !== null;
   const hasFigs = t.key_figures.length > 0;
-  const dossierHref = dossierPath(t.theater_id);
+  const dossierHref = dossierPath(t.theater_id, dossiers);
 
   return (
     <section id={id} className="geo-theater" aria-labelledby={`${id}-claim`}>

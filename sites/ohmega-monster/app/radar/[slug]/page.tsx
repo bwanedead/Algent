@@ -4,17 +4,19 @@ import { notFound } from "next/navigation";
 import RadarView from "@/components/RadarView";
 import { getMenu, getMenus, menuLabel } from "@/lib/radar";
 
-export function generateStaticParams() {
-  return getMenus().map((m) => ({ slug: m.slug }));
+export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+
+export async function generateStaticParams() {
+  return (await getMenus()).map((m) => ({ slug: m.slug }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
-  const m = getMenu(params.slug);
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const m = await getMenu(params.slug);
   return m ? { title: `Headline radar — ${menuLabel(m)}` } : {};
 }
 
-export default function RadarMenuPage({ params }: { params: { slug: string } }) {
-  const m = getMenu(params.slug);
+export default async function RadarMenuPage({ params }: { params: { slug: string } }) {
+  const m = await getMenu(params.slug);
   if (!m) notFound();
   return <RadarView menu={m} />;
 }
