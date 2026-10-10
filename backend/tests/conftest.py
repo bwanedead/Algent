@@ -42,6 +42,15 @@ def _no_real_browser(monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _no_live_search_backends(tmp_path, monkeypatch):
+    """web_search reads our source library first and asks our own SearXNG: tests must see neither the real
+    library on disk nor a live SearXNG (a laptop tunnel would answer). An empty library and an unroutable
+    SearXNG make every chain start exactly where each test's fakes expect."""
+    monkeypatch.setenv("ALGENT_LIBRARY_STORE", str(tmp_path / "library_iso"))
+    monkeypatch.setenv("ALGENT_SEARXNG_URL", "http://127.0.0.1:9")
+
+
+@pytest.fixture(autouse=True)
 def _no_live_sensing_refresh(monkeypatch):
     """The daily's sensing refresh crawls the library, fetches every instrument and collects + extracts
     statements: real network and model calls. Two CLI tests built args without no_refresh and ran it for 27

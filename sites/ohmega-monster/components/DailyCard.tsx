@@ -7,8 +7,8 @@ import DailyGlance from "./DailyGlance";
 
 // Home-page teaser for a daily report: the headline, then the same small-multiples rows as the
 // report's first screen (compact). Renders nothing until a report exists.
-export default function DailyCard({ domain, title, href }: { domain: string; title: string; href: string }) {
-  const report = latestDaily(domain);
+export default async function DailyCard({ domain, title, href }: { domain: string; title: string; href: string }) {
+  const report = await latestDaily(domain);
   if (!report || !report.headline) return null;
   return (
     <aside className="intel-card geo-card" aria-label={`${title} daily report`}>

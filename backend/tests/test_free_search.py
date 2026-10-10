@@ -139,9 +139,9 @@ def test_gnews_resolution_failure_keeps_headline(monkeypatch) -> None:
 # -- facade wiring ------------------------------------------------------------------------------
 
 def test_chains() -> None:
-    assert research._provider_chain("keyword") == ["ddg", "tavily", "brave", "exa", "bing", "muse"]
-    sem = research._provider_chain("semantic")
-    assert sem[:2] == ["exa", "ddg"] and sem[-2:] == ["bing", "muse"]
+    # (SearXNG is filtered out by this file's fixture; it leads every chain — see test_search_searxng_quota.py)
+    assert research._provider_chain("keyword") == ["ddg", "bing", "tavily", "brave", "exa", "muse"]
+    assert research._provider_chain("semantic") == ["exa", "ddg", "bing", "brave", "tavily", "muse"]
     assert research._provider_chain("news") == ["gnews", "ddg"]
 
 
@@ -196,8 +196,8 @@ def test_paid_fallback_is_still_metered(monkeypatch) -> None:
     monkeypatch.setattr(cost, "settle", lambda *a, **k: None)
 
     def invoke(p, q, n):
-        if p == "ddg":
-            raise RuntimeError("duckduckgo rate limit")
+        if p in ("ddg", "bing"):                 # every free engine down: only then is a paid one reached
+            raise RuntimeError(f"{p} rate limit")
         return [{"title": "t", "url": "u"}]
 
     monkeypatch.setattr(research, "_invoke_provider", invoke)
@@ -358,3 +358,14 @@ def test_gnews_decode_failure_falls_back_to_title_then_bing(monkeypatch) -> None
     items = gnews.search("houthi")
     assert items[0]["resolved"] is True and items[0]["url"].endswith("/found")
     assert circuit.is_open("ddg")
+
+
+@pytest.fixture(autouse=True)
+def _chain_without_searxng(monkeypatch):
+    """These tests pin fallback MECHANICS on the engines they fake; our own SearXNG (first in every chain since
+    10-09, and unreachable in tests) is taken out so each chain starts where the test expects. The new order
+    itself is asserted in test_search_searxng_quota.py."""
+    from algent_backend.agent_system.tools.sourcing.search import research as _r
+
+    real = _r._provider_chain
+    monkeypatch.setattr(_r, "_provider_chain", lambda kind: [p for p in real(kind) if not p.startswith("searxng")])

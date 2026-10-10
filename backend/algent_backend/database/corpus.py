@@ -32,6 +32,18 @@ def _rows(store: Any) -> list[tuple[dict, list[dict]]]:
     return out
 
 
+def _jsonb(doc: dict) -> str:
+    """JSON text Postgres JSONB accepts. It rejects the NUL character (\u0000), which scraped page text
+    sometimes carries; it holds no meaning, so it is dropped here, at the database edge. The profile files keep
+    their exact bytes."""
+    return json.dumps(doc).replace("\\u0000", "")
+
+
+def _text(value: Any) -> str:
+    """A Postgres text value: same rule as ``_jsonb`` — text columns reject NUL too."""
+    return str(value or "").replace("\x00", "")
+
+
 def load_profiles(conn: Any = None) -> dict:
     from algent_backend.agent_system.agents.research.store import JsonProfileStore
 
@@ -50,13 +62,13 @@ def load_profiles(conn: Any = None) -> dict:
                                  profile_status = excluded.profile_status, payload = excluded.payload,
                                  updated_at = now()
                                where research_profiles.revision < excluded.revision""",
-                            (current["id"], current.get("title") or "", int(current.get("revision") or 1),
-                             str(current.get("as_of") or ""), str(current.get("profile_status") or ""),
-                             current.get("generated_at") or None, json.dumps(current)))
+                            (current["id"], _text(current.get("title")), int(current.get("revision") or 1),
+                             _text(current.get("as_of")), _text(current.get("profile_status")),
+                             current.get("generated_at") or None, _jsonb(current)))
                 loaded += cur.rowcount
                 for doc in [*history, current]:
                     cur.execute("""insert into research_profile_revisions (profile_id, revision, payload)
                                    values (%s, %s, %s) on conflict do nothing""",
-                                (current["id"], int(doc.get("revision") or 1), json.dumps(doc)))
+                                (current["id"], int(doc.get("revision") or 1), _jsonb(doc)))
                     revisions += cur.rowcount
     return {"profiles_written": loaded, "revisions_added": revisions}

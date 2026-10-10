@@ -9,8 +9,10 @@ import { getAllMeta } from "@/lib/articles";
 import { SITE_URL } from "@/lib/site";
 
 // The hub: a dense, wiki/terminal-style index of pieces, newest first.
-export default function Home() {
-  const articles = getAllMeta();
+export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+
+export default async function Home() {
+  const articles = await getAllMeta();
   return (
     <section className="index-page" aria-label="Reports">
       <RadarCard />

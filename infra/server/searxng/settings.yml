@@ -1,0 +1,29 @@
+# SearXNG settings for Ohmega: SearXNG's defaults plus what a private, machine-facing instance needs.
+# The secret comes from the SEARXNG_SECRET env var (generated on the server by deploy.sh, never in git).
+use_default_settings: true
+
+general:
+  instance_name: "ohmega-search"
+
+search:
+  # JSON is what the pipeline reads; HTML stays for a human checking through the SSH tunnel.
+  formats: [html, json]
+  default_lang: "en-US"
+  safe_search: 0
+  autocomplete: ""
+
+server:
+  # Private and localhost-only: the public-instance bot limiter would only throttle our own pipeline.
+  limiter: false
+  image_proxy: false
+  public_instance: false
+
+valkey:
+  url: valkey://valkey:6379/0
+
+outgoing:
+  # Engines answer at different speeds; a research query should not hang on the slowest one.
+  request_timeout: 4.0
+  max_request_timeout: 8.0
+  pool_connections: 100
+  pool_maxsize: 20

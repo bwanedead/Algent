@@ -23,5 +23,7 @@ def add_parser(sub: Any) -> None:
 
 
 def run_reads(args: Any) -> int:
-    print(json.dumps(read_ledger.summarise(args.days), indent=2))
+    from algent_backend.agent_system.tools.sourcing.search import quota
+
+    print(json.dumps({**read_ledger.summarise(args.days), "paid_this_month": quota.summary()}, indent=2))
     return 0

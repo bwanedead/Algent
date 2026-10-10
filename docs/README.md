@@ -44,6 +44,7 @@ Docs sprawl is a real failure mode. To prevent it:
 - `run-control-plane.md` – run directory contract, runs CLI, observability weave.
 - `map-analytics-stack.md` – accurate country-scale map figures for the newsroom analytics path.
 - `pulse-system.md` – Ohmega Pulse: situations, anchored Pulses, append-only influences, watches, storage.
+- `published-content.md` – publishing as a database write: `published_*` tables, anon-read RLS, the site's Supabase reader with file fallback.
 - `instruments.md` – the numbers layer: free programmatic series (chokepoint transits, energy, rates, FX…), append-only store, moves vs each series' own history, evidence API.
 - `statements.md` – the record of who said what: primary transcripts (Kremlin, White House, State, FCDO, No 10, EC, China MFA), quote-validated extraction, append-only ledger, recall API.
 - `library.md` – Ohmega's own source library: curated trusted sources crawled politely into a local FTS5 index; ranked search that answers first in web_search.
@@ -52,6 +53,7 @@ Docs sprawl is a real failure mode. To prevent it:
 
 ### Guides — `guides/`
 - `run-operator-entrypoint.md` – **start here** to operate runs; short hub that routes to the rest.
+- `worker-server.md` – the always-on server: what runs where (free jobs on timers, paid runs on request), how to trigger a run over SSH, access it holds, rebuild from nothing.
 - `agent-cli-testing.md` – **canonical CLI guide**: full `runs` command/flag set, newsroom rail,
   post-t0 `--from-run`, promotion cooldown, watch/stop, cost rails, run layout.
 - `ohmega-research.md` – Ohmega Research CLI: validate trial JSONL, build the offline report, synthetic demo, reproducible METR source audit (`audit-metr`); record schema and denominator policy.

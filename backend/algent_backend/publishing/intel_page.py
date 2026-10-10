@@ -185,7 +185,7 @@ from algent_backend.agent_system.agents.intel import dossier_store, forecasts, o
 from algent_backend.agent_system.agents.intel.brief import safe_name
 from algent_backend.agent_system.agents.intel.contracts import coverage_label
 
-from . import actors_feed, agent_feed, site_git
+from . import actors_feed, agent_feed, published_db, site_git
 from .agent_feed import reader_safe  # noqa: F401  (re-exported: the contract owner's public helper)
 
 INTEL_SUBDIR = ("content", "intel")
@@ -378,26 +378,33 @@ def write_intel(site_dir: Path, snapshot: dict, intel_dir: Path, store: Any = No
     changed), plus the agent feed (``build_agent_files``) under ``public/data``; Pulse files and the changes
     feed need the Pulse store."""
     root = site_dir.joinpath(*INTEL_SUBDIR)
+    docs: dict[str, dict] = {}        # rel path under the intel dir -> payload; also upserted to the database below
+
+    def put(rel: str, payload: dict) -> None:
+        _write_if_changed(root / rel, payload)
+        docs[rel] = payload
+
     path = root / "snapshots" / f"{snapshot['slug']}.json"
-    _write_if_changed(path, snapshot)
+    put(f"snapshots/{snapshot['slug']}.json", snapshot)
     for record in _read_all(intel_dir / "briefs"):
-        _write_if_changed(root / "briefs" / f"{record['slug']}.json", record)
+        put(f"briefs/{record['slug']}.json", record)
     for record in _daily_reports(intel_dir):
-        _write_if_changed(root / "daily" / safe_name(record["domain"]) / f"{record['date']}.json", record)
+        put(f"daily/{safe_name(record['domain'])}/{record['date']}.json", record)
     built = build_dossiers(intel_dir, store)
     if built is not None:
         for tid, record in built["theaters"].items():
-            _write_if_changed(root / "theaters" / f"{tid}.json", record)
-        _write_if_changed(root / "theaters" / "index.json", built["index"])
+            put(f"theaters/{tid}.json", record)
+        put("theaters/index.json", built["index"])
     data = site_dir / "public" / "data"
     files = build_agent_files(snapshot, intel_dir, store, built)
     for rel, payload in files.items():
         _write_if_changed(data / rel, payload)
     for rel, payload in actors_feed.build_actor_files(built).items():        # the actor pages' data (see actors_feed.py)
-        _write_if_changed(root / "actors" / rel, payload)
+        put(f"actors/{rel}", payload)
         _write_if_changed(data / "actors" / rel, payload)
     if "record.json" in files:                         # the site reads it at build time, like the other desk files
-        _write_if_changed(root / "record.json", files["record.json"])
+        put("record.json", files["record.json"])
+    published_db.publish_documents(docs)   # TRANSITIONAL: the files above are the fallback reader (published-content.md)
     return path
 
 

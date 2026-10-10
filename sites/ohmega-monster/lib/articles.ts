@@ -1,11 +1,9 @@
-import fs from "node:fs";
-import path from "node:path";
-
 import matter from "gray-matter";
 
-// Articles are plain markdown files with frontmatter, dropped here by the publish pipeline.
-// Content-as-files keeps publishing git-driven: approve -> write file -> push -> deploy.
-const ARTICLES_DIR = path.join(process.cwd(), "content", "articles");
+import { articleSource, articleSources } from "./store";
+
+// Articles are markdown with frontmatter, written by the publish pipeline. They are read from Supabase
+// (published_articles.markdown) or, as the transitional fallback, content/articles/*.md — see lib/store.ts.
 
 // The transparency appendix ("the receipts") begins at this heading in the article body. We split
 // it out so the page can render it as a collapsible, skippable section.
@@ -49,28 +47,23 @@ export type Article = ArticleMeta & {
   receipts: string | null;
 };
 
-function readDir(): string[] {
-  if (!fs.existsSync(ARTICLES_DIR)) return [];
-  return fs.readdirSync(ARTICLES_DIR).filter((f) => f.endsWith(".md"));
-}
-
-export function getAllMeta(): ArticleMeta[] {
-  return readDir()
-    .map((file) => toMeta(file, matter(fs.readFileSync(path.join(ARTICLES_DIR, file), "utf8")).data))
+export async function getAllMeta(): Promise<ArticleMeta[]> {
+  return (await articleSources())
+    .map((a) => toMeta(`${a.slug}.md`, matter(a.markdown).data))
     // Newest first, on the full publish timestamp — `date` is day-granular, so sorting on it left
     // same-day pieces (routine for a newsroom) in arbitrary order. Falls back to `date` for older
     // articles written before published_at existed.
     .sort((a, b) => (b.published_at || b.date).localeCompare(a.published_at || a.date));
 }
 
-export function getSlugs(): string[] {
-  return readDir().map((f) => f.replace(/\.md$/, ""));
+export async function getSlugs(): Promise<string[]> {
+  return (await articleSources()).map((a) => a.slug);
 }
 
-export function getArticle(slug: string): Article | null {
-  const file = path.join(ARTICLES_DIR, `${slug}.md`);
-  if (!fs.existsSync(file)) return null;
-  const { data, content } = matter(fs.readFileSync(file, "utf8"));
+export async function getArticle(slug: string): Promise<Article | null> {
+  const src = await articleSource(slug);
+  if (!src) return null;
+  const { data, content } = matter(src.markdown);
   const idx = content.indexOf(RECEIPTS_HEADING);
   const body = (idx >= 0 ? content.slice(0, idx) : content).replace(/^---\s*$/gm, "").trim();
   // The heading is the split marker (a machine contract), not reader copy — the disclosure's own

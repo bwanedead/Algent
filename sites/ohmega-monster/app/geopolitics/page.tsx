@@ -12,8 +12,10 @@ export const metadata: Metadata = {
   alternates: { canonical: BASE },
 };
 
-export default function GeopoliticsPage() {
-  const report = latestDaily(DOMAIN);
+export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
+
+export default async function GeopoliticsPage() {
+  const report = await latestDaily(DOMAIN);
   if (report) return <GeopoliticsDay report={report} />;
 
   return (

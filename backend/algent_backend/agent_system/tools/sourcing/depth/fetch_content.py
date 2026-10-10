@@ -321,6 +321,11 @@ def _merge_meta_into_content(content: str | None, meta: dict[str, str]) -> str |
 def _firecrawl_markdown(url: str, api_key: str) -> str | None:
     import httpx
 
+    from ..search import quota
+
+    if not quota.allow("firecrawl"):              # the month's cap is spent: the free rungs already tried
+        return None
+    quota.spend("firecrawl")
     response = httpx.post(
         _FIRECRAWL_ENDPOINT,
         json={"url": url, "formats": ["markdown"]},

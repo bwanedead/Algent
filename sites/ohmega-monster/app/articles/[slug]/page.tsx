@@ -12,8 +12,10 @@ import { getArticle, getSlugs } from "@/lib/articles";
 import { AI_IMAGE_LABEL, isGeneratedImage, pageHasGeneratedImages } from "@/lib/generated";
 import { SITE_URL } from "@/lib/site";
 
-export function generateStaticParams() {
-  return getSlugs().map((slug) => ({ slug }));
+export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS; new articles render on demand, no redeploy
+
+export async function generateStaticParams() {
+  return (await getSlugs()).map((slug) => ({ slug }));
 }
 
 // Soft-publish can ship a piece our editing checks were not satisfied with, and saying so is
@@ -37,8 +39,8 @@ function reviewNotice(status: string): string {
   );
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
-  const a = getArticle(params.slug);
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const a = await getArticle(params.slug);
   if (!a) return {};
   const url = `${SITE_URL}/articles/${a.slug}`;
   // The machine-readable twin (graded claims + sources) for agents — see public/llms.txt.
@@ -69,8 +71,8 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   };
 }
 
-export default function ArticlePage({ params }: { params: { slug: string } }) {
-  const a = getArticle(params.slug);
+export default async function ArticlePage({ params }: { params: { slug: string } }) {
+  const a = await getArticle(params.slug);
   if (!a) notFound();
   const qt = a.quickTake;
   const url = `${SITE_URL}/articles/${a.slug}`;

@@ -1,13 +1,10 @@
-import fs from "node:fs";
-import path from "node:path";
-
 import { parseOnRecord, type OnRecord } from "./record-model";
+import { intelDoc, intelNames } from "./store";
 import { parseCoverage, type Band, type Coverage, type Direction, type Pace, type Trend } from "./intel";
 
 // Daily reports are written by the backend to <intel dir>/daily/<domain>/<YYYY-MM-DD>.json and read
 // at build time. Parsed defensively: a missing dir or malformed file yields empty states, never a
 // build failure.
-const INTEL_DIR = process.env.OHMEGA_INTEL_DIR || path.join(process.cwd(), "content", "intel");
 
 export type DailyChangeKind = "escalated" | "eased" | "new" | "resolved" | "unchanged";
 export type DailyStatement = { who: string; role: string; said: string; quote: boolean; when: string; source: string };
@@ -158,14 +155,6 @@ const oneOf = <T extends string>(v: unknown, allowed: readonly T[], fallback: T)
 
 const DOMAIN_RE = /^[\w-]+$/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
-
-function readJson(file: string): unknown {
-  try {
-    return JSON.parse(fs.readFileSync(file, "utf8"));
-  } catch {
-    return null;
-  }
-}
 
 // ---- parsers --------------------------------------------------------------------------------
 /** Only plain SVG path data may reach a `d` attribute. */
@@ -444,28 +433,25 @@ function parseDaily(raw: unknown, domain: string, date: string): Daily | null {
 
 // ---- public readers -------------------------------------------------------------------------
 /** All dates with a daily report for the domain, newest first. */
-export function allDailyDates(domain: string): string[] {
+export async function allDailyDates(domain: string): Promise<string[]> {
   if (!DOMAIN_RE.test(domain)) return [];
-  try {
-    return fs
-      .readdirSync(path.join(INTEL_DIR, "daily", domain))
-      .filter((f) => f.endsWith(".json") && DATE_RE.test(f.slice(0, -5)))
-      .map((f) => f.slice(0, -5))
-      .filter((d) => daily(domain, d) !== null)
-      .sort()
-      .reverse();
-  } catch {
-    return [];
-  }
+  const dates = (await intelNames(`daily/${domain}`))
+    .filter((f) => f.endsWith(".json") && DATE_RE.test(f.slice(0, -5)))
+    .map((f) => f.slice(0, -5))
+    .sort()
+    .reverse();
+  // Each lookup below is a cached read, so validating every report stays cheap.
+  const parsed = await Promise.all(dates.map((d) => daily(domain, d)));
+  return dates.filter((_, i) => parsed[i] !== null);
 }
 
-export function daily(domain: string, date: string): Daily | null {
+export async function daily(domain: string, date: string): Promise<Daily | null> {
   if (!DOMAIN_RE.test(domain) || !DATE_RE.test(date)) return null;
-  return parseDaily(readJson(path.join(INTEL_DIR, "daily", domain, `${date}.json`)), domain, date);
+  return parseDaily(await intelDoc(`daily/${domain}/${date}.json`), domain, date);
 }
 
-export function latestDaily(domain: string): Daily | null {
-  const dates = allDailyDates(domain);
+export async function latestDaily(domain: string): Promise<Daily | null> {
+  const dates = await allDailyDates(domain);
   return dates.length > 0 ? daily(domain, dates[0]) : null;
 }
 
