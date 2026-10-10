@@ -1,6 +1,6 @@
 {
   "schema": "ohmega.pulses/1",
-  "built_at": "2026-10-09T12:16:25.453777+00:00",
+  "built_at": "2026-10-10T05:33:46.621585+00:00",
   "pulses": [
     {
       "id": "pls_ai_geopolitics_ai_safety_governance_fracture",
@@ -429,7 +429,7 @@
       "band": "severe",
       "confidence": "medium",
       "last_assessed": "2026-10-05T06:44:10.888856+00:00",
-      "evidence_through": "unknown - research header dated 'as of ?' with no claims",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {
@@ -466,7 +466,7 @@
       "band": "critical",
       "confidence": "medium",
       "last_assessed": "2026-10-05T06:44:10.888856+00:00",
-      "evidence_through": "unknown - research header dated 'as of ?' with no claims",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {
@@ -499,7 +499,7 @@
       "band": "severe",
       "confidence": "high",
       "last_assessed": "2026-10-05T06:44:10.888856+00:00",
-      "evidence_through": "unknown - research header dated 'as of ?' with no claims",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {
@@ -531,7 +531,7 @@
       "band": "severe",
       "confidence": "medium",
       "last_assessed": "2026-10-05T06:44:10.888856+00:00",
-      "evidence_through": "unknown - research header dated 'as of ?' with no claims",
+      "evidence_through": "2026-10-05",
       "velocity_7d": null,
       "history": [
         {
