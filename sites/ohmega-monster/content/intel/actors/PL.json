@@ -543,7 +543,41 @@
     "as_of": "2026-10-05",
     "nuclear": null
   },
-  "statements": [],
+  "statements": [
+    {
+      "id": "st_ceb42e1c0626",
+      "speaker": "Poland delegate",
+      "role": "Delegate to the UN",
+      "date": "2026-10-09",
+      "text": "Russia cannot bomb its way to a legitimate peace, nor can it secure its future by destroying Ukraine's",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://press.un.org/en/2026/sc16472.doc.htm"
+    },
+    {
+      "id": "st_274d79102156",
+      "speaker": "Representative of Poland",
+      "role": "Representative",
+      "date": "2026-10-08",
+      "text": "Said Poland continues to bear heavy consequences of Russia's ongoing war of aggression against Ukraine and that the security situation has only deteriorated.",
+      "is_quote": false,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://press.un.org/en/2026/gadis3765.doc.htm"
+    },
+    {
+      "id": "st_77a0c658496a",
+      "speaker": "Representative of Poland",
+      "role": "Representative",
+      "date": "2026-10-08",
+      "text": "Said Moscow's increasingly aggressive nuclear posture should be a matter of deep concern for the entire international community.",
+      "is_quote": false,
+      "signal": "warning",
+      "stance": -2,
+      "source_url": "https://press.un.org/en/2026/gadis3765.doc.htm"
+    }
+  ],
   "involved": {
     "theaters": [
       {
@@ -591,6 +625,13 @@
       {
         "id": "pls_russia_nato_diplomatic_rupture",
         "name": "Diplomatic Rupture",
+        "band": "severe",
+        "position": 62.0,
+        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      },
+      {
+        "id": "pls_energy_security_energy_price_and_market_shock",
+        "name": "Energy Price and Market Shock",
         "band": "severe",
         "position": 62.0,
         "theater_id": "thr_russia_ukraine_war_and_european_security_archite"

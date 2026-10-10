@@ -332,6 +332,61 @@
   },
   "statements": [
     {
+      "id": "st_54aaa85c254e",
+      "speaker": "Yemane Gebremeskel",
+      "role": "Information Minister",
+      "date": "2026-10-09",
+      "text": "an unprovoked war of aggression",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://www.france24.com/en/africa/20261009-eritrea-ethiopia-accuse-each-other-of-provoking-war-as-tigray-rebels-retreat"
+    },
+    {
+      "id": "st_7354a4bc6957",
+      "speaker": "Yemane Gebremeskel",
+      "role": "Information Minister",
+      "date": "2026-10-09",
+      "text": "Ethiopia's fixation on Red Sea access reflects prior intent to wage a war of invasion against Eritrea",
+      "is_quote": false,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://www.france24.com/en/africa/20261009-eritrea-ethiopia-accuse-each-other-of-provoking-war-as-tigray-rebels-retreat"
+    },
+    {
+      "id": "st_3f5670762684",
+      "speaker": "Yemane Meskel",
+      "role": "Minister of Information",
+      "date": "2026-10-09",
+      "text": "The sovereign state of Eritrea is bound by blood and law",
+      "is_quote": true,
+      "signal": "warning",
+      "stance": -2,
+      "source_url": "https://www.dw.com/en/eritrean-troops-in-ethiopia-raise-fears-of-a-regional-war/a-79615065?maca=en-rss-en-all-1573-rdf"
+    },
+    {
+      "id": "st_58f7137cb5e4",
+      "speaker": "Yemane Meskel",
+      "role": "Minister of Information",
+      "date": "2026-10-09",
+      "text": "Woe to those who touch it",
+      "is_quote": true,
+      "signal": "threat",
+      "stance": -2,
+      "source_url": "https://www.dw.com/en/eritrean-troops-in-ethiopia-raise-fears-of-a-regional-war/a-79615065?maca=en-rss-en-all-1573-rdf"
+    },
+    {
+      "id": "st_073e9e9a6aee",
+      "speaker": "Yemane Meskel",
+      "role": "Minister of Information",
+      "date": "2026-10-07",
+      "text": "incessantly beating the drums of war",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://www.dw.com/en/eritrean-troops-in-ethiopia-raise-fears-of-a-regional-war/a-79615065?maca=en-rss-en-all-1573-rdf"
+    },
+    {
       "id": "st_d06f3cf92b35",
       "speaker": "Eritrea",
       "role": "Government",

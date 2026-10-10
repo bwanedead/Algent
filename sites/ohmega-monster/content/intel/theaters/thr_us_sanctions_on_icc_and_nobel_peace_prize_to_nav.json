@@ -1,0 +1,212 @@
+{
+  "schema": "ohmega.dossier/1",
+  "theater_id": "thr_us_sanctions_on_icc_and_nobel_peace_prize_to_nav",
+  "name": "US sanctions on ICC and Nobel Peace Prize to Navi Pillay",
+  "domain": "geopolitics",
+  "built_at": "2026-10-10T06:43:57.575805+00:00",
+  "first_seen": "2026-10-09",
+  "last_seen": "2026-10-10",
+  "days_covered": 1,
+  "state": "new",
+  "last_novel": "2026-10-10",
+  "primer": {
+    "text": "The confrontation pits the United States against the International Criminal Court over the court's pursuit of cases involving allied leaders, including Netanyahu, whom Washington has sought to defend through sanctions on the court. The court and governments that support it defend its independence against that pressure. Former ICC judge Navi Pillay is a central figure in that justice system and a Nobel Peace Prize laureate, a standing that has drawn attacks from U.S. political figures including Trump and defense from abroad. In this context sanctions means penalties intended to constrain the court, while the Peace Prize is an international honor seen as validating the recipient's work.",
+    "built_at": "2026-10-10T06:43:57.575805+00:00"
+  },
+  "current": {
+    "date": "2026-10-10",
+    "bottom_line": "The 2026 Nobel Peace Prize to Navi Pillay on 9 Oct in Oslo is confirmed (nobelprize.org). That the US sanctioned the ICC hours apart, that sanctions aim to defend Netanyahu, and that Trump dismissed Pillay as a 'liberal' 'mystery person' are so far only reported by outlets (11 headlines in 3 days vs 0 before) and not yet verified by our research. The pairing has created a direct US-ICC confrontation with global pushback reported but not confirmed.",
+    "escalation": {
+      "direction": "rising",
+      "pace": "fast"
+    },
+    "coverage": "newly reported",
+    "source": "daily",
+    "url": "/geopolitics/2026-10-10"
+  },
+  "pulses": [
+    {
+      "id": "pls_israel_palestine_international_legal_and_diplomatic_pressure_on_israel",
+      "name": "International Legal and Diplomatic Pressure on Israel",
+      "situation": "Israel–Palestine and the wider region",
+      "position": 73.0,
+      "band": "severe",
+      "history": [
+        {
+          "at": "2026-10-01T08:09:19.809131+00:00",
+          "position": 68.0
+        },
+        {
+          "at": "2026-10-01T08:39:39.312641+00:00",
+          "position": 73.0
+        }
+      ]
+    }
+  ],
+  "escalation_history": [
+    {
+      "date": "2026-10-10",
+      "direction": "rising",
+      "pace": "fast"
+    }
+  ],
+  "coverage_series": [
+    {
+      "day": "2026-10-04",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-05",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-06",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-07",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-08",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-09",
+      "count": 7,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-10",
+      "count": 4,
+      "editions": 1
+    }
+  ],
+  "timeline": [
+    {
+      "date": "2026-10-10",
+      "headline": "Trump reported to attack Pillay; UN and rights groups reported to defend ICC",
+      "detail": "On 10 Oct outlets reported Trump called Pillay a 'liberal person... who nobody has ever heard of' and a 'mystery person' while lamenting his own Nobel snub. Separately on 9-10 Oct outlets reported the UN, member states and HRW criticized the US sanctions and warned they put global justice at risk.",
+      "where": "United States",
+      "verification": "reported",
+      "sources": [
+        "https://www.aa.com.tr/en/world/trump-attacks-nobel-peace-prize-winner-as-liberal-person-who-nobody-has-ever-heard-of-/4084156",
+        "https://www.middleeasteye.net/live-blog/live-blog-update/trump-calls-navi-pillay-mystery-person-laments-nobel-snub",
+        "https://news.cgtn.com/news/2026-10-10/news-1R7mNT6P2fK/p.html",
+        "https://www.hrw.org/news/2026/10/09/us-sanctions-on-icc-put-global-justice-at-risk"
+      ],
+      "from": "/geopolitics/2026-10-10"
+    },
+    {
+      "date": "2026-10-09",
+      "headline": "US sanctions on ICC reported hours from Nobel award",
+      "detail": "Multiple outlets on 9-10 Oct reported the US imposed sanctions on the ICC, with one reporting the move came hours after Pillay's Nobel win. One outlet reported Trump said sanctions were aimed at defending Netanyahu and others. All remain unverified by our research.",
+      "where": "United States",
+      "verification": "reported",
+      "sources": [
+        "https://en.mercopress.com/2026/10/09/us-sanctions-the-international-criminal-court-hours-after-a-former-judge-wins-the-nobel-peace-prize",
+        "https://www.atlanticcouncil.org/dispatches/the-us-just-sanctioned-the-international-criminal-court-whats-next/",
+        "https://news.cgtn.com/news/2026-10-10/news-1R7mNT6P2fK/p.html",
+        "https://www.hrw.org/news/2026/10/09/us-sanctions-on-icc-put-global-justice-at-risk",
+        "https://www.middleeasteye.net/live-blog/live-blog-update/trump-says-icc-sanctions-aimed-defending-netanyahu-and-others"
+      ],
+      "from": "/geopolitics/2026-10-10"
+    },
+    {
+      "date": "2026-10-09",
+      "headline": "Nobel Peace Prize awarded to Navi Pillay in Oslo",
+      "detail": "The Norwegian Nobel Committee awarded the 2026 Nobel Peace Prize to Navanethem \"Navi\" Pillay on 9 October 2026 in Oslo for her efforts to promote peace and international law.",
+      "where": "Oslo, Norway",
+      "verification": "researched",
+      "sources": [
+        "https://www.nobelprize.org/prizes/peace/2026/press-release/"
+      ],
+      "from": "/geopolitics/2026-10-10"
+    }
+  ],
+  "places": [],
+  "map": null,
+  "actors": [
+    {
+      "name": "Navi Pillay",
+      "mentions": 2,
+      "first": "2026-10-09",
+      "last": "2026-10-10"
+    },
+    {
+      "name": "Donald Trump",
+      "mentions": 1,
+      "first": "2026-10-10",
+      "last": "2026-10-10"
+    },
+    {
+      "name": "Human Rights Watch",
+      "mentions": 1,
+      "first": "2026-10-10",
+      "last": "2026-10-10"
+    },
+    {
+      "name": "International Criminal Court",
+      "mentions": 1,
+      "first": "2026-10-09",
+      "last": "2026-10-09"
+    },
+    {
+      "name": "Norwegian Nobel Committee",
+      "mentions": 1,
+      "first": "2026-10-09",
+      "last": "2026-10-09"
+    },
+    {
+      "name": "United Nations",
+      "mentions": 1,
+      "first": "2026-10-10",
+      "last": "2026-10-10"
+    },
+    {
+      "name": "United States",
+      "mentions": 1,
+      "first": "2026-10-09",
+      "last": "2026-10-09"
+    }
+  ],
+  "relations": [],
+  "figures": [],
+  "forecasts": [],
+  "indicators": [],
+  "statements": [],
+  "on_record": [],
+  "links": [
+    {
+      "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout",
+      "name": "Gaza war and UNGA diplomatic fallout",
+      "link": "US sanctions on ICC and Nobel Peace Prize to Navi Pillay ↔ Gaza war and UNGA diplomatic fallout: reported US ICC sanctions said to defend Netanyahu and confirmed Nobel award to Pillay coincide with researched assessments that Gaza's Oct 10 2025 ceasefire exists in name only, sharpening the accountability contest over continued killings",
+      "date": "2026-10-10"
+    },
+    {
+      "theater_id": "thr_russia_ukraine_war_and_european_security_archite",
+      "name": "Russia-Ukraine war and European security architecture",
+      "link": "Russia-Ukraine war and European security architecture ↔ US sanctions on ICC and Nobel Peace Prize to Navi Pillay: US-ICC friction spans both theaters as the ICC pursues Russian actions in Ukraine while reported US sanctions aim to block ICC action related to Netanyahu",
+      "date": "2026-10-10"
+    }
+  ],
+  "reports": [
+    {
+      "date": "2026-10-10",
+      "url": "/geopolitics/2026-10-10"
+    }
+  ],
+  "briefs": [],
+  "lineage": {
+    "parent": null,
+    "branches": [],
+    "merged_into": null,
+    "absorbed": []
+  },
+  "inherited": []
+}

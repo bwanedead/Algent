@@ -1,8 +1,122 @@
 {
   "schema": "ohmega.changes/1",
   "window_days": 30,
-  "as_of": "2026-10-05T09:41:18.336483+00:00",
+  "as_of": "2026-10-10T06:43:57.080244+00:00",
   "events": [
+    {
+      "type": "daily_published",
+      "at": "2026-10-10T06:43:57.080244+00:00",
+      "domain": "geopolitics",
+      "date": "2026-10-10",
+      "headline": "US reported to ease Russian diesel sanctions as Russia kills dozens in civilian strikes and Hormuz stays shut with zero tankers",
+      "url": "/geopolitics/2026-10-10",
+      "data_url": "/data/daily/geopolitics/2026-10-10.json"
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-10T06:42:22.417939+00:00",
+      "pulse_id": "pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe",
+      "name": "Gaza Combat and Humanitarian Catastrophe",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe.json",
+      "from": 87.0,
+      "to": 88.0,
+      "from_band": "critical",
+      "to_band": "critical",
+      "band_changed": false
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-10T06:42:22.417939+00:00",
+      "pulse_id": "pls_israel_palestine_ceasefire_and_normalization_deadlock",
+      "name": "Ceasefire and Normalization Deadlock",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_israel_palestine_ceasefire_and_normalization_deadlock.json",
+      "from": 63.0,
+      "to": 65.0,
+      "from_band": "severe",
+      "to_band": "severe",
+      "band_changed": false
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-10T06:33:34.545041+00:00",
+      "pulse_id": "pls_china_taiwan_cross_strait_political_rupture",
+      "name": "Cross-Strait Political Rupture",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_china_taiwan_cross_strait_political_rupture.json",
+      "position": 65.0,
+      "band": "severe"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-10T06:33:34.545041+00:00",
+      "pulse_id": "pls_china_taiwan_taiwan_defence_vulnerability",
+      "name": "Taiwan Defence Vulnerability",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_china_taiwan_taiwan_defence_vulnerability.json",
+      "position": 38.0,
+      "band": "elevated"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-10T06:33:34.545041+00:00",
+      "pulse_id": "pls_china_taiwan_pla_military_pressure_and_blockade_invasion_risk",
+      "name": "PLA Military Pressure and Blockade/Invasion Risk",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_china_taiwan_pla_military_pressure_and_blockade_invasion_risk.json",
+      "position": 48.0,
+      "band": "elevated"
+    },
+    {
+      "type": "pulse_created",
+      "at": "2026-10-10T06:33:34.545041+00:00",
+      "pulse_id": "pls_china_taiwan_external_deterrence_failure_and_intervention_risk",
+      "name": "External Deterrence Failure and Intervention Risk",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_china_taiwan_external_deterrence_failure_and_intervention_risk.json",
+      "position": 32.0,
+      "band": "elevated"
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-10T06:18:36.543486+00:00",
+      "pulse_id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
+      "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption.json",
+      "from": 65.0,
+      "to": 60.0,
+      "from_band": "severe",
+      "to_band": "severe",
+      "band_changed": false
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-10T06:18:36.543486+00:00",
+      "pulse_id": "pls_iran_gulf_us_iran_israel_military_confrontation",
+      "name": "US-Iran-Israel Direct Military Confrontation",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_iran_gulf_us_iran_israel_military_confrontation.json",
+      "from": 78.0,
+      "to": 75.0,
+      "from_band": "critical",
+      "to_band": "critical",
+      "band_changed": false
+    },
+    {
+      "type": "pulse_moved",
+      "at": "2026-10-10T06:18:36.543486+00:00",
+      "pulse_id": "pls_iran_gulf_iran_proxy_axis_escalation",
+      "name": "Iran Proxy Axis Escalation",
+      "url": "/pulses",
+      "data_url": "/data/pulses/pls_iran_gulf_iran_proxy_axis_escalation.json",
+      "from": 83.0,
+      "to": 87.0,
+      "from_band": "critical",
+      "to_band": "critical",
+      "band_changed": false
+    },
     {
       "type": "daily_published",
       "at": "2026-10-05T09:41:18.336483+00:00",

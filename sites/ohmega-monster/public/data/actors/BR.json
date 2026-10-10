@@ -563,6 +563,28 @@
   },
   "statements": [
     {
+      "id": "st_1f9b69ab9fbf",
+      "speaker": "Representative of Brazil",
+      "role": "Representative to the UN",
+      "date": "2026-10-09",
+      "text": "In national capacity, said the concept of self-determination does not apply to the Malvinas Islands because the current population was introduced following an illegal occupation, and that only the principles of territorial integrity and peaceful settlement of disputes apply.",
+      "is_quote": false,
+      "signal": "accusation",
+      "stance": -1,
+      "source_url": "https://press.un.org/en/2026/gaspd838.doc.htm"
+    },
+    {
+      "id": "st_cbf0d4f3ce46",
+      "speaker": "Representative of Brazil",
+      "role": "Representative",
+      "date": "2026-10-08",
+      "text": "Meaningful participation requires adequate time for capitals to review increasingly complex legal questions",
+      "is_quote": true,
+      "signal": "demand",
+      "stance": 0,
+      "source_url": "https://press.un.org/en/2026/gal3745.doc.htm"
+    },
+    {
       "id": "st_62f7e9878a3b",
       "speaker": "Brazil Ministry of Foreign Affairs",
       "role": "Ministry of Foreign Affairs",
@@ -626,28 +648,6 @@
       "is_quote": false,
       "signal": "policy_announcement",
       "stance": 1,
-      "source_url": "https://www.gov.br/mre/en/contact-us/press-area/press-releases/brazil-confirmed-as-co-chair-of-the-alliance-board-of-the-global-biofuels-alliance-gba"
-    },
-    {
-      "id": "st_05fb6ec64354",
-      "speaker": "Brazil Ministry of Foreign Affairs",
-      "role": "Ministry of Foreign Affairs",
-      "date": "2026-10-05",
-      "text": "Brazil will also be a member of the GBA Executive Committee, responsible for guiding implementation of the Alliance's strategy and work programme, together with India, Italy and Kenya.",
-      "is_quote": false,
-      "signal": "policy_announcement",
-      "stance": 1,
-      "source_url": "https://www.gov.br/mre/en/contact-us/press-area/press-releases/brazil-confirmed-as-co-chair-of-the-alliance-board-of-the-global-biofuels-alliance-gba"
-    },
-    {
-      "id": "st_b025d6b0a3b7",
-      "speaker": "Brazil Ministry of Foreign Affairs",
-      "role": "Ministry of Foreign Affairs",
-      "date": "2026-10-05",
-      "text": "The GBA seeks to promote production and use of biofuels, foster market development and bring together major producing and consuming countries, with planned activities including capacity-building across the value chain, technical support to national programmes, exchange of experiences and technological advances, and promotion of sustainability in biofuel production.",
-      "is_quote": false,
-      "signal": "policy_announcement",
-      "stance": 0,
       "source_url": "https://www.gov.br/mre/en/contact-us/press-area/press-releases/brazil-confirmed-as-co-chair-of-the-alliance-board-of-the-global-biofuels-alliance-gba"
     }
   ],

@@ -522,6 +522,50 @@
   },
   "statements": [
     {
+      "id": "st_540185a51353",
+      "speaker": "Gedion Timothewos",
+      "role": "Foreign Minister",
+      "date": "2026-10-09",
+      "text": "a blatant act of aggression that engages Ethiopia's inherent right to self-defence",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://www.france24.com/en/africa/20261009-eritrea-ethiopia-accuse-each-other-of-provoking-war-as-tigray-rebels-retreat"
+    },
+    {
+      "id": "st_1c1411fee7cf",
+      "speaker": "Abiy Ahmed",
+      "role": "Prime Minister",
+      "date": "2026-10-09",
+      "text": "Prime Minister Abiy Ahmed stated that access to the sea was a priority upon being sworn in for another five-year term.",
+      "is_quote": false,
+      "signal": "policy_announcement",
+      "stance": -1,
+      "source_url": "https://www.dw.com/en/eritrean-troops-in-ethiopia-raise-fears-of-a-regional-war/a-79615065?maca=en-rss-en-all-1573-rdf"
+    },
+    {
+      "id": "st_ef295bb572ca",
+      "speaker": "Gedion Timothewos",
+      "role": "Foreign Minister",
+      "date": "2026-10-08",
+      "text": "Ethiopia called for the immediate withdrawal of Eritrean troops from its territory in a letter to the UN Security Council.",
+      "is_quote": false,
+      "signal": "demand",
+      "stance": -1,
+      "source_url": "https://www.dw.com/en/eritrean-troops-in-ethiopia-raise-fears-of-a-regional-war/a-79615065?maca=en-rss-en-all-1573-rdf"
+    },
+    {
+      "id": "st_eed4c13a5a49",
+      "speaker": "Gedion Timothewos",
+      "role": "Foreign Minister",
+      "date": "2026-10-08",
+      "text": "no option but to defend itself against Eritrea",
+      "is_quote": true,
+      "signal": "threat",
+      "stance": -2,
+      "source_url": "https://www.dw.com/en/eritrean-troops-in-ethiopia-raise-fears-of-a-regional-war/a-79615065?maca=en-rss-en-all-1573-rdf"
+    },
+    {
       "id": "st_603177fa86a9",
       "speaker": "Ethiopia",
       "role": "Government",

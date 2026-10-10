@@ -535,92 +535,92 @@
   },
   "statements": [
     {
-      "id": "st_7a26cfc0fbf8",
+      "id": "st_eba4bf4887bd",
       "speaker": "Alexander Stubb",
-      "role": "President",
-      "date": "2026-10-02",
-      "text": "The more you intimidate, the more you threaten, the more we’re going to end up supporting Ukraine,",
+      "role": "President of the Republic of Finland",
+      "date": "2026-10-07",
+      "text": "We defend Europe's border together, in the north and in the south,",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 2,
+      "source_url": "https://www.presidentti.fi/en/state-visit-to-finland-by-their-majesties-king-felipe-vi-and-queen-letizia-of-spain/"
+    },
+    {
+      "id": "st_80199e437096",
+      "speaker": "Alexander Stubb",
+      "role": "President of the Republic of Finland",
+      "date": "2026-10-06",
+      "text": "Our societies are built on democracy, the rule of law, human rights and equality. We are both staunch supporters of multilateral cooperation and rules-based international order.",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 2,
+      "source_url": "https://www.presidentti.fi/en/speech-by-president-of-the-republic-of-finland-alexander-stubb-at-the-state-banquet-at-the-presidential-palace-in-helsinki-on-the-occasion-of-the-state-visit-from-spain-on-6-october-2026/"
+    },
+    {
+      "id": "st_418da0c123fc",
+      "speaker": "Alexander Stubb",
+      "role": "President of the Republic of Finland",
+      "date": "2026-10-06",
+      "text": "A Europe that remains united. A Europe that remains open. A Europe that remains capable of reform and ambitious for the future.",
       "is_quote": true,
       "signal": "commitment",
       "stance": 1,
-      "source_url": "https://www.kyivpost.com/post/86003"
+      "source_url": "https://www.presidentti.fi/en/speech-by-president-of-the-republic-of-finland-alexander-stubb-at-the-state-banquet-at-the-presidential-palace-in-helsinki-on-the-occasion-of-the-state-visit-from-spain-on-6-october-2026/"
     },
     {
-      "id": "st_967358048c2d",
+      "id": "st_6584d68004d3",
       "speaker": "Alexander Stubb",
-      "role": "President",
-      "date": "2026-10-02",
-      "text": "What we have to understand is that these are not one-off attempts from the Russian side, but they are actually a campaign,",
-      "is_quote": true,
-      "signal": "accusation",
-      "stance": -2,
-      "source_url": "https://www.kyivpost.com/post/86003"
-    },
-    {
-      "id": "st_d45e794cf105",
-      "speaker": "Alexander Stubb",
-      "role": "President",
-      "date": "2026-10-02",
-      "text": "The aim of that campaign is to destabilize us mentally and otherwise, to make sure that we don’t support Ukraine.",
-      "is_quote": true,
-      "signal": "accusation",
-      "stance": -2,
-      "source_url": "https://www.kyivpost.com/post/86003"
-    },
-    {
-      "id": "st_b166fa6f1a71",
-      "speaker": "Alexander Stubb",
-      "role": "President",
-      "date": "2026-10-02",
-      "text": "The warfare that Russia is conducting in Ukraine is kinetic, traditional warfare, but what it’s conducting in Europe is hybrid,",
+      "role": "President of the Republic of Finland",
+      "date": "2026-10-06",
+      "text": "The events in Ceuta put Spain under immense pressure this summer. Finland has faced instrumentalized migration from Russia.",
       "is_quote": true,
       "signal": "accusation",
       "stance": -1,
-      "source_url": "https://www.kyivpost.com/post/86003"
+      "source_url": "https://www.presidentti.fi/en/speech-by-president-of-the-republic-of-finland-alexander-stubb-at-the-state-banquet-at-the-presidential-palace-in-helsinki-on-the-occasion-of-the-state-visit-from-spain-on-6-october-2026/"
     },
     {
-      "id": "st_1366b5b1a1c0",
+      "id": "st_0e3bb0241cee",
       "speaker": "Alexander Stubb",
-      "role": "President",
-      "date": "2026-10-02",
-      "text": "Europe's response to Russian hybrid attacks should be attribution, resilience and consequences, with some responses public and others via private diplomatic channels, but the overall message must be that pressure on Europe means stronger support for Kyiv",
-      "is_quote": false,
+      "role": "President of the Republic of Finland",
+      "date": "2026-10-06",
+      "text": "Secure external borders are essential. European solidarity is essential. And no Member State should ever be left alone when facing pressure that ultimately concerns all Europeans.",
+      "is_quote": true,
       "signal": "policy_announcement",
-      "stance": 0,
-      "source_url": "https://www.kyivpost.com/post/86003"
-    },
-    {
-      "id": "st_146eb29aa55a",
-      "speaker": "Alexander Stubb",
-      "role": "President",
-      "date": "2026-10-02",
-      "text": "Putin's war has achieved the opposite of its aims: Ukraine became European instead of Russian, NATO enlarged with Finland and Sweden joining, and European defense spending is rising toward 5%",
-      "is_quote": false,
-      "signal": "other",
-      "stance": -1,
-      "source_url": "https://www.kyivpost.com/post/86003"
-    },
-    {
-      "id": "st_e31ff17e5c3e",
-      "speaker": "Alexander Stubb",
-      "role": "President",
-      "date": "2026-10-02",
-      "text": "I think the power balance in Europe will be very different after the war is over to what it is now,",
-      "is_quote": true,
-      "signal": "other",
       "stance": 1,
-      "source_url": "https://www.kyivpost.com/post/86003"
+      "source_url": "https://www.presidentti.fi/en/speech-by-president-of-the-republic-of-finland-alexander-stubb-at-the-state-banquet-at-the-presidential-palace-in-helsinki-on-the-occasion-of-the-state-visit-from-spain-on-6-october-2026/"
     },
     {
-      "id": "st_fd4d7f37ed99",
+      "id": "st_9a6fe42e8a20",
       "speaker": "Alexander Stubb",
-      "role": "President",
-      "date": "2026-10-02",
-      "text": "The Russian military was not capable of modern warfare when this war began, but now they are,",
+      "role": "President of the Republic of Finland",
+      "date": "2026-10-06",
+      "text": "Finland stands in full solidarity with Spain.",
       "is_quote": true,
-      "signal": "warning",
-      "stance": -1,
-      "source_url": "https://www.kyivpost.com/post/86003"
+      "signal": "reassurance",
+      "stance": 2,
+      "source_url": "https://www.presidentti.fi/en/speech-by-president-of-the-republic-of-finland-alexander-stubb-at-the-state-banquet-at-the-presidential-palace-in-helsinki-on-the-occasion-of-the-state-visit-from-spain-on-6-october-2026/"
+    },
+    {
+      "id": "st_eaf5e850492d",
+      "speaker": "Alexander Stubb",
+      "role": "President of the Republic of Finland",
+      "date": "2026-10-06",
+      "text": "Russia’s war of aggression against Ukraine continues to test Europe’s resilience and unity.",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://www.presidentti.fi/en/speech-by-president-of-the-republic-of-finland-alexander-stubb-at-the-state-banquet-at-the-presidential-palace-in-helsinki-on-the-occasion-of-the-state-visit-from-spain-on-6-october-2026/"
+    },
+    {
+      "id": "st_d89e1dfb811c",
+      "speaker": "Alexander Stubb",
+      "role": "President of the Republic of Finland",
+      "date": "2026-10-06",
+      "text": "instability in the Middle East and migratory pressures affect us all, but most intimately the Southern Flank.",
+      "is_quote": true,
+      "signal": "other",
+      "stance": 0,
+      "source_url": "https://www.presidentti.fi/en/speech-by-president-of-the-republic-of-finland-alexander-stubb-at-the-state-banquet-at-the-presidential-palace-in-helsinki-on-the-occasion-of-the-state-visit-from-spain-on-6-october-2026/"
     }
   ],
   "involved": {

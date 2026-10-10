@@ -171,6 +171,17 @@
   },
   "statements": [
     {
+      "id": "st_f757161cbe41",
+      "speaker": "Representative of Liechtenstein",
+      "role": "Representative",
+      "date": "2026-10-08",
+      "text": "for the Commission's work to translate into tangible outcomes, it must be met with political will",
+      "is_quote": true,
+      "signal": "warning",
+      "stance": 0,
+      "source_url": "https://press.un.org/en/2026/gal3745.doc.htm"
+    },
+    {
       "id": "st_77e9b014a3cd",
       "speaker": "Representative of Liechtenstein",
       "role": "Delegate to the Third Committee",

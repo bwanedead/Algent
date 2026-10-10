@@ -3,33 +3,33 @@
   "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout",
   "name": "Gaza war and UNGA diplomatic fallout",
   "domain": "geopolitics",
-  "built_at": "2026-10-05T09:41:18.336483+00:00",
+  "built_at": "2026-10-10T06:43:57.080244+00:00",
   "first_seen": "2026-09-28",
-  "last_seen": "2026-10-05",
-  "days_covered": 4,
+  "last_seen": "2026-10-10",
+  "days_covered": 5,
   "state": "active",
-  "last_novel": "2026-10-05",
+  "last_novel": "2026-10-10",
   "primer": {
     "text": "The Gaza war centers on fighting in Gaza, where hospitals and camps have faced mass-casualty strikes, with spillover violence in the West Bank. It sits within a wider confrontation involving Israel, the United States and Iran that has included direct strikes and disruption to shipping through the Strait of Hormuz, the narrow waterway carrying a large share of world oil and gas. At the United Nations General Assembly, diplomacy becomes leverage: walkouts, votes and proposals such as a Board of Peace are used to signal support or pressure, and can trigger bilateral fallout such as diplomatic retaliation between the Netherlands and Israel or quiet mediation by the United Arab Emirates.",
     "built_at": "2026-10-04T07:26:06.472952+00:00"
   },
   "current": {
-    "date": "2026-10-05",
-    "bottom_line": "Targeted killings under the year-old ceasefire continued 2026-10-03 to 2026-10-05, with the IDF confirming the Oct 3 Gaza City strike aimed at Hamas's most senior Gaza political figure Ali al-Amoudi (outcome unconfirmed, five civilians killed) and announcing a new Oct 5 vehicle strike in Khan Younis killing Nukhba member Saqr Qaisi. No new EU settlement-goods bans or diplomatic accreditation revocations beyond the Netherlands/UK actions of late September were reported, and no new hospital service suspensions were confirmed. Confidence high on strike details and tolls (researched).",
+    "date": "2026-10-10",
+    "bottom_line": "One year after the October 10, 2025 ceasefire, major anniversary assessments on October 9-10 say the truce exists in name only, with at least 1,400 Palestinians killed since and Israeli control expanded beyond agreed lines, while the IDF continued targeted killings and marked the third October 7 anniversary with a claim that 4,000 of 6,000 attackers have been killed. No new EU settlement-goods bans, diplomatic revocations or hospital suspensions were reported since October 5. Confidence high on anniversary figures and IDF announcements (researched).",
     "escalation": {
-      "direction": "rising",
+      "direction": "steady",
       "pace": "gradual"
     },
-    "coverage": "rising coverage",
+    "coverage": "steady coverage",
     "source": "daily",
-    "url": "/geopolitics/2026-10-05"
+    "url": "/geopolitics/2026-10-10"
   },
   "pulses": [
     {
       "id": "pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe",
       "name": "Gaza Combat and Humanitarian Catastrophe",
       "situation": "Israel–Palestine and the wider region",
-      "position": 87.0,
+      "position": 88.0,
       "band": "critical",
       "history": [
         {
@@ -39,6 +39,10 @@
         {
           "at": "2026-10-05T06:44:10.888856+00:00",
           "position": 87.0
+        },
+        {
+          "at": "2026-10-10T06:42:22.417939+00:00",
+          "position": 88.0
         }
       ]
     },
@@ -63,7 +67,7 @@
       "id": "pls_israel_palestine_ceasefire_and_normalization_deadlock",
       "name": "Ceasefire and Normalization Deadlock",
       "situation": "Israel–Palestine and the wider region",
-      "position": 63.0,
+      "position": 65.0,
       "band": "severe",
       "history": [
         {
@@ -77,6 +81,10 @@
         {
           "at": "2026-10-05T06:44:10.888856+00:00",
           "position": 63.0
+        },
+        {
+          "at": "2026-10-10T06:42:22.417939+00:00",
+          "position": 65.0
         }
       ]
     },
@@ -122,34 +130,14 @@
       "date": "2026-10-05",
       "direction": "rising",
       "pace": "gradual"
+    },
+    {
+      "date": "2026-10-10",
+      "direction": "steady",
+      "pace": "gradual"
     }
   ],
   "coverage_series": [
-    {
-      "day": "2026-09-29",
-      "count": 2,
-      "editions": 0
-    },
-    {
-      "day": "2026-09-30",
-      "count": 0,
-      "editions": 0
-    },
-    {
-      "day": "2026-10-01",
-      "count": 3,
-      "editions": 2
-    },
-    {
-      "day": "2026-10-02",
-      "count": 0,
-      "editions": 1
-    },
-    {
-      "day": "2026-10-03",
-      "count": 3,
-      "editions": 1
-    },
     {
       "day": "2026-10-04",
       "count": 0,
@@ -157,11 +145,88 @@
     },
     {
       "day": "2026-10-05",
-      "count": 1,
+      "count": 0,
       "editions": 0
+    },
+    {
+      "day": "2026-10-06",
+      "count": 3,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-07",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-08",
+      "count": 2,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-09",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-10",
+      "count": 2,
+      "editions": 1
     }
   ],
   "timeline": [
+    {
+      "date": "2026-10-10",
+      "headline": "Anniversary assessments say Gaza ceasefire exists in name only one year on",
+      "detail": "HRW on October 10 said Israeli forces continue to kill and wound civilians and deny food, aid and water a year after ceasefire, with acts of genocide and crimes against humanity persisting, and that IDF moved Yellow Line west beyond agreed line squeezing 2.1 million into shrinking coastal strip. More than 100 humanitarian organizations said October 9 the ceasefire 'exists in name only' with daily killing and aid restrictions. Reuters/Al-Monitor anniversary reviews found at least 1,400 killed and 4,881 wounded since ceasefire, cumulative toll over 74,000 including 21,000 children, Israeli control now about 64% (HRW) to 70%/two-thirds (Reuters/Al-Monitor) vs 53% permitted, aid averaging 227 trucks/day vs 600 required, and $71.4 billion reconstruction needs with no reconstruction begun and Board of Peace $2.45 billion 6-month plan stalled.",
+      "where": "Gaza Strip",
+      "verification": "researched",
+      "sources": [
+        "https://www.hrw.org/news/2026/10/10/gaza-ceasefire-anniversary-marks-year-of-failed-promises",
+        "https://www.amnesty.org/en/latest/news/2026/10/gaza-ceasefire-exists-in-name-only-say-more-than-100-organizations/",
+        "https://www.reuters.com/world/middle-east/one-year-trumps-gaza-plan-has-not-stopped-israeli-fire-or-disarmed-hamas-2026-10-06/",
+        "https://www.al-monitor.com/originals/2026/10/year-later-gaza-ceasefire-promises-mostly-unfulfilled"
+      ],
+      "from": "/geopolitics/2026-10-10"
+    },
+    {
+      "date": "2026-10-09",
+      "headline": "IDF says it killed Hamas Shati Battalion commander who held three hostages",
+      "detail": "IDF announced October 9 it killed Muhammad Muhsen Nimr Yazji, commander of Hamas's Shati Battalion who held hostages Emily Damari, Romi Gonen and Matan Angrest, in Gaza City strikes on October 6.",
+      "where": "Gaza City",
+      "verification": "researched",
+      "sources": [
+        "https://www.jpost.com/israel-news/defense-news/article-911096"
+      ],
+      "from": "/geopolitics/2026-10-10"
+    },
+    {
+      "date": "2026-10-07",
+      "headline": "Third October 7 anniversary marked with official remembrance and calls to implement ceasefire",
+      "detail": "Third anniversary of October 7, 2023 attack marked October 6-7 with UK Prime Minister Andy Burnham statement remembering those 'senselessly killed by Hamas terrorists,' noting rise in antisemitism and pledging synagogue/school protection and two-state solution; UN relief chief Tom Fletcher urging Israel and Hamas to fully implement ceasefire, protect civilians and aid workers and 'choose lasting peace'; ICRC saying it facilitated return of 195 hostages including 35 deceased and 6,000+ Palestinian detainees and 52,400+ consultations; memorials at Nova festival site near Re'im (378 killed, 44 kidnapped), Kibbutz Kfar Aza (64 killed, 19 hostages) and Tel Aviv Yarkon Park national ceremony with protests demanding state inquiry.",
+      "where": "Re'im, Kfar Aza, Tel Aviv",
+      "verification": "researched",
+      "sources": [
+        "https://www.gov.uk/government/news/pm-statement-on-october-7th-attacks",
+        "https://www.unocha.org/news/three-years-7-october-attacks-un-relief-chief-urges-israel-and-hamas-choose-lasting-peace",
+        "https://www.icrc.org/en/statement/israel-and-occupied-territories-marking-three-years-tragedy-and-loss",
+        "https://www.bbc.com/news/articles/cwkgj0g30m5jo"
+      ],
+      "from": "/geopolitics/2026-10-10"
+    },
+    {
+      "date": "2026-10-06",
+      "headline": "IDF and Netanyahu say 4,000 of 6,000 October 7 attackers killed, vow to pursue remainder",
+      "detail": "IDF Military Intelligence chief Maj Gen Shlomi Binder told Security Cabinet October 5-6 that 4,000 of 6,000 terrorists who crossed into Israel on October 7, 2023 have been killed with 2,000 remaining, vowing 'we will get every last one.' Prime Minister Benjamin Netanyahu echoed the 4,000/6,000 figure October 6-7 and vowed to 'settle the score' with all attackers, saying he instructed IDF and security agencies to eliminate everyone involved.",
+      "where": "Jerusalem",
+      "verification": "researched",
+      "sources": [
+        "https://www.thejc.com/news/world/idf-weve-killed-4-000-october-7-terrorists-y31t3ys3",
+        "https://www.bbc.com/news/articles/cwkgj0g30m5jo",
+        "https://www.al-monitor.com/originals/2026/10/year-later-gaza-ceasefire-promises-mostly-unfulfilled"
+      ],
+      "from": "/geopolitics/2026-10-10"
+    },
     {
       "date": "2026-10-05",
       "headline": "IDF kills Hamas Nukhba member linked to Turkish NGO in Khan Younis vehicle strike on 2026-10-05",
@@ -427,6 +492,18 @@
       "last": "2026-09-28"
     },
     {
+      "name": "Hamas",
+      "mentions": 3,
+      "first": "2026-10-03",
+      "last": "2026-10-09"
+    },
+    {
+      "name": "Israel Defense Forces",
+      "mentions": 3,
+      "first": "2026-10-06",
+      "last": "2026-10-10"
+    },
+    {
       "name": "Gaza Health Ministry",
       "mentions": 2,
       "first": "2026-10-01",
@@ -437,12 +514,6 @@
       "mentions": 2,
       "first": "2026-09-19",
       "last": "2026-09-22"
-    },
-    {
-      "name": "Hamas",
-      "mentions": 2,
-      "first": "2026-10-03",
-      "last": "2026-10-05"
     },
     {
       "name": "Israel Defense Forces (IDF)",
@@ -469,46 +540,40 @@
       "last": "2026-10-01"
     },
     {
+      "name": "Al-Monitor",
+      "mentions": 1,
+      "first": "2026-10-10",
+      "last": "2026-10-10"
+    },
+    {
       "name": "Ali Ahmed al-Amoudi",
       "mentions": 1,
       "first": "2026-10-03",
       "last": "2026-10-03"
     },
     {
+      "name": "Amnesty International",
+      "mentions": 1,
+      "first": "2026-10-10",
+      "last": "2026-10-10"
+    },
+    {
+      "name": "Andy Burnham",
+      "mentions": 1,
+      "first": "2026-10-07",
+      "last": "2026-10-07"
+    },
+    {
+      "name": "Benjamin Netanyahu",
+      "mentions": 1,
+      "first": "2026-10-06",
+      "last": "2026-10-06"
+    },
+    {
       "name": "Danish Refugee Council",
       "mentions": 1,
       "first": "2026-10-01",
       "last": "2026-10-01"
-    },
-    {
-      "name": "Danish Refugee Council (DRC)",
-      "mentions": 1,
-      "first": "2026-10-01",
-      "last": "2026-10-01"
-    },
-    {
-      "name": "Dutch Foreign Minister Tom Berendsen",
-      "mentions": 1,
-      "first": "2026-09-27",
-      "last": "2026-09-27"
-    },
-    {
-      "name": "Gaza civil defence",
-      "mentions": 1,
-      "first": "2026-10-03",
-      "last": "2026-10-03"
-    },
-    {
-      "name": "Greek Orthodox Patriarchate of Jerusalem",
-      "mentions": 1,
-      "first": "2026-10-03",
-      "last": "2026-10-03"
-    },
-    {
-      "name": "Israel (settlements)",
-      "mentions": 1,
-      "first": "2026-09-22",
-      "last": "2026-09-22"
     }
   ],
   "relations": [
@@ -562,6 +627,39 @@
     }
   ],
   "figures": [
+    {
+      "label": "Cumulative death toll in Gaza since October 2023 including children",
+      "unit": "people",
+      "series": [
+        {
+          "as_of": "2026-10-10",
+          "value": 74000.0,
+          "source": "https://www.hrw.org/news/2026/10/10/gaza-ceasefire-anniversary-marks-year-of-failed-promises"
+        }
+      ]
+    },
+    {
+      "label": "Palestinians killed in Gaza since, 2025 ceasefire (Gaza Health Ministry, UN-considered accurate",
+      "unit": "people",
+      "series": [
+        {
+          "as_of": "2026-10-10",
+          "value": 1400.0,
+          "source": "https://www.hrw.org/news/2026/10/10/gaza-ceasefire-anniversary-marks-year-of-failed-promises"
+        }
+      ]
+    },
+    {
+      "label": "attackers killed per IDF Military Intelligence chief",
+      "unit": "people",
+      "series": [
+        {
+          "as_of": "2026-10-06",
+          "value": 4000.0,
+          "source": "https://www.thejc.com/news/world/idf-weve-killed-4-000-october-7-terrorists-y31t3ys3"
+        }
+      ]
+    },
     {
       "label": "Palestinian teachers killed since 2023 (Education Ministry",
       "unit": "killed",
@@ -649,6 +747,17 @@
           "source": "https://www.aljazeera.com/news/2026/10/1/israeli-drone-kills-palestinian-in-gaza-settlers-kill-another-in-west-bank"
         }
       ]
+    },
+    {
+      "label": "Average aid trucks per day into Gaza from ceasefire to end May 2026 (IPC",
+      "unit": "trucks/day",
+      "series": [
+        {
+          "as_of": "2026-05-31",
+          "value": 227.0,
+          "source": "https://www.reuters.com/world/middle-east/one-year-trumps-gaza-plan-has-not-stopped-israeli-fire-or-disarmed-hamas-2026-10-06/"
+        }
+      ]
     }
   ],
   "forecasts": [
@@ -715,8 +824,98 @@
       ]
     }
   ],
-  "statements": [],
+  "statements": [
+    {
+      "who": "Andy Burnham",
+      "role": "Prime Minister",
+      "said": "we remember those senselessly killed by Hamas terrorists, noting rise in antisemitism and pledging funding for protection of synagogues, schools and community buildings and work toward two-state solution",
+      "quote": false,
+      "when": "2026-10-06",
+      "source": "https://www.gov.uk/government/news/pm-statement-on-october-7th-attacks"
+    },
+    {
+      "who": "Tom Fletcher",
+      "role": "UN Under-Secretary-General for Humanitarian Affairs",
+      "said": "urged Israel and Hamas to fully implement ceasefire, protect civilians including aid workers, remove aid obstacles, and choose lasting peace",
+      "quote": false,
+      "when": "2026-10-06",
+      "source": "https://www.unocha.org/news/three-years-7-october-attacks-un-relief-chief-urges-israel-and-hamas-choose-lasting-peace"
+    }
+  ],
   "on_record": [
+    {
+      "id": "st_afd651fa064f",
+      "speaker": "Andy Burnham",
+      "role": "Prime Minister",
+      "affiliation": "United Kingdom",
+      "iso2": "GB",
+      "date": "2026-10-06",
+      "venue": "statement",
+      "quote": "we remember those who were senselessly killed by Hamas terrorists",
+      "paraphrase": "Three years on from the October 7 attacks on Israel, remembered those killed by Hamas terrorists, noting the impact was felt not just in Israel but in Jewish communities worldwide.",
+      "about": [
+        "Hamas",
+        "Israel"
+      ],
+      "about_iso2": [
+        "IL"
+      ],
+      "signal": "accusation",
+      "stance": -1,
+      "significance": "Reaffirms UK attribution of October 7 attacks to Hamas as terrorism and frames remembrance as basis for policy.",
+      "url": "https://www.gov.uk/government/news/pm-statement-on-october-7th-attacks",
+      "reported_by": ""
+    },
+    {
+      "id": "st_82b556489b8f",
+      "speaker": "Andy Burnham",
+      "role": "Prime Minister",
+      "affiliation": "United Kingdom",
+      "iso2": "GB",
+      "date": "2026-10-06",
+      "venue": "statement",
+      "quote": "we continue to work towards a two-state solution, with Israelis and Palestinians living side by side in peace and security",
+      "paraphrase": "Said that abroad the UK continues to work towards a two-state solution with Israelis and Palestinians living side by side in peace and security.",
+      "about": [
+        "Israel",
+        "Palestine"
+      ],
+      "about_iso2": [
+        "IL",
+        "PS"
+      ],
+      "signal": "commitment",
+      "stance": 0,
+      "significance": "Restates UK's long-standing foreign policy position on the Israeli-Palestinian conflict amid the post-October 7 war.",
+      "url": "https://www.gov.uk/government/news/pm-statement-on-october-7th-attacks",
+      "reported_by": ""
+    },
+    {
+      "id": "st_f78dda524705",
+      "speaker": "Benjamin Netanyahu",
+      "role": "Prime Minister",
+      "affiliation": "Israel",
+      "iso2": "IL",
+      "date": "2026-10-04",
+      "venue": "statement",
+      "quote": "has instructed the head of the National Security Council, Shmuel Ben Ezra, to appoint an examiner to conduct a thorough review of all security aspects of foreign civil aviation to Israel",
+      "paraphrase": "Has instructed the head of the National Security Council, Shmuel Ben Ezra, to appoint an examiner to conduct a thorough review of all security aspects of foreign civil aviation to Israel.",
+      "about": [
+        "Israel",
+        "UAE",
+        "Oman"
+      ],
+      "about_iso2": [
+        "IL",
+        "AE",
+        "OM"
+      ],
+      "signal": "policy_announcement",
+      "stance": 0,
+      "significance": "Orders formal security review of foreign airlines operating to Israel after attempted cockpit attack by Omani co-pilot on UAE-Israel flight.",
+      "url": "https://www.scmp.com/news/world/middle-east/article/3369732/netanyahu-orders-security-review-international-flights-israel-after-flydubai-attack",
+      "reported_by": "South China Morning Post"
+    },
     {
       "id": "st_99b5965fc1e7",
       "speaker": "Ambassador Sarah MacIntosh",
@@ -877,8 +1076,19 @@
       "reported_by": ""
     }
   ],
-  "links": [],
+  "links": [
+    {
+      "theater_id": "thr_us_sanctions_on_icc_and_nobel_peace_prize_to_nav",
+      "name": "US sanctions on ICC and Nobel Peace Prize to Navi Pillay",
+      "link": "US sanctions on ICC and Nobel Peace Prize to Navi Pillay ↔ Gaza war and UNGA diplomatic fallout: reported US ICC sanctions said to defend Netanyahu and confirmed Nobel award to Pillay coincide with researched assessments that Gaza's Oct 10 2025 ceasefire exists in name only, sharpening the accountability contest over continued killings",
+      "date": "2026-10-10"
+    }
+  ],
   "reports": [
+    {
+      "date": "2026-10-10",
+      "url": "/geopolitics/2026-10-10"
+    },
     {
       "date": "2026-10-05",
       "url": "/geopolitics/2026-10-05"

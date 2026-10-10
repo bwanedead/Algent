@@ -562,92 +562,92 @@
   },
   "statements": [
     {
-      "id": "st_d01f8a77b371",
-      "speaker": "Recep Tayyip Erdoğan",
+      "id": "st_b91b8e2dbd0a",
+      "speaker": "Recep Tayyip Erdogan",
       "role": "President",
-      "date": "2026-10-03",
-      "text": "No one will be able to stand between us and our goal of a terror-free Türkiye",
+      "date": "2026-10-09",
+      "text": "International peace and security cannot be established without justice.",
       "is_quote": true,
-      "signal": "commitment",
-      "stance": 0,
-      "source_url": "https://www.tccb.gov.tr/en/news/542/166442/-no-one-will-be-able-to-stand-between-us-and-our-goal-of-a-terror-free-turkiye-"
+      "signal": "accusation",
+      "stance": -1,
+      "source_url": "https://www.tccb.gov.tr/en/news/542/166492/-international-peace-and-security-cannot-be-established-without-justice-"
     },
     {
-      "id": "st_0864ea048b15",
-      "speaker": "Recep Tayyip Erdoğan",
+      "id": "st_84032e9e8d8c",
+      "speaker": "Recep Tayyip Erdogan",
       "role": "President",
-      "date": "2026-10-03",
-      "text": "The brutal regime, which had the blood of 1 million people in their hands, was toppled in Syria, and an administration, which is a close friend of Türkiye, took office. With the integration process, the issue of terror is being resolved now there.",
+      "date": "2026-10-09",
+      "text": "Today, we are unfortunately faced with an international system that is heavily wounded in terms of representation, function and legitimacy, and has experienced an erosion of trust and prestige.",
       "is_quote": true,
-      "signal": "reassurance",
-      "stance": 2,
-      "source_url": "https://www.tccb.gov.tr/en/news/542/166442/-no-one-will-be-able-to-stand-between-us-and-our-goal-of-a-terror-free-turkiye-"
+      "signal": "accusation",
+      "stance": -1,
+      "source_url": "https://www.tccb.gov.tr/en/news/542/166492/-international-peace-and-security-cannot-be-established-without-justice-"
     },
     {
-      "id": "st_827308dac592",
-      "speaker": "Recep Tayyip Erdoğan",
+      "id": "st_f08ecd577318",
+      "speaker": "Recep Tayyip Erdogan",
       "role": "President",
-      "date": "2026-10-03",
-      "text": "Likewise in Iraq, the environment of security is being reestablished in the places where insecurity prevailed for years.",
+      "date": "2026-10-09",
+      "text": "We all know that a structure where the will of over 190 countries under the roof of the United Nations is bound by just five countries that hold veto prerogative is not fair and sound.",
+      "is_quote": true,
+      "signal": "demand",
+      "stance": -1,
+      "source_url": "https://www.tccb.gov.tr/en/news/542/166492/-international-peace-and-security-cannot-be-established-without-justice-"
+    },
+    {
+      "id": "st_20c4a0627224",
+      "speaker": "Recep Tayyip Erdogan",
+      "role": "President",
+      "date": "2026-10-09",
+      "text": "International law has almost been suspended.",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -1,
+      "source_url": "https://www.tccb.gov.tr/en/news/542/166492/-international-peace-and-security-cannot-be-established-without-justice-"
+    },
+    {
+      "id": "st_c95e3b8646ef",
+      "speaker": "Recep Tayyip Erdogan",
+      "role": "President",
+      "date": "2026-10-09",
+      "text": "The war between Russia and Ukraine, now well past its four and a half years, is still raging on with thousands of casualties every month.",
       "is_quote": true,
       "signal": "other",
-      "stance": 1,
-      "source_url": "https://www.tccb.gov.tr/en/news/542/166442/-no-one-will-be-able-to-stand-between-us-and-our-goal-of-a-terror-free-turkiye-"
-    },
-    {
-      "id": "st_b343cf59e9c2",
-      "speaker": "Recep Tayyip Erdoğan",
-      "role": "President",
-      "date": "2026-10-03",
-      "text": "No one will be able to prevent serenity, peace and economic development from prevailing in our geography, from Iraq to Syria, Iran to Lebanon.",
-      "is_quote": true,
-      "signal": "commitment",
-      "stance": 1,
-      "source_url": "https://www.tccb.gov.tr/en/news/542/166442/-no-one-will-be-able-to-stand-between-us-and-our-goal-of-a-terror-free-turkiye-"
-    },
-    {
-      "id": "st_8f3dec482a1c",
-      "speaker": "Recep Tayyip Erdogan",
-      "role": "President",
-      "date": "2026-10-03",
-      "text": "With the products you produce, with the projects you realize, with your character, courage, knowledge, compassion and mercy, you will heal the wounds in our kindred geography, from Palestine to Lebanon, Yemen and Libya.",
-      "is_quote": true,
-      "signal": "commitment",
-      "stance": 1,
-      "source_url": "https://www.tccb.gov.tr/en/news/542/166436/-the-century-of-turkiye-will-bear-the-seal-of-the-teknofest-generation-"
-    },
-    {
-      "id": "st_88c7c449a853",
-      "speaker": "Recep Tayyip Erdogan",
-      "role": "President",
-      "date": "2026-10-03",
-      "text": "President Erdogan said indigenous and national defense products, software, platforms and equipment increase Turkey's efficiency and deterrence and meet the defense needs of Turkey's friends and allies on demand",
-      "is_quote": false,
-      "signal": "policy_announcement",
-      "stance": 1,
-      "source_url": "https://www.tccb.gov.tr/en/news/542/166436/-the-century-of-turkiye-will-bear-the-seal-of-the-teknofest-generation-"
-    },
-    {
-      "id": "st_0f4bcedf5a41",
-      "speaker": "Recep Tayyip Erdogan",
-      "role": "President",
-      "date": "2026-10-03",
-      "text": "We have exported $511.4 million worth of defense and aviation products solely in August this year We have increased our exports in January-August period by 16.2 per cent year-on-year, and have reached $6.3 billion.",
-      "is_quote": true,
-      "signal": "policy_announcement",
       "stance": 0,
-      "source_url": "https://www.tccb.gov.tr/en/news/542/166436/-the-century-of-turkiye-will-bear-the-seal-of-the-teknofest-generation-"
+      "source_url": "https://www.tccb.gov.tr/en/news/542/166492/-international-peace-and-security-cannot-be-established-without-justice-"
     },
     {
-      "id": "st_95edf13af09d",
+      "id": "st_6d4335756d52",
       "speaker": "Recep Tayyip Erdogan",
       "role": "President",
-      "date": "2026-10-01",
-      "text": "In our region that has of late turned into a ring of fire, the terror-free Türkiye efforts have already created a deterrent effect upon Türkiye’s adversaries and have multiplied Türkiye’s strength and ushered in a new era.",
+      "date": "2026-10-09",
+      "text": "The bottleneck in the Strait of Hormuz, through which 35 percent of global oil exports transit, couldn’t be resolved for months despite all the efforts exerted.",
       "is_quote": true,
-      "signal": "policy_announcement",
+      "signal": "accusation",
       "stance": 0,
-      "source_url": "https://www.tccb.gov.tr/en/news/542/166411/-terror-free-turkiye-efforts-have-multiplied-turkiye-s-strength-and-ushered-in-a-new-era-in-our-region-"
+      "source_url": "https://www.tccb.gov.tr/en/news/542/166492/-international-peace-and-security-cannot-be-established-without-justice-"
+    },
+    {
+      "id": "st_b6e25f43f26b",
+      "speaker": "Recep Tayyip Erdogan",
+      "role": "President",
+      "date": "2026-10-09",
+      "text": "Gaza has been turned into the world’s largest concentration camp by a radical and arrogant genocidal network that considers itself above international law and cannot get enough of killing.",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://www.tccb.gov.tr/en/news/542/166492/-international-peace-and-security-cannot-be-established-without-justice-"
+    },
+    {
+      "id": "st_80fc2ab60048",
+      "speaker": "Recep Tayyip Erdogan",
+      "role": "President",
+      "date": "2026-10-09",
+      "text": "This ceasefire has been violated thousands of times by the Israeli government while our Palestinian brothers and sisters have abided by it.",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://www.tccb.gov.tr/en/news/542/166492/-international-peace-and-security-cannot-be-established-without-justice-"
     }
   ],
   "involved": {

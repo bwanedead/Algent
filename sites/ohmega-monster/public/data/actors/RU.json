@@ -568,92 +568,92 @@
   },
   "statements": [
     {
-      "id": "st_e1ea3ef298cb",
+      "id": "st_3322a57341f2",
       "speaker": "Vladimir Putin",
       "role": "President",
-      "date": "2026-10-05",
-      "text": "It would be hard to overestimate your personal contribution to the development of the strategic partnership and alliance between Tajikistan and Russia.",
+      "date": "2026-10-09",
+      "text": "In a phone call with US President Donald Trump on Friday, Putin said an immediate resumption of peace talks with Ukraine is unlikely, citing drone attacks on Moscow during parliamentary elections last month",
+      "is_quote": false,
+      "signal": "policy_announcement",
+      "stance": -1,
+      "source_url": "https://www.aljazeera.com/news/2026/10/10/putin-tells-trump-peace-talks-are-unlikely-cites-ukraine-drone-attacks"
+    },
+    {
+      "id": "st_c603c6e28395",
+      "speaker": "Vladimir Putin",
+      "role": "President",
+      "date": "2026-10-09",
+      "text": "Putin said Moscow was ready to resume negotiations with Kyiv after the parliamentary elections, but drone attacks on the capital made resumption of trilateral talks between Russia, Ukraine and the US unlikely",
+      "is_quote": false,
+      "signal": "accusation",
+      "stance": -1,
+      "source_url": "https://www.aljazeera.com/news/2026/10/10/putin-tells-trump-peace-talks-are-unlikely-cites-ukraine-drone-attacks"
+    },
+    {
+      "id": "st_3a14676ab796",
+      "speaker": "Yuri Ushakov",
+      "role": "Kremlin foreign policy aide",
+      "date": "2026-10-09",
+      "text": "By launching a large-scale drone attack on Moscow, other cities and polling stations on the most important day of the elections, and by targeting some people involved in organising the elections, the Kyiv regime has, in reality, interrupted the possibility of an immediate resumption of the negotiation process,",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://www.aljazeera.com/news/2026/10/10/putin-tells-trump-peace-talks-are-unlikely-cites-ukraine-drone-attacks"
+    },
+    {
+      "id": "st_14749e47c1fa",
+      "speaker": "Yuri Ushakov",
+      "role": "Kremlin foreign policy aide",
+      "date": "2026-10-09",
+      "text": "As the president said, we will now assess when these negotiations can resume,",
+      "is_quote": true,
+      "signal": "policy_announcement",
+      "stance": 0,
+      "source_url": "https://www.aljazeera.com/news/2026/10/10/putin-tells-trump-peace-talks-are-unlikely-cites-ukraine-drone-attacks"
+    },
+    {
+      "id": "st_6bc4d153fd2a",
+      "speaker": "Kirill Dmitriev",
+      "role": "Russian presidential envoy",
+      "date": "2026-10-09",
+      "text": "Russia-U.S. cooperation on diesel and energy will benefit the world.",
       "is_quote": true,
       "signal": "reassurance",
       "stance": 2,
-      "source_url": "http://en.kremlin.ru/events/president/news/80922"
+      "source_url": "https://www.dw.com/en/trump-putin-agree-on-deal-to-release-russian-diesel-to-us-world-markets/a-79623364?maca=en-rss-en-all-1573-rdf"
     },
     {
-      "id": "st_88996869b5e0",
-      "speaker": "Vladimir Putin",
-      "role": "President",
-      "date": "2026-10-05",
-      "text": "I will be delighted to continue our constructive and friendly communication and our fruitful cooperation on the topical issues of the bilateral, regional and international agendas.",
+      "id": "st_3c01bbadb477",
+      "speaker": "Vassily A. Nebenzia",
+      "role": "Ambassador to the UN",
+      "date": "2026-10-09",
+      "text": "It was Kyiv that consciously chose to aggravate the situation and now seeks to promote itself as an innocent victim",
       "is_quote": true,
-      "signal": "commitment",
-      "stance": 2,
-      "source_url": "http://en.kremlin.ru/events/president/news/80922"
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://press.un.org/en/2026/sc16472.doc.htm"
     },
     {
-      "id": "st_9b2b2cc0512a",
-      "speaker": "Vladimir Putin",
-      "role": "President",
-      "date": "2026-10-04",
-      "text": "our country has acquired a reliable space-based missile defence shield: an effective instrument for maintaining global strategic parity",
-      "is_quote": true,
-      "signal": "policy_announcement",
-      "stance": 0,
-      "source_url": "http://en.kremlin.ru/events/president/news/80919"
-    },
-    {
-      "id": "st_6081107036db",
-      "speaker": "Vladimir Putin",
-      "role": "President",
-      "date": "2026-10-04",
-      "text": "are promptly providing the Armed Forces and units participating in the special military operation with essential data",
-      "is_quote": true,
-      "signal": "commitment",
+      "id": "st_d4e299e464cc",
+      "speaker": "Vassily A. Nebenzia",
+      "role": "Ambassador to the UN",
+      "date": "2026-10-09",
+      "text": "Insisted Russian attacks were restricted to military facilities and questioned why Kyiv positions air defence systems, drone-production sites and other military facilities within residential areas, posing threats to civilian lives.",
+      "is_quote": false,
+      "signal": "denial",
       "stance": -1,
-      "source_url": "http://en.kremlin.ru/events/president/news/80919"
+      "source_url": "https://press.un.org/en/2026/sc16472.doc.htm"
     },
     {
-      "id": "st_35e1f41a7d8a",
-      "speaker": "Vladimir Putin",
-      "role": "President",
-      "date": "2026-10-04",
-      "text": "It is important to continue expanding the capabilities of our orbital satellite constellation and ground-based infrastructure, developing advanced technologies for cutting-edge weapons and equipment, and conducting promising studies",
+      "id": "st_5aad78bd9472",
+      "speaker": "Vassily A. Nebenzia",
+      "role": "Ambassador to the UN",
+      "date": "2026-10-09",
+      "text": "double standards and hypocrisy",
       "is_quote": true,
-      "signal": "policy_announcement",
-      "stance": 0,
-      "source_url": "http://en.kremlin.ru/events/president/news/80919"
-    },
-    {
-      "id": "st_f071196defb5",
-      "speaker": "Russian Defense Ministry",
-      "role": "Defense Ministry",
-      "date": "2026-10-04",
-      "text": "The Russian armed forces will intensify strikes against military and military-industrial facilities, as well as related infrastructure in Kyiv and other regions of Ukraine,",
-      "is_quote": true,
-      "signal": "threat",
-      "stance": -2,
-      "source_url": "https://www.japantimes.co.jp/news/2026/10/04/world/russia-vows-increased-strikes/"
-    },
-    {
-      "id": "st_615f72bbf6eb",
-      "speaker": "Russian Foreign Ministry",
-      "role": "Foreign Ministry",
-      "date": "2026-10-04",
-      "text": "mortal danger",
-      "is_quote": true,
-      "signal": "warning",
-      "stance": -2,
-      "source_url": "https://www.japantimes.co.jp/news/2026/10/04/world/russia-vows-increased-strikes/"
-    },
-    {
-      "id": "st_4758bbc3b6cb",
-      "speaker": "Russian Foreign Ministry",
-      "role": "Foreign Ministry",
-      "date": "2026-10-04",
-      "text": "The responsibility for any negative consequences lies entirely with those who ignore this warning,",
-      "is_quote": true,
-      "signal": "warning",
-      "stance": -2,
-      "source_url": "https://www.dw.com/en/germany-s-merz-visits-kyiv-as-russia-strikes-bridge/a-79534734?maca=en-rss-en-all-1573-rdf"
+      "signal": "accusation",
+      "stance": -1,
+      "source_url": "https://press.un.org/en/2026/sc16472.doc.htm"
     }
   ],
   "involved": {
@@ -661,7 +661,7 @@
       {
         "id": "thr_russia_ukraine_war_and_european_security_archite",
         "name": "Russia-Ukraine war and European security architecture",
-        "mentions": 22
+        "mentions": 23
       }
     ],
     "pulses": [
@@ -703,6 +703,13 @@
       {
         "id": "pls_russia_nato_diplomatic_rupture",
         "name": "Diplomatic Rupture",
+        "band": "severe",
+        "position": 62.0,
+        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      },
+      {
+        "id": "pls_energy_security_energy_price_and_market_shock",
+        "name": "Energy Price and Market Shock",
         "band": "severe",
         "position": 62.0,
         "theater_id": "thr_russia_ukraine_war_and_european_security_archite"

@@ -560,153 +560,97 @@
   },
   "statements": [
     {
-      "id": "st_dd17548de306",
-      "speaker": "Guo Jiakun",
+      "id": "st_a7a381c624b3",
+      "speaker": "Mao Ning",
       "role": "Foreign Ministry Spokesperson",
-      "date": "2026-10-03",
-      "text": "The strategic guidance provided by head-of-state diplomacy serves as the most important political underpinning for the steady and sustained advancement of China-Russia relations.",
-      "is_quote": true,
+      "date": "2026-10-09",
+      "text": "China and Botswana are strategic partners that have upheld sincere friendship and mutually beneficial cooperation over 51 years of diplomatic relations, support each other on major issues concerning respective core interests, and stand on the right side of history on international affairs; the upcoming state visit by President Boko will elevate relations and contribute to building an all-weather China-Africa community with a shared future for the new era.",
+      "is_quote": false,
       "signal": "reassurance",
       "stance": 2,
-      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261003_12035482.html"
+      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261009_12037462.html"
     },
     {
-      "id": "st_423f7300b7f1",
-      "speaker": "Guo Jiakun",
+      "id": "st_65275986e5ba",
+      "speaker": "Mao Ning",
       "role": "Foreign Ministry Spokesperson",
-      "date": "2026-10-03",
-      "text": "China welcomes President Putin’s attendance at the APEC Economic Leaders’ Meeting in Shenzhen this November and stands ready to work with the Russian side for fruitful outcomes of the APEC “China Year.”",
-      "is_quote": true,
-      "signal": "commitment",
-      "stance": 2,
-      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261003_12035482.html"
-    },
-    {
-      "id": "st_c8c64a51c31d",
-      "speaker": "Guo Jiakun",
-      "role": "Foreign Ministry Spokesperson",
-      "date": "2026-10-03",
-      "text": "As for your specific question, I have no information to offer at the moment.",
-      "is_quote": true,
-      "signal": "denial",
-      "stance": 0,
-      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261003_12035482.html"
-    },
-    {
-      "id": "st_6cb3c42769dd",
-      "speaker": "Guo Jiakun",
-      "role": "Foreign Ministry Spokesperson",
-      "date": "2026-10-03",
-      "text": "China always acts prudently and responsibly on the export of military products, and exercises strict control over dual-use items in accordance with China’s laws and regulations on export control and due international obligations.",
-      "is_quote": true,
-      "signal": "policy_announcement",
-      "stance": 0,
-      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261003_12035482.html"
-    },
-    {
-      "id": "st_0df656c23c76",
-      "speaker": "Guo Jiakun",
-      "role": "Foreign Ministry Spokesperson",
-      "date": "2026-10-03",
-      "text": "China opposes using civilian drones for military purposes.",
-      "is_quote": true,
-      "signal": "policy_announcement",
-      "stance": 0,
-      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261003_12035482.html"
-    },
-    {
-      "id": "st_32b2d8e3e0bb",
-      "speaker": "Guo Jiakun",
-      "role": "Foreign Ministry Spokesperson",
-      "date": "2026-10-03",
-      "text": "All parties should play a constructive role in facilitating a political settlement of the Ukraine crisis, instead of making groundless speculation and ill-intentioned association.",
+      "date": "2026-10-09",
+      "text": "China Coast Guard took legitimate and reasonable measures to handle the situation in accordance with laws and regulations",
       "is_quote": true,
       "signal": "accusation",
-      "stance": 0,
-      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261003_12035482.html"
-    },
-    {
-      "id": "st_ca64984fd411",
-      "speaker": "Guo Jiakun",
-      "role": "Foreign Ministry Spokesperson",
-      "date": "2026-10-03",
-      "text": "The so-called “genocide” in Xinjiang is a blatant lie.",
-      "is_quote": true,
-      "signal": "denial",
       "stance": -1,
-      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261003_12035482.html"
+      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261009_12037462.html"
     },
     {
-      "id": "st_ab33d2d5f48f",
-      "speaker": "Guo Jiakun",
+      "id": "st_d4fec6283a7c",
+      "speaker": "Mao Ning",
       "role": "Foreign Ministry Spokesperson",
-      "date": "2026-10-03",
-      "text": "This U.S. group is known for vilifying China out of political motives and has absolutely no credibility to speak of.",
+      "date": "2026-10-09",
+      "text": "After communication between the two sides, out of humanitarian considerations China gave timely permission for the Philippine side to evacuate injured personnel by small boat and provided necessary facilitation.",
+      "is_quote": false,
+      "signal": "reassurance",
+      "stance": 0,
+      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261009_12037462.html"
+    },
+    {
+      "id": "st_08a899dbd383",
+      "speaker": "Mao Ning",
+      "role": "Foreign Ministry Spokesperson",
+      "date": "2026-10-09",
+      "text": "which is rather despicable",
       "is_quote": true,
       "signal": "accusation",
       "stance": -2,
-      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261003_12035482.html"
+      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261009_12037462.html"
+    },
+    {
+      "id": "st_52d9fe40f822",
+      "speaker": "Mao Ning",
+      "role": "Foreign Ministry Spokesperson",
+      "date": "2026-10-09",
+      "text": "China will not waver in responding to any provocation and safeguarding territorial sovereignty and maritime rights and interests",
+      "is_quote": true,
+      "signal": "warning",
+      "stance": -2,
+      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261009_12037462.html"
+    },
+    {
+      "id": "st_33f910ec1954",
+      "speaker": "Mao Ning",
+      "role": "Foreign Ministry Spokesperson",
+      "date": "2026-10-09",
+      "text": "China firmly opposes and combats hacking activities in accordance with law and firmly opposes spreading disinformation and making noises for political agenda, in response to U.S. claims of seizing domains linked to Chinese hackers targeting critical infrastructure.",
+      "is_quote": false,
+      "signal": "denial",
+      "stance": -1,
+      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261009_12037462.html"
+    },
+    {
+      "id": "st_3a1a8db32a54",
+      "speaker": "Mao Ning",
+      "role": "Foreign Ministry Spokesperson",
+      "date": "2026-10-09",
+      "text": "The U.S. should quit double standards and political manipulation on cybersecurity and jointly tackle risks through equal-footed dialogue and consultation to build a relationship characterized by peace, stability and mutual respect on cyber issues.",
+      "is_quote": false,
+      "signal": "demand",
+      "stance": -1,
+      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261009_12037462.html"
+    },
+    {
+      "id": "st_cf263df11dc5",
+      "speaker": "Mao Ning",
+      "role": "Foreign Ministry Spokesperson",
+      "date": "2026-10-09",
+      "text": "The relevant report is not true",
+      "is_quote": true,
+      "signal": "denial",
+      "stance": 0,
+      "source_url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261009_12037462.html"
     }
   ],
   "involved": {
-    "theaters": [
-      {
-        "id": "thr_russia_ukraine_war_and_european_security_archite",
-        "name": "Russia-Ukraine war and European security architecture",
-        "mentions": 1
-      }
-    ],
-    "pulses": [
-      {
-        "id": "pls_ukraine_war_combat_strike_intensity",
-        "name": "Combat and Long-Range Strike Intensity",
-        "band": "critical",
-        "position": 85.0,
-        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
-      },
-      {
-        "id": "pls_ukraine_war_energy_heating_collapse",
-        "name": "Energy and Heating System Collapse",
-        "band": "critical",
-        "position": 84.0,
-        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
-      },
-      {
-        "id": "pls_ukraine_war_war_economy_dependency_strain",
-        "name": "War Economy and External Dependency Strain",
-        "band": "critical",
-        "position": 83.0,
-        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
-      },
-      {
-        "id": "pls_energy_security_global_hydrocarbon_supply_disruption",
-        "name": "Global Hydrocarbon Supply Disruption",
-        "band": "critical",
-        "position": 77.0,
-        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
-      },
-      {
-        "id": "pls_russia_nato_hybrid_grey_zone_pressure",
-        "name": "Hybrid and Grey-Zone Pressure",
-        "band": "severe",
-        "position": 72.0,
-        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
-      },
-      {
-        "id": "pls_russia_nato_diplomatic_rupture",
-        "name": "Diplomatic Rupture",
-        "band": "severe",
-        "position": 62.0,
-        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
-      },
-      {
-        "id": "pls_russia_nato_direct_military_confrontation",
-        "name": "Direct Military Confrontation",
-        "band": "severe",
-        "position": 58.0,
-        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
-      }
-    ]
+    "theaters": [],
+    "pulses": []
   },
   "credits": [
     {

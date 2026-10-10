@@ -529,6 +529,50 @@
   },
   "statements": [
     {
+      "id": "st_bce2a6785277",
+      "speaker": "France delegate",
+      "role": "Delegate to the UN",
+      "date": "2026-10-09",
+      "text": "Condemned Moscow's bloody escalation as targeting the very conditions of the Ukrainian people's existence to provoke a humanitarian catastrophe, subject Ukrainians to cold and darkness and isolate them, and demanded an immediate, comprehensive and unconditional ceasefire while pledging support for Ukraine's self-defence and a moratorium on attacks against energy infrastructure and in the Black Sea.",
+      "is_quote": false,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://press.un.org/en/2026/sc16472.doc.htm"
+    },
+    {
+      "id": "st_1cda65c5a70d",
+      "speaker": "Emmanuel Macron",
+      "role": "President of France",
+      "date": "2026-10-08",
+      "text": "cette visite témoigne de notre détermination à poursuivre nos engagements stratégiques communs au service de la sécurité de l’Europe et des Européens",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 2,
+      "source_url": "https://www.elysee.fr/emmanuel-macron/2026/10/08/visite-detat-de-frank-walter-steinmeier-president-de-la-republique-federale-dallemagne"
+    },
+    {
+      "id": "st_5a967ff5698f",
+      "speaker": "Representative of France",
+      "role": "Representative",
+      "date": "2026-10-08",
+      "text": "Expressed concern about the DPRK's nuclear and ballistic missile programmes and condemned Russia's failure to respond to the principle of a complete ceasefire, while noting Ukraine has shown readiness to implement a moratorium on strikes against energy infrastructure and grain exports in the Black Sea.",
+      "is_quote": false,
+      "signal": "accusation",
+      "stance": -1,
+      "source_url": "https://press.un.org/en/2026/gadis3765.doc.htm"
+    },
+    {
+      "id": "st_a813ba8b4832",
+      "speaker": "Representative of France",
+      "role": "Representative",
+      "date": "2026-10-08",
+      "text": "This framework must take into account the radical disparities between the largest nuclear arsenals and the modest arsenals of France and the United Kingdom and be based on the bedrock of equity,",
+      "is_quote": true,
+      "signal": "offer",
+      "stance": 0,
+      "source_url": "https://press.un.org/en/2026/gadis3765.doc.htm"
+    },
+    {
       "id": "st_d108082f1e26",
       "speaker": "Emmanuel Macron",
       "role": "President of the Republic",
@@ -571,50 +615,6 @@
       "signal": "warning",
       "stance": -1,
       "source_url": "https://www.elysee.fr/emmanuel-macron/2026/09/28/allocutions-a-metz-aux-racines-de-leurope-pour-la-paix-et-lunite"
-    },
-    {
-      "id": "st_27ff776fe801",
-      "speaker": "Emmanuel Macron",
-      "role": "President of the Republic",
-      "date": "2026-09-28",
-      "text": "D'autres veulent encore aujourd'hui nous rejoindre, des Balkans jusqu'à l'Ukraine",
-      "is_quote": true,
-      "signal": "commitment",
-      "stance": 2,
-      "source_url": "https://www.elysee.fr/emmanuel-macron/2026/09/28/allocutions-a-metz-aux-racines-de-leurope-pour-la-paix-et-lunite"
-    },
-    {
-      "id": "st_f9434c5e17f5",
-      "speaker": "Emmanuel Macron",
-      "role": "President of the Republic",
-      "date": "2026-09-28",
-      "text": "Pour assurer une souveraineté réelle, il nous faut donc agir. Agir d'abord pour assurer notre sécurité et préserver nos valeurs, car la paix ne se décrète pas, elle se construit patiemment par des artisans de bonne volonté, lucides et constants.",
-      "is_quote": true,
-      "signal": "policy_announcement",
-      "stance": 1,
-      "source_url": "https://www.elysee.fr/emmanuel-macron/2026/09/28/allocutions-a-metz-aux-racines-de-leurope-pour-la-paix-et-lunite"
-    },
-    {
-      "id": "st_d3317b429920",
-      "speaker": "Emmanuel Macron",
-      "role": "President of the Republic",
-      "date": "2026-09-28",
-      "text": "Agir pour nous protéger contre l'épidémie de désinformation et d'ingérence qui veulent saper nos démocraties et nous diviser, porter atteinte aux projets européens.",
-      "is_quote": true,
-      "signal": "warning",
-      "stance": -1,
-      "source_url": "https://www.elysee.fr/emmanuel-macron/2026/09/28/allocutions-a-metz-aux-racines-de-leurope-pour-la-paix-et-lunite"
-    },
-    {
-      "id": "st_3fe876c371c5",
-      "speaker": "Presidency of France",
-      "role": "President of the Republic",
-      "date": "2026-09-25",
-      "text": "The apostolic visit forms part of the traditional relations between France and the Holy See and bears witness to the depth of a dialogue based on shared values and commitments.",
-      "is_quote": false,
-      "signal": "reassurance",
-      "stance": 2,
-      "source_url": "https://www.elysee.fr/emmanuel-macron/2026/09/25/pope-leo-xivs-apostolic-journey-to-france"
     }
   ],
   "involved": {

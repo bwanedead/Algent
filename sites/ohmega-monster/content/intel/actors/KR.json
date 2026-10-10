@@ -542,7 +542,96 @@
     "as_of": "2026-10-05",
     "nuclear": null
   },
-  "statements": [],
+  "statements": [
+    {
+      "id": "st_baa73273ef7e",
+      "speaker": "South Korean Foreign Ministry",
+      "role": "Foreign Ministry",
+      "date": "2026-10-10",
+      "text": "Ambassador Park Ki-chang was recalled and returned home Saturday in protest of Kyiv's disclosure of the transfer of North Korean POWs to Seoul",
+      "is_quote": false,
+      "signal": "policy_announcement",
+      "stance": -1,
+      "source_url": "https://en.yna.co.kr/view/AEN20261010000900315"
+    },
+    {
+      "id": "st_ed3fdf742b48",
+      "speaker": "Seoul",
+      "role": "Government",
+      "date": "2026-10-10",
+      "text": "A non-disclosure agreement on the POW transfer was reached with Kyiv at Ukraine's request to protect the soldiers and their families remaining in North Korea, and President Zelenskyy breached it by revealing the transfer during his address to the U.N. General Assembly in New York last month",
+      "is_quote": false,
+      "signal": "accusation",
+      "stance": -1,
+      "source_url": "https://en.yna.co.kr/view/AEN20261010000900315"
+    },
+    {
+      "id": "st_d2537c8ecbbe",
+      "speaker": "South Korean officials",
+      "role": "officials",
+      "date": "2026-10-10",
+      "text": "Two North Korean soldiers captured in January 2025 while fighting for Russia in the Kursk region arrived in South Korea in mid-September",
+      "is_quote": false,
+      "signal": "other",
+      "stance": 0,
+      "source_url": "https://en.yna.co.kr/view/AEN20261010000900315"
+    },
+    {
+      "id": "st_e21a544ca869",
+      "speaker": "Representative of the Republic of Korea",
+      "role": "Representative",
+      "date": "2026-10-08",
+      "text": "The [Democratic People’s Republic of Korea’s] continued development of nuclear weapons and ballistic missile programmes, in violation of its international obligations, poses a grave threat not only to peace and security on the Korean Peninsula and beyond but also to the global non-proliferation regime.",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://press.un.org/en/2026/gadis3765.doc.htm"
+    },
+    {
+      "id": "st_78207c7f57b5",
+      "speaker": "South Korean Foreign Ministry",
+      "role": "Foreign Ministry",
+      "date": "2026-10-08",
+      "text": "We hope that various issues between the two countries will be resolved smoothly, and we will continue consultations with the Ukrainian side to that end,",
+      "is_quote": true,
+      "signal": "reassurance",
+      "stance": 1,
+      "source_url": "https://en.yna.co.kr/view/AEN20261010000900315"
+    },
+    {
+      "id": "st_98252f4008c3",
+      "speaker": "Lee Jae Myung",
+      "role": "President",
+      "date": "2026-10-04",
+      "text": "a vicious cycle of hostility and confrontation to create a virtuous cycle of peace and prosperity",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 2,
+      "source_url": "https://en.yna.co.kr/view/AEN20261004003000315"
+    },
+    {
+      "id": "st_331a9185f893",
+      "speaker": "Lee Jae Myung",
+      "role": "President",
+      "date": "2026-10-04",
+      "text": "The journey to resolve the Korean Peninsula issue and establish peace will not be easy. But it is clear that is the road we have to walk",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 1,
+      "source_url": "https://en.yna.co.kr/view/AEN20261004003000315"
+    },
+    {
+      "id": "st_c398f4189664",
+      "speaker": "Lee Jae Myung",
+      "role": "President",
+      "date": "2026-10-04",
+      "text": "historic agreement",
+      "is_quote": true,
+      "signal": "other",
+      "stance": 1,
+      "source_url": "https://en.yna.co.kr/view/AEN20261004003000315"
+    }
+  ],
   "involved": {
     "theaters": [
       {
@@ -590,6 +679,13 @@
       {
         "id": "pls_russia_nato_diplomatic_rupture",
         "name": "Diplomatic Rupture",
+        "band": "severe",
+        "position": 62.0,
+        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      },
+      {
+        "id": "pls_energy_security_energy_price_and_market_shock",
+        "name": "Energy Price and Market Shock",
         "band": "severe",
         "position": 62.0,
         "theater_id": "thr_russia_ukraine_war_and_european_security_archite"

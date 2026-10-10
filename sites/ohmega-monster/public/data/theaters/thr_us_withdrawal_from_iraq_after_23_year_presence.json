@@ -3,11 +3,11 @@
   "theater_id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
   "name": "US withdrawal from Iraq after 23-year presence",
   "domain": "geopolitics",
-  "built_at": "2026-10-05T08:11:46.846756+00:00",
+  "built_at": "2026-10-10T06:18:36.543486+00:00",
   "first_seen": "2026-09-30",
   "last_seen": "2026-10-05",
   "days_covered": 3,
-  "state": "active",
+  "state": "quiet",
   "last_novel": "2026-10-01",
   "primer": {
     "text": "The United States has kept forces in Iraq for more than two decades, and Iraq is the country where that presence has been based. A withdrawal is the formal end of that long presence through a drawdown — the planned removal of troops and the closing out of the deployment. That presence has been part of the region's security arrangement, so how it ends matters beyond the two countries. Changes to who provides security inside Iraq carry implications for neighboring states and for broader regional security.",
@@ -29,7 +29,7 @@
       "id": "pls_iran_gulf_iran_proxy_axis_escalation",
       "name": "Iran Proxy Axis Escalation",
       "situation": "Iran, Israel and the Gulf",
-      "position": 83.0,
+      "position": 87.0,
       "band": "critical",
       "history": [
         {
@@ -51,6 +51,10 @@
         {
           "at": "2026-10-05T08:11:46.846756+00:00",
           "position": 83.0
+        },
+        {
+          "at": "2026-10-10T06:18:36.543486+00:00",
+          "position": 87.0
         }
       ]
     },
@@ -58,7 +62,7 @@
       "id": "pls_iran_gulf_us_iran_israel_military_confrontation",
       "name": "US-Iran-Israel Direct Military Confrontation",
       "situation": "Iran, Israel and the Gulf",
-      "position": 78.0,
+      "position": 75.0,
       "band": "critical",
       "history": [
         {
@@ -68,6 +72,10 @@
         {
           "at": "2026-10-01T08:28:58.928568+00:00",
           "position": 78.0
+        },
+        {
+          "at": "2026-10-10T06:18:36.543486+00:00",
+          "position": 75.0
         }
       ]
     }

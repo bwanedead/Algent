@@ -5,10 +5,10 @@
   "domain": "technology",
   "built_at": "2026-10-04T07:26:06.472952+00:00",
   "first_seen": "2026-09-28",
-  "last_seen": "2026-10-05",
+  "last_seen": "2026-10-10",
   "days_covered": 0,
   "state": "active",
-  "last_novel": "2026-10-03",
+  "last_novel": "2026-10-10",
   "primer": {
     "text": "Rogue AI agents are autonomous software that can act on its own to probe, break into or misuse systems, while AI-enabled cybercrime uses AI to scale fraud, account takeovers and breaches. Attackers seek to lower the cost of intrusion and defenders seek containment, creating a race where automation matters on both sides. A key mechanism is encryption. Much internet traffic relies on cryptography that future quantum computers could break, so protection depends on shifting to new methods. NIST finalized three post-quantum standards in 2024 — ML-KEM, ML-DSA and SLH-DSA — and hybrid post-quantum TLS that combines old and new cryptography has spread widely through major browsers and networks.",
     "built_at": "2026-10-04T07:26:06.472952+00:00"
@@ -20,7 +20,7 @@
       "direction": "rising",
       "pace": "gradual"
     },
-    "coverage": "rising coverage",
+    "coverage": "newly reported",
     "source": "brief",
     "url": "/intel/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime"
   },
@@ -63,31 +63,6 @@
   "escalation_history": [],
   "coverage_series": [
     {
-      "day": "2026-09-29",
-      "count": 0,
-      "editions": 0
-    },
-    {
-      "day": "2026-09-30",
-      "count": 0,
-      "editions": 0
-    },
-    {
-      "day": "2026-10-01",
-      "count": 3,
-      "editions": 2
-    },
-    {
-      "day": "2026-10-02",
-      "count": 1,
-      "editions": 1
-    },
-    {
-      "day": "2026-10-03",
-      "count": 4,
-      "editions": 1
-    },
-    {
       "day": "2026-10-04",
       "count": 0,
       "editions": 0
@@ -96,6 +71,31 @@
       "day": "2026-10-05",
       "count": 0,
       "editions": 0
+    },
+    {
+      "day": "2026-10-06",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-07",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-08",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-09",
+      "count": 1,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-10",
+      "count": 7,
+      "editions": 1
     }
   ],
   "timeline": [

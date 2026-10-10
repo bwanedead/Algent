@@ -3,28 +3,41 @@
   "theater_id": "thr_us_china_summit_and_strategic_competition",
   "name": "US-China summit and strategic competition",
   "domain": "geopolitics",
-  "built_at": "2026-10-04T07:26:06.472952+00:00",
-  "first_seen": "2026-09-26",
-  "last_seen": "2026-10-05",
-  "days_covered": 2,
+  "built_at": "2026-10-10T06:43:57.080244+00:00",
+  "first_seen": "2026-09-28",
+  "last_seen": "2026-10-10",
+  "days_covered": 3,
   "state": "active",
-  "last_novel": "2026-10-05",
+  "last_novel": "2026-10-10",
   "primer": {
     "text": "The United States and China are locked in strategic competition, a broad contest for economic, technological and security influence often framed as growth versus rivalry, where cooperation and rivalry run together. Summitry between the American and Chinese leaders is the main way to set direction, send alignment signals to allies and rivals, and keep crisis channels open so incidents do not escalate. In this context, strategic competition means managing rivalry without direct conflict; crisis channels, including a proposed AI hotline, are dedicated lines to defuse fast-moving military or technological incidents; panda diplomacy is the symbolic exchange of pandas used to signal goodwill or a thaw.",
     "built_at": "2026-10-04T07:26:06.472952+00:00"
   },
   "current": {
-    "date": "2026-10-02",
-    "bottom_line": "No new US-China policy moves in the last three days; the picture is unchanged from the Sept 23-25 Washington summit. The two-month truce extension to Jan 10, 2027, panda renewal, and announced AI/military channels remain pageantry and promises, with core gaps — undefined AI incident benchmarks and rare-earth flows still below historical levels — unresolved. Confidence is high that the truce holds for now, lower that safeguards will be operational before the November Shenzhen and December Miami meetings.",
+    "date": "2026-10-10",
+    "bottom_line": "Taiwan's deterrence messaging sharpened Oct 10 with President Lai framing a record NT$1.12 trillion defense budget as war prevention, while Washington simultaneously called China's east-of-Taiwan maritime activity 'deeply destabilizing' and a senior US official said markets are overpricing near-term Strait war risk. No new US-China summit-level moves or PLA drills followed; the Sept 23-25 truce framework to Jan 10, 2027 remains intact but core gaps on safeguards and rare-earth flows are unchanged. Confidence is high that deterrence holds near-term, lower that the 2027 budget passes unchanged through an opposition-controlled legislature.",
     "escalation": {
       "direction": "steady",
       "pace": "flat"
     },
-    "coverage": "falling coverage",
+    "coverage": "newly reported",
     "source": "daily",
-    "url": "/geopolitics/2026-10-02"
+    "url": "/geopolitics/2026-10-10"
   },
   "pulses": [
+    {
+      "id": "pls_china_taiwan_cross_strait_political_rupture",
+      "name": "Cross-Strait Political Rupture",
+      "situation": "China–Taiwan",
+      "position": 65.0,
+      "band": "severe",
+      "history": [
+        {
+          "at": "2026-10-10T06:33:34.545041+00:00",
+          "position": 65.0
+        }
+      ]
+    },
     {
       "id": "pls_us_china_technology_export_control_decoupling",
       "name": "Technology and Export-Control Decoupling",
@@ -39,6 +52,32 @@
       ]
     },
     {
+      "id": "pls_china_taiwan_pla_military_pressure_and_blockade_invasion_risk",
+      "name": "PLA Military Pressure and Blockade/Invasion Risk",
+      "situation": "China–Taiwan",
+      "position": 48.0,
+      "band": "elevated",
+      "history": [
+        {
+          "at": "2026-10-10T06:33:34.545041+00:00",
+          "position": 48.0
+        }
+      ]
+    },
+    {
+      "id": "pls_china_taiwan_taiwan_defence_vulnerability",
+      "name": "Taiwan Defence Vulnerability",
+      "situation": "China–Taiwan",
+      "position": 38.0,
+      "band": "elevated",
+      "history": [
+        {
+          "at": "2026-10-10T06:33:34.545041+00:00",
+          "position": 38.0
+        }
+      ]
+    },
+    {
       "id": "pls_us_china_trade_tariff_confrontation",
       "name": "Trade and Tariff Confrontation",
       "situation": "US–China competition",
@@ -48,6 +87,19 @@
         {
           "at": "2026-10-01T08:54:58.966164+00:00",
           "position": 35.0
+        }
+      ]
+    },
+    {
+      "id": "pls_china_taiwan_external_deterrence_failure_and_intervention_risk",
+      "name": "External Deterrence Failure and Intervention Risk",
+      "situation": "China–Taiwan",
+      "position": 32.0,
+      "band": "elevated",
+      "history": [
+        {
+          "at": "2026-10-10T06:33:34.545041+00:00",
+          "position": 32.0
         }
       ]
     },
@@ -83,46 +135,100 @@
       "date": "2026-10-02",
       "direction": "steady",
       "pace": "flat"
+    },
+    {
+      "date": "2026-10-10",
+      "direction": "steady",
+      "pace": "flat"
     }
   ],
   "coverage_series": [
     {
-      "day": "2026-09-26",
-      "count": 1,
-      "editions": 1
-    },
-    {
-      "day": "2026-09-27",
-      "count": 2,
-      "editions": 1
-    },
-    {
-      "day": "2026-09-28",
-      "count": 1,
-      "editions": 1
-    },
-    {
-      "day": "2026-09-29",
+      "day": "2026-10-04",
       "count": 0,
       "editions": 0
     },
     {
-      "day": "2026-09-30",
+      "day": "2026-10-05",
       "count": 0,
       "editions": 0
     },
     {
-      "day": "2026-10-01",
+      "day": "2026-10-06",
       "count": 0,
-      "editions": 2
+      "editions": 0
     },
     {
-      "day": "2026-10-02",
+      "day": "2026-10-07",
       "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-08",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-09",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-10",
+      "count": 5,
       "editions": 1
     }
   ],
   "timeline": [
+    {
+      "date": "2026-10-10",
+      "headline": "Lai frames record 2027 defense budget as deterrence, not provocation",
+      "detail": "Outside the Presidential Office in Taipei, Lai marked the 115th anniversary of the 1911 uprising and 30th anniversary of Taiwan's first direct presidential election, saying Taiwan 'cherishes peace' and 'will not give up our freedom,' is 'open to exchanges, but will not accept subordination,' and that increasing defense investment 'is not to provoke, rather, it is to deter war.' He accused China of continuing 'military and grey-zone activities in an attempt to alter the status quo across the Taiwan Strait.' His government has set aside NT$1.1225 trillion (~$34.5-35.3bn) for defense in 2027, 3.01% of GDP under NATO-style accounting, a record nominal amount that includes MND budget, special budgets, funds, pensions and Coast Guard. The NT$3.9266 trillion central budget requires approval by the opposition-controlled Legislative Yuan.",
+      "where": "Taipei, Taiwan",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/10/taiwan-president-says-defence-spending-boost-aims-to-deter-war",
+        "https://focustaiwan.tw/politics/202610100003",
+        "https://focustaiwan.tw/politics/202608200011"
+      ],
+      "from": "/geopolitics/2026-10-10"
+    },
+    {
+      "date": "2026-10-09",
+      "headline": "US calls China's east-of-Taiwan maritime assertions 'deeply destabilizing'",
+      "detail": "The State Department said Oct 9 it 'remains concerned by China's activity east of Taiwan' and that 'China's actions are deeply destabilizing. By asserting authorities around maritime areas that Taiwan has peacefully administered for over 70 years, China only exacerbates tensions and undermines the peaceful resolution of issues that it claims to seek,' urging Beijing to stop pressuring Taiwan and engage in meaningful dialogue. The statement followed a Reuters report that maritime militia vessel Minfudingyu 07902 was spotted >30 nautical miles (55.6km) off Hualien County in mid-August, accompanied by a China Coast Guard cutter and research vessel, identified by Taiwan's Apex Aviation. Taiwan's MND said China was using law enforcement and scientific research as pretexts to expand activities without triggering conflict and challenge maritime law enforcement; Coast Guard said vessels were outside restricted waters and were monitored.",
+      "where": "Washington / east of Taiwan off Hualien",
+      "verification": "researched",
+      "sources": [
+        "https://www.taipeitimes.com/News/front/archives/2026/10/10/2003865713",
+        "https://focustaiwan.tw/politics/202610090003"
+      ],
+      "from": "/geopolitics/2026-10-10"
+    },
+    {
+      "date": "2026-10-09",
+      "headline": "Senior US official says Strait war risk overpriced, deterrence holds",
+      "detail": "At the Milken Institute Asia Summit in Singapore, DeSombre said global investors are overestimating Taiwan Strait conflict risk by next year and that 'Both China and the US don't want conflict, and we're able to deter conflict.' He said 'the most mispricing is with regard to Taiwan, where actually I think people are overpricing the risk of something happening across the Taiwan Strait' and market anxieties are 'priced at too high a level.' He described Xi Jinping as a 'rational actor' who calculates strategic risks: 'To the extent that he realizes that it can't be done, or it can't be done without substantial consequences, it won't happen,' stressing robust deterrence with allies and severe repercussions would prevent Beijing from acting.",
+      "where": "Singapore",
+      "verification": "researched",
+      "sources": [
+        "https://www.cnbc.com/2026/10/09/taiwan-trump-china-militia-boat-tsmc-.html",
+        "https://www.taipeitimes.com/News/front/archives/2026/10/10/2003865713",
+        "https://www.taiwannews.com.tw/news/6455216"
+      ],
+      "from": "/geopolitics/2026-10-10"
+    },
+    {
+      "date": "2026-10-09",
+      "headline": "KMT power struggle watched by Washington and Beijing as legislature holds defense budget",
+      "detail": "Nikkei Asia reported Oct 9 tensions inside Taiwan's largest opposition party KMT are brewing weeks ahead of crucial local elections that will set stage for next year's presidential campaign, with both China and the US watching closely, describing 'two centers of gravity' as leader draws criticism. The KMT-led coalition controls the legislature which will decide next year's defense budget at a time of uncertainty over Washington's commitment. Prior Nikkei reporting noted Chairwoman Cheng Li-wun has sought talks with Xi and panned Lai's defense proposal. Taiwan is also waiting for US approval of a $14bn arms package including Patriot air defense after an $11bn package in December 2024.",
+      "where": "Taipei, Taiwan",
+      "verification": "researched",
+      "sources": [
+        "https://asia.nikkei.com/politics/taiwan-s-kmt-shows-signs-of-power-struggle-tracked-by-us-and-china"
+      ],
+      "from": "/geopolitics/2026-10-10"
+    },
     {
       "date": "2026-09-27",
       "headline": "Panda diplomacy renewed as pair arrives in Atlanta on 10-year loan",
@@ -171,10 +277,22 @@
   "map": null,
   "actors": [
     {
+      "name": "Cheng Li-wun",
+      "mentions": 1,
+      "first": "2026-10-09",
+      "last": "2026-10-09"
+    },
+    {
       "name": "China Wildlife Conservation Association",
       "mentions": 1,
       "first": "2026-09-27",
       "last": "2026-09-27"
+    },
+    {
+      "name": "China maritime militia / China Coast Guard",
+      "mentions": 1,
+      "first": "2026-10-09",
+      "last": "2026-10-09"
     },
     {
       "name": "China's Foreign Ministry",
@@ -183,10 +301,28 @@
       "last": "2026-09-26"
     },
     {
+      "name": "Kuomintang (KMT)",
+      "mentions": 1,
+      "first": "2026-10-09",
+      "last": "2026-10-09"
+    },
+    {
+      "name": "Michael DeSombre, US Assistant Secretary of State for East Asian and Pacific Affairs",
+      "mentions": 1,
+      "first": "2026-10-09",
+      "last": "2026-10-09"
+    },
+    {
       "name": "President Donald Trump",
       "mentions": 1,
       "first": "2026-09-23",
       "last": "2026-09-23"
+    },
+    {
+      "name": "President Lai Ching-te",
+      "mentions": 1,
+      "first": "2026-10-10",
+      "last": "2026-10-10"
     },
     {
       "name": "President Xi Jinping",
@@ -195,10 +331,22 @@
       "last": "2026-09-23"
     },
     {
+      "name": "Taiwan government",
+      "mentions": 1,
+      "first": "2026-10-10",
+      "last": "2026-10-10"
+    },
+    {
       "name": "Trump administration officials",
       "mentions": 1,
       "first": "2026-09-26",
       "last": "2026-09-26"
+    },
+    {
+      "name": "US State Department",
+      "mentions": 1,
+      "first": "2026-10-09",
+      "last": "2026-10-09"
     },
     {
       "name": "White House",
@@ -222,6 +370,28 @@
   "relations": [],
   "figures": [
     {
+      "label": "Taiwan 2027 defense budget (record nominal",
+      "unit": "NT$ trillion",
+      "series": [
+        {
+          "as_of": "2026-10-10",
+          "value": 1.1225,
+          "source": "https://focustaiwan.tw/politics/202608200011"
+        }
+      ]
+    },
+    {
+      "label": "Taiwan 2027 defense budget share of GDP (NATO-style",
+      "unit": "% of GDP",
+      "series": [
+        {
+          "as_of": "2026-10-10",
+          "value": 3.01,
+          "source": "https://focustaiwan.tw/politics/202608200011"
+        }
+      ]
+    },
+    {
       "label": "Chinese coal imports from US committed for 2027 (and again 2028",
       "unit": "million metric tons",
       "series": [
@@ -244,6 +414,17 @@
       ]
     },
     {
+      "label": "Chinese maritime militia vessel distance off Hualien (Minfudingyu 07902",
+      "unit": "nautical miles",
+      "series": [
+        {
+          "as_of": "2026-08-15",
+          "value": 30.0,
+          "source": "https://www.taipeitimes.com/News/front/archives/2026/10/10/2003865713"
+        }
+      ]
+    },
+    {
       "label": "Chinese pledge to purchase US soybeans per year under Busan truce",
       "unit": "million metric tons",
       "series": [
@@ -258,9 +439,134 @@
   "forecasts": [],
   "indicators": [],
   "statements": [],
-  "on_record": [],
+  "on_record": [
+    {
+      "id": "st_b531fca6aa06",
+      "speaker": "Guo Jiakun",
+      "role": "Foreign Ministry Spokesperson",
+      "affiliation": "China",
+      "iso2": "CN",
+      "date": "2026-10-06",
+      "venue": "press_conference",
+      "quote": "The Taiwan question is China’s internal affair. Resolving the Taiwan question is a matter for the Chinese ourselves that brooks no external interference. The U.S. side needs to implement the important common understandings reached at the meeting between the two presidents, abide by the one-China principle and the three China-U.S. joint communiqués, and act prudently on the Taiwan question.",
+      "paraphrase": "In response to a Reuters question citing U.S. officials' assessment that the likelihood of China 'invading' Taiwan before 2028 is decreasing, Guo Jiakun said resolving the Taiwan question is a matter for the Chinese themselves that brooks no external interference and demanded the U.S. implement the common understandings reached at the meeting between the two presidents, abide by the one-China principle and the three China-U.S. joint communiqués, and act prudently on the Taiwan question.",
+      "about": [
+        "Taiwan",
+        "United States"
+      ],
+      "about_iso2": [
+        "TW",
+        "US"
+      ],
+      "signal": "red_line",
+      "stance": -1,
+      "significance": "Restates China's red line that Taiwan is an internal affair with no external interference and conditions U.S. behavior on adherence to one-China principle and prior presidential understandings.",
+      "url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261006_12035790.html",
+      "reported_by": ""
+    },
+    {
+      "id": "st_0a03b68df2d0",
+      "speaker": "Guo Jiakun",
+      "role": "Foreign Ministry Spokesperson",
+      "affiliation": "China",
+      "iso2": "CN",
+      "date": "2026-10-06",
+      "venue": "press_conference",
+      "quote": "We remain firmly opposed to U.S. arms sales to China’s Taiwan region.",
+      "paraphrase": "In response to questions from Reuters and AFP about Taiwan receiving two U.S.-made F-16V fighter jets and planning to receive 64 more within the year, Guo Jiakun said China remains firmly opposed to U.S. arms sales to China's Taiwan region.",
+      "about": [
+        "Taiwan",
+        "United States"
+      ],
+      "about_iso2": [
+        "TW",
+        "US"
+      ],
+      "signal": "accusation",
+      "stance": -1,
+      "significance": "Reaffirms China's standing opposition to U.S. arms sales to Taiwan amid new F-16V deliveries.",
+      "url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202610/t20261006_12035790.html",
+      "reported_by": ""
+    },
+    {
+      "id": "st_69dbae539c4c",
+      "speaker": "Guo Jiakun",
+      "role": "Foreign Ministry Spokesperson",
+      "affiliation": "China",
+      "iso2": "CN",
+      "date": "2026-09-29",
+      "venue": "press_conference",
+      "quote": "The incumbent leader of Japan not only refuses to reflect on the history of aggression, but also claims that a contingency in Taiwan will constitute a “survival threatening” situation for Japan. This is a blatant challenge to China’s state sovereignty and against the aspiration demonstrated by the normalization of China-Japan relations and the political commitments Japan made to China.",
+      "paraphrase": "In response to a question about the 54th anniversary of the China-Japan Joint Statement, the spokesperson said the incumbent Japanese leader has gravely undermined the political foundation of bilateral relations by refusing to reflect on the history of aggression and by claiming a Taiwan contingency constitutes a 'survival threatening' situation for Japan, which China views as a blatant challenge to its sovereignty and to Japan's commitments at normalization.",
+      "about": [
+        "Japan",
+        "Taiwan"
+      ],
+      "about_iso2": [
+        "JP",
+        "TW"
+      ],
+      "signal": "accusation",
+      "stance": -2,
+      "significance": "Directly accuses Japan's current leadership of violating the One-China principle and the 1972 Joint Statement by linking Taiwan to Japanese collective self-defense.",
+      "url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202609/t20260929_12033413.html",
+      "reported_by": ""
+    },
+    {
+      "id": "st_e57996d5b131",
+      "speaker": "Guo Jiakun",
+      "role": "Foreign Ministry Spokesperson",
+      "affiliation": "China",
+      "iso2": "CN",
+      "date": "2026-09-29",
+      "venue": "press_conference",
+      "quote": "the pressing priority for Japan is to correct Japanese leader’s erroneous words and deeds on the Taiwan question.",
+      "paraphrase": "Citing Foreign Minister Wang Yi's meeting with Takeshi Iwaya, the spokesperson said Japan's pressing priority is to correct the Japanese leader's erroneous words and deeds on the Taiwan question, adopt a correct attitude on historical issues, form an objective and rational perception of China, and return to the purpose and mission of the four political documents.",
+      "about": [
+        "Japan",
+        "Taiwan"
+      ],
+      "about_iso2": [
+        "JP",
+        "TW"
+      ],
+      "signal": "demand",
+      "stance": -1,
+      "significance": "Sets explicit conditions for stabilizing China-Japan relations: retraction/correction on Taiwan and history as prerequisite.",
+      "url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202609/t20260929_12033413.html",
+      "reported_by": ""
+    },
+    {
+      "id": "st_ff582ea19402",
+      "speaker": "Guo Jiakun",
+      "role": "Foreign Ministry Spokesperson",
+      "affiliation": "China",
+      "iso2": "CN",
+      "date": "2026-09-29",
+      "venue": "press_conference",
+      "quote": "The four political documents between China and Japan, including the joint statement, laid the political and legal foundation for China-Japan relations, and established the rules for properly settling major issues of principle, including history and Taiwan. There should be no distortion or regression, still less sabotage, regarding these principles.",
+      "paraphrase": "The four political documents between China and Japan, including the 1972 Joint Statement, laid the political and legal foundation for bilateral relations and established rules for settling major issues of principle including history and Taiwan.",
+      "about": [
+        "Japan",
+        "Taiwan"
+      ],
+      "about_iso2": [
+        "JP",
+        "TW"
+      ],
+      "signal": "commitment",
+      "stance": 0,
+      "significance": "Reasserts China's legal-political baseline for Japan relations and frames any deviation on history/Taiwan as violation of foundational commitments.",
+      "url": "https://www.mfa.gov.cn/eng/xw/fyrbt/lxjzh/202609/t20260929_12033413.html",
+      "reported_by": ""
+    }
+  ],
   "links": [],
   "reports": [
+    {
+      "date": "2026-10-10",
+      "url": "/geopolitics/2026-10-10"
+    },
     {
       "date": "2026-10-02",
       "url": "/geopolitics/2026-10-02"

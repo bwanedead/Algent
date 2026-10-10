@@ -3,26 +3,26 @@
   "theater_id": "thr_russia_ukraine_war_and_european_security_archite",
   "name": "Russia-Ukraine war and European security architecture",
   "domain": "geopolitics",
-  "built_at": "2026-10-05T09:41:18.336483+00:00",
+  "built_at": "2026-10-10T06:43:57.080244+00:00",
   "first_seen": "2026-09-28",
-  "last_seen": "2026-10-05",
-  "days_covered": 5,
+  "last_seen": "2026-10-10",
+  "days_covered": 6,
   "state": "active",
-  "last_novel": "2026-10-05",
+  "last_novel": "2026-10-10",
   "primer": {
     "text": "Russia's war on Ukraine has become a contest between battlefield attrition and economic endurance that directly involves European security. Ukraine tries to hold territory while using long-range drones against Russian oil refineries and logistics to cut Moscow's war funding; Russia tries to sustain its offensive and pressure NATO through airspace incursions, sabotage of rail and infrastructure, and drone operations attributed to its services. NATO's eastern members seek protection through alliance mechanisms. Article 4 is a call for consultations when a member feels threatened, and Eastern Sentry is the alliance's reinforced air-defence posture along that flank. Russia's reliance on China for dual-use components and export markets shapes how sanctions bite.",
     "built_at": "2026-10-04T07:26:06.472952+00:00"
   },
   "current": {
-    "date": "2026-10-05",
-    "bottom_line": "Russia sustained its Dnipro bridge campaign for a fourth straight day Oct 4 and formally vowed to intensify strikes on military-industrial infrastructure in Kyiv, while Ukraine confirmed it has disabled 51% of Russian refining capacity and will double down on refinery strikes. Germany's Oct 4 Kyiv visit locked a €1.3bn package and €8.5bn in co-production deals for interceptor drones and long-range weapons, anchoring the energy-mobility war in alliance support. Confidence is high on bridge hits, refinery damage and German aid; lower on Russian claims of vessel hits and drone-intercept tallies.",
+    "date": "2026-10-10",
+    "bottom_line": "The energy-sanctions front fractured Oct 9 as the U.S. agreed to take millions of tonnes of Russian diesel and ease related measures, undercutting the refinery-war pressure Ukraine has built. At the same time Russia escalated civilian strikes — 20 killed in one Pryluky apartment (KN-23), ~30 killed on Kramatorsk buses, 4 killed in Zaporizhzhia — while Ukraine expanded its counter-campaign to Russian data centers and fuel terminals. Confidence is high on the diplomatic shift and casualty strikes (multiple outlets); lower on exact diesel volumes and damage extent, which rest on single-source headlines.",
     "escalation": {
       "direction": "rising",
-      "pace": "gradual"
+      "pace": "fast"
     },
     "coverage": "rising coverage",
     "source": "daily",
-    "url": "/geopolitics/2026-10-05"
+    "url": "/geopolitics/2026-10-10"
   },
   "pulses": [
     {
@@ -128,6 +128,23 @@
       ]
     },
     {
+      "id": "pls_energy_security_energy_price_and_market_shock",
+      "name": "Energy Price and Market Shock",
+      "situation": "Global energy security",
+      "position": 62.0,
+      "band": "severe",
+      "history": [
+        {
+          "at": "2026-10-01T03:00:57.470982+00:00",
+          "position": 64.0
+        },
+        {
+          "at": "2026-10-05T08:11:46.846756+00:00",
+          "position": 62.0
+        }
+      ]
+    },
+    {
       "id": "pls_russia_nato_direct_military_confrontation",
       "name": "Direct Military Confrontation",
       "situation": "Russia–NATO confrontation",
@@ -166,46 +183,120 @@
       "date": "2026-10-05",
       "direction": "rising",
       "pace": "gradual"
+    },
+    {
+      "date": "2026-10-10",
+      "direction": "rising",
+      "pace": "fast"
     }
   ],
   "coverage_series": [
     {
-      "day": "2026-09-29",
-      "count": 0,
-      "editions": 0
-    },
-    {
-      "day": "2026-09-30",
-      "count": 0,
-      "editions": 0
-    },
-    {
-      "day": "2026-10-01",
-      "count": 0,
-      "editions": 2
-    },
-    {
-      "day": "2026-10-02",
-      "count": 3,
-      "editions": 1
-    },
-    {
-      "day": "2026-10-03",
-      "count": 5,
-      "editions": 1
-    },
-    {
       "day": "2026-10-04",
-      "count": 2,
+      "count": 0,
       "editions": 0
     },
     {
       "day": "2026-10-05",
-      "count": 4,
+      "count": 0,
       "editions": 0
+    },
+    {
+      "day": "2026-10-06",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-07",
+      "count": 2,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-08",
+      "count": 5,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-09",
+      "count": 13,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-10",
+      "count": 7,
+      "editions": 1
     }
   ],
   "timeline": [
+    {
+      "date": "2026-10-09",
+      "headline": "Trump-Putin diesel deal and U.S. easing of Russian diesel sanctions announced Oct 9",
+      "detail": "Multiple outlets Oct 9 reported Trump said Russia will supply millions of tonnes of diesel to U.S. and global markets as Washington eases sanctions on Russian diesel sales, reversing years of pressure over Ukraine. Headlines cite Trump thanking Putin; Zelensky quoted as calling it 'an investment in a war that must be ended, not prolonged' and 'we're being used as a front.' Kremlin via TASS said Putin downplayed immediate talks resumption in same call. Single-source per outlet, not yet confirmed by U.S. Treasury/OFAC gazette.",
+      "where": "Washington / Moscow",
+      "verification": "reported",
+      "sources": [
+        "https://en.mercopress.com/2026/10/09/trump-says-russia-will-supply-millions-of-tonnes-of-diesel-as-us-eases-sanctions-on-moscow",
+        "https://www.thehindu.com/news/international/us-lifts-sanctions-on-sale-of-russian-diesel-in-global-markets/article71565823.ece",
+        "https://www.france24.com/en/europe/20261009-trump-strikes-diesel-deal-with-putin-reversing-years-of-pressure-on-russia-over-ukraine-war",
+        "https://meduza.io/en/news/2026/10/09/trump-says-he-reached-a-deal-with-putin-to-supply-russian-diesel-to-u-s-and-global-markets-breaking-with-years-of-american-sanctions-policy",
+        "https://www.dw.com/en/trump-putin-agree-on-deal-to-release-russian-diesel-to-us-world-markets/a-79623364?maca=en-rss-en-all-1573-rdf"
+      ],
+      "from": "/geopolitics/2026-10-10"
+    },
+    {
+      "date": "2026-10-08",
+      "headline": "Ukraine expands strikes to Russian AI data infrastructure and fuel terminals Oct 8-10",
+      "detail": "Reported Oct 8-10: Ukrainian drones hit Yandex data center and industrial facilities across Russia Oct 8 (Moscow Times), second straight day of Yandex strikes Oct 9 (Meduza), and major fire at oil terminal linked to Novoshakhtinsk refinery after suspected drone strike Oct 10. Follows late-September Russian data-center/telecom hits, indicating mutual data-infrastructure campaign. Damage extent single-source per incident.",
+      "where": "Yandex data center, Moscow region and Novoshakhtinsk, Rostov Oblast, Russia",
+      "verification": "reported",
+      "sources": [
+        "https://www.themoscowtimes.com/2026/10/08/ukrainian-drones-hit-yandex-data-center-after-wave-of-russian-attacks-a93915",
+        "https://meduza.io/en/feature/2026/10/09/ukraine-strikes-russian-tech-giant-yandex-s-data-centers-for-a-second-straight-day-as-new-peace-talks-involving-ukraine-the-u-s-and-europe-get-underway-in-miami",
+        "https://kyivindependent.com/major-fire-reported-at-oil-terminal-linked-to-russias-novoshakhtinsk-refinery-after-suspected-drone-strike/",
+        "https://kyivindependent.com/ukraine-war-latest-drones-strike-another-yandex-data-center-in-russia/"
+      ],
+      "from": "/geopolitics/2026-10-10"
+    },
+    {
+      "date": "2026-10-08",
+      "headline": "Russian missile strikes on Pryluky, Kramatorsk and Zaporizhzhia kill dozens Oct 7-10",
+      "detail": "Reported Oct 7-10: Oct 7-8 massive ballistic missile/drone attack killed at least 28, including 20 in one Pryluky apartment hit by North Korean KN-23 (Chernihiv Oblast); Oct 8 ballistic missile hit two buses in Kramatorsk killing at least 30, 18 wounded; Oct 10 guided bombs hit Zaporizhzhia apartment killing 4, injuring 4. UN press release Oct 9 said strikes reached 'new horrifying level'; UK at UN warned directly targeting civilian infrastructure may constitute war crime and announced 38 new sanctions. Each casualty figure single-source, not independently verified.",
+      "where": "Pryluky, Kramatorsk, Zaporizhzhia, Ukraine",
+      "verification": "reported",
+      "sources": [
+        "https://www.theguardian.com/world/2026/oct/08/ukraine-war-briefing-zelenskyy-condemns-vile-attacks-from-russia-that-killed-20-in-one-apartment",
+        "https://www.aljazeera.com/news/2026/10/8/russia-attack-in-ukraines-kramatorsk-kills-12",
+        "https://kyivindependent.com/russian-guided-bombs-hit-zaporizhzhia-apartment-building-killing-4-injuring-4/",
+        "https://press.un.org/en/2026/sc16472.doc.htm"
+      ],
+      "from": "/geopolitics/2026-10-10"
+    },
+    {
+      "date": "2026-10-08",
+      "headline": "Lithuania reinforces Kaliningrad border and Miami talks test diplomacy Oct 8-10",
+      "detail": "Reported Oct 8 Lithuania deployed army to Kaliningrad border after Belarus-Latvia breach; Oct 10 U.S., Ukrainian and European officials met in Miami to discuss ending war (Kyiv Independent), while TASS said Moscow will reconsider resuming talks after Ukrainian attacks and Kremlin said Putin downplayed immediate talks resumption. No joint communiqué from Miami published.",
+      "where": "Lithuania-Kaliningrad border and Miami, USA",
+      "verification": "reported",
+      "sources": [
+        "https://www.themoscowtimes.com/2026/10/08/lithuania-deploys-army-to-kaliningrad-border-after-belarus-latvia-breach-a93920",
+        "https://kyivindependent.com/us-ukrainian-european-officials-discuss-ending-russias-war-at-miami-meeting/",
+        "https://tass.com/politics/2200165",
+        "https://www.themoscowtimes.com/2026/10/10/kremlin-says-putin-in-phone-call-with-trump-downplays-immediate-ukraine-talks-resumption-a93938"
+      ],
+      "from": "/geopolitics/2026-10-10"
+    },
+    {
+      "date": "2026-10-07",
+      "headline": "UK-Germany joint anti-sabotage/cyber pact and UK oil-sanctions expansion Oct 7-8",
+      "detail": "Reported Oct 7: UK and Germany launched joint partnership to counter sabotage and cyber attacks (gov.uk). Oct 8 UK expanded sanctions to cover 90% of Russian oil output, shadow fleet and finance networks (Moscow Times). Follows German attribution of Leipzig drone attack to Russia Sept 1-2 and NATO Eastern Sentry posture. Partnership details and sanctions statutory instruments not yet published.",
+      "where": "London / Berlin",
+      "verification": "reported",
+      "sources": [
+        "https://www.gov.uk/government/news/uk-and-germany-launch-joint-partnership-to-counter-sabotage-and-cyber-attacks",
+        "https://www.themoscowtimes.com/2026/10/08/uk-expands-sanctions-to-cover-90-of-russian-oil-output-shadow-fleet-and-finance-networks-a93922"
+      ],
+      "from": "/geopolitics/2026-10-10"
+    },
     {
       "date": "2026-10-05",
       "headline": "Strikes widen beyond Kyiv to Kharkiv, Odesa ports and Russian airfield",
@@ -959,9 +1050,21 @@
   "actors": [
     {
       "name": "Russia",
-      "mentions": 10,
+      "mentions": 11,
       "first": "2022-02-24",
-      "last": "2026-10-04"
+      "last": "2026-10-09"
+    },
+    {
+      "name": "Russian Armed Forces",
+      "mentions": 6,
+      "first": "2026-09-28",
+      "last": "2026-10-08"
+    },
+    {
+      "name": "Ukraine",
+      "mentions": 6,
+      "first": "2025-01-01",
+      "last": "2026-10-08"
     },
     {
       "name": "President Volodymyr Zelensky",
@@ -970,22 +1073,10 @@
       "last": "2026-10-04"
     },
     {
-      "name": "Russian Armed Forces",
-      "mentions": 5,
-      "first": "2026-09-28",
-      "last": "2026-10-05"
-    },
-    {
       "name": "Russian forces",
       "mentions": 5,
       "first": "2026-09-27",
       "last": "2026-10-02"
-    },
-    {
-      "name": "Ukraine",
-      "mentions": 4,
-      "first": "2025-01-01",
-      "last": "2026-10-04"
     },
     {
       "name": "President Vladimir Putin",
@@ -994,16 +1085,40 @@
       "last": "2026-10-01"
     },
     {
+      "name": "Vladimir Putin",
+      "mentions": 3,
+      "first": "2026-09-28",
+      "last": "2026-10-09"
+    },
+    {
+      "name": "Donald Trump",
+      "mentions": 2,
+      "first": "2026-09-22",
+      "last": "2026-10-09"
+    },
+    {
+      "name": "Germany",
+      "mentions": 2,
+      "first": "2026-10-04",
+      "last": "2026-10-07"
+    },
+    {
+      "name": "NATO",
+      "mentions": 2,
+      "first": "2025-01-14",
+      "last": "2026-10-07"
+    },
+    {
       "name": "Poland",
       "mentions": 2,
       "first": "2025-09-03",
       "last": "2026-10-02"
     },
     {
-      "name": "Vladimir Putin",
+      "name": "United States",
       "mentions": 2,
-      "first": "2026-09-28",
-      "last": "2026-10-04"
+      "first": "2026-10-08",
+      "last": "2026-10-09"
     },
     {
       "name": "Baltic states/Poland",
@@ -1012,40 +1127,16 @@
       "last": "2025-09-09"
     },
     {
+      "name": "Belarus",
+      "mentions": 1,
+      "first": "2026-10-08",
+      "last": "2026-10-08"
+    },
+    {
       "name": "Centrenergo / Trypillya Thermal Power Plant",
       "mentions": 1,
       "first": "2026-09-29",
       "last": "2026-09-29"
-    },
-    {
-      "name": "China",
-      "mentions": 1,
-      "first": "2026-10-03",
-      "last": "2026-10-03"
-    },
-    {
-      "name": "Chinese military contingent",
-      "mentions": 1,
-      "first": "2026-09-28",
-      "last": "2026-09-28"
-    },
-    {
-      "name": "Danish Defence Intelligence Service (DDIS) Chief Thomas Ahrenkiel",
-      "mentions": 1,
-      "first": "2026-10-01",
-      "last": "2026-10-01"
-    },
-    {
-      "name": "Danish Defence Minister Jeppe Bruus",
-      "mentions": 1,
-      "first": "2026-10-01",
-      "last": "2026-10-01"
-    },
-    {
-      "name": "Defence Minister Władysław Kosiniak-Kamysz",
-      "mentions": 1,
-      "first": "2026-10-01",
-      "last": "2026-10-01"
     }
   ],
   "relations": [
@@ -1388,6 +1479,14 @@
   ],
   "statements": [
     {
+      "who": "United Kingdom delegate",
+      "role": "Delegate to the UN",
+      "said": "Directly targeting civilian infrastructure may constitute a war crime",
+      "quote": true,
+      "when": "2026-10-09",
+      "source": "https://press.un.org/en/2026/sc16472.doc.htm"
+    },
+    {
       "who": "Vladimir Putin",
       "role": "President of Russia",
       "said": "Russia has acquired a reliable space-based missile defence shield as effective instrument for maintaining global strategic parity and will expand orbital constellation and advanced weapons technologies",
@@ -1413,6 +1512,55 @@
     }
   ],
   "on_record": [
+    {
+      "id": "st_8ed1091c8286",
+      "speaker": "Dmitry Medvedev",
+      "role": "Deputy Chairman of the Security Council",
+      "affiliation": "Russia",
+      "iso2": "RU",
+      "date": "2026-10-09",
+      "venue": "other",
+      "quote": "Now, it is quite likely that we will have to replenish the exchange fund with European and American idiots in order to get our own people out. There’s no other way: when in Rome, do as the Romans do…,",
+      "paraphrase": "Russia will likely need to replenish its prisoner exchange fund by detaining European and American citizens in order to free Russians held in Europe.",
+      "about": [
+        "Europe",
+        "United States",
+        "Russia"
+      ],
+      "about_iso2": [
+        "US",
+        "RU"
+      ],
+      "signal": "threat",
+      "stance": -2,
+      "significance": "Explicit threat to detain European and U.S. citizens as leverage for prisoner exchanges in response to Montenegro's arrest of Rybar founder, signaling retaliatory hostage-diplomacy posture.",
+      "url": "https://www.themoscowtimes.com/2026/10/09/montenegro-arrests-founder-of-influential-russian-pro-war-blog-rybar-a93929",
+      "reported_by": "The Moscow Times"
+    },
+    {
+      "id": "st_a89c55aa6248",
+      "speaker": "United Kingdom delegate",
+      "role": "Delegate to the UN",
+      "affiliation": "United Kingdom",
+      "iso2": "GB",
+      "date": "2026-10-09",
+      "venue": "other",
+      "quote": "Directly targeting civilian infrastructure may constitute a war crime",
+      "paraphrase": "Warned Moscow is seeking to make the unacceptable appear routine, citing a Russian Defence Ministry post saying Ukrainians would freeze and the Kremlin calling Ukraine's energy system an Achilles heel, said directly targeting civilian infrastructure may constitute a war crime, and called for increased pressure including 38 new British sanctions on suppliers to Russia's military.",
+      "about": [
+        "Russia",
+        "Ukraine"
+      ],
+      "about_iso2": [
+        "RU",
+        "UA"
+      ],
+      "signal": "threat",
+      "stance": -2,
+      "significance": "UK raises war crimes liability for energy strikes and announces concrete sanctions pressure.",
+      "url": "https://press.un.org/en/2026/sc16472.doc.htm",
+      "reported_by": ""
+    },
     {
       "id": "st_8ecc38221968",
       "speaker": "Johann Wadephul",
@@ -1555,6 +1703,172 @@
       "signal": "reassurance",
       "stance": 2,
       "significance": "Presents aid as mutual security benefit to counter domestic criticism of Ukraine spending",
+      "url": "https://www.dw.com/en/germany-s-merz-visits-kyiv-as-russia-strikes-bridge/a-79534734?maca=en-rss-en-all-1573-rdf",
+      "reported_by": "Deutsche Welle"
+    },
+    {
+      "id": "st_51b42f279fd4",
+      "speaker": "Friedrich Merz",
+      "role": "Chancellor",
+      "affiliation": "Germany",
+      "iso2": "DE",
+      "date": "2026-10-04",
+      "venue": "other",
+      "quote": "You can rely on us.",
+      "paraphrase": "He traveled to Kyiv with the message that Ukraine can rely on Germany.",
+      "about": [
+        "Ukraine"
+      ],
+      "about_iso2": [
+        "UA"
+      ],
+      "signal": "reassurance",
+      "stance": 2,
+      "significance": "Public German reassurance of continued support during unannounced wartime visit to Kyiv.",
+      "url": "https://www.aa.com.tr/en/europe/zelenskyy-says-germany-provides-ukraine-with-146b-support-package/4077652",
+      "reported_by": "Anadolu Agency"
+    },
+    {
+      "id": "st_626ff509c90b",
+      "speaker": "Friedrich Merz",
+      "role": "Chancellor",
+      "affiliation": "Germany",
+      "iso2": "DE",
+      "date": "2026-10-04",
+      "venue": "press_conference",
+      "quote": "",
+      "paraphrase": "Germany pledged further military and energy assistance to Ukraine, including a support package worth more than €1.3 billion",
+      "about": [
+        "Ukraine",
+        "Germany"
+      ],
+      "about_iso2": [
+        "UA",
+        "DE"
+      ],
+      "signal": "commitment",
+      "stance": 2,
+      "significance": "Concrete new aid commitment signals sustained German backing ahead of winter",
+      "url": "https://www.dw.com/en/germany-s-merz-visits-kyiv-as-russia-strikes-bridge/a-79534734?maca=en-rss-en-all-1573-rdf",
+      "reported_by": "Deutsche Welle"
+    },
+    {
+      "id": "st_199c0518abc6",
+      "speaker": "Friedrich Merz",
+      "role": "Chancellor",
+      "affiliation": "Germany",
+      "iso2": "DE",
+      "date": "2026-10-04",
+      "venue": "press_conference",
+      "quote": "You can count on our help.",
+      "paraphrase": "Ukraine will need all of Germany's support in coming weeks as winter approaches and Russian attacks intensify, and Ukraine can count on German help",
+      "about": [
+        "Ukraine",
+        "Germany"
+      ],
+      "about_iso2": [
+        "UA",
+        "DE"
+      ],
+      "signal": "reassurance",
+      "stance": 2,
+      "significance": "Explicit reassurance of continued support during expected intensified Russian winter campaign",
+      "url": "https://www.dw.com/en/germany-s-merz-visits-kyiv-as-russia-strikes-bridge/a-79534734?maca=en-rss-en-all-1573-rdf",
+      "reported_by": "Deutsche Welle"
+    },
+    {
+      "id": "st_86f55ef3570a",
+      "speaker": "Friedrich Merz",
+      "role": "Chancellor",
+      "affiliation": "Germany",
+      "iso2": "DE",
+      "date": "2026-10-04",
+      "venue": "other",
+      "quote": "Ukraine will need our support",
+      "paraphrase": "Ukraine will continue to need German support",
+      "about": [
+        "Ukraine"
+      ],
+      "about_iso2": [
+        "UA"
+      ],
+      "signal": "commitment",
+      "stance": 2,
+      "significance": "Signals continued German backing for Ukraine during Merz's solidarity visit to Kyiv after Russian strikes.",
+      "url": "https://www.france24.com/en/german-chancellor-in-kyiv-ukraine-will-need-our-support",
+      "reported_by": "France 24"
+    },
+    {
+      "id": "st_4758bbc3b6cb",
+      "speaker": "Russian Foreign Ministry",
+      "role": "Foreign Ministry",
+      "affiliation": "Russia",
+      "iso2": "RU",
+      "date": "2026-10-04",
+      "venue": "statement",
+      "quote": "The responsibility for any negative consequences lies entirely with those who ignore this warning,",
+      "paraphrase": "Foreign diplomats and visitors should avoid Kyiv, especially military and government buildings, and bear full responsibility for any negative consequences if they ignore the warning",
+      "about": [
+        "Ukraine",
+        "Germany",
+        "other foreign states"
+      ],
+      "about_iso2": [
+        "UA",
+        "DE"
+      ],
+      "signal": "warning",
+      "stance": -2,
+      "significance": "Russian threat aimed at deterring Western visits to Kyiv, issued hours before Merz arrival during strikes on bridges",
+      "url": "https://www.dw.com/en/germany-s-merz-visits-kyiv-as-russia-strikes-bridge/a-79534734?maca=en-rss-en-all-1573-rdf",
+      "reported_by": "Deutsche Welle"
+    },
+    {
+      "id": "st_97eaab6cb83f",
+      "speaker": "Russian Foreign Ministry",
+      "role": "Foreign Ministry",
+      "affiliation": "Russia",
+      "iso2": "RU",
+      "date": "2026-10-04",
+      "venue": "statement",
+      "quote": "",
+      "paraphrase": "Russian strikes on Ukraine are responses to terrorist acts by the Ukrainian armed forces against Russian civilian infrastructure",
+      "about": [
+        "Russia",
+        "Ukraine"
+      ],
+      "about_iso2": [
+        "RU",
+        "UA"
+      ],
+      "signal": "accusation",
+      "stance": -2,
+      "significance": "Russian justification for strikes on Kyiv infrastructure, shifting blame to Ukraine",
+      "url": "https://www.dw.com/en/germany-s-merz-visits-kyiv-as-russia-strikes-bridge/a-79534734?maca=en-rss-en-all-1573-rdf",
+      "reported_by": "Deutsche Welle"
+    },
+    {
+      "id": "st_b68e21237e30",
+      "speaker": "Friedrich Merz",
+      "role": "Chancellor",
+      "affiliation": "Germany",
+      "iso2": "DE",
+      "date": "2026-10-04",
+      "venue": "speech",
+      "quote": "If we in Germany waver, Europe wavers,",
+      "paraphrase": "If Germany wavers, Europe wavers, and if Europe wavers, Ukraine wavers; Germany will not be divided despite pressure from the AfD and its Russian backers",
+      "about": [
+        "Germany",
+        "Europe",
+        "Ukraine"
+      ],
+      "about_iso2": [
+        "DE",
+        "UA"
+      ],
+      "signal": "commitment",
+      "stance": 1,
+      "significance": "Links German domestic resolve directly to European unity and Ukraine's survival, calling out domestic pro-Russian opposition",
       "url": "https://www.dw.com/en/germany-s-merz-visits-kyiv-as-russia-strikes-bridge/a-79534734?maca=en-rss-en-all-1573-rdf",
       "reported_by": "Deutsche Welle"
     },
@@ -1970,6 +2284,18 @@
     {
       "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
       "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
+      "link": "Russia-Ukraine war and European security architecture ↔ US-Iran-Houthi confrontation over Hormuz and Red Sea: reported US easing of Russian diesel sanctions while Hormuz tanker transits measured 0 ships/day as of Oct 4 (outside full-history range) jointly strain European energy, with TTF gas measured 81.43 EUR/MWh as of Oct 9 at 99th percentile and 152% above a year ago",
+      "date": "2026-10-10"
+    },
+    {
+      "theater_id": "thr_us_sanctions_on_icc_and_nobel_peace_prize_to_nav",
+      "name": "US sanctions on ICC and Nobel Peace Prize to Navi Pillay",
+      "link": "Russia-Ukraine war and European security architecture ↔ US sanctions on ICC and Nobel Peace Prize to Navi Pillay: US-ICC friction spans both theaters as the ICC pursues Russian actions in Ukraine while reported US sanctions aim to block ICC action related to Netanyahu",
+      "date": "2026-10-10"
+    },
+    {
+      "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+      "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
       "link": "Russia-Ukraine war and European security architecture — US-Iran-Houthi confrontation over Hormuz and Red Sea: Ukraine's refinery campaign claiming 51% of Russian refining disabled and Hormuz closure holding tanker transits at 1 ship/day as of 2026-09-27 outside full-history range jointly sustain energy pressure with TTF gas at 74.76 EUR/MWh as of 2026-10-02 up 138% year-on-year and oil above $100 despite G7 100-million-barrel release.",
       "date": "2026-10-05"
     },
@@ -1993,6 +2319,10 @@
     }
   ],
   "reports": [
+    {
+      "date": "2026-10-10",
+      "url": "/geopolitics/2026-10-10"
+    },
     {
       "date": "2026-10-05",
       "url": "/geopolitics/2026-10-05"

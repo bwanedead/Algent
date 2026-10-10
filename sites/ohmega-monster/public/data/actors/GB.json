@@ -550,92 +550,92 @@
   },
   "statements": [
     {
-      "id": "st_ecdc88d2f76e",
-      "speaker": "Eleanor Sanders",
-      "role": "UK Human Rights Ambassador",
-      "date": "2026-10-02",
-      "text": "The UK is supporting this work with $7.5 million to the Human Rights Compliance Mechanism for the Gang Suppression Force, which will be delivered by the Office for the High Commissioner for Human Rights.",
+      "id": "st_feaffe22c2dd",
+      "speaker": "government spokesperson",
+      "role": "government spokesperson",
+      "date": "2026-10-10",
+      "text": "maintain pressure on Russia through the toughest sanctions regime ever imposed by the UK.",
       "is_quote": true,
       "signal": "commitment",
-      "stance": 1,
-      "source_url": "https://www.gov.uk/government/speeches/un-human-rights-council-63-uk-statement-on-the-interactive-dialogue-on-haiti"
-    },
-    {
-      "id": "st_b655a0f7b479",
-      "speaker": "Eleanor Sanders",
-      "role": "UK Human Rights Ambassador",
-      "date": "2026-10-02",
-      "text": "Children associated with gangs must be treated as victims, not perpetrators.",
-      "is_quote": true,
-      "signal": "demand",
-      "stance": 0,
-      "source_url": "https://www.gov.uk/government/speeches/un-human-rights-council-63-uk-statement-on-the-interactive-dialogue-on-haiti"
-    },
-    {
-      "id": "st_1553689170d7",
-      "speaker": "Eleanor Sanders",
-      "role": "UK Human Rights Ambassador",
-      "date": "2026-10-02",
-      "text": "What concrete steps can the Government of Haiti take to resource and implement DDR nationwide, and deliver the safe release and reintegration of children associated with armed groups?",
-      "is_quote": true,
-      "signal": "demand",
-      "stance": 0,
-      "source_url": "https://www.gov.uk/government/speeches/un-human-rights-council-63-uk-statement-on-the-interactive-dialogue-on-haiti"
-    },
-    {
-      "id": "st_46bfc98aa766",
-      "speaker": "Ambassador Holland",
-      "role": "UK Ambassador to the OSCE",
-      "date": "2026-10-02",
-      "text": "The United Kingdom is deeply concerned by reports of the deteriorating humanitarian conditions in the temporarily occupied parts of Ukraine’s Kherson region, including Oleshky.",
-      "is_quote": true,
-      "signal": "accusation",
       "stance": -1,
-      "source_url": "https://www.gov.uk/government/speeches/humanitarian-situation-in-oleshky-uk-statement-to-the-osce"
+      "source_url": "https://www.aljazeera.com/news/2026/10/10/putin-tells-trump-peace-talks-are-unlikely-cites-ukraine-drone-attacks"
     },
     {
-      "id": "st_2fb239bdd364",
-      "speaker": "Ambassador Holland",
-      "role": "UK Ambassador to the OSCE",
-      "date": "2026-10-02",
-      "text": "Russia must meet its obligations.",
+      "id": "st_a89c55aa6248",
+      "speaker": "United Kingdom delegate",
+      "role": "Delegate to the UN",
+      "date": "2026-10-09",
+      "text": "Directly targeting civilian infrastructure may constitute a war crime",
       "is_quote": true,
-      "signal": "demand",
-      "stance": -1,
-      "source_url": "https://www.gov.uk/government/speeches/humanitarian-situation-in-oleshky-uk-statement-to-the-osce"
-    },
-    {
-      "id": "st_0b62749ae005",
-      "speaker": "Ambassador Holland",
-      "role": "UK Ambassador to the OSCE",
-      "date": "2026-10-02",
-      "text": "The United Kingdom will continue to support Ukraine and in doing so to draw attention to the human consequences of Russia’s war of aggression.",
-      "is_quote": true,
-      "signal": "commitment",
-      "stance": 1,
-      "source_url": "https://www.gov.uk/government/speeches/humanitarian-situation-in-oleshky-uk-statement-to-the-osce"
-    },
-    {
-      "id": "st_d1d8ec305f11",
-      "speaker": "Ambassador Holland",
-      "role": "UK Ambassador to the OSCE",
-      "date": "2026-10-02",
-      "text": "It also documents a broader rise in civilian harm and attacks affecting humanitarian personnel and operations.",
-      "is_quote": true,
-      "signal": "accusation",
-      "stance": -1,
-      "source_url": "https://www.gov.uk/government/speeches/humanitarian-situation-in-oleshky-uk-statement-to-the-osce"
-    },
-    {
-      "id": "st_e9dfbf401e2e",
-      "speaker": "Eleanor Sanders",
-      "role": "UK's Human Rights Ambassador",
-      "date": "2026-10-02",
-      "text": "Sixty three percent of those interviewed reported conflict-related sexual violence at Russian hands. This included rape, genital mutilation, electric shocks and beatings to the genitals, and forced nudity - inflicted to strip prisoners of dignity and humiliate them before fellow captives and guards, sometimes over years.",
-      "is_quote": true,
-      "signal": "accusation",
+      "signal": "threat",
       "stance": -2,
-      "source_url": "https://www.gov.uk/government/speeches/un-human-rights-council-63-uk-statement-for-the-interactive-dialogue-with-the-high-commissioner-on-the-oral-update-on-ukraine"
+      "source_url": "https://press.un.org/en/2026/sc16472.doc.htm"
+    },
+    {
+      "id": "st_2b8d3d2a560a",
+      "speaker": "Kirsty McNeill",
+      "role": "Minister for International Development and Africa",
+      "date": "2026-10-09",
+      "text": "Brexit has done more harm than good",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 2,
+      "source_url": "https://www.gov.uk/government/speeches/minister-for-international-development-and-africa-speech-at-the-institute-of-international-and-european-affairs-dublin"
+    },
+    {
+      "id": "st_49731c08e3bd",
+      "speaker": "Kirsty McNeill",
+      "role": "Minister for International Development and Africa",
+      "date": "2026-10-09",
+      "text": "the first time the UK has sat around that table since Brexit",
+      "is_quote": true,
+      "signal": "policy_announcement",
+      "stance": 2,
+      "source_url": "https://www.gov.uk/government/speeches/minister-for-international-development-and-africa-speech-at-the-institute-of-international-and-european-affairs-dublin"
+    },
+    {
+      "id": "st_5e2a3c23082e",
+      "speaker": "Kirsty McNeill",
+      "role": "Minister for International Development and Africa",
+      "date": "2026-10-09",
+      "text": "We’ve also restarted formal development discussions with the European Commission, our teams in Brussels are working together more closely, and we’re looking forward to the second UK-EU Summit later this year",
+      "is_quote": true,
+      "signal": "policy_announcement",
+      "stance": 2,
+      "source_url": "https://www.gov.uk/government/speeches/minister-for-international-development-and-africa-speech-at-the-institute-of-international-and-european-affairs-dublin"
+    },
+    {
+      "id": "st_4de409b96240",
+      "speaker": "Kirsty McNeill",
+      "role": "Minister for International Development and Africa",
+      "date": "2026-10-09",
+      "text": "At a moment when some are stepping back from international cooperation, we are stepping forward",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 1,
+      "source_url": "https://www.gov.uk/government/speeches/minister-for-international-development-and-africa-speech-at-the-institute-of-international-and-european-affairs-dublin"
+    },
+    {
+      "id": "st_b11dd55016c0",
+      "speaker": "Kirsty McNeill",
+      "role": "Minister for International Development and Africa",
+      "date": "2026-10-09",
+      "text": "The UK and Ireland share common interests as nearest neighbours and more importantly common values including belief in democracy, multilateralism, the rule of law and standing up for those most in need, reflecting strength of the bilateral relationship.",
+      "is_quote": false,
+      "signal": "reassurance",
+      "stance": 2,
+      "source_url": "https://www.gov.uk/government/speeches/minister-for-international-development-and-africa-speech-at-the-institute-of-international-and-european-affairs-dublin"
+    },
+    {
+      "id": "st_f85d69f68cc5",
+      "speaker": "Kirsty McNeill",
+      "role": "Minister for International Development and Africa",
+      "date": "2026-10-09",
+      "text": "adopting a modern approach to development grounded in investment, stronger systems and local leadership – and rooted in shared solidarity and mutual interest",
+      "is_quote": true,
+      "signal": "policy_announcement",
+      "stance": 0,
+      "source_url": "https://www.gov.uk/government/speeches/minister-for-international-development-and-africa-speech-at-the-institute-of-international-and-european-affairs-dublin"
     }
   ],
   "involved": {
@@ -656,7 +656,7 @@
         "id": "pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe",
         "name": "Gaza Combat and Humanitarian Catastrophe",
         "band": "critical",
-        "position": 87.0,
+        "position": 88.0,
         "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
       },
       {
@@ -677,7 +677,7 @@
         "id": "pls_israel_palestine_ceasefire_and_normalization_deadlock",
         "name": "Ceasefire and Normalization Deadlock",
         "band": "severe",
-        "position": 63.0,
+        "position": 65.0,
         "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
       },
       {

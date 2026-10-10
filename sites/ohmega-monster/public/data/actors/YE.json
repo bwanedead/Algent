@@ -477,6 +477,28 @@
   },
   "statements": [
     {
+      "id": "st_2b4c53c3cf1c",
+      "speaker": "Abdullah Ali Fadhel Al-Saadi",
+      "role": "Ambassador to the United Nations",
+      "date": "2026-10-09",
+      "text": "The objective of this operation is to end the war, to recover security, stability and peace in Yemen and the region,",
+      "is_quote": true,
+      "signal": "policy_announcement",
+      "stance": -1,
+      "source_url": "https://press.un.org/en/2026/sc16471.doc.htm"
+    },
+    {
+      "id": "st_130745ac23f0",
+      "speaker": "Abdullah Ali Fadhel Al-Saadi",
+      "role": "Ambassador to the United Nations",
+      "date": "2026-10-09",
+      "text": "The threat of the Houthis is no longer an internal Yemeni affair that can be contained within our borders",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -1,
+      "source_url": "https://press.un.org/en/2026/sc16471.doc.htm"
+    },
+    {
       "id": "st_9e9bf87c8383",
       "speaker": "Representative of Yemen",
       "role": "Delegate to the Third Committee",
@@ -498,6 +520,13 @@
     ],
     "pulses": [
       {
+        "id": "pls_iran_gulf_iran_proxy_axis_escalation",
+        "name": "Iran Proxy Axis Escalation",
+        "band": "critical",
+        "position": 87.0,
+        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
+      },
+      {
         "id": "pls_iran_gulf_hormuz_maritime_disruption",
         "name": "Strait of Hormuz Maritime Disruption",
         "band": "critical",
@@ -505,24 +534,17 @@
         "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       },
       {
-        "id": "pls_iran_gulf_iran_proxy_axis_escalation",
-        "name": "Iran Proxy Axis Escalation",
+        "id": "pls_energy_security_global_hydrocarbon_supply_disruption",
+        "name": "Global Hydrocarbon Supply Disruption",
         "band": "critical",
-        "position": 83.0,
+        "position": 77.0,
         "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       },
       {
         "id": "pls_iran_gulf_us_iran_israel_military_confrontation",
         "name": "US-Iran-Israel Direct Military Confrontation",
         "band": "critical",
-        "position": 78.0,
-        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
-      },
-      {
-        "id": "pls_energy_security_global_hydrocarbon_supply_disruption",
-        "name": "Global Hydrocarbon Supply Disruption",
-        "band": "critical",
-        "position": 77.0,
+        "position": 75.0,
         "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       },
       {
@@ -547,13 +569,6 @@
         "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       },
       {
-        "id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
-        "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
-        "band": "severe",
-        "position": 65.0,
-        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
-      },
-      {
         "id": "pls_red_sea_shipping_war_risk_insurance_freight_pressure",
         "name": "War-Risk Insurance and Freight Cost Pressure",
         "band": "severe",
@@ -565,6 +580,13 @@
         "name": "Energy Price and Market Shock",
         "band": "severe",
         "position": 62.0,
+        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
+      },
+      {
+        "id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
+        "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
+        "band": "severe",
+        "position": 60.0,
         "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       }
     ]

@@ -566,7 +566,52 @@
       "source_url": "https://fas.org/initiatives/status-world-nuclear-forces/"
     }
   },
-  "statements": [],
+  "statements": [
+    {
+      "id": "st_b0e4add6ddca",
+      "speaker": "Nirmala Sitharaman",
+      "role": "Finance Minister",
+      "date": "2026-10-05",
+      "text": "Although we like to believe that both sides have reached a plateau, beyond which giving or taking might be very, very difficult, But Maybe if there are rooms to operate from, both sides would do it,",
+      "is_quote": true,
+      "signal": "other",
+      "stance": 0,
+      "source_url": "https://www.dw.com/en/india-news-top-court-to-hear-petitions-against-chief-election-commissioner-gyanesh-kumar/live-79542552?maca=en-rss-en-all-1573-rdf"
+    },
+    {
+      "id": "st_75db2721b7a8",
+      "speaker": "Nirmala Sitharaman",
+      "role": "Finance Minister",
+      "date": "2026-10-05",
+      "text": "hard and very rigorously negotiated",
+      "is_quote": true,
+      "signal": "other",
+      "stance": 0,
+      "source_url": "https://www.dw.com/en/india-news-top-court-to-hear-petitions-against-chief-election-commissioner-gyanesh-kumar/live-79542552?maca=en-rss-en-all-1573-rdf"
+    },
+    {
+      "id": "st_2acdceb26d38",
+      "speaker": "Nirmala Sitharaman",
+      "role": "Finance Minister",
+      "date": "2026-10-05",
+      "text": "They would want to reduce that imbalance,",
+      "is_quote": true,
+      "signal": "other",
+      "stance": 0,
+      "source_url": "https://www.dw.com/en/india-news-top-court-to-hear-petitions-against-chief-election-commissioner-gyanesh-kumar/live-79542552?maca=en-rss-en-all-1573-rdf"
+    },
+    {
+      "id": "st_5d380daef0c3",
+      "speaker": "Narendra Modi",
+      "role": "Prime Minister",
+      "date": "2026-09-28",
+      "text": "We reviewed our bilateral cooperation in trade, defence, energy, critical technologies and other areas. We agreed to maintain close engagement to take our Comprehensive Global Strategic Partnership forward,",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 1,
+      "source_url": "https://thediplomat.com/2026/10/indias-foreign-minister-jaishankar-openly-calls-out-the-us/"
+    }
+  ],
   "involved": {
     "theaters": [],
     "pulses": []

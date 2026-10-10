@@ -4,11 +4,11 @@
   "name": "Ethiopia-Eritrea rupture and Tigray offensive",
   "domain": "geopolitics",
   "built_at": "2026-10-05T09:41:18.336483+00:00",
-  "first_seen": "2026-10-01",
-  "last_seen": "2026-10-05",
+  "first_seen": "2026-10-03",
+  "last_seen": "2026-10-10",
   "days_covered": 3,
   "state": "active",
-  "last_novel": "2026-10-05",
+  "last_novel": "2026-10-10",
   "primer": {
     "text": "Ethiopia and Eritrea are two states in the Horn of Africa, and Tigray is a region within Ethiopia where Ethiopian government forces and Tigray-aligned forces have contested control. Mekelle is the main city in Tigray and the location of its airport, so control of the airport signals control of the regional center. A rupture in relations between Ethiopia and Eritrea and intensified fighting inside Tigray are understood as one escalation because the interstate relationship and the internal contest over Tigray affect each other, with implications for security across the Horn.",
     "built_at": "2026-10-04T07:26:06.472952+00:00"
@@ -83,31 +83,6 @@
   ],
   "coverage_series": [
     {
-      "day": "2026-09-29",
-      "count": 0,
-      "editions": 0
-    },
-    {
-      "day": "2026-09-30",
-      "count": 0,
-      "editions": 0
-    },
-    {
-      "day": "2026-10-01",
-      "count": 4,
-      "editions": 2
-    },
-    {
-      "day": "2026-10-02",
-      "count": 3,
-      "editions": 1
-    },
-    {
-      "day": "2026-10-03",
-      "count": 2,
-      "editions": 1
-    },
-    {
       "day": "2026-10-04",
       "count": 2,
       "editions": 0
@@ -116,6 +91,31 @@
       "day": "2026-10-05",
       "count": 0,
       "editions": 0
+    },
+    {
+      "day": "2026-10-06",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-07",
+      "count": 1,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-08",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-09",
+      "count": 0,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-10",
+      "count": 1,
+      "editions": 1
     }
   ],
   "timeline": [

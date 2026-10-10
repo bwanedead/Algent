@@ -562,6 +562,17 @@
   },
   "statements": [
     {
+      "id": "st_99f2b9ccbe53",
+      "speaker": "Representative of the Philippines",
+      "role": "Representative",
+      "date": "2026-10-08",
+      "text": "Article 13 of the UN Charter entrusts the General Assembly with encouraging the progressive development and codification of international law, which is the core of Sixth Committee work and reflects deliberate institutional design where the Commission brings independent legal expertise while the Assembly provides the intergovernmental setting to consider its recommendations.",
+      "is_quote": false,
+      "signal": "other",
+      "stance": 0,
+      "source_url": "https://press.un.org/en/2026/gal3745.doc.htm"
+    },
+    {
       "id": "st_252255b3358f",
       "speaker": "Presidential Communications Office",
       "role": "Presidential Communications Office",

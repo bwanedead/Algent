@@ -1,7 +1,36 @@
 {
   "schema": "ohmega.intel.index/1",
-  "built_at": "2026-10-10T05:33:46.621585+00:00",
+  "built_at": "2026-10-10T06:44:11.148884+00:00",
   "daily": [
+    {
+      "domain": "geopolitics",
+      "date": "2026-10-10",
+      "headline": "US reported to ease Russian diesel sanctions as Russia kills dozens in civilian strikes and Hormuz stays shut with zero tankers",
+      "theaters": [
+        {
+          "id": "thr_russia_ukraine_war_and_european_security_archite",
+          "name": "Russia-Ukraine war and European security architecture"
+        },
+        {
+          "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+          "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea"
+        },
+        {
+          "id": "thr_us_sanctions_on_icc_and_nobel_peace_prize_to_nav",
+          "name": "US sanctions on ICC and Nobel Peace Prize to Navi Pillay"
+        },
+        {
+          "id": "thr_us_china_summit_and_strategic_competition",
+          "name": "US-China summit and strategic competition"
+        },
+        {
+          "id": "thr_gaza_war_and_unga_diplomatic_fallout",
+          "name": "Gaza war and UNGA diplomatic fallout"
+        }
+      ],
+      "url": "/geopolitics/2026-10-10",
+      "data_url": "/data/daily/geopolitics/2026-10-10.json"
+    },
     {
       "domain": "geopolitics",
       "date": "2026-10-05",
@@ -212,30 +241,10 @@
   ],
   "theaters": [
     {
-      "id": "thr_gaza_war_and_unga_diplomatic_fallout",
-      "name": "Gaza war and UNGA diplomatic fallout",
-      "domain": "geopolitics",
-      "heat": 6.26,
-      "trend": "heating",
-      "coverage": "rising coverage",
-      "brief_url": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout",
-      "brief_data_url": "/data/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout.json"
-    },
-    {
-      "id": "thr_brazil_presidential_election_lula_vs_flavio_bols",
-      "name": "Brazil presidential election Lula vs Flavio Bolsonaro",
-      "domain": "politics",
-      "heat": 6.19,
-      "trend": "new",
-      "coverage": "newly reported",
-      "brief_url": null,
-      "brief_data_url": null
-    },
-    {
       "id": "thr_russia_ukraine_war_and_european_security_archite",
       "name": "Russia-Ukraine war and European security architecture",
       "domain": "geopolitics",
-      "heat": 5.72,
+      "heat": 6.54,
       "trend": "heating",
       "coverage": "rising coverage",
       "brief_url": "/intel/briefs/2026-09-28-russia-ukraine-war-and-european-security-architecture-ccc746",
@@ -245,29 +254,19 @@
       "id": "thr_rogue_ai_agents_and_ai_enabled_cybercrime",
       "name": "Rogue AI agents and AI-enabled cybercrime",
       "domain": "technology",
-      "heat": 5.26,
-      "trend": "heating",
-      "coverage": "rising coverage",
+      "heat": 4.46,
+      "trend": "new",
+      "coverage": "newly reported",
       "brief_url": "/intel/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime",
       "brief_data_url": "/data/briefs/2026-10-01-rogue-ai-agents-and-ai-enabled-cybercrime.json"
     },
     {
-      "id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
-      "name": "Ethiopia-Eritrea rupture and Tigray offensive",
+      "id": "thr_us_sanctions_on_icc_and_nobel_peace_prize_to_nav",
+      "name": "US sanctions on ICC and Nobel Peace Prize to Navi Pillay",
       "domain": "geopolitics",
-      "heat": 4.57,
-      "trend": "steady",
-      "coverage": "steady coverage",
-      "brief_url": null,
-      "brief_data_url": null
-    },
-    {
-      "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
-      "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
-      "domain": "geopolitics",
-      "heat": 4.43,
-      "trend": "steady",
-      "coverage": "steady coverage",
+      "heat": 4.12,
+      "trend": "new",
+      "coverage": "newly reported",
       "brief_url": null,
       "brief_data_url": null
     },
@@ -275,37 +274,47 @@
       "id": "thr_frontier_ai_race_and_superintelligence_governanc",
       "name": "Frontier AI race and superintelligence governance",
       "domain": "technology",
-      "heat": 2.82,
+      "heat": 2.94,
       "trend": "steady",
       "coverage": "steady coverage",
       "brief_url": "/intel/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance",
       "brief_data_url": "/data/briefs/2026-10-01-frontier-ai-race-and-superintelligence-governance.json"
     },
     {
-      "id": "thr_pneumonic_plague_death_and_quarantine_in_irkutsk",
-      "name": "Pneumonic plague death and quarantine in Irkutsk",
-      "domain": "health",
-      "heat": 2.13,
-      "trend": "heating",
-      "coverage": "rising coverage",
-      "brief_url": null,
-      "brief_data_url": null
-    },
-    {
-      "id": "thr_spain_snap_election_and_housing_policy_crisis",
-      "name": "Spain snap election and housing policy crisis",
-      "domain": "politics",
-      "heat": 1.96,
+      "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
+      "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
+      "domain": "geopolitics",
+      "heat": 2.83,
       "trend": "steady",
       "coverage": "steady coverage",
       "brief_url": null,
       "brief_data_url": null
     },
     {
-      "id": "thr_sudan_civil_war_and_us_visa_leverage",
-      "name": "Sudan civil war and US visa leverage",
+      "id": "thr_us_china_summit_and_strategic_competition",
+      "name": "US-China summit and strategic competition",
       "domain": "geopolitics",
-      "heat": 1.83,
+      "heat": 2.38,
+      "trend": "new",
+      "coverage": "newly reported",
+      "brief_url": null,
+      "brief_data_url": null
+    },
+    {
+      "id": "thr_gaza_war_and_unga_diplomatic_fallout",
+      "name": "Gaza war and UNGA diplomatic fallout",
+      "domain": "geopolitics",
+      "heat": 1.88,
+      "trend": "steady",
+      "coverage": "steady coverage",
+      "brief_url": "/intel/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout",
+      "brief_data_url": "/data/briefs/2026-10-01-gaza-war-and-unga-diplomatic-fallout.json"
+    },
+    {
+      "id": "thr_brazil_presidential_election_lula_vs_flavio_bols",
+      "name": "Brazil presidential election Lula vs Flavio Bolsonaro",
+      "domain": "politics",
+      "heat": 1.81,
       "trend": "steady",
       "coverage": "steady coverage",
       "brief_url": null,
@@ -315,19 +324,29 @@
       "id": "thr_french_budget_austerity_and_political_unrest",
       "name": "French budget austerity and political unrest",
       "domain": "politics",
-      "heat": 1.37,
-      "trend": "cooling",
-      "coverage": "falling coverage",
+      "heat": 1.42,
+      "trend": "new",
+      "coverage": "newly reported",
       "brief_url": null,
       "brief_data_url": null
     },
     {
-      "id": "thr_ai_driven_ram_and_memory_supply_crunch",
-      "name": "AI-driven RAM and memory supply crunch",
-      "domain": "technology",
-      "heat": 0.9,
+      "id": "thr_ethiopia_eritrea_rupture_and_tigray_offensive",
+      "name": "Ethiopia-Eritrea rupture and Tigray offensive",
+      "domain": "geopolitics",
+      "heat": 1.15,
       "trend": "steady",
       "coverage": "steady coverage",
+      "brief_url": null,
+      "brief_data_url": null
+    },
+    {
+      "id": "thr_pneumonic_plague_death_and_quarantine_in_irkutsk",
+      "name": "Pneumonic plague death and quarantine in Irkutsk",
+      "domain": "health",
+      "heat": 0.58,
+      "trend": "cooling",
+      "coverage": "falling coverage",
       "brief_url": null,
       "brief_data_url": null
     },
@@ -335,19 +354,19 @@
       "id": "thr_flydubai_hijacking_attempt_and_aviation_security",
       "name": "FlyDubai hijacking attempt and aviation security fallout",
       "domain": "geopolitics",
-      "heat": 0.7,
-      "trend": "steady",
-      "coverage": "steady coverage",
+      "heat": 0.46,
+      "trend": "new",
+      "coverage": "newly reported",
       "brief_url": null,
       "brief_data_url": null
     },
     {
-      "id": "thr_us_withdrawal_from_iraq_after_23_year_presence",
-      "name": "US withdrawal from Iraq after 23-year presence",
+      "id": "thr_sudan_civil_war_and_us_visa_leverage",
+      "name": "Sudan civil war and US visa leverage",
       "domain": "geopolitics",
-      "heat": 0.31,
-      "trend": "cooling",
-      "coverage": "falling coverage",
+      "heat": 0.44,
+      "trend": "steady",
+      "coverage": "steady coverage",
       "brief_url": null,
       "brief_data_url": null
     }

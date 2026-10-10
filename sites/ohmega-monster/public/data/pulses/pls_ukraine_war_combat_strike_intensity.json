@@ -13,9 +13,9 @@
   "position": 85.0,
   "band": "critical",
   "confidence": "medium",
-  "velocity_7d": null,
-  "last_assessed": "2026-10-05T08:14:35.334028+00:00",
-  "evidence_through": "2026-10-05",
+  "velocity_7d": 1.0,
+  "last_assessed": "2026-10-10T06:05:46.600128+00:00",
+  "evidence_through": "2026-10-10",
   "history": [
     {
       "at": "2026-10-01T03:00:57.470982+00:00",
@@ -120,6 +120,18 @@
       "rationale": "Closest to 2026-10-03 held reading 84 (reader thought 84) which already priced 157-drone Oct 2-3 salvo and initial Southern/Northern bridge hits as same severe tempo. New research extends to fourth consecutive day Oct 4 (heating main cut, 2 injured, 5 of 6 Kyiv bridges restricted, metro suspended) with explicit Russian doctrine to strike roads/schools/hospitals to depopulate cities and MoD pledge…",
       "confidence": "medium",
       "evidence_through": "2026-10-05",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-10T06:05:46.600128+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "no_change",
+      "position": null,
+      "rationale": "Closest to 2026-10-05 reading 85 which already priced severe tempo (170 drones 76 jet 26-27 Sep, 190 drones+ballistics 29-30 Sep, 157 drones Oct 2-3, bridge/heating-main hits). New confirmed only notes late-September data-center/telecom strikes as precedent for current mutual campaign, with no new salvo size, frequency, intercept rate or casualty scale beyond that severe baseline. Vivid incident…",
+      "confidence": "high",
+      "evidence_through": "2026-10-10",
       "model": "muse-spark-1.2-contributor",
       "article_url": null
     }

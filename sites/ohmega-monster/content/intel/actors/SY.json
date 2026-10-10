@@ -375,6 +375,17 @@
   },
   "statements": [
     {
+      "id": "st_389c67709ac1",
+      "speaker": "Representative of Syria",
+      "role": "Representative",
+      "date": "2026-10-08",
+      "text": "For decades, the authorities used laws to subjugate the people, but, today, we are all equal in the eyes of the law.",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 1,
+      "source_url": "https://press.un.org/en/2026/gal3745.doc.htm"
+    },
+    {
       "id": "st_410643605990",
       "speaker": "Syria",
       "role": "",

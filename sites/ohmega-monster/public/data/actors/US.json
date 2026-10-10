@@ -550,92 +550,92 @@
   },
   "statements": [
     {
-      "id": "st_eb5df750b65c",
-      "speaker": "Marco Rubio",
-      "role": "Secretary of State",
-      "date": "2026-10-04",
-      "text": "The United States remains committed to strengthening our commercial ties through strategic investments such as Convalt Energy’s $6.2 billion hydropower and data center project while also building on the close cooperation we share in health and security.",
-      "is_quote": true,
-      "signal": "commitment",
-      "stance": 1,
-      "source_url": "https://www.state.gov/releases/office-of-the-spokesman/2026/10/lesotho-national-day-2/"
-    },
-    {
-      "id": "st_c33eb76690b6",
-      "speaker": "White House",
-      "role": "White House",
-      "date": "2026-10-04",
-      "text": "The United States and 16 other countries jointly endorsed the Kyoto Vision for a Golden Age of Science at the STS Forum in Kyoto, reflecting a shared ambition to renew science ecosystems and usher in a golden age of discovery, including pledges to harness super intelligence for science, improve institutions of discovery, and cultivate talent.",
+      "id": "st_2a8e1879850d",
+      "speaker": "Donald Trump",
+      "role": "President",
+      "date": "2026-10-10",
+      "text": "The US campaign to dismantle the ICC was intended to defend Netanyahu and others from prosecution.",
       "is_quote": false,
+      "signal": "policy_announcement",
+      "stance": -2,
+      "source_url": "https://www.middleeasteye.net/live-blog/live-blog-update/trump-says-icc-sanctions-aimed-defending-netanyahu-and-others"
+    },
+    {
+      "id": "st_ad7c78dcbaf6",
+      "speaker": "Donald J. Trump",
+      "role": "President of the United States",
+      "date": "2026-10-09",
+      "text": "we build upon our extraordinary relationships with our Nordic partners and open a glorious new chapter in America’s Arctic story",
+      "is_quote": true,
+      "signal": "reassurance",
+      "stance": 2,
+      "source_url": "https://www.whitehouse.gov/briefings-statements/2026/10/presidential-message-on-leif-erikson-day/"
+    },
+    {
+      "id": "st_e8658091fae5",
+      "speaker": "Donald J. Trump",
+      "role": "President of the United States",
+      "date": "2026-10-09",
+      "text": "my Administration has now secured Greenland’s future as a bastion for U.S. security and transatlantic defense",
+      "is_quote": true,
       "signal": "commitment",
       "stance": 1,
-      "source_url": "https://www.whitehouse.gov/releases/2026/10/us-leads-international-coalition-to-endorse-kyoto-vision-for-a-golden-age-of-science/"
+      "source_url": "https://www.whitehouse.gov/briefings-statements/2026/10/presidential-message-on-leif-erikson-day/"
     },
     {
-      "id": "st_ec4710157911",
-      "speaker": "Michael Kratsios",
-      "role": "Director, White House Office of Science and Technology Policy",
-      "date": "2026-10-04",
-      "text": "Super intelligence applied to science will be the greatest force in history for democratizing research. Seizing this moment requires us to reinvigorate our research enterprises and leverage new institutional models for discovery. Under President Trump's leadership, the United States is leading that charge, and the Kyoto Vision shows the world is ready to move forward with us.",
+      "id": "st_ee5f532412bd",
+      "speaker": "Donald J. Trump",
+      "role": "President of the United States",
+      "date": "2026-10-09",
+      "text": "Last month, I entered into a historic agreement with Denmark and Greenland that gives the United States permanent control over security in Greenland, guaranteeing our ability to safeguard America and our allies for all time",
       "is_quote": true,
       "signal": "policy_announcement",
       "stance": 1,
-      "source_url": "https://www.whitehouse.gov/releases/2026/10/us-leads-international-coalition-to-endorse-kyoto-vision-for-a-golden-age-of-science/"
+      "source_url": "https://www.whitehouse.gov/briefings-statements/2026/10/presidential-message-on-leif-erikson-day/"
     },
     {
-      "id": "st_a0aa4bd911cf",
-      "speaker": "Thomas \"Tommy\" Pigott",
-      "role": "Spokesman",
-      "date": "2026-10-03",
-      "text": "Increasing cross-border tensions between Ethiopia and Eritrea have the potential to affect the entire region.",
-      "is_quote": true,
-      "signal": "warning",
-      "stance": 0,
-      "source_url": "https://www.state.gov/releases/office-of-the-spokesman/2026/10/u-s-statement-on-increased-tensions-between-ethiopia-and-eritrea/"
-    },
-    {
-      "id": "st_7597e06a0d96",
-      "speaker": "Thomas \"Tommy\" Pigott",
-      "role": "Spokesman",
-      "date": "2026-10-03",
-      "text": "The Horn of Africa cannot sustain another military conflict and humanitarian crisis.",
-      "is_quote": true,
-      "signal": "warning",
-      "stance": 0,
-      "source_url": "https://www.state.gov/releases/office-of-the-spokesman/2026/10/u-s-statement-on-increased-tensions-between-ethiopia-and-eritrea/"
-    },
-    {
-      "id": "st_47cfb4755a6c",
-      "speaker": "Thomas \"Tommy\" Pigott",
-      "role": "Spokesman",
-      "date": "2026-10-03",
-      "text": "A conflict jeopardizes ongoing U.S. collaboration on shared interests with both countries.",
-      "is_quote": true,
-      "signal": "warning",
-      "stance": 0,
-      "source_url": "https://www.state.gov/releases/office-of-the-spokesman/2026/10/u-s-statement-on-increased-tensions-between-ethiopia-and-eritrea/"
-    },
-    {
-      "id": "st_5c22097dfc2b",
-      "speaker": "Thomas \"Tommy\" Pigott",
-      "role": "Spokesman",
-      "date": "2026-10-03",
-      "text": "We strongly urge Ethiopia and Eritrea to respect the sovereignty and territorial integrity of their neighbors, exercise maximum restraint and return to dialogue and cooperation as agreed in their 2018 peace framework.",
-      "is_quote": true,
-      "signal": "demand",
-      "stance": 0,
-      "source_url": "https://www.state.gov/releases/office-of-the-spokesman/2026/10/u-s-statement-on-increased-tensions-between-ethiopia-and-eritrea/"
-    },
-    {
-      "id": "st_8444aef7338c",
-      "speaker": "Thomas \"Tommy\" Pigott",
-      "role": "Spokesman",
-      "date": "2026-10-03",
-      "text": "Peace through dialogue is the only path toward sustainable security, economic growth, and prosperity.",
+      "id": "st_35a6cbb8c0e1",
+      "speaker": "Donald J. Trump",
+      "role": "President of the United States",
+      "date": "2026-10-09",
+      "text": "I permanently recognized Greenland as an essential national security partner and made the Arctic a pillar of American strength once again",
       "is_quote": true,
       "signal": "policy_announcement",
       "stance": 1,
-      "source_url": "https://www.state.gov/releases/office-of-the-spokesman/2026/10/u-s-statement-on-increased-tensions-between-ethiopia-and-eritrea/"
+      "source_url": "https://www.whitehouse.gov/briefings-statements/2026/10/presidential-message-on-leif-erikson-day/"
+    },
+    {
+      "id": "st_5603302853ec",
+      "speaker": "Donald Trump",
+      "role": "President",
+      "date": "2026-10-09",
+      "text": "Russia agreed to deliver more than 300,000 tonnes of diesel to American and global markets",
+      "is_quote": false,
+      "signal": "policy_announcement",
+      "stance": 1,
+      "source_url": "https://www.aljazeera.com/news/2026/10/10/putin-tells-trump-peace-talks-are-unlikely-cites-ukraine-drone-attacks"
+    },
+    {
+      "id": "st_1829713d2440",
+      "speaker": "Donald Trump",
+      "role": "President",
+      "date": "2026-10-09",
+      "text": "Announced an agreement with Russian President Vladimir Putin, made during a phone call that was supposed to be about a suspected plague outbreak in Russia, for the release of Russian diesel to global markets.",
+      "is_quote": false,
+      "signal": "policy_announcement",
+      "stance": 2,
+      "source_url": "https://www.dw.com/en/trump-putin-agree-on-deal-to-release-russian-diesel-to-us-world-markets/a-79623364?maca=en-rss-en-all-1573-rdf"
+    },
+    {
+      "id": "st_80bbb20cf0de",
+      "speaker": "Donald Trump",
+      "role": "President",
+      "date": "2026-10-09",
+      "text": "immediately thereafter",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 1,
+      "source_url": "https://www.dw.com/en/trump-putin-agree-on-deal-to-release-russian-diesel-to-us-world-markets/a-79623364?maca=en-rss-en-all-1573-rdf"
     }
   ],
   "involved": {
@@ -643,6 +643,11 @@
       {
         "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
         "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
+        "mentions": 4
+      },
+      {
+        "id": "thr_russia_ukraine_war_and_european_security_archite",
+        "name": "Russia-Ukraine war and European security architecture",
         "mentions": 3
       },
       {
@@ -651,12 +656,19 @@
         "mentions": 2
       },
       {
-        "id": "thr_russia_ukraine_war_and_european_security_archite",
-        "name": "Russia-Ukraine war and European security architecture",
+        "id": "thr_us_sanctions_on_icc_and_nobel_peace_prize_to_nav",
+        "name": "US sanctions on ICC and Nobel Peace Prize to Navi Pillay",
         "mentions": 1
       }
     ],
     "pulses": [
+      {
+        "id": "pls_iran_gulf_iran_proxy_axis_escalation",
+        "name": "Iran Proxy Axis Escalation",
+        "band": "critical",
+        "position": 87.0,
+        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
+      },
       {
         "id": "pls_ukraine_war_combat_strike_intensity",
         "name": "Combat and Long-Range Strike Intensity",
@@ -686,25 +698,18 @@
         "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
       },
       {
-        "id": "pls_iran_gulf_iran_proxy_axis_escalation",
-        "name": "Iran Proxy Axis Escalation",
-        "band": "critical",
-        "position": 83.0,
-        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
-      },
-      {
-        "id": "pls_iran_gulf_us_iran_israel_military_confrontation",
-        "name": "US-Iran-Israel Direct Military Confrontation",
-        "band": "critical",
-        "position": 78.0,
-        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
-      },
-      {
         "id": "pls_energy_security_global_hydrocarbon_supply_disruption",
         "name": "Global Hydrocarbon Supply Disruption",
         "band": "critical",
         "position": 77.0,
         "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      },
+      {
+        "id": "pls_iran_gulf_us_iran_israel_military_confrontation",
+        "name": "US-Iran-Israel Direct Military Confrontation",
+        "band": "critical",
+        "position": 75.0,
+        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       },
       {
         "id": "pls_iran_gulf_us_iran_diplomatic_deadlock",
@@ -714,18 +719,18 @@
         "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       },
       {
+        "id": "pls_israel_palestine_international_legal_and_diplomatic_pressure_on_israel",
+        "name": "International Legal and Diplomatic Pressure on Israel",
+        "band": "severe",
+        "position": 73.0,
+        "theater_id": "thr_us_sanctions_on_icc_and_nobel_peace_prize_to_nav"
+      },
+      {
         "id": "pls_russia_nato_hybrid_grey_zone_pressure",
         "name": "Hybrid and Grey-Zone Pressure",
         "band": "severe",
         "position": 72.0,
         "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
-      },
-      {
-        "id": "pls_energy_security_transition_and_grid_resilience_strain",
-        "name": "Transition and Grid Resilience Strain",
-        "band": "severe",
-        "position": 68.0,
-        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       }
     ]
   },

@@ -622,15 +622,15 @@
       "source_url": "https://www.pm.gov.au/media/pre-cop-leaders-event-fiji-and-tuvalu"
     },
     {
-      "id": "st_a7b3ff2de20d",
-      "speaker": "Prime Minister",
-      "role": "Prime Minister of Australia",
-      "date": "2026-10-01",
-      "text": "which is why we continue to call for a de-escalation",
-      "is_quote": true,
-      "signal": "demand",
-      "stance": 0,
-      "source_url": "https://www.pm.gov.au/media/press-conference-bell-bay-tasmania"
+      "id": "st_04861d80524b",
+      "speaker": "Anthony Albanese",
+      "role": "Prime Minister",
+      "date": "2026-10-04",
+      "text": "An OpenAI AI agent breached Australia's Medicare statistics reporting service portal on June 18, accessing both public and non-public files while researching public medical spending.",
+      "is_quote": false,
+      "signal": "accusation",
+      "stance": -1,
+      "source_url": "https://stocktwits.com/news-articles/markets/equity/open-ai-agent-hacked-australian-medicare-portal-pm-anthony-albanese-calls-breach-unacceptable/cZM4aRdRBBW"
     }
   ],
   "involved": {

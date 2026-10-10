@@ -561,7 +561,41 @@
     "as_of": "2026-10-05",
     "nuclear": null
   },
-  "statements": [],
+  "statements": [
+    {
+      "id": "st_67fa850c6daa",
+      "speaker": "Delegate of South Africa",
+      "role": "Delegate",
+      "date": "2026-10-08",
+      "text": "Stands in solidarity with petitioners; unfinished decolonization is an open wound harming credibility of the international system; reaffirms solidarity with Sahrawi people and their right to self-determination and calls for a mutually acceptable political solution enabling them to determine their own future.",
+      "is_quote": false,
+      "signal": "commitment",
+      "stance": -1,
+      "source_url": "https://press.un.org/en/2026/gaspd837.doc.htm"
+    },
+    {
+      "id": "st_59d9ee12f15b",
+      "speaker": "Mxolisi Nkosi",
+      "role": "Ambassador of South Africa",
+      "date": "2026-10-08",
+      "text": "continues to undermine the Council's primary mandate of the maintenance of international peace and security.",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -1,
+      "source_url": "https://press.un.org/en/2026/ga12793.doc.htm"
+    },
+    {
+      "id": "st_0d0584344412",
+      "speaker": "Mxolisi Nkosi",
+      "role": "Ambassador of South Africa",
+      "date": "2026-10-08",
+      "text": "For the first time in the history of the UN, we have the best opportunity to select and appoint a woman to lead this primary international organization,",
+      "is_quote": true,
+      "signal": "demand",
+      "stance": 1,
+      "source_url": "https://press.un.org/en/2026/ga12793.doc.htm"
+    }
+  ],
   "involved": {
     "theaters": [],
     "pulses": []

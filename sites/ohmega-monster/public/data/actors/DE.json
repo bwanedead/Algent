@@ -535,97 +535,160 @@
   },
   "statements": [
     {
-      "id": "st_0668f8b79f51",
-      "speaker": "Johann Wadephul",
-      "role": "Foreign Minister",
-      "date": "2026-10-05",
-      "text": "For more than four years now, we have been witnessing Putin’s brutal and illegal war of aggression against Ukraine.",
+      "id": "st_064969fd279f",
+      "speaker": "Germany delegate",
+      "role": "Delegate to the UN",
+      "date": "2026-10-09",
+      "text": "As Europeans, we stand ready to talk. Ukraine stands ready to talk. A negotiated peace is possible",
       "is_quote": true,
-      "signal": "accusation",
-      "stance": -2,
-      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2804288-2804288"
+      "signal": "offer",
+      "stance": -1,
+      "source_url": "https://press.un.org/en/2026/sc16472.doc.htm"
     },
     {
-      "id": "st_8ecc38221968",
+      "id": "st_f92a9822b4f1",
       "speaker": "Johann Wadephul",
       "role": "Foreign Minister",
-      "date": "2026-10-05",
-      "text": "Especially with a view to the approaching winter, Russia is systematically targeting civilian heating and energy infrastructure.",
-      "is_quote": true,
-      "signal": "accusation",
-      "stance": -2,
-      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2804288-2804288"
-    },
-    {
-      "id": "st_e894ba334f57",
-      "speaker": "Johann Wadephul",
-      "role": "Foreign Minister",
-      "date": "2026-10-05",
-      "text": "There is no room in this Assembly for those who wage illegal wars of aggression!",
+      "date": "2026-10-09",
+      "text": "one of the world’s largest free trade zones, with more than 715 million people",
       "is_quote": true,
       "signal": "policy_announcement",
-      "stance": -2,
-      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2804288-2804288"
-    },
-    {
-      "id": "st_740a3bc68b79",
-      "speaker": "Johann Wadephul",
-      "role": "Foreign Minister",
-      "date": "2026-10-05",
-      "text": "Only today, our Estonian friends announced that Russia was clearly responsible for the arson attack in Tallinn on the night of 14 to 15 August.",
-      "is_quote": true,
-      "signal": "accusation",
-      "stance": -2,
-      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2804288-2804288"
-    },
-    {
-      "id": "st_5c0ef628218e",
-      "speaker": "Johann Wadephul",
-      "role": "Foreign Minister",
-      "date": "2026-10-05",
-      "text": "All this because Putin is under the illusion that, through these actions, he can sow uncertainty in our free societies.",
-      "is_quote": true,
-      "signal": "accusation",
-      "stance": -2,
-      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2804288-2804288"
-    },
-    {
-      "id": "st_8491d12812be",
-      "speaker": "Johann Wadephul",
-      "role": "Foreign Minister",
-      "date": "2026-10-05",
-      "text": "We stand firmly by the side of the Ukrainian people.",
-      "is_quote": true,
-      "signal": "commitment",
       "stance": 2,
-      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2804288-2804288"
+      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2805150-2805150"
     },
     {
-      "id": "st_4dd69f2e3e9f",
+      "id": "st_3a6a927d7cf0",
       "speaker": "Johann Wadephul",
       "role": "Foreign Minister",
-      "date": "2026-10-05",
-      "text": "We will complete our ratification process for Germany’s accession to the Convention establishing an International Claims Commission by the end of the year.",
+      "date": "2026-10-09",
+      "text": "The trade pillar has been applied provisionally for just over 150 days now, and it has brought very tangible simplifications for our businesses. We are seeing tariffs falling. We are finding better access to public procurement and service markets in Latin America.",
+      "is_quote": true,
+      "signal": "policy_announcement",
+      "stance": 2,
+      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2805150-2805150"
+    },
+    {
+      "id": "st_20ac1299d5f3",
+      "speaker": "Johann Wadephul",
+      "role": "Foreign Minister",
+      "date": "2026-10-09",
+      "text": "We are committed to free trade!",
       "is_quote": true,
       "signal": "commitment",
       "stance": 1,
-      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2804288-2804288"
+      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2805150-2805150"
     },
     {
-      "id": "st_da4b1c386ef4",
+      "id": "st_ce0d2b5b7cf4",
       "speaker": "Johann Wadephul",
       "role": "Foreign Minister",
-      "date": "2026-10-05",
-      "text": "Germany calls on UN member states to work towards common safety requirements for the most capable AI models, requiring providers to test models before release and report serious safety failures, supported by effective national and regional oversight.",
-      "is_quote": false,
+      "date": "2026-10-09",
+      "text": "The EU-Mercosur Agreement is forecast to increase the European Union’s GDP by more than 77 billion euro.",
+      "is_quote": true,
       "signal": "policy_announcement",
-      "stance": 0,
-      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2804084-2804084"
+      "stance": 2,
+      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2805150-2805150"
+    },
+    {
+      "id": "st_60d3fb3b6f92",
+      "speaker": "Johann Wadephul",
+      "role": "Foreign Minister",
+      "date": "2026-10-09",
+      "text": "This economic milestone is also an important political signal, a sign that we, as democracies worldwide, stand together and are committed to rules-based trade",
+      "is_quote": true,
+      "signal": "reassurance",
+      "stance": 2,
+      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2805150-2805150"
+    },
+    {
+      "id": "st_62dcf46c64e5",
+      "speaker": "Johann Wadephul",
+      "role": "Foreign Minister",
+      "date": "2026-10-09",
+      "text": "if we are to be able to assert ourselves on the world stage at all, then we have to bring our full European weight to bear.",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 1,
+      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2805150-2805150"
+    },
+    {
+      "id": "st_5058bf0bb541",
+      "speaker": "Johann Wadephul",
+      "role": "Foreign Minister",
+      "date": "2026-10-09",
+      "text": "the Federal Government is firmly convinced that the Agreement is in conformity with the EU Treaties.",
+      "is_quote": true,
+      "signal": "reassurance",
+      "stance": 1,
+      "source_url": "https://www.auswaertiges-amt.de/en/newsroom/news/2805150-2805150"
     }
   ],
   "involved": {
-    "theaters": [],
-    "pulses": []
+    "theaters": [
+      {
+        "id": "thr_russia_ukraine_war_and_european_security_archite",
+        "name": "Russia-Ukraine war and European security architecture",
+        "mentions": 2
+      }
+    ],
+    "pulses": [
+      {
+        "id": "pls_ukraine_war_combat_strike_intensity",
+        "name": "Combat and Long-Range Strike Intensity",
+        "band": "critical",
+        "position": 85.0,
+        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      },
+      {
+        "id": "pls_ukraine_war_energy_heating_collapse",
+        "name": "Energy and Heating System Collapse",
+        "band": "critical",
+        "position": 84.0,
+        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      },
+      {
+        "id": "pls_ukraine_war_war_economy_dependency_strain",
+        "name": "War Economy and External Dependency Strain",
+        "band": "critical",
+        "position": 83.0,
+        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      },
+      {
+        "id": "pls_energy_security_global_hydrocarbon_supply_disruption",
+        "name": "Global Hydrocarbon Supply Disruption",
+        "band": "critical",
+        "position": 77.0,
+        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      },
+      {
+        "id": "pls_russia_nato_hybrid_grey_zone_pressure",
+        "name": "Hybrid and Grey-Zone Pressure",
+        "band": "severe",
+        "position": 72.0,
+        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      },
+      {
+        "id": "pls_russia_nato_diplomatic_rupture",
+        "name": "Diplomatic Rupture",
+        "band": "severe",
+        "position": 62.0,
+        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      },
+      {
+        "id": "pls_energy_security_energy_price_and_market_shock",
+        "name": "Energy Price and Market Shock",
+        "band": "severe",
+        "position": 62.0,
+        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      },
+      {
+        "id": "pls_russia_nato_direct_military_confrontation",
+        "name": "Direct Military Confrontation",
+        "band": "severe",
+        "position": 58.0,
+        "theater_id": "thr_russia_ukraine_war_and_european_security_archite"
+      }
+    ]
   },
   "credits": [
     {

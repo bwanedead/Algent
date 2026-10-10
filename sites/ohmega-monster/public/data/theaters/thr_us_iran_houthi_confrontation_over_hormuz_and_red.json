@@ -3,28 +3,61 @@
   "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
   "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
   "domain": "geopolitics",
-  "built_at": "2026-10-05T09:41:18.336483+00:00",
+  "built_at": "2026-10-10T06:43:57.080244+00:00",
   "first_seen": "2026-09-28",
-  "last_seen": "2026-10-05",
-  "days_covered": 5,
+  "last_seen": "2026-10-10",
+  "days_covered": 6,
   "state": "active",
-  "last_novel": "2026-10-05",
+  "last_novel": "2026-10-10",
   "primer": {
     "text": "The standoff centers on the United States and Israel, Iran, and Iran-aligned Houthis in Yemen over two oil chokepoints. Washington and its ally aim to degrade Iran's nuclear and military capacity and keep shipping moving; Tehran uses control of the Strait of Hormuz to deter attacks and extract concessions; the Houthis press the Red Sea front. It sharpened after a U.S.-Israeli operation in late February 2026 struck Iranian nuclear, military and leadership sites, after which Iran restricted Hormuz. The strait carries 20 million barrels a day — a fifth of world oil and LNG — far more than pipeline bypasses can replace, so disruption lifts energy and freight costs. Saudi Arabia's Red Sea pipeline workaround is vulnerable to Houthi attacks.",
     "built_at": "2026-10-04T07:26:06.472952+00:00"
   },
   "current": {
-    "date": "2026-10-05",
-    "bottom_line": "Hormuz remains shut with Iran on 4 Oct restating a 7-day reopening tied to seven US concessions under the Islamabad MoU and no formal US counter-offer reported via Qatar/Oman. The Red Sea front escalated as Yemen's leadership on 4 Oct ordered a nationwide offensive to retake Houthi territory with sustained Saudi-led strikes, while Houthis cut the Taiz-Aden road. Market pressure eased on 2-5 Oct via a G7 100-million-barrel IEA release, an Iraqi VLCC transit through Hormuz, and lower Brent/Aramco prices, but physical chokepoint transits remain near zero. Confidence high on deadlock and offensive/strikes; lower on single-source casualty and territorial claims.",
+    "date": "2026-10-10",
+    "bottom_line": "Houthi strikes reached Riyadh's main airport on 7-9 Oct killing three and wounding 36, prompting expanded aviation warnings and a Saudi-led air campaign over Bab al-Mandab. Hormuz remains effectively shut with CENTCOM reporting 133 vessels redirected and fresh tanker incidents off UAE/Oman, while US-Iran diplomacy is stalled on enrichment and blockade conditions. No formal US counter-offer via Qatar/Oman to Iran's 7-day reopening proposal has been reported.",
     "escalation": {
       "direction": "rising",
       "pace": "gradual"
     },
     "coverage": "steady coverage",
     "source": "daily",
-    "url": "/geopolitics/2026-10-05"
+    "url": "/geopolitics/2026-10-10"
   },
   "pulses": [
+    {
+      "id": "pls_iran_gulf_iran_proxy_axis_escalation",
+      "name": "Iran Proxy Axis Escalation",
+      "situation": "Iran, Israel and the Gulf",
+      "position": 87.0,
+      "band": "critical",
+      "history": [
+        {
+          "at": "2026-10-01T03:00:57.470982+00:00",
+          "position": 64.0
+        },
+        {
+          "at": "2026-10-01T07:48:19.756517+00:00",
+          "position": 72.0
+        },
+        {
+          "at": "2026-10-01T08:28:58.928568+00:00",
+          "position": 77.0
+        },
+        {
+          "at": "2026-10-02T07:06:21.526172+00:00",
+          "position": 80.0
+        },
+        {
+          "at": "2026-10-05T08:11:46.846756+00:00",
+          "position": 83.0
+        },
+        {
+          "at": "2026-10-10T06:18:36.543486+00:00",
+          "position": 87.0
+        }
+      ]
+    },
     {
       "id": "pls_iran_gulf_hormuz_maritime_disruption",
       "name": "Strait of Hormuz Maritime Disruption",
@@ -51,52 +84,6 @@
       ]
     },
     {
-      "id": "pls_iran_gulf_iran_proxy_axis_escalation",
-      "name": "Iran Proxy Axis Escalation",
-      "situation": "Iran, Israel and the Gulf",
-      "position": 83.0,
-      "band": "critical",
-      "history": [
-        {
-          "at": "2026-10-01T03:00:57.470982+00:00",
-          "position": 64.0
-        },
-        {
-          "at": "2026-10-01T07:48:19.756517+00:00",
-          "position": 72.0
-        },
-        {
-          "at": "2026-10-01T08:28:58.928568+00:00",
-          "position": 77.0
-        },
-        {
-          "at": "2026-10-02T07:06:21.526172+00:00",
-          "position": 80.0
-        },
-        {
-          "at": "2026-10-05T08:11:46.846756+00:00",
-          "position": 83.0
-        }
-      ]
-    },
-    {
-      "id": "pls_iran_gulf_us_iran_israel_military_confrontation",
-      "name": "US-Iran-Israel Direct Military Confrontation",
-      "situation": "Iran, Israel and the Gulf",
-      "position": 78.0,
-      "band": "critical",
-      "history": [
-        {
-          "at": "2026-10-01T03:00:57.470982+00:00",
-          "position": 75.0
-        },
-        {
-          "at": "2026-10-01T08:28:58.928568+00:00",
-          "position": 78.0
-        }
-      ]
-    },
-    {
       "id": "pls_energy_security_global_hydrocarbon_supply_disruption",
       "name": "Global Hydrocarbon Supply Disruption",
       "situation": "Global energy security",
@@ -110,6 +97,27 @@
         {
           "at": "2026-10-01T07:48:19.756517+00:00",
           "position": 77.0
+        }
+      ]
+    },
+    {
+      "id": "pls_iran_gulf_us_iran_israel_military_confrontation",
+      "name": "US-Iran-Israel Direct Military Confrontation",
+      "situation": "Iran, Israel and the Gulf",
+      "position": 75.0,
+      "band": "critical",
+      "history": [
+        {
+          "at": "2026-10-01T03:00:57.470982+00:00",
+          "position": 75.0
+        },
+        {
+          "at": "2026-10-01T08:28:58.928568+00:00",
+          "position": 78.0
+        },
+        {
+          "at": "2026-10-10T06:18:36.543486+00:00",
+          "position": 75.0
         }
       ]
     },
@@ -157,31 +165,6 @@
       ]
     },
     {
-      "id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
-      "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
-      "situation": "Red Sea and global shipping disruption",
-      "position": 65.0,
-      "band": "severe",
-      "history": [
-        {
-          "at": "2026-10-01T03:00:57.470982+00:00",
-          "position": 58.0
-        },
-        {
-          "at": "2026-10-01T07:48:19.756517+00:00",
-          "position": 68.0
-        },
-        {
-          "at": "2026-10-01T11:36:13.230643+00:00",
-          "position": 72.0
-        },
-        {
-          "at": "2026-10-03T21:55:50.660077+00:00",
-          "position": 65.0
-        }
-      ]
-    },
-    {
       "id": "pls_red_sea_shipping_war_risk_insurance_freight_pressure",
       "name": "War-Risk Insurance and Freight Cost Pressure",
       "situation": "Red Sea and global shipping disruption",
@@ -208,6 +191,35 @@
         {
           "at": "2026-10-05T08:11:46.846756+00:00",
           "position": 62.0
+        }
+      ]
+    },
+    {
+      "id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
+      "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
+      "situation": "Red Sea and global shipping disruption",
+      "position": 60.0,
+      "band": "severe",
+      "history": [
+        {
+          "at": "2026-10-01T03:00:57.470982+00:00",
+          "position": 58.0
+        },
+        {
+          "at": "2026-10-01T07:48:19.756517+00:00",
+          "position": 68.0
+        },
+        {
+          "at": "2026-10-01T11:36:13.230643+00:00",
+          "position": 72.0
+        },
+        {
+          "at": "2026-10-03T21:55:50.660077+00:00",
+          "position": 65.0
+        },
+        {
+          "at": "2026-10-10T06:18:36.543486+00:00",
+          "position": 60.0
         }
       ]
     }
@@ -237,46 +249,118 @@
       "date": "2026-10-05",
       "direction": "rising",
       "pace": "gradual"
+    },
+    {
+      "date": "2026-10-10",
+      "direction": "rising",
+      "pace": "gradual"
     }
   ],
   "coverage_series": [
     {
-      "day": "2026-09-29",
-      "count": 0,
-      "editions": 0
-    },
-    {
-      "day": "2026-09-30",
-      "count": 0,
-      "editions": 0
-    },
-    {
-      "day": "2026-10-01",
-      "count": 2,
-      "editions": 2
-    },
-    {
-      "day": "2026-10-02",
-      "count": 5,
-      "editions": 1
-    },
-    {
-      "day": "2026-10-03",
-      "count": 1,
-      "editions": 1
-    },
-    {
       "day": "2026-10-04",
-      "count": 3,
+      "count": 1,
       "editions": 0
     },
     {
       "day": "2026-10-05",
       "count": 3,
       "editions": 0
+    },
+    {
+      "day": "2026-10-06",
+      "count": 1,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-07",
+      "count": 1,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-08",
+      "count": 1,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-09",
+      "count": 2,
+      "editions": 0
+    },
+    {
+      "day": "2026-10-10",
+      "count": 4,
+      "editions": 1
     }
   ],
   "timeline": [
+    {
+      "date": "2026-10-09",
+      "headline": "CENTCOM enforces Hormuz blockade as tanker incidents surge off UAE and Oman",
+      "detail": "As of 9 Oct US Central Command said it had redirected 133 commercial vessels through the Strait of Hormuz to enforce its naval blockade against Iran, describing blockade as ironclad. At 1000 GMT 9 Oct a vessel was struck by unknown projectile about 13 nautical miles west of Al Jazeera, UAE, causing fire later extinguished; UKMTO said crew status and damage unknown. At least seven tanker incidents were reported in past week including Kuwaiti VLCC MT Kazimah III fire 1 Oct, Liberian Aframax Lipsi damage 4 Oct northeast of Oman, and Panama-flagged tanker with 12 crew injured 7 Oct while crossing Hormuz; IRGC said 9 Oct an LPG carrier was struck while attempting illegal Hormuz transit. IMF PortWatch as of 4 Oct showed Hormuz tanker transits at 0/day and vessel transits at 4/day, both near historic lows.",
+      "where": "Strait of Hormuz, off Al Jazeera UAE",
+      "verification": "researched",
+      "sources": [
+        "https://www.middleeasteye.net/live-blog/live-blog-update/centcom-says-133-vessels-redirected-hormuz-it-enforces-iran-blockade",
+        "https://www.middleeasteye.net/live-blog/live-blog-update/fire-extinguished-vessel-hit-uae-coast-ukmto-says",
+        "https://www.aa.com.tr/en/us-israel-iran-war/vessel-struck-by-unknown-projectile-off-uae-coast-fire-extinguished-ukmto/4083668",
+        "https://www.aljazeera.com/news/2026/10/6/hormuz-ship-attacks-surge-are-increased-oil-exports-sustainable"
+      ],
+      "from": "/geopolitics/2026-10-10"
+    },
+    {
+      "date": "2026-10-09",
+      "headline": "Aviation authorities widen Saudi airspace warnings as UN warns Yemen back in full-scale war",
+      "detail": "On 10 Oct EASA widened Saudi airspace warning saying Houthi attacks show ability and intent to strike deeper inside Saudi territory including Riyadh, Tabuk, Medina and Yanbu, with greater focus on aviation infrastructure and increased risk of misidentification of civil aircraft from overflights and air-defence activation. As of 9 Oct UK Foreign Office advises against all travel within 10km of Yemen border and against all but essential travel to Aseer, Riyadh, Najran, Jizan and Taif, warning further airport attacks very likely. UN Security Council met 9-10 Oct where envoy warned Yemen has fallen back into full-scale war; UN said >200,000 displaced since civil war reignited in July with surging cholera and hunger.",
+      "where": "Saudi airspace, Yemen",
+      "verification": "researched",
+      "sources": [
+        "https://www.aa.com.tr/en/europe/following-houthi-attacks-europes-aviation-safety-body-expands-saudi-airspace-warning/4084161",
+        "https://www.gov.uk/foreign-travel-advice/saudi-arabia",
+        "https://news.un.org/feed/view/en/story/2026/10/1168559"
+      ],
+      "from": "/geopolitics/2026-10-10"
+    },
+    {
+      "date": "2026-10-07",
+      "headline": "Houthi strikes hit Riyadh and Abha airports killing three, wounding 36",
+      "detail": "Houthi missile and drone attacks struck Abha International Airport and King Khalid International Airport in Riyadh on 7-8 Oct, killing three and wounding 36; attacks also hit Jazan and Najran airports on 7 Oct wounding three. Saudi GACA said on 9-10 Oct the three killed at King Khalid were Saudi nationals including pilot Captain Hamoud Ali Alkalthami and that operations had resumed. Houthi spokesman Yahya Saree claimed a ballistic missile hit King Khalid and disrupted traffic, and Houthis warned airlines to avoid Saudi airspace except over Mecca and Medina as airport-for-airport retaliation for strikes on Sanaa and Hodeidah.",
+      "where": "Riyadh, Abha, Jazan, Najran, Saudi Arabia",
+      "verification": "researched",
+      "sources": [
+        "https://www.france24.com/en/live-news/20261007-yemen-s-houthis-claim-new-attacks-on-saudi-airports-as-conflict-deepens",
+        "https://www.aljazeera.com/news/2026/10/9/saudi-arabia-reopens-riyadh-airport-after-houthi-attack-kills-three",
+        "https://www.aa.com.tr/en/world/turkiye-strongly-condemns-houthi-attacks-on-saudi-airports/4084011"
+      ],
+      "from": "/geopolitics/2026-10-10"
+    },
+    {
+      "date": "2026-10-06",
+      "headline": "US sets new enrichment demand and pre-midterms pause while Iran calls talks futile",
+      "detail": "US Vice President JD Vance said 6 Oct Iran must make meaningful reduction in enrichment and halt 60% highly enriched uranium production, asking why Iran needs 60% if not seeking weapon. President Donald Trump said week of 6 Oct US will not attack Iran before 3 Nov midterms and productive discussions are underway, while warning war will end through nice way or not-so-nice way. Iran's late-September proposal to reopen Hormuz within seven days if US lifts blockade, waives oil sanctions, releases frozen assets and observes regional ceasefire including Lebanon was rejected by Trump 26 Sept as unacceptable; President Masoud Pezeshkian said 6 Oct negotiations futile and US seeks to bring down Islamic Republic, while FM Abbas Araghchi said 4 Oct only justice-based talks could end conflict. Kremlin said 10 Oct Trump welcomed Russia's involvement in Iran settlement efforts.",
+      "where": "Washington, Tehran, Moscow",
+      "verification": "researched",
+      "sources": [
+        "https://www.aljazeera.com/news/2026/10/7/us-sets-new-demands-for-iran-deal-what-are-they",
+        "https://www.al-monitor.com/originals/2026/10/trump-offers-iran-path-nuclear-deal-while-keeping-military-pressure",
+        "https://www.aljazeera.com/news/liveblog/2026/10/10/iran-war-live-kremlin-says-trump-welcomed-russia-effort-in-iran-deal?traffic_source=rss"
+      ],
+      "from": "/geopolitics/2026-10-10"
+    },
+    {
+      "date": "2026-10-05",
+      "headline": "Saudi-led coalition escalates air campaign and activates Mecca Alliance as Bab al-Mandab ground control contested",
+      "detail": "Saudi-led coalition spokesman Maj-Gen Turki al-Maliki said 5-7 Oct that 100 fighter jets were supporting Yemeni government forces, had secured air protection over Bab al-Mandab and struck 82 targets including missile facilities and command centres. Defence and foreign ministers of Saudi Arabia, Turkey and Pakistan meeting in Riyadh 5 Oct agreed to activate collective deterrence under the Mecca Alliance for Defence (signed 7 Aug, attack on one is attack on all) and rapidly deploy forces to Saudi Arabia; Pakistan said 10 Oct its substantial forces in Riyadh will defend Saudi territory but not cross borders. Ground claims remain contested: Yemeni forces claimed seizure of Dhubab district/airport and Mocha, Houthis denied Mocha loss, and Saudi envoy's 9-10 Oct claim that Bab al-Mandab was cleansed was denied by Houthis who claimed repelling attacks and destroying 22 armored vehicles.",
+      "where": "Bab al-Mandab, Dhubab, Mocha, Riyadh",
+      "verification": "researched",
+      "sources": [
+        "https://www.france24.com/en/live-news/20261007-yemen-s-houthis-claim-new-attacks-on-saudi-airports-as-conflict-deepens",
+        "https://www.aljazeera.com/news/2026/10/5/yemen-forces-claim-to-seize-dhubab-sites-near-bab-al-mandeb-from-houthis",
+        "https://www.aljazeera.com/news/2026/10/5/mecca-alliance-agrees-to-activate-collective-deterrence-measures",
+        "https://www.aljazeera.com/news/2026/10/9/saudi-arabia-reopens-riyadh-airport-after-houthi-attack-kills-three"
+      ],
+      "from": "/geopolitics/2026-10-10"
+    },
     {
       "date": "2026-10-05",
       "headline": "Oil prices ease above $100 and Aramco cuts Asia prices as pipeline bypass ramps but chokepoint transits stay near zero",
@@ -301,8 +385,7 @@
         "https://www.cnn.com/2026/10/04/middleeast/yemen-offensive-houthis-intl",
         "https://news.cgtn.com/news/2026-10-04/Explosions-rock-Sanaa-as-Saudi-airstrikes-target-Houthi-positions-1QXtD4nN8Lm/p.html",
         "https://www.middleeasteye.net/live-blog/live-blog-update/explosions-reported-near-tanker-southern-yemen-ukmto",
-        "https://www.dw.com/en/yemen-launches-major-military-operation-against-houthis/a-79542723?maca=en-rss-en-all-1573-rdf",
-        "https://yemenonline.info/special-reports/13945"
+        "https://www.dw.com/en/yemen-launches-major-military-operation-against-houthis/a-79542723?maca=en-rss-en-all-1573-rdf"
       ],
       "from": "/geopolitics/2026-10-05"
     },
@@ -330,6 +413,19 @@
       "verification": "reported",
       "sources": [
         "https://news.cgtn.com/news/2026-10-04/Iran-s-IRGC-hits-7-violating-tankers-in-Strait-of-Hormuz-in-5-days-1QXsqlhSvlK/p.html"
+      ],
+      "from": "/geopolitics/2026-10-04"
+    },
+    {
+      "date": "2026-10-04",
+      "headline": "Houthis seize Al-Turbah as Yemen presidency announces drive to retake all Houthi territory; explosions near tanker off southern Yemen reported",
+      "detail": "On 4 Oct the Houthis took control of Al-Turbah, Yemen (Taiz governorate, near the Bab el-Mandeb approaches), per YemenOnline. The same day Yemen's presidency announced a military drive to retake all territory seized by Houthis, per CNA/Dawn. Separately on 4 Oct UKMTO reported explosions near a tanker off southern Yemen, per Middle East Eye live blog. Reuters on 2 Oct had reported Saudi Arabia is planning an offensive in coming weeks to retake the Bab al-Mandab Strait. All territorial and tanker-incident claims are single-source and unverified by us.",
+      "where": "Al-Turbah",
+      "verification": "reported",
+      "sources": [
+        "https://yemenonline.info/special-reports/13945",
+        "https://www.channelnewsasia.com/world/yemen-presidency-announces-military-drive-retake-all-houthi-territory-6431676",
+        "https://www.middleeasteye.net/live-blog/live-blog-update/explosions-reported-near-tanker-southern-yemen-ukmto"
       ],
       "from": "/geopolitics/2026-10-04"
     },
@@ -574,15 +670,33 @@
   "actors": [
     {
       "name": "Houthis",
-      "mentions": 3,
+      "mentions": 5,
       "first": "2026-09-25",
-      "last": "2026-10-04"
+      "last": "2026-10-07"
+    },
+    {
+      "name": "Iran",
+      "mentions": 4,
+      "first": "2026-10-01",
+      "last": "2026-10-09"
     },
     {
       "name": "United States",
+      "mentions": 4,
+      "first": "2026-10-01",
+      "last": "2026-10-06"
+    },
+    {
+      "name": "Saudi Arabia",
       "mentions": 3,
       "first": "2026-10-01",
-      "last": "2026-10-04"
+      "last": "2026-10-07"
+    },
+    {
+      "name": "Saudi-led coalition",
+      "mentions": 3,
+      "first": "2026-10-01",
+      "last": "2026-10-05"
     },
     {
       "name": "Abbas Araghchi",
@@ -597,19 +711,13 @@
       "last": "2026-10-01"
     },
     {
-      "name": "Iran",
+      "name": "IRGC",
       "mentions": 2,
-      "first": "2026-10-01",
-      "last": "2026-10-02"
+      "first": "2026-10-04",
+      "last": "2026-10-09"
     },
     {
       "name": "Qatar",
-      "mentions": 2,
-      "first": "2026-10-01",
-      "last": "2026-10-02"
-    },
-    {
-      "name": "Saudi Arabia",
       "mentions": 2,
       "first": "2026-10-01",
       "last": "2026-10-02"
@@ -621,10 +729,10 @@
       "last": "2026-10-05"
     },
     {
-      "name": "Saudi-led coalition",
-      "mentions": 2,
-      "first": "2026-10-01",
-      "last": "2026-10-04"
+      "name": "Abdulaziz M. Alwasil",
+      "mentions": 1,
+      "first": "2026-10-09",
+      "last": "2026-10-09"
     },
     {
       "name": "Ali Fadavi",
@@ -649,22 +757,53 @@
       "mentions": 1,
       "first": "2026-10-01",
       "last": "2026-10-01"
-    },
-    {
-      "name": "Donald Trump",
-      "mentions": 1,
-      "first": "2026-09-26",
-      "last": "2026-09-26"
-    },
-    {
-      "name": "Esmail Baghaei",
-      "mentions": 1,
-      "first": "2026-10-04",
-      "last": "2026-10-04"
     }
   ],
   "relations": [],
   "figures": [
+    {
+      "label": "Bab el-Mandeb daily tanker transits",
+      "unit": "ships/day",
+      "series": [
+        {
+          "as_of": "2026-09-27",
+          "value": 11.0,
+          "source": "https://portwatch.imf.org/"
+        },
+        {
+          "as_of": "2026-10-04",
+          "value": 11.0,
+          "source": "https://portwatch.imf.org/"
+        }
+      ]
+    },
+    {
+      "label": "Strait of Hormuz daily tanker transits",
+      "unit": "ships/day",
+      "series": [
+        {
+          "as_of": "2026-09-27",
+          "value": 1.0,
+          "source": "https://portwatch.imf.org/"
+        },
+        {
+          "as_of": "2026-10-04",
+          "value": 0.0,
+          "source": "https://portwatch.imf.org/"
+        }
+      ]
+    },
+    {
+      "label": "Commercial vessels redirected by CENTCOM in Hormuz blockade",
+      "unit": "vessels",
+      "series": [
+        {
+          "as_of": "2026-10-09",
+          "value": 133.0,
+          "source": "https://www.middleeasteye.net/live-blog/live-blog-update/centcom-says-133-vessels-redirected-hormuz-it-enforces-iran-blockade"
+        }
+      ]
+    },
     {
       "label": "Iraqi VLCC transit through Hormuz",
       "unit": "million barrels",
@@ -706,28 +845,6 @@
           "as_of": "2026-09-30",
           "value": 5900000000.0,
           "source": "https://www.carbonbrief.org/analysis-wind-and-solar-save-uk-from-gas-imports-worth-5-9bn-during-hormuz-crisis"
-        }
-      ]
-    },
-    {
-      "label": "Bab el-Mandeb daily tanker transits",
-      "unit": "ships/day",
-      "series": [
-        {
-          "as_of": "2026-09-27",
-          "value": 11.0,
-          "source": "https://portwatch.imf.org/"
-        }
-      ]
-    },
-    {
-      "label": "Strait of Hormuz daily tanker transits",
-      "unit": "ships/day",
-      "series": [
-        {
-          "as_of": "2026-09-27",
-          "value": 1.0,
-          "source": "https://portwatch.imf.org/"
         }
       ]
     },
@@ -779,6 +896,14 @@
   "forecasts": [],
   "indicators": [],
   "statements": [
+    {
+      "who": "Abdulaziz M. Alwasil",
+      "role": "Ambassador to the United Nations",
+      "said": "Called on Council to address risks from rapid developments and continued threats to civilians and civilian infrastructure including impediments to global economy and supply chains from attacks on navigation in Red Sea and Bab al-Mandab; said 8 October attack on King Khalid International Airport killing three civilians is blatant act of aggression by terrorist Houthi militia part of dangerous escalation, citing attempted attack on Mecca on 15 September and on Taiba electricity station on 29 September",
+      "quote": false,
+      "when": "2026-10-09",
+      "source": "https://press.un.org/en/2026/sc16471.doc.htm"
+    },
     {
       "who": "Rashad Al-Alimi",
       "role": "Chairman of the Presidential Leadership Council",
@@ -837,6 +962,30 @@
     }
   ],
   "on_record": [
+    {
+      "id": "st_e9ed2500a310",
+      "speaker": "Abdulaziz M. Alwasil",
+      "role": "Ambassador to the United Nations",
+      "affiliation": "Saudi Arabia",
+      "iso2": "SA",
+      "date": "2026-10-09",
+      "venue": "other",
+      "quote": "",
+      "paraphrase": "Called on Council to address risks from rapid developments and continued threats to civilians and civilian infrastructure, including impediments to global economy and supply chains from attacks on navigation in Red Sea and Bab al-Mandab; said 8 October attack on King Khalid International Airport in Riyadh killing three civilians is blatant act of aggression by terrorist Houthi militia part of dangerous escalation, citing attempted attack on Mecca on 15 September and on Taiba electricity station on 29 September as provocations against Muslims worldwide.",
+      "about": [
+        "Ansar Allah/Houthis",
+        "Saudi Arabia",
+        "Red Sea"
+      ],
+      "about_iso2": [
+        "SA"
+      ],
+      "signal": "accusation",
+      "stance": -2,
+      "significance": "Saudi Arabia details recent cross-border attacks and frames them as threats to global shipping and religious sites, seeking Council action.",
+      "url": "https://press.un.org/en/2026/sc16471.doc.htm",
+      "reported_by": ""
+    },
     {
       "id": "st_6dc54425f3cf",
       "speaker": "Rashad Al-Alimi",
@@ -1090,6 +1239,59 @@
       "reported_by": "Anadolu Agency"
     },
     {
+      "id": "st_6d8a2a08127e",
+      "speaker": "Regional and Western officials",
+      "role": "officials",
+      "affiliation": "Unspecified regional and Western governments",
+      "iso2": "",
+      "date": "2026-10-03",
+      "venue": "press_conference",
+      "quote": "",
+      "paraphrase": "Saudi Arabia is planning an offensive against Iran-backed Houthi militants in Yemen, with options under consideration including a coastal push to secure the Red Sea shipping route or an assault on multiple fronts",
+      "about": [
+        "Saudi Arabia",
+        "Houthis",
+        "Yemen",
+        "Iran"
+      ],
+      "about_iso2": [
+        "SA",
+        "YE",
+        "IR"
+      ],
+      "signal": "threat",
+      "stance": -2,
+      "significance": "Signals potential major Saudi-led escalation in Yemen aimed at reopening Red Sea shipping lane",
+      "url": "https://www.haaretz.com/middle-east-news/2026-10-03/ty-article/saudi-arabia-planning-assault-on-houthis-to-break-red-sea-chokehold/000001a1-016e-d27a-abaf-197e37b90000",
+      "reported_by": "Haaretz"
+    },
+    {
+      "id": "st_9807decba73b",
+      "speaker": "Regional and Western officials",
+      "role": "officials",
+      "affiliation": "Unspecified regional and Western governments",
+      "iso2": "",
+      "date": "2026-10-03",
+      "venue": "press_conference",
+      "quote": "",
+      "paraphrase": "The planned operation aimed at breaking the Houthis' control of the Bab el-Mandeb strait would be led by Yemeni forces on the ground, directed by Riyadh and supported by Saudi air strikes",
+      "about": [
+        "Saudi Arabia",
+        "Houthis",
+        "Yemen",
+        "Bab el-Mandeb strait"
+      ],
+      "about_iso2": [
+        "SA",
+        "YE"
+      ],
+      "signal": "policy_announcement",
+      "stance": -2,
+      "significance": "Details operational concept for breaking Houthi chokehold on key Red Sea chokepoint, indicating Saudi direction and air support for Yemeni ground forces",
+      "url": "https://www.haaretz.com/middle-east-news/2026-10-03/ty-article/saudi-arabia-planning-assault-on-houthis-to-break-red-sea-chokehold/000001a1-016e-d27a-abaf-197e37b90000",
+      "reported_by": "Haaretz"
+    },
+    {
       "id": "st_8ffb63d5ad70",
       "speaker": "Hans Grundberg",
       "role": "Special Envoy for Yemen",
@@ -1220,6 +1422,175 @@
       "stance": -2,
       "significance": "Directly attributes energy market disruption and regional instability to Iran, raising diplomatic pressure.",
       "url": "https://www.elysee.fr/emmanuel-macron/2026/10/02/g7-leaders-statement-on-global-energy-security-and-market-stability",
+      "reported_by": ""
+    },
+    {
+      "id": "st_fa8efcd3ce7b",
+      "speaker": "G7 Leaders",
+      "role": "Leaders of the G7",
+      "affiliation": "G7",
+      "iso2": "",
+      "date": "2026-10-02",
+      "venue": "other",
+      "quote": "We commend the United States for its efforts to ensure the free flow of commerce through the strait of Hormuz.",
+      "paraphrase": "G7 commends US efforts to ensure free flow of commerce through the Strait of Hormuz.",
+      "about": [
+        "United States"
+      ],
+      "about_iso2": [
+        "US"
+      ],
+      "signal": "reassurance",
+      "stance": 2,
+      "significance": "Public G7 endorsement of US security role in Hormuz amid Iran-related tensions.",
+      "url": "https://www.gov.uk/government/news/g7-leaders-statement-on-global-energy-security-and-market-stability",
+      "reported_by": ""
+    },
+    {
+      "id": "st_b554c43db0d8",
+      "speaker": "G7 Leaders",
+      "role": "Heads of State and Government",
+      "affiliation": "G7",
+      "iso2": "",
+      "date": "2026-10-02",
+      "venue": "other",
+      "quote": "We will coordinate maintenance schedules across G7 refineries to prevent simultaneous capacity shutdowns and temporarily increase utilization rates where feasible.",
+      "paraphrase": "",
+      "about": [
+        "G7",
+        "IEA"
+      ],
+      "about_iso2": [],
+      "signal": "commitment",
+      "stance": 1,
+      "significance": "Signals coordinated supply-side management to avoid self-inflicted refining bottlenecks.",
+      "url": "https://www.elysee.fr/emmanuel-macron/2026/10/02/g7-leaders-statement-on-global-energy-security-and-market-stability",
+      "reported_by": ""
+    },
+    {
+      "id": "st_1708f92eaa54",
+      "speaker": "G7 Leaders",
+      "role": "Leaders of the G7",
+      "affiliation": "G7",
+      "iso2": "",
+      "date": "2026-10-02",
+      "venue": "other",
+      "quote": "",
+      "paraphrase": "G7 will coordinate maintenance schedules across G7 refineries to prevent simultaneous capacity shutdowns and temporarily increase utilization rates where feasible.",
+      "about": [
+        "G7"
+      ],
+      "about_iso2": [],
+      "signal": "commitment",
+      "stance": 1,
+      "significance": "Operational coordination among G7 to maximize refined product supply, especially diesel.",
+      "url": "https://www.gov.uk/government/news/g7-leaders-statement-on-global-energy-security-and-market-stability",
+      "reported_by": ""
+    },
+    {
+      "id": "st_8ba43fa2a547",
+      "speaker": "G7 Leaders",
+      "role": "Leaders of the G7",
+      "affiliation": "G7",
+      "iso2": "",
+      "date": "2026-10-02",
+      "venue": "other",
+      "quote": "We will maintain sanctions against Russia while working with the IEA and global partners to prevent further spill overs into fuel, gas, and other commodity markets.",
+      "paraphrase": "G7 will maintain sanctions against Russia while working with the IEA and global partners to prevent further spillovers into fuel, gas and other commodity markets.",
+      "about": [
+        "Russia"
+      ],
+      "about_iso2": [
+        "RU"
+      ],
+      "signal": "commitment",
+      "stance": -2,
+      "significance": "Signals continuity of Russia sanctions despite energy market volatility, with effort to contain collateral market effects.",
+      "url": "https://www.gov.uk/government/news/g7-leaders-statement-on-global-energy-security-and-market-stability",
+      "reported_by": ""
+    },
+    {
+      "id": "st_d0d50540216e",
+      "speaker": "G7 Leaders",
+      "role": "Heads of State and Government",
+      "affiliation": "G7",
+      "iso2": "",
+      "date": "2026-10-02",
+      "venue": "other",
+      "quote": "To impose no bans or restrictions on energy exports among G7 members, as protectionist measures would be harmful to all.",
+      "paraphrase": "G7 leaders unanimously decided to impose no bans or restrictions on energy exports among G7 members.",
+      "about": [
+        "G7"
+      ],
+      "about_iso2": [],
+      "signal": "commitment",
+      "stance": 1,
+      "significance": "Intra-G7 pledge against energy protectionism, reassuring allies and markets of open supply within the bloc.",
+      "url": "https://www.elysee.fr/emmanuel-macron/2026/10/02/videoconference-with-g7-leaders-on-the-global-energy-situation",
+      "reported_by": ""
+    },
+    {
+      "id": "st_555ef1f58e7a",
+      "speaker": "G7 Leaders",
+      "role": "Heads of State and Government",
+      "affiliation": "G7",
+      "iso2": "",
+      "date": "2026-10-02",
+      "venue": "other",
+      "quote": "We will maintain sanctions against Russia while working with the IEA and global partners to prevent further spillovers into fuel, gas, and other commodity markets.",
+      "paraphrase": "",
+      "about": [
+        "Russia"
+      ],
+      "about_iso2": [
+        "RU"
+      ],
+      "signal": "commitment",
+      "stance": -2,
+      "significance": "Confirms sanctions continuity on Russia while seeking to contain collateral energy market spillovers.",
+      "url": "https://www.elysee.fr/emmanuel-macron/2026/10/02/g7-leaders-statement-on-global-energy-security-and-market-stability",
+      "reported_by": ""
+    },
+    {
+      "id": "st_1ebfb704bc97",
+      "speaker": "G7 Leaders",
+      "role": "Leaders of the G7",
+      "affiliation": "G7",
+      "iso2": "",
+      "date": "2026-10-02",
+      "venue": "other",
+      "quote": "",
+      "paraphrase": "G7 leaders agreed on coordinated measures to stabilize immediate energy supplies, shield households and businesses from price shocks, and strengthen long-term resilience of global energy systems amid unprecedented oil market volatility.",
+      "about": [
+        "G7",
+        "IEA"
+      ],
+      "about_iso2": [],
+      "signal": "commitment",
+      "stance": 0,
+      "significance": "Frames G7 collective action on energy as response to market volatility threatening economic stability.",
+      "url": "https://www.gov.uk/government/news/g7-leaders-statement-on-global-energy-security-and-market-stability",
+      "reported_by": ""
+    },
+    {
+      "id": "st_488cc2edd0e3",
+      "speaker": "G7 Leaders",
+      "role": "Leaders of the G7",
+      "affiliation": "G7",
+      "iso2": "",
+      "date": "2026-10-02",
+      "venue": "other",
+      "quote": "The G7 requests the IEA to monitor the immediate and full implementation of the March 2026 commitments. In this regard, taking into account commitments that have already been fulfilled, we will implement our commitments with a coordinated release through the IEA of 100 million barrels (MB) to begin immediately over 4 months, including a frontloaded substantial diesel release within the",
+      "paraphrase": "G7 requests the IEA to monitor immediate and full implementation of March 2026 commitments and will implement commitments with a coordinated release through the IEA, and will convene in the IEA context in coming days to discuss possible additional diesel releases.",
+      "about": [
+        "IEA",
+        "G7"
+      ],
+      "about_iso2": [],
+      "signal": "commitment",
+      "stance": 0,
+      "significance": "Quantified, time-bound strategic stock release with frontloaded diesel component signals scale and urgency of G7 market intervention.",
+      "url": "https://www.gov.uk/government/news/g7-leaders-statement-on-global-energy-security-and-market-stability",
       "reported_by": ""
     },
     {
@@ -1387,6 +1758,12 @@
     {
       "theater_id": "thr_russia_ukraine_war_and_european_security_archite",
       "name": "Russia-Ukraine war and European security architecture",
+      "link": "Russia-Ukraine war and European security architecture ↔ US-Iran-Houthi confrontation over Hormuz and Red Sea: reported US easing of Russian diesel sanctions while Hormuz tanker transits measured 0 ships/day as of Oct 4 (outside full-history range) jointly strain European energy, with TTF gas measured 81.43 EUR/MWh as of Oct 9 at 99th percentile and 152% above a year ago",
+      "date": "2026-10-10"
+    },
+    {
+      "theater_id": "thr_russia_ukraine_war_and_european_security_archite",
+      "name": "Russia-Ukraine war and European security architecture",
       "link": "Russia-Ukraine war and European security architecture — US-Iran-Houthi confrontation over Hormuz and Red Sea: Ukraine's refinery campaign claiming 51% of Russian refining disabled and Hormuz closure holding tanker transits at 1 ship/day as of 2026-09-27 outside full-history range jointly sustain energy pressure with TTF gas at 74.76 EUR/MWh as of 2026-10-02 up 138% year-on-year and oil above $100 despite G7 100-million-barrel release.",
       "date": "2026-10-05"
     },
@@ -1428,6 +1805,10 @@
     }
   ],
   "reports": [
+    {
+      "date": "2026-10-10",
+      "url": "/geopolitics/2026-10-10"
+    },
     {
       "date": "2026-10-05",
       "url": "/geopolitics/2026-10-05"

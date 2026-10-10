@@ -10,12 +10,12 @@
   "situation_id": "sit_israel_palestine",
   "situation": "Israel–Palestine and the wider region",
   "status": "experimental",
-  "position": 63.0,
+  "position": 65.0,
   "band": "severe",
   "confidence": "medium",
-  "velocity_7d": null,
-  "last_assessed": "2026-10-05T06:44:10.888856+00:00",
-  "evidence_through": "2026-10-05",
+  "velocity_7d": 5.0,
+  "last_assessed": "2026-10-10T06:42:22.417939+00:00",
+  "evidence_through": "2026-10-10",
   "history": [
     {
       "at": "2026-10-01T08:09:19.809131+00:00",
@@ -28,6 +28,10 @@
     {
       "at": "2026-10-05T06:44:10.888856+00:00",
       "position": 63.0
+    },
+    {
+      "at": "2026-10-10T06:42:22.417939+00:00",
+      "position": 65.0
     }
   ],
   "definition": {
@@ -120,6 +124,18 @@
       "rationale": "Closest to held 60 on 2026-10-03 (reader thought reality 60, closest to 62 on 2026-10-01) which already reflected paper-only ceasefire with 1,381-1,439 killed. New research confirms same pattern (1,439 killed/5,052 injured since Oct 10 2025 -, Oct 3 al-Asala strike -, Oct 1 al-Mawasi strike -, Oct 5 Khan Younis strike -) but adds structural worsening not in prior rationale: Yellow Line expanded…",
       "confidence": "medium",
       "evidence_through": "2026-10-05",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-10T06:42:22.417939+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "applied",
+      "position": 65.0,
+      "rationale": "Closest to 63 on 2026-10-05 which already reflected paper-only ceasefire (1,381-1,439 killed). New research confirms same pattern (1,400 killed, 100+ orgs say ceasefire exists in name only) but adds material worsening not in prior reading: IDF moved Yellow Line westward squeezing 2.1m into coastal strip and now controls 64-70% vs 53% permitted, zero reconstruction despite $71.4bn need and $2.45bn…",
+      "confidence": "medium",
+      "evidence_through": "2026-10-10",
       "model": "muse-spark-1.2-contributor",
       "article_url": null
     }

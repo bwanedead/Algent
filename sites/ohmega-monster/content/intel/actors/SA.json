@@ -533,13 +533,47 @@
     "as_of": "2026-10-05",
     "nuclear": null
   },
-  "statements": [],
+  "statements": [
+    {
+      "id": "st_e9ed2500a310",
+      "speaker": "Abdulaziz M. Alwasil",
+      "role": "Ambassador to the United Nations",
+      "date": "2026-10-09",
+      "text": "Called on Council to address risks from rapid developments and continued threats to civilians and civilian infrastructure, including impediments to global economy and supply chains from attacks on navigation in Red Sea and Bab al-Mandab; said 8 October attack on King Khalid International Airport in Riyadh killing three civilians is blatant act of aggression by terrorist Houthi militia part of dangerous escalation, citing attempted attack on Mecca on 15 September and on Taiba electricity station on 29 September as provocations against Muslims worldwide.",
+      "is_quote": false,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://press.un.org/en/2026/sc16471.doc.htm"
+    },
+    {
+      "id": "st_05a58fafad2f",
+      "speaker": "Abdulaziz M. Alwasil",
+      "role": "Ambassador to the United Nations",
+      "date": "2026-10-09",
+      "text": "Said Saudi diplomatic efforts since 2011 to preserve peace process have been rejected by Houthis who on every occasion chose reckless escalation and obstructed political solution, and drew attention to external military and technical support to the group calling for implementation of relevant sanctions measures.",
+      "is_quote": false,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://press.un.org/en/2026/sc16471.doc.htm"
+    },
+    {
+      "id": "st_eefddb316f72",
+      "speaker": "Representative of Saudi Arabia",
+      "role": "Representative to the First Committee",
+      "date": "2026-10-09",
+      "text": "Israel, as the only State in the Middle East that has not acceded to the Treaty on the Non-Proliferation of Nuclear Weapons, should join without delay and place all its nuclear facilities under IAEA comprehensive safeguards.",
+      "is_quote": false,
+      "signal": "demand",
+      "stance": -1,
+      "source_url": "https://press.un.org/en/2026/gadis3766.doc.htm"
+    }
+  ],
   "involved": {
     "theaters": [
       {
         "id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red",
         "name": "US-Iran-Houthi confrontation over Hormuz and Red Sea",
-        "mentions": 5
+        "mentions": 6
       },
       {
         "id": "thr_flydubai_hijacking_attempt_and_aviation_security",
@@ -549,6 +583,13 @@
     ],
     "pulses": [
       {
+        "id": "pls_iran_gulf_iran_proxy_axis_escalation",
+        "name": "Iran Proxy Axis Escalation",
+        "band": "critical",
+        "position": 87.0,
+        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
+      },
+      {
         "id": "pls_iran_gulf_hormuz_maritime_disruption",
         "name": "Strait of Hormuz Maritime Disruption",
         "band": "critical",
@@ -556,24 +597,17 @@
         "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       },
       {
-        "id": "pls_iran_gulf_iran_proxy_axis_escalation",
-        "name": "Iran Proxy Axis Escalation",
+        "id": "pls_energy_security_global_hydrocarbon_supply_disruption",
+        "name": "Global Hydrocarbon Supply Disruption",
         "band": "critical",
-        "position": 83.0,
+        "position": 77.0,
         "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       },
       {
         "id": "pls_iran_gulf_us_iran_israel_military_confrontation",
         "name": "US-Iran-Israel Direct Military Confrontation",
         "band": "critical",
-        "position": 78.0,
-        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
-      },
-      {
-        "id": "pls_energy_security_global_hydrocarbon_supply_disruption",
-        "name": "Global Hydrocarbon Supply Disruption",
-        "band": "critical",
-        "position": 77.0,
+        "position": 75.0,
         "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       },
       {
@@ -598,13 +632,6 @@
         "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       },
       {
-        "id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
-        "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
-        "band": "severe",
-        "position": 65.0,
-        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
-      },
-      {
         "id": "pls_red_sea_shipping_war_risk_insurance_freight_pressure",
         "name": "War-Risk Insurance and Freight Cost Pressure",
         "band": "severe",
@@ -616,6 +643,13 @@
         "name": "Energy Price and Market Shock",
         "band": "severe",
         "position": 62.0,
+        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
+      },
+      {
+        "id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
+        "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
+        "band": "severe",
+        "position": 60.0,
         "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       }
     ]

@@ -553,6 +553,28 @@
   },
   "statements": [
     {
+      "id": "st_5037aa018310",
+      "speaker": "Delegate of Egypt",
+      "role": "Delegate",
+      "date": "2026-10-08",
+      "text": "Establishing a Middle East free zone and subjecting all nuclear facilities in the region to the IAEA [International Atomic Energy Agency] safeguards are not political propaganda,",
+      "is_quote": true,
+      "signal": "warning",
+      "stance": -1,
+      "source_url": "https://press.un.org/en/2026/gadis3765.doc.htm"
+    },
+    {
+      "id": "st_e10200ac5eb0",
+      "speaker": "Delegate of Egypt",
+      "role": "Delegate",
+      "date": "2026-10-08",
+      "text": "Observed that illicit transfer of small arms to non-State actors has imposed a heavy price on African and Middle Eastern countries and said Egypt is a staunch supporter of regulatory frameworks in this domain.",
+      "is_quote": false,
+      "signal": "accusation",
+      "stance": 0,
+      "source_url": "https://press.un.org/en/2026/gadis3765.doc.htm"
+    },
+    {
       "id": "st_61de5ba56f08",
       "speaker": "Abdel Fattah al-Sisi",
       "role": "President of Egypt",

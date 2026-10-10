@@ -13,9 +13,9 @@
   "position": 84.0,
   "band": "critical",
   "confidence": "high",
-  "velocity_7d": null,
-  "last_assessed": "2026-10-05T08:11:46.846756+00:00",
-  "evidence_through": "2026-10-05",
+  "velocity_7d": 6.0,
+  "last_assessed": "2026-10-10T06:18:36.543486+00:00",
+  "evidence_through": "2026-10-10",
   "history": [
     {
       "at": "2026-10-01T03:00:57.470982+00:00",
@@ -136,6 +136,18 @@
       "rationale": "Closest to 2026-10-04 at 84 which already captured severe impairment (3-5 vessels/day vs 84-85 normal, 80 IMO attacks/22 killed, ~80 mines, 14.6 vs 20.4 mb/d ~30% drop, premiums 2-6%). New confirmed Iraq VLCC transit 3 Oct (first in decades) is single-vessel anecdote not systemic recovery; G7 100m barrel release and Brent still >$101 with persistent infrastructure risks, plus Saudi bypass surge…",
       "confidence": "high",
       "evidence_through": "2026-10-05",
+      "model": "muse-spark-1.2-contributor",
+      "article_url": null
+    },
+    {
+      "at": "2026-10-10T06:18:36.543486+00:00",
+      "mode": "article",
+      "moves_pulse": true,
+      "decision": "no_change",
+      "position": null,
+      "rationale": "Closest to 2026-10-05 held at 84 (reader thought 84) which already captured severe impairment (3-5 vessels/day vs 84-85 normal, 80 IMO attacks/22 killed, ~80 mines, 14.6 vs 20.4 mb/d ~30% drop, premiums 2-6%, 8m b/d still transiting). New confirmed 7 tanker incidents past week (Kazimah III 1 Oct, Lipsi 4 Oct, Panama tanker 12 injured 7 Oct), vessel struck 13nm west of Al Jazeera 9 Oct, likely…",
+      "confidence": "high",
+      "evidence_through": "2026-10-10",
       "model": "muse-spark-1.2-contributor",
       "article_url": null
     }

@@ -549,7 +549,41 @@
       "source_url": "https://fas.org/initiatives/status-world-nuclear-forces/"
     }
   },
-  "statements": [],
+  "statements": [
+    {
+      "id": "st_ac0145f7b0d3",
+      "speaker": "Delegate of Israel",
+      "role": "Delegate",
+      "date": "2026-10-08",
+      "text": "Let us be clear, an Iran with nuclear weapons is not only a threat to Israel, but to the region and to the world,",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -2,
+      "source_url": "https://press.un.org/en/2026/gadis3765.doc.htm"
+    },
+    {
+      "id": "st_f78dda524705",
+      "speaker": "Benjamin Netanyahu",
+      "role": "Prime Minister",
+      "date": "2026-10-04",
+      "text": "has instructed the head of the National Security Council, Shmuel Ben Ezra, to appoint an examiner to conduct a thorough review of all security aspects of foreign civil aviation to Israel",
+      "is_quote": true,
+      "signal": "policy_announcement",
+      "stance": 0,
+      "source_url": "https://www.scmp.com/news/world/middle-east/article/3369732/netanyahu-orders-security-review-international-flights-israel-after-flydubai-attack"
+    },
+    {
+      "id": "st_e969a40d00ee",
+      "speaker": "Miri Regev",
+      "role": "Transport Minister",
+      "date": "2026-10-04",
+      "text": "Security oversight for flights operated by foreign airlines falls under the remit of the Mossad and Shin Bet, not the Transport Ministry.",
+      "is_quote": false,
+      "signal": "denial",
+      "stance": 0,
+      "source_url": "https://www.scmp.com/news/world/middle-east/article/3369732/netanyahu-orders-security-review-international-flights-israel-after-flydubai-attack"
+    }
+  ],
   "involved": {
     "theaters": [
       {
@@ -568,7 +602,7 @@
         "id": "pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe",
         "name": "Gaza Combat and Humanitarian Catastrophe",
         "band": "critical",
-        "position": 87.0,
+        "position": 88.0,
         "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
       },
       {
@@ -582,7 +616,7 @@
         "id": "pls_israel_palestine_ceasefire_and_normalization_deadlock",
         "name": "Ceasefire and Normalization Deadlock",
         "band": "severe",
-        "position": 63.0,
+        "position": 65.0,
         "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
       },
       {

@@ -1,6 +1,6 @@
 {
   "schema": "ohmega.pulses/1",
-  "built_at": "2026-10-10T05:33:46.621585+00:00",
+  "built_at": "2026-10-10T06:44:11.148884+00:00",
   "pulses": [
     {
       "id": "pls_ai_geopolitics_ai_safety_governance_fracture",
@@ -88,19 +88,24 @@
       "low_end": "Functional cross-strait dialogue and communication channels exist with managed political differences and no coercive unification threats.",
       "high_end": "Complete severance of cross-strait communication with Beijing openly threatening imminent forced unification and Taipei fully rejecting any engagement framework.",
       "status": "experimental",
-      "position": null,
-      "band": "unassessed",
-      "confidence": "",
-      "last_assessed": "2026-10-01T03:00:57.470982+00:00",
-      "evidence_through": "",
+      "position": 65.0,
+      "band": "severe",
+      "confidence": "high",
+      "last_assessed": "2026-10-10T06:33:34.545041+00:00",
+      "evidence_through": "2026-10-10",
       "velocity_7d": null,
-      "history": [],
+      "history": [
+        {
+          "at": "2026-10-10T06:33:34.545041+00:00",
+          "position": 65.0
+        }
+      ],
       "title": "China–Taiwan · Cross-Strait Political Rupture",
       "actors_iso2": [
         "CN",
         "TW"
       ],
-      "rationale": "",
+      "rationale": "Initial reading - past was unassessed (2026-10-01). Evidence shows sustained high rupture but not extreme: no functional dialogue (US urges Beijing to engage democratically elected authorities), Lai says open to exchanges but not subordination, Beijing expanding grey-zone jurisdictional claims east of Taiwan via militia/Coast Guard/research vessels outside restricted waters to create impression…",
       "data_url": "/data/pulses/pls_china_taiwan_cross_strait_political_rupture.json"
     },
     {
@@ -112,19 +117,24 @@
       "low_end": "Strong, credible and unambiguous US and allied deterrence with regular coordinated presence and no imminent need for direct intervention.",
       "high_end": "Deterrence has collapsed and the US and allies are engaged in direct combat operations to defend Taiwan against a PLA attack.",
       "status": "experimental",
-      "position": null,
-      "band": "unassessed",
-      "confidence": "",
-      "last_assessed": "2026-10-01T03:00:57.470982+00:00",
-      "evidence_through": "",
+      "position": 32.0,
+      "band": "elevated",
+      "confidence": "medium",
+      "last_assessed": "2026-10-10T06:33:34.545041+00:00",
+      "evidence_through": "2026-10-10",
       "velocity_7d": null,
-      "history": [],
+      "history": [
+        {
+          "at": "2026-10-10T06:33:34.545041+00:00",
+          "position": 32.0
+        }
+      ],
       "title": "US–China · External deterrence failure and intervention risk",
       "actors_iso2": [
         "US",
         "CN"
       ],
-      "rationale": "",
+      "rationale": "Initial reading - past unassessed. US deterrence publicly reaffirmed as credible: State Dept calls PRC actions deeply destabilizing, DeSombre (Oct 9 Singapore) says both sides don't want conflict, US able to deter with allies, Xi rational actor deterred by consequences, market overpricing risk; EU Parliament Oct 8 rejects PRC distortion of 2758 and calls for naval presence; US policy unchanged…",
       "data_url": "/data/pulses/pls_china_taiwan_external_deterrence_failure_and_intervention_risk.json"
     },
     {
@@ -136,19 +146,24 @@
       "low_end": "Routine peacetime PLA posture with minimal activity near Taiwan and no coercive exercises, incursions, or mobilization.",
       "high_end": "Full-scale PLA invasion of Taiwan or comprehensive blockade cutting off Taiwan's air and maritime access is underway.",
       "status": "experimental",
-      "position": null,
-      "band": "unassessed",
-      "confidence": "",
-      "last_assessed": "2026-10-01T03:00:57.470982+00:00",
-      "evidence_through": "",
+      "position": 48.0,
+      "band": "elevated",
+      "confidence": "high",
+      "last_assessed": "2026-10-10T06:33:34.545041+00:00",
+      "evidence_through": "2026-10-10",
       "velocity_7d": null,
-      "history": [],
+      "history": [
+        {
+          "at": "2026-10-10T06:33:34.545041+00:00",
+          "position": 48.0
+        }
+      ],
       "title": "China–Taiwan · PLA Military Pressure and Blockade/Invasion Risk",
       "actors_iso2": [
         "CN",
         "TW"
       ],
-      "rationale": "",
+      "rationale": "Initial reading - past unassessed. Evidence shows elevated but not extreme PLA pressure: mid-August maritime militia vessel Minfudingyu 07902 >30nm off Hualien with Coast Guard cutter and research vessel, described by MND as law-enforcement/research pretext to expand without triggering conflict and challenge maritime authority; State Dept concerned by activity east of Taiwan asserting authorities…",
       "data_url": "/data/pulses/pls_china_taiwan_pla_military_pressure_and_blockade_invasion_risk.json"
     },
     {
@@ -160,18 +175,23 @@
       "low_end": "Taiwan maintains high military readiness, robust stockpiles and mobilization capacity, and strong societal resilience and civil defence preparedness.",
       "high_end": "Taiwan's defence posture is critically degraded with severe equipment, manpower and stockpile shortfalls and societal resilience near collapse.",
       "status": "experimental",
-      "position": null,
-      "band": "unassessed",
-      "confidence": "",
-      "last_assessed": "2026-10-01T03:00:57.470982+00:00",
-      "evidence_through": "",
+      "position": 38.0,
+      "band": "elevated",
+      "confidence": "medium",
+      "last_assessed": "2026-10-10T06:33:34.545041+00:00",
+      "evidence_through": "2026-10-10",
       "velocity_7d": null,
-      "history": [],
+      "history": [
+        {
+          "at": "2026-10-10T06:33:34.545041+00:00",
+          "position": 38.0
+        }
+      ],
       "title": "Taiwan · Defence vulnerability",
       "actors_iso2": [
         "TW"
       ],
-      "rationale": "",
+      "rationale": "Initial reading - past unassessed. Taiwan signalling reduced vulnerability: record nominal 2027 defence proposal NT$1.1225tn (3.01% GDP NATO method, incl. MND budget, special budgets, pensions, Coast Guard), up from ~2.5% in 2023-24, with Lai goal >3% and 5% by 2030. However vulnerability not low: share down from 3.32% in 2026 despite nominal rise, proposal requires approval by…",
       "data_url": "/data/pulses/pls_china_taiwan_taiwan_defence_vulnerability.json"
     },
     {
@@ -276,9 +296,9 @@
       "position": 84.0,
       "band": "critical",
       "confidence": "high",
-      "last_assessed": "2026-10-05T08:11:46.846756+00:00",
-      "evidence_through": "2026-10-05",
-      "velocity_7d": null,
+      "last_assessed": "2026-10-10T06:18:36.543486+00:00",
+      "evidence_through": "2026-10-10",
+      "velocity_7d": 6.0,
       "history": [
         {
           "at": "2026-10-01T03:00:57.470982+00:00",
@@ -314,12 +334,12 @@
       "low_end": "Proxy networks dormant with no attacks on shipping or neighbors, and full compliance with disarmament and de-escalation agreements.",
       "high_end": "Coordinated full-scale proxy war with sustained Houthi/Hezbollah/Iraqi militia attacks on shipping, Gulf infrastructure and Israel, triggering major retaliation.",
       "status": "experimental",
-      "position": 83.0,
+      "position": 87.0,
       "band": "critical",
       "confidence": "high",
-      "last_assessed": "2026-10-05T08:11:46.846756+00:00",
-      "evidence_through": "2026-10-05",
-      "velocity_7d": null,
+      "last_assessed": "2026-10-10T06:18:36.543486+00:00",
+      "evidence_through": "2026-10-10",
+      "velocity_7d": 7.0,
       "history": [
         {
           "at": "2026-10-01T03:00:57.470982+00:00",
@@ -340,13 +360,17 @@
         {
           "at": "2026-10-05T08:11:46.846756+00:00",
           "position": 83.0
+        },
+        {
+          "at": "2026-10-10T06:18:36.543486+00:00",
+          "position": 87.0
         }
       ],
       "title": "Iran Proxy Axis · Escalation",
       "actors_iso2": [
         "IR"
       ],
-      "rationale": "Closest to 2026-10-04 held at 80 (reader thought 80) which reflected sustained Houthi kinetic control (blockade 20 July, seizure of entire Red Sea coast/Mocha/Perim controlling Bab al-Mandab, pipeline/Jazan disabled). New confirmed moves beyond control to active multi-front war: PLC chairman 4 Oct announced operations to retake all Houthi territory, 13+ airstrikes on Sanaa 3-4 Oct plus…",
+      "rationale": "Closest to 2026-10-05 at 83 which reflected sustained Houthi kinetic control (blockade 20 July, seizure of entire Red Sea coast/Mocha/Perim controlling Bab al-Mandab, pipeline/Jazan disabled). New confirmed moves beyond control to active multi-front war with civilian toll and alliance mobilization: Houthi missile/drone strikes 7-8 Oct on King Khalid (Riyadh) and Abha airports killing 3 including…",
       "data_url": "/data/pulses/pls_iran_gulf_iran_proxy_axis_escalation.json"
     },
     {
@@ -361,9 +385,9 @@
       "position": 74.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-05T08:11:46.846756+00:00",
-      "evidence_through": "2026-10-05",
-      "velocity_7d": null,
+      "last_assessed": "2026-10-10T06:18:36.543486+00:00",
+      "evidence_through": "2026-10-10",
+      "velocity_7d": 0.0,
       "history": [
         {
           "at": "2026-10-01T03:00:57.470982+00:00",
@@ -391,12 +415,12 @@
       "low_end": "Stable deterrence with no direct strikes, routine force posture, and no threats to attack the other's territory or forces.",
       "high_end": "Sustained open war between the US/Israel and Iran with strikes on capitals and critical infrastructure, mass casualties, and ground or invasion operations.",
       "status": "experimental",
-      "position": 78.0,
+      "position": 75.0,
       "band": "critical",
       "confidence": "medium",
-      "last_assessed": "2026-10-05T08:11:46.846756+00:00",
-      "evidence_through": "2026-10-05",
-      "velocity_7d": null,
+      "last_assessed": "2026-10-10T06:18:36.543486+00:00",
+      "evidence_through": "2026-10-10",
+      "velocity_7d": -3.0,
       "history": [
         {
           "at": "2026-10-01T03:00:57.470982+00:00",
@@ -405,6 +429,10 @@
         {
           "at": "2026-10-01T08:28:58.928568+00:00",
           "position": 78.0
+        },
+        {
+          "at": "2026-10-10T06:18:36.543486+00:00",
+          "position": 75.0
         }
       ],
       "title": "US–Iran–Israel · Direct Military Confrontation",
@@ -413,7 +441,7 @@
         "IR",
         "IL"
       ],
-      "rationale": "Closest to 2026-10-01 at 75 (held, reader thought 75) which reflected July CENTCOM waves hitting 300+ targets and Iran threats to Gulf infrastructure. New confirmed raises baseline: war began 28 Feb with strikes killing Khamenei and targeting nuclear/military/leadership, MoU 17 June declared permanent termination then expired 17 Aug, Trump rejected roadmap 26 Sep, plus geographic expansion…",
+      "rationale": "Closest to 2026-10-05 held at 78 (reader thought 78) which reflected open war baseline (28 Feb Operation Epic Fury ~900 strikes killing Khamenei, July CENTCOM 300+ target waves, MoU permanent termination, Oct 1-2 Patriot deployments to Saudi/Qatar). New confirmed Trump week of 6 Oct says US will not attack Iran before 3 Nov midterms and productive discussions underway, with no new confirmed…",
       "data_url": "/data/pulses/pls_iran_gulf_us_iran_israel_military_confrontation.json"
     },
     {
@@ -425,12 +453,12 @@
       "low_end": "A durable Gaza ceasefire and hostage exchange is in effect with active mediation and advancing Israel-Arab normalization agreements.",
       "high_end": "Ceasefire and hostage negotiations have completely collapsed, mediation is severed, and regional normalization is frozen or reversed amid diplomatic rupture.",
       "status": "experimental",
-      "position": 63.0,
+      "position": 65.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-05T06:44:10.888856+00:00",
-      "evidence_through": "2026-10-05",
-      "velocity_7d": null,
+      "last_assessed": "2026-10-10T06:42:22.417939+00:00",
+      "evidence_through": "2026-10-10",
+      "velocity_7d": 5.0,
       "history": [
         {
           "at": "2026-10-01T08:09:19.809131+00:00",
@@ -443,6 +471,10 @@
         {
           "at": "2026-10-05T06:44:10.888856+00:00",
           "position": 63.0
+        },
+        {
+          "at": "2026-10-10T06:42:22.417939+00:00",
+          "position": 65.0
         }
       ],
       "title": "Israel–Hamas–Saudi Arabia · Ceasefire and Normalization Deadlock",
@@ -450,7 +482,7 @@
         "IL",
         "SA"
       ],
-      "rationale": "Closest to held 60 on 2026-10-03 (reader thought reality 60, closest to 62 on 2026-10-01) which already reflected paper-only ceasefire with 1,381-1,439 killed. New research confirms same pattern (1,439 killed/5,052 injured since Oct 10 2025 -, Oct 3 al-Asala strike -, Oct 1 al-Mawasi strike -, Oct 5 Khan Younis strike -) but adds structural worsening not in prior rationale: Yellow Line expanded…",
+      "rationale": "Closest to 63 on 2026-10-05 which already reflected paper-only ceasefire (1,381-1,439 killed). New research confirms same pattern (1,400 killed, 100+ orgs say ceasefire exists in name only) but adds material worsening not in prior reading: IDF moved Yellow Line westward squeezing 2.1m into coastal strip and now controls 64-70% vs 53% permitted, zero reconstruction despite $71.4bn need and $2.45bn…",
       "data_url": "/data/pulses/pls_israel_palestine_ceasefire_and_normalization_deadlock.json"
     },
     {
@@ -462,12 +494,12 @@
       "low_end": "A sustained ceasefire holds with minimal combat, effective civilian protection, and adequate humanitarian aid, medical care and reconstruction access across Gaza.",
       "high_end": "Sustained high-intensity combat with mass civilian casualties, famine and total collapse of medical and aid systems, and large-scale forced displacement across Gaza.",
       "status": "experimental",
-      "position": 87.0,
+      "position": 88.0,
       "band": "critical",
-      "confidence": "medium",
-      "last_assessed": "2026-10-05T06:44:10.888856+00:00",
-      "evidence_through": "2026-10-05",
-      "velocity_7d": null,
+      "confidence": "high",
+      "last_assessed": "2026-10-10T06:42:22.417939+00:00",
+      "evidence_through": "2026-10-10",
+      "velocity_7d": 3.0,
       "history": [
         {
           "at": "2026-10-01T08:09:19.809131+00:00",
@@ -476,6 +508,10 @@
         {
           "at": "2026-10-05T06:44:10.888856+00:00",
           "position": 87.0
+        },
+        {
+          "at": "2026-10-10T06:42:22.417939+00:00",
+          "position": 88.0
         }
       ],
       "title": "Israel–Palestine · Gaza Combat and Humanitarian Catastrophe",
@@ -483,7 +519,7 @@
         "IL",
         "PS"
       ],
-      "rationale": "Closest to held 85 on 2026-10-03 (reader thought reality 85) which captured persistent low-intensity combat (1,381-1,439 killed since ceasefire) and near-extreme collapse (1.8m displaced, 80% water shortage, half hospitals operational). New research confirms same baseline (1.8m/86% in 1,739 sites -, 80% water shortage/rat infestations/4,000 chickenpox cases/half hospitals operational -, 8 killed…",
+      "rationale": "Closest to 87 on 2026-10-05 (held 85 before) which captured persistent low-intensity combat (1,381-1,439 killed) and near-extreme collapse (1.8m displaced, 80% water shortage, half hospitals). New research confirms same low-intensity combat (1,400 killed/4,881 wounded since ceasefire, 74k total, HRW says killing/denial of aid and acts of genocide persist) but quantifies deeper humanitarian…",
       "data_url": "/data/pulses/pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe.json"
     },
     {
@@ -498,9 +534,9 @@
       "position": 73.0,
       "band": "severe",
       "confidence": "high",
-      "last_assessed": "2026-10-05T06:44:10.888856+00:00",
-      "evidence_through": "2026-10-05",
-      "velocity_7d": null,
+      "last_assessed": "2026-10-10T06:42:22.417939+00:00",
+      "evidence_through": "2026-10-10",
+      "velocity_7d": 0.0,
       "history": [
         {
           "at": "2026-10-01T08:09:19.809131+00:00",
@@ -530,8 +566,8 @@
       "position": 60.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-05T06:44:10.888856+00:00",
-      "evidence_through": "2026-10-05",
+      "last_assessed": "2026-10-10T06:42:22.417939+00:00",
+      "evidence_through": "2026-10-10",
       "velocity_7d": null,
       "history": [
         {
@@ -564,12 +600,12 @@
       "low_end": "Bab el-Mandeb and the Red Sea are open with normal commercial traffic volumes, no attacks or credible blockade threats, and routine transit without special routing or naval escort.",
       "high_end": "Bab el-Mandeb and the Red Sea are effectively closed to commercial shipping due to sustained attacks, enforced blockade, or mass avoidance with near-zero transits and prolonged Suez disruption.",
       "status": "experimental",
-      "position": 65.0,
+      "position": 60.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-05T08:11:46.846756+00:00",
-      "evidence_through": "2026-10-05",
-      "velocity_7d": null,
+      "last_assessed": "2026-10-10T06:18:36.543486+00:00",
+      "evidence_through": "2026-10-10",
+      "velocity_7d": -12.0,
       "history": [
         {
           "at": "2026-10-01T03:00:57.470982+00:00",
@@ -586,13 +622,17 @@
         {
           "at": "2026-10-03T21:55:50.660077+00:00",
           "position": 65.0
+        },
+        {
+          "at": "2026-10-10T06:18:36.543486+00:00",
+          "position": 60.0
         }
       ],
       "title": "Houthis–Saudi Arabia · Red Sea–Bab el-Mandeb Shipping Disruption",
       "actors_iso2": [
         "SA"
       ],
-      "rationale": "Closest to past reading 68 (2026-10-01) which reflected declared embargo, physical control of Bab el-Mandeb islands/Mokha and kinetic strikes on Riyadh. New confirmed evidence confirms sustained control of entire Red Sea coast and Mayun Island 11 Sep and Saudi-only ban with explicit assurance navigation safe for non-Saudi firms, plus pipeline strike and French/Italian protection deployments.…",
+      "rationale": "Closest to past reading 65 (2026-10-03, held 2026-10-04/05) which reflected sustained Houthi control of Red Sea coast/Mayun/Mocha and Saudi-only ban forcing rerouting, and to dissenting reader view 58 (2026-10-03) which noted declared embargo without verified attacks/traffic collapse. New evidence confirms Houthi seizure of Mocha/islands mid-Sep but also confirmed coalition securing air…",
       "data_url": "/data/pulses/pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption.json"
     },
     {
@@ -607,8 +647,8 @@
       "position": null,
       "band": "unassessed",
       "confidence": "",
-      "last_assessed": "2026-10-05T08:11:46.846756+00:00",
-      "evidence_through": "2026-10-05",
+      "last_assessed": "2026-10-10T06:18:36.543486+00:00",
+      "evidence_through": "2026-10-10",
       "velocity_7d": null,
       "history": [],
       "title": "Houthis–Saudi Arabia · Suez Canal Throughput and Rerouting Strain",
@@ -630,9 +670,9 @@
       "position": 65.0,
       "band": "severe",
       "confidence": "medium",
-      "last_assessed": "2026-10-05T08:11:46.846756+00:00",
-      "evidence_through": "2026-10-05",
-      "velocity_7d": null,
+      "last_assessed": "2026-10-10T06:18:36.543486+00:00",
+      "evidence_through": "2026-10-10",
+      "velocity_7d": 0.0,
       "history": [
         {
           "at": "2026-10-01T03:00:57.470982+00:00",
@@ -819,9 +859,9 @@
       "position": 85.0,
       "band": "critical",
       "confidence": "medium",
-      "last_assessed": "2026-10-05T08:14:35.334028+00:00",
-      "evidence_through": "2026-10-05",
-      "velocity_7d": null,
+      "last_assessed": "2026-10-10T06:05:46.600128+00:00",
+      "evidence_through": "2026-10-10",
+      "velocity_7d": 1.0,
       "history": [
         {
           "at": "2026-10-01T03:00:57.470982+00:00",
@@ -856,9 +896,9 @@
       "position": 84.0,
       "band": "critical",
       "confidence": "high",
-      "last_assessed": "2026-10-05T08:14:35.334028+00:00",
-      "evidence_through": "2026-10-05",
-      "velocity_7d": null,
+      "last_assessed": "2026-10-10T06:05:46.600128+00:00",
+      "evidence_through": "2026-10-10",
+      "velocity_7d": 0.0,
       "history": [
         {
           "at": "2026-10-01T03:00:57.470982+00:00",
@@ -884,9 +924,9 @@
       "position": 83.0,
       "band": "critical",
       "confidence": "medium",
-      "last_assessed": "2026-10-05T08:14:35.334028+00:00",
-      "evidence_through": "2026-10-05",
-      "velocity_7d": null,
+      "last_assessed": "2026-10-10T06:05:46.600128+00:00",
+      "evidence_through": "2026-10-10",
+      "velocity_7d": 1.0,
       "history": [
         {
           "at": "2026-10-01T03:00:57.470982+00:00",

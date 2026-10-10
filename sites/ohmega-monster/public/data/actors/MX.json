@@ -555,7 +555,19 @@
     "as_of": "",
     "nuclear": null
   },
-  "statements": [],
+  "statements": [
+    {
+      "id": "st_cf7a66092eff",
+      "speaker": "Representative of Mexico",
+      "role": "Representative",
+      "date": "2026-10-08",
+      "text": "Ironically, the number of UN treaties has been much higher and more prolific when projects have not been referred to the Sixth Committee.",
+      "is_quote": true,
+      "signal": "accusation",
+      "stance": -1,
+      "source_url": "https://press.un.org/en/2026/gal3745.doc.htm"
+    }
+  ],
   "involved": {
     "theaters": [],
     "pulses": []

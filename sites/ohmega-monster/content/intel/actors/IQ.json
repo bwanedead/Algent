@@ -520,14 +520,14 @@
         "id": "pls_iran_gulf_iran_proxy_axis_escalation",
         "name": "Iran Proxy Axis Escalation",
         "band": "critical",
-        "position": 83.0,
+        "position": 87.0,
         "theater_id": "thr_us_withdrawal_from_iraq_after_23_year_presence"
       },
       {
         "id": "pls_iran_gulf_us_iran_israel_military_confrontation",
         "name": "US-Iran-Israel Direct Military Confrontation",
         "band": "critical",
-        "position": 78.0,
+        "position": 75.0,
         "theater_id": "thr_us_withdrawal_from_iraq_after_23_year_presence"
       }
     ]

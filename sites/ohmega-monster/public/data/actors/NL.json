@@ -547,7 +547,7 @@
         "id": "pls_israel_palestine_gaza_combat_and_humanitarian_catastrophe",
         "name": "Gaza Combat and Humanitarian Catastrophe",
         "band": "critical",
-        "position": 87.0,
+        "position": 88.0,
         "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
       },
       {
@@ -561,7 +561,7 @@
         "id": "pls_israel_palestine_ceasefire_and_normalization_deadlock",
         "name": "Ceasefire and Normalization Deadlock",
         "band": "severe",
-        "position": 63.0,
+        "position": 65.0,
         "theater_id": "thr_gaza_war_and_unga_diplomatic_fallout"
       },
       {

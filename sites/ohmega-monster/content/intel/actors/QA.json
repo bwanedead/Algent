@@ -536,6 +536,13 @@
     ],
     "pulses": [
       {
+        "id": "pls_iran_gulf_iran_proxy_axis_escalation",
+        "name": "Iran Proxy Axis Escalation",
+        "band": "critical",
+        "position": 87.0,
+        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
+      },
+      {
         "id": "pls_iran_gulf_hormuz_maritime_disruption",
         "name": "Strait of Hormuz Maritime Disruption",
         "band": "critical",
@@ -543,24 +550,17 @@
         "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       },
       {
-        "id": "pls_iran_gulf_iran_proxy_axis_escalation",
-        "name": "Iran Proxy Axis Escalation",
+        "id": "pls_energy_security_global_hydrocarbon_supply_disruption",
+        "name": "Global Hydrocarbon Supply Disruption",
         "band": "critical",
-        "position": 83.0,
+        "position": 77.0,
         "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       },
       {
         "id": "pls_iran_gulf_us_iran_israel_military_confrontation",
         "name": "US-Iran-Israel Direct Military Confrontation",
         "band": "critical",
-        "position": 78.0,
-        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
-      },
-      {
-        "id": "pls_energy_security_global_hydrocarbon_supply_disruption",
-        "name": "Global Hydrocarbon Supply Disruption",
-        "band": "critical",
-        "position": 77.0,
+        "position": 75.0,
         "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       },
       {
@@ -585,13 +585,6 @@
         "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       },
       {
-        "id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
-        "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
-        "band": "severe",
-        "position": 65.0,
-        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
-      },
-      {
         "id": "pls_red_sea_shipping_war_risk_insurance_freight_pressure",
         "name": "War-Risk Insurance and Freight Cost Pressure",
         "band": "severe",
@@ -603,6 +596,13 @@
         "name": "Energy Price and Market Shock",
         "band": "severe",
         "position": 62.0,
+        "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
+      },
+      {
+        "id": "pls_red_sea_shipping_red_sea_bab_el_mandeb_disruption",
+        "name": "Red Sea–Bab el-Mandeb Shipping Disruption",
+        "band": "severe",
+        "position": 60.0,
         "theater_id": "thr_us_iran_houthi_confrontation_over_hormuz_and_red"
       }
     ]

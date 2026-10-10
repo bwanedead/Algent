@@ -1,0 +1,563 @@
+{
+  "schema": "ohmega.actor/1",
+  "data_as_of": "2026-10-05",
+  "iso2": "ME",
+  "iso3": "MNE",
+  "name": "Montenegro",
+  "region": "Europe & Central Asia",
+  "capital": "Podgorica",
+  "kind": "state",
+  "headline": [
+    {
+      "id": "population",
+      "label": "Population",
+      "unit": "people",
+      "group": "people",
+      "value": 623129.0,
+      "year": 2025,
+      "source": "wb",
+      "rank": 165,
+      "of": 194,
+      "percentile": 14
+    },
+    {
+      "id": "gdp",
+      "label": "GDP",
+      "unit": "usd",
+      "group": "economy",
+      "value": 9232801464.79257,
+      "year": 2025,
+      "source": "wb",
+      "rank": 153,
+      "of": 193,
+      "percentile": 20
+    },
+    {
+      "id": "gdp_pc",
+      "label": "GDP per person",
+      "unit": "usd",
+      "group": "economy",
+      "value": 14816.8380299947,
+      "year": 2025,
+      "source": "wb",
+      "rank": 67,
+      "of": 193,
+      "percentile": 65
+    },
+    {
+      "id": "energy_production",
+      "label": "Fossil fuel production (oil + gas + coal)",
+      "unit": "twh",
+      "group": "energy",
+      "value": 3.768,
+      "year": 2016,
+      "source": "owid",
+      "rank": 103,
+      "of": 186,
+      "percentile": 44
+    },
+    {
+      "id": "milex",
+      "label": "Military spending",
+      "unit": "usd",
+      "group": "military",
+      "value": 150033208.503973,
+      "year": 2024,
+      "source": "wb",
+      "rank": 137,
+      "of": 167,
+      "percentile": 17
+    }
+  ],
+  "groups": {
+    "people": [
+      {
+        "id": "population",
+        "label": "Population",
+        "unit": "people",
+        "group": "people",
+        "value": 623129.0,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "pop_growth",
+        "label": "Population growth",
+        "unit": "pct",
+        "group": "people",
+        "value": -0.0635300593940256,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "urban_pct",
+        "label": "Urban population",
+        "unit": "pct",
+        "group": "people",
+        "value": 65.6085083521036,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "land_area",
+        "label": "Land area",
+        "unit": "km2",
+        "group": "people",
+        "value": 13450.0,
+        "year": 2023,
+        "source": "wb"
+      }
+    ],
+    "economy": [
+      {
+        "id": "gdp",
+        "label": "GDP",
+        "unit": "usd",
+        "group": "economy",
+        "value": 9232801464.79257,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_ppp",
+        "label": "GDP (purchasing power)",
+        "unit": "usd",
+        "group": "economy",
+        "value": 22072877345.296,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_pc",
+        "label": "GDP per person",
+        "unit": "usd",
+        "group": "economy",
+        "value": 14816.8380299947,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_pc_ppp",
+        "label": "GDP per person (purchasing power)",
+        "unit": "usd",
+        "group": "economy",
+        "value": 35422.6449824931,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_growth",
+        "label": "GDP growth",
+        "unit": "pct",
+        "group": "economy",
+        "value": 2.74455354258522,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "inflation",
+        "label": "Inflation",
+        "unit": "pct",
+        "group": "economy",
+        "value": 3.89960910704956,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "gdp_growth_imf",
+        "label": "GDP growth, IMF estimate/forecast",
+        "unit": "pct",
+        "group": "economy",
+        "value": 2.8,
+        "year": 2026,
+        "source": "imf"
+      },
+      {
+        "id": "gov_debt_imf",
+        "label": "General government gross debt, share of GDP (IMF)",
+        "unit": "pct",
+        "group": "economy",
+        "value": 62.4,
+        "year": 2026,
+        "source": "imf"
+      },
+      {
+        "id": "fiscal_balance_imf",
+        "label": "Government net lending/borrowing, share of GDP (IMF)",
+        "unit": "pct",
+        "group": "economy",
+        "value": -4.0,
+        "year": 2026,
+        "source": "imf"
+      },
+      {
+        "id": "current_account_imf",
+        "label": "Current account balance, share of GDP (IMF)",
+        "unit": "pct",
+        "group": "economy",
+        "value": -19.4,
+        "year": 2026,
+        "source": "imf"
+      },
+      {
+        "id": "reserves_usd",
+        "label": "Foreign reserves (incl. gold)",
+        "unit": "usd",
+        "group": "economy",
+        "value": 2196370744.61095,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "reserves_months",
+        "label": "Foreign reserves, months of imports",
+        "unit": "months",
+        "group": "economy",
+        "value": 3.94727078638566,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "ext_debt_usd",
+        "label": "External debt stocks",
+        "unit": "usd",
+        "group": "economy",
+        "value": 8741348456.1,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "ext_debt_gni",
+        "label": "External debt, share of national income",
+        "unit": "pct",
+        "group": "economy",
+        "value": 108.635519944661,
+        "year": 2024,
+        "source": "wb"
+      }
+    ],
+    "trade": [
+      {
+        "id": "exports_pct",
+        "label": "Exports, share of GDP",
+        "unit": "pct",
+        "group": "trade",
+        "value": 40.0626882380633,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "imports_pct",
+        "label": "Imports, share of GDP",
+        "unit": "pct",
+        "group": "trade",
+        "value": 65.7111131958305,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "fuel_exports_pct",
+        "label": "Fuels, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 25.2784229867546,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "exports_usd",
+        "label": "Exports of goods and services",
+        "unit": "usd",
+        "group": "trade",
+        "value": 3698908466.47919,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "imports_usd",
+        "label": "Imports of goods and services",
+        "unit": "usd",
+        "group": "trade",
+        "value": 6066976621.67614,
+        "year": 2025,
+        "source": "wb"
+      },
+      {
+        "id": "food_exports_pct",
+        "label": "Food, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 16.8444611565394,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "metal_exports_pct",
+        "label": "Ores and metals, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 16.4157801794885,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "manuf_exports_pct",
+        "label": "Manufactures, share of goods exports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 35.0794692329519,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "fuel_imports_pct",
+        "label": "Fuels, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 10.4670227786235,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "food_imports_pct",
+        "label": "Food, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 23.6003133483077,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "metal_imports_pct",
+        "label": "Ores and metals, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 1.60012272351775,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "manuf_imports_pct",
+        "label": "Manufactures, share of goods imports",
+        "unit": "pct",
+        "group": "trade",
+        "value": 63.6876899395175,
+        "year": 2024,
+        "source": "wb"
+      }
+    ],
+    "energy": [
+      {
+        "id": "energy_production",
+        "label": "Fossil fuel production (oil + gas + coal)",
+        "unit": "twh",
+        "group": "energy",
+        "value": 3.768,
+        "year": 2016,
+        "source": "owid"
+      },
+      {
+        "id": "energy_use",
+        "label": "Primary energy consumption",
+        "unit": "twh",
+        "group": "energy",
+        "value": 11.773,
+        "year": 2023,
+        "source": "owid"
+      },
+      {
+        "id": "energy_pc",
+        "label": "Energy use per person",
+        "unit": "kwh",
+        "group": "energy",
+        "value": 18582.631,
+        "year": 2023,
+        "source": "owid"
+      },
+      {
+        "id": "oil_prod",
+        "label": "Oil production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 0.0,
+        "year": 2016,
+        "source": "owid"
+      },
+      {
+        "id": "gas_prod",
+        "label": "Gas production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 0.0,
+        "year": 2016,
+        "source": "owid"
+      },
+      {
+        "id": "coal_prod",
+        "label": "Coal production",
+        "unit": "twh",
+        "group": "energy",
+        "value": 3.768,
+        "year": 2016,
+        "source": "owid"
+      },
+      {
+        "id": "elec_gen",
+        "label": "Electricity generation",
+        "unit": "twh",
+        "group": "energy",
+        "value": 2.46,
+        "year": 2025,
+        "source": "owid"
+      },
+      {
+        "id": "elec_fossil",
+        "label": "Electricity from fossil fuels",
+        "unit": "pct",
+        "group": "energy",
+        "value": 24.39,
+        "year": 2025,
+        "source": "owid"
+      },
+      {
+        "id": "elec_nuclear",
+        "label": "Electricity from nuclear",
+        "unit": "pct",
+        "group": "energy",
+        "value": 0.0,
+        "year": 2025,
+        "source": "owid"
+      },
+      {
+        "id": "elec_renew",
+        "label": "Electricity from renewables",
+        "unit": "pct",
+        "group": "energy",
+        "value": 75.61,
+        "year": 2025,
+        "source": "owid"
+      },
+      {
+        "id": "energy_import_pct",
+        "label": "Net energy imports, share of use",
+        "unit": "pct",
+        "group": "energy",
+        "value": 24.3527580071175,
+        "year": 2023,
+        "source": "wb"
+      }
+    ],
+    "military": [
+      {
+        "id": "milex",
+        "label": "Military spending",
+        "unit": "usd",
+        "group": "military",
+        "value": 150033208.503973,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "milex_pct",
+        "label": "Military spending, share of GDP",
+        "unit": "pct",
+        "group": "military",
+        "value": 1.83253539270475,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "armed_forces",
+        "label": "Armed forces personnel",
+        "unit": "persons",
+        "group": "military",
+        "value": 12000.0,
+        "year": 2020,
+        "source": "wb"
+      },
+      {
+        "id": "arms_imports",
+        "label": "Arms imports (SIPRI trend-indicator value, 1990 US$)",
+        "unit": "usd",
+        "group": "military",
+        "value": 5000000.0,
+        "year": 2024,
+        "source": "wb"
+      },
+      {
+        "id": "arms_exports",
+        "label": "Arms exports (SIPRI trend-indicator value, 1990 US$)",
+        "unit": "usd",
+        "group": "military",
+        "value": 4000000.0,
+        "year": 2022,
+        "source": "wb"
+      }
+    ]
+  },
+  "energy_role": {
+    "surplus": [],
+    "deficit": []
+  },
+  "leadership": {
+    "head_of_state": {
+      "name": "Jakov Milatović",
+      "since": "2023-05-20"
+    },
+    "head_of_government": {
+      "name": "Milojko Spajić",
+      "since": "2023-10-31"
+    },
+    "as_of": "2026-10-05",
+    "nuclear": null
+  },
+  "statements": [
+    {
+      "id": "st_323d556132b4",
+      "speaker": "Milojko Spajić",
+      "role": "Prime Minister",
+      "date": "2026-10-09",
+      "text": "Montenegro is protecting its interests and no one will endanger our European future,",
+      "is_quote": true,
+      "signal": "commitment",
+      "stance": 2,
+      "source_url": "https://www.themoscowtimes.com/2026/10/09/montenegro-arrests-founder-of-influential-russian-pro-war-blog-rybar-a93929"
+    }
+  ],
+  "involved": {
+    "theaters": [],
+    "pulses": []
+  },
+  "credits": [
+    {
+      "source": "imf",
+      "name": "IMF World Economic Outlook (DataMapper)",
+      "licence": "IMF open data, attribution",
+      "url": "https://www.imf.org/external/datamapper",
+      "years": "2026"
+    },
+    {
+      "source": "owid",
+      "name": "Our World in Data energy dataset (Energy Institute, Ember, EIA)",
+      "licence": "CC BY 4.0",
+      "url": "https://ourworldindata.org/energy",
+      "years": "2016-2025"
+    },
+    {
+      "source": "wb",
+      "name": "World Bank World Development Indicators (military figures: SIPRI)",
+      "licence": "CC BY 4.0",
+      "url": "https://data.worldbank.org/",
+      "years": "2020-2025"
+    },
+    {
+      "source": "wikidata",
+      "name": "Wikidata (heads of state and government)",
+      "licence": "CC0",
+      "url": "https://www.wikidata.org/",
+      "years": ""
+    }
+  ],
+  "url": "/intel/actors/ME",
+  "data_url": "/data/actors/ME.json"
+}
