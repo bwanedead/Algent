@@ -8,7 +8,12 @@
       "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File C:\\\\Users\\\\dawki\\\\.claude\\\\skills\\\\ralph-services\\\\scripts\\\\run.ps1:*)",
       "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File:*)",
       "Bash(powershell -Command \"[DateTime]::UtcNow.ToString\\(''o''\\)\")",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Read(//c/tmp/**)",
+      "Bash(backend/.venv/Scripts/python.exe -)",
+      "Bash(cp \"sites/ohmega-monster/app/articles/[slug]/page.tsx\" \".site-live/sites/ohmega-monster/app/articles/[slug]/page.tsx\")",
+      "Bash(python -c \"import sys,json;d=json.load\\(sys.stdin\\);print\\(len\\(d['features']\\),d.get\\('exceededTransferLimit'\\)\\)\")",
+      "Bash(python -c \"import sys,json;print\\(json.load\\(sys.stdin\\)['features']\\)\")"
     ]
   }
 }

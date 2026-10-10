@@ -25,7 +25,6 @@ OK, WARN, FAIL = "ok", "warn", "fail"
 #: (a test asserts every name here appears in the manifest).
 REQUIRED_KEYS: tuple[tuple[str, tuple[str, ...], str], ...] = (
     ("house model key", ("META_MODEL_API_KEY",), FAIL),
-    ("house model base url", ("META_MODEL_API_BASE_URL",), FAIL),
     ("database", ("DATABASE_URL",), FAIL),
     ("gemini (hero images)", ("GEMINI_API_KEY", "GOOGLE_API_KEY"), WARN),
     ("x read", ("X_BEARER_TOKEN", "X_API_BEARER_TOKEN", "X_BEARER", "X_BEARER_KEY", "TWITTER_BEARER_TOKEN"), WARN),
