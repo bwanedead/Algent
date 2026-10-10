@@ -72,9 +72,20 @@ def _published_at(markdown: str) -> str | None:
     return m.group(1).strip() if m else None
 
 
+#: Postgres text and jsonb reject NUL (0x00); it carries no meaning in published text, so it is dropped at this edge.
+NUL_ESCAPE = "\\u0000"
+
+
+def _no_nul(text: str) -> str:
+    return (text or "").replace(chr(0), "")
+
+
 def publish_article(slug: str, markdown: str, *, title: str = "", status: str = "",
                     connect: Callable[[], Any] | None = None) -> dict[str, Any]:
     """Upsert one article (its full site markdown). A changed body also appends a revision."""
+    markdown = _no_nul(markdown)          # Postgres text rejects NUL; scraped source text sometimes carries it
+    title = _no_nul(title)
+
     def work(conn: Any) -> dict:
         with conn.cursor() as cur:
             cur.execute(_ARTICLE, (slug, title or slug, status, _published_at(markdown), markdown))
@@ -93,7 +104,7 @@ def publish_documents(docs: dict[str, dict], *, connect: Callable[[], Any] | Non
         with conn.cursor() as cur:
             for path, body in sorted(docs.items()):
                 cur.execute(_DOCUMENT, (path, path.split("/", 1)[0].removesuffix(".json"),
-                                        json.dumps(body, ensure_ascii=False)))
+                                        json.dumps(body, ensure_ascii=False).replace(NUL_ESCAPE, "")))
                 changed += cur.fetchone() is not None
         return {"documents": changed, "of": len(docs)}
 
