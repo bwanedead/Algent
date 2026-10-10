@@ -247,8 +247,9 @@ def check_harnesses(probes: Probes) -> dict[str, Any]:
 
 
 def check_publish(env: dict[str, str], probes: Probes, repo: Path) -> dict[str, Any]:
-    db_mode = bool(env.get("DATABASE_URL")) and env.get("ALGENT_DB_PUBLISH", "1").strip().lower() not in (
-        "0", "false", "no", "off")
+    from algent_backend.publishing import site_git
+
+    db_mode = site_git.via_db()   # SITE_PUBLISH_VIA (flags.py), not merely "a database is configured"
     if db_mode:
         return {"publish": _check(OK, "db mode (publishes rows to the database; connectivity checked above)")}
     try:
