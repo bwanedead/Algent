@@ -9,7 +9,9 @@ so it can be rebuilt from scratch instead of repaired by hand.
 - DigitalOcean droplet `ohmega-server`, Toronto (TOR1), Ubuntu 24.04, 2 vCPU / 4 GB / 80 GB, $24/month.
 - Address `146.190.243.152`. Log in as `ohmega` with the automation key: `ssh -i ~/.ssh/ohmega_ops ohmega@146.190.243.152`
   (root login and passwords are off; the operator's personal key also works).
-- Firewall: SSH only. SearXNG and everything else listen on 127.0.0.1.
+- Firewall: SSH only, on **22 and 443**. 443 exists because cloud Claude sandboxes can only get out on 443; it is a
+  systemd drop-in, `/etc/systemd/system/ssh.socket.d/port443.conf` (`ListenStream=0.0.0.0:443` and `[::]:443`), plus
+  `ufw allow 443/tcp`. Key-only auth applies the same. SearXNG and everything else listen on 127.0.0.1.
 
 ## What it runs
 
