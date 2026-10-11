@@ -67,7 +67,9 @@ function findFeature(layers: LayerSpec[], id: string): { f: Feature; spec: Layer
 
 /** A touch-first device (phones, tablets): standard one-finger map gestures there. */
 function isTouch(): boolean {
-  return typeof window !== "undefined" && window.matchMedia?.("(pointer: coarse)").matches === true;
+  if (typeof window === "undefined") return false;
+  // Any touch capability counts (some phone browsers don't report a coarse pointer): a phone must never need two fingers.
+  return (navigator.maxTouchPoints ?? 0) > 0 || "ontouchstart" in window || window.matchMedia?.("(pointer: coarse)").matches === true;
 }
 
 export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1.6, maxZoom = 9, tilt = false, fallback, selectedId = null, onSelect, items, itemsLabel = "Marked places", onStatus, credit, focus = null, onMap }: MapProps) {
