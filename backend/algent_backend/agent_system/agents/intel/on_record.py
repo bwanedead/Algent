@@ -18,6 +18,8 @@ A statement proves it was SAID, not that it is true; the site says so once.
 
 from __future__ import annotations
 
+import re
+
 from collections import defaultdict
 from collections.abc import Iterable
 from datetime import date
@@ -40,11 +42,30 @@ def _iso2(name: str) -> str:
     return iso2_for_name(name)
 
 
+_LED = re.compile(r"^(?P<lead>[A-Za-z .'-]+?)[- ]led\s+(?:coalition|alliance|forces?|mission|campaign|bloc)\b", re.I)
+
+
+def _iso2_affiliation(name: str) -> str:
+    """Country for an affiliation: the name itself, or the lead nation of a "<Country>-led coalition" (a
+    Saudi-led coalition spokesman speaks for Saudi Arabia). Nothing else is inferred: NATO, the UN and a
+    group like the Houthis stay countryless."""
+    found = _iso2(name)
+    if found or not (m := _LED.match(name.strip())):
+        return found
+    lead = m.group("lead").strip()
+    if found := _iso2(lead):
+        return found
+    from algent_backend.actors import registry   # "Saudi" -> Saudi Arabia, only when exactly one state starts with it
+
+    hits = {c.iso2 for c in registry.states() if c.name.casefold().startswith(lead.casefold() + " ")}
+    return hits.pop() if len(hits) == 1 else ""
+
+
 def entry(s: Statement) -> dict[str, Any]:
     """One statement as a published row. ``iso2``/``about_iso2`` are "" / omitted where the name is not a country."""
     about_iso = list(dict.fromkeys(i for i in (_iso2(a) for a in s.about) if i))
     return {"id": s.id, "speaker": s.speaker, "role": s.role, "affiliation": s.affiliation,
-            "iso2": _iso2(s.affiliation), "date": s.date, "venue": s.venue_kind, "quote": s.quote,
+            "iso2": _iso2_affiliation(s.affiliation), "date": s.date, "venue": s.venue_kind, "quote": s.quote,
             "paraphrase": s.paraphrase, "about": list(s.about), "about_iso2": about_iso, "signal": s.signal,
             "stance": s.stance, "significance": s.significance, "url": s.source_url,
             "reported_by": s.reported_by if getattr(s, "source_kind", "") == "secondary" else ""}

@@ -122,6 +122,9 @@ WHAT GOOD LOOKS LIKE:
   short and says so: `bottom_line` states that nothing has changed since that date and what stands;
   `developments` holds only what actually moved (empty is fine). Never re-describe the earlier section
   to fill the space.
+- `headline`: ONE complete, standalone sentence of at most 20 words that states the single most important
+  thing today (it is the title line of the section; the reader may read nothing else). Never a fragment,
+  never trails off, no dateline. `bottom_line` expands it.
 - `bottom_line`: 2-3 sentences: what matters today and how sure we are. Calm is news too: if something
   expected has NOT happened, or the day was quiet, say so plainly. News over-reports escalation; do not
   read volume as intensity.
@@ -477,6 +480,16 @@ def record_proposals(store: Any, drafts: list[PulseProposal], *, theater: Theate
     return recorded
 
 
+HEADLINE_MAX_WORDS = 28   # the prompt asks for <= 20; past this it is a paragraph, not a headline
+
+
+def _headline(text: str) -> str:
+    """The writer's one-sentence headline, or "" when absent or too long to be one (the site then falls back
+    to a clause-bounded cut of ``bottom_line``)."""
+    t = " ".join(str(text or "").split())
+    return t if t and len(t.split()) <= HEADLINE_MAX_WORDS else ""
+
+
 # ── the engine ────────────────────────────────────────────────────────────────────────────────
 def _section(theater: Theater, heat: dict, draft: SectionDraft, pulses: list[dict], brief: dict | None,
              countries: list[geo.Country] | None = None, record: Sequence[dict] = ()) -> dict:
@@ -486,6 +499,7 @@ def _section(theater: Theater, heat: dict, draft: SectionDraft, pulses: list[dic
                             "coverage": coverage_label(heat.get("trend", "")),
                             "recent_share": heat.get("recent_share", 0.0), "prior_share": heat.get("prior_share", 0.0)},
             "escalation": d["escalation"], "pulses": pulses, "bottom_line": d["bottom_line"],
+            "headline": _headline(d.get("headline", "")),
             "since_yesterday": d["since_yesterday"], "developments": d["developments"], "context": d["context"],
             "outlook": d["outlook"], "watch_next": d["watch_next"],
             "key_figures": d["key_figures"], "brief_slug": (brief or {}).get("slug"),

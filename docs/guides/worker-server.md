@@ -78,5 +78,10 @@ Supabase (next step) becomes the working database.
 3. Deploy keys + `~/.ssh/config` host aliases `github-algent` / `github-data` (see this doc's history).
 4. `scp` the `.env` to `~/algent.env`; `infra/server/app_setup.sh`; `infra/server/searxng/deploy.sh ohmega@HOST`.
 5. Restore the stores: `python -c "from algent_backend.data_backup import sync; print(sync.restore())"`.
-6. `infra/server/install_schedules.sh`.
-7. `newsroom runner claim`, then `newsroom doctor`.
+6. Basemap data (untracked, so a fresh clone lacks it; without it every daily map silently vanishes): copy
+   `analytics_workspace/data/natural_earth/` from a machine that has it, or download from naturalearthdata.com
+   `ne_50m_admin_0_countries` (or `ne_110m_`) plus `ne_10m_populated_places_simple`, `ne_50m_rivers_lake_centerlines`,
+   `ne_50m_lakes`, `ne_10m_admin_0_disputed_areas` (or `ne_50m_admin_0_breakaway_disputed_areas`) as `.geojson` into that folder.
+   `newsroom doctor` warns (`basemap`) when it cannot load.
+7. `infra/server/install_schedules.sh`.
+8. `newsroom runner claim`, then `newsroom doctor`.

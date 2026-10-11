@@ -99,6 +99,11 @@ class Probes:
                               timeout=timeout, cwd=cwd)
         return done.returncode, (done.stdout + done.stderr).strip()
 
+    def basemap_loaded(self) -> bool:
+        from algent_backend.agent_system.agents.intel import geo
+
+        return bool(geo.load())
+
     def runner_status(self) -> dict[str, Any]:
         from algent_backend.data_backup import runner
 
@@ -341,6 +346,17 @@ def check_instruments() -> dict[str, Any]:
             else _check(OK, "every feed is as fresh as its cadence allows")}
 
 
+def check_basemap(probes: Probes) -> dict[str, Any]:
+    """The Natural Earth basemap (untracked data) must load, or every daily map silently disappears."""
+    try:
+        loaded = probes.basemap_loaded()
+    except Exception as exc:  # noqa: BLE001
+        return {"basemap": _check(WARN, f"unknown: {scrub(exc)}")}
+    return {"basemap": _check(OK, "Natural Earth countries load") if loaded else _check(
+        WARN, "Natural Earth basemap missing: daily maps and places will be empty. Copy "
+              "analytics_workspace/data/natural_earth/ from a machine that has it (docs/guides/worker-server.md)")}
+
+
 def run_checks(env: dict[str, str] | None = None, probes: Probes | None = None,
                repo: Path | None = None) -> dict[str, Any]:
     env = dict(os.environ if env is None else env)
@@ -349,7 +365,7 @@ def run_checks(env: dict[str, str] | None = None, probes: Probes | None = None,
     checks: dict[str, Any] = {}
     for part in (check_keys(env), check_database(env, probes), check_search(env, probes), check_reads(probes),
                  check_harnesses(probes), check_publish(env, probes, repo), check_runner(probes),
-                 check_system(probes), check_watchdog(probes), check_quota(probes), check_instruments()):
+                 check_system(probes), check_watchdog(probes), check_quota(probes), check_instruments(), check_basemap(probes)):
         checks.update(part)
     counts = {s: sum(1 for c in checks.values() if c["status"] == s) for s in (OK, WARN, FAIL)}
     return {"ok": counts[FAIL] == 0, "summary": f"{counts[OK]} ok, {counts[WARN]} warn, {counts[FAIL]} fail",

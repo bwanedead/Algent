@@ -391,6 +391,7 @@ def _current(acc: _Acc, coverage: str) -> dict | None:
         day, (_r, s) = daily
         esc = s.get("escalation") or {}
         return {"date": day, "bottom_line": _clean(s.get("bottom_line", ""), _TEXT_LIMIT),
+                "headline": _clean(s.get("headline", ""), _TEXT_LIMIT),
                 "escalation": {"direction": esc.get("direction", "unclear"), "pace": esc.get("pace", "gradual")},
                 "coverage": (s.get("temperature") or {}).get("coverage") or coverage, "source": "daily",
                 "url": _daily_url(day)}

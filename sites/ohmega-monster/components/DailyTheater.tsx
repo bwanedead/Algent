@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import Popover from "@/components/Popover";
 import type { DailyChangeKind, DailyTheater } from "@/lib/daily";
-import { claimOf, isCut, shortDay, splitLead } from "@/lib/daily";
+import { claimOf, headlineOf, isCut, shortDay, splitLead } from "@/lib/daily";
 import { dossierPath } from "@/lib/dossier";
 import type { Direction, Snapshot } from "@/lib/intel";
 
@@ -57,7 +57,7 @@ function ContextList({ t }: { t: DailyTheater }) {
 
 export default function DailyTheaterSection({ t, id, date, snap, dossiers, first = false }: { t: DailyTheater; id: string; date: string; snap: Snapshot | null; dossiers: ReadonlySet<string>; first?: boolean }) {
   const dir = DIR[t.escalation.direction];
-  const claim = claimOf(t.bottom_line, 150) || claimOf(t.since_yesterday[0]?.what ?? "", 150) || t.name;
+  const claim = headlineOf(t.headline, t.bottom_line, 150) || claimOf(t.since_yesterday[0]?.what ?? "", 150) || t.name;
   const changed = t.since_yesterday.filter((c) => c.kind !== "unchanged");
   const same = t.since_yesterday.filter((c) => c.kind === "unchanged");
   const outlook = claimOf(t.outlook, 170);
@@ -88,7 +88,7 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
           {claim}
         </h2>
         {isCut(t.bottom_line, claim) && (
-          <Popover label={`Full assessment: ${t.name}`} triggerClassName="geo-link-btn" trigger={<>Full assessment ›</>}>
+          <Popover label={`Full assessment: ${t.name}`} triggerClassName="geo-link-btn xt" trigger={<>Full assessment ›</>}>
             <div className="geo-pd">
               <p className="geo-pd-title">{t.name}</p>
               <p className="geo-pd-text">{t.bottom_line}</p>
@@ -131,7 +131,7 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
           {same.length > 0 && (
             <Popover
               label={`Unchanged since yesterday: ${same.length}`}
-              triggerClassName="geo-link-btn geo-same"
+              triggerClassName="geo-link-btn geo-same xt"
               trigger={
                 <>
                   <span aria-hidden="true">=</span> {changed.length === 0 ? "Nothing changed since yesterday" : `${same.length} unchanged`} ›
@@ -177,7 +177,7 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
             </div>
           )}
           {outlookCut && (
-            <Popover label={`Full outlook: ${t.name}`} triggerClassName="geo-link-btn" trigger={<>Full outlook and watch list ›</>}>
+            <Popover label={`Full outlook: ${t.name}`} triggerClassName="geo-link-btn xt" trigger={<>Full outlook and watch list ›</>}>
               <div className="geo-pd">
                 <p className="geo-pd-title">{t.name}</p>
                 {t.outlook && <p className="geo-pd-text">{t.outlook}</p>}
@@ -200,7 +200,7 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
       {(t.context.length > 0 || t.brief_slug) && (
         <Popover
           label={`Background: ${t.name}`}
-          triggerClassName="geo-link-btn"
+          triggerClassName="geo-link-btn xt"
           trigger={<>{t.context.length > 0 ? `Background (${t.context.length})` : "Deep brief"} ›</>}
         >
           <div className="geo-pd">

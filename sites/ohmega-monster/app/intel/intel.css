@@ -39,10 +39,8 @@
 .sit-seg button:focus-visible { outline: 1px solid var(--accent); outline-offset: -2px; }
 
 .sit-linkbtn {
-  padding: 0; border: 0; background: none; color: var(--strong); font: inherit; font-size: 11px; cursor: pointer;
-  text-decoration: underline; text-decoration-color: var(--rule-strong); text-underline-offset: 3px;
+  padding: 0; border: 0; background: none; font: inherit; font-size: 11px;
 }
-.sit-linkbtn:hover { text-decoration-color: var(--strong); }
 
 /* ---- biggest moves: dumbbells on one shared axis ---- */
 .sit-moves { list-style: none; margin: 0; padding: 0; }

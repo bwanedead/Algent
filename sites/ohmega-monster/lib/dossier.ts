@@ -61,7 +61,7 @@ export type Dossier = {
   last_seen: string;
   days_covered: number;
   primer: { text: string; built_at: string } | null;
-  current: { date: string; bottom_line: string; direction: Direction; pace: Pace; coverage: Coverage; source: string; url: string } | null;
+  current: { date: string; bottom_line: string; headline: string; direction: Direction; pace: Pace; coverage: Coverage; source: string; url: string } | null;
   pulses: DossierPulse[];
   escalation_history: EscalationPoint[];
   coverage_series: CoveragePoint[];
@@ -226,6 +226,7 @@ function parseDossier(raw: unknown, id: string): Dossier | null {
       ? {
           date: str(cur.date),
           bottom_line: bottom,
+          headline: str(cur.headline).trim(),
           direction: oneOf(esc.direction, DIRECTIONS, "unclear"),
           pace: oneOf(esc.pace, PACES, "flat"),
           coverage: parseCoverage(cur.coverage, "steady"),

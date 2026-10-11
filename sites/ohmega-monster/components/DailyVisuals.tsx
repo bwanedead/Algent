@@ -104,7 +104,7 @@ export function PulseTiles({ pulses, snap, limit, asOf, className = "geo-pulses"
     <div className={className}>
       {head.map(tile)}
       {rest > 0 && (
-        <Popover label={`${rest} more Pulses`} triggerClassName="geo-more-chip" wide trigger={`+${rest}`}>
+        <Popover label={`${rest} more Pulses`} triggerClassName="geo-more-chip xt" wide trigger={`+${rest}`}>
           <div className="geo-pd">
             <div className="geo-pulses">{sorted.map(tile)}</div>
           </div>

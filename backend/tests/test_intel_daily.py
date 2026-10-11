@@ -104,7 +104,7 @@ def test_report_shape_persistence_pulses_and_marking(tmp_path, monkeypatch) -> N
     assert rec == res["report"] and rec["schema"] == "ohmega.daily/1" and rec["researched"] is False
     assert [t["theater_id"] for t in rec["theaters"]] == ["thr_a", "thr_b"]          # technology theater skipped
     a = rec["theaters"][0]
-    assert set(a) == {"theater_id", "name", "temperature", "escalation", "pulses", "bottom_line", "since_yesterday",
+    assert set(a) == {"theater_id", "name", "temperature", "escalation", "pulses", "bottom_line", "headline", "since_yesterday",
                       "developments", "context", "outlook", "watch_next", "key_figures", "brief_slug", "on_record", "map",
                       "numbers"}
     assert a["temperature"] == {"heat": 9.0, "trend": "heating", "coverage": "rising coverage", "recent_share": 0.2,

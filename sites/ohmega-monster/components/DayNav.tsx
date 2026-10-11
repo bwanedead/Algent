@@ -52,7 +52,7 @@ export default function DayNav({
           </Link>
         )}
         {dates.length > 1 && (
-          <Popover key={current} label="All days" wide triggerClassName="geo-daynav-all" trigger={<>All days ▾</>}>
+          <Popover key={current} label="All days" wide triggerClassName="geo-daynav-all xt" trigger={<>All days ▾</>}>
             <DailyArchive dates={dates} current={current} domain={domain} base={base} />
           </Popover>
         )}

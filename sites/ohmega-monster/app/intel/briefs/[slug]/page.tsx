@@ -155,7 +155,7 @@ export default async function BriefPage({ params }: { params: Params }) {
                   <p className="intel-strong">{j.statement}</p>
                   {j.horizon && <p className="intel-micro">By {j.horizon}</p>}
                   {(j.basis || j.resolves_yes_if || j.resolves_no_if) && (
-                    <Popover label={`Basis and resolution: ${j.statement}`} trigger="Basis and how it resolves" triggerClassName="pop-link">
+                    <Popover label={`Basis and resolution: ${j.statement}`} trigger="Basis and how it resolves" triggerClassName="pop-link xt">
                       {j.basis && <p className="intel-muted">{j.basis}</p>}
                       {j.resolves_yes_if && (
                         <p>

@@ -144,6 +144,9 @@ class FakeProbes(doctor.Probes):
             return 0, "abc\trefs/heads/site-live"
         return 0, "grok 1.2.3"
 
+    def basemap_loaded(self):
+        return not self.kw.get("no_basemap")
+
     def runner_status(self):
         return {"runner": "box", "is_runner": True, "this_host": "box", "reachable": True, "since": "t"}
 
@@ -242,3 +245,11 @@ def test_usage_summary_math():
     assert s["free_share_pct"] == 60.0 and s["paid_share_pct"] == 20.0
     assert s["failure_rate_pct"] == 20.0 and s["fell_through_pct"] == 40.0
     assert s["paid_quota_this_month"].keys() == quota.MONTHLY_CAPS.keys()
+
+
+def test_doctor_warns_when_basemap_missing():
+    ok = doctor.run_checks(_FULL_ENV, FakeProbes())
+    assert ok["checks"]["basemap"]["status"] == "ok"
+    rep = doctor.run_checks(_FULL_ENV, FakeProbes(no_basemap=True))
+    assert rep["checks"]["basemap"]["status"] == "warn" and "natural_earth" in rep["checks"]["basemap"]["detail"]
+    assert rep["ok"] is True      # a warning, not a failure

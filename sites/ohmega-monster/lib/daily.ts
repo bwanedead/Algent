@@ -127,6 +127,8 @@ export type DailyTheater = {
   escalation: { direction: Direction; pace: Pace };
   pulses: DailyPulse[];
   bottom_line: string;
+  /** The writer's one-sentence headline (newer reports); "" on older ones, which fall back to a cut of `bottom_line`. */
+  headline: string;
   since_yesterday: { what: string; kind: DailyChangeKind }[];
   developments: DailyDevelopment[];
   context: { what: string; when: string; why_relevant: string; source: string }[];
@@ -417,6 +419,7 @@ function parseTheater(raw: unknown): DailyTheater | null {
       })
       .filter((p) => p.name),
     bottom_line: str(raw.bottom_line),
+    headline: str(raw.headline).trim(),
     since_yesterday: arr(raw.since_yesterday)
       .filter(isObj)
       .map((c) => ({ what: str(c.what), kind: oneOf(c.kind, ["escalated", "eased", "new", "resolved", "unchanged"] as const, "unchanged") }))
@@ -547,19 +550,38 @@ export function claimOf(text: string, max = 120): string {
   const one = firstSentence(s).replace(/[.!?]+$/, "");
   if (one.length <= max) return one;
   const min = Math.floor(max * 0.45);
-  const lastWithin = (re: RegExp): number => {
+  // The last clause boundary in [lo, hi]; the search widens past `max` before giving up, so a long
+  // sentence is cut at a boundary and not between two words.
+  const lastWithin = (re: RegExp, lo: number, hi: number): number => {
     let best = -1;
     for (const m of one.matchAll(re)) {
       const i = m.index ?? -1;
-      if (i >= min && i <= max && i > best) best = i;
+      if (i >= lo && i <= hi && i > best) best = i;
     }
     return best;
   };
-  const strong = lastWithin(/;|:\s| — |,\s+(?:while|as|but|with|and|then|after|though|amid|which|keeping|including)\b/g);
-  const at = strong >= 0 ? strong : lastWithin(/,\s/g);
-  if (at >= 0) return one.slice(0, at).trim();
-  const words = one.slice(0, max).replace(/\s+\S*$/, "");
-  return `${words || one.slice(0, max)}…`;
+  const strong = /;|:\s| — |,\s+(?:while|as|but|with|and|then|after|though|amid|which|keeping|including)\b/g;
+  const weak = /,\s/g;
+  const widest = Math.floor(max * 1.5);
+  for (const [lo, hi] of [[min, max], [max, widest]] as const) {
+    const at = [lastWithin(strong, lo, hi), lastWithin(weak, lo, hi)].find((i) => i >= 0);
+    if (at !== undefined) return `${one.slice(0, at).trim()}…`;
+  }
+  // No boundary anywhere near: the last whole word, minus words that cannot end a phrase ("while Germany").
+  const words = one
+    .slice(0, max)
+    .replace(/\s+\S*$/, "")
+    .replace(/(?:\s+(?:a|an|the|of|to|in|on|at|for|by|with|while|as|and|or|but|that|which|from|into|amid|after|over|its|their|his|her))+$/i, "");
+  return `${(words || one.slice(0, max)).replace(/[,;:\s]+$/, "")}…`;
+}
+
+/**
+ * The line a section leads with: the writer's own headline when it has one (a complete sentence by
+ * contract), else a boundary-bounded cut of the passage.
+ */
+export function headlineOf(headline: string, full: string, max = 150): string {
+  const h = headline.replace(/\s+/g, " ").trim().replace(/[.!?]+$/, "");
+  return h || claimOf(full, max);
 }
 
 /** True when `claim` (from claimOf) leaves part of `full` unsaid. */

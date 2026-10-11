@@ -31,3 +31,45 @@ export function flagImageUrl(iso2: string, width = 20): string {
   const w = width <= 20 ? 20 : width <= 40 ? 40 : 80;
   return `https://flagcdn.com/w${w}/${iso2.toLowerCase()}.png`;
 }
+
+/** Names the Intl region table gets wrong for a news site, or lacks (older ICU builds). */
+const NAME_OVERRIDES: Record<string, string> = {
+  XK: "Kosovo",
+  TW: "Taiwan",
+  PS: "Palestine",
+  HK: "Hong Kong",
+  MO: "Macau",
+  GB: "United Kingdom",
+  US: "United States",
+  RU: "Russia",
+  KR: "South Korea",
+  KP: "North Korea",
+  IR: "Iran",
+  SY: "Syria",
+  VN: "Vietnam",
+  CZ: "Czechia",
+  TR: "Turkey",
+  EU: "European Union",
+};
+
+let regionNames: Intl.DisplayNames | null | undefined;
+
+/** ISO-3166 alpha-2 -> English country/region name ("SA" -> "Saudi Arabia"); the code itself when unknown. */
+export function countryName(iso2: string): string {
+  const code = iso2.trim().toUpperCase();
+  if (NAME_OVERRIDES[code]) return NAME_OVERRIDES[code];
+  if (regionNames === undefined) {
+    try {
+      regionNames = new Intl.DisplayNames("en", { type: "region" });
+    } catch {
+      regionNames = null;
+    }
+  }
+  try {
+    const name = regionNames?.of(code);
+    if (name && name !== code) return name;
+  } catch {
+    // not a region code
+  }
+  return code;
+}

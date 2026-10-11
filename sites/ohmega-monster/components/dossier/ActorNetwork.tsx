@@ -196,7 +196,7 @@ export default function ActorNetwork({ actors, relations, statements }: { actors
 
       <p className="th-foot">
         {ranked.length > 0 && (
-          <Popover label="Relations as a table" wide triggerClassName="th-link-btn" trigger={<>All {ranked.length} relation{ranked.length === 1 ? "" : "s"} as a table ›</>}>
+          <Popover label="Relations as a table" wide triggerClassName="th-link-btn xt" trigger={<>All {ranked.length} relation{ranked.length === 1 ? "" : "s"} as a table ›</>}>
             <RelationTable relations={ranked} actors={actors} />
           </Popover>
         )}

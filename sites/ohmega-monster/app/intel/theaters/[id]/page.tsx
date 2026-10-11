@@ -12,7 +12,7 @@ import DossierPulses from "@/components/dossier/DossierPulses";
 import DossierTimeline from "@/components/dossier/DossierTimeline";
 import { DossierPrimer, DossierTop } from "@/components/dossier/DossierTop";
 import { actorsForTheater } from "@/lib/actors";
-import { claimOf } from "@/lib/daily";
+import { headlineOf } from "@/lib/daily";
 import { dossier, dossierIds } from "@/lib/dossier";
 import { latestSnapshot } from "@/lib/intel";
 
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   if (!d) return { title: "Theater" };
   return {
     title: `${d.name}: dossier`,
-    description: (d.current ? claimOf(d.current.bottom_line, 190) : "") || `Everything we know about ${d.name}, and where it is heading.`,
+    description: (d.current ? headlineOf(d.current.headline, d.current.bottom_line, 190) : "") || `Everything we know about ${d.name}, and where it is heading.`,
     alternates: { canonical: `/intel/theaters/${d.theater_id}` },
   };
 }

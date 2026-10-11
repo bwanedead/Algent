@@ -13,7 +13,7 @@ export function RecordRow({ r }: { r: OnRecord }) {
   return (
     <li className="rec-row">
       <p className="rec-who">
-        <IsoFlags codes={r.iso2 ? [r.iso2] : []} />
+        <IsoFlags codes={r.iso2 ? [r.iso2] : []} unknown={r.affiliation} />
         <b>{r.speaker}</b>
         <span className="rec-muted">
           {officeOf(r) ? ` · ${officeOf(r)}` : ""} · {dayLabel(r.date)}
@@ -62,7 +62,7 @@ export default function OnRecordBlock({ rows, title, note = false }: { rows: OnR
         ))}
       </ul>
       {rest.length > 0 && (
-        <Popover label={`On the record: ${title}`} triggerClassName="geo-link-btn" trigger={<>{rest.length} more on the record ›</>}>
+        <Popover label={`On the record: ${title}`} triggerClassName="geo-link-btn xt" trigger={<>{rest.length} more on the record ›</>}>
           <div className="geo-pd">
             <p className="geo-pd-title">{title}</p>
             <ul className="rec-list">
