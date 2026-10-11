@@ -122,7 +122,7 @@ export type TheaterNumbers = { as_of: string; trackers: Tracker[]; actors: Numbe
 
 /** An ad-hoc visual the backend drew for a section (agents/intel/visuals.py). `kind` is its form; `schematic` forms
  *  must read as drawings, not measurements. Older reports: none. */
-export type VisualKind = "chart" | "timeline" | "comparison" | "map" | "scale" | "schematic" | "flow" | "before_after";
+export type VisualKind = "chart" | "timeline" | "comparison" | "map" | "scale" | "schematic" | "flow" | "before_after" | "scene3d";
 export type DailyVisual = {
   id: string;
   kind: VisualKind;
@@ -131,6 +131,9 @@ export type DailyVisual = {
   /** Site path under /analytics/ (resolve with `assetUrl`). */
   asset: string;
   schematic: boolean;
+  /** scene3d only: the scene JSON and its still (`asset` is the still, so older readers show an image). */
+  scene: string;
+  preview: string;
   as_of: string;
   ai_label: string;
   sources: { label: string; url: string }[];
@@ -397,13 +400,15 @@ function parseDevelopment(raw: unknown): DailyDevelopment | null {
   };
 }
 
-const VISUAL_KINDS = ["chart", "timeline", "comparison", "map", "scale", "schematic", "flow", "before_after"] as const;
+const VISUAL_KINDS = ["chart", "timeline", "comparison", "map", "scale", "schematic", "flow", "before_after", "scene3d"] as const;
 
 function parseVisual(raw: unknown): DailyVisual | null {
   if (!isObj(raw)) return null;
   const asset = str(raw.asset);
   if (!/^\/analytics\/[\w./-]+$/.test(asset) || asset.includes("..")) return null; // only our published assets
   const kind = oneOf(raw.kind, VISUAL_KINDS, "chart");
+  const own = (p: string) => /^\/analytics\/[\w./-]+$/.test(p) && !p.includes("..");
+  const scene = kind === "scene3d" && own(str(raw.scene)) ? str(raw.scene) : "";
   return {
     id: str(raw.id) || asset,
     kind,
@@ -411,6 +416,8 @@ function parseVisual(raw: unknown): DailyVisual | null {
     caption: str(raw.caption),
     asset,
     schematic: raw.schematic === true || kind === "schematic" || kind === "flow",
+    scene,
+    preview: scene && own(str(raw.preview)) ? str(raw.preview) : asset,
     as_of: str(raw.as_of),
     ai_label: str(raw.ai_label),
     sources: arr(raw.sources)

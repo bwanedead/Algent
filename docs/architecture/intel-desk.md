@@ -107,3 +107,27 @@ its year, trend and world rank, oil/gas/coal made vs used, and the ranked top ex
 partner, with sources. Below, the dated flows and rates as tiles (`TrackerTile.tsx`, three visible, the rest behind a
 control). One sparkline (`Sparkline.tsx`) serves everything. The accent marks "unusual" only. Annual statistics are
 labelled as such on the panel.
+
+## Daily visuals and 3D scenes (`visuals.py`, `scene3d.py`)
+One planning call reads the day's sourced facts (`visuals_facts.py`) and proposes 0-3 visuals; every number must come
+from a cited fact (or a public spec named in `source_hint`). Flat forms are drawn by the article analytics harness.
+`flags.py` holds the switches (`VISUALS_*`, `SCENE3D_*`).
+
+**`scene3d`** is the one interactive kind: a scene the reader rotates, zooms and scrubs through dated frames, used only
+when depth, height or turning the object explains more than any flat picture (true-scale vessels and aircraft, a
+chokepoint with lanes and ranges, a trajectory over terrain, a front line day by day, a cutaway). Most days none.
+- **Contract** (`scene_spec.py`): declarative JSON, never code. Units `m`/`km`, x east / y north / z up; primitives
+  box, cylinder, cone, sphere, capsule, extrude (2D outline), lathe, line (dashed or trajectory), ring, arrow, marker,
+  terrain (heightfield) and coast (Natural Earth land, filled by the builder from a lon/lat box); palette tokens not
+  colours; labels, camera presets, `scale_bar`, optional `timeline` keyframes (visibility, position, colour per date),
+  `sources`, `schematic`, caption, text alternative. Every `real` object cites a source and each size number must appear
+  in that source's `says` text (unit conversions and diameter-for-radius allowed); sources are the day's facts or, if
+  the planner gave a `source_hint`, a named public spec; text may carry no number its sources lack; object, vertex and
+  timeline limits (`flags.scene3d_limits`). Anything refused is a line in the report, never a failed day.
+- **Production**: a second structured model call (`Scene` schema) after planning, not the coding harness: a scene is
+  data, so it is validated mechanically and nothing is executed, and it does not need the harness to be ready.
+- **Hosting**: `/analytics/daily/<domain>/<date>/<id>.scene.json` plus a PNG still (`scene_preview.py`, matplotlib,
+  run under the analytics workspace interpreter because the backend env has none). Record: `kind: "scene3d"`, `scene`,
+  `preview` (and `asset` = the still, so older readers show an image).
+- **Viewer**: `components/Scene3D.tsx` loads three.js r160 from a pinned CDN when the figure scrolls into view; falls back
+  to the still. Test bench: `/lab/scene` (examples in `sites/ohmega-monster/public/examples/`).

@@ -31,6 +31,20 @@ VISUALS_MAX_PER_DAY = 3
 #: "grok" / "codex". Both are subscription-funded CLIs on the server, so a visual costs no API dollars.
 VISUALS_HARNESS = ""
 
+#: Interactive 3D scenes (``scene3d.py``): the planner may propose the ``scene3d`` visual kind when 3D explains
+#: better than any flat picture. Counts against ``VISUALS_MAX_PER_DAY``. False = the planner is told it cannot.
+SCENE3D_ENABLED = True
+
+#: Size limits the scene validator enforces (mobile budget): objects, and total vertices across coastlines,
+#: terrain, outlines and lines. The contract's own hard ceilings are higher; these are the operating bounds.
+SCENE3D_MAX_OBJECTS = 60
+SCENE3D_MAX_VERTICES = 3000
+
+#: Whether a scene may draw a thing's size from a PUBLIC specification the planner named (`source_hint`) rather
+#: than from the day's own facts. The numbers then come from the model's reading of that source and are shown
+#: under the picture with the source named; set False to restrict scenes to the day's facts.
+SCENE3D_PUBLIC_SPECS = True
+
 _FALSEY = ("0", "false", "no", "off")
 
 
@@ -66,3 +80,18 @@ def spotlight_sections() -> int:
         return max(0, int(raw)) if raw is not None and raw.strip() != "" else max(0, int(SPOTLIGHT_SECTIONS))
     except ValueError:
         return max(0, int(SPOTLIGHT_SECTIONS))
+
+
+def scene3d_enabled() -> bool:
+    raw = os.environ.get("ALGENT_SCENE3D")
+    if raw is not None and raw.strip() != "":
+        return raw.strip().lower() not in _FALSEY
+    return bool(SCENE3D_ENABLED)
+
+
+def scene3d_limits() -> tuple[int, int]:
+    return max(1, int(SCENE3D_MAX_OBJECTS)), max(1, int(SCENE3D_MAX_VERTICES))
+
+
+def scene3d_public_specs() -> bool:
+    return bool(SCENE3D_PUBLIC_SPECS)
