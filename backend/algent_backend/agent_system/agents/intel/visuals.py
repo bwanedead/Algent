@@ -29,7 +29,7 @@ from . import flags
 from . import visuals_facts as vf
 
 #: What a visual can BE. ``kind`` in the record. Chart-like forms are drawn as charts, the rest as illustrations.
-Form = Literal["chart", "timeline", "comparison", "map", "scale", "schematic", "flow", "before_after"]
+Form = Literal["chart", "timeline", "comparison", "map", "scale", "schematic", "flow", "before_after", "scene3d"]
 _CHARTLIKE = {"chart", "timeline", "comparison"}
 #: Forms that are drawings of a structure or system, not measurements: they must say so under the picture.
 _SIGNPOSTED = {"schematic", "flow"}
@@ -82,6 +82,13 @@ GROUNDING. Every number, date, dimension and relationship in a visual comes from
 submarine's length, a missile's range) sets `source_hint` to the exact public source to fetch; it is drawn only if
 the source can be named under the picture. Never invent positions, boundaries, ranges or capabilities.
 
+SCENE3D is rare: most days none. Choose it ONLY when depth, height or turning the object genuinely explains more
+than any flat picture: vessels, aircraft or structures at true relative size from published dimensions; a chokepoint
+with its depth, lanes and ranges; a trajectory over terrain; a front line stepped day by day; a cutaway. If a
+chart, map or `scale` picture says it as well, use that. It needs the same grounding: every dimension, range and
+date from a cited fact or a public specification named in `source_hint`; `spec` says what objects, which
+cameras and, if the point is change over time, which dated frames.
+
 HONESTY OF FORM. Code-drawn only, no generated art. A schematic or flow says so in `caption` ("Schematic, not to
 exact detail"). `finding` states the finding ("Strikes tripled in four days"), not the measure; `caption` is one
 plain sentence to the reader, never about "the reader" or why we made it. Label directly on the plot; units in
@@ -119,6 +126,8 @@ def validate(plan: Any, facts: list[vf.Fact], theater_ids: set[str], cap: int) -
             dropped.append(f"{tag}: not a theater in the report")
         elif any(a.theater_id == ask.theater_id for a, _ in kept):
             dropped.append(f"{tag}: theater already has a visual")
+        elif ask.form == "scene3d" and not flags.scene3d_enabled():
+            dropped.append(f"{tag}: 3D scenes are switched off")
         elif len(kept) >= cap:
             dropped.append(f"{tag}: over the daily cap of {cap}")
         elif not (ask.finding.strip() and ask.caption.strip() and ask.spec.strip()):
@@ -280,6 +289,13 @@ def attach(sections: list[dict], *, ctx: Any, domain: str, as_of: str, ask: Call
                                   "none_because": getattr(plan, "none_because", "") or ""}
         if not kept:
             return report
+        scenes = [k for k in kept if k[0].form == "scene3d"]
+        kept = [k for k in kept if k[0].form != "scene3d"]
+        if scenes:
+            _scenes(scenes, sections, ask=ask, domain=domain, as_of=as_of, uploader=uploader or _upload, report=report,
+                    first=len(kept) + 1)
+        if not kept:
+            return report
         ok, note = (ready or _ready)()
         if not ok:
             report["skipped"].append(f"harness not ready: {note[:160]}")
@@ -290,6 +306,22 @@ def attach(sections: list[dict], *, ctx: Any, domain: str, as_of: str, ask: Call
         return report
     except Exception as exc:  # noqa: BLE001 - a visual is an addition to the day, never its gate
         return {"produced": 0, "skipped": [f"visuals failed: {type(exc).__name__}: {str(exc)[:160]}"]}
+
+
+def _scenes(scenes: list[tuple[VisualAsk, list[vf.Fact]]], sections: list[dict], *, ask: Callable[[Any, str, str], Any],
+            domain: str, as_of: str, uploader: Callable[[dict[str, bytes]], dict], report: dict, first: int) -> None:
+    """Interactive 3D scenes: structured model call + mechanical validation (``scene3d``), no coding harness."""
+    from . import scene3d
+
+    for n, (brief, cited) in enumerate(scenes, first):
+        rec = scene3d.produce(brief, cited, n, domain=domain, as_of=as_of, site_dir=SITE_DIR, ask=ask, uploader=uploader,
+                              report=report)
+        if rec is None:
+            continue
+        for s in sections:
+            if s.get("theater_id") == brief.theater_id:
+                s.setdefault("visuals", []).append(rec)
+                report["produced"] += 1
 
 
 def _draw_all(kept: list[tuple[VisualAsk, list[vf.Fact]]], profile: Any, sections: list[dict], *, ctx: Any, domain: str,

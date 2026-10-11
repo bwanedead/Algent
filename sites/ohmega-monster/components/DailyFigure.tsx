@@ -1,4 +1,5 @@
 import { SourceLink } from "@/components/DailyVisuals";
+import Scene3D from "@/components/Scene3D";
 import Popover from "@/components/Popover";
 import { assetUrl } from "@/lib/assets";
 import type { DailyVisual, VisualKind } from "@/lib/daily";
@@ -16,11 +17,20 @@ const KIND: Record<VisualKind, string> = {
   schematic: "Schematic",
   flow: "Diagram",
   before_after: "Before and after",
+  scene3d: "3D scene",
 };
 
 export default function DailyFigure({ v }: { v: DailyVisual }) {
   const src = assetUrl(v.asset);
   const alt = v.title || v.caption;
+  if (v.kind === "scene3d" && v.scene) {
+    return (
+      <figure className={`geo-figure${v.schematic ? " is-schematic" : ""}`}>
+        <Scene3D src={assetUrl(v.scene)} preview={assetUrl(v.preview)} title={v.title} caption={v.caption} />
+        <FigCaption v={v} />
+      </figure>
+    );
+  }
   return (
     <figure className={`geo-figure${v.schematic ? " is-schematic" : ""}`}>
       <Popover label={`Enlarge: ${alt}`} triggerClassName="geo-figure-zoom" wide trigger={<img src={src} alt={alt} loading="lazy" />}>
@@ -30,16 +40,22 @@ export default function DailyFigure({ v }: { v: DailyVisual }) {
           {v.caption && <p className="geo-pd-text">{v.caption}</p>}
         </div>
       </Popover>
-      <figcaption>
-        <span className="geo-figure-tag">{KIND[v.kind]}</span>
-        {v.title && <b className="geo-strong"> {v.title}. </b>}
-        <span>{v.caption}</span>
-        <span className="geo-figure-src">
+      <FigCaption v={v} />
+    </figure>
+  );
+}
+
+function FigCaption({ v }: { v: DailyVisual }) {
+  return (
+    <figcaption>
+      <span className="geo-figure-tag">{KIND[v.kind]}</span>
+      {v.title && <b className="geo-strong"> {v.title}. </b>}
+      <span>{v.caption}</span>
+      <span className="geo-figure-src">
           {v.sources.map((s, i) => (s.url ? <SourceLink key={i} url={s.url} label={s.label} /> : <span key={i} className="geo-micro">{s.label}</span>))}
           {v.as_of && <span className="geo-micro">as of {v.as_of}</span>}
           {v.ai_label && <span className="geo-micro">{v.ai_label}</span>}
-        </span>
+      </span>
       </figcaption>
-    </figure>
   );
 }
