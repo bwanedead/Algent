@@ -15,6 +15,7 @@ import { popupNode } from "@/components/map/mapLayers";
 
 import { colorOf, describe, iconOf, isNotable, passes, reckon, SHIP_CLASSES, NO_FILTER, type Entity, type EntityFilter, type Kind } from "./entities";
 import type { Trail } from "./trails";
+import { styleReady } from "@/components/map/maplibre";
 
 export const DOT_ZOOM = 4;
 export const ICON_ZOOM = 6.5;
@@ -236,7 +237,7 @@ export class Tracks {
   // ---- drawing ----------------------------------------------------------------------------------------------------------
   private rebuild(only?: Kind) {
     const map = this.map;
-    if (!map || !map.isStyleLoaded()) return;
+    if (!map || !styleReady(map)) return;
     const z = map.getZoom();
     const detail = z >= ICON_ZOOM;
     const now = Date.now() / 1000;

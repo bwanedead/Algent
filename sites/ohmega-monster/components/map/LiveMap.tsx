@@ -16,7 +16,7 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { anchorOf, FIT_PADDING, type Bounds, type Feature, type LngLat, type Props } from "./geo";
 import { installLayer, installSelected, inDrawOrder, popupNode, removeLayer, SELECTED_SOURCE, type LayerSpec } from "./mapLayers";
 import { currentTheme, quietBasemap, STYLE_URL, TERRAIN_SOURCE } from "./mapStyle";
-import { hasWebGL, loadMapLibre } from "./maplibre";
+import { hasWebGL, loadMapLibre, styleReady } from "./maplibre";
 
 import "./map.css";
 
@@ -93,7 +93,7 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
   // (Re)build our sources and layers: on style load (first load, theme switch) and whenever the data changes.
   const sync = useCallback(() => {
     const map = mapRef.current;
-    if (!map || !map.isStyleLoaded()) return;
+    if (!map || !styleReady(map)) return;
     for (const { spec, all } of installed.current) removeLayer(map, spec, all);
     installed.current = [];
     if (map.getLayer(`${SELECTED_SOURCE}-ring`)) map.removeLayer(`${SELECTED_SOURCE}-ring`);

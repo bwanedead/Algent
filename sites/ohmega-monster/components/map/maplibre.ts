@@ -45,3 +45,12 @@ export function loadMapLibre(): Promise<any> {
   });
   return pending;
 }
+
+/**
+ * True once the map's STYLE is parsed and layers/sources can be added. Not `map.isStyleLoaded()`: that also waits for
+ * every tile source and image to finish loading, so called from "style.load" it is usually false and anything gated
+ * on it is silently skipped (our data layers never appeared).
+ */
+export function styleReady(map: any): boolean {
+  return !!(map && map.style && map.style._loaded);
+}
