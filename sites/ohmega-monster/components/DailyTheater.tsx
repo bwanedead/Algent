@@ -56,7 +56,7 @@ function ContextList({ t }: { t: DailyTheater }) {
   );
 }
 
-export default function DailyTheaterSection({ t, id, date, snap, dossiers, first = false }: { t: DailyTheater; id: string; date: string; snap: Snapshot | null; dossiers: ReadonlySet<string>; first?: boolean }) {
+export default function DailyTheaterSection({ t, id, date, snap, dossiers, first = false, tag = "", update = false }: { t: DailyTheater; id: string; date: string; snap: Snapshot | null; dossiers: ReadonlySet<string>; first?: boolean; tag?: string; update?: boolean }) {
   const dir = DIR[t.escalation.direction];
   const claim = headlineOf(t.headline, t.bottom_line, 150) || claimOf(t.since_yesterday[0]?.what ?? "", 150) || t.name;
   const changed = t.since_yesterday.filter((c) => c.kind !== "unchanged");
@@ -70,9 +70,11 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
   const dossierHref = dossierPath(t.theater_id, dossiers);
 
   return (
-    <section id={id} className="geo-theater" aria-labelledby={`${id}-claim`}>
+    <section id={id} className={`geo-theater${update ? " is-update" : ""}`} aria-labelledby={`${id}-claim`}>
       <header className="geo-th">
         <p className="geo-kicker">
+          {update && <span className="geo-edition-tag">Update</span>}
+          {tag && <span className="geo-edition-tag">{tag}</span>}
           <span>
             {dossierHref ? (
               <Link href={dossierHref} className="th-dlink" title="Open this theater's dossier: background, actors, record, outlook">

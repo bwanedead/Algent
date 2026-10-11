@@ -8,6 +8,30 @@ run: ``ALGENT_<FLAG>`` in the process env (``ALGENT_SWEEP=0``, ``ALGENT_SPOTLIGH
 from __future__ import annotations
 
 import os
+from typing import NamedTuple
+
+
+class Edition(NamedTuple):
+    n: int
+    label: str        # reader-facing: "Part 1 · {label}" / "added {utc} UTC · {cycle}"
+    cycle: str        # the news cycle it covers
+    utc: str          # HH:MM UTC the scheduler starts it (infra/server/install_schedules.sh reads this)
+
+
+#: The daily's EDITIONS: the day's report is built in parts, each an APPEND to ONE record (``daily_editions``).
+#: Part 1 is the normal run; part 2 re-reads what is new since part 1 and adds sections/updates for it. The times
+#: are when the scheduled jobs fire (before the Americas news cycle is mostly in, before Europe/Asia wakes up
+#: again); change them here and re-run ``infra/server/install_schedules.sh``. More parts are possible: add a row.
+EDITIONS: tuple[Edition, ...] = (
+    Edition(1, "Europe/Asia morning", "Europe/Asia", "05:30"),
+    Edition(2, "Americas", "Americas", "17:30"),
+)
+
+
+def edition_info(n: int) -> Edition:
+    """The edition numbered ``n`` (a row of ``EDITIONS``); unknown numbers get a neutral label, never an error."""
+    return next((e for e in EDITIONS if e.n == n), Edition(n, f"Part {n}", "", ""))
+
 
 #: The daily's "Around the world" sweep (``sweep.py``): ONE house-model call over material the desk already
 #: holds for free, writing a short region-grouped digest of what the focus sections do not cover. False
@@ -24,7 +48,8 @@ SPOTLIGHT_SECTIONS = 1
 #: 0-3 visuals (any code-renderable form), each drawn by the article analytics harness. False = none.
 VISUALS_ENABLED = True
 
-#: Ceiling on visuals per day. The planner's honest answer is usually fewer; this is a spend/attention bound.
+#: Ceiling on visuals per edition run (an append edition plans its own sections' visuals under the same ceiling).
+#: The planner's honest answer is usually fewer; this is a spend/attention bound.
 VISUALS_MAX_PER_DAY = 3
 
 #: Which coding harness draws them: "" = the analytics default (``ALGENT_ANALYTICS_HARNESS``, else grok), or

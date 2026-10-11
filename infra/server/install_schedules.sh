@@ -8,6 +8,12 @@
 #   ohmega-statements   every 6 h      official statement transcripts (collection only, no extraction)
 #   ohmega-backup       daily 06:15    stores -> private algent-data archive
 #   ohmega-watchdog     every 2 min    kills paid runs over their time/spend limits (free; ops/flags.py)
+#   ohmega-menu         daily 05:00    PAID: newsroom menu (time: MENU_UTC in ops/flags.py)
+#   ohmega-daily-1      daily 05:30    PAID: geopolitics daily, part 1 Europe/Asia (time: EDITIONS in intel/flags.py)
+#   ohmega-daily-2      daily 17:30    PAID: geopolitics daily, part 2 Americas, appended to the same report
+# The three paid timers are operator-authorised and run unattended behind the watchdog; each job checks the kill
+# switch (SCHEDULED_PAID_RUNS), the runner claim and the spend halt before it spends (ops/schedule.py). Pause:
+# `sudo systemctl disable --now ohmega-menu.timer ohmega-daily-1.timer ohmega-daily-2.timer`.
 set -euo pipefail
 INFRA="$HOME/Algent/infra/server"
 
@@ -45,8 +51,16 @@ unit statements  "$INFRA/jobs.sh statements"   "1/6:10"
 unit backup      "$INFRA/jobs.sh backup"       "*-*-* 06:15"
 unit watchdog    "$INFRA/jobs.sh watchdog"     "*:0/2"
 
+# Paid jobs: the times live in the repo's flags, not here (`newsroom schedule times` prints "<job> <HH:MM>").
+PAID=""
+while read -r job hhmm; do
+    unit "$job" "$INFRA/jobs.sh $job" "*-*-* $hhmm:00"
+    PAID="$PAID $job"
+done < <(cd "$HOME/Algent/backend" && .venv/bin/python -m algent_backend.cli newsroom schedule times)
+[ -n "$PAID" ] || { echo "no paid jobs listed by 'newsroom schedule times'; refusing to continue" >&2; exit 1; }
+
 sudo systemctl daemon-reload
-for t in update library instruments statements backup watchdog; do
+for t in update library instruments statements backup watchdog $PAID; do
     sudo systemctl enable --now "ohmega-$t.timer" >/dev/null
 done
 systemctl list-timers 'ohmega-*' --no-pager

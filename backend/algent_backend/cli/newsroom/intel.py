@@ -6,6 +6,7 @@
     newsroom intel brief --theater thr_x --research   # commission fresh research first (paid, capped)
     newsroom intel daily [--domain geopolitics] [--top 5] [--research] [--fresh-research]   # the daily rundown: heat -> sections -> publish -> backup
     newsroom intel daily --date D --theater id[,id] [--repair] [--fresh-research]   # redo only those sections of D's record, republish
+    newsroom intel daily --edition 2 [--research]   # APPEND part 2 (Americas) to today's report: only what is new since part 1
     newsroom intel daily --date D --rerender [--theater id[,id]]   # re-derive D's record from its saved model drafts: NO model call
     newsroom intel daily --date D --tag-places   # repair for reports made before drafts were kept: one small call places the developments
     newsroom intel publish                      # put the desk snapshot (pulses, theaters, briefs) on the site
@@ -51,6 +52,7 @@ def add_parser(sub: Any) -> None:
     d.add_argument("--repair", action="store_true", help="with --theater: tie the saved research's lost claim->source links back (one cheap call) instead of researching again")
     d.add_argument("--rerender", action="store_true", help="re-derive --date's record from its saved model drafts (places/maps, numbers, flags, on-record order, summary and sweep guards), republish; ZERO model calls; with --theater only those sections")
     d.add_argument("--tag-places", action="store_true", help="repair tool for reports made before drafts were kept: ONE small low-effort model call places the existing developments (text untouched, places checked against the basemap), maps rebuilt")
+    d.add_argument("--edition", default="1", help="which part of the day: 1 (the normal run), 2 (append what is new since part 1 to the same report; never rewrites part 1, reuses its research) or auto (the next part when its time in intel/flags.EDITIONS has passed)")
     d.add_argument("--days", type=int, default=7)
     d.add_argument("--no-refresh", action="store_true", help="skip refreshing instruments and statements first")
     d.add_argument("--date", default="", help="YYYY-MM-DD to (re)write; default today. The headline board is "
@@ -298,7 +300,7 @@ def _daily_rederive(args: Any, only: list[str]) -> int:
 
 def _daily(args: Any) -> int:
     """Fresh heat board, the daily report for the domain, publish, back up. Prints a JSON report."""
-    from algent_backend.agent_system.agents.intel import daily, desk
+    from algent_backend.agent_system.agents.intel import daily, daily_editions, desk
     from algent_backend.agent_system.foundation.models import house_spec
     from algent_backend.data_backup import sync
     from algent_backend.publishing.intel_page import publish_intel
@@ -308,24 +310,39 @@ def _daily(args: Any) -> int:
     only = [t for t in (getattr(args, "theater", "") or "").split(",") if t.strip()]
     if getattr(args, "rerender", False) or getattr(args, "tag_places", False):
         return _daily_rederive(args, only)
-    sensing_refresh = {} if only else _refresh_sensing(args)   # a targeted rerun keeps the day's inputs
+    from datetime import date
+
+    as_of = getattr(args, "date", "") or date.today().isoformat()
+    try:
+        raw_ed = str(getattr(args, "edition", "1") or "1").strip().lower()
+        edition = daily_editions.next_edition(args.domain, as_of) if raw_ed == "auto" else int(raw_ed)
+    except ValueError:
+        print(json.dumps({"error": f"--edition must be 1, 2, ... or auto, not {args.edition!r}"}))
+        return 2
+    if edition > 1 and only:
+        print(json.dumps({"error": "--theater redoes sections of an existing part; it does not combine with --edition > 1"}))
+        return 2
+    # Sensing is refreshed before part 1 only; later parts use the collectors already on their timers.
+    sensing_refresh = {} if only or edition > 1 else _refresh_sensing(args)   # a targeted rerun keeps the day's inputs
     if not only and _heat(args, publish=False) != 0:
         return 1
     board = desk.latest_board()
     if board is None:
         print(json.dumps({"error": "no heat board"}))
         return 2
-    # The report is dated the day it is written. It used to take the board's date, which is the newest radar
+    # The report is dated the day it is written (as_of, above), not the board's date, which is the newest radar
     # edition's: on a day the radar had not run, "today's" daily silently overwrote yesterday's record.
-    from datetime import date
-
-    as_of = getattr(args, "date", "") or date.today().isoformat()
-    result = daily.produce_daily(_ctx("intel-daily"), domain=args.domain, top=args.top, research=args.research or bool(only),
-                                 model_spec=house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=16384,
-                                                       streaming=True),
-                                 as_of=as_of, board=board, out=_out(as_of),
-                                 fresh_research=args.fresh_research, only_theaters=only,
-                                 repair=getattr(args, "repair", False))
+    spec = house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=16384, streaming=True)
+    if edition > 1:
+        result = daily_editions.produce(_ctx("intel-daily"), domain=args.domain, top=args.top, research=args.research,
+                                        model_spec=spec, as_of=as_of, board=board, out=_out(as_of),
+                                        fresh_research=args.fresh_research, edition=edition)
+    else:
+        result = daily.produce_daily(_ctx("intel-daily"), domain=args.domain, top=args.top,
+                                     research=args.research or bool(only), model_spec=spec,
+                                     as_of=as_of, board=board, out=_out(as_of),
+                                     fresh_research=args.fresh_research, only_theaters=only,
+                                     repair=getattr(args, "repair", False))
     if result.get("error"):         # a failed run: nothing persisted, so nothing to promote, publish or back up
         print(json.dumps({"date": as_of, "domain": args.domain, "error": result["error"],
                           "theaters": result["theaters"], "research_usd": result["research_usd"],
@@ -335,7 +352,7 @@ def _daily(args: Any) -> int:
     # Promote first (quietly: it does not publish) so the one publish below carries the new Pulses.
     proposals = [] if only else promote_ready_quietly()
     primers_report = {} if only else _prime(args.domain)        # only dossiers lacking a primer or with one over 7 days old
-    report = {"date": as_of, "headlines_through": board["as_of"], "domain": args.domain, "path": result["path"],
+    report = {"date": as_of, "edition": edition, "headlines_through": board["as_of"], "domain": args.domain, "path": result["path"],
               "html": result.get("html"),
               "headline": result["report"]["summary"]["headline"], "theaters": result["theaters"],
               "research_usd": result["research_usd"], "pulse_proposals": proposals, "primers": primers_report,

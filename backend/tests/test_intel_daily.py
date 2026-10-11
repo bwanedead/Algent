@@ -106,7 +106,7 @@ def test_report_shape_persistence_pulses_and_marking(tmp_path, monkeypatch) -> N
     a = rec["theaters"][0]
     assert set(a) == {"theater_id", "name", "temperature", "escalation", "pulses", "bottom_line", "headline", "since_yesterday",
                       "developments", "context", "outlook", "watch_next", "key_figures", "brief_slug", "on_record", "map",
-                      "numbers"}
+                      "numbers", "edition"}
     assert a["temperature"] == {"heat": 9.0, "trend": "heating", "coverage": "rising coverage", "recent_share": 0.2,
                                 "prior_share": 0.1}
     assert a["map"] is None and a["brief_slug"] is None

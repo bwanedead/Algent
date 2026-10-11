@@ -119,6 +119,24 @@ class Probes:
 
         return watchdog.last_pass_age_minutes()
 
+    def timer_state(self, job: str) -> str | None:
+        """systemd's `is-enabled` word for the job's timer ("enabled", "disabled", "not-found"), None without systemd."""
+        if not shutil.which("systemctl"):
+            return None
+        done = subprocess.run(["systemctl", "is-enabled", f"ohmega-{job}.timer"], capture_output=True, text=True, timeout=10)
+        return (done.stdout or done.stderr).strip().splitlines()[0] if (done.stdout or done.stderr).strip() else "unknown"
+
+    def scheduled_jobs(self) -> dict[str, dict[str, Any]]:
+        """job -> {"utc", "last"} for the paid scheduled jobs (`ops/schedule.py`)."""
+        from algent_backend.ops import schedule
+
+        return {j.name: {"utc": j.utc, "last": schedule.last_outcome(j.name)} for j in schedule.jobs().values()}
+
+    def scheduled_enabled(self) -> bool:
+        from algent_backend.ops import schedule
+
+        return schedule.paid_runs_enabled()
+
     def disk_free_gb(self) -> float:
         return shutil.disk_usage(Path(__file__).resolve().parents[3]).free / 1e9
 
@@ -313,6 +331,34 @@ def check_watchdog(probes: Probes) -> dict[str, Any]:
     return {"watchdog": _check(OK, f"last pass {age:.0f} min ago")}
 
 
+def check_schedule(probes: Probes) -> dict[str, Any]:
+    """The unattended paid jobs: is each timer installed, is the kill switch on, and how did the last run end?
+    A machine without systemd (the laptop) is fine: the timers belong to the server."""
+    out: dict[str, Any] = {}
+    try:
+        enabled, table = probes.scheduled_enabled(), probes.scheduled_jobs()
+    except Exception as exc:  # noqa: BLE001
+        return {"schedule": _check(WARN, f"unknown: {scrub(exc)}")}
+    if not enabled:
+        out["schedule"] = _check(WARN, "scheduled paid runs are PAUSED (SCHEDULED_PAID_RUNS is off in ops/flags.py)")
+    for job, info in table.items():
+        try:
+            state = probes.timer_state(job)
+        except Exception as exc:  # noqa: BLE001
+            state = f"unknown ({scrub(exc)})"
+        last = info.get("last")
+        said = (f"last: {last['outcome']} {last['ts']}" + (f" (${last['usd']:.2f})" if last.get("usd") is not None else "")
+                + (f", {last['why']}" if last.get("why") else "")) if last else "no run recorded yet"
+        if state is None:
+            out[f"schedule:{job}"] = _check(OK, f"{info['utc']} UTC; no systemd on this machine; {said}")
+        elif state != "enabled":
+            out[f"schedule:{job}"] = _check(WARN, f"{info['utc']} UTC; timer is {state} (infra/server/install_schedules.sh); {said}")
+        else:
+            out[f"schedule:{job}"] = _check(WARN if last and last["outcome"] == "failed" else OK,
+                                            f"{info['utc']} UTC; timer enabled; {said}")
+    return out
+
+
 def check_quota(probes: Probes) -> dict[str, Any]:
     out: dict[str, Any] = {}
     for provider, row in probes.quota_summary().items():
@@ -365,7 +411,7 @@ def run_checks(env: dict[str, str] | None = None, probes: Probes | None = None,
     checks: dict[str, Any] = {}
     for part in (check_keys(env), check_database(env, probes), check_search(env, probes), check_reads(probes),
                  check_harnesses(probes), check_publish(env, probes, repo), check_runner(probes),
-                 check_system(probes), check_watchdog(probes), check_quota(probes), check_instruments(), check_basemap(probes)):
+                 check_system(probes), check_watchdog(probes), check_schedule(probes), check_quota(probes), check_instruments(), check_basemap(probes)):
         checks.update(part)
     counts = {s: sum(1 for c in checks.values() if c["status"] == s) for s in (OK, WARN, FAIL)}
     return {"ok": counts[FAIL] == 0, "summary": f"{counts[OK]} ok, {counts[WARN]} warn, {counts[FAIL]} fail",
