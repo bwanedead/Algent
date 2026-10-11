@@ -101,8 +101,12 @@ def test_migration_006_exposes_only_the_asset_bucket_for_select() -> None:
     assert not re.search(r"\bgrant\b", code) and "create table" not in code
 
 
-def test_db_mode_flag_defaults_to_git_and_env_overrides(monkeypatch) -> None:
+def test_db_mode_flag_follows_the_checked_in_default_and_env_overrides(monkeypatch) -> None:
+    from algent_backend.agent_system.agents.newsroom import flags
+
     monkeypatch.delenv("ALGENT_SITE_PUBLISH_VIA", raising=False)
+    assert site_git.via_db() is (flags.SITE_PUBLISH_VIA == "db")
+    monkeypatch.setenv("ALGENT_SITE_PUBLISH_VIA", "git")
     assert site_git.via_db() is False
     monkeypatch.setenv("ALGENT_SITE_PUBLISH_VIA", "db")
     assert site_git.via_db() is True
