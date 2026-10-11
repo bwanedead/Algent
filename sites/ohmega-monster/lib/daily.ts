@@ -120,6 +120,22 @@ export type NumbersActor = {
 };
 export type TheaterNumbers = { as_of: string; trackers: Tracker[]; actors: NumbersActor[] };
 
+/** An ad-hoc visual the backend drew for a section (agents/intel/visuals.py). `kind` is its form; `schematic` forms
+ *  must read as drawings, not measurements. Older reports: none. */
+export type VisualKind = "chart" | "timeline" | "comparison" | "map" | "scale" | "schematic" | "flow" | "before_after";
+export type DailyVisual = {
+  id: string;
+  kind: VisualKind;
+  title: string;
+  caption: string;
+  /** Site path under /analytics/ (resolve with `assetUrl`). */
+  asset: string;
+  schematic: boolean;
+  as_of: string;
+  ai_label: string;
+  sources: { label: string; url: string }[];
+};
+
 export type DailyTheater = {
   theater_id: string;
   name: string;
@@ -143,6 +159,7 @@ export type DailyTheater = {
   numbers: TheaterNumbers | null;
   /** The one extra researched section the world sweep nominated (see `DailySweep`); false for a focus theater. */
   spotlight: boolean;
+  visuals: DailyVisual[];
 };
 /** A theater in the domain that is live but not written up today, or one gone quiet (see the desk's focus). */
 export type DailyWatch = { theater_id: string; name: string; note: string; last_novel: string };
@@ -380,6 +397,29 @@ function parseDevelopment(raw: unknown): DailyDevelopment | null {
   };
 }
 
+const VISUAL_KINDS = ["chart", "timeline", "comparison", "map", "scale", "schematic", "flow", "before_after"] as const;
+
+function parseVisual(raw: unknown): DailyVisual | null {
+  if (!isObj(raw)) return null;
+  const asset = str(raw.asset);
+  if (!/^\/analytics\/[\w./-]+$/.test(asset) || asset.includes("..")) return null; // only our published assets
+  const kind = oneOf(raw.kind, VISUAL_KINDS, "chart");
+  return {
+    id: str(raw.id) || asset,
+    kind,
+    title: str(raw.title),
+    caption: str(raw.caption),
+    asset,
+    schematic: raw.schematic === true || kind === "schematic" || kind === "flow",
+    as_of: str(raw.as_of),
+    ai_label: str(raw.ai_label),
+    sources: arr(raw.sources)
+      .filter(isObj)
+      .map((x) => ({ label: str(x.label), url: /^https?:\/\//.test(str(x.url)) ? str(x.url) : "" }))
+      .filter((x) => x.label),
+  };
+}
+
 function parseTheater(raw: unknown): DailyTheater | null {
   if (!isObj(raw)) return null;
   const name = str(raw.name);
@@ -437,6 +477,7 @@ function parseTheater(raw: unknown): DailyTheater | null {
     map: parseMap(raw.map),
     numbers: parseNumbers(raw.numbers),
     spotlight: raw.spotlight === true,
+    visuals: arr(raw.visuals).map(parseVisual).filter((v): v is DailyVisual => v !== null),
   };
 }
 

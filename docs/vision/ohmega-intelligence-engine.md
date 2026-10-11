@@ -95,6 +95,15 @@ graded research, and earns trust the way the best analytic shops do:
   republishes, and notes the correction (when, why) in the record's `corrections`. `--repair` reuses the saved
   research and, when its claims lost their links to their sources, ties them back with one cheap call (no new
   research); research runs only if nothing is saved or `--fresh-research` is given.
+  **Paid model work is kept, not re-bought.** The daily's guards are destructive (a place off the basemap, an
+  uncited source are dropped from the published section), so every model output the day used (section drafts,
+  the summary, the sweep) is saved raw, with the inputs the guards need, in `intel_store/daily_drafts/<domain>/<date>.json`
+  (internal; never mirrored to the site). `intel daily --date D --rerender [--theater ids]` re-derives the
+  record from it with zero model calls: guards, places and maps, numbers panels, Pulse table, on-record
+  order, the summary's cross-theater links and the sweep's validation. So fixing the environment (a missing
+  basemap) or adding a display feature costs nothing. For a report made before drafts were kept,
+  `--tag-places` is a one-off repair: one low-effort call per report places the existing developments (text
+  untouched, every place checked against the basemap, maps rebuilt).
 - **Pulses grow from the work.** Every daily report and brief feeds research into Pulses; when a
   theater bears on a dimension no Pulse measures, the writer proposes one, and proposals become
   stable Pulses through a registry agents can also read and propose to (one dimension, one Pulse).

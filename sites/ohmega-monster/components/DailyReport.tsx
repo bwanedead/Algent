@@ -8,12 +8,15 @@ import { dossierIds } from "@/lib/dossier";
 import { fmtUtc, latestSnapshot } from "@/lib/intel";
 
 import DailyGlance from "./DailyGlance";
+import DailyThirty from "./DailyThirty";
+import Expander from "./Expander";
 import DailySweepBlock from "./DailySweep";
 import DailyTheaterSection from "./DailyTheater";
 import DailyWatching from "./DailyWatching";
 
-// The daily report page body. Screen one is the day at a glance (headline, theater table, the
-// day in four lines); each theater follows as a claim, a picture and a timeline. See
+// The daily report page body. Screen one is the day in 30 seconds (headline, one line per theater);
+// the theater table and the longer day sit behind expanders. Each theater follows as a claim, a picture
+// and its top developments, the rest behind expanders (Expander.tsx). See
 // docs/ethos/information-ergonomics-ethos.md.
 
 const DAY_SHOWN = 4;
@@ -132,10 +135,20 @@ export default async function DailyReport({ report, title }: { report: Daily; ti
       {report.theaters.length === 0 ? (
         <p className="intel-empty">No theaters were covered in this report.</p>
       ) : (
-        <DailyGlance report={report} snap={snap} />
+        <>
+          <DailyThirty report={report} />
+          <div className="geo-exps geo-exps-top">
+            <Expander label="All theaters side by side" hint="state, direction, Pulses, coverage">
+              <DailyGlance report={report} snap={snap} />
+            </Expander>
+            {report.the_day.length > 0 && (
+              <Expander label="The day, in more detail" count={report.the_day.length}>
+                <TheDay items={report.the_day} />
+              </Expander>
+            )}
+          </div>
+        </>
       )}
-
-      {report.the_day.length > 0 && <TheDay items={report.the_day} />}
 
       {report.theaters.map((t, i) => (
         <Fragment key={t.theater_id + i}>

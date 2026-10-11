@@ -1,0 +1,169 @@
+"""
+Redo a day's daily WITHOUT the model: re-render from the draft archive, or (for old days) tag places once.
+
+``rerender`` re-derives a saved record from ``daily_drafts`` (the models' raw output plus the guards' inputs):
+every section's guards, places and maps, numbers panel, Pulse table, on-record order, the summary's derived
+bits and the sweep's validation. It makes ZERO model calls, so fixing the environment (a basemap that was
+missing on the server) or adding a display feature never re-buys content that was fine. It is the path the
+targeted rerun already is, minus the paying: ``--theater`` limits it to those sections.
+
+``tag_places`` is a REPAIR TOOL for reports made before the archive existed (their drafts were never kept, so
+their places were lost with the basemap): ONE small structured call per report, never per section, gives each
+development a place from its headline; the existing text is not touched, every place is checked against the
+basemap, and the maps are rebuilt deterministically. Not a normal step; a day with an archive needs
+``rerender`` instead.
+"""
+
+from __future__ import annotations
+
+import json
+from datetime import UTC, datetime
+from types import SimpleNamespace
+from typing import Any
+
+from pydantic import BaseModel, Field
+
+from . import daily, daily_drafts, desk, geo, render
+from . import sweep as sweep_mod
+from .brief import safe_name
+from .contracts import DaySummary, Place
+
+
+def _load_record(domain: str, as_of: str) -> tuple[Any, dict | None]:
+    path = daily.daily_dir(domain) / f"{as_of}.json"
+    return path, (json.loads(path.read_text(encoding="utf-8")) if path.is_file() else None)
+
+
+def _publish_html(record: dict, domain: str, out: Any, result: dict) -> None:
+    if out is not None:
+        html = out / f"daily_{safe_name(domain)}.html"
+        html.write_text(render.render_daily(record), encoding="utf-8")
+        result["html"] = str(html)
+
+
+def rerender(domain: str, as_of: str, *, only: list[str] | tuple[str, ...] = (), out: Any = None,
+             countries: list[geo.Country] | None = None, store: Any = None) -> dict:
+    """Re-derive ``as_of``'s record from its draft archive and write it back; nothing is asked of any model.
+
+    ``only`` limits the sections redone (ids or unique name fragments, as ``--theater``); the summary's and
+    the sweep's derived bits are redone whenever the whole day is. ``countries`` defaults to the installed
+    basemap and ``store`` to the Pulse store; a missing basemap is reported as a warning (places stay
+    dropped from the PUBLISHED record, but remain in the archive for the next rerender). Returns
+    ``{"report", "path", "redone", "kept", "warnings"}`` or ``{"error"}``."""
+    from algent_backend.agent_system.agents.pulse.repository import pulse_store
+
+    path, record = _load_record(domain, as_of)
+    if record is None:
+        return {"error": f"no daily record at {path}"}
+    archive = daily_drafts.load(domain, as_of)
+    if archive is None:
+        return {"error": f"no draft archive for {domain} {as_of} (it was produced before drafts were kept, so there "
+                         f"is nothing to rerender; `--tag-places` can restore its places with one small call)"}
+    countries = geo.load() if countries is None else countries
+    store = store if store is not None else pulse_store()
+    in_record = [SimpleNamespace(id=s.get("theater_id", ""), name=s.get("name", "")) for s in record.get("theaters") or []]
+    try:
+        chosen = ({t.id for t in daily.resolve_theaters(list(only), {t.id: t for t in in_record})} if only
+                  else {t.id for t in in_record})
+    except ValueError as exc:
+        return {"error": str(exc)}
+    now = datetime.fromisoformat(f"{as_of}T23:59:59+00:00")
+    redone, kept, sections = [], [], []
+    for sec in record.get("theaters") or []:
+        tid = sec.get("theater_id", "")
+        saved = archive["theaters"].get(tid)
+        if tid not in chosen:
+            sections.append(sec)
+            continue
+        if saved is None:                      # chosen, but its draft was never kept: left as published
+            kept.append(tid)
+            sections.append(sec)
+            continue
+        new, _ = daily.finish_section(saved["draft"], saved["inputs"], tid=tid, countries=countries, store=store,
+                                      now=now, as_of=as_of, brief=desk.previous_brief(tid))
+        if sec.get("spotlight"):
+            new["spotlight"] = True
+        sections.append(new)
+        redone.append(tid)
+    record["theaters"] = sections
+    if not only:
+        _rederive_top(record, archive, countries)
+    desk._write(path, record)
+    result: dict[str, Any] = {"report": record, "path": str(path), "redone": redone, "kept": kept,
+                              "warnings": [] if countries else ["no basemap loaded: places and maps stay off the "
+                                                                "published record (the drafts keep them)"]}
+    _publish_html(record, domain, out, result)
+    return result
+
+
+def _rederive_top(record: dict, archive: dict, countries: list[geo.Country] | None) -> None:
+    """The summary's and the sweep's derived bits from their saved raw drafts (each only when it was saved)."""
+    if (raw := (archive.get("summary") or {}).get("draft")) is not None:
+        summary = daily.normalise_summary(DaySummary.model_validate(raw), record["theaters"])
+        record["summary"] = {"headline": summary.headline, "the_day": summary.the_day}
+        record["cross_theater"] = [c.model_dump() for c in summary.cross_theater]
+    if (arc := archive.get("sweep")) and isinstance(record.get("sweep"), dict):
+        known_iso = {k.upper() for c in (countries or ()) for k in (c.keys or ()) if len(k) == 2} or None
+        spot = (record["sweep"].get("spotlight") or {}).get("text", "")
+        record["sweep"]["regions"] = sweep_mod.regions_from_archive(arc, known_iso=known_iso, spotlight_text=spot)
+
+
+# ── the repair tool for days that have no archive ─────────────────────────────────────────────
+TAG_ROLE = """\
+You place news developments on a map. For each numbered development (given by its headline and the place
+text the desk wrote for it) give the named city or site where it happened as `name`, `country` (the common
+English name; "sea" for a sea lane or open water), `lat` and `lon`. Give a place ONLY when the development has
+a specific named location whose coordinates you know; omit it when unsure. A wrong point is worse than none:
+the desk checks every one against a map and drops those outside the country. Do not rewrite or judge the
+developments; you only locate them.
+"""
+
+
+class PlaceTag(BaseModel):
+    ref: str = Field(description="The development's reference exactly as listed, like T2.4.")
+    place: Place | None = None
+
+
+class PlaceTags(BaseModel):
+    tags: list[PlaceTag] = Field(default_factory=list)
+
+
+def tag_places(ctx: Any, model_spec: Any, domain: str, as_of: str, *, out: Any = None,
+               countries: list[geo.Country] | None = None) -> dict:
+    """Give an archive-less record's developments places: ONE structured call for the whole report. Text is
+    never changed; only developments with no place gain one, and only if it validates against the basemap.
+    The maps are rebuilt. Returns ``{"report", "path", "tagged", "asked"}`` or ``{"error"}``."""
+    path, record = _load_record(domain, as_of)
+    if record is None:
+        return {"error": f"no daily record at {path}"}
+    countries = geo.load() if countries is None else countries
+    if not countries:
+        return {"error": "no basemap loaded: places cannot be validated, so none would be kept; fix that first"}
+    refs: dict[str, dict] = {}
+    lines = []
+    for si, sec in enumerate(record.get("theaters") or []):
+        lines.append(f"T{si} {sec.get('name', '')}")
+        for di, dev in enumerate(sec.get("developments") or []):
+            if not dev.get("place"):
+                refs[f"T{si}.{di}"] = dev
+                lines.append(f"  T{si}.{di}: {dev.get('headline', '')} [{dev.get('where', '')}]")
+    if not refs:
+        return {"report": record, "path": str(path), "tagged": 0, "asked": 0}
+    got = daily._ask(ctx, None, model_spec, PlaceTags, TAG_ROLE,
+                     "DEVELOPMENTS (theater, then reference: headline [where]):\n" + "\n".join(lines)
+                     + "\n\nTASK: place the developments you can.")
+    if not isinstance(got, PlaceTags):   # a failed call is an error to report, never a silent "nothing to place"
+        return {"error": f"place tagging call returned no result ({type(got).__name__}); nothing changed"}
+    tagged = 0
+    for tag in got.tags:
+        dev = refs.get(tag.ref.strip())
+        valid = geo.validate_place(tag.place, countries) if dev is not None else None
+        if valid:
+            dev["place"] = valid
+            tagged += 1
+    for sec in record["theaters"]:
+        sec["map"] = geo.build_map(sec.get("developments") or [], countries)
+    desk._write(path, record)
+    result: dict[str, Any] = {"report": record, "path": str(path), "tagged": tagged, "asked": len(refs)}
+    _publish_html(record, domain, out, result)
+    return result

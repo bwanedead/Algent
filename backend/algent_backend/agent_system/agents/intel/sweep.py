@@ -278,10 +278,19 @@ def _nominee(pairs: list[tuple[SweepItemDraft, dict]], mat: Material, recent_ids
     return None, None
 
 
+def regions_from_archive(archive: dict, *, known_iso: set[str] | None, spotlight_text: str = "") -> list[dict]:
+    """The sweep's regions re-derived from its saved raw draft, no model: the same guards (``clean``) over the
+    saved material URLs, with the saved spotlight's item re-flagged. For ``daily_rerender``."""
+    pairs = clean(SweepDraft.model_validate(archive["draft"]), Material(urls=set(archive["urls"])),
+                  covered_urls=set(archive["covered_urls"]), known_iso=known_iso)
+    nominee = next((it for it, rec in pairs if spotlight_text and rec["text"] == spotlight_text), None)
+    return _group(pairs, nominee)
+
+
 def run(ask: Callable[[Any, str, str], Any], *, board: dict, domain: str, as_of: str, focus_ids: set[str],
         covered: list[str], covered_urls: set[str], folder: Path, known_iso: set[str] | None = None,
         library: Callable[[str], list[dict]] = library_material,
-        evidence: sensing_mod.Evidence | None = None) -> Sweep:
+        evidence: sensing_mod.Evidence | None = None, archive: dict | None = None) -> Sweep:
     """Gather, ask once, validate. ``ask(schema, role, task)`` makes the model call (the daily's ``_ask``).
     Raises only what ``ask`` raises; the caller decides that a failed sweep must not cost the day."""
     mat = gather(board, domain=domain, focus_ids=focus_ids, as_of=as_of, library=library, evidence=evidence)
@@ -296,6 +305,8 @@ def run(ask: Callable[[Any, str, str], Any], *, board: dict, domain: str, as_of:
     draft = ask(SweepDraft, SWEEP_ROLE, task)
     if not isinstance(draft, SweepDraft):
         return Sweep(error="sweep writer returned nothing")
+    if archive is not None:         # the raw draft and what its guards need, for ``regions_from_archive``
+        archive.update(draft=draft.model_dump(), urls=sorted(mat.urls), covered_urls=sorted(covered_urls))
     pairs = clean(draft, mat, covered_urls=covered_urls, known_iso=known_iso)
     nominee, theater = _nominee(pairs, mat, recent_ids, domain)
     spot = None

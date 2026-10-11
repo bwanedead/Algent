@@ -1,19 +1,20 @@
 import Link from "next/link";
 
-import Popover from "@/components/Popover";
 import type { DailyChangeKind, DailyTheater } from "@/lib/daily";
-import { claimOf, headlineOf, isCut, shortDay, splitLead } from "@/lib/daily";
+import { claimOf, headlineOf, shortDay, splitLead } from "@/lib/daily";
 import { dossierPath } from "@/lib/dossier";
 import type { Direction, Snapshot } from "@/lib/intel";
 
+import DailyFigure from "./DailyFigure";
+import Expander from "./Expander";
 import OnRecordBlock from "./OnRecord";
 import { DevelopmentTimeline, KeyFigures, PulseTiles, SourceLink } from "./DailyVisuals";
 import GeoMap from "./map/GeoMap";
 import TheaterNumbersPanel from "./numbers/TheaterNumbers";
 import "@/app/intel/theaters/theaters.css";
 
-// One theater of the daily report. Reading order: the claim (bottom line up front), the picture
-// (map + figures), what changed, what happened, the Pulses, what next. Detail waits in popovers.
+// One theater of the daily report. Open, a skimmer gets: the claim, the picture (the desk's own visual first,
+// then the map and stat tiles) and the top three developments. Everything else waits behind labelled expanders.
 
 /** The accent colours change: only escalated and new wear it (`hot`). */
 const CHANGE: Record<DailyChangeKind, { glyph: string; label: string; hot: boolean }> = {
@@ -31,7 +32,7 @@ const DIR: Record<Direction, { glyph: string; word: string; moving: boolean }> =
   unclear: { glyph: "?", word: "unclear", moving: false },
 };
 
-const WATCH_SHOWN = 3;
+const TOP_SHOWN = 3; // developments visible without opening anything
 
 function ContextList({ t }: { t: DailyTheater }) {
   return (
@@ -60,9 +61,10 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
   const claim = headlineOf(t.headline, t.bottom_line, 150) || claimOf(t.since_yesterday[0]?.what ?? "", 150) || t.name;
   const changed = t.since_yesterday.filter((c) => c.kind !== "unchanged");
   const same = t.since_yesterday.filter((c) => c.kind === "unchanged");
-  const outlook = claimOf(t.outlook, 170);
-  const watch = t.watch_next.map((w) => claimOf(w, 95));
-  const outlookCut = isCut(t.outlook, outlook) || t.watch_next.length > WATCH_SHOWN || t.watch_next.some((w, k) => isCut(w, watch[k]));
+  const outlook = t.outlook.trim();
+  const watch = t.watch_next;
+  const hasNumbers = !!t.numbers && (t.numbers.trackers.length > 0 || t.numbers.actors.length > 0);
+  const unusual = t.numbers ? t.numbers.trackers.filter((x) => x.unusual && x.new).length : 0;
   const hasMap = t.map !== null;
   const hasFigs = t.key_figures.length > 0;
   const dossierHref = dossierPath(t.theater_id, dossiers);
@@ -87,15 +89,11 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
         <h2 id={`${id}-claim`} className="geo-claim">
           {claim}
         </h2>
-        {isCut(t.bottom_line, claim) && (
-          <Popover label={`Full assessment: ${t.name}`} triggerClassName="geo-link-btn xt" trigger={<>Full assessment ›</>}>
-            <div className="geo-pd">
-              <p className="geo-pd-title">{t.name}</p>
-              <p className="geo-pd-text">{t.bottom_line}</p>
-            </div>
-          </Popover>
-        )}
       </header>
+
+      {t.visuals.map((v) => (
+        <DailyFigure key={v.id} v={v} />
+      ))}
 
       {(hasMap || hasFigs) && (
         <div className={`geo-visual${hasMap && hasFigs ? " is-two" : ""}`}>
@@ -104,116 +102,97 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
         </div>
       )}
 
-      <TheaterNumbersPanel numbers={t.numbers} name={t.name} />
+      <DevelopmentTimeline developments={t.developments} map={t.map} reportDate={date} range={[0, TOP_SHOWN]} />
 
-      {t.since_yesterday.length > 0 && (
-        <div className="geo-since">
-          {changed.length > 0 && (
-            <ul className="geo-chrows">
-              {changed.map((c, k) => {
-                const ch = CHANGE[c.kind];
-                const { lead, tail } = splitLead(c.what);
-                return (
-                  <li key={k} className={ch.hot ? "is-hot" : ""} title={c.what}>
-                    <span className="geo-glyph" aria-hidden="true">
-                      {ch.glyph}
-                    </span>
-                    <span className="geo-sr">{ch.label}: </span>
-                    <span>
-                      {lead && <b className="geo-strong">{lead} </b>}
-                      {claimOf(tail, 130)}
-                    </span>
-                  </li>
-                );
-              })}
-            </ul>
+      <div className="geo-exps">
+        <Expander label="Assessment and what changed" hint="the full read, since yesterday">
+          <p className="geo-pd-text">{t.bottom_line}</p>
+          {t.since_yesterday.length > 0 && (
+            <div className="geo-since">
+              {changed.length > 0 && (
+                <ul className="geo-chrows">
+                  {changed.map((c, k) => {
+                    const ch = CHANGE[c.kind];
+                    const { lead, tail } = splitLead(c.what);
+                    return (
+                      <li key={k} className={ch.hot ? "is-hot" : ""} title={c.what}>
+                        <span className="geo-glyph" aria-hidden="true">
+                          {ch.glyph}
+                        </span>
+                        <span className="geo-sr">{ch.label}: </span>
+                        <span>
+                          {lead && <b className="geo-strong">{lead} </b>}
+                          {claimOf(tail, 130)}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+              {same.length > 0 && (
+                <p className="geo-micro">
+                  <span aria-hidden="true">=</span> {changed.length === 0 ? "Nothing changed since yesterday" : `${same.length} unchanged`}: {same.map((c) => c.what).join(" · ")}
+                </p>
+              )}
+            </div>
           )}
-          {same.length > 0 && (
-            <Popover
-              label={`Unchanged since yesterday: ${same.length}`}
-              triggerClassName="geo-link-btn geo-same xt"
-              trigger={
-                <>
-                  <span aria-hidden="true">=</span> {changed.length === 0 ? "Nothing changed since yesterday" : `${same.length} unchanged`} ›
-                </>
-              }
-            >
-              <div className="geo-pd">
-                <p className="geo-pd-title">Unchanged since yesterday</p>
+        </Expander>
+
+        {t.developments.length > TOP_SHOWN && (
+          <Expander label="More developments" count={t.developments.length - TOP_SHOWN}>
+            <DevelopmentTimeline developments={t.developments} map={t.map} reportDate={date} range={[TOP_SHOWN, t.developments.length]} />
+          </Expander>
+        )}
+
+        {t.on_record.length > 0 && (
+          <Expander label="On the record" count={t.on_record.length} hint="what was said, in the speakers' words">
+            <OnRecordBlock rows={t.on_record} title={t.name} note={first} />
+          </Expander>
+        )}
+
+        {hasNumbers && (
+          <Expander label="Numbers and actors" hint={unusual > 0 ? `${unusual} unusual now` : "statistics, flows and rates"}>
+            <TheaterNumbersPanel numbers={t.numbers} name={t.name} />
+          </Expander>
+        )}
+
+        {t.pulses.length > 0 && (
+          <Expander label="Pulses" count={t.pulses.length} hint="how tense, 0 to 100">
+            <PulseTiles pulses={t.pulses} snap={snap} />
+          </Expander>
+        )}
+
+        {(outlook || watch.length > 0 || t.context.length > 0 || t.brief_slug) && (
+          <Expander label="Outlook, watch list and background">
+            {t.outlook && (
+              <p className="geo-next-outlook">
+                <span className="geo-micro">Outlook</span> {t.outlook}
+              </p>
+            )}
+            {t.watch_next.length > 0 && (
+              <div>
+                <span className="geo-micro">Watch for</span>
                 <ul className="geo-plain">
-                  {same.map((c, k) => (
-                    <li key={k}>{c.what}</li>
+                  {t.watch_next.map((w, k) => (
+                    <li key={k}>{w}</li>
                   ))}
                 </ul>
               </div>
-            </Popover>
-          )}
-        </div>
-      )}
-
-      <DevelopmentTimeline developments={t.developments} map={t.map} reportDate={date} />
-
-      <OnRecordBlock rows={t.on_record} title={t.name} note={first} />
-
-      <PulseTiles pulses={t.pulses} snap={snap} />
-
-      {(outlook || watch.length > 0) && (
-        <div className="geo-next">
-          {outlook && (
-            <p className="geo-next-outlook">
-              <span className="geo-micro">Outlook</span> {outlook}
-            </p>
-          )}
-          {watch.length > 0 && (
-            <div>
-              <span className="geo-micro">Watch for</span>
-              <ul className="geo-watch">
-                {watch.slice(0, WATCH_SHOWN).map((w, k) => (
-                  <li key={k} title={t.watch_next[k]}>
-                    {w}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {outlookCut && (
-            <Popover label={`Full outlook: ${t.name}`} triggerClassName="geo-link-btn xt" trigger={<>Full outlook and watch list ›</>}>
-              <div className="geo-pd">
-                <p className="geo-pd-title">{t.name}</p>
-                {t.outlook && <p className="geo-pd-text">{t.outlook}</p>}
-                {t.watch_next.length > 0 && (
-                  <>
-                    <p className="geo-micro">Watch for</p>
-                    <ul className="geo-plain">
-                      {t.watch_next.map((w, k) => (
-                        <li key={k}>{w}</li>
-                      ))}
-                    </ul>
-                  </>
-                )}
+            )}
+            {t.context.length > 0 && (
+              <div>
+                <span className="geo-micro">Background</span>
+                <ContextList t={t} />
               </div>
-            </Popover>
-          )}
-        </div>
-      )}
-
-      {(t.context.length > 0 || t.brief_slug) && (
-        <Popover
-          label={`Background: ${t.name}`}
-          triggerClassName="geo-link-btn xt"
-          trigger={<>{t.context.length > 0 ? `Background (${t.context.length})` : "Deep brief"} ›</>}
-        >
-          <div className="geo-pd">
-            <p className="geo-pd-title">{t.name}</p>
-            {t.context.length > 0 && <ContextList t={t} />}
+            )}
             {t.brief_slug && (
               <p className="geo-pd-foot">
                 <Link href={`/intel/briefs/${t.brief_slug}`}>Deep brief →</Link>
               </p>
             )}
-          </div>
-        </Popover>
-      )}
+          </Expander>
+        )}
+      </div>
     </section>
   );
 }

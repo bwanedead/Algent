@@ -6,7 +6,9 @@
     newsroom intel brief --theater thr_x --research   # commission fresh research first (paid, capped)
     newsroom intel daily [--domain geopolitics] [--top 5] [--research] [--fresh-research]   # the daily rundown: heat -> sections -> publish -> backup
     newsroom intel daily --date D --theater id[,id] [--repair] [--fresh-research]   # redo only those sections of D's record, republish
-    newsroom intel publish                       # put the desk snapshot (pulses, theaters, briefs) on the site
+    newsroom intel daily --date D --rerender [--theater id[,id]]   # re-derive D's record from its saved model drafts: NO model call
+    newsroom intel daily --date D --tag-places   # repair for reports made before drafts were kept: one small call places the developments
+    newsroom intel publish                      # put the desk snapshot (pulses, theaters, briefs) on the site
     newsroom intel dossiers [--primers] [--domain geopolitics]   # rebuild + publish the theater dossiers; --primers writes the missing/stale (>7d) primers first
     newsroom intel cycle [--top 2] [--research] [--domain geopolitics,politics]  # heat -> settle forecasts -> briefs -> publish -> backup, unattended
     newsroom intel import-briefs                 # one-off: runs_data briefs -> durable intel store
@@ -47,6 +49,8 @@ def add_parser(sub: Any) -> None:
     d.add_argument("--fresh-research", action="store_true", help="redo research even if today's already exists")
     d.add_argument("--theater", default="", help="rewrite only these theaters' sections of --date's existing record (comma-separated ids, or a unique name fragment); everything else is kept")
     d.add_argument("--repair", action="store_true", help="with --theater: tie the saved research's lost claim->source links back (one cheap call) instead of researching again")
+    d.add_argument("--rerender", action="store_true", help="re-derive --date's record from its saved model drafts (places/maps, numbers, flags, on-record order, summary and sweep guards), republish; ZERO model calls; with --theater only those sections")
+    d.add_argument("--tag-places", action="store_true", help="repair tool for reports made before drafts were kept: ONE small low-effort model call places the existing developments (text untouched, places checked against the basemap), maps rebuilt")
     d.add_argument("--days", type=int, default=7)
     d.add_argument("--no-refresh", action="store_true", help="skip refreshing instruments and statements first")
     d.add_argument("--date", default="", help="YYYY-MM-DD to (re)write; default today. The headline board is "
@@ -263,6 +267,35 @@ def _cycle(args: Any) -> int:
     return 0
 
 
+def _daily_rederive(args: Any, only: list[str]) -> int:
+    """``daily --rerender`` (no model at all) or ``--tag-places`` (one small call): fix a saved record, publish, back up."""
+    from datetime import date
+
+    from algent_backend.agent_system.agents.intel import daily_rerender
+    from algent_backend.agent_system.foundation.models import house_spec
+    from algent_backend.data_backup import sync
+    from algent_backend.publishing.intel_page import publish_intel
+
+    as_of = getattr(args, "date", "") or date.today().isoformat()
+    if args.rerender and args.tag_places:
+        print(json.dumps({"error": "--rerender and --tag-places are separate repairs; pick one"}))
+        return 2
+    if args.rerender:
+        result = daily_rerender.rerender(args.domain, as_of, only=only, out=_out(as_of))
+    else:
+        result = daily_rerender.tag_places(
+            _ctx("intel-tag-places"), house_spec(reasoning_effort="low", temperature=0.1, max_tokens=8192),
+            args.domain, as_of, out=_out(as_of))
+    if result.get("error"):
+        print(json.dumps({"date": as_of, "domain": args.domain, "error": result["error"]}, indent=2, ensure_ascii=False))
+        return 1
+    report = {"date": as_of, "domain": args.domain, "path": result["path"], "html": result.get("html"),
+              **{k: result[k] for k in ("redone", "kept", "warnings", "tagged", "asked") if k in result},
+              "publish": publish_intel(), "backup": sync.backup(note="intel daily rederive")}
+    print(json.dumps(report, indent=2, ensure_ascii=False))
+    return 0
+
+
 def _daily(args: Any) -> int:
     """Fresh heat board, the daily report for the domain, publish, back up. Prints a JSON report."""
     from algent_backend.agent_system.agents.intel import daily, desk
@@ -273,6 +306,8 @@ def _daily(args: Any) -> int:
     from .pulse import promote_ready_quietly
 
     only = [t for t in (getattr(args, "theater", "") or "").split(",") if t.strip()]
+    if getattr(args, "rerender", False) or getattr(args, "tag_places", False):
+        return _daily_rederive(args, only)
     sensing_refresh = {} if only else _refresh_sensing(args)   # a targeted rerun keeps the day's inputs
     if not only and _heat(args, publish=False) != 0:
         return 1
