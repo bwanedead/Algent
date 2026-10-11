@@ -35,13 +35,13 @@ from __future__ import annotations
 import json
 import math
 from collections.abc import Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 from . import brief as br
-from . import desk, flags, focus, forecasts, geo, numbers, on_record, render
+from . import daily_drafts, desk, flags, focus, forecasts, geo, numbers, on_record, render
 from . import sensing as sensing_mod
 from . import sweep as sweep_mod
 from .contracts import (
@@ -437,7 +437,8 @@ def normalise_section(draft: SectionDraft, *, pulse_table: dict[str, str], has_p
 
 
 def write_summary(context: Any, config: Any, sections: list[dict], *, as_of: str, domain: str,
-                  model_spec: Any, sensing: sensing_mod.Evidence | None = None) -> DaySummary | None:
+                  model_spec: Any, sensing: sensing_mod.Evidence | None = None,
+                  archive: dict | None = None) -> DaySummary | None:
     digest = "\n\n".join(
         f"## {s['name']} ({s['temperature']['coverage'] or s['temperature']['trend']}; escalation {s['escalation']['direction']}, "
         f"{s['escalation']['pace']})\n{s['bottom_line']}\n"
@@ -449,8 +450,15 @@ def write_summary(context: Any, config: Any, sections: list[dict], *, as_of: str
     out = _ask(context, config, model_spec, DaySummary, SUMMARY_ROLE, task)
     if not isinstance(out, DaySummary):
         return None
-    # Normalise a copy, never the object handed back: a shared instance (a cached or faked reply) was emptied of its
-    # cross-theater links by one run and every later run inherited the damage.
+    if archive is not None:
+        archive["draft"] = out.model_dump()             # the model's words as returned, before the guards
+    return normalise_summary(out, sections)
+
+
+def normalise_summary(out: DaySummary, sections: list[dict]) -> DaySummary:
+    """The summary's guards, a pure function of the raw summary and the finished sections (so a rerender
+    redoes them without the model). Works on a copy, never the object handed in: a shared instance (a cached
+    or faked reply) was emptied of its cross-theater links by one run and every later run inherited the damage."""
     out = out.model_copy(deep=True)
     names = {s["name"].lower(): s["name"] for s in sections}
     out.the_day = [b for b in out.the_day if b.strip()][:6]
@@ -491,10 +499,10 @@ def _headline(text: str) -> str:
 
 
 # ── the engine ────────────────────────────────────────────────────────────────────────────────
-def _section(theater: Theater, heat: dict, draft: SectionDraft, pulses: list[dict], brief: dict | None,
+def _section(tid: str, name: str, heat: dict, draft: SectionDraft, pulses: list[dict], brief: dict | None,
              countries: list[geo.Country] | None = None, record: Sequence[dict] = ()) -> dict:
     d = draft.model_dump()
-    return {"theater_id": theater.id, "name": theater.name,
+    return {"theater_id": tid, "name": name,
             "temperature": {"heat": heat.get("heat", 0), "trend": heat.get("trend", ""),
                             "coverage": coverage_label(heat.get("trend", "")),
                             "recent_share": heat.get("recent_share", 0.0), "prior_share": heat.get("prior_share", 0.0)},
@@ -504,6 +512,24 @@ def _section(theater: Theater, heat: dict, draft: SectionDraft, pulses: list[dic
             "outlook": d["outlook"], "watch_next": d["watch_next"],
             "key_figures": d["key_figures"], "brief_slug": (brief or {}).get("slug"),
             "on_record": list(record), "map": geo.build_map(d["developments"], countries)}
+
+
+def finish_section(raw: dict, inputs: dict, *, tid: str, countries: list[geo.Country] | None, store: Any,
+                   now: datetime, as_of: str, brief: dict | None) -> tuple[dict, SectionDraft]:
+    """The model's raw section draft -> the published section: every guard, the map, the Pulse table, the
+    on-record order and the numbers panel. A pure function of the draft, ``inputs`` (the URL sets, record rows
+    and readings the writer was shown, saved with the draft) and the environment (basemap ``countries``, Pulse
+    ``store``, ``brief``), so it runs unchanged on a saved draft with no model."""
+    draft = normalise_section(SectionDraft.model_validate(raw), pulse_table=dict.fromkeys(inputs["pulse_names"], ""),
+                              has_previous=inputs["has_previous"], researched=inputs["researched"],
+                              research_urls=set(inputs["research_urls"]), reported_urls=set(inputs["reported_urls"]),
+                              countries=countries, instrument_urls=set(inputs["instrument_urls"]),
+                              statement_urls=set(inputs["statement_urls"]), record=inputs["record"])
+    record = on_record.lead_with(inputs["record"], draft.key_statements)   # the writer's picks first, then consequence order
+    section = _section(tid, inputs["name"], inputs["heat"], draft, pulse_rows(store, draft.pulses, now=now), brief,
+                       countries, record)
+    section["numbers"] = numbers.for_section(section, inputs["instrument_rows"], brief, as_of=as_of)
+    return section, draft
 
 
 @dataclass
@@ -521,6 +547,9 @@ class _Run:
     countries: list[geo.Country]
     now: datetime
     repair: bool = False        # a targeted rerun: tie a saved profile's lost source links back, no new research
+    drafts: dict = field(default_factory=dict)          # raw model output + the inputs to re-validate it, by theater id
+    summary_archive: dict = field(default_factory=dict)
+    sweep_archive: dict = field(default_factory=dict)
 
 
 def _cover(run: _Run, theater: Theater, heat: dict, *, propose: bool = True) -> tuple[dict | None, dict]:
@@ -581,20 +610,29 @@ def _cover(run: _Run, theater: Theater, heat: dict, *, propose: bool = True) -> 
     if draft is None:
         row["error"] = "section writer returned nothing"
         return None, row
-    draft = normalise_section(draft, pulse_table=table, has_previous=previous is not None,
-                              researched=bool(profiles) or not earlier.empty,
-                              research_urls=research_urls,
-                              reported_urls={u for m in theater.members for u in m.sources},
-                              countries=run.countries, instrument_urls=sensed.instrument_urls,
-                              statement_urls=sensed.statement_urls, record=record)
-    record = on_record.lead_with(record, draft.key_statements)   # the writer's picks first, then consequence order
-    section = _section(theater, heat, draft, pulse_rows(store, draft.pulses, now=run.now), latest_brief,
-                       run.countries, record)
-    section["numbers"] = numbers.for_section(section, sensed.instrument_rows, latest_brief, as_of=as_of)
+    inputs = {"name": theater.name, "heat": heat, "pulse_names": list(table), "has_previous": previous is not None,
+              "researched": bool(profiles) or not earlier.empty, "research_urls": sorted(research_urls),
+              "reported_urls": sorted({u for m in theater.members for u in m.sources}),
+              "instrument_urls": sorted(sensed.instrument_urls), "statement_urls": sorted(sensed.statement_urls),
+              "record": record, "instrument_rows": sensed.instrument_rows}
+    raw = draft.model_dump()                  # kept raw: the guards may drop what only the environment lacked
+    run.drafts[tid] = {"draft": raw, "inputs": inputs}
+    section, draft = finish_section(raw, inputs, tid=tid, countries=run.countries, store=store, now=run.now,
+                                    as_of=as_of, brief=latest_brief)
     row["proposals"] = [{"theater": theater.name, **p.model_dump()} for p in draft.pulse_proposals]
     row["proposals_logged"] = (record_proposals(store, draft.pulse_proposals, theater=theater, domain=run.domain,
                                                 as_of=as_of) if propose else 0)
     return section, row
+
+
+def _archive(run: _Run, result: dict, *, merge: bool) -> None:
+    """Save the day's raw model output (``daily_drafts``) beside the record. Best-effort: a full disk must
+    not cost the report that was just paid for; the failure is the result's ``drafts_error``."""
+    try:
+        daily_drafts.save(run.domain, run.as_of, theaters=run.drafts, summary=run.summary_archive or None,
+                          sweep=run.sweep_archive or None, merge=merge)
+    except OSError as exc:
+        result["drafts_error"] = f"{type(exc).__name__}: {str(exc)[:160]}"
 
 
 def _sweep_and_spotlight(run: _Run, board: dict, sections: list[dict], rows: list[dict], focus_ids: list[str],
@@ -609,7 +647,8 @@ def _sweep_and_spotlight(run: _Run, board: dict, sections: list[dict], rows: lis
         known_iso = {k.upper() for c in (run.countries or ()) for k in (c.keys or ()) if len(k) == 2} or None
         out = sweep_mod.run(lambda schema, role, task: _ask(run.ctx, None, run.model_spec, schema, role, task),
                             board=board, domain=run.domain, as_of=run.as_of, focus_ids=set(focus_ids),
-                            covered=covered, covered_urls=urls, folder=daily_dir(run.domain), known_iso=known_iso)
+                            covered=covered, covered_urls=urls, folder=daily_dir(run.domain), known_iso=known_iso,
+                            archive=run.sweep_archive)
     except Exception as exc:  # noqa: BLE001 - the sweep is an addition to the report, never its gate
         err = f"sweep failed: {br.describe_failure(exc)}"
         print(f"[daily] sweep failed; continuing without it: {err}", flush=True)
@@ -676,7 +715,8 @@ def _rerun_theaters(run: _Run, board: dict, theaters: dict[str, Theater], heats:
     record["theaters"] = [new.get(s.get("theater_id"), s) for s in record["theaters"]]
     try:
         summary = write_summary(run.ctx, None, record["theaters"], as_of=run.as_of, domain=run.domain,
-                                model_spec=run.model_spec, sensing=sensing_mod.across_theaters(as_of=run.as_of))
+                                model_spec=run.model_spec, sensing=sensing_mod.across_theaters(as_of=run.as_of),
+                                archive=run.summary_archive)
     except Exception as exc:  # noqa: BLE001 - the corrected section stands; the old top is kept
         print(f"[daily] summary writer failed on rerun; keeping the earlier top: {br.describe_failure(exc)}", flush=True)
         summary = None
@@ -693,6 +733,7 @@ def _rerun_theaters(run: _Run, board: dict, theaters: dict[str, Theater], heats:
     desk._write(path, record)
     result: dict[str, Any] = {"report": record, "path": str(path), "theaters": rows,
                               "research_usd": round(sum(r["research_usd"] for r in rows), 4)}
+    _archive(run, result, merge=True)
     if out is not None:
         html = out / f"daily_{br.safe_name(run.domain)}.html"
         html.write_text(render.render_daily(record), encoding="utf-8")
@@ -743,7 +784,7 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
     if sections:
         try:
             summary = write_summary(ctx, None, sections, as_of=as_of, domain=domain, model_spec=model_spec,
-                                    sensing=sensing_mod.across_theaters(as_of=as_of))
+                                    sensing=sensing_mod.across_theaters(as_of=as_of), archive=run.summary_archive)
         except Exception as exc:  # noqa: BLE001 - the sections stand on their own; the top is a convenience
             summary_error = br.describe_failure(exc)
             print(f"[daily] summary writer failed; publishing sections without it: {summary_error}", flush=True)
@@ -763,6 +804,7 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
     desk._write(path, record)
     result: dict[str, Any] = {"report": record, "path": str(path), "theaters": rows,
                               "research_usd": round(sum(r["research_usd"] for r in rows), 4)}
+    _archive(run, result, merge=False)
     if summary_error:
         result["summary_error"] = summary_error
     if swept is not None and swept.error:
