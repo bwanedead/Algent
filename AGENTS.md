@@ -18,6 +18,7 @@ Keep a **sane working tree** and a **remote backup** as work lands. Do not let l
 
 - **Commit when a chunk is done.** After a coherent unit is correct (a feature slice, a fix, a doctrine pass, a testable batch — typically once reviewers/self-review are settled for non-trivial work), commit it. Prefer several small scoped commits over one mega-commit at end of day.
 - **Push after committing.** Push the feature branch to `origin` so remote holds the backup. Do not wait for the human to ask unless push is blocked.
+- **One source of truth.** Work happens on several machines (the laptop, the worker server's `ohmega-server` session, cloud sessions); GitHub `organic-dev` is the shared state. Pull (`--ff-only`) before editing, push right after committing; never leave unpushed commits on a machine (the server's deploy-on-push stalls on them and reports `deploy-on-push BLOCKED` in `~/ops-log.md`).
 - **Branch only — never commit to `main`.** Work on `organic-dev` or a topic branch.
 - **Before every commit:** `git status` + diff. Exclude secrets (`.env`, keys), run artifacts (`backend/runs_data/`), caches, build outputs, and one-shot local scratch. Update `.gitignore` when a new junk path appears.
 - **Messages:** short imperative, scoped to the area (`feat(models): …`, `fix(editorial): …`).

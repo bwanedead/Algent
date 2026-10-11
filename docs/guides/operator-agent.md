@@ -95,6 +95,16 @@ Use `--help` on any of them. Launch long runs detached so they survive your sess
 - A `System restart required` notice on login means security updates are pending; reboot only when no run is active,
   and tell the operator first.
 
+## Staying in sync (laptop, server, cloud)
+- **GitHub `organic-dev` is the only source of truth for code.** No machine keeps code state that isn't pushed.
+- Before editing: `git pull --ff-only`. After a coherent change with tests green: commit **and push immediately**.
+  Never leave local commits unpushed or edits half-done. The update timer can't fast-forward past them and stops
+  deploying; it then writes `deploy-on-push BLOCKED` to the ops log.
+- Your commits are labelled `ohmega-server`. Log notable code changes in `~/ops-log.md` too, so the laptop session
+  sees them.
+- Not in git, by design: secrets (`~/algent.env`), run data (`backend/runs_data/`), stores (backed up nightly to the
+  private archive and in Supabase). Never commit those.
+
 ## First thing each session
 Run `doctor`, `runner status`, `watchdog --dry-run`, check `pgrep -fa algent_backend`, and give a status of 5 lines
 or fewer.
