@@ -589,10 +589,10 @@ def _sweep_and_spotlight(run: _Run, board: dict, sections: list[dict], rows: lis
     Appends to ``sections`` / ``rows``. Never raises: a failed sweep is a report row, not a failed day."""
     if not flags.sweep_enabled():
         return None
-    covered = [f"{s['name']}: " + "; ".join(d["headline"] for d in s["developments"][:6]) for s in sections]
-    urls = {u for s in sections for d in s["developments"] for u in d["sources"]}
-    known_iso = {k.upper() for c in run.countries for k in c.keys if len(k) == 2} or None
-    try:
+    try:   # everything, input prep included: a sweep bug must cost the sweep, never the day's paid sections
+        covered = [f"{s['name']}: " + "; ".join(d["headline"] for d in s["developments"][:6]) for s in sections]
+        urls = {u for s in sections for d in s["developments"] for u in d["sources"]}
+        known_iso = {k.upper() for c in (run.countries or ()) for k in (c.keys or ()) if len(k) == 2} or None
         out = sweep_mod.run(lambda schema, role, task: _ask(run.ctx, None, run.model_spec, schema, role, task),
                             board=board, domain=run.domain, as_of=run.as_of, focus_ids=set(focus_ids),
                             covered=covered, covered_urls=urls, folder=daily_dir(run.domain), known_iso=known_iso)
