@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   openGraph: { type: "website", siteName: SITE_NAME, url: SITE_URL, title: SITE_NAME, description: SITE_DESCRIPTION },
   twitter: { card: "summary", title: SITE_NAME, description: SITE_DESCRIPTION },
   // Let readers and machines discover the feed from any page.
-  alternates: { types: { "application/rss+xml": `${SITE_URL}/feed.xml` } },
+  alternates: { types: { "application/rss+xml": `${SITE_URL}/feed.xml`, "application/json": `${SITE_URL}/api/v1/index` } },
 };
 
 // Set the display before paint (no flash), honoring a saved choice and defaulting to terminal.
@@ -54,6 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <nav aria-label="Secondary navigation">
               <a href="/feed.xml">RSS</a>
               <a href="/sitemap.xml">Sitemap</a>
+              <a href="/developers">Developers</a>
             </nav>
           </div>
         </footer>

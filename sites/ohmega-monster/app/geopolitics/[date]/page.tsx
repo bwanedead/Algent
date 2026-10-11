@@ -22,7 +22,10 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     title: `Geopolitics — ${fmtDay(r.date)}`,
     description: r.headline.slice(0, 200) || undefined,
     // The newest report is one page with two addresses; /geopolitics is the one to index.
-    alternates: (await allDailyDates(DOMAIN))[0] === r.date ? { canonical: BASE } : undefined,
+    alternates: {
+      ...((await allDailyDates(DOMAIN))[0] === r.date ? { canonical: BASE } : {}),
+      types: { "application/json": `/api/v1/daily/${DOMAIN}/${r.date}` },
+    },
   };
 }
 

@@ -9,7 +9,7 @@ import "./geopolitics.css";
 export const metadata: Metadata = {
   title: "Geopolitics — daily report",
   description: "A daily rundown of the world's hot spots: what happened, who said what, and what to watch next.",
-  alternates: { canonical: BASE },
+  alternates: { canonical: BASE, types: { "application/json": `/api/v1/daily/${DOMAIN}/latest` } },
 };
 
 export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS

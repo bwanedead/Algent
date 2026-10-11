@@ -7,6 +7,7 @@ import { toWallPulse, type WallPulse } from "@/lib/pulse-wall";
 export const metadata: Metadata = {
   title: "Pulses",
   description: "Every Pulse we track: one question, one 0–100 reading. Early readings — still calibrating.",
+  alternates: { types: { "application/json": "/api/v1/pulses" } },
 };
 
 export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS

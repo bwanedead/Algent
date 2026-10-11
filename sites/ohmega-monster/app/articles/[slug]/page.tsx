@@ -9,7 +9,6 @@ import { getArticle, getSlugs } from "@/lib/articles";
 import { absoluteAssetUrl, assetUrl } from "@/lib/assets";
 import { AI_IMAGE_LABEL, isGeneratedImage, pageHasGeneratedImages } from "@/lib/generated";
 import { SITE_URL } from "@/lib/site";
-import { intelDoc } from "@/lib/store";
 
 export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS; new articles render on demand, no redeploy
 
@@ -42,16 +41,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const a = await getArticle(params.slug);
   if (!a) return {};
   const url = `${SITE_URL}/articles/${a.slug}`;
-  // The machine-readable twin (graded claims + sources) for agents — see public/llms.txt.
-  const hasTwin = (await intelDoc(`data/articles/${a.slug}.json`)) !== null;
+  // The machine-readable twin for agents (markdown + graded claims + sources) — see /developers, public/llms.txt.
   return {
     title: a.title, // layout template appends " · Ohmega Monster"
     description: a.dek,
     alternates: {
       canonical: url,
-      ...(hasTwin
-        ? { types: { "application/json": `${SITE_URL}/data/articles/${a.slug}.json` } }
-        : {}),
+      types: { "application/json": `${SITE_URL}/api/v1/articles/${a.slug}` },
     },
     openGraph: {
       type: "article",
