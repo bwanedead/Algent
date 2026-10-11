@@ -20,7 +20,7 @@ export function currentTheme(): MapTheme {
 // Colours shared with the static SVG map (app/geopolitics/geopolitics.css) on paper, so both read as one map.
 const PALETTE = {
   paper: { background: "#f4f1e8", water: "#cfe3f1", border: "#7d8793", label: "#2b3440", halo: "#ffffff", quiet: "#c9c6bc" },
-  dark: { background: "#161a19", water: "#0d1519", border: "#6c7773", label: "#a9b0ab", halo: "#0c0f0e", quiet: "#2a302e" },
+  dark: { background: "#1d2321", water: "#0a1217", border: "#6c7773", label: "#a9b0ab", halo: "#0c0f0e", quiet: "#2a302e" },
 };
 
 const HIDE = /^(building|aeroway|railway|road_oneway|road_pier|road_area_pier|highway[-_]shield|road_shield|highway[-_]name|airport|landuse_residential|landcover_wood|park|landuse_park)/;
