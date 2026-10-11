@@ -163,6 +163,19 @@ of a stack the reader can descend, never the whole of it:
   statements, unusual readings, our library) and leave it after a week with nothing new, kept on a quiet
   strip with their last change and still one click deep. Detection draws on a broad base, not only our
   own radar.
+- **The world is swept, not only focused (operator, 10-10).** Heat x novelty favours volume, so the same loud
+  theaters returned daily while subtle, consequential dynamics (Africa, Asia, Latin and Central America, the
+  Arctic, space) never got attention, and researching everything is neither affordable nor fast. The daily
+  therefore adds, after the focus, an "Around the world" sweep: ONE house-model call over the last ~48h of
+  material the desk already holds for free (headlines of theaters not in focus, recent library titles no
+  theater claimed, the statements ledger, flagged instrument moves) that writes a short region-grouped digest.
+  Regions are a scaffold, not a quota (empty is a finding); each item is one sentence with the countries
+  involved and the source links it rests on, and an item without a source from the material is dropped. The
+  same call may nominate ONE **Spotlight**: the item most deserving depth that the daily has not covered in the
+  last week; with `--research` it becomes one extra researched section (a board theater if it is one, else an
+  ad-hoc theater built from its headlines; no Pulses are created). One extra section per run is a flag
+  (`intel/flags.py`: `SPOTLIGHT_SECTIONS`), a budget decision. Code: `agents/intel/sweep.py`. A world map with
+  pins for sweep items is a follow-up; today the site shows a region-grouped list with flags.
 - **Names are explicit.** A Pulse, a theater or a figure says who and what in its title (flags allowed):
   "🇺🇸🇨🇳 US–China: diplomatic deadlock", never a bare "Relationship deadlock" the reader must click
   to decode. Clicking gives the definition, not the identity.

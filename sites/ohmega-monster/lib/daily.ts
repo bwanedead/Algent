@@ -126,10 +126,20 @@ export type DailyTheater = {
   map: TheaterMap | null;
   /** The theater's trackers and actors (older reports: null). */
   numbers: TheaterNumbers | null;
+  /** The one extra researched section the world sweep nominated (see `DailySweep`); false for a focus theater. */
+  spotlight: boolean;
 };
 /** A theater in the domain that is live but not written up today, or one gone quiet (see the desk's focus). */
 export type DailyWatch = { theater_id: string; name: string; note: string; last_novel: string };
 export type DailyQuiet = { theater_id: string; name: string; last_novel: string; countries: string[] };
+/** "Around the world" (backend agents/intel/sweep.py): what the focus under-weights, grouped by region. Older reports: null. */
+export type SweepItem = { text: string; countries: string[]; sources: string[]; spotlight: boolean };
+export type SweepRegion = { region: string; items: SweepItem[] };
+export type DailySweep = {
+  regions: SweepRegion[];
+  /** The item nominated for a full section; `section` says whether this report carries it (research was on). */
+  spotlight: { theater_id: string; name: string; text: string; region: string; countries: string[]; sources: string[]; section: boolean } | null;
+};
 export type Daily = {
   domain: string;
   date: string;
@@ -141,6 +151,7 @@ export type Daily = {
   cross_theater: { theaters: string[]; link: string }[];
   watch: DailyWatch[];
   quiet: DailyQuiet[];
+  sweep: DailySweep | null;
 };
 
 // ---- defensive coercion helpers -------------------------------------------------------------
@@ -402,7 +413,28 @@ function parseTheater(raw: unknown): DailyTheater | null {
     on_record: parseOnRecord(raw.on_record),
     map: parseMap(raw.map),
     numbers: parseNumbers(raw.numbers),
+    spotlight: raw.spotlight === true,
   };
+}
+
+const isoCodes = (v: unknown): string[] => strs(v).filter((c) => /^[A-Za-z]{2}$/.test(c)).map((c) => c.toUpperCase());
+const httpUrls = (v: unknown): string[] => strs(v).filter((u) => /^https?:\/\//.test(u));
+
+function parseSweep(raw: unknown): DailySweep | null {
+  if (!isObj(raw)) return null;
+  const regions = arr(raw.regions)
+    .filter(isObj)
+    .map((r) => ({
+      region: str(r.region),
+      items: arr(r.items)
+        .filter(isObj)
+        .map((i) => ({ text: str(i.text), countries: isoCodes(i.countries), sources: httpUrls(i.sources), spotlight: i.spotlight === true }))
+        .filter((i) => i.text),
+    }))
+    .filter((r) => r.region && r.items.length > 0);
+  const s = isObj(raw.spotlight) ? raw.spotlight : null;
+  const spotlight = s && str(s.name) ? { theater_id: str(s.theater_id), name: str(s.name), text: str(s.text), region: str(s.region), countries: isoCodes(s.countries), sources: httpUrls(s.sources), section: s.section === true } : null;
+  return regions.length > 0 || spotlight ? { regions, spotlight } : null;
 }
 
 function parseDaily(raw: unknown, domain: string, date: string): Daily | null {
@@ -428,6 +460,7 @@ function parseDaily(raw: unknown, domain: string, date: string): Daily | null {
       .filter(isObj)
       .map((q) => ({ theater_id: str(q.theater_id), name: str(q.name), last_novel: str(q.last_novel), countries: strs(q.countries) }))
       .filter((q) => q.name),
+    sweep: parseSweep(raw.sweep),
   };
 }
 
