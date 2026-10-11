@@ -400,6 +400,10 @@ def _is_reader_facing(req: AnalyticsRequest) -> bool:
     return True
 
 
+#: Public name for the reader-facing floor, shared with the daily's visual planner.
+is_reader_facing = _is_reader_facing
+
+
 def _finalize(plan: AnalyticsPlan, profile: SignalProfile, model: str) -> AnalyticsPlan:
     requests = [r if r.id else r.model_copy(update={"id": f"anx_{i:02d}"})
                 for i, r in enumerate(plan.requests, 1)]
