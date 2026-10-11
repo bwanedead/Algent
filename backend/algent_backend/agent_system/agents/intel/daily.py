@@ -20,6 +20,10 @@ the deep brief (briefs stay the occasional dive; the daily links to the latest o
 5. PERSIST to ``intel_store/daily/<domain>/<date>.json`` (schema ``ohmega.daily/1``) — the durable copy
    the site mirrors and the next day's report reads for continuity.
 
+EDITIONS: the day's report is built in parts (``flags.EDITIONS``). This module is part 1, the normal run; part 2
+(``daily_editions``) APPENDS to the same record what is new since part 1 and never rewrites it. Each section
+carries the ``edition`` that wrote it and the record an ``editions`` list.
+
 Numbers are never the model's: temperature comes from the board and Pulse positions/deltas from the
 Pulse store. The model only names which listed Pulses a theater bears on (exact names, filtered), and
 the ``key_figures`` it lists are numbers the researched evidence states, kept only when their source is
@@ -220,6 +224,9 @@ def previous_digest(sec: dict) -> str:
              "Developments then:"]
     lines += [f"- {d.get('when', '')} {d.get('headline', '')}" for d in sec.get("developments") or []]
     lines += ["We said to watch:"] + [f"- {w}" for w in sec.get("watch_next") or []]
+    for upd in sec.get("updates") or []:          # a later part of that day added to it: the reader has read that too
+        lines += [f"Later that day, an update: {upd.get('bottom_line', '')}"]
+        lines += [f"- {d.get('when', '')} {d.get('headline', '')}" for d in upd.get("developments") or []]
     return "\n".join(lines)
 
 
@@ -310,14 +317,16 @@ def new_since_line(heat: dict, previous: dict | None) -> str:
 def write_section(context: Any, config: Any, theater: Theater, heat: dict, *, as_of: str, profiles: list[dict],
                   pulse_table: dict[str, str], model_spec: Any, previous: dict | None = None,
                   brief: dict | None = None, corpus_ctx: Any = None,
-                  sensing: sensing_mod.Evidence | None = None) -> tuple[SectionDraft | None, set[str]]:
+                  sensing: sensing_mod.Evidence | None = None,
+                  edition_note: str = "") -> tuple[SectionDraft | None, set[str]]:
     """One structured call for one theater. Returns the raw draft and the URLs it may cite (the research's
     sources plus our earlier corpus claims'); ``sensing`` adds the INSTRUMENTS and STATEMENTS blocks, whose
     URLs the caller passes to ``normalise_section`` as primary evidence."""
     researched, research_urls = research_evidence(profiles)
     research_urls = research_urls | (corpus_ctx.source_urls if corpus_ctx is not None else set())
     task = (f"TODAY: {as_of}. Cover roughly the last three days; older items belong in `context`.\n\n"
-            f"THEATER: {theater.name}\n{theater.why}\n\n"
+            + (edition_note + "\n\n" if edition_note else "")
+            + f"THEATER: {theater.name}\n{theater.why}\n\n"
             f"TEMPERATURE: {heat.get('recent', 0)} headlines in the last 3 days vs {heat.get('prior', 0)} before "
             f"({coverage_label(heat.get('trend', '')) or '?'}; how much it is reported, not how severe it is).\n\n"
             + (previous_digest(previous) + "\n\n" if previous
@@ -439,15 +448,20 @@ def normalise_section(draft: SectionDraft, *, pulse_table: dict[str, str], has_p
 
 def write_summary(context: Any, config: Any, sections: list[dict], *, as_of: str, domain: str,
                   model_spec: Any, sensing: sensing_mod.Evidence | None = None,
-                  archive: dict | None = None) -> DaySummary | None:
+                  archive: dict | None = None, edition_note: str = "") -> DaySummary | None:
+    def block(s: dict, mark: str = "") -> str:
+        return (f"## {s['name']}{mark} ({s['temperature']['coverage'] or s['temperature']['trend']}; escalation "
+                f"{s['escalation']['direction']}, {s['escalation']['pace']})\n{s['bottom_line']}\n"
+                + "\n".join(f"- [{d['verification']}] {d['when']} {d['headline']}" for d in s["developments"]))
+
     digest = "\n\n".join(
-        f"## {s['name']} ({s['temperature']['coverage'] or s['temperature']['trend']}; escalation {s['escalation']['direction']}, "
-        f"{s['escalation']['pace']})\n{s['bottom_line']}\n"
-        + "\n".join(f"- [{d['verification']}] {d['when']} {d['headline']}" for d in s["developments"])
+        "\n\n".join([block(s, " [added in a later part of the day]" if s.get("edition", 1) > 1 else ""),
+                      *(block(u, " [UPDATE, later part of the day]") for u in s.get("updates") or [])])
         for s in sections)
     across = (f"ACROSS ALL THEATERS AND ACTORS (not limited to the sections above):\n{sensing.render()}"
               if sensing and sensing.render() else "")
-    task = f"DATE: {as_of}  DOMAIN: {domain}\n\nTODAY'S SECTIONS:\n{digest}\n\n{across}TASK: write the summary."
+    task = (f"DATE: {as_of}  DOMAIN: {domain}\n\n" + (edition_note + "\n\n" if edition_note else "")
+            + f"TODAY'S SECTIONS:\n{digest}\n\n{across}TASK: write the summary.")
     out = _ask(context, config, model_spec, DaySummary, SUMMARY_ROLE, task)
     if not isinstance(out, DaySummary):
         return None
@@ -490,6 +504,16 @@ def record_proposals(store: Any, drafts: list[PulseProposal], *, theater: Theate
 
 
 HEADLINE_MAX_WORDS = 28   # the prompt asks for <= 20; past this it is a paragraph, not a headline
+
+
+def edition_entry(n: int, built_at: str, sections: list[dict], summary: dict) -> dict:
+    """One row of the record's ``editions`` list: which part of the day, when it was built, which sections it
+    added (``theater_id`` plus ``update`` when it extended a morning section) and the day-so-far summary it left."""
+    info = flags.edition_info(n)
+    return {"n": n, "label": info.label, "cycle": info.cycle, "built_at": built_at,
+            "sections": [{"theater_id": s.get("theater_id", ""), "name": s.get("name", ""),
+                          **({"update": True} if s.get("kind") == "update" else {})} for s in sections],
+            "summary": summary}
 
 
 def _headline(text: str) -> str:
@@ -547,16 +571,19 @@ class _Run:
     table: dict[str, str]
     countries: list[geo.Country]
     now: datetime
+    edition: int = 1            # which part of the day this run builds (``daily_editions`` for 2+)
     repair: bool = False        # a targeted rerun: tie a saved profile's lost source links back, no new research
     drafts: dict = field(default_factory=dict)          # raw model output + the inputs to re-validate it, by theater id
     summary_archive: dict = field(default_factory=dict)
     sweep_archive: dict = field(default_factory=dict)
 
 
-def _cover(run: _Run, theater: Theater, heat: dict, *, propose: bool = True) -> tuple[dict | None, dict]:
+def _cover(run: _Run, theater: Theater, heat: dict, *, propose: bool = True, previous: dict | None = None,
+           edition_note: str = "") -> tuple[dict | None, dict]:
     """One theater's section: research (optional) -> forecasts settled -> sensing -> writer -> guards.
     Returns (section or None, report row); a row with ``error`` means no section. ``propose=False`` keeps an
-    ad-hoc theater's Pulse proposals out of the registry (a spotlight theater is not a tracked one)."""
+    ad-hoc theater's Pulse proposals out of the registry (a spotlight theater is not a tracked one).
+    ``previous`` replaces the continuity section (a later part of the day continues from the morning's)."""
     from algent_backend.agent_system.agents.pulse.update import update_quietly
     from algent_backend.agent_system.foundation import cost
 
@@ -593,7 +620,7 @@ def _cover(run: _Run, theater: Theater, heat: dict, *, propose: bool = True) -> 
     except Exception as exc:  # noqa: BLE001 - settling is a side duty of the report, never its gate
         row["forecasts_settled"] = 0
         row["forecasts_error"] = br.describe_failure(exc)
-    previous = previous_section(run.domain, tid, before=as_of)
+    previous = previous if previous is not None else previous_section(run.domain, tid, before=as_of)
     latest_brief = desk.previous_brief(tid)
     sensed = sensing_mod.for_theater(theater, as_of=as_of, actors=sensing_mod.prior_actors(latest_brief, previous))
     row["sensing"] = sensing_mod.summary_for_report(sensed)
@@ -603,7 +630,8 @@ def _cover(run: _Run, theater: Theater, heat: dict, *, propose: bool = True) -> 
     try:
         draft, research_urls = write_section(ctx, None, theater, heat, as_of=as_of, profiles=profiles,
                                              pulse_table=table, model_spec=run.model_spec, previous=previous,
-                                             brief=latest_brief, corpus_ctx=earlier, sensing=sensed)
+                                             brief=latest_brief, corpus_ctx=earlier, sensing=sensed,
+                                             edition_note=edition_note)
     except Exception as exc:  # noqa: BLE001 - skip this theater, keep the others
         row["error"] = f"section writer failed: {br.describe_failure(exc)}"
         print(f"[daily] section writer failed for {tid}; theater skipped: {row['error']}", flush=True)
@@ -620,36 +648,46 @@ def _cover(run: _Run, theater: Theater, heat: dict, *, propose: bool = True) -> 
     run.drafts[tid] = {"draft": raw, "inputs": inputs}
     section, draft = finish_section(raw, inputs, tid=tid, countries=run.countries, store=store, now=run.now,
                                     as_of=as_of, brief=latest_brief)
+    section["edition"] = run.edition
     row["proposals"] = [{"theater": theater.name, **p.model_dump()} for p in draft.pulse_proposals]
     row["proposals_logged"] = (record_proposals(store, draft.pulse_proposals, theater=theater, domain=run.domain,
                                                 as_of=as_of) if propose else 0)
     return section, row
 
 
-def _archive(run: _Run, result: dict, *, merge: bool) -> None:
+def _archive(run: _Run, result: dict, *, merge: bool, parts: dict[int, dict] | None = None) -> None:
     """Save the day's raw model output (``daily_drafts``) beside the record. Best-effort: a full disk must
-    not cost the report that was just paid for; the failure is the result's ``drafts_error``."""
+    not cost the report that was just paid for; the failure is the result's ``drafts_error``. ``parts`` splits
+    a targeted rerun's drafts by the edition each section belongs to (the summary goes with the last part)."""
     try:
-        daily_drafts.save(run.domain, run.as_of, theaters=run.drafts, summary=run.summary_archive or None,
-                          sweep=run.sweep_archive or None, merge=merge)
+        for n, drafts in (parts or {run.edition: run.drafts}).items():
+            last = n == max(parts or {run.edition: 0})
+            daily_drafts.save(run.domain, run.as_of, theaters=drafts, summary=(run.summary_archive or None) if last else None,
+                              sweep=run.sweep_archive or None if n == run.edition else None, merge=merge, edition=n)
     except OSError as exc:
         result["drafts_error"] = f"{type(exc).__name__}: {str(exc)[:160]}"
 
 
 def _sweep_and_spotlight(run: _Run, board: dict, sections: list[dict], rows: list[dict], focus_ids: list[str],
-                         heats: dict[str, dict]) -> sweep_mod.Sweep | None:
+                         heats: dict[str, dict], *, earlier: dict | None = None) -> sweep_mod.Sweep | None:
     """The world sweep (one cheap call) and, with research on, the Spotlight's one extra researched section.
-    Appends to ``sections`` / ``rows``. Never raises: a failed sweep is a report row, not a failed day."""
+    Appends to ``sections`` / ``rows``. Never raises: a failed sweep is a report row, not a failed day.
+    ``earlier`` is the day's record so far when this is a later part: its sections, updates and sweep count as
+    covered, and the day's one Spotlight is not nominated twice."""
     if not flags.sweep_enabled():
         return None
     try:   # everything, input prep included: a sweep bug must cost the sweep, never the day's paid sections
-        covered = [f"{s['name']}: " + "; ".join(d["headline"] for d in s["developments"][:6]) for s in sections]
-        urls = {u for s in sections for d in s["developments"] for u in d["sources"]}
+        seen = [x for s in (earlier or {}).get("theaters") or [] for x in (s, *(s.get("updates") or []))]
+        covered = [f"{s['name']}: " + "; ".join(d["headline"] for d in s["developments"][:6]) for s in [*seen, *sections]]
+        urls = {u for s in [*seen, *sections] for d in s["developments"] for u in d["sources"]}
+        urls |= {u for reg in ((earlier or {}).get("sweep") or {}).get("regions") or [] for i in reg.get("items") or []
+                 for u in i.get("sources") or []}
         known_iso = {k.upper() for c in (run.countries or ()) for k in (c.keys or ()) if len(k) == 2} or None
         out = sweep_mod.run(lambda schema, role, task: _ask(run.ctx, None, run.model_spec, schema, role, task),
                             board=board, domain=run.domain, as_of=run.as_of, focus_ids=set(focus_ids),
                             covered=covered, covered_urls=urls, folder=daily_dir(run.domain), known_iso=known_iso,
-                            archive=run.sweep_archive)
+                            archive=run.sweep_archive, today=earlier,
+                            allow_spotlight=not ((earlier or {}).get("sweep") or {}).get("spotlight"))
     except Exception as exc:  # noqa: BLE001 - the sweep is an addition to the report, never its gate
         err = f"sweep failed: {br.describe_failure(exc)}"
         print(f"[daily] sweep failed; continuing without it: {err}", flush=True)
@@ -722,6 +760,11 @@ def _rerun_theaters(run: _Run, board: dict, theaters: dict[str, Theater], heats:
         if section is None:
             return fail(f"{t.id}: {row.get('error', 'no section')}; the record was not changed", rows)
         new[t.id] = section
+    for tid, sec in new.items():      # the part of the day and the later updates belong to the slot, not the text
+        old = next(s for s in record["theaters"] if s.get("theater_id") == tid)
+        sec["edition"] = old.get("edition", 1)
+        if old.get("updates"):
+            sec["updates"] = old["updates"]
     record["theaters"] = [new.get(s.get("theater_id"), s) for s in record["theaters"]]
     try:
         summary = write_summary(run.ctx, None, record["theaters"], as_of=run.as_of, domain=run.domain,
@@ -743,12 +786,27 @@ def _rerun_theaters(run: _Run, board: dict, theaters: dict[str, Theater], heats:
     desk._write(path, record)
     result: dict[str, Any] = {"report": record, "path": str(path), "theaters": rows,
                               "research_usd": round(sum(r["research_usd"] for r in rows), 4)}
-    _archive(run, result, merge=True)
+    parts: dict[int, dict] = {}
+    for tid, d in run.drafts.items():
+        parts.setdefault(new[tid]["edition"], {})[tid] = d
+    _archive(run, result, merge=True, parts=parts)
     if out is not None:
         html = out / f"daily_{br.safe_name(run.domain)}.html"
         html.write_text(render.render_daily(record), encoding="utf-8")
         result["html"] = str(html)
     return result
+
+
+def make_run(ctx: Any, *, domain: str, as_of: str, research: bool, model_spec: Any, fresh_research: bool,
+             edition: int = 1) -> _Run:
+    """The services and the day every theater of one run shares."""
+    from algent_backend.agent_system.agents.pulse.repository import pulse_store
+
+    store = pulse_store()
+    return _Run(ctx=ctx, domain=domain, as_of=as_of, model_spec=model_spec, research=research,
+                fresh_research=fresh_research, store=store, table=br.pulse_catalog(store),
+                countries=geo.load(),                       # the basemap places are validated against
+                now=datetime.fromisoformat(f"{as_of}T23:59:59+00:00"), edition=edition)
 
 
 def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, research: bool = False,
@@ -763,19 +821,19 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
 
     A run that attempted theaters but wrote no section is a FAILED run: nothing is persisted, the result
     carries ``error`` and no ``path``/``html``, and the caller must not publish."""
-    from algent_backend.agent_system.agents.pulse.repository import pulse_store
-
     board = board if board is not None else (desk.latest_board() or {"theaters": [], "heat": []})
     theaters = {t["id"]: Theater.model_validate(t) for t in board.get("theaters", [])}
     heats = {h["theater_id"]: h for h in board.get("heat", [])}
-    store = pulse_store()
-    run = _Run(ctx=ctx, domain=domain, as_of=as_of, model_spec=model_spec, research=research,
-               fresh_research=fresh_research, store=store, table=br.pulse_catalog(store),
-               countries=geo.load(),                       # the basemap places are validated against
-               now=datetime.fromisoformat(f"{as_of}T23:59:59+00:00"))
+    run = make_run(ctx, domain=domain, as_of=as_of, research=research, model_spec=model_spec,
+                   fresh_research=fresh_research)
     if only_theaters:
         run.repair = repair
         return _rerun_theaters(run, board, theaters, heats, only_theaters, out=out)
+    if (existing := _prior_record(domain, as_of, False)) and any(
+            e.get("n", 1) > 1 for e in existing.get("editions") or []):
+        return {"report": None, "theaters": [], "research_usd": 0.0,
+                "error": f"{as_of} already has later parts appended; a full edition-1 run would overwrite them. "
+                         f"Use --theater / --rerender, or `--edition 2` to add to the day"}
     sections, rows = [], []
     today_focus = focus.plan(board, top, [domain])        # `top` is a ceiling; the world decides how many
     for tid in today_focus.focus:
@@ -801,12 +859,15 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
         except Exception as exc:  # noqa: BLE001 - the sections stand on their own; the top is a convenience
             summary_error = br.describe_failure(exc)
             print(f"[daily] summary writer failed; publishing sections without it: {summary_error}", flush=True)
-    record = {"schema": SCHEMA, "domain": domain, "date": as_of, "built_at": datetime.now(UTC).isoformat(),
+    built_at = datetime.now(UTC).isoformat()
+    day_summary = {"headline": summary.headline if summary else
+                   (("Nothing new in the theaters we are watching." if today_focus.watch or today_focus.quiet
+                     else "No live theaters in this domain today.") if not sections else "Today's rundown."),
+                   "the_day": summary.the_day if summary else []}
+    record = {"schema": SCHEMA, "domain": domain, "date": as_of, "built_at": built_at,
               "researched": any_research,
-              "summary": {"headline": summary.headline if summary else
-                          (("Nothing new in the theaters we are watching." if today_focus.watch or today_focus.quiet
-                            else "No live theaters in this domain today.") if not sections else "Today's rundown."),
-                          "the_day": summary.the_day if summary else []},
+              "summary": day_summary,
+              "editions": [edition_entry(1, built_at, sections, day_summary)],
               "theaters": sections,
               "cross_theater": [c.model_dump() for c in summary.cross_theater] if summary else [],
               "watch": today_focus.watch, "quiet": today_focus.quiet,

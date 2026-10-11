@@ -163,7 +163,15 @@ export type DailyTheater = {
   /** The one extra researched section the world sweep nominated (see `DailySweep`); false for a focus theater. */
   spotlight: boolean;
   visuals: DailyVisual[];
+  /** Which part of the day wrote it (1 = the morning run; older reports are all 1). See `DailyEdition`. */
+  edition: number;
+  /** "update": a later part's addition to a theater the morning already covered; it is nested under that section. */
+  kind: "section" | "update";
+  /** Later parts' updates to this section (empty for older reports and for an update itself). */
+  updates: DailyTheater[];
 };
+/** One part of the day's single report (backend agents/intel/daily_editions.py): who added what, and when. Older reports: none. */
+export type DailyEdition = { n: number; label: string; cycle: string; built_at: string; sections: { theater_id: string; name: string; update: boolean }[] };
 /** A theater in the domain that is live but not written up today, or one gone quiet (see the desk's focus). */
 export type DailyWatch = { theater_id: string; name: string; note: string; last_novel: string };
 export type DailyQuiet = { theater_id: string; name: string; last_novel: string; countries: string[] };
@@ -180,6 +188,8 @@ export type Daily = {
   date: string;
   built_at: string;
   researched: boolean;
+  /** The parts the day was built in, oldest first; length 1 (or 0 on old reports) means a single-run report. */
+  editions: DailyEdition[];
   headline: string;
   the_day: string[];
   theaters: DailyTheater[];
@@ -427,7 +437,7 @@ function parseVisual(raw: unknown): DailyVisual | null {
   };
 }
 
-function parseTheater(raw: unknown): DailyTheater | null {
+function parseTheater(raw: unknown, nested = false): DailyTheater | null {
   if (!isObj(raw)) return null;
   const name = str(raw.name);
   if (!name) return null;
@@ -485,6 +495,22 @@ function parseTheater(raw: unknown): DailyTheater | null {
     numbers: parseNumbers(raw.numbers),
     spotlight: raw.spotlight === true,
     visuals: arr(raw.visuals).map(parseVisual).filter((v): v is DailyVisual => v !== null),
+    edition: Math.max(1, Math.floor(num(raw.edition) ?? 1)),
+    kind: raw.kind === "update" ? "update" : "section",
+    updates: nested ? [] : arr(raw.updates).map((u) => parseTheater(u, true)).filter((u): u is DailyTheater => u !== null),
+  };
+}
+
+function parseEdition(raw: unknown): DailyEdition | null {
+  if (!isObj(raw)) return null;
+  const n = num(raw.n);
+  if (n === null || n < 1) return null;
+  return {
+    n: Math.floor(n),
+    label: str(raw.label) || `Part ${n}`,
+    cycle: str(raw.cycle),
+    built_at: str(raw.built_at),
+    sections: arr(raw.sections).filter(isObj).map((x) => ({ theater_id: str(x.theater_id), name: str(x.name), update: x.update === true })),
   };
 }
 
@@ -516,9 +542,10 @@ function parseDaily(raw: unknown, domain: string, date: string): Daily | null {
     date,
     built_at: str(raw.built_at),
     researched: raw.researched === true,
+    editions: arr(raw.editions).map(parseEdition).filter((e): e is DailyEdition => e !== null),
     headline: str(summary.headline),
     the_day: strs(summary.the_day),
-    theaters: arr(raw.theaters).map(parseTheater).filter((t): t is DailyTheater => t !== null),
+    theaters: arr(raw.theaters).map((t) => parseTheater(t)).filter((t): t is DailyTheater => t !== null),
     cross_theater: arr(raw.cross_theater)
       .filter(isObj)
       .map((c) => ({ theaters: strs(c.theaters), link: str(c.link) }))
@@ -567,6 +594,15 @@ export function fmtDay(date: string): string {
 }
 
 // ---- pure presentation helpers shared by the daily surfaces (server components only: this module reads fs) --
+/** The "added 17:30 UTC · Americas" tag for a section written by a later part; "" for part 1 and for single-run reports. */
+export function editionTag(report: { editions: DailyEdition[] }, n: number): string {
+  const e = report.editions.find((x) => x.n === n);
+  if (n <= 1 || !e) return "";
+  const d = new Date(e.built_at);
+  const at = Number.isNaN(d.getTime()) ? "" : `${d.toISOString().slice(11, 16)} UTC`;
+  return `${at ? `Added ${at}` : "Added"}${e.cycle || e.label ? ` · ${e.cycle || e.label}` : ""}`;
+}
+
 /** Stable in-page anchor of a theater section. */
 export const theaterAnchor = (t: { theater_id: string }, i: number): string =>
   `theater-${i}-${t.theater_id.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;

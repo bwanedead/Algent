@@ -21,10 +21,43 @@ so it can be rebuilt from scratch instead of repaired by hand.
 | `ohmega-instruments` | every 6 h | public data series | free |
 | `ohmega-statements` | every 6 h | official statement transcripts (collection only) | free |
 | `ohmega-backup` | daily 06:15 | stores → private `algent-data` archive | free |
+| `ohmega-menu` | daily 05:00 | newsroom menu (`run --to menu`) | **paid** |
+| `ohmega-daily-1` | daily 05:30 | geopolitics daily, part 1 (Europe/Asia morning) | **paid** |
+| `ohmega-daily-2` | daily 17:30 | geopolitics daily, part 2 (Americas), appended to the same report | **paid** |
+| `ohmega-watchdog` | every 2 min | kills paid runs over their time/spend limits | free |
 | SearXNG (Docker) | always | our own metasearch on 127.0.0.1:8080 | free |
 
-**Only free work is scheduled.** Anything that spends (research, extraction, the daily, articles) runs when the
-operator asks, triggered over SSH, e.g.:
+### The three paid timers (operator-authorised, unattended)
+
+Times are in-repo flags: the editions in `intel/flags.py` (`EDITIONS`), the menu in `ops/flags.py` (`MENU_UTC`);
+change one and re-run `infra/server/install_schedules.sh`. Each unit runs `jobs.sh <job>` → `newsroom schedule run
+<job>` (`ops/schedule.py`), under the same job lock as everything else, so paid jobs never overlap (the menu, then
+daily 1, simply queue). Before it spends, a job checks, and on any "no" exits 0 having spent nothing and says why:
+
+1. the kill switch (`SCHEDULED_PAID_RUNS` in `ops/flags.py`, or `ALGENT_SCHEDULED_PAID_RUNS=0`);
+2. THIS machine holds the runner claim (`newsroom runner status`); an unreachable archive counts as no, unlike the
+   interactive guard, which fails open;
+3. no spend halt stands for today (`spend_halt.json`; lift with `newsroom watchdog --clear-halt` only when you mean it).
+
+The job then runs the real command as a child, so the watchdog bounds it on its own command line ($15/run, $40/day,
+3 h; the limits fit a ~70 min daily and are commented in `ops/flags.py`). A failure is retried ONCE after 30 min, only
+when the output shows a transient network/provider fault, never for a code error, an unrecognised failure or a
+watchdog kill; research is saved and reused, so nothing is bought twice. Every job ends with one line in
+`~/ops-log.md` (who `scheduler`: published/skipped/FAILED, settled spend, link), a record in
+`runs_data/scheduler.jsonl`, and its output in the journal and `~/runlogs/<job>-<date>.log`. `newsroom doctor` has a
+`schedule` check per paid timer (installed? last outcome?); `newsroom schedule status` prints the same detail.
+
+Part 2 of the daily is an append to the day's one report: it re-reads what is new since part 1, adds sections for
+new theaters and nested updates for theaters the morning covered, and never rewrites part 1 (see
+`agents/intel/daily_editions.py`). Part 1 also refreshes instruments/statements first; part 2 relies on the
+collectors already on timers.
+
+**Pause the paid schedule:** set `SCHEDULED_PAID_RUNS = False` in `backend/algent_backend/ops/flags.py` and push
+(deploy-on-push applies it in 5 min; jobs then log "paused" and spend nothing), or stop the timers at once:
+`sudo systemctl disable --now ohmega-menu.timer ohmega-daily-1.timer ohmega-daily-2.timer` (`install_schedules.sh`
+re-enables them). A missed run is not made up by hand: run `newsroom intel daily --edition 1|2 --research`.
+
+Everything else that spends (articles, ad-hoc research) still runs only when the operator asks, over SSH, e.g.:
 
 ```bash
 ssh -i ~/.ssh/ohmega_ops ohmega@146.190.243.152 'cd ~/Algent/backend && .venv/bin/python -m algent_backend.cli newsroom intel daily --research'
@@ -45,7 +78,7 @@ Logs: `journalctl -u ohmega-<job> -n 50`; timers: `systemctl list-timers 'ohmega
 
 `ohmega-watchdog` (timer, every 2 min; `newsroom watchdog`) is the floor against runaway API bills. It needs no agent awake and spends nothing. Each pass finds running paid algent CLI processes (free jobs are ignored) and SIGTERMs, then after 20 s SIGKILLs, any that:
 
-- ran past its wall-clock limit (3 h for `intel daily`, `newsroom run`/`resume` and everything else),
+- ran past its wall-clock limit (3 h for `intel daily`, `newsroom run`/`resume` and everything else; the scheduler's own wrapper is a free command and is not timed, its child is),
 - spent over $15 on its own, or
 - push today's (UTC) total over $40, in which case it kills every paid run and writes `runs_data/spend_halt.json`; the budget gate (`cost.try_reserve`) then refuses all billable work until the UTC day rolls over or you run `newsroom watchdog --clear-halt`.
 

@@ -6,7 +6,9 @@ operator from the Claude app via Remote Control (service `claude-rc`). Read this
 ## Your role
 - **Keep the machine healthy and the runs sane.** Watch scheduled jobs and paid runs, read their logs, and diagnose
   failures. Stop anything stuck or looping (the watchdog is the hard floor; you are the judgment layer above it).
-- **Run things when the operator asks.** You never start paid work on your own initiative.
+- **Run things when the operator asks.** You never start paid work on your own initiative. The one exception is not
+  yours: three unattended paid timers (menu, daily part 1, daily part 2) run on their own, authorised by the operator;
+  you watch them, you do not add to them.
 - **Report plainly.** Short status, what's wrong, what you'd do. The operator is often on a phone: lead with the answer.
 - **Dev work is secondary.** The main development happens in the operator's laptop sessions (Opus plans and reviews,
   Sonnet builds). You can do small fixes when asked. Follow the same rules: branch `organic-dev`, tests green,
@@ -44,7 +46,13 @@ collision guard).
 - SearXNG (our search) runs in Docker on 127.0.0.1:8080. Supabase is the database; the site is on Vercel and
   reads it live.
 - Timers (`systemctl list-timers 'ohmega-*'`): deploy-on-push every 5 min (pulls `organic-dev`), library crawl 4 h,
-  instruments 6 h, statements 6 h, backup 06:15 UTC, **watchdog every 2 min**.
+  instruments 6 h, statements 6 h, backup 06:15 UTC, **watchdog every 2 min**, and the three PAID ones: **menu 05:00,
+  daily part 1 05:30, daily part 2 17:30 UTC** (`docs/guides/worker-server.md`, "The three paid timers"). They log one
+  line each to `~/ops-log.md` as `scheduler`; read those first each session. A skipped line says why (kill switch,
+  not the runner, spend halt); a FAILED one says whether it retried. Diagnose with `newsroom schedule status`,
+  `~/runlogs/<job>-<date>.log` and the run's `audit/`. To stop the paid schedule: flag `SCHEDULED_PAID_RUNS = False`
+  in `ops/flags.py` (push), or `sudo systemctl disable --now ohmega-menu.timer ohmega-daily-1.timer ohmega-daily-2.timer`.
+  Do that on the operator's word, and tell them.
 - Logs: `journalctl -u ohmega-<job> -n 50`; runs at `backend/runs_data/<run_id>/audit/` (start with
   `human/timeline.md`, then `events.jsonl` and `error.log`); ad-hoc run output in `~/runlogs/`; watchdog actions in
   `backend/runs_data/watchdog.jsonl`.
@@ -62,7 +70,9 @@ collision guard).
 | `library`, `instruments`, `statements` | free collectors (also on timers) | free |
 | `run --to menu` | build today's menu | **paid** |
 | `run --pick N …` | write articles from menu picks | **paid** |
-| `intel daily --domain geopolitics --research` | the geopolitics daily | **paid** |
+| `intel daily --domain geopolitics --research` | the geopolitics daily, part 1 (the scheduled 05:30 run) | **paid** |
+| `intel daily --edition 2 --research` | part 2: APPENDS what is new since part 1 to the same report (new sections, nested updates; never rewrites part 1, reuses its research); the scheduled 17:30 run. `--edition auto` picks 2 once its time has passed | **paid** (less) |
+| `schedule status` | the paid timers' times, the kill switch and each job's last outcome | free |
 | `intel daily --date D --theater <id,id or name> --repair` | redo only those sections of D's daily from the saved research (relinks lost claim sources: one cheap call, no research); add `--fresh-research` to research again; republishes | cheap (repair) / **paid** (fresh) |
 | `intel daily --date D --rerender [--theater <ids>]` | re-derive D's record from its saved model drafts (places/maps, numbers, flags, ordering, summary + sweep guards); zero model calls; republishes. Use after fixing the environment (e.g. basemap) | free |
 | `intel daily --date D --tag-places` | repair for reports made before drafts were kept: one low-effort call places the existing developments; text untouched, places checked against the basemap | cheap (one small call) |
@@ -72,8 +82,9 @@ Use `--help` on any of them. Launch long runs detached so they survive your sess
 `setsid nohup .venv/bin/python -m algent_backend.cli newsroom … > ~/runlogs/<name>.log 2>&1 < /dev/null &`.
 
 ## Cost control (non-negotiable)
-- **No paid run without the operator's explicit go-ahead in this conversation.** A previous approval doesn't carry
-  over.
+- **No paid run of YOUR OWN without the operator's explicit go-ahead in this conversation.** A previous approval
+  doesn't carry over. (The three scheduled paid jobs are the operator's standing authorisation, bounded by the
+  watchdog; if one fails for a non-transient reason, do not rerun it yourself without asking: say what happened.)
 - **Free first, paid last.** Search is SearXNG first, then free engines, then paid ones with monthly caps
   (`search/quota.py`); reads use the free ladder before Firecrawl.
 - **Never redo paid work.** Reruns reuse saved research, reviews and drafts; only the failed step reruns.

@@ -62,3 +62,30 @@ def measure(theater: Theater, *, since: str, as_of: date, ev: sensing.Evidence |
 def since_for(last_section: str, *, as_of: date, days: int) -> str:
     """The date novelty counts after: the last section's date, else the day before the window opens."""
     return last_section or (as_of - timedelta(days=days)).isoformat()
+
+
+def measure_since_seen(theater: Theater, *, since: str, as_of: date, ev: sensing.Evidence | None,
+                       seen_urls: set[str], seen_statements: set[str], seen_series: set[str]) -> dict[str, Any]:
+    """The same block as ``measure`` for a part of the day that follows another (``daily_editions``): what is new
+    since the EARLIER PART was built, not since the last dated section. Day-granular dates cannot say "since the
+    morning", so newness is membership: a headline whose source the earlier part's writer was not shown, a
+    statement whose transcript it was not shown, a series flagged now that it was not shown. ``since`` is a label."""
+    headlines = {c: 0 for c in CLASSES}
+    newest: list[str] = []
+    for m in theater.members:
+        if m.sources and any(u.strip().rstrip("/") in seen_urls for u in m.sources):
+            continue
+        if not m.sources and m.edition[:10] < as_of.isoformat():
+            continue                      # nothing to tell it apart by: only today's source-less headlines count
+        headlines[m.kind] = headlines.get(m.kind, 0) + 1
+        newest.append(m.edition[:10])
+    shown = [s for s in (ev.shown if ev else []) if s.source_url not in seen_statements]
+    statements = [s.date for s in shown]
+    instruments: dict[str, str] = {}
+    if ev and ev.instrument_rows:
+        ids = {r["series_id"] for r in ev.instrument_rows}
+        instruments = {sid: d for sid, d in _flagged(ev.tags, as_of).items() if sid in ids and sid not in seen_series}
+    newest += statements + list(instruments.values())
+    total = sum(headlines.values()) + len(statements) + len(instruments)
+    return {"since": since, "headlines": headlines, "statements": len(statements), "instruments": len(instruments),
+            "total": total, "newest": max(newest, default="")}
