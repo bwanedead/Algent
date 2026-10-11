@@ -506,6 +506,7 @@ class _Run:
     table: dict[str, str]
     countries: list[geo.Country]
     now: datetime
+    repair: bool = False        # a targeted rerun: tie a saved profile's lost source links back, no new research
 
 
 def _cover(run: _Run, theater: Theater, heat: dict, *, propose: bool = True) -> tuple[dict | None, dict]:
@@ -524,7 +525,7 @@ def _cover(run: _Run, theater: Theater, heat: dict, *, propose: bool = True) -> 
             with cost.article_scoped(1.0):              # the research agent caps itself; this makes spend visible
                 try:
                     prof, row["research_reused"] = br.obtain_research(
-                        ctx, None, theater, fresh=run.fresh_research, questions=DAILY_QUESTIONS,
+                        ctx, None, theater, fresh=run.fresh_research, questions=DAILY_QUESTIONS, repair=run.repair,
                         id_tag=f"daily_{as_of.replace('-', '')}")
                 finally:
                     row["research_usd"] = round(cost.article_spent_usd(), 4)
@@ -536,6 +537,7 @@ def _cover(run: _Run, theater: Theater, heat: dict, *, propose: bool = True) -> 
                   flush=True)
         if prof:
             profiles.append(prof)
+            row["research_link_audit"] = prof.get("link_audit")   # dangling refs + relink outcome, in the daily's record
             # The day's research moves the Pulses it bears on; once=True so a rerun that reuses
             # this profile does not move them a second time.
             update_quietly(prof, run_id=prof["id"], once=True)
@@ -611,9 +613,82 @@ def _sweep_and_spotlight(run: _Run, board: dict, sections: list[dict], rows: lis
     return out
 
 
+def resolve_theaters(wanted: Sequence[str], theaters: dict[str, Theater]) -> list[Theater]:
+    """Each wanted theater by exact id (``thr_`` optional) or, failing that, one unambiguous name
+    substring. Raises ValueError naming what was asked and what was available."""
+    out: list[Theater] = []
+    for raw in (w.strip() for w in wanted):
+        key = raw.lower()
+        hit = [t for t in theaters.values() if key in (t.id.lower(), "thr_" + key)]
+        if not hit:
+            hit = [t for t in theaters.values() if key and key in t.name.lower()]
+        if len(hit) != 1:
+            why = "matches several" if hit else "is not a theater on the board"
+            raise ValueError(f"theater {raw!r} {why}: "
+                             f"{', '.join(f'{t.id} ({t.name})' for t in (hit or theaters.values()))}")
+        if hit[0] not in out:
+            out.append(hit[0])
+    return out
+
+
+def _rerun_theaters(run: _Run, board: dict, theaters: dict[str, Theater], heats: dict[str, dict],
+                    wanted: Sequence[str], *, out: Path | None) -> dict:
+    """Rewrite ONLY the named theaters' sections of a day's existing record, through the same ``_cover``
+    path, keep every other section, the sweep and the spotlight as they were, redo the day summary, and
+    note the correction in the record. Nothing is written unless every named section was."""
+    def fail(msg: str, rows: list[dict] | None = None) -> dict:
+        rows = rows or []
+        return {"report": None, "theaters": rows, "research_usd": round(sum(r["research_usd"] for r in rows), 4),
+                "error": msg}
+
+    path = daily_dir(run.domain) / f"{run.as_of}.json"
+    if not path.exists():
+        return fail(f"no daily record at {path}")
+    record = json.loads(path.read_text(encoding="utf-8"))
+    try:
+        chosen = resolve_theaters(wanted, theaters)
+    except ValueError as exc:
+        return fail(str(exc))
+    in_record = {s.get("theater_id") for s in record.get("theaters") or []}
+    if missing := [t.id for t in chosen if t.id not in in_record]:
+        return fail(f"not in the {run.as_of} record (a rerun covers existing sections only): {', '.join(missing)}")
+    new, rows = {}, []
+    for t in chosen:
+        section, row = _cover(run, t, heats.get(t.id, {}), propose=False)
+        rows.append(row)
+        if section is None:
+            return fail(f"{t.id}: {row.get('error', 'no section')}; the record was not changed", rows)
+        new[t.id] = section
+    record["theaters"] = [new.get(s.get("theater_id"), s) for s in record["theaters"]]
+    try:
+        summary = write_summary(run.ctx, None, record["theaters"], as_of=run.as_of, domain=run.domain,
+                                model_spec=run.model_spec, sensing=sensing_mod.across_theaters(as_of=run.as_of))
+    except Exception as exc:  # noqa: BLE001 - the corrected section stands; the old top is kept
+        print(f"[daily] summary writer failed on rerun; keeping the earlier top: {br.describe_failure(exc)}", flush=True)
+        summary = None
+    if summary:
+        record["summary"] = {"headline": summary.headline, "the_day": summary.the_day}
+        record["cross_theater"] = [c.model_dump() for c in summary.cross_theater]
+    now = datetime.now(UTC).isoformat()
+    record["researched"] = bool(record.get("researched")) or any(r.get("researched") for r in rows)
+    record.setdefault("corrections", []).extend(
+        {"theater_id": t.id, "name": t.name, "at": now,
+         "why": ("claims had lost their links to their sources; relinked from the saved research"
+                 if run.repair else "section rewritten after a fault in the first run"),
+         "research_reused": r.get("research_reused", False)} for t, r in zip(chosen, rows, strict=True))
+    desk._write(path, record)
+    result: dict[str, Any] = {"report": record, "path": str(path), "theaters": rows,
+                              "research_usd": round(sum(r["research_usd"] for r in rows), 4)}
+    if out is not None:
+        html = out / f"daily_{br.safe_name(run.domain)}.html"
+        html.write_text(render.render_daily(record), encoding="utf-8")
+        result["html"] = str(html)
+    return result
+
+
 def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, research: bool = False,
                   model_spec: Any = None, as_of: str, board: dict | None = None, out: Path | None = None,
-                  fresh_research: bool = False) -> dict:
+                  fresh_research: bool = False, only_theaters: Sequence[str] = (), repair: bool = False) -> dict:
     """Board -> per-theater sections -> world sweep (+ spotlight) -> summary -> persisted daily record. Returns
     a report with the record, a row per theater (research spend, forecasts settled, proposals, errors) and the
     HTML path.
@@ -633,6 +708,9 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
                fresh_research=fresh_research, store=store, table=br.pulse_catalog(store),
                countries=geo.load(),                       # the basemap places are validated against
                now=datetime.fromisoformat(f"{as_of}T23:59:59+00:00"))
+    if only_theaters:
+        run.repair = repair
+        return _rerun_theaters(run, board, theaters, heats, only_theaters, out=out)
     sections, rows = [], []
     today_focus = focus.plan(board, top, [domain])        # `top` is a ceiling; the world decides how many
     for tid in today_focus.focus:

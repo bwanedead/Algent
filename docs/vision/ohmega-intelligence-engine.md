@@ -90,6 +90,11 @@ graded research, and earns trust the way the best analytic shops do:
   Pulses with their 24h/7d moves, outlook and what to watch, and maps where they make it clearer
   (front lines and day-over-day territorial change for Russia–Ukraine first). Maps are only drawn
   from sources we may lawfully reuse, credited, and accurate enough to stake the brand on.
+  A fault in one theater never costs a whole new run: `intel daily --date D --theater <id|name>` rewrites only
+  that section of the day's existing record (every other section, the sweep and the spotlight stay as they were),
+  republishes, and notes the correction (when, why) in the record's `corrections`. `--repair` reuses the saved
+  research and, when its claims lost their links to their sources, ties them back with one cheap call (no new
+  research); research runs only if nothing is saved or `--fresh-research` is given.
 - **Pulses grow from the work.** Every daily report and brief feeds research into Pulses; when a
   theater bears on a dimension no Pulse measures, the writer proposes one, and proposals become
   stable Pulses through a registry agents can also read and propose to (one dimension, one Pulse).
