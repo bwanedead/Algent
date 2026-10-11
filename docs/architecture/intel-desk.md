@@ -131,3 +131,22 @@ chokepoint with lanes and ranges, a trajectory over terrain, a front line day by
   `preview` (and `asset` = the still, so older readers show an image).
 - **Viewer**: `components/Scene3D.tsx` loads three.js r160 from a pinned CDN when the figure scrolls into view; falls back
   to the still. Test bench: `/lab/scene` (examples in `sites/ohmega-monster/public/examples/`).
+
+## Maps (`geo.py`, `components/map/`, `/live`)
+- **Backend data (unchanged contract, additive)**: `geo.build_map` still emits the version-2 frame spec (SVG paths in a 1000-wide
+  equirectangular frame). New, backward compatible: `points[].lon/lat`, `annotations[].lon/lat`, `disputed[].rings` (unclipped
+  lon/lat polygons). Older records lack them; the site unprojects x/y from `bbox` (exact) and reads the SVG `d` for disputed areas.
+  `live/world.json` gains `gates` (the ship-counting lines).
+- **Interactive map**: one client component, `components/map/LiveMap.tsx` = MapLibre GL JS 4.7.1 (pinned CDN `<script>`, no npm
+  dependency; `maplibre.ts`) over OpenFreeMap vector tiles (free, keyless; `positron` for the paper theme, `dark` for dark-amber,
+  re-skinned in `mapStyle.ts`: roads/rails/buildings muted, borders clear). Data is declared as `LayerSpec`s (`mapLayers.ts`:
+  area / line / dots+cluster / heat / numbered). Callers: `GeoMap.tsx` (daily theaters + dossiers; `theaterLayers.ts`) and
+  `components/live/LiveWorldMap.tsx` (`liveLayers.ts`, per-kind toggles, detail card and list kept).
+- **Behaviour**: lazy (nothing fetched until the figure nears the viewport); cooperative gestures (a finger scrolls the page,
+  two move the map; Ctrl+wheel on desktop); keyboard pan/zoom plus a button list of marks; "Reset view"; "3D tilt" on theater maps
+  (pitch + AWS Terrain Tiles, optional); follows `data-theme`; OpenFreeMap/OSM attribution always visible.
+- **Fallback**: the home-drawn SVG (`GeoMapStatic.tsx`, `LiveWorldStatic.tsx`) shows while loading, with no JS, without WebGL, or
+  after a 15 s load failure (the theater then swaps to the full static figure with its own legend). The SVG pipeline remains the
+  source for X/social stills.
+- **Client rule**: `"use client"` map code imports only `import type` from `lib/daily`/`lib/dossier` and values only from
+  `lib/live-shared` (never anything reaching `lib/store.ts`).

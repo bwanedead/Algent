@@ -31,12 +31,15 @@ export type KeyFigure = {
   as_of: string;
   source: string;
 };
-export type MapPoint = { x: number; y: number; label: string; date: string; verification: "researched" | "reported"; n: number | null };
+/** `lon`/`lat` are the real coordinates (newer maps); older specs have only the frame x/y, which the interactive map unprojects from `bbox`. */
+export type MapPoint = { x: number; y: number; lon: number | null; lat: number | null; label: string; date: string; verification: "researched" | "reported"; n: number | null };
 export type MapCountryLabel = { name: string; x: number; y: number; r: number; key: boolean };
 export type MapCity = { name: string; x: number; y: number; capital: boolean };
 /** A disputed or occupied area (backend `geo_disputed`): hatched on the map, with a factual status note and its source. */
-export type MapDisputed = { name: string; d: string; note: string; status: string; claimants: string[]; source: string; x: number; y: number; r: number };
-export type MapAnnotation = { kind: string; x: number; y: number; title: string; lines: string[]; source: string };
+export type MapDisputed = { name: string; d: string; note: string; status: string; claimants: string[]; source: string; x: number; y: number; r: number;
+  /** Unclipped lon/lat polygons ([outer, ...holes] each, [lon, lat] pairs) for the interactive map; empty on older records. */
+  rings: number[][][][] };
+export type MapAnnotation = { kind: string; x: number; y: number; lon: number | null; lat: number | null; title: string; lines: string[]; source: string };
 export type MapLocator = { width: number; height: number; d: string; rect: { x: number; y: number; w: number; h: number } };
 /** Map spec. Version 1 (stored in past daily records) has only bbox/countries/points/credit; every v2 layer
  *  defaults to empty, so an old spec renders as land + marks. The geometry is the backend's (`geo.build_map`). */
@@ -238,6 +241,14 @@ function parseKeyFigure(raw: unknown): KeyFigure | null {
   };
 }
 
+/** Polygons as [[outer, ...holes], ...] of [lon, lat] pairs; anything malformed is dropped. */
+function parseRings(v: unknown): number[][][][] {
+  const pair = (q: unknown): number[] | null => (Array.isArray(q) && q.length >= 2 && num(q[0]) !== null && num(q[1]) !== null ? [q[0] as number, q[1] as number] : null);
+  return arr(v)
+    .map((poly) => arr(poly).map((ring) => arr(ring).map(pair).filter((q): q is number[] => q !== null)).filter((ring) => ring.length >= 3))
+    .filter((poly) => poly.length > 0);
+}
+
 export function parseMap(raw: unknown): TheaterMap | null {
   if (!isObj(raw)) return null;
   const width = dim(raw.width);
@@ -249,7 +260,7 @@ export function parseMap(raw: unknown): TheaterMap | null {
     .filter((c) => c.d !== "" && PATH_RE.test(c.d));
   const points = arr(raw.points)
     .filter(isObj)
-    .map((p) => ({ x: num(p.x), y: num(p.y), label: str(p.label), date: str(p.date), verification: oneOf(p.verification, ["researched", "reported"] as const, "reported"), n: num(p.n) }))
+    .map((p) => ({ x: num(p.x), y: num(p.y), lon: num(p.lon), lat: num(p.lat), label: str(p.label), date: str(p.date), verification: oneOf(p.verification, ["researched", "reported"] as const, "reported"), n: num(p.n) }))
     .filter((p): p is MapPoint => p.x !== null && p.y !== null && p.x >= 0 && p.x <= width && p.y >= 0 && p.y <= height);
   if (countries.length === 0 && points.length === 0) return null;
   const inFrame = (x: number | null, y: number | null): x is number => x !== null && y !== null && x >= 0 && x <= width && y >= 0 && y <= height;
@@ -260,13 +271,13 @@ export function parseMap(raw: unknown): TheaterMap | null {
     .filter((l): l is MapCountryLabel => l.name !== "" && inFrame(l.x, l.y));
   const disputed = arr(raw.disputed).filter(isObj)
     .map((a) => ({ name: str(a.name), d: str(a.d), note: str(a.note), status: str(a.status), claimants: strs(a.claimants),
-      source: /^https:\/\//.test(str(a.source)) ? str(a.source) : "", x: num(a.x), y: num(a.y), r: num(a.r) ?? 0 }))
+      source: /^https:\/\//.test(str(a.source)) ? str(a.source) : "", x: num(a.x), y: num(a.y), r: num(a.r) ?? 0, rings: parseRings(a.rings) }))
     .filter((a): a is MapDisputed => a.name !== "" && a.d !== "" && PATH_RE.test(a.d) && inFrame(a.x, a.y));
   const cities = arr(raw.cities).filter(isObj)
     .map((c) => ({ name: str(c.name), x: num(c.x), y: num(c.y), capital: c.capital === true }))
     .filter((c): c is MapCity => c.name !== "" && inFrame(c.x, c.y));
   const annotations = arr(raw.annotations).filter(isObj)
-    .map((a) => ({ kind: str(a.kind), x: num(a.x), y: num(a.y), title: str(a.title), lines: strs(a.lines), source: str(a.source) }))
+    .map((a) => ({ kind: str(a.kind), x: num(a.x), y: num(a.y), lon: num(a.lon), lat: num(a.lat), title: str(a.title), lines: strs(a.lines), source: str(a.source) }))
     .filter((a): a is MapAnnotation => a.title !== "" && inFrame(a.x, a.y));
   const sc = isObj(raw.scale) ? { km: num(raw.scale.km), px: num(raw.scale.px), label: str(raw.scale.label) } : null;
   const scale = sc && sc.km !== null && sc.px !== null && sc.px > 0 && sc.px <= width && sc.label ? { km: sc.km, px: sc.px, label: sc.label } : null;

@@ -40,7 +40,9 @@ export type LiveStat = {
 };
 
 /** The simplified world basemap the backend publishes as document `live/world.json`. */
-export type LiveWorld = { bbox: [number, number, number, number]; width: number; height: number; countries: { name: string; d: string }[]; credit: string };
+/** `gates` are the ship-counting lines ((lat, lon) ends), keyed by the same region slug as the ship stats; older documents have none. */
+export type LiveGate = { region: string; label: string; a: [number, number]; b: [number, number] };
+export type LiveWorld = { bbox: [number, number, number, number]; width: number; height: number; countries: { name: string; d: string }[]; gates?: LiveGate[]; credit: string };
 
 
 // ---- chokepoint tiles: our own daily ship count against its recent normal -------------------------------------
