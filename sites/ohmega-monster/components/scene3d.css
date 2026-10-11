@@ -1,0 +1,21 @@
+/* Interactive 3D scene viewer (components/Scene3D.tsx). Colours come from globals.css tokens. */
+.s3d { margin: 0; min-width: 0; }
+.s3d-wrap { position: relative; }
+.s3d-stage { position: relative; width: 100%; height: min(62vh, 520px); min-height: 280px; overflow: hidden; border: 1px solid var(--rule-strong, #888); background: var(--bg); outline-offset: 2px; }
+.s3d-canvas { display: block; width: 100%; height: 100%; }
+.s3d-overlay { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.s3d-label { position: absolute; left: 0; top: 0; white-space: nowrap; font-size: 11px; line-height: 14px; padding: 0 3px; color: var(--text); background: color-mix(in srgb, var(--bg) 70%, transparent); will-change: transform; }
+.s3d-scale { position: absolute; left: 10px; bottom: 8px; display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text); }
+.s3d-scale i { display: block; height: 6px; border: 1px solid var(--text); border-top: 0; }
+.s3d-cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: var(--bg); margin: 0; display: flex; align-items: center; justify-content: center; }
+.s3d-still { display: block; width: 100%; height: auto; border: 1px solid var(--rule-strong, #888); }
+.s3d-note { font-size: 12px; color: var(--text); }
+.s3d-bar, .s3d-time { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-top: 6px; font-size: 12px; }
+.s3d-hint { margin-left: auto; font-size: 11px; opacity: 0.7; }
+.s3d-btn { font: inherit; font-size: 12px; padding: 4px 10px; min-height: 32px; color: var(--text); background: transparent; border: 1px solid var(--rule-strong, #888); cursor: pointer; }
+.s3d-btn.is-on { border-color: var(--link-accent); color: var(--link-accent); }
+.s3d-time input[type="range"] { flex: 1 1 160px; min-width: 120px; min-height: 32px; }
+.s3d-date { font-variant-numeric: tabular-nums; }
+.s3d-alt { margin-top: 6px; font-size: 12px; }
+.s3d-alt summary { cursor: pointer; }
+@media (max-width: 639px) { .s3d-hint { margin-left: 0; width: 100%; } }

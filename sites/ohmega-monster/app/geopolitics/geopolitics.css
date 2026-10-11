@@ -211,6 +211,9 @@ button.geo-x-btn:hover .geo-more { color: var(--link-accent-hover); }
 .geo-sw-line { min-width: 0; overflow-wrap: anywhere; }
 .geo-sw-tag { margin-right: 8px; padding: 0 5px; border: 1px solid var(--accent-dim); color: var(--strong); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
 .geo-spotlight-label { margin: calc(var(--line) * 3) 0 0; color: var(--strong); }
+/* A later part of the day's single report: a light provenance tag on what it added, and an update sitting under the morning section. */
+.geo-edition-tag { color: var(--strong); letter-spacing: 0.06em; }
+.geo-theater.is-update { margin-top: calc(var(--line) * 1.5); padding-left: 12px; border-left: 2px solid var(--rule, currentColor); }
 
 /* ---- day navigator (components/DayNav.tsx) and its "All days" list (components/DailyArchive.tsx) -- */
 .geo-daynav { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 0 14px; align-items: baseline; min-width: 0; padding: 0 0 6px; font-size: 12px; line-height: 20px; }

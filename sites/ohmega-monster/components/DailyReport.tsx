@@ -3,7 +3,7 @@ import { Fragment } from "react";
 
 import Popover from "@/components/Popover";
 import type { Daily } from "@/lib/daily";
-import { claimOf, crossParts, fmtDay, isCut, shortTheater, theaterAnchor } from "@/lib/daily";
+import { claimOf, crossParts, editionTag, fmtDay, isCut, shortTheater, theaterAnchor } from "@/lib/daily";
 import { dossierIds } from "@/lib/dossier";
 import { fmtUtc, latestSnapshot } from "@/lib/intel";
 
@@ -119,8 +119,13 @@ export default async function DailyReport({ report, title }: { report: Daily; ti
         <span className="intel-strip-title">{title} · Daily</span>
         <span className="intel-strip-item">{fmtDay(report.date)}</span>
         <span className="intel-strip-item">
-          <span className="geo-micro">Built</span> {report.built_at ? fmtUtc(report.built_at) : "—"}
+          <span className="geo-micro">{report.editions.length > 1 ? "Updated" : "Built"}</span> {report.built_at ? fmtUtc(report.built_at) : "—"}
         </span>
+        {report.editions.length > 1 && (
+          <span className="intel-strip-item" title="The report is built in parts through the day; each section says which part added it">
+            <span className="geo-micro">Parts</span> {report.editions.map((e) => `${e.n} · ${e.cycle || e.label}`).join(" + ")}
+          </span>
+        )}
         <span className="intel-trust" title={report.researched ? "Developments were checked against sources" : "Built from headlines; not independently checked"}>
           {report.researched ? "Researched" : "From headlines"}
         </span>
@@ -153,7 +158,10 @@ export default async function DailyReport({ report, title }: { report: Daily; ti
       {report.theaters.map((t, i) => (
         <Fragment key={t.theater_id + i}>
           {t.spotlight && <p className="geo-spotlight-label geo-micro">Spotlight · an under-covered story, researched in full</p>}
-          <DailyTheaterSection t={t} id={theaterAnchor(t, i)} date={report.date} snap={snap} dossiers={dossiers} first={i === 0} />
+          <DailyTheaterSection t={t} id={theaterAnchor(t, i)} date={report.date} snap={snap} dossiers={dossiers} first={i === 0} tag={editionTag(report, t.edition)} />
+          {t.updates.map((u, k) => (
+            <DailyTheaterSection key={`${u.theater_id}-u${k}`} t={u} id={`${theaterAnchor(t, i)}-update-${k + 1}`} date={report.date} snap={snap} dossiers={dossiers} tag={editionTag(report, u.edition)} update />
+          ))}
         </Fragment>
       ))}
 

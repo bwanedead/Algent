@@ -189,7 +189,7 @@ def gather(board: dict, *, domain: str, focus_ids: set[str], as_of: str,
               if t.id not in focus_ids and (t.domain or "").lower() == domain.lower()]
     blocks.append(_library_block(board, mat, as_of, library))
     ev = evidence if evidence is not None else sensing_mod.across_theaters(as_of=as_of, days=WINDOW_DAYS)
-    mat.urls |= {norm_url(u) for u in ev.statement_urls | ev.instrument_urls}
+    mat.urls |= {norm_url(u) for u in ev.statement_urls | ev.instrument_urls | ev.live_urls}
     if ev.render().strip():
         blocks.append("STATEMENTS ON RECORD AND INSTRUMENT MOVES, ACROSS ALL ACTORS\n" + ev.render().strip())
     mat.urls.discard("")
@@ -197,9 +197,28 @@ def gather(board: dict, *, domain: str, focus_ids: set[str], as_of: str,
     return mat
 
 
-def recent_coverage(folder: Path, *, before: str) -> tuple[str, set[str]]:
+def _coverage_of(rec: dict, stem: str) -> tuple[list[str], set[str]]:
+    """One daily record's coverage as prompt lines (sections, flagged items, spotlight) and theater ids."""
+    lines, ids = [], set()
+    for sec in rec.get("theaters") or []:
+        ids.add(sec.get("theater_id", ""))
+        lines.append(f"- ({stem}) section: {sec.get('name', '')} — {str(sec.get('bottom_line', ''))[:160]}")
+        lines += [f"- ({stem}) update: {sec.get('name', '')} — {str(u.get('bottom_line', ''))[:160]}"
+                  for u in sec.get("updates") or []]
+    sweep = rec.get("sweep") or {}
+    for reg in sweep.get("regions") or []:
+        lines += [f"- ({stem}) flagged, {reg.get('region', '')}: {i.get('text', '')[:160]}"
+                  for i in reg.get("items") or []]
+    spot = sweep.get("spotlight") or {}
+    if spot.get("theater_id"):
+        ids.add(spot["theater_id"])
+    return lines, ids
+
+
+def recent_coverage(folder: Path, *, before: str, today: dict | None = None) -> tuple[str, set[str]]:
     """What the dailies of the last ``FOCUS_DROP_DAYS`` days covered (theater names and bottom lines, earlier
-    sweep items, earlier spotlights) as prompt text, and the theater ids that had a section or a spotlight."""
+    sweep items, earlier spotlights) as prompt text, and the theater ids that had a section or a spotlight.
+    ``today`` is the day's record so far, for a later edition: its earlier parts count as covered too."""
     floor = (date.fromisoformat(before) - timedelta(days=focus.FOCUS_DROP_DAYS)).isoformat()
     lines, ids = [], set()
     for path in sorted(folder.glob("*.json"), reverse=True) if folder.is_dir() else []:
@@ -209,16 +228,13 @@ def recent_coverage(folder: Path, *, before: str) -> tuple[str, set[str]]:
             rec = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, ValueError):
             continue
-        for sec in rec.get("theaters") or []:
-            ids.add(sec.get("theater_id", ""))
-            lines.append(f"- ({path.stem}) section: {sec.get('name', '')} — {str(sec.get('bottom_line', ''))[:160]}")
-        sweep = rec.get("sweep") or {}
-        for reg in sweep.get("regions") or []:
-            lines += [f"- ({path.stem}) flagged, {reg.get('region', '')}: {i.get('text', '')[:160]}"
-                      for i in reg.get("items") or []]
-        spot = sweep.get("spotlight") or {}
-        if spot.get("theater_id"):
-            ids.add(spot["theater_id"])
+        more, got = _coverage_of(rec, path.stem)
+        lines += more
+        ids |= got
+    if today:
+        more, got = _coverage_of(today, f"{before}, earlier today")
+        lines += more
+        ids |= got
     ids.discard("")
     return "\n".join(lines), ids
 
@@ -290,13 +306,16 @@ def regions_from_archive(archive: dict, *, known_iso: set[str] | None, spotlight
 def run(ask: Callable[[Any, str, str], Any], *, board: dict, domain: str, as_of: str, focus_ids: set[str],
         covered: list[str], covered_urls: set[str], folder: Path, known_iso: set[str] | None = None,
         library: Callable[[str], list[dict]] = library_material,
-        evidence: sensing_mod.Evidence | None = None, archive: dict | None = None) -> Sweep:
+        evidence: sensing_mod.Evidence | None = None, archive: dict | None = None,
+        today: dict | None = None, allow_spotlight: bool = True) -> Sweep:
     """Gather, ask once, validate. ``ask(schema, role, task)`` makes the model call (the daily's ``_ask``).
-    Raises only what ``ask`` raises; the caller decides that a failed sweep must not cost the day."""
+    Raises only what ``ask`` raises; the caller decides that a failed sweep must not cost the day.
+    ``today`` is the day's record so far (a later edition's sweep excludes what the earlier parts covered);
+    ``allow_spotlight=False`` keeps this call from nominating one (the day already has its spotlight)."""
     mat = gather(board, domain=domain, focus_ids=focus_ids, as_of=as_of, library=library, evidence=evidence)
     if mat.empty:
         return Sweep()
-    recent_text, recent_ids = recent_coverage(folder, before=as_of)
+    recent_text, recent_ids = recent_coverage(folder, before=as_of, today=today)
     task = (f"TODAY: {as_of}. Material is from the last {WINDOW_DAYS} days.\n\n"
             "ALREADY COVERED TODAY BY THE FOCUS SECTIONS (do not write about these):\n"
             + ("\n".join(f"- {c}" for c in covered) or "- (none)") + "\n\n"
@@ -308,7 +327,7 @@ def run(ask: Callable[[Any, str, str], Any], *, board: dict, domain: str, as_of:
     if archive is not None:         # the raw draft and what its guards need, for ``regions_from_archive``
         archive.update(draft=draft.model_dump(), urls=sorted(mat.urls), covered_urls=sorted(covered_urls))
     pairs = clean(draft, mat, covered_urls=covered_urls, known_iso=known_iso)
-    nominee, theater = _nominee(pairs, mat, recent_ids, domain)
+    nominee, theater = _nominee(pairs, mat, recent_ids, domain) if allow_spotlight else (None, None)
     spot = None
     if nominee is not None and theater is not None:
         rec = next(r for it, r in pairs if it is nominee)

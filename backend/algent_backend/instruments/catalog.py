@@ -21,6 +21,7 @@ unreviewed, so they are internal evidence only. Government and central-bank sour
 from __future__ import annotations
 
 from .contracts import Series
+from .live_series import LIVE_SERIES
 
 _PORTWATCH_PAGE = "https://portwatch.imf.org/"
 _PORTWATCH_LICENCE = "IMF PortWatch — open data, attribute IMF PortWatch; verify before public display"
@@ -128,6 +129,8 @@ CATALOG: list[Series] = [
 
     # --- risk ---
     _yahoo("risk_vix", "VIX (equity volatility index)", "index", "^VIX", ["risk", "volatility", "equities", "us"], _yf("%5EVIX")),
+    # --- our own counts from live feeds (AIS gates, ADS-B regions, FIRMS boxes): see instruments/live_series.py ---
+    *LIVE_SERIES,
 ]
 
 _BY_ID = {s.id: s for s in CATALOG}

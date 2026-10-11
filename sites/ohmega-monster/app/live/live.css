@@ -1,0 +1,83 @@
+/* /live and the "Live now" strips. Mobile first; colours are theme tokens except the map, which is a light
+   "printed" panel in both themes (same convention as the daily's maps). Marks differ by SHAPE as well as colour. */
+.live-page { display: grid; gap: 16px; }
+.live-h1 { margin: 0; font-size: 20px; line-height: 1.25; color: var(--strong); }
+.live-h2 { margin: 8px 0 4px; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.live-lede, .live-note { margin: 0; max-width: 70ch; color: var(--text); }
+.live-note { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+.live-muted { color: var(--muted); }
+.live-empty { color: var(--muted); margin: 8px 0; }
+.live-limits { margin: 0; padding-left: 18px; display: grid; gap: 6px; max-width: 70ch; color: var(--muted); font-size: 13px; }
+
+/* chokepoint tiles */
+.live-tiles { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.live-tile { border: 1px solid var(--rule); background: var(--panel); padding: 10px; min-width: 0; }
+.live-tile-name { margin: 0 0 4px; color: var(--strong); font-weight: 600; font-size: 13px; }
+.live-tile-num { margin: 0 0 6px; font-size: 13px; }
+.live-tile-num strong { font-size: 22px; color: var(--strong); }
+.live-tile-note { margin: 6px 0 0; font-size: 12px; color: var(--muted); }
+.live-bar { position: relative; height: 8px; background: var(--rule); }
+.live-bar-fill { position: absolute; inset: 0 auto 0 0; background: var(--accent); }
+.live-bar-fill.is-low { background: var(--ai); }
+.live-bar-usual { position: absolute; left: 50%; top: -3px; bottom: -3px; width: 2px; background: var(--strong); z-index: 1; } /* the usual day */
+
+/* map */
+.live-map-wrap { display: grid; gap: 10px; min-width: 0; }
+.live-layers { display: flex; flex-wrap: wrap; gap: 6px; }
+.live-layer { font: inherit; font-size: 12px; padding: 8px 10px; min-height: 40px; border: 1px solid var(--rule-strong); background: transparent; color: var(--muted); cursor: pointer; }
+.live-layer.is-on { color: var(--strong); border-color: var(--accent); background: var(--panel); }
+.live-layer:focus-visible, .live-row:focus-visible, .live-card-x:focus-visible { outline: 2px solid var(--link-accent); outline-offset: 2px; }
+.live-count { color: var(--muted); }
+.live-map { --map-sea: #cfe3f1; --map-land: #f4f1e8; --map-border: #8e98a3; margin: 0; }
+.live-map-svg { display: block; width: 100%; height: auto; border: 1px solid var(--rule-strong); background: var(--map-sea); }
+.live-map-sea { fill: var(--map-sea); }
+.live-map-land { fill: var(--map-land); stroke: var(--map-border); stroke-width: 0.6px; vector-effect: non-scaling-stroke; }
+.live-credit { margin-top: 4px; font-size: 10px; color: var(--muted); overflow-wrap: anywhere; }
+.live-hit { cursor: pointer; }
+.live-hit-area { fill: transparent; }
+.live-hit:focus-visible .live-hit-area { stroke: #0a57d0; stroke-width: 2px; }
+.live-mark { stroke: #fff; stroke-width: 1.5px; vector-effect: non-scaling-stroke; fill-opacity: 0.88; }
+.live-mark.is-on { stroke: #111; stroke-width: 2.5px; }
+.live-mark-outage { fill: #c0392b; }
+.live-mark-quake { fill: #d98a00; }
+.live-mark-aircraft { fill: #5b3fa0; }
+.live-mark-fire { fill: #e0561b; }
+.live-mark-ships circle:first-child { fill: #0a6b73; }
+.live-mark-core { fill: #fff; }
+.live-mark.is-major { stroke: #111; }
+/* legend glyphs and strip dots share the mark colours */
+.live-glyph-outage, .live-dot-outage { color: #c0392b; }
+.live-glyph-quake, .live-dot-quake { color: #d98a00; }
+.live-glyph-aircraft, .live-dot-aircraft { color: #8a6fd0; }
+.live-glyph-fire, .live-dot-fire { color: #e0561b; }
+.live-glyph-ships { color: #0a6b73; }
+
+/* detail card */
+.live-card { position: relative; border: 1px solid var(--accent-dim); background: var(--panel); padding: 12px 14px; max-width: 70ch; }
+.live-card-x { position: absolute; top: 2px; right: 2px; min-width: 40px; min-height: 40px; font: inherit; font-size: 20px; border: 0; background: transparent; color: var(--muted); cursor: pointer; }
+.live-card-kind { margin: 0; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.live-card-title { margin: 2px 32px 4px 0; font-size: 15px; color: var(--strong); }
+.live-card-when { margin: 0 0 6px; font-size: 12px; color: var(--muted); }
+.live-card-text { margin: 0 0 8px; }
+.live-card-src { margin: 0; font-size: 13px; }
+
+/* list under the map: the tap-friendly, accessible route to every item */
+.live-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.live-row { width: 100%; display: grid; grid-template-columns: 20px 1fr; gap: 2px 8px; align-items: baseline; text-align: left; font: inherit; font-size: 13px; padding: 9px 8px; min-height: 44px; border: 0; border-bottom: 1px solid var(--rule); background: transparent; color: var(--text); cursor: pointer; }
+.live-row.is-on { background: var(--panel); }
+.live-row-title { min-width: 0; overflow-wrap: anywhere; }
+.live-row-when { grid-column: 2; color: var(--muted); font-size: 12px; }
+
+/* "Live now" strip in theater sections and dossiers */
+.live-now { margin: 10px 0; padding: 8px 10px; border-left: 3px solid var(--accent); background: var(--panel); font-size: 13px; }
+.live-now-head { margin: 0 0 4px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); display: flex; gap: 10px; flex-wrap: wrap; }
+.live-now ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.live-now li { display: grid; grid-template-columns: 14px 1fr; gap: 6px; align-items: baseline; }
+.live-dot { width: 8px; height: 8px; background: currentColor; display: inline-block; }
+.live-dot-quake { border-radius: 50%; }
+
+@media (min-width: 640px) {
+  .live-row { grid-template-columns: 20px 1fr auto; }
+  .live-row-when { grid-column: auto; }
+  .live-h1 { font-size: 24px; }
+}

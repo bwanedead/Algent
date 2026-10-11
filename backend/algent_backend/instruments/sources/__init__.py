@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from typing import Callable
 
-from . import agsi, ecb, eurostat, fiscaldata, portwatch, treasury, yahoo
+from . import agsi, ecb, eurostat, fiscaldata, live, portwatch, treasury, yahoo
 
 PROVIDERS: dict[str, Callable] = {
     "portwatch": portwatch.fetch,
@@ -20,4 +20,5 @@ PROVIDERS: dict[str, Callable] = {
     "ecb": ecb.fetch,
     "eurostat": eurostat.fetch,
     "agsi": agsi.fetch,
+    "live": live.fetch,
 }

@@ -7,9 +7,18 @@
 #   ohmega-instruments  every 6 h      free public data series
 #   ohmega-statements   every 6 h      official statement transcripts (collection only, no extraction)
 #   ohmega-backup       daily 06:15    stores -> private algent-data archive
+#   ohmega-live-<feed>  every N min     free live feeds (ioda, usgs, adsb, firms; N from live/flags.py)
+#   ohmega-ais          always on        AIS chokepoint counter service (needs ALGENT_AISSTREAM_KEY; restarts always)
 #   ohmega-watchdog     every 2 min    kills paid runs over their time/spend limits (free; ops/flags.py)
+#   ohmega-menu         daily 05:00    PAID: newsroom menu (time: MENU_UTC in ops/flags.py)
+#   ohmega-daily-1      daily 05:30    PAID: geopolitics daily, part 1 Europe/Asia (time: EDITIONS in intel/flags.py)
+#   ohmega-daily-2      daily 17:30    PAID: geopolitics daily, part 2 Americas, appended to the same report
+# The three paid timers are operator-authorised and run unattended behind the watchdog; each job checks the kill
+# switch (SCHEDULED_PAID_RUNS), the runner claim and the spend halt before it spends (ops/schedule.py). Pause:
+# `sudo systemctl disable --now ohmega-menu.timer ohmega-daily-1.timer ohmega-daily-2.timer`.
 set -euo pipefail
 INFRA="$HOME/Algent/infra/server"
+LIVE_TIMERS=""
 
 unit() {   # name, command, OnCalendar
     sudo tee "/etc/systemd/system/ohmega-$1.service" >/dev/null <<EOF
@@ -45,8 +54,44 @@ unit statements  "$INFRA/jobs.sh statements"   "1/6:10"
 unit backup      "$INFRA/jobs.sh backup"       "*-*-* 06:15"
 unit watchdog    "$INFRA/jobs.sh watchdog"     "*:0/2"
 
+# Live feeds: one timer per feed, cadence from `newsroom live schedule` (live/flags.py is the single source).
+# Keyed feeds without their key just report it. A feed run is seconds long.
+while read -r feed minutes; do
+    unit "live-$feed" "$INFRA/jobs.sh live $feed" "*:0/$minutes"
+    LIVE_TIMERS="$LIVE_TIMERS live-$feed"
+done < <(cd "$HOME/Algent/backend" && .venv/bin/python -m algent_backend.cli newsroom live schedule)
+
+# The AIS counter is a long-running service, not a timer; it exits with a message (and is retried slowly) while
+# its free key is missing.
+sudo tee /etc/systemd/system/ohmega-ais.service >/dev/null <<EOF
+[Unit]
+Description=Ohmega AIS chokepoint counter
+After=network-online.target
+
+[Service]
+User=ohmega
+WorkingDirectory=/home/ohmega/Algent/backend
+ExecStart=/home/ohmega/Algent/backend/.venv/bin/python -m algent_backend.cli newsroom live ais
+Restart=always
+RestartSec=60
+Nice=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+
+# Paid jobs: the times live in the repo's flags, not here (`newsroom schedule times` prints "<job> <HH:MM>").
+PAID=""
+while read -r job hhmm; do
+    unit "$job" "$INFRA/jobs.sh $job" "*-*-* $hhmm:00"
+    PAID="$PAID $job"
+done < <(cd "$HOME/Algent/backend" && .venv/bin/python -m algent_backend.cli newsroom schedule times)
+[ -n "$PAID" ] || { echo "no paid jobs listed by 'newsroom schedule times'; refusing to continue" >&2; exit 1; }
+
 sudo systemctl daemon-reload
-for t in update library instruments statements backup watchdog; do
+for t in update library instruments statements backup watchdog $LIVE_TIMERS $PAID; do
     sudo systemctl enable --now "ohmega-$t.timer" >/dev/null
 done
+sudo systemctl enable --now ohmega-ais.service >/dev/null
 systemctl list-timers 'ohmega-*' --no-pager

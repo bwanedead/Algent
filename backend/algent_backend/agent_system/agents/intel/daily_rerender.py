@@ -23,7 +23,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
-from . import daily, daily_drafts, desk, geo, render
+from . import daily, daily_drafts, daily_editions, desk, geo, render
 from . import sweep as sweep_mod
 from .brief import safe_name
 from .contracts import DaySummary, Place
@@ -55,8 +55,8 @@ def rerender(domain: str, as_of: str, *, only: list[str] | tuple[str, ...] = (),
     path, record = _load_record(domain, as_of)
     if record is None:
         return {"error": f"no daily record at {path}"}
-    archive = daily_drafts.load(domain, as_of)
-    if archive is None:
+    archives = {n: daily_drafts.load(domain, as_of, n) for n in daily_drafts.editions_present(domain, as_of)}
+    if not archives:
         return {"error": f"no draft archive for {domain} {as_of} (it was produced before drafts were kept, so there "
                          f"is nothing to rerender; `--tag-places` can restore its places with one small call)"}
     countries = geo.load() if countries is None else countries
@@ -68,26 +68,35 @@ def rerender(domain: str, as_of: str, *, only: list[str] | tuple[str, ...] = (),
     except ValueError as exc:
         return {"error": str(exc)}
     now = datetime.fromisoformat(f"{as_of}T23:59:59+00:00")
-    redone, kept, sections = [], [], []
-    for sec in record.get("theaters") or []:
-        tid = sec.get("theater_id", "")
-        saved = archive["theaters"].get(tid)
+    redone, kept = [], []
+
+    def redo(sec: dict) -> dict:
+        """One section (or update) re-derived from its own edition's draft; left as published without one."""
+        tid, n = sec.get("theater_id", ""), sec.get("edition", 1)
+        saved = ((archives.get(n) or {}).get("theaters") or {}).get(tid)
         if tid not in chosen:
-            sections.append(sec)
-            continue
+            return sec
         if saved is None:                      # chosen, but its draft was never kept: left as published
             kept.append(tid)
-            sections.append(sec)
-            continue
+            return sec
         new, _ = daily.finish_section(saved["draft"], saved["inputs"], tid=tid, countries=countries, store=store,
                                       now=now, as_of=as_of, brief=desk.previous_brief(tid))
-        if sec.get("spotlight"):
-            new["spotlight"] = True
-        sections.append(new)
+        new["edition"] = n
+        for key in ("spotlight", "kind", "update_of"):      # what the slot is, not what the text says
+            if sec.get(key):
+                new[key] = sec[key]
         redone.append(tid)
+        return new
+
+    sections = []
+    for sec in record.get("theaters") or []:
+        new = redo(sec)
+        if sec.get("updates"):
+            new["updates"] = [redo(u) for u in sec["updates"]]
+        sections.append(new)
     record["theaters"] = sections
     if not only:
-        _rederive_top(record, archive, countries)
+        _rederive_top(record, archives, countries)
     desk._write(path, record)
     result: dict[str, Any] = {"report": record, "path": str(path), "redone": redone, "kept": kept,
                               "warnings": [] if countries else ["no basemap loaded: places and maps stay off the "
@@ -96,16 +105,29 @@ def rerender(domain: str, as_of: str, *, only: list[str] | tuple[str, ...] = (),
     return result
 
 
-def _rederive_top(record: dict, archive: dict, countries: list[geo.Country] | None) -> None:
-    """The summary's and the sweep's derived bits from their saved raw drafts (each only when it was saved)."""
-    if (raw := (archive.get("summary") or {}).get("draft")) is not None:
-        summary = daily.normalise_summary(DaySummary.model_validate(raw), record["theaters"])
-        record["summary"] = {"headline": summary.headline, "the_day": summary.the_day}
-        record["cross_theater"] = [c.model_dump() for c in summary.cross_theater]
-    if (arc := archive.get("sweep")) and isinstance(record.get("sweep"), dict):
-        known_iso = {k.upper() for c in (countries or ()) for k in (c.keys or ()) if len(k) == 2} or None
-        spot = (record["sweep"].get("spotlight") or {}).get("text", "")
-        record["sweep"]["regions"] = sweep_mod.regions_from_archive(arc, known_iso=known_iso, spotlight_text=spot)
+def _rederive_top(record: dict, archives: dict[int, dict | None], countries: list[geo.Country] | None) -> None:
+    """The summary's and the sweep's derived bits from their saved raw drafts, one edition at a time (each only
+    when it was saved). The last edition's summary is the day's; each part's ``editions`` row keeps its own, built
+    from the sections that existed at that part."""
+    known_iso = {k.upper() for c in (countries or ()) for k in (c.keys or ()) if len(k) == 2} or None
+    spot = ((record.get("sweep") or {}).get("spotlight") or {}).get("text", "")
+    regions: list[dict] | None = None
+    for n in sorted(archives):
+        arc = archives[n] or {}
+        upto = [{**s, "updates": [u for u in s.get("updates") or [] if u.get("edition", 1) <= n]}
+                for s in record["theaters"] if s.get("edition", 1) <= n]
+        if (raw := (arc.get("summary") or {}).get("draft")) is not None:
+            summary = daily.normalise_summary(DaySummary.model_validate(raw), upto)
+            record["summary"] = {"headline": summary.headline, "the_day": summary.the_day}
+            record["cross_theater"] = [c.model_dump() for c in summary.cross_theater]
+            for entry in record.get("editions") or []:
+                if entry.get("n") == n:
+                    entry["summary"] = dict(record["summary"])
+        if arc.get("sweep") and isinstance(record.get("sweep"), dict):
+            got = sweep_mod.regions_from_archive(arc["sweep"], known_iso=known_iso, spotlight_text=spot)
+            regions = got if regions is None else daily_editions.merge_regions(regions, got, n)
+    if regions is not None and isinstance(record.get("sweep"), dict):
+        record["sweep"]["regions"] = regions
 
 
 # ── the repair tool for days that have no archive ─────────────────────────────────────────────

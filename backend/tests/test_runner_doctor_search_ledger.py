@@ -114,6 +114,12 @@ class FakeProbes(doctor.Probes):
     def __init__(self, **kw):
         self.kw = kw
 
+    def timer_state(self, job):          # no systemd, no scheduler journal: the schedule check is covered in test_ops_schedule
+        return None
+
+    def scheduled_jobs(self):
+        return {}
+
     def db_select1(self):
         if "db_error" in self.kw:
             raise RuntimeError(self.kw["db_error"])
