@@ -58,7 +58,8 @@ worker server the file is `~/algent.env` (chmod 600), linked as `backend/.env` b
 | `DATABASE_URL` | Supabase Postgres (session-pooler URI) | `database/migrate.py`, `pulse/repository.py` | the database (once set up) |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | the **site's** read access (set in Vercel, not the backend). The anon key is public by design: RLS limits it to `published_*` rows. **Never put the service-role key or `DATABASE_URL` on the site.** | `sites/ohmega-monster/lib/store.ts` | unset: the site reads its content files |
 | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | **server-only** Storage writes: the backend uploads published images to the public bucket `published-assets` (REST; the key bypasses RLS). `SUPABASE_URL` is the same project URL as the site's public one. **The service-role key is a master key: backend/worker env only, never in Vercel, never in the site, never committed.** | `publishing/asset_store.py` | images stay in `public/` (the commit path); with `SITE_PUBLISH_VIA = "db"` a publish errors instead |
-| `ALGENT_JINA_KEY`, `ALGENT_AGSI_KEY` | optional: higher Jina limits; EU gas storage series | `depth/free_rungs.py`, `instruments` | optional |
+| `ALGENT_JINA_KEY` | optional: higher Jina limits | `depth/free_rungs.py` | optional |
+| `ALGENT_AGSI_KEY` | GIE AGSI+ API key (free registration at agsi.gie.eu): without it the `gas_eu_storage` series stays empty and reports "needs AGSI key (free registration)"; `newsroom instruments show` and `newsroom doctor` list it as overdue until set | `instruments/sources/agsi.py` | optional (operator registers) |
 
 **Not keys but per-machine logins** (subscription-funded, no API key): the chart harnesses `grok-build` (default)
 and `codex` (fallback) — each must be logged in on whichever machine runs analytics.

@@ -101,7 +101,7 @@ export default async function TheaterNumbersPanel({ numbers, name }: { numbers: 
   const { trackers, actors } = numbers;
   const known = new Set(await actorIds());
   const asOfYear = Number(numbers.as_of.slice(0, 4)) || new Date().getUTCFullYear();
-  const unusual = trackers.filter((t) => t.unusual).length;
+  const unusual = trackers.filter((t) => t.unusual && t.new).length;
   const rest = trackers.slice(TRACKERS_SHOWN);
   return (
     <section className="num-panel" aria-label={`Numbers and power: ${name}`}>
@@ -119,7 +119,7 @@ export default async function TheaterNumbersPanel({ numbers, name }: { numbers: 
         <div className="num-trackers">
           <p className="geo-micro">
             Flows and rates, dated
-            {unusual > 0 && <span className="num-hot"> · {unusual} outside its normal</span>}
+            {unusual > 0 && <span className="num-hot"> · {unusual} unusual now</span>}
           </p>
           <ul className="num-grid">
             {trackers.slice(0, TRACKERS_SHOWN).map((t) => (

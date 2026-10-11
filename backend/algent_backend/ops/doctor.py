@@ -317,6 +317,30 @@ def check_quota(probes: Probes) -> dict[str, Any]:
     return out
 
 
+def check_instruments() -> dict[str, Any]:
+    """Numbers-layer feeds judged against their own release cadence: a series with nothing stored or whose newest
+    reading is older than its cadence + lag allows is a broken feed (a weekly feed a week old is fine)."""
+    try:
+        from datetime import date
+
+        from algent_backend.instruments import freshness, store
+        from algent_backend.instruments.catalog import CATALOG
+
+        if not store.stored_ids():
+            return {"instruments": _check(OK, "no instrument store on this machine (numbers layer not collected here)")}
+        bad = []
+        for s in CATALOG:
+            hist = store.history(s.id)
+            if not hist:
+                bad.append(f"{s.id} (nothing stored)")
+            elif (f := freshness.assess(s, hist[-1].period, date.today()))["status"] == "overdue":
+                bad.append(f"{s.id} ({f['note']})")
+    except Exception as exc:  # noqa: BLE001 - a readiness aid must not crash the doctor
+        return {"instruments": _check(WARN, f"unknown: {scrub(exc)}")}
+    return {"instruments": _check(WARN, f"{len(bad)} overdue/empty feeds: {'; '.join(bad)}") if bad
+            else _check(OK, "every feed is as fresh as its cadence allows")}
+
+
 def run_checks(env: dict[str, str] | None = None, probes: Probes | None = None,
                repo: Path | None = None) -> dict[str, Any]:
     env = dict(os.environ if env is None else env)
@@ -325,7 +349,7 @@ def run_checks(env: dict[str, str] | None = None, probes: Probes | None = None,
     checks: dict[str, Any] = {}
     for part in (check_keys(env), check_database(env, probes), check_search(env, probes), check_reads(probes),
                  check_harnesses(probes), check_publish(env, probes, repo), check_runner(probes),
-                 check_system(probes), check_watchdog(probes), check_quota(probes)):
+                 check_system(probes), check_watchdog(probes), check_quota(probes), check_instruments()):
         checks.update(part)
     counts = {s: sum(1 for c in checks.values() if c["status"] == s) for s in (OK, WARN, FAIL)}
     return {"ok": counts[FAIL] == 0, "summary": f"{counts[OK]} ok, {counts[WARN]} warn, {counts[FAIL]} fail",

@@ -18,7 +18,8 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
-Frequency = Literal["daily", "weekly", "monthly"]
+Frequency = Literal["daily", "weekly", "monthly"]      # spacing of the stored PERIODS
+Cadence = Literal["daily", "weekly", "monthly", "annual"]  # how often the SOURCE publishes new ones (see freshness.py)
 
 
 class Series(BaseModel):
@@ -26,6 +27,8 @@ class Series(BaseModel):
     name: str                                 # reader-facing label
     unit: str                                 # "ships/day", "USD/bbl", "%" ...
     frequency: Frequency
+    cadence: Cadence = "daily"                # how often the source releases new readings (PortWatch: weekly, though each row is a day)
+    lag_days: int = 1                         # typical days between the end of a period and its publication
     source: str                               # who publishes it, human-readable ("IMF PortWatch")
     source_url: str                           # human-readable page to cite (NOT the API endpoint)
     fetcher: str                              # provider module in ``sources/``

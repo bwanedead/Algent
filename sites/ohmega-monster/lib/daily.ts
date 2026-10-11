@@ -80,7 +80,20 @@ export type Tracker = {
   unusual: boolean;
   reasons: string[];
   outside: boolean;
+  /** Plain words for a long-run departure ("lowest in 6 years of data"); empty when not outside. */
+  outside_note: string;
   percentile_1y: number | null;
+  /** How often the source publishes (a weekly feed is not stale between releases). */
+  cadence: "daily" | "weekly" | "monthly" | "annual";
+  /** "overdue" = older than the source's cadence and lag allow: a feed problem, not a quiet source. */
+  status: "current" | "overdue";
+  /** "weekly data · latest week to 4 Oct" */
+  note: string;
+  /** The change horizon that is this series' natural step ("prev" or "7d") and its words ("prior week"). */
+  step_key: TrackerHorizon;
+  step_label: string;
+  /** False for a standing reading of a weekly/monthly source that has not changed since yesterday's report. */
+  new: boolean;
   spark: number[];
 };
 /** One annual statistic of a state: its own year, world rank, source key (wb | owid | imf | bis) and up to ten years of trend. */
@@ -273,7 +286,14 @@ function parseTracker(raw: unknown): Tracker | null {
     unusual: raw.unusual === true,
     reasons: strs(raw.reasons),
     outside: raw.outside === true,
+    outside_note: str(raw.outside_note),
     percentile_1y: num(raw.percentile_1y),
+    cadence: oneOf(raw.cadence, ["daily", "weekly", "monthly", "annual"] as const, "daily"),
+    status: raw.status === "overdue" ? "overdue" : "current",
+    note: str(raw.note),
+    step_key: oneOf(raw.step_key, HORIZONS, "prev"),
+    step_label: str(raw.step_label) || "previous reading",
+    new: raw.new !== false,
     spark: arr(raw.spark).map(num).filter((n): n is number => n !== null),
   };
 }

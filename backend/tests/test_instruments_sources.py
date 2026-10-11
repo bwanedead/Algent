@@ -81,7 +81,7 @@ def test_agsi_keyless_denial_degrades_to_unavailable(monkeypatch):
     with pytest.raises(SourceUnavailable):
         agsi.parse(read("agsi_denied.json"), s, T)
     monkeypatch.delenv(agsi.KEY_ENV, raising=False)
-    with pytest.raises(SourceUnavailable, match="API key"):
+    with pytest.raises(SourceUnavailable, match="needs AGSI key"):
         agsi.fetch(s, None)       # no key: refuses before any network call
 
 

@@ -6,6 +6,14 @@ Series ids are permanent: they name the store file and are cited by consumers. `
 situation matches against — put the region, the actors and the dynamic ("hormuz", "iran", "gulf",
 "shipping", "energy") so a desk working on any of them finds the number.
 
+Every series declares its release ``cadence`` (how often the SOURCE publishes) and ``lag_days`` (typical days
+from the end of a period to its publication); ``freshness.py`` judges "current" vs "overdue" against them, so a
+weekly feed is never read as a broken daily one. Bases: PortWatch refreshes weekly (Tuesdays) with data to the
+previous weekend, so ~7 days behind (observed: latest row 4 Oct on 11 Oct, a manual refetch returned nothing
+newer); Yahoo, US Treasury and ECB publish each business day (next-day lag at most); Treasury FiscalData's debt
+to the penny posts ~2 business days late; GIE AGSI+ posts the previous gas day each evening (revisions land the
+next day); Eurostat's HICP flash estimate lands within ~2 days of month end (final figures ~17th).
+
 Yahoo-backed series are ``public_display=False``: the endpoint is unofficial and its terms are
 unreviewed, so they are internal evidence only. Government and central-bank sources are public.
 """
@@ -33,7 +41,8 @@ def chokepoint_sites() -> list[dict]:
 def _chokepoint(slug: str, label: str, port: str, tags: list[str], lat: float, lon: float) -> list[Series]:
     """Two series per chokepoint: all-vessel transits and tanker transits (a Hormuz/oil lens)."""
     _SITES.append({"series_id": f"chk_{slug}_transits", "label": label, "lat": lat, "lon": lon})
-    common = dict(unit="ships/day", frequency="daily", source="IMF PortWatch", source_url=_PORTWATCH_PAGE,
+    common = dict(unit="ships/day", frequency="daily", cadence="weekly", lag_days=7,
+                  source="IMF PortWatch", source_url=_PORTWATCH_PAGE,
                   fetcher="portwatch", licence=_PORTWATCH_LICENCE, public_display=True,
                   tags=["chokepoint", "shipping", *tags])
     return [
@@ -72,7 +81,7 @@ CATALOG: list[Series] = [
            ["energy", "gas", "europe", "russia", "lng", "ttf"], _yf("TTF=F")),
     _yahoo("px_henry_gas", "Henry Hub natural gas (front month)", "USD/MMBtu", "NG=F",
            ["energy", "gas", "us", "lng"], _yf("NG=F")),
-    Series(id="gas_eu_storage", name="EU gas storage fill", unit="% full", frequency="daily",
+    Series(id="gas_eu_storage", name="EU gas storage fill", unit="% full", frequency="daily", lag_days=2,
            source="GIE AGSI+", source_url="https://agsi.gie.eu/", fetcher="agsi", params={"type": "eu"},
            tags=["energy", "gas", "europe", "russia", "storage"],
            licence="GIE AGSI+ — free, API key required (ALGENT_AGSI_KEY); attribute GIE; verify before public display",
@@ -106,12 +115,13 @@ CATALOG: list[Series] = [
     _yahoo("fx_usdrub", "USD/RUB", "RUB per USD", "USDRUB=X", ["fx", "russia", "ruble", "sanctions"], _yf("USDRUB=X")),
 
     # --- inflation & fiscal ---
-    Series(id="infl_ea_hicp", name="Euro-area inflation (HICP, annual rate)", unit="% y/y", frequency="monthly",
-           source="Eurostat", source_url="https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_manr/",
-           fetcher="eurostat", params={"dataset": "prc_hicp_manr", "filters": {"geo": "EA", "coicop": "CP00"}},
+    # prc_hicp_manr (COICOP) stopped updating in 2026-02 (stuck at 2025-12); Eurostat's ECOICOP-2 successor is prc_hicp_minr.
+    Series(id="infl_ea_hicp", name="Euro-area inflation (HICP, annual rate)", unit="% y/y", frequency="monthly", cadence="monthly", lag_days=3,
+           source="Eurostat", source_url="https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/",
+           fetcher="eurostat", params={"dataset": "prc_hicp_minr", "filters": {"geo": "EA", "coicop18": "TOTAL", "unit": "RCH_A"}},
            tags=["inflation", "europe", "ecb", "prices"],
            licence="Eurostat — reuse with attribution (Commission Decision 2011/833/EU)", public_display=True),
-    Series(id="fisc_us_debt", name="US total public debt outstanding", unit="USD trillion", frequency="daily",
+    Series(id="fisc_us_debt", name="US total public debt outstanding", unit="USD trillion", frequency="daily", lag_days=2,
            source="US Treasury FiscalData", source_url="https://fiscaldata.treasury.gov/datasets/debt-to-the-penny/",
            fetcher="fiscaldata", params={"field": "tot_pub_debt_out_amt", "scale": 1e12},
            tags=["fiscal", "debt", "us"], licence="US government work — public domain", public_display=True),
