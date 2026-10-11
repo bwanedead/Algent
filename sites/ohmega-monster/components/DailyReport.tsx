@@ -30,7 +30,7 @@ function TheDay({ items }: { items: string[] }) {
         ))}
       </ul>
       {more && (
-        <Popover label="The day, in full" triggerClassName="geo-link-btn" trigger={<>The day in full ({items.length}) ›</>}>
+        <Popover label="The day, in full" triggerClassName="geo-link-btn xt" trigger={<>The day in full ({items.length}) ›</>}>
           <div className="geo-pd">
             <p className="geo-pd-title">The day</p>
             <ul className="geo-plain">

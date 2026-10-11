@@ -5,7 +5,7 @@ Free to reuse with attribution (Eurostat copyright policy). JSON-stat stores val
 ``value`` map indexed by position in the cube; the catalog pins every dimension except time to one
 member, so the flat index equals the time position (checked, not assumed).
 
-Series params: ``dataset`` (e.g. ``prc_hicp_manr``), ``filters`` (dimension -> member).
+Series params: ``dataset`` (e.g. ``prc_hicp_minr``; the old ``prc_hicp_manr`` froze in 2026-02 when HICP moved to ECOICOP ver. 2, dimension ``coicop18``), ``filters`` (dimension -> member).
 """
 
 from __future__ import annotations

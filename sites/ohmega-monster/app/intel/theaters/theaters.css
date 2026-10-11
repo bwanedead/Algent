@@ -14,8 +14,9 @@
 .th-page > * { min-width: 0; }
 
 /* From the daily report: a theater's name links to its dossier. */
-body .geo a.th-dlink { color: inherit; text-decoration: underline dotted var(--rule-strong); text-underline-offset: 3px; }
-body .geo a.th-dlink:hover { color: var(--strong); text-decoration-color: var(--accent); }
+body .geo a.th-dlink { color: var(--link-accent); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--link-accent) 55%, transparent); text-underline-offset: 3px; }
+body .geo a.th-dlink:hover { color: var(--link-accent-hover); text-decoration-color: currentColor; }
+body .geo a.th-dlink:focus-visible { outline: 2px solid var(--link-accent); outline-offset: 2px; }
 
 .th-k { margin-right: 4px; color: var(--muted); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
 .th-when { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
@@ -25,9 +26,7 @@ body .geo a.th-dlink:hover { color: var(--strong); text-decoration-color: var(--
 .th-key .geo-v:first-child { margin-left: 0; }
 
 /* Popover triggers that are not tiles: plain text that looks like what it is. */
-button.th-link-btn { margin: 6px 16px 0 0; padding: 0; font: inherit; font-size: 11px; line-height: 20px; color: var(--muted); background: none; border: 0; cursor: pointer; text-align: left; text-decoration: underline dotted var(--rule-strong); text-underline-offset: 3px; }
-button.th-link-btn:hover { color: var(--strong); }
-button.th-link-btn:focus-visible { outline: 1px solid var(--accent-dim); outline-offset: 2px; }
+button.th-link-btn { margin: 6px 16px 0 0; padding: 0; font: inherit; font-size: 11px; line-height: 20px; background: none; border: 0; text-align: left; }
 
 /* ---- screen one: label, claim, meta strip, escalation trajectory --------------------------- */
 .th-crumb { margin: calc(var(--line) * 0.25) 0 0; font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }

@@ -83,7 +83,7 @@ function Pin({ f, lanes }: { f: TimelinePin; lanes: number }) {
 
 function AllOpen({ open }: { open: ForecastPin[] }) {
   return (
-    <Popover label={`All ${open.length} open forecasts`} triggerClassName="sit-linkbtn" wide trigger={<>All {open.length} open →</>}>
+    <Popover label={`All ${open.length} open forecasts`} triggerClassName="sit-linkbtn xt" wide trigger={<>All {open.length} open →</>}>
       <ol className="sit-all">
         {open.map((f) => (
           <li key={f.id}>

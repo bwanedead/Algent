@@ -7,6 +7,7 @@
 #   ohmega-instruments  every 6 h      free public data series
 #   ohmega-statements   every 6 h      official statement transcripts (collection only, no extraction)
 #   ohmega-backup       daily 06:15    stores -> private algent-data archive
+#   ohmega-watchdog     every 2 min    kills paid runs over their time/spend limits (free; ops/flags.py)
 set -euo pipefail
 INFRA="$HOME/Algent/infra/server"
 
@@ -42,9 +43,10 @@ unit library     "$INFRA/jobs.sh library"      "0/4:20"
 unit instruments "$INFRA/jobs.sh instruments"  "0/6:40"
 unit statements  "$INFRA/jobs.sh statements"   "1/6:10"
 unit backup      "$INFRA/jobs.sh backup"       "*-*-* 06:15"
+unit watchdog    "$INFRA/jobs.sh watchdog"     "*:0/2"
 
 sudo systemctl daemon-reload
-for t in update library instruments statements backup; do
+for t in update library instruments statements backup watchdog; do
     sudo systemctl enable --now "ohmega-$t.timer" >/dev/null
 done
 systemctl list-timers 'ohmega-*' --no-pager

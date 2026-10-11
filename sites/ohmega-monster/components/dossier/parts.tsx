@@ -23,7 +23,7 @@ export function Section({ id, title, lead, children, aside }: { id: string; titl
 /** "Earlier (12) ›": everything past the first screen, one click away, never a reflow. */
 export function Overflow({ label, trigger, wide = false, children }: { label: string; trigger: string; wide?: boolean; children: ReactNode }) {
   return (
-    <Popover label={label} triggerClassName="th-link-btn" trigger={<>{trigger} ›</>} wide={wide}>
+    <Popover label={label} triggerClassName="th-link-btn xt" trigger={<>{trigger} ›</>} wide={wide}>
       <div className="geo-pd">
         <p className="geo-pd-title">{label}</p>
         {children}

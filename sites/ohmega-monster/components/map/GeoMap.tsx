@@ -161,7 +161,7 @@ export default function GeoMap({ map, developments, label, initialK = DEFAULT_K 
               <>
                 <strong className="geo-strong">{area.name}</strong> — {area.note}{" "}
                 {area.source && <a href={area.source} target="_blank" rel="noopener noreferrer">Source</a>}{" "}
-                <button type="button" className="geo-link-btn geo-legend-close" onClick={() => setOpenArea(null)}>Close</button>
+                <button type="button" className="geo-link-btn geo-legend-close xt" onClick={() => setOpenArea(null)}>Close</button>
               </>
             ) : (
               <span className="geo-muted">Tap a hatched area for its status and source.</span>

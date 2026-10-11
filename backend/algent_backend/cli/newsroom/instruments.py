@@ -17,7 +17,7 @@ import json
 from datetime import date
 from typing import Any
 
-from algent_backend.instruments import store
+from algent_backend.instruments import freshness, store
 from algent_backend.instruments.catalog import CATALOG, get_series
 from algent_backend.instruments.collect import collect
 from algent_backend.instruments.evidence import moves_board
@@ -58,13 +58,17 @@ def run_show(args: Any) -> int:
         hist = store.history(s.id)
         return _emit({"series": s.model_dump(), "n_obs": len(hist),
                       "observations": [o.model_dump() for o in hist[-args.last:]]})
-    rows = []
+    rows, overdue = [], []
     for s in CATALOG:
         hist = store.history(s.id)
-        rows.append({"id": s.id, "name": s.name, "unit": s.unit, "frequency": s.frequency, "source": s.source,
-                     "public_display": s.public_display, "n_obs": len(hist),
+        fresh = freshness.assess(s, hist[-1].period, date.today()) if hist else None
+        if fresh is None or fresh["status"] == "overdue":
+            overdue.append(f"{s.id}: " + (fresh["note"] if fresh else "nothing stored (feed never worked?)"))
+        rows.append({"id": s.id, "name": s.name, "unit": s.unit, "frequency": s.frequency, "cadence": s.cadence,
+                     "lag_days": s.lag_days, "source": s.source, "public_display": s.public_display,
+                     "n_obs": len(hist), "freshness": fresh["note"] if fresh else "nothing stored",
                      "latest": {"period": hist[-1].period, "value": hist[-1].value} if hist else None})
-    return _emit({"store": str(store.store_dir()), "series": rows})
+    return _emit({"store": str(store.store_dir()), "overdue": overdue, "series": rows})
 
 
 def run_moves(args: Any) -> int:

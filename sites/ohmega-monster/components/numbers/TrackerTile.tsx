@@ -2,7 +2,7 @@ import Popover from "@/components/Popover";
 import type { Tracker, TrackerHorizon } from "@/lib/daily";
 import { shortDay } from "@/lib/daily";
 
-import { arrow, fmtChange, fmtValue, HORIZON_LABEL, PREV_LABEL, REASON, shortName } from "./format";
+import { arrow, fmtChange, fmtValue, HORIZON_LABEL, REASON, SECOND_KEY, shortName, STEP_SHORT } from "./format";
 import Sparkline from "./Sparkline";
 import "./numbers.css";
 
@@ -22,7 +22,11 @@ function Detail({ t }: { t: Tracker }) {
       <p className="geo-pd-big">
         <b>{fmtValue(t.value)}</b> {t.unit} <span className="geo-muted">as of {shortDay(t.as_of)}</span>
       </p>
-      {t.age_days > 2 && <p className="num-range">This source publishes with a lag: the latest reading is {t.age_days} days old at the time of this report.</p>}
+      <p className="num-range">
+        {t.note}
+        {t.status === "current" && t.cadence !== "daily" && ": new readings arrive on the source's own schedule, so this is the newest there is."}
+        {t.status === "overdue" && ": the source should have published since; the feed is being checked."}
+      </p>
       <Sparkline values={t.spark} large hot={t.unusual} label={`${shortName(t.name)}: shape of the series, latest ${fmtValue(t.value)} ${t.unit}`} />
       {lo !== null && hi !== null && (
         <p className="num-range">
@@ -35,7 +39,7 @@ function Detail({ t }: { t: Tracker }) {
           const c = t.changes[h]!;
           return (
             <li key={h}>
-              <span className="geo-muted">{h === "prev" ? `vs ${HORIZON_LABEL.prev} (${shortDay(c.from_period)})` : `vs ${HORIZON_LABEL[h]} ago`}</span>
+              <span className="geo-muted">{h === t.step_key ? `vs ${t.step_label} (${shortDay(c.from_period)})` : `vs ${HORIZON_LABEL[h]} ago`}</span>
               <span>
                 {fmtValue(c.from)} → <b className="geo-strong">{fmtValue(t.value)}</b>
               </span>
@@ -47,7 +51,7 @@ function Detail({ t }: { t: Tracker }) {
       {(t.unusual || t.outside) && (
         <p className="num-why">
           {t.unusual && <span className="num-hot">● Unusual: {t.reasons.map((r) => REASON[r] ?? r).join("; ") || "outside its own history"}. </span>}
-          {t.outside && <span>Outside everything this series has done in our record.</span>}
+          {t.outside && <span>{t.outside_note ? `${t.outside_note[0].toUpperCase()}${t.outside_note.slice(1)}.` : "Far from its usual level."}</span>}
         </p>
       )}
       <p className="geo-pd-foot">
@@ -65,13 +69,15 @@ function Detail({ t }: { t: Tracker }) {
 
 export default function TrackerTile({ t }: { t: Tracker }) {
   const name = shortName(t.name);
-  const prev = t.changes.prev;
-  const week = t.changes["7d"];
-  const flag = t.unusual ? "● unusual" : t.outside ? "outside its range" : "";
+  const prev = t.changes[t.step_key];
+  const secondKey = SECOND_KEY[t.cadence];
+  const second = t.changes[secondKey];
+  const flag = t.unusual && t.new ? "● unusual" : t.outside_note || (t.outside ? "far from its usual level" : "");
+  const dated = t.cadence === "daily" && t.status === "current" ? `as of ${shortDay(t.as_of)}` : t.note;
   return (
     <Popover
       label={`${t.name}: ${fmtValue(t.value)} ${t.unit}`}
-      triggerClassName={`num-tile${t.unusual ? " is-hot" : ""}`}
+      triggerClassName={`num-tile${t.unusual && t.new ? " is-hot" : ""}`}
       trigger={
         <>
           <span className="num-name">{name}</span>
@@ -81,22 +87,22 @@ export default function TrackerTile({ t }: { t: Tracker }) {
           <span className="num-chg">
             {prev ? (
               <span title={`${fmtValue(prev.from)} → ${fmtValue(t.value)} since ${prev.from_period}`}>
-                {fmtChange(t, prev)} <i>{PREV_LABEL[t.freq]}</i>
+                {fmtChange(t, prev)} <i>{STEP_SHORT[t.cadence]}</i>
               </span>
             ) : (
               <span className="geo-muted">first reading</span>
             )}
-            {week && (
-              <span title={`${fmtValue(week.from)} → ${fmtValue(t.value)} since ${week.from_period}`}>
-                {fmtChange(t, week)} <i>7d</i>
+            {second && (
+              <span title={`${fmtValue(second.from)} → ${fmtValue(t.value)} since ${second.from_period}`}>
+                {fmtChange(t, second)} <i>{secondKey}</i>
               </span>
             )}
           </span>
-          <Sparkline values={t.spark} hot={t.unusual} label={`${name}: shape over the plotted window; ${prev ? `${arrow(t.value - prev.from)} on the previous reading` : "first reading"}`} />
+          <Sparkline values={t.spark} hot={t.unusual && t.new} label={`${name}: shape over the plotted window; ${prev ? `${arrow(t.value - prev.from)} on the previous reading` : "first reading"}`} />
           <span className="num-flag">
             {flag}
             {flag ? " · " : ""}
-            {`as of ${shortDay(t.as_of)}`}
+            {dated}
           </span>
         </>
       }

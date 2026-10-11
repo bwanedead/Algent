@@ -56,8 +56,11 @@ def test_tracker_changes_are_from_to_and_internal_sources_carry_no_url() -> None
     t = numbers.tracker(_row("chk_hormuz_transits"), DAY)
     assert (t["id"], t["value"], t["as_of"], t["unit"]) == ("chk_hormuz_transits", 110.0, "2026-10-04", "ships/day")
     assert t["internal"] is False and t["source_url"].startswith("https://") and t["source"] == "IMF PortWatch"
-    assert t["changes"]["prev"] == {"from": 99.0, "from_period": "2026-10-03", "pct": 11.11}
-    assert set(t["changes"]) <= {"prev", "7d", "30d", "1y"} and t["spark"][-1] == 110.0
+    assert "prev" not in t["changes"]                                         # weekly feed: never a 1d delta
+    assert t["step_key"] == "7d" and t["step_label"] == "prior week" and t["cadence"] == "weekly"
+    assert t["changes"]["7d"]["from_period"] == "2026-09-27" and t["status"] == "current"
+    assert t["note"] == "weekly data · latest week to 4 Oct"
+    assert set(t["changes"]) <= {"7d", "30d", "1y"} and t["spark"][-1] == 110.0
     assert t["unusual"] is True and "change" in t["reasons"]
     _seed("px_brent", [100.0] * 59 + [200.0])                                # Yahoo: unreviewed terms
     b = numbers.tracker(_row("px_brent"), DAY)

@@ -161,9 +161,22 @@ def reusable_research(theater: Theater, *, focus: str = "", id_tag: str = "", on
     return found.model_dump(mode="json")
 
 
+def repaired_research(context: Any, theater: Theater, *, focus: str = "", id_tag: str = "",
+                      store: Any = None) -> dict | None:
+    """The saved profile for this commission, repaired when its claims lost their sources (one cheap
+    call, no research). None when nothing is saved or the repair found nothing to tie."""
+    from ..research.assembly import profile_id_for
+    from ..research.relink import repair_saved
+    from ..research.store import JsonProfileStore
+
+    pid = profile_id_for({"id": research_vector_id(theater, focus=focus, id_tag=id_tag)})
+    fixed = repair_saved(store or JsonProfileStore(), pid, context)
+    return fixed.model_dump(mode="json") if fixed is not None and fixed.is_complete else None
+
+
 def obtain_research(context: Any, config: Any, theater: Theater, *, fresh: bool = False, focus: str = "",
                     questions: tuple[str, ...] | None = None, id_tag: str = "",
-                    on_date: str = "") -> tuple[dict | None, bool]:
+                    on_date: str = "", repair: bool = False) -> tuple[dict | None, bool]:
     """Reuse the research we already have for this commission, else commission it. Returns
     ``(profile, reused)``. ``fresh`` forces new research (the operator asked for it). Research that comes
     back empty raises ``EmptyResearch`` (callers record it as ``research_error``)."""
@@ -171,6 +184,8 @@ def obtain_research(context: Any, config: Any, theater: Theater, *, fresh: bool 
         found = reusable_research(theater, focus=focus, id_tag=id_tag, on_date=on_date)
         if found:
             return found, True
+        if repair and (fixed := repaired_research(context, theater, focus=focus, id_tag=id_tag)):
+            return fixed, True
     return commission_research(context, config, theater, focus=focus, questions=questions, id_tag=id_tag), False
 
 
@@ -203,9 +218,13 @@ def commission_research(context: Any, config: Any, theater: Theater, *, focus: s
     if not SignalProfile.model_validate(profile).is_complete:
         # The store has already refused to let this replace a complete profile; the money is spent,
         # so say so upstream instead of letting the desk write from nothing as if it had researched.
+        audit = profile.get("link_audit") or {}
+        tried = (f"; a relink pass was attempted ({audit.get('relink_note') or 'no result'})"
+                 if audit.get("relink_attempted") else "")
         raise EmptyResearch(f"research for {theater.name!r} returned no sourced claims "
                             f"({len(profile.get('claim_ledger') or [])} claims, "
-                            f"{len(profile.get('source_ledger') or [])} sources)")
+                            f"{len(profile.get('source_ledger') or [])} sources, "
+                            f"dangling refs {sum(d.get('count', 0) for d in audit.get('dangling') or [])}){tried}")
     return profile
 
 

@@ -26,12 +26,10 @@ button.geo-link-btn,
 button.geo-fig,
 button.geo-ev-btn,
 button.geo-x-btn { font: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; text-align: left; cursor: pointer; }
-button.geo-link-btn { display: block; margin-top: 6px; color: var(--muted); font-size: 11px; line-height: 20px; text-decoration: underline dotted var(--rule-strong); text-underline-offset: 3px; }
-button.geo-link-btn:hover { color: var(--strong); }
+button.geo-link-btn { display: block; margin-top: 6px; font-size: 11px; line-height: 20px; }
 button.geo-fig:focus-visible,
 button.geo-ev-btn:focus-visible,
 button.geo-x-btn:focus-visible,
-button.geo-link-btn:focus-visible { outline: 1px solid var(--accent-dim); outline-offset: 2px; }
 
 /* Trust: one quiet pair of marks, solid = researched, hollow = reported (map, timeline, popovers). */
 .geo-v { display: inline-block; flex: none; width: 9px; height: 9px; border: 1.5px solid var(--strong); border-radius: 50%; vertical-align: -1px; }
@@ -62,9 +60,8 @@ body .geo-card a.geo-name:hover { text-decoration: underline; text-decoration-co
 /* A theater's Pulses as compact shared tiles; extras fold into a "+N" chip. Stale ones are muted. */
 .geo-tiles { display: flex; flex-wrap: wrap; align-items: stretch; gap: 5px; min-width: 0; }
 .geo-tiles > .pt { flex: 1 1 104px; max-width: 170px; }
-button.geo-more-chip { align-self: center; padding: 2px 7px; font: inherit; font-size: 11px; color: var(--muted); background: none; border: 1px solid var(--rule-strong); cursor: pointer; }
-button.geo-more-chip:hover { color: var(--strong); border-color: var(--accent); }
-button.geo-more-chip:focus-visible { outline: 1px solid var(--accent-dim); outline-offset: 2px; }
+button.geo-more-chip { align-self: center; padding: 2px 7px; font: inherit; font-size: 11px; background: none; border: 1px solid var(--link-accent); text-decoration: none; }
+button.geo-more-chip:hover { border-color: var(--link-accent-hover); }
 
 .geo-delta { color: var(--muted); font-size: 11px; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .geo-delta.is-moving { color: var(--accent); }
@@ -201,6 +198,8 @@ body .geo .geo-x-names a { color: var(--strong); font-weight: 600; text-decorati
 button.geo-x-btn { display: flex; align-items: baseline; gap: 8px; width: 100%; min-width: 0; line-height: 20px; }
 .geo-x-line { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
 button.geo-x-btn:hover .geo-x-line { color: var(--strong); }
+button.geo-x-btn .geo-more { color: var(--link-accent); font-weight: 700; }
+button.geo-x-btn:hover .geo-more { color: var(--link-accent-hover); }
 
 /* ---- around the world (components/DailySweep.tsx) and the spotlight label ----------------------- */
 .geo-sweep { margin-top: calc(var(--line) * 3); min-width: 0; }
@@ -223,9 +222,7 @@ button.geo-x-btn:hover .geo-x-line { color: var(--strong); }
 .geo-daynav-mid { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 0 10px; min-width: 0; }
 .geo-daynav-cur { color: var(--strong); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .intel-page .geo-daynav a.geo-daynav-latest { color: var(--muted); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
-button.geo-daynav-all { font: inherit; font-size: 11px; color: var(--muted); background: none; border: 0; padding: 0; margin: 0; cursor: pointer; text-decoration: underline dotted var(--rule-strong); text-underline-offset: 3px; white-space: nowrap; }
-button.geo-daynav-all:hover { color: var(--strong); }
-button.geo-daynav-all:focus-visible { outline: 1px solid var(--accent-dim); outline-offset: 2px; }
+button.geo-daynav-all { font: inherit; font-size: 11px; background: none; border: 0; padding: 0; margin: 0; white-space: nowrap; }
 
 .geo-archive { min-width: 0; }
 .geo-arch-month + .geo-arch-month { margin-top: 10px; }

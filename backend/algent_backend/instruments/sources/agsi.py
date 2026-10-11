@@ -37,7 +37,7 @@ def parse(text: str, series: Series, fetched_at: str) -> list[Observation]:
 def fetch(series: Series, since: date | None) -> list[Observation]:
     key = os.environ.get(KEY_ENV)
     if not key:
-        raise SourceUnavailable(f"{URL} needs an API key — set {KEY_ENV} (free at agsi.gie.eu)")
+        raise SourceUnavailable(f"needs AGSI key (free registration at agsi.gie.eu): set {KEY_ENV}")
     start = since or date.today() - timedelta(days=30)
     text = get(URL, {"type": series.params.get("type", "eu"), "from": start.isoformat(),
                      "to": date.today().isoformat(), "size": 300}, headers={"x-key": key})

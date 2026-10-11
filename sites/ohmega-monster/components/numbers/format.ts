@@ -26,9 +26,13 @@ export function fmtChange(t: Tracker, c: TrackerChange): string {
   return `${arrow(delta)} ${sign}${p < 10 ? p.toFixed(1) : Math.round(p)}%`;
 }
 
-/** Label of the previous-reading horizon, by how often the series is published. */
-export const PREV_LABEL: Record<Tracker["freq"], string> = { daily: "1d", weekly: "1w", monthly: "1mo" };
 export const HORIZON_LABEL: Record<TrackerHorizon, string> = { prev: "previous reading", "7d": "7 days", "30d": "30 days", "1y": "1 year" };
+
+/** Short chip label for a tracker's main change, by how often the source publishes. */
+export const STEP_SHORT: Record<Tracker["cadence"], string> = { daily: "1d", weekly: "1w", monthly: "1mo", annual: "1y" };
+
+/** The secondary change a tile shows beside the main one, in the series' own natural step (never 7d on a weekly feed). */
+export const SECOND_KEY: Record<Tracker["cadence"], TrackerHorizon> = { daily: "7d", weekly: "30d", monthly: "1y", annual: "1y" };
 
 /** A reader-sized name: drops bracketed qualifiers and "daily vessel transits" wordiness. */
 export function shortName(name: string): string {
@@ -39,6 +43,6 @@ export function shortName(name: string): string {
 }
 
 export const REASON: Record<string, string> = {
-  change: "today's move is large against this series' own history",
+  change: "the latest move is large against this series' own history",
   level: "the level is far from where it sat over the past year",
 };

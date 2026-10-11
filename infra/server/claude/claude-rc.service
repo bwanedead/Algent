@@ -1,0 +1,19 @@
+# Always-on Claude Code operator on the worker server, reachable from the Claude app via Remote Control.
+# Install (as ohmega): infra/server/claude/install.sh. Docs: docs/guides/worker-server.md "Operator agent".
+# Server mode exits after ~10 min offline; systemd brings it back. Permission prompts go to the phone.
+[Unit]
+Description=Claude Code Remote Control (ohmega operator)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=%h/Algent
+Environment=PATH=%h/.local/bin:%h/.grok/bin:/usr/local/bin:/usr/bin:/bin
+# Remote Control refuses API-key auth; make sure none leaks in from the app env.
+UnsetEnvironment=ANTHROPIC_API_KEY ANTHROPIC_AUTH_TOKEN ANTHROPIC_BASE_URL
+ExecStart=%h/.local/bin/claude remote-control --name ohmega-server --spawn same-dir
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=default.target

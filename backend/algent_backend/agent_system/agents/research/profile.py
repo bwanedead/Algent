@@ -209,6 +209,26 @@ class ProfileAdditions(BaseModel):
     note: str = ""
 
 
+class DanglingRefs(BaseModel):
+    kind: str          # e.g. claim.supported_by
+    count: int = 0
+
+
+class LinkAudit(BaseModel):
+    """How well the model's references survived assembly (harness-written, never model).
+
+    ``dangling`` counts refs that pointed at nothing and were dropped, by kind (e.g.
+    ``claim.supported_by``). ``relink_attempted`` / ``claims_relinked`` record the one repair pass
+    run when the claims lost their links to sources. It travels with the profile, so a desk that
+    commissioned the research (and leaves no run folder) can still say what happened.
+    """
+
+    dangling: list[DanglingRefs] = Field(default_factory=list)
+    relink_attempted: bool = False
+    claims_relinked: int = 0
+    relink_note: str = ""
+
+
 class SignalProfile(BaseModel):
     """t2 — the researched knowledge object (the asset). An article is a view of this.
 
@@ -261,6 +281,7 @@ class SignalProfile(BaseModel):
     generated_at: str = ""           # when this profile was built
     generator: str = ""              # agent id / version that built it
     model: str = ""                  # model that produced it
+    link_audit: LinkAudit | None = None  # HARNESS-written: refs dropped in assembly + relink outcome
 
     @property
     def is_complete(self) -> bool:

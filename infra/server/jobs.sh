@@ -9,6 +9,8 @@
 set -euo pipefail
 cd "$HOME/Algent/backend"
 PY=".venv/bin/python"
+# The watchdog must fire while a long job holds the lock below, so it runs before (and without) it.
+if [ "${1:-}" = "watchdog" ]; then exec $PY -m algent_backend.cli newsroom watchdog; fi
 exec 9>"$HOME/.ohmega-jobs.lock"
 flock -w 3600 9
 

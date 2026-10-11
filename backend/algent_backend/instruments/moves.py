@@ -36,6 +36,7 @@ from datetime import date, timedelta
 from statistics import mean, median, pstdev
 from typing import Any
 
+from . import freshness
 from .contracts import Observation, Series, period_date
 
 Z_LIMIT = 2.0
@@ -105,6 +106,7 @@ def compute(points: list[Point], today: date | None = None) -> dict[str, Any] | 
     reasons = [name for name, z in (("change", change_z), ("level", level_z)) if beyond(z)]
     out.update(change_z=_round(change_z), level_z=_round(level_z), long_run_z=_round(long_z),
                long_run_outside=beyond(long_z), unusual=bool(reasons), unusual_reasons=reasons)
+    out["outside_note"] = _outside_note(points, long_z) if beyond(long_z) else ""
 
     first = points[0][0]
     for key, pick in (("new_high", max), ("new_low", min)):
@@ -117,6 +119,24 @@ def compute(points: list[Point], today: date | None = None) -> dict[str, Any] | 
             if covered and latest[1] == pick(prior + [latest[1]]) and set(prior) != {latest[1]}:
                 out[key] = label
     return out
+
+
+def _plain(x: float) -> str:
+    return f"{x:,.0f}" if abs(x) >= 100 else f"{x:,.3g}"
+
+
+def _outside_note(points: list[Point], z: float | None | str) -> str:
+    """The long-run departure in plain words, from the stored history only: 'lowest in 6 years of data' when
+    the latest reading is the record, else 'far below its usual level (about 80)'."""
+    prior = [v for _, v in points[:-1]]
+    latest, days = points[-1][1], (points[-1][0] - points[0][0]).days
+    span = f"{round(days / 365.25)} years" if days >= 730 else f"{max(1, round(days / 30.4))} months"
+    if latest <= min(prior):
+        return f"lowest in {span} of data"
+    if latest >= max(prior):
+        return f"highest in {span} of data"
+    below = z < 0 if isinstance(z, float) else latest < prior[0]
+    return f"far {'below' if below else 'above'} its usual level (about {_plain(median(prior))})"
 
 
 def _round(z: float | None | str) -> float | None | str:
@@ -132,6 +152,9 @@ def series_moves(series: Series, observations: list[Observation], as_of: date | 
     body = compute(sorted(pts), today=as_of or today)
     if body is None:
         return None
+    fresh = freshness.assess(series, body["latest"]["period"], as_of or today or date.today())
     return {"series_id": series.id, "name": series.name, "unit": series.unit, "frequency": series.frequency,
+            "freshness": fresh, "step_key": freshness.step_key(series),
+            "step_label": freshness.STEP_LABEL[series.cadence],
             "source": series.source, "source_url": series.source_url, "public_display": series.public_display,
             "tags": series.tags, **body}

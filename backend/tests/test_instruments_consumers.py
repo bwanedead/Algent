@@ -47,7 +47,8 @@ def test_evidence_block_format():
     line = lines[1]
     assert "[chk_hormuz_transits]" in line and "2 ships/day" in line and "UNUSUAL" in line
     assert "at 90d low" in line and "source: IMF PortWatch https://portwatch.imf.org/" in line
-    assert "vs prev" in line and "1y percentile" in line
+    assert "vs prior week" in line and "vs prev" not in line and "1y percentile" in line
+    assert "weekly data" in line and "latest week to 10 Oct" in line
 
 
 def test_evidence_block_empty_when_nothing_matches_or_stored():
@@ -113,3 +114,21 @@ def test_cli_fetch_uses_collector(capsys, monkeypatch):
     monkeypatch.setitem(PROVIDERS, "portwatch", lambda s, since: [mk(s.id, "2026-10-01", 7.0)])
     rep = run_cli(capsys, "fetch", "--series", "chk_hormuz_transits")
     assert rep["ok"] == 1 and rep["series"][0]["new"] == 1
+
+
+def test_a_weekly_reading_is_a_move_only_on_the_day_it_lands():
+    seed_hormuz()
+    sid, today = "chk_hormuz_transits", date.today()
+    path = store.store_dir() / "series" / f"{sid}.jsonl"
+
+    def stamp(day):
+        lines = [o.model_copy(update={"fetched_at": f"{day.isoformat()}T06:00:00+00:00"}).model_dump_json() for o in store.log(sid)]
+        path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    stamp(today - timedelta(days=3))
+    row = moves_board(["hormuz"])[0]
+    assert row["unusual"] and row["new"] is False                        # still unusual, but not news today
+    text = evidence_block(["hormuz"])
+    assert "NOT a new reading today" in text and "UNUSUAL vs" not in text
+    stamp(today)
+    assert moves_board(["hormuz"])[0]["new"] is True

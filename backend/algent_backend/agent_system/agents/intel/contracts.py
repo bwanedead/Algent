@@ -264,6 +264,7 @@ class SectionDraft(BaseModel):
     """What the section writer returns; the engine adds temperature, Pulse numbers and the brief link."""
 
     bottom_line: str
+    headline: str = ""               # one complete standalone sentence, <= ~20 words: the section's title line
     escalation: DailyEscalation = Field(default_factory=DailyEscalation)
     since_yesterday: list[DailyChange] = Field(default_factory=list)
     developments: list[Development] = Field(default_factory=list)

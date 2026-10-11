@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { CoverSpark } from "@/components/DailyVisuals";
 import Popover from "@/components/Popover";
-import { claimOf, isCut } from "@/lib/daily";
+import { headlineOf, isCut } from "@/lib/daily";
 import type { Dossier } from "@/lib/dossier";
 import { DIRECTION, dayLabel, escalationShift, isoDay, splitPrimer } from "@/lib/dossier-view";
 import { COVERAGE_DISPLAY } from "@/lib/intel";
@@ -16,7 +16,7 @@ import { Anchor, Section } from "./parts";
 
 export function DossierTop({ d }: { d: Dossier }) {
   const cur = d.current;
-  const claim = cur ? claimOf(cur.bottom_line, 160) : d.name;
+  const claim = cur ? headlineOf(cur.headline, cur.bottom_line, 160) : d.name;
   const shift = escalationShift(d.escalation_history);
   const dir = DIRECTION[cur?.direction ?? shift?.direction ?? "unclear"];
   const moving = (cur?.direction ?? shift?.direction) === "rising" || (cur?.direction ?? shift?.direction) === "easing";
@@ -33,7 +33,7 @@ export function DossierTop({ d }: { d: Dossier }) {
       </p>
       <h1 className="th-claim">{claim}</h1>
       {cur && isCut(cur.bottom_line, claim) && (
-        <Popover label={`Full assessment: ${d.name}`} triggerClassName="th-link-btn" trigger={<>Full assessment ›</>}>
+        <Popover label={`Full assessment: ${d.name}`} triggerClassName="th-link-btn xt" trigger={<>Full assessment ›</>}>
           <div className="geo-pd">
             <p className="geo-pd-title">{d.name}</p>
             <p className="geo-pd-text">{cur.bottom_line}</p>
@@ -97,7 +97,7 @@ export function DossierPrimer({ primer }: { primer: Dossier["primer"] }) {
         ))}
       </div>
       {rest && (
-        <Popover label="Background, in full" wide triggerClassName="th-link-btn" trigger={<>Read the rest ›</>}>
+        <Popover label="Background, in full" wide triggerClassName="th-link-btn xt" trigger={<>Read the rest ›</>}>
           <div className="geo-pd">
             {primer.text
               .split(/\n\s*\n/)

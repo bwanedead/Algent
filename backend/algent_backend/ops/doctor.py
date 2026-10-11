@@ -99,6 +99,11 @@ class Probes:
                               timeout=timeout, cwd=cwd)
         return done.returncode, (done.stdout + done.stderr).strip()
 
+    def basemap_loaded(self) -> bool:
+        from algent_backend.agent_system.agents.intel import geo
+
+        return bool(geo.load())
+
     def runner_status(self) -> dict[str, Any]:
         from algent_backend.data_backup import runner
 
@@ -108,6 +113,11 @@ class Probes:
         from algent_backend.agent_system.tools.sourcing.search import quota
 
         return quota.summary()
+
+    def watchdog_age_minutes(self) -> float | None:
+        from algent_backend.ops import watchdog
+
+        return watchdog.last_pass_age_minutes()
 
     def disk_free_gb(self) -> float:
         return shutil.disk_usage(Path(__file__).resolve().parents[3]).free / 1e9
@@ -288,6 +298,21 @@ def check_runner(probes: Probes) -> dict[str, Any]:
                                    "paid work and publishing", since=s.get("since"))}
 
 
+def check_watchdog(probes: Probes) -> dict[str, Any]:
+    from algent_backend.ops import flags
+
+    try:
+        age = probes.watchdog_age_minutes()
+    except Exception as exc:  # noqa: BLE001
+        return {"watchdog": _check(WARN, f"unknown: {scrub(exc)}")}
+    if age is None:
+        return {"watchdog": _check(WARN, "no pass logged (install the ohmega-watchdog timer: "
+                                         "infra/server/install_schedules.sh)")}
+    if age > flags.DOCTOR_STALE_MINUTES:
+        return {"watchdog": _check(WARN, f"last pass {age:.0f} min ago; is the ohmega-watchdog timer running?")}
+    return {"watchdog": _check(OK, f"last pass {age:.0f} min ago")}
+
+
 def check_quota(probes: Probes) -> dict[str, Any]:
     out: dict[str, Any] = {}
     for provider, row in probes.quota_summary().items():
@@ -295,6 +320,41 @@ def check_quota(probes: Probes) -> dict[str, Any]:
         status = OK if used < 0.8 * cap else WARN
         out[f"quota:{provider}"] = _check(status, f"{used}/{cap} this month")
     return out
+
+
+def check_instruments() -> dict[str, Any]:
+    """Numbers-layer feeds judged against their own release cadence: a series with nothing stored or whose newest
+    reading is older than its cadence + lag allows is a broken feed (a weekly feed a week old is fine)."""
+    try:
+        from datetime import date
+
+        from algent_backend.instruments import freshness, store
+        from algent_backend.instruments.catalog import CATALOG
+
+        if not store.stored_ids():
+            return {"instruments": _check(OK, "no instrument store on this machine (numbers layer not collected here)")}
+        bad = []
+        for s in CATALOG:
+            hist = store.history(s.id)
+            if not hist:
+                bad.append(f"{s.id} (nothing stored)")
+            elif (f := freshness.assess(s, hist[-1].period, date.today()))["status"] == "overdue":
+                bad.append(f"{s.id} ({f['note']})")
+    except Exception as exc:  # noqa: BLE001 - a readiness aid must not crash the doctor
+        return {"instruments": _check(WARN, f"unknown: {scrub(exc)}")}
+    return {"instruments": _check(WARN, f"{len(bad)} overdue/empty feeds: {'; '.join(bad)}") if bad
+            else _check(OK, "every feed is as fresh as its cadence allows")}
+
+
+def check_basemap(probes: Probes) -> dict[str, Any]:
+    """The Natural Earth basemap (untracked data) must load, or every daily map silently disappears."""
+    try:
+        loaded = probes.basemap_loaded()
+    except Exception as exc:  # noqa: BLE001
+        return {"basemap": _check(WARN, f"unknown: {scrub(exc)}")}
+    return {"basemap": _check(OK, "Natural Earth countries load") if loaded else _check(
+        WARN, "Natural Earth basemap missing: daily maps and places will be empty. Copy "
+              "analytics_workspace/data/natural_earth/ from a machine that has it (docs/guides/worker-server.md)")}
 
 
 def run_checks(env: dict[str, str] | None = None, probes: Probes | None = None,
@@ -305,7 +365,7 @@ def run_checks(env: dict[str, str] | None = None, probes: Probes | None = None,
     checks: dict[str, Any] = {}
     for part in (check_keys(env), check_database(env, probes), check_search(env, probes), check_reads(probes),
                  check_harnesses(probes), check_publish(env, probes, repo), check_runner(probes),
-                 check_system(probes), check_quota(probes)):
+                 check_system(probes), check_watchdog(probes), check_quota(probes), check_instruments(), check_basemap(probes)):
         checks.update(part)
     counts = {s: sum(1 for c in checks.values() if c["status"] == s) for s in (OK, WARN, FAIL)}
     return {"ok": counts[FAIL] == 0, "summary": f"{counts[OK]} ok, {counts[WARN]} warn, {counts[FAIL]} fail",

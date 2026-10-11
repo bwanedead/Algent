@@ -97,20 +97,23 @@ def tracker(row: dict[str, Any], day: date) -> dict[str, Any]:
     and carries no URL: it is never offered as a citation."""
     changes = {k: {"from": _sig(c["from_value"]), "from_period": c["from_period"],
                    "pct": round(c["pct"], 2) if c["pct"] is not None else None}
-               for k, c in row["changes"].items()}
+               for k, c in row["changes"].items() if k != "prev" or row["step_key"] == "prev"}   # never a 1d delta on weekly data
     internal = not row["public_display"]
     return {"id": row["series_id"], "name": row["name"], "unit": row["unit"], "freq": row["frequency"],
             "source": row["source"], "source_url": "" if internal else row["source_url"], "internal": internal,
             "value": _sig(row["latest"]["value"]), "as_of": row["latest"]["period"], "age_days": row["age_days"],
             "changes": changes, "unusual": bool(row["unusual"]), "reasons": list(row["unusual_reasons"]),
-            "outside": bool(row["long_run_outside"]), "percentile_1y": row["percentile_1y"],
+            "outside": bool(row["long_run_outside"]), "outside_note": row["outside_note"],
+            "percentile_1y": row["percentile_1y"], "cadence": row["freshness"]["cadence"],
+            "status": row["freshness"]["status"], "note": row["freshness"]["note"],
+            "step_key": row["step_key"], "step_label": row["step_label"], "new": bool(row.get("new", True)),
             "spark": spark(row["series_id"], day)}
 
 
 def trackers(rows: list[dict[str, Any]], day: date) -> list[dict[str, Any]]:
-    """A theater's matched flows and policy rates (``tracker_ok``), unusual ones first then sensing's relevance
-    order, at most ``MAX_TRACKERS``."""
-    ordered = sorted((r for r in rows if tracker_ok(r)), key=lambda r: not r["unusual"])    # stable inside each half
+    """A theater's matched flows and policy rates (``tracker_ok``), unusual-and-new ones first (a standing
+    weekly reading is not today's news) then sensing's relevance order, at most ``MAX_TRACKERS``."""
+    ordered = sorted((r for r in rows if tracker_ok(r)), key=lambda r: not (r["unusual"] and r.get("new", True)))    # stable inside each half
     return [tracker(r, day) for r in ordered[:MAX_TRACKERS]]
 
 

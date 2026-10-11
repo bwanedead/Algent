@@ -113,3 +113,32 @@ def test_as_of_replays_history():
     obs = [ob((date(2026, 1, 1) + timedelta(days=i)).isoformat(), float(i)) for i in range(30)]
     m = moves.series_moves(get_series("chk_hormuz_transits"), obs, as_of=date(2026, 1, 10))
     assert m["latest"]["period"] == "2026-01-10" and m["n_obs"] == 10
+
+
+def test_freshness_is_judged_against_the_sources_cadence() -> None:
+    from datetime import date
+
+    from algent_backend.instruments import freshness
+
+    weekly, daily, monthly = get_series("chk_hormuz_transits"), get_series("rate_ust_10y"), get_series("infl_ea_hicp")
+    today = date(2026, 10, 11)
+    assert freshness.assess(weekly, "2026-10-04", today)["status"] == "current"      # a week behind is normal for PortWatch
+    assert freshness.assess(weekly, "2026-09-20", today)["status"] == "overdue"
+    assert freshness.assess(daily, "2026-10-04", today)["status"] == "overdue"       # same age, a daily feed: broken
+    assert freshness.assess(monthly, "2026-09", today)["status"] == "current"
+    late = freshness.assess(monthly, "2026-07", today)
+    assert late["status"] == "overdue" and "overdue" in late["note"]
+    assert freshness.step_key(weekly) == "7d" and freshness.step_key(daily) == "prev"
+
+
+def test_outside_note_is_plain_words_from_the_stored_history() -> None:
+    from datetime import date, timedelta
+
+    from algent_backend.instruments.moves import compute
+
+    start = date(2020, 1, 1)
+    pts = [(start + timedelta(days=i), 80.0 + (i % 5)) for i in range(2000)]
+    low = compute(pts + [(pts[-1][0] + timedelta(days=1), 3.0)])
+    assert low["long_run_outside"] and low["outside_note"] == "lowest in 5 years of data"
+    mid = compute(pts + [(pts[-1][0] + timedelta(days=1), 3.0), (pts[-1][0] + timedelta(days=2), 27.0)])
+    assert mid["outside_note"].startswith("far below its usual level")

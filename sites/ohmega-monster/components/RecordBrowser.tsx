@@ -78,7 +78,7 @@ export default function RecordBrowser({ rows, fields = ["speaker", "by", "about"
         ))}
       </ul>
       {!all && shown.length > SHOWN && (
-        <button type="button" className="geo-link-btn" onClick={() => setAll(true)}>
+        <button type="button" className="geo-link-btn xt" onClick={() => setAll(true)}>
           Show all {shown.length} ›
         </button>
       )}

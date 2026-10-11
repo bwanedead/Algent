@@ -1,4 +1,4 @@
-import { flagEmojiToIso, flagImageUrl } from "@/lib/flags";
+import { countryName, flagEmojiToIso, flagImageUrl } from "@/lib/flags";
 
 type Props = {
   /** Regional-indicator emoji strings from article frontmatter (e.g. "🇦🇺"). */
@@ -18,7 +18,7 @@ export default function FlagRow({ flags, places = [], className = "feed-flags" }
     <span className={className} aria-label={places.length ? places.join(", ") : "Places"}>
       {flags.map((flag, i) => {
         const iso = flagEmojiToIso(flag);
-        const label = places[i] || iso || "place";
+        const label = places[i] || (iso ? countryName(iso) : "place");
         if (!iso) {
           return (
             <span key={`flag-${i}`} className="feed-flag-fallback" title={label}>

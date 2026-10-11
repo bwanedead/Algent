@@ -41,6 +41,18 @@ Logs: `journalctl -u ohmega-<job> -n 50`; timers: `systemctl list-timers 'ohmega
   and publishes, and the laptop can take over. Procedure: `docs/guides/runner-handover.md`.
 - `newsroom search-usage` shows how search is doing (who answers, free vs paid, failures).
 
+## Watchdog
+
+`ohmega-watchdog` (timer, every 2 min; `newsroom watchdog`) is the floor against runaway API bills. It needs no agent awake and spends nothing. Each pass finds running paid algent CLI processes (free jobs are ignored) and SIGTERMs, then after 20 s SIGKILLs, any that:
+
+- ran past its wall-clock limit (3 h for `intel daily`, `newsroom run`/`resume` and everything else),
+- spent over $15 on its own, or
+- push today's (UTC) total over $40, in which case it kills every paid run and writes `runs_data/spend_halt.json`; the budget gate (`cost.try_reserve`) then refuses all billable work until the UTC day rolls over or you run `newsroom watchdog --clear-halt`.
+
+Limits are commented constants in `backend/algent_backend/ops/flags.py`. Spend comes from per-process heartbeat files (`runs_data/live_spend/`, written by the cost ledger): settled charges only, so it misses the call in flight and anything billed outside the ledger (external harness CLIs); the wall-clock limit covers a process that never reports spend.
+
+See what it did: `tail runs_data/watchdog.jsonl` (one JSON line per pass/kill/halt) or `journalctl -u ohmega-watchdog -n 50`. Rehearse: `newsroom watchdog --dry-run`. `newsroom doctor` warns if no pass was logged in the last 10 min. Disable: `sudo systemctl disable --now ohmega-watchdog.timer` (`install_schedules.sh` re-enables it).
+
 ## Source of truth for data
 
 Once runs happen on the server, **its stores are the live ones**; the laptop stops running jobs so the two
@@ -66,5 +78,10 @@ Supabase (next step) becomes the working database.
 3. Deploy keys + `~/.ssh/config` host aliases `github-algent` / `github-data` (see this doc's history).
 4. `scp` the `.env` to `~/algent.env`; `infra/server/app_setup.sh`; `infra/server/searxng/deploy.sh ohmega@HOST`.
 5. Restore the stores: `python -c "from algent_backend.data_backup import sync; print(sync.restore())"`.
-6. `infra/server/install_schedules.sh`.
-7. `newsroom runner claim`, then `newsroom doctor`.
+6. Basemap data (untracked, so a fresh clone lacks it; without it every daily map silently vanishes): copy
+   `analytics_workspace/data/natural_earth/` from a machine that has it, or download from naturalearthdata.com
+   `ne_50m_admin_0_countries` (or `ne_110m_`) plus `ne_10m_populated_places_simple`, `ne_50m_rivers_lake_centerlines`,
+   `ne_50m_lakes`, `ne_10m_admin_0_disputed_areas` (or `ne_50m_admin_0_breakaway_disputed_areas`) as `.geojson` into that folder.
+   `newsroom doctor` warns (`basemap`) when it cannot load.
+7. `infra/server/install_schedules.sh`.
+8. `newsroom runner claim`, then `newsroom doctor`.

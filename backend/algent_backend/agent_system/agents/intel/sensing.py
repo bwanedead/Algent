@@ -198,7 +198,7 @@ def _instrument_block(theater: Theater, actors: Any, as_of: date | None
 
     rows = [r for r in evidence.moves_board(tags, as_of=as_of) if strength(r) >= 2]
     score = {r["series_id"]: sum(rar.idf[t] for t in present & set(r["tags"])) for r in rows}
-    rows = sorted(rows, key=lambda r: (-score[r["series_id"]], not r["unusual"]))[:MAX_INSTRUMENT_LINES]
+    rows = sorted(rows, key=lambda r: (-score[r["series_id"]], not (r["unusual"] and r["new"])))[:MAX_INSTRUMENT_LINES]
     return (evidence.render_block(rows, as_of=as_of), {r["source_url"] for r in rows if r["public_display"]},
             tags, len(rows), rows)
 
@@ -361,7 +361,7 @@ def _weight(s: Statement) -> int:
 
 def _trending(series_id: str, day: date) -> bool:
     """A series that keeps drifting one way is not departing from anything: a debt total is always rising, so
-    "unusual" or "outside its full-history range" says nothing about it. Test: over the last 90 days (the
+    "unusual" or "far from its usual level" says nothing about it. Test: over the last 90 days (the
     longest recent window ``moves`` uses), is the mean period-over-period change distinguishable from zero
     against the scatter of those changes (a t-statistic above ``moves.Z_LIMIT``, the same two-sigma convention,
     with at least ``moves.MIN_SAMPLE`` changes)? A collapse is different: one or two large steps and then
@@ -384,7 +384,7 @@ def across_theaters(*, as_of: str | date, days: int = CROSS_DAYS) -> Evidence:
     try:
         day = date.fromisoformat(as_of) if isinstance(as_of, str) else as_of
         rows = [r for r in evidence.moves_board(None, as_of=day)
-                if (r["unusual"] or r["long_run_outside"]) and not _trending(r["series_id"], day)]
+                if (r["unusual"] or r["long_run_outside"]) and r["new"] and not _trending(r["series_id"], day)]
         rows = rows[:CROSS_MOVES]                                  # moves_board lists unusual ones first
         taken: Counter[str] = Counter()
         shown: list[Statement] = []
