@@ -109,6 +109,11 @@ class Probes:
 
         return quota.summary()
 
+    def watchdog_age_minutes(self) -> float | None:
+        from algent_backend.ops import watchdog
+
+        return watchdog.last_pass_age_minutes()
+
     def disk_free_gb(self) -> float:
         return shutil.disk_usage(Path(__file__).resolve().parents[3]).free / 1e9
 
@@ -288,6 +293,21 @@ def check_runner(probes: Probes) -> dict[str, Any]:
                                    "paid work and publishing", since=s.get("since"))}
 
 
+def check_watchdog(probes: Probes) -> dict[str, Any]:
+    from algent_backend.ops import flags
+
+    try:
+        age = probes.watchdog_age_minutes()
+    except Exception as exc:  # noqa: BLE001
+        return {"watchdog": _check(WARN, f"unknown: {scrub(exc)}")}
+    if age is None:
+        return {"watchdog": _check(WARN, "no pass logged (install the ohmega-watchdog timer: "
+                                         "infra/server/install_schedules.sh)")}
+    if age > flags.DOCTOR_STALE_MINUTES:
+        return {"watchdog": _check(WARN, f"last pass {age:.0f} min ago; is the ohmega-watchdog timer running?")}
+    return {"watchdog": _check(OK, f"last pass {age:.0f} min ago")}
+
+
 def check_quota(probes: Probes) -> dict[str, Any]:
     out: dict[str, Any] = {}
     for provider, row in probes.quota_summary().items():
@@ -305,7 +325,7 @@ def run_checks(env: dict[str, str] | None = None, probes: Probes | None = None,
     checks: dict[str, Any] = {}
     for part in (check_keys(env), check_database(env, probes), check_search(env, probes), check_reads(probes),
                  check_harnesses(probes), check_publish(env, probes, repo), check_runner(probes),
-                 check_system(probes), check_quota(probes)):
+                 check_system(probes), check_watchdog(probes), check_quota(probes)):
         checks.update(part)
     counts = {s: sum(1 for c in checks.values() if c["status"] == s) for s in (OK, WARN, FAIL)}
     return {"ok": counts[FAIL] == 0, "summary": f"{counts[OK]} ok, {counts[WARN]} warn, {counts[FAIL]} fail",

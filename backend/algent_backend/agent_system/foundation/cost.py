@@ -26,6 +26,8 @@ from contextlib import contextmanager
 from dataclasses import dataclass, field
 from typing import Any, Literal
 
+from . import live_spend
+
 # ---------------------------------------------------------------------------
 # Model list prices (USD per 1,000,000 tokens)
 # ---------------------------------------------------------------------------
@@ -439,6 +441,11 @@ def try_reserve(
     est = max(0.0, float(estimate))
     is_ess = _essential.get() if essential is None else bool(essential)
     led = _ledger.get()
+    if live_spend.halted():
+        # The out-of-process watchdog declared today's spend ceiling hit: nothing new may start.
+        if led is not None:
+            _record_refuse(led, op, "spend_halt")
+        return None
     if led is None:
         # Standalone stage scope: gate against stage cap via would_exceed.
         if _active.get() and (_spent.get() + est) > _cap.get():
@@ -518,7 +525,8 @@ def _charge(led: BudgetLedger, usd: float, *, op: str = "") -> None:
         return
     led.spent_usd = round(led.spent_usd + usd, 6)
     _spent.set(led.spent_usd)
-    stage = led.current_stage or "unknown"
+    live_spend.note(usd)
+    stage =led.current_stage or "unknown"
     led.cost_by_stage[stage] = round(led.cost_by_stage.get(stage, 0.0) + usd, 6)
     if op:
         led.cost_by_op[op] = round(led.cost_by_op.get(op, 0.0) + usd, 6)
@@ -537,6 +545,7 @@ def add(usd: float) -> None:
         _charge(led, usd)
         return
     _spent.set(_spent.get() + usd)
+    live_spend.note(usd)
 
 
 def add_model_usage(
