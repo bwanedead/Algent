@@ -1170,9 +1170,10 @@ a { color: inherit; }
 .pulse-hist { margin: 0; max-width: 420px; }
 .pulse-hist svg { display: block; width: 100%; height: auto; background: var(--bg); border: 1px solid var(--rule); }
 .pulse-hist figcaption { display: flex; justify-content: space-between; gap: 8px; margin-top: 2px; }
-.pulse-hist-grid { stroke: var(--rule); stroke-width: 1; }
-.pulse-hist-line { fill: none; stroke: var(--band); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
-.pulse-hist-dot { fill: var(--band); }
+.pulse-hist-zone { fill: var(--band); opacity: 0.1; }
+.pulse-hist-line { fill: none; stroke: var(--band); stroke-width: 1; opacity: 0.35; vector-effect: non-scaling-stroke; }
+.pulse-hist-pt { fill: var(--band); }
+.pulse-hist-latest { fill: none; stroke: var(--strong); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
 
 .pulse-spec { display: block; position: relative; min-width: 0; }
 .pulse-spec-track { position: relative; display: flex; gap: 1px; height: 6px; margin: 5px 0 3px; }

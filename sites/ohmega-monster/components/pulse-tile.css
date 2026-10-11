@@ -27,6 +27,9 @@
 .pt-ghost { position: absolute; top: -1px; bottom: -1px; width: 2px; margin-left: -1px; background: var(--muted); opacity: 0.55; }
 .pt-meter-empty { background: transparent; border: 1px dashed var(--rule-strong); }
 
+.pt-stale { opacity: 0.72; }
+.pt-stale .pt-note { color: var(--faint); }
+
 .pt-s { padding: 5px 7px 6px; }
 .pt-s .pt-num { font-size: 20px; line-height: 22px; }
 

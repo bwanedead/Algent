@@ -23,13 +23,11 @@ body .geo-card a:hover { color: var(--strong); text-decoration-color: var(--acce
 
 /* Popover triggers: plain text that looks like what it is, never like a default button. */
 button.geo-link-btn,
-button.geo-axis-btn,
 button.geo-fig,
 button.geo-ev-btn,
 button.geo-x-btn { font: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; text-align: left; cursor: pointer; }
 button.geo-link-btn { display: block; margin-top: 6px; color: var(--muted); font-size: 11px; line-height: 20px; text-decoration: underline dotted var(--rule-strong); text-underline-offset: 3px; }
 button.geo-link-btn:hover { color: var(--strong); }
-button.geo-axis-btn:focus-visible,
 button.geo-fig:focus-visible,
 button.geo-ev-btn:focus-visible,
 button.geo-x-btn:focus-visible,
@@ -45,11 +43,10 @@ button.geo-link-btn:focus-visible { outline: 1px solid var(--accent-dim); outlin
 /* ---- screen one: headline, glance table, the day -------------------------------------------- */
 .geo-headline { margin: 16px 0 14px; color: var(--strong); font-size: clamp(18px, 2.6vw, 24px); line-height: 1.3; font-weight: 600; letter-spacing: -0.02em; overflow-wrap: anywhere; }
 
-.geo-glance { --cols: minmax(140px, 190px) minmax(0, 1fr) 84px minmax(200px, 250px) 54px 64px; margin: 0 0 14px; min-width: 0; }
+.geo-glance { --cols: minmax(140px, 190px) minmax(0, 1fr) 84px minmax(240px, 360px) 54px 64px; margin: 0 0 14px; min-width: 0; }
 .geo-glance-head,
 .geo-row { display: grid; grid-template-columns: var(--cols); gap: 0 14px; align-items: center; min-width: 0; }
 .geo-glance-head { padding-bottom: 4px; border-bottom: 1px solid var(--rule-strong); color: var(--muted); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
-.geo-gh-axis { display: flex; justify-content: space-between; padding-right: 32px; }
 .geo-rows { list-style: none; margin: 0; padding: 0; }
 .geo-row { padding: 7px 0; }
 
@@ -62,14 +59,12 @@ body .geo-card a.geo-name:hover { text-decoration: underline; text-decoration-co
 .geo-dir { color: var(--muted); font-size: 11px; white-space: nowrap; }
 .geo-dir.is-moving { color: var(--accent); }
 
-/* Every Pulse of the theater as a dot on one shared 0-100 axis: position = value, colour = band. */
-.geo-axis-cell { display: flex; align-items: center; gap: 8px; width: 100%; min-width: 0; padding: 3px 0; }
-.geo-axis { position: relative; flex: 1 1 auto; height: 18px; min-width: 0; }
-.geo-zones { position: absolute; left: 0; right: 0; top: 6px; height: 6px; display: flex; gap: 1px; }
-.geo-zones > i { flex: 1 1 0; background: var(--band); opacity: 0.22; }
-.geo-dot { position: absolute; top: 50%; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: var(--band); box-shadow: 0 0 0 1.5px var(--bg); }
-.geo-peak { flex: none; width: 24px; text-align: right; color: var(--strong); font-size: 13px; font-variant-numeric: tabular-nums; }
-button.geo-axis-btn:hover .geo-peak { text-decoration: underline; text-decoration-color: var(--accent); }
+/* A theater's Pulses as compact shared tiles; extras fold into a "+N" chip. Stale ones are muted. */
+.geo-tiles { display: flex; flex-wrap: wrap; align-items: stretch; gap: 5px; min-width: 0; }
+.geo-tiles > .pt { flex: 1 1 104px; max-width: 170px; }
+button.geo-more-chip { align-self: center; padding: 2px 7px; font: inherit; font-size: 11px; color: var(--muted); background: none; border: 1px solid var(--rule-strong); cursor: pointer; }
+button.geo-more-chip:hover { color: var(--strong); border-color: var(--accent); }
+button.geo-more-chip:focus-visible { outline: 1px solid var(--accent-dim); outline-offset: 2px; }
 
 .geo-delta { color: var(--muted); font-size: 11px; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .geo-delta.is-moving { color: var(--accent); }
@@ -207,6 +202,17 @@ button.geo-x-btn { display: flex; align-items: baseline; gap: 8px; width: 100%; 
 .geo-x-line { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
 button.geo-x-btn:hover .geo-x-line { color: var(--strong); }
 
+/* ---- around the world (components/DailySweep.tsx) and the spotlight label ----------------------- */
+.geo-sweep { margin-top: calc(var(--line) * 3); min-width: 0; }
+.geo-sw-region { padding: 4px 0; }
+.geo-sw-name { margin: 0 0 2px; }
+.geo-sweep ul { list-style: none; margin: 0; padding: 0; }
+.geo-sw-item { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 0 10px; align-items: baseline; padding: 2px 0; font-size: 13px; line-height: 20px; }
+.geo-sw-flags { display: inline-flex; gap: 3px; min-width: 0; }
+.geo-sw-line { min-width: 0; overflow-wrap: anywhere; }
+.geo-sw-tag { margin-right: 8px; padding: 0 5px; border: 1px solid var(--accent-dim); color: var(--strong); font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; }
+.geo-spotlight-label { margin: calc(var(--line) * 3) 0 0; color: var(--strong); }
+
 /* ---- day navigator (components/DayNav.tsx) and its "All days" list (components/DailyArchive.tsx) -- */
 .geo-daynav { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 0 14px; align-items: baseline; min-width: 0; padding: 0 0 6px; font-size: 12px; line-height: 20px; }
 .geo-daynav.is-bottom { margin-top: calc(var(--line) * 3); padding: 0; }
@@ -260,17 +266,17 @@ body .geo-xlink a { color: var(--muted); }
 body .geo-card a.geo-card-head { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px 6px; color: var(--text); text-decoration: none; }
 .geo-card-head strong { color: var(--strong); font-size: 14px; font-weight: 600; line-height: 20px; overflow-wrap: anywhere; }
 .geo-card .geo-glance { margin: 0; padding: 0 12px 8px; }
-.geo-glance.is-compact { --cols: minmax(0, 1fr) 72px minmax(110px, 190px) 46px; }
+.geo-glance.is-compact { --cols: minmax(0, 1fr) 72px minmax(170px, 260px) 46px; }
 .geo-glance.is-compact .geo-row { padding: 3px 0; }
 
-/* ---- phones: rows stack, the axis keeps its full width and its shared scale ------------------- */
+/* ---- phones: rows stack, the tiles take the full width ------------------- */
 @media (max-width: 860px) {
   .geo-glance-head { display: none; }
   .geo-row { grid-template-columns: auto auto minmax(0, 1fr); grid-template-areas: "name name name" "state state state" "dir delta cov" "axis axis axis"; gap: 2px 14px; padding: 9px 0; border-bottom: 1px solid var(--rule); }
   .geo-name { grid-area: name; }
   .geo-state { grid-area: state; }
   .geo-dir { grid-area: dir; }
-  .geo-axis-cell { grid-area: axis; }
+  .geo-tiles { grid-area: axis; }
   .geo-delta { grid-area: delta; }
   .geo-cov-cell { grid-area: cov; justify-self: end; }
   .geo-glance.is-compact .geo-row { grid-template-columns: minmax(0, 1fr) auto auto; grid-template-areas: "name dir delta" "axis axis axis"; padding: 6px 0; }

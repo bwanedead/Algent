@@ -59,6 +59,13 @@ def _no_live_sensing_refresh(monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _publish_via_files(monkeypatch):
+    """Production publishes to the database (flags.SITE_PUBLISH_VIA = "db"); tests exercise the file path and
+    must never need a live DATABASE_URL. Tests of db mode set ALGENT_SITE_PUBLISH_VIA themselves."""
+    monkeypatch.setenv("ALGENT_SITE_PUBLISH_VIA", "git")
+
+
+@pytest.fixture(autouse=True)
 def _no_data_backup(monkeypatch):
     """A test must never push anything to the private data repo."""
     monkeypatch.setenv("ALGENT_DATA_BACKUP", "0")

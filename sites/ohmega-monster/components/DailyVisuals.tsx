@@ -73,16 +73,43 @@ function wallPulseFor(snap: Snapshot | null, p: DailyPulse): { wall: WallPulse; 
   return { wall: toWallPulse(own, "") };
 }
 
-/** A theater's Pulses as one row of the shared tile, most severe first (position = rank). */
-export function PulseTiles({ pulses, snap }: { pulses: DailyPulse[]; snap: Snapshot | null }) {
+const STALE_MS = 2 * 86_400_000;
+
+/** When a Pulse was last read, if that is older than the report day by more than a day or two (else null). */
+function staleSince(wall: WallPulse, asOf: string | undefined): string | null {
+  const ref = asOf ? Date.parse(`${asOf}T23:59:59Z`) : NaN;
+  const lastAt = wall.history.length ? wall.history[wall.history.length - 1].at : wall.last_assessed;
+  const last = Date.parse(lastAt);
+  if (!Number.isFinite(ref) || !Number.isFinite(last) || ref - last <= STALE_MS) return null;
+  return shortDay(lastAt.slice(0, 10));
+}
+
+/**
+ * A theater's Pulses as a row of the shared tile, most severe first (position = rank). `limit` shows that
+ * many and folds the rest into a "+N" chip that opens them all; `asOf` (the report date) lets a Pulse that
+ * has not been reassessed lately say so quietly ("last read 6 Oct") instead of looking current.
+ */
+export function PulseTiles({ pulses, snap, limit, asOf, className = "geo-pulses" }: { pulses: DailyPulse[]; snap: Snapshot | null; limit?: number; asOf?: string; className?: string }) {
   if (pulses.length === 0) return null;
   const sorted = [...pulses].sort((a, b) => (b.position ?? -1) - (a.position ?? -1));
+  const tile = (p: DailyPulse, i: number) => {
+    const { wall, note } = wallPulseFor(snap, p);
+    const since = staleSince(wall, asOf);
+    const shown = since ? [note, `last read ${since}`].filter(Boolean).join(" · ") : note;
+    return <PulseTile key={`${p.id}-${i}`} pulse={wall} delta={p.change_24h} period="24h" size="s" note={shown} anchor={false} stale={since !== null} />;
+  };
+  const head = limit !== undefined && sorted.length > limit + 1 ? sorted.slice(0, limit) : sorted;
+  const rest = sorted.length - head.length;
   return (
-    <div className="geo-pulses">
-      {sorted.map((p, i) => {
-        const { wall, note } = wallPulseFor(snap, p);
-        return <PulseTile key={`${p.id}-${i}`} pulse={wall} delta={p.change_24h} period="24h" size="s" note={note} anchor={false} />;
-      })}
+    <div className={className}>
+      {head.map(tile)}
+      {rest > 0 && (
+        <Popover label={`${rest} more Pulses`} triggerClassName="geo-more-chip" wide trigger={`+${rest}`}>
+          <div className="geo-pd">
+            <div className="geo-pulses">{sorted.map(tile)}</div>
+          </div>
+        </Popover>
+      )}
     </div>
   );
 }
