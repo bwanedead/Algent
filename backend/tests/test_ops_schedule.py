@@ -14,6 +14,9 @@ class FakeProbes(schedule.Probes):
         self.tmp, self._runner, self._reachable, self._halted = tmp_path, runner, reachable, halted
         self.results, self.ran, self.slept, self._spend, self._per = list(results), [], [], 0.0, spend_per_run
 
+    def editions_done(self, day):
+        return {1}
+
     def runner_status(self):
         return {"reachable": self._reachable, "is_runner": self._runner, "runner": "other" if not self._runner else "me",
                 "this_host": "me"}
@@ -152,3 +155,25 @@ def test_doctor_reports_the_paid_timers_and_their_last_outcome(tmp_path) -> None
 
     out = doctor.check_schedule(Q())
     assert out["schedule"]["status"] == doctor.WARN and out["schedule:menu"]["status"] == doctor.OK
+
+
+def test_part_two_waits_for_part_one(monkeypatch, tmp_path) -> None:
+    from algent_backend.ops import schedule
+
+    calls = []
+
+    class P(schedule.Probes):
+        def editions_done(self, day):
+            return set()
+
+        def run_child(self, job, log):
+            calls.append(job.name)
+            return 0, ""
+
+        def home(self):
+            return tmp_path
+
+    monkeypatch.setattr(schedule, "_record", lambda outcome: None)
+    monkeypatch.setattr(schedule, "_ops_log", lambda probes, line: None)
+    assert schedule.run_job("daily-2", P()) == 0
+    assert calls == []

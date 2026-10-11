@@ -86,6 +86,20 @@ def classify_failure(rc: int, tail: str) -> str:
 
 # ── everything that touches the world (tests substitute these) ────────────────────────────────
 class Probes:
+    def editions_done(self, day: str) -> set[int]:
+        """Which parts of today's geopolitics daily already exist (empty when there is no record yet)."""
+        import json as _json
+
+        from algent_backend.agent_system.agents.intel.daily import daily_dir
+
+        path = daily_dir("geopolitics") / f"{day}.json"
+        try:
+            record = _json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return set()
+        done = {int(e.get("n", 0)) for e in record.get("editions") or [] if isinstance(e, dict)}
+        return done or {1}            # a record from before editions existed is a part 1
+
     def runner_status(self) -> dict[str, Any]:
         from algent_backend.data_backup import runner
 
@@ -189,6 +203,14 @@ def run_job(name: str, probes: Probes | None = None) -> int:
         return 2
     day = probes.now().strftime("%Y-%m-%d")
     log = probes.home() / "runlogs" / f"{job.name}-{day}.log"
+    # Part 2 appends to part 1; run before it (a late or failed morning, a catch-up timer after a reboot) it would
+    # become the day's whole report and a late part 1 would then overwrite it. So part 2 waits for part 1.
+    if job.name == "daily-2" and 1 not in probes.editions_done(day):
+        outcome = {"job": job.name, "outcome": "skipped", "why": "part 1 of today's daily does not exist yet"}
+        _record(outcome)
+        _ops_log(probes, f"{job.name}: skipped, part 1 of today's daily does not exist yet")
+        print(json.dumps(outcome))
+        return 0
     attempts: list[dict[str, Any]] = []
     for attempt in (1, 2):
         if why := _may_spend(probes):
