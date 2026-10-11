@@ -108,6 +108,62 @@ export const KIND_LABEL: Record<LiveKind, string> = {
   fire: "Fire hotspots",
 };
 
+// ---- snapshot documents (backend `live/snapshots.py`): compact JSON in the public Storage bucket, polled by the map ----------
+
+export const SNAPSHOT_BASE = `${(process.env.NEXT_PUBLIC_SUPABASE_URL || "").replace(/\/+$/, "")}/storage/v1/object/public/published-assets/live`;
+
+/** URL of a live snapshot ("vessels", "aircraft", "fires", "summary", "energy", "tracks/v3"). */
+export const snapshotUrl = (name: string) => `${SNAPSHOT_BASE}/${name}.json`;
+
+export type Headline = { id: string; layer: "outage" | "quake" | "fire" | "ships" | "aircraft"; text: string; score: number; lat: number | null; lon: number | null; zoom: number };
+export type GateNow = { label: string; lat: number; lon: number; box?: [number, number, number, number]; in_strait?: number; moving?: number; tankers?: number; transits_today?: number | null; tanker_transits_today?: number | null };
+export type Summary = {
+  as_of: string;
+  headlines: Headline[];
+  gates: Record<string, GateNow>;
+  fresh: Partial<Record<"outage" | "quake" | "fire" | "ships" | "aircraft" | "aircraft_regions" | "energy", string>>;
+  fires?: { as_of?: string; detections?: number; occupied?: number };
+};
+
+/** Fire heat: cells are [lon, lat, detections, strongest MW]. */
+export type FiresDoc = { as_of: string; cell_deg: number; detections: number; occupied: number; cells: [number, number, number, number][] };
+
+/** Vessel rows: [mmsi, lon, lat, heading (-1 unknown), speed kn (-1 unknown), class, last seen (unix s), name?, destination?, flag?, notable bits?].
+ *  Notable bits: 1 military/law enforcement, 2 dark (silent after moving), 4 tanker stopped in a strait. */
+export type VesselsDoc = { as_of: string; ttl: number; n: number; classes: string[]; counts: Record<string, number>; rows: (string | number)[][] };
+/** Aircraft rows: [id, lon, lat, heading, speed kn, class (0 civil, 1 other mil, 2 tanker, 3 surveillance, 4 airlift, 5 fighter), last seen, callsign?, type?, altitude ft?]. */
+export type AircraftDoc = { as_of: string; n: number; classes: string[]; counts: { civil: number; military: number }; rows: (string | number)[][] };
+/** A trail shard: object id -> [lon, lat, lon, lat, ...] oldest first. */
+export type TracksDoc = { as_of: string; t: Record<string, number[]> };
+
+export type EnergyTile = { id: string; label: string; unit: string; value: number; as_of_day: string; change_pct: number | null; spark: number[]; source: string; source_url: string };
+export type SeriesBlock = { as_of_day: string; value: number; spark: number[]; avg_30d: number | null };
+export type EnergyDoc = {
+  as_of: string;
+  gas: { as_of_day: string; value: number; week_change: number | null; years: { year: number; value: number }[]; spark: (number | null)[]; band: ([number, number] | null)[] } | null;
+  lng: { sendout: SeriesBlock | null; full: SeriesBlock | null } | null;
+  tiles: EnergyTile[];
+  credits: { gas: { text: string; url: string }; lng: { text: string; url: string } };
+};
+
+/** "3 min ago" / "2 h ago" from an ISO instant and a clock reading in ms. */
+export function ago(iso: string | undefined, nowMs: number): string {
+  if (!iso) return "";
+  const t = new Date(iso).getTime();
+  if (Number.isNaN(t)) return "";
+  const s = Math.max(0, Math.round((nowMs - t) / 1000));
+  if (s < 90) return "just now";
+  const m = Math.round(s / 60);
+  if (m < 90) return `${m} min ago`;
+  const h = Math.round(m / 60);
+  return h < 36 ? `${h} h ago` : `${Math.round(h / 24)} d ago`;
+}
+
+/** Compact number: 12,400 -> "12.4k". */
+export function compact(n: number): string {
+  return n >= 100000 ? `${Math.round(n / 1000)}k` : n >= 10000 ? `${(n / 1000).toFixed(0)}k` : n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n);
+}
+
 /** "11 Oct 14:00 UTC" from an ISO instant. */
 export function whenUtc(iso: string | null): string {
   if (!iso) return "";

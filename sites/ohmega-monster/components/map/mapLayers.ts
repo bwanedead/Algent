@@ -24,6 +24,10 @@ export type LayerSpec = {
   data: FeatureCollection;
   color: string;
   dashed?: boolean;
+  /** `area`: a soft fill (low opacity, hairline edge) for context such as outages, not a hard shape. */
+  soft?: boolean;
+  /** `dots`: a faint wide halo under each dot (the dot itself stays small and crisp). */
+  halo?: boolean;
   cluster?: boolean;
   /** Feature property whose text is drawn on a mark (`numbered`: the number) or beside a point (`line`). */
   labelProp?: string;
@@ -56,29 +60,36 @@ export function installLayer(map: any, spec: LayerSpec): { all: string[]; click:
 
   switch (spec.kind) {
     case "area":
-      add({ id: id("fill"), type: "fill", filter: geom("Polygon"), paint: { "fill-color": spec.color, "fill-opacity": 0.3 } }, true);
-      add({ id: id("edge"), type: "line", filter: geom("Polygon"), paint: { "line-color": spec.color, "line-width": 1.6, ...(spec.dashed ? { "line-dasharray": [3, 2] } : {}) } });
+      add({ id: id("fill"), type: "fill", filter: geom("Polygon"), paint: { "fill-color": spec.color, "fill-opacity": spec.soft ? 0.18 : 0.3 } }, true);
+      add({ id: id("edge"), type: "line", filter: geom("Polygon"), paint: { "line-color": spec.color, "line-opacity": spec.soft ? 0.5 : 1, "line-width": spec.soft ? 0.8 : 1.6, ...(spec.dashed ? { "line-dasharray": [3, 2] } : {}) } });
       break;
     case "line":
-      add({ id: id("line"), type: "line", filter: geom("LineString"), layout: { "line-cap": "round" }, paint: { "line-color": spec.color, "line-width": ["interpolate", ["linear"], ["zoom"], 2, 3, 8, 5] } }, true);
-      add({ id: id("pt"), type: "circle", filter: geom("Point"), paint: { "circle-radius": 7, "circle-color": spec.color, "circle-stroke-color": "#fff", "circle-stroke-width": 2 } }, true);
-      if (label) add({ id: id("label"), type: "symbol", filter: geom("Point"), layout: { "text-field": label, "text-font": FONT, "text-size": 12, "text-offset": [0, 1.3], "text-anchor": "top", "text-optional": true }, paint: { "text-color": "#14282b", ...halo } });
+      add({ id: id("line"), type: "line", filter: geom("LineString"), layout: { "line-cap": "round" }, paint: { "line-color": spec.color, "line-opacity": 0.9, "line-width": ["interpolate", ["linear"], ["zoom"], 2, 1.2, 8, 2.4], "line-dasharray": [2, 1.5] } }, true);
+      add({ id: id("pt"), type: "circle", filter: geom("Point"), paint: { "circle-radius": 2.5, "circle-color": spec.color, "circle-stroke-color": "#fff", "circle-stroke-width": 1 } }, true);
+      if (label) add({ id: id("label"), type: "symbol", filter: geom("Point"), minzoom: 3, layout: { "text-field": label, "text-font": FONT, "text-size": 11, "text-offset": [0, 0.9], "text-anchor": "top", "text-optional": true }, paint: { "text-color": "#0d2b2f", ...halo } });
       break;
     case "heat":
-      add({ id: id("heat"), type: "heatmap", maxzoom: 9, paint: {
-        "heatmap-weight": ["interpolate", ["linear"], ["coalesce", ["get", "w"], 1], 1, 0.35, 8, 1],
-        "heatmap-radius": ["interpolate", ["linear"], ["zoom"], 1, 8, 6, 22, 9, 34],
-        "heatmap-intensity": ["interpolate", ["linear"], ["zoom"], 1, 0.9, 9, 2],
-        "heatmap-color": ["interpolate", ["linear"], ["heatmap-density"], 0, "rgba(224,86,27,0)", 0.25, "rgba(255,196,80,0.55)", 0.6, "rgba(240,120,30,0.8)", 1, spec.color],
-        "heatmap-opacity": ["interpolate", ["linear"], ["zoom"], 6, 0.9, 9, 0] } });
-      add({ id: id("dots"), type: "circle", minzoom: 6, paint: { "circle-radius": 5, "circle-color": spec.color, "circle-stroke-color": "#fff", "circle-stroke-width": 1.5 } }, true);
+      // Detections folded into grid cells: `w` is the cell's weight (0..1), `f` its strongest reading in MW. A calm heat surface
+      // far out, resolving into small dots (coloured by intensity) once the cells are far enough apart to read.
+      add({ id: id("heat"), type: "heatmap", maxzoom: 8, paint: {
+        "heatmap-weight": ["coalesce", ["get", "w"], 0.3],
+        "heatmap-radius": ["interpolate", ["linear"], ["zoom"], 0, 3, 3, 7, 6, 16, 8, 26],
+        "heatmap-intensity": ["interpolate", ["linear"], ["zoom"], 0, 0.6, 6, 1.1, 8, 1.6],
+        "heatmap-color": ["interpolate", ["linear"], ["heatmap-density"], 0, "rgba(224,86,27,0)", 0.2, "rgba(255,196,80,0.35)", 0.5, "rgba(240,130,40,0.7)", 0.85, "rgba(226,70,40,0.88)", 1, spec.color],
+        "heatmap-opacity": ["interpolate", ["linear"], ["zoom"], 5.5, 0.9, 8, 0] } });
+      add({ id: id("dots"), type: "circle", minzoom: 5.5, paint: {
+        "circle-radius": ["interpolate", ["linear"], ["zoom"], 5.5, 1.6, 9, 3.2, 12, 5],
+        "circle-color": ["interpolate", ["linear"], ["coalesce", ["get", "f"], 0], 0, "#f2b84b", 40, "#ee7d2c", 150, spec.color],
+        "circle-opacity": ["interpolate", ["linear"], ["zoom"], 5.5, 0, 7, 0.85],
+        "circle-stroke-color": "rgba(255,255,255,0.7)", "circle-stroke-width": 0.5 } }, true);
       break;
     case "dots":
       if (clustered) {
         add({ id: id("cluster"), type: "circle", filter: ["has", "point_count"], paint: { "circle-color": spec.color, "circle-opacity": 0.85, "circle-stroke-color": "#fff", "circle-stroke-width": 2, "circle-radius": ["step", ["get", "point_count"], 14, 10, 18, 40, 24] } }, true);
         add({ id: id("count"), type: "symbol", filter: ["has", "point_count"], layout: { "text-field": ["get", "point_count_abbreviated"], "text-font": FONT, "text-size": 12, "text-allow-overlap": true }, paint: { "text-color": "#ffffff" } });
       }
-      add({ id: id("dots"), type: "circle", ...(clustered ? { filter: ["!", ["has", "point_count"]] } : {}), paint: { "circle-radius": ["coalesce", ["get", "r"], 6], "circle-color": spec.color, "circle-opacity": 0.9, "circle-stroke-color": "#fff", "circle-stroke-width": 1.5 } }, true);
+      if (spec.halo) add({ id: id("halo"), type: "circle", paint: { "circle-radius": ["*", ["coalesce", ["get", "r"], 6], 2.1], "circle-color": spec.color, "circle-opacity": 0.14, "circle-stroke-color": spec.color, "circle-stroke-opacity": 0.35, "circle-stroke-width": 0.6 } });
+      add({ id: id("dots"), type: "circle", ...(clustered ? { filter: ["!", ["has", "point_count"]] } : {}), paint: { "circle-radius": ["coalesce", ["get", "r"], 6], "circle-color": spec.color, "circle-opacity": 0.9, "circle-stroke-color": "#fff", "circle-stroke-width": spec.halo ? 0.8 : 1.5 } }, true);
       break;
     case "numbered":
       add({ id: id("mark"), type: "circle", paint: {
