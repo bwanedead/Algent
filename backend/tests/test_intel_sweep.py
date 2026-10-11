@@ -191,7 +191,7 @@ def test_a_spotlight_never_adds_more_than_the_flag_allows(tmp_path, monkeypatch)
 def test_a_failed_sweep_costs_only_the_sweep(tmp_path, monkeypatch) -> None:
     res, _ = _run(tmp_path, monkeypatch, RuntimeError("504 gateway_timeout"))
     assert "sweep" not in res["report"] and [t["theater_id"] for t in res["report"]["theaters"]] == ["thr_a"]
-    assert "sweep failed" in next(r for r in res["theaters"] if r["theater"] == "(sweep)")["error"]
+    assert "sweep failed" in res["sweep_error"] and all(r["theater"] != "(sweep)" for r in res["theaters"])
     assert res["report"]["summary"]["headline"] == "Alpha heats up"
 
 
