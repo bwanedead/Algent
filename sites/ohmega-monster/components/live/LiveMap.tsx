@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-import { KIND_LABEL, whenUtc, type LiveEvent, type LiveKind, type LiveStat, type LiveWorld } from "@/lib/live";
+import { KIND_LABEL, whenUtc, type LiveEvent, type LiveKind, type LiveStat, type LiveWorld } from "@/lib/live-shared";
 
 // The /live world map: the desk's Natural Earth countries (published by the backend as `live/world.json`) with one
 // mark per live item, each layer toggleable. The map is a light "printed" panel in both themes (map-local colours in
