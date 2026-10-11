@@ -595,12 +595,9 @@ def _sweep_and_spotlight(run: _Run, board: dict, sections: list[dict], rows: lis
                             board=board, domain=run.domain, as_of=run.as_of, focus_ids=set(focus_ids),
                             covered=covered, covered_urls=urls, folder=daily_dir(run.domain), known_iso=known_iso)
     except Exception as exc:  # noqa: BLE001 - the sweep is an addition to the report, never its gate
-        rows.append({"theater": "(sweep)", "researched": False, "research_usd": 0.0,
-                     "error": f"sweep failed: {br.describe_failure(exc)}"})
-        print(f"[daily] sweep failed; continuing without it: {rows[-1]['error']}", flush=True)
-        return None
-    if out.error:
-        rows.append({"theater": "(sweep)", "researched": False, "research_usd": 0.0, "error": out.error})
+        err = f"sweep failed: {br.describe_failure(exc)}"
+        print(f"[daily] sweep failed; continuing without it: {err}", flush=True)
+        return sweep_mod.Sweep(error=err)
     if out.spotlight and out.theater is not None:
         out.spotlight["section"] = False
         if run.research and flags.spotlight_sections() >= 1:
@@ -676,6 +673,8 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
                               "research_usd": round(sum(r["research_usd"] for r in rows), 4)}
     if summary_error:
         result["summary_error"] = summary_error
+    if swept is not None and swept.error:
+        result["sweep_error"] = swept.error            # not a theater row: row consumers expect research fields
     if out is not None:
         html = out / f"daily_{br.safe_name(domain)}.html"
         html.write_text(render.render_daily(record), encoding="utf-8")
