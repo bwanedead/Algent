@@ -73,6 +73,10 @@ Daily files: ``content/intel/daily/<domain>/<YYYY-MM-DD>.json`` = the persisted 
                      "credit"}}],   // our own validated points over Natural Earth; null without a point
          // each development also carries "place":{"name","country","lat","lon"}|null (validated)
      "cross_theater":[{"theaters":[names],"link"}],
+     "sweep":{"window_days":2,"regions":[{"region","items":[{"text","countries":[ISO2],"sources":[urls],"spotlight"?:true}]}],
+              "spotlight":{"theater_id","name","text","region","countries","sources","adhoc":bool,"section":bool}|null},
+              // "Around the world" (agents/intel/sweep.py); absent in older records or when nothing was flagged.
+              // The spotlight's own section is in "theaters" with "spotlight":true (only when research ran).
      "pulse_proposals":[{"theater","name","question","low_end","high_end","why"}]}
 
 Pulse numbers and deltas are computed from the Pulse store, never by a model. Key figures are numbers

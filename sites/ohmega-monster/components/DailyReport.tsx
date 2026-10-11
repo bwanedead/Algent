@@ -8,6 +8,7 @@ import { dossierIds } from "@/lib/dossier";
 import { fmtUtc, latestSnapshot } from "@/lib/intel";
 
 import DailyGlance from "./DailyGlance";
+import DailySweepBlock from "./DailySweep";
 import DailyTheaterSection from "./DailyTheater";
 import DailyWatching from "./DailyWatching";
 
@@ -137,8 +138,13 @@ export default async function DailyReport({ report, title }: { report: Daily; ti
       {report.the_day.length > 0 && <TheDay items={report.the_day} />}
 
       {report.theaters.map((t, i) => (
-        <DailyTheaterSection key={t.theater_id + i} t={t} id={theaterAnchor(t, i)} date={report.date} snap={snap} dossiers={dossiers} first={i === 0} />
+        <Fragment key={t.theater_id + i}>
+          {t.spotlight && <p className="geo-spotlight-label geo-micro">Spotlight · an under-covered story, researched in full</p>}
+          <DailyTheaterSection t={t} id={theaterAnchor(t, i)} date={report.date} snap={snap} dossiers={dossiers} first={i === 0} />
+        </Fragment>
       ))}
+
+      {report.sweep && <DailySweepBlock sweep={report.sweep} />}
 
       <Across report={report} />
       <DailyWatching watch={report.watch} quiet={report.quiet} dossiers={dossiers} />
