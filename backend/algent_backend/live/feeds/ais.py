@@ -140,7 +140,9 @@ async def serve(key: str, *, max_seconds: float | None = None, counter: GateCoun
                 await ws.send_str(subscription(key))
                 delay = 5.0
                 async for raw in ws:
-                    if raw.type != aiohttp.WSMsgType.TEXT:
+                    # aisstream sends its JSON as BINARY frames (text only for some control messages); both carry
+                    # data. Only a close or error ends the session.
+                    if raw.type not in (aiohttp.WSMsgType.TEXT, aiohttp.WSMsgType.BINARY):
                         break
                     now = time.time()
                     msg = json.loads(raw.data)
