@@ -152,8 +152,10 @@ def tag_places(ctx: Any, model_spec: Any, domain: str, as_of: str, *, out: Any =
     got = daily._ask(ctx, None, model_spec, PlaceTags, TAG_ROLE,
                      "DEVELOPMENTS (theater, then reference: headline [where]):\n" + "\n".join(lines)
                      + "\n\nTASK: place the developments you can.")
+    if not isinstance(got, PlaceTags):   # a failed call is an error to report, never a silent "nothing to place"
+        return {"error": f"place tagging call returned no result ({type(got).__name__}); nothing changed"}
     tagged = 0
-    for tag in got.tags if isinstance(got, PlaceTags) else []:
+    for tag in got.tags:
         dev = refs.get(tag.ref.strip())
         valid = geo.validate_place(tag.place, countries) if dev is not None else None
         if valid:
