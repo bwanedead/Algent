@@ -85,8 +85,16 @@ CATALOG: list[Series] = [
     Series(id="gas_eu_storage", name="EU gas storage fill", unit="% full", frequency="daily", lag_days=2,
            source="GIE AGSI+", source_url="https://agsi.gie.eu/", fetcher="agsi", params={"type": "eu"},
            tags=["energy", "gas", "europe", "russia", "storage"],
-           licence="GIE AGSI+ — free, API key required (ALGENT_AGSI_KEY); attribute GIE; verify before public display",
-           public_display=False),
+           licence="GIE AGSI+ — free, API key required (ALGENT_AGSI_KEY); GIE requires a visible 'GIE AGSI' source credit wherever it is shown",
+           public_display=True),
+    Series(id="lng_eu_sendout", name="EU LNG terminal send-out", unit="GWh/day", frequency="daily", lag_days=2,
+           source="GIE ALSI", source_url="https://alsi.gie.eu/", fetcher="alsi", params={"type": "eu", "field": "sendOut"},
+           tags=["energy", "gas", "lng", "europe"],
+           licence="GIE ALSI — free, same key as AGSI (ALGENT_AGSI_KEY); show a visible 'GIE ALSI' source credit", public_display=True),
+    Series(id="lng_eu_full", name="EU LNG terminal tanks, share full", unit="% full", frequency="daily", lag_days=2,
+           source="GIE ALSI", source_url="https://alsi.gie.eu/", fetcher="alsi", params={"type": "eu", "field": "full"},
+           tags=["energy", "gas", "lng", "europe", "storage"],
+           licence="GIE ALSI — free, same key as AGSI (ALGENT_AGSI_KEY); show a visible 'GIE ALSI' source credit", public_display=True),
 
     # --- metals / food ---
     _yahoo("px_gold", "Gold (front month)", "USD/oz", "GC=F", ["metals", "gold", "safe-haven", "risk"], _yf("GC=F")),

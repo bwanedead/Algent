@@ -18,7 +18,7 @@ function Mark({ it, x, y, on }: { it: Item; x: number; y: number; on: boolean })
       return <path className={cls} d={`M${x} ${y - r * 1.2}L${x + r * 1.1} ${y + r * 0.8}L${x - r * 1.1} ${y + r * 0.8}Z`} />;
     case "fire":
       return <path className={cls} d={`M${x} ${y - r}L${x + r} ${y}L${x} ${y + r}L${x - r} ${y}Z`} />;
-    case "ships":
+    case "gates":
       return (
         <g className={cls}>
           <circle cx={x} cy={y} r={r} />

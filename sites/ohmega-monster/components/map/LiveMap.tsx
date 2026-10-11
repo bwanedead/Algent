@@ -47,6 +47,11 @@ type MapProps = {
   onStatus?: (s: MapStatus) => void;
   /** Our own data credit, under the map (the basemap's attribution is drawn on the map itself). */
   credit?: ReactNode;
+  /** Frame something: `bounds` (fitted) or `center` + `zoom`; a new `nonce` re-triggers the move. */
+  focus?: { nonce: number; bounds?: Bounds; center?: LngLat; zoom?: number } | null;
+  /** Called with the live MapLibre map after every (re)sync of the style and layers (idempotent hook for extra layers), and with
+   *  null when the map is torn down. */
+  onMap?: (map: any | null) => void;
 };
 
 const LOAD_TIMEOUT_MS = 15000;
@@ -60,14 +65,14 @@ function findFeature(layers: LayerSpec[], id: string): { f: Feature; spec: Layer
   return null;
 }
 
-export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1.6, maxZoom = 9, tilt = false, fallback, selectedId = null, onSelect, items, itemsLabel = "Marked places", onStatus, credit }: MapProps) {
+export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1.6, maxZoom = 9, tilt = false, fallback, selectedId = null, onSelect, items, itemsLabel = "Marked places", onStatus, credit, focus = null, onMap }: MapProps) {
   const wrap = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const popupRef = useRef<any>(null);
   const installed = useRef<{ spec: LayerSpec; all: string[] }[]>([]);
-  const live = useRef({ layers, hidden, bounds, selectedId, onSelect, tilted: false });
-  live.current = { ...live.current, layers, hidden, bounds, selectedId, onSelect };
+  const live = useRef({ layers, hidden, bounds, selectedId, onSelect, onMap, tilted: false });
+  live.current = { ...live.current, layers, hidden, bounds, selectedId, onSelect, onMap };
   const [status, setStatus] = useState<MapStatus>("loading");
   const [armed, setArmed] = useState(false);
   const [tilted, setTilted] = useState(false);
@@ -107,6 +112,7 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
     map.__lmClick = { clickIds, specOfLayer };
     applyHidden();
     applySelected(false);
+    live.current.onMap?.(map);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -227,6 +233,7 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
       cancelled = true;
       if (timer) clearTimeout(timer);
       popupRef.current?.remove();
+      live.current.onMap?.(null);
       mapRef.current?.remove();
       mapRef.current = null;
     };
@@ -246,6 +253,13 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
   useEffect(() => { sync(); }, [layers, sync]);
   useEffect(() => { applyHidden(); }, [hidden]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { applySelected(true); }, [selectedId]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!focus || !map) return;
+    const dur = reduceMotion() ? 0 : 700;
+    if (focus.bounds) map.fitBounds(focus.bounds, { padding: FIT_PADDING, maxZoom: 11, duration: dur });
+    else if (focus.center) map.easeTo({ center: focus.center, zoom: focus.zoom ?? map.getZoom(), duration: dur });
+  }, [focus?.nonce]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function setTerrain(on: boolean) {
     const map = mapRef.current;

@@ -13,6 +13,7 @@ from typing import Any, Callable
 
 from algent_backend import polite_http
 
+from . import energy, headlines, snapshots
 from . import publish as live_publish
 from . import store
 from .contracts import Ctx, NeedsKey
@@ -37,12 +38,13 @@ def run(names: list[str] | None = None, *, get: Callable[..., str] | None = None
     rows: list[dict[str, Any]] = []
     fresh: dict[str, list] = {}
     stats = []
+    docs: dict[str, dict] = {}
     stamp = now.isoformat(timespec="seconds")
     for n in names:
         feed = FEEDS[n]
         store.record_status(n, last_attempt=stamp)
         try:
-            res = feed.fetch(Ctx(get=get or polite_http.get, now=now, key=_key(feed)))
+            res = feed.fetch(Ctx(get=get or polite_http.get, now=now, key=_key(feed), lines=None if get else polite_http.stream_lines))
         except NeedsKey as exc:
             store.record_status(n, needs=str(exc), error="")
             rows.append({"feed": n, "status": "needs_key", "note": str(exc)})
@@ -55,10 +57,19 @@ def run(names: list[str] | None = None, *, get: Callable[..., str] | None = None
         store.write_events(n, res.events)
         fresh[n] = res.events
         stats += res.stats
+        docs.update(res.docs)
+        if "fires" in res.docs:
+            f = res.docs["fires"]
+            store.write_doc("fires_meta", {k: f[k] for k in ("as_of", "detections", "occupied")})
         store.record_status(n, last_ok=stamp, error="", needs="", n_events=len(res.events), note=res.note)
         rows.append({"feed": n, "status": "ok", "events": len(res.events), "stats": len(res.stats), "note": res.note})
     tally = store.apply_stats(stats, now.date()) if stats or store.running() else {}
     out: dict[str, Any] = {"as_of": stamp, "feeds": rows, "stats": tally}
+    if publish and (docs or fresh):
+        if (en := energy.build(now)) is not None:
+            docs["energy"] = en
+        docs["summary"] = headlines.build(now)
+        out["snapshots"] = snapshots.publish(docs, local=("summary",))
     if publish and fresh:
         out["publish"] = live_publish.publish(fresh, today=now.date(), connect=connect)
         if out["publish"].get("db"):

@@ -56,6 +56,15 @@ def read_events(feed: str | None = None) -> list[LiveEvent]:
     return [LiveEvent.model_validate(d) for n in names for d in _read(root() / "events" / f"{n}.json", [])]
 
 
+# ── small documents shared between processes (gate counts, summary, fire heat) ─────────────────
+def write_doc(name: str, doc: Any) -> None:
+    _write(root() / "docs" / f"{name}.json", doc)
+
+
+def read_doc(name: str) -> Any:
+    return _read(root() / "docs" / f"{name}.json", None)
+
+
 # ── status ────────────────────────────────────────────────────────────────────────────────────
 def read_status() -> dict[str, dict[str, Any]]:
     return _read(root() / "status.json", {})

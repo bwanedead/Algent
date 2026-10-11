@@ -1,9 +1,10 @@
-// The /live items: one plain record per event or ship-count, shared by the interactive map, its static fallback, the
-// layer toggles, the card and the list under the map. Client-safe: imports only lib/live-shared (never lib/live or the store).
+// The /live event items: one plain record per event (outage, quake, notable fire, aircraft region) or chokepoint, shared by the
+// interactive map, its static fallback, the card and the list under the map. Ships and aircraft are NOT items (thousands of
+// them; see entities.ts). Client-safe: imports only lib/live-shared (never lib/live or the store).
 
-import { whenUtc, type LiveEvent, type LiveKind, type LiveStat } from "@/lib/live-shared";
+import { whenUtc, type GateNow, type LiveEvent, type LiveKind } from "@/lib/live-shared";
 
-export type Layer = LiveKind | "ships";
+export type Layer = LiveKind | "gates";
 
 export type Item = {
   id: string;
@@ -18,18 +19,8 @@ export type Item = {
   countries: string[];
   size: number;
   major: boolean;
-  /** Ship counts: the strait's region slug (ties the item to its counting line) and a short on-map label. */
-  region?: string;
-  badge?: string;
+  notable: boolean;
 };
-
-export const LAYERS: { id: Layer; label: string; glyph: string }[] = [
-  { id: "outage", label: "Internet outages", glyph: "■" },
-  { id: "quake", label: "Earthquakes", glyph: "●" },
-  { id: "aircraft", label: "Military aircraft", glyph: "▲" },
-  { id: "fire", label: "Fire hotspots", glyph: "◆" },
-  { id: "ships", label: "Ship traffic", glyph: "◎" },
-];
 
 export const safeUrl = (u: string) => (/^https?:\/\//.test(u) ? u : "");
 
@@ -49,30 +40,29 @@ export function eventItem(e: LiveEvent): Item {
     countries: e.countries,
     size: e.kind === "quake" ? Math.max(1, mag - 3.5) : Math.min(3, 1 + Math.log2(count)),
     major: e.severity === "major",
+    notable: e.data.notable === true,
   };
 }
 
-/** One item per chokepoint: its latest completed day's ship count. */
-export function shipItems(stats: LiveStat[]): Item[] {
-  const last = new Map<string, LiveStat>();
-  for (const s of stats) if (s.kind === "ships" && !s.partial) last.set(s.region, s);
-  return Array.from(last.values()).map((s) => {
-    const name = s.name.split(" — ")[0];
+/** One item per chokepoint, carrying the live count when the summary has it. */
+export function gateItems(gates: Record<string, GateNow> | undefined): Item[] {
+  return Object.entries(gates ?? {}).map(([slug, g]) => {
+    const live = typeof g.in_strait === "number" ? `${g.in_strait} ships in the strait right now (${g.moving ?? 0} moving, ${g.tankers ?? 0} tankers)` : "no live ship count yet";
+    const today = typeof g.transits_today === "number" ? `; ${g.transits_today} have crossed our counting line so far today` : "";
     return {
-      id: s.series_id,
-      layer: "ships" as const,
-      title: `${name}: ${s.value} ships crossed on ${s.period}`,
-      detail: "Ships whose tracking signal crossed our counting line in this strait that day, counted by Ohmega from live ship-position broadcasts. Ships with their transponder off are not seen, so read it against its own recent days, not as a total.",
-      when: `day ending ${s.period} 24:00 UTC`,
+      id: `gate:${slug}`,
+      layer: "gates" as const,
+      title: `${g.label}: ${live}`,
+      detail: `${live}${today}. Ships whose tracking signal crossed the counting line, counted by Ohmega from live ship-position broadcasts; ships with the transponder off are not seen, so read it against its own recent days.`,
+      when: "live",
       source: "Ohmega count from aisstream.io",
-      url: safeUrl(s.source_url),
-      lat: s.lat,
-      lon: s.lon,
+      url: "https://aisstream.io/",
+      lat: g.lat,
+      lon: g.lon,
       countries: [],
-      size: 1.4,
+      size: 1,
       major: false,
-      region: s.region,
-      badge: `${name} · ${s.value}`,
+      notable: false,
     };
   });
 }

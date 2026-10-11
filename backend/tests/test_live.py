@@ -72,10 +72,17 @@ def test_firms_needs_key_then_clusters():
         firms.fetch(ctx())
     csv_text = ("latitude,longitude,acq_date,acq_time,confidence,frp\n"
                 "48.01,37.01,2026-10-11,0930,h,20.5\n48.02,37.02,2026-10-11,0930,n,5\n48.5,38.5,2026-10-11,0930,l,50\n")
-    res = firms.fetch(ctx(csv_text, key="K"))
+
+    def only_first_tile(url, *a, **k):
+        if "/0,0,90,90" in url:
+            return csv_text
+        return "latitude,longitude\n" if "area/csv" in url else ""
+
+    res = firms.fetch(Ctx(get=only_first_tile, now=NOW, key="K"))
     assert res.events and res.events[0].data["hotspots"] == 2
     stats = {s.series_id: s.value for s in res.stats}
     assert stats["live_fire_ukraine_front"] == 2                # the low-confidence row is dropped
+    assert res.docs["fires"]["detections"] == 2
 
 
 def gate_msgs(mmsi, points):
