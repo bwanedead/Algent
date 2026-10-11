@@ -24,6 +24,7 @@ from __future__ import annotations
 import argparse
 import sys
 
+import algent_backend.config  # noqa: F401  — loads backend/.env once, so every command sees the same keys
 from algent_backend.data_ingestion.cli import COMMANDS as INGEST_COMMANDS
 
 from .newsroom import COMMANDS as NEWSROOM_COMMANDS

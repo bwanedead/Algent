@@ -98,7 +98,7 @@ def test_map_spec_projection_bbox_and_culling(countries) -> None:
     assert spec["height"] == 900
     (pt,) = spec["points"]
     assert pt == {"x": 500.0, "y": round(6 / 12 * spec["height"], 1), "label": "Town", "date": "2026-09-28",
-                  "verification": "researched", "n": 2}                      # n is 1-based: developments[1]
+                  "verification": "researched", "n": 2, "lon": 5.0, "lat": 5.0}   # n is 1-based; lon/lat for the interactive map
     assert [c["name"] for c in spec["countries"]] == ["Aland"]               # Bland and Farland are outside the frame
     nums = [float(v) for v in re.findall(r"-?\d+(?:\.\d+)?", spec["countries"][0]["d"])]
     xs, ys = nums[0::2], nums[1::2]

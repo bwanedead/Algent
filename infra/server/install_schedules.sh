@@ -57,7 +57,9 @@ unit watchdog    "$INFRA/jobs.sh watchdog"     "*:0/2"
 # Live feeds: one timer per feed, cadence from `newsroom live schedule` (live/flags.py is the single source).
 # Keyed feeds without their key just report it. A feed run is seconds long.
 while read -r feed minutes; do
-    unit "live-$feed" "$INFRA/jobs.sh live $feed" "*:0/$minutes"
+    # systemd minute steps only go to 59; longer cadences are written as an hourly step.
+    if [ "$minutes" -ge 60 ]; then cal="*-*-* 0/$((minutes / 60)):00:00"; else cal="*:0/$minutes"; fi
+    unit "live-$feed" "$INFRA/jobs.sh live $feed" "$cal"
     LIVE_TIMERS="$LIVE_TIMERS live-$feed"
 done < <(cd "$HOME/Algent/backend" && .venv/bin/python -m algent_backend.cli newsroom live schedule)
 
