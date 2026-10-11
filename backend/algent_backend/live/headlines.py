@@ -130,7 +130,7 @@ def build(now: datetime, rows: list[tuple] | None = None, extra_fresh: dict[str,
     rows = publish.stat_rows(now.date()) if rows is None else rows
     gates_now = store.read_doc("gates_now") or {}
     fires = store.read_doc("fires_meta") or {}
-    gates_meta = {g.slug: {"label": g.label, "lat": round((g.a[0] + g.b[0]) / 2, 3), "lon": round((g.a[1] + g.b[1]) / 2, 3)} for g in GATES}
+    gates_meta = {g.slug: {"label": g.label, "lat": round((g.a[0] + g.b[0]) / 2, 3), "lon": round((g.a[1] + g.b[1]) / 2, 3), "box": list(g.box)} for g in GATES}
     gates = {}
     from algent_backend.instruments.live_series import ais_ids
 
