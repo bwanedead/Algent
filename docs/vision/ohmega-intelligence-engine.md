@@ -223,3 +223,11 @@ page. Canonical doc: `docs/vision/ohmega-research.md`.
 
 The phrase to keep in mind: **a continuously revised, provenance-bearing model of the world**,
 with everything else a way of looking at it.
+
+## Live listening
+
+The desk no longer only reads the news: the worker server listens 24/7 to free live data (internet outages, earthquakes,
+military ADS-B, satellite fire hotspots, AIS ship traffic at chokepoints) and computes our own series from it. Those series
+join the instruments layer (so numbers, freshness and moves machinery see them) and live events reach the section writers
+with a public source URL, so a daily can say "IODA shows a nationwide outage in X since 14:00 UTC". Readers see the same
+data on the /live page. Details: `docs/guides/worker-server.md` (Live feeds).

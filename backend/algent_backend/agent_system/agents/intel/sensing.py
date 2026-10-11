@@ -78,6 +78,9 @@ class Evidence:
     histories: list[str] = field(default_factory=list)
     instrument_urls: set[str] = field(default_factory=set)      # public-display sources only
     statement_urls: set[str] = field(default_factory=set)
+    live: str = ""                                          # LIVE EVENTS block (outages, quakes ... touching the theater's countries)
+    live_urls: set[str] = field(default_factory=set)        # the public dashboards those lines cite
+    n_live: int = 0
     shown: list[Statement] = field(default_factory=list)     # the statements in the block, in the order shown
     tags: list[str] = field(default_factory=list)
     terms: list[str] = field(default_factory=list)
@@ -89,11 +92,11 @@ class Evidence:
 
     @property
     def primary_urls(self) -> set[str]:
-        return self.instrument_urls | self.statement_urls
+        return self.instrument_urls | self.statement_urls | self.live_urls
 
     def render(self) -> str:
         """The blocks for a writer's task text ('' when there are none), ending in a blank line."""
-        parts = [p for p in (self.instruments, self.statements, *self.histories) if p]
+        parts = [p for p in (self.instruments, self.live, self.statements, *self.histories) if p]
         return "\n\n".join(parts) + "\n\n" if parts else ""
 
 
@@ -201,6 +204,18 @@ def _instrument_block(theater: Theater, actors: Any, as_of: date | None
     rows = sorted(rows, key=lambda r: (-score[r["series_id"]], not (r["unusual"] and r["new"])))[:MAX_INSTRUMENT_LINES]
     return (evidence.render_block(rows, as_of=as_of), {r["source_url"] for r in rows if r["public_display"]},
             tags, len(rows), rows)
+
+
+# ── live events ───────────────────────────────────────────────────────────────────────────────
+def _live_block(theater: Theater, actors: Any) -> tuple[str, set[str], int]:
+    """Current live-feed events (``live/``) in countries the theater stands behind (same corroboration rule as tags)."""
+    from algent_backend.live import desk
+
+    def find_in(text: str, names: set[str]) -> set[str]:
+        words = _words(text)
+        return {n for n in names if _find(words, _words(n), text)}
+
+    return desk.for_theater(lambda find: corroborated(find, theater, actors), find_in)
 
 
 # ── statements ────────────────────────────────────────────────────────────────────────────────
@@ -348,6 +363,7 @@ def for_theater(theater: Theater, *, as_of: str | date, actors: list[str] | tupl
          ev.statement_dates) = _statement_block(
             theater, actors, day, days=statement_days, limit=statement_limit, history_days=history_days)
         ev.n_statements = len(ev.shown)
+        ev.live, ev.live_urls, ev.n_live = _live_block(theater, actors)
     except Exception as exc:  # noqa: BLE001 - sensing is an aid; a broken store must not cost the report
         return Evidence(error=f"{type(exc).__name__}: {str(exc)[:160]}")
     return ev
@@ -394,8 +410,11 @@ def across_theaters(*, as_of: str | date, days: int = CROSS_DAYS) -> Evidence:
                 taken[s.speaker] += 1
                 shown.append(s)
         shown.sort(key=lambda s: s.date, reverse=True)
+        from algent_backend.live import desk
+
+        live, live_urls, n_live = desk.block(desk.country_names())          # severest current events anywhere
         return Evidence(instruments=evidence.render_block(rows, as_of=day), statements=statements_block(shown, days),
-                        n_instruments=len(rows), n_statements=len(shown), shown=shown,
+                        live=live, live_urls=live_urls, n_live=n_live, n_instruments=len(rows), n_statements=len(shown), shown=shown,
                         instrument_urls={r["source_url"] for r in rows if r["public_display"]},
                         statement_urls={s.source_url for s in shown})
     except Exception as exc:  # noqa: BLE001
@@ -405,6 +424,8 @@ def across_theaters(*, as_of: str | date, days: int = CROSS_DAYS) -> Evidence:
 def summary_for_report(ev: Evidence) -> dict[str, Any]:
     """The small, JSON-friendly account of what sensing contributed, for a run report row."""
     out: dict[str, Any] = {"instruments": ev.n_instruments, "statements": ev.n_statements}
+    if ev.n_live:
+        out["live"] = ev.n_live
     if ev.error:
         out["error"] = ev.error
     return out

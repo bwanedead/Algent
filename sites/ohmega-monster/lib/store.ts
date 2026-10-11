@@ -42,6 +42,11 @@ async function rest<T>(table: string, query: string): Promise<T[] | null> {
   }
 }
 
+/** Rows of a public table (RLS-bounded), for pages that read their own tables (the /live page). [] without a database. */
+export async function dbRows<T>(table: string, query: string): Promise<T[]> {
+  return (await rest<T>(table, query)) ?? [];
+}
+
 const enc = encodeURIComponent;
 
 // ---- documents (daily, theaters, actors, briefs, snapshots, record, radar, agent feeds) ------------

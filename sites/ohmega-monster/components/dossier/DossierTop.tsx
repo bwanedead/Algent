@@ -7,6 +7,8 @@ import type { Dossier } from "@/lib/dossier";
 import { DIRECTION, dayLabel, escalationShift, isoDay, splitPrimer } from "@/lib/dossier-view";
 import { COVERAGE_DISPLAY } from "@/lib/intel";
 
+import { LiveNow } from "@/components/live/LiveParts";
+
 import { EscalationTrack } from "./EscalationTrack";
 import { Anchor, Section } from "./parts";
 
@@ -51,6 +53,8 @@ export function DossierTop({ d }: { d: Dossier }) {
           )}
         </p>
       )}
+
+      <LiveNow text={`${d.name} . ${cur?.bottom_line ?? ""}`} />
 
       <div className="th-meta" role="group" aria-label="Theater at a glance">
         {d.first_seen && (

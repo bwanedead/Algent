@@ -189,7 +189,7 @@ def gather(board: dict, *, domain: str, focus_ids: set[str], as_of: str,
               if t.id not in focus_ids and (t.domain or "").lower() == domain.lower()]
     blocks.append(_library_block(board, mat, as_of, library))
     ev = evidence if evidence is not None else sensing_mod.across_theaters(as_of=as_of, days=WINDOW_DAYS)
-    mat.urls |= {norm_url(u) for u in ev.statement_urls | ev.instrument_urls}
+    mat.urls |= {norm_url(u) for u in ev.statement_urls | ev.instrument_urls | ev.live_urls}
     if ev.render().strip():
         blocks.append("STATEMENTS ON RECORD AND INSTRUMENT MOVES, ACROSS ALL ACTORS\n" + ev.render().strip())
     mat.urls.discard("")

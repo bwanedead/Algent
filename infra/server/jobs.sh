@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # The server's scheduled jobs, one entry point so systemd units stay one-liners:
 #
-#   jobs.sh library | instruments | statements | backup
+#   jobs.sh library | instruments | statements | backup | live <feed>
 #
 # Only FREE work runs on a schedule (crawl, public data series, statement transcripts without extraction, the
 # archive backup). Anything that spends money — research, extraction, the daily, articles — runs only when the
@@ -14,10 +14,11 @@ if [ "${1:-}" = "watchdog" ]; then exec $PY -m algent_backend.cli newsroom watch
 exec 9>"$HOME/.ohmega-jobs.lock"
 flock -w 3600 9
 
-case "${1:?usage: jobs.sh library|instruments|statements|backup}" in
+case "${1:?usage: jobs.sh library|instruments|statements|backup|live}" in
     library)     $PY -m algent_backend.cli newsroom library crawl --max 150 ;;
     instruments) $PY -m algent_backend.cli newsroom instruments fetch ;;
     statements)  $PY -m algent_backend.cli newsroom statements collect --no-extract --no-reported ;;
+    live)        $PY -m algent_backend.cli newsroom live run --feed "${2:?usage: jobs.sh live <feed>}" ;;
     backup)      $PY -c "from algent_backend.data_backup import sync; print(sync.backup(note='server nightly'))" ;;
     *) echo "unknown job: $1" >&2; exit 2 ;;
 esac

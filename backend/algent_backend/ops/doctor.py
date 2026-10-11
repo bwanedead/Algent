@@ -335,6 +335,8 @@ def check_instruments() -> dict[str, Any]:
             return {"instruments": _check(OK, "no instrument store on this machine (numbers layer not collected here)")}
         bad = []
         for s in CATALOG:
+            if s.fetcher == "live":              # judged by check_live (a keyed feed without its key is not "overdue")
+                continue
             hist = store.history(s.id)
             if not hist:
                 bad.append(f"{s.id} (nothing stored)")
@@ -344,6 +346,34 @@ def check_instruments() -> dict[str, Any]:
         return {"instruments": _check(WARN, f"unknown: {scrub(exc)}")}
     return {"instruments": _check(WARN, f"{len(bad)} overdue/empty feeds: {'; '.join(bad)}") if bad
             else _check(OK, "every feed is as fresh as its cadence allows")}
+
+
+def check_live(env: dict[str, str]) -> dict[str, Any]:
+    """Live feeds (free collectors): last successful fetch per feed, and which keyed feeds lack their free key.
+    A keyless feed that never succeeded or is long silent is a warning; a missing key is reported with its signup."""
+    try:
+        from datetime import datetime, timezone
+
+        from algent_backend.live import flags as live_flags
+        from algent_backend.live import runner
+    except Exception as exc:  # noqa: BLE001
+        return {"live": _check(WARN, f"unknown: {scrub(exc)}")}
+    out: dict[str, Any] = {}
+    now = datetime.now(timezone.utc)
+    for row in runner.doctor_rows():
+        name = f"live:{row['feed']}"
+        if row["needs"]:
+            out[name] = _check(WARN, row["needs"])
+            continue
+        if not row["last_ok"]:
+            out[name] = _check(WARN, "never succeeded on this machine" + (f" ({scrub(row['error'], env)})" if row["error"] else ""))
+            continue
+        age = (now - datetime.fromisoformat(row["last_ok"])).total_seconds() / 60
+        # silent = several of the feed's own cadences missed (the AIS service flushes every few minutes)
+        every = live_flags.CADENCE_MINUTES.get(row["feed"], live_flags.AIS_FLUSH_SECONDS / 60)
+        out[name] = _check(WARN if age > 4 * every + 5 else OK,
+                           f"last ok {age:.0f} min ago" + (f"; {scrub(row['error'], env)}" if row["error"] else ""))
+    return out
 
 
 def check_basemap(probes: Probes) -> dict[str, Any]:
@@ -365,7 +395,7 @@ def run_checks(env: dict[str, str] | None = None, probes: Probes | None = None,
     checks: dict[str, Any] = {}
     for part in (check_keys(env), check_database(env, probes), check_search(env, probes), check_reads(probes),
                  check_harnesses(probes), check_publish(env, probes, repo), check_runner(probes),
-                 check_system(probes), check_watchdog(probes), check_quota(probes), check_instruments(), check_basemap(probes)):
+                 check_system(probes), check_watchdog(probes), check_quota(probes), check_instruments(), check_live(env), check_basemap(probes)):
         checks.update(part)
     counts = {s: sum(1 for c in checks.values() if c["status"] == s) for s in (OK, WARN, FAIL)}
     return {"ok": counts[FAIL] == 0, "summary": f"{counts[OK]} ok, {counts[WARN]} warn, {counts[FAIL]} fail",

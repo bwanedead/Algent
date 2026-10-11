@@ -85,3 +85,32 @@ Supabase (next step) becomes the working database.
    `newsroom doctor` warns (`basemap`) when it cannot load.
 7. `infra/server/install_schedules.sh`.
 8. `newsroom runner claim`, then `newsroom doctor`.
+
+## Live feeds
+
+The server listens continuously to free live data and turns it into our own stats (package `backend/algent_backend/live/`,
+cadences and budgets in `live/flags.py`). One collector per feed behind one contract (fetch, normalized events and stats,
+store, derived stats); no model, no spend, so the watchdog ignores `newsroom live`.
+
+| Feed | Source | Key | Runs | Produces |
+|---|---|---|---|---|
+| `ioda` | IODA (Georgia Tech) country internet outages | none | timer, 15 min | outage events per country (start, severity, dashboard link) |
+| `usgs` | USGS earthquakes M4.5+ past day | none | timer, 10 min | quake events |
+| `adsb` | adsb.lol military aircraft | none | timer, 15 min | per-region cluster events + `live_mil_*` day-maximum series (tankers and surveillance counted apart) |
+| `firms` | NASA FIRMS VIIRS hotspots in watched boxes | `ALGENT_FIRMS_KEY` (free: https://firms.modaps.eosdis.nasa.gov/api/map_key/) | timer, 3 h | hotspot events + `live_fire_*` series |
+| `ais` | aisstream.io live AIS | `ALGENT_AISSTREAM_KEY` (free: https://aisstream.io/authenticate) | service `ohmega-ais`, always on | our daily gate-crossing counts `live_ais_<gate>_transits` / `_tanker_transits` (Hormuz, Bab el-Mandeb, Suez, Bosporus, Malacca, Taiwan Strait) |
+
+A keyed feed without its key reports `needs <KEY> (free registration at <url>)` in `newsroom live status` and `newsroom doctor`
+(check `live:<feed>`) and nothing else breaks. Timers are installed by `infra/server/install_schedules.sh` from
+`newsroom live schedule`; the AIS service restarts always.
+
+Where it goes: numeric results are `live_*` instrument series (completed UTC days only; the day being counted sits in
+`live_store/running_*.json`, so a half-counted today never reads as a collapse), which flow through the numbers, freshness
+and moves machinery to the section writers; ship counts carry the `chokepoint` tag so a theater's numbers panel shows them
+beside IMF PortWatch (kept as the reference series; ours is current to the day, PortWatch is a week behind). Events are
+snapshots in `live_store/events/<feed>.json` that sensing turns into a `LIVE EVENTS` block (with source URLs) for theaters
+whose countries they touch. With `DATABASE_URL` set the collectors also upsert `live_events` / `live_stats`
+(migration `007_live.sql`, anon SELECT only) for the site's `/live` page. Commands: `newsroom live run|ais|status|schedule|publish`.
+
+Honest limits: ADS-B and AIS only show what volunteer receivers hear and what transmits; counts are floors and comparable
+with themselves over time. A fire hotspot is heat, not proof of a strike. An internet outage does not say why.

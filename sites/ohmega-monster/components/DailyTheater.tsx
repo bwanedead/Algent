@@ -9,6 +9,7 @@ import DailyFigure from "./DailyFigure";
 import Expander from "./Expander";
 import OnRecordBlock from "./OnRecord";
 import { DevelopmentTimeline, KeyFigures, PulseTiles, SourceLink } from "./DailyVisuals";
+import { LiveNow } from "./live/LiveParts";
 import GeoMap from "./map/GeoMap";
 import TheaterNumbersPanel from "./numbers/TheaterNumbers";
 import "@/app/intel/theaters/theaters.css";
@@ -90,6 +91,8 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
           {claim}
         </h2>
       </header>
+
+      <LiveNow text={[t.name, t.bottom_line, ...t.developments.map((d) => d.headline)].join(" . ")} />
 
       {t.visuals.map((v) => (
         <DailyFigure key={v.id} v={v} />
