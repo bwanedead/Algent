@@ -3,6 +3,9 @@
 .lm { margin: 0; min-width: 0; max-width: 100%; display: grid; gap: 6px; }
 .lm-stage { position: relative; width: 100%; aspect-ratio: var(--lm-aspect, 1.6); min-height: 300px; max-height: 82vh; border: 1px solid var(--rule-strong); background: var(--panel); overflow: hidden; }
 .lm-canvas { position: absolute; inset: 0; }
+/* maplibre-gl.css (loaded later) sets .maplibregl-map { position: relative }, which collapsed the canvas box to 0 px tall
+   and left the map blank; the extra class wins on specificity whatever the load order. */
+.lm .lm-canvas.maplibregl-map { position: absolute; inset: 0; width: 100%; height: 100%; }
 .lm-loading .lm-canvas, .lm-failed .lm-canvas { visibility: hidden; }
 .lm-fallback { position: absolute; inset: 0; display: grid; align-items: center; overflow: hidden; background: var(--panel); }
 .lm-fallback svg { display: block; width: 100%; height: auto; border: 0; }

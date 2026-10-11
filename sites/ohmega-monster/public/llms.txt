@@ -5,6 +5,22 @@
 
 Base URL: https://www.ohmega.monster . Every `url` / `data_url` in the data is relative to it.
 
+## API and MCP (preferred for agents)
+
+- [REST API](https://www.ohmega.monster/api/v1/index): versioned, read-only JSON, public, CORS open. Every response is
+  `{data, meta}`; `meta` has `as_of` (freshness), `source` (document schema), `cite_as` (canonical page to cite),
+  `license`, and `next` (next page URL). Lists take `limit` and `cursor`. Endpoints under `/api/v1/`: `index`,
+  `daily/{domain}/{date|latest}`, `theaters`, `theaters/{id}`, `briefs/{slug}`, `pulses`, `pulses/{id}` (with history),
+  `articles`, `articles/{slug}` (markdown and graded claims with sources), `statements?actor=&since=`, `actors`,
+  `actors/{iso}`, `instruments`, `instruments/{id}`, `live/events?kind=&since=`, `search?q=`, `changes`, `forecasts`.
+- [OpenAPI 3.1 spec](https://www.ohmega.monster/api/v1/openapi.json) and the [developer guide](https://www.ohmega.monster/developers).
+- [MCP server](https://www.ohmega.monster/api/mcp) (Streamable HTTP, stateless, read-only): tools `get_daily`,
+  `list_theaters`, `get_theater`, `list_pulses`, `get_pulse`, `search`, `get_statements`, `get_live_events`,
+  `get_instrument`. Add it to Claude Code with `claude mcp add --transport http ohmega https://www.ohmega.monster/api/mcp`.
+- [Full guide](https://www.ohmega.monster/llms-full.txt): this file expanded with the data model and every endpoint.
+
+The static files below are the same documents without API logic (no paging or filters).
+
 ## Start here
 
 - [Changes feed](https://www.ohmega.monster/data/changes.json) (`ohmega.changes/1`): everything that

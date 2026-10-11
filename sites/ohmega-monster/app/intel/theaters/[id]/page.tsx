@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   return {
     title: `${d.name}: dossier`,
     description: (d.current ? headlineOf(d.current.headline, d.current.bottom_line, 190) : "") || `Everything we know about ${d.name}, and where it is heading.`,
-    alternates: { canonical: `/intel/theaters/${d.theater_id}` },
+    alternates: { canonical: `/intel/theaters/${d.theater_id}`, types: { "application/json": `/api/v1/theaters/${d.theater_id}` } },
   };
 }
 

@@ -39,7 +39,7 @@ function claimOf(a: Actor): string {
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const a = await actor(params.iso);
   if (!a) return { title: "Actor" };
-  return { title: `${a.name}: power profile`, description: claimOf(a), alternates: { canonical: `/intel/actors/${a.iso2}` } };
+  return { title: `${a.name}: power profile`, description: claimOf(a), alternates: { canonical: `/intel/actors/${a.iso2}`, types: { "application/json": `/api/v1/actors/${a.iso2}` } } };
 }
 
 const SHOWN = 5;

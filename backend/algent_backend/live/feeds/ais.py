@@ -90,6 +90,8 @@ class GateCounter:
 
     def prune(self, now: float) -> None:
         self.last = {k: v for k, v in self.last.items() if now - v[1] <= flags.AIS_TRACK_TTL_S}
+        keep = {m for _, m in self.last} | self._interesting()            # ship types only for ships we still follow
+        self.types = {m: t for m, t in self.types.items() if m in keep}
 
     def stats(self) -> list[Stat]:
         out = []
@@ -102,9 +104,10 @@ class GateCounter:
 
 
 def subscription(key: str) -> str:
-    boxes = [[[g.box[0], g.box[1]], [g.box[2], g.box[3]]] for g in GATES]
+    boxes = [[list(sw), list(ne)] for sw, ne in flags.AIS_BOXES]
     return json.dumps({"APIKey": key, "BoundingBoxes": boxes,
-                       "FilterMessageTypes": ["PositionReport", "ShipStaticData", "StandardClassBPositionReport"]})
+                       "FilterMessageTypes": ["PositionReport", "ShipStaticData", "StandardClassBPositionReport",
+                                              "ExtendedClassBPositionReport", "StaticDataReport"]})
 
 
 def _state_path():
@@ -124,11 +127,12 @@ def load_counter() -> GateCounter:
     return GateCounter.from_json(store._read(_state_path(), {}))
 
 
-async def serve(key: str, *, max_seconds: float | None = None) -> None:
-    """Listen forever (or ``max_seconds``): reconnect with backoff, flush every ``AIS_FLUSH_SECONDS``."""
+async def serve(key: str, *, max_seconds: float | None = None, counter: GateCounter | None = None, board: Any = None) -> None:
+    """Listen forever (or ``max_seconds``): reconnect with backoff, flush every ``AIS_FLUSH_SECONDS``. Every message also
+    feeds the live position ``board`` (``board.VesselBoard``) when one is given."""
     import aiohttp
 
-    counter, delay, started = load_counter(), 5.0, time.monotonic()
+    counter, delay, started = counter or load_counter(), 5.0, time.monotonic()
     last_flush = 0.0
     while max_seconds is None or time.monotonic() - started < max_seconds:
         try:
@@ -136,13 +140,17 @@ async def serve(key: str, *, max_seconds: float | None = None) -> None:
                 await ws.send_str(subscription(key))
                 delay = 5.0
                 async for raw in ws:
-                    if raw.type != aiohttp.WSMsgType.TEXT:
+                    # aisstream sends its JSON as BINARY frames (text only for some control messages); both carry
+                    # data. Only a close or error ends the session.
+                    if raw.type not in (aiohttp.WSMsgType.TEXT, aiohttp.WSMsgType.BINARY):
                         break
                     now = time.time()
                     msg = json.loads(raw.data)
                     if msg.get("error"):
                         raise RuntimeError(str(msg["error"])[:120])
                     counter.message(msg, now, datetime.now(timezone.utc).date().isoformat())
+                    if board is not None:
+                        board.message(msg, now)
                     if now - last_flush >= flags.AIS_FLUSH_SECONDS:
                         counter.prune(now)
                         flush(counter, datetime.now(timezone.utc).date())
@@ -158,11 +166,12 @@ async def serve(key: str, *, max_seconds: float | None = None) -> None:
 
 def run_service(max_seconds: float | None = None) -> int:
     key = os.environ.get(KEY_ENV, "")
-    if not key:
+    if not key:       # the aircraft sweep and the snapshots still run; only ships wait for the key
         store.record_status("ais", needs=FEED.needs(), error="")
-        print(FEED.needs())
-        return 2
-    asyncio.run(serve(key, max_seconds=max_seconds))
+        print(FEED.needs() + " (ships are off; aircraft and snapshots continue)")
+    from .. import stream
+
+    asyncio.run(stream.run(key, max_seconds=max_seconds))
     return 0
 
 

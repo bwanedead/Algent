@@ -45,6 +45,7 @@ Docs sprawl is a real failure mode. To prevent it:
 - `map-analytics-stack.md` – accurate country-scale map figures for the newsroom analytics path.
 - `pulse-system.md` – Ohmega Pulse: situations, anchored Pulses, append-only influences, watches, storage.
 - `published-content.md` – publishing as a database write: `published_*` tables, anon-read RLS, the site's Supabase reader with file fallback.
+- `agent-api.md` – the agent surface of the site: `/api/v1` JSON API, OpenAPI, remote MCP server, discovery files, and the API-key seam.
 - `instruments.md` – the numbers layer: free programmatic series (chokepoint transits, energy, rates, FX…), append-only store, moves vs each series' own history, evidence API.
 - `statements.md` – the record of who said what: primary transcripts (Kremlin, White House, State, FCDO, No 10, EC, China MFA), quote-validated extraction, append-only ledger, recall API.
 - `library.md` – Ohmega's own source library: curated trusted sources crawled politely into a local FTS5 index; ranked search that answers first in web_search.
