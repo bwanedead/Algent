@@ -1,7 +1,8 @@
 """
 World basemap for the site's /live page — one simplified plate-carree spec from the desk's Natural Earth countries.
 
-    {"bbox":[w,s,e,n], "width":1000, "height":int, "countries":[{"name","d"}], "credit":str}
+    {"bbox":[w,s,e,n], "width":1000, "height":int, "countries":[{"name","d"}],
+     "gates":[{"region","label","a":[lat,lon],"b":[lat,lon]}], "credit":str}   # gates: the counting lines (older documents: none)
 
 The page projects live events itself (x = (lon - w) * width / (e - w), y = (n - lat) * height / (n - s)). Published as the
 document ``live/world.json`` (idempotent: an unchanged map is not rewritten). Antarctica is cropped by the frame.
@@ -12,6 +13,7 @@ from __future__ import annotations
 from typing import Any
 
 from . import places
+from .regions import GATES
 
 WIDTH = 1000
 FRAME = (-180.0, -58.0, 180.0, 84.0)       # w, s, e, n
@@ -40,4 +42,5 @@ def build() -> dict[str, Any] | None:
                 rings.append(ring)
         if d := ring_path(rings, TOLERANCE):
             out.append({"name": c.name, "d": d})
-    return {"bbox": [w, s, e, n], "width": WIDTH, "height": height, "countries": out, "credit": CREDIT}
+    gates = [{"region": g.slug, "label": g.label, "a": list(g.a), "b": list(g.b)} for g in GATES]   # (lat, lon) ends
+    return {"bbox": [w, s, e, n], "width": WIDTH, "height": height, "countries": out, "gates": gates, "credit": CREDIT}

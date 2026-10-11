@@ -201,7 +201,7 @@ def chokepoint_notes(frame: tuple[float, float, float, float], proj: Proj, focus
         reading = _count(m["latest"]["value"], m["unit"])
         line1 = f"{reading} · {_count(ch[horizon]['from_value'])} {ago}" if horizon else reading
         x, y = proj(c["lon"], c["lat"])
-        out.append({"kind": "chokepoint", "x": round(x, 1), "y": round(y, 1), "title": c["label"],
+        out.append({"kind": "chokepoint", "x": round(x, 1), "y": round(y, 1), "lon": c["lon"], "lat": c["lat"], "title": c["label"],
                     "lines": [line1, f"as of {_day(m['latest']['period'])}"], "series_id": c["series_id"],
                     "source": "IMF PortWatch"})
     return out

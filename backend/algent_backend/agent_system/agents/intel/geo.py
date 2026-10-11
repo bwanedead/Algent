@@ -20,12 +20,12 @@ cos(mid-latitude)) in 0..width x 0..height units, and layers drawn in it, all cl
      "countries":[{"name","d"}],                        # land, simplified (Douglas-Peucker) to ~0.4 px
      "labels":[{"name","x","y","r","key"}],             # where to write a country's name; r = room (inscribed radius)
      "rivers":[{"d"}], "lakes":[{"d"}],                 # polylines / polygons; "d" are SVG paths
-     "disputed":[{"name","d","note","status","claimants":[..],"source","x","y","r"}],   # hatched; see geo_disputed; may be []
+     "disputed":[{"name","d","note","status","claimants":[..],"source","x","y","r","rings"}],   # hatched; see geo_disputed; may be []; rings = unclipped lon/lat polygons
      "cities":[{"name","x","y","capital"}],            # capitals + the largest cities, most important first
-     "annotations":[{"kind":"chokepoint","x","y","title","lines":[..],"series_id","source"}],  # instruments, may be []
+     "annotations":[{"kind":"chokepoint","x","y","lon","lat","title","lines":[..],"series_id","source"}],  # instruments, may be []
      "scale":{"km","px","label"},                       # a round-number bar, true at mid-latitude
      "locator":{"width","height","d","rect":{x,y,w,h}}|null,   # world inset with the frame outlined
-     "points":[{"x","y","label","date","verification","n"}],   # n = 1-based: developments[n-1]
+     "points":[{"x","y","lon","lat","label","date","verification","n"}],   # n = 1-based: developments[n-1]; lon/lat for the interactive map
      "credit":str}
 
 Version 1 (no ``version``, no layers) and early version-2 maps (no ``disputed``) already stored in past daily
@@ -355,6 +355,22 @@ def _locator(countries: list[Country], frame: tuple[float, float, float, float])
             "rect": {"x": round((w + 180) * sc, 1), "y": round((90 - n) * sc, 1), "w": round(rw, 1), "h": round(rh, 1)}}
 
 
+def _lonlat_rings(polys: list[list[Ring]], frame: tuple[float, float, float, float], tol: float) -> list[list[list[list[float]]]]:
+    """Polygons (outer ring first, holes after) in lon/lat, simplified to ``tol`` degrees and rounded to 3 places,
+    for the interactive map (GeoJSON order: [lon, lat]). Unlike the SVG path they are NOT clipped to the frame, so a
+    panned map never shows a cut edge; only polygons that touch the frame are kept."""
+    w, s, e, n = frame
+    out = []
+    for poly in polys:
+        if not poly or max(x for x, _ in poly[0]) < w or min(x for x, _ in poly[0]) > e                 or max(y for _, y in poly[0]) < s or min(y for _, y in poly[0]) > n:
+            continue
+        rings = [[[round(x, 3), round(y, 3)] for x, y in simplify(r, tol, closed=True)] for r in poly]
+        rings = [r for r in rings if len(r) >= 3]
+        if rings:
+            out.append(rings)
+    return out
+
+
 def build_map(developments: list[dict], countries: list[Country] | None, *, layers: Layers | None = None,
               as_of: date | None = None) -> dict | None:
     """The where-it-happened spec (version 2) for a theater, from developments whose ``place`` already validated.
@@ -401,14 +417,15 @@ def build_map(developments: list[dict], countries: list[Country] | None, *, laye
         for drawn in _drawn([poly], _bounds([poly[0]]), frame, proj, box):
             if d := ring_path(drawn, tol, min_extent=max(4.0, 3 * tol)):
                 lakes.append({"d": d})
-    disputed = top_areas([ent for a in layers.disputed
+    deg_tol = tol * (e - w) / MAP_WIDTH                  # the same tolerance, in degrees (for the lon/lat rings)
+    disputed = top_areas([{**ent, "rings": _lonlat_rings(a.polygons, frame, deg_tol)} for a in layers.disputed
                           if (polys := _drawn(a.polygons, a.bbox, frame, proj, box)) and (ent := disputed_entry(a, polys, tol))])
     cities = select_cities(layers, proj, frame, MAP_WIDTH, height, lon_span, event_countries)
     notes = chokepoint_notes(frame, proj, [(p["lon"], p["lat"]) for _, p, _ in pts], lon_span, as_of)
 
     points = []
     for (n_, place, dev), (x, y) in zip(pts, placed, strict=True):
-        points.append({"x": round(x, 1), "y": round(y, 1), "label": place["name"], "date": dev.get("when", ""),
+        points.append({"x": round(x, 1), "y": round(y, 1), "lon": place["lon"], "lat": place["lat"], "label": place["name"], "date": dev.get("when", ""),
                        "verification": dev.get("verification", "reported"), "n": n_})
     credit = CREDIT + (" Disputed areas: Natural Earth (public domain)." if disputed else "") + (" Shipping data: IMF PortWatch." if notes else "") \
         + (f" Not on this map (too far away): {', '.join(elsewhere)}." if elsewhere else "")

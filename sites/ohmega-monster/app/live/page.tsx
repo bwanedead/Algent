@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import LiveMap from "@/components/live/LiveMap";
+import LiveWorldMap from "@/components/live/LiveWorldMap";
 import { ChokepointTiles } from "@/components/live/LiveParts";
 import { liveEvents, liveStats, liveWorld, shipTiles, whenUtc } from "@/lib/live";
 
@@ -38,7 +38,7 @@ export default async function LivePage() {
 
       <section aria-labelledby="live-map">
         <h2 id="live-map" className="live-h2">Map</h2>
-        <LiveMap world={world} events={events} stats={stats} />
+        <LiveWorldMap world={world} events={events} stats={stats} />
       </section>
 
       <section aria-labelledby="live-limits">
