@@ -44,6 +44,7 @@ from . import brief as br
 from . import daily_drafts, desk, flags, focus, forecasts, geo, numbers, on_record, render
 from . import sensing as sensing_mod
 from . import sweep as sweep_mod
+from . import visuals as visuals_mod
 from .contracts import (
     DaySummary,
     Place,
@@ -666,6 +667,15 @@ def _sweep_and_spotlight(run: _Run, board: dict, sections: list[dict], rows: lis
     return out
 
 
+def _prior_record(domain: str, as_of: str, fresh: bool) -> dict | None:
+    """The same day's earlier record, so a re-run reuses visuals already drawn (``fresh`` redraws)."""
+    path = daily_dir(domain) / f"{as_of}.json"
+    try:
+        return None if fresh or not path.exists() else json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
 def resolve_theaters(wanted: Sequence[str], theaters: dict[str, Theater]) -> list[Theater]:
     """Each wanted theater by exact id (``thr_`` optional) or, failing that, one unambiguous name
     substring. Raises ValueError naming what was asked and what was available."""
@@ -779,6 +789,9 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
         return {"report": None, "theaters": rows, "research_usd": round(sum(r["research_usd"] for r in rows), 4),
                 "error": f"no theater section was written ({len(rows)} attempted); daily not persisted: {errors}"}
     swept = _sweep_and_spotlight(run, board, sections, rows, today_focus.focus, heats)
+    visual_run = visuals_mod.attach(          # additive: section["visuals"]; never gates the day
+        sections, ctx=ctx, domain=domain, as_of=as_of, prior=_prior_record(domain, as_of, fresh_research),
+        ask=lambda schema, role, task: _ask(ctx, None, model_spec, schema, role, task))
     any_research = any(r.get("researched") for r in rows)
     summary, summary_error = None, ""
     if sections:
@@ -798,6 +811,8 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
               "cross_theater": [c.model_dump() for c in summary.cross_theater] if summary else [],
               "watch": today_focus.watch, "quiet": today_focus.quiet,
               "pulse_proposals": [p for r in rows for p in r.get("proposals", [])]}
+    if visual_run:
+        record["visuals_run"] = visual_run
     if swept is not None and (swept.regions or swept.spotlight):
         record["sweep"] = swept.record()                   # additive: older readers ignore the key
     path = daily_dir(domain) / f"{as_of}.json"

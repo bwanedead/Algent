@@ -303,10 +303,13 @@ function DevelopmentDetail({ d }: { d: DailyDevelopment }) {
 
 /** Developments as a vertical timeline, newest day first: one line each, detail in a popover. The mark is
  *  solid when researched, hollow when reported, and carries the map's number when the map shows it. */
-export function DevelopmentTimeline({ developments, map, reportDate }: { developments: DailyDevelopment[]; map: TheaterMap | null; reportDate: string }) {
+export function DevelopmentTimeline({ developments, map, reportDate, range }: { developments: DailyDevelopment[]; map: TheaterMap | null; reportDate: string; range?: [number, number] }) {
   if (developments.length === 0) return null;
-  const mapped = mappedNumbers(map, developments.length);
-  const rows = developments.map((d, i) => ({ d, i, day: devDay(d.when, reportDate) }));
+  const mapped = mappedNumbers(map, developments.length); // numbers always index the FULL list, so a slice keeps the map's marks
+  const rows = developments
+    .map((d, i) => ({ d, i, day: devDay(d.when, reportDate) }))
+    .filter(({ i }) => !range || (i >= range[0] && i < range[1]));
+  if (rows.length === 0) return null;
   rows.sort((a, b) => (a.day < b.day ? 1 : a.day > b.day ? -1 : a.i - b.i));
   let prev = "\u0000";
   return (
