@@ -48,6 +48,7 @@ class Stat(BaseModel):
 class FeedResult(BaseModel):
     events: list[LiveEvent] = Field(default_factory=list)
     stats: list[Stat] = Field(default_factory=list)
+    docs: dict[str, dict] = Field(default_factory=dict)   # snapshot documents for the site's Storage bucket (name -> body)
     note: str = ""
 
 
@@ -60,6 +61,7 @@ class Ctx:
     get: Callable[..., str]                   # polite_http.get-shaped; tests pass a fake
     now: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     key: str = ""
+    lines: Callable[..., Any] | None = None   # polite_http.stream_lines-shaped (a big CSV read line by line); None -> split ``get``
 
 
 @dataclass(frozen=True)

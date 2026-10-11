@@ -79,8 +79,10 @@ def _load(path: Path) -> dict[str, str]:
         return {}
 
 
-def upload(files: dict[str, bytes], *, http: Http | None = None, manifest: Path | None = None) -> dict[str, Any]:
-    """Upload ``{site path: bytes}``. Returns ``{"assets": n_uploaded, "skipped": n, "failed": [paths], "ok": bool}``
+def upload(files: dict[str, bytes], *, http: Http | None = None, manifest: Path | None = None,
+           cache_control: str = "max-age=3600") -> dict[str, Any]:
+    """Upload ``{site path: bytes}`` (``cache_control`` is the objects' CDN/browser cache header; the live snapshots
+    pass a short one). Returns ``{"assets": n_uploaded, "skipped": n, "failed": [paths], "ok": bool}``
     (``ok`` False only when a configured upload failed). Never raises."""
     if not files:
         return {"assets": 0, "skipped": 0, "failed": [], "ok": True}
@@ -100,7 +102,7 @@ def upload(files: dict[str, bytes], *, http: Http | None = None, manifest: Path 
                 skipped += 1
                 continue
             headers = {"Authorization": f"Bearer {key_env}", "apikey": key_env, "x-upsert": "true",
-                       "Content-Type": content_type(key), "Cache-Control": "max-age=3600"}
+                       "Content-Type": content_type(key), "Cache-Control": cache_control}
             status = send("POST", f"{_base()}/storage/v1/object/{BUCKET}/{key}", headers, data)
             if 200 <= status < 300:
                 seen[key] = digest
