@@ -32,6 +32,7 @@ export default function PulseTile({
   note,
   showDelta = true,
   anchor = true,
+  stale = false,
 }: {
   pulse: WallPulse;
   /** Change over `period`. Given: the meter gets a ghost marker and the popover shows it. null: no baseline. */
@@ -44,6 +45,8 @@ export default function PulseTile({
   showDelta?: boolean;
   /** false: no id="pulse-<id>" (and no #pulse-<id> deep link), for pages that show one Pulse twice. */
   anchor?: boolean;
+  /** true: not reassessed recently; the tile is muted (say when in `note`). */
+  stale?: boolean;
 }) {
   const pos = pulse.position === null ? null : Math.round(pulse.position);
   const from = pulse.position !== null && delta !== undefined && delta !== null ? pulse.position - delta : null;
@@ -63,7 +66,7 @@ export default function PulseTile({
     </>
   );
   return (
-    <Popover label={pulse.title} trigger={trigger} triggerClassName={`pt pt-${size} intel-band-${pulse.band}`} id={anchor ? `pulse-${pulse.id}` : undefined}>
+    <Popover label={pulse.title} trigger={trigger} triggerClassName={`pt pt-${size} intel-band-${pulse.band}${stale ? " pt-stale" : ""}`} id={anchor ? `pulse-${pulse.id}` : undefined}>
       <PulseDetail pulse={pulse} delta={delta} period={period} />
     </Popover>
   );

@@ -10,29 +10,39 @@ import "./pulse-tile.css";
 
 const day = (at: string) => at.slice(0, 10);
 
-/** History line with first/last dates. Time-scaled when every date parses, evenly spaced otherwise. */
+/**
+ * Every reading as a dot on the 0-100 spectrum over time: oldest faint and small, newest bold and large,
+ * the latest ringed, a faint line joining them so back-and-forth shows. Band zones sit quietly behind.
+ * Time-scaled when every date parses, evenly spaced otherwise. Recency reads on its own; no key.
+ */
 function History({ p }: { p: WallPulse }) {
   const pts = p.history.slice(-40);
   if (pts.length === 0) return null;
   const W = 320;
-  const H = 56;
-  const pad = 5;
-  const y = (v: number) => pad + (1 - Math.min(100, Math.max(0, v)) / 100) * (H - pad * 2);
+  const H = 96;
+  const padX = 8;
+  const padY = 6;
+  const y = (v: number) => padY + (1 - Math.min(100, Math.max(0, v)) / 100) * (H - padY * 2);
   const times = pts.map((h) => Date.parse(h.at));
   const timed = pts.length > 1 && times.every(Number.isFinite) && times[times.length - 1] > times[0];
   const x = (i: number) =>
-    pts.length === 1 ? W - pad : pad + (timed ? (times[i] - times[0]) / (times[times.length - 1] - times[0]) : i / (pts.length - 1)) * (W - pad * 2);
+    pts.length === 1 ? W - padX : padX + (timed ? (times[i] - times[0]) / (times[times.length - 1] - times[0]) : i / (pts.length - 1)) * (W - padX * 2);
   const xy = pts.map((h, i) => [x(i), y(h.position)] as const);
   const d = xy.map(([px, py], i) => `${i ? "L" : "M"}${px.toFixed(1)},${py.toFixed(1)}`).join(" ");
   const last = xy[xy.length - 1];
+  const zoneH = (H - padY * 2) / 4;
   return (
     <figure className="pulse-hist">
       <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${p.title}: ${pts.length} readings, ${day(pts[0].at)} to ${day(pts[pts.length - 1].at)}`}>
-        {[25, 50, 75].map((g) => (
-          <line key={g} x1={pad} x2={W - pad} y1={y(g)} y2={y(g)} className="pulse-hist-grid" />
+        {(["critical", "severe", "elevated", "calm"] as const).map((b, i) => (
+          <rect key={b} x={0} width={W} y={padY + i * zoneH} height={zoneH} className={`pulse-hist-zone intel-band-${b}`} />
         ))}
         {pts.length > 1 && <path d={d} className="pulse-hist-line" />}
-        <circle cx={last[0]} cy={last[1]} r={3} className="pulse-hist-dot" />
+        {xy.map(([px, py], i) => {
+          const age = pts.length === 1 ? 1 : i / (pts.length - 1);
+          return <circle key={i} cx={px} cy={py} r={1.6 + age * 2.4} className="pulse-hist-pt" style={{ opacity: 0.18 + age * 0.82 }} />;
+        })}
+        <circle cx={last[0]} cy={last[1]} r={6.5} className="pulse-hist-latest" />
       </svg>
       <figcaption className="intel-micro">
         <span>{day(pts[0].at)}</span>
