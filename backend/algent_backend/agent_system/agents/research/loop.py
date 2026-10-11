@@ -32,6 +32,7 @@ from .grounding import grounding_gap
 from .leads import JsonLeadStore, backfeed_leads
 from .messages import build_vector_message
 from .profile import SignalProfile
+from .relink import claims_lost_their_links, repair_profile
 from .store import JsonProfileStore
 from .x_seeds import hydrate_vector_with_x_seeds
 
@@ -40,6 +41,8 @@ BRIEFING_NAME = "briefing.md"
 PROFILE_COMPLETED = "profile.completed"
 PROFILE_NO_INPUT = "profile.no_input"
 PROFILE_EMPTY = "profile.empty"          # finished with no sourced claim: a failed attempt, not research
+DANGLING_REFS = "profile.dangling_refs"  # model references that pointed at nothing and were dropped
+PROFILE_RELINKED = "profile.relinked"    # the one repair pass over claims that lost their sources
 GROUNDING_CAPPED = "grounding.capped"   # the floor overrode the model's asserted maturity
 GENERATOR = "signal_profile@v2"
 STAGE = "signal_profile"
@@ -113,6 +116,14 @@ def build_profile_graph(
             related_profiles=prior.profile_ids, corpus_context=prior.summaries(),
             prior_claim_ids=prior.claim_ids,
         )
+        if profile.link_audit and profile.link_audit.dangling:
+            context.emit(DANGLING_REFS, {"profile_id": profile.id, "dangling": [d.model_dump() for d in profile.link_audit.dangling]})
+        # The claims lost their links to the sources they were read from: before the paid research is
+        # written off, one cheap pass over what we already hold ties them back.
+        if claims_lost_their_links(profile):
+            profile, relink_usd = repair_profile(profile, context, config)
+            estimated_usd += relink_usd
+            context.emit(PROFILE_RELINKED, {"profile_id": profile.id, **profile.link_audit.model_dump()})
         # Telemetry: the deterministic grounding floor overrode the model's maturity claim.
         # This is free doctrine-failure measurement AND the exact worklist enrichment can act on.
         if profile.profile_status != asserted_status:

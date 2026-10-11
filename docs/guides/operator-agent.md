@@ -63,6 +63,7 @@ collision guard).
 | `run --to menu` | build today's menu | **paid** |
 | `run --pick N …` | write articles from menu picks | **paid** |
 | `intel daily --domain geopolitics --research` | the geopolitics daily | **paid** |
+| `intel daily --date D --theater <id,id or name> --repair` | redo only those sections of D's daily from the saved research (relinks lost claim sources: one cheap call, no research); add `--fresh-research` to research again; republishes | cheap (repair) / **paid** (fresh) |
 | `steer` | reframe a live run at its next stage | free |
 
 Use `--help` on any of them. Launch long runs detached so they survive your session:

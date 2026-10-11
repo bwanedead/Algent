@@ -5,6 +5,7 @@
     newsroom intel brief                         # briefs on the 3 hottest theaters
     newsroom intel brief --theater thr_x --research   # commission fresh research first (paid, capped)
     newsroom intel daily [--domain geopolitics] [--top 5] [--research] [--fresh-research]   # the daily rundown: heat -> sections -> publish -> backup
+    newsroom intel daily --date D --theater id[,id] [--repair] [--fresh-research]   # redo only those sections of D's record, republish
     newsroom intel publish                       # put the desk snapshot (pulses, theaters, briefs) on the site
     newsroom intel dossiers [--primers] [--domain geopolitics]   # rebuild + publish the theater dossiers; --primers writes the missing/stale (>7d) primers first
     newsroom intel cycle [--top 2] [--research] [--domain geopolitics,politics]  # heat -> settle forecasts -> briefs -> publish -> backup, unattended
@@ -44,6 +45,8 @@ def add_parser(sub: Any) -> None:
     d.add_argument("--top", type=int, default=5, help="ceiling on theater sections; only theaters with something new are written")
     d.add_argument("--research", action="store_true", help="research each theater first (paid, capped)")
     d.add_argument("--fresh-research", action="store_true", help="redo research even if today's already exists")
+    d.add_argument("--theater", default="", help="rewrite only these theaters' sections of --date's existing record (comma-separated ids, or a unique name fragment); everything else is kept")
+    d.add_argument("--repair", action="store_true", help="with --theater: tie the saved research's lost claim->source links back (one cheap call) instead of researching again")
     d.add_argument("--days", type=int, default=7)
     d.add_argument("--no-refresh", action="store_true", help="skip refreshing instruments and statements first")
     d.add_argument("--date", default="", help="YYYY-MM-DD to (re)write; default today. The headline board is "
@@ -269,8 +272,9 @@ def _daily(args: Any) -> int:
 
     from .pulse import promote_ready_quietly
 
-    sensing_refresh = _refresh_sensing(args)
-    if _heat(args, publish=False) != 0:
+    only = [t for t in (getattr(args, "theater", "") or "").split(",") if t.strip()]
+    sensing_refresh = {} if only else _refresh_sensing(args)   # a targeted rerun keeps the day's inputs
+    if not only and _heat(args, publish=False) != 0:
         return 1
     board = desk.latest_board()
     if board is None:
@@ -281,11 +285,12 @@ def _daily(args: Any) -> int:
     from datetime import date
 
     as_of = getattr(args, "date", "") or date.today().isoformat()
-    result = daily.produce_daily(_ctx("intel-daily"), domain=args.domain, top=args.top, research=args.research,
+    result = daily.produce_daily(_ctx("intel-daily"), domain=args.domain, top=args.top, research=args.research or bool(only),
                                  model_spec=house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=16384,
                                                        streaming=True),
                                  as_of=as_of, board=board, out=_out(as_of),
-                                 fresh_research=args.fresh_research)
+                                 fresh_research=args.fresh_research, only_theaters=only,
+                                 repair=getattr(args, "repair", False))
     if result.get("error"):         # a failed run: nothing persisted, so nothing to promote, publish or back up
         print(json.dumps({"date": as_of, "domain": args.domain, "error": result["error"],
                           "theaters": result["theaters"], "research_usd": result["research_usd"],
@@ -293,8 +298,8 @@ def _daily(args: Any) -> int:
                          indent=2, ensure_ascii=False))
         return 1
     # Promote first (quietly: it does not publish) so the one publish below carries the new Pulses.
-    proposals = promote_ready_quietly()
-    primers_report = _prime(args.domain)        # only dossiers lacking a primer or with one over 7 days old
+    proposals = [] if only else promote_ready_quietly()
+    primers_report = {} if only else _prime(args.domain)        # only dossiers lacking a primer or with one over 7 days old
     report = {"date": as_of, "headlines_through": board["as_of"], "domain": args.domain, "path": result["path"],
               "html": result.get("html"),
               "headline": result["report"]["summary"]["headline"], "theaters": result["theaters"],

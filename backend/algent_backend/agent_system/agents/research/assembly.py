@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import hashlib
 import re
+from collections import Counter
 from datetime import UTC, datetime
 from typing import Any
 
@@ -28,6 +29,8 @@ from .grounding import cap_status_by_grounding
 from .profile import (
     SCHEMA_VERSION,
     ItemProvenance,
+    DanglingRefs,
+    LinkAudit,
     ProfileAdditions,
     SignalProfile,
     SourceSnapshot,
@@ -54,8 +57,13 @@ def finalize_profile(
     # so only real captured ones survive.
     for s in profile.source_ledger:
         s.snapshot = None
+    # Provenance is the harness's to stamp: a model-authored stage or timestamp is a forgery.
+    for item in (*profile.source_ledger, *profile.claim_ledger, *profile.threads):
+        item.provenance = None
+    lost: Counter[str] = Counter()
     sources, entities, claims, threads = _assemble(
-        profile.source_ledger, profile.entities, profile.claim_ledger, profile.threads, captured, prov
+        profile.source_ledger, profile.entities, profile.claim_ledger, profile.threads, captured, prov,
+        lost=lost,
     )
     shown = prior_claim_ids or set()
     for c in claims:
@@ -70,6 +78,7 @@ def finalize_profile(
         "profile_status": cap_status_by_grounding(profile.profile_status, claims, threads),
         "revision": revision, "schema_version": SCHEMA_VERSION,
         "generated_at": prov.created_at, "generator": generator, "model": model,
+        "link_audit": LinkAudit(dangling=[DanglingRefs(kind=k, count=n) for k, n in lost.items()]),
     })
 
 
@@ -135,8 +144,9 @@ def _place_sources(source_ledger, captured_norm, prov):
     return sources, src_map
 
 
-def _assemble(source_ledger, entities_in, claim_ledger, threads_in, captured, prov):
-    """The shared core: ids, refs, dedup, snapshots, grounding, provenance."""
+def _assemble(source_ledger, entities_in, claim_ledger, threads_in, captured, prov, lost=None):
+    """The shared core: ids, refs, dedup, snapshots, grounding, provenance. ``lost`` (a Counter), when
+    given, tallies the dangling refs dropped, by kind."""
     captured_norm = {_norm_url(u): v for u, v in captured.items()}
     sources, src_map = _place_sources(source_ledger, captured_norm, prov)
 
@@ -162,8 +172,8 @@ def _assemble(source_ledger, entities_in, claim_ledger, threads_in, captured, pr
         if new in seen_clm:
             continue
         c.id = new
-        c.supported_by = _remap(c.supported_by, src_map)
-        c.contradicted_by = _remap(c.contradicted_by, src_map)
+        c.supported_by = _remap(c.supported_by, src_map, lost, "claim.supported_by")
+        c.contradicted_by = _remap(c.contradicted_by, src_map, lost, "claim.contradicted_by")
         c.grounding = _claim_grounding(c.supported_by, snapshotted)
         c.provenance = c.provenance or prov
         seen_clm[new] = c
@@ -175,9 +185,9 @@ def _assemble(source_ledger, entities_in, claim_ledger, threads_in, captured, pr
         if new in seen_thr:
             continue
         t.id = new
-        t.entities = _remap(t.entities, ent_map)
-        t.claims = _remap(t.claims, claim_map)
-        t.sources = _remap(t.sources, src_map)
+        t.entities = _remap(t.entities, ent_map, lost, "thread.entities")
+        t.claims = _remap(t.claims, claim_map, lost, "thread.claims")
+        t.sources = _remap(t.sources, src_map, lost, "thread.sources")
         t.grounding = _thread_grounding(t.claims, seen_clm)
         t.provenance = t.provenance or prov
         seen_thr.add(new)
@@ -199,10 +209,12 @@ def _thread_grounding(claim_ids: list[str], claims_by_id: dict[str, Any]) -> str
     return max(levels, key=lambda g: _GROUNDING_ORDER.get(g, 2))
 
 
-def _remap(refs: list[str], mapping: dict[str, str]) -> list[str]:
+def _remap(refs: list[str], mapping: dict[str, str], lost: Counter | None = None, kind: str = "") -> list[str]:
     out: list[str] = []
     for ref in refs:
         stable = mapping.get(ref)
+        if stable is None and lost is not None:
+            lost[kind] += 1             # a ref to nothing: dropped, but counted so the loss is visible
         if stable and stable not in out:
             out.append(stable)
     return out
@@ -277,3 +289,29 @@ profile_id_for = _profile_id    # public: callers that must predict the id a vec
 
 def _now() -> str:
     return datetime.now(UTC).isoformat()
+
+
+def attach_claim_sources(profile: SignalProfile, links: dict[str, list[str]]) -> tuple[SignalProfile, int]:
+    """Attach sources to claims that have none. ``links`` maps claim id -> source ids; only ids that
+    exist in the profile's ledger survive and only unsourced claims are touched. Recomputes grounding
+    (claim, thread, profile status). Returns ``(profile, claims_attached)``."""
+    known = {s.id for s in profile.source_ledger}
+    snapshotted = {s.id for s in profile.source_ledger if s.snapshot is not None}
+    attached = 0
+    claims = []
+    for c in profile.claim_ledger:
+        ids = [i for i in dict.fromkeys(links.get(c.id) or []) if i in known]
+        if c.supported_by or not ids:
+            claims.append(c)
+            continue
+        attached += 1
+        claims.append(c.model_copy(update={
+            "supported_by": ids, "grounding": _claim_grounding(ids, snapshotted)}))
+    if not attached:
+        return profile, 0
+    by_id = {c.id: c for c in claims}
+    threads = [t.model_copy(update={"grounding": _thread_grounding(t.claims, by_id)}) for t in profile.threads]
+    return profile.model_copy(update={
+        "claim_ledger": claims, "threads": threads,
+        "profile_status": cap_status_by_grounding(profile.profile_status, claims, threads),
+    }), attached
