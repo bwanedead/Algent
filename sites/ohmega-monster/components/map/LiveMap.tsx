@@ -65,6 +65,11 @@ function findFeature(layers: LayerSpec[], id: string): { f: Feature; spec: Layer
   return null;
 }
 
+/** A touch-first device (phones, tablets): standard one-finger map gestures there. */
+function isTouch(): boolean {
+  return typeof window !== "undefined" && window.matchMedia?.("(pointer: coarse)").matches === true;
+}
+
 export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1.6, maxZoom = 9, tilt = false, fallback, selectedId = null, onSelect, items, itemsLabel = "Marked places", onStatus, credit, focus = null, onMap }: MapProps) {
   const wrap = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLDivElement>(null);
@@ -172,7 +177,9 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
         bounds: b,
         fitBoundsOptions: { padding: FIT_PADDING, maxZoom },
         maxZoom: 14,
-        cooperativeGestures: true,
+        // Touch: standard map gestures (one finger pans, double-tap and pinch zoom); the stage is shorter than the
+        // screen so the page still scrolls past it. Desktop keeps Ctrl+wheel so wheel-scrolling the page isn't hijacked.
+        cooperativeGestures: !isTouch(),
         dragRotate: false,
         pitchWithRotate: false,
         touchPitch: false,
@@ -182,6 +189,7 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
       mapRef.current = map;
       map.touchZoomRotate.disableRotation();
       map.addControl(new ml.NavigationControl({ showCompass: false }), "top-right");
+      map.addControl(new ml.FullscreenControl(), "top-right");
       map.addControl(new ml.AttributionControl({ compact: false }), "bottom-right");
       map.getCanvas().setAttribute("aria-label", label);
       timer = setTimeout(() => {
@@ -308,7 +316,7 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
               3D tilt {tilted ? "on" : "off"}
             </button>
           )}
-          <span className="lm-hint">Two fingers or Ctrl + scroll to zoom the map; arrow keys pan.</span>
+          <span className="lm-hint">{isTouch() ? "Drag to pan, pinch or double-tap to zoom; ⛶ for full screen." : "Drag to pan, Ctrl + scroll to zoom; arrow keys pan; ⛶ for full screen."}</span>
         </div>
       )}
       {status === "ready" && items && items.length > 0 && (
