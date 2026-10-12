@@ -1,8 +1,8 @@
 // The moving things on /live: ships and aircraft decoded from the compact snapshot rows, their classes and colours, the
 // filters the layer panel offers, and dead reckoning (where an object is NOW, from its last report). Pure and client-safe:
-// imports nothing.
+// imports only types from lib/live-shared.
 
-type Rows = { rows: (string | number)[][] };
+import type { AircraftDoc, VesselsDoc } from "@/lib/live-shared";
 
 export type Kind = "ship" | "air";
 
@@ -49,15 +49,14 @@ export const SHIP_NOTABLE = [
 const num = (v: string | number | undefined, d = -1) => (typeof v === "number" ? v : d);
 const str = (v: string | number | undefined) => (typeof v === "string" ? v : "");
 
-/** `doc` is a full snapshot or one tile: only `rows` is read. */
-export function decodeVessels(doc: Rows | null): Entity[] {
+export function decodeVessels(doc: VesselsDoc | null): Entity[] {
   return (doc?.rows ?? []).map((r) => ({
     kind: "ship" as const, id: num(r[0], 0), lon: num(r[1], 0), lat: num(r[2], 0), hdg: num(r[3]), spd: num(r[4]), cls: num(r[5], 5), ts: num(r[6], 0),
     name: str(r[7]), dest: str(r[8]), flag: str(r[9]), nf: num(r[10], 0), type: "", alt: -1,
   }));
 }
 
-export function decodeAircraft(doc: Rows | null): Entity[] {
+export function decodeAircraft(doc: AircraftDoc | null): Entity[] {
   return (doc?.rows ?? []).map((r) => ({
     kind: "air" as const, id: num(r[0], 0), lon: num(r[1], 0), lat: num(r[2], 0), hdg: num(r[3]), spd: num(r[4]), cls: num(r[5], 0), ts: num(r[6], 0),
     name: str(r[7]), dest: "", flag: "", nf: 0, type: str(r[8]), alt: num(r[9]),
