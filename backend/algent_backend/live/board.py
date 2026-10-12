@@ -18,6 +18,7 @@ from array import array
 from typing import Any
 
 from . import flags
+from .ais_memory import Coverage, StaticMemory
 from .classify import VESSEL_CLASSES, flag_of, vessel_class
 from .contracts import iso
 from .regions import GATES, inside
@@ -64,15 +65,18 @@ class TrackStore:
 
 
 class VesselBoard:
-    def __init__(self, ttl: int = flags.AIS_VESSEL_TTL_S, cap: int = flags.AIS_MAX_VESSELS) -> None:
+    def __init__(self, ttl: int = flags.AIS_VESSEL_TTL_S, cap: int = flags.AIS_MAX_VESSELS,
+                 static: StaticMemory | None = None, coverage: Coverage | None = None) -> None:
         self.ttl, self.cap = ttl, cap
         self.v: dict[int, list[float]] = {}                  # mmsi -> [lat, lon, heading, speed, seen]
-        self.static: dict[int, list[Any]] = {}               # mmsi -> [ship type, name, destination, seen]
+        self.static = static or StaticMemory()               # mmsi -> [ship type, name, destination, seen]; survives restarts
+        self.coverage = coverage or Coverage()               # where any AIS was heard in the last day
         self.name: dict[int, str] = {}                       # names from position metadata (only for vessels on the board)
         self.tracks = TrackStore()
 
     # ── input ──────────────────────────────────────────────────────────────────────────────
     def message(self, msg: dict[str, Any], now: float) -> None:
+        """One aisstream message (position or static)."""
         body, meta = msg.get("Message") or {}, msg.get("MetaData") or {}
         mmsi = meta.get("MMSI") or next((b.get("UserID") for b in body.values() if isinstance(b, dict) and b.get("UserID")), None)
         if not mmsi:
@@ -80,33 +84,45 @@ class VesselBoard:
         mmsi = int(mmsi)
         st = body.get("ShipStaticData")
         if st:
-            self._static(mmsi, st.get("Type"), st.get("Name"), st.get("Destination"), now)
+            self.static.put(mmsi, st.get("Type"), st.get("Name"), st.get("Destination"), now)
             return
         rep = body.get("StaticDataReport")
         if rep:
-            self._static(mmsi, (rep.get("ReportB") or {}).get("ShipType"), (rep.get("ReportA") or {}).get("Name"), None, now)
+            self.static.put(mmsi, (rep.get("ReportB") or {}).get("ShipType"), (rep.get("ReportA") or {}).get("Name"), None, now)
             return
-        pos = body.get("PositionReport") or body.get("StandardClassBPositionReport") or body.get("ExtendedClassBPositionReport")
-        lat = meta.get("latitude", (pos or {}).get("Latitude"))
-        lon = meta.get("longitude", (pos or {}).get("Longitude"))
-        if pos is None or lat is None or lon is None or abs(lat) > 90 or abs(lon) > 180:
+        pos = (body.get("PositionReport") or body.get("StandardClassBPositionReport") or body.get("ExtendedClassBPositionReport")
+               or body.get("LongRangeAisBroadcastMessage"))
+        if pos is None:
             return
-        sog = pos.get("Sog")
-        hdg = pos.get("TrueHeading")
-        if hdg is None or hdg == _NA_HDG or not 0 <= hdg < 360:
-            cog = pos.get("Cog")
-            hdg = cog if cog is not None and 0 <= cog < 360 and (sog or 0) >= MOVING_KN else -1
-        sog = -1.0 if sog is None or sog >= _NA_SOG else float(sog)
-        self.v[mmsi] = [float(lat), float(lon), float(hdg), sog, now]
-        nm = (meta.get("ShipName") or "").strip()
+        self.report(mmsi, meta.get("latitude", pos.get("Latitude")), meta.get("longitude", pos.get("Longitude")), now,
+                    heading=pos.get("TrueHeading"), cog=pos.get("Cog"), sog=pos.get("Sog"),
+                    name=meta.get("ShipName"), ship_type=pos.get("Type"))     # only the extended Class B report carries a type
+
+    def report(self, mmsi: int, lat: Any, lon: Any, ts: float, *, heading: Any = None, cog: Any = None, sog: Any = None,
+               name: Any = None, ship_type: Any = None, dest: Any = None) -> bool:
+        """One position from ANY source (aisstream, Digitraffic, Kystverket). Heading is the true heading, else the course over
+        ground when the ship is moving, else -1. The freshest report per MMSI wins. Returns True when the position was stored."""
+        if not isinstance(lat, (int, float)) or not isinstance(lon, (int, float)) or abs(lat) > 90 or abs(lon) > 180:
+            return False
+        self.coverage.hear(lat, lon, ts)
+        nm = (name or "").strip()
+        if ship_type or dest or (nm and not self._named(mmsi)):
+            self.static.put(mmsi, ship_type, nm, dest, ts)
+        prev = self.v.get(mmsi)
+        if prev is not None and prev[4] > ts:
+            return False
+        speed = float(sog) if isinstance(sog, (int, float)) and 0 <= sog < _NA_SOG else -1.0
+        if not (isinstance(heading, (int, float)) and 0 <= heading < 360):
+            heading = cog if isinstance(cog, (int, float)) and 0 <= cog < 360 and speed >= MOVING_KN else -1
+        self.v[mmsi] = [float(lat), float(lon), float(heading), speed, ts]
         if nm:
             self.name[mmsi] = nm[:24]
-        self.tracks.add(mmsi, now, lat, lon)
+        self.tracks.add(mmsi, ts, lat, lon)
+        return True
 
-    def _static(self, mmsi: int, ship_type: Any, name: Any, dest: Any, now: float) -> None:
-        cur = self.static.get(mmsi, [None, "", "", 0.0])
-        self.static[mmsi] = [ship_type if ship_type is not None else cur[0], (name or cur[1] or "").strip()[:24],
-                             (dest or cur[2] or "").strip()[:24], now]
+    def _named(self, mmsi: int) -> bool:
+        rec = self.static.get(mmsi)
+        return bool(rec and rec[1])
 
     # ── upkeep ─────────────────────────────────────────────────────────────────────────────
     def prune(self, now: float) -> None:
@@ -114,9 +130,7 @@ class VesselBoard:
         if len(self.v) > self.cap:                            # keep the freshest `cap`
             keep = sorted(self.v.items(), key=lambda kv: -kv[1][4])[:self.cap]
             self.v = dict(keep)
-        self.static = {k: s for k, s in self.static.items() if k in self.v or now - s[3] <= self.ttl}
-        if len(self.static) > 2 * self.cap:
-            self.static = dict(sorted(self.static.items(), key=lambda kv: -kv[1][3])[:self.cap])
+        self.static.prune(now)
         self.name = {k: n for k, n in self.name.items() if k in self.v}
         self.tracks.prune(self.v, now)
 

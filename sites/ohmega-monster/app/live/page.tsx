@@ -37,11 +37,12 @@ export default async function LivePage() {
       <section aria-labelledby="live-limits">
         <h2 id="live-limits" className="live-h2">How to read this</h2>
         <ul className="live-limits">
-          <li>Ships and aircraft appear only if they broadcast a position and a volunteer receiver hears it. Many military flights fly silent, so a count is a minimum, and the civil aircraft shown are a sample of the busiest airspace.</li>
+          <li>Ships and aircraft appear only if they broadcast a position and a volunteer receiver hears it. Many military flights fly silent, so a count is a minimum, and civil coverage is thinner over oceans, Africa, Russia and China, where few receivers listen.</li>
+          <li>Ships come from AIS radio receivers on land and coasts, so open ocean is mostly unseen: the shaded cells show where any ship was heard in the last 24 hours, and unshaded sea means no receiver, not no ships.</li>
           <li>Positions between updates are estimated from each object&apos;s last heading and speed; they snap to the real position at the next update. A trail is the last two hours at most.</li>
           <li>A fire hotspot is a satellite heat reading: a wildfire, an industrial flare or a strike can look the same.</li>
           <li>An internet outage does not say why: a government shutdown, a cut cable and a power failure all look alike.</li>
-          <li>Sources: AIS ship positions from aisstream.io, ADS-B from adsb.lol, NASA FIRMS, USGS, IODA (Georgia Tech), GIE AGSI+ and ALSI, delayed market prices. Each event links to its source.</li>
+          <li>Sources: AIS ship positions from aisstream.io, Fintraffic (digitraffic.fi, CC 4.0 BY) and the Norwegian Coastal Administration (NLOD), ADS-B aircraft from the OpenSky Network and adsb.lol, NASA FIRMS, USGS, IODA (Georgia Tech), GIE AGSI+ and ALSI, delayed market prices. Each event links to its source.</li>
         </ul>
       </section>
     </div>
