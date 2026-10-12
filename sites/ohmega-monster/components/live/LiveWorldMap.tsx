@@ -4,10 +4,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { Bounds, LngLat } from "@/components/map/geo";
 import LiveMap, { type MapStatus } from "@/components/map/LiveMap";
-import { ago, compact, KIND_LABEL, shipTiles, type Headline, type LiveEvent, type LiveStat, type LiveWorld, type Summary } from "@/lib/live-shared";
+import {
+  ago, compact, fetchSnapshot, KIND_LABEL, shipTiles,
+  type AircraftDoc, type CoverageDoc, type FiresDoc, type Headline, type LiveEvent, type LiveStat, type LiveWorld, type Summary, type VesselsDoc,
+} from "@/lib/live-shared";
 
 import ChokepointTiles from "./ChokepointTiles";
-import { AIR_KINDS, NO_FILTER, passes, regionName, SHIP_CLASSES, type Entity } from "./entities";
+import { AIR_KINDS, decodeAircraft, decodeVessels, NO_FILTER, passes, regionName, SHIP_CLASSES, type Entity } from "./entities";
 import Headlines from "./Headlines";
 import LayerPanel, { type FilterState, type PanelRow } from "./LayerPanel";
 import { eventItem, gateItems, type Layer } from "./liveItems";
@@ -15,20 +18,23 @@ import { COLOR, GROUPS, liveLayers, WORLD_BOUNDS } from "./liveLayers";
 import LiveWorldStatic from "./LiveWorldStatic";
 import { Tracks } from "./TrackLayers";
 import { loadTrails, type Trail } from "./trails";
-import { useLiveFeed } from "./useLiveFeed";
 
 // The /live world map and everything around it. One interactive map (MapLibre over OpenFreeMap, components/map/LiveMap.tsx):
 //   - events (outage fills, quakes, fire heat, chokepoint lines) are declarative layers (liveLayers.ts);
 //   - ships and aircraft are the moving layers (TrackLayers.ts): density far out, dots, then heading-oriented icons dead-reckoned
 //     between the once-a-minute snapshots, with filters, search and short trails (entities.ts, trails.ts).
-// Data comes from the public Storage bucket through useLiveFeed.ts (a world density grid every minute, object tiles only for the
-// zoomed-in view, nothing while the tab is hidden or the map off screen; fire heat and receiver coverage every ten minutes). The layer toggles persist in localStorage. While the map loads, without JS or WebGL, or if the CDN
+// Data is polled from the public Storage bucket (lib/live-shared.ts `fetchSnapshot`; the big documents arrive gzipped): vessels /
+// aircraft / summary every minute, fire heat and the AIS receiver-coverage grid every ten. The layer toggles persist in localStorage. While the map loads, without JS or WebGL, or if the CDN
 // fails, the SVG map (LiveWorldStatic) shows the events instead.
 
 const BASEMAP_CREDIT = "Interactive basemap: OpenFreeMap, © OpenMapTiles, data © OpenStreetMap contributors.";
 const DATA_CREDIT = "Ships: aisstream.io, Fintraffic digitraffic.fi (CC 4.0 BY), Norwegian Coastal Administration (NLOD). Aircraft: OpenSky Network, adsb.lol. Fires: NASA FIRMS. Quakes: USGS. Outages: IODA.";
 const STORE_KEY = "ohmega-live-off";
+const POLL_MS = 60_000;
+const FIRES_MS = 600_000;
 const REFRESH_TRAILS_MS = 300_000;
+
+const pull = fetchSnapshot;
 
 const reduceMotion = () => typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 const HEADLINE_TOGGLE: Record<Headline["layer"], string> = { outage: "outage", quake: "quake", fire: "fire", ships: "ships", aircraft: "aircraft" };
@@ -36,6 +42,11 @@ const HEADLINE_TOGGLE: Record<Headline["layer"], string> = { outage: "outage", q
 type Focus = { nonce: number; bounds?: Bounds; center?: LngLat; zoom?: number };
 
 export default function LiveWorldMap({ world, events, stats, summary: summary0 }: { world: LiveWorld | null; events: LiveEvent[]; stats: LiveStat[]; summary: Summary | null }) {
+  const [summary, setSummary] = useState<Summary | null>(summary0);
+  const [vessels, setVessels] = useState<VesselsDoc | null>(null);
+  const [aircraft, setAircraft] = useState<AircraftDoc | null>(null);
+  const [fires, setFires] = useState<FiresDoc | null>(null);
+  const [coverage, setCoverage] = useState<CoverageDoc | null>(null);
   const [off, setOff] = useState<Set<string>>(new Set());
   const [filters, setFilters] = useState<FilterState>({ speed: "all", notable: false, flag: "", q: "" });
   const [sel, setSel] = useState<string | null>(null);
@@ -50,7 +61,6 @@ export default function LiveWorldMap({ world, events, stats, summary: summary0 }
   const wrap = useRef<HTMLDivElement>(null);
   const nonce = useRef(0);
   const tracks = useMemo(() => new Tracks((e) => setSelEnt(e)), []);
-  const { summary, ships, planes, totals, tiled, fires, coverage } = useLiveFeed(tracks, wrap, summary0);
 
   // ---- clock, persisted toggles, polling ---------------------------------------------------------------------------
   useEffect(() => {
@@ -68,7 +78,39 @@ export default function LiveWorldMap({ world, events, stats, summary: summary0 }
     }
   }, []);
 
+  useEffect(() => {
+    let dead = false;
+    const fast = async () => {
+      if (document.hidden) return;
+      const [v, a, s] = await Promise.all([pull<VesselsDoc>("vessels"), pull<AircraftDoc>("aircraft"), pull<Summary>("summary")]);
+      if (dead) return;
+      if (v) setVessels(v);
+      if (a) setAircraft(a);
+      if (s) setSummary(s);
+    };
+    const slow = async () => {
+      const [f, c] = await Promise.all([pull<FiresDoc>("fires"), pull<CoverageDoc>("coverage")]);
+      if (dead) return;
+      if (f) setFires(f);
+      if (c) setCoverage(c);
+    };
+    const visible = () => { if (!document.hidden) void fast(); };
+    void fast();
+    void slow();
+    const i1 = setInterval(fast, POLL_MS);
+    const i2 = setInterval(slow, FIRES_MS);
+    document.addEventListener("visibilitychange", visible);
+    return () => {
+      dead = true;
+      clearInterval(i1);
+      clearInterval(i2);
+      document.removeEventListener("visibilitychange", visible);
+    };
+  }, []);
+
   // ---- moving layers: entities, filters ----------------------------------------------------------------------------
+  const ships = useMemo(() => decodeVessels(vessels), [vessels]);
+  const planes = useMemo(() => decodeAircraft(aircraft), [aircraft]);
   useEffect(() => tracks.setEntities("ship", ships), [tracks, ships]);
   useEffect(() => tracks.setEntities("air", planes), [tracks, planes]);
   const entityFilter = useMemo(
@@ -97,10 +139,10 @@ export default function LiveWorldMap({ world, events, stats, summary: summary0 }
       const t = await loadTrails(tracks.visibleEntities(), (e) => tracks.position(e));
       if (!dead) setVisTrail(t);
     };
-    const offView = tracks.addViewListener(() => { clearTimeout(timer); timer = setTimeout(() => void run(), 600); });
+    tracks.onView = () => { clearTimeout(timer); timer = setTimeout(() => void run(), 600); };
     void run();
     const again = setInterval(() => void run(), REFRESH_TRAILS_MS);
-    return () => { dead = true; clearTimeout(timer); clearInterval(again); offView(); };
+    return () => { dead = true; clearTimeout(timer); clearInterval(again); tracks.onView = null; };
   }, [wantVisible, tracks, ships, planes]);
   useEffect(() => tracks.setTrails([...visTrail, ...selTrail]), [tracks, visTrail, selTrail]);
 
@@ -119,10 +161,10 @@ export default function LiveWorldMap({ world, events, stats, summary: summary0 }
   const nOutages = events.filter((e) => e.kind === "outage" && e.ends_at === null).length;
   const nQuakes = events.filter((e) => e.kind === "quake").length;
   const rows: PanelRow[] = [
-    { key: "ships", label: "Ships", color: "#3fb0a8", count: totals.ships ? totals.ships.n : null, fresh: when(totals.ships?.as_of ?? summary?.fresh.ships),
-      subs: SHIP_CLASSES.map((c) => ({ key: `ships.${c.key}`, label: c.key === "military" ? "Military / police" : c.label, color: c.color, count: totals.ships?.counts?.[c.key] ?? null, fresh: "" })) },
-    { key: "aircraft", label: "Aircraft", color: "#8b6fd6", count: totals.air ? totals.air.n : null, fresh: when(totals.air?.as_of ?? summary?.fresh.aircraft),
-      subs: AIR_KINDS.map((k) => ({ key: `aircraft.${k.key}`, label: k.label, color: k.color, count: totals.air?.counts?.[k.key] ?? null, fresh: "" })) },
+    { key: "ships", label: "Ships", color: "#3fb0a8", count: vessels ? vessels.n : null, fresh: when(vessels?.as_of ?? summary?.fresh.ships),
+      subs: SHIP_CLASSES.map((c) => ({ key: `ships.${c.key}`, label: c.key === "military" ? "Military / police" : c.label, color: c.color, count: vessels?.counts?.[c.key] ?? null, fresh: "" })) },
+    { key: "aircraft", label: "Aircraft", color: "#8b6fd6", count: aircraft ? aircraft.n : null, fresh: when(aircraft?.as_of ?? summary?.fresh.aircraft),
+      subs: AIR_KINDS.map((k) => ({ key: `aircraft.${k.key}`, label: k.label, color: k.color, count: aircraft?.counts?.[k.key] ?? null, fresh: "" })) },
     { key: "coverage", label: "AIS receiver coverage", color: "#3fb0a8", count: null, fresh: coverage ? "last 24 h" : "" },
     { key: "fire", label: KIND_LABEL.fire, color: COLOR.fire, count: fires?.detections ?? summary?.fires?.detections ?? null, fresh: when(fires?.as_of ?? summary?.fresh.fire) },
     { key: "quake", label: KIND_LABEL.quake, color: COLOR.quake, count: nQuakes, fresh: when(summary?.fresh.quake) },
@@ -142,12 +184,8 @@ export default function LiveWorldMap({ world, events, stats, summary: summary0 }
   const shownText = useMemo(() => {
     const s = off.has("ships") ? 0 : ships.filter((e) => passes(e, entityFilter)).length;
     const a = off.has("aircraft") ? 0 : planes.filter((e) => passes(e, entityFilter)).length;
-    if (tiled) {
-      const narrowed = filters.speed !== "all" || filters.notable || filters.flag !== "" || filters.q !== "";
-      return `Far out you see density, by class: ${compact(totals.ships?.n ?? 0)} ships and ${compact(totals.air?.n ?? 0)} aircraft worldwide. Zoom in on a region to load its individual ships and aircraft (${compact(s)} of ${compact(ships.length)} ships and ${compact(a)} of ${compact(planes.length)} aircraft are in view). ${narrowed ? "Speed, notable, flag and search filters, and the search box, apply to what is loaded in view only. " : ""}Ships are seen only within reach of AIS receivers (the shaded cells): unshaded ocean means no receiver, not no ships.`;
-    }
     return ships.length + planes.length === 0 ? "" : `Showing ${compact(s)} of ${compact(ships.length)} ships and ${compact(a)} of ${compact(planes.length)} aircraft. Zoom in past a region for individual icons; far out you see density. Ships are seen only within reach of AIS receivers (the shaded cells): unshaded ocean means no receiver, not no ships.`;
-  }, [ships, planes, entityFilter, off, tiled, totals, filters]);
+  }, [ships, planes, entityFilter, off]);
 
   const toggle = (key: string) => {
     const n = new Set(off);
@@ -242,7 +280,7 @@ export default function LiveWorldMap({ world, events, stats, summary: summary0 }
 
       <section aria-labelledby="live-choke">
         <h2 id="live-choke" className="live-h2">Chokepoints</h2>
-        <ChokepointTiles tiles={gateTile} gates={summary?.gates ?? {}} focus={gate} onFocus={focusGate} fresh={when(totals.ships?.as_of ?? summary?.fresh.ships)} />
+        <ChokepointTiles tiles={gateTile} gates={summary?.gates ?? {}} focus={gate} onFocus={focusGate} fresh={when(vessels?.as_of ?? summary?.fresh.ships)} />
       </section>
 
       <details className="live-events">
