@@ -115,7 +115,7 @@ def _update_note(edition: int, morning: dict, built_at: str) -> str:
             f"a section earlier today (built {_hhmm(built_at)} UTC), shown below as the PREVIOUS DAILY SECTION. The "
             f"reader has read it. Write ONLY what moved since: lead with the change, do not restate the morning. "
             f"`since_yesterday` here means since that earlier section. If nothing material moved, leave "
-            f"`developments` empty and say so in `bottom_line`.")
+            f"`developments` empty and say so in `bottom_line`. Leave `saga` empty: the morning section carries it.")
 
 
 def _new_note(edition: int) -> str:

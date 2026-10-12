@@ -265,6 +265,7 @@ class SectionDraft(BaseModel):
 
     bottom_line: str
     headline: str = ""               # one complete standalone sentence, <= ~20 words: the section's title line
+    saga: str = ""                   # the big picture in 1-3 plain sentences (who is against whom, since when, why it matters); "" for a one-off
     escalation: DailyEscalation = Field(default_factory=DailyEscalation)
     since_yesterday: list[DailyChange] = Field(default_factory=list)
     developments: list[Development] = Field(default_factory=list)

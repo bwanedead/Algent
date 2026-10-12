@@ -250,7 +250,8 @@ def _daily_theater(t: dict) -> str:
     watch = "".join(f"<li>{_e(w)}</li>" for w in t["watch_next"])
     brief = f"<div class='sub'>Deep brief: {_e(t['brief_slug'])}</div>" if t.get("brief_slug") else ""
     figures = "".join(_figure(f) for f in t.get("key_figures") or [])
-    return (f"<h2>{_e(t['name'])}</h2><div class='card bluf'>{_e(t['bottom_line'])}</div>"
+    saga = f"<div class='sub'>{_e(t['saga'])}</div>" if t.get("saga") else ""
+    return (f"<h2>{_e(t['name'])}</h2>{saga}<div class='card bluf'>{_e(t['bottom_line'])}</div>"
             f"<div><span class='pill {esc['direction']}'>{_e(esc['direction'])}</span>"
             f"<span class='pill steady'>pace: {_e(esc['pace'])}</span>"
             f"<span class='pill steady'>{_e(temp.get('coverage') or temp['trend'])} · "
