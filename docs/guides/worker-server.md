@@ -138,21 +138,37 @@ not a fixed number), one event per blaze, at most 12. Watched boxes (front lines
 key limit: 5000 transactions per 10 minutes; a run is 8 area requests plus one status check every 3 hours (72 a day), and the run is
 skipped if the status endpoint says the key is near its limit.
 
-**Ships and aircraft (the stream service).** `newsroom live ais` runs the aisstream websocket (boxes in `flags.AIS_BOXES`, the world by
-default; if that is too heavy, list several sea-lane boxes there) and an adsb.lol sweep together. Boards are bounded: a vessel expires
-after 30 min and at most `AIS_MAX_VESSELS` (12,000, freshest kept) are held; civil aircraft come from area queries (adsb.lol has no
-worldwide dump) swept over `regions.CIVIL_HUBS`, three hubs per cycle, plus one `/v2/mil` call, expiring after 8 min (military 4 min), at
-most 8,000. Ships are classed from the AIS ship type (tanker, cargo, passenger, fishing, military/law enforcement, other); flag state
-from the MMSI prefix. A short trail (up to 24 points, one per 5 min, 2 h) is kept per live object and dropped when it leaves the board;
-nothing else about an object is stored (daily aggregate counts only). The ICAO address and registration are never published; callsign
-and ship name only if broadcast.
+**Ships and aircraft (the stream service).** `newsroom live ais` runs these sources together, all merged into two bounded boards:
+
+| Source | What | Notes |
+|---|---|---|
+| aisstream.io | world websocket (`flags.AIS_BOXES`), position + static + long-range (type 27) messages | connects with permessage-deflate (`compress=15`): since September 2026 aisstream drops messages of UNCOMPRESSED connections beyond a per-user bandwidth limit. Terrestrial, volunteer receivers only: the open ocean is genuinely unseen |
+| Digitraffic (Fintraffic) | Finnish waters, REST, polled every 60 s (metadata every 15 min) | keyless, CC 4.0 BY |
+| Kystverket | Norwegian economic zone + Svalbard, NMEA over TCP `153.44.253.27:5631` | keyless, NLOD licence; decoded by `live/ingest/nmea.py`; excludes small craft. Not reachable from every network: the service records failures in `status.json` and keeps retrying |
+| OpenSky Network | the whole world's aircraft, one `/states/all` call | anonymous 900 s cadence, account 120 s (credit math in `flags.py`); keys `ALGENT_OPENSKY_CLIENT_ID/_SECRET` |
+| adsb.lol | all military (`/v2/mil`) + 6 civil area queries per minute over `regions.CIVIL_HUBS` (41 hubs, ~7 min sweep) | fills OpenSky's gaps; the only source of military flags |
+
+Boards are bounded: a vessel expires after 30 min and at most `AIS_MAX_VESSELS` (60,000, freshest kept; ~1 KB each, measured) are held;
+aircraft expire after their source's ttl and at most `AIRCRAFT_MAX` (25,000) are held. Merges are by MMSI / ICAO address, freshest
+position wins, and a military class is never downgraded by a civil sighting. Ships are classed from the AIS ship type (tanker, cargo,
+passenger, fishing, military/law enforcement, other); static data arrives only every ~6 min per ship, so the MMSI -> type/name/destination
+memory is saved to `live_store/ais_static.json` every 5 min and reloaded at start (14-day keep, 150,000 cap): without it a restart reads
+every ship as "other". A short trail (ships up to 24 points one per 5 min; aircraft 16 points one per 3 min) is kept per live object and
+dropped when it leaves the board. The ICAO address and registration are never published; callsign and ship name only if broadcast.
+
+**Receiver coverage.** The board also keeps `live_store/ais_coverage.json`: 1-degree cells where any AIS position was heard in the last 24 h,
+published as `coverage.json.gz` and drawn as a faint layer, so empty ocean reads as "no receiver" and not "no ships". Honest limits:
+aisstream is volunteer terrestrial AIS (about 40 nautical miles from a coast receiver); open ocean needs satellite AIS, which is paid.
 
 **Transport.** Nothing per-object goes to Postgres. Every 60 s the service writes compact JSON snapshots to the public Storage bucket
 `published-assets` under `live/` via `publishing/asset_store` (cache header `public, max-age=20`, unchanged files skipped by hash):
-`vessels.json`, `aircraft.json` (rows of rounded numbers), `summary.json` (headlines, per-layer freshness, live chokepoint counts); every 5 min
-the trail shards `tracks/v0..v15.json` (ships) and `tracks/a0..a3.json` (aircraft; an object lives in shard `id mod n`), fetched by the
-site only when a trail is asked for. The timer runner publishes `fires.json` (heat cells), `energy.json` and `summary.json`. The site polls
-them (`lib/live-shared.ts` `snapshotUrl`); with no Supabase credentials the uploads are a no-op. Snapshot code: `live/snapshots.py`, `live/stream.py`.
+`vessels.json.gz`, `aircraft.json.gz` (rows of rounded numbers, gzip level 6, deterministic; 60,000 ships are 4.4 MB of JSON and 0.8 MB gzipped;
+15,000 aircraft about 1 MB and 0.38 MB), `summary.json` (headlines, per-layer freshness, live chokepoint counts); every 5 min `coverage.json.gz`
+and the trail shards `tracks/v0..v15.json.gz` (ships) and `tracks/a0..a15.json.gz` (aircraft; an object lives in shard `id mod n`), fetched by
+the site only when a trail is asked for. The site inflates `.json.gz` in the browser (`DecompressionStream`; `fetchSnapshot` in
+`lib/live-shared.ts`) and falls back to the plain `.json` of older deployments. The timer runner publishes `fires.json` (heat cells),
+`energy.json` and `summary.json`. With no Supabase credentials the uploads are a no-op. Code: `live/snapshots.py`, `live/stream.py`.
+Egress note: an open /live tab pulls ~1.2 MB a minute (visible tabs only); watch the bucket's egress on the free Supabase plan.
 
 **What the site does with them.** The map (`sites/ohmega-monster/components/live/`) shows ships and aircraft as density far out, dots at
 region zoom and small heading-oriented icons past zoom 6.5, dead-reckoned between snapshots (paused when the tab is hidden, the map is
