@@ -2,12 +2,12 @@
 // for aircraft; an object lives in shard `id mod n`). A trail is fetched only when asked for (tap, "trails for visible",
 // chokepoint focus) and cached for a few minutes. Client-safe.
 
-import { snapshotUrl, type TracksDoc } from "@/lib/live-shared";
+import { fetchSnapshot, type TracksDoc } from "@/lib/live-shared";
 
 import { colorOf, type Entity } from "./entities";
 
 export const SHIP_SHARDS = 16; // backend flags.TRACK_SHARDS
-export const AIR_SHARDS = 4;
+export const AIR_SHARDS = 16; // backend flags.AIR_TRACK_SHARDS
 const FRESH_MS = 4 * 60 * 1000;
 const MAX_TRAILS = 160; // "trails for visible" is capped: more lines than this is a hairball, not information
 
@@ -20,13 +20,7 @@ export const shardName = (e: Entity) => (e.kind === "ship" ? `tracks/v${e.id % S
 async function shard(name: string): Promise<TracksDoc | null> {
   const hit = cache.get(name);
   if (hit && Date.now() - hit.at < FRESH_MS) return hit.doc;
-  let doc: TracksDoc | null = null;
-  try {
-    const res = await fetch(snapshotUrl(name), { cache: "no-store" });
-    doc = res.ok ? ((await res.json()) as TracksDoc) : null;
-  } catch {
-    doc = null;
-  }
+  const doc = await fetchSnapshot<TracksDoc>(name);
   cache.set(name, { at: Date.now(), doc });
   return doc;
 }

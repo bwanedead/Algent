@@ -5,7 +5,10 @@
 //     rotated to their heading, only for what is inside the (padded) view and capped at MAX_ICONS. GPU symbol layers do the drawing.
 //   * Motion: between snapshots each icon is dead-reckoned along its heading at its speed (entities.reckon). The loop runs only
 //     while the map is zoomed in, on screen, in a visible tab and without a reduced-motion preference.
-//   * Tap an object: popup with what it broadcasts; the host is told (to load its trail). Trails are drawn from a line source.
+//   * Tap an object: the hit target is a pixel box around the finger/cursor (bigger on touch), the NEAREST object wins, and when
+//     two or more sit within a few pixels of the nearest a small chooser lists them. The popup shows what the object broadcasts;
+//     the host is told (to load its trail). Trails are drawn from a line source.
+//   * Receiver coverage: a faint wash over the 1-degree cells where AIS was heard in the last day, so empty ocean reads as "no receiver".
 //
 // Client-only. MapLibre arrives as a runtime global (components/map/maplibre.ts), hence the untyped map.
 
@@ -16,22 +19,32 @@ import { popupNode } from "@/components/map/mapLayers";
 import { colorOf, describe, iconOf, isNotable, passes, reckon, SHIP_CLASSES, NO_FILTER, type Entity, type EntityFilter, type Kind } from "./entities";
 import type { Trail } from "./trails";
 import { styleReady } from "@/components/map/maplibre";
+import type { CoverageDoc } from "@/lib/live-shared";
 
 export const DOT_ZOOM = 4;
 export const ICON_ZOOM = 6.5;
 const MAX_ICONS = 4500;
+const FAR_MAX = 30000; // far out (density only) more points than this are thinned evenly: the heat picture does not need them all
+const HIT_PX = 14; // half-width of the tap box on a mouse (a finger gets HIT_PX_TOUCH)
+const HIT_PX_TOUCH = 26;
+const HOVER_PX = 10;
+const CHOOSE_GAP_PX = 9; // when the second-nearest object is within this many pixels of the nearest, ask which one
+const MAX_CHOICES = 8;
 const PAD = 0.25;
 const KINDS: Kind[] = ["ship", "air"];
 const GROUP_COLOR: Record<Kind, string> = { ship: "#3fb0a8", air: "#8b6fd6" };
 const EMPTY = { type: "FeatureCollection", features: [] as any[] };
 const SOURCE: Record<Kind, { name: string; url: string }> = {
-  ship: { name: "aisstream.io", url: "https://aisstream.io/" },
-  air: { name: "adsb.lol", url: "https://adsb.lol/" },
+  ship: { name: "aisstream.io and open national AIS feeds", url: "https://aisstream.io/" },
+  air: { name: "OpenSky Network, adsb.lol", url: "https://opensky-network.org/" },
 };
 
 const src = (k: Kind) => `lt-${k}`;
 const layerIds = (k: Kind) => [`${src(k)}-heat`, `${src(k)}-dot`, `${src(k)}-dot0`, `${src(k)}-icon`, `${src(k)}-note`];
 const CLICKABLE = (k: Kind) => [`${src(k)}-icon`, `${src(k)}-dot`, `${src(k)}-dot0`];
+const COVERAGE = { source: "lt-coverage", layer: "lt-coverage-fill" };
+type Hit = { e: Entity; d: number; at: [number, number] };
+const coarsePointer = () => typeof matchMedia === "function" && matchMedia("(pointer: coarse)").matches;
 const reduceMotion = () => typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function icon(draw: (c: CanvasRenderingContext2D, r: number) => void, size = 36): ImageData {
@@ -67,6 +80,9 @@ export class Tracks {
   private trails: Trail[] = [];
   private selected: Entity | null = null;
   private popup: any = null;
+  private chooser: any = null;
+  private coverage: CoverageDoc | null = null;
+  private coverageOn = true;
   private raf = 0;
   private last = 0;
   private visible = true;
@@ -83,6 +99,10 @@ export class Tracks {
     this.map = map;
     this.addIcons();
     for (const k of KINDS) this.addGroup(k);
+    if (!map.getSource(COVERAGE.source)) {
+      map.addSource(COVERAGE.source, { type: "geojson", data: EMPTY });
+      map.addLayer({ id: COVERAGE.layer, source: COVERAGE.source, type: "fill", paint: { "fill-color": "#3fb0a8", "fill-opacity": 0.1, "fill-antialias": false } });
+    }
     if (!map.getSource("lt-trails")) {
       map.addSource("lt-trails", { type: "geojson", data: EMPTY });
       map.addLayer({ id: "lt-trails-line", source: "lt-trails", type: "line", layout: { "line-cap": "round", "line-join": "round" },
@@ -90,7 +110,7 @@ export class Tracks {
       map.addSource("lt-sel", { type: "geojson", data: EMPTY });
       map.addLayer({ id: "lt-sel-ring", source: "lt-sel", type: "circle", paint: { "circle-radius": 14, "circle-color": "rgba(0,0,0,0)", "circle-stroke-color": "#ffffff", "circle-stroke-width": 2 } });
     }
-    for (const id of ["lt-trails-line", ...KINDS.flatMap(layerIds), "lt-sel-ring"]) if (map.getLayer(id)) map.moveLayer(id); // keep above the declarative layers
+    for (const id of [COVERAGE.layer, "lt-trails-line", ...KINDS.flatMap(layerIds), "lt-sel-ring"]) if (map.getLayer(id)) map.moveLayer(id); // keep above the declarative layers
     if (!this.bound.has(map)) {
       this.bound.add(map);
       this.bind(map);
@@ -98,6 +118,7 @@ export class Tracks {
     this.rebuild();
     this.drawTrails();
     this.drawSelected();
+    this.drawCoverage();
     this.start();
   }
 
@@ -108,21 +129,21 @@ export class Tracks {
     this.io = null;
     this.popup?.remove();
     this.popup = null;
+    this.chooser?.remove();
+    this.chooser = null;
     this.map = null;
   }
 
   private bind(map: any) {
-    const ids = KINDS.flatMap(CLICKABLE);
     map.on("click", (e: any) => {
-      const live = ids.filter((id) => map.getLayer(id));
-      const f = live.length ? map.queryRenderedFeatures(e.point, { layers: live })[0] : null;
-      if (!f) return this.select(null);
-      const kind: Kind = f.properties.k === "s" ? "ship" : "air";
-      this.select(this.byId[kind].get(Number(f.properties.id)) ?? null);
+      const touch = e.originalEvent?.pointerType === "touch" || coarsePointer();
+      const hits = this.hits(e.point, touch ? HIT_PX_TOUCH : HIT_PX);
+      if (!hits.length) return this.select(null);
+      if (hits.length > 1 && hits[1].d - hits[0].d < CHOOSE_GAP_PX) return this.choose(hits.slice(0, MAX_CHOICES), hits[0].at);
+      this.select(hits[0].e);
     });
     map.on("mousemove", (e: any) => {
-      const live = ids.filter((id) => map.getLayer(id));
-      if (live.length) map.getCanvas().style.cursor = map.queryRenderedFeatures(e.point, { layers: live }).length ? "pointer" : "";
+      map.getCanvas().style.cursor = this.hits(e.point, HOVER_PX).length ? "pointer" : "";
     });
     map.on("moveend", () => {
       this.rebuild();
@@ -133,6 +154,61 @@ export class Tracks {
       this.io = new IntersectionObserver((entries) => (this.visible = entries.some((en) => en.isIntersecting)));
       this.io.observe(map.getContainer());
     }
+  }
+
+  /** The objects whose icon/dot lies within `radius` pixels of `point`, nearest first (each once). */
+  private hits(point: { x: number; y: number }, radius: number): Hit[] {
+    const map = this.map;
+    if (!map) return [];
+    const layers = KINDS.flatMap(CLICKABLE).filter((id) => map.getLayer(id));
+    if (!layers.length) return [];
+    const feats = map.queryRenderedFeatures([[point.x - radius, point.y - radius], [point.x + radius, point.y + radius]], { layers });
+    const seen = new Set<string>();
+    const out: Hit[] = [];
+    for (const f of feats) {
+      const kind: Kind = f.properties.k === "s" ? "ship" : "air";
+      const ent = this.byId[kind].get(Number(f.properties.id));
+      const key = `${kind}:${f.properties.id}`;
+      if (!ent || seen.has(key)) continue;
+      seen.add(key);
+      const at = (f.geometry?.coordinates ?? this.position(ent)) as [number, number];
+      const px = map.project(at);
+      out.push({ e: ent, d: Math.hypot(px.x - point.x, px.y - point.y), at });
+    }
+    return out.filter((h) => h.d <= radius * 1.5).sort((a, b) => a.d - b.d);
+  }
+
+  /** Several objects under one tap: a small list to pick from (text only, buttons big enough for a finger). */
+  private choose(hits: Hit[], at: [number, number]) {
+    const ml = (window as any).maplibregl;
+    if (!ml || !this.map) return this.select(hits[0].e);
+    this.popup?.remove();
+    this.chooser?.remove();
+    const root = document.createElement("div");
+    root.className = "lm-pop lt-choose";
+    const head = document.createElement("p");
+    head.className = "lm-pop-kind";
+    head.textContent = `${hits.length} objects here, pick one`;
+    root.appendChild(head);
+    const list = document.createElement("ul");
+    const now = Date.now() / 1000;
+    for (const h of hits) {
+      const d = describe(h.e, now);
+      const li = document.createElement("li");
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "lt-choose-btn";
+      btn.textContent = `${d.title} · ${d.kind}`;
+      btn.addEventListener("click", () => {
+        this.chooser?.remove();
+        this.chooser = null;
+        this.select(h.e);
+      });
+      li.appendChild(btn);
+      list.appendChild(li);
+    }
+    root.appendChild(list);
+    this.chooser = new ml.Popup({ maxWidth: "280px", offset: 10, closeButton: true, focusAfterOpen: false }).setLngLat(at).setDOMContent(root).addTo(this.map);
   }
 
   private addIcons() {
@@ -212,6 +288,8 @@ export class Tracks {
   }
 
   select(e: Entity | null, open = true) {
+    this.chooser?.remove();
+    this.chooser = null;
     this.popup?.remove();
     this.popup = null;
     this.selected = e;
@@ -250,6 +328,12 @@ export class Tracks {
         continue;
       }
       let list = this.ents[k].filter((e) => passes(e, this.filter));
+      if (!b && list.length > FAR_MAX) {
+        const keep = list.filter((e) => isNotable(e) || e === this.selected);
+        const rest = list.filter((e) => !(isNotable(e) || e === this.selected));
+        const stride = Math.ceil(rest.length / Math.max(1, FAR_MAX - keep.length));
+        list = [...keep, ...rest.filter((_, i) => i % stride === 0)];
+      }
       if (b) {
         const dx = (b.getEast() - b.getWest()) * PAD;
         const dy = (b.getNorth() - b.getSouth()) * PAD;
@@ -267,6 +351,30 @@ export class Tracks {
         geometry: { type: "Point", coordinates: detail ? reckon(e, now) : [e.lon, e.lat] } })) });
     }
     if (this.selected) this.drawSelected();
+  }
+
+  setCoverage(doc: CoverageDoc | null) {
+    this.coverage = doc;
+    this.drawCoverage();
+  }
+
+  setCoverageVisible(on: boolean) {
+    this.coverageOn = on;
+    this.drawCoverage();
+  }
+
+  private drawCoverage() {
+    const map = this.map;
+    const s = map?.getSource(COVERAGE.source);
+    if (!s || !map.getLayer(COVERAGE.layer)) return;
+    map.setLayoutProperty(COVERAGE.layer, "visibility", this.coverageOn ? "visible" : "none");
+    const d = this.coverage?.deg ?? 1;
+    const perRow = Math.round(360 / d);
+    s.setData({ type: "FeatureCollection", features: (this.coverageOn ? this.coverage?.cells ?? [] : []).map((id) => {
+      const lat0 = Math.floor(id / perRow) * d - 90;
+      const lon0 = (id % perRow) * d - 180;
+      return { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [[[lon0, lat0], [lon0 + d, lat0], [lon0 + d, lat0 + d], [lon0, lat0 + d], [lon0, lat0]]] } };
+    }) });
   }
 
   private drawTrails() {

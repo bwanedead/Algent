@@ -112,8 +112,37 @@ export const KIND_LABEL: Record<LiveKind, string> = {
 
 export const SNAPSHOT_BASE = `${(process.env.NEXT_PUBLIC_SUPABASE_URL || "").replace(/\/+$/, "")}/storage/v1/object/public/published-assets/live`;
 
-/** URL of a live snapshot ("vessels", "aircraft", "fires", "summary", "energy", "tracks/v3"). */
+/** URL of a live snapshot's plain-JSON form ("fires", "summary", "energy"; the big ones are fetched with `fetchSnapshot`). */
 export const snapshotUrl = (name: string) => `${SNAPSHOT_BASE}/${name}.json`;
+
+/** The big documents (vessels, aircraft, coverage, tracks/...) are published gzipped as `<name>.json.gz` (backend `flags.GZIP_LEVEL`). */
+export const GZIPPED = ["vessels", "aircraft", "coverage", "tracks/"];
+
+async function inflate(bytes: Uint8Array): Promise<unknown> {
+  if (bytes[0] === 0x1f && bytes[1] === 0x8b && typeof DecompressionStream !== "undefined") {
+    const stream = new Blob([bytes as BlobPart]).stream().pipeThrough(new DecompressionStream("gzip"));
+    return new Response(stream).json();
+  }
+  return JSON.parse(new TextDecoder().decode(bytes)); // a CDN that already decoded the gzip hands over plain JSON
+}
+
+/** Fetch one live snapshot as JSON: the gzipped object first for the big documents (inflated in the browser), the plain `.json` as
+ *  the fallback (an older backend, a browser without DecompressionStream). `null` on any failure; the page degrades to "nothing". */
+export async function fetchSnapshot<T>(name: string): Promise<T | null> {
+  const attempts = GZIPPED.some((g) => name.startsWith(g)) ? [`${SNAPSHOT_BASE}/${name}.json.gz`, snapshotUrl(name)] : [snapshotUrl(name)];
+  for (const url of attempts) {
+    try {
+      const res = await fetch(url, { cache: "no-store" });
+      if (res.ok) return (await inflate(new Uint8Array(await res.arrayBuffer()))) as T;
+    } catch {
+      /* try the next form */
+    }
+  }
+  return null;
+}
+
+/** Receiver coverage: 1-degree cells (id = (floor(lat)+90)*360 + floor(lon)+180) where any AIS position was heard in the last `hours` hours. */
+export type CoverageDoc = { as_of: string; deg: number; hours: number; cells: number[] };
 
 export type Headline = { id: string; layer: "outage" | "quake" | "fire" | "ships" | "aircraft"; text: string; score: number; lat: number | null; lon: number | null; zoom: number };
 export type GateNow = { label: string; lat: number; lon: number; box?: [number, number, number, number]; in_strait?: number; moving?: number; tankers?: number; transits_today?: number | null; tanker_transits_today?: number | null };
