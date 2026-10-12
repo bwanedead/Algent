@@ -139,7 +139,7 @@ SNAPSHOT_CACHE = "public, max-age=30"
 #: Live transport (live/tiles.py): the vessel and aircraft boards are published as a world density grid (DENSITY_DEG cells) plus
 #: object tiles (TILE_DEG degrees, only non-empty ones) so a tab downloads just what it shows. TILE_DEG trades files per cycle
 #: (smaller tiles = more uploads, ~300 at 10) against bytes per viewport (bigger tiles = more rows the viewport does not need).
-DENSITY_DEG = 2
+DENSITY_DEG = 0.25   # fine enough that the world heat glow looks like the objects themselves (~26 KB gz for both layers)
 TILE_DEG = 10
 #: Also publish the old full ``vessels`` / ``aircraft`` documents (~1.2 MB a minute per open tab). Keep True until the deployed site
 #: reads ``density`` + ``tiles/`` (it falls back to the full documents when they are missing), then set False and delete the two objects.
