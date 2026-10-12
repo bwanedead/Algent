@@ -89,7 +89,7 @@ export class Tracks {
   private dens: Record<Kind, DensityCells | null> = { ship: null, air: null };
   private derived: Record<Kind, DensityCells | null> = { ship: null, air: null };
   private coverage: CoverageDoc | null = null;
-  private coverageOn = false;
+  private coverageOn = false;   // receiver coverage is opt-in
   private raf = 0;
   private last = 0;
   private visible = true;
@@ -235,13 +235,10 @@ export class Tracks {
     const col = GROUP_COLOR[k];
     map.addSource(s, { type: "geojson", data: EMPTY });
     map.addSource(`${s}-d`, { type: "geojson", data: EMPTY });
-    // Far out: a soft heat glow from the density cells' centres (no blocky squares), fading out as the dots take over.
-    map.addLayer({ id: `${s}-cell`, source: `${s}-d`, type: "heatmap", maxzoom: DOT_ZOOM + 1, paint: {
-      "heatmap-weight": ["interpolate", ["linear"], ["get", "w"], 0, 0, 5, 0.35, 60, 0.75, 400, 1],
-      "heatmap-intensity": ["interpolate", ["linear"], ["zoom"], 0, 0.6, DOT_ZOOM, 1.2],
-      "heatmap-radius": ["interpolate", ["linear"], ["zoom"], 0, 6, 3, 16, DOT_ZOOM, 30],
-      "heatmap-color": ["interpolate", ["linear"], ["heatmap-density"], 0, "rgba(0,0,0,0)", 0.15, withAlpha(col, 0.18), 0.5, withAlpha(col, 0.45), 1, withAlpha(col, 0.8)],
-      "heatmap-opacity": ["interpolate", ["linear"], ["zoom"], DOT_ZOOM - 0.5, 0.9, DOT_ZOOM + 1, 0] } });
+    const level = ["interpolate", ["linear"], ["get", "w"], 1, 0.16, 12, 0.38, 120, 0.72];
+    map.addLayer({ id: `${s}-cell`, source: `${s}-d`, type: "fill", maxzoom: DOT_ZOOM + 1, paint: {
+      "fill-color": col, "fill-antialias": false,
+      "fill-opacity": ["interpolate", ["linear"], ["zoom"], DOT_ZOOM - 0.5, level, DOT_ZOOM + 1, 0] } });
     const dotPaint = { "circle-color": ["get", "col"], "circle-opacity": 0.85, "circle-stroke-width": 0.5, "circle-stroke-color": "rgba(255,255,255,0.7)" };
     map.addLayer({ id: `${s}-dot`, source: s, type: "circle", minzoom: DOT_ZOOM, maxzoom: ICON_ZOOM, paint: { ...dotPaint,
       "circle-radius": ["interpolate", ["linear"], ["zoom"], DOT_ZOOM, 1.3, ICON_ZOOM, 2.4] } });
@@ -402,7 +399,7 @@ export class Tracks {
       if (w <= 0) continue;
       const lat0 = Math.floor(id / perRow) * d - 90;
       const lon0 = (id % perRow) * d - 180;
-      features.push({ type: "Feature", properties: { w }, geometry: { type: "Point", coordinates: [lon0 + d / 2, lat0 + d / 2] } });
+      features.push({ type: "Feature", properties: { w }, geometry: { type: "Polygon", coordinates: [[[lon0, lat0], [lon0 + d, lat0], [lon0 + d, lat0 + d], [lon0, lat0 + d], [lon0, lat0]]] } });
     }
     s.setData({ type: "FeatureCollection", features });
   }
@@ -474,11 +471,4 @@ export class Tracks {
     };
     this.raf = requestAnimationFrame(tick);
   }
-}
-
-
-/** A hex colour (#rrggbb) at the given alpha, for heatmap ramps. */
-function withAlpha(hex: string, a: number): string {
-  const n = parseInt(hex.replace("#", "").slice(0, 6), 16);
-  return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
 }
