@@ -48,7 +48,8 @@ def test_evidence_block_format():
     assert "[chk_hormuz_transits]" in line and "2 ships/day" in line and "UNUSUAL" in line
     assert "at 90d low" in line and "source: IMF PortWatch https://portwatch.imf.org/" in line
     assert "vs prior week" in line and "vs prev" not in line and "1y percentile" in line
-    assert "weekly data" in line and "latest week to 10 Oct" in line
+    last = date.today() - timedelta(days=1)                                   # the seed's newest observation
+    assert "weekly data" in line and f"latest week to {last.day} {last:%b}" in line
 
 
 def test_evidence_block_empty_when_nothing_matches_or_stored():

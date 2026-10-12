@@ -1,0 +1,13 @@
+/* GlobeSpinner (components/GlobeSpinner.tsx): theme tokens only, so dark-amber and paper both work. */
+.globe-spinner { display: inline-flex; flex-direction: column; align-items: center; gap: 8px; line-height: 0; vertical-align: middle; }
+.globe-spinner svg { display: block; overflow: visible; }
+.gs-coast { stroke: var(--accent); }
+.gs-far { stroke: var(--accent); opacity: 0.16; }
+.gs-grid { stroke: var(--rule-strong); opacity: 0.55; }
+.gs-rim { stroke: var(--rule-strong); }
+.gs-lit { stop-color: var(--accent); }
+.gs-limb { stop-color: var(--accent); }
+.globe-caption { font-size: 12px; line-height: 1.3; color: var(--muted); }
+/* A centred loading slot: fills its parent and centres the globe. */
+.globe-fill { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+.globe-page { min-height: 50vh; display: grid; place-items: center; padding: 48px 16px; }

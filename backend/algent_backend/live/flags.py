@@ -133,7 +133,18 @@ DIGITRAFFIC_INTERVAL_S = 60
 KYSTVERKET_ENABLED = True
 KYSTVERKET_HOST = "153.44.253.27"
 KYSTVERKET_PORT = 5631
-#: Snapshot objects in the public Storage bucket carry this cache header (the site polls every minute).
-SNAPSHOT_CACHE = "public, max-age=20"
+#: Snapshot objects in the public Storage bucket carry this cache header: the site polls every 60 s and revalidates (ETag), a CDN
+#: serves repeat fetches inside the window. Trail shards, coverage and tiles are republished at most this often anyway.
+SNAPSHOT_CACHE = "public, max-age=30"
+#: Live transport (live/tiles.py): the vessel and aircraft boards are published as a world density grid (DENSITY_DEG cells) plus
+#: object tiles (TILE_DEG degrees, only non-empty ones) so a tab downloads just what it shows. TILE_DEG trades files per cycle
+#: (smaller tiles = more uploads, ~300 at 10) against bytes per viewport (bigger tiles = more rows the viewport does not need).
+DENSITY_DEG = 2
+TILE_DEG = 10
+#: Also publish the old full ``vessels`` / ``aircraft`` documents (~1.2 MB a minute per open tab). Keep True until the deployed site
+#: reads ``density`` + ``tiles/`` (it falls back to the full documents when they are missing), then set False and delete the two objects.
+PUBLISH_FULL_SNAPSHOT = True
+#: Parallel uploads of one cycle's files (tiles are hundreds of small objects).
+UPLOAD_WORKERS = 8
 #: A ship is "dark" when it was last heard moving this long ago while the board still holds it (it leaves at AIS_VESSEL_TTL_S).
 DARK_AFTER_S = 900

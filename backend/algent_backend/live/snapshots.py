@@ -7,6 +7,9 @@ site polls them. Nothing per-object goes to Postgres.
 Same contract as the other publishers: never raises, a no-op without ``SUPABASE_URL`` + ``SUPABASE_SERVICE_ROLE_KEY``, an
 unchanged file is skipped (content hash). Small documents also keep a local copy (``live_store/docs/<name>.json``) so the
 other process (timers vs the always-on stream service) can read them.
+
+The vessel and aircraft layers go out mainly as ``density`` + ``tiles/...`` (``live/tiles.py``); ``publish`` sends a cycle's tiles
+BEFORE the rest, so a client never reads a ``tiles/index`` that names tiles not yet uploaded.
 """
 
 from __future__ import annotations
@@ -25,7 +28,7 @@ def encode(doc: Any) -> bytes:
 
 
 #: Documents big enough to be worth compressing; they are uploaded as ``<name>.json.gz`` (see ``flags.GZIP_LEVEL``). The site inflates them.
-GZIPPED = ("vessels", "aircraft", "coverage", "tracks/")
+GZIPPED = ("vessels", "aircraft", "coverage", "tracks/", "density", "tiles/")
 
 
 def encode_gz(doc: Any) -> bytes:
@@ -38,6 +41,18 @@ def publish(docs: dict[str, Any], *, local: tuple[str, ...] = (), http: Callable
     for name in local:
         if name in docs:
             store.write_doc(name, docs[name])
-    files = {(f"/live/{name}.json.gz" if name.startswith(GZIPPED) else f"/live/{name}.json"): encode_gz(doc) if name.startswith(GZIPPED) else encode(doc)
-             for name, doc in docs.items()}
-    return asset_store.upload(files, http=http, manifest=store.root() / "asset_hashes.json", cache_control=flags.SNAPSHOT_CACHE)
+    def encoded(names: list[str]) -> dict[str, bytes]:
+        return {(f"/live/{n}.json.gz" if n.startswith(GZIPPED) else f"/live/{n}.json"): encode_gz(docs[n]) if n.startswith(GZIPPED) else encode(docs[n])
+                for n in names}
+
+    tile_names = [n for n in docs if n.startswith("tiles/") and n != "tiles/index"]
+    rest = [n for n in docs if n not in tile_names]
+    kw: dict[str, Any] = {"http": http, "manifest": store.root() / "asset_hashes.json", "cache_control": flags.SNAPSHOT_CACHE}
+    first = asset_store.upload(encoded(tile_names), workers=flags.UPLOAD_WORKERS, **kw)
+    second = asset_store.upload(encoded(rest), **kw)
+    out = {k: first[k] + second[k] for k in ("assets", "skipped")}
+    out["failed"] = first["failed"] + second["failed"]
+    out["ok"] = first["ok"] and second["ok"]
+    if note := second.get("note") or first.get("note"):
+        out["note"] = note
+    return out

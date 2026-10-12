@@ -1,8 +1,10 @@
 // The moving layers of the /live map (ships, aircraft) as one MapLibre controller, kept apart from the declarative layers
 // in components/map/mapLayers.ts because they are data-heavy and animated.
 //
-//   * Level of detail: far out the objects are a quiet density (heat); from DOT_ZOOM small dots; from ICON_ZOOM small icons
+//   * Level of detail: far out the objects are a quiet density (shaded grid cells, from the backend's `density` document or derived
+//     from the objects when the old full snapshots are in use); from DOT_ZOOM small dots; from ICON_ZOOM small icons
 //     rotated to their heading, only for what is inside the (padded) view and capped at MAX_ICONS. GPU symbol layers do the drawing.
+//     The objects themselves are only loaded from DOT_ZOOM on (the host fetches just the tiles under the view; useLiveFeed.ts).
 //   * Motion: between snapshots each icon is dead-reckoned along its heading at its speed (entities.reckon). The loop runs only
 //     while the map is zoomed in, on screen, in a visible tab and without a reduced-motion preference.
 //   * Tap an object: the hit target is a pixel box around the finger/cursor (bigger on touch), the NEAREST object wins, and when
@@ -21,10 +23,10 @@ import type { Trail } from "./trails";
 import { styleReady } from "@/components/map/maplibre";
 import type { CoverageDoc } from "@/lib/live-shared";
 
-export const DOT_ZOOM = 4;
+export const DOT_ZOOM = 5;
 export const ICON_ZOOM = 6.5;
 const MAX_ICONS = 4500;
-const FAR_MAX = 30000; // far out (density only) more points than this are thinned evenly: the heat picture does not need them all
+const FAR_MAX = 30000; // between DOT_ZOOM and ICON_ZOOM more points than this are thinned evenly
 const HIT_PX = 14; // half-width of the tap box on a mouse (a finger gets HIT_PX_TOUCH)
 const HIT_PX_TOUCH = 26;
 const HOVER_PX = 10;
@@ -40,9 +42,12 @@ const SOURCE: Record<Kind, { name: string; url: string }> = {
 };
 
 const src = (k: Kind) => `lt-${k}`;
-const layerIds = (k: Kind) => [`${src(k)}-heat`, `${src(k)}-dot`, `${src(k)}-dot0`, `${src(k)}-icon`, `${src(k)}-note`];
+const layerIds = (k: Kind) => [`${src(k)}-cell`, `${src(k)}-dot`, `${src(k)}-dot0`, `${src(k)}-icon`, `${src(k)}-note`];
 const CLICKABLE = (k: Kind) => [`${src(k)}-icon`, `${src(k)}-dot`, `${src(k)}-dot0`];
 const COVERAGE = { source: "lt-coverage", layer: "lt-coverage-fill" };
+/** A density grid: `deg`-degree cells, each `[id, n of class 0, n of class 1, ...]` (id = row * (360 / deg) + col from the south-west). */
+export type DensityCells = { deg: number; cells: number[][] };
+const DENSITY_DEG = 2;
 type Hit = { e: Entity; d: number; at: [number, number] };
 const coarsePointer = () => typeof matchMedia === "function" && matchMedia("(pointer: coarse)").matches;
 const reduceMotion = () => typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -81,6 +86,8 @@ export class Tracks {
   private selected: Entity | null = null;
   private popup: any = null;
   private chooser: any = null;
+  private dens: Record<Kind, DensityCells | null> = { ship: null, air: null };
+  private derived: Record<Kind, DensityCells | null> = { ship: null, air: null };
   private coverage: CoverageDoc | null = null;
   private coverageOn = true;
   private raf = 0;
@@ -88,8 +95,7 @@ export class Tracks {
   private visible = true;
   private io: IntersectionObserver | null = null;
   private bound = new WeakSet<object>();
-  /** Set by the host: called (after the icons are rebuilt) whenever the view stops moving. */
-  onView: (() => void) | null = null;
+  private viewers = new Set<() => void>();
 
   constructor(private onSelect: (e: Entity | null) => void) {}
 
@@ -119,6 +125,7 @@ export class Tracks {
     this.drawTrails();
     this.drawSelected();
     this.drawCoverage();
+    for (const k of KINDS) this.drawDensity(k);
     this.start();
   }
 
@@ -147,7 +154,7 @@ export class Tracks {
     });
     map.on("moveend", () => {
       this.rebuild();
-      this.onView?.();
+      this.viewers.forEach((f) => f());
     });
     this.io?.disconnect();
     if (typeof IntersectionObserver !== "undefined") {
@@ -227,12 +234,11 @@ export class Tracks {
     const s = src(k);
     const col = GROUP_COLOR[k];
     map.addSource(s, { type: "geojson", data: EMPTY });
-    map.addLayer({ id: `${s}-heat`, source: s, type: "heatmap", maxzoom: DOT_ZOOM + 1, paint: {
-      "heatmap-weight": 1,
-      "heatmap-radius": ["interpolate", ["linear"], ["zoom"], 0, 5, 2, 9, 5, 16],
-      "heatmap-intensity": ["interpolate", ["linear"], ["zoom"], 0, 0.5, 5, 1.2],
-      "heatmap-color": ["interpolate", ["linear"], ["heatmap-density"], 0, "rgba(0,0,0,0)", 0.2, `${col}33`, 0.6, `${col}99`, 1, col],
-      "heatmap-opacity": ["interpolate", ["linear"], ["zoom"], DOT_ZOOM, 0.85, DOT_ZOOM + 1, 0] } });
+    map.addSource(`${s}-d`, { type: "geojson", data: EMPTY });
+    const level = ["interpolate", ["linear"], ["get", "w"], 1, 0.16, 12, 0.38, 120, 0.72];
+    map.addLayer({ id: `${s}-cell`, source: `${s}-d`, type: "fill", maxzoom: DOT_ZOOM + 1, paint: {
+      "fill-color": col, "fill-antialias": false,
+      "fill-opacity": ["interpolate", ["linear"], ["zoom"], DOT_ZOOM - 0.5, level, DOT_ZOOM + 1, 0] } });
     const dotPaint = { "circle-color": ["get", "col"], "circle-opacity": 0.85, "circle-stroke-width": 0.5, "circle-stroke-color": "rgba(255,255,255,0.7)" };
     map.addLayer({ id: `${s}-dot`, source: s, type: "circle", minzoom: DOT_ZOOM, maxzoom: ICON_ZOOM, paint: { ...dotPaint,
       "circle-radius": ["interpolate", ["linear"], ["zoom"], DOT_ZOOM, 1.3, ICON_ZOOM, 2.4] } });
@@ -248,7 +254,29 @@ export class Tracks {
   setEntities(kind: Kind, ents: Entity[]) {
     this.ents[kind] = ents;
     this.byId[kind] = new Map(ents.map((e) => [e.id, e]));
+    this.derived[kind] = null;
     this.rebuild(kind);
+    if (!this.dens[kind]) this.drawDensity(kind);
+  }
+
+  /** The backend's world grid for a layer (null: derive one from the loaded objects, as with the old full snapshots). */
+  setDensity(kind: Kind, d: DensityCells | null) {
+    this.dens[kind] = d;
+    this.drawDensity(kind);
+  }
+
+  /** The current view, for the host to decide which tiles it needs. */
+  view(): { zoom: number; bounds: [number, number, number, number] } | null {
+    const map = this.map;
+    if (!map || !styleReady(map)) return null;
+    const b = map.getBounds();
+    return { zoom: map.getZoom(), bounds: [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()] };
+  }
+
+  /** Called whenever the view stops moving (after the icons are rebuilt). Returns the unsubscribe function. */
+  addViewListener(fn: () => void): () => void {
+    this.viewers.add(fn);
+    return () => this.viewers.delete(fn);
   }
 
   entities(kind: Kind): Entity[] {
@@ -259,6 +287,7 @@ export class Tracks {
     this.filter = f;
     this.on = on;
     this.rebuild();
+    for (const k of KINDS) this.drawDensity(k);
   }
 
   setTrails(trails: Trail[]) {
@@ -323,8 +352,8 @@ export class Tracks {
     for (const k of only ? [only] : KINDS) {
       const s = map.getSource(src(k));
       if (!s) continue;
-      if (!this.on[k]) {
-        s.setData(EMPTY);
+      if (!this.on[k] || z < DOT_ZOOM) {
+        s.setData(EMPTY); // far out only the density cells draw
         continue;
       }
       let list = this.ents[k].filter((e) => passes(e, this.filter));
@@ -351,6 +380,41 @@ export class Tracks {
         geometry: { type: "Point", coordinates: detail ? reckon(e, now) : [e.lon, e.lat] } })) });
     }
     if (this.selected) this.drawSelected();
+  }
+
+  /** Shaded cells for a layer's density: the sum of the classes still switched on (other filters need the objects, which are not loaded far out). */
+  private drawDensity(kind: Kind) {
+    const s = this.map?.getSource(`${src(kind)}-d`);
+    if (!s) return;
+    const grid = this.dens[kind] ?? (this.derived[kind] ??= this.derive(kind));
+    if (!this.on[kind] || !grid.cells.length) return void s.setData(EMPTY);
+    const sub = kind === "ship" ? SHIP_CLASSES.map((c) => c.key as string) : ["civil", "military", "military", "military", "military", "military"];
+    const keep = sub.map((key) => !this.filter.off.has(key));
+    const d = grid.deg;
+    const perRow = Math.round(360 / d);
+    const features: any[] = [];
+    for (const [id, ...counts] of grid.cells) {
+      let w = 0;
+      counts.forEach((n, i) => { if (keep[Math.min(i, keep.length - 1)]) w += n; });
+      if (w <= 0) continue;
+      const lat0 = Math.floor(id / perRow) * d - 90;
+      const lon0 = (id % perRow) * d - 180;
+      features.push({ type: "Feature", properties: { w }, geometry: { type: "Polygon", coordinates: [[[lon0, lat0], [lon0 + d, lat0], [lon0 + d, lat0 + d], [lon0, lat0 + d], [lon0, lat0]]] } });
+    }
+    s.setData({ type: "FeatureCollection", features });
+  }
+
+  /** A density grid from the loaded objects (the old full snapshots hold every object, so this is the whole world). */
+  private derive(kind: Kind): DensityCells {
+    const perRow = 360 / DENSITY_DEG;
+    const by = new Map<number, number[]>();
+    for (const e of this.ents[kind]) {
+      const id = Math.min(89, Math.max(0, Math.floor((e.lat + 90) / DENSITY_DEG))) * perRow + Math.min(perRow - 1, Math.max(0, Math.floor((e.lon + 180) / DENSITY_DEG)));
+      const row = by.get(id) ?? [0, 0, 0, 0, 0, 0];
+      row[Math.min(e.cls, 5)]++;
+      by.set(id, row);
+    }
+    return { deg: DENSITY_DEG, cells: Array.from(by, ([id, row]) => [id, ...row]) };
   }
 
   setCoverage(doc: CoverageDoc | null) {
