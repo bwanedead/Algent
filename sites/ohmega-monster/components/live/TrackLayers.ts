@@ -89,7 +89,7 @@ export class Tracks {
   private dens: Record<Kind, DensityCells | null> = { ship: null, air: null };
   private derived: Record<Kind, DensityCells | null> = { ship: null, air: null };
   private coverage: CoverageDoc | null = null;
-  private coverageOn = false;   // receiver coverage is opt-in
+  private coverageOn = true;
   private raf = 0;
   private last = 0;
   private visible = true;
