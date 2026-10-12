@@ -2,10 +2,11 @@ import Link from "next/link";
 import { Fragment } from "react";
 
 import Popover from "@/components/Popover";
+import Term from "@/components/Term";
 import type { Daily } from "@/lib/daily";
-import { claimOf, crossParts, editionTag, fmtDay, isCut, shortTheater, theaterAnchor } from "@/lib/daily";
-import { dossierIds } from "@/lib/dossier";
-import { fmtUtc, latestSnapshot } from "@/lib/intel";
+import { claimOf, crossParts, editionTag, firstSentences, fmtDay, isCut, publishedLine, shortTheater, theaterAnchor } from "@/lib/daily";
+import { dossier, dossierIds } from "@/lib/dossier";
+import { latestSnapshot } from "@/lib/intel";
 
 import DailyGlance from "./DailyGlance";
 import DailyThirty from "./DailyThirty";
@@ -110,28 +111,33 @@ function Across({ report }: { report: Daily }) {
   );
 }
 
+/** The big-picture line for a section whose record carries none (an older report): the first sentences of the theater's
+ *  stored dossier primer, background we already hold, so it costs nothing. Only for theaters that have a dossier. */
+async function backgrounds(report: Daily, dossiers: ReadonlySet<string>): Promise<Record<string, string>> {
+  const need = report.theaters.filter((t) => !t.saga && dossiers.has(t.theater_id));
+  const found = await Promise.all(need.map(async (t) => [t.theater_id, firstSentences((await dossier(t.theater_id))?.primer?.text ?? "", 2)] as const));
+  return Object.fromEntries(found.filter(([, text]) => text));
+}
+
 export default async function DailyReport({ report, title }: { report: Daily; title: string }) {
   const snap = await latestSnapshot();
   const dossiers = new Set(await dossierIds());
+  const published = publishedLine(report);
+  const background = await backgrounds(report, dossiers);
   return (
     <div className="geo">
       <div className="intel-strip" role="group" aria-label="Report status">
         <span className="intel-strip-title">{title} · Daily</span>
         <span className="intel-strip-item">{fmtDay(report.date)}</span>
-        <span className="intel-strip-item">
-          <span className="geo-micro">{report.editions.length > 1 ? "Updated" : "Built"}</span> {report.built_at ? fmtUtc(report.built_at) : "—"}
+        {published && <span className="intel-strip-item">{published}</span>}
+        <span className="intel-trust">
+          <Term id={report.researched ? "researched" : "fromHeadlines"} label={report.researched ? "researched" : "from headlines"}>
+            {report.researched ? "Researched" : "From headlines"}
+          </Term>
         </span>
-        {report.editions.length > 1 && (
-          <span className="intel-strip-item" title="The report is built in parts through the day; each section says which part added it">
-            <span className="geo-micro">Parts</span> {report.editions.map((e) => `${e.n} · ${e.cycle || e.label}`).join(" + ")}
-          </span>
-        )}
-        <span className="intel-trust" title={report.researched ? "Developments were checked against sources" : "Built from headlines; not independently checked"}>
-          {report.researched ? "Researched" : "From headlines"}
-        </span>
-        <span className="geo-key" title="Marks on developments and map">
-          <i className="geo-v is-solid" aria-hidden="true" /> researched
-          <i className="geo-v is-hollow" aria-hidden="true" /> reported
+        <span className="geo-key">
+          <i className="geo-v is-solid" aria-hidden="true" /> <Term id="researched">researched</Term>
+          <i className="geo-v is-hollow" aria-hidden="true" /> <Term id="reported">reported</Term>
         </span>
       </div>
 
@@ -157,8 +163,10 @@ export default async function DailyReport({ report, title }: { report: Daily; ti
 
       {report.theaters.map((t, i) => (
         <Fragment key={t.theater_id + i}>
-          {t.spotlight && <p className="geo-spotlight-label geo-micro">Spotlight · an under-covered story, researched in full</p>}
-          <DailyTheaterSection t={t} id={theaterAnchor(t, i)} date={report.date} snap={snap} dossiers={dossiers} first={i === 0} tag={editionTag(report, t.edition)} />
+          {t.spotlight && <p className="geo-spotlight-label geo-micro">
+              <Term id="spotlight">Spotlight</Term> · an under-covered story, researched in full
+            </p>}
+          <DailyTheaterSection t={t} id={theaterAnchor(t, i)} date={report.date} snap={snap} dossiers={dossiers} first={i === 0} tag={editionTag(report, t.edition)} background={background[t.theater_id] ?? ""} />
           {t.updates.map((u, k) => (
             <DailyTheaterSection key={`${u.theater_id}-u${k}`} t={u} id={`${theaterAnchor(t, i)}-update-${k + 1}`} date={report.date} snap={snap} dossiers={dossiers} tag={editionTag(report, u.edition)} update />
           ))}

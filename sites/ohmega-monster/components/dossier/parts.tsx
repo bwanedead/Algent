@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import Popover from "@/components/Popover";
+import Term from "@/components/Term";
 import { linkTarget } from "@/lib/dossier";
 
 // Small shared pieces of the dossier pages. Server components; styled by app/intel/theaters/theaters.css.
@@ -51,7 +52,7 @@ export function Anchor({ url, children, className }: { url: string; children: Re
 export function VerifyKey() {
   return (
     <span className="th-key">
-      <span className="geo-v is-solid" aria-hidden="true" /> researched <span className="geo-v is-hollow" aria-hidden="true" /> reported
+      <span className="geo-v is-solid" aria-hidden="true" /> <Term id="researched">researched</Term> <span className="geo-v is-hollow" aria-hidden="true" /> <Term id="reported">reported</Term>
     </span>
   );
 }

@@ -8,6 +8,7 @@ import { DIRECTION, dayLabel, escalationShift, isoDay, splitPrimer } from "@/lib
 import { COVERAGE_DISPLAY } from "@/lib/intel";
 
 import { LiveNow } from "@/components/live/LiveParts";
+import Term from "@/components/Term";
 
 import { EscalationTrack } from "./EscalationTrack";
 import { Anchor, Section } from "./parts";
@@ -68,11 +69,11 @@ export function DossierTop({ d }: { d: Dossier }) {
           </span>
         )}
         <span className="th-cov" title="How much of the world's headlines are about this theater">
-          <span className="th-k">Coverage</span> <span aria-hidden="true">{cov.glyph}</span> {cov.label}
+          <span className="th-k"><Term id="coverage">Coverage</Term></span> <span aria-hidden="true">{cov.glyph}</span> {cov.label}
           {d.coverage_series.length > 1 && <CoverSpark series={d.coverage_series} coverage={cur?.coverage ?? "steady"} name={d.name} />}
         </span>
         <span className={moving ? "th-dir is-moving" : "th-dir"} title="Is the situation itself getting worse, steadier or easing">
-          <span className="th-k">Escalation</span> <span aria-hidden="true">{dir.glyph}</span> {dir.word}
+          <span className="th-k"><Term id="direction" label="escalation">Escalation</Term></span> <span aria-hidden="true">{dir.glyph}</span> {dir.word}
           {cur && cur.pace !== "flat" && <> · {cur.pace}</>}
           {shift && !shift.first && (
             <span className="th-since">

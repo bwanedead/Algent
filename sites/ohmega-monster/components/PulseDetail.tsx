@@ -5,6 +5,7 @@ import { BAND_LABEL, deltaClass, fmtDelta } from "@/lib/band";
 import type { WallPulse } from "@/lib/pulse-wall";
 
 import IsoFlags from "./IsoFlags";
+import Term from "./Term";
 import PulseSpectrum from "./PulseSpectrum";
 import "./pulse-tile.css";
 
@@ -106,6 +107,11 @@ export default function PulseDetail({
         </p>
       )}
       {p.rationale && <p className="pd-why">{p.rationale}</p>}
+      <p className="intel-micro pd-foot">
+        <Term id="pulse" label="a Pulse">
+          What is a Pulse?
+        </Term>
+      </p>
     </div>
   );
 }

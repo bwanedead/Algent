@@ -30,7 +30,9 @@ wired yet — only clean consumption APIs exist).
 
 `Series`: `id` (permanent; names the store file), `name`, `unit`, `frequency` (daily/weekly/monthly), `source`,
 `source_url` (the human page to cite, not the API), `fetcher` (provider module), `params` (provider selector: port, symbol, key…),
-`tags` (region + actor + dynamic keywords: `hormuz`, `iran`, `gulf`, `shipping`, `energy`), `licence`, `public_display`.
+`tags` (region + actor + dynamic keywords: `hormuz`, `iran`, `gulf`, `shipping`, `energy`), `licence`, `public_display`,
+`plain` (what it is and why it matters, plain words, at most two sentences: published to the daily as `tracker.plain` and shown
+in the site's info hints; every catalog entry must have one).
 
 `Observation`: `series_id`, `period` (`YYYY-MM-DD` or `YYYY-MM`), `value`, `fetched_at`, `source_url`, `revised`.
 

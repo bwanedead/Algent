@@ -104,6 +104,17 @@ graded research, and earns trust the way the best analytic shops do:
   basemap) or adding a display feature costs nothing. For a report made before drafts were kept,
   `--tag-places` is a one-off repair: one low-effort call per report places the existing developments (text
   untouched, every place checked against the basemap, maps rebuilt).
+- **The daily explains itself to a newcomer** (operator, 10-11). Three reader aids, none of which costs a model call:
+  (1) every theater section opens with a `saga`, 1-3 plain sentences of big picture (who is against whom, since when, why it
+  matters) under its headline. The writer produces it inside the section call it already makes, grounded on the theater's
+  stored primer (`primers.py`, written once a week for the dossier) when there is one, and leaves it empty for a one-off event;
+  an older record with no saga shows the first sentences of the dossier primer instead. It lives on the draft, so `--rerender`
+  carries it. (2) One glossary: the instrument catalog's `Series.plain` (and `actors/plain.py` for annual statistics) is
+  published inside the record as `tracker.plain` / `metric.plain`, and the site's `lib/glossary.ts` holds the desk and
+  interface terms; both surface through a dotted-underline or corner "i" hint (`Tip.tsx`, `Term.tsx`) that opens on hover,
+  tap or keyboard, at most two sentences each. (3) The strip under the title says when the report went out ("Published 05:30 UTC
+  · updated 17:30 UTC", from each cycle's `built_at`), never "part 1/2". The section `headline` (one complete sentence) is
+  requested of every writer, part two's updates and new sections included.
 - **Pulses grow from the work.** Every daily report and brief feeds research into Pulses; when a
   theater bears on a dimension no Pulse measures, the writer proposes one, and proposals become
   stable Pulses through a registry agents can also read and propose to (one dimension, one Pulse).

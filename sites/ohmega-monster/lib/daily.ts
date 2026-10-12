@@ -70,6 +70,8 @@ export type TrackerHorizon = "prev" | "7d" | "30d" | "1y";
 export type Tracker = {
   id: string;
   name: string;
+  /** What it is and why it matters, in plain words (the backend catalog's note; "" on older reports). */
+  plain: string;
   unit: string;
   freq: "daily" | "weekly" | "monthly";
   source: string;
@@ -102,6 +104,8 @@ export type Tracker = {
 /** One annual statistic of a state: its own year, world rank, source key (wb | owid | imf | bis) and up to ten years of trend. */
 export type ActorMetric = {
   label: string;
+  /** Plain-English note for an opaque metric ("" when the label explains itself, and on older reports). */
+  plain: string;
   unit: string;
   value: number;
   year: number;
@@ -151,6 +155,8 @@ export type DailyTheater = {
   bottom_line: string;
   /** The writer's one-sentence headline (newer reports); "" on older ones, which fall back to a cut of `bottom_line`. */
   headline: string;
+  /** The big picture in 1-3 plain sentences (who is against whom, since when, why it matters); "" for a one-off and on older reports. */
+  saga: string;
   since_yesterday: { what: string; kind: DailyChangeKind }[];
   developments: DailyDevelopment[];
   context: { what: string; when: string; why_relevant: string; source: string }[];
@@ -317,6 +323,7 @@ function parseTracker(raw: unknown): Tracker | null {
   return {
     id,
     name: str(raw.name) || id,
+    plain: str(raw.plain).trim(),
     unit: str(raw.unit),
     freq: oneOf(raw.freq, ["daily", "weekly", "monthly"] as const, "daily"),
     source: str(raw.source),
@@ -354,7 +361,7 @@ function parseActorMetrics(raw: unknown): Record<string, ActorMetric> {
       const v = Array.isArray(p) ? num(p[1]) : null;
       if (y !== null && v !== null) trend.push([y, v]);
     }
-    metrics[k] = { label: str(m.label) || k, unit: str(m.unit), value, year: num(m.year) ?? 0, rank: num(m.rank), of: num(m.of), source: str(m.source), trend };
+    metrics[k] = { label: str(m.label) || k, plain: str(m.plain).trim(), unit: str(m.unit), value, year: num(m.year) ?? 0, rank: num(m.rank), of: num(m.of), source: str(m.source), trend };
   }
   return metrics;
 }
@@ -488,6 +495,7 @@ function parseTheater(raw: unknown, nested = false): DailyTheater | null {
       .filter((p) => p.name),
     bottom_line: str(raw.bottom_line),
     headline: str(raw.headline).trim(),
+    saga: str(raw.saga).trim(),
     since_yesterday: arr(raw.since_yesterday)
       .filter(isObj)
       .map((c) => ({ what: str(c.what), kind: oneOf(c.kind, ["escalated", "eased", "new", "resolved", "unchanged"] as const, "unchanged") }))
@@ -614,6 +622,39 @@ export function editionTag(report: { editions: DailyEdition[] }, n: number): str
   return `${at ? `Added ${at}` : "Added"}${e.cycle || e.label ? ` · ${e.cycle || e.label}` : ""}`;
 }
 
+/** The first `n` whole sentences of `text`, within `max` characters ("" when even one does not fit). */
+export function firstSentences(text: string, n = 2, max = 320): string {
+  const sentences = text.replace(/\s+/g, " ").trim().match(/[^.!?]+[.!?]+(?=\s|$)/g) ?? [];
+  let out = "";
+  for (const s of sentences.slice(0, n)) {
+    if ((out + s).trim().length > max) break;
+    out = `${out} ${s}`.trim();
+  }
+  return out;
+}
+
+const hhmmUtc = (iso: string): string => {
+  const d = new Date(iso);
+  return iso && !Number.isNaN(d.getTime()) ? `${d.toISOString().slice(11, 16)} UTC` : "";
+};
+
+/**
+ * When the report went out, in plain words: "Published 05:30 UTC · updated 17:30 UTC", or just "Published 05:30 UTC"
+ * when one cycle has run. Reads each cycle's `built_at` (first = published, last = updated) and falls back to the
+ * record's own `built_at` on older reports. "" when no time is known. Never mentions parts or pending runs.
+ */
+export function publishedLine(report: { built_at: string; editions: DailyEdition[] }): string {
+  const times = report.editions
+    .slice()
+    .sort((a, b) => a.n - b.n)
+    .map((e) => hhmmUtc(e.built_at))
+    .filter(Boolean);
+  const first = times[0] ?? hhmmUtc(report.built_at);
+  if (!first) return "";
+  const last = times.length > 1 ? times[times.length - 1] : "";
+  return last && last !== first ? `Published ${first} · updated ${last}` : `Published ${first}`;
+}
+
 /** Stable in-page anchor of a theater section. */
 export const theaterAnchor = (t: { theater_id: string }, i: number): string =>
   `theater-${i}-${t.theater_id.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
@@ -633,6 +674,21 @@ function firstSentence(s: string): string {
     return s.slice(0, m.index + m[0].length);
   }
   return s;
+}
+
+const DANGLING_WORDS = /(?:\s+(?:a|an|the|of|to|in|on|at|for|by|with|while|as|and|or|but|that|which|from|into|amid|after|before|over|its|their|his|her|than|per|via|against|between|among|under|since|because|though|although|whereas|if|when|who))+$/i;
+// A connector plus at most three words closing the text ("…, while Germany"): a clause begun and not finished.
+const DANGLING_CLAUSE = /[,;:]?\s+(?:while|as|but|and|or|with|amid|after|before|though|although|whereas|because|since|if|when|which|who|that)\s+(?:\S+\s+){0,2}\S+$/i;
+
+/** `s` without a tail that cannot end a phrase: trailing articles/prepositions/conjunctions, or a started-and-unfinished clause. */
+export function trimDangling(s: string): string {
+  let out = s.replace(/[,;:\s]+$/, "");
+  for (let i = 0; i < 3; i++) {
+    const next = out.replace(DANGLING_WORDS, "").replace(DANGLING_CLAUSE, "").replace(/[,;:\s]+$/, "");
+    if (next === out || !next) break;
+    out = next;
+  }
+  return out;
 }
 
 /**
@@ -660,13 +716,10 @@ export function claimOf(text: string, max = 120): string {
   const widest = Math.floor(max * 1.5);
   for (const [lo, hi] of [[min, max], [max, widest]] as const) {
     const at = [lastWithin(strong, lo, hi), lastWithin(weak, lo, hi)].find((i) => i >= 0);
-    if (at !== undefined) return `${one.slice(0, at).trim()}…`;
+    if (at !== undefined) return `${trimDangling(one.slice(0, at).trim())}…`;
   }
   // No boundary anywhere near: the last whole word, minus words that cannot end a phrase ("while Germany").
-  const words = one
-    .slice(0, max)
-    .replace(/\s+\S*$/, "")
-    .replace(/(?:\s+(?:a|an|the|of|to|in|on|at|for|by|with|while|as|and|or|but|that|which|from|into|amid|after|over|its|their|his|her))+$/i, "");
+  const words = trimDangling(one.slice(0, max).replace(/\s+\S*$/, ""));
   return `${(words || one.slice(0, max)).replace(/[,;:\s]+$/, "")}…`;
 }
 

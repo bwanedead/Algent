@@ -1,4 +1,5 @@
 import Popover from "@/components/Popover";
+import Term, { TipCorner } from "@/components/Term";
 import type { Tracker, TrackerHorizon } from "@/lib/daily";
 import { shortDay } from "@/lib/daily";
 
@@ -19,6 +20,7 @@ function Detail({ t }: { t: Tracker }) {
   return (
     <div className="geo-pd">
       <p className="geo-pd-title">{t.name}</p>
+      {t.plain && <p className="num-plain">{t.plain}</p>}
       <p className="geo-pd-big">
         <b>{fmtValue(t.value)}</b> {t.unit} <span className="geo-muted">as of {shortDay(t.as_of)}</span>
       </p>
@@ -50,7 +52,11 @@ function Detail({ t }: { t: Tracker }) {
       </ul>
       {(t.unusual || t.outside) && (
         <p className="num-why">
-          {t.unusual && <span className="num-hot">● Unusual: {t.reasons.map((r) => REASON[r] ?? r).join("; ") || "outside its own history"}. </span>}
+          {t.unusual && (
+            <span className="num-hot">
+              ● <Term id="unusual" label="unusual">Unusual</Term>: {t.reasons.map((r) => REASON[r] ?? r).join("; ") || "outside its own history"}.{" "}
+            </span>
+          )}
           {t.outside && <span>{t.outside_note ? `${t.outside_note[0].toUpperCase()}${t.outside_note.slice(1)}.` : "Far from its usual level."}</span>}
         </p>
       )}
@@ -75,39 +81,42 @@ export default function TrackerTile({ t }: { t: Tracker }) {
   const flag = t.unusual && t.new ? "● unusual" : t.outside_note || (t.outside ? "far from its usual level" : "");
   const dated = t.cadence === "daily" && t.status === "current" ? `as of ${shortDay(t.as_of)}` : t.note;
   return (
-    <Popover
-      label={`${t.name}: ${fmtValue(t.value)} ${t.unit}`}
-      triggerClassName={`num-tile${t.unusual && t.new ? " is-hot" : ""}`}
-      trigger={
-        <>
-          <span className="num-name">{name}</span>
-          <span className="num-val">
-            <b>{fmtValue(t.value)}</b> <small>{t.unit}</small>
-          </span>
-          <span className="num-chg">
-            {prev ? (
-              <span title={`${fmtValue(prev.from)} → ${fmtValue(t.value)} since ${prev.from_period}`}>
-                {fmtChange(t, prev)} <i>{STEP_SHORT[t.cadence]}</i>
-              </span>
-            ) : (
-              <span className="geo-muted">first reading</span>
-            )}
-            {second && (
-              <span title={`${fmtValue(second.from)} → ${fmtValue(t.value)} since ${second.from_period}`}>
-                {fmtChange(t, second)} <i>{secondKey}</i>
-              </span>
-            )}
-          </span>
-          <Sparkline values={t.spark} hot={t.unusual && t.new} label={`${name}: shape over the plotted window; ${prev ? `${arrow(t.value - prev.from)} on the previous reading` : "first reading"}`} />
-          <span className="num-flag">
-            {flag}
-            {flag ? " · " : ""}
-            {dated}
-          </span>
-        </>
-      }
-    >
-      <Detail t={t} />
-    </Popover>
+    <div className="tip-host">
+      <TipCorner text={t.plain} label={name} />
+      <Popover
+        label={`${t.name}: ${fmtValue(t.value)} ${t.unit}`}
+        triggerClassName={`num-tile${t.unusual && t.new ? " is-hot" : ""}`}
+        trigger={
+          <>
+            <span className="num-name">{name}</span>
+            <span className="num-val">
+              <b>{fmtValue(t.value)}</b> <small>{t.unit}</small>
+            </span>
+            <span className="num-chg">
+              {prev ? (
+                <span title={`${fmtValue(prev.from)} → ${fmtValue(t.value)} since ${prev.from_period}`}>
+                  {fmtChange(t, prev)} <i>{STEP_SHORT[t.cadence]}</i>
+                </span>
+              ) : (
+                <span className="geo-muted">first reading</span>
+              )}
+              {second && (
+                <span title={`${fmtValue(second.from)} → ${fmtValue(t.value)} since ${second.from_period}`}>
+                  {fmtChange(t, second)} <i>{secondKey}</i>
+                </span>
+              )}
+            </span>
+            <Sparkline values={t.spark} hot={t.unusual && t.new} label={`${name}: shape over the plotted window; ${prev ? `${arrow(t.value - prev.from)} on the previous reading` : "first reading"}`} />
+            <span className="num-flag">
+              {flag}
+              {flag ? " · " : ""}
+              {dated}
+            </span>
+          </>
+        }
+      >
+        <Detail t={t} />
+      </Popover>
+    </div>
   );
 }
