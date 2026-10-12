@@ -3,6 +3,7 @@ snapshots, energy and the headline strip."""
 
 from __future__ import annotations
 
+import gzip
 import json
 from datetime import date, datetime, timezone
 
@@ -183,9 +184,9 @@ def test_snapshots_upload_compact_json_with_a_short_cache_header_and_skip_unchan
     doc = {"v": 1, "rows": [[1, 2.5, 3.5]]}
     r = snapshots.publish({"vessels": doc, "tracks/v0": {"t": {}}}, local=("vessels",), http=http)
     assert r["assets"] == 2
-    assert {u.rsplit("/published-assets/", 1)[1] for u, _, _ in sent} == {"live/vessels.json", "live/tracks/v0.json"}
+    assert {u.rsplit("/published-assets/", 1)[1] for u, _, _ in sent} == {"live/vessels.json.gz", "live/tracks/v0.json.gz"}
     assert all(c == flags.SNAPSHOT_CACHE for _, c, _ in sent)
-    assert next(b for u, _, b in sent if u.endswith("vessels.json")) == b'{"v":1,"rows":[[1,2.5,3.5]]}'
+    assert gzip.decompress(next(b for u, _, b in sent if u.endswith("vessels.json.gz"))) == b'{"v":1,"rows":[[1,2.5,3.5]]}'
     assert store.read_doc("vessels") == doc
     assert snapshots.publish({"vessels": doc}, http=http)["skipped"] == 1                  # unchanged: not re-uploaded
 
@@ -195,7 +196,8 @@ def test_build_docs_makes_every_layer_and_the_trail_shards():
     b.message(pos(636000001, 26.5, 56.3), T)
     docs = build_docs(b, s, T + 1, tracks=True)
     assert {"vessels", "aircraft", "summary"} <= set(docs)
-    assert sum(k.startswith("tracks/v") for k in docs) == flags.TRACK_SHARDS and sum(k.startswith("tracks/a") for k in docs) == 4
+    assert sum(k.startswith("tracks/v") for k in docs) == flags.TRACK_SHARDS and sum(k.startswith("tracks/a") for k in docs) == flags.AIR_TRACK_SHARDS
+    assert docs["coverage"]["cells"] and docs["coverage"]["deg"] == flags.COVERAGE_DEG
     assert docs["summary"]["gates"]["hormuz"]["in_strait"] == 1 and docs["summary"]["fresh"]["ships"] == docs["vessels"]["as_of"]
     assert store.read_doc("gates_now")["gates"]["hormuz"]["in_strait"] == 1
 

@@ -6,6 +6,7 @@ import { fmtDelta } from "@/lib/band";
 import type { Direction, Snapshot } from "@/lib/intel";
 
 import { CoverSpark, PulseTiles } from "./DailyVisuals";
+import Term from "./Term";
 
 // The day at a glance: a small-multiples table, one row per theater, every row the same shape and
 // the same tiles (name, number, band, 24h move) so the eye compares down the columns (doctrine: overview first, small
@@ -42,13 +43,24 @@ export default function DailyGlance({
   return (
     <div className={`geo-glance${compact ? " is-compact" : ""}`}>
       {!compact && (
-        <div className="geo-glance-head" aria-hidden="true">
-          <span>Theater</span>
+        <div className="geo-glance-head">
+          <span>
+            <Term id="theater">Theater</Term>
+          </span>
           <span>State</span>
-          <span>Direction</span>
-          <span>Pulses · move in 24h</span>
+          <span>
+            <Term id="direction">Direction</Term>
+          </span>
+          <span>
+            <Term id="pulse" label="Pulses">
+              Pulses
+            </Term>{" "}
+            · move in 24h
+          </span>
           <span>Δ 24h</span>
-          <span>Coverage</span>
+          <span>
+            <Term id="coverage">Coverage</Term>
+          </span>
         </div>
       )}
       <ol className="geo-rows">
@@ -64,7 +76,7 @@ export default function DailyGlance({
                 {shortTheater(t.name)}
               </Link>
               {!compact && <span className="geo-state">{state}</span>}
-              <span className={`geo-dir${dir.moving ? " is-moving" : ""}`} title={`Is the situation itself getting worse or easing: ${dir.word}, ${t.escalation.pace} pace`}>
+              <span className={`geo-dir${dir.moving ? " is-moving" : ""}`} title={`${dir.word}, ${t.escalation.pace} pace`}>
                 <span aria-hidden="true">{dir.glyph}</span> {dir.word}
               </span>
               <PulseTiles pulses={t.pulses} snap={snap} limit={compact ? 2 : 3} asOf={report.date} className="geo-tiles" />

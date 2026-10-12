@@ -4,6 +4,8 @@ import { ActorFlag, ScaleBar } from "@/components/actors/ActorParts";
 import { fmt, type Unit } from "@/lib/actors";
 import type { ActorMetric, NumbersActor, RankedLine, RankedTrade } from "@/lib/daily";
 
+import Term from "@/components/Term";
+
 import Sparkline from "./Sparkline";
 import "./numbers.css";
 
@@ -41,7 +43,11 @@ function Row({ id, m, asOfYear }: { id: string; m: ActorMetric; asOfYear: number
       : showMetric(m);
   return (
     <li>
-      <span className="geo-muted">{m.label}</span>
+      <span className="geo-muted">
+        <Term text={m.plain} label={m.label}>
+          {m.label}
+        </Term>
+      </span>
       <span>
         <b className="geo-strong">{text}</b> <span className="geo-muted">({m.year}{est ? " est." : ""})</span>
       </span>

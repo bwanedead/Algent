@@ -338,3 +338,7 @@ button.geo-figure-zoom img, .geo-figure-big { display: block; width: 100%; heigh
 .geo-figure-tag { display: inline-block; margin-right: 6px; padding: 0 6px; border: 1px solid var(--link-accent); color: var(--link-accent); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
 .geo-figure.is-schematic .geo-figure-tag { border-style: dashed; }
 .geo-figure-src { display: flex; flex-wrap: wrap; gap: 0 10px; margin-top: 2px; }
+
+/* The saga: the big picture, under a section's headline. Quieter than the headline, ahead of the developments. */
+.geo-saga { margin: 6px 0 0; max-width: 72ch; color: var(--muted); font-size: 13px; line-height: 19px; }
+.geo-gloss { margin: 0 0 8px; max-width: 72ch; color: var(--muted); font-size: 11px; line-height: 16px; }

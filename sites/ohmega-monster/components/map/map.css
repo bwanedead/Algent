@@ -9,6 +9,10 @@
 .lm-loading .lm-canvas, .lm-failed .lm-canvas { visibility: hidden; }
 .lm-fallback { position: absolute; inset: 0; display: grid; align-items: center; overflow: hidden; background: var(--panel); }
 .lm-fallback svg { display: block; width: 100%; height: auto; border: 0; }
+/* While the interactive map loads: the stage's own size and a quiet pulse, no old map. */
+.lm-skeleton { position: absolute; inset: 0; background: linear-gradient(110deg, var(--panel) 30%, var(--rule) 50%, var(--panel) 70%); background-size: 220% 100%; animation: lm-sheen 1.8s ease-in-out infinite; opacity: 0.55; }
+@keyframes lm-sheen { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+@media (prefers-reduced-motion: reduce) { .lm-skeleton { animation: none; opacity: 0.35; } }
 .lm-note { position: absolute; left: 8px; bottom: 8px; margin: 0; padding: 3px 8px; font-size: 12px; color: var(--muted); background: var(--panel); border: 1px solid var(--rule); }
 
 .lm-tools { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; }
@@ -32,6 +36,9 @@
 .lm-pop-when { font-size: 12px; color: #4d5967; }
 .lm-pop-src { font-size: 12px; }
 .lm-pop a { color: #0a57d0; }
+.lt-choose ul { list-style: none; margin: 4px 0 0; padding: 0; max-height: 220px; overflow-y: auto; }
+.lt-choose-btn { display: block; width: 100%; min-height: 40px; padding: 6px 8px; margin: 0 0 3px; text-align: left; font: inherit; font-size: 13px; color: #0e1620; background: #f1ede2; border: 1px solid #d3cdbd; border-radius: 0; cursor: pointer; }
+.lt-choose-btn:hover, .lt-choose-btn:focus-visible { background: #e6e0cf; outline: 2px solid #0a57d0; outline-offset: -2px; }
 .lm .maplibregl-ctrl-attrib { font-size: 10px; max-width: 70vw; }
 .lm .maplibregl-canvas:focus-visible { outline: 2px solid var(--link-accent, var(--accent)); outline-offset: -2px; }
 

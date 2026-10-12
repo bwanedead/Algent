@@ -107,7 +107,8 @@ def subscription(key: str) -> str:
     boxes = [[list(sw), list(ne)] for sw, ne in flags.AIS_BOXES]
     return json.dumps({"APIKey": key, "BoundingBoxes": boxes,
                        "FilterMessageTypes": ["PositionReport", "ShipStaticData", "StandardClassBPositionReport",
-                                              "ExtendedClassBPositionReport", "StaticDataReport"]})
+                                              "ExtendedClassBPositionReport", "StaticDataReport",
+                                              "LongRangeAisBroadcastMessage"]})
 
 
 def _state_path():
@@ -133,12 +134,16 @@ async def serve(key: str, *, max_seconds: float | None = None, counter: GateCoun
     import aiohttp
 
     counter, delay, started = counter or load_counter(), 5.0, time.monotonic()
-    last_flush = 0.0
+    last_flush, messages = 0.0, 0
     while max_seconds is None or time.monotonic() - started < max_seconds:
         try:
-            async with aiohttp.ClientSession() as session, session.ws_connect(WS_URL, heartbeat=30) as ws:
+            # compress=15 negotiates permessage-deflate: from September 2026 aisstream drops messages of UNCOMPRESSED connections
+            # beyond a per-user bandwidth limit, which on a world subscription silently thins the ship picture.
+            async with aiohttp.ClientSession() as session, session.ws_connect(WS_URL, heartbeat=30, compress=15, max_msg_size=0) as ws:
                 await ws.send_str(subscription(key))
                 delay = 5.0
+                store.record_status("ais_stream", connected=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                                    compression=bool(getattr(ws, "compress", 0)))
                 async for raw in ws:
                     # aisstream sends its JSON as BINARY frames (text only for some control messages); both carry
                     # data. Only a close or error ends the session.
@@ -146,6 +151,7 @@ async def serve(key: str, *, max_seconds: float | None = None, counter: GateCoun
                         break
                     now = time.time()
                     msg = json.loads(raw.data)
+                    messages += 1
                     if msg.get("error"):
                         raise RuntimeError(str(msg["error"])[:120])
                     counter.message(msg, now, datetime.now(timezone.utc).date().isoformat())
@@ -154,6 +160,7 @@ async def serve(key: str, *, max_seconds: float | None = None, counter: GateCoun
                     if now - last_flush >= flags.AIS_FLUSH_SECONDS:
                         counter.prune(now)
                         flush(counter, datetime.now(timezone.utc).date())
+                        store.record_status("ais_stream", messages=messages, vessels=len(board.v) if board is not None else None)
                         last_flush = now
                     if max_seconds is not None and time.monotonic() - started >= max_seconds:
                         break

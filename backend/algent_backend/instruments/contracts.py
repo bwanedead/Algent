@@ -36,6 +36,7 @@ class Series(BaseModel):
     tags: list[str] = Field(default_factory=list)
     licence: str = ""                         # what we know about reuse terms
     public_display: bool = True               # False = internal signal until terms are reviewed
+    plain: str = ""                           # what it is and why it matters, plain words, <= 2 sentences (published to the site's info tips)
 
 
 class Observation(BaseModel):

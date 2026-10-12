@@ -90,3 +90,6 @@ button.num-actor:focus-visible, button.num-actor[aria-expanded="true"] { outline
 @media (min-width: 860px) {
   .num-arow { grid-template-columns: minmax(110px, 1fr) repeat(4, minmax(0, 84px)); }
 }
+
+/* What a series is and why it matters, first line of its detail. */
+.num-plain { margin: 0; color: var(--text); font-size: 12px; line-height: 17px; }

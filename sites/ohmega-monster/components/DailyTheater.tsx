@@ -3,11 +3,13 @@ import Link from "next/link";
 import type { DailyChangeKind, DailyTheater } from "@/lib/daily";
 import { claimOf, headlineOf, shortDay, splitLead } from "@/lib/daily";
 import { dossierPath } from "@/lib/dossier";
+import { GLOSSARY } from "@/lib/glossary";
 import type { Direction, Snapshot } from "@/lib/intel";
 
 import DailyFigure from "./DailyFigure";
 import Expander from "./Expander";
 import OnRecordBlock from "./OnRecord";
+import Term from "./Term";
 import { DevelopmentTimeline, KeyFigures, PulseTiles, SourceLink } from "./DailyVisuals";
 import { LiveNow } from "./live/LiveParts";
 import GeoMap from "./map/GeoMap";
@@ -57,7 +59,7 @@ function ContextList({ t }: { t: DailyTheater }) {
   );
 }
 
-export default function DailyTheaterSection({ t, id, date, snap, dossiers, first = false, tag = "", update = false }: { t: DailyTheater; id: string; date: string; snap: Snapshot | null; dossiers: ReadonlySet<string>; first?: boolean; tag?: string; update?: boolean }) {
+export default function DailyTheaterSection({ t, id, date, snap, dossiers, first = false, tag = "", update = false, background = "" }: { t: DailyTheater; id: string; date: string; snap: Snapshot | null; dossiers: ReadonlySet<string>; first?: boolean; tag?: string; update?: boolean; background?: string }) {
   const dir = DIR[t.escalation.direction];
   const claim = headlineOf(t.headline, t.bottom_line, 150) || claimOf(t.since_yesterday[0]?.what ?? "", 150) || t.name;
   const changed = t.since_yesterday.filter((c) => c.kind !== "unchanged");
@@ -85,13 +87,18 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
               t.name
             )}
           </span>
-          <span className={`geo-dir${dir.moving ? " is-moving" : ""}`} title={`Is the situation itself getting worse or easing: ${dir.word}, ${t.escalation.pace} pace`}>
-            <span aria-hidden="true">{dir.glyph}</span> {dir.word}
+          <span className={`geo-dir${dir.moving ? " is-moving" : ""}`}>
+            <span aria-hidden="true">{dir.glyph}</span>{" "}
+            <Term id="direction" label="direction">
+              {dir.word}
+            </Term>
+            <span className="geo-sr">, {t.escalation.pace} pace</span>
           </span>
         </p>
         <h2 id={`${id}-claim`} className="geo-claim">
           {claim}
         </h2>
+        {(t.saga || background) && !update && <p className="geo-saga">{t.saga || background}</p>}
       </header>
 
       <LiveNow text={[t.name, t.bottom_line, ...t.developments.map((d) => d.headline)].join(" . ")} />
@@ -163,6 +170,7 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
 
         {t.pulses.length > 0 && (
           <Expander label="Pulses" count={t.pulses.length} hint="how tense, 0 to 100">
+            <p className="geo-gloss">{GLOSSARY.pulse}</p>
             <PulseTiles pulses={t.pulses} snap={snap} />
           </Expander>
         )}

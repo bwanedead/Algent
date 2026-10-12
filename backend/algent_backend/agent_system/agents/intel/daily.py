@@ -38,6 +38,7 @@ from __future__ import annotations
 
 import json
 import math
+import re
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
@@ -45,6 +46,7 @@ from pathlib import Path
 from typing import Any
 
 from . import brief as br
+from . import primers as primers_mod
 from . import daily_drafts, desk, flags, focus, forecasts, geo, numbers, on_record, render
 from . import sensing as sensing_mod
 from . import sweep as sweep_mod
@@ -127,6 +129,13 @@ WHAT GOOD LOOKS LIKE:
   short and says so: `bottom_line` states that nothing has changed since that date and what stands;
   `developments` holds only what actually moved (empty is fine). Never re-describe the earlier section
   to fill the space.
+- `saga`: the big picture, so that a reader who has NOT followed this story can place today's news: 1 to 3
+  plain sentences on what the ongoing conflict or dynamic is, who is on which side, since when, and why it
+  matters beyond the parties. Write it as if to a smart friend who has never heard of it: no jargon, no
+  acronyms left unexplained, no abbreviations of names, nothing from today (today's news is the rest of
+  the section). Use only what you were given, including the STABLE BACKGROUND block when there is one;
+  never a date, number or name from memory. Leave it EMPTY when there is no saga: a one-off event, or a
+  theater whose background you cannot state from the material. It is background, not a summary of today.
 - `headline`: ONE complete, standalone sentence of at most 20 words that states the single most important
   thing today (it is the title line of the section; the reader may read nothing else). Never a fragment,
   never trails off, no dateline. `bottom_line` expands it.
@@ -314,6 +323,16 @@ def new_since_line(heat: dict, previous: dict | None) -> str:
             f"their range. Newest {nov.get('newest') or '?'}.\n\n")
 
 
+def _background_block(theater_id: str) -> str:
+    """The theater's stored primer (``primers.py``, written once a week for its dossier) as the STABLE BACKGROUND
+    the `saga` is written from, so the daily reuses background we already paid for. "" when there is none."""
+    try:
+        text = str(primers_mod.load(store_dir()).get(theater_id, {}).get("text") or "").strip()
+    except Exception:  # noqa: BLE001 - background is an aid, never a dependency
+        return ""
+    return f"STABLE BACKGROUND (our primer on this dynamic; the source for `saga`, not news):\n{text}\n\n" if text else ""
+
+
 def write_section(context: Any, config: Any, theater: Theater, heat: dict, *, as_of: str, profiles: list[dict],
                   pulse_table: dict[str, str], model_spec: Any, previous: dict | None = None,
                   brief: dict | None = None, corpus_ctx: Any = None,
@@ -332,6 +351,7 @@ def write_section(context: Any, config: Any, theater: Theater, heat: dict, *, as
             + (previous_digest(previous) + "\n\n" if previous
                else "PREVIOUS DAILY SECTION: none; leave since_yesterday empty.\n\n")
             + new_since_line(heat, previous)
+            + _background_block(theater.id)
             + (_brief_digest(brief) + "\n\n" if brief else "")
             + br.corpus_block(corpus_ctx)
             + f"RESEARCHED CLAIMS (graded by our research):{researched or ' none'}\n\n"
@@ -417,6 +437,7 @@ def normalise_section(draft: SectionDraft, *, pulse_table: dict[str, str], has_p
     def clean(url: str) -> str:
         return url if _norm_url(url) in known else ""
 
+    draft.saga = fit_saga(draft.saga)
     draft.developments = [d for d in draft.developments if d.headline.strip()]
     for dev in draft.developments:
         valid = geo.validate_place(dev.place, countries)
@@ -504,6 +525,8 @@ def record_proposals(store: Any, drafts: list[PulseProposal], *, theater: Theate
 
 
 HEADLINE_MAX_WORDS = 28   # the prompt asks for <= 20; past this it is a paragraph, not a headline
+SAGA_MAX_SENTENCES = 3    # the prompt asks for 1-3 plain sentences; a longer one is a history lesson, not an anchor
+SAGA_MAX_WORDS = 90
 
 
 def edition_entry(n: int, built_at: str, sections: list[dict], summary: dict) -> dict:
@@ -514,6 +537,19 @@ def edition_entry(n: int, built_at: str, sections: list[dict], summary: dict) ->
             "sections": [{"theater_id": s.get("theater_id", ""), "name": s.get("name", ""),
                           **({"update": True} if s.get("kind") == "update" else {})} for s in sections],
             "summary": summary}
+
+
+def fit_saga(text: str) -> str:
+    """The saga held to its contract: whitespace tidied, links dropped, at most ``SAGA_MAX_SENTENCES`` sentences and
+    ``SAGA_MAX_WORDS`` words (cut at a sentence end; a single over-long sentence is dropped, not clipped)."""
+    t = " ".join(re.sub(r"https?://\S+", "", str(text or "")).split())
+    out: list[str] = []
+    for sent in re.findall(r"[^.!?]+[.!?]+(?:\s|$)|[^.!?]+$", t):
+        sent = sent.strip()
+        if not sent or len(out) >= SAGA_MAX_SENTENCES or len(" ".join([*out, sent]).split()) > SAGA_MAX_WORDS:
+            break
+        out.append(sent)
+    return " ".join(out)
 
 
 def _headline(text: str) -> str:
@@ -532,7 +568,7 @@ def _section(tid: str, name: str, heat: dict, draft: SectionDraft, pulses: list[
                             "coverage": coverage_label(heat.get("trend", "")),
                             "recent_share": heat.get("recent_share", 0.0), "prior_share": heat.get("prior_share", 0.0)},
             "escalation": d["escalation"], "pulses": pulses, "bottom_line": d["bottom_line"],
-            "headline": _headline(d.get("headline", "")),
+            "headline": _headline(d.get("headline", "")), "saga": d.get("saga", ""),
             "since_yesterday": d["since_yesterday"], "developments": d["developments"], "context": d["context"],
             "outlook": d["outlook"], "watch_next": d["watch_next"],
             "key_figures": d["key_figures"], "brief_slug": (brief or {}).get("slug"),

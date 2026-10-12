@@ -145,8 +145,9 @@ chokepoint with lanes and ranges, a trajectory over terrain, a front line day by
 - **Behaviour**: lazy (nothing fetched until the figure nears the viewport); cooperative gestures (a finger scrolls the page,
   two move the map; Ctrl+wheel on desktop); keyboard pan/zoom plus a button list of marks; "Reset view"; "3D tilt" on theater maps
   (pitch + AWS Terrain Tiles, optional); follows `data-theme`; OpenFreeMap/OSM attribution always visible.
-- **Fallback**: the home-drawn SVG (`GeoMapStatic.tsx`, `LiveWorldStatic.tsx`) shows while loading, with no JS, without WebGL, or
-  after a 15 s load failure (the theater then swaps to the full static figure with its own legend). The SVG pipeline remains the
-  source for X/social stills.
+- **Loading and fallback**: while the interactive map loads, `LiveMap` shows a neutral skeleton of the same size (never the static
+  map: swapping one map for another flashed). The home-drawn SVG (`GeoMapStatic.tsx`, `LiveWorldStatic.tsx`, passed as `fallback`)
+  shows only when the interactive map cannot run: no WebGL, or a 15 s load failure (the theater then swaps to the full static figure
+  with its own legend); with no JS at all it is rendered inside `<noscript>`. The SVG pipeline remains the source for X/social stills.
 - **Client rule**: `"use client"` map code imports only `import type` from `lib/daily`/`lib/dossier` and values only from
   `lib/live-shared` (never anything reaching `lib/store.ts`).

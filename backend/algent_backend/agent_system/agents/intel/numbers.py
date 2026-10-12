@@ -32,7 +32,9 @@ from collections import Counter
 from datetime import date
 from typing import Any
 
+from algent_backend.actors.plain import PLAIN as ACTOR_PLAIN
 from algent_backend.instruments import store as istore
+from algent_backend.instruments.catalog import get_series
 from algent_backend.instruments.contracts import period_date
 
 MAX_TRACKERS = 8
@@ -91,6 +93,14 @@ def spark(series_id: str, day: date) -> list[float]:
     return [_sig(v) for v in vals]
 
 
+def _plain(series_id: str) -> str:
+    """The catalog's plain-English note for a series ("" for one the catalog no longer holds)."""
+    try:
+        return get_series(series_id).plain
+    except KeyError:
+        return ""
+
+
 def tracker(row: dict[str, Any], day: date) -> dict[str, Any]:
     """One ``moves_board`` row as a published tracker: latest value, from -> to changes, flags, sparkline.
     An internal-source series (``public_display`` False) is shown with its source named, flagged ``internal``,
@@ -99,7 +109,7 @@ def tracker(row: dict[str, Any], day: date) -> dict[str, Any]:
                    "pct": round(c["pct"], 2) if c["pct"] is not None else None}
                for k, c in row["changes"].items() if k != "prev" or row["step_key"] == "prev"}   # never a 1d delta on weekly data
     internal = not row["public_display"]
-    return {"id": row["series_id"], "name": row["name"], "unit": row["unit"], "freq": row["frequency"],
+    return {"id": row["series_id"], "name": row["name"], "plain": _plain(row["series_id"]), "unit": row["unit"], "freq": row["frequency"],
             "source": row["source"], "source_url": "" if internal else row["source_url"], "internal": internal,
             "value": _sig(row["latest"]["value"]), "as_of": row["latest"]["period"], "age_days": row["age_days"],
             "changes": changes, "unusual": bool(row["unusual"]), "reasons": list(row["unusual_reasons"]),
@@ -190,7 +200,7 @@ def actor_block(codes: list[str], corpus: Any = None) -> list[dict[str, Any]]:
             f, rk = fields.get(mid), corpus.rank(mid, p["iso2"])
             if not f:
                 continue
-            m = {"label": f["label"], "unit": f["unit"], "value": _sig(f["value"]), "year": f["year"],
+            m = {"label": f["label"], **({"plain": ACTOR_PLAIN[mid]} if mid in ACTOR_PLAIN else {}), "unit": f["unit"], "value": _sig(f["value"]), "year": f["year"],
                  "rank": rk[0] if rk else None, "of": rk[1] if rk else None, "source": f["source"]}
             pts = trends.get(mid, {}).get(p["iso2"], [])[-TREND_YEARS - 1:]
             if len(pts) >= 3:

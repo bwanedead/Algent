@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { ActorFlag, ScaleBar } from "@/components/actors/ActorParts";
 import Popover from "@/components/Popover";
+import Term from "@/components/Term";
 import { actorIds } from "@/lib/actors";
 import type { NumbersActor, TheaterNumbers } from "@/lib/daily";
 
@@ -48,10 +49,14 @@ function MetricTable({ title, cols, actors, asOfYear, known }: { title: string; 
   return (
     <div className="num-table">
       <p className="geo-micro">{title}</p>
-      <div className="num-arow num-ahead" aria-hidden="true">
+      <div className="num-arow num-ahead">
         <span />
         {cols.map((c) => (
-          <span key={c.id}>{c.label}</span>
+          <span key={c.id}>
+            <Term text={present.map((a) => a.metrics[c.id]?.plain).find(Boolean) ?? ""} label={c.label}>
+              {c.label}
+            </Term>
+          </span>
         ))}
       </div>
       <ul className="num-alist">
@@ -110,7 +115,10 @@ export default async function TheaterNumbersPanel({ numbers, name }: { numbers: 
           <MetricTable title="Who they are · size" cols={SIZE} actors={actors} asOfYear={asOfYear} known={known} />
           <MetricTable title="Balance sheet · debt, budget, current account, reserves" cols={BOOKS} actors={actors} asOfYear={asOfYear} known={known} />
           <p className="num-note">
-            Annual statistics: latest year on record for each figure (IMF figures for this year are estimates), bars on one scale per column, line = the last ten years. Tap an actor for every year, rank, energy, ranked trade and sources.{" "}
+            <Term id="annual" label="annual statistics">
+              Annual statistics
+            </Term>
+            : latest year on record for each figure (IMF figures for this year are estimates), bars on one scale per column, line = the last ten years. Tap an actor for every year, rank, energy, ranked trade and sources.{" "}
             <Link href="/intel/actors">All actors →</Link>
           </p>
         </div>
@@ -118,7 +126,9 @@ export default async function TheaterNumbersPanel({ numbers, name }: { numbers: 
       {trackers.length > 0 && (
         <div className="num-trackers">
           <p className="geo-micro">
-            Flows and rates, dated
+            <Term id="flows" label="flows and rates">
+              Flows and rates, dated
+            </Term>
             {unusual > 0 && <span className="num-hot"> · {unusual} unusual now</span>}
           </p>
           <ul className="num-grid">

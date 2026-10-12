@@ -26,7 +26,7 @@ from typing import Any, Callable
 BUCKET = "published-assets"
 _OFF = ("0", "false", "no", "off")
 _MIME = {".svg": "image/svg+xml", ".webp": "image/webp", ".png": "image/png", ".jpg": "image/jpeg",
-         ".jpeg": "image/jpeg", ".gif": "image/gif", ".json": "application/json"}
+         ".jpeg": "image/jpeg", ".gif": "image/gif", ".json": "application/json", ".gz": "application/gzip"}
 
 #: ``http(method, url, headers, body) -> status`` — injectable so tests need no network.
 Http = Callable[[str, str, dict[str, str], bytes], int]
