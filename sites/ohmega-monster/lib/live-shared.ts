@@ -115,8 +115,10 @@ export const SNAPSHOT_BASE = `${(process.env.NEXT_PUBLIC_SUPABASE_URL || "").rep
 /** URL of a live snapshot's plain-JSON form ("fires", "summary", "energy"; the big ones are fetched with `fetchSnapshot`). */
 export const snapshotUrl = (name: string) => `${SNAPSHOT_BASE}/${name}.json`;
 
-/** The big documents (vessels, aircraft, coverage, tracks/...) are published gzipped as `<name>.json.gz` (backend `flags.GZIP_LEVEL`). */
-export const GZIPPED = ["vessels", "aircraft", "coverage", "tracks/"];
+/** The big documents (vessels, aircraft, coverage, density, tiles/..., tracks/...) are published gzipped as `<name>.json.gz` (backend `flags.GZIP_LEVEL`). */
+export const GZIPPED = ["vessels", "aircraft", "coverage", "tracks/", "density", "tiles/"];
+/** Documents with no plain `.json` twin: a failed gzipped fetch is a failure, not a reason to try another URL. */
+const GZ_ONLY = ["density", "tiles/"];
 
 async function inflate(bytes: Uint8Array): Promise<unknown> {
   if (bytes[0] === 0x1f && bytes[1] === 0x8b && typeof DecompressionStream !== "undefined") {
@@ -127,12 +129,15 @@ async function inflate(bytes: Uint8Array): Promise<unknown> {
 }
 
 /** Fetch one live snapshot as JSON: the gzipped object first for the big documents (inflated in the browser), the plain `.json` as
- *  the fallback (an older backend, a browser without DecompressionStream). `null` on any failure; the page degrades to "nothing". */
-export async function fetchSnapshot<T>(name: string): Promise<T | null> {
-  const attempts = GZIPPED.some((g) => name.startsWith(g)) ? [`${SNAPSHOT_BASE}/${name}.json.gz`, snapshotUrl(name)] : [snapshotUrl(name)];
+ *  the fallback (an older backend, a browser without DecompressionStream). `null` on any failure; the page degrades to "nothing".
+ *  Polled documents are REVALIDATED (conditional request: an unchanged one costs a 304, no body). A tile is fetched with `v` = its
+ *  etag from the index (`?v=`): the URL then names its content, so the browser/CDN cache may answer repeat requests. */
+export async function fetchSnapshot<T>(name: string, opts: { v?: string } = {}): Promise<T | null> {
+  const gz = `${SNAPSHOT_BASE}/${name}.json.gz${opts.v ? `?v=${encodeURIComponent(opts.v)}` : ""}`;
+  const attempts = GZ_ONLY.some((g) => name.startsWith(g)) ? [gz] : GZIPPED.some((g) => name.startsWith(g)) ? [gz, snapshotUrl(name)] : [snapshotUrl(name)];
   for (const url of attempts) {
     try {
-      const res = await fetch(url, { cache: "no-store" });
+      const res = await fetch(url, { cache: opts.v ? "default" : "no-cache" });
       if (res.ok) return (await inflate(new Uint8Array(await res.arrayBuffer()))) as T;
     } catch {
       /* try the next form */
@@ -140,6 +145,16 @@ export async function fetchSnapshot<T>(name: string): Promise<T | null> {
   }
   return null;
 }
+
+// ---- the tiled transport (backend `live/tiles.py`): a world density grid + 10-degree object tiles ----------------------------
+
+/** One layer's world grid: cells of `deg` degrees, id = row * (360 / deg) + col from the south-west corner; each cell is `[id, n of class 0, n of class 1, ...]`. */
+export type DensityLayer = { n: number; counts: Record<string, number>; classes: string[]; cells: number[][] };
+export type DensityDoc = { as_of: string; aircraft_as_of?: string; deg: number; layers: { vessels: DensityLayer; aircraft: DensityLayer } };
+/** Which tiles exist, per layer: `{ "r11c23": [objects, etag] }` (tile id = row/col of its `deg`-degree cell). */
+export type TileIndex = { as_of: string; aircraft_as_of?: string; deg: number; vessels: Record<string, [number, string]>; aircraft: Record<string, [number, string]> };
+/** The rows of one tile (same row layout as VesselsDoc / AircraftDoc). */
+export type TileDoc = { tile: string; n: number; rows: (string | number)[][] };
 
 /** Receiver coverage: 1-degree cells (id = (floor(lat)+90)*360 + floor(lon)+180) where any AIS position was heard in the last `hours` hours. */
 export type CoverageDoc = { as_of: string; deg: number; hours: number; cells: number[] };
