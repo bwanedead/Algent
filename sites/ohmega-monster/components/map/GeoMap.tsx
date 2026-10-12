@@ -10,8 +10,9 @@ import { theaterLayers } from "./theaterLayers";
 
 // THE map of the site: daily-report theaters and dossier maps both draw through this. It is the interactive map
 // (MapLibre over OpenFreeMap tiles, see LiveMap.tsx) showing the backend's data: numbered marks that match the
-// development list, disputed/occupied areas, chokepoint readings. The home-drawn SVG (GeoMapStatic) is what you see while
-// it loads, without JS or WebGL, and in full (with its own legend and credit) if the interactive map cannot start.
+// development list, disputed/occupied areas, chokepoint readings. While it loads a neutral skeleton holds the place (no static map to flash
+// before the real one); the home-drawn SVG (GeoMapStatic) shows only without JS (<noscript>) or WebGL, and in full
+// (with its own legend and credit) if the interactive map cannot start. The SVG also stays the source for social stills.
 // Doctrine: docs/ethos/information-ergonomics-ethos.md. Spec: docs/architecture/intel-desk.md "Maps".
 
 const BASEMAP_CREDIT = "Interactive basemap: OpenFreeMap, © OpenMapTiles, data © OpenStreetMap contributors.";

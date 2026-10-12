@@ -9,6 +9,10 @@
 .lm-loading .lm-canvas, .lm-failed .lm-canvas { visibility: hidden; }
 .lm-fallback { position: absolute; inset: 0; display: grid; align-items: center; overflow: hidden; background: var(--panel); }
 .lm-fallback svg { display: block; width: 100%; height: auto; border: 0; }
+/* While the interactive map loads: the stage's own size and a quiet pulse, no old map. */
+.lm-skeleton { position: absolute; inset: 0; background: linear-gradient(110deg, var(--panel) 30%, var(--rule) 50%, var(--panel) 70%); background-size: 220% 100%; animation: lm-sheen 1.8s ease-in-out infinite; opacity: 0.55; }
+@keyframes lm-sheen { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+@media (prefers-reduced-motion: reduce) { .lm-skeleton { animation: none; opacity: 0.35; } }
 .lm-note { position: absolute; left: 8px; bottom: 8px; margin: 0; padding: 3px 8px; font-size: 12px; color: var(--muted); background: var(--panel); border: 1px solid var(--rule); }
 
 .lm-tools { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; }
