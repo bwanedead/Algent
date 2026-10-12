@@ -27,7 +27,7 @@ import { useLiveFeed } from "./useLiveFeed";
 
 const BASEMAP_CREDIT = "Interactive basemap: OpenFreeMap, © OpenMapTiles, data © OpenStreetMap contributors.";
 const DATA_CREDIT = "Ships: aisstream.io, Fintraffic digitraffic.fi (CC 4.0 BY), Norwegian Coastal Administration (NLOD). Aircraft: OpenSky Network, adsb.lol. Fires: NASA FIRMS. Quakes: USGS. Outages: IODA.";
-const STORE_KEY = "ohmega-live-off";
+const STORE_KEY = "ohmega-live-off-v2";   // v2: receiver coverage became opt-in
 const REFRESH_TRAILS_MS = 300_000;
 
 const reduceMotion = () => typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -36,7 +36,7 @@ const HEADLINE_TOGGLE: Record<Headline["layer"], string> = { outage: "outage", q
 type Focus = { nonce: number; bounds?: Bounds; center?: LngLat; zoom?: number };
 
 export default function LiveWorldMap({ world, events, stats, summary: summary0 }: { world: LiveWorld | null; events: LiveEvent[]; stats: LiveStat[]; summary: Summary | null }) {
-  const [off, setOff] = useState<Set<string>>(new Set());
+  const [off, setOff] = useState<Set<string>>(new Set(["coverage"]));   // receiver coverage is opt-in
   const [filters, setFilters] = useState<FilterState>({ speed: "all", notable: false, flag: "", q: "" });
   const [sel, setSel] = useState<string | null>(null);
   const [selEnt, setSelEnt] = useState<Entity | null>(null);
