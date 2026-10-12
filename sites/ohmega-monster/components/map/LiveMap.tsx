@@ -4,7 +4,7 @@
 // (see mapLayers.ts). Every map on the site (daily theaters, dossiers, /live) goes through here.
 //   - Loaded lazily: nothing is fetched until the figure nears the viewport (maplibre.ts pins the CDN build).
 //   - Cooperative gestures: on a phone one finger scrolls the page and two move the map, so the map never traps scroll.
-//   - While it loads, a neutral skeleton of the same size holds the place (never the static map: swapping one map for
+//   - While it loads, a panel of the same size with the site's globe spinner holds the place (never the static map: swapping one map for
 //     another is a visible flash). `fallback` (our static SVG map) shows only when the interactive map cannot run:
 //     no WebGL, the CDN/style fails (`onStatus("failed")` lets the caller swap in the full static figure), or no JS at all
 //     (it is then rendered inside <noscript>).
@@ -14,6 +14,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- MapLibre is loaded at runtime and untyped here */
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+
+import GlobeSpinner from "@/components/GlobeSpinner";
 
 import { anchorOf, FIT_PADDING, type Bounds, type Feature, type LngLat, type Props } from "./geo";
 import { installLayer, installSelected, inDrawOrder, popupNode, removeLayer, SELECTED_SOURCE, type LayerSpec } from "./mapLayers";
@@ -310,14 +312,13 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
       <div className="lm-stage">
         <div className="lm-canvas" ref={canvas} role="group" aria-label={label} />
         {status === "failed" && fallback && <div className="lm-fallback">{fallback}</div>}
-        {status === "loading" && <div className="lm-skeleton" aria-hidden="true" />}
+        {status === "loading" && <div className="lm-skeleton">{armed && <GlobeSpinner size={96} caption="Loading the interactive map" />}</div>}
         {fallback && (
           <noscript>
             <style>{".lm-skeleton{display:none}"}</style>
             <div className="lm-fallback">{fallback}</div>
           </noscript>
         )}
-        {status === "loading" && armed && <p className="lm-note" role="status">Loading the interactive map…</p>}
       </div>
       {status === "ready" && (
         <div className="lm-tools">

@@ -8,6 +8,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import GlobeSpinner from "./GlobeSpinner";
 import "./scene3d.css";
 
 /* eslint-disable @typescript-eslint/no-explicit-any -- three.js is loaded at runtime and untyped here */
@@ -260,7 +261,8 @@ export default function Scene3D({ src, preview, title, caption }: { src: string;
       <div className="s3d-wrap">
         {/* the stage has no React children: mount() owns its DOM */}
         <div className="s3d-stage" ref={hostRef} tabIndex={0} role="group" aria-label={`Interactive 3D scene: ${title || caption || ""}. Drag to rotate, pinch or scroll to zoom, two fingers or right-drag to pan.`} />
-        {state !== "ready" && (preview ? <img className="s3d-still s3d-cover" src={preview} alt="" loading="lazy" /> : <p className="s3d-note s3d-cover">Loading 3D scene…</p>)}
+        {state !== "ready" && (preview ? <img className="s3d-still s3d-cover" src={preview} alt="" loading="lazy" /> : <div className="s3d-cover"><GlobeSpinner size={72} caption="Loading 3D scene" /></div>)}
+        {state === "loading" && preview && <div className="s3d-busy"><GlobeSpinner size={40} label="Loading 3D scene" /></div>}
       </div>
       {state === "ready" && spec && (
         <>
