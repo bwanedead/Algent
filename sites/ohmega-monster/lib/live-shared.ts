@@ -116,7 +116,7 @@ export const SNAPSHOT_BASE = `${(process.env.NEXT_PUBLIC_SUPABASE_URL || "").rep
 export const snapshotUrl = (name: string) => `${SNAPSHOT_BASE}/${name}.json`;
 
 /** The big documents (vessels, aircraft, coverage, tracks/...) are published gzipped as `<name>.json.gz` (backend `flags.GZIP_LEVEL`). */
-export const GZIPPED = ["vessels", "aircraft", "coverage", "tracks/"];
+export const GZIPPED = ["vessels", "aircraft", "coverage", "tracks/", "points", "tiles/"];
 
 async function inflate(bytes: Uint8Array): Promise<unknown> {
   if (bytes[0] === 0x1f && bytes[1] === 0x8b && typeof DecompressionStream !== "undefined") {
@@ -162,6 +162,14 @@ export type FiresDoc = { as_of: string; cell_deg: number; detections: number; oc
 export type VesselsDoc = { as_of: string; ttl: number; n: number; classes: string[]; counts: Record<string, number>; rows: (string | number)[][] };
 /** Aircraft rows: [id, lon, lat, heading, speed kn, class (0 civil, 1 other mil, 2 tanker, 3 surveillance, 4 airlift, 5 fighter), last seen, callsign?, type?, altitude ft?]. */
 export type AircraftDoc = { as_of: string; n: number; classes: string[]; counts: { civil: number; military: number }; rows: (string | number)[][] };
+/** World-zoom positions (backend `live/points.py`): per layer `p` is a flat int array, three ints per point `[dlat, lon, c]`, in 0.05 degree
+ *  units, delta-coded from the south pole (lon is absolute when dlat > 0, else a step); c = class index + 8 when notable. */
+export type PointsLayer = { n: number; counts: Record<string, number>; classes: string[]; p: number[]; flags?: [string, number][] };
+export type PointsDoc = { as_of: string; aircraft_as_of: string; deg: number; layers: { vessels: PointsLayer; aircraft: PointsLayer } };
+/** Tile index (backend `live/tiles.py`): per layer `{tile id: [rows, etag]}`; tile ids are `r<row>c<col>` over `deg`-degree cells from the south-west corner. */
+export type TilesIndex = { as_of: string; aircraft_as_of: string; deg: number; vessels: Record<string, [number, string]>; aircraft: Record<string, [number, string]> };
+/** One tile: the same rows as the full documents, for the objects inside it. */
+export type TileDoc = { tile: string; n: number; rows: (string | number)[][] };
 /** A trail shard: object id -> [lon, lat, lon, lat, ...] oldest first. */
 export type TracksDoc = { as_of: string; t: Record<string, number[]> };
 

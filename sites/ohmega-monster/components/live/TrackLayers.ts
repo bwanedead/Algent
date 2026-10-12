@@ -90,6 +90,8 @@ export class Tracks {
   private bound = new WeakSet<object>();
   /** Set by the host: called (after the icons are rebuilt) whenever the view stops moving. */
   onView: (() => void) | null = null;
+  /** Set by the data hook: called whenever the view stops moving (it picks points or tiles by zoom and viewport). */
+  onMove: (() => void) | null = null;
 
   constructor(private onSelect: (e: Entity | null) => void) {}
 
@@ -148,6 +150,7 @@ export class Tracks {
     map.on("moveend", () => {
       this.rebuild();
       this.onView?.();
+      this.onMove?.();
     });
     this.io?.disconnect();
     if (typeof IntersectionObserver !== "undefined") {
@@ -276,6 +279,20 @@ export class Tracks {
       for (const e of this.ents[k]) if (e.lon >= b.getWest() && e.lon <= b.getEast() && e.lat >= b.getSouth() && e.lat <= b.getNorth() && passes(e, this.filter)) out.push(e);
     }
     return out.sort((a, c) => Number(c === this.selected) - Number(a === this.selected) || Number(isNotable(c)) - Number(isNotable(a)) || c.spd - a.spd);
+  }
+
+  /** The map's zoom and padded view `[west, south, east, north]`, or null before the map exists. */
+  view(pad = PAD): { zoom: number; box: [number, number, number, number] } | null {
+    const b = this.map?.getBounds?.();
+    if (!b) return null;
+    const dx = (b.getEast() - b.getWest()) * pad;
+    const dy = (b.getNorth() - b.getSouth()) * pad;
+    return { zoom: this.map.getZoom(), box: [b.getWest() - dx, b.getSouth() - dy, b.getEast() + dx, b.getNorth() + dy] };
+  }
+
+  /** True while the map is on screen (the data hook skips polling otherwise). */
+  isOnScreen(): boolean {
+    return this.visible;
   }
 
   position(e: Entity): [number, number] {

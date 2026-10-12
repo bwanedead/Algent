@@ -2,7 +2,7 @@
 // filters the layer panel offers, and dead reckoning (where an object is NOW, from its last report). Pure and client-safe:
 // imports only types from lib/live-shared.
 
-import type { AircraftDoc, VesselsDoc } from "@/lib/live-shared";
+import type { AircraftDoc, PointsLayer, VesselsDoc } from "@/lib/live-shared";
 
 export type Kind = "ship" | "air";
 
@@ -61,6 +61,21 @@ export function decodeAircraft(doc: AircraftDoc | null): Entity[] {
     kind: "air" as const, id: num(r[0], 0), lon: num(r[1], 0), lat: num(r[2], 0), hdg: num(r[3]), spd: num(r[4]), cls: num(r[5], 0), ts: num(r[6], 0),
     name: str(r[7]), dest: "", flag: "", nf: 0, type: str(r[8]), alt: num(r[9]),
   }));
+}
+
+/** World-zoom points (`PointsLayer.p`) as stand-in entities: position, class and the notable bit only (ids are negative: they are never looked up). */
+export function decodePoints(layer: PointsLayer | undefined, kind: Kind): Entity[] {
+  const p = layer?.p ?? [];
+  const out: Entity[] = [];
+  let lat = -1800;
+  let lon = 0;
+  for (let i = 0; i + 2 < p.length; i += 3) {
+    lat += p[i];
+    lon = p[i] === 0 ? lon + p[i + 1] : p[i + 1];
+    const c = p[i + 2];
+    out.push({ kind, id: -(out.length + 1), lon: lon / 20, lat: lat / 20, hdg: -1, spd: -1, cls: c & 7, ts: 0, name: "", dest: "", flag: "", nf: kind === "ship" && c >= 8 ? 1 : 0, type: "", alt: -1 });
+  }
+  return out;
 }
 
 export const colorOf = (e: Entity): string => (e.kind === "ship" ? SHIP_CLASSES[e.cls]?.color ?? "#9aa5ab" : e.cls === 0 ? AIR_KINDS[1].color : AIR_KINDS[0].color);

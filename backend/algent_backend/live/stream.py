@@ -5,7 +5,7 @@ The stream service (``newsroom live ais``, systemd unit ``ohmega-ais``) — ever
   * extra free AIS sources merged into the same board by MMSI: Finnish Digitraffic (REST) and Norwegian Kystverket (NMEA over TCP);
   * the aircraft sources: OpenSky (the whole world in one call) and adsb.lol (all military + a few civil hubs per cycle) merged into
     the sky board by ICAO address, freshest position winning;
-  * every ``SNAPSHOT_SECONDS`` the world ``density`` grid, the object ``tiles/`` (+ index) and ``summary`` (and, until the site no longer
+  * every ``SNAPSHOT_SECONDS`` the world ``points`` (compact real positions for the far-out glow; the old ``density`` grid is still written, unused), the object ``tiles/`` (+ index) and ``summary`` (and, until the site no longer
     needs them, the full ``vessels`` / ``aircraft``: ``flags.PUBLISH_FULL_SNAPSHOT``) to the public Storage bucket,
     and every ``PERSIST_SECONDS`` the short-trail shards (``tracks/v<k>``, ``tracks/a<k>``), the receiver-coverage grid and the local
     saves of the MMSI static memory (so a restart does not forget every ship's type).
@@ -23,7 +23,7 @@ from typing import Any, Callable
 
 from algent_backend import polite_http
 
-from . import flags, headlines, snapshots, store, tiles
+from . import flags, headlines, points, snapshots, store, tiles
 from .ais_memory import Coverage, StaticMemory
 from .board import VesselBoard
 from .contracts import iso
@@ -42,6 +42,7 @@ def build_docs(board: VesselBoard, sky: SkyBoard, now: float, *, tracks: bool = 
     docs: dict[str, Any] = {"vessels": vessels, "aircraft": aircraft,
                             "summary": headlines.build(at, extra_fresh={"ships": vessels["as_of"], "aircraft": aircraft["as_of"]})}
     docs.update(tiles.build(vessels, aircraft))
+    docs["points"] = points.build(vessels, aircraft)
     if not flags.PUBLISH_FULL_SNAPSHOT:
         del docs["vessels"], docs["aircraft"]
     if tracks:

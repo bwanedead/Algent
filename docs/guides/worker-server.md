@@ -163,15 +163,16 @@ aisstream is volunteer terrestrial AIS (about 40 nautical miles from a coast rec
 **Transport.** Nothing per-object goes to Postgres. Every 60 s the service writes compact JSON to the public Storage bucket
 `published-assets` under `live/` via `publishing/asset_store` (cache header `public, max-age=30` so a CDN can answer repeat fetches, unchanged
 files skipped by content hash, uploads in parallel; content types `application/json` and `application/gzip` only, bucket migration `008`).
-The vessel and aircraft boards go out as (`live/tiles.py`, constants in `live/flags.py`):
+The vessel and aircraft boards go out as (`live/points.py`, `live/tiles.py`, constants in `live/flags.py`):
 
-| Object | What | Size (60,000 ships + 15,000 aircraft, synthetic clustered data) |
+| Object | What | Size (measured on the live 26,700 ships + 7,400 aircraft) |
 |---|---|---|
-| `density.json.gz` | world grid, 2 degree cells, counts per class, both layers | ~27 KB |
-| `tiles/index.json.gz` | non-empty 10 degree tiles per layer, each `[objects, etag]` | ~5 KB |
-| `tiles/v/<tile>.json.gz`, `tiles/a/<tile>.json.gz` | the object rows of one tile (same row layout as the old documents); no timestamp inside, so an unchanged tile keeps its etag and is not re-uploaded | median 0.5 KB, densest 118 KB, ~490 files |
+| `points.json.gz` | every ship and aircraft's REAL position rounded to 0.05 degree + class (+ a notable bit), delta-coded; no ids, names or headings; top flags. Feeds the far-out heat glow exactly as the full rows did. Not thinned | 33 KB |
+| `density.json.gz` | world grid, 2 degree cells (still written, no longer read: grids are not the far-zoom picture) | 6 KB |
+| `tiles/index.json.gz` | non-empty 10 degree tiles per layer, each `[objects, etag]` | 3 KB |
+| `tiles/v/<tile>.json.gz`, `tiles/a/<tile>.json.gz` | the object rows of one tile (same row layout as the old documents); no timestamp inside, so an unchanged tile keeps its etag and is not re-uploaded | 252 files, 0.9 MB in all; densest (North Sea / Baltic corner) 215 KB |
 | `summary.json` | headlines, per-layer freshness, live chokepoint counts | a few KB |
-| `vessels.json.gz`, `aircraft.json.gz` | the OLD full documents | 1.43 MB and 0.29 MB |
+| `vessels.json.gz`, `aircraft.json.gz` | the OLD full documents | 0.75 MB and 0.19 MB |
 
 Every 5 min `coverage.json.gz` and the trail shards `tracks/v0..v15`, `tracks/a0..a15` (an object lives in shard `id mod n`), fetched only when
 a trail is asked for. Tiles are uploaded before the index, so a client never sees an index naming tiles that are not there yet; a tile that
@@ -180,27 +181,28 @@ empties is simply dropped from the index (its old object stays in the bucket, un
 no Supabase credentials the uploads are a no-op. Code: `live/snapshots.py`, `live/tiles.py`, `live/stream.py`.
 
 **Deploy order and the old documents.** `flags.PUBLISH_FULL_SNAPSHOT = True` keeps writing `vessels` and `aircraft` so the previously deployed
-site (which only reads those) keeps working. The new site reads `density` + `tiles/` and falls back to the full documents when `density`
-is missing. After the new site is live, set the flag to `False` and delete the two objects from the bucket; the stream service then uploads
-only density, tiles, summary (and, every 5 min, coverage and trails).
+site (which only reads those) keeps working. Deploy the backend first (it adds `points`), then the site: the new site reads `points` far out
+and `tiles/` zoomed in, and falls back to the full documents when either is missing or when a filter needs fields the compact forms lack (flag,
+name search, speed, notable). After the new site is live and the far-out glow checked against the old, set the flag to `False` and delete the
+two objects from the bucket.
 
-**Egress math (Supabase free plan: about 5 GB a month).** Per open, visible tab, per minute, bodies only (conditional requests on unchanged
-documents are answered 304 without a body; a CDN hit costs the bucket nothing):
+**Egress math (Supabase free plan: about 5 GB a month).** Per open, visible tab, per minute, bodies only:
 
 | View | Old | New |
 |---|---|---|
-| world / idle (nothing zoomed) | 1.2-1.7 MB (full vessels + aircraft) | density 27 KB + summary ~5 KB = ~32 KB |
-| zoomed to a region (zoom 5+) | the same 1.2-1.7 MB | ~32 KB + index 5 KB + the tiles under the view whose etag changed; 2-4 tiles, typically 5-100 KB, worst case (Rotterdam / Singapore corner of a tile) ~150-250 KB |
-| hidden tab or map off screen | 0 (visible tabs only) | 0 |
+| world / idle (below zoom 4) | 0.94 MB (full vessels + aircraft) | points 33 KB + summary ~5 KB = ~38 KB |
+| zoomed in (zoom 4+) | the same 0.94 MB | summary + index 3 KB + the tiles under the padded view whose etag changed: sparse regions tens of KB, one dense tile 215 KB, a Europe-wide view at zoom 4 up to ~0.6 MB |
+| filter on flag / search / speed / notable | 0.94 MB | 0.94 MB (full snapshots, only while the filter is set) |
+| hidden tab or map off screen | 0 | 0 |
 
-At 32 KB a minute one tab-hour is ~2 MB, so 5 GB covers ~2,500 tab-hours a month at the world view; the old layout covered ~60. Fires and
-coverage add ~1-5 KB a minute averaged. Knobs if the bucket still runs hot: `flags.TILE_DEG` (smaller tiles = fewer wasted rows per view but more
-files per cycle), `flags.DENSITY_DEG`, `SNAPSHOT_SECONDS`, and the CDN window `SNAPSHOT_CACHE`.
+Zoomed-in tiles refetch every minute where objects moved (positions and timestamps are in the rows), so the win there is the area, not the
+unchanged-tile skip. Knobs if the bucket still runs hot: `flags.TILE_DEG` (smaller tiles = fewer wasted rows per view, more files per cycle),
+`SNAPSHOT_SECONDS`, and the CDN window `SNAPSHOT_CACHE`.
 
-**What the site does with them.** The map (`sites/ohmega-monster/components/live/`) shows ships and aircraft as density far out, dots at
-region zoom (zoom 5, when it first fetches the tiles under the view) and small heading-oriented icons past zoom 6.5, dead-reckoned between
-snapshots (paused when the tab is hidden, the map is off screen or the user prefers reduced motion). Far out only class filters apply (the grid
-holds counts per class); speed, notable, flag and name search work on the objects loaded for the view (`components/live/useLiveFeed.ts`), with layer/sublayer toggles (persisted in localStorage), filters (underway/stopped,
+**What the site does with them.** The map (`sites/ohmega-monster/components/live/`) shows ships and aircraft as a soft heat glow far out (fed by
+`points`), dots from zoom 4 (when it starts fetching the tiles under the view) and small heading-oriented icons past zoom 6.5, dead-reckoned between
+snapshots (paused when the tab is hidden, the map is off screen or the user prefers reduced motion). Class filters work from the points; speed, notable, flag and name
+search switch the map to the full snapshots while set (`components/live/useLiveEntities.ts` picks points / tiles / full), with layer/sublayer toggles (persisted in localStorage), filters (underway/stopped,
 notable, flag state, search by name/MMSI/callsign), tap-for-trail, "trails for visible" (capped at 160) and a per-chokepoint focus mode.
 "Notable" ships: military/law enforcement, gone dark (moving, then silent 15 min while still on the board), tanker stopped inside a
 chokepoint lane. Not built: unusual-route and loitering-near-infrastructure detection.
