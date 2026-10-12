@@ -8,7 +8,7 @@ Same contract as the other publishers: never raises, a no-op without ``SUPABASE_
 unchanged file is skipped (content hash). Small documents also keep a local copy (``live_store/docs/<name>.json``) so the
 other process (timers vs the always-on stream service) can read them.
 
-The vessel and aircraft layers go out mainly as ``density`` + ``tiles/...`` (``live/tiles.py``); ``publish`` sends a cycle's tiles
+The vessel and aircraft layers go out as ``points`` (``live/points.py``: the world-zoom glow) + ``tiles/...`` (``live/tiles.py``: zoomed-in detail); ``publish`` sends a cycle's tiles
 BEFORE the rest, so a client never reads a ``tiles/index`` that names tiles not yet uploaded.
 """
 
@@ -28,7 +28,7 @@ def encode(doc: Any) -> bytes:
 
 
 #: Documents big enough to be worth compressing; they are uploaded as ``<name>.json.gz`` (see ``flags.GZIP_LEVEL``). The site inflates them.
-GZIPPED = ("vessels", "aircraft", "coverage", "tracks/", "density", "tiles/")
+GZIPPED = ("vessels", "aircraft", "coverage", "tracks/", "density", "tiles/", "points")
 
 
 def encode_gz(doc: Any) -> bytes:
