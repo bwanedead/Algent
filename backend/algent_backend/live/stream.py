@@ -5,7 +5,8 @@ The stream service (``newsroom live ais``, systemd unit ``ohmega-ais``) — ever
   * extra free AIS sources merged into the same board by MMSI: Finnish Digitraffic (REST) and Norwegian Kystverket (NMEA over TCP);
   * the aircraft sources: OpenSky (the whole world in one call) and adsb.lol (all military + a few civil hubs per cycle) merged into
     the sky board by ICAO address, freshest position winning;
-  * every ``SNAPSHOT_SECONDS`` one compact JSON per layer (``vessels``, ``aircraft``, ``summary``) to the public Storage bucket,
+  * every ``SNAPSHOT_SECONDS`` the world ``density`` grid, the object ``tiles/`` (+ index) and ``summary`` (and, until the site no longer
+    needs them, the full ``vessels`` / ``aircraft``: ``flags.PUBLISH_FULL_SNAPSHOT``) to the public Storage bucket,
     and every ``PERSIST_SECONDS`` the short-trail shards (``tracks/v<k>``, ``tracks/a<k>``), the receiver-coverage grid and the local
     saves of the MMSI static memory (so a restart does not forget every ship's type).
 
@@ -22,7 +23,7 @@ from typing import Any, Callable
 
 from algent_backend import polite_http
 
-from . import flags, headlines, snapshots, store
+from . import flags, headlines, snapshots, store, tiles
 from .ais_memory import Coverage, StaticMemory
 from .board import VesselBoard
 from .contracts import iso
@@ -40,6 +41,9 @@ def build_docs(board: VesselBoard, sky: SkyBoard, now: float, *, tracks: bool = 
     store.write_doc("gates_now", {"as_of": iso(at), "gates": gates})
     docs: dict[str, Any] = {"vessels": vessels, "aircraft": aircraft,
                             "summary": headlines.build(at, extra_fresh={"ships": vessels["as_of"], "aircraft": aircraft["as_of"]})}
+    docs.update(tiles.build(vessels, aircraft))
+    if not flags.PUBLISH_FULL_SNAPSHOT:
+        del docs["vessels"], docs["aircraft"]
     if tracks:
         docs["coverage"] = board.coverage.document(vessels["as_of"], now)
         for k in range(flags.TRACK_SHARDS):
@@ -81,7 +85,7 @@ async def _cycle_loop(board: VesselBoard, sky: SkyBoard, stop_at: float | None,
                 last_tracks = started
                 await asyncio.to_thread(_save_memory, dict(board.static.m), dict(board.coverage.seen))
             store.record_status("stream", last_ok=iso(datetime.now(timezone.utc)), error="",
-                                note=f"{docs['vessels']['n']} vessels, {docs['aircraft']['n']} aircraft; upload {res.get('assets', 0)} new, {len(res.get('failed', []))} failed")
+                                note=f"{docs['density']['layers']['vessels']['n']} vessels, {docs['density']['layers']['aircraft']['n']} aircraft; upload {res.get('assets', 0)} new, {len(res.get('failed', []))} failed")
         except Exception as exc:  # noqa: BLE001 - the service outlives a bad cycle
             store.record_status("stream", error=f"{type(exc).__name__}: {str(exc)[:160]}")
         await asyncio.sleep(max(1.0, flags.SNAPSHOT_SECONDS - (time.time() - started)))

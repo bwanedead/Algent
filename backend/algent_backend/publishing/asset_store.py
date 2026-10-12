@@ -80,9 +80,9 @@ def _load(path: Path) -> dict[str, str]:
 
 
 def upload(files: dict[str, bytes], *, http: Http | None = None, manifest: Path | None = None,
-           cache_control: str = "max-age=3600") -> dict[str, Any]:
+           cache_control: str = "max-age=3600", workers: int = 1) -> dict[str, Any]:
     """Upload ``{site path: bytes}`` (``cache_control`` is the objects' CDN/browser cache header; the live snapshots
-    pass a short one). Returns ``{"assets": n_uploaded, "skipped": n, "failed": [paths], "ok": bool}``
+    pass a short one; ``workers`` > 1 sends that many requests at once, for the live tiles). Returns ``{"assets": n_uploaded, "skipped": n, "failed": [paths], "ok": bool}``
     (``ok`` False only when a configured upload failed). Never raises."""
     if not files:
         return {"assets": 0, "skipped": 0, "failed": [], "ok": True}
@@ -94,21 +94,32 @@ def upload(files: dict[str, bytes], *, http: Http | None = None, manifest: Path 
         seen = _load(mpath)
         key_env = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
         send = http or _http
-        uploaded, skipped, failed = 0, 0, []
-        for site_path, data in sorted(files.items()):
+
+        def one(site_path: str) -> tuple[str, str]:
+            data = files[site_path]
             key = object_key(site_path)
             digest = hashlib.sha256(data).hexdigest()
             if seen.get(key) == digest:
-                skipped += 1
-                continue
+                return "skipped", site_path
             headers = {"Authorization": f"Bearer {key_env}", "apikey": key_env, "x-upsert": "true",
                        "Content-Type": content_type(key), "Cache-Control": cache_control}
             status = send("POST", f"{_base()}/storage/v1/object/{BUCKET}/{key}", headers, data)
             if 200 <= status < 300:
                 seen[key] = digest
-                uploaded += 1
-            else:
-                failed.append(f"{site_path} ({status})")
+                return "uploaded", site_path
+            return "failed", f"{site_path} ({status})"
+
+        paths = sorted(files)
+        if workers > 1:
+            from concurrent.futures import ThreadPoolExecutor
+
+            with ThreadPoolExecutor(max_workers=workers) as pool:
+                results = list(pool.map(one, paths))
+        else:
+            results = [one(p) for p in paths]
+        uploaded = sum(r == "uploaded" for r, _ in results)
+        skipped = sum(r == "skipped" for r, _ in results)
+        failed = [what for r, what in results if r == "failed"]
         try:
             mpath.parent.mkdir(parents=True, exist_ok=True)
             mpath.write_text(json.dumps(seen, indent=1, sort_keys=True), encoding="utf-8")
