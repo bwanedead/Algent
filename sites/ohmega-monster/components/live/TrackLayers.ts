@@ -47,7 +47,7 @@ const CLICKABLE = (k: Kind) => [`${src(k)}-icon`, `${src(k)}-dot`, `${src(k)}-do
 const COVERAGE = { source: "lt-coverage", layer: "lt-coverage-fill" };
 /** A density grid: `deg`-degree cells, each `[id, n of class 0, n of class 1, ...]` (id = row * (360 / deg) + col from the south-west). */
 export type DensityCells = { deg: number; cells: number[][] };
-const DENSITY_DEG = 0.25;   // matches backend live/flags.py DENSITY_DEG
+const DENSITY_DEG = 2;
 type Hit = { e: Entity; d: number; at: [number, number] };
 const coarsePointer = () => typeof matchMedia === "function" && matchMedia("(pointer: coarse)").matches;
 const reduceMotion = () => typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -89,7 +89,7 @@ export class Tracks {
   private dens: Record<Kind, DensityCells | null> = { ship: null, air: null };
   private derived: Record<Kind, DensityCells | null> = { ship: null, air: null };
   private coverage: CoverageDoc | null = null;
-  private coverageOn = false;   // receiver coverage is opt-in
+  private coverageOn = true;
   private raf = 0;
   private last = 0;
   private visible = true;
@@ -235,14 +235,10 @@ export class Tracks {
     const col = GROUP_COLOR[k];
     map.addSource(s, { type: "geojson", data: EMPTY });
     map.addSource(`${s}-d`, { type: "geojson", data: EMPTY });
-    // Far out: the original heat glow (a big soft splodge that resolves as you zoom), fed by the fine density grid's cell
-    // centres weighted by their counts — visually the same as one point per object, at a fraction of the bandwidth.
-    map.addLayer({ id: `${s}-cell`, source: `${s}-d`, type: "heatmap", maxzoom: DOT_ZOOM + 1, paint: {
-      "heatmap-weight": ["get", "w"],
-      "heatmap-radius": ["interpolate", ["linear"], ["zoom"], 0, 5, 2, 9, 5, 16],
-      "heatmap-intensity": ["interpolate", ["linear"], ["zoom"], 0, 0.5, 5, 1.2],
-      "heatmap-color": ["interpolate", ["linear"], ["heatmap-density"], 0, "rgba(0,0,0,0)", 0.2, `${col}33`, 0.6, `${col}99`, 1, col],
-      "heatmap-opacity": ["interpolate", ["linear"], ["zoom"], DOT_ZOOM, 0.85, DOT_ZOOM + 1, 0] } });
+    const level = ["interpolate", ["linear"], ["get", "w"], 1, 0.16, 12, 0.38, 120, 0.72];
+    map.addLayer({ id: `${s}-cell`, source: `${s}-d`, type: "fill", maxzoom: DOT_ZOOM + 1, paint: {
+      "fill-color": col, "fill-antialias": false,
+      "fill-opacity": ["interpolate", ["linear"], ["zoom"], DOT_ZOOM - 0.5, level, DOT_ZOOM + 1, 0] } });
     const dotPaint = { "circle-color": ["get", "col"], "circle-opacity": 0.85, "circle-stroke-width": 0.5, "circle-stroke-color": "rgba(255,255,255,0.7)" };
     map.addLayer({ id: `${s}-dot`, source: s, type: "circle", minzoom: DOT_ZOOM, maxzoom: ICON_ZOOM, paint: { ...dotPaint,
       "circle-radius": ["interpolate", ["linear"], ["zoom"], DOT_ZOOM, 1.3, ICON_ZOOM, 2.4] } });
@@ -403,7 +399,7 @@ export class Tracks {
       if (w <= 0) continue;
       const lat0 = Math.floor(id / perRow) * d - 90;
       const lon0 = (id % perRow) * d - 180;
-      features.push({ type: "Feature", properties: { w }, geometry: { type: "Point", coordinates: [lon0 + d / 2, lat0 + d / 2] } });
+      features.push({ type: "Feature", properties: { w }, geometry: { type: "Polygon", coordinates: [[[lon0, lat0], [lon0 + d, lat0], [lon0 + d, lat0 + d], [lon0, lat0 + d], [lon0, lat0]]] } });
     }
     s.setData({ type: "FeatureCollection", features });
   }
@@ -413,7 +409,7 @@ export class Tracks {
     const perRow = 360 / DENSITY_DEG;
     const by = new Map<number, number[]>();
     for (const e of this.ents[kind]) {
-      const id = Math.min(Math.round(180 / DENSITY_DEG) - 1, Math.max(0, Math.floor((e.lat + 90) / DENSITY_DEG))) * perRow + Math.min(perRow - 1, Math.max(0, Math.floor((e.lon + 180) / DENSITY_DEG)));
+      const id = Math.min(89, Math.max(0, Math.floor((e.lat + 90) / DENSITY_DEG))) * perRow + Math.min(perRow - 1, Math.max(0, Math.floor((e.lon + 180) / DENSITY_DEG)));
       const row = by.get(id) ?? [0, 0, 0, 0, 0, 0];
       row[Math.min(e.cls, 5)]++;
       by.set(id, row);

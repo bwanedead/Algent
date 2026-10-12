@@ -27,14 +27,14 @@ LAYERS = (("vessels", "v"), ("aircraft", "a"))     # (document name, tile folder
 _LON, _LAT, _CLS = 1, 2, 5                          # row positions shared by both documents
 
 
-def _cell(lat: float, lon: float, deg: float) -> tuple[int, int]:
-    rows, cols = round(180 / deg), round(360 / deg)          # deg may be fractional (the density grid is 0.25 degrees)
+def _cell(lat: float, lon: float, deg: int) -> tuple[int, int]:
+    rows, cols = 180 // deg, 360 // deg
     return min(rows - 1, max(0, int((lat + 90) // deg))), min(cols - 1, max(0, int((lon + 180) // deg)))
 
 
-def cell_id(lat: float, lon: float, deg: float) -> int:
+def cell_id(lat: float, lon: float, deg: int) -> int:
     row, col = _cell(lat, lon, deg)
-    return row * round(360 / deg) + col
+    return row * (360 // deg) + col
 
 
 def tile_id(lat: float, lon: float, deg: int | None = None) -> str:
@@ -42,7 +42,7 @@ def tile_id(lat: float, lon: float, deg: int | None = None) -> str:
     return f"r{row:02d}c{col:02d}"
 
 
-def density(doc: dict[str, Any], deg: float | None = None) -> dict[str, Any]:
+def density(doc: dict[str, Any], deg: int | None = None) -> dict[str, Any]:
     """One layer's grid: ``{"n", "counts", "classes", "cells": [[id, n_class0, n_class1, ...], ...]}`` (trailing zero counts dropped)."""
     deg = deg or flags.DENSITY_DEG
     grid: dict[int, list[int]] = {}
