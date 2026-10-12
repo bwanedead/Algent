@@ -6,11 +6,11 @@ import type { Bounds, LngLat } from "@/components/map/geo";
 import LiveMap, { type MapStatus } from "@/components/map/LiveMap";
 import {
   ago, compact, fetchSnapshot, KIND_LABEL, shipTiles,
-  type AircraftDoc, type CoverageDoc, type FiresDoc, type Headline, type LiveEvent, type LiveStat, type LiveWorld, type Summary, type VesselsDoc,
+  type CoverageDoc, type FiresDoc, type Headline, type LiveEvent, type LiveStat, type LiveWorld, type Summary,
 } from "@/lib/live-shared";
 
 import ChokepointTiles from "./ChokepointTiles";
-import { AIR_KINDS, decodeAircraft, decodeVessels, NO_FILTER, passes, regionName, SHIP_CLASSES, type Entity } from "./entities";
+import { AIR_KINDS, NO_FILTER, passes, regionName, SHIP_CLASSES, type Entity } from "./entities";
 import Headlines from "./Headlines";
 import LayerPanel, { type FilterState, type PanelRow } from "./LayerPanel";
 import { eventItem, gateItems, type Layer } from "./liveItems";
@@ -18,18 +18,21 @@ import { COLOR, GROUPS, liveLayers, WORLD_BOUNDS } from "./liveLayers";
 import LiveWorldStatic from "./LiveWorldStatic";
 import { Tracks } from "./TrackLayers";
 import { loadTrails, type Trail } from "./trails";
+import { useLiveEntities } from "./useLiveEntities";
 
 // The /live world map and everything around it. One interactive map (MapLibre over OpenFreeMap, components/map/LiveMap.tsx):
 //   - events (outage fills, quakes, fire heat, chokepoint lines) are declarative layers (liveLayers.ts);
 //   - ships and aircraft are the moving layers (TrackLayers.ts): density far out, dots, then heading-oriented icons dead-reckoned
 //     between the once-a-minute snapshots, with filters, search and short trails (entities.ts, trails.ts).
-// Data is polled from the public Storage bucket (lib/live-shared.ts `fetchSnapshot`; the big documents arrive gzipped): vessels /
-// aircraft / summary every minute, fire heat and the AIS receiver-coverage grid every ten. The layer toggles persist in localStorage. While the map loads, without JS or WebGL, or if the CDN
+// Data is polled from the public Storage bucket (lib/live-shared.ts `fetchSnapshot`; the big documents arrive gzipped): the summary
+// every minute, fire heat and the AIS receiver-coverage grid every ten; ships and aircraft by view (useLiveEntities.ts: compact
+// points far out, tiles under the viewport zoomed in, the full snapshots when a filter needs them). The layer toggles persist in
+// localStorage; receiver coverage starts off. While the map loads, without JS or WebGL, or if the CDN
 // fails, the SVG map (LiveWorldStatic) shows the events instead.
 
 const BASEMAP_CREDIT = "Interactive basemap: OpenFreeMap, © OpenMapTiles, data © OpenStreetMap contributors.";
 const DATA_CREDIT = "Ships: aisstream.io, Fintraffic digitraffic.fi (CC 4.0 BY), Norwegian Coastal Administration (NLOD). Aircraft: OpenSky Network, adsb.lol. Fires: NASA FIRMS. Quakes: USGS. Outages: IODA.";
-const STORE_KEY = "ohmega-live-off";
+const STORE_KEY = "ohmega-live-off-v2"; // v2: coverage became off by default
 const POLL_MS = 60_000;
 const FIRES_MS = 600_000;
 const REFRESH_TRAILS_MS = 300_000;
@@ -43,11 +46,9 @@ type Focus = { nonce: number; bounds?: Bounds; center?: LngLat; zoom?: number };
 
 export default function LiveWorldMap({ world, events, stats, summary: summary0 }: { world: LiveWorld | null; events: LiveEvent[]; stats: LiveStat[]; summary: Summary | null }) {
   const [summary, setSummary] = useState<Summary | null>(summary0);
-  const [vessels, setVessels] = useState<VesselsDoc | null>(null);
-  const [aircraft, setAircraft] = useState<AircraftDoc | null>(null);
   const [fires, setFires] = useState<FiresDoc | null>(null);
   const [coverage, setCoverage] = useState<CoverageDoc | null>(null);
-  const [off, setOff] = useState<Set<string>>(new Set());
+  const [off, setOff] = useState<Set<string>>(new Set(["coverage"]));
   const [filters, setFilters] = useState<FilterState>({ speed: "all", notable: false, flag: "", q: "" });
   const [sel, setSel] = useState<string | null>(null);
   const [selEnt, setSelEnt] = useState<Entity | null>(null);
@@ -82,11 +83,8 @@ export default function LiveWorldMap({ world, events, stats, summary: summary0 }
     let dead = false;
     const fast = async () => {
       if (document.hidden) return;
-      const [v, a, s] = await Promise.all([pull<VesselsDoc>("vessels"), pull<AircraftDoc>("aircraft"), pull<Summary>("summary")]);
-      if (dead) return;
-      if (v) setVessels(v);
-      if (a) setAircraft(a);
-      if (s) setSummary(s);
+      const s = await pull<Summary>("summary");
+      if (!dead && s) setSummary(s);
     };
     const slow = async () => {
       const [f, c] = await Promise.all([pull<FiresDoc>("fires"), pull<CoverageDoc>("coverage")]);
@@ -109,8 +107,10 @@ export default function LiveWorldMap({ world, events, stats, summary: summary0 }
   }, []);
 
   // ---- moving layers: entities, filters ----------------------------------------------------------------------------
-  const ships = useMemo(() => decodeVessels(vessels), [vessels]);
-  const planes = useMemo(() => decodeAircraft(aircraft), [aircraft]);
+  const needFull = filters.flag !== "" || filters.q !== "" || filters.speed !== "all" || filters.notable; // fields only the full rows carry
+  const { ships, planes, meta, topFlags, mode } = useLiveEntities(tracks, needFull, { ships: !off.has("ships"), air: !off.has("aircraft") });
+  const vessels = meta.vessels;
+  const aircraft = meta.aircraft;
   useEffect(() => tracks.setEntities("ship", ships), [tracks, ships]);
   useEffect(() => tracks.setEntities("air", planes), [tracks, planes]);
   const entityFilter = useMemo(
@@ -172,10 +172,11 @@ export default function LiveWorldMap({ world, events, stats, summary: summary0 }
     { key: "gates", label: "Chokepoints", color: COLOR.gates, count: Object.keys(gates ?? {}).length, fresh: "" },
   ];
   const flags = useMemo(() => {
+    if (mode !== "full") return topFlags.map(([code, c]) => ({ code, label: regionName(code), n: c }));
     const n = new Map<string, number>();
     for (const s of ships) if (s.flag) n.set(s.flag, (n.get(s.flag) ?? 0) + 1);
     return Array.from(n.entries()).sort((a, b) => b[1] - a[1]).slice(0, 40).map(([code, c]) => ({ code, label: regionName(code), n: c }));
-  }, [ships]);
+  }, [ships, mode, topFlags]);
   const results = useMemo(() => {
     if (filters.q.length < 2) return [];
     const only = { ...NO_FILTER, q: filters.q };
@@ -184,8 +185,11 @@ export default function LiveWorldMap({ world, events, stats, summary: summary0 }
   const shownText = useMemo(() => {
     const s = off.has("ships") ? 0 : ships.filter((e) => passes(e, entityFilter)).length;
     const a = off.has("aircraft") ? 0 : planes.filter((e) => passes(e, entityFilter)).length;
-    return ships.length + planes.length === 0 ? "" : `Showing ${compact(s)} of ${compact(ships.length)} ships and ${compact(a)} of ${compact(planes.length)} aircraft. Zoom in past a region for individual icons; far out you see density. Ships are seen only within reach of AIS receivers (the shaded cells): unshaded ocean means no receiver, not no ships.`;
-  }, [ships, planes, entityFilter, off]);
+    const nShips = vessels?.n ?? ships.length;
+    const nAir = aircraft?.n ?? planes.length;
+    const shown = mode === "tiles" ? `Showing ${compact(s)} ships and ${compact(a)} aircraft in this view (${compact(nShips)} and ${compact(nAir)} worldwide)` : `Showing ${compact(s)} of ${compact(nShips)} ships and ${compact(a)} of ${compact(nAir)} aircraft`;
+    return ships.length + planes.length === 0 ? "" : `${shown}. Zoom in past a region for individual icons; far out you see density. Ships are seen only within reach of AIS receivers (switch on AIS receiver coverage to see where): empty ocean may mean no receiver, not no ships.`;
+  }, [ships, planes, entityFilter, off, mode, vessels, aircraft]);
 
   const toggle = (key: string) => {
     const n = new Set(off);
