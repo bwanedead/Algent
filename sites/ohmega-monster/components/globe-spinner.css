@@ -3,7 +3,8 @@
 .globe-spinner svg { display: block; overflow: visible; }
 .globe-spinner { --gs-red: #c4574f; --gs-green: #4f9d5e; }
 /* Land: line-art coast plus a very faint tint, so land and water read apart at a glance. */
-.gs-coast { stroke: var(--accent); fill: var(--accent); fill-opacity: 0.38; }
+.gs-coast { stroke: var(--accent); }
+.gs-land { fill: var(--accent); fill-opacity: 0.38; }
 /* Ocean: a cool blue-slate disc under everything, so water reads clearly as water against the warm land. */
 .gs-ocean { fill: #2f6f8f; fill-opacity: 0.28; }
 .gs-far { stroke: var(--accent); opacity: 0.16; }
