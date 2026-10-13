@@ -8,6 +8,14 @@
 .gs-lit { stop-color: var(--accent); }
 .gs-limb { stop-color: var(--accent); }
 .globe-caption { font-size: 12px; line-height: 1.3; color: var(--muted); }
+/* Cycling views: the ecliptic ring and spin axis fade in with --ecl (0..1, set per frame by the component); the view name is a whisper. */
+.gs-ecl { stroke: var(--muted); opacity: calc(var(--ecl, 0) * 0.55); }
+.gs-ecl-front { stroke: var(--accent); opacity: calc(var(--ecl, 0) * 0.7); }
+.gs-axis { stroke: var(--accent); opacity: calc(var(--ecl, 0) * 0.8); }
+.globe-view-label { font-size: 9px; line-height: 1.3; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); opacity: 0.6; white-space: nowrap; }
+/* The small decorative globe in a report's status strip. */
+.globe-mark { flex: none; align-self: center; margin: -6px 2px -6px 0; }
+@media (max-width: 640px) { .globe-mark svg { width: 40px; height: 40px; } }
 /* A centred loading slot: fills its parent and centres the globe. */
 .globe-fill { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
 .globe-page { min-height: 50vh; display: grid; place-items: center; padding: 48px 16px; }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Fragment } from "react";
+import { Fragment, type ReactNode } from "react";
 
 import Popover from "@/components/Popover";
 import Term from "@/components/Term";
@@ -119,7 +119,8 @@ async function backgrounds(report: Daily, dossiers: ReadonlySet<string>): Promis
   return Object.fromEntries(found.filter(([, text]) => text));
 }
 
-export default async function DailyReport({ report, title }: { report: Daily; title: string }) {
+/** `mark`: an optional small decoration at the start of the status strip (the geopolitics page puts its cycling globe there). */
+export default async function DailyReport({ report, title, mark }: { report: Daily; title: string; mark?: ReactNode }) {
   const snap = await latestSnapshot();
   const dossiers = new Set(await dossierIds());
   const published = publishedLine(report);
@@ -127,6 +128,7 @@ export default async function DailyReport({ report, title }: { report: Daily; ti
   return (
     <div className="geo">
       <div className="intel-strip" role="group" aria-label="Report status">
+        {mark}
         <span className="intel-strip-title">{title} · Daily</span>
         <span className="intel-strip-item">{fmtDay(report.date)}</span>
         {published && <span className="intel-strip-item">{published}</span>}
