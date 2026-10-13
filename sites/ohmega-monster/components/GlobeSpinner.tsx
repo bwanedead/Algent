@@ -240,12 +240,42 @@ const viewMat = (d: ViewDef, clock: number, precession: number): Mat =>
 /** Where the camera is at `clock` ms: a view matrix, how "ecliptic" it is (0 or 1, drives the ring and axis), which view's name
  *  to show, and `since` = ms since the last hard cut (Infinity when not cycling). Stateless: the whole schedule is a function of
  *  the clock, so a paused tab resumes seamlessly. Views switch instantly, with no glide. */
-function cameraAt(views: readonly ViewDef[], clock: number, hold: number, precession: number): { v: Mat; ecl: number; label: number; since: number } {
+/** A deterministic shuffle of 0..n-1 for one pass of the cycle (mulberry32 seeded by seed + pass). */
+function passOrder(n: number, seed: number, pass: number): number[] {
+  let t = (seed ^ Math.imul(pass + 1, 0x9e3779b1)) >>> 0;
+  const rnd = () => {
+    t = (t + 0x6d2b79f5) >>> 0;
+    let r = Math.imul(t ^ (t >>> 15), 1 | t);
+    r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
+    return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+  };
+  const o = Array.from({ length: n }, (_, i) => i);
+  for (let i = n - 1; i > 0; i--) {
+    const j = Math.floor(rnd() * (i + 1));
+    [o[i], o[j]] = [o[j], o[i]];
+  }
+  return o;
+}
+
+/** Random order, every view once per pass, never the same view twice in a row across a pass boundary. */
+function orderFor(n: number, seed: number, pass: number): number[] {
+  const o = passOrder(n, seed, pass);
+  if (pass > 0 && n > 1) {
+    const prev = passOrder(n, seed, pass - 1);
+    if (o[0] === prev[n - 1]) [o[0], o[1]] = [o[1], o[0]];
+  }
+  return o;
+}
+
+function cameraAt(views: readonly ViewDef[], clock: number, hold: number, precession: number, seed = 0): { v: Mat; ecl: number; label: number; since: number } {
   if (views.length === 1) return { v: viewMat(views[0], clock, precession), ecl: views[0].ecliptic ? 1 : 0, label: 0, since: Infinity };
   const dur = views.map((d) => (d.ecliptic ? Math.max(hold, Math.min(hold * ECL_HOLD, ECL_MAX)) : hold));
   const total = dur.reduce((a, b) => a + b, 0);
-  let p = clock % total, i = 0;
-  while (p >= dur[i]) p -= dur[i++];
+  const pass = Math.floor(clock / total);
+  const order = orderFor(views.length, seed, pass);
+  let p = clock - pass * total, k = 0;
+  while (p >= dur[order[k]]) p -= dur[order[k++]];
+  const i = order[k];
   return { v: viewMat(views[i], clock, precession), ecl: views[i].ecliptic ? 1 : 0, label: i, since: p };
 }
 
@@ -287,6 +317,7 @@ export default function GlobeSpinner({
   const px = clamp(size);
   const id = useId();
   const [pick, setPick] = useState(0);
+  const seed = useRef(Math.floor(Math.random() * 2 ** 31));   // per-mount random view order (only used in the animation loop)
   const [land, setLand] = useState<Poly[]>(COARSE_POLYS);
   const host = useRef<HTMLSpanElement>(null);
   const coast = useRef<SVGPathElement>(null);
@@ -324,7 +355,7 @@ export default function GlobeSpinner({
     let shown = -1;
     let flashing = false;
     const paint = (clock: number, allowFlash = true) => {
-      const cam = cameraAt(views, clock, hold, precession);
+      const cam = cameraAt(views, clock, hold, precession, seed.current);
       const m = spun(cam.v, 0.6 + (clock / period) * 2 * Math.PI);
       const l = paths(land, m, showFar);
       coast.current?.setAttribute("d", l.front);
