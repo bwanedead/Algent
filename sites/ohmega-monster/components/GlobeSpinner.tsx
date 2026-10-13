@@ -10,8 +10,8 @@
 //     fetched lazily once per page; a 330-point inline outline draws instantly meanwhile.
 //   - Frames are written straight to the SVG paths from requestAnimationFrame (about 30 fps, stopped off screen), not through React.
 //   - prefers-reduced-motion: one still frame. Accessible: role="status" with a label (default "Loading"), or `decorative` for none.
-//   - VIEWS is the systematic set (straight, 45-degree quadrants, ecliptic with precession). `cycle` walks through it, slerping the
-//     camera between views; `view` pins one by id. The legacy `perspective` prop and random PERSPECTIVES pick still work.
+//   - VIEWS is the systematic set (straight, 45-degree quadrants, ecliptic with precession). `cycle` walks through it with hard cuts (no glide;
+//     the equatorial plane flashes for under a second after each cut: red axis to lon 0, green to 90E); `view` pins one by id. The legacy `perspective` prop and random PERSPECTIVES pick still work.
 // Client-safe: imports nothing from the server side.
 
 import { useEffect, useId, useRef, useState } from "react";
@@ -53,7 +53,7 @@ export const VIEWS: readonly ViewDef[] = [
 ];
 
 type Props = {
-  /** Cycle through VIEWS, gliding the camera between them. */
+  /** Cycle through VIEWS with hard cuts, flashing the equatorial plane after each. */
   cycle?: boolean;
   /** Pin one of VIEWS by id (ignored when `cycle`). */
   view?: string;
@@ -61,7 +61,7 @@ type Props = {
   showLabel?: boolean;
   /** Purely decorative: aria-hidden, no status role. */
   decorative?: boolean;
-  /** Milliseconds each view is held while cycling (default 8000 — long enough to watch each one; the ecliptic view holds longer). */
+  /** Milliseconds each view is held while cycling (default 30000; the ecliptic view holds longer, capped at 60 s). */
   hold?: number;
   /** Milliseconds per precession sweep in the ecliptic view (default 40000). */
   precession?: number;
@@ -200,7 +200,6 @@ function paths(polys: Poly[], m: number[], wantBack: boolean): { front: string; 
 // ---- cameras: 3x3 rows (screen x, screen y, depth) acting on the polar-axis frame ---------------------------------------------
 
 type Mat = number[];
-type Quat = [number, number, number, number]; // x, y, z, w
 
 /** Camera over latitude `elev` at lon 0, picture rolled by `roll` (before the spin is applied). */
 function fixedView(elev: number, roll: number): Mat {
@@ -231,65 +230,50 @@ function spun(v: Mat, theta: number): Mat {
   return out;
 }
 
-function toQuat(m: Mat): Quat {
-  const tr = m[0] + m[4] + m[8];
-  let x, y, z, w, s;
-  if (tr > 0) { s = Math.sqrt(tr + 1) * 2; w = s / 4; x = (m[7] - m[5]) / s; y = (m[2] - m[6]) / s; z = (m[3] - m[1]) / s; }
-  else if (m[0] > m[4] && m[0] > m[8]) { s = Math.sqrt(1 + m[0] - m[4] - m[8]) * 2; w = (m[7] - m[5]) / s; x = s / 4; y = (m[1] + m[3]) / s; z = (m[2] + m[6]) / s; }
-  else if (m[4] > m[8]) { s = Math.sqrt(1 + m[4] - m[0] - m[8]) * 2; w = (m[2] - m[6]) / s; x = (m[1] + m[3]) / s; y = s / 4; z = (m[5] + m[7]) / s; }
-  else { s = Math.sqrt(1 + m[8] - m[0] - m[4]) * 2; w = (m[3] - m[1]) / s; x = (m[2] + m[6]) / s; y = (m[5] + m[7]) / s; z = s / 4; }
-  return [x, y, z, w];
-}
-
-function fromQuat([x, y, z, w]: Quat): Mat {
-  return [1 - 2 * (y * y + z * z), 2 * (x * y - z * w), 2 * (x * z + y * w), 2 * (x * y + z * w), 1 - 2 * (x * x + z * z), 2 * (y * z - x * w), 2 * (x * z - y * w), 2 * (y * z + x * w), 1 - 2 * (x * x + y * y)];
-}
-
-/** Shortest-arc spherical interpolation, so the camera glides between views with no jump and no flip. */
-function slerp(a: Quat, b: Quat, t: number): Quat {
-  let d = a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
-  const sg = d < 0 ? -1 : 1;
-  d *= sg;
-  let ka = 1 - t, kb = t * sg;
-  if (d < 0.9995) {
-    const om = Math.acos(d), so = Math.sin(om);
-    ka = Math.sin((1 - t) * om) / so;
-    kb = (Math.sin(t * om) / so) * sg;
-  }
-  const q = [0, 1, 2, 3].map((i) => ka * a[i] + kb * b[i]);
-  const n = Math.hypot(q[0], q[1], q[2], q[3]) || 1;
-  return [q[0] / n, q[1] / n, q[2] / n, q[3] / n];
-}
-
-const ease = (u: number) => u * u * (3 - 2 * u);
-const TRANSITION = 1800; // ms of camera glide between views
 const ECL_HOLD = 2.2; // the ecliptic view stays this many times longer, to show a good part of the precession
+const ECL_MAX = 60000; // ...but never more than this many ms
+const FLASH_MS = 900; // the equatorial-plane flash right after each cut
 
-const viewQuat = (d: ViewDef, clock: number, precession: number): Quat =>
-  toQuat(d.ecliptic ? eclipticView((clock / precession) * 2 * Math.PI) : fixedView(d.elev ?? 0, d.roll ?? 0));
+const viewMat = (d: ViewDef, clock: number, precession: number): Mat =>
+  d.ecliptic ? eclipticView((clock / precession) * 2 * Math.PI) : fixedView(d.elev ?? 0, d.roll ?? 0);
 
-/** Where the camera is at `clock` ms: a view matrix, how "ecliptic" it is (0..1, drives the ring and axis), and which view's name
- *  to show. Stateless: the whole schedule is a function of the clock, so a paused tab resumes seamlessly. */
-function cameraAt(views: readonly ViewDef[], clock: number, hold: number, precession: number): { v: Mat; ecl: number; label: number } {
-  const n = views.length;
-  if (n === 1) return { v: fromQuat(viewQuat(views[0], clock, precession)), ecl: views[0].ecliptic ? 1 : 0, label: 0 };
-  const dur = views.map((d) => (d.ecliptic ? hold * ECL_HOLD : hold) + TRANSITION);
+/** Where the camera is at `clock` ms: a view matrix, how "ecliptic" it is (0 or 1, drives the ring and axis), which view's name
+ *  to show, and `since` = ms since the last hard cut (Infinity when not cycling). Stateless: the whole schedule is a function of
+ *  the clock, so a paused tab resumes seamlessly. Views switch instantly, with no glide. */
+function cameraAt(views: readonly ViewDef[], clock: number, hold: number, precession: number): { v: Mat; ecl: number; label: number; since: number } {
+  if (views.length === 1) return { v: viewMat(views[0], clock, precession), ecl: views[0].ecliptic ? 1 : 0, label: 0, since: Infinity };
+  const dur = views.map((d) => (d.ecliptic ? Math.max(hold, Math.min(hold * ECL_HOLD, ECL_MAX)) : hold));
   const total = dur.reduce((a, b) => a + b, 0);
   let p = clock % total, i = 0;
   while (p >= dur[i]) p -= dur[i++];
-  const j = (i + 1) % n, h = dur[i] - TRANSITION;
-  const here = viewQuat(views[i], clock, precession);
-  if (p < h) return { v: fromQuat(here), ecl: views[i].ecliptic ? 1 : 0, label: i };
-  const e = ease((p - h) / TRANSITION);
-  return {
-    v: fromQuat(slerp(here, viewQuat(views[j], clock, precession), e)),
-    ecl: (views[i].ecliptic ? 1 - e : 0) + (views[j].ecliptic ? e : 0),
-    label: e < 0.5 ? i : j,
-  };
+  return { v: viewMat(views[i], clock, precession), ecl: views[i].ecliptic ? 1 : 0, label: i, since: p };
 }
 
 const reduceMotion = () => typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 const clamp = (n: number) => Math.min(160, Math.max(24, n));
+
+// Equatorial-plane flash (body frame, so the axes turn with the planet): red towards lon 0, green towards lon 90E, plus rings and radials.
+const sc = (m: number[], bx: number, by: number, r: number) => [C + R * r * (m[0] * bx + m[1] * by), C - R * r * (m[3] * bx + m[4] * by), r * (m[6] * bx + m[7] * by)];
+
+function flashPaths(m: number[]): { front: string; back: string } {
+  let front = "", back = "";
+  const add = (p: number[], q: number[]) => {
+    const s = `M${f1(p[0])} ${f1(p[1])}L${f1(q[0])} ${f1(q[1])}`;
+    if (p[2] + q[2] >= 0) front += s; else back += s;
+  };
+  for (const r of [1 / 3, 2 / 3, 1]) {
+    for (let k = 0; k < 72; k++) {
+      const a = k * 5 * RAD, b = (k + 1) * 5 * RAD;
+      add(sc(m, Math.cos(a), Math.sin(a), r), sc(m, Math.cos(b), Math.sin(b), r));
+    }
+  }
+  for (let k = 1; k < 12; k++) {
+    if (k % 3 === 0) continue; // the axes themselves are drawn separately
+    const a = k * 30 * RAD;
+    add(sc(m, Math.cos(a), Math.sin(a), 0), sc(m, Math.cos(a), Math.sin(a), 1));
+  }
+  return { front, back };
+}
 
 // Ecliptic ring: fixed in the picture (the camera is fixed in the ecliptic frame). Back half is masked where the globe covers it.
 const RING = 49, RING_Y = RING * ECL_SIN;
@@ -298,7 +282,7 @@ const RING_FRONT = `M${C + RING} ${C}A${RING} ${RING_Y} 0 0 1 ${C - RING} ${C}`;
 
 export default function GlobeSpinner({
   size = 64, perspective, label = "Loading", caption, className = "", period = 16000,
-  cycle = false, view, showLabel = false, decorative = false, hold = 8000, precession = 40000,
+  cycle = false, view, showLabel = false, decorative = false, hold = 30000, precession = 40000,
 }: Props) {
   const px = clamp(size);
   const id = useId();
@@ -310,6 +294,10 @@ export default function GlobeSpinner({
   const grid = useRef<SVGPathElement>(null);
   const axis = useRef<SVGLineElement>(null);
   const tag = useRef<HTMLSpanElement>(null);
+  const flash = useRef<SVGGElement>(null);
+  const flFront = useRef<SVGPathElement>(null);
+  const flBack = useRef<SVGPathElement>(null);
+  const flAxes = useRef<(SVGLineElement | null)[]>([]);
 
   const pinned = perspective === undefined && !cycle ? VIEWS.find((v) => v.id === view) : undefined;
   const legacy = !cycle && !pinned;
@@ -334,7 +322,8 @@ export default function GlobeSpinner({
     const views: readonly ViewDef[] = cycle ? VIEWS : pinned ? [pinned] : [{ id: "legacy", label: "", elev, roll }];
     const showGrid = px >= 40, showFar = px >= 56;
     let shown = -1;
-    const paint = (clock: number) => {
+    let flashing = false;
+    const paint = (clock: number, allowFlash = true) => {
       const cam = cameraAt(views, clock, hold, precession);
       const m = spun(cam.v, 0.6 + (clock / period) * 2 * Math.PI);
       const l = paths(land, m, showFar);
@@ -350,10 +339,32 @@ export default function GlobeSpinner({
           a.setAttribute("x2", String(f1(C + R * k * ax))); a.setAttribute("y2", String(f1(C - R * k * ay)));
         }
       }
+      const fl = flash.current;
+      if (fl) {
+        const k = allowFlash && cam.since < FLASH_MS ? (1 - cam.since / FLASH_MS) ** 2 : 0; // ease-out
+        if (k > 0.01) {
+          flashing = true;
+          fl.style.display = "";
+          fl.setAttribute("opacity", k.toFixed(2));
+          const fp = flashPaths(m);
+          flFront.current?.setAttribute("d", fp.front);
+          flBack.current?.setAttribute("d", fp.back);
+          flAxes.current.forEach((ln, i) => { // 0 red +, 1 green +, 2 red -, 3 green -
+            if (!ln) return;
+            const bx = i % 2 === 0 ? 1 : 0, by = 1 - bx, e = sc(m, bx, by, i < 2 ? 1.12 : -1.12);
+            ln.setAttribute("x1", String(C)); ln.setAttribute("y1", String(C));
+            ln.setAttribute("x2", String(f1(e[0]))); ln.setAttribute("y2", String(f1(e[1])));
+            ln.setAttribute("opacity", e[2] >= 0 ? "1" : "0.4");
+          });
+        } else if (flashing) {
+          flashing = false;
+          fl.style.display = "none";
+        }
+      }
       if (tag.current && cam.label !== shown) { shown = cam.label; tag.current.textContent = views[cam.label].label; }
     };
     if (reduceMotion()) {
-      paint(0);
+      paint(0, false);
       return;
     }
     let raf = 0, last = 0, clock = 0, seen = true;
@@ -402,9 +413,18 @@ export default function GlobeSpinner({
         <circle cx={C} cy={C} r={R} fill={`url(#${id}-w)`} />
         <path ref={grid} className="gs-grid" fill="none" strokeWidth={0.8} vectorEffect="non-scaling-stroke" />
         <path ref={far} className="gs-far" fill="none" strokeWidth={0.8} vectorEffect="non-scaling-stroke" />
-        <path ref={coast} className="gs-coast" fill="none" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+        <path ref={coast} className="gs-coast" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
         <circle cx={C} cy={C} r={R} fill={`url(#${id}-l)`} />
         <circle cx={C} cy={C} r={R} className="gs-rim" fill="none" strokeWidth={sw} vectorEffect="non-scaling-stroke" />
+        {cycle && (
+          <g ref={flash} style={{ display: "none" }} aria-hidden="true">
+            <path ref={flBack} className="gs-fl-grid gs-fl-back" fill="none" strokeWidth={0.7} vectorEffect="non-scaling-stroke" />
+            <path ref={flFront} className="gs-fl-grid gs-fl-front" fill="none" strokeWidth={0.7} vectorEffect="non-scaling-stroke" />
+            {[0, 1, 2, 3].map((i) => (
+              <line key={i} ref={(el) => { flAxes.current[i] = el; }} className={i % 2 === 0 ? "gs-fl-red" : "gs-fl-green"} strokeWidth={1.4} strokeLinecap="round" strokeDasharray={i < 2 ? undefined : "2 2.5"} vectorEffect="non-scaling-stroke" />
+            ))}
+          </g>
+        )}
         {hasEcl && <line ref={axis} className="gs-axis" strokeWidth={0.8} strokeLinecap="round" vectorEffect="non-scaling-stroke" />}
         {hasEcl && <path d={RING_FRONT} className="gs-ecl gs-ecl-front" fill="none" strokeWidth={0.8} strokeDasharray="2 3" vectorEffect="non-scaling-stroke" />}
       </svg>

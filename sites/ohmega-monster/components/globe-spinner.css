@@ -1,7 +1,9 @@
 /* GlobeSpinner (components/GlobeSpinner.tsx): theme tokens only, so dark-amber and paper both work. */
 .globe-spinner { display: inline-flex; flex-direction: column; align-items: center; gap: 8px; line-height: 0; vertical-align: middle; }
 .globe-spinner svg { display: block; overflow: visible; }
-.gs-coast { stroke: var(--accent); }
+.globe-spinner { --gs-red: #c4574f; --gs-green: #4f9d5e; }
+/* Land: line-art coast plus a very faint tint, so land and water read apart at a glance. */
+.gs-coast { stroke: var(--accent); fill: var(--accent); fill-opacity: 0.1; }
 .gs-far { stroke: var(--accent); opacity: 0.16; }
 .gs-grid { stroke: var(--rule-strong); opacity: 0.55; }
 .gs-rim { stroke: var(--rule-strong); }
@@ -13,6 +15,12 @@
 .gs-ecl-front { stroke: var(--accent); opacity: calc(var(--ecl, 0) * 0.7); }
 .gs-axis { stroke: var(--accent); opacity: calc(var(--ecl, 0) * 0.8); }
 .globe-view-label { font-size: 9px; line-height: 1.3; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); opacity: 0.6; white-space: nowrap; }
+/* Equatorial-plane flash after each cut: red axis towards lon 0, green towards 90E, faint rings and radials; fades via the group opacity. */
+.gs-fl-grid { stroke: var(--muted); }
+.gs-fl-front { opacity: 0.6; }
+.gs-fl-back { opacity: 0.22; }
+.gs-fl-red { stroke: var(--gs-red); }
+.gs-fl-green { stroke: var(--gs-green); }
 /* The small decorative globe in a report's status strip. */
 .globe-mark { flex: none; align-self: center; margin: -6px 2px -6px 0; }
 @media (max-width: 640px) { .globe-mark svg { width: 40px; height: 40px; } }
