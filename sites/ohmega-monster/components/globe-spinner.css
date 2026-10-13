@@ -25,7 +25,7 @@
 .gs-fl-green { stroke: var(--gs-green); }
 /* The small decorative globe in a report's status strip. */
 .globe-mark { flex: none; align-self: center; margin: -6px 2px -6px 0; }
-@media (max-width: 640px) { .globe-mark svg { width: 64px; height: 64px; } }
+@media (max-width: 640px) { .globe-mark svg { width: 96px; height: 96px; } }
 /* A centred loading slot: fills its parent and centres the globe. */
 .globe-fill { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
 .globe-page { min-height: 50vh; display: grid; place-items: center; padding: 48px 16px; }
