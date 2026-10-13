@@ -61,7 +61,7 @@ type Props = {
   showLabel?: boolean;
   /** Purely decorative: aria-hidden, no status role. */
   decorative?: boolean;
-  /** Milliseconds each view is held while cycling (default 4500; the ecliptic view holds longer). */
+  /** Milliseconds each view is held while cycling (default 8000 — long enough to watch each one; the ecliptic view holds longer). */
   hold?: number;
   /** Milliseconds per precession sweep in the ecliptic view (default 40000). */
   precession?: number;
@@ -298,7 +298,7 @@ const RING_FRONT = `M${C + RING} ${C}A${RING} ${RING_Y} 0 0 1 ${C - RING} ${C}`;
 
 export default function GlobeSpinner({
   size = 64, perspective, label = "Loading", caption, className = "", period = 16000,
-  cycle = false, view, showLabel = false, decorative = false, hold = 4500, precession = 40000,
+  cycle = false, view, showLabel = false, decorative = false, hold = 8000, precession = 40000,
 }: Props) {
   const px = clamp(size);
   const id = useId();
