@@ -9,7 +9,9 @@
 //   - Coastline data: /geo/land-lite.json (~19 KB, built by analytics_workspace/scripts/make_land_lite.py from Natural Earth 110m),
 //     fetched lazily once per page; a 330-point inline outline draws instantly meanwhile.
 //   - Frames are written straight to the SVG paths from requestAnimationFrame (about 30 fps, stopped off screen), not through React.
-//   - prefers-reduced-motion: one still frame. Accessible: role="status" with a label (default "Loading").
+//   - prefers-reduced-motion: one still frame. Accessible: role="status" with a label (default "Loading"), or `decorative` for none.
+//   - VIEWS is the systematic set (straight, 45-degree quadrants, ecliptic with precession). `cycle` walks through it, slerping the
+//     camera between views; `view` pins one by id. The legacy `perspective` prop and random PERSPECTIVES pick still work.
 // Client-safe: imports nothing from the server side.
 
 import { useEffect, useId, useRef, useState } from "react";
@@ -30,7 +32,39 @@ export const PERSPECTIVES: readonly Perspective[] = [
   { elev: 64, roll: 156 }, //  over the north pole, inverted
 ];
 
+/** One named camera. Fixed views are (elev, roll); the ecliptic view has the camera fixed in the ecliptic frame, Earth's axis tilted
+ *  23.44 degrees from the ecliptic normal and sweeping a cone (precession, stylised to one sweep per `precession` ms). */
+export type ViewDef = { id: string; label: string; elev?: number; roll?: number; ecliptic?: boolean };
+
+const quad = (hemi: "N" | "S"): ViewDef[] =>
+  [0, 90, 180, 270].map((roll) => ({ id: `${hemi.toLowerCase()}45-${roll}`, label: `${hemi} 45° · ${roll}°`, elev: hemi === "N" ? 45 : -45, roll }));
+
+// Spinning about the axis makes camera azimuth irrelevant (it only shifts which longitude faces us), so the four "azimuths" of a
+// 45-degree view are four rolls of the picture: the axis leans up, left, down, right.
+/** The systematic set, in a pleasing cycling order (each neighbour is a modest turn from the last). */
+export const VIEWS: readonly ViewDef[] = [
+  { id: "north-up", label: "North up", elev: 0, roll: 0 },
+  ...quad("N"),
+  { id: "above-north", label: "From above the North Pole", elev: 90, roll: 0 },
+  { id: "ecliptic", label: "Ecliptic · tilt and precession", ecliptic: true },
+  { id: "south-up", label: "South up", elev: 0, roll: 180 },
+  ...quad("S"),
+  { id: "below-south", label: "From below the South Pole", elev: -90, roll: 0 },
+];
+
 type Props = {
+  /** Cycle through VIEWS, gliding the camera between them. */
+  cycle?: boolean;
+  /** Pin one of VIEWS by id (ignored when `cycle`). */
+  view?: string;
+  /** With `cycle`/`view`: a tiny faint caption naming the current view. */
+  showLabel?: boolean;
+  /** Purely decorative: aria-hidden, no status role. */
+  decorative?: boolean;
+  /** Milliseconds each view is held while cycling (default 4500; the ecliptic view holds longer). */
+  hold?: number;
+  /** Milliseconds per precession sweep in the ecliptic view (default 40000). */
+  precession?: number;
   /** Pixels, clamped to 24-160. */
   size?: number;
   perspective?: number | Perspective;
@@ -163,23 +197,109 @@ function paths(polys: Poly[], m: number[], wantBack: boolean): { front: string; 
   return { front, back };
 }
 
-/** Rows for: spin about the polar axis by `theta`, look from latitude `elev` over lon 0, then roll the picture by `roll`. */
-function matrix(theta: number, elev: number, roll: number): number[] {
-  const ct = Math.cos(theta), st = Math.sin(theta);
-  const ce = Math.cos(elev * RAD), se = Math.sin(elev * RAD);
-  const cr = Math.cos(roll * RAD), sr = Math.sin(roll * RAD);
-  // after the spin: v' = (ct*vx - st*vy, st*vx + ct*vy, vz); screen x = v'.y, y = -se*v'.x + ce*v'.z, depth = ce*v'.x + se*v'.z
-  const X = [st, ct, 0];
-  const Y = [-se * ct, se * st, ce];
-  const D = [ce * ct, -ce * st, se];
-  const row = (a: number, b: number) => [0, 1, 2].map((k) => a * X[k] + b * Y[k]);
-  return [...row(cr, -sr), ...row(sr, cr), ...D];
+// ---- cameras: 3x3 rows (screen x, screen y, depth) acting on the polar-axis frame ---------------------------------------------
+
+type Mat = number[];
+type Quat = [number, number, number, number]; // x, y, z, w
+
+/** Camera over latitude `elev` at lon 0, picture rolled by `roll` (before the spin is applied). */
+function fixedView(elev: number, roll: number): Mat {
+  const ce = Math.cos(elev * RAD), se = Math.sin(elev * RAD), cr = Math.cos(roll * RAD), sr = Math.sin(roll * RAD);
+  const X = [0, 1, 0], Y = [-se, 0, ce], D = [ce, 0, se];
+  return [...[0, 1, 2].map((k) => cr * X[k] - sr * Y[k]), ...[0, 1, 2].map((k) => sr * X[k] + cr * Y[k]), ...D];
+}
+
+const TILT = 23.44 * RAD; // obliquity of the ecliptic
+const ECL_CAM = 24 * RAD; // how far above the ecliptic plane the camera sits, so its ring reads as an ellipse
+const ECL_COS = Math.cos(ECL_CAM), ECL_SIN = Math.sin(ECL_CAM);
+
+/** Ecliptic frame fixed on screen (x right, ecliptic normal leaning up), axis tilted TILT from the normal at azimuth `phi`. */
+function eclipticView(phi: number): Mat {
+  const ct = Math.cos(TILT), st = Math.sin(TILT), cp = Math.cos(phi), sp = Math.sin(phi);
+  const xb = [ct * cp, ct * sp, -st], yb = [-sp, cp, 0], zb = [st * cp, st * sp, ct]; // body axes in ecliptic coordinates
+  const ex = [1, 0, 0], ey = [0, ECL_SIN, -ECL_COS], ez = [0, ECL_COS, ECL_SIN]; // ecliptic axes in screen coordinates
+  const toScreen = (b: number[]) => [0, 1, 2].map((r) => ex[r] * b[0] + ey[r] * b[1] + ez[r] * b[2]);
+  const cx = toScreen(xb), cy = toScreen(yb), cz = toScreen(zb); // columns of the view matrix
+  return [cx[0], cy[0], cz[0], cx[1], cy[1], cz[1], cx[2], cy[2], cz[2]];
+}
+
+/** Spin about the polar axis by `theta` first, then the camera `v`. */
+function spun(v: Mat, theta: number): Mat {
+  const c = Math.cos(theta), s = Math.sin(theta);
+  const out: number[] = [];
+  for (let r = 0; r < 3; r++) out.push(v[r * 3] * c + v[r * 3 + 1] * s, -v[r * 3] * s + v[r * 3 + 1] * c, v[r * 3 + 2]);
+  return out;
+}
+
+function toQuat(m: Mat): Quat {
+  const tr = m[0] + m[4] + m[8];
+  let x, y, z, w, s;
+  if (tr > 0) { s = Math.sqrt(tr + 1) * 2; w = s / 4; x = (m[7] - m[5]) / s; y = (m[2] - m[6]) / s; z = (m[3] - m[1]) / s; }
+  else if (m[0] > m[4] && m[0] > m[8]) { s = Math.sqrt(1 + m[0] - m[4] - m[8]) * 2; w = (m[7] - m[5]) / s; x = s / 4; y = (m[1] + m[3]) / s; z = (m[2] + m[6]) / s; }
+  else if (m[4] > m[8]) { s = Math.sqrt(1 + m[4] - m[0] - m[8]) * 2; w = (m[2] - m[6]) / s; x = (m[1] + m[3]) / s; y = s / 4; z = (m[5] + m[7]) / s; }
+  else { s = Math.sqrt(1 + m[8] - m[0] - m[4]) * 2; w = (m[3] - m[1]) / s; x = (m[2] + m[6]) / s; y = (m[5] + m[7]) / s; z = s / 4; }
+  return [x, y, z, w];
+}
+
+function fromQuat([x, y, z, w]: Quat): Mat {
+  return [1 - 2 * (y * y + z * z), 2 * (x * y - z * w), 2 * (x * z + y * w), 2 * (x * y + z * w), 1 - 2 * (x * x + z * z), 2 * (y * z - x * w), 2 * (x * z - y * w), 2 * (y * z + x * w), 1 - 2 * (x * x + y * y)];
+}
+
+/** Shortest-arc spherical interpolation, so the camera glides between views with no jump and no flip. */
+function slerp(a: Quat, b: Quat, t: number): Quat {
+  let d = a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
+  const sg = d < 0 ? -1 : 1;
+  d *= sg;
+  let ka = 1 - t, kb = t * sg;
+  if (d < 0.9995) {
+    const om = Math.acos(d), so = Math.sin(om);
+    ka = Math.sin((1 - t) * om) / so;
+    kb = (Math.sin(t * om) / so) * sg;
+  }
+  const q = [0, 1, 2, 3].map((i) => ka * a[i] + kb * b[i]);
+  const n = Math.hypot(q[0], q[1], q[2], q[3]) || 1;
+  return [q[0] / n, q[1] / n, q[2] / n, q[3] / n];
+}
+
+const ease = (u: number) => u * u * (3 - 2 * u);
+const TRANSITION = 1800; // ms of camera glide between views
+const ECL_HOLD = 2.2; // the ecliptic view stays this many times longer, to show a good part of the precession
+
+const viewQuat = (d: ViewDef, clock: number, precession: number): Quat =>
+  toQuat(d.ecliptic ? eclipticView((clock / precession) * 2 * Math.PI) : fixedView(d.elev ?? 0, d.roll ?? 0));
+
+/** Where the camera is at `clock` ms: a view matrix, how "ecliptic" it is (0..1, drives the ring and axis), and which view's name
+ *  to show. Stateless: the whole schedule is a function of the clock, so a paused tab resumes seamlessly. */
+function cameraAt(views: readonly ViewDef[], clock: number, hold: number, precession: number): { v: Mat; ecl: number; label: number } {
+  const n = views.length;
+  if (n === 1) return { v: fromQuat(viewQuat(views[0], clock, precession)), ecl: views[0].ecliptic ? 1 : 0, label: 0 };
+  const dur = views.map((d) => (d.ecliptic ? hold * ECL_HOLD : hold) + TRANSITION);
+  const total = dur.reduce((a, b) => a + b, 0);
+  let p = clock % total, i = 0;
+  while (p >= dur[i]) p -= dur[i++];
+  const j = (i + 1) % n, h = dur[i] - TRANSITION;
+  const here = viewQuat(views[i], clock, precession);
+  if (p < h) return { v: fromQuat(here), ecl: views[i].ecliptic ? 1 : 0, label: i };
+  const e = ease((p - h) / TRANSITION);
+  return {
+    v: fromQuat(slerp(here, viewQuat(views[j], clock, precession), e)),
+    ecl: (views[i].ecliptic ? 1 - e : 0) + (views[j].ecliptic ? e : 0),
+    label: e < 0.5 ? i : j,
+  };
 }
 
 const reduceMotion = () => typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 const clamp = (n: number) => Math.min(160, Math.max(24, n));
 
-export default function GlobeSpinner({ size = 64, perspective, label = "Loading", caption, className = "", period = 16000 }: Props) {
+// Ecliptic ring: fixed in the picture (the camera is fixed in the ecliptic frame). Back half is masked where the globe covers it.
+const RING = 49, RING_Y = RING * ECL_SIN;
+const RING_BACK = `M${C - RING} ${C}A${RING} ${RING_Y} 0 0 1 ${C + RING} ${C}`;
+const RING_FRONT = `M${C + RING} ${C}A${RING} ${RING_Y} 0 0 1 ${C - RING} ${C}`;
+
+export default function GlobeSpinner({
+  size = 64, perspective, label = "Loading", caption, className = "", period = 16000,
+  cycle = false, view, showLabel = false, decorative = false, hold = 4500, precession = 40000,
+}: Props) {
   const px = clamp(size);
   const id = useId();
   const [pick, setPick] = useState(0);
@@ -188,11 +308,16 @@ export default function GlobeSpinner({ size = 64, perspective, label = "Loading"
   const coast = useRef<SVGPathElement>(null);
   const far = useRef<SVGPathElement>(null);
   const grid = useRef<SVGPathElement>(null);
+  const axis = useRef<SVGLineElement>(null);
+  const tag = useRef<HTMLSpanElement>(null);
 
-  // A random angle per instance, chosen after mount so server and client markup agree.
+  const pinned = perspective === undefined && !cycle ? VIEWS.find((v) => v.id === view) : undefined;
+  const legacy = !cycle && !pinned;
+
+  // A random legacy angle per instance, chosen after mount so server and client markup agree.
   useEffect(() => {
-    if (perspective === undefined) setPick(Math.floor(Math.random() * PERSPECTIVES.length));
-  }, [perspective]);
+    if (legacy && perspective === undefined) setPick(Math.floor(Math.random() * PERSPECTIVES.length));
+  }, [legacy, perspective]);
 
   useEffect(() => {
     let dead = false;
@@ -200,44 +325,61 @@ export default function GlobeSpinner({ size = 64, perspective, label = "Loading"
     return () => { dead = true; };
   }, [px]);
 
-  const view: Perspective = typeof perspective === "object" ? perspective : PERSPECTIVES[(typeof perspective === "number" ? perspective : pick) % PERSPECTIVES.length];
-  const { elev, roll } = view;
+  const legacyView: Perspective = typeof perspective === "object" ? perspective : PERSPECTIVES[(typeof perspective === "number" ? perspective : pick) % PERSPECTIVES.length];
+  const { elev, roll } = legacyView;
+  const hasEcl = cycle || !!pinned?.ecliptic;
+  const labelled = showLabel && !legacy;
 
   useEffect(() => {
+    const views: readonly ViewDef[] = cycle ? VIEWS : pinned ? [pinned] : [{ id: "legacy", label: "", elev, roll }];
     const showGrid = px >= 40, showFar = px >= 56;
-    const paint = (theta: number) => {
-      const m = matrix(theta, elev, roll);
+    let shown = -1;
+    const paint = (clock: number) => {
+      const cam = cameraAt(views, clock, hold, precession);
+      const m = spun(cam.v, 0.6 + (clock / period) * 2 * Math.PI);
       const l = paths(land, m, showFar);
       coast.current?.setAttribute("d", l.front);
       far.current?.setAttribute("d", l.back);
       if (showGrid) grid.current?.setAttribute("d", paths(GRAT, m, false).front);
+      if (hasEcl) {
+        host.current?.style.setProperty("--ecl", String(Math.round(cam.ecl * 100) / 100));
+        const a = axis.current;
+        if (a) { // the rotation axis (view matrix column 2), poking out of both poles
+          const ax = cam.v[2], ay = cam.v[5], k = 1.14;
+          a.setAttribute("x1", String(f1(C - R * k * ax))); a.setAttribute("y1", String(f1(C + R * k * ay)));
+          a.setAttribute("x2", String(f1(C + R * k * ax))); a.setAttribute("y2", String(f1(C - R * k * ay)));
+        }
+      }
+      if (tag.current && cam.label !== shown) { shown = cam.label; tag.current.textContent = views[cam.label].label; }
     };
-    const theta0 = 0.6;
     if (reduceMotion()) {
-      paint(theta0);
+      paint(0);
       return;
     }
-    let raf = 0, last = 0, on = true;
-    const t0 = performance.now();
+    let raf = 0, last = 0, clock = 0, seen = true;
     const tick = (t: number) => {
       raf = requestAnimationFrame(tick);
-      if (!on || t - last < 33) return;
+      if (!seen || document.hidden) { last = 0; return; } // paused: the clock does not advance, so resuming is seamless
+      if (!last) { last = t; return; }
+      if (t - last < 33) return;
+      clock += Math.min(t - last, 100);
       last = t;
-      paint(theta0 + ((t - t0) / period) * 2 * Math.PI);
+      paint(clock);
     };
-    paint(theta0);
+    paint(0);
     raf = requestAnimationFrame(tick);
-    const io = typeof IntersectionObserver !== "undefined" && host.current ? new IntersectionObserver((e) => { on = e.some((x) => x.isIntersecting); }) : null;
+    const io = typeof IntersectionObserver !== "undefined" && host.current ? new IntersectionObserver((e) => { seen = e.some((x) => x.isIntersecting); }) : null;
     if (io && host.current) io.observe(host.current);
     return () => {
       cancelAnimationFrame(raf);
       io?.disconnect();
     };
-  }, [land, elev, roll, px, period]);
+  }, [land, cycle, pinned, elev, roll, px, period, hold, precession, hasEcl]);
 
   const sw = px < 48 ? 1.1 : 1; // css px, constant across sizes (non-scaling strokes)
+  const a11y = decorative ? { "aria-hidden": true as const } : { role: "status", "aria-label": caption || label };
   return (
-    <span ref={host} className={`globe-spinner ${caption ? "has-caption" : ""} ${className}`.trim()} role="status" aria-label={caption || label}>
+    <span ref={host} className={`globe-spinner ${caption || labelled ? "has-caption" : ""} ${className}`.trim()} {...a11y}>
       <svg width={px} height={px} viewBox="0 0 100 100" aria-hidden="true" focusable="false">
         <defs>
           <radialGradient id={`${id}-w`} cx="34%" cy="30%" r="80%">
@@ -249,15 +391,25 @@ export default function GlobeSpinner({ size = 64, perspective, label = "Loading"
             <stop offset="86%" className="gs-limb" stopOpacity="0" />
             <stop offset="100%" className="gs-limb" stopOpacity="0.28" />
           </radialGradient>
+          {hasEcl && (
+            <mask id={`${id}-m`} maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
+              <rect width="100" height="100" fill="white" />
+              <circle cx={C} cy={C} r={R} fill="black" />
+            </mask>
+          )}
         </defs>
+        {hasEcl && <path d={RING_BACK} className="gs-ecl" fill="none" strokeWidth={0.8} strokeDasharray="2 3" vectorEffect="non-scaling-stroke" mask={`url(#${id}-m)`} />}
         <circle cx={C} cy={C} r={R} fill={`url(#${id}-w)`} />
         <path ref={grid} className="gs-grid" fill="none" strokeWidth={0.8} vectorEffect="non-scaling-stroke" />
         <path ref={far} className="gs-far" fill="none" strokeWidth={0.8} vectorEffect="non-scaling-stroke" />
         <path ref={coast} className="gs-coast" fill="none" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
         <circle cx={C} cy={C} r={R} fill={`url(#${id}-l)`} />
         <circle cx={C} cy={C} r={R} className="gs-rim" fill="none" strokeWidth={sw} vectorEffect="non-scaling-stroke" />
+        {hasEcl && <line ref={axis} className="gs-axis" strokeWidth={0.8} strokeLinecap="round" vectorEffect="non-scaling-stroke" />}
+        {hasEcl && <path d={RING_FRONT} className="gs-ecl gs-ecl-front" fill="none" strokeWidth={0.8} strokeDasharray="2 3" vectorEffect="non-scaling-stroke" />}
       </svg>
       {caption && <span className="globe-caption">{caption}</span>}
+      {labelled && <span ref={tag} className="globe-view-label" aria-hidden="true" />}
     </span>
   );
 }
