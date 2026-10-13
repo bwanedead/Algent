@@ -242,3 +242,33 @@ military ADS-B, satellite fire hotspots, AIS ship traffic at chokepoints) and co
 join the instruments layer (so numbers, freshness and moves machinery see them) and live events reach the section writers
 with a public source URL, so a daily can say "IODA shows a nationwide outage in X since 14:00 UTC". Readers see the same
 data on the /live page. Details: `docs/guides/worker-server.md` (Live feeds).
+
+## Runway: what we build next, and why (operator, 10-12)
+
+**Original intelligence.** Two kinds of knowledge compound here. *Aggregated* intelligence gathers what others found
+(news, statements, official statistics): context, breadth, inputs. *Original* intelligence is what we derive ourselves
+from raw signals: our own chokepoint counts, baselines and anomalies, a ship that went dark, a site that changed
+between satellite passes, a forecast that settled. Grow the original-intelligence surface steadily; label it on the
+site and API as Ohmega-derived; track how much of each daily rests on our own signals.
+
+**Priority tiers** (value = uniqueness × compounding × feeds-existing × visible wow, over effort):
+1. *Tier 1, next:* live feeds into memory + anomalies (grid baselines by hour/weekday, flags high or low, daily
+   rollups and anomalies stored in the corpus, linked to theaters/actors, fed to the writer); a "what's coming"
+   calendar + sanctions and diplomatic events; shadow-fleet and maritime behaviour from our own AIS (dark gaps,
+   ship-to-ship transfers, loitering, flag hopping).
+2. *Tier 2:* satellite imagery change detection on watched sites (free Sentinel); GPS jamming + military flight
+   patterns; physical-economy dashboard (freight, commodity flows, grid stress, night-time lights).
+3. *Tier 3:* state-media narrative tracking; human and environmental stress (displacement, outbreaks, food,
+   water); tech and space; ownership and finance networks.
+Alongside: views beyond maps (country dashboards, calendar, anomalies page, timelines, relationship graphs),
+tasteful 3D where a story warrants it, and every new dataset flowing to the agent API/MCP.
+
+**The globe viewer (soon, not now).** A spinnable globe, Google-Earth-style navigation but in our illustrated line-art
+style rather than satellite imagery, where each country's fill is set by *information channels*: what's new there,
+how recent our latest coverage is (fresh vs stale), by category (conflict, economy, politics, disaster…), with
+context on tap. Scrub around the world, look top-down at a place, and read what's happening there while rooted in
+its geography. Overlays as further channels: resource and trade flows as animated directional routes (wheat, oil,
+LNG, metals, GPUs/chips: the economic pipes), chokepoints, traces, live layers. Why it matters: ergonomics as a
+reasoning aid. Seeing trackables in spatial relation to each other helps build and retain a model of how their
+states affect one another, which is what a model *is*. Start soon after Tier 1; reuse the live map, the globe
+spinner's projection, and the corpus's per-country recency.
