@@ -442,6 +442,7 @@ export default function GlobeSpinner({
         </defs>
         {hasEcl && <path d={RING_BACK} className="gs-ecl" fill="none" strokeWidth={0.8} strokeDasharray="2 3" vectorEffect="non-scaling-stroke" mask={`url(#${id}-m)`} />}
         <circle cx={C} cy={C} r={R} fill={`url(#${id}-w)`} />
+        <circle cx={C} cy={C} r={R} className="gs-ocean" />
         <path ref={grid} className="gs-grid" fill="none" strokeWidth={0.8} vectorEffect="non-scaling-stroke" />
         <path ref={far} className="gs-far" fill="none" strokeWidth={0.8} vectorEffect="non-scaling-stroke" />
         <path ref={coast} className="gs-coast" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
