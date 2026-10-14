@@ -62,6 +62,48 @@ class Timeline(BaseModel):
     alt: str = ""
 
 
+# -- the WIRE schema the model fills (no ``X | None``: the house provider rejects ``anyOf``/``oneOf``) -------------
+
+class EventWire(BaseModel):
+    id: str
+    date: str
+    time: str = ""
+    title: str
+    detail: str = ""
+    actors: list[str] = Field(default_factory=list)
+    lane: str = ""
+    kind: Kind = "other"
+    place_name: str = ""
+    place_located: bool = False         # true only when ``place_lat``/``place_lon`` are sure
+    place_lat: float = 0.0
+    place_lon: float = 0.0
+    fact_ids: list[str] = Field(default_factory=list)
+
+
+class TimelineWire(BaseModel):
+    title: str
+    caption: str
+    lanes: list[Lane] = Field(default_factory=list)
+    events: list[EventWire]
+
+
+def from_wire(wire: TimelineWire) -> tuple[Timeline, list[str]]:
+    """The strict spec from what the model filled, plus a line per event that could not be built."""
+    events: list[Event] = []
+    notes: list[str] = []
+    for i, w in enumerate(wire.events[:MAX_EVENTS + 8]):
+        try:
+            place = None
+            if w.place_name.strip():
+                ok = w.place_located and -90 <= w.place_lat <= 90 and -180 <= w.place_lon <= 180
+                place = Place(name=w.place_name, lat=w.place_lat if ok else None, lon=w.place_lon if ok else None)
+            events.append(Event(id=w.id, date=w.date, time=w.time, title=w.title, detail=w.detail, actors=w.actors[:4],
+                                lane=w.lane, kind=w.kind, place=place, fact_ids=w.fact_ids[:6]))
+        except Exception as exc:  # noqa: BLE001 - a malformed event is dropped, not the timeline
+            notes.append(f"event {i + 1} dropped: malformed ({type(exc).__name__})")
+    return Timeline(title=wire.title, caption=wire.caption, lanes=wire.lanes[:4], events=events), notes
+
+
 def valid_date(s: str) -> bool:
     try:
         date.fromisoformat(s)

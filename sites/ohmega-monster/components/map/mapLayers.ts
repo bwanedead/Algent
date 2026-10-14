@@ -16,7 +16,8 @@ export type LayerKind =
   | "dots" // sized circles; `cluster` merges dense points into counted bubbles
   | "heat" // a heat surface that resolves into dots when zoomed in
   | "icons" // heading-rotated icon images (ships, aircraft: the same arrows /live draws); `cluster` merges dense ones into counted bubbles
-  | "numbered"; // circles carrying a number, solid when researched and hollow when reported (the daily's marks)
+  | "numbered" // circles carrying a number, solid when researched and hollow when reported (the daily's marks)
+  | "assets"; // infrastructure: a small disc per place coloured by `col`, faded by `op`, with its type's letter `g`
 
 export type LayerSpec = {
   /** Toggle unit: a group's map layers are shown or hidden together. */
@@ -37,12 +38,13 @@ export type LayerSpec = {
   images?: (map: any) => void;
   /** Feature property whose text is drawn on a mark (`numbered`: the number) or beside a point (`line`). */
   labelProp?: string;
-  /** Feature properties read by kind: `r` = circle radius in px (`dots`, default 6); `w` = weight (`heat`). */
+  /** Feature properties read by kind: `r` = circle radius in px (`dots`, default 6; `assets`); `w` = weight (`heat`); `assets` also
+   *  reads `col` (colour), `op` (opacity 0..1), `g` (the letter) and `ev` (events on record: places with one keep their letter at every zoom). */
   popup?: (p: Props) => PopupInfo | null;
 };
 
 export const FONT = ["Noto Sans Bold"]; // served by the OpenFreeMap glyph server for both styles
-const ORDER: Record<LayerKind, number> = { area: 0, heat: 1, line: 2, dots: 3, icons: 3.5, numbered: 4 };
+const ORDER: Record<LayerKind, number> = { area: 0, heat: 1, line: 2, dots: 3, assets: 3.2, icons: 3.5, numbered: 4 };
 export const inDrawOrder = (specs: LayerSpec[]) => [...specs].sort((a, b) => ORDER[a.kind] - ORDER[b.kind]);
 
 const sourceId = (g: string) => `lm-${g}`;
@@ -116,6 +118,19 @@ export function installLayer(map: any, spec: LayerSpec): { all: string[]; click:
         "icon-size": spec.subtle ? ["interpolate", ["linear"], ["zoom"], 3, 0.38, 7, 0.48, 14, 0.7] : ["interpolate", ["linear"], ["zoom"], 3, 0.6, 7, 0.75, 14, 1.1] },
         ...(spec.subtle ? { paint: { "icon-opacity": 0.65 } } : {}) }, true);
       break;
+    case "assets": {
+      // A status on record (ev > 0) draws larger and always carries its letter; a place that merely exists is a quiet dot whose letter
+      // appears once the map is zoomed in. Data-driven only: a zoom expression cannot sit inside the property maths.
+      add({ id: id("disc"), type: "circle", paint: {
+        "circle-radius": ["coalesce", ["get", "r"], 5], "circle-color": ["get", "col"], "circle-opacity": ["coalesce", ["get", "op"], 1],
+        "circle-stroke-color": "#ffffff", "circle-stroke-opacity": ["coalesce", ["get", "op"], 1],
+        "circle-stroke-width": ["case", [">", ["coalesce", ["get", "ev"], 0], 0], 1.3, 0.6] } }, true);
+      const letter = { "text-field": ["get", "g"], "text-font": FONT, "text-size": 10, "text-allow-overlap": true, "text-ignore-placement": true };
+      const ink = { "text-color": "#ffffff", "text-opacity": ["coalesce", ["get", "op"], 1] };
+      add({ id: id("g-ev"), type: "symbol", filter: [">", ["coalesce", ["get", "ev"], 0], 0], layout: letter, paint: ink });
+      add({ id: id("g-all"), type: "symbol", minzoom: 5.5, filter: ["<=", ["coalesce", ["get", "ev"], 0], 0], layout: { ...letter, "text-size": 9 }, paint: ink });
+      break;
+    }
     case "numbered":
       add({ id: id("mark"), type: "circle", paint: {
         "circle-radius": 11, "circle-stroke-width": 2.5, "circle-stroke-color": spec.color,

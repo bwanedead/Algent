@@ -29,6 +29,9 @@ from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any
 
+from algent_backend.geoledger import ask as geo_ask
+from algent_backend.geoledger import ingest as geo_ingest
+
 from . import brief as br
 from . import daily, daily_drafts, desk, flags, focus, novelty, render
 from . import sensing as sensing_mod
@@ -216,6 +219,8 @@ def produce(ctx: Any, *, domain: str = "geopolitics", top: int = 5, research: bo
     visual_run = visuals_mod.attach(
         added, ctx=ctx, domain=domain, as_of=as_of, prior=None,
         ask=lambda schema, role, task: daily._ask(ctx, None, model_spec, schema, role, task))
+    geo_run = geo_ingest.attach(added, as_of=as_of,
+                                ask=lambda schema, role, task: daily._ask(ctx, None, geo_ask.extraction_spec(), schema, role, task))
     built_at = datetime.now(UTC).isoformat()
     _attach(record, added)
     summary, summary_error = None, ""
@@ -244,6 +249,8 @@ def produce(ctx: Any, *, domain: str = "geopolitics", top: int = 5, research: bo
     entry = daily.edition_entry(edition, built_at, added, dict(record["summary"]))
     if visual_run:
         entry["visuals_run"] = visual_run
+    if geo_run:
+        entry["geoledger_run"] = geo_run
     record["editions"].append(entry)
     path = daily.daily_dir(domain) / f"{as_of}.json"
     desk._write(path, record)

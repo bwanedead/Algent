@@ -341,3 +341,104 @@ def validate_scene(scene: Scene, fact_text: dict[str, str] | None = None, *, all
                 if oid not in ids:
                     bad.append(f"timeline {fr.date}: unknown object {oid}")
     return bad[:12]
+
+
+# ── the WIRE schema the model fills ──────────────────────────────────────────────────────────────
+# No unions (the house provider rejects oneOf/anyOf, which a discriminated union and every ``X | None`` emit): one flat
+# object with a ``type`` and every kind's fields, unused ones left at their empty default, and flat stand-ins for the
+# optional blocks. ``from_wire`` builds the strict ``Scene``; an object that is not a valid strict one is dropped.
+
+class ObjWire(BaseModel):
+    id: str
+    type: Literal["box", "cylinder", "cone", "sphere", "capsule", "extrude", "lathe", "line", "ring", "arrow", "marker",
+                  "terrain", "coast"]
+    label: str = ""
+    color: Color = "accent"
+    opacity: float = Field(1.0, ge=0.05, le=1.0)
+    pos: Vec3 = Field(default_factory=lambda: [0.0, 0.0, 0.0])
+    lonlat: list[float] = Field(default_factory=list)        # [] = unset; else [lon, lat]
+    rot_z_deg: float = 0.0
+    real: bool = True
+    cite: str = ""
+    label_dz: float = 0.0
+    size: list[float] = Field(default_factory=list)          # box: x,y,z; terrain: x,y
+    radius: float = 0.0                                       # cylinder, cone, sphere, capsule, ring
+    height: float = 0.0                                       # cylinder, cone
+    radius_top: float = 0.0                                   # cylinder frustum; 0 = none
+    length: float = 0.0                                       # capsule
+    depth: float = 0.0                                        # extrude
+    profile: list[list[float]] = Field(default_factory=list)  # extrude (x,y) or lathe (radius,height) pairs
+    points: list[list[float]] = Field(default_factory=list)   # line
+    style: Literal["line", "dashed", "trajectory"] = "line"
+    width: float = 2.0
+    to: list[float] = Field(default_factory=list)             # arrow end
+    heights: list[list[float]] = Field(default_factory=list)  # terrain rows
+    bbox_lonlat: list[float] = Field(default_factory=list)    # coast: west, south, east, north
+
+
+class SceneWire(BaseModel):
+    title: str
+    caption: str
+    unit: Literal["m", "km"] = "km"
+    has_origin: bool = False
+    origin_lon: float = 0.0
+    origin_lat: float = 0.0
+    schematic: bool = False
+    has_ground: bool = False
+    ground: Color = "water"                                  # used only when ``has_ground``
+    objects: list[ObjWire]
+    cameras: list[CameraPreset] = Field(default_factory=list)
+    frames: list[Keyframe] = Field(default_factory=list)     # [] = no timeline
+    scale_bar_length: float = 0.0                            # 0 = no scale bar
+    scale_bar_label: str = ""
+    sources: list[SceneSource] = Field(default_factory=list)
+    alt: str = ""
+
+
+def _obj_from_wire(w: ObjWire) -> _Obj:
+    c = dict(id=w.id, label=w.label, color=w.color, opacity=w.opacity, pos=w.pos, lonlat=w.lonlat or None,
+             rot_z_deg=w.rot_z_deg, real=w.real, cite=w.cite, label_dz=w.label_dz)
+    t = w.type
+    if t == "box":
+        return Box(**c, size=w.size)
+    if t == "cylinder":
+        return Cylinder(**c, radius=w.radius, height=w.height, radius_top=w.radius_top or None)
+    if t == "cone":
+        return Cone(**c, radius=w.radius, height=w.height)
+    if t == "sphere":
+        return Sphere(**c, radius=w.radius)
+    if t == "capsule":
+        return Capsule(**c, radius=w.radius, length=w.length)
+    if t == "extrude":
+        return Extrude(**c, profile=w.profile, depth=w.depth)
+    if t == "lathe":
+        return Lathe(**c, profile=w.profile)
+    if t == "line":
+        return Line(**c, points=w.points, style=w.style, width=w.width)
+    if t == "ring":
+        return Ring(**c, radius=w.radius)
+    if t == "arrow":
+        return Arrow(**c, to=w.to)
+    if t == "marker":
+        return Marker(**c)
+    if t == "terrain":
+        return Terrain(**c, size=w.size, heights=w.heights)
+    return Coast(**c, bbox_lonlat=w.bbox_lonlat)
+
+
+def from_wire(wire: SceneWire) -> tuple[Scene, list[str]]:
+    """The strict scene from what the model filled, plus a line per object that could not be built."""
+    notes: list[str] = []
+    objs: list[_Obj] = []
+    for w in wire.objects[:HARD_OBJECTS]:
+        try:
+            objs.append(_obj_from_wire(w))
+        except Exception as exc:  # noqa: BLE001 - a malformed object is dropped, not the scene
+            notes.append(f"{w.type} {w.id!r} dropped: malformed ({type(exc).__name__})")
+    scene = Scene(title=wire.title, caption=wire.caption, unit=wire.unit, schematic=wire.schematic,
+                  origin=Origin(lon=wire.origin_lon, lat=wire.origin_lat) if wire.has_origin else None,
+                  ground=wire.ground if wire.has_ground else None, objects=objs, cameras=wire.cameras,
+                  timeline=Timeline(frames=wire.frames) if len(wire.frames) >= 2 else None,
+                  scale_bar=ScaleBar(length=wire.scale_bar_length, label=wire.scale_bar_label) if wire.scale_bar_length > 0 else None,
+                  sources=wire.sources, alt=wire.alt)
+    return scene, notes

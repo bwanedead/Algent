@@ -138,7 +138,9 @@ def produce(brief: Any, cited: list[vf.Fact], n: int, *, domain: str, as_of: str
     tag = f"{brief.theater_id}/scene3d"
     skip = (report or {}).setdefault("skipped", [])
     try:
-        scene = ask(ss.Scene, SCENE_ROLE, _message(brief, cited))
+        scene = ask(ss.SceneWire, SCENE_ROLE, _message(brief, cited))
+        if isinstance(scene, ss.SceneWire):          # the wire schema carries no unions; build the strict scene
+            scene, _dropped = ss.from_wire(scene)
         if not isinstance(scene, ss.Scene):
             skip.append(f"{tag}: no scene returned")
             return None
