@@ -21,7 +21,7 @@ export function objectLayers(objs: Obj[]): LayerSpec[] {
       return pointFeature(reckon(e, now), { id: `obj:${e.kind}:${e.id}`, h: e.hdg, ic: iconOf(e), col: colorOf(e), kind: d.kind, title: d.title, lines: d.lines.join("\n"), src: e.kind });
     });
     return [{
-      group: objectGroupId(g.key), kind: "icons", cluster: true, color: g.color, data: collection(features), images: addTrackIcons,
+      group: objectGroupId(g.key), kind: "icons", cluster: true, subtle: true, color: g.color, data: collection(features), images: addTrackIcons,
       popup: (p) => {
         const src = SOURCE[p.src === "ship" ? "ship" : "air"];
         return { kind: String(p.kind), title: String(p.title), lines: String(p.lines ?? "").split("\n").filter(Boolean), source: src.name, url: src.url };

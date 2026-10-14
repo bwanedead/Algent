@@ -30,6 +30,8 @@ export type LayerSpec = {
   /** `dots`: a faint wide halo under each dot (the dot itself stays small and crisp). */
   halo?: boolean;
   cluster?: boolean;
+  /** `icons`: a muted, small drawing (small arrows/dots, low-contrast small clusters) for background context such as a theater's traffic. */
+  subtle?: boolean;
   /** `icons`: registers the images the features' `ic` property names on the map (idempotent; called on every style load). The features
    *  carry `ic` (image name), `h` (heading in degrees, negative = unknown: drawn as a plain dot in `col`) and `col`. */
   images?: (map: any) => void;
@@ -63,6 +65,11 @@ export function installLayer(map: any, spec: LayerSpec): { all: string[]; click:
   const halo = { "text-halo-color": "#ffffff", "text-halo-width": 1.6 };
 
   const addClusters = () => {
+    if (spec.subtle) {
+      add({ id: id("cluster"), type: "circle", filter: ["has", "point_count"], paint: { "circle-color": spec.color, "circle-opacity": 0.28, "circle-stroke-color": spec.color, "circle-stroke-opacity": 0.5, "circle-stroke-width": 0.6, "circle-radius": ["step", ["get", "point_count"], 7, 10, 9, 40, 11] } }, true);
+      add({ id: id("count"), type: "symbol", filter: ["has", "point_count"], layout: { "text-field": ["get", "point_count_abbreviated"], "text-font": FONT, "text-size": 9, "text-allow-overlap": true }, paint: { "text-color": spec.color, "text-opacity": 0.8 } });
+      return;
+    }
     add({ id: id("cluster"), type: "circle", filter: ["has", "point_count"], paint: { "circle-color": spec.color, "circle-opacity": 0.85, "circle-stroke-color": "#fff", "circle-stroke-width": 2, "circle-radius": ["step", ["get", "point_count"], 14, 10, 18, 40, 24] } }, true);
     add({ id: id("count"), type: "symbol", filter: ["has", "point_count"], layout: { "text-field": ["get", "point_count_abbreviated"], "text-font": FONT, "text-size": 12, "text-allow-overlap": true }, paint: { "text-color": "#ffffff" } });
   };
@@ -101,10 +108,13 @@ export function installLayer(map: any, spec: LayerSpec): { all: string[]; click:
     case "icons":
       spec.images?.(map);
       if (clustered) addClusters();
-      add({ id: id("dot0"), type: "circle", filter: single(["<", ["get", "h"], 0]), paint: { "circle-radius": 4, "circle-color": ["get", "col"], "circle-opacity": 0.9, "circle-stroke-color": "#fff", "circle-stroke-width": 0.8 } }, true);
+      add({ id: id("dot0"), type: "circle", filter: single(["<", ["get", "h"], 0]), paint: spec.subtle
+        ? { "circle-radius": 2.5, "circle-color": ["get", "col"], "circle-opacity": 0.6, "circle-stroke-width": 0 }
+        : { "circle-radius": 4, "circle-color": ["get", "col"], "circle-opacity": 0.9, "circle-stroke-color": "#fff", "circle-stroke-width": 0.8 } }, true);
       add({ id: id("icon"), type: "symbol", filter: single([">=", ["get", "h"], 0]), layout: {
         "icon-image": ["get", "ic"], "icon-rotate": ["get", "h"], "icon-rotation-alignment": "map", "icon-allow-overlap": true, "icon-ignore-placement": true,
-        "icon-size": ["interpolate", ["linear"], ["zoom"], 3, 0.6, 7, 0.75, 14, 1.1] } }, true);
+        "icon-size": spec.subtle ? ["interpolate", ["linear"], ["zoom"], 3, 0.38, 7, 0.48, 14, 0.7] : ["interpolate", ["linear"], ["zoom"], 3, 0.6, 7, 0.75, 14, 1.1] },
+        ...(spec.subtle ? { paint: { "icon-opacity": 0.65 } } : {}) }, true);
       break;
     case "numbered":
       add({ id: id("mark"), type: "circle", paint: {
