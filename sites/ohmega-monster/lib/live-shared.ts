@@ -85,22 +85,6 @@ export function shipTiles(stats: LiveStat[]): Tile[] {
   return out.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-// ---- matching events to a theater by the countries its text names -------------------------------------------
-
-const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-/** Live events still going whose countries are named in `text` (a theater's name and assessment). Word-boundary match on
- *  the country name; short names must be capitalised ("US" is not "us"). Ended outages and quiet ones are left out. */
-export function liveTouching(events: LiveEvent[], text: string, limit = 4): LiveEvent[] {
-  const hit = events.filter(
-    (e) =>
-      e.ends_at === null &&
-      e.countries.some((c) => (c.length <= 3 ? new RegExp(`\\b${escapeRe(c)}\\b`) : new RegExp(`\\b${escapeRe(c)}`, "i")).test(text)),
-  );
-  const rank = { major: 0, notable: 1, info: 2 } as const;
-  return hit.sort((a, b) => rank[a.severity] - rank[b.severity]).slice(0, limit);
-}
-
 export const KIND_LABEL: Record<LiveKind, string> = {
   outage: "Internet outages",
   quake: "Earthquakes",
