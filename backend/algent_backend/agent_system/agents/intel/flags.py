@@ -60,6 +60,11 @@ VISUALS_HARNESS = ""
 #: better than any flat picture. Counts against ``VISUALS_MAX_PER_DAY``. False = the planner is told it cannot.
 SCENE3D_ENABLED = True
 
+#: Native interactive timelines and map stories (``native_forms.py``): the site draws them from a validated data
+#: spec, one structured model call each, no harness. Counts against ``VISUALS_MAX_PER_DAY``. False = the planner
+#: cannot choose them (timelines are never routed to the static-chart harness either way).
+NATIVE_FORMS_ENABLED = True
+
 #: Size limits the scene validator enforces (mobile budget): objects, and total vertices across coastlines,
 #: terrain, outlines and lines. The contract's own hard ceilings are higher; these are the operating bounds.
 SCENE3D_MAX_OBJECTS = 60
@@ -112,6 +117,13 @@ def scene3d_enabled() -> bool:
     if raw is not None and raw.strip() != "":
         return raw.strip().lower() not in _FALSEY
     return bool(SCENE3D_ENABLED)
+
+
+def native_forms_enabled() -> bool:
+    raw = os.environ.get("ALGENT_NATIVE_FORMS")
+    if raw is not None and raw.strip() != "":
+        return raw.strip().lower() not in _FALSEY
+    return bool(NATIVE_FORMS_ENABLED)
 
 
 def scene3d_limits() -> tuple[int, int]:

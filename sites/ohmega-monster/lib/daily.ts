@@ -129,7 +129,7 @@ export type TheaterNumbers = { as_of: string; trackers: Tracker[]; actors: Numbe
 
 /** An ad-hoc visual the backend drew for a section (agents/intel/visuals.py). `kind` is its form; `schematic` forms
  *  must read as drawings, not measurements. Older reports: none. */
-export type VisualKind = "chart" | "timeline" | "comparison" | "map" | "scale" | "schematic" | "flow" | "before_after" | "scene3d";
+export type VisualKind = "chart" | "timeline" | "mapstory" | "comparison" | "map" | "scale" | "schematic" | "flow" | "before_after" | "scene3d";
 export type DailyVisual = {
   id: string;
   kind: VisualKind;
@@ -140,6 +140,9 @@ export type DailyVisual = {
   schematic: boolean;
   /** scene3d only: the scene JSON and its still (`asset` is the still, so older readers show an image). */
   scene: string;
+  /** Native timeline / map story: the data spec the site renders (empty on an older, image-only timeline). */
+  spec: string;
+  /** The still of a scene3d / timeline / map story (an image, for no-script, link previews and failures). */
   preview: string;
   as_of: string;
   ai_label: string;
@@ -428,7 +431,7 @@ function parseDevelopment(raw: unknown): DailyDevelopment | null {
   };
 }
 
-const VISUAL_KINDS = ["chart", "timeline", "comparison", "map", "scale", "schematic", "flow", "before_after", "scene3d"] as const;
+const VISUAL_KINDS = ["chart", "timeline", "mapstory", "comparison", "map", "scale", "schematic", "flow", "before_after", "scene3d"] as const;
 
 function parseVisual(raw: unknown): DailyVisual | null {
   if (!isObj(raw)) return null;
@@ -437,6 +440,7 @@ function parseVisual(raw: unknown): DailyVisual | null {
   const kind = oneOf(raw.kind, VISUAL_KINDS, "chart");
   const own = (p: string) => /^\/analytics\/[\w./-]+$/.test(p) && !p.includes("..");
   const scene = kind === "scene3d" && own(str(raw.scene)) ? str(raw.scene) : "";
+  const spec = (kind === "timeline" || kind === "mapstory") && own(str(raw.spec)) ? str(raw.spec) : "";
   return {
     id: str(raw.id) || asset,
     kind,
@@ -445,7 +449,8 @@ function parseVisual(raw: unknown): DailyVisual | null {
     asset,
     schematic: raw.schematic === true || kind === "schematic" || kind === "flow",
     scene,
-    preview: scene && own(str(raw.preview)) ? str(raw.preview) : asset,
+    spec,
+    preview: (scene || spec) && own(str(raw.preview)) ? str(raw.preview) : asset,
     as_of: str(raw.as_of),
     ai_label: str(raw.ai_label),
     sources: arr(raw.sources)
