@@ -1,7 +1,7 @@
 "use client";
 
 // The live objects near one theater, fetched the bandwidth-efficient way /live uses at map zoom (see useLiveEntities.ts): the small
-// `tiles/index` document, then only the 10-degree tiles that intersect the theater's box, each refetched only when its etag changed.
+// `tiles/index` document, then only the 10-degree tiles that intersect the theater's box (plus a small margin), and the rows are cut to that box, each refetched only when its etag changed.
 // Rows are decoded with /live's own decoders and reduced at once to the three kinds the daily shows (theaterObjects.groupOf), so a cached
 // tile holds a handful of objects, not the thousands of ships in it. Polls every POLL_MS, and only while `host` is near the viewport and the
 // tab is visible; leaving the page area stops the clock, coming back loads at once.
@@ -16,25 +16,12 @@ import { tilesIn } from "./useLiveEntities";
 
 const POLL_MS = 60_000;
 const NEAR_PX = 600; // start loading this far before the strip scrolls into view
-/** A box wider than this many tiles (a whole-region theater) is read from the tiles nearest its centre, not all of them. */
-const MAX_TILES = 16;
-
 type Cached = { etag: string; objs: Obj[] };
 const LAYERS = [["vessels", "v"], ["aircraft", "a"]] as const;
 
-/** The tile ids to read for `box`, nearest the box centre first, at most MAX_TILES. */
-function pickTiles(box: [number, number, number, number], deg: number): string[] {
-  const ids = tilesIn([Math.max(-180, box[0]), Math.max(-90, box[1]), Math.min(180, box[2]), Math.min(90, box[3])], deg);
-  if (ids.length <= MAX_TILES) return ids;
-  const cx = (box[0] + box[2]) / 2;
-  const cy = (box[1] + box[3]) / 2;
-  const dist = (id: string) => {
-    const lat = (Number(id.slice(1, 3)) + 0.5) * deg - 90;
-    const lon = (Number(id.slice(4, 6)) + 0.5) * deg - 180;
-    return Math.hypot(lat - cy, lon - cx);
-  };
-  return ids.sort((a, b) => dist(a) - dist(b)).slice(0, MAX_TILES);
-}
+/** The tile ids to read for `box`: every tile that intersects it (rows are then filtered to the box itself). */
+const pickTiles = (box: [number, number, number, number], deg: number): string[] =>
+  tilesIn([Math.max(-180, box[0]), Math.max(-90, box[1]), Math.min(180, box[2]), Math.min(90, box[3])], deg);
 
 async function fetchObjects(box: [number, number, number, number], cache: Map<string, Cached>): Promise<Obj[] | null> {
   const index = await fetchSnapshot<TilesIndex>("tiles/index");

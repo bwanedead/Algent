@@ -62,6 +62,10 @@ type MapProps = {
   /** Called with the live MapLibre map after every (re)sync of the style and layers (idempotent hook for extra layers), and with
    *  null when the map is torn down. */
   onMap?: (map: any | null) => void;
+  /** Theater and dossier maps: stronger country borders and faint internal subdivisions (see mapStyle.ts). /live leaves it off. */
+  theaterStyle?: boolean;
+  /** Extra buttons in the map tools row, after the built-in ones. */
+  tools?: ReactNode;
 };
 
 const LOAD_TIMEOUT_MS = 15000;
@@ -152,7 +156,7 @@ function northControl(map: any) {
   return { onAdd: () => el, onRemove: () => { map.off("rotate", show); el.remove(); } };
 }
 
-export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1.6, maxZoom = 9, tilt = false, fallback, selectedId = null, onSelect, items, itemsLabel = "Marked places", onStatus, credit, focus = null, reveal = null, zoomOutRoom = 1.5, onMap }: MapProps) {
+export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1.6, maxZoom = 9, tilt = false, fallback, selectedId = null, onSelect, items, itemsLabel = "Marked places", onStatus, credit, focus = null, reveal = null, zoomOutRoom = 1.5, onMap, theaterStyle = false, tools }: MapProps) {
   const wrap = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
@@ -333,7 +337,7 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
         }
       }, LOAD_TIMEOUT_MS);
       map.on("style.load", () => {
-        quietBasemap(map, currentTheme());
+        quietBasemap(map, currentTheme(), { theater: theaterStyle });
         sync();
         if (live.current.tilted) setTerrain(true);
       });
@@ -510,6 +514,7 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
               3D tilt {tilted ? "on" : "off"}
             </button>
           )}
+          {tools}
           <span className="lm-hint">{isTouch() ? "Drag to pan, pinch or double-tap to zoom; ⛶ for full screen." : "Drag to pan, scroll or double-click to zoom; arrow keys pan, + and - zoom; ⛶ for full screen."}</span>
         </div>
       )}

@@ -44,10 +44,10 @@ export function shape(all: Obj[]): Shaped {
 /** "3 military aircraft", "1 tanker": the strip's line for one group. */
 export const countText = (g: (typeof GROUPS)[number], n: number) => `${n.toLocaleString("en-GB")} ${n === 1 ? g.one : g.many}`;
 
-/** [west, south, east, north] widened by a tenth of its size on each side (at least half a degree): ships and aircraft just outside the
- *  frame are still "near" the theater. */
+/** [west, south, east, north] widened by 5% of its size on each side (at least a tenth of a degree): the theater's own box, not its
+ *  neighbours. */
 export function withMargin(b: number[]): [number, number, number, number] {
-  const dx = Math.max(0.5, (b[2] - b[0]) * 0.1);
-  const dy = Math.max(0.5, (b[3] - b[1]) * 0.1);
+  const dx = Math.max(0.1, (b[2] - b[0]) * 0.05);
+  const dy = Math.max(0.1, (b[3] - b[1]) * 0.05);
   return [b[0] - dx, b[1] - dy, b[2] + dx, b[3] + dy];
 }

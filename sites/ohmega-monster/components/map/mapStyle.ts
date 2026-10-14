@@ -19,8 +19,8 @@ export function currentTheme(): MapTheme {
 
 // Colours shared with the static SVG map (app/geopolitics/geopolitics.css) on paper, so both read as one map.
 const PALETTE = {
-  paper: { background: "#f4f1e8", water: "#cfe3f1", border: "#7d8793", label: "#2b3440", halo: "#ffffff", quiet: "#c9c6bc" },
-  dark: { background: "#1d2321", water: "#0a1217", border: "#6c7773", label: "#a9b0ab", halo: "#0c0f0e", quiet: "#2a302e" },
+  paper: { background: "#f4f1e8", water: "#cfe3f1", border: "#7d8793", borderStrong: "#37424f", label: "#2b3440", halo: "#ffffff", quiet: "#c9c6bc" },
+  dark: { background: "#1d2321", water: "#0a1217", border: "#6c7773", borderStrong: "#c4ccc7", label: "#a9b0ab", halo: "#0c0f0e", quiet: "#2a302e" },
 };
 
 const HIDE = /^(building|aeroway|railway|road_oneway|road_pier|road_area_pier|highway[-_]shield|road_shield|highway[-_]name|airport|landuse_residential|landcover_wood|park|landuse_park)/;
@@ -38,8 +38,16 @@ function paint(map: any, id: string, prop: string, value: unknown) {
   }
 }
 
+export type QuietOptions = {
+  /** Theater and dossier maps: country borders clearly stronger, internal subdivisions (oblasts, states) faint and thin. /live leaves this off. */
+  theater?: boolean;
+};
+
+const BORDER_SUBDIVISION = /^(boundary_3|boundary_state)/; // admin_level 3-6 / 4: dashed in both styles, quieted on theater maps
+const DISPUTED_LINE = /^boundary_disputed/; // keeps its own dashed style everywhere
+
 /** Mute and recolour the loaded basemap style in place. */
-export function quietBasemap(map: any, theme: MapTheme) {
+export function quietBasemap(map: any, theme: MapTheme, opts: QuietOptions = {}) {
   const c = PALETTE[theme];
   const layers: { id: string; type: string }[] = map.getStyle()?.layers ?? [];
   for (const l of layers) {
