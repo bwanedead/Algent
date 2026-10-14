@@ -108,12 +108,54 @@ partner, with sources. Below, the dated flows and rates as tiles (`TrackerTile.t
 control). One sparkline (`Sparkline.tsx`) serves everything. The accent marks "unusual" only. Annual statistics are
 labelled as such on the panel.
 
-## Daily visuals and 3D scenes (`visuals.py`, `scene3d.py`)
+## Daily visuals: native interactive forms, 3D scenes, static charts (`visuals.py`, `native_forms.py`, `scene3d.py`)
 One planning call reads the day's sourced facts (`visuals_facts.py`) and proposes 0-3 visuals; every number must come
-from a cited fact (or a public spec named in `source_hint`). Flat forms are drawn by the article analytics harness.
-`flags.py` holds the switches (`VISUALS_*`, `SCENE3D_*`).
+from a cited fact (or a public spec named in `source_hint`). The planner picks the FORM by asking what dynamic the
+reader must grasp and which form transfers it with the least effort:
 
-**`scene3d`** is the one interactive kind: a scene the reader rotates, zooms and scrubs through dated frames, used only
+| The reader must grasp | Form | Built by |
+|---|---|---|
+| a sequence: who did what, in what order, how fast | `timeline` | native: structured call -> `timeline_spec.Timeline` |
+| movement or spread over geography and time | `mapstory` | native: structured call -> `mapstory_spec.MapStory` |
+| physical scale, geometry, 3D relations | `scene3d` | structured call -> `scene_spec.Scene` |
+| quantities, trends, comparisons (and map/scale/schematic/flow/before_after stills) | `chart` etc. | the coding harness (grok/codex), static SVG/PNG |
+
+The data forms (`timeline`, `mapstory`, `scene3d`) are never routed to the harness: a second structured model call after
+planning fills a typed spec, the contract validates it against the cited facts mechanically, and the SITE renders it.
+They need no subscription CLI and do not depend on the harness being ready. `flags.py` holds the switches
+(`VISUALS_*`, `SCENE3D_*`, `NATIVE_FORMS_ENABLED` / `ALGENT_NATIVE_FORMS`).
+
+**Native forms** (`native_forms.produce`, one house-model call each; failure is a line in `visuals_run`, never a failed day):
+- **`timeline`** (`timeline_spec.py`): events `{id, date YYYY-MM-DD, time?, title <=10 words, detail <=30 words, actors
+  (ISO alpha-2), lane?, kind (strike/statement/meeting/decision/movement/deadline/other), place?, fact_ids, sources}`,
+  optional `lanes` (2-4, kept only if two or more are used) and `now` (set to the day). Grounding (`ground`): each event
+  cites facts of the visual, its DATE must be stated by one of them (ISO or "8 October"), no number in its words may be
+  one the facts lack, a coordinate is kept only if the place name is in the facts. An event that fails is dropped and named
+  in `visuals_run.trimmed`; fewer than 3 left refuses the timeline. `sources` are resolved from the cited facts, never
+  written by the model.
+- **`mapstory`** (`mapstory_spec.py`): steps `{date, caption <=35 words, fact_ids, show: features, hide: ids}`; state
+  carries forward, so a step lists only what changed. Features: `point` (re-showing an id moves it), `route` (path in travel
+  order, arrow), `area` (outline), `range` (centre + `radius_km`). Grounding: a step's date must be stated by a cited fact;
+  every feature names the place it is at and that place must be one the step's facts speak of (coordinates cannot be
+  checked against prose, the name given to them can); a range radius must be a figure the facts hold; `bounds` are computed
+  mechanically. Dropped steps/features are named; fewer than 2 steps, or none on the map, refuses it.
+- **Hosting**: `/analytics/daily/<domain>/<date>/<id>.<form>.json` (the spec) plus `<id>.<form>.svg` (`native_preview.py`:
+  a plain server-drawn still for link previews, social, no-script and failures). Record: `kind` (`timeline`/`mapstory`),
+  `spec`, `preview`, `asset` (= the still, so older readers show an image), `detail` (the text alternative), `sources`.
+  Older harness-drawn timelines have no `spec` and keep rendering as images.
+- **Site**: `components/DailyFigure.tsx` routes by kind and shape. `NativeTimeline.tsx` (+ `timelineLayout.ts`,
+  `timeline.css`): vertical and mobile-first, a date column, ONE continuous spine (every row draws its own full-height
+  segment, no margins between rows, only the first and last clip to their dots), a card per event (bold title, muted detail,
+  actor flags, kind glyph + word, tap for place and sources), gaps made visible between rows (proportional up to a week,
+  compressed and dashed after, named "· 6 days ·"), a "now" row, lane chips only when lanes exist. `MapStory.tsx`
+  (+ `map/storyFrame.ts`, `mapstory.css`): plays over `LiveMap` (our layers added through its `onMap` hook), routes draw
+  themselves, points glide, areas fade in, rings expand; play/pause, step buttons, scrubber, caption + sources per step; plays
+  once when first on screen; under `prefers-reduced-motion` there is no animation or autoplay (steps only). The step captions
+  are the text alternative (listed under the map).
+- **`--visuals-only`** (`daily_visuals.redo`) runs the same `attach`, so it makes the new forms too. Prior visuals are kept
+  unless `--fresh-visuals`: use that to replace an older image timeline with a native one.
+
+**`scene3d`** is the 3D kind: a scene the reader rotates, zooms and scrubs through dated frames, used only
 when depth, height or turning the object explains more than any flat picture (true-scale vessels and aircraft, a
 chokepoint with lanes and ranges, a trajectory over terrain, a front line day by day, a cutaway). Most days none.
 - **Contract** (`scene_spec.py`): declarative JSON, never code. Units `m`/`km`, x east / y north / z up; primitives

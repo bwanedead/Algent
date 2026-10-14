@@ -30,8 +30,11 @@ from . import visuals_facts as vf
 from .visuals_grounding import ungrounded as _ungrounded      # the one grounding rule (scene_spec shares it)
 
 #: What a visual can BE. ``kind`` in the record. Chart-like forms are drawn as charts, the rest as illustrations.
-Form = Literal["chart", "timeline", "comparison", "map", "scale", "schematic", "flow", "before_after", "scene3d"]
-_CHARTLIKE = {"chart", "timeline", "comparison"}
+Form = Literal["chart", "timeline", "mapstory", "comparison", "map", "scale", "schematic", "flow", "before_after", "scene3d"]
+_CHARTLIKE = {"chart", "comparison"}
+#: Forms the SITE draws natively and interactively from a validated data spec (no coding harness): a second
+#: structured model call after planning (``native_forms``), like ``scene3d`` (``scene3d.py``).
+_NATIVE = {"timeline", "mapstory"}
 #: Forms that are drawings of a structure or system, not measurements: they must say so under the picture.
 _SIGNPOSTED = {"schematic", "flow"}
 SIGNPOST = "Schematic, not to exact detail."
@@ -71,7 +74,8 @@ then say why in `none_because`. Read every theater with these questions before d
 - Several comparable things stated separately (forces, stockpiles, outputs, losses, budgets)? Put them on one axis
   so the gap is visible; a paragraph can only recite them.
 - A PLACE the story turns on (a strait, a border, a pipeline, a front, a range ring, a base)? Show the geometry.
-- A SEQUENCE where the spacing matters (strike, response, deadline, vote)? Show the real time between events.
+- A SEQUENCE where the order and spacing matter (strike, response, deadline, vote)? A timeline the reader scrolls.
+- Things that MOVED over days (forces, ships, a front, strikes spreading)? A map story the reader can play.
 - A SYSTEM whose parts the reader must hold together (who supplies, commands, depends on or blocks whom)?
 - A size, distance or capability a bare number does not make felt? Draw it to scale beside something known.
 Choose the strongest one to three; each must answer a question a reader would actually ask, better than the sentence
@@ -79,8 +83,14 @@ does. Do not pad to reach three, and do not stop at zero because the check below
 you cite your facts.
 
 VALUE OVER FORM. Choose the form that gives THIS story the most understanding, and say what question it answers
-(`reader_question`) and why the form beats prose (`why_not_prose`). Forms: chart (quantities), timeline (a sequence
-with real spacing), comparison (like against like, the whole field), map (an annotated explanatory map: a
+(`reader_question`) and why the form beats prose (`why_not_prose`). Ask of each: WHAT DYNAMIC MUST THE READER GRASP,
+AND WHICH FORM TRANSFERS IT WITH THE LEAST EFFORT? A sequence of events is a `timeline`; movement or spread across
+geography over time is a `mapstory`; physical scale, geometry or 3D relations are `scene3d`; quantities, trends and
+comparisons are a `chart`. `timeline`, `mapstory` and `scene3d` are interactive and built by the site from the
+cited facts alone (no outside source): the reader scrolls, plays or turns them, so prefer them whenever the material
+is a sequence, a movement or a shape, and a static picture only when it is truly the best. Forms: chart (quantities),
+timeline (dated events in order: who did what when, with the real time between), mapstory (what moved where and
+when, played step by step over a map; needs named places the facts speak of), comparison (like against like, the whole field), map (an annotated explanatory map: a
 chokepoint with its lanes, a range ring, a front line the facts state), scale (dimensions of things drawn to one
 scale from published specifications), schematic (a cutaway or layout of a structure or system), flow (who supplies,
 commands or depends on whom), before_after. Never decoration; never restate a number the stat tiles already show;
@@ -89,7 +99,8 @@ never a diagram of a sentence; never a status or evidence ledger.
 GROUNDING. Every number, date, dimension and relationship in a visual comes from a cited fact: list its id in
 `fact_ids` (at least two facts, or one plus a `source_hint`). You may NOT write a number of your own in `finding`,
 `caption` or `spec` that is not in the cited facts (dates as the facts give them are fine; quote a figure exactly,
-never round or derive one). A form that needs published specifications the facts lack (a
+never round or derive one). A `timeline` or `mapstory` is built from the cited facts ALONE, so cite every fact that
+gives one of its events or steps (its dates, places and figures all come from them). A form that needs published specifications the facts lack (a
 submarine's length, a missile's range) sets `source_hint` to the exact public source to fetch; it is drawn only if
 the source can be named under the picture. Never invent positions, boundaries, ranges or capabilities.
 
@@ -127,6 +138,7 @@ def validate(plan: Any, facts: list[vf.Fact], theater_ids: set[str], cap: int) -
     from algent_backend.agent_system.agents.editorial.analytics_contracts import AnalyticsRequest
     for ask in plan.visuals:
         tag = f"{ask.theater_id}/{ask.form}"
+        hint = "" if ask.form in _NATIVE else ask.source_hint.strip()      # native forms stand on the day's facts alone
         cited = [by_id[i] for i in dict.fromkeys(ask.fact_ids) if i in by_id]
         if ask.theater_id not in theater_ids:
             dropped.append(f"{tag}: not a theater in the report")
@@ -134,14 +146,16 @@ def validate(plan: Any, facts: list[vf.Fact], theater_ids: set[str], cap: int) -
             dropped.append(f"{tag}: theater already has a visual")
         elif ask.form == "scene3d" and not flags.scene3d_enabled():
             dropped.append(f"{tag}: 3D scenes are switched off")
+        elif ask.form in _NATIVE and not flags.native_forms_enabled():
+            dropped.append(f"{tag}: native timelines and map stories are switched off")
         elif len(kept) >= cap:
             dropped.append(f"{tag}: over the daily cap of {cap}")
         elif not (ask.finding.strip() and ask.caption.strip() and ask.spec.strip()):
             dropped.append(f"{tag}: missing finding, caption or spec")
-        elif len(cited) < (1 if ask.source_hint.strip() else 2):
+        elif len(cited) < (1 if hint else 2):
             dropped.append(f"{tag}: cites too few of the report's facts")
         elif bad := _ungrounded(" ".join((ask.finding, ask.caption, ask.spec)), " ".join(f.text for f in cited)) \
-                if not ask.source_hint.strip() else []:
+                if not hint else []:
             dropped.append(f"{tag}: numbers not in the cited facts ({', '.join(bad[:4])})")
         elif not is_reader_facing(AnalyticsRequest(id="x", kind="chart", title=ask.finding, question=ask.caption,
                                                    spec=ask.spec)):
@@ -157,7 +171,7 @@ def _request(ask: VisualAsk, cited: list[vf.Fact], n: int, as_of: str):
     caption = ask.caption.strip()
     if ask.form in _SIGNPOSTED and not _SIGNPOST_WORDS.search(caption):
         caption = f"{caption.rstrip()} {SIGNPOST}"
-    klass = {"chart": "data_chart", "timeline": "timeline", "comparison": "comparison", "map": "locator_map"}.get(
+    klass = {"chart": "data_chart", "comparison": "comparison", "map": "locator_map"}.get(
         ask.form, "process_diagram" if ask.form in ("schematic", "flow") else "other")
     # "anx_": the worker only treats anx_*/req_* folders as its own scratch (see its _is_scratch_dir)
     return AnalyticsRequest(
@@ -296,11 +310,11 @@ def attach(sections: list[dict], *, ctx: Any, domain: str, as_of: str, ask: Call
                                   "none_because": getattr(plan, "none_because", "") or ""}
         if not kept:
             return report
-        scenes = [k for k in kept if k[0].form == "scene3d"]
-        kept = [k for k in kept if k[0].form != "scene3d"]
-        if scenes:
-            _scenes(scenes, sections, ask=ask, domain=domain, as_of=as_of, uploader=uploader or _upload, report=report,
-                    first=len(kept) + 1)
+        specs = [k for k in kept if k[0].form == "scene3d" or k[0].form in _NATIVE]
+        kept = [k for k in kept if k not in specs]           # what remains goes to the coding harness: static charts only
+        if specs:
+            _spec_forms(specs, sections, ask=ask, domain=domain, as_of=as_of, uploader=uploader or _upload, report=report,
+                        first=len(kept) + 1)
         if not kept:
             return report
         ok, note = (ready or _ready)()
@@ -315,14 +329,19 @@ def attach(sections: list[dict], *, ctx: Any, domain: str, as_of: str, ask: Call
         return {"produced": 0, "skipped": [f"visuals failed: {type(exc).__name__}: {str(exc)[:160]}"]}
 
 
-def _scenes(scenes: list[tuple[VisualAsk, list[vf.Fact]]], sections: list[dict], *, ask: Callable[[Any, str, str], Any],
-            domain: str, as_of: str, uploader: Callable[[dict[str, bytes]], dict], report: dict, first: int) -> None:
-    """Interactive 3D scenes: structured model call + mechanical validation (``scene3d``), no coding harness."""
-    from . import scene3d
+def _spec_forms(specs: list[tuple[VisualAsk, list[vf.Fact]]], sections: list[dict], *, ask: Callable[[Any, str, str], Any],
+                domain: str, as_of: str, uploader: Callable[[dict[str, bytes]], dict], report: dict, first: int) -> None:
+    """Interactive forms the site renders from a data spec: a structured model call + mechanical validation, no
+    coding harness (``scene3d`` for 3D scenes, ``native_forms`` for timelines and map stories)."""
+    from . import native_forms, scene3d
 
-    for n, (brief, cited) in enumerate(scenes, first):
-        rec = scene3d.produce(brief, cited, n, domain=domain, as_of=as_of, site_dir=SITE_DIR, ask=ask, uploader=uploader,
-                              report=report)
+    for n, (brief, cited) in enumerate(specs, first):
+        if brief.form == "scene3d":
+            rec = scene3d.produce(brief, cited, n, domain=domain, as_of=as_of, site_dir=SITE_DIR, ask=ask,
+                                  uploader=uploader, report=report)
+        else:
+            rec = native_forms.produce(brief.form, brief, cited, n, domain=domain, as_of=as_of, site_dir=SITE_DIR,
+                                       ask=ask, uploader=uploader, report=report)
         if rec is None:
             continue
         for s in sections:

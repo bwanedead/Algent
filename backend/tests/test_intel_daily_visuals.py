@@ -131,7 +131,7 @@ def test_visuals_only_adds_visuals_without_touching_text_or_the_writer(tmp_path,
     monkeypatch.setattr(daily, "daily_dir", lambda _d: tmp_path)
     (tmp_path / "2026-09-29.json").write_text(json.dumps(_record()), encoding="utf-8")
     plan = visuals.VisualPlan(visuals=[visuals.VisualAsk(
-        theater_id="thr_a", form="timeline", finding="Berth damage climbs each wave",
+        theater_id="thr_a", form="chart", finding="Berth damage climbs each wave",
         caption="Share of berths hit, by wave, 2026-09-27 to 2026-09-29.", reader_question="How fast?",
         why_not_prose="three numbers over time", fact_ids=["f1.1", "f1.2", "f1.3"],
         spec="bars of 12.5, 31.4 and 58.2 percent for 08 and 09 Oct")])
@@ -144,7 +144,7 @@ def test_visuals_only_adds_visuals_without_touching_text_or_the_writer(tmp_path,
         uploader=lambda files: uploads.append(files) or {"ok": True, "failed": []})
     assert out["produced"] == 1 and asked == ["VisualPlan"], out      # one planning call, no writer
     saved = json.loads((tmp_path / "2026-09-29.json").read_text(encoding="utf-8"))
-    assert saved["theaters"][0]["visuals"][0]["kind"] == "timeline" and saved["visuals_run"]["produced"] == 1
+    assert saved["theaters"][0]["visuals"][0]["kind"] == "chart" and saved["visuals_run"]["produced"] == 1
     assert saved["summary"] == {"headline": "H", "the_day": []} and uploads
 
     again = daily_visuals.redo(None, None, "geopolitics", "2026-09-29", ask=lambda *_a: pytest.fail("replanned"),
