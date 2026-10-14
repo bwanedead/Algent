@@ -11,7 +11,7 @@ import Expander from "./Expander";
 import OnRecordBlock from "./OnRecord";
 import Term from "./Term";
 import { DevelopmentTimeline, KeyFigures, PulseTiles, SourceLink } from "./DailyVisuals";
-import { LiveNow } from "./live/LiveParts";
+import LiveNowStrip from "./live/LiveNowStrip";
 import GeoMap from "./map/GeoMap";
 import TheaterNumbersPanel from "./numbers/TheaterNumbers";
 import "@/app/intel/theaters/theaters.css";
@@ -101,7 +101,7 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
         {(t.saga || background) && !update && <p className="geo-saga">{t.saga || background}</p>}
       </header>
 
-      <LiveNow scope={id} text={[t.name, t.bottom_line, ...t.developments.map((d) => d.headline)].join(" . ")} />
+      <LiveNowStrip scope={id} bbox={t.map?.bbox} />
 
       {t.visuals.map((v) => (
         <DailyFigure key={v.id} v={v} />

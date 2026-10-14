@@ -34,7 +34,7 @@ const PAD = 0.25;
 const KINDS: Kind[] = ["ship", "air"];
 const GROUP_COLOR: Record<Kind, string> = { ship: "#3fb0a8", air: "#8b6fd6" };
 const EMPTY = { type: "FeatureCollection", features: [] as any[] };
-const SOURCE: Record<Kind, { name: string; url: string }> = {
+export const SOURCE: Record<Kind, { name: string; url: string }> = {
   ship: { name: "aisstream.io and open national AIS feeds", url: "https://aisstream.io/" },
   air: { name: "OpenSky Network, adsb.lol", url: "https://opensky-network.org/" },
 };
@@ -70,6 +70,17 @@ function poly(ctx: CanvasRenderingContext2D, r: number, pts: [number, number][],
 
 const SHIP_SHAPE: [number, number][] = [[0, -1], [0.55, 0.85], [0, 0.45], [-0.55, 0.85]];
 const PLANE_SHAPE: [number, number][] = [[0, -1], [0.12, -0.3], [0.95, 0.25], [0.95, 0.42], [0.12, 0.15], [0.1, 0.7], [0.42, 0.9], [0.42, 1], [0, 0.9], [-0.42, 1], [-0.42, 0.9], [-0.1, 0.7], [-0.12, 0.15], [-0.95, 0.42], [-0.95, 0.25], [-0.12, -0.3]];
+
+/** Registers the ship and aircraft icon images (`iconOf` names them) on a map, idempotently. Shared with the theater maps, which
+ *  draw the same arrows. */
+export function addTrackIcons(map: any) {
+  const put = (name: string, data: ImageData) => {
+    if (!map.hasImage(name)) map.addImage(name, data, { pixelRatio: 2 });
+  };
+  SHIP_CLASSES.forEach((c, i) => put(`lt-ship-${i}`, icon((ctx, r) => poly(ctx, r, SHIP_SHAPE, c.color))));
+  put("lt-air-civil", icon((ctx, r) => poly(ctx, r, PLANE_SHAPE, "#8fa3b5")));
+  put("lt-air-mil", icon((ctx, r) => poly(ctx, r, PLANE_SHAPE, "#8b6fd6")));
+}
 
 export class Tracks {
   private map: any = null;
@@ -215,13 +226,7 @@ export class Tracks {
   }
 
   private addIcons() {
-    const map = this.map;
-    const put = (name: string, data: ImageData) => {
-      if (!map.hasImage(name)) map.addImage(name, data, { pixelRatio: 2 });
-    };
-    SHIP_CLASSES.forEach((c, i) => put(`lt-ship-${i}`, icon((ctx, r) => poly(ctx, r, SHIP_SHAPE, c.color))));
-    put("lt-air-civil", icon((ctx, r) => poly(ctx, r, PLANE_SHAPE, "#8fa3b5")));
-    put("lt-air-mil", icon((ctx, r) => poly(ctx, r, PLANE_SHAPE, "#8b6fd6")));
+    addTrackIcons(this.map);
   }
 
   private addGroup(k: Kind) {
