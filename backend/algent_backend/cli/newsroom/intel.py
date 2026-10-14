@@ -8,6 +8,7 @@
     newsroom intel daily --date D --theater id[,id] [--repair] [--fresh-research]   # redo only those sections of D's record, republish
     newsroom intel daily --edition 2 [--research]   # APPEND part 2 (Americas) to today's report: only what is new since part 1
     newsroom intel daily --date D --rerender [--theater id[,id]]   # re-derive D's record from its saved model drafts: NO model call
+    newsroom intel daily --date D --visuals-only [--fresh-visuals]   # plan/draw ONLY D's visuals over its saved record: no writer call, text untouched
     newsroom intel daily --date D --tag-places   # repair for reports made before drafts were kept: one small call places the developments
     newsroom intel publish                      # put the desk snapshot (pulses, theaters, briefs) on the site
     newsroom intel dossiers [--primers] [--domain geopolitics]   # rebuild + publish the theater dossiers; --primers writes the missing/stale (>7d) primers first
@@ -52,6 +53,8 @@ def add_parser(sub: Any) -> None:
     d.add_argument("--repair", action="store_true", help="with --theater: tie the saved research's lost claim->source links back (one cheap call) instead of researching again")
     d.add_argument("--rerender", action="store_true", help="re-derive --date's record from its saved model drafts (places/maps, numbers, flags, on-record order, summary and sweep guards), republish; ZERO model calls; with --theater only those sections")
     d.add_argument("--tag-places", action="store_true", help="repair tool for reports made before drafts were kept: ONE small low-effort model call places the existing developments (text untouched, places checked against the basemap), maps rebuilt")
+    d.add_argument("--visuals-only", dest="visuals_only", action="store_true", help="re-run ONLY the visuals step over --date's saved record (one small planning call + the chart harness per visual): no writer call, no research, text untouched; existing visuals are kept unless --fresh-visuals")
+    d.add_argument("--fresh-visuals", dest="fresh_visuals", action="store_true", help="with --visuals-only: drop the day's existing visuals and plan them again")
     d.add_argument("--edition", default="1", help="which part of the day: 1 (the normal run), 2 (append what is new since part 1 to the same report; never rewrites part 1, reuses its research) or auto (the next part when its time in intel/flags.EDITIONS has passed)")
     d.add_argument("--days", type=int, default=7)
     d.add_argument("--no-refresh", action="store_true", help="skip refreshing instruments and statements first")
@@ -279,10 +282,14 @@ def _daily_rederive(args: Any, only: list[str]) -> int:
     from algent_backend.publishing.intel_page import publish_intel
 
     as_of = getattr(args, "date", "") or date.today().isoformat()
-    if args.rerender and args.tag_places:
-        print(json.dumps({"error": "--rerender and --tag-places are separate repairs; pick one"}))
+    if sum(bool(x) for x in (args.rerender, args.tag_places, getattr(args, "visuals_only", False))) > 1:
+        print(json.dumps({"error": "--rerender, --tag-places and --visuals-only are separate repairs; pick one"}))
         return 2
-    if args.rerender:
+    if getattr(args, "visuals_only", False):
+        from algent_backend.agent_system.agents.intel import daily_visuals
+        result = daily_visuals.redo(_ctx("intel-visuals"), house_spec(reasoning_effort="medium", temperature=0.2, max_tokens=16384),
+                                    args.domain, as_of, fresh=getattr(args, "fresh_visuals", False), out=_out(as_of))
+    elif args.rerender:
         result = daily_rerender.rerender(args.domain, as_of, only=only, out=_out(as_of))
     else:
         result = daily_rerender.tag_places(
@@ -292,7 +299,7 @@ def _daily_rederive(args: Any, only: list[str]) -> int:
         print(json.dumps({"date": as_of, "domain": args.domain, "error": result["error"]}, indent=2, ensure_ascii=False))
         return 1
     report = {"date": as_of, "domain": args.domain, "path": result["path"], "html": result.get("html"),
-              **{k: result[k] for k in ("redone", "kept", "warnings", "tagged", "asked") if k in result},
+              **{k: result[k] for k in ("redone", "kept", "warnings", "tagged", "asked", "visuals_run", "produced") if k in result},
               "publish": publish_intel(), "backup": sync.backup(note="intel daily rederive")}
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0
@@ -308,7 +315,7 @@ def _daily(args: Any) -> int:
     from .pulse import promote_ready_quietly
 
     only = [t for t in (getattr(args, "theater", "") or "").split(",") if t.strip()]
-    if getattr(args, "rerender", False) or getattr(args, "tag_places", False):
+    if getattr(args, "rerender", False) or getattr(args, "tag_places", False) or getattr(args, "visuals_only", False):
         return _daily_rederive(args, only)
     from datetime import date
 
