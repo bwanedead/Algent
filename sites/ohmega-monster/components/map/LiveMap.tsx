@@ -75,6 +75,30 @@ function findFeature(layers: LayerSpec[], id: string): { f: Feature; spec: Layer
   return null;
 }
 
+type ScrollMode = "auto" | "standard" | "reversed";
+const SCROLL_KEY = "ohmega-map-scroll";
+const SCROLL_LABEL: Record<ScrollMode, string> = { auto: "Scroll zoom: auto", standard: "Scroll zoom: standard", reversed: "Scroll zoom: reversed" };
+
+function readScrollMode(): ScrollMode {
+  try {
+    const v = localStorage.getItem(SCROLL_KEY);
+    return v === "standard" || v === "reversed" ? v : "auto";
+  } catch {
+    return "auto";
+  }
+}
+
+/**
+ * A touchpad's two-finger scroll arrives as small, smooth wheel deltas (pixels); a mouse wheel as coarse fixed steps (~100/120
+ * per notch, or line mode). With "natural" scrolling a touchpad swipe up is reported as scroll DOWN, which every map library reads
+ * as zoom out — backwards to the person swiping. Auto mode reverses only touchpad-like scrolls; pinch (ctrlKey) is never touched.
+ */
+function looksLikeTouchpad(e: WheelEvent): boolean {
+  if (e.deltaMode !== 0) return false;
+  const d = Math.abs(e.deltaY);
+  return d > 0 && (d < 40 || !Number.isInteger(e.deltaY));
+}
+
 /** A touch-first device (phones, tablets, iPads), for wording and tap sizes only: gestures need no switch, because MapLibre takes
  *  wheel and drag from a mouse and touches from a finger side by side (so a hybrid laptop gets both). iPadOS reports itself as a Mac
  *  ("MacIntel"), so a Mac with more than one touch point is an iPad; a plain pointer:coarse covers phones and Android tablets. */
@@ -125,6 +149,9 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
   const [status, setStatus] = useState<MapStatus>("loading");
   const [armed, setArmed] = useState(false);
   const [tilted, setTilted] = useState(false);
+  const [scrollMode, setScrollMode] = useState<ScrollMode>("auto");
+  const scrollModeRef = useRef<ScrollMode>("auto");
+  useEffect(() => { const m = readScrollMode(); setScrollMode(m); scrollModeRef.current = m; }, []);
 
   const report = useCallback((s: MapStatus) => {
     setStatus(s);
@@ -262,6 +289,22 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
         fadeDuration: reduceMotion() ? 0 : 200,
       });
       mapRef.current = map;
+      // Reverse scroll-zoom where wanted (see looksLikeTouchpad): swallow the original wheel event in the capture phase and
+      // re-dispatch a mirrored one, so MapLibre's own smooth wheel zoom still does the work.
+      const wheelHost = map.getCanvasContainer();
+      wheelHost.addEventListener("wheel", (e: WheelEvent) => {
+        if ((e as any).__ohMirrored || e.ctrlKey) return;
+        const mode = scrollModeRef.current;
+        const flip = mode === "reversed" || (mode === "auto" && looksLikeTouchpad(e));
+        if (!flip) return;
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        const m = new WheelEvent("wheel", { deltaX: -e.deltaX, deltaY: -e.deltaY, deltaZ: e.deltaZ, deltaMode: e.deltaMode,
+          clientX: e.clientX, clientY: e.clientY, screenX: e.screenX, screenY: e.screenY, shiftKey: e.shiftKey, altKey: e.altKey,
+          metaKey: e.metaKey, bubbles: true, cancelable: true });
+        (m as any).__ohMirrored = true;
+        (e.target as Element).dispatchEvent(m);
+      }, { capture: true, passive: false });
       map.touchZoomRotate.disableRotation();
       map.addControl(new ml.NavigationControl({ showCompass: false }), "top-right");
       map.addControl(northControl(map), "top-right");
@@ -441,6 +484,13 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
       {status === "ready" && (
         <div className="lm-tools">
           <button type="button" className="lm-btn" onClick={reset}>Reset view</button>
+          <button type="button" className="lm-btn" title="Which way scrolling zooms. Auto reverses touchpad scrolls so swiping up zooms in."
+            onClick={() => {
+              const next: ScrollMode = scrollMode === "auto" ? "reversed" : scrollMode === "reversed" ? "standard" : "auto";
+              setScrollMode(next);
+              scrollModeRef.current = next;
+              try { localStorage.setItem(SCROLL_KEY, next); } catch { /* storage blocked: applies for this visit */ }
+            }}>{SCROLL_LABEL[scrollMode]}</button>
           {tilt && (
             <button type="button" className="lm-btn" aria-pressed={tilted} onClick={toggleTilt}>
               3D tilt {tilted ? "on" : "off"}
