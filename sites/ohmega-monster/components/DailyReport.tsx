@@ -6,6 +6,7 @@ import Term from "@/components/Term";
 import type { Daily } from "@/lib/daily";
 import { claimOf, crossParts, editionTag, firstSentences, fmtDay, isCut, publishedLine, shortTheater, theaterAnchor } from "@/lib/daily";
 import { dossier, dossierIds } from "@/lib/dossier";
+import { theaterInfra, type TheaterInfra } from "@/lib/geoledger";
 import { latestSnapshot } from "@/lib/intel";
 
 import DailyGlance from "./DailyGlance";
@@ -119,12 +120,20 @@ async function backgrounds(report: Daily, dossiers: ReadonlySet<string>): Promis
   return Object.fromEntries(found.filter(([, text]) => text));
 }
 
+/** Each theater's infrastructure for its map and status log (the geoledger, lib/geoledger.ts), keyed by theater id; a theater
+ *  with no map frame, or no database behind the site, simply has none. Updates of a theater share its frame. */
+async function infrastructure(report: Daily): Promise<Record<string, TheaterInfra>> {
+  const found = await Promise.all(report.theaters.map(async (t) => [t.theater_id, await theaterInfra(t.map?.bbox, report.date)] as const));
+  return Object.fromEntries(found.filter(([, i]) => i.assets.length > 0 || i.log.length > 0));
+}
+
 /** `mark`: an optional small decoration at the start of the status strip (the geopolitics page puts its cycling globe there). */
 export default async function DailyReport({ report, title, mark }: { report: Daily; title: string; mark?: ReactNode }) {
   const snap = await latestSnapshot();
   const dossiers = new Set(await dossierIds());
   const published = publishedLine(report);
   const background = await backgrounds(report, dossiers);
+  const infra = await infrastructure(report);
   return (
     <div className="geo">
       <div className="intel-strip" role="group" aria-label="Report status">
@@ -168,9 +177,9 @@ export default async function DailyReport({ report, title, mark }: { report: Dai
           {t.spotlight && <p className="geo-spotlight-label geo-micro">
               <Term id="spotlight">Spotlight</Term> · an under-covered story, researched in full
             </p>}
-          <DailyTheaterSection t={t} id={theaterAnchor(t, i)} date={report.date} snap={snap} dossiers={dossiers} first={i === 0} tag={editionTag(report, t.edition)} background={background[t.theater_id] ?? ""} />
+          <DailyTheaterSection t={t} id={theaterAnchor(t, i)} date={report.date} snap={snap} dossiers={dossiers} first={i === 0} tag={editionTag(report, t.edition)} background={background[t.theater_id] ?? ""} infra={infra[t.theater_id]} />
           {t.updates.map((u, k) => (
-            <DailyTheaterSection key={`${u.theater_id}-u${k}`} t={u} id={`${theaterAnchor(t, i)}-update-${k + 1}`} date={report.date} snap={snap} dossiers={dossiers} tag={editionTag(report, u.edition)} update />
+            <DailyTheaterSection key={`${u.theater_id}-u${k}`} t={u} id={`${theaterAnchor(t, i)}-update-${k + 1}`} date={report.date} snap={snap} dossiers={dossiers} tag={editionTag(report, u.edition)} update infra={infra[t.theater_id]} />
           ))}
         </Fragment>
       ))}

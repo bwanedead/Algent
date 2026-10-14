@@ -6,7 +6,9 @@ import { groupBounds, objectLayers } from "@/components/live/objectLayers";
 import { setMapUp, setShown, useScope } from "@/components/live/theaterLive";
 import type { Bounds } from "./geo";
 import type { DailyDevelopment, TheaterMap } from "@/lib/daily";
+import { TONE, TYPE_GLYPH, TYPE_LABEL, type GeoAsset, type GeoLogRow } from "@/lib/geoledger-shared";
 
+import { ASSET_KEY, assetLayer } from "./assetLayers";
 import GeoMapStatic from "./GeoMapStatic";
 import LiveMap, { type MapStatus } from "./LiveMap";
 import { theaterLayers } from "./theaterLayers";
@@ -21,12 +23,13 @@ import { theaterLayers } from "./theaterLayers";
 // draws only that one group, small and muted (a second press, "Hide", clears it) and fits the map to it (LiveMap `focus`); an optional
 // "Show nearby traffic" tool draws all three groups the same quiet way. The strip owns the loading, so the map makes no request of its own.
 // The purple disputed/occupied areas have a key chip that is also their on/off switch. Both switches are remembered per browser.
+// The "Infrastructure" chip does the same for the geoledger's places (power plants, substations, refineries, ports, bases) drawn as
+// small lettered discs coloured by their latest status (assetLayers.ts); the key under the map reads the colours.
 // Doctrine: docs/ethos/information-ergonomics-ethos.md. Spec: docs/architecture/intel-desk.md "Maps".
 
-const SHOW_ALL: string[] = [];
-const HIDE_AREAS = ["disputed"];
 const NEARBY_KEY = "ohmega-theater-nearby";
 const AREAS_KEY = "ohmega-theater-areas";
+const INFRA_KEY = "ohmega-theater-infra";
 
 /** A per-browser on/off preference; storage may be blocked (private window), then it simply applies to this visit. */
 function usePref(key: string, initial: boolean): [boolean, (v: boolean) => void] {
@@ -44,21 +47,29 @@ function usePref(key: string, initial: boolean): [boolean, (v: boolean) => void]
 }
 
 const AREAS_TIP = "Areas whose control is contested or occupied, e.g. Russian-held parts of Ukraine; tap an area for details. Click to hide or show them.";
-const NEARBY_TIP = "Draw all the military aircraft, tankers and military vessels counted in the strip above, small and muted. Off by default; the strip's Show me draws one group.";
+const INFRA_TIP = "Power plants, substations, refineries, ports and bases, coloured by what is on record about them: claimed struck, damage reported, damage confirmed, restored. Tap one for its history. Click to hide or show them.";
+const NEARBY_TIP ="Draw all the military aircraft, tankers and military vessels counted in the strip above, small and muted. Off by default; the strip's Show me draws one group.";
 
 const BASEMAP_CREDIT = "Interactive basemap: OpenFreeMap, © OpenMapTiles, data © OpenStreetMap contributors.";
 
-export default function GeoMap({ map, developments, label, initialK, liveScope }: { map: TheaterMap | null; developments: DailyDevelopment[]; label?: string; initialK?: number; liveScope?: string }) {
+const CREDIT_WRI = "Power plants: WRI Global Power Plant Database (CC BY 4.0).";
+const CREDIT_OSM = "Other places: © OpenStreetMap contributors (ODbL).";
+
+export default function GeoMap({ map, developments, label, initialK, liveScope, assets, assetLog }: { map: TheaterMap | null; developments: DailyDevelopment[]; label?: string; initialK?: number; liveScope?: string; assets?: GeoAsset[]; assetLog?: GeoLogRow[] }) {
   const [status, setStatus] = useState<MapStatus>("loading");
   const spec = useMemo(() => (map ? theaterLayers(map, developments) : null), [map, developments]);
   const { live, request, shown } = useScope(liveScope);
   const [nearby, setNearby] = usePref(NEARBY_KEY, false);
   const [areasOn, setAreasOn] = usePref(AREAS_KEY, true);
+  const [infraOn, setInfraOn] = usePref(INFRA_KEY, true);
+  const infra = useMemo(() => (assets && assets.length > 0 ? assetLayer(assets, assetLog ?? []) : null), [assets, assetLog]);
+  const types = useMemo(() => Array.from(new Set((assets ?? []).map((a) => a.type))).filter((t) => t !== "other"), [assets]);
+  const hidden = useMemo(() => [...(areasOn ? [] : ["disputed"]), ...(infraOn ? [] : ["infra"])], [areasOn, infraOn]);
   const [focus, setFocus] = useState<{ nonce: number; bounds: Bounds } | null>(null);
   // Nothing by default; a "Show me" group alone; or everything counted when the nearby-traffic tool is on.
   const drawn = useMemo(() => (nearby ? live.objs : shown ? live.objs.filter((o) => o.group === shown) : []), [nearby, shown, live.objs]);
   const liveSpecs = useMemo(() => objectLayers(drawn), [drawn]);
-  const layers = useMemo(() => (spec ? [...spec.layers, ...liveSpecs] : []), [spec, liveSpecs]);
+  const layers = useMemo(() => (spec ? [...spec.layers, ...(infra ? [infra] : []), ...liveSpecs] : []), [spec, infra, liveSpecs]);
   const fig = useRef<HTMLElement>(null);
   const seen = useRef(request?.nonce ?? 0); // a request filed before this map existed is not replayed
   const ready = status === "ready";
@@ -107,10 +118,16 @@ export default function GeoMap({ map, developments, label, initialK, liveScope }
         items={spec.items}
         itemsLabel="Marked places"
         focus={focus}
-        hidden={areasOn ? SHOW_ALL : HIDE_AREAS}
+        hidden={hidden}
         theaterStyle
         tools={
           <>
+            {infra && (
+              <button type="button" className="lm-btn" aria-pressed={infraOn} title={INFRA_TIP} onClick={() => setInfraOn(!infraOn)}>
+                <span aria-hidden="true" style={{ display: "inline-block", width: 12, height: 12, marginRight: 6, verticalAlign: "-2px", borderRadius: "50%", background: TONE.reported, border: "1.5px solid #fff", boxShadow: "0 0 0 1px #6b7280", opacity: infraOn ? 1 : 0.4 }} />
+                Infrastructure
+              </button>
+            )}
             {hasAreas && (
               <button type="button" className="lm-btn" aria-pressed={areasOn} title={AREAS_TIP} onClick={() => setAreasOn(!areasOn)}>
                 <span aria-hidden="true" style={{ display: "inline-block", width: 12, height: 12, marginRight: 6, verticalAlign: "-1px", border: "1.5px dashed #7a4fa3", background: "rgba(122,79,163,0.3)", opacity: areasOn ? 1 : 0.4 }} />
@@ -129,6 +146,19 @@ export default function GeoMap({ map, developments, label, initialK, liveScope }
         credit={
           <>
             <span className="geo-micro">Numbers match the timeline. Solid mark: researched; hollow: reported.{hasAreas ? " Dashed purple areas: disputed or occupied territory; select one for its status and source." : ""}</span>
+            {infra && infraOn && (
+              <span className="geo-micro">
+                {" "}
+                Infrastructure, lettered by type ({types.map((t) => `${TYPE_GLYPH[t]} ${TYPE_LABEL[t].toLowerCase()}`).join(", ")}); colour is the latest status on record:{" "}
+                {ASSET_KEY.map((k, i) => (
+                  <span key={k.label}>
+                    {i > 0 && ", "}
+                    <span aria-hidden="true" style={{ color: k.color }}>●</span> {k.label}
+                  </span>
+                ))}
+                . A claim is a party&apos;s word, not a confirmation; marks fade as a status ages. {assets?.some((a) => a.licence === "CC BY 4.0") ? CREDIT_WRI : ""} {assets?.some((a) => a.licence === "ODbL 1.0") ? CREDIT_OSM : ""}
+              </span>
+            )}
             {drawn.length > 0 && <span className="geo-micro"> Small arrows: live military aircraft (purple), tankers (amber) and military or law-enforcement vessels (red) in the theater, from the strip above; a faint numbered circle is several close together.</span>}
             <br />
             {map.credit} {BASEMAP_CREDIT}

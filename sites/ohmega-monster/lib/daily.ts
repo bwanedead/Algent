@@ -1,3 +1,4 @@
+import { asStatus, asType, type AssetStatus, type AssetType } from "./geoledger-shared";
 import { parseOnRecord, type OnRecord } from "./record-model";
 import { intelDoc, intelNames } from "./store";
 import { parseCoverage, type Band, type Coverage, type Direction, type Pace, type Trend } from "./intel";
@@ -149,6 +150,23 @@ export type DailyVisual = {
   sources: { label: string; url: string }[];
 };
 
+/** One status event of a named place, as the day's extraction stated it (backend `geoledger/`): who said it, how firmly, where from.
+ *  Older reports: none. A claim is a party's word, never a confirmation (`status` keeps them apart). */
+export type DailyAssetEvent = {
+  asset_id: string;
+  name: string;
+  type: AssetType;
+  country: string;
+  lat: number | null;
+  lon: number | null;
+  status: AssetStatus;
+  claimant: string;
+  confidence: "low" | "medium" | "high";
+  date: string;
+  sources: string[];
+  note: string;
+};
+
 export type DailyTheater = {
   theater_id: string;
   name: string;
@@ -175,6 +193,8 @@ export type DailyTheater = {
   /** The one extra researched section the world sweep nominated (see `DailySweep`); false for a focus theater. */
   spotlight: boolean;
   visuals: DailyVisual[];
+  /** Named facilities, vessels and entities the section's developments say something dated about (older reports: empty). */
+  asset_events: DailyAssetEvent[];
   /** Which part of the day wrote it (1 = the morning run; older reports are all 1). See `DailyEdition`. */
   edition: number;
   /** "update": a later part's addition to a theater the morning already covered; it is nested under that section. */
@@ -460,6 +480,28 @@ function parseVisual(raw: unknown): DailyVisual | null {
   };
 }
 
+function parseAssetEvent(raw: unknown): DailyAssetEvent | null {
+  if (!isObj(raw)) return null;
+  const status = asStatus(raw.status);
+  const date = str(raw.date);
+  if (!status || !str(raw.name) || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
+  const conf = str(raw.confidence);
+  return {
+    asset_id: str(raw.asset_id),
+    name: str(raw.name),
+    type: asType(raw.type),
+    country: str(raw.country),
+    lat: num(raw.lat),
+    lon: num(raw.lon),
+    status,
+    claimant: str(raw.claimant),
+    confidence: conf === "low" || conf === "high" ? conf : "medium",
+    date,
+    sources: strs(raw.sources).filter((u) => /^https?:\/\//.test(u)),
+    note: str(raw.note),
+  };
+}
+
 function parseTheater(raw: unknown, nested = false): DailyTheater | null {
   if (!isObj(raw)) return null;
   const name = str(raw.name);
@@ -519,6 +561,7 @@ function parseTheater(raw: unknown, nested = false): DailyTheater | null {
     numbers: parseNumbers(raw.numbers),
     spotlight: raw.spotlight === true,
     visuals: arr(raw.visuals).map(parseVisual).filter((v): v is DailyVisual => v !== null),
+    asset_events: arr(raw.asset_events).map(parseAssetEvent).filter((e): e is DailyAssetEvent => e !== null),
     edition: Math.max(1, Math.floor(num(raw.edition) ?? 1)),
     kind: raw.kind === "update" ? "update" : "section",
     updates: nested ? [] : arr(raw.updates).map((u) => parseTheater(u, true)).filter((u): u is DailyTheater => u !== null),

@@ -1,5 +1,7 @@
+import { ASSET_STATUSES, ASSET_TYPES } from "@/lib/geoledger-shared";
 import { SITE_URL } from "@/lib/site";
 
+import { assetOp, assetsOp } from "./ops-assets";
 import { articleOp, articlesOp, searchOp } from "./ops-content";
 import { instrumentOp, instrumentsOp, liveEventsOp } from "./ops-data";
 import {
@@ -138,6 +140,26 @@ export const ROUTES: Route[] = [
       { name: "severity", description: "Severity.", enum: ["info", "notable", "major"] },
     ],
     run: (_p, q) => liveEventsOp(q),
+  },
+  {
+    path: "/assets",
+    summary:
+      "Geolocated places (power plants, substations, refineries, fuel depots, ports, airbases, bases, dams) with the latest thing said about their state and by whom. A claimed strike is a party's claim, not a confirmation. Give at least one filter.",
+    paged: true,
+    query: [
+      { name: "bbox", description: "west,south,east,north in degrees.", example: "30,46,38,52" },
+      { name: "type", description: "Kind of place.", enum: ASSET_TYPES },
+      { name: "country", description: "ISO 3166-1 alpha-2 code.", example: "UA" },
+      { name: "status", description: "Latest status on record.", enum: ASSET_STATUSES },
+      { name: "has_events", description: "true: only places with a status on record; false: only those without.", enum: ["true", "false"] },
+    ],
+    run: (_p, q) => assetsOp(q),
+  },
+  {
+    path: "/assets/{id}",
+    summary: "One place and its full status history: every dated event with the party who said it, confidence and source URLs.",
+    pathParams: { id: { description: "Asset id from /assets.", example: "wri-UKR0000123" } },
+    run: (p) => assetOp(p),
   },
   {
     path: "/search",

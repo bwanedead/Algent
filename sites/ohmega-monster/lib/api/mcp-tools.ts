@@ -1,4 +1,7 @@
+import { ASSET_STATUSES, ASSET_TYPES } from "@/lib/geoledger-shared";
+
 import { LICENSE } from "./envelope";
+import { assetOp, assetsOp } from "./ops-assets";
 import { searchOp } from "./ops-content";
 import { instrumentOp, instrumentsOp, liveEventsOp } from "./ops-data";
 import { dailyOp, pulseOp, pulsesOp, statementsOp, theaterOp, theatersOp } from "./ops-desk";
@@ -157,6 +160,23 @@ export const TOOLS: Tool[] = [
       cursor: cursor_,
     }),
     run: liveEventsOp,
+  },
+  {
+    name: "get_assets",
+    title: "Places and their status history",
+    description:
+      "Geolocated infrastructure (power plants, substations, refineries, fuel depots, ports, airbases, bases, dams) with the latest dated statement about its state and WHO made it: claimed_struck is a party's claim, reported_damaged and confirmed_damaged come from others. Filter by bbox, type, country, status or has_events; pass id for one place's full history with sources.",
+    inputSchema: schema({
+      id: str_("Asset id from a previous result; returns the full status history."),
+      bbox: str_("west,south,east,north in degrees, e.g. 30,46,38,52."),
+      type: str_("Kind of place.", { enum: [...ASSET_TYPES] }),
+      country: str_("ISO alpha-2 code, e.g. UA."),
+      status: str_("Latest status on record.", { enum: [...ASSET_STATUSES] }),
+      has_events: str_("true: only places with a status on record.", { enum: ["true", "false"] }),
+      limit: limit_(30),
+      cursor: cursor_,
+    }),
+    run: (a) => (a.id ? assetOp(a) : assetsOp(a)),
   },
   {
     name: "get_instrument",

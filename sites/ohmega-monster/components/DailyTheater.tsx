@@ -3,9 +3,11 @@ import Link from "next/link";
 import type { DailyChangeKind, DailyTheater } from "@/lib/daily";
 import { claimOf, headlineOf, shortDay, splitLead } from "@/lib/daily";
 import { dossierPath } from "@/lib/dossier";
+import type { TheaterInfra } from "@/lib/geoledger";
 import { GLOSSARY } from "@/lib/glossary";
 import type { Direction, Snapshot } from "@/lib/intel";
 
+import AssetStatusLog, { logLines } from "./AssetStatusLog";
 import DailyFigure from "./DailyFigure";
 import Expander from "./Expander";
 import OnRecordBlock from "./OnRecord";
@@ -59,7 +61,10 @@ function ContextList({ t }: { t: DailyTheater }) {
   );
 }
 
-export default function DailyTheaterSection({ t, id, date, snap, dossiers, first = false, tag = "", update = false, background = "" }: { t: DailyTheater; id: string; date: string; snap: Snapshot | null; dossiers: ReadonlySet<string>; first?: boolean; tag?: string; update?: boolean; background?: string }) {
+const NO_INFRA: TheaterInfra = { assets: [], log: [] };
+
+export default function DailyTheaterSection({ t, id, date, snap, dossiers, first = false, tag = "", update = false, background = "", infra = NO_INFRA }: { t: DailyTheater; id: string; date: string; snap: Snapshot | null; dossiers: ReadonlySet<string>; first?: boolean; tag?: string; update?: boolean; background?: string; infra?: TheaterInfra }) {
+  const statusLog = logLines(infra.log, t.asset_events);
   const dir = DIR[t.escalation.direction];
   const claim = headlineOf(t.headline, t.bottom_line, 150) || claimOf(t.since_yesterday[0]?.what ?? "", 150) || t.name;
   const changed = t.since_yesterday.filter((c) => c.kind !== "unchanged");
@@ -109,7 +114,7 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
 
       {(hasMap || hasFigs) && (
         <div className={`geo-visual${hasMap && hasFigs ? " is-two" : ""}`}>
-          <GeoMap map={t.map} developments={t.developments} liveScope={id} />
+          <GeoMap map={t.map} developments={t.developments} liveScope={id} assets={infra.assets} assetLog={infra.log} />
           <KeyFigures figures={t.key_figures} />
         </div>
       )}
@@ -159,6 +164,12 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
         {t.on_record.length > 0 && (
           <Expander label="On the record" count={t.on_record.length} hint="what was said, in the speakers' words">
             <OnRecordBlock rows={t.on_record} title={t.name} note={first} />
+          </Expander>
+        )}
+
+        {statusLog.length > 0 && (
+          <Expander label="Strike & status log" count={statusLog.length} hint="named places, who says what, this week">
+            <AssetStatusLog lines={statusLog} />
           </Expander>
         )}
 
