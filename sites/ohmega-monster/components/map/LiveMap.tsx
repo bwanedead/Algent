@@ -3,7 +3,9 @@
 // THE interactive map of the site: MapLibre GL JS over OpenFreeMap vector tiles, with our data drawn as GeoJSON layers
 // (see mapLayers.ts). Every map on the site (daily theaters, dossiers, /live) goes through here.
 //   - Loaded lazily: nothing is fetched until the figure nears the viewport (maplibre.ts pins the CDN build).
-//   - Cooperative gestures: on a phone one finger scrolls the page and two move the map, so the map never traps scroll.
+//   - Gestures are Google Maps' on every device (wheel/trackpad zoom, drag pan with inertia, pinch, double-tap/click zoom, north-up
+//     until the 3D tilt is on); the canvas takes touch-action: none (map.css), and the stage is shorter than a phone screen so the page
+//     can still be scrolled past the map. Programmatic moves are one smooth flyTo ("Show me", headlines, picks).
 //   - While it loads, a panel of the same size with the site's globe spinner holds the place (never the static map: swapping one map for
 //     another is a visible flash). `fallback` (our static SVG map) shows only when the interactive map cannot run:
 //     no WebGL, the CDN/style fails (`onStatus("failed")` lets the caller swap in the full static figure), or no JS at all
@@ -53,6 +55,10 @@ type MapProps = {
   credit?: ReactNode;
   /** Frame something: `bounds` (fitted) or `center` + `zoom`; a new `nonce` re-triggers the move. */
   focus?: { nonce: number; bounds?: Bounds; center?: LngLat; zoom?: number } | null;
+  /** "Show me": fly to the feature whose `id` this is and open its popup (a new `nonce` re-triggers; also starts a not-yet-loaded map). */
+  reveal?: { nonce: number; id: string } | null;
+  /** How many zoom levels the user may go out beyond the framed view (the frame itself is never cropped). */
+  zoomOutRoom?: number;
   /** Called with the live MapLibre map after every (re)sync of the style and layers (idempotent hook for extra layers), and with
    *  null when the map is torn down. */
   onMap?: (map: any | null) => void;
@@ -69,20 +75,52 @@ function findFeature(layers: LayerSpec[], id: string): { f: Feature; spec: Layer
   return null;
 }
 
-/** A touch-first device (phones, tablets): standard one-finger map gestures there. */
+/** A touch-first device (phones, tablets, iPads), for wording and tap sizes only: gestures need no switch, because MapLibre takes
+ *  wheel and drag from a mouse and touches from a finger side by side (so a hybrid laptop gets both). iPadOS reports itself as a Mac
+ *  ("MacIntel"), so a Mac with more than one touch point is an iPad; a plain pointer:coarse covers phones and Android tablets. */
 function isTouch(): boolean {
   if (typeof window === "undefined") return false;
-  // Any touch capability counts (some phone browsers don't report a coarse pointer): a phone must never need two fingers.
-  return (navigator.maxTouchPoints ?? 0) > 0 || "ontouchstart" in window || window.matchMedia?.("(pointer: coarse)").matches === true;
+  const points = navigator.maxTouchPoints ?? 0;
+  const ipad = /Mac/i.test(navigator.platform ?? "") && points > 1;
+  const primaryCoarse = window.matchMedia?.("(pointer: coarse)").matches === true;
+  return ipad || primaryCoarse || (points > 0 && window.matchMedia?.("(any-pointer: fine)").matches !== true);
 }
 
-export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1.6, maxZoom = 9, tilt = false, fallback, selectedId = null, onSelect, items, itemsLabel = "Marked places", onStatus, credit, focus = null, onMap }: MapProps) {
+/** Is this click a finger's tap (wider hit box)? The event says so when it can; otherwise the device class does. */
+const tappedByFinger = (e: any) => e.originalEvent?.pointerType === "touch" || e.originalEvent?.type?.startsWith("touch") || isTouch();
+const TAP_PX = 18; // half-width of the box searched around a finger's tap for a mark (a mouse gets MOUSE_PX)
+const MOUSE_PX = 5;
+
+/** A compass that exists only while the map is rotated: "reset north". */
+function northControl(map: any) {
+  const el = document.createElement("div");
+  el.className = "maplibregl-ctrl maplibregl-ctrl-group lm-north";
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "maplibregl-ctrl-compass";
+  btn.setAttribute("aria-label", "Reset north");
+  btn.title = "Reset north";
+  btn.innerHTML = '<span class="maplibregl-ctrl-icon" aria-hidden="true"></span>';
+  const icon = btn.firstElementChild as HTMLElement;
+  btn.addEventListener("click", () => map.easeTo({ bearing: 0, duration: reduceMotion() ? 0 : 400 }));
+  el.appendChild(btn);
+  const show = () => {
+    const b = map.getBearing();
+    el.style.display = Math.abs(b) < 0.5 ? "none" : "";
+    icon.style.transform = `rotate(${-b}deg)`;
+  };
+  map.on("rotate", show);
+  show();
+  return { onAdd: () => el, onRemove: () => { map.off("rotate", show); el.remove(); } };
+}
+
+export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1.6, maxZoom = 9, tilt = false, fallback, selectedId = null, onSelect, items, itemsLabel = "Marked places", onStatus, credit, focus = null, reveal = null, zoomOutRoom = 1.5, onMap }: MapProps) {
   const wrap = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const popupRef = useRef<any>(null);
   const installed = useRef<{ spec: LayerSpec; all: string[] }[]>([]);
-  const live = useRef({ layers, hidden, bounds, selectedId, onSelect, onMap, tilted: false });
+  const live = useRef<{ layers: LayerSpec[]; hidden: string[]; bounds: Bounds; selectedId: string | null; onSelect: MapProps["onSelect"]; onMap: MapProps["onMap"]; tilted: boolean; fromMap: string | null; pending: { nonce: number; id: string } | null }>({ layers, hidden, bounds, selectedId, onSelect, onMap, tilted: false, fromMap: null, pending: null });
   live.current = { ...live.current, layers, hidden, bounds, selectedId, onSelect, onMap };
   const [status, setStatus] = useState<MapStatus>("loading");
   const [armed, setArmed] = useState(false);
@@ -124,6 +162,7 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
     applyHidden();
     applySelected(false);
     live.current.onMap?.(map);
+    runPending();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -144,7 +183,31 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
     const hit = id ? findFeature(live.current.layers, id) : null;
     const at = hit ? anchorOf(hit.f) : null;
     src.setData({ type: "FeatureCollection", features: at ? [{ type: "Feature", properties: {}, geometry: { type: "Point", coordinates: at } }] : [] });
-    if (at && move) map.easeTo({ center: at, duration: reduceMotion() ? 0 : 500 });
+    if (at && move) fly(at);
+  }
+
+  /** A programmatic move: one smooth flight (a jump under reduced motion). `zoom` only ever zooms in. */
+  function fly(at: LngLat, zoom?: number) {
+    const map = mapRef.current;
+    if (!map) return;
+    const z = zoom === undefined ? map.getZoom() : Math.max(map.getZoom(), zoom);
+    if (reduceMotion()) map.jumpTo({ center: at, zoom: z });
+    else map.flyTo({ center: at, zoom: z, speed: 1.3, curve: 1.3, essential: true });
+  }
+
+  /** "Show me": fly to the feature and open its popup; held until the map and its layers exist. */
+  function runPending() {
+    const map = mapRef.current;
+    const want = live.current.pending;
+    if (!want || !map || !styleReady(map)) return;
+    live.current.pending = null;
+    const hit = findFeature(live.current.layers, want.id);
+    if (!hit) return;
+    const at = anchorOf(hit.f);
+    fly(at, 6);
+    openPopup(hit.spec, hit.f.properties, at);
+    live.current.fromMap = want.id;
+    live.current.onSelect?.(want.id, hit.f.properties);
   }
 
   // 1. Arm the map when the figure nears the viewport.
@@ -183,9 +246,15 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
         bounds: b,
         fitBoundsOptions: { padding: FIT_PADDING, maxZoom },
         maxZoom: 14,
-        // Touch: standard map gestures (one finger pans, double-tap and pinch zoom); the stage is shorter than the
-        // screen so the page still scrolls past it. Desktop keeps Ctrl+wheel so wheel-scrolling the page isn't hijacked.
-        cooperativeGestures: !isTouch(),
+        // Google-Maps rules on every device, no cooperative-gesture gate: the wheel/trackpad zooms under the pointer, a drag pans
+        // (with inertia), double-click/double-tap zooms in, pinch zooms, +/- and arrows work. MapLibre reads mouse and touch
+        // separately, so a hybrid laptop gets both. The stage is shorter than the screen, so the page still scrolls past the map.
+        // North stays up (no twist, no tilt-drag) until the 3D tilt toggle is on (toggleTilt).
+        scrollZoom: true,
+        dragPan: { linearity: 0.3, deceleration: 2500, maxSpeed: 1800 },
+        doubleClickZoom: true,
+        keyboard: true,
+        renderWorldCopies: false,
         dragRotate: false,
         pitchWithRotate: false,
         touchPitch: false,
@@ -195,6 +264,7 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
       mapRef.current = map;
       map.touchZoomRotate.disableRotation();
       map.addControl(new ml.NavigationControl({ showCompass: false }), "top-right");
+      map.addControl(northControl(map), "top-right");
       map.addControl(new ml.FullscreenControl(), "top-right");
       map.addControl(new ml.AttributionControl({ compact: false }), "bottom-right");
       map.getCanvas().setAttribute("aria-label", label);
@@ -212,12 +282,24 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
       });
       map.once("load", () => {
         clearTimeout(timer);
+        // The fitted frame is the widest view: allow some room beyond it, never less than the frame itself (a phone's world frame
+        // sits below zoom 0, so a fixed floor would crop it).
+        map.setMinZoom(Math.max(-2, map.getZoom() - zoomOutRoom));
         if (!cancelled) report("ready");
+        runPending();
       });
       map.on("click", (e: any) => {
         const reg = map.__lmClick;
         if (!reg) return;
-        const feats = map.queryRenderedFeatures(e.point, { layers: reg.clickIds.filter((id: string) => map.getLayer(id)) });
+        const layerIds = reg.clickIds.filter((id: string) => map.getLayer(id));
+        // Marks are small: a finger's tap searches a box (nearest point mark wins), a mouse a few pixels; exact hits first.
+        let feats = map.queryRenderedFeatures(e.point, { layers: layerIds });
+        if (!feats.length && layerIds.length) {
+          const r = tappedByFinger(e) ? TAP_PX : MOUSE_PX;
+          const near = map.queryRenderedFeatures([[e.point.x - r, e.point.y - r], [e.point.x + r, e.point.y + r]], { layers: layerIds });
+          const dist = (g: any) => (g?.type === "Point" ? Math.hypot(map.project(g.coordinates).x - e.point.x, map.project(g.coordinates).y - e.point.y) : Infinity);
+          feats = near.filter((x: any) => x.geometry?.type === "Point").sort((a: any, b: any) => dist(a.geometry) - dist(b.geometry));
+        }
         const f = feats[0];
         if (!f) {
           popupRef.current?.remove();
@@ -232,7 +314,9 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
         const spec = reg.specOfLayer.get(f.layer.id) as LayerSpec | undefined;
         const props = f.properties as Props;
         openPopup(spec, props, f.geometry.type === "Point" ? f.geometry.coordinates : [e.lngLat.lng, e.lngLat.lat]);
-        live.current.onSelect?.(typeof props.id === "string" ? props.id : null, props);
+        // The popup is already at the mark: tell the host, but do not let its selection re-centre the map under the finger.
+        live.current.fromMap = typeof props.id === "string" ? props.id : null;
+        live.current.onSelect?.(live.current.fromMap, props);
       });
       map.on("mousemove", (e: any) => {
         const reg = map.__lmClick;
@@ -266,14 +350,43 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
 
   useEffect(() => { sync(); }, [layers, sync]);
   useEffect(() => { applyHidden(); }, [hidden]); // eslint-disable-line react-hooks/exhaustive-deps
-  useEffect(() => { applySelected(true); }, [selectedId]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const fromMap = live.current.fromMap === selectedId; // chosen by tapping the map itself: it is already where it should be
+    live.current.fromMap = null;
+    applySelected(!fromMap);
+  }, [selectedId]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     const map = mapRef.current;
     if (!focus || !map) return;
     const dur = reduceMotion() ? 0 : 700;
     if (focus.bounds) map.fitBounds(focus.bounds, { padding: FIT_PADDING, maxZoom: 11, duration: dur });
-    else if (focus.center) map.easeTo({ center: focus.center, zoom: focus.zoom ?? map.getZoom(), duration: dur });
+    else if (focus.center && reduceMotion()) map.jumpTo({ center: focus.center, zoom: focus.zoom ?? map.getZoom() });
+    else if (focus.center) map.flyTo({ center: focus.center, zoom: focus.zoom ?? map.getZoom(), speed: 1.3, curve: 1.3, essential: true });
   }, [focus?.nonce]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // "Show me": arm a not-yet-loaded map, then fly + popup as soon as the map and its layers exist (runPending).
+  useEffect(() => {
+    if (!reveal) return;
+    live.current.pending = reveal;
+    setArmed(true);
+    runPending();
+  }, [reveal?.nonce]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // The box can change without a window resize (orientation change, the fullscreen control, the address bar sliding away on iOS):
+  // keep the canvas matched to it.
+  useEffect(() => {
+    const el = canvas.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    let raf = 0;
+    const ro = new ResizeObserver(() => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => mapRef.current?.resize());
+    });
+    ro.observe(el);
+    const turned = () => setTimeout(() => mapRef.current?.resize(), 300); // iOS reports the new size a beat after the event
+    window.addEventListener("orientationchange", turned);
+    return () => { ro.disconnect(); cancelAnimationFrame(raf); window.removeEventListener("orientationchange", turned); };
+  }, []);
 
   function setTerrain(on: boolean) {
     const map = mapRef.current;
@@ -295,6 +408,11 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
     live.current.tilted = next;
     setTilted(next);
     setTerrain(next);
+    // Tilt on frees the view to turn (drag with the right button / two fingers, tilt with two-finger drag); off squares it back to north.
+    const free = next ? "enable" : "disable";
+    map.dragRotate[free]();
+    map.touchPitch[free]();
+    if (next) map.touchZoomRotate.enableRotation(); else map.touchZoomRotate.disableRotation();
     map.easeTo({ pitch: next ? 55 : 0, bearing: next ? -12 : 0, duration: reduceMotion() ? 0 : 700 });
   };
   const reset = () => mapRef.current?.fitBounds(bounds, { padding: FIT_PADDING, maxZoom, duration: reduceMotion() ? 0 : 500, pitch: 0, bearing: 0 });
@@ -302,7 +420,7 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
     const hit = findFeature(layers, id);
     if (!hit || !mapRef.current) return;
     const at = anchorOf(hit.f);
-    mapRef.current.easeTo({ center: at, zoom: Math.max(mapRef.current.getZoom(), 5), duration: reduceMotion() ? 0 : 500 });
+    fly(at, 5);
     openPopup(hit.spec, hit.f.properties, at);
     onSelect?.(id, hit.f.properties);
   };
@@ -328,7 +446,7 @@ export default function LiveMap({ layers, bounds, label, hidden = [], aspect = 1
               3D tilt {tilted ? "on" : "off"}
             </button>
           )}
-          <span className="lm-hint">{isTouch() ? "Drag to pan, pinch or double-tap to zoom; ⛶ for full screen." : "Drag to pan, Ctrl + scroll to zoom; arrow keys pan; ⛶ for full screen."}</span>
+          <span className="lm-hint">{isTouch() ? "Drag to pan, pinch or double-tap to zoom; ⛶ for full screen." : "Drag to pan, scroll or double-click to zoom; arrow keys pan, + and - zoom; ⛶ for full screen."}</span>
         </div>
       )}
       {status === "ready" && items && items.length > 0 && (

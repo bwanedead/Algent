@@ -40,6 +40,15 @@
 .lm .maplibregl-ctrl-attrib { font-size: 10px; max-width: 70vw; }
 .lm .maplibregl-canvas:focus-visible { outline: 2px solid var(--link-accent, var(--accent)); outline-offset: -2px; }
 
+/* Gestures: the canvas owns every touch that starts on it (one-finger pan, pinch, double-tap); only the canvas, never the page. The
+   selector out-weighs maplibre-gl.css's pan-x/pan-y rules whatever the load order. */
+.lm .lm-canvas .maplibregl-canvas-container .maplibregl-canvas { touch-action: none; }
+@media (pointer: coarse) {
+  /* finger-sized controls */
+  .lm .maplibregl-ctrl-group button { width: 40px; height: 40px; }
+  .lm .maplibregl-popup-close-button { min-width: 40px; min-height: 40px; }
+}
+
 @media (max-width: 639px) {
   .lm-stage { aspect-ratio: auto; height: min(72vh, 440px); min-height: 300px; }
   .lm-fallback { align-items: start; }
