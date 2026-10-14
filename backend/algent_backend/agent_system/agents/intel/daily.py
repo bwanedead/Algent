@@ -45,6 +45,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from algent_backend.geoledger import ask as geo_ask
+from algent_backend.geoledger import ingest as geo_ingest
+
 from . import brief as br
 from . import primers as primers_mod
 from . import daily_drafts, desk, flags, focus, forecasts, geo, numbers, on_record, render
@@ -886,6 +889,8 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
     visual_run = visuals_mod.attach(          # additive: section["visuals"]; never gates the day
         sections, ctx=ctx, domain=domain, as_of=as_of, prior=_prior_record(domain, as_of, fresh_research),
         ask=lambda schema, role, task: _ask(ctx, None, model_spec, schema, role, task))
+    geo_run = geo_ingest.attach(sections, as_of=as_of,      # additive: section["asset_events"]; never gates the day
+                                ask=lambda schema, role, task: _ask(ctx, None, geo_ask.extraction_spec(), schema, role, task))
     any_research = any(r.get("researched") for r in rows)
     summary, summary_error = None, ""
     if sections:
@@ -910,6 +915,8 @@ def produce_daily(ctx: Any, *, domain: str = "geopolitics", top: int = 5, resear
               "pulse_proposals": [p for r in rows for p in r.get("proposals", [])]}
     if visual_run:
         record["visuals_run"] = visual_run
+    if geo_run:
+        record["geoledger_run"] = geo_run
     if swept is not None and (swept.regions or swept.spotlight):
         record["sweep"] = swept.record()                   # additive: older readers ignore the key
     path = daily_dir(domain) / f"{as_of}.json"
