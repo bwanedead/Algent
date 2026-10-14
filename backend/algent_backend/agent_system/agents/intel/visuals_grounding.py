@@ -54,3 +54,37 @@ def ungrounded(text: str, corpus: str) -> list[str]:
             continue
         out.append(raw)
     return out
+
+
+# ── the other things a native visual (timeline, map story) may state: WHEN and WHERE ──────────────
+_MONTHS = ("january", "february", "march", "april", "may", "june", "july", "august", "september", "october",
+           "november", "december")
+_GENERIC_PLACE = {"gulf", "strait", "sea", "ocean", "bay", "island", "islands", "river", "city", "port", "base", "north",
+                  "south", "east", "west", "northern", "southern", "eastern", "western", "region", "province", "oblast",
+                  "front", "line", "border", "area", "zone", "airbase", "coast", "central", "district", "the"}
+
+
+def mentions_date(text: str, iso: str) -> bool:
+    """Does ``text`` state the calendar date ``iso`` (YYYY-MM-DD): as ISO, or as "8 October" / "October 8th"?
+    A cited fact is the ground of an event's date; the year is taken as the event's own."""
+    m = re.fullmatch(r"(\d{4})-(\d{2})-(\d{2})", iso or "")
+    if not m or not (1 <= int(m[2]) <= 12):
+        return False
+    if iso in (text or ""):
+        return True
+    mon, day = _MONTHS[int(m[2]) - 1], int(m[3])
+    name = rf"(?:{mon}|{mon[:3]}\.?)"
+    d = rf"0?{day}(?:st|nd|rd|th)?"
+    return bool(re.search(rf"\b{d}\s+(?:of\s+)?{name}\b|\b{name}\s+{d}\b", text or "", re.I))
+
+
+def mentions_place(text: str, place: str) -> bool:
+    """Is the place one a cited fact speaks of? Any distinctive word of the name (not "Gulf", "North"...) in the text.
+    A mechanical floor: the model's coordinates cannot be checked, the name it gave them for can."""
+    hay = (text or "").lower()
+    words = [w for w in re.findall(r"[^\W\d_]{3,}", (place or "").lower()) if w not in _GENERIC_PLACE]
+    return bool(words) and any(re.search(rf"\b{re.escape(w)}", hay) for w in words)
+
+
+def word_count(text: str) -> int:
+    return len((text or "").split())

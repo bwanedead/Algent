@@ -53,7 +53,7 @@ def test_ungrounded_numbers_and_thin_citations_are_rejected() -> None:
 
 
 def test_cap_and_one_per_theater() -> None:
-    kept, dropped = _validate(_ask(), _ask(form="timeline"))
+    kept, dropped = _validate(_ask(), _ask(form="comparison"))
     assert len(kept) == 1 and "already has a visual" in dropped[0]
     kept, dropped = _validate(_ask(), _ask(theater_id="thr_b", fact_ids=["f1.1", "f1.2"]), cap=1)
     assert len(kept) == 1 and "cap" in dropped[0]
@@ -63,7 +63,7 @@ def test_schematic_is_signposted_and_forms_map_to_worker_kinds() -> None:
     facts = vf.collect(_sections())
     req = visuals._request(_ask(form="schematic", caption="How the port is laid out."), facts[:2], 1, "2026-09-29")
     assert req.kind == "image" and "not to exact detail" in req.question and req.data_refs == ["f1.1", "f1.2"]
-    assert visuals._request(_ask(form="timeline"), facts[:2], 1, "2026-09-29").kind == "chart"
+    assert visuals._request(_ask(form="comparison"), facts[:2], 1, "2026-09-29").kind == "chart"
 
 
 def _runner(fail: bool = False):
