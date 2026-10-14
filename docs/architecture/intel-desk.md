@@ -182,7 +182,7 @@ chokepoint with lanes and ranges, a trajectory over terrain, a front line day by
 - **Interactive map**: one client component, `components/map/LiveMap.tsx` = MapLibre GL JS 4.7.1 (pinned CDN `<script>`, no npm
   dependency; `maplibre.ts`) over OpenFreeMap vector tiles (free, keyless; `positron` for the paper theme, `dark` for dark-amber,
   re-skinned in `mapStyle.ts`: roads/rails/buildings muted, borders clear). Data is declared as `LayerSpec`s (`mapLayers.ts`:
-  area / line / dots+cluster / heat / numbered). Callers: `GeoMap.tsx` (daily theaters + dossiers; `theaterLayers.ts`) and
+  area / line / dots+cluster / heat / numbered / assets: the geoledger's infrastructure layer, see `geoledger.md`). Callers: `GeoMap.tsx` (daily theaters + dossiers; `theaterLayers.ts`) and
   `components/live/LiveWorldMap.tsx` (`liveLayers.ts`, per-kind toggles, detail card and list kept).
 - **Behaviour**: lazy (nothing fetched until the figure nears the viewport); cooperative gestures (a finger scrolls the page,
   two move the map; Ctrl+wheel on desktop); keyboard pan/zoom plus a button list of marks; "Reset view"; "3D tilt" on theater maps

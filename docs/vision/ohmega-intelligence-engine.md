@@ -201,6 +201,12 @@ of a stack the reader can descend, never the whole of it:
   ad-hoc theater built from its headlines; no Pulses are created). One extra section per run is a flag
   (`intel/flags.py`: `SPOTLIGHT_SECTIONS`), a budget decision. Code: `agents/intel/sweep.py`. A world map with
   pins for sweep items is a follow-up; today the site shows a region-grouped list with flags.
+- **Named things are entities, not prose (operator, 10-14).** A report that lists six power plants as struck had put
+  six facilities into a paragraph: nothing placed them on the map, tracked their status, or showed what has been hit,
+  what is left and what exists. The geoledger is the persistent, geolocated entity layer under the prose: places seeded
+  from open data (power plants, substations, refineries, ports, bases), and every dated statement about their state with
+  WHO said it (a claim is never a confirmation), extracted from the texts we already hold. Maps draw it, the API and MCP
+  serve it. See `docs/architecture/geoledger.md`.
 - **Names are explicit.** A Pulse, a theater or a figure says who and what in its title (flags allowed):
   "🇺🇸🇨🇳 US–China: diplomatic deadlock", never a bare "Relationship deadlock" the reader must click
   to decode. Clicking gives the definition, not the identity.
