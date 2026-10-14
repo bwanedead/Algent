@@ -91,12 +91,26 @@ function readScrollMode(): ScrollMode {
 /**
  * A touchpad's two-finger scroll arrives as small, smooth wheel deltas (pixels); a mouse wheel as coarse fixed steps (~100/120
  * per notch, or line mode). With "natural" scrolling a touchpad swipe up is reported as scroll DOWN, which every map library reads
- * as zoom out — backwards to the person swiping. Auto mode reverses only touchpad-like scrolls; pinch (ctrlKey) is never touched.
+ * as zoom out — backwards to the person swiping. Auto mode reverses touchpad scrolls; pinch (ctrlKey) is never touched.
+ *
+ * The decision must be STICKY: a fast swipe also emits a few large integer deltas mid-gesture, and judging each event alone
+ * flips the zoom back and forth (flicker). So once a touchpad is seen we keep treating the device as one, and only fall back to
+ * mouse after a clear, isolated wheel notch (a big round step that starts a new burst).
  */
+const wheelState = { touchpad: false, lastAt: 0 };
+
 function looksLikeTouchpad(e: WheelEvent): boolean {
-  if (e.deltaMode !== 0) return false;
+  const now = performance.now();
+  const gap = now - wheelState.lastAt;
+  wheelState.lastAt = now;
+  if (e.deltaMode !== 0) return (wheelState.touchpad = false);           // line/page mode: a mouse wheel
   const d = Math.abs(e.deltaY);
-  return d > 0 && (d < 40 || !Number.isInteger(e.deltaY));
+  if (d === 0) return wheelState.touchpad;
+  const smooth = d < 40 || !Number.isInteger(e.deltaY);
+  if (smooth) return (wheelState.touchpad = true);
+  const notch = d >= 100 && (d % 100 === 0 || d % 120 === 0);
+  if (notch && gap > 250) return (wheelState.touchpad = false);           // an isolated wheel notch: the mouse is back
+  return wheelState.touchpad;                                              // mid-burst: keep the current verdict
 }
 
 /** A touch-first device (phones, tablets, iPads), for wording and tap sizes only: gestures need no switch, because MapLibre takes
