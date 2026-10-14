@@ -2,7 +2,7 @@
 Ad-hoc visuals for the daily — the reader's picture where the prose is the harder way to understand something.
 
 After the day's sections are final, ONE planning call reads the whole report's sourced material (``visuals_facts``)
-and proposes 0-3 visuals, each tied to a theater and each answering a question prose answers worse. Each is then
+and proposes 1-3 visuals when the material supports them (none only with a stated reason), each tied to a theater and each answering a question prose answers worse. Each is then
 drawn by the EXISTING article analytics machinery (``editorial.analytics_worker.fulfill_request``: scratch folder,
 coding harness grok/codex, escape guard, figure check, geometry check) through a small adapter, uploaded through
 ``publishing.asset_store`` and attached to its section as ``section["visuals"]`` (additive; older readers ignore it).
@@ -27,6 +27,7 @@ from pydantic import BaseModel, Field
 
 from . import flags
 from . import visuals_facts as vf
+from .visuals_grounding import ungrounded as _ungrounded      # the one grounding rule (scene_spec shares it)
 
 #: What a visual can BE. ``kind`` in the record. Chart-like forms are drawn as charts, the rest as illustrations.
 Form = Literal["chart", "timeline", "comparison", "map", "scale", "schematic", "flow", "before_after", "scene3d"]
@@ -41,8 +42,6 @@ FACT_CHARS = 600
 PROMPT_CHARS = 45_000       # the planner's reading budget
 SITE_DIR = "/analytics/daily"
 
-_NUMBER = re.compile(r"\d[\d,]*(?:\.\d+)?%?")
-_YEAR = re.compile(r"^(?:19|20)\d{2}$")
 
 
 class VisualAsk(BaseModel):
@@ -64,9 +63,20 @@ class VisualPlan(BaseModel):
 
 PLAN_ROLE = """\
 You are the graphics editor of an intelligence daily. A reader on a phone gives a figure three seconds. You have
-the day's SOURCED FACTS, numbered. Propose 0-3 visuals, each for one theater, ONLY where a picture lets the reader
-understand something the paragraph makes them assemble: a magnitude, a sequence, a spatial relation, a scale, a
-structure, a chain of dependence. None is a good answer; most days want one or two at most.
+the day's SOURCED FACTS, numbered. Your job is to LOOK for where a picture lets the reader understand something
+the paragraph makes them assemble in their head, and to propose it: 1-3 visuals a day, each for one theater. A day
+with material and no visual is a missed job; offer none only when the facts hold nothing a picture would teach, and
+then say why in `none_because`. Read every theater with these questions before deciding:
+- A SERIES or a before/after (counts, prices, levels, shares over days or years)? Draw the shape of it.
+- Several comparable things stated separately (forces, stockpiles, outputs, losses, budgets)? Put them on one axis
+  so the gap is visible; a paragraph can only recite them.
+- A PLACE the story turns on (a strait, a border, a pipeline, a front, a range ring, a base)? Show the geometry.
+- A SEQUENCE where the spacing matters (strike, response, deadline, vote)? Show the real time between events.
+- A SYSTEM whose parts the reader must hold together (who supplies, commands, depends on or blocks whom)?
+- A size, distance or capability a bare number does not make felt? Draw it to scale beside something known.
+Choose the strongest one to three; each must answer a question a reader would actually ask, better than the sentence
+does. Do not pad to reach three, and do not stop at zero because the check below is strict: the check only asks that
+you cite your facts.
 
 VALUE OVER FORM. Choose the form that gives THIS story the most understanding, and say what question it answers
 (`reader_question`) and why the form beats prose (`why_not_prose`). Forms: chart (quantities), timeline (a sequence
@@ -78,34 +88,30 @@ never a diagram of a sentence; never a status or evidence ledger.
 
 GROUNDING. Every number, date, dimension and relationship in a visual comes from a cited fact: list its id in
 `fact_ids` (at least two facts, or one plus a `source_hint`). You may NOT write a number of your own in `finding`,
-`caption` or `spec` that is not in the cited facts. A form that needs published specifications the facts lack (a
+`caption` or `spec` that is not in the cited facts (dates as the facts give them are fine; quote a figure exactly,
+never round or derive one). A form that needs published specifications the facts lack (a
 submarine's length, a missile's range) sets `source_hint` to the exact public source to fetch; it is drawn only if
 the source can be named under the picture. Never invent positions, boundaries, ranges or capabilities.
 
-SCENE3D is rare: most days none. Choose it ONLY when depth, height or turning the object genuinely explains more
-than any flat picture: vessels, aircraft or structures at true relative size from published dimensions; a chokepoint
-with its depth, lanes and ranges; a trajectory over terrain; a front line stepped day by day; a cutaway. If a
-chart, map or `scale` picture says it as well, use that. It needs the same grounding: every dimension, range and
-date from a cited fact or a public specification named in `source_hint`; `spec` says what objects, which
-cameras and, if the point is change over time, which dated frames.
+SCENE3D (an interactive 3D scene the reader can turn) wins over every flat form when depth, height, true relative
+size or a changing arrangement IS the understanding, and it is on the table whenever a story offers one of these:
+- TO-SCALE COMPARISON of named systems (a carrier beside a destroyer and a fishing boat; two bombers; a launcher
+  against the building it threatens): sizes from published dimensions named in `source_hint`.
+- CHOKEPOINT GEOGRAPHY (a strait with its depth, shipping lanes, island chains and the range rings of what covers
+  it), where a flat map hides that the passage is narrow, shallow or overlooked.
+- TRAJECTORIES AND RANGES (a missile's or drone's path over terrain, a radar umbrella, an interception arc), where
+  altitude and distance together are the story.
+- FORCE POSTURE (where ships, aircraft or units sit relative to a coast, base or line, stepped by dated frames).
+- A CUTAWAY of a structure (a facility, a vessel, a pipeline junction) when the point is what is inside or beneath.
+If a chart, map or `scale` picture says it as well, use that instead; do not choose 3D for show. It needs the same
+grounding: every dimension, range and date from a cited fact or a public specification named in `source_hint`;
+`spec` says what objects, which cameras and, if the point is change over time, which dated frames.
 
 HONESTY OF FORM. Code-drawn only, no generated art. A schematic or flow says so in `caption` ("Schematic, not to
 exact detail"). `finding` states the finding ("Strikes tripled in four days"), not the measure; `caption` is one
 plain sentence to the reader, never about "the reader" or why we made it. Label directly on the plot; units in
 words; no legends to match; no dual axes. Prefer the whole field to a hand-picked handful.
 """
-
-
-def _ungrounded(text: str, corpus: str) -> list[str]:
-    """Numbers written in ``text`` that appear in no cited fact. Years and single digits are not claims."""
-    have = {n.replace(",", "").rstrip("%") for n in _NUMBER.findall(corpus)}
-    out = []
-    for raw in _NUMBER.findall(text or ""):
-        n = raw.replace(",", "")
-        if _YEAR.match(n) or (len(n.rstrip("%")) <= 1) or n.rstrip("%") in have:
-            continue
-        out.append(raw)
-    return out
 
 
 def validate(plan: Any, facts: list[vf.Fact], theater_ids: set[str], cap: int) -> tuple[list[tuple[VisualAsk, list[vf.Fact]]], list[str]]:
@@ -175,7 +181,8 @@ def _message(facts: list[vf.Fact], sections: list[dict], cap: int) -> str:
             break
         lines.append(line)
     return (f"THEATERS:\n{heads}\n\nSOURCED FACTS (cite by id):\n" + "\n".join(lines) +
-            f"\n\nTASK: propose at most {cap} visuals, or none with `none_because`. Cite fact ids; write no numbers of your own.")
+            f"\n\nTASK: look for where a picture beats the paragraph and propose up to {cap} visuals (one to {cap} when the "
+            f"material supports it; none only with `none_because`). Cite fact ids; write no numbers of your own.")
 
 
 class _Capture:

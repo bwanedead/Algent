@@ -291,7 +291,7 @@ def validate_scene(scene: Scene, fact_text: dict[str, str] | None = None, *, all
     """Every reason this scene may not be published; empty = acceptable. ``fact_text`` maps fact id to its text
     (the day's cited facts). ``allow_public`` admits url-only public-spec sources (a planner ask with a
     ``source_hint``, or a hand-authored scene)."""
-    from .visuals import _ungrounded   # one grounding rule for every daily visual
+    from .visuals_grounding import ungrounded as _ungrounded   # one grounding rule for every daily visual
 
     facts, bad = fact_text or {}, []
     src = {s.id: s for s in scene.sources}

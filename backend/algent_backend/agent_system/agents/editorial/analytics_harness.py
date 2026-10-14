@@ -25,8 +25,10 @@ in anything the subprocess promises. Neither is trusted; both are contained.
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import subprocess
+import sys
 from collections.abc import Callable
 from dataclasses import dataclass
 from functools import lru_cache
@@ -57,6 +59,59 @@ _ENV_CODEX_MODEL = "ALGENT_CODEX_MODEL"
 
 HARNESSES = ("codex", "grok")
 
+#: WHO CONFINES the coding CLI. The operator knob (override once: ``ALGENT_HARNESS_SANDBOX``).
+#:
+#: - ``"harness"`` — the CLI's own sandbox (codex ``--full-auto`` = workspace-write via bubblewrap/seatbelt).
+#:   Strongest, but it needs OS features a locked-down server may not grant: Ubuntu 24.04 restricts
+#:   unprivileged user namespaces (AppArmor), so bubblewrap dies at start-up ("bwrap: loopback…",
+#:   "RTM_NEWADDR: Operation not permitted") and EVERY figure fails — the daily then ships with no visuals.
+#: - ``"workspace"`` — the CLI's sandbox is OFF (codex ``-s danger-full-access``; grok has none unless
+#:   configured) and OUR containment is the line instead: cwd pinned to the request's scratch folder, an
+#:   environment cut to an allow-list (no API keys, no tokens reach the child), the artifact allow-list /
+#:   escape guard / tree-kill timeout around it, and the fact that the box is a dedicated unprivileged-user
+#:   worker with nothing in the scratch folder but the data the figure needs. The trade: the CLI could in
+#:   principle touch anything that user can; we accept that on the dedicated worker, not on a laptop.
+#: - ``"auto"`` (default) — ``"workspace"`` on Linux (where this failure lives), ``"harness"`` elsewhere; and
+#:   whenever a harness-sandboxed run reports the sandbox failing to start, the process switches to
+#:   ``"workspace"`` and retries that run once (the switch is remembered for the process).
+HARNESS_SANDBOX = "auto"
+_ENV_SANDBOX = "ALGENT_HARNESS_SANDBOX"
+
+#: Output that means the CLI's sandbox could not start (not that the figure was bad). Seen on the server:
+#: "bwrap: loopback: Failed RTM_NEWADDR: Operation not permitted", "the shell sandbox failed to start".
+_SANDBOX_FAILURE = re.compile(
+    r"bwrap|bubblewrap|RTM_NEWADDR|loopback.{0,40}(fail|denied|not permitted)|user namespace|unshare|"
+    r"(sandbox|command runner|shell).{0,60}(failed to start|could not start|failed before|unavailable)|"
+    r"landlock", re.I)
+_relaxed_for_process = False     # set once a harness-sandboxed run reports the sandbox cannot start
+
+#: What a child CLI may inherit in workspace mode: process basics, locale, temp, proxies/certs, Windows
+#: furniture, and the CLIs' own auth/config (their credentials live in ~/.codex, ~/.grok; a key in the
+#: environment is passed only when that CLI is the one meant to use it). Nothing else — the daemon's other
+#: provider keys, Supabase, GitHub and Firecrawl tokens stay out of a process that executes model-written code.
+_ENV_ALLOW = frozenset({
+    "PATH", "HOME", "USER", "LOGNAME", "SHELL", "LANG", "LANGUAGE", "TERM", "TZ", "TMPDIR", "TEMP", "TMP",
+    "PWD", "SYSTEMROOT", "SYSTEMDRIVE", "WINDIR", "COMSPEC", "PATHEXT", "USERPROFILE", "APPDATA", "LOCALAPPDATA",
+    "HOMEDRIVE", "HOMEPATH", "PROGRAMFILES", "PROGRAMDATA", "NODE_EXTRA_CA_CERTS", "SSL_CERT_FILE", "SSL_CERT_DIR",
+    "VIRTUAL_ENV", "MPLCONFIGDIR", "HTTP_PROXY", "HTTPS_PROXY", "NO_PROXY", "ALL_PROXY", "OPENAI_API_KEY", "XAI_API_KEY", "GROK_API_KEY",
+})
+_ENV_ALLOW_PREFIX = ("LC_", "XDG_", "CODEX_", "GROK_", "OPENAI_")
+_ENV_DENY = frozenset({"GROK_SANDBOX", "GROK_SANDBOX_MODE"})     # a sandbox profile is exactly what workspace mode drops
+
+
+def sandbox_mode() -> str:
+    """``"harness"`` or ``"workspace"`` for the next run (see ``HARNESS_SANDBOX``)."""
+    chosen = (os.environ.get(_ENV_SANDBOX) or HARNESS_SANDBOX or "auto").strip().lower()
+    if chosen in ("harness", "workspace"):
+        return chosen
+    return "workspace" if _relaxed_for_process or sys.platform.startswith("linux") else "harness"
+
+
+def child_env() -> dict[str, str]:
+    """The environment a workspace-mode child gets: the allow-list above, nothing inherited wholesale."""
+    return {k: v for k, v in os.environ.items()
+            if k not in _ENV_DENY and (k.upper() in _ENV_ALLOW or k.upper().startswith(_ENV_ALLOW_PREFIX))}
+
 #: Silence that means STUCK rather than slow — no byte written or removed anywhere in the
 #: scratch folder for this long. Generous on purpose: a worker may reason or fetch for minutes
 #: before it writes, and killing a thinking agent is the failure this replaces.
@@ -86,14 +141,30 @@ class Harness:
 
     name = "harness"
 
-    def argv(self, prompt: str, folder: Path, *, allow_web: bool) -> list[str]:
+    def argv(self, prompt: str, folder: Path, *, allow_web: bool, sandbox: str = "harness") -> list[str]:
         raise NotImplementedError
 
     def run(
         self, prompt: str, folder: Path, *, timeout: float, allow_web: bool = False,
     ) -> tuple[bool, str]:
-        """Returns ``(ok, tail-of-output)``. Never raises — a dead CLI is a missing figure."""
-        argv = self.argv(prompt, folder, allow_web=allow_web)
+        """Returns ``(ok, tail-of-output)``. Never raises — a dead CLI is a missing figure.
+
+        Under ``HARNESS_SANDBOX="auto"`` a run whose CLI sandbox could not start is retried ONCE with the
+        CLI's sandbox off (our containment instead) and the process stays in that mode. Detection reads the
+        output regardless of exit status: these CLIs exit 0 after the model apologises that its shell died."""
+        global _relaxed_for_process
+        mode = sandbox_mode()
+        ok, tail = self._run_once(prompt, folder, timeout=timeout, allow_web=allow_web, sandbox=mode)
+        explicit = (os.environ.get(_ENV_SANDBOX) or HARNESS_SANDBOX or "auto").strip().lower()
+        if mode == "harness" and explicit == "auto" and _SANDBOX_FAILURE.search(tail):
+            _relaxed_for_process = True
+            ok, tail = self._run_once(prompt, folder, timeout=timeout, allow_web=allow_web, sandbox="workspace")
+        return ok, tail
+
+    def _run_once(
+        self, prompt: str, folder: Path, *, timeout: float, allow_web: bool, sandbox: str,
+    ) -> tuple[bool, str]:
+        argv = self.argv(prompt, folder, allow_web=allow_web, sandbox=sandbox)
         exe = executable(argv[0])
         if exe is None:
             return False, f"{self.name} CLI not found on PATH"
@@ -101,6 +172,9 @@ class Harness:
             proc = run_capturing(
                 [exe, *argv[1:]],
                 timeout=timeout,
+                cwd=str(folder),
+                # Workspace mode: the CLI's sandbox is off, so the child gets an allow-listed environment.
+                env=child_env() if sandbox == "workspace" else None,
                 # A figure is built by writing files, so the scratch folder IS the progress
                 # signal: while it changes the worker is working, and killing it then costs the
                 # full ceiling and returns nothing.
@@ -137,16 +211,17 @@ class CodexHarness(Harness):
     def model(self) -> str:
         return os.environ.get(_ENV_CODEX_MODEL, DEFAULT_CODEX_MODEL).strip() or DEFAULT_CODEX_MODEL
 
-    def argv(self, prompt: str, folder: Path, *, allow_web: bool) -> list[str]:
+    def argv(self, prompt: str, folder: Path, *, allow_web: bool, sandbox: str = "harness") -> list[str]:
         cmd = [
             "codex", "exec", prompt,
             "-C", str(folder),
             "-m", self.model(),
-            # Sandboxed auto-execution (= workspace-write): codex can WRITE only under the -C
-            # folder (+ its temp), so this is real confinement. grok has no verified equivalent
-            # (--sandbox takes an undocumented profile name), so for it ``analytics_guard`` is
-            # the only line of defence on the surfaces it can attribute.
-            "--full-auto",
+            # harness mode: sandboxed auto-execution (= workspace-write): codex can WRITE only under the
+            # -C folder (+ its temp), real confinement where the OS lets bubblewrap start. workspace mode:
+            # codex's sandbox off (``-s danger-full-access``; ``exec`` never prompts) and confinement is
+            # ours (see HARNESS_SANDBOX). grok's own sandbox is off unless configured, so for it
+            # ``analytics_guard`` plus the pinned cwd are the defence either way.
+            *(["-s", "danger-full-access"] if sandbox == "workspace" else ["--full-auto"]),
             # The scratch folder is not a git repo, and must not be treated as one.
             "--skip-git-repo-check",
             # Don't leave session files behind for a throwaway one-shot.
@@ -177,7 +252,10 @@ class CodexHarness(Harness):
 class GrokHarness(Harness):
     name = "grok"
 
-    def argv(self, prompt: str, folder: Path, *, allow_web: bool) -> list[str]:
+    def argv(self, prompt: str, folder: Path, *, allow_web: bool, sandbox: str = "harness") -> list[str]:
+        # No sandbox flag in either mode: grok-build's sandbox is "off by default" and ``--sandbox`` takes
+        # profile names only (devbox/project/read-only/strict/workspace), none of which means "off".
+        # Workspace mode drops GROK_SANDBOX* from the child's environment instead (``child_env``).
         cmd = [
             "grok", "-p", prompt, "--cwd", str(folder), "--output-format", "json",
             "--always-approve", "--no-memory",
