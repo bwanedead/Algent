@@ -19,7 +19,7 @@ from urllib.parse import urlsplit
 
 from pydantic import BaseModel, Field
 
-from .contracts import (NOTE_CHARS, AssetType, Confidence, Status, fold, valid_day)
+from .contracts import NOTE_CHARS, AssetType, Confidence, Status, fold, valid_day
 from .materials import Material
 
 ROLE = """\
@@ -123,6 +123,26 @@ def _claimant(raw: str, cited_text: str, urls: list[str]) -> str:
     return f"reported via {_host(urls[0])}" if urls else ""
 
 
+def _day(raw: str, cited: list, m: Material, floor: str, ceil: str) -> str:
+    """The event's day: the model's when plausible, else the cited item's own day, else the material's; "" if none fits."""
+    for day in (raw.strip(), next((i.when for i in cited if i.when), ""), m.default_date):
+        if valid_day(day) and floor <= day <= ceil:
+            return day
+    return ""
+
+
+def _position(ev: CandidateEvent, country: str, iso_at: Callable[[float, float], str] | None, tag: str,
+              notes: list[str]) -> tuple[float | None, float | None, str]:
+    """(lat, lon, country): the model's position only when it is stated as known and agrees with the country it names."""
+    if not (ev.located and -90 <= ev.lat <= 90 and -180 <= ev.lon <= 180 and (ev.lat or ev.lon)):
+        return None, None, country
+    there = iso_at(ev.lat, ev.lon) if iso_at else ""
+    if country and there and there != country:
+        notes.append(f"{tag}: position {ev.lat:.2f},{ev.lon:.2f} is in {there}, not {country}; position dropped")
+        return None, None, country
+    return round(ev.lat, 5), round(ev.lon, 5), country or there
+
+
 def validate(plan: Any, m: Material, *, today: date | None = None, iso_at: Callable[[float, float], str] | None = None,
              valid_country: Callable[[str], bool] | None = None) -> tuple[list[Candidate], list[str]]:
     """The candidates that stand on the material, and a line per candidate dropped or repaired."""
@@ -145,10 +165,8 @@ def validate(plan: Any, m: Material, *, today: date | None = None, iso_at: Calla
         elif not (claimant := _claimant(ev.claimant, text, urls)):
             notes.append(f"{tag}: dropped, no claimant")
         else:
-            day = ev.date.strip()
-            if not (valid_day(day) and floor <= day <= ceil):
-                day = next((i.when for i in cited if i.when), "") or m.default_date
-            if not (valid_day(day) and floor <= day <= ceil):
+            day = _day(ev.date, cited, m, floor, ceil)
+            if not day:
                 notes.append(f"{tag}: dropped, no usable date")
                 continue
             if claimant != " ".join(ev.claimant.split()):
@@ -156,14 +174,7 @@ def validate(plan: Any, m: Material, *, today: date | None = None, iso_at: Calla
             country = ev.country.strip().upper()
             if country and valid_country is not None and not valid_country(country):
                 country = ""
-            lat = lon = None
-            if ev.located and -90 <= ev.lat <= 90 and -180 <= ev.lon <= 180 and (ev.lat or ev.lon):
-                there = iso_at(ev.lat, ev.lon) if iso_at else ""
-                if country and there and there != country:
-                    notes.append(f"{tag}: position {ev.lat:.2f},{ev.lon:.2f} is in {there}, not {country}; position dropped")
-                else:
-                    lat, lon = round(ev.lat, 5), round(ev.lon, 5)
-                    country = country or there
+            lat, lon, country = _position(ev, country, iso_at, tag, notes)
             quote = " ".join(ev.quote.split())
             note = quote[:NOTE_CHARS] if quote and _norm(quote) in _norm(text) else ""
             out.append(Candidate(name=ev.name_as_written.strip(), known_as=ev.known_as.strip(), type=ev.type, country=country,

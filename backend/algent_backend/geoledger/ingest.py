@@ -20,7 +20,7 @@ from typing import Any
 
 from . import extract as ex
 from . import flags, match, publish
-from .contracts import (NOTE_CHARS, Asset, StatusEvent, event_id, fold, new_asset_id, valid_day)
+from .contracts import NOTE_CHARS, Asset, StatusEvent, event_id, fold, new_asset_id, valid_day
 from .materials import Material, from_section
 from .store import Ledger, now_iso
 

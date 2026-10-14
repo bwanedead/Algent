@@ -11,7 +11,13 @@ import pytest
 from algent_backend.geoledger import backfill, flags, ingest
 from algent_backend.geoledger import extract as ex
 from algent_backend.geoledger.contracts import Asset
-from algent_backend.geoledger.materials import Item, Material, from_document, from_profile, from_section
+from algent_backend.geoledger.materials import (
+    Item,
+    Material,
+    from_document,
+    from_profile,
+    from_section,
+)
 from algent_backend.geoledger.store import Ledger
 
 TODAY = date(2026, 10, 14)

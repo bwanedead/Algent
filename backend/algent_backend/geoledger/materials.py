@@ -41,7 +41,7 @@ class Material:
             h.update(i.text.encode("utf-8"))
         return h.hexdigest()[:20]
 
-    def batches(self, limit: int = BATCH_CHARS) -> list["Material"]:
+    def batches(self, limit: int = BATCH_CHARS) -> list[Material]:
         out: list[list[Item]] = [[]]
         size = 0
         for i in self.items:

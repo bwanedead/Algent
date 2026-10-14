@@ -30,7 +30,7 @@ substation sub dam bridge hydro hydroelectric nuclear solar wind facility comple
 
 _CYR = dict(zip("абвгґдеєжзиіїйклмнопрстуфхцчшщьюяыэё",
                 ["a", "b", "v", "h", "g", "d", "e", "ie", "zh", "z", "y", "i", "yi", "i", "k", "l", "m", "n", "o", "p",
-                 "r", "s", "t", "u", "f", "kh", "ts", "ch", "sh", "shch", "", "iu", "ia", "y", "e", "e"]))
+                 "r", "s", "t", "u", "f", "kh", "ts", "ch", "sh", "shch", "", "iu", "ia", "y", "e", "e"], strict=True))
 _WORD = re.compile(r"[a-z0-9]+")
 
 
@@ -124,13 +124,15 @@ def find(index: _Index, names: list[str], *, type_: str = "other", country: str 
         return Match(None, 0.0, "below threshold" if index.candidates(words, country) else "no candidate")
     scored.sort(key=lambda s: -s[0])
     if len(scored) > 1 and scored[0][0] - scored[1][0] < TIE_MARGIN:
-        # a tie is only broken by distance from the stated position; otherwise refuse rather than guess
-        if at is None or scored[0][1].lat is None or scored[1][1].lat is None:
+        if (winner := _nearer(scored[0][1], scored[1][1], at)) is None:
             return Match(None, scored[0][0], "ambiguous")
-        d0 = km_between(at, (scored[0][1].lat, scored[0][1].lon))      # type: ignore[arg-type]
-        d1 = km_between(at, (scored[1][1].lat, scored[1][1].lon))      # type: ignore[arg-type]
-        if abs(d0 - d1) < 5.0:
-            return Match(None, scored[0][0], "ambiguous")
-        if d1 < d0:
-            scored[0], scored[1] = scored[1], scored[0]
+        return Match(winner, scored[0][0] if winner is scored[0][1] else scored[1][0])
     return Match(scored[0][1], scored[0][0])
+
+
+def _nearer(a: Asset, b: Asset, at: tuple[float, float] | None) -> Asset | None:
+    """Of two equally good matches, the one clearly nearer the stated position; None when position cannot tell them apart."""
+    if at is None or a.lat is None or a.lon is None or b.lat is None or b.lon is None:
+        return None
+    da, db = km_between(at, (a.lat, a.lon)), km_between(at, (b.lat, b.lon))
+    return None if abs(da - db) < 5.0 else (a if da < db else b)

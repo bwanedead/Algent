@@ -12,8 +12,9 @@ from __future__ import annotations
 import csv
 import io
 import zipfile
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any
 
 from .contracts import Asset
 from .store import Ledger

@@ -225,3 +225,52 @@ def test_the_geoledger_migration_is_public_read_only() -> None:
     assert "for select to anon" in sql and "to anon using (true)" in sql
     assert "grant insert" not in sql and "grant all" not in sql and "grant update" not in sql
     assert new_asset_id("Zmiivska TPP", "power_plant", "UA") == "og-ua-power_plant-zmiivska-tpp"
+
+
+# -- the site's contract with the tables ----------------------------------------------------------
+
+def _site(*parts: str) -> str:
+    from pathlib import Path
+
+    return (Path(__file__).resolve().parents[2] / "sites" / "ohmega-monster" / Path(*parts)).read_text(encoding="utf-8")
+
+
+def _table_columns(sql: str, table: str) -> list[str]:
+    import re
+
+    body = re.search(rf"create table {table} \((.*?)\n\);", sql, re.S).group(1)
+    return [m.group(1) for m in re.finditer(r"^\s{4}(\w+)\s", body, re.M)]
+
+
+def test_the_site_reads_and_the_publisher_writes_only_columns_the_migration_defines() -> None:
+    import re
+
+    sql = next(p for p in available() if p.stem == "009_geoledger").read_text(encoding="utf-8")
+    ts = _site("lib", "geoledger.ts")
+    for table, const, writer in (("geo_assets", "ASSET_COLS", publish._ASSET), ("geo_asset_events", "EVENT_COLS", publish._EVENT)):
+        have = set(_table_columns(sql, table))
+        read = re.search(rf'const {const} = "([^"]+)"', ts).group(1).split(",")
+        wrote = [c.strip() for c in re.search(r"\((.*?)\)\s*values", writer, re.S).group(1).split(",")]
+        assert set(read) <= have, set(read) - have
+        assert set(wrote) <= have, set(wrote) - have
+    assert len(re.search(r"values \((.*?)\)\non conflict", publish._ASSET, re.S).group(1).split(",")) == 18      # a placeholder per column
+    assert len(publish.asset_row(_plant("wri-1", "Zmiivska"), None, 0)) == 18
+
+
+def test_the_site_vocabulary_matches_the_backend_vocabulary() -> None:
+    import re
+
+    from algent_backend.geoledger.contracts import ASSET_TYPES, STATUSES
+
+    ts = _site("lib", "geoledger-shared.ts")
+    label = re.search(r"STATUS_LABEL: Record<AssetStatus, string> = \{(.*?)\n\};", ts, re.S).group(1)
+    assert set(re.findall(r"^\s+(\w+):", label, re.M)) == set(STATUSES)
+    types = re.search(r"TYPE_LABEL: Record<AssetType, string> = \{(.*?)\n\};", ts, re.S).group(1)
+    assert set(re.findall(r"(\w+): \"", types)) == set(ASSET_TYPES)
+
+
+def test_the_agent_surface_exposes_assets_and_history_and_the_mcp_tool() -> None:
+    router, tools, ops = _site("lib", "api", "router.ts"), _site("lib", "api", "mcp-tools.ts"), _site("lib", "api", "ops-assets.ts")
+    assert 'path: "/assets"' in router and 'path: "/assets/{id}"' in router and '"has_events"' in router
+    assert 'name: "get_assets"' in tools and "assetOp(a) : assetsOp(a)" in tools
+    assert "claimed_struck" in ops and "Every event names its claimant" in ops and "give at least one filter" in ops
