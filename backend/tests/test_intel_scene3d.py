@@ -84,7 +84,7 @@ def test_preview_renders_a_png_when_matplotlib_is_reachable() -> None:
 
 
 def _ask_scene(d):
-    return lambda schema, role, msg: ss.Scene.model_validate(d) if schema is ss.Scene else None
+    return lambda schema, role, msg: ss.Scene.model_validate(d) if schema is ss.SceneWire else None
 
 
 def _ask(**kw) -> visuals.VisualAsk:

@@ -10,6 +10,7 @@ import pytest
 
 from algent_backend.agent_system.agents.intel import daily, daily_visuals, flags, native_forms, native_preview, visuals
 from algent_backend.agent_system.agents.intel import mapstory_spec as ms
+from algent_backend.agent_system.agents.intel import scene_spec as ss
 from algent_backend.agent_system.agents.intel import timeline_spec as ts
 from algent_backend.agent_system.agents.intel import visuals_facts as vf
 from algent_backend.agent_system.agents.intel.visuals_grounding import mentions_date, mentions_place
@@ -129,8 +130,8 @@ def _attach(plan, specs, *, uploads=None, **kw):
     asked: list[str] = []
 
     def ask(schema, role, task):
-        asked.append(schema.__name__)
-        return plan if schema is visuals.VisualPlan else specs[schema.__name__]
+        asked.append(schema.__name__.removesuffix("Wire"))
+        return plan if schema is visuals.VisualPlan else specs[schema.__name__.removesuffix("Wire")]
 
     def not_the_harness(*_a, **_k):
         raise AssertionError("native forms must never reach the coding harness")
@@ -213,7 +214,7 @@ def test_visuals_only_regenerates_today_as_a_native_timeline(tmp_path, monkeypat
     uploads: list[dict] = []
 
     def ask(schema, role, task):
-        asked.append(schema.__name__)
+        asked.append(schema.__name__.removesuffix("Wire"))
         return visuals.VisualPlan(visuals=[_ask()]) if schema is visuals.VisualPlan else _timeline()
 
     def no_harness(*_a, **_k):
@@ -231,3 +232,54 @@ def test_visuals_only_regenerates_today_as_a_native_timeline(tmp_path, monkeypat
 @pytest.mark.parametrize("bad", ["2026-13-01", "2026-10-1", "tomorrow", ""])
 def test_malformed_dates_are_not_dates(bad: str) -> None:
     assert not ts.valid_date(bad)
+
+
+# -- the wire schemas the model fills carry no unions (the house provider rejects oneOf/anyOf) ----------
+
+def _has_union(node) -> bool:
+    if isinstance(node, dict):
+        return any(k in ("oneOf", "anyOf", "allOf") or _has_union(v) for k, v in node.items())
+    return isinstance(node, list) and any(_has_union(v) for v in node)
+
+
+@pytest.mark.parametrize("schema", [ms.MapStoryWire, ts.TimelineWire, ss.SceneWire])
+def test_wire_schemas_have_no_oneof_or_anyof(schema) -> None:
+    assert not _has_union(schema.model_json_schema())
+
+
+def test_a_flat_map_story_wire_builds_the_strict_spec_and_drops_the_malformed() -> None:
+    pt = ms.Pt(lat=49.99, lon=36.23)
+    wire = ms.MapStoryWire(title="t", caption="c", steps=[ms.StepWire(date="2026-10-09", caption="x", fact_ids=["f1.1"], show=[
+        ms.FeatureWire(id="a", kind="point", place="Kharkiv", at=[pt]),
+        ms.FeatureWire(id="b", kind="route", places=["Belgorod", "Kharkiv"], path=[pt, pt]),
+        ms.FeatureWire(id="c", kind="range", place="Belgorod", at=[pt], radius_km=500),
+        ms.FeatureWire(id="bad", kind="point", place="Kharkiv")])])           # a point with no position
+    spec, notes = ms.from_wire(wire)
+    assert [f.type for f in spec.steps[0].show] == ["point", "route", "range"] and len(notes) == 1 and "'bad'" in notes[0]
+
+
+def test_a_flat_timeline_wire_builds_places_only_when_located() -> None:
+    w = ts.TimelineWire(title="t", caption="c", events=[
+        ts.EventWire(id="e1", date="2026-10-09", title="x", place_name="Kharkiv", place_located=True, place_lat=49.9, place_lon=36.2),
+        ts.EventWire(id="e2", date="2026-10-10", title="y", place_name="Belgorod", place_lat=0, place_lon=0)])
+    spec, notes = ts.from_wire(w)
+    assert spec.events[0].place.lat == 49.9 and spec.events[1].place.lat is None and not notes
+
+
+def test_a_flat_scene_wire_builds_the_strict_scene() -> None:
+    w = ss.SceneWire(title="t", caption="c", has_origin=True, origin_lon=1.0, origin_lat=2.0, objects=[
+        ss.ObjWire(id="b", type="box", size=[1, 1, 1]), ss.ObjWire(id="s", type="sphere", radius=2),
+        ss.ObjWire(id="bad", type="cylinder")])                                # no radius/height
+    scene, notes = ss.from_wire(w)
+    assert [o.type for o in scene.objects] == ["box", "sphere"] and scene.origin.lat == 2.0 and len(notes) == 1
+
+
+def test_a_wire_answer_from_the_model_is_converted_in_produce() -> None:
+    wire = ms.MapStoryWire(title="Strike, then a convoy", caption="What moved around Kharkiv.", steps=[
+        ms.StepWire(date="2026-10-09", caption="Drones hit the rail depot.", fact_ids=["f1.1"],
+                    show=[ms.FeatureWire(id="kh", kind="point", label="Rail depot hit", place="Kharkiv", at=[ms.Pt(lat=49.99, lon=36.23)])]),
+        ms.StepWire(date="2026-10-12", caption="A convoy leaves Belgorod.", fact_ids=["f1.3"],
+                    show=[ms.FeatureWire(id="cv", kind="route", places=["Belgorod", "Kharkiv"],
+                                         path=[ms.Pt(lat=50.6, lon=36.6), ms.Pt(lat=49.99, lon=36.23)])])])
+    secs, rep, asked, _ = _attach(visuals.VisualPlan(visuals=[_ask(form="mapstory")]), {"MapStory": wire})
+    assert rep["produced"] == 1 and secs[0]["visuals"][0]["kind"] == "mapstory", rep

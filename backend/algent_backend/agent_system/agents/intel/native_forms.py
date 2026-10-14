@@ -36,7 +36,8 @@ Events (3 to 24, only the ones that carry the sequence): `title` is the event in
 plain line of at most 30 words (what, where, why it mattered, only from the facts), `kind` one of strike, statement,
 meeting, decision, movement, deadline, other. `actors` are ISO alpha-2 country codes (RU, UA, US...) of who acted,
 at most 4, none for a non-state actor you cannot code. `date` is YYYY-MM-DD; add `time` HH:MM only when a fact gives
-the hour. `place` (name, and lat/lon only if you are sure of them) only when where it happened matters. Use `lanes`
+the hour. `place_name` (and `place_located` true with `place_lat`/`place_lon` only if you are sure of them) only when where it
+happened matters. Use `lanes`
 (2 to 4: an actor or a thread, with `lane` on each event) only when parallel threads are the understanding; otherwise
 none. Leave `sources`, `now` and `alt` empty. `title` states the finding ("Strikes tripled in four days"), `caption`
 is one plain sentence for the reader.
@@ -47,14 +48,14 @@ You build one MAP STORY: an animated sequence over a map that lets a reader watc
 """ + _COMMON + """\
 Steps (2 to 12), in date order: each has a `date`, a `caption` of at most 35 words saying what CHANGED at that step,
 `fact_ids`, and `show`: the features that appear or change at this step; state carries forward, so list only what is
-new or moved, and `hide` the ids that should disappear. Features, each with a short `label` (at most 6 words), a
-`tone` (accent, hot, warn, cool, good, ink) and the NAMED `place` it is at (a route lists `places`, its named
-stops); the name must be a place a cited fact speaks of, and the coordinates (lat and lon in degrees) must be where
-that place really is:
-- point: a unit, site, strike or event at `at`. Showing the same id again at a new place MOVES it (it glides).
-- route: `path` of waypoints in travel order (a drawn arrow, direction = order) for a movement the facts describe.
-- area: `ring`, an outline (3 to 40 points) of territory a fact says is held, contested or affected.
-- range: `at` and `radius_km`, a range ring, only when a cited fact states that radius in km.
+new or moved, and `hide` the ids that should disappear. Every feature is one object with an `id`, a `kind`, a short `label` (at most 6
+words), a `tone` (accent, hot, warn, cool, good, ink) and the NAMED `place` it is at (a route lists `places`, its
+named stops); the name must be a place a cited fact speaks of, and the coordinates (lat and lon in degrees) must be
+where that place really is. Fill only the fields of its kind and leave the rest empty:
+- kind point: a unit, site, strike or event; `at` holds its one position. Showing the same id again at a new place MOVES it.
+- kind route: `path` of waypoints in travel order (a drawn arrow, direction = order) for a movement the facts describe.
+- kind area: `ring`, an outline (3 to 40 points) of territory a fact says is held, contested or affected.
+- kind range: `at` (one position) and `radius_km`, a range ring, only when a cited fact states that radius in km.
 Keep it simple enough to read at a glance: a handful of features, one idea per step. Leave `bounds`, `sources`
 and `alt` empty.
 """
@@ -91,9 +92,11 @@ def _build_mapstory(spec: ms.MapStory, by_id: dict[str, vf.Fact], as_of: str) ->
     return notes, native_preview.mapstory_svg(spec)
 
 
-_FORMS: dict[str, tuple[type, str, Callable[..., tuple[list[str], str]]]] = {
-    "timeline": (ts.Timeline, TIMELINE_ROLE, _build_timeline),
-    "mapstory": (ms.MapStory, MAPSTORY_ROLE, _build_mapstory),
+# form -> (wire schema the model fills, wire -> strict spec, strict spec class, role, builder). The wire schema has
+# no unions (the house provider rejects oneOf/anyOf); a fake or test may hand back the strict spec directly.
+_FORMS: dict[str, tuple[type, Callable[[Any], tuple[Any, list[str]]], type, str, Callable[..., tuple[list[str], str]]]] = {
+    "timeline": (ts.TimelineWire, ts.from_wire, ts.Timeline, TIMELINE_ROLE, _build_timeline),
+    "mapstory": (ms.MapStoryWire, ms.from_wire, ms.MapStory, MAPSTORY_ROLE, _build_mapstory),
 }
 
 
@@ -105,14 +108,20 @@ def produce(form: str, brief: Any, cited: list[vf.Fact], n: int, *, domain: str,
     tag = f"{brief.theater_id}/{form}"
     rep = report if report is not None else {}
     skip = rep.setdefault("skipped", [])
-    schema, role, build = _FORMS[form]
+    wire_schema, from_wire, strict, role, build = _FORMS[form]
     by_id = {f.id: f for f in cited}
     try:
-        spec = ask(schema, role, _facts_message(brief, cited))
-        if not isinstance(spec, schema):
+        got = ask(wire_schema, role, _facts_message(brief, cited))
+        pre: list[str] = []
+        if isinstance(got, wire_schema):
+            spec, pre = from_wire(got)
+        else:
+            spec = got
+        if not isinstance(spec, strict):
             skip.append(f"{tag}: no {form} returned")
             return None
         notes, svg = build(spec, by_id, as_of)
+        notes = pre + notes
         if bad := ts.refused(notes):
             skip.append(f"{tag}: {form} refused: " + "; ".join(b.removeprefix("REFUSED: ") for b in bad[:3]))
             return None

@@ -82,6 +82,66 @@ class MapStory(BaseModel):
     alt: str = ""
 
 
+# -- the WIRE schema the model fills ----------------------------------------------------------------
+# The house model provider rejects ``oneOf``/``anyOf`` in a structured-output schema, which a discriminated union
+# (and every ``X | None``) emits. So the model fills ONE flat feature object (a ``kind`` and optional fields per
+# kind, absent = empty) and ``from_wire`` builds the strict spec above from it; a feature that does not make a
+# valid strict feature is dropped and named, never fatal.
+
+class FeatureWire(BaseModel):
+    id: str
+    kind: Literal["point", "route", "area", "range"]
+    label: str = ""
+    tone: Tone = "accent"
+    place: str = ""                                                # point, area, range: the named place
+    places: list[str] = Field(default_factory=list)               # route: its named stops
+    at: list[Pt] = Field(default_factory=list)                    # point, range: exactly one position
+    path: list[Pt] = Field(default_factory=list)                  # route: waypoints in travel order
+    ring: list[Pt] = Field(default_factory=list)                  # area: the outline
+    radius_km: float = 0.0                                         # range only
+    arrow: bool = True                                             # route only
+
+
+class StepWire(BaseModel):
+    date: str
+    caption: str
+    fact_ids: list[str] = Field(default_factory=list)
+    show: list[FeatureWire] = Field(default_factory=list)
+    hide: list[str] = Field(default_factory=list)
+
+
+class MapStoryWire(BaseModel):
+    title: str
+    caption: str
+    steps: list[StepWire]
+
+
+def _feature_from_wire(w: FeatureWire) -> Feature:
+    base = dict(id=w.id, label=w.label, tone=w.tone)
+    if w.kind == "point":
+        return Point(**base, place=w.place, at=w.at[0])
+    if w.kind == "route":
+        return Route(**base, path=w.path, places=w.places, arrow=w.arrow)
+    if w.kind == "area":
+        return Area(**base, place=w.place, ring=w.ring)
+    return Range(**base, place=w.place, at=w.at[0], radius_km=w.radius_km)
+
+
+def from_wire(wire: MapStoryWire) -> tuple[MapStory, list[str]]:
+    """The strict spec from what the model filled, plus a line per feature that could not be built."""
+    notes: list[str] = []
+    steps: list[Step] = []
+    for i, ws in enumerate(wire.steps[:MAX_STEPS + 4]):
+        show: list[Feature] = []
+        for w in ws.show[:16]:
+            try:
+                show.append(_feature_from_wire(w))
+            except Exception as exc:  # noqa: BLE001 - a malformed feature is dropped, not the story
+                notes.append(f"step {i + 1}: {w.kind} {w.id!r} dropped: malformed ({type(exc).__name__})")
+        steps.append(Step(date=ws.date, caption=ws.caption, fact_ids=ws.fact_ids[:6], show=show, hide=ws.hide))
+    return MapStory(title=wire.title, caption=wire.caption, steps=steps), notes
+
+
 def _ring_km(p: Pt, km: float) -> list[Pt]:
     k = 111.32
     return [Pt(lat=max(-90, min(90, p.lat + km / k * math.sin(a))), lon=max(-180, min(180, p.lon + km / (k * max(math.cos(math.radians(p.lat)), 0.05)) * math.cos(a))))
