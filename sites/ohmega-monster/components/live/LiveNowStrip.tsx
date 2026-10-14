@@ -1,60 +1,61 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo } from "react";
+import { useEffect, useRef } from "react";
 
-import { whenUtc, type LiveEvent } from "@/lib/live-shared";
+import "@/app/live/live.css";
 
-import { eventItem, safeUrl } from "./liveItems";
-import { publishEvents, requestShow, useScope } from "./theaterLive";
+import { countText, GROUPS, NO_OBJECTS } from "./theaterObjects";
+import { publishLive, requestShow, useScope } from "./theaterLive";
+import { useTheaterObjects } from "./useTheaterObjects";
 
-// The "Live now" strip of a theater or dossier (client half of LiveParts.tsx). It lists the live events the server matched to the
-// theater, hands the same events to the theater's map (theaterLive.ts) and, while that map is up, gives each located event a
-// "Show me": the map flies there and opens the popup, without leaving the page. The link to /live stays as the second route.
+// The "Live now" strip of a theater or dossier: one line per kind of live object near the theater (military aircraft, tankers,
+// military and law-enforcement vessels), counted from /live's own position feeds, and nothing else (fires, quakes and outages stay on
+// /live). It loads those objects while it is near the screen (useTheaterObjects.ts), hands them to the theater's map (theaterLive.ts),
+// and, while that map is up, gives each line a "Show me" that fits the map to those objects. The link to /live stays as the second route.
 
-export default function LiveNowStrip({ events, scope }: { events: LiveEvent[]; scope: string }) {
-  const items = useMemo(() => events.map(eventItem), [events]);
+export default function LiveNowStrip({ bbox, scope }: { bbox: number[] | null | undefined; scope: string }) {
+  const host = useRef<HTMLDivElement>(null);
+  const live = useTheaterObjects(bbox, host);
   const { map } = useScope(scope);
 
-  useEffect(() => {
-    publishEvents(scope, items);
-    return () => publishEvents(scope, []);
-  }, [scope, items]);
+  useEffect(() => { publishLive(scope, live); }, [scope, live]);
+  useEffect(() => () => publishLive(scope, NO_OBJECTS), [scope]);
 
+  const rows = GROUPS.filter((g) => live.totals[g.key] > 0);
   return (
-    <aside className="live-now" aria-label="Live now">
-      <p className="live-now-head">
-        Live now <Link href="/live" className="xt">all live data →</Link>
-      </p>
-      <ul>
-        {events.map((e, i) => {
-          const url = safeUrl(e.source_url);
-          const located = map && e.lat !== null && e.lon !== null;
-          return (
-            <li key={e.id}>
-              <span className={`live-dot live-dot-${e.kind}`} aria-hidden="true" />
-              <span>
-                {e.title}
-                {e.starts_at && e.kind !== "aircraft" ? <span className="live-muted"> · since {whenUtc(e.starts_at)}</span> : null}
-                {url && (
-                  <>
-                    {" "}
-                    <a className="xt" href={url} target="_blank" rel="noopener noreferrer">{e.source}</a>
-                  </>
-                )}
-                {located && (
-                  <>
-                    {" "}
-                    <button type="button" className="live-showme" onClick={() => requestShow(scope, items[i].id)} aria-label={`Show on the map: ${e.title}`}>
-                      Show me
-                    </button>
-                  </>
-                )}
-              </span>
-            </li>
-          );
-        })}
-      </ul>
-    </aside>
+    <div ref={host}>
+      {rows.length > 0 && (
+        <aside className="live-now" aria-label="Live now">
+          <p className="live-now-head">
+            Live now, near this theater <Link href="/live" className="xt">all live data →</Link>
+          </p>
+          <ul>
+            {rows.map((g) => {
+              const n = live.totals[g.key];
+              const drawn = live.objs.filter((o) => o.group === g.key).length;
+              return (
+                <li key={g.key}>
+                  <span className="live-dot" style={{ color: g.color }} aria-hidden="true" />
+                  <span>
+                    {countText(g, n)}
+                    {drawn < n && <span className="live-muted"> (newest {drawn} drawn)</span>}
+                    {map && (
+                      <>
+                        {" "}
+                        <button type="button" className="live-showme" onClick={() => requestShow(scope, g.key)} aria-label={`Show on the map: ${countText(g, n)}`}>
+                          Show me
+                        </button>
+                      </>
+                    )}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+          <p className="live-muted">Positions as the vessels and aircraft broadcast them, refreshed every minute while this is on screen; ones with no transponder are not seen.</p>
+        </aside>
+      )}
+    </div>
   );
 }

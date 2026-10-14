@@ -15,6 +15,7 @@ export type LayerKind =
   | "line" // lines (+ an optional text label on point features of the same data)
   | "dots" // sized circles; `cluster` merges dense points into counted bubbles
   | "heat" // a heat surface that resolves into dots when zoomed in
+  | "icons" // heading-rotated icon images (ships, aircraft: the same arrows /live draws); `cluster` merges dense ones into counted bubbles
   | "numbered"; // circles carrying a number, solid when researched and hollow when reported (the daily's marks)
 
 export type LayerSpec = {
@@ -29,6 +30,9 @@ export type LayerSpec = {
   /** `dots`: a faint wide halo under each dot (the dot itself stays small and crisp). */
   halo?: boolean;
   cluster?: boolean;
+  /** `icons`: registers the images the features' `ic` property names on the map (idempotent; called on every style load). The features
+   *  carry `ic` (image name), `h` (heading in degrees, negative = unknown: drawn as a plain dot in `col`) and `col`. */
+  images?: (map: any) => void;
   /** Feature property whose text is drawn on a mark (`numbered`: the number) or beside a point (`line`). */
   labelProp?: string;
   /** Feature properties read by kind: `r` = circle radius in px (`dots`, default 6); `w` = weight (`heat`). */
@@ -36,7 +40,7 @@ export type LayerSpec = {
 };
 
 export const FONT = ["Noto Sans Bold"]; // served by the OpenFreeMap glyph server for both styles
-const ORDER: Record<LayerKind, number> = { area: 0, heat: 1, line: 2, dots: 3, numbered: 4 };
+const ORDER: Record<LayerKind, number> = { area: 0, heat: 1, line: 2, dots: 3, icons: 3.5, numbered: 4 };
 export const inDrawOrder = (specs: LayerSpec[]) => [...specs].sort((a, b) => ORDER[a.kind] - ORDER[b.kind]);
 
 const sourceId = (g: string) => `lm-${g}`;
@@ -53,10 +57,16 @@ export function installLayer(map: any, spec: LayerSpec): { all: string[]; click:
     all.push(layer.id as string);
     if (clickable) click.push(layer.id as string);
   };
-  const clustered = spec.kind === "dots" && spec.cluster === true;
+  const clustered = (spec.kind === "dots" || spec.kind === "icons") && spec.cluster === true;
   map.addSource(src, { type: "geojson", data: spec.data, ...(clustered ? { cluster: true, clusterRadius: 44, clusterMaxZoom: 7 } : {}) });
   const label = spec.labelProp ? ["to-string", ["coalesce", ["get", spec.labelProp], ""]] : null;
   const halo = { "text-halo-color": "#ffffff", "text-halo-width": 1.6 };
+
+  const addClusters = () => {
+    add({ id: id("cluster"), type: "circle", filter: ["has", "point_count"], paint: { "circle-color": spec.color, "circle-opacity": 0.85, "circle-stroke-color": "#fff", "circle-stroke-width": 2, "circle-radius": ["step", ["get", "point_count"], 14, 10, 18, 40, 24] } }, true);
+    add({ id: id("count"), type: "symbol", filter: ["has", "point_count"], layout: { "text-field": ["get", "point_count_abbreviated"], "text-font": FONT, "text-size": 12, "text-allow-overlap": true }, paint: { "text-color": "#ffffff" } });
+  };
+  const single = (...conds: unknown[]) => ["all", ...(clustered ? [["!", ["has", "point_count"]]] : []), ...conds];
 
   switch (spec.kind) {
     case "area":
@@ -84,12 +94,17 @@ export function installLayer(map: any, spec: LayerSpec): { all: string[]; click:
         "circle-stroke-color": "rgba(255,255,255,0.7)", "circle-stroke-width": 0.5 } }, true);
       break;
     case "dots":
-      if (clustered) {
-        add({ id: id("cluster"), type: "circle", filter: ["has", "point_count"], paint: { "circle-color": spec.color, "circle-opacity": 0.85, "circle-stroke-color": "#fff", "circle-stroke-width": 2, "circle-radius": ["step", ["get", "point_count"], 14, 10, 18, 40, 24] } }, true);
-        add({ id: id("count"), type: "symbol", filter: ["has", "point_count"], layout: { "text-field": ["get", "point_count_abbreviated"], "text-font": FONT, "text-size": 12, "text-allow-overlap": true }, paint: { "text-color": "#ffffff" } });
-      }
+      if (clustered) addClusters();
       if (spec.halo) add({ id: id("halo"), type: "circle", paint: { "circle-radius": ["*", ["coalesce", ["get", "r"], 6], 2.1], "circle-color": spec.color, "circle-opacity": 0.14, "circle-stroke-color": spec.color, "circle-stroke-opacity": 0.35, "circle-stroke-width": 0.6 } });
       add({ id: id("dots"), type: "circle", ...(clustered ? { filter: ["!", ["has", "point_count"]] } : {}), paint: { "circle-radius": ["coalesce", ["get", "r"], 6], "circle-color": spec.color, "circle-opacity": 0.9, "circle-stroke-color": "#fff", "circle-stroke-width": spec.halo ? 0.8 : 1.5 } }, true);
+      break;
+    case "icons":
+      spec.images?.(map);
+      if (clustered) addClusters();
+      add({ id: id("dot0"), type: "circle", filter: single(["<", ["get", "h"], 0]), paint: { "circle-radius": 4, "circle-color": ["get", "col"], "circle-opacity": 0.9, "circle-stroke-color": "#fff", "circle-stroke-width": 0.8 } }, true);
+      add({ id: id("icon"), type: "symbol", filter: single([">=", ["get", "h"], 0]), layout: {
+        "icon-image": ["get", "ic"], "icon-rotate": ["get", "h"], "icon-rotation-alignment": "map", "icon-allow-overlap": true, "icon-ignore-placement": true,
+        "icon-size": ["interpolate", ["linear"], ["zoom"], 3, 0.6, 7, 0.75, 14, 1.1] } }, true);
       break;
     case "numbered":
       add({ id: id("mark"), type: "circle", paint: {
