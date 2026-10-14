@@ -69,6 +69,10 @@
 .live-now-head { margin: 0 0 4px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); display: flex; gap: 10px; flex-wrap: wrap; }
 .live-now ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
 .live-now li { display: grid; grid-template-columns: 14px 1fr; gap: 6px; align-items: baseline; }
+.live-showme { font: inherit; font-size: 12px; min-height: 32px; padding: 2px 10px; border: 1px solid var(--rule-strong); background: transparent; color: var(--strong); cursor: pointer; }
+.live-showme:hover { border-color: var(--accent); }
+.live-showme:focus-visible { outline: 2px solid var(--link-accent, var(--accent)); outline-offset: 2px; }
+@media (pointer: coarse) { .live-showme { min-height: 40px; } }
 .live-dot { width: 8px; height: 8px; background: currentColor; display: inline-block; }
 .live-dot-quake { border-radius: 50%; }
 

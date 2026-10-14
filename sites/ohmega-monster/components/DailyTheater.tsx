@@ -101,7 +101,7 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
         {(t.saga || background) && !update && <p className="geo-saga">{t.saga || background}</p>}
       </header>
 
-      <LiveNow text={[t.name, t.bottom_line, ...t.developments.map((d) => d.headline)].join(" . ")} />
+      <LiveNow scope={id} text={[t.name, t.bottom_line, ...t.developments.map((d) => d.headline)].join(" . ")} />
 
       {t.visuals.map((v) => (
         <DailyFigure key={v.id} v={v} />
@@ -109,7 +109,7 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
 
       {(hasMap || hasFigs) && (
         <div className={`geo-visual${hasMap && hasFigs ? " is-two" : ""}`}>
-          <GeoMap map={t.map} developments={t.developments} />
+          <GeoMap map={t.map} developments={t.developments} liveScope={id} />
           <KeyFigures figures={t.key_figures} />
         </div>
       )}

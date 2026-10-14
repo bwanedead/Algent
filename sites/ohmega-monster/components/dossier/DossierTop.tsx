@@ -55,7 +55,7 @@ export function DossierTop({ d }: { d: Dossier }) {
         </p>
       )}
 
-      <LiveNow text={`${d.name} . ${cur?.bottom_line ?? ""}`} />
+      <LiveNow scope={d.theater_id} text={`${d.name} . ${cur?.bottom_line ?? ""}`} />
 
       <div className="th-meta" role="group" aria-label="Theater at a glance">
         {d.first_seen && (
