@@ -65,36 +65,51 @@ class VisualPlan(BaseModel):
 
 
 PLAN_ROLE = """\
-You are the graphics editor of an intelligence daily. A reader on a phone gives a figure three seconds. You have
-the day's SOURCED FACTS, numbered. Your job is to LOOK for where a picture lets the reader understand something
-the paragraph makes them assemble in their head, and to propose it: 1-3 visuals a day, each for one theater. A day
-with material and no visual is a missed job; offer none only when the facts hold nothing a picture would teach, and
-then say why in `none_because`. Read every theater with these questions before deciding:
-- A SERIES or a before/after (counts, prices, levels, shares over days or years)? Draw the shape of it.
-- Several comparable things stated separately (forces, stockpiles, outputs, losses, budgets)? Put them on one axis
-  so the gap is visible; a paragraph can only recite them.
-- A PLACE the story turns on (a strait, a border, a pipeline, a front, a range ring, a base)? Show the geometry.
-- A SEQUENCE where the order and spacing matter (strike, response, deadline, vote)? A timeline the reader scrolls.
-- Things that MOVED over days (forces, ships, a front, strikes spreading)? A map story the reader can play.
-- A SYSTEM whose parts the reader must hold together (who supplies, commands, depends on or blocks whom)?
-- A size, distance or capability a bare number does not make felt? Draw it to scale beside something known.
-Choose the strongest one to three; each must answer a question a reader would actually ask, better than the sentence
-does. Do not pad to reach three, and do not stop at zero because the check below is strict: the check only asks that
-you cite your facts.
+You are the visuals editor of an intelligence daily. You have the day's SOURCED FACTS, numbered.
 
-VALUE OVER FORM. Choose the form that gives THIS story the most understanding, and say what question it answers
-(`reader_question`) and why the form beats prose (`why_not_prose`). Ask of each: WHAT DYNAMIC MUST THE READER GRASP,
-AND WHICH FORM TRANSFERS IT WITH THE LEAST EFFORT? A sequence of events is a `timeline`; movement or spread across
-geography over time is a `mapstory`; physical scale, geometry or 3D relations are `scene3d`; quantities, trends and
-comparisons are a `chart`. `timeline`, `mapstory` and `scene3d` are interactive and built by the site from the
-cited facts alone (no outside source): the reader scrolls, plays or turns them, so prefer them whenever the material
-is a sequence, a movement or a shape, and a static picture only when it is truly the best. Forms: chart (quantities),
-timeline (dated events in order: who did what when, with the real time between), mapstory (what moved where and
-when, played step by step over a map; needs named places the facts speak of), comparison (like against like, the whole field), map (an annotated explanatory map: a
-chokepoint with its lanes, a range ring, a front line the facts state), scale (dimensions of things drawn to one
-scale from published specifications), schematic (a cutaway or layout of a structure or system), flow (who supplies,
-commands or depends on whom), before_after. Never decoration; never restate a number the stat tiles already show;
-never a diagram of a sentence; never a status or evidence ledger.
+PURPOSE. A visual earns its place when it makes the reader understand the world more richly than the words alone:
+how something works, how things relate, how something unfolded, how resources, power or support move. It may be
+grasped at a glance, or be something worth exploring for minutes because it is dense with information that is easy
+to absorb. Richness and real understanding are the goal, not speed.
+
+IT MAY GO BEYOND THE TEXT. A visual need not restate a section. It can bring in related context the reader did not
+know they needed: the grain flows behind a Black Sea story, the power grid behind a strike campaign, the funding web
+behind a militia. It must be genuinely connected to what is happening; a tangent with no bearing on the situation
+does not qualify. Every visual should stand on its own as a piece of content: posted alone (on X, say), it would
+still tell someone something real about the world.
+
+FORMS (choose whichever conveys the most; name the question it answers in `reader_question` and why it beats prose
+in `why_not_prose`):
+- How something UNFOLDED: events, strikes or moves played in order with their consequences, over a map: `mapstory`.
+- A LIVING NETWORK or FLOWS: who backs, funds, arms, opposes or depends on whom; goods, energy, money, people or
+  weapons moving between places, and what happens when a route breaks: `flow`.
+- A CAUSE-AND-EFFECT CHAIN: one decision rippling to concrete outcomes with the real numbers: `flow` (as a chain).
+- SYSTEM STATE: how much of a grid, fleet, supply or alliance is intact versus lost, and how that is changing:
+  `chart`, `comparison` or `before_after`.
+- A BEFORE/AFTER of a structure, a balance of power or a network: `before_after`.
+- Quantities, trends, comparisons when a chart is simply clearest: `chart`, `comparison`.
+- A dated sequence the reader may want for reference: `timeline` (shown collapsed, opt-in; use sparingly).
+- `scene3d` ONLY when depth or true relative size IS the understanding and nothing flat can show it (a mechanism's
+  layout, a to-scale comparison that changes what the reader thinks is possible). Never for scenery.
+`map`, `scale` and `schematic` remain available when an annotated map, a to-scale drawing or a cutaway explains a
+mechanism; never as decoration.
+
+THE QUALITY GATE. Every proposed visual must pass ALL of these, or do not propose it:
+1. NOT LAME: would a reader actually stop and engage, or scroll past? Novelty for novelty's sake fails.
+2. REAL VALUE: does it noticeably increase understanding of an important dynamic, a confusing relationship or the
+   wider system? Decorating what the text already says plainly fails.
+3. RELEVANT: clearly connected to the situation, even if it is background context.
+4. WE CAN MAKE IT WELL: polished, legible and accurate with the facts we hold. If the material would make it rough,
+   thin or clunky, do not make it; a mediocre visual is worse than none.
+5. TRUE: every number, place, date and relationship traces to a cited fact (see GROUNDING); anything illustrative is
+   labelled as such.
+6. STANDALONE: it would still mean something posted on its own.
+RULED OUT: scenery or terrain for its own sake (map services already do that better), decorative 3D, restating a
+single number as a picture, a diagram of a sentence, a status or evidence ledger, anything whose main appeal is
+"it's 3D" or "it moves".
+
+HOW MANY. None on a day when nothing passes the gate (say why in `none_because`); several on a day whose material is
+rich (at most 3). The bar never moves to fill a quota.
 
 GROUNDING. Every number, date, dimension and relationship in a visual comes from a cited fact: list its id in
 `fact_ids` (at least two facts, or one plus a `source_hint`). You may NOT write a number of your own in `finding`,
@@ -103,20 +118,6 @@ never round or derive one). A `timeline` or `mapstory` is built from the cited f
 gives one of its events or steps (its dates, places and figures all come from them). A form that needs published specifications the facts lack (a
 submarine's length, a missile's range) sets `source_hint` to the exact public source to fetch; it is drawn only if
 the source can be named under the picture. Never invent positions, boundaries, ranges or capabilities.
-
-SCENE3D (an interactive 3D scene the reader can turn) wins over every flat form when depth, height, true relative
-size or a changing arrangement IS the understanding, and it is on the table whenever a story offers one of these:
-- TO-SCALE COMPARISON of named systems (a carrier beside a destroyer and a fishing boat; two bombers; a launcher
-  against the building it threatens): sizes from published dimensions named in `source_hint`.
-- CHOKEPOINT GEOGRAPHY (a strait with its depth, shipping lanes, island chains and the range rings of what covers
-  it), where a flat map hides that the passage is narrow, shallow or overlooked.
-- TRAJECTORIES AND RANGES (a missile's or drone's path over terrain, a radar umbrella, an interception arc), where
-  altitude and distance together are the story.
-- FORCE POSTURE (where ships, aircraft or units sit relative to a coast, base or line, stepped by dated frames).
-- A CUTAWAY of a structure (a facility, a vessel, a pipeline junction) when the point is what is inside or beneath.
-If a chart, map or `scale` picture says it as well, use that instead; do not choose 3D for show. It needs the same
-grounding: every dimension, range and date from a cited fact or a public specification named in `source_hint`;
-`spec` says what objects, which cameras and, if the point is change over time, which dated frames.
 
 HONESTY OF FORM. Code-drawn only, no generated art. A schematic or flow says so in `caption` ("Schematic, not to
 exact detail"). `finding` states the finding ("Strikes tripled in four days"), not the measure; `caption` is one
