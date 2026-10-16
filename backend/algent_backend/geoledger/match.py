@@ -26,12 +26,19 @@ NEAR_BONUS = 0.08
 #: Words that say what a thing is or who runs it, not which one it is.
 STOP = frozenset("""power plant plants station stations thermal tpp chp tec tets tes hpp npp gres hes pp heat electric
 electricity energy company co ltd jsc pjsc llc the of and de la el unit units oil refinery depot port airbase air base
-substation sub dam bridge hydro hydroelectric nuclear solar wind facility complex terminal storage fuel""".split())
+substation sub dam bridge hydro hydroelectric nuclear solar wind facility complex terminal storage fuel
+aes hres ges tetz""".split())
+
+#: The generic words that name a plant's kind, in every spelling the desk meets (Latin and transliterated Cyrillic:
+#: CHP = TEC = TETs = ТЕЦ = ТЭЦ; TPP = TES = ТЕС; HPP = GES = HES = ГЕС; NPP = AES = АЕС). Kind is a guard, not an identity.
+PLANT_CLASS: dict[str, str] = {**dict.fromkeys(("chp", "tec", "tets", "tetz", "tes", "tpp", "gres", "hres"), "thermal"),
+                               **dict.fromkeys(("hpp", "ges", "hes", "hydro", "hydroelectric"), "hydro"),
+                               **dict.fromkeys(("npp", "aes", "zaes", "nuclear"), "nuclear")}
 
 _CYR = dict(zip("абвгґдеєжзиіїйклмнопрстуфхцчшщьюяыэё",
                 ["a", "b", "v", "h", "g", "d", "e", "ie", "zh", "z", "y", "i", "yi", "i", "k", "l", "m", "n", "o", "p",
                  "r", "s", "t", "u", "f", "kh", "ts", "ch", "sh", "shch", "", "iu", "ia", "y", "e", "e"], strict=True))
-_WORD = re.compile(r"[a-z0-9]+")
+_WORD = re.compile(r"[a-z]+|[0-9]+")           # "chp5" is "chp" and "5"
 
 
 def _translit(text: str) -> str:
@@ -45,7 +52,7 @@ def fold_token(t: str) -> str:
     return re.sub(r"(.)\1+", r"\1", t)
 
 
-_ADJ = ("skii", "ska", "ske", "ski", "sk")      # Kharkivska, Zaporizka: "of Kharkiv" names the town too
+_ADJ = ("skaia", "skoie", "skoe", "skii", "ska", "ske", "ski", "sk")      # Kharkivska, Zaporizka: "of Kharkiv" names the town too
 
 
 def stem(w: str) -> str:
@@ -67,12 +74,20 @@ def tokens(name: str) -> tuple[list[str], set[str]]:
     return words, nums
 
 
+def plant_class(name: str) -> str:
+    """"thermal" | "hydro" | "nuclear" when the name says what kind of plant it is, else "" (``Kyiv TETs-5`` -> thermal)."""
+    return next((PLANT_CLASS[w] for w in _WORD.findall(_translit(fold(name))) if w in PLANT_CLASS), "")
+
+
 def name_score(a: str, b: str) -> float:
     """0..1 similarity of two names; 0 when their unit numbers disagree or neither has any content word."""
     aw, an = tokens(a)
     bw, bn = tokens(b)
     if an and bn and an != bn:
         return 0.0                                 # CHP-5 is not CHP-6
+    ca, cb = plant_class(a), plant_class(b)
+    if ca and cb and ca != cb:
+        return 0.0                                 # Dnipro HPP is not Dnipro CHP
     if not aw or not bw:
         return 0.0
     score = max(SequenceMatcher(None, " ".join(sorted(aw)), " ".join(sorted(bw))).ratio(),

@@ -1,7 +1,7 @@
 import { ASSET_STATUSES, ASSET_TYPES } from "@/lib/geoledger-shared";
 import { SITE_URL } from "@/lib/site";
 
-import { assetOp, assetsOp } from "./ops-assets";
+import { assetOp, assetsOp, gridOp } from "./ops-assets";
 import { articleOp, articlesOp, searchOp } from "./ops-content";
 import { instrumentOp, instrumentsOp, liveEventsOp } from "./ops-data";
 import {
@@ -160,6 +160,13 @@ export const ROUTES: Route[] = [
     summary: "One place and its full status history: every dated event with the party who said it, confidence and source URLs.",
     pathParams: { id: { description: "Asset id from /assets.", example: "wri-UKR0000123" } },
     run: (p) => assetOp(p),
+  },
+  {
+    path: "/grid/{iso}",
+    summary:
+      "Ohmega's grid-impact rollup for a country: installed generating capacity (WRI/OSM) and the share claimed struck, reported damaged, confirmed damaged or destroyed and restored over 7 and 30 days, split by fuel, plus the affected plants. Claimed and confirmed are separate and overlap. Original analysis (ohmega_derived).",
+    pathParams: { iso: { description: "ISO 3166-1 alpha-2 code.", example: "UA" } },
+    run: (p) => gridOp(p),
   },
   {
     path: "/search",

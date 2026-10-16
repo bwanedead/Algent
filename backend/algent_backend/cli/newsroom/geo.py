@@ -6,6 +6,8 @@
     newsroom geo add-event ASSET_ID --status S --claimant WHO --date YYYY-MM-DD --source URL [--confidence C] [--note T]
     newsroom geo find NAME [--country UA] [--type power_plant]
     newsroom geo show ASSET_ID
+    newsroom geo merge DUP INTO [--note T]
+    newsroom geo grid ISO [--as-of YYYY-MM-DD] [--publish]
     newsroom geo publish [--full]
     newsroom geo status
 
@@ -56,6 +58,14 @@ def add_parser(sub: Any) -> None:
     pu = v.add_parser("publish", help="push new assets and events to the site database")
     pu.add_argument("--full", action="store_true", help="resend everything, not just what is new")
     v.add_parser("status", help="counts: assets by type, events, unpublished lines")
+    mg = v.add_parser("merge", help="record that asset DUP is the same place as INTO (history kept, nothing deleted)")
+    mg.add_argument("dup")
+    mg.add_argument("into")
+    mg.add_argument("--note", default="")
+    g = v.add_parser("grid", help="grid-impact rollup of a country: installed capacity claimed / reported / confirmed struck")
+    g.add_argument("iso")
+    g.add_argument("--as-of", help="YYYY-MM-DD (default today)")
+    g.add_argument("--publish", action="store_true", help="also upsert it to the site database")
     p.set_defaults(handler=run_geo)
 
 
@@ -66,7 +76,7 @@ def _emit(doc: Any, code: int = 0) -> int:
 
 def run_geo(args: Any) -> int:
     return {"seed": _seed, "extract": _extract, "add-event": _add_event, "find": _find, "show": _show,
-            "publish": _publish, "status": _status}[args.geo_verb](args)
+            "publish": _publish, "status": _status, "merge": _merge, "grid": _grid}[args.geo_verb](args)
 
 
 def _seed(args: Any) -> int:
@@ -112,11 +122,11 @@ def _add_event(args: Any) -> int:
 
 
 def _find(args: Any) -> int:
-    from algent_backend.geoledger import match
+    from algent_backend.geoledger import alias, match
     from algent_backend.geoledger.store import Ledger
 
     ledger = Ledger()
-    hit = match.find(ledger, [args.name], type_=args.type, country=args.country.upper())
+    hit = alias.find(ledger, [args.name], type_=args.type, country=args.country.upper())
     words = {w for w in match.tokens(args.name)[0]}
     near = ledger.candidates(words, args.country.upper())
     scored = sorted(((max(match.name_score(args.name, m) for m in (a.name, *a.aliases)), a) for a in near), key=lambda t: -t[0])[:8]
@@ -138,7 +148,29 @@ def _show(args: Any) -> int:
 def _publish(args: Any) -> int:
     from algent_backend.geoledger import publish
 
-    return _emit(publish.publish(full=args.full))
+    from algent_backend.geoledger import grid
+
+    return _emit({**publish.publish(full=args.full), "grid": grid.publish_rollups()})
+
+
+def _merge(args: Any) -> int:
+    from algent_backend.geoledger.store import Ledger
+
+    try:
+        return _emit({"merged": Ledger().merge(args.dup, args.into, note=args.note)})
+    except ValueError as exc:
+        return _emit({"error": str(exc)}, 1)
+
+
+def _grid(args: Any) -> int:
+    from algent_backend.geoledger import grid
+    from algent_backend.geoledger.store import Ledger
+
+    ledger = Ledger()
+    doc = grid.rollup(ledger, args.iso, args.as_of)
+    if args.publish:
+        doc["published"] = grid.publish_rollups(ledger, as_of=doc["as_of"], isos=[args.iso])
+    return _emit(doc)
 
 
 def _status(_args: Any) -> int:

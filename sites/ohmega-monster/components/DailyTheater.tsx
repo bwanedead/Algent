@@ -9,6 +9,8 @@ import { GLOSSARY } from "@/lib/glossary";
 import type { Direction, Snapshot } from "@/lib/intel";
 
 import AssetStatusLog, { logLines } from "./AssetStatusLog";
+import GridImpact from "./GridImpact";
+import { countryName } from "@/lib/flags";
 import DailyFigure from "./DailyFigure";
 import LinkedText from "./entities/LinkedText";
 import Expander from "./Expander";
@@ -63,7 +65,7 @@ function ContextList({ t }: { t: DailyTheater }) {
   );
 }
 
-const NO_INFRA: TheaterInfra = { assets: [], log: [] };
+const NO_INFRA: TheaterInfra = { assets: [], log: [], grid: null };
 
 export default function DailyTheaterSection({ t, id, date, snap, dossiers, first = false, tag = "", update = false, background = "", infra = NO_INFRA, events = false }: { t: DailyTheater; id: string; date: string; snap: Snapshot | null; dossiers: ReadonlySet<string>; first?: boolean; tag?: string; update?: boolean; background?: string; infra?: TheaterInfra; events?: boolean }) {
   const statusLog = logLines(infra.log, t.asset_events);
@@ -122,6 +124,8 @@ export default function DailyTheaterSection({ t, id, date, snap, dossiers, first
           <KeyFigures figures={t.key_figures} />
         </div>
       )}
+
+      {infra.grid && <GridImpact grid={infra.grid} name={countryName(infra.grid.iso)} />}
 
       <DevelopmentTimeline developments={t.developments} map={t.map} reportDate={date} range={[0, TOP_SHOWN]} anchor={id} eventHref={eventOf} />
 

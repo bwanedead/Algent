@@ -19,7 +19,7 @@ from datetime import date
 from typing import Any
 
 from . import extract as ex
-from . import flags, match, publish
+from . import alias, flags, grid, publish
 from .contracts import NOTE_CHARS, Asset, StatusEvent, event_id, fold, new_asset_id, valid_day
 from .materials import Material, from_section
 from .store import Ledger, now_iso
@@ -58,7 +58,7 @@ def _mark_seen(ledger: Ledger, m: Material, report: dict) -> None:
 def resolve(ledger: Ledger, c: ex.Candidate, m: Material) -> tuple[Asset, bool]:
     """The asset a candidate is about, and whether it was newly minted (an existing asset may gain an alias)."""
     at = (c.lat, c.lon) if c.lat is not None and c.lon is not None else None
-    hit = match.find(ledger, [c.name, c.known_as], type_=c.type, country=c.country, at=at)
+    hit = alias.find(ledger, [c.name, c.known_as], type_=c.type, country=c.country, at=at, place=c.place)
     if hit.asset is not None:
         a = hit.asset
         known = {fold(x) for x in (a.name, *a.aliases)}
@@ -74,7 +74,7 @@ def resolve(ledger: Ledger, c: ex.Candidate, m: Material) -> tuple[Asset, bool]:
               source=f"Ohmega extraction from: {m.label}"[:160], licence="Ohmega", provenance="ohmega_derived")
     prior = ledger.assets.get(a.id)
     if prior is not None:                                   # the same facility named the same way, seen before
-        return prior, False
+        return ledger.assets[ledger.canonical(prior.id)], False
     ledger.add_assets([a])
     return a, True
 
@@ -165,6 +165,8 @@ def attach(sections: list[dict], *, ask: Callable[[Any, str, str], Any], as_of: 
                 s["asset_events"] = r["rows"]
         if publish_now and report["events"]:
             report["published"] = publish.publish(ledger).get("db", False)
+        if publish_now:                                     # the windows move with the date, so rollups refresh daily
+            report["grid"] = grid.publish_rollups(ledger, as_of=as_of).get("grid", 0)
         return report
     except Exception as exc:  # noqa: BLE001
         return {"calls": 0, "events": 0, "errors": [f"{type(exc).__name__}: {str(exc)[:160]}"]}

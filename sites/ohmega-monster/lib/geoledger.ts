@@ -1,6 +1,6 @@
 import { dbRows } from "@/lib/store";
 
-import { asStatus, asType, type GeoAsset, type GeoEvent, type GeoLogRow } from "./geoledger-shared";
+import { asStatus, asType, type GeoAsset, type GeoEvent, type GeoLogRow, type GridDoc } from "./geoledger-shared";
 
 export * from "./geoledger-shared";
 
@@ -8,7 +8,7 @@ export * from "./geoledger-shared";
 // Everything degrades to "nothing": no database, an empty table or a failed request yields empty lists, and the map
 // simply draws no infrastructure layer. Server-only: client components import lib/geoledger-shared.ts instead.
 
-const ASSET_COLS = "id,name,aliases,type,country,lat,lon,loc_precision,capacity_mw,fuel,attrs,source,licence,provenance,status,status_on,status_by,events";
+const ASSET_COLS = "id,name,aliases,type,country,lat,lon,loc_precision,capacity_mw,fuel,attrs,source,licence,provenance,status,status_on,status_by,events,merged_into";
 const EVENT_COLS = "id,asset_id,occurred_on,occurred_at,status,claimant,confidence,sources,provenance,observed_at,note,via";
 const ID = /^[\w.-]+$/;
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
@@ -46,6 +46,7 @@ function toAsset(r: Raw): GeoAsset | null {
     status_on: DAY.test(str(r.status_on)) ? str(r.status_on) : null,
     status_by: str(r.status_by) || null,
     events: Math.max(0, Math.floor(num(r.events) ?? 0)),
+    merged_into: str(r.merged_into) || null,
   };
 }
 
@@ -80,7 +81,7 @@ export type AssetFilter = {
 };
 
 function filterQuery(f: AssetFilter): string {
-  const q: string[] = [`select=${ASSET_COLS}`];
+  const q: string[] = [`select=${ASSET_COLS}`, "merged_into=is.null"];            // a merged duplicate is its target now
   if (f.bbox) {
     const [w, s, e, n] = f.bbox;
     q.push(`lat=gte.${s}`, `lat=lte.${n}`, `lon=gte.${w}`, `lon=lte.${e}`);
@@ -112,6 +113,26 @@ export async function assetHistory(id: string): Promise<GeoEvent[]> {
   return rows.map(toEvent).filter((e): e is GeoEvent => e !== null);
 }
 
+/**
+ * The grid-impact rollup of one country (table `geo_grid`, migration 010, written by the backend), or null: no database, no row,
+ * or a row that is not the document we know. The document is trusted only in shape (windows present), never in kind.
+ */
+export async function getGrid(iso: string): Promise<GridDoc | null> {
+  const code = iso.toUpperCase();
+  if (!/^[A-Z]{2}$/.test(code)) return null;
+  const rows = await dbRows<Raw>("geo_grid", `select=iso,as_of,doc&iso=eq.${code}&limit=1`);
+  const doc = rows[0]?.doc as GridDoc | undefined;
+  if (!doc || typeof doc !== "object" || !doc.windows || !doc.windows["30"] || !doc.windows["7"] || !doc.installed) return null;
+  return { ...doc, iso: code, provenance: "ohmega_derived" };
+}
+
+/** The country most of these places are in ("" when none): where a theater map's struck power plants are. */
+export function dominantCountry(assets: GeoAsset[]): string {
+  const n = new Map<string, number>();
+  for (const a of assets) if (a.type === "power_plant" && a.country) n.set(a.country, (n.get(a.country) ?? 0) + 1);
+  return [...n.entries()].sort((x, y) => y[1] - x[1])[0]?.[0] ?? "";
+}
+
 /** Events of the given places in a window, newest first. */
 export async function eventsFor(ids: string[], since: string, until: string, limit = 300): Promise<GeoEvent[]> {
   const safe = ids.filter((i) => ID.test(i)).slice(0, 400);
@@ -123,7 +144,7 @@ export async function eventsFor(ids: string[], since: string, until: string, lim
   return rows.map(toEvent).filter((e): e is GeoEvent => e !== null);
 }
 
-export type TheaterInfra = { assets: GeoAsset[]; log: GeoLogRow[] };
+export type TheaterInfra = { assets: GeoAsset[]; log: GeoLogRow[]; /** Grid-impact rollup of the country the frame's struck power plants are mostly in. */ grid: GridDoc | null };
 
 const addDays = (day: string, n: number): string => new Date(Date.parse(`${day}T00:00:00Z`) + n * 86400000).toISOString().slice(0, 10);
 
@@ -133,7 +154,7 @@ const addDays = (day: string, n: number): string => new Date(Date.parse(`${day}T
  * Empty when there is no database or no frame.
  */
 export async function theaterInfra(bbox: number[] | undefined, day: string): Promise<TheaterInfra> {
-  if (!bbox || bbox.length !== 4 || !DAY.test(day) || !bbox.every((x) => Number.isFinite(x))) return { assets: [], log: [] };
+  if (!bbox || bbox.length !== 4 || !DAY.test(day) || !bbox.every((x) => Number.isFinite(x))) return { assets: [], log: [], grid: null };
   const frame = bbox as [number, number, number, number];
   const [hit, rest] = await Promise.all([
     queryAssets({ bbox: frame, hasEvents: true, limit: MAP_EVENT_ASSETS }),
@@ -146,5 +167,5 @@ export async function theaterInfra(bbox: number[] | undefined, day: string): Pro
     const a = byId.get(e.asset_id);
     return a ? [{ ...e, name: a.name, type: a.type, country: a.country }] : [];
   });
-  return { assets, log };
+  return { assets, log, grid: await getGrid(dominantCountry(hit)) };
 }
