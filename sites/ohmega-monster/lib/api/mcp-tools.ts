@@ -3,7 +3,7 @@ import { ASSET_STATUSES, ASSET_TYPES } from "@/lib/geoledger-shared";
 import { LICENSE } from "./envelope";
 import { assetOp, assetsOp, gridOp } from "./ops-assets";
 import { searchOp } from "./ops-content";
-import { instrumentOp, instrumentsOp, liveEventsOp } from "./ops-data";
+import { anomaliesOp, instrumentOp, instrumentsOp, liveEventsOp } from "./ops-data";
 import { dailyOp, pulseOp, pulsesOp, statementsOp, theaterOp, theatersOp } from "./ops-desk";
 import { arr, isObj, objs, type ApiResult, type Args, type Obj } from "./util";
 
@@ -160,6 +160,22 @@ export const TOOLS: Tool[] = [
       cursor: cursor_,
     }),
     run: liveEventsOp,
+  },
+  {
+    name: "get_live_anomalies",
+    title: "Live anomalies",
+    description:
+      "Ohmega's own analysis of where live ship, aircraft and satellite-fire counts depart from their learned normal for that place and hour of the week: each with place, how far (ratio and a plain sentence), how long, confidence and whether the baseline is still learning. Original analysis (ohmega_derived), not reported by any source; it shows a pattern departs from normal, not why. Receiver-coverage gaps are screened out.",
+    inputSchema: schema({
+      layer: str_("What is counted.", { enum: ["ship", "air", "fire"] }),
+      direction: str_("Above or below normal.", { enum: ["above", "below"] }),
+      active: str_("true: still going; false: recently closed.", { enum: ["true", "false"] }),
+      country: str_("Country name as the desk writes it, e.g. Iran."),
+      since: str_("Only started on or after this date or ISO instant."),
+      limit: limit_(20),
+      cursor: cursor_,
+    }),
+    run: anomaliesOp,
   },
   {
     name: "get_assets",

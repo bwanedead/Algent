@@ -1,4 +1,4 @@
-import { liveEvents, liveStats, type LiveKind, type LiveStat } from "@/lib/live";
+import { liveAnomalies, liveEvents, liveStats, type LiveKind, type LiveStat } from "@/lib/live";
 
 import { apiUrl } from "./ops-desk";
 import { abs, docObj, enumParam, idParam, isObj, limitParam, newest, notFound, objs, paginate, sinceParam, str, type ApiResult, type Args, type Obj } from "./util";
@@ -155,5 +155,58 @@ export async function liveEventsOp(a: Args): Promise<ApiResult> {
     verification: "feed_reported",
     next_cursor: p.next_cursor,
     note: "Current events from public live feeds (outage monitors, USGS, aircraft and fire feeds), relayed with their source_url. Not independently verified by Ohmega.",
+  };
+}
+
+// ---- live anomalies -------------------------------------------------------------------------------------
+
+/**
+ * Where the live feeds depart from Ohmega's own learned normal (backend `live/memory`, table `live_anomalies`). Original analysis:
+ * provenance ohmega_derived, computed from public AIS / ADS-B / FIRMS counts against a per-place, per-hour-of-week median; no model and
+ * no source says it. Coverage gaps are screened out before anything is published.
+ */
+export async function anomaliesOp(a: Args): Promise<ApiResult> {
+  const layer = enumParam("layer", a.layer, ["ship", "air", "fire"] as const);
+  const direction = enumParam("direction", a.direction, ["above", "below"] as const);
+  const active = enumParam("active", a.active, ["true", "false"] as const);
+  const country = (a.country ?? "").trim().toLowerCase();
+  const since = sinceParam(a.since);
+  const rows = (await liveAnomalies())
+    .filter((r) => (!layer || r.layer === layer) && (!direction || r.direction === direction))
+    .filter((r) => !active || String(r.active) === active)
+    .filter((r) => !country || r.countries.some((c) => c.toLowerCase() === country))
+    .filter((r) => !since || r.starts_at >= since)
+    .map((r) => ({
+      id: r.id,
+      series: r.series,
+      place: { kind: r.place_kind, id: r.place_id, label: r.label, lat: r.lat, lon: r.lon, countries: r.countries, cells_merged: r.n_cells },
+      direction: r.direction,
+      sentence: r.sentence,
+      starts_at: r.starts_at,
+      ends_at: r.ends_at,
+      ongoing: r.ends_at === null,
+      hours: r.hours,
+      value: r.value,
+      normal: r.normal,
+      ratio: r.ratio,
+      score: r.score,
+      confidence: r.confidence,
+      baseline: r.learning ? "learning" : "learned",
+      provenance: r.provenance,
+      updated_at: r.updated_at,
+      cite_as: abs("/live"),
+    }));
+  const p = paginate(rows, limitParam(a.limit), a.cursor);
+  return {
+    data: { anomalies: p.items, total: p.total },
+    as_of: newest(...rows.map((r) => r.updated_at)),
+    cite_as: abs("/live"),
+    source: "live_anomalies",
+    verification: "ohmega_derived",
+    next_cursor: p.next_cursor,
+    note:
+      "Ohmega analysis (provenance ohmega_derived), not something a source reported: counts of ships, aircraft and satellite fire detections per place compared with that place's own median for the same hour of the week over earlier weeks. " +
+      "ratio = value / normal (null when normal is about zero); confidence is 0..1 and halved while the baseline is 'learning' (fewer than three weeks of history). It shows a pattern departs from normal, not why. " +
+      "Receiver-coverage gaps, thin normals and world-wide feed dips are screened out, and a departure must last three hourly observations before it is published. Closed anomalies stay for 14 days.",
   };
 }

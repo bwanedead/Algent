@@ -32,12 +32,57 @@ export type LiveStat = {
   partial: boolean; // the day still being counted
   name: string;
   unit: string;
-  kind: "ships" | "tankers" | "aircraft" | "aircraft_support" | "fires";
+  kind: "ships" | "tankers" | "aircraft" | "aircraft_support" | "fires" | "presence"; // presence: live memory's daily means (never a chokepoint tile)
   region: string;
   lat: number | null;
   lon: number | null;
   source_url: string;
 };
+
+// ---- anomalies (backend `live/memory`, migration 011): places where the live feeds depart from Ohmega's own learned normal ----
+
+/** One confirmed anomaly. Provenance is always `ohmega_derived`: computed by Ohmega from public sensor feeds, never reported by a source. */
+export type LiveAnomaly = {
+  id: string;
+  series: string; // ship.tanker | air.military | fire.count ...
+  layer: "ship" | "air" | "fire";
+  klass: string;
+  place_kind: "cell" | "gate" | "region" | "fire";
+  place_id: string;
+  label: string;
+  lat: number | null;
+  lon: number | null;
+  countries: string[];
+  direction: "above" | "below";
+  starts_at: string;
+  ends_at: string | null; // null: still going
+  last_seen: string | null;
+  active: boolean;
+  hours: number;
+  value: number;
+  normal: number;
+  ratio: number | null;
+  score: number;
+  confidence: number; // 0..1
+  learning: boolean; // the baseline is still young
+  n_cells: number;
+  sentence: string;
+  provenance: "ohmega_derived";
+  updated_at: string;
+};
+
+/** The few fields a compact "unusual" line needs; a LiveAnomaly and a daily's stored rollup row both satisfy it. */
+export type UnusualRow = { id: string; sentence: string; direction: "above" | "below"; confidence: number; ongoing: boolean; learning: boolean };
+
+export const toUnusual = (a: LiveAnomaly): UnusualRow => ({ id: a.id, sentence: a.sentence, direction: a.direction, confidence: a.confidence, ongoing: a.ends_at === null, learning: a.learning });
+
+/** Ring colours: above normal warm, below normal cool (also told by the arrow glyph and the words, never colour alone). */
+export const ANOMALY_COLOR = { above: "#d4568a", below: "#4a7fd0" } as const;
+
+/** Active first, then the most confident; at most `limit`. */
+export function strongest(rows: LiveAnomaly[], limit = 8): LiveAnomaly[] {
+  return [...rows].sort((a, b) => Number(b.active) - Number(a.active) || b.confidence - a.confidence).slice(0, limit);
+}
 
 /** The simplified world basemap the backend publishes as document `live/world.json`. */
 /** `gates` are the ship-counting lines ((lat, lon) ends), keyed by the same region slug as the ship stats; older documents have none. */

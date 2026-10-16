@@ -3,7 +3,7 @@ import { SITE_URL } from "@/lib/site";
 
 import { assetOp, assetsOp, gridOp } from "./ops-assets";
 import { articleOp, articlesOp, searchOp } from "./ops-content";
-import { instrumentOp, instrumentsOp, liveEventsOp } from "./ops-data";
+import { anomaliesOp, instrumentOp, instrumentsOp, liveEventsOp } from "./ops-data";
 import {
   actorOp, actorsOp, apiUrl, briefOp, changesOp, dailyOp, deskAsOf, forecastsOp, pulseOp, pulsesOp, statementsOp, theaterOp, theatersOp,
 } from "./ops-desk";
@@ -140,6 +140,20 @@ export const ROUTES: Route[] = [
       { name: "severity", description: "Severity.", enum: ["info", "notable", "major"] },
     ],
     run: (_p, q) => liveEventsOp(q),
+  },
+  {
+    path: "/anomalies",
+    summary:
+      "Where live ships, aircraft and satellite fire detections depart from Ohmega's own learned normal for that place and hour of the week (e.g. tankers 60% below normal in the Strait of Hormuz for 18 h), with ratio, duration, confidence and a plain sentence. Original analysis (ohmega_derived); coverage gaps are screened out.",
+    paged: true,
+    query: [
+      { name: "layer", description: "What is counted.", enum: ["ship", "air", "fire"] },
+      { name: "direction", description: "Above or below normal.", enum: ["above", "below"] },
+      { name: "active", description: "true: still going; false: recently closed.", enum: ["true", "false"] },
+      { name: "country", description: "Country name as the desk writes it.", example: "Iran" },
+      { name: "since", description: SINCE, example: "2026-10-10" },
+    ],
+    run: (_p, q) => anomaliesOp(q),
   },
   {
     path: "/assets",

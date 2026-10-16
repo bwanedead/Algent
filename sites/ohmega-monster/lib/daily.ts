@@ -1,4 +1,5 @@
 import { asStatus, asType, type AssetStatus, type AssetType } from "./geoledger-shared";
+import type { UnusualRow } from "./live-shared";
 import { parseOnRecord, type OnRecord } from "./record-model";
 import { intelDoc, intelNames } from "./store";
 import { parseCoverage, type Band, type Coverage, type Direction, type Pace, type Trend } from "./intel";
@@ -195,6 +196,8 @@ export type DailyTheater = {
   visuals: DailyVisual[];
   /** Named facilities, vessels and entities the section's developments say something dated about (older reports: empty). */
   asset_events: DailyAssetEvent[];
+  /** The places Ohmega's live memory found outside their learned normal in this theater on the day (older reports: empty). */
+  unusual: UnusualRow[];
   /** Which part of the day wrote it (1 = the morning run; older reports are all 1). See `DailyEdition`. */
   edition: number;
   /** "update": a later part's addition to a theater the morning already covered; it is nested under that section. */
@@ -565,10 +568,27 @@ function parseTheater(raw: unknown, nested = false): DailyTheater | null {
     spotlight: raw.spotlight === true,
     visuals: arr(raw.visuals).map(parseVisual).filter((v): v is DailyVisual => v !== null),
     asset_events: arr(raw.asset_events).map(parseAssetEvent).filter((e): e is DailyAssetEvent => e !== null),
+    unusual: parseUnusual(raw.live_rollup),
     edition: Math.max(1, Math.floor(num(raw.edition) ?? 1)),
     kind: raw.kind === "update" ? "update" : "section",
     updates: nested ? [] : arr(raw.updates).map((u) => parseTheater(u, true)).filter((u): u is DailyTheater => u !== null),
   };
+}
+
+/** The theater's stored live-memory rollup (backend `live/memory/desk.py`): its abnormal rows, as the compact lines the page shows. */
+function parseUnusual(raw: unknown): UnusualRow[] {
+  if (!isObj(raw)) return [];
+  return arr(raw.abnormal)
+    .filter(isObj)
+    .map((r) => ({
+      id: str(r.id),
+      sentence: str(r.sentence),
+      direction: r.direction === "below" ? ("below" as const) : ("above" as const),
+      confidence: Math.max(0, Math.min(1, num(r.confidence) ?? 0)),
+      ongoing: r.ongoing === true,
+      learning: r.learning === true,
+    }))
+    .filter((r) => r.id && r.sentence);
 }
 
 function parseEdition(raw: unknown): DailyEdition | null {
