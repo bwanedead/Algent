@@ -5,6 +5,9 @@
 //     top-down view. Double-click / double-tap centres on a spot (and steps in). Arrow keys rotate, + and - zoom.
 //   - Two modes. "Cycle" walks the spinner's view set (lib/globe/camera.ts VIEWS) with hard cuts, slowly. "Still" is a north-up globe
 //     centred where you left it. Any drag, click, wheel or key press cancels Cycle and keeps the point it was looking at.
+//   - Country fills by information channel (Recency, Direction, Involvement, and Unusual when there is something): the page hands in a
+//     compact per-country dataset (lib/globe-data.ts), lib/globe/channels.ts sorts each country into a colour bucket, and the
+//     fills are one clipped path per bucket. Without the country file the plain land layers stay.
 //   - Reduced motion: starts Still, no inertia, no easing. Pauses when the tab is hidden or the globe is off screen.
 // Frames are written straight to SVG paths from requestAnimationFrame, not through React (as in GlobeSpinner).
 // Geometry, projection, clipping and cameras all come from lib/globe/ (pure, client-safe).
@@ -14,6 +17,9 @@ import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react"
 import { cameraAt, spun, VIEWS } from "@/lib/globe/camera";
 import { buildRings, landPath } from "@/lib/globe/clip";
 import { C, paths, R } from "@/lib/globe/project";
+import { availableChannels, bucketOf, type ChannelId } from "@/lib/globe/channels";
+import { loadCountries, type Countries } from "@/lib/globe/countries";
+import type { GlobeData } from "@/lib/globe/data";
 import { COARSE_POLYS, GRAT, loadLand, type Poly } from "@/lib/globe/sphere";
 import { centreOf, centredView, MAX_LAT, unproject, wrapLon } from "@/lib/globe/view";
 
@@ -36,11 +42,21 @@ const reduceMotion = () => typeof matchMedia === "function" && matchMedia("(pref
 type Camera = { lon: number; lat: number; zoom: number };
 type Goto = { lon: number; lat: number; zoom: number };
 
-export default function GlobeViewer() {
+const BUCKETS = 8; // slot 0 = countries with no data on the channel, then up to seven legend buckets
+
+export default function GlobeViewer({ data }: { data: GlobeData | null }) {
   const id = useId();
+  const channels = useMemo(() => availableChannels(data?.countries ?? {}), [data]);
+  const [channel, setChannel] = useState<ChannelId>(data ? "recency" : "off");
+  const [geo, setGeo] = useState<Countries | null>(null);
   const [mode, setModeState] = useState<Mode>("cycle");
   const [land, setLand] = useState<Poly[]>(COARSE_POLYS);
   const rings = useMemo(() => buildRings(land), [land]);
+  const bucketRings = useMemo(() => {
+    const out: Poly[][] = Array.from({ length: BUCKETS }, () => []);
+    if (geo) for (const c of geo.list) out[bucketOf(channel, data?.countries[c.iso]) + 1].push(...c.fill);
+    return out;
+  }, [geo, data, channel]);
 
   const box = useRef<HTMLDivElement>(null);
   const svg = useRef<SVGSVGElement>(null);
@@ -49,6 +65,8 @@ export default function GlobeViewer() {
   const coast = useRef<SVGPathElement>(null);
   const far = useRef<SVGPathElement>(null);
   const grid = useRef<SVGPathElement>(null);
+  const buckets = useRef<(SVGPathElement | null)[]>([]);
+  const borders = useRef<SVGPathElement>(null);
   const tag = useRef<HTMLSpanElement>(null);
 
   // All per-frame state lives in refs; React only hears about the mode.
@@ -85,6 +103,12 @@ export default function GlobeViewer() {
     return () => { dead = true; };
   }, []);
 
+  useEffect(() => {
+    let dead = false;
+    void loadCountries().then((c) => { if (!dead && c) { setGeo(c); dirty.current = true; } });
+    return () => { dead = true; };
+  }, []);
+
   // Start Still for readers who asked for less motion.
   useEffect(() => {
     if (reduceMotion()) setMode("still");
@@ -106,8 +130,10 @@ export default function GlobeViewer() {
       }
       matrix.current = m;
       world.current?.setAttribute("transform", c.zoom === 1 ? "" : `translate(${C} ${C}) scale(${c.zoom}) translate(${-C} ${-C})`);
-      const l = paths(land, m, true);
-      fill.current?.setAttribute("d", landPath(rings, m));
+      const l = paths(geo ? geo.coast : land, m, true);
+      fill.current?.setAttribute("d", geo ? "" : landPath(rings, m));
+      for (let b = 0; b < BUCKETS; b++) buckets.current[b]?.setAttribute("d", geo && bucketRings[b].length > 0 ? landPath(bucketRings[b], m) : "");
+      borders.current?.setAttribute("d", geo ? paths(geo.borders, m, false).front : "");
       coast.current?.setAttribute("d", l.front);
       far.current?.setAttribute("d", l.back);
       grid.current?.setAttribute("d", paths(GRAT, m, false).front);
@@ -151,7 +177,7 @@ export default function GlobeViewer() {
     const io = typeof IntersectionObserver !== "undefined" && box.current ? new IntersectionObserver((e) => { seen = e.some((x) => x.isIntersecting); }) : null;
     if (io && box.current) io.observe(box.current);
     return () => { cancelAnimationFrame(raf); io?.disconnect(); };
-  }, [land, rings]);
+  }, [land, rings, geo, bucketRings]);
 
   // ---- input ------------------------------------------------------------------------------------------------------------------
   /** Pointer position -> unit-globe coordinates (radius 1, y up) for the current zoom. */
@@ -287,6 +313,8 @@ export default function GlobeViewer() {
     };
   }, [rotateBy, setMode, toGlobe, zoomBy]);
 
+  const legend = geo && data ? channels.find((c) => c.id === channel) : undefined;
+
   const toggleFullscreen = useCallback(() => {
     const el = box.current;
     if (!el) return;
@@ -295,7 +323,7 @@ export default function GlobeViewer() {
   }, []);
 
   return (
-    <div ref={box} className="gv" tabIndex={0} role="application" aria-label="Interactive globe. Drag to rotate, scroll or pinch to zoom, double-click to centre. Arrow keys rotate; plus and minus zoom.">
+    <div ref={box} className="gv" data-channel={geo ? channel : "off"} tabIndex={0} role="application" aria-label="Interactive globe. Drag to rotate, scroll or pinch to zoom, double-click to centre. Arrow keys rotate; plus and minus zoom.">
       <svg ref={svg} className="gv-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
         <defs>
           <radialGradient id={`${id}-w`} cx="34%" cy="30%" r="80%">
@@ -314,6 +342,10 @@ export default function GlobeViewer() {
           <path ref={grid} className="gs-grid" fill="none" strokeWidth={0.8} vectorEffect="non-scaling-stroke" />
           <path ref={far} className="gs-far" fill="none" strokeWidth={0.8} vectorEffect="non-scaling-stroke" />
           <path ref={fill} className="gs-land" fillRule="evenodd" stroke="none" />
+          {Array.from({ length: BUCKETS }, (_, b) => (
+            <path key={b} ref={(el) => { buckets.current[b] = el; }} className={b === 0 ? "gv-bn" : `gv-b${b - 1}`} fillRule="evenodd" stroke="none" />
+          ))}
+          <path ref={borders} className="gv-border" fill="none" strokeWidth={0.6} vectorEffect="non-scaling-stroke" />
           <path ref={coast} className="gs-coast" fill="none" strokeWidth={1} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           <circle cx={C} cy={C} r={R} fill={`url(#${id}-l)`} />
           <circle cx={C} cy={C} r={R} className="gs-rim" fill="none" strokeWidth={1} vectorEffect="non-scaling-stroke" />
@@ -325,12 +357,29 @@ export default function GlobeViewer() {
           <button type="button" className={mode === "cycle" ? "is-on" : ""} aria-pressed={mode === "cycle"} onClick={() => setMode("cycle")}>Cycle</button>
           <button type="button" className={mode === "still" ? "is-on" : ""} aria-pressed={mode === "still"} onClick={() => setMode("still")}>Still</button>
         </div>
-        <div className="gv-seg">
+        {data && geo && (
+          <div className="gv-seg" role="group" aria-label="Colour countries by">
+            {channels.map((c) => (
+              <button key={c.id} type="button" className={channel === c.id ? "is-on" : ""} aria-pressed={channel === c.id} onClick={() => { setChannel(c.id); dirty.current = true; }}>{c.label}</button>
+            ))}
+          </div>
+        )}
+        <div className="gv-seg gv-seg-right">
           <button type="button" aria-label="Zoom in" onClick={() => zoomBy(1.5)}>+</button>
           <button type="button" aria-label="Zoom out" onClick={() => zoomBy(1 / 1.5)}>&minus;</button>
           <button type="button" aria-label="Toggle full screen" onClick={toggleFullscreen}>Full</button>
         </div>
       </div>
+      {legend && legend.legend.length > 0 && (
+        <div className="gv-legend" aria-label={`${legend.label}: ${legend.note}`}>
+          <p className="gv-legend-note">{legend.note}{data ? ` As of ${data.asOf}.` : ""}</p>
+          <ul>
+            {legend.legend.map((label, b) => (
+              <li key={label}><span className={`gv-sw gv-b${b}`} aria-hidden="true" />{label}</li>
+            ))}
+          </ul>
+        </div>
+      )}
       <p className="gv-hint" aria-hidden="true">Drag to turn · scroll to zoom · double-click to centre</p>
     </div>
   );
