@@ -19,19 +19,14 @@ import type { Bounds } from "./map/geo";
 import LiveMap, { type MapStatus } from "./map/LiveMap";
 import { FONT, type LayerSpec } from "./map/mapLayers";
 import { currentTheme } from "./map/mapStyle";
-import { buildTimelines, frameAt, type Palette } from "./map/storyFrame";
+import { PALETTE } from "./map/storyPalette";
+import { buildTimelines, frameAt } from "./map/storyFrame";
 
 import "./mapstory.css";
 
 const STEP_MS = 1500; // time to travel one step at the natural pace
 const MAX_JUMP_MS = 1300; // a scrub across many steps still lands within this
 const HOLD_MS = 1300; // rest on each step while playing, so the caption can be read
-
-// Map-local data colours (like the other maps): one set per basemap theme.
-const PALETTE: Record<"paper" | "dark", Palette> = {
-  paper: { ink: "#1f2933", accent: "#c2410c", warn: "#d98e04", cool: "#1d6fa5", hot: "#c8321e", good: "#2f7a46" },
-  dark: { ink: "#e5e7eb", accent: "#f0a33a", warn: "#f0b429", cool: "#5aa9d6", hot: "#ff6b4a", good: "#6fbf7f" },
-};
 
 const SOURCES = ["ms-poly", "ms-line", "ms-pt", "ms-lbl"] as const;
 const EMPTY = { type: "FeatureCollection", features: [] };
