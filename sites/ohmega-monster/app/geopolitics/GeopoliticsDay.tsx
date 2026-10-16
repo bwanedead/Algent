@@ -23,7 +23,7 @@ export default async function GeopoliticsDay({ report }: { report: Daily }) {
       <DailyReport report={report} title="Geopolitics" mark={<GlobeSpinner cycle decorative size={144} className="globe-mark" />} />
       <DayNav dates={dates} current={report.date} domain={DOMAIN} base={BASE} placement="bottom" />
       <p className="geo-xlink">
-        <Link href="/intel">Intelligence board: Pulses, Theaters and Briefs →</Link>
+        <Link href="/intel/theaters">All theaters →</Link> · <Link href="/intel/actors">Actors →</Link> · <Link href="/intel">Intelligence: briefs, the record and more →</Link>
       </p>
     </div>
   );

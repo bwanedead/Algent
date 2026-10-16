@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import NavLinks from "@/components/NavLinks";
 import ThemeToggle from "@/components/ThemeToggle";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -36,14 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <span>OHMEGA</span><span className="brand-separator">/</span><span>MONSTER</span>
             </Link>
             <nav className="site-nav" aria-label="Primary navigation">
-              <Link href="/">Index</Link>
-              <Link href="/radar">Radar</Link>
-              <Link href="/intel" className="nav-keep">Intelligence</Link>
-              <Link href="/geopolitics" className="nav-keep">Geopolitics</Link>
-              <Link href="/live" className="nav-keep">Live</Link>
-              <Link href="/pulses" className="nav-keep">Pulses</Link>
-              <Link href="/intel/actors" className="nav-keep">Actors</Link>
-              <a href="/feed.xml">RSS</a>
+              <NavLinks />
               <ThemeToggle />
             </nav>
           </div>
@@ -52,6 +46,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <footer className="site-footer">
           <div className="shell footer-row">
             <nav aria-label="Secondary navigation">
+              <Link href="/intel/theaters">Theaters</Link>
+              <Link href="/intel/actors">Actors</Link>
+              <Link href="/intel/briefs">Briefs</Link>
+              <Link href="/intel/record">Record</Link>
               <a href="/feed.xml">RSS</a>
               <a href="/sitemap.xml">Sitemap</a>
               <a href="/developers">Developers</a>

@@ -13,7 +13,7 @@ export function RecordRow({ r }: { r: OnRecord }) {
   return (
     <li className="rec-row">
       <p className="rec-who">
-        <IsoFlags codes={r.iso2 ? [r.iso2] : []} unknown={r.affiliation} />
+        <IsoFlags codes={r.iso2 ? [r.iso2] : []} unknown={r.affiliation} link />
         <b>{r.speaker}</b>
         <span className="rec-muted">
           {officeOf(r) ? ` · ${officeOf(r)}` : ""} · {dayLabel(r.date)}

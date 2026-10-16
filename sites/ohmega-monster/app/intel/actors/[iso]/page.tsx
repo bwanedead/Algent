@@ -3,10 +3,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ActorFlag, ordinal, rankText, ScaleBar } from "@/components/actors/ActorParts";
+import Crumbs, { ACTORS_CRUMB, INTEL_CRUMB } from "@/components/Crumbs";
 import { Anchor, Overflow, Section } from "@/components/dossier/parts";
+import { ActorDevelopments, ActorOnRecord, InvolvedIn, RelatedActors } from "@/components/entities/EntityLinks";
 import PulseTile from "@/components/PulseTile";
 import { actor, actorIds, CREDIT_SOURCE_ORDER, fieldOf, fmt, GROUPS, type Actor, type Field, type GroupId } from "@/lib/actors";
 import { dayLabel } from "@/lib/dossier-view";
+import { actorContext } from "@/lib/entities";
+import { countryName } from "@/lib/flags";
 import { latestSnapshot } from "@/lib/intel";
 import { toWallPulse } from "@/lib/pulse-wall";
 
@@ -38,7 +42,7 @@ function claimOf(a: Actor): string {
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const a = await actor(params.iso);
-  if (!a) return { title: "Actor" };
+  if (!a) return /^[A-Z]{2}$/.test(params.iso) ? { title: countryName(params.iso), description: `Where ${countryName(params.iso)} appears: theaters, statements and developments.` } : { title: "Actor" };
   return { title: `${a.name}: power profile`, description: claimOf(a), alternates: { canonical: `/intel/actors/${a.iso2}`, types: { "application/json": `/api/v1/actors/${a.iso2}` } } };
 }
 
@@ -133,9 +137,35 @@ const TITLE: Record<GroupId, (a: Actor) => string> = {
 };
 const ANCHOR: Record<GroupId, string> = { people: "people", economy: "economy", trade: "trade", energy: "energy", military: "military" };
 
+/** A state with no power profile yet but a place in the news: the same linked sections, without the numbers. */
+async function ActorStub({ iso }: { iso: string }) {
+  const ctx = await actorContext(iso);
+  if (!ctx) notFound();
+  return (
+    <div className="intel-page th-page">
+      <Crumbs trail={[INTEL_CRUMB, ACTORS_CRUMB]} />
+      <p className="th-kicker">
+        <span>
+          <ActorFlag iso2={iso} name={ctx.name} /> {ctx.name}
+        </span>
+      </p>
+      <h1 className="th-claim">{ctx.name}: where it appears in the desk&apos;s reporting</h1>
+      <p className="th-note">There is no power profile for {ctx.name} yet (economy, energy, military). Everything below comes from the theaters, statements and daily reports that name it.</p>
+      <InvolvedIn name={ctx.name} theaters={ctx.theaters} />
+      <ActorOnRecord name={ctx.name} said={ctx.said} about={ctx.saidAbout} />
+      <ActorDevelopments name={ctx.name} items={ctx.developments} />
+      <RelatedActors name={ctx.name} related={ctx.related} />
+    </div>
+  );
+}
+
 export default async function ActorPage({ params }: { params: Params }) {
   const a = await actor(params.iso);
-  if (!a) notFound();
+  if (!a) {
+    if (!/^[A-Z]{2}$/.test(params.iso)) notFound();
+    return <ActorStub iso={params.iso} />;
+  }
+  const ctx = await actorContext(a.iso2);
   const snap = await latestSnapshot();
   const lookup = new Map((snap?.situations ?? []).flatMap((s) => s.pulses.map((p) => [p.id, toWallPulse(p, s.title)] as const)));
   const pulses = a.involved.pulses.map((p) => lookup.get(p.id)).filter((p): p is NonNullable<typeof p> => !!p);
@@ -161,9 +191,7 @@ export default async function ActorPage({ params }: { params: Params }) {
   );
   return (
     <div className="intel-page th-page">
-      <nav className="th-crumb" aria-label="Breadcrumb">
-        <Link href="/intel/actors">All actors</Link>
-      </nav>
+      <Crumbs trail={[INTEL_CRUMB, ACTORS_CRUMB]} />
       <p className="th-kicker">
         <span>
           <ActorFlag iso2={a.iso2} name={a.name} /> {a.name}
@@ -211,6 +239,10 @@ export default async function ActorPage({ params }: { params: Params }) {
       )}
       <p className="th-note">Bars show the share of states this actor is ahead of. Rank is among states, each at its latest year.</p>
 
+      {ctx && <InvolvedIn name={a.name} theaters={ctx.theaters} />}
+      {ctx && ctx.said.length > 0 && <ActorOnRecord name={a.name} said={ctx.said} about={ctx.saidAbout} />}
+      {ctx && <ActorDevelopments name={a.name} items={ctx.developments} />}
+
       {GROUPS.map((g) =>
         a.groups[g].length === 0 ? null : (
           <Section key={g} id={ANCHOR[g]} title={TITLE[g](a)}>
@@ -220,7 +252,7 @@ export default async function ActorPage({ params }: { params: Params }) {
         ),
       )}
 
-      {said.length > 0 && (
+      {said.length > 0 && !(ctx && ctx.said.length > 0) && (
         <Section id="said" title={`What ${a.name}'s leaders said lately`} lead={`${said.length} statement${said.length === 1 ? "" : "s"} on record, newest first`}>
           <ul className="ac-said">{said.slice(0, 3).map(sayText)}</ul>
           {said.length > 3 && (
@@ -231,26 +263,17 @@ export default async function ActorPage({ params }: { params: Params }) {
         </Section>
       )}
 
-      {a.involved.theaters.length > 0 && (
-        <Section
-          id="involved"
-          title={`In play in ${a.involved.theaters.length} theater${a.involved.theaters.length === 1 ? "" : "s"}`}
-          lead={a.involved.theaters.slice(0, SHOWN).map((t, i) => (
-            <span key={t.id}>
-              {i > 0 && " · "}
-              <Link href={`/intel/theaters/${t.id}`}>{t.name}</Link>
-            </span>
-          ))}
-        >
-          {pulses.length > 0 && (
-            <div className="pt-grid">
-              {pulses.slice(0, SHOWN).map((p) => (
-                <PulseTile key={p.id} pulse={p} size="s" anchor={false} />
-              ))}
-            </div>
-          )}
+      {pulses.length > 0 && (
+        <Section id="involved" title={`Pulses involving ${a.name}`} lead={<Link href="/pulses" className="xt">Every Pulse →</Link>}>
+          <div className="pt-grid">
+            {pulses.slice(0, SHOWN).map((p) => (
+              <PulseTile key={p.id} pulse={p} size="s" anchor={false} />
+            ))}
+          </div>
         </Section>
       )}
+
+      {ctx && <RelatedActors name={a.name} related={ctx.related} />}
 
       <Section id="credits" title="Where these numbers come from">
         <ul className="ac-credits">

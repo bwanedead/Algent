@@ -76,7 +76,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
   return (
     <article className="article-page">
       <nav className="breadcrumb" aria-label="Breadcrumb">
-        <Link href="/">← Index</Link>
+        <Link href="/articles">← All articles</Link>
       </nav>
 
       <header className="article-header">

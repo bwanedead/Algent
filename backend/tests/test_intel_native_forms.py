@@ -188,7 +188,7 @@ def test_native_forms_ignore_a_source_hint_and_chart_forms_still_need_numbers() 
 
 
 def test_planner_doctrine_names_the_native_forms() -> None:
-    for word in ("mapstory", "timeline", "scene3d", "LEAST EFFORT"):
+    for word in ("mapstory", "timeline", "scene3d", "QUALITY GATE", "RULED OUT"):
         assert word in visuals.PLAN_ROLE
 
 

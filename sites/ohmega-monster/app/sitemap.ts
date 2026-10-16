@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 
+import { actorIds } from "@/lib/actors";
 import { getAllMeta } from "@/lib/articles";
 import { allDailyDates } from "@/lib/daily";
 import { dossierIds } from "@/lib/dossier";
@@ -15,7 +16,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: a.date || undefined,
   }));
   const intel = [
+    { url: `${SITE_URL}/articles`, lastModified: new Date() },
     { url: `${SITE_URL}/intel`, lastModified: new Date() },
+    { url: `${SITE_URL}/intel/situation`, lastModified: new Date() },
+    { url: `${SITE_URL}/intel/briefs`, lastModified: new Date() },
+    { url: `${SITE_URL}/intel/actors`, lastModified: new Date() },
+    ...(await actorIds()).map((iso) => ({ url: `${SITE_URL}/intel/actors/${iso}`, lastModified: new Date() })),
+    { url: `${SITE_URL}/intel/record`, lastModified: new Date() },
+    { url: `${SITE_URL}/radar`, lastModified: new Date() },
     ...(await allBriefSlugs()).map((slug) => ({ url: `${SITE_URL}/intel/briefs/${slug}` })),
     { url: `${SITE_URL}/intel/theaters`, lastModified: new Date() },
     ...(await dossierIds()).map((id) => ({ url: `${SITE_URL}/intel/theaters/${id}`, lastModified: new Date() })),

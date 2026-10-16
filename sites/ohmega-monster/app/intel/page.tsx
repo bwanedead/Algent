@@ -1,65 +1,31 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
-import SituationCoverage from "@/components/SituationCoverage";
-import SituationForecasts from "@/components/SituationForecasts";
-import SituationMoves from "@/components/SituationMoves";
-import SituationNew from "@/components/SituationNew";
-import { SituationSince, SituationVisitProvider } from "@/components/SituationVisit";
-import { actorIds } from "@/lib/actors";
-import { dossierList } from "@/lib/dossier";
-import { situationRoom } from "@/lib/situation";
+import Doors from "@/components/Doors";
+import { intelDoors } from "@/lib/sections";
 
-import "./intel.css";
+import "@/app/geopolitics/geopolitics.css";
+import "./theaters/theaters.css";
 
 export const metadata: Metadata = {
-  title: "Situation Room",
-  description: "What changed, and how well we are calling it: the biggest Pulse moves, rising coverage, forecasts due and the track record.",
+  title: "Intelligence",
+  description: "The depth behind the daily report: theaters, actors, briefs, the record and the Pulses, in one place.",
+  alternates: { canonical: "/intel" },
 };
 
-// The Situation Room: what changed, and how well are we calling it. It deliberately does not repeat
-// the other pages' jobs: /geopolitics reads the day, /pulses scans the whole state of the world.
+// The Intelligence section's front door: a plain directory of everything behind the daily report, so no
+// page type is reachable only by chance. The Situation room (what changed) lives at /intel/situation.
 export const revalidate = 300; // lib/store.ts REVALIDATE_SECONDS
 
-export default async function IntelPage() {
-  const room = await situationRoom();
-  const dossiers = (await dossierList()).length;
-  const actors = (await actorIds()).length;
+export default async function IntelDirectoryPage() {
+  const doors = await intelDoors();
   return (
-    <div className="intel-page sit-page">
-      <SituationVisitProvider>
-        <div className="intel-strip sit-strip" role="group" aria-label="Status">
-          <span className="intel-strip-title">Situation room</span>
-          {room && (
-            <span className="intel-strip-item">
-              <span className="intel-micro">As of</span> {room.asOfLabel}
-            </span>
-          )}
-          {room && (
-            <span className="intel-strip-item">
-              <SituationSince times={room.changeTimes} />
-            </span>
-          )}
-          <span className="intel-strip-item sit-strip-links">
-            {dossiers > 0 && <Link href="/intel/theaters">Every theater&apos;s dossier →</Link>}
-            {actors > 0 && <Link href="/intel/actors">Who the actors are →</Link>}
-            <Link href="/intel/record">What they said →</Link>
-            <Link href="/geopolitics">Read the day →</Link>
-            <Link href="/pulses">Scan every Pulse →</Link>
-          </span>
-        </div>
-
-        {!room && <p className="intel-empty">No intelligence has been published yet. Check back soon.</p>}
-
-        {room && (
-          <>
-            <SituationMoves moves={room.moves} />
-            <SituationCoverage coverage={room.coverage} />
-            <SituationForecasts forecasts={room.forecasts} />
-            <SituationNew items={room.news} />
-          </>
-        )}
-      </SituationVisitProvider>
+    <div className="intel-page th-page">
+      <p className="th-kicker">
+        <span>Intelligence</span>
+      </p>
+      <h1 className="th-claim">The depth behind the daily report</h1>
+      <p className="th-asof">Start with a theater or a state, or see what changed since you were last here.</p>
+      <Doors doors={doors} label="Intelligence sections" />
     </div>
   );
 }

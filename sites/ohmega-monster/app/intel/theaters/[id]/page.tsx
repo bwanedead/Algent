@@ -13,7 +13,9 @@ import DossierTimeline from "@/components/dossier/DossierTimeline";
 import { DossierPrimer, DossierTop } from "@/components/dossier/DossierTop";
 import { actorsForTheater } from "@/lib/actors";
 import { headlineOf } from "@/lib/daily";
+import { RelatedTheaters, StatesInvolved } from "@/components/entities/EntityLinks";
 import { dossier, dossierIds } from "@/lib/dossier";
+import { relatedTheaters, theaterStates } from "@/lib/entities";
 import { latestSnapshot } from "@/lib/intel";
 
 import "@/app/geopolitics/geopolitics.css";
@@ -46,6 +48,7 @@ export default async function TheaterDossierPage({ params }: { params: Params })
   const snap = await latestSnapshot();
   const known = new Set(await dossierIds());
   const involved = await actorsForTheater(d.theater_id);
+  const [states, related] = await Promise.all([theaterStates(d.theater_id), relatedTheaters(d.theater_id)]);
   const first = d.timeline.map((t) => t.date).filter(Boolean).sort()[0] ?? "";
   return (
     <div className="intel-page th-page">
@@ -62,10 +65,12 @@ export default async function TheaterDossierPage({ params }: { params: Params })
       <DossierPrimer primer={d.primer} />
       <ActorNetwork actors={d.actors} relations={d.relations} statements={d.statements} />
       <ActorStrip actors={involved} />
+      {states.length > involved.length && <StatesInvolved states={states} />}
       <DossierRecord rows={d.on_record} />
       <DossierTimeline items={d.timeline} since={d.first_seen || first} />
       <DossierFigures figures={d.figures} />
       <DossierOutlook d={d} known={known} />
+      <RelatedTheaters items={related} />
 
       <p className="th-built">{d.built_at ? `Rebuilt ${d.built_at.slice(0, 10)}, and again as new reports land.` : "Rebuilt as new reports land."}</p>
     </div>
